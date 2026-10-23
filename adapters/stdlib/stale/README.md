@@ -3,6 +3,8 @@ section: Trust and proof
 line: Approved answers whose cited passage has changed or gone. Citations are content hashes, so it's exact.
 source: box
 added: 2026-10-23
+writes: nothing
+network: none
 -->
 # stale
 

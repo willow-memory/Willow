@@ -3,6 +3,8 @@ section: Reading more kinds of files
 line: .eml and .mbox files, with sender, date and subject kept.
 source: new
 added: 2026-10-23
+writes: to
+network: none
 -->
 # mail
 

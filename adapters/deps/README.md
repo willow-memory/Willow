@@ -12,8 +12,9 @@ adds. Each add-on in this folder carries:
   program (`tesseract`, `gpg`, `git`) or service (a local model server), with
   its licence. The licence must be one an Apache-2.0 project can depend on;
   a program that is only run, never linked, says so;
-- **`network:` in the header** if it goes online at all, even once to download
-  a model, and the same on the first line of its card;
+- **`network:` in the header**, as every add-on has, saying where it goes
+  if it goes online at all, even once to download a model, and the same on
+  the first line of its card;
 - **`requirements-floor.txt`**, the same packages pinned at their floor, the
   oldest version it is tested against (the floor rule, below);
 - **`floor:` in the header**, naming each floor version, and why, when it is

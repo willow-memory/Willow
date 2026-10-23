@@ -3,6 +3,8 @@ section: Reading more kinds of files
 line: Obsidian and Logseq vaults, with [[links]] and #tags kept and backlinks listed.
 source: new
 added: 2026-10-23
+writes: to
+network: none
 -->
 # notes
 

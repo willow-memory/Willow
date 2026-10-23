@@ -3,6 +3,8 @@ section: For maintainers
 line: This repo's checks as verdict rows on a kernel record, the same every run.
 source: box
 added: 2026-10-23
+writes: record
+network: PyPI, to read each dependency floor's release date
 -->
 # ci
 
@@ -23,10 +25,10 @@ record in the runner's temp folder.
 | Part | Gates, in this order |
 |---|---|
 | lint | `lint:check`, `lint:format` (ruff) |
-| tests | `tests:beats` (`kernel.py test`), `tests:kernel`, `tests:docs`, `tests:adapters` (the add-ons in `adapters/stdlib/`), `tests:vectors` (pytest) |
+| tests | `tests:beats` (`kernel.py test`), `tests:kernel`, `tests:docs`, `tests:adapters` (the add-ons in `adapters/stdlib/`, under the guard), `tests:vectors` (pytest) |
 | ports | `ports:java`, `ports:ts`, `ports:csharp`: `vectors/compare.py`, one port at a time |
 | demo | `demo:hollis`, `demo:odile`, `demo:teodora`: each person's files made in a temporary folder and held to their `demo/*/PLANTED.md` |
-| deps | `deps:mcp`, `deps:mcp@floor`, `deps:pdf`, `deps:pdf@floor`, two per add-on in `adapters/deps/`: its tests in a fresh virtual environment with only its own pinned requirements (then its floor's) and pytest; an install that can't be done is unreachable. Then `deps:floors`: each floor against the floor rule, by PyPI's upload dates; PyPI out of reach is unreachable |
+| deps | `deps:mcp`, `deps:mcp@floor`, `deps:pdf`, `deps:pdf@floor`, two per add-on in `adapters/deps/`: its tests, under the guard, in a fresh virtual environment with only its own pinned requirements (then its floor's) and pytest; an install that can't be done is unreachable. Then `deps:floors`: each floor against the floor rule, by PyPI's upload dates; PyPI out of reach is unreachable |
 
 Each verdict row holds the gate, its state, a hash of every file in the repo
 it ran on, a hash of what the command printed, the Python version, and a
@@ -43,6 +45,16 @@ and none failing; 2 a gate failing, or a record that doesn't verify.
 **Deterministic:** every row's time is the commit's, and what changes between
 runs (durations, temporary folders, where the repo sits) is taken out before
 the output is hashed. The same files give the same record, byte for byte.
+
+**The guard:** the add-ons' tests, and each deps add-on's, run with
+[guard/sitecustomize.py](guard/sitecustomize.py) on `PYTHONPATH`, so it is
+loaded into every Python process they start. It holds each add-on to its
+card's `writes` and `network` and to the rules no card loosens (no original
+changed, no box written but through the kernel, no key read), and writes
+each breach to a log. A gate whose log isn't empty is `failing`, even when
+every test passed: a breach the add-on caught and hid is still a breach.
+[test_guard.py](test_guard.py) breaks each promise on purpose and checks the
+guard catches it.
 
 **Uses:** the kernel's `init`, `append`, `read`, `verify`, `h256` and its exit
 codes.

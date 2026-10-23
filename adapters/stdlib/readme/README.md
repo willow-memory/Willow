@@ -3,6 +3,8 @@ section: For maintainers
 line: Builds this README's generated sections from the add-ons' own cards.
 source: new
 added: 2026-10-23
+writes: README.md
+network: none
 -->
 # readme
 

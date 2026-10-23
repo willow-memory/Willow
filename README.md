@@ -152,14 +152,16 @@ never changes it. Some are built and tested; the rest are planned, and each
 one's line says what it will do. This section is generated from the add-ons'
 own cards by [adapters/stdlib/readme](adapters/stdlib/readme/), so a 🛠 turns
 into ✅ only when the add-on exists, and CI fails if this page falls behind.
+The list is open: anyone can add an idea, and anyone can build one from it.
+[CONTRIBUTING.md](CONTRIBUTING.md) says how.
 
 **Legend:** ✅ built · 🛠 planned · 🐍 standard library only, nothing to
-install · 📦 needs the install in brackets, with its licence · 🌐 goes online
-(the kernel never does) · *bot* rebuilt from willow-bot's one script · *box*
+install · 📦 needs the install in brackets, with its licence · 🌐 goes online,
+and where (the kernel never does) · 🏠 reaches only this machine · *bot* rebuilt from willow-bot's one script · *box*
 built from what the kernel already has · *new*
 
 <!-- willow:pools -->
-`████████░░░░░░░░░░░░` **23 of 56 built** · 39 🐍 · 17 📦
+`████████░░░░░░░░░░░░` **24 of 57 built** · 40 🐍 · 17 📦
 
 | Section | Built | Planned | 🐍 | 📦 |
 |---|---|---|---|---|
@@ -172,7 +174,7 @@ built from what the kernel already has · *new*
 | Assistants | 1 | 2 | 0 | 3 |
 | Ways to use it | 1 | 2 | 2 | 1 |
 | Play | 0 | 3 | 2 | 1 |
-| For maintainers | 2 | 0 | 2 | 0 |
+| For maintainers | 3 | 0 | 3 | 0 |
 <!-- /willow:pools -->
 
 ### Newest
@@ -182,15 +184,15 @@ built from what the kernel already has · *new*
 - 2026-10-23 · [**surprise**](adapters/stdlib/surprise/) — One passage from your folder at random, seeded so it can be replayed.
 - 2026-10-23 · [**starter-words**](adapters/stdlib/starter-words/) — A first-day words list to copy and edit (owes = invoice, outstanding; doctor = dr, physician, clinic).
 - 2026-10-23 · [**stale**](adapters/stdlib/stale/) — Approved answers whose cited passage has changed or gone. Citations are content hashes, so it's exact.
-- 2026-10-23 · [**readme**](adapters/stdlib/readme/) — Builds this README's generated sections from the add-ons' own cards.
+- 2026-10-23 · [**similar**](adapters/stdlib/similar/) — What's already on the add-on list near a new idea, by the kernel's own search.
 <!-- /willow:newest -->
 
 ### Add-on of the week
 
 <!-- willow:pick week=2026-W43 -->
-**[chats](adapters/stdlib/chats/)** — WhatsApp and Telegram exports, one dated line per message.
+**[pdf](adapters/deps/pdf/)** — Text out of PDFs.
 
-*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 23 built add-ons in name order.*
+*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 24 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -214,12 +216,12 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - ✅ [**pdf**](adapters/deps/pdf/) 📦 [pypdf; BSD-3-Clause] — Text out of PDFs. *new*
 - 🛠 **photos** 📦 [Pillow; MIT-CMU] — When and where each photo was taken, as dated lines. *new*
 - 🛠 **sheets** 📦 [openpyxl; MIT] — Spreadsheets with formulas and formatting kept, beyond what the office add-on reads. *new*
-- 🛠 **voice** 📦 [faster-whisper; MIT] 🌐 model downloaded once — Dictation, calls and lectures transcribed into dated text. *new*
+- 🛠 **voice** 📦 [faster-whisper; MIT] 🌐 the model, downloaded once — Dictation, calls and lectures transcribed into dated text. *new*
 
 ### Finding things
 
 - ✅ [**all**](adapters/stdlib/all/) 🐍 — Every matching passage, ranked, not just the top three. *box*
-- 🛠 **meaning** 📦 [sentence-transformers; Apache-2.0] 🌐 model downloaded once — Search by meaning: "who owes me money" finds "invoice outstanding". *new*
+- 🛠 **meaning** 📦 [sentence-transformers; Apache-2.0] 🌐 the model, downloaded once from Hugging Face — Search by meaning: "who owes me money" finds "invoice outstanding". *new*
 - ✅ [**on-this-day**](adapters/stdlib/on-this-day/) 🐍 — What you wrote on this date in earlier years. *box*
 - ✅ [**quote-check**](adapters/stdlib/quote-check/) 🐍 — Is this exact quote in my files, and where? For writers, journalists and students. *box*
 - ✅ [**surprise**](adapters/stdlib/surprise/) 🐍 — One passage from your folder at random, seeded so it can be replayed. *bot*
@@ -231,7 +233,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 
 - ✅ [**starter-words**](adapters/stdlib/starter-words/) 🐍 — A first-day words list to copy and edit (owes = invoice, outstanding; doctor = dr, physician, clinic). *new*
 - 🛠 **stems** 📦 [snowballstemmer; BSD-3] — Word forms for 20+ languages, so "maisons" finds "maison". *new*
-- 🛠 **synonyms** 📦 [nltk and WordNet; Apache-2.0] 🌐 data downloaded once — Suggests words-list lines for a word no file has. *new*
+- 🛠 **synonyms** 📦 [nltk and WordNet; Apache-2.0] 🌐 the WordNet data, downloaded once — Suggests words-list lines for a word no file has. *new*
 - 🛠 **words-de** 🐍 — German common words, so questions aren't matched on "der" and "und". *new*
 - 🛠 **words-es** 🐍 — Spanish common words ("el", "y"). *new*
 - 🛠 **words-fr** 🐍 — French common words ("le", "et"). *new*
@@ -267,13 +269,13 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 
 Each hands in suggestions through propose. None can approve: every suggestion waits for your seal.
 
-- 🛠 **claude** 📦 [anthropic; MIT] 🌐 cloud — Suggestions from Claude through the Anthropic API, citing your passages. *new*
-- 🛠 **local-model** 📦 [a local model server; licence varies by model] — Suggestions from a model on this machine only, such as Ollama or llama.cpp. *new*
+- 🛠 **claude** 📦 [anthropic; MIT] 🌐 api.anthropic.com, to ask for suggestions — Suggestions from Claude through the Anthropic API, citing your passages. *new*
+- 🛠 **local-model** 📦 [a local model server; licence varies by model] 🏠 this machine only — Suggestions from a model on this machine only, such as Ollama or llama.cpp. *new*
 - ✅ [**mcp**](adapters/deps/mcp/) 📦 [mcp; MIT] — Lets any MCP client, such as an AI assistant or editor, ask your folder and hand in suggestions. *new*
 
 ### Ways to use it
 
-- 🛠 **browse** 🐍 — A local web page to ask questions and approve answers, reachable from this machine only. *new*
+- 🛠 **browse** 🐍 🏠 this machine only — A local web page to ask questions and approve answers, reachable from this machine only. *new*
 - ✅ [**plain**](adapters/stdlib/plain/) 🐍 — Answers as sentences instead of JSON, each with its file and line. *new*
 - 🛠 **speak** 📦 [pyttsx3; MPL-2.0] — Reads answers aloud. *new*
 
@@ -285,8 +287,9 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 
 ### For maintainers
 
-- ✅ [**ci**](adapters/stdlib/ci/) 🐍 — This repo's checks as verdict rows on a kernel record, the same every run. *box*
+- ✅ [**ci**](adapters/stdlib/ci/) 🐍 🌐 PyPI, to read each dependency floor's release date — This repo's checks as verdict rows on a kernel record, the same every run. *box*
 - ✅ [**readme**](adapters/stdlib/readme/) 🐍 — Builds this README's generated sections from the add-ons' own cards. *new*
+- ✅ [**similar**](adapters/stdlib/similar/) 🐍 — What's already on the add-on list near a new idea, by the kernel's own search. *box*
 <!-- /willow:list -->
 
 ## How it works
@@ -553,8 +556,11 @@ willow/
 │   │   │   └── README.md
 │   │   ├── ci/
 │   │   │   ├── ci.py         this repo's checks as verdict rows on a kernel record
+│   │   │   ├── guard/
+│   │   │   │   └── sitecustomize.py  holds each add-on to its card while its tests run
 │   │   │   ├── test_ci.py    its tests: the same record every run, and every state
-│   │   │   └── README.md     its card: gates, states and exit codes
+│   │   │   ├── test_guard.py the guard's tests: each broken promise caught
+│   │   │   └── README.md     its card: gates, states, the guard and exit codes
 │   │   ├── coming-up/
 │   │   │   ├── coming_up.py  dates in your files in the next few days
 │   │   │   ├── test_coming_up.py
@@ -599,6 +605,10 @@ willow/
 │   │   │   ├── readme.py     builds this README's generated sections from the cards
 │   │   │   ├── test_readme.py
 │   │   │   └── README.md     its card: sections, the draw, what it reads
+│   │   ├── similar/
+│   │   │   ├── similar.py    what's already on the list near a new idea
+│   │   │   ├── test_similar.py
+│   │   │   └── README.md
 │   │   ├── stale/
 │   │   │   ├── stale.py      approved answers whose cited passage changed or went
 │   │   │   ├── test_stale.py

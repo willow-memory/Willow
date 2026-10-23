@@ -63,17 +63,25 @@ PYTEST = (PY, "-m", "pytest", "-q", "-p", "no:cacheprovider")
 TIMING = re.compile(r"\b\d+(?:\.\d+)?\s*(?:s|ms|sec|seconds)\b")
 
 
+TEMP = os.path.realpath(tempfile.gettempdir())
+
+
 def steady(said: str) -> str:
     """What a command printed, less what changes from run to run: how long it
-    took, and where the repo sits on this machine."""
-    return TIMING.sub("", said.replace(str(ROOT), "<repo>"))
+    took, where the repo sits on this machine, and the temporary folders a
+    run makes (pytest numbers its own: pytest-412, pytest-413), and where
+    this Python lives, which a throwaway environment changes every run."""
+    said = said.replace(str(ROOT), "<repo>").replace(sys.prefix, "<python>")
+    said = said.replace(TEMP, "<tmp>")
+    return re.sub(r"pytest-\d+", "pytest-N", TIMING.sub("", said))
 
 
 # ── gates ────────────────────────────────────────────────────────────────────
-def run(argv: tuple, cwd: Path = ROOT) -> tuple[int, str]:
+def run(argv: tuple, cwd: Path = ROOT, env: dict | None = None) -> tuple[int, str]:
     got = subprocess.run(
-        argv, cwd=cwd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True
-    )
+        argv, cwd=cwd, env=env,
+        stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True,
+    )  # fmt: skip
     print(got.stdout, end="", flush=True)
     return got.returncode, got.stdout
 
@@ -101,6 +109,55 @@ def command(*argv: str, needs=None, judge=None):
             return FAILING, said, f"exit {code}"
         why = judge(said) if judge else None
         return (FAILING, said, why) if why else (SATISFIED, said, None)
+
+    return gate
+
+
+GUARD = Path(__file__).resolve().parent / "guard"
+
+
+def guarded(log: Path) -> dict:
+    """The environment the add-on tests run in: the guard (guard/
+    sitecustomize.py) loaded into every process they start, its breaches
+    written to `log`, and no bytecode written, which is the import system's
+    doing and not the add-on's."""
+    env = dict(os.environ)
+    env["PYTHONPATH"] = os.pathsep.join(
+        p for p in (str(GUARD), env.get("PYTHONPATH", "")) if p
+    )
+    env["WILLOW_GUARD_LOG"] = str(log)
+    env["PYTHONDONTWRITEBYTECODE"] = "1"
+    return env
+
+
+def breaches(log: Path) -> str | None:
+    """The guard's log, one line per distinct breach, or None when clean. A
+    breach the add-on caught and swallowed is on it all the same."""
+    if not log.is_file():
+        return None
+    lines = sorted(
+        {steady(line) for line in log.read_text(encoding="utf-8").splitlines()}
+    )
+    return "; ".join(lines)[:400] if lines else None
+
+
+def guarded_tests(*target: str):
+    """pytest over `target` under the guard: failing on a failed test, or on
+    any breach of a card's promises."""
+
+    def gate() -> tuple[str, str, str | None]:
+        why = missing_module("pytest")
+        if why:
+            return UNREACHABLE, "", why
+        with tempfile.TemporaryDirectory() as tmp:
+            log = Path(tmp) / "guard.log"
+            code, said = run((*PYTEST, *target), env=guarded(log))
+            broke = breaches(log)
+        if broke:  # first: a breach is why the tests failed, if they did
+            return FAILING, said, f"broke its card's promises: {broke}"
+        if code != 0:
+            return FAILING, said, f"exit {code}"
+        return SATISFIED, said, None
 
     return gate
 
@@ -169,15 +226,18 @@ def deps_add_on(name: str, pins: str = "requirements.txt"):
                     "",
                     f"couldn't install its requirements: {tail[0][:120]}",
                 )
+            log = Path(tmp) / "guard.log"
             code, said = run(
-                (py, "-m", "pytest", "-q", "-p", "no:cacheprovider", str(here))
+                (py, "-m", "pytest", "-q", "-p", "no:cacheprovider", str(here)),
+                env=guarded(log),
             )
             said = said.replace(tmp, "<tmp>")
-            return (
-                (SATISFIED, said, None)
-                if code == 0
-                else (FAILING, said, f"exit {code}")
-            )
+            broke = breaches(log)
+            if broke:
+                return FAILING, said, f"broke its card's promises: {broke}"
+            if code != 0:
+                return FAILING, said, f"exit {code}"
+            return SATISFIED, said, None
 
     return gate
 
@@ -290,6 +350,8 @@ def gates() -> list[tuple[str, str, object]]:
         ("vectors", "vectors/test_vectors.py", "-k", "as_it_is_now"),
     ):
         how = command(*PYTEST, *target, needs=lambda: missing_module("pytest"))
+        if gate == "adapters":
+            how = guarded_tests(*target)
         out.append(("tests", f"tests:{gate}", how))
     for port in PORTS:
         how = command(

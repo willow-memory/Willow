@@ -3,6 +3,8 @@ section: Keeping track
 line: Numbers over time and a date gone by, beside an answer.
 source: box
 added: 2026-10-22
+writes: record
+network: none
 -->
 # readings
 

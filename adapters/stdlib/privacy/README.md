@@ -3,6 +3,8 @@ section: Privacy and safety
 line: Hides phone numbers, emails, card, bank and ID numbers, and API keys in what a question prints, and says what it hid.
 source: bot
 added: 2026-10-23
+writes: record
+network: none
 -->
 # privacy
 

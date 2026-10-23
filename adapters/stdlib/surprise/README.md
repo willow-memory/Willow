@@ -3,6 +3,8 @@ section: Finding things
 line: One passage from your folder at random, seeded so it can be replayed.
 source: bot
 added: 2026-10-23
+writes: record
+network: none
 -->
 # surprise
 

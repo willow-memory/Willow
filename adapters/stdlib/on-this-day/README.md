@@ -3,6 +3,8 @@ section: Finding things
 line: What you wrote on this date in earlier years.
 source: box
 added: 2026-10-23
+writes: nothing
+network: none
 -->
 # on-this-day
 

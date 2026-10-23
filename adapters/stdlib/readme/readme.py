@@ -27,9 +27,11 @@ What it reads:
       line: Numbers over time and a date gone by, beside an answer.
       source: box
       added: 2026-10-22
+      writes: nothing
+      network: none
       -->
 
-  plus `needs:` and `network:` for one in `adapters/deps/`;
+  plus `needs:` and `floor:` for one in `adapters/deps/`;
 - `adapters/planned.json`, the add-ons not built yet, with the same fields
   and a `kind` (stdlib or deps).
 
@@ -79,7 +81,10 @@ SECTIONS = [
     ("For maintainers", ""),
 ]  # fmt: skip
 NAMES = [s for s, _ in SECTIONS]
-FIELDS = {"section", "line", "source"}
+FIELDS = {"section", "line", "source", "writes", "network"}
+#: what an add-on may write: the guard in adapters/stdlib/ci/guard holds it
+#: to this while its tests run; a file of the repo may also be named
+WRITES = {"nothing", "record", "to"}
 SOURCES = {"bot", "box", "new"}
 HEADER = re.compile(r"\A<!-- willow-addon\n(.*?)\n-->\n", re.S)
 NAME = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*")
@@ -142,6 +147,12 @@ def addons() -> list[dict]:
             raise Refused(f"{where}: no section {a['section']!r}")
         if a["source"] not in SOURCES:
             raise Refused(f"{where}: source is bot, box or new")
+        writes = [w.strip() for w in a["writes"].split(",")]
+        bad = [w for w in writes if w not in WRITES and not (ROOT / w).is_file()]
+        if bad or ("nothing" in writes and len(writes) > 1):
+            raise Refused(f"{where}: writes is nothing, or any of record, to, or a file of the repo: {a['writes']!r}")  # fmt: skip
+        if not a["network"].strip():
+            raise Refused(f"{where}: network is none, loopback, or what it reaches and why")  # fmt: skip
         if a["kind"] == "deps" and not a.get("needs"):
             raise Refused(f"{where}: a deps add-on says what it needs")
         if a["kind"] == "stdlib" and a.get("needs"):
@@ -154,7 +165,9 @@ def addons() -> list[dict]:
 # ── the sections ─────────────────────────────────────────────────────────────
 def mark(a: dict) -> str:
     out = "🐍" if a["kind"] == "stdlib" else f"📦 [{a['needs']}]"
-    if a.get("network"):
+    if a["network"] == "loopback":
+        out += " 🏠 this machine only"
+    elif a["network"] != "none":
         out += f" 🌐 {a['network']}"
     return out
 

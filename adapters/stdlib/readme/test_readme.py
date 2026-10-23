@@ -46,7 +46,8 @@ The end, by hand.
 
 
 def card(section="Play", line="A thing.", source="new", added="2026-10-23", **more):
-    head = {"section": section, "line": line, "source": source, "added": added, **more}
+    head = {"section": section, "line": line, "source": source, "added": added,
+            "writes": "nothing", "network": "none", **more}  # fmt: skip
     body = "".join(f"{k}: {v}\n" for k, v in head.items())
     return f"<!-- willow-addon\n{body}-->\n# card\n"
 
@@ -63,7 +64,7 @@ def repo(tmp_path, monkeypatch):
             card(added="2026-10-0" + str(len(name)), **extra)
         )
     planned = [{"name": "gamma", "kind": "stdlib", "section": "Play", "line": "Later.",
-                "source": "box"}]  # fmt: skip
+                "source": "box", "writes": "to", "network": "loopback"}]  # fmt: skip
     (tmp_path / "adapters" / "planned.json").write_text(json.dumps(planned))
     (tmp_path / "README.md").write_text(PAGE)
     monkeypatch.setattr(rd, "ROOT", tmp_path)
@@ -89,7 +90,7 @@ def test_building_an_add_on_is_what_turns_planned_into_built(repo):
         "- ✅ [**beta**](adapters/deps/beta/) 📦 [somepkg; MIT] — A thing. *new*"
         in text
     )
-    assert "- 🛠 **gamma** 🐍 — Later. *box*" in text
+    assert "- 🛠 **gamma** 🐍 🏠 this machine only — Later. *box*" in text
     assert "**2 of 3 built**" in text
     (repo / "adapters" / "stdlib" / "gamma").mkdir()  # built, and still planned
     (repo / "adapters" / "stdlib" / "gamma" / "README.md").write_text(card())
@@ -134,6 +135,15 @@ def test_the_draw_is_the_weeks_and_anyone_can_redo_it(repo):
         ("stdlib/delta", card(added="soon"), "added is the date"),
         ("stdlib/delta", card(needs="x; MIT"), "a stdlib add-on needs nothing"),
         ("deps/delta", card(), "a deps add-on says what it needs"),
+        ("stdlib/delta", card(writes="everything"), "writes is nothing, or any of"),
+        ("stdlib/delta", card(writes="nothing, to"), "writes is nothing, or any of"),
+        ("stdlib/delta", card(writes="README.md, record"), None),
+        (
+            "stdlib/delta",
+            card(writes="no-such-file.md"),
+            "writes is nothing, or any of",
+        ),
+        ("stdlib/delta", card().replace("network: none\n", ""), "needs network"),
         ("stdlib/Delta", card(), "lowercase words joined by -"),
         ("stdlib/alpha2", "", "has no README.md card"),
     ],
@@ -143,6 +153,10 @@ def test_an_add_on_that_doesnt_hold_together_is_refused(repo, folder, text, why)
     where.mkdir(parents=True)
     if text:
         (where / "README.md").write_text(text)
+    if why is None:  # a file of the repo, beside record: holds together
+        (repo / "README.md").touch()
+        rd.rebuild(PAGE, None)
+        return
     with pytest.raises(rd.Refused, match=why):
         rd.rebuild(PAGE, None)
 

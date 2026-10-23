@@ -47,6 +47,11 @@ out.
 the same output: no clock times, no machine paths, and no ordering that
 depends on the file system.
 
+**An add-on keeps its card's promises.** Its card says what it writes and
+whether it goes online, and CI holds it to that while its tests run. No card
+can loosen three rules: an add-on never changes your files, never writes the
+record except through the kernel, and never reads the key itself.
+
 **The docs match the files.** `test_docs.py` checks that the file tree in
 the README lists every file in the repo and nothing else, that every path a
 document names exists, and that the numbers the README quotes are the
@@ -56,6 +61,56 @@ test will tell you which document still has the old one.
 **Plain words.** Write the README, the cards and the error messages for
 someone who has never seen the project. Name the thing, then say what it
 does.
+
+## Add an idea
+
+The add-on list in the README is open. To add an idea, open a pull request
+that adds one entry to [adapters/planned.json](adapters/planned.json):
+
+```json
+{
+ "name": "bank",
+ "kind": "stdlib",
+ "section": "Reading more kinds of files",
+ "line": "Bank CSV and OFX statements as dated lines, with spending by month.",
+ "source": "new",
+ "writes": "to",
+ "network": "none"
+}
+```
+
+- `kind` is `stdlib` if it needs nothing installed, else `deps`, with a
+  `needs` line naming each install and its licence.
+- `writes` and `network` are its promises, set out in
+  [adapters/README.md](adapters/README.md#its-promises-checked). Whoever
+  builds it is held to them.
+
+Before you add it, see what's already near it:
+
+    python adapters/stdlib/similar/similar.py near "your idea in a sentence"
+
+If something built is close, connecting to it may be the better idea. On the
+pull request, CI's run summary lists what's near each idea you add, and
+willow-bot posts the same list as a comment. That list is a suggestion; only
+the maintainer decides. CI does refuse an idea with the same line as one
+already listed.
+
+## Pick one up
+
+Anyone can build any idea on the list; you don't need to ask first. To let
+others know you've started, open a draft pull request that names it.
+
+1. Make its folder in `adapters/stdlib/` or `adapters/deps/`, with the code,
+   its card and its tests.
+2. Give the card the idea's fields and the same promises. If building it
+   shows a promise was wrong, change it in the card and say why in the pull
+   request, where the maintainer can see it.
+3. Take its entry out of `adapters/planned.json` in the same change, and regenerate
+   the README's list.
+
+Your add-on's tests run under the guard, which holds it to its card. A test
+that never runs a path is a path the guard never checks, so test what your
+add-on actually does.
 
 ## Add-ons that need installs
 
@@ -76,8 +131,7 @@ versions and the floor, and checks each floor against PyPI's release dates.
 
 ## Pull requests
 
-- One idea per pull request. A new add-on takes its entry out of
-  [adapters/planned.json](adapters/planned.json) in the same change.
+- One idea per pull request.
 - Regenerate the README's add-on list with
   `python adapters/stdlib/readme/readme.py write`, never by hand;
   `test_docs.py` fails if it's stale.

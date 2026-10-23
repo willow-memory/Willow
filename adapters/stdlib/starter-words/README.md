@@ -3,6 +3,8 @@ section: Your own words
 line: A first-day words list to copy and edit (owes = invoice, outstanding; doctor = dr, physician, clinic).
 source: new
 added: 2026-10-23
+writes: to
+network: none
 -->
 # starter-words
 

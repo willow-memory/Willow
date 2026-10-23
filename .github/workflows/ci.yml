@@ -12,6 +12,23 @@ permissions:
   contents: read
 
 jobs:
+  similar:
+    # What's already on the add-on list near each idea or add-on this pull
+    # request adds, written to the run's summary so a fork sees it too.
+    # A suggestion, never a gate: similar.py's own check runs in the tests.
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - env:
+          BASE: origin/${{ github.base_ref }}
+        run: python adapters/stdlib/similar/similar.py new --base "$BASE" >> "$GITHUB_STEP_SUMMARY"
+
   lint:
     runs-on: ubuntu-latest
     steps:

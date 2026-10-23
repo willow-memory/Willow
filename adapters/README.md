@@ -47,21 +47,54 @@ The card opens with a header that the main README's list is generated from:
     line: Numbers over time and a date gone by, beside an answer.
     source: box
     added: 2026-10-22
+    writes: nothing
+    network: none
     -->
 
 `section` is one of the list's sections, `line` is one sentence, `source` is
 `bot` (rebuilt from willow-bot's one script), `box` (built from what the
 kernel has) or `new`, and `added` is the date it was built. An add-on in
-`deps/` adds `needs` (what to install, and its licence), `floor` (its
-floor versions, and why when above the rule's) and, if it goes online,
-`network`.
+`deps/` adds `needs` (what to install, and its licence) and `floor` (its
+floor versions, and why when above the rule's).
 
-## Building a planned one
+## Its promises, checked
 
-Make its folder, write its card with the header, and take its entry out of
-[planned.json](planned.json) in the same change, then run
+`writes` and `network` are promises, and CI holds every add-on to them:
+
+| Line | Values |
+|---|---|
+| `writes` | `nothing` (it only prints); `record` (it writes the record, through the kernel); `to` (it writes only where `--to` points: a mirror folder, or one file); or a file of this repo by name, such as `README.md`. Several are joined with commas. |
+| `network` | `none`; `loopback` (this machine only); or what it reaches and why, such as `api.anthropic.com, to ask for suggestions`. |
+
+Three more hold for every add-on, whatever its card says: it never changes
+an original (the folder given to `--from`, or a box's pile), never writes a
+box but through the kernel, and never reads the key itself.
+
+The add-ons' tests run under a guard, [ci/guard](stdlib/ci/guard/), loaded
+into every Python process they start. It watches each file written, removed
+or renamed, each read of the key, and each connection or name lookup, works
+out whose code asked, and checks it against that add-on's card. A breach
+stops the add-on and goes on a log, and a breach the add-on catches and
+hides is still on the log; CI fails a run whose log isn't empty. The guard
+sees what the tests run, so a promise is only as checked as the tests are
+thorough.
+
+## Adding an idea, or building one
+
+Anyone can do either; [CONTRIBUTING.md](../CONTRIBUTING.md) says how. An idea is
+an entry in [planned.json](planned.json) with the same fields as a card,
+promises included, and a `kind` (`stdlib` or `deps`). Before adding one, see
+what's near it:
+
+    python adapters/stdlib/similar/similar.py near "your idea in a sentence"
+
+To build one, make its folder, write its card with the header (the same
+promises, or changed in the open with the reason in the pull request), and
+take its entry out of [planned.json](planned.json) in the same change, then
+run
 
     python adapters/stdlib/readme/readme.py write
 
 CI fails if the main README is behind the cards, if a name is both built and
-planned, or if a folder is missing its card or tests.
+planned, if two entries have the same line, if a folder is missing its card
+or tests, or if an add-on breaks a promise while its tests run.
