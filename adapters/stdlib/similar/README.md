@@ -5,6 +5,7 @@ source: box
 added: 2026-10-23
 writes: nothing
 network: none
+tags: no-install, offline, read-only, maintainers
 -->
 # similar
 
@@ -19,7 +20,7 @@ each idea in [planned.json](../../planned.json).
 
 | Command | What it does |
 |---|---|
-| `near` | Up to three entries the kernel's search serves for your words, each with the words it shares. A built one (✅) is something to connect to rather than build again; an idea (🛠) is already on the list, to pick up rather than add twice. |
+| `near` | Up to three entries the kernel's search serves for your words, each with the words it shares. A built one is something to connect to rather than build again; an idea is already on the list, to pick up rather than add twice. Tags count as words too. |
 | `check` | Refuses two entries with the same line, whatever the case or punctuation. CI runs it. An idea that is only near another is shown, never refused: only a person can say two ideas are one. |
 | `new` | Markdown for a pull request: each add-on or idea added, or whose line changed, since REF, with what's near it. If nothing is near, it says so. willow-bot posts this on the pull request. |
 

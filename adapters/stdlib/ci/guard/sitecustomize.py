@@ -24,7 +24,9 @@ and an add-on is held to its card's header:
                              made itself with tempfile
     writes: record           may write the record, only through the kernel
     writes: to               writes only under the path given to --to
-    writes: README.md        writes that one file of the repo
+    writes: README.md        writes that one file of the repo; a pattern,
+                             such as adapters/*/*/README.md, matches one
+                             path segment per segment
                              (several, comma-separated)
 
 and to the rules no card can loosen: it never changes an original (the
@@ -41,6 +43,7 @@ the guard never checks; that is the tests' coverage, and their job.
 
 from __future__ import annotations
 
+import fnmatch
 import json
 import os
 import sys
@@ -69,6 +72,15 @@ _scratch: list[str] = []  # folders and files this process made with tempfile
 
 def under(path: str, root: str) -> bool:
     return path == root or path.startswith(root.rstrip(os.sep) + os.sep)
+
+
+def repo_file(rel: str, pattern: str) -> bool:
+    """A path of the repo against a `writes` file or pattern, segment by
+    segment: `*` never crosses a /."""
+    got, want = rel.split(os.sep), pattern.split("/")
+    return len(got) == len(want) and all(
+        fnmatch.fnmatchcase(g, w) for g, w in zip(got, want)
+    )
 
 
 def real(path, dir_fd=None) -> str | None:
@@ -217,7 +229,9 @@ def judge_write(addon: str, via_kernel: bool, path: str) -> None:
         if "to" in writes:
             return
         breach(addon, f"wrote {path} under --to; its card says writes: {', '.join(sorted(writes)) or 'nothing'}")  # fmt: skip
-    if any(path == os.path.join(ROOT, w) for w in writes):
+    if under(path, ROOT) and any(
+        repo_file(os.path.relpath(path, ROOT), w) for w in writes
+    ):
         return
     if any(under(path, s) for s in _scratch):
         return  # its own scratch, made with tempfile

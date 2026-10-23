@@ -174,3 +174,27 @@ def test_without_a_log_the_guard_does_nothing(repo):
     got = subprocess.run([sys.executable, str(script)], capture_output=True,
                          env=dict(os.environ, PYTHONPATH=str(GUARD)))  # fmt: skip
     assert got.returncode == 0 and (root / "out.txt").exists()
+
+
+def test_writing_a_repo_file_by_pattern_and_only_that(repo):
+    """A `writes` pattern names repo files segment by segment: `*` never
+    crosses a folder."""
+    root, _, _ = repo
+    (root / "adapters" / "stdlib" / "x").mkdir()
+    ok, deeper = (
+        root / "adapters" / "stdlib" / "x" / "README.md",
+        root / "adapters" / "stdlib" / "x" / "y",
+    )
+    deeper.mkdir()
+    script = addon(
+        root,
+        "adapters/*/*/README.md",
+        "none",
+        f"""\
+        open({str(ok)!r}, 'w').write('fine')
+        open({str(deeper / "README.md")!r}, 'w').write('one folder too deep')
+    """,
+    )
+    code, log = run(root, script)
+    assert ok.read_text() == "fine"
+    assert code != 0 and "x/y/README.md" in log

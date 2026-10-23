@@ -2,7 +2,7 @@
 drift from them.
 
 Each test holds one promise in adapters/stdlib/readme/README.md, and each can
-fail: the real README is current, building an add-on is what turns 🛠 into ✅,
+fail: the real README is current, building an add-on is what turns an idea into a built one,
 the draw is the same for the same week and anyone can redo it, only the
 marked sections are written, and an add-on that doesn't hold together is
 refused.
@@ -14,6 +14,7 @@ import importlib.util
 import json
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 import pytest
@@ -47,14 +48,17 @@ The end, by hand.
 
 def card(section="Play", line="A thing.", source="new", added="2026-10-23", **more):
     head = {"section": section, "line": line, "source": source, "added": added,
-            "writes": "nothing", "network": "none", **more}  # fmt: skip
+            "writes": "nothing", "network": "none", "tags": "play, thing", **more}  # fmt: skip
     body = "".join(f"{k}: {v}\n" for k, v in head.items())
     return f"<!-- willow-addon\n{body}-->\n# card\n"
 
 
 @pytest.fixture
 def repo(tmp_path, monkeypatch):
-    """A small repo: one built add-on in each folder, one planned."""
+    """A small repo: one built add-on in each folder, one planned. Made with
+    tempfile, so the guard knows it as this test's scratch, not the repo
+    readme.py's card names."""
+    tmp_path = Path(tempfile.mkdtemp(dir=tmp_path))
     for kind, name, extra in (
         ("stdlib", "alpha", {}),
         ("deps", "beta", {"needs": "somepkg; MIT"}),
@@ -64,7 +68,8 @@ def repo(tmp_path, monkeypatch):
             card(added="2026-10-0" + str(len(name)), **extra)
         )
     planned = [{"name": "gamma", "kind": "stdlib", "section": "Play", "line": "Later.",
-                "source": "box", "writes": "to", "network": "loopback"}]  # fmt: skip
+                "source": "box", "writes": "to", "network": "loopback",
+                "tags": "later"}]  # fmt: skip
     (tmp_path / "adapters" / "planned.json").write_text(json.dumps(planned))
     (tmp_path / "README.md").write_text(PAGE)
     monkeypatch.setattr(rd, "ROOT", tmp_path)
@@ -85,19 +90,23 @@ def test_the_real_readme_is_current():
 
 def test_building_an_add_on_is_what_turns_planned_into_built(repo):
     text = rd.rebuild(PAGE, None)
-    assert "- ✅ [**alpha**](adapters/stdlib/alpha/) 🐍 — A thing. *new*" in text
     assert (
-        "- ✅ [**beta**](adapters/deps/beta/) 📦 [somepkg; MIT] — A thing. *new*"
+        "- [**alpha**](adapters/stdlib/alpha/) — A thing. *new* `play` `thing`" in text
+    )
+    assert (
+        "- [**beta**](adapters/deps/beta/) — A thing. Needs somepkg; MIT. *new* `play` `thing`"
         in text
     )
-    assert "- 🛠 **gamma** 🐍 🏠 this machine only — Later. *box*" in text
+    assert (
+        "- **gamma** (idea) — Later. Reaches this machine only. *box* `later`" in text
+    )
     assert "**2 of 3 built**" in text
     (repo / "adapters" / "stdlib" / "gamma").mkdir()  # built, and still planned
     (repo / "adapters" / "stdlib" / "gamma" / "README.md").write_text(card())
     with pytest.raises(rd.Refused, match="still in planned.json"):
         rd.rebuild(PAGE, None)
     (repo / "adapters" / "planned.json").write_text("[]")
-    assert "- ✅ [**gamma**](adapters/stdlib/gamma/)" in rd.rebuild(PAGE, None)
+    assert "- [**gamma**](adapters/stdlib/gamma/)" in rd.rebuild(PAGE, None)
 
 
 def test_only_the_marked_sections_are_written(repo):
@@ -145,6 +154,14 @@ def test_the_draw_is_the_weeks_and_anyone_can_redo_it(repo):
         ),
         ("stdlib/delta", card().replace("network: none\n", ""), "needs network"),
         ("stdlib/Delta", card(), "lowercase words joined by -"),
+        ("stdlib/delta", card(tags="a, b, c, d, e, f"), "tags are up to 5"),
+        ("stdlib/delta", card(tags="Has Caps"), "tags are up to 5"),
+        ("stdlib/delta", card(tags="a, a"), "tags are up to 5"),
+        (
+            "stdlib/delta",
+            card().replace("tags: play, thing\n", ""),
+            "run readme.py tags",
+        ),
         ("stdlib/alpha2", "", "has no README.md card"),
     ],
 )
@@ -166,3 +183,20 @@ def test_a_readme_missing_a_section_is_refused(repo):
         rd.rebuild(
             PAGE.replace("<!-- willow:newest -->\n<!-- /willow:newest -->\n", ""), None
         )
+
+
+def test_tags_fills_only_what_is_missing_and_keeps_what_a_person_wrote(repo):
+    """Auto-populated, never overwritten: the card's tags are its author's."""
+    card_file = repo / "adapters" / "stdlib" / "alpha" / "README.md"
+    card_file.write_text(card_file.read_text().replace("tags: play, thing\n", ""))
+    beta = repo / "adapters" / "deps" / "beta" / "README.md"
+    planned = repo / "adapters" / "planned.json"
+    planned.write_text(planned.read_text().replace(', "tags": "later"', ""))
+    before = beta.read_text()
+    assert rd.main(["tags"]) == 0
+    assert "tags: no-install, offline, read-only, play\n-->" in card_file.read_text()
+    assert beta.read_text() == before  # a person's tags, untouched
+    assert json.loads(planned.read_text())[0]["tags"] == (
+        "no-install, this-machine, writes-output, play"
+    )
+    assert rd.main(["tags"]) == 0 and beta.read_text() == before  # twice: no change

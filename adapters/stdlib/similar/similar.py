@@ -56,7 +56,7 @@ def entries() -> list[dict]:
 
 def text_of(a: dict) -> str:
     """What is searched for an entry: its line, and a built one's card."""
-    out = a["line"]
+    out = a["line"] + "\n" + a["tags"].replace(",", " ")
     if a["built"]:
         card = (ROOT / a["path"] / "README.md").read_text(encoding="utf-8")
         out += "\n\n" + card.split("-->", 1)[1]
@@ -103,7 +103,7 @@ def near(every: list[dict], words: str, leave_out: str | None = None) -> list[tu
 def line_of(a: dict, shared: list[str]) -> str:
     what = "built: connect to it" if a["built"] else "an idea already on the list"
     name = f"[**{a['name']}**]({a['path']})" if a["built"] else f"**{a['name']}**"
-    return f"- {'✅' if a['built'] else '🛠'} {name}, {what}. {a['line']} (shares: {', '.join(shared)})"  # fmt: skip
+    return f"- {name}, {what}. {a['line']} (shares: {', '.join(shared)})"
 
 
 def duplicates(every: list[dict]) -> list[tuple[str, str]]:

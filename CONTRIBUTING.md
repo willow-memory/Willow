@@ -75,12 +75,15 @@ that adds one entry to [adapters/planned.json](adapters/planned.json):
  "line": "Bank CSV and OFX statements as dated lines, with spending by month.",
  "source": "new",
  "writes": "to",
- "network": "none"
+ "network": "none",
+ "tags": "no-install, offline, writes-output, file-reader, money"
 }
 ```
 
 - `kind` is `stdlib` if it needs nothing installed, else `deps`, with a
   `needs` line naming each install and its licence.
+- `tags` are up to five; leave them out and `readme.py tags` fills in four
+  from the rest, or write your own.
 - `writes` and `network` are its promises, set out in
   [adapters/README.md](adapters/README.md#its-promises-checked). Whoever
   builds it is held to them.

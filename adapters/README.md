@@ -49,6 +49,7 @@ The card opens with a header that the main README's list is generated from:
     added: 2026-10-22
     writes: nothing
     network: none
+    tags: no-install, offline, read-only, tracking
     -->
 
 `section` is one of the list's sections, `line` is one sentence, `source` is
@@ -56,6 +57,17 @@ The card opens with a header that the main README's list is generated from:
 kernel has) or `new`, and `added` is the date it was built. An add-on in
 `deps/` adds `needs` (what to install, and its licence) and `floor` (its
 floor versions, and why when above the rule's).
+
+`tags` are up to five, lowercase words joined by -, for finding it. When a
+card or idea has none,
+
+    python adapters/stdlib/readme/readme.py tags
+
+fills in four from what the header already says (an install or none, where
+it goes online, what it writes, its section), leaving the fifth for you. It
+never touches tags that are there: change them as you like. Tags are for
+finding things, never a promise: what it needs and where it goes are said
+from `needs` and `network`, whatever the tags say.
 
 ## Its promises, checked
 

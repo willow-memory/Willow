@@ -5,6 +5,7 @@ source: bot
 added: 2026-10-23
 writes: record
 network: none
+tags: no-install, offline, records, search
 -->
 # surprise
 
