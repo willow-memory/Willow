@@ -139,6 +139,18 @@ def test_the_repos_github_folder_holds():
             "workflows/tests.yml/badge.svg",
             "CI badge",
         ),
+        (
+            ".github/workflows/ci.yml",
+            " && github.event.pull_request.user.login != 'dependabot[bot]'",
+            "",
+            "changelog job",
+        ),
+        (
+            ".github/workflows/ci.yml",
+            "login != 'dependabot[bot]'",
+            "login != 'someone'",
+            "changelog job",
+        ),
     ],
 )
 def test_each_way_github_can_drift_is_caught(

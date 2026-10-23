@@ -8,6 +8,12 @@ says how). The first was v0.1.0.
 
 ## Unreleased
 
+### Changed
+
+- The changelog check skips Dependabot's pull requests, which can't write
+  an entry; its updates aren't listed. The GitHub add-on's check fails if
+  it skips anyone else. (#9)
+
 ## v0.1.0 · 2026-10-23
 
 The first release: this section, and the two pull requests below it from
