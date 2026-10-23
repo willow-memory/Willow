@@ -1,4 +1,4 @@
-"""The readings adapter: three hints beside a kernel bite, never in the kernel.
+"""The readings adapter: two hints beside a kernel bite, never in the kernel.
 
 Its readings are held to the Odile demo's shapes (demo/odile/STRIP.md); the
 kernel's own tests and vectors know nothing of them, and the last test here
