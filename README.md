@@ -338,11 +338,14 @@ words and missed the rest. The full results, misses included, are in
 
 ## How it's verified
 
-- **One script runs every check.** `python ci.py` runs lint, the tests, every
-  port and every demo; `python ci.py tests` (or `lint`, `ports`, `demo`) runs
-  one part. CI runs the same script on every push, with the tests on Python
-  3.9 through 3.14, so a green run on your machine means what a green run in
-  CI means. A missing tool fails its part rather than skipping it.
+- **CI is built on the kernel.** `python adapters/ci/ci.py run` runs every
+  check (lint, the tests, every port, every demo) and writes each one as a
+  verdict row on a kernel record, which `verify` then checks like any other.
+  A tool that isn't installed is recorded as unreachable, never as a pass.
+  It is deterministic: the same files give the same record, byte for byte.
+  CI runs the same script on every push, with the tests on Python 3.9 through
+  3.14, and keeps each job's record as an artifact. The verdicts are draft;
+  merging is the person's call. See [adapters/ci](adapters/ci/).
 - **Four implementations, one behaviour.** `vectors/gen.py` reads 4,463 cases
   out of `kernel.py`, covering canonical JSON, word splitting, HTML text,
   ranking, dates, word forms and every refusal. The Java, TypeScript and C#
@@ -374,6 +377,10 @@ willow/
 ├── README.md                 this file
 ├── adapters/                 add-ons built on top of kernel.py
 │   ├── README.md             the rule every add-on follows
+│   ├── ci/
+│   │   ├── ci.py             this repo's checks as verdict rows on a kernel record
+│   │   ├── test_ci.py        its tests: the same record every run, and every state
+│   │   └── README.md         its gates, states and exit codes
 │   └── readings/
 │       ├── readings.py       notes beside an answer: numbers over time, dates gone by
 │       ├── test_readings.py  its tests
@@ -415,9 +422,8 @@ willow/
 │       ├── PLANTED.md
 │       ├── QUESTIONS.md
 │       └── STRIP.md
-├── ci.py                     every check, in one script: lint, tests, ports, demo
 ├── .github/workflows/
-│   └── ci.yml                installs the tools and runs ci.py, with tests on Python 3.9 to 3.14
+│   └── ci.yml                runs adapters/ci/ci.py one part a job, tests on Python 3.9 to 3.14
 ├── .gitignore                generated files and build output
 ├── ruff.toml                 lint settings
 └── LICENSE                   Apache-2.0

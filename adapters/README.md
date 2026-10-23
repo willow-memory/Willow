@@ -22,4 +22,5 @@ runs.
 
 | Adapter | What it adds |
 |---|---|
+| [ci/](ci/) | this repo's checks as verdict rows on a kernel record, the same every run |
 | [readings/](readings/) | two hints beside a bite: numbers over time, a date gone by |

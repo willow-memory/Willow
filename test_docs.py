@@ -130,6 +130,10 @@ ELSEWHERE = {
         "odile-record/": "made by the first-five-minutes walkthrough",
         "odile.key": "made by the first-five-minutes walkthrough",
     },
+    "adapters/ci/README.md": {
+        ".ci-record/": "made by `ci.py run`, ignored by git",
+        ".ci-record.key": "made by `ci.py run`, ignored by git",
+    },
     "vectors/README.md": {
         "foundation/": "willow-bot",
         "foundation/gen.py": "willow-bot",
@@ -315,8 +319,10 @@ def test_every_port_folder_is_one_compare_runs_and_ci_requires():
     )
     folders = {p.name for p in (ROOT / "ports").iterdir() if p.is_dir()}
     assert folders == run, f"ports/: {sorted(folders)}; compare.py runs: {sorted(run)}"
-    ci = (ROOT / "ci.py").read_text(encoding="utf-8")
+    ci = (ROOT / "adapters" / "ci" / "ci.py").read_text(encoding="utf-8")
     held = set(
         re.findall(r'"(\w+)"', re.search(r"^PORTS = \((.*?)\)", ci, re.M).group(1))
     )
-    assert folders == held, f"ports/: {sorted(folders)}; ci.py requires: {sorted(held)}"
+    assert folders == held, (
+        f"ports/: {sorted(folders)}; adapters/ci/ci.py runs: {sorted(held)}"
+    )
