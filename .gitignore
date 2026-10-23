@@ -1,0 +1,12 @@
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+# made by each demo's make_life.py, the same bytes every run
+demo/*/life/
+# port builds
+ports/ts/node_modules/
+ports/ts/dist/
+ports/csharp/obj/
+ports/csharp/bin/
+ports/csharp/out/
+out/
