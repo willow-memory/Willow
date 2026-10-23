@@ -24,7 +24,7 @@ def stale(b: Path) -> subprocess.CompletedProcess:
                           capture_output=True, text=True)  # fmt: skip
 
 
-def approved(tmp_path: Path) -> tuple[Path, Path]:
+def approved(tmp_path: Path, data: str = "Six hours.") -> tuple[Path, Path]:
     pile = tmp_path / "pile"
     pile.mkdir()
     (pile / "garden.md").write_text(
@@ -36,7 +36,7 @@ def approved(tmp_path: Path) -> tuple[Path, Path]:
     got = json.loads(
         k("bite", "--box", str(b), *NOW, "how much sun do tomatoes want").stdout
     )
-    row = {"path": "sun.md", "data": "Six hours.", "cites": [got["served"][0]["id"]],
+    row = {"path": "sun.md", "data": data, "cites": [got["served"][0]["id"]],
            "claim": "garden.md"}  # fmt: skip
     (tmp_path / "rows.jsonl").write_text(json.dumps(row) + "\n")
     k("propose", "--box", str(b), "--file", str(tmp_path / "rows.jsonl"), *NOW)
@@ -92,3 +92,14 @@ def test_a_record_that_doesnt_verify_is_refused(tmp_path):
         path.read_bytes().replace(b'"verdict":"pass"', b'"verdict":"fail"', 1)
     )
     assert stale(b).returncode == 2
+
+
+def test_a_long_answer_is_shown_cut_and_its_subject_shortened(tmp_path):
+    long = "Six hours of direct sun, more in a cool summer, and never less than four."
+    b, _ = approved(tmp_path, long)
+    line = stale(b).stdout.splitlines()[0]
+    assert line.startswith("holds   proposal:") and line.split("…")[0].endswith(
+        line.split()[1][:21]
+    )
+    assert len(line.split()[1].rstrip("…")) == 21
+    assert line.endswith(repr(long[:57] + "..."))

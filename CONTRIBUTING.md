@@ -37,6 +37,10 @@ break that thing on purpose and watch the test go red. A test that can't
 fail, or that skips quietly when something is missing, looks like a pass and
 checks nothing. If something needed isn't installed, refuse with a message
 that names it.
+CI checks this for you: `mutants` breaks each add-on's code a few ways and
+fails when its tests don't notice. If a break truly changes nothing a person
+could see, list it in `adapters/stdlib/mutants/accepted.json` with the reason;
+the maintainer decides whether it stands.
 
 **Say what's missing.** "Nothing found", "nothing there" and "couldn't
 reach it" are three different answers, and an add-on reports which one it

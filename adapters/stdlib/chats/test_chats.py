@@ -308,3 +308,27 @@ def test_the_kernel_serves_a_message_line(tmp_path):
     assert any(
         "2024-12-03 08:10  Dev Raman: I can do 600 tonight" in s["text"] for s in served
     )
+
+
+def test_json_whose_messages_carry_no_dates_is_not_a_chat_and_not_counted(tmp_path):
+    src, dst = tmp_path / "src", tmp_path / "dst"
+    src.mkdir()
+    (src / "settings.json").write_text('{"messages": [{"text": "hello"}]}')
+    (src / "chat.txt").write_text("[13/12/2024, 08:10:00] Dev Raman: I can do 600\n")
+    got = mirror(src, dst)
+    assert got.returncode == 0 and got.stdout.strip().endswith("; skipped 0")
+    assert not (dst / "settings.json.txt").exists()
+
+
+def test_a_telegram_export_not_in_utf8_is_skipped_and_counted(tmp_path):
+    src, dst = tmp_path / "src", tmp_path / "dst"
+    src.mkdir()
+    (src / "result.json").write_bytes(
+        '{"messages": [{"date": "2024-12-13T08:10:00", "from": "Andr\u00e9", "text": "caf\u00e9"}]}'.encode(
+            "latin-1"
+        )
+    )
+    (src / "chat.txt").write_text("[13/12/2024, 08:10:00] Dev Raman: I can do 600\n")
+    got = mirror(src, dst)
+    assert got.stdout.strip().endswith("; skipped 1")
+    assert "result.json: not UTF-8" in got.stderr

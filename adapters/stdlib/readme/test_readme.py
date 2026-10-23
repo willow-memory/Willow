@@ -200,3 +200,10 @@ def test_tags_fills_only_what_is_missing_and_keeps_what_a_person_wrote(repo):
         "no-install, this-machine, writes-output, play"
     )
     assert rd.main(["tags"]) == 0 and beta.read_text() == before  # twice: no change
+
+
+def test_check_keeps_the_week_written_whatever_week_it_is(repo):
+    """`write --week` sets the draw's week; `check` never moves it to today's."""
+    assert rd.main(["write", "--week", "2027-W01"]) == 0
+    assert "<!-- willow:pick week=2027-W01 -->" in (repo / "README.md").read_text()
+    assert rd.main(["check"]) == 0

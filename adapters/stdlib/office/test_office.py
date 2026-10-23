@@ -334,3 +334,21 @@ def test_bite_finds_a_word_only_inside_a_docx(tmp_path):
     doc = json.loads(got.stdout)
     assert doc["state"] == "populated"
     assert any(s["where"].startswith("reports/q3.docx.txt") for s in doc["served"])
+
+
+def test_xlsx_column_aa_comes_straight_after_z(tmp_path):
+    folder = tmp_path / "in"
+    workbook = (f'{HEAD}<workbook xmlns="{SS_NS}" xmlns:r="{R_NS}"><sheets>'
+                '<sheet name="Wide" sheetId="1" r:id="rId1"/></sheets></workbook>')  # fmt: skip
+    rels = (f'{HEAD}<Relationships xmlns="{PKG_NS}">'
+            '<Relationship Id="rId1" Target="worksheets/sheet1.xml"/></Relationships>')  # fmt: skip
+    sheet = (f'{HEAD}<worksheet xmlns="{SS_NS}"><sheetData><row r="1">'
+             '<c r="Z1" t="inlineStr"><is><t>z</t></is></c>'
+             '<c r="AA1" t="inlineStr"><is><t>aa</t></is></c>'
+             "</row></sheetData></worksheet>")  # fmt: skip
+    zip_file(folder / "wide.xlsx", {"xl/workbook.xml": workbook,
+             "xl/_rels/workbook.xml.rels": rels, "xl/worksheets/sheet1.xml": sheet})  # fmt: skip
+    out = tmp_path / "out"
+    assert mirror(folder, out).returncode == 0
+    row = (out / "wide.xlsx.txt").read_text(encoding="utf-8").splitlines()[-1]
+    assert row.split(" | ")[25:] == ["z", "aa"]  # columns 26 and 27

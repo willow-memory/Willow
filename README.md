@@ -165,7 +165,7 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`████████░░░░░░░░░░░░` **24 of 57 built** · 40 need no install · 17 need one
+`█████████░░░░░░░░░░░` **25 of 58 built** · 41 need no install · 17 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
@@ -178,7 +178,7 @@ or `writes-output`; its section), and any the card's author adds or changes.
 | Assistants | 1 | 2 | 0 | 3 |
 | Ways to use it | 1 | 2 | 2 | 1 |
 | Play | 0 | 3 | 2 | 1 |
-| For maintainers | 3 | 0 | 3 | 0 |
+| For maintainers | 4 | 0 | 4 | 0 |
 <!-- /willow:pools -->
 
 ### Newest
@@ -194,9 +194,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ### Add-on of the week
 
 <!-- willow:pick week=2026-W43 -->
-**[pdf](adapters/deps/pdf/)** — Text out of PDFs.
+**[privacy](adapters/stdlib/privacy/)** — Hides phone numbers, emails, card, bank and ID numbers, and API keys in what a question prints, and says what it hid.
 
-*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 24 built add-ons in name order.*
+*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 25 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -292,6 +292,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 ### For maintainers
 
 - [**ci**](adapters/stdlib/ci/) — This repo's checks as verdict rows on a kernel record, the same every run. Goes online: PyPI, to read each dependency floor's release date. *box* `no-install` `online` `records` `maintainers`
+- [**mutants**](adapters/stdlib/mutants/) — Breaks each add-on's code on purpose and checks its tests notice. *new* `no-install` `offline` `read-only` `maintainers`
 - [**readme**](adapters/stdlib/readme/) — Builds this README's generated sections from the add-ons' own cards. *new* `no-install` `offline` `writes-output` `maintainers`
 - [**similar**](adapters/stdlib/similar/) — What's already on the add-on list near a new idea, by the kernel's own search. *box* `no-install` `offline` `read-only` `maintainers`
 <!-- /willow:list -->
@@ -472,6 +473,9 @@ Each is a test that fails if it stops being true.
 | Never accepts a forged approval | `kernel.py test`: a seal with the right shape and a re-hashed chain is still rejected |
 | Never writes past a change | `kernel.py test`: one edited field in one past line, and every command refuses |
 | Same answer every run | the ranking is checked under different hash seeds |
+| Every add-on keeps its card's promises: what it writes, where it goes online | the guard watches every process an add-on's tests start, and fails a breach even one the add-on catches and hides |
+| Every add-on's tests can fail | each add-on's code is broken on purpose a few ways (`mutants`); a break its tests miss fails CI, unless it's listed as harmless with the reason |
+| Every add-on refuses a bad command line, and every reader keeps the same contract | one test holds them all to it (`adapters/stdlib/ci/test_contract.py`) |
 
 ## Where it falls short
 
@@ -537,6 +541,7 @@ willow/
 ├── CODE_OF_CONDUCT.md        how we treat each other
 ├── SECURITY.md               what counts as a security problem, and how to report it privately
 ├── SUPPORT.md                where to ask, and where to report
+├── CHANGELOG.md              what changed, by pull request
 ├── adapters/                 add-ons built on top of kernel.py
 │   ├── README.md             the rules every add-on follows
 │   ├── planned.json          the add-ons not built yet, as this README lists them
@@ -567,6 +572,7 @@ willow/
 │   │   │   │   └── sitecustomize.py  holds each add-on to its card while its tests run
 │   │   │   ├── test_ci.py    its tests: the same record every run, and every state
 │   │   │   ├── test_guard.py the guard's tests: each broken promise caught
+│   │   │   ├── test_contract.py  what every add-on promises alike, held for all of them
 │   │   │   └── README.md     its card: gates, states, the guard and exit codes
 │   │   ├── coming-up/
 │   │   │   ├── coming_up.py  dates in your files in the next few days
@@ -579,6 +585,11 @@ willow/
 │   │   ├── mail/
 │   │   │   ├── mail.py       .eml and .mbox, with sender, date and subject
 │   │   │   ├── test_mail.py
+│   │   │   └── README.md
+│   │   ├── mutants/
+│   │   │   ├── mutants.py    breaks each add-on's code on purpose and checks its tests notice
+│   │   │   ├── accepted.json the breaks that change nothing a person could notice, each with why
+│   │   │   ├── test_mutants.py
 │   │   │   └── README.md
 │   │   ├── notes/
 │   │   │   ├── notes.py      Obsidian and Logseq vaults, links and backlinks kept

@@ -22,6 +22,7 @@
 ## Before you open it
 
 - [ ] The tests can fail: I broke the thing on purpose and watched them go red
+      (`python adapters/stdlib/mutants/mutants.py run NAME` does it for you)
 - [ ] A new file is in the README's tree; a new add-on has its card and tests
 - [ ] A built idea's entry is out of `adapters/planned.json` in this change
 - [ ] `python adapters/stdlib/readme/readme.py write` was run, not hand edits

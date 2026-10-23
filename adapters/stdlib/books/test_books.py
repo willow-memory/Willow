@@ -308,3 +308,17 @@ def test_kernel_serves_a_highlight_from_the_mirror(tmp_path):
     got = run(KERNEL, "bite", "--box", box, *NOW, "salt lamps burning")
     assert got.returncode == 0, got.stderr
     assert "Salt keeps the lamps burning." in got.stdout
+
+
+def test_an_epub_naming_no_book_inside_is_skipped_and_counted(tmp_path):
+    """container.xml with no rootfile: skipped like any unreadable file, never
+    a crash that takes the other books down with it."""
+    folder, to = tmp_path / "f", tmp_path / "m"
+    folder.mkdir()
+    make_library(folder)
+    with zipfile.ZipFile(folder / "empty.epub", "w") as z:
+        z.writestr("META-INF/container.xml", '<container xmlns="urn:oasis:names:tc:'
+                   'opendocument:xmlns:container"><rootfiles/></container>')  # fmt: skip
+    got = mirror(folder, to)
+    assert got.returncode == 0, got.stderr
+    assert got.stdout.strip() == f"wrote 2 files to {to}; skipped 1"

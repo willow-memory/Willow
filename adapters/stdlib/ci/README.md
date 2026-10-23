@@ -13,7 +13,7 @@ This repo's checks as a kernel record. Each check runs one fixed command and
 is written as one `verdict` row through the kernel's own `append`, so the CI
 record is hash-chained like any other and the kernel's `verify` checks it.
 
-    python adapters/stdlib/ci/ci.py run    [lint|tests|ports|demo|deps ...] [--box DIR]
+    python adapters/stdlib/ci/ci.py run    [lint|tests|ports|demo|deps|mutants ...] [--box DIR]
     python adapters/stdlib/ci/ci.py verify [--box DIR]
     python adapters/stdlib/ci/ci.py show   [--box DIR]
 
@@ -30,6 +30,7 @@ record in the runner's temp folder.
 | ports | `ports:java`, `ports:ts`, `ports:csharp`: `vectors/compare.py`, one port at a time |
 | demo | `demo:hollis`, `demo:odile`, `demo:teodora`: each person's files made in a temporary folder and held to their `demo/*/PLANTED.md` |
 | deps | `deps:mcp`, `deps:mcp@floor`, `deps:pdf`, `deps:pdf@floor`, two per add-on in `adapters/deps/`: its tests, under the guard, in a fresh virtual environment with only its own pinned requirements (then its floor's) and pytest; an install that can't be done is unreachable. Then `deps:floors`: each floor against the floor rule, by PyPI's upload dates; PyPI out of reach is unreachable |
+| mutants | `mutants:again`, `mutants:all`, … one per stdlib add-on: [mutants.py](../mutants/) breaks its code a few ways and runs its tests against each break; a break they miss fails, unless [accepted.json](../mutants/accepted.json) gives the reason it's harmless |
 
 Each verdict row holds the gate, its state, a hash of every file in the repo
 it ran on, a hash of what the command printed, the Python version, and a
@@ -46,6 +47,13 @@ and none failing; 2 a gate failing, or a record that doesn't verify.
 **Deterministic:** every row's time is the commit's, and what changes between
 runs (durations, temporary folders, where the repo sits) is taken out before
 the output is hashed. The same files give the same record, byte for byte.
+
+**The contract:** [test_contract.py](test_contract.py) holds every add-on to
+what they all promise alike. Run with nothing, or with one argument too many
+against a real box, an add-on refuses (exit 2) and names itself; every reader
+keeps the readers' contract (the summary line, the same bytes twice,
+originals untouched, hidden files unread, 42 for nothing to read, refusals
+that write nothing). A new add-on with a command line has to be listed there.
 
 **The guard:** the add-ons' tests, and each deps add-on's, run with
 [guard/sitecustomize.py](guard/sitecustomize.py) on `PYTHONPATH`, so it is

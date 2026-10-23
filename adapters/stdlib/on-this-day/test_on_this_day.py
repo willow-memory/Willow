@@ -64,3 +64,22 @@ def test_nothing_on_this_day(tmp_path):
         *NOW,
     )
     assert run(str(HERE / "on_this_day.py"), "--box", str(b), *NOW).returncode == 42
+
+
+def test_nothing_says_which_day_and_a_long_line_is_cut_at_120(tmp_path):
+    pile = tmp_path / "pile"
+    pile.mkdir()
+    (pile / "a.md").write_text("2024-01-01 new year\n")
+    b = tmp_path / "box"
+    run(str(KERNEL), "init", "--box", str(b), "--pile", str(pile), "--key",
+        str(tmp_path / "k"), *NOW)  # fmt: skip
+    got = run(str(HERE / "on_this_day.py"), "--box", str(b), *NOW)
+    assert (
+        got.stdout.strip()
+        == "Nothing in your folder is dated 10-23 in an earlier year."
+    )
+    (pile / "a.md").write_text("2025-10-23 " + "x" * 200 + "\n")
+    line = run(str(HERE / "on_this_day.py"), "--box", str(b), *NOW).stdout.splitlines()[
+        0
+    ]
+    assert line.endswith("2025-10-23 " + "x" * 109)  # the line, 120 characters of it

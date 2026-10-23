@@ -4,7 +4,7 @@
     python adapters/stdlib/ci/ci.py verify [--box DIR]
     python adapters/stdlib/ci/ci.py show   [--box DIR]
 
-PART is lint, tests, ports, demo or deps; none means all five. --box defaults to
+PART is lint, tests, ports, demo, deps or mutants; none means all six. --box defaults to
 .ci-record (ignored by git), and its key to the same name plus `.key`, beside
 it, never in it.
 
@@ -330,6 +330,15 @@ def deps_add_ons() -> list[str]:
     )
 
 
+def mutant_targets() -> list[str]:
+    """The stdlib add-ons mutants.py breaks: every one but itself."""
+    return sorted(
+        p.name
+        for p in (ROOT / "adapters" / "stdlib").iterdir()
+        if p.is_dir() and not p.name.startswith(("_", ".")) and p.name != "mutants"
+    )
+
+
 def people() -> list[str]:
     return sorted(p.parent.name for p in (ROOT / "demo").glob("*/make_life.py"))
 
@@ -365,10 +374,14 @@ def gates() -> list[tuple[str, str, object]]:
         out.append(("deps", f"deps:{name}@floor",
                     deps_add_on(name, "requirements-floor.txt")))  # fmt: skip
     out.append(("deps", "deps:floors", floors))
+    for name in mutant_targets():
+        how = command(PY, "adapters/stdlib/mutants/mutants.py", "run", name,
+                      needs=lambda: missing_module("pytest"))  # fmt: skip
+        out.append(("mutants", f"mutants:{name}", how))
     return out
 
 
-PARTS = ("lint", "tests", "ports", "demo", "deps")
+PARTS = ("lint", "tests", "ports", "demo", "deps", "mutants")
 
 
 # ── the record ───────────────────────────────────────────────────────────────

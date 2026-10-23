@@ -1,0 +1,33 @@
+{
+  "again": {
+    "1b9ac0201051": "Only bite rows carry a bite_key, so choosing rows by kind or by key picks the same rows."
+  },
+  "all": {
+    "7ec175d12b0a": "EVERY is a cap no folder reaches; 10**9 and 10**10 serve the same passages."
+  },
+  "books": {
+    "059f5e759b3b": "Kindle always writes a blank line after a clipping's meta line; starting one line later skips only that blank."
+  },
+  "coming-up": {
+    "059bb44076f5": "The kernel's dates are exactly eight characters, so d[6:9] is d[6:8]."
+  },
+  "export": {
+    "2edb79a5366b": "Days are grouped by a key cut from the same timestamp as the day shown; one more character groups the same rows."
+  },
+  "notes": {
+    "00d9493a4212": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
+  },
+  "office": {
+    "04697c92e4ab": "The promise is that a part is bounded, not its exact size: 64 or 65 MiB refuses the same zip bombs."
+  },
+  "on-this-day": {
+    "3f174bd01a95": "today is eight characters, so today[4:9] is today[4:8].",
+    "38b9c5553e24": "A year is four digits: comparing d[:5] with this year orders earlier, same and later years the same way."
+  },
+  "starter-words": {
+    "2f4df3ac7eca": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
+  },
+  "todo": {
+    "05759b3d5759": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
+  }
+}
