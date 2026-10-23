@@ -3,6 +3,9 @@ section: Keeping track
 line: TODO, FIXME and "need to" lines across the folder, oldest first.
 source: box
 added: 2026-10-23
+writes: nothing
+network: none
+tags: no-install, offline, read-only, tracking
 -->
 # todo
 

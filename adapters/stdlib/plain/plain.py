@@ -58,7 +58,22 @@ def sentences(doc: dict) -> str:
     return "\n\n".join(out)
 
 
+def well_formed(argv: list[str]) -> bool:
+    """`--box DIR [--now TS] "your words"`, nothing more: a command line the
+    kernel would refuse is refused here, with this add-on's own usage."""
+    opts, words, it = {}, [], iter(argv)
+    for a in it:
+        if a in ("--box", "--now"):
+            opts[a] = next(it, "")
+        else:
+            words.append(a)
+    return bool(opts.get("--box")) and len(words) == 1 and not words[0].startswith("--")
+
+
 def bite(argv: list[str]) -> int:
+    if not well_formed(argv):
+        print(__doc__.split("\n\n")[1], file=sys.stderr)
+        return kernel.REFUSED
     got = io.StringIO()
     with contextlib.redirect_stdout(got):
         code = kernel.main(["bite", *argv])

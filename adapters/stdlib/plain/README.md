@@ -3,6 +3,9 @@ section: Ways to use it
 line: Answers as sentences instead of JSON, each with its file and line.
 source: new
 added: 2026-10-23
+writes: record
+network: none
+tags: no-install, offline, records, interface
 -->
 # plain
 

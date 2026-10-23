@@ -1,0 +1,5 @@
+{
+  "name": "GitHub",
+  "label": "#{n}",
+  "titles": ["\\(#(\\d+)\\)$", "^Merge pull request #(\\d+) "]
+}

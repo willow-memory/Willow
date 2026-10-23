@@ -3,6 +3,9 @@ section: Reading more kinds of files
 line: .ics events and .vcf contacts as dated lines.
 source: new
 added: 2026-10-23
+writes: to
+network: none
+tags: no-install, offline, writes-output, file-reader
 -->
 # calendar
 

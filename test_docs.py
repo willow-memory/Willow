@@ -1,7 +1,8 @@
 """The docs say what the repo holds, and the repo holds what the docs say.
 
-- README.md's tree under "What's in this repo" lists every file in the repo,
-  and nothing that isn't there.
+- FILES.md's tree lists every file in the repo, and nothing that isn't
+  there; README.md's tree under "What's in this repo" lists exactly the
+  repo's top level.
 - Every path a doc names, as a link or in backticks, exists: from the doc's
   own folder or the repo root. A path that lives somewhere else (another
   repo, a record folder the walkthrough makes) is listed in ELSEWHERE with
@@ -19,6 +20,7 @@ file added without a line in the tree fails here before it is committed.
 from __future__ import annotations
 
 import fnmatch
+import importlib.util
 import json
 import re
 import shutil
@@ -30,6 +32,7 @@ import pytest
 
 ROOT = Path(__file__).resolve().parent
 README = ROOT / "README.md"
+FILES = ROOT / "FILES.md"
 
 
 def repo_files() -> set[str]:
@@ -64,9 +67,10 @@ def section(text: str, heading: str) -> str:
 ENTRY = re.compile(r"^((?:│   |    )*)(├── |└── )(\S+)")
 
 
-def tree() -> tuple[set[str], set[str]]:
-    """(files, folders) README.md's tree lists, as paths from the repo root."""
-    block = section(README.read_text(encoding="utf-8"), "## What's in this repo")
+def tree(doc: Path = FILES, heading: str = "# Every file") -> tuple[set[str], set[str]]:
+    """(files, folders) a doc's tree lists, as paths from the repo root:
+    FILES.md's, every file, unless the README's top level is asked for."""
+    block = section(doc.read_text(encoding="utf-8"), heading)
     lines = block.split("```")[1].strip("\n").splitlines()
     assert lines[0] == "willow/", "the tree starts at willow/"
     files: set[str] = set()
@@ -100,8 +104,21 @@ def test_the_tree_lists_every_file_and_nothing_else():
     actual = repo_files()
     missing, extra = sorted(actual - listed), sorted(listed - actual)
     assert not missing and not extra, (
-        f"README.md's tree is out of date.\n  in the repo, not the tree: {missing}"
+        f"FILES.md's tree is out of date.\n  in the repo, not the tree: {missing}"
         f"\n  in the tree, not the repo: {extra}"
+    )
+
+
+def test_the_readmes_tree_is_the_repos_top_level():
+    """The front page shows the top: every file and folder at the root, each
+    once, and nothing deeper."""
+    files, folders = tree(README, "## What's in this repo")
+    actual = repo_files()
+    top_files = {f for f in actual if "/" not in f}
+    top_folders = {f.split("/")[0] for f in actual if "/" in f}
+    assert files == top_files and folders == top_folders, (
+        f"README.md's top-level tree is out of date: files {sorted(files ^ top_files)}, "
+        f"folders {sorted(folders ^ top_folders)}"
     )
 
 
@@ -124,8 +141,10 @@ FILE = re.compile(
 #: where it lives. An entry its doc no longer names fails too, so this list
 #: can't go stale.
 ELSEWHERE = {
-    "README.md": {
-        "dad/": "in Odile's generated files (test_odiles_files_are_what_the_readme_says)",
+    "docs/how-it-works.md": {
+        "dad/": "in Odile's generated files (test_odiles_files_are_what_the_docs_say)",
+    },
+    "docs/tour.md": {
         "hives/2026.txt": "in Odile's generated files (the same test)",
         "odile-record/": "made by the first-five-minutes walkthrough",
         "odile.key": "made by the first-five-minutes walkthrough",
@@ -303,16 +322,17 @@ def test_the_case_count_is_cases_jsons():
 
 
 def test_the_kernels_length_is_what_the_tree_says():
-    said = re.search(
-        r"kernel\.py\s+the whole program \(about ([\d,]+) lines\)", README.read_text()
-    )
     lines = len((ROOT / "kernel.py").read_text(encoding="utf-8").splitlines())
-    assert said and number(said.group(1)) == round(lines, -1), (
-        f"kernel.py is {lines} lines; the tree says about {said and said.group(1)}"
-    )
+    for doc in (README, FILES):
+        said = re.search(
+            r"kernel\.py\s+the whole program \(about ([\d,]+) lines\)", doc.read_text()
+        )
+        assert said and number(said.group(1)) == round(lines, -1), (
+            f"kernel.py is {lines} lines; {doc.name} says about {said and said.group(1)}"
+        )
 
 
-def test_odiles_files_are_what_the_readme_says(tmp_path):
+def test_odiles_files_are_what_the_docs_say(tmp_path):
     """Her files are made in a copy of her folder, never in the repo's."""
     shutil.copytree(ROOT / "demo" / "odile", tmp_path / "odile")
     made = subprocess.run(
@@ -327,11 +347,14 @@ def test_odiles_files_are_what_the_readme_says(tmp_path):
     import kernel
 
     paragraphs = len(kernel.chunks(life))
-    text = README.read_text(encoding="utf-8")
+    text = "\n".join(
+        (ROOT / "docs" / f).read_text(encoding="utf-8")
+        for f in ("tour.md", "how-it-works.md")
+    )
     m = re.search(
         r"On Odile's ([\d,]+) files \(([\d,]+) KB, about ([\d,]+)\s+paragraphs\)", text
     )
-    assert m, "README.md no longer says how big Odile's folder is"
+    assert m, "docs/how-it-works.md no longer says how big Odile's folder is"
     assert number(m.group(1)) == len(paths), f"she has {len(paths)} files"
     size = sum(p.stat().st_size for p in paths)
     assert number(m.group(2)) == round(size / 1000, -1), f"her files are {size:,} bytes"
@@ -339,22 +362,30 @@ def test_odiles_files_are_what_the_readme_says(tmp_path):
     assert f"writes her {len(paths)} files" in text
     for name in ODILE_NAMED:
         assert (life / name.rstrip("/")).exists(), (
-            f"README.md names {name}; her files don't have it"
+            f"the docs name {name}; her files don't have it"
         )
 
 
-def test_the_python_versions_are_the_ones_ci_runs():
-    ci = (ROOT / ".github" / "workflows" / "ci.yml").read_text()
-    versions = re.findall(
-        r'"(3\.\d+)"', re.search(r"python-version: \[(.*?)\]", ci).group(1)
+def test_the_readmes_contents_link_every_section_in_order():
+    """The contents line at the top names each `##` section, in order, and
+    links to it, so a section added or renamed can't be left out of it."""
+    text = README.read_text(encoding="utf-8")
+    line = next((ln for ln in text.splitlines() if ln.startswith("**Contents:** ")), "")
+    links = re.findall(r"\[([^\]]+)\]\(#([^)]+)\)", line)
+    heads = re.findall(r"^## (.+)$", text, re.M)
+    slug = lambda h: re.sub(r"[^a-z0-9 -]", "", h.lower()).replace(" ", "-")  # noqa: E731
+    assert links == [(h, slug(h)) for h in heads], (
+        f"README.md's contents: {[n for n, _ in links]}; its sections: {heads}"
     )
-    first, last = versions[0], versions[-1]
-    text = " ".join(README.read_text(encoding="utf-8").split())  # wrapped lines
-    assert f"Python {first} through {last}" in text
-    assert f"tests on Python {first} to {last}" in text
-    assert f"Python {first} or newer" in text
+
+
+def test_the_python_version_is_the_kernels():
+    """The README names the oldest Python the kernel's own first line does.
+    That CI tests it there is the host's to hold (adapters/stdlib/github)."""
     head = (ROOT / "kernel.py").read_text(encoding="utf-8").splitlines()[0]
-    assert f"Python {first}+" in head, f"kernel.py's first line: {head}"
+    first = re.search(r"Python (3\.\d+)\+", head).group(1)
+    text = " ".join(README.read_text(encoding="utf-8").split())  # wrapped lines
+    assert f"Python {first} or newer" in text, f"kernel.py says Python {first}+"
 
 
 # ── add-ons and ports ────────────────────────────────────────────────────────
@@ -462,4 +493,54 @@ def test_every_port_folder_is_one_compare_runs_and_ci_requires():
     )
     assert folders == held, (
         f"ports/: {sorted(folders)}; adapters/ci/ci.py runs: {sorted(held)}"
+    )
+
+
+def test_bugs_md_is_the_tests_marked_as_known_bugs():
+    """BUGS.md is made from the tests marked as known bugs, and every
+    expected-to-fail mark is one (strict, naming its bug)."""
+    spec = importlib.util.spec_from_file_location(
+        "willow_bugs", ROOT / "adapters" / "stdlib" / "ci" / "bugs.py"
+    )
+    bugs = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(bugs)
+    made = bugs.render(bugs.bugs())
+    assert (ROOT / "BUGS.md").read_text(encoding="utf-8") == made, (
+        "BUGS.md isn't current: run python adapters/stdlib/ci/bugs.py write"
+    )
+
+
+def test_every_file_is_checked_out_with_lf_line_endings():
+    """kernel.py hashes its own bytes into every record, so a checkout that
+    turned LF into CRLF would change what every record says. .gitattributes
+    forces LF on every system, and no file in the repo holds a CRLF."""
+    attrs = (ROOT / ".gitattributes").read_text(encoding="utf-8").splitlines()
+    assert "* text=auto eol=lf" in attrs, ".gitattributes doesn't force LF"
+    crlf = sorted(f for f in repo_files() if b"\r\n" in (ROOT / f).read_bytes())
+    assert not crlf, f"files with CRLF line endings: {crlf}"
+
+
+RELEASE = re.compile(r"v(\d+\.\d+\.\d+) · (\d{4}-\d{2}-\d{2})")
+BEFORE_RELEASES = re.compile(r"\d{4}-\d{2}-\d{2} · pull request #\d+")
+
+
+def test_each_release_is_a_changelog_heading_and_the_citation_names_the_newest():
+    """CHANGELOG.md's headings are `Unreleased`, then releases, newest first,
+    `vX.Y.Z · YYYY-MM-DD` (the pull requests before the first release keep
+    theirs). CITATION.cff names the newest release, or no version at all
+    before there is one."""
+    heads = re.findall(r"^## (.+)$", (ROOT / "CHANGELOG.md").read_text(encoding="utf-8"), re.M)  # fmt: skip
+    assert heads[0] == "Unreleased", "CHANGELOG.md opens with ## Unreleased"
+    odd = [h for h in heads[1:] if not (RELEASE.fullmatch(h) or BEFORE_RELEASES.fullmatch(h))]  # fmt: skip
+    assert not odd, f"CHANGELOG.md headings that aren't a release: {odd}"
+    releases = [
+        RELEASE.fullmatch(h).groups() for h in heads[1:] if RELEASE.fullmatch(h)
+    ]
+    cff = (ROOT / "CITATION.cff").read_text(encoding="utf-8")
+    said = dict(re.findall(r"^(version|date-released): \"?([\w.-]+)\"?$", cff, re.M))
+    newest = (
+        {"version": releases[0][0], "date-released": releases[0][1]} if releases else {}
+    )
+    assert said == newest, (
+        f"CITATION.cff says {said}; CHANGELOG.md's newest release is {newest}"
     )

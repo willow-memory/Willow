@@ -74,3 +74,13 @@ def test_nothing_in_the_window_and_an_impossible_date(tmp_path):
         {"path": "a.md", "line": 1, "text": "2026-10-31 then 2026-02-31", "id": "x"}
     ]
     assert cu.coming(pile, date(2026, 10, 23), 14)[0][0] == date(2026, 10, 31)
+
+
+def test_a_bare_start_line_skips_a_dated_line_to_reach_its_summary(tmp_path):
+    """The next line with its own date is another event, never this one's
+    summary: the summary is the first undated line that says something."""
+    b = box(tmp_path, {"cal.ics": "DTSTART:20261028\nRENEWAL 2026-11-30 at the bank\n"
+                                  "SUMMARY:Dentist at ten\n"})  # fmt: skip
+    got = run(str(HERE / "coming_up.py"), "--box", str(b), *NOW)
+    assert "DTSTART:20261028  SUMMARY:Dentist at ten" in got.stdout
+    assert "DTSTART:20261028  RENEWAL" not in got.stdout

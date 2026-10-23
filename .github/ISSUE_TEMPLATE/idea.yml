@@ -1,0 +1,68 @@
+name: An add-on idea
+description: Something you'd like built on the kernel. Anyone can pick it up.
+labels: ["idea"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        You can also add it yourself, as one entry in adapters/planned.json
+        (CONTRIBUTING.md says how). First see what's near it:
+        `python adapters/stdlib/similar/similar.py near "your idea"`.
+  - type: input
+    id: name
+    attributes:
+      label: Name
+      description: Lowercase words joined by -, such as bank or care-log
+    validations:
+      required: true
+  - type: input
+    id: line
+    attributes:
+      label: What it does, in one sentence
+    validations:
+      required: true
+  - type: dropdown
+    id: section
+    attributes:
+      label: Section
+      options:
+        - Reading more kinds of files
+        - Finding things
+        - Your own words
+        - Keeping track
+        - Trust and proof
+        - Privacy and safety
+        - Assistants
+        - Ways to use it
+        - Play
+        - For maintainers
+    validations:
+      required: true
+  - type: dropdown
+    id: writes
+    attributes:
+      label: What it writes
+      options:
+        - nothing (it only prints)
+        - record (through the kernel)
+        - to (only where --to points)
+    validations:
+      required: true
+  - type: input
+    id: network
+    attributes:
+      label: Where it goes online
+      description: none, loopback (this machine only), or where and why
+      value: none
+    validations:
+      required: true
+  - type: input
+    id: needs
+    attributes:
+      label: What it needs installed, with its licence
+      description: Leave empty if Python's standard library is enough
+  - type: input
+    id: tags
+    attributes:
+      label: Tags
+      description: Up to five, lowercase words joined by -. Leave empty and four are filled in from the rest.

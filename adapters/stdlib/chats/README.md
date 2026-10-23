@@ -3,6 +3,9 @@ section: Reading more kinds of files
 line: WhatsApp and Telegram exports, one dated line per message.
 source: new
 added: 2026-10-23
+writes: to
+network: none
+tags: no-install, offline, writes-output, file-reader
 -->
 # chats
 

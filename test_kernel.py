@@ -9,6 +9,7 @@ import json
 import shutil
 import subprocess
 import sys
+import sysconfig
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent / "kernel.py"
@@ -135,6 +136,45 @@ def reaches(source: str) -> set[str]:
         elif isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
             out |= {node.func.id} & DYNAMIC
     return out
+
+
+def imports(source: str) -> set[str]:
+    """The top-level names of every module a source imports."""
+    out = set()
+    for node in ast.walk(ast.parse(source)):
+        if isinstance(node, ast.Import):
+            out |= {a.name.split(".")[0] for a in node.names}
+        elif isinstance(node, ast.ImportFrom) and node.module and not node.level:
+            out.add(node.module.split(".")[0])
+    return out
+
+
+def outside_the_standard_library(names: set[str]) -> set[str]:
+    """Those that aren't Python's own: built in, frozen, or under its lib folder."""
+    lib = Path(sysconfig.get_paths()["stdlib"]).resolve()
+    out = set()
+    for name in names:
+        if name == "__future__" or name in sys.builtin_module_names:
+            continue
+        spec = importlib.util.find_spec(name)
+        origin = spec and spec.origin
+        if origin in ("built-in", "frozen"):
+            continue
+        if (
+            not origin
+            or "site-packages" in origin
+            or lib not in Path(origin).resolve().parents
+        ):
+            out.add(name)
+    return out
+
+
+def test_it_uses_only_the_standard_library_and_never_an_add_on():
+    assert (
+        outside_the_standard_library(imports(HERE.read_text(encoding="utf-8"))) == set()
+    )
+    planted = "import json\nimport pytest\nfrom adapters.stdlib import todo\n"
+    assert outside_the_standard_library(imports(planted)) == {"pytest", "adapters"}
 
 
 def test_it_never_dials_out():

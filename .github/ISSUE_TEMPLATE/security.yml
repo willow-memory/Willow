@@ -1,0 +1,49 @@
+name: A security problem
+description: A way around one of willow's promises. Reported in public, here.
+title: "Security: "
+labels: ["security"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Security problems are reported in the open, like any bug: willow runs
+        only on your own machine, so a public report reaches everyone who
+        needs to know at once. SECURITY.md says what counts.
+
+        **Leave out anything from your own files.** Show it with the smallest
+        made-up folder you can.
+
+        If you can say which lines are at fault, a workflow finds the pull
+        request that wrote them and names its author here, so they hear about
+        it straight away.
+  - type: dropdown
+    id: promise
+    attributes:
+      label: Which promise
+      options:
+        - An approval accepted without the key, or a forged one served
+        - A past row of the record changed without verify saying so
+        - The key read, copied or printed by anything but seal and verify
+        - An original file changed
+        - An add-on writing or going online past its card, unseen by the guard
+        - Someone's files, questions or answers sent somewhere
+        - Something else
+    validations:
+      required: true
+  - type: textarea
+    id: did
+    attributes:
+      label: What you did, and what happened
+      description: The commands, their exit codes, what they printed, and what you expected instead.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: where
+    attributes:
+      label: Where it is
+      description: |
+        Optional. The lines at fault, one place per line, as PATH:FIRST-LAST
+        (kernel.py:120-134). Each is looked up with git blame.
+    validations:
+      required: false

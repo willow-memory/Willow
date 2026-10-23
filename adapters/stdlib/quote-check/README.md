@@ -3,6 +3,9 @@ section: Finding things
 line: Is this exact quote in my files, and where? For writers, journalists and students.
 source: box
 added: 2026-10-23
+writes: nothing
+network: none
+tags: no-install, offline, read-only, search
 -->
 # quote-check
 

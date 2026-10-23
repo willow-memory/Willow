@@ -12,6 +12,40 @@ permissions:
   contents: read
 
 jobs:
+  similar:
+    # What's already on the add-on list near each idea or add-on this pull
+    # request adds, written to the run's summary so a fork sees it too.
+    # A suggestion, never a gate: similar.py's own check runs in the tests.
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - env:
+          BASE: origin/${{ github.base_ref }}
+        run: python adapters/stdlib/similar/similar.py new --base "$BASE" >> "$GITHUB_STEP_SUMMARY"
+
+  changelog:
+    # A pull request that changes more than the docs adds a line under
+    # CHANGELOG.md's Unreleased ending with its number (CONTRIBUTING.md).
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - env:
+          BASE: origin/${{ github.base_ref }}
+          PR: ${{ github.event.number }}
+        run: python adapters/stdlib/ci/changelog.py --base "$BASE" --pr "$PR"
+
   lint:
     runs-on: ubuntu-latest
     steps:
@@ -91,6 +125,26 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: ci-record-demo
+          path: ${{ runner.temp }}/ci-record/record.jsonl
+
+  mutants:
+    # Each stdlib add-on's code broken on purpose, a few ways, and its tests
+    # run against each break: a break the tests miss fails, unless
+    # adapters/stdlib/mutants/accepted.json gives the reason it's harmless.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - run: pip install pytest
+      - run: python adapters/stdlib/ci/ci.py run mutants --box ${{ runner.temp }}/ci-record
+      - if: always()
+        run: python adapters/stdlib/ci/ci.py verify --box ${{ runner.temp }}/ci-record
+      - if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: ci-record-mutants
           path: ${{ runner.temp }}/ci-record/record.jsonl
 
   deps:

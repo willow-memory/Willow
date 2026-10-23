@@ -127,3 +127,19 @@ def test_hints_gathers_both_readings_and_never_what_isnt_there(tmp_path):
     assert "not in" not in whys
     assert "gone by, nothing written since: Ann (May 2026)" in whys
     assert "kg: 72 on 2026-10-15" in whys
+
+
+def test_a_quoted_cell_keeps_its_commas_and_doubled_quotes():
+    assert r.cells('2026-10-01,"say ""hi"", then go",3') == [
+        "2026-10-01",
+        'say "hi", then go',
+        "3",
+    ]
+
+
+def test_when_the_latest_week_is_the_biggest_it_is_said_once():
+    log = "date,kg\n" + "".join(
+        f"2026-10-{d:02d},{w}\n" for d, w in ((1, 70.0), (8, 70.2), (15, 73.0))
+    )
+    (got,) = r.series("log.csv", log)
+    assert got["why"] == "kg: 73.0 on 2026-10-15, up 2.8 from 70.2 on 2026-10-08"

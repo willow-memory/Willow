@@ -65,3 +65,14 @@ def test_nothing_marked(tmp_path):
         *NOW,
     )
     assert run(str(HERE / "todo.py"), "--box", str(b)).returncode == 42
+
+
+def test_a_long_marked_line_is_cut_at_120(tmp_path):
+    pile = tmp_path / "pile"
+    pile.mkdir()
+    (pile / "a.md").write_text("TODO: " + "y" * 200 + "\n")
+    b = tmp_path / "box"
+    run(str(KERNEL), "init", "--box", str(b), "--pile", str(pile), "--key",
+        str(tmp_path / "k"), *NOW)  # fmt: skip
+    line = run(str(HERE / "todo.py"), "--box", str(b)).stdout.splitlines()[0]
+    assert line.endswith("TODO: " + "y" * 114)

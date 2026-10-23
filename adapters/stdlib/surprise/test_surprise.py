@@ -105,3 +105,14 @@ def test_a_folder_with_nothing_long_enough_says_so(tmp_path):
         *NOW,
     )
     assert run(str(HERE / "surprise.py"), "--box", str(b), *NOW).returncode == 42
+
+
+def test_a_passage_of_exactly_eight_words_can_be_drawn(tmp_path):
+    pile = tmp_path / "pile"
+    pile.mkdir()
+    (pile / "a.md").write_text("One two three four five six seven eight.\n")
+    b = tmp_path / "box"
+    run(str(KERNEL), "init", "--box", str(b), "--pile", str(pile), "--key",
+        str(tmp_path / "k"), *NOW)  # fmt: skip
+    got = run(str(HERE / "surprise.py"), "--box", str(b), *NOW)
+    assert got.returncode == 0 and "seven eight" in got.stdout

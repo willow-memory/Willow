@@ -1,8 +1,8 @@
-"""The README generator: the front page is built from the add-ons, and can't
-drift from them.
+"""The add-on list and the front page's one feature are built from the
+add-ons, and can't drift from them.
 
 Each test holds one promise in adapters/stdlib/readme/README.md, and each can
-fail: the real README is current, building an add-on is what turns 🛠 into ✅,
+fail: the real README is current, building an add-on is what turns an idea into a built one,
 the draw is the same for the same week and anyone can redo it, only the
 marked sections are written, and an add-on that doesn't hold together is
 refused.
@@ -14,6 +14,7 @@ import importlib.util
 import json
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 import pytest
@@ -44,16 +45,29 @@ Also by hand.
 The end, by hand.
 """
 
+FRONT = """# the front page
+
+<!-- willow:summary -->
+<!-- /willow:summary -->
+
+<!-- willow:front show=pick week=2026-W43 -->
+<!-- /willow:front -->
+"""
+
 
 def card(section="Play", line="A thing.", source="new", added="2026-10-23", **more):
-    head = {"section": section, "line": line, "source": source, "added": added, **more}
+    head = {"section": section, "line": line, "source": source, "added": added,
+            "writes": "nothing", "network": "none", "tags": "play, thing", **more}  # fmt: skip
     body = "".join(f"{k}: {v}\n" for k, v in head.items())
     return f"<!-- willow-addon\n{body}-->\n# card\n"
 
 
 @pytest.fixture
 def repo(tmp_path, monkeypatch):
-    """A small repo: one built add-on in each folder, one planned."""
+    """A small repo: one built add-on in each folder, one planned. Made with
+    tempfile, so the guard knows it as this test's scratch, not the repo
+    readme.py's card names."""
+    tmp_path = Path(tempfile.mkdtemp(dir=tmp_path))
     for kind, name, extra in (
         ("stdlib", "alpha", {}),
         ("deps", "beta", {"needs": "somepkg; MIT"}),
@@ -63,11 +77,14 @@ def repo(tmp_path, monkeypatch):
             card(added="2026-10-0" + str(len(name)), **extra)
         )
     planned = [{"name": "gamma", "kind": "stdlib", "section": "Play", "line": "Later.",
-                "source": "box"}]  # fmt: skip
+                "source": "box", "writes": "to", "network": "loopback",
+                "tags": "later"}]  # fmt: skip
     (tmp_path / "adapters" / "planned.json").write_text(json.dumps(planned))
-    (tmp_path / "README.md").write_text(PAGE)
+    (tmp_path / "ADDONS.md").write_text(PAGE)
+    (tmp_path / "README.md").write_text(FRONT)
     monkeypatch.setattr(rd, "ROOT", tmp_path)
     monkeypatch.setattr(rd, "README", tmp_path / "README.md")
+    monkeypatch.setattr(rd, "ADDONS_MD", tmp_path / "ADDONS.md")
     monkeypatch.setattr(rd, "ADAPTERS", tmp_path / "adapters")
     monkeypatch.setattr(rd, "PLANNED", tmp_path / "adapters" / "planned.json")
     return tmp_path
@@ -84,19 +101,23 @@ def test_the_real_readme_is_current():
 
 def test_building_an_add_on_is_what_turns_planned_into_built(repo):
     text = rd.rebuild(PAGE, None)
-    assert "- ✅ [**alpha**](adapters/stdlib/alpha/) 🐍 — A thing. *new*" in text
     assert (
-        "- ✅ [**beta**](adapters/deps/beta/) 📦 [somepkg; MIT] — A thing. *new*"
+        "- [**alpha**](adapters/stdlib/alpha/) — A thing. *new* `play` `thing`" in text
+    )
+    assert (
+        "- [**beta**](adapters/deps/beta/) — A thing. Needs somepkg; MIT. *new* `play` `thing`"
         in text
     )
-    assert "- 🛠 **gamma** 🐍 — Later. *box*" in text
+    assert (
+        "- **gamma** (idea) — Later. Reaches this machine only. *box* `later`" in text
+    )
     assert "**2 of 3 built**" in text
     (repo / "adapters" / "stdlib" / "gamma").mkdir()  # built, and still planned
     (repo / "adapters" / "stdlib" / "gamma" / "README.md").write_text(card())
     with pytest.raises(rd.Refused, match="still in planned.json"):
         rd.rebuild(PAGE, None)
     (repo / "adapters" / "planned.json").write_text("[]")
-    assert "- ✅ [**gamma**](adapters/stdlib/gamma/)" in rd.rebuild(PAGE, None)
+    assert "- [**gamma**](adapters/stdlib/gamma/)" in rd.rebuild(PAGE, None)
 
 
 def test_only_the_marked_sections_are_written(repo):
@@ -134,7 +155,24 @@ def test_the_draw_is_the_weeks_and_anyone_can_redo_it(repo):
         ("stdlib/delta", card(added="soon"), "added is the date"),
         ("stdlib/delta", card(needs="x; MIT"), "a stdlib add-on needs nothing"),
         ("deps/delta", card(), "a deps add-on says what it needs"),
+        ("stdlib/delta", card(writes="everything"), "writes is nothing, or any of"),
+        ("stdlib/delta", card(writes="nothing, to"), "writes is nothing, or any of"),
+        ("stdlib/delta", card(writes="README.md, record"), None),
+        (
+            "stdlib/delta",
+            card(writes="no-such-file.md"),
+            "writes is nothing, or any of",
+        ),
+        ("stdlib/delta", card().replace("network: none\n", ""), "needs network"),
         ("stdlib/Delta", card(), "lowercase words joined by -"),
+        ("stdlib/delta", card(tags="a, b, c, d, e, f"), "tags are up to 5"),
+        ("stdlib/delta", card(tags="Has Caps"), "tags are up to 5"),
+        ("stdlib/delta", card(tags="a, a"), "tags are up to 5"),
+        (
+            "stdlib/delta",
+            card().replace("tags: play, thing\n", ""),
+            "run readme.py tags",
+        ),
         ("stdlib/alpha2", "", "has no README.md card"),
     ],
 )
@@ -143,6 +181,10 @@ def test_an_add_on_that_doesnt_hold_together_is_refused(repo, folder, text, why)
     where.mkdir(parents=True)
     if text:
         (where / "README.md").write_text(text)
+    if why is None:  # a file of the repo, beside record: holds together
+        (repo / "README.md").touch()
+        rd.rebuild(PAGE, None)
+        return
     with pytest.raises(rd.Refused, match=why):
         rd.rebuild(PAGE, None)
 
@@ -152,3 +194,91 @@ def test_a_readme_missing_a_section_is_refused(repo):
         rd.rebuild(
             PAGE.replace("<!-- willow:newest -->\n<!-- /willow:newest -->\n", ""), None
         )
+
+
+def test_tags_fills_only_what_is_missing_and_keeps_what_a_person_wrote(repo):
+    """Auto-populated, never overwritten: the card's tags are its author's."""
+    card_file = repo / "adapters" / "stdlib" / "alpha" / "README.md"
+    card_file.write_text(card_file.read_text().replace("tags: play, thing\n", ""))
+    beta = repo / "adapters" / "deps" / "beta" / "README.md"
+    planned = repo / "adapters" / "planned.json"
+    planned.write_text(planned.read_text().replace(', "tags": "later"', ""))
+    before = beta.read_text()
+    assert rd.main(["tags"]) == 0
+    assert "tags: no-install, offline, read-only, play\n-->" in card_file.read_text()
+    assert beta.read_text() == before  # a person's tags, untouched
+    assert json.loads(planned.read_text())[0]["tags"] == (
+        "no-install, this-machine, writes-output, play"
+    )
+    assert rd.main(["tags"]) == 0 and beta.read_text() == before  # twice: no change
+
+
+def test_check_keeps_the_week_written_whatever_week_it_is(repo):
+    """`write --week` sets the draw's week; `check` never moves it to today's."""
+    assert rd.main(["write", "--week", "2027-W01"]) == 0
+    assert "<!-- willow:pick week=2027-W01 -->" in (repo / "ADDONS.md").read_text()
+    assert (
+        "<!-- willow:front show=pick week=2027-W01 -->"
+        in (repo / "README.md").read_text()
+    )
+    assert rd.main(["check"]) == 0
+
+
+def rebuild_front(show: str) -> str:
+    return rd.rebuild(
+        FRONT.replace("show=pick", f"show={show}"),
+        None,
+        ("summary", "front"),
+        "README.md",
+    )
+
+
+@pytest.mark.parametrize("show, title, has", [
+    ("pick", "Add-on of the week", "*Drawn for 2026-W43"),
+    ("newest", "Newest", "2026-10-05 · [**alpha**]"),
+    ("pools", "How the list stands", "| Section | Built |"),
+])  # fmt: skip
+def test_the_front_page_shows_the_one_feature_its_marker_names(repo, show, title, has):
+    text = rebuild_front(show)
+    assert f"**{title}**" in text and has in text
+    assert (
+        "[Every add-on, 2 built of 3, and how to add one: ADDONS.md](ADDONS.md)" in text
+    )
+    marker = next(ln for ln in text.splitlines() if ln.startswith("<!-- willow:front"))
+    assert ("week=" in marker) == (show == "pick")  # a week only for the draw
+    assert rebuild_front(show) == rd.rebuild(
+        text, None, ("summary", "front"), "README.md"
+    )
+
+
+@pytest.mark.parametrize("show", ["list", "Pick", "everything"])
+def test_a_front_page_feature_that_isnt_one_is_refused(repo, show):
+    with pytest.raises(rd.Refused, match="front shows one of pick, newest, pools"):
+        rebuild_front(show)
+
+
+def test_check_says_which_page_is_stale(repo, capsys):
+    assert rd.main(["write"]) == 0
+    (repo / "README.md").write_text((repo / "README.md").read_text().replace("Add-on of", "Add-in of"))  # fmt: skip
+    assert rd.main(["check"]) == 2
+    assert "README.md isn't current" in capsys.readouterr().out
+
+
+def test_every_section_says_what_its_for():
+    assert list(rd.WHAT) == rd.NAMES
+
+
+def test_the_summary_links_what_is_built_and_names_what_is_still_an_idea(repo):
+    line = next(
+        ln for ln in rd.section_summary(rd.addons()).splitlines() if "**Play:**" in ln
+    )
+    assert (
+        "Built: [alpha](adapters/stdlib/alpha/), [beta](adapters/deps/beta/)." in line
+    )
+    assert line.endswith("Ideas: *gamma*.")
+    keeping = next(
+        ln
+        for ln in rd.section_summary(rd.addons()).splitlines()
+        if "**Keeping track:**" in ln
+    )
+    assert "Built: nothing yet." in keeping and "Ideas" not in keeping

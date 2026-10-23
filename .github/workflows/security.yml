@@ -1,0 +1,35 @@
+name: security
+
+# A security report names the lines at fault (the form's "Where it is").
+# adapters/stdlib/github/github.py report finds the pull request that wrote
+# each one and its author, and this posts that on the report, in public, so
+# they hear about it from the start. The report's text is anyone's: it
+# reaches the script only on stdin, never through the workflow's own
+# expressions, and none of it is echoed into the comment.
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: read
+
+jobs:
+  whose:
+    if: startsWith(github.event.issue.title, 'Security:')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - env:
+          BODY: ${{ github.event.issue.body }}
+          ISSUE: ${{ github.event.issue.number }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          printf '%s' "$BODY" | python adapters/stdlib/github/github.py report > comment.md
+          gh issue comment "$ISSUE" --body-file comment.md
