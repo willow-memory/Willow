@@ -59,3 +59,12 @@ The same twenty questions on a fresh copy. Five empty answers, against six.
   either way round; lines like `[15/10/2026, …]` now date.
 
 Needs: still one found as asked, now four with evidence served, two missed.
+
+## With the starter-words list (2026-10-23)
+
+The first-day list from `adapters/stdlib/starter-words`, copied as it ships,
+on a fresh copy of her files. Question 9, "how much do I still owe dev", was
+empty; with the list it serves her chat with Sam, where "Dev says he can lend
+us some till Jan": the list reads owe as lend. **N7 moves from missed to
+evidence served.** Hollis's question 7 stays empty with the same list: his
+invoices hold neither "still" nor "money".

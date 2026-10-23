@@ -7,13 +7,6 @@
   "source": "bot"
  },
  {
-  "name": "all",
-  "kind": "stdlib",
-  "section": "Finding things",
-  "line": "Every matching passage, ranked, not just the top three.",
-  "source": "box"
- },
- {
   "name": "bank",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -251,20 +244,6 @@
   "needs": "Pillow; MIT-CMU"
  },
  {
-  "name": "plain",
-  "kind": "stdlib",
-  "section": "Ways to use it",
-  "line": "Answers as sentences instead of JSON, each with its file and line.",
-  "source": "new"
- },
- {
-  "name": "privacy",
-  "kind": "stdlib",
-  "section": "Privacy and safety",
-  "line": "Hides phone numbers, emails, card, bank and ID numbers, and API keys in what a question prints, and says what it hid.",
-  "source": "bot"
- },
- {
   "name": "quote-check",
   "kind": "stdlib",
   "section": "Finding things",
@@ -302,33 +281,12 @@
   "needs": "pyttsx3; MPL-2.0"
  },
  {
-  "name": "stale",
-  "kind": "stdlib",
-  "section": "Trust and proof",
-  "line": "Approved answers whose cited passage has changed or gone. Citations are content hashes, so it's exact.",
-  "source": "box"
- },
- {
-  "name": "starter-words",
-  "kind": "stdlib",
-  "section": "Your own words",
-  "line": "A first-day words list to copy and edit (owes = invoice, outstanding; doctor = dr, physician, clinic).",
-  "source": "new"
- },
- {
   "name": "stems",
   "kind": "deps",
   "section": "Your own words",
   "line": "Word forms for 20+ languages, so \"maisons\" finds \"maison\".",
   "source": "new",
   "needs": "snowballstemmer; BSD-3"
- },
- {
-  "name": "surprise",
-  "kind": "stdlib",
-  "section": "Finding things",
-  "line": "One passage from your folder at random, seeded so it can be replayed.",
-  "source": "bot"
  },
  {
   "name": "synonyms",

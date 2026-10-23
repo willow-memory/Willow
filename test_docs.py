@@ -134,6 +134,9 @@ ELSEWHERE = {
         ".ci-record/": "made by `ci.py run`, ignored by git",
         ".ci-record.key": "made by `ci.py run`, ignored by git",
     },
+    "adapters/stdlib/surprise/README.md": {
+        "sha256-stream/v1": "the name of willow-bot's stream generator, not a file",
+    },
     "adapters/README.md": {
         "requirements.txt": "each deps add-on's own file, in its folder",
     },

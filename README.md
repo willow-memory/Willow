@@ -159,18 +159,18 @@ install · 📦 needs the install in brackets, with its licence · 🌐 goes onl
 built from what the kernel already has · *new*
 
 <!-- willow:pools -->
-`█░░░░░░░░░░░░░░░░░░░` **3 of 56 built** · 39 🐍 · 17 📦
+`███░░░░░░░░░░░░░░░░░` **9 of 56 built** · 39 🐍 · 17 📦
 
 | Section | Built | Planned | 🐍 | 📦 |
 |---|---|---|---|---|
 | Reading more kinds of files | 0 | 15 | 9 | 6 |
-| Finding things | 0 | 6 | 4 | 2 |
-| Your own words | 0 | 7 | 5 | 2 |
+| Finding things | 2 | 4 | 4 | 2 |
+| Your own words | 1 | 6 | 5 | 2 |
 | Keeping track | 1 | 8 | 9 | 0 |
-| Trust and proof | 0 | 6 | 4 | 2 |
-| Privacy and safety | 0 | 2 | 2 | 0 |
+| Trust and proof | 1 | 5 | 4 | 2 |
+| Privacy and safety | 1 | 1 | 2 | 0 |
 | Assistants | 0 | 3 | 0 | 3 |
-| Ways to use it | 0 | 3 | 2 | 1 |
+| Ways to use it | 1 | 2 | 2 | 1 |
 | Play | 0 | 3 | 2 | 1 |
 | For maintainers | 2 | 0 | 2 | 0 |
 <!-- /willow:pools -->
@@ -178,17 +178,19 @@ built from what the kernel already has · *new*
 ### Newest
 
 <!-- willow:newest -->
+- 2026-10-23 · [**surprise**](adapters/stdlib/surprise/) — One passage from your folder at random, seeded so it can be replayed.
+- 2026-10-23 · [**starter-words**](adapters/stdlib/starter-words/) — A first-day words list to copy and edit (owes = invoice, outstanding; doctor = dr, physician, clinic).
+- 2026-10-23 · [**stale**](adapters/stdlib/stale/) — Approved answers whose cited passage has changed or gone. Citations are content hashes, so it's exact.
 - 2026-10-23 · [**readme**](adapters/stdlib/readme/) — Builds this README's generated sections from the add-ons' own cards.
-- 2026-10-23 · [**ci**](adapters/stdlib/ci/) — This repo's checks as verdict rows on a kernel record, the same every run.
-- 2026-10-22 · [**readings**](adapters/stdlib/readings/) — Numbers over time and a date gone by, beside an answer.
+- 2026-10-23 · [**privacy**](adapters/stdlib/privacy/) — Hides phone numbers, emails, card, bank and ID numbers, and API keys in what a question prints, and says what it hid.
 <!-- /willow:newest -->
 
 ### Add-on of the week
 
 <!-- willow:pick week=2026-W43 -->
-**[readings](adapters/stdlib/readings/)** — Numbers over time and a date gone by, beside an answer.
+**[ci](adapters/stdlib/ci/)** — This repo's checks as verdict rows on a kernel record, the same every run.
 
-*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 3 built add-ons in name order.*
+*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 9 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -216,18 +218,18 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 
 ### Finding things
 
-- 🛠 **all** 🐍 — Every matching passage, ranked, not just the top three. *box*
+- ✅ [**all**](adapters/stdlib/all/) 🐍 — Every matching passage, ranked, not just the top three. *box*
 - 🛠 **meaning** 📦 [sentence-transformers; Apache-2.0] 🌐 model downloaded once — Search by meaning: "who owes me money" finds "invoice outstanding". *new*
 - 🛠 **on-this-day** 🐍 — What you wrote on this date in earlier years. *box*
 - 🛠 **quote-check** 🐍 — Is this exact quote in my files, and where? For writers, journalists and students. *box*
-- 🛠 **surprise** 🐍 — One passage from your folder at random, seeded so it can be replayed. *bot*
+- ✅ [**surprise**](adapters/stdlib/surprise/) 🐍 — One passage from your folder at random, seeded so it can be replayed. *bot*
 - 🛠 **typos** 📦 [rapidfuzz; MIT] — Forgives misspellings in questions. *new*
 
 ### Your own words
 
 The blind tests' biggest gap: on day one, a person's words aren't their files' words.
 
-- 🛠 **starter-words** 🐍 — A first-day words list to copy and edit (owes = invoice, outstanding; doctor = dr, physician, clinic). *new*
+- ✅ [**starter-words**](adapters/stdlib/starter-words/) 🐍 — A first-day words list to copy and edit (owes = invoice, outstanding; doctor = dr, physician, clinic). *new*
 - 🛠 **stems** 📦 [snowballstemmer; BSD-3] — Word forms for 20+ languages, so "maisons" finds "maison". *new*
 - 🛠 **synonyms** 📦 [nltk and WordNet; Apache-2.0] 🌐 data downloaded once — Suggests words-list lines for a word no file has. *new*
 - 🛠 **words-de** 🐍 — German common words, so questions aren't matched on "der" and "und". *new*
@@ -254,11 +256,11 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - 🛠 **export** 🐍 — Approved answers, and the question log (counts only, never words), as Markdown or CSV. *box*
 - 🛠 **pgp** 📦 [the gpg program and python-gnupg; BSD] — Signs exports and reports with your PGP key, verifiable anywhere. *new*
 - 🛠 **report** 🐍 — A self-checking bundle: the record, the approved answers, and a script that re-verifies them on any machine. *box*
-- 🛠 **stale** 🐍 — Approved answers whose cited passage has changed or gone. Citations are content hashes, so it's exact. *box*
+- ✅ [**stale**](adapters/stdlib/stale/) 🐍 — Approved answers whose cited passage has changed or gone. Citations are content hashes, so it's exact. *box*
 
 ### Privacy and safety
 
-- 🛠 **privacy** 🐍 — Hides phone numbers, emails, card, bank and ID numbers, and API keys in what a question prints, and says what it hid. *bot*
+- ✅ [**privacy**](adapters/stdlib/privacy/) 🐍 — Hides phone numbers, emails, card, bank and ID numbers, and API keys in what a question prints, and says what it hid. *bot*
 - 🛠 **secrets-audit** 🐍 — Finds keys and passwords sitting in plain files. *bot*
 
 ### Assistants
@@ -272,7 +274,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 ### Ways to use it
 
 - 🛠 **browse** 🐍 — A local web page to ask questions and approve answers, reachable from this machine only. *new*
-- 🛠 **plain** 🐍 — Answers as sentences instead of JSON, each with its file and line. *new*
+- ✅ [**plain**](adapters/stdlib/plain/) 🐍 — Answers as sentences instead of JSON, each with its file and line. *new*
 - 🛠 **speak** 📦 [pyttsx3; MPL-2.0] — Reads answers aloud. *new*
 
 ### Play
@@ -528,18 +530,43 @@ willow/
 │   ├── README.md             the rules every add-on follows
 │   ├── planned.json          the add-ons not built yet, as this README lists them
 │   ├── stdlib/               add-ons that need nothing beyond Python
+│   │   ├── all/
+│   │   │   ├── all.py        every passage that holds a question, in the kernel's order
+│   │   │   ├── test_all.py
+│   │   │   └── README.md
 │   │   ├── ci/
 │   │   │   ├── ci.py         this repo's checks as verdict rows on a kernel record
 │   │   │   ├── test_ci.py    its tests: the same record every run, and every state
 │   │   │   └── README.md     its card: gates, states and exit codes
+│   │   ├── plain/
+│   │   │   ├── plain.py      the kernel's answer as sentences
+│   │   │   ├── test_plain.py
+│   │   │   └── README.md
+│   │   ├── privacy/
+│   │   │   ├── privacy.py    personal data and keys withheld from what a question prints
+│   │   │   ├── test_privacy.py
+│   │   │   └── README.md
 │   │   ├── readings/
 │   │   │   ├── readings.py   notes beside an answer: numbers over time, dates gone by
 │   │   │   ├── test_readings.py
 │   │   │   └── README.md     its card: what it adds, uses and never does
-│   │   └── readme/
-│   │       ├── readme.py     builds this README's generated sections from the cards
-│   │       ├── test_readme.py
-│   │       └── README.md     its card: sections, the draw, what it reads
+│   │   ├── readme/
+│   │   │   ├── readme.py     builds this README's generated sections from the cards
+│   │   │   ├── test_readme.py
+│   │   │   └── README.md     its card: sections, the draw, what it reads
+│   │   ├── stale/
+│   │   │   ├── stale.py      approved answers whose cited passage changed or went
+│   │   │   ├── test_stale.py
+│   │   │   └── README.md
+│   │   ├── starter-words/
+│   │   │   ├── words.txt     a first-day words list, in the kernel's format
+│   │   │   ├── starter.py    copies it where yours will live, readable only by you
+│   │   │   ├── test_starter_words.py
+│   │   │   └── README.md
+│   │   └── surprise/
+│   │       ├── surprise.py   one passage drawn by a seeded stream, replayable
+│   │       ├── test_surprise.py
+│   │       └── README.md
 │   └── deps/                 add-ons that need something installed
 │       └── README.md         what one must declare: pinned requirements, licences, network
 ├── ports/                    kernel.py rewritten in other languages
