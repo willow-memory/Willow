@@ -1300,7 +1300,7 @@ public static class Kernel
         if (wl != null) cfg["words"] = Resolved(wl);
         File.WriteAllText(System.IO.Path.Combine(box, "kernel.json"), DumpsDefault(cfg, true) + "\n", Utf8);
         var row = Append(box, ts, "boot", "kernel", Obj("loop", "open", "pile_sha256", H256((string)cfg["pile"]!)));
-        Console.WriteLine($"open loop, row {PyStr(row["n"])} {((string)row["hash"]!).Substring(0, 16)}: the box is yours");
+        Console.WriteLine($"ready: record started, row {PyStr(row["n"])} {((string)row["hash"]!).Substring(0, 16)}");
         return ALIVE;
     }
 
@@ -1544,7 +1544,14 @@ public static class Kernel
     }
 
     // ── the command line ───────────────────────────────────────────────────
-    const string USAGE = "kernel.py: the smallest script that runs the whole loop, for anyone. Python 3.9+, stdlib only.";
+    const string USAGE = "kernel.py: answers questions from your own files. Python 3.9+, stdlib only.\n" +
+        "    python kernel.py init    --box DIR --pile FOLDER --key FILE [--words FILE]\n" +
+        "    python kernel.py bite    --box DIR \"your question\"\n" +
+        "    python kernel.py propose --box DIR --file SUGGESTIONS.jsonl\n" +
+        "    python kernel.py seal    --box DIR proposal:<sha256>\n" +
+        "    python kernel.py verify  --box DIR\n" +
+        "    python kernel.py out     --box DIR\n" +
+        "    python kernel.py test";
 
     static int Run(string[] argv)
     {

@@ -1158,7 +1158,7 @@ function init(box: string, pile: string, key: string, ts: string, wl: string | n
   if (wl !== null) cfg.set("words", resolved(wl));
   fs.writeFileSync(path.join(box, "kernel.json"), dumpsDefault(cfg, true) + "\n");
   const row = append(box, ts, "boot", "kernel", obj(["loop", "open"], ["pile_sha256", h256(cfg.get("pile") as string)]));
-  console.log(`open loop, row ${row.get("n")} ${(row.get("hash") as string).slice(0, 16)}: the box is yours`);
+  console.log(`ready: record started, row ${row.get("n")} ${(row.get("hash") as string).slice(0, 16)}`);
   return ALIVE;
 }
 
@@ -1408,7 +1408,15 @@ function vectors(casesFile: string, resultsFile: string): number {
 
 // ── the command line ───────────────────────────────────────────────────────
 const now = () => new Date().toISOString().replace(/\.\d{3}Z$/, "Z");
-const USAGE = "kernel.py: the smallest script that runs the whole loop, for anyone. Python 3.9+, stdlib only.";
+const USAGE =
+  "kernel.py: answers questions from your own files. Python 3.9+, stdlib only.\n" +
+  "    python kernel.py init    --box DIR --pile FOLDER --key FILE [--words FILE]\n" +
+  "    python kernel.py bite    --box DIR \"your question\"\n" +
+  "    python kernel.py propose --box DIR --file SUGGESTIONS.jsonl\n" +
+  "    python kernel.py seal    --box DIR proposal:<sha256>\n" +
+  "    python kernel.py verify  --box DIR\n" +
+  "    python kernel.py out     --box DIR\n" +
+  "    python kernel.py test";
 
 function main(argv: string[]): number {
   loadTables(process.env.KERNEL_TABLES ?? path.join(__dirname, "..", "..", "..", "vectors", "kernel_tables.json"));

@@ -10,3 +10,7 @@ ports/csharp/obj/
 ports/csharp/bin/
 ports/csharp/out/
 out/
+
+# the CI record and its key (adapters/ci)
+.ci-record/
+.ci-record.key

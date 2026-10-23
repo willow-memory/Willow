@@ -643,7 +643,9 @@ def write_calendar(visits: list[dict], booked: list[dict], jobs: list[dict]) -> 
 def write(rel: str, text: str) -> None:
     p = LIFE / rel
     p.parent.mkdir(parents=True, exist_ok=True)
-    p.write_text(text, encoding="utf-8", newline="")
+    # open(), not Path.write_text: write_text has no newline= before Python 3.10
+    with open(p, "w", encoding="utf-8", newline="") as f:
+        f.write(text)
 
 
 def build() -> dict:

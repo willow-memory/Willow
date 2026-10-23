@@ -1386,8 +1386,8 @@ public final class Kernel {
         Files.writeString(box.resolve("kernel.json"), dumpsDefault(cfg, true) + "\n");
         Map<String, Object> row = append(box, ts, "boot", "kernel",
             fields("loop", "open", "pile_sha256", h256((String) cfg.get("pile"))));
-        System.out.println("open loop, row " + row.get("n") + " " + ((String) row.get("hash")).substring(0, 16)
-            + ": the box is yours");
+        System.out.println("ready: record started, row " + row.get("n") + " "
+            + ((String) row.get("hash")).substring(0, 16));
         return ALIVE;
     }
 
@@ -1783,7 +1783,14 @@ public final class Kernel {
         return ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'"));
     }
 
-    static final String USAGE = "kernel.py: the smallest script that runs the whole loop, for anyone. Python 3.9+, stdlib only.";
+    static final String USAGE = "kernel.py: answers questions from your own files. Python 3.9+, stdlib only.\n" +
+        "    python kernel.py init    --box DIR --pile FOLDER --key FILE [--words FILE]\n" +
+        "    python kernel.py bite    --box DIR \"your question\"\n" +
+        "    python kernel.py propose --box DIR --file SUGGESTIONS.jsonl\n" +
+        "    python kernel.py seal    --box DIR proposal:<sha256>\n" +
+        "    python kernel.py verify  --box DIR\n" +
+        "    python kernel.py out     --box DIR\n" +
+        "    python kernel.py test";
 
     static Path tablesPath() {
         String p = System.getProperty("kernel.tables");
