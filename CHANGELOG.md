@@ -19,6 +19,10 @@ says how). The first was v0.1.0.
   clauses are cited where, every CI run; `constitution/declarations.json` starts empty,
   since verdicts are the person's to record. CI gains `tests:constitution`
   and `tests:coverage`. (#4)
+- The law, both ways, held by `test_docs.py`: every citation is a real
+  clause; every clause the code cites, a test cites too; every clause is
+  cited or answered in `constitution/reach.json` (out of reach, or open,
+  with why); and each README guarantee names its clause. (#4)
 
 ## v0.1.0 · 2026-10-23
 

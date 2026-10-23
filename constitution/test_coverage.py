@@ -185,3 +185,17 @@ def test_a_clause_is_cited_under_each_of_its_names(tmp_path, monkeypatch):
     assert "clauses cited by trace-id: 1 · anchor: 1 · section-sign: 1" in cc.render(
         cc.build_report([tree])
     )
+
+
+def test_an_articles_answer_stands_for_its_clauses_unless_one_has_its_own(
+    tmp_path, monkeypatch
+):
+    cc = _load_const_coverage()
+    law = _write(tmp_path, "## Article I — X\n\n**I.1 — One.**\n\n**I.2 — Two.**\n")
+    reach = tmp_path / "reach.json"
+    reach.write_text('{"answers": {"CONST-I": {"answer": "out of reach", "why": "a"},'
+                     ' "CONST-I-2": {"answer": "open", "why": "b"}}}')  # fmt: skip
+    monkeypatch.setattr(cc, "CONSTITUTION", law)
+    got = cc.load_reach(reach)
+    assert got["CONST-I-1"]["why"] == "a" and got["CONST-I-2"]["why"] == "b"
+    assert cc.load_reach(tmp_path / "missing.json") == {}

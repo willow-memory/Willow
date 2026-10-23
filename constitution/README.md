@@ -22,6 +22,7 @@ own lines enforce, at those lines.
 | [coverage.py](coverage.py) | The coverage report Appendix A calls for: which clauses the constitution defines, read from its own headings, and where in this repo each is cited, in any of its three spellings |
 | [test_coverage.py](test_coverage.py) | The report's own tests, since a gate's report about itself is not evidence about that gate |
 | [declarations.json](declarations.json) | The verdicts, kept by hand: `satisfied`, `differently`, `not applicable` or `failing`, one per clause, each with a sentence saying why |
+| [reach.json](reach.json) | Every clause no code or test cites, answered: *out of reach*, or *open*, and why. An article's answer stands for each of its clauses with none of its own |
 
     python constitution/coverage.py
     python -m pytest constitution
@@ -50,7 +51,11 @@ person's act.
 
 Most of Articles I to XIII govern a system with many agents and machines; the
 kernel is one program on one person's files. A clause it can't reach is left
-uncited, and the report says so, rather than being claimed.
+uncited, never claimed, and [reach.json](reach.json) says why; one it does
+something like, but no check cites yet, is answered *open*. `test_docs.py`
+fails on a clause with neither a citation nor an answer, on a citation to a
+clause the law doesn't have, and on a clause the code cites that no test
+does.
 
 The Casebook the constitution links to stays with willows-grove: its cases
 name the people, dates and files involved, which is why they can't live in

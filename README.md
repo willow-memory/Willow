@@ -134,20 +134,23 @@ The exit code is meant for scripts and for other programs calling it:
 
 ## Guarantees, and the tests behind them
 
-Each is a test that fails if it stops being true.
+Each is a test that fails if it stops being true. The clause is the one in
+[CONSTITUTION.md](CONSTITUTION.md) it holds, or none, for a promise of
+willow's own.
 
-| Guarantee | Enforced by |
-|---|---|
-| Uses only Python's own library, and never an add-on | `test_kernel.py` fails on any other import, `adapters` included |
-| Never goes online | `test_kernel.py` parses the file and fails on any network module, `eval`, `exec`, `compile` or `__import__` |
-| Never stores your words | the log is checked for the question's and answer's words after a full cycle |
-| Never gives a suggestion as an answer until it's approved | `kernel.py test`: a suggestion without a seal is listed as waiting, not given |
-| Never accepts a forged approval | `kernel.py test`: a seal with the right shape and a re-hashed chain is still rejected |
-| Never writes past a change | `kernel.py test`: one edited field in one past line, and every command refuses |
-| Same answer every run | the ranking is checked under different hash seeds |
-| Every add-on keeps its card's promises: what it writes, where it goes online | the guard watches every process an add-on's tests start, and fails a breach even one the add-on catches and hides |
-| Every add-on's tests can fail | each add-on's code is broken on purpose a few ways (`mutants`); a break its tests miss fails CI, unless it's listed as harmless with the reason |
-| Every add-on refuses a bad command line, and every reader keeps the same contract | one test holds them all to it (`adapters/stdlib/ci/test_contract.py`) |
+| Guarantee | Clause | Enforced by |
+|---|---|---|
+| Uses only Python's own library, and never an add-on | none | `test_kernel.py` fails on any other import, `adapters` included |
+| Never goes online | none | `test_kernel.py` parses the file and fails on any network module, `eval`, `exec`, `compile` or `__import__` |
+| Never stores your words | none | the log is checked for the question's and answer's words after a full cycle |
+| Never gives a suggestion as an answer until it's approved | `CONST-0-1`, `CONST-0-2` | `kernel.py test`: a suggestion without a seal is listed as waiting, not given |
+| Never accepts a forged approval | `CONST-0-4` | `kernel.py test`: a seal with the right shape and a re-hashed chain is still rejected |
+| Never writes past a change | `CONST-0-5` | `kernel.py test`: one edited field in one past line, and every command refuses |
+| What no one decided is yours: nothing matched, or something waits on you, is exit 42 | `CONST-0-6` | `constitution/test_eternity.py`: nothing found, an answer waiting and a seal that doesn't prove each end at 42, never 0 |
+| Same answer every run | none | the ranking is checked under different hash seeds |
+| Every add-on keeps its card's promises: what it writes, where it goes online | `CONST-0-3` | the guard watches every process an add-on's tests start, and fails a breach even one the add-on catches and hides |
+| Every add-on's tests can fail | none | each add-on's code is broken on purpose a few ways (`mutants`); a break its tests miss fails CI, unless it's listed as harmless with the reason |
+| Every add-on refuses a bad command line, and every reader keeps the same contract | none | one test holds them all to it (`adapters/stdlib/ci/test_contract.py`) |
 
 ### The law above them
 

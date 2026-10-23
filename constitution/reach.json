@@ -1,0 +1,93 @@
+{
+  "about": "Every clause of CONSTITUTION.md that no code or test in this repo cites, and why. 'out of reach': the clause governs something willow doesn't have. 'open': willow does something like it, but no check cites the clause yet, so whether it enforces the clause is still to be shown. An article's entry answers each of its clauses that has none of its own. test_docs.py fails on a clause with no answer, and on an answer for a clause the code already cites. Changing this file is the maintainer's call, like a verdict.",
+  "answers": {
+    "CONST-I": {
+      "answer": "out of reach",
+      "why": "Identity and standing govern many agents, each with a signed manifest and a role. willow has one person and no agents: nothing in it holds an identity but the key."
+    },
+    "CONST-I-5": {
+      "answer": "open",
+      "why": "The kernel shows authority only by the key: a seal counts when its proof holds under the person's key, whatever the suggestion says of itself. No check cites I.5 yet."
+    },
+    "CONST-II": {
+      "answer": "out of reach",
+      "why": "Creating, delegating and vetoing capabilities between agents: willow has no agents to grant them to."
+    },
+    "CONST-II-1": {
+      "answer": "open",
+      "why": "Each add-on's card enumerates what it writes and where it goes online, and the guard holds it to that; whether that is II.1's enumeration is still to be shown. No check cites II.1 yet."
+    },
+    "CONST-III": {
+      "answer": "open",
+      "why": "The guard holds each add-on to its card's reach, and cites Article III; which of its clauses that meets, clause by clause, no check says yet."
+    },
+    "CONST-III-3": {
+      "answer": "out of reach",
+      "why": "A card's grant doesn't expire: it is a standing promise in the repo, changed only by a pull request."
+    },
+    "CONST-IV": {
+      "answer": "out of reach",
+      "why": "Willow has two states, suggested and approved. The axes, tiers, verifiers and demotions of Article IV are the fleet's."
+    },
+    "CONST-IV-2": {
+      "answer": "open",
+      "why": "Anyone may propose and only the key holder seals, which the kernel enforces under CONST-0-2; no check cites IV.2 itself yet."
+    },
+    "CONST-V": {
+      "answer": "out of reach",
+      "why": "Delegation, succession, incapacity and escalation budgets govern an operator with agents acting for them. Willow has one person, who acts for themself."
+    },
+    "CONST-V-1": {
+      "answer": "open",
+      "why": "Approval is reserved to the person, by the key, under CONST-0-4; no check cites V.1 itself yet."
+    },
+    "CONST-V-6": {
+      "answer": "open",
+      "why": "Everything another program hands in is a suggestion, an offer that waits; no check cites V.6 itself yet."
+    },
+    "CONST-VI": {
+      "answer": "open",
+      "why": "The kernel's record is append-only and hash-chained, under CONST-0-5; which clauses of Article VI that meets, clause by clause, no check says yet."
+    },
+    "CONST-VI-3": {
+      "answer": "out of reach",
+      "why": "A split brain needs two writers apart. Willow's record has one writer, on one machine, behind a file lock."
+    },
+    "CONST-VI-5": {
+      "answer": "out of reach",
+      "why": "Unanimity is a property of many voters; willow has one person."
+    },
+    "CONST-VII": {
+      "answer": "out of reach",
+      "why": "The Interpreter is a seat in the fleet that reads the law in a dispute. Willow has no seats and no disputes between them."
+    },
+    "CONST-VII-default": {
+      "answer": "open",
+      "why": "Whatever no one decided goes to the person as exit 42, under CONST-0-6; no check cites VII.default itself yet."
+    },
+    "CONST-VIII": {
+      "answer": "out of reach",
+      "why": "Amendment is how people change the law, not something code does. The repo holds the text; changing it is a pull request a person merges."
+    },
+    "CONST-IX": {
+      "answer": "out of reach",
+      "why": "Ratification and founding are people's acts. The constitution is a draft no one has ratified yet."
+    },
+    "CONST-X": {
+      "answer": "out of reach",
+      "why": "Supremacy, severability and concurrence govern how the law ranks against other rules in the fleet. Willow's code has no other law to rank against."
+    },
+    "CONST-XI": {
+      "answer": "out of reach",
+      "why": "Constitutional review is a process people invoke, with suspensions and binding resolutions; nothing in willow runs it."
+    },
+    "CONST-XII": {
+      "answer": "out of reach",
+      "why": "Resource allocation between agents: willow runs one command at a time, for one person, with nothing to allocate."
+    },
+    "CONST-XIII": {
+      "answer": "out of reach",
+      "why": "Federation is reserved for Version 2 of the law, and has no clauses yet."
+    }
+  }
+}

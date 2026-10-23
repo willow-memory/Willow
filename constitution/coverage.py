@@ -55,6 +55,8 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parent.parent
 CONSTITUTION = REPO_ROOT / "CONSTITUTION.md"
 DECLARATIONS = REPO_ROOT / "constitution" / "declarations.json"
+#: each clause no code cites, answered: out of reach, or open, and why
+REACH = REPO_ROOT / "constitution" / "reach.json"
 
 EXIT_OK, EXIT_ANSWER_IS_NO, EXIT_CANNOT = 0, 1, 2
 
@@ -221,6 +223,22 @@ def load_declarations(path: Path) -> tuple[dict[str, dict], str | None]:
     return decls, None
 
 
+def load_reach(path: Path) -> dict[str, dict]:
+    """Each clause's answer from reach.json, an article's standing for each
+    of its clauses that has none of its own. Missing or unreadable: none."""
+    try:
+        answers = json.loads(path.read_text(encoding="utf-8"))["answers"]
+    except (OSError, json.JSONDecodeError, KeyError, TypeError):
+        return {}
+    clauses, _ = clauses_from_constitution(CONSTITUTION)
+    out = {}
+    for cid in clauses:
+        article = "-".join(cid.split("-")[:2])
+        if cid in answers or article in answers:
+            out[cid] = answers.get(cid) or answers[article]
+    return out
+
+
 def build_report(roots: list[Path]) -> dict:
     clauses, unreadable_const = clauses_from_constitution(CONSTITUTION)
     if unreadable_const:
@@ -233,10 +251,11 @@ def build_report(roots: list[Path]) -> dict:
     forms: dict[str, dict[str, list[str]]] = {}
     citations, unreadable = scan(
         roots,
-        skip={CONSTITUTION, here, here.parent / "test_coverage.py"},
+        skip={CONSTITUTION, here, here.parent / "test_coverage.py", REACH},
         forms=forms,
     )
     decls, decl_problem = load_declarations(DECLARATIONS)
+    reach = load_reach(REACH)
 
     rows = []
     for cid in clauses:
@@ -253,6 +272,8 @@ def build_report(roots: list[Path]) -> dict:
                 note = "no verdict recorded — see the declarations line above"
             elif cites:
                 note = "cited in the tree but no human verdict recorded"
+            elif cid in reach:
+                note = f"{reach[cid]['answer']}: {reach[cid]['why']}"
             else:
                 note = "no citation found in the scanned roots and no verdict recorded"
         rows.append(

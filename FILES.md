@@ -27,6 +27,7 @@ willow/
 │   ├── coverage.py           which clauses are cited where, generated, never tabled
 │   ├── test_coverage.py      its tests
 │   ├── declarations.json     the verdicts, kept by hand; none recorded yet
+│   ├── reach.json            each clause no code cites, answered: out of reach, or open, and why
 │   └── README.md             what the kernel answers for, and what it doesn't claim
 ├── adapters/                 add-ons built on top of kernel.py
 │   ├── README.md             the rules every add-on follows

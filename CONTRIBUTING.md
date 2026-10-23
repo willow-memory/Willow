@@ -65,12 +65,28 @@ whether it goes online, and CI holds it to that while its tests run. No card
 can loosen three rules: an add-on never changes your files, never writes the
 record except through the kernel, and never reads the key itself.
 
-**A check that enforces the law cites it.** If what you build enforces a
-clause of [CONSTITUTION.md](CONSTITUTION.md), name the clause by its Trace ID
-(`CONST-0-3`) in the code or the test that does it. The law never names your
-code; your code names the law, and the coverage report finds it. Never write
-a verdict into `constitution/declarations.json` for your own work: that is
-the maintainer's call, and the witness is not the actor.
+**The law, both ways.** The law never names your code; your code names
+the law. If what you build enforces a clause of
+[CONSTITUTION.md](CONSTITUTION.md), name the clause by its Trace ID
+(`CONST-0-3`) in the code that does it, and in a test that tries to break
+it. `test_docs.py` holds both directions:
+
+- **code to law:** every Trace ID cited anywhere is a clause the law has,
+  and every clause cited in code is also cited by a test, since enforcing
+  a clause with nothing trying to break it is a wish;
+- **law to code:** every clause is cited by code or a test, or answered in
+  `constitution/reach.json`: *out of reach* (it governs something willow
+  doesn't have) or *open* (willow does something like it, but no check
+  shows it yet), with the reason. An answer for a clause the code already
+  cites fails too, so the file can't go stale;
+- **the README:** each guarantee names the clause it holds, or `none`, and
+  every eternity clause is one of them.
+
+A change to the law, or to what the code cites, brings its answers in the
+same pull request. Two files are the maintainer's call, never yours for your
+own work: the verdicts in `constitution/declarations.json`, and the answers
+in `constitution/reach.json`. Propose them in the pull request; the witness
+is not the actor.
 
 **The docs match the files.** `test_docs.py` checks that the file tree in
 [FILES.md](FILES.md) lists every file in the repo and nothing else, that the
