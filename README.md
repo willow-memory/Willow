@@ -526,6 +526,7 @@ willow/
 ├── test_kernel.py            its tests
 ├── test_docs.py              holds every doc to the files that exist, and this tree to the repo
 ├── README.md                 this file
+├── CONTRIBUTING.md           the rules every change follows, and how to show it does
 ├── adapters/                 add-ons built on top of kernel.py
 │   ├── README.md             the rules every add-on follows
 │   ├── planned.json          the add-ons not built yet, as this README lists them
@@ -685,7 +686,8 @@ tests that CI runs. The card opens with a short header (section, one line,
 source, date added) that [What you can build on it](#what-you-can-build-on-it)
 is generated from. To build a planned one, take its entry out of
 `adapters/planned.json` in the same change. The rules are in
-[adapters/README.md](adapters/README.md).
+[adapters/README.md](adapters/README.md). What every change follows, add-on or not, is in
+[CONTRIBUTING.md](CONTRIBUTING.md).
 
 **Ports** to another language go in `ports/` and must pass
 `python vectors/compare.py` with zero unexplained differences. Go and Rust are

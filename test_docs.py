@@ -141,6 +141,10 @@ ELSEWHERE = {
         "requirements.txt": "each deps add-on's own file, in its folder",
         "requirements-floor.txt": "each deps add-on's own file, in its folder",
     },
+    "CONTRIBUTING.md": {
+        "requirements.txt": "each deps add-on's own file, in its folder",
+        "requirements-floor.txt": "each deps add-on's own file, in its folder",
+    },
     "adapters/deps/README.md": {
         "requirements.txt": "each deps add-on's own file, in its folder",
         "requirements-floor.txt": "each deps add-on's own file, in its folder",
