@@ -113,3 +113,22 @@ def test_the_gates_run_in_one_fixed_order_and_cover_every_part():
         *(f"demo:{p}" for p in ci.people()),
     ]  # fmt: skip
     assert {p for p, _, _ in ci.gates()} == set(ci.PARTS)
+
+
+def test_a_record_inside_the_repo_where_git_would_count_it_is_refused(tmp_path):
+    """It would be hashed into the files it records (the first CI run did
+    exactly this, and the docs test caught the files it left)."""
+    inside = ci.ROOT / "ci-record-test-only"
+    try:
+        got = cli("run", "demo", "--box", str(inside), "--now", NOW)
+        assert got.returncode != 0 and "not ignored by git" in got.stderr
+        assert not inside.exists()
+        assert not inside.with_name(inside.name + ".key").exists()
+    finally:  # even when it fails: nothing may be left in the repo
+        if inside.exists():
+            import shutil
+
+            shutil.rmtree(inside)
+        inside.with_name(inside.name + ".key").unlink(missing_ok=True)
+    ok = cli("run", "demo", "--box", str(tmp_path / "out"), "--now", NOW)
+    assert ok.returncode == 0  # outside the repo is fine

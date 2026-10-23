@@ -2,7 +2,8 @@ name: ci
 
 # Every check is in adapters/ci/ci.py, which writes each one as a verdict row
 # on a kernel record. This file only installs the tools, runs one part per
-# job, verifies the record, and keeps it as the run's artifact.
+# job, verifies the record, and keeps it as the run's artifact. The record
+# lives in the runner's temp folder: never in the checkout it hashes.
 on:
   push:
   pull_request:
@@ -19,14 +20,14 @@ jobs:
         with:
           python-version: "3.13"
       - run: pip install ruff==0.16.7
-      - run: python adapters/ci/ci.py run lint --box ci-record
+      - run: python adapters/ci/ci.py run lint --box ${{ runner.temp }}/ci-record
       - if: always()
-        run: python adapters/ci/ci.py verify --box ci-record
+        run: python adapters/ci/ci.py verify --box ${{ runner.temp }}/ci-record
       - if: always()
         uses: actions/upload-artifact@v7
         with:
           name: ci-record-lint
-          path: ci-record/record.jsonl
+          path: ${{ runner.temp }}/ci-record/record.jsonl
 
   tests:
     # kernel.py says 3.9+, so 3.9 is in the matrix, not assumed.
@@ -41,14 +42,14 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - run: pip install pytest
-      - run: python adapters/ci/ci.py run tests --box ci-record
+      - run: python adapters/ci/ci.py run tests --box ${{ runner.temp }}/ci-record
       - if: always()
-        run: python adapters/ci/ci.py verify --box ci-record
+        run: python adapters/ci/ci.py verify --box ${{ runner.temp }}/ci-record
       - if: always()
         uses: actions/upload-artifact@v7
         with:
           name: ci-record-tests-${{ matrix.python-version }}
-          path: ci-record/record.jsonl
+          path: ${{ runner.temp }}/ci-record/record.jsonl
 
   ports:
     runs-on: ubuntu-latest
@@ -67,14 +68,14 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: "8.0.x"
-      - run: python adapters/ci/ci.py run ports --box ci-record
+      - run: python adapters/ci/ci.py run ports --box ${{ runner.temp }}/ci-record
       - if: always()
-        run: python adapters/ci/ci.py verify --box ci-record
+        run: python adapters/ci/ci.py verify --box ${{ runner.temp }}/ci-record
       - if: always()
         uses: actions/upload-artifact@v7
         with:
           name: ci-record-ports
-          path: ci-record/record.jsonl
+          path: ${{ runner.temp }}/ci-record/record.jsonl
 
   demo:
     runs-on: ubuntu-latest
@@ -83,11 +84,11 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: "3.13"
-      - run: python adapters/ci/ci.py run demo --box ci-record
+      - run: python adapters/ci/ci.py run demo --box ${{ runner.temp }}/ci-record
       - if: always()
-        run: python adapters/ci/ci.py verify --box ci-record
+        run: python adapters/ci/ci.py verify --box ${{ runner.temp }}/ci-record
       - if: always()
         uses: actions/upload-artifact@v7
         with:
           name: ci-record-demo
-          path: ci-record/record.jsonl
+          path: ${{ runner.temp }}/ci-record/record.jsonl

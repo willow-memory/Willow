@@ -10,7 +10,9 @@ record is hash-chained like any other and the kernel's `verify` checks it.
 
 `run` with no part runs all four. The record goes in `.ci-record/` by default
 (git ignores it), and the key `init` makes goes beside it in
-`.ci-record.key`.
+`.ci-record.key`. A record or key inside the repo where git would count it is
+refused: it would be hashed into the very files it records. CI keeps its
+record in the runner's temp folder.
 
 | Part | Gates, in this order |
 |---|---|

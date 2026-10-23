@@ -208,12 +208,31 @@ def quiet(fn, *a):
         return fn(*a)
 
 
+def counted(path: Path) -> bool:
+    """Whether `path` sits in the repo where git would track it, and so in
+    `files_sha256` and in the README's tree."""
+    path = path.resolve()
+    if not path.is_relative_to(ROOT):
+        return False
+    ignored = subprocess.run(
+        ["git", "check-ignore", "-q", str(path)], cwd=ROOT, capture_output=True
+    )
+    return ignored.returncode != 0
+
+
 def open_box(box: Path, ts: str) -> None:
     """A kernel box whose pile is this repo. Its key is made beside it; no
-    seal is ever written with it."""
+    seal is ever written with it. Neither may sit where git would count it:
+    the record would be hashed into the files it records, and change them."""
+    key = box.parent / (box.name + ".key")
+    for path in (box, key):
+        if counted(path):
+            raise SystemExit(
+                f"refused: {path} is in the repo and not ignored by git;"
+                " put the record outside the repo, or under .ci-record"
+            )
     if (box / "record.jsonl").exists():
         return
-    key = box.parent / (box.name + ".key")
     if quiet(kernel.init, box, ROOT, key, ts) != kernel.ALIVE:
         raise SystemExit(f"refused: couldn't start a record at {box}")
 
