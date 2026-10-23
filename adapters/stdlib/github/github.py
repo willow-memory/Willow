@@ -14,6 +14,7 @@ comment, so a report can't make it tag anyone.
 the kernel names, and the README (its words and its badges) and FILES.md
 quote the matrix as it is; the CI badge names a workflow that exists;
 the idea form offers the add-on list's own sections and `writes` values;
+the changelog job skips Dependabot's pull requests and no one else's;
 the security form asks under the heading `report` reads.
 
 Delete this folder and `.github/`, and willow runs and tests the same on
@@ -41,6 +42,10 @@ USAGE = "usage: github.py report < ISSUE_BODY | github.py check"
 SECTION = "Where it is"
 WHOSE = ROOT / "adapters" / "stdlib" / "ci" / "whose.py"
 DOT = ROOT / ".github"
+#: the changelog job runs on every pull request but Dependabot's, which can't
+#: write an entry and isn't listed; no other author is skipped
+CHANGELOG_IF = ("github.event_name == 'pull_request' && "
+                "github.event.pull_request.user.login != 'dependabot[bot]'")  # fmt: skip
 
 
 def places(body: str) -> list[str]:
@@ -135,6 +140,12 @@ def problems() -> list[str]:
             out.append(
                 f"README.md's CI badge names {flow}, which .github/workflows/ doesn't hold"
             )
+    ci = (DOT / "workflows" / "ci.yml").read_text(encoding="utf-8")
+    job = re.search(r"^  changelog:\n(.*?)(?=^  \S|\Z)", ci, re.M | re.S)
+    if not job or f"    if: {CHANGELOG_IF}\n" not in job.group(1):
+        out.append(
+            "ci.yml's changelog job doesn't run on every pull request but Dependabot's"
+        )
     security = (DOT / "ISSUE_TEMPLATE" / "security.yml").read_text(encoding="utf-8")
     if f"label: {SECTION}\n" not in security:
         out.append(f'security.yml has no "{SECTION}" field for report to read')

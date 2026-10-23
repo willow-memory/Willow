@@ -183,7 +183,8 @@ beside the GitHub one: a host.json for `adapters/stdlib/ci/whose.py`, and that s
 - A change to anything but the docs adds an entry under `## Unreleased` in
   [CHANGELOG.md](CHANGELOG.md), ending with its pull request's number, such
   as `(#7)`, under `### Added`, `### Changed`, `### Fixed` or `### Removed`.
-  CI checks it on every pull request.
+  CI checks it on every pull request but Dependabot's: a bot's dependency
+  update can't write an entry, and those updates aren't listed.
 - Regenerate the add-on list (ADDONS.md, and the README's one feature) with
   `python adapters/stdlib/readme/readme.py write`, never by hand;
   `test_docs.py` fails if it's stale.
