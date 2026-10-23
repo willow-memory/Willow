@@ -1,6 +1,6 @@
 # The kernel's vectors: one script, any language
 
-`kernel.py` is the smallest script that runs the whole loop for anyone. This
+`kernel.py` answers questions from a person's own files. This
 folder lets it run in another language without becoming another script: a
 port answers the same cases byte for byte, writes boxes `kernel.py` verifies,
 and verifies boxes `kernel.py` wrote. The vectors are the converter, both
