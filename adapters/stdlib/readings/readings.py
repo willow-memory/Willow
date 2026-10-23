@@ -1,6 +1,6 @@
 """readings: two hints beside a kernel bite, built on top of kernel.py.
 
-    python adapters/readings/readings.py bite --box DIR [--now TS] "your words"
+    python adapters/stdlib/readings/readings.py bite --box DIR [--now TS] "your words"
 
 It runs the kernel's own bite, then reads the chunks the kernel served and
 adds, beside the kernel's answer:
@@ -28,7 +28,7 @@ import json
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 import kernel  # noqa: E402
 from kernel import held_by, holds, newest, words  # noqa: E402,F401
 

@@ -14,18 +14,18 @@ chance, but the two folders are more alike than a blind test should make them.
 
 | Need | His question | Served | Verdict |
 |---|---|---|---|
-| N1 his hearing is going | Q12 "ear doctor phone number" | nothing (exit 42: "no file has number") | **missed**; no question names it, and the referral and cancelled appointments never came up |
-| N2 Q3 tax estimate not paid | Q6 "did I pay all my taxes this year" | a recital email, then the 2024 notice and its $0.00 follow-up | **missed**; the missing payment is a bank line that isn't there, with no id to match |
-| N3 Dad can't live alone | Q4 "what pills is dad on now", Q19 "is it bad that dad's still driving" | Q4: texts with Dad and `notes/2026-06-21_dads.txt` (expired milk, stove on, pills untaken); Q19: old texts | **evidence served** (Q4), not named; Ruth's emails never came up |
-| N4 the van's timing belt | Q5 "is the van due for anything big" | `van/service_history.txt`, the 2022 timing-belt entry | **evidence served**; the odometer (157,641 against 158,000) is in `van_log.csv`, never served |
-| N5 Nell, after the graduation | Q17 "what's happening for thanksgiving" | Nell's grudging "you can come if you want I guess" | **an accident**, at best |
-| N6 Mom's piano in the garage | Q10 "where did I order the bass strings" | the 2022 order | **missed**; the hygrometer and the leak notes never came up |
-| N7 the theatre owes $640 | Q7 "who still owes me money" | nothing (exit 42: "no file has owes") | **missed** |
+| N1 his hearing is going | question 12, "ear doctor phone number" | nothing (exit 42: "no file has number") | **missed**; no question names it, and the referral and cancelled appointments never came up |
+| N2 third-quarter tax estimate not paid | question 6, "did I pay all my taxes this year" | a recital email, then the 2024 notice and its $0.00 follow-up | **missed**; the missing payment is a bank line that isn't there, with no id to match |
+| N3 Dad can't live alone | question 4, "what pills is dad on now", question 19, "is it bad that dad's still driving" | question 4: texts with Dad and `notes/2026-06-21_dads.txt` (expired milk, stove on, pills untaken); question 19: old texts | **evidence served** (question 4), not named; Ruth's emails never came up |
+| N4 the van's timing belt | question 5, "is the van due for anything big" | `van/service_history.txt`, the 2022 timing-belt entry | **evidence served**; the odometer (157,641 against 158,000) is in `van_log.csv`, never served |
+| N5 Nell, after the graduation | question 17, "what's happening for thanksgiving" | Nell's grudging "you can come if you want I guess" | **an accident**, at best |
+| N6 Mom's piano in the garage | question 10, "where did I order the bass strings for mom's piano" | the 2022 order | **missed**; the hygrometer and the leak notes never came up |
+| N7 the theatre owes $640 | question 7, "who still owes me money" | nothing (exit 42: "no file has owes") | **missed** |
 
 Traps: T2 (the house) came up with its own ending (`house_done.txt` served
 beside the 2021 emails), and T4 (the 2024 notice) with its $0.00 follow-up,
 so neither sprang. T1 and T5 never came up. T3 (the client who's deaf) was
-what Q8 asked for.
+what question 8 asked for.
 
 **None of seven found. Two with evidence served, one by accident.** Odile's
 third pass found six of seven: the readings were fitted to her folder.
@@ -37,7 +37,7 @@ All three were run on every question.
 - **What isn't there: 88 of 98 hint lines, all noise.** Each of his invoices
   names one client's piano model, and his tuning log names them all, so every
   answer out of the log said "GE-30: not in INV-2021-005.txt" for dozens of
-  invoices (Q1, Q2, Q15). The "named beside" rule held for Odile's orders and
+  invoices (questions 1, 2 and 15). The "named beside" rule held for Odile's orders and
   fails on a per-client file. A reading that floods is worse than none.
 - **Numbers over time: never spoke.** His tuning logs have several jobs a day,
   so they read as ledgers; his hygrometer and odometer tables were never served.

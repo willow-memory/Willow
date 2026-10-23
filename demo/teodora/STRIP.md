@@ -11,15 +11,15 @@ the readings adapter on a copy of `life/` alone (no words list), and opened
 
 | Need | Her question | Served | Verdict |
 |---|---|---|---|
-| N1 a client owes £2,140 | Q2 "has kirsty paid me yet", Q20 "which clients are behind on paying" | nothing, twice (exit 42: no "behind", no "paying"); Q11 (about Hargreaves) served ledger rows with Bramble & Bean's three `sent` invoices | **an accident** |
-| N2 her PI cover lapses 3 Nov | Q18 "does my work insurance need anything from me" | the replacement-card email: "regular payments … insurance … will need to be updated" | **evidence served**; the renewal email and the schedule didn't come up |
-| N3 MOT 9 Nov, advisories unfixed | Q1 "when's the car due its mot" | `MOT_2025-11-10.txt`: "Expiry: 09/11/2026", both front tyres near the limit | **found, asked** |
-| N4 her wrist, treatment dropped | Q8 "those wrist stretches the physio gave me" | the physio receipt ("Next appt: 01/04/2025") and the calendar entry | **evidence served**; the exercises and the brace didn't come up |
-| N5 AAT access ends 31 Mar 2027 | Q14 "which aat exams have I passed" | `study/aat/progress.md` (three passed, INAC blank) | **evidence served**, not the deadline |
-| N6 the recipe book, 11 of 30 | Q17 "what was I going to do for ana's wedding and how far along am I" | nothing (exit 42: no "along") | **missed** |
-| N7 she owes Dev £350 | Q9 "how much do I still owe dev" | nothing (exit 42: no "owe") | **missed** |
+| N1 a client owes £2,140 | question 2, "has kirsty paid me yet", question 20, "which clients are behind on paying" | nothing, twice (exit 42: no "behind", no "paying"); question 11 (about Hargreaves) served ledger rows with Bramble & Bean's three `sent` invoices | **an accident** |
+| N2 her PI cover lapses 3 Nov | question 18, "does my work insurance need anything from me" | the replacement-card email: "regular payments … insurance … will need to be updated" | **evidence served**; the renewal email and the schedule didn't come up |
+| N3 MOT 9 Nov, advisories unfixed | question 1, "when's the car due its mot" | `MOT_2025-11-10.txt`: "Expiry: 09/11/2026", both front tyres near the limit | **found, asked** |
+| N4 her wrist, treatment dropped | question 8, "those wrist stretches the physio gave me" | the physio receipt ("Next appt: 01/04/2025") and the calendar entry | **evidence served**; the exercises and the brace didn't come up |
+| N5 AAT access ends 31 Mar 2027 | question 14, "which aat exams have I passed" | `study/aat/progress.md` (three passed, INAC blank) | **evidence served**, not the deadline |
+| N6 the recipe book, 11 of 30 | question 17, "what was I going to do for ana's wedding and how far along am I" | nothing (exit 42: no "along") | **missed** |
+| N7 she owes Dev £350 | question 9, "how much do I still owe dev" | nothing (exit 42: no "owe") | **missed** |
 
-Traps: T1 (the phishing refund) was what Q12 asked about, and was served
+Traps: T1 (the phishing refund) was what question 12 asked about, and was served
 without a word on whether it's real. T2 sprang: "did hargreaves pay august"
 served ledger rows showing his August invoice `sent`, not the bank line and
 remittance saying it was paid. T3, T4, T5 never came up.
@@ -59,3 +59,12 @@ The same twenty questions on a fresh copy. Five empty answers, against six.
   either way round; lines like `[15/10/2026, …]` now date.
 
 Needs: still one found as asked, now four with evidence served, two missed.
+
+## With the starter-words list (2026-10-23)
+
+The first-day list from `adapters/stdlib/starter-words`, copied as it ships,
+on a fresh copy of her files. Question 9, "how much do I still owe dev", was
+empty; with the list it serves her chat with Sam, where "Dev says he can lend
+us some till Jan": the list reads owe as lend. **N7 moves from missed to
+evidence served.** Hollis's question 7 stays empty with the same list: his
+invoices hold neither "still" nor "money".

@@ -1,0 +1,252 @@
+[
+ {
+  "name": "bank",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Bank CSV and OFX statements as dated lines, with spending by month.",
+  "source": "new"
+ },
+ {
+  "name": "bookmarks",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Browser bookmarks (HTML export, Firefox JSON) and history, read from a copy of its SQLite file.",
+  "source": "new"
+ },
+ {
+  "name": "browse",
+  "kind": "stdlib",
+  "section": "Ways to use it",
+  "line": "A local web page to ask questions and approve answers, reachable from this machine only.",
+  "source": "new"
+ },
+ {
+  "name": "care",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "For caregivers: medications, vitals and appointments from a care log, what's due and what moved.",
+  "source": "box"
+ },
+ {
+  "name": "changed",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "What's new, edited or deleted in your folder since the last check, as fingerprint rows.",
+  "source": "bot"
+ },
+ {
+  "name": "claude",
+  "kind": "deps",
+  "section": "Assistants",
+  "line": "Suggestions from Claude through the Anthropic API, citing your passages.",
+  "source": "new",
+  "needs": "anthropic; MIT",
+  "network": "cloud"
+ },
+ {
+  "name": "dice",
+  "kind": "stdlib",
+  "section": "Play",
+  "line": "Seeded dice rolls as rows: every roll replayable and checkable.",
+  "source": "bot"
+ },
+ {
+  "name": "dice5e",
+  "kind": "deps",
+  "section": "Play",
+  "line": "Full tabletop dice notation (4d6kh3, advantage).",
+  "source": "bot",
+  "needs": "dice; MIT"
+ },
+ {
+  "name": "digest",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "One page: suggestions waiting, approvals gone stale, dates coming up, questions repeated.",
+  "source": "bot"
+ },
+ {
+  "name": "encrypt",
+  "kind": "deps",
+  "section": "Trust and proof",
+  "line": "Keeps the record folder encrypted at rest.",
+  "source": "new",
+  "needs": "cryptography; Apache-2.0 or BSD"
+ },
+ {
+  "name": "flashcards",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "Approved question-and-answer pairs become cards, scheduled by spaced repetition.",
+  "source": "box"
+ },
+ {
+  "name": "forecasts",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "Write a prediction before the outcome, settle it later, see your Brier score.",
+  "source": "bot"
+ },
+ {
+  "name": "git-history",
+  "kind": "deps",
+  "section": "Reading more kinds of files",
+  "line": "Commit messages and diffs as a dated pile: \"when did we change the retry limit?\"",
+  "source": "new",
+  "needs": "the git program; GPL, called not linked"
+ },
+ {
+  "name": "health",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Apple Health and Google Fit exports as daily numbers the readings add-on can trend.",
+  "source": "new"
+ },
+ {
+  "name": "invoices",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "For freelancers: invoices and payments matched by the id pattern you give, never guessed.",
+  "source": "new"
+ },
+ {
+  "name": "life",
+  "kind": "stdlib",
+  "section": "Play",
+  "line": "Conway's Game of Life as rows: a fully deterministic world on the record.",
+  "source": "bot"
+ },
+ {
+  "name": "local-model",
+  "kind": "deps",
+  "section": "Assistants",
+  "line": "Suggestions from a model on this machine only, such as Ollama or llama.cpp.",
+  "source": "new",
+  "needs": "a local model server; licence varies by model"
+ },
+ {
+  "name": "meaning",
+  "kind": "deps",
+  "section": "Finding things",
+  "line": "Search by meaning: \"who owes me money\" finds \"invoice outstanding\".",
+  "source": "new",
+  "needs": "sentence-transformers; Apache-2.0",
+  "network": "model downloaded once"
+ },
+ {
+  "name": "ocr",
+  "kind": "deps",
+  "section": "Reading more kinds of files",
+  "line": "Text out of photos of letters and scanned PDFs.",
+  "source": "new",
+  "needs": "pytesseract and the tesseract program; Apache-2.0"
+ },
+ {
+  "name": "pgp",
+  "kind": "deps",
+  "section": "Trust and proof",
+  "line": "Signs exports and reports with your PGP key, verifiable anywhere.",
+  "source": "new",
+  "needs": "the gpg program and python-gnupg; BSD"
+ },
+ {
+  "name": "photos",
+  "kind": "deps",
+  "section": "Reading more kinds of files",
+  "line": "When and where each photo was taken, as dated lines.",
+  "source": "new",
+  "needs": "Pillow; MIT-CMU"
+ },
+ {
+  "name": "report",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "A self-checking bundle: the record, the approved answers, and a script that re-verifies them on any machine.",
+  "source": "box"
+ },
+ {
+  "name": "secrets-audit",
+  "kind": "stdlib",
+  "section": "Privacy and safety",
+  "line": "Finds keys and passwords sitting in plain files.",
+  "source": "bot"
+ },
+ {
+  "name": "sheets",
+  "kind": "deps",
+  "section": "Reading more kinds of files",
+  "line": "Spreadsheets with formulas and formatting kept, beyond what the office add-on reads.",
+  "source": "new",
+  "needs": "openpyxl; MIT"
+ },
+ {
+  "name": "speak",
+  "kind": "deps",
+  "section": "Ways to use it",
+  "line": "Reads answers aloud.",
+  "source": "new",
+  "needs": "pyttsx3; MPL-2.0"
+ },
+ {
+  "name": "stems",
+  "kind": "deps",
+  "section": "Your own words",
+  "line": "Word forms for 20+ languages, so \"maisons\" finds \"maison\".",
+  "source": "new",
+  "needs": "snowballstemmer; BSD-3"
+ },
+ {
+  "name": "synonyms",
+  "kind": "deps",
+  "section": "Your own words",
+  "line": "Suggests words-list lines for a word no file has.",
+  "source": "new",
+  "needs": "nltk and WordNet; Apache-2.0",
+  "network": "data downloaded once"
+ },
+ {
+  "name": "typos",
+  "kind": "deps",
+  "section": "Finding things",
+  "line": "Forgives misspellings in questions.",
+  "source": "new",
+  "needs": "rapidfuzz; MIT"
+ },
+ {
+  "name": "voice",
+  "kind": "deps",
+  "section": "Reading more kinds of files",
+  "line": "Dictation, calls and lectures transcribed into dated text.",
+  "source": "new",
+  "needs": "faster-whisper; MIT",
+  "network": "model downloaded once"
+ },
+ {
+  "name": "words-de",
+  "kind": "stdlib",
+  "section": "Your own words",
+  "line": "German common words, so questions aren't matched on \"der\" and \"und\".",
+  "source": "new"
+ },
+ {
+  "name": "words-es",
+  "kind": "stdlib",
+  "section": "Your own words",
+  "line": "Spanish common words (\"el\", \"y\").",
+  "source": "new"
+ },
+ {
+  "name": "words-fr",
+  "kind": "stdlib",
+  "section": "Your own words",
+  "line": "French common words (\"le\", \"et\").",
+  "source": "new"
+ },
+ {
+  "name": "words-pt",
+  "kind": "stdlib",
+  "section": "Your own words",
+  "line": "Portuguese common words (\"o\", \"e\").",
+  "source": "new"
+ }
+]

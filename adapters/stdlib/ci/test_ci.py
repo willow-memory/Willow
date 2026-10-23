@@ -1,6 +1,6 @@
 """The CI one-script: verdict rows on a kernel record, the same every run.
 
-Each test holds one promise in adapters/ci/README.md, and each can fail: the
+Each test holds one promise in adapters/stdlib/ci/README.md, and each can fail: the
 record is byte-for-byte the same for the same files, a missing tool is
 unreachable (not failing, not a pass), a failing command is failing, and the
 record holds only ci verdicts, which `verify` checks along with the kernel's
@@ -111,6 +111,8 @@ def test_the_gates_run_in_one_fixed_order_and_cover_every_part():
         "tests:beats", "tests:kernel", "tests:docs", "tests:adapters", "tests:vectors",
         *(f"ports:{p}" for p in ci.PORTS),
         *(f"demo:{p}" for p in ci.people()),
+        *(g for d in ci.deps_add_ons() for g in (f"deps:{d}", f"deps:{d}@floor")),
+        "deps:floors",
     ]  # fmt: skip
     assert {p for p, _, _ in ci.gates()} == set(ci.PARTS)
 
@@ -132,3 +134,29 @@ def test_a_record_inside_the_repo_where_git_would_count_it_is_refused(tmp_path):
         inside.with_name(inside.name + ".key").unlink(missing_ok=True)
     ok = cli("run", "demo", "--box", str(tmp_path / "out"), "--now", NOW)
     assert ok.returncode == 0  # outside the repo is fine
+
+
+def test_the_floor_rule_takes_the_last_release_of_2020_else_the_first():
+    old = {"1.0": "2019-03-01T00:00:00Z", "1.1": "2020-12-31T23:00:00Z",
+           "0.9": "2021-02-01T00:00:00Z", "2.0": "2022-01-01T00:00:00Z"}  # fmt: skip
+    assert ci.rule_floor(old) == "1.1"  # by upload time: 0.9 came out after 1.1
+    assert (
+        ci.rule_floor({"0.1": "2024-11-20T00:00:00Z", "1.0": "2025-01-01T00:00:00Z"})
+        == "0.1"
+    )
+
+
+def test_a_floor_above_the_rule_needs_a_reason_on_its_card(monkeypatch):
+    uploaded = {"pypdf": {"1.9": "2014-05-17T00:00:00Z", "3.1.0": "2022-12-23T00:00:00Z"},
+                "mcp": {"0.9.1": "2024-11-20T00:00:00Z", "2.0.0": "2026-07-28T00:00:00Z"}}  # fmt: skip
+    monkeypatch.setattr(ci, "releases", lambda package: uploaded[package])
+    assert ci.floors()[0] == ci.SATISFIED
+    monkeypatch.setattr(ci, "floor_line", lambda name: "")
+    state, _, why = ci.floors()
+    assert state == ci.FAILING and "gives no reason" in why
+
+    def offline(package):
+        raise OSError("no network")
+
+    monkeypatch.setattr(ci, "releases", offline)
+    assert ci.floors()[0] == ci.UNREACHABLE

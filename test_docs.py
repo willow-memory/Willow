@@ -130,9 +130,24 @@ ELSEWHERE = {
         "odile-record/": "made by the first-five-minutes walkthrough",
         "odile.key": "made by the first-five-minutes walkthrough",
     },
-    "adapters/ci/README.md": {
+    "adapters/stdlib/ci/README.md": {
         ".ci-record/": "made by `ci.py run`, ignored by git",
         ".ci-record.key": "made by `ci.py run`, ignored by git",
+    },
+    "adapters/stdlib/surprise/README.md": {
+        "sha256-stream/v1": "the name of willow-bot's stream generator, not a file",
+    },
+    "adapters/README.md": {
+        "requirements.txt": "each deps add-on's own file, in its folder",
+        "requirements-floor.txt": "each deps add-on's own file, in its folder",
+    },
+    "CONTRIBUTING.md": {
+        "requirements.txt": "each deps add-on's own file, in its folder",
+        "requirements-floor.txt": "each deps add-on's own file, in its folder",
+    },
+    "adapters/deps/README.md": {
+        "requirements.txt": "each deps add-on's own file, in its folder",
+        "requirements-floor.txt": "each deps add-on's own file, in its folder",
     },
     "vectors/README.md": {
         "foundation/": "willow-bot",
@@ -218,6 +233,54 @@ def test_every_path_a_doc_names_exists():
     )
 
 
+# ── question numbers ─────────────────────────────────────────────────────────
+ITEM = re.compile(r"^(\d+)\. (.+)$", re.M)
+ONE = re.compile(r"\bquestion (\d+)(?:, \"([^\"]+)\")?", re.I)
+MANY = re.compile(r"\bquestions (\d+(?:, \d+)*(?:,? and \d+)?)", re.I)
+#: The willow system's id families: a Q8 there names one question everywhere,
+#: so a demo's own "Q8" would be read as that one (and was, cross-repo).
+RESERVED = re.compile(r"(?<![A-Za-z0-9_\-])(?:OW|Q|D|F)[1-9]\d{0,2}(?![A-Za-z0-9_])")
+
+
+def test_a_question_number_is_one_its_folder_asks_and_its_words_are_its_own():
+    files = repo_files()
+    for qs in sorted(p for p in files if p.endswith("/QUESTIONS.md")):
+        here = Path(qs).parent
+        asked = {
+            int(n): text.strip() for n, text in ITEM.findall((ROOT / qs).read_text())
+        }
+        assert sorted(asked) == list(range(1, len(asked) + 1)), f"{qs} skips a number"
+        for doc in sorted(
+            p for p in files if p.endswith(".md") and Path(p).parent == here
+        ):
+            text = (ROOT / doc).read_text(encoding="utf-8")
+            for n, words in ONE.findall(text):
+                assert int(n) in asked, f"{doc}: question {n}; {qs} has {len(asked)}"
+                if words:
+                    assert words.lower() == asked[int(n)].lower(), (
+                        f"{doc}: question {n} quoted as {words!r}; it asks {asked[int(n)]!r}"
+                    )
+            for run in MANY.findall(text):
+                for n in re.findall(r"\d+", run):
+                    assert int(n) in asked, (
+                        f"{doc}: question {n}; {qs} has {len(asked)}"
+                    )
+
+
+def test_no_doc_uses_the_willow_systems_id_families():
+    bad = [
+        f"{doc}:{n}: {m.group(0)}"
+        for doc in sorted(p for p in repo_files() if p.endswith(".md"))
+        for n, line in enumerate(
+            (ROOT / doc).read_text(encoding="utf-8").splitlines(), 1
+        )
+        for m in RESERVED.finditer(line)
+    ]
+    assert not bad, "OW, Q, D and F ids belong to the willow system:\n  " + "\n  ".join(
+        bad
+    )
+
+
 # ── the numbers ──────────────────────────────────────────────────────────────
 def number(text: str) -> int:
     return int(text.replace(",", ""))
@@ -295,19 +358,93 @@ def test_the_python_versions_are_the_ones_ci_runs():
 
 
 # ── add-ons and ports ────────────────────────────────────────────────────────
-def test_every_add_on_has_its_card_its_tests_and_its_row():
-    table = (ROOT / "adapters" / "README.md").read_text(encoding="utf-8")
-    rows = set(re.findall(r"^\| \[([^\]]+)/\]\(\1/\) \|", table, re.M))
-    folders = {p.name for p in (ROOT / "adapters").iterdir() if p.is_dir()} - {
-        "__pycache__"
-    }
-    assert rows == folders, (
-        f"adapters/README.md's table: {sorted(rows)}; folders: {sorted(folders)}"
+def add_on_folders() -> list[Path]:
+    return sorted(
+        p
+        for kind in ("stdlib", "deps")
+        for p in (ROOT / "adapters" / kind).glob("*")
+        if p.is_dir() and not p.name.startswith(("_", "."))
     )
-    for name in folders:
-        here = ROOT / "adapters" / name
-        assert (here / "README.md").is_file(), f"adapters/{name} has no card"
-        assert list(here.glob("test_*.py")), f"adapters/{name} has no tests"
+
+
+def test_add_ons_live_only_in_stdlib_or_deps():
+    loose = sorted(
+        p.name
+        for p in (ROOT / "adapters").iterdir()
+        if p.is_dir() and p.name not in ("stdlib", "deps", "__pycache__")
+    )
+    assert not loose, f"adapters/ holds {loose}: an add-on goes in stdlib/ or deps/"
+
+
+def test_every_add_on_has_its_card_and_its_tests():
+    for here in add_on_folders():
+        name = here.relative_to(ROOT)
+        assert (here / "README.md").is_file(), f"{name} has no card"
+        assert list(here.glob("test_*.py")), f"{name} has no tests"
+
+
+PIN = re.compile(r"([A-Za-z0-9][A-Za-z0-9._-]*)==[A-Za-z0-9.+!-]+")
+
+
+def test_every_deps_add_on_pins_what_it_needs_and_names_it_on_its_card():
+    for here in add_on_folders():
+        if here.parent.name != "deps":
+            continue
+        req = here / "requirements.txt"
+        assert req.is_file(), f"{here.relative_to(ROOT)} has no requirements.txt"
+        lines = [
+            line.split("#")[0].strip()
+            for line in req.read_text(encoding="utf-8").splitlines()
+        ]
+        pins = [line for line in lines if line]
+        bad = [line for line in pins if not PIN.fullmatch(line)]
+        assert pins and not bad, f"{req.relative_to(ROOT)}: pin each with ==: {bad}"
+        head = (here / "README.md").read_text(encoding="utf-8").split("-->")[0]
+        needs = re.search(r"^needs: (.*)$", head, re.M)
+        assert needs, f"{here.relative_to(ROOT)}: its card's header has no needs:"
+        for pin in pins:
+            package = PIN.fullmatch(pin).group(1)
+            assert package.lower() in needs.group(1).lower(), (
+                f"{here.relative_to(ROOT)}: {package} is pinned but not on its card"
+            )
+
+
+def test_every_deps_add_on_has_a_floor_and_its_card_names_it():
+    """The floor rule: each deps add-on is also tested at its oldest version,
+    the last release of 2020 or else the first, or at a higher floor its card
+    gives a reason for. ci.py's deps:floors checks the dates against PyPI."""
+    for here in add_on_folders():
+        if here.parent.name != "deps":
+            continue
+        name = here.relative_to(ROOT)
+        floor = here / "requirements-floor.txt"
+        assert floor.is_file(), f"{name} has no requirements-floor.txt"
+        pins = {}
+        for line in floor.read_text(encoding="utf-8").splitlines():
+            line = line.split("#")[0].strip()
+            if line:
+                assert PIN.fullmatch(line), (
+                    f"{floor.relative_to(ROOT)}: pin with ==: {line}"
+                )
+                package, version = line.split("==")
+                pins[package.lower()] = version
+        top = {
+            line.split("==")[0].strip().lower()
+            for line in (here / "requirements.txt")
+            .read_text(encoding="utf-8")
+            .splitlines()
+            if line.split("#")[0].strip()
+        }
+        assert set(pins) == top, (
+            f"{name}: the floor pins {sorted(pins)}, the top {sorted(top)}"
+        )
+        head = (here / "README.md").read_text(encoding="utf-8").split("-->")[0]
+        line = re.search(r"^floor: (.*)$", head, re.M)
+        assert line, f"{name}: its card's header has no floor:"
+        for package, version in pins.items():
+            assert f"{package} {version}" in line.group(1).lower(), (
+                f"{name}: its floor: line doesn't name {package} {version}"
+            )
 
 
 def test_every_port_folder_is_one_compare_runs_and_ci_requires():
@@ -319,7 +456,7 @@ def test_every_port_folder_is_one_compare_runs_and_ci_requires():
     )
     folders = {p.name for p in (ROOT / "ports").iterdir() if p.is_dir()}
     assert folders == run, f"ports/: {sorted(folders)}; compare.py runs: {sorted(run)}"
-    ci = (ROOT / "adapters" / "ci" / "ci.py").read_text(encoding="utf-8")
+    ci = (ROOT / "adapters" / "stdlib" / "ci" / "ci.py").read_text(encoding="utf-8")
     held = set(
         re.findall(r'"(\w+)"', re.search(r"^PORTS = \((.*?)\)", ci, re.M).group(1))
     )

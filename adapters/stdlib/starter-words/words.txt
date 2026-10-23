@@ -1,0 +1,43 @@
+# A first-day words list for kernel.py, in its own format: one of your words,
+# then the words your files might use for it, a comma between. Copy it, keep
+# what fits your files, cut the rest, add your own:
+#
+#   python adapters/stdlib/starter-words/starter.py copy --to ~/my-words.txt
+#   python kernel.py init --box my-record --pile FOLDER --key my.key --words ~/my-words.txt
+#
+# Word forms are already one word (owe, owes, owed, owing), so each line names
+# a word once. When a line changes an answer, the answer says so.
+
+# money
+owe = invoice, outstanding, unpaid, overdue, balance, lend, lent, borrowed
+paid = payment, deposit, remittance, settled, received
+pay = payment, invoice, bill, transfer
+bill = invoice, statement, charge, fee
+rent = landlord, lease, tenancy
+tax = irs, hmrc, return, estimate, refund
+insurance = policy, cover, coverage, premium, renewal, rider
+bank = account, statement, deposit, transfer
+
+# dates
+due = deadline, expires, expiry, renewal, next
+deadline = due, expires, expiry, respond
+appointment = appt, booking, booked, visit, consultation
+birthday = born, dob
+
+# health
+doctor = dr, physician, gp, clinic, surgery, consultant
+medicine = medication, meds, prescription, pills, tablets, dose
+pills = medication, meds, prescription, tablets
+sick = ill, symptoms, fever, unwell
+weight = kg, lbs, pounds
+
+# home and car
+car = vehicle, van, mot, registration, mileage
+repair = fix, fixed, service, mechanic, replaced
+address = street, road, avenue, lane, postcode, zip
+
+# people and work
+phone = tel, mobile, cell, number
+email = mail, address, inbox
+job = work, client, contract, invoice
+boss = manager, supervisor

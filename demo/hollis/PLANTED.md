@@ -26,9 +26,9 @@ None of his files say so. The evidence:
 ### N2: The third-quarter estimated tax payment was never made (urgent, practical)
 - `money/bank/checking_2022-09.csv` … `checking_2025-09.csv` each have a `TREAS EST TAX PMT 1040-ES` line on
   Sep 15. `checking_2026-09.csv` has none. The 2026 Apr and Jun payments are present.
-- `money/taxes/estimates_2026.txt`: Q3 has no paid line. Earlier years' ledgers are complete.
+- `money/taxes/estimates_2026.txt`: the third quarter has no paid line. Earlier years' ledgers are complete.
 - `mail/inbox/2026-09-02_september_estimate.eml`: Dana's routine reminder, identical in form to every year's.
-- `notes/todo_2024-09-09.txt` and `todo_2025-09-08.txt` list the Q3 estimate. `notes/todo_2026-09-10.txt` doesn't.
+- `notes/todo_2024-09-09.txt` and `todo_2025-09-08.txt` list the third-quarter estimate. `notes/todo_2026-09-10.txt` doesn't.
 
 ### N3: His father can no longer safely live alone or drive, and Hollis hasn't faced it (slow-urgent, personal)
 - `van/van_log.csv`: "Brookhollow (Dad)" days go from 12 a year (2021–23) to 55 in Jan–Oct 2026, now every Sunday
