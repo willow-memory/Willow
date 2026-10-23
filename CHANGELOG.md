@@ -8,11 +8,6 @@ says how). The first was v0.1.0.
 
 ## Unreleased
 
-## v0.1.0 · 2026-10-23
-
-The first release: this section, and the two pull requests below it from
-before releases began.
-
 ### Added
 
 - `CONSTITUTION.md`, willows-grove's Draft 0.9 byte for byte, unratified;
@@ -24,6 +19,11 @@ before releases began.
   clauses are cited where, every CI run; `constitution/declarations.json` starts empty,
   since verdicts are the person's to record. CI gains `tests:constitution`
   and `tests:coverage`. (#4)
+
+## v0.1.0 · 2026-10-23
+
+The first release: this section, and the two pull requests below it from
+before releases began.
 
 ### Added
 
