@@ -24,6 +24,10 @@ releases yet; when there are, each gets its own heading here.
 
 ### Changed
 
+- The full file tree moved from the README to `FILES.md`; the README shows
+  the top level. `test_docs.py` holds both to the repo.
+- `similar` matches on each entry's line and the tags a person chose, not
+  the whole card, whose common words made unrelated add-ons look alike.
 - The add-on list shows tags instead of emoji, and says in words what an
   add-on needs installed and where it goes online.
 - `plain`, `privacy` and `readings` refuse a bad command line with their own

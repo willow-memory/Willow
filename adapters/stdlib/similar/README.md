@@ -15,12 +15,14 @@ Before you build an add-on or add an idea, see what's already on the list.
     python adapters/stdlib/similar/similar.py check
     python adapters/stdlib/similar/similar.py new --base REF
 
-The list is this repo's add-ons and nothing else: each built one's card, and
-each idea in [planned.json](../../planned.json).
+The list is this repo's add-ons and nothing else, built and planned: each
+one's line, and the tags a person chose for it. Not the four tags filled in
+from its card, which nearly every entry shares, and not the card's whole
+text, whose common words made unrelated add-ons look alike.
 
 | Command | What it does |
 |---|---|
-| `near` | Up to three entries the kernel's search serves for your words, each with the words it shares. A built one is something to connect to rather than build again; an idea is already on the list, to pick up rather than add twice. Tags count as words too. |
+| `near` | Up to three entries the kernel's search serves for your words, each with the words it shares. A built one is something to connect to rather than build again; an idea is already on the list, to pick up rather than add twice. |
 | `check` | Refuses two entries with the same line, whatever the case or punctuation. CI runs it. An idea that is only near another is shown, never refused: only a person can say two ideas are one. |
 | `new` | Markdown for a pull request: each add-on or idea added, or whose line changed, since REF, with what's near it. If nothing is near, it says so. willow-bot posts this on the pull request. |
 

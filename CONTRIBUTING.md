@@ -57,10 +57,11 @@ can loosen three rules: an add-on never changes your files, never writes the
 record except through the kernel, and never reads the key itself.
 
 **The docs match the files.** `test_docs.py` checks that the file tree in
-the README lists every file in the repo and nothing else, that every path a
-document names exists, and that the numbers the README quotes are the
-repo's. If you add a file, add it to the tree. If you change a number, the
-test will tell you which document still has the old one.
+[FILES.md](FILES.md) lists every file in the repo and nothing else, that the
+README's short tree is the repo's top level, that every path a document names
+exists, and that the numbers the README quotes are the repo's. If you add a
+file, add it to FILES.md's tree. If you change a number, the test will tell
+you which document still has the old one.
 
 **Plain words.** Write the README, the cards and the error messages for
 someone who has never seen the project. Name the thing, then say what it

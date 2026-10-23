@@ -1,7 +1,8 @@
 """The docs say what the repo holds, and the repo holds what the docs say.
 
-- README.md's tree under "What's in this repo" lists every file in the repo,
-  and nothing that isn't there.
+- FILES.md's tree lists every file in the repo, and nothing that isn't
+  there; README.md's tree under "What's in this repo" lists exactly the
+  repo's top level.
 - Every path a doc names, as a link or in backticks, exists: from the doc's
   own folder or the repo root. A path that lives somewhere else (another
   repo, a record folder the walkthrough makes) is listed in ELSEWHERE with
@@ -31,6 +32,7 @@ import pytest
 
 ROOT = Path(__file__).resolve().parent
 README = ROOT / "README.md"
+FILES = ROOT / "FILES.md"
 
 
 def repo_files() -> set[str]:
@@ -65,9 +67,10 @@ def section(text: str, heading: str) -> str:
 ENTRY = re.compile(r"^((?:│   |    )*)(├── |└── )(\S+)")
 
 
-def tree() -> tuple[set[str], set[str]]:
-    """(files, folders) README.md's tree lists, as paths from the repo root."""
-    block = section(README.read_text(encoding="utf-8"), "## What's in this repo")
+def tree(doc: Path = FILES, heading: str = "# Every file") -> tuple[set[str], set[str]]:
+    """(files, folders) a doc's tree lists, as paths from the repo root:
+    FILES.md's, every file, unless the README's top level is asked for."""
+    block = section(doc.read_text(encoding="utf-8"), heading)
     lines = block.split("```")[1].strip("\n").splitlines()
     assert lines[0] == "willow/", "the tree starts at willow/"
     files: set[str] = set()
@@ -101,8 +104,21 @@ def test_the_tree_lists_every_file_and_nothing_else():
     actual = repo_files()
     missing, extra = sorted(actual - listed), sorted(listed - actual)
     assert not missing and not extra, (
-        f"README.md's tree is out of date.\n  in the repo, not the tree: {missing}"
+        f"FILES.md's tree is out of date.\n  in the repo, not the tree: {missing}"
         f"\n  in the tree, not the repo: {extra}"
+    )
+
+
+def test_the_readmes_tree_is_the_repos_top_level():
+    """The front page shows the top: every file and folder at the root, each
+    once, and nothing deeper."""
+    files, folders = tree(README, "## What's in this repo")
+    actual = repo_files()
+    top_files = {f for f in actual if "/" not in f}
+    top_folders = {f.split("/")[0] for f in actual if "/" in f}
+    assert files == top_files and folders == top_folders, (
+        f"README.md's top-level tree is out of date: files {sorted(files ^ top_files)}, "
+        f"folders {sorted(folders ^ top_folders)}"
     )
 
 
@@ -304,13 +320,14 @@ def test_the_case_count_is_cases_jsons():
 
 
 def test_the_kernels_length_is_what_the_tree_says():
-    said = re.search(
-        r"kernel\.py\s+the whole program \(about ([\d,]+) lines\)", README.read_text()
-    )
     lines = len((ROOT / "kernel.py").read_text(encoding="utf-8").splitlines())
-    assert said and number(said.group(1)) == round(lines, -1), (
-        f"kernel.py is {lines} lines; the tree says about {said and said.group(1)}"
-    )
+    for doc in (README, FILES):
+        said = re.search(
+            r"kernel\.py\s+the whole program \(about ([\d,]+) lines\)", doc.read_text()
+        )
+        assert said and number(said.group(1)) == round(lines, -1), (
+            f"kernel.py is {lines} lines; {doc.name} says about {said and said.group(1)}"
+        )
 
 
 def test_odiles_files_are_what_the_readme_says(tmp_path):
@@ -352,7 +369,8 @@ def test_the_python_versions_are_the_ones_ci_runs():
     first, last = versions[0], versions[-1]
     text = " ".join(README.read_text(encoding="utf-8").split())  # wrapped lines
     assert f"Python {first} through {last}" in text
-    assert f"tests on Python {first} to {last}" in text
+    files = " ".join(FILES.read_text(encoding="utf-8").split())
+    assert f"tests on Python {first} to {last}" in files  # ci.yml's line in the tree
     assert f"Python {first} or newer" in text
     head = (ROOT / "kernel.py").read_text(encoding="utf-8").splitlines()[0]
     assert f"Python {first}+" in head, f"kernel.py's first line: {head}"

@@ -518,8 +518,8 @@ words and missed the rest. The full results, misses included, are in
   BOM dropped by Node's decoder, and more). A case was added for each one the
   tests missed. The table is in [vectors/README.md](vectors/README.md).
 - **The docs are tested too.** `test_docs.py` fails if a doc names a file
-  that doesn't exist, if the file tree below misses a file or lists one that
-  isn't there, or if a number in this README (the case count, the kernel's
+  that doesn't exist, if the file tree in [FILES.md](FILES.md) misses a file or
+  lists one that isn't there, or if a number in this README (the case count, the kernel's
   length, the size of Odile's files, the Python versions) stops matching the
   repo. A demo write-up that cites a question must cite one its person asked,
   in that question's own words.
@@ -528,183 +528,26 @@ words and missed the rest. The full results, misses included, are in
 
 ## What's in this repo
 
-Every file in the repo, and what it is. `test_docs.py` fails if this tree and
-the repo ever disagree.
+The top of it. [FILES.md](FILES.md) lists every file and what it is, and
+`test_docs.py` fails if either one and the repo ever disagree.
 
 ```
 willow/
 ├── kernel.py                 the whole program (about 910 lines)
 ├── test_kernel.py            its tests
-├── test_docs.py              holds every doc to the files that exist, and this tree to the repo
+├── test_docs.py              holds every doc to the files that exist, and the trees to the repo
 ├── README.md                 this file
+├── FILES.md                  every file in the repo, and what it is
 ├── CONTRIBUTING.md           the rules every change follows, and how to show it does
 ├── CODE_OF_CONDUCT.md        how we treat each other
 ├── SECURITY.md               what counts as a security problem, and how to report it privately
 ├── SUPPORT.md                where to ask, and where to report
 ├── CHANGELOG.md              what changed, by pull request
 ├── adapters/                 add-ons built on top of kernel.py
-│   ├── README.md             the rules every add-on follows
-│   ├── planned.json          the add-ons not built yet, as this README lists them
-│   ├── stdlib/               add-ons that need nothing beyond Python
-│   │   ├── again/
-│   │   │   ├── again.py      the questions you keep asking, counted from the record
-│   │   │   ├── test_again.py
-│   │   │   └── README.md
-│   │   ├── all/
-│   │   │   ├── all.py        every passage that holds a question, in the kernel's order
-│   │   │   ├── test_all.py
-│   │   │   └── README.md
-│   │   ├── books/
-│   │   │   ├── books.py      Kindle highlights and .epub text, as passages
-│   │   │   ├── test_books.py
-│   │   │   └── README.md
-│   │   ├── calendar/
-│   │   │   ├── cal.py        .ics events and .vcf contacts, as dated lines
-│   │   │   ├── test_calendar.py
-│   │   │   └── README.md
-│   │   ├── chats/
-│   │   │   ├── chats.py      WhatsApp and Telegram exports, a dated line a message
-│   │   │   ├── test_chats.py
-│   │   │   └── README.md
-│   │   ├── ci/
-│   │   │   ├── ci.py         this repo's checks as verdict rows on a kernel record
-│   │   │   ├── guard/
-│   │   │   │   └── sitecustomize.py  holds each add-on to its card while its tests run
-│   │   │   ├── test_ci.py    its tests: the same record every run, and every state
-│   │   │   ├── test_guard.py the guard's tests: each broken promise caught
-│   │   │   ├── test_contract.py  what every add-on promises alike, held for all of them
-│   │   │   └── README.md     its card: gates, states, the guard and exit codes
-│   │   ├── coming-up/
-│   │   │   ├── coming_up.py  dates in your files in the next few days
-│   │   │   ├── test_coming_up.py
-│   │   │   └── README.md
-│   │   ├── export/
-│   │   │   ├── export.py     approved answers and the question log, as Markdown or CSV
-│   │   │   ├── test_export.py
-│   │   │   └── README.md
-│   │   ├── mail/
-│   │   │   ├── mail.py       .eml and .mbox, with sender, date and subject
-│   │   │   ├── test_mail.py
-│   │   │   └── README.md
-│   │   ├── mutants/
-│   │   │   ├── mutants.py    breaks each add-on's code on purpose and checks its tests notice
-│   │   │   ├── accepted.json the breaks that change nothing a person could notice, each with why
-│   │   │   ├── test_mutants.py
-│   │   │   └── README.md
-│   │   ├── notes/
-│   │   │   ├── notes.py      Obsidian and Logseq vaults, links and backlinks kept
-│   │   │   ├── test_notes.py
-│   │   │   └── README.md
-│   │   ├── office/
-│   │   │   ├── office.py     .docx, .odt, .pptx, .xlsx and .ods, as text
-│   │   │   ├── test_office.py
-│   │   │   └── README.md
-│   │   ├── on-this-day/
-│   │   │   ├── on_this_day.py what your files say happened on this date in other years
-│   │   │   ├── test_on_this_day.py
-│   │   │   └── README.md
-│   │   ├── plain/
-│   │   │   ├── plain.py      the kernel's answer as sentences
-│   │   │   ├── test_plain.py
-│   │   │   └── README.md
-│   │   ├── privacy/
-│   │   │   ├── privacy.py    personal data and keys withheld from what a question prints
-│   │   │   ├── test_privacy.py
-│   │   │   └── README.md
-│   │   ├── quote-check/
-│   │   │   ├── quote_check.py is this exact quote in my files, and where
-│   │   │   ├── test_quote_check.py
-│   │   │   └── README.md
-│   │   ├── readings/
-│   │   │   ├── readings.py   notes beside an answer: numbers over time, dates gone by
-│   │   │   ├── test_readings.py
-│   │   │   └── README.md     its card: what it adds, uses and never does
-│   │   ├── readme/
-│   │   │   ├── readme.py     builds this README's generated sections from the cards
-│   │   │   ├── test_readme.py
-│   │   │   └── README.md     its card: sections, the draw, what it reads
-│   │   ├── similar/
-│   │   │   ├── similar.py    what's already on the list near a new idea
-│   │   │   ├── test_similar.py
-│   │   │   └── README.md
-│   │   ├── stale/
-│   │   │   ├── stale.py      approved answers whose cited passage changed or went
-│   │   │   ├── test_stale.py
-│   │   │   └── README.md
-│   │   ├── starter-words/
-│   │   │   ├── words.txt     a first-day words list, in the kernel's format
-│   │   │   ├── starter.py    copies it where yours will live, readable only by you
-│   │   │   ├── test_starter_words.py
-│   │   │   └── README.md
-│   │   ├── surprise/
-│   │   │   ├── surprise.py   one passage drawn by a seeded stream, replayable
-│   │   │   ├── test_surprise.py
-│   │   │   └── README.md
-│   │   └── todo/
-│   │       ├── todo.py       things marked to do, oldest first
-│   │       ├── test_todo.py
-│   │       └── README.md
-│   └── deps/                 add-ons that need something installed
-│       ├── README.md         what one must declare: pins, floors, licences, network
-│       ├── mcp/
-│       │   ├── server.py     your folder for any MCP client: ask and suggest, never approve
-│       │   ├── requirements.txt  mcp, pinned
-│       │   ├── requirements-floor.txt  mcp at its floor, also tested
-│       │   ├── test_mcp_server.py
-│       │   └── README.md
-│       └── pdf/
-│           ├── pdf.py        text out of PDFs, a headed paragraph a page
-│           ├── requirements.txt  pypdf, pinned
-│           ├── requirements-floor.txt  pypdf at its floor, also tested
-│           ├── test_pdf.py
-│           └── README.md
 ├── ports/                    kernel.py rewritten in other languages
-│   ├── java/
-│   │   └── Kernel.java       JDK 11+, standard library only
-│   ├── ts/
-│   │   ├── kernel.ts         Node 14+, standard library only
-│   │   ├── package.json      TypeScript and Node's types, to compile it
-│   │   ├── package-lock.json
-│   │   └── tsconfig.json
-│   └── csharp/
-│       ├── Kernel.cs         .NET 5+, no packages
-│       └── Kernel.csproj
 ├── vectors/                  what keeps the four implementations identical
-│   ├── gen.py                reads the test cases out of kernel.py
-│   ├── cases.json            4,463 cases, with the answers kernel.py gives
-│   ├── kernel_tables.json    Python's Unicode and HTML rules, so ports don't use their own
-│   ├── compare.py            runs every port against the cases and each other's logs
-│   ├── test_vectors.py       fails if the cases are stale or a port disagrees
-│   └── README.md             how the ports were built and what testing them found
 ├── demo/                     three made-up people to try it on
-│   ├── odile/                piano tuner and beekeeper, caring for her father
-│   │   ├── make_life.py      writes her files into life/, the same bytes every run
-│   │   ├── CHARACTER.md      who she is and how her life is written down
-│   │   ├── PLANTED.md        the needs hidden in her files, and the traps
-│   │   ├── STRIP.md          her questions, and what kernel.py found and missed
-│   │   └── names.txt         everyone named in her files, written by make_life.py
-│   ├── hollis/               built blind, by an agent that never saw the code
-│   │   ├── make_life.py
-│   │   ├── CHARACTER.md
-│   │   ├── PLANTED.md
-│   │   ├── QUESTIONS.md      the questions he would ask, written before any run
-│   │   └── STRIP.md
-│   └── teodora/              built blind, from a different line of work
-│       ├── make_life.py
-│       ├── CHARACTER.md
-│       ├── PLANTED.md
-│       ├── QUESTIONS.md
-│       └── STRIP.md
-├── .github/
-│   ├── workflows/
-│   │   └── ci.yml            runs adapters/stdlib/ci/ci.py one part a job, tests on Python 3.9 to 3.14
-│   ├── ISSUE_TEMPLATE/
-│   │   ├── bug.yml           the form for something wrong
-│   │   ├── idea.yml          the form for an add-on idea: the same fields as planned.json
-│   │   └── config.yml        security reports go private; a link to the contributing rules
-│   ├── pull_request_template.md  what a pull request says, and what to check before opening one
-│   ├── CODEOWNERS            the maintainer reviews every change
-│   └── dependabot.yml        weekly updates for the workflow's actions, never the add-ons' pins
+├── .github/                  CI, the issue forms, the pull request template
 ├── .gitignore                generated files and build output
 ├── ruff.toml                 lint settings
 └── LICENSE                   Apache-2.0

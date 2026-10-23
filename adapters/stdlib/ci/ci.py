@@ -422,7 +422,7 @@ def quiet(fn, *a):
 
 def counted(path: Path) -> bool:
     """Whether `path` sits in the repo where git would track it, and so in
-    `files_sha256` and in the README's tree."""
+    `files_sha256` and in FILES.md's tree."""
     path = path.resolve()
     if not path.is_relative_to(ROOT):
         return False

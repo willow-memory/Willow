@@ -4,8 +4,9 @@
     python adapters/stdlib/similar/similar.py check
     python adapters/stdlib/similar/similar.py new --base REF
 
-The list is every add-on in this repo: each built one's card, and each idea
-in adapters/planned.json. Nothing outside this repo is read.
+The list is every add-on in this repo, built and planned: each one's line,
+and the tags a person chose for it (not the four filled in from its card,
+which nearly every entry shares). Nothing outside this repo is read.
 
 `near` asks the kernel's own search (`kernel.rank`, the same as a `bite`)
 which entries hold your words: up to three, each with the words it shares.
@@ -54,35 +55,35 @@ def entries() -> list[dict]:
     return readme.addons()
 
 
+#: the tags readme.py fills in from a card's other lines; on nearly every
+#: entry, so they'd make everything near everything
+AUTO_TAGS = {
+    "no-install", "needs-install", "offline", "this-machine", "online",
+    "read-only", "records", "writes-output", *readme.SECTION_TAG.values(),
+}  # fmt: skip
+
+
 def text_of(a: dict) -> str:
-    """What is searched for an entry: its line, and a built one's card."""
-    out = a["line"] + "\n" + a["tags"].replace(",", " ")
-    if a["built"]:
-        card = (ROOT / a["path"] / "README.md").read_text(encoding="utf-8")
-        out += "\n\n" + card.split("-->", 1)[1]
-    return out
+    """What is searched for an entry: its line, and the tags a person chose.
+    Not the card's whole text: its common words (answers, reads, only) made
+    unrelated add-ons near each other."""
+    own = [t for t in readme.split_tags(a["tags"]) if t not in AUTO_TAGS]
+    return a["line"] + ("\n" + " ".join(own) if own else "")
 
 
 def pile(every: list[dict], leave_out: str | None = None) -> list[dict]:
-    """The kernel's chunks: one per paragraph of each entry's text, its path
-    the entry's name, so a name's words count too."""
-    out = []
-    for a in every:
-        if a["name"] == leave_out:
-            continue
-        para, start = [], 1
-        for i, line in enumerate(text_of(a).splitlines() + [""], 1):
-            if not line.strip():
-                if para:
-                    body = "\n".join(para)
-                    out.append({"path": a["name"], "line": start, "text": body,
-                                "id": kernel.h256(body)})  # fmt: skip
-                para = []
-            else:
-                if not para:
-                    start = i
-                para.append(line)
-    return out
+    """The kernel's chunks: one per entry, its path the entry's name, so a
+    name's words count too."""
+    return [
+        {
+            "path": a["name"],
+            "line": 1,
+            "text": text_of(a),
+            "id": kernel.h256(text_of(a)),
+        }
+        for a in every
+        if a["name"] != leave_out
+    ]
 
 
 def near(every: list[dict], words: str, leave_out: str | None = None) -> list[tuple]:
