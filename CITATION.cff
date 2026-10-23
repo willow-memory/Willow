@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use willow, please cite it as below."
+title: willow
+abstract: >-
+  Ask questions of your own files, and get back only what you wrote or what
+  you approved. One Python file, standard library only, with a hash-chained
+  log and approvals made with a private key.
+type: software
+authors:
+  - name: The willow contributors
+repository-code: "https://github.com/willow-memory/Willow"
+license: Apache-2.0
+keywords:
+  - local-first
+  - personal knowledge
+  - search
+  - audit log
+  - hash chain

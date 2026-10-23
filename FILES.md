@@ -16,7 +16,8 @@ willow/
 ├── CONTRIBUTING.md           the rules every change follows, and how to show it does
 ├── CODE_OF_CONDUCT.md        how we treat each other
 ├── SECURITY.md               what counts as a security problem, and how to report it in public
-├── CHANGELOG.md              what changed, by pull request
+├── CHANGELOG.md              what changed, by pull request, and each release
+├── CITATION.cff              how to cite willow; names the newest release once there is one
 ├── BUGS.md                   the known bugs, made from the tests that show them
 ├── DECISIONS.md              what's settled, why, and what holds it
 ├── LIMITS.md                 what willow doesn't do, on purpose or not yet
@@ -199,6 +200,8 @@ willow/
 │   ├── pull_request_template.md  what a pull request says, and what to check before opening one
 │   └── dependabot.yml        weekly updates for the workflow's actions, never the add-ons' pins
 ├── .gitignore                generated files and build output
+├── .gitattributes            every file checked out with LF line endings, on every system
+├── .editorconfig             the same line endings and indents, for editors
 ├── ruff.toml                 lint settings
 └── LICENSE                   Apache-2.0
 ```

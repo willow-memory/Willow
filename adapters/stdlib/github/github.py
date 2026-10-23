@@ -11,7 +11,8 @@ asked of GitHub with `gh`. None of the report's own text reaches the
 comment, so a report can't make it tag anyone.
 
 `check` holds `.github/` to the repo: the CI matrix starts at the Python
-the kernel names, and the README and FILES.md quote the matrix as it is;
+the kernel names, and the README (its words and its badges) and FILES.md
+quote the matrix as it is; the CI badge names a workflow that exists;
 the idea form offers the add-on list's own sections and `writes` values;
 the security form asks under the heading `report` reads.
 
@@ -124,6 +125,16 @@ def problems() -> list[str]:
     if sorted(o.split()[0] for o in options("writes")) != sorted(rd.WRITES):
         out.append("idea.yml's writes values aren't the ones readme.py takes")
 
+    badge = re.search(
+        r"img\.shields\.io/badge/python-([\d.]+)%20to%20([\d.]+)-", readme
+    )
+    if not badge or badge.groups() != (first, last):
+        out.append(f"README.md's Python badge doesn't say {first} to {last}")
+    for flow in re.findall(r"github\.com/willow-memory/Willow/actions/workflows/([\w.-]+)/badge\.svg", readme):  # fmt: skip
+        if not (DOT / "workflows" / flow).is_file():
+            out.append(
+                f"README.md's CI badge names {flow}, which .github/workflows/ doesn't hold"
+            )
     security = (DOT / "ISSUE_TEMPLATE" / "security.yml").read_text(encoding="utf-8")
     if f"label: {SECTION}\n" not in security:
         out.append(f'security.yml has no "{SECTION}" field for report to read')

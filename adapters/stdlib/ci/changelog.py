@@ -4,7 +4,8 @@ CHANGELOG.md.
     python adapters/stdlib/ci/changelog.py --base REF --pr N
 
 Compares the checkout with REF (the branch the pull request goes into). When
-every changed file is Markdown, nothing is owed. Otherwise CHANGELOG.md's
+every changed file is Markdown, or CITATION.cff, nothing is owed: a release
+moves entries and sets the citation's version, and changes nothing else. Otherwise CHANGELOG.md's
 `## Unreleased` section must hold an entry, added by this pull request, that
 ends with its number: `(#N)`. An entry is a `- ` line and the indented lines
 that wrap it. One elsewhere in the file, or one that names another pull
@@ -62,7 +63,7 @@ def check(base: str, pr: str) -> int:
         print(f"unreachable: git can't compare with {base}: {changed.stderr.strip()}")
         return kernel.ESCALATE
     files = [f for f in changed.stdout.split() if f]
-    code = [f for f in files if not f.endswith(".md")]
+    code = [f for f in files if not f.endswith(".md") and f != "CITATION.cff"]
     if not code:
         print(f"docs only ({len(files)} files): no changelog line owed")
         return kernel.ALIVE

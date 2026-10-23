@@ -508,3 +508,39 @@ def test_bugs_md_is_the_tests_marked_as_known_bugs():
     assert (ROOT / "BUGS.md").read_text(encoding="utf-8") == made, (
         "BUGS.md isn't current: run python adapters/stdlib/ci/bugs.py write"
     )
+
+
+def test_every_file_is_checked_out_with_lf_line_endings():
+    """kernel.py hashes its own bytes into every record, so a checkout that
+    turned LF into CRLF would change what every record says. .gitattributes
+    forces LF on every system, and no file in the repo holds a CRLF."""
+    attrs = (ROOT / ".gitattributes").read_text(encoding="utf-8").splitlines()
+    assert "* text=auto eol=lf" in attrs, ".gitattributes doesn't force LF"
+    crlf = sorted(f for f in repo_files() if b"\r\n" in (ROOT / f).read_bytes())
+    assert not crlf, f"files with CRLF line endings: {crlf}"
+
+
+RELEASE = re.compile(r"v(\d+\.\d+\.\d+) · (\d{4}-\d{2}-\d{2})")
+BEFORE_RELEASES = re.compile(r"\d{4}-\d{2}-\d{2} · pull request #\d+")
+
+
+def test_each_release_is_a_changelog_heading_and_the_citation_names_the_newest():
+    """CHANGELOG.md's headings are `Unreleased`, then releases, newest first,
+    `vX.Y.Z · YYYY-MM-DD` (the pull requests before the first release keep
+    theirs). CITATION.cff names the newest release, or no version at all
+    before there is one."""
+    heads = re.findall(r"^## (.+)$", (ROOT / "CHANGELOG.md").read_text(encoding="utf-8"), re.M)  # fmt: skip
+    assert heads[0] == "Unreleased", "CHANGELOG.md opens with ## Unreleased"
+    odd = [h for h in heads[1:] if not (RELEASE.fullmatch(h) or BEFORE_RELEASES.fullmatch(h))]  # fmt: skip
+    assert not odd, f"CHANGELOG.md headings that aren't a release: {odd}"
+    releases = [
+        RELEASE.fullmatch(h).groups() for h in heads[1:] if RELEASE.fullmatch(h)
+    ]
+    cff = (ROOT / "CITATION.cff").read_text(encoding="utf-8")
+    said = dict(re.findall(r"^(version|date-released): \"?([\w.-]+)\"?$", cff, re.M))
+    newest = (
+        {"version": releases[0][0], "date-released": releases[0][1]} if releases else {}
+    )
+    assert said == newest, (
+        f"CITATION.cff says {said}; CHANGELOG.md's newest release is {newest}"
+    )

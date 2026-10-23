@@ -189,6 +189,27 @@ mark is strict, that fails the run until you take the mark off. Regenerate
 BUGS.md, and add an entry under `### Fixed` in CHANGELOG.md that names it,
 `bug #12`; CI refuses the pull request without it.
 
+## Releases
+
+A release is a version number and a date on what has merged since the last
+one, `vMAJOR.MINOR.PATCH`:
+
+- **major:** a record, a command or an exit code changes in a way an older
+  script or record can't follow;
+- **minor:** something new: a command, an option, an add-on;
+- **patch:** fixes only.
+
+To make one, open a pull request that changes only the docs:
+
+1. In [CHANGELOG.md](CHANGELOG.md), rename `## Unreleased` to
+   `## vX.Y.Z · YYYY-MM-DD` and put a new, empty `## Unreleased` above it.
+2. In [CITATION.cff](CITATION.cff), set `version: X.Y.Z` and
+   `date-released: YYYY-MM-DD` to match.
+
+`test_docs.py` fails if the two disagree, and the changelog check owes
+nothing for it. Once it merges, tag the merge commit `vX.Y.Z` and publish a
+release whose notes are that section of the changelog.
+
 ## After you open it
 
 - **CI runs every part** as its own job, one row per check, and keeps the

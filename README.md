@@ -1,5 +1,9 @@
 # willow
 
+[![CI](https://github.com/willow-memory/Willow/actions/workflows/ci.yml/badge.svg)](https://github.com/willow-memory/Willow/actions/workflows/ci.yml)
+[![Python 3.9 to 3.14](https://img.shields.io/badge/python-3.9%20to%203.14-blue)](.github/workflows/ci.yml)
+[![Licence: Apache-2.0](https://img.shields.io/badge/licence-Apache--2.0-blue)](LICENSE)
+
 **Ask questions of your own files, and get back only what you wrote or what
 you approved.**
 
@@ -32,7 +36,7 @@ Nothing to install beyond Python. Check it works, then ask questions of a
 made-up beekeeper's six years of notes:
 
 ```
-$ git clone https://github.com/willow-memory/willow && cd willow
+$ git clone https://github.com/willow-memory/Willow && cd Willow
 $ python kernel.py test
 kernel: the eight beats held
 $ python demo/odile/make_life.py
@@ -210,7 +214,8 @@ willow/
 ├── CONTRIBUTING.md           the rules every change follows, and how to show it does
 ├── CODE_OF_CONDUCT.md        how we treat each other
 ├── SECURITY.md               what counts as a security problem, and how to report it in public
-├── CHANGELOG.md              what changed, by pull request
+├── CHANGELOG.md              what changed, by pull request, and each release
+├── CITATION.cff              how to cite willow; names the newest release once there is one
 ├── BUGS.md                   the known bugs, made from the tests that show them
 ├── DECISIONS.md              what's settled, why, and what holds it
 ├── LIMITS.md                 what willow doesn't do, on purpose or not yet
@@ -221,6 +226,8 @@ willow/
 ├── docs/                     the full first five minutes, and how it works in full
 ├── .github/                  CI, the issue forms, the pull request template: the GitHub add-on's
 ├── .gitignore                generated files and build output
+├── .gitattributes            every file checked out with LF line endings, on every system
+├── .editorconfig             the same line endings and indents, for editors
 ├── ruff.toml                 lint settings
 └── LICENSE                   Apache-2.0
 ```

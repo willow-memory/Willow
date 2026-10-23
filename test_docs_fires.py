@@ -99,6 +99,14 @@ PLANTS = {
     "test_every_port_folder_is_one_compare_runs_and_ci_requires": _add(
         "ports/planted/Kernel.planted"
     ),
+    "test_every_file_is_checked_out_with_lf_line_endings": _append(
+        "kernel.py", "# planted\r\n"
+    ),
+    "test_each_release_is_a_changelog_heading_and_the_citation_names_the_newest": _replace(
+        "CHANGELOG.md",
+        "\n## Unreleased\n",
+        "\n## Unreleased\n\n## v0.1.0 · 2026-10-24\n",
+    ),
     "test_bugs_md_is_the_tests_marked_as_known_bugs": _add(
         "test_planted.py",
         "import pytest\n\n\n@pytest.mark.xfail(strict=True, reason='bug #1: planted')\n"

@@ -2,8 +2,9 @@
 
 What changed, newest first, by the pull request that changed it, under
 Added, Changed, Fixed and Removed. A fix names what it fixes: a known bug
-from [BUGS.md](BUGS.md) as `bug #N`, or a security report. There are no
-releases yet; when there are, each gets its own heading here.
+from [BUGS.md](BUGS.md) as `bug #N`, or a security report. A release turns
+`Unreleased` into `vX.Y.Z · YYYY-MM-DD` ([CONTRIBUTING.md](CONTRIBUTING.md)
+says how); there are none yet.
 
 ## Unreleased
 
@@ -39,6 +40,14 @@ releases yet; when there are, each gets its own heading here.
   with `.github/`, so it can be taken away, or another host added beside
   it. `test_strip.py` deletes it and `.github/`, then all of `adapters/`,
   and shows what's left still passes. (#3)
+- `.gitattributes`, so every file is checked out with LF line endings
+  everywhere: `kernel.py` hashes its own bytes into each record, and a
+  Windows checkout turning them into CRLF would change that hash.
+  `test_docs.py` checks it, and that no file holds a CRLF. (#3)
+- `.editorconfig`, `CITATION.cff`, badges on the README (CI, Python,
+  licence; the GitHub add-on checks the first two), and a release process
+  in CONTRIBUTING.md; `test_docs.py` holds CITATION.cff to the newest
+  release in this file. (#3)
 - The standard GitHub files, shaped from the willow repos' own conventions:
   a pull request template built on Evidence (receipts, not claims) and on
   what wasn't checked, issue
@@ -68,6 +77,9 @@ releases yet; when there are, each gets its own heading here.
   record too. (#3)
 
 ### Fixed
+
+- The clone command named the repo by its old name, `willow`; it is
+  `Willow` now, and `cd willow` failed on a case-sensitive system. (#3)
 
 - `privacy`'s test checked that "555" never reached the record, and failed
   whenever one of the record's hashes happened to contain it; it now checks

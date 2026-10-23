@@ -6,7 +6,7 @@ The output shown is real.
 ## 1. Check it works on your machine
 
 ```
-$ git clone https://github.com/willow-memory/willow && cd willow
+$ git clone https://github.com/willow-memory/Willow && cd Willow
 $ python kernel.py test
 kernel: the eight beats held
 ```

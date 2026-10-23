@@ -1,0 +1,5 @@
+# Every file is checked out with LF line endings, on every system.
+# kernel.py hashes its own bytes into every record (VERSION) and willow-bot
+# pins it by SHA-256, so a checkout that turned LF into CRLF would change
+# what every record says and break the pin. test_docs.py holds this.
+* text=auto eol=lf

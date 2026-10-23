@@ -1,0 +1,17 @@
+# Editors that read this keep what .gitattributes and ruff.toml expect.
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 4
+
+[*.{ts,json,yml,yaml}]
+indent_size = 2
+
+[*.md]
+# two spaces at a line's end are a line break in Markdown
+trim_trailing_whitespace = false

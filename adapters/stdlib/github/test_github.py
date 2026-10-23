@@ -127,6 +127,18 @@ def test_the_repos_github_folder_holds():
             "label: Where",
             "security.yml",
         ),  # fmt: skip
+        (
+            "README.md",
+            "python-3.9%20to%203.14",
+            "python-3.9%20to%203.13",
+            "Python badge",
+        ),
+        (
+            "README.md",
+            "workflows/ci.yml/badge.svg",
+            "workflows/tests.yml/badge.svg",
+            "CI badge",
+        ),
     ],
 )
 def test_each_way_github_can_drift_is_caught(

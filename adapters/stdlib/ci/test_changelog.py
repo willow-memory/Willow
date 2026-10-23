@@ -134,3 +134,8 @@ def test_a_fixed_bug_not_named_under_fixed_is_refused(buggy, log, capsys):
     commit(buggy, {"code.py": "x = 2\n", "CHANGELOG.md": log})
     assert cl.check("main", "7") == 2
     assert "bug #12" in capsys.readouterr().err
+
+
+def test_a_release_changing_only_the_docs_and_the_citation_owes_nothing(repo):
+    commit(repo, {"README.md": "hello\n", "CITATION.cff": "version: 0.1.0\n"})
+    assert cl.check("main", "7") == 0
