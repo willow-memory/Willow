@@ -508,7 +508,8 @@ words and missed the rest. The full results, misses included, are in
   that doesn't exist, if the file tree below misses a file or lists one that
   isn't there, or if a number in this README (the case count, the kernel's
   length, the size of Odile's files, the Python versions) stops matching the
-  repo.
+  repo. A demo write-up that cites a question must cite one its person asked,
+  in that question's own words.
 - **Old runtimes, not assumed:** the tests and every port have also been run
   on Python 3.9.0, JDK 11, Node 14 and .NET 5, all from 2020.
 

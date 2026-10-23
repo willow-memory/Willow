@@ -224,6 +224,54 @@ def test_every_path_a_doc_names_exists():
     )
 
 
+# ── question numbers ─────────────────────────────────────────────────────────
+ITEM = re.compile(r"^(\d+)\. (.+)$", re.M)
+ONE = re.compile(r"\bquestion (\d+)(?:, \"([^\"]+)\")?", re.I)
+MANY = re.compile(r"\bquestions (\d+(?:, \d+)*(?:,? and \d+)?)", re.I)
+#: The willow system's id families: a Q8 there names one question everywhere,
+#: so a demo's own "Q8" would be read as that one (and was, cross-repo).
+RESERVED = re.compile(r"(?<![A-Za-z0-9_\-])(?:OW|Q|D|F)[1-9]\d{0,2}(?![A-Za-z0-9_])")
+
+
+def test_a_question_number_is_one_its_folder_asks_and_its_words_are_its_own():
+    files = repo_files()
+    for qs in sorted(p for p in files if p.endswith("/QUESTIONS.md")):
+        here = Path(qs).parent
+        asked = {
+            int(n): text.strip() for n, text in ITEM.findall((ROOT / qs).read_text())
+        }
+        assert sorted(asked) == list(range(1, len(asked) + 1)), f"{qs} skips a number"
+        for doc in sorted(
+            p for p in files if p.endswith(".md") and Path(p).parent == here
+        ):
+            text = (ROOT / doc).read_text(encoding="utf-8")
+            for n, words in ONE.findall(text):
+                assert int(n) in asked, f"{doc}: question {n}; {qs} has {len(asked)}"
+                if words:
+                    assert words.lower() == asked[int(n)].lower(), (
+                        f"{doc}: question {n} quoted as {words!r}; it asks {asked[int(n)]!r}"
+                    )
+            for run in MANY.findall(text):
+                for n in re.findall(r"\d+", run):
+                    assert int(n) in asked, (
+                        f"{doc}: question {n}; {qs} has {len(asked)}"
+                    )
+
+
+def test_no_doc_uses_the_willow_systems_id_families():
+    bad = [
+        f"{doc}:{n}: {m.group(0)}"
+        for doc in sorted(p for p in repo_files() if p.endswith(".md"))
+        for n, line in enumerate(
+            (ROOT / doc).read_text(encoding="utf-8").splitlines(), 1
+        )
+        for m in RESERVED.finditer(line)
+    ]
+    assert not bad, "OW, Q, D and F ids belong to the willow system:\n  " + "\n  ".join(
+        bad
+    )
+
+
 # ── the numbers ──────────────────────────────────────────────────────────────
 def number(text: str) -> int:
     return int(text.replace(",", ""))
