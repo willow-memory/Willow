@@ -22,281 +22,44 @@ any time.
 chats, office documents), track what matters (dates coming up, forecasts,
 flashcards, a care log), keep approved answers honest, and let AI assistants
 hand in suggestions they can never approve themselves.
-[See what you can build on it.](#what-you-can-build-on-it)
+[See every add-on.](ADDONS.md)
+
+**Contents:** [Your first five minutes](#your-first-five-minutes) · [What you can build on it](#what-you-can-build-on-it) · [How it works](#how-it-works) · [Commands](#commands) · [Guarantees, and the tests behind them](#guarantees-and-the-tests-behind-them) · [Where it falls short](#where-it-falls-short) · [How it's verified](#how-its-verified) · [What's in this repo](#whats-in-this-repo) · [Building on it](#building-on-it) · [Licence](#licence)
 
 ## Your first five minutes
 
-Everything below runs from a fresh clone with nothing installed beyond Python.
-The output shown is real.
-
-### 1. Check it works on your machine
+Nothing to install beyond Python. Check it works, then ask questions of a
+made-up beekeeper's six years of notes:
 
 ```
 $ git clone https://github.com/willow-memory/willow && cd willow
 $ python kernel.py test
 kernel: the eight beats held
-```
-
-`test` sets up a throwaway folder, runs every command, and checks eight
-properties, among them that an unapproved suggestion is never given as an
-answer, a forged approval is rejected, and an edited log is refused.
-
-### 2. Ask questions of someone else's files
-
-The repo includes made-up people to try it on. Odile is a piano tuner and
-beekeeper with six years of notes, logs, texts, letters and receipts.
-
-```
-$ python demo/odile/make_life.py           # writes her 254 files into demo/odile/life/
+$ python demo/odile/make_life.py
 $ python kernel.py init --box odile-record --pile demo/odile/life --key odile.key
-ready: record started, row 0 6ecb8f01be3521d6
-
 $ python kernel.py bite --box odile-record "how are the bees"
 ```
 
-`init` made two things: `odile-record/`, the folder where the log is kept,
-and `odile.key`, the private key that approves answers. Odile's own folder is
-only read.
-
-The answer is JSON: up to three passages, each with its file, line and text.
-Here they are the three most recent hive inspections from `hives/2026.txt`,
-newest first, because her log has a date over every entry.
-
-### 3. Ask something her files don't say
-
-```
-$ python kernel.py bite --box odile-record "when is the county deadline"
-```
-
-```json
-{
-  "state": "populated",
-  "served": [
-    { "where": "mail/2026-03-20-county.txt:12",
-      "text": "... You may file a response or an\nobjection within 180 days of the date of this notice. ..." },
-    { "where": "mail/2026-03-20-county.txt:10", "text": "NOTICE OF PROPOSED DETERMINATION OF WATER RIGHT" },
-    { "where": "mail/2026-03-20-county.txt:8",  "text": "RE: Case No. WR-2026-0117" }
-  ],
-  "look": [
-    { "why": "no file in your folder has deadline",
-      "where": "it may be called something else there",
-      "next": "add it to your words list, or use a search that matches by meaning" }
-  ]
-}
-```
-
-(Trimmed: each passage also carries an `id` and an `echo` flag.) Her files
-never say "deadline", and the output says so rather than pretending. The
-county's letter is still found from the other words. When no passage holds
-enough of the question, the exit code is 42 and nothing is served.
-
-### 4. Teach it her words
-
-"Who still owes me money" brings back a text message about money, because her
-files never say "owes": her invoices do. A words list connects the two:
-
-```
-$ printf 'owes = invoice, outstanding\n' > words.txt && chmod 600 words.txt
-$ python kernel.py init --box odile-record-2 --pile demo/odile/life --key odile.key --words words.txt
-$ python kernel.py bite --box odile-record-2 "who still owes me money"
-```
-
-Now two of the three passages are her unpaid school-district invoices, and
-the output says why: `"read owes as invoice, from your words list"`.
-
-### 5. Approve an answer
-
-Suppose an assistant read the county letter and suggests an answer. It hands
-it in, citing the passage it relied on (the passage's `id` from step 3):
-
-```
-$ cat rows.jsonl                           # one suggestion per line; wrapped here
-{"path": "county.md", "data": "Reply by 2026-09-16: 180 days from the 2026-03-20 notice.",
- "cites": ["0e4ba2df…"], "claim": "the notice gives 180 days to file"}
-
-$ python kernel.py propose --box odile-record --file rows.jsonl
-pass  proposal:0a6fde95…  waiting on your seal          (exit 42: waiting on you)
-
-$ python kernel.py out --box odile-record
-waiting on your seal: proposal:0a6fde95…
-5 rows; 0 sealed; 1 waiting
-
-$ python kernel.py seal --box odile-record proposal:0a6fde95…
-sealed proposal:0a6fde95…; written to written/county.md
-
-$ python kernel.py bite --box odile-record "When is the county deadline?"
-{"state": "sealed", "answer": "Reply by 2026-09-16: 180 days from the 2026-03-20 notice.", "by": "proposal:0a6fde95…"}
-
-$ python kernel.py verify --box odile-record
-the chain holds: 7 rows, 1 sealed
-```
-
-The same question, typed with different case and punctuation, now returns the
-approved answer. Until `seal` ran it was only a suggestion, and it was never
-given as an answer.
-
-Then point it at a folder of your own:
-
-```
-$ python kernel.py init --box my-record --pile path/to/your/folder --key my.key
-$ python kernel.py bite --box my-record "your own question"
-```
-
-Keep the key somewhere other than the record folder; `init` refuses a key
-inside it.
+The answer is up to three passages from her files, each with its file and
+line. [The full five minutes](docs/tour.md) goes on: a question her files
+don't answer, teaching it her words, and approving an answer with the key.
 
 ## What you can build on it
 
-Everything below is an add-on: a folder beside the kernel that uses it and
-never changes it. Some are built and tested; the rest are planned, and each
-one's line says what it will do. This section is generated from the add-ons'
-own cards by [adapters/stdlib/readme](adapters/stdlib/readme/), so an idea
-becomes a built add-on only when it exists, and CI fails if this page falls
-behind.
-The list is open: anyone can add an idea, and anyone can build one from it.
-[CONTRIBUTING.md](CONTRIBUTING.md) says how.
+Everything beyond the kernel is an add-on: a folder beside it that uses it and
+never changes it. They read more kinds of files, keep track of what matters,
+keep approved answers honest, and let assistants suggest without approving.
+Anyone can add an idea or build one.
 
-**How to read it:** a linked name is built; *(idea)* is not yet. What an
-add-on needs installed, with its licence, and where it goes online are said in
-words: the kernel itself never goes online. *bot* is rebuilt from willow-bot's
-one script, *box* is built from what the kernel already has, *new* is new.
-Each carries up to five tags: four filled in from its card (`no-install` or
-`needs-install`; `offline`, `this-machine` or `online`; `read-only`, `records`
-or `writes-output`; its section), and any the card's author adds or changes.
+<!-- willow:front show=pick week=2026-W43 -->
+**Add-on of the week**
 
-<!-- willow:pools -->
-`█████████░░░░░░░░░░░` **26 of 59 built** · 42 need no install · 17 need one
-
-| Section | Built | Ideas | No install | Needs one |
-|---|---|---|---|---|
-| Reading more kinds of files | 7 | 8 | 9 | 6 |
-| Finding things | 4 | 2 | 4 | 2 |
-| Your own words | 1 | 6 | 5 | 2 |
-| Keeping track | 4 | 5 | 9 | 0 |
-| Trust and proof | 2 | 4 | 4 | 2 |
-| Privacy and safety | 1 | 1 | 2 | 0 |
-| Assistants | 1 | 2 | 0 | 3 |
-| Ways to use it | 1 | 2 | 2 | 1 |
-| Play | 0 | 3 | 2 | 1 |
-| For maintainers | 5 | 0 | 5 | 0 |
-<!-- /willow:pools -->
-
-### Newest
-
-<!-- willow:newest -->
-- 2026-10-23 · [**todo**](adapters/stdlib/todo/) — TODO, FIXME and "need to" lines across the folder, oldest first.
-- 2026-10-23 · [**surprise**](adapters/stdlib/surprise/) — One passage from your folder at random, seeded so it can be replayed.
-- 2026-10-23 · [**starter-words**](adapters/stdlib/starter-words/) — A first-day words list to copy and edit (owes = invoice, outstanding; doctor = dr, physician, clinic).
-- 2026-10-23 · [**stale**](adapters/stdlib/stale/) — Approved answers whose cited passage has changed or gone. Citations are content hashes, so it's exact.
-- 2026-10-23 · [**similar**](adapters/stdlib/similar/) — What's already on the add-on list near a new idea, by the kernel's own search.
-<!-- /willow:newest -->
-
-### Add-on of the week
-
-<!-- willow:pick week=2026-W43 -->
 **[todo](adapters/stdlib/todo/)** — TODO, FIXME and "need to" lines across the folder, oldest first.
 
 *Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 26 built add-ons in name order.*
-<!-- /willow:pick -->
 
-<!-- willow:list -->
-**Contents:** [Reading more kinds of files](#reading-more-kinds-of-files) · [Finding things](#finding-things) · [Your own words](#your-own-words) · [Keeping track](#keeping-track) · [Trust and proof](#trust-and-proof) · [Privacy and safety](#privacy-and-safety) · [Assistants](#assistants) · [Ways to use it](#ways-to-use-it) · [Play](#play) · [For maintainers](#for-maintainers)
-
-### Reading more kinds of files
-
-Each writes plain text into a mirror folder the kernel searches, so your originals are never touched.
-
-- **bank** (idea) — Bank CSV and OFX statements as dated lines, with spending by month. *new* `no-install` `offline` `writes-output` `file-reader`
-- **bookmarks** (idea) — Browser bookmarks (HTML export, Firefox JSON) and history, read from a copy of its SQLite file. *new* `no-install` `offline` `writes-output` `file-reader`
-- [**books**](adapters/stdlib/books/) — Kindle "My Clippings.txt" highlights and .epub text. *new* `no-install` `offline` `writes-output` `file-reader`
-- [**calendar**](adapters/stdlib/calendar/) — .ics events and .vcf contacts as dated lines. *new* `no-install` `offline` `writes-output` `file-reader`
-- [**chats**](adapters/stdlib/chats/) — WhatsApp and Telegram exports, one dated line per message. *new* `no-install` `offline` `writes-output` `file-reader`
-- **git-history** (idea) — Commit messages and diffs as a dated pile: "when did we change the retry limit?" Needs the git program; GPL, called not linked. *new* `needs-install` `offline` `writes-output` `file-reader`
-- **health** (idea) — Apple Health and Google Fit exports as daily numbers the readings add-on can trend. *new* `no-install` `offline` `writes-output` `file-reader`
-- [**mail**](adapters/stdlib/mail/) — .eml and .mbox files, with sender, date and subject kept. *new* `no-install` `offline` `writes-output` `file-reader`
-- [**notes**](adapters/stdlib/notes/) — Obsidian and Logseq vaults, with [[links]] and #tags kept and backlinks listed. *new* `no-install` `offline` `writes-output` `file-reader`
-- **ocr** (idea) — Text out of photos of letters and scanned PDFs. Needs pytesseract and the tesseract program; Apache-2.0. *new* `needs-install` `offline` `writes-output` `file-reader`
-- [**office**](adapters/stdlib/office/) — .docx, .odt, .pptx, .xlsx and .ods, which are all zipped XML. *new* `no-install` `offline` `writes-output` `file-reader`
-- [**pdf**](adapters/deps/pdf/) — Text out of PDFs. Needs pypdf; BSD-3-Clause. *new* `needs-install` `offline` `writes-output` `file-reader`
-- **photos** (idea) — When and where each photo was taken, as dated lines. Needs Pillow; MIT-CMU. *new* `needs-install` `offline` `writes-output` `file-reader`
-- **sheets** (idea) — Spreadsheets with formulas and formatting kept, beyond what the office add-on reads. Needs openpyxl; MIT. *new* `needs-install` `offline` `writes-output` `file-reader`
-- **voice** (idea) — Dictation, calls and lectures transcribed into dated text. Needs faster-whisper; MIT. Goes online: the model, downloaded once. *new* `needs-install` `online` `writes-output` `file-reader`
-
-### Finding things
-
-- [**all**](adapters/stdlib/all/) — Every matching passage, ranked, not just the top three. *box* `no-install` `offline` `read-only` `search`
-- **meaning** (idea) — Search by meaning: "who owes me money" finds "invoice outstanding". Needs sentence-transformers; Apache-2.0. Goes online: the model, downloaded once from Hugging Face. *new* `needs-install` `online` `writes-output` `search`
-- [**on-this-day**](adapters/stdlib/on-this-day/) — What you wrote on this date in earlier years. *box* `no-install` `offline` `read-only` `search`
-- [**quote-check**](adapters/stdlib/quote-check/) — Is this exact quote in my files, and where? For writers, journalists and students. *box* `no-install` `offline` `read-only` `search`
-- [**surprise**](adapters/stdlib/surprise/) — One passage from your folder at random, seeded so it can be replayed. *bot* `no-install` `offline` `records` `search`
-- **typos** (idea) — Forgives misspellings in questions. Needs rapidfuzz; MIT. *new* `needs-install` `offline` `read-only` `search`
-
-### Your own words
-
-The blind tests' biggest gap: on day one, a person's words aren't their files' words.
-
-- [**starter-words**](adapters/stdlib/starter-words/) — A first-day words list to copy and edit (owes = invoice, outstanding; doctor = dr, physician, clinic). *new* `no-install` `offline` `writes-output` `words`
-- **stems** (idea) — Word forms for 20+ languages, so "maisons" finds "maison". Needs snowballstemmer; BSD-3. *new* `needs-install` `offline` `read-only` `words`
-- **synonyms** (idea) — Suggests words-list lines for a word no file has. Needs nltk and WordNet; Apache-2.0. Goes online: the WordNet data, downloaded once. *new* `needs-install` `online` `writes-output` `words`
-- **words-de** (idea) — German common words, so questions aren't matched on "der" and "und". *new* `no-install` `offline` `writes-output` `words`
-- **words-es** (idea) — Spanish common words ("el", "y"). *new* `no-install` `offline` `writes-output` `words`
-- **words-fr** (idea) — French common words ("le", "et"). *new* `no-install` `offline` `writes-output` `words`
-- **words-pt** (idea) — Portuguese common words ("o", "e"). *new* `no-install` `offline` `writes-output` `words`
-
-### Keeping track
-
-- [**again**](adapters/stdlib/again/) — Questions you keep asking: "asked 4 times; approve an answer?" *bot* `no-install` `offline` `read-only` `tracking`
-- **care** (idea) — For caregivers: medications, vitals and appointments from a care log, what's due and what moved. *box* `no-install` `offline` `read-only` `tracking`
-- [**coming-up**](adapters/stdlib/coming-up/) — Dates written in your files in the next N days: appointments, renewals, deadlines. *box* `no-install` `offline` `read-only` `tracking`
-- **digest** (idea) — One page: suggestions waiting, approvals gone stale, dates coming up, questions repeated. *bot* `no-install` `offline` `read-only` `tracking`
-- **flashcards** (idea) — Approved question-and-answer pairs become cards, scheduled by spaced repetition. *box* `no-install` `offline` `records` `tracking`
-- **forecasts** (idea) — Write a prediction before the outcome, settle it later, see your Brier score. *bot* `no-install` `offline` `records` `tracking`
-- **invoices** (idea) — For freelancers: invoices and payments matched by the id pattern you give, never guessed. *new* `no-install` `offline` `read-only` `tracking`
-- [**readings**](adapters/stdlib/readings/) — Numbers over time and a date gone by, beside an answer. *box* `no-install` `offline` `records` `tracking`
-- [**todo**](adapters/stdlib/todo/) — TODO, FIXME and "need to" lines across the folder, oldest first. *box* `no-install` `offline` `read-only` `tracking`
-
-### Trust and proof
-
-- **changed** (idea) — What's new, edited or deleted in your folder since the last check, as fingerprint rows. *bot* `no-install` `offline` `records` `trust`
-- **encrypt** (idea) — Keeps the record folder encrypted at rest. Needs cryptography; Apache-2.0 or BSD. *new* `needs-install` `offline` `records` `trust`
-- [**export**](adapters/stdlib/export/) — Approved answers, and the question log (counts only, never words), as Markdown or CSV. *box* `no-install` `offline` `read-only` `trust`
-- **pgp** (idea) — Signs exports and reports with your PGP key, verifiable anywhere. Needs the gpg program and python-gnupg; BSD. *new* `needs-install` `offline` `writes-output` `trust`
-- **report** (idea) — A self-checking bundle: the record, the approved answers, and a script that re-verifies them on any machine. *box* `no-install` `offline` `writes-output` `trust`
-- [**stale**](adapters/stdlib/stale/) — Approved answers whose cited passage has changed or gone. Citations are content hashes, so it's exact. *box* `no-install` `offline` `read-only` `trust`
-
-### Privacy and safety
-
-- [**privacy**](adapters/stdlib/privacy/) — Hides phone numbers, emails, card, bank and ID numbers, and API keys in what a question prints, and says what it hid. *bot* `no-install` `offline` `records` `privacy`
-- **secrets-audit** (idea) — Finds keys and passwords sitting in plain files. *bot* `no-install` `offline` `read-only` `privacy`
-
-### Assistants
-
-Each hands in suggestions through propose. None can approve: every suggestion waits for your seal.
-
-- **claude** (idea) — Suggestions from Claude through the Anthropic API, citing your passages. Needs anthropic; MIT. Goes online: api.anthropic.com, to ask for suggestions. *new* `needs-install` `online` `records` `assistant`
-- **local-model** (idea) — Suggestions from a model on this machine only, such as Ollama or llama.cpp. Needs a local model server; licence varies by model. Reaches this machine only. *new* `needs-install` `this-machine` `records` `assistant`
-- [**mcp**](adapters/deps/mcp/) — Lets any MCP client, such as an AI assistant or editor, ask your folder and hand in suggestions. Needs mcp; MIT. *new* `needs-install` `offline` `records` `assistant`
-
-### Ways to use it
-
-- **browse** (idea) — A local web page to ask questions and approve answers, reachable from this machine only. Reaches this machine only. *new* `no-install` `this-machine` `records` `interface`
-- [**plain**](adapters/stdlib/plain/) — Answers as sentences instead of JSON, each with its file and line. *new* `no-install` `offline` `records` `interface`
-- **speak** (idea) — Reads answers aloud. Needs pyttsx3; MPL-2.0. *new* `needs-install` `offline` `read-only` `interface`
-
-### Play
-
-- **dice** (idea) — Seeded dice rolls as rows: every roll replayable and checkable. *bot* `no-install` `offline` `records` `play`
-- **dice5e** (idea) — Full tabletop dice notation (4d6kh3, advantage). Needs dice; MIT. *bot* `needs-install` `offline` `records` `play`
-- **life** (idea) — Conway's Game of Life as rows: a fully deterministic world on the record. *bot* `no-install` `offline` `records` `play`
-
-### For maintainers
-
-- [**ci**](adapters/stdlib/ci/) — This repo's checks as verdict rows on a kernel record, the same every run. Goes online: PyPI, to read each dependency floor's release date. *box* `no-install` `online` `records` `maintainers`
-- [**github**](adapters/stdlib/github/) — What willow's repo needs from GitHub, kept in one folder so it can be taken away. Goes online: GitHub, through gh, to read the author of a pull request a security report points to. *box* `no-install` `online` `read-only` `maintainers`
-- [**mutants**](adapters/stdlib/mutants/) — Breaks each add-on's code on purpose and checks its tests notice. *new* `no-install` `offline` `read-only` `maintainers`
-- [**readme**](adapters/stdlib/readme/) — Builds this README's generated sections from the add-ons' own cards. *new* `no-install` `offline` `writes-output` `maintainers`
-- [**similar**](adapters/stdlib/similar/) — What's already on the add-on list near a new idea, by the kernel's own search. *box* `no-install` `offline` `read-only` `maintainers`
-<!-- /willow:list -->
+[Every add-on, 26 built of 59, and how to add one: ADDONS.md](ADDONS.md)
+<!-- /willow:front -->
 
 ## How it works
 
@@ -310,124 +73,15 @@ suggested answers ──checked──▶ held, waiting ──you approve──�
                                   every step ──▶ hash-chained log (--box)
 ```
 
-### Reading your folder: there is no index
+Your folder is read fresh on every question; nothing is copied or indexed.
+A passage must hold at least half of the question's uncommon words, rarer
+words count for more, newer comes before older on a tie, and the top three
+come back with their file and line. A suggested answer must cite
+passages just shown, and waits until you approve it with your key. Every step
+goes on a hash-chained log that `verify` checks.
 
-Nothing is copied or indexed. On every question `kernel.py` walks the folder
-fresh, so it always sees the files as they are now and leaves nothing behind
-to fall out of date or leak. On Odile's 254 files (310 KB, about 1,100
-paragraphs) a question takes about a quarter of a second. The cost grows with
-the folder, so a very large folder would want an index, which belongs in an
-add-on, not the kernel.
-
-What it reads:
-
-- **Any text file, whatever its name or extension.** A file is text if it is
-  UTF-8 with no NUL byte in its first 8 KB. Binaries, files over 1 MB and
-  hidden files and folders (names starting with `.`) are skipped.
-- **Web pages as the text they show.** Scripts, styles, comments and tags are
-  stripped, entities decoded, and line numbers still point at the original.
-- **Paragraph by paragraph.** A blank line ends a passage, and no passage runs
-  past 500 characters, so one long file can't match every question.
-
-Your folder is never written to.
-
-### Finding answers
-
-A question is split into words. Common English words ("the", "how", "do",
-"when", …) are set aside, and a passage must contain at least half of the
-rest to count. Matching passages are scored so that **rarer words count for
-more**: a word that appears in two passages outweighs one in fifty. Ties are
-broken in this order:
-
-1. something written once before something repeated every week,
-2. **newer before older,**
-3. the file path, then the later line in a log.
-
-At most three passages are returned, never the same text twice. Scores are
-exact fractions, not floating point, so the same folder and question give the
-same order on every run, every Python version, and in every port.
-
-It adapts to how people actually write:
-
-| It handles | Example |
-|---|---|
-| Word forms | "owe", "owes", "owed" and "owing" match each other (English suffix rules) |
-| Folder names | a file in `dad/` matches "Dad's weight" even if the file never says "Dad" |
-| Dates, for "newest first" | `2026-10-14`, `20261014`, `21/10/2026`, `10.21.2026`; a date that could be read either way round (`11/03/2023`) is left undated, never guessed. A log's date heading covers the lines under it |
-| Serial and case numbers | "the one ending 672841" finds `1HGEJ6672841` |
-| Questions echoed back | an FAQ line that only repeats your question is marked `"echo": true` and doesn't count as an answer |
-| Your own vocabulary | a words list (below) |
-| Code | if a returned passage defines a function, it says where else in the folder that name appears |
-
-When nothing matches, it exits with code 42 and says which of your words no
-file contains.
-
-### Your own words
-
-People don't use the same words as their files. A words list teaches
-`kernel.py` yours:
-
-```
-# words.txt — one word, then the words your files use for it
-owes = invoice, outstanding
-due = next
-```
-
-Give it at setup with `init --words words.txt`. Like the key, it must be
-readable only by you (`chmod 600`) and kept outside the record folder. When
-the list changes an answer, the output says so ("read owes as invoice, from
-your words list"), and the log records a fingerprint of the list, never its
-contents.
-
-### Your key
-
-`init` creates the key: 32 random bytes, written as hex to the file you name,
-readable only by you (mode `600`). An approval is an HMAC-SHA-256 of the exact
-suggested answer, made with that key.
-
-- Only someone with the key file can approve an answer.
-- `kernel.py` refuses a key stored inside the record folder, so copying the
-  record never copies the means to approve.
-- If the key is lost, past approvals can no longer be checked: they stop
-  being given as answers, and `verify` reports them as unproven. Back it up
-  like any private key.
-
-### The record folder
-
-`--box` names the folder where `kernel.py` keeps its record. `init` creates
-it:
-
-```
-odile-record/
-├── kernel.json        where your folder, key and words list are
-├── record.jsonl       the log: one JSON line per step, hash-chained
-├── proposals/         suggested answers, one file each, named by their hash
-└── written/           approved answers, written out as files
-```
-
-Each log line holds what happened (setup, question, suggestion, approval,
-check), when, and the hash of the line before it. A question is recorded as a
-fingerprint of its words plus the file and line of each passage returned,
-**never the words of the question or the passages**. Any edit to a past line
-breaks the chain, and from then on every command refuses to write until a
-person looks. Writes take a file lock and are flushed to disk, and a
-half-written last line is detected rather than repaired silently.
-
-### Suggestions and approvals
-
-A suggestion is one JSON line with exactly four fields:
-
-| Field | Rule |
-|---|---|
-| `path` | where the approved answer will be written, a plain relative path inside the record folder |
-| `data` | the answer itself |
-| `cites` | ids of passages it relies on, which must come from the most recent question's results |
-| `claim` | a non-empty reason |
-
-Anything else is refused, line by line, with the reason logged. A suggestion
-that passes waits. `seal` approves one by its hash; if its file has changed
-since it was suggested, the approval is refused. An approved answer is given
-for the same words in the same order, regardless of case and punctuation.
+[How it works, in full](docs/how-it-works.md): what it reads, how it ranks,
+your key, the record folder, and suggestions and approvals.
 
 ## Commands
 
@@ -540,6 +194,7 @@ willow/
 ├── test_strip.py             takes away GitHub, then every add-on, and shows what's left still passes
 ├── README.md                 this file
 ├── FILES.md                  every file in the repo, and what it is
+├── ADDONS.md                 every add-on, built and planned, generated from their cards
 ├── CONTRIBUTING.md           the rules every change follows, and how to show it does
 ├── CODE_OF_CONDUCT.md        how we treat each other
 ├── SECURITY.md               what counts as a security problem, and how to report it in public
@@ -551,6 +206,7 @@ willow/
 ├── ports/                    kernel.py rewritten in other languages
 ├── vectors/                  what keeps the four implementations identical
 ├── demo/                     three made-up people to try it on
+├── docs/                     the full first five minutes, and how it works in full
 ├── .github/                  CI, the issue forms, the pull request template: the GitHub add-on's
 ├── .gitignore                generated files and build output
 ├── ruff.toml                 lint settings

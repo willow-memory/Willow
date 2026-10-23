@@ -77,8 +77,11 @@ PLANTS = {
         r"the whole program \(about ([\d,]+)",
         r"the whole program (about 9\1",
     ),
-    "test_odiles_files_are_what_the_readme_says": _replace(
-        "README.md", "On Odile's ", "On Odile's 1"
+    "test_odiles_files_are_what_the_docs_say": _replace(
+        "docs/how-it-works.md", "On Odile's ", "On Odile's 1"
+    ),
+    "test_the_readmes_contents_link_every_section_in_order": _replace(
+        "README.md", r" · \[Commands\]\(#commands\)", ""
     ),
     "test_the_python_version_is_the_kernels": _replace(
         "README.md", "Python 3.9 or newer", "Python 3.8 or newer"

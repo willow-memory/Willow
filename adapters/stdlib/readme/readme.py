@@ -1,16 +1,17 @@
-"""readme.py: README.md's generated sections, built from the add-ons themselves.
+"""readme.py: the add-on list and the front page's feature, built from the
+add-ons themselves.
 
     python adapters/stdlib/readme/readme.py write [--week YYYY-Www]
     python adapters/stdlib/readme/readme.py check
     python adapters/stdlib/readme/readme.py tags
 
-Each generated section sits between two markers in README.md,
-`<!-- willow:NAME -->` and `<!-- /willow:NAME -->`; everything outside them is
-written by hand and never touched. `write` rebuilds every section in place.
-`check` rebuilds them in memory and exits 2 if README.md differs, so a section
-can't go stale: the add-on's tests run it on every push.
+Each generated section sits between two markers, `<!-- willow:NAME -->` and
+`<!-- /willow:NAME -->`; everything outside them is written by hand and never
+touched. `write` rebuilds every section in place. `check` rebuilds them in
+memory and exits 2 if a page differs, so a section can't go stale: the
+add-on's tests run it on every push.
 
-The sections, in this order:
+ADDONS.md holds these sections, in this order:
 
     pools    how the add-ons spread: by section, built and ideas, and how
              many need an install
@@ -18,6 +19,10 @@ The sections, in this order:
     pick     the add-on of the week, drawn from the built ones by a hash of
              the week, so anyone can recompute the draw
     list     every add-on, built and planned, by section, A to Z
+
+README.md holds one, `front`: one of pools, newest or pick, as its `show=`
+says (`<!-- willow:front show=pick week=2026-W43 -->`), and a link to the
+rest. To switch the front page's feature, change `show=` and run `write`.
 
 What it reads:
 
@@ -70,6 +75,7 @@ sys.path.insert(0, str(ROOT))
 import kernel  # noqa: E402
 
 README = ROOT / "README.md"
+ADDONS_MD = ROOT / "ADDONS.md"
 ADAPTERS = ROOT / "adapters"
 PLANNED = ADAPTERS / "planned.json"
 KINDS = ("stdlib", "deps")
@@ -328,6 +334,12 @@ BLOCK = re.compile(
     r"<!-- willow:(\w+)((?: \w+=\S+)*) -->\n.*?<!-- /willow:\1 -->", re.S
 )
 ORDER = ("pools", "newest", "pick", "list")
+#: what the front page can show, and the title it shows it under
+FRONT = {
+    "pick": "Add-on of the week",
+    "newest": "Newest",
+    "pools": "How the list stands",
+}
 
 
 def this_week() -> str:
@@ -335,31 +347,49 @@ def this_week() -> str:
     return f"{y}-W{w:02d}"
 
 
-def rebuild(text: str, week: str | None) -> str:
+def rebuild(text: str, week: str | None, needs: tuple = ORDER, page: str = "ADDONS.md") -> str:  # fmt: skip
     every = addons()
     found = [m.group(1) for m in BLOCK.finditer(text)]
-    if sorted(found) != sorted(ORDER):
+    if sorted(found) != sorted(needs):
         raise Refused(
-            f"README.md's sections are {found}; it needs one each of {list(ORDER)}"
+            f"{page}'s sections are {found}; it needs one each of {list(needs)}"
         )
+
+    def drawn(attrs: dict) -> str:
+        attrs["week"] = week or attrs.get("week") or this_week()
+        if not re.fullmatch(r"\d{4}-W\d{2}", attrs["week"]):
+            raise Refused(f"week {attrs['week']!r} is YYYY-Www")
+        return section_pick(every, attrs["week"])
+
+    def made(name: str, attrs: dict) -> str:
+        if name == "pick":
+            return drawn(attrs)
+        return {"pools": section_pools, "newest": section_newest,
+                "list": section_list}[name](every)  # fmt: skip
 
     def fill(m: re.Match) -> str:
         name, attrs = m.group(1), dict(a.split("=") for a in m.group(2).split())
-        if name == "pick":
-            attrs["week"] = week or attrs.get("week") or this_week()
-            if not re.fullmatch(r"\d{4}-W\d{2}", attrs["week"]):
-                raise Refused(f"week {attrs['week']!r} is YYYY-Www")
-            body = section_pick(every, attrs["week"])
+        if name == "front":
+            show = attrs.get("show", "")
+            if show not in FRONT:
+                raise Refused(f"front shows one of {', '.join(FRONT)}, not {show!r}")
+            if show != "pick":
+                attrs.pop("week", None)
+            built = sum(a["built"] for a in every)
+            body = (f"**{FRONT[show]}**\n\n{made(show, attrs)}\n\n"
+                    f"[Every add-on, {built} built of {len(every)}, and how to add one: "
+                    "ADDONS.md](ADDONS.md)")  # fmt: skip
         else:
-            body = {
-                "pools": section_pools,
-                "newest": section_newest,
-                "list": section_list,
-            }[name](every)
+            body = made(name, attrs)
         head = "".join(f" {k}={v}" for k, v in sorted(attrs.items()))
         return f"<!-- willow:{name}{head} -->\n{body}\n<!-- /willow:{name} -->"
 
     return BLOCK.sub(fill, text)
+
+
+def pages() -> list[tuple[Path, tuple]]:
+    """Each page readme.py writes, and the sections it holds."""
+    return [(ADDONS_MD, ORDER), (README, ("front",))]
 
 
 def main(argv: list[str]) -> int:
@@ -376,22 +406,26 @@ def main(argv: list[str]) -> int:
     if rest or verb not in ("write", "check") or (week and verb == "check"):
         print(__doc__.split("\n\n")[1], file=sys.stderr)
         return kernel.REFUSED
-    text = README.read_text(encoding="utf-8")
-    try:
-        new = rebuild(text, this_week() if verb == "write" and not week else week)
-    except Refused as e:
-        print(f"refused: {e}", file=sys.stderr)
-        return kernel.REFUSED
+    week = this_week() if verb == "write" and not week else week
+    stale = []
+    for path, needs in pages():
+        text = path.read_text(encoding="utf-8") if path.is_file() else ""
+        try:
+            new = rebuild(text, week, needs, path.name)
+        except Refused as e:
+            print(f"refused: {e}", file=sys.stderr)
+            return kernel.REFUSED
+        if verb == "write":
+            path.write_text(new, encoding="utf-8")
+            print(f"{path.name}: generated sections written")
+        elif new != text:
+            stale.append(path.name)
     if verb == "write":
-        README.write_text(new, encoding="utf-8")
-        print("README.md: generated sections written")
         return kernel.ALIVE
-    if new != text:
-        print(
-            "README.md isn't current: run python adapters/stdlib/readme/readme.py write"
-        )
+    if stale:
+        print(f"{', '.join(stale)} isn't current: run python adapters/stdlib/readme/readme.py write")  # fmt: skip
         return kernel.REFUSED
-    print("README.md is current")
+    print("README.md and ADDONS.md are current")
     return kernel.ALIVE
 
 

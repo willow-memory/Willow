@@ -141,8 +141,10 @@ FILE = re.compile(
 #: where it lives. An entry its doc no longer names fails too, so this list
 #: can't go stale.
 ELSEWHERE = {
-    "README.md": {
-        "dad/": "in Odile's generated files (test_odiles_files_are_what_the_readme_says)",
+    "docs/how-it-works.md": {
+        "dad/": "in Odile's generated files (test_odiles_files_are_what_the_docs_say)",
+    },
+    "docs/tour.md": {
         "hives/2026.txt": "in Odile's generated files (the same test)",
         "odile-record/": "made by the first-five-minutes walkthrough",
         "odile.key": "made by the first-five-minutes walkthrough",
@@ -330,7 +332,7 @@ def test_the_kernels_length_is_what_the_tree_says():
         )
 
 
-def test_odiles_files_are_what_the_readme_says(tmp_path):
+def test_odiles_files_are_what_the_docs_say(tmp_path):
     """Her files are made in a copy of her folder, never in the repo's."""
     shutil.copytree(ROOT / "demo" / "odile", tmp_path / "odile")
     made = subprocess.run(
@@ -345,11 +347,14 @@ def test_odiles_files_are_what_the_readme_says(tmp_path):
     import kernel
 
     paragraphs = len(kernel.chunks(life))
-    text = README.read_text(encoding="utf-8")
+    text = "\n".join(
+        (ROOT / "docs" / f).read_text(encoding="utf-8")
+        for f in ("tour.md", "how-it-works.md")
+    )
     m = re.search(
         r"On Odile's ([\d,]+) files \(([\d,]+) KB, about ([\d,]+)\s+paragraphs\)", text
     )
-    assert m, "README.md no longer says how big Odile's folder is"
+    assert m, "docs/how-it-works.md no longer says how big Odile's folder is"
     assert number(m.group(1)) == len(paths), f"she has {len(paths)} files"
     size = sum(p.stat().st_size for p in paths)
     assert number(m.group(2)) == round(size / 1000, -1), f"her files are {size:,} bytes"
@@ -357,8 +362,21 @@ def test_odiles_files_are_what_the_readme_says(tmp_path):
     assert f"writes her {len(paths)} files" in text
     for name in ODILE_NAMED:
         assert (life / name.rstrip("/")).exists(), (
-            f"README.md names {name}; her files don't have it"
+            f"the docs name {name}; her files don't have it"
         )
+
+
+def test_the_readmes_contents_link_every_section_in_order():
+    """The contents line at the top names each `##` section, in order, and
+    links to it, so a section added or renamed can't be left out of it."""
+    text = README.read_text(encoding="utf-8")
+    line = next((ln for ln in text.splitlines() if ln.startswith("**Contents:** ")), "")
+    links = re.findall(r"\[([^\]]+)\]\(#([^)]+)\)", line)
+    heads = re.findall(r"^## (.+)$", text, re.M)
+    slug = lambda h: re.sub(r"[^a-z0-9 -]", "", h.lower()).replace(" ", "-")  # noqa: E731
+    assert links == [(h, slug(h)) for h in heads], (
+        f"README.md's contents: {[n for n, _ in links]}; its sections: {heads}"
+    )
 
 
 def test_the_python_version_is_the_kernels():

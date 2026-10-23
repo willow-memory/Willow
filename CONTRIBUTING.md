@@ -123,7 +123,7 @@ others know you've started, open a draft pull request that names it.
    shows a promise was wrong, change it in the card and say why in the pull
    request, where the maintainer can see it.
 3. Take its entry out of `adapters/planned.json` in the same change, and regenerate
-   the README's list.
+   the add-on list.
 
 Your add-on's tests run under the guard, which holds it to its card. A test
 that never runs a path is a path the guard never checks, so test what your
@@ -161,7 +161,7 @@ beside the GitHub one: a host.json for `adapters/stdlib/ci/whose.py`, and that s
   [CHANGELOG.md](CHANGELOG.md), ending with its pull request's number, such
   as `(#7)`, under `### Added`, `### Changed`, `### Fixed` or `### Removed`.
   CI checks it on every pull request.
-- Regenerate the README's add-on list with
+- Regenerate the add-on list (ADDONS.md, and the README's one feature) with
   `python adapters/stdlib/readme/readme.py write`, never by hand;
   `test_docs.py` fails if it's stale.
 

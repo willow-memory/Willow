@@ -4,7 +4,7 @@ Things built on top of `kernel.py`. The kernel is the base, and it runs alone:
 delete this folder and it behaves the same, byte for byte.
 
 The list of add-ons, built and planned, is in the main README under
-[What you can build on it](../README.md#what-you-can-build-on-it). It is
+[ADDONS.md](../ADDONS.md). It is
 generated from the cards here, so this page holds only the rules.
 
 ## The one rule: the arrow points one way
@@ -40,7 +40,7 @@ What an add-on can rely on:
   what it never does;
 - its own tests (`test_*.py`), which CI runs.
 
-The card opens with a header that the main README's list is generated from:
+The card opens with a header that the add-on list in ADDONS.md is generated from:
 
     <!-- willow-addon
     section: Keeping track

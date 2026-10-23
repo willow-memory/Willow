@@ -3,7 +3,7 @@
 Two copies of the repo, each stripped and run:
 
 - **Without GitHub:** `.github/` and `adapters/stdlib/github/` deleted, and
-  the README's add-on list regenerated, as anyone removing an add-on does.
+  the add-on list regenerated, as anyone removing an add-on does.
   The kernel, its beats, every other add-on's tests and the vectors all
   pass, so willow is worked on the same with no host at all, or another.
 - **The kernel alone:** all of `adapters/` deleted. The kernel's tests, its

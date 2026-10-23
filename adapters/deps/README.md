@@ -1,7 +1,7 @@
 # deps
 
 Add-ons that need something installed: [pdf](pdf/) and [mcp](mcp/) so far.
-The planned ones are marked 📦 in the main README's list.
+The planned ones are in [ADDONS.md](../../ADDONS.md), each saying what it needs installed.
 
 The kernel needs nothing but Python, so anything here says plainly what it
 adds. Each add-on in this folder carries:

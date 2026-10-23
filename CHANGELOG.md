@@ -47,6 +47,10 @@ releases yet; when there are, each gets its own heading here.
 
 ### Changed
 
+- The README is a front page: a contents line, a first try, one add-on
+  feature that can be switched (`show=` on its marker), and summaries that
+  link to `docs/tour.md`, `docs/how-it-works.md` and `ADDONS.md`, the full
+  add-on list. `test_docs.py` holds the contents line to the sections. (#3)
 - The full file tree moved from the README to `FILES.md`; the README shows
   the top level. `test_docs.py` holds both to the repo. (#3)
 - The README's shortfalls moved to `LIMITS.md`, beside what willow

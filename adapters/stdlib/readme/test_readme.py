@@ -1,5 +1,5 @@
-"""The README generator: the front page is built from the add-ons, and can't
-drift from them.
+"""The add-on list and the front page's one feature are built from the
+add-ons, and can't drift from them.
 
 Each test holds one promise in adapters/stdlib/readme/README.md, and each can
 fail: the real README is current, building an add-on is what turns an idea into a built one,
@@ -45,6 +45,12 @@ Also by hand.
 The end, by hand.
 """
 
+FRONT = """# the front page
+
+<!-- willow:front show=pick week=2026-W43 -->
+<!-- /willow:front -->
+"""
+
 
 def card(section="Play", line="A thing.", source="new", added="2026-10-23", **more):
     head = {"section": section, "line": line, "source": source, "added": added,
@@ -71,9 +77,11 @@ def repo(tmp_path, monkeypatch):
                 "source": "box", "writes": "to", "network": "loopback",
                 "tags": "later"}]  # fmt: skip
     (tmp_path / "adapters" / "planned.json").write_text(json.dumps(planned))
-    (tmp_path / "README.md").write_text(PAGE)
+    (tmp_path / "ADDONS.md").write_text(PAGE)
+    (tmp_path / "README.md").write_text(FRONT)
     monkeypatch.setattr(rd, "ROOT", tmp_path)
     monkeypatch.setattr(rd, "README", tmp_path / "README.md")
+    monkeypatch.setattr(rd, "ADDONS_MD", tmp_path / "ADDONS.md")
     monkeypatch.setattr(rd, "ADAPTERS", tmp_path / "adapters")
     monkeypatch.setattr(rd, "PLANNED", tmp_path / "adapters" / "planned.json")
     return tmp_path
@@ -205,5 +213,45 @@ def test_tags_fills_only_what_is_missing_and_keeps_what_a_person_wrote(repo):
 def test_check_keeps_the_week_written_whatever_week_it_is(repo):
     """`write --week` sets the draw's week; `check` never moves it to today's."""
     assert rd.main(["write", "--week", "2027-W01"]) == 0
-    assert "<!-- willow:pick week=2027-W01 -->" in (repo / "README.md").read_text()
+    assert "<!-- willow:pick week=2027-W01 -->" in (repo / "ADDONS.md").read_text()
+    assert (
+        "<!-- willow:front show=pick week=2027-W01 -->"
+        in (repo / "README.md").read_text()
+    )
     assert rd.main(["check"]) == 0
+
+
+def rebuild_front(show: str) -> str:
+    return rd.rebuild(
+        FRONT.replace("show=pick", f"show={show}"), None, ("front",), "README.md"
+    )
+
+
+@pytest.mark.parametrize("show, title, has", [
+    ("pick", "Add-on of the week", "*Drawn for 2026-W43"),
+    ("newest", "Newest", "2026-10-05 · [**alpha**]"),
+    ("pools", "How the list stands", "| Section | Built |"),
+])  # fmt: skip
+def test_the_front_page_shows_the_one_feature_its_marker_names(repo, show, title, has):
+    text = rebuild_front(show)
+    assert f"**{title}**" in text and has in text
+    assert (
+        "[Every add-on, 2 built of 3, and how to add one: ADDONS.md](ADDONS.md)" in text
+    )
+    assert ("week=" in text.split("-->")[0]) == (
+        show == "pick"
+    )  # a week only for the draw
+    assert rebuild_front(show) == rd.rebuild(text, None, ("front",), "README.md")
+
+
+@pytest.mark.parametrize("show", ["list", "Pick", "everything"])
+def test_a_front_page_feature_that_isnt_one_is_refused(repo, show):
+    with pytest.raises(rd.Refused, match="front shows one of pick, newest, pools"):
+        rebuild_front(show)
+
+
+def test_check_says_which_page_is_stale(repo, capsys):
+    assert rd.main(["write"]) == 0
+    (repo / "README.md").write_text((repo / "README.md").read_text().replace("Add-on of", "Add-in of"))  # fmt: skip
+    assert rd.main(["check"]) == 2
+    assert "README.md isn't current" in capsys.readouterr().out

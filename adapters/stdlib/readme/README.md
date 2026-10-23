@@ -1,16 +1,17 @@
 <!-- willow-addon
 section: For maintainers
-line: Builds this README's generated sections from the add-ons' own cards.
+line: Builds ADDONS.md, and the README's one feature, from the add-ons' own cards.
 source: new
 added: 2026-10-23
-writes: README.md, adapters/planned.json, adapters/*/*/README.md
+writes: README.md, ADDONS.md, adapters/planned.json, adapters/*/*/README.md
 network: none
 tags: no-install, offline, writes-output, maintainers
 -->
 # readme
 
-README.md's generated sections, built from the add-ons themselves, so the
-front page can't drift from what's in the repo.
+The add-on list in ADDONS.md, and the one feature the README's front page
+shows, built from the add-ons themselves, so neither can drift from what's in
+the repo.
 
     python adapters/stdlib/readme/readme.py write [--week YYYY-Www]
     python adapters/stdlib/readme/readme.py check
@@ -23,8 +24,14 @@ front page can't drift from what's in the repo.
 | pick | the add-on of the week, drawn by a hash of the week |
 | list | every add-on, built (linked) and ideas, by section, A to Z: its line, what it needs and where it goes online in words, and its tags |
 
-Each sits between `<!-- willow:NAME -->` and `<!-- /willow:NAME -->` in
-README.md. Everything outside the markers is written by hand and never touched.
+ADDONS.md holds all four, each between `<!-- willow:NAME -->` and
+`<!-- /willow:NAME -->`. Everything outside the markers is written by hand
+and never touched.
+
+**The front page's feature.** README.md holds one block, `front`, which shows
+one of pools, newest or pick, as its `show=` says, and links to ADDONS.md. To
+switch it, change `show=` in the marker (`<!-- willow:front show=newest -->`)
+and run `write`; anything else there is refused.
 
 **What it reads:** each built add-on's card header (the comment at the top of
 its README.md: `section`, `line`, `source`, `added`, `writes`, `network`,

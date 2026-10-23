@@ -10,8 +10,9 @@ willow/
 ├── test_docs.py              holds every doc to the files that exist, and the trees to the repo
 ├── test_docs_fires.py        plants a violation for each docs check and makes sure it fails
 ├── test_strip.py             takes away GitHub, then every add-on, and shows what's left still passes
-├── README.md                 the front page: what it does, the first five minutes, the add-on list
+├── README.md                 the front page: what it does, a first try, one add-on, and where to read more
 ├── FILES.md                  this file
+├── ADDONS.md                 every add-on, built and planned, generated from their cards
 ├── CONTRIBUTING.md           the rules every change follows, and how to show it does
 ├── CODE_OF_CONDUCT.md        how we treat each other
 ├── SECURITY.md               what counts as a security problem, and how to report it in public
@@ -164,6 +165,9 @@ willow/
 │   ├── compare.py            runs every port against the cases and each other's logs
 │   ├── test_vectors.py       fails if the cases are stale or a port disagrees
 │   └── README.md             how the ports were built and what testing them found
+├── docs/
+│   ├── tour.md               the first five minutes, in full: a question, a gap, her words, an approval
+│   └── how-it-works.md       what it reads, how it ranks, the key, the record, approvals
 ├── demo/                     three made-up people to try it on
 │   ├── odile/                piano tuner and beekeeper, caring for her father
 │   │   ├── make_life.py      writes her files into life/, the same bytes every run
