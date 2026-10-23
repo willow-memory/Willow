@@ -616,15 +616,17 @@ willow/
 │   │       ├── test_todo.py
 │   │       └── README.md
 │   └── deps/                 add-ons that need something installed
-│       ├── README.md         what one must declare: pinned requirements, licences, network
+│       ├── README.md         what one must declare: pins, floors, licences, network
 │       ├── mcp/
 │       │   ├── server.py     your folder for any MCP client: ask and suggest, never approve
 │       │   ├── requirements.txt  mcp, pinned
+│       │   ├── requirements-floor.txt  mcp at its floor, also tested
 │       │   ├── test_mcp_server.py
 │       │   └── README.md
 │       └── pdf/
 │           ├── pdf.py        text out of PDFs, a headed paragraph a page
 │           ├── requirements.txt  pypdf, pinned
+│           ├── requirements-floor.txt  pypdf at its floor, also tested
 │           ├── test_pdf.py
 │           └── README.md
 ├── ports/                    kernel.py rewritten in other languages
@@ -674,7 +676,8 @@ willow/
 ## Building on it
 
 **Add-ons** go in `adapters/stdlib/` if they need nothing beyond Python, or
-`adapters/deps/` if they need something installed. An add-on may use
+`adapters/deps/` if they need something installed, tested at its pins and
+at its floor (each package's last 2020 release, or its first). An add-on may use
 `kernel.py`; `kernel.py` never uses an add-on, and runs the same without any.
 An add-on writes to the log only through `kernel.py`, so `verify` still holds.
 Each one has its code, a card saying what it's for and what it never does, and

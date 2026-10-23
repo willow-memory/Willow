@@ -139,12 +139,13 @@ def demo(name: str):
     return gate
 
 
-def deps_add_on(name: str):
+def deps_add_on(name: str, pins: str = "requirements.txt"):
     """A deps add-on's tests in a fresh virtual environment of its own, with
-    its pinned requirements and pytest installed there, so one add-on's
-    packages never decide whether another's tests pass. An install that can't
-    be done (no network, a pin that won't resolve) is unreachable, not a
-    pass; only the tests' own output is hashed, never the installer's."""
+    `pins` and pytest installed there, so one add-on's packages never decide
+    whether another's tests pass. Run once at its pins and once at its floor
+    (requirements-floor.txt). An install that can't be done (no network, a
+    pin that won't resolve) is unreachable, not a pass; only the tests' own
+    output is hashed, never the installer's."""
 
     def gate() -> tuple[str, str, str | None]:
         here = ROOT / "adapters" / "deps" / name
@@ -158,7 +159,7 @@ def deps_add_on(name: str):
             py = str(env / ("Scripts" if os.name == "nt" else "bin") / "python")
             got = subprocess.run(
                 [py, "-m", "pip", "install", "-q", "--disable-pip-version-check",
-                 "-r", str(here / "requirements.txt"), "pytest"],
+                 "-r", str(here / pins), "pytest"],
                 capture_output=True, text=True,
             )  # fmt: skip
             if got.returncode != 0:
@@ -179,6 +180,86 @@ def deps_add_on(name: str):
             )
 
     return gate
+
+
+#: the floor rule: a dependency is also tested at its last release on or
+#: before this day, or at its first release if it had none by then
+FLOOR_DAY = "2021-01-01"
+PYPI = "https://pypi.org/pypi/{}/json"
+
+
+def pins_of(path: Path) -> dict[str, str]:
+    """{package: version} from a file of `name==version` lines."""
+    out = {}
+    for line in path.read_text(encoding="utf-8").splitlines():
+        line = line.split("#")[0].strip()
+        if line:
+            name, version = line.split("==")
+            out[name.strip().lower()] = version.strip()
+    return out
+
+
+def releases(package: str) -> dict[str, str]:
+    """{version: first upload time} for each release with a file not yanked."""
+    import json
+    import urllib.request
+
+    with urllib.request.urlopen(PYPI.format(package), timeout=30) as got:
+        doc = json.load(got)
+    out = {}
+    for version, files in doc["releases"].items():
+        times = [f["upload_time_iso_8601"] for f in files if not f.get("yanked")]
+        if times:
+            out[version] = min(times)
+    return out
+
+
+def rule_floor(uploaded: dict[str, str]) -> str:
+    """The version the floor rule names, by upload time, not version order."""
+    by_time = sorted(uploaded, key=uploaded.get)
+    before = [v for v in by_time if uploaded[v] < FLOOR_DAY]
+    return before[-1] if before else by_time[0]
+
+
+def floor_line(name: str) -> str:
+    card = (ROOT / "adapters" / "deps" / name / "README.md").read_text(encoding="utf-8")
+    got = re.search(r"^floor: (.*)$", card.split("-->")[0], re.M)
+    return got.group(1).strip() if got else ""
+
+
+def floors() -> tuple[str, str, str | None]:
+    """Each deps add-on's floor against the rule, from PyPI's upload dates: a
+    floor at the rule's version passes; one above it passes only when its
+    card's `floor:` line says why; one below it is fine (older than asked).
+    PyPI out of reach is unreachable."""
+    said, wrong = [], []
+    for name in deps_add_ons():
+        here = ROOT / "adapters" / "deps" / name
+        for package, version in sorted(
+            pins_of(here / "requirements-floor.txt").items()
+        ):
+            try:
+                uploaded = releases(package)
+            except (OSError, ValueError) as exc:
+                return UNREACHABLE, "", f"couldn't read PyPI for {package}: {exc}"[:200]
+            rule = rule_floor(uploaded)
+            if version not in uploaded:
+                wrong.append(f"{name}: {package}=={version} is not on PyPI")
+                continue
+            line = f"{name}: {package} floor {version}, rule {rule}"
+            if uploaded[version] > uploaded[rule]:
+                reason = floor_line(name).replace(f"{package} {version}", "")
+                if len(reason.strip(" ;,.:")) < 20:
+                    wrong.append(f"{name}: {package} {version} is above the rule's "
+                                 f"{rule} and its card's floor: line gives no reason")  # fmt: skip
+                    continue
+                line += ", raised with a reason"
+            said.append(line)
+    said = "\n".join(said) + "\n"
+    print(said, end="")
+    if wrong:
+        return FAILING, said, "; ".join(wrong)
+    return SATISFIED, said, None
 
 
 def deps_add_ons() -> list[str]:
@@ -217,7 +298,11 @@ def gates() -> list[tuple[str, str, object]]:
         )  # fmt: skip
         out.append(("ports", f"ports:{port}", how))
     out += [("demo", f"demo:{name}", demo(name)) for name in people()]
-    out += [("deps", f"deps:{name}", deps_add_on(name)) for name in deps_add_ons()]
+    for name in deps_add_ons():
+        out.append(("deps", f"deps:{name}", deps_add_on(name)))
+        out.append(("deps", f"deps:{name}@floor",
+                    deps_add_on(name, "requirements-floor.txt")))  # fmt: skip
+    out.append(("deps", "deps:floors", floors))
     return out
 
 

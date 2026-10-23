@@ -95,7 +95,8 @@ jobs:
 
   deps:
     # Each add-on in adapters/deps gets a fresh virtual environment with only
-    # its own pinned requirements, made by ci.py; mcp needs Python 3.10+.
+    # its own pinned requirements, made by ci.py, then another at its floor;
+    # deps:floors checks each floor against PyPI. mcp needs Python 3.10+.
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7

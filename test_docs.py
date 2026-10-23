@@ -139,9 +139,11 @@ ELSEWHERE = {
     },
     "adapters/README.md": {
         "requirements.txt": "each deps add-on's own file, in its folder",
+        "requirements-floor.txt": "each deps add-on's own file, in its folder",
     },
     "adapters/deps/README.md": {
         "requirements.txt": "each deps add-on's own file, in its folder",
+        "requirements-floor.txt": "each deps add-on's own file, in its folder",
     },
     "vectors/README.md": {
         "foundation/": "willow-bot",
@@ -400,6 +402,44 @@ def test_every_deps_add_on_pins_what_it_needs_and_names_it_on_its_card():
             package = PIN.fullmatch(pin).group(1)
             assert package.lower() in needs.group(1).lower(), (
                 f"{here.relative_to(ROOT)}: {package} is pinned but not on its card"
+            )
+
+
+def test_every_deps_add_on_has_a_floor_and_its_card_names_it():
+    """The floor rule: each deps add-on is also tested at its oldest version,
+    the last release of 2020 or else the first, or at a higher floor its card
+    gives a reason for. ci.py's deps:floors checks the dates against PyPI."""
+    for here in add_on_folders():
+        if here.parent.name != "deps":
+            continue
+        name = here.relative_to(ROOT)
+        floor = here / "requirements-floor.txt"
+        assert floor.is_file(), f"{name} has no requirements-floor.txt"
+        pins = {}
+        for line in floor.read_text(encoding="utf-8").splitlines():
+            line = line.split("#")[0].strip()
+            if line:
+                assert PIN.fullmatch(line), (
+                    f"{floor.relative_to(ROOT)}: pin with ==: {line}"
+                )
+                package, version = line.split("==")
+                pins[package.lower()] = version
+        top = {
+            line.split("==")[0].strip().lower()
+            for line in (here / "requirements.txt")
+            .read_text(encoding="utf-8")
+            .splitlines()
+            if line.split("#")[0].strip()
+        }
+        assert set(pins) == top, (
+            f"{name}: the floor pins {sorted(pins)}, the top {sorted(top)}"
+        )
+        head = (here / "README.md").read_text(encoding="utf-8").split("-->")[0]
+        line = re.search(r"^floor: (.*)$", head, re.M)
+        assert line, f"{name}: its card's header has no floor:"
+        for package, version in pins.items():
+            assert f"{package} {version}" in line.group(1).lower(), (
+                f"{name}: its floor: line doesn't name {package} {version}"
             )
 
 

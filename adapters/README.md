@@ -28,8 +28,10 @@ What an add-on can rely on:
 - [stdlib/](stdlib/): needs nothing beyond Python's standard library, like the
   kernel. Copy the folder and run it.
 - [deps/](deps/): needs something installed. Its card names every install up
-  front, and it carries a pinned `requirements.txt`; see
-  [deps/README.md](deps/README.md).
+  front, and it carries a pinned `requirements.txt` and a
+  `requirements-floor.txt`: it is tested at both, the floor being each
+  package's last release of 2020, or its first, or a higher one the card
+  gives a reason for; see [deps/README.md](deps/README.md).
 
 ## What a folder holds
 
@@ -50,8 +52,9 @@ The card opens with a header that the main README's list is generated from:
 `section` is one of the list's sections, `line` is one sentence, `source` is
 `bot` (rebuilt from willow-bot's one script), `box` (built from what the
 kernel has) or `new`, and `added` is the date it was built. An add-on in
-`deps/` adds `needs` (what to install, and its licence) and, if it goes
-online, `network`.
+`deps/` adds `needs` (what to install, and its licence), `floor` (its
+floor versions, and why when above the rule's) and, if it goes online,
+`network`.
 
 ## Building a planned one
 

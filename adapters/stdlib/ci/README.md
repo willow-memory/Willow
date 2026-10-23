@@ -26,7 +26,7 @@ record in the runner's temp folder.
 | tests | `tests:beats` (`kernel.py test`), `tests:kernel`, `tests:docs`, `tests:adapters` (the add-ons in `adapters/stdlib/`), `tests:vectors` (pytest) |
 | ports | `ports:java`, `ports:ts`, `ports:csharp`: `vectors/compare.py`, one port at a time |
 | demo | `demo:hollis`, `demo:odile`, `demo:teodora`: each person's files made in a temporary folder and held to their `demo/*/PLANTED.md` |
-| deps | `deps:mcp`, `deps:pdf`, one per add-on in `adapters/deps/`: its tests in a fresh virtual environment with only its own pinned requirements and pytest; an install that can't be done is unreachable |
+| deps | `deps:mcp`, `deps:mcp@floor`, `deps:pdf`, `deps:pdf@floor`, two per add-on in `adapters/deps/`: its tests in a fresh virtual environment with only its own pinned requirements (then its floor's) and pytest; an install that can't be done is unreachable. Then `deps:floors`: each floor against the floor rule, by PyPI's upload dates; PyPI out of reach is unreachable |
 
 Each verdict row holds the gate, its state, a hash of every file in the repo
 it ran on, a hash of what the command printed, the Python version, and a
