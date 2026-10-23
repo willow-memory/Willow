@@ -6,8 +6,8 @@ body:
     attributes:
       value: |
         Thanks for writing it up. If it's a way to forge an approval, rewrite
-        the record, read the key or slip past the guard, don't file it here:
-        see SECURITY.md and report it privately.
+        the record, read the key or slip past the guard, use the security
+        form instead: SECURITY.md says what counts.
   - type: input
     id: what
     attributes:

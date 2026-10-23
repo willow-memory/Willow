@@ -96,6 +96,11 @@ PLANTS = {
     "test_every_port_folder_is_one_compare_runs_and_ci_requires": _add(
         "ports/planted/Kernel.planted"
     ),
+    "test_bugs_md_is_the_tests_marked_as_known_bugs": _add(
+        "test_planted.py",
+        "import pytest\n\n\n@pytest.mark.xfail(strict=True, reason='bug #1: planted')\n"
+        "def test_planted():\n    assert False\n",
+    ),
     "test_the_idea_form_offers_exactly_the_lists_sections_and_writes": _replace(
         ".github/ISSUE_TEMPLATE/idea.yml", "        - Play\n", "        - Games\n"
     ),

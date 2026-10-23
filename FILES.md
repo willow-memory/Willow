@@ -13,8 +13,11 @@ willow/
 ├── FILES.md                  this file
 ├── CONTRIBUTING.md           the rules every change follows, and how to show it does
 ├── CODE_OF_CONDUCT.md        how we treat each other
-├── SECURITY.md               what counts as a security problem, and how to report it privately
+├── SECURITY.md               what counts as a security problem, and how to report it in public
 ├── CHANGELOG.md              what changed, by pull request
+├── BUGS.md                   the known bugs, made from the tests that show them
+├── DECISIONS.md              what's settled, why, and what holds it
+├── LIMITS.md                 what willow doesn't do, on purpose or not yet
 ├── adapters/                 add-ons built on top of kernel.py
 │   ├── README.md             the rules every add-on follows
 │   ├── planned.json          the add-ons not built yet, as this README lists them
@@ -41,13 +44,17 @@ willow/
 │   │   │   └── README.md
 │   │   ├── ci/
 │   │   │   ├── ci.py         this repo's checks as verdict rows on a kernel record
-│   │   │   ├── changelog.py  a change beyond the docs adds its line to CHANGELOG.md
+│   │   │   ├── changelog.py  a change beyond the docs adds its entry to CHANGELOG.md, and names a bug it fixed
+│   │   │   ├── bugs.py       makes BUGS.md from the tests marked as known bugs
+│   │   │   ├── whose.py      which pull request wrote these lines
 │   │   │   ├── guard/
 │   │   │   │   └── sitecustomize.py  holds each add-on to its card while its tests run
 │   │   │   ├── test_ci.py    its tests: the same record every run, and every state
 │   │   │   ├── test_guard.py the guard's tests: each broken promise caught
 │   │   │   ├── test_contract.py  what every add-on promises alike, held for all of them
 │   │   │   ├── test_changelog.py  changelog.py's tests: owed, not owed, and in the wrong place
+│   │   │   ├── test_bugs.py  bugs.py's tests: strict marks only, and the list made from them
+│   │   │   ├── test_whose.py whose.py's tests: merges, squashes, and a report's text refused
 │   │   │   └── README.md     its card: gates, states, the guard and exit codes
 │   │   ├── coming-up/
 │   │   │   ├── coming_up.py  dates in your files in the next few days
@@ -172,11 +179,13 @@ willow/
 │       └── STRIP.md
 ├── .github/
 │   ├── workflows/
-│   │   └── ci.yml            runs adapters/stdlib/ci/ci.py one part a job, tests on Python 3.9 to 3.14
+│   │   ├── ci.yml            runs adapters/stdlib/ci/ci.py one part a job, tests on Python 3.9 to 3.14
+│   │   └── security.yml      names the author of each pull request a security report points to
 │   ├── ISSUE_TEMPLATE/
 │   │   ├── bug.yml           the form for something wrong
 │   │   ├── idea.yml          the form for an add-on idea: the same fields as planned.json
-│   │   └── config.yml        security reports go private; a link to the contributing rules
+│   │   ├── security.yml      the form for a security problem, in public
+│   │   └── config.yml        a link to the contributing rules
 │   ├── pull_request_template.md  what a pull request says, and what to check before opening one
 │   └── dependabot.yml        weekly updates for the workflow's actions, never the add-ons' pins
 ├── .gitignore                generated files and build output

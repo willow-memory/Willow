@@ -21,14 +21,23 @@ problem: open an issue for those.
 
 ## How to report one
 
-Privately, through GitHub: the repository's **Security** tab, then **Report
-a vulnerability**. Please don't open a public issue for it.
+In public, with the **A security problem** issue form. Willow runs only on
+your own machine and has no server to attack, so there is nothing for a
+private report to protect, and a public one reaches everyone who needs to
+know at once: whoever runs it, and whoever wrote the lines at fault.
 
 Say what you did, what happened, and what you expected, with the smallest
-folder and commands that show it. Leave out anything from your own files.
+made-up folder and commands that show it. **Leave out anything from your own
+files.**
 
-You'll get a reply within a week. Once it's fixed, the fix says what it
-fixed, and who found it if they'd like to be named.
+If you can, name the lines at fault, as `PATH:FIRST-LAST`. A workflow
+(`.github/workflows/security.yml`) looks each one up with git blame, finds
+the pull request that wrote it (`adapters/stdlib/ci/whose.py`), and names
+that pull request's author on the report. That is so they hear about it
+from the start, not to blame them: the lines are a place to begin.
+
+The fix goes under `### Fixed` in [CHANGELOG.md](CHANGELOG.md) and names
+the report, and who found it if they'd like to be named.
 
 ## What's supported
 

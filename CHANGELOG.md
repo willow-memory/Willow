@@ -1,6 +1,8 @@
 # Changelog
 
-What changed, newest first, by the pull request that changed it. There are no
+What changed, newest first, by the pull request that changed it, under
+Added, Changed, Fixed and Removed. A fix names what it fixes: a known bug
+from [BUGS.md](BUGS.md) as `bug #N`, or a security report. There are no
 releases yet; when there are, each gets its own heading here.
 
 ## Unreleased
@@ -22,6 +24,16 @@ releases yet; when there are, each gets its own heading here.
   docs, ending with its number; CI checks it. (#3)
 - `test_docs_fires.py`: each of the docs test's checks is shown to fail on a
   violation planted in a copy of the repo. (#3)
+- `BUGS.md`, made from the tests that show each known bug, marked as
+  expected to fail; a fix names the bug it fixes under Fixed, and CI checks
+  that. (#3)
+- `DECISIONS.md`, what's settled and what holds it, and `LIMITS.md`, what
+  willow doesn't do. (#3)
+- A test that the kernel imports only Python's own library, and no
+  add-on. (#3)
+- Security problems are reported in public with their own issue form, and
+  a workflow tags the author of the pull request behind each line a report
+  points to (`adapters/stdlib/ci/whose.py`). (#3)
 - The standard GitHub files, shaped from the willow repos' own conventions:
   a pull request template built on Evidence (receipts, not claims) and on
   what wasn't checked, issue
@@ -32,6 +44,8 @@ releases yet; when there are, each gets its own heading here.
 
 - The full file tree moved from the README to `FILES.md`; the README shows
   the top level. `test_docs.py` holds both to the repo. (#3)
+- The README's shortfalls moved to `LIMITS.md`, beside what willow
+  doesn't do on purpose. (#3)
 - `similar` matches on each entry's line and the tags a person chose, not
   the whole card, whose common words made unrelated add-ons look alike. (#3)
 - The add-on list shows tags instead of emoji, and says in words what an

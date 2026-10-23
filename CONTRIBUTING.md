@@ -5,8 +5,10 @@ Thanks for looking. Most changes here are a new add-on, and
 the rules every change follows, and how to show that yours does.
 
 A question is welcome: open an issue and say what you tried. A security
-problem never goes in an issue; [SECURITY.md](SECURITY.md) says how to report
-it privately. Everyone here keeps the
+problem is reported in public too, with its own issue form;
+[SECURITY.md](SECURITY.md) says what counts. What's settled and why is in
+[DECISIONS.md](DECISIONS.md), and what willow doesn't do in
+[LIMITS.md](LIMITS.md). Everyone here keeps the
 [code of conduct](CODE_OF_CONDUCT.md).
 
 ## Run what CI runs
@@ -31,8 +33,8 @@ run is said, not left out.
 
 **The kernel stays small.** `kernel.py` needs nothing but Python 3.9 or
 newer. An add-on may use the kernel; the kernel never uses an add-on, and it
-runs the same without any. A change that adds an import to `kernel.py` beyond
-the standard library won't be merged.
+runs the same without any. An import in `kernel.py` from beyond the standard
+library, or from an add-on, fails `test_kernel.py`.
 
 **Only a person approves.** Code may search, suggest and record. It never
 writes an approval (a `seal`), and it never reads the person's key. An add-on
@@ -147,12 +149,38 @@ versions and the floor, and checks each floor against PyPI's release dates.
 ## Pull requests
 
 - One idea per pull request.
-- A change to anything but the docs adds a line under `## Unreleased` in
+- A change to anything but the docs adds an entry under `## Unreleased` in
   [CHANGELOG.md](CHANGELOG.md), ending with its pull request's number, such
-  as `(#7)`. CI checks it on every pull request.
+  as `(#7)`, under `### Added`, `### Changed`, `### Fixed` or `### Removed`.
+  CI checks it on every pull request.
 - Regenerate the README's add-on list with
   `python adapters/stdlib/readme/readme.py write`, never by hand;
   `test_docs.py` fails if it's stale.
+
+## Bugs
+
+Report one with the **Something is wrong** issue form. A security problem
+has its own form, and if you can name the lines at fault
+(`PATH:FIRST-LAST`), a workflow finds the pull request that wrote them and
+tags its author on the report, so they hear about it from the start.
+
+**A known bug is a test.** To put one on [BUGS.md](BUGS.md), write a test
+that shows it, and mark it as expected to fail, strictly, naming its issue:
+
+```python
+@pytest.mark.xfail(strict=True, reason="bug #12: what goes wrong, in a sentence")
+def test_a_date_written_day_first_is_read_day_first(): ...
+```
+
+Then run `python adapters/stdlib/ci/bugs.py write`. `test_docs.py` fails if
+BUGS.md and the tests disagree, and refuses any expected-to-fail mark that
+isn't strict or doesn't name a bug: a loose one would let a fixed bug pass
+unnoticed.
+
+**Fixing one.** Once the bug is fixed its test passes, and because the
+mark is strict, that fails the run until you take the mark off. Regenerate
+BUGS.md, and add an entry under `### Fixed` in CHANGELOG.md that names it,
+`bug #12`; CI refuses the pull request without it.
 
 ## After you open it
 
@@ -176,7 +204,9 @@ never a reason to change the check until it passes. So CI never:
 - loosens an add-on's card, its `writes` or `network`, to fit what the code
   does: if the card was wrong, the pull request says so;
 - approves anything: only a person does;
-- skips a test to get green: a skipped check still looks like a pass.
+- skips a test to get green: a skipped check still looks like a pass. A
+  test marked as expected to fail is a known bug, with its number, on
+  BUGS.md, never a way to quiet a failure.
 
 ## Licence
 

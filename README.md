@@ -467,6 +467,7 @@ Each is a test that fails if it stops being true.
 
 | Guarantee | Enforced by |
 |---|---|
+| Uses only Python's own library, and never an add-on | `test_kernel.py` fails on any other import, `adapters` included |
 | Never goes online | `test_kernel.py` parses the file and fails on any network module, `eval`, `exec`, `compile` or `__import__` |
 | Never stores your words | the log is checked for the question's and answer's words after a full cycle |
 | Never gives a suggestion as an answer until it's approved | `kernel.py test`: a suggestion without a seal is listed as waiting, not given |
@@ -479,16 +480,12 @@ Each is a test that fails if it stops being true.
 
 ## Where it falls short
 
-- **It matches words, not meanings.** Ask "who owes me money" when your files
-  say "invoice outstanding" and it finds nothing until a words list connects
-  them.
-- **English is built in.** The common-word list and the word-form rules are
-  English. Questions in other languages work, but no common words are set
-  aside, and words with accents or in other scripts are matched only as
-  written.
-- **No index,** so time grows with the size of the folder.
-- **One writer at a time on Windows.** File locking uses `fcntl`, which
-  Windows doesn't have.
+It matches words, not meanings: ask "who owes me money" when your files say
+"invoice outstanding" and it finds nothing until a words list connects them.
+That, English being built in, the cost of having no index, and locking on
+Windows are in [LIMITS.md](LIMITS.md), with what it doesn't do on purpose
+and why ([DECISIONS.md](DECISIONS.md)). Known bugs, each shown by a test,
+are in [BUGS.md](BUGS.md).
 
 It was tested blind. For two of the three characters, a separate AI agent
 that never saw the code wrote the files, the needs hidden in them, and the
@@ -543,8 +540,11 @@ willow/
 ├── FILES.md                  every file in the repo, and what it is
 ├── CONTRIBUTING.md           the rules every change follows, and how to show it does
 ├── CODE_OF_CONDUCT.md        how we treat each other
-├── SECURITY.md               what counts as a security problem, and how to report it privately
+├── SECURITY.md               what counts as a security problem, and how to report it in public
 ├── CHANGELOG.md              what changed, by pull request
+├── BUGS.md                   the known bugs, made from the tests that show them
+├── DECISIONS.md              what's settled, why, and what holds it
+├── LIMITS.md                 what willow doesn't do, on purpose or not yet
 ├── adapters/                 add-ons built on top of kernel.py
 ├── ports/                    kernel.py rewritten in other languages
 ├── vectors/                  what keeps the four implementations identical

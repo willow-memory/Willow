@@ -1,0 +1,61 @@
+name: security
+
+# A security report names the lines at fault (the form's "Where it is").
+# whose.py finds the pull request that wrote each one, and this names its
+# author on the report, in public, so they hear about it from the start.
+# The report's text is anyone's: it reaches whose.py only on stdin, never
+# through the workflow's own expressions, and whose.py refuses any place
+# that isn't a line range in a file git tracks. Nothing of the report's own
+# text is echoed into the comment.
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: read
+
+jobs:
+  whose:
+    if: startsWith(github.event.issue.title, 'Security:')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - env:
+          BODY: ${{ github.event.issue.body }}
+          ISSUE: ${{ github.event.issue.number }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set +e
+          printf '%s' "$BODY" | python adapters/stdlib/ci/whose.py form > whose.txt
+          code=$?
+          set -e
+          {
+            if [ "$code" = 0 ]; then
+              echo "The lines this report names were written by:"
+              echo
+              while read -r pr where; do
+                n="${pr#\#}"
+                if author=$(gh pr view "$n" --json author --jq .author.login); then
+                  echo "- $pr ($where), by @$author"
+                else
+                  echo "- $pr ($where)"
+                fi
+              done < whose.txt
+              echo
+              echo "Tagged so you hear about it from the start. Nothing here says who is at fault: the lines are a place to begin."
+            elif [ "$code" = 42 ]; then
+              echo "No pull request found for the lines this report names: they landed before pull requests, or none were named."
+            else
+              echo "The places in \"Where it is\" couldn't be looked up."
+              echo
+              echo "Each should be PATH:FIRST-LAST, a line range in a file in the repo."
+            fi
+          } > comment.md
+          gh issue comment "$ISSUE" --body-file comment.md

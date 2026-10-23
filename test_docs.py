@@ -501,3 +501,17 @@ def test_the_idea_form_offers_exactly_the_lists_sections_and_writes():
 
     assert options("section") == rd.NAMES
     assert sorted(o.split()[0] for o in options("writes")) == sorted(rd.WRITES)
+
+
+def test_bugs_md_is_the_tests_marked_as_known_bugs():
+    """BUGS.md is made from the tests marked as known bugs, and every
+    expected-to-fail mark is one (strict, naming its bug)."""
+    spec = importlib.util.spec_from_file_location(
+        "willow_bugs", ROOT / "adapters" / "stdlib" / "ci" / "bugs.py"
+    )
+    bugs = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(bugs)
+    made = bugs.render(bugs.bugs())
+    assert (ROOT / "BUGS.md").read_text(encoding="utf-8") == made, (
+        "BUGS.md isn't current: run python adapters/stdlib/ci/bugs.py write"
+    )

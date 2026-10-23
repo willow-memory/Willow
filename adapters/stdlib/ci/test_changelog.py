@@ -93,3 +93,44 @@ def test_a_base_git_cant_find_is_unreachable(repo):
 )
 def test_a_bad_command_line_is_refused(argv):
     assert cl.main(argv) == 2
+
+
+BUGS = "# Known bugs\n\n| Bug | What goes wrong | The test that shows it |\n|---|---|---|\n| #12 | x | `t.py::t` |\n"
+
+
+def fixed_log(entry: str, heading: str = "Fixed") -> str:
+    return LOG.replace(
+        "- an older line (#1)\n", f"- an older line (#1)\n\n### {heading}\n\n{entry}\n"
+    )
+
+
+@pytest.fixture
+def buggy(repo):
+    """The base lists bug #12; the change fixes it, taking it off BUGS.md."""
+    git(repo, "checkout", "-q", "main")
+    commit(repo, {"BUGS.md": BUGS})
+    git(repo, "checkout", "-q", "change")
+    git(repo, "merge", "-q", "main")
+    (repo / "BUGS.md").write_text(BUGS.replace("| #12 | x | `t.py::t` |\n", ""))
+    return repo
+
+
+def test_a_fixed_bug_named_under_fixed_passes(buggy):
+    commit(buggy, {"code.py": "x = 2\n",
+                   "CHANGELOG.md": fixed_log("- Ages read wrong, bug #12,\n  now right. (#7)")})  # fmt: skip
+    assert cl.check("main", "7") == 0
+
+
+@pytest.mark.parametrize(
+    "log",
+    [
+        fixed_log("- Ages read wrong. (#7)"),  # the bug isn't named
+        fixed_log("- Ages read wrong, bug #12. (#7)", heading="Changed"),
+        fixed_log("- Ages read wrong, bug #120. (#7)"),
+        fixed_log("- Ages read wrong, bug #12. (#8)"),  # another pull request's
+    ],
+)
+def test_a_fixed_bug_not_named_under_fixed_is_refused(buggy, log, capsys):
+    commit(buggy, {"code.py": "x = 2\n", "CHANGELOG.md": log})
+    assert cl.check("main", "7") == 2
+    assert "bug #12" in capsys.readouterr().err

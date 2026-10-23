@@ -5,13 +5,18 @@ CHANGELOG.md.
 
 Compares the checkout with REF (the branch the pull request goes into). When
 every changed file is Markdown, nothing is owed. Otherwise CHANGELOG.md's
-`## Unreleased` section must hold a line, added by this pull request, that
-ends with its number: `(#N)`. A line elsewhere in the file, or one that
-names another pull request, doesn't count.
+`## Unreleased` section must hold an entry, added by this pull request, that
+ends with its number: `(#N)`. An entry is a `- ` line and the indented lines
+that wrap it. One elsewhere in the file, or one that names another pull
+request, doesn't count.
+
+A bug BUGS.md listed at REF and no longer lists was fixed here, so each one
+also owes an entry of this pull request's under `### Fixed` that names it,
+`bug #12`.
 
 CI runs it on every pull request, where the number is known. Exit codes,
-the kernel's: 0 the line is there, or nothing is owed; 42 git couldn't
-compare with REF; 2 the line is missing, or a bad command line.
+the kernel's: 0 every entry owed is there, or nothing is owed; 42 git
+couldn't compare with REF; 2 an entry is missing, or a bad command line.
 """
 
 from __future__ import annotations
@@ -32,10 +37,23 @@ def git(*args: str) -> subprocess.CompletedProcess:
     return subprocess.run(["git", *args], cwd=ROOT, capture_output=True, text=True)
 
 
-def unreleased(text: str) -> list[str]:
-    """The lines of the `## Unreleased` section."""
+def unreleased(text: str) -> list[tuple[str, str]]:
+    """(heading, entry) for each entry of the `## Unreleased` section, its
+    wrapped lines joined; heading is the `### ` it sits under."""
     m = re.search(r"^## Unreleased\n(.*?)(?=^## |\Z)", text, re.M | re.S)
-    return m.group(1).splitlines() if m else []
+    out, heading = [], ""
+    for line in m.group(1).splitlines() if m else []:
+        if line.startswith("### "):
+            heading = line[4:].strip()
+        elif line.startswith("- "):
+            out.append((heading, line[2:].strip()))
+        elif line.startswith("  ") and line.strip() and out:
+            out[-1] = (out[-1][0], f"{out[-1][1]} {line.strip()}")
+    return out
+
+
+def bugs_listed(text: str) -> set[int]:
+    return {int(n) for n in re.findall(r"^\| #(\d+) \|", text, re.M)}
 
 
 def check(base: str, pr: str) -> int:
@@ -51,17 +69,33 @@ def check(base: str, pr: str) -> int:
     before = git("show", f"{base}:CHANGELOG.md")
     old = set(unreleased(before.stdout)) if before.returncode == 0 else set()
     now = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
-    # a wrapped entry ends its last line with the number
-    added = [ln for ln in unreleased(now) if ln not in old]
-    if any(ln.rstrip().endswith(f"(#{pr})") for ln in added):
-        print(f"CHANGELOG.md: this pull request's line (#{pr}) is under Unreleased")
-        return kernel.ALIVE
-    print(
-        f"refused: {len(code)} files beyond the docs changed ({', '.join(code[:3])}"
-        f"{', …' if len(code) > 3 else ''}), and CHANGELOG.md has no new line under "
-        f"## Unreleased ending (#{pr})",
-        file=sys.stderr,
+    mine = [e for e in unreleased(now) if e not in old and e[1].endswith(f"(#{pr})")]
+    bugs_then = git("show", f"{base}:BUGS.md")
+    bugs_now = ROOT / "BUGS.md"
+    fixed = sorted(
+        bugs_listed(bugs_then.stdout if bugs_then.returncode == 0 else "")
+        - bugs_listed(
+            bugs_now.read_text(encoding="utf-8") if bugs_now.is_file() else ""
+        )
     )
+    unnamed = [
+        n for n in fixed
+        if not any(h == "Fixed" and re.search(rf"\bbug #{n}\b", e) for h, e in mine)
+    ]  # fmt: skip
+    if mine and not unnamed:
+        print(f"CHANGELOG.md: this pull request's entry (#{pr}) is under Unreleased"
+              + (f", naming fixed bugs {', '.join(f'#{n}' for n in fixed)}" if fixed else ""))  # fmt: skip
+        return kernel.ALIVE
+    if not mine:
+        print(
+            f"refused: {len(code)} files beyond the docs changed ({', '.join(code[:3])}"
+            f"{', …' if len(code) > 3 else ''}), and CHANGELOG.md has no new entry under "
+            f"## Unreleased ending (#{pr})",
+            file=sys.stderr,
+        )
+    for n in unnamed:
+        print(f"refused: BUGS.md no longer lists bug #{n}, and no entry of this pull "
+              f"request's under ### Fixed names it as bug #{n}", file=sys.stderr)  # fmt: skip
     return kernel.REFUSED
 
 

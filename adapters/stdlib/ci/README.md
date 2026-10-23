@@ -3,7 +3,7 @@ section: For maintainers
 line: This repo's checks as verdict rows on a kernel record, the same every run.
 source: box
 added: 2026-10-23
-writes: record
+writes: record, BUGS.md
 network: PyPI, to read each dependency floor's release date
 tags: no-install, online, records, maintainers
 -->
@@ -51,9 +51,21 @@ the output is hashed. The same files give the same record, byte for byte.
 **The changelog:** [changelog.py](changelog.py) runs as its own CI job on
 every pull request, outside the record (it needs the pull request's number
 and its base branch). When anything but Markdown changed, CHANGELOG.md's
-`## Unreleased` section must gain a line ending with that number, `(#N)`.
-Exit 0 the line is there or nothing is owed; 42 git couldn't compare with the
-base; 2 the line is missing.
+`## Unreleased` section must gain an entry ending with that number, `(#N)`,
+and a bug [BUGS.md](../../../BUGS.md) stopped listing must be named in one
+under `### Fixed`, `bug #12`. Exit 0 every entry owed is there, or nothing is
+owed; 42 git couldn't compare with the base; 2 an entry is missing.
+
+**Known bugs:** [bugs.py](bugs.py) makes BUGS.md from the tests marked as
+expected to fail, `strict=True` with a reason `bug #N: …`, and refuses any
+other such mark. `test_docs.py` fails when BUGS.md and the tests disagree.
+
+**Whose lines:** [whose.py](whose.py) takes `PATH:FIRST-LAST` places and
+prints the pull request that wrote each, by git blame and the merge that
+brought the commit in. The security workflow runs it on a report's "Where it
+is" section and tags each pull request's author on the report. It refuses
+any place that isn't a line range in a file git tracks, since a report's
+text is anyone's.
 
 **The contract:** [test_contract.py](test_contract.py) holds every add-on to
 what they all promise alike. Run with nothing, or with one argument too many
