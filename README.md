@@ -159,17 +159,17 @@ install · 📦 needs the install in brackets, with its licence · 🌐 goes onl
 built from what the kernel already has · *new*
 
 <!-- willow:pools -->
-`█████░░░░░░░░░░░░░░░` **15 of 56 built** · 39 🐍 · 17 📦
+`████████░░░░░░░░░░░░` **23 of 56 built** · 39 🐍 · 17 📦
 
 | Section | Built | Planned | 🐍 | 📦 |
 |---|---|---|---|---|
-| Reading more kinds of files | 0 | 15 | 9 | 6 |
+| Reading more kinds of files | 7 | 8 | 9 | 6 |
 | Finding things | 4 | 2 | 4 | 2 |
 | Your own words | 1 | 6 | 5 | 2 |
 | Keeping track | 4 | 5 | 9 | 0 |
 | Trust and proof | 2 | 4 | 4 | 2 |
 | Privacy and safety | 1 | 1 | 2 | 0 |
-| Assistants | 0 | 3 | 0 | 3 |
+| Assistants | 1 | 2 | 0 | 3 |
 | Ways to use it | 1 | 2 | 2 | 1 |
 | Play | 0 | 3 | 2 | 1 |
 | For maintainers | 2 | 0 | 2 | 0 |
@@ -188,9 +188,9 @@ built from what the kernel already has · *new*
 ### Add-on of the week
 
 <!-- willow:pick week=2026-W43 -->
-**[all](adapters/stdlib/all/)** — Every matching passage, ranked, not just the top three.
+**[chats](adapters/stdlib/chats/)** — WhatsApp and Telegram exports, one dated line per message.
 
-*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 15 built add-ons in name order.*
+*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 23 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -202,16 +202,16 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 
 - 🛠 **bank** 🐍 — Bank CSV and OFX statements as dated lines, with spending by month. *new*
 - 🛠 **bookmarks** 🐍 — Browser bookmarks (HTML export, Firefox JSON) and history, read from a copy of its SQLite file. *new*
-- 🛠 **books** 🐍 — Kindle "My Clippings.txt" highlights and .epub text. *new*
-- 🛠 **calendar** 🐍 — .ics events and .vcf contacts as dated lines. *new*
-- 🛠 **chats** 🐍 — WhatsApp and Telegram exports, one dated line per message. *new*
+- ✅ [**books**](adapters/stdlib/books/) 🐍 — Kindle "My Clippings.txt" highlights and .epub text. *new*
+- ✅ [**calendar**](adapters/stdlib/calendar/) 🐍 — .ics events and .vcf contacts as dated lines. *new*
+- ✅ [**chats**](adapters/stdlib/chats/) 🐍 — WhatsApp and Telegram exports, one dated line per message. *new*
 - 🛠 **git-history** 📦 [the git program; GPL, called not linked] — Commit messages and diffs as a dated pile: "when did we change the retry limit?" *new*
 - 🛠 **health** 🐍 — Apple Health and Google Fit exports as daily numbers the readings add-on can trend. *new*
-- 🛠 **mail** 🐍 — .eml and .mbox files, with sender, date and subject kept. *new*
-- 🛠 **notes** 🐍 — Obsidian and Logseq vaults, with [[links]] and #tags kept and backlinks listed. *new*
+- ✅ [**mail**](adapters/stdlib/mail/) 🐍 — .eml and .mbox files, with sender, date and subject kept. *new*
+- ✅ [**notes**](adapters/stdlib/notes/) 🐍 — Obsidian and Logseq vaults, with [[links]] and #tags kept and backlinks listed. *new*
 - 🛠 **ocr** 📦 [pytesseract and the tesseract program; Apache-2.0] — Text out of photos of letters and scanned PDFs. *new*
-- 🛠 **office** 🐍 — .docx, .odt, .pptx, .xlsx and .ods, which are all zipped XML. *new*
-- 🛠 **pdf** 📦 [pypdf; BSD-3] — Text out of PDFs. *new*
+- ✅ [**office**](adapters/stdlib/office/) 🐍 — .docx, .odt, .pptx, .xlsx and .ods, which are all zipped XML. *new*
+- ✅ [**pdf**](adapters/deps/pdf/) 📦 [pypdf; BSD-3-Clause] — Text out of PDFs. *new*
 - 🛠 **photos** 📦 [Pillow; MIT-CMU] — When and where each photo was taken, as dated lines. *new*
 - 🛠 **sheets** 📦 [openpyxl; MIT] — Spreadsheets with formulas and formatting kept, beyond what the office add-on reads. *new*
 - 🛠 **voice** 📦 [faster-whisper; MIT] 🌐 model downloaded once — Dictation, calls and lectures transcribed into dated text. *new*
@@ -269,7 +269,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 
 - 🛠 **claude** 📦 [anthropic; MIT] 🌐 cloud — Suggestions from Claude through the Anthropic API, citing your passages. *new*
 - 🛠 **local-model** 📦 [a local model server; licence varies by model] — Suggestions from a model on this machine only, such as Ollama or llama.cpp. *new*
-- 🛠 **mcp** 📦 [mcp; MIT] — Lets any MCP client, such as an AI assistant or editor, ask your folder and hand in suggestions. *new*
+- ✅ [**mcp**](adapters/deps/mcp/) 📦 [mcp; MIT] — Lets any MCP client, such as an AI assistant or editor, ask your folder and hand in suggestions. *new*
 
 ### Ways to use it
 
@@ -538,6 +538,18 @@ willow/
 │   │   │   ├── all.py        every passage that holds a question, in the kernel's order
 │   │   │   ├── test_all.py
 │   │   │   └── README.md
+│   │   ├── books/
+│   │   │   ├── books.py      Kindle highlights and .epub text, as passages
+│   │   │   ├── test_books.py
+│   │   │   └── README.md
+│   │   ├── calendar/
+│   │   │   ├── cal.py        .ics events and .vcf contacts, as dated lines
+│   │   │   ├── test_calendar.py
+│   │   │   └── README.md
+│   │   ├── chats/
+│   │   │   ├── chats.py      WhatsApp and Telegram exports, a dated line a message
+│   │   │   ├── test_chats.py
+│   │   │   └── README.md
 │   │   ├── ci/
 │   │   │   ├── ci.py         this repo's checks as verdict rows on a kernel record
 │   │   │   ├── test_ci.py    its tests: the same record every run, and every state
@@ -549,6 +561,18 @@ willow/
 │   │   ├── export/
 │   │   │   ├── export.py     approved answers and the question log, as Markdown or CSV
 │   │   │   ├── test_export.py
+│   │   │   └── README.md
+│   │   ├── mail/
+│   │   │   ├── mail.py       .eml and .mbox, with sender, date and subject
+│   │   │   ├── test_mail.py
+│   │   │   └── README.md
+│   │   ├── notes/
+│   │   │   ├── notes.py      Obsidian and Logseq vaults, links and backlinks kept
+│   │   │   ├── test_notes.py
+│   │   │   └── README.md
+│   │   ├── office/
+│   │   │   ├── office.py     .docx, .odt, .pptx, .xlsx and .ods, as text
+│   │   │   ├── test_office.py
 │   │   │   └── README.md
 │   │   ├── on-this-day/
 │   │   │   ├── on_this_day.py what your files say happened on this date in other years
@@ -592,7 +616,17 @@ willow/
 │   │       ├── test_todo.py
 │   │       └── README.md
 │   └── deps/                 add-ons that need something installed
-│       └── README.md         what one must declare: pinned requirements, licences, network
+│       ├── README.md         what one must declare: pinned requirements, licences, network
+│       ├── mcp/
+│       │   ├── server.py     your folder for any MCP client: ask and suggest, never approve
+│       │   ├── requirements.txt  mcp, pinned
+│       │   ├── test_mcp_server.py
+│       │   └── README.md
+│       └── pdf/
+│           ├── pdf.py        text out of PDFs, a headed paragraph a page
+│           ├── requirements.txt  pypdf, pinned
+│           ├── test_pdf.py
+│           └── README.md
 ├── ports/                    kernel.py rewritten in other languages
 │   ├── java/
 │   │   └── Kernel.java       JDK 11+, standard library only

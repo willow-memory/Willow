@@ -14,24 +14,10 @@
   "source": "new"
  },
  {
-  "name": "books",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Kindle \"My Clippings.txt\" highlights and .epub text.",
-  "source": "new"
- },
- {
   "name": "browse",
   "kind": "stdlib",
   "section": "Ways to use it",
   "line": "A local web page to ask questions and approve answers, reachable from this machine only.",
-  "source": "new"
- },
- {
-  "name": "calendar",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": ".ics events and .vcf contacts as dated lines.",
   "source": "new"
  },
  {
@@ -47,13 +33,6 @@
   "section": "Trust and proof",
   "line": "What's new, edited or deleted in your folder since the last check, as fingerprint rows.",
   "source": "bot"
- },
- {
-  "name": "chats",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "WhatsApp and Telegram exports, one dated line per message.",
-  "source": "new"
  },
  {
   "name": "claude",
@@ -146,21 +125,6 @@
   "needs": "a local model server; licence varies by model"
  },
  {
-  "name": "mail",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": ".eml and .mbox files, with sender, date and subject kept.",
-  "source": "new"
- },
- {
-  "name": "mcp",
-  "kind": "deps",
-  "section": "Assistants",
-  "line": "Lets any MCP client, such as an AI assistant or editor, ask your folder and hand in suggestions.",
-  "source": "new",
-  "needs": "mcp; MIT"
- },
- {
   "name": "meaning",
   "kind": "deps",
   "section": "Finding things",
@@ -170,34 +134,12 @@
   "network": "model downloaded once"
  },
  {
-  "name": "notes",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Obsidian and Logseq vaults, with [[links]] and #tags kept and backlinks listed.",
-  "source": "new"
- },
- {
   "name": "ocr",
   "kind": "deps",
   "section": "Reading more kinds of files",
   "line": "Text out of photos of letters and scanned PDFs.",
   "source": "new",
   "needs": "pytesseract and the tesseract program; Apache-2.0"
- },
- {
-  "name": "office",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": ".docx, .odt, .pptx, .xlsx and .ods, which are all zipped XML.",
-  "source": "new"
- },
- {
-  "name": "pdf",
-  "kind": "deps",
-  "section": "Reading more kinds of files",
-  "line": "Text out of PDFs.",
-  "source": "new",
-  "needs": "pypdf; BSD-3"
  },
  {
   "name": "pgp",

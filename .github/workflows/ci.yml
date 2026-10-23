@@ -92,3 +92,21 @@ jobs:
         with:
           name: ci-record-demo
           path: ${{ runner.temp }}/ci-record/record.jsonl
+
+  deps:
+    # Each add-on in adapters/deps gets a fresh virtual environment with only
+    # its own pinned requirements, made by ci.py; mcp needs Python 3.10+.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - run: python adapters/stdlib/ci/ci.py run deps --box ${{ runner.temp }}/ci-record
+      - if: always()
+        run: python adapters/stdlib/ci/ci.py verify --box ${{ runner.temp }}/ci-record
+      - if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: ci-record-deps
+          path: ${{ runner.temp }}/ci-record/record.jsonl

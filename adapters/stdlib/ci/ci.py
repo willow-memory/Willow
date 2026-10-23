@@ -4,7 +4,7 @@
     python adapters/stdlib/ci/ci.py verify [--box DIR]
     python adapters/stdlib/ci/ci.py show   [--box DIR]
 
-PART is lint, tests, ports or demo; none means all four. --box defaults to
+PART is lint, tests, ports, demo or deps; none means all five. --box defaults to
 .ci-record (ignored by git), and its key to the same name plus `.key`, beside
 it, never in it.
 
@@ -40,6 +40,7 @@ from __future__ import annotations
 import contextlib
 import hashlib
 import io
+import os
 import re
 import shutil
 import subprocess
@@ -138,6 +139,56 @@ def demo(name: str):
     return gate
 
 
+def deps_add_on(name: str):
+    """A deps add-on's tests in a fresh virtual environment of its own, with
+    its pinned requirements and pytest installed there, so one add-on's
+    packages never decide whether another's tests pass. An install that can't
+    be done (no network, a pin that won't resolve) is unreachable, not a
+    pass; only the tests' own output is hashed, never the installer's."""
+
+    def gate() -> tuple[str, str, str | None]:
+        here = ROOT / "adapters" / "deps" / name
+        with tempfile.TemporaryDirectory() as tmp:
+            env = Path(tmp) / "env"
+            got = subprocess.run(
+                [PY, "-m", "venv", str(env)], capture_output=True, text=True
+            )
+            if got.returncode != 0:
+                return UNREACHABLE, "", "couldn't make a virtual environment"
+            py = str(env / ("Scripts" if os.name == "nt" else "bin") / "python")
+            got = subprocess.run(
+                [py, "-m", "pip", "install", "-q", "--disable-pip-version-check",
+                 "-r", str(here / "requirements.txt"), "pytest"],
+                capture_output=True, text=True,
+            )  # fmt: skip
+            if got.returncode != 0:
+                tail = (got.stderr or got.stdout).strip().splitlines()[-1:] or [""]
+                return (
+                    UNREACHABLE,
+                    "",
+                    f"couldn't install its requirements: {tail[0][:120]}",
+                )
+            code, said = run(
+                (py, "-m", "pytest", "-q", "-p", "no:cacheprovider", str(here))
+            )
+            said = said.replace(tmp, "<tmp>")
+            return (
+                (SATISFIED, said, None)
+                if code == 0
+                else (FAILING, said, f"exit {code}")
+            )
+
+    return gate
+
+
+def deps_add_ons() -> list[str]:
+    return sorted(
+        p.name
+        for p in (ROOT / "adapters" / "deps").glob("*")
+        if p.is_dir() and not p.name.startswith(("_", "."))
+    )
+
+
 def people() -> list[str]:
     return sorted(p.parent.name for p in (ROOT / "demo").glob("*/make_life.py"))
 
@@ -154,7 +205,7 @@ def gates() -> list[tuple[str, str, object]]:
     for gate, *target in (
         ("kernel", "test_kernel.py"),
         ("docs", "test_docs.py"),
-        ("adapters", "adapters"),
+        ("adapters", "adapters/stdlib"),
         ("vectors", "vectors/test_vectors.py", "-k", "as_it_is_now"),
     ):
         how = command(*PYTEST, *target, needs=lambda: missing_module("pytest"))
@@ -166,10 +217,11 @@ def gates() -> list[tuple[str, str, object]]:
         )  # fmt: skip
         out.append(("ports", f"ports:{port}", how))
     out += [("demo", f"demo:{name}", demo(name)) for name in people()]
+    out += [("deps", f"deps:{name}", deps_add_on(name)) for name in deps_add_ons()]
     return out
 
 
-PARTS = ("lint", "tests", "ports", "demo")
+PARTS = ("lint", "tests", "ports", "demo", "deps")
 
 
 # ── the record ───────────────────────────────────────────────────────────────
