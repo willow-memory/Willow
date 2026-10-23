@@ -1,12 +1,18 @@
+<!-- willow-addon
+section: For maintainers
+line: This repo's checks as verdict rows on a kernel record, the same every run.
+source: box
+added: 2026-10-23
+-->
 # ci
 
 This repo's checks as a kernel record. Each check runs one fixed command and
 is written as one `verdict` row through the kernel's own `append`, so the CI
 record is hash-chained like any other and the kernel's `verify` checks it.
 
-    python adapters/ci/ci.py run    [lint|tests|ports|demo ...] [--box DIR]
-    python adapters/ci/ci.py verify [--box DIR]
-    python adapters/ci/ci.py show   [--box DIR]
+    python adapters/stdlib/ci/ci.py run    [lint|tests|ports|demo ...] [--box DIR]
+    python adapters/stdlib/ci/ci.py verify [--box DIR]
+    python adapters/stdlib/ci/ci.py show   [--box DIR]
 
 `run` with no part runs all four. The record goes in `.ci-record/` by default
 (git ignores it), and the key `init` makes goes beside it in

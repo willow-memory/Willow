@@ -15,7 +15,7 @@ import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-KERNEL = HERE.parents[1] / "kernel.py"
+KERNEL = HERE.parents[2] / "kernel.py"
 spec = importlib.util.spec_from_file_location("readings", HERE / "readings.py")
 r = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(r)
@@ -80,7 +80,7 @@ def test_a_date_gone_by_with_nothing_since_is_said(tmp_path):
 def test_the_arrow_points_one_way(tmp_path):
     """The kernel never names an adapter; with the readings on top, the same
     chunks are served and the kernel's own hints come first, unchanged."""
-    assert "adapters" not in KERNEL.read_text().replace("adapters/readings", "")
+    assert "adapters" not in KERNEL.read_text()
     pile, box, mine = tmp_path / "pile", tmp_path / "box", tmp_path / "mine"
     (pile / "dad").mkdir(parents=True)
     (pile / "dad" / "care-log.csv").write_text(

@@ -18,6 +18,12 @@ any time.
 - **Portable:** reimplemented in Java, TypeScript and C#, and all four are held
   to the same 4,463 test cases.
 
+**Built to be built on.** Add-ons read more kinds of files (PDFs, email,
+chats, office documents), track what matters (dates coming up, forecasts,
+flashcards, a care log), keep approved answers honest, and let AI assistants
+hand in suggestions they can never approve themselves.
+[See what you can build on it.](#what-you-can-build-on-it)
+
 ## Your first five minutes
 
 Everything below runs from a fresh clone with nothing installed beyond Python.
@@ -138,6 +144,148 @@ $ python kernel.py bite --box my-record "your own question"
 
 Keep the key somewhere other than the record folder; `init` refuses a key
 inside it.
+
+## What you can build on it
+
+Everything below is an add-on: a folder beside the kernel that uses it and
+never changes it. Some are built and tested; the rest are planned, and each
+one's line says what it will do. This section is generated from the add-ons'
+own cards by [adapters/stdlib/readme](adapters/stdlib/readme/), so a 🛠 turns
+into ✅ only when the add-on exists, and CI fails if this page falls behind.
+
+**Legend:** ✅ built · 🛠 planned · 🐍 standard library only, nothing to
+install · 📦 needs the install in brackets, with its licence · 🌐 goes online
+(the kernel never does) · *bot* rebuilt from willow-bot's one script · *box*
+built from what the kernel already has · *new*
+
+<!-- willow:pools -->
+`█░░░░░░░░░░░░░░░░░░░` **3 of 56 built** · 39 🐍 · 17 📦
+
+| Section | Built | Planned | 🐍 | 📦 |
+|---|---|---|---|---|
+| Reading more kinds of files | 0 | 15 | 9 | 6 |
+| Finding things | 0 | 6 | 4 | 2 |
+| Your own words | 0 | 7 | 5 | 2 |
+| Keeping track | 1 | 8 | 9 | 0 |
+| Trust and proof | 0 | 6 | 4 | 2 |
+| Privacy and safety | 0 | 2 | 2 | 0 |
+| Assistants | 0 | 3 | 0 | 3 |
+| Ways to use it | 0 | 3 | 2 | 1 |
+| Play | 0 | 3 | 2 | 1 |
+| For maintainers | 2 | 0 | 2 | 0 |
+<!-- /willow:pools -->
+
+### Newest
+
+<!-- willow:newest -->
+- 2026-10-23 · [**readme**](adapters/stdlib/readme/) — Builds this README's generated sections from the add-ons' own cards.
+- 2026-10-23 · [**ci**](adapters/stdlib/ci/) — This repo's checks as verdict rows on a kernel record, the same every run.
+- 2026-10-22 · [**readings**](adapters/stdlib/readings/) — Numbers over time and a date gone by, beside an answer.
+<!-- /willow:newest -->
+
+### Add-on of the week
+
+<!-- willow:pick week=2026-W43 -->
+**[readings](adapters/stdlib/readings/)** — Numbers over time and a date gone by, beside an answer.
+
+*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 3 built add-ons in name order.*
+<!-- /willow:pick -->
+
+<!-- willow:list -->
+**Contents:** [Reading more kinds of files](#reading-more-kinds-of-files) · [Finding things](#finding-things) · [Your own words](#your-own-words) · [Keeping track](#keeping-track) · [Trust and proof](#trust-and-proof) · [Privacy and safety](#privacy-and-safety) · [Assistants](#assistants) · [Ways to use it](#ways-to-use-it) · [Play](#play) · [For maintainers](#for-maintainers)
+
+### Reading more kinds of files
+
+Each writes plain text into a mirror folder the kernel searches, so your originals are never touched.
+
+- 🛠 **bank** 🐍 — Bank CSV and OFX statements as dated lines, with spending by month. *new*
+- 🛠 **bookmarks** 🐍 — Browser bookmarks (HTML export, Firefox JSON) and history, read from a copy of its SQLite file. *new*
+- 🛠 **books** 🐍 — Kindle "My Clippings.txt" highlights and .epub text. *new*
+- 🛠 **calendar** 🐍 — .ics events and .vcf contacts as dated lines. *new*
+- 🛠 **chats** 🐍 — WhatsApp and Telegram exports, one dated line per message. *new*
+- 🛠 **git-history** 📦 [the git program; GPL, called not linked] — Commit messages and diffs as a dated pile: "when did we change the retry limit?" *new*
+- 🛠 **health** 🐍 — Apple Health and Google Fit exports as daily numbers the readings add-on can trend. *new*
+- 🛠 **mail** 🐍 — .eml and .mbox files, with sender, date and subject kept. *new*
+- 🛠 **notes** 🐍 — Obsidian and Logseq vaults, with [[links]] and #tags kept and backlinks listed. *new*
+- 🛠 **ocr** 📦 [pytesseract and the tesseract program; Apache-2.0] — Text out of photos of letters and scanned PDFs. *new*
+- 🛠 **office** 🐍 — .docx, .odt, .pptx, .xlsx and .ods, which are all zipped XML. *new*
+- 🛠 **pdf** 📦 [pypdf; BSD-3] — Text out of PDFs. *new*
+- 🛠 **photos** 📦 [Pillow; MIT-CMU] — When and where each photo was taken, as dated lines. *new*
+- 🛠 **sheets** 📦 [openpyxl; MIT] — Spreadsheets with formulas and formatting kept, beyond what the office add-on reads. *new*
+- 🛠 **voice** 📦 [faster-whisper; MIT] 🌐 model downloaded once — Dictation, calls and lectures transcribed into dated text. *new*
+
+### Finding things
+
+- 🛠 **all** 🐍 — Every matching passage, ranked, not just the top three. *box*
+- 🛠 **meaning** 📦 [sentence-transformers; Apache-2.0] 🌐 model downloaded once — Search by meaning: "who owes me money" finds "invoice outstanding". *new*
+- 🛠 **on-this-day** 🐍 — What you wrote on this date in earlier years. *box*
+- 🛠 **quote-check** 🐍 — Is this exact quote in my files, and where? For writers, journalists and students. *box*
+- 🛠 **surprise** 🐍 — One passage from your folder at random, seeded so it can be replayed. *bot*
+- 🛠 **typos** 📦 [rapidfuzz; MIT] — Forgives misspellings in questions. *new*
+
+### Your own words
+
+The blind tests' biggest gap: on day one, a person's words aren't their files' words.
+
+- 🛠 **starter-words** 🐍 — A first-day words list to copy and edit (owes = invoice, outstanding; doctor = dr, physician, clinic). *new*
+- 🛠 **stems** 📦 [snowballstemmer; BSD-3] — Word forms for 20+ languages, so "maisons" finds "maison". *new*
+- 🛠 **synonyms** 📦 [nltk and WordNet; Apache-2.0] 🌐 data downloaded once — Suggests words-list lines for a word no file has. *new*
+- 🛠 **words-de** 🐍 — German common words, so questions aren't matched on "der" and "und". *new*
+- 🛠 **words-es** 🐍 — Spanish common words ("el", "y"). *new*
+- 🛠 **words-fr** 🐍 — French common words ("le", "et"). *new*
+- 🛠 **words-pt** 🐍 — Portuguese common words ("o", "e"). *new*
+
+### Keeping track
+
+- 🛠 **again** 🐍 — Questions you keep asking: "asked 4 times; approve an answer?" *bot*
+- 🛠 **care** 🐍 — For caregivers: medications, vitals and appointments from a care log, what's due and what moved. *box*
+- 🛠 **coming-up** 🐍 — Dates written in your files in the next N days: appointments, renewals, deadlines. *box*
+- 🛠 **digest** 🐍 — One page: suggestions waiting, approvals gone stale, dates coming up, questions repeated. *bot*
+- 🛠 **flashcards** 🐍 — Approved question-and-answer pairs become cards, scheduled by spaced repetition. *box*
+- 🛠 **forecasts** 🐍 — Write a prediction before the outcome, settle it later, see your Brier score. *bot*
+- 🛠 **invoices** 🐍 — For freelancers: invoices and payments matched by the id pattern you give, never guessed. *new*
+- ✅ [**readings**](adapters/stdlib/readings/) 🐍 — Numbers over time and a date gone by, beside an answer. *box*
+- 🛠 **todo** 🐍 — TODO, FIXME and "need to" lines across the folder, oldest first. *box*
+
+### Trust and proof
+
+- 🛠 **changed** 🐍 — What's new, edited or deleted in your folder since the last check, as fingerprint rows. *bot*
+- 🛠 **encrypt** 📦 [cryptography; Apache-2.0 or BSD] — Keeps the record folder encrypted at rest. *new*
+- 🛠 **export** 🐍 — Approved answers, and the question log (counts only, never words), as Markdown or CSV. *box*
+- 🛠 **pgp** 📦 [the gpg program and python-gnupg; BSD] — Signs exports and reports with your PGP key, verifiable anywhere. *new*
+- 🛠 **report** 🐍 — A self-checking bundle: the record, the approved answers, and a script that re-verifies them on any machine. *box*
+- 🛠 **stale** 🐍 — Approved answers whose cited passage has changed or gone. Citations are content hashes, so it's exact. *box*
+
+### Privacy and safety
+
+- 🛠 **privacy** 🐍 — Hides phone numbers, emails, card, bank and ID numbers, and API keys in what a question prints, and says what it hid. *bot*
+- 🛠 **secrets-audit** 🐍 — Finds keys and passwords sitting in plain files. *bot*
+
+### Assistants
+
+Each hands in suggestions through propose. None can approve: every suggestion waits for your seal.
+
+- 🛠 **claude** 📦 [anthropic; MIT] 🌐 cloud — Suggestions from Claude through the Anthropic API, citing your passages. *new*
+- 🛠 **local-model** 📦 [a local model server; licence varies by model] — Suggestions from a model on this machine only, such as Ollama or llama.cpp. *new*
+- 🛠 **mcp** 📦 [mcp; MIT] — Lets any MCP client, such as an AI assistant or editor, ask your folder and hand in suggestions. *new*
+
+### Ways to use it
+
+- 🛠 **browse** 🐍 — A local web page to ask questions and approve answers, reachable from this machine only. *new*
+- 🛠 **plain** 🐍 — Answers as sentences instead of JSON, each with its file and line. *new*
+- 🛠 **speak** 📦 [pyttsx3; MPL-2.0] — Reads answers aloud. *new*
+
+### Play
+
+- 🛠 **dice** 🐍 — Seeded dice rolls as rows: every roll replayable and checkable. *bot*
+- 🛠 **dice5e** 📦 [dice; MIT] — Full tabletop dice notation (4d6kh3, advantage). *bot*
+- 🛠 **life** 🐍 — Conway's Game of Life as rows: a fully deterministic world on the record. *bot*
+
+### For maintainers
+
+- ✅ [**ci**](adapters/stdlib/ci/) 🐍 — This repo's checks as verdict rows on a kernel record, the same every run. *box*
+- ✅ [**readme**](adapters/stdlib/readme/) 🐍 — Builds this README's generated sections from the add-ons' own cards. *new*
+<!-- /willow:list -->
 
 ## How it works
 
@@ -338,14 +486,14 @@ words and missed the rest. The full results, misses included, are in
 
 ## How it's verified
 
-- **CI is built on the kernel.** `python adapters/ci/ci.py run` runs every
+- **CI is built on the kernel.** `python adapters/stdlib/ci/ci.py run` runs every
   check (lint, the tests, every port, every demo) and writes each one as a
   verdict row on a kernel record, which `verify` then checks like any other.
   A tool that isn't installed is recorded as unreachable, never as a pass.
   It is deterministic: the same files give the same record, byte for byte.
   CI runs the same script on every push, with the tests on Python 3.9 through
   3.14, and keeps each job's record as an artifact. The verdicts are draft;
-  merging is the person's call. See [adapters/ci](adapters/ci/).
+  merging is the person's call. See [adapters/stdlib/ci](adapters/stdlib/ci/).
 - **Four implementations, one behaviour.** `vectors/gen.py` reads 4,463 cases
   out of `kernel.py`, covering canonical JSON, word splitting, HTML text,
   ranking, dates, word forms and every refusal. The Java, TypeScript and C#
@@ -376,15 +524,23 @@ willow/
 ├── test_docs.py              holds every doc to the files that exist, and this tree to the repo
 ├── README.md                 this file
 ├── adapters/                 add-ons built on top of kernel.py
-│   ├── README.md             the rule every add-on follows
-│   ├── ci/
-│   │   ├── ci.py             this repo's checks as verdict rows on a kernel record
-│   │   ├── test_ci.py        its tests: the same record every run, and every state
-│   │   └── README.md         its gates, states and exit codes
-│   └── readings/
-│       ├── readings.py       notes beside an answer: numbers over time, dates gone by
-│       ├── test_readings.py  its tests
-│       └── README.md         what it adds, what it uses, what it never does
+│   ├── README.md             the rules every add-on follows
+│   ├── planned.json          the add-ons not built yet, as this README lists them
+│   ├── stdlib/               add-ons that need nothing beyond Python
+│   │   ├── ci/
+│   │   │   ├── ci.py         this repo's checks as verdict rows on a kernel record
+│   │   │   ├── test_ci.py    its tests: the same record every run, and every state
+│   │   │   └── README.md     its card: gates, states and exit codes
+│   │   ├── readings/
+│   │   │   ├── readings.py   notes beside an answer: numbers over time, dates gone by
+│   │   │   ├── test_readings.py
+│   │   │   └── README.md     its card: what it adds, uses and never does
+│   │   └── readme/
+│   │       ├── readme.py     builds this README's generated sections from the cards
+│   │       ├── test_readme.py
+│   │       └── README.md     its card: sections, the draw, what it reads
+│   └── deps/                 add-ons that need something installed
+│       └── README.md         what one must declare: pinned requirements, licences, network
 ├── ports/                    kernel.py rewritten in other languages
 │   ├── java/
 │   │   └── Kernel.java       JDK 11+, standard library only
@@ -423,7 +579,7 @@ willow/
 │       ├── QUESTIONS.md
 │       └── STRIP.md
 ├── .github/workflows/
-│   └── ci.yml                runs adapters/ci/ci.py one part a job, tests on Python 3.9 to 3.14
+│   └── ci.yml                runs adapters/stdlib/ci/ci.py one part a job, tests on Python 3.9 to 3.14
 ├── .gitignore                generated files and build output
 ├── ruff.toml                 lint settings
 └── LICENSE                   Apache-2.0
@@ -431,13 +587,16 @@ willow/
 
 ## Building on it
 
-**Add-ons** go in `adapters/`. An add-on may use `kernel.py`; `kernel.py`
-never uses an add-on, and runs the same without any. An add-on writes to the
-log only through `kernel.py`, so `verify` still holds. Each one has its code,
-a short card saying what it's for and what it never does, and tests that CI
-runs. [adapters/readings](adapters/readings/) is the first: it adds notes
-beside an answer, such as how a number in a dated table has moved, or a date
-in a log that has passed with nothing written since.
+**Add-ons** go in `adapters/stdlib/` if they need nothing beyond Python, or
+`adapters/deps/` if they need something installed. An add-on may use
+`kernel.py`; `kernel.py` never uses an add-on, and runs the same without any.
+An add-on writes to the log only through `kernel.py`, so `verify` still holds.
+Each one has its code, a card saying what it's for and what it never does, and
+tests that CI runs. The card opens with a short header (section, one line,
+source, date added) that [What you can build on it](#what-you-can-build-on-it)
+is generated from. To build a planned one, take its entry out of
+`adapters/planned.json` in the same change. The rules are in
+[adapters/README.md](adapters/README.md).
 
 **Ports** to another language go in `ports/` and must pass
 `python vectors/compare.py` with zero unexplained differences. Go and Rust are

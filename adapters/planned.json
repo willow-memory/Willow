@@ -1,0 +1,394 @@
+[
+ {
+  "name": "again",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "Questions you keep asking: \"asked 4 times; approve an answer?\"",
+  "source": "bot"
+ },
+ {
+  "name": "all",
+  "kind": "stdlib",
+  "section": "Finding things",
+  "line": "Every matching passage, ranked, not just the top three.",
+  "source": "box"
+ },
+ {
+  "name": "bank",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Bank CSV and OFX statements as dated lines, with spending by month.",
+  "source": "new"
+ },
+ {
+  "name": "bookmarks",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Browser bookmarks (HTML export, Firefox JSON) and history, read from a copy of its SQLite file.",
+  "source": "new"
+ },
+ {
+  "name": "books",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Kindle \"My Clippings.txt\" highlights and .epub text.",
+  "source": "new"
+ },
+ {
+  "name": "browse",
+  "kind": "stdlib",
+  "section": "Ways to use it",
+  "line": "A local web page to ask questions and approve answers, reachable from this machine only.",
+  "source": "new"
+ },
+ {
+  "name": "calendar",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": ".ics events and .vcf contacts as dated lines.",
+  "source": "new"
+ },
+ {
+  "name": "care",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "For caregivers: medications, vitals and appointments from a care log, what's due and what moved.",
+  "source": "box"
+ },
+ {
+  "name": "changed",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "What's new, edited or deleted in your folder since the last check, as fingerprint rows.",
+  "source": "bot"
+ },
+ {
+  "name": "chats",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "WhatsApp and Telegram exports, one dated line per message.",
+  "source": "new"
+ },
+ {
+  "name": "claude",
+  "kind": "deps",
+  "section": "Assistants",
+  "line": "Suggestions from Claude through the Anthropic API, citing your passages.",
+  "source": "new",
+  "needs": "anthropic; MIT",
+  "network": "cloud"
+ },
+ {
+  "name": "coming-up",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "Dates written in your files in the next N days: appointments, renewals, deadlines.",
+  "source": "box"
+ },
+ {
+  "name": "dice",
+  "kind": "stdlib",
+  "section": "Play",
+  "line": "Seeded dice rolls as rows: every roll replayable and checkable.",
+  "source": "bot"
+ },
+ {
+  "name": "dice5e",
+  "kind": "deps",
+  "section": "Play",
+  "line": "Full tabletop dice notation (4d6kh3, advantage).",
+  "source": "bot",
+  "needs": "dice; MIT"
+ },
+ {
+  "name": "digest",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "One page: suggestions waiting, approvals gone stale, dates coming up, questions repeated.",
+  "source": "bot"
+ },
+ {
+  "name": "encrypt",
+  "kind": "deps",
+  "section": "Trust and proof",
+  "line": "Keeps the record folder encrypted at rest.",
+  "source": "new",
+  "needs": "cryptography; Apache-2.0 or BSD"
+ },
+ {
+  "name": "export",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "Approved answers, and the question log (counts only, never words), as Markdown or CSV.",
+  "source": "box"
+ },
+ {
+  "name": "flashcards",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "Approved question-and-answer pairs become cards, scheduled by spaced repetition.",
+  "source": "box"
+ },
+ {
+  "name": "forecasts",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "Write a prediction before the outcome, settle it later, see your Brier score.",
+  "source": "bot"
+ },
+ {
+  "name": "git-history",
+  "kind": "deps",
+  "section": "Reading more kinds of files",
+  "line": "Commit messages and diffs as a dated pile: \"when did we change the retry limit?\"",
+  "source": "new",
+  "needs": "the git program; GPL, called not linked"
+ },
+ {
+  "name": "health",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Apple Health and Google Fit exports as daily numbers the readings add-on can trend.",
+  "source": "new"
+ },
+ {
+  "name": "invoices",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "For freelancers: invoices and payments matched by the id pattern you give, never guessed.",
+  "source": "new"
+ },
+ {
+  "name": "life",
+  "kind": "stdlib",
+  "section": "Play",
+  "line": "Conway's Game of Life as rows: a fully deterministic world on the record.",
+  "source": "bot"
+ },
+ {
+  "name": "local-model",
+  "kind": "deps",
+  "section": "Assistants",
+  "line": "Suggestions from a model on this machine only, such as Ollama or llama.cpp.",
+  "source": "new",
+  "needs": "a local model server; licence varies by model"
+ },
+ {
+  "name": "mail",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": ".eml and .mbox files, with sender, date and subject kept.",
+  "source": "new"
+ },
+ {
+  "name": "mcp",
+  "kind": "deps",
+  "section": "Assistants",
+  "line": "Lets any MCP client, such as an AI assistant or editor, ask your folder and hand in suggestions.",
+  "source": "new",
+  "needs": "mcp; MIT"
+ },
+ {
+  "name": "meaning",
+  "kind": "deps",
+  "section": "Finding things",
+  "line": "Search by meaning: \"who owes me money\" finds \"invoice outstanding\".",
+  "source": "new",
+  "needs": "sentence-transformers; Apache-2.0",
+  "network": "model downloaded once"
+ },
+ {
+  "name": "notes",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Obsidian and Logseq vaults, with [[links]] and #tags kept and backlinks listed.",
+  "source": "new"
+ },
+ {
+  "name": "ocr",
+  "kind": "deps",
+  "section": "Reading more kinds of files",
+  "line": "Text out of photos of letters and scanned PDFs.",
+  "source": "new",
+  "needs": "pytesseract and the tesseract program; Apache-2.0"
+ },
+ {
+  "name": "office",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": ".docx, .odt, .pptx, .xlsx and .ods, which are all zipped XML.",
+  "source": "new"
+ },
+ {
+  "name": "on-this-day",
+  "kind": "stdlib",
+  "section": "Finding things",
+  "line": "What you wrote on this date in earlier years.",
+  "source": "box"
+ },
+ {
+  "name": "pdf",
+  "kind": "deps",
+  "section": "Reading more kinds of files",
+  "line": "Text out of PDFs.",
+  "source": "new",
+  "needs": "pypdf; BSD-3"
+ },
+ {
+  "name": "pgp",
+  "kind": "deps",
+  "section": "Trust and proof",
+  "line": "Signs exports and reports with your PGP key, verifiable anywhere.",
+  "source": "new",
+  "needs": "the gpg program and python-gnupg; BSD"
+ },
+ {
+  "name": "photos",
+  "kind": "deps",
+  "section": "Reading more kinds of files",
+  "line": "When and where each photo was taken, as dated lines.",
+  "source": "new",
+  "needs": "Pillow; MIT-CMU"
+ },
+ {
+  "name": "plain",
+  "kind": "stdlib",
+  "section": "Ways to use it",
+  "line": "Answers as sentences instead of JSON, each with its file and line.",
+  "source": "new"
+ },
+ {
+  "name": "privacy",
+  "kind": "stdlib",
+  "section": "Privacy and safety",
+  "line": "Hides phone numbers, emails, card, bank and ID numbers, and API keys in what a question prints, and says what it hid.",
+  "source": "bot"
+ },
+ {
+  "name": "quote-check",
+  "kind": "stdlib",
+  "section": "Finding things",
+  "line": "Is this exact quote in my files, and where? For writers, journalists and students.",
+  "source": "box"
+ },
+ {
+  "name": "report",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "A self-checking bundle: the record, the approved answers, and a script that re-verifies them on any machine.",
+  "source": "box"
+ },
+ {
+  "name": "secrets-audit",
+  "kind": "stdlib",
+  "section": "Privacy and safety",
+  "line": "Finds keys and passwords sitting in plain files.",
+  "source": "bot"
+ },
+ {
+  "name": "sheets",
+  "kind": "deps",
+  "section": "Reading more kinds of files",
+  "line": "Spreadsheets with formulas and formatting kept, beyond what the office add-on reads.",
+  "source": "new",
+  "needs": "openpyxl; MIT"
+ },
+ {
+  "name": "speak",
+  "kind": "deps",
+  "section": "Ways to use it",
+  "line": "Reads answers aloud.",
+  "source": "new",
+  "needs": "pyttsx3; MPL-2.0"
+ },
+ {
+  "name": "stale",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "Approved answers whose cited passage has changed or gone. Citations are content hashes, so it's exact.",
+  "source": "box"
+ },
+ {
+  "name": "starter-words",
+  "kind": "stdlib",
+  "section": "Your own words",
+  "line": "A first-day words list to copy and edit (owes = invoice, outstanding; doctor = dr, physician, clinic).",
+  "source": "new"
+ },
+ {
+  "name": "stems",
+  "kind": "deps",
+  "section": "Your own words",
+  "line": "Word forms for 20+ languages, so \"maisons\" finds \"maison\".",
+  "source": "new",
+  "needs": "snowballstemmer; BSD-3"
+ },
+ {
+  "name": "surprise",
+  "kind": "stdlib",
+  "section": "Finding things",
+  "line": "One passage from your folder at random, seeded so it can be replayed.",
+  "source": "bot"
+ },
+ {
+  "name": "synonyms",
+  "kind": "deps",
+  "section": "Your own words",
+  "line": "Suggests words-list lines for a word no file has.",
+  "source": "new",
+  "needs": "nltk and WordNet; Apache-2.0",
+  "network": "data downloaded once"
+ },
+ {
+  "name": "todo",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "TODO, FIXME and \"need to\" lines across the folder, oldest first.",
+  "source": "box"
+ },
+ {
+  "name": "typos",
+  "kind": "deps",
+  "section": "Finding things",
+  "line": "Forgives misspellings in questions.",
+  "source": "new",
+  "needs": "rapidfuzz; MIT"
+ },
+ {
+  "name": "voice",
+  "kind": "deps",
+  "section": "Reading more kinds of files",
+  "line": "Dictation, calls and lectures transcribed into dated text.",
+  "source": "new",
+  "needs": "faster-whisper; MIT",
+  "network": "model downloaded once"
+ },
+ {
+  "name": "words-de",
+  "kind": "stdlib",
+  "section": "Your own words",
+  "line": "German common words, so questions aren't matched on \"der\" and \"und\".",
+  "source": "new"
+ },
+ {
+  "name": "words-es",
+  "kind": "stdlib",
+  "section": "Your own words",
+  "line": "Spanish common words (\"el\", \"y\").",
+  "source": "new"
+ },
+ {
+  "name": "words-fr",
+  "kind": "stdlib",
+  "section": "Your own words",
+  "line": "French common words (\"le\", \"et\").",
+  "source": "new"
+ },
+ {
+  "name": "words-pt",
+  "kind": "stdlib",
+  "section": "Your own words",
+  "line": "Portuguese common words (\"o\", \"e\").",
+  "source": "new"
+ }
+]

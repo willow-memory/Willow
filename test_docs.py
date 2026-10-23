@@ -130,9 +130,15 @@ ELSEWHERE = {
         "odile-record/": "made by the first-five-minutes walkthrough",
         "odile.key": "made by the first-five-minutes walkthrough",
     },
-    "adapters/ci/README.md": {
+    "adapters/stdlib/ci/README.md": {
         ".ci-record/": "made by `ci.py run`, ignored by git",
         ".ci-record.key": "made by `ci.py run`, ignored by git",
+    },
+    "adapters/README.md": {
+        "requirements.txt": "each deps add-on's own file, in its folder",
+    },
+    "adapters/deps/README.md": {
+        "requirements.txt": "each deps add-on's own file, in its folder",
     },
     "vectors/README.md": {
         "foundation/": "willow-bot",
@@ -295,19 +301,55 @@ def test_the_python_versions_are_the_ones_ci_runs():
 
 
 # ── add-ons and ports ────────────────────────────────────────────────────────
-def test_every_add_on_has_its_card_its_tests_and_its_row():
-    table = (ROOT / "adapters" / "README.md").read_text(encoding="utf-8")
-    rows = set(re.findall(r"^\| \[([^\]]+)/\]\(\1/\) \|", table, re.M))
-    folders = {p.name for p in (ROOT / "adapters").iterdir() if p.is_dir()} - {
-        "__pycache__"
-    }
-    assert rows == folders, (
-        f"adapters/README.md's table: {sorted(rows)}; folders: {sorted(folders)}"
+def add_on_folders() -> list[Path]:
+    return sorted(
+        p
+        for kind in ("stdlib", "deps")
+        for p in (ROOT / "adapters" / kind).glob("*")
+        if p.is_dir() and not p.name.startswith(("_", "."))
     )
-    for name in folders:
-        here = ROOT / "adapters" / name
-        assert (here / "README.md").is_file(), f"adapters/{name} has no card"
-        assert list(here.glob("test_*.py")), f"adapters/{name} has no tests"
+
+
+def test_add_ons_live_only_in_stdlib_or_deps():
+    loose = sorted(
+        p.name
+        for p in (ROOT / "adapters").iterdir()
+        if p.is_dir() and p.name not in ("stdlib", "deps", "__pycache__")
+    )
+    assert not loose, f"adapters/ holds {loose}: an add-on goes in stdlib/ or deps/"
+
+
+def test_every_add_on_has_its_card_and_its_tests():
+    for here in add_on_folders():
+        name = here.relative_to(ROOT)
+        assert (here / "README.md").is_file(), f"{name} has no card"
+        assert list(here.glob("test_*.py")), f"{name} has no tests"
+
+
+PIN = re.compile(r"([A-Za-z0-9][A-Za-z0-9._-]*)==[A-Za-z0-9.+!-]+")
+
+
+def test_every_deps_add_on_pins_what_it_needs_and_names_it_on_its_card():
+    for here in add_on_folders():
+        if here.parent.name != "deps":
+            continue
+        req = here / "requirements.txt"
+        assert req.is_file(), f"{here.relative_to(ROOT)} has no requirements.txt"
+        lines = [
+            line.split("#")[0].strip()
+            for line in req.read_text(encoding="utf-8").splitlines()
+        ]
+        pins = [line for line in lines if line]
+        bad = [line for line in pins if not PIN.fullmatch(line)]
+        assert pins and not bad, f"{req.relative_to(ROOT)}: pin each with ==: {bad}"
+        head = (here / "README.md").read_text(encoding="utf-8").split("-->")[0]
+        needs = re.search(r"^needs: (.*)$", head, re.M)
+        assert needs, f"{here.relative_to(ROOT)}: its card's header has no needs:"
+        for pin in pins:
+            package = PIN.fullmatch(pin).group(1)
+            assert package.lower() in needs.group(1).lower(), (
+                f"{here.relative_to(ROOT)}: {package} is pinned but not on its card"
+            )
 
 
 def test_every_port_folder_is_one_compare_runs_and_ci_requires():
@@ -319,7 +361,7 @@ def test_every_port_folder_is_one_compare_runs_and_ci_requires():
     )
     folders = {p.name for p in (ROOT / "ports").iterdir() if p.is_dir()}
     assert folders == run, f"ports/: {sorted(folders)}; compare.py runs: {sorted(run)}"
-    ci = (ROOT / "adapters" / "ci" / "ci.py").read_text(encoding="utf-8")
+    ci = (ROOT / "adapters" / "stdlib" / "ci" / "ci.py").read_text(encoding="utf-8")
     held = set(
         re.findall(r'"(\w+)"', re.search(r"^PORTS = \((.*?)\)", ci, re.M).group(1))
     )

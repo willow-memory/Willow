@@ -1,6 +1,6 @@
 name: ci
 
-# Every check is in adapters/ci/ci.py, which writes each one as a verdict row
+# Every check is in adapters/stdlib/ci/ci.py, which writes each one as a verdict row
 # on a kernel record. This file only installs the tools, runs one part per
 # job, verifies the record, and keeps it as the run's artifact. The record
 # lives in the runner's temp folder: never in the checkout it hashes.
@@ -20,9 +20,9 @@ jobs:
         with:
           python-version: "3.13"
       - run: pip install ruff==0.16.7
-      - run: python adapters/ci/ci.py run lint --box ${{ runner.temp }}/ci-record
+      - run: python adapters/stdlib/ci/ci.py run lint --box ${{ runner.temp }}/ci-record
       - if: always()
-        run: python adapters/ci/ci.py verify --box ${{ runner.temp }}/ci-record
+        run: python adapters/stdlib/ci/ci.py verify --box ${{ runner.temp }}/ci-record
       - if: always()
         uses: actions/upload-artifact@v7
         with:
@@ -42,9 +42,9 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - run: pip install pytest
-      - run: python adapters/ci/ci.py run tests --box ${{ runner.temp }}/ci-record
+      - run: python adapters/stdlib/ci/ci.py run tests --box ${{ runner.temp }}/ci-record
       - if: always()
-        run: python adapters/ci/ci.py verify --box ${{ runner.temp }}/ci-record
+        run: python adapters/stdlib/ci/ci.py verify --box ${{ runner.temp }}/ci-record
       - if: always()
         uses: actions/upload-artifact@v7
         with:
@@ -68,9 +68,9 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: "8.0.x"
-      - run: python adapters/ci/ci.py run ports --box ${{ runner.temp }}/ci-record
+      - run: python adapters/stdlib/ci/ci.py run ports --box ${{ runner.temp }}/ci-record
       - if: always()
-        run: python adapters/ci/ci.py verify --box ${{ runner.temp }}/ci-record
+        run: python adapters/stdlib/ci/ci.py verify --box ${{ runner.temp }}/ci-record
       - if: always()
         uses: actions/upload-artifact@v7
         with:
@@ -84,9 +84,9 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: "3.13"
-      - run: python adapters/ci/ci.py run demo --box ${{ runner.temp }}/ci-record
+      - run: python adapters/stdlib/ci/ci.py run demo --box ${{ runner.temp }}/ci-record
       - if: always()
-        run: python adapters/ci/ci.py verify --box ${{ runner.temp }}/ci-record
+        run: python adapters/stdlib/ci/ci.py verify --box ${{ runner.temp }}/ci-record
       - if: always()
         uses: actions/upload-artifact@v7
         with:

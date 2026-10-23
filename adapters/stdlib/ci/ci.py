@@ -1,8 +1,8 @@
 """ci.py: this repo's checks as verdict rows on a kernel record. Python 3.9+.
 
-    python adapters/ci/ci.py run    [PART ...] [--box DIR] [--now TS]
-    python adapters/ci/ci.py verify [--box DIR]
-    python adapters/ci/ci.py show   [--box DIR]
+    python adapters/stdlib/ci/ci.py run    [PART ...] [--box DIR] [--now TS]
+    python adapters/stdlib/ci/ci.py verify [--box DIR]
+    python adapters/stdlib/ci/ci.py show   [--box DIR]
 
 PART is lint, tests, ports or demo; none means all four. --box defaults to
 .ci-record (ignored by git), and its key to the same name plus `.key`, beside
@@ -48,7 +48,7 @@ import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT))
 import kernel  # noqa: E402
 

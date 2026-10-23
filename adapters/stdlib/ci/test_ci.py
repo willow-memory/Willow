@@ -1,6 +1,6 @@
 """The CI one-script: verdict rows on a kernel record, the same every run.
 
-Each test holds one promise in adapters/ci/README.md, and each can fail: the
+Each test holds one promise in adapters/stdlib/ci/README.md, and each can fail: the
 record is byte-for-byte the same for the same files, a missing tool is
 unreachable (not failing, not a pass), a failing command is failing, and the
 record holds only ci verdicts, which `verify` checks along with the kernel's

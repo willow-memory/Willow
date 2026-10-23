@@ -153,7 +153,7 @@ Out of the kernel. The ranking the demo needed (newest first, path words, her
 words list, one text once, said once before routine) stays in `kernel.py`,
 because it decides what is served. The three readings that only speak beside
 an answer (what isn't there, numbers over time, a date gone by) are an adapter
-built on top: `adapters/readings/`. The kernel runs the same without it; run
+built on top: `adapters/stdlib/readings/`. The kernel runs the same without it; run
 through it, her box answers as above.
 
 ## What isn't there, taken out
