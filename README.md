@@ -1,11 +1,30 @@
 # willow
 
-`kernel.py` is the smallest script that runs the whole loop, for anyone. It
-searches your own folder, serves what you wrote, writes down only what you
-seal, and keeps every step on a chain you can check.
+`kernel.py` answers questions from your own files, and from nothing else.
+
+You point it at a folder: notes, logs, letters, exports, whatever you keep. You
+ask in plain words, "how are the bees". It shows you the lines in your files
+that hold those words, newest first, each with the file and line it came
+from. If no file holds them, it says so rather than guessing.
+
+It can also take answers from somewhere else, an AI model for instance, but it
+holds each one until you approve it with a key only you have. Once approved,
+that answer comes back the next time you ask. Nothing you haven't approved is
+ever given as an answer.
+
+Every question, suggested answer and approval is written to a record you can
+check later. The record holds fingerprints (hashes) and file positions, never
+your words, and any change to it after the fact is caught.
 
 One file, Python 3.9+, standard library only. Nothing to install, and it never
 touches the network.
+
+### The words it uses
+
+- **pile:** your folder. It is only read.
+- **box:** a folder `kernel.py` makes to keep its record in.
+- **bite:** a question.
+- **seal:** your approval of one suggested answer, made with your key.
 
 ## Try it on someone else's life first
 
