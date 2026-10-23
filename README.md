@@ -338,8 +338,11 @@ words and missed the rest. The full results, misses included, are in
 
 ## How it's verified
 
-- **CI on every push:** the tests on Python 3.9 through 3.14, lint, every
-  port, and every demo rebuilt and checked.
+- **One script runs every check.** `python ci.py` runs lint, the tests, every
+  port and every demo; `python ci.py tests` (or `lint`, `ports`, `demo`) runs
+  one part. CI runs the same script on every push, with the tests on Python
+  3.9 through 3.14, so a green run on your machine means what a green run in
+  CI means. A missing tool fails its part rather than skipping it.
 - **Four implementations, one behaviour.** `vectors/gen.py` reads 4,463 cases
   out of `kernel.py`, covering canonical JSON, word splitting, HTML text,
   ranking, dates, word forms and every refusal. The Java, TypeScript and C#
@@ -412,10 +415,9 @@ willow/
 │       ├── PLANTED.md
 │       ├── QUESTIONS.md
 │       └── STRIP.md
+├── ci.py                     every check, in one script: lint, tests, ports, demo
 ├── .github/workflows/
-│   ├── kernel.yml            tests on Python 3.9 to 3.14, and lint
-│   ├── vectors.yml           every port; fails if any port didn't run
-│   └── demo.yml              rebuilds each person's files and checks them
+│   └── ci.yml                installs the tools and runs ci.py, with tests on Python 3.9 to 3.14
 ├── .gitignore                generated files and build output
 ├── ruff.toml                 lint settings
 └── LICENSE                   Apache-2.0

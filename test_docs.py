@@ -277,12 +277,12 @@ def test_odiles_files_are_what_the_readme_says(tmp_path):
 
 
 def test_the_python_versions_are_the_ones_ci_runs():
-    ci = (ROOT / ".github" / "workflows" / "kernel.yml").read_text()
+    ci = (ROOT / ".github" / "workflows" / "ci.yml").read_text()
     versions = re.findall(
         r'"(3\.\d+)"', re.search(r"python-version: \[(.*?)\]", ci).group(1)
     )
     first, last = versions[0], versions[-1]
-    text = README.read_text(encoding="utf-8")
+    text = " ".join(README.read_text(encoding="utf-8").split())  # wrapped lines
     assert f"Python {first} through {last}" in text
     assert f"tests on Python {first} to {last}" in text
     assert f"Python {first} or newer" in text
@@ -306,7 +306,7 @@ def test_every_add_on_has_its_card_its_tests_and_its_row():
         assert list(here.glob("test_*.py")), f"adapters/{name} has no tests"
 
 
-def test_every_port_folder_is_one_compare_runs():
+def test_every_port_folder_is_one_compare_runs_and_ci_requires():
     compare = (ROOT / "vectors" / "compare.py").read_text(encoding="utf-8")
     run = set(
         re.findall(
@@ -315,3 +315,8 @@ def test_every_port_folder_is_one_compare_runs():
     )
     folders = {p.name for p in (ROOT / "ports").iterdir() if p.is_dir()}
     assert folders == run, f"ports/: {sorted(folders)}; compare.py runs: {sorted(run)}"
+    ci = (ROOT / "ci.py").read_text(encoding="utf-8")
+    held = set(
+        re.findall(r'"(\w+)"', re.search(r"^PORTS = \((.*?)\)", ci, re.M).group(1))
+    )
+    assert folders == held, f"ports/: {sorted(folders)}; ci.py requires: {sorted(held)}"
