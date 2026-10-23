@@ -1,12 +1,5 @@
 [
  {
-  "name": "again",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "Questions you keep asking: \"asked 4 times; approve an answer?\"",
-  "source": "bot"
- },
- {
   "name": "bank",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -72,13 +65,6 @@
   "network": "cloud"
  },
  {
-  "name": "coming-up",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "Dates written in your files in the next N days: appointments, renewals, deadlines.",
-  "source": "box"
- },
- {
   "name": "dice",
   "kind": "stdlib",
   "section": "Play",
@@ -107,13 +93,6 @@
   "line": "Keeps the record folder encrypted at rest.",
   "source": "new",
   "needs": "cryptography; Apache-2.0 or BSD"
- },
- {
-  "name": "export",
-  "kind": "stdlib",
-  "section": "Trust and proof",
-  "line": "Approved answers, and the question log (counts only, never words), as Markdown or CSV.",
-  "source": "box"
  },
  {
   "name": "flashcards",
@@ -213,13 +192,6 @@
   "source": "new"
  },
  {
-  "name": "on-this-day",
-  "kind": "stdlib",
-  "section": "Finding things",
-  "line": "What you wrote on this date in earlier years.",
-  "source": "box"
- },
- {
   "name": "pdf",
   "kind": "deps",
   "section": "Reading more kinds of files",
@@ -242,13 +214,6 @@
   "line": "When and where each photo was taken, as dated lines.",
   "source": "new",
   "needs": "Pillow; MIT-CMU"
- },
- {
-  "name": "quote-check",
-  "kind": "stdlib",
-  "section": "Finding things",
-  "line": "Is this exact quote in my files, and where? For writers, journalists and students.",
-  "source": "box"
  },
  {
   "name": "report",
@@ -296,13 +261,6 @@
   "source": "new",
   "needs": "nltk and WordNet; Apache-2.0",
   "network": "data downloaded once"
- },
- {
-  "name": "todo",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "TODO, FIXME and \"need to\" lines across the folder, oldest first.",
-  "source": "box"
  },
  {
   "name": "typos",
