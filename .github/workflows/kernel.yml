@@ -36,5 +36,5 @@ jobs:
       # the ports run in vectors.yml, where a missing toolchain fails the job
       - run: >-
           python -m pytest -q -p no:cacheprovider
-          test_kernel.py adapters vectors/test_vectors.py
+          test_kernel.py test_docs.py adapters vectors/test_vectors.py
           -k "not every_port"

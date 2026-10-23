@@ -155,7 +155,7 @@ suggested answers ──checked──▶ held, waiting ──you approve──�
 
 Nothing is copied or indexed. On every question `kernel.py` walks the folder
 fresh, so it always sees the files as they are now and leaves nothing behind
-to fall out of date or leak. On Odile's 254 files (1.3 MB, about 1,100
+to fall out of date or leak. On Odile's 254 files (310 KB, about 1,100
 paragraphs) a question takes about a quarter of a second. The cost grows with
 the folder, so a very large folder would want an index, which belongs in an
 add-on, not the kernel.
@@ -350,25 +350,42 @@ words and missed the rest. The full results, misses included, are in
   ports (sorting by UTF-16 instead of code points, floating-point scores, a
   BOM dropped by Node's decoder, and more). A case was added for each one the
   tests missed. The table is in [vectors/README.md](vectors/README.md).
+- **The docs are tested too.** `test_docs.py` fails if a doc names a file
+  that doesn't exist, if the file tree below misses a file or lists one that
+  isn't there, or if a number in this README (the case count, the kernel's
+  length, the size of Odile's files, the Python versions) stops matching the
+  repo.
 - **Old runtimes, not assumed:** the tests and every port have also been run
   on Python 3.9.0, JDK 11, Node 14 and .NET 5, all from 2020.
 
 ## What's in this repo
 
+Every file in the repo, and what it is. `test_docs.py` fails if this tree and
+the repo ever disagree.
+
 ```
 willow/
 ├── kernel.py                 the whole program (about 910 lines)
 ├── test_kernel.py            its tests
+├── test_docs.py              holds every doc to the files that exist, and this tree to the repo
+├── README.md                 this file
 ├── adapters/                 add-ons built on top of kernel.py
 │   ├── README.md             the rule every add-on follows
 │   └── readings/
 │       ├── readings.py       notes beside an answer: numbers over time, dates gone by
-│       ├── test_readings.py
+│       ├── test_readings.py  its tests
 │       └── README.md         what it adds, what it uses, what it never does
 ├── ports/                    kernel.py rewritten in other languages
-│   ├── java/Kernel.java      JDK 11+, standard library only
-│   ├── ts/kernel.ts          Node 14+; TypeScript only to compile
-│   └── csharp/Kernel.cs      .NET 5+, no packages
+│   ├── java/
+│   │   └── Kernel.java       JDK 11+, standard library only
+│   ├── ts/
+│   │   ├── kernel.ts         Node 14+, standard library only
+│   │   ├── package.json      TypeScript and Node's types, to compile it
+│   │   ├── package-lock.json
+│   │   └── tsconfig.json
+│   └── csharp/
+│       ├── Kernel.cs         .NET 5+, no packages
+│       └── Kernel.csproj
 ├── vectors/                  what keeps the four implementations identical
 │   ├── gen.py                reads the test cases out of kernel.py
 │   ├── cases.json            4,463 cases, with the answers kernel.py gives
@@ -378,18 +395,28 @@ willow/
 │   └── README.md             how the ports were built and what testing them found
 ├── demo/                     three made-up people to try it on
 │   ├── odile/                piano tuner and beekeeper, caring for her father
-│   │                         (her questions are in her STRIP.md, not a QUESTIONS.md)
+│   │   ├── make_life.py      writes her files into life/, the same bytes every run
+│   │   ├── CHARACTER.md      who she is and how her life is written down
+│   │   ├── PLANTED.md        the needs hidden in her files, and the traps
+│   │   ├── STRIP.md          her questions, and what kernel.py found and missed
+│   │   └── names.txt         everyone named in her files, written by make_life.py
 │   ├── hollis/               built blind, by an agent that never saw the code
+│   │   ├── make_life.py
+│   │   ├── CHARACTER.md
+│   │   ├── PLANTED.md
+│   │   ├── QUESTIONS.md      the questions he would ask, written before any run
+│   │   └── STRIP.md
 │   └── teodora/              built blind, from a different line of work
-│       ├── make_life.py      writes the person's files into life/, the same bytes every run
-│       ├── CHARACTER.md      who they are and how their life is written down
-│       ├── PLANTED.md        the needs hidden in their files, and the traps
-│       ├── QUESTIONS.md      the questions they would ask
-│       └── STRIP.md          what kernel.py found and missed, scored against PLANTED.md
+│       ├── make_life.py
+│       ├── CHARACTER.md
+│       ├── PLANTED.md
+│       ├── QUESTIONS.md
+│       └── STRIP.md
 ├── .github/workflows/
 │   ├── kernel.yml            tests on Python 3.9 to 3.14, and lint
 │   ├── vectors.yml           every port; fails if any port didn't run
 │   └── demo.yml              rebuilds each person's files and checks them
+├── .gitignore                generated files and build output
 ├── ruff.toml                 lint settings
 └── LICENSE                   Apache-2.0
 ```
