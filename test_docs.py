@@ -19,6 +19,7 @@ file added without a line in the tree fails here before it is committed.
 from __future__ import annotations
 
 import fnmatch
+import importlib.util
 import json
 import re
 import shutil
@@ -463,3 +464,22 @@ def test_every_port_folder_is_one_compare_runs_and_ci_requires():
     assert folders == held, (
         f"ports/: {sorted(folders)}; adapters/ci/ci.py runs: {sorted(held)}"
     )
+
+
+def test_the_idea_form_offers_exactly_the_lists_sections_and_writes():
+    """The issue form for an idea asks for the fields planned.json holds, so
+    its choices are the list's own: a section added to readme.py, or a value
+    `writes` takes, can't be missing from the form."""
+    spec = importlib.util.spec_from_file_location(
+        "willow_readme_for_docs", ROOT / "adapters/stdlib/readme/readme.py"
+    )
+    rd = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(rd)
+    form = (ROOT / ".github/ISSUE_TEMPLATE/idea.yml").read_text(encoding="utf-8")
+
+    def options(field: str) -> list[str]:
+        block = form.split(f"id: {field}\n", 1)[1].split("validations:", 1)[0]
+        return re.findall(r"^        - (.+)$", block, re.M)
+
+    assert options("section") == rd.NAMES
+    assert sorted(o.split()[0] for o in options("writes")) == sorted(rd.WRITES)

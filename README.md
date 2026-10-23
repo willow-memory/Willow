@@ -534,6 +534,9 @@ willow/
 ├── test_docs.py              holds every doc to the files that exist, and this tree to the repo
 ├── README.md                 this file
 ├── CONTRIBUTING.md           the rules every change follows, and how to show it does
+├── CODE_OF_CONDUCT.md        how we treat each other
+├── SECURITY.md               what counts as a security problem, and how to report it privately
+├── SUPPORT.md                where to ask, and where to report
 ├── adapters/                 add-ons built on top of kernel.py
 │   ├── README.md             the rules every add-on follows
 │   ├── planned.json          the add-ons not built yet, as this README lists them
@@ -681,8 +684,16 @@ willow/
 │       ├── PLANTED.md
 │       ├── QUESTIONS.md
 │       └── STRIP.md
-├── .github/workflows/
-│   └── ci.yml                runs adapters/stdlib/ci/ci.py one part a job, tests on Python 3.9 to 3.14
+├── .github/
+│   ├── workflows/
+│   │   └── ci.yml            runs adapters/stdlib/ci/ci.py one part a job, tests on Python 3.9 to 3.14
+│   ├── ISSUE_TEMPLATE/
+│   │   ├── bug.yml           the form for something wrong
+│   │   ├── idea.yml          the form for an add-on idea: the same fields as planned.json
+│   │   └── config.yml        security reports go private; a link to the contributing rules
+│   ├── pull_request_template.md  what a pull request says, and what to check before opening one
+│   ├── CODEOWNERS            the maintainer reviews every change
+│   └── dependabot.yml        weekly updates for the workflow's actions, never the add-ons' pins
 ├── .gitignore                generated files and build output
 ├── ruff.toml                 lint settings
 └── LICENSE                   Apache-2.0

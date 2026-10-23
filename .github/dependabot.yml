@@ -1,0 +1,10 @@
+version: 2
+updates:
+  # The workflow's actions only. The add-ons' pins are left to people on
+  # purpose: each deps add-on is also tested at its floor
+  # (requirements-floor.txt), and a bot bumping that file would quietly move
+  # the floor rule's oldest tested version.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
