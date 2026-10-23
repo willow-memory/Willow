@@ -47,7 +47,8 @@ releases yet; when there are, each gets its own heading here.
 
 ### Changed
 
-- The README is a front page: a contents line, a first try, one add-on
+- The README is a front page: a contents line, a first try, a generated
+  summary of what's built and what's still an idea in each area, one add-on
   feature that can be switched (`show=` on its marker), and summaries that
   link to `docs/tour.md`, `docs/how-it-works.md` and `ADDONS.md`, the full
   add-on list. `test_docs.py` holds the contents line to the sections. (#3)
@@ -65,6 +66,12 @@ releases yet; when there are, each gets its own heading here.
   coming-up, office, on-this-day, readings, stale, surprise and todo. (#3)
 - CI's records take out temp folders, so two failing runs give the same
   record too. (#3)
+
+### Fixed
+
+- `privacy`'s test checked that "555" never reached the record, and failed
+  whenever one of the record's hashes happened to contain it; it now checks
+  for the planted phone number itself. (#3)
 
 ## 2026-10-23 · pull request #2
 

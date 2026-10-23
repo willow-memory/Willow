@@ -47,6 +47,9 @@ The end, by hand.
 
 FRONT = """# the front page
 
+<!-- willow:summary -->
+<!-- /willow:summary -->
+
 <!-- willow:front show=pick week=2026-W43 -->
 <!-- /willow:front -->
 """
@@ -223,7 +226,10 @@ def test_check_keeps_the_week_written_whatever_week_it_is(repo):
 
 def rebuild_front(show: str) -> str:
     return rd.rebuild(
-        FRONT.replace("show=pick", f"show={show}"), None, ("front",), "README.md"
+        FRONT.replace("show=pick", f"show={show}"),
+        None,
+        ("summary", "front"),
+        "README.md",
     )
 
 
@@ -238,10 +244,11 @@ def test_the_front_page_shows_the_one_feature_its_marker_names(repo, show, title
     assert (
         "[Every add-on, 2 built of 3, and how to add one: ADDONS.md](ADDONS.md)" in text
     )
-    assert ("week=" in text.split("-->")[0]) == (
-        show == "pick"
-    )  # a week only for the draw
-    assert rebuild_front(show) == rd.rebuild(text, None, ("front",), "README.md")
+    marker = next(ln for ln in text.splitlines() if ln.startswith("<!-- willow:front"))
+    assert ("week=" in marker) == (show == "pick")  # a week only for the draw
+    assert rebuild_front(show) == rd.rebuild(
+        text, None, ("summary", "front"), "README.md"
+    )
 
 
 @pytest.mark.parametrize("show", ["list", "Pick", "everything"])
@@ -255,3 +262,23 @@ def test_check_says_which_page_is_stale(repo, capsys):
     (repo / "README.md").write_text((repo / "README.md").read_text().replace("Add-on of", "Add-in of"))  # fmt: skip
     assert rd.main(["check"]) == 2
     assert "README.md isn't current" in capsys.readouterr().out
+
+
+def test_every_section_says_what_its_for():
+    assert list(rd.WHAT) == rd.NAMES
+
+
+def test_the_summary_links_what_is_built_and_names_what_is_still_an_idea(repo):
+    line = next(
+        ln for ln in rd.section_summary(rd.addons()).splitlines() if "**Play:**" in ln
+    )
+    assert (
+        "Built: [alpha](adapters/stdlib/alpha/), [beta](adapters/deps/beta/)." in line
+    )
+    assert line.endswith("Ideas: *gamma*.")
+    keeping = next(
+        ln
+        for ln in rd.section_summary(rd.addons()).splitlines()
+        if "**Keeping track:**" in ln
+    )
+    assert "Built: nothing yet." in keeping and "Ideas" not in keeping

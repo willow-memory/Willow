@@ -20,9 +20,11 @@ ADDONS.md holds these sections, in this order:
              the week, so anyone can recompute the draw
     list     every add-on, built and planned, by section, A to Z
 
-README.md holds one, `front`: one of pools, newest or pick, as its `show=`
-says (`<!-- willow:front show=pick week=2026-W43 -->`), and a link to the
-rest. To switch the front page's feature, change `show=` and run `write`.
+README.md holds two: `summary`, one line per section saying what it's for,
+what's built and what's still an idea; and `front`, one of pools, newest or
+pick, as its `show=` says (`<!-- willow:front show=pick week=2026-W43 -->`),
+and a link to the rest. To switch the front page's feature, change `show=`
+and run `write`.
 
 What it reads:
 
@@ -97,6 +99,19 @@ SECTIONS = [
     ("For maintainers", ""),
 ]  # fmt: skip
 NAMES = [s for s, _ in SECTIONS]
+#: what each section is for, in a phrase, for the README's summary
+WHAT = {
+    "Reading more kinds of files": "PDFs, email, chats, calendars, notes and office files, as text it can search",
+    "Finding things": "more ways to look: every match, this date in past years, an exact quote, by meaning, past typos",
+    "Your own words": "teaching it the words you use, so a question finds what your files call it",
+    "Keeping track": "dates coming up, numbers over time, to-dos, care logs, invoices, forecasts and flashcards",
+    "Trust and proof": "answers you can check later: exports, stale answers, what changed, signed and encrypted records",
+    "Privacy and safety": "phone numbers, card numbers and keys hidden in answers, or found sitting in files",
+    "Assistants": "AI assistants that can ask and suggest, but never approve",
+    "Ways to use it": "other ways in: plain sentences, a page on this machine, answers read aloud",
+    "Play": "seeded, replayable games on the record, such as dice and the Game of Life",
+    "For maintainers": "the repo's own tools: CI, the list, tests that can fail",
+}  # fmt: skip
 FIELDS = {"section", "line", "source", "writes", "network", "tags"}
 #: at most this many tags an add-on carries
 MAX_TAGS = 5
@@ -284,6 +299,23 @@ def section_list(every: list[dict]) -> str:
     return "\n".join(lines)
 
 
+def section_summary(every: list[dict]) -> str:
+    """One line per section: what it's for, what's built (linked) and what's
+    still an idea, so the front page says it all without the full list."""
+    lines = []
+    for title in NAMES:
+        mine = sorted(
+            (a for a in every if a["section"] == title), key=lambda a: a["name"]
+        )
+        built = ", ".join(f"[{a['name']}]({a['path']})" for a in mine if a["built"])
+        ideas = ", ".join(a["name"] for a in mine if not a["built"])
+        lines.append(
+            f"- **{title}:** {WHAT[title]}. Built: {built or 'nothing yet'}."
+            + (f" Ideas: *{ideas}*." if ideas else "")
+        )
+    return "\n".join(lines)
+
+
 def section_pools(every: list[dict]) -> str:
     built = sum(a["built"] for a in every)
     bar = round(20 * built / len(every))
@@ -365,7 +397,7 @@ def rebuild(text: str, week: str | None, needs: tuple = ORDER, page: str = "ADDO
         if name == "pick":
             return drawn(attrs)
         return {"pools": section_pools, "newest": section_newest,
-                "list": section_list}[name](every)  # fmt: skip
+                "list": section_list, "summary": section_summary}[name](every)  # fmt: skip
 
     def fill(m: re.Match) -> str:
         name, attrs = m.group(1), dict(a.split("=") for a in m.group(2).split())
@@ -389,7 +421,7 @@ def rebuild(text: str, week: str | None, needs: tuple = ORDER, page: str = "ADDO
 
 def pages() -> list[tuple[Path, tuple]]:
     """Each page readme.py writes, and the sections it holds."""
-    return [(ADDONS_MD, ORDER), (README, ("front",))]
+    return [(ADDONS_MD, ORDER), (README, ("summary", "front"))]
 
 
 def main(argv: list[str]) -> int:

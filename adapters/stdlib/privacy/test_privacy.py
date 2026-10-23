@@ -73,9 +73,11 @@ def test_a_bite_serves_the_same_passages_with_the_data_withheld(tmp_path):
     mine, theirs = json.loads(got.stdout), json.loads(plain.stdout)
     assert got.returncode == plain.returncode == 0
     assert [s["id"] for s in mine["served"]] == [s["id"] for s in theirs["served"]]
-    assert "555" not in got.stdout and "example.net" not in got.stdout
     assert (
-        "555" in plain.stdout
+        "010-0177" not in got.stdout and "example.net" not in got.stdout
+    )  # not "555": hashes hold it
+    assert (
+        "010-0177" in plain.stdout
     )  # the kernel itself prints it: that's this add-on's job
     assert mine["withheld"] == {"email": 1, "phone": 1}
-    assert "555" not in (b / "record.jsonl").read_text()
+    assert "010-0177" not in (b / "record.jsonl").read_text()

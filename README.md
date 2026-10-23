@@ -47,9 +47,21 @@ don't answer, teaching it her words, and approving an answer with the key.
 ## What you can build on it
 
 Everything beyond the kernel is an add-on: a folder beside it that uses it and
-never changes it. They read more kinds of files, keep track of what matters,
-keep approved answers honest, and let assistants suggest without approving.
-Anyone can add an idea or build one.
+never changes it. Here is what's built, and what's still an idea that anyone
+can pick up ([CONTRIBUTING.md](CONTRIBUTING.md) says how):
+
+<!-- willow:summary -->
+- **Reading more kinds of files:** PDFs, email, chats, calendars, notes and office files, as text it can search. Built: [books](adapters/stdlib/books/), [calendar](adapters/stdlib/calendar/), [chats](adapters/stdlib/chats/), [mail](adapters/stdlib/mail/), [notes](adapters/stdlib/notes/), [office](adapters/stdlib/office/), [pdf](adapters/deps/pdf/). Ideas: *bank, bookmarks, git-history, health, ocr, photos, sheets, voice*.
+- **Finding things:** more ways to look: every match, this date in past years, an exact quote, by meaning, past typos. Built: [all](adapters/stdlib/all/), [on-this-day](adapters/stdlib/on-this-day/), [quote-check](adapters/stdlib/quote-check/), [surprise](adapters/stdlib/surprise/). Ideas: *meaning, typos*.
+- **Your own words:** teaching it the words you use, so a question finds what your files call it. Built: [starter-words](adapters/stdlib/starter-words/). Ideas: *stems, synonyms, words-de, words-es, words-fr, words-pt*.
+- **Keeping track:** dates coming up, numbers over time, to-dos, care logs, invoices, forecasts and flashcards. Built: [again](adapters/stdlib/again/), [coming-up](adapters/stdlib/coming-up/), [readings](adapters/stdlib/readings/), [todo](adapters/stdlib/todo/). Ideas: *care, digest, flashcards, forecasts, invoices*.
+- **Trust and proof:** answers you can check later: exports, stale answers, what changed, signed and encrypted records. Built: [export](adapters/stdlib/export/), [stale](adapters/stdlib/stale/). Ideas: *changed, encrypt, pgp, report*.
+- **Privacy and safety:** phone numbers, card numbers and keys hidden in answers, or found sitting in files. Built: [privacy](adapters/stdlib/privacy/). Ideas: *secrets-audit*.
+- **Assistants:** AI assistants that can ask and suggest, but never approve. Built: [mcp](adapters/deps/mcp/). Ideas: *claude, local-model*.
+- **Ways to use it:** other ways in: plain sentences, a page on this machine, answers read aloud. Built: [plain](adapters/stdlib/plain/). Ideas: *browse, speak*.
+- **Play:** seeded, replayable games on the record, such as dice and the Game of Life. Built: nothing yet. Ideas: *dice, dice5e, life*.
+- **For maintainers:** the repo's own tools: CI, the list, tests that can fail. Built: [ci](adapters/stdlib/ci/), [github](adapters/stdlib/github/), [mutants](adapters/stdlib/mutants/), [readme](adapters/stdlib/readme/), [similar](adapters/stdlib/similar/).
+<!-- /willow:summary -->
 
 <!-- willow:front show=pick week=2026-W43 -->
 **Add-on of the week**
