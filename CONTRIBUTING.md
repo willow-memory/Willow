@@ -65,6 +65,13 @@ whether it goes online, and CI holds it to that while its tests run. No card
 can loosen three rules: an add-on never changes your files, never writes the
 record except through the kernel, and never reads the key itself.
 
+**A check that enforces the law cites it.** If what you build enforces a
+clause of [CONSTITUTION.md](CONSTITUTION.md), name the clause by its Trace ID
+(`CONST-0-3`) in the code or the test that does it. The law never names your
+code; your code names the law, and the coverage report finds it. Never write
+a verdict into `constitution/declarations.json` for your own work: that is
+the maintainer's call, and the witness is not the actor.
+
 **The docs match the files.** `test_docs.py` checks that the file tree in
 [FILES.md](FILES.md) lists every file in the repo and nothing else, that the
 README's short tree is the repo's top level, that every path a document names

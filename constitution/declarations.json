@@ -1,0 +1,8 @@
+{
+  "_": "Human-maintained verdicts for constitution/coverage.py.",
+  "_why_not_generated": "satisfied vs differently asks whether an artifact enforces a clause BY THE MECHANISM THE CLAUSE DESCRIBES. That is a judgment about meaning, not a fact about text, and a scanner that guessed it would be a gate claiming a check it cannot perform (Appendix B). A clause with no entry here reports as 'undeclared' rather than being guessed into a verdict.",
+  "_verdicts": ["satisfied", "differently", "not applicable", "failing"],
+  "_shape": {"CONST-X-N": {"verdict": "one of _verdicts", "note": "why, in one sentence"}},
+  "_status": "Verdicts are the person's to record, about this checkout. None is recorded yet, which is a statement about what has been judged here, not about what is enforced.",
+  "clauses": {}
+}

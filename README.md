@@ -149,6 +149,21 @@ Each is a test that fails if it stops being true.
 | Every add-on's tests can fail | each add-on's code is broken on purpose a few ways (`mutants`); a break its tests miss fails CI, unless it's listed as harmless with the reason |
 | Every add-on refuses a bad command line, and every reader keeps the same contract | one test holds them all to it (`adapters/stdlib/ci/test_contract.py`) |
 
+### The law above them
+
+These guarantees answer to a written law, [CONSTITUTION.md](CONSTITUTION.md),
+a draft not yet ratified. Its first article, the eternity clause, is six
+things no amendment may ever loosen: no one is the witness to their own work,
+no one ratifies their own proposal, no one widens their own reach, a reserved
+decision needs the human key, the record is never rewritten, and whatever no
+one decided goes to the person.
+
+The law names no code; the code names the law. Each kernel line that enforces
+a clause cites it by its Trace ID (`CONST-0-4`), and
+[constitution/](constitution/) attacks each of the six against the kernel and
+checks it is refused. A coverage report, rebuilt every CI run, lists every
+clause and where it is cited, and says why for each it found nothing for.
+
 ## Where it falls short
 
 It matches words, not meanings: ask "who owes me money" when your files say
@@ -219,6 +234,8 @@ willow/
 ├── BUGS.md                   the known bugs, made from the tests that show them
 ├── DECISIONS.md              what's settled, why, and what holds it
 ├── LIMITS.md                 what willow doesn't do, on purpose or not yet
+├── CONSTITUTION.md           the law the kernel is written to enforce (Draft 0.9)
+├── constitution/             the checks that answer to it
 ├── adapters/                 add-ons built on top of kernel.py
 ├── ports/                    kernel.py rewritten in other languages
 ├── vectors/                  what keeps the four implementations identical

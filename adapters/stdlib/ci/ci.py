@@ -24,7 +24,8 @@ the kernel's own `append`, so the record is a kernel record and the kernel's
 
 A verdict is code's record of what happened, never a seal: its kind is always
 `verdict`, it is written as `ci`, and nothing here writes a `seal` row. CI's
-verdicts are draft. The merge is the person saying the tree is good enough.
+verdicts are draft. The merge is the person saying the tree is good enough:
+the witness is not the actor (CONSTITUTION.md, CONST-0-1).
 
 It is deterministic. The time on every row is the commit's (`--now` sets it),
 and nothing the commands print that changes from run to run (how long they
@@ -358,11 +359,15 @@ def gates() -> list[tuple[str, str, object]]:
         ("adapters", "adapters/stdlib"),
         ("vectors", "vectors/test_vectors.py", "-k", "as_it_is_now"),
         ("strip", "test_strip.py"),
+        ("constitution", "constitution"),
     ):
         how = command(*PYTEST, *target, needs=lambda: missing_module("pytest"))
         if gate == "adapters":
             how = guarded_tests(*target)
         out.append(("tests", f"tests:{gate}", how))
+    # the coverage report, generated each run: it fails only on a clause the
+    # person declared failing, and says why for each one it found nothing for
+    out.append(("tests", "tests:coverage", command(PY, "constitution/coverage.py")))
     for port in PORTS:
         how = command(
             PY, "vectors/compare.py", "--port", port,

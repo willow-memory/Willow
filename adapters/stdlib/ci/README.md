@@ -26,7 +26,7 @@ record in the runner's temp folder.
 | Part | Gates, in this order |
 |---|---|
 | lint | `lint:check`, `lint:format` (ruff) |
-| tests | `tests:beats` (`kernel.py test`), `tests:kernel`, `tests:docs` (`test_docs.py`, and `test_docs_fires.py`, which shows each docs check fails on a planted violation), `tests:adapters` (the add-ons in `adapters/stdlib/`, under the guard), `tests:vectors` (pytest), `tests:strip` (`test_strip.py`: the repo without GitHub, then without any add-on) |
+| tests | `tests:beats` (`kernel.py test`), `tests:kernel`, `tests:docs` (`test_docs.py`, and `test_docs_fires.py`, which shows each docs check fails on a planted violation), `tests:adapters` (the add-ons in `adapters/stdlib/`, under the guard), `tests:vectors` (pytest), `tests:strip` (`test_strip.py`: the repo without GitHub, then without any add-on), `tests:constitution` (the eternity clause, attacked), `tests:coverage` (`constitution/coverage.py`: which clauses are cited where; failing only on a clause declared failing) |
 | ports | `ports:java`, `ports:ts`, `ports:csharp`: `vectors/compare.py`, one port at a time |
 | demo | `demo:hollis`, `demo:odile`, `demo:teodora`: each person's files made in a temporary folder and held to their `demo/*/PLANTED.md` |
 | deps | `deps:mcp`, `deps:mcp@floor`, `deps:pdf`, `deps:pdf@floor`, two per add-on in `adapters/deps/`: its tests, under the guard, in a fresh virtual environment with only its own pinned requirements (then its floor's) and pytest; an install that can't be done is unreachable. Then `deps:floors`: each floor against the floor rule, by PyPI's upload dates; PyPI out of reach is unreachable |

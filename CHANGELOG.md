@@ -10,6 +10,18 @@ says how); there are none yet.
 
 ### Added
 
+- `CONSTITUTION.md`, willows-grove's Draft 0.9 byte for byte, unratified;
+  this repo is its home. `kernel.py` cites the eternity clauses at the
+  lines that enforce them (comments only; the vectors regenerated, the
+  4,463 cases unchanged). (#4)
+- `constitution/test_eternity.py` attacks each eternity clause through the
+  kernel's own command line, and `constitution/coverage.py` reports which
+  clauses are cited where, every CI run; `constitution/declarations.json` starts empty,
+  since verdicts are the person's to record. CI gains `tests:constitution`
+  and `tests:coverage`. (#4)
+
+### Added
+
 - An open list of add-on ideas: anyone can add one to `adapters/planned.json`,
   or build one from it. `adapters/stdlib/similar/similar.py` shows what's
   already near an idea, and refuses one with the same line as another. (#3)

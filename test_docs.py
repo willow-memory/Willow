@@ -160,6 +160,9 @@ ELSEWHERE = {
         "requirements.txt": "each deps add-on's own file, in its folder",
         "requirements-floor.txt": "each deps add-on's own file, in its folder",
     },
+    "CONSTITUTION.md": {
+        "CASEBOOK.md": "willows-grove's: its cases name people and files, so not here",
+    },
     "CONTRIBUTING.md": {
         "requirements.txt": "each deps add-on's own file, in its folder",
         "requirements-floor.txt": "each deps add-on's own file, in its folder",

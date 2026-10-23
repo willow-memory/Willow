@@ -21,6 +21,13 @@ willow/
 ├── BUGS.md                   the known bugs, made from the tests that show them
 ├── DECISIONS.md              what's settled, why, and what holds it
 ├── LIMITS.md                 what willow doesn't do, on purpose or not yet
+├── CONSTITUTION.md           the law the kernel is written to enforce (Draft 0.9)
+├── constitution/             the checks that answer to it
+│   ├── test_eternity.py      each eternity clause, attacked, and refused by the kernel
+│   ├── coverage.py           which clauses are cited where, generated, never tabled
+│   ├── test_coverage.py      its tests
+│   ├── declarations.json     the verdicts, kept by hand; none recorded yet
+│   └── README.md             what the kernel answers for, and what it doesn't claim
 ├── adapters/                 add-ons built on top of kernel.py
 │   ├── README.md             the rules every add-on follows
 │   ├── planned.json          the add-ons not built yet, as this README lists them
