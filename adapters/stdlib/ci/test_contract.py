@@ -67,8 +67,8 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
 }  # fmt: skip
 
 #: a command that works, for each add-on a person runs; {box}, {pile} and
-#: {tmp} are filled in. The repo's own tools (ci, readme, similar, mutants)
-#: are tested in their own folders.
+#: {tmp} are filled in. The repo's own tools (ci, readme, similar, mutants,
+#: github) are tested in their own folders.
 COMMANDS: dict[str, tuple[str, list[str]]] = {
     "again": ("again.py", ["--box", "{box}"]),
     "all": ("all.py", ["--box", "{box}", "tomatoes"]),
@@ -107,7 +107,7 @@ def test_every_add_on_a_person_runs_is_listed_here():
     run_by_people = {
         p.parent.name for p in STDLIB.glob("*/*.py")
         if "__main__" in p.read_text(encoding="utf-8") and not p.name.startswith("test_")
-    } - {"ci", "readme", "similar", "mutants"}  # fmt: skip
+    } - {"ci", "readme", "similar", "mutants", "github"}  # fmt: skip
     assert run_by_people == set(COMMANDS)
 
 

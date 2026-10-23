@@ -165,7 +165,7 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`█████████░░░░░░░░░░░` **25 of 58 built** · 41 need no install · 17 need one
+`█████████░░░░░░░░░░░` **26 of 59 built** · 42 need no install · 17 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
@@ -178,7 +178,7 @@ or `writes-output`; its section), and any the card's author adds or changes.
 | Assistants | 1 | 2 | 0 | 3 |
 | Ways to use it | 1 | 2 | 2 | 1 |
 | Play | 0 | 3 | 2 | 1 |
-| For maintainers | 4 | 0 | 4 | 0 |
+| For maintainers | 5 | 0 | 5 | 0 |
 <!-- /willow:pools -->
 
 ### Newest
@@ -194,9 +194,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ### Add-on of the week
 
 <!-- willow:pick week=2026-W43 -->
-**[privacy](adapters/stdlib/privacy/)** — Hides phone numbers, emails, card, bank and ID numbers, and API keys in what a question prints, and says what it hid.
+**[todo](adapters/stdlib/todo/)** — TODO, FIXME and "need to" lines across the folder, oldest first.
 
-*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 25 built add-ons in name order.*
+*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 26 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -292,6 +292,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 ### For maintainers
 
 - [**ci**](adapters/stdlib/ci/) — This repo's checks as verdict rows on a kernel record, the same every run. Goes online: PyPI, to read each dependency floor's release date. *box* `no-install` `online` `records` `maintainers`
+- [**github**](adapters/stdlib/github/) — What willow's repo needs from GitHub, kept in one folder so it can be taken away. Goes online: GitHub, through gh, to read the author of a pull request a security report points to. *box* `no-install` `online` `read-only` `maintainers`
 - [**mutants**](adapters/stdlib/mutants/) — Breaks each add-on's code on purpose and checks its tests notice. *new* `no-install` `offline` `read-only` `maintainers`
 - [**readme**](adapters/stdlib/readme/) — Builds this README's generated sections from the add-ons' own cards. *new* `no-install` `offline` `writes-output` `maintainers`
 - [**similar**](adapters/stdlib/similar/) — What's already on the add-on list near a new idea, by the kernel's own search. *box* `no-install` `offline` `read-only` `maintainers`
@@ -536,6 +537,7 @@ willow/
 ├── test_kernel.py            its tests
 ├── test_docs.py              holds every doc to the files that exist, and the trees to the repo
 ├── test_docs_fires.py        plants a violation for each docs check and makes sure it fails
+├── test_strip.py             takes away GitHub, then every add-on, and shows what's left still passes
 ├── README.md                 this file
 ├── FILES.md                  every file in the repo, and what it is
 ├── CONTRIBUTING.md           the rules every change follows, and how to show it does
@@ -549,7 +551,7 @@ willow/
 ├── ports/                    kernel.py rewritten in other languages
 ├── vectors/                  what keeps the four implementations identical
 ├── demo/                     three made-up people to try it on
-├── .github/                  CI, the issue forms, the pull request template
+├── .github/                  CI, the issue forms, the pull request template: the GitHub add-on's
 ├── .gitignore                generated files and build output
 ├── ruff.toml                 lint settings
 └── LICENSE                   Apache-2.0

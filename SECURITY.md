@@ -21,20 +21,26 @@ problem: open an issue for those.
 
 ## How to report one
 
-In public, with the **A security problem** issue form. Willow runs only on
-your own machine and has no server to attack, so there is nothing for a
-private report to protect, and a public one reaches everyone who needs to
-know at once: whoever runs it, and whoever wrote the lines at fault.
+In public, where the repo is hosted: on GitHub, with the **A security
+problem** issue form. Willow runs only on your own machine and has no server
+to attack, so there is nothing for a private report to protect, and a public
+one reaches everyone who needs to know at once: whoever runs it, and whoever
+wrote the lines at fault.
 
 Say what you did, what happened, and what you expected, with the smallest
 made-up folder and commands that show it. **Leave out anything from your own
 files.**
 
-If you can, name the lines at fault, as `PATH:FIRST-LAST`. A workflow
-(`.github/workflows/security.yml`) looks each one up with git blame, finds
-the pull request that wrote it (`adapters/stdlib/ci/whose.py`), and names
-that pull request's author on the report. That is so they hear about it
-from the start, not to blame them: the lines are a place to begin.
+If you can, name the lines at fault, as `PATH:FIRST-LAST`. Anyone can then
+find who wrote them with git alone:
+
+    python adapters/stdlib/ci/whose.py kernel.py:120-134
+
+On GitHub this happens by itself: the GitHub add-on
+([adapters/stdlib/github/](adapters/stdlib/github/)) finds the pull request
+behind each line and its author, and a workflow tags them on the report.
+That is so they hear about it from the start, not to blame them: the lines
+are a place to begin.
 
 The fix goes under `### Fixed` in [CHANGELOG.md](CHANGELOG.md) and names
 the report, and who found it if they'd like to be named.

@@ -361,19 +361,13 @@ def test_odiles_files_are_what_the_readme_says(tmp_path):
         )
 
 
-def test_the_python_versions_are_the_ones_ci_runs():
-    ci = (ROOT / ".github" / "workflows" / "ci.yml").read_text()
-    versions = re.findall(
-        r'"(3\.\d+)"', re.search(r"python-version: \[(.*?)\]", ci).group(1)
-    )
-    first, last = versions[0], versions[-1]
-    text = " ".join(README.read_text(encoding="utf-8").split())  # wrapped lines
-    assert f"Python {first} through {last}" in text
-    files = " ".join(FILES.read_text(encoding="utf-8").split())
-    assert f"tests on Python {first} to {last}" in files  # ci.yml's line in the tree
-    assert f"Python {first} or newer" in text
+def test_the_python_version_is_the_kernels():
+    """The README names the oldest Python the kernel's own first line does.
+    That CI tests it there is the host's to hold (adapters/stdlib/github)."""
     head = (ROOT / "kernel.py").read_text(encoding="utf-8").splitlines()[0]
-    assert f"Python {first}+" in head, f"kernel.py's first line: {head}"
+    first = re.search(r"Python (3\.\d+)\+", head).group(1)
+    text = " ".join(README.read_text(encoding="utf-8").split())  # wrapped lines
+    assert f"Python {first} or newer" in text, f"kernel.py says Python {first}+"
 
 
 # ── add-ons and ports ────────────────────────────────────────────────────────
@@ -482,25 +476,6 @@ def test_every_port_folder_is_one_compare_runs_and_ci_requires():
     assert folders == held, (
         f"ports/: {sorted(folders)}; adapters/ci/ci.py runs: {sorted(held)}"
     )
-
-
-def test_the_idea_form_offers_exactly_the_lists_sections_and_writes():
-    """The issue form for an idea asks for the fields planned.json holds, so
-    its choices are the list's own: a section added to readme.py, or a value
-    `writes` takes, can't be missing from the form."""
-    spec = importlib.util.spec_from_file_location(
-        "willow_readme_for_docs", ROOT / "adapters/stdlib/readme/readme.py"
-    )
-    rd = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(rd)
-    form = (ROOT / ".github/ISSUE_TEMPLATE/idea.yml").read_text(encoding="utf-8")
-
-    def options(field: str) -> list[str]:
-        block = form.split(f"id: {field}\n", 1)[1].split("validations:", 1)[0]
-        return re.findall(r"^        - (.+)$", block, re.M)
-
-    assert options("section") == rd.NAMES
-    assert sorted(o.split()[0] for o in options("writes")) == sorted(rd.WRITES)
 
 
 def test_bugs_md_is_the_tests_marked_as_known_bugs():

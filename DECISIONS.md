@@ -13,8 +13,9 @@ test behind it. A decision with nothing to hold it says so.
 **One file, standard library only, Python 3.9 or newer.** Anyone can copy
 it anywhere and read all of it; there is nothing to install and nothing
 else to trust. *Held by:* `test_kernel.py` fails on any import from outside
-Python's own library, add-ons included, and CI runs the tests on every
-Python from 3.9 to 3.14.
+Python's own library, add-ons included; `test_strip.py` runs the kernel
+with `adapters/` deleted; and CI runs the tests on every Python from 3.9 to
+3.14.
 
 **It never goes online.** A tool trusted with someone's own files has no
 business with a network. *Held by:* `test_kernel.py` fails on any network
@@ -100,6 +101,14 @@ number, and one that fixes a known bug names it under `### Fixed`.
 **Security problems are reported in public.** Willow runs only on a
 person's own machine, so a private report protects nothing and a public one
 reaches everyone at once, including whoever wrote the lines at fault.
-*Held by:* the security issue form and `.github/workflows/security.yml`,
-which names the pull request behind each line a report points to
-(`adapters/stdlib/ci/whose.py`). See [SECURITY.md](SECURITY.md).
+*Held by:* review; on GitHub, the security issue form, and a workflow that
+tags the author of the pull request behind each line a report points to.
+See [SECURITY.md](SECURITY.md).
+
+**Where the repo is hosted is an add-on.** GitHub is one host, not part of
+willow: what needs it is in `adapters/stdlib/github/`, with `.github/`, and
+another host gets a folder of its own beside it. Who wrote a line is a
+question for git (`adapters/stdlib/ci/whose.py`); only how a site numbers
+its pull requests is the host's, in its host.json. *Held by:*
+`test_strip.py`, which deletes the GitHub add-on and `.github/`, then all
+of `adapters/`, and runs what's left.

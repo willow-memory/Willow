@@ -357,6 +357,7 @@ def gates() -> list[tuple[str, str, object]]:
         ("docs", "test_docs.py", "test_docs_fires.py"),
         ("adapters", "adapters/stdlib"),
         ("vectors", "vectors/test_vectors.py", "-k", "as_it_is_now"),
+        ("strip", "test_strip.py"),
     ):
         how = command(*PYTEST, *target, needs=lambda: missing_module("pytest"))
         if gate == "adapters":

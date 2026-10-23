@@ -80,7 +80,7 @@ PLANTS = {
     "test_odiles_files_are_what_the_readme_says": _replace(
         "README.md", "On Odile's ", "On Odile's 1"
     ),
-    "test_the_python_versions_are_the_ones_ci_runs": _replace(
+    "test_the_python_version_is_the_kernels": _replace(
         "README.md", "Python 3.9 or newer", "Python 3.8 or newer"
     ),
     "test_add_ons_live_only_in_stdlib_or_deps": _add("adapters/loose/loose.py"),
@@ -100,9 +100,6 @@ PLANTS = {
         "test_planted.py",
         "import pytest\n\n\n@pytest.mark.xfail(strict=True, reason='bug #1: planted')\n"
         "def test_planted():\n    assert False\n",
-    ),
-    "test_the_idea_form_offers_exactly_the_lists_sections_and_writes": _replace(
-        ".github/ISSUE_TEMPLATE/idea.yml", "        - Play\n", "        - Games\n"
     ),
 }
 

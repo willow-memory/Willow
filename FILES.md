@@ -9,6 +9,7 @@ willow/
 ├── test_kernel.py            its tests
 ├── test_docs.py              holds every doc to the files that exist, and the trees to the repo
 ├── test_docs_fires.py        plants a violation for each docs check and makes sure it fails
+├── test_strip.py             takes away GitHub, then every add-on, and shows what's left still passes
 ├── README.md                 the front page: what it does, the first five minutes, the add-on list
 ├── FILES.md                  this file
 ├── CONTRIBUTING.md           the rules every change follows, and how to show it does
@@ -46,7 +47,7 @@ willow/
 │   │   │   ├── ci.py         this repo's checks as verdict rows on a kernel record
 │   │   │   ├── changelog.py  a change beyond the docs adds its entry to CHANGELOG.md, and names a bug it fixed
 │   │   │   ├── bugs.py       makes BUGS.md from the tests marked as known bugs
-│   │   │   ├── whose.py      which pull request wrote these lines
+│   │   │   ├── whose.py      which commit wrote these lines, or with a host's host.json which pull request
 │   │   │   ├── guard/
 │   │   │   │   └── sitecustomize.py  holds each add-on to its card while its tests run
 │   │   │   ├── test_ci.py    its tests: the same record every run, and every state
@@ -54,7 +55,7 @@ willow/
 │   │   │   ├── test_contract.py  what every add-on promises alike, held for all of them
 │   │   │   ├── test_changelog.py  changelog.py's tests: owed, not owed, and in the wrong place
 │   │   │   ├── test_bugs.py  bugs.py's tests: strict marks only, and the list made from them
-│   │   │   ├── test_whose.py whose.py's tests: merges, squashes, and a report's text refused
+│   │   │   ├── test_whose.py whose.py's tests: commits, merges, squashes, another host, places refused
 │   │   │   └── README.md     its card: gates, states, the guard and exit codes
 │   │   ├── coming-up/
 │   │   │   ├── coming_up.py  dates in your files in the next few days
@@ -64,6 +65,11 @@ willow/
 │   │   │   ├── export.py     approved answers and the question log, as Markdown or CSV
 │   │   │   ├── test_export.py
 │   │   │   └── README.md
+│   │   ├── github/
+│   │   │   ├── github.py     what the repo needs from GitHub: a security report's comment, .github/ held to the repo
+│   │   │   ├── host.json     how GitHub titles the merge of a pull request, for whose.py --host
+│   │   │   ├── test_github.py
+│   │   │   └── README.md     its card: and .github/ belongs to it
 │   │   ├── mail/
 │   │   │   ├── mail.py       .eml and .mbox, with sender, date and subject
 │   │   │   ├── test_mail.py
@@ -180,7 +186,7 @@ willow/
 ├── .github/
 │   ├── workflows/
 │   │   ├── ci.yml            runs adapters/stdlib/ci/ci.py one part a job, tests on Python 3.9 to 3.14
-│   │   └── security.yml      names the author of each pull request a security report points to
+│   │   └── security.yml      posts the github add-on's comment on a security report
 │   ├── ISSUE_TEMPLATE/
 │   │   ├── bug.yml           the form for something wrong
 │   │   ├── idea.yml          the form for an add-on idea: the same fields as planned.json

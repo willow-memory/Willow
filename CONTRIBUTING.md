@@ -5,8 +5,8 @@ Thanks for looking. Most changes here are a new add-on, and
 the rules every change follows, and how to show that yours does.
 
 A question is welcome: open an issue and say what you tried. A security
-problem is reported in public too, with its own issue form;
-[SECURITY.md](SECURITY.md) says what counts. What's settled and why is in
+problem is reported in public too; [SECURITY.md](SECURITY.md) says what
+counts and how. What's settled and why is in
 [DECISIONS.md](DECISIONS.md), and what willow doesn't do in
 [LIMITS.md](LIMITS.md). Everyone here keeps the
 [code of conduct](CODE_OF_CONDUCT.md).
@@ -146,6 +146,14 @@ add-on can't run that far back, raise the floor and give the reason in one
 sentence on the card's `floor:` line. CI runs the tests at both the pinned
 versions and the floor, and checks each floor against PyPI's release dates.
 
+## Where it's hosted
+
+Everything that needs GitHub is in [adapters/stdlib/github/](adapters/stdlib/github/),
+with `.github/`, and nothing else uses them. Run `adapters/stdlib/ci/ci.py` on your own machine
+and you need no host at all; `test_strip.py` deletes both and shows the rest
+still passes. To work on willow somewhere else, add a folder for that host
+beside the GitHub one: a host.json for `adapters/stdlib/ci/whose.py`, and that site's CI file.
+
 ## Pull requests
 
 - One idea per pull request.
@@ -159,10 +167,9 @@ versions and the floor, and checks each floor against PyPI's release dates.
 
 ## Bugs
 
-Report one with the **Something is wrong** issue form. A security problem
-has its own form, and if you can name the lines at fault
-(`PATH:FIRST-LAST`), a workflow finds the pull request that wrote them and
-tags its author on the report, so they hear about it from the start.
+Report one as an issue (on GitHub, the **Something is wrong** form). A
+security problem is reported the same way, in public: see
+[SECURITY.md](SECURITY.md).
 
 **A known bug is a test.** To put one on [BUGS.md](BUGS.md), write a test
 that shows it, and mark it as expected to fail, strictly, naming its issue:

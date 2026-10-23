@@ -31,9 +31,14 @@ releases yet; when there are, each gets its own heading here.
   willow doesn't do. (#3)
 - A test that the kernel imports only Python's own library, and no
   add-on. (#3)
-- Security problems are reported in public with their own issue form, and
-  a workflow tags the author of the pull request behind each line a report
-  points to (`adapters/stdlib/ci/whose.py`). (#3)
+- Security problems are reported in public. `adapters/stdlib/ci/whose.py`
+  finds the commit behind any line with git alone, or with a host's
+  host.json the pull request; on GitHub a workflow tags its author on
+  the report. (#3)
+- `adapters/stdlib/github/`: everything that needs GitHub, in one add-on
+  with `.github/`, so it can be taken away, or another host added beside
+  it. `test_strip.py` deletes it and `.github/`, then all of `adapters/`,
+  and shows what's left still passes. (#3)
 - The standard GitHub files, shaped from the willow repos' own conventions:
   a pull request template built on Evidence (receipts, not claims) and on
   what wasn't checked, issue

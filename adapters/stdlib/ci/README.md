@@ -26,7 +26,7 @@ record in the runner's temp folder.
 | Part | Gates, in this order |
 |---|---|
 | lint | `lint:check`, `lint:format` (ruff) |
-| tests | `tests:beats` (`kernel.py test`), `tests:kernel`, `tests:docs` (`test_docs.py`, and `test_docs_fires.py`, which shows each docs check fails on a planted violation), `tests:adapters` (the add-ons in `adapters/stdlib/`, under the guard), `tests:vectors` (pytest) |
+| tests | `tests:beats` (`kernel.py test`), `tests:kernel`, `tests:docs` (`test_docs.py`, and `test_docs_fires.py`, which shows each docs check fails on a planted violation), `tests:adapters` (the add-ons in `adapters/stdlib/`, under the guard), `tests:vectors` (pytest), `tests:strip` (`test_strip.py`: the repo without GitHub, then without any add-on) |
 | ports | `ports:java`, `ports:ts`, `ports:csharp`: `vectors/compare.py`, one port at a time |
 | demo | `demo:hollis`, `demo:odile`, `demo:teodora`: each person's files made in a temporary folder and held to their `demo/*/PLANTED.md` |
 | deps | `deps:mcp`, `deps:mcp@floor`, `deps:pdf`, `deps:pdf@floor`, two per add-on in `adapters/deps/`: its tests, under the guard, in a fresh virtual environment with only its own pinned requirements (then its floor's) and pytest; an install that can't be done is unreachable. Then `deps:floors`: each floor against the floor rule, by PyPI's upload dates; PyPI out of reach is unreachable |
@@ -61,11 +61,11 @@ expected to fail, `strict=True` with a reason `bug #N: …`, and refuses any
 other such mark. `test_docs.py` fails when BUGS.md and the tests disagree.
 
 **Whose lines:** [whose.py](whose.py) takes `PATH:FIRST-LAST` places and
-prints the pull request that wrote each, by git blame and the merge that
-brought the commit in. The security workflow runs it on a report's "Where it
-is" section and tags each pull request's author on the report. It refuses
-any place that isn't a line range in a file git tracks, since a report's
-text is anyone's.
+prints the commit that wrote each, with git alone. Given a host add-on's
+folder (`--host adapters/stdlib/github`), it prints the pull request
+instead, by the merge that brought the commit in and that host's
+host.json. It refuses any place that isn't a line range in a file git
+tracks, since the places may come from a report anyone can write.
 
 **The contract:** [test_contract.py](test_contract.py) holds every add-on to
 what they all promise alike. Run with nothing, or with one argument too many
