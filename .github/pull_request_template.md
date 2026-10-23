@@ -1,29 +1,24 @@
-## What this changes
+## What this changes, and why
 
-<!-- One idea per pull request. Say what it does in a sentence or two. -->
-
-## Which add-on or idea
-
-<!-- The add-on's folder, or the planned.json entry this builds or adds.
-     Leave out if this touches neither. -->
+<!-- One idea per pull request. What it does in a sentence or two, and why
+     it's worth doing. The diff says how; this says why. -->
 
 ## Its promises
 
 <!-- For an add-on: its card's `writes` and `network`, and whether this
-     changes them. If it does, say why here, where the maintainer sees it. -->
+     changes them. If it does, say why here, where the maintainer sees it.
+     Leave out if this touches no add-on. -->
 
-## What CI said
+## Evidence
 
-<!-- Paste the output of:
+<!-- Receipts, not claims: only what you actually ran, with its result.
+     Paste the output of:
        python adapters/stdlib/ci/ci.py run --box /tmp/ci-record
        python adapters/stdlib/ci/ci.py show --box /tmp/ci-record
-     A run you can show is worth more than a sentence saying it passed. -->
+     A part you didn't run (no Java, no network) is said, not left out. -->
 
-## Before you open it
+## What you didn't check
 
-- [ ] The tests can fail: I broke the thing on purpose and watched them go red
-      (`python adapters/stdlib/mutants/mutants.py run NAME` does it for you)
-- [ ] A new file is in FILES.md's tree; a new add-on has its card and tests
-- [ ] A built idea's entry is out of `adapters/planned.json` in this change
-- [ ] `python adapters/stdlib/readme/readme.py write` was run, not hand edits
-- [ ] Nothing here writes an approval, or reads the key
+<!-- What CI can't see: a case you thought of and didn't test, a platform
+     you couldn't run it on, a part of the change you're unsure about.
+     "Nothing" is an answer too. -->

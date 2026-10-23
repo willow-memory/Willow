@@ -9,33 +9,39 @@ releases yet; when there are, each gets its own heading here.
 
 - An open list of add-on ideas: anyone can add one to `adapters/planned.json`,
   or build one from it. `adapters/stdlib/similar/similar.py` shows what's
-  already near an idea, and refuses one with the same line as another.
+  already near an idea, and refuses one with the same line as another. (#3)
 - Promises on every card and idea: what it writes and where it goes online.
   A guard holds every add-on to its card while its tests run, and fails a
-  breach even one the add-on catches and hides.
+  breach even one the add-on catches and hides. (#3)
 - Tags on every add-on and idea, up to five; four filled in from the card,
-  the rest the author's.
+  the rest the author's. (#3)
 - `mutants`: each stdlib add-on's code broken on purpose a few ways in CI; a
-  break its tests miss fails, unless listed as harmless with the reason.
-- One contract test for every add-on's command line, and for every reader.
-- The standard GitHub files: a pull request template, issue forms for a bug
-  and an idea, a code of conduct, a security policy, support, code owners,
-  and Dependabot for the workflow's actions.
+  break its tests miss fails, unless listed as harmless with the reason. (#3)
+- One contract test for every add-on's command line, and for every reader. (#3)
+- A changelog line is owed by every pull request that changes more than the
+  docs, ending with its number; CI checks it. (#3)
+- `test_docs_fires.py`: each of the docs test's checks is shown to fail on a
+  violation planted in a copy of the repo. (#3)
+- The standard GitHub files, shaped from the willow repos' own conventions:
+  a pull request template built on Evidence (receipts, not claims) and on
+  what wasn't checked, issue
+  forms for a bug and an idea, a code of conduct, a security policy, and
+  Dependabot for the workflow's actions. (#3)
 
 ### Changed
 
 - The full file tree moved from the README to `FILES.md`; the README shows
-  the top level. `test_docs.py` holds both to the repo.
+  the top level. `test_docs.py` holds both to the repo. (#3)
 - `similar` matches on each entry's line and the tags a person chose, not
-  the whole card, whose common words made unrelated add-ons look alike.
+  the whole card, whose common words made unrelated add-ons look alike. (#3)
 - The add-on list shows tags instead of emoji, and says in words what an
-  add-on needs installed and where it goes online.
+  add-on needs installed and where it goes online. (#3)
 - `plain`, `privacy` and `readings` refuse a bad command line with their own
-  usage, not the kernel's.
+  usage, not the kernel's. (#3)
 - Tests added where breaking the code went unnoticed: in books, chats,
-  coming-up, office, on-this-day, readings, stale, surprise and todo.
+  coming-up, office, on-this-day, readings, stale, surprise and todo. (#3)
 - CI's records take out temp folders, so two failing runs give the same
-  record too.
+  record too. (#3)
 
 ## 2026-10-23 · pull request #2
 

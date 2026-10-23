@@ -4,6 +4,11 @@ Thanks for looking. Most changes here are a new add-on, and
 [adapters/README.md](adapters/README.md) says how to build one. This page has
 the rules every change follows, and how to show that yours does.
 
+A question is welcome: open an issue and say what you tried. A security
+problem never goes in an issue; [SECURITY.md](SECURITY.md) says how to report
+it privately. Everyone here keeps the
+[code of conduct](CODE_OF_CONDUCT.md).
+
 ## Run what CI runs
 
 CI is one script, and you can run all of it on your own machine:
@@ -14,11 +19,13 @@ CI is one script, and you can run all of it on your own machine:
 Each check is written down as one row: `satisfied`, `failing` or
 `unreachable`. Unreachable means a tool isn't installed (no Java, no
 network), and it never counts as a pass. To run one part, name it: `lint`,
-`tests`, `ports`, `demo` or `deps`. Keep the record folder outside the repo;
-the script refuses one inside it unless git ignores it.
+`tests`, `ports`, `demo`, `deps` or `mutants`. Keep the record folder outside
+the repo; the script refuses one inside it unless git ignores it.
 
-Paste the `show` output into your pull request. A green run you can show is
-worth more than a sentence saying it passed.
+**Receipts, not claims.** Paste the `show` output into your pull request's
+Evidence: only what you actually ran, with its result. A green run you can
+show is worth more than a sentence saying it passed, and a part you didn't
+run is said, not left out.
 
 ## The rules
 
@@ -140,11 +147,36 @@ versions and the floor, and checks each floor against PyPI's release dates.
 ## Pull requests
 
 - One idea per pull request.
+- A change to anything but the docs adds a line under `## Unreleased` in
+  [CHANGELOG.md](CHANGELOG.md), ending with its pull request's number, such
+  as `(#7)`. CI checks it on every pull request.
 - Regenerate the README's add-on list with
   `python adapters/stdlib/readme/readme.py write`, never by hand;
   `test_docs.py` fails if it's stale.
-- Merging is the maintainer saying the change is good enough for now. CI's
-  rows are evidence for that decision, not the decision itself.
+
+## After you open it
+
+- **CI runs every part** as its own job, one row per check, and keeps the
+  record as the run's artifact. A pull request's run summary also lists
+  what's already on the add-on list near anything it adds (`similar`).
+- **willows-bot** posts one status comment and keeps it current, and labels
+  the pull request (its size, and that it's been looked at). It never
+  approves or merges.
+- **The maintainer merges.** Merging is the maintainer saying the change is
+  good enough for now. CI's rows are evidence for that decision, not the
+  decision itself.
+
+## What CI will not do
+
+A failing check is a finding to fix or to talk about on the pull request,
+never a reason to change the check until it passes. So CI never:
+
+- adds a break to `adapters/stdlib/mutants/accepted.json`: a person does,
+  with the reason, and the maintainer decides whether it stands;
+- loosens an add-on's card, its `writes` or `network`, to fit what the code
+  does: if the card was wrong, the pull request says so;
+- approves anything: only a person does;
+- skips a test to get green: a skipped check still looks like a pass.
 
 ## Licence
 

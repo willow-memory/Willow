@@ -522,7 +522,9 @@ words and missed the rest. The full results, misses included, are in
   lists one that isn't there, or if a number in this README (the case count, the kernel's
   length, the size of Odile's files, the Python versions) stops matching the
   repo. A demo write-up that cites a question must cite one its person asked,
-  in that question's own words.
+  in that question's own words. And `test_docs_fires.py` plants a
+  violation for each of those checks in a copy of the repo, and fails if
+  the check doesn't catch it.
 - **Old runtimes, not assumed:** the tests and every port have also been run
   on Python 3.9.0, JDK 11, Node 14 and .NET 5, all from 2020.
 
@@ -536,12 +538,12 @@ willow/
 ├── kernel.py                 the whole program (about 910 lines)
 ├── test_kernel.py            its tests
 ├── test_docs.py              holds every doc to the files that exist, and the trees to the repo
+├── test_docs_fires.py        plants a violation for each docs check and makes sure it fails
 ├── README.md                 this file
 ├── FILES.md                  every file in the repo, and what it is
 ├── CONTRIBUTING.md           the rules every change follows, and how to show it does
 ├── CODE_OF_CONDUCT.md        how we treat each other
 ├── SECURITY.md               what counts as a security problem, and how to report it privately
-├── SUPPORT.md                where to ask, and where to report
 ├── CHANGELOG.md              what changed, by pull request
 ├── adapters/                 add-ons built on top of kernel.py
 ├── ports/                    kernel.py rewritten in other languages

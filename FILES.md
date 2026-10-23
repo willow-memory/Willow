@@ -8,12 +8,12 @@ willow/
 ├── kernel.py                 the whole program (about 910 lines)
 ├── test_kernel.py            its tests
 ├── test_docs.py              holds every doc to the files that exist, and the trees to the repo
+├── test_docs_fires.py        plants a violation for each docs check and makes sure it fails
 ├── README.md                 the front page: what it does, the first five minutes, the add-on list
 ├── FILES.md                  this file
 ├── CONTRIBUTING.md           the rules every change follows, and how to show it does
 ├── CODE_OF_CONDUCT.md        how we treat each other
 ├── SECURITY.md               what counts as a security problem, and how to report it privately
-├── SUPPORT.md                where to ask, and where to report
 ├── CHANGELOG.md              what changed, by pull request
 ├── adapters/                 add-ons built on top of kernel.py
 │   ├── README.md             the rules every add-on follows
@@ -41,11 +41,13 @@ willow/
 │   │   │   └── README.md
 │   │   ├── ci/
 │   │   │   ├── ci.py         this repo's checks as verdict rows on a kernel record
+│   │   │   ├── changelog.py  a change beyond the docs adds its line to CHANGELOG.md
 │   │   │   ├── guard/
 │   │   │   │   └── sitecustomize.py  holds each add-on to its card while its tests run
 │   │   │   ├── test_ci.py    its tests: the same record every run, and every state
 │   │   │   ├── test_guard.py the guard's tests: each broken promise caught
 │   │   │   ├── test_contract.py  what every add-on promises alike, held for all of them
+│   │   │   ├── test_changelog.py  changelog.py's tests: owed, not owed, and in the wrong place
 │   │   │   └── README.md     its card: gates, states, the guard and exit codes
 │   │   ├── coming-up/
 │   │   │   ├── coming_up.py  dates in your files in the next few days
@@ -176,7 +178,6 @@ willow/
 │   │   ├── idea.yml          the form for an add-on idea: the same fields as planned.json
 │   │   └── config.yml        security reports go private; a link to the contributing rules
 │   ├── pull_request_template.md  what a pull request says, and what to check before opening one
-│   ├── CODEOWNERS            the maintainer reviews every change
 │   └── dependabot.yml        weekly updates for the workflow's actions, never the add-ons' pins
 ├── .gitignore                generated files and build output
 ├── ruff.toml                 lint settings

@@ -354,7 +354,7 @@ def gates() -> list[tuple[str, str, object]]:
     ]  # fmt: skip
     for gate, *target in (
         ("kernel", "test_kernel.py"),
-        ("docs", "test_docs.py"),
+        ("docs", "test_docs.py", "test_docs_fires.py"),
         ("adapters", "adapters/stdlib"),
         ("vectors", "vectors/test_vectors.py", "-k", "as_it_is_now"),
     ):

@@ -17,7 +17,7 @@ record is hash-chained like any other and the kernel's `verify` checks it.
     python adapters/stdlib/ci/ci.py verify [--box DIR]
     python adapters/stdlib/ci/ci.py show   [--box DIR]
 
-`run` with no part runs all five. The record goes in `.ci-record/` by default
+`run` with no part runs all six. The record goes in `.ci-record/` by default
 (git ignores it), and the key `init` makes goes beside it in
 `.ci-record.key`. A record or key inside the repo where git would count it is
 refused: it would be hashed into the very files it records. CI keeps its
@@ -26,7 +26,7 @@ record in the runner's temp folder.
 | Part | Gates, in this order |
 |---|---|
 | lint | `lint:check`, `lint:format` (ruff) |
-| tests | `tests:beats` (`kernel.py test`), `tests:kernel`, `tests:docs`, `tests:adapters` (the add-ons in `adapters/stdlib/`, under the guard), `tests:vectors` (pytest) |
+| tests | `tests:beats` (`kernel.py test`), `tests:kernel`, `tests:docs` (`test_docs.py`, and `test_docs_fires.py`, which shows each docs check fails on a planted violation), `tests:adapters` (the add-ons in `adapters/stdlib/`, under the guard), `tests:vectors` (pytest) |
 | ports | `ports:java`, `ports:ts`, `ports:csharp`: `vectors/compare.py`, one port at a time |
 | demo | `demo:hollis`, `demo:odile`, `demo:teodora`: each person's files made in a temporary folder and held to their `demo/*/PLANTED.md` |
 | deps | `deps:mcp`, `deps:mcp@floor`, `deps:pdf`, `deps:pdf@floor`, two per add-on in `adapters/deps/`: its tests, under the guard, in a fresh virtual environment with only its own pinned requirements (then its floor's) and pytest; an install that can't be done is unreachable. Then `deps:floors`: each floor against the floor rule, by PyPI's upload dates; PyPI out of reach is unreachable |
@@ -47,6 +47,13 @@ and none failing; 2 a gate failing, or a record that doesn't verify.
 **Deterministic:** every row's time is the commit's, and what changes between
 runs (durations, temporary folders, where the repo sits) is taken out before
 the output is hashed. The same files give the same record, byte for byte.
+
+**The changelog:** [changelog.py](changelog.py) runs as its own CI job on
+every pull request, outside the record (it needs the pull request's number
+and its base branch). When anything but Markdown changed, CHANGELOG.md's
+`## Unreleased` section must gain a line ending with that number, `(#N)`.
+Exit 0 the line is there or nothing is owed; 42 git couldn't compare with the
+base; 2 the line is missing.
 
 **The contract:** [test_contract.py](test_contract.py) holds every add-on to
 what they all promise alike. Run with nothing, or with one argument too many
