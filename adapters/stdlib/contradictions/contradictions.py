@@ -11,11 +11,14 @@ rewritten: which one is right is yours to say.
             mail/ana.txt:2  2026-06-19  Reminder: the wedding dinner is on 19/06/2026.
             plans.md:3      2026-06-12  The wedding dinner is on 2026-06-12.
 
-Two lines say the same thing when every word of the shorter one is in the
-longer one, and that is at least half the longer one's words: words here
-leaving out small words (the kernel's), the date or amount itself, units,
-months and weekdays. It takes two such words: one is a label ("Date:"), not
-a subject. A date is the kernel's own reading (`newest`), which never
+Two lines say the same thing when they share at least half the shorter
+one's words, and at least two: words here leaving out small words (the
+kernel's), the date or amount itself, units, months and weekdays. One shared
+word is a label ("Date:"), not a subject. Records of one kind are left alone
+and counted: files named alike but numbered differently (two invoices, two
+tax years), a subject said in the same words on three lines or more (a
+form's field, a table's rows), and two items one after the other in a list
+(the nearside tyre and the offside). A date is the kernel's own reading (`newest`), which never
 guesses a day from a month; a date that starts a line is when it was
 written, not what it says, and a line with two dates, or two different
 amounts of one unit, isn't read for them. Two lines written on different
@@ -70,8 +73,20 @@ NAMES = set(
     " november december jan feb mar apr jun jul aug sep sept oct nov dec monday"
     " tuesday wednesday thursday friday saturday sunday".split()
 )
+ITEM = re.compile(r"^\s*(?:[-*+]|\d+[.)])\s")  # a list's item: "- ", "* ", "2. "
 LEAD = re.compile(r"^\s*(?:[-*+>#]+\s*|\d+[.)]\s+|\[[ xX]\]\s*)*")
 MIN_WORDS = 2  # "Date: ..." or "Rent is $900": one word is a label, not a subject
+DIGITS = re.compile(r"\d+")
+#: a subject said in the same words on this many lines is a form's field
+#: ("Total due:" on every invoice) or a table's rows, not a claim made twice
+FIELD = 3
+
+
+def kin(a: str, b: str) -> bool:
+    """Two files named alike but numbered differently, INV-2026-012.txt and
+    INV-2026-015.txt, or one tax year's summary and the next: records of one
+    kind, each with its own date and amount, not two accounts of one thing."""
+    return a != b and DIGITS.sub("#", a) == DIGITS.sub("#", b)
 
 
 def day(d: str) -> str:
@@ -129,44 +144,60 @@ def passages(pile: list[dict]) -> list[dict]:
             if not said and not amt:
                 continue
             out.append({"path": c["path"], "line": c["line"] + i, "text": text.strip(),
+                        "item": bool(ITEM.match(text)),
                         "date": said, "amounts": amt, "words": ws, "on": stamp or on,
                         "stems": {kernel.stem(w) for w in ws}})  # fmt: skip
     return out
 
 
 def same(a: dict, b: dict) -> bool:
-    """Whether two lines say the same thing: every word of the shorter is in
-    the longer, and that is at least half the longer's (the kernel's HOLD)."""
+    """Whether two lines say the same thing: they share at least half the
+    shorter one's words (the kernel's HOLD), and at least two of them."""
     short, long_ = sorted((a["stems"], b["stems"]), key=len)
-    return (
-        len(short) >= MIN_WORDS
-        and short <= long_
-        and len(short) >= kernel.HOLD * len(long_)
-    )
+    both = len(short & long_)
+    return both >= MIN_WORDS and both >= kernel.HOLD * len(short)
 
 
-def disagreements(found: list[dict]) -> tuple[list[dict], int]:
+def disagreements(found: list[dict]) -> tuple[list[dict], int, int]:
     """Each pair that says the same thing and states a different date, or a
     different amount of one unit, and how many pairs saying the same thing
     were written on different days, left alone: a log's entries, or a plan
-    changed, which this can't tell from a mistake. Neither side is picked."""
+    changed, which this can't tell from a mistake; and how many were records
+    of one kind, left alone the same way: in files named alike (`kin`), a
+    subject said in the same words on `FIELD` lines or more, or two items one
+    after the other in a list (the nearside tyre and the offside). Neither
+    side is picked."""
     has: dict[str, set[int]] = {}
     for i, a in enumerate(found):
         for w in a["stems"]:
             has.setdefault(w, set()).add(i)
-    # the longer of a pair holds every word of the shorter: look only there
-    near = set()
-    for i, a in enumerate(found):
-        if a["stems"]:
-            both = set.intersection(*(has[w] for w in a["stems"]))
-            near |= {(min(i, j), max(i, j)) for j in both if j != i}
-    out, apart = [], 0
+    # a pair says the same thing only if it shares a word: look only there
+    near = {
+        (i, j) for i, a in enumerate(found) for w in a["stems"] for j in has[w] if j > i
+    }
+    said: dict[frozenset, int] = {}
+    for a in found:
+        said[frozenset(a["stems"])] = said.get(frozenset(a["stems"]), 0) + 1
+    out, apart, kinds = [], 0, 0
     for i, j in sorted(near):
         a, b = found[i], found[j]
         if not same(a, b):
             continue
         if a["on"] and b["on"] and a["on"] != b["on"]:
             apart += 1
+            continue
+        listed = (
+            a["path"] == b["path"]
+            and abs(a["line"] - b["line"]) == 1
+            and a["item"]
+            and b["item"]
+        )
+        if (
+            listed
+            or kin(a["path"], b["path"])
+            or FIELD <= max(said[frozenset(a["stems"])], said[frozenset(b["stems"])])
+        ):
+            kinds += 1
             continue
         about = min((a, b), key=lambda x: len(x["stems"]))["words"]
         if a["date"] and b["date"] and a["date"] != b["date"]:
@@ -178,7 +209,7 @@ def disagreements(found: list[dict]) -> tuple[list[dict], int]:
                 out.append(
                     {"kind": "AMOUNT", "about": about, "sides": [(a, wa), (b, wb)]}
                 )
-    return out, apart
+    return out, apart, kinds
 
 
 def show(x: dict) -> list[str]:
@@ -203,8 +234,10 @@ def main(argv: list[str]) -> int:
     if not found:
         print("Nothing in your folder states a date or an amount this can read.")
         return kernel.ESCALATE
-    pairs, apart = disagreements(found)
+    pairs, apart, kinds = disagreements(found)
     read = f"{len(found)} line{'s' * (len(found) != 1)} with a date or an amount read"
+    if kinds:
+        read += f", {kinds} pair{'s' * (kinds != 1)} in records of one kind left alone"
     if apart:
         read += (
             f", {apart} pair{'s' * (apart != 1)} written on different days left alone"

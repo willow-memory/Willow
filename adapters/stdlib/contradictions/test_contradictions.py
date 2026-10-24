@@ -182,19 +182,61 @@ def test_a_line_saying_two_of_a_thing_is_not_read_for_it(tmp_path):
     ]
 
 
-def test_the_shorter_must_be_half_the_longer(tmp_path):
+def test_sharing_half_the_shorter_lines_words_is_the_same_thing(tmp_path):
     got = contradictions(tmp_path, {
         "a.md": "Wedding dinner on 2026-06-12.\n",
         "b.md": "Wedding dinner, cake tasting with Ana on 2026-06-19.\n",
-        "c.md": "Wedding dinner party on 2026-06-20.\n",
+        "c.md": "Cake tasting with the caterer on 2026-06-21.\n",
     })  # fmt: skip
     assert got.returncode == 0
-    assert lines(got) == [
+    # a and c share no word; b shares two with each, half of either's
+    assert [x for x in lines(got) if not x.startswith(" ")] == [
         "DATE    wedding, dinner",
-        "        a.md:1  2026-06-12  Wedding dinner on 2026-06-12.",
-        "        c.md:1  2026-06-20  Wedding dinner party on 2026-06-20.",
-        "1 disagreement, 3 lines with a date or an amount read; neither side is picked.",
+        "DATE    cake, tasting, caterer",
+        "2 disagreements, 3 lines with a date or an amount read; neither side is picked.",
     ]
+
+
+def test_the_same_thing_in_other_words(tmp_path):
+    got = contradictions(tmp_path, {
+        "car/mot.txt": "Note to self: the MOT for the van is due on 2026-11-03.\n",
+        "garage.txt": "Rang the garage. Van MOT is due 2026-11-10, booked in.\n",
+    })  # fmt: skip
+    assert lines(got)[0] == "DATE    note, self, mot, van, due"
+    assert got.returncode == 0
+
+
+def test_files_named_alike_are_records_of_one_kind(tmp_path):
+    got = contradictions(tmp_path, {
+        "INV-0012.txt": "Total due for the boiler service: $120.\n",
+        "INV-0013.txt": "Total due for the boiler service: $95.\n",
+    })  # fmt: skip
+    assert got.returncode == 42
+    assert lines(got)[-1].endswith("1 pair in records of one kind left alone.")
+
+
+def test_a_subject_said_on_three_lines_is_a_forms_field(tmp_path):
+    files = {
+        f"{n}.md": f"Boiler service total due: ${len(n)}0.\n" for n in ("ann", "bo")
+    }
+    assert contradictions(tmp_path, files).returncode == 0  # two: a claim made twice
+    files["cyrus.md"] = "Boiler service total due: $70.\n"
+    got = contradictions(tmp_path, files)
+    assert got.returncode == 42
+    assert lines(got)[-1].endswith("3 pairs in records of one kind left alone.")
+
+
+def test_two_items_one_after_the_other_in_a_list_are_left_alone(tmp_path):
+    got = contradictions(tmp_path, {
+        "mot.md": "* Nearside front tyre worn to 1.8mm\n* Offside front tyre worn to 2.0mm\n",
+        "log.md": "Front tyre worn to 1.8mm\nFront tyre worn to 2.0mm\n",
+        "far.md": "* Rear tyre worn to 3 mm\n\nnot a list\n\n* Rear tyre worn to 4 mm\n",
+    })  # fmt: skip
+    heads = [x for x in lines(got) if not x.startswith(" ")]
+    # lines that aren't items are compared, and so are items apart
+    assert "AMOUNT  front, tyre, worn" in heads and "AMOUNT  rear, tyre, worn" in heads
+    assert "AMOUNT  nearside, front, tyre, worn" not in heads
+    assert "AMOUNT  front, tyre, worn, offside" not in heads
 
 
 def test_the_same_value_twice_is_no_disagreement(tmp_path):
@@ -209,10 +251,10 @@ def test_the_same_value_twice_is_no_disagreement(tmp_path):
 
 
 def test_a_short_name_is_a_word_of_its_own(tmp_path):
-    got = contradictions(tmp_path, {
-        "a.md": "Ed paid $40 for gas.\n", "b.md": "Jo paid $55 for gas.\n",
-    })  # fmt: skip
-    assert got.returncode == 42
+    got = contradictions(
+        tmp_path, {"a.md": "Ed: gas, $40.\n", "b.md": "Ed: gas, $55.\n"}
+    )
+    assert got.returncode == 0  # "ed" and "gas": two words, so a subject
 
 
 def test_one_word_is_a_label_not_a_subject(tmp_path):
@@ -233,9 +275,9 @@ def test_a_long_line_is_cut_at_a_hundred_characters(tmp_path):
 
 def test_the_same_folder_gives_the_same_bytes(tmp_path):
     files = {
-        "z.md": "Rent for the flat is $9.\n",
+        "z.md": "Rent for the flat is $9 now.\n",
         "a.md": "Rent for the flat is $8.\n",
-        "m.md": "Rent for the flat is $7.\n",
+        "m.md": "Rent on the flat is $7, they say.\n",
     }
     one = contradictions(tmp_path, files).stdout
     assert one == contradictions(tmp_path, files).stdout
