@@ -14,7 +14,7 @@ says how). The first was v0.1.0.
   tenancy), chosen by words, as a dated list of every line of the passages
   that hold them, each cited by file and line, written to one file to hand
   on. A line's own date and its file's are both shown when they differ;
-  undated lines are kept, after the dated ones; nothing is merged.
+  undated lines are kept, after the dated ones; nothing is merged. (#28)
 - `scan`, an add-on that indexes a folder once and then answers a list of
   questions in seconds with the kernel's own answers, narrowing only which
   passages `rank` looks at. It adds `--changed-from` (ask only what changed
