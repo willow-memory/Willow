@@ -24,6 +24,13 @@ NOW = ["--now", "2026-10-23T00:00:00Z"]
     [
         ("call (555) 010-0142 today", "phone"),
         ("call +442079460123 today", "phone"),
+        ("call 0113 555 0122 today", "phone"),  # national, from its trunk 0
+        ("mobile 07700 900123", "phone"),
+        ("freephone 0800 123 456", "phone"),  # ten digits
+        ("Northbank sort code 00-00-00", "account"),
+        ("pay into account 00012345", "account"),
+        ("Account No. 000123456789", "account"),
+        ("routing number 011000015", "account"),
         ("write to ana@example.org", "email"),
         ("card 4111 1111 1111 1111", "card"),
         ("card 4111111111111111", "card"),
@@ -49,11 +56,26 @@ def test_each_kind_is_withheld_and_counted(text, kind):
         "loopback 127.0.0.1 and 0.0.0.0",
         "version 1.2.3.4.5 of the tuner",
         "met at 7.30 on 12/10",
+        "shifts 0900 1200 1730",  # times, too few digits for a phone
+        "build 0113 555",  # too few digits for a phone
+        "part 011 555 012",  # nine digits: too few for a phone
+        "account 2026-10-22 statement",  # a date, not a bank number
+        "accounting for 123456 widgets",  # not the label
+        "account 1234",  # too short for a bank number
     ],
 )
 def test_lookalikes_are_left(text):
     found = {}
     assert pv.scrub(text, found) == text and found == {}
+
+
+def test_a_bank_number_keeps_its_label_so_the_line_still_reads():
+    found = {}
+    got = pv.scrub("Pay by bank transfer: sort code 00-00-00 account 00012345.", found)
+    assert got == (
+        "Pay by bank transfer: sort code [withheld: account] account [withheld: account]."
+    )
+    assert found == {"account": 2}
 
 
 def test_a_bite_serves_the_same_passages_with_the_data_withheld(tmp_path):

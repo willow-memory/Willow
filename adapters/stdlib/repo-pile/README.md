@@ -51,10 +51,10 @@ passages took a minute and a half.
 
 What `ask` and `quote` print goes through privacy's scrub unless `--raw`:
 other people's docs hold their email addresses, and sometimes their keys.
-It hides what privacy knows to look for, no more. On willow's three demo
-lives, built into a base as local repos, it hid nine email addresses and
-let through a UK phone number written with spaces and a bank account
-number.
+It hides what privacy knows to look for, no more: on willow's three demo
+lives, built into a base as local repos, it first let through a UK phone
+number written with spaces and a bank account number, which privacy now
+withholds; a street address or a name on its own still goes through.
 
 **The kernel's rank or BM25.** On these repositories the kernel's rank found
 the right passage when a question used the files' words, and said nothing

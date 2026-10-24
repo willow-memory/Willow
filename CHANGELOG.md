@@ -8,6 +8,16 @@ says how). The first was v0.1.0.
 
 ## Unreleased
 
+### Changed
+
+- `privacy` also withholds a national phone number written from its 0 in
+  groups (`0113 555 0122`, `07700 900123`: 10 or 11 digits), and a bank
+  number after its label (sort code, account number, acct, a/c, routing),
+  keeping the label so the line still reads. Its card already said bank
+  numbers; only IBANs were caught. Found when repo-pile was run on the demo
+  lives, where 64 phone numbers and 121 bank numbers got through; on 3,165
+  docs from 44 public repositories neither shape matched anything.
+
 ### Added
 
 - `repo-pile`: a list of public repositories made into a box you can ask.
