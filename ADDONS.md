@@ -18,7 +18,7 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`███░░░░░░░░░░░░░░░░░` **66 of 413 built** · 364 need no install · 49 need one
+`███░░░░░░░░░░░░░░░░░` **67 of 413 built** · 364 need no install · 49 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
@@ -31,7 +31,7 @@ or `writes-output`; its section), and any the card's author adds or changes.
 | Assistants | 11 | 17 | 22 | 6 |
 | Ways to use it | 10 | 27 | 33 | 4 |
 | Play | 4 | 36 | 35 | 5 |
-| For maintainers | 7 | 32 | 34 | 5 |
+| For maintainers | 8 | 31 | 34 | 5 |
 <!-- /willow:pools -->
 
 ### Newest
@@ -47,9 +47,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ### Add-on of the week
 
 <!-- willow:pick week=2026-W43 -->
-**[similar](adapters/stdlib/similar/)** — What's already on the add-on list near a new idea, by the kernel's own search.
+**[jetbrains](adapters/stdlib/jetbrains/)** — An external tool for IntelliJ, PyCharm and the rest, with answers as links to file and line.
 
-*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 66 built add-ons in name order.*
+*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 67 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -500,7 +500,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - **slow-tests** (idea) — Each test's time kept per run, with the slowest named and any that got slower flagged. *new* `no-install` `offline` `read-only` `maintainers`
 - **sourcehut** (idea) — What willow's repo needs from SourceHut: its host.json for patches by email and a builds.sr.ht manifest. Goes online: sr.ht, through hut, to read the author of a patch a security report points to. *new* `no-install` `online` `read-only` `maintainers`
 - **swift** (idea) — A Swift port of kernel.py for iPhone and Mac apps, held to the same vectors. *new* `no-install` `offline` `read-only` `maintainers`
-- **test-impact** (idea) — Only the tests a change can reach run first, from the import graph; the full suite still runs after. *new* `no-install` `offline` `read-only` `maintainers`
+- [**test-impact**](adapters/stdlib/test-impact/) — Only the tests a change can reach run first, from the import graph; the full suite still runs after. *new* `no-install` `offline` `read-only` `maintainers`
 - **test-shards** (idea) — The CI test jobs split by each test's past time, so every job finishes about together. *new* `no-install` `offline` `read-only` `maintainers`
 - **welcome** (idea) — One plain thank-you on a first-time contributor's first pull request, once per person, and only where it's turned on. Goes online: the forge, through the workflow's token, to post the thank-you. *bot* `no-install` `online` `read-only` `maintainers`
 <!-- /willow:list -->
