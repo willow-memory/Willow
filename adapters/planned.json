@@ -3159,16 +3159,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "snapshot",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "A web page or data file fetched once into the box, kept under its hash with its licence, so later answers cite the copy.",
-  "source": "bot",
-  "writes": "record",
-  "network": "the address you give, fetched once",
-  "tags": "no-install, online, records, file-reader"
- },
- {
   "name": "socratic",
   "kind": "stdlib",
   "section": "Ways to use it",
@@ -3658,16 +3648,6 @@
   "tags": "no-install, offline, writes-output, search"
  },
  {
-  "name": "wayback",
-  "kind": "stdlib",
-  "section": "Trust and proof",
-  "line": "Each web snapshot paired with the Wayback Machine's nearest copy, so anyone can see what the page said that day.",
-  "source": "new",
-  "writes": "record",
-  "network": "archive.org, to find the nearest archived copy",
-  "tags": "no-install, online, records, trust"
- },
- {
   "name": "weather-bet",
   "kind": "stdlib",
   "section": "Play",
@@ -3676,16 +3656,6 @@
   "writes": "record",
   "network": "api.open-meteo.com, to read the forecast and the outcome",
   "tags": "no-install, online, records, play"
- },
- {
-  "name": "web-pages",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Saved web pages, .html and .mhtml, as their readable text, with the address they came from.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
  },
  {
   "name": "welcome",

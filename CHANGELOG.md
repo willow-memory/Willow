@@ -15,6 +15,35 @@ says how). The first was v0.1.0.
   hook-replay, hook-shell and others), the store behind willow-bot's pile
   (pile-rank, pile-serve, pile-gold, fair-merge), and the tools LLMs use
   (instruction-files, llms-txt, mcp-by-hash, schema-check, cassettes). (#19)
+- `web-pages`, a reader for saved web pages, .html and .mhtml: each page's
+  paragraphs, headings and list items as paragraphs, under the address it
+  came from, or `address: not in the file`. (#18)
+- `policy-watch`, an add-on that fetches a terms or policy page each time
+  it runs, through snapshot, and says what changed since the last copy,
+  sentence by sentence, through clauses. (#18)
+- `claim-check`, an add-on that checks a claim against your sources part
+  by part: the passages holding every part, those holding the most short of
+  that with what they lack, and the parts no file names. (#18)
+- `misquote`, an add-on for a quote that is almost in your files: the
+  passage holding most of its words in order, and the words it drops, adds
+  or changes; quote-check's "not there" made specific. (#18)
+- `snapshot`, an add-on that fetches a page or file once into a folder, as
+  it came, with its address, the time and its SHA-256 on a hidden line the
+  kernel never serves; what couldn't be fetched gets its line too, and
+  `check` re-hashes offline. `wayback` finds the Wayback Machine's copy of a
+  page in a window of days, saves it as a snapshot and compares it byte for
+  byte, saying "no capture" and "couldn't reach it" as themselves. (#16)
+- `clauses`, a reader that writes a policy, contract or web page as one
+  sentence a passage (wrapped PDF text joined back, page headings kept), so
+  an answer lands on the clause; `diff` lists two versions' reworded, added
+  and removed sentences. (#16)
+- `demo/google-privacy-2026-10-16`, a real policy change: Google's privacy
+  policy before and after 16 October 2026, asked in the reporters' words,
+  frozen by hash before it ran, with blind rewordings, null questions and an
+  absence test, recorded on a kernel record. 11 of 12 pass rules pass. The
+  sources are fetched once and kept by hash, not in the repo; CI checks only
+  that the frozen files still match. Three ideas from it go on the list:
+  `claim-check`, `misquote` and `policy-watch`. (#16)
 - `gaps`: where a log you keep stops. The days a folder of daily notes, a
   reading log or a diary skipped are said as gaps: a spacing more than three
   times the log's typical one. A log with too few dates is said, an undated
@@ -207,6 +236,13 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- `live` has a `chrome` check: a page saved by headless Chrome, over its
+  DevTools pipe with no library, as .mhtml and as drawn, read by web-pages.
+  Its first run found web-pages garbling Chrome's .mhtml, whose page part
+  names no charset; fixed, with a test of Chrome's exact form. (#18)
+- `test-impact` places a demo's test reached by import by its folder, as it
+  places a demo's files, not php2shell's alone; the study's CI row is
+  `demo:google-privacy-2026-10-16`, by that rule. (#16)
 - CI runs once per change: on pushes to main only, so a pull request no
   longer runs twice (once for its branch's push, once for the pull
   request), and a newer commit on a pull request cancels the run it

@@ -1,0 +1,123 @@
+{
+ "about": "The clauses a hit lands on, as the clauses add-on writes them from each version's PDF, and what makes a passage support a claim. Written on 2026-10-24 after reading both versions and their clause diff, before any question was asked; held by FROZEN.json.",
+ "exception": {
+  "side": "new",
+  "text": "We don’t show you personalized ads based on your content from Drive, Gmail, or Google Photos, unless you choose to make data from these services available to other Google services that support personalized ads."
+ },
+ "default": {
+  "side": "old",
+  "text": "We don’t show you personalized ads based on your content from Drive, Gmail, or Photos."
+ },
+ "opt-in": {
+  "side": "new",
+  "texts": [
+   "You may choose to allow certain Google services, including services like Search or Gemini Apps, to access data from other Google services you use, such as Google Photos and Workspace apps like Gmail and Drive, in order to provide you with a more personalized experience, subject to the policies and settings of the accessing service.",
+   "For example, Search may process some of the data that you allow Search to access to personalize content, including ads.",
+   "If you choose to allow certain services to process data from other services, including for features such as Personal Intelligence, the same data may be used to personalize your experience.",
+   "For example, if you ask Search a question about a recent hotel booking, Search may use information about booking details from an email to help suggest things to do near your hotel."
+  ]
+ },
+ "analyze": {
+  "side": "both",
+  "text": "We use automated systems that analyze your content to provide you with things like tailored search results, personalized ads, or other features tailored to how you use our services."
+ },
+ "content-includes-email": {
+  "side": "both",
+  "text": "This includes things like email you write and receive, photos and videos you save, docs and spreadsheets you create, and comments you make on YouTube videos."
+ },
+ "probe": "We use automated systems that analyze your content for personalized ads",
+ "support": {
+  "about": "A served passage supports a claim when, by the kernel's own `holds` (a word or its plain form), it holds at least one word of each group the claim needs. A negation in the passage is not read; a passage that only denies the claim and holds every group would count as support, which makes the rule stricter, not looser.",
+  "groups": {
+   "read": [
+    "scan",
+    "scans",
+    "scanning",
+    "read",
+    "reads",
+    "reading",
+    "analyze",
+    "analyzes",
+    "analyse",
+    "examine",
+    "examines",
+    "process",
+    "processes"
+   ],
+   "mail": [
+    "gmail",
+    "email",
+    "emails",
+    "inbox",
+    "inboxes",
+    "message",
+    "messages",
+    "mail",
+    "mailbox"
+   ],
+   "ads": [
+    "ad",
+    "ads",
+    "advertising",
+    "advertisement",
+    "advertisements"
+   ],
+   "default": [
+    "default",
+    "automatically"
+   ]
+  },
+  "needs": {
+   "study-plain": [
+    "read",
+    "mail",
+    "ads"
+   ],
+   "sh-table": [
+    "read",
+    "mail",
+    "ads"
+   ],
+   "ti-faq": [
+    "read",
+    "mail",
+    "ads"
+   ],
+   "dx-scanning": [
+    "read",
+    "mail",
+    "ads"
+   ],
+   "sh-skim": [
+    "read",
+    "mail",
+    "ads"
+   ],
+   "ti-inboxes": [
+    "read",
+    "mail",
+    "ads"
+   ],
+   "sh-default": [
+    "mail",
+    "ads",
+    "default"
+   ],
+   "sh-faq": [
+    "mail",
+    "ads",
+    "default"
+   ]
+  },
+  "absent": {
+   "study-plain": "scans",
+   "sh-table": "scans",
+   "ti-faq": "reading",
+   "dx-scanning": "scanning",
+   "sh-skim": "reads",
+   "ti-inboxes": "reads",
+   "sh-default": "default",
+   "sh-faq": "default"
+  }
+ }
+}

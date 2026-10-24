@@ -1,0 +1,35 @@
+# Thirty null questions about the policy that have nothing to do with ads,
+# Gmail, Drive, Photos or personalisation, written by a blind agent from a
+# one-paragraph brief, without seeing the policy, the reporting or any result.
+# Its own note on its sources: this message only; no tools used.
+# name<TAB>question
+null-01	How long does the company keep my data after I collect it or it is collected about me?
+null-02	If I delete my account, how long until my information is fully erased from all systems, including backups?
+null-03	Can I download a copy of all the data the company holds about me, and in what format?
+null-04	Does the company store a history of where I have been, and how do I turn that off?
+null-05	Which cookies does the company use purely for security or fraud prevention, and can I block them?
+null-06	How does the company handle accounts created for children under 13?
+null-07	Can a parent see or delete the data collected from their child's account?
+null-08	Under what circumstances will the company hand my information over to police or government agencies?
+null-09	Does the company tell me when a government has requested my data?
+null-10	Is my data transferred to servers in other countries, and what legal protections apply when it is?
+null-11	What security measures does the company use to protect my data from hackers?
+null-12	Will I be notified if there is a data breach involving my information?
+null-13	What happens to my data if the company is bought by or merges with another company?
+null-14	How do I contact the company's data protection officer?
+null-15	What information is collected when I use the company's services without signing in?
+null-16	Are recordings of my voice stored when I use voice commands, and can I delete them?
+null-17	What information about my phone or computer, such as hardware model and operating system, does the company collect?
+null-18	Does the company collect my IP address, and what is it used for?
+null-19	How is my credit card or other payment information stored and protected?
+null-20	Which legal entity is the data controller responsible for my information?
+null-21	How will I be informed if the privacy policy changes?
+null-22	Can I keep using the services if I disagree with an update to the privacy policy?
+null-23	Does the company share my information with outside contractors who process data on its behalf?
+null-24	What rights do I have under European data protection law, such as GDPR?
+null-25	What rights do California residents have regarding their personal information?
+null-26	How can I file a complaint with a data protection regulator about the company?
+null-27	Does the company collect information from sensors like the accelerometer or Bluetooth on my device?
+null-28	Is my data anonymized or aggregated before it is used for research or statistics?
+null-29	What happens to my account and data if I die or stop using it for a long time?
+null-30	Does the company use my data to detect spam, abuse, or fraudulent activity on its services?
