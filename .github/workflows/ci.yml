@@ -32,7 +32,9 @@ jobs:
   changelog:
     # A pull request that changes more than the docs adds a line under
     # CHANGELOG.md's Unreleased ending with its number (CONTRIBUTING.md).
-    if: github.event_name == 'pull_request'
+    # Dependabot's can't write one, and its updates aren't listed: it alone
+    # is skipped, which adapters/stdlib/github/github.py check holds.
+    if: github.event_name == 'pull_request' && github.event.pull_request.user.login != 'dependabot[bot]'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -99,7 +101,7 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: "22"
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/setup-dotnet@v6
         with:
           dotnet-version: "8.0.x"
       - run: python adapters/stdlib/ci/ci.py run ports --box ${{ runner.temp }}/ci-record
