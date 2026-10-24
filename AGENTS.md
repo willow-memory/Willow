@@ -76,6 +76,52 @@ Each of these has been missed at least once, and each is a check that fails.
     placeholder with angle brackets, as the pdf card writes
     `MIRROR/<same path>.txt`.
 
+## The guard
+
+An add-on's tests run under `adapters/stdlib/ci/guard/sitecustomize.py`,
+which holds every write the add-on's own code makes to its card's `writes`,
+and raises the moment it breaks one:
+
+- **`to` means under the path in `--to` on the command line.** It reads
+  `sys.argv`, so a test that calls `main()` in-process passes `--to` there
+  too, or the write is judged as outside it.
+- **Making a missing folder is a write.** An add-on that creates the parent
+  of its `--to` file has written outside `to`; refuse a missing folder
+  instead.
+- **A box is written only through the kernel**, and any folder holding a
+  kernel.json counts as one.
+- **Scratch made with `tempfile` is the add-on's own**; a folder it names
+  itself, even under /tmp, is not.
+- **Never the key.** No add-on reads it, not even to copy it.
+
+## An idea, not yet built
+
+- **Ask the list first:**
+  `python adapters/stdlib/similar/similar.py near "your idea in a sentence"`.
+  It asks with the kernel's own rank, so an entry must hold half of your
+  sentence's content words: a long, careful line can miss an idea that is
+  already there. Ask again with three or four of its key words.
+- **`adapters/planned.json` is sorted by name and written as
+  `json.dumps(entries, indent=1, ensure_ascii=False)` plus a newline.**
+  Rewritten any other way, every line of it changes.
+
+## The kernel's rank is for answering
+
+`kernel.rank` serves a passage only when it holds half the question's
+content words. That is the promise that an answer the folder doesn't have is
+never invented, and the eight beats in `test_kernel.py` test it.
+
+- **Don't loosen it for recall.** A third of the words, or any two, finds a
+  few more on code, but answers questions about something else several
+  times as often, and breaks the beat where a folder holding only the
+  question says so.
+- **Pointing at where to look** is another job: `scan --rank bm25`, which
+  always serves its top passages.
+- **Comparing two texts** is another job again: count against the shorter
+  one, so a long line doesn't hide a short one it contains.
+- **Use the kernel's public names.** A page's text is `kernel.html_text`,
+  not `_TAG` and `_lines_kept`.
+
 ## A new CI row
 
 A gate added to `gates()` in `adapters/stdlib/ci/ci.py` (a demo, say) is
@@ -116,6 +162,9 @@ A result tested against what anyone can rerun, as in
 
 ## Pull requests
 
+- **Several sessions can share a branch.** Fetch before you push, merge
+  what's new, and never force-push.
+- **Merging makes a merge commit**; squash isn't allowed on this repo.
 - **Open it, then write its number** in CHANGELOG.md. Another pull request
   may take the number you guessed.
 - **Work that needs another unmerged branch stacks on it.** An add-on whose
