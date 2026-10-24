@@ -242,6 +242,11 @@ def restack(branch: str, onto: str) -> tuple[int, list[str]]:
         raise Stop(f"git doesn't know {branch if not old else onto}")
     if git("merge-base", "--is-ancestor", base, old, ok=(0, 1)).returncode == 0:
         return kernel.ESCALATE, [f"{branch}: already on top of {onto}"]
+    there = checkouts().get(branch)
+    if there is not None and git("status", "--porcelain", cwd=there).stdout.strip():
+        raise Stop(
+            f"{there} has it checked out, with changes of yours; commit or put them away first"
+        )
     scratch = Path(tempfile.mkdtemp(prefix="restack-"))
     work = scratch / "work"
     git("worktree", "add", "--detach", str(work), old)
@@ -278,10 +283,7 @@ def restack(branch: str, onto: str) -> tuple[int, list[str]]:
     finally:
         git("worktree", "remove", "--force", str(work), ok=(0, 128))
         shutil.rmtree(scratch, ignore_errors=True)
-    there = checkouts().get(branch)
-    if there is not None:
-        if git("status", "--porcelain", cwd=there).stdout.strip():
-            raise Stop(f"rebased to {new[:8]}, not moved: {there} has changes of yours")
+    if there is not None:  # clean when asked; --keep refuses if that changed since
         git("reset", "-q", "--keep", new, cwd=there)
     else:
         git("branch", "-f", branch, new)

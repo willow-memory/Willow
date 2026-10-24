@@ -142,6 +142,18 @@ def clone(tmp_path):
     return repo
 
 
+def docs_pass(repo: Path) -> bool:
+    """Whether the copy's own test_docs.py passes at main. It doesn't in the
+    copy test_strip.py makes, its FILES.md naming what was stripped: there
+    nothing can move, and the tests hold restack to saying so."""
+    work = repo.parent / "main-docs"
+    git(repo, "worktree", "add", "-q", "--detach", str(work), "main")
+    got = subprocess.run([sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider",
+                          "test_docs.py"], cwd=work, capture_output=True)  # fmt: skip
+    git(repo, "worktree", "remove", "--force", str(work))
+    return got.returncode == 0
+
+
 def run(repo: Path, *argv: str) -> subprocess.CompletedProcess:
     script = repo / "adapters" / "stdlib" / "restack" / "restack.py"
     return subprocess.run([sys.executable, str(script), *argv], cwd=repo, env=ENV,
@@ -153,6 +165,10 @@ def test_a_branch_is_put_on_top_with_its_changelog_settled_and_nothing_else_touc
 ):
     old = git(clone, "rev-parse", "work")
     got = run(clone, "--onto", "main", "work")
+    if not docs_pass(clone):
+        assert got.returncode == 2 and "test_docs.py fails" in got.stdout, got.stdout
+        assert git(clone, "rev-parse", "work") == old, "nothing moves unchecked"
+        return
     assert got.returncode == 0, got.stdout + got.stderr
     assert "settled CHANGELOG.md" in got.stdout
     assert f"git push --force-with-lease=work:{old[:12]} origin work" in got.stdout
@@ -189,10 +205,13 @@ def test_a_checkout_with_changes_of_yours_is_never_moved(clone, tmp_path):
     (there / "mine.txt").write_text("not committed\n")
     old = git(clone, "rev-parse", "work")
     got = run(clone, "--onto", "main", "work")
-    assert got.returncode == 2 and "has changes of yours" in got.stdout
+    assert got.returncode == 2 and "with changes of yours" in got.stdout
     assert git(clone, "rev-parse", "work") == old
     (there / "mine.txt").unlink()
     moved = run(clone, "--onto", "main", "work")
+    if not docs_pass(clone):
+        assert moved.returncode == 2 and git(there, "rev-parse", "HEAD") == old
+        return
     assert moved.returncode == 0, moved.stdout
     assert git(there, "rev-parse", "HEAD") == git(clone, "rev-parse", "work") != old
 
