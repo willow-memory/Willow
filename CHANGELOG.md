@@ -10,7 +10,7 @@ says how). The first was v0.1.0.
 
 ### Added
 
-- Seventy-nine ideas on the add-on list, nothing built: readers for what
+- Ninety-five ideas on the add-on list, nothing built: readers for what
   people use now (Pocket, Instapaper, wallabag, Karakeep, Joplin, jrnl,
   Journiv, WriteFreely, ArchiveBox, Slack, Discord, Signal, Mastodon,
   Bluesky, Google Takeout, subtitles, AI agents' session files) and tools
@@ -26,7 +26,11 @@ says how). The first was v0.1.0.
   forges: readers for GitHub, GitLab and Forgejo exports, gh's JSON, CI
   logs and SARIF, codeowners and advisories, willow's repo on gitlab,
   forgejo and sourcehut, mirror, git-notes, signed-commits, issue-answer,
-  pr-context and quote-review. (#13)
+  pr-context and quote-review; and around npm, PyPI and crates.io:
+  readers for lockfiles, SBOMs and installed packages' own docs,
+  upgrade-notes, outdated, licenses, provenance, package-contents,
+  install-scripts, typosquat, pins, and the kernel and its ports on pypi,
+  npm, nuget, maven and crates. (#13)
 - No terminal, no English required: `browse`, your folder in your web
   browser on 127.0.0.1 (ask, read each answer at its file and line, approve
   a suggestion with a click through the kernel's own `seal`; a secret per

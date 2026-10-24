@@ -181,6 +181,16 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
+  "name": "crates",
+  "kind": "stdlib",
+  "section": "For maintainers",
+  "line": "A Rust port of kernel.py on crates.io, held to the same vectors as the other four.",
+  "source": "new",
+  "writes": "to",
+  "network": "crates.io, to publish a release a maintainer tags",
+  "tags": "no-install, online, writes-output, maintainers"
+ },
+ {
   "name": "dice",
   "kind": "stdlib",
   "section": "Play",
@@ -415,6 +425,16 @@
   "tags": "no-install, offline, writes-output, trust"
  },
  {
+  "name": "install-scripts",
+  "kind": "stdlib",
+  "section": "Privacy and safety",
+  "line": "The install scripts the packages in node_modules would run (preinstall, install, postinstall), each cited by file and line.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, privacy"
+ },
+ {
   "name": "instapaper",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -525,6 +545,16 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
+  "name": "licenses",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "The licence of every installed dependency, read from its own metadata on this machine: which are copyleft, and which file says so.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, trust"
+ },
+ {
   "name": "life",
   "kind": "stdlib",
   "section": "Play",
@@ -567,6 +597,16 @@
   "tags": "needs-install, this-machine, records, assistant"
  },
  {
+  "name": "lockfiles",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Lockfiles as passages (package-lock.json, pnpm-lock.yaml, poetry.lock, uv.lock, Cargo.lock, go.sum): which version of each dependency, and which lockfile says so.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
   "name": "mastodon",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -575,6 +615,16 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "maven",
+  "kind": "stdlib",
+  "section": "For maintainers",
+  "line": "The Java port on Maven Central, built from this repo and checked against the vectors.",
+  "source": "new",
+  "writes": "to",
+  "network": "Maven Central, to publish a release a maintainer tags",
+  "tags": "no-install, online, writes-output, maintainers"
  },
  {
   "name": "meaning",
@@ -649,6 +699,26 @@
   "tags": "no-install, offline, writes-output, trust"
  },
  {
+  "name": "npm",
+  "kind": "stdlib",
+  "section": "For maintainers",
+  "line": "The TypeScript port on npm, built from this repo, checked against the vectors, and published with provenance; npx runs it.",
+  "source": "new",
+  "writes": "to",
+  "network": "registry.npmjs.org, to publish a release a maintainer tags",
+  "tags": "no-install, online, writes-output, maintainers"
+ },
+ {
+  "name": "nuget",
+  "kind": "stdlib",
+  "section": "For maintainers",
+  "line": "The C# port on NuGet, built from this repo and checked against the vectors.",
+  "source": "new",
+  "writes": "to",
+  "network": "nuget.org, to publish a release a maintainer tags",
+  "tags": "no-install, online, writes-output, maintainers"
+ },
+ {
   "name": "oakenscroll",
   "kind": "stdlib",
   "section": "Keeping track",
@@ -668,6 +738,36 @@
   "writes": "to",
   "network": "none",
   "tags": "needs-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "outdated",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "How old each locked dependency is, and which are yanked, deprecated or two years without a release, from a registry index you downloaded.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, tracking"
+ },
+ {
+  "name": "package-contents",
+  "kind": "stdlib",
+  "section": "Privacy and safety",
+  "line": "What's inside a wheel, sdist, npm tarball or .crate before you install it: every file, and any code it runs on install.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, privacy"
+ },
+ {
+  "name": "package-docs",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "The READMEs and docs inside packages you've already installed (site-packages, node_modules, Cargo's registry cache), so you can ask your dependencies offline.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
  },
  {
   "name": "pets",
@@ -702,6 +802,16 @@
   "tags": "needs-install, offline, writes-output, file-reader"
  },
  {
+  "name": "pins",
+  "kind": "stdlib",
+  "section": "For maintainers",
+  "line": "Version ranges in package.json, pyproject.toml or Cargo.toml that no lockfile holds.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, maintainers"
+ },
+ {
   "name": "pocket",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -730,6 +840,27 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, interface"
+ },
+ {
+  "name": "provenance",
+  "kind": "deps",
+  "section": "Trust and proof",
+  "line": "Checks a package's Sigstore provenance or PyPI attestation names the repo and commit it claims, before you trust it.",
+  "source": "new",
+  "needs": "sigstore; Apache-2.0",
+  "writes": "nothing",
+  "network": "the registry and Sigstore's log, to fetch the attestation",
+  "tags": "needs-install, online, read-only, trust"
+ },
+ {
+  "name": "pypi",
+  "kind": "stdlib",
+  "section": "For maintainers",
+  "line": "kernel.py on PyPI as a package with no dependencies, built from this repo, checked against the vectors, and attested on upload; uvx and pipx run it.",
+  "source": "new",
+  "writes": "to",
+  "network": "upload.pypi.org, to publish a release a maintainer tags",
+  "tags": "no-install, online, writes-output, maintainers"
  },
  {
   "name": "quiet-corner",
@@ -819,6 +950,16 @@
   "kind": "stdlib",
   "section": "Reading more kinds of files",
   "line": "SARIF reports from code scanners such as CodeQL and Semgrep: each finding as a passage with its rule, file and line.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "sbom",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "SBOMs in SPDX or CycloneDX JSON: each component, its version and licence, as passages.",
   "source": "new",
   "writes": "to",
   "network": "none",
@@ -1070,6 +1211,26 @@
   "writes": "nothing",
   "network": "none",
   "tags": "needs-install, offline, read-only, search"
+ },
+ {
+  "name": "typosquat",
+  "kind": "stdlib",
+  "section": "Privacy and safety",
+  "line": "Dependency names a letter off from a popular one (reqeusts, lodahs), checked against a list of top packages you downloaded.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, privacy"
+ },
+ {
+  "name": "upgrade-notes",
+  "kind": "stdlib",
+  "section": "Finding things",
+  "line": "Before an upgrade: the changelog lines between the version you lock and the one you'd move to, from the package's own files.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "the registry (PyPI, npm or crates.io), to fetch the newer version's changelog",
+  "tags": "no-install, online, read-only, search"
  },
  {
   "name": "voice",

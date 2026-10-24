@@ -18,20 +18,20 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`██████░░░░░░░░░░░░░░` **49 of 160 built** · 135 need no install · 25 need one
+`██████░░░░░░░░░░░░░░` **49 of 176 built** · 150 need no install · 26 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
-| Reading more kinds of files | 7 | 45 | 45 | 7 |
-| Finding things | 4 | 3 | 5 | 2 |
+| Reading more kinds of files | 7 | 48 | 48 | 7 |
+| Finding things | 4 | 4 | 6 | 2 |
 | Your own words | 5 | 5 | 8 | 2 |
-| Keeping track | 5 | 16 | 21 | 0 |
-| Trust and proof | 2 | 17 | 11 | 8 |
-| Privacy and safety | 1 | 3 | 4 | 0 |
+| Keeping track | 5 | 17 | 22 | 0 |
+| Trust and proof | 2 | 19 | 12 | 9 |
+| Privacy and safety | 1 | 6 | 7 | 0 |
 | Assistants | 11 | 7 | 15 | 3 |
 | Ways to use it | 8 | 7 | 14 | 1 |
 | Play | 0 | 3 | 2 | 1 |
-| For maintainers | 6 | 5 | 10 | 1 |
+| For maintainers | 6 | 11 | 16 | 1 |
 <!-- /willow:pools -->
 
 ### Newest
@@ -89,17 +89,20 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - **lessons** (idea) — Lesson plans from the Emerging Rule community library, by grade and subject, as passages a teacher can ask. *new* `no-install` `offline` `writes-output` `file-reader`
 - **letterboxd** (idea) — Letterboxd's export: the films you've watched, your ratings and reviews, as dated lines. *new* `no-install` `offline` `writes-output` `file-reader`
 - **listening** (idea) — Spotify's data download: what you listened to, by day, so you can ask what was on that summer. *new* `no-install` `offline` `writes-output` `file-reader`
+- **lockfiles** (idea) — Lockfiles as passages (package-lock.json, pnpm-lock.yaml, poetry.lock, uv.lock, Cargo.lock, go.sum): which version of each dependency, and which lockfile says so. *new* `no-install` `offline` `writes-output` `file-reader`
 - [**mail**](adapters/stdlib/mail/) — .eml and .mbox files, with sender, date and subject kept. *new* `no-install` `offline` `writes-output` `file-reader`
 - **mastodon** (idea) — A Mastodon or Pixelfed account archive's outbox.json: your posts as dated lines. *new* `no-install` `offline` `writes-output` `file-reader`
 - [**notes**](adapters/stdlib/notes/) — Obsidian and Logseq vaults, with [[links]] and #tags kept and backlinks listed. *new* `no-install` `offline` `writes-output` `file-reader`
 - **ocr** (idea) — Text out of photos of letters and scanned PDFs. Needs pytesseract and the tesseract program; Apache-2.0. *new* `needs-install` `offline` `writes-output` `file-reader`
 - [**office**](adapters/stdlib/office/) — .docx, .odt, .pptx, .xlsx and .ods, which are all zipped XML. *new* `no-install` `offline` `writes-output` `file-reader`
+- **package-docs** (idea) — The READMEs and docs inside packages you've already installed (site-packages, node_modules, Cargo's registry cache), so you can ask your dependencies offline. *new* `no-install` `offline` `writes-output` `file-reader`
 - [**pdf**](adapters/deps/pdf/) — Text out of PDFs. Needs pypdf; BSD-3-Clause. *new* `needs-install` `offline` `writes-output` `file-reader`
 - **photos** (idea) — When and where each photo was taken, as dated lines. Needs Pillow; MIT-CMU. *new* `needs-install` `offline` `writes-output` `file-reader`
 - **pocket** (idea) — Pocket's export, the HTML and CSV in its zip, as one dated line per saved article, now that Pocket is gone. *new* `no-install` `offline` `writes-output` `file-reader`
 - **quiet-corner** (idea) — A Quiet Corner backup file: a teacher's classroom observations as dated passages, for that teacher's questions alone. *new* `no-install` `offline` `writes-output` `file-reader`
 - **recipes** (idea) — Recipes from saved web pages and recipe-app exports, as plain text: what can I cook with leeks? *new* `no-install` `offline` `writes-output` `file-reader`
 - **sarif** (idea) — SARIF reports from code scanners such as CodeQL and Semgrep: each finding as a passage with its rule, file and line. *new* `no-install` `offline` `writes-output` `file-reader`
+- **sbom** (idea) — SBOMs in SPDX or CycloneDX JSON: each component, its version and licence, as passages. *new* `no-install` `offline` `writes-output` `file-reader`
 - **sheets** (idea) — Spreadsheets with formulas and formatting kept, beyond what the office add-on reads. Needs openpyxl; MIT. *new* `needs-install` `offline` `writes-output` `file-reader`
 - **sigmap** (idea) — SigMap's signature map of a codebase as plain text: each function's signature with its file and line, for questions about the code. *new* `no-install` `offline` `writes-output` `file-reader`
 - **signal** (idea) — A Signal backup, decrypted with its passphrase, as one dated line per message. Needs cryptography; Apache-2.0 or BSD. *new* `needs-install` `offline` `writes-output` `file-reader`
@@ -121,6 +124,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - [**quote-check**](adapters/stdlib/quote-check/) — Is this exact quote in my files, and where? For writers, journalists and students. *box* `no-install` `offline` `read-only` `search`
 - [**surprise**](adapters/stdlib/surprise/) — One passage from your folder at random, seeded so it can be replayed. *bot* `no-install` `offline` `records` `search`
 - **typos** (idea) — Forgives misspellings in questions. Needs rapidfuzz; MIT. *new* `needs-install` `offline` `read-only` `search`
+- **upgrade-notes** (idea) — Before an upgrade: the changelog lines between the version you lock and the one you'd move to, from the package's own files. Goes online: the registry (PyPI, npm or crates.io), to fetch the newer version's changelog. *new* `no-install` `online` `read-only` `search`
 
 ### Your own words
 
@@ -151,6 +155,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - **invoices** (idea) — For freelancers: invoices and payments matched by the id pattern you give, never guessed. *new* `no-install` `offline` `read-only` `tracking`
 - **milestones** (idea) — Your child's firsts, words and heights, from your notes, by age. *new* `no-install` `offline` `read-only` `tracking`
 - **oakenscroll** (idea) — Oakenscroll's Office calibration ledger: what you believed, how hard, and how it resolved, as dated passages. *new* `no-install` `offline` `writes-output` `tracking`
+- **outdated** (idea) — How old each locked dependency is, and which are yanked, deprecated or two years without a release, from a registry index you downloaded. *new* `no-install` `offline` `read-only` `tracking`
 - **pets** (idea) — Each pet's vet visits, vaccines and medicines, from your records: what's due next. *new* `no-install` `offline` `read-only` `tracking`
 - [**readings**](adapters/stdlib/readings/) — Numbers over time and a date gone by, beside an answer. *box* `no-install` `offline` `records` `tracking`
 - **school** (idea) — School letters and emails for parents: trips, forms due, term dates, and what to bring. *new* `no-install` `offline` `read-only` `tracking`
@@ -171,10 +176,12 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - **history** (idea) — Your record in plain sentences: what was asked when, what found nothing, what you approved; places and counts, never the words. *new* `no-install` `offline` `read-only` `trust` `everyday`
 - **in-case** (idea) — A letter for the people you trust, if something happens to you: where things are and who to call, from your files, sealed by you. *new* `no-install` `offline` `writes-output` `trust`
 - **jeles** (idea) — Your approved answers as Jeles nuggets, with question, answer, sources and who sealed it, and Jeles' own verified nuggets read back as passages. *new* `no-install` `offline` `writes-output` `trust`
+- **licenses** (idea) — The licence of every installed dependency, read from its own metadata on this machine: which are copyleft, and which file says so. *new* `no-install` `offline` `read-only` `trust`
 - **line-origin** (idea) — Which agent session wrote this line of code: git blame to the commit, then the transcript turn that made it. Needs the git program; GPL, called not linked. *new* `needs-install` `offline` `read-only` `trust`
 - **mirror** (idea) — Checks each mirror of a repo on another forge holds the same commits as the original, so losing a host loses nothing. Needs the git program; GPL, called not linked. Goes online: each mirror's git URL, to read its refs. *new* `needs-install` `online` `read-only` `trust`
 - **nestor** (idea) — Answers Nestor records a person has checked, read from a copy of its SQLite store, each citing who checked it and when. *new* `no-install` `offline` `writes-output` `trust`
 - **pgp** (idea) — Signs exports and reports with your PGP key, verifiable anywhere. Needs the gpg program and python-gnupg; BSD. *new* `needs-install` `offline` `writes-output` `trust`
+- **provenance** (idea) — Checks a package's Sigstore provenance or PyPI attestation names the repo and commit it claims, before you trust it. Needs sigstore; Apache-2.0. Goes online: the registry and Sigstore's log, to fetch the attestation. *new* `needs-install` `online` `read-only` `trust`
 - **quote-review** (idea) — A review comment that quotes the repo, checked: does the quoted line still say that at the pull request's head? Goes online: the forge, through the workflow's token, to read the review comments. *new* `no-install` `online` `read-only` `trust`
 - **redential** (idea) — The bundle redential-cli's scan makes, written to the record before you submit it, so what left your machine can be checked later. Needs the redential program, run through npx; Apache-2.0. *new* `needs-install` `offline` `records` `trust`
 - **report** (idea) — A self-checking bundle: the record, the approved answers, and a script that re-verifies them on any machine. *box* `no-install` `offline` `writes-output` `trust`
@@ -186,9 +193,12 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 ### Privacy and safety
 
 - **advisories** (idea) — Security advisories from a downloaded OSV or GitHub advisory database, matched to your lockfiles: which dependency each names, and since when. *new* `no-install` `offline` `read-only` `privacy`
+- **install-scripts** (idea) — The install scripts the packages in node_modules would run (preinstall, install, postinstall), each cited by file and line. *new* `no-install` `offline` `read-only` `privacy`
+- **package-contents** (idea) — What's inside a wheel, sdist, npm tarball or .crate before you install it: every file, and any code it runs on install. *new* `no-install` `offline` `read-only` `privacy`
 - [**privacy**](adapters/stdlib/privacy/) — Hides phone numbers, emails, card, bank and ID numbers, and API keys in what a question prints, and says what it hid. *bot* `no-install` `offline` `records` `privacy`
 - **secrets-audit** (idea) — Finds keys and passwords sitting in plain files. *bot* `no-install` `offline` `read-only` `privacy`
 - **transcript-redact** (idea) — An agent transcript with keys, home paths and emails taken out before you share it, each removal listed by line. *new* `no-install` `offline` `writes-output` `privacy`
+- **typosquat** (idea) — Dependency names a letter off from a popular one (reqeusts, lodahs), checked against a list of top packages you downloaded. *new* `no-install` `offline` `read-only` `privacy`
 
 ### Assistants
 
@@ -241,11 +251,17 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 
 - **agents-md-check** (idea) — Commands and paths named in AGENTS.md or CLAUDE.md that no longer exist in the repo. *new* `no-install` `offline` `read-only` `maintainers`
 - [**ci**](adapters/stdlib/ci/) — This repo's checks as verdict rows on a kernel record, the same every run. Goes online: PyPI, to read each dependency floor's release date. *box* `no-install` `online` `records` `maintainers`
+- **crates** (idea) — A Rust port of kernel.py on crates.io, held to the same vectors as the other four. Goes online: crates.io, to publish a release a maintainer tags. *new* `no-install` `online` `writes-output` `maintainers`
 - **forgejo** (idea) — What willow's repo needs from Forgejo, Gitea or Codeberg: its host.json and an Actions file, so the repo can move there. Goes online: the Forgejo instance's API, to read the author of a pull request a security report points to. *new* `no-install` `online` `read-only` `maintainers`
 - [**github**](adapters/stdlib/github/) — What willow's repo needs from GitHub, kept in one folder so it can be taken away. Goes online: GitHub, through gh, to read the author of a pull request a security report points to. *box* `no-install` `online` `read-only` `maintainers`
 - **gitlab** (idea) — What willow's repo needs from GitLab, as github does for GitHub: its host.json and CI file, so the repo can move there. Goes online: GitLab, through glab, to read the author of a merge request a security report points to. *new* `no-install` `online` `read-only` `maintainers`
 - [**live**](adapters/stdlib/live/) — Each way-in add-on run through the real program it's for, a shell, an editor or an AI tool: works, fails, or not here. Goes online: only what the programs it starts reach on their own; it reaches nothing itself. *new* `no-install` `maintainers` `tests` `interface` `assistant`
+- **maven** (idea) — The Java port on Maven Central, built from this repo and checked against the vectors. Goes online: Maven Central, to publish a release a maintainer tags. *new* `no-install` `online` `writes-output` `maintainers`
 - [**mutants**](adapters/stdlib/mutants/) — Breaks each add-on's code on purpose and checks its tests notice. *new* `no-install` `offline` `read-only` `maintainers`
+- **npm** (idea) — The TypeScript port on npm, built from this repo, checked against the vectors, and published with provenance; npx runs it. Goes online: registry.npmjs.org, to publish a release a maintainer tags. *new* `no-install` `online` `writes-output` `maintainers`
+- **nuget** (idea) — The C# port on NuGet, built from this repo and checked against the vectors. Goes online: nuget.org, to publish a release a maintainer tags. *new* `no-install` `online` `writes-output` `maintainers`
+- **pins** (idea) — Version ranges in package.json, pyproject.toml or Cargo.toml that no lockfile holds. *new* `no-install` `offline` `read-only` `maintainers`
+- **pypi** (idea) — kernel.py on PyPI as a package with no dependencies, built from this repo, checked against the vectors, and attested on upload; uvx and pipx run it. Goes online: upload.pypi.org, to publish a release a maintainer tags. *new* `no-install` `online` `writes-output` `maintainers`
 - [**readme**](adapters/stdlib/readme/) — Builds ADDONS.md, and the README's one feature, from the add-ons' own cards. *new* `no-install` `offline` `writes-output` `maintainers`
 - **reconciler** (idea) — willow-reconciler run on this repo's idea list and git history: how much of what was proposed has landed. Needs willow-reconciler; Apache-2.0. *new* `needs-install` `offline` `read-only` `maintainers`
 - [**similar**](adapters/stdlib/similar/) — What's already on the add-on list near a new idea, by the kernel's own search. *box* `no-install` `offline` `read-only` `maintainers`
