@@ -18,7 +18,7 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`███░░░░░░░░░░░░░░░░░` **68 of 414 built** · 365 need no install · 49 need one
+`███░░░░░░░░░░░░░░░░░` **69 of 415 built** · 366 need no install · 49 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
@@ -31,7 +31,7 @@ or `writes-output`; its section), and any the card's author adds or changes.
 | Assistants | 11 | 17 | 22 | 6 |
 | Ways to use it | 10 | 27 | 33 | 4 |
 | Play | 4 | 36 | 35 | 5 |
-| For maintainers | 9 | 30 | 34 | 5 |
+| For maintainers | 10 | 30 | 35 | 5 |
 <!-- /willow:pools -->
 
 ### Newest
@@ -47,9 +47,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ### Add-on of the week
 
 <!-- willow:pick week=2026-W43 -->
-**[coming-up](adapters/stdlib/coming-up/)** — Dates written in your files in the next N days: appointments, renewals, deadlines.
+**[books](adapters/stdlib/books/)** — Kindle "My Clippings.txt" highlights and .epub text.
 
-*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 68 built add-ons in name order.*
+*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 69 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -497,6 +497,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - [**readme**](adapters/stdlib/readme/) — Builds ADDONS.md, and the README's one feature, from the add-ons' own cards. *new* `no-install` `offline` `writes-output` `maintainers`
 - **reconciler** (idea) — willow-reconciler run on this repo's idea list and git history: how much of what was proposed has landed. Needs willow-reconciler; Apache-2.0. *new* `needs-install` `offline` `read-only` `maintainers`
 - **repro** (idea) — A release built twice from the same commit, byte for byte the same. *new* `no-install` `offline` `read-only` `maintainers`
+- [**restack**](adapters/stdlib/restack/) — Main merged into your branches, with the conflicts in the files the repo makes or only adds to settled by its own tools, and every other one left to you. *new* `no-install` `offline` `read-only` `maintainers` `git`
 - [**similar**](adapters/stdlib/similar/) — What's already on the add-on list near a new idea, by the kernel's own search. *box* `no-install` `offline` `read-only` `maintainers`
 - **slow-tests** (idea) — Each test's time kept per run, with the slowest named and any that got slower flagged. *new* `no-install` `offline` `read-only` `maintainers`
 - **sourcehut** (idea) — What willow's repo needs from SourceHut: its host.json for patches by email and a builds.sr.ht manifest. Goes online: sr.ht, through hut, to read the author of a patch a security report points to. *new* `no-install` `online` `read-only` `maintainers`
