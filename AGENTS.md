@@ -129,6 +129,24 @@ also named in the two lists of gates in `adapters/stdlib/ci/test_ci.py`.
 Missed, `tests:adapters` fails, and `tests:strip` with it, since it runs
 the same tests.
 
+## A deps add-on's floor
+
+The deps gate installs each add-on's pins, then its floor pins
+(`adapters/deps/mcp/requirements-floor.txt`, say), again on the one Python the
+deps job runs (`3.13` in `.github/workflows/ci.yml`). The floor rule names a
+2020-era release, but such a pin often won't install on that Python: raise the
+floor to the first version that does and say why on the card's `floor:` line
+(twenty characters or more once the version is struck out, or `deps:floors`
+fails). mcp's floor is raised this way.
+
+A new deps package is also named by hand in one test fixture: the `uploaded`
+dict in `test_a_floor_above_the_rule_needs_a_reason_on_its_card`
+(`adapters/stdlib/ci/test_ci.py`). It stands in for PyPI, and `floors()` reads
+it for every add-on's floor pins, so a package it doesn't list is a `KeyError`,
+not a clean failure. Give it a release dated before 2021 and your floor's
+version with its own date, so the rule picks the old one and your raised floor
+still has to carry its reason.
+
 ## Edits that miss say nothing
 
 `ruff format` reflows lines. A scripted find-and-replace written against
