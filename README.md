@@ -64,17 +64,17 @@ can pick up ([CONTRIBUTING.md](CONTRIBUTING.md) says how):
 - **Assistants:** AI assistants that can ask and suggest, but never approve. Built: [aider](adapters/stdlib/aider/), [claude-code](adapters/stdlib/claude-code/), [codex-cli](adapters/stdlib/codex-cli/), [copilot](adapters/stdlib/copilot/), [cursor](adapters/stdlib/cursor/), [gemini-cli](adapters/stdlib/gemini-cli/), [mcp](adapters/deps/mcp/), [mcp-lite](adapters/stdlib/mcp-lite/), [opencode](adapters/stdlib/opencode/), [windsurf](adapters/stdlib/windsurf/), [zed](adapters/stdlib/zed/). Ideas: *assistant-scores, basic-memory, claude, hermes, issue-answer, ladder, local-model, memory-import, mex, model-fit, night-batch, openai-compatible, plain-language, quantized, scope, second-opinion, translate*.
 - **Ways to use it:** other ways in: pipes, your shell and your editor, plain sentences, a page on this machine, answers read aloud. Built: [browse](adapters/stdlib/browse/), [emacs](adapters/stdlib/emacs/), [jetbrains](adapters/stdlib/jetbrains/), [pipe](adapters/stdlib/pipe/), [plain](adapters/stdlib/plain/), [print](adapters/stdlib/print/), [shell](adapters/stdlib/shell/), [start](adapters/stdlib/start/), [vim](adapters/stdlib/vim/), [vscode](adapters/stdlib/vscode/). Ideas: *anki, annotations, badge, braille, calendar-out, cloudevents, datasette, deep-links, desktop, dictate, email-ask, emergency-card, home-assistant, kiosk, launcher, obsidian, pr-context, qr, rss-out, safe-app, share, socratic, speak, static-search, telegram-bot, tui, warm*.
 - **Play:** seeded, replayable games on the record, such as dice and the Game of Life. Built: [dice](adapters/stdlib/dice/), [horoscope](adapters/stdlib/horoscope/), [life](adapters/stdlib/life/), [odds](adapters/stdlib/odds/). Ideas: *art-of-the-day, beacon, chess-puzzle, connect-four, daily-word, dice5e, front-page, game-master, gutenberg, hanoi, horoscope-grades, ink-story, joins, lore, lunatic, mastermind, movie, nim, ninety-percent, oracle-text, pageviews, pile-poetry, predictions, quake-bets, quiz, real-sky, reversi, roll-for-merge, rules, sokoban, spurious, tarot, tic-tac-toe, tides, todays-place, weather-bet*.
-- **For maintainers:** the repo's own tools: CI, the list, tests that can fail. Built: [ci](adapters/stdlib/ci/), [github](adapters/stdlib/github/), [live](adapters/stdlib/live/), [mutants](adapters/stdlib/mutants/), [readme](adapters/stdlib/readme/), [similar](adapters/stdlib/similar/), [test-impact](adapters/stdlib/test-impact/). Ideas: *agents-md-check, bench, ci-baseline, ci-bets, ci-cache, ci-why, code-stats, compiled, contribute, contributions, crates, docs-i18n, fast-tests, forgejo, fuzz, gitlab, go, maven, npm, nuget, pins, profile, property-tests, pypi, pypy, reconciler, repro, slow-tests, sourcehut, swift, test-shards, welcome*.
+- **For maintainers:** the repo's own tools: CI, the list, tests that can fail. Built: [ci](adapters/stdlib/ci/), [ci-why](adapters/stdlib/ci-why/), [github](adapters/stdlib/github/), [live](adapters/stdlib/live/), [mutants](adapters/stdlib/mutants/), [readme](adapters/stdlib/readme/), [similar](adapters/stdlib/similar/), [test-impact](adapters/stdlib/test-impact/). Ideas: *agents-md-check, bench, ci-baseline, ci-bets, ci-cache, code-stats, compiled, contribute, contributions, crates, docs-i18n, fast-tests, forgejo, fuzz, gitlab, go, maven, npm, nuget, pins, profile, property-tests, pypi, pypy, reconciler, repro, slow-tests, sourcehut, swift, test-shards, welcome*.
 <!-- /willow:summary -->
 
 <!-- willow:front show=pick week=2026-W43 -->
 **Add-on of the week**
 
-**[surprise](adapters/stdlib/surprise/)** — One passage from your folder at random, seeded so it can be replayed.
+**[stale](adapters/stdlib/stale/)** — Approved answers whose cited passage has changed or gone. Citations are content hashes, so it's exact.
 
-*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 65 built add-ons in name order.*
+*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 66 built add-ons in name order.*
 
-[Every add-on, 65 built of 413, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 66 built of 413, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 ## How it works
