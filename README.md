@@ -64,17 +64,17 @@ can pick up ([CONTRIBUTING.md](CONTRIBUTING.md) says how):
 - **Assistants:** AI assistants that can ask and suggest, but never approve. Built: [aider](adapters/stdlib/aider/), [claude-code](adapters/stdlib/claude-code/), [codex-cli](adapters/stdlib/codex-cli/), [copilot](adapters/stdlib/copilot/), [cursor](adapters/stdlib/cursor/), [gemini-cli](adapters/stdlib/gemini-cli/), [mcp](adapters/deps/mcp/), [mcp-lite](adapters/stdlib/mcp-lite/), [opencode](adapters/stdlib/opencode/), [windsurf](adapters/stdlib/windsurf/), [zed](adapters/stdlib/zed/). Ideas: *assistant-scores, basic-memory, cassettes, claude, hermes, hook-checks, hook-cite, hook-compact, hook-errors, hook-fail-closed, hook-feedback, hook-fuzz, hook-guard, hook-handoff, hook-impact, hook-leaks, hook-pin, hook-read-first, hook-replay, hook-sequence, hook-shell, hook-start, hook-stop, hook-tiers, hooks-elsewhere, instruction-files, issue-answer, ladder, local-model, mcp-by-hash, memory-import, mex, model-fit, night-batch, openai-compatible, persona-card, plain-language, quantized, same-way, schema-check, scope, second-opinion, silence-log, translate*.
 - **Ways to use it:** other ways in: pipes, your shell and your editor, plain sentences, a page on this machine, answers read aloud. Built: [browse](adapters/stdlib/browse/), [emacs](adapters/stdlib/emacs/), [jetbrains](adapters/stdlib/jetbrains/), [pipe](adapters/stdlib/pipe/), [plain](adapters/stdlib/plain/), [print](adapters/stdlib/print/), [shell](adapters/stdlib/shell/), [start](adapters/stdlib/start/), [vim](adapters/stdlib/vim/), [vscode](adapters/stdlib/vscode/). Ideas: *anki, annotations, badge, braille, calendar-out, cloudevents, datasette, deep-links, desktop, dictate, email-ask, emergency-card, home-assistant, kiosk, launcher, llms-txt, obsidian, pr-context, qr, rss-out, safe-app, share, socratic, speak, static-search, telegram-bot, tui, warm*.
 - **Play:** seeded, replayable games on the record, such as dice and the Game of Life. Built: [dice](adapters/stdlib/dice/), [horoscope](adapters/stdlib/horoscope/), [life](adapters/stdlib/life/), [odds](adapters/stdlib/odds/). Ideas: *art-of-the-day, beacon, chess-puzzle, connect-four, daily-word, dice5e, front-page, game-master, gutenberg, hanoi, horoscope-grades, ink-story, joins, lore, lunatic, mastermind, movie, nim, ninety-percent, oracle-text, pageviews, pile-poetry, predictions, quake-bets, quiz, real-sky, reversi, roll-for-merge, rules, sokoban, spurious, tarot, tic-tac-toe, tides, todays-place, weather-bet*.
-- **For maintainers:** the repo's own tools: CI, the list, tests that can fail. Built: [ci](adapters/stdlib/ci/), [github](adapters/stdlib/github/), [live](adapters/stdlib/live/), [mutants](adapters/stdlib/mutants/), [readme](adapters/stdlib/readme/), [similar](adapters/stdlib/similar/). Ideas: *agents-md-check, bench, ci-baseline, ci-bets, ci-cache, ci-why, code-stats, compiled, contribute, contributions, crates, docs-i18n, fast-tests, forgejo, fuzz, gitlab, go, maven, npm, nuget, pins, profile, property-tests, pypi, pypy, reconciler, repro, slow-tests, sourcehut, swift, test-impact, test-shards, welcome*.
+- **For maintainers:** the repo's own tools: CI, the list, tests that can fail. Built: [ci](adapters/stdlib/ci/), [ci-why](adapters/stdlib/ci-why/), [github](adapters/stdlib/github/), [live](adapters/stdlib/live/), [mutants](adapters/stdlib/mutants/), [readme](adapters/stdlib/readme/), [similar](adapters/stdlib/similar/). Ideas: *agents-md-check, bench, ci-baseline, ci-bets, ci-cache, code-stats, compiled, contribute, contributions, crates, docs-i18n, fast-tests, forgejo, fuzz, gitlab, go, maven, npm, nuget, pins, profile, property-tests, pypi, pypy, reconciler, repro, slow-tests, sourcehut, swift, test-impact, test-shards, welcome*.
 <!-- /willow:summary -->
 
 <!-- willow:front show=pick week=2026-W43 -->
 **Add-on of the week**
 
-**[secrets-audit](adapters/stdlib/secrets-audit/)** — Finds passwords, keys and card numbers sitting in plain files, by file and line, never showing the value.
+**[starter-words](adapters/stdlib/starter-words/)** — A first-day words list to copy and edit (owes = invoice, outstanding; doctor = dr, physician, clinic).
 
-*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 64 built add-ons in name order.*
+*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 65 built add-ons in name order.*
 
-[Every add-on, 64 built of 450, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 65 built of 450, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 ## How it works
@@ -190,7 +190,7 @@ words and missed the rest. The full results, misses included, are in
   verdict row on a kernel record, which `verify` then checks like any other.
   A tool that isn't installed is recorded as unreachable, never as a pass.
   It is deterministic: the same files give the same record, byte for byte.
-  CI runs the same script on every push, with the tests on Python 3.9 through
+  CI runs the same script on every pull request and every push to main, with the tests on Python 3.9 through
   3.14, and keeps each job's record as an artifact. The verdicts are draft;
   merging is the person's call. See [adapters/stdlib/ci](adapters/stdlib/ci/).
 - **Four implementations, one behaviour.** `vectors/gen.py` reads 4,463 cases

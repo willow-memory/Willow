@@ -401,16 +401,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "ci-why",
-  "kind": "stdlib",
-  "section": "For maintainers",
-  "line": "Why CI went red: the failing block pulled out of the job's log, plain, put where people look.",
-  "source": "bot",
-  "writes": "nothing",
-  "network": "the forge, through the workflow's token, to read the job's log",
-  "tags": "no-install, online, read-only, maintainers"
- },
- {
   "name": "claude",
   "kind": "deps",
   "section": "Assistants",
