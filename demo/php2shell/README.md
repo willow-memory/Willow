@@ -391,3 +391,45 @@ The honest one line: *given a vulnerability's public advisory and the fixed
 release, a word-ranker over only the changed code points at the fix well
 above chance, across projects and for bugs no model had seen; Willow's own
 ranking is weaker at this than plain BM25.*
+
+## After the seven: would a looser rule find more? Not frozen, 2026-10-24
+
+Phase 3 left a question: is the kernel's rank weak because of its half-the-words
+rule, and would a looser rule fix that? `demo/php2shell/hold.py` asks it.
+Nothing about it was frozen before it ran, so it is evidence for a design call,
+not a result of the study.
+
+It reuses phase 3's fetched trees, its scan indexes, its questions and its hit
+rule (rule 2). It runs on the four phase-3 CVEs that aren't PHP, each with 8
+questions. Each rule is asked its own CVE's questions about the passages that
+CVE's fix changed, top 3. Then it is asked the other three CVEs' 24 questions
+about the same passages. An answer to one of those is an answer the folder
+doesn't have, so that column is what a looser rule costs.
+
+    python demo/php2shell/hold.py --to DIR --ix DIR
+
+| Rule | CVE-2014-0160 | CVE-2021-44228 | CVE-2026-111497 | CVE-2026-110264 | Total | Answers to other CVEs' questions |
+|---|---|---|---|---|---|---|
+| half (the kernel's) | 3 of 8 | 3 of 8 | 4 of 8 | 0 of 8 | 10 of 32 | 14 of 192 |
+| third | 5 of 8 | 5 of 8 | 6 of 8 | 0 of 8 | 16 of 32 | 66 of 192 |
+| idf-half | 2 of 8 | 3 of 8 | 3 of 8 | 0 of 8 | 8 of 32 | 2 of 192 |
+| present-half | 4 of 8 | 4 of 8 | 5 of 8 | 1 of 8 | 14 of 32 | 60 of 192 |
+| any-two | 5 of 8 | 5 of 8 | 6 of 8 | 1 of 8 | 17 of 32 | 82 of 192 |
+| bm25 | 8 of 8 | 4 of 8 | 7 of 8 | 7 of 8 | 26 of 32 | always 3 |
+
+How to read the table. The totals count questions over the 4 CVEs, not CVEs,
+which is why they differ from phase 3's "1 of 7".
+
+- The looser rules find up to 7 more of 32. In return they answer about 4 to 6
+  times as many questions about other bugs.
+- `third` and `any-two` also break the kernel's echo beat in `test_kernel.py`:
+  a folder that holds only the question must say it doesn't know.
+- `idf-half` is the one rule that gives fewer wrong answers, and it finds fewer
+  right ones too. Its weights are floats summed over a set, so whether a passage
+  passes can change with Python's hash seed. The kernel's answers can't.
+
+The kernel's rule stays. Pointing at where to look is BM25's job (`scan --rank bm25`),
+as LIMITS.md says.
+
+Ran on kernel `ccr-b405f5ee-kernel-seams` at 87a7f05, with the indexes rebuilt
+on that kernel.

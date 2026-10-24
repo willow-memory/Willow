@@ -94,6 +94,10 @@ willow/
 │   │   │   ├── test_bugs.py  bugs.py's tests: strict marks only, and the list made from them
 │   │   │   ├── test_whose.py whose.py's tests: commits, merges, squashes, another host, places refused
 │   │   │   └── README.md     its card: gates, states, the guard and exit codes
+│   │   ├── ci-why/
+│   │   │   ├── ci_why.py     the failing block of a red CI log, plain: the test, the assertion, the line to act on
+│   │   │   ├── test_ci_why.py
+│   │   │   └── README.md
 │   │   ├── claude-code/
 │   │   │   ├── hook.py           Claude Code's prompt hook: cited passages at each prompt; setup prints it
 │   │   │   ├── test_hook.py
@@ -373,6 +377,7 @@ willow/
 │       ├── phase4.py         before the fix: the whole release, ranked three ways, recall at k
 │       ├── phase5.py         robustness: rewording, top-k, a words list, and leakage
 │       ├── phase6.py         reproducibility: every release, five Pythons, four kernels, a second labeller
+│       ├── hold.py           not frozen: the kernel's hold rule against looser ones, on phase 3's CVEs
 │       ├── test_php2shell.py holds the frozen files to their hashes, and the tools to their word
 │       ├── results/
 │       │   └── phase6-labels.json  the independent labellers' yes or no, item by item

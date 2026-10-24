@@ -16,7 +16,8 @@ where it falls short today, and a fix is welcome.
   where to look is `scan --rank bm25`, which always serves its top passages:
   on demo/php2shell's out-of-sample CVEs it found 7 of 7 to the kernel's 1.
   Loosening the kernel's rule found a few more there but answered questions
-  about other bugs several times as often.
+  about other bugs several times as often (`demo/php2shell/hold.py`; its
+  table is in that study's README).
 - **It doesn't approve anything itself.** Suggestions wait until a person
   approves them with their key.
 - **It doesn't keep your words.** The record holds fingerprints and places,

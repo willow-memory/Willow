@@ -21,6 +21,13 @@ says how). The first was v0.1.0.
   No answer changes: the vectors regenerate with only the kernel's hash
   different. `similar near` also counts against the entry, so a long new
   line finds a short entry it contains. (#20)
+- `ci-why`, an add-on that reads a red CI log (what `ci.py run` printed, or a
+  job's raw log) and prints only each failing block: the pytest test, its
+  assertion and place, a stale or surviving mutant, a ruff rule and line, a
+  traceback's last frame. It reads the CI record when given one to know which
+  checks failed, never counts an unreachable check as failing, and says
+  "couldn't find a failing block" (exit 42) apart from "the log says it
+  passed". It reads only, and goes nowhere. (#24)
 - `scan`, an add-on that indexes a folder once and then answers a list of
   questions in seconds with the kernel's own answers, narrowing only which
   passages `rank` looks at. It adds `--changed-from` (ask only what changed
@@ -164,6 +171,11 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- CI runs once per change: on pushes to main only, so a pull request no
+  longer runs twice (once for its branch's push, once for the pull
+  request), and a newer commit on a pull request cancels the run it
+  replaces; main's runs are never cancelled. `github.py check` holds both.
+  (#31)
 - `adapters/stdlib/mutants/mutants.py` runs each mutant without Python's bytecode cache, so a
   same-size break can no longer run the previous mutant's code and pass as
   a survivor; and it no longer breaks the `__main__` guard, which the
