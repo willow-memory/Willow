@@ -302,7 +302,7 @@ public static class Kernel
     static string H256(string text) => Sha256(Utf8.GetBytes(text));
     static string Hmac(byte[] key, byte[] msg) { using var h = new HMACSHA256(key); return Hex(h.ComputeHash(msg)); }
     /** onescript/sign.py hmac_parts(key, "seal", subject). */
-    static string Proof(byte[] key, string subject) => Hmac(key, Utf8.GetBytes("seal\u001f" + subject));
+    static string Proof(byte[] key, string subject, string act = "seal") => Hmac(key, Utf8.GetBytes(act + "\u001f" + subject));
 
     // ── the tables: Python's decisions, read out of Python ─────────────────
     sealed class Ranges
@@ -1304,16 +1304,18 @@ public static class Kernel
         return ALIVE;
     }
 
-    static Dictionary<string, JObj> Sealed(string box, List<JObj> rows, List<string> order)
+    static Dictionary<string, JObj> Declined(string box, List<JObj> rows) => Sealed(box, rows, new List<string>(), "decline");
+
+    static Dictionary<string, JObj> Sealed(string box, List<JObj> rows, List<string> order, string act = "seal")
     {
         var (key, _) = ReadKey((string)Config(box)["key"]!, box);
         var o = new Dictionary<string, JObj>(StringComparer.Ordinal);
         foreach (var r in rows)
         {
-            if (r.Get("kind") is "seal" && key != null)
+            if (r.Get("kind") is string k && k == act && key != null)
             {
                 var subj = r.Has("subject") ? r["subject"] : "";
-                var want = Utf8.GetBytes(Proof(key, subj as string ?? PyStr(subj)));
+                var want = Utf8.GetBytes(Proof(key, subj as string ?? PyStr(subj), act));
                 var got = Utf8.GetBytes(PyStr(r.Has("proof") ? r["proof"] : null));
                 if (want.Length == got.Length && CryptographicOperations.FixedTimeEquals(want, got))
                 {
@@ -1434,6 +1436,8 @@ public static class Kernel
         if (RefusedBreaks(r)) return REFUSED;
         if (!r.Rows.Any(x => x.Get("kind") is "proposal" && x.Get("subject") is string s && s == subj))
         { Console.Error.WriteLine($"refused: {subj} is not a proposal in this box"); return REFUSED; }
+        var no = Declined(box, r.Rows);
+        if (no.ContainsKey(subj)) { Console.Error.WriteLine($"refused: you declined {subj} at row {PyStr(no[subj]["n"])}"); return REFUSED; }
         var (key, why) = ReadKey((string)Config(box)["key"]!, box);
         if (key == null) { Console.Error.WriteLine($"refused: {why}"); return REFUSED; }
         var prop = (JObj)Parser.Loads(File.ReadAllText(PropFile(box, subj), Utf8))!;
@@ -1446,13 +1450,32 @@ public static class Kernel
         return ALIVE;
     }
 
+    static int Decline(string box, string subj, string ts)
+    {
+        var r = ReadRecord(System.IO.Path.Combine(box, "record.jsonl"));
+        if (RefusedBreaks(r)) return REFUSED;
+        if (!r.Rows.Any(x => x.Get("kind") is "proposal" && x.Get("subject") is string s && s == subj))
+        { Console.Error.WriteLine($"refused: {subj} is not a proposal in this box"); return REFUSED; }
+        foreach (var (done, said) in new[] { (Sealed(box, r.Rows, new List<string>()), "sealed"), (Declined(box, r.Rows), "declined") })
+            if (done.ContainsKey(subj)) { Console.Error.WriteLine($"refused: you {said} {subj} at row {PyStr(done[subj]["n"])}"); return REFUSED; }
+        var (key, why) = ReadKey((string)Config(box)["key"]!, box);
+        if (key == null) { Console.Error.WriteLine($"refused: {why}"); return REFUSED; }
+        Append(box, ts, "decline", "human", Obj("subject", subj, "proof", Proof(key, subj, "decline")));
+        Console.WriteLine($"declined {subj}; it won't be offered again");
+        return ALIVE;
+    }
+
     static int Verify(string box)
     {
         var r = ReadRecord(System.IO.Path.Combine(box, "record.jsonl"));
         if (r.Breaks.Count > 0) { Console.WriteLine(string.Join("\n", r.Breaks)); return REFUSED; }
         var good = Sealed(box, r.Rows, new List<string>());
         var forged = r.Rows.Where(x => x.Get("kind") is "seal" && !(x.Get("subject") is string s && good.ContainsKey(s))).Select(x => PyStr(x["n"])).ToList();
-        if (forged.Count > 0) { Console.WriteLine($"the chain holds; seal rows [{string.Join(", ", forged)}] don't prove under your key"); return ESCALATE; }
+        var no = Declined(box, r.Rows);
+        var nos = r.Rows.Where(x => x.Get("kind") is "decline" && !(x.Get("subject") is string s && no.ContainsKey(s))).Select(x => PyStr(x["n"])).ToList();
+        if (forged.Count > 0) Console.WriteLine($"the chain holds; seal rows [{string.Join(", ", forged)}] don't prove under your key");
+        if (nos.Count > 0) Console.WriteLine($"the chain holds; decline rows [{string.Join(", ", nos)}] don't prove under your key");
+        if (forged.Count > 0 || nos.Count > 0) return ESCALATE;
         Console.WriteLine($"the chain holds: {r.Rows.Count} rows, {good.Count} sealed");
         return ALIVE;
     }
@@ -1462,7 +1485,9 @@ public static class Kernel
         var r = ReadRecord(System.IO.Path.Combine(box, "record.jsonl"));
         if (RefusedBreaks(r)) return REFUSED;
         var good = Sealed(box, r.Rows, new List<string>());
-        var waiting = r.Rows.Where(x => x.Get("kind") is "proposal" && x.Get("verdict") is "pass" && !(x.Get("subject") is string s && good.ContainsKey(s)))
+        var no = Declined(box, r.Rows);
+        var waiting = r.Rows.Where(x => x.Get("kind") is "proposal" && x.Get("verdict") is "pass"
+                && !(x.Get("subject") is string s && (good.ContainsKey(s) || no.ContainsKey(s))))
             .Select(x => (string)x["subject"]!).ToList();
         var tip = r.Rows.Count > 0 ? r.Rows[^1]["hash"] : GENESIS;
         Append(box, ts, "out", "kernel", Obj("waiting", new BigInteger(waiting.Count), "tip", tip));
@@ -1549,6 +1574,7 @@ public static class Kernel
         "    python kernel.py bite    --box DIR \"your question\"\n" +
         "    python kernel.py propose --box DIR --file SUGGESTIONS.jsonl\n" +
         "    python kernel.py seal    --box DIR proposal:<sha256>\n" +
+        "    python kernel.py decline --box DIR proposal:<sha256>\n" +
         "    python kernel.py verify  --box DIR\n" +
         "    python kernel.py out     --box DIR\n" +
         "    python kernel.py test";
@@ -1582,6 +1608,7 @@ public static class Kernel
         if (verb == "bite" && args.Count == 1) return Bite(box, args[0], ts);
         if (verb == "propose" && Opt("--file") != "" && args.Count == 0) return Propose(box, Splitlines(Utf8.GetString(File.ReadAllBytes(Opt("--file")))), ts);
         if (verb == "seal" && args.Count == 1 && args[0].StartsWith("proposal:", StringComparison.Ordinal)) return Seal(box, args[0], ts);
+        if (verb == "decline" && args.Count == 1 && args[0].StartsWith("proposal:", StringComparison.Ordinal)) return Decline(box, args[0], ts);
         if (verb == "verify" && args.Count == 0) return Verify(box);
         if (verb == "out" && args.Count == 0) return Out(box, ts);
         Console.Error.WriteLine(USAGE);

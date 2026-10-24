@@ -228,7 +228,7 @@ const sha256 = (data: Buffer | string) => crypto.createHash("sha256").update(dat
 const h256 = (text: string) => sha256(Buffer.from(text, "utf8"));
 const hmac = (key: Buffer, msg: Buffer) => crypto.createHmac("sha256", key).update(msg).digest("hex");
 /** onescript/sign.py hmac_parts(key, "seal", subject). */
-const proof = (key: Buffer, subject: string) => hmac(key, Buffer.from("seal\x1f" + subject, "utf8"));
+const proof = (key: Buffer, subject: string, act = "seal") => hmac(key, Buffer.from(act + "\x1f" + subject, "utf8"));
 
 // ── the tables: Python's decisions, read out of Python ─────────────────────
 class Ranges {
@@ -1162,19 +1162,21 @@ function init(box: string, pile: string, key: string, ts: string, wl: string | n
   return ALIVE;
 }
 
-function sealed(box: string, rows: JMap[]): Map<string, JMap> {
+function sealed(box: string, rows: JMap[], act = "seal"): Map<string, JMap> {
   const [key] = readKey(config(box).get("key") as string, box);
   const out = new Map<string, JMap>();
   for (const r of rows) {
-    if (r.get("kind") === "seal" && key !== null) {
+    if (r.get("kind") === act && key !== null) {
       const subj = r.has("subject") ? r.get("subject")! : "";
-      const want = Buffer.from(proof(key, typeof subj === "string" ? subj : pyStr(subj)), "utf8");
+      const want = Buffer.from(proof(key, typeof subj === "string" ? subj : pyStr(subj), act), "utf8");
       const got = Buffer.from(pyStr(r.has("proof") ? r.get("proof") : null), "utf8");
       if (want.length === got.length && crypto.timingSafeEqual(want, got)) out.set(r.get("subject") as string, r);
     }
   }
   return out;
 }
+
+const declined = (box: string, rows: JMap[]) => sealed(box, rows, "decline");
 
 function refusedBreaks(r: Read): boolean {
   if (!r.breaks.length) return false;
@@ -1277,6 +1279,11 @@ function seal(box: string, subj: string, ts: string): number {
     console.error(`refused: ${subj} is not a proposal in this box`);
     return REFUSED;
   }
+  const no = declined(box, r.rows);
+  if (no.has(subj)) {
+    console.error(`refused: you declined ${subj} at row ${no.get(subj)!.get("n")}`);
+    return REFUSED;
+  }
   const [key, why] = readKey(config(box).get("key") as string, box);
   if (key === null) {
     console.error(`refused: ${why}`);
@@ -1295,6 +1302,29 @@ function seal(box: string, subj: string, ts: string): number {
   return ALIVE;
 }
 
+function decline(box: string, subj: string, ts: string): number {
+  const r = read(path.join(box, "record.jsonl"));
+  if (refusedBreaks(r)) return REFUSED;
+  if (!r.rows.some((row) => row.get("kind") === "proposal" && row.get("subject") === subj)) {
+    console.error(`refused: ${subj} is not a proposal in this box`);
+    return REFUSED;
+  }
+  for (const [done, said] of [[sealed(box, r.rows), "sealed"], [declined(box, r.rows), "declined"]] as const) {
+    if (done.has(subj)) {
+      console.error(`refused: you ${said} ${subj} at row ${done.get(subj)!.get("n")}`);
+      return REFUSED;
+    }
+  }
+  const [key, why] = readKey(config(box).get("key") as string, box);
+  if (key === null) {
+    console.error(`refused: ${why}`);
+    return REFUSED;
+  }
+  append(box, ts, "decline", "human", obj(["subject", subj], ["proof", proof(key, subj, "decline")]));
+  console.log(`declined ${subj}; it won't be offered again`);
+  return ALIVE;
+}
+
 function verify(box: string): number {
   const r = read(path.join(box, "record.jsonl"));
   if (r.breaks.length) {
@@ -1303,10 +1333,11 @@ function verify(box: string): number {
   }
   const good = sealed(box, r.rows);
   const forged = r.rows.filter((row) => row.get("kind") === "seal" && !good.has(row.get("subject") as string)).map((row) => String(row.get("n")));
-  if (forged.length) {
-    console.log(`the chain holds; seal rows [${forged.join(", ")}] don't prove under your key`);
-    return ESCALATE;
-  }
+  const no = declined(box, r.rows);
+  const nos = r.rows.filter((row) => row.get("kind") === "decline" && !no.has(row.get("subject") as string)).map((row) => String(row.get("n")));
+  if (forged.length) console.log(`the chain holds; seal rows [${forged.join(", ")}] don't prove under your key`);
+  if (nos.length) console.log(`the chain holds; decline rows [${nos.join(", ")}] don't prove under your key`);
+  if (forged.length || nos.length) return ESCALATE;
   console.log(`the chain holds: ${r.rows.length} rows, ${good.size} sealed`);
   return ALIVE;
 }
@@ -1315,8 +1346,10 @@ function out(box: string, ts: string): number {
   const r = read(path.join(box, "record.jsonl"));
   if (refusedBreaks(r)) return REFUSED;
   const good = sealed(box, r.rows);
+  const no = declined(box, r.rows);
   const waiting = r.rows
-    .filter((row) => row.get("kind") === "proposal" && row.get("verdict") === "pass" && !good.has(row.get("subject") as string))
+    .filter((row) => row.get("kind") === "proposal" && row.get("verdict") === "pass"
+      && !good.has(row.get("subject") as string) && !no.has(row.get("subject") as string))
     .map((row) => row.get("subject") as string);
   const tip = r.rows.length ? r.rows[r.rows.length - 1].get("hash")! : T.GENESIS;
   append(box, ts, "out", "kernel", obj(["waiting", BigInt(waiting.length)], ["tip", tip]));
@@ -1414,6 +1447,7 @@ const USAGE =
   "    python kernel.py bite    --box DIR \"your question\"\n" +
   "    python kernel.py propose --box DIR --file SUGGESTIONS.jsonl\n" +
   "    python kernel.py seal    --box DIR proposal:<sha256>\n" +
+  "    python kernel.py decline --box DIR proposal:<sha256>\n" +
   "    python kernel.py verify  --box DIR\n" +
   "    python kernel.py out     --box DIR\n" +
   "    python kernel.py test";
@@ -1451,6 +1485,7 @@ function main(argv: string[]): number {
   if (verb === "propose" && opts.get("--file") && !args.length)
     return propose(box, splitlines(UTF8.decode(fs.readFileSync(opts.get("--file")!))), ts);
   if (verb === "seal" && args.length === 1 && args[0].startsWith("proposal:")) return seal(box, args[0], ts);
+  if (verb === "decline" && args.length === 1 && args[0].startsWith("proposal:")) return decline(box, args[0], ts);
   if (verb === "verify" && !args.length) return verify(box);
   if (verb === "out" && !args.length) return out(box, ts);
   console.error(USAGE);

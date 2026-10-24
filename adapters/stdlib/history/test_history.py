@@ -213,3 +213,29 @@ def test_a_changed_check_is_said_in_counts():
         "You checked what changed in your folder: 1 new, 2 deleted.",
         "You checked what changed in your folder: nothing had.",
     ]
+
+
+def test_a_no_is_said_as_turned_down(tmp_path, capsys):
+    b = life(tmp_path)
+    at = ["--now", "2026-10-24T09:30:00Z"]
+    served = json.loads(
+        k("bite", "--box", str(b), *at, "what day is the dentist on").stdout
+    )["served"]
+    row = {
+        "path": "guess.md",
+        "data": "Monday",
+        "cites": [served[0]["id"]],
+        "claim": "a guess",
+    }
+    (tmp_path / "g.jsonl").write_text(json.dumps(row) + "\n")
+    k("propose", "--box", str(b), "--file", str(tmp_path / "g.jsonl"), *at)
+    subj = json.loads((b / "record.jsonl").read_text().splitlines()[-1])["subject"]
+    assert (
+        k("decline", "--box", str(b), subj, "--now", "2026-10-24T09:31:00Z").returncode
+        == 0
+    )
+    assert hs.main(["--box", str(b)]) == 0
+    assert (
+        "  09:31  You turned down the suggestion for guess.md."
+        in capsys.readouterr().out
+    )

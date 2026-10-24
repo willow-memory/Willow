@@ -350,7 +350,12 @@ public final class Kernel {
 
     /** onescript/sign.py hmac_parts(key, "seal", subject). */
     static String proof(byte[] key, String subject) {
-        return hmac(key, ("seal" + "\u001f" + subject).getBytes(StandardCharsets.UTF_8));
+        return proof(key, subject, "seal");
+    }
+
+    /** The same over another act: "decline", for the person's No. */
+    static String proof(byte[] key, String subject, String act) {
+        return hmac(key, (act + "\u001f" + subject).getBytes(StandardCharsets.UTF_8));
     }
 
     // ── the tables: Python's decisions, read out of Python ──────────────────
@@ -1393,12 +1398,21 @@ public final class Kernel {
 
     @SuppressWarnings("unchecked")
     static Map<String, Map<String, Object>> sealed(Path box, List<Map<String, Object>> rows) throws IOException {
+        return sealed(box, rows, "seal");
+    }
+
+    static Map<String, Map<String, Object>> declined(Path box, List<Map<String, Object>> rows) throws IOException {
+        return sealed(box, rows, "decline");
+    }
+
+    @SuppressWarnings("unchecked")
+    static Map<String, Map<String, Object>> sealed(Path box, List<Map<String, Object>> rows, String act) throws IOException {
         Key k = readKey(Path.of((String) config(box).get("key")), box);
         Map<String, Map<String, Object>> out = new LinkedHashMap<>();
         for (Map<String, Object> r : rows) {
-            if ("seal".equals(r.get("kind")) && k.key != null) {
+            if (act.equals(r.get("kind")) && k.key != null) {
                 Object subj = r.containsKey("subject") ? r.get("subject") : "";
-                String want = proof(k.key, subj instanceof String ? (String) subj : String.valueOf(subj));
+                String want = proof(k.key, subj instanceof String ? (String) subj : String.valueOf(subj), act);
                 Object got = r.containsKey("proof") ? r.get("proof") : NULL;
                 if (MessageDigest.isEqual(want.getBytes(StandardCharsets.UTF_8),
                         pyStr(got).getBytes(StandardCharsets.UTF_8)))
@@ -1574,6 +1588,11 @@ public final class Kernel {
             System.err.println("refused: " + subj + " is not a proposal in this box");
             return REFUSED;
         }
+        Map<String, Map<String, Object>> no = declined(box, r.rows);
+        if (no.containsKey(subj)) {
+            System.err.println("refused: you declined " + subj + " at row " + no.get(subj).get("n"));
+            return REFUSED;
+        }
         Key k = readKey(Path.of((String) config(box).get("key")), box);
         if (k.key == null) {
             System.err.println("refused: " + k.why);
@@ -1592,6 +1611,35 @@ public final class Kernel {
         return ALIVE;
     }
 
+    static int decline(Path box, String subj, String ts) throws IOException {
+        Read r = read(box.resolve("record.jsonl"));
+        if (refusedBreaks(r)) return REFUSED;
+        boolean known = false;
+        for (Map<String, Object> row : r.rows)
+            known |= "proposal".equals(row.get("kind")) && subj.equals(row.get("subject"));
+        if (!known) {
+            System.err.println("refused: " + subj + " is not a proposal in this box");
+            return REFUSED;
+        }
+        Map<String, Map<String, Object>> yes = sealed(box, r.rows), no = declined(box, r.rows);
+        if (yes.containsKey(subj)) {
+            System.err.println("refused: you sealed " + subj + " at row " + yes.get(subj).get("n"));
+            return REFUSED;
+        }
+        if (no.containsKey(subj)) {
+            System.err.println("refused: you declined " + subj + " at row " + no.get(subj).get("n"));
+            return REFUSED;
+        }
+        Key k = readKey(Path.of((String) config(box).get("key")), box);
+        if (k.key == null) {
+            System.err.println("refused: " + k.why);
+            return REFUSED;
+        }
+        append(box, ts, "decline", "human", fields("subject", subj, "proof", proof(k.key, subj, "decline")));
+        System.out.println("declined " + subj + "; it won't be offered again");
+        return ALIVE;
+    }
+
     static int verify(Path box) throws IOException {
         Read r = read(box.resolve("record.jsonl"));
         if (!r.breaks.isEmpty()) {
@@ -1602,10 +1650,15 @@ public final class Kernel {
         List<String> forged = new ArrayList<>();
         for (Map<String, Object> row : r.rows)
             if ("seal".equals(row.get("kind")) && !good.containsKey(row.get("subject"))) forged.add(String.valueOf(row.get("n")));
-        if (!forged.isEmpty()) {
+        Map<String, Map<String, Object>> no = declined(box, r.rows);
+        List<String> nos = new ArrayList<>();
+        for (Map<String, Object> row : r.rows)
+            if ("decline".equals(row.get("kind")) && !no.containsKey(row.get("subject"))) nos.add(String.valueOf(row.get("n")));
+        if (!forged.isEmpty())
             System.out.println("the chain holds; seal rows [" + String.join(", ", forged) + "] don't prove under your key");
-            return ESCALATE;
-        }
+        if (!nos.isEmpty())
+            System.out.println("the chain holds; decline rows [" + String.join(", ", nos) + "] don't prove under your key");
+        if (!forged.isEmpty() || !nos.isEmpty()) return ESCALATE;
         System.out.println("the chain holds: " + r.rows.size() + " rows, " + good.size() + " sealed");
         return ALIVE;
     }
@@ -1613,10 +1666,11 @@ public final class Kernel {
     static int out(Path box, String ts) throws IOException {
         Read r = read(box.resolve("record.jsonl"));
         if (refusedBreaks(r)) return REFUSED;
-        Map<String, Map<String, Object>> good = sealed(box, r.rows);
+        Map<String, Map<String, Object>> good = sealed(box, r.rows), no = declined(box, r.rows);
         List<String> waiting = new ArrayList<>();
         for (Map<String, Object> row : r.rows)
-            if ("proposal".equals(row.get("kind")) && "pass".equals(row.get("verdict")) && !good.containsKey(row.get("subject")))
+            if ("proposal".equals(row.get("kind")) && "pass".equals(row.get("verdict"))
+                    && !good.containsKey(row.get("subject")) && !no.containsKey(row.get("subject")))
                 waiting.add((String) row.get("subject"));
         Object tip = r.rows.isEmpty() ? GENESIS : r.rows.get(r.rows.size() - 1).get("hash");
         append(box, ts, "out", "kernel", fields("waiting", BigInteger.valueOf(waiting.size()), "tip", tip));
@@ -1788,6 +1842,7 @@ public final class Kernel {
         "    python kernel.py bite    --box DIR \"your question\"\n" +
         "    python kernel.py propose --box DIR --file SUGGESTIONS.jsonl\n" +
         "    python kernel.py seal    --box DIR proposal:<sha256>\n" +
+        "    python kernel.py decline --box DIR proposal:<sha256>\n" +
         "    python kernel.py verify  --box DIR\n" +
         "    python kernel.py out     --box DIR\n" +
         "    python kernel.py test";
@@ -1849,6 +1904,7 @@ public final class Kernel {
         if (verb.equals("propose") && !opts.getOrDefault("--file", "").isEmpty() && args.isEmpty())
             return propose(box, splitlines(Files.readString(Path.of(opts.get("--file")))), ts);
         if (verb.equals("seal") && args.size() == 1 && args.get(0).startsWith("proposal:")) return seal(box, args.get(0), ts);
+        if (verb.equals("decline") && args.size() == 1 && args.get(0).startsWith("proposal:")) return decline(box, args.get(0), ts);
         if (verb.equals("verify") && args.isEmpty()) return verify(box);
         if (verb.equals("out") && args.isEmpty()) return out(box, ts);
         System.err.println(USAGE);

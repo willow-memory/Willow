@@ -106,6 +106,7 @@ python kernel.py init    --box DIR --pile FOLDER --key FILE [--words FILE]
 python kernel.py bite    --box DIR "your question"
 python kernel.py propose --box DIR --file SUGGESTIONS.jsonl
 python kernel.py seal    --box DIR proposal:<sha256>
+python kernel.py decline --box DIR proposal:<sha256>
 python kernel.py verify  --box DIR
 python kernel.py out     --box DIR
 python kernel.py test
@@ -117,7 +118,8 @@ python kernel.py test
 | `bite` | answers a question: an approved answer if there is one, else up to three passages from your files |
 | `propose` | takes suggested answers and holds the ones that pass |
 | `seal` | approves one suggestion with your key |
-| `verify` | checks every line of the log and every approval |
+| `decline` | turns one down, with your key: it isn't offered again |
+| `verify` | checks every line of the log, every approval and every No |
 | `out` | lists what is waiting for your approval |
 | `test` | runs the whole cycle in a temporary folder and checks eight properties |
 
@@ -171,8 +173,8 @@ clause and where it is cited, and says why for each it found nothing for.
 
 It matches words, not meanings: ask "who owes me money" when your files say
 "invoice outstanding" and it finds nothing until a words list connects them.
-That, English being built in, the cost of having no index, and locking on
-Windows are in [LIMITS.md](LIMITS.md), with what it doesn't do on purpose
+That, English being built in, and the cost of having no index are in
+[LIMITS.md](LIMITS.md), with what it doesn't do on purpose
 and why ([DECISIONS.md](DECISIONS.md)). Known bugs, each shown by a test,
 are in [BUGS.md](BUGS.md).
 
@@ -221,7 +223,7 @@ The top of it. [FILES.md](FILES.md) lists every file and what it is, and
 
 ```
 willow/
-├── kernel.py                 the whole program (about 940 lines)
+├── kernel.py                 the whole program (about 1,000 lines)
 ├── test_kernel.py            its tests
 ├── test_docs.py              holds every doc to the files that exist, and the trees to the repo
 ├── test_docs_fires.py        plants a violation for each docs check and makes sure it fails
