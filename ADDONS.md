@@ -18,14 +18,14 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`███░░░░░░░░░░░░░░░░░` **64 of 413 built** · 364 need no install · 49 need one
+`███░░░░░░░░░░░░░░░░░` **65 of 414 built** · 365 need no install · 49 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
 | Reading more kinds of files | 7 | 96 | 95 | 8 |
 | Finding things | 5 | 27 | 23 | 9 |
 | Your own words | 7 | 17 | 21 | 3 |
-| Keeping track | 5 | 49 | 54 | 0 |
+| Keeping track | 6 | 49 | 55 | 0 |
 | Trust and proof | 7 | 36 | 34 | 9 |
 | Privacy and safety | 2 | 11 | 13 | 0 |
 | Assistants | 11 | 17 | 22 | 6 |
@@ -47,9 +47,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ### Add-on of the week
 
 <!-- willow:pick week=2026-W43 -->
-**[secrets-audit](adapters/stdlib/secrets-audit/)** — Finds passwords, keys and card numbers sitting in plain files, by file and line, never showing the value.
+**[starter-words](adapters/stdlib/starter-words/)** — A first-day words list to copy and edit (owes = invoice, outstanding; doctor = dr, physician, clinic).
 
-*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 64 built add-ons in name order.*
+*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 65 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -246,6 +246,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - **foia** (idea) — Freedom-of-information requests: what you asked, when, and when the answer is due by law. *new* `no-install` `offline` `read-only` `tracking`
 - **food-log** (idea) — What you ate, from your notes, by day. *new* `no-install` `offline` `read-only` `tracking`
 - **forecasts** (idea) — Write a prediction before the outcome, settle it later, see your Brier score. *bot* `no-install` `offline` `records` `tracking`
+- [**gaps**](adapters/stdlib/gaps/) — Where a log you keep stops: the days a daily note, reading or diary skipped, said as gaps, not left out. *new* `no-install` `offline` `read-only` `tracking` `journal`
 - **garden** (idea) — What you planted, where and when, and how it did, season by season. *new* `no-install` `offline` `read-only` `tracking`
 - **gifts** (idea) — Gifts given and received, and who likes what, so nobody gets the same scarf twice. *new* `no-install` `offline` `read-only` `tracking`
 - **gradebook** (idea) — A teacher's gradebook, kept on this machine: each student's marks by assignment, and who is falling behind. *new* `no-install` `offline` `read-only` `tracking`

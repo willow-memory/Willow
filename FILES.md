@@ -134,6 +134,10 @@ willow/
 │   │   │   ├── export.py     approved answers and the question log, as Markdown or CSV
 │   │   │   ├── test_export.py
 │   │   │   └── README.md
+│   │   ├── gaps/
+│   │   │   ├── gaps.py       where a log you keep stops: the days it skipped, said as gaps
+│   │   │   ├── test_gaps.py
+│   │   │   └── README.md
 │   │   ├── gemini-cli/
 │   │   │   ├── gemini_cli.py     the settings.json lines that register mcp-lite with Gemini CLI
 │   │   │   ├── test_gemini_cli.py

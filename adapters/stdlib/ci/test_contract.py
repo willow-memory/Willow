@@ -90,6 +90,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "all": ("all.py", ["--box", "{box}", "tomatoes"]),
     "coming-up": ("coming_up.py", ["--box", "{box}", *NOW]),
     "export": ("export.py", ["--box", "{box}"]),
+    "gaps": ("gaps.py", ["--box", "{box}", *NOW]),
     "on-this-day": ("on_this_day.py", ["--box", "{box}", *NOW]),
     "pipe": ("pipe.py", ["--box", "{box}", *NOW]),
     "plain": ("plain.py", ["bite", "--box", "{box}", *NOW, "tomatoes"]),
