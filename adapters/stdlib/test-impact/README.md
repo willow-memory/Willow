@@ -39,7 +39,10 @@ test. This says which ones a change can reach, and can run just those first.
 **The change** is the paths git says differ from `--base REF` (from where your
 branch left REF, so REF's later commits don't count), to `--head REF` if you
 give one, else to your files as they are now, edits and new files included. Paths
-you name are added. With neither, it refuses.
+you name are added. With neither, it refuses. `--head` must be the commit you
+have checked out: the plan is read from the files on disk, so another branch's
+head is refused rather than planned from the wrong files. To plan a branch,
+check it out (a `git worktree` will do) and plan there.
 
 **How a path is placed.** Every Python file in the repo is read with Python's
 `ast` and joined to what it imports, and to any Python file it names in a string

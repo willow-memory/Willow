@@ -398,6 +398,16 @@ def test_without_a_head_edits_and_new_files_count_and_with_one_they_do_not(
     assert imp.changed_by_git("work", "work") == []
 
 
+def test_a_head_that_is_not_checked_out_is_refused_not_planned_from_other_files(
+    tmp_path, monkeypatch
+):
+    repo(tmp_path, monkeypatch)
+    # checked out: work; main has later.py, which work's files on disk don't
+    with pytest.raises(imp.Refused, match="isn't what is checked out here"):
+        imp.changed_by_git("work", "main")
+    assert imp.changed_by_git("main", "HEAD") == ["a.py", "b.py", "b2.py", "c.py"]
+
+
 def test_an_unknown_ref_is_a_refusal_not_an_empty_change(tmp_path, monkeypatch):
     repo(tmp_path, monkeypatch)
     with pytest.raises(imp.Refused):

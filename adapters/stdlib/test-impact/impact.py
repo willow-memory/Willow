@@ -5,7 +5,9 @@
 
 The change is the paths git says differ from REF (`--base`; to `--head` when
 given, else to the files as they are now, edits and new files included), and
-the PATHs on the command line. Git is asked with `git merge-base REF HEAD`
+the PATHs on the command line. `--head` must be what is checked out: the
+graph and the rules read the files on disk, so another head is refused, never
+planned from the wrong files. Git is asked with `git merge-base REF HEAD`
 first, so a branch is compared with where it left REF, not with REF's later
 commits. A PATH given by hand must exist, or be one git knew at HEAD (a file
 you deleted).
@@ -100,7 +102,14 @@ def git(*argv: str) -> str:
 def changed_by_git(base: str, head: str | None) -> list[str]:
     """Paths that differ from `base` (where this branch left it), to `head`, or
     to the files on disk when there is no head. New files are in; so are both
-    ends of a rename."""
+    ends of a rename. The graph and the rules read the files checked out here,
+    so a head that isn't HEAD would be planned from the wrong files: an add-on
+    only that head has would read as removed, and its tests left out."""
+    if head and git("rev-parse", f"{head}^{{commit}}") != git("rev-parse", "HEAD"):
+        raise Refused(
+            f"--head {head} isn't what is checked out here; the checks are read from"
+            f" the files on disk, so plan it from a checkout of {head}"
+        )
     start = git("merge-base", base, head or "HEAD").strip()
     names = git(
         "diff", "--name-only", "--no-renames", "-z", start, *([head] if head else [])
