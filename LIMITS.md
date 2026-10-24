@@ -22,10 +22,15 @@ where it falls short today, and a fix is welcome.
 - **It matches words, not meanings.** Ask "who owes me money" when your
   files say "invoice outstanding" and it finds nothing until a words list
   connects them.
-- **English is built in.** The common-word list and the word-form rules are
-  English. Questions in other languages work, but no common words are set
-  aside, and words with accents or in other scripts are matched only as
-  written.
+- **English is built in.** The kernel's common-word list and word-form
+  rules are English. The words-de, words-es, words-fr and words-pt add-ons
+  set German, Spanish, French and Portuguese common words aside before a
+  question reaches it; other languages keep every word. Word forms are
+  English's only, and words in other scripts are matched only as written.
+- **A suggestion can't be turned down.** It waits until you approve it, for
+  as long as it takes: the kernel has no verb that says no, so `out` and
+  the browse page list it forever. A `decline` verb, a row as plain as a
+  seal, would need the vectors and the ports to follow.
 - **No index, so time grows with the size of the folder.** On Odile's
   folder a question takes about a quarter of a second; a very large folder
   would want an index, in an add-on.

@@ -50,6 +50,16 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
+  "name": "backup",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "Copies your record and your key to a place you choose, checks the copy's chain verifies, and won't put the key beside the box.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, trust, everyday"
+ },
+ {
   "name": "bank",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -88,16 +98,6 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, file-reader"
- },
- {
-  "name": "browse",
-  "kind": "stdlib",
-  "section": "Ways to use it",
-  "line": "A local web page to ask questions and approve answers, reachable from this machine only.",
-  "source": "new",
-  "writes": "record",
-  "network": "loopback",
-  "tags": "no-install, this-machine, records, interface"
  },
  {
   "name": "car",
@@ -200,16 +200,6 @@
   "writes": "record",
   "network": "none",
   "tags": "needs-install, offline, records, play"
- },
- {
-  "name": "digest",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "One page: suggestions waiting, approvals gone stale, dates coming up, questions repeated.",
-  "source": "bot",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
  },
  {
   "name": "discord",
@@ -393,6 +383,16 @@
   "writes": "record",
   "network": "none",
   "tags": "no-install, offline, records, assistant"
+ },
+ {
+  "name": "history",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "Your record in plain sentences: what was asked when, what found nothing, what you approved; places and counts, never the words.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, trust, everyday"
  },
  {
   "name": "homestead",
@@ -939,6 +939,16 @@
   "tags": "needs-install, offline, read-only, interface"
  },
  {
+  "name": "start",
+  "kind": "stdlib",
+  "section": "Ways to use it",
+  "line": "First run in one step: asks where your files are, makes the box and key where they belong, copies in the starter words, and prints the double-click launcher.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, interface, everyday"
+ },
+ {
   "name": "stems",
   "kind": "deps",
   "section": "Your own words",
@@ -1093,44 +1103,24 @@
   "tags": "no-install, offline, read-only, tracking"
  },
  {
-  "name": "words-de",
+  "name": "words-it",
   "kind": "stdlib",
   "section": "Your own words",
-  "line": "German common words, so questions aren't matched on \"der\" and \"und\".",
+  "line": "Italian common words (\"il\", \"e\").",
   "source": "new",
-  "writes": "to",
+  "writes": "record",
   "network": "none",
-  "tags": "no-install, offline, writes-output, words"
+  "tags": "no-install, offline, records, words, italian"
  },
  {
-  "name": "words-es",
+  "name": "words-nl",
   "kind": "stdlib",
   "section": "Your own words",
-  "line": "Spanish common words (\"el\", \"y\").",
+  "line": "Dutch common words (\"de\", \"en\").",
   "source": "new",
-  "writes": "to",
+  "writes": "record",
   "network": "none",
-  "tags": "no-install, offline, writes-output, words"
- },
- {
-  "name": "words-fr",
-  "kind": "stdlib",
-  "section": "Your own words",
-  "line": "French common words (\"le\", \"et\").",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, words"
- },
- {
-  "name": "words-pt",
-  "kind": "stdlib",
-  "section": "Your own words",
-  "line": "Portuguese common words (\"o\", \"e\").",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, words"
+  "tags": "no-install, offline, records, words, dutch"
  },
  {
   "name": "writefreely",
