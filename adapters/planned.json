@@ -1233,16 +1233,6 @@
   "tags": "no-install, offline, records, assistant, hooks"
  },
  {
-  "name": "hook-fail-closed",
-  "kind": "stdlib",
-  "section": "Assistants",
-  "line": "Wraps any hook so a crash, a timeout or output it can't read blocks the tool, since Claude Code, Gemini CLI, Codex and Cursor all let the tool run by default.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, assistant, hooks"
- },
- {
   "name": "hook-feedback",
   "kind": "stdlib",
   "section": "Assistants",
@@ -1251,16 +1241,6 @@
   "writes": "record",
   "network": "none",
   "tags": "no-install, offline, records, assistant, hooks"
- },
- {
-  "name": "hook-fuzz",
-  "kind": "stdlib",
-  "section": "Assistants",
-  "line": "Throws empty, malformed, oversized and non-UTF-8 input at a hook and fails it if any of them crash it, since a crashed hook lets the tool run.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, assistant, hooks"
  },
  {
   "name": "hook-guard",
@@ -1303,30 +1283,10 @@
   "tags": "no-install, offline, read-only, assistant, hooks"
  },
  {
-  "name": "hook-pin",
-  "kind": "stdlib",
-  "section": "Assistants",
-  "line": "Each hook's SHA-256 kept on the record when you approve it, so a hook that changed since is named before it runs, never silently trusted or skipped.",
-  "source": "new",
-  "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, assistant, hooks"
- },
- {
   "name": "hook-read-first",
   "kind": "stdlib",
   "section": "Assistants",
   "line": "A PreToolUse hook that refuses an edit to a file the assistant hasn't read this session, or whose bytes changed since it did, each read kept as a hash.",
-  "source": "new",
-  "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, assistant, hooks"
- },
- {
-  "name": "hook-replay",
-  "kind": "stdlib",
-  "section": "Assistants",
-  "line": "Every hook's answer kept as a row with the hashes of what it was given and what it said, and check runs it again to prove the same input still gets the same answer.",
   "source": "new",
   "writes": "record",
   "network": "none",

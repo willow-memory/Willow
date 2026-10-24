@@ -30,6 +30,9 @@
   "gemini-cli": {
     "106ddf1a7af1": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
   },
+  "hook-fail-closed": {
+    "22462805a55d": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
+  },
   "jetbrains": {
     "2a82bb3953da": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
   },
