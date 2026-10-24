@@ -39,6 +39,11 @@ says how). The first was v0.1.0.
   sources are fetched once and kept by hash, not in the repo; CI checks only
   that the frozen files still match. Three ideas from it go on the list:
   `claim-check`, `misquote` and `policy-watch`. (#16)
+- `restack`, your branches put back on top of main: each rebased in a
+  scratch worktree, the conflicts in the files the repo makes or only adds
+  to (the add-on list, CHANGELOG.md, FILES.md, `COMMANDS`, the idea list)
+  settled by the repo's own rules and tools, any other one stopping that
+  branch untouched, and nothing moved until `test_docs.py` passes. (#22)
 - `test-shards`, an add-on that splits the test run into parts by each test's
   time in an earlier run (pytest's JUnit XML), so the CI jobs finish about
   together. It learns the suite as it is now, places a test with no past
