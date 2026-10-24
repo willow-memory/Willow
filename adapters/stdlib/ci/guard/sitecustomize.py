@@ -32,7 +32,8 @@ and an add-on is held to its card's header:
 and to the rules no card can loosen: it never changes an original (the
 folder given to --from, or the pile of the box given to --box), never
 writes a box but through the kernel, and never reads the key itself. No
-add-on widens its own reach (CONSTITUTION.md, CONST-0-3 and CONST-III).
+add-on widens its own reach (CONSTITUTION.md, CONST-0-3 and CONST-III),
+and what its card doesn't list, it can't do (CONST-II-1).
 
 A breach raises PermissionError, so the add-on stops there, and is also
 written to WILLOW_GUARD_LOG, so a breach the add-on catches and swallows is

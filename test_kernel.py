@@ -178,6 +178,9 @@ def test_it_uses_only_the_standard_library_and_never_an_add_on():
 
 
 def test_it_never_dials_out():
+    """No network module and no dynamic code: the kernel has no reach but
+    what it is given (CONST-III-1), and nothing it holds leaves the machine
+    (CONST-III-5)."""
     assert reaches(HERE.read_text(encoding="utf-8")) == set()
     planted = (
         "import json\ndef f(u):\n    from urllib import request\n    return eval(u)\n"

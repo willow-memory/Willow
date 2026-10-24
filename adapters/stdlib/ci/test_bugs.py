@@ -1,5 +1,6 @@
 """bugs: every expected failure is a strict one naming its bug, and BUGS.md
-is made from them, so the list and the tests can't disagree."""
+is made from them, so the list and the tests can't disagree: a known defect
+is a check expected to fail, and leaves only by a fix (CONST-VI-7)."""
 
 from __future__ import annotations
 
@@ -73,6 +74,7 @@ def test_any_other_mark_is_refused(repo, mark):
 
 
 def test_check_says_when_bugs_md_is_out_of_date(repo, capsys):
+    """BUGS.md is a view of the tests, recomputed (CONST-VI-6)."""
     write(repo, "test_a.py", f"@{MARK.format(n=5, what='x')}\ndef test_a():\n    assert False\n")  # fmt: skip
     assert bugs.main(["check"]) == 2  # no BUGS.md yet
     assert bugs.main(["write"]) == 0

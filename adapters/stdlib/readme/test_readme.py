@@ -91,6 +91,7 @@ def repo(tmp_path, monkeypatch):
 
 
 def test_the_real_readme_is_current():
+    """The generated sections are a view, recomputed from the cards (CONST-VI-6)."""
     got = subprocess.run(
         [sys.executable, str(HERE / "readme.py"), "check"],
         capture_output=True,
@@ -177,6 +178,8 @@ def test_the_draw_is_the_weeks_and_anyone_can_redo_it(repo):
     ],
 )
 def test_an_add_on_that_doesnt_hold_together_is_refused(repo, folder, text, why):
+    """A card that doesn't list what its add-on writes and where it goes
+    online is refused: a reach is enumerated, never inferred (CONST-II-1)."""
     where = repo / "adapters" / folder
     where.mkdir(parents=True)
     if text:

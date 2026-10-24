@@ -23,7 +23,8 @@ amendment file, and `check` holds the two together.
     out of order, a draft that isn't the next one, a supersession of one
     that doesn't come before it;
   * an amendment whose clause text isn't in the law word for word, unless a
-    later amendment has superseded it;
+    later amendment has superseded it, or whose history row is missing: an
+    amendment takes effect only upon recording (CONST-VIII-1);
   * a history row, a lineage step or a draft number that isn't the one the
     amendment files make, and any edit to the rows that came before them.
 
@@ -200,6 +201,8 @@ def problems(text: str = None, folder: Path = None) -> list[str]:
         every = amendments(folder)
     except Refused as why:
         return out + [str(why)]
+    # CONST-VIII-1: an amendment takes effect only upon recording, its text
+    # in the law and its row in the history
     for a in every:
         if a["live"] and a["body"] not in text:
             out.append(f"{a['name']}: its text isn't in CONSTITUTION.md word for word")

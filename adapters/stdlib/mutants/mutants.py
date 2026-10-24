@@ -21,7 +21,8 @@ Some survivors break nothing a person would notice: a usage message cut a
 different way, an import path the test layout hides. Each is listed in
 accepted.json, by id, with the reason in a sentence. `run` fails an add-on
 when a mutant survives that isn't listed there, and when a listed one is no
-longer made or no longer survives, so the list can't go stale.
+longer made or no longer survives, so the list can't go stale. A check that
+can't fail is no check (CONST-IV-9).
 
 Only adapters/stdlib: a deps add-on's tests need its own installs (the deps
 part of ci.py makes those).

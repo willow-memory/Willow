@@ -23,6 +23,8 @@ am = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(am)
 
 LAW = am.LAW.read_text(encoding="utf-8")
+EVERY = am.amendments()
+LATEST = EVERY[-1]["draft"]
 
 
 @pytest.fixture
@@ -55,8 +57,9 @@ def test_write_changes_nothing_on_a_law_that_holds():
         ("Draft 0.3 — three AI reviews", "Draft 0.3 — four AI reviews",
          "rows before the first amendment"),
         ("0.2 (body framed, DeepSeek)", "0.2 (body framed)", "lineage up to 0.9"),
-        # CONST-VIII-4: each amendment makes the next draft, and says so
-        ("> Draft 0.10. ", "> Draft 0.9. ", "aren't what the amendments make"),
+        # CONST-VIII-4: each amendment makes the next draft, and says so; and
+        # CONST-VIII-1: it takes effect only upon recording, its row and text
+        (f"> Draft {LATEST}. ", "> Draft 0.9. ", "aren't what the amendments make"),
         ("*draft — by merge of #4* |", "*ratified* |", "aren't what the amendments make"),
         ("This constitution is never closed.", "This constitution is closed.",
          "isn't in CONSTITUTION.md word for word"),
@@ -92,7 +95,7 @@ def test_an_amendment_that_doesnt_hold_together_is_refused(old, new, says, folde
 
 
 def test_amendments_are_numbered_in_turn(folder):
-    (folder / "0001.md").rename(folder / "0002.md")
+    (folder / "0001.md").unlink()
     assert any("should be 0001.md" in p for p in am.problems(LAW, folder))
 
 
@@ -103,20 +106,22 @@ def test_a_later_amendment_supersedes_an_earlier_and_both_stay(folder):
     old = first.split("-->\n", 1)[1].strip()
     new = old.replace("This constitution is never closed.",
                       "This constitution is never closed, and says so.")  # fmt: skip
-    (folder / "0002.md").write_text(
-        first.replace("draft: 0.10", "draft: 0.11")
-        .replace("pr: 4\n", "pr: 5\nsupersedes: 0001\n")
+    n, draft = len(EVERY) + 1, am.next_draft(LATEST)
+    (folder / f"{n:04d}.md").write_text(
+        first.replace("draft: 0.10", f"draft: {draft}")
+        .replace("pr: 4\n", "pr: 99\nsupersedes: 0001\n")
         .replace("summary: VIII.4,", "summary: VIII.4 restated,")
         .replace(old, new),
         encoding="utf-8",
     )
     law = am.build(LAW.replace(old, new), am.amendments(folder))
     assert am.problems(law, folder) == []
-    assert "> Draft 0.11. " in law and old not in law
+    assert f"> Draft {draft}. " in law and old not in law
     rows = [r for r in am.history(law) if "by merge of #" in r]
-    assert [r.split(" | ")[2][:10] for r in rows] == ["Draft 0.10", "Draft 0.11"]
-    assert " → 0.10 (VIII.4, always" in law and " → 0.11 (VIII.4 restated," in law
-    (folder / "0002.md").unlink()  # with it gone, the law it made no longer holds
+    assert len(rows) == n and rows[0].split(" | ")[2].startswith("Draft 0.10 — VIII.4,")
+    assert rows[-1].endswith("*draft — by merge of #99* |")
+    assert " → 0.10 (VIII.4, always" in law and f" → {draft} (VIII.4 restated," in law
+    (folder / f"{n:04d}.md").unlink()  # with it gone, the law it made no longer holds
     assert am.problems(law, folder)
 
 

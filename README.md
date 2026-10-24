@@ -237,7 +237,7 @@ willow/
 ├── BUGS.md                   the known bugs, made from the tests that show them
 ├── DECISIONS.md              what's settled, why, and what holds it
 ├── LIMITS.md                 what willow doesn't do, on purpose or not yet
-├── CONSTITUTION.md           the law the kernel is written to enforce (always a draft; now 0.10)
+├── CONSTITUTION.md           the law the kernel is written to enforce (always a draft; now 0.14)
 ├── constitution/             the checks that answer to it
 ├── adapters/                 add-ons built on top of kernel.py
 ├── ports/                    kernel.py rewritten in other languages

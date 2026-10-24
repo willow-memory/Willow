@@ -13,13 +13,9 @@
       "answer": "out of reach",
       "why": "Creating, delegating and vetoing capabilities between agents: willow has no agents to grant them to."
     },
-    "CONST-II-1": {
-      "answer": "open",
-      "why": "Each add-on's card enumerates what it writes and where it goes online, and the guard holds it to that; whether that is II.1's enumeration is still to be shown. No check cites II.1 yet."
-    },
     "CONST-III": {
       "answer": "open",
-      "why": "The guard holds each add-on to its card's reach, and cites Article III; which of its clauses that meets, clause by clause, no check says yet."
+      "why": "III.1 and III.5 are cited by the kernel's test that it reaches nothing it isn't given and sends nothing off the machine, and the guard holds each add-on to its card. III.2 and III.4, a standing scope list and an audit of grants, have no check of their own yet."
     },
     "CONST-III-3": {
       "answer": "out of reach",
@@ -47,7 +43,7 @@
     },
     "CONST-VI": {
       "answer": "open",
-      "why": "The kernel's record is append-only and hash-chained, under CONST-0-5; which clauses of Article VI that meets, clause by clause, no check says yet."
+      "why": "The kernel's record is append-only and hash-chained, under CONST-0-5, and VI.6 is cited by the generated pages, views recomputed and never kept by hand. VI.1's signed ledger, VI.2's repair of the chain and VI.4's auditor apart from the actor have no check of their own yet."
     },
     "CONST-VI-3": {
       "answer": "out of reach",

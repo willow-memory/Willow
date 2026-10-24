@@ -63,7 +63,8 @@ def run(root: Path, script: Path, *args: str) -> tuple[int, str]:
 
 
 def test_writing_a_file_when_the_card_says_nothing(repo, tmp_path):
-    """An add-on can't widen its own reach past its card (CONST-0-3, CONST-III)."""
+    """An add-on can't widen its own reach past its card (CONST-0-3, CONST-III):
+    what the card doesn't list, it can't do (CONST-II-1)."""
     root, _, _ = repo
     script = addon(root, "nothing", "none", f"open({str(root / 'out.txt')!r}, 'w')\n")
     code, log = run(root, script)

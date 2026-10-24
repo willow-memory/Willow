@@ -1,6 +1,6 @@
 """mutants: a break the tests miss fails the add-on; an accepted one doesn't;
 a stale acceptance does; ids don't move with the lines; the repo is never
-touched."""
+touched. A check that can't fail is no check (CONST-IV-9)."""
 
 from __future__ import annotations
 

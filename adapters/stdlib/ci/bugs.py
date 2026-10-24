@@ -12,13 +12,14 @@ When someone fixes the bug, the test passes, and because the mark is
 strict, a test that passes when it was expected to fail fails the run. So
 the fix has to take the mark off, and BUGS.md loses the bug only then;
 changelog.py then asks for a line under `### Fixed` naming it. A bug can't
-be listed without a test, or leave the list without a fix.
+be listed without a test, or leave the list without a fix (CONST-VI-7).
 
 Every expected-to-fail mark in the repo's tests has to be one of these:
 strict, with a `bug #N:` reason. Any other is refused, since a mark that
 isn't strict lets a fixed bug pass unnoticed.
 
 `write` makes BUGS.md from the tests; `check` says whether it is current.
+BUGS.md is a view of the tests, recomputed, never kept by hand (CONST-VI-6).
 Exit codes, the kernel's: 0 written, or current; 2 not current, a mark
 refused, or a bad command line.
 """
