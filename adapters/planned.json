@@ -401,16 +401,6 @@
   "tags": "no-install, online, read-only, maintainers"
  },
  {
-  "name": "claim-check",
-  "kind": "stdlib",
-  "section": "Trust and proof",
-  "line": "A claim checked against your sources: the passages that hold all of its parts, the ones that hold only some, and the parts no file names.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, trust"
- },
- {
   "name": "claude",
   "kind": "deps",
   "section": "Assistants",

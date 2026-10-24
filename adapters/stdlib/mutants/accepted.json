@@ -8,6 +8,9 @@
   "books": {
     "059f5e759b3b": "Kindle always writes a blank line after a clipping's meta line; starting one line later skips only that blank."
   },
+  "claim-check": {
+    "11c6e5c3ed55": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
+  },
   "clauses": {
     "0df2e008ca77": "The width a file of page headings and no text lines falls back to: with no lines, it is never compared to one."
   },

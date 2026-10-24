@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `claim-check`, an add-on that checks a claim against your sources part
+  by part: the passages holding every part, those holding the most short of
+  that with what they lack, and the parts no file names. (#17)
 - `misquote`, an add-on for a quote that is almost in your files: the
   passage holding most of its words in order, and the words it drops, adds
   or changes; quote-check's "not there" made specific. (#17)

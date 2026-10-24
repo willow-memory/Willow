@@ -98,6 +98,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "privacy": ("privacy.py", ["bite", "--box", "{box}", *NOW, "tomatoes"]),
     "quote-check": ("quote_check.py", ["--box", "{box}", "Tomatoes want sun"]),
     "misquote": ("misquote.py", ["--box", "{box}", "Tomatoes want rain"]),
+    "claim-check": ("claim_check.py", ["--box", "{box}", "tomatoes want sun"]),
     "readings": ("readings.py", ["bite", "--box", "{box}", *NOW, "tomatoes"]),
     "scan": ("scan.py", ["index", "--from", "{pile}", "--to", "{tmp}/index"]),
     "snapshot": ("snapshot.py", ["check", "--in", "{pile}"]),
