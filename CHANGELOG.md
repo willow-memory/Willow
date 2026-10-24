@@ -15,7 +15,7 @@ says how). The first was v0.1.0.
   the same thing when they share two words and half the shorter's; records
   of one kind (invoices numbered alike, a form's field, a list's items) and
   lines written on different days are counted and left alone. Dates are the
-  kernel's own reading.
+  kernel's own reading. (#29)
 - `scan`, an add-on that indexes a folder once and then answers a list of
   questions in seconds with the kernel's own answers, narrowing only which
   passages `rank` looks at. It adds `--changed-from` (ask only what changed
