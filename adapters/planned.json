@@ -20,16 +20,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "browse",
-  "kind": "stdlib",
-  "section": "Ways to use it",
-  "line": "A local web page to ask questions and approve answers, reachable from this machine only.",
-  "source": "new",
-  "writes": "record",
-  "network": "loopback",
-  "tags": "no-install, this-machine, records, interface"
- },
- {
   "name": "care",
   "kind": "stdlib",
   "section": "Keeping track",
@@ -80,16 +70,6 @@
   "writes": "record",
   "network": "none",
   "tags": "needs-install, offline, records, play"
- },
- {
-  "name": "digest",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "One page: suggestions waiting, approvals gone stale, dates coming up, questions repeated.",
-  "source": "bot",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
  },
  {
   "name": "encrypt",
@@ -303,45 +283,5 @@
   "writes": "to",
   "network": "the model, downloaded once",
   "tags": "needs-install, online, writes-output, file-reader"
- },
- {
-  "name": "words-de",
-  "kind": "stdlib",
-  "section": "Your own words",
-  "line": "German common words, so questions aren't matched on \"der\" and \"und\".",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, words"
- },
- {
-  "name": "words-es",
-  "kind": "stdlib",
-  "section": "Your own words",
-  "line": "Spanish common words (\"el\", \"y\").",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, words"
- },
- {
-  "name": "words-fr",
-  "kind": "stdlib",
-  "section": "Your own words",
-  "line": "French common words (\"le\", \"et\").",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, words"
- },
- {
-  "name": "words-pt",
-  "kind": "stdlib",
-  "section": "Your own words",
-  "line": "Portuguese common words (\"o\", \"e\").",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, words"
  }
 ]

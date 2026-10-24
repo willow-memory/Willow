@@ -54,6 +54,10 @@ willow/
 │   │   │   ├── books.py      Kindle highlights and .epub text, as passages
 │   │   │   ├── test_books.py
 │   │   │   └── README.md
+│   │   ├── browse/
+│   │   │   ├── browse.py     your folder in your browser, on 127.0.0.1: ask, read, approve with a click
+│   │   │   ├── test_browse.py
+│   │   │   └── README.md
 │   │   ├── calendar/
 │   │   │   ├── cal.py        .ics events and .vcf contacts, as dated lines
 │   │   │   ├── test_calendar.py
@@ -79,6 +83,10 @@ willow/
 │   │   ├── coming-up/
 │   │   │   ├── coming_up.py  dates in your files in the next few days
 │   │   │   ├── test_coming_up.py
+│   │   │   └── README.md
+│   │   ├── digest/
+│   │   │   ├── digest.py     one page of what waits on you, gone stale, coming up; writes nothing
+│   │   │   ├── test_digest.py
 │   │   │   └── README.md
 │   │   ├── export/
 │   │   │   ├── export.py     approved answers and the question log, as Markdown or CSV
@@ -147,9 +155,25 @@ willow/
 │   │   │   ├── surprise.py   one passage drawn by a seeded stream, replayable
 │   │   │   ├── test_surprise.py
 │   │   │   └── README.md
-│   │   └── todo/
-│   │       ├── todo.py       things marked to do, oldest first
-│   │       ├── test_todo.py
+│   │   ├── todo/
+│   │   │   ├── todo.py       things marked to do, oldest first
+│   │   │   ├── test_todo.py
+│   │   │   └── README.md
+│   │   ├── words-de/
+│   │   │   ├── words_de.py   a question in German, its common words out, then the kernel's bite
+│   │   │   ├── test_words_de.py
+│   │   │   └── README.md
+│   │   ├── words-es/
+│   │   │   ├── words_es.py   a question in Spanish, its common words out, then the kernel's bite
+│   │   │   ├── test_words_es.py
+│   │   │   └── README.md
+│   │   ├── words-fr/
+│   │   │   ├── words_fr.py   a question in French, its common words out, then the kernel's bite
+│   │   │   ├── test_words_fr.py
+│   │   │   └── README.md
+│   │   └── words-pt/
+│   │       ├── words_pt.py   a question in Portuguese, its common words out, then the kernel's bite
+│   │       ├── test_words_pt.py
 │   │       └── README.md
 │   └── deps/                 add-ons that need something installed
 │       ├── README.md         what one must declare: pins, floors, licences, network

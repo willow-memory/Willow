@@ -18,18 +18,18 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`█████████░░░░░░░░░░░` **26 of 59 built** · 42 need no install · 17 need one
+`███████████░░░░░░░░░` **32 of 59 built** · 42 need no install · 17 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
 | Reading more kinds of files | 7 | 8 | 9 | 6 |
 | Finding things | 4 | 2 | 4 | 2 |
-| Your own words | 1 | 6 | 5 | 2 |
-| Keeping track | 4 | 5 | 9 | 0 |
+| Your own words | 5 | 2 | 5 | 2 |
+| Keeping track | 5 | 4 | 9 | 0 |
 | Trust and proof | 2 | 4 | 4 | 2 |
 | Privacy and safety | 1 | 1 | 2 | 0 |
 | Assistants | 1 | 2 | 0 | 3 |
-| Ways to use it | 1 | 2 | 2 | 1 |
+| Ways to use it | 2 | 1 | 2 | 1 |
 | Play | 0 | 3 | 2 | 1 |
 | For maintainers | 5 | 0 | 5 | 0 |
 <!-- /willow:pools -->
@@ -37,19 +37,19 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ### Newest
 
 <!-- willow:newest -->
-- 2026-10-23 · [**todo**](adapters/stdlib/todo/) — TODO, FIXME and "need to" lines across the folder, oldest first.
-- 2026-10-23 · [**surprise**](adapters/stdlib/surprise/) — One passage from your folder at random, seeded so it can be replayed.
-- 2026-10-23 · [**starter-words**](adapters/stdlib/starter-words/) — A first-day words list to copy and edit (owes = invoice, outstanding; doctor = dr, physician, clinic).
-- 2026-10-23 · [**stale**](adapters/stdlib/stale/) — Approved answers whose cited passage has changed or gone. Citations are content hashes, so it's exact.
-- 2026-10-23 · [**similar**](adapters/stdlib/similar/) — What's already on the add-on list near a new idea, by the kernel's own search.
+- 2026-10-24 · [**words-pt**](adapters/stdlib/words-pt/) — Portuguese common words ("o", "e").
+- 2026-10-24 · [**words-fr**](adapters/stdlib/words-fr/) — French common words ("le", "et").
+- 2026-10-24 · [**words-es**](adapters/stdlib/words-es/) — Spanish common words ("el", "y").
+- 2026-10-24 · [**words-de**](adapters/stdlib/words-de/) — German common words, so questions aren't matched on "der" and "und".
+- 2026-10-24 · [**digest**](adapters/stdlib/digest/) — One page of what your folder needs from you: suggestions waiting, approvals gone stale, dates coming up, questions that keep finding nothing.
 <!-- /willow:newest -->
 
 ### Add-on of the week
 
 <!-- willow:pick week=2026-W43 -->
-**[todo](adapters/stdlib/todo/)** — TODO, FIXME and "need to" lines across the folder, oldest first.
+**[mutants](adapters/stdlib/mutants/)** — Breaks each add-on's code on purpose and checks its tests notice.
 
-*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 26 built add-ons in name order.*
+*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 32 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -91,17 +91,17 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**starter-words**](adapters/stdlib/starter-words/) — A first-day words list to copy and edit (owes = invoice, outstanding; doctor = dr, physician, clinic). *new* `no-install` `offline` `writes-output` `words`
 - **stems** (idea) — Word forms for 20+ languages, so "maisons" finds "maison". Needs snowballstemmer; BSD-3. *new* `needs-install` `offline` `read-only` `words`
 - **synonyms** (idea) — Suggests words-list lines for a word no file has. Needs nltk and WordNet; Apache-2.0. Goes online: the WordNet data, downloaded once. *new* `needs-install` `online` `writes-output` `words`
-- **words-de** (idea) — German common words, so questions aren't matched on "der" and "und". *new* `no-install` `offline` `writes-output` `words`
-- **words-es** (idea) — Spanish common words ("el", "y"). *new* `no-install` `offline` `writes-output` `words`
-- **words-fr** (idea) — French common words ("le", "et"). *new* `no-install` `offline` `writes-output` `words`
-- **words-pt** (idea) — Portuguese common words ("o", "e"). *new* `no-install` `offline` `writes-output` `words`
+- [**words-de**](adapters/stdlib/words-de/) — German common words, so questions aren't matched on "der" and "und". *new* `no-install` `offline` `records` `words` `german`
+- [**words-es**](adapters/stdlib/words-es/) — Spanish common words ("el", "y"). *new* `no-install` `offline` `records` `words` `spanish`
+- [**words-fr**](adapters/stdlib/words-fr/) — French common words ("le", "et"). *new* `no-install` `offline` `records` `words` `french`
+- [**words-pt**](adapters/stdlib/words-pt/) — Portuguese common words ("o", "e"). *new* `no-install` `offline` `records` `words` `portuguese`
 
 ### Keeping track
 
 - [**again**](adapters/stdlib/again/) — Questions you keep asking: "asked 4 times; approve an answer?" *bot* `no-install` `offline` `read-only` `tracking`
 - **care** (idea) — For caregivers: medications, vitals and appointments from a care log, what's due and what moved. *box* `no-install` `offline` `read-only` `tracking`
 - [**coming-up**](adapters/stdlib/coming-up/) — Dates written in your files in the next N days: appointments, renewals, deadlines. *box* `no-install` `offline` `read-only` `tracking`
-- **digest** (idea) — One page: suggestions waiting, approvals gone stale, dates coming up, questions repeated. *bot* `no-install` `offline` `read-only` `tracking`
+- [**digest**](adapters/stdlib/digest/) — One page of what your folder needs from you: suggestions waiting, approvals gone stale, dates coming up, questions that keep finding nothing. *bot* `no-install` `offline` `read-only` `tracking` `everyday`
 - **flashcards** (idea) — Approved question-and-answer pairs become cards, scheduled by spaced repetition. *box* `no-install` `offline` `records` `tracking`
 - **forecasts** (idea) — Write a prediction before the outcome, settle it later, see your Brier score. *bot* `no-install` `offline` `records` `tracking`
 - **invoices** (idea) — For freelancers: invoices and payments matched by the id pattern you give, never guessed. *new* `no-install` `offline` `read-only` `tracking`
@@ -132,7 +132,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 
 ### Ways to use it
 
-- **browse** (idea) — A local web page to ask questions and approve answers, reachable from this machine only. Reaches this machine only. *new* `no-install` `this-machine` `records` `interface`
+- [**browse**](adapters/stdlib/browse/) — Your folder in your web browser: ask, read each answer at its file and line, and approve suggestions with a click, from this machine only. Reaches this machine only. *new* `no-install` `this-machine` `records` `interface` `everyday`
 - [**plain**](adapters/stdlib/plain/) — Answers as sentences instead of JSON, each with its file and line. *new* `no-install` `offline` `records` `interface`
 - **speak** (idea) — Reads answers aloud. Needs pyttsx3; MPL-2.0. *new* `needs-install` `offline` `read-only` `interface`
 

@@ -21,13 +21,19 @@
     "04697c92e4ab": "The promise is that a part is bounded, not its exact size: 64 or 65 MiB refuses the same zip bombs."
   },
   "on-this-day": {
-    "3f174bd01a95": "today is eight characters, so today[4:9] is today[4:8].",
-    "38b9c5553e24": "A year is four digits: comparing d[:5] with this year orders earlier, same and later years the same way."
+    "38b9c5553e24": "A year is four digits: comparing d[:5] with this year orders earlier, same and later years the same way.",
+    "3f174bd01a95": "today is eight characters, so today[4:9] is today[4:8]."
   },
   "starter-words": {
     "2f4df3ac7eca": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
   },
   "todo": {
     "05759b3d5759": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
+  },
+  "words-es": {
+    "088d00bd8ee5": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
+  },
+  "words-fr": {
+    "3fb13e910cef": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
   }
 }

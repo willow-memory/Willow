@@ -10,6 +10,15 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- No terminal, no English required: `browse`, your folder in your web
+  browser on 127.0.0.1 (ask, read each answer at its file and line, approve
+  a suggestion with a click through the kernel's own `seal`; a secret per
+  start, Host and Origin checked, never framed, no scripts), with a
+  `launcher` for a double-click file on macOS, Windows and Linux; `digest`,
+  one page of what waits on you, what went stale, what's coming up and
+  what keeps finding nothing, writing nothing; and `words-de`, `words-es`,
+  `words-fr` and `words-pt`, which take a language's common words out of a
+  question before the kernel's bite. (#PR)
 - CI's `similar` job keeps its list of what's near each added idea as the
   run's `similar` artifact, which willow-bot posts in its status comment on
   the pull request; `github.py check` holds the job to it. (#10)

@@ -57,12 +57,12 @@ can pick up ([CONTRIBUTING.md](CONTRIBUTING.md) says how):
 <!-- willow:summary -->
 - **Reading more kinds of files:** PDFs, email, chats, calendars, notes and office files, as text it can search. Built: [books](adapters/stdlib/books/), [calendar](adapters/stdlib/calendar/), [chats](adapters/stdlib/chats/), [mail](adapters/stdlib/mail/), [notes](adapters/stdlib/notes/), [office](adapters/stdlib/office/), [pdf](adapters/deps/pdf/). Ideas: *bank, bookmarks, git-history, health, ocr, photos, sheets, voice*.
 - **Finding things:** more ways to look: every match, this date in past years, an exact quote, by meaning, past typos. Built: [all](adapters/stdlib/all/), [on-this-day](adapters/stdlib/on-this-day/), [quote-check](adapters/stdlib/quote-check/), [surprise](adapters/stdlib/surprise/). Ideas: *meaning, typos*.
-- **Your own words:** teaching it the words you use, so a question finds what your files call it. Built: [starter-words](adapters/stdlib/starter-words/). Ideas: *stems, synonyms, words-de, words-es, words-fr, words-pt*.
-- **Keeping track:** dates coming up, numbers over time, to-dos, care logs, invoices, forecasts and flashcards. Built: [again](adapters/stdlib/again/), [coming-up](adapters/stdlib/coming-up/), [readings](adapters/stdlib/readings/), [todo](adapters/stdlib/todo/). Ideas: *care, digest, flashcards, forecasts, invoices*.
+- **Your own words:** teaching it the words you use, so a question finds what your files call it. Built: [starter-words](adapters/stdlib/starter-words/), [words-de](adapters/stdlib/words-de/), [words-es](adapters/stdlib/words-es/), [words-fr](adapters/stdlib/words-fr/), [words-pt](adapters/stdlib/words-pt/). Ideas: *stems, synonyms*.
+- **Keeping track:** dates coming up, numbers over time, to-dos, care logs, invoices, forecasts and flashcards. Built: [again](adapters/stdlib/again/), [coming-up](adapters/stdlib/coming-up/), [digest](adapters/stdlib/digest/), [readings](adapters/stdlib/readings/), [todo](adapters/stdlib/todo/). Ideas: *care, flashcards, forecasts, invoices*.
 - **Trust and proof:** answers you can check later: exports, stale answers, what changed, signed and encrypted records. Built: [export](adapters/stdlib/export/), [stale](adapters/stdlib/stale/). Ideas: *changed, encrypt, pgp, report*.
 - **Privacy and safety:** phone numbers, card numbers and keys hidden in answers, or found sitting in files. Built: [privacy](adapters/stdlib/privacy/). Ideas: *secrets-audit*.
 - **Assistants:** AI assistants that can ask and suggest, but never approve. Built: [mcp](adapters/deps/mcp/). Ideas: *claude, local-model*.
-- **Ways to use it:** other ways in: plain sentences, a page on this machine, answers read aloud. Built: [plain](adapters/stdlib/plain/). Ideas: *browse, speak*.
+- **Ways to use it:** other ways in: plain sentences, a page on this machine, answers read aloud. Built: [browse](adapters/stdlib/browse/), [plain](adapters/stdlib/plain/). Ideas: *speak*.
 - **Play:** seeded, replayable games on the record, such as dice and the Game of Life. Built: nothing yet. Ideas: *dice, dice5e, life*.
 - **For maintainers:** the repo's own tools: CI, the list, tests that can fail. Built: [ci](adapters/stdlib/ci/), [github](adapters/stdlib/github/), [mutants](adapters/stdlib/mutants/), [readme](adapters/stdlib/readme/), [similar](adapters/stdlib/similar/).
 <!-- /willow:summary -->
@@ -70,11 +70,11 @@ can pick up ([CONTRIBUTING.md](CONTRIBUTING.md) says how):
 <!-- willow:front show=pick week=2026-W43 -->
 **Add-on of the week**
 
-**[todo](adapters/stdlib/todo/)** — TODO, FIXME and "need to" lines across the folder, oldest first.
+**[mutants](adapters/stdlib/mutants/)** — Breaks each add-on's code on purpose and checks its tests notice.
 
-*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 26 built add-ons in name order.*
+*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 32 built add-ons in name order.*
 
-[Every add-on, 26 built of 59, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 32 built of 59, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 ## How it works
