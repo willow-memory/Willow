@@ -179,6 +179,56 @@ The verdicts are rows on a kernel record (the chain holds, 6 rows, 0
 sealed), with the SHA-256 of the scored answers (868f771a) and of the
 tools: `kernel.py` 2d7fd0f6, `scan.py` d93536eb.
 
+## Phase 3: seven other CVEs, 2026-10-24
+
+Run by [phase3.py](phase3.py), frozen with [its pins](phase3.json) and
+[its questions](questions/phase3.txt) before it ran. Four of six pass rules
+pass. **BM25 found all seven; the kernel's rank found one.**
+
+Five are older CVEs a model may remember, and two were disclosed after
+mid-2026: Brotli's CVE-2026-111497 (the Node.js bug) and Onigmo's
+CVE-2026-110264 (the GitLab bug, in Ruby's regex engine). Two agents wrote
+eight questions a CVE from the advisories, without seeing any project's
+code or any fix. Each vulnerable release was asked `--changed-from` its
+fixed one, top 3. A hit is a passage holding a line a fix commit removed,
+or one next to code it added (rule 2), anywhere but tests, changelogs and
+version files. Each tree is every file of its commit as git stores it, since
+`git archive` drops most of Brotli's files and rewrites one of Log4j's.
+
+| CVE | Changed passages | Random | Kernel | BM25 |
+|---|---|---|---|---|
+| CVE-2024-4577, PHP CGI | 138 | 2.2% | 2 of 8 | 5 of 8 |
+| CVE-2019-11043, PHP-FPM | 354 | 0.9% | 2 | 7 |
+| CVE-2012-1823, PHP CGI | 5 | 60.5% | 3 | 6 |
+| CVE-2014-0160, Heartbleed | 217 | 5.6% | 3 | 8 |
+| CVE-2021-44228, Log4Shell | 1,543 | 7.3% | 3 | 4 |
+| CVE-2026-111497, Brotli (new) | 46 | 86.8% | 4 | 7 |
+| CVE-2026-110264, Onigmo (new) | 72 | 23.4% | 0 | 7 |
+
+| Rule | Kernel | BM25 |
+|---|---|---|
+| found: half a CVE's questions hit, for 4 of 7 | **fails**: 1 of 7 | passes: 7 of 7 |
+| above chance, the two new CVEs | **fails**: 4 of 16 against 55%, p = 1.0 | passes: 14 of 16, p = 0.0068 |
+| above chance, the five older | passes: 13 of 40 against 15%, p = 0.0051 | passes: 30 of 40, p = 10^-17 |
+
+**What it says:**
+
+- **The method travels.** Asking only what changed between a release and
+  its fix, with BM25, found the fixed code for every CVE tried, in four
+  projects and three languages, and for the two a model can't remember.
+- **The kernel's rank is the wrong tool for this.** It serves a passage
+  only when it holds half a question's rarer words; on code, few passages
+  do. On Onigmo it served nothing that hit, for all eight questions.
+- **Two tests are weak, and say so.** Brotli's fix changed 46 passages,
+  most of the changed set, so random draws hit 87% of the time; PHP 5.4.2
+  changed only 5. They count, but they show little either way.
+- **The older five can't rule out memory.** Their writer was told to use no
+  remembered identifier, and says it used none, but a model knows these
+  bugs. The two new CVEs are the clean test, and BM25 passes it.
+
+The verdicts are rows on a kernel record (the chain holds, 7 rows, 0
+sealed), with the SHA-256 of the scored answers (3b8fd0d7).
+
 ## Where each phase stands
 
 | Phase | Status |
@@ -187,7 +237,7 @@ tools: `kernel.py` 2d7fd0f6, `scan.py` d93536eb.
 | 2, null tests | done: 4 of 6 pass; random (p = 0.022) and BM25 fail |
 | 1, blind questions | done: 4 of 5 pass; the kernel under rule 1 fails (p = 0.022) |
 | 6, reproducibility | not started |
-| 3, out of sample | not started; its CVEs and releases are frozen when it starts |
+| 3, out of sample | done: 4 of 6 pass; BM25 finds all 7 CVEs, the kernel 1 |
 | 4, before the fix | not started |
 | 5, robustness | not started |
 
