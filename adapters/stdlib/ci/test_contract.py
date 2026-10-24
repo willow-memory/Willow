@@ -64,6 +64,9 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         "Subject: Roof estimate\n\nThe estimate is in.\n").encode()}),
     "notes": ("notes.py", {"garden.md": b"Tomatoes want [[sun]].\n"}),
     "office": ("office.py", {"letter.docx": _docx("The roof is fixed.")}),
+    "web-pages": ("web_pages.py", {"saved.html": (
+        "<!-- saved from url=(0020)https://example.org/ -->\n"
+        "<p>The roof is fixed.</p>\n").encode()}),
     "clauses": ("clauses.py", {"terms.html": (
         "<h1>Terms</h1><p>We keep your data. We delete it on request.</p>\n").encode()}),
 }  # fmt: skip
@@ -99,6 +102,9 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "plain": ("plain.py", ["bite", "--box", "{box}", *NOW, "tomatoes"]),
     "privacy": ("privacy.py", ["bite", "--box", "{box}", *NOW, "tomatoes"]),
     "quote-check": ("quote_check.py", ["--box", "{box}", "Tomatoes want sun"]),
+    "misquote": ("misquote.py", ["--box", "{box}", "Tomatoes want rain"]),
+    "claim-check": ("claim_check.py", ["--box", "{box}", "tomatoes want sun"]),
+    "policy-watch": ("policy_watch.py", ["--url", "http://127.0.0.1:9/terms", "--to", "{tmp}/w"]),
     "readings": ("readings.py", ["bite", "--box", "{box}", *NOW, "tomatoes"]),
     "scan": ("scan.py", ["index", "--from", "{pile}", "--to", "{tmp}/index"]),
     "slow-tests": ("slow_tests.py", ["--runs", "{pile}"]),

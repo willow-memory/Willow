@@ -10,6 +10,18 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `web-pages`, a reader for saved web pages, .html and .mhtml: each page's
+  paragraphs, headings and list items as paragraphs, under the address it
+  came from, or `address: not in the file`. (#18)
+- `policy-watch`, an add-on that fetches a terms or policy page each time
+  it runs, through snapshot, and says what changed since the last copy,
+  sentence by sentence, through clauses. (#18)
+- `claim-check`, an add-on that checks a claim against your sources part
+  by part: the passages holding every part, those holding the most short of
+  that with what they lack, and the parts no file names. (#18)
+- `misquote`, an add-on for a quote that is almost in your files: the
+  passage holding most of its words in order, and the words it drops, adds
+  or changes; quote-check's "not there" made specific. (#18)
 - `snapshot`, an add-on that fetches a page or file once into a folder, as
   it came, with its address, the time and its SHA-256 on a hidden line the
   kernel never serves; what couldn't be fetched gets its line too, and
@@ -219,6 +231,10 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- `live` has a `chrome` check: a page saved by headless Chrome, over its
+  DevTools pipe with no library, as .mhtml and as drawn, read by web-pages.
+  Its first run found web-pages garbling Chrome's .mhtml, whose page part
+  names no charset; fixed, with a test of Chrome's exact form. (#18)
 - `test-impact` places a demo's test reached by import by its folder, as it
   places a demo's files, not php2shell's alone; the study's CI row is
   `demo:google-privacy-2026-10-16`, by that rule. (#16)

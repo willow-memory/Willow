@@ -391,16 +391,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "claim-check",
-  "kind": "stdlib",
-  "section": "Trust and proof",
-  "line": "A claim checked against your sources: the passages that hold all of its parts, the ones that hold only some, and the parts no file names.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, trust"
- },
- {
   "name": "claude",
   "kind": "deps",
   "section": "Assistants",
@@ -1791,16 +1781,6 @@
   "tags": "needs-install, online, read-only, trust"
  },
  {
-  "name": "misquote",
-  "kind": "stdlib",
-  "section": "Finding things",
-  "line": "A quote that is almost in your files: the closest passage, and the words it adds, drops or changes, so a misquote shows as one.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, search"
- },
- {
   "name": "model-fit",
   "kind": "stdlib",
   "section": "Assistants",
@@ -2214,16 +2194,6 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, file-reader"
- },
- {
-  "name": "policy-watch",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "A terms or policy page fetched each time you run it, by snapshot, and what changed since last time, sentence by sentence, by clauses.",
-  "source": "new",
-  "writes": "to",
-  "network": "the page you name, fetched each time you run it",
-  "tags": "no-install, online, writes-output, tracking"
  },
  {
   "name": "pr-context",
@@ -3315,16 +3285,6 @@
   "writes": "record",
   "network": "api.open-meteo.com, to read the forecast and the outcome",
   "tags": "no-install, online, records, play"
- },
- {
-  "name": "web-pages",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Saved web pages, .html and .mhtml, as their readable text, with the address they came from.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
  },
  {
   "name": "welcome",

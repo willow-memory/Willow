@@ -98,6 +98,10 @@ willow/
 │   │   │   ├── ci_why.py     the failing block of a red CI log, plain: the test, the assertion, the line to act on
 │   │   │   ├── test_ci_why.py
 │   │   │   └── README.md
+│   │   ├── claim-check/
+│   │   │   ├── claim_check.py  a claim, part by part: what holds it all, some of it, and what no file names
+│   │   │   ├── test_claim_check.py
+│   │   │   └── README.md
 │   │   ├── claude-code/
 │   │   │   ├── hook.py           Claude Code's prompt hook: cited passages at each prompt; setup prints it
 │   │   │   ├── test_hook.py
@@ -191,6 +195,10 @@ willow/
 │   │   │   ├── server.py         the mcp add-on's three tools, the protocol by hand, nothing to install
 │   │   │   ├── test_server.py
 │   │   │   └── README.md
+│   │   ├── misquote/
+│   │   │   ├── misquote.py   a quote almost in your files: the closest passage, and what differs
+│   │   │   ├── test_misquote.py
+│   │   │   └── README.md
 │   │   ├── mutants/
 │   │   │   ├── mutants.py    breaks each add-on's code on purpose and checks its tests notice
 │   │   │   ├── accepted.json the breaks that change nothing a person could notice, each with why
@@ -223,6 +231,10 @@ willow/
 │   │   ├── plain/
 │   │   │   ├── plain.py      the kernel's answer as sentences
 │   │   │   ├── test_plain.py
+│   │   │   └── README.md
+│   │   ├── policy-watch/
+│   │   │   ├── policy_watch.py  a policy page fetched each run, and what changed since, sentence by sentence
+│   │   │   ├── test_policy_watch.py
 │   │   │   └── README.md
 │   │   ├── print/
 │   │   │   ├── print.py      an answer as a page to print, with its sources; --large for big type
@@ -316,6 +328,10 @@ willow/
 │   │   ├── wayback/
 │   │   │   ├── wayback.py    the Wayback Machine's copy of a page, saved and compared byte for byte
 │   │   │   ├── test_wayback.py
+│   │   │   └── README.md
+│   │   ├── web-pages/
+│   │   │   ├── web_pages.py  saved .html and .mhtml as their paragraphs, under the address they came from
+│   │   │   ├── test_web_pages.py
 │   │   │   └── README.md
 │   │   ├── windsurf/
 │   │   │   ├── windsurf.py       the mcp_config.json lines that register mcp-lite with Windsurf
