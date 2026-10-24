@@ -10,6 +10,13 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `repo-pile`: a list of public repositories made into a box you can ask.
+  Each is cloned, kept only when its own licence file grants one an
+  Apache-2.0 project can use (anything else, or none, is left out and said
+  why), and its docs made the pile; the kernel makes the box, and scan
+  indexes the docs and the whole source. Then ask, bite, quote, report,
+  check and backup are willow's own add-ons over it, what they print
+  scrubbed by privacy. It never reads the key or seals.
 - `gaps`: where a log you keep stops. The days a folder of daily notes, a
   reading log or a diary skipped are said as gaps: a spacing more than three
   times the log's typical one. A log with too few dates is said, an undated

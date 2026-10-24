@@ -18,7 +18,7 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`████░░░░░░░░░░░░░░░░` **73 of 415 built** · 366 need no install · 49 need one
+`████░░░░░░░░░░░░░░░░` **74 of 416 built** · 367 need no install · 49 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
@@ -29,7 +29,7 @@ or `writes-output`; its section), and any the card's author adds or changes.
 | Trust and proof | 9 | 34 | 34 | 9 |
 | Privacy and safety | 2 | 11 | 13 | 0 |
 | Assistants | 11 | 17 | 22 | 6 |
-| Ways to use it | 10 | 27 | 33 | 4 |
+| Ways to use it | 11 | 27 | 34 | 4 |
 | Play | 4 | 36 | 35 | 5 |
 | For maintainers | 11 | 29 | 35 | 5 |
 <!-- /willow:pools -->
@@ -47,9 +47,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ### Add-on of the week
 
 <!-- willow:pick week=2026-W43 -->
-**[opencode](adapters/stdlib/opencode/)** — OpenCode asks your folder and hands in suggestions, through the mcp add-on.
+**[quote-check](adapters/stdlib/quote-check/)** — Is this exact quote in my files, and where? For writers, journalists and students.
 
-*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 73 built add-ons in name order.*
+*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 74 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -406,6 +406,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - **pr-context** (idea) — On a pull request, the passages in the repo's docs that name the files it changes, posted as one comment. Goes online: the forge, through the workflow's token, to post the comment. *new* `no-install` `online` `read-only` `interface`
 - [**print**](adapters/stdlib/print/) — An answer as a printable page with its sources, to take to an appointment; --large for big, high-contrast type. *new* `no-install` `offline` `records` `interface` `everyday`
 - **qr** (idea) — An answer as a QR code on screen, to carry it to your phone without the network. *new* `no-install` `offline` `read-only` `interface`
+- [**repo-pile**](adapters/stdlib/repo-pile/) — Public repositories made into a box you can ask: cloned, kept only under a licence an Apache-2.0 project can use, their docs the pile, indexed for fast questions. Goes online: github.com (or the --source you give), to clone the repositories you list. *new* `no-install` `online` `records` `interface` `research`
 - **rss-out** (idea) — New approved answers as an RSS feed file, for any feed reader. *new* `no-install` `offline` `writes-output` `interface`
 - **safe-app** (idea) — willow as a SAFE app: installed from the SAFE App Store, authorized per session, and deleted clean. *new* `no-install` `offline` `read-only` `interface`
 - **share** (idea) — One sealed answer to send someone, checkable by them, without giving them the folder. *new* `no-install` `offline` `writes-output` `interface`

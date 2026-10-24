@@ -240,6 +240,10 @@ willow/
 │   │   │   ├── readme.py     builds this README's generated sections from the cards
 │   │   │   ├── test_readme.py
 │   │   │   └── README.md     its card: sections, the draw, what it reads
+│   │   ├── repo-pile/
+│   │   │   ├── repo_pile.py  public repos made into a box: cloned, licence-gated, their docs the pile, indexed
+│   │   │   ├── test_repo_pile.py
+│   │   │   └── README.md
 │   │   ├── restack/
 │   │   │   ├── restack.py    your branches back on top of main, the repo's own conflicts settled
 │   │   │   ├── test_restack.py
