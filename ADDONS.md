@@ -18,7 +18,7 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`███████████░░░░░░░░░` **32 of 59 built** · 42 need no install · 17 need one
+`█████████████░░░░░░░` **49 of 76 built** · 59 need no install · 17 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
@@ -28,28 +28,28 @@ or `writes-output`; its section), and any the card's author adds or changes.
 | Keeping track | 5 | 4 | 9 | 0 |
 | Trust and proof | 2 | 4 | 4 | 2 |
 | Privacy and safety | 1 | 1 | 2 | 0 |
-| Assistants | 1 | 2 | 0 | 3 |
-| Ways to use it | 2 | 1 | 2 | 1 |
+| Assistants | 11 | 2 | 10 | 3 |
+| Ways to use it | 8 | 1 | 8 | 1 |
 | Play | 0 | 3 | 2 | 1 |
-| For maintainers | 5 | 0 | 5 | 0 |
+| For maintainers | 6 | 0 | 6 | 0 |
 <!-- /willow:pools -->
 
 ### Newest
 
 <!-- willow:newest -->
+- 2026-10-24 · [**zed**](adapters/stdlib/zed/) — Zed's assistant asks your folder and hands in suggestions, through the mcp add-on.
 - 2026-10-24 · [**words-pt**](adapters/stdlib/words-pt/) — Portuguese common words ("o", "e").
 - 2026-10-24 · [**words-fr**](adapters/stdlib/words-fr/) — French common words ("le", "et").
 - 2026-10-24 · [**words-es**](adapters/stdlib/words-es/) — Spanish common words ("el", "y").
 - 2026-10-24 · [**words-de**](adapters/stdlib/words-de/) — German common words, so questions aren't matched on "der" and "und".
-- 2026-10-24 · [**digest**](adapters/stdlib/digest/) — One page of what your folder needs from you: suggestions waiting, approvals gone stale, dates coming up, questions that keep finding nothing.
 <!-- /willow:newest -->
 
 ### Add-on of the week
 
 <!-- willow:pick week=2026-W43 -->
-**[mutants](adapters/stdlib/mutants/)** — Breaks each add-on's code on purpose and checks its tests notice.
+**[aider](adapters/stdlib/aider/)** — Aider reads answers from your folder with its /run command, file and line included.
 
-*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 32 built add-ons in name order.*
+*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 49 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -126,15 +126,31 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 
 Each hands in suggestions through propose. None can approve: every suggestion waits for your seal.
 
+- [**aider**](adapters/stdlib/aider/) — Aider reads answers from your folder with its /run command, file and line included. *new* `no-install` `offline` `read-only` `assistant`
 - **claude** (idea) — Suggestions from Claude through the Anthropic API, citing your passages. Needs anthropic; MIT. Goes online: api.anthropic.com, to ask for suggestions. *new* `needs-install` `online` `records` `assistant`
+- [**claude-code**](adapters/stdlib/claude-code/) — Claude Code sees cited passages from your folder with each prompt, through its prompt hook. *bot* `no-install` `offline` `records` `assistant`
+- [**codex-cli**](adapters/stdlib/codex-cli/) — OpenAI's Codex CLI asks your folder and hands in suggestions, through the mcp add-on. *new* `no-install` `offline` `read-only` `assistant`
+- [**copilot**](adapters/stdlib/copilot/) — GitHub Copilot, in VS Code and in its own CLI, asks your folder through the mcp add-on. *new* `no-install` `offline` `read-only` `assistant`
+- [**cursor**](adapters/stdlib/cursor/) — Cursor asks your folder and hands in suggestions, through the mcp add-on. *new* `no-install` `offline` `read-only` `assistant`
+- [**gemini-cli**](adapters/stdlib/gemini-cli/) — Google's Gemini CLI asks your folder and hands in suggestions, through the mcp add-on. *new* `no-install` `offline` `read-only` `assistant`
 - **local-model** (idea) — Suggestions from a model on this machine only, such as Ollama or llama.cpp. Needs a local model server; licence varies by model. Reaches this machine only. *new* `needs-install` `this-machine` `records` `assistant`
 - [**mcp**](adapters/deps/mcp/) — Lets any MCP client, such as an AI assistant or editor, ask your folder and hand in suggestions. Needs mcp; MIT. *new* `needs-install` `offline` `records` `assistant`
+- [**mcp-lite**](adapters/stdlib/mcp-lite/) — The mcp add-on's three tools with nothing to install: the protocol by hand, standard library only. *box* `no-install` `offline` `records` `assistant`
+- [**opencode**](adapters/stdlib/opencode/) — OpenCode asks your folder and hands in suggestions, through the mcp add-on. *new* `no-install` `offline` `read-only` `assistant`
+- [**windsurf**](adapters/stdlib/windsurf/) — Windsurf asks your folder and hands in suggestions, through the mcp add-on. *new* `no-install` `offline` `read-only` `assistant`
+- [**zed**](adapters/stdlib/zed/) — Zed's assistant asks your folder and hands in suggestions, through the mcp add-on. *new* `no-install` `offline` `read-only` `assistant`
 
 ### Ways to use it
 
 - [**browse**](adapters/stdlib/browse/) — Your folder in your web browser: ask, read each answer at its file and line, and approve suggestions with a click, from this machine only. Reaches this machine only. *new* `no-install` `this-machine` `records` `interface` `everyday`
+- [**emacs**](adapters/stdlib/emacs/) — Answers in an Emacs compilation buffer, each a jump to its file and line. *new* `no-install` `offline` `read-only` `interface`
+- [**jetbrains**](adapters/stdlib/jetbrains/) — An external tool for IntelliJ, PyCharm and the rest, with answers as links to file and line. *new* `no-install` `offline` `read-only` `interface`
+- [**pipe**](adapters/stdlib/pipe/) — Questions in on standard input, answers out one per line: JSON lines, or file:line: text for grep and fzf. *box* `no-install` `offline` `records` `interface`
 - [**plain**](adapters/stdlib/plain/) — Answers as sentences instead of JSON, each with its file and line. *new* `no-install` `offline` `records` `interface`
+- [**shell**](adapters/stdlib/shell/) — A willow command and tab completion for bash, zsh, fish and PowerShell, on Linux, macOS and Windows. *new* `no-install` `offline` `records` `interface`
 - **speak** (idea) — Reads answers aloud. Needs pyttsx3; MPL-2.0. *new* `needs-install` `offline` `read-only` `interface`
+- [**vim**](adapters/stdlib/vim/) — Answers in Vim and Neovim's quickfix list, each a jump to its file and line. *new* `no-install` `offline` `read-only` `interface`
+- [**vscode**](adapters/stdlib/vscode/) — A VS Code task whose answers land in the Problems panel, each a jump to its file and line. *new* `no-install` `offline` `read-only` `interface`
 
 ### Play
 
@@ -146,6 +162,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 
 - [**ci**](adapters/stdlib/ci/) — This repo's checks as verdict rows on a kernel record, the same every run. Goes online: PyPI, to read each dependency floor's release date. *box* `no-install` `online` `records` `maintainers`
 - [**github**](adapters/stdlib/github/) — What willow's repo needs from GitHub, kept in one folder so it can be taken away. Goes online: GitHub, through gh, to read the author of a pull request a security report points to. *box* `no-install` `online` `read-only` `maintainers`
+- [**live**](adapters/stdlib/live/) — Each way-in add-on run through the real program it's for, a shell, an editor or an AI tool: works, fails, or not here. Goes online: only what the programs it starts reach on their own; it reaches nothing itself. *new* `no-install` `maintainers` `tests` `interface` `assistant`
 - [**mutants**](adapters/stdlib/mutants/) — Breaks each add-on's code on purpose and checks its tests notice. *new* `no-install` `offline` `read-only` `maintainers`
 - [**readme**](adapters/stdlib/readme/) — Builds ADDONS.md, and the README's one feature, from the add-ons' own cards. *new* `no-install` `offline` `writes-output` `maintainers`
 - [**similar**](adapters/stdlib/similar/) — What's already on the add-on list near a new idea, by the kernel's own search. *box* `no-install` `offline` `read-only` `maintainers`

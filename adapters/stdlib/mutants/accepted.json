@@ -8,11 +8,30 @@
   "books": {
     "059f5e759b3b": "Kindle always writes a blank line after a clipping's meta line; starting one line later skips only that blank."
   },
+  "codex-cli": {
+    "2432e7c4e258": "The JSON branch's indent: codex-cli prints only TOML, so the JSON indent is never used.",
+    "596bc0a25be9": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
+  },
   "coming-up": {
     "059bb44076f5": "The kernel's dates are exactly eight characters, so d[6:9] is d[6:8]."
   },
+  "cursor": {
+    "1786b40184a1": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
+  },
   "export": {
     "2edb79a5366b": "Days are grouped by a key cut from the same timestamp as the day shown; one more character groups the same rows."
+  },
+  "gemini-cli": {
+    "106ddf1a7af1": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
+  },
+  "jetbrains": {
+    "2a82bb3953da": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
+  },
+  "live": {
+    "099e4afa6871": "How much of what a program said is quoted in a failure's reason: one character more is the same message, and the state, the part a person and CI act on, is unchanged."
+  },
+  "mcp-lite": {
+    "0422b2185389": "A propose refusal's reason after its first colon; a maxsplit of 2 differs only when the reason holds a second colon."
   },
   "notes": {
     "00d9493a4212": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
@@ -30,10 +49,20 @@
   "todo": {
     "05759b3d5759": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
   },
+  "vim": {
+    "21fa5a119235": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
+  },
+  "vscode": {
+    "423204448d2d": "sys.path.insert at index 1 instead of 0 still finds kernel.py.",
+    "42ff77b58811": "The printed tasks.json's indent: three spaces parses to the same tasks."
+  },
   "words-es": {
     "088d00bd8ee5": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
   },
   "words-fr": {
     "3fb13e910cef": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
+  },
+  "zed": {
+    "18bcef49e82b": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
   }
 }

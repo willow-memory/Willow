@@ -13,11 +13,11 @@ This repo's checks as a kernel record. Each check runs one fixed command and
 is written as one `verdict` row through the kernel's own `append`, so the CI
 record is hash-chained like any other and the kernel's `verify` checks it.
 
-    python adapters/stdlib/ci/ci.py run    [lint|tests|ports|demo|deps|mutants ...] [--box DIR]
+    python adapters/stdlib/ci/ci.py run    [lint|tests|ports|demo|deps|mutants|tools ...] [--box DIR]
     python adapters/stdlib/ci/ci.py verify [--box DIR]
     python adapters/stdlib/ci/ci.py show   [--box DIR]
 
-`run` with no part runs all six. The record goes in `.ci-record/` by default
+`run` with no part runs all seven. The record goes in `.ci-record/` by default
 (git ignores it), and the key `init` makes goes beside it in
 `.ci-record.key`. A record or key inside the repo where git would count it is
 refused: it would be hashed into the very files it records. CI keeps its
@@ -31,6 +31,7 @@ record in the runner's temp folder.
 | demo | `demo:hollis`, `demo:odile`, `demo:teodora`: each person's files made in a temporary folder and held to their `demo/*/PLANTED.md` |
 | deps | `deps:mcp`, `deps:mcp@floor`, `deps:pdf`, `deps:pdf@floor`, two per add-on in `adapters/deps/`: its tests, under the guard, in a fresh virtual environment with only its own pinned requirements (then its floor's) and pytest; an install that can't be done is unreachable. Then `deps:floors`: each floor against the floor rule, by PyPI's upload dates; PyPI out of reach is unreachable |
 | mutants | `mutants:again`, `mutants:all`, … one per stdlib add-on: [mutants.py](../mutants/) breaks its code a few ways and runs its tests against each break; a break they miss fails, unless [accepted.json](../mutants/accepted.json) gives the reason it's harmless |
+| tools | `tools:bash`, `tools:zsh`, … one per check in [live.py](../live/): the real program a way-in add-on is for (a shell, an editor, an AI tool), run on the lines that add-on prints; a program that isn't installed is unreachable |
 
 Each verdict row holds the gate, its state, a hash of every file in the repo
 it ran on, a hash of what the command printed, the Python version, and a
