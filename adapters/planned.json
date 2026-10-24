@@ -331,6 +331,16 @@
   "tags": "no-install, offline, read-only, tracking"
  },
  {
+  "name": "cassettes",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "Each exchange with a model kept as a row (what was asked, what came back, the model and its seed), replayed later as a test, and drift between models found by plain diff.",
+  "source": "bot",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, assistant"
+ },
+ {
   "name": "chess-puzzle",
   "kind": "stdlib",
   "section": "Play",
@@ -780,6 +790,16 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
+  "name": "fair-merge",
+  "kind": "stdlib",
+  "section": "Finding things",
+  "line": "Each folder or repo ranked on its own and the lists merged in turns, so a large corpus can't push a small one out on volume alone, and a source that found nothing says so.",
+  "source": "bot",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, search, pile"
+ },
+ {
   "name": "family-box",
   "kind": "stdlib",
   "section": "Trust and proof",
@@ -1213,6 +1233,16 @@
   "tags": "no-install, offline, records, assistant, hooks"
  },
  {
+  "name": "hook-fail-closed",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "Wraps any hook so a crash, a timeout or output it can't read blocks the tool, since Claude Code, Gemini CLI, Codex and Cursor all let the tool run by default.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, assistant, hooks"
+ },
+ {
   "name": "hook-feedback",
   "kind": "stdlib",
   "section": "Assistants",
@@ -1273,6 +1303,16 @@
   "tags": "no-install, offline, read-only, assistant, hooks"
  },
  {
+  "name": "hook-pin",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "Each hook's SHA-256 kept on the record when you approve it, so a hook that changed since is named before it runs, never silently trusted or skipped.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, assistant, hooks"
+ },
+ {
   "name": "hook-read-first",
   "kind": "stdlib",
   "section": "Assistants",
@@ -1291,6 +1331,26 @@
   "writes": "record",
   "network": "none",
   "tags": "no-install, offline, records, assistant, hooks"
+ },
+ {
+  "name": "hook-sequence",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "Rules over what an assistant did before, not just this call: no push until the tests ran on this commit, at most so many deletions a session, read from the record.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, assistant, hooks"
+ },
+ {
+  "name": "hook-shell",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "A command split the way the shell will split it, quotes, variables and chained commands included, before any rule judges it, so a rule can't be dodged by spelling.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, assistant, hooks"
  },
  {
   "name": "hook-start",
@@ -1422,6 +1482,16 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "instruction-files",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "For a folder, which instruction files each coding agent would load (AGENTS.md, CLAUDE.md, GEMINI.md, rules folders), in what order, with each file's size and hash.",
+  "source": "box",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, assistant"
  },
  {
   "name": "inventory",
@@ -1706,6 +1776,16 @@
   "tags": "no-install, offline, read-only, tracking"
  },
  {
+  "name": "llms-txt",
+  "kind": "stdlib",
+  "section": "Ways to use it",
+  "line": "An llms.txt for your folder, written from what's actually in it to the spec's version 2, and any llms.txt you saved checked against that spec.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output"
+ },
+ {
   "name": "local-model",
   "kind": "deps",
   "section": "Assistants",
@@ -1847,6 +1927,16 @@
   "writes": "to",
   "network": "Maven Central, to publish a release a maintainer tags",
   "tags": "no-install, online, writes-output, maintainers"
+ },
+ {
+  "name": "mcp-by-hash",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "Your passages served as MCP resources named by their SHA-256, so an assistant cites exactly the bytes it read and a changed passage gets a new name.",
+  "source": "bot",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, assistant"
  },
  {
   "name": "meaning",
@@ -2284,6 +2374,16 @@
   "tags": "no-install, offline, read-only, search"
  },
  {
+  "name": "persona-card",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "A persona written as a card and compiled into the same system-prompt bytes every time, with the prompt's hash on the record.",
+  "source": "box",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, assistant"
+ },
+ {
   "name": "pets",
   "kind": "stdlib",
   "section": "Keeping track",
@@ -2344,6 +2444,16 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, search, pile"
+ },
+ {
+  "name": "pile-gold",
+  "kind": "stdlib",
+  "section": "Finding things",
+  "line": "Each answer you approve marks the passage that held it, so your own questions become a test of how well the search finds things, scored as recall at five.",
+  "source": "box",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, search, pile"
  },
  {
   "name": "pile-poetry",
@@ -2896,6 +3006,16 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
+  "name": "schema-check",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "A model's answer held to a JSON schema before anything reads it, and a reply that doesn't fit recorded as a result, not lost as an error.",
+  "source": "box",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, assistant"
+ },
+ {
   "name": "school",
   "kind": "stdlib",
   "section": "Keeping track",
@@ -3047,6 +3167,16 @@
   "writes": "nothing",
   "network": "none",
   "tags": "needs-install, offline, read-only, trust"
+ },
+ {
+  "name": "silence-log",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "A model that ran and said nothing kept as its own row, so silence is told apart from a model that never ran.",
+  "source": "bot",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, assistant"
  },
  {
   "name": "slack",
@@ -3524,6 +3654,17 @@
   "writes": "nothing",
   "network": "GitHub, through gh, with your own login",
   "tags": "no-install, online, read-only, tracking"
+ },
+ {
+  "name": "vectors",
+  "kind": "deps",
+  "section": "Finding things",
+  "line": "The meaning add-on's vectors kept in the store's own SQLite file, so they're computed once per passage, not at every question.",
+  "source": "bot",
+  "needs": "sqlite-vec and model2vec; MIT or Apache-2.0",
+  "writes": "to",
+  "network": "none",
+  "tags": "needs-install, offline, writes-output, search, pile"
  },
  {
   "name": "vocab",
