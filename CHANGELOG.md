@@ -209,6 +209,7 @@ says how). The first was v0.1.0.
   `github.py check` holds every gate to exactly one job. A pull request's
   `first` job runs what `test-impact` says its change reaches, cheapest first,
   and a failing job writes `ci-why`'s reading of its log to the run's summary.
+  (#36)
 
 - CI runs once per change: on pushes to main only, so a pull request no
   longer runs twice (once for its branch's push, once for the pull
