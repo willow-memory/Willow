@@ -164,3 +164,10 @@ def test_a_bad_command_line_says_how_to_run_it(tmp_path, capsys):
     assert "not a kernel box" in capsys.readouterr().err
     b = life(tmp_path)
     assert dg.main(["--box", str(b), "--now", "soon"]) == 2
+
+
+def test_a_suggestion_you_declined_no_longer_waits(tmp_path):
+    b = life(tmp_path)
+    subj = dg.digest(b, TODAY)["waiting"]["items"][0]["subject"]
+    assert k("decline", "--box", str(b), subj, *NOW).returncode == 0
+    assert dg.digest(b, TODAY)["waiting"] == {"state": "empty", "items": []}

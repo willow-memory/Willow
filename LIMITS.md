@@ -36,15 +36,9 @@ where it falls short today, and a fix is welcome.
   Portuguese common words aside before a question reaches it; other
   languages keep every word. Word forms are English's only, and words in
   other scripts are matched only as written.
-- **A suggestion can't be turned down.** It waits until you approve it, for
-  as long as it takes: the kernel has no verb that says no, so `out` and
-  the browse page list it forever. A `decline` verb, a row as plain as a
-  seal, would need the vectors and the ports to follow.
 - **No index, so time grows with the size of the folder.** On Odile's
   folder a question takes about a quarter of a second; a very large folder
   would want an index, in an add-on.
-- **One writer at a time on Windows.** File locking uses `fcntl`, which
-  Windows doesn't have.
 
 A shortfall with a test that shows it is a known bug, and is listed in
 [BUGS.md](BUGS.md).

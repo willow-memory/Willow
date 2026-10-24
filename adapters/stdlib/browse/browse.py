@@ -235,9 +235,9 @@ class Willow:
                 "Waiting for you",
                 f"<p>Your record doesn't check out: {esc('; '.join(breaks))}</p>",
             )
-        good = kernel.sealed(self.box, rows)
+        done = {**kernel.sealed(self.box, rows), **kernel.declined(self.box, rows)}
         subjects = [r["subject"] for r in rows if r["kind"] == "proposal"
-                    and r.get("verdict") == "pass" and r["subject"] not in good]  # fmt: skip
+                    and r.get("verdict") == "pass" and r["subject"] not in done]  # fmt: skip
         if not subjects:
             return page(
                 "Waiting for you",

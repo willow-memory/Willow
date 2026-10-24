@@ -10,6 +10,11 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `kernel.py decline`, the person's No: proved with their key like a seal,
+  it is never offered again by `out`, `browse` or `digest`, and can't be
+  sealed after; `verify` names a No that doesn't prove. On Windows the
+  record is now locked with `msvcrt`. Both were in LIMITS.md, and the three
+  ports do the same. (#32)
 - `hook-fail-closed`, `hook-fuzz`, `hook-pin` and `hook-replay`: a hook
   that crashes, hangs or prints what can't be read blocks the tool instead
   of letting it run; thirteen fixed bad inputs thrown at a hook, each one

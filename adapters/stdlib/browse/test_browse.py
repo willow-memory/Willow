@@ -291,3 +291,23 @@ def test_a_port_already_taken_is_refused(tmp_path, capsys):
         assert "refused" in capsys.readouterr().err
     finally:
         s.close()
+
+
+def test_a_suggestion_you_declined_no_longer_waits(site, tmp_path):
+    b = site.willow.box
+    served = json.loads(k("bite", "--box", str(b), *NOW, "when is the dentist").stdout)[
+        "served"
+    ]
+    row = {
+        "path": "dentist.md",
+        "data": "Monday",
+        "cites": [served[0]["id"]],
+        "claim": "a guess",
+    }
+    (tmp_path / "s.jsonl").write_text(json.dumps(row) + "\n")
+    k("propose", "--box", str(b), "--file", str(tmp_path / "s.jsonl"), *NOW)
+    subject = next(r["subject"] for r in map(json.loads, (b / "record.jsonl").read_text().splitlines())
+                   if r.get("verdict") == "pass")  # fmt: skip
+    assert k("decline", "--box", str(b), subject, *NOW).returncode == 0
+    site.start()
+    assert "Nothing is waiting for your approval." in site.req("GET", "/waiting")[1]
