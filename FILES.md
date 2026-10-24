@@ -291,6 +291,10 @@ willow/
 │   │   │   ├── wayback.py    the Wayback Machine's copy of a page, saved and compared byte for byte
 │   │   │   ├── test_wayback.py
 │   │   │   └── README.md
+│   │   ├── web-pages/
+│   │   │   ├── web_pages.py  saved .html and .mhtml as their paragraphs, under the address they came from
+│   │   │   ├── test_web_pages.py
+│   │   │   └── README.md
 │   │   ├── windsurf/
 │   │   │   ├── windsurf.py       the mcp_config.json lines that register mcp-lite with Windsurf
 │   │   │   ├── test_windsurf.py

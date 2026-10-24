@@ -3357,16 +3357,6 @@
   "tags": "no-install, online, records, play"
  },
  {
-  "name": "web-pages",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Saved web pages, .html and .mhtml, as their readable text, with the address they came from.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "welcome",
   "kind": "stdlib",
   "section": "For maintainers",

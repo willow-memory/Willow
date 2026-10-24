@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `web-pages`, a reader for saved web pages, .html and .mhtml: each page's
+  paragraphs, headings and list items as paragraphs, under the address it
+  came from, or `address: not in the file`. (#18)
 - `policy-watch`, an add-on that fetches a terms or policy page each time
   it runs, through snapshot, and says what changed since the last copy,
   sentence by sentence, through clauses. (#18)
