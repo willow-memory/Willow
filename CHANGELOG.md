@@ -10,7 +10,7 @@ says how). The first was v0.1.0.
 
 ### Added
 
-- Sixty-two ideas on the add-on list, nothing built: readers for what
+- Seventy-nine ideas on the add-on list, nothing built: readers for what
   people use now (Pocket, Instapaper, wallabag, Karakeep, Joplin, jrnl,
   Journiv, WriteFreely, ArchiveBox, Slack, Discord, Signal, Mastodon,
   Bluesky, Google Takeout, subtitles, AI agents' session files) and tools
@@ -22,7 +22,11 @@ says how). The first was v0.1.0.
   safe-app, sap-gate); and for everyday life (family-tree, goodreads,
   letterboxd, listening, recipes, strava, texts, car, garden, gifts,
   milestones, pets, school, subscriptions, tax-year, trips, warranties,
-  memoir, in-case, timeline, print, large-print, share). (#13)
+  memoir, in-case, timeline, print, large-print, share); and around the
+  forges: readers for GitHub, GitLab and Forgejo exports, gh's JSON, CI
+  logs and SARIF, codeowners and advisories, willow's repo on gitlab,
+  forgejo and sourcehut, mirror, git-notes, signed-commits, issue-answer,
+  pr-context and quote-review. (#13)
 - CLI adapters, sixteen add-ons with nothing to install: `pipe` (JSON lines,
   or grep's file:line: text), `mcp-lite` (the mcp add-on's tools, the
   protocol by hand), `claude-code` (a prompt hook), `shell` (a willow

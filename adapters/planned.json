@@ -1,5 +1,15 @@
 [
  {
+  "name": "advisories",
+  "kind": "stdlib",
+  "section": "Privacy and safety",
+  "line": "Security advisories from a downloaded OSV or GitHub advisory database, matched to your lockfiles: which dependency each names, and since when.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, privacy"
+ },
+ {
   "name": "agent-transcript",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -120,6 +130,16 @@
   "tags": "no-install, offline, records, trust"
  },
  {
+  "name": "ci-logs",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "CI run logs you downloaded (GitHub Actions, GitLab CI, Forgejo Actions): each failing step as a passage, so you can ask when a test last failed.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
   "name": "claude",
   "kind": "deps",
   "section": "Assistants",
@@ -139,6 +159,16 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "codeowners",
+  "kind": "stdlib",
+  "section": "Finding things",
+  "line": "Who owns this file: the CODEOWNERS rule that matches it, cited by line, on GitHub, GitLab and Forgejo alike.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, search"
  },
  {
   "name": "corpus-lens",
@@ -233,6 +263,26 @@
   "tags": "no-install, offline, records, tracking"
  },
  {
+  "name": "forgejo",
+  "kind": "stdlib",
+  "section": "For maintainers",
+  "line": "What willow's repo needs from Forgejo, Gitea or Codeberg: its host.json and an Actions file, so the repo can move there.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "the Forgejo instance's API, to read the author of a pull request a security report points to",
+  "tags": "no-install, online, read-only, maintainers"
+ },
+ {
+  "name": "forgejo-dump",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "A Forgejo or Gitea dump, Codeberg's included: issues, pull requests and wiki pages as dated passages.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
   "name": "garden",
   "kind": "stdlib",
   "section": "Keeping track",
@@ -241,6 +291,16 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, tracking"
+ },
+ {
+  "name": "gh-json",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "What gh prints with --json (issues, pull requests, runs), saved to a file and read as dated passages.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
  },
  {
   "name": "gifts",
@@ -262,6 +322,47 @@
   "writes": "to",
   "network": "none",
   "tags": "needs-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "git-notes",
+  "kind": "deps",
+  "section": "Trust and proof",
+  "line": "Approved answers kept as git notes on the commits they cite, so they travel with the repo to any forge.",
+  "source": "new",
+  "needs": "the git program; GPL, called not linked",
+  "writes": "to",
+  "network": "none",
+  "tags": "needs-install, offline, writes-output, trust"
+ },
+ {
+  "name": "github-archive",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Your GitHub account's data export: the issues, pull requests, reviews and comments you wrote, as dated passages with their links.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "gitlab",
+  "kind": "stdlib",
+  "section": "For maintainers",
+  "line": "What willow's repo needs from GitLab, as github does for GitHub: its host.json and CI file, so the repo can move there.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "GitLab, through glab, to read the author of a merge request a security report points to",
+  "tags": "no-install, online, read-only, maintainers"
+ },
+ {
+  "name": "gitlab-export",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "A GitLab project export, read without unpacking it: its issues, merge requests and comments as dated passages.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
  },
  {
   "name": "goodreads",
@@ -332,6 +433,16 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, tracking"
+ },
+ {
+  "name": "issue-answer",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "A workflow that drafts an answer to a new issue from the repo's own docs, each line cited, posted only once a maintainer seals it.",
+  "source": "new",
+  "writes": "record",
+  "network": "the forge, through the workflow's token, to post an answer once it is sealed",
+  "tags": "no-install, online, records, assistant"
  },
  {
   "name": "jeles",
@@ -517,6 +628,17 @@
   "tags": "no-install, offline, read-only, tracking"
  },
  {
+  "name": "mirror",
+  "kind": "deps",
+  "section": "Trust and proof",
+  "line": "Checks each mirror of a repo on another forge holds the same commits as the original, so losing a host loses nothing.",
+  "source": "new",
+  "needs": "the git program; GPL, called not linked",
+  "writes": "nothing",
+  "network": "each mirror's git URL, to read its refs",
+  "tags": "needs-install, online, read-only, trust"
+ },
+ {
   "name": "nestor",
   "kind": "stdlib",
   "section": "Trust and proof",
@@ -590,6 +712,16 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
+  "name": "pr-context",
+  "kind": "stdlib",
+  "section": "Ways to use it",
+  "line": "On a pull request, the passages in the repo's docs that name the files it changes, posted as one comment.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "the forge, through the workflow's token, to post the comment",
+  "tags": "no-install, online, read-only, interface"
+ },
+ {
   "name": "print",
   "kind": "stdlib",
   "section": "Ways to use it",
@@ -608,6 +740,16 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "quote-review",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "A review comment that quotes the repo, checked: does the quoted line still say that at the pull request's head?",
+  "source": "new",
+  "writes": "nothing",
+  "network": "the forge, through the workflow's token, to read the review comments",
+  "tags": "no-install, online, read-only, trust"
  },
  {
   "name": "recipes",
@@ -671,6 +813,16 @@
   "writes": "nothing",
   "network": "none",
   "tags": "needs-install, offline, read-only, trust"
+ },
+ {
+  "name": "sarif",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "SARIF reports from code scanners such as CodeQL and Semgrep: each finding as a passage with its rule, file and line.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
  },
  {
   "name": "school",
@@ -745,6 +897,17 @@
   "tags": "needs-install, offline, writes-output, file-reader"
  },
  {
+  "name": "signed-commits",
+  "kind": "deps",
+  "section": "Trust and proof",
+  "line": "Which commits are signed, and by whose key, checked on this machine against the keys you trust.",
+  "source": "new",
+  "needs": "the git program; GPL, called not linked",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "needs-install, offline, read-only, trust"
+ },
+ {
   "name": "slack",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -753,6 +916,16 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "sourcehut",
+  "kind": "stdlib",
+  "section": "For maintainers",
+  "line": "What willow's repo needs from SourceHut: its host.json for patches by email and a builds.sr.ht manifest.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "sr.ht, through hut, to read the author of a patch a security report points to",
+  "tags": "no-install, online, read-only, maintainers"
  },
  {
   "name": "speak",
