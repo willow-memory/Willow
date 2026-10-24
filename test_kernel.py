@@ -272,6 +272,47 @@ def test_among_equal_answers_the_newest_comes_first(tmp_path):
     assert k.newest("2026-10-14 20261015 12026-10-16 2026-13-01") == "20261015"
 
 
+def test_top_and_dated_change_how_many_and_whose_dates_never_the_order(tmp_path):
+    """An add-on that lists every match, or an index that has the dates
+    already, passes them in; rank is otherwise the same, and a TOP set from
+    outside (demo/php2shell/phase6.py does) still holds when top isn't."""
+    days = [f"== 2026-0{m}-10\nH1: bees calm, hive {m}\n" for m in range(1, 8)]
+    (tmp_path / "hives.txt").write_text("\n".join(days))
+    (tmp_path / "notes.md").write_text("bees, no date\n")
+    pile = k.chunks(tmp_path)
+    where = lambda got: [(c["path"], c["line"]) for c in got]  # noqa: E731
+    every = k.rank(pile, "how are the bees", None, 10**9)
+    assert len(every) == 8 and len(k.rank(pile, "how are the bees")) == k.TOP
+    for top in (1, 3, 5):
+        assert where(k.rank(pile, "how are the bees", None, top)) == where(every[:top])
+    was = k.TOP
+    try:
+        k.TOP = 5
+        assert where(k.rank(pile, "how are the bees")) == where(every[:5])
+    finally:
+        k.TOP = was
+    assert k.rank(pile, "how are the bees", None, None, k.dates) == every[:3]
+    undated = k.rank(pile, "how are the bees", None, 10**9, lambda p: [0] * len(p))
+    assert where(undated) != where(every)
+    assert sorted(where(undated)) == sorted(where(every))
+
+
+def test_holding_is_every_passage_rank_weighs(tmp_path):
+    """Every passage that holds the bite, in pile order: copies too, and
+    none cut at TOP. One holding too few of its words is not among them."""
+    (tmp_path / "a.md").write_text("the bees are calm\n\nthe bees are calm\n")
+    (tmp_path / "b.md").write_text("bees swarm in May\n\nhow are you\n")
+    (tmp_path / "c.md").write_text("calm weather\n")
+    pile = k.chunks(tmp_path)
+    got = [(c["path"], c["line"]) for c in k.holding(pile, "are the bees calm")]
+    assert got == [("a.md", 1), ("a.md", 3), ("b.md", 1), ("c.md", 1)]
+    assert {c["id"] for c in k.rank(pile, "are the bees calm", None, 10**9)} == {
+        c["id"] for c in k.holding(pile, "are the bees calm")
+    }
+    assert k.holding(pile, "swarm bees spring") == [pile[2]]
+    assert k.holding(pile, "how are the") == []
+
+
 def test_her_words_list_reads_her_word_as_her_folders(tmp_path):
     """Odile asks who's due; her tuning log says `next:` (demo/odile/STRIP.md).
     Her own list, kept like her key, reads one as the other, says so when

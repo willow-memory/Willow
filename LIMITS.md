@@ -10,6 +10,13 @@ where it falls short today, and a fix is welcome.
   its card says where and why.
 - **It doesn't make up an answer.** No model writes one; when your files
   don't hold it, it says so (exit 42).
+- **It answers; it doesn't point.** A passage is served only when it holds
+  half your question's words, so a long or roundabout question can find
+  nothing where a looser search would point at the right file. Pointing at
+  where to look is `scan --rank bm25`, which always serves its top passages:
+  on demo/php2shell's out-of-sample CVEs it found 7 of 7 to the kernel's 1.
+  Loosening the kernel's rule found a few more there but answered questions
+  about other bugs several times as often.
 - **It doesn't approve anything itself.** Suggestions wait until a person
   approves them with their key.
 - **It doesn't keep your words.** The record holds fingerprints and places,
