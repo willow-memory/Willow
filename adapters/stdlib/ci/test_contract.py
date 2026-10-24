@@ -103,7 +103,11 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "browse": ("browse.py", ["launcher", "--box", "{box}"]),
     "digest": ("digest.py", ["--box", "{box}", *NOW]),
     **{f"words-{c}": (f"words_{c}.py", ["bite", "--box", "{box}", *NOW, "tomatoes"])
-       for c in ("de", "es", "fr", "pt")},
+       for c in ("de", "es", "fr", "it", "nl", "pt")},
+    "backup": ("backup.py", ["--box", "{box}", "--to", "{tmp}/backups", *NOW]),
+    "history": ("history.py", ["--box", "{box}"]),
+    "print": ("print.py", ["--box", "{box}", "--to", "{tmp}/page.html", *NOW, "tomatoes"]),
+    "start": ("start.py", ["--pile", "{pile}", "--to", "{tmp}/willow"]),
     **{name: (script, ["mirror", "--from", "{pile}", "--to", "{tmp}/mirror"])
        for name, (script, _) in READERS.items()},
 }  # fmt: skip

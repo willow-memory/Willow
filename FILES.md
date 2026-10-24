@@ -54,6 +54,10 @@ willow/
 │   │   │   ├── all.py        every passage that holds a question, in the kernel's order
 │   │   │   ├── test_all.py
 │   │   │   └── README.md
+│   │   ├── backup/
+│   │   │   ├── backup.py     your record in one zip, every byte and the chain checked; never the key
+│   │   │   ├── test_backup.py
+│   │   │   └── README.md
 │   │   ├── books/
 │   │   │   ├── books.py      Kindle highlights and .epub text, as passages
 │   │   │   ├── test_books.py
@@ -125,6 +129,10 @@ willow/
 │   │   │   ├── host.json     how GitHub titles the merge of a pull request, for whose.py --host
 │   │   │   ├── test_github.py
 │   │   │   └── README.md     its card: and .github/ belongs to it
+│   │   ├── history/
+│   │   │   ├── history.py    your record in plain sentences, places and counts, never the words
+│   │   │   ├── test_history.py
+│   │   │   └── README.md
 │   │   ├── jetbrains/
 │   │   │   ├── jetbrains.py      an external tool for JetBrains IDEs: answers as links to file and line
 │   │   │   ├── test_jetbrains.py
@@ -170,6 +178,10 @@ willow/
 │   │   │   ├── plain.py      the kernel's answer as sentences
 │   │   │   ├── test_plain.py
 │   │   │   └── README.md
+│   │   ├── print/
+│   │   │   ├── print.py      an answer as a page to print, with its sources; --large for big type
+│   │   │   ├── test_print.py
+│   │   │   └── README.md
 │   │   ├── privacy/
 │   │   │   ├── privacy.py    personal data and keys withheld from what a question prints
 │   │   │   ├── test_privacy.py
@@ -197,6 +209,10 @@ willow/
 │   │   ├── stale/
 │   │   │   ├── stale.py      approved answers whose cited passage changed or went
 │   │   │   ├── test_stale.py
+│   │   │   └── README.md
+│   │   ├── start/
+│   │   │   ├── start.py      set up in one step: the box, the key and the starter words, then what next
+│   │   │   ├── test_start.py
 │   │   │   └── README.md
 │   │   ├── starter-words/
 │   │   │   ├── words.txt     a first-day words list, in the kernel's format
@@ -234,6 +250,14 @@ willow/
 │   │   ├── words-fr/
 │   │   │   ├── words_fr.py   a question in French, its common words out, then the kernel's bite
 │   │   │   ├── test_words_fr.py
+│   │   │   └── README.md
+│   │   ├── words-it/
+│   │   │   ├── words_it.py   a question in Italian, its common words out, then the kernel's bite
+│   │   │   ├── test_words_it.py
+│   │   │   └── README.md
+│   │   ├── words-nl/
+│   │   │   ├── words_nl.py   a question in Dutch, its common words out, then the kernel's bite
+│   │   │   ├── test_words_nl.py
 │   │   │   └── README.md
 │   │   ├── words-pt/
 │   │   │   ├── words_pt.py   a question in Portuguese, its common words out, then the kernel's bite

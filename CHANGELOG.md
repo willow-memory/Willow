@@ -10,6 +10,15 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- Get started, keep it safe, take it with you: `start` sets willow up in one
+  step (the box by the kernel's own init, the key, the starter words, then
+  how to open, launch and back it up); `backup` writes the box as one zip
+  and keeps it only once every byte and the copied record's chain check
+  out, never reading the key or putting it beside it; `history` reads the
+  record out in plain sentences, places and counts, never the words;
+  `print` writes an answer as a page with its sources, and `--large` in big,
+  high-contrast type (the large-print idea, as a switch); `words-it` and
+  `words-nl`. (#PR)
 - Ninety-five ideas on the add-on list, nothing built: readers for what
   people use now (Pocket, Instapaper, wallabag, Karakeep, Joplin, jrnl,
   Journiv, WriteFreely, ArchiveBox, Slack, Discord, Signal, Mastodon,
