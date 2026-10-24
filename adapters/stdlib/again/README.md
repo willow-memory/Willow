@@ -21,7 +21,7 @@ The record keeps a question as the SHA-256 of its words, never the words, so
 this can't print a question back; give it your words and it says how often
 you've asked that one.
 
-**The ladder** is willow-bot's: asked once, answered; twice, noticed; three
+**The ladder** is [willow-bot's](https://github.com/willow-memory/willow-bot/blob/main/one-script/onescript/ladder.py): asked once, answered; twice, noticed; three
 times, and every third time after, offered. An approved answer is the standing
 one, and once there is one the offer stops. Offering is all it does: approving
 stays yours.

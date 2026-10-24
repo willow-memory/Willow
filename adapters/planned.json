@@ -160,16 +160,6 @@
   "tags": "no-install, offline, read-only, tracking"
  },
  {
-  "name": "backup",
-  "kind": "stdlib",
-  "section": "Trust and proof",
-  "line": "Copies your record and your key to a place you choose, checks the copy's chain verifies, and won't put the key beside the box.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, trust, everyday"
- },
- {
   "name": "badge",
   "kind": "stdlib",
   "section": "Ways to use it",
@@ -339,16 +329,6 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, tracking"
- },
- {
-  "name": "changed",
-  "kind": "stdlib",
-  "section": "Trust and proof",
-  "line": "What's new, edited or deleted in your folder since the last check, as fingerprint rows.",
-  "source": "bot",
-  "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, trust"
  },
  {
   "name": "chess-puzzle",
@@ -697,16 +677,6 @@
   "tags": "needs-install, offline, read-only, words"
  },
  {
-  "name": "dice",
-  "kind": "stdlib",
-  "section": "Play",
-  "line": "Seeded dice rolls as rows: every roll replayable and checkable.",
-  "source": "bot",
-  "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, play"
- },
- {
   "name": "dice5e",
   "kind": "deps",
   "section": "Play",
@@ -737,16 +707,6 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, file-reader"
- },
- {
-  "name": "diverge",
-  "kind": "stdlib",
-  "section": "Trust and proof",
-  "line": "Where two copies of a folder or a box part, narrowed level by level to the first line that differs.",
-  "source": "bot",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, trust"
  },
  {
   "name": "docs-i18n",
@@ -1173,16 +1133,6 @@
   "tags": "no-install, offline, records, assistant"
  },
  {
-  "name": "history",
-  "kind": "stdlib",
-  "section": "Trust and proof",
-  "line": "Your record in plain sentences: what was asked when, what found nothing, what you approved; places and counts, never the words.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, trust, everyday"
- },
- {
   "name": "home-assistant",
   "kind": "stdlib",
   "section": "Ways to use it",
@@ -1221,16 +1171,6 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, file-reader"
- },
- {
-  "name": "horoscope",
-  "kind": "stdlib",
-  "section": "Play",
-  "line": "A daily horoscope keyed on your name and the date: same name, same day, same reading, always.",
-  "source": "bot",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, play"
  },
  {
   "name": "horoscope-grades",
@@ -1505,16 +1445,6 @@
   "tags": "no-install, offline, records, assistant"
  },
  {
-  "name": "large-print",
-  "kind": "stdlib",
-  "section": "Ways to use it",
-  "line": "Answers in large, high-contrast type, read on a screen or printed.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, interface"
- },
- {
   "name": "latex",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -1573,16 +1503,6 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, trust"
- },
- {
-  "name": "life",
-  "kind": "stdlib",
-  "section": "Play",
-  "line": "Conway's Game of Life as rows: a fully deterministic world on the record.",
-  "source": "bot",
-  "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, play"
  },
  {
   "name": "line-origin",
@@ -2084,16 +2004,6 @@
   "tags": "needs-install, offline, writes-output, file-reader"
  },
  {
-  "name": "odds",
-  "kind": "stdlib",
-  "section": "Play",
-  "line": "Exact odds, as fractions, for a game's dice and tables: what each outcome's chance really is.",
-  "source": "bot",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, play"
- },
- {
   "name": "openai-compatible",
   "kind": "stdlib",
   "section": "Assistants",
@@ -2344,16 +2254,6 @@
   "writes": "record",
   "network": "api.drand.sh, to read a beacon round's randomness",
   "tags": "no-install, online, records, play"
- },
- {
-  "name": "print",
-  "kind": "stdlib",
-  "section": "Ways to use it",
-  "line": "An answer as a printable page with its sources, to take to an appointment.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, interface"
  },
  {
   "name": "profile",
@@ -2836,16 +2736,6 @@
   "tags": "no-install, offline, records, assistant"
  },
  {
-  "name": "secrets-audit",
-  "kind": "stdlib",
-  "section": "Privacy and safety",
-  "line": "Finds keys and passwords sitting in plain files.",
-  "source": "bot",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, privacy"
- },
- {
   "name": "session-cost",
   "kind": "stdlib",
   "section": "Keeping track",
@@ -3018,16 +2908,6 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, search"
- },
- {
-  "name": "start",
-  "kind": "stdlib",
-  "section": "Ways to use it",
-  "line": "First run in one step: asks where your files are, makes the box and key where they belong, copies in the starter words, and prints the double-click launcher.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, interface, everyday"
  },
  {
   "name": "static-search",
@@ -3567,16 +3447,6 @@
   "tags": "no-install, offline, writes-output, words"
  },
  {
-  "name": "words-it",
-  "kind": "stdlib",
-  "section": "Your own words",
-  "line": "Italian common words (\"il\", \"e\").",
-  "source": "new",
-  "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, words, italian"
- },
- {
   "name": "words-ja",
   "kind": "stdlib",
   "section": "Your own words",
@@ -3585,16 +3455,6 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, words"
- },
- {
-  "name": "words-nl",
-  "kind": "stdlib",
-  "section": "Your own words",
-  "line": "Dutch common words (\"de\", \"en\").",
-  "source": "new",
-  "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, words, dutch"
  },
  {
   "name": "words-pl",
@@ -3665,16 +3525,6 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, file-reader"
- },
- {
-  "name": "xref",
-  "kind": "stdlib",
-  "section": "Trust and proof",
-  "line": "Every reference in your files checked: each link to another file, and each quoted line, still there and still saying it.",
-  "source": "bot",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, trust"
  },
  {
   "name": "zotero",

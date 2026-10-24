@@ -143,3 +143,10 @@ def test_the_entry_guard_is_never_broken():
     src = 'if __name__ == "__main__":\n    x = a == b\n'
     compares = [n for k, n in mu.points(__import__("ast").parse(src)) if k == "compare"]
     assert len(compares) == 1 and compares[0].left.id == "a"
+
+
+def test_the_copy_leaves_out_a_demos_life_but_not_an_add_on_named_life():
+    demo = mu.ROOT / "demo" / "odile"
+    assert mu.skipped(str(demo), ["life", "make_life.py"]) == {"life"}
+    assert mu.skipped(str(mu.ROOT / "adapters" / "stdlib"), ["life", "dice"]) == set()
+    assert mu.skipped(str(mu.ROOT / "ports"), ["bin", "obj", "src"]) == {"bin", "obj"}

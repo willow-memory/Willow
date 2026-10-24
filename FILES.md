@@ -54,6 +54,10 @@ willow/
 │   │   │   ├── all.py        every passage that holds a question, in the kernel's order
 │   │   │   ├── test_all.py
 │   │   │   └── README.md
+│   │   ├── backup/
+│   │   │   ├── backup.py     your record in one zip, every byte and the chain checked; never the key
+│   │   │   ├── test_backup.py
+│   │   │   └── README.md
 │   │   ├── books/
 │   │   │   ├── books.py      Kindle highlights and .epub text, as passages
 │   │   │   ├── test_books.py
@@ -65,6 +69,10 @@ willow/
 │   │   ├── calendar/
 │   │   │   ├── cal.py        .ics events and .vcf contacts, as dated lines
 │   │   │   ├── test_calendar.py
+│   │   │   └── README.md
+│   │   ├── changed/
+│   │   │   ├── changed.py    what's new, edited or deleted since the last check, as fingerprint rows
+│   │   │   ├── test_changed.py
 │   │   │   └── README.md
 │   │   ├── chats/
 │   │   │   ├── chats.py      WhatsApp and Telegram exports, a dated line a message
@@ -104,9 +112,17 @@ willow/
 │   │   │   ├── cursor.py         the mcp.json lines that register mcp-lite with Cursor
 │   │   │   ├── test_cursor.py
 │   │   │   └── README.md
+│   │   ├── dice/
+│   │   │   ├── dice.py       dice rolled on the record, seeded by its tip; check throws every roll again
+│   │   │   ├── test_dice.py
+│   │   │   └── README.md
 │   │   ├── digest/
 │   │   │   ├── digest.py     one page of what waits on you, gone stale, coming up; writes nothing
 │   │   │   ├── test_digest.py
+│   │   │   └── README.md
+│   │   ├── diverge/
+│   │   │   ├── diverge.py    where two copies part: records by row, files, then the first line
+│   │   │   ├── test_diverge.py
 │   │   │   └── README.md
 │   │   ├── emacs/
 │   │   │   ├── emacs.py          an M-x willow command: answers in a grep-mode buffer
@@ -125,9 +141,21 @@ willow/
 │   │   │   ├── host.json     how GitHub titles the merge of a pull request, for whose.py --host
 │   │   │   ├── test_github.py
 │   │   │   └── README.md     its card: and .github/ belongs to it
+│   │   ├── history/
+│   │   │   ├── history.py    your record in plain sentences, places and counts, never the words
+│   │   │   ├── test_history.py
+│   │   │   └── README.md
+│   │   ├── horoscope/
+│   │   │   ├── horoscope.py  a daily reading picked by the SHA-256 of name and date
+│   │   │   ├── test_horoscope.py
+│   │   │   └── README.md
 │   │   ├── jetbrains/
 │   │   │   ├── jetbrains.py      an external tool for JetBrains IDEs: answers as links to file and line
 │   │   │   ├── test_jetbrains.py
+│   │   │   └── README.md
+│   │   ├── life/
+│   │   │   ├── life.py       Conway's Game of Life as one row; check plays it again
+│   │   │   ├── test_life.py
 │   │   │   └── README.md
 │   │   ├── live/
 │   │   │   ├── live.py       each way-in add-on run through its real program: works, fails, or not here
@@ -154,6 +182,10 @@ willow/
 │   │   │   ├── office.py     .docx, .odt, .pptx, .xlsx and .ods, as text
 │   │   │   ├── test_office.py
 │   │   │   └── README.md
+│   │   ├── odds/
+│   │   │   ├── odds.py       exact odds for any dice, as fractions
+│   │   │   ├── test_odds.py
+│   │   │   └── README.md
 │   │   ├── on-this-day/
 │   │   │   ├── on_this_day.py what your files say happened on this date in other years
 │   │   │   ├── test_on_this_day.py
@@ -169,6 +201,10 @@ willow/
 │   │   ├── plain/
 │   │   │   ├── plain.py      the kernel's answer as sentences
 │   │   │   ├── test_plain.py
+│   │   │   └── README.md
+│   │   ├── print/
+│   │   │   ├── print.py      an answer as a page to print, with its sources; --large for big type
+│   │   │   ├── test_print.py
 │   │   │   └── README.md
 │   │   ├── privacy/
 │   │   │   ├── privacy.py    personal data and keys withheld from what a question prints
@@ -186,6 +222,10 @@ willow/
 │   │   │   ├── readme.py     builds this README's generated sections from the cards
 │   │   │   ├── test_readme.py
 │   │   │   └── README.md     its card: sections, the draw, what it reads
+│   │   ├── secrets-audit/
+│   │   │   ├── secrets_audit.py passwords, keys and card numbers in plain files, by file and line
+│   │   │   ├── test_secrets_audit.py
+│   │   │   └── README.md
 │   │   ├── shell/
 │   │   │   ├── shell.py          a willow command and tab completion for bash, zsh, fish, PowerShell and cmd
 │   │   │   ├── test_shell.py
@@ -197,6 +237,10 @@ willow/
 │   │   ├── stale/
 │   │   │   ├── stale.py      approved answers whose cited passage changed or went
 │   │   │   ├── test_stale.py
+│   │   │   └── README.md
+│   │   ├── start/
+│   │   │   ├── start.py      set up in one step: the box, the key and the starter words, then what next
+│   │   │   ├── test_start.py
 │   │   │   └── README.md
 │   │   ├── starter-words/
 │   │   │   ├── words.txt     a first-day words list, in the kernel's format
@@ -235,9 +279,21 @@ willow/
 │   │   │   ├── words_fr.py   a question in French, its common words out, then the kernel's bite
 │   │   │   ├── test_words_fr.py
 │   │   │   └── README.md
+│   │   ├── words-it/
+│   │   │   ├── words_it.py   a question in Italian, its common words out, then the kernel's bite
+│   │   │   ├── test_words_it.py
+│   │   │   └── README.md
+│   │   ├── words-nl/
+│   │   │   ├── words_nl.py   a question in Dutch, its common words out, then the kernel's bite
+│   │   │   ├── test_words_nl.py
+│   │   │   └── README.md
 │   │   ├── words-pt/
 │   │   │   ├── words_pt.py   a question in Portuguese, its common words out, then the kernel's bite
 │   │   │   ├── test_words_pt.py
+│   │   │   └── README.md
+│   │   ├── xref/
+│   │   │   ├── xref.py       each link and file:line in your files checked, still there
+│   │   │   ├── test_xref.py
 │   │   │   └── README.md
 │   │   └── zed/
 │   │       ├── zed.py            the settings.json lines that register mcp-lite with Zed

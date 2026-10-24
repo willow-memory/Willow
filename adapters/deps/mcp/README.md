@@ -39,7 +39,7 @@ stdio server settings, with `--box` pointing at your record folder.
 needs Python 3.10 or newer (the kernel itself runs on 3.9). Without it, the
 server refuses and names the install.
 
-**Source:** the shape of Jeles's corpus server (an MCP server over stdio with
+**Source:** the shape of [Jeles's corpus server](https://github.com/hornbook-knowledge/Jeles/blob/master/jeles/corpus_server.py) (an MCP server over stdio with
 an ask tool and a tool that records an unchecked claim), rebuilt over the
 kernel.
 

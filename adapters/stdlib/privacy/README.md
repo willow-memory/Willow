@@ -30,7 +30,7 @@ numbers and serials.
 
 **Misses, said rather than hidden:** a street address, and a name on its own.
 
-**Source:** the shapes and checks of willow-bot's one-script scrub module (its
+**Source:** the shapes and checks of [willow-bot's one-script scrub module](https://github.com/willow-memory/willow-bot/blob/main/one-script/onescript/scrub.py) (its
 personal-data and credential sets), rebuilt for a person's own folder.
 
 **Uses:** the kernel's `main` (its own bite).
