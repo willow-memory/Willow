@@ -15,6 +15,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 HERE = Path(__file__).resolve().parent
 spec = importlib.util.spec_from_file_location("ci", HERE / "ci.py")
 ci = importlib.util.module_from_spec(spec)
@@ -123,6 +125,52 @@ def test_the_gates_run_in_one_fixed_order_and_cover_every_part():
     ]  # fmt: skip
     assert ci.live_checks()[:2] == ["bash", "zsh"]
     assert {p for p, _, _ in ci.gates()} == set(ci.PARTS)
+
+
+def test_shards_run_every_gate_of_what_was_named_once_in_its_order():
+    every = ci.select(["mutants"], [], None)
+    assert every == [f"mutants:{n}" for n in ci.mutant_targets()]
+    for n in (1, 2, 3, 7):
+        parts = [ci.select(["mutants"], [], f"{k}/{n}") for k in range(1, n + 1)]
+        assert sorted(g for p in parts for g in p) == sorted(every), n
+        assert all(p == [g for g in every if g in p] for p in parts)
+        assert max(map(len, parts)) - min(map(len, parts)) <= 1, "cut by count"
+    assert ci.select(["mutants"], [], "1/1") == every
+
+
+def test_a_gate_is_named_or_left_out_by_name():
+    tests = [g for p, g, _ in ci.gates() if p == "tests"]
+    assert ci.select(["tests:strip"], [], None) == ["tests:strip"]
+    assert ci.select(["tests"], ["tests:strip"], None) == [g for g in tests if g != "tests:strip"]  # fmt: skip
+    assert ci.select(["lint", "tests:strip"], [], None) == ["lint:check", "lint:format", "tests:strip"]  # fmt: skip
+    assert ci.select([], [], None) == [g for _, g, _ in ci.gates()]
+
+
+@pytest.mark.parametrize("argv", [["tests:strpi"], ["--without", "tests"], ["--without", "nope"],
+                                  ["--shard", "0/3"], ["--shard", "4/3"], ["--shard", "1/0"],
+                                  ["--shard", "x"], ["--shard"], ["--without"], ["--stray"]])  # fmt: skip
+def test_what_it_doesnt_know_is_refused_and_runs_nothing(tmp_path, argv):
+    box = tmp_path / "box"
+    got = cli("run", "demo", *argv, "--box", str(box), "--now", NOW)
+    assert got.returncode == 2
+    assert not box.exists(), "refused before the record is made"
+    assert got.stderr.startswith(
+        ("refused: ", "    python adapters/stdlib/ci/ci.py run")
+    )
+
+
+def test_leaving_out_a_part_is_refused_by_name():
+    got = cli("run", "--without", "tests", "--box", "/nonexistent/box", "--now", NOW)
+    assert (
+        got.returncode == 2
+        and "--without takes a gate, and tests is a part" in got.stderr
+    )
+
+
+def test_a_shard_on_the_command_line_writes_only_its_gates(tmp_path):
+    box = tmp_path / "box"
+    assert cli("run", "demo", "--shard", "2/2", "--box", str(box), "--now", NOW).returncode == 0  # fmt: skip
+    assert [r["gate"] for r in rows(box)[1:]] == ci.select(["demo"], [], "2/2")
 
 
 def test_a_record_inside_the_repo_where_git_would_count_it_is_refused(tmp_path):

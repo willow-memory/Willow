@@ -21,6 +21,12 @@ concurrency:
 permissions:
   contents: read
 
+# bash's own pipefail: each check below is piped through tee, for ci-why to
+# read when it fails, and the step must still fail with it
+defaults:
+  run:
+    shell: bash
+
 jobs:
   similar:
     # What's already on the add-on list near each idea or add-on this pull
@@ -67,6 +73,39 @@ jobs:
           PR: ${{ github.event.number }}
         run: python adapters/stdlib/ci/changelog.py --base "$BASE" --pr "$PR"
 
+  first:
+    # The checks this pull request's change can reach, cheapest first,
+    # stopping at the first that fails (adapters/stdlib/test-impact): a
+    # failure shows in a minute or two instead of at the end. Every job below
+    # still runs all of its part; this one replaces none of them.
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - run: pip install pytest ruff==0.16.7
+      - env:
+          BASE: origin/${{ github.base_ref }}
+        # A change it can't place widens to every gate, which the jobs below
+        # already run: then this says so and stops. 42 is a gate whose tool
+        # isn't installed here (a port, say), which its own job installs.
+        run: |
+          python adapters/stdlib/test-impact/impact.py plan --base "$BASE" | tee "$RUNNER_TEMP/plan.txt"
+          if grep -q ": running everything$" "$RUNNER_TEMP/plan.txt"; then
+            echo "test-impact couldn't place this change, so it ran nothing: the other jobs run every gate." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          set +e
+          python adapters/stdlib/test-impact/impact.py run --base "$BASE" 2>&1 | tee "$RUNNER_TEMP/ci.log"
+          code=${PIPESTATUS[0]}
+          [ "$code" = 0 ] || [ "$code" = 42 ]
+      - if: failure()
+        run: python adapters/stdlib/ci-why/ci_why.py "$RUNNER_TEMP/ci.log" >> "$GITHUB_STEP_SUMMARY" || true
+
   lint:
     runs-on: ubuntu-latest
     steps:
@@ -75,7 +114,9 @@ jobs:
         with:
           python-version: "3.13"
       - run: pip install ruff==0.16.7
-      - run: python adapters/stdlib/ci/ci.py run lint --box ${{ runner.temp }}/ci-record
+      - run: python adapters/stdlib/ci/ci.py run lint --box ${{ runner.temp }}/ci-record | tee "$RUNNER_TEMP/ci.log"
+      - if: failure()
+        run: python adapters/stdlib/ci-why/ci_why.py "$RUNNER_TEMP/ci.log" --record "$RUNNER_TEMP/ci-record/record.jsonl" >> "$GITHUB_STEP_SUMMARY" || true
       - if: always()
         run: python adapters/stdlib/ci/ci.py verify --box ${{ runner.temp }}/ci-record
       - if: always()
@@ -85,7 +126,11 @@ jobs:
           path: ${{ runner.temp }}/ci-record/record.jsonl
 
   tests:
-    # kernel.py says 3.9+, so 3.9 is in the matrix, not assumed.
+    # kernel.py says 3.9+, so 3.9 is in the matrix, not assumed. Every gate of
+    # the tests part but tests:strip, which the strip job runs beside it on
+    # the same Pythons: it runs the add-ons' tests again in a copy without
+    # GitHub, so in one job it doubled the time. github.py check holds the two
+    # to the whole part, and to the same matrix.
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -97,13 +142,40 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - run: pip install pytest
-      - run: python adapters/stdlib/ci/ci.py run tests --box ${{ runner.temp }}/ci-record
+      - run: python adapters/stdlib/ci/ci.py run tests --without tests:strip --box ${{ runner.temp }}/ci-record | tee "$RUNNER_TEMP/ci.log"
+      - if: failure()
+        run: python adapters/stdlib/ci-why/ci_why.py "$RUNNER_TEMP/ci.log" --record "$RUNNER_TEMP/ci-record/record.jsonl" >> "$GITHUB_STEP_SUMMARY" || true
       - if: always()
         run: python adapters/stdlib/ci/ci.py verify --box ${{ runner.temp }}/ci-record
       - if: always()
         uses: actions/upload-artifact@v7
         with:
           name: ci-record-tests-${{ matrix.python-version }}
+          path: ${{ runner.temp }}/ci-record/record.jsonl
+
+  strip:
+    # tests:strip, test_strip.py: the repo without GitHub, then without any
+    # add-on, each still passing.
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: pip install pytest
+      - run: python adapters/stdlib/ci/ci.py run tests:strip --box ${{ runner.temp }}/ci-record | tee "$RUNNER_TEMP/ci.log"
+      - if: failure()
+        run: python adapters/stdlib/ci-why/ci_why.py "$RUNNER_TEMP/ci.log" --record "$RUNNER_TEMP/ci-record/record.jsonl" >> "$GITHUB_STEP_SUMMARY" || true
+      - if: always()
+        run: python adapters/stdlib/ci/ci.py verify --box ${{ runner.temp }}/ci-record
+      - if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: ci-record-strip-${{ matrix.python-version }}
           path: ${{ runner.temp }}/ci-record/record.jsonl
 
   ports:
@@ -123,7 +195,9 @@ jobs:
       - uses: actions/setup-dotnet@v6
         with:
           dotnet-version: "8.0.x"
-      - run: python adapters/stdlib/ci/ci.py run ports --box ${{ runner.temp }}/ci-record
+      - run: python adapters/stdlib/ci/ci.py run ports --box ${{ runner.temp }}/ci-record | tee "$RUNNER_TEMP/ci.log"
+      - if: failure()
+        run: python adapters/stdlib/ci-why/ci_why.py "$RUNNER_TEMP/ci.log" --record "$RUNNER_TEMP/ci-record/record.jsonl" >> "$GITHUB_STEP_SUMMARY" || true
       - if: always()
         run: python adapters/stdlib/ci/ci.py verify --box ${{ runner.temp }}/ci-record
       - if: always()
@@ -140,7 +214,9 @@ jobs:
         with:
           python-version: "3.13"
       - run: pip install pytest  # the php2shell demo's freeze check is a pytest file
-      - run: python adapters/stdlib/ci/ci.py run demo --box ${{ runner.temp }}/ci-record
+      - run: python adapters/stdlib/ci/ci.py run demo --box ${{ runner.temp }}/ci-record | tee "$RUNNER_TEMP/ci.log"
+      - if: failure()
+        run: python adapters/stdlib/ci-why/ci_why.py "$RUNNER_TEMP/ci.log" --record "$RUNNER_TEMP/ci-record/record.jsonl" >> "$GITHUB_STEP_SUMMARY" || true
       - if: always()
         run: python adapters/stdlib/ci/ci.py verify --box ${{ runner.temp }}/ci-record
       - if: always()
@@ -153,20 +229,28 @@ jobs:
     # Each stdlib add-on's code broken on purpose, a few ways, and its tests
     # run against each break: a break the tests miss fails, unless
     # adapters/stdlib/mutants/accepted.json gives the reason it's harmless.
+    # Cut in four by ci.py's --shard, each add-on in one of them: the gates
+    # take seconds each, so a cut by count ends the four about together.
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
         with:
           python-version: "3.13"
       - run: pip install pytest
-      - run: python adapters/stdlib/ci/ci.py run mutants --box ${{ runner.temp }}/ci-record
+      - run: python adapters/stdlib/ci/ci.py run mutants --shard ${{ matrix.shard }}/4 --box ${{ runner.temp }}/ci-record | tee "$RUNNER_TEMP/ci.log"
+      - if: failure()
+        run: python adapters/stdlib/ci-why/ci_why.py "$RUNNER_TEMP/ci.log" --record "$RUNNER_TEMP/ci-record/record.jsonl" >> "$GITHUB_STEP_SUMMARY" || true
       - if: always()
         run: python adapters/stdlib/ci/ci.py verify --box ${{ runner.temp }}/ci-record
       - if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: ci-record-mutants
+          name: ci-record-mutants-${{ matrix.shard }}
           path: ${{ runner.temp }}/ci-record/record.jsonl
 
   deps:
@@ -179,7 +263,9 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: "3.13"
-      - run: python adapters/stdlib/ci/ci.py run deps --box ${{ runner.temp }}/ci-record
+      - run: python adapters/stdlib/ci/ci.py run deps --box ${{ runner.temp }}/ci-record | tee "$RUNNER_TEMP/ci.log"
+      - if: failure()
+        run: python adapters/stdlib/ci-why/ci_why.py "$RUNNER_TEMP/ci.log" --record "$RUNNER_TEMP/ci-record/record.jsonl" >> "$GITHUB_STEP_SUMMARY" || true
       - if: always()
         run: python adapters/stdlib/ci/ci.py verify --box ${{ runner.temp }}/ci-record
       - if: always()
@@ -208,7 +294,9 @@ jobs:
           @openai/codex@0.164.0 @google/gemini-cli@0.65.0 opencode-ai@1.19.4
           @github/copilot@1.0.103 @anthropic-ai/claude-code@2.1.310
           @modelcontextprotocol/inspector@2.12.0
-      - run: python adapters/stdlib/ci/ci.py run tools --box ${{ runner.temp }}/ci-record
+      - run: python adapters/stdlib/ci/ci.py run tools --box ${{ runner.temp }}/ci-record | tee "$RUNNER_TEMP/ci.log"
+      - if: failure()
+        run: python adapters/stdlib/ci-why/ci_why.py "$RUNNER_TEMP/ci.log" --record "$RUNNER_TEMP/ci-record/record.jsonl" >> "$GITHUB_STEP_SUMMARY" || true
       - if: always()
         run: python adapters/stdlib/ci/ci.py verify --box ${{ runner.temp }}/ci-record
       - if: always()
