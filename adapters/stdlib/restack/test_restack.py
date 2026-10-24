@@ -1,4 +1,4 @@
-"""restack: a branch on top of main, the repo's own conflicts settled by rule,
+"""restack: main merged into a branch, the repo's own conflicts settled by rule,
 any other one stopping it untouched, and nothing moved before test_docs.py
 passes."""
 
@@ -171,15 +171,18 @@ def test_a_branch_is_put_on_top_with_its_changelog_settled_and_nothing_else_touc
         return
     assert got.returncode == 0, got.stdout + got.stderr
     assert "settled CHANGELOG.md" in got.stdout
-    assert f"git push --force-with-lease=work:{old[:12]} origin work" in got.stdout
+    assert "  push: git push origin work" in got.stdout
     assert git(clone, "merge-base", "--is-ancestor", "main", "work") == ""
+    # merged, not rewritten: the branch's old commit is still under it
+    assert git(clone, "log", "-1", "--format=%s", "work") == "Merge main into work"
+    assert git(clone, "merge-base", "--is-ancestor", old, "work") == ""
     text = git(clone, "show", "work:CHANGELOG.md")
     assert "- `work`, from the branch.\n- `mainline`, from main. (#99)\n" in text + "\n"
     assert git(clone, "worktree", "list").count("\n") == 0, (
         "its scratch worktree is gone"
     )
     again = run(clone, "--onto", "main", "work")
-    assert again.returncode == 42 and "already on top" in again.stdout
+    assert again.returncode == 42 and "already holds main" in again.stdout
 
 
 def test_a_conflict_with_no_rule_stops_it_and_leaves_the_branch_as_it_was(clone):
