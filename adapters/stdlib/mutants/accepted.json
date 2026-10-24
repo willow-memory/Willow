@@ -18,6 +18,12 @@
   "cursor": {
     "1786b40184a1": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
   },
+  "dice": {
+    "080cb53ea56e": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
+  },
+  "diverge": {
+    "034127892304": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
+  },
   "export": {
     "2edb79a5366b": "Days are grouped by a key cut from the same timestamp as the day shown; one more character groups the same rows."
   },
@@ -43,6 +49,9 @@
     "38b9c5553e24": "A year is four digits: comparing d[:5] with this year orders earlier, same and later years the same way.",
     "3f174bd01a95": "today is eight characters, so today[4:9] is today[4:8]."
   },
+  "print": {
+    "3c840b9c9283": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
+  },
   "scan": {
     "09336b67f2ff": "Only narrows candidates: the kernel's own rank re-checks each one, so an or here adds passages it drops, never one it serves."
   },
@@ -64,6 +73,9 @@
   },
   "words-fr": {
     "3fb13e910cef": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
+  },
+  "words-it": {
+    "01b92201995a": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
   },
   "zed": {
     "18bcef49e82b": "sys.path.insert at index 1 instead of 0 still finds kernel.py."

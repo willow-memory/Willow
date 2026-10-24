@@ -23,10 +23,11 @@ where it falls short today, and a fix is welcome.
   files say "invoice outstanding" and it finds nothing until a words list
   connects them.
 - **English is built in.** The kernel's common-word list and word-form
-  rules are English. The words-de, words-es, words-fr and words-pt add-ons
-  set German, Spanish, French and Portuguese common words aside before a
-  question reaches it; other languages keep every word. Word forms are
-  English's only, and words in other scripts are matched only as written.
+  rules are English. The words-de, words-es, words-fr, words-it, words-nl
+  and words-pt add-ons set German, Spanish, French, Italian, Dutch and
+  Portuguese common words aside before a question reaches it; other
+  languages keep every word. Word forms are English's only, and words in
+  other scripts are matched only as written.
 - **A suggestion can't be turned down.** It waits until you approve it, for
   as long as it takes: the kernel has no verb that says no, so `out` and
   the browse page list it forever. A `decline` verb, a row as plain as a
