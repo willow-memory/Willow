@@ -525,16 +525,6 @@
   "tags": "no-install, offline, read-only, tracking"
  },
  {
-  "name": "contradictions",
-  "kind": "stdlib",
-  "section": "Trust and proof",
-  "line": "Two passages that disagree about the same date or amount, side by side.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, trust"
- },
- {
   "name": "contribute",
   "kind": "stdlib",
   "section": "For maintainers",
@@ -1683,16 +1673,6 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, interface"
- },
- {
-  "name": "lending",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "Things you lent, to whom and when, and which are still out.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
  },
  {
   "name": "lessons",
@@ -3179,16 +3159,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "slow-tests",
-  "kind": "stdlib",
-  "section": "For maintainers",
-  "line": "Each test's time kept per run, with the slowest named and any that got slower flagged.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, maintainers"
- },
- {
   "name": "snapshot",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -3512,16 +3482,6 @@
   "writes": "record",
   "network": "none",
   "tags": "no-install, offline, records, trust"
- },
- {
-  "name": "timeline",
-  "kind": "stdlib",
-  "section": "Trust and proof",
-  "line": "A dated timeline of one matter (a dispute, an illness, a tenancy), every line cited, to hand to a lawyer, doctor or council.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, trust"
  },
  {
   "name": "todays-place",
