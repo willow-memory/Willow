@@ -10,6 +10,13 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- CLI adapters, sixteen add-ons with nothing to install: `pipe` (JSON lines,
+  or grep's file:line: text), `mcp-lite` (the mcp add-on's tools, the
+  protocol by hand), `claude-code` (a prompt hook), `shell` (a willow
+  command and completion for bash, zsh, fish, PowerShell and cmd), the
+  settings that register mcp-lite with Codex CLI, Gemini CLI, Copilot,
+  Cursor, Windsurf, Zed and OpenCode, and pipe's answers in Vim, Emacs, VS
+  Code, JetBrains IDEs and Aider. (#11)
 - `CONSTITUTION.md`, willows-grove's Draft 0.9 byte for byte, unratified;
   this repo is its home. `kernel.py` cites the eternity clauses at the
   lines that enforce them (comments only; the vectors regenerated, the
@@ -47,6 +54,10 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- `mutants.py` runs each mutant without Python's bytecode cache, so a
+  same-size break can no longer run the previous mutant's code and pass as
+  a survivor; and it no longer breaks the `__main__` guard, which the
+  contract test already holds. (#11)
 - The changelog check skips Dependabot's pull requests, which can't write
   an entry; its updates aren't listed. The GitHub add-on's check fails if
   it skips anyone else. (#9)
