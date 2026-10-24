@@ -10,6 +10,36 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `latent`, a deps add-on that ranks a `scan` index by meaning (TF-IDF then a
+  truncated SVD), so a question reaches a passage that shares its sense without
+  sharing its words; offline, it downloads no model. Needs numpy, pinned and
+  floor-tested. (#35)
+- `typosquat`, an add-on that reads your lockfiles and a downloaded list of
+  popular package names and flags any dependency whose name is one edit off a
+  popular one — an insert, delete, substitution, or a swap of two adjacent
+  letters (optimal string alignment), the common typosquat shapes. Offline;
+  reuses `advisories`' lockfile reader. (#35)
+- `install-scripts`, an add-on that lists the `preinstall`/`install`/
+  `postinstall` scripts the packages under a `node_modules` folder would run
+  on install, each cited by file and line, so arbitrary install-time code is
+  visible before you trust it. Offline, read-only. (#35)
+- `pins`, an add-on that reads package.json and requirements.txt and names the
+  dependencies declared as a version range that no lockfile pins to an exact
+  version — the ones a maintainer may want to lock. Offline; reuses
+  `advisories`' lockfile reader. (#35)
+- `outdated`, an add-on that reads your lockfiles and a downloaded registry
+  index (npm, PyPI, crates.io metadata) and says how old each locked
+  dependency is, flagging the ones that are yanked, deprecated, or from a
+  project two years without a release. Offline; reuses `advisories`' lockfile
+  reader; `--now` makes a run repeatable. (#35)
+- `advisories`, an add-on that reads your lockfiles (npm, PyPI, crates.io) and
+  a downloaded OSV or GitHub advisory database, offline, and says which locked
+  dependency a known advisory names, and since when -- matching a version by
+  the advisory's own version list or its numeric ranges, and naming what it
+  can't compare rather than guessing. (#35)
+- `demo/php2shell/pipeline.py`, a runner that composes the PHP2Shell method end
+  to end (kernel, BM25 and the latent ranker) in one command; a runner, not an
+  add-on, and not part of CI. (#35)
 - `kernel.py decline`, the person's No: proved with their key like a seal,
   it is never offered again by `out`, `browse` or `digest`, and can't be
   sealed after; `verify` names a No that doesn't prove. On Windows the

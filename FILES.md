@@ -44,6 +44,10 @@ willow/
 │   ├── README.md             the rules every add-on follows
 │   ├── planned.json          the add-ons not built yet, as this README lists them
 │   ├── stdlib/               add-ons that need nothing beyond Python
+│   │   ├── advisories/
+│   │   │   ├── advisories.py locked dependencies matched to a downloaded OSV advisory database, offline
+│   │   │   ├── test_advisories.py
+│   │   │   └── README.md
 │   │   ├── again/
 │   │   │   ├── again.py      the questions you keep asking, counted from the record
 │   │   │   ├── test_again.py
@@ -187,6 +191,10 @@ willow/
 │   │   │   ├── horoscope.py  a daily reading picked by the SHA-256 of name and date
 │   │   │   ├── test_horoscope.py
 │   │   │   └── README.md
+│   │   ├── install-scripts/
+│   │   │   ├── install_scripts.py  the install scripts node_modules would run (preinstall, install, postinstall), by file and line
+│   │   │   ├── test_install_scripts.py
+│   │   │   └── README.md
 │   │   ├── jetbrains/
 │   │   │   ├── jetbrains.py      an external tool for JetBrains IDEs: answers as links to file and line
 │   │   │   ├── test_jetbrains.py
@@ -239,6 +247,14 @@ willow/
 │   │   ├── opencode/
 │   │   │   ├── opencode.py       the opencode.json lines that register mcp-lite with OpenCode
 │   │   │   ├── test_opencode.py
+│   │   │   └── README.md
+│   │   ├── outdated/
+│   │   │   ├── outdated.py   how old each locked dependency is, and which are yanked, deprecated or unmaintained
+│   │   │   ├── test_outdated.py
+│   │   │   └── README.md
+│   │   ├── pins/
+│   │   │   ├── pins.py       version ranges in package.json or requirements.txt that no lockfile pins
+│   │   │   ├── test_pins.py
 │   │   │   └── README.md
 │   │   ├── pipe/
 │   │   │   ├── pipe.py           questions in, one answer a line out: JSON lines, or grep's file:line: text
@@ -333,6 +349,10 @@ willow/
 │   │   │   ├── todo.py       things marked to do, oldest first
 │   │   │   ├── test_todo.py
 │   │   │   └── README.md
+│   │   ├── typosquat/
+│   │   │   ├── typosquat.py  dependency names a letter off a popular one, checked against a top-packages list
+│   │   │   ├── test_typosquat.py
+│   │   │   └── README.md
 │   │   ├── vim/
 │   │   │   ├── vim.py            a :Willow command: answers in the quickfix list
 │   │   │   ├── test_vim.py
@@ -387,6 +407,12 @@ willow/
 │   │       └── README.md
 │   └── deps/                 add-ons that need something installed
 │       ├── README.md         what one must declare: pins, floors, licences, network
+│       ├── latent/
+│       │   ├── latent.py     ranks a scan index by meaning (TF-IDF + SVD), offline
+│       │   ├── requirements.txt  numpy, pinned
+│       │   ├── requirements-floor.txt  numpy at its floor, also tested
+│       │   ├── test_latent.py
+│       │   └── README.md
 │       ├── mcp/
 │       │   ├── server.py     your folder for any MCP client: ask and suggest, never approve
 │       │   ├── requirements.txt  mcp, pinned
@@ -453,6 +479,7 @@ willow/
 │   │   ├── phase4.py         before the fix: the whole release, ranked three ways, recall at k
 │   │   ├── phase5.py         robustness: rewording, top-k, a words list, and leakage
 │   │   ├── phase6.py         reproducibility: every release, five Pythons, four kernels, a second labeller
+│   │   ├── pipeline.py       the whole method in one command: index, changed-from, rank three ways, score
 │   │   ├── hold.py           not frozen: the kernel's hold rule against looser ones, on phase 3's CVEs
 │   │   ├── test_php2shell.py holds the frozen files to their hashes, and the tools to their word
 │   │   ├── results/

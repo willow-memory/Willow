@@ -20,16 +20,6 @@
   "tags": "no-install, offline, writes-output, words"
  },
  {
-  "name": "advisories",
-  "kind": "stdlib",
-  "section": "Privacy and safety",
-  "line": "Security advisories from a downloaded OSV or GitHub advisory database, matched to your lockfiles: which dependency each names, and since when.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, privacy"
- },
- {
   "name": "agent-transcript",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -1404,16 +1394,6 @@
   "tags": "needs-install, offline, records, play"
  },
  {
-  "name": "install-scripts",
-  "kind": "stdlib",
-  "section": "Privacy and safety",
-  "line": "The install scripts the packages in node_modules would run (preinstall, install, postinstall), each cited by file and line.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, privacy"
- },
- {
   "name": "instapaper",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -2224,16 +2204,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "outdated",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "How old each locked dependency is, and which are yanked, deprecated or two years without a release, from a registry index you downloaded.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
- },
- {
   "name": "package-contents",
   "kind": "stdlib",
   "section": "Privacy and safety",
@@ -2444,16 +2414,6 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, search, pile"
- },
- {
-  "name": "pins",
-  "kind": "stdlib",
-  "section": "For maintainers",
-  "line": "Version ranges in package.json, pyproject.toml or Cargo.toml that no lockfile holds.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, maintainers"
  },
  {
   "name": "places",
@@ -3504,16 +3464,6 @@
   "writes": "nothing",
   "network": "none",
   "tags": "needs-install, offline, read-only, search"
- },
- {
-  "name": "typosquat",
-  "kind": "stdlib",
-  "section": "Privacy and safety",
-  "line": "Dependency names a letter off from a popular one (reqeusts, lodahs), checked against a list of top packages you downloaded.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, privacy"
  },
  {
   "name": "upgrade-notes",

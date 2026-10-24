@@ -1,4 +1,7 @@
 {
+  "advisories": {
+    "0c47318788a2": "split(sep, 1)[0] takes the text before the first separator; the maxsplit changes only how many pieces follow it, never that first piece, so any value of at least 1 gives the same result."
+  },
   "again": {
     "1b9ac0201051": "Only bite rows carry a bite_key, so choosing rows by kind or by key picks the same rows."
   },
@@ -65,6 +68,9 @@
     "38b9c5553e24": "A year is four digits: comparing d[:5] with this year orders earlier, same and later years the same way.",
     "3f174bd01a95": "today is eight characters, so today[4:9] is today[4:8]."
   },
+  "pins": {
+    "1eb781c3ac07": "pins.py's own repo-root insert on sys.path is redundant: importing advisories inserts the same root and imports kernel, so changing this index only adds a directory that never supplies kernel."
+  },
   "print": {
     "3c840b9c9283": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
   },
@@ -76,6 +82,10 @@
   },
   "todo": {
     "05759b3d5759": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
+  },
+  "typosquat": {
+    "0b021f6deb3f": "src is used only via len(src)!=1; with the two-name list, flipping 'o in opts' to 'o not in opts' swaps which names land in src but leaves that length 0/1/2 the same for every command line, so the refuse/pass decision is unchanged.",
+    "0e6387e1f6d0": "sys.path.insert at index 1 instead of 0 still resolves 'import advisories': the repo root inserted just before holds no advisories.py, so the advisories dir is still the first that supplies it."
   },
   "vim": {
     "21fa5a119235": "sys.path.insert at index 1 instead of 0 still finds kernel.py."

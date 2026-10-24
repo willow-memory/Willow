@@ -18,20 +18,20 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`████░░░░░░░░░░░░░░░░` **84 of 456 built** · 406 need no install · 50 need one
+`████░░░░░░░░░░░░░░░░` **90 of 457 built** · 406 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
 | Reading more kinds of files | 10 | 94 | 96 | 8 |
-| Finding things | 6 | 36 | 32 | 10 |
+| Finding things | 7 | 36 | 32 | 11 |
 | Your own words | 7 | 17 | 21 | 3 |
-| Keeping track | 8 | 48 | 56 | 0 |
+| Keeping track | 9 | 47 | 56 | 0 |
 | Trust and proof | 11 | 33 | 35 | 9 |
-| Privacy and safety | 2 | 11 | 13 | 0 |
+| Privacy and safety | 5 | 8 | 13 | 0 |
 | Assistants | 15 | 40 | 49 | 6 |
 | Ways to use it | 10 | 28 | 34 | 4 |
 | Play | 4 | 36 | 35 | 5 |
-| For maintainers | 11 | 29 | 35 | 5 |
+| For maintainers | 12 | 28 | 35 | 5 |
 <!-- /willow:pools -->
 
 ### Newest
@@ -47,9 +47,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ### Add-on of the week
 
 <!-- willow:pick week=2026-W43 -->
-**[aider](adapters/stdlib/aider/)** — Aider reads answers from your folder with its /run command, file and line included.
+**[again](adapters/stdlib/again/)** — Questions you keep asking: "asked 4 times; approve an answer?"
 
-*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 84 built add-ons in name order.*
+*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 90 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -180,6 +180,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - **fuzzy-dates** (idea) — Dates that admit doubt ('about 1880', 'sometime in March') read and kept with their doubt, in EDTF. *new* `no-install` `offline` `read-only` `search`
 - **index-cache** (idea) — The box's index kept between runs and checked against each file's hash, so a question doesn't re-read the folder. *new* `no-install` `offline` `writes-output` `search`
 - **kiwix** (idea) — An offline Wikipedia (or Stack Exchange, or Gutenberg) as a source after your own files, cited by article. Needs libzim, and a ZIM file you download; GPL-3.0. *new* `needs-install` `offline` `read-only` `search`
+- [**latent**](adapters/deps/latent/) — Rank a scan index by meaning, not just words: a question reaches code that shares its sense without sharing its words. Needs numpy; BSD-3-Clause. *new* `needs-install` `offline` `read-only` `search`
 - **meaning** (idea) — Search by meaning: "who owes me money" finds "invoice outstanding". Needs sentence-transformers; Apache-2.0. Goes online: the model, downloaded once from Hugging Face. *new* `needs-install` `online` `writes-output` `search`
 - [**misquote**](adapters/stdlib/misquote/) — A quote that is almost in your files: the closest passage, and the words it adds, drops or changes, so a misquote shows as one. *new* `no-install` `offline` `read-only` `search`
 - **my-lessons** (idea) — Your own lesson plans by grade, subject and standard: what did I teach on fractions last year? *new* `no-install` `offline` `read-only` `search`
@@ -277,7 +278,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - **minutes** (idea) — Meeting minutes: who decided what and when, and which actions are still open. *new* `no-install` `offline` `read-only` `tracking`
 - **mood** (idea) — Mood scores you write in a journal, over weeks and months. *new* `no-install` `offline` `read-only` `tracking`
 - **oakenscroll** (idea) — Oakenscroll's Office calibration ledger: what you believed, how hard, and how it resolved, as dated passages. *new* `no-install` `offline` `writes-output` `tracking`
-- **outdated** (idea) — How old each locked dependency is, and which are yanked, deprecated or two years without a release, from a registry index you downloaded. *new* `no-install` `offline` `read-only` `tracking`
+- [**outdated**](adapters/stdlib/outdated/) — How old each locked dependency is, and which are yanked, deprecated or two years without a release, from a registry index you downloaded. *new* `no-install` `offline` `read-only` `tracking`
 - **pets** (idea) — Each pet's vet visits, vaccines and medicines, from your records: what's due next. *new* `no-install` `offline` `read-only` `tracking`
 - [**policy-watch**](adapters/stdlib/policy-watch/) — A terms or policy page fetched each time you run it, by snapshot, and what changed since last time, sentence by sentence, by clauses. Goes online: the page you name, fetched each time you run it. *new* `no-install` `online` `writes-output` `tracking` `policies`
 - **predict** (idea) — Write down what you'll do next before you do it, and grade it after; the record counts how often you were right. *bot* `no-install` `offline` `records` `tracking`
@@ -347,9 +348,9 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 ### Privacy and safety
 
 - **a11y-check** (idea) — Your documents checked for screen-reader problems: images without descriptions, headings out of order. *new* `no-install` `offline` `read-only` `privacy`
-- **advisories** (idea) — Security advisories from a downloaded OSV or GitHub advisory database, matched to your lockfiles: which dependency each names, and since when. *new* `no-install` `offline` `read-only` `privacy`
+- [**advisories**](adapters/stdlib/advisories/) — Security advisories from a downloaded OSV or GitHub advisory database, matched to your lockfiles: which dependency each names, and since when. *new* `no-install` `offline` `read-only` `privacy`
 - **forget** (idea) — Stops a file being searched, recorded on the chain, so what was taken out is known and nothing else is touched. *new* `no-install` `offline` `records` `privacy`
-- **install-scripts** (idea) — The install scripts the packages in node_modules would run (preinstall, install, postinstall), each cited by file and line. *new* `no-install` `offline` `read-only` `privacy`
+- [**install-scripts**](adapters/stdlib/install-scripts/) — The install scripts the packages in node_modules would run (preinstall, install, postinstall), each cited by file and line. *new* `no-install` `offline` `read-only` `privacy`
 - **kids** (idea) — A box for a child: answers only from the folder you choose for them, and nothing they can approve. *new* `no-install` `offline` `read-only` `privacy`
 - **package-contents** (idea) — What's inside a wheel, sdist, npm tarball or .crate before you install it: every file, and any code it runs on install. *new* `no-install` `offline` `read-only` `privacy`
 - **pii-audit** (idea) — Personal data sitting in your files (ID numbers, health details, card numbers), listed by file and line. *new* `no-install` `offline` `read-only` `privacy`
@@ -358,7 +359,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**secrets-audit**](adapters/stdlib/secrets-audit/) — Finds passwords, keys and card numbers sitting in plain files, by file and line, never showing the value. *bot* `no-install` `offline` `read-only` `privacy` `everyday`
 - **student-records** (idea) — A box of student records that answers only the teacher who owns it, and logs every look. *new* `no-install` `offline` `records` `privacy`
 - **transcript-redact** (idea) — An agent transcript with keys, home paths and emails taken out before you share it, each removal listed by line. *new* `no-install` `offline` `writes-output` `privacy`
-- **typosquat** (idea) — Dependency names a letter off from a popular one (reqeusts, lodahs), checked against a list of top packages you downloaded. *new* `no-install` `offline` `read-only` `privacy`
+- [**typosquat**](adapters/stdlib/typosquat/) — Dependency names a letter off from a popular one (reqeusts, lodahs), checked against a list of top packages you downloaded. *new* `no-install` `offline` `read-only` `privacy`
 
 ### Assistants
 
@@ -530,7 +531,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - [**mutants**](adapters/stdlib/mutants/) — Breaks each add-on's code on purpose and checks its tests notice. *new* `no-install` `offline` `read-only` `maintainers`
 - **npm** (idea) — The TypeScript port on npm, built from this repo, checked against the vectors, and published with provenance; npx runs it. Goes online: registry.npmjs.org, to publish a release a maintainer tags. *new* `no-install` `online` `writes-output` `maintainers`
 - **nuget** (idea) — The C# port on NuGet, built from this repo and checked against the vectors. Goes online: nuget.org, to publish a release a maintainer tags. *new* `no-install` `online` `writes-output` `maintainers`
-- **pins** (idea) — Version ranges in package.json, pyproject.toml or Cargo.toml that no lockfile holds. *new* `no-install` `offline` `read-only` `maintainers`
+- [**pins**](adapters/stdlib/pins/) — Version ranges in package.json, pyproject.toml or Cargo.toml that no lockfile holds. *new* `no-install` `offline` `read-only` `maintainers`
 - **profile** (idea) — Where a question's time goes, function by function, from cProfile, per release. *new* `no-install` `offline` `read-only` `maintainers`
 - **property-tests** (idea) — Thousands of odd inputs (combining marks, empty strings, huge seeds) thrown at the byte rules by Hypothesis. Needs Hypothesis; MPL-2.0. *new* `needs-install` `offline` `read-only` `maintainers`
 - **pypi** (idea) — kernel.py on PyPI as a package with no dependencies, built from this repo, checked against the vectors, and attested on upload; uvx and pipx run it. Goes online: upload.pypi.org, to publish a release a maintainer tags. *new* `no-install` `online` `writes-output` `maintainers`
