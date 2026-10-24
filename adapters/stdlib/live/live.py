@@ -25,11 +25,13 @@ from __future__ import annotations
 
 import json
 import os
+import select
 import shlex
 import shutil
 import subprocess
 import sys
 import tempfile
+import time
 import types
 from pathlib import Path
 
@@ -335,6 +337,135 @@ def check_mcp(place: Place) -> str | None:
     return f"a refused suggest: {why}" if why else None
 
 
+#: a page for the web-pages check: a canonical link, a curly quote, and a
+#: paragraph only its script writes, which a page fetched as bytes lacks
+PAGE = """<!doctype html><html><head><meta charset="utf-8"><title>Terms</title>
+<link rel="canonical" href="https://example.org/terms"></head>
+<body><h1>Terms</h1><p>We don\u2019t sell data.</p><p id="late"></p>
+<script>document.getElementById("late").textContent = "Drawn by script.";</script>
+</body></html>
+"""
+
+
+class Chrome:
+    """A headless Chrome driven over its DevTools pipe (fd 3 in, fd 4 out,
+    each message JSON ended by a NUL): the browser's own save, no library."""
+
+    def __init__(self, exe: str, place: Place):
+        # its output to a log in the scratch folder, its input from /dev/null
+        # opened to read: subprocess.DEVNULL opens it to write, a write the
+        # card doesn't make
+        self.log = open(place.root / "chrome.log", "wb")
+        self.quiet = open(os.devnull, "rb")
+        self.to_r, self.to_w = os.pipe()
+        self.from_r, self.from_w = os.pipe()
+        sandbox = (
+            ["--no-sandbox"] if hasattr(os, "geteuid") and os.geteuid() == 0 else []
+        )
+        self.proc = subprocess.Popen(
+            [exe, "--headless=new", "--remote-debugging-pipe", "--no-first-run",
+             "--no-default-browser-check", "--disable-gpu",
+             f"--user-data-dir={place.home / 'chrome'}", *sandbox, "about:blank"],
+            env=place.env, stdin=self.quiet, stdout=self.log, stderr=self.log,
+            close_fds=False, preexec_fn=self._fds,
+        )  # fmt: skip
+        os.close(self.to_r)
+        os.close(self.from_w)
+        self.n, self.buf = 0, b""
+
+    def _fds(self) -> None:
+        """In the child: its ends on fds 3 and 4, inheritable. Moved through
+        spare fds first, since a pipe may already be fd 3, and dup2 onto
+        itself would leave it closing at exec."""
+        r, w = os.dup(self.to_r), os.dup(self.from_w)
+        os.dup2(r, 3)
+        os.dup2(w, 4)
+
+    def send(self, method: str, params: dict = None, session: str = None) -> dict:
+        self.n += 1
+        msg = {"id": self.n, "method": method, "params": params or {}}
+        if session:
+            msg["sessionId"] = session
+        os.write(self.to_w, json.dumps(msg).encode() + b"\0")
+        end = time.monotonic() + TIMEOUT
+        while True:
+            while b"\0" in self.buf:
+                raw, self.buf = self.buf.split(b"\0", 1)
+                got = json.loads(raw)
+                if got.get("id") == self.n:
+                    if "error" in got:
+                        raise RuntimeError(f"{method}: {got['error'].get('message')}")
+                    return got.get("result", {})
+            left = end - time.monotonic()
+            if left <= 0 or not select.select([self.from_r], [], [], left)[0]:
+                raise subprocess.TimeoutExpired(method, TIMEOUT)
+            chunk = os.read(self.from_r, 1 << 16)
+            if not chunk:
+                raise RuntimeError(f"{method}: the browser closed its pipe")
+            self.buf += chunk
+
+    def close(self) -> None:
+        try:
+            self.send("Browser.close")
+        except (OSError, RuntimeError, subprocess.TimeoutExpired):
+            pass
+        try:
+            self.proc.wait(timeout=10)
+        except subprocess.TimeoutExpired:
+            self.proc.kill()
+        os.close(self.to_w)
+        os.close(self.from_r)
+        self.log.close()
+        self.quiet.close()
+
+
+def check_chrome(place: Place) -> str | None:
+    """A page saved by a real Chrome, as .mhtml (its own snapshot, as Save
+    Page As writes it) and as the page it drew (.html), read by web-pages:
+    each under its address, with the paragraph only the script wrote."""
+    pages = place.root / "pages"
+    pages.mkdir()
+    (pages / "terms.html").write_text(PAGE, encoding="utf-8")
+    url = (pages / "terms.html").resolve().as_uri()
+    chrome = Chrome(shutil.which("google-chrome"), place)
+    try:
+        target = chrome.send("Target.createTarget", {"url": url})["targetId"]
+        session = chrome.send("Target.attachToTarget",
+                              {"targetId": target, "flatten": True})["sessionId"]  # fmt: skip
+        state = ""
+        for _ in range(100):
+            state = chrome.send("Runtime.evaluate", {"expression": "document.readyState",
+                                "returnByValue": True}, session)["result"].get("value")  # fmt: skip
+            if state == "complete":
+                break
+            time.sleep(0.1)
+        if state != "complete":
+            return f"the page never finished loading: {state}"
+        mht = chrome.send("Page.captureSnapshot", {"format": "mhtml"}, session)["data"]
+        drawn = chrome.send("Runtime.evaluate", {"expression": "document.documentElement.outerHTML",
+                            "returnByValue": True}, session)["result"]["value"]  # fmt: skip
+    finally:
+        chrome.close()
+    saved = place.root / "saved"
+    saved.mkdir()
+    (saved / "terms.mhtml").write_bytes(mht.encode("utf-8"))
+    (saved / "terms.html").write_text(drawn, encoding="utf-8")
+    mirror = place.root / "mirror"
+    said = place.run([sys.executable, str(STDLIB / "web-pages" / "web_pages.py"), "mirror",
+                      "--from", str(saved), "--to", str(mirror)])  # fmt: skip
+    if (
+        not (mirror / "terms.mhtml.txt").is_file()
+        or not (mirror / "terms.html.txt").is_file()
+    ):
+        return f"web-pages didn't read both: {said.strip()}"
+    as_mhtml = (mirror / "terms.mhtml.txt").read_text(encoding="utf-8")
+    as_html = (mirror / "terms.html.txt").read_text(encoding="utf-8")
+    body = ("Terms", "We don\u2019t sell data.", "Drawn by script.")
+    return lines(as_mhtml, f"address: {url}", *body) or lines(
+        as_html, "address: https://example.org/terms", *body
+    )
+
+
 #: name: (what the check runs, the program it needs, the check)
 CHECKS = {
     "bash": ("shell: the willow command and its completion", "bash", check_bash),
@@ -351,6 +482,7 @@ CHECKS = {
     "copilot": ("copilot: Copilot CLI reads the server", "copilot", check_copilot),
     "claude": ("claude-code: the hook serves passages; Claude Code connects", "claude", check_claude),
     "mcp": ("mcp-lite: ask, suggest, waiting and a refusal, through MCP Inspector", "mcp-inspector", check_mcp),
+    "chrome": ("web-pages: a page Chrome saved, as .mhtml and as drawn", "google-chrome", check_chrome),
 }  # fmt: skip
 
 

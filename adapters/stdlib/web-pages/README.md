@@ -37,7 +37,8 @@ canonical link; its `og:url`. A page that says none of these gets
 `address: not in the file`, never a guess.
 
 **Its charset:** UTF-8, or the one the page's own `<meta charset>` names
-in its first 4,096 bytes; for an .mhtml, the one its page part says.
+in its first 4,096 bytes. An .mhtml's page is read in the charset its part
+names, else the same way: Chrome names none on the part, only in the page.
 
 **The reader contract** (shared with every file reader): hidden files and
 folders are skipped; nothing is written inside FOLDER; the mirror and the

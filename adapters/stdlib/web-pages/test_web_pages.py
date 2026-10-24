@@ -99,3 +99,36 @@ def test_a_charset_is_read_only_from_the_first_4096_bytes():
     page = b'"><p>Caf\xe9</p>'
     assert web_pages.decode(pad + head + page).endswith("<p>Café</p>")  # all within
     assert web_pages.decode(b" " + pad + head + page) is None  # its last byte past
+
+
+#: the shape Chrome 154 wrote for live.py's check: no charset on the page's
+#: part, only in the page's own meta tag (shortened; the boundary is Chrome's)
+CHROME = (
+    "From: <Saved by Blink>\r\n"
+    "Snapshot-Content-Location: file:///tmp/with%20space/pages/terms.html\r\n"
+    "Subject: Terms\r\n"
+    "MIME-Version: 1.0\r\n"
+    "Content-Type: multipart/related;\r\n"
+    '\ttype="text/html";\r\n'
+    '\tboundary="----MultipartBoundary--3sOx----"\r\n\r\n\r\n'
+    "------MultipartBoundary--3sOx----\r\n"
+    "Content-Type: text/html\r\n"
+    "Content-Transfer-Encoding: quoted-printable\r\n"
+    "Content-Location: file:///tmp/with%20space/pages/terms.html\r\n\r\n"
+    '<!DOCTYPE html><html><head><meta http-equiv=3D"Content-Type" content=3D"tex=\r\n'
+    't/html; charset=3DUTF-8"><title>Terms</title></head>\r\n'
+    "<body><p>We don=E2=80=99t sell data.</p></body></html>\r\n"
+    "------MultipartBoundary--3sOx------\r\n"
+)
+
+
+def test_a_chrome_mhtml_whose_part_names_no_charset_is_read_as_its_page_says():
+    page, said = web_pages.mhtml(CHROME.encode())
+    assert said == "file:///tmp/with%20space/pages/terms.html"
+    assert web_pages.as_text(page, said).endswith("Terms\n\nWe don’t sell data.\n")
+    latin = CHROME.replace("=E2=80=99", "=92").replace("UTF-8", "windows-1252")
+    assert "don’t" in web_pages.mhtml(latin.encode())[0]
+    bad = CHROME.replace(
+        "Content-Type: text/html\r\n", "Content-Type: text/html; charset=nope\r\n"
+    )
+    assert web_pages.mhtml(bad.encode()) is None

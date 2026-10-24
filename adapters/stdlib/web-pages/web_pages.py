@@ -18,8 +18,8 @@ an .html it saves; an .mhtml's `Snapshot-Content-Location` or its page's
 says none of them gets `address: not in the file`, never a guess.
 
 A page is read as UTF-8, or as the charset its own `<meta charset>` names
-in its first 4,096 bytes;
-an .mhtml's page as its part says. The contract every reader shares: hidden
+in its first 4,096 bytes; an .mhtml's page in the charset its part names,
+else the same way. The contract every reader shares: hidden
 files and folders are skipped; nothing is written inside FOLDER; the same
 folder gives the same bytes; a file it can't read is skipped and counted.
 Exit codes: 0 wrote at least one file, 42 nothing to read, 2 refused.
@@ -67,13 +67,20 @@ def decode(raw: bytes) -> str | None:
 
 
 def mhtml(raw: bytes) -> tuple[str, str] | None:
-    """An .mhtml's page and the address it says, or None."""
+    """An .mhtml's page and the address it says, or None. The page is read
+    in the charset its part names, else as a saved .html is: Chrome names
+    none on the part, only in the page's own meta tag."""
     msg = email.message_from_bytes(raw, policy=email.policy.default)
     for part in msg.walk():
         if part.get_content_type() == "text/html":
-            try:
-                page = part.get_content()
-            except (LookupError, UnicodeDecodeError):
+            body = part.get_payload(decode=True) or b""
+            named = part.get_content_charset()
+            if named:
+                try:
+                    page = body.decode(codecs.lookup(named).name)
+                except (LookupError, UnicodeDecodeError):
+                    return None
+            elif (page := decode(body)) is None:
                 return None
             where = (
                 msg.get("Snapshot-Content-Location")

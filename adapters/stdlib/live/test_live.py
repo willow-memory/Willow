@@ -236,3 +236,94 @@ def test_vscodes_matcher_must_read_every_line_and_read_it_right(fakes, monkeypat
     monkeypatch.setenv("EXTRA", "NO MATCH /n/x.txt")
     state, why = live.one("vscode")
     assert state == live.FAILS and why.startswith("a line didn't match")
+
+
+#: a stand-in Chrome on the DevTools pipe: fd 3 in, fd 4 out, NUL-ended JSON.
+#: It "draws" the page as Chrome would (the script's paragraph filled in) and
+#: snapshots it as Chrome does, with no charset on the part; FAKE_CHROME=bare
+#: snapshots the page as fetched, without what the script drew.
+CHROME = r"""
+import json, os, quopri, sys
+from pathlib import Path
+from urllib.parse import unquote, urlsplit
+mode, url, buf = os.environ.get("FAKE_CHROME", ""), "", b""
+(Path(os.environ["HOME"]) / "argv.json").write_text(json.dumps(sys.argv[1:]))
+def page():
+    text = Path(unquote(urlsplit(url).path)).read_text(encoding="utf-8")
+    drawn = text.replace('<p id="late"></p>', '<p id="late">Drawn by script.</p>')
+    return text if mode == "bare" else drawn
+def reply(msg, result):
+    os.write(4, json.dumps({"id": msg["id"], "result": result}).encode() + b"\0")
+while True:
+    chunk = os.read(3, 65536)
+    if not chunk:
+        sys.exit(0)
+    buf += chunk
+    while b"\0" in buf:
+        raw, buf = buf.split(b"\0", 1)
+        msg = json.loads(raw)
+        m, p = msg["method"], msg.get("params", {})
+        if m == "Target.createTarget":
+            url = p["url"]
+            reply(msg, {"targetId": "T1"})
+        elif m == "Target.attachToTarget":
+            reply(msg, {"sessionId": "S1"})
+        elif m == "Runtime.evaluate":
+            v = "complete" if p["expression"] == "document.readyState" else page()
+            reply(msg, {"result": {"type": "string", "value": v}})
+        elif m == "Page.captureSnapshot":
+            body = quopri.encodestring(page().encode()).decode()
+            reply(msg, {"data": "From: <Saved by Blink>\r\nSnapshot-Content-Location: " + url
+                + '\r\nMIME-Version: 1.0\r\nContent-Type: multipart/related; type="text/html";'
+                + ' boundary="B"\r\n\r\n--B\r\nContent-Type: text/html\r\n'
+                + "Content-Transfer-Encoding: quoted-printable\r\n\r\n" + body + "\r\n--B--\r\n"})
+        elif m == "Browser.close":
+            reply(msg, {})
+            sys.exit(0)
+"""
+
+
+@pytest.fixture
+def chrome(fakes):
+    exe = fakes / "google-chrome"
+    exe.write_text(f"#!{sys.executable}\n" + CHROME)
+    exe.chmod(0o755)
+    return exe
+
+
+def test_chrome_saves_a_page_web_pages_reads_both_ways(chrome):
+    assert live.one("chrome") == (live.WORKS, "")
+
+
+def test_chrome_fails_when_a_saved_page_lacks_what_the_script_drew(chrome, monkeypatch):
+    monkeypatch.setenv("FAKE_CHROME", "bare")
+    state, why = live.one("chrome")
+    assert state == live.FAILS and why.startswith("no line 'Drawn by script.'")
+
+
+def test_a_browser_that_closes_its_pipe_fails_and_says_so(fakes):
+    exe = fakes / "google-chrome"
+    exe.write_text(f"#!{sys.executable}\nimport os\nos.close(4)\n")
+    exe.chmod(0o755)
+    state, why = live.one("chrome")
+    assert state == live.FAILS and "closed its pipe" in why
+
+
+def test_chrome_runs_without_its_sandbox_only_as_root(chrome, monkeypatch):
+    """Chrome refuses to start as root with its sandbox on; as anyone else
+    the sandbox stays."""
+    seen = []
+    real = live.check_chrome
+
+    def keep(place):
+        why = real(place)
+        seen.append(json.loads((place.home / "argv.json").read_text()))
+        return why
+
+    monkeypatch.setattr(
+        live, "CHECKS", {**live.CHECKS, "chrome": (*live.CHECKS["chrome"][:2], keep)}
+    )
+    for uid in (0, 1000):
+        monkeypatch.setattr(live.os, "geteuid", lambda uid=uid: uid)
+        assert live.one("chrome") == (live.WORKS, "")
+    assert ["--no-sandbox" in argv for argv in seen] == [True, False]

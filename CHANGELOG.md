@@ -182,6 +182,10 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- `live` has a `chrome` check: a page saved by headless Chrome, over its
+  DevTools pipe with no library, as .mhtml and as drawn, read by web-pages.
+  Its first run found web-pages garbling Chrome's .mhtml, whose page part
+  names no charset; fixed, with a test of Chrome's exact form. (#18)
 - `adapters/stdlib/mutants/mutants.py` runs each mutant without Python's bytecode cache, so a
   same-size break can no longer run the previous mutant's code and pass as
   a survivor; and it no longer breaks the `__main__` guard, which the
