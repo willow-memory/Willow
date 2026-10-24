@@ -74,12 +74,58 @@ FROZEN.json also records the SHA-256 of `kernel.py`, `scan.py` and
 A tree from `git archive` has `$Id$` filled in, in the six files PHP marks
 `ident`; the check puts it back before hashing, as git does.
 
+## Phase 2: the null tests, 2026-10-24
+
+Run by [phase2.py](phase2.py), frozen before it ran. Four tests passed and two
+failed. The result survives in part: the kernel lands on the fix's core
+well above chance, but not by the frozen margin, and BM25 does better.
+
+Each fix's pair, the vulnerable release asked `--changed-from` the fixed
+one, eight questions each, 32 answers:
+
+| Test | core | any | file | miss | Passes when | Result |
+|---|---|---|---|---|---|---|
+| kernel, top 3 | 12 | 0 | 12 | 8 | (the result under test) | |
+| random, 3 of the changed passages, 40,000 draws | 20.8% | 66.7% | 11.4% | 1.2% | kernel's core above it, p < 0.01 | **fails**: p = 0.022 |
+| null questions, 200 answers | 0 | 59 | 29 | 112 | core rate below the kernel's | passes |
+| wrong pair, 16 answers | 0 | 0 | 0 | 16 | no core answer | passes |
+| diff size | 0 | 24 | 8 | 0 | kernel's core at least as many | passes |
+| grep | 12 | 0 | 8 | 12 | kernel's core at least as many | passes (a tie) |
+| BM25 | 17 | 3 | 10 | 2 | kernel's core at least as many | **fails**: 17 against 12 |
+| kernel, the fix's side (not judged) | 17 | 11 | 0 | 4 | | |
+
+**What it says:**
+
+- **Most of the work is the narrowing.** The changed set is 876 to 1,305
+  passages a fix, and nearly nine in ten random draws of three (87.5%) land on a line the
+  security commit changed somewhere (core or any). Asking only what changed
+  between two releases is most of the result.
+- **The questions do matter.** On a pair the fix isn't in, the same
+  questions find nothing at all. The fifty null questions never reach a core
+  hunk, though 59 of 200 reach another file the commit hardened, as the
+  freeze expected.
+- **The kernel's ranking is not the best one.** It needs half a question's
+  rarer words in one passage, so it serves nothing for 618a and 619c, where
+  BM25 still finds the right file or a changed line. Which ranking a person
+  should use on code is open.
+- **The frozen rule has a blind spot, kept as frozen.** Asking the old code,
+  only removed lines count, so a passage the fix only added lines to scores
+  `file`. That is why 619b, the upload-progress handler, scores `file` on the
+  old side and `core` on the fix's side. Changing the rule now would be
+  changing it after seeing results; a later freeze can add a rule that
+  counts such passages, run on new questions.
+
+The verdicts are rows on a kernel record (`verify`: the chain holds, 7 rows,
+0 sealed), each with the SHA-256 of the scored answers (93bb155f) and of the tools:
+`kernel.py` 2d7fd0f6, `scan.py` ead27057, `score.py` 084d0a3a, `phase2.py`
+5ca4e4a1.
+
 ## Where each phase stands
 
 | Phase | Status |
 |---|---|
 | 0, freeze | done: 18 releases and 4 fix diffs fetched and matching their pins |
-| 2, null tests | next |
+| 2, null tests | done: 4 of 6 pass; random (p = 0.022) and BM25 fail |
 | 1, blind questions | not started |
 | 6, reproducibility | not started |
 | 3, out of sample | not started; its CVEs and releases are frozen when it starts |
