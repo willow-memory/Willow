@@ -16,6 +16,11 @@ says how). The first was v0.1.0.
   No answer changes: the vectors regenerate with only the kernel's hash
   different. `similar near` also counts against the entry, so a long new
   line finds a short entry it contains. (#20)
+- `gaps`: where a log you keep stops. The days a folder of daily notes, a
+  reading log or a diary skipped are said as gaps: a spacing more than three
+  times the log's typical one. A log with too few dates is said, an undated
+  file beside it is said, and a gap is "no entry written", never "nothing
+  happened". (#30)
 - `timeline`: one matter from your folder (a dispute, an illness, a
   tenancy), chosen by words, as a dated list of every line of the passages
   that hold them, each cited by file and line, written to one file to hand
