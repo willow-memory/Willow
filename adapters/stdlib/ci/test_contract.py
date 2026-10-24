@@ -91,6 +91,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "all": ("all.py", ["--box", "{box}", "tomatoes"]),
     "coming-up": ("coming_up.py", ["--box", "{box}", *NOW]),
     "export": ("export.py", ["--box", "{box}"]),
+    "gaps": ("gaps.py", ["--box", "{box}", *NOW]),
     "on-this-day": ("on_this_day.py", ["--box", "{box}", *NOW]),
     "pipe": ("pipe.py", ["--box", "{box}", *NOW]),
     "plain": ("plain.py", ["bite", "--box", "{box}", *NOW, "tomatoes"]),
@@ -104,6 +105,8 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "surprise": ("surprise.py", ["--box", "{box}", *NOW]),
     "todo": ("todo.py", ["--box", "{box}"]),
     "contradictions": ("contradictions.py", ["--box", "{box}"]),
+    "lending": ("lending.py", ["--box", "{box}"]),
+    "timeline": ("timeline.py", ["--box", "{box}", "--to", "{tmp}/timeline.txt", "tomatoes"]),
     "browse": ("browse.py", ["launcher", "--box", "{box}"]),
     "digest": ("digest.py", ["--box", "{box}", *NOW]),
     **{f"words-{c}": (f"words_{c}.py", ["bite", "--box", "{box}", *NOW, "tomatoes"])

@@ -23,6 +23,20 @@ says how). The first was v0.1.0.
   kernel's own bite and propose, so it waits on the person's seal like any
   suggestion: one seal over a whole session. Ported from willow-bot's one
   script, with the kernel's seal standing in for Nestor's. (#34)
+- `gaps`: where a log you keep stops. The days a folder of daily notes, a
+  reading log or a diary skipped are said as gaps: a spacing more than three
+  times the log's typical one. A log with too few dates is said, an undated
+  file beside it is said, and a gap is "no entry written", never "nothing
+  happened". (#30)
+- `timeline`: one matter from your folder (a dispute, an illness, a
+  tenancy), chosen by words, as a dated list of every line of the passages
+  that hold them, each cited by file and line, written to one file to hand
+  on. A line's own date and its file's are both shown when they differ;
+  undated lines are kept, after the dated ones; nothing is merged. (#28)
+- `lending`, what you lent, to whom and when, and which are still out: a
+  thing in parts is out until every part is back, a loan with no return
+  line is "no return written", and a line's own date and its file's are
+  both shown when they differ. (#27)
 - `contradictions`, two lines saying the same thing with a different date
   or amount, side by side, each cited, neither picked. Two lines are about
   the same thing when they share two words and half the shorter's; records

@@ -1445,16 +1445,6 @@
   "tags": "no-install, offline, read-only, interface"
  },
  {
-  "name": "lending",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "Things you lent, to whom and when, and which are still out.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
- },
- {
   "name": "lessons",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -3122,16 +3112,6 @@
   "writes": "record",
   "network": "none",
   "tags": "no-install, offline, records, trust"
- },
- {
-  "name": "timeline",
-  "kind": "stdlib",
-  "section": "Trust and proof",
-  "line": "A dated timeline of one matter (a dispute, an illness, a tenancy), every line cited, to hand to a lawyer, doctor or council.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, trust"
  },
  {
   "name": "todays-place",

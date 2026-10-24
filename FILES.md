@@ -142,6 +142,10 @@ willow/
 │   │   │   ├── export.py     approved answers and the question log, as Markdown or CSV
 │   │   │   ├── test_export.py
 │   │   │   └── README.md
+│   │   ├── gaps/
+│   │   │   ├── gaps.py       where a log you keep stops: the days it skipped, said as gaps
+│   │   │   ├── test_gaps.py
+│   │   │   └── README.md
 │   │   ├── gemini-cli/
 │   │   │   ├── gemini_cli.py     the settings.json lines that register mcp-lite with Gemini CLI
 │   │   │   ├── test_gemini_cli.py
@@ -162,6 +166,10 @@ willow/
 │   │   ├── jetbrains/
 │   │   │   ├── jetbrains.py      an external tool for JetBrains IDEs: answers as links to file and line
 │   │   │   ├── test_jetbrains.py
+│   │   │   └── README.md
+│   │   ├── lending/
+│   │   │   ├── lending.py    what you lent, and what your files say came back
+│   │   │   ├── test_lending.py
 │   │   │   └── README.md
 │   │   ├── life/
 │   │   │   ├── life.py       Conway's Game of Life as one row; check plays it again
@@ -284,6 +292,10 @@ willow/
 │   │   ├── test-shards/
 │   │   │   ├── shards.py     splits the test run into parts by each test's past time
 │   │   │   ├── test_shards.py
+│   │   │   └── README.md
+│   │   ├── timeline/
+│   │   │   ├── timeline.py   one matter's lines by date, each cited, written to one file
+│   │   │   ├── test_timeline.py
 │   │   │   └── README.md
 │   │   ├── todo/
 │   │   │   ├── todo.py       things marked to do, oldest first
