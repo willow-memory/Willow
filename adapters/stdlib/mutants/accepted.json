@@ -1,4 +1,7 @@
 {
+  "advisories": {
+    "0c47318788a2": "split(sep, 1)[0] takes the text before the first separator; the maxsplit changes only how many pieces follow it, never that first piece, so any value of at least 1 gives the same result."
+  },
   "again": {
     "1b9ac0201051": "Only bite rows carry a bite_key, so choosing rows by kind or by key picks the same rows."
   },

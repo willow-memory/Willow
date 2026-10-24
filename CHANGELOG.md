@@ -10,6 +10,11 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `advisories`, an add-on that reads your lockfiles (npm, PyPI, crates.io) and
+  a downloaded OSV or GitHub advisory database, offline, and says which locked
+  dependency a known advisory names, and since when -- matching a version by
+  the advisory's own version list or its numeric ranges, and naming what it
+  can't compare rather than guessing.
 - `scan`, an add-on that indexes a folder once and then answers a list of
   questions in seconds with the kernel's own answers, narrowing only which
   passages `rank` looks at. It adds `--changed-from` (ask only what changed

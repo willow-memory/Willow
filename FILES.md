@@ -42,6 +42,10 @@ willow/
 │   ├── README.md             the rules every add-on follows
 │   ├── planned.json          the add-ons not built yet, as this README lists them
 │   ├── stdlib/               add-ons that need nothing beyond Python
+│   │   ├── advisories/
+│   │   │   ├── advisories.py locked dependencies matched to a downloaded OSV advisory database, offline
+│   │   │   ├── test_advisories.py
+│   │   │   └── README.md
 │   │   ├── again/
 │   │   │   ├── again.py      the questions you keep asking, counted from the record
 │   │   │   ├── test_again.py

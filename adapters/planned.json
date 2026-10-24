@@ -20,16 +20,6 @@
   "tags": "no-install, offline, writes-output, words"
  },
  {
-  "name": "advisories",
-  "kind": "stdlib",
-  "section": "Privacy and safety",
-  "line": "Security advisories from a downloaded OSV or GitHub advisory database, matched to your lockfiles: which dependency each names, and since when.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, privacy"
- },
- {
   "name": "agent-transcript",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
