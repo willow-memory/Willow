@@ -141,7 +141,7 @@ def test_every_add_on_a_person_runs_is_listed_here():
     run_by_people = {
         p.parent.name for p in STDLIB.glob("*/*.py")
         if "__main__" in p.read_text(encoding="utf-8") and not p.name.startswith("test_")
-    } - {"ci", "readme", "similar", "mutants", "github"}  # fmt: skip
+    } - {"ci", "readme", "similar", "mutants", "github", "test-shards"}  # fmt: skip
     assert run_by_people == set(COMMANDS)
 
 

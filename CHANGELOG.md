@@ -10,6 +10,10 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `test-shards`, an add-on that splits the test run into parts by each test's
+  time in an earlier run (pytest's JUnit XML), so the CI jobs finish about
+  together. It learns the suite as it is now, places a test with no past
+  time at the median and says so, and prints any one part for a job to run.
 - `scan`, an add-on that indexes a folder once and then answers a list of
   questions in seconds with the kernel's own answers, narrowing only which
   passages `rank` looks at. It adds `--changed-from` (ask only what changed
