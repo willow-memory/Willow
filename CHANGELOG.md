@@ -16,6 +16,11 @@ says how). The first was v0.1.0.
   median of its earlier passes), and says, rather than drops, a test that is
   missing from the latest run or was skipped. Runs go by file name, never by
   file time; it writes nothing. (#25)
+- `restack`, your branches put back on top of main: each rebased in a
+  scratch worktree, the conflicts in the files the repo makes or only adds
+  to (the add-on list, CHANGELOG.md, FILES.md, `COMMANDS`, the idea list)
+  settled by the repo's own rules and tools, any other one stopping that
+  branch untouched, and nothing moved until `test_docs.py` passes. (#22)
 - `test-shards`, an add-on that splits the test run into parts by each test's
   time in an earlier run (pytest's JUnit XML), so the CI jobs finish about
   together. It learns the suite as it is now, places a test with no past
