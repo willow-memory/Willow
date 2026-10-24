@@ -115,6 +115,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "diverge": ("diverge.py", ["{pile}", "{pile}"]),
     "secrets-audit": ("secrets_audit.py", ["--box", "{box}"]),
     "xref": ("xref.py", ["--box", "{box}"]),
+    "test-impact": ("impact.py", ["plan", "README.md"]),
     "print": ("print.py", ["--box", "{box}", "--to", "{tmp}/page.html", *NOW, "tomatoes"]),
     "start": ("start.py", ["--pile", "{pile}", "--to", "{tmp}/willow"]),
     **{name: (script, ["mirror", "--from", "{pile}", "--to", "{tmp}/mirror"])
