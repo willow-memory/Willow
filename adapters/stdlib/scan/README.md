@@ -14,6 +14,7 @@ Index a folder once, then ask it a list of questions in seconds.
     python adapters/stdlib/scan/scan.py index --from FOLDER --to INDEX
     python adapters/stdlib/scan/scan.py scan --index INDEX [--index INDEX ...]
         --questions FILE [--words FILE] [--top N] [--changed-from INDEX] [--todo]
+        [--rank kernel|bm25]
 
 The kernel reads your whole folder on every question, so nothing it says is
 ever stale; the cost is time. On a programming language's source (26,000
@@ -52,6 +53,15 @@ dates the lines under it. Each answer says `"changed_from"`. Ask a release
 `--changed-from` its fix and the questions go to the code the fix replaced;
 ask the fix `--changed-from` the release, and to the code it wrote.
 
+**Ranked another way:** `--rank bm25` ranks by BM25 instead of the
+kernel's rule: the same words, split the kernel's way with its common words
+dropped, scored by how often each appears in a passage against how rare it
+is. The kernel serves a passage only when it holds half a question's rarer
+words; BM25 serves the best partial match. Its answers are not the kernel's,
+each says `"ranked_by": "bm25"`, and it takes no words list. With
+`--changed-from` it counts only the changed passages, as a folder of their
+own. The tests hold it to BM25 written out by brute force.
+
 **What the file says isn't right yet:** `--todo` adds to each passage
 served the lines its file marks to do, by the [todo](../todo/) add-on's own
 marks (TODO, FIXME, "need to", ...), each with its file and line:
@@ -67,7 +77,11 @@ where the bugs live, PHP's multipart parser (rfc1867.c) and its session code, ba
 allocator's out-of-memory raise, `add_post_var`'s loop, the multipart
 parser's registration, and the session's upload-progress handler. And
 `--todo` put beside them a TODO in the session's per-request reset, there
-since 2016, that the fix took out.
+since 2016, that the fix took out. Tested since, in
+[demo/php2shell](../../../demo/php2shell/): most of that is the narrowing to
+what changed (random passages from it land on the fix often), the kernel's
+rank lands on the fix's core above chance but short of the frozen margin,
+and BM25 lands more often.
 
 **What an index is:** three files in `--to`: chunks.jsonl (each passage
 and its date), words.tsv (each word and its passages) and index.json

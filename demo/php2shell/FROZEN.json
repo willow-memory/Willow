@@ -7,7 +7,12 @@
   "score.py": "084d0a3a0d7e99f5450ccc12536f659d1f3fd0e675dc3b4415d8bc4ef97e7142",
   "questions/author.txt": "bf6b3bc3531a8fb0207c8ae81a8eff5dd49cb54c789594e17b6827f5e2e25597",
   "questions/null.txt": "8f05a7a08ec0558c1b99af2c9378a24e7f1e6b8148d821d4f30514babf5ef124",
-  "phase2.py": "5ca4e4a1a80e3e159191935866140d268b7a750b3380b372f75b9ddb0e521cb9"
+  "phase2.py": "5ca4e4a1a80e3e159191935866140d268b7a750b3380b372f75b9ddb0e521cb9",
+  "score2.py": "ddf0bde4ff821e484875afd5df851398f886db1094a6da4a67086e8df6cd6cba",
+  "phase1.py": "86a7e3a6b4b7b671edbf32dd72440830172160002ef09004775660754b575408",
+  "questions/blind-a.txt": "e5cf1656bd0ff1fd02e7d5c88535aba81236cab22367e67817ccd74094c8a1f8",
+  "questions/blind-b.txt": "ac726fa6bcda969a466ce95f05b9f76bacbd0537db5b261409247bde78635958",
+  "questions/blind-c.txt": "fb89225c5ada04c3d9ded4e640aff8f5cac8b261f338610f7f471da9737b08fe"
  },
  "tools_at_freeze": {
   "kernel.py": "2d7fd0f67bbffbd4955c599695d15d237e5e3ea9058ba700c6f8936699d96400",
@@ -15,6 +20,15 @@
   "adapters/stdlib/todo/todo.py": "56be091ebcb319711653ab2566d011b8f32a00790c106e63d4ef63516e7e0c45"
  },
  "added": {
-  "phase2.py": "2026-10-24, before phase 2 ran: its seed, draws, baselines and pass rules"
+  "phase2.py": "2026-10-24, before phase 2 ran: its seed, draws, baselines and pass rules",
+  "score2.py": "2026-10-24, before phase 1 ran",
+  "phase1.py": "2026-10-24, before phase 1 ran",
+  "questions/blind-a.txt": "2026-10-24, before phase 1 ran",
+  "questions/blind-b.txt": "2026-10-24, before phase 1 ran",
+  "questions/blind-c.txt": "2026-10-24, before phase 1 ran"
+ },
+ "tools_at_phase1_freeze": {
+  "kernel.py": "2d7fd0f67bbffbd4955c599695d15d237e5e3ea9058ba700c6f8936699d96400",
+  "adapters/stdlib/scan/scan.py": "d93536eb54d14edb86364acbd262e0edbf316460fa9085309a6693d20147ed96"
  }
 }

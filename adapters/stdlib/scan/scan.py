@@ -3,6 +3,7 @@
     python adapters/stdlib/scan/scan.py index --from FOLDER --to INDEX
     python adapters/stdlib/scan/scan.py scan --index INDEX [--index INDEX ...]
         --questions FILE [--words FILE] [--top N] [--changed-from INDEX] [--todo]
+        [--rank kernel|bm25]
 
 The kernel reads the whole folder on every question; that is its promise and
 its cost. A large folder (a programming language's source, 400,000
@@ -34,6 +35,12 @@ Index a release and its fix, and the questions are asked of the fix.
 todo add-on's own marks (TODO, FIXME, "need to", ...): what the file's
 authors wrote down as not yet right, beside what was found.
 
+--rank bm25 ranks by BM25 instead of by the kernel: the same words, split
+the kernel's way with its common words dropped, but scored by how often each
+appears against how rare it is. Its answers are not the kernel's, and each
+says "ranked_by": "bm25". It takes no words list. On PHP's source it found
+more of the PHP2Shell fix than the kernel's rank did (demo/php2shell).
+
 An index is the folder as it was read: index again after the folder
 changes. One made with another kernel.py is refused, since its passages,
 words and dates were the other kernel's.
@@ -51,6 +58,7 @@ is never changed.
 from __future__ import annotations
 
 import json
+import math
 import sys
 from pathlib import Path
 
@@ -118,6 +126,7 @@ class Index:
         self.pile, self.day = passages(at), {}
         for c in self.pile:
             self.day[id(c)] = c.pop("date")
+        self.lengths: dict[int, int] | None = None  # words a passage, for bm25
         self.copies: dict[str, list[int]] = {}
         self.files: dict[str, list[int]] = {}
         for i, c in enumerate(self.pile):
@@ -170,6 +179,50 @@ class Index:
         finally:
             kernel.TOP, kernel.dates = top_was, dates_was
 
+    def bm25(self, question: str, top: int, lacked_by: set | None = None) -> list[dict]:
+        """BM25 (k1 1.2, b 0.75) over the passages' words, split and with
+        common words dropped as the kernel does, but ranked by BM25, not by
+        the kernel: an answer here is not one a `bite` would give. With
+        `lacked_by`, over only the passages whose ids it lacks, counted as a
+        folder of their own. Equal scores keep the index's order."""
+        if lacked_by is None:
+            pool = range(len(self.pile))
+        else:
+            pool = [i for i, c in enumerate(self.pile) if c["id"] not in lacked_by]
+        if lacked_by is not None or self.lengths is None:
+            lengths = {i: len(kernel.words(self.pile[i]["text"])) for i in pool}
+            if lacked_by is None:
+                self.lengths = lengths
+        else:
+            lengths = self.lengths
+        inside = set(lengths)
+        n, avg = len(lengths), sum(lengths.values()) / max(len(lengths), 1)
+        ws = [
+            w for w in dict.fromkeys(kernel.words(question)) if w not in kernel.FUNCTION
+        ]
+        docs: dict[int, list[str]] = {}
+        df: dict[str, int] = {}
+        for w in ws:  # a word's passages are among those holding it, by the index
+            for i in self.holding(w) & inside:
+                d = docs.setdefault(i, kernel.words(self.pile[i]["text"]))
+                df[w] = df.get(w, 0) + (w in d)
+        scored = []
+        for i, d in docs.items():
+            s = 0.0
+            for w in ws:
+                f = d.count(w)
+                if f:
+                    idf = math.log((n - df[w] + 0.5) / (df[w] + 0.5) + 1)
+                    s += (
+                        idf
+                        * f
+                        * (1.2 + 1)
+                        / (f + 1.2 * (1 - 0.75 + 0.75 * lengths[i] / avg))
+                    )
+            if s > 0:
+                scored.append((-s, i))
+        return [self.pile[i] for _, i in sorted(scored)][:top]
+
     def marked(self, path: str) -> list[dict]:
         """The lines `path` marks to do, by the todo add-on's marks."""
         return [
@@ -197,6 +250,7 @@ def scan(
     top: int,
     base: Path | None = None,
     marks: bool = False,
+    by: str = "kernel",
 ) -> int:
     """Print each answer of each index; the kernel's exit code over them all."""
     names = [p.name for p in paths]
@@ -212,7 +266,12 @@ def scan(
         others = [n for n in names if n != ix.name]
         for name, q in qs:
             served = []
-            for i, c in enumerate(ix.rank(q, alias, top, lacked_by), 1):
+            got = (
+                ix.bm25(q, top, lacked_by)
+                if by == "bm25"
+                else ix.rank(q, alias, top, lacked_by)
+            )
+            for i, c in enumerate(got, 1):
                 s = {
                     "rank": i,
                     "where": f"{c['path']}:{c['line']}",
@@ -228,6 +287,8 @@ def scan(
             held = held or bool(served)
             state = "populated" if served else "empty"
             row = {"index": ix.name, "question": name, "state": state}
+            if by != "kernel":
+                row["ranked_by"] = by
             if base is not None:
                 row["changed_from"] = base.name
             print(json.dumps({**row, "served": served}, ensure_ascii=False))
@@ -245,7 +306,14 @@ def main(argv: list[str]) -> int:
     cmd, opts, it = argv[0], {}, iter(argv[1:])
     takes = {
         "index": {"--from", "--to"},
-        "scan": {"--index", "--questions", "--words", "--top", "--changed-from"},
+        "scan": {
+            "--index",
+            "--questions",
+            "--words",
+            "--top",
+            "--changed-from",
+            "--rank",
+        },
     }
     flags = {"scan": {"--todo"}}.get(cmd, set())
     for a in it:
@@ -285,7 +353,10 @@ def main(argv: list[str]) -> int:
         print(f"indexed {n} passages to {opts['--to']}")
         return kernel.ALIVE if n else kernel.ESCALATE
     top = opts.get("--top", str(kernel.TOP))
+    by = opts.get("--rank", "kernel")
     if not {"--index", "--questions"} <= set(opts) or not top.isdigit() or int(top) < 1:
+        return usage()
+    if by not in ("kernel", "bm25") or (by == "bm25" and "--words" in opts):
         return usage()
     try:
         qs = questions(Path(opts["--questions"]).read_text(encoding="utf-8"))
@@ -300,7 +371,7 @@ def main(argv: list[str]) -> int:
             raise ValueError(f"{opts['--questions']} holds no question")
         base = Path(opts["--changed-from"]) if "--changed-from" in opts else None
         paths = [Path(p) for p in opts["--index"]]
-        return scan(paths, qs, alias, int(top), base, "--todo" in opts)
+        return scan(paths, qs, alias, int(top), base, "--todo" in opts, by)
     except (OSError, ValueError) as e:
         print(f"refused: {e}", file=sys.stderr)
         return kernel.REFUSED

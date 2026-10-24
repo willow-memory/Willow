@@ -173,3 +173,59 @@ def test_phase2s_baselines_rank_as_they_say():
     assert phase2.diff_size(changed)[0]["line"] == 1
     assert phase2.binomial_tail(0, 5, 0.3) == pytest.approx(1.0)
     assert phase2.binomial_tail(5, 5, 0.5) == pytest.approx(1 / 32)
+
+
+def test_rule_2_adds_an_added_runs_neighbours_and_nothing_further():
+    import score2
+
+    d = (
+        "--- a/main/main.c\n+++ b/main/main.c\n@@ -1,6 +1,8 @@\n"
+        " far away context line\n"
+        " before the added run\n"
+        "+\tadded_reset_of_globals();\n"
+        " after the added run\n"
+        " far away again here\n"
+        "-\tremoved_old_call(x);\n"
+        "+\treplacement_call(x);\n"
+        " after the replacement\n"
+    )
+    v1, v2 = (
+        score.changed(d)["old"]["main/main.c"],
+        score2.changed(d)["old"]["main/main.c"],
+    )
+    assert v1 == {"removed_old_call(x);"}
+    assert v2 == v1 | {
+        "before the added run",
+        "after the added run",
+        "after the replacement",
+    }
+    assert score2.changed(d)["new"] == score.changed(d)["new"]
+    assert score.changed is not score2.changed  # put back after score_answers
+
+
+def test_scans_bm25_is_phase_2s_baseline(tmp_path):
+    """phase1 ranks with scan's BM25; it must be the BM25 phase 2 measured."""
+    import subprocess
+
+    import phase2
+
+    root = HERE.parents[1]
+    sys.path.insert(0, str(root / "adapters" / "stdlib" / "scan"))
+    import scan
+
+    kernel = phase2.kernel
+    old = {"a.c": "memory limit bailout here\n\nsession upload progress\n",
+           "b.c": "unchanged memory text\n", "c.c": "limit the post size\n"}  # fmt: skip
+    new = {**old, "a.c": "memory limit unwind here\n\nsession upload progress\n"}
+    for name, files in (("old", old), ("new", new)):
+        for rel, text in files.items():
+            (tmp_path / name).mkdir(exist_ok=True)
+            (tmp_path / name / rel).write_text(text)
+        subprocess.run([sys.executable, str(root / "adapters/stdlib/scan/scan.py"), "index",
+                        "--from", str(tmp_path / name), "--to", str(tmp_path / f"ix-{name}")],
+                       check=True, capture_output=True)  # fmt: skip
+    before = {c["id"] for c in kernel.chunks(tmp_path / "new")}
+    ix = scan.Index(tmp_path / "ix-old")
+    changed = [c for c in ix.pile if c["id"] not in before]
+    for q in ("memory limit bailout", "session memory", "post size limit", "nothing"):
+        assert ix.bm25(q, 3, before) == phase2.bm25(changed, q), q

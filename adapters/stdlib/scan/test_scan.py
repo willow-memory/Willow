@@ -414,3 +414,60 @@ def test_a_bad_command_line_is_refused(argv, tmp_path):
     assert (
         got.returncode == 2 and "scan.py" in got.stderr and not list(tmp_path.iterdir())
     )
+
+
+def reference_bm25(pile: list[dict], q: str) -> list[tuple[str, int]]:
+    """BM25 as the textbook writes it, over every passage, by brute force."""
+    import math
+
+    docs = [kernel.words(c["text"]) for c in pile]
+    ws = [w for w in dict.fromkeys(kernel.words(q)) if w not in kernel.FUNCTION]
+    n, avg = len(docs), sum(map(len, docs)) / len(docs)
+    df = {w: sum(w in d for d in docs) for w in ws}
+    out = []
+    for i, d in enumerate(docs):
+        s = sum(
+            math.log((n - df[w] + 0.5) / (df[w] + 0.5) + 1)
+            * d.count(w) * 2.2 / (d.count(w) + 1.2 * (0.25 + 0.75 * len(d) / avg))
+            for w in ws if d.count(w)
+        )  # fmt: skip
+        if s > 0:
+            out.append((-s, i))
+    return [(pile[i]["path"], pile[i]["line"]) for _, i in sorted(out)]
+
+
+def test_bm25_ranks_as_bm25_does_over_all_or_only_what_changed(tmp_path):
+    for name, files in (("old", FOLDER), ("new", LATER)):
+        write(tmp_path / name, files)
+        run(
+            "index",
+            "--from",
+            str(tmp_path / name),
+            "--to",
+            str(tmp_path / f"ix-{name}"),
+        )
+    new = kernel.chunks(tmp_path / "new")
+    before = {c["id"] for c in kernel.chunks(tmp_path / "old")}
+    changed = [c for c in new if c["id"] not in before]
+    ix = scan.Index(tmp_path / "ix-new")
+    for q in [*QUESTIONS, "jars lids honey", "paid vet times"]:
+        got = [(c["path"], c["line"]) for c in ix.bm25(q, 10**9)]
+        assert got == reference_bm25(new, q), q
+        got = [(c["path"], c["line"]) for c in ix.bm25(q, 10**9, before)]
+        assert got == (reference_bm25(changed, q) if changed else []), q
+    assert len(ix.bm25("tomatoes", 1)) == 1 and ix.bm25("the", 5) == []
+    (tmp_path / "q").write_text("t\ttomatoes water\n")
+    ask = [
+        "scan",
+        "--index",
+        str(tmp_path / "ix-new"),
+        "--questions",
+        str(tmp_path / "q"),
+    ]
+    row = json.loads(run(*ask, "--rank", "bm25").stdout)
+    assert row["ranked_by"] == "bm25" and row["served"][0]["where"] == "garden.md:3"
+    assert "ranked_by" not in json.loads(run(*ask).stdout)
+    (tmp_path / "w").write_text("money = invoice\n")
+    for bad in (["--rank", "grep"], ["--rank", "bm25", "--words", str(tmp_path / "w")]):
+        got = run(*ask, *bad)
+        assert got.returncode == 2 and "scan.py" in got.stderr

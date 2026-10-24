@@ -198,10 +198,15 @@ willow/
 │       ├── releases.json     PHP's releases and the security commits, pinned by hash
 │       ├── make_trees.py     fetches them from php-src, and checks them without git
 │       ├── score.py          the frozen hit rule: did a passage land on the fix?
+│       ├── score2.py         the second hit rule: also an added run's neighbouring lines
 │       ├── phase2.py         the null tests: random draws, null questions, wrong pairs, baselines
+│       ├── phase1.py         the blind questions, under both rules, ranked by the kernel and BM25
 │       ├── test_php2shell.py holds the frozen files to their hashes, and the tools to their word
 │       └── questions/
 │           ├── author.txt    the first look's eight questions, labelled as the author's
+│           ├── blind-a.txt   eight written blind, as a security engineer, from the advisories
+│           ├── blind-b.txt   eight written blind, as a sysadmin, from one news article
+│           ├── blind-c.txt   eight written blind, as terse keywords, from the advisories
 │           └── null.txt      fifty questions with nothing to do with the bug
 ├── .github/
 │   ├── workflows/
