@@ -1,5 +1,15 @@
 [
  {
+  "name": "aider",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "Aider reads answers from your folder with its /run command, file and line included.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, assistant"
+ },
+ {
   "name": "bank",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -61,6 +71,46 @@
   "tags": "needs-install, online, records, assistant"
  },
  {
+  "name": "claude-code",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "Claude Code sees cited passages from your folder with each prompt, through its prompt hook.",
+  "source": "bot",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, assistant"
+ },
+ {
+  "name": "codex-cli",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "OpenAI's Codex CLI asks your folder and hands in suggestions, through the mcp add-on.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, assistant"
+ },
+ {
+  "name": "copilot",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "GitHub Copilot, in VS Code and in its own CLI, asks your folder through the mcp add-on.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, assistant"
+ },
+ {
+  "name": "cursor",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "Cursor asks your folder and hands in suggestions, through the mcp add-on.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, assistant"
+ },
+ {
   "name": "dice",
   "kind": "stdlib",
   "section": "Play",
@@ -90,6 +140,16 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, tracking"
+ },
+ {
+  "name": "emacs",
+  "kind": "stdlib",
+  "section": "Ways to use it",
+  "line": "Answers in an Emacs compilation buffer, each a jump to its file and line.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, interface"
  },
  {
   "name": "encrypt",
@@ -123,6 +183,16 @@
   "tags": "no-install, offline, records, tracking"
  },
  {
+  "name": "gemini-cli",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "Google's Gemini CLI asks your folder and hands in suggestions, through the mcp add-on.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, assistant"
+ },
+ {
   "name": "git-history",
   "kind": "deps",
   "section": "Reading more kinds of files",
@@ -154,6 +224,16 @@
   "tags": "no-install, offline, read-only, tracking"
  },
  {
+  "name": "jetbrains",
+  "kind": "stdlib",
+  "section": "Ways to use it",
+  "line": "An external tool for IntelliJ, PyCharm and the rest, with answers as links to file and line.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, interface"
+ },
+ {
   "name": "life",
   "kind": "stdlib",
   "section": "Play",
@@ -173,6 +253,16 @@
   "writes": "record",
   "network": "loopback",
   "tags": "needs-install, this-machine, records, assistant"
+ },
+ {
+  "name": "mcp-lite",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "The mcp add-on's three tools with nothing to install: the protocol by hand, standard library only.",
+  "source": "box",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, assistant"
  },
  {
   "name": "meaning",
@@ -197,6 +287,16 @@
   "tags": "needs-install, offline, writes-output, file-reader"
  },
  {
+  "name": "opencode",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "OpenCode asks your folder and hands in suggestions, through the mcp add-on.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, assistant"
+ },
+ {
   "name": "pgp",
   "kind": "deps",
   "section": "Trust and proof",
@@ -217,6 +317,16 @@
   "writes": "to",
   "network": "none",
   "tags": "needs-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "pipe",
+  "kind": "stdlib",
+  "section": "Ways to use it",
+  "line": "Questions in on standard input, answers out one per line: JSON lines, or file:line: text for grep and fzf.",
+  "source": "box",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, interface"
  },
  {
   "name": "report",
@@ -248,6 +358,16 @@
   "writes": "to",
   "network": "none",
   "tags": "needs-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "shell",
+  "kind": "stdlib",
+  "section": "Ways to use it",
+  "line": "A willow command and tab completion for bash, zsh, fish and PowerShell, on Linux, macOS and Windows.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, interface"
  },
  {
   "name": "speak",
@@ -294,6 +414,16 @@
   "tags": "needs-install, offline, read-only, search"
  },
  {
+  "name": "vim",
+  "kind": "stdlib",
+  "section": "Ways to use it",
+  "line": "Answers in Vim and Neovim's quickfix list, each a jump to its file and line.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, interface"
+ },
+ {
   "name": "voice",
   "kind": "deps",
   "section": "Reading more kinds of files",
@@ -303,6 +433,26 @@
   "writes": "to",
   "network": "the model, downloaded once",
   "tags": "needs-install, online, writes-output, file-reader"
+ },
+ {
+  "name": "vscode",
+  "kind": "stdlib",
+  "section": "Ways to use it",
+  "line": "A VS Code task whose answers land in the Problems panel, each a jump to its file and line.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, interface"
+ },
+ {
+  "name": "windsurf",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "Windsurf asks your folder and hands in suggestions, through the mcp add-on.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, assistant"
  },
  {
   "name": "words-de",
@@ -343,5 +493,15 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, words"
+ },
+ {
+  "name": "zed",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "Zed's assistant asks your folder and hands in suggestions, through the mcp add-on.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, assistant"
  }
 ]

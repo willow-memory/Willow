@@ -18,7 +18,7 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`█████████░░░░░░░░░░░` **26 of 59 built** · 42 need no install · 17 need one
+`███████░░░░░░░░░░░░░` **26 of 75 built** · 58 need no install · 17 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
@@ -28,8 +28,8 @@ or `writes-output`; its section), and any the card's author adds or changes.
 | Keeping track | 4 | 5 | 9 | 0 |
 | Trust and proof | 2 | 4 | 4 | 2 |
 | Privacy and safety | 1 | 1 | 2 | 0 |
-| Assistants | 1 | 2 | 0 | 3 |
-| Ways to use it | 1 | 2 | 2 | 1 |
+| Assistants | 1 | 12 | 10 | 3 |
+| Ways to use it | 1 | 8 | 8 | 1 |
 | Play | 0 | 3 | 2 | 1 |
 | For maintainers | 5 | 0 | 5 | 0 |
 <!-- /willow:pools -->
@@ -126,15 +126,31 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 
 Each hands in suggestions through propose. None can approve: every suggestion waits for your seal.
 
+- **aider** (idea) — Aider reads answers from your folder with its /run command, file and line included. *new* `no-install` `offline` `read-only` `assistant`
 - **claude** (idea) — Suggestions from Claude through the Anthropic API, citing your passages. Needs anthropic; MIT. Goes online: api.anthropic.com, to ask for suggestions. *new* `needs-install` `online` `records` `assistant`
+- **claude-code** (idea) — Claude Code sees cited passages from your folder with each prompt, through its prompt hook. *bot* `no-install` `offline` `read-only` `assistant`
+- **codex-cli** (idea) — OpenAI's Codex CLI asks your folder and hands in suggestions, through the mcp add-on. *new* `no-install` `offline` `read-only` `assistant`
+- **copilot** (idea) — GitHub Copilot, in VS Code and in its own CLI, asks your folder through the mcp add-on. *new* `no-install` `offline` `read-only` `assistant`
+- **cursor** (idea) — Cursor asks your folder and hands in suggestions, through the mcp add-on. *new* `no-install` `offline` `read-only` `assistant`
+- **gemini-cli** (idea) — Google's Gemini CLI asks your folder and hands in suggestions, through the mcp add-on. *new* `no-install` `offline` `read-only` `assistant`
 - **local-model** (idea) — Suggestions from a model on this machine only, such as Ollama or llama.cpp. Needs a local model server; licence varies by model. Reaches this machine only. *new* `needs-install` `this-machine` `records` `assistant`
 - [**mcp**](adapters/deps/mcp/) — Lets any MCP client, such as an AI assistant or editor, ask your folder and hand in suggestions. Needs mcp; MIT. *new* `needs-install` `offline` `records` `assistant`
+- **mcp-lite** (idea) — The mcp add-on's three tools with nothing to install: the protocol by hand, standard library only. *box* `no-install` `offline` `records` `assistant`
+- **opencode** (idea) — OpenCode asks your folder and hands in suggestions, through the mcp add-on. *new* `no-install` `offline` `read-only` `assistant`
+- **windsurf** (idea) — Windsurf asks your folder and hands in suggestions, through the mcp add-on. *new* `no-install` `offline` `read-only` `assistant`
+- **zed** (idea) — Zed's assistant asks your folder and hands in suggestions, through the mcp add-on. *new* `no-install` `offline` `read-only` `assistant`
 
 ### Ways to use it
 
 - **browse** (idea) — A local web page to ask questions and approve answers, reachable from this machine only. Reaches this machine only. *new* `no-install` `this-machine` `records` `interface`
+- **emacs** (idea) — Answers in an Emacs compilation buffer, each a jump to its file and line. *new* `no-install` `offline` `read-only` `interface`
+- **jetbrains** (idea) — An external tool for IntelliJ, PyCharm and the rest, with answers as links to file and line. *new* `no-install` `offline` `read-only` `interface`
+- **pipe** (idea) — Questions in on standard input, answers out one per line: JSON lines, or file:line: text for grep and fzf. *box* `no-install` `offline` `read-only` `interface`
 - [**plain**](adapters/stdlib/plain/) — Answers as sentences instead of JSON, each with its file and line. *new* `no-install` `offline` `records` `interface`
+- **shell** (idea) — A willow command and tab completion for bash, zsh, fish and PowerShell, on Linux, macOS and Windows. *new* `no-install` `offline` `read-only` `interface`
 - **speak** (idea) — Reads answers aloud. Needs pyttsx3; MPL-2.0. *new* `needs-install` `offline` `read-only` `interface`
+- **vim** (idea) — Answers in Vim and Neovim's quickfix list, each a jump to its file and line. *new* `no-install` `offline` `read-only` `interface`
+- **vscode** (idea) — A VS Code task whose answers land in the Problems panel, each a jump to its file and line. *new* `no-install` `offline` `read-only` `interface`
 
 ### Play
 

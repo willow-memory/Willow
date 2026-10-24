@@ -109,7 +109,7 @@ WHAT = {
     "Trust and proof": "answers you can check later: exports, stale answers, what changed, signed and encrypted records",
     "Privacy and safety": "phone numbers, card numbers and keys hidden in answers, or found sitting in files",
     "Assistants": "AI assistants that can ask and suggest, but never approve",
-    "Ways to use it": "other ways in: plain sentences, a page on this machine, answers read aloud",
+    "Ways to use it": "other ways in: pipes, your shell and your editor, plain sentences, a page on this machine, answers read aloud",
     "Play": "seeded, replayable games on the record, such as dice and the Game of Life",
     "For maintainers": "the repo's own tools: CI, the list, tests that can fail",
 }  # fmt: skip

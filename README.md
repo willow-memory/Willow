@@ -61,8 +61,8 @@ can pick up ([CONTRIBUTING.md](CONTRIBUTING.md) says how):
 - **Keeping track:** dates coming up, numbers over time, to-dos, care logs, invoices, forecasts and flashcards. Built: [again](adapters/stdlib/again/), [coming-up](adapters/stdlib/coming-up/), [readings](adapters/stdlib/readings/), [todo](adapters/stdlib/todo/). Ideas: *care, digest, flashcards, forecasts, invoices*.
 - **Trust and proof:** answers you can check later: exports, stale answers, what changed, signed and encrypted records. Built: [export](adapters/stdlib/export/), [stale](adapters/stdlib/stale/). Ideas: *changed, encrypt, pgp, report*.
 - **Privacy and safety:** phone numbers, card numbers and keys hidden in answers, or found sitting in files. Built: [privacy](adapters/stdlib/privacy/). Ideas: *secrets-audit*.
-- **Assistants:** AI assistants that can ask and suggest, but never approve. Built: [mcp](adapters/deps/mcp/). Ideas: *claude, local-model*.
-- **Ways to use it:** other ways in: plain sentences, a page on this machine, answers read aloud. Built: [plain](adapters/stdlib/plain/). Ideas: *browse, speak*.
+- **Assistants:** AI assistants that can ask and suggest, but never approve. Built: [mcp](adapters/deps/mcp/). Ideas: *aider, claude, claude-code, codex-cli, copilot, cursor, gemini-cli, local-model, mcp-lite, opencode, windsurf, zed*.
+- **Ways to use it:** other ways in: pipes, your shell and your editor, plain sentences, a page on this machine, answers read aloud. Built: [plain](adapters/stdlib/plain/). Ideas: *browse, emacs, jetbrains, pipe, shell, speak, vim, vscode*.
 - **Play:** seeded, replayable games on the record, such as dice and the Game of Life. Built: nothing yet. Ideas: *dice, dice5e, life*.
 - **For maintainers:** the repo's own tools: CI, the list, tests that can fail. Built: [ci](adapters/stdlib/ci/), [github](adapters/stdlib/github/), [mutants](adapters/stdlib/mutants/), [readme](adapters/stdlib/readme/), [similar](adapters/stdlib/similar/).
 <!-- /willow:summary -->
@@ -74,7 +74,7 @@ can pick up ([CONTRIBUTING.md](CONTRIBUTING.md) says how):
 
 *Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 26 built add-ons in name order.*
 
-[Every add-on, 26 built of 59, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 26 built of 75, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 ## How it works
