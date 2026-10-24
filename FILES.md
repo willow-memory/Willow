@@ -257,6 +257,10 @@ willow/
 │   │   │   ├── surprise.py   one passage drawn by a seeded stream, replayable
 │   │   │   ├── test_surprise.py
 │   │   │   └── README.md
+│   │   ├── timeline/
+│   │   │   ├── timeline.py   one matter's lines by date, each cited, written to one file
+│   │   │   ├── test_timeline.py
+│   │   │   └── README.md
 │   │   ├── todo/
 │   │   │   ├── todo.py       things marked to do, oldest first
 │   │   │   ├── test_todo.py
