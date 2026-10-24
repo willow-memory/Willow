@@ -18,14 +18,14 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`███░░░░░░░░░░░░░░░░░` **66 of 414 built** · 364 need no install · 50 need one
+`███░░░░░░░░░░░░░░░░░` **67 of 414 built** · 364 need no install · 50 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
 | Reading more kinds of files | 7 | 96 | 95 | 8 |
 | Finding things | 6 | 27 | 23 | 10 |
 | Your own words | 7 | 17 | 21 | 3 |
-| Keeping track | 5 | 49 | 54 | 0 |
+| Keeping track | 6 | 48 | 54 | 0 |
 | Trust and proof | 7 | 36 | 34 | 9 |
 | Privacy and safety | 3 | 10 | 13 | 0 |
 | Assistants | 11 | 17 | 22 | 6 |
@@ -47,9 +47,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ### Add-on of the week
 
 <!-- willow:pick week=2026-W43 -->
-**[similar](adapters/stdlib/similar/)** — What's already on the add-on list near a new idea, by the kernel's own search.
+**[latent](adapters/deps/latent/)** — Rank a scan index by meaning, not just words: a question reaches code that shares its sense without sharing its words.
 
-*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 66 built add-ons in name order.*
+*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 67 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -266,7 +266,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - **minutes** (idea) — Meeting minutes: who decided what and when, and which actions are still open. *new* `no-install` `offline` `read-only` `tracking`
 - **mood** (idea) — Mood scores you write in a journal, over weeks and months. *new* `no-install` `offline` `read-only` `tracking`
 - **oakenscroll** (idea) — Oakenscroll's Office calibration ledger: what you believed, how hard, and how it resolved, as dated passages. *new* `no-install` `offline` `writes-output` `tracking`
-- **outdated** (idea) — How old each locked dependency is, and which are yanked, deprecated or two years without a release, from a registry index you downloaded. *new* `no-install` `offline` `read-only` `tracking`
+- [**outdated**](adapters/stdlib/outdated/) — How old each locked dependency is, and which are yanked, deprecated or two years without a release, from a registry index you downloaded. *new* `no-install` `offline` `read-only` `tracking`
 - **pets** (idea) — Each pet's vet visits, vaccines and medicines, from your records: what's due next. *new* `no-install` `offline` `read-only` `tracking`
 - **predict** (idea) — Write down what you'll do next before you do it, and grade it after; the record counts how often you were right. *bot* `no-install` `offline` `records` `tracking`
 - **reading-log** (idea) — A child's reading log: books, pages and minutes, week by week. *new* `no-install` `offline` `read-only` `tracking`

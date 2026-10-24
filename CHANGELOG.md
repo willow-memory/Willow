@@ -10,6 +10,11 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `outdated`, an add-on that reads your lockfiles and a downloaded registry
+  index (npm, PyPI, crates.io metadata) and says how old each locked
+  dependency is, flagging the ones that are yanked, deprecated, or from a
+  project two years without a release. Offline; reuses `advisories`' lockfile
+  reader; `--now` makes a run repeatable.
 - `advisories`, an add-on that reads your lockfiles (npm, PyPI, crates.io) and
   a downloaded OSV or GitHub advisory database, offline, and says which locked
   dependency a known advisory names, and since when -- matching a version by

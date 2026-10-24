@@ -2034,16 +2034,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "outdated",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "How old each locked dependency is, and which are yanked, deprecated or two years without a release, from a registry index you downloaded.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
- },
- {
   "name": "package-contents",
   "kind": "stdlib",
   "section": "Privacy and safety",

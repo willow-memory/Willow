@@ -198,6 +198,10 @@ willow/
 │   │   │   ├── opencode.py       the opencode.json lines that register mcp-lite with OpenCode
 │   │   │   ├── test_opencode.py
 │   │   │   └── README.md
+│   │   ├── outdated/
+│   │   │   ├── outdated.py   how old each locked dependency is, and which are yanked, deprecated or unmaintained
+│   │   │   ├── test_outdated.py
+│   │   │   └── README.md
 │   │   ├── pipe/
 │   │   │   ├── pipe.py           questions in, one answer a line out: JSON lines, or grep's file:line: text
 │   │   │   ├── test_pipe.py
