@@ -15,6 +15,13 @@ says how). The first was v0.1.0.
   that hold them, each cited by file and line, written to one file to hand
   on. A line's own date and its file's are both shown when they differ;
   undated lines are kept, after the dated ones; nothing is merged. (#28)
+- `test-impact`, an add-on for maintainers that takes a change (paths from git
+  against a base ref, and any you name) and says which of the repo's checks it
+  can reach, in ci's own gate names, cheapest and closest first: the
+  add-on's tests, `adapters/stdlib/ci/test_contract.py` narrowed to it, the docs test, its
+  mutants. It builds the import graph with `ast` and adds a few written rules
+  for what imports can't show. A change it can't place runs everything, and it
+  always says the full suite still runs after. (#23)
 - `ci-why`, an add-on that reads a red CI log (what `ci.py run` printed, or a
   job's raw log) and prints only each failing block: the pytest test, its
   assertion and place, a stale or surviving mutant, a ruff rule and line, a

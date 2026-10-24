@@ -261,6 +261,10 @@ willow/
 │   │   │   ├── surprise.py   one passage drawn by a seeded stream, replayable
 │   │   │   ├── test_surprise.py
 │   │   │   └── README.md
+│   │   ├── test-impact/
+│   │   │   ├── impact.py     which of this repo's checks a change can reach, closest first, in ci's gate names
+│   │   │   ├── test_impact.py
+│   │   │   └── README.md
 │   │   ├── timeline/
 │   │   │   ├── timeline.py   one matter's lines by date, each cited, written to one file
 │   │   │   ├── test_timeline.py
