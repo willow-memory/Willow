@@ -1,9 +1,49 @@
 [
  {
+  "name": "agent-transcript",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Claude Code, Codex, Gemini CLI, Cursor and Copilot session files as plain text, each turn numbered, so you can ask what an agent was told.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "agents-md-check",
+  "kind": "stdlib",
+  "section": "For maintainers",
+  "line": "Commands and paths named in AGENTS.md or CLAUDE.md that no longer exist in the repo.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, maintainers"
+ },
+ {
+  "name": "archivebox",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "ArchiveBox snapshots: each saved page's text, with its URL and the date it was captured.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
   "name": "bank",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
   "line": "Bank CSV and OFX statements as dated lines, with spending by month.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "bluesky",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "A Bluesky repo.car export: your posts as dated lines, read by a small CAR and CBOR reader of its own.",
   "source": "new",
   "writes": "to",
   "network": "none",
@@ -92,6 +132,16 @@
   "tags": "no-install, offline, read-only, tracking"
  },
  {
+  "name": "discord",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Discord's data package: your messages, one dated line each, by server and channel.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
   "name": "encrypt",
   "kind": "deps",
   "section": "Trust and proof",
@@ -144,6 +194,16 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
+  "name": "instapaper",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Instapaper's CSV and HTML export: saved articles and highlights as dated lines.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
   "name": "invoices",
   "kind": "stdlib",
   "section": "Keeping track",
@@ -154,6 +214,46 @@
   "tags": "no-install, offline, read-only, tracking"
  },
  {
+  "name": "joplin",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Joplin's .jex export, read without unpacking it: each note as plain text with its title and dates.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "journiv",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Journiv journal entries, with their moods, as dated lines, once its export format is settled.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "jrnl",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "jrnl journals: each [YYYY-MM-DD HH:MM] entry as a dated passage.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "karakeep",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Karakeep's JSON export: bookmarks, notes and tags as plain text.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
   "name": "life",
   "kind": "stdlib",
   "section": "Play",
@@ -162,6 +262,17 @@
   "writes": "record",
   "network": "none",
   "tags": "no-install, offline, records, play"
+ },
+ {
+  "name": "line-origin",
+  "kind": "deps",
+  "section": "Trust and proof",
+  "line": "Which agent session wrote this line of code: git blame to the commit, then the transcript turn that made it.",
+  "source": "new",
+  "needs": "the git program; GPL, called not linked",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "needs-install, offline, read-only, trust"
  },
  {
   "name": "local-model",
@@ -175,6 +286,16 @@
   "tags": "needs-install, this-machine, records, assistant"
  },
  {
+  "name": "mastodon",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "A Mastodon or Pixelfed account archive's outbox.json: your posts as dated lines.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
   "name": "meaning",
   "kind": "deps",
   "section": "Finding things",
@@ -184,6 +305,16 @@
   "writes": "to",
   "network": "the model, downloaded once from Hugging Face",
   "tags": "needs-install, online, writes-output, search"
+ },
+ {
+  "name": "memory-import",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "An AI assistant's memory store, SQLite or Markdown, handed in through propose: one suggestion per memory, none trusted until you seal it.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, assistant"
  },
  {
   "name": "ocr",
@@ -219,6 +350,16 @@
   "tags": "needs-install, offline, writes-output, file-reader"
  },
  {
+  "name": "pocket",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Pocket's export, the HTML and CSV in its zip, as one dated line per saved article, now that Pocket is gone.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
   "name": "report",
   "kind": "stdlib",
   "section": "Trust and proof",
@@ -239,6 +380,16 @@
   "tags": "no-install, offline, read-only, privacy"
  },
  {
+  "name": "session-cost",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "Tokens each agent session spent, by day and by repo, summed from its own session files and priced from a table you keep.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, tracking"
+ },
+ {
   "name": "sheets",
   "kind": "deps",
   "section": "Reading more kinds of files",
@@ -248,6 +399,27 @@
   "writes": "to",
   "network": "none",
   "tags": "needs-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "signal",
+  "kind": "deps",
+  "section": "Reading more kinds of files",
+  "line": "A Signal backup, decrypted with its passphrase, as one dated line per message.",
+  "source": "new",
+  "needs": "cryptography; Apache-2.0 or BSD",
+  "writes": "to",
+  "network": "none",
+  "tags": "needs-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "slack",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Slack's export zip: one dated line per message, with channel and author.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
  },
  {
   "name": "speak",
@@ -272,6 +444,16 @@
   "tags": "needs-install, offline, read-only, words"
  },
  {
+  "name": "subtitles",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Subtitle and transcript files (.vtt, .srt) as lines cited by timestamp, for podcasts and videos already transcribed.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
   "name": "synonyms",
   "kind": "deps",
   "section": "Your own words",
@@ -281,6 +463,26 @@
   "writes": "to",
   "network": "the WordNet data, downloaded once",
   "tags": "needs-install, online, writes-output, words"
+ },
+ {
+  "name": "takeout",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Google Takeout's My Activity and YouTube history, JSON or HTML, as dated lines.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "transcript-redact",
+  "kind": "stdlib",
+  "section": "Privacy and safety",
+  "line": "An agent transcript with keys, home paths and emails taken out before you share it, each removal listed by line.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, privacy"
  },
  {
   "name": "typos",
@@ -303,6 +505,16 @@
   "writes": "to",
   "network": "the model, downloaded once",
   "tags": "needs-install, online, writes-output, file-reader"
+ },
+ {
+  "name": "wallabag",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "wallabag's JSON or HTML export: saved entries as plain text, with their tags.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
  },
  {
   "name": "words-de",
@@ -343,5 +555,15 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, words"
+ },
+ {
+  "name": "writefreely",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "WriteFreely posts, from its export or a copy of its SQLite database, as dated text.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
  }
 ]

@@ -10,6 +10,12 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- Twenty-two ideas on the add-on list, from what people are using now:
+  readers for Pocket, Instapaper, wallabag, Karakeep, Joplin, jrnl,
+  Journiv, WriteFreely, ArchiveBox, Slack, Discord, Signal, Mastodon,
+  Bluesky, Google Takeout, subtitles and AI agents' session files; and
+  memory-import, line-origin, session-cost, transcript-redact and
+  agents-md-check. Ideas only: nothing is built.
 - CI's `similar` job keeps its list of what's near each added idea as the
   run's `similar` artifact, which willow-bot posts in its status comment on
   the pull request; `github.py check` holds the job to it. (#10)
