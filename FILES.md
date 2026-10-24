@@ -264,6 +264,10 @@ willow/
 │   │   │   ├── similar.py    what's already on the list near a new idea
 │   │   │   ├── test_similar.py
 │   │   │   └── README.md
+│   │   ├── slow-tests/
+│   │   │   ├── slow_tests.py each test's time over several runs, the slowest named, any that got slower flagged
+│   │   │   ├── test_slow_tests.py
+│   │   │   └── README.md
 │   │   ├── snapshot/
 │   │   │   ├── snapshot.py   a page or file fetched once, with its address, time and SHA-256
 │   │   │   ├── test_snapshot.py
