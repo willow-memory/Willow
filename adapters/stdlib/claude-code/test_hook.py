@@ -67,6 +67,15 @@ def test_an_unreadable_folder_says_why(tmp_path):
     )
 
 
+def test_json_that_isnt_a_prompt_object_is_said_never_a_crash(tmp_path):
+    """hook-fuzz found these: JSON that isn't an object, or is nested past
+    Python's depth, raised a traceback and exited 1, though the hook says it
+    always exits 0."""
+    b = box(tmp_path)
+    for sent in ("null", "[]", "5", "[" * 10_000 + "]" * 10_000):
+        assert said(b, sent) == "willow: couldn't read the prompt Claude Code sent\n"
+
+
 def test_the_prompt_is_on_the_record_by_fingerprint_not_words(tmp_path):
     b = box(tmp_path)
     said(b, {"prompt": "when does the bus leave the square"})
