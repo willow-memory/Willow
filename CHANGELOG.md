@@ -23,6 +23,12 @@ says how). The first was v0.1.0.
 - Ten ideas for willow beside its maintainer's own projects: almanac,
   corpus-lens, homestead, jeles, nestor, oakenscroll, quiet-corner,
   reconciler, safe-app and sap-gate. Ideas only: nothing is built.
+- Twenty-three ideas for everyday life, not for developers: readers for
+  family trees, Goodreads, Letterboxd, Spotify, recipes, Strava and phone
+  texts; trackers for the car, the garden, gifts, a child's milestones,
+  pets, school letters, subscriptions, a tax year, trips and warranties;
+  memoir, in-case, timeline, print, large-print and share. Ideas only:
+  nothing is built.
 - CI's `similar` job keeps its list of what's near each added idea as the
   run's `similar` artifact, which willow-bot posts in its status comment on
   the pull request; `github.py check` holds the job to it. (#10)
