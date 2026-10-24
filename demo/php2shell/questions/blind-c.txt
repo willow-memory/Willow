@@ -1,0 +1,13 @@
+# Blind set C: an agent writing as a developer who searches in terse keywords, from
+# the public advisories only, 2026-10-24. It never saw PHP's code, the fix, the
+# author's questions or any result. Its sources, as it reported them: four web
+# searches, whose result summaries showed no code; four page fetches, all failed
+# (DNS), so no page was read.
+c1	out of memory longjmp
+c2	multipart parsing memory exhaustion
+c3	request shutdown use-after-free
+c4	uninitialized pointer request cleanup
+c5	session upload progress use-after-free
+c6	stale global state reset
+c7	per-request globals not reset
+c8	extension state freed request

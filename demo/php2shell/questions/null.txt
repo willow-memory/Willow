@@ -1,0 +1,52 @@
+# Fifty questions about PHP with nothing to do with PHP2Shell, for phase 2.
+# Written 2026-10-24 by the author, before any null run.
+n01	daylight saving time zone transition
+n02	json pretty print unicode escape
+n03	regular expression named capture groups
+n04	sort array by key preserving order
+n05	sprintf padding with zeros
+n06	string to lowercase multibyte
+n07	random integer between two numbers
+n08	round half up precision
+n09	format a date as ISO week
+n10	read a CSV file into rows
+n11	send an email with headers
+n12	hash a password with bcrypt
+n13	base64 encode binary data
+n14	gzip compress a string
+n15	connect to mysql with pdo
+n16	sqlite prepared statement bind
+n17	curl follow redirects timeout
+n18	parse a url into parts
+n19	xml document load and xpath query
+n20	image resize with gd
+n21	exif orientation of a photo
+n22	intl number format currency
+n23	tokenize php source
+n24	reflection class methods list
+n25	closure bind to object scope
+n26	generator yield from another
+n27	enum cases backed by strings
+n28	readonly property cannot be modified
+n29	match expression no arm matched
+n30	named arguments unknown parameter
+n31	fibers suspend and resume
+n32	opcache preload script
+n33	jit compile hot functions
+n34	ftp upload passive mode
+n35	socket bind listen accept
+n36	posix get process id
+n37	pcntl fork a child process
+n38	shared memory segment attach
+n39	soap client wsdl call
+n40	ldap bind and search
+n41	snmp get an oid
+n42	bcmath arbitrary precision divide
+n43	gmp big integer power
+n44	calendar easter date
+n45	iconv convert charset
+n46	levenshtein distance between words
+n47	similar text percentage
+n48	array chunk into pieces
+n49	str_pad left with spaces
+n50	ctype digit check

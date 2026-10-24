@@ -42,7 +42,10 @@ def test_the_same_files_give_the_same_record_byte_for_byte(tmp_path):
         assert cli("run", "demo", "--box", str(box), "--now", NOW).returncode == 0
     assert (a / "record.jsonl").read_bytes() == (b / "record.jsonl").read_bytes()
     made = rows(a)
-    assert [r["gate"] for r in made[1:]] == [f"demo:{p}" for p in ci.people()]
+    assert [r["gate"] for r in made[1:]] == [
+        *(f"demo:{p}" for p in ci.people()),
+        "demo:php2shell",
+    ]
     assert {r["state"] for r in made[1:]} == {ci.SATISFIED}
 
 
@@ -112,7 +115,7 @@ def test_the_gates_run_in_one_fixed_order_and_cover_every_part():
         "tests:strip",
         "tests:constitution", "tests:coverage",
         *(f"ports:{p}" for p in ci.PORTS),
-        *(f"demo:{p}" for p in ci.people()),
+        *(f"demo:{p}" for p in ci.people()), "demo:php2shell",
         *(g for d in ci.deps_add_ons() for g in (f"deps:{d}", f"deps:{d}@floor")),
         "deps:floors",
         *(f"mutants:{n}" for n in ci.mutant_targets()),

@@ -1,0 +1,50 @@
+{
+ "about": "Phase 0 of demo/php2shell: each file's SHA-256 when it was frozen, held by test_php2shell.py. A change is a new freeze, in its own commit, before the phase that needs it runs.",
+ "frozen": "2026-10-24",
+ "files": {
+  "releases.json": "111510c7fd92072ee046a48fb74a89d4c6ee6a1d538650c6de39199c8088ce53",
+  "make_trees.py": "50bbcb8d4d12a7932d0a79f035e82366219430e1773524c117aa71ad55329f12",
+  "score.py": "084d0a3a0d7e99f5450ccc12536f659d1f3fd0e675dc3b4415d8bc4ef97e7142",
+  "questions/author.txt": "bf6b3bc3531a8fb0207c8ae81a8eff5dd49cb54c789594e17b6827f5e2e25597",
+  "questions/null.txt": "8f05a7a08ec0558c1b99af2c9378a24e7f1e6b8148d821d4f30514babf5ef124",
+  "phase2.py": "5ca4e4a1a80e3e159191935866140d268b7a750b3380b372f75b9ddb0e521cb9",
+  "score2.py": "ddf0bde4ff821e484875afd5df851398f886db1094a6da4a67086e8df6cd6cba",
+  "phase1.py": "86a7e3a6b4b7b671edbf32dd72440830172160002ef09004775660754b575408",
+  "questions/blind-a.txt": "e5cf1656bd0ff1fd02e7d5c88535aba81236cab22367e67817ccd74094c8a1f8",
+  "questions/blind-b.txt": "ac726fa6bcda969a466ce95f05b9f76bacbd0537db5b261409247bde78635958",
+  "questions/blind-c.txt": "fb89225c5ada04c3d9ded4e640aff8f5cac8b261f338610f7f471da9737b08fe",
+  "phase6.py": "a9b8360c3923ac25d49dce89b09ced54afd6c2a15b20948cba3e586079899482",
+  "phase3.py": "1328d97cd50f41d6a822cbdadc36d72ad1ab696b668dbb290366a6c36c81146e",
+  "phase3.json": "9028bc8e76554e39a55bcb2bbf33cf35d06f9fccb567ac1064d93f68299c3ebc",
+  "questions/phase3.txt": "4804879d8fd2b84242f9fa4240e00caebcc2757094800a169cc8d7dae3cbf493",
+  "phase4.py": "c8d9315b7a119b532614b623e68686e55c3eea7310920255ff2a83623adc67d0",
+  "phase5.py": "f4690547c2ff6f7ebf1967f9e946c01fed53c0b6967f560d019c15b836a31480",
+  "questions/reword.txt": "b36063a8b0c490addf1150fc8a42ff141cf6437ebef16add23234ee6f7e2ad25",
+  "questions/advisory-words.txt": "341a4d15edad110fa69e7e2e5bc9308fd9ce750caad07e6420a6874597a2813c"
+ },
+ "tools_at_freeze": {
+  "kernel.py": "2d7fd0f67bbffbd4955c599695d15d237e5e3ea9058ba700c6f8936699d96400",
+  "adapters/stdlib/scan/scan.py": "ead27057594089cfbc94eddd0af0dbd35224880c6c26253f3e5ebca6ac59d691",
+  "adapters/stdlib/todo/todo.py": "56be091ebcb319711653ab2566d011b8f32a00790c106e63d4ef63516e7e0c45"
+ },
+ "added": {
+  "phase2.py": "2026-10-24, before phase 2 ran: its seed, draws, baselines and pass rules",
+  "score2.py": "2026-10-24, before phase 1 ran",
+  "phase1.py": "2026-10-24, before phase 1 ran",
+  "questions/blind-a.txt": "2026-10-24, before phase 1 ran",
+  "questions/blind-b.txt": "2026-10-24, before phase 1 ran",
+  "questions/blind-c.txt": "2026-10-24, before phase 1 ran",
+  "phase6.py": "2026-10-24, before any part of phase 6 ran: its checks and pass rules",
+  "phase3.py": "2026-10-24, before phase 3 ran: seven CVEs, their pins, blind questions and pass rules",
+  "phase3.json": "2026-10-24, before phase 3 ran: seven CVEs, their pins, blind questions and pass rules",
+  "questions/phase3.txt": "2026-10-24, before phase 3 ran: seven CVEs, their pins, blind questions and pass rules",
+  "phase4.py": "2026-10-24, before phase 4 ran (re-frozen same day: grep uses the index's postings, proven identical to the brute-force scan by test, a speed fix with no result seen)",
+  "phase5.py": "2026-10-24, before phase 5 ran: rewording, settings and leakage",
+  "questions/reword.txt": "2026-10-24, before phase 5 ran: rewording, settings and leakage",
+  "questions/advisory-words.txt": "2026-10-24, before phase 5 ran: rewording, settings and leakage"
+ },
+ "tools_at_phase1_freeze": {
+  "kernel.py": "2d7fd0f67bbffbd4955c599695d15d237e5e3ea9058ba700c6f8936699d96400",
+  "adapters/stdlib/scan/scan.py": "d93536eb54d14edb86364acbd262e0edbf316460fa9085309a6693d20147ed96"
+ }
+}

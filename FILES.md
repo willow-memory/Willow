@@ -222,6 +222,10 @@ willow/
 │   │   │   ├── readme.py     builds this README's generated sections from the cards
 │   │   │   ├── test_readme.py
 │   │   │   └── README.md     its card: sections, the draw, what it reads
+│   │   ├── scan/
+│   │   │   ├── scan.py       indexes a folder once, then asks it a list of questions, the kernel's way
+│   │   │   ├── test_scan.py  holds its answers to the kernel's, every ranking vector included
+│   │   │   └── README.md
 │   │   ├── secrets-audit/
 │   │   │   ├── secrets_audit.py passwords, keys and card numbers in plain files, by file and line
 │   │   │   ├── test_secrets_audit.py
@@ -334,7 +338,7 @@ willow/
 ├── docs/
 │   ├── tour.md               the first five minutes, in full: a question, a gap, her words, an approval
 │   └── how-it-works.md       what it reads, how it ranks, the key, the record, approvals
-├── demo/                     three made-up people to try it on
+├── demo/                     three made-up people, and one real bug, to try it on
 │   ├── odile/                piano tuner and beekeeper, caring for her father
 │   │   ├── make_life.py      writes her files into life/, the same bytes every run
 │   │   ├── CHARACTER.md      who she is and how her life is written down
@@ -347,12 +351,38 @@ willow/
 │   │   ├── PLANTED.md
 │   │   ├── QUESTIONS.md      the questions he would ask, written before any run
 │   │   └── STRIP.md
-│   └── teodora/              built blind, from a different line of work
-│       ├── make_life.py
-│       ├── CHARACTER.md
-│       ├── PLANTED.md
-│       ├── QUESTIONS.md
-│       └── STRIP.md
+│   ├── teodora/              built blind, from a different line of work
+│   │   ├── make_life.py
+│   │   ├── CHARACTER.md
+│   │   ├── PLANTED.md
+│   │   ├── QUESTIONS.md
+│   │   └── STRIP.md
+│   └── php2shell/            a real bug: the PHP2Shell result, tested seven ways
+│       ├── README.md         the claim, the threats, what is frozen, each phase's results
+│       ├── FROZEN.json       the SHA-256 of each frozen file, and of the tools when frozen
+│       ├── releases.json     PHP's releases and the security commits, pinned by hash
+│       ├── make_trees.py     fetches them from php-src, and checks them without git
+│       ├── score.py          the frozen hit rule: did a passage land on the fix?
+│       ├── score2.py         the second hit rule: also an added run's neighbouring lines
+│       ├── phase2.py         the null tests: random draws, null questions, wrong pairs, baselines
+│       ├── phase1.py         the blind questions, under both rules, ranked by the kernel and BM25
+│       ├── phase3.py         out of sample: seven other CVEs, fetched as git stores them, asked blind
+│       ├── phase3.json       those CVEs' releases and fix commits, pinned by hash
+│       ├── phase4.py         before the fix: the whole release, ranked three ways, recall at k
+│       ├── phase5.py         robustness: rewording, top-k, a words list, and leakage
+│       ├── phase6.py         reproducibility: every release, five Pythons, four kernels, a second labeller
+│       ├── test_php2shell.py holds the frozen files to their hashes, and the tools to their word
+│       ├── results/
+│       │   └── phase6-labels.json  the independent labellers' yes or no, item by item
+│       └── questions/
+│           ├── author.txt    the first look's eight questions, labelled as the author's
+│           ├── blind-a.txt   eight written blind, as a security engineer, from the advisories
+│           ├── blind-b.txt   eight written blind, as a sysadmin, from one news article
+│           ├── blind-c.txt   eight written blind, as terse keywords, from the advisories
+│           ├── phase3.txt    eight a CVE for phase 3's seven, written blind
+│           ├── reword.txt     the author's eight, rephrased five ways each, blind
+│           └── advisory-words.txt  a words list of acronyms the advisories expand
+│           └── null.txt      fifty questions with nothing to do with the bug
 ├── .github/
 │   ├── workflows/
 │   │   ├── ci.yml            runs adapters/stdlib/ci/ci.py one part a job, tests on Python 3.9 to 3.14

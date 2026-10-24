@@ -1,0 +1,9 @@
+# A words list for the kernel's --words, drawn only from acronyms the public
+# advisories expand themselves, never from PHP's code. Frozen for phase 5's
+# settings check: does a plausible advisory-derived words list change results?
+# "out-of-memory (OOM)" -> oom reads as memory
+oom = memory
+# "remote code execution (RCE)"
+rce = execution
+# "use-after-free (UAF)"
+uaf = free

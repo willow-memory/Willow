@@ -1,0 +1,10 @@
+# The author's eight, written from the public advisories before any run, 2026-10-24.
+# Used in the first look; the author has since seen the results and the fix.
+618a	memory limit bailout during multipart post parsing
+618b	out of memory while registering post variables
+618c	rfc1867 memory limit longjmp
+619a	session upload progress cleanup between requests
+619b	upload progress data freed at request shutdown
+619c	fatal error backtraces stale between requests
+560a	session serialize handler php_binary php_serialize upload progress
+560b	serialize handler changed with ini_set before session_start

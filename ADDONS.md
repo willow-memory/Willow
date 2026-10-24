@@ -18,12 +18,12 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`███░░░░░░░░░░░░░░░░░` **63 of 412 built** · 363 need no install · 49 need one
+`███░░░░░░░░░░░░░░░░░` **64 of 413 built** · 364 need no install · 49 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
 | Reading more kinds of files | 7 | 96 | 95 | 8 |
-| Finding things | 4 | 27 | 22 | 9 |
+| Finding things | 5 | 27 | 23 | 9 |
 | Your own words | 7 | 17 | 21 | 3 |
 | Keeping track | 5 | 49 | 54 | 0 |
 | Trust and proof | 7 | 36 | 34 | 9 |
@@ -47,9 +47,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ### Add-on of the week
 
 <!-- willow:pick week=2026-W43 -->
-**[aider](adapters/stdlib/aider/)** — Aider reads answers from your folder with its /run command, file and line included.
+**[secrets-audit](adapters/stdlib/secrets-audit/)** — Finds passwords, keys and card numbers sitting in plain files, by file and line, never showing the value.
 
-*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 63 built add-ons in name order.*
+*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 64 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -189,6 +189,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - **rerank** (idea) — A small model on the CPU that reorders the top passages by reading the question and each passage together. Needs FlashRank; Apache-2.0. Goes online: the model, downloaded once. *new* `needs-install` `online` `read-only` `search`
 - **ripgrep** (idea) — Exact search through ripgrep, much faster on a big folder, its hits checked against the kernel's hashes. Needs the ripgrep program; MIT or Unlicense. *new* `needs-install` `offline` `read-only` `search`
 - **said** (idea) — Your own quotes, gathered: every 'so-and-so, on this date: "..."' in your files, as a dated timeline of what was decided. *new* `no-install` `offline` `read-only` `search`
+- [**scan**](adapters/stdlib/scan/) — Index a big folder once, then ask it a list of questions in seconds, with the kernel's own answers: of everything, or only what changed since another index. *box* `no-install` `offline` `writes-output` `search` `index`
 - **standards** (idea) — Curriculum standards beside your lessons: which standard each lesson meets, each cited. *new* `no-install` `offline` `read-only` `search`
 - [**surprise**](adapters/stdlib/surprise/) — One passage from your folder at random, seeded so it can be replayed. *bot* `no-install` `offline` `records` `search`
 - **symbols** (idea) — Exact definitions and references for Python code: where a name is defined, and every place it's used. Needs scip-python; MIT. *new* `needs-install` `offline` `read-only` `search`

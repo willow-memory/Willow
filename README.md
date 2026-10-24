@@ -56,7 +56,7 @@ can pick up ([CONTRIBUTING.md](CONTRIBUTING.md) says how):
 
 <!-- willow:summary -->
 - **Reading more kinds of files:** PDFs, email, chats, calendars, notes and office files, as text it can search. Built: [books](adapters/stdlib/books/), [calendar](adapters/stdlib/calendar/), [chats](adapters/stdlib/chats/), [mail](adapters/stdlib/mail/), [notes](adapters/stdlib/notes/), [office](adapters/stdlib/office/), [pdf](adapters/deps/pdf/). Ideas: *agent-transcript, almanac, apple-notes, archivebox, bank, bibtex, bluesky, bookmarks, canvas, chordpro, ci-logs, code-comments, codebase-memory, confluence, corpus-lens, day-one, discord, dotfiles, evernote, family-tree, forgejo-dump, gh-json, git-history, github-archive, gitlab-export, goodreads, google-classroom, google-keep, health, home-sensors, homestead, instapaper, irc, jira, joplin, journiv, jrnl, jupyter, karakeep, latex, lessons, letterboxd, linkedin, listening, location-history, lockfiles, logs, man-pages, manifests, mastodon, matrix, mediawiki, medical-records, meta-archive, moodle, music-library, musicxml, notion, ocr, orders, package-docs, parallel, past-papers, pgn, photos, places, pocket, quiet-corner, readwise, recipes, reddit, rtf, sarif, sbom, screenplay, scripture, scrivener, sheets, shell-history, sigmap, signal, slack, snapshot, steam, strava, subtitles, takeout, teams, texts, trello, voice, wallabag, web-pages, writefreely, x-archive, zotero*.
-- **Finding things:** more ways to look: every match, this date in past years, an exact quote, by meaning, past typos. Built: [all](adapters/stdlib/all/), [on-this-day](adapters/stdlib/on-this-day/), [quote-check](adapters/stdlib/quote-check/), [surprise](adapters/stdlib/surprise/). Ideas: *amounts, bm25, by-function, code-first, code-shape, codeowners, crosswalk, duplicates, first-mention, fuzzy-dates, index-cache, kiwix, meaning, my-lessons, people, promises, reading-level, record-sql, rerank, ripgrep, said, standards, symbols, typos, upgrade-notes, watch, why-not*.
+- **Finding things:** more ways to look: every match, this date in past years, an exact quote, by meaning, past typos. Built: [all](adapters/stdlib/all/), [on-this-day](adapters/stdlib/on-this-day/), [quote-check](adapters/stdlib/quote-check/), [scan](adapters/stdlib/scan/), [surprise](adapters/stdlib/surprise/). Ideas: *amounts, bm25, by-function, code-first, code-shape, codeowners, crosswalk, duplicates, first-mention, fuzzy-dates, index-cache, kiwix, meaning, my-lessons, people, promises, reading-level, record-sql, rerank, ripgrep, said, standards, symbols, typos, upgrade-notes, watch, why-not*.
 - **Your own words:** teaching it the words you use, so a question finds what your files call it. Built: [starter-words](adapters/stdlib/starter-words/), [words-de](adapters/stdlib/words-de/), [words-es](adapters/stdlib/words-es/), [words-fr](adapters/stdlib/words-fr/), [words-it](adapters/stdlib/words-it/), [words-nl](adapters/stdlib/words-nl/), [words-pt](adapters/stdlib/words-pt/). Ideas: *abbreviations, dialect, memoir, nicknames, stems, synonyms, tatoeba, vocab, words-ar, words-cy, words-hi, words-ja, words-pl, words-ru, words-sv, words-tr, words-zh*.
 - **Keeping track:** dates coming up, numbers over time, to-dos, care logs, invoices, forecasts and flashcards. Built: [again](adapters/stdlib/again/), [coming-up](adapters/stdlib/coming-up/), [digest](adapters/stdlib/digest/), [readings](adapters/stdlib/readings/), [todo](adapters/stdlib/todo/). Ideas: *ask-later, attendance, baby-log, budget, car, care, contracts, crowd, cycle, debts, flashcards, foia, food-log, forecasts, garden, gifts, gradebook, grant-report, habits, home-upkeep, hours, inventory, invoices, job-hunt, lab-notebook, lending, livestock, market-calls, mileage, milestones, minutes, mood, oakenscroll, outdated, pets, predict, reading-log, renewals, rubric, school, session-cost, subscriptions, support-plan, syllabus, symptoms, tax-year, trips, upstream-desk, warranties*.
 - **Trust and proof:** answers you can check later: exports, stale answers, what changed, signed and encrypted records. Built: [backup](adapters/stdlib/backup/), [changed](adapters/stdlib/changed/), [diverge](adapters/stdlib/diverge/), [export](adapters/stdlib/export/), [history](adapters/stdlib/history/), [stale](adapters/stdlib/stale/), [xref](adapters/stdlib/xref/). Ideas: *box-health, contradictions, encrypt, family-box, git-notes, handoff, ids, in-case, in-toto, jeles, licenses, line-origin, losc, merkle, mirror, nestor, notary, opentimestamps, paper-key, pgp, prov, provenance, quote-review, redential, report, retire, ro-crate, sap-gate, session-seal, signed-commits, sync, thesis, time-capsule, timeline, wayback, witness*.
@@ -70,11 +70,11 @@ can pick up ([CONTRIBUTING.md](CONTRIBUTING.md) says how):
 <!-- willow:front show=pick week=2026-W43 -->
 **Add-on of the week**
 
-**[aider](adapters/stdlib/aider/)** — Aider reads answers from your folder with its /run command, file and line included.
+**[secrets-audit](adapters/stdlib/secrets-audit/)** — Finds passwords, keys and card numbers sitting in plain files, by file and line, never showing the value.
 
-*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 63 built add-ons in name order.*
+*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 64 built add-ons in name order.*
 
-[Every add-on, 63 built of 412, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 64 built of 413, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 ## How it works
@@ -242,7 +242,7 @@ willow/
 ├── adapters/                 add-ons built on top of kernel.py
 ├── ports/                    kernel.py rewritten in other languages
 ├── vectors/                  what keeps the four implementations identical
-├── demo/                     three made-up people to try it on
+├── demo/                     three made-up people, and one real bug, to try it on
 ├── docs/                     the full first five minutes, and how it works in full
 ├── .github/                  CI, the issue forms, the pull request template: the GitHub add-on's
 ├── .gitignore                generated files and build output

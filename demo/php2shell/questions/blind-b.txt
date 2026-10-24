@@ -1,0 +1,13 @@
+# Blind set B: an agent writing as a sysadmin who read one news article, 2026-10-24.
+# It never saw PHP's code, the fix, the author's questions or any result. Its source,
+# as it reported it: one BleepingComputer article ("PHP ships emergency patches for
+# critical PHP2Shell flaws"), read only as a search summary limited to that site; its
+# page fetches failed (DNS) and a curl was refused by the proxy, so no page was read.
+b1	memory stays corrupted after request ends abnormally
+b2	out of memory handling cleanup
+b3	stale global state between requests
+b4	use after free when request ends
+b5	session upload progress handling
+b6	reset memory when request shuts down
+b7	limit POST request size
+b8	request startup before application code runs
