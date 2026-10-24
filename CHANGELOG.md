@@ -10,7 +10,7 @@ says how). The first was v0.1.0.
 
 ### Added
 
-- Two hundred and five ideas on the add-on list, nothing built: readers for what
+- Two hundred and twenty-nine ideas on the add-on list, nothing built: readers for what
   people use now (Pocket, Instapaper, wallabag, Karakeep, Joplin, jrnl,
   Journiv, WriteFreely, ArchiveBox, Slack, Discord, Signal, Mastodon,
   Bluesky, Google Takeout, subtitles, AI agents' session files) and tools
@@ -36,7 +36,12 @@ says how). The first was v0.1.0.
   words; trackers from habits and symptoms to contracts and livestock;
   notary, witness, sync and forget; desktop, tui, launcher, Telegram,
   email, braille and Anki; quiz, daily-word and tarot; and fuzz, bench,
-  Go and Swift ports. (#13)
+  Go and Swift ports; and twenty-four rebuilt from what willow-bot built
+  by hand: diverge, xref, snapshot, session-seal, retire, lore, rules,
+  game-master, odds, beacon, predictions, joins, market-calls, predict,
+  ladder, scope and code-first from its one script, and horoscope, losc,
+  contribute, contributions, upstream-desk, welcome and ci-why from the
+  bot itself. (#13)
 - No terminal, no English required: `browse`, your folder in your web
   browser on 127.0.0.1 (ask, read each answer at its file and line, approve
   a suggestion with a click through the kernel's own `seal`; a secret per

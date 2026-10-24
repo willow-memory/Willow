@@ -140,6 +140,16 @@
   "tags": "no-install, offline, records, assistant"
  },
  {
+  "name": "beacon",
+  "kind": "stdlib",
+  "section": "Play",
+  "line": "Draws seeded by a public randomness beacon (drand), so nobody could have picked the result in advance.",
+  "source": "bot",
+  "writes": "record",
+  "network": "api.drand.sh, to read a beacon round's randomness",
+  "tags": "no-install, online, records, play"
+ },
+ {
   "name": "bench",
   "kind": "stdlib",
   "section": "For maintainers",
@@ -260,6 +270,16 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
+  "name": "ci-why",
+  "kind": "stdlib",
+  "section": "For maintainers",
+  "line": "Why CI went red: the failing block pulled out of the job's log, plain, put where people look.",
+  "source": "bot",
+  "writes": "nothing",
+  "network": "the forge, through the workflow's token, to read the job's log",
+  "tags": "no-install, online, read-only, maintainers"
+ },
+ {
   "name": "claude",
   "kind": "deps",
   "section": "Assistants",
@@ -279,6 +299,16 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "code-first",
+  "kind": "stdlib",
+  "section": "Finding things",
+  "line": "Questions code can answer exactly (counts, dates, ids) answered by code before any model, with a wrong answer counted as a defect.",
+  "source": "bot",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, search"
  },
  {
   "name": "codebase-memory",
@@ -329,6 +359,26 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, trust"
+ },
+ {
+  "name": "contribute",
+  "kind": "stdlib",
+  "section": "For maintainers",
+  "line": "For anyone on GitHub, what they can do next in the projects they work on: open pull requests, reviews asked of them, issues assigned.",
+  "source": "bot",
+  "writes": "nothing",
+  "network": "GitHub, through gh, with your own login",
+  "tags": "no-install, online, read-only, maintainers"
+ },
+ {
+  "name": "contributions",
+  "kind": "stdlib",
+  "section": "For maintainers",
+  "line": "A ledger of who contributes to the repo: first-timers and outside contributors called out, bots known by type, never by name.",
+  "source": "bot",
+  "writes": "nothing",
+  "network": "GitHub, through gh, with your own login",
+  "tags": "no-install, online, read-only, maintainers"
  },
  {
   "name": "corpus-lens",
@@ -430,6 +480,16 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "diverge",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "Where two copies of a folder or a box part, narrowed level by level to the first line that differs.",
+  "source": "bot",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, trust"
  },
  {
   "name": "docs-i18n",
@@ -591,6 +651,16 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, maintainers"
+ },
+ {
+  "name": "game-master",
+  "kind": "stdlib",
+  "section": "Play",
+  "line": "A tabletop game's rolls and rulings as rows on the record, with the game master's calls sealed.",
+  "source": "bot",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, play"
  },
  {
   "name": "garden",
@@ -785,6 +855,16 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
+  "name": "horoscope",
+  "kind": "stdlib",
+  "section": "Play",
+  "line": "A daily horoscope keyed on your name and the date: same name, same day, same reading, always.",
+  "source": "bot",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, play"
+ },
+ {
   "name": "hours",
   "kind": "stdlib",
   "section": "Keeping track",
@@ -885,6 +965,16 @@
   "tags": "no-install, offline, read-only, tracking"
  },
  {
+  "name": "joins",
+  "kind": "stdlib",
+  "section": "Play",
+  "line": "Two passages from two different folders, drawn by chance, for you to say what joins them.",
+  "source": "bot",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, play"
+ },
+ {
   "name": "joplin",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -963,6 +1053,16 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, tracking"
+ },
+ {
+  "name": "ladder",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "Your files first, then sources you trust such as Jeles and Nestor, then a model, stopping at the first that answers, each answer kept for next time.",
+  "source": "bot",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, assistant"
  },
  {
   "name": "large-print",
@@ -1127,6 +1227,26 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
+  "name": "lore",
+  "kind": "stdlib",
+  "section": "Play",
+  "line": "For a world you're writing: each fact about it sealed one at a time, so a story can be checked against its canon.",
+  "source": "bot",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, play"
+ },
+ {
+  "name": "losc",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "Does a project pass the Local Only Servers Club's test: no accounts, no cloud, and your data your own?",
+  "source": "bot",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, trust"
+ },
+ {
   "name": "man-pages",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -1146,6 +1266,16 @@
   "writes": "to",
   "network": "none",
   "tags": "needs-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "market-calls",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "Market calls kept as wagers on the record ('SPY closes up on Friday'), settled later, with the losers kept.",
+  "source": "bot",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, tracking"
  },
  {
   "name": "mastodon",
@@ -1401,6 +1531,16 @@
   "tags": "needs-install, offline, writes-output, file-reader"
  },
  {
+  "name": "odds",
+  "kind": "stdlib",
+  "section": "Play",
+  "line": "Exact odds, as fractions, for a game's dice and tables: what each outcome's chance really is.",
+  "source": "bot",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, play"
+ },
+ {
   "name": "openai-compatible",
   "kind": "stdlib",
   "section": "Assistants",
@@ -1563,6 +1703,26 @@
   "tags": "no-install, online, read-only, interface"
  },
  {
+  "name": "predict",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "Write down what you'll do next before you do it, and grade it after; the record counts how often you were right.",
+  "source": "bot",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, tracking"
+ },
+ {
+  "name": "predictions",
+  "kind": "stdlib",
+  "section": "Play",
+  "line": "Twelve yes-or-no questions about random data, forecast now and answered by a beacon round later, with your Brier score.",
+  "source": "bot",
+  "writes": "record",
+  "network": "api.drand.sh, to read a beacon round's randomness",
+  "tags": "no-install, online, records, play"
+ },
+ {
   "name": "print",
   "kind": "stdlib",
   "section": "Ways to use it",
@@ -1716,6 +1876,16 @@
   "tags": "no-install, offline, read-only, maintainers"
  },
  {
+  "name": "retire",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "Proposes setting aside approved answers that no longer hold, each one gone only when you seal it.",
+  "source": "bot",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, trust"
+ },
+ {
   "name": "rss-out",
   "kind": "stdlib",
   "section": "Ways to use it",
@@ -1734,6 +1904,16 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "rules",
+  "kind": "stdlib",
+  "section": "Play",
+  "line": "A game's or a house's rules, sealed section by section, so 'what does the rule say?' answers with the exact section.",
+  "source": "bot",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, play"
  },
  {
   "name": "safe-app",
@@ -1785,6 +1965,16 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, tracking"
+ },
+ {
+  "name": "scope",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "Hands an assistant only the passages in scope, as one file, by ids it can't guess: nothing outside it is named or counted.",
+  "source": "bot",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, assistant"
  },
  {
   "name": "screenplay",
@@ -1855,6 +2045,16 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, tracking"
+ },
+ {
+  "name": "session-seal",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "One seal at the end of a session, over everything asked and approved in it: yes, these were my actions.",
+  "source": "bot",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, trust"
  },
  {
   "name": "share",
@@ -1928,6 +2128,16 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "snapshot",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "A web page or data file fetched once into the box, kept under its hash with its licence, so later answers cite the copy.",
+  "source": "bot",
+  "writes": "record",
+  "network": "the address you give, fetched once",
+  "tags": "no-install, online, records, file-reader"
  },
  {
   "name": "sourcehut",
@@ -2204,6 +2414,16 @@
   "tags": "no-install, online, read-only, search"
  },
  {
+  "name": "upstream-desk",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "Your work in other people's projects, in one place: notifications sorted into what needs you, and your open pull requests there.",
+  "source": "bot",
+  "writes": "nothing",
+  "network": "GitHub, through gh, with your own login",
+  "tags": "no-install, online, read-only, tracking"
+ },
+ {
   "name": "voice",
   "kind": "deps",
   "section": "Reading more kinds of files",
@@ -2243,6 +2463,16 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "welcome",
+  "kind": "stdlib",
+  "section": "For maintainers",
+  "line": "One plain thank-you on a first-time contributor's first pull request, once per person, and only where it's turned on.",
+  "source": "bot",
+  "writes": "nothing",
+  "network": "the forge, through the workflow's token, to post the thank-you",
+  "tags": "no-install, online, read-only, maintainers"
  },
  {
   "name": "witness",
@@ -2383,6 +2613,16 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "xref",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "Every reference in your files checked: each link to another file, and each quoted line, still there and still saying it.",
+  "source": "bot",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, trust"
  },
  {
   "name": "zotero",
