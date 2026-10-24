@@ -26,7 +26,7 @@ Dice notation: `2d6`, `1d20+3`, `3d6-2`, `1d8+1d6`, `d6`, with spaces around
 a fraction until it's printed, counted over every way the dice can fall, so
 the chances add up to exactly 1.
 
-**Where it comes from:** willow-bot's odds, which counts 2d6 plus a stat
+**Where it comes from:** [willow-bot's odds](https://github.com/willow-memory/willow-bot/blob/main/one-script/onescript/odds.py), which counts 2d6 plus a stat
 over its 36 outcomes for its own game, with exact fractions. This counts any
 dice the same way.
 

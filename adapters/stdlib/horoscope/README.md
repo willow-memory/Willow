@@ -22,7 +22,7 @@ set is for everyone else.
 
 It predicts nothing. It's a toy that can't be rigged, which is the point.
 
-**Where it comes from:** willow-bot's horoscope, the same rule and the same
+**Where it comes from:** [willow-bot's horoscope](https://github.com/willow-memory/willow-bot/blob/main/horoscope.py), the same rule and the same
 coder lines.
 
 **Never:** reads or writes anything.

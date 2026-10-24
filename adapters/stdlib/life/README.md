@@ -43,7 +43,7 @@ and names the first generation that doesn't match.
 R-pentomino's 116 cells at generation 1103, the same figure willow-bot's own
 test holds.
 
-**Where it comes from:** willow-bot's life, which writes the same rows
+**Where it comes from:** [willow-bot's life](https://github.com/willow-memory/willow-bot/blob/main/one-script/onescript/life.py), which writes the same rows
 through its game table; this writes them through the kernel's `append`.
 
 **Never:** writes anything but its row.

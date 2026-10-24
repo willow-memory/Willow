@@ -29,7 +29,7 @@ These aren't checked:
 - A link that leads out of your folder is counted, never followed.
 - A `file:line` that names no file in your folder may name one somewhere else entirely.
 
-**Where it comes from:** willow-bot's xref (its link and `file:line`
+**Where it comes from:** [willow-bot's xref](https://github.com/willow-memory/willow-bot/blob/main/one-script/onescript/xref.py) (its link and `file:line`
 patterns), for one person's folder rather than a set of repositories. It
 leaves out the bot's repo ids, commits and git blob checks.
 

@@ -35,7 +35,7 @@ and anyone holding the record can throw it again.
 
 Dice notation is [odds](../odds/)'s: `2d6`, `1d20+3`, `1d8+1d6`, `d6`.
 
-**Where it comes from:** willow-bot's stream (onescript/stream.py), ported
+**Where it comes from:** [willow-bot's stream](https://github.com/willow-memory/willow-bot/blob/main/one-script/onescript/stream.py), ported
 draw for draw.
 
 **Never:** rolls without writing the row, or rewrites a roll.

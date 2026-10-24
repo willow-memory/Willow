@@ -25,7 +25,7 @@ something to show; nothing, said as nothing; or couldn't look, said with
 why (for instance, when the stale add-on was deleted). The rest still show.
 
 It writes nothing, not even the row `kernel.py out` appends, so the record's
-tip doesn't move while you read it. That's willow-bot's `peek`, which shows
+tip doesn't move while you read it. That's [willow-bot's `peek`](https://github.com/willow-memory/willow-bot/blob/main/one-script/onescript/api.py), which shows
 the morning screen's NEEDS YOU without writing a row. The
 [browse](../browse/) page uses it for its front page.
 

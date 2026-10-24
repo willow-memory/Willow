@@ -32,7 +32,7 @@ answers, with each passage's file and line.
 The hook always exits 0. In Claude Code a hook that exits 2 blocks the
 prompt, and your folder being unreadable is no reason to stop you typing.
 
-**Source:** willow-bot's one script, its prompt hook: what was served goes into
+**Source:** [willow-bot's one script, its prompt hook](https://github.com/willow-memory/willow-bot/blob/main/one-script/scripts/prompt-hook): what was served goes into
 the prompt as one framed block of data, never instructions. Rebuilt over the
 kernel's bite.
 

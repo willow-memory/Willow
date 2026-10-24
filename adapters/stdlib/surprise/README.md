@@ -19,7 +19,7 @@ SHA-256 of "willow surprise" and the day, so it's the same passage all day and
 a new one tomorrow; it prints the seed, and the same seed and folder always
 draw the same passage.
 
-**The draw:** willow-bot's `sha256-stream/v1`: SHA-256 over the seed and an
+**The draw:** [willow-bot's](https://github.com/willow-memory/willow-bot/blob/main/one-script/onescript/stream.py) `sha256-stream/v1`: SHA-256 over the seed and an
 8-byte counter, the first four bytes as a number, and a pick by rejection so
 no passage is likelier than another. Its tests hold it to the bot's stream,
 draw for draw.

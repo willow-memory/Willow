@@ -11,8 +11,8 @@ The list is open: anyone can add an idea, and anyone can build one from it.
 
 **How to read it:** a linked name is built; *(idea)* is not yet. What an
 add-on needs installed, with its licence, and where it goes online are said in
-words: the kernel itself never goes online. *bot* is rebuilt from willow-bot's
-one script, *box* is built from what the kernel already has, *new* is new.
+words: the kernel itself never goes online. *bot* is rebuilt from
+[willow-bot's one script](https://github.com/willow-memory/willow-bot), *box* is built from what the kernel already has, *new* is new.
 Each carries up to five tags: four filled in from its card (`no-install` or
 `needs-install`; `offline`, `this-machine` or `online`; `read-only`, `records`
 or `writes-output`; its section), and any the card's author adds or changes.

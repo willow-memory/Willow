@@ -35,7 +35,7 @@ a value that names somewhere else (`env:WIFI`, `None`), a placeholder
 in every file and aren't secrets.
 
 **Where the shapes come from:** the [privacy](../privacy/) add-on's checks
-(willow-bot's scrub, rebuilt there), and willow-bot's own typed-password
+([willow-bot's scrub](https://github.com/willow-memory/willow-bot/blob/main/one-script/onescript/scrub.py), rebuilt there), and willow-bot's own typed-password
 rule. A file is read the way the kernel reads it, so what's listed is what
 an answer could have shown. If the privacy add-on was deleted, it says so
 and looks for typed passwords alone.

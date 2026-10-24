@@ -33,7 +33,7 @@ read: a file that a box's kernel.json names as its key is skipped if it
 sits inside what's compared (as [start](../start/) puts it, beside the box).
 "The same" means every file, byte for byte.
 
-**Where it comes from:** willow-bot's diverge, which finds where two
+**Where it comes from:** [willow-bot's diverge](https://github.com/willow-memory/willow-bot/blob/main/one-script/onescript/diverge.py), which finds where two
 branches or two boxes' chains part.
 
 Exit codes, the kernel's: 0 the same; 42 they differ; 2 refused.
