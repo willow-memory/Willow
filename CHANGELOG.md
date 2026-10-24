@@ -18,7 +18,7 @@ says how). The first was v0.1.0.
   one page of what waits on you, what went stale, what's coming up and
   what keeps finding nothing, writing nothing; and `words-de`, `words-es`,
   `words-fr` and `words-pt`, which take a language's common words out of a
-  question before the kernel's bite. (#PR)
+  question before the kernel's bite. (#12)
 - CLI adapters, sixteen add-ons with nothing to install: `pipe` (JSON lines,
   or grep's file:line: text), `mcp-lite` (the mcp add-on's tools, the
   protocol by hand), `claude-code` (a prompt hook), `shell` (a willow
