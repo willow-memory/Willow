@@ -337,6 +337,9 @@ public static class Kernel
     static Ranges WORD = null!, SPACE = null!, DIGIT = null!, CASED = null!, IGNORABLE = null!;
     static Dictionary<int, string> LOWER = null!, INVALID_CHARREFS = null!;
     static HashSet<int> LINE_BREAKS = null!, INVALID_CODEPOINTS = null!;
+    static Dictionary<int, int> CCC = null!;
+    static Dictionary<int, int[]> DECOMP = null!;
+    static Dictionary<(int, int), int> COMPOSE = null!;
     static Dictionary<string, string> HTML5 = null!, NEXT = null!;
     static Dictionary<char, HashSet<int>> TAG_FOLD = null!;
     static Dictionary<char, HashSet<(int, int)>> TAG_BACKREF = null!;
@@ -368,6 +371,12 @@ public static class Kernel
         var icr = (JObj)t["invalid_charrefs"]!;
         INVALID_CHARREFS = icr.Keys.ToDictionary(k => int.Parse(k, CultureInfo.InvariantCulture), k => (string)icr[k]!);
         INVALID_CODEPOINTS = L(t["invalid_codepoints"]).Select(I).ToHashSet();
+        var nfc = (JObj)t["nfc"]!;
+        var ccc = (JObj)nfc["ccc"]!;
+        CCC = ccc.Keys.ToDictionary(k => int.Parse(k, CultureInfo.InvariantCulture), k => I(ccc[k]));
+        var decomp = (JObj)nfc["decomp"]!;
+        DECOMP = decomp.Keys.ToDictionary(k => int.Parse(k, CultureInfo.InvariantCulture), k => L(decomp[k]).Select(I).ToArray());
+        COMPOSE = L(nfc["compose"]).Select(L).ToDictionary(p => (I(p[0]), I(p[1])), p => I(p[2]));
         var fold = (JObj)t["tag_fold"]!;
         TAG_FOLD = fold.Keys.ToDictionary(k => k[0], k => L(fold[k]).Select(I).ToHashSet());
         var back = (JObj)t["tag_backref"]!;
@@ -427,6 +436,58 @@ public static class Kernel
         return b.ToString();
     }
 
+    static int Ccc(int c) => CCC.TryGetValue(c, out var n) ? n : 0;
+
+    /** unicodedata.normalize("NFC"): decompose, put marks in canonical order,
+     * compose, by gen.py's tables, so .NET's Unicode version never decides. */
+    static int[] Nfc(int[] a)
+    {
+        var d = new List<int>(a.Length);
+        foreach (int c in a)
+        {
+            if (c >= 0xAC00 && c <= 0xD7A3)
+            {
+                int s = c - 0xAC00;
+                d.Add(0x1100 + s / 588);
+                d.Add(0x1161 + s % 588 / 28);
+                if (s % 28 != 0) d.Add(0x11A7 + s % 28);
+            }
+            else if (DECOMP.TryGetValue(c, out var x)) d.AddRange(x);
+            else d.Add(c);
+        }
+        for (int i = 1; i < d.Count; i++)
+            for (int j = i; j > 0 && Ccc(d[j]) != 0 && Ccc(d[j - 1]) > Ccc(d[j]); j--)
+                (d[j - 1], d[j]) = (d[j], d[j - 1]);
+        var o = new List<int>(d.Count);
+        int st = -1;
+        foreach (int c in d)
+        {
+            int cc = Ccc(c);
+            if (st >= 0)
+            {
+                int last = Ccc(o[^1]);
+                if (o.Count - 1 == st || (last != 0 && last < cc))
+                {
+                    int s = o[st];
+                    if (s >= 0x1100 && s < 0x1113 && c >= 0x1161 && c < 0x1176)
+                    {
+                        o[st] = 0xAC00 + ((s - 0x1100) * 21 + c - 0x1161) * 28;
+                        continue;
+                    }
+                    if (s >= 0xAC00 && s <= 0xD7A3 && (s - 0xAC00) % 28 == 0 && c >= 0x11A8 && c <= 0x11C2)
+                    {
+                        o[st] = s + c - 0x11A7;
+                        continue;
+                    }
+                    if (COMPOSE.TryGetValue((s, c), out var p)) { o[st] = p; continue; }
+                }
+            }
+            if (cc == 0) st = o.Count;
+            o.Add(c);
+        }
+        return o.ToArray();
+    }
+
     static bool FinalSigma(int[] a, int i)
     {
         int j = i - 1;
@@ -477,7 +538,7 @@ public static class Kernel
     {
         var o = new List<string>();
         var cur = new StringBuilder();
-        foreach (int c in Cps(Lower(text)))
+        foreach (int c in Nfc(Cps(Lower(text))))
         {
             if (WORD.Has(c)) Cp(cur, c);
             else if (cur.Length > 0) { o.Add(cur.ToString()); cur.Clear(); }

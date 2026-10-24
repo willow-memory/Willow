@@ -106,6 +106,7 @@ def tables() -> dict:
             for n, v in vars(html)["_invalid_charrefs"].items()  # noqa: SLF001
         },
         "invalid_codepoints": sorted(vars(html)["_invalid_codepoints"]),
+        "nfc": _nfc(),
         "kernel": {
             "GENESIS": k.GENESIS,
             "TOP": k.TOP,
@@ -120,6 +121,31 @@ def tables() -> dict:
             "ROW_KEYS": sorted(k.ROW_KEYS),
         },
     }
+
+
+def _nfc() -> dict:
+    """unicodedata.normalize("NFC"), as tables a port composes with: each
+    non-zero combining class, each code point's full canonical decomposition
+    (Hangul syllables are arithmetic, so left out), and each pair that
+    composes back, which leaves out the composition exclusions."""
+    ccc, decomp, compose = {}, {}, []
+    for c in cps():
+        ch = chr(c)
+        if unicodedata.combining(ch):
+            ccc[str(c)] = unicodedata.combining(ch)
+        if 0xAC00 <= c <= 0xD7A3:
+            continue
+        if unicodedata.normalize("NFD", ch) != ch:
+            decomp[str(c)] = [ord(x) for x in unicodedata.normalize("NFD", ch)]
+        raw = unicodedata.decomposition(ch)
+        if raw and not raw.startswith("<"):
+            pair = [int(x, 16) for x in raw.split()]
+            if (
+                len(pair) == 2
+                and unicodedata.normalize("NFC", chr(pair[0]) + chr(pair[1])) == ch
+            ):
+                compose.append([*pair, c])
+    return {"ccc": ccc, "decomp": decomp, "compose": compose}
 
 
 def _near_tag_letters() -> dict[str, list[int]]:
@@ -181,7 +207,10 @@ POOLS = [
     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
     " \t\n.,;:!?()[]{}\"'-_/\\@#$%^&*+=<>|~`",
     "éÉàÀçÇñÑüÜøØåÅßẞæÆœŒ",
-    "e\u0301a\u0300o\u0308",  # combining marks: not word characters in Python
+    "e\u0301a\u0300o\u0308",  # combining marks: not word characters, until NFC
+    "\u0301\u0323\u0300\u0308\u0327\u0345\u0315\u05b0\u093c\u0f71\u0f72",  # mark classes
+    "\u1100\u1161\u11a8\uac00\u1112\u1175",  # Hangul jamo, a syllable
+    "\u212b\u2126\u0344\u0958\ufb1d\U0001d15e",  # singletons and exclusions
     "İıIi",  # Turkish dotted and dotless i
     "ΣσςΟΔΟΣΑΒΓ",  # sigma, final and capital
     "²³¹½⅓Ⅻ٠١٢٣߀",  # superscripts, fractions, roman, Arabic-Indic, NKo digits
@@ -281,8 +310,16 @@ WORD_TEXTS = [
 ]
 
 
+def _decomposed() -> list[str]:
+    """Every composed code point, decomposed, 64 to a text: each must come
+    back composed (or as NFC has it) in every port."""
+    nfd = [unicodedata.normalize("NFD", chr(c)) for c in cps()]
+    nfd = [d for c, d in zip(cps(), nfd) if d != chr(c)]
+    return [" ".join(nfd[i : i + 64]) for i in range(0, len(nfd), 64)]
+
+
 def words_cases() -> list[dict]:
-    texts = WORD_TEXTS + [text(R.randint(0, 40)) for _ in range(800)]
+    texts = WORD_TEXTS + _decomposed() + [text(R.randint(0, 40)) for _ in range(800)]
     return [{"text": t, "words": k.words(t), "bite_key": k.bite_key(t)} for t in texts]
 
 

@@ -62,6 +62,7 @@ import re
 import secrets
 import sys
 import tempfile
+import unicodedata
 from datetime import datetime, timezone
 from fractions import Fraction
 from pathlib import Path
@@ -195,7 +196,9 @@ def proof(key: bytes, subject: str, act: str = "seal") -> str:
 
 
 def words(text: str) -> list[str]:
-    return WORD.findall(text.lower())
+    """A text's words, lowercased and composed (NFC): a file that spells é as
+    e and a combining accent, as macOS often saves it, holds the é you type."""
+    return WORD.findall(unicodedata.normalize("NFC", text.lower()))
 
 
 def bite_key(text: str) -> str | None:

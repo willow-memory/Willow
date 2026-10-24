@@ -263,6 +263,9 @@ interface Tables {
   html5: Map<string, string>;
   invalidCharrefs: Map<number, string>;
   invalidCodepoints: Set<number>;
+  ccc: Map<number, number>;
+  decomp: Map<number, number[]>;
+  compose: Map<number, number>; // a * 0x200000 + b -> composed
   tagFold: Map<string, Set<number>>;
   tagBackref: Map<string, Set<string>>; // "a,b" pairs
   GENESIS: string;
@@ -293,6 +296,7 @@ function loadTables(file: string): void {
   for (const [k, v] of t.get("tag_backref") as JMap)
     tagBackref.set(k, new Set((v as J[]).map((p) => (p as J[]).map(num).join(","))));
   const hold = kc.get("HOLD") as J[];
+  const nfc = t.get("nfc") as JMap;
   T = {
     word: new Ranges(t.get("word")!),
     space: new Ranges(t.get("space")!),
@@ -304,6 +308,9 @@ function loadTables(file: string): void {
     html5: new Map(Array.from(t.get("html5") as JMap).map(([k, v]) => [k, v as string])),
     invalidCharrefs: new Map(Array.from(t.get("invalid_charrefs") as JMap).map(([k, v]) => [Number(k), v as string])),
     invalidCodepoints: new Set((t.get("invalid_codepoints") as J[]).map(num)),
+    ccc: new Map(Array.from(nfc.get("ccc") as JMap).map(([k, v]) => [Number(k), num(v)])),
+    decomp: new Map(Array.from(nfc.get("decomp") as JMap).map(([k, v]) => [Number(k), (v as J[]).map(num)])),
+    compose: new Map((nfc.get("compose") as J[]).map((p) => (p as J[]).map(num)).map(([a, b, c]) => [a * 0x200000 + b, c])),
     tagFold,
     tagBackref,
     GENESIS: kc.get("GENESIS") as string,
@@ -341,6 +348,50 @@ function lower(s: string): string {
     else b += T.lower.get(c) ?? String.fromCodePoint(c);
   }
   return b;
+}
+
+const ccc = (c: number) => T.ccc.get(c) ?? 0;
+
+/** unicodedata.normalize("NFC"): decompose, put marks in canonical order,
+ * compose, by gen.py's tables, so this engine's Unicode version never decides. */
+function nfc(a: number[]): number[] {
+  const d: number[] = [];
+  for (const c of a) {
+    if (c >= 0xac00 && c <= 0xd7a3) {
+      const s = c - 0xac00;
+      d.push(0x1100 + Math.floor(s / 588), 0x1161 + Math.floor((s % 588) / 28));
+      if (s % 28) d.push(0x11a7 + (s % 28));
+    } else d.push(...(T.decomp.get(c) ?? [c]));
+  }
+  for (let i = 1; i < d.length; i++)
+    for (let j = i; j > 0 && ccc(d[j]) && ccc(d[j - 1]) > ccc(d[j]); j--) [d[j - 1], d[j]] = [d[j], d[j - 1]];
+  const out: number[] = [];
+  let st = -1;
+  for (const c of d) {
+    const cc = ccc(c);
+    if (st >= 0) {
+      const last = ccc(out[out.length - 1]);
+      if (out.length - 1 === st || (last && last < cc)) {
+        const s = out[st];
+        if (s >= 0x1100 && s < 0x1113 && c >= 0x1161 && c < 0x1176) {
+          out[st] = 0xac00 + ((s - 0x1100) * 21 + c - 0x1161) * 28;
+          continue;
+        }
+        if (s >= 0xac00 && s <= 0xd7a3 && (s - 0xac00) % 28 === 0 && c >= 0x11a8 && c <= 0x11c2) {
+          out[st] = s + c - 0x11a7;
+          continue;
+        }
+        const p = T.compose.get(s * 0x200000 + c);
+        if (p !== undefined) {
+          out[st] = p;
+          continue;
+        }
+      }
+    }
+    if (cc === 0) st = out.length;
+    out.push(c);
+  }
+  return out;
 }
 
 function finalSigma(a: number[], i: number): boolean {
@@ -392,7 +443,7 @@ const take = (s: string, n: number) => {
 function words(text: string): string[] {
   const out: string[] = [];
   let cur = "";
-  for (const c of cps(lower(text))) {
+  for (const c of nfc(cps(lower(text)))) {
     if (T.word.has(c)) cur += String.fromCodePoint(c);
     else if (cur) {
       out.push(cur);
