@@ -100,6 +100,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "quote-check": ("quote_check.py", ["--box", "{box}", "Tomatoes want sun"]),
     "readings": ("readings.py", ["bite", "--box", "{box}", *NOW, "tomatoes"]),
     "scan": ("scan.py", ["index", "--from", "{pile}", "--to", "{tmp}/index"]),
+    "slow-tests": ("slow_tests.py", ["--runs", "{pile}"]),
     "snapshot": ("snapshot.py", ["check", "--in", "{pile}"]),
     "wayback": ("wayback.py", ["find", "--url", "https://example.org/", "--to", "{tmp}/w",
                                "--after", "20261016", "--before", "20261001"]),

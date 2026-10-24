@@ -2849,16 +2849,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "slow-tests",
-  "kind": "stdlib",
-  "section": "For maintainers",
-  "line": "Each test's time kept per run, with the slowest named and any that got slower flagged.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, maintainers"
- },
- {
   "name": "socratic",
   "kind": "stdlib",
   "section": "Ways to use it",
