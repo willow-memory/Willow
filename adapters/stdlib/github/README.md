@@ -19,7 +19,7 @@ kernel and every other add-on run and test the same without it.
 |---|---|
 | [host.json](host.json) | how GitHub titles the merge of a pull request, for `adapters/stdlib/ci/whose.py --host` |
 | `report` | a security report's comment: the pull request behind each line the report names, and its author, tagged |
-| `check` | `.github/` held to the repo: the CI matrix, the idea form, the security form, and the changelog job skipping Dependabot's pull requests and no one else's |
+| `check` | `.github/` held to the repo: one CI run per change (pushes run on main only, and a pull request's newer commit cancels the run it replaces), the CI matrix, the idea form, the security form, and the changelog job skipping Dependabot's pull requests and no one else's |
 | `.github/` | GitHub reads it only at the repo's root, so it lives there, but it belongs to this folder and `check` holds it |
 
 **Taking it away.** Delete this folder and `.github/`. `test_strip.py`, at
