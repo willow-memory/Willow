@@ -15,7 +15,7 @@ says how). The first was v0.1.0.
   test that got slower by a printed rule (more than 2x and 1 s over the
   median of its earlier passes), and says, rather than drops, a test that is
   missing from the latest run or was skipped. Runs go by file name, never by
-  file time; it writes nothing.
+  file time; it writes nothing. (#25)
 - `scan`, an add-on that indexes a folder once and then answers a list of
   questions in seconds with the kernel's own answers, narrowing only which
   passages `rank` looks at. It adds `--changed-from` (ask only what changed
