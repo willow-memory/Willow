@@ -304,6 +304,53 @@ chance, but rarely at the exact line. The line comes once the fix exists to
 compare against (phases 1 and 3). The verdicts are rows on a kernel record
 (the chain holds, 7 rows, 0 sealed), answers SHA-256 a4340fab.
 
+## Phase 5: robustness, 2026-10-24
+
+Run by [phase5.py](phase5.py), frozen before it ran. Three checks, all asking
+the PHP2Shell pairs (vulnerable `--changed-from` fixed, the kernel's rank,
+rule 2 on a core file). The headline rule, that rewording keeps most hits,
+**fails**, narrowly, and on the kernel's known weakness.
+
+**Rewording.** A blind agent rephrased the author's eight questions five ways
+each (40 variants). Of the originals, 24 of 32 hit; of the variants, 80 of
+160 (50%), just under the 70%-of-original bar (52%). By kind, of 32:
+
+| Rewording | Hits | Kept, where the original hit |
+|---|---|---|
+| v5 reordered | 24 | 24 of 24 |
+| v2 shorter | 24 | 20 of 24 |
+| v4 misspelled | 16 | 16 of 24 |
+| v1 synonyms | 8 | 8 of 24 |
+| v3 longer | 8 | 8 of 24 |
+
+Word order costs nothing, as a word-matcher should. Synonyms and a longer,
+chattier phrasing cost the most: the kernel matches words, not meanings, and
+needs half a question's words in one passage, so swapping words for synonyms
+or padding the question with common ones drops the hit. This is the limit
+[LIMITS.md](../../LIMITS.md) already names, measured.
+
+**Settings.** The author's eight, ranked by the kernel: 24 hits at top 1, 24
+at top 3, 24 at top 10. When the kernel hits here, it hits at rank 1; more
+room adds nothing. The advisory words list (oom/rce/uaf, acronyms the
+advisories expand) changed no result: those words aren't what the questions
+turn on. Only the kernel's rank was reworded and re-ranked here, not BM25.
+
+**Leakage.** All 35 old-side hits rest on a line the fix removed, which is
+old-release code, so a comment the fix added can never be a hit on the side
+the headline results use. (A separate count: 12 served passages also contain
+text the fix adds somewhere, common lines that coincide; the docstring's
+guess that this would be zero was wrong, and it doesn't bear on the hits,
+which are removed lines.)
+
+**Source.** The plan's fourth check, php.net's release tarball against the
+git tree, is not run: php.net is unreachable from here (the proxy returns
+403). It stands for anyone to run where php.net is reachable.
+
+The verdict is a row on a kernel record (the chain holds, 2 rows, 0 sealed),
+answers SHA-256 ac3c4902. The rewording rule failing is a true finding about
+the kernel's ranking, not a flaw in the run; BM25, which the other phases
+show is stronger, was not put through rewording.
+
 ## Where each phase stands
 
 | Phase | Status |
@@ -314,6 +361,33 @@ compare against (phases 1 and 3). The verdicts are rows on a kernel record
 | 6, reproducibility | done: every check passes |
 | 3, out of sample | done: 4 of 6 pass; BM25 finds all 7 CVEs, the kernel 1 |
 | 4, before the fix | done: 4 of 6 pass; above chance everywhere, strong at the file level |
-| 5, robustness | not started |
+| 5, robustness | done: rewording rule fails (50% vs 52%); word order free, synonyms costly |
 
 Results go here, each with the tools' hashes it ran on, misses included.
+
+## What the seven phases found, together
+
+All seven have run. The result survives, narrowed and qualified:
+
+- **The method is real, not the author's wording.** Blind questions, from
+  people and models that never saw the code, find the fixed code far above
+  chance (phases 1, 3, 4), in four projects and three languages, on two CVEs
+  disclosed after any model's training (phase 3).
+- **Most of the power is the narrowing.** Asking only what changed between a
+  release and its fix does most of the work; on the whole release, with no
+  fix to compare, it points at the right file but rarely the right line
+  (phases 2, 4).
+- **BM25 is the ranking that carries it; the kernel's own rank is the weak
+  link.** BM25 found all seven phase-3 CVEs and passed every null test; the
+  kernel's rank found one, missed the strict margins (phases 1, 2, 3), and
+  is the thing rewording breaks (phase 5). Its half-the-words rule and its
+  blindness to synonyms are the documented limits, now measured.
+- **The pipeline is sound where it can be checked cold.** The index matches
+  the kernel exactly, four implementations agree, the bytes are stable
+  across Pythons, and an independent reader backs the scoring rule
+  (phase 6).
+
+The honest one line: *given a vulnerability's public advisory and the fixed
+release, a word-ranker over only the changed code points at the fix well
+above chance, across projects and for bugs no model had seen; Willow's own
+ranking is weaker at this than plain BM25.*
