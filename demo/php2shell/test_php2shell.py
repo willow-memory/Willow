@@ -154,3 +154,22 @@ def test_each_release_is_scored_against_its_branchs_fix(tmp_path):
     assert [(r["best"], r["first_hit_rank"], r["side"]) for r in rows] == [
         ("core", 1, "old"), ("file", None, "new"), ("miss", None, "old"),
     ]  # fmt: skip
+
+
+def test_phase2s_baselines_rank_as_they_say():
+    import phase2
+
+    changed = [
+        {"path": "a.c", "line": 1, "text": "memory limit here"},
+        {"path": "a.c", "line": 9, "text": "memory limit bailout memory"},
+        {"path": "b.c", "line": 1, "text": "the session upload"},
+        {"path": "c.c", "line": 1, "text": "unrelated words only"},
+    ]
+    q = "the memory limit bailout"  # "the" is a common word, never counted
+    assert [c["line"] for c in phase2.grep(changed, q)] == [9, 1]
+    assert phase2.bm25(changed, q)[0]["line"] == 9
+    assert phase2.grep(changed, "nothing matches") == []
+    assert [c["path"] for c in phase2.diff_size(changed)] == ["a.c", "b.c", "c.c"]
+    assert phase2.diff_size(changed)[0]["line"] == 1
+    assert phase2.binomial_tail(0, 5, 0.3) == pytest.approx(1.0)
+    assert phase2.binomial_tail(5, 5, 0.5) == pytest.approx(1 / 32)
