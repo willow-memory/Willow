@@ -10,6 +10,11 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- Thirty-seven ideas on the add-on list, nothing built: hooks whose answers
+  are code, never judgment (hook-fail-closed, hook-fuzz, hook-pin,
+  hook-replay, hook-shell and others), the store behind willow-bot's pile
+  (pile-rank, pile-serve, pile-gold, fair-merge), and the tools LLMs use
+  (instruction-files, llms-txt, mcp-by-hash, schema-check, cassettes). (#19)
 - `web-pages`, a reader for saved web pages, .html and .mhtml: each page's
   paragraphs, headings and list items as paragraphs, under the address it
   came from, or `address: not in the file`. (#18)
