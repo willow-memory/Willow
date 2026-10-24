@@ -165,6 +165,11 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- CI runs once per change: on pushes to main only, so a pull request no
+  longer runs twice (once for its branch's push, once for the pull
+  request), and a newer commit on a pull request cancels the run it
+  replaces; main's runs are never cancelled. `github.py check` holds both.
+  (#31)
 - `adapters/stdlib/mutants/mutants.py` runs each mutant without Python's bytecode cache, so a
   same-size break can no longer run the previous mutant's code and pass as
   a survivor; and it no longer breaks the `__main__` guard, which the
