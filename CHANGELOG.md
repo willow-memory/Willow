@@ -12,13 +12,13 @@ says how). The first was v0.1.0.
 
 - `policy-watch`, an add-on that fetches a terms or policy page each time
   it runs, through snapshot, and says what changed since the last copy,
-  sentence by sentence, through clauses. (#17)
+  sentence by sentence, through clauses. (#18)
 - `claim-check`, an add-on that checks a claim against your sources part
   by part: the passages holding every part, those holding the most short of
-  that with what they lack, and the parts no file names. (#17)
+  that with what they lack, and the parts no file names. (#18)
 - `misquote`, an add-on for a quote that is almost in your files: the
   passage holding most of its words in order, and the words it drops, adds
-  or changes; quote-check's "not there" made specific. (#17)
+  or changes; quote-check's "not there" made specific. (#18)
 - `snapshot`, an add-on that fetches a page or file once into a folder, as
   it came, with its address, the time and its SHA-256 on a hidden line the
   kernel never serves; what couldn't be fetched gets its line too, and
