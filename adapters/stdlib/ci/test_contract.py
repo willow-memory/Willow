@@ -98,10 +98,12 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "quote-check": ("quote_check.py", ["--box", "{box}", "Tomatoes want sun"]),
     "readings": ("readings.py", ["bite", "--box", "{box}", *NOW, "tomatoes"]),
     "scan": ("scan.py", ["index", "--from", "{pile}", "--to", "{tmp}/index"]),
+    "slow-tests": ("slow_tests.py", ["--runs", "{pile}"]),
     "stale": ("stale.py", ["--box", "{box}"]),
     "starter-words": ("starter.py", ["copy", "--to", "{tmp}/words.txt"]),
     "surprise": ("surprise.py", ["--box", "{box}", *NOW]),
     "todo": ("todo.py", ["--box", "{box}"]),
+    "contradictions": ("contradictions.py", ["--box", "{box}"]),
     "browse": ("browse.py", ["launcher", "--box", "{box}"]),
     "digest": ("digest.py", ["--box", "{box}", *NOW]),
     **{f"words-{c}": (f"words_{c}.py", ["bite", "--box", "{box}", *NOW, "tomatoes"])
@@ -121,6 +123,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "print": ("print.py", ["--box", "{box}", "--to", "{tmp}/page.html", *NOW, "tomatoes"]),
     "start": ("start.py", ["--pile", "{pile}", "--to", "{tmp}/willow"]),
     "test-shards": ("shards.py", ["--shards", "2", "--tests", "{pile}/garden.md"]),
+    "restack": ("restack.py", ["--onto", "HEAD", "HEAD"]),
     **{name: (script, ["mirror", "--from", "{pile}", "--to", "{tmp}/mirror"])
        for name, (script, _) in READERS.items()},
 }  # fmt: skip

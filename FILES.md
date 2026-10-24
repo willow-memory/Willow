@@ -110,6 +110,10 @@ willow/
 │   │   │   ├── coming_up.py  dates in your files in the next few days
 │   │   │   ├── test_coming_up.py
 │   │   │   └── README.md
+│   │   ├── contradictions/
+│   │   │   ├── contradictions.py  two lines saying the same thing with a different date or amount, side by side
+│   │   │   ├── test_contradictions.py
+│   │   │   └── README.md
 │   │   ├── copilot/
 │   │   │   ├── copilot.py        the mcp.json lines that register mcp-lite with Copilot, in VS Code and its CLI
 │   │   │   ├── test_copilot.py
@@ -228,6 +232,10 @@ willow/
 │   │   │   ├── readme.py     builds this README's generated sections from the cards
 │   │   │   ├── test_readme.py
 │   │   │   └── README.md     its card: sections, the draw, what it reads
+│   │   ├── restack/
+│   │   │   ├── restack.py    your branches back on top of main, the repo's own conflicts settled
+│   │   │   ├── test_restack.py
+│   │   │   └── README.md
 │   │   ├── scan/
 │   │   │   ├── scan.py       indexes a folder once, then asks it a list of questions, the kernel's way
 │   │   │   ├── test_scan.py  holds its answers to the kernel's, every ranking vector included
@@ -247,6 +255,10 @@ willow/
 │   │   ├── similar/
 │   │   │   ├── similar.py    what's already on the list near a new idea
 │   │   │   ├── test_similar.py
+│   │   │   └── README.md
+│   │   ├── slow-tests/
+│   │   │   ├── slow_tests.py each test's time over several runs, the slowest named, any that got slower flagged
+│   │   │   ├── test_slow_tests.py
 │   │   │   └── README.md
 │   │   ├── stale/
 │   │   │   ├── stale.py      approved answers whose cited passage changed or went
