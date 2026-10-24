@@ -74,7 +74,9 @@ def test_check_throws_every_roll_again_and_catches_a_changed_one(tmp_path):
         got.returncode == 0 and "3 rolls on the record; every one holds." in got.stdout
     )
     rows, _ = dc.kernel.read(b / "record.jsonl")
-    bad = dict(rows[2], faces=[[6, 6, 6]])
+    # every face moved one up (6 to 1), so never the faces its seed gave: a
+    # fixed [[6, 6, 6]] was the real roll for 1 seed in 216, and passed
+    bad = dict(rows[2], faces=[[f % 6 + 1 for f in rows[2]["faces"][0]]])
     assert dc.check(rows[:2] + [bad] + rows[3:]) == (
         1,
         "row 2: its faces aren't what its seed gives",

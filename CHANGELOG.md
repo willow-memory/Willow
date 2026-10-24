@@ -10,6 +10,11 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- `dice`'s test of `check` no longer fails by chance: it faked a changed
+  roll by setting a 3d6 to 6, 6, 6, which is the honest roll for 1 seed
+  in 216, and then `check` rightly found nothing wrong. The fake now moves
+  every face one up, so it never matches. It failed once in CI's
+  adapters tests.
 - `privacy` also withholds a national phone number written from its 0 in
   groups (`0113 555 0122`, `07700 900123`: 10 or 11 digits), and a bank
   number after its label (sort code, account number, acct, a/c, routing),
