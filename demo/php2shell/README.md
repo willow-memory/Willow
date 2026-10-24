@@ -229,6 +229,32 @@ version files. Each tree is every file of its commit as git stores it, since
 The verdicts are rows on a kernel record (the chain holds, 7 rows, 0
 sealed), with the SHA-256 of the scored answers (3b8fd0d7).
 
+## Phase 6: reproducibility, 2026-10-24
+
+Run by [phase6.py](phase6.py), frozen before any part ran. Every check
+passes: anyone gets the same answers, byte for byte, from the same files.
+
+| Check | What was compared | Result |
+|---|---|---|
+| exact | the index's full ranking against the kernel's own `rank` over the whole tree, 8 questions on each of 16 releases | the same, passage for passage, all 128 |
+| bytes | scan's answers for 8.5.11, whole and `--changed-from` 8.5.12, on Python 3.9, 3.11, 3.12, 3.13 and 3.14, hash seeds 0, 1 and 4242 (30 runs); the index of 8.5.11 made on 3.9, 3.13 and 3.14 | every run byte-identical; the index file for file |
+| ports | the Java, TypeScript and C# kernels' `bite` on the whole 8.5.11 tree, no index, against kernel.py's | each serves the same passages in the same order, 8 of 8 |
+| agree | four independent labellers, each given only the criterion and one fix's diff, never the scorer or any result, said yes or no for 180 passages; [their labels](results/phase6-labels.json) | rule 2: 170 of 180 agree, kappa 0.707 (passes, at least 0.6); rule 1, reported: 92 of 180, kappa 0.104 |
+
+**What it says:**
+
+- **The speed costs nothing.** The index ranks exactly as the kernel does on
+  every release asked, so its answers can be checked against the kernel's.
+- **Four implementations agree** on a 26,582-file tree, so the answers are
+  the method's, not one program's.
+- **An independent reader agrees with rule 2, not rule 1.** Rule 1 counted
+  only removed lines; a reader judging "did the fix change this passage"
+  sides with rule 2 nine times in ten.
+
+Python 3.9 and 3.14 came from `uv`, and .NET 8 from Ubuntu's packages, for
+this run. The verdicts are rows on a kernel record (the chain holds, 25 rows,
+0 sealed).
+
 ## Where each phase stands
 
 | Phase | Status |
@@ -236,7 +262,7 @@ sealed), with the SHA-256 of the scored answers (3b8fd0d7).
 | 0, freeze | done: 18 releases and 4 fix diffs fetched and matching their pins |
 | 2, null tests | done: 4 of 6 pass; random (p = 0.022) and BM25 fail |
 | 1, blind questions | done: 4 of 5 pass; the kernel under rule 1 fails (p = 0.022) |
-| 6, reproducibility | not started |
+| 6, reproducibility | done: every check passes |
 | 3, out of sample | done: 4 of 6 pass; BM25 finds all 7 CVEs, the kernel 1 |
 | 4, before the fix | not started |
 | 5, robustness | not started |
