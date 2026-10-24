@@ -15,6 +15,9 @@
   "coming-up": {
     "059bb44076f5": "The kernel's dates are exactly eight characters, so d[6:9] is d[6:8]."
   },
+  "contradictions": {
+    "1d25d809a0c8": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
+  },
   "cursor": {
     "1786b40184a1": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
   },
