@@ -179,7 +179,7 @@ says how). The first was v0.1.0.
   types; before, it split into "cafe" and a stray mark, and the question
   found nothing. The three ports compose by tables `vectors/gen.py` reads
   out of Python, so no runtime's Unicode version decides a word, and the
-  vectors hold every composed character decomposed.
+  vectors hold every composed character decomposed. (#33)
 
 ## v0.1.0 · 2026-10-23
 
