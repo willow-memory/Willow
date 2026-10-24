@@ -10,7 +10,7 @@ says how). The first was v0.1.0.
 
 ### Added
 
-- timeline: one matter from your folder (a dispute, an illness, a
+- `timeline`: one matter from your folder (a dispute, an illness, a
   tenancy), chosen by words, as a dated list of every line of the passages
   that hold them, each cited by file and line, written to one file to hand
   on. A line's own date and its file's are both shown when they differ;

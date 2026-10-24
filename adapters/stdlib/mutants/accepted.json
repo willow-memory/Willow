@@ -58,6 +58,9 @@
   "starter-words": {
     "2f4df3ac7eca": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
   },
+  "timeline": {
+    "db28c33cb5ca": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
+  },
   "todo": {
     "05759b3d5759": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
   },
