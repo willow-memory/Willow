@@ -27,9 +27,6 @@
   "export": {
     "2edb79a5366b": "Days are grouped by a key cut from the same timestamp as the day shown; one more character groups the same rows."
   },
-  "gaps": {
-    "971c8da5caf5": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
-  },
   "gemini-cli": {
     "106ddf1a7af1": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
   },
