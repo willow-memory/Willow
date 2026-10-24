@@ -10,6 +10,11 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- Thirty-seven ideas on the add-on list, nothing built: hooks whose answers
+  are code, never judgment (hook-fail-closed, hook-fuzz, hook-pin,
+  hook-replay, hook-shell and others), the store behind willow-bot's pile
+  (pile-rank, pile-serve, pile-gold, fair-merge), and the tools LLMs use
+  (instruction-files, llms-txt, mcp-by-hash, schema-check, cassettes). (#19)
 - `scan`, an add-on that indexes a folder once and then answers a list of
   questions in seconds with the kernel's own answers, narrowing only which
   passages `rank` looks at. It adds `--changed-from` (ask only what changed
