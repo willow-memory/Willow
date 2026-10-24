@@ -22,7 +22,7 @@ says how). The first was v0.1.0.
   safe-app, sap-gate); and for everyday life (family-tree, goodreads,
   letterboxd, listening, recipes, strava, texts, car, garden, gifts,
   milestones, pets, school, subscriptions, tax-year, trips, warranties,
-  memoir, in-case, timeline, print, large-print, share). (#PRNUM)
+  memoir, in-case, timeline, print, large-print, share). (#13)
 - CLI adapters, sixteen add-ons with nothing to install: `pipe` (JSON lines,
   or grep's file:line: text), `mcp-lite` (the mcp add-on's tools, the
   protocol by hand), `claude-code` (a prompt hook), `shell` (a willow
