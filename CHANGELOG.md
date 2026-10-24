@@ -41,7 +41,7 @@ says how). The first was v0.1.0.
   game-master, odds, beacon, predictions, joins, market-calls, predict,
   ladder, scope and code-first from its one script, and horoscope, losc,
   contribute, contributions, upstream-desk, welcome and ci-why from the
-  bot itself; and fifty-six from willow-bot's `one-script/IDEAS.md`:
+  bot itself; and fifty-six from willow-bot's own idea list:
   search rungs (bm25, ripgrep, by-function, code-shape, symbols, rerank,
   kiwix), the record in the world's formats (merkle, opentimestamps,
   ids, prov, ro-crate, in-toto, wayback, cloudevents), bets on the
