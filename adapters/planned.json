@@ -1234,16 +1234,6 @@
   "tags": "needs-install, offline, records, play"
  },
  {
-  "name": "install-scripts",
-  "kind": "stdlib",
-  "section": "Privacy and safety",
-  "line": "The install scripts the packages in node_modules would run (preinstall, install, postinstall), each cited by file and line.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, privacy"
- },
- {
   "name": "instapaper",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -2164,16 +2154,6 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, play"
- },
- {
-  "name": "pins",
-  "kind": "stdlib",
-  "section": "For maintainers",
-  "line": "Version ranges in package.json, pyproject.toml or Cargo.toml that no lockfile holds.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, maintainers"
  },
  {
   "name": "places",
@@ -3244,16 +3224,6 @@
   "writes": "nothing",
   "network": "none",
   "tags": "needs-install, offline, read-only, search"
- },
- {
-  "name": "typosquat",
-  "kind": "stdlib",
-  "section": "Privacy and safety",
-  "line": "Dependency names a letter off from a popular one (reqeusts, lodahs), checked against a list of top packages you downloaded.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, privacy"
  },
  {
   "name": "upgrade-notes",

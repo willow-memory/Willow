@@ -10,6 +10,19 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `typosquat`, an add-on that reads your lockfiles and a downloaded list of
+  popular package names and flags any dependency whose name is one edit off a
+  popular one — an insert, delete, substitution, or a swap of two adjacent
+  letters (optimal string alignment), the common typosquat shapes. Offline;
+  reuses `advisories`' lockfile reader.
+- `install-scripts`, an add-on that lists the `preinstall`/`install`/
+  `postinstall` scripts the packages under a `node_modules` folder would run
+  on install, each cited by file and line, so arbitrary install-time code is
+  visible before you trust it. Offline, read-only.
+- `pins`, an add-on that reads package.json and requirements.txt and names the
+  dependencies declared as a version range that no lockfile pins to an exact
+  version — the ones a maintainer may want to lock. Offline; reuses
+  `advisories`' lockfile reader.
 - `outdated`, an add-on that reads your lockfiles and a downloaded registry
   index (npm, PyPI, crates.io metadata) and says how old each locked
   dependency is, flagging the ones that are yanked, deprecated, or from a
