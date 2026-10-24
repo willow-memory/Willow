@@ -204,6 +204,7 @@ willow/
 │       ├── phase3.py         out of sample: seven other CVEs, fetched as git stores them, asked blind
 │       ├── phase3.json       those CVEs' releases and fix commits, pinned by hash
 │       ├── phase4.py         before the fix: the whole release, ranked three ways, recall at k
+│       ├── phase5.py         robustness: rewording, top-k, a words list, and leakage
 │       ├── phase6.py         reproducibility: every release, five Pythons, four kernels, a second labeller
 │       ├── test_php2shell.py holds the frozen files to their hashes, and the tools to their word
 │       ├── results/
@@ -214,6 +215,8 @@ willow/
 │           ├── blind-b.txt   eight written blind, as a sysadmin, from one news article
 │           ├── blind-c.txt   eight written blind, as terse keywords, from the advisories
 │           ├── phase3.txt    eight a CVE for phase 3's seven, written blind
+│           ├── reword.txt     the author's eight, rephrased five ways each, blind
+│           └── advisory-words.txt  a words list of acronyms the advisories expand
 │           └── null.txt      fifty questions with nothing to do with the bug
 ├── .github/
 │   ├── workflows/

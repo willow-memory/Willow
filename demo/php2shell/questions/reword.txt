@@ -1,0 +1,44 @@
+# Phase 5's rewording check, 2026-10-24. An agent rephrased the author's eight
+# PHP2Shell questions five ways each (synonyms, shorter, longer, misspelled,
+# reordered), blind to all code, the fix and every result. Id is <orig>-v<n>,
+# so each variant is scored against the same fix as its original.
+618a-v1	memory cap abort while parsing multipart post data
+618a-v2	multipart post memory bailout
+618a-v3	when the memory limit is hit while parsing a multipart post request
+618a-v4	memory limit bailout during multpart post parsing
+618a-v5	during multipart post parsing, memory limit bailout
+618b-v1	memory exhausted while recording post variables
+618b-v2	post variables out of memory
+618b-v3	running out of memory in the middle of registering post variables
+618b-v4	out of memory while registring post varaibles
+618b-v5	registering post variables while out of memory
+618c-v1	rfc1867 memory cap jump
+618c-v2	rfc1867 memory longjmp
+618c-v3	a long jump triggered by the memory limit in rfc1867 handling
+618c-v4	rfc1867 memory limit longjump
+618c-v5	longjmp from rfc1867 memory limit
+619a-v1	session upload progress clearing across requests
+619a-v2	upload progress cleanup
+619a-v3	cleaning up the session upload progress information between separate requests
+619a-v4	sesion upload progress cleanup between requests
+619a-v5	between requests, session upload progress cleanup
+619b-v1	upload progress data released during request teardown
+619b-v2	upload progress freed at shutdown
+619b-v3	the upload progress data being freed when the request shuts down
+619b-v4	upload progress data freed at request shutdwon
+619b-v5	at request shutdown, upload progress data freed
+619c-v1	fatal error stack traces outdated across requests
+619c-v2	stale fatal error backtraces
+619c-v3	fatal error backtraces remaining stale from one request to the next
+619c-v4	fatal error backtraces stale beteen requests
+619c-v5	between requests, fatal error backtraces stale
+560a-v1	session serialization handler php_binary php_serialize upload progress
+560a-v2	serialize handler upload progress
+560a-v3	the session serialize handler php_binary or php_serialize affecting upload progress
+560a-v4	session serialize handler php_binary php_serialze upload progress
+560a-v5	upload progress session serialize handler php_binary php_serialize
+560b-v1	serialization handler altered via ini_set before session start
+560b-v2	ini_set serialize handler before session_start
+560b-v3	changing the serialize handler using ini_set prior to starting the session
+560b-v4	serialize handler changed with ini_set before sesion_start
+560b-v5	before session_start, serialize handler changed with ini_set

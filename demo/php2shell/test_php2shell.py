@@ -412,3 +412,25 @@ def test_phase4_grep_matches_brute_force(tmp_path):
         fast = [(c["path"], c["line"]) for c in phase4.grep_rank(ix, q, 50)]
         slow = [(c["path"], c["line"]) for c in brute(q, 50)]
         assert fast == slow, q
+
+
+def test_phase5_added_lines_and_leakage_invariant():
+    import phase5
+
+    d = (
+        "--- a/main/rfc1867.c\n+++ b/main/rfc1867.c\n@@ -1,3 +1,4 @@\n"
+        " context line unchanged here\n"
+        "-\told_removed_call(heap);\n"
+        "+\tnew_added_call(heap);\n"
+        "+\t/* a freshly added comment line */\n"
+    )
+    added = phase5.added_lines(d)
+    assert added["main/rfc1867.c"] == {
+        "new_added_call(heap);",
+        "/* a freshly added comment line */",
+    }
+    # an old-side hit holds a removed line; it cannot hold an added one
+    fix = phase5.changed_core(d)
+    assert fix["old"]["main/rfc1867.c"] == {"old_removed_call(heap);"}
+    overlap = fix["old"]["main/rfc1867.c"] & added["main/rfc1867.c"]
+    assert overlap == set()
