@@ -1173,6 +1173,76 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
+  "name": "hook-checks",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "A PostToolUse hook that runs the repo's own fast checks on the file just edited and hands back only what failed, the same output for the same file.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, assistant, hooks"
+ },
+ {
+  "name": "hook-compact",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "A PreCompact hook that prints what the record still holds open, seals waiting and questions unanswered, so it survives the assistant's summary.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, assistant, hooks"
+ },
+ {
+  "name": "hook-guard",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "A PreToolUse hook that refuses, by rule and never by judgment, a tool call that would read the key or write a box outside the kernel, naming the rule it hit.",
+  "source": "box",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, assistant, hooks"
+ },
+ {
+  "name": "hook-replay",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "Every hook's answer kept as a row with the hashes of what it was given and what it said, and check runs it again to prove the same input still gets the same answer.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, assistant, hooks"
+ },
+ {
+  "name": "hook-start",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "A SessionStart hook that hands the assistant what needs you, read the way digest reads it, so opening a session writes nothing.",
+  "source": "bot",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, assistant, hooks"
+ },
+ {
+  "name": "hook-stop",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "A Stop hook that won't let an assistant's turn end while the record doesn't verify or its changes aren't committed, and says which.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, assistant, hooks"
+ },
+ {
+  "name": "hooks-elsewhere",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "The prompt hook for Gemini CLI, Codex and opencode, wherever they take hooks, held to Claude Code's answer byte for byte.",
+  "source": "box",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, assistant, hooks"
+ },
+ {
   "name": "horoscope-grades",
   "kind": "stdlib",
   "section": "Play",
@@ -2176,6 +2246,16 @@
   "tags": "no-install, offline, read-only, privacy"
  },
  {
+  "name": "pile-build",
+  "kind": "stdlib",
+  "section": "Finding things",
+  "line": "The store built in the background after each change, behind a lock, from orders that say where the key is but never hold it, so your next question finds it warm.",
+  "source": "bot",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, search, pile"
+ },
+ {
   "name": "pile-poetry",
   "kind": "stdlib",
   "section": "Play",
@@ -2184,6 +2264,56 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, play"
+ },
+ {
+  "name": "pile-rank",
+  "kind": "stdlib",
+  "section": "Finding things",
+  "line": "Phrases as well as words: BM25F over each passage's words and the word pairs your files use together, title and question lines weighted, no model.",
+  "source": "bot",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, search, pile"
+ },
+ {
+  "name": "pile-rungs",
+  "kind": "stdlib",
+  "section": "Finding things",
+  "line": "Each lookup says which rung answered, words, phrases or an embedder, and why a higher one was skipped, as data beside the passages.",
+  "source": "bot",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, search, pile"
+ },
+ {
+  "name": "pile-serve",
+  "kind": "stdlib",
+  "section": "Finding things",
+  "line": "The store held open by one process on this machine, over stdio or a local socket, so a hook's lookup takes milliseconds instead of a cold start.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, search, pile"
+ },
+ {
+  "name": "pile-store",
+  "kind": "stdlib",
+  "section": "Finding things",
+  "line": "Your folder's passages read once into one SQLite file, each repeat stored once, and opened read-only only while it still matches the folder, the limits and the key, else built again.",
+  "source": "bot",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, search, pile"
+ },
+ {
+  "name": "pile-sweep",
+  "kind": "stdlib",
+  "section": "Finding things",
+  "line": "The passage size measured, not guessed: your box's own questions asked at several sizes, and the size that finds the most of their answers kept.",
+  "source": "bot",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, search, pile"
  },
  {
   "name": "pins",
