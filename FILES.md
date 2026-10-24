@@ -305,6 +305,12 @@ willow/
 │   │       └── README.md
 │   └── deps/                 add-ons that need something installed
 │       ├── README.md         what one must declare: pins, floors, licences, network
+│       ├── latent/
+│       │   ├── latent.py     ranks a scan index by meaning (TF-IDF + SVD), offline
+│       │   ├── requirements.txt  numpy, pinned
+│       │   ├── requirements-floor.txt  numpy at its floor, also tested
+│       │   ├── test_latent.py
+│       │   └── README.md
 │       ├── mcp/
 │       │   ├── server.py     your folder for any MCP client: ask and suggest, never approve
 │       │   ├── requirements.txt  mcp, pinned
