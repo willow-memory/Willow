@@ -389,6 +389,9 @@ public final class Kernel {
     static Set<Integer> LINE_BREAKS, INVALID_CODEPOINTS;
     static Map<String, String> HTML5;
     static Map<Integer, String> INVALID_CHARREFS;
+    static Map<Integer, Integer> CCC;
+    static Map<Integer, int[]> DECOMP;
+    static Map<Long, Integer> COMPOSE;
     static String GENESIS;
     static int TOP, SNIFF, MAX_FILE, MAX_CHUNK, ECHO_RUN, HOLD_NUM, HOLD_DEN;
     static Set<String> FUNCTION, MAKE, ROW_KEYS;
@@ -417,6 +420,20 @@ public final class Kernel {
             INVALID_CHARREFS.put(Integer.parseInt(e.getKey()), (String) e.getValue());
         INVALID_CODEPOINTS = new HashSet<>();
         for (Object o : (List<Object>) t.get("invalid_codepoints")) INVALID_CODEPOINTS.add(((BigInteger) o).intValue());
+        Map<String, Object> nfc = (Map<String, Object>) t.get("nfc");
+        CCC = new HashMap<>();
+        for (Map.Entry<String, Object> e : ((Map<String, Object>) nfc.get("ccc")).entrySet())
+            CCC.put(Integer.parseInt(e.getKey()), ((BigInteger) e.getValue()).intValue());
+        DECOMP = new HashMap<>();
+        for (Map.Entry<String, Object> e : ((Map<String, Object>) nfc.get("decomp")).entrySet())
+            DECOMP.put(Integer.parseInt(e.getKey()),
+                    ((List<Object>) e.getValue()).stream().mapToInt(o -> ((BigInteger) o).intValue()).toArray());
+        COMPOSE = new HashMap<>();
+        for (Object o : (List<Object>) nfc.get("compose")) {
+            List<Object> p = (List<Object>) o;
+            COMPOSE.put(cpPair(((BigInteger) p.get(0)).intValue(), ((BigInteger) p.get(1)).intValue()),
+                    ((BigInteger) p.get(2)).intValue());
+        }
         Map<String, Object> kc = (Map<String, Object>) t.get("kernel");
         GENESIS = (String) kc.get("GENESIS");
         TOP = ((BigInteger) kc.get("TOP")).intValue();
@@ -487,6 +504,58 @@ public final class Kernel {
         return b.toString();
     }
 
+    private static long cpPair(int a, int b) { return ((long) a << 21) | b; }
+
+    private static int ccc(int c) { return CCC.getOrDefault(c, 0); }
+
+    /** unicodedata.normalize("NFC"): decompose, put marks in canonical order,
+     * compose, by gen.py's tables, so this JVM's Unicode version never decides. */
+    static int[] nfc(int[] a) {
+        List<Integer> d = new ArrayList<>(a.length);
+        for (int c : a) {
+            if (c >= 0xAC00 && c <= 0xD7A3) {
+                int s = c - 0xAC00;
+                d.add(0x1100 + s / 588);
+                d.add(0x1161 + s % 588 / 28);
+                if (s % 28 != 0) d.add(0x11A7 + s % 28);
+            } else if (DECOMP.containsKey(c)) {
+                for (int x : DECOMP.get(c)) d.add(x);
+            } else {
+                d.add(c);
+            }
+        }
+        for (int i = 1; i < d.size(); i++)
+            for (int j = i; j > 0 && ccc(d.get(j)) != 0 && ccc(d.get(j - 1)) > ccc(d.get(j)); j--)
+                d.set(j - 1, d.set(j, d.get(j - 1)));
+        List<Integer> out = new ArrayList<>(d.size());
+        int st = -1;
+        for (int c : d) {
+            int cc = ccc(c);
+            if (st >= 0) {
+                int last = ccc(out.get(out.size() - 1));
+                if (out.size() - 1 == st || (last != 0 && last < cc)) {
+                    int s = out.get(st);
+                    if (s >= 0x1100 && s < 0x1113 && c >= 0x1161 && c < 0x1176) {
+                        out.set(st, 0xAC00 + ((s - 0x1100) * 21 + c - 0x1161) * 28);
+                        continue;
+                    }
+                    if (s >= 0xAC00 && s <= 0xD7A3 && (s - 0xAC00) % 28 == 0 && c >= 0x11A8 && c <= 0x11C2) {
+                        out.set(st, s + c - 0x11A7);
+                        continue;
+                    }
+                    Integer p = COMPOSE.get(cpPair(s, c));
+                    if (p != null) {
+                        out.set(st, p);
+                        continue;
+                    }
+                }
+            }
+            if (cc == 0) st = out.size();
+            out.add(c);
+        }
+        return out.stream().mapToInt(Integer::intValue).toArray();
+    }
+
     private static boolean finalSigma(int[] a, int i) {
         int j = i - 1;
         while (j >= 0 && IGNORABLE.has(a[j])) j--;
@@ -538,7 +607,7 @@ public final class Kernel {
     static List<String> words(String text) {
         List<String> out = new ArrayList<>();
         StringBuilder cur = new StringBuilder();
-        for (int c : cps(lower(text))) {
+        for (int c : nfc(cps(lower(text)))) {
             if (WORD.has(c)) {
                 cur.appendCodePoint(c);
             } else if (cur.length() > 0) {

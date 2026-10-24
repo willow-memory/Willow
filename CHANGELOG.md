@@ -276,6 +276,15 @@ says how). The first was v0.1.0.
   an entry; its updates aren't listed. The GitHub add-on's check fails if
   it skips anyone else. (#9)
 
+### Fixed
+
+- `kernel.words` composes text (NFC) before it splits it, so an é saved as
+  e and a combining accent, as macOS often saves it, holds the é a person
+  types; before, it split into "cafe" and a stray mark, and the question
+  found nothing. The three ports compose by tables `vectors/gen.py` reads
+  out of Python, so no runtime's Unicode version decides a word, and the
+  vectors hold every composed character decomposed. (#33)
+
 ## v0.1.0 · 2026-10-23
 
 The first release: this section, and the two pull requests below it from
