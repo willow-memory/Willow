@@ -85,6 +85,7 @@ def test_an_author_login_that_isnt_one_is_left_out(stand_ins, tmp_path):
 
 # ── check ────────────────────────────────────────────────────────────────────
 FILES = ["kernel.py", "README.md", "FILES.md", ".github/workflows/ci.yml",
+         ".github/workflows/law.yml",
          ".github/ISSUE_TEMPLATE/idea.yml", ".github/ISSUE_TEMPLATE/security.yml",
          "adapters/stdlib/readme/readme.py"]  # fmt: skip
 
@@ -150,6 +151,15 @@ def test_the_repos_github_folder_holds():
             "login != 'dependabot[bot]'",
             "login != 'someone'",
             "changelog job",
+        ),
+        # CONST-VIII-2: the weekly run that reaches a person when an
+        # emergency amendment expires in a quiet repo
+        (".github/workflows/law.yml", "  schedule:\n", "  scheduled:\n", "law.yml"),
+        (
+            ".github/workflows/law.yml",
+            "run: python constitution/amend.py check",
+            "run: python constitution/amend.py write",
+            "law.yml",
         ),
     ],
 )

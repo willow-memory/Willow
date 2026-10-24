@@ -38,7 +38,9 @@ says how). The first was v0.1.0.
 - Emergency amendments, VIII.2 restated to Draft 0.15: an amendment with
   `expires:` enters by the same checks and merge, expires within 90 days,
   can't renew itself, and once expired fails every run until a full
-  amendment keeps or undoes it. (#4)
+  amendment keeps or undoes it. A weekly workflow, `.github/workflows/law.yml`, runs the
+  law's check so an expired one is caught in a quiet repo too, and the
+  GitHub add-on's check holds it scheduled. (#4)
 - The checks from #1 to #3 cite the clauses they already enforced: the
   kernel's no-network test III.1 and III.5, the guard and the add-on cards
   II.1, and the generated pages VI.6. Their answers in `constitution/reach.json` go. (#4)

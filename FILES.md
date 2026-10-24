@@ -208,6 +208,7 @@ willow/
 ├── .github/
 │   ├── workflows/
 │   │   ├── ci.yml            runs adapters/stdlib/ci/ci.py one part a job, tests on Python 3.9 to 3.14
+│   │   ├── law.yml           every Monday, the law's check: an expired emergency amendment fails it
 │   │   └── security.yml      posts the github add-on's comment on a security report
 │   ├── ISSUE_TEMPLATE/
 │   │   ├── bug.yml           the form for something wrong

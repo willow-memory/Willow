@@ -37,7 +37,9 @@ same checks and the same merge, but it has to expire within 90 days, it
 can't renew another emergency amendment, and the day after it expires,
 `amend.py check` fails on every run until a full amendment names it in
 `supersedes`, keeping it or undoing it. Nothing puts the old text back on
-its own; the failing check is how the timer reaches a person.
+its own; the failing check is how the timer reaches a person. On GitHub,
+`.github/workflows/law.yml` runs the check every Monday, so it fires even
+in a week with no pushes.
 
 Merging is what enters it. The maintainers are the quorum, and today there
 is one; when there are more, their merge is still the act, and requiring
