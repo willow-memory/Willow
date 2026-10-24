@@ -15,9 +15,9 @@ its file and line, oldest first, written to FILE:
     undated     tenancy/misc.md:1        The landlord's number is in the blue book. Mould spray under the sink.
 
 A line's date is the one it says (the kernel's `newest`, which never reads
-11/03/2026 either way round); a line that says none takes the date written
-above it in its file, the kernel's rule for a log's headings, and says which
-line that was; a line with neither takes its file's name, and says so. A
+11/03/2026 either way round): the one it starts with, or else the latest it
+names, saying so when it names several; a line that says none takes the nearest date written above it in
+its file, and says which line that was; a line with neither takes its file's name, and says so. A
 line's own date and its file's are two facts: when they differ, both are
 shown, and it is placed by its own. Undated lines come after the dated ones,
 by file and line. Nothing is merged, shortened or reworded: a passage that
@@ -57,10 +57,27 @@ def held(pile: list[dict], matter: str, alias: dict) -> set[int]:
     return out
 
 
+def said_of(text: str) -> tuple[str, str]:
+    """(the date a line is placed at, a note when it names several). A line
+    that starts with a date was written then: "2026-03-05 Hearing set for
+    2026-12-01" is March. Any other line is placed at the latest it names,
+    the kernel's `newest`, and says so when there is more than one."""
+    ws = text.split()
+    named = {d for w in ws if (d := kernel.newest(w))}
+    lead = kernel.newest(ws[0]) if ws else ""
+    if len(named) < 2:
+        return lead or kernel.newest(text), ""
+    if lead:
+        return lead, "names several dates; placed at the one it starts with"
+    return kernel.newest(text), "names several dates; placed at the latest"
+
+
 def lines(pile: list[dict], keep: set[int]) -> list[dict]:
-    """Every line of the kept passages, each with the date it says, the date
-    written above it in its file (the latest, as the kernel's `dates` reads a
-    log's headings) and where that was, and the date its file is named for."""
+    """Every line of the kept passages, each with the date it says, the
+    nearest date written above it in its file and where that was, and the date
+    its file is named for. The nearest, not the latest the kernel's `dates`
+    ranks by: after "hearing set for 2026-12-01", the next line was still
+    written in March."""
     out, path, above, src = [], None, "", None
     for i, c in enumerate(pile):
         if c["path"] != path:
@@ -68,12 +85,12 @@ def lines(pile: list[dict], keep: set[int]) -> list[dict]:
         filed = kernel.newest(c["path"])
         for j, text in enumerate(c["text"].splitlines()):
             n = c["line"] + j
-            said = kernel.newest(text)
+            said, several = said_of(text)
             if i in keep:
                 out.append({"said": said, "above": above, "from": src,
                             "filed": filed, "path": c["path"], "line": n,
-                            "text": text.strip()})  # fmt: skip
-            if said > above:
+                            "several": several, "text": text.strip()})  # fmt: skip
+            if said:
                 above, src = said, n
     for r in out:
         r["when"] = r["said"] or r["above"] or r["filed"]
@@ -83,6 +100,8 @@ def lines(pile: list[dict], keep: set[int]) -> list[dict]:
 
 def show(r: dict, width: int) -> str:
     notes = []
+    if r["several"]:
+        notes.append(r["several"])
     if not r["said"] and r["above"]:
         notes.append(f"date from line {r['from']}")
     elif not r["said"] and r["filed"]:

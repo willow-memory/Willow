@@ -98,6 +98,38 @@ def test_a_heading_dates_the_lines_under_it_and_its_file_date_is_shown(tmp_path)
     ]
 
 
+def test_a_line_is_placed_at_the_date_it_starts_with_and_dates_the_next(tmp_path):
+    b = box(tmp_path, {
+        "log.md": "2026-03-05 Hearing set for 2026-12-01, landlord told.\n"
+                  "Landlord says the mould is fixed.\n"
+                  "Landlord moved the hearing from 2026-12-01 to 2027-01-12.\n",
+    })  # fmt: skip
+    timeline(b, tmp_path / "t.txt", "landlord")
+    rows = (tmp_path / "t.txt").read_text().splitlines()[7:]
+    assert rows == [
+        # written in March: neither it nor the line under it is December
+        "2026-03-05  log.md:1  2026-03-05 Hearing set for 2026-12-01, landlord told."
+        "  (names several dates; placed at the one it starts with)",
+        "2026-03-05  log.md:2  Landlord says the mould is fixed.  (date from line 1)",
+        "2027-01-12  log.md:3  Landlord moved the hearing from 2026-12-01 to 2027-01-12."
+        "  (names several dates; placed at the latest)",
+    ]
+
+
+def test_the_nearest_date_above_not_the_latest(tmp_path):
+    b = box(tmp_path, {
+        "log.md": "2026-05-01\nKnee physio booked.\n\n2026-02-01\nKnee hurt on the stairs.\n",
+    })  # fmt: skip
+    timeline(b, tmp_path / "t.txt", "knee")
+    rows = (tmp_path / "t.txt").read_text().splitlines()[7:]
+    assert rows == [
+        "2026-02-01  log.md:4  2026-02-01",
+        "2026-02-01  log.md:5  Knee hurt on the stairs.  (date from line 4)",
+        "2026-05-01  log.md:1  2026-05-01",
+        "2026-05-01  log.md:2  Knee physio booked.  (date from line 1)",
+    ]
+
+
 def test_a_heading_in_one_file_never_dates_another(tmp_path):
     b = box(tmp_path, {
         "a.md": "2026-01-05 Rent paid.\n",
@@ -219,3 +251,14 @@ def test_refused_without_a_box_or_a_file_or_words(tmp_path):
         got = run(script, *argv)
         assert got.returncode == 2 and got.stderr, argv
     assert not (tmp_path / "t.txt").exists()
+
+
+def test_a_line_whose_one_date_is_mid_line_is_placed_at_it(tmp_path):
+    b = box(
+        tmp_path, {"log.md": "Wrote to the landlord on 2026-03-09 about the mould.\n"}
+    )
+    timeline(b, tmp_path / "t.txt", "landlord")
+    rows = (tmp_path / "t.txt").read_text().splitlines()[7:]
+    assert rows == [
+        "2026-03-09  log.md:1  Wrote to the landlord on 2026-03-09 about the mould."
+    ]

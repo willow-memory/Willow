@@ -32,8 +32,10 @@ you have one), gives all of its lines, oldest first.
   that appears in two files is listed twice, at both places.
 - **It never guesses a date.** A line is dated by the date it says. A date
   that reads either way round, like 11/03/2026, is not read at all. A line
-  that says no date takes the date written above it in its file, and says
-  which line; one with neither takes its file's name, and says so.
+  that starts with a date was written then; one that names several dates
+  anywhere else is placed at the latest. Either way, it says so. A line
+  that says no date takes the nearest date written above it in its file,
+  and says which line; one with neither takes its file's name, and says so.
 - **Two dates are two facts.** A line's own date and the date its file is
   named for can differ (a letter written up the next day). When they do,
   both are shown, and the line is placed by its own.
