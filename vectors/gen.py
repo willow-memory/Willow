@@ -311,9 +311,13 @@ WORD_TEXTS = [
 
 
 def _decomposed() -> list[str]:
-    """Every composed code point, decomposed, 64 to a text: each must come
-    back composed (or as NFC has it) in every port."""
-    nfd = [unicodedata.normalize("NFD", chr(c)) for c in cps()]
+    """Every code point Unicode 3.2 composes, decomposed, 64 to a text: each
+    must come back composed (or as NFC has it) in every port. Python's own
+    Unicode grows (3.14's 16.0 composes more than 3.13's 15.1), and the cases
+    are the same on every Python, so the list is drawn from the 3.2 database
+    every Python carries, never this one's."""
+    old = unicodedata.ucd_3_2_0
+    nfd = [old.normalize("NFD", chr(c)) for c in cps()]
     nfd = [d for c, d in zip(cps(), nfd) if d != chr(c)]
     return [" ".join(nfd[i : i + 64]) for i in range(0, len(nfd), 64)]
 

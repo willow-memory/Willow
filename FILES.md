@@ -336,7 +336,7 @@ willow/
 │       └── Kernel.csproj
 ├── vectors/                  what keeps the four implementations identical
 │   ├── gen.py                reads the test cases out of kernel.py
-│   ├── cases.json            4,670 cases, with the answers kernel.py gives
+│   ├── cases.json            4,668 cases, with the answers kernel.py gives
 │   ├── kernel_tables.json    Python's Unicode and HTML rules, so ports don't use their own
 │   ├── compare.py            runs every port against the cases and each other's logs
 │   ├── test_vectors.py       fails if the cases are stale or a port disagrees
