@@ -10,6 +10,12 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `hook-fail-closed`, `hook-fuzz`, `hook-pin` and `hook-replay`: a hook
+  that crashes, hangs or prints what can't be read blocks the tool instead
+  of letting it run; thirteen fixed bad inputs thrown at a hook, each one
+  that breaks it named; a hook runs only as the bytes you approved, pinned on
+  the record; and every hook answer a row of hashes, run again by `check`.
+  (#21)
 - Thirty-seven ideas on the add-on list, nothing built: hooks whose answers
   are code, never judgment (hook-fail-closed, hook-fuzz, hook-pin,
   hook-replay, hook-shell and others), the store behind willow-bot's pile
@@ -207,6 +213,9 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- `claude-code`'s prompt hook says it couldn't read the prompt when it
+  gets JSON that isn't an object, or JSON nested past Python's depth, where
+  it crashed with a traceback; `hook-fuzz` found it. (#21)
 - CI runs once per change: on pushes to main only, so a pull request no
   longer runs twice (once for its branch's push, once for the pull
   request), and a newer commit on a pull request cancels the run it
