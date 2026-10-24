@@ -18,14 +18,14 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`███░░░░░░░░░░░░░░░░░` **69 of 417 built** · 368 need no install · 49 need one
+`███░░░░░░░░░░░░░░░░░` **70 of 417 built** · 368 need no install · 49 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
 | Reading more kinds of files | 9 | 95 | 96 | 8 |
 | Finding things | 6 | 27 | 24 | 9 |
 | Your own words | 7 | 17 | 21 | 3 |
-| Keeping track | 5 | 50 | 55 | 0 |
+| Keeping track | 6 | 49 | 55 | 0 |
 | Trust and proof | 9 | 35 | 35 | 9 |
 | Privacy and safety | 2 | 11 | 13 | 0 |
 | Assistants | 11 | 17 | 22 | 6 |
@@ -47,9 +47,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ### Add-on of the week
 
 <!-- willow:pick week=2026-W43 -->
-**[books](adapters/stdlib/books/)** — Kindle "My Clippings.txt" highlights and .epub text.
+**[aider](adapters/stdlib/aider/)** — Aider reads answers from your folder with its /run command, file and line included.
 
-*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 69 built add-ons in name order.*
+*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 70 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -269,7 +269,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - **oakenscroll** (idea) — Oakenscroll's Office calibration ledger: what you believed, how hard, and how it resolved, as dated passages. *new* `no-install` `offline` `writes-output` `tracking`
 - **outdated** (idea) — How old each locked dependency is, and which are yanked, deprecated or two years without a release, from a registry index you downloaded. *new* `no-install` `offline` `read-only` `tracking`
 - **pets** (idea) — Each pet's vet visits, vaccines and medicines, from your records: what's due next. *new* `no-install` `offline` `read-only` `tracking`
-- **policy-watch** (idea) — A terms or policy page fetched each time you run it, by snapshot, and what changed since last time, sentence by sentence, by clauses. Goes online: the page you name, fetched each time you run it. *new* `no-install` `online` `writes-output` `tracking`
+- [**policy-watch**](adapters/stdlib/policy-watch/) — A terms or policy page fetched each time you run it, by snapshot, and what changed since last time, sentence by sentence, by clauses. Goes online: the page you name, fetched each time you run it. *new* `no-install` `online` `writes-output` `tracking` `policies`
 - **predict** (idea) — Write down what you'll do next before you do it, and grade it after; the record counts how often you were right. *bot* `no-install` `offline` `records` `tracking`
 - **reading-log** (idea) — A child's reading log: books, pages and minutes, week by week. *new* `no-install` `offline` `read-only` `tracking`
 - [**readings**](adapters/stdlib/readings/) — Numbers over time and a date gone by, beside an answer. *box* `no-install` `offline` `records` `tracking`

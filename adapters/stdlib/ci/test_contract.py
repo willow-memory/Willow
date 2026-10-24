@@ -99,6 +99,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "quote-check": ("quote_check.py", ["--box", "{box}", "Tomatoes want sun"]),
     "misquote": ("misquote.py", ["--box", "{box}", "Tomatoes want rain"]),
     "claim-check": ("claim_check.py", ["--box", "{box}", "tomatoes want sun"]),
+    "policy-watch": ("policy_watch.py", ["--url", "http://127.0.0.1:9/terms", "--to", "{tmp}/w"]),
     "readings": ("readings.py", ["bite", "--box", "{box}", *NOW, "tomatoes"]),
     "scan": ("scan.py", ["index", "--from", "{pile}", "--to", "{tmp}/index"]),
     "snapshot": ("snapshot.py", ["check", "--in", "{pile}"]),

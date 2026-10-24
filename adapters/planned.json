@@ -2226,16 +2226,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "policy-watch",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "A terms or policy page fetched each time you run it, by snapshot, and what changed since last time, sentence by sentence, by clauses.",
-  "source": "new",
-  "writes": "to",
-  "network": "the page you name, fetched each time you run it",
-  "tags": "no-install, online, writes-output, tracking"
- },
- {
   "name": "pr-context",
   "kind": "stdlib",
   "section": "Ways to use it",
