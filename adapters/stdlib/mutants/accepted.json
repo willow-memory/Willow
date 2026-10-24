@@ -8,6 +8,12 @@
   "books": {
     "059f5e759b3b": "Kindle always writes a blank line after a clipping's meta line; starting one line later skips only that blank."
   },
+  "claim-check": {
+    "11c6e5c3ed55": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
+  },
+  "clauses": {
+    "0df2e008ca77": "The width a file of page headings and no text lines falls back to: with no lines, it is never compared to one."
+  },
   "codex-cli": {
     "2432e7c4e258": "The JSON branch's indent: codex-cli prints only TOML, so the JSON indent is never used.",
     "596bc0a25be9": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
@@ -40,10 +46,14 @@
     "2a82bb3953da": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
   },
   "live": {
-    "099e4afa6871": "How much of what a program said is quoted in a failure's reason: one character more is the same message, and the state, the part a person and CI act on, is unchanged."
+    "099e4afa6871": "How much of what a program said is quoted in a failure's reason: one character more is the same message, and the state, the part a person and CI act on, is unchanged.",
+    "03f95b5e44db": "Where the DevTools message counter starts: replies are matched to requests by id, so starting at 1 instead of 0 matches the same replies."
   },
   "mcp-lite": {
     "0422b2185389": "A propose refusal's reason after its first colon; a maxsplit of 2 differs only when the reason holds a second colon."
+  },
+  "misquote": {
+    "1d105075a976": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
   },
   "notes": {
     "00d9493a4212": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
@@ -73,6 +83,9 @@
   "vscode": {
     "423204448d2d": "sys.path.insert at index 1 instead of 0 still finds kernel.py.",
     "42ff77b58811": "The printed tasks.json's indent: three spaces parses to the same tasks."
+  },
+  "wayback": {
+    "0f8f6a1cbbfe": "sys.path.insert at index 1 instead of 0 still finds snapshot.py."
   },
   "words-es": {
     "088d00bd8ee5": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
