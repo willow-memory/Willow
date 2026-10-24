@@ -15,6 +15,11 @@ says how). The first was v0.1.0.
   hook-replay, hook-shell and others), the store behind willow-bot's pile
   (pile-rank, pile-serve, pile-gold, fair-merge), and the tools LLMs use
   (instruction-files, llms-txt, mcp-by-hash, schema-check, cassettes). (#19)
+- `gaps`: where a log you keep stops. The days a folder of daily notes, a
+  reading log or a diary skipped are said as gaps: a spacing more than three
+  times the log's typical one. A log with too few dates is said, an undated
+  file beside it is said, and a gap is "no entry written", never "nothing
+  happened". (#30)
 - `timeline`: one matter from your folder (a dispute, an illness, a
   tenancy), chosen by words, as a dated list of every line of the passages
   that hold them, each cited by file and line, written to one file to hand
