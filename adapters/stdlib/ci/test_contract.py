@@ -77,6 +77,7 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
 COMMANDS: dict[str, tuple[str, list[str]]] = {
     "again": ("again.py", ["--box", "{box}"]),
     "aider": ("aider.py", ["--box", "{box}"]),
+    "ci-why": ("ci_why.py", ["--record", "{box}/record.jsonl"]),
     "claude-code": ("hook.py", ["setup", "--box", "{box}"]),
     "codex-cli": ("codex_cli.py", ["--box", "{box}"]),
     "copilot": ("copilot.py", ["--box", "{box}"]),

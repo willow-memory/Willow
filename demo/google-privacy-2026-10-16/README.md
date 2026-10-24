@@ -273,6 +273,22 @@ shattered.io's block quote is in neither version: it joins the old
 sentence's "or Photos" to the new sentence's exception. The new text says
 "or Google Photos". The meaning survives; the words don't.
 
+## Context the documents don't give
+
+Not evidence: the study answers from the two versions alone. But it helps
+to know where "Google scans Gmail for ads" comes from. Google used to: in
+2017 it said it would stop scanning consumer Gmail to choose which ads to
+show, and would keep scanning it for spam and phishing
+([Gulf News](https://gulfnews.com/technology/google-will-no-longer-scan-gmail-for-ad-targeting-1.2048619)).
+In May 2018,
+[Pixel Envy](https://pxlnv.com/linklog/google-revised-privacy-policy/),
+citing The Outline, noted that the privacy policy's wording still allowed
+it. tech-insider.org's report has a section on the same history ("From
+Scanned Inboxes to Opt-In Connections"). So the claim describes what Google
+did before 2017, not anything the 16 October text added; and the
+unchanged analyze clause above may be that older wording's descendant,
+which these two documents can't show.
+
 ## What it found, together
 
 - **The text supports the default and the exception.** The reporters' own

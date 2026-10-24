@@ -39,6 +39,13 @@ says how). The first was v0.1.0.
   sources are fetched once and kept by hash, not in the repo; CI checks only
   that the frozen files still match. Three ideas from it go on the list:
   `claim-check`, `misquote` and `policy-watch`. (#16)
+- `ci-why`, an add-on that reads a red CI log (what `ci.py run` printed, or a
+  job's raw log) and prints only each failing block: the pytest test, its
+  assertion and place, a stale or surviving mutant, a ruff rule and line, a
+  traceback's last frame. It reads the CI record when given one to know which
+  checks failed, never counts an unreachable check as failing, and says
+  "couldn't find a failing block" (exit 42) apart from "the log says it
+  passed". It reads only, and goes nowhere. (#24)
 - `scan`, an add-on that indexes a folder once and then answers a list of
   questions in seconds with the kernel's own answers, narrowing only which
   passages `rank` looks at. It adds `--changed-from` (ask only what changed

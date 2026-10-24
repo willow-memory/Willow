@@ -14,6 +14,8 @@ willow/
 ├── FILES.md                  this file
 ├── ADDONS.md                 every add-on, built and planned, generated from their cards
 ├── CONTRIBUTING.md           the rules every change follows, and how to show it does
+├── AGENTS.md                 for AI agents: what CI catches when CONTRIBUTING is missed
+├── CLAUDE.md                 one line: read AGENTS.md
 ├── CODE_OF_CONDUCT.md        how we treat each other
 ├── SECURITY.md               what counts as a security problem, and how to report it in public
 ├── CHANGELOG.md              what changed, by pull request, and each release
@@ -92,6 +94,10 @@ willow/
 │   │   │   ├── test_bugs.py  bugs.py's tests: strict marks only, and the list made from them
 │   │   │   ├── test_whose.py whose.py's tests: commits, merges, squashes, another host, places refused
 │   │   │   └── README.md     its card: gates, states, the guard and exit codes
+│   │   ├── ci-why/
+│   │   │   ├── ci_why.py     the failing block of a red CI log, plain: the test, the assertion, the line to act on
+│   │   │   ├── test_ci_why.py
+│   │   │   └── README.md
 │   │   ├── claim-check/
 │   │   │   ├── claim_check.py  a claim, part by part: what holds it all, some of it, and what no file names
 │   │   │   ├── test_claim_check.py
