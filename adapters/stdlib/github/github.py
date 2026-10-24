@@ -44,6 +44,11 @@ WHOSE = ROOT / "adapters" / "stdlib" / "ci" / "whose.py"
 DOT = ROOT / ".github"
 #: the changelog job runs on every pull request but Dependabot's, which can't
 #: write an entry and isn't listed; no other author is skipped
+CONCURRENCY = (
+    "concurrency:\n"
+    "  group: ci-${{ github.event.pull_request.number || github.ref }}\n"
+    "  cancel-in-progress: ${{ github.event_name == 'pull_request' }}\n"
+)
 CHANGELOG_IF = ("github.event_name == 'pull_request' && "
                 "github.event.pull_request.user.login != 'dependabot[bot]'")  # fmt: skip
 
@@ -162,6 +167,13 @@ def problems() -> list[str]:
         out.append(
             "ci.yml's similar job doesn't keep its list as the similar artifact willow-bot reads"
         )
+    # one run per change: pushes run on main only, and a pull request's newer
+    # commit cancels the run it replaces, never one of main's
+    trigger = re.search(r"^on:\n(.*?)(?=^\S)", ci, re.M | re.S)
+    if not trigger or not re.search(r"^  push:\n    branches: \[main\]\n", trigger.group(1), re.M):  # fmt: skip
+        out.append("ci.yml runs on pushes to branches other than main, so a pull request runs twice")  # fmt: skip
+    if CONCURRENCY not in ci:
+        out.append("ci.yml doesn't cancel a pull request's run when a newer commit replaces it")  # fmt: skip
     # CONST-VIII-2: an expired emergency amendment fails the law's check, and
     # law.yml runs that check weekly, so a quiet repo still reaches a person
     law = DOT / "workflows" / "law.yml"
