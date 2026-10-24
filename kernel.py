@@ -455,7 +455,32 @@ def held_by(w: str, toks: set[str], alias: dict) -> bool:
     return any(holds(x, toks) for x in [w, *alias.get(w, [])])
 
 
-def rank(pile: list[dict], bite: str, alias: dict | None = None) -> list[dict]:
+def _held(pile: list[dict], want: set[str], alias: dict, days: list[int]) -> list:
+    """(chunk, date, the words it holds) for each chunk holding `HOLD` of
+    `want`, in pile order."""
+    held = [
+        (c, d, {w for w in want if held_by(w, toks(c), alias)})
+        for c, d in zip(pile, days)
+    ]
+    return [(c, d, h) for c, d, h in held if len(h) >= HOLD * len(want)]
+
+
+def holding(pile: list[dict], bite: str, alias: dict | None = None) -> list[dict]:
+    """Every chunk `rank` would weigh for the bite, in pile order, none left
+    out for `TOP` and none for a copy: the passages that hold it."""
+    want = set(words(bite)) - FUNCTION
+    if not want:
+        return []
+    return [c for c, *_ in _held(pile, want, alias or {}, [0] * len(pile))]
+
+
+def rank(
+    pile: list[dict],
+    bite: str,
+    alias: dict | None = None,
+    top: int | None = None,
+    dated=None,
+) -> list[dict]:
     """The chunks holding at least `HOLD` of the bite's content words (not
     `FUNCTION`) in their text or their path (`toks`), rarest words weighing
     most; among equal scores, the newest
@@ -464,15 +489,13 @@ def rank(pile: list[dict], bite: str, alias: dict | None = None) -> list[dict]:
     "how" and "do" doesn't hold "when does the frost come" or "how do I bake
     sourdough bread": an answer it doesn't have is never improvised (beat 1).
     A bite of function words alone is held by nothing: say more. `alias` is
-    their words list (`parse_words`)."""
+    their words list (`parse_words`). `top` serves more than `TOP` (an
+    add-on listing every match); `dated` gives each chunk's date in place of
+    `dates` (an index that has them already). Neither changes the order."""
     want = set(words(bite)) - FUNCTION
     if not want:
         return []
-    held = [
-        (c, d, {w for w in want if held_by(w, toks(c), alias or {})})
-        for c, d in zip(pile, dates(pile))
-    ]
-    held = [(c, d, h) for c, d, h in held if len(h) >= HOLD * len(want)]
+    held = _held(pile, want, alias or {}, (dated or dates)(pile))
     df = {w: sum(w in h for *_, h in held) for w in want}
     # exact, not float: a float sum's last bit depends on the order the set is
     # walked in, which is the process's hash seed, so on Python 3.9-3.11 the
@@ -498,7 +521,7 @@ def rank(pile: list[dict], bite: str, alias: dict | None = None) -> list[dict]:
     # out the van memo she still has to act on)
     out: list[dict] = []
     for *_, c in order:
-        if len(out) == TOP:
+        if len(out) == (TOP if top is None else top):
             break
         if all(c["id"] != x["id"] for x in out):
             out.append(c)

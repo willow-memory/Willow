@@ -5,7 +5,7 @@ the repo ever disagree. [README.md](README.md) shows the top of it.
 
 ```
 willow/
-├── kernel.py                 the whole program (about 910 lines)
+├── kernel.py                 the whole program (about 940 lines)
 ├── test_kernel.py            its tests
 ├── test_docs.py              holds every doc to the files that exist, and the trees to the repo
 ├── test_docs_fires.py        plants a violation for each docs check and makes sure it fails
@@ -464,6 +464,7 @@ willow/
 │   │   ├── phase5.py         robustness: rewording, top-k, a words list, and leakage
 │   │   ├── phase6.py         reproducibility: every release, five Pythons, four kernels, a second labeller
 │   │   ├── pipeline.py       the whole method in one command: index, changed-from, rank three ways, score
+│   │   ├── hold.py           not frozen: the kernel's hold rule against looser ones, on phase 3's CVEs
 │   │   ├── test_php2shell.py holds the frozen files to their hashes, and the tools to their word
 │   │   ├── results/
 │   │   │   └── phase6-labels.json  the independent labellers' yes or no, item by item

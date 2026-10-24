@@ -17,8 +17,8 @@ It ranks with the kernel's own `rank`, the same rule, order and words list,
 so its first three are always exactly the three the kernel serves. The output
 is JSON like a bite's, each passage with its rank and a `count`.
 
-**How:** the kernel's `rank` stops at its `TOP` (3); this lifts that for one
-call, in its own process, and puts it back. `kernel.py` is never changed.
+**How:** the kernel's `rank` stops at its `TOP` (3); its `top` serves more,
+for one call. `kernel.py` is never changed.
 
 **Exit codes:** 0 something holds the question; 42 nothing does; 2 refused.
 

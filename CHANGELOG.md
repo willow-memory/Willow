@@ -40,6 +40,12 @@ says how). The first was v0.1.0.
 - `demo/php2shell/pipeline.py`, a runner that composes the PHP2Shell method end
   to end (kernel, BM25 and the latent ranker) in one command; a runner, not an
   add-on, and not part of CI. (#35)
+- `kernel.rank` takes `top` and `dated`, so an add-on that lists every
+  match, or an index that has the dates already, no longer sets the
+  kernel's globals for a call; its filter is public as `kernel.holding`.
+  No answer changes: the vectors regenerate with only the kernel's hash
+  different. `similar near` also counts against the entry, so a long new
+  line finds a short entry it contains. (#20)
 - Thirty-seven ideas on the add-on list, nothing built: hooks whose answers
   are code, never judgment (hook-fail-closed, hook-fuzz, hook-pin,
   hook-replay, hook-shell and others), the store behind willow-bot's pile
