@@ -39,6 +39,13 @@ says how). The first was v0.1.0.
   sources are fetched once and kept by hash, not in the repo; CI checks only
   that the frozen files still match. Three ideas from it go on the list:
   `claim-check`, `misquote` and `policy-watch`. (#16)
+- `test-impact`, an add-on for maintainers that takes a change (paths from git
+  against a base ref, and any you name) and says which of the repo's checks it
+  can reach, in ci's own gate names, cheapest and closest first: the
+  add-on's tests, `adapters/stdlib/ci/test_contract.py` narrowed to it, the docs test, its
+  mutants. It builds the import graph with `ast` and adds a few written rules
+  for what imports can't show. A change it can't place runs everything, and it
+  always says the full suite still runs after. (#23)
 - `ci-why`, an add-on that reads a red CI log (what `ci.py run` printed, or a
   job's raw log) and prints only each failing block: the pytest test, its
   assertion and place, a stale or surviving mutant, a ruff rule and line, a
@@ -193,6 +200,14 @@ says how). The first was v0.1.0.
   DevTools pipe with no library, as .mhtml and as drawn, read by web-pages.
   Its first run found web-pages garbling Chrome's .mhtml, whose page part
   names no charset; fixed, with a test of Chrome's exact form. (#18)
+- `test-impact` places a demo's test reached by import by its folder, as it
+  places a demo's files, not php2shell's alone; the study's CI row is
+  `demo:google-privacy-2026-10-16`, by that rule. (#16)
+- CI runs once per change: on pushes to main only, so a pull request no
+  longer runs twice (once for its branch's push, once for the pull
+  request), and a newer commit on a pull request cancels the run it
+  replaces; main's runs are never cancelled. `github.py check` holds both.
+  (#31)
 - `adapters/stdlib/mutants/mutants.py` runs each mutant without Python's bytecode cache, so a
   same-size break can no longer run the previous mutant's code and pass as
   a survivor; and it no longer breaks the `__main__` guard, which the
