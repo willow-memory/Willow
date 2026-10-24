@@ -112,6 +112,10 @@ willow/
 │   │   │   ├── cursor.py         the mcp.json lines that register mcp-lite with Cursor
 │   │   │   ├── test_cursor.py
 │   │   │   └── README.md
+│   │   ├── dice/
+│   │   │   ├── dice.py       dice rolled on the record, seeded by its tip; check throws every roll again
+│   │   │   ├── test_dice.py
+│   │   │   └── README.md
 │   │   ├── digest/
 │   │   │   ├── digest.py     one page of what waits on you, gone stale, coming up; writes nothing
 │   │   │   ├── test_digest.py
@@ -141,9 +145,17 @@ willow/
 │   │   │   ├── history.py    your record in plain sentences, places and counts, never the words
 │   │   │   ├── test_history.py
 │   │   │   └── README.md
+│   │   ├── horoscope/
+│   │   │   ├── horoscope.py  a daily reading picked by the SHA-256 of name and date
+│   │   │   ├── test_horoscope.py
+│   │   │   └── README.md
 │   │   ├── jetbrains/
 │   │   │   ├── jetbrains.py      an external tool for JetBrains IDEs: answers as links to file and line
 │   │   │   ├── test_jetbrains.py
+│   │   │   └── README.md
+│   │   ├── life/
+│   │   │   ├── life.py       Conway's Game of Life as one row; check plays it again
+│   │   │   ├── test_life.py
 │   │   │   └── README.md
 │   │   ├── live/
 │   │   │   ├── live.py       each way-in add-on run through its real program: works, fails, or not here
@@ -169,6 +181,10 @@ willow/
 │   │   ├── office/
 │   │   │   ├── office.py     .docx, .odt, .pptx, .xlsx and .ods, as text
 │   │   │   ├── test_office.py
+│   │   │   └── README.md
+│   │   ├── odds/
+│   │   │   ├── odds.py       exact odds for any dice, as fractions
+│   │   │   ├── test_odds.py
 │   │   │   └── README.md
 │   │   ├── on-this-day/
 │   │   │   ├── on_this_day.py what your files say happened on this date in other years

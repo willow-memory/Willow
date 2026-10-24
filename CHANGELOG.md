@@ -26,6 +26,15 @@ says how). The first was v0.1.0.
   changed; `xref` checks every link and file:line in your files is still
   there; `diverge` finds where two copies part, a backup zip included, by
   record row, file and line, and never reads a key. (#PR)
+- Play, from what willow-bot already plays: `odds` gives any dice's exact
+  chances as fractions, with at-least and bands; `horoscope` reads the day
+  by the SHA-256 of name and date, the bot's lines kept for `--coder`;
+  `dice` rolls on the record from its tip with the bot's seeded stream, and
+  `check` throws every roll again; `life` plays Conway's Game of Life as
+  one row, its fate named, and `check` plays it again. mutants.py now
+  leaves out only a demo's generated life/ folder when it copies the
+  repo, not every folder of that name, so an add-on named life is
+  mutated like any other. (#PR)
 - Three hundred and thirty-two ideas on the add-on list, nothing built: readers for what
   people use now (Pocket, Instapaper, wallabag, Karakeep, Joplin, jrnl,
   Journiv, WriteFreely, ArchiveBox, Slack, Discord, Signal, Mastodon,

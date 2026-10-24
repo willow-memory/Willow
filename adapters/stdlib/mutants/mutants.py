@@ -132,6 +132,21 @@ def addons(names: list[str]) -> list[str]:
     return names or every
 
 
+#: tools' caches and builds, left out of the copy wherever they are
+SKIP = {".git", "__pycache__", ".pytest_cache", ".ruff_cache", "node_modules",
+        ".ci-record", "obj", "bin", "dist", "out"}  # fmt: skip
+
+
+def skipped(folder: str, names: list[str]) -> set[str]:
+    """What the copy leaves out of `folder`: SKIP anywhere, and the life/
+    each demo's make_life.py writes, only directly under a demo, so an
+    add-on named life is copied like any other."""
+    out = SKIP & set(names)
+    if Path(folder).parent.name == "demo" and "life" in names:
+        out.add("life")
+    return out
+
+
 def run(names: list[str], per: int) -> int:
     if subprocess.run([sys.executable, "-c", "import pytest"],
                       capture_output=True).returncode != 0:  # fmt: skip
@@ -141,9 +156,7 @@ def run(names: list[str], per: int) -> int:
     bad = 0
     with tempfile.TemporaryDirectory() as tmp:
         copy = Path(tmp) / "repo"
-        shutil.copytree(ROOT, copy, ignore=shutil.ignore_patterns(
-            ".git", "__pycache__", ".pytest_cache", ".ruff_cache", "node_modules",
-            ".ci-record", "life", "obj", "bin", "dist", "out"))  # fmt: skip
+        shutil.copytree(ROOT, copy, ignore=skipped)
         for name in names:
             chosen = mutants(name)[:per]
             survived, couldnt = [], []

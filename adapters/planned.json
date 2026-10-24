@@ -677,16 +677,6 @@
   "tags": "needs-install, offline, read-only, words"
  },
  {
-  "name": "dice",
-  "kind": "stdlib",
-  "section": "Play",
-  "line": "Seeded dice rolls as rows: every roll replayable and checkable.",
-  "source": "bot",
-  "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, play"
- },
- {
   "name": "dice5e",
   "kind": "deps",
   "section": "Play",
@@ -1183,16 +1173,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "horoscope",
-  "kind": "stdlib",
-  "section": "Play",
-  "line": "A daily horoscope keyed on your name and the date: same name, same day, same reading, always.",
-  "source": "bot",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, play"
- },
- {
   "name": "horoscope-grades",
   "kind": "stdlib",
   "section": "Play",
@@ -1523,16 +1503,6 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, trust"
- },
- {
-  "name": "life",
-  "kind": "stdlib",
-  "section": "Play",
-  "line": "Conway's Game of Life as rows: a fully deterministic world on the record.",
-  "source": "bot",
-  "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, play"
  },
  {
   "name": "line-origin",
@@ -2032,16 +2002,6 @@
   "writes": "to",
   "network": "none",
   "tags": "needs-install, offline, writes-output, file-reader"
- },
- {
-  "name": "odds",
-  "kind": "stdlib",
-  "section": "Play",
-  "line": "Exact odds, as fractions, for a game's dice and tables: what each outcome's chance really is.",
-  "source": "bot",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, play"
  },
  {
   "name": "openai-compatible",
