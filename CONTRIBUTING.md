@@ -146,7 +146,8 @@ Before you add it, see what's already near it:
 
 If something built is close, connecting to it may be the better idea. On the
 pull request, CI's run summary lists what's near each idea you add, and
-willow-bot posts the same list as a comment. That list is a suggestion; only
+willow-bot posts the same list in its status comment, read from the run's
+`similar` artifact. That list is a suggestion; only
 the maintainer decides. CI does refuse an idea with the same line as one
 already listed.
 

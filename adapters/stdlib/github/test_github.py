@@ -152,6 +152,19 @@ def test_the_repos_github_folder_holds():
             "login != 'someone'",
             "changelog job",
         ),
+        # willow-bot reads the similar job's list from its artifact
+        (
+            ".github/workflows/ci.yml",
+            "          name: similar\n",
+            "          name: near\n",
+            "similar job",
+        ),
+        (
+            ".github/workflows/ci.yml",
+            '> "$RUNNER_TEMP/similar.md"',
+            '>> "$GITHUB_STEP_SUMMARY"',
+            "similar job",
+        ),
         # CONST-VIII-2: the weekly run that reaches a person when an
         # emergency amendment expires in a quiet repo
         (".github/workflows/law.yml", "  schedule:\n", "  scheduled:\n", "law.yml"),
