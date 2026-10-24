@@ -6,7 +6,17 @@ name: ci
 # lives in the runner's temp folder: never in the checkout it hashes.
 on:
   push:
+    branches: [main]
   pull_request:
+
+# One run per change. A pull request's runs are its pull_request ones, not
+# its branch's pushes as well, and a newer commit on it cancels the run it
+# replaces: a run on a commit nobody will merge holds a runner every other
+# pull request is queued behind. main's runs are never cancelled.
+# adapters/stdlib/github/github.py check holds both.
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 permissions:
   contents: read
