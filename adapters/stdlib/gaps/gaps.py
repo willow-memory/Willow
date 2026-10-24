@@ -27,7 +27,7 @@ import sys
 from datetime import date
 from pathlib import Path, PurePosixPath
 
-sys.path = [str(Path(__file__).resolve().parents[3]), *sys.path]
+sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 import kernel  # noqa: E402
 
 FEWEST = 4  # dates a log needs before it has a rhythm
