@@ -103,6 +103,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "starter-words": ("starter.py", ["copy", "--to", "{tmp}/words.txt"]),
     "surprise": ("surprise.py", ["--box", "{box}", *NOW]),
     "todo": ("todo.py", ["--box", "{box}"]),
+    "contradictions": ("contradictions.py", ["--box", "{box}"]),
     "timeline": ("timeline.py", ["--box", "{box}", "--to", "{tmp}/timeline.txt", "tomatoes"]),
     "browse": ("browse.py", ["launcher", "--box", "{box}"]),
     "digest": ("digest.py", ["--box", "{box}", *NOW]),
