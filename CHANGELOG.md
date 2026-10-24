@@ -40,6 +40,84 @@ says how). The first was v0.1.0.
 - `demo/php2shell/pipeline.py`, a runner that composes the PHP2Shell method end
   to end (kernel, BM25 and the latent ranker) in one command; a runner, not an
   add-on, and not part of CI. (#35)
+- `web-pages`, a reader for saved web pages, .html and .mhtml: each page's
+  paragraphs, headings and list items as paragraphs, under the address it
+  came from, or `address: not in the file`. (#18)
+- `policy-watch`, an add-on that fetches a terms or policy page each time
+  it runs, through snapshot, and says what changed since the last copy,
+  sentence by sentence, through clauses. (#18)
+- `claim-check`, an add-on that checks a claim against your sources part
+  by part: the passages holding every part, those holding the most short of
+  that with what they lack, and the parts no file names. (#18)
+- `misquote`, an add-on for a quote that is almost in your files: the
+  passage holding most of its words in order, and the words it drops, adds
+  or changes; quote-check's "not there" made specific. (#18)
+- `snapshot`, an add-on that fetches a page or file once into a folder, as
+  it came, with its address, the time and its SHA-256 on a hidden line the
+  kernel never serves; what couldn't be fetched gets its line too, and
+  `check` re-hashes offline. `wayback` finds the Wayback Machine's copy of a
+  page in a window of days, saves it as a snapshot and compares it byte for
+  byte, saying "no capture" and "couldn't reach it" as themselves. (#16)
+- `clauses`, a reader that writes a policy, contract or web page as one
+  sentence a passage (wrapped PDF text joined back, page headings kept), so
+  an answer lands on the clause; `diff` lists two versions' reworded, added
+  and removed sentences. (#16)
+- `demo/google-privacy-2026-10-16`, a real policy change: Google's privacy
+  policy before and after 16 October 2026, asked in the reporters' words,
+  frozen by hash before it ran, with blind rewordings, null questions and an
+  absence test, recorded on a kernel record. 11 of 12 pass rules pass. The
+  sources are fetched once and kept by hash, not in the repo; CI checks only
+  that the frozen files still match. Three ideas from it go on the list:
+  `claim-check`, `misquote` and `policy-watch`. (#16)
+- `gaps`: where a log you keep stops. The days a folder of daily notes, a
+  reading log or a diary skipped are said as gaps: a spacing more than three
+  times the log's typical one. A log with too few dates is said, an undated
+  file beside it is said, and a gap is "no entry written", never "nothing
+  happened". (#30)
+- `timeline`: one matter from your folder (a dispute, an illness, a
+  tenancy), chosen by words, as a dated list of every line of the passages
+  that hold them, each cited by file and line, written to one file to hand
+  on. A line's own date and its file's are both shown when they differ;
+  undated lines are kept, after the dated ones; nothing is merged. (#28)
+- `lending`, what you lent, to whom and when, and which are still out: a
+  thing in parts is out until every part is back, a loan with no return
+  line is "no return written", and a line's own date and its file's are
+  both shown when they differ. (#27)
+- `contradictions`, two lines saying the same thing with a different date
+  or amount, side by side, each cited, neither picked. Two lines are about
+  the same thing when they share two words and half the shorter's; records
+  of one kind (invoices numbered alike, a form's field, a list's items) and
+  lines written on different days are counted and left alone. Dates are the
+  kernel's own reading. (#29)
+- `slow-tests`, an add-on that reads a folder of pytest's JUnit XML files, one
+  per run, and names the slowest tests and files in the latest. It flags a
+  test that got slower by a printed rule (more than 2x and 1 s over the
+  median of its earlier passes), and says, rather than drops, a test that is
+  missing from the latest run or was skipped. Runs go by file name, never by
+  file time; it writes nothing. (#25)
+- `restack`, your branches put back on top of main: each rebased in a
+  scratch worktree, the conflicts in the files the repo makes or only adds
+  to (the add-on list, CHANGELOG.md, FILES.md, `COMMANDS`, the idea list)
+  settled by the repo's own rules and tools, any other one stopping that
+  branch untouched, and nothing moved until `test_docs.py` passes. (#22)
+- `test-shards`, an add-on that splits the test run into parts by each test's
+  time in an earlier run (pytest's JUnit XML), so the CI jobs finish about
+  together. It learns the suite as it is now, places a test with no past
+  time at the median and says so, and prints any one part for a job to run. (#26)
+- `test-impact`, an add-on for maintainers that takes a change (paths from git
+  against a base ref, and any you name) and says which of the repo's checks it
+  can reach, in ci's own gate names, cheapest and closest first: the
+  add-on's tests, `adapters/stdlib/ci/test_contract.py` narrowed to it, the docs test, its
+  mutants. It builds the import graph with `ast` and adds a few written rules
+  for what imports can't show. A change it can't place runs everything, and it
+  always says the full suite still runs after. (#23)
+- `ci-why`, an add-on that reads a red CI log (what `ci.py run` printed, or a
+  job's raw log) and prints only each failing block: the pytest test, its
+  assertion and place, a stale or surviving mutant, a ruff rule and line, a
+  traceback's last frame. It reads the CI record when given one to know which
+  checks failed, never counts an unreachable check as failing, and says
+  "couldn't find a failing block" (exit 42) apart from "the log says it
+  passed". It reads only, and goes nowhere. (#24)
 - `scan`, an add-on that indexes a folder once and then answers a list of
   questions in seconds with the kernel's own answers, narrowing only which
   passages `rank` looks at. It adds `--changed-from` (ask only what changed
@@ -183,6 +261,18 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- `live` has a `chrome` check: a page saved by headless Chrome, over its
+  DevTools pipe with no library, as .mhtml and as drawn, read by web-pages.
+  Its first run found web-pages garbling Chrome's .mhtml, whose page part
+  names no charset; fixed, with a test of Chrome's exact form. (#18)
+- `test-impact` places a demo's test reached by import by its folder, as it
+  places a demo's files, not php2shell's alone; the study's CI row is
+  `demo:google-privacy-2026-10-16`, by that rule. (#16)
+- CI runs once per change: on pushes to main only, so a pull request no
+  longer runs twice (once for its branch's push, once for the pull
+  request), and a newer commit on a pull request cancels the run it
+  replaces; main's runs are never cancelled. `github.py check` holds both.
+  (#31)
 - `adapters/stdlib/mutants/mutants.py` runs each mutant without Python's bytecode cache, so a
   same-size break can no longer run the previous mutant's code and pass as
   a survivor; and it no longer breaks the `__main__` guard, which the

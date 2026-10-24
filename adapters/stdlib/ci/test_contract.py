@@ -64,6 +64,11 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         "Subject: Roof estimate\n\nThe estimate is in.\n").encode()}),
     "notes": ("notes.py", {"garden.md": b"Tomatoes want [[sun]].\n"}),
     "office": ("office.py", {"letter.docx": _docx("The roof is fixed.")}),
+    "web-pages": ("web_pages.py", {"saved.html": (
+        "<!-- saved from url=(0020)https://example.org/ -->\n"
+        "<p>The roof is fixed.</p>\n").encode()}),
+    "clauses": ("clauses.py", {"terms.html": (
+        "<h1>Terms</h1><p>We keep your data. We delete it on request.</p>\n").encode()}),
 }  # fmt: skip
 
 #: a command that works, for each add-on a person runs; {box}, {pile} and
@@ -72,6 +77,7 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
 COMMANDS: dict[str, tuple[str, list[str]]] = {
     "again": ("again.py", ["--box", "{box}"]),
     "aider": ("aider.py", ["--box", "{box}"]),
+    "ci-why": ("ci_why.py", ["--record", "{box}/record.jsonl"]),
     "claude-code": ("hook.py", ["setup", "--box", "{box}"]),
     "codex-cli": ("codex_cli.py", ["--box", "{box}"]),
     "copilot": ("copilot.py", ["--box", "{box}"]),
@@ -90,11 +96,15 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "all": ("all.py", ["--box", "{box}", "tomatoes"]),
     "coming-up": ("coming_up.py", ["--box", "{box}", *NOW]),
     "export": ("export.py", ["--box", "{box}"]),
+    "gaps": ("gaps.py", ["--box", "{box}", *NOW]),
     "on-this-day": ("on_this_day.py", ["--box", "{box}", *NOW]),
     "pipe": ("pipe.py", ["--box", "{box}", *NOW]),
     "plain": ("plain.py", ["bite", "--box", "{box}", *NOW, "tomatoes"]),
     "privacy": ("privacy.py", ["bite", "--box", "{box}", *NOW, "tomatoes"]),
     "quote-check": ("quote_check.py", ["--box", "{box}", "Tomatoes want sun"]),
+    "misquote": ("misquote.py", ["--box", "{box}", "Tomatoes want rain"]),
+    "claim-check": ("claim_check.py", ["--box", "{box}", "tomatoes want sun"]),
+    "policy-watch": ("policy_watch.py", ["--url", "http://127.0.0.1:9/terms", "--to", "{tmp}/w"]),
     "readings": ("readings.py", ["bite", "--box", "{box}", *NOW, "tomatoes"]),
     "advisories": ("advisories.py", ["--box", "{box}"]),
     "outdated": ("outdated.py", ["--box", "{box}"]),
@@ -102,10 +112,17 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "install-scripts": ("install_scripts.py", ["--box", "{box}"]),
     "pins": ("pins.py", ["--box", "{box}"]),
     "scan": ("scan.py", ["index", "--from", "{pile}", "--to", "{tmp}/index"]),
+    "slow-tests": ("slow_tests.py", ["--runs", "{pile}"]),
+    "snapshot": ("snapshot.py", ["check", "--in", "{pile}"]),
+    "wayback": ("wayback.py", ["find", "--url", "https://example.org/", "--to", "{tmp}/w",
+                               "--after", "20261016", "--before", "20261001"]),
     "stale": ("stale.py", ["--box", "{box}"]),
     "starter-words": ("starter.py", ["copy", "--to", "{tmp}/words.txt"]),
     "surprise": ("surprise.py", ["--box", "{box}", *NOW]),
     "todo": ("todo.py", ["--box", "{box}"]),
+    "contradictions": ("contradictions.py", ["--box", "{box}"]),
+    "lending": ("lending.py", ["--box", "{box}"]),
+    "timeline": ("timeline.py", ["--box", "{box}", "--to", "{tmp}/timeline.txt", "tomatoes"]),
     "browse": ("browse.py", ["launcher", "--box", "{box}"]),
     "digest": ("digest.py", ["--box", "{box}", *NOW]),
     **{f"words-{c}": (f"words_{c}.py", ["bite", "--box", "{box}", *NOW, "tomatoes"])
@@ -120,8 +137,11 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "diverge": ("diverge.py", ["{pile}", "{pile}"]),
     "secrets-audit": ("secrets_audit.py", ["--box", "{box}"]),
     "xref": ("xref.py", ["--box", "{box}"]),
+    "test-impact": ("impact.py", ["plan", "README.md"]),
     "print": ("print.py", ["--box", "{box}", "--to", "{tmp}/page.html", *NOW, "tomatoes"]),
     "start": ("start.py", ["--pile", "{pile}", "--to", "{tmp}/willow"]),
+    "test-shards": ("shards.py", ["--shards", "2", "--tests", "{pile}/garden.md"]),
+    "restack": ("restack.py", ["--onto", "HEAD", "HEAD"]),
     **{name: (script, ["mirror", "--from", "{pile}", "--to", "{tmp}/mirror"])
        for name, (script, _) in READERS.items()},
 }  # fmt: skip

@@ -1,0 +1,32 @@
+{
+ "about": "The freeze of demo/google-privacy-2026-10-16: each file's SHA-256 when it was frozen, held by test_google_privacy.py. A change is a new freeze, in its own commit, before the run that needs it. The commit that froze a file is its pre-registration.",
+ "frozen": "2026-10-24",
+ "files": {
+  "sources.json": "6c964bc84a80ead9b3e0b3420e9a3df90cd9dc53443735cf499a38a2e3837c31",
+  "targets.json": "1a682c79cd7537b06f378d2cd118120de4a34142d796edf5af8f021299f84124",
+  "fetch.py": "06804e6623a055d9fde9af3599e512c8f8a90b380be2504332132ae57b88212a",
+  "study.py": "776e2a0778af85737980bef696dbe7e8a724cc3e9154c178728b942169f91240",
+  "questions/blind-claims.txt": "d894bcf6be31cc9cf8a92701fa071226a19f0c8bec8fdec8a535215f544713da",
+  "questions/blind-reporters.txt": "684072e13e9c8b6e7198966d5eb891fe50caf0e896ba19cf788270ce726c058a",
+  "questions/claims.txt": "2de5ac01cd6c2f8d6412c2254e160150120d1b8c5f80d5cc2e35d3c2c8d912fb",
+  "questions/null.txt": "46eea7fcfac90cc7d7f72add2e7af12817afa879eb5d60a29093aa09f7a4e18f",
+  "questions/policy-quotes.txt": "8f830c8d38a1caf03ace5cb154670413fea7433fea7ae491cadb53e9ccd06f84",
+  "questions/reporters.txt": "a24bf80490a4387a1f6dfccc6d197dabdf1c068355d1d5abe408cc198c12e846"
+ },
+ "tools_at_freeze": {
+  "kernel.py": "68dc77b92c24c0171d67ea90da85fc22a51952ee6c4bd59109ca4831e220b5ff",
+  "adapters/stdlib/scan/scan.py": "d93536eb54d14edb86364acbd262e0edbf316460fa9085309a6693d20147ed96",
+  "adapters/stdlib/clauses/clauses.py": "2eb6c0a5b533738bbd25c4319bc0bb62ffc362a54351a57108f891e7a4cae9ec",
+  "adapters/deps/pdf/pdf.py": "854c80d591c568788394bcb8e7449a3851760077a39a2cc6c9e8af060507d523",
+  "adapters/stdlib/quote-check/quote_check.py": "f8dd5e5591490da8fefb3708ec899f906420d0dc6150a823b46001f079715be1",
+  "adapters/stdlib/snapshot/snapshot.py": "3c9f231a13a58e00df16a974a8aab7b77e232c83775aebbc219a29b5f3822d1d",
+  "adapters/stdlib/wayback/wayback.py": "c908180ad7e81b5295610270ae921fe438f1472f074bf76101469fcfac07f407"
+ },
+ "pypdf": "6.17.0",
+ "said_plainly": [
+  "The author read both policy versions, their clause diff and all three articles before writing the questions, targets.json and the pass rules. The hit rule is defined by the change itself, as php2shell's was by the fix.",
+  "The renderings rule was first written over every sentence the clause diff marks changed; a dry run with nonsense questions showed it judging the PDF's joined labels, which no web page holds, so before the freeze it was narrowed to the target clauses. That dry run showed the narrowed rule passing; it asks no question.",
+  "The support groups in targets.json were written knowing the policy's analyze clause exists; the probe rule is there so the absence test is shown able to find support where the policy gives it.",
+  "The quotes in policy-quotes.txt are reported, not judged: the author had already read the shattered.io block quote."
+ ]
+}

@@ -6,7 +6,17 @@ name: ci
 # lives in the runner's temp folder: never in the checkout it hashes.
 on:
   push:
+    branches: [main]
   pull_request:
+
+# One run per change. A pull request's runs are its pull_request ones, not
+# its branch's pushes as well, and a newer commit on it cancels the run it
+# replaces: a run on a commit nobody will merge holds a runner every other
+# pull request is queued behind. main's runs are never cancelled.
+# adapters/stdlib/github/github.py check holds both.
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 permissions:
   contents: read
@@ -198,6 +208,8 @@ jobs:
           @openai/codex@0.164.0 @google/gemini-cli@0.65.0 opencode-ai@1.19.4
           @github/copilot@1.0.103 @anthropic-ai/claude-code@2.1.310
           @modelcontextprotocol/inspector@2.12.0
+      # google-chrome, for the chrome check, comes with the runner's image:
+      # its version is the image's, not pinned here like the rest.
       - run: python adapters/stdlib/ci/ci.py run tools --box ${{ runner.temp }}/ci-record
       - if: always()
         run: python adapters/stdlib/ci/ci.py verify --box ${{ runner.temp }}/ci-record

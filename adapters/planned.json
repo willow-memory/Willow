@@ -381,16 +381,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "ci-why",
-  "kind": "stdlib",
-  "section": "For maintainers",
-  "line": "Why CI went red: the failing block pulled out of the job's log, plain, put where people look.",
-  "source": "bot",
-  "writes": "nothing",
-  "network": "the forge, through the workflow's token, to read the job's log",
-  "tags": "no-install, online, read-only, maintainers"
- },
- {
   "name": "claude",
   "kind": "deps",
   "section": "Assistants",
@@ -513,16 +503,6 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, tracking"
- },
- {
-  "name": "contradictions",
-  "kind": "stdlib",
-  "section": "Trust and proof",
-  "line": "Two passages that disagree about the same date or amount, side by side.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, trust"
  },
  {
   "name": "contribute",
@@ -1443,16 +1423,6 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, interface"
- },
- {
-  "name": "lending",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "Things you lent, to whom and when, and which are still out.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
  },
  {
   "name": "lessons",
@@ -2789,26 +2759,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "slow-tests",
-  "kind": "stdlib",
-  "section": "For maintainers",
-  "line": "Each test's time kept per run, with the slowest named and any that got slower flagged.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, maintainers"
- },
- {
-  "name": "snapshot",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "A web page or data file fetched once into the box, kept under its hash with its licence, so later answers cite the copy.",
-  "source": "bot",
-  "writes": "record",
-  "network": "the address you give, fetched once",
-  "tags": "no-install, online, records, file-reader"
- },
- {
   "name": "socratic",
   "kind": "stdlib",
   "section": "Ways to use it",
@@ -3074,26 +3024,6 @@
   "tags": "no-install, online, read-only, interface"
  },
  {
-  "name": "test-impact",
-  "kind": "stdlib",
-  "section": "For maintainers",
-  "line": "Only the tests a change can reach run first, from the import graph; the full suite still runs after.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, maintainers"
- },
- {
-  "name": "test-shards",
-  "kind": "stdlib",
-  "section": "For maintainers",
-  "line": "The CI test jobs split by each test's past time, so every job finishes about together.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, maintainers"
- },
- {
   "name": "texts",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -3142,16 +3072,6 @@
   "writes": "record",
   "network": "none",
   "tags": "no-install, offline, records, trust"
- },
- {
-  "name": "timeline",
-  "kind": "stdlib",
-  "section": "Trust and proof",
-  "line": "A dated timeline of one matter (a dispute, an illness, a tenancy), every line cited, to hand to a lawyer, doctor or council.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, trust"
  },
  {
   "name": "todays-place",
@@ -3307,16 +3227,6 @@
   "tags": "no-install, offline, writes-output, search"
  },
  {
-  "name": "wayback",
-  "kind": "stdlib",
-  "section": "Trust and proof",
-  "line": "Each web snapshot paired with the Wayback Machine's nearest copy, so anyone can see what the page said that day.",
-  "source": "new",
-  "writes": "record",
-  "network": "archive.org, to find the nearest archived copy",
-  "tags": "no-install, online, records, trust"
- },
- {
   "name": "weather-bet",
   "kind": "stdlib",
   "section": "Play",
@@ -3325,16 +3235,6 @@
   "writes": "record",
   "network": "api.open-meteo.com, to read the forecast and the outcome",
   "tags": "no-install, online, records, play"
- },
- {
-  "name": "web-pages",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Saved web pages, .html and .mhtml, as their readable text, with the address they came from.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
  },
  {
   "name": "welcome",
