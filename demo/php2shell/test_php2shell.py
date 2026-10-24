@@ -355,3 +355,60 @@ def test_phase4s_recall_and_hit_sets():
     served = [pile[3], pile[1], pile[0]]  # a (a hit) is third
     assert phase4.recall_at(served, {"a"}, (1, 3)) == {1: False, 3: True}
     assert phase4.recall_at(served, {"z"}, (1, 3)) == {1: False, 3: False}
+
+
+def test_phase4_grep_matches_brute_force(tmp_path):
+    import subprocess as sp
+    import sys as _s
+
+    import phase4
+
+    root = HERE.parents[1]
+    _s.path.insert(0, str(root / "adapters" / "stdlib" / "scan"))
+    import scan
+
+    files = {
+        "a.c": "memory limit bailout during request\n\nunrelated text here\n",
+        "b.c": "the request bailout path\n",
+        "c.c": "limit the memory again\n",
+        "d.c": "nothing relevant at all\n",
+        "e.c": "memory memory memory limit\n",
+    }
+    src = tmp_path / "src"
+    src.mkdir()
+    for rel, text in files.items():
+        (src / rel).write_text(text)
+    sp.run(
+        [
+            _s.executable,
+            str(root / "adapters/stdlib/scan/scan.py"),
+            "index",
+            "--from",
+            str(src),
+            "--to",
+            str(tmp_path / "ix"),
+        ],
+        check=True,
+        capture_output=True,
+    )
+    ix = scan.Index(tmp_path / "ix")
+
+    def brute(q, top):
+        ws = set(w for w in scan.kernel.words(q) if w not in scan.kernel.FUNCTION)
+        got = [
+            (-len(ws & set(scan.kernel.words(c["text"]))), i)
+            for i, c in enumerate(ix.pile)
+        ]
+        got = [(h, i) for h, i in got if h]
+        return [ix.pile[i] for _, i in sorted(got)][:top]
+
+    for q in (
+        "memory limit bailout",
+        "request path",
+        "the",
+        "memory memory",
+        "nothing relevant",
+    ):
+        fast = [(c["path"], c["line"]) for c in phase4.grep_rank(ix, q, 50)]
+        slow = [(c["path"], c["line"]) for c in brute(q, 50)]
+        assert fast == slow, q

@@ -62,9 +62,14 @@ def grep_rank(ix: scan.Index, question: str, top: int) -> list[dict]:
     kernel's split with its common words dropped; ties keep the index's
     order."""
     ws = set(w for w in kernel.words(question) if w not in kernel.FUNCTION)
+    # a passage holding none of the words scores 0 and never ranks, so only
+    # the index's postings for these words can hold a candidate
+    cand = set()
+    for w in ws:
+        cand |= ix.holding(w)
     got = []
-    for i, c in enumerate(ix.pile):
-        held = len(ws & set(kernel.words(c["text"])))
+    for i in cand:
+        held = len(ws & set(kernel.words(ix.pile[i]["text"])))
         if held:
             got.append((-held, i))
     return [ix.pile[i] for _, i in sorted(got)][:top]
