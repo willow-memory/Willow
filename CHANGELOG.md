@@ -8,6 +8,17 @@ says how). The first was v0.1.0.
 
 ## Unreleased
 
+### Added
+
+- `scan`, an add-on that indexes a folder once and then answers a list of
+  questions in seconds with the kernel's own answers, narrowing only which
+  passages `rank` looks at. It adds `--changed-from` (ask only what changed
+  between two indexes), `--todo`, and `--rank bm25`. (#15)
+- `demo/php2shell`, a real bug worked as a demo: whether asking the changed
+  code points at the PHP2Shell fix, tested seven ways, each frozen by hash
+  before it ran and recorded on a kernel record. Runs go online and are not
+  in CI; CI checks only that the frozen files still match. (#15)
+
 ### Changed
 
 - The changelog check skips Dependabot's pull requests, which can't write
