@@ -139,7 +139,9 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: "3.13"
-      - run: pip install pytest  # the php2shell demo's freeze check is a pytest file
+      # pytest: php2shell's freeze check and Bernadette's stack are pytest files;
+      # pdf's pins, so the stack reads her PDFs as a person with it installed would
+      - run: pip install pytest -r adapters/deps/pdf/requirements.txt
       - run: python adapters/stdlib/ci/ci.py run demo --box ${{ runner.temp }}/ci-record
       - if: always()
         run: python adapters/stdlib/ci/ci.py verify --box ${{ runner.temp }}/ci-record
