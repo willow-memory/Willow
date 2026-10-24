@@ -230,6 +230,8 @@ willow/
 ├── FILES.md                  every file in the repo, and what it is
 ├── ADDONS.md                 every add-on, built and planned, generated from their cards
 ├── CONTRIBUTING.md           the rules every change follows, and how to show it does
+├── AGENTS.md                 for AI agents: what CI catches when CONTRIBUTING is missed
+├── CLAUDE.md                 one line: read AGENTS.md
 ├── CODE_OF_CONDUCT.md        how we treat each other
 ├── SECURITY.md               what counts as a security problem, and how to report it in public
 ├── CHANGELOG.md              what changed, by pull request, and each release
