@@ -266,7 +266,11 @@ def test_a_later_verdict_for_a_gate_replaces_an_earlier_one(tmp_path):
              state="satisfied", files_sha256="0" * 64, said_sha256="0" * 64,
              python="3.13")  # fmt: skip
     got = cli("--record", rec)
-    assert got.returncode == 0 and "nothing failed: 1 satisfied" in got.stdout
+    assert (
+        got.returncode == 42
+        and "nothing failed in the 1 gates on the record" in got.stdout
+    )
+    assert "a record doesn't say whether its run finished" in got.stdout
 
 
 def test_a_record_alone_names_the_failing_gates_but_has_no_block_to_show(tmp_path):
@@ -361,3 +365,75 @@ def test_an_empty_record_is_not_enough_to_say(tmp_path):
     rec = record(tmp_path, {})
     got = cli("--record", rec)
     assert got.returncode == 42 and "no verdicts" in got.stdout
+
+
+CUT = "── tests:kernel\n120 passed in 3.1s\n\n── mutants:again\nagain: 6 of 6 killed, 0 accepted\n\n── mutants:similar\n"
+
+
+def test_a_log_cut_off_before_the_summary_is_never_nothing_failed(tmp_path):
+    got = cli(log(tmp_path, CUT))
+    assert got.returncode == 42
+    assert got.stdout.startswith(
+        "ci-why: no failing block in the 3 gates the log reached"
+    )
+    assert "stops in mutants:similar, before ci.py's summary" in got.stdout
+    rec = record(tmp_path, {"tests:kernel": ("satisfied", None)})
+    got = cli(log(tmp_path, CUT, "c.log"), "--record", rec)
+    assert got.returncode == 42 and "the run was cut off" in got.stdout
+
+
+def test_a_cut_off_log_still_shows_what_failed_and_says_it_was_cut(tmp_path):
+    body = PYTEST_RED.split("\n\ntests:")[0]  # the gates, no summary after them
+    got = cli(log(tmp_path, body + "\n── mutants:similar\n"))
+    assert got.returncode == 42
+    assert "block found; the log stops in mutants:similar" in got.stdout.splitlines()[0]
+
+
+def test_passed_on_the_way_is_not_the_logs_last_word(tmp_path):
+    got = cli(log(tmp_path, "6 passed in 0.10s\n\nrunning the next suite\n"))
+    assert got.returncode == 42
+    assert got.stdout.startswith("ci-why: couldn't find a failing block")
+
+
+def test_an_empty_failing_section_is_said_and_a_missing_one_is_not_empty(tmp_path):
+    empty = cli(
+        log(tmp_path, "── demo:hollis\n\ndemo:hollis        failing  (exit 1)\n")
+    )
+    assert "   the section is empty" in empty.stdout and empty.returncode == 42
+    rec = record(tmp_path, {"lint:check": ("failing", "exit 1")})
+    gone = cli(log(tmp_path, PYTEST_RED, "g.log"), "--record", rec).stdout
+    assert "the section is empty" not in gone
+
+
+def test_an_unknown_shape_shows_exactly_the_last_eight_lines(tmp_path):
+    lines = "".join(f"step {i}\n" for i in range(1, 11))
+    got = cli(
+        log(
+            tmp_path, f"── demo:hollis\n{lines}\ndemo:hollis        failing  (exit 1)\n"
+        )
+    )
+    shown = [
+        x.strip() for x in got.stdout.splitlines() if x.strip().startswith("step ")
+    ]
+    assert shown == [f"step {i}" for i in range(3, 11)]
+
+
+def test_twenty_six_e_lines_are_cut_and_twenty_five_are_not(tmp_path):
+    def run(n: int) -> str:
+        es = "".join(f"E   line {i}\n" for i in range(n))
+        text = ("── tests:docs\n" + "=" * 20 + " FAILURES " + "=" * 20 + "\n"
+                + "_____ test_big _____\n> assert False\n" + es + "x.py:1: AssertionError\n"
+                + "\ntests:docs         failing  (exit 1)\n")  # fmt: skip
+        return cli(log(tmp_path, text, f"{n}.log")).stdout
+
+    assert "E   line 24" in run(25) and "left out" not in run(25)
+    assert "E   ... 3 E lines left out ..." in run(26)
+
+
+def test_a_one_frame_traceback_keeps_its_frame(tmp_path):
+    tb = 'Traceback (most recent call last):\n  File "make.py", line 3, in <module>\n    boom()\nNameError: name \'boom\' is not defined\n'  # fmt: skip
+    got = cli(
+        log(tmp_path, f"── demo:hollis\n{tb}\ndemo:hollis        failing  (exit 1)\n")
+    )
+    assert 'File "make.py", line 3, in <module>' in got.stdout
+    assert "NameError: name 'boom' is not defined" in got.stdout

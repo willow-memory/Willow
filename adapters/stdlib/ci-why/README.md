@@ -53,9 +53,18 @@ said so, with that section's last lines marked as such. A failing check the
 log has no section for is said. "Couldn't find a failing block" is its own
 answer, and so is "the log says it passed".
 
-Exit codes, the kernel's: 0 nothing failed, or every failing check's block
-is printed; 42 couldn't find a failing block for a failing check (or for any
-check, when nothing says which failed), and a record with no verdicts; 2
+**"Nothing failed" takes a whole run.** ci.py prints its summary only once
+every check has run, so a log of checks without one was cut off (a job
+that timed out, a run stopped partway): it is said where the log stops,
+and that nothing can be said of the checks after it. A record alone can't
+say whether its run finished either, so with no log it says what the record
+holds and asks for the log. A bare pytest log passed only when its last
+line says so.
+
+Exit codes, the kernel's: 0 nothing failed in a whole run, or every failing
+check's block is printed; 42 couldn't find a failing block for a failing
+check (or for any check, when nothing says which failed), a run that may
+not be whole, and a record with no verdicts; 2
 refused (no such file, a record that doesn't verify, a bad command line).
 
 **Fetching the log.** This add-on reads what it is given and goes nowhere.

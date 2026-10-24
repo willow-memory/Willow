@@ -30,11 +30,16 @@ failing when it holds one of those shapes.
 
 The first line says which answer it is: `nothing failed` (the log or record
 says every gate passed or couldn't run), `N failing`, or `couldn't find a
-failing block`.
+failing block`. `nothing failed` takes a whole run: ci.py prints its summary
+only once every gate has run, so a log of gates without one was cut off, and
+a record alone can't say whether its run finished; either is said, and is
+not enough to say nothing failed. A bare pytest log passed when its last
+line says so.
 
-Exit codes, the kernel's: 0 nothing failed, or every failing gate's block is
-printed; 42 couldn't find a failing block for a failing gate (or any gate,
-when nothing says which failed); 2 refused (no such file, a record that
+Exit codes, the kernel's: 0 nothing failed in a whole run, or every failing
+gate's block is printed; 42 couldn't find a failing block for a failing gate
+(or any gate, when nothing says which failed), or the run may not be whole;
+2 refused (no such file, a record that
 doesn't verify, a bad command line).
 """
 
@@ -214,18 +219,31 @@ def blocks_of(body: list[str]) -> list[tuple[str, list[str]]]:
 # ── the answer ───────────────────────────────────────────────────────────────
 def why(log: str | None, verdicts: dict) -> tuple[int, list[str]]:
     """(exit code, the lines to print)."""
-    found, summary = sections(clean(log)) if log is not None else ({}, {})
+    lines = clean(log) if log is not None else []
+    found, summary = sections(lines) if log is not None else ({}, {})
+    # ci.py prints its summary only once every gate has run: a log of gates
+    # with none was cut off, and says nothing of the gates after its last
+    cut = next(reversed(found)) if found and "" not in found and not summary else None
     states = verdicts or summary
     if states:
         failing = sorted(g for g, (s, _) in states.items() if s == "failing")
         if not failing:
             n = {k: sum(1 for s, _ in states.values() if s == k) for k in ("satisfied", "unreachable")}  # fmt: skip
             more = f", {n['unreachable']} couldn't run (not a failure)" if n["unreachable"] else ""  # fmt: skip
+            if cut is not None:
+                return kernel.ESCALATE, [f"ci-why: nothing failed in the {len(states)} gates on the record, but the log stops in {cut}, before ci.py's summary: the run was cut off, so nothing can be said of the gates after it"]  # fmt: skip
+            if log is None:
+                return kernel.ESCALATE, [f"ci-why: nothing failed in the {len(states)} gates on the record: {n['satisfied']} satisfied{more}; a record doesn't say whether its run finished, so give its log too"]  # fmt: skip
             return kernel.ALIVE, [f"ci-why: nothing failed: {n['satisfied']} satisfied{more}"]  # fmt: skip
     else:
         failing = [g for g, body in found.items() if blocks_of(body)]
         if not failing:
-            if log is not None and any(PASSED.match(x) for x in clean(log)):
+            if cut is not None:
+                return kernel.ESCALATE, [f"ci-why: no failing block in the {len(found)} gates the log reached, but it stops in {cut}, before ci.py's summary: the run was cut off, so nothing can be said of the gates after it"]  # fmt: skip
+            said = [x for x in lines if x.strip()]
+            if said and PASSED.match(
+                said[-1]
+            ):  # pytest's last word, not one on the way
                 return kernel.ALIVE, ["ci-why: nothing failed: the log says it passed"]  # fmt: skip
             return kernel.ESCALATE, ["ci-why: couldn't find a failing block, and nothing says which gate failed"]  # fmt: skip
     out, missing, count = [], [], 0
@@ -243,17 +261,22 @@ def why(log: str | None, verdicts: dict) -> tuple[int, list[str]]:
             count += 1
         if not blocks:
             missing.append(gate)
-            if body:
-                tail = [x for x in body if x.strip()][-TAIL:]
+            said = [x for x in body if x.strip()] if body is not None else None
+            if said:
                 out.append("   no failure shape this knows; the section's last lines, as printed:")  # fmt: skip
-                out += [f"      {x}" for x in tail]
-            elif body is not None:
-                out.append("   the section is empty")
+                out += [f"      {x}" for x in said[-TAIL:]]
+            elif said is not None:
+                out.append("   the section is empty")  # blank lines are no lines
     names = f" ({', '.join(g or 'log' for g in failing)})" if len(failing) <= 3 else ""
     top = f"ci-why: {len(failing)} failing{names}; {count} block{'s' * (count != 1)} found"  # fmt: skip
     if missing:
         top += f"; couldn't find one for {len(missing)}"
-    return (kernel.ESCALATE if missing else kernel.ALIVE), [top, *out]
+    if cut is not None:
+        top += f"; the log stops in {cut}, before ci.py's summary, so the gates after it are unknown"  # fmt: skip
+    return (kernel.ESCALATE if missing or cut is not None else kernel.ALIVE), [
+        top,
+        *out,
+    ]
 
 
 def main(argv: list[str]) -> int:
