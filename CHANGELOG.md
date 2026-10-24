@@ -18,14 +18,14 @@ says how). The first was v0.1.0.
   record out in plain sentences, places and counts, never the words;
   `print` writes an answer as a page with its sources, and `--large` in big,
   high-contrast type (the large-print idea, as a switch); `words-it` and
-  `words-nl`. (#PR)
+  `words-nl`. (#14)
 - Look after your folder, from what willow-bot already does: `secrets-audit`
   lists passwords, keys and card numbers sitting in plain files by file and
   line, never the value; `changed` keeps what's new, edited or deleted as
   fingerprint rows, the first check whole and each later one only what
   changed; `xref` checks every link and file:line in your files is still
   there; `diverge` finds where two copies part, a backup zip included, by
-  record row, file and line, and never reads a key. (#PR)
+  record row, file and line, and never reads a key. (#14)
 - Play, from what willow-bot already plays: `odds` gives any dice's exact
   chances as fractions, with at-least and bands; `horoscope` reads the day
   by the SHA-256 of name and date, the bot's lines kept for `--coder`;
@@ -34,7 +34,7 @@ says how). The first was v0.1.0.
   one row, its fate named, and `check` plays it again. mutants.py now
   leaves out only a demo's generated life/ folder when it copies the
   repo, not every folder of that name, so an add-on named life is
-  mutated like any other. (#PR)
+  mutated like any other. (#14)
 - Three hundred and thirty-two ideas on the add-on list, nothing built: readers for what
   people use now (Pocket, Instapaper, wallabag, Karakeep, Joplin, jrnl,
   Journiv, WriteFreely, ArchiveBox, Slack, Discord, Signal, Mastodon,
