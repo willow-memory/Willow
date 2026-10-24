@@ -283,5 +283,55 @@
   "writes": "to",
   "network": "the model, downloaded once",
   "tags": "needs-install, online, writes-output, file-reader"
+ },
+ {
+  "name": "start",
+  "kind": "stdlib",
+  "section": "Ways to use it",
+  "line": "First run in one step: asks where your files are, makes the box and key where they belong, copies in the starter words, and prints the double-click launcher.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, interface, everyday"
+ },
+ {
+  "name": "backup",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "Copies your record and your key to a place you choose, checks the copy's chain verifies, and won't put the key beside the box.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, trust, everyday"
+ },
+ {
+  "name": "history",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "Your record in plain sentences: what was asked when, what found nothing, what you approved; places and counts, never the words.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, trust, everyday"
+ },
+ {
+  "name": "words-it",
+  "kind": "stdlib",
+  "section": "Your own words",
+  "line": "Italian common words (\"il\", \"e\").",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, words, italian"
+ },
+ {
+  "name": "words-nl",
+  "kind": "stdlib",
+  "section": "Your own words",
+  "line": "Dutch common words (\"de\", \"en\").",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, words, dutch"
  }
 ]

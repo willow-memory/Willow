@@ -18,18 +18,18 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`█████████████░░░░░░░` **49 of 76 built** · 59 need no install · 17 need one
+`████████████░░░░░░░░` **49 of 81 built** · 64 need no install · 17 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
 | Reading more kinds of files | 7 | 8 | 9 | 6 |
 | Finding things | 4 | 2 | 4 | 2 |
-| Your own words | 5 | 2 | 5 | 2 |
+| Your own words | 5 | 4 | 7 | 2 |
 | Keeping track | 5 | 4 | 9 | 0 |
-| Trust and proof | 2 | 4 | 4 | 2 |
+| Trust and proof | 2 | 6 | 6 | 2 |
 | Privacy and safety | 1 | 1 | 2 | 0 |
 | Assistants | 11 | 2 | 10 | 3 |
-| Ways to use it | 8 | 1 | 8 | 1 |
+| Ways to use it | 8 | 2 | 9 | 1 |
 | Play | 0 | 3 | 2 | 1 |
 | For maintainers | 6 | 0 | 6 | 0 |
 <!-- /willow:pools -->
@@ -94,6 +94,8 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**words-de**](adapters/stdlib/words-de/) — German common words, so questions aren't matched on "der" and "und". *new* `no-install` `offline` `records` `words` `german`
 - [**words-es**](adapters/stdlib/words-es/) — Spanish common words ("el", "y"). *new* `no-install` `offline` `records` `words` `spanish`
 - [**words-fr**](adapters/stdlib/words-fr/) — French common words ("le", "et"). *new* `no-install` `offline` `records` `words` `french`
+- **words-it** (idea) — Italian common words ("il", "e"). *new* `no-install` `offline` `records` `words` `italian`
+- **words-nl** (idea) — Dutch common words ("de", "en"). *new* `no-install` `offline` `records` `words` `dutch`
 - [**words-pt**](adapters/stdlib/words-pt/) — Portuguese common words ("o", "e"). *new* `no-install` `offline` `records` `words` `portuguese`
 
 ### Keeping track
@@ -110,9 +112,11 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 
 ### Trust and proof
 
+- **backup** (idea) — Copies your record and your key to a place you choose, checks the copy's chain verifies, and won't put the key beside the box. *new* `no-install` `offline` `writes-output` `trust` `everyday`
 - **changed** (idea) — What's new, edited or deleted in your folder since the last check, as fingerprint rows. *bot* `no-install` `offline` `records` `trust`
 - **encrypt** (idea) — Keeps the record folder encrypted at rest. Needs cryptography; Apache-2.0 or BSD. *new* `needs-install` `offline` `records` `trust`
 - [**export**](adapters/stdlib/export/) — Approved answers, and the question log (counts only, never words), as Markdown or CSV. *box* `no-install` `offline` `read-only` `trust`
+- **history** (idea) — Your record in plain sentences: what was asked when, what found nothing, what you approved; places and counts, never the words. *new* `no-install` `offline` `read-only` `trust` `everyday`
 - **pgp** (idea) — Signs exports and reports with your PGP key, verifiable anywhere. Needs the gpg program and python-gnupg; BSD. *new* `needs-install` `offline` `writes-output` `trust`
 - **report** (idea) — A self-checking bundle: the record, the approved answers, and a script that re-verifies them on any machine. *box* `no-install` `offline` `writes-output` `trust`
 - [**stale**](adapters/stdlib/stale/) — Approved answers whose cited passage has changed or gone. Citations are content hashes, so it's exact. *box* `no-install` `offline` `read-only` `trust`
@@ -149,6 +153,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - [**plain**](adapters/stdlib/plain/) — Answers as sentences instead of JSON, each with its file and line. *new* `no-install` `offline` `records` `interface`
 - [**shell**](adapters/stdlib/shell/) — A willow command and tab completion for bash, zsh, fish and PowerShell, on Linux, macOS and Windows. *new* `no-install` `offline` `records` `interface`
 - **speak** (idea) — Reads answers aloud. Needs pyttsx3; MPL-2.0. *new* `needs-install` `offline` `read-only` `interface`
+- **start** (idea) — First run in one step: asks where your files are, makes the box and key where they belong, copies in the starter words, and prints the double-click launcher. *new* `no-install` `offline` `writes-output` `interface` `everyday`
 - [**vim**](adapters/stdlib/vim/) — Answers in Vim and Neovim's quickfix list, each a jump to its file and line. *new* `no-install` `offline` `read-only` `interface`
 - [**vscode**](adapters/stdlib/vscode/) — A VS Code task whose answers land in the Problems panel, each a jump to its file and line. *new* `no-install` `offline` `read-only` `interface`
 
