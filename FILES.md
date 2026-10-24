@@ -113,6 +113,10 @@ willow/
 │   │   │   ├── readme.py     builds this README's generated sections from the cards
 │   │   │   ├── test_readme.py
 │   │   │   └── README.md     its card: sections, the draw, what it reads
+│   │   ├── scan/
+│   │   │   ├── scan.py       indexes a folder once, then asks it a list of questions, the kernel's way
+│   │   │   ├── test_scan.py  holds its answers to the kernel's, every ranking vector included
+│   │   │   └── README.md
 │   │   ├── similar/
 │   │   │   ├── similar.py    what's already on the list near a new idea
 │   │   │   ├── test_similar.py

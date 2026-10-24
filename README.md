@@ -56,7 +56,7 @@ can pick up ([CONTRIBUTING.md](CONTRIBUTING.md) says how):
 
 <!-- willow:summary -->
 - **Reading more kinds of files:** PDFs, email, chats, calendars, notes and office files, as text it can search. Built: [books](adapters/stdlib/books/), [calendar](adapters/stdlib/calendar/), [chats](adapters/stdlib/chats/), [mail](adapters/stdlib/mail/), [notes](adapters/stdlib/notes/), [office](adapters/stdlib/office/), [pdf](adapters/deps/pdf/). Ideas: *bank, bookmarks, git-history, health, ocr, photos, sheets, voice*.
-- **Finding things:** more ways to look: every match, this date in past years, an exact quote, by meaning, past typos. Built: [all](adapters/stdlib/all/), [on-this-day](adapters/stdlib/on-this-day/), [quote-check](adapters/stdlib/quote-check/), [surprise](adapters/stdlib/surprise/). Ideas: *meaning, typos*.
+- **Finding things:** more ways to look: every match, this date in past years, an exact quote, by meaning, past typos. Built: [all](adapters/stdlib/all/), [on-this-day](adapters/stdlib/on-this-day/), [quote-check](adapters/stdlib/quote-check/), [scan](adapters/stdlib/scan/), [surprise](adapters/stdlib/surprise/). Ideas: *meaning, typos*.
 - **Your own words:** teaching it the words you use, so a question finds what your files call it. Built: [starter-words](adapters/stdlib/starter-words/). Ideas: *stems, synonyms, words-de, words-es, words-fr, words-pt*.
 - **Keeping track:** dates coming up, numbers over time, to-dos, care logs, invoices, forecasts and flashcards. Built: [again](adapters/stdlib/again/), [coming-up](adapters/stdlib/coming-up/), [readings](adapters/stdlib/readings/), [todo](adapters/stdlib/todo/). Ideas: *care, digest, flashcards, forecasts, invoices*.
 - **Trust and proof:** answers you can check later: exports, stale answers, what changed, signed and encrypted records. Built: [export](adapters/stdlib/export/), [stale](adapters/stdlib/stale/). Ideas: *changed, encrypt, pgp, report*.
@@ -70,11 +70,11 @@ can pick up ([CONTRIBUTING.md](CONTRIBUTING.md) says how):
 <!-- willow:front show=pick week=2026-W43 -->
 **Add-on of the week**
 
-**[todo](adapters/stdlib/todo/)** — TODO, FIXME and "need to" lines across the folder, oldest first.
+**[all](adapters/stdlib/all/)** — Every matching passage, ranked, not just the top three.
 
-*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 26 built add-ons in name order.*
+*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 27 built add-ons in name order.*
 
-[Every add-on, 26 built of 59, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 27 built of 60, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 ## How it works
