@@ -20,7 +20,7 @@ any time.
 - **Verifiable:** the log is a hash chain. Any edit to a past entry is
   detected, and a forged approval is never accepted.
 - **Portable:** reimplemented in Java, TypeScript and C#, and all four are held
-  to the same 4,463 test cases.
+  to the same 4,668 test cases.
 
 **Built to be built on.** Add-ons read more kinds of files (PDFs, email,
 chats, office documents), track what matters (dates coming up, forecasts,
@@ -106,6 +106,7 @@ python kernel.py init    --box DIR --pile FOLDER --key FILE [--words FILE]
 python kernel.py bite    --box DIR "your question"
 python kernel.py propose --box DIR --file SUGGESTIONS.jsonl
 python kernel.py seal    --box DIR proposal:<sha256>
+python kernel.py decline --box DIR proposal:<sha256>
 python kernel.py verify  --box DIR
 python kernel.py out     --box DIR
 python kernel.py test
@@ -117,7 +118,8 @@ python kernel.py test
 | `bite` | answers a question: an approved answer if there is one, else up to three passages from your files |
 | `propose` | takes suggested answers and holds the ones that pass |
 | `seal` | approves one suggestion with your key |
-| `verify` | checks every line of the log and every approval |
+| `decline` | turns one down, with your key: it isn't offered again |
+| `verify` | checks every line of the log, every approval and every No |
 | `out` | lists what is waiting for your approval |
 | `test` | runs the whole cycle in a temporary folder and checks eight properties |
 
@@ -171,8 +173,8 @@ clause and where it is cited, and says why for each it found nothing for.
 
 It matches words, not meanings: ask "who owes me money" when your files say
 "invoice outstanding" and it finds nothing until a words list connects them.
-That, English being built in, the cost of having no index, and locking on
-Windows are in [LIMITS.md](LIMITS.md), with what it doesn't do on purpose
+That, English being built in, and the cost of having no index are in
+[LIMITS.md](LIMITS.md), with what it doesn't do on purpose
 and why ([DECISIONS.md](DECISIONS.md)). Known bugs, each shown by a test,
 are in [BUGS.md](BUGS.md).
 
@@ -193,7 +195,7 @@ words and missed the rest. The full results, misses included, are in
   CI runs the same script on every pull request and every push to main, with the tests on Python 3.9 through
   3.14, and keeps each job's record as an artifact. The verdicts are draft;
   merging is the person's call. See [adapters/stdlib/ci](adapters/stdlib/ci/).
-- **Four implementations, one behaviour.** `vectors/gen.py` reads 4,463 cases
+- **Four implementations, one behaviour.** `vectors/gen.py` reads 4,668 cases
   out of `kernel.py`, covering canonical JSON, word splitting, HTML text,
   ranking, dates, word forms and every refusal. The Java, TypeScript and C#
   ports must give byte-identical answers. Then the same session runs through
@@ -221,7 +223,7 @@ The top of it. [FILES.md](FILES.md) lists every file and what it is, and
 
 ```
 willow/
-├── kernel.py                 the whole program (about 940 lines)
+├── kernel.py                 the whole program (about 1,010 lines)
 ├── test_kernel.py            its tests
 ├── test_docs.py              holds every doc to the files that exist, and the trees to the repo
 ├── test_docs_fires.py        plants a violation for each docs check and makes sure it fails

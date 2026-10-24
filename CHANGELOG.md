@@ -40,6 +40,11 @@ says how). The first was v0.1.0.
 - `demo/php2shell/pipeline.py`, a runner that composes the PHP2Shell method end
   to end (kernel, BM25 and the latent ranker) in one command; a runner, not an
   add-on, and not part of CI. (#35)
+- `kernel.py decline`, the person's No: proved with their key like a seal,
+  it is never offered again by `out`, `browse` or `digest`, and can't be
+  sealed after; `verify` names a No that doesn't prove. On Windows the
+  record is now locked with `msvcrt`. Both were in LIMITS.md, and the three
+  ports do the same. (#32)
 - `hook-fail-closed`, `hook-fuzz`, `hook-pin` and `hook-replay`: a hook
   that crashes, hangs or prints what can't be read blocks the tool instead
   of letting it run; thirteen fixed bad inputs thrown at a hook, each one
@@ -300,6 +305,15 @@ says how). The first was v0.1.0.
 - The changelog check skips Dependabot's pull requests, which can't write
   an entry; its updates aren't listed. The GitHub add-on's check fails if
   it skips anyone else. (#9)
+
+### Fixed
+
+- `kernel.words` composes text (NFC) before it splits it, so an é saved as
+  e and a combining accent, as macOS often saves it, holds the é a person
+  types; before, it split into "cafe" and a stray mark, and the question
+  found nothing. The three ports compose by tables `vectors/gen.py` reads
+  out of Python, so no runtime's Unicode version decides a word, and the
+  vectors hold every composed character decomposed. (#33)
 
 ## v0.1.0 · 2026-10-23
 

@@ -55,6 +55,89 @@ def test_the_whole_loop_on_the_command_line(tmp_path):
     assert "bus" not in text and "Seven" not in text  # hashes and places, never words
 
 
+def test_a_no_is_proved_like_a_seal_and_is_final(tmp_path):
+    """decline: the person's No, an HMAC under their key over "decline" and
+    the subject. out stops offering it, seal refuses it, and a No that
+    doesn't prove is never counted (LIMITS.md asked for this verb)."""
+    pile, box, key = tmp_path / "pile", tmp_path / "box", tmp_path / "keys" / "me.key"
+    pile.mkdir()
+    (pile / "notes.md").write_text("The bus leaves at seven from the square.\n")
+    b = ["--box", str(box), "--now", "2026-10-22T00:00:00Z"]
+    cli("init", *b, "--pile", str(pile), "--key", str(key))
+    got = cli("bite", *b, "when does the bus leave the square")
+    cite = json.loads(got.stdout)["served"][0]["id"]
+    rows = tmp_path / "rows.jsonl"
+    yes = {"path": "bus.md", "data": "Seven.", "cites": [cite], "claim": "notes.md"}
+    no = {**yes, "path": "ferry.md", "data": "Noon."}
+    rows.write_text(json.dumps(yes) + "\n" + json.dumps(no) + "\n")
+    cli("propose", *b, "--file", str(rows))
+    s_yes, s_no = k.subject_of(yes), k.subject_of(no)
+    got = cli("decline", *b, s_no)
+    assert (got.returncode, got.stdout) == (
+        0,
+        f"declined {s_no}; it won't be offered again\n",
+    )
+    row = json.loads((box / "record.jsonl").read_text().splitlines()[-1])
+    assert (row["kind"], row["who"], row["subject"]) == ("decline", "human", s_no)
+    mine, _ = k.read_key(key, box)
+    assert row["proof"] == k.proof(mine, s_no, "decline") != k.proof(mine, s_no)
+    out = cli("out", *b)
+    assert (
+        out.returncode == 42
+        and s_no not in out.stdout
+        and f"waiting on your seal: {s_yes}" in out.stdout
+    )
+    sealed = cli("seal", *b, s_no)
+    assert (
+        sealed.returncode == 2
+        and f"you declined {s_no} at row {row['n']}" in sealed.stderr
+    )
+    assert "declined" in cli("decline", *b, s_no).stderr
+    cli("seal", *b, s_yes)
+    assert "you sealed" in cli("decline", *b, s_yes).stderr
+    assert cli("decline", *b, "proposal:" + "0" * 64).returncode == 2
+    assert cli("out", *b).returncode == 0  # nothing left waiting
+    assert cli("verify", *b).stdout.startswith("the chain holds:")
+    fake = k.append(
+        box,
+        "2026-10-22T00:00:00Z",
+        "decline",
+        who="human",
+        subject=s_yes,
+        proof="0" * 64,
+    )
+    forged = cli("verify", *b)
+    assert forged.returncode == 42
+    assert forged.stdout.endswith(
+        f"decline rows [{fake['n']}] don't prove under your key\n"
+    )
+    rows_now, _ = k.read(box / "record.jsonl")
+    assert set(k.declined(box, rows_now)) == {s_no}  # the forged No counts for nothing
+
+
+def test_on_windows_the_record_is_locked_with_msvcrt(tmp_path, monkeypatch):
+    """No fcntl on Windows: the record's first byte is locked with msvcrt,
+    tried again while another writer holds it, before the row is written."""
+    calls = []
+
+    class Msvcrt:
+        LK_LOCK = 1
+
+        @staticmethod
+        def locking(fd, mode, n):
+            calls.append((mode, n))
+            if len(calls) < 3:
+                raise OSError("held by another writer")
+
+    monkeypatch.setattr(k, "fcntl", None)
+    monkeypatch.setattr(k, "msvcrt", Msvcrt)
+    (tmp_path / "record.jsonl").write_text("")
+    row = k.append(tmp_path, "2026-10-22T00:00:00Z", "boot")
+    assert calls == [(1, 1)] * 3 and row["n"] == 0
+    monkeypatch.setattr(k, "msvcrt", None)  # neither: written without a lock
+    assert k.append(tmp_path, "2026-10-22T00:00:00Z", "boot")["n"] == 1
+
+
 def test_a_strangers_files_are_read_by_what_they_hold_not_their_names(tmp_path):
     """quick-stupids' the-box: the answers lived in TODO, login.php, deploy.bat,
     error_log and a .doc that is plain text, none of them on a list of suffixes."""
@@ -149,12 +232,18 @@ def imports(source: str) -> set[str]:
     return out
 
 
+#: standard library on one system only: the kernel locks with whichever is there
+ONE_PLATFORM = {"fcntl", "msvcrt"}
+
+
 def outside_the_standard_library(names: set[str]) -> set[str]:
     """Those that aren't Python's own: built in, frozen, or under its lib folder."""
     lib = Path(sysconfig.get_paths()["stdlib"]).resolve()
     out = set()
     for name in names:
         if name == "__future__" or name in sys.builtin_module_names:
+            continue
+        if name in ONE_PLATFORM:  # the standard library's, on the other system
             continue
         spec = importlib.util.find_spec(name)
         origin = spec and spec.origin
@@ -396,6 +485,18 @@ def test_word_forms_are_one_word(tmp_path):
     assert k.stem("café") == "café" and k.stem("x1-2") == "x1-2"
     (tmp_path / "loan.md").write_text("Dev: owed 600, paying it back.\n")
     assert k.rank(k.chunks(tmp_path), "how much do I still owe dev")
+
+
+def test_an_accent_typed_one_way_holds_where_it_was_saved_the_other(tmp_path):
+    """é is one code point as typed, and often e plus a combining accent as
+    macOS saves it. Unmixed, the saved é split into "cafe" and a stray mark,
+    and the question found nothing; both are composed (NFC) before words."""
+    composed, apart = "Caf\u00e9 Lumi\u00e8re", "Cafe\u0301 Lumie\u0300re"
+    assert k.words(apart) == k.words(composed) == ["café", "lumière"]
+    (tmp_path / "plans.md").write_text(f"Friday: meet Ana at {apart}, 8pm.\n")
+    (tmp_path / "other.md").write_text("Saturday: the market on Rue Cler.\n")
+    got = k.rank(k.chunks(tmp_path), "when is the meeting at Caf\u00e9 Lumi\u00e8re")
+    assert [c["path"] for c in got] == ["plans.md"]
 
 
 def test_a_day_and_month_either_way_round_only_when_it_cant_be_misread():
