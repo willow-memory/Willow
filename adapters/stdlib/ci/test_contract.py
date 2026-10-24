@@ -71,10 +71,26 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
 #: github) are tested in their own folders.
 COMMANDS: dict[str, tuple[str, list[str]]] = {
     "again": ("again.py", ["--box", "{box}"]),
+    "aider": ("aider.py", ["--box", "{box}"]),
+    "claude-code": ("hook.py", ["setup", "--box", "{box}"]),
+    "codex-cli": ("codex_cli.py", ["--box", "{box}"]),
+    "copilot": ("copilot.py", ["--box", "{box}"]),
+    "cursor": ("cursor.py", ["--box", "{box}"]),
+    "emacs": ("emacs.py", ["--box", "{box}"]),
+    "gemini-cli": ("gemini_cli.py", ["--box", "{box}"]),
+    "jetbrains": ("jetbrains.py", ["--box", "{box}"]),
+    "mcp-lite": ("server.py", ["--box", "{box}"]),
+    "opencode": ("opencode.py", ["--box", "{box}"]),
+    "shell": ("shell.py", ["script", "bash"]),
+    "vim": ("vim.py", ["--box", "{box}"]),
+    "vscode": ("vscode.py", ["--box", "{box}"]),
+    "windsurf": ("windsurf.py", ["--box", "{box}"]),
+    "zed": ("zed.py", ["--box", "{box}"]),
     "all": ("all.py", ["--box", "{box}", "tomatoes"]),
     "coming-up": ("coming_up.py", ["--box", "{box}", *NOW]),
     "export": ("export.py", ["--box", "{box}"]),
     "on-this-day": ("on_this_day.py", ["--box", "{box}", *NOW]),
+    "pipe": ("pipe.py", ["--box", "{box}", *NOW]),
     "plain": ("plain.py", ["bite", "--box", "{box}", *NOW, "tomatoes"]),
     "privacy": ("privacy.py", ["bite", "--box", "{box}", *NOW, "tomatoes"]),
     "quote-check": ("quote_check.py", ["--box", "{box}", "Tomatoes want sun"]),
@@ -93,7 +109,7 @@ def only(names) -> list[str]:
 
 
 def run(script: Path, *argv: str) -> subprocess.CompletedProcess:
-    return subprocess.run([sys.executable, str(script), *argv],
+    return subprocess.run([sys.executable, str(script), *argv], stdin=subprocess.DEVNULL,
                           capture_output=True, text=True)  # fmt: skip
 
 
