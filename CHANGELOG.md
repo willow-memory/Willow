@@ -16,6 +16,32 @@ says how). The first was v0.1.0.
   No answer changes: the vectors regenerate with only the kernel's hash
   different. `similar near` also counts against the entry, so a long new
   line finds a short entry it contains. (#20)
+- `timeline`: one matter from your folder (a dispute, an illness, a
+  tenancy), chosen by words, as a dated list of every line of the passages
+  that hold them, each cited by file and line, written to one file to hand
+  on. A line's own date and its file's are both shown when they differ;
+  undated lines are kept, after the dated ones; nothing is merged. (#28)
+- `lending`, what you lent, to whom and when, and which are still out: a
+  thing in parts is out until every part is back, a loan with no return
+  line is "no return written", and a line's own date and its file's are
+  both shown when they differ. (#27)
+- `contradictions`, two lines saying the same thing with a different date
+  or amount, side by side, each cited, neither picked. Two lines are about
+  the same thing when they share two words and half the shorter's; records
+  of one kind (invoices numbered alike, a form's field, a list's items) and
+  lines written on different days are counted and left alone. Dates are the
+  kernel's own reading. (#29)
+- `slow-tests`, an add-on that reads a folder of pytest's JUnit XML files, one
+  per run, and names the slowest tests and files in the latest. It flags a
+  test that got slower by a printed rule (more than 2x and 1 s over the
+  median of its earlier passes), and says, rather than drops, a test that is
+  missing from the latest run or was skipped. Runs go by file name, never by
+  file time; it writes nothing. (#25)
+- `restack`, your branches put back on top of main: each rebased in a
+  scratch worktree, the conflicts in the files the repo makes or only adds
+  to (the add-on list, CHANGELOG.md, FILES.md, `COMMANDS`, the idea list)
+  settled by the repo's own rules and tools, any other one stopping that
+  branch untouched, and nothing moved until `test_docs.py` passes. (#22)
 - `test-shards`, an add-on that splits the test run into parts by each test's
   time in an earlier run (pytest's JUnit XML), so the CI jobs finish about
   together. It learns the suite as it is now, places a test with no past
