@@ -1,0 +1,8 @@
+# The policy's words as each report quotes them: the text inside its quotation
+# marks or block quote, copied from the saved article. quote-check asks each of
+# the policy before and the policy after: verbatim, same words, or not there.
+# Held to quote-check, verbatim, in the news pile, like reporters.txt.
+# name<TAB>quote
+ti-quote	Drive, Gmail, or Google Photos
+dx-quote	unless you choose to make data from these services available to other Google services that support personalized ads.
+sh-blockquote	We don’t show you personalized ads based on your content from Drive, Gmail, or Photos, unless you choose to make data from these services available to other Google services that support personalized ads.
