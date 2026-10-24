@@ -6,6 +6,8 @@ abstract: >-
   you approved. One Python file, standard library only, with a hash-chained
   log and approvals made with a private key.
 type: software
+version: "0.1.0"
+date-released: "2026-10-23"
 authors:
   - name: The willow contributors
 repository-code: "https://github.com/willow-memory/Willow"
