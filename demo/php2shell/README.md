@@ -255,6 +255,55 @@ Python 3.9 and 3.14 came from `uv`, and .NET 8 from Ubuntu's packages, for
 this run. The verdicts are rows on a kernel record (the chain holds, 25 rows,
 0 sealed).
 
+## Phase 4: before the fix, 2026-10-24
+
+Run by [phase4.py](phase4.py), frozen before it ran. The question October 20
+posed: with no fixed release to compare against, does asking the whole
+vulnerable release point at the code? Each question is ranked over the whole
+release, top 50, three ways, and scored at two levels: a *line* hit (a
+passage the fix changed, rule 2) and a *file* hit (any passage of a file the
+fix changed). The pass rule judges the line level in the top 10, against an
+exact random baseline, for the kernel and BM25 on the blind, new-CVE and
+older-CVE groups.
+
+**Line level**, questions with a hit in the top k, of the group's total:
+
+| Group | Ranker | @3 | @10 | @50 | random expects @10 | p |
+|---|---|---|---|---|---|---|
+| blind (96) | kernel | 3 | 11 | 42 | 0.7 | 10^-10 |
+| blind (96) | BM25 | 8 | 9 | 52 | 0.7 | 10^-8 |
+| blind (96) | grep | 2 | 19 | 40 | 0.7 | 10^-22 |
+| p3 new (16) | kernel | 0 | 2 | 7 | 0.25 | 0.024 |
+| p3 new (16) | BM25 | 2 | 2 | 8 | 0.25 | 0.024 |
+| p3 new (16) | grep | 2 | 5 | 8 | 0.25 | 10^-6 |
+| p3 old (40) | BM25 | 7 | 11 | 21 | 0.1 | 10^-23 |
+
+**File level**, the same, for the blind set of 96: kernel 31 / 50 / 68,
+BM25 26 / 51 / 80, grep 24 / 48 / 69.
+
+**What it says:**
+
+- **Far above chance, at both levels.** Every group beats its random
+  baseline (p well below 0.01 for the blind and older sets); where random
+  expects under one hit in the top 10, the search returns 9 to 19.
+- **Good at the file, weak at the line, as expected.** Over a whole release
+  the top 10 holds a changed *file* about half the time (50 of 96 blind), a
+  changed *line* about one time in five to ten. Without the fix to narrow
+  to, a person gets pointed at the right file and reads it, not handed the
+  line.
+- **The two new CVEs are the weak spot here.** Only the frozen pass rule
+  counts, and both the kernel and BM25 miss it (p = 0.024, just over 0.01);
+  grep passes (p = 10^-6). The group is 16 questions on two bugs, so one or
+  two hits move it; at the file level it is 9 to 11 of 16.
+- **Four of six pass rules pass.** Both failures are the two-new-CVE line
+  level at the strict margin, where grep, not judged, does clear it.
+
+So the honest answer to the pre-disclosure question: on October 20, this
+would have pointed a reader at the handful of files to read, well above
+chance, but rarely at the exact line. The line comes once the fix exists to
+compare against (phases 1 and 3). The verdicts are rows on a kernel record
+(the chain holds, 7 rows, 0 sealed), answers SHA-256 a4340fab.
+
 ## Where each phase stands
 
 | Phase | Status |
@@ -264,7 +313,7 @@ this run. The verdicts are rows on a kernel record (the chain holds, 25 rows,
 | 1, blind questions | done: 4 of 5 pass; the kernel under rule 1 fails (p = 0.022) |
 | 6, reproducibility | done: every check passes |
 | 3, out of sample | done: 4 of 6 pass; BM25 finds all 7 CVEs, the kernel 1 |
-| 4, before the fix | not started |
+| 4, before the fix | done: 4 of 6 pass; above chance everywhere, strong at the file level |
 | 5, robustness | not started |
 
 Results go here, each with the tools' hashes it ran on, misses included.
