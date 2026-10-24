@@ -10,6 +10,50 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- Three hundred and thirty-two ideas on the add-on list, nothing built: readers for what
+  people use now (Pocket, Instapaper, wallabag, Karakeep, Joplin, jrnl,
+  Journiv, WriteFreely, ArchiveBox, Slack, Discord, Signal, Mastodon,
+  Bluesky, Google Takeout, subtitles, AI agents' session files) and tools
+  around those agents (memory-import, line-origin, session-cost,
+  transcript-redact, agents-md-check); willow inside projects its
+  maintainer contributes to (basic-memory, codebase-memory, hermes, mex,
+  redential, sigmap, lessons) and beside their own (almanac, corpus-lens,
+  homestead, jeles, nestor, oakenscroll, quiet-corner, reconciler,
+  safe-app, sap-gate); and for everyday life (family-tree, goodreads,
+  letterboxd, listening, recipes, strava, texts, car, garden, gifts,
+  milestones, pets, school, subscriptions, tax-year, trips, warranties,
+  memoir, in-case, timeline, print, large-print, share); and around the
+  forges: readers for GitHub, GitLab and Forgejo exports, gh's JSON, CI
+  logs and SARIF, codeowners and advisories, willow's repo on gitlab,
+  forgejo and sourcehut, mirror, git-notes, signed-commits, issue-answer,
+  pr-context and quote-review; and around npm, PyPI and crates.io:
+  readers for lockfiles, SBOMs and installed packages' own docs,
+  upgrade-notes, outdated, licenses, provenance, package-contents,
+  install-scripts, typosquat, pins, and the kernel and its ports on pypi,
+  npm, nuget, maven and crates; and a hundred and ten more across the
+  board: readers from Notion, Evernote, Zotero and Jupyter to X, Reddit,
+  Matrix, medical records and shell history; nine more languages' common
+  words; trackers from habits and symptoms to contracts and livestock;
+  notary, witness, sync and forget; desktop, tui, launcher, Telegram,
+  email, braille and Anki; quiz, daily-word and tarot; and fuzz, bench,
+  Go and Swift ports; and twenty-four rebuilt from what willow-bot built
+  by hand: diverge, xref, snapshot, session-seal, retire, lore, rules,
+  game-master, odds, beacon, predictions, joins, market-calls, predict,
+  ladder, scope and code-first from its one script, and horoscope, losc,
+  contribute, contributions, upstream-desk, welcome and ci-why from the
+  bot itself; and fifty-six from willow-bot's own idea list:
+  search rungs (bm25, ripgrep, by-function, code-shape, symbols, rerank,
+  kiwix), the record in the world's formats (merkle, opentimestamps,
+  ids, prov, ro-crate, in-toto, wayback, cloudevents), bets on the
+  world's data (weather, quakes, pageviews, the front page, tides),
+  games with known answers (tic-tac-toe to reversi), and the stupid
+  pile (lunatic, spurious, roll-for-merge); and forty-seven more: for
+  education (Moodle, Canvas and Classroom exports, past papers, lesson
+  plans and standards, gradebook, rubric, support plans, socratic), for
+  speed (index-cache, watch, parallel, warm, quantized, night-batch,
+  fast-tests, test-impact, test-shards, ci-cache, compiled, pypy), and
+  why-not, ask-later, family-box, handoff, box-health, emergency-card
+  and others. (#13)
 - No terminal, no English required: `browse`, your folder in your web
   browser on 127.0.0.1 (ask, read each answer at its file and line, approve
   a suggestion with a click through the kernel's own `seal`; a secret per
