@@ -10,25 +10,36 @@ says how). The first was v0.1.0.
 
 ### Added
 
-- Twenty-two ideas on the add-on list, from what people are using now:
-  readers for Pocket, Instapaper, wallabag, Karakeep, Joplin, jrnl,
+- Sixty-two ideas on the add-on list, nothing built: readers for what
+  people use now (Pocket, Instapaper, wallabag, Karakeep, Joplin, jrnl,
   Journiv, WriteFreely, ArchiveBox, Slack, Discord, Signal, Mastodon,
-  Bluesky, Google Takeout, subtitles and AI agents' session files; and
-  memory-import, line-origin, session-cost, transcript-redact and
-  agents-md-check. Ideas only: nothing is built.
-- Seven ideas for willow inside projects its maintainer has contributed
-  to: basic-memory, codebase-memory (codebase-memory-mcp), hermes (Hermes
-  Agent), mex, redential (redential-cli), sigmap, and lessons (the Emerging
-  Rule community library). Ideas only: nothing is built.
-- Ten ideas for willow beside its maintainer's own projects: almanac,
-  corpus-lens, homestead, jeles, nestor, oakenscroll, quiet-corner,
-  reconciler, safe-app and sap-gate. Ideas only: nothing is built.
-- Twenty-three ideas for everyday life, not for developers: readers for
-  family trees, Goodreads, Letterboxd, Spotify, recipes, Strava and phone
-  texts; trackers for the car, the garden, gifts, a child's milestones,
-  pets, school letters, subscriptions, a tax year, trips and warranties;
-  memoir, in-case, timeline, print, large-print and share. Ideas only:
-  nothing is built.
+  Bluesky, Google Takeout, subtitles, AI agents' session files) and tools
+  around those agents (memory-import, line-origin, session-cost,
+  transcript-redact, agents-md-check); willow inside projects its
+  maintainer contributes to (basic-memory, codebase-memory, hermes, mex,
+  redential, sigmap, lessons) and beside their own (almanac, corpus-lens,
+  homestead, jeles, nestor, oakenscroll, quiet-corner, reconciler,
+  safe-app, sap-gate); and for everyday life (family-tree, goodreads,
+  letterboxd, listening, recipes, strava, texts, car, garden, gifts,
+  milestones, pets, school, subscriptions, tax-year, trips, warranties,
+  memoir, in-case, timeline, print, large-print, share). (#PRNUM)
+- CLI adapters, sixteen add-ons with nothing to install: `pipe` (JSON lines,
+  or grep's file:line: text), `mcp-lite` (the mcp add-on's tools, the
+  protocol by hand), `claude-code` (a prompt hook), `shell` (a willow
+  command and completion for bash, zsh, fish, PowerShell and cmd), the
+  settings that register mcp-lite with Codex CLI, Gemini CLI, Copilot,
+  Cursor, Windsurf, Zed and OpenCode, and pipe's answers in Vim, Emacs, VS
+  Code, JetBrains IDEs and Aider. (#11)
+- `live` runs each way-in add-on through the real program it's for (bash,
+  zsh, fish, PowerShell, Vim, Neovim, Emacs, Node for VS Code's matcher,
+  Codex CLI, Gemini CLI, OpenCode, Copilot CLI, Claude Code and MCP
+  Inspector), in a box under a folder with a space in its name: works,
+  fails, or not here. CI gains a `tools` job that installs each at a pinned
+  version, one gate a check, where a program that isn't there fails the
+  job. Its first run found, fixed here before release: VS Code's matcher
+  misread a passage quoting a file:line of its own, and Claude Code's hook
+  and add line, Aider's run line and JetBrains' parameters split a path
+  with a space. (#11)
 - CI's `similar` job keeps its list of what's near each added idea as the
   run's `similar` artifact, which willow-bot posts in its status comment on
   the pull request; `github.py check` holds the job to it. (#10)
@@ -69,6 +80,10 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- `adapters/stdlib/mutants/mutants.py` runs each mutant without Python's bytecode cache, so a
+  same-size break can no longer run the previous mutant's code and pass as
+  a survivor; and it no longer breaks the `__main__` guard, which the
+  contract test already holds. (#11)
 - The changelog check skips Dependabot's pull requests, which can't write
   an entry; its updates aren't listed. The GitHub add-on's check fails if
   it skips anyone else. (#9)
