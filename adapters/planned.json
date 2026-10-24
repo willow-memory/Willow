@@ -3104,16 +3104,6 @@
   "tags": "no-install, online, read-only, interface"
  },
  {
-  "name": "test-impact",
-  "kind": "stdlib",
-  "section": "For maintainers",
-  "line": "Only the tests a change can reach run first, from the import graph; the full suite still runs after.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, maintainers"
- },
- {
   "name": "texts",
   "kind": "stdlib",
   "section": "Reading more kinds of files",

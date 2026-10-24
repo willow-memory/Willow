@@ -14,6 +14,13 @@ says how). The first was v0.1.0.
   time in an earlier run (pytest's JUnit XML), so the CI jobs finish about
   together. It learns the suite as it is now, places a test with no past
   time at the median and says so, and prints any one part for a job to run. (#26)
+- `test-impact`, an add-on for maintainers that takes a change (paths from git
+  against a base ref, and any you name) and says which of the repo's checks it
+  can reach, in ci's own gate names, cheapest and closest first: the
+  add-on's tests, `adapters/stdlib/ci/test_contract.py` narrowed to it, the docs test, its
+  mutants. It builds the import graph with `ast` and adds a few written rules
+  for what imports can't show. A change it can't place runs everything, and it
+  always says the full suite still runs after. (#23)
 - `ci-why`, an add-on that reads a red CI log (what `ci.py run` printed, or a
   job's raw log) and prints only each failing block: the pytest test, its
   assertion and place, a stale or surviving mutant, a ruff rule and line, a
