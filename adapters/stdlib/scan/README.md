@@ -1,6 +1,6 @@
 <!-- willow-addon
 section: Finding things
-line: Index a big folder once, then ask it a list of questions in seconds, with the kernel's own answers, and see which passages another index lacks.
+line: Index a big folder once, then ask it a list of questions in seconds, with the kernel's own answers: of everything, or only what changed since another index.
 source: box
 added: 2026-10-24
 writes: to
@@ -13,7 +13,7 @@ Index a folder once, then ask it a list of questions in seconds.
 
     python adapters/stdlib/scan/scan.py index --from FOLDER --to INDEX
     python adapters/stdlib/scan/scan.py scan --index INDEX [--index INDEX ...]
-        --questions FILE [--words FILE] [--top N]
+        --questions FILE [--words FILE] [--top N] [--changed-from INDEX] [--todo]
 
 The kernel reads your whole folder on every question, so nothing it says is
 ever stale; the cost is time. On a programming language's source (26,000
@@ -44,6 +44,31 @@ doesn't hold those exact words, and `held_in` each that does. Index two
 releases, two backups or two drafts, and a passage gone from one is one that
 changed there or went. Nothing else is compared.
 
+**Only what changed:** `--changed-from INDEX` asks each question of only
+the passages that INDEX lacks. They are ranked as the kernel ranks a folder
+holding only them (the rare words are rare among them), and dated as they
+are in their own folder, so a log's date heading that didn't change still
+dates the lines under it. Each answer says `"changed_from"`. Ask a release
+`--changed-from` its fix and the questions go to the code the fix replaced;
+ask the fix `--changed-from` the release, and to the code it wrote.
+
+**What the file says isn't right yet:** `--todo` adds to each passage
+served the lines its file marks to do, by the [todo](../todo/) add-on's own
+marks (TODO, FIXME, "need to", ...), each with its file and line:
+
+    "marked": [{"where": "ext/session/session.c:114", "text": "/* TODO: …"}]
+
+**What it was built for:** PHP2Shell, October 2026. Sixteen PHP releases,
+5.6 to 8.5, indexed at about 50 seconds each; eight questions in the
+advisories' words, asked of all sixteen, in under two minutes (through the
+kernel, about three hours). Asked of the whole of each release it found
+where the bugs live, PHP's multipart parser (rfc1867.c) and its session code, back to
+5.6. Asked `--changed-from` each fix, it found what the fix replaced: the
+allocator's out-of-memory raise, `add_post_var`'s loop, the multipart
+parser's registration, and the session's upload-progress handler. And
+`--todo` put beside them a TODO in the session's per-request reset, there
+since 2016, that the fix took out.
+
 **What an index is:** three files in `--to`: chunks.jsonl (each passage
 and its date), words.tsv (each word and its passages) and index.json
 (how many, which kernel, and a hash of the passages), written last. It holds
@@ -57,7 +82,7 @@ its index.json.
 folder had nothing to read; 2 refused.
 
 **Uses:** the kernel's `chunks`, `toks`, `dates`, `rank`, `words`, `stem`,
-`echo`, `parse_words`, `canon` and `h256`. For one call it lifts the
+`echo`, `parse_words`, `canon` and `h256`, and the todo add-on's `MARK`. For one call it lifts the
 kernel's `TOP` to `--top`, as [all](../all/) does, and answers `dates` from
 the index, then puts both back; `kernel.py` is never changed.
 

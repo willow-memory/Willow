@@ -286,6 +286,112 @@ def test_a_scan_refuses_before_printing_anything(tmp_path):
     assert got.returncode == 2 and "holds no question" in got.stderr
 
 
+#: FOLDER, a release later: passages edited, one added, one gone, a date
+#: heading kept above an edited line, and two copies edited alike
+LATER = {
+    **{k: v for k, v in FOLDER.items() if k != "invoice.md"},
+    "garden.md": "Tomatoes want six hours of sun.\n\nWater tomatoes at dawn.\n",
+    "diary.md": "2021-05-14\n\nPaid the vet.\n\n2023-02-01\n\nPaid the vet three times.\n",
+    "a/memo.txt": "Order jars and lids for the honey.\n",
+    "b/memo.txt": "Order jars and lids for the honey.\n",
+    "care/2026-02-02.md": "Dad's weight 74 kg; paid the clinic.\n",
+}
+
+
+def test_changed_from_is_the_kernel_on_only_what_changed(tmp_path):
+    for name, files in (("old", FOLDER), ("new", LATER)):
+        write(tmp_path / name, files)
+        run(
+            "index",
+            "--from",
+            str(tmp_path / name),
+            "--to",
+            str(tmp_path / f"ix-{name}"),
+        )
+    new = kernel.chunks(tmp_path / "new")
+    before = {c["id"] for c in kernel.chunks(tmp_path / "old")}
+    day = {id(c): d for c, d in zip(new, kernel.dates(new))}
+    changed = [c for c in new if c["id"] not in before]
+    assert len(changed) == 5
+    ix = scan.Index(tmp_path / "ix-new")
+    for q in [*QUESTIONS, "jars lids honey", "paid vet times", "dad paid clinic"]:
+        for top in (3, 10**9):
+            top_was, dates_was = kernel.TOP, kernel.dates
+            kernel.TOP, kernel.dates = top, lambda pile: [day[id(c)] for c in pile]
+            try:
+                want = kernel.rank(changed, q, WORDS)
+            finally:
+                kernel.TOP, kernel.dates = top_was, dates_was
+            got = ix.rank(q, WORDS, top, before)
+            assert [(c["path"], c["line"]) for c in got] == [
+                (c["path"], c["line"]) for c in want
+            ], (q, top)
+    paid = ix.rank("paid the vet", {}, 3, before)
+    assert [c["path"] + ":" + str(c["line"]) for c in paid] == [
+        "diary.md:7",  # dated 2023 by a heading that didn't change
+        "care/2026-02-02.md:1",
+    ]
+    jars = ix.rank("order jars", {}, 3, before)
+    assert [c["path"] for c in jars] == ["a/memo.txt"]  # two copies, served once
+
+
+def test_changed_from_on_the_command_line(tmp_path):
+    for name, files in (("old", FOLDER), ("new", LATER)):
+        write(tmp_path / name, files)
+        run(
+            "index",
+            "--from",
+            str(tmp_path / name),
+            "--to",
+            str(tmp_path / f"ix-{name}"),
+        )
+    (tmp_path / "q").write_text(
+        "w\twater tomatoes\nn\tnothing changed about civic owner\n"
+    )
+    ask = ["scan", "--index", str(tmp_path / "ix-new"), "--index", str(tmp_path / "ix-old"),
+           "--questions", str(tmp_path / "q"), "--changed-from", str(tmp_path / "ix-old")]  # fmt: skip
+    got = run(*ask)
+    assert got.returncode == 0, got.stderr
+    rows = [json.loads(line) for line in got.stdout.splitlines()]
+    assert [(r["index"], r["question"], r["changed_from"], r["state"]) for r in rows] == [
+        ("ix-new", "w", "ix-old", "populated"), ("ix-new", "n", "ix-old", "empty"),
+        ("ix-old", "w", "ix-old", "empty"), ("ix-old", "n", "ix-old", "empty"),
+    ]  # fmt: skip
+    [water] = rows[0]["served"]
+    assert water["where"] == "garden.md:3" and water["gone_from"] == ["ix-old"]
+    plain = run(*ask[:-2])  # without it, the unchanged first paragraph is served too
+    served = json.loads(plain.stdout.splitlines()[0])["served"]
+    assert [s["where"] for s in served][:2] == ["garden.md:3", "garden.md:1"]
+    got = run(*ask[:-1], str(tmp_path / "nope"))
+    assert got.returncode == 2 and "not an index" in got.stderr and not got.stdout
+
+
+def test_todo_lists_what_the_served_file_marks(tmp_path):
+    write(tmp_path / "f", {
+        "session.c": "static void reset(void)\n{\n\t/* TODO: these should be reset\n"
+                     "\t   at shutdown, always */\n\tstate = 0;\n}\n\n"
+                     "void cleanup(void) { state = 0; } // FIXME: twice\n",
+        "other.c": "/* TODO: not this file */\nint state;\n",
+        "plain.c": "int reset_state;\n",
+    })  # fmt: skip
+    run("index", "--from", str(tmp_path / "f"), "--to", str(tmp_path / "ix"))
+    (tmp_path / "q").write_text("reset state\n")
+    ask = ["scan", "--index", str(tmp_path / "ix"), "--questions", str(tmp_path / "q")]
+    row = json.loads(run(*ask, "--todo").stdout)
+    [first] = [s for s in row["served"] if s["where"] == "session.c:1"]
+    assert first["marked"] == [
+        {"where": "session.c:3", "text": "/* TODO: these should be reset"},
+        {
+            "where": "session.c:8",
+            "text": "void cleanup(void) { state = 0; } // FIXME: twice",
+        },
+    ]
+    assert all(
+        s["marked"] == [] for s in row["served"] if s["where"].startswith("plain")
+    )
+    assert all("marked" not in s for s in json.loads(run(*ask).stdout)["served"])
+
+
 @pytest.mark.parametrize(
     "argv",
     [
@@ -297,6 +403,9 @@ def test_a_scan_refuses_before_printing_anything(tmp_path):
         ["scan", "--index", "i", "--questions", "q", "--top", "x"],
         ["scan", "--index", "i", "--questions", "q", "--to", "t"],
         ["scan", "--index", "i", "--questions", "q", "--questions", "r"],
+        ["scan", "--index", "i", "--questions", "q", "--todo", "--todo"],
+        ["scan", "--index", "i", "--questions", "q", "--changed-from"],
+        ["index", "--from", "f", "--to", "t", "--todo"],
     ],
 )  # fmt: skip
 def test_a_bad_command_line_is_refused(argv, tmp_path):

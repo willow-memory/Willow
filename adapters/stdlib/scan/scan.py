@@ -2,7 +2,7 @@
 
     python adapters/stdlib/scan/scan.py index --from FOLDER --to INDEX
     python adapters/stdlib/scan/scan.py scan --index INDEX [--index INDEX ...]
-        --questions FILE [--words FILE] [--top N]
+        --questions FILE [--words FILE] [--top N] [--changed-from INDEX] [--todo]
 
 The kernel reads the whole folder on every question; that is its promise and
 its cost. A large folder (a programming language's source, 400,000
@@ -23,6 +23,16 @@ and `#` lines are skipped. Each answer is one JSON line:
 A passage's id is the SHA-256 of its text, so asked of two indexes (two
 releases, two backups) `gone_from` names each other index without those exact
 words: the words changed there, or went. Nothing else is compared.
+
+--changed-from INDEX asks each question of only the passages that INDEX
+lacks: what changed since it, or before it. They are ranked as the kernel
+ranks a folder holding only them, and dated as they are in their own folder
+(a log's date heading that didn't change still dates the lines under it).
+Index a release and its fix, and the questions are asked of the fix.
+
+--todo adds, to each passage served, the lines its file marks to do, by the
+todo add-on's own marks (TODO, FIXME, "need to", ...): what the file's
+authors wrote down as not yet right, beside what was found.
 
 An index is the folder as it was read: index again after the folder
 changes. One made with another kernel.py is refused, since its passages,
@@ -45,7 +55,9 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "todo"))
 import kernel  # noqa: E402
+import todo  # noqa: E402
 
 FORMAT = "willow-scan/1"
 FILES = ("chunks.jsonl", "words.tsv", "index.json")  # index.json last: it means done
@@ -107,8 +119,10 @@ class Index:
         for c in self.pile:
             self.day[id(c)] = c.pop("date")
         self.copies: dict[str, list[int]] = {}
+        self.files: dict[str, list[int]] = {}
         for i, c in enumerate(self.pile):
             self.copies.setdefault(c["id"], []).append(i)
+            self.files.setdefault(c["path"], []).append(i)
         self.words = {}
         with open(at / "words.tsv", encoding="utf-8") as f:
             for line in f:
@@ -118,11 +132,14 @@ class Index:
     def holding(self, t: str) -> set[int]:
         return set(map(int, self.words.get(t, "").split()))
 
-    def near(self, question: str, alias: dict) -> list[dict]:
+    def near(
+        self, question: str, alias: dict, lacked_by: set | None = None
+    ) -> list[dict]:
         """The passages holding enough of the question's words for `rank` to
         keep them, each word held the way the kernel's `held_by` holds it,
         with every copy of each one's text, since `rank` counts a text's
-        copies across the whole folder."""
+        copies across the whole folder. With `lacked_by`, a set of ids, only
+        the passages whose ids it lacks, and so only their copies."""
         want = set(kernel.words(question)) - kernel.FUNCTION
         count: dict[int, int] = {}
         for w in want:
@@ -136,17 +153,31 @@ class Index:
             for i in got:
                 count[i] = count.get(i, 0) + 1
         kept = [i for i, n in count.items() if n >= kernel.HOLD * len(want)]
+        if lacked_by is not None:
+            kept = [i for i in kept if self.pile[i]["id"] not in lacked_by]
         every = {j for i in kept for j in self.copies[self.pile[i]["id"]]}
         return [self.pile[i] for i in sorted(every)]
 
-    def rank(self, question: str, alias: dict, top: int) -> list[dict]:
+    def rank(
+        self, question: str, alias: dict, top: int, lacked_by: set | None = None
+    ) -> list[dict]:
         top_was, dates_was = kernel.TOP, kernel.dates
         kernel.TOP = top
         kernel.dates = lambda pile: [self.day[id(c)] for c in pile]
         try:
-            return kernel.rank(self.near(question, alias), question, alias)
+            near = self.near(question, alias, lacked_by)
+            return kernel.rank(near, question, alias)
         finally:
             kernel.TOP, kernel.dates = top_was, dates_was
+
+    def marked(self, path: str) -> list[dict]:
+        """The lines `path` marks to do, by the todo add-on's marks."""
+        return [
+            {"where": f"{path}:{c['line'] + n}", "text": line.strip()[:120]}
+            for c in (self.pile[i] for i in self.files.get(path, []))
+            for n, line in enumerate(c["text"].splitlines())
+            if todo.MARK.search(line)
+        ]
 
 
 def questions(text: str) -> list[tuple[str, str]]:
@@ -159,7 +190,14 @@ def questions(text: str) -> list[tuple[str, str]]:
     return out
 
 
-def scan(paths: list[Path], qs: list[tuple[str, str]], alias: dict, top: int) -> int:
+def scan(
+    paths: list[Path],
+    qs: list[tuple[str, str]],
+    alias: dict,
+    top: int,
+    base: Path | None = None,
+    marks: bool = False,
+) -> int:
     """Print each answer of each index; the kernel's exit code over them all."""
     names = [p.name for p in paths]
     if len(set(names)) != len(names):
@@ -167,13 +205,15 @@ def scan(paths: list[Path], qs: list[tuple[str, str]], alias: dict, top: int) ->
     # every index checked, and its ids kept, before a line is printed; then
     # one whole index in memory at a time
     ids = {p.name: {c["id"] for c in passages(p)} for p in paths}
+    lacked_by = None if base is None else {c["id"] for c in passages(base)}
     held = False
     for p in paths:
         ix = Index(p)
         others = [n for n in names if n != ix.name]
         for name, q in qs:
-            served = [
-                {
+            served = []
+            for i, c in enumerate(ix.rank(q, alias, top, lacked_by), 1):
+                s = {
                     "rank": i,
                     "where": f"{c['path']}:{c['line']}",
                     "id": c["id"],
@@ -182,12 +222,15 @@ def scan(paths: list[Path], qs: list[tuple[str, str]], alias: dict, top: int) ->
                     "held_in": [n for n in others if c["id"] in ids[n]],
                     "gone_from": [n for n in others if c["id"] not in ids[n]],
                 }
-                for i, c in enumerate(ix.rank(q, alias, top), 1)
-            ]
+                if marks:
+                    s["marked"] = ix.marked(c["path"])
+                served.append(s)
             held = held or bool(served)
             state = "populated" if served else "empty"
-            row = {"index": ix.name, "question": name, "state": state, "served": served}
-            print(json.dumps(row, ensure_ascii=False))
+            row = {"index": ix.name, "question": name, "state": state}
+            if base is not None:
+                row["changed_from"] = base.name
+            print(json.dumps({**row, "served": served}, ensure_ascii=False))
     return kernel.ALIVE if held else kernel.ESCALATE
 
 
@@ -202,9 +245,13 @@ def main(argv: list[str]) -> int:
     cmd, opts, it = argv[0], {}, iter(argv[1:])
     takes = {
         "index": {"--from", "--to"},
-        "scan": {"--index", "--questions", "--words", "--top"},
+        "scan": {"--index", "--questions", "--words", "--top", "--changed-from"},
     }
+    flags = {"scan": {"--todo"}}.get(cmd, set())
     for a in it:
+        if a in flags and a not in opts:
+            opts[a] = True
+            continue
         v = next(it, "")
         if a not in takes[cmd] or not v or (a in opts and a != "--index"):
             return usage()
@@ -251,7 +298,9 @@ def main(argv: list[str]) -> int:
                 raise ValueError(why)
         if not qs:
             raise ValueError(f"{opts['--questions']} holds no question")
-        return scan([Path(p) for p in opts["--index"]], qs, alias, int(top))
+        base = Path(opts["--changed-from"]) if "--changed-from" in opts else None
+        paths = [Path(p) for p in opts["--index"]]
+        return scan(paths, qs, alias, int(top), base, "--todo" in opts)
     except (OSError, ValueError) as e:
         print(f"refused: {e}", file=sys.stderr)
         return kernel.REFUSED
