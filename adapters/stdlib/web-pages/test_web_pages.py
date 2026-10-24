@@ -132,3 +132,13 @@ def test_a_chrome_mhtml_whose_part_names_no_charset_is_read_as_its_page_says():
         "Content-Type: text/html\r\n", "Content-Type: text/html; charset=nope\r\n"
     )
     assert web_pages.mhtml(bad.encode()) is None
+
+
+def test_the_mark_of_the_webs_zone_marker_is_not_an_address():
+    marked = "<!-- saved from url=(0014)about:internet -->\n"
+    canon = '<link rel="canonical" href="https://a.example/">'
+    assert web_pages.address(marked + canon) == "https://a.example/"
+    assert web_pages.address(marked + "<p>Hi.</p>") == ""
+    assert web_pages.address("<!-- saved from url=(0018)https://b.example/ -->") == (
+        "https://b.example/"
+    )

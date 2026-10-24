@@ -31,7 +31,8 @@ a first line saying where the page came from, then the page's blocks
 on the paragraph that says it.
 
 **Where it came from** is the first of: the `saved from url=` note a
-browser writes into an .html it saves; an .mhtml's
+browser writes into an .html it saves (Internet Explorer's Mark of the Web),
+except `about:internet`, which marks a zone, not an address; an .mhtml's
 `Snapshot-Content-Location`, or its page's `Content-Location`; the page's
 canonical link; its `og:url`. A page that says none of these gets
 `address: not in the file`, never a guess.
@@ -49,6 +50,12 @@ page it can't read is skipped and counted.
 [demo/google-privacy-2026-10-16](../../../demo/google-privacy-2026-10-16/),
 saved as fetched: each came out as its own paragraphs (220, 336 and 349 of
 them), under the address its canonical link gives.
+
+**Which browser saved it:** Chrome and Edge save .mhtml; Firefox saves
+only .html, without a saved-from note, so a page Firefox saved gets its
+address from the page's canonical link or og:url, if it has one. A "complete"
+save puts the page's files in a folder beside it; an .html there (a frame)
+is read as a page of its own.
 
 **Can't:** run a page's scripts, so text a page only draws with JavaScript
 isn't there; or keep a page's pictures. A page's menus and footers come out

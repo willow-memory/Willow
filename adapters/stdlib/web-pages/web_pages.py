@@ -13,8 +13,9 @@ paragraph each, so an answer lands on the paragraph that says it.
     address: https://example.org/terms
 
 The address is the first of: the `saved from url=` note a browser writes in
-an .html it saves; an .mhtml's `Snapshot-Content-Location` or its page's
-`Content-Location`; the page's canonical link; its `og:url`. A page that
+an .html it saves (not `about:internet`, Internet Explorer's zone marker);
+an .mhtml's `Snapshot-Content-Location` or its page's `Content-Location`;
+the page's canonical link; its `og:url`. A page that
 says none of them gets `address: not in the file`, never a guess.
 
 A page is read as UTF-8, or as the charset its own `<meta charset>` names
@@ -92,9 +93,11 @@ def mhtml(raw: bytes) -> tuple[str, str] | None:
 
 
 def address(page: str, said: str = "") -> str:
-    """Where the page came from, by the first thing that says so."""
+    """Where the page came from, by the first thing that says so. A
+    saved-from note of `about:internet` is Internet Explorer's zone marker
+    (the Mark of the Web), not an address, so it says nothing here."""
     m = SAVED.search(page[:4096])
-    if m:
+    if m and not m.group(1).lower().startswith("about:"):
         return m.group(1)
     if said:
         return said
