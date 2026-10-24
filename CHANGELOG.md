@@ -16,7 +16,7 @@ says how). The first was v0.1.0.
   add-on's tests, `adapters/stdlib/ci/test_contract.py` narrowed to it, the docs test, its
   mutants. It builds the import graph with `ast` and adds a few written rules
   for what imports can't show. A change it can't place runs everything, and it
-  always says the full suite still runs after.
+  always says the full suite still runs after. (#23)
 - `scan`, an add-on that indexes a folder once and then answers a list of
   questions in seconds with the kernel's own answers, narrowing only which
   passages `rank` looks at. It adds `--changed-from` (ask only what changed
