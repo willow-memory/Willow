@@ -39,6 +39,26 @@ def test_near_serves_a_built_add_on_and_an_idea_with_the_words_they_share():
     assert "**ocr**, an idea already on the list." in lines
 
 
+def test_a_long_line_still_finds_the_short_entry_it_contains():
+    """A new line that holds half of an entry's words is near it, though
+    the kernel, counting half of the new line's words, serves nothing: the
+    symbols idea went on the list twice that way."""
+    every = [
+        idea("symbols", "Exact definitions and references for Python code: "
+             "where a name is defined, and every place it's used."),
+        idea("bank", "Bank CSV statements as dated lines."),
+    ]  # fmt: skip
+    every = [{**a, "tags": ""} for a in every]
+    line = ("Exact definitions and references in code from a SCIP index, so where "
+            "is this defined is answered by the compiler's view, not by matching words.")  # fmt: skip
+    assert sim.kernel.rank(sim.pile(every), line) == []
+    found = sim.near(every, line)
+    assert [a["name"] for a, _ in found] == ["symbols"]
+    assert {"code", "definitions", "exact", "references"} <= set(found[0][1])
+    assert sim.near(every, "statements") == [(every[1], ["statements"])]
+    assert sim.near(every, "dated sea shells") == []  # one shared word is never near
+
+
 def test_an_entry_is_never_near_itself():
     every = sim.entries()
     pdf = next(a for a in every if a["name"] == "pdf")
