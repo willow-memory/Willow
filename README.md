@@ -20,7 +20,7 @@ any time.
 - **Verifiable:** the log is a hash chain. Any edit to a past entry is
   detected, and a forged approval is never accepted.
 - **Portable:** reimplemented in Java, TypeScript and C#, and all four are held
-  to the same 4,463 test cases.
+  to the same 4,668 test cases.
 
 **Built to be built on.** Add-ons read more kinds of files (PDFs, email,
 chats, office documents), track what matters (dates coming up, forecasts,
@@ -61,7 +61,7 @@ can pick up ([CONTRIBUTING.md](CONTRIBUTING.md) says how):
 - **Keeping track:** dates coming up, numbers over time, to-dos, care logs, invoices, forecasts and flashcards. Built: [again](adapters/stdlib/again/), [coming-up](adapters/stdlib/coming-up/), [digest](adapters/stdlib/digest/), [gaps](adapters/stdlib/gaps/), [lending](adapters/stdlib/lending/), [policy-watch](adapters/stdlib/policy-watch/), [readings](adapters/stdlib/readings/), [todo](adapters/stdlib/todo/). Ideas: *ask-later, attendance, baby-log, budget, car, care, contracts, crowd, cycle, debts, flashcards, foia, food-log, forecasts, garden, gifts, gradebook, grant-report, habits, home-upkeep, hours, inventory, invoices, job-hunt, lab-notebook, livestock, market-calls, mileage, milestones, minutes, mood, oakenscroll, outdated, pets, predict, reading-log, renewals, rubric, school, session-cost, subscriptions, support-plan, syllabus, symptoms, tax-year, trips, upstream-desk, warranties*.
 - **Trust and proof:** answers you can check later: exports, stale answers, what changed, signed and encrypted records. Built: [backup](adapters/stdlib/backup/), [changed](adapters/stdlib/changed/), [claim-check](adapters/stdlib/claim-check/), [contradictions](adapters/stdlib/contradictions/), [diverge](adapters/stdlib/diverge/), [export](adapters/stdlib/export/), [history](adapters/stdlib/history/), [stale](adapters/stdlib/stale/), [timeline](adapters/stdlib/timeline/), [wayback](adapters/stdlib/wayback/), [xref](adapters/stdlib/xref/). Ideas: *box-health, encrypt, family-box, git-notes, handoff, ids, in-case, in-toto, jeles, licenses, line-origin, losc, merkle, mirror, nestor, notary, opentimestamps, paper-key, pgp, prov, provenance, quote-review, redential, report, retire, ro-crate, sap-gate, session-seal, signed-commits, sync, thesis, time-capsule, witness*.
 - **Privacy and safety:** phone numbers, card numbers and keys hidden in answers, or found sitting in files. Built: [privacy](adapters/stdlib/privacy/), [secrets-audit](adapters/stdlib/secrets-audit/). Ideas: *a11y-check, advisories, forget, install-scripts, kids, package-contents, pii-audit, scrub, student-records, transcript-redact, typosquat*.
-- **Assistants:** AI assistants that can ask and suggest, but never approve. Built: [aider](adapters/stdlib/aider/), [claude-code](adapters/stdlib/claude-code/), [codex-cli](adapters/stdlib/codex-cli/), [copilot](adapters/stdlib/copilot/), [cursor](adapters/stdlib/cursor/), [gemini-cli](adapters/stdlib/gemini-cli/), [mcp](adapters/deps/mcp/), [mcp-lite](adapters/stdlib/mcp-lite/), [opencode](adapters/stdlib/opencode/), [windsurf](adapters/stdlib/windsurf/), [zed](adapters/stdlib/zed/). Ideas: *assistant-scores, basic-memory, cassettes, claude, hermes, hook-checks, hook-cite, hook-compact, hook-errors, hook-fail-closed, hook-feedback, hook-fuzz, hook-guard, hook-handoff, hook-impact, hook-leaks, hook-pin, hook-read-first, hook-replay, hook-sequence, hook-shell, hook-start, hook-stop, hook-tiers, hooks-elsewhere, instruction-files, issue-answer, ladder, local-model, mcp-by-hash, memory-import, mex, model-fit, night-batch, openai-compatible, persona-card, plain-language, quantized, same-way, schema-check, scope, second-opinion, silence-log, translate*.
+- **Assistants:** AI assistants that can ask and suggest, but never approve. Built: [aider](adapters/stdlib/aider/), [claude-code](adapters/stdlib/claude-code/), [codex-cli](adapters/stdlib/codex-cli/), [copilot](adapters/stdlib/copilot/), [cursor](adapters/stdlib/cursor/), [gemini-cli](adapters/stdlib/gemini-cli/), [hook-fail-closed](adapters/stdlib/hook-fail-closed/), [hook-fuzz](adapters/stdlib/hook-fuzz/), [hook-pin](adapters/stdlib/hook-pin/), [hook-replay](adapters/stdlib/hook-replay/), [mcp](adapters/deps/mcp/), [mcp-lite](adapters/stdlib/mcp-lite/), [opencode](adapters/stdlib/opencode/), [windsurf](adapters/stdlib/windsurf/), [zed](adapters/stdlib/zed/). Ideas: *assistant-scores, basic-memory, cassettes, claude, hermes, hook-checks, hook-cite, hook-compact, hook-errors, hook-feedback, hook-guard, hook-handoff, hook-impact, hook-leaks, hook-read-first, hook-sequence, hook-shell, hook-start, hook-stop, hook-tiers, hooks-elsewhere, instruction-files, issue-answer, ladder, local-model, mcp-by-hash, memory-import, mex, model-fit, night-batch, openai-compatible, persona-card, plain-language, quantized, same-way, schema-check, scope, second-opinion, silence-log, translate*.
 - **Ways to use it:** other ways in: pipes, your shell and your editor, plain sentences, a page on this machine, answers read aloud. Built: [browse](adapters/stdlib/browse/), [emacs](adapters/stdlib/emacs/), [jetbrains](adapters/stdlib/jetbrains/), [pipe](adapters/stdlib/pipe/), [plain](adapters/stdlib/plain/), [print](adapters/stdlib/print/), [shell](adapters/stdlib/shell/), [start](adapters/stdlib/start/), [vim](adapters/stdlib/vim/), [vscode](adapters/stdlib/vscode/). Ideas: *anki, annotations, badge, braille, calendar-out, cloudevents, datasette, deep-links, desktop, dictate, email-ask, emergency-card, home-assistant, kiosk, launcher, llms-txt, obsidian, pr-context, qr, rss-out, safe-app, share, socratic, speak, static-search, telegram-bot, tui, warm*.
 - **Play:** seeded, replayable games on the record, such as dice and the Game of Life. Built: [dice](adapters/stdlib/dice/), [horoscope](adapters/stdlib/horoscope/), [life](adapters/stdlib/life/), [odds](adapters/stdlib/odds/). Ideas: *art-of-the-day, beacon, chess-puzzle, connect-four, daily-word, dice5e, front-page, game-master, gutenberg, hanoi, horoscope-grades, ink-story, joins, lore, lunatic, mastermind, movie, nim, ninety-percent, oracle-text, pageviews, pile-poetry, predictions, quake-bets, quiz, real-sky, reversi, roll-for-merge, rules, sokoban, spurious, tarot, tic-tac-toe, tides, todays-place, weather-bet*.
 - **For maintainers:** the repo's own tools: CI, the list, tests that can fail. Built: [ci](adapters/stdlib/ci/), [ci-why](adapters/stdlib/ci-why/), [github](adapters/stdlib/github/), [live](adapters/stdlib/live/), [mutants](adapters/stdlib/mutants/), [readme](adapters/stdlib/readme/), [restack](adapters/stdlib/restack/), [similar](adapters/stdlib/similar/), [slow-tests](adapters/stdlib/slow-tests/), [test-impact](adapters/stdlib/test-impact/), [test-shards](adapters/stdlib/test-shards/). Ideas: *agents-md-check, bench, ci-baseline, ci-bets, ci-cache, code-stats, compiled, contribute, contributions, crates, docs-i18n, fast-tests, forgejo, fuzz, gitlab, go, maven, npm, nuget, pins, profile, property-tests, pypi, pypy, reconciler, repro, sourcehut, swift, welcome*.
@@ -70,11 +70,11 @@ can pick up ([CONTRIBUTING.md](CONTRIBUTING.md) says how):
 <!-- willow:front show=pick week=2026-W43 -->
 **Add-on of the week**
 
-**[starter-words](adapters/stdlib/starter-words/)** — A first-day words list to copy and edit (owes = invoice, outstanding; doctor = dr, physician, clinic).
+**[aider](adapters/stdlib/aider/)** — Aider reads answers from your folder with its /run command, file and line included.
 
-*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 80 built add-ons in name order.*
+*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 84 built add-ons in name order.*
 
-[Every add-on, 80 built of 456, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 84 built of 456, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 ## How it works
@@ -106,6 +106,7 @@ python kernel.py init    --box DIR --pile FOLDER --key FILE [--words FILE]
 python kernel.py bite    --box DIR "your question"
 python kernel.py propose --box DIR --file SUGGESTIONS.jsonl
 python kernel.py seal    --box DIR proposal:<sha256>
+python kernel.py decline --box DIR proposal:<sha256>
 python kernel.py verify  --box DIR
 python kernel.py out     --box DIR
 python kernel.py test
@@ -117,7 +118,8 @@ python kernel.py test
 | `bite` | answers a question: an approved answer if there is one, else up to three passages from your files |
 | `propose` | takes suggested answers and holds the ones that pass |
 | `seal` | approves one suggestion with your key |
-| `verify` | checks every line of the log and every approval |
+| `decline` | turns one down, with your key: it isn't offered again |
+| `verify` | checks every line of the log, every approval and every No |
 | `out` | lists what is waiting for your approval |
 | `test` | runs the whole cycle in a temporary folder and checks eight properties |
 
@@ -171,8 +173,8 @@ clause and where it is cited, and says why for each it found nothing for.
 
 It matches words, not meanings: ask "who owes me money" when your files say
 "invoice outstanding" and it finds nothing until a words list connects them.
-That, English being built in, the cost of having no index, and locking on
-Windows are in [LIMITS.md](LIMITS.md), with what it doesn't do on purpose
+That, English being built in, and the cost of having no index are in
+[LIMITS.md](LIMITS.md), with what it doesn't do on purpose
 and why ([DECISIONS.md](DECISIONS.md)). Known bugs, each shown by a test,
 are in [BUGS.md](BUGS.md).
 
@@ -193,7 +195,7 @@ words and missed the rest. The full results, misses included, are in
   CI runs the same script on every pull request and every push to main, with the tests on Python 3.9 through
   3.14, and keeps each job's record as an artifact. The verdicts are draft;
   merging is the person's call. See [adapters/stdlib/ci](adapters/stdlib/ci/).
-- **Four implementations, one behaviour.** `vectors/gen.py` reads 4,463 cases
+- **Four implementations, one behaviour.** `vectors/gen.py` reads 4,668 cases
   out of `kernel.py`, covering canonical JSON, word splitting, HTML text,
   ranking, dates, word forms and every refusal. The Java, TypeScript and C#
   ports must give byte-identical answers. Then the same session runs through
@@ -221,7 +223,7 @@ The top of it. [FILES.md](FILES.md) lists every file and what it is, and
 
 ```
 willow/
-├── kernel.py                 the whole program (about 910 lines)
+├── kernel.py                 the whole program (about 1,010 lines)
 ├── test_kernel.py            its tests
 ├── test_docs.py              holds every doc to the files that exist, and the trees to the repo
 ├── test_docs_fires.py        plants a violation for each docs check and makes sure it fails

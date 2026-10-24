@@ -5,7 +5,7 @@ the repo ever disagree. [README.md](README.md) shows the top of it.
 
 ```
 willow/
-├── kernel.py                 the whole program (about 910 lines)
+├── kernel.py                 the whole program (about 1,010 lines)
 ├── test_kernel.py            its tests
 ├── test_docs.py              holds every doc to the files that exist, and the trees to the repo
 ├── test_docs_fires.py        plants a violation for each docs check and makes sure it fails
@@ -166,6 +166,22 @@ willow/
 │   │   ├── history/
 │   │   │   ├── history.py    your record in plain sentences, places and counts, never the words
 │   │   │   ├── test_history.py
+│   │   │   └── README.md
+│   │   ├── hook-fail-closed/
+│   │   │   ├── hook_fail_closed.py a hook that crashes, hangs or says what can't be read blocks the tool
+│   │   │   ├── test_hook_fail_closed.py
+│   │   │   └── README.md
+│   │   ├── hook-fuzz/
+│   │   │   ├── hook_fuzz.py      bad input thrown at a hook, and each one that breaks it named
+│   │   │   ├── test_hook_fuzz.py
+│   │   │   └── README.md
+│   │   ├── hook-pin/
+│   │   │   ├── hook_pin.py       a hook runs only as the bytes you approved, pinned on the record
+│   │   │   ├── test_hook_pin.py
+│   │   │   └── README.md
+│   │   ├── hook-replay/
+│   │   │   ├── hook_replay.py    every hook answer a row of hashes, and each one run again
+│   │   │   ├── test_hook_replay.py
 │   │   │   └── README.md
 │   │   ├── horoscope/
 │   │   │   ├── horoscope.py  a daily reading picked by the SHA-256 of name and date
@@ -396,7 +412,7 @@ willow/
 │       └── Kernel.csproj
 ├── vectors/                  what keeps the four implementations identical
 │   ├── gen.py                reads the test cases out of kernel.py
-│   ├── cases.json            4,463 cases, with the answers kernel.py gives
+│   ├── cases.json            4,668 cases, with the answers kernel.py gives
 │   ├── kernel_tables.json    Python's Unicode and HTML rules, so ports don't use their own
 │   ├── compare.py            runs every port against the cases and each other's logs
 │   ├── test_vectors.py       fails if the cases are stale or a port disagrees
@@ -437,6 +453,7 @@ willow/
 │   │   ├── phase4.py         before the fix: the whole release, ranked three ways, recall at k
 │   │   ├── phase5.py         robustness: rewording, top-k, a words list, and leakage
 │   │   ├── phase6.py         reproducibility: every release, five Pythons, four kernels, a second labeller
+│   │   ├── hold.py           not frozen: the kernel's hold rule against looser ones, on phase 3's CVEs
 │   │   ├── test_php2shell.py holds the frozen files to their hashes, and the tools to their word
 │   │   ├── results/
 │   │   │   └── phase6-labels.json  the independent labellers' yes or no, item by item

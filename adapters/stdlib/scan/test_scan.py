@@ -90,11 +90,7 @@ def test_every_passage_ranked_as_the_kernel_ranks_it(indexed, alias):
     pile, ix = indexed
     for q in QUESTIONS:
         for top in (1, 3, 10**9):
-            kernel.TOP, was = top, kernel.TOP
-            try:
-                want = kernel.rank(pile, q, alias)
-            finally:
-                kernel.TOP = was
+            want = kernel.rank(pile, q, alias, top)
             got = ix.rank(q, alias, top)
             assert [(c["path"], c["line"], c["id"]) for c in got] == [
                 (c["path"], c["line"], c["id"]) for c in want
@@ -316,12 +312,9 @@ def test_changed_from_is_the_kernel_on_only_what_changed(tmp_path):
     ix = scan.Index(tmp_path / "ix-new")
     for q in [*QUESTIONS, "jars lids honey", "paid vet times", "dad paid clinic"]:
         for top in (3, 10**9):
-            top_was, dates_was = kernel.TOP, kernel.dates
-            kernel.TOP, kernel.dates = top, lambda pile: [day[id(c)] for c in pile]
-            try:
-                want = kernel.rank(changed, q, WORDS)
-            finally:
-                kernel.TOP, kernel.dates = top_was, dates_was
+            want = kernel.rank(
+                changed, q, WORDS, top, lambda pile: [day[id(c)] for c in pile]
+            )
             got = ix.rank(q, WORDS, top, before)
             assert [(c["path"], c["line"]) for c in got] == [
                 (c["path"], c["line"]) for c in want

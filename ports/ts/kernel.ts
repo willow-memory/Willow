@@ -228,7 +228,7 @@ const sha256 = (data: Buffer | string) => crypto.createHash("sha256").update(dat
 const h256 = (text: string) => sha256(Buffer.from(text, "utf8"));
 const hmac = (key: Buffer, msg: Buffer) => crypto.createHmac("sha256", key).update(msg).digest("hex");
 /** onescript/sign.py hmac_parts(key, "seal", subject). */
-const proof = (key: Buffer, subject: string) => hmac(key, Buffer.from("seal\x1f" + subject, "utf8"));
+const proof = (key: Buffer, subject: string, act = "seal") => hmac(key, Buffer.from(act + "\x1f" + subject, "utf8"));
 
 // ── the tables: Python's decisions, read out of Python ─────────────────────
 class Ranges {
@@ -263,6 +263,9 @@ interface Tables {
   html5: Map<string, string>;
   invalidCharrefs: Map<number, string>;
   invalidCodepoints: Set<number>;
+  ccc: Map<number, number>;
+  decomp: Map<number, number[]>;
+  compose: Map<number, number>; // a * 0x200000 + b -> composed
   tagFold: Map<string, Set<number>>;
   tagBackref: Map<string, Set<string>>; // "a,b" pairs
   GENESIS: string;
@@ -293,6 +296,7 @@ function loadTables(file: string): void {
   for (const [k, v] of t.get("tag_backref") as JMap)
     tagBackref.set(k, new Set((v as J[]).map((p) => (p as J[]).map(num).join(","))));
   const hold = kc.get("HOLD") as J[];
+  const nfc = t.get("nfc") as JMap;
   T = {
     word: new Ranges(t.get("word")!),
     space: new Ranges(t.get("space")!),
@@ -304,6 +308,9 @@ function loadTables(file: string): void {
     html5: new Map(Array.from(t.get("html5") as JMap).map(([k, v]) => [k, v as string])),
     invalidCharrefs: new Map(Array.from(t.get("invalid_charrefs") as JMap).map(([k, v]) => [Number(k), v as string])),
     invalidCodepoints: new Set((t.get("invalid_codepoints") as J[]).map(num)),
+    ccc: new Map(Array.from(nfc.get("ccc") as JMap).map(([k, v]) => [Number(k), num(v)])),
+    decomp: new Map(Array.from(nfc.get("decomp") as JMap).map(([k, v]) => [Number(k), (v as J[]).map(num)])),
+    compose: new Map((nfc.get("compose") as J[]).map((p) => (p as J[]).map(num)).map(([a, b, c]) => [a * 0x200000 + b, c])),
     tagFold,
     tagBackref,
     GENESIS: kc.get("GENESIS") as string,
@@ -341,6 +348,50 @@ function lower(s: string): string {
     else b += T.lower.get(c) ?? String.fromCodePoint(c);
   }
   return b;
+}
+
+const ccc = (c: number) => T.ccc.get(c) ?? 0;
+
+/** unicodedata.normalize("NFC"): decompose, put marks in canonical order,
+ * compose, by gen.py's tables, so this engine's Unicode version never decides. */
+function nfc(a: number[]): number[] {
+  const d: number[] = [];
+  for (const c of a) {
+    if (c >= 0xac00 && c <= 0xd7a3) {
+      const s = c - 0xac00;
+      d.push(0x1100 + Math.floor(s / 588), 0x1161 + Math.floor((s % 588) / 28));
+      if (s % 28) d.push(0x11a7 + (s % 28));
+    } else d.push(...(T.decomp.get(c) ?? [c]));
+  }
+  for (let i = 1; i < d.length; i++)
+    for (let j = i; j > 0 && ccc(d[j]) && ccc(d[j - 1]) > ccc(d[j]); j--) [d[j - 1], d[j]] = [d[j], d[j - 1]];
+  const out: number[] = [];
+  let st = -1;
+  for (const c of d) {
+    const cc = ccc(c);
+    if (st >= 0) {
+      const last = ccc(out[out.length - 1]);
+      if (out.length - 1 === st || (last && last < cc)) {
+        const s = out[st];
+        if (s >= 0x1100 && s < 0x1113 && c >= 0x1161 && c < 0x1176) {
+          out[st] = 0xac00 + ((s - 0x1100) * 21 + c - 0x1161) * 28;
+          continue;
+        }
+        if (s >= 0xac00 && s <= 0xd7a3 && (s - 0xac00) % 28 === 0 && c >= 0x11a8 && c <= 0x11c2) {
+          out[st] = s + c - 0x11a7;
+          continue;
+        }
+        const p = T.compose.get(s * 0x200000 + c);
+        if (p !== undefined) {
+          out[st] = p;
+          continue;
+        }
+      }
+    }
+    if (cc === 0) st = out.length;
+    out.push(c);
+  }
+  return out;
 }
 
 function finalSigma(a: number[], i: number): boolean {
@@ -392,7 +443,7 @@ const take = (s: string, n: number) => {
 function words(text: string): string[] {
   const out: string[] = [];
   let cur = "";
-  for (const c of cps(lower(text))) {
+  for (const c of nfc(cps(lower(text)))) {
     if (T.word.has(c)) cur += String.fromCodePoint(c);
     else if (cur) {
       out.push(cur);
@@ -1162,19 +1213,21 @@ function init(box: string, pile: string, key: string, ts: string, wl: string | n
   return ALIVE;
 }
 
-function sealed(box: string, rows: JMap[]): Map<string, JMap> {
+function sealed(box: string, rows: JMap[], act = "seal"): Map<string, JMap> {
   const [key] = readKey(config(box).get("key") as string, box);
   const out = new Map<string, JMap>();
   for (const r of rows) {
-    if (r.get("kind") === "seal" && key !== null) {
+    if (r.get("kind") === act && key !== null) {
       const subj = r.has("subject") ? r.get("subject")! : "";
-      const want = Buffer.from(proof(key, typeof subj === "string" ? subj : pyStr(subj)), "utf8");
+      const want = Buffer.from(proof(key, typeof subj === "string" ? subj : pyStr(subj), act), "utf8");
       const got = Buffer.from(pyStr(r.has("proof") ? r.get("proof") : null), "utf8");
       if (want.length === got.length && crypto.timingSafeEqual(want, got)) out.set(r.get("subject") as string, r);
     }
   }
   return out;
 }
+
+const declined = (box: string, rows: JMap[]) => sealed(box, rows, "decline");
 
 function refusedBreaks(r: Read): boolean {
   if (!r.breaks.length) return false;
@@ -1277,6 +1330,11 @@ function seal(box: string, subj: string, ts: string): number {
     console.error(`refused: ${subj} is not a proposal in this box`);
     return REFUSED;
   }
+  const no = declined(box, r.rows);
+  if (no.has(subj)) {
+    console.error(`refused: you declined ${subj} at row ${no.get(subj)!.get("n")}`);
+    return REFUSED;
+  }
   const [key, why] = readKey(config(box).get("key") as string, box);
   if (key === null) {
     console.error(`refused: ${why}`);
@@ -1295,6 +1353,29 @@ function seal(box: string, subj: string, ts: string): number {
   return ALIVE;
 }
 
+function decline(box: string, subj: string, ts: string): number {
+  const r = read(path.join(box, "record.jsonl"));
+  if (refusedBreaks(r)) return REFUSED;
+  if (!r.rows.some((row) => row.get("kind") === "proposal" && row.get("subject") === subj)) {
+    console.error(`refused: ${subj} is not a proposal in this box`);
+    return REFUSED;
+  }
+  for (const [done, said] of [[sealed(box, r.rows), "sealed"], [declined(box, r.rows), "declined"]] as const) {
+    if (done.has(subj)) {
+      console.error(`refused: you ${said} ${subj} at row ${done.get(subj)!.get("n")}`);
+      return REFUSED;
+    }
+  }
+  const [key, why] = readKey(config(box).get("key") as string, box);
+  if (key === null) {
+    console.error(`refused: ${why}`);
+    return REFUSED;
+  }
+  append(box, ts, "decline", "human", obj(["subject", subj], ["proof", proof(key, subj, "decline")]));
+  console.log(`declined ${subj}; it won't be offered again`);
+  return ALIVE;
+}
+
 function verify(box: string): number {
   const r = read(path.join(box, "record.jsonl"));
   if (r.breaks.length) {
@@ -1303,10 +1384,11 @@ function verify(box: string): number {
   }
   const good = sealed(box, r.rows);
   const forged = r.rows.filter((row) => row.get("kind") === "seal" && !good.has(row.get("subject") as string)).map((row) => String(row.get("n")));
-  if (forged.length) {
-    console.log(`the chain holds; seal rows [${forged.join(", ")}] don't prove under your key`);
-    return ESCALATE;
-  }
+  const no = declined(box, r.rows);
+  const nos = r.rows.filter((row) => row.get("kind") === "decline" && !no.has(row.get("subject") as string)).map((row) => String(row.get("n")));
+  if (forged.length) console.log(`the chain holds; seal rows [${forged.join(", ")}] don't prove under your key`);
+  if (nos.length) console.log(`the chain holds; decline rows [${nos.join(", ")}] don't prove under your key`);
+  if (forged.length || nos.length) return ESCALATE;
   console.log(`the chain holds: ${r.rows.length} rows, ${good.size} sealed`);
   return ALIVE;
 }
@@ -1315,8 +1397,10 @@ function out(box: string, ts: string): number {
   const r = read(path.join(box, "record.jsonl"));
   if (refusedBreaks(r)) return REFUSED;
   const good = sealed(box, r.rows);
+  const no = declined(box, r.rows);
   const waiting = r.rows
-    .filter((row) => row.get("kind") === "proposal" && row.get("verdict") === "pass" && !good.has(row.get("subject") as string))
+    .filter((row) => row.get("kind") === "proposal" && row.get("verdict") === "pass"
+      && !good.has(row.get("subject") as string) && !no.has(row.get("subject") as string))
     .map((row) => row.get("subject") as string);
   const tip = r.rows.length ? r.rows[r.rows.length - 1].get("hash")! : T.GENESIS;
   append(box, ts, "out", "kernel", obj(["waiting", BigInt(waiting.length)], ["tip", tip]));
@@ -1414,6 +1498,7 @@ const USAGE =
   "    python kernel.py bite    --box DIR \"your question\"\n" +
   "    python kernel.py propose --box DIR --file SUGGESTIONS.jsonl\n" +
   "    python kernel.py seal    --box DIR proposal:<sha256>\n" +
+  "    python kernel.py decline --box DIR proposal:<sha256>\n" +
   "    python kernel.py verify  --box DIR\n" +
   "    python kernel.py out     --box DIR\n" +
   "    python kernel.py test";
@@ -1451,6 +1536,7 @@ function main(argv: string[]): number {
   if (verb === "propose" && opts.get("--file") && !args.length)
     return propose(box, splitlines(UTF8.decode(fs.readFileSync(opts.get("--file")!))), ts);
   if (verb === "seal" && args.length === 1 && args[0].startsWith("proposal:")) return seal(box, args[0], ts);
+  if (verb === "decline" && args.length === 1 && args[0].startsWith("proposal:")) return decline(box, args[0], ts);
   if (verb === "verify" && !args.length) return verify(box);
   if (verb === "out" && !args.length) return out(box, ts);
   console.error(USAGE);
