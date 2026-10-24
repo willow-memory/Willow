@@ -2,7 +2,7 @@ name: law
 
 # The one check that depends on the day: an emergency amendment that has
 # expired with no full amendment keeping or undoing it (CONST-VIII-2). CI runs
-# on pushes and pull requests, so a quiet repo would carry an expired one
+# on pull requests and pushes to main, so a quiet repo would carry an expired one
 # unseen. This runs it every Monday, and by hand, and fails until a person
 # acts. adapters/stdlib/github/github.py check holds that it stays scheduled.
 on:

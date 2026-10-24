@@ -94,6 +94,10 @@ willow/
 │   │   │   ├── test_bugs.py  bugs.py's tests: strict marks only, and the list made from them
 │   │   │   ├── test_whose.py whose.py's tests: commits, merges, squashes, another host, places refused
 │   │   │   └── README.md     its card: gates, states, the guard and exit codes
+│   │   ├── ci-why/
+│   │   │   ├── ci_why.py     the failing block of a red CI log, plain: the test, the assertion, the line to act on
+│   │   │   ├── test_ci_why.py
+│   │   │   └── README.md
 │   │   ├── claude-code/
 │   │   │   ├── hook.py           Claude Code's prompt hook: cited passages at each prompt; setup prints it
 │   │   │   ├── test_hook.py
