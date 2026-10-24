@@ -65,6 +65,71 @@ Each of these has been missed at least once, and each is a check that fails.
    (`python demo/odile/make_life.py`, and the same for hollis and teodora).
    An add-on can pass every test on hand-made files and still be wrong on a
    real folder; a test written from what the code does checks only that.
+9. **If it goes online**, its tests use a server it starts on 127.0.0.1:
+   the guard narrows only `none` and `loopback`, so a card naming a site
+   lets the tests use this machine. Its `COMMANDS` row must still answer
+   without the network, by an argument that settles the question before any
+   fetch (an empty window of days, a closed local port); a row that reaches
+   the real site is a test that goes online.
+10. **Placeholders on its card.** `test_docs.py` reads a backticked name with
+    a slash or a file extension as a path that must exist. Write a
+    placeholder with angle brackets, as the pdf card writes
+    `MIRROR/<same path>.txt`.
+
+## A new CI row
+
+A gate added to `gates()` in `adapters/stdlib/ci/ci.py` (a demo, say) is
+also named in the two lists of gates in `adapters/stdlib/ci/test_ci.py`.
+Missed, `tests:adapters` fails, and `tests:strip` with it, since it runs
+the same tests.
+
+## Edits that miss say nothing
+
+`ruff format` reflows lines. A scripted find-and-replace written against
+the text before formatting then matches nothing, and says nothing: the edit
+just isn't there. Check each one matched (assert the old text occurs once),
+and never replace a string that could be empty, which inserts the new text
+between every character. Read the result, or run the test that should now
+pass.
+
+## A study, like demo/php2shell
+
+A result tested against what anyone can rerun, as in
+[demo/php2shell/README.md](demo/php2shell/README.md):
+
+- **Freeze first.** The source hashes, the questions, the hit rule and every
+  pass rule go in a FROZEN.json held by a test, as
+  `demo/php2shell/FROZEN.json` is, committed alone before any question is
+  asked. That commit is the pre-registration; a later change is a new
+  freeze, with its reason.
+- **Find the bugs without the results.** Run the pipeline once with every
+  question replaced by nonsense ("qqqq zzzz"), so wiring breaks show up
+  before the freeze, and say in the README what that dry run could see.
+- **Verdicts are kernel rows**, one per pass rule, appended to a box outside
+  the repo with the answers' and tools' SHA-256; `kernel.py verify` on it
+  goes in the README.
+- **Sources that aren't the repo's** (news, a company's pages) are kept by
+  address, time and SHA-256, never their text, with a script that fetches
+  them again and checks the hashes offline.
+- **Write down what failed** with its frozen numbers, beside what held, and
+  what was written after reading the sources.
+
+## Pull requests
+
+- **Open it, then write its number** in CHANGELOG.md. Another pull request
+  may take the number you guessed.
+- **Work that needs another unmerged branch stacks on it.** An add-on whose
+  idea, or whose card's link, exists only on another branch is built from
+  that branch, and its pull request's base is that branch; built from
+  `main`, it fails `test_docs.py` and clashes on `adapters/planned.json`.
+- **In a Claude Code cloud session**, `gh pr create` is refused (GitHub's
+  GraphQL isn't reachable); open it through the REST API instead:
+
+      gh api repos/willow-memory/Willow/pulls --method POST \
+          -f title=... -f head=BRANCH -f base=main -f body=...
+
+  A shallow clone fetches only `main`, so a pushed branch shows as never
+  pushed until its own fetch refspec is added.
 
 ## When main moves under a branch
 
