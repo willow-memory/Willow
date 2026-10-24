@@ -190,7 +190,7 @@ words and missed the rest. The full results, misses included, are in
   verdict row on a kernel record, which `verify` then checks like any other.
   A tool that isn't installed is recorded as unreachable, never as a pass.
   It is deterministic: the same files give the same record, byte for byte.
-  CI runs the same script on every push, with the tests on Python 3.9 through
+  CI runs the same script on every pull request and every push to main, with the tests on Python 3.9 through
   3.14, and keeps each job's record as an artifact. The verdicts are draft;
   merging is the person's call. See [adapters/stdlib/ci](adapters/stdlib/ci/).
 - **Four implementations, one behaviour.** `vectors/gen.py` reads 4,463 cases
