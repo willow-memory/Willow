@@ -1,0 +1,35 @@
+# Blind rewordings, three of each line of reporters.txt: v1 a worried user's question,
+# v2 search-box keywords, v3 the same meaning in synonyms. Written by an agent
+# given only those lines, without seeing the policy or any result. Its own
+# note on its sources: this message only; no research tools used.
+# name<TAB>question
+dx-headline-v1	Did Google secretly change its privacy policy so my Gmail and Photos can be used to target ads at me?
+dx-headline-v2	google privacy policy gmail photos targeted ads
+dx-headline-v3	The search giant silently revised its data protection terms so your email and pictures might feed tailored advertising
+dx-lede-v1	Has Google updated its privacy policy so my personal info from Gmail, Photos and Drive might be used for targeted ads?
+dx-lede-v2	google policy gmail photos drive ad targeting
+dx-lede-v3	The search company has revised its data protection terms to let private details from your email, picture library and cloud storage possibly be used for tailored advertising
+dx-exception-v1	Did Google break its old promise not to use my Gmail, Photos and Drive content for personalized ads when the October 16 change kicked in?
+dx-exception-v2	google october 16 exception personalized ads promise
+dx-exception-v3	The revision, in force since the 16th of October, adds a major carve-out to the search giant's earlier pledge not to use material from these products to tailor advertising.
+ti-lede-v1	Does Google's new privacy policy from October 16, 2026 let them use my Drive, Gmail and Photos data for personalized ads?
+ti-lede-v2	google revised policy october 2026 drive gmail photos ads
+ti-lede-v3	The search company's amended data protection terms, in force from 16 October 2026, now state it may draw on information from cloud storage, email and picture libraries to shape tailored advertising
+ti-headline-v1	Does Google's policy now connect my Gmail to ads?
+ti-headline-v2	policy links gmail ads
+ti-headline-v3	Rules Tie Email to Advertising
+ars-headline-v1	Does Google's updated privacy policy say they might use my Gmail for advertising?
+ars-headline-v2	google updated privacy policy gmail advertising
+ars-headline-v3	Revised search-giant data protection terms say your email could be used for marketing
+verge-headline-v1	Is Google now saying it might use my Gmail and Google Photos data to target ads at me?
+verge-headline-v2	google may use gmail photos target ads
+verge-headline-v3	The search giant now states it could use your email and picture data to aim advertising
+9to5-headline-v1	If I turn on Personal Intelligence, will Google target ads at me based on my Gmail and Photos?
+9to5-headline-v2	personal intelligence gmail photos ad targeting
+9to5-headline-v3	The search company will aim advertising using your email and picture data if its personalized-intelligence feature is switched on.
+sh-lede-v1	Does Google's policy now explain a way for my Gmail, Drive and Photos data to affect the personalized ads I see?
+sh-lede-v2	gmail drive photos data personalized ads route
+sh-lede-v3	it now lays out a pathway for email, cloud storage and picture data to shape tailored advertising.
+sh-headline-v1	Is Google opening a way, only if I opt in, for my Gmail to be used for ads?
+sh-headline-v2	google opt-in gmail ads path
+sh-headline-v3	Search Giant Unlocks Voluntary Email Advertising Route

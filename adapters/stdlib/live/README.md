@@ -32,6 +32,7 @@ inside the scratch folder, so nothing of yours is read or changed.
 | copilot | [copilot](../copilot/)'s Copilot CLI file | `copilot mcp list` names willow (local) |
 | claude | [claude-code](../claude-code/)'s hook and add line | the hook serves passages through `sh`; `claude mcp list` says Connected |
 | mcp | [mcp-lite](../mcp-lite/), through MCP Inspector's CLI | ask answers; suggest waits; waiting lists it; a bad suggest is a tool error |
+| chrome | a page saved by headless Chrome over its DevTools pipe, as .mhtml (its own snapshot) and as drawn (.html), read by [web-pages](../web-pages/) | each is read under its address, with the paragraph only the page's script wrote |
 
 Each check gives one of three states, kept apart:
 
@@ -57,7 +58,9 @@ quoting `old.txt:4:` as that file and line. Claude Code's hook, its
 `claude mcp add` line, Aider's run line and JetBrains' parameters split
 a folder with a space in its name into two words. Gemini starts no server
 in a folder its person hasn't trusted. Each is fixed or said on its card,
-and has a test.
+and has a test. The chrome check, its first time, found web-pages reading
+Chrome's own .mhtml wrongly: Chrome names no charset on the page's part, so
+its curly quotes came out garbled; web-pages now reads the page's own.
 
 **Uses:** the kernel's `init` for the scratch box and its exit codes; each
 add-on's own functions for the lines it prints.

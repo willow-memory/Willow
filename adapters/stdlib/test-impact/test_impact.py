@@ -186,6 +186,13 @@ def test_a_deps_add_on_is_its_two_gates(plan_of):
     assert "deps:pdf:" in got and "deps:pdf@floor:" in got
 
 
+def test_a_demo_test_that_imports_the_change_is_its_demos_gate(plan_of):
+    """demo/google-privacy-2026-10-16's test reaches the pdf add-on through
+    its study; any demo, not php2shell alone, is placed by its folder."""
+    got = plan_of("adapters/deps/pdf/pdf.py").stdout
+    assert "demo:google-privacy-2026-10-16:" in got and "couldn't place" not in got
+
+
 def test_every_gate_a_plan_names_is_a_gate_ci_has(plan_of):
     have = {g for _, g, _ in ci.gates()}
     for path in ("vectors/gen.py", "demo/php2shell/README.md", "constitution/coverage.py",

@@ -1,0 +1,91 @@
+{
+ "about": "What fetch.py saved, once, on 2026-10-24: each source's folder and file in the pile, its address, when it was fetched, its type, size and SHA-256, as the snapshot add-on wrote them. Held by FROZEN.json; fetch.py --check holds a pile to it.",
+ "sources": [
+  {
+   "folder": "policy-old",
+   "bytes": 692585,
+   "fetched": "2026-10-24T09:05:28Z",
+   "file": "google_privacy_policy_en.pdf",
+   "sha256": "1c4cf3010d63f3feb78c4a468ef6d504794df79281a1b22a60dbf977ec7c556a",
+   "status": 200,
+   "type": "application/pdf",
+   "url": "https://www.gstatic.com/policies/privacy/pdf/20261001/f86f5p0s/google_privacy_policy_en.pdf"
+  },
+  {
+   "folder": "policy-new",
+   "bytes": 694555,
+   "fetched": "2026-10-24T09:05:29Z",
+   "file": "google_privacy_policy_en.pdf",
+   "sha256": "e4214c7c8266a124cbf63d2a9b7b98c1e757e6a09cb1fb771614a5514c907075",
+   "status": 200,
+   "type": "application/pdf",
+   "url": "https://www.gstatic.com/policies/privacy/pdf/20261016/k8m9x4w2/google_privacy_policy_en.pdf"
+  },
+  {
+   "folder": "google-pages",
+   "bytes": 557937,
+   "fetched": "2026-10-24T09:05:29Z",
+   "file": "archive.html",
+   "sha256": "62598a3cd43f545b86c3ee71064a30435cba57377db65b99f6cd39ec2c440208",
+   "status": 200,
+   "type": "text/html; charset=utf-8",
+   "url": "https://policies.google.com/privacy/archive?hl=en-US"
+  },
+  {
+   "folder": "google-pages",
+   "bytes": 707807,
+   "fetched": "2026-10-24T09:05:29Z",
+   "file": "archive-20261001.html",
+   "sha256": "90b75c2ce6d992d3fc65a03edf2152a0e43e773d7702d5293b9522f968c8e3fd",
+   "status": 200,
+   "type": "text/html; charset=utf-8",
+   "url": "https://policies.google.com/privacy/archive/20261001?hl=en-US"
+  },
+  {
+   "folder": "google-pages",
+   "bytes": 652115,
+   "fetched": "2026-10-24T09:05:30Z",
+   "file": "privacy-current.html",
+   "sha256": "1af405bd923bcf2b842fbee9230f77a4cb26c9018fd065bbf1ee27551a5f8898",
+   "status": 200,
+   "type": "text/html; charset=utf-8",
+   "url": "https://policies.google.com/privacy?hl=en-US"
+  },
+  {
+   "folder": "news",
+   "bytes": 264585,
+   "fetched": "2026-10-24T09:05:30Z",
+   "file": "tech-insider.html",
+   "sha256": "8eb71b815dd0c9b2e1cc2a4db50ccdcb240abb2980e45ca90b12c70cd5889eba",
+   "status": 200,
+   "type": "text/html; charset=UTF-8",
+   "url": "https://tech-insider.org/google-privacy-policy-gmail-ads-opt-in-2026/"
+  },
+  {
+   "folder": "news",
+   "bytes": 309182,
+   "fetched": "2026-10-24T09:05:31Z",
+   "file": "dexerto.html",
+   "sha256": "e4315e68515e10e6419db03ff4c45c7842f73db95970c153575642c5308dfd06",
+   "status": 200,
+   "type": "text/html; charset=utf-8",
+   "url": "https://www.dexerto.com/entertainment/google-quietly-changes-privacy-policy-so-your-gmail-and-photos-could-be-used-in-targeted-ads-3421462/"
+  },
+  {
+   "folder": "news",
+   "bytes": 213464,
+   "fetched": "2026-10-24T09:05:31Z",
+   "file": "shattered.html",
+   "sha256": "f621a5a0a12396cc8a715d1334c8764a129bd063c6c4362d190014f6b482999a",
+   "status": 200,
+   "type": "text/html; charset=UTF-8",
+   "url": "https://shattered.io/google-privacy-policy-gmail-ads-opt-in-oct-16-2026/"
+  }
+ ],
+ "wayback": {
+  "asked": "https://web.archive.org/cdx/search/cdx for the before PDF, captures from 20261001 to before 20261016",
+  "answer": "couldn't reach the archive: [Errno 104] Connection reset by peer",
+  "when": "2026-10-24T09:05:32Z",
+  "exit": 42
+ }
+}

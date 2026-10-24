@@ -412,6 +412,10 @@ def gates() -> list[tuple[str, str, object]]:
     # PHP2Shell's runs fetch PHP's source; CI holds only what they froze
     out.append(("demo", "demo:php2shell", command(*PYTEST, "demo/php2shell",
                 needs=lambda: missing_module("pytest"))))  # fmt: skip
+    # the Google privacy study fetched its sources once; CI holds what it froze
+    out.append(("demo", "demo:google-privacy-2026-10-16", command(
+        *PYTEST, "demo/google-privacy-2026-10-16",
+        needs=lambda: missing_module("pytest"))))  # fmt: skip
     for name in deps_add_ons():
         out.append(("deps", f"deps:{name}", deps_add_on(name)))
         out.append(("deps", f"deps:{name}@floor",

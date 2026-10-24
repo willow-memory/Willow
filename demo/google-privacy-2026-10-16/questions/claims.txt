@@ -1,0 +1,12 @@
+# The strong claim, "Google scans Gmail for ads", in the words the reporting
+# uses for it (each to deny it or ask it), copied from the saved articles and
+# held to quote-check like reporters.txt; and the plain form, the study's own.
+# name<TAB>claim
+study-plain	Google scans Gmail for ads
+sh-table	Google scans all Gmail messages to serve ads
+ti-faq	Is Google reading my Gmail to show me ads?
+dx-scanning	Google is automatically scanning everyone’s private emails and photos to serve ads.
+sh-skim	Google reads inbox contents to pick ads.
+ti-inboxes	Google reads inboxes for ads
+sh-default	Gmail ad use is on by default
+sh-faq	Does Google now use my Gmail to target ads by default?
