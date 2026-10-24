@@ -18,18 +18,18 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`████░░░░░░░░░░░░░░░░` **73 of 415 built** · 366 need no install · 49 need one
+`███░░░░░░░░░░░░░░░░░` **73 of 452 built** · 402 need no install · 50 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
 | Reading more kinds of files | 7 | 96 | 95 | 8 |
-| Finding things | 5 | 27 | 23 | 9 |
+| Finding things | 5 | 36 | 31 | 10 |
 | Your own words | 7 | 17 | 21 | 3 |
 | Keeping track | 7 | 48 | 55 | 0 |
 | Trust and proof | 9 | 34 | 34 | 9 |
 | Privacy and safety | 2 | 11 | 13 | 0 |
-| Assistants | 11 | 17 | 22 | 6 |
-| Ways to use it | 10 | 27 | 33 | 4 |
+| Assistants | 11 | 44 | 49 | 6 |
+| Ways to use it | 10 | 28 | 34 | 4 |
 | Play | 4 | 36 | 35 | 5 |
 | For maintainers | 11 | 29 | 35 | 5 |
 <!-- /willow:pools -->
@@ -174,6 +174,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - **codeowners** (idea) — Who owns this file: the CODEOWNERS rule that matches it, cited by line, on GitHub, GitLab and Forgejo alike. *new* `no-install` `offline` `read-only` `search`
 - **crosswalk** (idea) — The outside IDs a passage points to (Wikidata, DOI, ORCID, GeoNames) kept beside it, so your notes join the world's. *new* `no-install` `offline` `writes-output` `search`
 - **duplicates** (idea) — Passages that say the same thing in two files, and which one is newer. *new* `no-install` `offline` `read-only` `search`
+- **fair-merge** (idea) — Each folder or repo ranked on its own and the lists merged in turns, so a large corpus can't push a small one out on volume alone, and a source that found nothing says so. *bot* `no-install` `offline` `read-only` `search` `pile`
 - **first-mention** (idea) — When your files first mention something, and the line that does. *new* `no-install` `offline` `read-only` `search`
 - **fuzzy-dates** (idea) — Dates that admit doubt ('about 1880', 'sometime in March') read and kept with their doubt, in EDTF. *new* `no-install` `offline` `read-only` `search`
 - **index-cache** (idea) — The box's index kept between runs and checked against each file's hash, so a question doesn't re-read the folder. *new* `no-install` `offline` `writes-output` `search`
@@ -182,6 +183,13 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - **my-lessons** (idea) — Your own lesson plans by grade, subject and standard: what did I teach on fractions last year? *new* `no-install` `offline` `read-only` `search`
 - [**on-this-day**](adapters/stdlib/on-this-day/) — What you wrote on this date in earlier years. *box* `no-install` `offline` `read-only` `search`
 - **people** (idea) — Everyone your files name, and every place each is mentioned. *new* `no-install` `offline` `read-only` `search`
+- **pile-build** (idea) — The store built in the background after each change, behind a lock, from orders that say where the key is but never hold it, so your next question finds it warm. *bot* `no-install` `offline` `writes-output` `search` `pile`
+- **pile-gold** (idea) — Each answer you approve marks the passage that held it, so your own questions become a test of how well the search finds things, scored as recall at five. *box* `no-install` `offline` `records` `search` `pile`
+- **pile-rank** (idea) — Phrases as well as words: BM25F over each passage's words and the word pairs your files use together, title and question lines weighted, no model. *bot* `no-install` `offline` `read-only` `search` `pile`
+- **pile-rungs** (idea) — Each lookup says which rung answered, words, phrases or an embedder, and why a higher one was skipped, as data beside the passages. *bot* `no-install` `offline` `read-only` `search` `pile`
+- **pile-serve** (idea) — The store held open by one process on this machine, over a Unix socket the way willow-bot's deterministic runner serves, so a hook's lookup takes milliseconds instead of a cold start. *bot* `no-install` `offline` `read-only` `search` `pile`
+- **pile-store** (idea) — Your folder's passages read once into one SQLite file, each repeat stored once, and opened read-only only while it still matches the folder, the limits and the key, else built again. *bot* `no-install` `offline` `writes-output` `search` `pile`
+- **pile-sweep** (idea) — The passage size measured, not guessed: your box's own questions asked at several sizes, and the size that finds the most of their answers kept. *bot* `no-install` `offline` `read-only` `search` `pile`
 - **promises** (idea) — What a candidate or a council said, by date and source, from the documents you saved. *new* `no-install` `offline` `read-only` `search`
 - [**quote-check**](adapters/stdlib/quote-check/) — Is this exact quote in my files, and where? For writers, journalists and students. *box* `no-install` `offline` `read-only` `search`
 - **reading-level** (idea) — How hard a passage reads (sentence length, word length, Flesch), so a teacher can find texts for a class. *new* `no-install` `offline` `read-only` `search`
@@ -195,6 +203,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - **symbols** (idea) — Exact definitions and references for Python code: where a name is defined, and every place it's used. Needs scip-python; MIT. *new* `needs-install` `offline` `read-only` `search`
 - **typos** (idea) — Forgives misspellings in questions. Needs rapidfuzz; MIT. *new* `needs-install` `offline` `read-only` `search`
 - **upgrade-notes** (idea) — Before an upgrade: the changelog lines between the version you lock and the one you'd move to, from the package's own files. Goes online: the registry (PyPI, npm or crates.io), to fetch the newer version's changelog. *new* `no-install` `online` `read-only` `search`
+- **vectors** (idea) — The meaning add-on's vectors kept in the store's own SQLite file, so they're computed once per passage, not at every question. Needs sqlite-vec and model2vec; MIT or Apache-2.0. *bot* `needs-install` `offline` `writes-output` `search` `pile`
 - **watch** (idea) — A file re-read the moment it changes (inotify, FSEvents, or polling), so the index is always current. *new* `no-install` `offline` `writes-output` `search`
 - **why-not** (idea) — When the answer is 'not enough to say', which words found nothing, and what kind of file would have answered. *new* `no-install` `offline` `read-only` `search`
 
@@ -354,6 +363,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - [**aider**](adapters/stdlib/aider/) — Aider reads answers from your folder with its /run command, file and line included. *new* `no-install` `offline` `read-only` `assistant`
 - **assistant-scores** (idea) — How often each assistant's suggestions were sealed or set aside, from the record. *new* `no-install` `offline` `read-only` `assistant`
 - **basic-memory** (idea) — Basic Memory's Markdown notes where an AI wrote them: each observation and relation handed in through propose, waiting for your seal. *new* `no-install` `offline` `records` `assistant`
+- **cassettes** (idea) — Each exchange with a model kept as a row (what was asked, what came back, the model and its seed), replayed later as a test, and drift between models found by plain diff. *bot* `no-install` `offline` `records` `assistant`
 - **claude** (idea) — Suggestions from Claude through the Anthropic API, citing your passages. Needs anthropic; MIT. Goes online: api.anthropic.com, to ask for suggestions. *new* `needs-install` `online` `records` `assistant`
 - [**claude-code**](adapters/stdlib/claude-code/) — Claude Code sees cited passages from your folder with each prompt, through its prompt hook. *bot* `no-install` `offline` `records` `assistant`
 - [**codex-cli**](adapters/stdlib/codex-cli/) — OpenAI's Codex CLI asks your folder and hands in suggestions, through the mcp add-on. *new* `no-install` `offline` `read-only` `assistant`
@@ -361,10 +371,32 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - [**cursor**](adapters/stdlib/cursor/) — Cursor asks your folder and hands in suggestions, through the mcp add-on. *new* `no-install` `offline` `read-only` `assistant`
 - [**gemini-cli**](adapters/stdlib/gemini-cli/) — Google's Gemini CLI asks your folder and hands in suggestions, through the mcp add-on. *new* `no-install` `offline` `read-only` `assistant`
 - **hermes** (idea) — Hermes Agent asking your folder as a plugin, and its memories, and what its dreaming plugin consolidates, handed in through propose. *new* `no-install` `offline` `records` `assistant`
+- **hook-checks** (idea) — A PostToolUse hook that runs the repo's own fast checks on the file just edited and hands back only what failed, the same output for the same file. *new* `no-install` `offline` `read-only` `assistant` `hooks`
+- **hook-cite** (idea) — A hook that refuses an assistant's claim citing a passage the box never served it, checked against the record by id. *new* `no-install` `offline` `read-only` `assistant` `hooks`
+- **hook-compact** (idea) — A PreCompact hook that prints what the record still holds open, seals waiting and questions unanswered, so it survives the assistant's summary. *new* `no-install` `offline` `read-only` `assistant` `hooks`
+- **hook-errors** (idea) — Each failed command an assistant runs kept as a row of its hash and exit code, so the same failure the third time is named, not retried blind. *new* `no-install` `offline` `records` `assistant` `hooks`
+- **hook-fail-closed** (idea) — Wraps any hook so a crash, a timeout or output it can't read blocks the tool, since Claude Code, Gemini CLI, Codex and Cursor all let the tool run by default. *new* `no-install` `offline` `read-only` `assistant` `hooks`
+- **hook-feedback** (idea) — Your corrections to an assistant (no, wrong, I said) caught by fixed patterns at each prompt and handed in through propose, for you to keep or drop. *new* `no-install` `offline` `records` `assistant` `hooks`
+- **hook-fuzz** (idea) — Throws empty, malformed, oversized and non-UTF-8 input at a hook and fails it if any of them crash it, since a crashed hook lets the tool run. *new* `no-install` `offline` `read-only` `assistant` `hooks`
+- **hook-guard** (idea) — A PreToolUse hook that refuses, by rule and never by judgment, a tool call that would read the key or write a box outside the kernel, naming the rule it hit. *box* `no-install` `offline` `read-only` `assistant` `hooks`
+- **hook-handoff** (idea) — A Stop hook that writes where the session ended, and the next session's first prompt gets it back, so nothing rides on the assistant's memory. *new* `no-install` `offline` `records` `assistant` `hooks`
+- **hook-impact** (idea) — Before an edit, a hook hands the assistant every place in your files that names what it's about to change, by file and line. *new* `no-install` `offline` `read-only` `assistant` `hooks`
+- **hook-leaks** (idea) — A PreToolUse hook that refuses a write or a command holding a key, password or card number, by the privacy add-on's shapes, naming only the kind. *box* `no-install` `offline` `read-only` `assistant` `hooks`
+- **hook-pin** (idea) — Each hook's SHA-256 kept on the record when you approve it, so a hook that changed since is named before it runs, never silently trusted or skipped. *new* `no-install` `offline` `records` `assistant` `hooks`
+- **hook-read-first** (idea) — A PreToolUse hook that refuses an edit to a file the assistant hasn't read this session, or whose bytes changed since it did, each read kept as a hash. *new* `no-install` `offline` `records` `assistant` `hooks`
+- **hook-replay** (idea) — Every hook's answer kept as a row with the hashes of what it was given and what it said, and check runs it again to prove the same input still gets the same answer. *new* `no-install` `offline` `records` `assistant` `hooks`
+- **hook-sequence** (idea) — Rules over what an assistant did before, not just this call: no push until the tests ran on this commit, at most so many deletions a session, read from the record. *new* `no-install` `offline` `read-only` `assistant` `hooks`
+- **hook-shell** (idea) — A command split the way the shell will split it, quotes, variables and chained commands included, before any rule judges it, so a rule can't be dodged by spelling. *new* `no-install` `offline` `read-only` `assistant` `hooks`
+- **hook-start** (idea) — A SessionStart hook that hands the assistant what needs you, read the way digest reads it, so opening a session writes nothing. *bot* `no-install` `offline` `read-only` `assistant` `hooks`
+- **hook-stop** (idea) — A Stop hook that won't let an assistant's turn end while the record doesn't verify or its changes aren't committed, and says which. *new* `no-install` `offline` `read-only` `assistant` `hooks`
+- **hook-tiers** (idea) — Edits sorted into tiers by the paths they touch, and the top tier held as a proposal until you seal it, by a rule you can read. *new* `no-install` `offline` `records` `assistant` `hooks`
+- **hooks-elsewhere** (idea) — The prompt hook for Gemini CLI, Codex and opencode, wherever they take hooks, held to Claude Code's answer byte for byte. *box* `no-install` `offline` `records` `assistant` `hooks`
+- **instruction-files** (idea) — For a folder, which instruction files each coding agent would load (AGENTS.md, CLAUDE.md, GEMINI.md, rules folders), in what order, with each file's size and hash. *box* `no-install` `offline` `read-only` `assistant`
 - **issue-answer** (idea) — A workflow that drafts an answer to a new issue from the repo's own docs, each line cited, posted only once a maintainer seals it. Goes online: the forge, through the workflow's token, to post an answer once it is sealed. *new* `no-install` `online` `records` `assistant`
 - **ladder** (idea) — Your files first, then sources you trust such as Jeles and Nestor, then a model, stopping at the first that answers, each answer kept for next time. *bot* `no-install` `offline` `records` `assistant`
 - **local-model** (idea) — Suggestions from a model on this machine only, such as Ollama or llama.cpp. Needs a local model server; licence varies by model. Reaches this machine only. *new* `needs-install` `this-machine` `records` `assistant`
 - [**mcp**](adapters/deps/mcp/) — Lets any MCP client, such as an AI assistant or editor, ask your folder and hand in suggestions. Needs mcp; MIT. *new* `needs-install` `offline` `records` `assistant`
+- **mcp-by-hash** (idea) — Your passages served as MCP resources named by their SHA-256, so an assistant cites exactly the bytes it read and a changed passage gets a new name. *bot* `no-install` `offline` `read-only` `assistant`
 - [**mcp-lite**](adapters/stdlib/mcp-lite/) — The mcp add-on's three tools with nothing to install: the protocol by hand, standard library only. *box* `no-install` `offline` `records` `assistant`
 - **memory-import** (idea) — An AI assistant's memory store, SQLite or Markdown, handed in through propose: one suggestion per memory, none trusted until you seal it. *new* `no-install` `offline` `records` `assistant`
 - **mex** (idea) — mex's project memory for coding agents: its scaffold read as cited passages, and what an agent writes back held for your seal. *new* `no-install` `offline` `records` `assistant`
@@ -372,10 +404,14 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - **night-batch** (idea) — Questions waiting for suggestions batched into one local-model run overnight, stopped the moment you're back. Needs a local model server; licence varies by model. Reaches this machine only. *new* `needs-install` `this-machine` `records` `assistant`
 - **openai-compatible** (idea) — Suggestions from any OpenAI-compatible endpoint you choose (LM Studio, vLLM, OpenRouter), citing your passages. Goes online: the endpoint you configure, to ask for suggestions. *new* `no-install` `online` `records` `assistant`
 - [**opencode**](adapters/stdlib/opencode/) — OpenCode asks your folder and hands in suggestions, through the mcp add-on. *new* `no-install` `offline` `read-only` `assistant`
+- **persona-card** (idea) — A persona written as a card and compiled into the same system-prompt bytes every time, with the prompt's hash on the record. *box* `no-install` `offline` `records` `assistant`
 - **plain-language** (idea) — An approved answer rewritten in plain language by a model, the rewrite held until you seal it. *new* `no-install` `offline` `records` `assistant`
 - **quantized** (idea) — Finds the smallest quantized local model that still gets your box's own questions right, so suggestions come faster. Needs a local model server; licence varies by model. Reaches this machine only. *new* `needs-install` `this-machine` `read-only` `assistant`
+- **same-way** (idea) — A local model asked each of your box's questions three times, and how often its answer flips, since a model that answers the same way every time is one you can build on. Goes online: this-machine. *new* `no-install` `this-machine` `read-only` `assistant`
+- **schema-check** (idea) — A model's answer held to a JSON schema before anything reads it, and a reply that doesn't fit recorded as a result, not lost as an error. *box* `no-install` `offline` `records` `assistant`
 - **scope** (idea) — Hands an assistant only the passages in scope, as one file, by ids it can't guess: nothing outside it is named or counted. *bot* `no-install` `offline` `writes-output` `assistant`
 - **second-opinion** (idea) — Two assistants' suggestions for the same question side by side, each waiting for its own seal. *new* `no-install` `offline` `records` `assistant`
+- **silence-log** (idea) — A model that ran and said nothing kept as its own row, so silence is told apart from a model that never ran. *bot* `no-install` `offline` `records` `assistant`
 - **translate** (idea) — An answer translated by a local model, the original kept beside it, the translation held until you seal it. Needs a local model server; licence varies by model. Reaches this machine only. *new* `needs-install` `this-machine` `records` `assistant`
 - [**windsurf**](adapters/stdlib/windsurf/) — Windsurf asks your folder and hands in suggestions, through the mcp add-on. *new* `no-install` `offline` `read-only` `assistant`
 - [**zed**](adapters/stdlib/zed/) — Zed's assistant asks your folder and hands in suggestions, through the mcp add-on. *new* `no-install` `offline` `read-only` `assistant`
@@ -400,6 +436,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - [**jetbrains**](adapters/stdlib/jetbrains/) — An external tool for IntelliJ, PyCharm and the rest, with answers as links to file and line. *new* `no-install` `offline` `read-only` `interface`
 - **kiosk** (idea) — A shared machine in a library or classroom: one box, ask only, nobody's key on it. Reaches this machine only. *new* `no-install` `this-machine` `read-only` `interface`
 - **launcher** (idea) — Ask from Alfred, Raycast, KRunner or PowerToys Run, answers with file and line. *new* `no-install` `offline` `read-only` `interface`
+- **llms-txt** (idea) — An llms.txt for your folder, written from what's actually in it to the spec's version 2, and any llms.txt you saved checked against that spec. *new* `no-install` `offline` `writes-output`
 - **obsidian** (idea) — Ask from inside Obsidian, answers as links to the note and line. Reaches this machine only. *new* `no-install` `this-machine` `read-only` `interface`
 - [**pipe**](adapters/stdlib/pipe/) — Questions in on standard input, answers out one per line: JSON lines, or file:line: text for grep and fzf. *box* `no-install` `offline` `records` `interface`
 - [**plain**](adapters/stdlib/plain/) — Answers as sentences instead of JSON, each with its file and line. *new* `no-install` `offline` `records` `interface`
