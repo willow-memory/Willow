@@ -120,13 +120,72 @@ The verdicts are rows on a kernel record (`verify`: the chain holds, 7 rows,
 `kernel.py` 2d7fd0f6, `scan.py` ead27057, `score.py` 084d0a3a, `phase2.py`
 5ca4e4a1.
 
+## Phase 1: blind questions, a second rule, and BM25, 2026-10-24
+
+Run by [phase1.py](phase1.py), frozen with what it used before it ran:
+three blind question sets, [score2.py](score2.py) and scan's `--rank bm25`.
+Four of five pass rules pass.
+
+**The blind sets.** Three agents each wrote eight questions without seeing
+PHP's code, the fix, the author's questions or any result:
+[blind-a.txt](questions/blind-a.txt) as a security engineer and
+[blind-c.txt](questions/blind-c.txt) in terse keywords, both from the
+advisories, and [blind-b.txt](questions/blind-b.txt) as a sysadmin from one
+news article. None could open a web page (each fetch failed), so all three
+worked from search summaries, which describe the bugs' mechanisms in plain
+words but show no code. Each file's header lists its sources.
+
+**The second rule.** Phase 2 showed rule 1 blind where the fix only added
+code. Rule 2 also counts the unchanged line just before and just after each
+run of added lines. It was written after phase 2's results, so it is judged
+only on the blind questions, which nobody had asked yet, and against random
+draws scored the same way, since it is looser.
+
+Pooled over the three blind sets, each asked of the four fixes' pairs, top
+3, 96 answers a row:
+
+| Ranked by | Rule | Core answers | Random | p | Passes when | Result |
+|---|---|---|---|---|---|---|
+| the kernel | 1 | 28 (29%) | 20.1% | 0.022 | p < 0.01 | **fails** |
+| the kernel | 2 | 48 (50%) | 27.7% | 0.000003 | p < 0.01 | passes |
+| BM25 | 1 | 31 (32%) | 20.1% | 0.0034 | p < 0.01 | passes |
+| BM25 | 2 | 75 (78%) | 27.7% | 10^-24 | p < 0.01 | passes |
+
+The blind sets reach 29% under rule 1 with the kernel, against the author's
+37.5%: at least half, as the rule asks, so it passes. By set, out of 32:
+
+| Set | kernel, rule 1 | kernel, rule 2 | BM25, rule 1 | BM25, rule 2 |
+|---|---|---|---|---|
+| blind-a, security engineer | 6 | 12 | 9 | 27 |
+| blind-b, one news article | 14 | 16 | 14 | 20 |
+| blind-c, terse keywords | 8 | 20 | 8 | 28 |
+| author's (not blind) | 12 | 24 | 17 | 27 |
+
+**What it says:**
+
+- **The result holds for questions its author didn't write.** Blind
+  questions land on the fix far above chance once the rule counts where the
+  fix added code. The sysadmin's set, from one news article, did as well as
+  any.
+- **BM25 is the better ranking for this.** Under rule 2 it lands three
+  answers in four on the fix's core, against half for the kernel's rank.
+  The kernel's need for half a question's rarer words in one passage costs
+  it most on long, descriptive questions (set A).
+- **Under the strict rule, the kernel still misses the frozen margin**, as
+  in phase 2 (p = 0.022 both times). Its result rests on rule 2, which was
+  written after phase 2; BM25's does not.
+
+The verdicts are rows on a kernel record (the chain holds, 6 rows, 0
+sealed), with the SHA-256 of the scored answers (868f771a) and of the
+tools: `kernel.py` 2d7fd0f6, `scan.py` d93536eb.
+
 ## Where each phase stands
 
 | Phase | Status |
 |---|---|
 | 0, freeze | done: 18 releases and 4 fix diffs fetched and matching their pins |
 | 2, null tests | done: 4 of 6 pass; random (p = 0.022) and BM25 fail |
-| 1, blind questions | not started |
+| 1, blind questions | done: 4 of 5 pass; the kernel under rule 1 fails (p = 0.022) |
 | 6, reproducibility | not started |
 | 3, out of sample | not started; its CVEs and releases are frozen when it starts |
 | 4, before the fix | not started |
