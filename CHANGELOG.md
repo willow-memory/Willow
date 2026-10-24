@@ -14,6 +14,12 @@ says how). The first was v0.1.0.
   thing in parts is out until every part is back, a loan with no return
   line is "no return written", and a line's own date and its file's are
   both shown when they differ. (#27)
+- `contradictions`, two lines saying the same thing with a different date
+  or amount, side by side, each cited, neither picked. Two lines are about
+  the same thing when they share two words and half the shorter's; records
+  of one kind (invoices numbered alike, a form's field, a list's items) and
+  lines written on different days are counted and left alone. Dates are the
+  kernel's own reading. (#29)
 - `slow-tests`, an add-on that reads a folder of pytest's JUnit XML files, one
   per run, and names the slowest tests and files in the latest. It flags a
   test that got slower by a printed rule (more than 2x and 1 s over the
