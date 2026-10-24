@@ -176,3 +176,32 @@ jobs:
         with:
           name: ci-record-deps
           path: ${{ runner.temp }}/ci-record/record.jsonl
+
+  tools:
+    # The programs the way-in add-ons are for, each run on the lines its
+    # add-on prints (adapters/stdlib/live/live.py). Pinned, so a run says
+    # which version read them; one that didn't install is unreachable, and
+    # an unreachable gate fails this job: nothing here passes unchecked.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+      - run: sudo apt-get update -q && sudo apt-get install -y -q zsh fish emacs-nox vim neovim
+      - run: >-
+          npm install --global --no-fund --no-audit
+          @openai/codex@0.164.0 @google/gemini-cli@0.65.0 opencode-ai@1.19.4
+          @github/copilot@1.0.103 @anthropic-ai/claude-code@2.1.310
+          @modelcontextprotocol/inspector@2.12.0
+      - run: python adapters/stdlib/ci/ci.py run tools --box ${{ runner.temp }}/ci-record
+      - if: always()
+        run: python adapters/stdlib/ci/ci.py verify --box ${{ runner.temp }}/ci-record
+      - if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: ci-record-tools
+          path: ${{ runner.temp }}/ci-record/record.jsonl

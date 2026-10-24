@@ -10,6 +10,23 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- CLI adapters, sixteen add-ons with nothing to install: `pipe` (JSON lines,
+  or grep's file:line: text), `mcp-lite` (the mcp add-on's tools, the
+  protocol by hand), `claude-code` (a prompt hook), `shell` (a willow
+  command and completion for bash, zsh, fish, PowerShell and cmd), the
+  settings that register mcp-lite with Codex CLI, Gemini CLI, Copilot,
+  Cursor, Windsurf, Zed and OpenCode, and pipe's answers in Vim, Emacs, VS
+  Code, JetBrains IDEs and Aider. (#11)
+- `live` runs each way-in add-on through the real program it's for (bash,
+  zsh, fish, PowerShell, Vim, Neovim, Emacs, Node for VS Code's matcher,
+  Codex CLI, Gemini CLI, OpenCode, Copilot CLI, Claude Code and MCP
+  Inspector), in a box under a folder with a space in its name: works,
+  fails, or not here. CI gains a `tools` job that installs each at a pinned
+  version, one gate a check, where a program that isn't there fails the
+  job. Its first run found, fixed here before release: VS Code's matcher
+  misread a passage quoting a file:line of its own, and Claude Code's hook
+  and add line, Aider's run line and JetBrains' parameters split a path
+  with a space. (#11)
 - CI's `similar` job keeps its list of what's near each added idea as the
   run's `similar` artifact, which willow-bot posts in its status comment on
   the pull request; `github.py check` holds the job to it. (#10)
@@ -50,6 +67,10 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- `adapters/stdlib/mutants/mutants.py` runs each mutant without Python's bytecode cache, so a
+  same-size break can no longer run the previous mutant's code and pass as
+  a survivor; and it no longer breaks the `__main__` guard, which the
+  contract test already holds. (#11)
 - The changelog check skips Dependabot's pull requests, which can't write
   an entry; its updates aren't listed. The GitHub add-on's check fails if
   it skips anyone else. (#9)
