@@ -525,16 +525,6 @@
   "tags": "no-install, offline, read-only, tracking"
  },
  {
-  "name": "contradictions",
-  "kind": "stdlib",
-  "section": "Trust and proof",
-  "line": "Two passages that disagree about the same date or amount, side by side.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, trust"
- },
- {
   "name": "contribute",
   "kind": "stdlib",
   "section": "For maintainers",
