@@ -10,6 +10,11 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `restack`, your branches put back on top of main: each rebased in a
+  scratch worktree, the conflicts in the files the repo makes or only adds
+  to (the add-on list, CHANGELOG.md, FILES.md, `COMMANDS`, the idea list)
+  settled by the repo's own rules and tools, any other one stopping that
+  branch untouched, and nothing moved until `test_docs.py` passes.
 - `scan`, an add-on that indexes a folder once and then answers a list of
   questions in seconds with the kernel's own answers, narrowing only which
   passages `rank` looks at. It adds `--changed-from` (ask only what changed

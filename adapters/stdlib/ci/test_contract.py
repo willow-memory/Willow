@@ -117,6 +117,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "xref": ("xref.py", ["--box", "{box}"]),
     "print": ("print.py", ["--box", "{box}", "--to", "{tmp}/page.html", *NOW, "tomatoes"]),
     "start": ("start.py", ["--pile", "{pile}", "--to", "{tmp}/willow"]),
+    "restack": ("restack.py", ["--onto", "HEAD", "HEAD"]),
     **{name: (script, ["mirror", "--from", "{pile}", "--to", "{tmp}/mirror"])
        for name, (script, _) in READERS.items()},
 }  # fmt: skip
