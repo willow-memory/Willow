@@ -70,6 +70,16 @@
   "tags": "no-install, offline, writes-output, interface"
  },
  {
+  "name": "annotations",
+  "kind": "stdlib",
+  "section": "Ways to use it",
+  "line": "Approved answers as W3C Web Annotations, so any annotation tool can show what your files say about a page.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, interface"
+ },
+ {
   "name": "apple-notes",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -88,6 +98,16 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "art-of-the-day",
+  "kind": "stdlib",
+  "section": "Play",
+  "line": "An artwork from the Met's public-domain collection, drawn for the day or for each sealed session.",
+  "source": "new",
+  "writes": "record",
+  "network": "collectionapi.metmuseum.org, to read the artwork",
+  "tags": "no-install, online, records, play"
  },
  {
   "name": "assistant-scores",
@@ -180,6 +200,16 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
+  "name": "bm25",
+  "kind": "stdlib",
+  "section": "Finding things",
+  "line": "A BM25 rank from SQLite's own full-text index, beside the kernel's words rank: rare words weigh more.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, search"
+ },
+ {
   "name": "bookmarks",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -208,6 +238,17 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, tracking"
+ },
+ {
+  "name": "by-function",
+  "kind": "deps",
+  "section": "Finding things",
+  "line": "Code read by function and class instead of by line, so a hit names the function it's in.",
+  "source": "new",
+  "needs": "tree-sitter and its language pack; MIT",
+  "writes": "to",
+  "network": "none",
+  "tags": "needs-install, offline, writes-output, search"
  },
  {
   "name": "calendar-out",
@@ -250,6 +291,16 @@
   "tags": "no-install, offline, records, trust"
  },
  {
+  "name": "chess-puzzle",
+  "kind": "stdlib",
+  "section": "Play",
+  "line": "A Lichess puzzle a day, drawn by a seed: predict whether you'll solve it, then solve it.",
+  "source": "new",
+  "writes": "record",
+  "network": "lichess.org, to read the puzzle",
+  "tags": "no-install, online, records, play"
+ },
+ {
   "name": "chordpro",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -258,6 +309,26 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "ci-baseline",
+  "kind": "stdlib",
+  "section": "For maintainers",
+  "line": "Is your CI normal? How often pull requests everywhere go green first time, from GH Archive.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "data.gharchive.org, its hours downloaded once",
+  "tags": "no-install, online, read-only, maintainers"
+ },
+ {
+  "name": "ci-bets",
+  "kind": "stdlib",
+  "section": "For maintainers",
+  "line": "Bet on your own CI: forecasts on each pull request going green, scored against the model's.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, maintainers"
  },
  {
   "name": "ci-logs",
@@ -291,6 +362,16 @@
   "tags": "needs-install, online, records, assistant"
  },
  {
+  "name": "cloudevents",
+  "kind": "stdlib",
+  "section": "Ways to use it",
+  "line": "Record rows in the CloudEvents envelope, for any tool that already reads them.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, interface"
+ },
+ {
   "name": "code-comments",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -309,6 +390,28 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, search"
+ },
+ {
+  "name": "code-shape",
+  "kind": "deps",
+  "section": "Finding things",
+  "line": "Search code by its shape, not its words: every call of a kind, whatever it's named.",
+  "source": "new",
+  "needs": "the ast-grep program; MIT",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "needs-install, offline, read-only, search"
+ },
+ {
+  "name": "code-stats",
+  "kind": "deps",
+  "section": "For maintainers",
+  "line": "Lines, code and complexity per language, per release, as rows the list can answer from.",
+  "source": "new",
+  "needs": "the scc program; MIT",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "needs-install, offline, read-only, maintainers"
  },
  {
   "name": "codebase-memory",
@@ -339,6 +442,16 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "connect-four",
+  "kind": "stdlib",
+  "section": "Play",
+  "line": "Connect Four as rows on the record, held to the solved result: the first player wins.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, play"
  },
  {
   "name": "contracts",
@@ -401,6 +514,26 @@
   "tags": "no-install, online, writes-output, maintainers"
  },
  {
+  "name": "crosswalk",
+  "kind": "stdlib",
+  "section": "Finding things",
+  "line": "The outside IDs a passage points to (Wikidata, DOI, ORCID, GeoNames) kept beside it, so your notes join the world's.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, search"
+ },
+ {
+  "name": "crowd",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "You against the crowd: a prediction market's question copied into your ledger, your probability beside theirs, both scored.",
+  "source": "new",
+  "writes": "record",
+  "network": "the market's public API, to read the question and its resolution",
+  "tags": "no-install, online, records, tracking"
+ },
+ {
   "name": "cycle",
   "kind": "stdlib",
   "section": "Keeping track",
@@ -419,6 +552,17 @@
   "writes": "record",
   "network": "none",
   "tags": "no-install, offline, records, play"
+ },
+ {
+  "name": "datasette",
+  "kind": "deps",
+  "section": "Ways to use it",
+  "line": "Your record and approved answers browsable in Datasette, read only: tables, facets and SQL on this machine.",
+  "source": "new",
+  "needs": "Datasette; Apache-2.0",
+  "writes": "nothing",
+  "network": "loopback",
+  "tags": "needs-install, this-machine, read-only, interface"
  },
  {
   "name": "day-one",
@@ -441,6 +585,16 @@
   "tags": "no-install, offline, read-only, tracking"
  },
  {
+  "name": "deep-links",
+  "kind": "stdlib",
+  "section": "Ways to use it",
+  "line": "Each answer as a link that opens the file at the line (RFC 5147 lines, browser text fragments).",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, interface"
+ },
+ {
   "name": "desktop",
   "kind": "stdlib",
   "section": "Ways to use it",
@@ -449,6 +603,17 @@
   "writes": "record",
   "network": "none",
   "tags": "no-install, offline, records, interface"
+ },
+ {
+  "name": "dialect",
+  "kind": "deps",
+  "section": "Your own words",
+  "line": "The words you use far more than the world does: your own dialect, from your files against wordfreq's counts.",
+  "source": "new",
+  "needs": "wordfreq; Apache-2.0, its data CC BY-SA 4.0",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "needs-install, offline, read-only, words"
  },
  {
   "name": "dice",
@@ -643,6 +808,16 @@
   "tags": "no-install, offline, records, privacy"
  },
  {
+  "name": "front-page",
+  "kind": "stdlib",
+  "section": "Play",
+  "line": "Which new posts will make the Hacker News front page? Wager, and let its search settle it.",
+  "source": "new",
+  "writes": "record",
+  "network": "hn.algolia.com, to read the front page",
+  "tags": "no-install, online, records, play"
+ },
+ {
   "name": "fuzz",
   "kind": "stdlib",
   "section": "For maintainers",
@@ -651,6 +826,16 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, maintainers"
+ },
+ {
+  "name": "fuzzy-dates",
+  "kind": "stdlib",
+  "section": "Finding things",
+  "line": "Dates that admit doubt ('about 1880', 'sometime in March') read and kept with their doubt, in EDTF.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, search"
  },
  {
   "name": "game-master",
@@ -775,6 +960,16 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
+  "name": "gutenberg",
+  "kind": "stdlib",
+  "section": "Play",
+  "line": "A paragraph from a public-domain book beside one of yours, for serendipity.",
+  "source": "new",
+  "writes": "record",
+  "network": "gutenberg.org, each book fetched once",
+  "tags": "no-install, online, records, play"
+ },
+ {
   "name": "habits",
   "kind": "stdlib",
   "section": "Keeping track",
@@ -783,6 +978,16 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, tracking"
+ },
+ {
+  "name": "hanoi",
+  "kind": "stdlib",
+  "section": "Play",
+  "line": "Towers of Hanoi as rows: each move, n discs in 2^n - 1.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, play"
  },
  {
   "name": "health",
@@ -865,6 +1070,16 @@
   "tags": "no-install, offline, read-only, play"
  },
  {
+  "name": "horoscope-grades",
+  "kind": "stdlib",
+  "section": "Play",
+  "line": "Every horoscope logged as a forecast and settled against the day, so the stars get a Brier score.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, play"
+ },
+ {
   "name": "hours",
   "kind": "stdlib",
   "section": "Keeping track",
@@ -875,6 +1090,16 @@
   "tags": "no-install, offline, read-only, tracking"
  },
  {
+  "name": "ids",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "Every file and passage given its Software Heritage ID and IPFS CID, names the rest of the world already uses.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, trust"
+ },
+ {
   "name": "in-case",
   "kind": "stdlib",
   "section": "Trust and proof",
@@ -883,6 +1108,27 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, trust"
+ },
+ {
+  "name": "in-toto",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "A sealed answer exported as an in-toto Statement, the envelope SLSA uses, so others can check it.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, trust"
+ },
+ {
+  "name": "ink-story",
+  "kind": "deps",
+  "section": "Play",
+  "line": "A branching ink story where every choice made for you comes from a seed on the record.",
+  "source": "new",
+  "needs": "inkjs; MIT",
+  "writes": "record",
+  "network": "none",
+  "tags": "needs-install, offline, records, play"
  },
  {
   "name": "install-scripts",
@@ -1043,6 +1289,17 @@
   "writes": "nothing",
   "network": "loopback",
   "tags": "no-install, this-machine, read-only, interface"
+ },
+ {
+  "name": "kiwix",
+  "kind": "deps",
+  "section": "Finding things",
+  "line": "An offline Wikipedia (or Stack Exchange, or Gutenberg) as a source after your own files, cited by article.",
+  "source": "new",
+  "needs": "libzim, and a ZIM file you download; GPL-3.0",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "needs-install, offline, read-only, search"
  },
  {
   "name": "lab-notebook",
@@ -1247,6 +1504,17 @@
   "tags": "no-install, offline, read-only, trust"
  },
  {
+  "name": "lunatic",
+  "kind": "deps",
+  "section": "Play",
+  "line": "The moon's real phase sets how far typos are forgiven: everything at full moon, nothing at new.",
+  "source": "new",
+  "needs": "Skyfield; MIT",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "needs-install, offline, read-only, play"
+ },
+ {
   "name": "man-pages",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -1276,6 +1544,16 @@
   "writes": "record",
   "network": "none",
   "tags": "no-install, offline, records, tracking"
+ },
+ {
+  "name": "mastermind",
+  "kind": "stdlib",
+  "section": "Play",
+  "line": "Mastermind with the secret's hash at the open: each guess and score on the record.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, play"
  },
  {
   "name": "mastodon",
@@ -1359,6 +1637,16 @@
   "tags": "no-install, offline, records, assistant"
  },
  {
+  "name": "merkle",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "A Merkle tree over the record, so one row can be proven with a handful of hashes, not the whole file.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, trust"
+ },
+ {
   "name": "meta-archive",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -1420,6 +1708,17 @@
   "tags": "no-install, offline, read-only, tracking"
  },
  {
+  "name": "movie",
+  "kind": "deps",
+  "section": "Play",
+  "line": "Your record as a Gource film: every question, approval and miss growing like a tree.",
+  "source": "new",
+  "needs": "the gource program; GPL-3.0, called not linked",
+  "writes": "to",
+  "network": "none",
+  "tags": "needs-install, offline, writes-output, play"
+ },
+ {
   "name": "music-library",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -1458,6 +1757,26 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, words"
+ },
+ {
+  "name": "nim",
+  "kind": "stdlib",
+  "section": "Play",
+  "line": "Nim as rows: the heaps and each take, a position lost exactly when the heaps' XOR is 0.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, play"
+ },
+ {
+  "name": "ninety-percent",
+  "kind": "stdlib",
+  "section": "Play",
+  "line": "The calibration drill: give a range you're 90% sure of for a real number, and see how many hold.",
+  "source": "new",
+  "writes": "record",
+  "network": "Our World in Data, its numbers downloaded once",
+  "tags": "no-install, online, records, play"
  },
  {
   "name": "notary",
@@ -1551,6 +1870,26 @@
   "tags": "no-install, online, records, assistant"
  },
  {
+  "name": "opentimestamps",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "The record's newest hash anchored by OpenTimestamps, proof that it existed by a given block.",
+  "source": "new",
+  "writes": "record",
+  "network": "the OpenTimestamps calendars, sent only the hash",
+  "tags": "no-install, online, records, trust"
+ },
+ {
+  "name": "oracle-text",
+  "kind": "stdlib",
+  "section": "Play",
+  "line": "Readings written by a Tracery grammar, every branch picked by the seeded stream, so each one can be replayed.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, play"
+ },
+ {
   "name": "orders",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -1589,6 +1928,16 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "pageviews",
+  "kind": "stdlib",
+  "section": "Play",
+  "line": "Two Wikipedia articles drawn at random: which gets more views tomorrow?",
+  "source": "new",
+  "writes": "record",
+  "network": "the Wikimedia pageviews API, to settle it",
+  "tags": "no-install, online, records, play"
  },
  {
   "name": "paper-key",
@@ -1663,6 +2012,16 @@
   "tags": "no-install, offline, read-only, privacy"
  },
  {
+  "name": "pile-poetry",
+  "kind": "stdlib",
+  "section": "Play",
+  "line": "Verse from the word pairs your own files use most, in your own dialect.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, play"
+ },
+ {
   "name": "pins",
   "kind": "stdlib",
   "section": "For maintainers",
@@ -1733,6 +2092,27 @@
   "tags": "no-install, offline, writes-output, interface"
  },
  {
+  "name": "property-tests",
+  "kind": "deps",
+  "section": "For maintainers",
+  "line": "Thousands of odd inputs (combining marks, empty strings, huge seeds) thrown at the byte rules by Hypothesis.",
+  "source": "new",
+  "needs": "Hypothesis; MPL-2.0",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "needs-install, offline, read-only, maintainers"
+ },
+ {
+  "name": "prov",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "The record exported as W3C PROV: what came from what, by which step, sealed by whom.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, trust"
+ },
+ {
   "name": "provenance",
   "kind": "deps",
   "section": "Trust and proof",
@@ -1762,6 +2142,16 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, interface"
+ },
+ {
+  "name": "quake-bets",
+  "kind": "stdlib",
+  "section": "Play",
+  "line": "Will there be a magnitude 6 this week? Bet, then let the USGS feed settle it against the base rate.",
+  "source": "new",
+  "writes": "record",
+  "network": "earthquake.usgs.gov, to read the week's earthquakes",
+  "tags": "no-install, online, records, play"
  },
  {
   "name": "quiet-corner",
@@ -1804,6 +2194,17 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
+  "name": "real-sky",
+  "kind": "deps",
+  "section": "Play",
+  "line": "A horoscope from where the planets really are, computed offline from a JPL ephemeris.",
+  "source": "new",
+  "needs": "Skyfield; MIT",
+  "writes": "nothing",
+  "network": "the ephemeris file, downloaded once",
+  "tags": "needs-install, online, read-only, play"
+ },
+ {
   "name": "recipes",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -1823,6 +2224,17 @@
   "writes": "nothing",
   "network": "none",
   "tags": "needs-install, offline, read-only, maintainers"
+ },
+ {
+  "name": "record-sql",
+  "kind": "deps",
+  "section": "Finding things",
+  "line": "SQL straight over your record, in place: 'how many answers did I approve in March?'",
+  "source": "new",
+  "needs": "DuckDB; MIT",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "needs-install, offline, read-only, search"
  },
  {
   "name": "reddit",
@@ -1876,6 +2288,17 @@
   "tags": "no-install, offline, read-only, maintainers"
  },
  {
+  "name": "rerank",
+  "kind": "deps",
+  "section": "Finding things",
+  "line": "A small model on the CPU that reorders the top passages by reading the question and each passage together.",
+  "source": "new",
+  "needs": "FlashRank; Apache-2.0",
+  "writes": "nothing",
+  "network": "the model, downloaded once",
+  "tags": "needs-install, online, read-only, search"
+ },
+ {
   "name": "retire",
   "kind": "stdlib",
   "section": "Trust and proof",
@@ -1884,6 +2307,47 @@
   "writes": "record",
   "network": "none",
   "tags": "no-install, offline, records, trust"
+ },
+ {
+  "name": "reversi",
+  "kind": "stdlib",
+  "section": "Play",
+  "line": "Reversi as rows: every move, each flip following from the board.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, play"
+ },
+ {
+  "name": "ripgrep",
+  "kind": "deps",
+  "section": "Finding things",
+  "line": "Exact search through ripgrep, much faster on a big folder, its hits checked against the kernel's hashes.",
+  "source": "new",
+  "needs": "the ripgrep program; MIT or Unlicense",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "needs-install, offline, read-only, search"
+ },
+ {
+  "name": "ro-crate",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "A box snapshot as an RO-Crate research object Zenodo can read: each file with its hash and licence.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, trust"
+ },
+ {
+  "name": "roll-for-merge",
+  "kind": "stdlib",
+  "section": "Play",
+  "line": "A d20 for every pull request, green runs added and red streaks taken away, against a DC the bot calls.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, play"
  },
  {
   "name": "rss-out",
@@ -1924,6 +2388,16 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, interface"
+ },
+ {
+  "name": "said",
+  "kind": "stdlib",
+  "section": "Finding things",
+  "line": "Your own quotes, gathered: every 'so-and-so, on this date: \"...\"' in your files, as a dated timeline of what was decided.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, search"
  },
  {
   "name": "sap-gate",
@@ -2140,6 +2614,16 @@
   "tags": "no-install, online, records, file-reader"
  },
  {
+  "name": "sokoban",
+  "kind": "stdlib",
+  "section": "Play",
+  "line": "Sokoban levels and moves on the record, a solution checked by replaying it.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, play"
+ },
+ {
   "name": "sourcehut",
   "kind": "stdlib",
   "section": "For maintainers",
@@ -2161,6 +2645,16 @@
   "tags": "needs-install, offline, read-only, interface"
  },
  {
+  "name": "spurious",
+  "kind": "stdlib",
+  "section": "Play",
+  "line": "Everything joined on time and place (CI reds, earthquakes, rain, front pages) to hunt correlations that mean nothing.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, play"
+ },
+ {
   "name": "start",
   "kind": "stdlib",
   "section": "Ways to use it",
@@ -2169,6 +2663,17 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, interface, everyday"
+ },
+ {
+  "name": "static-search",
+  "kind": "deps",
+  "section": "Ways to use it",
+  "line": "An exported page of approved answers with its own search built in, no server, opened in any browser.",
+  "source": "new",
+  "needs": "Pagefind; MIT",
+  "writes": "to",
+  "network": "none",
+  "tags": "needs-install, offline, writes-output, interface"
  },
  {
   "name": "steam",
@@ -2232,6 +2737,17 @@
   "tags": "no-install, offline, read-only, maintainers"
  },
  {
+  "name": "symbols",
+  "kind": "deps",
+  "section": "Finding things",
+  "line": "Exact definitions and references for Python code: where a name is defined, and every place it's used.",
+  "source": "new",
+  "needs": "scip-python; MIT",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "needs-install, offline, read-only, search"
+ },
+ {
   "name": "symptoms",
   "kind": "stdlib",
   "section": "Keeping track",
@@ -2283,6 +2799,16 @@
   "tags": "no-install, offline, records, play"
  },
  {
+  "name": "tatoeba",
+  "kind": "stdlib",
+  "section": "Your own words",
+  "line": "A question in one language finds the same idea in another, through Tatoeba's sentence pairs, downloaded once.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, words"
+ },
+ {
   "name": "tax-year",
   "kind": "stdlib",
   "section": "Keeping track",
@@ -2323,6 +2849,26 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
+  "name": "tic-tac-toe",
+  "kind": "stdlib",
+  "section": "Play",
+  "line": "Tic-tac-toe as rows: every move, and the solver's value of each position; perfect play draws.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, play"
+ },
+ {
+  "name": "tides",
+  "kind": "stdlib",
+  "section": "Play",
+  "line": "Tide predictions as a control: if your Brier score on tides isn't near zero, the forecasting plumbing is broken.",
+  "source": "new",
+  "writes": "record",
+  "network": "NOAA's tides API, to read predictions and what happened",
+  "tags": "no-install, online, records, play"
+ },
+ {
   "name": "time-capsule",
   "kind": "stdlib",
   "section": "Trust and proof",
@@ -2341,6 +2887,16 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, trust"
+ },
+ {
+  "name": "todays-place",
+  "kind": "stdlib",
+  "section": "Play",
+  "line": "One place a day drawn from Natural Earth's public-domain list, for the day's questions and bets.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, play"
  },
  {
   "name": "transcript-redact",
@@ -2453,6 +3009,26 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, tracking"
+ },
+ {
+  "name": "wayback",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "Each web snapshot paired with the Wayback Machine's nearest copy, so anyone can see what the page said that day.",
+  "source": "new",
+  "writes": "record",
+  "network": "archive.org, to find the nearest archived copy",
+  "tags": "no-install, online, records, trust"
+ },
+ {
+  "name": "weather-bet",
+  "kind": "stdlib",
+  "section": "Play",
+  "line": "Wager on rain tomorrow before you look, against Open-Meteo's own forecast, and see whose Brier score wins.",
+  "source": "new",
+  "writes": "record",
+  "network": "api.open-meteo.com, to read the forecast and the outcome",
+  "tags": "no-install, online, records, play"
  },
  {
   "name": "web-pages",

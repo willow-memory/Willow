@@ -10,7 +10,7 @@ says how). The first was v0.1.0.
 
 ### Added
 
-- Two hundred and twenty-nine ideas on the add-on list, nothing built: readers for what
+- Two hundred and eighty-five ideas on the add-on list, nothing built: readers for what
   people use now (Pocket, Instapaper, wallabag, Karakeep, Joplin, jrnl,
   Journiv, WriteFreely, ArchiveBox, Slack, Discord, Signal, Mastodon,
   Bluesky, Google Takeout, subtitles, AI agents' session files) and tools
@@ -41,7 +41,13 @@ says how). The first was v0.1.0.
   game-master, odds, beacon, predictions, joins, market-calls, predict,
   ladder, scope and code-first from its one script, and horoscope, losc,
   contribute, contributions, upstream-desk, welcome and ci-why from the
-  bot itself. (#13)
+  bot itself; and fifty-six from willow-bot's `one-script/IDEAS.md`:
+  search rungs (bm25, ripgrep, by-function, code-shape, symbols, rerank,
+  kiwix), the record in the world's formats (merkle, opentimestamps,
+  ids, prov, ro-crate, in-toto, wayback, cloudevents), bets on the
+  world's data (weather, quakes, pageviews, the front page, tides),
+  games with known answers (tic-tac-toe to reversi), and the stupid
+  pile (lunatic, spurious, roll-for-merge). (#13)
 - No terminal, no English required: `browse`, your folder in your web
   browser on 127.0.0.1 (ask, read each answer at its file and line, approve
   a suggestion with a click through the kernel's own `seal`; a secret per

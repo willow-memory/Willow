@@ -18,20 +18,20 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`███░░░░░░░░░░░░░░░░░` **49 of 310 built** · 283 need no install · 27 need one
+`███░░░░░░░░░░░░░░░░░` **49 of 366 built** · 323 need no install · 43 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
 | Reading more kinds of files | 7 | 91 | 90 | 8 |
-| Finding things | 4 | 9 | 11 | 2 |
-| Your own words | 5 | 16 | 19 | 2 |
-| Keeping track | 5 | 38 | 43 | 0 |
-| Trust and proof | 2 | 30 | 23 | 9 |
+| Finding things | 4 | 20 | 15 | 9 |
+| Your own words | 5 | 18 | 20 | 3 |
+| Keeping track | 5 | 39 | 44 | 0 |
+| Trust and proof | 2 | 37 | 30 | 9 |
 | Privacy and safety | 1 | 10 | 11 | 0 |
 | Assistants | 11 | 12 | 20 | 3 |
-| Ways to use it | 8 | 20 | 27 | 1 |
-| Play | 0 | 14 | 13 | 1 |
-| For maintainers | 6 | 21 | 26 | 1 |
+| Ways to use it | 8 | 25 | 30 | 3 |
+| Play | 0 | 40 | 35 | 5 |
+| For maintainers | 6 | 25 | 28 | 3 |
 <!-- /willow:pools -->
 
 ### Newest
@@ -162,15 +162,26 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 
 - [**all**](adapters/stdlib/all/) — Every matching passage, ranked, not just the top three. *box* `no-install` `offline` `read-only` `search`
 - **amounts** (idea) — Every sum of money in your files, with its date and the line it's on. *new* `no-install` `offline` `read-only` `search`
+- **bm25** (idea) — A BM25 rank from SQLite's own full-text index, beside the kernel's words rank: rare words weigh more. *new* `no-install` `offline` `read-only` `search`
+- **by-function** (idea) — Code read by function and class instead of by line, so a hit names the function it's in. Needs tree-sitter and its language pack; MIT. *new* `needs-install` `offline` `writes-output` `search`
 - **code-first** (idea) — Questions code can answer exactly (counts, dates, ids) answered by code before any model, with a wrong answer counted as a defect. *bot* `no-install` `offline` `read-only` `search`
+- **code-shape** (idea) — Search code by its shape, not its words: every call of a kind, whatever it's named. Needs the ast-grep program; MIT. *new* `needs-install` `offline` `read-only` `search`
 - **codeowners** (idea) — Who owns this file: the CODEOWNERS rule that matches it, cited by line, on GitHub, GitLab and Forgejo alike. *new* `no-install` `offline` `read-only` `search`
+- **crosswalk** (idea) — The outside IDs a passage points to (Wikidata, DOI, ORCID, GeoNames) kept beside it, so your notes join the world's. *new* `no-install` `offline` `writes-output` `search`
 - **duplicates** (idea) — Passages that say the same thing in two files, and which one is newer. *new* `no-install` `offline` `read-only` `search`
 - **first-mention** (idea) — When your files first mention something, and the line that does. *new* `no-install` `offline` `read-only` `search`
+- **fuzzy-dates** (idea) — Dates that admit doubt ('about 1880', 'sometime in March') read and kept with their doubt, in EDTF. *new* `no-install` `offline` `read-only` `search`
+- **kiwix** (idea) — An offline Wikipedia (or Stack Exchange, or Gutenberg) as a source after your own files, cited by article. Needs libzim, and a ZIM file you download; GPL-3.0. *new* `needs-install` `offline` `read-only` `search`
 - **meaning** (idea) — Search by meaning: "who owes me money" finds "invoice outstanding". Needs sentence-transformers; Apache-2.0. Goes online: the model, downloaded once from Hugging Face. *new* `needs-install` `online` `writes-output` `search`
 - [**on-this-day**](adapters/stdlib/on-this-day/) — What you wrote on this date in earlier years. *box* `no-install` `offline` `read-only` `search`
 - **people** (idea) — Everyone your files name, and every place each is mentioned. *new* `no-install` `offline` `read-only` `search`
 - [**quote-check**](adapters/stdlib/quote-check/) — Is this exact quote in my files, and where? For writers, journalists and students. *box* `no-install` `offline` `read-only` `search`
+- **record-sql** (idea) — SQL straight over your record, in place: 'how many answers did I approve in March?' Needs DuckDB; MIT. *new* `needs-install` `offline` `read-only` `search`
+- **rerank** (idea) — A small model on the CPU that reorders the top passages by reading the question and each passage together. Needs FlashRank; Apache-2.0. Goes online: the model, downloaded once. *new* `needs-install` `online` `read-only` `search`
+- **ripgrep** (idea) — Exact search through ripgrep, much faster on a big folder, its hits checked against the kernel's hashes. Needs the ripgrep program; MIT or Unlicense. *new* `needs-install` `offline` `read-only` `search`
+- **said** (idea) — Your own quotes, gathered: every 'so-and-so, on this date: "..."' in your files, as a dated timeline of what was decided. *new* `no-install` `offline` `read-only` `search`
 - [**surprise**](adapters/stdlib/surprise/) — One passage from your folder at random, seeded so it can be replayed. *bot* `no-install` `offline` `records` `search`
+- **symbols** (idea) — Exact definitions and references for Python code: where a name is defined, and every place it's used. Needs scip-python; MIT. *new* `needs-install` `offline` `read-only` `search`
 - **typos** (idea) — Forgives misspellings in questions. Needs rapidfuzz; MIT. *new* `needs-install` `offline` `read-only` `search`
 - **upgrade-notes** (idea) — Before an upgrade: the changelog lines between the version you lock and the one you'd move to, from the package's own files. Goes online: the registry (PyPI, npm or crates.io), to fetch the newer version's changelog. *new* `no-install` `online` `read-only` `search`
 
@@ -179,11 +190,13 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 The blind tests' biggest gap: on day one, a person's words aren't their files' words.
 
 - **abbreviations** (idea) — Your own shorthand, written down once (appt, Rx, w/c), so a question finds either form. *new* `no-install` `offline` `writes-output` `words`
+- **dialect** (idea) — The words you use far more than the world does: your own dialect, from your files against wordfreq's counts. Needs wordfreq; Apache-2.0, its data CC BY-SA 4.0. *new* `needs-install` `offline` `read-only` `words`
 - **memoir** (idea) — A question a week about your life, answered in your own words and kept, so your story is in your files. *new* `no-install` `offline` `writes-output` `words`
 - **nicknames** (idea) — The names you call people, mapped to who they are, so 'Mum' finds Margaret. *new* `no-install` `offline` `writes-output` `words`
 - [**starter-words**](adapters/stdlib/starter-words/) — A first-day words list to copy and edit (owes = invoice, outstanding; doctor = dr, physician, clinic). *new* `no-install` `offline` `writes-output` `words`
 - **stems** (idea) — Word forms for 20+ languages, so "maisons" finds "maison". Needs snowballstemmer; BSD-3. *new* `needs-install` `offline` `read-only` `words`
 - **synonyms** (idea) — Suggests words-list lines for a word no file has. Needs nltk and WordNet; Apache-2.0. Goes online: the WordNet data, downloaded once. *new* `needs-install` `online` `writes-output` `words`
+- **tatoeba** (idea) — A question in one language finds the same idea in another, through Tatoeba's sentence pairs, downloaded once. *new* `no-install` `offline` `writes-output` `words`
 - **words-ar** (idea) — Arabic common words, with the article and prefixes read apart. *new* `no-install` `offline` `writes-output` `words`
 - **words-cy** (idea) — Welsh common words ('a', 'y', 'yn'). *new* `no-install` `offline` `writes-output` `words`
 - [**words-de**](adapters/stdlib/words-de/) — German common words, so questions aren't matched on "der" and "und". *new* `no-install` `offline` `records` `words` `german`
@@ -209,6 +222,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - **care** (idea) — For caregivers: medications, vitals and appointments from a care log, what's due and what moved. *box* `no-install` `offline` `read-only` `tracking`
 - [**coming-up**](adapters/stdlib/coming-up/) — Dates written in your files in the next N days: appointments, renewals, deadlines. *box* `no-install` `offline` `read-only` `tracking`
 - **contracts** (idea) — The dates that matter in your contracts: renewals, notice periods and break clauses, each cited. *new* `no-install` `offline` `read-only` `tracking`
+- **crowd** (idea) — You against the crowd: a prediction market's question copied into your ledger, your probability beside theirs, both scored. Goes online: the market's public API, to read the question and its resolution. *new* `no-install` `online` `records` `tracking`
 - **cycle** (idea) — A menstrual cycle log that never leaves this machine: dates, what's next, and what changed. *new* `no-install` `offline` `read-only` `tracking`
 - **debts** (idea) — Who owes whom, from the IOUs in your notes and messages, each cited. *new* `no-install` `offline` `read-only` `tracking`
 - [**digest**](adapters/stdlib/digest/) — One page of what your folder needs from you: suggestions waiting, approvals gone stale, dates coming up, questions that keep finding nothing. *bot* `no-install` `offline` `read-only` `tracking` `everyday`
@@ -256,21 +270,27 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**export**](adapters/stdlib/export/) — Approved answers, and the question log (counts only, never words), as Markdown or CSV. *box* `no-install` `offline` `read-only` `trust`
 - **git-notes** (idea) — Approved answers kept as git notes on the commits they cite, so they travel with the repo to any forge. Needs the git program; GPL, called not linked. *new* `needs-install` `offline` `writes-output` `trust`
 - **history** (idea) — Your record in plain sentences: what was asked when, what found nothing, what you approved; places and counts, never the words. *new* `no-install` `offline` `read-only` `trust` `everyday`
+- **ids** (idea) — Every file and passage given its Software Heritage ID and IPFS CID, names the rest of the world already uses. *new* `no-install` `offline` `read-only` `trust`
 - **in-case** (idea) — A letter for the people you trust, if something happens to you: where things are and who to call, from your files, sealed by you. *new* `no-install` `offline` `writes-output` `trust`
+- **in-toto** (idea) — A sealed answer exported as an in-toto Statement, the envelope SLSA uses, so others can check it. *new* `no-install` `offline` `writes-output` `trust`
 - **jeles** (idea) — Your approved answers as Jeles nuggets, with question, answer, sources and who sealed it, and Jeles' own verified nuggets read back as passages. *new* `no-install` `offline` `writes-output` `trust`
 - **licenses** (idea) — The licence of every installed dependency, read from its own metadata on this machine: which are copyleft, and which file says so. *new* `no-install` `offline` `read-only` `trust`
 - **line-origin** (idea) — Which agent session wrote this line of code: git blame to the commit, then the transcript turn that made it. Needs the git program; GPL, called not linked. *new* `needs-install` `offline` `read-only` `trust`
 - **losc** (idea) — Does a project pass the Local Only Servers Club's test: no accounts, no cloud, and your data your own? *bot* `no-install` `offline` `read-only` `trust`
+- **merkle** (idea) — A Merkle tree over the record, so one row can be proven with a handful of hashes, not the whole file. *new* `no-install` `offline` `writes-output` `trust`
 - **mirror** (idea) — Checks each mirror of a repo on another forge holds the same commits as the original, so losing a host loses nothing. Needs the git program; GPL, called not linked. Goes online: each mirror's git URL, to read its refs. *new* `needs-install` `online` `read-only` `trust`
 - **nestor** (idea) — Answers Nestor records a person has checked, read from a copy of its SQLite store, each citing who checked it and when. *new* `no-install` `offline` `writes-output` `trust`
 - **notary** (idea) — The record's newest hash timestamped by an outside time server, so anyone can see it existed by then. Goes online: an RFC 3161 time server you choose, sent only the hash. *new* `no-install` `online` `records` `trust`
+- **opentimestamps** (idea) — The record's newest hash anchored by OpenTimestamps, proof that it existed by a given block. Goes online: the OpenTimestamps calendars, sent only the hash. *new* `no-install` `online` `records` `trust`
 - **paper-key** (idea) — Your key printed as words on paper, to keep somewhere safe, and typed back in to restore it. *new* `no-install` `offline` `writes-output` `trust`
 - **pgp** (idea) — Signs exports and reports with your PGP key, verifiable anywhere. Needs the gpg program and python-gnupg; BSD. *new* `needs-install` `offline` `writes-output` `trust`
+- **prov** (idea) — The record exported as W3C PROV: what came from what, by which step, sealed by whom. *new* `no-install` `offline` `writes-output` `trust`
 - **provenance** (idea) — Checks a package's Sigstore provenance or PyPI attestation names the repo and commit it claims, before you trust it. Needs sigstore; Apache-2.0. Goes online: the registry and Sigstore's log, to fetch the attestation. *new* `needs-install` `online` `read-only` `trust`
 - **quote-review** (idea) — A review comment that quotes the repo, checked: does the quoted line still say that at the pull request's head? Goes online: the forge, through the workflow's token, to read the review comments. *new* `no-install` `online` `read-only` `trust`
 - **redential** (idea) — The bundle redential-cli's scan makes, written to the record before you submit it, so what left your machine can be checked later. Needs the redential program, run through npx; Apache-2.0. *new* `needs-install` `offline` `records` `trust`
 - **report** (idea) — A self-checking bundle: the record, the approved answers, and a script that re-verifies them on any machine. *box* `no-install` `offline` `writes-output` `trust`
 - **retire** (idea) — Proposes setting aside approved answers that no longer hold, each one gone only when you seal it. *bot* `no-install` `offline` `records` `trust`
+- **ro-crate** (idea) — A box snapshot as an RO-Crate research object Zenodo can read: each file with its hash and licence. *new* `no-install` `offline` `writes-output` `trust`
 - **sap-gate** (idea) — The mcp add-on's tool calls checked against SAP/1.0 grants before they run, through openclaw-sap-gate. Needs openclaw-sap-gate; MIT. *new* `needs-install` `offline` `read-only` `trust`
 - **session-seal** (idea) — One seal at the end of a session, over everything asked and approved in it: yes, these were my actions. *bot* `no-install` `offline` `records` `trust`
 - **signed-commits** (idea) — Which commits are signed, and by whose key, checked on this machine against the keys you trust. Needs the git program; GPL, called not linked. *new* `needs-install` `offline` `read-only` `trust`
@@ -278,6 +298,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - **sync** (idea) — Your record kept on two devices through any synced folder, with the chain checked on each before it's trusted. *new* `no-install` `offline` `records` `trust`
 - **time-capsule** (idea) — A note sealed now and opened on a date you choose, with the record proving it wasn't changed. *new* `no-install` `offline` `records` `trust`
 - **timeline** (idea) — A dated timeline of one matter (a dispute, an illness, a tenancy), every line cited, to hand to a lawyer, doctor or council. *new* `no-install` `offline` `writes-output` `trust`
+- **wayback** (idea) — Each web snapshot paired with the Wayback Machine's nearest copy, so anyone can see what the page said that day. Goes online: archive.org, to find the nearest archived copy. *new* `no-install` `online` `records` `trust`
 - **witness** (idea) — A second person's seal beside yours, for answers that need two people to agree. *new* `no-install` `offline` `records` `trust`
 - **xref** (idea) — Every reference in your files checked: each link to another file, and each quoted line, still there and still saying it. *bot* `no-install` `offline` `read-only` `trust`
 
@@ -326,9 +347,13 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 ### Ways to use it
 
 - **anki** (idea) — Approved answers as an Anki deck, built without Anki installed. *new* `no-install` `offline` `writes-output` `interface`
+- **annotations** (idea) — Approved answers as W3C Web Annotations, so any annotation tool can show what your files say about a page. *new* `no-install` `offline` `writes-output` `interface`
 - **braille** (idea) — Answers as braille-ready files (BRF) for a braille display or embosser. *new* `no-install` `offline` `writes-output` `interface`
 - [**browse**](adapters/stdlib/browse/) — Your folder in your web browser: ask, read each answer at its file and line, and approve suggestions with a click, from this machine only. Reaches this machine only. *new* `no-install` `this-machine` `records` `interface` `everyday`
 - **calendar-out** (idea) — Dates coming up as an .ics file your calendar app can subscribe to. *new* `no-install` `offline` `writes-output` `interface`
+- **cloudevents** (idea) — Record rows in the CloudEvents envelope, for any tool that already reads them. *new* `no-install` `offline` `writes-output` `interface`
+- **datasette** (idea) — Your record and approved answers browsable in Datasette, read only: tables, facets and SQL on this machine. Needs Datasette; Apache-2.0. Reaches this machine only. *new* `needs-install` `this-machine` `read-only` `interface`
+- **deep-links** (idea) — Each answer as a link that opens the file at the line (RFC 5147 lines, browser text fragments). *new* `no-install` `offline` `read-only` `interface`
 - **desktop** (idea) — A small window to ask and approve, with nothing to install: Python's own tkinter. *new* `no-install` `offline` `records` `interface`
 - [**emacs**](adapters/stdlib/emacs/) — Answers in an Emacs compilation buffer, each a jump to its file and line. *new* `no-install` `offline` `read-only` `interface`
 - **email-ask** (idea) — Ask by emailing yourself; the answer comes back as a reply with its sources. Goes online: your own mail server, over IMAP and SMTP, to read questions and reply. *new* `no-install` `online` `read-only` `interface`
@@ -349,6 +374,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - [**shell**](adapters/stdlib/shell/) — A willow command and tab completion for bash, zsh, fish and PowerShell, on Linux, macOS and Windows. *new* `no-install` `offline` `records` `interface`
 - **speak** (idea) — Reads answers aloud. Needs pyttsx3; MPL-2.0. *new* `needs-install` `offline` `read-only` `interface`
 - **start** (idea) — First run in one step: asks where your files are, makes the box and key where they belong, copies in the starter words, and prints the double-click launcher. *new* `no-install` `offline` `writes-output` `interface` `everyday`
+- **static-search** (idea) — An exported page of approved answers with its own search built in, no server, opened in any browser. Needs Pagefind; MIT. *new* `needs-install` `offline` `writes-output` `interface`
 - **telegram-bot** (idea) — Ask from your phone through a Telegram bot only you can talk to. Goes online: api.telegram.org, to receive your questions and send answers. *new* `no-install` `online` `read-only` `interface`
 - **tui** (idea) — A full-screen terminal view to ask, read passages and approve, in curses. *new* `no-install` `offline` `records` `interface`
 - [**vim**](adapters/stdlib/vim/) — Answers in Vim and Neovim's quickfix list, each a jump to its file and line. *new* `no-install` `offline` `read-only` `interface`
@@ -356,27 +382,56 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 
 ### Play
 
+- **art-of-the-day** (idea) — An artwork from the Met's public-domain collection, drawn for the day or for each sealed session. Goes online: collectionapi.metmuseum.org, to read the artwork. *new* `no-install` `online` `records` `play`
 - **beacon** (idea) — Draws seeded by a public randomness beacon (drand), so nobody could have picked the result in advance. Goes online: api.drand.sh, to read a beacon round's randomness. *bot* `no-install` `online` `records` `play`
+- **chess-puzzle** (idea) — A Lichess puzzle a day, drawn by a seed: predict whether you'll solve it, then solve it. Goes online: lichess.org, to read the puzzle. *new* `no-install` `online` `records` `play`
+- **connect-four** (idea) — Connect Four as rows on the record, held to the solved result: the first player wins. *new* `no-install` `offline` `records` `play`
 - **daily-word** (idea) — A word game drawn from your own files' words, the same puzzle for everyone with the same box. *new* `no-install` `offline` `records` `play`
 - **dice** (idea) — Seeded dice rolls as rows: every roll replayable and checkable. *bot* `no-install` `offline` `records` `play`
 - **dice5e** (idea) — Full tabletop dice notation (4d6kh3, advantage). Needs dice; MIT. *bot* `needs-install` `offline` `records` `play`
+- **front-page** (idea) — Which new posts will make the Hacker News front page? Wager, and let its search settle it. Goes online: hn.algolia.com, to read the front page. *new* `no-install` `online` `records` `play`
 - **game-master** (idea) — A tabletop game's rolls and rulings as rows on the record, with the game master's calls sealed. *bot* `no-install` `offline` `records` `play`
+- **gutenberg** (idea) — A paragraph from a public-domain book beside one of yours, for serendipity. Goes online: gutenberg.org, each book fetched once. *new* `no-install` `online` `records` `play`
+- **hanoi** (idea) — Towers of Hanoi as rows: each move, n discs in 2^n - 1. *new* `no-install` `offline` `records` `play`
 - **horoscope** (idea) — A daily horoscope keyed on your name and the date: same name, same day, same reading, always. *bot* `no-install` `offline` `read-only` `play`
+- **horoscope-grades** (idea) — Every horoscope logged as a forecast and settled against the day, so the stars get a Brier score. *new* `no-install` `offline` `records` `play`
+- **ink-story** (idea) — A branching ink story where every choice made for you comes from a seed on the record. Needs inkjs; MIT. *new* `needs-install` `offline` `records` `play`
 - **joins** (idea) — Two passages from two different folders, drawn by chance, for you to say what joins them. *bot* `no-install` `offline` `records` `play`
 - **life** (idea) — Conway's Game of Life as rows: a fully deterministic world on the record. *bot* `no-install` `offline` `records` `play`
 - **lore** (idea) — For a world you're writing: each fact about it sealed one at a time, so a story can be checked against its canon. *bot* `no-install` `offline` `records` `play`
+- **lunatic** (idea) — The moon's real phase sets how far typos are forgiven: everything at full moon, nothing at new. Needs Skyfield; MIT. *new* `needs-install` `offline` `read-only` `play`
+- **mastermind** (idea) — Mastermind with the secret's hash at the open: each guess and score on the record. *new* `no-install` `offline` `records` `play`
+- **movie** (idea) — Your record as a Gource film: every question, approval and miss growing like a tree. Needs the gource program; GPL-3.0, called not linked. *new* `needs-install` `offline` `writes-output` `play`
+- **nim** (idea) — Nim as rows: the heaps and each take, a position lost exactly when the heaps' XOR is 0. *new* `no-install` `offline` `records` `play`
+- **ninety-percent** (idea) — The calibration drill: give a range you're 90% sure of for a real number, and see how many hold. Goes online: Our World in Data, its numbers downloaded once. *new* `no-install` `online` `records` `play`
 - **odds** (idea) — Exact odds, as fractions, for a game's dice and tables: what each outcome's chance really is. *bot* `no-install` `offline` `read-only` `play`
+- **oracle-text** (idea) — Readings written by a Tracery grammar, every branch picked by the seeded stream, so each one can be replayed. *new* `no-install` `offline` `read-only` `play`
+- **pageviews** (idea) — Two Wikipedia articles drawn at random: which gets more views tomorrow? Goes online: the Wikimedia pageviews API, to settle it. *new* `no-install` `online` `records` `play`
+- **pile-poetry** (idea) — Verse from the word pairs your own files use most, in your own dialect. *new* `no-install` `offline` `read-only` `play`
 - **predictions** (idea) — Twelve yes-or-no questions about random data, forecast now and answered by a beacon round later, with your Brier score. Goes online: api.drand.sh, to read a beacon round's randomness. *bot* `no-install` `online` `records` `play`
+- **quake-bets** (idea) — Will there be a magnitude 6 this week? Bet, then let the USGS feed settle it against the base rate. Goes online: earthquake.usgs.gov, to read the week's earthquakes. *new* `no-install` `online` `records` `play`
 - **quiz** (idea) — A quiz from your own files: a passage with a word missing, and you fill it in. *new* `no-install` `offline` `records` `play`
+- **real-sky** (idea) — A horoscope from where the planets really are, computed offline from a JPL ephemeris. Needs Skyfield; MIT. Goes online: the ephemeris file, downloaded once. *new* `needs-install` `online` `read-only` `play`
+- **reversi** (idea) — Reversi as rows: every move, each flip following from the board. *new* `no-install` `offline` `records` `play`
+- **roll-for-merge** (idea) — A d20 for every pull request, green runs added and red streaks taken away, against a DC the bot calls. *new* `no-install` `offline` `records` `play`
 - **rules** (idea) — A game's or a house's rules, sealed section by section, so 'what does the rule say?' answers with the exact section. *bot* `no-install` `offline` `records` `play`
+- **sokoban** (idea) — Sokoban levels and moves on the record, a solution checked by replaying it. *new* `no-install` `offline` `records` `play`
+- **spurious** (idea) — Everything joined on time and place (CI reds, earthquakes, rain, front pages) to hunt correlations that mean nothing. *new* `no-install` `offline` `read-only` `play`
 - **tarot** (idea) — A seeded tarot draw on the record, replayable by anyone with the seed. *new* `no-install` `offline` `records` `play`
+- **tic-tac-toe** (idea) — Tic-tac-toe as rows: every move, and the solver's value of each position; perfect play draws. *new* `no-install` `offline` `records` `play`
+- **tides** (idea) — Tide predictions as a control: if your Brier score on tides isn't near zero, the forecasting plumbing is broken. Goes online: NOAA's tides API, to read predictions and what happened. *new* `no-install` `online` `records` `play`
+- **todays-place** (idea) — One place a day drawn from Natural Earth's public-domain list, for the day's questions and bets. *new* `no-install` `offline` `records` `play`
+- **weather-bet** (idea) — Wager on rain tomorrow before you look, against Open-Meteo's own forecast, and see whose Brier score wins. Goes online: api.open-meteo.com, to read the forecast and the outcome. *new* `no-install` `online` `records` `play`
 
 ### For maintainers
 
 - **agents-md-check** (idea) — Commands and paths named in AGENTS.md or CLAUDE.md that no longer exist in the repo. *new* `no-install` `offline` `read-only` `maintainers`
 - **bench** (idea) — How fast the kernel answers on boxes of set sizes, per release, so a slowdown is seen. *new* `no-install` `offline` `read-only` `maintainers`
 - [**ci**](adapters/stdlib/ci/) — This repo's checks as verdict rows on a kernel record, the same every run. Goes online: PyPI, to read each dependency floor's release date. *box* `no-install` `online` `records` `maintainers`
+- **ci-baseline** (idea) — Is your CI normal? How often pull requests everywhere go green first time, from GH Archive. Goes online: data.gharchive.org, its hours downloaded once. *new* `no-install` `online` `read-only` `maintainers`
+- **ci-bets** (idea) — Bet on your own CI: forecasts on each pull request going green, scored against the model's. *new* `no-install` `offline` `records` `maintainers`
 - **ci-why** (idea) — Why CI went red: the failing block pulled out of the job's log, plain, put where people look. Goes online: the forge, through the workflow's token, to read the job's log. *bot* `no-install` `online` `read-only` `maintainers`
+- **code-stats** (idea) — Lines, code and complexity per language, per release, as rows the list can answer from. Needs the scc program; MIT. *new* `needs-install` `offline` `read-only` `maintainers`
 - **contribute** (idea) — For anyone on GitHub, what they can do next in the projects they work on: open pull requests, reviews asked of them, issues assigned. Goes online: GitHub, through gh, with your own login. *bot* `no-install` `online` `read-only` `maintainers`
 - **contributions** (idea) — A ledger of who contributes to the repo: first-timers and outside contributors called out, bots known by type, never by name. Goes online: GitHub, through gh, with your own login. *bot* `no-install` `online` `read-only` `maintainers`
 - **crates** (idea) — A Rust port of kernel.py on crates.io, held to the same vectors as the other four. Goes online: crates.io, to publish a release a maintainer tags. *new* `no-install` `online` `writes-output` `maintainers`
@@ -392,6 +447,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - **npm** (idea) — The TypeScript port on npm, built from this repo, checked against the vectors, and published with provenance; npx runs it. Goes online: registry.npmjs.org, to publish a release a maintainer tags. *new* `no-install` `online` `writes-output` `maintainers`
 - **nuget** (idea) — The C# port on NuGet, built from this repo and checked against the vectors. Goes online: nuget.org, to publish a release a maintainer tags. *new* `no-install` `online` `writes-output` `maintainers`
 - **pins** (idea) — Version ranges in package.json, pyproject.toml or Cargo.toml that no lockfile holds. *new* `no-install` `offline` `read-only` `maintainers`
+- **property-tests** (idea) — Thousands of odd inputs (combining marks, empty strings, huge seeds) thrown at the byte rules by Hypothesis. Needs Hypothesis; MPL-2.0. *new* `needs-install` `offline` `read-only` `maintainers`
 - **pypi** (idea) — kernel.py on PyPI as a package with no dependencies, built from this repo, checked against the vectors, and attested on upload; uvx and pipx run it. Goes online: upload.pypi.org, to publish a release a maintainer tags. *new* `no-install` `online` `writes-output` `maintainers`
 - [**readme**](adapters/stdlib/readme/) — Builds ADDONS.md, and the README's one feature, from the add-ons' own cards. *new* `no-install` `offline` `writes-output` `maintainers`
 - **reconciler** (idea) — willow-reconciler run on this repo's idea list and git history: how much of what was proposed has landed. Needs willow-reconciler; Apache-2.0. *new* `needs-install` `offline` `read-only` `maintainers`
