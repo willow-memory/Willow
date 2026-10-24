@@ -71,8 +71,8 @@ The other five were the PDF's labels joined to a sentence, as said under
 **Exit codes:** mirror, 0 wrote at least one file, 42 nothing to read;
 diff, 0 the same, 42 something changed; 2 refused.
 
-**Uses:** the kernel's `words`, `SNIFF`, and the way it reads a web page
-(`_HIDDEN`, `_TAG`, `_lines_kept`), so a line it names is the kernel's line.
+**Uses:** the kernel's `words`, `SNIFF`, and `html_text`, the way it reads
+a web page, so a line it names is the kernel's line.
 
 **Never:** writes inside your folder or beside the versions it compares,
 changes an original, or goes online.
