@@ -18,20 +18,20 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`███░░░░░░░░░░░░░░░░░` **71 of 450 built** · 400 need no install · 50 need one
+`███░░░░░░░░░░░░░░░░░` **76 of 451 built** · 401 need no install · 50 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
 | Reading more kinds of files | 7 | 96 | 95 | 8 |
 | Finding things | 5 | 36 | 31 | 10 |
 | Your own words | 7 | 17 | 21 | 3 |
-| Keeping track | 5 | 49 | 54 | 0 |
-| Trust and proof | 7 | 36 | 34 | 9 |
+| Keeping track | 6 | 48 | 54 | 0 |
+| Trust and proof | 9 | 34 | 34 | 9 |
 | Privacy and safety | 2 | 11 | 13 | 0 |
 | Assistants | 15 | 40 | 49 | 6 |
 | Ways to use it | 10 | 28 | 34 | 4 |
 | Play | 4 | 36 | 35 | 5 |
-| For maintainers | 9 | 30 | 34 | 5 |
+| For maintainers | 11 | 29 | 35 | 5 |
 <!-- /willow:pools -->
 
 ### Newest
@@ -47,9 +47,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ### Add-on of the week
 
 <!-- willow:pick week=2026-W43 -->
-**[words-fr](adapters/stdlib/words-fr/)** — French common words ("le", "et").
+**[live](adapters/stdlib/live/)** — Each way-in add-on run through the real program it's for, a shell, an editor or an AI tool: works, fails, or not here.
 
-*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 71 built add-ons in name order.*
+*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 76 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -266,7 +266,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - **invoices** (idea) — For freelancers: invoices and payments matched by the id pattern you give, never guessed. *new* `no-install` `offline` `read-only` `tracking`
 - **job-hunt** (idea) — Applications sent, replies and interviews, by date: who you're still waiting on. *new* `no-install` `offline` `read-only` `tracking`
 - **lab-notebook** (idea) — A lab notebook's dated entries, by sample and experiment: what was done to what, and when. *new* `no-install` `offline` `read-only` `tracking`
-- **lending** (idea) — Things you lent, to whom and when, and which are still out. *new* `no-install` `offline` `read-only` `tracking`
+- [**lending**](adapters/stdlib/lending/) — Things you lent, to whom and when, and which are still out. *new* `no-install` `offline` `read-only` `tracking`
 - **livestock** (idea) — Each animal's births, treatments and sales, from your farm records. *new* `no-install` `offline` `read-only` `tracking`
 - **market-calls** (idea) — Market calls kept as wagers on the record ('SPY closes up on Friday'), settled later, with the losers kept. *bot* `no-install` `offline` `records` `tracking`
 - **mileage** (idea) — Miles driven for work, from your trips and notes, totalled for a tax year. *new* `no-install` `offline` `read-only` `tracking`
@@ -298,7 +298,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**backup**](adapters/stdlib/backup/) — Your record in one zip, every byte and the chain checked before it's kept; never beside your key, and it never reads the key. *new* `no-install` `offline` `writes-output` `trust` `everyday`
 - **box-health** (idea) — A box's health in one line: files it can't read, readers out of date, and when the chain was last checked. *new* `no-install` `offline` `read-only` `trust`
 - [**changed**](adapters/stdlib/changed/) — What's new, edited or deleted in your folder since the last check, as fingerprint rows. *bot* `no-install` `offline` `records` `trust` `everyday`
-- **contradictions** (idea) — Two passages that disagree about the same date or amount, side by side. *new* `no-install` `offline` `read-only` `trust`
+- [**contradictions**](adapters/stdlib/contradictions/) — Two passages that disagree about the same date or amount, side by side. *new* `no-install` `offline` `read-only` `trust`
 - [**diverge**](adapters/stdlib/diverge/) — Where two copies of a folder or a box part, a backup zip included, narrowed to the first row, file and line that differ. *bot* `no-install` `offline` `read-only` `trust` `everyday`
 - **encrypt** (idea) — Keeps the record folder encrypted at rest. Needs cryptography; Apache-2.0 or BSD. *new* `needs-install` `offline` `records` `trust`
 - [**export**](adapters/stdlib/export/) — Approved answers, and the question log (counts only, never words), as Markdown or CSV. *box* `no-install` `offline` `read-only` `trust`
@@ -334,7 +334,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - **sync** (idea) — Your record kept on two devices through any synced folder, with the chain checked on each before it's trusted. *new* `no-install` `offline` `records` `trust`
 - **thesis** (idea) — A thesis's claims, each tied to the source that backs it, and a list of the ones with none. *new* `no-install` `offline` `read-only` `trust`
 - **time-capsule** (idea) — A note sealed now and opened on a date you choose, with the record proving it wasn't changed. *new* `no-install` `offline` `records` `trust`
-- **timeline** (idea) — A dated timeline of one matter (a dispute, an illness, a tenancy), every line cited, to hand to a lawyer, doctor or council. *new* `no-install` `offline` `writes-output` `trust`
+- [**timeline**](adapters/stdlib/timeline/) — A dated timeline of one matter (a dispute, an illness, a tenancy), every line cited, to hand to a lawyer, doctor or council. *new* `no-install` `offline` `writes-output` `trust`
 - **wayback** (idea) — Each web snapshot paired with the Wayback Machine's nearest copy, so anyone can see what the page said that day. Goes online: archive.org, to find the nearest archived copy. *new* `no-install` `online` `records` `trust`
 - **witness** (idea) — A second person's seal beside yours, for answers that need two people to agree. *new* `no-install` `offline` `records` `trust`
 - [**xref**](adapters/stdlib/xref/) — Every reference in your files checked: each link to another file, and each quoted line, still there and still saying it. *bot* `no-install` `offline` `read-only` `trust` `everyday`
@@ -533,8 +533,9 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - [**readme**](adapters/stdlib/readme/) — Builds ADDONS.md, and the README's one feature, from the add-ons' own cards. *new* `no-install` `offline` `writes-output` `maintainers`
 - **reconciler** (idea) — willow-reconciler run on this repo's idea list and git history: how much of what was proposed has landed. Needs willow-reconciler; Apache-2.0. *new* `needs-install` `offline` `read-only` `maintainers`
 - **repro** (idea) — A release built twice from the same commit, byte for byte the same. *new* `no-install` `offline` `read-only` `maintainers`
+- [**restack**](adapters/stdlib/restack/) — Main merged into your branches, with the conflicts in the files the repo makes or only adds to settled by its own tools, and every other one left to you. *new* `no-install` `offline` `read-only` `maintainers` `git`
 - [**similar**](adapters/stdlib/similar/) — What's already on the add-on list near a new idea, by the kernel's own search. *box* `no-install` `offline` `read-only` `maintainers`
-- **slow-tests** (idea) — Each test's time kept per run, with the slowest named and any that got slower flagged. *new* `no-install` `offline` `read-only` `maintainers`
+- [**slow-tests**](adapters/stdlib/slow-tests/) — Each test's time kept per run, with the slowest named and any that got slower flagged. *new* `no-install` `offline` `read-only` `maintainers`
 - **sourcehut** (idea) — What willow's repo needs from SourceHut: its host.json for patches by email and a builds.sr.ht manifest. Goes online: sr.ht, through hut, to read the author of a patch a security report points to. *new* `no-install` `online` `read-only` `maintainers`
 - **swift** (idea) — A Swift port of kernel.py for iPhone and Mac apps, held to the same vectors. *new* `no-install` `offline` `read-only` `maintainers`
 - [**test-impact**](adapters/stdlib/test-impact/) — Only the tests a change can reach run first, from the import graph; the full suite still runs after. *new* `no-install` `offline` `read-only` `maintainers`
