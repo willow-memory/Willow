@@ -15,6 +15,11 @@ says how). The first was v0.1.0.
   times the log's typical one. A log with too few dates is said, an undated
   file beside it is said, and a gap is "no entry written", never "nothing
   happened". (#30)
+- `timeline`: one matter from your folder (a dispute, an illness, a
+  tenancy), chosen by words, as a dated list of every line of the passages
+  that hold them, each cited by file and line, written to one file to hand
+  on. A line's own date and its file's are both shown when they differ;
+  undated lines are kept, after the dated ones; nothing is merged. (#28)
 - `lending`, what you lent, to whom and when, and which are still out: a
   thing in parts is out until every part is back, a loan with no return
   line is "no return written", and a line's own date and its file's are
