@@ -24,6 +24,9 @@
     "3f174bd01a95": "today is eight characters, so today[4:9] is today[4:8].",
     "38b9c5553e24": "A year is four digits: comparing d[:5] with this year orders earlier, same and later years the same way."
   },
+  "scan": {
+    "09336b67f2ff": "Only narrows candidates: the kernel's own rank re-checks each one, so an or here adds passages it drops, never one it serves."
+  },
   "starter-words": {
     "2f4df3ac7eca": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
   },

@@ -122,7 +122,8 @@ def test_every_ranking_vector_the_four_kernels_are_held_to(tmp_path):
                 p.write_bytes(base64.b64decode(f["b64"]))
             else:  # a big one, written as a run: n times `repeat`, then `then`
                 p.write_bytes((f["repeat"] * f["n"] + f["then"]).encode())
-        scan.build(folder, tmp_path / f"ix{n}")
+        got = run("index", "--from", str(folder), "--to", str(tmp_path / f"ix{n}"))
+        assert got.returncode in (0, 42), got.stderr
         ixs.append(scan.Index(tmp_path / f"ix{n}"))
     for case in CASES["rank"]:
         got = ixs[case["pile"]].rank(case["bite"], case["alias"], kernel.TOP)
@@ -143,6 +144,10 @@ def test_scan_says_which_other_index_lacks_the_words(tmp_path):
         tmp_path / "old", {"rfc1867.c": "if (oom) bailout();\n\nfree(state);\n"}
     )
     new = write(tmp_path / "new", {"rfc1867.c": "if (oom) unwind();\n\nfree(state);\n"})
+    got = run("index", "--from", str(old), "--to", str(tmp_path / "ix" / "old"))
+    assert got.returncode == 2 and "make it first" in got.stderr
+    assert not (tmp_path / "ix").exists()
+    (tmp_path / "ix").mkdir()
     for f in (old, new):
         assert (
             run(

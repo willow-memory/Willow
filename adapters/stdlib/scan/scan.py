@@ -59,7 +59,7 @@ def build(folder: Path, to: Path) -> int:
     for i, c in enumerate(pile):
         for t in kernel.toks(c):
             post.setdefault(t, []).append(i)
-    to.mkdir(parents=True, exist_ok=True)
+    to.mkdir(exist_ok=True)
     (to / "index.json").unlink(missing_ok=True)
     with open(to / "chunks.jsonl", "w", encoding="utf-8", newline="\n") as f:
         for c, d in zip(pile, days):
@@ -220,6 +220,11 @@ def main(argv: list[str]) -> int:
             print(
                 "refused: the index and the folder can't hold each other",
                 file=sys.stderr,
+            )
+            return kernel.REFUSED
+        if not to.parent.is_dir():
+            print(
+                f"refused: {to.parent} is not a folder; make it first", file=sys.stderr
             )
             return kernel.REFUSED
         if to.exists() and (not to.is_dir() or (
