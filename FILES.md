@@ -437,6 +437,7 @@ willow/
 │   │   ├── phase4.py         before the fix: the whole release, ranked three ways, recall at k
 │   │   ├── phase5.py         robustness: rewording, top-k, a words list, and leakage
 │   │   ├── phase6.py         reproducibility: every release, five Pythons, four kernels, a second labeller
+│   │   ├── hold.py           not frozen: the kernel's hold rule against looser ones, on phase 3's CVEs
 │   │   ├── test_php2shell.py holds the frozen files to their hashes, and the tools to their word
 │   │   ├── results/
 │   │   │   └── phase6-labels.json  the independent labellers' yes or no, item by item
@@ -452,21 +453,6 @@ willow/
 │   └── google-privacy-2026-10-16/  a real policy change: what Google's text says against what the news said
 │       ├── README.md         the claim, the threats, what is frozen, how to reproduce, the results
 │       ├── FROZEN.json       the SHA-256 of each frozen file, and of the tools when frozen
-│       ├── releases.json     PHP's releases and the security commits, pinned by hash
-│       ├── make_trees.py     fetches them from php-src, and checks them without git
-│       ├── score.py          the frozen hit rule: did a passage land on the fix?
-│       ├── score2.py         the second hit rule: also an added run's neighbouring lines
-│       ├── phase2.py         the null tests: random draws, null questions, wrong pairs, baselines
-│       ├── phase1.py         the blind questions, under both rules, ranked by the kernel and BM25
-│       ├── phase3.py         out of sample: seven other CVEs, fetched as git stores them, asked blind
-│       ├── phase3.json       those CVEs' releases and fix commits, pinned by hash
-│       ├── phase4.py         before the fix: the whole release, ranked three ways, recall at k
-│       ├── phase5.py         robustness: rewording, top-k, a words list, and leakage
-│       ├── phase6.py         reproducibility: every release, five Pythons, four kernels, a second labeller
-│       ├── hold.py           not frozen: the kernel's hold rule against looser ones, on phase 3's CVEs
-│       ├── test_php2shell.py holds the frozen files to their hashes, and the tools to their word
-│       ├── results/
-│       │   └── phase6-labels.json  the independent labellers' yes or no, item by item
 │       ├── sources.json      each source fetched, with its address, time and SHA-256
 │       ├── fetch.py          saves the sources into a pile once, and checks them offline
 │       ├── targets.json      the frozen hit rule: the clauses a question lands on, and what supports a claim
