@@ -98,6 +98,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "quote-check": ("quote_check.py", ["--box", "{box}", "Tomatoes want sun"]),
     "readings": ("readings.py", ["bite", "--box", "{box}", *NOW, "tomatoes"]),
     "scan": ("scan.py", ["index", "--from", "{pile}", "--to", "{tmp}/index"]),
+    "slow-tests": ("slow_tests.py", ["--runs", "{pile}"]),
     "stale": ("stale.py", ["--box", "{box}"]),
     "starter-words": ("starter.py", ["copy", "--to", "{tmp}/words.txt"]),
     "surprise": ("surprise.py", ["--box", "{box}", *NOW]),
