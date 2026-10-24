@@ -232,6 +232,10 @@ willow/
 │   │   │   ├── readme.py     builds this README's generated sections from the cards
 │   │   │   ├── test_readme.py
 │   │   │   └── README.md     its card: sections, the draw, what it reads
+│   │   ├── restack/
+│   │   │   ├── restack.py    your branches back on top of main, the repo's own conflicts settled
+│   │   │   ├── test_restack.py
+│   │   │   └── README.md
 │   │   ├── scan/
 │   │   │   ├── scan.py       indexes a folder once, then asks it a list of questions, the kernel's way
 │   │   │   ├── test_scan.py  holds its answers to the kernel's, every ranking vector included
