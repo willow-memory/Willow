@@ -15,6 +15,10 @@ says how). The first was v0.1.0.
   times the log's typical one. A log with too few dates is said, an undated
   file beside it is said, and a gap is "no entry written", never "nothing
   happened". (#30)
+- `lending`, what you lent, to whom and when, and which are still out: a
+  thing in parts is out until every part is back, a loan with no return
+  line is "no return written", and a line's own date and its file's are
+  both shown when they differ. (#27)
 - `contradictions`, two lines saying the same thing with a different date
   or amount, side by side, each cited, neither picked. Two lines are about
   the same thing when they share two words and half the shorter's; records
