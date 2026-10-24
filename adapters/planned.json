@@ -40,6 +40,16 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
+  "name": "basic-memory",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "Basic Memory's Markdown notes where an AI wrote them: each observation and relation handed in through propose, waiting for your seal.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, assistant"
+ },
+ {
   "name": "bluesky",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -99,6 +109,16 @@
   "writes": "record",
   "network": "api.anthropic.com, to ask for suggestions",
   "tags": "needs-install, online, records, assistant"
+ },
+ {
+  "name": "codebase-memory",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "codebase-memory-mcp's code graph, read from a copy of its SQLite file: each function, what calls it, and its file and line.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
  },
  {
   "name": "dice",
@@ -194,6 +214,16 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
+  "name": "hermes",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "Hermes Agent asking your folder as a plugin, and its memories, and what its dreaming plugin consolidates, handed in through propose.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, assistant"
+ },
+ {
   "name": "instapaper",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -248,6 +278,16 @@
   "kind": "stdlib",
   "section": "Reading more kinds of files",
   "line": "Karakeep's JSON export: bookmarks, notes and tags as plain text.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "lessons",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Lesson plans from the Emerging Rule community library, by grade and subject, as passages a teacher can ask.",
   "source": "new",
   "writes": "to",
   "network": "none",
@@ -317,6 +357,16 @@
   "tags": "no-install, offline, records, assistant"
  },
  {
+  "name": "mex",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "mex's project memory for coding agents: its scaffold read as cited passages, and what an agent writes back held for your seal.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, assistant"
+ },
+ {
   "name": "ocr",
   "kind": "deps",
   "section": "Reading more kinds of files",
@@ -360,6 +410,17 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
+  "name": "redential",
+  "kind": "deps",
+  "section": "Trust and proof",
+  "line": "The bundle redential-cli's scan makes, written to the record before you submit it, so what left your machine can be checked later.",
+  "source": "new",
+  "needs": "the redential program, run through npx; Apache-2.0",
+  "writes": "record",
+  "network": "none",
+  "tags": "needs-install, offline, records, trust"
+ },
+ {
   "name": "report",
   "kind": "stdlib",
   "section": "Trust and proof",
@@ -399,6 +460,16 @@
   "writes": "to",
   "network": "none",
   "tags": "needs-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "sigmap",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "SigMap's signature map of a codebase as plain text: each function's signature with its file and line, for questions about the code.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
  },
  {
   "name": "signal",

@@ -55,13 +55,13 @@ never changes it. Here is what's built, and what's still an idea that anyone
 can pick up ([CONTRIBUTING.md](CONTRIBUTING.md) says how):
 
 <!-- willow:summary -->
-- **Reading more kinds of files:** PDFs, email, chats, calendars, notes and office files, as text it can search. Built: [books](adapters/stdlib/books/), [calendar](adapters/stdlib/calendar/), [chats](adapters/stdlib/chats/), [mail](adapters/stdlib/mail/), [notes](adapters/stdlib/notes/), [office](adapters/stdlib/office/), [pdf](adapters/deps/pdf/). Ideas: *agent-transcript, archivebox, bank, bluesky, bookmarks, discord, git-history, health, instapaper, joplin, journiv, jrnl, karakeep, mastodon, ocr, photos, pocket, sheets, signal, slack, subtitles, takeout, voice, wallabag, writefreely*.
+- **Reading more kinds of files:** PDFs, email, chats, calendars, notes and office files, as text it can search. Built: [books](adapters/stdlib/books/), [calendar](adapters/stdlib/calendar/), [chats](adapters/stdlib/chats/), [mail](adapters/stdlib/mail/), [notes](adapters/stdlib/notes/), [office](adapters/stdlib/office/), [pdf](adapters/deps/pdf/). Ideas: *agent-transcript, archivebox, bank, bluesky, bookmarks, codebase-memory, discord, git-history, health, instapaper, joplin, journiv, jrnl, karakeep, lessons, mastodon, ocr, photos, pocket, sheets, sigmap, signal, slack, subtitles, takeout, voice, wallabag, writefreely*.
 - **Finding things:** more ways to look: every match, this date in past years, an exact quote, by meaning, past typos. Built: [all](adapters/stdlib/all/), [on-this-day](adapters/stdlib/on-this-day/), [quote-check](adapters/stdlib/quote-check/), [surprise](adapters/stdlib/surprise/). Ideas: *meaning, typos*.
 - **Your own words:** teaching it the words you use, so a question finds what your files call it. Built: [starter-words](adapters/stdlib/starter-words/). Ideas: *stems, synonyms, words-de, words-es, words-fr, words-pt*.
 - **Keeping track:** dates coming up, numbers over time, to-dos, care logs, invoices, forecasts and flashcards. Built: [again](adapters/stdlib/again/), [coming-up](adapters/stdlib/coming-up/), [readings](adapters/stdlib/readings/), [todo](adapters/stdlib/todo/). Ideas: *care, digest, flashcards, forecasts, invoices, session-cost*.
-- **Trust and proof:** answers you can check later: exports, stale answers, what changed, signed and encrypted records. Built: [export](adapters/stdlib/export/), [stale](adapters/stdlib/stale/). Ideas: *changed, encrypt, line-origin, pgp, report*.
+- **Trust and proof:** answers you can check later: exports, stale answers, what changed, signed and encrypted records. Built: [export](adapters/stdlib/export/), [stale](adapters/stdlib/stale/). Ideas: *changed, encrypt, line-origin, pgp, redential, report*.
 - **Privacy and safety:** phone numbers, card numbers and keys hidden in answers, or found sitting in files. Built: [privacy](adapters/stdlib/privacy/). Ideas: *secrets-audit, transcript-redact*.
-- **Assistants:** AI assistants that can ask and suggest, but never approve. Built: [mcp](adapters/deps/mcp/). Ideas: *claude, local-model, memory-import*.
+- **Assistants:** AI assistants that can ask and suggest, but never approve. Built: [mcp](adapters/deps/mcp/). Ideas: *basic-memory, claude, hermes, local-model, memory-import, mex*.
 - **Ways to use it:** other ways in: plain sentences, a page on this machine, answers read aloud. Built: [plain](adapters/stdlib/plain/). Ideas: *browse, speak*.
 - **Play:** seeded, replayable games on the record, such as dice and the Game of Life. Built: nothing yet. Ideas: *dice, dice5e, life*.
 - **For maintainers:** the repo's own tools: CI, the list, tests that can fail. Built: [ci](adapters/stdlib/ci/), [github](adapters/stdlib/github/), [mutants](adapters/stdlib/mutants/), [readme](adapters/stdlib/readme/), [similar](adapters/stdlib/similar/). Ideas: *agents-md-check*.
@@ -74,7 +74,7 @@ can pick up ([CONTRIBUTING.md](CONTRIBUTING.md) says how):
 
 *Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 26 built add-ons in name order.*
 
-[Every add-on, 26 built of 81, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 26 built of 88, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 ## How it works
