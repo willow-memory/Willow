@@ -222,7 +222,7 @@ willow/
 ├── adapters/                 add-ons built on top of kernel.py
 ├── ports/                    kernel.py rewritten in other languages
 ├── vectors/                  what keeps the four implementations identical
-├── demo/                     three made-up people to try it on
+├── demo/                     three made-up people, and one real bug, to try it on
 ├── docs/                     the full first five minutes, and how it works in full
 ├── .github/                  CI, the issue forms, the pull request template: the GitHub add-on's
 ├── .gitignore                generated files and build output

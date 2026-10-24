@@ -370,6 +370,9 @@ def gates() -> list[tuple[str, str, object]]:
         )  # fmt: skip
         out.append(("ports", f"ports:{port}", how))
     out += [("demo", f"demo:{name}", demo(name)) for name in people()]
+    # PHP2Shell's runs fetch PHP's source; CI holds only what they froze
+    out.append(("demo", "demo:php2shell", command(*PYTEST, "demo/php2shell",
+                needs=lambda: missing_module("pytest"))))  # fmt: skip
     for name in deps_add_ons():
         out.append(("deps", f"deps:{name}", deps_add_on(name)))
         out.append(("deps", f"deps:{name}@floor",

@@ -1,0 +1,16 @@
+{
+ "about": "Phase 0 of demo/php2shell: each file's SHA-256 when it was frozen, held by test_php2shell.py. A change is a new freeze, in its own commit, before the phase that needs it runs.",
+ "frozen": "2026-10-24",
+ "files": {
+  "releases.json": "111510c7fd92072ee046a48fb74a89d4c6ee6a1d538650c6de39199c8088ce53",
+  "make_trees.py": "50bbcb8d4d12a7932d0a79f035e82366219430e1773524c117aa71ad55329f12",
+  "score.py": "084d0a3a0d7e99f5450ccc12536f659d1f3fd0e675dc3b4415d8bc4ef97e7142",
+  "questions/author.txt": "bf6b3bc3531a8fb0207c8ae81a8eff5dd49cb54c789594e17b6827f5e2e25597",
+  "questions/null.txt": "8f05a7a08ec0558c1b99af2c9378a24e7f1e6b8148d821d4f30514babf5ef124"
+ },
+ "tools_at_freeze": {
+  "kernel.py": "2d7fd0f67bbffbd4955c599695d15d237e5e3ea9058ba700c6f8936699d96400",
+  "adapters/stdlib/scan/scan.py": "ead27057594089cfbc94eddd0af0dbd35224880c6c26253f3e5ebca6ac59d691",
+  "adapters/stdlib/todo/todo.py": "56be091ebcb319711653ab2566d011b8f32a00790c106e63d4ef63516e7e0c45"
+ }
+}

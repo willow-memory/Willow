@@ -173,7 +173,7 @@ willow/
 ├── docs/
 │   ├── tour.md               the first five minutes, in full: a question, a gap, her words, an approval
 │   └── how-it-works.md       what it reads, how it ranks, the key, the record, approvals
-├── demo/                     three made-up people to try it on
+├── demo/                     three made-up people, and one real bug, to try it on
 │   ├── odile/                piano tuner and beekeeper, caring for her father
 │   │   ├── make_life.py      writes her files into life/, the same bytes every run
 │   │   ├── CHARACTER.md      who she is and how her life is written down
@@ -186,12 +186,22 @@ willow/
 │   │   ├── PLANTED.md
 │   │   ├── QUESTIONS.md      the questions he would ask, written before any run
 │   │   └── STRIP.md
-│   └── teodora/              built blind, from a different line of work
-│       ├── make_life.py
-│       ├── CHARACTER.md
-│       ├── PLANTED.md
-│       ├── QUESTIONS.md
-│       └── STRIP.md
+│   ├── teodora/              built blind, from a different line of work
+│   │   ├── make_life.py
+│   │   ├── CHARACTER.md
+│   │   ├── PLANTED.md
+│   │   ├── QUESTIONS.md
+│   │   └── STRIP.md
+│   └── php2shell/            a real bug: the PHP2Shell result, tested seven ways
+│       ├── README.md         the claim, the threats, what is frozen, each phase's results
+│       ├── FROZEN.json       the SHA-256 of each frozen file, and of the tools when frozen
+│       ├── releases.json     PHP's releases and the security commits, pinned by hash
+│       ├── make_trees.py     fetches them from php-src, and checks them without git
+│       ├── score.py          the frozen hit rule: did a passage land on the fix?
+│       ├── test_php2shell.py holds the frozen files to their hashes, and the tools to their word
+│       └── questions/
+│           ├── author.txt    the first look's eight questions, labelled as the author's
+│           └── null.txt      fifty questions with nothing to do with the bug
 ├── .github/
 │   ├── workflows/
 │   │   ├── ci.yml            runs adapters/stdlib/ci/ci.py one part a job, tests on Python 3.9 to 3.14
