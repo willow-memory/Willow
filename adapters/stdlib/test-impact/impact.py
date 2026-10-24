@@ -431,10 +431,10 @@ def place(changed: list[str], graph: Graph) -> Plan:
             plan.gate("tests:constitution", t, "reached by import")
         elif t.startswith("vectors/"):
             plan.gate("tests:vectors", t, "reached by import")
-        elif t.startswith("demo/php2shell"):
-            plan.gate("demo:php2shell", t, "reached by import")
         elif t.startswith(STACK.rsplit("/", 1)[0] + "/"):
-            plan.gate("demo:stack", t, "reached by import")
+            plan.gate("demo:stack", t, "reached by import")  # its tests are that gate
+        elif person := under(t, "demo/"):
+            plan.gate(f"demo:{person}", t, "reached by import")
         elif t.startswith("adapters/deps/"):
             dep = deps_of(t)
             plan.gate(f"deps:{dep}", t, "reached by import")

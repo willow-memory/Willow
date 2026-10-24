@@ -99,9 +99,9 @@ and raises the moment it breaks one:
 
 - **Ask the list first:**
   `python adapters/stdlib/similar/similar.py near "your idea in a sentence"`.
-  It asks with the kernel's own rank, so an entry must hold half of your
-  sentence's content words: a long, careful line can miss an idea that is
-  already there. Ask again with three or four of its key words.
+  It asks both ways: entries that hold half of your sentence's words, and
+  entries half of whose words your sentence holds, so a long line still
+  finds a short entry it contains. It shows, never refuses: you decide.
 - **`adapters/planned.json` is sorted by name and written as
   `json.dumps(entries, indent=1, ensure_ascii=False)` plus a newline.**
   Rewritten any other way, every line of it changes.

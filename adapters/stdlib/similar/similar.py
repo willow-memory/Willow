@@ -88,9 +88,13 @@ def pile(every: list[dict], leave_out: str | None = None) -> list[dict]:
 
 def near(every: list[dict], words: str, leave_out: str | None = None) -> list[tuple]:
     """(entry, the words it shares) for each entry the kernel's search
-    serves for `words`, best first, each entry once."""
+    serves for `words`, best first, each entry once; then, up to `TOP` in
+    all, each entry whose own words `words` holds by the same rule, counted
+    against the entry. The kernel counts against the question, so a long,
+    careful line reads as far from a short entry it contains."""
     by_name = {a["name"]: a for a in every}
     want = set(kernel.words(words)) - kernel.FUNCTION
+    mine = kernel.forms(w.lower() for w in kernel.words(words))
     out, seen = [], set()
     for c in kernel.rank(pile(every, leave_out), words):
         if c["path"] in seen:
@@ -98,6 +102,14 @@ def near(every: list[dict], words: str, leave_out: str | None = None) -> list[tu
         seen.add(c["path"])
         shared = sorted(w for w in want if kernel.held_by(w, kernel.toks(c), {}))
         out.append((by_name[c["path"]], shared))
+    back = []
+    for c in pile(every, leave_out):
+        theirs = set(kernel.words(c["text"])) - kernel.FUNCTION
+        shared = sorted(w for w in theirs if kernel.holds(w, mine))
+        if c["path"] not in seen and len(shared) >= max(2, kernel.HOLD * len(theirs)):
+            back.append((-len(shared) / len(theirs), c["path"], shared))
+    for _, name, shared in sorted(back)[: max(0, kernel.TOP - len(out))]:
+        out.append((by_name[name], shared))
     return out
 
 

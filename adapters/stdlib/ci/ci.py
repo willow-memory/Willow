@@ -1,10 +1,14 @@
 """ci.py: this repo's checks as verdict rows on a kernel record. Python 3.9+.
 
-    python adapters/stdlib/ci/ci.py run    [PART ...] [--box DIR] [--now TS]
+    python adapters/stdlib/ci/ci.py run    [PART|GATE ...] [--without GATE ...] [--shard K/N]
+                                            [--box DIR] [--now TS]
     python adapters/stdlib/ci/ci.py verify [--box DIR]
     python adapters/stdlib/ci/ci.py show   [--box DIR]
 
-PART is lint, tests, ports, demo, deps, mutants or tools; none means all seven. --box defaults to
+PART is lint, tests, ports, demo, deps, mutants or tools; none means all seven.
+A GATE (tests:strip) runs that one gate; --without leaves one out of what was
+named; --shard K/N runs the Kth of N parts of it, so N jobs run it all between
+them, each gate once. --box defaults to
 .ci-record (ignored by git), and its key to the same name plus `.key`, beside
 it, never in it.
 
@@ -40,6 +44,7 @@ from __future__ import annotations
 
 import contextlib
 import hashlib
+import importlib.util
 import io
 import os
 import re
@@ -407,6 +412,10 @@ def gates() -> list[tuple[str, str, object]]:
     # PHP2Shell's runs fetch PHP's source; CI holds only what they froze
     out.append(("demo", "demo:php2shell", command(*PYTEST, "demo/php2shell",
                 needs=lambda: missing_module("pytest"))))  # fmt: skip
+    # the Google privacy study fetched its sources once; CI holds what it froze
+    out.append(("demo", "demo:google-privacy-2026-10-16", command(
+        *PYTEST, "demo/google-privacy-2026-10-16",
+        needs=lambda: missing_module("pytest"))))  # fmt: skip
     # Bernadette's files through every layer: readers to the trust add-ons
     out.append(("demo", "demo:stack", command(*PYTEST, "demo/bernadette",
                 needs=lambda: missing_module("pytest"))))  # fmt: skip
@@ -424,6 +433,41 @@ def gates() -> list[tuple[str, str, object]]:
 
 
 PARTS = ("lint", "tests", "ports", "demo", "deps", "mutants", "tools")
+SHARDS = ROOT / "adapters" / "stdlib" / "test-shards" / "shards.py"
+
+
+def select(names: list[str], without: list[str], shard: str | None) -> list[str]:
+    """The gates `run` runs, in GATES' order: each named one and each of a
+    named part's (all of them when none is named), less the ones `without`
+    names; with `shard` K/N, the Kth of N parts of those, cut by test-shards'
+    own split. Every gate is in exactly one of the N. Anything it doesn't
+    know is refused, so a name spelled wrong never runs nothing."""
+    every = [(part, gate) for part, gate, _ in gates()]
+    known = set(PARTS) | {g for _, g in every}
+    for name in names + without:
+        if name not in known:
+            raise ValueError(f"{name} isn't a part or a gate of ci.py")
+    for name in without:
+        if name in PARTS:
+            raise ValueError(f"--without takes a gate, and {name} is a part")
+    picked = [
+        g
+        for p, g in every
+        if (not names or p in names or g in names) and g not in without
+    ]
+    if shard is None:
+        return picked
+    got = re.fullmatch(r"([1-9]\d*)/([1-9]\d*)", shard)
+    if not got or int(got.group(1)) > int(got.group(2)):
+        raise ValueError(f"--shard {shard} isn't K/N with K from 1 to N")
+    spec = importlib.util.spec_from_file_location("willow_shards_for_ci", SHARDS)
+    shards = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(shards)
+    # every gate weighs the same: the record keeps no times to weigh them by
+    part = shards.split(dict.fromkeys(picked, 1), int(got.group(2)))[
+        int(got.group(1)) - 1
+    ]
+    return [g for g in picked if g in part]
 
 
 # ── the record ───────────────────────────────────────────────────────────────
@@ -491,13 +535,13 @@ def open_box(box: Path, ts: str) -> None:
         raise SystemExit(f"refused: couldn't start a record at {box}")
 
 
-def do_run(box: Path, parts: list[str], ts: str) -> int:
+def do_run(box: Path, chosen: list[str], ts: str) -> int:
     open_box(box, ts)
     files = files_sha256()
     python = "{}.{}".format(*sys.version_info[:2])
     states = []
-    for part, gate, how in gates():
-        if part not in parts:
+    for _, gate, how in gates():
+        if gate not in chosen:
             continue
         print(f"\n── {gate}", flush=True)
         state, said, why = how()
@@ -563,15 +607,22 @@ def do_show(box: Path) -> int:
 
 def main(argv: list[str]) -> int:
     verb, rest = (argv[0], argv[1:]) if argv else ("", [])
-    opts, args, it = {}, [], iter(rest)
+    opts, args, without, it = {}, [], [], iter(rest)
     for a in it:
-        if a in ("--box", "--now"):
+        if a in ("--box", "--now", "--shard"):
             opts[a] = next(it, "")
+        elif a == "--without":
+            without.append(next(it, ""))
         else:
             args.append(a)
     box = Path(opts.get("--box") or ROOT / ".ci-record")
-    if verb == "run" and all(a in PARTS for a in args):
-        return do_run(box, args or list(PARTS), opts.get("--now") or commit_time())
+    if verb == "run" and not any(a.startswith("-") for a in args + without):
+        try:
+            chosen = select(args, without, opts.get("--shard"))
+        except ValueError as e:
+            print(f"refused: {e}", file=sys.stderr)
+            return kernel.REFUSED
+        return do_run(box, chosen, opts.get("--now") or commit_time())
     if verb == "verify" and not args:
         return do_verify(box)
     if verb == "show" and not args:

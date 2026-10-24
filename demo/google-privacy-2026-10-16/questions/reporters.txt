@@ -1,0 +1,15 @@
+# The reporting's claim, in the reporters' own words: each line is copied
+# from a saved article (sources.json), and test_google_privacy.py holds each
+# to quote-check, verbatim, in the news pile. Quoted headlines (Ars Technica,
+# The Verge, 9to5Google) are as the saved articles print them.
+# name<TAB>question; the name says whose words and where.
+dx-headline	Google quietly changes privacy policy so your Gmail and Photos could be used in targeted ads
+dx-lede	Google has updated its privacy policy to allow personal information from Gmail, Google Photos, and Drive to potentially be used for targeted advertising
+dx-exception	The change, which took effect on October 16, introduces a significant exception to Google’s previous promise that it would not use content from these services to personalize advertisements.
+ti-lede	Google’s revised privacy policy, effective October 16, 2026 , now says the company may use data from Drive, Gmail and Google Photos to inform personalized ads
+ti-headline	Policy Links Gmail to Ads
+ars-headline	Updated Google privacy policy says your Gmail might be used for advertising
+verge-headline	Now Google says it might use your Gmail and Google Photos data to target ads
+9to5-headline	Google will target ads based on Gmail, Photos data if Personal Intelligence is enabled.
+sh-lede	it now spells out a route for Gmail, Drive and Photos data to influence personalized ads.
+sh-headline	Google Opens Opt-In Gmail Ad Path
