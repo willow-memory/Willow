@@ -203,6 +203,8 @@ willow/
 │       ├── phase1.py         the blind questions, under both rules, ranked by the kernel and BM25
 │       ├── phase6.py         reproducibility: every release, five Pythons, four kernels, a second labeller
 │       ├── test_php2shell.py holds the frozen files to their hashes, and the tools to their word
+│       ├── results/
+│       │   └── phase6-labels.json  the independent labellers' yes or no, item by item
 │       └── questions/
 │           ├── author.txt    the first look's eight questions, labelled as the author's
 │           ├── blind-a.txt   eight written blind, as a security engineer, from the advisories
