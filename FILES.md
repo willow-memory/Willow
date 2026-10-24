@@ -300,6 +300,10 @@ willow/
 │   │   │   ├── secrets_audit.py passwords, keys and card numbers in plain files, by file and line
 │   │   │   ├── test_secrets_audit.py
 │   │   │   └── README.md
+│   │   ├── session-seal/
+│   │   │   ├── session_seal.py one seal over a session's rows, proposed through the kernel
+│   │   │   ├── test_session_seal.py
+│   │   │   └── README.md
 │   │   ├── shell/
 │   │   │   ├── shell.py          a willow command and tab completion for bash, zsh, fish, PowerShell and cmd
 │   │   │   ├── test_shell.py
@@ -446,7 +450,7 @@ willow/
 ├── docs/
 │   ├── tour.md               the first five minutes, in full: a question, a gap, her words, an approval
 │   └── how-it-works.md       what it reads, how it ranks, the key, the record, approvals
-├── demo/                     three made-up people, a real bug and a real policy change, to try it on
+├── demo/                     four made-up people, a real bug and a real policy change, to try it on
 │   ├── odile/                piano tuner and beekeeper, caring for her father
 │   │   ├── make_life.py      writes her files into life/, the same bytes every run
 │   │   ├── CHARACTER.md      who she is and how her life is written down
@@ -465,6 +469,14 @@ willow/
 │   │   ├── PLANTED.md
 │   │   ├── QUESTIONS.md
 │   │   └── STRIP.md
+│   ├── bernadette/           built blind, in her apps' raw formats, and run through the whole stack
+│   │   ├── make_life.py      her mail, calendars, chats, vault, office files, Kindle and PDFs, the same bytes every run
+│   │   ├── CHARACTER.md
+│   │   ├── PLANTED.md        written by make_life.py --planted, from the table --check holds
+│   │   ├── QUESTIONS.md
+│   │   ├── STRIP.md          what each need came to, and what each layer of the stack did
+│   │   ├── stack.py          her files through every reader, start, the finders, privacy, an MCP assistant, and the trust add-ons
+│   │   └── test_stack.py     holds the stack to the states STRIP.md scores
 │   ├── php2shell/            a real bug: the PHP2Shell result, tested seven ways
 │   │   ├── README.md         the claim, the threats, what is frozen, each phase's results
 │   │   ├── FROZEN.json       the SHA-256 of each frozen file, and of the tools when frozen

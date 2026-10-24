@@ -416,6 +416,9 @@ def gates() -> list[tuple[str, str, object]]:
     out.append(("demo", "demo:google-privacy-2026-10-16", command(
         *PYTEST, "demo/google-privacy-2026-10-16",
         needs=lambda: missing_module("pytest"))))  # fmt: skip
+    # Bernadette's files through every layer: readers to the trust add-ons
+    out.append(("demo", "demo:stack", command(*PYTEST, "demo/bernadette",
+                needs=lambda: missing_module("pytest"))))  # fmt: skip
     for name in deps_add_ons():
         out.append(("deps", f"deps:{name}", deps_add_on(name)))
         out.append(("deps", f"deps:{name}@floor",

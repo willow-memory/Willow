@@ -62,9 +62,10 @@ Each of these has been missed at least once, and each is a check that fails.
    `adapters/stdlib/mutants/accepted.json` for a break those six don't
    include fails as stale: list only what CI's own run shows surviving.
 8. **Real data, not only fixtures.** Run it on the demo folders
-   (`python demo/odile/make_life.py`, and the same for hollis and teodora).
-   An add-on can pass every test on hand-made files and still be wrong on a
-   real folder; a test written from what the code does checks only that.
+   (`python demo/odile/make_life.py`, and the same for hollis, teodora and
+   bernadette). An add-on can pass every test on hand-made files and still be
+   wrong on a real folder; a test written from what the code does checks only
+   that.
 9. **If it goes online**, its tests use a server it starts on 127.0.0.1:
    the guard narrows only `none` and `loopback`, so a card naming a site
    lets the tests use this machine. Its `COMMANDS` row must still answer

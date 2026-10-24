@@ -59,7 +59,7 @@ can pick up ([CONTRIBUTING.md](CONTRIBUTING.md) says how):
 - **Finding things:** more ways to look: every match, this date in past years, an exact quote, by meaning, past typos. Built: [all](adapters/stdlib/all/), [latent](adapters/deps/latent/), [misquote](adapters/stdlib/misquote/), [on-this-day](adapters/stdlib/on-this-day/), [quote-check](adapters/stdlib/quote-check/), [scan](adapters/stdlib/scan/), [surprise](adapters/stdlib/surprise/). Ideas: *amounts, bm25, by-function, code-first, code-shape, codeowners, crosswalk, duplicates, fair-merge, first-mention, fuzzy-dates, index-cache, kiwix, meaning, my-lessons, people, pile-build, pile-gold, pile-rank, pile-rungs, pile-serve, pile-store, pile-sweep, promises, reading-level, record-sql, rerank, ripgrep, said, standards, symbols, typos, upgrade-notes, vectors, watch, why-not*.
 - **Your own words:** teaching it the words you use, so a question finds what your files call it. Built: [starter-words](adapters/stdlib/starter-words/), [words-de](adapters/stdlib/words-de/), [words-es](adapters/stdlib/words-es/), [words-fr](adapters/stdlib/words-fr/), [words-it](adapters/stdlib/words-it/), [words-nl](adapters/stdlib/words-nl/), [words-pt](adapters/stdlib/words-pt/). Ideas: *abbreviations, dialect, memoir, nicknames, stems, synonyms, tatoeba, vocab, words-ar, words-cy, words-hi, words-ja, words-pl, words-ru, words-sv, words-tr, words-zh*.
 - **Keeping track:** dates coming up, numbers over time, to-dos, care logs, invoices, forecasts and flashcards. Built: [again](adapters/stdlib/again/), [coming-up](adapters/stdlib/coming-up/), [digest](adapters/stdlib/digest/), [gaps](adapters/stdlib/gaps/), [lending](adapters/stdlib/lending/), [outdated](adapters/stdlib/outdated/), [policy-watch](adapters/stdlib/policy-watch/), [readings](adapters/stdlib/readings/), [todo](adapters/stdlib/todo/). Ideas: *ask-later, attendance, baby-log, budget, car, care, contracts, crowd, cycle, debts, flashcards, foia, food-log, forecasts, garden, gifts, gradebook, grant-report, habits, home-upkeep, hours, inventory, invoices, job-hunt, lab-notebook, livestock, market-calls, mileage, milestones, minutes, mood, oakenscroll, pets, predict, reading-log, renewals, rubric, school, session-cost, subscriptions, support-plan, syllabus, symptoms, tax-year, trips, upstream-desk, warranties*.
-- **Trust and proof:** answers you can check later: exports, stale answers, what changed, signed and encrypted records. Built: [backup](adapters/stdlib/backup/), [changed](adapters/stdlib/changed/), [claim-check](adapters/stdlib/claim-check/), [contradictions](adapters/stdlib/contradictions/), [diverge](adapters/stdlib/diverge/), [export](adapters/stdlib/export/), [history](adapters/stdlib/history/), [stale](adapters/stdlib/stale/), [timeline](adapters/stdlib/timeline/), [wayback](adapters/stdlib/wayback/), [xref](adapters/stdlib/xref/). Ideas: *box-health, encrypt, family-box, git-notes, handoff, ids, in-case, in-toto, jeles, licenses, line-origin, losc, merkle, mirror, nestor, notary, opentimestamps, paper-key, pgp, prov, provenance, quote-review, redential, report, retire, ro-crate, sap-gate, session-seal, signed-commits, sync, thesis, time-capsule, witness*.
+- **Trust and proof:** answers you can check later: exports, stale answers, what changed, signed and encrypted records. Built: [backup](adapters/stdlib/backup/), [changed](adapters/stdlib/changed/), [claim-check](adapters/stdlib/claim-check/), [contradictions](adapters/stdlib/contradictions/), [diverge](adapters/stdlib/diverge/), [export](adapters/stdlib/export/), [history](adapters/stdlib/history/), [session-seal](adapters/stdlib/session-seal/), [stale](adapters/stdlib/stale/), [timeline](adapters/stdlib/timeline/), [wayback](adapters/stdlib/wayback/), [xref](adapters/stdlib/xref/). Ideas: *box-health, encrypt, family-box, git-notes, handoff, ids, in-case, in-toto, jeles, licenses, line-origin, losc, merkle, mirror, nestor, notary, opentimestamps, paper-key, pgp, prov, provenance, quote-review, redential, report, retire, ro-crate, sap-gate, signed-commits, sync, thesis, time-capsule, witness*.
 - **Privacy and safety:** phone numbers, card numbers and keys hidden in answers, or found sitting in files. Built: [advisories](adapters/stdlib/advisories/), [install-scripts](adapters/stdlib/install-scripts/), [privacy](adapters/stdlib/privacy/), [secrets-audit](adapters/stdlib/secrets-audit/), [typosquat](adapters/stdlib/typosquat/). Ideas: *a11y-check, forget, kids, package-contents, pii-audit, scrub, student-records, transcript-redact*.
 - **Assistants:** AI assistants that can ask and suggest, but never approve. Built: [aider](adapters/stdlib/aider/), [claude-code](adapters/stdlib/claude-code/), [codex-cli](adapters/stdlib/codex-cli/), [copilot](adapters/stdlib/copilot/), [cursor](adapters/stdlib/cursor/), [gemini-cli](adapters/stdlib/gemini-cli/), [hook-fail-closed](adapters/stdlib/hook-fail-closed/), [hook-fuzz](adapters/stdlib/hook-fuzz/), [hook-pin](adapters/stdlib/hook-pin/), [hook-replay](adapters/stdlib/hook-replay/), [mcp](adapters/deps/mcp/), [mcp-lite](adapters/stdlib/mcp-lite/), [opencode](adapters/stdlib/opencode/), [windsurf](adapters/stdlib/windsurf/), [zed](adapters/stdlib/zed/). Ideas: *assistant-scores, basic-memory, cassettes, claude, hermes, hook-checks, hook-cite, hook-compact, hook-errors, hook-feedback, hook-guard, hook-handoff, hook-impact, hook-leaks, hook-read-first, hook-sequence, hook-shell, hook-start, hook-stop, hook-tiers, hooks-elsewhere, instruction-files, issue-answer, ladder, local-model, mcp-by-hash, memory-import, mex, model-fit, night-batch, openai-compatible, persona-card, plain-language, quantized, same-way, schema-check, scope, second-opinion, silence-log, translate*.
 - **Ways to use it:** other ways in: pipes, your shell and your editor, plain sentences, a page on this machine, answers read aloud. Built: [browse](adapters/stdlib/browse/), [emacs](adapters/stdlib/emacs/), [jetbrains](adapters/stdlib/jetbrains/), [pipe](adapters/stdlib/pipe/), [plain](adapters/stdlib/plain/), [print](adapters/stdlib/print/), [shell](adapters/stdlib/shell/), [start](adapters/stdlib/start/), [vim](adapters/stdlib/vim/), [vscode](adapters/stdlib/vscode/). Ideas: *anki, annotations, badge, braille, calendar-out, cloudevents, datasette, deep-links, desktop, dictate, email-ask, emergency-card, home-assistant, kiosk, launcher, llms-txt, obsidian, pr-context, qr, rss-out, safe-app, share, socratic, speak, static-search, telegram-bot, tui, warm*.
@@ -70,11 +70,11 @@ can pick up ([CONTRIBUTING.md](CONTRIBUTING.md) says how):
 <!-- willow:front show=pick week=2026-W43 -->
 **Add-on of the week**
 
-**[again](adapters/stdlib/again/)** — Questions you keep asking: "asked 4 times; approve an answer?"
+**[session-seal](adapters/stdlib/session-seal/)** — One seal at the end of a session, over everything asked and approved in it: yes, these were my actions.
 
-*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 90 built add-ons in name order.*
+*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 91 built add-ons in name order.*
 
-[Every add-on, 90 built of 457, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 91 built of 457, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 ## How it works
@@ -178,12 +178,14 @@ That, English being built in, and the cost of having no index are in
 and why ([DECISIONS.md](DECISIONS.md)). Known bugs, each shown by a test,
 are in [BUGS.md](BUGS.md).
 
-It was tested blind. For two of the three characters, a separate AI agent
+It was tested blind. For three of the four characters, a separate AI agent
 that never saw the code wrote the files, the needs hidden in them, and the
 questions the person would ask; the answers were then scored against what was
 hidden. It found what was asked in the files' own
-words and missed the rest. The full results, misses included, are in
-`demo/*/STRIP.md`.
+words and missed the rest. The fourth of them, Bernadette, wrote her files in
+her apps' raw formats and was run through every add-on at once, readers to
+backups (`demo/bernadette/stack.py`). The full results, misses included, are
+in `demo/*/STRIP.md`.
 
 ## How it's verified
 
@@ -246,7 +248,7 @@ willow/
 ├── adapters/                 add-ons built on top of kernel.py
 ├── ports/                    kernel.py rewritten in other languages
 ├── vectors/                  what keeps the four implementations identical
-├── demo/                     three made-up people, and one real bug, to try it on
+├── demo/                     four made-up people, and one real bug, to try it on
 ├── docs/                     the full first five minutes, and how it works in full
 ├── .github/                  CI, the issue forms, the pull request template: the GitHub add-on's
 ├── .gitignore                generated files and build output

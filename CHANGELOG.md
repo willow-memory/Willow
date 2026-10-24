@@ -10,6 +10,19 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `demo/bernadette`, a fourth person built blind, her files in the raw formats
+  her apps would leave (.eml and .mbox, .ics and .vcf, WhatsApp and Telegram,
+  an Obsidian vault, .docx, .xlsx and .odt, Kindle and .epub, PDFs), and
+  `demo/bernadette/stack.py`, which takes them through every layer of willow at once: each
+  reader, `start`, the look-ahead add-ons, her twenty questions, `privacy`,
+  an assistant over `mcp-lite`, and, once she seals, `stale`, `export`,
+  `session-seal`, `backup`, `diverge` and `verify`. CI runs it as
+  `demo:stack`; STRIP.md scores it, misses included. (#34)
+- `session-seal`, an add-on that bundles a session's rows, by number,
+  kind and hash and never their words, and proposes the bundle through the
+  kernel's own bite and propose, so it waits on the person's seal like any
+  suggestion: one seal over a whole session. Ported from willow-bot's one
+  script, with the kernel's seal standing in for Nestor's. (#34)
 - `latent`, a deps add-on that ranks a `scan` index by meaning (TF-IDF then a
   truncated SVD), so a question reaches a passage that shares its sense without
   sharing its words; offline, it downloads no model. Needs numpy, pinned and

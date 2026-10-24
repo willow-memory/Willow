@@ -2986,16 +2986,6 @@
   "tags": "no-install, offline, read-only, tracking"
  },
  {
-  "name": "session-seal",
-  "kind": "stdlib",
-  "section": "Trust and proof",
-  "line": "One seal at the end of a session, over everything asked and approved in it: yes, these were my actions.",
-  "source": "bot",
-  "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, trust"
- },
- {
   "name": "share",
   "kind": "stdlib",
   "section": "Ways to use it",

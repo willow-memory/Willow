@@ -18,7 +18,7 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`████░░░░░░░░░░░░░░░░` **90 of 457 built** · 406 need no install · 51 need one
+`████░░░░░░░░░░░░░░░░` **91 of 457 built** · 406 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
@@ -26,7 +26,7 @@ or `writes-output`; its section), and any the card's author adds or changes.
 | Finding things | 7 | 36 | 32 | 11 |
 | Your own words | 7 | 17 | 21 | 3 |
 | Keeping track | 9 | 47 | 56 | 0 |
-| Trust and proof | 11 | 33 | 35 | 9 |
+| Trust and proof | 12 | 32 | 35 | 9 |
 | Privacy and safety | 5 | 8 | 13 | 0 |
 | Assistants | 15 | 40 | 49 | 6 |
 | Ways to use it | 10 | 28 | 34 | 4 |
@@ -47,9 +47,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ### Add-on of the week
 
 <!-- willow:pick week=2026-W43 -->
-**[again](adapters/stdlib/again/)** — Questions you keep asking: "asked 4 times; approve an answer?"
+**[session-seal](adapters/stdlib/session-seal/)** — One seal at the end of a session, over everything asked and approved in it: yes, these were my actions.
 
-*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 90 built add-ons in name order.*
+*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 91 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -334,7 +334,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - **retire** (idea) — Proposes setting aside approved answers that no longer hold, each one gone only when you seal it. *bot* `no-install` `offline` `records` `trust`
 - **ro-crate** (idea) — A box snapshot as an RO-Crate research object Zenodo can read: each file with its hash and licence. *new* `no-install` `offline` `writes-output` `trust`
 - **sap-gate** (idea) — The mcp add-on's tool calls checked against SAP/1.0 grants before they run, through openclaw-sap-gate. Needs openclaw-sap-gate; MIT. *new* `needs-install` `offline` `read-only` `trust`
-- **session-seal** (idea) — One seal at the end of a session, over everything asked and approved in it: yes, these were my actions. *bot* `no-install` `offline` `records` `trust`
+- [**session-seal**](adapters/stdlib/session-seal/) — One seal at the end of a session, over everything asked and approved in it: yes, these were my actions. *bot* `no-install` `offline` `records` `trust`
 - **signed-commits** (idea) — Which commits are signed, and by whose key, checked on this machine against the keys you trust. Needs the git program; GPL, called not linked. *new* `needs-install` `offline` `read-only` `trust`
 - [**stale**](adapters/stdlib/stale/) — Approved answers whose cited passage has changed or gone. Citations are content hashes, so it's exact. *box* `no-install` `offline` `read-only` `trust`
 - **sync** (idea) — Your record kept on two devices through any synced folder, with the chain checked on each before it's trusted. *new* `no-install` `offline` `records` `trust`

@@ -37,6 +37,8 @@ How a path is placed:
       vectors/                 its tests, and every port
       ports/NAME/              ports:NAME
       demo/NAME/               demo:NAME
+      demo/bernadette/, or the code of an add-on its stack.py runs
+                               demo:stack too
       adapters/deps/NAME/      deps:NAME and deps:NAME@floor
       adapters/stdlib/github/, .github/ (not workflows)
                                tests:strip
@@ -61,6 +63,7 @@ from __future__ import annotations
 import ast
 import importlib.util
 import os
+import re
 import subprocess
 import sys
 import tempfile
@@ -83,6 +86,9 @@ STDLIB = "adapters/stdlib/"
 CONTRACT = "adapters/stdlib/ci/test_contract.py"
 #: the tests of the one gate that has several files and one narrow form
 DOCS = ("test_docs.py", "test_docs_fires.py")
+#: The demo that runs add-ons as a person would, each its own process, so the
+#: import graph never sees them: what it runs is read from its own text.
+STACK = "demo/bernadette/stack.py"
 EVERYTHING = "everything"
 FULL = "python adapters/stdlib/ci/ci.py run --box /tmp/ci-record"
 
@@ -285,6 +291,13 @@ def deps_of(path: str) -> str | None:
     return None
 
 
+def stacked() -> set[str]:
+    """The add-ons demo:stack runs, by folder name, as stack.py names them."""
+    f = ROOT / STACK
+    text = f.read_text(encoding="utf-8") if f.is_file() else ""
+    return set(re.findall(r'(?:STD|"deps") / "([\w-]+)"', text))
+
+
 def under(path: str, folder: str) -> str | None:
     """NAME for folder/NAME/... (a file straight in `folder` has no name)."""
     if path.startswith(folder) and path.count("/") > folder.count("/"):
@@ -328,6 +341,7 @@ def place(changed: list[str], graph: Graph) -> Plan:
     }
     targets = set(ci.mutant_targets())
     seeds: set[str] = set()
+    stack = stacked()
     for p in changed:
         py = p.endswith(".py")
         if py and (ROOT / p).is_file():
@@ -346,6 +360,8 @@ def place(changed: list[str], graph: Graph) -> Plan:
         if p == CONTRACT:
             plan.contract_whole = True
             plan.say(p, "test_contract.py, whole")
+        if py and not is_test(p) and (name or deps_of(p)) in stack:
+            plan.gate("demo:stack", p, f"{STACK} runs it")
         if name:
             gone = name not in stdlib_dirs
             if name not in plan.narrow:
@@ -376,6 +392,8 @@ def place(changed: list[str], graph: Graph) -> Plan:
                 plan.gate("demo:php2shell", p, "demo/php2shell")
             else:
                 plan.gate(f"demo:{person}", p, f"demo/{person}")
+            if p.startswith(STACK.rsplit("/", 1)[0] + "/"):
+                plan.gate("demo:stack", p, STACK.rsplit("/", 1)[0])
         elif p.startswith(".github/"):
             plan.gate("tests:strip", p, ".github/ (strip removes it)")
         elif p in ("test_kernel.py",):
@@ -413,6 +431,8 @@ def place(changed: list[str], graph: Graph) -> Plan:
             plan.gate("tests:constitution", t, "reached by import")
         elif t.startswith("vectors/"):
             plan.gate("tests:vectors", t, "reached by import")
+        elif t.startswith(STACK.rsplit("/", 1)[0] + "/"):
+            plan.gate("demo:stack", t, "reached by import")  # its tests are that gate
         elif person := under(t, "demo/"):
             plan.gate(f"demo:{person}", t, "reached by import")
         elif t.startswith("adapters/deps/"):
