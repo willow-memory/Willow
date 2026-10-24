@@ -12,7 +12,8 @@
   "phase1.py": "86a7e3a6b4b7b671edbf32dd72440830172160002ef09004775660754b575408",
   "questions/blind-a.txt": "e5cf1656bd0ff1fd02e7d5c88535aba81236cab22367e67817ccd74094c8a1f8",
   "questions/blind-b.txt": "ac726fa6bcda969a466ce95f05b9f76bacbd0537db5b261409247bde78635958",
-  "questions/blind-c.txt": "fb89225c5ada04c3d9ded4e640aff8f5cac8b261f338610f7f471da9737b08fe"
+  "questions/blind-c.txt": "fb89225c5ada04c3d9ded4e640aff8f5cac8b261f338610f7f471da9737b08fe",
+  "phase6.py": "a9b8360c3923ac25d49dce89b09ced54afd6c2a15b20948cba3e586079899482"
  },
  "tools_at_freeze": {
   "kernel.py": "2d7fd0f67bbffbd4955c599695d15d237e5e3ea9058ba700c6f8936699d96400",
@@ -25,7 +26,8 @@
   "phase1.py": "2026-10-24, before phase 1 ran",
   "questions/blind-a.txt": "2026-10-24, before phase 1 ran",
   "questions/blind-b.txt": "2026-10-24, before phase 1 ran",
-  "questions/blind-c.txt": "2026-10-24, before phase 1 ran"
+  "questions/blind-c.txt": "2026-10-24, before phase 1 ran",
+  "phase6.py": "2026-10-24, before any part of phase 6 ran: its checks and pass rules"
  },
  "tools_at_phase1_freeze": {
   "kernel.py": "2d7fd0f67bbffbd4955c599695d15d237e5e3ea9058ba700c6f8936699d96400",

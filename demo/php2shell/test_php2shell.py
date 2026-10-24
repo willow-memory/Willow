@@ -229,3 +229,11 @@ def test_scans_bm25_is_phase_2s_baseline(tmp_path):
     changed = [c for c in ix.pile if c["id"] not in before]
     for q in ("memory limit bailout", "session memory", "post size limit", "nothing"):
         assert ix.bm25(q, 3, before) == phase2.bm25(changed, q), q
+
+
+def test_phase6s_kappa():
+    import phase6
+
+    assert phase6.kappa([True, False, True, False], [True, False, True, False]) == 1.0
+    assert phase6.kappa([True, True, False, False], [True, False, True, False]) == 0.0
+    assert phase6.kappa([True, False], [False, True]) == -1.0
