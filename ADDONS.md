@@ -18,7 +18,7 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`████░░░░░░░░░░░░░░░░` **74 of 418 built** · 369 need no install · 49 need one
+`████░░░░░░░░░░░░░░░░` **75 of 418 built** · 369 need no install · 49 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
@@ -26,7 +26,7 @@ or `writes-output`; its section), and any the card's author adds or changes.
 | Finding things | 5 | 28 | 24 | 9 |
 | Your own words | 7 | 17 | 21 | 3 |
 | Keeping track | 6 | 49 | 55 | 0 |
-| Trust and proof | 9 | 35 | 35 | 9 |
+| Trust and proof | 10 | 34 | 35 | 9 |
 | Privacy and safety | 2 | 11 | 13 | 0 |
 | Assistants | 11 | 17 | 22 | 6 |
 | Ways to use it | 10 | 27 | 33 | 4 |
@@ -47,9 +47,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ### Add-on of the week
 
 <!-- willow:pick week=2026-W43 -->
-**[quote-check](adapters/stdlib/quote-check/)** — Is this exact quote in my files, and where? For writers, journalists and students.
+**[copilot](adapters/stdlib/copilot/)** — GitHub Copilot, in VS Code and in its own CLI, asks your folder through the mcp add-on.
 
-*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 74 built add-ons in name order.*
+*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 75 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -329,7 +329,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - **sync** (idea) — Your record kept on two devices through any synced folder, with the chain checked on each before it's trusted. *new* `no-install` `offline` `records` `trust`
 - **thesis** (idea) — A thesis's claims, each tied to the source that backs it, and a list of the ones with none. *new* `no-install` `offline` `read-only` `trust`
 - **time-capsule** (idea) — A note sealed now and opened on a date you choose, with the record proving it wasn't changed. *new* `no-install` `offline` `records` `trust`
-- **timeline** (idea) — A dated timeline of one matter (a dispute, an illness, a tenancy), every line cited, to hand to a lawyer, doctor or council. *new* `no-install` `offline` `writes-output` `trust`
+- [**timeline**](adapters/stdlib/timeline/) — A dated timeline of one matter (a dispute, an illness, a tenancy), every line cited, to hand to a lawyer, doctor or council. *new* `no-install` `offline` `writes-output` `trust`
 - [**wayback**](adapters/stdlib/wayback/) — The Wayback Machine's copy of a page from a window of days, saved beside your own snapshot and compared with it byte for byte. Goes online: archive.org, to find the archived copy and fetch it. *new* `no-install` `online` `writes-output` `trust` `sources`
 - **witness** (idea) — A second person's seal beside yours, for answers that need two people to agree. *new* `no-install` `offline` `records` `trust`
 - [**xref**](adapters/stdlib/xref/) — Every reference in your files checked: each link to another file, and each quoted line, still there and still saying it. *bot* `no-install` `offline` `read-only` `trust` `everyday`
