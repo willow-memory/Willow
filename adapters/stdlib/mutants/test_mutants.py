@@ -1,6 +1,6 @@
 """mutants: a break the tests miss fails the add-on; an accepted one doesn't;
 a stale acceptance does; ids don't move with the lines; the repo is never
-touched."""
+touched. A check that can't fail is no check (CONST-IV-9)."""
 
 from __future__ import annotations
 
@@ -106,3 +106,40 @@ def test_each_kind_of_break():
     assert "x = a == b or c in d\ny = 3\n" in made
     assert "x = a == b and c not in d\ny = 3\n" in made
     assert "x = a == b and c in d\ny = 4\n" in made
+
+
+TWINS = """def a():
+    return 1
+
+
+def b():
+    return 1
+"""
+ONLY_B = """import sys
+sys.path.insert(0, __file__.rsplit("/", 1)[0])
+import toy
+
+
+def test_b():
+    assert toy.b() == 1
+"""
+
+
+def test_a_mutant_never_runs_the_last_ones_cached_code(repo, capsys):
+    """Breaking a's 1 and then b's 1 makes two files of the same size, often
+    in the same second. Python's bytecode cache would serve the second the
+    first's code, b's break would pass as a survivor, and the count would
+    depend on the clock. Only a's break survives."""
+    here, _ = repo
+    (here / "toy.py").write_text(TWINS)
+    (here / "test_toy.py").write_text(ONLY_B)
+    assert mu.run(["toy"], 6) == 2
+    out = capsys.readouterr().out
+    assert "toy: 1 of 2 killed" in out
+    assert out.count("survived") == 1 and "toy.py:2" in out
+
+
+def test_the_entry_guard_is_never_broken():
+    src = 'if __name__ == "__main__":\n    x = a == b\n'
+    compares = [n for k, n in mu.points(__import__("ast").parse(src)) if k == "compare"]
+    assert len(compares) == 1 and compares[0].left.id == "a"

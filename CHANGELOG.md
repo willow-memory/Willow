@@ -18,9 +18,120 @@ says how). The first was v0.1.0.
   code points at the PHP2Shell fix, tested seven ways, each frozen by hash
   before it ran and recorded on a kernel record. Runs go online and are not
   in CI; CI checks only that the frozen files still match. (#15)
+- Three hundred and thirty-two ideas on the add-on list, nothing built: readers for what
+  people use now (Pocket, Instapaper, wallabag, Karakeep, Joplin, jrnl,
+  Journiv, WriteFreely, ArchiveBox, Slack, Discord, Signal, Mastodon,
+  Bluesky, Google Takeout, subtitles, AI agents' session files) and tools
+  around those agents (memory-import, line-origin, session-cost,
+  transcript-redact, agents-md-check); willow inside projects its
+  maintainer contributes to (basic-memory, codebase-memory, hermes, mex,
+  redential, sigmap, lessons) and beside their own (almanac, corpus-lens,
+  homestead, jeles, nestor, oakenscroll, quiet-corner, reconciler,
+  safe-app, sap-gate); and for everyday life (family-tree, goodreads,
+  letterboxd, listening, recipes, strava, texts, car, garden, gifts,
+  milestones, pets, school, subscriptions, tax-year, trips, warranties,
+  memoir, in-case, timeline, print, large-print, share); and around the
+  forges: readers for GitHub, GitLab and Forgejo exports, gh's JSON, CI
+  logs and SARIF, codeowners and advisories, willow's repo on gitlab,
+  forgejo and sourcehut, mirror, git-notes, signed-commits, issue-answer,
+  pr-context and quote-review; and around npm, PyPI and crates.io:
+  readers for lockfiles, SBOMs and installed packages' own docs,
+  upgrade-notes, outdated, licenses, provenance, package-contents,
+  install-scripts, typosquat, pins, and the kernel and its ports on pypi,
+  npm, nuget, maven and crates; and a hundred and ten more across the
+  board: readers from Notion, Evernote, Zotero and Jupyter to X, Reddit,
+  Matrix, medical records and shell history; nine more languages' common
+  words; trackers from habits and symptoms to contracts and livestock;
+  notary, witness, sync and forget; desktop, tui, launcher, Telegram,
+  email, braille and Anki; quiz, daily-word and tarot; and fuzz, bench,
+  Go and Swift ports; and twenty-four rebuilt from what willow-bot built
+  by hand: diverge, xref, snapshot, session-seal, retire, lore, rules,
+  game-master, odds, beacon, predictions, joins, market-calls, predict,
+  ladder, scope and code-first from its one script, and horoscope, losc,
+  contribute, contributions, upstream-desk, welcome and ci-why from the
+  bot itself; and fifty-six from willow-bot's own idea list:
+  search rungs (bm25, ripgrep, by-function, code-shape, symbols, rerank,
+  kiwix), the record in the world's formats (merkle, opentimestamps,
+  ids, prov, ro-crate, in-toto, wayback, cloudevents), bets on the
+  world's data (weather, quakes, pageviews, the front page, tides),
+  games with known answers (tic-tac-toe to reversi), and the stupid
+  pile (lunatic, spurious, roll-for-merge); and forty-seven more: for
+  education (Moodle, Canvas and Classroom exports, past papers, lesson
+  plans and standards, gradebook, rubric, support plans, socratic), for
+  speed (index-cache, watch, parallel, warm, quantized, night-batch,
+  fast-tests, test-impact, test-shards, ci-cache, compiled, pypy), and
+  why-not, ask-later, family-box, handoff, box-health, emergency-card
+  and others. (#13)
+- No terminal, no English required: `browse`, your folder in your web
+  browser on 127.0.0.1 (ask, read each answer at its file and line, approve
+  a suggestion with a click through the kernel's own `seal`; a secret per
+  start, Host and Origin checked, never framed, no scripts), with a
+  `launcher` for a double-click file on macOS, Windows and Linux; `digest`,
+  one page of what waits on you, what went stale, what's coming up and
+  what keeps finding nothing, writing nothing; and `words-de`, `words-es`,
+  `words-fr` and `words-pt`, which take a language's common words out of a
+  question before the kernel's bite. (#12)
+- CLI adapters, sixteen add-ons with nothing to install: `pipe` (JSON lines,
+  or grep's file:line: text), `mcp-lite` (the mcp add-on's tools, the
+  protocol by hand), `claude-code` (a prompt hook), `shell` (a willow
+  command and completion for bash, zsh, fish, PowerShell and cmd), the
+  settings that register mcp-lite with Codex CLI, Gemini CLI, Copilot,
+  Cursor, Windsurf, Zed and OpenCode, and pipe's answers in Vim, Emacs, VS
+  Code, JetBrains IDEs and Aider. (#11)
+- `live` runs each way-in add-on through the real program it's for (bash,
+  zsh, fish, PowerShell, Vim, Neovim, Emacs, Node for VS Code's matcher,
+  Codex CLI, Gemini CLI, OpenCode, Copilot CLI, Claude Code and MCP
+  Inspector), in a box under a folder with a space in its name: works,
+  fails, or not here. CI gains a `tools` job that installs each at a pinned
+  version, one gate a check, where a program that isn't there fails the
+  job. Its first run found, fixed here before release: VS Code's matcher
+  misread a passage quoting a file:line of its own, and Claude Code's hook
+  and add line, Aider's run line and JetBrains' parameters split a path
+  with a space. (#11)
+- CI's `similar` job keeps its list of what's near each added idea as the
+  run's `similar` artifact, which willow-bot posts in its status comment on
+  the pull request; `github.py check` holds the job to it. (#10)
+- `CONSTITUTION.md`, willows-grove's Draft 0.9 byte for byte, unratified;
+  this repo is its home. `kernel.py` cites the eternity clauses at the
+  lines that enforce them (comments only; the vectors regenerated, the
+  4,463 cases unchanged). (#4)
+- `constitution/test_eternity.py` attacks each eternity clause through the
+  kernel's own command line, and `constitution/coverage.py` reports which
+  clauses are cited where, every CI run; `constitution/declarations.json` starts empty,
+  since verdicts are the person's to record. CI gains `tests:constitution`
+  and `tests:coverage`. (#4)
+- The law, both ways, held by `test_docs.py`: every citation is a real
+  clause; every clause the code cites, a test cites too; every clause is
+  cited or answered in `constitution/reach.json` (out of reach, or open,
+  with why); and each README guarantee names its clause. (#4)
+- The constitution is always a draft, and amended here:
+  `constitution/amendments/` holds each amendment, and
+  `constitution/amend.py` writes the draft number, history row and lineage
+  step each one makes, and refuses a change to the Preamble or Article 0, an
+  edit to the record before it, or a clause text the law doesn't carry.
+  `test_docs.py` refuses an amendment whose clauses no code and test both
+  cite. The first, VIII.4 "Always a draft", makes Draft 0.10. (#4)
+- Four more amendments, to Draft 0.14: VIII.1 becomes propose, check,
+  accept; VIII.3 says Article 0 is strengthened only by clauses that cite
+  it; IV.9, a check that cannot fail is no check, held by the mutants; and
+  VI.7, every change carries its account, held by the changelog and
+  known-bug checks. (#4)
+- Emergency amendments, VIII.2 restated to Draft 0.15: an amendment with
+  `expires:` enters by the same checks and merge, expires within 90 days,
+  can't renew itself, and once expired fails every run until a full
+  amendment keeps or undoes it. A weekly workflow, `.github/workflows/law.yml`, runs the
+  law's check so an expired one is caught in a quiet repo too, and the
+  GitHub add-on's check holds it scheduled. (#4)
+- The checks from #1 to #3 cite the clauses they already enforced: the
+  kernel's no-network test III.1 and III.5, the guard and the add-on cards
+  II.1, and the generated pages VI.6. Their answers in `constitution/reach.json` go. (#4)
 
 ### Changed
 
+- `adapters/stdlib/mutants/mutants.py` runs each mutant without Python's bytecode cache, so a
+  same-size break can no longer run the previous mutant's code and pass as
+  a survivor; and it no longer breaks the `__main__` guard, which the
+  contract test already holds. (#11)
 - The changelog check skips Dependabot's pull requests, which can't write
   an entry; its updates aren't listed. The GitHub add-on's check fails if
   it skips anyone else. (#9)

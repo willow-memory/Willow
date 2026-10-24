@@ -21,6 +21,23 @@ willow/
 ├── BUGS.md                   the known bugs, made from the tests that show them
 ├── DECISIONS.md              what's settled, why, and what holds it
 ├── LIMITS.md                 what willow doesn't do, on purpose or not yet
+├── CONSTITUTION.md           the law the kernel is written to enforce (always a draft; now 0.15)
+├── constitution/             the checks that answer to it
+│   ├── test_eternity.py      each eternity clause, attacked, and refused by the kernel
+│   ├── coverage.py           which clauses are cited where, generated, never tabled
+│   ├── test_coverage.py      its tests
+│   ├── declarations.json     the verdicts, kept by hand; none recorded yet
+│   ├── reach.json            each clause no code cites, answered: out of reach, or open, and why
+│   ├── amend.py              how an amendment enters the law, and the check that holds it there
+│   ├── test_amend.py         its tests: each way the law and its amendments could drift, refused
+│   ├── amendments/           every amendment made here, one file each, numbered in turn
+│   │   ├── 0001.md           VIII.4, always a draft: made Draft 0.10
+│   │   ├── 0002.md           VIII.1, propose, check, accept: made 0.11
+│   │   ├── 0003.md           VIII.3, Article 0 strengthened only by clauses that cite it: made 0.12
+│   │   ├── 0004.md           IV.9, a check that cannot fail is no check: made 0.13
+│   │   ├── 0005.md           VI.7, every change carries its account: made 0.14
+│   │   └── 0006.md           VIII.2, the emergency door on a timer: made 0.15
+│   └── README.md             what the kernel answers for, and what it doesn't claim
 ├── adapters/                 add-ons built on top of kernel.py
 │   ├── README.md             the rules every add-on follows
 │   ├── planned.json          the add-ons not built yet, as this README lists them
@@ -29,6 +46,10 @@ willow/
 │   │   │   ├── again.py      the questions you keep asking, counted from the record
 │   │   │   ├── test_again.py
 │   │   │   └── README.md
+│   │   ├── aider/
+│   │   │   ├── aider.py          the /run line that brings answers into Aider's chat
+│   │   │   ├── test_aider.py
+│   │   │   └── README.md
 │   │   ├── all/
 │   │   │   ├── all.py        every passage that holds a question, in the kernel's order
 │   │   │   ├── test_all.py
@@ -36,6 +57,10 @@ willow/
 │   │   ├── books/
 │   │   │   ├── books.py      Kindle highlights and .epub text, as passages
 │   │   │   ├── test_books.py
+│   │   │   └── README.md
+│   │   ├── browse/
+│   │   │   ├── browse.py     your folder in your browser, on 127.0.0.1: ask, read, approve with a click
+│   │   │   ├── test_browse.py
 │   │   │   └── README.md
 │   │   ├── calendar/
 │   │   │   ├── cal.py        .ics events and .vcf contacts, as dated lines
@@ -59,22 +84,62 @@ willow/
 │   │   │   ├── test_bugs.py  bugs.py's tests: strict marks only, and the list made from them
 │   │   │   ├── test_whose.py whose.py's tests: commits, merges, squashes, another host, places refused
 │   │   │   └── README.md     its card: gates, states, the guard and exit codes
+│   │   ├── claude-code/
+│   │   │   ├── hook.py           Claude Code's prompt hook: cited passages at each prompt; setup prints it
+│   │   │   ├── test_hook.py
+│   │   │   └── README.md
+│   │   ├── codex-cli/
+│   │   │   ├── codex_cli.py      the config.toml lines that register mcp-lite with Codex CLI
+│   │   │   ├── test_codex_cli.py
+│   │   │   └── README.md
 │   │   ├── coming-up/
 │   │   │   ├── coming_up.py  dates in your files in the next few days
 │   │   │   ├── test_coming_up.py
 │   │   │   └── README.md
+│   │   ├── copilot/
+│   │   │   ├── copilot.py        the mcp.json lines that register mcp-lite with Copilot, in VS Code and its CLI
+│   │   │   ├── test_copilot.py
+│   │   │   └── README.md
+│   │   ├── cursor/
+│   │   │   ├── cursor.py         the mcp.json lines that register mcp-lite with Cursor
+│   │   │   ├── test_cursor.py
+│   │   │   └── README.md
+│   │   ├── digest/
+│   │   │   ├── digest.py     one page of what waits on you, gone stale, coming up; writes nothing
+│   │   │   ├── test_digest.py
+│   │   │   └── README.md
+│   │   ├── emacs/
+│   │   │   ├── emacs.py          an M-x willow command: answers in a grep-mode buffer
+│   │   │   ├── test_emacs.py
+│   │   │   └── README.md
 │   │   ├── export/
 │   │   │   ├── export.py     approved answers and the question log, as Markdown or CSV
 │   │   │   ├── test_export.py
+│   │   │   └── README.md
+│   │   ├── gemini-cli/
+│   │   │   ├── gemini_cli.py     the settings.json lines that register mcp-lite with Gemini CLI
+│   │   │   ├── test_gemini_cli.py
 │   │   │   └── README.md
 │   │   ├── github/
 │   │   │   ├── github.py     what the repo needs from GitHub: a security report's comment, .github/ held to the repo
 │   │   │   ├── host.json     how GitHub titles the merge of a pull request, for whose.py --host
 │   │   │   ├── test_github.py
 │   │   │   └── README.md     its card: and .github/ belongs to it
+│   │   ├── jetbrains/
+│   │   │   ├── jetbrains.py      an external tool for JetBrains IDEs: answers as links to file and line
+│   │   │   ├── test_jetbrains.py
+│   │   │   └── README.md
+│   │   ├── live/
+│   │   │   ├── live.py       each way-in add-on run through its real program: works, fails, or not here
+│   │   │   ├── test_live.py
+│   │   │   └── README.md
 │   │   ├── mail/
 │   │   │   ├── mail.py       .eml and .mbox, with sender, date and subject
 │   │   │   ├── test_mail.py
+│   │   │   └── README.md
+│   │   ├── mcp-lite/
+│   │   │   ├── server.py         the mcp add-on's three tools, the protocol by hand, nothing to install
+│   │   │   ├── test_server.py
 │   │   │   └── README.md
 │   │   ├── mutants/
 │   │   │   ├── mutants.py    breaks each add-on's code on purpose and checks its tests notice
@@ -92,6 +157,14 @@ willow/
 │   │   ├── on-this-day/
 │   │   │   ├── on_this_day.py what your files say happened on this date in other years
 │   │   │   ├── test_on_this_day.py
+│   │   │   └── README.md
+│   │   ├── opencode/
+│   │   │   ├── opencode.py       the opencode.json lines that register mcp-lite with OpenCode
+│   │   │   ├── test_opencode.py
+│   │   │   └── README.md
+│   │   ├── pipe/
+│   │   │   ├── pipe.py           questions in, one answer a line out: JSON lines, or grep's file:line: text
+│   │   │   ├── test_pipe.py
 │   │   │   └── README.md
 │   │   ├── plain/
 │   │   │   ├── plain.py      the kernel's answer as sentences
@@ -117,6 +190,10 @@ willow/
 │   │   │   ├── scan.py       indexes a folder once, then asks it a list of questions, the kernel's way
 │   │   │   ├── test_scan.py  holds its answers to the kernel's, every ranking vector included
 │   │   │   └── README.md
+│   │   ├── shell/
+│   │   │   ├── shell.py          a willow command and tab completion for bash, zsh, fish, PowerShell and cmd
+│   │   │   ├── test_shell.py
+│   │   │   └── README.md
 │   │   ├── similar/
 │   │   │   ├── similar.py    what's already on the list near a new idea
 │   │   │   ├── test_similar.py
@@ -134,9 +211,41 @@ willow/
 │   │   │   ├── surprise.py   one passage drawn by a seeded stream, replayable
 │   │   │   ├── test_surprise.py
 │   │   │   └── README.md
-│   │   └── todo/
-│   │       ├── todo.py       things marked to do, oldest first
-│   │       ├── test_todo.py
+│   │   ├── todo/
+│   │   │   ├── todo.py       things marked to do, oldest first
+│   │   │   ├── test_todo.py
+│   │   │   └── README.md
+│   │   ├── vim/
+│   │   │   ├── vim.py            a :Willow command: answers in the quickfix list
+│   │   │   ├── test_vim.py
+│   │   │   └── README.md
+│   │   ├── vscode/
+│   │   │   ├── vscode.py         a VS Code task: answers in the Problems panel
+│   │   │   ├── test_vscode.py
+│   │   │   └── README.md
+│   │   ├── windsurf/
+│   │   │   ├── windsurf.py       the mcp_config.json lines that register mcp-lite with Windsurf
+│   │   │   ├── test_windsurf.py
+│   │   │   └── README.md
+│   │   ├── words-de/
+│   │   │   ├── words_de.py   a question in German, its common words out, then the kernel's bite
+│   │   │   ├── test_words_de.py
+│   │   │   └── README.md
+│   │   ├── words-es/
+│   │   │   ├── words_es.py   a question in Spanish, its common words out, then the kernel's bite
+│   │   │   ├── test_words_es.py
+│   │   │   └── README.md
+│   │   ├── words-fr/
+│   │   │   ├── words_fr.py   a question in French, its common words out, then the kernel's bite
+│   │   │   ├── test_words_fr.py
+│   │   │   └── README.md
+│   │   ├── words-pt/
+│   │   │   ├── words_pt.py   a question in Portuguese, its common words out, then the kernel's bite
+│   │   │   ├── test_words_pt.py
+│   │   │   └── README.md
+│   │   └── zed/
+│   │       ├── zed.py            the settings.json lines that register mcp-lite with Zed
+│   │       ├── test_zed.py
 │   │       └── README.md
 │   └── deps/                 add-ons that need something installed
 │       ├── README.md         what one must declare: pins, floors, licences, network
@@ -221,6 +330,7 @@ willow/
 ├── .github/
 │   ├── workflows/
 │   │   ├── ci.yml            runs adapters/stdlib/ci/ci.py one part a job, tests on Python 3.9 to 3.14
+│   │   ├── law.yml           every Monday, the law's check: an expired emergency amendment fails it
 │   │   └── security.yml      posts the github add-on's comment on a security report
 │   ├── ISSUE_TEMPLATE/
 │   │   ├── bug.yml           the form for something wrong

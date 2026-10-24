@@ -4,7 +4,7 @@
     python adapters/stdlib/ci/ci.py verify [--box DIR]
     python adapters/stdlib/ci/ci.py show   [--box DIR]
 
-PART is lint, tests, ports, demo, deps or mutants; none means all six. --box defaults to
+PART is lint, tests, ports, demo, deps, mutants or tools; none means all seven. --box defaults to
 .ci-record (ignored by git), and its key to the same name plus `.key`, beside
 it, never in it.
 
@@ -24,7 +24,8 @@ the kernel's own `append`, so the record is a kernel record and the kernel's
 
 A verdict is code's record of what happened, never a seal: its kind is always
 `verdict`, it is written as `ci`, and nothing here writes a `seal` row. CI's
-verdicts are draft. The merge is the person saying the tree is good enough.
+verdicts are draft. The merge is the person saying the tree is good enough:
+the witness is not the actor (CONSTITUTION.md, CONST-0-1).
 
 It is deterministic. The time on every row is the commit's (`--now` sets it),
 and nothing the commands print that changes from run to run (how long they
@@ -339,6 +340,35 @@ def mutant_targets() -> list[str]:
     )
 
 
+LIVE = ROOT / "adapters" / "stdlib" / "live" / "live.py"
+
+
+def live_check(name: str):
+    """One of live.py's checks: its program run on the lines its add-on
+    prints. A program that isn't installed is unreachable, never a pass."""
+
+    def gate() -> tuple[str, str, str | None]:
+        code, said = run((PY, str(LIVE), "run", name))
+        said = re.sub(r"/[^ ]*/with space/", "<tmp>/", said)  # a new folder every run
+        if code == kernel.ESCALATE:
+            return UNREACHABLE, said, said.split(None, 3)[-1].strip()
+        if code != kernel.ALIVE:
+            return (
+                FAILING,
+                said,
+                said.strip().split(None, 2)[-1][:300] or f"exit {code}",
+            )
+        return SATISFIED, said, None
+
+    return gate
+
+
+def live_checks() -> list[str]:
+    """live.py's checks, by name, as `live.py list` prints them."""
+    got = subprocess.run([PY, str(LIVE), "list"], capture_output=True, text=True)
+    return [line.split()[0] for line in got.stdout.splitlines() if line.strip()]
+
+
 def people() -> list[str]:
     return sorted(p.parent.name for p in (ROOT / "demo").glob("*/make_life.py"))
 
@@ -358,11 +388,15 @@ def gates() -> list[tuple[str, str, object]]:
         ("adapters", "adapters/stdlib"),
         ("vectors", "vectors/test_vectors.py", "-k", "as_it_is_now"),
         ("strip", "test_strip.py"),
+        ("constitution", "constitution"),
     ):
         how = command(*PYTEST, *target, needs=lambda: missing_module("pytest"))
         if gate == "adapters":
             how = guarded_tests(*target)
         out.append(("tests", f"tests:{gate}", how))
+    # the coverage report, generated each run: it fails only on a clause the
+    # person declared failing, and says why for each one it found nothing for
+    out.append(("tests", "tests:coverage", command(PY, "constitution/coverage.py")))
     for port in PORTS:
         how = command(
             PY, "vectors/compare.py", "--port", port,
@@ -382,10 +416,11 @@ def gates() -> list[tuple[str, str, object]]:
         how = command(PY, "adapters/stdlib/mutants/mutants.py", "run", name,
                       needs=lambda: missing_module("pytest"))  # fmt: skip
         out.append(("mutants", f"mutants:{name}", how))
+    out += [("tools", f"tools:{name}", live_check(name)) for name in live_checks()]
     return out
 
 
-PARTS = ("lint", "tests", "ports", "demo", "deps", "mutants")
+PARTS = ("lint", "tests", "ports", "demo", "deps", "mutants", "tools")
 
 
 # ── the record ───────────────────────────────────────────────────────────────

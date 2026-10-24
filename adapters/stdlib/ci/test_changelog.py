@@ -1,5 +1,6 @@
 """changelog: a change beyond the docs owes a line under Unreleased naming
-its pull request; docs alone owe nothing; a line elsewhere doesn't count."""
+its pull request; docs alone owe nothing; a line elsewhere doesn't count.
+Every change carries its account (CONST-VI-7)."""
 
 from __future__ import annotations
 

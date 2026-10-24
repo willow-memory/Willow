@@ -20,6 +20,7 @@ gets three tools:
 There is no tool to approve, and the server never reads your key: approving
 is `python kernel.py seal`, run by you. Every call goes through the kernel's
 own verbs, so each is on the record as if you'd typed it, and `verify` holds.
+A client may propose; it ratifies nothing (CONSTITUTION.md, CONST-0-2).
 
 A refusal (a cite the last ask didn't serve, a record that doesn't verify)
 comes back to the client as an error carrying the kernel's own reason.

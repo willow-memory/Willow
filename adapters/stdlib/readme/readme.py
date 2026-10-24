@@ -9,7 +9,8 @@ Each generated section sits between two markers, `<!-- willow:NAME -->` and
 `<!-- /willow:NAME -->`; everything outside them is written by hand and never
 touched. `write` rebuilds every section in place. `check` rebuilds them in
 memory and exits 2 if a page differs, so a section can't go stale: the
-add-on's tests run it on every push.
+add-on's tests run it on every push. A generated section is a view of the
+cards, recomputed each time, never kept by hand (CONST-VI-6).
 
 ADDONS.md holds these sections, in this order:
 
@@ -108,7 +109,7 @@ WHAT = {
     "Trust and proof": "answers you can check later: exports, stale answers, what changed, signed and encrypted records",
     "Privacy and safety": "phone numbers, card numbers and keys hidden in answers, or found sitting in files",
     "Assistants": "AI assistants that can ask and suggest, but never approve",
-    "Ways to use it": "other ways in: plain sentences, a page on this machine, answers read aloud",
+    "Ways to use it": "other ways in: pipes, your shell and your editor, plain sentences, a page on this machine, answers read aloud",
     "Play": "seeded, replayable games on the record, such as dice and the Game of Life",
     "For maintainers": "the repo's own tools: CI, the list, tests that can fail",
 }  # fmt: skip
@@ -199,6 +200,8 @@ def addons(tagged: bool = True) -> list[dict]:
             raise Refused(f"{where}: no section {a['section']!r}")
         if a["source"] not in SOURCES:
             raise Refused(f"{where}: source is bot, box or new")
+        # CONST-II-1: what an add-on writes and where it goes online is listed
+        # on its card, idea or built, never inferred from its code
         writes = [w.strip() for w in a["writes"].split(",")]
         bad = [w for w in writes if w not in WRITES and not any(ROOT.glob(w))]
         if bad or ("nothing" in writes and len(writes) > 1):

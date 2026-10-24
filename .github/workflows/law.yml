@@ -1,0 +1,24 @@
+name: law
+
+# The one check that depends on the day: an emergency amendment that has
+# expired with no full amendment keeping or undoing it (CONST-VIII-2). CI runs
+# on pushes and pull requests, so a quiet repo would carry an expired one
+# unseen. This runs it every Monday, and by hand, and fails until a person
+# acts. adapters/stdlib/github/github.py check holds that it stays scheduled.
+on:
+  schedule:
+    - cron: "17 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  amendments:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - run: python constitution/amend.py check

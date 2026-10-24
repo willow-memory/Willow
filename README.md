@@ -55,26 +55,26 @@ never changes it. Here is what's built, and what's still an idea that anyone
 can pick up ([CONTRIBUTING.md](CONTRIBUTING.md) says how):
 
 <!-- willow:summary -->
-- **Reading more kinds of files:** PDFs, email, chats, calendars, notes and office files, as text it can search. Built: [books](adapters/stdlib/books/), [calendar](adapters/stdlib/calendar/), [chats](adapters/stdlib/chats/), [mail](adapters/stdlib/mail/), [notes](adapters/stdlib/notes/), [office](adapters/stdlib/office/), [pdf](adapters/deps/pdf/). Ideas: *bank, bookmarks, git-history, health, ocr, photos, sheets, voice*.
-- **Finding things:** more ways to look: every match, this date in past years, an exact quote, by meaning, past typos. Built: [all](adapters/stdlib/all/), [on-this-day](adapters/stdlib/on-this-day/), [quote-check](adapters/stdlib/quote-check/), [scan](adapters/stdlib/scan/), [surprise](adapters/stdlib/surprise/). Ideas: *meaning, typos*.
-- **Your own words:** teaching it the words you use, so a question finds what your files call it. Built: [starter-words](adapters/stdlib/starter-words/). Ideas: *stems, synonyms, words-de, words-es, words-fr, words-pt*.
-- **Keeping track:** dates coming up, numbers over time, to-dos, care logs, invoices, forecasts and flashcards. Built: [again](adapters/stdlib/again/), [coming-up](adapters/stdlib/coming-up/), [readings](adapters/stdlib/readings/), [todo](adapters/stdlib/todo/). Ideas: *care, digest, flashcards, forecasts, invoices*.
-- **Trust and proof:** answers you can check later: exports, stale answers, what changed, signed and encrypted records. Built: [export](adapters/stdlib/export/), [stale](adapters/stdlib/stale/). Ideas: *changed, encrypt, pgp, report*.
-- **Privacy and safety:** phone numbers, card numbers and keys hidden in answers, or found sitting in files. Built: [privacy](adapters/stdlib/privacy/). Ideas: *secrets-audit*.
-- **Assistants:** AI assistants that can ask and suggest, but never approve. Built: [mcp](adapters/deps/mcp/). Ideas: *claude, local-model*.
-- **Ways to use it:** other ways in: plain sentences, a page on this machine, answers read aloud. Built: [plain](adapters/stdlib/plain/). Ideas: *browse, speak*.
-- **Play:** seeded, replayable games on the record, such as dice and the Game of Life. Built: nothing yet. Ideas: *dice, dice5e, life*.
-- **For maintainers:** the repo's own tools: CI, the list, tests that can fail. Built: [ci](adapters/stdlib/ci/), [github](adapters/stdlib/github/), [mutants](adapters/stdlib/mutants/), [readme](adapters/stdlib/readme/), [similar](adapters/stdlib/similar/).
+- **Reading more kinds of files:** PDFs, email, chats, calendars, notes and office files, as text it can search. Built: [books](adapters/stdlib/books/), [calendar](adapters/stdlib/calendar/), [chats](adapters/stdlib/chats/), [mail](adapters/stdlib/mail/), [notes](adapters/stdlib/notes/), [office](adapters/stdlib/office/), [pdf](adapters/deps/pdf/). Ideas: *agent-transcript, almanac, apple-notes, archivebox, bank, bibtex, bluesky, bookmarks, canvas, chordpro, ci-logs, code-comments, codebase-memory, confluence, corpus-lens, day-one, discord, dotfiles, evernote, family-tree, forgejo-dump, gh-json, git-history, github-archive, gitlab-export, goodreads, google-classroom, google-keep, health, home-sensors, homestead, instapaper, irc, jira, joplin, journiv, jrnl, jupyter, karakeep, latex, lessons, letterboxd, linkedin, listening, location-history, lockfiles, logs, man-pages, manifests, mastodon, matrix, mediawiki, medical-records, meta-archive, moodle, music-library, musicxml, notion, ocr, orders, package-docs, parallel, past-papers, pgn, photos, places, pocket, quiet-corner, readwise, recipes, reddit, rtf, sarif, sbom, screenplay, scripture, scrivener, sheets, shell-history, sigmap, signal, slack, snapshot, steam, strava, subtitles, takeout, teams, texts, trello, voice, wallabag, web-pages, writefreely, x-archive, zotero*.
+- **Finding things:** more ways to look: every match, this date in past years, an exact quote, by meaning, past typos. Built: [all](adapters/stdlib/all/), [on-this-day](adapters/stdlib/on-this-day/), [quote-check](adapters/stdlib/quote-check/), [scan](adapters/stdlib/scan/), [surprise](adapters/stdlib/surprise/). Ideas: *amounts, bm25, by-function, code-first, code-shape, codeowners, crosswalk, duplicates, first-mention, fuzzy-dates, index-cache, kiwix, meaning, my-lessons, people, promises, reading-level, record-sql, rerank, ripgrep, said, standards, symbols, typos, upgrade-notes, watch, why-not*.
+- **Your own words:** teaching it the words you use, so a question finds what your files call it. Built: [starter-words](adapters/stdlib/starter-words/), [words-de](adapters/stdlib/words-de/), [words-es](adapters/stdlib/words-es/), [words-fr](adapters/stdlib/words-fr/), [words-pt](adapters/stdlib/words-pt/). Ideas: *abbreviations, dialect, memoir, nicknames, stems, synonyms, tatoeba, vocab, words-ar, words-cy, words-hi, words-it, words-ja, words-nl, words-pl, words-ru, words-sv, words-tr, words-zh*.
+- **Keeping track:** dates coming up, numbers over time, to-dos, care logs, invoices, forecasts and flashcards. Built: [again](adapters/stdlib/again/), [coming-up](adapters/stdlib/coming-up/), [digest](adapters/stdlib/digest/), [readings](adapters/stdlib/readings/), [todo](adapters/stdlib/todo/). Ideas: *ask-later, attendance, baby-log, budget, car, care, contracts, crowd, cycle, debts, flashcards, foia, food-log, forecasts, garden, gifts, gradebook, grant-report, habits, home-upkeep, hours, inventory, invoices, job-hunt, lab-notebook, lending, livestock, market-calls, mileage, milestones, minutes, mood, oakenscroll, outdated, pets, predict, reading-log, renewals, rubric, school, session-cost, subscriptions, support-plan, syllabus, symptoms, tax-year, trips, upstream-desk, warranties*.
+- **Trust and proof:** answers you can check later: exports, stale answers, what changed, signed and encrypted records. Built: [export](adapters/stdlib/export/), [stale](adapters/stdlib/stale/). Ideas: *backup, box-health, changed, contradictions, diverge, encrypt, family-box, git-notes, handoff, history, ids, in-case, in-toto, jeles, licenses, line-origin, losc, merkle, mirror, nestor, notary, opentimestamps, paper-key, pgp, prov, provenance, quote-review, redential, report, retire, ro-crate, sap-gate, session-seal, signed-commits, sync, thesis, time-capsule, timeline, wayback, witness, xref*.
+- **Privacy and safety:** phone numbers, card numbers and keys hidden in answers, or found sitting in files. Built: [privacy](adapters/stdlib/privacy/). Ideas: *a11y-check, advisories, forget, install-scripts, kids, package-contents, pii-audit, scrub, secrets-audit, student-records, transcript-redact, typosquat*.
+- **Assistants:** AI assistants that can ask and suggest, but never approve. Built: [aider](adapters/stdlib/aider/), [claude-code](adapters/stdlib/claude-code/), [codex-cli](adapters/stdlib/codex-cli/), [copilot](adapters/stdlib/copilot/), [cursor](adapters/stdlib/cursor/), [gemini-cli](adapters/stdlib/gemini-cli/), [mcp](adapters/deps/mcp/), [mcp-lite](adapters/stdlib/mcp-lite/), [opencode](adapters/stdlib/opencode/), [windsurf](adapters/stdlib/windsurf/), [zed](adapters/stdlib/zed/). Ideas: *assistant-scores, basic-memory, claude, hermes, issue-answer, ladder, local-model, memory-import, mex, model-fit, night-batch, openai-compatible, plain-language, quantized, scope, second-opinion, translate*.
+- **Ways to use it:** other ways in: pipes, your shell and your editor, plain sentences, a page on this machine, answers read aloud. Built: [browse](adapters/stdlib/browse/), [emacs](adapters/stdlib/emacs/), [jetbrains](adapters/stdlib/jetbrains/), [pipe](adapters/stdlib/pipe/), [plain](adapters/stdlib/plain/), [shell](adapters/stdlib/shell/), [vim](adapters/stdlib/vim/), [vscode](adapters/stdlib/vscode/). Ideas: *anki, annotations, badge, braille, calendar-out, cloudevents, datasette, deep-links, desktop, dictate, email-ask, emergency-card, home-assistant, kiosk, large-print, launcher, obsidian, pr-context, print, qr, rss-out, safe-app, share, socratic, speak, start, static-search, telegram-bot, tui, warm*.
+- **Play:** seeded, replayable games on the record, such as dice and the Game of Life. Built: nothing yet. Ideas: *art-of-the-day, beacon, chess-puzzle, connect-four, daily-word, dice, dice5e, front-page, game-master, gutenberg, hanoi, horoscope, horoscope-grades, ink-story, joins, life, lore, lunatic, mastermind, movie, nim, ninety-percent, odds, oracle-text, pageviews, pile-poetry, predictions, quake-bets, quiz, real-sky, reversi, roll-for-merge, rules, sokoban, spurious, tarot, tic-tac-toe, tides, todays-place, weather-bet*.
+- **For maintainers:** the repo's own tools: CI, the list, tests that can fail. Built: [ci](adapters/stdlib/ci/), [github](adapters/stdlib/github/), [live](adapters/stdlib/live/), [mutants](adapters/stdlib/mutants/), [readme](adapters/stdlib/readme/), [similar](adapters/stdlib/similar/). Ideas: *agents-md-check, bench, ci-baseline, ci-bets, ci-cache, ci-why, code-stats, compiled, contribute, contributions, crates, docs-i18n, fast-tests, forgejo, fuzz, gitlab, go, maven, npm, nuget, pins, profile, property-tests, pypi, pypy, reconciler, repro, slow-tests, sourcehut, swift, test-impact, test-shards, welcome*.
 <!-- /willow:summary -->
 
 <!-- willow:front show=pick week=2026-W43 -->
 **Add-on of the week**
 
-**[all](adapters/stdlib/all/)** — Every matching passage, ranked, not just the top three.
+**[todo](adapters/stdlib/todo/)** — TODO, FIXME and "need to" lines across the folder, oldest first.
 
-*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 27 built add-ons in name order.*
+*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 50 built add-ons in name order.*
 
-[Every add-on, 27 built of 60, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 50 built of 414, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 ## How it works
@@ -134,20 +134,38 @@ The exit code is meant for scripts and for other programs calling it:
 
 ## Guarantees, and the tests behind them
 
-Each is a test that fails if it stops being true.
+Each is a test that fails if it stops being true. The clause is the one in
+[CONSTITUTION.md](CONSTITUTION.md) it holds, or none, for a promise of
+willow's own.
 
-| Guarantee | Enforced by |
-|---|---|
-| Uses only Python's own library, and never an add-on | `test_kernel.py` fails on any other import, `adapters` included |
-| Never goes online | `test_kernel.py` parses the file and fails on any network module, `eval`, `exec`, `compile` or `__import__` |
-| Never stores your words | the log is checked for the question's and answer's words after a full cycle |
-| Never gives a suggestion as an answer until it's approved | `kernel.py test`: a suggestion without a seal is listed as waiting, not given |
-| Never accepts a forged approval | `kernel.py test`: a seal with the right shape and a re-hashed chain is still rejected |
-| Never writes past a change | `kernel.py test`: one edited field in one past line, and every command refuses |
-| Same answer every run | the ranking is checked under different hash seeds |
-| Every add-on keeps its card's promises: what it writes, where it goes online | the guard watches every process an add-on's tests start, and fails a breach even one the add-on catches and hides |
-| Every add-on's tests can fail | each add-on's code is broken on purpose a few ways (`mutants`); a break its tests miss fails CI, unless it's listed as harmless with the reason |
-| Every add-on refuses a bad command line, and every reader keeps the same contract | one test holds them all to it (`adapters/stdlib/ci/test_contract.py`) |
+| Guarantee | Clause | Enforced by |
+|---|---|---|
+| Uses only Python's own library, and never an add-on | none | `test_kernel.py` fails on any other import, `adapters` included |
+| Never goes online | none | `test_kernel.py` parses the file and fails on any network module, `eval`, `exec`, `compile` or `__import__` |
+| Never stores your words | none | the log is checked for the question's and answer's words after a full cycle |
+| Never gives a suggestion as an answer until it's approved | `CONST-0-1`, `CONST-0-2` | `kernel.py test`: a suggestion without a seal is listed as waiting, not given |
+| Never accepts a forged approval | `CONST-0-4` | `kernel.py test`: a seal with the right shape and a re-hashed chain is still rejected |
+| Never writes past a change | `CONST-0-5` | `kernel.py test`: one edited field in one past line, and every command refuses |
+| What no one decided is yours: nothing matched, or something waits on you, is exit 42 | `CONST-0-6` | `constitution/test_eternity.py`: nothing found, an answer waiting and a seal that doesn't prove each end at 42, never 0 |
+| Same answer every run | none | the ranking is checked under different hash seeds |
+| Every add-on keeps its card's promises: what it writes, where it goes online | `CONST-0-3` | the guard watches every process an add-on's tests start, and fails a breach even one the add-on catches and hides |
+| Every add-on's tests can fail | none | each add-on's code is broken on purpose a few ways (`mutants`); a break its tests miss fails CI, unless it's listed as harmless with the reason |
+| Every add-on refuses a bad command line, and every reader keeps the same contract | none | one test holds them all to it (`adapters/stdlib/ci/test_contract.py`) |
+
+### The law above them
+
+These guarantees answer to a written law, [CONSTITUTION.md](CONSTITUTION.md),
+a draft not yet ratified. Its first article, the eternity clause, is six
+things no amendment may ever loosen: no one is the witness to their own work,
+no one ratifies their own proposal, no one widens their own reach, a reserved
+decision needs the human key, the record is never rewritten, and whatever no
+one decided goes to the person.
+
+The law names no code; the code names the law. Each kernel line that enforces
+a clause cites it by its Trace ID (`CONST-0-4`), and
+[constitution/](constitution/) attacks each of the six against the kernel and
+checks it is refused. A coverage report, rebuilt every CI run, lists every
+clause and where it is cited, and says why for each it found nothing for.
 
 ## Where it falls short
 
@@ -219,6 +237,8 @@ willow/
 ├── BUGS.md                   the known bugs, made from the tests that show them
 ├── DECISIONS.md              what's settled, why, and what holds it
 ├── LIMITS.md                 what willow doesn't do, on purpose or not yet
+├── CONSTITUTION.md           the law the kernel is written to enforce (always a draft; now 0.15)
+├── constitution/             the checks that answer to it
 ├── adapters/                 add-ons built on top of kernel.py
 ├── ports/                    kernel.py rewritten in other languages
 ├── vectors/                  what keeps the four implementations identical

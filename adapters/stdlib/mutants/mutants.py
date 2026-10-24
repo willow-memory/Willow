@@ -21,14 +21,18 @@ Some survivors break nothing a person would notice: a usage message cut a
 different way, an import path the test layout hides. Each is listed in
 accepted.json, by id, with the reason in a sentence. `run` fails an add-on
 when a mutant survives that isn't listed there, and when a listed one is no
-longer made or no longer survives, so the list can't go stale.
+longer made or no longer survives, so the list can't go stale. A check that
+can't fail is no check (CONST-IV-9).
 
 Only adapters/stdlib: a deps add-on's tests need its own installs (the deps
 part of ci.py makes those).
 
 A run of the tests that ends any other way than passing or failing (no tests
 found, a collection error) killed nothing: it is said, and fails the add-on,
-never counted as a kill.
+never counted as a kill. The script's entry guard, `if __name__ ==
+"__main__"`, is never broken: broken, it runs the add-on's main as its tests
+import it, which stops pytest outright, and ci/test_contract.py already runs
+every add-on as a script.
 
 Exit codes, the kernel's: 0 every mutant killed or accepted; 42 the tests
 couldn't run (pytest isn't installed); 2 a survivor not accepted, a stale
@@ -77,6 +81,8 @@ def points(tree: ast.AST) -> list[tuple[str, ast.AST]]:
     out = []
     for n in ast.walk(tree):
         if isinstance(n, ast.Compare) and type(n.ops[0]) in SWAP:
+            if isinstance(n.left, ast.Name) and n.left.id == "__name__":
+                continue  # the script's entry guard: ci/test_contract.py runs each add-on as a script
             out.append(("compare", n))
         elif isinstance(n, ast.BoolOp):
             out.append(("and-or", n))
@@ -153,7 +159,10 @@ def run(names: list[str], per: int) -> int:
                         [sys.executable, "-m", "pytest", "-q", "-x", "-p",
                          "no:cacheprovider", *map(str, targets)],
                         capture_output=True, text=True, timeout=600,
-                        env={**os.environ, "WILLOW_ONLY": name},
+                        # no bytecode cache: a mutant the same size as the last
+                        # one, written in the same second, would otherwise run
+                        # the last one's cached code, and pass as a survivor
+                        env={**os.environ, "WILLOW_ONLY": name, "PYTHONDONTWRITEBYTECODE": "1"},
                     )  # fmt: skip
                     # 1 is a test failing on the mutant: killed. 0 is every test
                     # passing: survived. Anything else (no tests, a collection

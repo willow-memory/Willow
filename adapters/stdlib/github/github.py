@@ -146,6 +146,30 @@ def problems() -> list[str]:
         out.append(
             "ci.yml's changelog job doesn't run on every pull request but Dependabot's"
         )
+    # willow-bot posts the similar job's list on the pull request, read from
+    # the run's `similar` artifact, so the job has to keep it
+    job = re.search(r"^  similar:\n(.*?)(?=^  \S|\Z)", ci, re.M | re.S)
+    if (
+        not job
+        or not re.search(
+            r"similar\.py new .*> \"\$RUNNER_TEMP/similar\.md\"", job.group(1)
+        )
+        or not re.search(
+            r"upload-artifact@v\d+\n\s+with:\n\s+name: similar\n\s+path: \$\{\{ runner\.temp \}\}/similar\.md\n",
+            job.group(1),
+        )
+    ):
+        out.append(
+            "ci.yml's similar job doesn't keep its list as the similar artifact willow-bot reads"
+        )
+    # CONST-VIII-2: an expired emergency amendment fails the law's check, and
+    # law.yml runs that check weekly, so a quiet repo still reaches a person
+    law = DOT / "workflows" / "law.yml"
+    flow = law.read_text(encoding="utf-8") if law.is_file() else ""
+    if not re.search(r"^  schedule:\n    - cron: \"[^\"]+\"\n", flow, re.M) or (
+        "run: python constitution/amend.py check\n" not in flow
+    ):
+        out.append("law.yml doesn't run constitution/amend.py check on a schedule")
     security = (DOT / "ISSUE_TEMPLATE" / "security.yml").read_text(encoding="utf-8")
     if f"label: {SECTION}\n" not in security:
         out.append(f'security.yml has no "{SECTION}" field for report to read')

@@ -160,6 +160,9 @@ ELSEWHERE = {
         "requirements.txt": "each deps add-on's own file, in its folder",
         "requirements-floor.txt": "each deps add-on's own file, in its folder",
     },
+    "CONSTITUTION.md": {
+        "CASEBOOK.md": "willows-grove's: its cases name people and files, so not here",
+    },
     "CONTRIBUTING.md": {
         "requirements.txt": "each deps add-on's own file, in its folder",
         "requirements-floor.txt": "each deps add-on's own file, in its folder",
@@ -543,4 +546,146 @@ def test_each_release_is_a_changelog_heading_and_the_citation_names_the_newest()
     )
     assert said == newest, (
         f"CITATION.cff says {said}; CHANGELOG.md's newest release is {newest}"
+    )
+
+
+# ── the law, both ways ──────────────────────────────────────────────────────
+#: not citations: the law itself, the scanner and its fixtures, these checks
+#: and their plants, and the files of answers and verdicts, whose keys are
+#: what they answer for (held to real clauses below, all the same)
+NOT_CITATIONS = {"CONSTITUTION.md", "constitution/coverage.py", "constitution/test_coverage.py",
+                 "constitution/reach.json", "constitution/declarations.json",
+                 "test_docs.py", "test_docs_fires.py"}  # fmt: skip
+
+
+def law():
+    spec = importlib.util.spec_from_file_location(
+        "willow_coverage_for_docs", ROOT / "constitution" / "coverage.py"
+    )
+    cov = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(cov)
+    clauses, problem = cov.clauses_from_constitution(ROOT / "CONSTITUTION.md")
+    assert not problem, problem
+    cites: dict[str, set[str]] = {}  # file -> the clauses it cites
+    for f in sorted(repo_files() - NOT_CITATIONS):
+        if Path(f).suffix in cov.TEXT_SUFFIXES:
+            found = cov.cited_ids(
+                (ROOT / f).read_text(encoding="utf-8", errors="replace")
+            )
+            if found:
+                cites[f] = set(found)
+    return clauses, cites
+
+
+def is_test(f: str) -> bool:
+    return Path(f).name.startswith("test_")
+
+
+def enforced(cites: dict[str, set[str]]) -> set[str]:
+    """Clauses cited by code or a test: not by a doc, which only says so."""
+    return {c for f, cs in cites.items() if not f.endswith(".md") for c in cs}
+
+
+def test_every_citation_names_a_clause_the_constitution_has():
+    clauses, cites = law()
+    bad = sorted(f"{f}: {c}" for f, cs in cites.items() for c in cs if c not in clauses)
+    for name, key in (("reach.json", "answers"), ("declarations.json", "clauses")):
+        keys = json.loads((ROOT / "constitution" / name).read_text()).get(key, {})
+        bad += sorted(f"constitution/{name}: {c}" for c in keys if c not in clauses)
+    assert not bad, "cited, but CONSTITUTION.md has no such clause:\n  " + "\n  ".join(
+        bad
+    )
+
+
+def test_every_clause_is_enforced_or_answered_in_reach_json():
+    """Appendix A: every clause has an enforcement artifact. Here, one the
+    code or a test cites, or an answer in constitution/reach.json saying why
+    not (out of reach, or open), never a silent empty row; and no answer for
+    a clause the code already cites, which would hide that it does."""
+    clauses, cites = law()
+    answers = json.loads((ROOT / "constitution" / "reach.json").read_text())["answers"]
+    done = enforced(cites)
+    article = lambda c: "-".join(c.split("-")[:2])  # noqa: E731
+    unknown = sorted(set(answers) - set(clauses))
+    # an answer is stale once the code cites what it answered for: a clause,
+    # or for an article, the article and every one of its clauses
+    stale = sorted(
+        c
+        for c in answers
+        if c in done
+        and (c != article(c) or all(k in done for k in clauses if article(k) == c))
+    )
+    bad_kind = sorted(c for c, a in answers.items()
+                      if a.get("answer") not in ("out of reach", "open") or not a.get("why"))  # fmt: skip
+    unanswered = []
+    for c in clauses:
+        mine = [
+            k for k in clauses if article(k) == c and k != c
+        ]  # an article's clauses
+        if c in done or c in answers or (c != article(c) and article(c) in answers):
+            continue
+        if mine and all(k in done or k in answers or c in answers for k in mine):
+            continue  # an article whose every clause is answered
+        unanswered.append(c)
+    assert not (unknown or stale or bad_kind or unanswered), (
+        f"reach.json answers clauses the law doesn't have: {unknown}; answers clauses "
+        f"the code cites: {stale}; has an answer that isn't 'out of reach' or 'open' with "
+        f"a why: {bad_kind}; and no one answers: {unanswered}"
+    )
+
+
+def test_every_clause_the_code_enforces_a_test_attacks():
+    """A clause cited in code, not a test, must be cited by a test too: a
+    claim to enforce it with nothing that tries to break it is a wish."""
+    _, cites = law()
+    in_tests = {c for f, cs in cites.items() if is_test(f) for c in cs}
+    untested = sorted(f"{f}: {c}" for f, cs in cites.items()
+                      if not is_test(f) and not f.endswith(".md") for c in cs - in_tests)  # fmt: skip
+    assert not untested, "code cites a clause no test cites:\n  " + "\n  ".join(
+        untested
+    )
+
+
+def test_every_clause_an_amendment_brings_is_enforced_and_attacked():
+    """The law is amended only to be better enforced (VIII.4): each clause an
+    amendment in constitution/amendments/ adds or changes, unless a later one
+    superseded it, is cited by code and by a test. An answer in reach.json
+    doesn't do for it."""
+    spec = importlib.util.spec_from_file_location(
+        "willow_amend_for_docs", ROOT / "constitution" / "amend.py"
+    )
+    am = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(am)
+    _, cites = law()
+    in_code = {c for f, cs in cites.items() if not is_test(f) and not f.endswith(".md") for c in cs}  # fmt: skip
+    in_tests = {c for f, cs in cites.items() if is_test(f) for c in cs}
+    weak = sorted(f"{a['name']}: {c}" for a in am.amendments() if a["live"]
+                  for c in a["clauses"] if c not in in_code or c not in in_tests)  # fmt: skip
+    assert not weak, "an amendment brings a clause no code and test both cite:\n  " + "\n  ".join(weak)  # fmt: skip
+
+
+def test_the_readmes_guarantees_name_their_clauses_and_every_eternity_clause_is_there():
+    """Each guarantee row says which clause it holds (or `none`, for a promise
+    of willow's own), and each of §0.1 to §0.6 is one of them."""
+    clauses, _ = law()
+    text = README.read_text(encoding="utf-8")
+    section = text.split("## Guarantees, and the tests behind them", 1)[1].split(
+        "\n## ", 1
+    )[0]
+    lines = section.splitlines()
+    assert "| Guarantee | Clause | Enforced by |" in lines, (
+        "the guarantees have no Clause column"
+    )
+    rows = [r for r in lines if r.startswith("| ") and not r.startswith("| Guarantee")]
+    named = set()
+    for r in rows:
+        cell = r.split("|")[2].strip()
+        ids = re.findall(r"`(CONST-[^`]+)`", cell)
+        assert ids or cell == "none", (
+            f"a guarantee names no clause, nor says none: {r[:80]}"
+        )
+        named |= set(ids)
+    eternity = {c for c in clauses if c.startswith("CONST-0-")}
+    assert eternity <= named, (
+        f"eternity clauses no guarantee names: {sorted(eternity - named)}"
     )
