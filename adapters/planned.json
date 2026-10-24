@@ -3104,16 +3104,6 @@
   "tags": "no-install, online, read-only, interface"
  },
  {
-  "name": "test-shards",
-  "kind": "stdlib",
-  "section": "For maintainers",
-  "line": "The CI test jobs split by each test's past time, so every job finishes about together.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, maintainers"
- },
- {
   "name": "texts",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
