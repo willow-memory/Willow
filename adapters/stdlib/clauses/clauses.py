@@ -44,7 +44,6 @@ changed; 2 refused.
 
 from __future__ import annotations
 
-import html
 import re
 import sys
 from pathlib import Path
@@ -71,10 +70,11 @@ END = re.compile(r"[.!?][\"'”’)\]]*\s+(?=[A-Z0-9\"'“‘(])")
 
 
 def blocks_of_html(text: str) -> list[tuple[int, str]]:
-    """A page's blocks, each with the line it starts on."""
-    text = kernel._HIDDEN.sub(kernel._lines_kept, text)
+    """A page's blocks, each with the line it starts on: each block tag marked,
+    then the kernel's own reading of a page (`html_text`), which drops scripts,
+    styles and comments, a mark inside them too, and keeps every line."""
     text = BLOCK.sub(lambda m: SEP + "\n" * m.group(0).count("\n"), text)
-    text = html.unescape(kernel._TAG.sub(kernel._lines_kept, text))
+    text = kernel.html_text(text)
     out, para, start = [], [], 0
     for i, line in enumerate(text.splitlines() + [SEP], 1):
         for k, part in enumerate(line.split(SEP)):

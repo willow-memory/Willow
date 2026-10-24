@@ -132,7 +132,11 @@ rows, 0 sealed), each with the SHA-256 of the scored answers (c63e49b2) and
 of the tools: `kernel.py` 68dc77b9, `scan.py` d93536eb, `clauses.py`
 2eb6c0a5, `pdf.py` 854c80d5, `quote_check.py` f8dd5e55, `study.py` 776e2a07.
 A second run, from fresh mirrors and indexes with another hash seed, gave
-the same answers byte for byte.
+the same answers byte for byte. After the run, `clauses.py` was changed to read a
+page through the kernel's public `html_text` (6e98d322, the repo's
+AGENTS.md asks for the kernel's public names); rerun from scratch with it,
+the study gave the same answers byte for byte, c63e49b2, and the same 11 of
+12 rules.
 
 The two versions: 36 pages each, 557 passages before and 564 after. The
 clause diff lists 16 entries against 532 unchanged sentences: the effective
