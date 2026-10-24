@@ -114,6 +114,10 @@ willow/
 │   │   │   ├── coming_up.py  dates in your files in the next few days
 │   │   │   ├── test_coming_up.py
 │   │   │   └── README.md
+│   │   ├── contradictions/
+│   │   │   ├── contradictions.py  two lines saying the same thing with a different date or amount, side by side
+│   │   │   ├── test_contradictions.py
+│   │   │   └── README.md
 │   │   ├── copilot/
 │   │   │   ├── copilot.py        the mcp.json lines that register mcp-lite with Copilot, in VS Code and its CLI
 │   │   │   ├── test_copilot.py
