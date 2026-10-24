@@ -16,7 +16,7 @@ says how). The first was v0.1.0.
   why), and its docs made the pile; the kernel makes the box, and scan
   indexes the docs and the whole source. Then ask, bite, quote, report,
   check and backup are willow's own add-ons over it, what they print
-  scrubbed by privacy. It never reads the key or seals.
+  scrubbed by privacy. It never reads the key or seals. (#37)
 - `demo/bernadette`, a fourth person built blind, her files in the raw formats
   her apps would leave (.eml and .mbox, .ics and .vcf, WhatsApp and Telegram,
   an Obsidian vault, .docx, .xlsx and .odt, Kindle and .epub, PDFs), and
@@ -309,7 +309,7 @@ says how). The first was v0.1.0.
   keeping the label so the line still reads. Its card already said bank
   numbers; only IBANs were caught. Found when repo-pile was run on the demo
   lives, where 64 phone numbers and 121 bank numbers got through; on 3,165
-  docs from 44 public repositories neither shape matched anything.
+  docs from 44 public repositories neither shape matched anything. (#37)
 - CI ends sooner, in the same gates. `ci.py run` takes a gate's name,
   `--without GATE` and `--shard K/N` (cut by `test-shards`' split), so
   `tests:strip`, which ran the add-ons' tests a second time in each tests job,
