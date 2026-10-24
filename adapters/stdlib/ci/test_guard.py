@@ -63,6 +63,8 @@ def run(root: Path, script: Path, *args: str) -> tuple[int, str]:
 
 
 def test_writing_a_file_when_the_card_says_nothing(repo, tmp_path):
+    """An add-on can't widen its own reach past its card (CONST-0-3, CONST-III):
+    what the card doesn't list, it can't do (CONST-II-1)."""
     root, _, _ = repo
     script = addon(root, "nothing", "none", f"open({str(root / 'out.txt')!r}, 'w')\n")
     code, log = run(root, script)
@@ -130,6 +132,7 @@ def test_reading_the_key_itself(repo, tmp_path):
 
 
 def test_going_online_when_the_card_says_none(repo):
+    """Nor reach past its card online (CONST-0-3, CONST-III)."""
     root, _, _ = repo
     script = addon(root, "nothing", "none", "socket.getaddrinfo('example.org', 443)\n")
     code, log = run(root, script)

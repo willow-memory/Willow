@@ -15,7 +15,8 @@ A bug BUGS.md listed at REF and no longer lists was fixed here, so each one
 also owes an entry of this pull request's under `### Fixed` that names it,
 `bug #12`.
 
-CI runs it on every pull request, where the number is known. Exit codes,
+Every change carries its account, beside the record (CONST-VI-7). CI runs
+it on every pull request, where the number is known. Exit codes,
 the kernel's: 0 every entry owed is there, or nothing is owed; 42 git
 couldn't compare with REF; 2 an entry is missing, or a bad command line.
 """

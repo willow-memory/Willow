@@ -107,6 +107,23 @@ PLANTS = {
         "\n## Unreleased\n",
         "\n## Unreleased\n\n## v0.1.0 · 2026-10-24\n",
     ),
+    "test_every_citation_names_a_clause_the_constitution_has": _append(
+        "adapters/stdlib/todo/todo.py", "# holds CONST-0-9\n"
+    ),
+    "test_every_clause_is_enforced_or_answered_in_reach_json": _replace(
+        "constitution/reach.json", r',\n    "CONST-XIII": \{[^}]*\}', ""
+    ),
+    "test_every_clause_the_code_enforces_a_test_attacks": _append(
+        "adapters/stdlib/todo/todo.py", "# holds CONST-VIII\n"
+    ),
+    "test_every_clause_an_amendment_brings_is_enforced_and_attacked": _replace(
+        "constitution/amendments/0001.md",
+        "clauses: CONST-VIII-4",
+        "clauses: CONST-VIII-4, CONST-VIII-2",
+    ),
+    "test_the_readmes_guarantees_name_their_clauses_and_every_eternity_clause_is_there": _replace(
+        "README.md", r"\| `CONST-0-6` \|", "| none |"
+    ),
     "test_bugs_md_is_the_tests_marked_as_known_bugs": _add(
         "test_planted.py",
         "import pytest\n\n\n@pytest.mark.xfail(strict=True, reason='bug #1: planted')\n"

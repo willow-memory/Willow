@@ -65,6 +65,44 @@ whether it goes online, and CI holds it to that while its tests run. No card
 can loosen three rules: an add-on never changes your files, never writes the
 record except through the kernel, and never reads the key itself.
 
+**The law, both ways.** The law never names your code; your code names
+the law. If what you build enforces a clause of
+[CONSTITUTION.md](CONSTITUTION.md), name the clause by its Trace ID
+(`CONST-0-3`) in the code that does it, and in a test that tries to break
+it. `test_docs.py` holds both directions:
+
+- **code to law:** every Trace ID cited anywhere is a clause the law has,
+  and every clause cited in code is also cited by a test, since enforcing
+  a clause with nothing trying to break it is a wish;
+- **law to code:** every clause is cited by code or a test, or answered in
+  `constitution/reach.json`: *out of reach* (it governs something willow
+  doesn't have) or *open* (willow does something like it, but no check
+  shows it yet), with the reason. An answer for a clause the code already
+  cites fails too, so the file can't go stale;
+- **the README:** each guarantee names the clause it holds, or `none`, and
+  every eternity clause is one of them.
+
+A change to the law, or to what the code cites, brings its answers in the
+same pull request. Two files are the maintainer's call, never yours for your
+own work: the verdicts in `constitution/declarations.json`, and the answers
+in `constitution/reach.json`. Propose them in the pull request; the witness
+is not the actor.
+
+**Amending the law.** The constitution is always a draft, and anyone may
+propose an amendment. Write the clause into its article in
+`CONSTITUTION.md`, add the next numbered file to `constitution/amendments/`
+with the same text under its header (the next draft, the date, your pull
+request's number, the articles, the clauses, a one-line summary), and run
+`python constitution/amend.py write`. In the same pull request, cite each
+clause it brings in the code that enforces it and in a test that tries to
+break it: an amendment that doesn't leave the law better enforced is
+refused. The Preamble and Article 0 can't be amended. To replace an
+earlier amendment, name it in `supersedes`; never edit or delete one. An
+urgent fix can go in as an emergency amendment, with `expires:` in its
+header; a full amendment has to keep or undo it within 90 days, or the
+checks fail.
+[constitution/README.md](constitution/README.md) has the rest.
+
 **The docs match the files.** `test_docs.py` checks that the file tree in
 [FILES.md](FILES.md) lists every file in the repo and nothing else, that the
 README's short tree is the repo's top level, that every path a document names
