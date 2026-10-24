@@ -20,6 +20,9 @@ says how). The first was v0.1.0.
   to: basic-memory, codebase-memory (codebase-memory-mcp), hermes (Hermes
   Agent), mex, redential (redential-cli), sigmap, and lessons (the Emerging
   Rule community library). Ideas only: nothing is built.
+- Ten ideas for willow beside its maintainer's own projects: almanac,
+  corpus-lens, homestead, jeles, nestor, oakenscroll, quiet-corner,
+  reconciler, safe-app and sap-gate. Ideas only: nothing is built.
 - CI's `similar` job keeps its list of what's near each added idea as the
   run's `similar` artifact, which willow-bot posts in its status comment on
   the pull request; `github.py check` holds the job to it. (#10)

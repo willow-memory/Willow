@@ -20,6 +20,16 @@
   "tags": "no-install, offline, read-only, maintainers"
  },
  {
+  "name": "almanac",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "An Almanac's catalog.json (climate, health, civic and the rest): each public dataset's description and source as passages, with when its link was last checked.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
   "name": "archivebox",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -115,6 +125,16 @@
   "kind": "stdlib",
   "section": "Reading more kinds of files",
   "line": "codebase-memory-mcp's code graph, read from a copy of its SQLite file: each function, what calls it, and its file and line.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "corpus-lens",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "corpus-lens's process reports on your own sessions with agents, as passages: where your intent arrives, who writes the code.",
   "source": "new",
   "writes": "to",
   "network": "none",
@@ -224,6 +244,16 @@
   "tags": "no-install, offline, records, assistant"
  },
  {
+  "name": "homestead",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Homestead's exports from its law, ledger and health modules: records, deadlines and evidence as dated passages.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
   "name": "instapaper",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -242,6 +272,16 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, tracking"
+ },
+ {
+  "name": "jeles",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "Your approved answers as Jeles nuggets, with question, answer, sources and who sealed it, and Jeles' own verified nuggets read back as passages.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, trust"
  },
  {
   "name": "joplin",
@@ -367,6 +407,26 @@
   "tags": "no-install, offline, records, assistant"
  },
  {
+  "name": "nestor",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "Answers Nestor records a person has checked, read from a copy of its SQLite store, each citing who checked it and when.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, trust"
+ },
+ {
+  "name": "oakenscroll",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "Oakenscroll's Office calibration ledger: what you believed, how hard, and how it resolved, as dated passages.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, tracking"
+ },
+ {
   "name": "ocr",
   "kind": "deps",
   "section": "Reading more kinds of files",
@@ -410,6 +470,27 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
+  "name": "quiet-corner",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "A Quiet Corner backup file: a teacher's classroom observations as dated passages, for that teacher's questions alone.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "reconciler",
+  "kind": "deps",
+  "section": "For maintainers",
+  "line": "willow-reconciler run on this repo's idea list and git history: how much of what was proposed has landed.",
+  "source": "new",
+  "needs": "willow-reconciler; Apache-2.0",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "needs-install, offline, read-only, maintainers"
+ },
+ {
   "name": "redential",
   "kind": "deps",
   "section": "Trust and proof",
@@ -429,6 +510,27 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, trust"
+ },
+ {
+  "name": "safe-app",
+  "kind": "stdlib",
+  "section": "Ways to use it",
+  "line": "willow as a SAFE app: installed from the SAFE App Store, authorized per session, and deleted clean.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, interface"
+ },
+ {
+  "name": "sap-gate",
+  "kind": "deps",
+  "section": "Trust and proof",
+  "line": "The mcp add-on's tool calls checked against SAP/1.0 grants before they run, through openclaw-sap-gate.",
+  "source": "new",
+  "needs": "openclaw-sap-gate; MIT",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "needs-install, offline, read-only, trust"
  },
  {
   "name": "secrets-audit",
