@@ -18,14 +18,14 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`████░░░░░░░░░░░░░░░░` **75 of 418 built** · 369 need no install · 49 need one
+`████░░░░░░░░░░░░░░░░` **76 of 419 built** · 370 need no install · 49 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
 | Reading more kinds of files | 9 | 95 | 96 | 8 |
 | Finding things | 5 | 28 | 24 | 9 |
 | Your own words | 7 | 17 | 21 | 3 |
-| Keeping track | 6 | 49 | 55 | 0 |
+| Keeping track | 7 | 49 | 56 | 0 |
 | Trust and proof | 10 | 34 | 35 | 9 |
 | Privacy and safety | 2 | 11 | 13 | 0 |
 | Assistants | 11 | 17 | 22 | 6 |
@@ -47,9 +47,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ### Add-on of the week
 
 <!-- willow:pick week=2026-W43 -->
-**[copilot](adapters/stdlib/copilot/)** — GitHub Copilot, in VS Code and in its own CLI, asks your folder through the mcp add-on.
+**[mcp](adapters/deps/mcp/)** — Lets any MCP client, such as an AI assistant or editor, ask your folder and hand in suggestions.
 
-*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 75 built add-ons in name order.*
+*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 76 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -248,6 +248,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - **foia** (idea) — Freedom-of-information requests: what you asked, when, and when the answer is due by law. *new* `no-install` `offline` `read-only` `tracking`
 - **food-log** (idea) — What you ate, from your notes, by day. *new* `no-install` `offline` `read-only` `tracking`
 - **forecasts** (idea) — Write a prediction before the outcome, settle it later, see your Brier score. *bot* `no-install` `offline` `records` `tracking`
+- [**gaps**](adapters/stdlib/gaps/) — Where a log you keep stops: the days a daily note, reading or diary skipped, said as gaps, not left out. *new* `no-install` `offline` `read-only` `tracking` `journal`
 - **garden** (idea) — What you planted, where and when, and how it did, season by season. *new* `no-install` `offline` `read-only` `tracking`
 - **gifts** (idea) — Gifts given and received, and who likes what, so nobody gets the same scarf twice. *new* `no-install` `offline` `read-only` `tracking`
 - **gradebook** (idea) — A teacher's gradebook, kept on this machine: each student's marks by assignment, and who is falling behind. *new* `no-install` `offline` `read-only` `tracking`
