@@ -203,6 +203,7 @@ willow/
 │       ├── phase1.py         the blind questions, under both rules, ranked by the kernel and BM25
 │       ├── phase3.py         out of sample: seven other CVEs, fetched as git stores them, asked blind
 │       ├── phase3.json       those CVEs' releases and fix commits, pinned by hash
+│       ├── phase4.py         before the fix: the whole release, ranked three ways, recall at k
 │       ├── phase6.py         reproducibility: every release, five Pythons, four kernels, a second labeller
 │       ├── test_php2shell.py holds the frozen files to their hashes, and the tools to their word
 │       ├── results/

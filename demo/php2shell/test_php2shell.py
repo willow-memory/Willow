@@ -300,3 +300,58 @@ def test_phase3_writes_a_tree_as_git_stores_it(tmp_path):
     phase3.write_tree(repo, commit, out)
     assert make_trees.git_tree(out) == tree  # export rules leave nothing out
     assert (out / "a" / "x.c").read_bytes() == b"int x;\r\n"
+
+
+def test_phase4s_chance_is_exact():
+    import itertools
+    import random as _r
+
+    import phase4
+
+    # chance_one against brute force over all k-subsets
+    for n, h, k in [(6, 2, 3), (8, 3, 2), (5, 0, 3), (5, 5, 1), (7, 1, 4)]:
+        ids = list(range(n))
+        hits = set(range(h))
+        total = win = 0
+        for combo in itertools.combinations(ids, k):
+            total += 1
+            win += any(x in hits for x in combo)
+        assert phase4.chance_one(n, h, k) == pytest.approx(win / total), (n, h, k)
+
+    # poisson_binomial_tail against Monte Carlo
+    ps = [0.1, 0.3, 0.5, 0.9, 0.2]
+    rng = _r.Random(0)
+    trials = 200000
+    for k in (1, 3, 5):
+        mc = sum(sum(rng.random() < p for p in ps) >= k for _ in range(trials)) / trials
+        assert abs(phase4.poisson_binomial_tail(ps, k) - mc) < 0.01, k
+    assert phase4.poisson_binomial_tail([], 0) == 1.0
+
+
+def test_phase4s_recall_and_hit_sets():
+    import phase4
+
+    class FakeIx:
+        def __init__(self, pile):
+            self.pile = pile
+
+    pile = [
+        {"id": "a", "path": "main/rfc1867.c", "text": "the changed line here"},
+        {"id": "b", "path": "main/rfc1867.c", "text": "untouched line"},
+        {"id": "c", "path": "ext/json/json.c", "text": "the changed line here"},
+        {"id": "d", "path": "other.c", "text": "nothing"},
+    ]
+    fix = {
+        "old": {
+            "main/rfc1867.c": {"the changed line here"},
+            "ext/json/json.c": {"the changed line here"},
+        },
+        "files": {"main/rfc1867.c", "ext/json/json.c"},
+    }
+    line, file, n = phase4.hit_sets(FakeIx(pile), fix, {"main/rfc1867.c"})
+    assert line == {"a"} and file == {"a", "b"} and n == 4
+    line2, file2, _ = phase4.hit_sets(FakeIx(pile), fix, None)
+    assert line2 == {"a", "c"} and file2 == {"a", "b", "c"}
+    served = [pile[3], pile[1], pile[0]]  # a (a hit) is third
+    assert phase4.recall_at(served, {"a"}, (1, 3)) == {1: False, 3: True}
+    assert phase4.recall_at(served, {"z"}, (1, 3)) == {1: False, 3: False}
