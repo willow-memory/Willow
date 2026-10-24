@@ -77,6 +77,9 @@ def find(url: str, folder: Path, after: str, before: str, against: Path | None,
     if against is not None and not against.is_file():
         print(f"refused: {against} is not a file", file=sys.stderr)
         return kernel.REFUSED
+    if after and before and after >= before:
+        print(f"no capture of {url} from {after} to {before}: the window is empty")
+        return kernel.ESCALATE
     try:
         times = captures(url, after, before)
     except (urllib.error.URLError, OSError) as e:

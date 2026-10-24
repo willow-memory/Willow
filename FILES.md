@@ -96,6 +96,10 @@ willow/
 │   │   │   ├── hook.py           Claude Code's prompt hook: cited passages at each prompt; setup prints it
 │   │   │   ├── test_hook.py
 │   │   │   └── README.md
+│   │   ├── clauses/
+│   │   │   ├── clauses.py    a long document as one sentence a passage, and a sentence-by-sentence diff
+│   │   │   ├── test_clauses.py
+│   │   │   └── README.md
 │   │   ├── codex-cli/
 │   │   │   ├── codex_cli.py      the config.toml lines that register mcp-lite with Codex CLI
 │   │   │   ├── test_codex_cli.py
@@ -238,6 +242,10 @@ willow/
 │   │   │   ├── similar.py    what's already on the list near a new idea
 │   │   │   ├── test_similar.py
 │   │   │   └── README.md
+│   │   ├── snapshot/
+│   │   │   ├── snapshot.py   a page or file fetched once, with its address, time and SHA-256
+│   │   │   ├── test_snapshot.py
+│   │   │   └── README.md
 │   │   ├── stale/
 │   │   │   ├── stale.py      approved answers whose cited passage changed or went
 │   │   │   ├── test_stale.py
@@ -266,6 +274,10 @@ willow/
 │   │   ├── vscode/
 │   │   │   ├── vscode.py         a VS Code task: answers in the Problems panel
 │   │   │   ├── test_vscode.py
+│   │   │   └── README.md
+│   │   ├── wayback/
+│   │   │   ├── wayback.py    the Wayback Machine's copy of a page, saved and compared byte for byte
+│   │   │   ├── test_wayback.py
 │   │   │   └── README.md
 │   │   ├── windsurf/
 │   │   │   ├── windsurf.py       the mcp_config.json lines that register mcp-lite with Windsurf
@@ -338,7 +350,7 @@ willow/
 ├── docs/
 │   ├── tour.md               the first five minutes, in full: a question, a gap, her words, an approval
 │   └── how-it-works.md       what it reads, how it ranks, the key, the record, approvals
-├── demo/                     three made-up people, and one real bug, to try it on
+├── demo/                     three made-up people, a real bug and a real policy change, to try it on
 │   ├── odile/                piano tuner and beekeeper, caring for her father
 │   │   ├── make_life.py      writes her files into life/, the same bytes every run
 │   │   ├── CHARACTER.md      who she is and how her life is written down
@@ -357,32 +369,47 @@ willow/
 │   │   ├── PLANTED.md
 │   │   ├── QUESTIONS.md
 │   │   └── STRIP.md
-│   └── php2shell/            a real bug: the PHP2Shell result, tested seven ways
-│       ├── README.md         the claim, the threats, what is frozen, each phase's results
+│   ├── php2shell/            a real bug: the PHP2Shell result, tested seven ways
+│   │   ├── README.md         the claim, the threats, what is frozen, each phase's results
+│   │   ├── FROZEN.json       the SHA-256 of each frozen file, and of the tools when frozen
+│   │   ├── releases.json     PHP's releases and the security commits, pinned by hash
+│   │   ├── make_trees.py     fetches them from php-src, and checks them without git
+│   │   ├── score.py          the frozen hit rule: did a passage land on the fix?
+│   │   ├── score2.py         the second hit rule: also an added run's neighbouring lines
+│   │   ├── phase2.py         the null tests: random draws, null questions, wrong pairs, baselines
+│   │   ├── phase1.py         the blind questions, under both rules, ranked by the kernel and BM25
+│   │   ├── phase3.py         out of sample: seven other CVEs, fetched as git stores them, asked blind
+│   │   ├── phase3.json       those CVEs' releases and fix commits, pinned by hash
+│   │   ├── phase4.py         before the fix: the whole release, ranked three ways, recall at k
+│   │   ├── phase5.py         robustness: rewording, top-k, a words list, and leakage
+│   │   ├── phase6.py         reproducibility: every release, five Pythons, four kernels, a second labeller
+│   │   ├── test_php2shell.py holds the frozen files to their hashes, and the tools to their word
+│   │   ├── results/
+│   │   │   └── phase6-labels.json  the independent labellers' yes or no, item by item
+│   │   └── questions/
+│   │       ├── author.txt    the first look's eight questions, labelled as the author's
+│   │       ├── blind-a.txt   eight written blind, as a security engineer, from the advisories
+│   │       ├── blind-b.txt   eight written blind, as a sysadmin, from one news article
+│   │       ├── blind-c.txt   eight written blind, as terse keywords, from the advisories
+│   │       ├── phase3.txt    eight a CVE for phase 3's seven, written blind
+│   │       ├── reword.txt     the author's eight, rephrased five ways each, blind
+│   │       ├── advisory-words.txt  a words list of acronyms the advisories expand
+│   │       └── null.txt      fifty questions with nothing to do with the bug
+│   └── google-privacy-2026-10-16/  a real policy change: what Google's text says against what the news said
+│       ├── README.md         the claim, the threats, what is frozen, how to reproduce, the results
 │       ├── FROZEN.json       the SHA-256 of each frozen file, and of the tools when frozen
-│       ├── releases.json     PHP's releases and the security commits, pinned by hash
-│       ├── make_trees.py     fetches them from php-src, and checks them without git
-│       ├── score.py          the frozen hit rule: did a passage land on the fix?
-│       ├── score2.py         the second hit rule: also an added run's neighbouring lines
-│       ├── phase2.py         the null tests: random draws, null questions, wrong pairs, baselines
-│       ├── phase1.py         the blind questions, under both rules, ranked by the kernel and BM25
-│       ├── phase3.py         out of sample: seven other CVEs, fetched as git stores them, asked blind
-│       ├── phase3.json       those CVEs' releases and fix commits, pinned by hash
-│       ├── phase4.py         before the fix: the whole release, ranked three ways, recall at k
-│       ├── phase5.py         robustness: rewording, top-k, a words list, and leakage
-│       ├── phase6.py         reproducibility: every release, five Pythons, four kernels, a second labeller
-│       ├── test_php2shell.py holds the frozen files to their hashes, and the tools to their word
-│       ├── results/
-│       │   └── phase6-labels.json  the independent labellers' yes or no, item by item
+│       ├── sources.json      each source fetched, with its address, time and SHA-256
+│       ├── fetch.py          saves the sources into a pile once, and checks them offline
+│       ├── targets.json      the frozen hit rule: the clauses a question lands on, and what supports a claim
+│       ├── study.py          every phase and pass rule: the versions, the changes, nulls, blind, absence
+│       ├── test_google_privacy.py holds the frozen files to their hashes, and the rules to their word
 │       └── questions/
-│           ├── author.txt    the first look's eight questions, labelled as the author's
-│           ├── blind-a.txt   eight written blind, as a security engineer, from the advisories
-│           ├── blind-b.txt   eight written blind, as a sysadmin, from one news article
-│           ├── blind-c.txt   eight written blind, as terse keywords, from the advisories
-│           ├── phase3.txt    eight a CVE for phase 3's seven, written blind
-│           ├── reword.txt     the author's eight, rephrased five ways each, blind
-│           └── advisory-words.txt  a words list of acronyms the advisories expand
-│           └── null.txt      fifty questions with nothing to do with the bug
+│           ├── reporters.txt   the reporting's claim, in the reporters' own words
+│           ├── claims.txt      "Google scans Gmail for ads", as the reporting words it
+│           ├── policy-quotes.txt  the policy as each report quotes it
+│           ├── blind-reporters.txt  the reporters' lines, reworded three ways, blind
+│           ├── blind-claims.txt     the claims, reworded three ways, blind
+│           └── null.txt        thirty questions about the policy with nothing to do with ads
 ├── .github/
 │   ├── workflows/
 │   │   ├── ci.yml            runs adapters/stdlib/ci/ci.py one part a job, tests on Python 3.9 to 3.14

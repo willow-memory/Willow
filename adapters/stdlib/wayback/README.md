@@ -23,7 +23,7 @@ be checked by a party that isn't you.
 200, keeps those on or after `--after` and before `--before`, and takes the
 latest. It saves that capture's bytes as they were archived (without the
 archive's banner) through the [snapshot](../snapshot/) add-on, so the copy
-has its own line in `FOLDER/.snapshots.jsonl`, with `wayback` (the
+has its own line in `<FOLDER>/.snapshots.jsonl`, with `wayback` (the
 capture's time) and `of` (the page it is a capture of). With `--against
 FILE` it says whether the bytes are the same:
 

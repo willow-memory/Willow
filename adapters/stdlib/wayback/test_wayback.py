@@ -104,6 +104,11 @@ def test_no_capture_and_no_answer_are_not_differences(archive, tmp_path):
         *NOW,
     )
     assert got.returncode == 42 and got.stdout.startswith("no capture of")
+    asked = len(SEEN)
+    window = ["--after", "20261016", "--before", "20261016"]
+    got = run(archive, "find", "--url", PAGE, "--to", str(tmp_path), *window, *NOW)
+    assert got.returncode == 42 and "the window is empty" in got.stdout
+    assert len(SEEN) == asked  # an empty window asks the archive nothing
     got = run(
         archive, "find", "--url", "https://broken.example/", "--to", str(tmp_path), *NOW
     )

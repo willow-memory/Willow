@@ -64,6 +64,8 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         "Subject: Roof estimate\n\nThe estimate is in.\n").encode()}),
     "notes": ("notes.py", {"garden.md": b"Tomatoes want [[sun]].\n"}),
     "office": ("office.py", {"letter.docx": _docx("The roof is fixed.")}),
+    "clauses": ("clauses.py", {"terms.html": (
+        "<h1>Terms</h1><p>We keep your data. We delete it on request.</p>\n").encode()}),
 }  # fmt: skip
 
 #: a command that works, for each add-on a person runs; {box}, {pile} and
@@ -97,6 +99,9 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "quote-check": ("quote_check.py", ["--box", "{box}", "Tomatoes want sun"]),
     "readings": ("readings.py", ["bite", "--box", "{box}", *NOW, "tomatoes"]),
     "scan": ("scan.py", ["index", "--from", "{pile}", "--to", "{tmp}/index"]),
+    "snapshot": ("snapshot.py", ["check", "--in", "{pile}"]),
+    "wayback": ("wayback.py", ["find", "--url", "https://example.org/", "--to", "{tmp}/w",
+                               "--after", "20261016", "--before", "20261001"]),
     "stale": ("stale.py", ["--box", "{box}"]),
     "starter-words": ("starter.py", ["copy", "--to", "{tmp}/words.txt"]),
     "surprise": ("surprise.py", ["--box", "{box}", *NOW]),

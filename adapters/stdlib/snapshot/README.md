@@ -22,7 +22,7 @@ that was fetched.
 
 **fetch** saves the address's bytes exactly as they came, as FOLDER/NAME
 (by default the address's last part), and adds a line to
-`FOLDER/.snapshots.jsonl`:
+`<FOLDER>/.snapshots.jsonl`:
 
     {"bytes": 692585, "fetched": "2026-10-24T08:53:10Z", "file": "old.pdf",
      "sha256": "…", "status": 200, "type": "application/pdf", "url": "https://…"}

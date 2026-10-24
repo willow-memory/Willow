@@ -61,9 +61,12 @@ list run together without full stops is one passage.
 
 **What it was built for:** Google's privacy policy of 16 October 2026, in
 [demo/google-privacy-2026-10-16](../../../demo/google-privacy-2026-10-16/):
-the two versions' PDFs, 8 pages each, became 547 and 544 passages, and the
-diff found the ads paragraph's four changed sentences and the new
-"personalize content" entry among 532 unchanged.
+the two versions' PDFs, 36 pages each, became 557 and 564 passages. The
+diff found 532 sentences the same and listed 16 entries: the effective date,
+the ads paragraph's five (three reworded, two added), "Photos" become
+"Google Photos", and the new "personalize content" entry's four lines.
+The other five were the PDF's labels joined to a sentence, as said under
+**Can't**.
 
 **Exit codes:** mirror, 0 wrote at least one file, 42 nothing to read;
 diff, 0 the same, 42 something changed; 2 refused.

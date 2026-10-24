@@ -8,6 +8,9 @@
   "books": {
     "059f5e759b3b": "Kindle always writes a blank line after a clipping's meta line; starting one line later skips only that blank."
   },
+  "clauses": {
+    "0df2e008ca77": "The width a file of page headings and no text lines falls back to: with no lines, it is never compared to one."
+  },
   "codex-cli": {
     "2432e7c4e258": "The JSON branch's indent: codex-cli prints only TOML, so the JSON indent is never used.",
     "596bc0a25be9": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
@@ -67,6 +70,9 @@
   "vscode": {
     "423204448d2d": "sys.path.insert at index 1 instead of 0 still finds kernel.py.",
     "42ff77b58811": "The printed tasks.json's indent: three spaces parses to the same tasks."
+  },
+  "wayback": {
+    "0f8f6a1cbbfe": "sys.path.insert at index 1 instead of 0 still finds snapshot.py."
   },
   "words-es": {
     "088d00bd8ee5": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
