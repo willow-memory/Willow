@@ -9,6 +9,9 @@ question is the kernel's own bite, on the record.
 
 from __future__ import annotations
 
+import os
+import shlex
+import subprocess
 import sys
 from pathlib import Path
 
@@ -18,8 +21,15 @@ import kernel  # noqa: E402
 PIPE = Path(__file__).resolve().parents[1] / "pipe" / "pipe.py"
 
 
+def command_line(argv: list[str]) -> str:
+    """One line for the shell that runs it, each piece quoted as that shell
+    reads it, so a folder with a space in its name stays one piece."""
+    return subprocess.list2cmdline(argv) if os.name == "nt" else shlex.join(argv)
+
+
 def snippet(box: Path, py: str) -> str:
-    return f'/run {py} {PIPE} --box {box.resolve()} --grep "your question"\n'
+    argv = [py, str(PIPE), "--box", str(box.resolve()), "--grep"]
+    return f'/run {command_line(argv)} "your question"\n'
 
 
 def render(box: Path, py: str = None) -> str:

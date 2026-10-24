@@ -64,17 +64,17 @@ can pick up ([CONTRIBUTING.md](CONTRIBUTING.md) says how):
 - **Assistants:** AI assistants that can ask and suggest, but never approve. Built: [aider](adapters/stdlib/aider/), [claude-code](adapters/stdlib/claude-code/), [codex-cli](adapters/stdlib/codex-cli/), [copilot](adapters/stdlib/copilot/), [cursor](adapters/stdlib/cursor/), [gemini-cli](adapters/stdlib/gemini-cli/), [mcp](adapters/deps/mcp/), [mcp-lite](adapters/stdlib/mcp-lite/), [opencode](adapters/stdlib/opencode/), [windsurf](adapters/stdlib/windsurf/), [zed](adapters/stdlib/zed/). Ideas: *claude, local-model*.
 - **Ways to use it:** other ways in: pipes, your shell and your editor, plain sentences, a page on this machine, answers read aloud. Built: [emacs](adapters/stdlib/emacs/), [jetbrains](adapters/stdlib/jetbrains/), [pipe](adapters/stdlib/pipe/), [plain](adapters/stdlib/plain/), [shell](adapters/stdlib/shell/), [vim](adapters/stdlib/vim/), [vscode](adapters/stdlib/vscode/). Ideas: *browse, speak*.
 - **Play:** seeded, replayable games on the record, such as dice and the Game of Life. Built: nothing yet. Ideas: *dice, dice5e, life*.
-- **For maintainers:** the repo's own tools: CI, the list, tests that can fail. Built: [ci](adapters/stdlib/ci/), [github](adapters/stdlib/github/), [mutants](adapters/stdlib/mutants/), [readme](adapters/stdlib/readme/), [similar](adapters/stdlib/similar/).
+- **For maintainers:** the repo's own tools: CI, the list, tests that can fail. Built: [ci](adapters/stdlib/ci/), [github](adapters/stdlib/github/), [live](adapters/stdlib/live/), [mutants](adapters/stdlib/mutants/), [readme](adapters/stdlib/readme/), [similar](adapters/stdlib/similar/).
 <!-- /willow:summary -->
 
 <!-- willow:front show=pick week=2026-W43 -->
 **Add-on of the week**
 
-**[aider](adapters/stdlib/aider/)** — Aider reads answers from your folder with its /run command, file and line included.
+**[opencode](adapters/stdlib/opencode/)** — OpenCode asks your folder and hands in suggestions, through the mcp add-on.
 
-*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 42 built add-ons in name order.*
+*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 43 built add-ons in name order.*
 
-[Every add-on, 42 built of 75, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 43 built of 76, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 ## How it works

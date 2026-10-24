@@ -84,6 +84,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "shell": ("shell.py", ["script", "bash"]),
     "vim": ("vim.py", ["--box", "{box}"]),
     "vscode": ("vscode.py", ["--box", "{box}"]),
+    "live": ("live.py", ["list"]),
     "windsurf": ("windsurf.py", ["--box", "{box}"]),
     "zed": ("zed.py", ["--box", "{box}"]),
     "all": ("all.py", ["--box", "{box}", "tomatoes"]),

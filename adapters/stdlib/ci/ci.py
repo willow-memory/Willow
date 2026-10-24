@@ -4,7 +4,7 @@
     python adapters/stdlib/ci/ci.py verify [--box DIR]
     python adapters/stdlib/ci/ci.py show   [--box DIR]
 
-PART is lint, tests, ports, demo, deps or mutants; none means all six. --box defaults to
+PART is lint, tests, ports, demo, deps, mutants or tools; none means all seven. --box defaults to
 .ci-record (ignored by git), and its key to the same name plus `.key`, beside
 it, never in it.
 
@@ -340,6 +340,35 @@ def mutant_targets() -> list[str]:
     )
 
 
+LIVE = ROOT / "adapters" / "stdlib" / "live" / "live.py"
+
+
+def live_check(name: str):
+    """One of live.py's checks: its program run on the lines its add-on
+    prints. A program that isn't installed is unreachable, never a pass."""
+
+    def gate() -> tuple[str, str, str | None]:
+        code, said = run((PY, str(LIVE), "run", name))
+        said = re.sub(r"/[^ ]*/with space/", "<tmp>/", said)  # a new folder every run
+        if code == kernel.ESCALATE:
+            return UNREACHABLE, said, said.split(None, 3)[-1].strip()
+        if code != kernel.ALIVE:
+            return (
+                FAILING,
+                said,
+                said.strip().split(None, 2)[-1][:300] or f"exit {code}",
+            )
+        return SATISFIED, said, None
+
+    return gate
+
+
+def live_checks() -> list[str]:
+    """live.py's checks, by name, as `live.py list` prints them."""
+    got = subprocess.run([PY, str(LIVE), "list"], capture_output=True, text=True)
+    return [line.split()[0] for line in got.stdout.splitlines() if line.strip()]
+
+
 def people() -> list[str]:
     return sorted(p.parent.name for p in (ROOT / "demo").glob("*/make_life.py"))
 
@@ -384,10 +413,11 @@ def gates() -> list[tuple[str, str, object]]:
         how = command(PY, "adapters/stdlib/mutants/mutants.py", "run", name,
                       needs=lambda: missing_module("pytest"))  # fmt: skip
         out.append(("mutants", f"mutants:{name}", how))
+    out += [("tools", f"tools:{name}", live_check(name)) for name in live_checks()]
     return out
 
 
-PARTS = ("lint", "tests", "ports", "demo", "deps", "mutants")
+PARTS = ("lint", "tests", "ports", "demo", "deps", "mutants", "tools")
 
 
 # ── the record ───────────────────────────────────────────────────────────────

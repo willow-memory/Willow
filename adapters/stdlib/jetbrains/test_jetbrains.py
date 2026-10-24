@@ -57,3 +57,16 @@ def test_a_bad_command_line_or_box_is_refused(tmp_path):
 
 def test_it_prints_with_the_python_that_ran_it(tmp_path):
     assert sys.executable in mod.render(box(tmp_path))
+
+
+def test_a_folder_with_a_space_in_its_name_stays_one_piece(tmp_path):
+    import shlex
+    import xml.etree.ElementTree as ET
+
+    (tmp_path / "with space").mkdir()
+    b = box(tmp_path / "with space")
+    tool = ET.fromstring(mod.snippet(b, "/usr/bin/python3"))
+    params = {o.get("name"): o.get("value") for o in tool.iter("option")}["PARAMETERS"]
+    argv = shlex.split(params)
+    assert argv[argv.index("--box") + 1] == str(b.resolve())
+    assert argv[-1] == "$Prompt$"

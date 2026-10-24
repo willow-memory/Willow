@@ -17,6 +17,16 @@ says how). The first was v0.1.0.
   settings that register mcp-lite with Codex CLI, Gemini CLI, Copilot,
   Cursor, Windsurf, Zed and OpenCode, and pipe's answers in Vim, Emacs, VS
   Code, JetBrains IDEs and Aider. (#11)
+- `live` runs each way-in add-on through the real program it's for (bash,
+  zsh, fish, PowerShell, Vim, Neovim, Emacs, Node for VS Code's matcher,
+  Codex CLI, Gemini CLI, OpenCode, Copilot CLI, Claude Code and MCP
+  Inspector), in a box under a folder with a space in its name: works,
+  fails, or not here. CI gains a `tools` job that installs each at a pinned
+  version, one gate a check, where a program that isn't there fails the
+  job. Its first run found, fixed here before release: VS Code's matcher
+  misread a passage quoting a file:line of its own, and Claude Code's hook
+  and add line, Aider's run line and JetBrains' parameters split a path
+  with a space. (#11)
 - `CONSTITUTION.md`, willows-grove's Draft 0.9 byte for byte, unratified;
   this repo is its home. `kernel.py` cites the eternity clauses at the
   lines that enforce them (comments only; the vectors regenerated, the

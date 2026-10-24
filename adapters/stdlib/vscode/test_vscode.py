@@ -59,3 +59,13 @@ def test_a_bad_command_line_or_box_is_refused(tmp_path):
 
 def test_it_prints_with_the_python_that_ran_it(tmp_path):
     assert sys.executable in mod.render(box(tmp_path))
+
+
+def test_a_passage_quoting_a_file_and_line_of_its_own_is_not_misread():
+    import re
+
+    pattern = re.compile(mod.REGEXP)
+    m = pattern.match("/home/a/notes/moved.txt:1: Moved from old.txt:4: to here")
+    assert m.group(1) == "/home/a/notes/moved.txt" and m.group(2) == "1"
+    m = pattern.match(r"C:\Users\a\notes\n.md:3: The bus")
+    assert m.group(1) == r"C:\Users\a\notes\n.md" and m.group(2) == "3"

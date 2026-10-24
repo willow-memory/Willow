@@ -53,3 +53,22 @@ def test_a_bad_command_line_or_box_is_refused(tmp_path):
 
 def test_it_prints_with_the_python_that_ran_it(tmp_path):
     assert sys.executable in mod.render(box(tmp_path))
+
+
+def test_a_folder_with_a_space_in_its_name_stays_one_piece(tmp_path):
+    import shlex
+
+    (tmp_path / "with space").mkdir()
+    b = box(tmp_path / "with space")
+    line = mod.snippet(b, "/usr/bin/python3")[len("/run ") :]
+    argv = shlex.split(line)
+    assert argv[argv.index("--box") + 1] == str(b.resolve())
+    assert argv[-1] == "your question"
+
+
+def test_each_system_gets_its_own_shells_quoting(monkeypatch):
+    argv = ["/a b/python", "x"]
+    monkeypatch.setattr(mod.os, "name", "posix")
+    assert mod.command_line(argv) == "'/a b/python' x"
+    monkeypatch.setattr(mod.os, "name", "nt")
+    assert mod.command_line(argv) == '"/a b/python" x'

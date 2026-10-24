@@ -19,8 +19,9 @@ import kernel  # noqa: E402
 PIPE = Path(__file__).resolve().parents[1] / "pipe" / "pipe.py"
 
 
-#: what VS Code reads in pipe's --grep lines
-REGEXP = r"^(.*):(\d+): (.*)$"
+#: what VS Code reads in pipe's --grep lines: the file ends at the first
+#: ":LINE: ", so a passage that quotes a file:line of its own isn't misread
+REGEXP = r"^(.*?):(\d+): (.*)$"
 
 
 def snippet(box: Path, py: str) -> str:

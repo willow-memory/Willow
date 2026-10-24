@@ -100,3 +100,27 @@ def test_setup_prints_the_hook_and_the_mcp_line_and_writes_nothing(tmp_path, cap
 def test_a_bad_command_line_or_box_is_refused(tmp_path):
     assert hk.main([]) == 2 and hk.main(["setup", "--box"]) == 2
     assert hk.main(["setup", "--box", str(tmp_path)]) == 2
+
+
+def test_a_folder_with_a_space_in_its_name_stays_one_piece(tmp_path, capsys):
+    import shlex
+
+    (tmp_path / "with space").mkdir()
+    b = box(tmp_path / "with space")
+    assert hk.main(["setup", "--box", str(b)]) == 0
+    out = capsys.readouterr().out
+    cmd = json.loads(out.split("\n\n")[1])["hooks"]["UserPromptSubmit"][0]["hooks"][0]
+    argv = shlex.split(cmd["command"])
+    assert argv[1:4] == [str(hk.HERE), "prompt", "--box"] and argv[4] == str(
+        b.resolve()
+    )
+    add = shlex.split(out.split("    claude mcp add", 1)[1])
+    assert add[add.index("--box") + 1] == str(b.resolve())
+
+
+def test_each_system_gets_its_own_shells_quoting(monkeypatch):
+    argv = ["/a b/python", "x"]
+    monkeypatch.setattr(hk.os, "name", "posix")
+    assert hk.command_line(argv) == "'/a b/python' x"
+    monkeypatch.setattr(hk.os, "name", "nt")
+    assert hk.command_line(argv) == '"/a b/python" x'

@@ -25,6 +25,9 @@ from __future__ import annotations
 import contextlib
 import io
 import json
+import os
+import shlex
+import subprocess
 import sys
 from pathlib import Path
 
@@ -77,20 +80,27 @@ def prompt(box: Path, stdin) -> str:
         return ""
 
 
+def command_line(argv: list[str]) -> str:
+    """One line for the shell that runs it, each piece quoted as that shell
+    reads it, so a folder with a space in its name stays one piece."""
+    return subprocess.list2cmdline(argv) if os.name == "nt" else shlex.join(argv)
+
+
 def setup(box: Path) -> str:
     """The settings.json hook and the mcp add line, for the person to paste."""
     py = sys.executable or "python3"
     hook = {"hooks": {"UserPromptSubmit": [{"hooks": [{
         "type": "command",
-        "command": f"{py} {HERE} prompt --box {box.resolve()}",
+        "command": command_line([py, str(HERE), "prompt", "--box", str(box.resolve())]),
         "timeout": 10,
     }]}]}}  # fmt: skip
     server = ROOT / "adapters" / "stdlib" / "mcp-lite" / "server.py"
+    add = ["claude", "mcp", "add", "willow", "--", py, str(server), "--box", str(box.resolve())]  # fmt: skip
     return (
         "Add this to ~/.claude/settings.json (or .claude/settings.json in a project):\n\n"
         + json.dumps(hook, indent=2)
         + "\n\nAnd register willow's tools, so Claude Code can ask and suggest on its own:\n\n"
-        + f"    claude mcp add willow -- {py} {server} --box {box.resolve()}\n"
+        + f"    {command_line(add)}\n"
     )
 
 

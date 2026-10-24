@@ -116,7 +116,9 @@ def test_the_gates_run_in_one_fixed_order_and_cover_every_part():
         *(g for d in ci.deps_add_ons() for g in (f"deps:{d}", f"deps:{d}@floor")),
         "deps:floors",
         *(f"mutants:{n}" for n in ci.mutant_targets()),
+        *(f"tools:{n}" for n in ci.live_checks()),
     ]  # fmt: skip
+    assert ci.live_checks()[:2] == ["bash", "zsh"]
     assert {p for p, _, _ in ci.gates()} == set(ci.PARTS)
 
 

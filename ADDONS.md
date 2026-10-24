@@ -18,7 +18,7 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`███████████░░░░░░░░░` **42 of 75 built** · 58 need no install · 17 need one
+`███████████░░░░░░░░░` **43 of 76 built** · 59 need no install · 17 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
@@ -31,7 +31,7 @@ or `writes-output`; its section), and any the card's author adds or changes.
 | Assistants | 11 | 2 | 10 | 3 |
 | Ways to use it | 7 | 2 | 8 | 1 |
 | Play | 0 | 3 | 2 | 1 |
-| For maintainers | 5 | 0 | 5 | 0 |
+| For maintainers | 6 | 0 | 6 | 0 |
 <!-- /willow:pools -->
 
 ### Newest
@@ -47,9 +47,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ### Add-on of the week
 
 <!-- willow:pick week=2026-W43 -->
-**[aider](adapters/stdlib/aider/)** — Aider reads answers from your folder with its /run command, file and line included.
+**[opencode](adapters/stdlib/opencode/)** — OpenCode asks your folder and hands in suggestions, through the mcp add-on.
 
-*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 42 built add-ons in name order.*
+*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 43 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -162,6 +162,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 
 - [**ci**](adapters/stdlib/ci/) — This repo's checks as verdict rows on a kernel record, the same every run. Goes online: PyPI, to read each dependency floor's release date. *box* `no-install` `online` `records` `maintainers`
 - [**github**](adapters/stdlib/github/) — What willow's repo needs from GitHub, kept in one folder so it can be taken away. Goes online: GitHub, through gh, to read the author of a pull request a security report points to. *box* `no-install` `online` `read-only` `maintainers`
+- [**live**](adapters/stdlib/live/) — Each way-in add-on run through the real program it's for, a shell, an editor or an AI tool: works, fails, or not here. Goes online: only what the programs it starts reach on their own; it reaches nothing itself. *new* `no-install` `maintainers` `tests` `interface` `assistant`
 - [**mutants**](adapters/stdlib/mutants/) — Breaks each add-on's code on purpose and checks its tests notice. *new* `no-install` `offline` `read-only` `maintainers`
 - [**readme**](adapters/stdlib/readme/) — Builds ADDONS.md, and the README's one feature, from the add-ons' own cards. *new* `no-install` `offline` `writes-output` `maintainers`
 - [**similar**](adapters/stdlib/similar/) — What's already on the add-on list near a new idea, by the kernel's own search. *box* `no-install` `offline` `read-only` `maintainers`

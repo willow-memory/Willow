@@ -9,6 +9,7 @@ question is the kernel's own bite, on the record.
 
 from __future__ import annotations
 
+import subprocess
 import sys
 from pathlib import Path
 from xml.sax.saxutils import quoteattr
@@ -20,7 +21,9 @@ PIPE = Path(__file__).resolve().parents[1] / "pipe" / "pipe.py"
 
 
 def snippet(box: Path, py: str) -> str:
-    params = f'{PIPE} --box {box.resolve()} --grep "$Prompt$"'
+    # the IDE splits PARAMETERS where Windows would: double quotes hold a piece
+    params = subprocess.list2cmdline([str(PIPE), "--box", str(box.resolve()), "--grep"])
+    params += ' "$Prompt$"'
     return (
         '<toolSet name="External Tools">\n'
         '  <tool name="willow" description="Ask your willow folder" showInMainMenu="true" '
