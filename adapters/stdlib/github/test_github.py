@@ -165,6 +165,21 @@ def test_the_repos_github_folder_holds():
             '>> "$GITHUB_STEP_SUMMARY"',
             "similar job",
         ),
+        # one run per change: no second run from the branch's push, and a
+        # newer commit cancels the older run, but never one of main's
+        (".github/workflows/ci.yml", "    branches: [main]\n", "", "runs twice"),
+        (
+            ".github/workflows/ci.yml",
+            "cancel-in-progress: ${{ github.event_name == 'pull_request' }}",
+            "cancel-in-progress: true",
+            "doesn't cancel",
+        ),
+        (
+            ".github/workflows/ci.yml",
+            "group: ci-${{ github.event.pull_request.number || github.ref }}",
+            "group: ci",
+            "doesn't cancel",
+        ),
         # CONST-VIII-2: the weekly run that reaches a person when an
         # emergency amendment expires in a quiet repo
         (".github/workflows/law.yml", "  schedule:\n", "  scheduled:\n", "law.yml"),
