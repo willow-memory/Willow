@@ -331,6 +331,16 @@
   "tags": "no-install, offline, read-only, tracking"
  },
  {
+  "name": "cassettes",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "Each exchange with a model kept as a row (what was asked, what came back, the model and its seed), replayed later as a test, and drift between models found by plain diff.",
+  "source": "bot",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, assistant"
+ },
+ {
   "name": "chess-puzzle",
   "kind": "stdlib",
   "section": "Play",
@@ -760,6 +770,16 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
+  "name": "fair-merge",
+  "kind": "stdlib",
+  "section": "Finding things",
+  "line": "Each folder or repo ranked on its own and the lists merged in turns, so a large corpus can't push a small one out on volume alone, and a source that found nothing says so.",
+  "source": "bot",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, search, pile"
+ },
+ {
   "name": "family-box",
   "kind": "stdlib",
   "section": "Trust and proof",
@@ -1153,6 +1173,206 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
+  "name": "hook-checks",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "A PostToolUse hook that runs the repo's own fast checks on the file just edited and hands back only what failed, the same output for the same file.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, assistant, hooks"
+ },
+ {
+  "name": "hook-cite",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "A hook that refuses an assistant's claim citing a passage the box never served it, checked against the record by id.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, assistant, hooks"
+ },
+ {
+  "name": "hook-compact",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "A PreCompact hook that prints what the record still holds open, seals waiting and questions unanswered, so it survives the assistant's summary.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, assistant, hooks"
+ },
+ {
+  "name": "hook-errors",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "Each failed command an assistant runs kept as a row of its hash and exit code, so the same failure the third time is named, not retried blind.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, assistant, hooks"
+ },
+ {
+  "name": "hook-fail-closed",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "Wraps any hook so a crash, a timeout or output it can't read blocks the tool, since Claude Code, Gemini CLI, Codex and Cursor all let the tool run by default.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, assistant, hooks"
+ },
+ {
+  "name": "hook-feedback",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "Your corrections to an assistant (no, wrong, I said) caught by fixed patterns at each prompt and handed in through propose, for you to keep or drop.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, assistant, hooks"
+ },
+ {
+  "name": "hook-fuzz",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "Throws empty, malformed, oversized and non-UTF-8 input at a hook and fails it if any of them crash it, since a crashed hook lets the tool run.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, assistant, hooks"
+ },
+ {
+  "name": "hook-guard",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "A PreToolUse hook that refuses, by rule and never by judgment, a tool call that would read the key or write a box outside the kernel, naming the rule it hit.",
+  "source": "box",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, assistant, hooks"
+ },
+ {
+  "name": "hook-handoff",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "A Stop hook that writes where the session ended, and the next session's first prompt gets it back, so nothing rides on the assistant's memory.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, assistant, hooks"
+ },
+ {
+  "name": "hook-impact",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "Before an edit, a hook hands the assistant every place in your files that names what it's about to change, by file and line.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, assistant, hooks"
+ },
+ {
+  "name": "hook-leaks",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "A PreToolUse hook that refuses a write or a command holding a key, password or card number, by the privacy add-on's shapes, naming only the kind.",
+  "source": "box",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, assistant, hooks"
+ },
+ {
+  "name": "hook-pin",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "Each hook's SHA-256 kept on the record when you approve it, so a hook that changed since is named before it runs, never silently trusted or skipped.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, assistant, hooks"
+ },
+ {
+  "name": "hook-read-first",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "A PreToolUse hook that refuses an edit to a file the assistant hasn't read this session, or whose bytes changed since it did, each read kept as a hash.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, assistant, hooks"
+ },
+ {
+  "name": "hook-replay",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "Every hook's answer kept as a row with the hashes of what it was given and what it said, and check runs it again to prove the same input still gets the same answer.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, assistant, hooks"
+ },
+ {
+  "name": "hook-sequence",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "Rules over what an assistant did before, not just this call: no push until the tests ran on this commit, at most so many deletions a session, read from the record.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, assistant, hooks"
+ },
+ {
+  "name": "hook-shell",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "A command split the way the shell will split it, quotes, variables and chained commands included, before any rule judges it, so a rule can't be dodged by spelling.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, assistant, hooks"
+ },
+ {
+  "name": "hook-start",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "A SessionStart hook that hands the assistant what needs you, read the way digest reads it, so opening a session writes nothing.",
+  "source": "bot",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, assistant, hooks"
+ },
+ {
+  "name": "hook-stop",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "A Stop hook that won't let an assistant's turn end while the record doesn't verify or its changes aren't committed, and says which.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, assistant, hooks"
+ },
+ {
+  "name": "hook-tiers",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "Edits sorted into tiers by the paths they touch, and the top tier held as a proposal until you seal it, by a rule you can read.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, assistant, hooks"
+ },
+ {
+  "name": "hooks-elsewhere",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "The prompt hook for Gemini CLI, Codex and opencode, wherever they take hooks, held to Claude Code's answer byte for byte.",
+  "source": "box",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, assistant, hooks"
+ },
+ {
   "name": "horoscope-grades",
   "kind": "stdlib",
   "section": "Play",
@@ -1242,6 +1462,16 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "instruction-files",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "For a folder, which instruction files each coding agent would load (AGENTS.md, CLAUDE.md, GEMINI.md, rules folders), in what order, with each file's size and hash.",
+  "source": "box",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, assistant"
  },
  {
   "name": "inventory",
@@ -1516,6 +1746,16 @@
   "tags": "no-install, offline, read-only, tracking"
  },
  {
+  "name": "llms-txt",
+  "kind": "stdlib",
+  "section": "Ways to use it",
+  "line": "An llms.txt for your folder, written from what's actually in it to the spec's version 2, and any llms.txt you saved checked against that spec.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output"
+ },
+ {
   "name": "local-model",
   "kind": "deps",
   "section": "Assistants",
@@ -1657,6 +1897,16 @@
   "writes": "to",
   "network": "Maven Central, to publish a release a maintainer tags",
   "tags": "no-install, online, writes-output, maintainers"
+ },
+ {
+  "name": "mcp-by-hash",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "Your passages served as MCP resources named by their SHA-256, so an assistant cites exactly the bytes it read and a changed passage gets a new name.",
+  "source": "bot",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, assistant"
  },
  {
   "name": "meaning",
@@ -2094,6 +2344,16 @@
   "tags": "no-install, offline, read-only, search"
  },
  {
+  "name": "persona-card",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "A persona written as a card and compiled into the same system-prompt bytes every time, with the prompt's hash on the record.",
+  "source": "box",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, assistant"
+ },
+ {
   "name": "pets",
   "kind": "stdlib",
   "section": "Keeping track",
@@ -2146,6 +2406,26 @@
   "tags": "no-install, offline, read-only, privacy"
  },
  {
+  "name": "pile-build",
+  "kind": "stdlib",
+  "section": "Finding things",
+  "line": "The store built in the background after each change, behind a lock, from orders that say where the key is but never hold it, so your next question finds it warm.",
+  "source": "bot",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, search, pile"
+ },
+ {
+  "name": "pile-gold",
+  "kind": "stdlib",
+  "section": "Finding things",
+  "line": "Each answer you approve marks the passage that held it, so your own questions become a test of how well the search finds things, scored as recall at five.",
+  "source": "box",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, search, pile"
+ },
+ {
   "name": "pile-poetry",
   "kind": "stdlib",
   "section": "Play",
@@ -2154,6 +2434,56 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, play"
+ },
+ {
+  "name": "pile-rank",
+  "kind": "stdlib",
+  "section": "Finding things",
+  "line": "Phrases as well as words: BM25F over each passage's words and the word pairs your files use together, title and question lines weighted, no model.",
+  "source": "bot",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, search, pile"
+ },
+ {
+  "name": "pile-rungs",
+  "kind": "stdlib",
+  "section": "Finding things",
+  "line": "Each lookup says which rung answered, words, phrases or an embedder, and why a higher one was skipped, as data beside the passages.",
+  "source": "bot",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, search, pile"
+ },
+ {
+  "name": "pile-serve",
+  "kind": "stdlib",
+  "section": "Finding things",
+  "line": "The store held open by one process on this machine, over a Unix socket the way willow-bot's deterministic runner serves, so a hook's lookup takes milliseconds instead of a cold start.",
+  "source": "bot",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, search, pile"
+ },
+ {
+  "name": "pile-store",
+  "kind": "stdlib",
+  "section": "Finding things",
+  "line": "Your folder's passages read once into one SQLite file, each repeat stored once, and opened read-only only while it still matches the folder, the limits and the key, else built again.",
+  "source": "bot",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, search, pile"
+ },
+ {
+  "name": "pile-sweep",
+  "kind": "stdlib",
+  "section": "Finding things",
+  "line": "The passage size measured, not guessed: your box's own questions asked at several sizes, and the size that finds the most of their answers kept.",
+  "source": "bot",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, search, pile"
  },
  {
   "name": "pins",
@@ -2605,6 +2935,16 @@
   "tags": "no-install, offline, read-only, search"
  },
  {
+  "name": "same-way",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "A local model asked each of your box's questions three times, and how often its answer flips, since a model that answers the same way every time is one you can build on.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "this-machine",
+  "tags": "no-install, this-machine, read-only, assistant"
+ },
+ {
   "name": "sap-gate",
   "kind": "deps",
   "section": "Trust and proof",
@@ -2634,6 +2974,16 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "schema-check",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "A model's answer held to a JSON schema before anything reads it, and a reply that doesn't fit recorded as a result, not lost as an error.",
+  "source": "box",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, assistant"
  },
  {
   "name": "school",
@@ -2787,6 +3137,16 @@
   "writes": "nothing",
   "network": "none",
   "tags": "needs-install, offline, read-only, trust"
+ },
+ {
+  "name": "silence-log",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "A model that ran and said nothing kept as its own row, so silence is told apart from a model that never ran.",
+  "source": "bot",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, assistant"
  },
  {
   "name": "slack",
@@ -3214,6 +3574,17 @@
   "writes": "nothing",
   "network": "GitHub, through gh, with your own login",
   "tags": "no-install, online, read-only, tracking"
+ },
+ {
+  "name": "vectors",
+  "kind": "deps",
+  "section": "Finding things",
+  "line": "The meaning add-on's vectors kept in the store's own SQLite file, so they're computed once per passage, not at every question.",
+  "source": "bot",
+  "needs": "sqlite-vec and model2vec; MIT or Apache-2.0",
+  "writes": "to",
+  "network": "none",
+  "tags": "needs-install, offline, writes-output, search, pile"
  },
  {
   "name": "vocab",
