@@ -18,7 +18,7 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`███░░░░░░░░░░░░░░░░░` **64 of 426 built** · 377 need no install · 49 need one
+`███░░░░░░░░░░░░░░░░░` **64 of 436 built** · 387 need no install · 49 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
@@ -28,7 +28,7 @@ or `writes-output`; its section), and any the card's author adds or changes.
 | Keeping track | 5 | 49 | 54 | 0 |
 | Trust and proof | 7 | 36 | 34 | 9 |
 | Privacy and safety | 2 | 11 | 13 | 0 |
-| Assistants | 11 | 24 | 29 | 6 |
+| Assistants | 11 | 34 | 39 | 6 |
 | Ways to use it | 10 | 27 | 33 | 4 |
 | Play | 4 | 36 | 35 | 5 |
 | For maintainers | 6 | 33 | 34 | 5 |
@@ -185,7 +185,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - **pile-build** (idea) — The store built in the background after each change, behind a lock, from orders that say where the key is but never hold it, so your next question finds it warm. *bot* `no-install` `offline` `writes-output` `search` `pile`
 - **pile-rank** (idea) — Phrases as well as words: BM25F over each passage's words and the word pairs your files use together, title and question lines weighted, no model. *bot* `no-install` `offline` `read-only` `search` `pile`
 - **pile-rungs** (idea) — Each lookup says which rung answered, words, phrases or an embedder, and why a higher one was skipped, as data beside the passages. *bot* `no-install` `offline` `read-only` `search` `pile`
-- **pile-serve** (idea) — The store held open by one process on this machine, over stdio or a local socket, so a hook's lookup takes milliseconds instead of a cold start. *new* `no-install` `offline` `read-only` `search` `pile`
+- **pile-serve** (idea) — The store held open by one process on this machine, over a Unix socket the way willow-bot's deterministic runner serves, so a hook's lookup takes milliseconds instead of a cold start. *bot* `no-install` `offline` `read-only` `search` `pile`
 - **pile-store** (idea) — Your folder's passages read once into one SQLite file, each repeat stored once, and opened read-only only while it still matches the folder, the limits and the key, else built again. *bot* `no-install` `offline` `writes-output` `search` `pile`
 - **pile-sweep** (idea) — The passage size measured, not guessed: your box's own questions asked at several sizes, and the size that finds the most of their answers kept. *bot* `no-install` `offline` `read-only` `search` `pile`
 - **promises** (idea) — What a candidate or a council said, by date and source, from the documents you saved. *new* `no-install` `offline` `read-only` `search`
@@ -367,11 +367,20 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - [**gemini-cli**](adapters/stdlib/gemini-cli/) — Google's Gemini CLI asks your folder and hands in suggestions, through the mcp add-on. *new* `no-install` `offline` `read-only` `assistant`
 - **hermes** (idea) — Hermes Agent asking your folder as a plugin, and its memories, and what its dreaming plugin consolidates, handed in through propose. *new* `no-install` `offline` `records` `assistant`
 - **hook-checks** (idea) — A PostToolUse hook that runs the repo's own fast checks on the file just edited and hands back only what failed, the same output for the same file. *new* `no-install` `offline` `read-only` `assistant` `hooks`
+- **hook-cite** (idea) — A hook that refuses an assistant's claim citing a passage the box never served it, checked against the record by id. *new* `no-install` `offline` `read-only` `assistant` `hooks`
 - **hook-compact** (idea) — A PreCompact hook that prints what the record still holds open, seals waiting and questions unanswered, so it survives the assistant's summary. *new* `no-install` `offline` `read-only` `assistant` `hooks`
+- **hook-errors** (idea) — Each failed command an assistant runs kept as a row of its hash and exit code, so the same failure the third time is named, not retried blind. *new* `no-install` `offline` `records` `assistant` `hooks`
+- **hook-feedback** (idea) — Your corrections to an assistant (no, wrong, I said) caught by fixed patterns at each prompt and handed in through propose, for you to keep or drop. *new* `no-install` `offline` `records` `assistant` `hooks`
+- **hook-fuzz** (idea) — Throws empty, malformed, oversized and non-UTF-8 input at a hook and fails it if any of them crash it, since a crashed hook lets the tool run. *new* `no-install` `offline` `read-only` `assistant` `hooks`
 - **hook-guard** (idea) — A PreToolUse hook that refuses, by rule and never by judgment, a tool call that would read the key or write a box outside the kernel, naming the rule it hit. *box* `no-install` `offline` `read-only` `assistant` `hooks`
+- **hook-handoff** (idea) — A Stop hook that writes where the session ended, and the next session's first prompt gets it back, so nothing rides on the assistant's memory. *new* `no-install` `offline` `records` `assistant` `hooks`
+- **hook-impact** (idea) — Before an edit, a hook hands the assistant every place in your files that names what it's about to change, by file and line. *new* `no-install` `offline` `read-only` `assistant` `hooks`
+- **hook-leaks** (idea) — A PreToolUse hook that refuses a write or a command holding a key, password or card number, by the privacy add-on's shapes, naming only the kind. *box* `no-install` `offline` `read-only` `assistant` `hooks`
+- **hook-read-first** (idea) — A PreToolUse hook that refuses an edit to a file the assistant hasn't read this session, or whose bytes changed since it did, each read kept as a hash. *new* `no-install` `offline` `records` `assistant` `hooks`
 - **hook-replay** (idea) — Every hook's answer kept as a row with the hashes of what it was given and what it said, and check runs it again to prove the same input still gets the same answer. *new* `no-install` `offline` `records` `assistant` `hooks`
 - **hook-start** (idea) — A SessionStart hook that hands the assistant what needs you, read the way digest reads it, so opening a session writes nothing. *bot* `no-install` `offline` `read-only` `assistant` `hooks`
 - **hook-stop** (idea) — A Stop hook that won't let an assistant's turn end while the record doesn't verify or its changes aren't committed, and says which. *new* `no-install` `offline` `read-only` `assistant` `hooks`
+- **hook-tiers** (idea) — Edits sorted into tiers by the paths they touch, and the top tier held as a proposal until you seal it, by a rule you can read. *new* `no-install` `offline` `records` `assistant` `hooks`
 - **hooks-elsewhere** (idea) — The prompt hook for Gemini CLI, Codex and opencode, wherever they take hooks, held to Claude Code's answer byte for byte. *box* `no-install` `offline` `records` `assistant` `hooks`
 - **issue-answer** (idea) — A workflow that drafts an answer to a new issue from the repo's own docs, each line cited, posted only once a maintainer seals it. Goes online: the forge, through the workflow's token, to post an answer once it is sealed. *new* `no-install` `online` `records` `assistant`
 - **ladder** (idea) — Your files first, then sources you trust such as Jeles and Nestor, then a model, stopping at the first that answers, each answer kept for next time. *bot* `no-install` `offline` `records` `assistant`
@@ -386,6 +395,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - [**opencode**](adapters/stdlib/opencode/) — OpenCode asks your folder and hands in suggestions, through the mcp add-on. *new* `no-install` `offline` `read-only` `assistant`
 - **plain-language** (idea) — An approved answer rewritten in plain language by a model, the rewrite held until you seal it. *new* `no-install` `offline` `records` `assistant`
 - **quantized** (idea) — Finds the smallest quantized local model that still gets your box's own questions right, so suggestions come faster. Needs a local model server; licence varies by model. Reaches this machine only. *new* `needs-install` `this-machine` `read-only` `assistant`
+- **same-way** (idea) — A local model asked each of your box's questions three times, and how often its answer flips, since a model that answers the same way every time is one you can build on. Goes online: this-machine. *new* `no-install` `this-machine` `read-only` `assistant`
 - **scope** (idea) — Hands an assistant only the passages in scope, as one file, by ids it can't guess: nothing outside it is named or counted. *bot* `no-install` `offline` `writes-output` `assistant`
 - **second-opinion** (idea) — Two assistants' suggestions for the same question side by side, each waiting for its own seal. *new* `no-install` `offline` `records` `assistant`
 - **translate** (idea) — An answer translated by a local model, the original kept beside it, the translation held until you seal it. Needs a local model server; licence varies by model. Reaches this machine only. *new* `needs-install` `this-machine` `records` `assistant`

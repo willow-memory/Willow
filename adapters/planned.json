@@ -1183,10 +1183,50 @@
   "tags": "no-install, offline, read-only, assistant, hooks"
  },
  {
+  "name": "hook-cite",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "A hook that refuses an assistant's claim citing a passage the box never served it, checked against the record by id.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, assistant, hooks"
+ },
+ {
   "name": "hook-compact",
   "kind": "stdlib",
   "section": "Assistants",
   "line": "A PreCompact hook that prints what the record still holds open, seals waiting and questions unanswered, so it survives the assistant's summary.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, assistant, hooks"
+ },
+ {
+  "name": "hook-errors",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "Each failed command an assistant runs kept as a row of its hash and exit code, so the same failure the third time is named, not retried blind.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, assistant, hooks"
+ },
+ {
+  "name": "hook-feedback",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "Your corrections to an assistant (no, wrong, I said) caught by fixed patterns at each prompt and handed in through propose, for you to keep or drop.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, assistant, hooks"
+ },
+ {
+  "name": "hook-fuzz",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "Throws empty, malformed, oversized and non-UTF-8 input at a hook and fails it if any of them crash it, since a crashed hook lets the tool run.",
   "source": "new",
   "writes": "nothing",
   "network": "none",
@@ -1201,6 +1241,46 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, assistant, hooks"
+ },
+ {
+  "name": "hook-handoff",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "A Stop hook that writes where the session ended, and the next session's first prompt gets it back, so nothing rides on the assistant's memory.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, assistant, hooks"
+ },
+ {
+  "name": "hook-impact",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "Before an edit, a hook hands the assistant every place in your files that names what it's about to change, by file and line.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, assistant, hooks"
+ },
+ {
+  "name": "hook-leaks",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "A PreToolUse hook that refuses a write or a command holding a key, password or card number, by the privacy add-on's shapes, naming only the kind.",
+  "source": "box",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, assistant, hooks"
+ },
+ {
+  "name": "hook-read-first",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "A PreToolUse hook that refuses an edit to a file the assistant hasn't read this session, or whose bytes changed since it did, each read kept as a hash.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, assistant, hooks"
  },
  {
   "name": "hook-replay",
@@ -1231,6 +1311,16 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, assistant, hooks"
+ },
+ {
+  "name": "hook-tiers",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "Edits sorted into tiers by the paths they touch, and the top tier held as a proposal until you seal it, by a rule you can read.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, assistant, hooks"
  },
  {
   "name": "hooks-elsewhere",
@@ -2289,8 +2379,8 @@
   "name": "pile-serve",
   "kind": "stdlib",
   "section": "Finding things",
-  "line": "The store held open by one process on this machine, over stdio or a local socket, so a hook's lookup takes milliseconds instead of a cold start.",
-  "source": "new",
+  "line": "The store held open by one process on this machine, over a Unix socket the way willow-bot's deterministic runner serves, so a hook's lookup takes milliseconds instead of a cold start.",
+  "source": "bot",
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, search, pile"
@@ -2763,6 +2853,16 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, search"
+ },
+ {
+  "name": "same-way",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "A local model asked each of your box's questions three times, and how often its answer flips, since a model that answers the same way every time is one you can build on.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "this-machine",
+  "tags": "no-install, this-machine, read-only, assistant"
  },
  {
   "name": "sap-gate",
