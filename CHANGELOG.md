@@ -8,21 +8,6 @@ says how). The first was v0.1.0.
 
 ## Unreleased
 
-### Changed
-
-- `dice`'s test of `check` no longer fails by chance: it faked a changed
-  roll by setting a 3d6 to 6, 6, 6, which is the honest roll for 1 seed
-  in 216, and then `check` rightly found nothing wrong. The fake now moves
-  every face one up, so it never matches. It failed once in CI's
-  adapters tests.
-- `privacy` also withholds a national phone number written from its 0 in
-  groups (`0113 555 0122`, `07700 900123`: 10 or 11 digits), and a bank
-  number after its label (sort code, account number, acct, a/c, routing),
-  keeping the label so the line still reads. Its card already said bank
-  numbers; only IBANs were caught. Found when repo-pile was run on the demo
-  lives, where 64 phone numbers and 121 bank numbers got through; on 3,165
-  docs from 44 public repositories neither shape matched anything.
-
 ### Added
 
 - `repo-pile`: a list of public repositories made into a box you can ask.
@@ -32,6 +17,100 @@ says how). The first was v0.1.0.
   indexes the docs and the whole source. Then ask, bite, quote, report,
   check and backup are willow's own add-ons over it, what they print
   scrubbed by privacy. It never reads the key or seals.
+- `demo/bernadette`, a fourth person built blind, her files in the raw formats
+  her apps would leave (.eml and .mbox, .ics and .vcf, WhatsApp and Telegram,
+  an Obsidian vault, .docx, .xlsx and .odt, Kindle and .epub, PDFs), and
+  `demo/bernadette/stack.py`, which takes them through every layer of willow at once: each
+  reader, `start`, the look-ahead add-ons, her twenty questions, `privacy`,
+  an assistant over `mcp-lite`, and, once she seals, `stale`, `export`,
+  `session-seal`, `backup`, `diverge` and `verify`. CI runs it as
+  `demo:stack`; STRIP.md scores it, misses included. (#34)
+- `session-seal`, an add-on that bundles a session's rows, by number,
+  kind and hash and never their words, and proposes the bundle through the
+  kernel's own bite and propose, so it waits on the person's seal like any
+  suggestion: one seal over a whole session. Ported from willow-bot's one
+  script, with the kernel's seal standing in for Nestor's. (#34)
+- `latent`, a deps add-on that ranks a `scan` index by meaning (TF-IDF then a
+  truncated SVD), so a question reaches a passage that shares its sense without
+  sharing its words; offline, it downloads no model. Needs numpy, pinned and
+  floor-tested. (#35)
+- `typosquat`, an add-on that reads your lockfiles and a downloaded list of
+  popular package names and flags any dependency whose name is one edit off a
+  popular one — an insert, delete, substitution, or a swap of two adjacent
+  letters (optimal string alignment), the common typosquat shapes. Offline;
+  reuses `advisories`' lockfile reader. (#35)
+- `install-scripts`, an add-on that lists the `preinstall`/`install`/
+  `postinstall` scripts the packages under a `node_modules` folder would run
+  on install, each cited by file and line, so arbitrary install-time code is
+  visible before you trust it. Offline, read-only. (#35)
+- `pins`, an add-on that reads package.json and requirements.txt and names the
+  dependencies declared as a version range that no lockfile pins to an exact
+  version — the ones a maintainer may want to lock. Offline; reuses
+  `advisories`' lockfile reader. (#35)
+- `outdated`, an add-on that reads your lockfiles and a downloaded registry
+  index (npm, PyPI, crates.io metadata) and says how old each locked
+  dependency is, flagging the ones that are yanked, deprecated, or from a
+  project two years without a release. Offline; reuses `advisories`' lockfile
+  reader; `--now` makes a run repeatable. (#35)
+- `advisories`, an add-on that reads your lockfiles (npm, PyPI, crates.io) and
+  a downloaded OSV or GitHub advisory database, offline, and says which locked
+  dependency a known advisory names, and since when -- matching a version by
+  the advisory's own version list or its numeric ranges, and naming what it
+  can't compare rather than guessing. (#35)
+- `demo/php2shell/pipeline.py`, a runner that composes the PHP2Shell method end
+  to end (kernel, BM25 and the latent ranker) in one command; a runner, not an
+  add-on, and not part of CI. (#35)
+- `kernel.py decline`, the person's No: proved with their key like a seal,
+  it is never offered again by `out`, `browse` or `digest`, and can't be
+  sealed after; `verify` names a No that doesn't prove. On Windows the
+  record is now locked with `msvcrt`. Both were in LIMITS.md, and the three
+  ports do the same. (#32)
+- `hook-fail-closed`, `hook-fuzz`, `hook-pin` and `hook-replay`: a hook
+  that crashes, hangs or prints what can't be read blocks the tool instead
+  of letting it run; thirteen fixed bad inputs thrown at a hook, each one
+  that breaks it named; a hook runs only as the bytes you approved, pinned on
+  the record; and every hook answer a row of hashes, run again by `check`.
+  (#21)
+- `kernel.rank` takes `top` and `dated`, so an add-on that lists every
+  match, or an index that has the dates already, no longer sets the
+  kernel's globals for a call; its filter is public as `kernel.holding`.
+  No answer changes: the vectors regenerate with only the kernel's hash
+  different. `similar near` also counts against the entry, so a long new
+  line finds a short entry it contains. (#20)
+- Thirty-seven ideas on the add-on list, nothing built: hooks whose answers
+  are code, never judgment (hook-fail-closed, hook-fuzz, hook-pin,
+  hook-replay, hook-shell and others), the store behind willow-bot's pile
+  (pile-rank, pile-serve, pile-gold, fair-merge), and the tools LLMs use
+  (instruction-files, llms-txt, mcp-by-hash, schema-check, cassettes). (#19)
+- `web-pages`, a reader for saved web pages, .html and .mhtml: each page's
+  paragraphs, headings and list items as paragraphs, under the address it
+  came from, or `address: not in the file`. (#18)
+- `policy-watch`, an add-on that fetches a terms or policy page each time
+  it runs, through snapshot, and says what changed since the last copy,
+  sentence by sentence, through clauses. (#18)
+- `claim-check`, an add-on that checks a claim against your sources part
+  by part: the passages holding every part, those holding the most short of
+  that with what they lack, and the parts no file names. (#18)
+- `misquote`, an add-on for a quote that is almost in your files: the
+  passage holding most of its words in order, and the words it drops, adds
+  or changes; quote-check's "not there" made specific. (#18)
+- `snapshot`, an add-on that fetches a page or file once into a folder, as
+  it came, with its address, the time and its SHA-256 on a hidden line the
+  kernel never serves; what couldn't be fetched gets its line too, and
+  `check` re-hashes offline. `wayback` finds the Wayback Machine's copy of a
+  page in a window of days, saves it as a snapshot and compares it byte for
+  byte, saying "no capture" and "couldn't reach it" as themselves. (#16)
+- `clauses`, a reader that writes a policy, contract or web page as one
+  sentence a passage (wrapped PDF text joined back, page headings kept), so
+  an answer lands on the clause; `diff` lists two versions' reworded, added
+  and removed sentences. (#16)
+- `demo/google-privacy-2026-10-16`, a real policy change: Google's privacy
+  policy before and after 16 October 2026, asked in the reporters' words,
+  frozen by hash before it ran, with blind rewordings, null questions and an
+  absence test, recorded on a kernel record. 11 of 12 pass rules pass. The
+  sources are fetched once and kept by hash, not in the repo; CI checks only
+  that the frozen files still match. Three ideas from it go on the list:
+  `claim-check`, `misquote` and `policy-watch`. (#16)
 - `gaps`: where a log you keep stops. The days a folder of daily notes, a
   reading log or a diary skipped are said as gaps: a spacing more than three
   times the log's typical one. A log with too few dates is said, an undated
@@ -224,6 +303,31 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- `privacy` also withholds a national phone number written from its 0 in
+  groups (`0113 555 0122`, `07700 900123`: 10 or 11 digits), and a bank
+  number after its label (sort code, account number, acct, a/c, routing),
+  keeping the label so the line still reads. Its card already said bank
+  numbers; only IBANs were caught. Found when repo-pile was run on the demo
+  lives, where 64 phone numbers and 121 bank numbers got through; on 3,165
+  docs from 44 public repositories neither shape matched anything.
+- CI ends sooner, in the same gates. `ci.py run` takes a gate's name,
+  `--without GATE` and `--shard K/N` (cut by `test-shards`' split), so
+  `tests:strip`, which ran the add-ons' tests a second time in each tests job,
+  has a job of its own on each Python, and the mutants run in four shards.
+  `github.py check` holds every gate to exactly one job. A pull request's
+  `first` job runs what `test-impact` says its change reaches, cheapest first,
+  and a failing job writes `ci-why`'s reading of its log to the run's summary.
+  (#36)
+- `claude-code`'s prompt hook says it couldn't read the prompt when it
+  gets JSON that isn't an object, or JSON nested past Python's depth, where
+  it crashed with a traceback; `hook-fuzz` found it. (#21)
+- `live` has a `chrome` check: a page saved by headless Chrome, over its
+  DevTools pipe with no library, as .mhtml and as drawn, read by web-pages.
+  Its first run found web-pages garbling Chrome's .mhtml, whose page part
+  names no charset; fixed, with a test of Chrome's exact form. (#18)
+- `test-impact` places a demo's test reached by import by its folder, as it
+  places a demo's files, not php2shell's alone; the study's CI row is
+  `demo:google-privacy-2026-10-16`, by that rule. (#16)
 - CI runs once per change: on pushes to main only, so a pull request no
   longer runs twice (once for its branch's push, once for the pull
   request), and a newer commit on a pull request cancels the run it
@@ -236,6 +340,15 @@ says how). The first was v0.1.0.
 - The changelog check skips Dependabot's pull requests, which can't write
   an entry; its updates aren't listed. The GitHub add-on's check fails if
   it skips anyone else. (#9)
+
+### Fixed
+
+- `kernel.words` composes text (NFC) before it splits it, so an é saved as
+  e and a combining accent, as macOS often saves it, holds the é a person
+  types; before, it split into "cafe" and a stray mark, and the question
+  found nothing. The three ports compose by tables `vectors/gen.py` reads
+  out of Python, so no runtime's Unicode version decides a word, and the
+  vectors hold every composed character decomposed. (#33)
 
 ## v0.1.0 · 2026-10-23
 

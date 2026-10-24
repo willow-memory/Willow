@@ -5,7 +5,7 @@ the repo ever disagree. [README.md](README.md) shows the top of it.
 
 ```
 willow/
-├── kernel.py                 the whole program (about 910 lines)
+├── kernel.py                 the whole program (about 1,010 lines)
 ├── test_kernel.py            its tests
 ├── test_docs.py              holds every doc to the files that exist, and the trees to the repo
 ├── test_docs_fires.py        plants a violation for each docs check and makes sure it fails
@@ -44,6 +44,10 @@ willow/
 │   ├── README.md             the rules every add-on follows
 │   ├── planned.json          the add-ons not built yet, as this README lists them
 │   ├── stdlib/               add-ons that need nothing beyond Python
+│   │   ├── advisories/
+│   │   │   ├── advisories.py locked dependencies matched to a downloaded OSV advisory database, offline
+│   │   │   ├── test_advisories.py
+│   │   │   └── README.md
 │   │   ├── again/
 │   │   │   ├── again.py      the questions you keep asking, counted from the record
 │   │   │   ├── test_again.py
@@ -98,9 +102,17 @@ willow/
 │   │   │   ├── ci_why.py     the failing block of a red CI log, plain: the test, the assertion, the line to act on
 │   │   │   ├── test_ci_why.py
 │   │   │   └── README.md
+│   │   ├── claim-check/
+│   │   │   ├── claim_check.py  a claim, part by part: what holds it all, some of it, and what no file names
+│   │   │   ├── test_claim_check.py
+│   │   │   └── README.md
 │   │   ├── claude-code/
 │   │   │   ├── hook.py           Claude Code's prompt hook: cited passages at each prompt; setup prints it
 │   │   │   ├── test_hook.py
+│   │   │   └── README.md
+│   │   ├── clauses/
+│   │   │   ├── clauses.py    a long document as one sentence a passage, and a sentence-by-sentence diff
+│   │   │   ├── test_clauses.py
 │   │   │   └── README.md
 │   │   ├── codex-cli/
 │   │   │   ├── codex_cli.py      the config.toml lines that register mcp-lite with Codex CLI
@@ -159,9 +171,29 @@ willow/
 │   │   │   ├── history.py    your record in plain sentences, places and counts, never the words
 │   │   │   ├── test_history.py
 │   │   │   └── README.md
+│   │   ├── hook-fail-closed/
+│   │   │   ├── hook_fail_closed.py a hook that crashes, hangs or says what can't be read blocks the tool
+│   │   │   ├── test_hook_fail_closed.py
+│   │   │   └── README.md
+│   │   ├── hook-fuzz/
+│   │   │   ├── hook_fuzz.py      bad input thrown at a hook, and each one that breaks it named
+│   │   │   ├── test_hook_fuzz.py
+│   │   │   └── README.md
+│   │   ├── hook-pin/
+│   │   │   ├── hook_pin.py       a hook runs only as the bytes you approved, pinned on the record
+│   │   │   ├── test_hook_pin.py
+│   │   │   └── README.md
+│   │   ├── hook-replay/
+│   │   │   ├── hook_replay.py    every hook answer a row of hashes, and each one run again
+│   │   │   ├── test_hook_replay.py
+│   │   │   └── README.md
 │   │   ├── horoscope/
 │   │   │   ├── horoscope.py  a daily reading picked by the SHA-256 of name and date
 │   │   │   ├── test_horoscope.py
+│   │   │   └── README.md
+│   │   ├── install-scripts/
+│   │   │   ├── install_scripts.py  the install scripts node_modules would run (preinstall, install, postinstall), by file and line
+│   │   │   ├── test_install_scripts.py
 │   │   │   └── README.md
 │   │   ├── jetbrains/
 │   │   │   ├── jetbrains.py      an external tool for JetBrains IDEs: answers as links to file and line
@@ -186,6 +218,10 @@ willow/
 │   │   ├── mcp-lite/
 │   │   │   ├── server.py         the mcp add-on's three tools, the protocol by hand, nothing to install
 │   │   │   ├── test_server.py
+│   │   │   └── README.md
+│   │   ├── misquote/
+│   │   │   ├── misquote.py   a quote almost in your files: the closest passage, and what differs
+│   │   │   ├── test_misquote.py
 │   │   │   └── README.md
 │   │   ├── mutants/
 │   │   │   ├── mutants.py    breaks each add-on's code on purpose and checks its tests notice
@@ -212,6 +248,14 @@ willow/
 │   │   │   ├── opencode.py       the opencode.json lines that register mcp-lite with OpenCode
 │   │   │   ├── test_opencode.py
 │   │   │   └── README.md
+│   │   ├── outdated/
+│   │   │   ├── outdated.py   how old each locked dependency is, and which are yanked, deprecated or unmaintained
+│   │   │   ├── test_outdated.py
+│   │   │   └── README.md
+│   │   ├── pins/
+│   │   │   ├── pins.py       version ranges in package.json or requirements.txt that no lockfile pins
+│   │   │   ├── test_pins.py
+│   │   │   └── README.md
 │   │   ├── pipe/
 │   │   │   ├── pipe.py           questions in, one answer a line out: JSON lines, or grep's file:line: text
 │   │   │   ├── test_pipe.py
@@ -219,6 +263,10 @@ willow/
 │   │   ├── plain/
 │   │   │   ├── plain.py      the kernel's answer as sentences
 │   │   │   ├── test_plain.py
+│   │   │   └── README.md
+│   │   ├── policy-watch/
+│   │   │   ├── policy_watch.py  a policy page fetched each run, and what changed since, sentence by sentence
+│   │   │   ├── test_policy_watch.py
 │   │   │   └── README.md
 │   │   ├── print/
 │   │   │   ├── print.py      an answer as a page to print, with its sources; --large for big type
@@ -256,6 +304,10 @@ willow/
 │   │   │   ├── secrets_audit.py passwords, keys and card numbers in plain files, by file and line
 │   │   │   ├── test_secrets_audit.py
 │   │   │   └── README.md
+│   │   ├── session-seal/
+│   │   │   ├── session_seal.py one seal over a session's rows, proposed through the kernel
+│   │   │   ├── test_session_seal.py
+│   │   │   └── README.md
 │   │   ├── shell/
 │   │   │   ├── shell.py          a willow command and tab completion for bash, zsh, fish, PowerShell and cmd
 │   │   │   ├── test_shell.py
@@ -267,6 +319,10 @@ willow/
 │   │   ├── slow-tests/
 │   │   │   ├── slow_tests.py each test's time over several runs, the slowest named, any that got slower flagged
 │   │   │   ├── test_slow_tests.py
+│   │   │   └── README.md
+│   │   ├── snapshot/
+│   │   │   ├── snapshot.py   a page or file fetched once, with its address, time and SHA-256
+│   │   │   ├── test_snapshot.py
 │   │   │   └── README.md
 │   │   ├── stale/
 │   │   │   ├── stale.py      approved answers whose cited passage changed or went
@@ -301,6 +357,10 @@ willow/
 │   │   │   ├── todo.py       things marked to do, oldest first
 │   │   │   ├── test_todo.py
 │   │   │   └── README.md
+│   │   ├── typosquat/
+│   │   │   ├── typosquat.py  dependency names a letter off a popular one, checked against a top-packages list
+│   │   │   ├── test_typosquat.py
+│   │   │   └── README.md
 │   │   ├── vim/
 │   │   │   ├── vim.py            a :Willow command: answers in the quickfix list
 │   │   │   ├── test_vim.py
@@ -308,6 +368,14 @@ willow/
 │   │   ├── vscode/
 │   │   │   ├── vscode.py         a VS Code task: answers in the Problems panel
 │   │   │   ├── test_vscode.py
+│   │   │   └── README.md
+│   │   ├── wayback/
+│   │   │   ├── wayback.py    the Wayback Machine's copy of a page, saved and compared byte for byte
+│   │   │   ├── test_wayback.py
+│   │   │   └── README.md
+│   │   ├── web-pages/
+│   │   │   ├── web_pages.py  saved .html and .mhtml as their paragraphs, under the address they came from
+│   │   │   ├── test_web_pages.py
 │   │   │   └── README.md
 │   │   ├── windsurf/
 │   │   │   ├── windsurf.py       the mcp_config.json lines that register mcp-lite with Windsurf
@@ -347,6 +415,12 @@ willow/
 │   │       └── README.md
 │   └── deps/                 add-ons that need something installed
 │       ├── README.md         what one must declare: pins, floors, licences, network
+│       ├── latent/
+│       │   ├── latent.py     ranks a scan index by meaning (TF-IDF + SVD), offline
+│       │   ├── requirements.txt  numpy, pinned
+│       │   ├── requirements-floor.txt  numpy at its floor, also tested
+│       │   ├── test_latent.py
+│       │   └── README.md
 │       ├── mcp/
 │       │   ├── server.py     your folder for any MCP client: ask and suggest, never approve
 │       │   ├── requirements.txt  mcp, pinned
@@ -372,7 +446,7 @@ willow/
 │       └── Kernel.csproj
 ├── vectors/                  what keeps the four implementations identical
 │   ├── gen.py                reads the test cases out of kernel.py
-│   ├── cases.json            4,463 cases, with the answers kernel.py gives
+│   ├── cases.json            4,668 cases, with the answers kernel.py gives
 │   ├── kernel_tables.json    Python's Unicode and HTML rules, so ports don't use their own
 │   ├── compare.py            runs every port against the cases and each other's logs
 │   ├── test_vectors.py       fails if the cases are stale or a port disagrees
@@ -380,7 +454,7 @@ willow/
 ├── docs/
 │   ├── tour.md               the first five minutes, in full: a question, a gap, her words, an approval
 │   └── how-it-works.md       what it reads, how it ranks, the key, the record, approvals
-├── demo/                     three made-up people, and one real bug, to try it on
+├── demo/                     four made-up people, a real bug and a real policy change, to try it on
 │   ├── odile/                piano tuner and beekeeper, caring for her father
 │   │   ├── make_life.py      writes her files into life/, the same bytes every run
 │   │   ├── CHARACTER.md      who she is and how her life is written down
@@ -399,35 +473,60 @@ willow/
 │   │   ├── PLANTED.md
 │   │   ├── QUESTIONS.md
 │   │   └── STRIP.md
-│   └── php2shell/            a real bug: the PHP2Shell result, tested seven ways
-│       ├── README.md         the claim, the threats, what is frozen, each phase's results
+│   ├── bernadette/           built blind, in her apps' raw formats, and run through the whole stack
+│   │   ├── make_life.py      her mail, calendars, chats, vault, office files, Kindle and PDFs, the same bytes every run
+│   │   ├── CHARACTER.md
+│   │   ├── PLANTED.md        written by make_life.py --planted, from the table --check holds
+│   │   ├── QUESTIONS.md
+│   │   ├── STRIP.md          what each need came to, and what each layer of the stack did
+│   │   ├── stack.py          her files through every reader, start, the finders, privacy, an MCP assistant, and the trust add-ons
+│   │   └── test_stack.py     holds the stack to the states STRIP.md scores
+│   ├── php2shell/            a real bug: the PHP2Shell result, tested seven ways
+│   │   ├── README.md         the claim, the threats, what is frozen, each phase's results
+│   │   ├── FROZEN.json       the SHA-256 of each frozen file, and of the tools when frozen
+│   │   ├── releases.json     PHP's releases and the security commits, pinned by hash
+│   │   ├── make_trees.py     fetches them from php-src, and checks them without git
+│   │   ├── score.py          the frozen hit rule: did a passage land on the fix?
+│   │   ├── score2.py         the second hit rule: also an added run's neighbouring lines
+│   │   ├── phase2.py         the null tests: random draws, null questions, wrong pairs, baselines
+│   │   ├── phase1.py         the blind questions, under both rules, ranked by the kernel and BM25
+│   │   ├── phase3.py         out of sample: seven other CVEs, fetched as git stores them, asked blind
+│   │   ├── phase3.json       those CVEs' releases and fix commits, pinned by hash
+│   │   ├── phase4.py         before the fix: the whole release, ranked three ways, recall at k
+│   │   ├── phase5.py         robustness: rewording, top-k, a words list, and leakage
+│   │   ├── phase6.py         reproducibility: every release, five Pythons, four kernels, a second labeller
+│   │   ├── pipeline.py       the whole method in one command: index, changed-from, rank three ways, score
+│   │   ├── hold.py           not frozen: the kernel's hold rule against looser ones, on phase 3's CVEs
+│   │   ├── test_php2shell.py holds the frozen files to their hashes, and the tools to their word
+│   │   ├── results/
+│   │   │   └── phase6-labels.json  the independent labellers' yes or no, item by item
+│   │   └── questions/
+│   │       ├── author.txt    the first look's eight questions, labelled as the author's
+│   │       ├── blind-a.txt   eight written blind, as a security engineer, from the advisories
+│   │       ├── blind-b.txt   eight written blind, as a sysadmin, from one news article
+│   │       ├── blind-c.txt   eight written blind, as terse keywords, from the advisories
+│   │       ├── phase3.txt    eight a CVE for phase 3's seven, written blind
+│   │       ├── reword.txt     the author's eight, rephrased five ways each, blind
+│   │       ├── advisory-words.txt  a words list of acronyms the advisories expand
+│   │       └── null.txt      fifty questions with nothing to do with the bug
+│   └── google-privacy-2026-10-16/  a real policy change: what Google's text says against what the news said
+│       ├── README.md         the claim, the threats, what is frozen, how to reproduce, the results
 │       ├── FROZEN.json       the SHA-256 of each frozen file, and of the tools when frozen
-│       ├── releases.json     PHP's releases and the security commits, pinned by hash
-│       ├── make_trees.py     fetches them from php-src, and checks them without git
-│       ├── score.py          the frozen hit rule: did a passage land on the fix?
-│       ├── score2.py         the second hit rule: also an added run's neighbouring lines
-│       ├── phase2.py         the null tests: random draws, null questions, wrong pairs, baselines
-│       ├── phase1.py         the blind questions, under both rules, ranked by the kernel and BM25
-│       ├── phase3.py         out of sample: seven other CVEs, fetched as git stores them, asked blind
-│       ├── phase3.json       those CVEs' releases and fix commits, pinned by hash
-│       ├── phase4.py         before the fix: the whole release, ranked three ways, recall at k
-│       ├── phase5.py         robustness: rewording, top-k, a words list, and leakage
-│       ├── phase6.py         reproducibility: every release, five Pythons, four kernels, a second labeller
-│       ├── test_php2shell.py holds the frozen files to their hashes, and the tools to their word
-│       ├── results/
-│       │   └── phase6-labels.json  the independent labellers' yes or no, item by item
+│       ├── sources.json      each source fetched, with its address, time and SHA-256
+│       ├── fetch.py          saves the sources into a pile once, and checks them offline
+│       ├── targets.json      the frozen hit rule: the clauses a question lands on, and what supports a claim
+│       ├── study.py          every phase and pass rule: the versions, the changes, nulls, blind, absence
+│       ├── test_google_privacy.py holds the frozen files to their hashes, and the rules to their word
 │       └── questions/
-│           ├── author.txt    the first look's eight questions, labelled as the author's
-│           ├── blind-a.txt   eight written blind, as a security engineer, from the advisories
-│           ├── blind-b.txt   eight written blind, as a sysadmin, from one news article
-│           ├── blind-c.txt   eight written blind, as terse keywords, from the advisories
-│           ├── phase3.txt    eight a CVE for phase 3's seven, written blind
-│           ├── reword.txt     the author's eight, rephrased five ways each, blind
-│           └── advisory-words.txt  a words list of acronyms the advisories expand
-│           └── null.txt      fifty questions with nothing to do with the bug
+│           ├── reporters.txt   the reporting's claim, in the reporters' own words
+│           ├── claims.txt      "Google scans Gmail for ads", as the reporting words it
+│           ├── policy-quotes.txt  the policy as each report quotes it
+│           ├── blind-reporters.txt  the reporters' lines, reworded three ways, blind
+│           ├── blind-claims.txt     the claims, reworded three ways, blind
+│           └── null.txt        thirty questions about the policy with nothing to do with ads
 ├── .github/
 │   ├── workflows/
-│   │   ├── ci.yml            runs adapters/stdlib/ci/ci.py one part a job, tests on Python 3.9 to 3.14
+│   │   ├── ci.yml            runs adapters/stdlib/ci/ci.py a part or a cut of one a job, tests on Python 3.9 to 3.14
 │   │   ├── law.yml           every Monday, the law's check: an expired emergency amendment fails it
 │   │   └── security.yml      posts the github add-on's comment on a security report
 │   ├── ISSUE_TEMPLATE/

@@ -122,7 +122,7 @@ def test_the_steps_are_ordered_cheapest_first(plan_of):
     got = plan_of("adapters/stdlib/changed/changed.py").stdout
     order = [g for g in gate_names(got)]
     assert order == ["lint:check", "lint:format", "tests:adapters", "tests:adapters",
-                     "tests:docs", "mutants:changed"]  # fmt: skip
+                     "tests:docs", "demo:stack", "mutants:changed"]  # fmt: skip
     narrow, own = (
         "WILLOW_ONLY=changed pytest",
         "pytest adapters/stdlib/changed/test_changed.py",
@@ -181,9 +181,26 @@ def test_other_gates_are_named_in_ci_terms(plan_of):
     assert "tests:kernel" in plan_of("test_kernel.py").stdout
 
 
+def test_the_stack_demo_and_every_add_on_it_runs_plan_its_gate(plan_of):
+    """stack.py runs add-ons as processes, which the import graph can't see."""
+    assert imp.stacked() >= {"mail", "start", "mcp-lite", "session-seal", "pdf"}
+    for path in ("demo/bernadette/STRIP.md", "adapters/stdlib/mail/mail.py",
+                 "adapters/deps/pdf/pdf.py", "adapters/stdlib/start/start.py"):  # fmt: skip
+        assert "demo:stack" in gate_names(plan_of(path).stdout), path
+    for path in ("adapters/stdlib/dice/dice.py", "adapters/stdlib/mail/README.md"):
+        assert "demo:stack" not in gate_names(plan_of(path).stdout), path
+
+
 def test_a_deps_add_on_is_its_two_gates(plan_of):
     got = plan_of("adapters/deps/pdf/pdf.py").stdout
     assert "deps:pdf:" in got and "deps:pdf@floor:" in got
+
+
+def test_a_demo_test_that_imports_the_change_is_its_demos_gate(plan_of):
+    """demo/google-privacy-2026-10-16's test reaches the pdf add-on through
+    its study; any demo, not php2shell alone, is placed by its folder."""
+    got = plan_of("adapters/deps/pdf/pdf.py").stdout
+    assert "demo:google-privacy-2026-10-16:" in got and "couldn't place" not in got
 
 
 def test_every_gate_a_plan_names_is_a_gate_ci_has(plan_of):

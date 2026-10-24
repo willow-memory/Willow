@@ -180,6 +180,49 @@ def test_the_repos_github_folder_holds():
             "group: ci",
             "doesn't cancel",
         ),
+        # ci.py's gates cut between jobs, each run by exactly one of them
+        (
+            ".github/workflows/ci.yml",
+            "run tests --without tests:strip --box",
+            "run tests --box",
+            "tests:strip more than once",
+        ),  # fmt: skip
+        (
+            ".github/workflows/ci.yml",
+            "run tests:strip --box",
+            "run tests:kernel --box",
+            "tests:kernel more than once",
+        ),  # fmt: skip
+        (
+            ".github/workflows/ci.yml",
+            "run tests:strip --box",
+            "run tests:strpi --box",
+            "what it refuses",
+        ),  # fmt: skip
+        (
+            ".github/workflows/ci.yml",
+            "        shard: [1, 2, 3, 4]\n",
+            "        shard: [1, 2, 3]\n",
+            "in no job",
+        ),  # fmt: skip
+        (
+            ".github/workflows/ci.yml",
+            "--shard ${{ matrix.shard }}/4",
+            "--shard ${{ matrix.shard }}/5",
+            "in no job",
+        ),  # fmt: skip
+        (
+            ".github/workflows/ci.yml",
+            "--shard ${{ matrix.shard }}/4",
+            "--shard 1/4",
+            "more than once",
+        ),  # fmt: skip
+        (
+            ".github/workflows/ci.yml",
+            '"3.14"]\n    steps:\n      - uses: actions/checkout@v7\n      - uses: actions/setup-python@v7\n        with:\n          python-version: ${{ matrix.python-version }}\n      - run: pip install pytest\n      - run: python adapters/stdlib/ci/ci.py run tests:strip',  # fmt: skip
+            '"3.13"]\n    steps:\n      - uses: actions/checkout@v7\n      - uses: actions/setup-python@v7\n        with:\n          python-version: ${{ matrix.python-version }}\n      - run: pip install pytest\n      - run: python adapters/stdlib/ci/ci.py run tests:strip',  # fmt: skip
+            "Python matrices differ",
+        ),
         # CONST-VIII-2: the weekly run that reaches a person when an
         # emergency amendment expires in a quiet repo
         (".github/workflows/law.yml", "  schedule:\n", "  scheduled:\n", "law.yml"),

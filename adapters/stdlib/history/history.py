@@ -82,6 +82,8 @@ def sentences(box: Path, rows: list[dict]) -> list[tuple[str, str]]:
                 said = f"A suggestion was turned away at the door: {r.get('why', 'no reason kept')}."
         elif kind == "seal":
             said = f"You approved the suggestion for {proposal_path(box, r.get('subject', ''))}."
+        elif kind == "decline":
+            said = f"You turned down the suggestion for {proposal_path(box, r.get('subject', ''))}."
         elif kind == "out":
             n = r.get("waiting", 0)
             said = ("You looked at what was waiting: "

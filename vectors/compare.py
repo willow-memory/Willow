@@ -8,7 +8,7 @@ number to read:
 1. **vectors.** The port answers `cases.json` (`<port> vectors cases.json
    results.json`); every answer is lined up against kernel.py's.
 2. **sessions.** The same scripted session (init, bites, proposals, a seal,
-   out, verify, a forged seal, an edit) run through kernel.py's command line
+   a decline, out, verify, a forged seal and a forged decline, an edit) run through kernel.py's command line
    and the port's, on the same paths with the same key, so each box is
    directly comparable: exit codes, what the person was shown, kernel.json,
    proposal files, and every record row but `version`, `hash`, `prev` and
@@ -319,6 +319,13 @@ def session(impl, root: Path) -> dict:
     step("out", *b)
     step("verify", *b)
     step("seal", *b, "proposal:" + "0" * 64)  # not a proposal here
+    step("decline", *b, k.subject_of(unsealed))  # the person's No
+    step("out", *b)  # no longer waiting
+    step("seal", *b, k.subject_of(unsealed))  # refused: declined
+    step("decline", *b, k.subject_of(unsealed))  # refused: declined already
+    step("decline", *b, k.subject_of(good))  # refused: sealed
+    step("decline", *b, "proposal:" + "0" * 64)  # not a proposal here
+    step("verify", *b)
     return {"shown": shown, "box": box, "key": key}
 
 
@@ -329,6 +336,9 @@ def forge_and_edit(impl, box: Path) -> list:
     fake = next(r["subject"] for r in reversed(rows) if r.get("verdict") == "pass")
     k.append(box, TS, "seal", who="human", subject=fake, proof="0" * 64)
     out = [["forged", *run(impl, "verify", *b)]]
+    good = next(r["subject"] for r in rows if r["kind"] == "seal")
+    k.append(box, TS, "decline", who="human", subject=good, proof="0" * 64)
+    out.append(["forged no", *run(impl, "verify", *b)])
     path = box / "record.jsonl"
     path.write_bytes(
         path.read_bytes().replace(b'"verdict":"pass"', b'"verdict":"fail"', 1)

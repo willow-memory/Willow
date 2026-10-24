@@ -10,6 +10,14 @@ where it falls short today, and a fix is welcome.
   its card says where and why.
 - **It doesn't make up an answer.** No model writes one; when your files
   don't hold it, it says so (exit 42).
+- **It answers; it doesn't point.** A passage is served only when it holds
+  half your question's words, so a long or roundabout question can find
+  nothing where a looser search would point at the right file. Pointing at
+  where to look is `scan --rank bm25`, which always serves its top passages:
+  on demo/php2shell's out-of-sample CVEs it found 7 of 7 to the kernel's 1.
+  Loosening the kernel's rule found a few more there but answered questions
+  about other bugs several times as often (`demo/php2shell/hold.py`; its
+  table is in that study's README).
 - **It doesn't approve anything itself.** Suggestions wait until a person
   approves them with their key.
 - **It doesn't keep your words.** The record holds fingerprints and places,
@@ -28,15 +36,9 @@ where it falls short today, and a fix is welcome.
   Portuguese common words aside before a question reaches it; other
   languages keep every word. Word forms are English's only, and words in
   other scripts are matched only as written.
-- **A suggestion can't be turned down.** It waits until you approve it, for
-  as long as it takes: the kernel has no verb that says no, so `out` and
-  the browse page list it forever. A `decline` verb, a row as plain as a
-  seal, would need the vectors and the ports to follow.
 - **No index, so time grows with the size of the folder.** On Odile's
   folder a question takes about a quarter of a second; a very large folder
   would want an index, in an add-on.
-- **One writer at a time on Windows.** File locking uses `fcntl`, which
-  Windows doesn't have.
 
 A shortfall with a test that shows it is a known bug, and is listed in
 [BUGS.md](BUGS.md).

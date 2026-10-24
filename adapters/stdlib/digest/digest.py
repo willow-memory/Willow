@@ -57,11 +57,11 @@ def section(items: list, why: str = "") -> dict:
 
 
 def waiting(box: Path, rows: list[dict]) -> dict:
-    good = kernel.sealed(box, rows)
+    done = {**kernel.sealed(box, rows), **kernel.declined(box, rows)}
     items = []
     for r in rows:
         subj = r.get("subject", "")
-        if r["kind"] == "proposal" and r.get("verdict") == "pass" and subj not in good:
+        if r["kind"] == "proposal" and r.get("verdict") == "pass" and subj not in done:
             try:
                 prop = json.loads((box / "proposals" / f"{subj[9:]}.json").read_text())
             except (OSError, ValueError):
