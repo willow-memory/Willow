@@ -487,6 +487,18 @@ def test_word_forms_are_one_word(tmp_path):
     assert k.rank(k.chunks(tmp_path), "how much do I still owe dev")
 
 
+def test_an_accent_typed_one_way_holds_where_it_was_saved_the_other(tmp_path):
+    """é is one code point as typed, and often e plus a combining accent as
+    macOS saves it. Unmixed, the saved é split into "cafe" and a stray mark,
+    and the question found nothing; both are composed (NFC) before words."""
+    composed, apart = "Caf\u00e9 Lumi\u00e8re", "Cafe\u0301 Lumie\u0300re"
+    assert k.words(apart) == k.words(composed) == ["café", "lumière"]
+    (tmp_path / "plans.md").write_text(f"Friday: meet Ana at {apart}, 8pm.\n")
+    (tmp_path / "other.md").write_text("Saturday: the market on Rue Cler.\n")
+    got = k.rank(k.chunks(tmp_path), "when is the meeting at Caf\u00e9 Lumi\u00e8re")
+    assert [c["path"] for c in got] == ["plans.md"]
+
+
 def test_a_day_and_month_either_way_round_only_when_it_cant_be_misread():
     """Teodora's chats are dd/mm/yyyy; 11/03/2023 could be either, and the
     kernel never guesses."""

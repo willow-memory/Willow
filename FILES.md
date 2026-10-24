@@ -5,7 +5,7 @@ the repo ever disagree. [README.md](README.md) shows the top of it.
 
 ```
 willow/
-├── kernel.py                 the whole program (about 1,000 lines)
+├── kernel.py                 the whole program (about 1,010 lines)
 ├── test_kernel.py            its tests
 ├── test_docs.py              holds every doc to the files that exist, and the trees to the repo
 ├── test_docs_fires.py        plants a violation for each docs check and makes sure it fails
@@ -368,7 +368,7 @@ willow/
 │       └── Kernel.csproj
 ├── vectors/                  what keeps the four implementations identical
 │   ├── gen.py                reads the test cases out of kernel.py
-│   ├── cases.json            4,463 cases, with the answers kernel.py gives
+│   ├── cases.json            4,668 cases, with the answers kernel.py gives
 │   ├── kernel_tables.json    Python's Unicode and HTML rules, so ports don't use their own
 │   ├── compare.py            runs every port against the cases and each other's logs
 │   ├── test_vectors.py       fails if the cases are stale or a port disagrees
