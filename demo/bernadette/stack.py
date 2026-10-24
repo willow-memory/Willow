@@ -75,7 +75,11 @@ class Run:
         got = subprocess.run([sys.executable, str(script), *args], input=stdin,
                              capture_output=True, text=True, cwd=ROOT)  # fmt: skip
         state = STATE.get(got.returncode, f"exit {got.returncode}")
-        if "ModuleNotFoundError" in got.stderr:  # a deps add-on, not installed
+        # a deps add-on not installed: it refuses and names the install, never
+        # skips (pdf's card), so that refusal is the stack's unreachable
+        if "ModuleNotFoundError" in got.stderr or (
+            got.returncode == 2 and "pip install" in got.stderr
+        ):
             state = "unreachable"
         said = summary(name, got.stdout, got.stderr)
         self.steps.append({"part": part, "piece": name, "args": [
