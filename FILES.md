@@ -167,6 +167,10 @@ willow/
 │   │   │   ├── jetbrains.py      an external tool for JetBrains IDEs: answers as links to file and line
 │   │   │   ├── test_jetbrains.py
 │   │   │   └── README.md
+│   │   ├── lending/
+│   │   │   ├── lending.py    what you lent, and what your files say came back
+│   │   │   ├── test_lending.py
+│   │   │   └── README.md
 │   │   ├── life/
 │   │   │   ├── life.py       Conway's Game of Life as one row; check plays it again
 │   │   │   ├── test_life.py

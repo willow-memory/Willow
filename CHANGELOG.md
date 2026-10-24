@@ -27,6 +27,10 @@ says how). The first was v0.1.0.
   sources are fetched once and kept by hash, not in the repo; CI checks only
   that the frozen files still match. Three ideas from it go on the list:
   `claim-check`, `misquote` and `policy-watch`. (#16)
+- `lending`, what you lent, to whom and when, and which are still out: a
+  thing in parts is out until every part is back, a loan with no return
+  line is "no return written", and a line's own date and its file's are
+  both shown when they differ. (#27)
 - `contradictions`, two lines saying the same thing with a different date
   or amount, side by side, each cited, neither picked. Two lines are about
   the same thing when they share two words and half the shorter's; records

@@ -109,6 +109,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "surprise": ("surprise.py", ["--box", "{box}", *NOW]),
     "todo": ("todo.py", ["--box", "{box}"]),
     "contradictions": ("contradictions.py", ["--box", "{box}"]),
+    "lending": ("lending.py", ["--box", "{box}"]),
     "browse": ("browse.py", ["launcher", "--box", "{box}"]),
     "digest": ("digest.py", ["--box", "{box}", *NOW]),
     **{f"words-{c}": (f"words_{c}.py", ["bite", "--box", "{box}", *NOW, "tomatoes"])
