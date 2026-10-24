@@ -117,6 +117,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "xref": ("xref.py", ["--box", "{box}"]),
     "print": ("print.py", ["--box", "{box}", "--to", "{tmp}/page.html", *NOW, "tomatoes"]),
     "start": ("start.py", ["--pile", "{pile}", "--to", "{tmp}/willow"]),
+    "test-shards": ("shards.py", ["--shards", "2", "--tests", "{pile}/garden.md"]),
     **{name: (script, ["mirror", "--from", "{pile}", "--to", "{tmp}/mirror"])
        for name, (script, _) in READERS.items()},
 }  # fmt: skip
@@ -141,7 +142,7 @@ def test_every_add_on_a_person_runs_is_listed_here():
     run_by_people = {
         p.parent.name for p in STDLIB.glob("*/*.py")
         if "__main__" in p.read_text(encoding="utf-8") and not p.name.startswith("test_")
-    } - {"ci", "readme", "similar", "mutants", "github", "test-shards"}  # fmt: skip
+    } - {"ci", "readme", "similar", "mutants", "github"}  # fmt: skip
     assert run_by_people == set(COMMANDS)
 
 
