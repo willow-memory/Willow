@@ -17,7 +17,7 @@ says how). The first was v0.1.0.
   reader, `start`, the look-ahead add-ons, her twenty questions, `privacy`,
   an assistant over `mcp-lite`, and, once she seals, `stale`, `export`,
   `session-seal`, `backup`, `diverge` and `verify`. CI runs it as
-  `demo:stack`; STRIP.md scores it, misses included.
+  `demo:stack`; STRIP.md scores it, misses included. (#34)
 - `session-seal`, an add-on that bundles a session's rows, by number,
   kind and hash and never their words, and proposes the bundle through the
   kernel's own bite and propose, so it waits on the person's seal like any
