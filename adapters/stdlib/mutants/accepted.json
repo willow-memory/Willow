@@ -18,6 +18,9 @@
   "cursor": {
     "1786b40184a1": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
   },
+  "dice": {
+    "080cb53ea56e": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
+  },
   "diverge": {
     "034127892304": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
   },

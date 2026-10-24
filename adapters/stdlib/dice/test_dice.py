@@ -108,3 +108,11 @@ def test_dice_it_cant_read_and_a_bad_command_line_are_refused(tmp_path):
     rec = b / "record.jsonl"
     rec.write_bytes(rec.read_bytes().replace(b'"boot"', b'"booT"', 1))
     assert "doesn't verify" in run("--box", str(b), "check").stderr
+
+
+def test_one_roll_is_said_as_one(tmp_path):
+    b = make(tmp_path)
+    run("--box", str(b), "roll", "1d6", *NOW)
+    assert (
+        "1 roll on the record; every one holds." in run("--box", str(b), "check").stdout
+    )
