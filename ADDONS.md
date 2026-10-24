@@ -18,15 +18,15 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`████░░░░░░░░░░░░░░░░` **73 of 415 built** · 366 need no install · 49 need one
+`████░░░░░░░░░░░░░░░░` **76 of 419 built** · 370 need no install · 49 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
-| Reading more kinds of files | 7 | 96 | 95 | 8 |
-| Finding things | 5 | 27 | 23 | 9 |
+| Reading more kinds of files | 9 | 95 | 96 | 8 |
+| Finding things | 5 | 28 | 24 | 9 |
 | Your own words | 7 | 17 | 21 | 3 |
-| Keeping track | 7 | 48 | 55 | 0 |
-| Trust and proof | 9 | 34 | 34 | 9 |
+| Keeping track | 7 | 49 | 56 | 0 |
+| Trust and proof | 10 | 34 | 35 | 9 |
 | Privacy and safety | 2 | 11 | 13 | 0 |
 | Assistants | 11 | 17 | 22 | 6 |
 | Ways to use it | 10 | 27 | 33 | 4 |
@@ -47,9 +47,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ### Add-on of the week
 
 <!-- willow:pick week=2026-W43 -->
-**[opencode](adapters/stdlib/opencode/)** — OpenCode asks your folder and hands in suggestions, through the mcp add-on.
+**[mcp](adapters/deps/mcp/)** — Lets any MCP client, such as an AI assistant or editor, ask your folder and hand in suggestions.
 
-*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 73 built add-ons in name order.*
+*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 76 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -73,6 +73,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - [**chats**](adapters/stdlib/chats/) — WhatsApp and Telegram exports, one dated line per message. *new* `no-install` `offline` `writes-output` `file-reader`
 - **chordpro** (idea) — ChordPro song sheets: titles, lyrics and chords, so you can ask which song had that line. *new* `no-install` `offline` `writes-output` `file-reader`
 - **ci-logs** (idea) — CI run logs you downloaded (GitHub Actions, GitLab CI, Forgejo Actions): each failing step as a passage, so you can ask when a test last failed. *new* `no-install` `offline` `writes-output` `file-reader`
+- [**clauses**](adapters/stdlib/clauses/) — A policy, contract or set of terms as one sentence a passage, so an answer lands on the clause, and what changed between two versions, sentence by sentence. *new* `no-install` `offline` `writes-output` `file-reader` `policies`
 - **code-comments** (idea) — A codebase's comments and docstrings as passages, cited by file and line. *new* `no-install` `offline` `writes-output` `file-reader`
 - **codebase-memory** (idea) — codebase-memory-mcp's code graph, read from a copy of its SQLite file: each function, what calls it, and its file and line. *new* `no-install` `offline` `writes-output` `file-reader`
 - **confluence** (idea) — A Confluence space's HTML export as plain text, page by page. *new* `no-install` `offline` `writes-output` `file-reader`
@@ -148,7 +149,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - **sigmap** (idea) — SigMap's signature map of a codebase as plain text: each function's signature with its file and line, for questions about the code. *new* `no-install` `offline` `writes-output` `file-reader`
 - **signal** (idea) — A Signal backup, decrypted with its passphrase, as one dated line per message. Needs cryptography; Apache-2.0 or BSD. *new* `needs-install` `offline` `writes-output` `file-reader`
 - **slack** (idea) — Slack's export zip: one dated line per message, with channel and author. *new* `no-install` `offline` `writes-output` `file-reader`
-- **snapshot** (idea) — A web page or data file fetched once into the box, kept under its hash with its licence, so later answers cite the copy. Goes online: the address you give, fetched once. *bot* `no-install` `online` `records` `file-reader`
+- [**snapshot**](adapters/stdlib/snapshot/) — A web page or data file fetched once into a folder, as it came, with its address, the time and its SHA-256, so later answers cite the copy. Goes online: the address you give, fetched once. *bot* `no-install` `online` `writes-output` `file-reader` `sources`
 - **steam** (idea) — Your Steam library from its local files: games, playtime and when you last played. *new* `no-install` `offline` `writes-output` `file-reader`
 - **strava** (idea) — Strava's export and GPX files: each run, ride and walk as a dated line with its distance and time. *new* `no-install` `offline` `writes-output` `file-reader`
 - **subtitles** (idea) — Subtitle and transcript files (.vtt, .srt) as lines cited by timestamp, for podcasts and videos already transcribed. *new* `no-install` `offline` `writes-output` `file-reader`
@@ -179,6 +180,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - **index-cache** (idea) — The box's index kept between runs and checked against each file's hash, so a question doesn't re-read the folder. *new* `no-install` `offline` `writes-output` `search`
 - **kiwix** (idea) — An offline Wikipedia (or Stack Exchange, or Gutenberg) as a source after your own files, cited by article. Needs libzim, and a ZIM file you download; GPL-3.0. *new* `needs-install` `offline` `read-only` `search`
 - **meaning** (idea) — Search by meaning: "who owes me money" finds "invoice outstanding". Needs sentence-transformers; Apache-2.0. Goes online: the model, downloaded once from Hugging Face. *new* `needs-install` `online` `writes-output` `search`
+- **misquote** (idea) — A quote that is almost in your files: the closest passage, and the words it adds, drops or changes, so a misquote shows as one. *new* `no-install` `offline` `read-only` `search`
 - **my-lessons** (idea) — Your own lesson plans by grade, subject and standard: what did I teach on fractions last year? *new* `no-install` `offline` `read-only` `search`
 - [**on-this-day**](adapters/stdlib/on-this-day/) — What you wrote on this date in earlier years. *box* `no-install` `offline` `read-only` `search`
 - **people** (idea) — Everyone your files name, and every place each is mentioned. *new* `no-install` `offline` `read-only` `search`
@@ -268,6 +270,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - **oakenscroll** (idea) — Oakenscroll's Office calibration ledger: what you believed, how hard, and how it resolved, as dated passages. *new* `no-install` `offline` `writes-output` `tracking`
 - **outdated** (idea) — How old each locked dependency is, and which are yanked, deprecated or two years without a release, from a registry index you downloaded. *new* `no-install` `offline` `read-only` `tracking`
 - **pets** (idea) — Each pet's vet visits, vaccines and medicines, from your records: what's due next. *new* `no-install` `offline` `read-only` `tracking`
+- **policy-watch** (idea) — A terms or policy page fetched each time you run it, by snapshot, and what changed since last time, sentence by sentence, by clauses. Goes online: the page you name, fetched each time you run it. *new* `no-install` `online` `writes-output` `tracking`
 - **predict** (idea) — Write down what you'll do next before you do it, and grade it after; the record counts how often you were right. *bot* `no-install` `offline` `records` `tracking`
 - **reading-log** (idea) — A child's reading log: books, pages and minutes, week by week. *new* `no-install` `offline` `read-only` `tracking`
 - [**readings**](adapters/stdlib/readings/) — Numbers over time and a date gone by, beside an answer. *box* `no-install` `offline` `records` `tracking`
@@ -290,6 +293,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**backup**](adapters/stdlib/backup/) — Your record in one zip, every byte and the chain checked before it's kept; never beside your key, and it never reads the key. *new* `no-install` `offline` `writes-output` `trust` `everyday`
 - **box-health** (idea) — A box's health in one line: files it can't read, readers out of date, and when the chain was last checked. *new* `no-install` `offline` `read-only` `trust`
 - [**changed**](adapters/stdlib/changed/) — What's new, edited or deleted in your folder since the last check, as fingerprint rows. *bot* `no-install` `offline` `records` `trust` `everyday`
+- **claim-check** (idea) — A claim checked against your sources: the passages that hold all of its parts, the ones that hold only some, and the parts no file names. *new* `no-install` `offline` `read-only` `trust`
 - [**contradictions**](adapters/stdlib/contradictions/) — Two passages that disagree about the same date or amount, side by side. *new* `no-install` `offline` `read-only` `trust`
 - [**diverge**](adapters/stdlib/diverge/) — Where two copies of a folder or a box part, a backup zip included, narrowed to the first row, file and line that differ. *bot* `no-install` `offline` `read-only` `trust` `everyday`
 - **encrypt** (idea) — Keeps the record folder encrypted at rest. Needs cryptography; Apache-2.0 or BSD. *new* `needs-install` `offline` `records` `trust`
@@ -327,7 +331,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - **thesis** (idea) — A thesis's claims, each tied to the source that backs it, and a list of the ones with none. *new* `no-install` `offline` `read-only` `trust`
 - **time-capsule** (idea) — A note sealed now and opened on a date you choose, with the record proving it wasn't changed. *new* `no-install` `offline` `records` `trust`
 - [**timeline**](adapters/stdlib/timeline/) — A dated timeline of one matter (a dispute, an illness, a tenancy), every line cited, to hand to a lawyer, doctor or council. *new* `no-install` `offline` `writes-output` `trust`
-- **wayback** (idea) — Each web snapshot paired with the Wayback Machine's nearest copy, so anyone can see what the page said that day. Goes online: archive.org, to find the nearest archived copy. *new* `no-install` `online` `records` `trust`
+- [**wayback**](adapters/stdlib/wayback/) — The Wayback Machine's copy of a page from a window of days, saved beside your own snapshot and compared with it byte for byte. Goes online: archive.org, to find the archived copy and fetch it. *new* `no-install` `online` `writes-output` `trust` `sources`
 - **witness** (idea) — A second person's seal beside yours, for answers that need two people to agree. *new* `no-install` `offline` `records` `trust`
 - [**xref**](adapters/stdlib/xref/) — Every reference in your files checked: each link to another file, and each quoted line, still there and still saying it. *bot* `no-install` `offline` `read-only` `trust` `everyday`
 

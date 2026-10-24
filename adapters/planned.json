@@ -391,6 +391,16 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
+  "name": "claim-check",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "A claim checked against your sources: the passages that hold all of its parts, the ones that hold only some, and the parts no file names.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, trust"
+ },
+ {
   "name": "claude",
   "kind": "deps",
   "section": "Assistants",
@@ -1781,6 +1791,16 @@
   "tags": "needs-install, online, read-only, trust"
  },
  {
+  "name": "misquote",
+  "kind": "stdlib",
+  "section": "Finding things",
+  "line": "A quote that is almost in your files: the closest passage, and the words it adds, drops or changes, so a misquote shows as one.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, search"
+ },
+ {
   "name": "model-fit",
   "kind": "stdlib",
   "section": "Assistants",
@@ -2194,6 +2214,16 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "policy-watch",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "A terms or policy page fetched each time you run it, by snapshot, and what changed since last time, sentence by sentence, by clauses.",
+  "source": "new",
+  "writes": "to",
+  "network": "the page you name, fetched each time you run it",
+  "tags": "no-install, online, writes-output, tracking"
  },
  {
   "name": "pr-context",
@@ -2799,16 +2829,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "snapshot",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "A web page or data file fetched once into the box, kept under its hash with its licence, so later answers cite the copy.",
-  "source": "bot",
-  "writes": "record",
-  "network": "the address you give, fetched once",
-  "tags": "no-install, online, records, file-reader"
- },
- {
   "name": "socratic",
   "kind": "stdlib",
   "section": "Ways to use it",
@@ -3285,16 +3305,6 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, search"
- },
- {
-  "name": "wayback",
-  "kind": "stdlib",
-  "section": "Trust and proof",
-  "line": "Each web snapshot paired with the Wayback Machine's nearest copy, so anyone can see what the page said that day.",
-  "source": "new",
-  "writes": "record",
-  "network": "archive.org, to find the nearest archived copy",
-  "tags": "no-install, online, records, trust"
  },
  {
   "name": "weather-bet",

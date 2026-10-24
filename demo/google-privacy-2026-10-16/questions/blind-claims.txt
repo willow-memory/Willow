@@ -1,0 +1,29 @@
+# Blind rewordings, three of each line of claims.txt: v1 a worried user's question,
+# v2 search-box keywords, v3 the same meaning in synonyms. Written by an agent
+# given only those lines, without seeing the policy or any result. Its own
+# note on its sources: this message only; no research tools used.
+# name<TAB>question
+study-plain-v1	Does Google scan my Gmail to show me ads?
+study-plain-v2	google scans gmail ads
+study-plain-v3	The search company examines your email for advertising
+sh-table-v1	Is Google scanning every one of my Gmail messages to serve me ads?
+sh-table-v2	google scans all gmail messages ads
+sh-table-v3	The search giant examines every email message to deliver advertising
+ti-faq-v1	Is Google going through my Gmail so it can show me ads?
+ti-faq-v2	is google reading gmail for ads
+ti-faq-v3	Is the search company looking through my email to display advertising to me?
+dx-scanning-v1	Is Google automatically scanning everyone's private emails and photos to show ads?
+dx-scanning-v2	google automatically scanning private emails photos ads
+dx-scanning-v3	The search giant is automatically examining all users' personal messages and pictures to deliver advertising.
+sh-skim-v1	Does Google read what's in my inbox to choose which ads I see?
+sh-skim-v2	google reads inbox to pick ads
+sh-skim-v3	The search company scans mailbox contents to select advertising.
+ti-inboxes-v1	Is Google reading people's inboxes for ads?
+ti-inboxes-v2	google reads inboxes ads
+ti-inboxes-v3	The search giant scans mailboxes for advertising
+sh-default-v1	Is using my Gmail for ads turned on by default?
+sh-default-v2	gmail ads on by default
+sh-default-v3	Email advertising use is enabled automatically
+sh-faq-v1	Is Google now automatically using my Gmail to target ads unless I turn it off?
+sh-faq-v2	google gmail ad targeting default
+sh-faq-v3	Does the search company now use my email to aim advertising automatically?
