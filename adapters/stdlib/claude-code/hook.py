@@ -63,9 +63,12 @@ def block(doc: dict) -> str:
 def prompt(box: Path, stdin) -> str:
     """What the hook prints for one prompt."""
     try:
-        text = str(json.loads(stdin.read() or "{}").get("prompt", "")).strip()
-    except ValueError:
+        sent = json.loads(stdin.read() or "{}")
+    except (ValueError, RecursionError):  # not JSON, or nested past Python's depth
+        sent = None
+    if not isinstance(sent, dict):
         return "willow: couldn't read the prompt Claude Code sent\n"
+    text = str(sent.get("prompt", "")).strip()
     if not text:
         return ""
     out, err = io.StringIO(), io.StringIO()
