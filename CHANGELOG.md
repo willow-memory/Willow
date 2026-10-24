@@ -10,6 +10,11 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `session-seal`, an add-on that bundles a session's rows, by number,
+  kind and hash and never their words, and proposes the bundle through the
+  kernel's own bite and propose, so it waits on the person's seal like any
+  suggestion: one seal over a whole session. Ported from willow-bot's one
+  script, with the kernel's seal standing in for Nestor's.
 - `scan`, an add-on that indexes a folder once and then answers a list of
   questions in seconds with the kernel's own answers, narrowing only which
   passages `rank` looks at. It adds `--changed-from` (ask only what changed

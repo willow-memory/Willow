@@ -114,6 +114,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "changed": ("changed.py", ["--box", "{box}", *NOW]),
     "diverge": ("diverge.py", ["{pile}", "{pile}"]),
     "secrets-audit": ("secrets_audit.py", ["--box", "{box}"]),
+    "session-seal": ("session_seal.py", ["--box", "{box}", *NOW]),
     "xref": ("xref.py", ["--box", "{box}"]),
     "print": ("print.py", ["--box", "{box}", "--to", "{tmp}/page.html", *NOW, "tomatoes"]),
     "start": ("start.py", ["--pile", "{pile}", "--to", "{tmp}/willow"]),
