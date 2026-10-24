@@ -56,6 +56,12 @@
     "423204448d2d": "sys.path.insert at index 1 instead of 0 still finds kernel.py.",
     "42ff77b58811": "The printed tasks.json's indent: three spaces parses to the same tasks."
   },
+  "words-es": {
+    "088d00bd8ee5": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
+  },
+  "words-fr": {
+    "3fb13e910cef": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
+  },
   "zed": {
     "18bcef49e82b": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
   }

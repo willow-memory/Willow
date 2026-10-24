@@ -58,6 +58,10 @@ willow/
 │   │   │   ├── books.py      Kindle highlights and .epub text, as passages
 │   │   │   ├── test_books.py
 │   │   │   └── README.md
+│   │   ├── browse/
+│   │   │   ├── browse.py     your folder in your browser, on 127.0.0.1: ask, read, approve with a click
+│   │   │   ├── test_browse.py
+│   │   │   └── README.md
 │   │   ├── calendar/
 │   │   │   ├── cal.py        .ics events and .vcf contacts, as dated lines
 │   │   │   ├── test_calendar.py
@@ -99,6 +103,10 @@ willow/
 │   │   ├── cursor/
 │   │   │   ├── cursor.py         the mcp.json lines that register mcp-lite with Cursor
 │   │   │   ├── test_cursor.py
+│   │   │   └── README.md
+│   │   ├── digest/
+│   │   │   ├── digest.py     one page of what waits on you, gone stale, coming up; writes nothing
+│   │   │   ├── test_digest.py
 │   │   │   └── README.md
 │   │   ├── emacs/
 │   │   │   ├── emacs.py          an M-x willow command: answers in a grep-mode buffer
@@ -214,6 +222,22 @@ willow/
 │   │   ├── windsurf/
 │   │   │   ├── windsurf.py       the mcp_config.json lines that register mcp-lite with Windsurf
 │   │   │   ├── test_windsurf.py
+│   │   │   └── README.md
+│   │   ├── words-de/
+│   │   │   ├── words_de.py   a question in German, its common words out, then the kernel's bite
+│   │   │   ├── test_words_de.py
+│   │   │   └── README.md
+│   │   ├── words-es/
+│   │   │   ├── words_es.py   a question in Spanish, its common words out, then the kernel's bite
+│   │   │   ├── test_words_es.py
+│   │   │   └── README.md
+│   │   ├── words-fr/
+│   │   │   ├── words_fr.py   a question in French, its common words out, then the kernel's bite
+│   │   │   ├── test_words_fr.py
+│   │   │   └── README.md
+│   │   ├── words-pt/
+│   │   │   ├── words_pt.py   a question in Portuguese, its common words out, then the kernel's bite
+│   │   │   ├── test_words_pt.py
 │   │   │   └── README.md
 │   │   └── zed/
 │   │       ├── zed.py            the settings.json lines that register mcp-lite with Zed

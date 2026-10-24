@@ -18,18 +18,18 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`███████████░░░░░░░░░` **43 of 76 built** · 59 need no install · 17 need one
+`████████████░░░░░░░░` **49 of 81 built** · 64 need no install · 17 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
 | Reading more kinds of files | 7 | 8 | 9 | 6 |
 | Finding things | 4 | 2 | 4 | 2 |
-| Your own words | 1 | 6 | 5 | 2 |
-| Keeping track | 4 | 5 | 9 | 0 |
-| Trust and proof | 2 | 4 | 4 | 2 |
+| Your own words | 5 | 4 | 7 | 2 |
+| Keeping track | 5 | 4 | 9 | 0 |
+| Trust and proof | 2 | 6 | 6 | 2 |
 | Privacy and safety | 1 | 1 | 2 | 0 |
 | Assistants | 11 | 2 | 10 | 3 |
-| Ways to use it | 7 | 2 | 8 | 1 |
+| Ways to use it | 8 | 2 | 9 | 1 |
 | Play | 0 | 3 | 2 | 1 |
 | For maintainers | 6 | 0 | 6 | 0 |
 <!-- /willow:pools -->
@@ -38,18 +38,18 @@ or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:newest -->
 - 2026-10-24 · [**zed**](adapters/stdlib/zed/) — Zed's assistant asks your folder and hands in suggestions, through the mcp add-on.
-- 2026-10-24 · [**windsurf**](adapters/stdlib/windsurf/) — Windsurf asks your folder and hands in suggestions, through the mcp add-on.
-- 2026-10-24 · [**vscode**](adapters/stdlib/vscode/) — A VS Code task whose answers land in the Problems panel, each a jump to its file and line.
-- 2026-10-24 · [**vim**](adapters/stdlib/vim/) — Answers in Vim and Neovim's quickfix list, each a jump to its file and line.
-- 2026-10-24 · [**shell**](adapters/stdlib/shell/) — A willow command and tab completion for bash, zsh, fish and PowerShell, on Linux, macOS and Windows.
+- 2026-10-24 · [**words-pt**](adapters/stdlib/words-pt/) — Portuguese common words ("o", "e").
+- 2026-10-24 · [**words-fr**](adapters/stdlib/words-fr/) — French common words ("le", "et").
+- 2026-10-24 · [**words-es**](adapters/stdlib/words-es/) — Spanish common words ("el", "y").
+- 2026-10-24 · [**words-de**](adapters/stdlib/words-de/) — German common words, so questions aren't matched on "der" and "und".
 <!-- /willow:newest -->
 
 ### Add-on of the week
 
 <!-- willow:pick week=2026-W43 -->
-**[opencode](adapters/stdlib/opencode/)** — OpenCode asks your folder and hands in suggestions, through the mcp add-on.
+**[aider](adapters/stdlib/aider/)** — Aider reads answers from your folder with its /run command, file and line included.
 
-*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 43 built add-ons in name order.*
+*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 49 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -91,17 +91,19 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**starter-words**](adapters/stdlib/starter-words/) — A first-day words list to copy and edit (owes = invoice, outstanding; doctor = dr, physician, clinic). *new* `no-install` `offline` `writes-output` `words`
 - **stems** (idea) — Word forms for 20+ languages, so "maisons" finds "maison". Needs snowballstemmer; BSD-3. *new* `needs-install` `offline` `read-only` `words`
 - **synonyms** (idea) — Suggests words-list lines for a word no file has. Needs nltk and WordNet; Apache-2.0. Goes online: the WordNet data, downloaded once. *new* `needs-install` `online` `writes-output` `words`
-- **words-de** (idea) — German common words, so questions aren't matched on "der" and "und". *new* `no-install` `offline` `writes-output` `words`
-- **words-es** (idea) — Spanish common words ("el", "y"). *new* `no-install` `offline` `writes-output` `words`
-- **words-fr** (idea) — French common words ("le", "et"). *new* `no-install` `offline` `writes-output` `words`
-- **words-pt** (idea) — Portuguese common words ("o", "e"). *new* `no-install` `offline` `writes-output` `words`
+- [**words-de**](adapters/stdlib/words-de/) — German common words, so questions aren't matched on "der" and "und". *new* `no-install` `offline` `records` `words` `german`
+- [**words-es**](adapters/stdlib/words-es/) — Spanish common words ("el", "y"). *new* `no-install` `offline` `records` `words` `spanish`
+- [**words-fr**](adapters/stdlib/words-fr/) — French common words ("le", "et"). *new* `no-install` `offline` `records` `words` `french`
+- **words-it** (idea) — Italian common words ("il", "e"). *new* `no-install` `offline` `records` `words` `italian`
+- **words-nl** (idea) — Dutch common words ("de", "en"). *new* `no-install` `offline` `records` `words` `dutch`
+- [**words-pt**](adapters/stdlib/words-pt/) — Portuguese common words ("o", "e"). *new* `no-install` `offline` `records` `words` `portuguese`
 
 ### Keeping track
 
 - [**again**](adapters/stdlib/again/) — Questions you keep asking: "asked 4 times; approve an answer?" *bot* `no-install` `offline` `read-only` `tracking`
 - **care** (idea) — For caregivers: medications, vitals and appointments from a care log, what's due and what moved. *box* `no-install` `offline` `read-only` `tracking`
 - [**coming-up**](adapters/stdlib/coming-up/) — Dates written in your files in the next N days: appointments, renewals, deadlines. *box* `no-install` `offline` `read-only` `tracking`
-- **digest** (idea) — One page: suggestions waiting, approvals gone stale, dates coming up, questions repeated. *bot* `no-install` `offline` `read-only` `tracking`
+- [**digest**](adapters/stdlib/digest/) — One page of what your folder needs from you: suggestions waiting, approvals gone stale, dates coming up, questions that keep finding nothing. *bot* `no-install` `offline` `read-only` `tracking` `everyday`
 - **flashcards** (idea) — Approved question-and-answer pairs become cards, scheduled by spaced repetition. *box* `no-install` `offline` `records` `tracking`
 - **forecasts** (idea) — Write a prediction before the outcome, settle it later, see your Brier score. *bot* `no-install` `offline` `records` `tracking`
 - **invoices** (idea) — For freelancers: invoices and payments matched by the id pattern you give, never guessed. *new* `no-install` `offline` `read-only` `tracking`
@@ -110,9 +112,11 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 
 ### Trust and proof
 
+- **backup** (idea) — Copies your record and your key to a place you choose, checks the copy's chain verifies, and won't put the key beside the box. *new* `no-install` `offline` `writes-output` `trust` `everyday`
 - **changed** (idea) — What's new, edited or deleted in your folder since the last check, as fingerprint rows. *bot* `no-install` `offline` `records` `trust`
 - **encrypt** (idea) — Keeps the record folder encrypted at rest. Needs cryptography; Apache-2.0 or BSD. *new* `needs-install` `offline` `records` `trust`
 - [**export**](adapters/stdlib/export/) — Approved answers, and the question log (counts only, never words), as Markdown or CSV. *box* `no-install` `offline` `read-only` `trust`
+- **history** (idea) — Your record in plain sentences: what was asked when, what found nothing, what you approved; places and counts, never the words. *new* `no-install` `offline` `read-only` `trust` `everyday`
 - **pgp** (idea) — Signs exports and reports with your PGP key, verifiable anywhere. Needs the gpg program and python-gnupg; BSD. *new* `needs-install` `offline` `writes-output` `trust`
 - **report** (idea) — A self-checking bundle: the record, the approved answers, and a script that re-verifies them on any machine. *box* `no-install` `offline` `writes-output` `trust`
 - [**stale**](adapters/stdlib/stale/) — Approved answers whose cited passage has changed or gone. Citations are content hashes, so it's exact. *box* `no-install` `offline` `read-only` `trust`
@@ -142,13 +146,14 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 
 ### Ways to use it
 
-- **browse** (idea) — A local web page to ask questions and approve answers, reachable from this machine only. Reaches this machine only. *new* `no-install` `this-machine` `records` `interface`
+- [**browse**](adapters/stdlib/browse/) — Your folder in your web browser: ask, read each answer at its file and line, and approve suggestions with a click, from this machine only. Reaches this machine only. *new* `no-install` `this-machine` `records` `interface` `everyday`
 - [**emacs**](adapters/stdlib/emacs/) — Answers in an Emacs compilation buffer, each a jump to its file and line. *new* `no-install` `offline` `read-only` `interface`
 - [**jetbrains**](adapters/stdlib/jetbrains/) — An external tool for IntelliJ, PyCharm and the rest, with answers as links to file and line. *new* `no-install` `offline` `read-only` `interface`
 - [**pipe**](adapters/stdlib/pipe/) — Questions in on standard input, answers out one per line: JSON lines, or file:line: text for grep and fzf. *box* `no-install` `offline` `records` `interface`
 - [**plain**](adapters/stdlib/plain/) — Answers as sentences instead of JSON, each with its file and line. *new* `no-install` `offline` `records` `interface`
 - [**shell**](adapters/stdlib/shell/) — A willow command and tab completion for bash, zsh, fish and PowerShell, on Linux, macOS and Windows. *new* `no-install` `offline` `records` `interface`
 - **speak** (idea) — Reads answers aloud. Needs pyttsx3; MPL-2.0. *new* `needs-install` `offline` `read-only` `interface`
+- **start** (idea) — First run in one step: asks where your files are, makes the box and key where they belong, copies in the starter words, and prints the double-click launcher. *new* `no-install` `offline` `writes-output` `interface` `everyday`
 - [**vim**](adapters/stdlib/vim/) — Answers in Vim and Neovim's quickfix list, each a jump to its file and line. *new* `no-install` `offline` `read-only` `interface`
 - [**vscode**](adapters/stdlib/vscode/) — A VS Code task whose answers land in the Problems panel, each a jump to its file and line. *new* `no-install` `offline` `read-only` `interface`
 
