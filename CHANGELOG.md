@@ -10,6 +10,11 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `kernel.py decline`, the person's No: proved with their key like a seal,
+  it is never offered again by `out`, `browse` or `digest`, and can't be
+  sealed after; `verify` names a No that doesn't prove. On Windows the
+  record is now locked with `msvcrt`. Both were in LIMITS.md, and the three
+  ports do the same. (#32)
 - `kernel.rank` takes `top` and `dated`, so an add-on that lists every
   match, or an index that has the dates already, no longer sets the
   kernel's globals for a call; its filter is public as `kernel.holding`.
