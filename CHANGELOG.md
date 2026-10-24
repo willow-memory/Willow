@@ -4,9 +4,20 @@ What changed, newest first, by the pull request that changed it, under
 Added, Changed, Fixed and Removed. A fix names what it fixes: a known bug
 from [BUGS.md](BUGS.md) as `bug #N`, or a security report. A release turns
 `Unreleased` into `vX.Y.Z · YYYY-MM-DD` ([CONTRIBUTING.md](CONTRIBUTING.md)
-says how); there are none yet.
+says how). The first was v0.1.0.
 
 ## Unreleased
+
+### Changed
+
+- The changelog check skips Dependabot's pull requests, which can't write
+  an entry; its updates aren't listed. The GitHub add-on's check fails if
+  it skips anyone else. (#9)
+
+## v0.1.0 · 2026-10-23
+
+The first release: this section, and the two pull requests below it from
+before releases began.
 
 ### Added
 

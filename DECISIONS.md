@@ -96,7 +96,11 @@ the list without a fix. *Held by:* `adapters/stdlib/ci/bugs.py`, run by
 **Every change says what it changed.** A pull request that changes more
 than the docs adds an entry to [CHANGELOG.md](CHANGELOG.md) ending with its
 number, and one that fixes a known bug names it under `### Fixed`.
-*Held by:* `adapters/stdlib/ci/changelog.py`, its own CI job.
+Dependabot's dependency updates are the one exception: a bot can't write
+the entry, and a version bump of a CI action changes nothing willow does.
+*Held by:* `adapters/stdlib/ci/changelog.py`, its own CI job, and on
+GitHub `adapters/stdlib/github/github.py check`, which fails if the job
+skips anyone but Dependabot.
 
 **Security problems are reported in public.** Willow runs only on a
 person's own machine, so a private report protects nothing and a public one
