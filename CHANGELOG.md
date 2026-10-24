@@ -54,7 +54,7 @@ says how). The first was v0.1.0.
 
 ### Changed
 
-- `mutants.py` runs each mutant without Python's bytecode cache, so a
+- `adapters/stdlib/mutants/mutants.py` runs each mutant without Python's bytecode cache, so a
   same-size break can no longer run the previous mutant's code and pass as
   a survivor; and it no longer breaks the `__main__` guard, which the
   contract test already holds. (#11)
