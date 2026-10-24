@@ -18,7 +18,7 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`███░░░░░░░░░░░░░░░░░` **68 of 450 built** · 400 need no install · 50 need one
+`███░░░░░░░░░░░░░░░░░` **69 of 450 built** · 400 need no install · 50 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
@@ -31,7 +31,7 @@ or `writes-output`; its section), and any the card's author adds or changes.
 | Assistants | 15 | 40 | 49 | 6 |
 | Ways to use it | 10 | 28 | 34 | 4 |
 | Play | 4 | 36 | 35 | 5 |
-| For maintainers | 6 | 33 | 34 | 5 |
+| For maintainers | 7 | 32 | 34 | 5 |
 <!-- /willow:pools -->
 
 ### Newest
@@ -47,9 +47,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ### Add-on of the week
 
 <!-- willow:pick week=2026-W43 -->
-**[copilot](adapters/stdlib/copilot/)** — GitHub Copilot, in VS Code and in its own CLI, asks your folder through the mcp add-on.
+**[books](adapters/stdlib/books/)** — Kindle "My Clippings.txt" highlights and .epub text.
 
-*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 68 built add-ons in name order.*
+*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 69 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -507,7 +507,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - **ci-baseline** (idea) — Is your CI normal? How often pull requests everywhere go green first time, from GH Archive. Goes online: data.gharchive.org, its hours downloaded once. *new* `no-install` `online` `read-only` `maintainers`
 - **ci-bets** (idea) — Bet on your own CI: forecasts on each pull request going green, scored against the model's. *new* `no-install` `offline` `records` `maintainers`
 - **ci-cache** (idea) — CI caches pip, npm, .NET and Maven downloads keyed on their lockfiles, so a run skips the installs. *new* `no-install` `offline` `read-only` `maintainers`
-- **ci-why** (idea) — Why CI went red: the failing block pulled out of the job's log, plain, put where people look. Goes online: the forge, through the workflow's token, to read the job's log. *bot* `no-install` `online` `read-only` `maintainers`
+- [**ci-why**](adapters/stdlib/ci-why/) — Why CI went red: the failing block pulled out of the job's log, plain, put where people look. *bot* `no-install` `offline` `read-only` `maintainers`
 - **code-stats** (idea) — Lines, code and complexity per language, per release, as rows the list can answer from. Needs the scc program; MIT. *new* `needs-install` `offline` `read-only` `maintainers`
 - **compiled** (idea) — kernel.py compiled with mypyc for speed, held to the same vectors byte for byte. Needs mypyc; MIT. *new* `needs-install` `offline` `read-only` `maintainers`
 - **contribute** (idea) — For anyone on GitHub, what they can do next in the projects they work on: open pull requests, reviews asked of them, issues assigned. Goes online: GitHub, through gh, with your own login. *bot* `no-install` `online` `read-only` `maintainers`
