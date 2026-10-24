@@ -22,6 +22,12 @@ amendment file, and `check` holds the two together.
   * an amendment file that doesn't hold together: a field missing, a number
     out of order, a draft that isn't the next one, a supersession of one
     that doesn't come before it;
+  * an emergency amendment (one with `expires:`) that expires more than
+    90 days after its date, renews another emergency amendment, or is still
+    standing after it expired, with no full amendment superseding it to keep
+    or undo it (CONST-VIII-2). Nothing restores the law on its own, so an
+    expired one fails every run until a person acts. This check is the one
+    that depends on the day it runs;
   * an amendment whose clause text isn't in the law word for word, unless a
     later amendment has superseded it, or whose history row is missing: an
     amendment takes effect only upon recording (CONST-VIII-1);
@@ -46,6 +52,7 @@ from __future__ import annotations
 import hashlib
 import re
 import sys
+from datetime import date, datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -64,6 +71,9 @@ BASE_ROWS = "f7bf1e2b42b34e94fba13d815a005de595879d872b070878b01cf797f02089df"
 BASE_LINEAGE = "d1441e2c3193d58307d1d18af81ab6b3045d2a3666c0a1a40dfae8e778979205"
 
 FIELDS = ("draft", "date", "pr", "articles", "clauses", "summary")
+#: the longest an emergency amendment may stand before a full amendment
+#: keeps or undoes it (VIII.2; a proposed default the maintainers may change)
+EMERGENCY_DAYS = 90
 HEADER = re.compile(r"\A<!-- willow-amendment\n(.*?)\n-->\n(.*)\Z", re.S)
 DRAFT_LINE = re.compile(r"^> Draft (\d+\.\d+)\. ", re.M)
 TRACE = re.compile(r"CONST-(?:0|[IVX]+)-[0-9A-Za-z]+")
@@ -156,8 +166,21 @@ def amendments(folder: Path = None) -> list[dict]:
         supersedes = [s.strip() for s in head.get("supersedes", "").split(",") if s.strip()]  # fmt: skip
         if not all(re.fullmatch(r"\d{4}", s) and int(s) < i for s in supersedes):
             raise Refused(f"{name}: supersedes only amendments before it, by number")
+        # CONST-VIII-2: an emergency amendment states when it expires, within
+        # the bound, and never renews itself
+        expires = head.get("expires", "")
+        if expires:
+            try:
+                days = (date.fromisoformat(expires) - date.fromisoformat(head["date"])).days  # fmt: skip
+            except ValueError:
+                raise Refused(f"{name}: expires is YYYY-MM-DD") from None
+            if not 0 < days <= EMERGENCY_DAYS:
+                raise Refused(f"{name}: an emergency amendment expires after its date and within {EMERGENCY_DAYS} days (VIII.2)")  # fmt: skip
+            renews = [s for s in supersedes if out[int(s) - 1].get("expires")]
+            if renews:
+                raise Refused(f"{name}: an emergency amendment can't renew another ({', '.join(renews)}); a full amendment keeps or undoes it (VIII.2)")  # fmt: skip
         out.append({**head, "n": i, "name": str(name), "clauses": clauses,
-                    "body": body, "supersedes": supersedes})  # fmt: skip
+                    "body": body, "supersedes": supersedes, "expires": expires})  # fmt: skip
     gone = {s for a in out for s in a["supersedes"]}
     for a in out:
         a["live"] = f"{a['n']:04d}" not in gone
@@ -165,7 +188,8 @@ def amendments(folder: Path = None) -> list[dict]:
 
 
 def row(a: dict) -> str:
-    return (f"| {a['date']} | {a['articles']} | Draft {a['draft']} — {a['summary']} "
+    until = f" *(emergency, expires {a['expires']})*" if a["expires"] else ""
+    return (f"| {a['date']} | {a['articles']} | Draft {a['draft']} — {a['summary']}{until} "
             f"| *draft — by merge of #{a['pr']}* |")  # fmt: skip
 
 
@@ -189,8 +213,11 @@ def _after(a: str, b: str) -> bool:
     return tuple(map(int, a.split("."))) > tuple(map(int, b.split(".")))
 
 
-def problems(text: str = None, folder: Path = None) -> list[str]:
+def problems(text: str = None, folder: Path = None, today: str = None) -> list[str]:
+    """What's wrong with the law and its amendments, as of `today`
+    (YYYY-MM-DD, UTC today if not given): an emergency amendment lapses."""
     text = LAW.read_text(encoding="utf-8") if text is None else text
+    today = today or datetime.now(timezone.utc).date().isoformat()
     out: list[str] = []
     # CONST-VIII-3: the Preamble and Article 0 are fixed
     for part, digest in FIXED.items():
@@ -206,6 +233,10 @@ def problems(text: str = None, folder: Path = None) -> list[str]:
     for a in every:
         if a["live"] and a["body"] not in text:
             out.append(f"{a['name']}: its text isn't in CONSTITUTION.md word for word")
+        # CONST-VIII-2: nothing restores the law on its own, so an emergency
+        # amendment no full one has named by its date stops the checks
+        if a["live"] and a["expires"] and a["expires"] < today:
+            out.append(f"{a['name']}: the emergency amendment expired {a['expires']}; enter a full amendment that supersedes it, keeping or undoing it (VIII.2)")  # fmt: skip
     try:
         rows = history(text)
         base = [r for r in rows if "*draft — by merge of #" not in r]

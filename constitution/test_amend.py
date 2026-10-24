@@ -136,3 +136,64 @@ def test_with_no_amendments_the_law_is_the_draft_that_came_from_grove(folder):
 @pytest.mark.parametrize("argv", [[], ["checks"], ["check", "x"]])
 def test_a_bad_command_line_is_refused(argv):
     assert am.main(argv) == 2
+
+
+# ── emergency amendments (CONST-VIII-2) ──────────────────────────────────────
+VIII4 = next(a for a in EVERY if a["clauses"] == ["CONST-VIII-4"])["body"]
+
+
+def add(folder: Path, expires: str = "", supersedes: str = "", date: str = "2026-10-24") -> int:  # fmt: skip
+    """The next amendment: VIII.4 restated as it stands, so the law's text
+    holds it, optionally an emergency one."""
+    every = am.amendments(folder)
+    n, draft = len(every) + 1, am.next_draft(every[-1]["draft"])
+    head = [f"draft: {draft}", f"date: {date}", "pr: 99", "articles: VIII",
+            "clauses: CONST-VIII-4", f"summary: amendment {n}"]  # fmt: skip
+    head += [f"expires: {expires}"] * bool(expires) + [f"supersedes: {supersedes}"] * bool(supersedes)  # fmt: skip
+    body = "<!-- willow-amendment\n" + "\n".join(head) + "\n-->\n" + VIII4 + "\n"
+    (folder / f"{n:04d}.md").write_text(body, encoding="utf-8")
+    return n
+
+
+def test_an_emergency_amendment_stands_until_its_date_then_stops_the_checks(folder):
+    """CONST-VIII-2: the emergency door closes on a timer, and nothing restores
+    the law on its own, so after its date the checks refuse until a person acts."""
+    add(folder, expires="2026-11-01")
+    law = am.build(LAW, am.amendments(folder))
+    assert "*(emergency, expires 2026-11-01)*" in law
+    assert am.problems(law, folder, today="2026-11-01") == []
+    got = am.problems(law, folder, today="2026-11-02")
+    assert any("expired 2026-11-01" in p for p in got), got
+
+
+def test_a_full_amendment_that_names_it_keeps_or_undoes_it(folder):
+    n = add(folder, expires="2026-11-01")
+    add(folder, supersedes=f"{n:04d}")
+    law = am.build(LAW, am.amendments(folder))
+    assert am.problems(law, folder, today="2027-06-01") == []
+
+
+def test_an_emergency_amendment_cant_renew_itself(folder):
+    """CONST-VIII-2: it may never renew itself; only a full amendment keeps it."""
+    n = add(folder, expires="2026-11-01")
+    add(folder, expires="2026-12-01", supersedes=f"{n:04d}")
+    assert any("can't renew another" in p for p in am.problems(LAW, folder))
+
+
+@pytest.mark.parametrize(
+    "expires, says",
+    [
+        ("2026-10-24", "expires after its date and within 90 days"),
+        ("2027-01-23", "expires after its date and within 90 days"),
+        ("soon", "expires is YYYY-MM-DD"),
+    ],
+)
+def test_an_emergency_amendment_states_a_date_within_the_bound(folder, expires, says):
+    add(folder, expires=expires)
+    assert any(says in p for p in am.problems(LAW, folder)), am.problems(LAW, folder)
+
+
+def test_ninety_days_on_is_within_the_bound(folder):
+    add(folder, expires="2027-01-22")
+    law = am.build(LAW, am.amendments(folder))
+    assert am.problems(law, folder, today="2026-10-25") == []

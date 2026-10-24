@@ -97,7 +97,10 @@ request's number, the articles, the clauses, a one-line summary), and run
 clause it brings in the code that enforces it and in a test that tries to
 break it: an amendment that doesn't leave the law better enforced is
 refused. The Preamble and Article 0 can't be amended. To replace an
-earlier amendment, name it in `supersedes`; never edit or delete one.
+earlier amendment, name it in `supersedes`; never edit or delete one. An
+urgent fix can go in as an emergency amendment, with `expires:` in its
+header; a full amendment has to keep or undo it within 90 days, or the
+checks fail.
 [constitution/README.md](constitution/README.md) has the rest.
 
 **The docs match the files.** `test_docs.py` checks that the file tree in

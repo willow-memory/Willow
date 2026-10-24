@@ -31,6 +31,14 @@ and the step in the draft lineage. CI refuses the pull request if:
   amendment has to leave the law better enforced than it found it, and an
   answer in `reach.json` doesn't do.
 
+**When something needs fixing quickly,** add `expires: YYYY-MM-DD` to the
+header: an emergency amendment (VIII.2). It goes in the same way, by the
+same checks and the same merge, but it has to expire within 90 days, it
+can't renew another emergency amendment, and the day after it expires,
+`amend.py check` fails on every run until a full amendment names it in
+`supersedes`, keeping it or undoing it. Nothing puts the old text back on
+its own; the failing check is how the timer reaches a person.
+
 Merging is what enters it. The maintainers are the quorum, and today there
 is one; when there are more, their merge is still the act, and requiring
 their reviews is a setting on the host, not a change to the law. Nothing
@@ -54,7 +62,7 @@ own lines enforce, at those lines.
 | [declarations.json](declarations.json) | The verdicts, kept by hand: `satisfied`, `differently`, `not applicable` or `failing`, one per clause, each with a sentence saying why |
 | [amend.py](amend.py) | How an amendment enters the law: `write` fills in what the amendment files make, `check` refuses a law that doesn't hold together with them |
 | [test_amend.py](test_amend.py) | Each way the law and its amendments could drift apart, attempted on a copy and refused; one amendment superseding another keeps both |
-| [amendments/](amendments/) | Every amendment made here, numbered in turn: 0001 VIII.4 *Always a draft*, 0002 VIII.1 *Propose, check, accept*, 0003 VIII.3 on strengthening Article 0, 0004 IV.9 *A check that cannot fail is no check*, 0005 VI.7 *Every change carries its account* |
+| [amendments/](amendments/) | Every amendment made here, numbered in turn: 0001 VIII.4 *Always a draft*, 0002 VIII.1 *Propose, check, accept*, 0003 VIII.3 on strengthening Article 0, 0004 IV.9 *A check that cannot fail is no check*, 0005 VI.7 *Every change carries its account*, 0006 VIII.2 *the emergency door on a timer* |
 | [reach.json](reach.json) | Every clause no code or test cites, answered: *out of reach*, or *open*, and why. An article's answer stands for each of its clauses with none of its own |
 
     python constitution/coverage.py

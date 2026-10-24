@@ -21,7 +21,7 @@ willow/
 ├── BUGS.md                   the known bugs, made from the tests that show them
 ├── DECISIONS.md              what's settled, why, and what holds it
 ├── LIMITS.md                 what willow doesn't do, on purpose or not yet
-├── CONSTITUTION.md           the law the kernel is written to enforce (always a draft; now 0.14)
+├── CONSTITUTION.md           the law the kernel is written to enforce (always a draft; now 0.15)
 ├── constitution/             the checks that answer to it
 │   ├── test_eternity.py      each eternity clause, attacked, and refused by the kernel
 │   ├── coverage.py           which clauses are cited where, generated, never tabled
@@ -35,7 +35,8 @@ willow/
 │   │   ├── 0002.md           VIII.1, propose, check, accept: made 0.11
 │   │   ├── 0003.md           VIII.3, Article 0 strengthened only by clauses that cite it: made 0.12
 │   │   ├── 0004.md           IV.9, a check that cannot fail is no check: made 0.13
-│   │   └── 0005.md           VI.7, every change carries its account: made 0.14
+│   │   ├── 0005.md           VI.7, every change carries its account: made 0.14
+│   │   └── 0006.md           VIII.2, the emergency door on a timer: made 0.15
 │   └── README.md             what the kernel answers for, and what it doesn't claim
 ├── adapters/                 add-ons built on top of kernel.py
 │   ├── README.md             the rules every add-on follows

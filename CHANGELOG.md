@@ -35,6 +35,10 @@ says how). The first was v0.1.0.
   it; IV.9, a check that cannot fail is no check, held by the mutants; and
   VI.7, every change carries its account, held by the changelog and
   known-bug checks. (#4)
+- Emergency amendments, VIII.2 restated to Draft 0.15: an amendment with
+  `expires:` enters by the same checks and merge, expires within 90 days,
+  can't renew itself, and once expired fails every run until a full
+  amendment keeps or undoes it. (#4)
 - The checks from #1 to #3 cite the clauses they already enforced: the
   kernel's no-network test III.1 and III.5, the guard and the add-on cards
   II.1, and the generated pages VI.6. Their answers in `constitution/reach.json` go. (#4)

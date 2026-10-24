@@ -55,7 +55,10 @@ pull request with its clause written into the law and a file in
 merges it. The maintainers are the quorum; today there is one, and when
 there are more, they are. An amendment has to leave the law better
 enforced: each clause it brings is cited by code and by a test. The
-Preamble and Article 0 never change. willows-grove pins the law from here;
+Preamble and Article 0 never change. Something always turns up that needs
+fixing quickly, so an emergency amendment may go in the same way, with a
+date it expires; within 90 days a full amendment keeps or undoes it, or the
+checks fail until one does. willows-grove pins the law from here;
 nothing flows back. *Held by:* `constitution/amend.py check`, run by
 `constitution/test_amend.py`, and `test_docs.py`, which fails on an amended
 clause no code and test both cite.
