@@ -17,9 +17,8 @@ of what was served and approved, and this serves nothing an approval can cite.
 Exit codes, the kernel's: 0 something holds the question; 42 nothing does; 2
 refused.
 
-How: the kernel's `rank` stops at its `TOP` (3). This lifts that limit for
-the one call, inside this process only, and puts it back; `kernel.py` itself
-is never changed.
+How: the kernel's `rank` stops at its `TOP` (3); its `top` serves more,
+for this call only. `kernel.py` itself is never changed.
 """
 
 from __future__ import annotations
@@ -43,12 +42,7 @@ def ranked(box: Path, question: str, top: int = EVERY) -> list[dict]:
         if why is not None:
             raise ValueError(why)
     pile = kernel.chunks(Path(cfg["pile"]))
-    was = kernel.TOP
-    kernel.TOP = top
-    try:
-        return kernel.rank(pile, question, alias)
-    finally:
-        kernel.TOP = was
+    return kernel.rank(pile, question, alias, top)
 
 
 def main(argv: list[str]) -> int:

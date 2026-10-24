@@ -16,6 +16,12 @@ says how). The first was v0.1.0.
   that breaks it named; a hook runs only as the bytes you approved, pinned on
   the record; and every hook answer a row of hashes, run again by `check`.
   (#21)
+- `kernel.rank` takes `top` and `dated`, so an add-on that lists every
+  match, or an index that has the dates already, no longer sets the
+  kernel's globals for a call; its filter is public as `kernel.holding`.
+  No answer changes: the vectors regenerate with only the kernel's hash
+  different. `similar near` also counts against the entry, so a long new
+  line finds a short entry it contains. (#20)
 - Thirty-seven ideas on the add-on list, nothing built: hooks whose answers
   are code, never judgment (hook-fail-closed, hook-fuzz, hook-pin,
   hook-replay, hook-shell and others), the store behind willow-bot's pile
