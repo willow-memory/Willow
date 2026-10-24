@@ -23,17 +23,36 @@ names, with numbers inside a name counting as numbers (`run-9` before
 `run-10`), never by when a file was written. Name them so they sort: a date, or
 a CI run number. The last one is "this run".
 
+Willow's own suite, three runs of `test_kernel.py` and `adapters/stdlib`,
+with `--top 3`:
+
     3 runs, oldest first:
-      2026-10-22  812 tests  passed 790  skipped 22  failed 0  passed time 301.20 s
-      ...
-    Slowest in 2026-10-24 (seconds; 790 passed):
-         126.40  tests.adapters::test_big  (median of 2 earlier 41.20)
-    Slowest files in 2026-10-24 (seconds, passed tests added):
-         140.10  tests.adapters
-    SLOWER than before in 2026-10-24 (more than 2x and 1 s over the median of earlier passes):
-      tests.adapters::test_big  126.40 s now, 41.20 s median of 2 earlier  (+85.20 s, 3.1x)
-    NOT RUN in 2026-10-24, though it passed before:
-      tests.old::test_x  not in this run; last passed in 2026-10-23 at 8.00 s
+      run-01  701 tests  passed 700  skipped 1  failed 0  passed time 115.41 s
+      run-02  721 tests  passed 720  skipped 1  failed 0  passed time 107.97 s
+      run-03  721 tests  passed 720  skipped 1  failed 0  passed time 101.31 s
+
+    Slowest in run-03 (seconds; 720 passed):
+           3.88  adapters.stdlib.ci.test_ci::test_the_same_files_give_the_same_record_byte_for_byte  (median of 2 earlier 5.12)
+           2.87  adapters.stdlib.ci.test_ci::test_a_record_inside_the_repo_where_git_would_count_it_is_refused  (median of 2 earlier 2.47)
+           2.37  adapters.stdlib.ci.test_ci::test_verify_holds_the_chain_and_refuses_anything_but_ci_verdicts  (median of 2 earlier 3.02)
+      ... and 717 more (--top shows more)
+
+    Slowest files in run-03 (seconds, passed tests added):
+          14.09  adapters.stdlib.ci.test_contract
+          10.61  adapters.stdlib.ci.test_whose
+           9.52  adapters.stdlib.ci.test_ci
+      ... and 66 more (--top shows more)
+
+    SLOWER than before in run-03 (more than 2x and 1 s over the median of earlier passes):
+      none
+
+    NOT RUN in run-03, though it passed before:
+      none
+
+No one test there is slow: the time is many short tests that each start a
+program, gathered in a few files, which the files list shows and the tests
+list can't. Nothing got slower between the runs, and run-to-run noise
+didn't trip the rule.
 
 - **The rule for "slower" is fixed and printed.** A test that passed in this
   run and in an earlier one is flagged when its time is more than **2 times**
