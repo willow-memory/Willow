@@ -27,6 +27,9 @@ says how). The first was v0.1.0.
   misread a passage quoting a file:line of its own, and Claude Code's hook
   and add line, Aider's run line and JetBrains' parameters split a path
   with a space. (#11)
+- CI's `similar` job keeps its list of what's near each added idea as the
+  run's `similar` artifact, which willow-bot posts in its status comment on
+  the pull request; `github.py check` holds the job to it. (#10)
 - `CONSTITUTION.md`, willows-grove's Draft 0.9 byte for byte, unratified;
   this repo is its home. `kernel.py` cites the eternity clauses at the
   lines that enforce them (comments only; the vectors regenerated, the

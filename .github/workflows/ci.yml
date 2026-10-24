@@ -14,8 +14,10 @@ permissions:
 jobs:
   similar:
     # What's already on the add-on list near each idea or add-on this pull
-    # request adds, written to the run's summary so a fork sees it too.
-    # A suggestion, never a gate: similar.py's own check runs in the tests.
+    # request adds, written to the run's summary so a fork sees it too, and
+    # kept as the `similar` artifact, which willow-bot posts on the pull
+    # request. A suggestion, never a gate: similar.py's own check runs in the
+    # tests.
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
@@ -27,7 +29,14 @@ jobs:
           python-version: "3.13"
       - env:
           BASE: origin/${{ github.base_ref }}
-        run: python adapters/stdlib/similar/similar.py new --base "$BASE" >> "$GITHUB_STEP_SUMMARY"
+        run: |
+          python adapters/stdlib/similar/similar.py new --base "$BASE" > "$RUNNER_TEMP/similar.md"
+          cat "$RUNNER_TEMP/similar.md" >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v7
+        with:
+          name: similar
+          path: ${{ runner.temp }}/similar.md
+          retention-days: 7
 
   changelog:
     # A pull request that changes more than the docs adds a line under

@@ -24,7 +24,7 @@ text, whose common words made unrelated add-ons look alike.
 |---|---|
 | `near` | Up to three entries the kernel's search serves for your words, each with the words it shares. A built one is something to connect to rather than build again; an idea is already on the list, to pick up rather than add twice. |
 | `check` | Refuses two entries with the same line, whatever the case or punctuation. CI runs it. An idea that is only near another is shown, never refused: only a person can say two ideas are one. |
-| `new` | Markdown for a pull request: each add-on or idea added, or whose line changed, since REF, with what's near it. If nothing is near, it says so. willow-bot posts this on the pull request. |
+| `new` | Markdown for a pull request: each add-on or idea added, or whose line changed, since REF, with what's near it. If nothing is near, it says so. On GitHub, CI writes it to the run's summary and keeps it as the run's `similar` artifact, and willow-bot posts it in its status comment on the pull request. |
 
 ## What it uses
 
