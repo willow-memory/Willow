@@ -237,3 +237,66 @@ def test_phase6s_kappa():
     assert phase6.kappa([True, False, True, False], [True, False, True, False]) == 1.0
     assert phase6.kappa([True, True, False, False], [True, False, True, False]) == 0.0
     assert phase6.kappa([True, False], [False, True]) == -1.0
+
+
+def test_phase3s_files_left_out():
+    import phase3
+
+    assert phase3.counts("c/dec/decode.c") and phase3.counts("regcomp.c")
+    for path in ("test/ruby/test_regexp.rb", "log4j-core/src/test/java/A.java",
+                 "src/changes/changes.xml", "version.h", "NEWS", "a/tests/x.c", "x.phpt"):  # fmt: skip
+        assert not phase3.counts(path), path
+
+
+def test_phase3s_rule_is_rule_2_with_its_files_left_out():
+    import phase3
+
+    d = (
+        "--- a/regcomp.c\n+++ b/regcomp.c\n@@ -1,3 +1,4 @@\n"
+        " if (num_repeat > max_repeats)\n+    return ONIGERR_TOO_BIG;\n"
+        " reg->num_repeat = num_repeat;\n"
+        "--- a/version.h\n+++ b/version.h\n@@ -1 +1 @@\n"
+        "-#define RUBY_PATCHLEVEL 111\n+#define RUBY_PATCHLEVEL 112\n"
+    )
+    fix = phase3.changed(d)
+    assert set(fix["old"]) == {"regcomp.c"}
+    assert score.counts("version.h")  # put back after
+    assert phase3.hit(
+        {"path": "regcomp.c", "text": "x\nif (num_repeat > max_repeats)"}, fix
+    )
+    assert not phase3.hit({"path": "regcomp.c", "text": "something else entirely"}, fix)
+    assert not phase3.hit(
+        {"path": "version.h", "text": "#define RUBY_PATCHLEVEL 111"}, fix
+    )
+
+
+@pytest.mark.skipif(os.name != "posix", reason="the sample holds a symlink")
+def test_phase3_writes_a_tree_as_git_stores_it(tmp_path):
+    import shutil
+    import subprocess
+
+    import phase3
+
+    if not shutil.which("git"):
+        pytest.skip("needs the git program")  # the runs need it too; CI has it
+    repo = tmp_path / "repo"
+    repo.mkdir()
+
+    def run(*a):
+        return subprocess.run(["git", *a], cwd=repo, check=True, capture_output=True)
+
+    run("init", "-q")
+    (repo / "a").mkdir()
+    (repo / "a" / "x.c").write_bytes(b"int x;\r\n")  # CRLF, kept as stored
+    (repo / "run.sh").write_bytes(b"#!/bin/sh\n")
+    (repo / "run.sh").chmod(0o755)
+    (repo / "link").symlink_to("a/x.c")
+    (repo / ".gitattributes").write_bytes(b"a/* export-ignore\n*.sh eol=crlf\n")
+    run("add", "-A")
+    run("-c", "user.name=t", "-c", "user.email=t@t", "commit", "-qm", "x")
+    commit = run("rev-parse", "HEAD").stdout.decode().strip()
+    tree = run("rev-parse", "HEAD^{tree}").stdout.decode().strip()
+    out = tmp_path / "out"
+    phase3.write_tree(repo, commit, out)
+    assert make_trees.git_tree(out) == tree  # export rules leave nothing out
+    assert (out / "a" / "x.c").read_bytes() == b"int x;\r\n"

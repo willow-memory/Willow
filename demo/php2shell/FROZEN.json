@@ -13,7 +13,10 @@
   "questions/blind-a.txt": "e5cf1656bd0ff1fd02e7d5c88535aba81236cab22367e67817ccd74094c8a1f8",
   "questions/blind-b.txt": "ac726fa6bcda969a466ce95f05b9f76bacbd0537db5b261409247bde78635958",
   "questions/blind-c.txt": "fb89225c5ada04c3d9ded4e640aff8f5cac8b261f338610f7f471da9737b08fe",
-  "phase6.py": "a9b8360c3923ac25d49dce89b09ced54afd6c2a15b20948cba3e586079899482"
+  "phase6.py": "a9b8360c3923ac25d49dce89b09ced54afd6c2a15b20948cba3e586079899482",
+  "phase3.py": "1328d97cd50f41d6a822cbdadc36d72ad1ab696b668dbb290366a6c36c81146e",
+  "phase3.json": "9028bc8e76554e39a55bcb2bbf33cf35d06f9fccb567ac1064d93f68299c3ebc",
+  "questions/phase3.txt": "4804879d8fd2b84242f9fa4240e00caebcc2757094800a169cc8d7dae3cbf493"
  },
  "tools_at_freeze": {
   "kernel.py": "2d7fd0f67bbffbd4955c599695d15d237e5e3ea9058ba700c6f8936699d96400",
@@ -27,7 +30,10 @@
   "questions/blind-a.txt": "2026-10-24, before phase 1 ran",
   "questions/blind-b.txt": "2026-10-24, before phase 1 ran",
   "questions/blind-c.txt": "2026-10-24, before phase 1 ran",
-  "phase6.py": "2026-10-24, before any part of phase 6 ran: its checks and pass rules"
+  "phase6.py": "2026-10-24, before any part of phase 6 ran: its checks and pass rules",
+  "phase3.py": "2026-10-24, before phase 3 ran: seven CVEs, their pins, blind questions and pass rules",
+  "phase3.json": "2026-10-24, before phase 3 ran: seven CVEs, their pins, blind questions and pass rules",
+  "questions/phase3.txt": "2026-10-24, before phase 3 ran: seven CVEs, their pins, blind questions and pass rules"
  },
  "tools_at_phase1_freeze": {
   "kernel.py": "2d7fd0f67bbffbd4955c599695d15d237e5e3ea9058ba700c6f8936699d96400",

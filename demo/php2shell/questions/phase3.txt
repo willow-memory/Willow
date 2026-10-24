@@ -1,0 +1,81 @@
+# Phase 3's questions, written blind, 2026-10-24, by two agents writing as a
+# security engineer from the public advisories. Neither saw any project's code,
+# any fix, any earlier question or any result. Their page fetches failed (DNS),
+# but for one Node.js advisory page (prose, no code); they worked from search
+# summaries. As they reported:
+# - CVE-2026-111497 and CVE-2026-110264 (disclosed after mid-2026): one search
+#   summary named a Brotli function, and n2 is that name split into plain words.
+# - The five older CVEs: told not to use any identifier they remembered from
+#   code. Two summaries named a source file, a variable and a setting; the writer
+#   says it used none of them. A model may still remember these bugs' code, so
+#   these five are judged apart from the two new ones.
+
+# CVE-2026-111497
+CVE-2026-111497 n1	invalid block switch treated as needing more input
+CVE-2026-111497 n2	decode block type and length return value
+CVE-2026-111497 n3	block switch format error in streaming decoder
+CVE-2026-111497 n4	append input bytes to eight byte internal buffer
+CVE-2026-111497 n5	fast path ignores block switch decode result
+CVE-2026-111497 n6	safe versus fast block type decoding
+CVE-2026-111497 n7	decoder result needs more input versus error
+CVE-2026-111497 n8	save leftover input bytes between stream chunks
+
+# CVE-2026-110264
+CVE-2026-110264 r1	repeat id stored in signed 16 bit field
+CVE-2026-110264 r2	too many repeat ids in pattern
+CVE-2026-110264 r3	count of repeat quantifiers in regex
+CVE-2026-110264 r4	compiler rejects pattern with too many repeats
+CVE-2026-110264 r5	repeat stack index out of bounds at match
+CVE-2026-110264 r6	allocate repeat range array for quantifiers
+CVE-2026-110264 r7	integer overflow when compiling regular expression
+CVE-2026-110264 r8	negative repeat number writes outside match stack
+
+# CVE-2024-4577
+CVE-2024-4577 p1	soft hyphen treated as dash in query string
+CVE-2024-4577 p2	query string passed as command line arguments
+CVE-2024-4577 p3	cgi mode check query string starts with hyphen
+CVE-2024-4577 p4	unicode best fit character conversion windows code page
+CVE-2024-4577 p5	escape hyphen before passing arguments to interpreter
+CVE-2024-4577 p6	decide whether query string contains equals sign
+CVE-2024-4577 p7	parse command line options from cgi request
+CVE-2024-4577 p8	windows wide character to ansi argument conversion
+
+# CVE-2019-11043
+CVE-2019-11043 f1	path info length subtraction underflow
+CVE-2019-11043 f2	fastcgi script filename and path info split
+CVE-2019-11043 f3	empty path info pointer arithmetic
+CVE-2019-11043 f4	trailing path info removed from script path
+CVE-2019-11043 f5	newline in url breaks path splitting
+CVE-2019-11043 f6	compute script name from request uri
+CVE-2019-11043 f7	pointer before start of buffer path info
+CVE-2019-11043 f8	fix path info cgi setting fastcgi process manager
+
+# CVE-2012-1823
+CVE-2012-1823 g1	query string without equals sign used as arguments
+CVE-2012-1823 g2	cgi binary reads options from query string
+CVE-2012-1823 g3	decode url query string into argv
+CVE-2012-1823 g4	disallow command line switches when run as cgi
+CVE-2012-1823 g5	define ini setting from command line option
+CVE-2012-1823 g6	show script source highlighted option
+CVE-2012-1823 g7	detect running under web server cgi environment
+CVE-2012-1823 g8	parse command line options cgi startup
+
+# CVE-2014-0160
+CVE-2014-0160 h1	heartbeat request payload length check
+CVE-2014-0160 h2	echo heartbeat payload back to peer
+CVE-2014-0160 h3	tls heartbeat extension message processing
+CVE-2014-0160 h4	discard heartbeat if length exceeds record
+CVE-2014-0160 h5	copy payload into heartbeat response buffer
+CVE-2014-0160 h6	read two byte length from heartbeat message
+CVE-2014-0160 h7	dtls heartbeat request handling
+CVE-2014-0160 h8	padding length heartbeat response allocation
+
+# CVE-2021-44228
+CVE-2021-44228 l1	lookup substitution in log message
+CVE-2021-44228 l2	jndi lookup remote object loading
+CVE-2021-44228 l3	replace variable placeholders in formatted message
+CVE-2021-44228 l4	disable message lookups system property
+CVE-2021-44228 l5	resolve dollar brace pattern in log event
+CVE-2021-44228 l6	ldap url lookup from naming context
+CVE-2021-44228 l7	string substitutor recursive variable resolution
+CVE-2021-44228 l8	allowed protocols hosts for jndi lookup
