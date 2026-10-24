@@ -18,7 +18,7 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`███░░░░░░░░░░░░░░░░░` **55 of 412 built** · 363 need no install · 49 need one
+`███░░░░░░░░░░░░░░░░░` **59 of 412 built** · 363 need no install · 49 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
@@ -26,8 +26,8 @@ or `writes-output`; its section), and any the card's author adds or changes.
 | Finding things | 4 | 27 | 22 | 9 |
 | Your own words | 7 | 17 | 21 | 3 |
 | Keeping track | 5 | 49 | 54 | 0 |
-| Trust and proof | 4 | 39 | 34 | 9 |
-| Privacy and safety | 1 | 12 | 13 | 0 |
+| Trust and proof | 7 | 36 | 34 | 9 |
+| Privacy and safety | 2 | 11 | 13 | 0 |
 | Assistants | 11 | 17 | 22 | 6 |
 | Ways to use it | 10 | 27 | 33 | 4 |
 | Play | 0 | 40 | 35 | 5 |
@@ -38,18 +38,18 @@ or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:newest -->
 - 2026-10-24 · [**zed**](adapters/stdlib/zed/) — Zed's assistant asks your folder and hands in suggestions, through the mcp add-on.
+- 2026-10-24 · [**xref**](adapters/stdlib/xref/) — Every reference in your files checked: each link to another file, and each quoted line, still there and still saying it.
 - 2026-10-24 · [**words-pt**](adapters/stdlib/words-pt/) — Portuguese common words ("o", "e").
 - 2026-10-24 · [**words-nl**](adapters/stdlib/words-nl/) — Dutch common words ("de", "en").
 - 2026-10-24 · [**words-it**](adapters/stdlib/words-it/) — Italian common words ("il", "e").
-- 2026-10-24 · [**words-fr**](adapters/stdlib/words-fr/) — French common words ("le", "et").
 <!-- /willow:newest -->
 
 ### Add-on of the week
 
 <!-- willow:pick week=2026-W43 -->
-**[export](adapters/stdlib/export/)** — Approved answers, and the question log (counts only, never words), as Markdown or CSV.
+**[stale](adapters/stdlib/stale/)** — Approved answers whose cited passage has changed or gone. Citations are content hashes, so it's exact.
 
-*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 55 built add-ons in name order.*
+*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 59 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -287,9 +287,9 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 
 - [**backup**](adapters/stdlib/backup/) — Your record in one zip, every byte and the chain checked before it's kept; never beside your key, and it never reads the key. *new* `no-install` `offline` `writes-output` `trust` `everyday`
 - **box-health** (idea) — A box's health in one line: files it can't read, readers out of date, and when the chain was last checked. *new* `no-install` `offline` `read-only` `trust`
-- **changed** (idea) — What's new, edited or deleted in your folder since the last check, as fingerprint rows. *bot* `no-install` `offline` `records` `trust`
+- [**changed**](adapters/stdlib/changed/) — What's new, edited or deleted in your folder since the last check, as fingerprint rows. *bot* `no-install` `offline` `records` `trust` `everyday`
 - **contradictions** (idea) — Two passages that disagree about the same date or amount, side by side. *new* `no-install` `offline` `read-only` `trust`
-- **diverge** (idea) — Where two copies of a folder or a box part, narrowed level by level to the first line that differs. *bot* `no-install` `offline` `read-only` `trust`
+- [**diverge**](adapters/stdlib/diverge/) — Where two copies of a folder or a box part, a backup zip included, narrowed to the first row, file and line that differ. *bot* `no-install` `offline` `read-only` `trust` `everyday`
 - **encrypt** (idea) — Keeps the record folder encrypted at rest. Needs cryptography; Apache-2.0 or BSD. *new* `needs-install` `offline` `records` `trust`
 - [**export**](adapters/stdlib/export/) — Approved answers, and the question log (counts only, never words), as Markdown or CSV. *box* `no-install` `offline` `read-only` `trust`
 - **family-box** (idea) — One box for a household: each person's own seal, and every answer showing whose it is. *new* `no-install` `offline` `records` `trust`
@@ -327,7 +327,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - **timeline** (idea) — A dated timeline of one matter (a dispute, an illness, a tenancy), every line cited, to hand to a lawyer, doctor or council. *new* `no-install` `offline` `writes-output` `trust`
 - **wayback** (idea) — Each web snapshot paired with the Wayback Machine's nearest copy, so anyone can see what the page said that day. Goes online: archive.org, to find the nearest archived copy. *new* `no-install` `online` `records` `trust`
 - **witness** (idea) — A second person's seal beside yours, for answers that need two people to agree. *new* `no-install` `offline` `records` `trust`
-- **xref** (idea) — Every reference in your files checked: each link to another file, and each quoted line, still there and still saying it. *bot* `no-install` `offline` `read-only` `trust`
+- [**xref**](adapters/stdlib/xref/) — Every reference in your files checked: each link to another file, and each quoted line, still there and still saying it. *bot* `no-install` `offline` `read-only` `trust` `everyday`
 
 ### Privacy and safety
 
@@ -340,7 +340,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - **pii-audit** (idea) — Personal data sitting in your files (ID numbers, health details, card numbers), listed by file and line. *new* `no-install` `offline` `read-only` `privacy`
 - [**privacy**](adapters/stdlib/privacy/) — Hides phone numbers, emails, card, bank and ID numbers, and API keys in what a question prints, and says what it hid. *bot* `no-install` `offline` `records` `privacy`
 - **scrub** (idea) — Strips the hidden details (EXIF, author, edit history) from a file before you share it. *new* `no-install` `offline` `writes-output` `privacy`
-- **secrets-audit** (idea) — Finds keys and passwords sitting in plain files. *bot* `no-install` `offline` `read-only` `privacy`
+- [**secrets-audit**](adapters/stdlib/secrets-audit/) — Finds passwords, keys and card numbers sitting in plain files, by file and line, never showing the value. *bot* `no-install` `offline` `read-only` `privacy` `everyday`
 - **student-records** (idea) — A box of student records that answers only the teacher who owns it, and logs every look. *new* `no-install` `offline` `records` `privacy`
 - **transcript-redact** (idea) — An agent transcript with keys, home paths and emails taken out before you share it, each removal listed by line. *new* `no-install` `offline` `writes-output` `privacy`
 - **typosquat** (idea) — Dependency names a letter off from a popular one (reqeusts, lodahs), checked against a list of top packages you downloaded. *new* `no-install` `offline` `read-only` `privacy`

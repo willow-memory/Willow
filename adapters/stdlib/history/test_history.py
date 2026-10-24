@@ -182,3 +182,34 @@ def test_a_bad_command_line_says_how_to_run_it(tmp_path, capsys):
         assert hs.main(argv) == 2
     assert hs.main(["--box", str(tmp_path)]) == 2
     assert hs.main(["--box", str(b), "--days", "1", "--now", "soon"]) == 2
+
+
+def test_a_changed_check_is_said_in_counts():
+    rows = [
+        {
+            "kind": "changed",
+            "first": True,
+            "files": {"a": "1", "b": "2"},
+            "ts": "2026-01-01T00:00:00Z",
+        },
+        {
+            "kind": "changed",
+            "new": {"c": "3"},
+            "edited": {},
+            "deleted": ["a", "b"],
+            "ts": "2026-01-02T00:00:00Z",
+        },
+        {
+            "kind": "changed",
+            "new": {},
+            "edited": {},
+            "deleted": [],
+            "ts": "2026-01-03T00:00:00Z",
+        },
+    ]
+    said = [s for _, s in hs.sentences(Path("."), rows)]
+    assert said == [
+        "You fingerprinted your folder: 2 files.",
+        "You checked what changed in your folder: 1 new, 2 deleted.",
+        "You checked what changed in your folder: nothing had.",
+    ]

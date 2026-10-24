@@ -70,6 +70,10 @@ willow/
 │   │   │   ├── cal.py        .ics events and .vcf contacts, as dated lines
 │   │   │   ├── test_calendar.py
 │   │   │   └── README.md
+│   │   ├── changed/
+│   │   │   ├── changed.py    what's new, edited or deleted since the last check, as fingerprint rows
+│   │   │   ├── test_changed.py
+│   │   │   └── README.md
 │   │   ├── chats/
 │   │   │   ├── chats.py      WhatsApp and Telegram exports, a dated line a message
 │   │   │   ├── test_chats.py
@@ -111,6 +115,10 @@ willow/
 │   │   ├── digest/
 │   │   │   ├── digest.py     one page of what waits on you, gone stale, coming up; writes nothing
 │   │   │   ├── test_digest.py
+│   │   │   └── README.md
+│   │   ├── diverge/
+│   │   │   ├── diverge.py    where two copies part: records by row, files, then the first line
+│   │   │   ├── test_diverge.py
 │   │   │   └── README.md
 │   │   ├── emacs/
 │   │   │   ├── emacs.py          an M-x willow command: answers in a grep-mode buffer
@@ -198,6 +206,10 @@ willow/
 │   │   │   ├── readme.py     builds this README's generated sections from the cards
 │   │   │   ├── test_readme.py
 │   │   │   └── README.md     its card: sections, the draw, what it reads
+│   │   ├── secrets-audit/
+│   │   │   ├── secrets_audit.py passwords, keys and card numbers in plain files, by file and line
+│   │   │   ├── test_secrets_audit.py
+│   │   │   └── README.md
 │   │   ├── shell/
 │   │   │   ├── shell.py          a willow command and tab completion for bash, zsh, fish, PowerShell and cmd
 │   │   │   ├── test_shell.py
@@ -262,6 +274,10 @@ willow/
 │   │   ├── words-pt/
 │   │   │   ├── words_pt.py   a question in Portuguese, its common words out, then the kernel's bite
 │   │   │   ├── test_words_pt.py
+│   │   │   └── README.md
+│   │   ├── xref/
+│   │   │   ├── xref.py       each link and file:line in your files checked, still there
+│   │   │   ├── test_xref.py
 │   │   │   └── README.md
 │   │   └── zed/
 │   │       ├── zed.py            the settings.json lines that register mcp-lite with Zed

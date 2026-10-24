@@ -331,16 +331,6 @@
   "tags": "no-install, offline, read-only, tracking"
  },
  {
-  "name": "changed",
-  "kind": "stdlib",
-  "section": "Trust and proof",
-  "line": "What's new, edited or deleted in your folder since the last check, as fingerprint rows.",
-  "source": "bot",
-  "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, trust"
- },
- {
   "name": "chess-puzzle",
   "kind": "stdlib",
   "section": "Play",
@@ -727,16 +717,6 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, file-reader"
- },
- {
-  "name": "diverge",
-  "kind": "stdlib",
-  "section": "Trust and proof",
-  "line": "Where two copies of a folder or a box part, narrowed level by level to the first line that differs.",
-  "source": "bot",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, trust"
  },
  {
   "name": "docs-i18n",
@@ -2796,16 +2776,6 @@
   "tags": "no-install, offline, records, assistant"
  },
  {
-  "name": "secrets-audit",
-  "kind": "stdlib",
-  "section": "Privacy and safety",
-  "line": "Finds keys and passwords sitting in plain files.",
-  "source": "bot",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, privacy"
- },
- {
   "name": "session-cost",
   "kind": "stdlib",
   "section": "Keeping track",
@@ -3595,16 +3565,6 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, file-reader"
- },
- {
-  "name": "xref",
-  "kind": "stdlib",
-  "section": "Trust and proof",
-  "line": "Every reference in your files checked: each link to another file, and each quoted line, still there and still saying it.",
-  "source": "bot",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, trust"
  },
  {
   "name": "zotero",

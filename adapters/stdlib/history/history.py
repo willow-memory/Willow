@@ -86,6 +86,16 @@ def sentences(box: Path, rows: list[dict]) -> list[tuple[str, str]]:
             n = r.get("waiting", 0)
             said = ("You looked at what was waiting: "
                     + (f"{n} suggestion{'s' if n != 1 else ''}." if n else "nothing."))  # fmt: skip
+        elif kind == "changed" and r.get("first"):
+            n = len(r.get("files", {}))
+            said = f"You fingerprinted your folder: {n} file{'s' if n != 1 else ''}."
+        elif kind == "changed":
+            counts = [(len(r.get(k, [])), k) for k in ("new", "edited", "deleted")]
+            said = (
+                "You checked what changed in your folder: "
+                + (", ".join(f"{n} {k}" for n, k in counts if n) or "nothing had")
+                + "."
+            )
         else:
             said = f"A {kind} row, written by {r.get('who', 'something')}."
         out.append((str(r.get("ts", "")), said))
