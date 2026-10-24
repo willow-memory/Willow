@@ -176,12 +176,14 @@ Windows are in [LIMITS.md](LIMITS.md), with what it doesn't do on purpose
 and why ([DECISIONS.md](DECISIONS.md)). Known bugs, each shown by a test,
 are in [BUGS.md](BUGS.md).
 
-It was tested blind. For two of the three characters, a separate AI agent
+It was tested blind. For three of the four characters, a separate AI agent
 that never saw the code wrote the files, the needs hidden in them, and the
 questions the person would ask; the answers were then scored against what was
 hidden. It found what was asked in the files' own
-words and missed the rest. The full results, misses included, are in
-`demo/*/STRIP.md`.
+words and missed the rest. The fourth of them, Bernadette, wrote her files in
+her apps' raw formats and was run through every add-on at once, readers to
+backups (`demo/bernadette/stack.py`). The full results, misses included, are
+in `demo/*/STRIP.md`.
 
 ## How it's verified
 
@@ -244,7 +246,7 @@ willow/
 ├── adapters/                 add-ons built on top of kernel.py
 ├── ports/                    kernel.py rewritten in other languages
 ├── vectors/                  what keeps the four implementations identical
-├── demo/                     three made-up people, and one real bug, to try it on
+├── demo/                     four made-up people, and one real bug, to try it on
 ├── docs/                     the full first five minutes, and how it works in full
 ├── .github/                  CI, the issue forms, the pull request template: the GitHub add-on's
 ├── .gitignore                generated files and build output

@@ -407,6 +407,9 @@ def gates() -> list[tuple[str, str, object]]:
     # PHP2Shell's runs fetch PHP's source; CI holds only what they froze
     out.append(("demo", "demo:php2shell", command(*PYTEST, "demo/php2shell",
                 needs=lambda: missing_module("pytest"))))  # fmt: skip
+    # Bernadette's files through every layer: readers to the trust add-ons
+    out.append(("demo", "demo:stack", command(*PYTEST, "demo/bernadette",
+                needs=lambda: missing_module("pytest"))))  # fmt: skip
     for name in deps_add_ons():
         out.append(("deps", f"deps:{name}", deps_add_on(name)))
         out.append(("deps", f"deps:{name}@floor",
