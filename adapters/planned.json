@@ -1821,16 +1821,6 @@
   "tags": "needs-install, online, read-only, trust"
  },
  {
-  "name": "misquote",
-  "kind": "stdlib",
-  "section": "Finding things",
-  "line": "A quote that is almost in your files: the closest passage, and the words it adds, drops or changes, so a misquote shows as one.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, search"
- },
- {
   "name": "model-fit",
   "kind": "stdlib",
   "section": "Assistants",

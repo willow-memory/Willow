@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `misquote`, an add-on for a quote that is almost in your files: the
+  passage holding most of its words in order, and the words it drops, adds
+  or changes; quote-check's "not there" made specific. (#17)
 - `snapshot`, an add-on that fetches a page or file once into a folder, as
   it came, with its address, the time and its SHA-256 on a hidden line the
   kernel never serves; what couldn't be fetched gets its line too, and

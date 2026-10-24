@@ -42,6 +42,9 @@
   "mcp-lite": {
     "0422b2185389": "A propose refusal's reason after its first colon; a maxsplit of 2 differs only when the reason holds a second colon."
   },
+  "misquote": {
+    "1d105075a976": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
+  },
   "notes": {
     "00d9493a4212": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
   },

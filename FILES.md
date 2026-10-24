@@ -173,6 +173,10 @@ willow/
 │   │   │   ├── server.py         the mcp add-on's three tools, the protocol by hand, nothing to install
 │   │   │   ├── test_server.py
 │   │   │   └── README.md
+│   │   ├── misquote/
+│   │   │   ├── misquote.py   a quote almost in your files: the closest passage, and what differs
+│   │   │   ├── test_misquote.py
+│   │   │   └── README.md
 │   │   ├── mutants/
 │   │   │   ├── mutants.py    breaks each add-on's code on purpose and checks its tests notice
 │   │   │   ├── accepted.json the breaks that change nothing a person could notice, each with why
