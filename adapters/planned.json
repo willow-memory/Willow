@@ -1,5 +1,15 @@
 [
  {
+  "name": "a11y-check",
+  "kind": "stdlib",
+  "section": "Privacy and safety",
+  "line": "Your documents checked for screen-reader problems: images without descriptions, headings out of order.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, privacy"
+ },
+ {
   "name": "abbreviations",
   "kind": "stdlib",
   "section": "Your own words",
@@ -110,6 +120,16 @@
   "tags": "no-install, online, records, play"
  },
  {
+  "name": "ask-later",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "A question with no answer yet kept on a list, and asked again whenever a new file arrives.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, tracking"
+ },
+ {
   "name": "assistant-scores",
   "kind": "stdlib",
   "section": "Assistants",
@@ -118,6 +138,16 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, assistant"
+ },
+ {
+  "name": "attendance",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "Attendance for a class, club or group, from your register, by week.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, tracking"
  },
  {
   "name": "baby-log",
@@ -138,6 +168,16 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, trust, everyday"
+ },
+ {
+  "name": "badge",
+  "kind": "stdlib",
+  "section": "Ways to use it",
+  "line": "A badge for a page: these answers came from these files and were approved, linked to the check anyone can run.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, interface"
  },
  {
   "name": "bank",
@@ -220,6 +260,16 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
+  "name": "box-health",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "A box's health in one line: files it can't read, readers out of date, and when the chain was last checked.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, trust"
+ },
+ {
   "name": "braille",
   "kind": "stdlib",
   "section": "Ways to use it",
@@ -259,6 +309,16 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, interface"
+ },
+ {
+  "name": "canvas",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Canvas course exports: pages, assignments and discussions as passages.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
  },
  {
   "name": "car",
@@ -329,6 +389,16 @@
   "writes": "record",
   "network": "none",
   "tags": "no-install, offline, records, maintainers"
+ },
+ {
+  "name": "ci-cache",
+  "kind": "stdlib",
+  "section": "For maintainers",
+  "line": "CI caches pip, npm, .NET and Maven downloads keyed on their lockfiles, so a run skips the installs.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, maintainers"
  },
  {
   "name": "ci-logs",
@@ -432,6 +502,17 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, search"
+ },
+ {
+  "name": "compiled",
+  "kind": "deps",
+  "section": "For maintainers",
+  "line": "kernel.py compiled with mypyc for speed, held to the same vectors byte for byte.",
+  "source": "new",
+  "needs": "mypyc; MIT",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "needs-install, offline, read-only, maintainers"
  },
  {
   "name": "confluence",
@@ -637,6 +718,17 @@
   "tags": "needs-install, offline, records, play"
  },
  {
+  "name": "dictate",
+  "kind": "deps",
+  "section": "Ways to use it",
+  "line": "Ask out loud: your question spoken and turned to text on this machine.",
+  "source": "new",
+  "needs": "faster-whisper; MIT",
+  "writes": "nothing",
+  "network": "the model, downloaded once",
+  "tags": "needs-install, online, read-only, interface"
+ },
+ {
   "name": "discord",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -697,6 +789,16 @@
   "tags": "no-install, online, read-only, interface"
  },
  {
+  "name": "emergency-card",
+  "kind": "stdlib",
+  "section": "Ways to use it",
+  "line": "One page of your medicines, allergies and contacts, from your files, to print or keep on your phone.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, interface"
+ },
+ {
   "name": "encrypt",
   "kind": "deps",
   "section": "Trust and proof",
@@ -718,6 +820,16 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
+  "name": "family-box",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "One box for a household: each person's own seal, and every answer showing whose it is.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, trust"
+ },
+ {
   "name": "family-tree",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -726,6 +838,17 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "fast-tests",
+  "kind": "deps",
+  "section": "For maintainers",
+  "line": "The test suite across every core with pytest-xdist, the same tests in a fraction of the time.",
+  "source": "new",
+  "needs": "pytest-xdist; MIT",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "needs-install, offline, read-only, maintainers"
  },
  {
   "name": "first-mention",
@@ -950,6 +1073,16 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
+  "name": "google-classroom",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Google Classroom from Takeout: assignments, announcements and comments as dated passages.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
   "name": "google-keep",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -958,6 +1091,26 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "gradebook",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "A teacher's gradebook, kept on this machine: each student's marks by assignment, and who is falling behind.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, tracking"
+ },
+ {
+  "name": "grant-report",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "For charities and groups: what you promised a funder and what you did, side by side, each cited.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, tracking"
  },
  {
   "name": "gutenberg",
@@ -978,6 +1131,16 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, tracking"
+ },
+ {
+  "name": "handoff",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "A box handed to the person you name (an executor, a carer): read only, your seals kept, theirs their own.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, trust"
  },
  {
   "name": "hanoi",
@@ -1120,6 +1283,16 @@
   "tags": "no-install, offline, writes-output, trust"
  },
  {
+  "name": "index-cache",
+  "kind": "stdlib",
+  "section": "Finding things",
+  "line": "The box's index kept between runs and checked against each file's hash, so a question doesn't re-read the folder.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, search"
+ },
+ {
   "name": "ink-story",
   "kind": "deps",
   "section": "Play",
@@ -1149,6 +1322,16 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "inventory",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "What you own, where it is, and where its papers are, for insurance or a will.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, tracking"
  },
  {
   "name": "invoices",
@@ -1687,6 +1870,16 @@
   "tags": "no-install, offline, read-only, tracking"
  },
  {
+  "name": "minutes",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "Meeting minutes: who decided what and when, and which actions are still open.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, tracking"
+ },
+ {
   "name": "mirror",
   "kind": "deps",
   "section": "Trust and proof",
@@ -1698,6 +1891,16 @@
   "tags": "needs-install, online, read-only, trust"
  },
  {
+  "name": "model-fit",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "Whether this machine's GPU, NPU or Apple silicon can run a local model, and about how fast, before you download one.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, assistant"
+ },
+ {
   "name": "mood",
   "kind": "stdlib",
   "section": "Keeping track",
@@ -1706,6 +1909,16 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, tracking"
+ },
+ {
+  "name": "moodle",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Moodle course backups: pages, assignments, quizzes and forum posts as passages.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
  },
  {
   "name": "movie",
@@ -1739,6 +1952,16 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
+  "name": "my-lessons",
+  "kind": "stdlib",
+  "section": "Finding things",
+  "line": "Your own lesson plans by grade, subject and standard: what did I teach on fractions last year?",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, search"
+ },
+ {
   "name": "nestor",
   "kind": "stdlib",
   "section": "Trust and proof",
@@ -1757,6 +1980,17 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, words"
+ },
+ {
+  "name": "night-batch",
+  "kind": "deps",
+  "section": "Assistants",
+  "line": "Questions waiting for suggestions batched into one local-model run overnight, stopped the moment you're back.",
+  "source": "new",
+  "needs": "a local model server; licence varies by model",
+  "writes": "record",
+  "network": "loopback",
+  "tags": "needs-install, this-machine, records, assistant"
  },
  {
   "name": "nim",
@@ -1950,6 +2184,26 @@
   "tags": "no-install, offline, writes-output, trust"
  },
  {
+  "name": "parallel",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "The readers run across every CPU core, so a big mirror folder builds in a fraction of the time.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "past-papers",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Past exam papers and their mark schemes as passages: which year asked this, and what earned the marks.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
   "name": "people",
   "kind": "stdlib",
   "section": "Finding things",
@@ -2042,6 +2296,16 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
+  "name": "plain-language",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "An approved answer rewritten in plain language by a model, the rewrite held until you seal it.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, assistant"
+ },
+ {
   "name": "pocket",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -2092,6 +2356,26 @@
   "tags": "no-install, offline, writes-output, interface"
  },
  {
+  "name": "profile",
+  "kind": "stdlib",
+  "section": "For maintainers",
+  "line": "Where a question's time goes, function by function, from cProfile, per release.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, maintainers"
+ },
+ {
+  "name": "promises",
+  "kind": "stdlib",
+  "section": "Finding things",
+  "line": "What a candidate or a council said, by date and source, from the documents you saved.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, search"
+ },
+ {
   "name": "property-tests",
   "kind": "deps",
   "section": "For maintainers",
@@ -2134,6 +2418,16 @@
   "tags": "no-install, online, writes-output, maintainers"
  },
  {
+  "name": "pypy",
+  "kind": "stdlib",
+  "section": "For maintainers",
+  "line": "The kernel and its tests run under PyPy too, and timed against CPython.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, maintainers"
+ },
+ {
   "name": "qr",
   "kind": "stdlib",
   "section": "Ways to use it",
@@ -2152,6 +2446,17 @@
   "writes": "record",
   "network": "earthquake.usgs.gov, to read the week's earthquakes",
   "tags": "no-install, online, records, play"
+ },
+ {
+  "name": "quantized",
+  "kind": "deps",
+  "section": "Assistants",
+  "line": "Finds the smallest quantized local model that still gets your box's own questions right, so suggestions come faster.",
+  "source": "new",
+  "needs": "a local model server; licence varies by model",
+  "writes": "nothing",
+  "network": "loopback",
+  "tags": "needs-install, this-machine, read-only, assistant"
  },
  {
   "name": "quiet-corner",
@@ -2182,6 +2487,26 @@
   "writes": "nothing",
   "network": "the forge, through the workflow's token, to read the review comments",
   "tags": "no-install, online, read-only, trust"
+ },
+ {
+  "name": "reading-level",
+  "kind": "stdlib",
+  "section": "Finding things",
+  "line": "How hard a passage reads (sentence length, word length, Flesch), so a teacher can find texts for a class.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, search"
+ },
+ {
+  "name": "reading-log",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "A child's reading log: books, pages and minutes, week by week.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, tracking"
  },
  {
   "name": "readwise",
@@ -2368,6 +2693,16 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "rubric",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "Marking against a rubric you wrote: each mark cites the criterion and the line of work it's for.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, tracking"
  },
  {
   "name": "rules",
@@ -2604,6 +2939,16 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
+  "name": "slow-tests",
+  "kind": "stdlib",
+  "section": "For maintainers",
+  "line": "Each test's time kept per run, with the slowest named and any that got slower flagged.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, maintainers"
+ },
+ {
   "name": "snapshot",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -2612,6 +2957,16 @@
   "writes": "record",
   "network": "the address you give, fetched once",
   "tags": "no-install, online, records, file-reader"
+ },
+ {
+  "name": "socratic",
+  "kind": "stdlib",
+  "section": "Ways to use it",
+  "line": "Asks you questions about your own notes instead of answering, each citing the passage it asked from.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, interface"
  },
  {
   "name": "sokoban",
@@ -2653,6 +3008,16 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, play"
+ },
+ {
+  "name": "standards",
+  "kind": "stdlib",
+  "section": "Finding things",
+  "line": "Curriculum standards beside your lessons: which standard each lesson meets, each cited.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, search"
  },
  {
   "name": "start",
@@ -2707,6 +3072,16 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
+  "name": "student-records",
+  "kind": "stdlib",
+  "section": "Privacy and safety",
+  "line": "A box of student records that answers only the teacher who owns it, and logs every look.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, privacy"
+ },
+ {
   "name": "subscriptions",
   "kind": "stdlib",
   "section": "Keeping track",
@@ -2727,6 +3102,16 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
+  "name": "support-plan",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "An IEP or support plan's goals, accommodations and review dates, each cited, for a parent or teacher.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, tracking"
+ },
+ {
   "name": "swift",
   "kind": "stdlib",
   "section": "For maintainers",
@@ -2735,6 +3120,16 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, maintainers"
+ },
+ {
+  "name": "syllabus",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "A course syllabus as dates: readings, assignments and exams due, each cited.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, tracking"
  },
  {
   "name": "symbols",
@@ -2839,6 +3234,26 @@
   "tags": "no-install, online, read-only, interface"
  },
  {
+  "name": "test-impact",
+  "kind": "stdlib",
+  "section": "For maintainers",
+  "line": "Only the tests a change can reach run first, from the import graph; the full suite still runs after.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, maintainers"
+ },
+ {
+  "name": "test-shards",
+  "kind": "stdlib",
+  "section": "For maintainers",
+  "line": "The CI test jobs split by each test's past time, so every job finishes about together.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, maintainers"
+ },
+ {
   "name": "texts",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -2847,6 +3262,16 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "thesis",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "A thesis's claims, each tied to the source that backs it, and a list of the ones with none.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, trust"
  },
  {
   "name": "tic-tac-toe",
@@ -2907,6 +3332,17 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, privacy"
+ },
+ {
+  "name": "translate",
+  "kind": "deps",
+  "section": "Assistants",
+  "line": "An answer translated by a local model, the original kept beside it, the translation held until you seal it.",
+  "source": "new",
+  "needs": "a local model server; licence varies by model",
+  "writes": "record",
+  "network": "loopback",
+  "tags": "needs-install, this-machine, records, assistant"
  },
  {
   "name": "trello",
@@ -2980,6 +3416,16 @@
   "tags": "no-install, online, read-only, tracking"
  },
  {
+  "name": "vocab",
+  "kind": "stdlib",
+  "section": "Your own words",
+  "line": "The words you're learning, from your notes and the texts you read, with where you met each one.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, words"
+ },
+ {
   "name": "voice",
   "kind": "deps",
   "section": "Reading more kinds of files",
@@ -3001,6 +3447,16 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
+  "name": "warm",
+  "kind": "stdlib",
+  "section": "Ways to use it",
+  "line": "The kernel kept running between questions on this machine, so each question skips the start-up.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "loopback",
+  "tags": "no-install, this-machine, read-only, interface"
+ },
+ {
   "name": "warranties",
   "kind": "stdlib",
   "section": "Keeping track",
@@ -3009,6 +3465,16 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, tracking"
+ },
+ {
+  "name": "watch",
+  "kind": "stdlib",
+  "section": "Finding things",
+  "line": "A file re-read the moment it changes (inotify, FSEvents, or polling), so the index is always current.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, search"
  },
  {
   "name": "wayback",
@@ -3049,6 +3515,16 @@
   "writes": "nothing",
   "network": "the forge, through the workflow's token, to post the thank-you",
   "tags": "no-install, online, read-only, maintainers"
+ },
+ {
+  "name": "why-not",
+  "kind": "stdlib",
+  "section": "Finding things",
+  "line": "When the answer is 'not enough to say', which words found nothing, and what kind of file would have answered.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, search"
  },
  {
   "name": "witness",

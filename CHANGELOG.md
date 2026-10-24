@@ -10,7 +10,7 @@ says how). The first was v0.1.0.
 
 ### Added
 
-- Two hundred and eighty-five ideas on the add-on list, nothing built: readers for what
+- Three hundred and thirty-two ideas on the add-on list, nothing built: readers for what
   people use now (Pocket, Instapaper, wallabag, Karakeep, Joplin, jrnl,
   Journiv, WriteFreely, ArchiveBox, Slack, Discord, Signal, Mastodon,
   Bluesky, Google Takeout, subtitles, AI agents' session files) and tools
@@ -47,7 +47,13 @@ says how). The first was v0.1.0.
   ids, prov, ro-crate, in-toto, wayback, cloudevents), bets on the
   world's data (weather, quakes, pageviews, the front page, tides),
   games with known answers (tic-tac-toe to reversi), and the stupid
-  pile (lunatic, spurious, roll-for-merge). (#13)
+  pile (lunatic, spurious, roll-for-merge); and forty-seven more: for
+  education (Moodle, Canvas and Classroom exports, past papers, lesson
+  plans and standards, gradebook, rubric, support plans, socratic), for
+  speed (index-cache, watch, parallel, warm, quantized, night-batch,
+  fast-tests, test-impact, test-shards, ci-cache, compiled, pypy), and
+  why-not, ask-later, family-box, handoff, box-health, emergency-card
+  and others. (#13)
 - No terminal, no English required: `browse`, your folder in your web
   browser on 127.0.0.1 (ask, read each answer at its file and line, approve
   a suggestion with a click through the kernel's own `seal`; a secret per
