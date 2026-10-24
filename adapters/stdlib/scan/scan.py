@@ -170,14 +170,10 @@ class Index:
     def rank(
         self, question: str, alias: dict, top: int, lacked_by: set | None = None
     ) -> list[dict]:
-        top_was, dates_was = kernel.TOP, kernel.dates
-        kernel.TOP = top
-        kernel.dates = lambda pile: [self.day[id(c)] for c in pile]
-        try:
-            near = self.near(question, alias, lacked_by)
-            return kernel.rank(near, question, alias)
-        finally:
-            kernel.TOP, kernel.dates = top_was, dates_was
+        near = self.near(question, alias, lacked_by)
+        return kernel.rank(
+            near, question, alias, top, lambda pile: [self.day[id(c)] for c in pile]
+        )
 
     def bm25(self, question: str, top: int, lacked_by: set | None = None) -> list[dict]:
         """BM25 (k1 1.2, b 0.75) over the passages' words, split and with

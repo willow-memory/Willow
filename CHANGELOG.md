@@ -10,6 +10,12 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `kernel.rank` takes `top` and `dated`, so an add-on that lists every
+  match, or an index that has the dates already, no longer sets the
+  kernel's globals for a call; its filter is public as `kernel.holding`.
+  No answer changes: the vectors regenerate with only the kernel's hash
+  different. `similar near` also counts against the entry, so a long new
+  line finds a short entry it contains. (#20)
 - `gaps`: where a log you keep stops. The days a folder of daily notes, a
   reading log or a diary skipped are said as gaps: a spacing more than three
   times the log's typical one. A log with too few dates is said, an undated
