@@ -261,6 +261,14 @@ willow/
 │   │   │   ├── surprise.py   one passage drawn by a seeded stream, replayable
 │   │   │   ├── test_surprise.py
 │   │   │   └── README.md
+│   │   ├── test-impact/
+│   │   │   ├── impact.py     which of this repo's checks a change can reach, closest first, in ci's gate names
+│   │   │   ├── test_impact.py
+│   │   │   └── README.md
+│   │   ├── test-shards/
+│   │   │   ├── shards.py     splits the test run into parts by each test's past time
+│   │   │   ├── test_shards.py
+│   │   │   └── README.md
 │   │   ├── todo/
 │   │   │   ├── todo.py       things marked to do, oldest first
 │   │   │   ├── test_todo.py
