@@ -283,6 +283,14 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- CI ends sooner, in the same gates. `ci.py run` takes a gate's name,
+  `--without GATE` and `--shard K/N` (cut by `test-shards`' split), so
+  `tests:strip`, which ran the add-ons' tests a second time in each tests job,
+  has a job of its own on each Python, and the mutants run in four shards.
+  `github.py check` holds every gate to exactly one job. A pull request's
+  `first` job runs what `test-impact` says its change reaches, cheapest first,
+  and a failing job writes `ci-why`'s reading of its log to the run's summary.
+  (#36)
 - `claude-code`'s prompt hook says it couldn't read the prompt when it
   gets JSON that isn't an object, or JSON nested past Python's depth, where
   it crashed with a traceback; `hook-fuzz` found it. (#21)

@@ -100,6 +100,55 @@ def matrix(ci: str) -> list[str]:
     )
 
 
+CI_PY = Path(__file__).resolve().parents[1] / "ci" / "ci.py"
+
+
+def split_problems(ci: str) -> list[str]:
+    """ci.yml's jobs cut ci.py's gates between them (tests:strip in a job of
+    its own, mutants in shards): each gate run by exactly one job, so a cut
+    never drops one, and every Python matrix the same, so tests:strip runs
+    on each Python the other tests do. Each job's `ci.py run` is read with
+    ci.py's own `select`, once for each value of its matrix's `shard`."""
+    spec = importlib.util.spec_from_file_location("willow_ci_for_github", CI_PY)
+    cimod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(cimod)
+    out, ran = [], {}
+    for job, block in re.findall(r"^  ([\w-]+):\n(.*?)(?=^  \S|\Z)", ci, re.M | re.S):
+        shards = re.search(r"^        shard: \[(.*?)\]$", block, re.M)
+        for line in re.findall(r"ci/ci\.py run (.*?) --box", block):
+            values = [v.strip() for v in shards.group(1).split(",")] if shards else [""]
+            for v in values:
+                argv = line.replace("${{ matrix.shard }}", v).split()
+                names, without, shard, it = [], [], None, iter(argv)
+                for a in it:
+                    if a == "--without":
+                        without.append(next(it, ""))
+                    elif a == "--shard":
+                        shard = next(it, "")
+                    else:
+                        names.append(a)
+                try:
+                    picked = cimod.select(names, without, shard)
+                except ValueError as e:
+                    out.append(
+                        f"ci.yml's {job} job runs ci.py with what it refuses: {e}"
+                    )
+                    continue
+                for gate in picked:
+                    ran.setdefault(gate, []).append(job)
+    for _, gate, _ in cimod.gates():
+        jobs = ran.get(gate, [])
+        if not jobs:
+            out.append(f"ci.yml runs {gate} in no job")
+        elif len(jobs) > 1:
+            out.append(f"ci.yml runs {gate} more than once, in {', '.join(jobs)}")
+    if len(set(re.findall(r"python-version: \[(.*?)\]", ci))) > 1:
+        out.append(
+            "ci.yml's Python matrices differ, so a job doesn't run on every Python"
+        )
+    return out
+
+
 def problems() -> list[str]:
     out = []
     versions = matrix((DOT / "workflows" / "ci.yml").read_text(encoding="utf-8"))
@@ -174,6 +223,7 @@ def problems() -> list[str]:
         out.append("ci.yml runs on pushes to branches other than main, so a pull request runs twice")  # fmt: skip
     if CONCURRENCY not in ci:
         out.append("ci.yml doesn't cancel a pull request's run when a newer commit replaces it")  # fmt: skip
+    out += split_problems(ci)
     # CONST-VIII-2: an expired emergency amendment fails the law's check, and
     # law.yml runs that check weekly, so a quiet repo still reaches a person
     law = DOT / "workflows" / "law.yml"

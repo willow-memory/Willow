@@ -14,10 +14,17 @@ is written as one `verdict` row through the kernel's own `append`, so the CI
 record is hash-chained like any other and the kernel's `verify` checks it.
 
     python adapters/stdlib/ci/ci.py run    [lint|tests|ports|demo|deps|mutants|tools ...] [--box DIR]
+    python adapters/stdlib/ci/ci.py run    tests --without tests:strip
+    python adapters/stdlib/ci/ci.py run    mutants --shard 2/4
     python adapters/stdlib/ci/ci.py verify [--box DIR]
     python adapters/stdlib/ci/ci.py show   [--box DIR]
 
-`run` with no part runs all seven. The record goes in `.ci-record/` by default
+`run` with no part runs all seven. A gate's own name (`tests:strip`) runs
+just that gate, `--without GATE` leaves one out of what was named, and
+`--shard K/N` runs the Kth of N parts of it, cut by
+[test-shards](../test-shards/)' own split: the N parts hold every gate once
+between them, in the table's order. A name it doesn't know, or `--without`
+given a part, is refused before anything runs. The record goes in `.ci-record/` by default
 (git ignores it), and the key `init` makes goes beside it in
 `.ci-record.key`. A record or key inside the repo where git would count it is
 refused: it would be hashed into the very files it records. CI keeps its
@@ -93,4 +100,9 @@ codes.
 merging it.
 
 In CI (`.github/workflows/ci.yml`) each part is its own job with its own
-record, verified and uploaded as that run's artifact.
+record, verified and uploaded as that run's artifact, but two: `tests:strip`
+has a job of its own on each Python (it runs the add-ons' tests again, in a
+stripped copy, so beside the rest it doubled the job), and the mutants run
+in four shards. `adapters/stdlib/github/github.py check` holds the cut: every gate run by exactly
+one job. A job that fails writes [ci-why](../ci-why/)'s reading of its log
+to the run's summary.
