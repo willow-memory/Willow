@@ -27,6 +27,10 @@ says how). The first was v0.1.0.
   sources are fetched once and kept by hash, not in the repo; CI checks only
   that the frozen files still match. Three ideas from it go on the list:
   `claim-check`, `misquote` and `policy-watch`. (#16)
+- `test-shards`, an add-on that splits the test run into parts by each test's
+  time in an earlier run (pytest's JUnit XML), so the CI jobs finish about
+  together. It learns the suite as it is now, places a test with no past
+  time at the median and says so, and prints any one part for a job to run. (#26)
 - `test-impact`, an add-on for maintainers that takes a change (paths from git
   against a base ref, and any you name) and says which of the repo's checks it
   can reach, in ci's own gate names, cheapest and closest first: the
