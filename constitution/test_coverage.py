@@ -134,13 +134,14 @@ def test_a_citation_to_no_clause_is_surfaced(tmp_path, monkeypatch):
 
 
 def test_the_real_charter_parses_to_every_article_and_clause():
-    """Against the document itself: 14 articles and 64 clauses (Draft 0.9 adds 13)."""
+    """Against the document itself: 14 articles and 65 clauses (Draft 0.9 adds 13,
+    Draft 0.10 adds VIII.4)."""
     ids, problem = cc.clauses_from_constitution(cc.CONSTITUTION)
     assert problem is None
     articles = [i for i in ids if i.count("-") == 1]
     clauses = [i for i in ids if i.count("-") >= 2]
     assert len(articles) == 14, articles
-    assert len(clauses) == 64, len(clauses)
+    assert len(clauses) == 65, len(clauses)
     assert "CONST-X-4" in clauses, "the clause that started this"
 
 

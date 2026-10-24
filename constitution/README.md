@@ -3,9 +3,39 @@
 The law the kernel is written to enforce is [CONSTITUTION.md](../CONSTITUTION.md),
 beside `kernel.py`. This folder holds the checks that answer to it.
 
-The constitution is Draft 0.9, ratified by no one yet. Its home is this repo,
-and every other copy is a pinned copy: a correction is made here, never in a
-copy.
+The constitution is always a draft (VIII.4): every amendment makes the next
+one, and none is final. It came from willows-grove as Draft 0.9; its home is
+this repo now, and every other copy, grove's included, is a pinned copy. A
+correction is made here, never in a copy.
+
+## How it is amended
+
+An amendment is a pull request that carries two things: the clause, written
+into its article in `CONSTITUTION.md`, and a file in
+[amendments/](amendments/) holding the same text under a header (the draft
+it makes, the date, the pull request, the articles, the clauses, a one-line
+summary, and any earlier amendment it supersedes). Then:
+
+    python constitution/amend.py write
+
+fills in the draft number at the top of the law, the Amendment History row
+and the step in the draft lineage. CI refuses the pull request if:
+
+- the Preamble or Article 0 changed by one byte: they are fixed, and Article
+  0 is beyond the reach of any amendment (VIII.3);
+- the amendment names an Article 0 clause, makes a draft that isn't the next
+  one, or its text isn't in the law word for word;
+- the Amendment History before the first amendment here, or the lineage up
+  to 0.9, was edited;
+- a clause it adds or changes isn't cited by code and by a test: an
+  amendment has to leave the law better enforced than it found it, and an
+  answer in `reach.json` doesn't do.
+
+Merging is what enters it. The maintainers are the quorum, and today there
+is one; when there are more, their merge is still the act, and requiring
+their reviews is a setting on the host, not a change to the law. Nothing
+leaves the record: an amendment that replaces another names it in
+`supersedes`, and both files and both rows stay.
 
 ## References point up
 
@@ -22,6 +52,9 @@ own lines enforce, at those lines.
 | [coverage.py](coverage.py) | The coverage report Appendix A calls for: which clauses the constitution defines, read from its own headings, and where in this repo each is cited, in any of its three spellings |
 | [test_coverage.py](test_coverage.py) | The report's own tests, since a gate's report about itself is not evidence about that gate |
 | [declarations.json](declarations.json) | The verdicts, kept by hand: `satisfied`, `differently`, `not applicable` or `failing`, one per clause, each with a sentence saying why |
+| [amend.py](amend.py) | How an amendment enters the law: `write` fills in what the amendment files make, `check` refuses a law that doesn't hold together with them |
+| [test_amend.py](test_amend.py) | Each way the law and its amendments could drift apart, attempted on a copy and refused; one amendment superseding another keeps both |
+| [amendments/](amendments/) | Every amendment made here, numbered in turn; 0001 is VIII.4, *Always a draft* |
 | [reach.json](reach.json) | Every clause no code or test cites, answered: *out of reach*, or *open*, and why. An article's answer stands for each of its clauses with none of its own |
 
     python constitution/coverage.py

@@ -646,6 +646,24 @@ def test_every_clause_the_code_enforces_a_test_attacks():
     )
 
 
+def test_every_clause_an_amendment_brings_is_enforced_and_attacked():
+    """The law is amended only to be better enforced (VIII.4): each clause an
+    amendment in constitution/amendments/ adds or changes, unless a later one
+    superseded it, is cited by code and by a test. An answer in reach.json
+    doesn't do for it."""
+    spec = importlib.util.spec_from_file_location(
+        "willow_amend_for_docs", ROOT / "constitution" / "amend.py"
+    )
+    am = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(am)
+    _, cites = law()
+    in_code = {c for f, cs in cites.items() if not is_test(f) and not f.endswith(".md") for c in cs}  # fmt: skip
+    in_tests = {c for f, cs in cites.items() if is_test(f) for c in cs}
+    weak = sorted(f"{a['name']}: {c}" for a in am.amendments() if a["live"]
+                  for c in a["clauses"] if c not in in_code or c not in in_tests)  # fmt: skip
+    assert not weak, "an amendment brings a clause no code and test both cite:\n  " + "\n  ".join(weak)  # fmt: skip
+
+
 def test_the_readmes_guarantees_name_their_clauses_and_every_eternity_clause_is_there():
     """Each guarantee row says which clause it holds (or `none`, for a promise
     of willow's own), and each of §0.1 to §0.6 is one of them."""

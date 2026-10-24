@@ -116,6 +116,11 @@ PLANTS = {
     "test_every_clause_the_code_enforces_a_test_attacks": _append(
         "adapters/stdlib/todo/todo.py", "# holds CONST-VIII\n"
     ),
+    "test_every_clause_an_amendment_brings_is_enforced_and_attacked": _replace(
+        "constitution/amendments/0001.md",
+        "clauses: CONST-VIII-4",
+        "clauses: CONST-VIII-4, CONST-VIII-2",
+    ),
     "test_the_readmes_guarantees_name_their_clauses_and_every_eternity_clause_is_there": _replace(
         "README.md", r"\| `CONST-0-6` \|", "| none |"
     ),

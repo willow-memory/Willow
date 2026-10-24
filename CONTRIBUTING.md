@@ -88,6 +88,18 @@ own work: the verdicts in `constitution/declarations.json`, and the answers
 in `constitution/reach.json`. Propose them in the pull request; the witness
 is not the actor.
 
+**Amending the law.** The constitution is always a draft, and anyone may
+propose an amendment. Write the clause into its article in
+`CONSTITUTION.md`, add the next numbered file to `constitution/amendments/`
+with the same text under its header (the next draft, the date, your pull
+request's number, the articles, the clauses, a one-line summary), and run
+`python constitution/amend.py write`. In the same pull request, cite each
+clause it brings in the code that enforces it and in a test that tries to
+break it: an amendment that doesn't leave the law better enforced is
+refused. The Preamble and Article 0 can't be amended. To replace an
+earlier amendment, name it in `supersedes`; never edit or delete one.
+[constitution/README.md](constitution/README.md) has the rest.
+
 **The docs match the files.** `test_docs.py` checks that the file tree in
 [FILES.md](FILES.md) lists every file in the repo and nothing else, that the
 README's short tree is the repo's top level, that every path a document names

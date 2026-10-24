@@ -23,6 +23,13 @@ says how). The first was v0.1.0.
   clause; every clause the code cites, a test cites too; every clause is
   cited or answered in `constitution/reach.json` (out of reach, or open,
   with why); and each README guarantee names its clause. (#4)
+- The constitution is always a draft, and amended here:
+  `constitution/amendments/` holds each amendment, and
+  `constitution/amend.py` writes the draft number, history row and lineage
+  step each one makes, and refuses a change to the Preamble or Article 0, an
+  edit to the record before it, or a clause text the law doesn't carry.
+  `test_docs.py` refuses an amendment whose clauses no code and test both
+  cite. The first, VIII.4 "Always a draft", makes Draft 0.10. (#4)
 
 ### Changed
 

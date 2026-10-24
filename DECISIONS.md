@@ -46,6 +46,20 @@ pull request against this file.
 *Held by:* `kernel.py test`, and `adapters/stdlib/ci/test_contract.py` for
 every add-on's refusal.
 
+## The law
+
+**The law is always a draft, and amended here.** CONSTITUTION.md is never
+closed: every amendment makes the next draft (VIII.4). An amendment is a
+pull request with its clause written into the law and a file in
+`constitution/amendments/`; it enters force when CI holds and a maintainer
+merges it. The maintainers are the quorum; today there is one, and when
+there are more, they are. An amendment has to leave the law better
+enforced: each clause it brings is cited by code and by a test. The
+Preamble and Article 0 never change. willows-grove pins the law from here;
+nothing flows back. *Held by:* `constitution/amend.py check`, run by
+`constitution/test_amend.py`, and `test_docs.py`, which fails on an amended
+clause no code and test both cite.
+
 ## Add-ons
 
 **The arrow points one way.** An add-on uses the kernel; the kernel never

@@ -67,7 +67,7 @@
     },
     "CONST-VIII": {
       "answer": "out of reach",
-      "why": "Amendment is how people change the law, not something code does. The repo holds the text; changing it is a pull request a person merges."
+      "why": "VIII.1's evidence floor, quorum and key, and VIII.2's emergency envelope, are people's acts: an amendment enters force when the checks hold and a maintainer merges it, and code can't do that part. VIII.3 and VIII.4, which code can hold, are cited by the amendment check and its tests."
     },
     "CONST-IX": {
       "answer": "out of reach",
