@@ -1,5 +1,15 @@
 [
  {
+  "name": "abbreviations",
+  "kind": "stdlib",
+  "section": "Your own words",
+  "line": "Your own shorthand, written down once (appt, Rx, w/c), so a question finds either form.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, words"
+ },
+ {
   "name": "advisories",
   "kind": "stdlib",
   "section": "Privacy and safety",
@@ -40,6 +50,36 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
+  "name": "amounts",
+  "kind": "stdlib",
+  "section": "Finding things",
+  "line": "Every sum of money in your files, with its date and the line it's on.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, search"
+ },
+ {
+  "name": "anki",
+  "kind": "stdlib",
+  "section": "Ways to use it",
+  "line": "Approved answers as an Anki deck, built without Anki installed.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, interface"
+ },
+ {
+  "name": "apple-notes",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Apple Notes, read from a copy of its database: each note as plain text with its folder and dates.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
   "name": "archivebox",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -48,6 +88,26 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "assistant-scores",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "How often each assistant's suggestions were sealed or set aside, from the record.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, assistant"
+ },
+ {
+  "name": "baby-log",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "Feeds, sleeps and nappies from your notes, by day: when was the last one?",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, tracking"
  },
  {
   "name": "backup",
@@ -80,6 +140,26 @@
   "tags": "no-install, offline, records, assistant"
  },
  {
+  "name": "bench",
+  "kind": "stdlib",
+  "section": "For maintainers",
+  "line": "How fast the kernel answers on boxes of set sizes, per release, so a slowdown is seen.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, maintainers"
+ },
+ {
+  "name": "bibtex",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": ".bib files: each reference as a passage, so you can ask which paper said it and get its key.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
   "name": "bluesky",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -98,6 +178,36 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "braille",
+  "kind": "stdlib",
+  "section": "Ways to use it",
+  "line": "Answers as braille-ready files (BRF) for a braille display or embosser.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, interface"
+ },
+ {
+  "name": "budget",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "Spending against the budget you wrote down, month by month, from your statements.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, tracking"
+ },
+ {
+  "name": "calendar-out",
+  "kind": "stdlib",
+  "section": "Ways to use it",
+  "line": "Dates coming up as an .ics file your calendar app can subscribe to.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, interface"
  },
  {
   "name": "car",
@@ -130,6 +240,16 @@
   "tags": "no-install, offline, records, trust"
  },
  {
+  "name": "chordpro",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "ChordPro song sheets: titles, lyrics and chords, so you can ask which song had that line.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
   "name": "ci-logs",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -149,6 +269,16 @@
   "writes": "record",
   "network": "api.anthropic.com, to ask for suggestions",
   "tags": "needs-install, online, records, assistant"
+ },
+ {
+  "name": "code-comments",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "A codebase's comments and docstrings as passages, cited by file and line.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
  },
  {
   "name": "codebase-memory",
@@ -171,6 +301,36 @@
   "tags": "no-install, offline, read-only, search"
  },
  {
+  "name": "confluence",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "A Confluence space's HTML export as plain text, page by page.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "contracts",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "The dates that matter in your contracts: renewals, notice periods and break clauses, each cited.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, tracking"
+ },
+ {
+  "name": "contradictions",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "Two passages that disagree about the same date or amount, side by side.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, trust"
+ },
+ {
   "name": "corpus-lens",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -189,6 +349,56 @@
   "writes": "to",
   "network": "crates.io, to publish a release a maintainer tags",
   "tags": "no-install, online, writes-output, maintainers"
+ },
+ {
+  "name": "cycle",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "A menstrual cycle log that never leaves this machine: dates, what's next, and what changed.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, tracking"
+ },
+ {
+  "name": "daily-word",
+  "kind": "stdlib",
+  "section": "Play",
+  "line": "A word game drawn from your own files' words, the same puzzle for everyone with the same box.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, play"
+ },
+ {
+  "name": "day-one",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Day One's JSON export: each journal entry as a dated passage, with its place and weather.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "debts",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "Who owes whom, from the IOUs in your notes and messages, each cited.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, tracking"
+ },
+ {
+  "name": "desktop",
+  "kind": "stdlib",
+  "section": "Ways to use it",
+  "line": "A small window to ask and approve, with nothing to install: Python's own tkinter.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, interface"
  },
  {
   "name": "dice",
@@ -222,6 +432,46 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
+  "name": "docs-i18n",
+  "kind": "stdlib",
+  "section": "For maintainers",
+  "line": "The README in other languages, each checked for drift against the English one.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, maintainers"
+ },
+ {
+  "name": "dotfiles",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Your dotfiles as passages: which file sets what, for 'where did I set my editor?'",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "duplicates",
+  "kind": "stdlib",
+  "section": "Finding things",
+  "line": "Passages that say the same thing in two files, and which one is newer.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, search"
+ },
+ {
+  "name": "email-ask",
+  "kind": "stdlib",
+  "section": "Ways to use it",
+  "line": "Ask by emailing yourself; the answer comes back as a reply with its sources.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "your own mail server, over IMAP and SMTP, to read questions and reply",
+  "tags": "no-install, online, read-only, interface"
+ },
+ {
   "name": "encrypt",
   "kind": "deps",
   "section": "Trust and proof",
@@ -231,6 +481,16 @@
   "writes": "record",
   "network": "none",
   "tags": "needs-install, offline, records, trust"
+ },
+ {
+  "name": "evernote",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Evernote's .enex files: each note as plain text with its notebook, tags and dates.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
  },
  {
   "name": "family-tree",
@@ -243,6 +503,16 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
+  "name": "first-mention",
+  "kind": "stdlib",
+  "section": "Finding things",
+  "line": "When your files first mention something, and the line that does.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, search"
+ },
+ {
   "name": "flashcards",
   "kind": "stdlib",
   "section": "Keeping track",
@@ -251,6 +521,26 @@
   "writes": "record",
   "network": "none",
   "tags": "no-install, offline, records, tracking"
+ },
+ {
+  "name": "foia",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "Freedom-of-information requests: what you asked, when, and when the answer is due by law.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, tracking"
+ },
+ {
+  "name": "food-log",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "What you ate, from your notes, by day.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, tracking"
  },
  {
   "name": "forecasts",
@@ -281,6 +571,26 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "forget",
+  "kind": "stdlib",
+  "section": "Privacy and safety",
+  "line": "Stops a file being searched, recorded on the chain, so what was taken out is known and nothing else is touched.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, privacy"
+ },
+ {
+  "name": "fuzz",
+  "kind": "stdlib",
+  "section": "For maintainers",
+  "line": "Random and broken inputs thrown at the kernel's commands, every crash kept as a test.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, maintainers"
  },
  {
   "name": "garden",
@@ -365,6 +675,16 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
+  "name": "go",
+  "kind": "stdlib",
+  "section": "For maintainers",
+  "line": "A Go port of kernel.py, held to the same vectors as the others.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, maintainers"
+ },
+ {
   "name": "goodreads",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -373,6 +693,26 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "google-keep",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Google Keep from Takeout: notes, lists and labels as dated passages.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "habits",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "Streaks from the lines you write each day: how many days in a row, and which you missed.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, tracking"
  },
  {
   "name": "health",
@@ -405,6 +745,36 @@
   "tags": "no-install, offline, read-only, trust, everyday"
  },
  {
+  "name": "home-assistant",
+  "kind": "stdlib",
+  "section": "Ways to use it",
+  "line": "Ask through Home Assistant's voice assistant, answered from your files.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "your Home Assistant, on your own network, to answer its voice assistant",
+  "tags": "no-install, online, read-only, interface"
+ },
+ {
+  "name": "home-sensors",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Home Assistant's history export: sensor readings as dated numbers the readings add-on can trend.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "home-upkeep",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "Home upkeep: the boiler service, the filters, the gutters, what's due and when it was last done.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, tracking"
+ },
+ {
   "name": "homestead",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -413,6 +783,16 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "hours",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "Hours worked or volunteered, per client or group, from your notes.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, tracking"
  },
  {
   "name": "in-case",
@@ -455,6 +835,16 @@
   "tags": "no-install, offline, read-only, tracking"
  },
  {
+  "name": "irc",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "IRC logs from WeeChat, irssi or ZNC, one dated line per message, by network and channel.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
   "name": "issue-answer",
   "kind": "stdlib",
   "section": "Assistants",
@@ -473,6 +863,26 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, trust"
+ },
+ {
+  "name": "jira",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Jira's issue export, CSV or XML: each issue, comment and status change as dated passages.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "job-hunt",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "Applications sent, replies and interviews, by date: who you're still waiting on.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, tracking"
  },
  {
   "name": "joplin",
@@ -505,6 +915,16 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
+  "name": "jupyter",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Jupyter notebooks: Markdown cells, code and text outputs as passages, cited by cell.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
   "name": "karakeep",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -515,6 +935,36 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
+  "name": "kids",
+  "kind": "stdlib",
+  "section": "Privacy and safety",
+  "line": "A box for a child: answers only from the folder you choose for them, and nothing they can approve.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, privacy"
+ },
+ {
+  "name": "kiosk",
+  "kind": "stdlib",
+  "section": "Ways to use it",
+  "line": "A shared machine in a library or classroom: one box, ask only, nobody's key on it.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "loopback",
+  "tags": "no-install, this-machine, read-only, interface"
+ },
+ {
+  "name": "lab-notebook",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "A lab notebook's dated entries, by sample and experiment: what was done to what, and when.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, tracking"
+ },
+ {
   "name": "large-print",
   "kind": "stdlib",
   "section": "Ways to use it",
@@ -523,6 +973,36 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, interface"
+ },
+ {
+  "name": "latex",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "LaTeX sources as plain prose, commands stripped, cited by the .tex file's own lines.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "launcher",
+  "kind": "stdlib",
+  "section": "Ways to use it",
+  "line": "Ask from Alfred, Raycast, KRunner or PowerToys Run, answers with file and line.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, interface"
+ },
+ {
+  "name": "lending",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "Things you lent, to whom and when, and which are still out.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, tracking"
  },
  {
   "name": "lessons",
@@ -576,6 +1056,16 @@
   "tags": "needs-install, offline, read-only, trust"
  },
  {
+  "name": "linkedin",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "LinkedIn's data export: messages, posts and connections as dated lines.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
   "name": "listening",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -584,6 +1074,16 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "livestock",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "Each animal's births, treatments and sales, from your farm records.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, tracking"
  },
  {
   "name": "local-model",
@@ -597,6 +1097,16 @@
   "tags": "needs-install, this-machine, records, assistant"
  },
  {
+  "name": "location-history",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Google Maps Timeline and other location exports: where you were, by day.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
   "name": "lockfiles",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -607,10 +1117,51 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
+  "name": "logs",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "System and app logs (syslog, journald's export, nginx): each line dated, so you can ask when it started.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "man-pages",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "The man pages installed on this machine as plain text, so you can ask your own system's docs.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "manifests",
+  "kind": "deps",
+  "section": "Reading more kinds of files",
+  "line": "Docker Compose and Kubernetes YAML: each service, image, port and volume as a passage.",
+  "source": "new",
+  "needs": "PyYAML; MIT",
+  "writes": "to",
+  "network": "none",
+  "tags": "needs-install, offline, writes-output, file-reader"
+ },
+ {
   "name": "mastodon",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
   "line": "A Mastodon or Pixelfed account archive's outbox.json: your posts as dated lines.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "matrix",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Element's room export, JSON or HTML: one dated line per message in each Matrix room.",
   "source": "new",
   "writes": "to",
   "network": "none",
@@ -638,6 +1189,26 @@
   "tags": "needs-install, online, writes-output, search"
  },
  {
+  "name": "mediawiki",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "A MediaWiki XML dump: each page's latest text, with its title and when it changed.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "medical-records",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Your health records as FHIR JSON or C-CDA XML: visits, results and prescriptions as dated lines.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
   "name": "memoir",
   "kind": "stdlib",
   "section": "Your own words",
@@ -658,6 +1229,16 @@
   "tags": "no-install, offline, records, assistant"
  },
  {
+  "name": "meta-archive",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Facebook and Instagram's Download Your Information files: posts, comments and messages as dated lines.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
   "name": "mex",
   "kind": "stdlib",
   "section": "Assistants",
@@ -666,6 +1247,16 @@
   "writes": "record",
   "network": "none",
   "tags": "no-install, offline, records, assistant"
+ },
+ {
+  "name": "mileage",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "Miles driven for work, from your trips and notes, totalled for a tax year.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, tracking"
  },
  {
   "name": "milestones",
@@ -689,6 +1280,36 @@
   "tags": "needs-install, online, read-only, trust"
  },
  {
+  "name": "mood",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "Mood scores you write in a journal, over weeks and months.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, tracking"
+ },
+ {
+  "name": "music-library",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Your music files' tags (MP3, FLAC, M4A): artist, album, year and track, as lines.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "musicxml",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "MusicXML scores: titles, lyrics, tempo and performance markings as passages.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
   "name": "nestor",
   "kind": "stdlib",
   "section": "Trust and proof",
@@ -697,6 +1318,36 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, trust"
+ },
+ {
+  "name": "nicknames",
+  "kind": "stdlib",
+  "section": "Your own words",
+  "line": "The names you call people, mapped to who they are, so 'Mum' finds Margaret.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, words"
+ },
+ {
+  "name": "notary",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "The record's newest hash timestamped by an outside time server, so anyone can see it existed by then.",
+  "source": "new",
+  "writes": "record",
+  "network": "an RFC 3161 time server you choose, sent only the hash",
+  "tags": "no-install, online, records, trust"
+ },
+ {
+  "name": "notion",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Notion's export zip, Markdown and CSV, as plain text with each page's title and path.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
  },
  {
   "name": "npm",
@@ -729,6 +1380,16 @@
   "tags": "no-install, offline, writes-output, tracking"
  },
  {
+  "name": "obsidian",
+  "kind": "stdlib",
+  "section": "Ways to use it",
+  "line": "Ask from inside Obsidian, answers as links to the note and line.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "loopback",
+  "tags": "no-install, this-machine, read-only, interface"
+ },
+ {
   "name": "ocr",
   "kind": "deps",
   "section": "Reading more kinds of files",
@@ -738,6 +1399,26 @@
   "writes": "to",
   "network": "none",
   "tags": "needs-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "openai-compatible",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "Suggestions from any OpenAI-compatible endpoint you choose (LM Studio, vLLM, OpenRouter), citing your passages.",
+  "source": "new",
+  "writes": "record",
+  "network": "the endpoint you configure, to ask for suggestions",
+  "tags": "no-install, online, records, assistant"
+ },
+ {
+  "name": "orders",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Amazon's order history and other shops' CSV exports: what you bought, when, and for how much.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
  },
  {
   "name": "outdated",
@@ -770,6 +1451,26 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
+  "name": "paper-key",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "Your key printed as words on paper, to keep somewhere safe, and typed back in to restore it.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, trust"
+ },
+ {
+  "name": "people",
+  "kind": "stdlib",
+  "section": "Finding things",
+  "line": "Everyone your files name, and every place each is mentioned.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, search"
+ },
+ {
   "name": "pets",
   "kind": "stdlib",
   "section": "Keeping track",
@@ -778,6 +1479,16 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, tracking"
+ },
+ {
+  "name": "pgn",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Chess games from PGN files: players, dates, openings and your annotations.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
  },
  {
   "name": "pgp",
@@ -802,6 +1513,16 @@
   "tags": "needs-install, offline, writes-output, file-reader"
  },
  {
+  "name": "pii-audit",
+  "kind": "stdlib",
+  "section": "Privacy and safety",
+  "line": "Personal data sitting in your files (ID numbers, health details, card numbers), listed by file and line.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, privacy"
+ },
+ {
   "name": "pins",
   "kind": "stdlib",
   "section": "For maintainers",
@@ -810,6 +1531,16 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, maintainers"
+ },
+ {
+  "name": "places",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "KML and GeoJSON files: each place's name, note and coordinates as a passage.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
  },
  {
   "name": "pocket",
@@ -863,6 +1594,16 @@
   "tags": "no-install, online, writes-output, maintainers"
  },
  {
+  "name": "qr",
+  "kind": "stdlib",
+  "section": "Ways to use it",
+  "line": "An answer as a QR code on screen, to carry it to your phone without the network.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, interface"
+ },
+ {
   "name": "quiet-corner",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -873,6 +1614,16 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
+  "name": "quiz",
+  "kind": "stdlib",
+  "section": "Play",
+  "line": "A quiz from your own files: a passage with a word missing, and you fill it in.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, play"
+ },
+ {
   "name": "quote-review",
   "kind": "stdlib",
   "section": "Trust and proof",
@@ -881,6 +1632,16 @@
   "writes": "nothing",
   "network": "the forge, through the workflow's token, to read the review comments",
   "tags": "no-install, online, read-only, trust"
+ },
+ {
+  "name": "readwise",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Readwise's highlights export: every highlight with its book or article, and your note on it.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
  },
  {
   "name": "recipes",
@@ -904,6 +1665,16 @@
   "tags": "needs-install, offline, read-only, maintainers"
  },
  {
+  "name": "reddit",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Reddit's data export: your posts, comments and saved items as dated lines.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
   "name": "redential",
   "kind": "deps",
   "section": "Trust and proof",
@@ -915,6 +1686,16 @@
   "tags": "needs-install, offline, records, trust"
  },
  {
+  "name": "renewals",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "Passports, licences, insurance and memberships: when each expires, from your documents.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, tracking"
+ },
+ {
   "name": "report",
   "kind": "stdlib",
   "section": "Trust and proof",
@@ -923,6 +1704,36 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, trust"
+ },
+ {
+  "name": "repro",
+  "kind": "stdlib",
+  "section": "For maintainers",
+  "line": "A release built twice from the same commit, byte for byte the same.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, maintainers"
+ },
+ {
+  "name": "rss-out",
+  "kind": "stdlib",
+  "section": "Ways to use it",
+  "line": "New approved answers as an RSS feed file, for any feed reader.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, interface"
+ },
+ {
+  "name": "rtf",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "RTF documents as plain text.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
  },
  {
   "name": "safe-app",
@@ -976,6 +1787,56 @@
   "tags": "no-install, offline, read-only, tracking"
  },
  {
+  "name": "screenplay",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Fountain and Final Draft scripts: scenes, characters and lines, cited by scene.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "scripture",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "A scripture or other canonical text with your study notes beside it, cited by book, chapter and verse.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "scrivener",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Scrivener projects: each document in the binder as plain text, by its place in the manuscript.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "scrub",
+  "kind": "stdlib",
+  "section": "Privacy and safety",
+  "line": "Strips the hidden details (EXIF, author, edit history) from a file before you share it.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, privacy"
+ },
+ {
+  "name": "second-opinion",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "Two assistants' suggestions for the same question side by side, each waiting for its own seal.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, assistant"
+ },
+ {
   "name": "secrets-audit",
   "kind": "stdlib",
   "section": "Privacy and safety",
@@ -1015,6 +1876,16 @@
   "writes": "to",
   "network": "none",
   "tags": "needs-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "shell-history",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Your bash, zsh and fish history: what you ran, and when the shell recorded it.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
  },
  {
   "name": "sigmap",
@@ -1090,6 +1961,16 @@
   "tags": "no-install, offline, writes-output, interface, everyday"
  },
  {
+  "name": "steam",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Your Steam library from its local files: games, playtime and when you last played.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
   "name": "stems",
   "kind": "deps",
   "section": "Your own words",
@@ -1131,6 +2012,36 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
+  "name": "swift",
+  "kind": "stdlib",
+  "section": "For maintainers",
+  "line": "A Swift port of kernel.py for iPhone and Mac apps, held to the same vectors.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, maintainers"
+ },
+ {
+  "name": "symptoms",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "A symptom diary over time, ready to show a doctor: what, when, how bad, each line cited.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, tracking"
+ },
+ {
+  "name": "sync",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "Your record kept on two devices through any synced folder, with the chain checked on each before it's trusted.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, trust"
+ },
+ {
   "name": "synonyms",
   "kind": "deps",
   "section": "Your own words",
@@ -1152,6 +2063,16 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
+  "name": "tarot",
+  "kind": "stdlib",
+  "section": "Play",
+  "line": "A seeded tarot draw on the record, replayable by anyone with the seed.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, play"
+ },
+ {
   "name": "tax-year",
   "kind": "stdlib",
   "section": "Keeping track",
@@ -1162,6 +2083,26 @@
   "tags": "no-install, offline, read-only, tracking"
  },
  {
+  "name": "teams",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Microsoft Teams chats from your Microsoft account's export, one dated line per message.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "telegram-bot",
+  "kind": "stdlib",
+  "section": "Ways to use it",
+  "line": "Ask from your phone through a Telegram bot only you can talk to.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "api.telegram.org, to receive your questions and send answers",
+  "tags": "no-install, online, read-only, interface"
+ },
+ {
   "name": "texts",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -1170,6 +2111,16 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "time-capsule",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "A note sealed now and opened on a date you choose, with the record proving it wasn't changed.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, trust"
  },
  {
   "name": "timeline",
@@ -1192,6 +2143,16 @@
   "tags": "no-install, offline, writes-output, privacy"
  },
  {
+  "name": "trello",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "A Trello board's JSON export: cards, checklists and comments, by list.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
   "name": "trips",
   "kind": "stdlib",
   "section": "Keeping track",
@@ -1200,6 +2161,16 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, tracking"
+ },
+ {
+  "name": "tui",
+  "kind": "stdlib",
+  "section": "Ways to use it",
+  "line": "A full-screen terminal view to ask, read passages and approve, in curses.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, interface"
  },
  {
   "name": "typos",
@@ -1264,6 +2235,56 @@
   "tags": "no-install, offline, read-only, tracking"
  },
  {
+  "name": "web-pages",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Saved web pages, .html and .mhtml, as their readable text, with the address they came from.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "witness",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "A second person's seal beside yours, for answers that need two people to agree.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, trust"
+ },
+ {
+  "name": "words-ar",
+  "kind": "stdlib",
+  "section": "Your own words",
+  "line": "Arabic common words, with the article and prefixes read apart.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, words"
+ },
+ {
+  "name": "words-cy",
+  "kind": "stdlib",
+  "section": "Your own words",
+  "line": "Welsh common words ('a', 'y', 'yn').",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, words"
+ },
+ {
+  "name": "words-hi",
+  "kind": "stdlib",
+  "section": "Your own words",
+  "line": "Hindi common words ('और', 'है').",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, words"
+ },
+ {
   "name": "words-it",
   "kind": "stdlib",
   "section": "Your own words",
@@ -1272,6 +2293,16 @@
   "writes": "record",
   "network": "none",
   "tags": "no-install, offline, records, words, italian"
+ },
+ {
+  "name": "words-ja",
+  "kind": "stdlib",
+  "section": "Your own words",
+  "line": "Japanese, which has no spaces: a small segmenter of its own and a common-words list.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, words"
  },
  {
   "name": "words-nl",
@@ -1284,10 +2315,80 @@
   "tags": "no-install, offline, records, words, dutch"
  },
  {
+  "name": "words-pl",
+  "kind": "stdlib",
+  "section": "Your own words",
+  "line": "Polish common words ('i', 'w').",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, words"
+ },
+ {
+  "name": "words-ru",
+  "kind": "stdlib",
+  "section": "Your own words",
+  "line": "Russian common words, so questions aren't matched on 'и' and 'в'.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, words"
+ },
+ {
+  "name": "words-sv",
+  "kind": "stdlib",
+  "section": "Your own words",
+  "line": "Swedish common words ('och', 'att').",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, words"
+ },
+ {
+  "name": "words-tr",
+  "kind": "stdlib",
+  "section": "Your own words",
+  "line": "Turkish common words ('ve', 'bir').",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, words"
+ },
+ {
+  "name": "words-zh",
+  "kind": "stdlib",
+  "section": "Your own words",
+  "line": "Chinese, which has no spaces: words found by a small segmenter of its own, and a common-words list.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, words"
+ },
+ {
   "name": "writefreely",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
   "line": "WriteFreely posts, from its export or a copy of its SQLite database, as dated text.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "x-archive",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "An X (Twitter) archive: your posts, replies and DMs as dated lines.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "zotero",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Your Zotero library, from a copy of zotero.sqlite: items, notes and PDF annotations, each with its citation.",
   "source": "new",
   "writes": "to",
   "network": "none",
