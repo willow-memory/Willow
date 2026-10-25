@@ -1,0 +1,111 @@
+{
+ "about": "The study's sources by address, commit and git tree hash; never their text. sources.py fetches them and checks each tree without git.",
+ "pinned": "2026-10-25",
+ "sources": {
+  "artcraft": {
+   "url": "https://github.com/storytold/artcraft",
+   "commit": "1f969a9224934a55417daf10359a6fb1458b63f4",
+   "tree": "fe6c09c70f4d9e60580000854d81527a4e71dce4"
+  },
+  "cadcraft": {
+   "url": "https://github.com/storytold/cadcraft",
+   "commit": "b9f96d3dd3630a8de2cb7885d66ded334682918b",
+   "tree": "9dc20929c4d2aacbf70b342da28453f5394fa34b"
+  },
+  "designcraft": {
+   "url": "https://github.com/storytold/designcraft",
+   "commit": "c313c53497619b2c66d8fe0fd8c7dd40f61f50ca",
+   "tree": "c2b7ead8a6427569e82d514b583855997206c2ef"
+  },
+  "drawcraft": {
+   "url": "https://github.com/storytold/drawcraft",
+   "commit": "dae0edb39cf5ab1c6b333a54562726145fdc8402",
+   "tree": "3724f8abf6b500f482ca9f71fad0677525795d8a"
+  },
+  "effectcraft": {
+   "url": "https://github.com/storytold/effectcraft",
+   "commit": "eb5108786b90bf994a6abe4e6c0b2614c6aeaa29",
+   "tree": "1caaa17fde68fde2aea42f1598c230d1aac76e26"
+  },
+  "figcraft": {
+   "url": "https://github.com/storytold/figcraft",
+   "commit": "10702311f345393ee1d8868c3257679befcfa14d",
+   "tree": "b54865f9868955aee77f668a5fbc7d6b1439d867"
+  },
+  "filmcraft": {
+   "url": "https://github.com/storytold/filmcraft",
+   "commit": "552f008d2757e307194256b3e672c9c1de4fa9b2",
+   "tree": "7b55c63ea120a917048032d18495b7170c57b603"
+  },
+  "gridcraft": {
+   "url": "https://github.com/storytold/gridcraft",
+   "commit": "3099df934eda27cd457a9b8d1525d3fc973a1b7b",
+   "tree": "dca6cbc69b3380ef4a447eda5ae998496e6ad47c"
+  },
+  "lightcraft": {
+   "url": "https://github.com/storytold/lightcraft",
+   "commit": "23f54803e617ef4aa45b6fec23fc467ef4c2449d",
+   "tree": "aad0aaf5dae4d43b9b390c78a9d474dc70eeda61"
+  },
+  "pdfcraft": {
+   "url": "https://github.com/storytold/pdfcraft",
+   "commit": "c894928e6fdfd3861795e43b1446c6cfc23cc9ab",
+   "tree": "420fa5f48d0a1b73b0efa0e389a1f3a463473f05"
+  },
+  "photocraft": {
+   "url": "https://github.com/storytold/photocraft",
+   "commit": "1c3db2e5c35a4f8c544011e57c8026ccb9741926",
+   "tree": "1f098afedb77877aa5e03b08f46d38187f9acb68"
+  },
+  "sheetcraft": {
+   "url": "https://github.com/storytold/sheetcraft",
+   "commit": "10bec74810c55c73fda2f08393ad45238eb783b5",
+   "tree": "a8618a799bf8b4debf1e3b181c2ee999b795a26b"
+  },
+  "slidecraft": {
+   "url": "https://github.com/storytold/slidecraft",
+   "commit": "7be391a1be0fdc09f9601e41bb55ac5fbac3df34",
+   "tree": "3cb05f10c7c71d46ee0fe8908e4a27afddc85aba"
+  },
+  "soundcraft": {
+   "url": "https://github.com/storytold/soundcraft",
+   "commit": "93800e0764ca62435ee66a4770f355df954b7fcd",
+   "tree": "e409d1a42a727664ee3f7f7e408905754cb624c3"
+  },
+  "wordcraft": {
+   "url": "https://github.com/storytold/wordcraft",
+   "commit": "cf2fe4733e3d308173afda81a74f6a2a81e49018",
+   "tree": "9ccfb98f4d30605623a0350e51f761f4a532f388"
+  },
+  "craft-libs@5c874d51ee": {
+   "url": "https://github.com/storytold/craft-libs",
+   "commit": "5c874d51eeb3de70e735c8ce87a59a7dedd47675",
+   "tree": "4b253a0dabee3f27562cb1e31148db4ec2e71245"
+  },
+  "craft-libs@82a24b006e": {
+   "url": "https://github.com/storytold/craft-libs",
+   "commit": "82a24b006eefa036b43c09a67fb9a3fbd17ffe63",
+   "tree": "00c0de41d9577f196bb240bc30932a2dde680708"
+  },
+  "craft-libs@9f75d3dc19": {
+   "url": "https://github.com/storytold/craft-libs",
+   "commit": "9f75d3dc19b4b514c4f3d4847ed1ec1b0e86b4ef",
+   "tree": "f7a2c6b18837a04eadc3253033294cd236aae042"
+  },
+  "craft-libs@d991bf6792": {
+   "url": "https://github.com/storytold/craft-libs",
+   "commit": "d991bf6792f8ade99c51358bf3c1d902c8cd96b5",
+   "tree": "4a1e943901b7073535a49d1dd34bb07251b94ae9"
+  },
+  "craft-libs@e9546e191d": {
+   "url": "https://github.com/storytold/craft-libs",
+   "commit": "e9546e191dd62f2bc1d61eca45dbdc2f1b3c1d8e",
+   "tree": "727ceba1cd02425d50236aa09bee40302732d047"
+  },
+  "craft-libs@f0ad6c1e1d": {
+   "url": "https://github.com/storytold/craft-libs",
+   "commit": "f0ad6c1e1d297908915f4be315b0fcfc9be7b5d4",
+   "tree": "b3c17c56616a9d64b1efb795cc906a73f940906d"
+  }
+ }
+}

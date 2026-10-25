@@ -454,7 +454,7 @@ willow/
 ├── docs/
 │   ├── tour.md               the first five minutes, in full: a question, a gap, her words, an approval
 │   └── how-it-works.md       what it reads, how it ranks, the key, the record, approvals
-├── demo/                     four made-up people, a real bug and a real policy change, to try it on
+├── demo/                     four made-up people, a real bug, a real policy change and programs taken apart, to try it on
 │   ├── odile/                piano tuner and beekeeper, caring for her father
 │   │   ├── make_life.py      writes her files into life/, the same bytes every run
 │   │   ├── CHARACTER.md      who she is and how her life is written down
@@ -509,6 +509,16 @@ willow/
 │   │       ├── reword.txt     the author's eight, rephrased five ways each, blind
 │   │       ├── advisory-words.txt  a words list of acronyms the advisories expand
 │   │       └── null.txt      fifty questions with nothing to do with the bug
+│   ├── craft-assembly/       the Craft apps taken apart into pieces, rebuilt exactly, and five assembled into one
+│   │   ├── README.md         the claim, the threats, what is frozen, what was seen before the freeze, results
+│   │   ├── FROZEN.json       the SHA-256 of each frozen file, and of the tools when frozen
+│   │   ├── sources.json      the 21 sources by address, commit and git tree hash
+│   │   ├── composite.json    the five apps the composite assembles, and their library's address
+│   │   ├── sources.py        fetches the sources by their pins, and checks each tree without git
+│   │   ├── pieces.py         takes sources apart into one store of pieces, and rebuilds them from it
+│   │   ├── compose.py        assembles one Cargo workspace from the store, by five written rules
+│   │   ├── run.py            the stages and the five pass rules, as kernel verdict rows
+│   │   └── test_craft_assembly.py holds the frozen files to their hashes, and the tools to their word
 │   └── google-privacy-2026-10-16/  a real policy change: what Google's text says against what the news said
 │       ├── README.md         the claim, the threats, what is frozen, how to reproduce, the results
 │       ├── FROZEN.json       the SHA-256 of each frozen file, and of the tools when frozen

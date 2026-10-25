@@ -1,0 +1,5 @@
+{
+ "about": "The composite compose.py assembles: these apps, each a Cargo workspace in the store, and the library they share, by its git address. The five pin craft-ui at the same commit, 5c874d51ee; each library crate is wanted at one commit only.",
+ "apps": ["cadcraft", "designcraft", "effectcraft", "filmcraft", "soundcraft"],
+ "library": "https://github.com/storytold/craft-libs"
+}

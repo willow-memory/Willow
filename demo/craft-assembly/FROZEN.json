@@ -1,0 +1,16 @@
+{
+ "about": "The freeze of demo/craft-assembly: each file's SHA-256 when it was frozen, held by test_craft_assembly.py. A change is a new freeze, in its own commit, with its reason, before the run that needs it.",
+ "frozen": "2026-10-25",
+ "files": {
+  "sources.json": "87e947f713958aa9fa19458185edd1ebb265b65955645b6d5c64a8c4a2eab2fa",
+  "composite.json": "8c15e93dff1db8b078acf1ac41ba9017094111128a5ccef6983a436c2461ba31",
+  "pieces.py": "e0b5a3cf686bdaefc16d3e05a9130d2b61a5ac5b88c49a8841ee847914566531",
+  "compose.py": "dd59ac0900fe6cfd0d26582065c2c922667d44e738d212d9e0bfb4bf17880894",
+  "run.py": "3ce79b305078b2a4ab2f3b3ac3f0f56567043da2f8b78a88e5a522a6658113c8",
+  "sources.py": "9708c5c29aedc18710db184934f1f32b4886b5bb9b845989e19c2f1c59de1e00"
+ },
+ "tools_at_freeze": {
+  "kernel.py": "9b9c14fb49e8be11149909578d80516384f69de428e905f3cf92a972f5f4b3d7",
+  "demo/php2shell/make_trees.py": "50bbcb8d4d12a7932d0a79f035e82366219430e1773524c117aa71ad55329f12"
+ }
+}

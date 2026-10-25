@@ -49,6 +49,7 @@ def test_the_same_files_give_the_same_record_byte_for_byte(tmp_path):
         "demo:php2shell",
         "demo:google-privacy-2026-10-16",
         "demo:stack",
+        "demo:craft-assembly",
     ]
     assert {r["state"] for r in made[1:]} == {ci.SATISFIED}
 
@@ -120,7 +121,7 @@ def test_the_gates_run_in_one_fixed_order_and_cover_every_part():
         "tests:constitution", "tests:coverage",
         *(f"ports:{p}" for p in ci.PORTS),
         *(f"demo:{p}" for p in ci.people()), "demo:php2shell", "demo:google-privacy-2026-10-16",
-        "demo:stack",
+        "demo:stack", "demo:craft-assembly",
         *(g for d in ci.deps_add_ons() for g in (f"deps:{d}", f"deps:{d}@floor")),
         "deps:floors",
         *(f"mutants:{n}" for n in ci.mutant_targets()),
