@@ -296,6 +296,10 @@ willow/
 │   │   │   ├── restack.py    your branches back on top of main, the repo's own conflicts settled
 │   │   │   ├── test_restack.py
 │   │   │   └── README.md
+│   │   ├── risky-code/
+│   │   │   ├── risky_code.py  lines of code matching a known-dangerous pattern, by file and line, as leads to read
+│   │   │   ├── test_risky_code.py
+│   │   │   └── README.md
 │   │   ├── scan/
 │   │   │   ├── scan.py       indexes a folder once, then asks it a list of questions, the kernel's way
 │   │   │   ├── test_scan.py  holds its answers to the kernel's, every ranking vector included

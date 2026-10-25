@@ -10,6 +10,12 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `risky-code`, an add-on that finds lines of code matching a known-dangerous
+  pattern — command injection, `eval`/`exec`, sql concatenation, insecure
+  deserialization, broken tls, ssrf, path traversal, template injection, xss
+  sinks, weak crypto, dangerous config, xxe — across Python, JavaScript, PHP,
+  Java, Go and Ruby, each cited by file and line as a lead to read, not proof.
+  A sibling to `secrets-audit`; offline, read-only.
 - `repo-pile`: a list of public repositories made into a box you can ask.
   Each is cloned, kept only when its own licence file grants one an
   Apache-2.0 project can use (anything else, or none, is left out and said

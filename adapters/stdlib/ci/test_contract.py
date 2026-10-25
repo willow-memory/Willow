@@ -140,6 +140,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "changed": ("changed.py", ["--box", "{box}", *NOW]),
     "diverge": ("diverge.py", ["{pile}", "{pile}"]),
     "secrets-audit": ("secrets_audit.py", ["--box", "{box}"]),
+    "risky-code": ("risky_code.py", ["--box", "{box}"]),
     "session-seal": ("session_seal.py", ["--box", "{box}", *NOW]),
     "xref": ("xref.py", ["--box", "{box}"]),
     "test-impact": ("impact.py", ["plan", "README.md"]),
