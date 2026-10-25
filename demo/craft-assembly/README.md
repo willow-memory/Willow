@@ -98,4 +98,65 @@ offline and in seconds.
 
 ## Results
 
-Not yet run: the freeze comes first.
+### Run 1, 2026-10-25: taking apart held; assembling failed
+
+Run by [run.py](run.py) from the freeze (8849664), 03:52 to 06:35 UTC. Its
+outcomes are [results/run-1.json](results/run-1.json) (SHA-256
+`6acabe8abcfbc5be…`), and its verdicts are rows 1 to 5 of a record outside
+the repo, of which `python kernel.py verify --box <box>` said
+`the chain holds: 6 rows, 0 sealed`.
+
+| Pass rule | Verdict | What it found |
+|---|---|---|
+| rebuilt | satisfied | all 21 sources rebuilt from the store hash to their pinned git trees |
+| same-store | satisfied | taking apart twice gave the same store, byte for byte |
+| same-composite | satisfied | composing twice gave the same composite, byte for byte |
+| builds | **failing** | 135 of 140 packages build in their own app; none builds in the composite |
+| tests | **failing** | 127 of 140 pass their tests in their own app; none in the composite |
+
+**The store.** 21,657 files, 408 MB, became 18,975 pieces; 1,173 of them
+(24.7 MB) are in two or more sources.
+
+**Why assembling failed.** Cargo could not resolve the composite at all, so
+no lockfile was made and every build stopped at once:
+
+    package `cpal` links to the native library `alsa`, but it conflicts with
+    a previous package which links to `alsa` as well
+
+effectcraft and filmcraft use the audio crate `cpal` 0.16, which reaches ALSA
+through `alsa-sys` 0.3; soundcraft uses `cpal` 0.18, through `alsa-sys` 0.4.
+Cargo allows several versions of a crate in one build, which rule 1 relies
+on, but only one crate in a build may link a given native library. Rule 1's
+"each app keeps its own versions, so apps that pin different versions need no
+choosing" is false for a crate that links one.
+
+**What the frozen rules missed, all of it in the manifests before the
+freeze:**
+
+- the `links` conflict above;
+- effectcraft takes sixteen of filmcraft's crates (its codecs, `media`,
+  `color` and more) by git, at filmcraft's commit `2c5ba7a726`, not the
+  `552f008d27` the study pins for filmcraft; rule 2 rewrites only
+  `craft-libs`, so the composite would have fetched those from GitHub, not
+  the store, and held two copies of filmcraft's codecs;
+- designcraft takes `indd-utils` by git with no commit at all; only its own
+  Cargo.lock says which.
+
+So the README's "compose.py reads only the store" held for every file it
+wrote, not for what the composite's manifests left Cargo to fetch.
+
+**In their own apps**, rebuilt from the store: the packages that didn't
+build are the effectcraft, filmcraft and soundcraft app binaries and
+soundcraft's `playback` and `ui-egui`; those that built and failed their
+tests are the `ui-egui` crates of cadcraft, designcraft and effectcraft, and
+filmcraft's `av1`, `cli`, `codecs`, `engine` and `media`. They count for
+neither rule.
+
+**Seen while it ran:** the tests of effectcraft and filmcraft write scratch
+files into a `target/` folder inside their app (about 1 GB for filmcraft),
+whatever `CARGO_TARGET_DIR` says. And to keep the disk from filling, which
+would have failed builds for want of space rather than for anything they
+hold, the baseline's build folder was deleted once the baseline was over,
+and finished copies (the second store and composite, the fetched sources,
+the scratch above) as each was no longer read. No outcome was read from
+them afterwards.
