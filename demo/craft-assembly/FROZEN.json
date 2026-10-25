@@ -5,8 +5,8 @@
   "sources.json": "9d5e7dcffd1c711be67bd4f9c85370a630f53450856a46b23ca019aa81bf4e1a",
   "composite.json": "e6ae01d871269648cbd97c9102da5bbe529e9eb737d77d2c1824310340c622a3",
   "pieces.py": "e0b5a3cf686bdaefc16d3e05a9130d2b61a5ac5b88c49a8841ee847914566531",
-  "compose.py": "8094e275079806c039620775c14ae8655add398ee140f8f87961d21e8f8b92eb",
-  "run.py": "97394ab7804270197e24a4c57ea4ee4af9c75cc0ab6ee6531a6b57506a421c40",
+  "compose.py": "4edb13797c2576cf356196e7ce3fc5d49c5bd09701c719c5b932a1b1a47928b5",
+  "run.py": "5b105cb1681e4249b15d8e2a6986de02cc83dce06154ec7afbbbe09417b3ee9d",
   "sources.py": "9708c5c29aedc18710db184934f1f32b4886b5bb9b845989e19c2f1c59de1e00"
  },
  "tools_at_freeze": {
@@ -29,7 +29,20 @@
   },
   {
    "freeze": 2,
-   "why": "after run 1 failed to resolve: rule 2 for every git dependency and patch, rule 6 for native-library clashes, three sources added, run.py's package specs and wider baseline"
+   "why": "after run 1 failed to resolve: rule 2 for every git dependency and patch, rule 6 for native-library clashes, three sources added, run.py's package specs and wider baseline",
+   "commit": "3b25ab9",
+   "files": {
+    "sources.json": "9d5e7dcffd1c711be67bd4f9c85370a630f53450856a46b23ca019aa81bf4e1a",
+    "composite.json": "e6ae01d871269648cbd97c9102da5bbe529e9eb737d77d2c1824310340c622a3",
+    "pieces.py": "e0b5a3cf686bdaefc16d3e05a9130d2b61a5ac5b88c49a8841ee847914566531",
+    "compose.py": "8094e275079806c039620775c14ae8655add398ee140f8f87961d21e8f8b92eb",
+    "run.py": "97394ab7804270197e24a4c57ea4ee4af9c75cc0ab6ee6531a6b57506a421c40",
+    "sources.py": "9708c5c29aedc18710db184934f1f32b4886b5bb9b845989e19c2f1c59de1e00"
+   }
+  },
+  {
+   "freeze": 3,
+   "why": "after run 2 lost two test suites: rule 7 pins each crate to the version the apps locked; rule 5 keeps each app's root Cargo.toml and Cargo.lock, members naming the composite root"
   }
  ]
 }

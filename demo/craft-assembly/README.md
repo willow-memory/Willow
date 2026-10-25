@@ -49,14 +49,15 @@ its own commit, with its reason.
 - [pieces.py](pieces.py): taking apart and rebuilding, and the tree hash
   (the repo's own, from [php2shell's make_trees.py](../php2shell/make_trees.py)).
 - [composite.json](composite.json) and [compose.py](compose.py): the five
-  apps, and the six rules that assemble them: inherit each app's own
+  apps, and the seven rules that assemble them: inherit each app's own
   workspace settings; take every crate depended on or patched in by git
   from the store, at its pinned commit (or the one its app's Cargo.lock
   holds), with its path dependencies there; leave out a package name two
-  apps share; join profiles setting by setting; drop each app's root
-  manifest and lockfile for the composite's one; and, when Cargo says two
-  versions of a crate link one native library, leave out the side fewer
-  apps use.
+  apps share; join profiles setting by setting; keep each app's root
+  manifest and lockfile as files, the composite's root the one Cargo uses
+  (till freeze 3, dropped); when Cargo says two versions of a crate link
+  one native library, leave out the side fewer apps use; and move each
+  crate to the version the apps locked (freeze 3).
 - [run.py](run.py): the stages and the five pass rules, `rebuilt`,
   `same-store`, `same-composite`, `builds` and `tests`, written as verdict
   rows with the SHA-256 of the results and of every tool.
@@ -136,6 +137,32 @@ Seen before freeze 2, beyond run 1's results:
 - a `[patch]` reaches the whole build: in the composite, cadcraft and
   filmcraft get designcraft's `winit` fork where their own apps use
   crates.io's. That is a difference the rules make, and it stays.
+
+## Freeze 3, and what was seen before it
+
+Made after run 2, in its own commit, for its two lost test suites:
+
+- **Rule 7, pins.** Run 2's lockfile was resolved fresh, so `cadcraft-io` got
+  `acadrust` 0.6.7 where cadcraft locks 0.6.5. Now, once Cargo has resolved,
+  each crates.io package is moved with `cargo update --precise` to the
+  version the apps' own lockfiles hold for it, the highest any app locked
+  in the range Cargo counts compatible. A move Cargo refuses is recorded
+  (`not_pinned`), not forced.
+- **Rule 5, kept roots.** Run 2 dropped each app's root `Cargo.toml` and
+  `Cargo.lock`, and `filmcraft-testkit` tests that its root manifest is
+  there. Now both stay, byte for byte, and every member the rules rewrite
+  names the composite's root as its workspace (`package.workspace`), so the
+  apps' roots are files Cargo never reads as roots.
+
+Seen before freeze 3, beyond run 2's results: that only cadcraft locks
+`acadrust`; that Cargo builds a member naming its workspace root while its
+app's own `[workspace]` manifest sits above it (tried on a workspace made for
+it); and the dry run, again to the lockfile and no further: 136 members, 9
+left out as in run 2, 53 crates moved to the apps' versions and 11 that
+Cargo wouldn't move (each needed newer by another crate, such as
+`derive_arbitrary` 1.5.0 by `arbitrary`), `acadrust` at 0.6.5, filmcraft's
+root manifest in place, and a lockfile of 1,053 packages, none from git.
+Nothing was built or tested.
 
 ## Reproduce
 

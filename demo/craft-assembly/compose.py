@@ -38,8 +38,11 @@ The rules, all of them; none looks at what a build does:
                   every app that has [profile.X] gives it the same value, and
                   dropped (and listed) when they differ or some leave it out.
                   [patch] tables are joined; a clash stops.
-    5. drop       each app's root Cargo.toml and Cargo.lock are not copied:
-                  the composite has one root and resolves one lockfile.
+    5. root       each app's root Cargo.toml and Cargo.lock stay, byte for byte
+                  (freeze 3; till then they were dropped). Each member the
+                  rules rewrite names the composite's root as its workspace
+                  (`package.workspace`), so the apps' own roots stay files,
+                  read by nothing but what reads them as files.
     6. links      `resolve` asks Cargo for that lockfile. When Cargo says two
                   versions of a crate link one native library, the members
                   that depend on the crate are grouped by the version they
@@ -47,6 +50,11 @@ The rules, all of them; none looks at what a build does:
                   apps come later in the recipe) is left out, with every
                   member that depends on one of them, and Cargo is asked
                   again. Any other failure to resolve is said, not settled.
+    7. pins       then each crates.io package in the lockfile is moved to the
+                  version the apps' own Cargo.lock files hold for it, by
+                  `cargo update -p NAME@V --precise W`: W is the highest
+                  version any app locked that Cargo would count compatible
+                  with V. A move Cargo refuses is said, not forced (freeze 3).
 
 Same store and recipe, same bytes; with rule 6, the same registry too.
 Exit codes: 0 composed; 2 refused, or a rule that stops the composite.
@@ -319,22 +327,19 @@ def compose(store: Path, recipe: dict, to: Path) -> dict:
     for app in apps:
         manifests = {f"{m}/Cargo.toml" for m in app.members}
         for path, (mode, sha) in sorted(app.rows.items()):
-            if path in ("Cargo.toml", "Cargo.lock"):
-                continue
             if path.startswith(".cargo/") or "/.cargo/" in path:
                 glue["local_cargo_config"].append(f"{app.name}/{path}")
             target = f"{app.name}/{path}"
             if path in manifests and (app.name, posixpath.dirname(path)) not in out_of:
                 m = posixpath.dirname(path)
-                text = toml(
-                    inherit(
-                        docs[(app.name, m)],
-                        app.ws,
-                        m,
-                        git_dep(app.rows),
-                        f"{app.name}/{m}",
-                    )
+                doc = inherit(
+                    docs[(app.name, m)], app.ws, m, git_dep(app.rows), f"{app.name}/{m}"
                 )
+                doc["package"] = {
+                    **doc["package"],
+                    "workspace": posixpath.relpath(".", f"{app.name}/{m}"),
+                }
+                text = toml(doc)
                 write_text(to / target, text)
                 glue["rewritten"].append(
                     {"file": target, "from": sha, "rule": "inherit, git"}
@@ -513,6 +518,7 @@ def resolve(to: Path, order: list[str], cargo) -> dict:
         ok, err = cargo(["generate-lockfile"], to)
         if ok:
             glue["resolved"] = True
+            glue["pinned"], glue["not_pinned"] = pin(to, order, cargo)
             break
         m = LINKS.search(err)
         if not m:
@@ -579,6 +585,56 @@ def resolve(to: Path, order: list[str], cargo) -> dict:
     glue["left_out"].sort(key=lambda g: g["member"])
     write_text(to / "GLUE.json", pieces.dump(glue))
     return glue
+
+
+def compat(version: str) -> tuple:
+    """The part of a version Cargo holds fixed for `^`: 1.2.3 -> (1,),
+    0.2.3 -> (0, 2), 0.0.3 -> (0, 0, 3)."""
+    major, minor, patch = (
+        int(x) for x in version.split("+")[0].split("-")[0].split(".")[:3]
+    )
+    return (major,) if major else ((0, minor) if minor else (0, 0, patch))
+
+
+def order_of(version: str) -> tuple:
+    core, _, pre = version.split("+")[0].partition("-")
+    return (*(int(x) for x in core.split(".")[:3]), not pre, pre)
+
+
+def registry(lock: Path) -> list[tuple[str, str]]:
+    if not lock.exists():
+        return []
+    packages = tomllib.loads(lock.read_text(encoding="utf-8")).get("package", [])
+    return sorted(
+        (p["name"], p["version"])
+        for p in packages
+        if p.get("source", "").startswith("registry+")
+    )
+
+
+def pin(to: Path, order: list[str], cargo) -> tuple[list[str], list[str]]:
+    """Rule 7: (what was moved, what Cargo wouldn't move), each as
+    `name from -> to`."""
+    held: dict[tuple, set[str]] = {}
+    for app in order:
+        for name, version in registry(to / app / "Cargo.lock"):
+            held.setdefault((name, compat(version)), set()).add(version)
+    moved, refused, tried = [], [], set()
+    for _ in range(3):  # a move can change what another resolves to
+        changed = False
+        for name, version in registry(to / "Cargo.lock"):
+            want = max(
+                held.get((name, compat(version)), ()), key=order_of, default=None
+            )
+            if want is None or want == version or (name, version, want) in tried:
+                continue
+            tried.add((name, version, want))
+            ok, _ = cargo(["update", "-p", f"{name}@{version}", "--precise", want], to)
+            (moved if ok else refused).append(f"{name} {version} -> {want}")
+            changed |= ok
+        if not changed:
+            break
+    return moved, refused
 
 
 def wants(doc: dict, crate: str) -> list[str]:

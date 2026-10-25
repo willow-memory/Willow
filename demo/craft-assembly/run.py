@@ -173,7 +173,8 @@ def stage_composite_layout(work: Path, res: dict) -> dict:
         glue = compose.resolve(work / d, RECIPE["apps"], resolver(work))
     glue = json.loads((work / "composite" / "GLUE.json").read_text(encoding="utf-8"))
     res["glue"] = {k: glue.get(k) for k in ("members", "left_out", "profiles_dropped", "git",
-                                             "local_cargo_config", "resolved", "unresolved")}  # fmt: skip
+                                             "local_cargo_config", "resolved", "unresolved",
+                                             "pinned", "not_pinned")}  # fmt: skip
     lock = work / "composite" / "Cargo.lock"
     res["lockfile_made"] = lock.exists()
     res["lockfile_sha256"] = (

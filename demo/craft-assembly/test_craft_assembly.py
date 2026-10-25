@@ -241,17 +241,21 @@ def test_the_composite_holds_both_apps_and_the_library_once(tmp_path):
     assert sorted(files(out / "git" / "libs")) == [
         f"{REV[:10]}/LICENSE-MIT", f"{REV[:10]}/crates/ui/Cargo.toml", f"{REV[:10]}/crates/ui/src/lib.rs",
     ]  # fmt: skip
-    assert (
-        not (out / "appa" / "Cargo.lock").exists()
-        and not (out / "appa" / "Cargo.toml").exists()
-    )
+    for app in ("appa", "appb"):  # rule 5: each app's own root stays, byte for byte
+        for name in ("Cargo.toml", "Cargo.lock"):
+            assert (out / app / name).read_bytes() == (src / app / name).read_bytes()
 
 
 def test_inheritance_is_inlined_from_each_app_s_own_workspace(tmp_path):
     _, out, _ = composed(tmp_path)
     a = tomllib.loads((out / "appa" / "crates" / "app" / "Cargo.toml").read_text())
     b = tomllib.loads((out / "appb" / "crates" / "app" / "Cargo.toml").read_text())
-    assert a["package"] == {"name": "appa", "version": "1.0.0", "edition": "2021"}
+    assert a["package"] == {
+        "name": "appa",
+        "version": "1.0.0",
+        "edition": "2021",
+        "workspace": "../../..",
+    }
     assert b["package"]["version"] == "1.1.0", "each app keeps its own versions"
     assert a["dependencies"] == {
         "appa-core": {"path": "../core"},
@@ -274,7 +278,7 @@ def test_every_other_file_is_its_piece_byte_for_byte(tmp_path):
     rewritten = {g["file"] for g in glue["rewritten"]}
     for app in ("appa", "appb"):
         for rel, data in files(src / app).items():
-            if rel.startswith(".git/") or rel in ("Cargo.toml", "Cargo.lock"):
+            if rel.startswith(".git/"):
                 continue
             if f"{app}/{rel}" in rewritten:
                 continue
@@ -491,6 +495,62 @@ def test_rule_6_leaves_out_the_side_fewer_apps_use_and_asks_again(tmp_path):
     root = tomllib.loads((out / "Cargo.toml").read_text())
     assert "appb/crates/app" in root["workspace"]["exclude"] and glue["members"] == 3
     assert json.loads((out / "GLUE.json").read_text())["resolved"] is True
+
+
+def lock(path: Path, packages: list[tuple[str, str]]) -> None:
+    path.write_text("version = 4\n" + "".join(
+        f'\n[[package]]\nname = "{n}"\nversion = "{v}"\nsource = "registry+https://github.com/rust-lang/crates.io-index"\n'
+        for n, v in packages))  # fmt: skip
+
+
+def test_rule_7_moves_each_crate_to_what_the_apps_locked(tmp_path):
+    out = tmp_path / "composite"
+    for app in ("appa", "appb"):
+        (out / app).mkdir(parents=True)
+    lock(
+        out / "appa" / "Cargo.lock",
+        [("acad", "0.6.5"), ("chrono", "0.4.44"), ("syn", "1.0.9")],
+    )
+    lock(out / "appb" / "Cargo.lock", [("chrono", "0.4.45"), ("syn", "2.0.1")])
+    fresh = [("acad", "0.6.7"), ("chrono", "0.4.46"), ("syn", "1.0.10"), ("syn", "2.0.1"), ("new", "1.0.0"),
+             ("zip", "0.5.2")]  # fmt: skip
+    lock(out / "Cargo.lock", fresh)
+    calls = []
+
+    def cargo(argv, cwd):
+        calls.append(argv)
+        if argv[0] == "generate-lockfile":
+            return True, ""
+        name, have = argv[2].split("@")
+        if name == "syn":
+            return False, "error: failed to select a version"  # a move Cargo refuses
+        packages = [
+            (n, argv[4] if (n, v) == (name, have) else v) for n, v in registry_of(cwd)
+        ]
+        lock(cwd / "Cargo.lock", packages)
+        return True, ""
+
+    def registry_of(cwd):
+        return compose.registry(cwd / "Cargo.lock")
+
+    assert compose.pin(out, ["appa", "appb"], cargo) == (
+        ["acad 0.6.7 -> 0.6.5", "chrono 0.4.46 -> 0.4.45"],
+        ["syn 1.0.10 -> 1.0.9"],
+    ), (
+        "the highest any app locked in Cargo's compatible range; zip and new no app locked"
+    )
+    assert compose.registry(out / "Cargo.lock") == [("acad", "0.6.5"), ("chrono", "0.4.45"), ("new", "1.0.0"),
+                                                    ("syn", "1.0.10"), ("syn", "2.0.1"), ("zip", "0.5.2")]  # fmt: skip
+    assert len(calls) == 3, "each move tried once"
+
+
+def test_compatible_versions_are_cargo_s():
+    assert compose.compat("1.2.3") == compose.compat("1.9.0") != compose.compat("2.0.0")
+    assert (
+        compose.compat("0.4.44") == compose.compat("0.4.99") != compose.compat("0.5.0")
+    )
+    assert compose.compat("0.0.3") != compose.compat("0.0.4")
+    assert max(["1.0.0-rc.1", "1.0.0", "0.9.9"], key=compose.order_of) == "1.0.0"
 
 
 def test_rule_6_says_a_failure_it_doesn_t_settle(tmp_path):
