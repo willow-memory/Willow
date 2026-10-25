@@ -17,9 +17,18 @@ its summary, then `where:` and `notes:` lines when present, then a blank line:
     notes: Ask about the fee; bring a
       spare string
 
-A recurring event (RRULE) is written once, with a `repeats:` line holding the
-rule; it is not expanded. Events are sorted by date within a file. A time
-ending in Z is UTC and is shown as written, not converted.
+A recurring event (RRULE) is written once, under its first date, so its
+first line says it repeats, and how, in words, and a `repeats:` line keeps
+the rule itself; it is not expanded here ([coming-up](../coming-up/) counts
+each repeat in its window):
+
+    2022-11-03  Car rego due  (yearly, from this date)
+    repeats: FREQ=YEARLY
+
+so a line quoted from it, by an assistant or by you, can't pass for this
+year's date. An event marked cancelled says `(cancelled)` on its first line.
+Events are sorted by date within a file. A time ending in Z is UTC and is
+shown as written, not converted.
 
 Each contact in a .vcf is one paragraph: `contact:` with the full name, then
 `phone:`, `email:`, `address:` and `birthday:` lines when present.
@@ -113,6 +122,25 @@ def birthday(value: str) -> str:
     return f"{m[1]}-{m[2]}-{m[3]}"
 
 
+#: a rule's FREQ, in words, and the unit an INTERVAL counts in
+EVERY = {"YEARLY": ("yearly", "years"), "MONTHLY": ("monthly", "months"),
+         "WEEKLY": ("weekly", "weeks"), "DAILY": ("daily", "days")}  # fmt: skip
+
+
+def in_words(rule: str) -> str:
+    """An RRULE said plainly: `yearly`, `every 2 weeks`, `monthly, until
+    2026-06-01`, `weekly, 10 times`; a FREQ it doesn't know, as `repeating`."""
+    parts = dict(p.split("=", 1) for p in rule.upper().split(";") if "=" in p)
+    word, unit = EVERY.get(parts.get("FREQ", ""), ("repeating", ""))
+    step = parts.get("INTERVAL", "1")
+    said = f"every {step} {unit}" if unit and step.isdigit() and int(step) > 1 else word
+    if until := when(parts.get("UNTIL", "")):
+        said += f", until {until[0]}"
+    if parts.get("COUNT", "").isdigit():
+        said += f", {parts['COUNT']} times"
+    return said
+
+
 def event_record(event: dict[str, str]) -> tuple[str, str, str, str] | None:
     """(date, time, summary, paragraph) for one VEVENT, None if it has no
     readable DTSTART: an event that cannot be dated is not written."""
@@ -122,7 +150,12 @@ def event_record(event: dict[str, str]) -> tuple[str, str, str, str] | None:
     iso, tm = got
     summary = flat(event.get("SUMMARY", "")) or "(untitled)"
     head = f"{iso} {tm}" if tm else iso
-    lines = [f"{head}  {summary}"]
+    first = f"{head}  {summary}"
+    if rule := event.get("RRULE", ""):
+        first += f"  ({in_words(rule)}, from this date)"
+    if event.get("STATUS", "").upper() == "CANCELLED":
+        first += "  (cancelled)"
+    lines = [first]
     if where := flat(event.get("LOCATION", "")):
         lines.append(f"where: {where}")
     if notes := block(event.get("DESCRIPTION", "")):

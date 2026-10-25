@@ -84,3 +84,67 @@ def test_a_bare_start_line_skips_a_dated_line_to_reach_its_summary(tmp_path):
     got = run(str(HERE / "coming_up.py"), "--box", str(b), *NOW)
     assert "DTSTART:20261028  SUMMARY:Dentist at ten" in got.stdout
     assert "DTSTART:20261028  RENEWAL" not in got.stdout
+
+
+def pile_of(**files: str) -> list[dict]:
+    return [{"path": name, "line": 1, "text": text} for name, text in files.items()]
+
+
+def soon(pile: list[dict], today: str = "2026-10-24", days: int = 30) -> list:
+    return [
+        (str(d), place)
+        for d, place, _ in cu.coming(pile, date.fromisoformat(today), days)
+    ]
+
+
+def test_a_yearly_event_and_a_birthday_come_up_on_this_years_date():
+    pile = pile_of(**{
+        "cal.txt": "2022-11-03  Car rego due  (yearly, from this date)\n"
+                   "notes: renew before 3 Nov\nrepeats: FREQ=YEARLY",
+        "people.txt": "contact: Mags Doyle\nbirthday: 1957-10-30",
+    })  # fmt: skip
+    assert soon(pile) == [("2026-10-30", "people.txt:2"), ("2026-11-03", "cal.txt:1")]
+    hits = cu.coming(pile, date(2026, 10, 24), 30)
+    assert hits[0][2] == "birthday: 1957-10-30  (every year)"
+    assert hits[1][2].startswith("2022-11-03  Car rego due")
+
+
+def test_a_raw_calendar_rule_belongs_to_its_dtstart_and_shows_its_summary():
+    raw = ("BEGIN:VEVENT\nDTSTAMP:20261024T000000Z\nDTSTART;VALUE=DATE:20221103\n"
+           "DTEND;VALUE=DATE:20221104\nRRULE:FREQ=YEARLY\nSUMMARY:Car rego due\n"
+           "END:VEVENT")  # fmt: skip
+    hits = cu.coming(pile_of(**{"home.ics": raw}), date(2026, 10, 25), 30)
+    assert [(str(d), p, t) for d, p, t in hits] == [
+        (
+            "2026-11-03",
+            "home.ics:3",
+            "DTSTART;VALUE=DATE:20221103  SUMMARY:Car rego due",
+        )
+    ]
+
+
+def test_each_rule_is_kept_to():
+    def on(rule: str, start: str, today: str, days: int = 60) -> list[str]:
+        got = cu.repeats(date.fromisoformat(start), rule, date.fromisoformat(today),
+                         date.fromisoformat(today) + cu.timedelta(days=days))  # fmt: skip
+        return [str(d) for d in got]
+
+    assert on("FREQ=MONTHLY", "2026-01-31", "2026-02-01") == ["2026-03-31"]  # no 31 Feb
+    assert on("FREQ=YEARLY", "2024-02-29", "2027-01-01", 800) == ["2028-02-29"]
+    assert on("FREQ=WEEKLY;INTERVAL=2", "2026-10-01", "2026-10-02", 30) == [
+        "2026-10-15", "2026-10-29"]  # fmt: skip
+    assert on("FREQ=DAILY;COUNT=3", "2026-10-01", "2026-10-02") == [
+        "2026-10-02",
+        "2026-10-03",
+    ]
+    assert on("FREQ=WEEKLY;UNTIL=20261015T000000Z", "2026-10-01", "2026-10-02") == [
+        "2026-10-08", "2026-10-15"]  # fmt: skip
+    assert (
+        on("FREQ=WEEKLY;BYDAY=MO,TH", "2026-10-01", "2026-10-02") == []
+    )  # not guessed
+    assert on("FREQ=HOURLY", "2026-10-01", "2026-10-02") == []
+
+
+def test_a_rule_stops_looking_up_at_its_paragraph_or_event():
+    pile = pile_of(**{"cal.txt": "2020-11-03  Old thing\n\nrepeats: FREQ=YEARLY"})
+    assert soon(pile) == [], "a rule with no start in its own paragraph counts nothing"

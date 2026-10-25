@@ -4,14 +4,20 @@ only, and phone numbers in the 555-01xx range."""
 
 from __future__ import annotations
 
+import importlib.util
 import json
 import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 HERE = Path(__file__).resolve().parent
 KERNEL = HERE.parents[2] / "kernel.py"
 CAL = HERE / "cal.py"
+spec = importlib.util.spec_from_file_location("cal", CAL)
+cal = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(cal)
 NOW = ["--now", "2026-10-23T00:00:00Z"]
 CRLF = "\r\n"
 
@@ -59,7 +65,7 @@ HOME_ICS = ics(
 HOME_TXT = (
     "2026-10-21  Pay the water bill\n"
     "\n"
-    "2026-10-26 18:00  Choir practice\n"
+    "2026-10-26 18:00  Choir practice  (weekly, from this date)\n"
     "repeats: FREQ=WEEKLY;BYDAY=MO\n"
     "\n"
     "2026-10-28 14:00  Tune - Ybarra\n"
@@ -133,6 +139,34 @@ def test_events_sorted_by_date_with_all_day_timed_location_notes_and_one_repeat(
     assert "\r" not in text and text.endswith("\n")
     assert text.count("repeats:") == 1
     assert "Default alarm text" not in text  # a VALARM's DESCRIPTION is not the event's
+
+
+@pytest.mark.parametrize("rule, said", [
+    ("FREQ=YEARLY", "yearly"),
+    ("FREQ=WEEKLY;BYDAY=MO", "weekly"),
+    ("FREQ=WEEKLY;INTERVAL=2", "every 2 weeks"),
+    ("FREQ=MONTHLY;UNTIL=20260601T000000Z", "monthly, until 2026-06-01"),
+    ("FREQ=DAILY;COUNT=10", "daily, 10 times"),
+    ("FREQ=SECONDLY", "repeating"),
+])  # fmt: skip
+def test_a_repeat_is_said_in_words_on_its_first_line(rule, said):
+    assert cal.in_words(rule) == said
+
+
+def test_a_repeating_or_cancelled_event_says_so_where_it_is_quoted(tmp_path):
+    folder = tmp_path / "f"
+    folder.mkdir()
+    (folder / "home.ics").write_text(ics(
+        "BEGIN:VEVENT", "DTSTART;VALUE=DATE:20221103", "RRULE:FREQ=YEARLY",
+        "SUMMARY:Car rego due", "END:VEVENT",
+        "BEGIN:VEVENT", "DTSTART:20260819T103000", "STATUS:CANCELLED",
+        "SUMMARY:Skin check", "END:VEVENT",
+    ), encoding="utf-8")  # fmt: skip
+    assert mirror(folder, tmp_path / "m").returncode == 0
+    lines = (tmp_path / "m" / "home.ics.txt").read_text().splitlines()
+    assert lines[0] == "2022-11-03  Car rego due  (yearly, from this date)"
+    assert lines[1] == "repeats: FREQ=YEARLY"
+    assert lines[3] == "2026-08-19 10:30  Skin check  (cancelled)"
 
 
 def test_folded_lines_unfolded_and_escapes_undone(tmp_path):
