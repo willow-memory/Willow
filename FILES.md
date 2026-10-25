@@ -485,6 +485,36 @@ willow/
 │   │   ├── STRIP.md          what each need came to, and what each layer of the stack did
 │   │   ├── stack.py          her files through every reader, start, the finders, privacy, an MCP assistant, and the trust add-ons
 │   │   └── test_stack.py     holds the stack to the states STRIP.md scores
+│   ├── novelty.py           the reusable novelty check: have these pieces been put together before?
+│   ├── test_novelty.py      a novel description reads as novel, one an existing demo holds as prior art
+│   ├── redteam/             a frozen recon composition over a planted target, scanned for novelty
+│   │   ├── README.md         the composition, what is planted, what is frozen, the novelty check
+│   │   ├── FROZEN.json       the SHA-256 of every source, and the finding expected from each section
+│   │   ├── recon.py          runs seven read-only add-ons over the target in an attacker's order
+│   │   ├── test_redteam.py   holds the sources to their hashes and the pass to its planted findings
+│   │   ├── intel/            the offline intel the pass needs, committed so it reads the same every run
+│   │   │   ├── popular.txt    the popular-names list typosquat checks against
+│   │   │   ├── osv/
+│   │   │   │   ├── PyPI/
+│   │   │   │   │   └── GHSA-x84v-xcm2-53pg.json  the Requests credentials-leak advisory
+│   │   │   │   └── npm/
+│   │   │   │       └── GHSA-35jh-r3h4-6jhm.json  the lodash command-injection advisory
+│   │   │   └── registry/
+│   │   │       └── npm/
+│   │   │           └── minimist.json  registry metadata showing minimist long abandoned
+│   │   └── target/           the planted application, read-only
+│   │       ├── package-lock.json  a vulnerable lodash, a misspelled reqeusts, an abandoned minimist
+│   │       ├── requirements.txt   an unpinned flask and a vulnerable requests
+│   │       ├── app/
+│   │       │   ├── client.js    JS sinks: exec, eval, innerHTML, Math.random, TLS off
+│   │       │   ├── config.py    a hardcoded AWS key and password, debug on
+│   │       │   ├── legacy.php   PHP sinks: shell_exec, unserialize, SQL concat, echo, TLS off
+│   │       │   ├── server.go    Go sinks: exec.Command, InsecureSkipVerify
+│   │       │   ├── settings.py  debug on, wildcard CORS, a connection string, a JWT
+│   │       │   └── views.py     Python sinks: shell, pickle, SQL format, eval, verify=False
+│   │       └── node_modules/
+│   │           └── evil-pkg/
+│   │               └── package.json  a postinstall that pipes a remote script to a shell
 │   ├── php2shell/            a real bug: the PHP2Shell result, tested seven ways
 │   │   ├── README.md         the claim, the threats, what is frozen, each phase's results
 │   │   ├── FROZEN.json       the SHA-256 of each frozen file, and of the tools when frozen

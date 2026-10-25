@@ -1,0 +1,5 @@
+npm requests
+npm lodash
+npm minimist
+npm express
+PyPI flask
