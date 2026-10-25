@@ -119,9 +119,10 @@ PLACEHOLDER = re.compile(
     r"(?i)(your|example|xxxx+|placeholder|none|null|true|false|changeme|redacted|\*\*\*)"
 )
 #: a file named as a list of them: passwords.txt, my-logins.md, credentials-old;
-#: the singular only on its own, so password-reset-steps.md is notes, not a list
+#: the singular only on its own, so password-reset-steps.md is notes, not a list;
+#: a word between separators holds none, so a name of many `_0`s is read once
 LIST_NAME = re.compile(
-    r"(?i)^(?:my[ _-]?)?(?:(?:passwords|logins|credentials)(?:[ _-]\w+)*|password|passwd)$"
+    r"(?i)^(?:my[ _-]?)?(?:(?:passwords|logins|credentials)(?:[ _-][^\W_]+)*|password|passwd)$"
 )
 
 

@@ -105,6 +105,17 @@ def test_in_a_file_of_passwords_every_one_is_withheld():
     assert pv.scrub(text, {}, listed=False).count("[withheld") == 1, "only the pw"
 
 
+def test_a_file_name_built_to_backtrack_is_read_at_once():
+    """CodeQL's case: separators and digits repeated, a name that once took
+    seconds per two more. Read in well under a second now, at any length."""
+    import time
+
+    start = time.monotonic()
+    assert not pv.password_list("passwords" + "_0" * 60 + "!")
+    assert pv.password_list("passwords" + "_0" * 60)
+    assert time.monotonic() - start < 1
+
+
 def test_a_bank_number_keeps_its_label_so_the_line_still_reads():
     found = {}
     got = pv.scrub("Pay by bank transfer: sort code 00-00-00 account 00012345.", found)

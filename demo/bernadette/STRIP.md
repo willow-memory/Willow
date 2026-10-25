@@ -92,7 +92,7 @@ up.
   came up only beside other questions. That is the same shape as every earlier
   demo's emotional need.
 
-## After the fixes
+## After the fixes (#40)
 
 Each finding above was taken up, and the stack run again, the same way, on
 the same files and the same twenty questions:
