@@ -419,6 +419,12 @@ def gates() -> list[tuple[str, str, object]]:
     # Bernadette's files through every layer: readers to the trust add-ons
     out.append(("demo", "demo:stack", command(*PYTEST, "demo/bernadette",
                 needs=lambda: missing_module("pytest"))))  # fmt: skip
+    # a frozen recon composition over a planted target; its intel is committed
+    out.append(("demo", "demo:redteam", command(*PYTEST, "demo/redteam",
+                needs=lambda: missing_module("pytest"))))  # fmt: skip
+    # the reusable novelty check every demo can run, over the idea pile and demos
+    out.append(("demo", "demo:novelty", command(*PYTEST, "demo/test_novelty.py",
+                needs=lambda: missing_module("pytest"))))  # fmt: skip
     for name in deps_add_ons():
         out.append(("deps", f"deps:{name}", deps_add_on(name)))
         out.append(("deps", f"deps:{name}@floor",
