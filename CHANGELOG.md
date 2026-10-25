@@ -359,7 +359,7 @@ says how). The first was v0.1.0.
 ### Fixed
 
 - CI pins its workflow to `ubuntu-24.04`. `ubuntu-latest` rolled to Ubuntu
-  26.04, for which `actions/setup-python` has no Python 3.9 build, so the
+  26.04, for which the setup-python action has no Python 3.9 build, so the
   `tests (3.9)` and `strip (3.9)` jobs failed at setup on every pull request;
   `kernel.py` promises 3.9+, so the runner is pinned to an image that still
   carries it rather than 3.9 dropped from the matrix. (#39)
