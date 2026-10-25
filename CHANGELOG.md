@@ -10,6 +10,13 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `repo-pile`: a list of public repositories made into a box you can ask.
+  Each is cloned, kept only when its own licence file grants one an
+  Apache-2.0 project can use (anything else, or none, is left out and said
+  why), and its docs made the pile; the kernel makes the box, and scan
+  indexes the docs and the whole source. Then ask, bite, quote, report,
+  check and backup are willow's own add-ons over it, what they print
+  scrubbed by privacy. It never reads the key or seals. (#37)
 - `demo/bernadette`, a fourth person built blind, her files in the raw formats
   her apps would leave (.eml and .mbox, .ics and .vcf, WhatsApp and Telegram,
   an Obsidian vault, .docx, .xlsx and .odt, Kindle and .epub, PDFs), and
@@ -296,6 +303,13 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- `privacy` also withholds a national phone number written from its 0 in
+  groups (`0113 555 0122`, `07700 900123`: 10 or 11 digits), and a bank
+  number after its label (sort code, account number, acct, a/c, routing),
+  keeping the label so the line still reads. Its card already said bank
+  numbers; only IBANs were caught. Found when repo-pile was run on the demo
+  lives, where 64 phone numbers and 121 bank numbers got through; on 3,165
+  docs from 44 public repositories neither shape matched anything. (#37)
 - CI ends sooner, in the same gates. `ci.py run` takes a gate's name,
   `--without GATE` and `--shard K/N` (cut by `test-shards`' split), so
   `tests:strip`, which ran the add-ons' tests a second time in each tests job,

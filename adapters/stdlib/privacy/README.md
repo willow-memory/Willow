@@ -16,7 +16,8 @@ What a question prints, with personal data and keys withheld.
 
 | Withheld | How it's told apart |
 |---|---|
-| phone | a number with an area code, or +country |
+| phone | a number with an area code, or +country, or a national number from its 0 in groups (`0113 555 0122`, `07700 900123`), 10 or 11 digits |
+| account | a bank number after its label: sort code, account (number, no.), acct, a/c or routing; six digits or more, never a date. The label stays, so `sort code [withheld: account]` still reads |
 | email | an address |
 | card | 4x4 groups, or 13 to 19 digits that pass the Luhn check |
 | iban | an IBAN whose mod-97 check holds |

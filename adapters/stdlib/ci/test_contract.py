@@ -145,6 +145,9 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "test-impact": ("impact.py", ["plan", "README.md"]),
     "print": ("print.py", ["--box", "{box}", "--to", "{tmp}/page.html", *NOW, "tomatoes"]),
     "start": ("start.py", ["--pile", "{pile}", "--to", "{tmp}/willow"]),
+    # a list naming no owner/repo builds nothing, before any clone: no network
+    "repo-pile": ("repo_pile.py", ["build", "--to", "{tmp}/base", "--repos",
+                                   "{pile}/garden.md", "--key", "{tmp}/base.key"]),
     "test-shards": ("shards.py", ["--shards", "2", "--tests", "{pile}/garden.md"]),
     "restack": ("restack.py", ["--onto", "HEAD", "HEAD"]),
     **{name: (script, ["mirror", "--from", "{pile}", "--to", "{tmp}/mirror"])

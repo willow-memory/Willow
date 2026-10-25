@@ -6,7 +6,10 @@
 `bite` runs the kernel's own bite (the record and the exit code are the
 kernel's) and withholds, in every passage and approved answer it prints:
 
-    email, phone            an address; a number with an area code, or +country
+    email, phone            an address; a number with an area code, or +country,
+                            or a national one from 0 in groups (0113 555 0122)
+    account                 a bank number after its label: sort code, account
+                            number, acct, a/c or routing; the label is kept
     card                    13 to 19 digits that pass the Luhn check, or 4x4 groups
     iban                    an IBAN whose mod-97 check holds
     ssn                     a US social security number, labelled or 3-2-4
@@ -68,6 +71,16 @@ PHONE = re.compile(
     r"(?<![\d+])(?:\+?1[-.\s]?)?(?:\(\d{3}\)\s?|\d{3}[-.\s])\d{3}[-.\s]\d{4}(?!\d)"
     r"|\+[1-9]\d{6,14}(?![A-Za-z0-9])"
 )
+# a national number from its trunk 0, in groups: 0113 555 0122, 07700 900123
+PHONE_NATIONAL = re.compile(
+    r"(?<![\d+])0\d{2,4}[-.\s]\d{3,4}(?:[-.\s]?\d{3,4})?(?![\d-])"
+)
+ACCOUNT = re.compile(
+    r"(?P<label>\b(?:sort[\s-]?code|(?:bank\s+)?account(?:\s+(?:number|no\.?|#))?"
+    r"|acct(?:\s+no\.?)?|a/c|routing(?:\s+number)?)[\s:#.]*)(?P<num>\d[\d-]{4,}\d)\b",
+    re.IGNORECASE,
+)
+DATE = re.compile(r"\d{4}-\d{2}-\d{2}")
 _OCTET = r"(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)"
 IPV4 = re.compile(rf"(?<![\d.]){_OCTET}(?:\.{_OCTET}){{3}}(?![\d.])")
 NOT_A_HOST = re.compile(r"^(?:127\.|0\.0\.0\.0$|255\.255\.255\.255$)")
@@ -103,10 +116,21 @@ def scrub(text: str, found: dict) -> str:
         text = rx.sub(hide("key"), text)
     text = EMAIL.sub(hide("email"), text)
     text = IBAN.sub(hide("iban", lambda v: not iban_ok(v)), text)
+
+    def account(m: re.Match) -> str:
+        num = m.group("num")
+        if sum(c.isdigit() for c in num) < 6 or DATE.fullmatch(num):
+            return m.group(0)  # too short to be a bank number, or a date
+        found["account"] = found.get("account", 0) + 1
+        return m.group("label") + MARK.format(kind="account")
+
+    text = ACCOUNT.sub(account, text)
     text = SSN.sub(hide("ssn"), text)
     text = CARD_GROUPS.sub(hide("card"), text)
     text = CARD_BARE.sub(hide("card", lambda v: not luhn(v)), text)
     text = PHONE.sub(hide("phone"), text)
+    digits = lambda v: sum(c.isdigit() for c in v)  # noqa: E731
+    text = PHONE_NATIONAL.sub(hide("phone", lambda v: digits(v) not in (10, 11)), text)
     text = IPV4.sub(hide("ip", lambda v: bool(NOT_A_HOST.match(v))), text)
     return text
 
