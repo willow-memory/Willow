@@ -18,13 +18,13 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`████░░░░░░░░░░░░░░░░` **93 of 459 built** · 408 need no install · 51 need one
+`████░░░░░░░░░░░░░░░░` **95 of 460 built** · 410 need no install · 50 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
 | Reading more kinds of files | 10 | 94 | 96 | 8 |
-| Finding things | 7 | 36 | 32 | 11 |
-| Your own words | 7 | 17 | 21 | 3 |
+| Finding things | 8 | 35 | 33 | 10 |
+| Your own words | 8 | 17 | 22 | 3 |
 | Keeping track | 9 | 47 | 56 | 0 |
 | Trust and proof | 12 | 32 | 35 | 9 |
 | Privacy and safety | 6 | 8 | 14 | 0 |
@@ -37,19 +37,19 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ### Newest
 
 <!-- willow:newest -->
+- 2026-10-25 · [**typos**](adapters/stdlib/typos/) — Forgives misspellings in questions.
 - 2026-10-25 · [**risky-code**](adapters/stdlib/risky-code/) — Lines of code matching a known-dangerous pattern (command injection, eval, sql concatenation, broken tls and more), by file and line, as leads to read.
+- 2026-10-25 · [**accents**](adapters/stdlib/accents/) — A word typed without its accent read as your files write it, and the words-list lines that make it last.
 - 2026-10-24 · [**zed**](adapters/stdlib/zed/) — Zed's assistant asks your folder and hands in suggestions, through the mcp add-on.
 - 2026-10-24 · [**xref**](adapters/stdlib/xref/) — Every reference in your files checked: each link to another file, and each quoted line, still there and still saying it.
-- 2026-10-24 · [**words-pt**](adapters/stdlib/words-pt/) — Portuguese common words ("o", "e").
-- 2026-10-24 · [**words-nl**](adapters/stdlib/words-nl/) — Dutch common words ("de", "en").
 <!-- /willow:newest -->
 
 ### Add-on of the week
 
 <!-- willow:pick week=2026-W43 -->
-**[scan](adapters/stdlib/scan/)** — Index a big folder once, then ask it a list of questions in seconds, with the kernel's own answers: of everything, or only what changed since another index.
+**[snapshot](adapters/stdlib/snapshot/)** — A web page or data file fetched once into a folder, as it came, with its address, the time and its SHA-256, so later answers cite the copy.
 
-*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 93 built add-ons in name order.*
+*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 95 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -204,7 +204,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - **standards** (idea) — Curriculum standards beside your lessons: which standard each lesson meets, each cited. *new* `no-install` `offline` `read-only` `search`
 - [**surprise**](adapters/stdlib/surprise/) — One passage from your folder at random, seeded so it can be replayed. *bot* `no-install` `offline` `records` `search`
 - **symbols** (idea) — Exact definitions and references for Python code: where a name is defined, and every place it's used. Needs scip-python; MIT. *new* `needs-install` `offline` `read-only` `search`
-- **typos** (idea) — Forgives misspellings in questions. Needs rapidfuzz; MIT. *new* `needs-install` `offline` `read-only` `search`
+- [**typos**](adapters/stdlib/typos/) — Forgives misspellings in questions. *new* `no-install` `offline` `read-only` `search`
 - **upgrade-notes** (idea) — Before an upgrade: the changelog lines between the version you lock and the one you'd move to, from the package's own files. Goes online: the registry (PyPI, npm or crates.io), to fetch the newer version's changelog. *new* `no-install` `online` `read-only` `search`
 - **vectors** (idea) — The meaning add-on's vectors kept in the store's own SQLite file, so they're computed once per passage, not at every question. Needs sqlite-vec and model2vec; MIT or Apache-2.0. *bot* `needs-install` `offline` `writes-output` `search` `pile`
 - **watch** (idea) — A file re-read the moment it changes (inotify, FSEvents, or polling), so the index is always current. *new* `no-install` `offline` `writes-output` `search`
@@ -215,6 +215,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 The blind tests' biggest gap: on day one, a person's words aren't their files' words.
 
 - **abbreviations** (idea) — Your own shorthand, written down once (appt, Rx, w/c), so a question finds either form. *new* `no-install` `offline` `writes-output` `words`
+- [**accents**](adapters/stdlib/accents/) — A word typed without its accent read as your files write it, and the words-list lines that make it last. *new* `no-install` `offline` `read-only` `words`
 - **dialect** (idea) — The words you use far more than the world does: your own dialect, from your files against wordfreq's counts. Needs wordfreq; Apache-2.0, its data CC BY-SA 4.0. *new* `needs-install` `offline` `read-only` `words`
 - **memoir** (idea) — A question a week about your life, answered in your own words and kept, so your story is in your files. *new* `no-install` `offline` `writes-output` `words`
 - **nicknames** (idea) — The names you call people, mapped to who they are, so 'Mum' finds Margaret. *new* `no-install` `offline` `writes-output` `words`

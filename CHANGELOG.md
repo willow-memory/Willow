@@ -10,6 +10,15 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `typos`, an add-on that reads a misspelt word of a question as your files
+  spell it, one edit inside the word (its first and last letters kept), the
+  most-held spelling first, and prints the question as read for you to ask:
+  it never asks for you, and writes nothing. Six letters and up, measured on
+  the demo questions. Planned with rapidfuzz; one edit needs nothing
+  installed. From willow-bot's one script's typo rung.
+- `accents`, an add-on that reads a word typed without its accent ("zoe") as
+  your files write it ("zoë"), both ways round, and with `words` prints the
+  words-list lines that make the kernel read them so every time.
 - `risky-code`, an add-on that finds lines of code matching a known-dangerous
   pattern — command injection, `eval`/`exec`, sql concatenation, insecure
   deserialization, broken tls, ssrf, path traversal, template injection, xss

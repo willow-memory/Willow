@@ -44,6 +44,10 @@ willow/
 │   ├── README.md             the rules every add-on follows
 │   ├── planned.json          the add-ons not built yet, as this README lists them
 │   ├── stdlib/               add-ons that need nothing beyond Python
+│   │   ├── accents/
+│   │   │   ├── accents.py    a word typed without its accent, read as the files write it; words-list lines
+│   │   │   ├── test_accents.py
+│   │   │   └── README.md
 │   │   ├── advisories/
 │   │   │   ├── advisories.py locked dependencies matched to a downloaded OSV advisory database, offline
 │   │   │   ├── test_advisories.py
@@ -360,6 +364,10 @@ willow/
 │   │   ├── todo/
 │   │   │   ├── todo.py       things marked to do, oldest first
 │   │   │   ├── test_todo.py
+│   │   │   └── README.md
+│   │   ├── typos/
+│   │   │   ├── typos.py      a misspelt word read as the files spell it, one edit inside, offered not asked
+│   │   │   ├── test_typos.py
 │   │   │   └── README.md
 │   │   ├── typosquat/
 │   │   │   ├── typosquat.py  dependency names a letter off a popular one, checked against a top-packages list

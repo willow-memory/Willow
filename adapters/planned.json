@@ -3445,17 +3445,6 @@
   "tags": "no-install, offline, records, interface"
  },
  {
-  "name": "typos",
-  "kind": "deps",
-  "section": "Finding things",
-  "line": "Forgives misspellings in questions.",
-  "source": "new",
-  "needs": "rapidfuzz; MIT",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "needs-install, offline, read-only, search"
- },
- {
   "name": "upgrade-notes",
   "kind": "stdlib",
   "section": "Finding things",
