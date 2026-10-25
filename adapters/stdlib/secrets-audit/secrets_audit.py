@@ -6,8 +6,12 @@
 Every line of your files (the box's, or any folder's) that holds one of:
 
     password   a password you typed with its label: `password: hunter2`,
-               `pw = widgets1998`; a label with no value, a comparison,
-               or a placeholder ("changeme", "example") is left alone
+               `pw = widgets1998`, `pw Wendouree#14`; the second half of a
+               login pair, `ana@example.org / Tide2024!`; and in a file
+               whose name says it's a list of them (passwords.txt,
+               logins.md), every value that looks like one. A label with
+               no value, a comparison, a placeholder ("changeme",
+               "example"), or prose ("password policy") is left alone
     key        a private key block, or an AWS, GitHub, Slack, Google,
                Stripe or model-provider API key, or a JWT
     card       a card number that passes the Luhn check, or 4x4 groups
@@ -20,7 +24,8 @@ is listed by file, line and kind, never with the value:
     work/deploy.md:41       key
 
 The shapes are the privacy add-on's (willow-bot's scrub, rebuilt there),
-and the typed-password rule is willow-bot's own. A file is read the way the
+passwords included, so what this lists is what privacy hides from an answer.
+Without privacy, only willow-bot's own typed-password rule is used. A file is read the way the
 kernel reads it, so what's listed is what an answer could have shown.
 Email addresses and phone numbers aren't listed: they're in every file and
 aren't secrets.
@@ -72,12 +77,13 @@ def typed_password(line: str) -> bool:
     )
 
 
-def kinds_in(line: str, pv) -> list[str]:
+def kinds_in(line: str, pv, listed: bool = False) -> list[str]:
+    """The kinds a line holds. `listed`: it is from a file of passwords."""
     found: dict = {}
     if pv is not None:
-        pv.scrub(line, found)
+        pv.scrub(line, found, listed)
     got = [k for k in KINDS if k in found]
-    if typed_password(line):
+    if pv is None and typed_password(line):
         got.insert(0, "password")
     return got
 
@@ -86,8 +92,9 @@ def audit(pile: Path, pv) -> list[tuple[str, int, str]]:
     """(path, line, kind) for every secret in the pile, in file order."""
     out = []
     for c in kernel.chunks(pile):
+        listed = pv is not None and pv.password_list(c["path"])
         for i, line in enumerate(c["text"].splitlines()):
-            for kind in kinds_in(line, pv):
+            for kind in kinds_in(line, pv, listed):
                 out.append((c["path"], c["line"] + i, kind))
     return sorted(set(out))
 
