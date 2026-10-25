@@ -2,16 +2,17 @@
 
     python demo/craft-assembly/compose.py --store STORE --recipe composite.json --to OUT
 
-The recipe names the apps (sources in the store, each a Cargo workspace) and
-the git address of the library they share. Everything is read from the store
-(pieces.py apart wrote it), never from a checkout, and OUT is written as:
+The recipe names the apps (sources in the store, each a Cargo workspace).
+Everything is read from the store (pieces.py apart wrote it), never from a
+checkout, and OUT is written as:
 
     OUT/<app>/...                every file of the app, byte for byte, but its
                                  root Cargo.toml and Cargo.lock; each member's
                                  Cargo.toml is rewritten (below)
-    OUT/craft-libs/<rev>/...     each library crate an app depends on, at the
-                                 commit the app pinned, with that commit's
-                                 licence files; its Cargo.toml rewritten too
+    OUT/git/<repo>/<rev>/...     each crate an app takes by git, at the commit
+                                 it pinned, with that commit's licence files;
+                                 its Cargo.toml rewritten too. Not a member:
+                                 the workspace excludes git/
     OUT/Cargo.toml               the one workspace: every member, sorted
     OUT/GLUE.json                every file the rules wrote, with the piece it
                                  came from, and everything they left out, why
@@ -24,10 +25,12 @@ The rules, all of them; none looks at what a build does:
                   `optional`; a path in a workspace value is made relative to
                   the member again. Each app keeps its own versions, so apps
                   that pin different versions of a crate need no choosing.
-    2. library    a dependency on the library's git address, at a commit the
-                  store holds, becomes a path dependency on that crate at that
-                  commit. A crate needed at two commits stops the composite:
-                  Cargo can't hold two of one name and version from paths.
+    2. git        a dependency by git becomes a path dependency on that crate,
+                  taken from the store at the commit pinned: its `rev`, or
+                  for a branch or none, the commit its source's own Cargo.lock
+                  holds. So do the crates it depends on by path at that
+                  commit. A crate wanted at two commits, or at a commit the
+                  store lacks, stops the composite.
     3. clash      a package name in two apps is left out in both, and so is
                   every member that depends on a member left out.
     4. profile    profiles are joined setting by setting: a setting of
@@ -37,9 +40,16 @@ The rules, all of them; none looks at what a build does:
                   [patch] tables are joined; a clash stops.
     5. drop       each app's root Cargo.toml and Cargo.lock are not copied:
                   the composite has one root and resolves one lockfile.
+    6. links      `resolve` asks Cargo for that lockfile. When Cargo says two
+                  versions of a crate link one native library, the members
+                  that depend on the crate are grouped by the version they
+                  ask for; the group fewer apps use (on a tie, the one whose
+                  apps come later in the recipe) is left out, with every
+                  member that depends on one of them, and Cargo is asked
+                  again. Any other failure to resolve is said, not settled.
 
-Same store and recipe, same bytes. Exit codes: 0 composed; 2 refused, or a
-rule that stops the composite (said why).
+Same store and recipe, same bytes; with rule 6, the same registry too.
+Exit codes: 0 composed; 2 refused, or a rule that stops the composite.
 """
 
 from __future__ import annotations
@@ -222,47 +232,51 @@ def inherit(doc: dict, ws: dict, member: str, libs, where: str) -> dict:
 
 def compose(store: Path, recipe: dict, to: Path) -> dict:
     apps = [App(store, n) for n in recipe["apps"]]
-    url = recipe["library"].rstrip("/")
-    revs = {
-        r["source"]: r
-        for r in (
-            pieces.recipe(store, p.stem)
-            for p in (store / "recipes").glob("craft-libs@*.json")
-        )
+    sources = {
+        p.stem: rows_of(store, p.stem) for p in (store / "recipes").glob("*@*.json")
     }
-    lib_rows = {n.split("@", 1)[1]: rows_of(store, n) for n in revs}
     glue = {
         "rewritten": [],
         "left_out": [],
         "profiles_dropped": [],
-        "library": {},
+        "git": {},
         "local_cargo_config": [],
     }
-    needed: dict[
-        str, tuple[str, str]
-    ] = {}  # package -> (rev, its folder in that commit)
+    needed: dict[str, tuple[str, str]] = {}  # package -> (source, its folder)
     used_by: dict[str, set[str]] = {}
 
-    def libs(name: str, spec: dict, where: str) -> dict:
-        if spec.get("git", "").rstrip("/").removesuffix(".git") != url:
-            return spec
-        rev = spec.get("rev", "")
-        short = next((r for r in lib_rows if rev.startswith(r)), None)
-        if short is None:
-            raise Stop(
-                f"{name} wants the library at {rev or 'no rev'}, which the store doesn't hold"
+    def git_dep(lock_rows: dict):
+        def libs(name: str, spec: dict, where: str) -> dict:
+            if "git" not in spec:
+                return spec
+            url = spec["git"].rstrip("/").removesuffix(".git")
+            repo, pkg = url.rsplit("/", 1)[-1], spec.get("package", name)
+            commit = spec.get("rev") or locked(store, lock_rows, url, pkg)
+            src = next((n for n in sorted(sources) if n.split("@")[0] == repo and len(commit) >= 10
+                        and commit.startswith(n.split("@")[1])), None)  # fmt: skip
+            if src is None:
+                raise Stop(
+                    f"{pkg} wants {repo} at {commit or 'no commit'}, which the store doesn't hold"
+                )
+            want(pkg, src, lib_folder(store, sources[src], pkg))
+            if not where.startswith(("git/", ".")):
+                used_by.setdefault(pkg, set()).add(where.split("/")[0])
+            out = {
+                k: v
+                for k, v in spec.items()
+                if k not in ("git", "rev", "branch", "tag")
+            }
+            out["path"] = rel(
+                posixpath.normpath(f"git/{src.replace('@', '/')}/{needed[pkg][1]}"),
+                where,
             )
-        pkg = spec.get("package", name)
-        folder = lib_folder(store, lib_rows[short], pkg)
-        if needed.setdefault(pkg, (short, folder)) != (short, folder):
-            raise Stop(f"{pkg} is wanted at two commits, {needed[pkg][0]} and {short}")
-        if not where.startswith("craft-libs/"):
-            used_by.setdefault(pkg, set()).add(where.split("/")[0])
-        out = {
-            k: v for k, v in spec.items() if k not in ("git", "rev", "branch", "tag")
-        }
-        out["path"] = rel(f"craft-libs/{short}/{folder}", where)
-        return out
+            return out
+
+        return libs
+
+    def want(pkg: str, src: str, folder: str) -> None:
+        if needed.setdefault(pkg, (src, folder)) != (src, folder):
+            raise Stop(f"{pkg} is wanted at two commits, {needed[pkg][0]} and {src}")
 
     # rule 3: names in two apps
     names: dict[str, list[tuple[str, str]]] = {}
@@ -313,56 +327,78 @@ def compose(store: Path, recipe: dict, to: Path) -> dict:
             if path in manifests and (app.name, posixpath.dirname(path)) not in out_of:
                 m = posixpath.dirname(path)
                 text = toml(
-                    inherit(docs[(app.name, m)], app.ws, m, libs, f"{app.name}/{m}")
+                    inherit(
+                        docs[(app.name, m)],
+                        app.ws,
+                        m,
+                        git_dep(app.rows),
+                        f"{app.name}/{m}",
+                    )
                 )
                 write_text(to / target, text)
                 glue["rewritten"].append(
-                    {"file": target, "from": sha, "rule": "inherit, library"}
+                    {"file": target, "from": sha, "rule": "inherit, git"}
                 )
                 kept.append(f"{app.name}/{m}")
             else:
                 pieces.write(store, [[path, mode, sha]], to / app.name)
 
-    # the library crates, each at its commit, with that commit's licence files
-    for pkg, (short, folder) in sorted(needed.items()):
-        rows = lib_rows[short]
-        root = tomllib.loads(
-            pieces.get(store, rows["Cargo.toml"][1]).decode("utf-8")
-        ).get("workspace", {})
-        base = f"craft-libs/{short}"
-        for path, (mode, sha) in sorted(rows.items()):
-            top_licence = "/" not in path and LICENCE.match(path)
-            if not (top_licence or path.startswith(folder + "/")):
-                continue
-            if path == f"{folder}/Cargo.toml":
-                doc = tomllib.loads(pieces.get(store, sha).decode("utf-8"))
-                write_text(
-                    to / base / path,
-                    toml(inherit(doc, root, folder, libs, f"{base}/{folder}")),
-                )
-                glue["rewritten"].append(
-                    {"file": f"{base}/{path}", "from": sha, "rule": "inherit, library"}
-                )
-            elif not (to / base / path).exists():
-                pieces.write(store, [[path, mode, sha]], to / base)
-        glue["library"][pkg] = {"commit": short, "folder": f"{base}/{folder}",
-                                "used_by": sorted(used_by.get(pkg, ()))}  # fmt: skip
-
-    # rule 4 and the root
-    profiles, patch = (
-        join_profiles(
-            [a.root.get("profile", {}) for a in apps], glue["profiles_dropped"]
-        ),
-        {},
-    )
+    # [patch] tables joined, each git entry from the store as rule 2 says
+    patch: dict[str, dict] = {}
     for a in apps:
         for src, table in a.root.get("patch", {}).items():
             for k, v in table.items():
+                if isinstance(v, dict) and "git" in v:
+                    v = git_dep(a.rows)(k, v, ".")
+                    used_by.setdefault(v.get("package", k), set()).add(a.name)
                 if patch.setdefault(src, {}).setdefault(k, v) != v:
                     raise Stop(f"[patch.{src}] {k} differs between apps")
+
+    # the crates taken by git, each at its commit, with its path deps there
+    done: set[str] = set()
+    while set(needed) - done:
+        pkg = sorted(set(needed) - done)[0]
+        done.add(pkg)
+        src, folder = needed[pkg]
+        rows = sources[src]
+        top = tomllib.loads(pieces.get(store, rows["Cargo.toml"][1]).decode("utf-8"))
+        base = f"git/{src.replace('@', '/')}"
+        manifest_path = "Cargo.toml" if folder == "." else f"{folder}/Cargo.toml"
+        doc = tomllib.loads(pieces.get(store, rows[manifest_path][1]).decode("utf-8"))
+        for dep in path_deps(doc, top.get("workspace", {}), folder):
+            want(package_at(store, rows, dep), src, dep)
+        for path, (mode, sha) in sorted(rows.items()):
+            top_licence = "/" not in path and LICENCE.match(path)
+            if not (top_licence or folder == "." or path.startswith(folder + "/")):
+                continue
+            if path == manifest_path:
+                text = toml(
+                    inherit(
+                        doc,
+                        top.get("workspace", {}),
+                        folder,
+                        git_dep(rows),
+                        posixpath.normpath(f"{base}/{folder}"),
+                    )
+                )
+                write_text(to / base / path, text)
+                glue["rewritten"].append(
+                    {"file": f"{base}/{path}", "from": sha, "rule": "inherit, git"}
+                )
+            elif not (to / base / path).exists():
+                pieces.write(store, [[path, mode, sha]], to / base)
+        glue["git"][pkg] = {"source": src, "folder": posixpath.normpath(f"{base}/{folder}"),
+                            "used_by": sorted(used_by.get(pkg, ()))}  # fmt: skip
+
+    # rule 4 and the root
+    profiles = join_profiles(
+        [a.root.get("profile", {}) for a in apps], glue["profiles_dropped"]
+    )
     resolver = max((a.ws.get("resolver", "1") for a in apps), key=lambda r: int(r))
-    root = {"workspace": {"resolver": resolver, "members": sorted(kept),
-                          "exclude": sorted(f"{a}/{m}" for a, m in out_of)}}  # fmt: skip
+    exclude = sorted(f"{a}/{m}" for a, m in out_of) + (["git"] if needed else [])
+    root = {
+        "workspace": {"resolver": resolver, "members": sorted(kept), "exclude": exclude}
+    }
     if profiles:
         root["profile"] = profiles
     if patch:
@@ -428,13 +464,133 @@ def path_deps(doc: dict, ws: dict, member: str) -> list[str]:
 
 
 def lib_folder(store: Path, rows: dict, pkg: str) -> str:
-    """The folder of package `pkg` in one commit of the library."""
+    """The folder of package `pkg` in one source, "." when it is the root."""
     for path in sorted(rows):
-        if posixpath.basename(path) == "Cargo.toml" and "/" in path:
+        if posixpath.basename(path) == "Cargo.toml":
             doc = tomllib.loads(pieces.get(store, rows[path][1]).decode("utf-8"))
             if doc.get("package", {}).get("name") == pkg:
-                return posixpath.dirname(path)
-    raise Stop(f"the library has no package {pkg}")
+                return posixpath.dirname(path) or "."
+    raise Stop(f"no package {pkg} in that source")
+
+
+def package_at(store: Path, rows: dict, folder: str) -> str:
+    path = "Cargo.toml" if folder in ("", ".") else f"{folder}/Cargo.toml"
+    if path not in rows:
+        raise Stop(f"a path dependency on {folder}, which holds no Cargo.toml")
+    return tomllib.loads(pieces.get(store, rows[path][1]).decode("utf-8"))["package"][
+        "name"
+    ]
+
+
+def locked(store: Path, rows: dict, url: str, pkg: str) -> str:
+    """The commit a source's own Cargo.lock holds for `pkg` from `url`."""
+    if "Cargo.lock" not in rows:
+        return ""
+    lock = tomllib.loads(pieces.get(store, rows["Cargo.lock"][1]).decode("utf-8"))
+    for entry in lock.get("package", []):
+        source = entry.get("source", "")
+        if entry.get("name") == pkg and source.startswith("git+") and "#" in source:
+            if (
+                source[4:].split("?")[0].split("#")[0].rstrip("/").removesuffix(".git")
+                == url
+            ):
+                return source.rsplit("#", 1)[1]
+    return ""
+
+
+# ── rule 6: resolving ───────────────────────────────────────────────────────
+LINKS = re.compile(
+    r"failed to select a version for `([^`]+)`.*?links to the native library `([^`]+)`",
+    re.S,
+)
+
+
+def resolve(to: Path, order: list[str], cargo) -> dict:
+    """Rule 6. `cargo(argv, cwd)` runs Cargo and gives (ok, stderr). Returns
+    what was left out, and whether a lockfile was made."""
+    glue = json.loads((to / "GLUE.json").read_text(encoding="utf-8"))
+    for _ in range(64):
+        ok, err = cargo(["generate-lockfile"], to)
+        if ok:
+            glue["resolved"] = True
+            break
+        m = LINKS.search(err)
+        if not m:
+            glue["resolved"], glue["unresolved"] = False, err.strip().splitlines()[-1:]
+            break
+        crate, native = m.groups()
+        root = tomllib.loads((to / "Cargo.toml").read_text(encoding="utf-8"))
+        users: dict[str, set[str]] = {}
+        for mem in root["workspace"]["members"]:
+            for req in wants(
+                tomllib.loads((to / mem / "Cargo.toml").read_text(encoding="utf-8")),
+                crate,
+            ):
+                users.setdefault(req, set()).add(mem)
+        if len(users) < 2:
+            glue["resolved"], glue["unresolved"] = (
+                False,
+                [f"{crate} links {native}, but no two member groups ask for it"],
+            )
+            break
+
+        def apps_of(req: str) -> list[str]:
+            return sorted({m.split("/")[0] for m in users[req]})
+
+        side = min(
+            users,
+            key=lambda r: (
+                len(apps_of(r)),
+                -max(order.index(a) for a in apps_of(r)),
+                r,
+            ),
+        )
+        others = sorted(r for r in users if r != side)
+        out = set(users[side])
+        grew = True
+        while grew:  # and every member that depends on one left out
+            grew = False
+            for mem in root["workspace"]["members"]:
+                doc = tomllib.loads(
+                    (to / mem / "Cargo.toml").read_text(encoding="utf-8")
+                )
+                if mem not in out and set(path_deps(doc, {}, mem)) & out:
+                    out.add(mem)
+                    glue["left_out"].append(
+                        {
+                            "member": mem,
+                            "why": f"it depends on a member left out for {native}",
+                        }
+                    )
+                    grew = True
+        for mem in sorted(users[side]):
+            glue["left_out"].append({"member": mem, "why": f"it asks for {crate} {side}, which links {native}, "
+                                                               f"as {crate} {' and '.join(others)} does in more apps"})  # fmt: skip
+        root["workspace"]["members"] = sorted(set(root["workspace"]["members"]) - out)
+        root["workspace"]["exclude"] = sorted(set(root["workspace"]["exclude"]) | out)
+        write_text(to / "Cargo.toml", toml(root))
+    else:
+        glue["resolved"] = False
+    glue["members"] = len(
+        tomllib.loads((to / "Cargo.toml").read_text(encoding="utf-8"))["workspace"][
+            "members"
+        ]
+    )
+    glue["left_out"].sort(key=lambda g: g["member"])
+    write_text(to / "GLUE.json", pieces.dump(glue))
+    return glue
+
+
+def wants(doc: dict, crate: str) -> list[str]:
+    """The versions of `crate` a manifest asks for, in any dependency table."""
+    tables = [doc.get(t, {}) for t in DEP_TABLES]
+    tables += [v.get(t, {}) for v in doc.get("target", {}).values() for t in DEP_TABLES]
+    out = []
+    for table in tables:
+        for name, spec in table.items():
+            if (spec.get("package", name) if isinstance(spec, dict) else name) == crate:
+                out.append(spec if isinstance(spec, str) else spec.get("version", "*"))
+    return sorted(set(out))
 
 
 def write_text(p: Path, text: str) -> None:
@@ -465,7 +621,7 @@ def main(argv: list[str]) -> int:
     except Stop as e:
         print(f"stopped: {e}", file=sys.stderr)
         return 2
-    print(f"composed {glue['members']} members, {len(glue['library'])} library crates, "
+    print(f"composed {glue['members']} members, {len(glue['git'])} crates by git, "
           f"{len(glue['left_out'])} left out, {len(glue['rewritten'])} manifests rewritten")  # fmt: skip
     return 0
 

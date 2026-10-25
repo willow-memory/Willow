@@ -1,5 +1,5 @@
 {
- "about": "The study's sources by address, commit and git tree hash; never their text. sources.py fetches them and checks each tree without git.",
+ "about": "The study's sources by address, commit and git tree hash; never their text. sources.py fetches them and checks each tree without git. Freeze 2 added the three that apps take by git, or patch in, from outside craft-libs.",
  "pinned": "2026-10-25",
  "sources": {
   "artcraft": {
@@ -106,6 +106,21 @@
    "url": "https://github.com/storytold/craft-libs",
    "commit": "f0ad6c1e1d297908915f4be315b0fcfc9be7b5d4",
    "tree": "b3c17c56616a9d64b1efb795cc906a73f940906d"
+  },
+  "filmcraft@2c5ba7a726": {
+   "url": "https://github.com/storytold/filmcraft",
+   "commit": "2c5ba7a72619935f0481f99d59409e0d1844b234",
+   "tree": "fc1700716b4dcb9f2c6c13ea171e367bbd287111"
+  },
+  "indd-utils@7f3060e5bc": {
+   "url": "https://github.com/storytold/indd-utils",
+   "commit": "7f3060e5bce78d21ea70e0d5eacb96edce15dfbe",
+   "tree": "33672d85b02ab8115cf368365ca754c3e3414446"
+  },
+  "winit@3d51077fd1": {
+   "url": "https://github.com/storytold/winit",
+   "commit": "3d51077fd1a966f84df9ef287839dc84fd5b4ca7",
+   "tree": "57986b3acd07afcbce475e8ed6d38de62514c840"
   }
  }
 }

@@ -189,7 +189,7 @@ mod tests {{
                                                    'version = "0.0.0"\nedition = "2021"\n',
             "crates/app/tests/fixture/src/lib.rs": "",
         })  # fmt: skip
-    source(src / f"craft-libs@{REV[:10]}", {
+    source(src / f"libs@{REV[:10]}", {
         "Cargo.toml": '[workspace]\nmembers = ["crates/*"]\n\n[workspace.package]\nedition = "2021"\n',
         "LICENSE-MIT": "MIT License\n",
         "crates/ui/Cargo.toml": '[package]\nname = "lib-ui"\nversion = "0.1.0"\nedition.workspace = true\n\n'
@@ -202,7 +202,7 @@ mod tests {{
     return src
 
 
-RECIPE = {"apps": ["appa", "appb"], "library": URL}
+RECIPE = {"apps": ["appa", "appb"]}
 
 
 def composed(tmp_path: Path, **kw) -> tuple[Path, Path, dict]:
@@ -224,7 +224,7 @@ def test_the_composite_holds_both_apps_and_the_library_once(tmp_path):
             "appb/crates/app",
             "appb/crates/core",
         ],
-        "exclude": ["appa/xtask", "appb/xtask"],
+        "exclude": ["appa/xtask", "appb/xtask", "git"],
     }
     assert root["profile"] == {"dev": {"debug": 0}}, (
         "rule 4: only a profile every app agrees on"
@@ -236,9 +236,9 @@ def test_the_composite_holds_both_apps_and_the_library_once(tmp_path):
         {"member": "appa/xtask", "why": "the name xtask is in 2 apps"},
         {"member": "appb/xtask", "why": "the name xtask is in 2 apps"},
     ]
-    assert glue["library"] == {"lib-ui": {"commit": REV[:10], "folder": f"craft-libs/{REV[:10]}/crates/ui",
-                                          "used_by": ["appa", "appb"]}}  # fmt: skip
-    assert sorted(files(out / "craft-libs")) == [
+    assert glue["git"] == {"lib-ui": {"source": f"libs@{REV[:10]}", "folder": f"git/libs/{REV[:10]}/crates/ui",
+                                      "used_by": ["appa", "appb"]}}  # fmt: skip
+    assert sorted(files(out / "git" / "libs")) == [
         f"{REV[:10]}/LICENSE-MIT", f"{REV[:10]}/crates/ui/Cargo.toml", f"{REV[:10]}/crates/ui/src/lib.rs",
     ]  # fmt: skip
     assert (
@@ -257,14 +257,14 @@ def test_inheritance_is_inlined_from_each_app_s_own_workspace(tmp_path):
         "appa-core": {"path": "../core"},
         "lib-ui": {
             "features": ["serde", "extra"],
-            "path": f"../../../craft-libs/{REV[:10]}/crates/ui",
+            "path": f"../../../git/libs/{REV[:10]}/crates/ui",
         },
     }
     core = tomllib.loads((out / "appa" / "crates" / "core" / "Cargo.toml").read_text())
     assert core["lints"] == {"rust": {"unsafe_code": "forbid"}}
     assert core["package"]["license"] == "MIT"
     ui = tomllib.loads(
-        (out / "craft-libs" / REV[:10] / "crates" / "ui" / "Cargo.toml").read_text()
+        (out / "git" / "libs" / REV[:10] / "crates" / "ui" / "Cargo.toml").read_text()
     )
     assert ui["package"]["edition"] == "2021"
 
@@ -313,7 +313,7 @@ def test_cargo_builds_and_tests_the_composite_offline(tmp_path):
 def test_a_library_crate_wanted_at_two_commits_stops_it(tmp_path):
     src = apps(tmp_path)
     other = "fedcba9876" + "1" * 30
-    source(src / f"craft-libs@{other[:10]}", {
+    source(src / f"libs@{other[:10]}", {
         "Cargo.toml": '[workspace]\nmembers = ["crates/*"]\n',
         "crates/ui/Cargo.toml": '[package]\nname = "lib-ui"\nversion = "0.1.0"\nedition = "2021"\n',
         "crates/ui/src/lib.rs": "",
@@ -375,6 +375,139 @@ def test_patches_join_and_a_clash_stops_it(tmp_path):
         compose.compose(store, RECIPE, clash / "out")
 
 
+EXT = "https://example.org/acme/ext"
+EXT_COMMIT = "1234567890" + "a" * 30
+
+
+def with_a_branch_dep(tmp_path: Path) -> Path:
+    """appb takes `ext` by git on a branch; only appb's Cargo.lock says
+    which commit. ext is a package at its repo's root, with a helper crate
+    beside it that it depends on by path."""
+    src = apps(tmp_path)
+    source(src / f"ext@{EXT_COMMIT[:10]}", {
+        "Cargo.toml": '[package]\nname = "ext"\nversion = "0.3.0"\nedition = "2021"\n\n'
+                      '[dependencies]\next-helper = { path = "crates/helper" }\n',
+        "src/lib.rs": "pub fn ext() -> u32 { ext_helper::help() }\n",
+        "crates/helper/Cargo.toml": '[package]\nname = "ext-helper"\nversion = "0.3.0"\nedition = "2021"\n',
+        "crates/helper/src/lib.rs": "pub fn help() -> u32 { 3 }\n",
+        "LICENSE": "MIT License\n",
+    })  # fmt: skip
+    app = src / "appb" / "crates" / "app" / "Cargo.toml"
+    app.write_text(app.read_text() + f'ext = {{ git = "{EXT}", branch = "main" }}\n')
+    (src / "appb" / "Cargo.lock").write_text(
+        f'version = 4\n\n[[package]]\nname = "ext"\nversion = "0.3.0"\n'
+        f'source = "git+{EXT}?branch=main#{EXT_COMMIT}"\n'
+    )
+    return src
+
+
+def test_a_git_dep_on_a_branch_takes_the_commit_its_app_locked(tmp_path):
+    src = with_a_branch_dep(tmp_path)
+    store = tmp_path / "store"
+    pieces.apart(src, store)
+    out = tmp_path / "composite"
+    glue = compose.compose(store, RECIPE, out)
+    short = EXT_COMMIT[:10]
+    assert glue["git"]["ext"] == {
+        "source": f"ext@{short}",
+        "folder": f"git/ext/{short}",
+        "used_by": ["appb"],
+    }
+    assert glue["git"]["ext-helper"]["folder"] == f"git/ext/{short}/crates/helper", (
+        "its path deps come too"
+    )
+    app = tomllib.loads((out / "appb" / "crates" / "app" / "Cargo.toml").read_text())
+    assert app["dependencies"]["ext"] == {"path": f"../../../git/ext/{short}"}
+    env = {
+        **os.environ,
+        "CARGO_TARGET_DIR": str(tmp_path / "target"),
+        "CARGO_NET_OFFLINE": "true",
+    }
+    got = subprocess.run(["cargo", "build", "--workspace", "--offline", "-q"], cwd=out, env=env,
+                         capture_output=True, text=True)  # fmt: skip
+    assert got.returncode == 0, got.stderr
+
+
+def test_a_git_dep_its_app_never_locked_stops_it(tmp_path):
+    src = with_a_branch_dep(tmp_path)
+    (src / "appb" / "Cargo.lock").write_text("version = 4\n")
+    store = tmp_path / "store"
+    pieces.apart(src, store)
+    with pytest.raises(compose.Stop, match="ext wants ext at no commit"):
+        compose.compose(store, RECIPE, tmp_path / "out")
+
+
+def test_a_patch_by_git_is_taken_from_the_store_too(tmp_path):
+    src = with_a_branch_dep(tmp_path)
+    root = src / "appa" / "Cargo.toml"
+    root.write_text(
+        root.read_text()
+        + f'\n[patch.crates-io]\next = {{ git = "{EXT}", rev = "{EXT_COMMIT}" }}\n'
+    )
+    store = tmp_path / "store"
+    pieces.apart(src, store)
+    out = tmp_path / "composite"
+    glue = compose.compose(store, RECIPE, out)
+    patched = tomllib.loads((out / "Cargo.toml").read_text())["patch"]["crates-io"][
+        "ext"
+    ]
+    assert patched == {"path": f"git/ext/{EXT_COMMIT[:10]}"}
+    assert glue["git"]["ext"]["used_by"] == ["appa", "appb"]
+
+
+CLASH = ("error: failed to select a version for `cpal`.\n    ... required by package `appb`\n"
+         "package `cpal` links to the native library `alsa`, but it conflicts with a previous package\n")  # fmt: skip
+
+
+def with_cpal(tmp_path: Path, a: str, b: str) -> Path:
+    src = apps(tmp_path)
+    for app, version in (("appa", a), ("appb", b)):
+        m = src / app / "crates" / "app" / "Cargo.toml"
+        m.write_text(m.read_text() + f'cpal = "{version}"\n')
+    store = tmp_path / "store"
+    pieces.apart(src, store)
+    out = tmp_path / "composite"
+    compose.compose(store, RECIPE, out)
+    return out
+
+
+def test_rule_6_leaves_out_the_side_fewer_apps_use_and_asks_again(tmp_path):
+    out = with_cpal(tmp_path, "0.16", "0.18")
+    asked = []
+
+    def cargo(argv, cwd):
+        asked.append(
+            tomllib.loads((cwd / "Cargo.toml").read_text())["workspace"]["members"]
+        )
+        return (len(asked) > 1, "" if len(asked) > 1 else CLASH)
+
+    glue = compose.resolve(out, ["appa", "appb"], cargo)
+    assert glue["resolved"] is True and len(asked) == 2
+    assert "appb/crates/app" in asked[0] and "appb/crates/app" not in asked[1]
+    assert {
+        "member": "appb/crates/app",
+        "why": "it asks for cpal 0.18, which links alsa, as cpal 0.16 does in more apps",
+    } in glue["left_out"]
+    root = tomllib.loads((out / "Cargo.toml").read_text())
+    assert "appb/crates/app" in root["workspace"]["exclude"] and glue["members"] == 3
+    assert json.loads((out / "GLUE.json").read_text())["resolved"] is True
+
+
+def test_rule_6_says_a_failure_it_doesn_t_settle(tmp_path):
+    out = with_cpal(tmp_path, "0.16", "0.18")
+    glue = compose.resolve(
+        out,
+        ["appa", "appb"],
+        lambda argv, cwd: (False, "error: no matching package named `nope`\n"),
+    )
+    assert glue["resolved"] is False and glue["unresolved"] == [
+        "error: no matching package named `nope`"
+    ]
+    one_side = with_cpal(tmp_path / "again", "0.16", "0.16")
+    glue = compose.resolve(one_side, ["appa", "appb"], lambda argv, cwd: (False, CLASH))
+    assert glue["resolved"] is False and "no two member groups" in glue["unresolved"][0]
+
+
 def test_the_toml_written_reads_back_as_what_was_given():
     doc = {
         "cargo-features": ["edition2024"],
@@ -399,12 +532,15 @@ def test_the_toml_written_reads_back_as_what_was_given():
 # ── what was frozen ─────────────────────────────────────────────────────────
 def test_the_pins_are_whole():
     pins = json.loads((HERE / "sources.json").read_text(encoding="utf-8"))["sources"]
-    assert len(pins) == 21
+    assert len(pins) == 24
     for name, pin in pins.items():
         assert len(pin["commit"]) == 40 and len(pin["tree"]) == 40, name
         assert pin["url"].startswith("https://github.com/storytold/"), name
-        if name.startswith("craft-libs@"):
-            assert pin["commit"].startswith(name.split("@")[1])
+        if "@" in name:  # a source taken by git: <repo>@<commit>
+            repo, short = name.split("@")
+            assert pin["commit"].startswith(short) and pin["url"].endswith(
+                "/" + repo
+            ), name
     recipe = json.loads((HERE / "composite.json").read_text(encoding="utf-8"))
     assert set(recipe["apps"]) <= set(pins)
 
@@ -424,13 +560,22 @@ def test_the_rules_count_only_what_held_in_the_app_itself():
             "a-core": outcome(True, True),
             "a-gui": outcome(True, False),
             "a-broken": outcome(False, False),
+            "xtask": outcome(True, True),  # a member the rules left out
         }
     }
     good = {"rebuilt": rebuilt, "same_store": True, "same_composite": True, "baseline": base,
+            "composite_members": {"appa": ["a-broken", "a-core", "a-gui"]},
             "composite": {"appa": {"a-core": outcome(True, True), "a-gui": outcome(True, False),
                                    "a-broken": outcome(False, False)}}}  # fmt: skip
     assert run.rules(good) == dict.fromkeys(
         ["rebuilt", "same-store", "same-composite", "builds", "tests"], True
+    ), "what the rules left out counts for neither rule"
+    gone = {
+        **good,
+        "composite_members": {"appa": ["a-broken", "a-core", "a-gui", "xtask"]},
+    }
+    assert run.rules(gone)["builds"] is False, (
+        "a member that wasn't built in the composite fails"
     )
     lost_test = {
         **good,

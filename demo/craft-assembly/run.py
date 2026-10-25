@@ -11,12 +11,14 @@ order, each needing the one before:
                DIR/store-again; every source rebuilt from DIR/store alone into
                DIR/rebuilt
     baseline   each of the composite's apps, in its rebuilt copy, with its own
-               Cargo.lock: each package that will be a composite member is
-               built (cargo build -p P --locked) and tested (cargo test -p P
-               --locked --no-fail-fast)
-    composite  compose.py into DIR/composite and again into DIR/composite-again;
-               its lockfile made once (cargo generate-lockfile), then each
-               member built and tested the same way, --locked to it
+               Cargo.lock: each package the composite holds, and each one the
+               rules left out of it, built (cargo build -p NAME@VERSION
+               --locked) and tested (cargo test -p NAME@VERSION --locked
+               --no-fail-fast)
+    composite  compose.py into DIR/composite and again into DIR/composite-again,
+               each resolved by its rule 6 (cargo generate-lockfile, until it
+               resolves), then each member built and tested the same way,
+               --locked to that lockfile
 
 The pass rules, one verdict row each, all frozen with this file:
 
@@ -30,7 +32,9 @@ The pass rules, one verdict row each, all frozen with this file:
                     in the composite
 
 A package that doesn't build, or whose tests fail, in its own app is said in
-the results and counts for neither rule: the rules ask what assembling lost.
+the results and counts for neither rule: the rules ask what assembling lost
+of what the composite holds. What the rules left out, and which of it built
+in its own app, is said beside them (left_out_held), and counts for neither.
 Each cargo command gets an hour; past that it counts as failing. Builds run
 with CARGO_PROFILE_DEV_DEBUG=0 and CARGO_INCREMENTAL=0, the same for both.
 
@@ -93,22 +97,36 @@ def cargo(argv: list[str], cwd: Path, target: Path) -> bool:
     return got.returncode == 0
 
 
-def package_names(folder: Path, members: list[str]) -> dict[str, str]:
-    """member folder -> package name, read from each member's manifest."""
-    return {m: tomllib.loads((folder / m / "Cargo.toml").read_text(encoding="utf-8"))["package"]["name"]
-            for m in members}  # fmt: skip
-
-
-def try_each(folder: Path, packages: list[str], target: Path) -> dict[str, dict]:
+def specs(folder: Path, members: list[str], root: Path | None = None) -> dict[str, str]:
+    """package name -> `name@version`, for each member folder; a version
+    inherited from the workspace is read from `root`'s Cargo.toml."""
+    ws = (
+        tomllib.loads(root.read_text(encoding="utf-8")).get("workspace", {})
+        if root
+        else {}
+    )
     out = {}
-    for p in packages:
-        built = cargo(["build", "-p", p, "--locked"], folder, target)
+    for m in members:
+        pkg = tomllib.loads((folder / m / "Cargo.toml").read_text(encoding="utf-8"))[
+            "package"
+        ]
+        version = pkg.get("version", "0.0.0")
+        if isinstance(version, dict):
+            version = ws.get("package", {})["version"]
+        out[pkg["name"]] = f"{pkg['name']}@{version}"
+    return out
+
+
+def try_each(folder: Path, packages: dict[str, str], target: Path) -> dict[str, dict]:
+    out = {}
+    for name, spec in sorted(packages.items()):
+        built = cargo(["build", "-p", spec, "--locked"], folder, target)
         tested = built and cargo(
-            ["test", "-p", p, "--locked", "--no-fail-fast"], folder, target
+            ["test", "-p", spec, "--locked", "--no-fail-fast"], folder, target
         )
-        out[p] = {"builds": built, "tests": tested}
+        out[name] = {"builds": built, "tests": tested}
         print(
-            f"  {p}: {'builds' if built else 'BUILD FAILS'}, {'tests pass' if tested else 'tests fail'}",
+            f"  {name}: {'builds' if built else 'BUILD FAILS'}, {'tests pass' if tested else 'tests fail'}",
             flush=True,
         )
     return out
@@ -128,60 +146,88 @@ def stage_pieces(work: Path, res: dict) -> None:
     res["same_store"] = res["store_sha256"] == digest(work / "store-again")
 
 
+def resolver(work: Path):
+    """Rule 6's Cargo: generate-lockfile, which resolves and downloads
+    nothing it builds."""
+
+    def run_cargo(argv: list[str], cwd: Path) -> tuple[bool, str]:
+        env = {**os.environ, **ENV, "CARGO_TARGET_DIR": str(work / "target-composite")}
+        got = subprocess.run(
+            ["cargo", *argv],
+            cwd=cwd,
+            env=env,
+            capture_output=True,
+            text=True,
+            timeout=HOUR,
+        )
+        return got.returncode == 0, got.stderr
+
+    return run_cargo
+
+
 def stage_composite_layout(work: Path, res: dict) -> dict:
     for d in ("composite", "composite-again"):
         shutil.rmtree(work / d, ignore_errors=True)
-    glue = compose.compose(work / "store", RECIPE, work / "composite")
-    compose.compose(work / "store", RECIPE, work / "composite-again")
-    res["glue"] = {
-        k: glue[k]
-        for k in (
-            "members",
-            "left_out",
-            "profiles_dropped",
-            "library",
-            "local_cargo_config",
-        )
-    }
+    for d in ("composite", "composite-again"):
+        compose.compose(work / "store", RECIPE, work / d)
+        glue = compose.resolve(work / d, RECIPE["apps"], resolver(work))
+    glue = json.loads((work / "composite" / "GLUE.json").read_text(encoding="utf-8"))
+    res["glue"] = {k: glue.get(k) for k in ("members", "left_out", "profiles_dropped", "git",
+                                             "local_cargo_config", "resolved", "unresolved")}  # fmt: skip
+    lock = work / "composite" / "Cargo.lock"
+    res["lockfile_made"] = lock.exists()
+    res["lockfile_sha256"] = (
+        hashlib.sha256(lock.read_bytes()).hexdigest() if lock.exists() else None
+    )
     res["composite_sha256"] = digest(work / "composite")
     res["same_composite"] = res["composite_sha256"] == digest(work / "composite-again")
     return glue
 
 
-def members_by_app(work: Path) -> dict[str, list[str]]:
+def members_by_app(work: Path, key: str = "members") -> dict[str, list[str]]:
+    """The composite's members (or, with key "exclude", what it left out of
+    the apps), by app."""
     root = tomllib.loads(
         (work / "composite" / "Cargo.toml").read_text(encoding="utf-8")
     )
     out: dict[str, list[str]] = {}
-    for m in root["workspace"]["members"]:
-        app, rest = m.split("/", 1)
-        out.setdefault(app, []).append(rest)
+    for m in root["workspace"][key]:
+        if not m.startswith("git"):
+            app, rest = m.split("/", 1)
+            out.setdefault(app, []).append(rest)
     return out
 
 
 def stage_baseline(work: Path, res: dict) -> None:
-    res["baseline"] = {}
-    for app, members in sorted(members_by_app(work).items()):
+    """Each app's own: every member the composite holds, and every one the
+    rules left out, so what assembling lost can be said."""
+    res["baseline"], held, out = (
+        {},
+        members_by_app(work),
+        members_by_app(work, "exclude"),
+    )
+    res["composite_members"] = {}
+    for app in sorted(set(held) | set(out)):
         print(f"baseline: {app}", flush=True)
-        names = package_names(work / "rebuilt" / app, members)
-        res["baseline"][app] = try_each(
-            work / "rebuilt" / app, sorted(names.values()), work / "target-sources"
+        folder = work / "rebuilt" / app
+        res["composite_members"][app] = sorted(
+            specs(folder, held.get(app, []), folder / "Cargo.toml")
         )
+        both = specs(
+            folder, held.get(app, []) + out.get(app, []), folder / "Cargo.toml"
+        )
+        res["baseline"][app] = try_each(folder, both, work / "target-sources")
+    res["left_out_held"] = sorted(f"{a}/{p}" for a, ps in res["baseline"].items() for p, o in ps.items()
+                                  if o["builds"] and p not in res["composite_members"][a])  # fmt: skip
 
 
 def stage_composite(work: Path, res: dict) -> None:
     out = work / "composite"
-    res["lockfile_made"] = cargo(["generate-lockfile"], out, work / "target-composite")
-    lock = out / "Cargo.lock"
-    res["lockfile_sha256"] = (
-        hashlib.sha256(lock.read_bytes()).hexdigest() if lock.exists() else None
-    )
     res["composite"] = {}
     for app, members in sorted(members_by_app(work).items()):
         print(f"composite: {app}", flush=True)
-        names = package_names(out / app, members)
         res["composite"][app] = try_each(
-            out, sorted(names.values()), work / "target-composite"
+            out, specs(out / app, members), work / "target-composite"
         )
 
 
@@ -190,9 +236,14 @@ def rules(res: dict) -> dict[str, bool]:
             "same-store": res.get("same_store") is True,
             "same-composite": res.get("same_composite") is True}  # fmt: skip
     if "composite" in res:
-        base, comp = res["baseline"], res["composite"]
+        base, comp, held_in = (
+            res["baseline"],
+            res["composite"],
+            res.get("composite_members", {}),
+        )
         for rule, field in (("builds", "builds"), ("tests", "tests")):
-            want = {(a, p) for a, ps in base.items() for p, o in ps.items() if o[field]}
+            want = {(a, p) for a, ps in base.items() for p, o in ps.items()
+                    if o[field] and p in held_in.get(a, ())}  # fmt: skip
             held[rule] = all(comp.get(a, {}).get(p, {}).get(field) for a, p in want)
     return held
 
@@ -218,8 +269,11 @@ def main(argv: list[str]) -> int:
             file=sys.stderr,
         )
         return 2
-    if shutil.which("cargo") is None and opts.get("--stage") != "pieces":
-        print("refused: the baseline and the composite need cargo", file=sys.stderr)
+    if shutil.which("cargo") is None:
+        print(
+            "refused: composing resolves with cargo, and the builds need it",
+            file=sys.stderr,
+        )
         return 2
     now = opts.get("--now") or datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     last = STAGES.index(opts.get("--stage", "composite"))

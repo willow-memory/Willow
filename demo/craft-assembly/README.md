@@ -10,17 +10,21 @@ row on a kernel record.
 
 ## The claim
 
-1. **Taken apart, nothing is lost.** Fifteen Craft apps and six commits of
-   their shared library, `craft-libs`, go into one store of pieces: each
-   distinct file once, by its SHA-256. Each source rebuilt from the store
-   alone hashes to the git tree it was pinned at.
+1. **Taken apart, nothing is lost.** Fifteen Craft apps, six commits of
+   their shared library `craft-libs`, and the three other repositories the
+   apps take crates from by git (24 sources since freeze 2; 21 in run 1) go
+   into one store of pieces: each distinct file once, by its SHA-256. Each
+   source rebuilt from the store alone hashes to the git tree it was pinned
+   at.
 2. **The same input gives the same bytes.** Taking apart twice gives the
    same store; assembling twice gives the same composite.
 3. **Assembled, nothing breaks.** cadcraft, designcraft, effectcraft,
-   filmcraft and soundcraft, and the seven `craft-libs` crates they use, at
-   the commits each pinned, become one Cargo workspace with one lockfile.
-   Every package that builds in its own app builds in it, and every package
-   whose tests pass in its own app passes them in it.
+   filmcraft and soundcraft, and every crate they take by git, at the
+   commits each pinned and all from the store, become one Cargo workspace
+   with one lockfile. Every package it holds that builds in its own app
+   builds in it, and every one whose tests pass in its own app passes them
+   in it. What the rules leave out is said, with whether it held in its own
+   app.
 
 ## How it could be wrong, and what answers it
 
@@ -28,8 +32,8 @@ row on a kernel record.
 |---|---|
 | A rebuild that only looks right | the git tree hash of every rebuilt source, against the commit's own tree from sources.json |
 | Rules fitted to the result | the rules and pass rules were frozen in FROZEN.json, in a commit of their own, before any rebuild was checked or anything was built |
-| "Larger" by copying, not assembling | compose.py reads only the store; GLUE.json lists every file the rules wrote and the piece each came from; every other file is a piece byte for byte |
-| A composite that builds by leaving things out | what rule 3 left out is listed; the build and test rules count every package that held in its own app |
+| "Larger" by copying, not assembling | compose.py reads only the store; GLUE.json lists every file the rules wrote and the piece each came from; every other file is a piece byte for byte; since freeze 2, the composite's lockfile takes nothing from git, only from the store's paths and crates.io |
+| A composite that builds by leaving things out | what rules 3 and 6 left out is listed, each tested in its own app too, and the results say which of it held there (`left_out_held`) |
 | Tests that failed already | each package is first built and tested in its own app, rebuilt from the store, with its own Cargo.lock; only what held there counts |
 | Different build settings | profiles are joined setting by setting (rule 4) and what was dropped is listed; both sides build with `CARGO_PROFILE_DEV_DEBUG=0` and `CARGO_INCREMENTAL=0` |
 
@@ -39,22 +43,25 @@ row on a kernel record.
 `test_craft_assembly.py` fails if one changes. A change is a new freeze, in
 its own commit, with its reason.
 
-- [sources.json](sources.json): the 21 sources by address, commit and git
+- [sources.json](sources.json): the 24 sources by address, commit and git
   tree hash; never their text. [sources.py](sources.py) fetches them and
   checks each tree without git.
 - [pieces.py](pieces.py): taking apart and rebuilding, and the tree hash
   (the repo's own, from [php2shell's make_trees.py](../php2shell/make_trees.py)).
 - [composite.json](composite.json) and [compose.py](compose.py): the five
-  apps, the library's address, and the five rules that assemble them:
-  inherit each app's own workspace settings, take each library crate from
-  the store at its pinned commit, leave out a package name two apps share,
-  join profiles setting by setting, and drop each app's root manifest and
-  lockfile for the composite's one.
+  apps, and the six rules that assemble them: inherit each app's own
+  workspace settings; take every crate depended on or patched in by git
+  from the store, at its pinned commit (or the one its app's Cargo.lock
+  holds), with its path dependencies there; leave out a package name two
+  apps share; join profiles setting by setting; drop each app's root
+  manifest and lockfile for the composite's one; and, when Cargo says two
+  versions of a crate link one native library, leave out the side fewer
+  apps use.
 - [run.py](run.py): the stages and the five pass rules, `rebuilt`,
   `same-store`, `same-composite`, `builds` and `tests`, written as verdict
   rows with the SHA-256 of the results and of every tool.
 
-## What was seen before the freeze
+## What was seen before freeze 1
 
 Said plainly, since it shaped the rules:
 
@@ -85,6 +92,51 @@ Said plainly, since it shaped the rules:
   `release.opt-level` dropped; and each app's `.cargo/config.toml`, whose
   only setting is an `xtask` alias, not read from the composite's root.
 
+## Freeze 2, and what was seen before it
+
+Made after run 1 failed (below), in its own commit, with its reasons:
+
+- **Rule 2, every git dependency.** Run 1's rule 2 rewrote only
+  `craft-libs`, so the composite left Cargo to fetch effectcraft's sixteen
+  filmcraft crates, designcraft's `indd-utils`, and the crates designcraft
+  and effectcraft patch in, from GitHub. Now any git dependency, in a
+  dependency table or a `[patch]`, is taken from the store at its commit:
+  its `rev`, or for a branch, the commit its app's Cargo.lock holds (for
+  designcraft's `indd-utils`, which tracks `main`). The crates it depends on
+  by path at that commit come too. Three sources were added for it:
+  filmcraft at `2c5ba7a726` (effectcraft's pin, not the study's filmcraft),
+  `indd-utils` at `7f3060e5bc`, and storytold's fork of `winit` at
+  `3d51077fd1`.
+- **Rule 6, native libraries.** Run 1 found that Cargo won't hold two crates
+  linking one native library. Rule 6 asks Cargo to resolve, and when it
+  names such a clash, leaves out the side fewer apps use. Chosen by the
+  person running the study, over dropping soundcraft whole or stopping.
+- **run.py.** Packages are named `name@version` (two copies of filmcraft's
+  crates, at 0.12.0 and 0.1.1, now share one build), composing includes
+  rule 6, and the baseline also tests what the rules left out.
+
+Seen before freeze 2, beyond run 1's results:
+
+- that a workspace may hold a member and an excluded path dependency of one
+  name at two versions, and `cargo build -p` tells them apart (tried on a
+  two-crate workspace made for it);
+- filmcraft at `2c5ba7a726` holds 26 crates in the closure effectcraft
+  needs, with no git dependency of their own; `indd-utils` and the `winit`
+  fork are one package each, Apache-2.0 or MIT;
+- **the dry run, again:** take apart, compose, rule 6's `cargo
+  generate-lockfile` (which resolves and downloads, and compiles nothing),
+  and `cargo metadata --no-deps`. No rebuild was checked, nothing was built
+  or tested. It found that `[patch]` tables still took `hayro`, `krilla` and
+  `winit` from GitHub, which is why rule 2 now reaches them. Its composite:
+  136 members; 35 crates by git, all from the store; 9 left out, the five
+  `xtask`s, and soundcraft's `playback` (it asks for `cpal` 0.18) with the
+  three that depend on it, `soundcraft`, `soundcraft-web` and `ui-egui`; a
+  lockfile of 1,054 packages, 177 from the store's paths, 877 from crates.io,
+  none from git.
+- a `[patch]` reaches the whole build: in the composite, cadcraft and
+  filmcraft get designcraft's `winit` fork where their own apps use
+  crates.io's. That is a difference the rules make, and it stays.
+
 ## Reproduce
 
     python demo/craft-assembly/sources.py --to /tmp/craft            # online: about 700 MB
@@ -92,9 +144,8 @@ Said plainly, since it shaped the rules:
     python demo/craft-assembly/run.py --work /tmp/craft --box /tmp/craft-box
     python kernel.py verify --box /tmp/craft-box
 
-The baseline and the composite need cargo and the network (crates.io, for
-the apps' outside dependencies); `--stage pieces` runs the first stage,
-offline and in seconds.
+Every stage needs cargo, since composing resolves, and the network for
+crates.io; `--stage pieces` stops before the builds, in about a minute.
 
 ## Results
 
