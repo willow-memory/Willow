@@ -358,6 +358,11 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- CI pins its workflow to `ubuntu-24.04`. `ubuntu-latest` rolled to Ubuntu
+  26.04, for which `actions/setup-python` has no Python 3.9 build, so the
+  `tests (3.9)` and `strip (3.9)` jobs failed at setup on every pull request;
+  `kernel.py` promises 3.9+, so the runner is pinned to an image that still
+  carries it rather than 3.9 dropped from the matrix. (#39)
 - `kernel.words` composes text (NFC) before it splits it, so an é saved as
   e and a combining accent, as macOS often saves it, holds the é a person
   types; before, it split into "cafe" and a stray mark, and the question
