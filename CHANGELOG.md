@@ -327,6 +327,26 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- `kernel.py`'s common words, which never count toward holding a question,
+  now hold "anything", "something", "nothing", "everything" and the
+  "-one", "-body" and "-where" words: they name no topic. "did i promise
+  siobhan anything" found nothing, since no file says "anything"; it now
+  serves the promise. On the sixty demo questions, two answers change, both
+  for the better. The vectors regenerate; the ports read the list from them.
+- `privacy` withholds passwords: one typed after its label (`password: x`,
+  `pw x`), the second half of a login pair (`user / x`), and, in a file named
+  as a list of them, every value that looks like one (six or more
+  characters, a letter and a digit). `secrets-audit` lists the same.
+- The `calendar` reader says on a recurring event's first line that it
+  repeats, and how (`(yearly, from this date)`), and says `(cancelled)` on a
+  cancelled one, so a line quoted from it can't pass for this year's date.
+  `coming-up` counts each repeat in its window (a rule's FREQ, INTERVAL,
+  UNTIL and COUNT; one with BY parts isn't guessed) and a birthday every
+  year.
+- `demo/bernadette`'s stack asks a question again as `typos` and `accents`
+  read it, and its STRIP.md says what each fix changed; it also corrects a
+  finding it had wrong (question 19 missed on "anything", not an accent).
+
 - `privacy` also withholds a national phone number written from its 0 in
   groups (`0113 555 0122`, `07700 900123`: 10 or 11 digits), and a bank
   number after its label (sort code, account number, acct, a/c, routing),
