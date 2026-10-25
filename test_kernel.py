@@ -402,6 +402,22 @@ def test_holding_is_every_passage_rank_weighs(tmp_path):
     assert k.holding(pile, "how are the") == []
 
 
+def test_anything_and_its_kin_name_no_topic(tmp_path):
+    """ "did i promise siobhan anything": a file that never says "anything"
+    still holds the question, by the promise. Bernadette's demo missed her
+    written promise on this one word."""
+    (tmp_path / "sent.md").write_text("To Siobhan: I promise Aoife the ring at 21.\n")
+    (tmp_path / "other.md").write_text("Anything else for the shop? Someone asked.\n")
+    pile = k.chunks(tmp_path)
+    got = [c["path"] for c in k.rank(pile, "did i promise siobhan anything")]
+    assert got == ["sent.md"]
+    for w in ("anything", "something", "nothing", "everything", "anyone", "someone",
+              "everyone", "anybody", "somebody", "everybody", "nobody", "anywhere",
+              "somewhere", "everywhere", "nowhere"):  # fmt: skip
+        assert w in k.FUNCTION, w
+    assert k.rank(pile, "is there anything someone") == [], "common words only"
+
+
 def test_her_words_list_reads_her_word_as_her_folders(tmp_path):
     """Odile asks who's due; her tuning log says `next:` (demo/odile/STRIP.md).
     Her own list, kept like her key, reads one as the other, says so when
