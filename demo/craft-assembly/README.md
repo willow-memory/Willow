@@ -149,6 +149,68 @@ crates.io; `--stage pieces` stops before the builds, in about a minute.
 
 ## Results
 
+### Run 2, 2026-10-25: four rules held; two packages lost their tests
+
+Run by [run.py](run.py) from freeze 2 (3b25ab9), 12:55 to 18:37 UTC. Its
+outcomes are [results/run-2.json](results/run-2.json) (SHA-256
+`dbba33f2ca620d7e…`), and its verdicts are rows 6 to 10 of the same record
+as run 1's, after it: `python kernel.py verify --box <box>` said
+`the chain holds: 11 rows, 0 sealed`.
+
+| Pass rule | Verdict | What it found |
+|---|---|---|
+| rebuilt | satisfied | all 24 sources rebuilt from the store hash to their pinned git trees |
+| same-store | satisfied | taking apart twice gave the same store, byte for byte |
+| same-composite | satisfied | composing and resolving twice gave the same composite, lockfile and all |
+| builds | satisfied | all 134 of the composite's packages that build in their own app build in it |
+| tests | **failing** | 125 of the 127 that pass their tests in their own app pass them in it; two don't |
+
+**The composite.** Five apps, 136 packages, one Cargo workspace and one
+lockfile of 1,054 packages: 177 from the store's paths and 877 from
+crates.io, none from git. 42 crates came in by git, all from the store: 27
+of filmcraft's at effectcraft's pin, 13 from `craft-libs` at six commits,
+`indd` and the `winit` fork. Two `craft-libs` crates, `craft-ui` and
+`craft-docpath`, are built once for all five apps. The store: 22,961 files,
+423 MB, as 19,743 pieces, 1,662 of them in two or more sources.
+
+**The two packages that lost their tests**, found after the run by running
+each in its own app and in the composite, and diffing:
+
+- `cadcraft-io`: one test of its 335, `damaged_dwg_opens_partially_and_says_what_it_left_out`,
+  fails in the composite. Its dependency tree differs from cadcraft's own in
+  patch releases only, among them `acadrust`, the DWG reader, at 0.6.7 where
+  cadcraft locks 0.6.5. Pinned back to 0.6.5 in a copy of the composite,
+  the test passes. The cause is the composite's lockfile, which Cargo
+  resolved fresh, taking crates.io's newest compatible releases, not the
+  versions each app had locked.
+- `filmcraft-testkit`: one test, `root_is_the_workspace`, checks that
+  filmcraft's root `Cargo.toml` exists. Rule 5 drops it, by design: the
+  composite has one root. A loss the rules themselves make.
+
+**What the rules left out**, each tested in its own app too: the five
+`xtask`s (rule 3), and soundcraft's `playback`, which asks for `cpal` 0.18,
+with the three that depend on it, `soundcraft`, `soundcraft-web` and
+`ui-egui` (rule 6). Of these, the five `xtask`s and `soundcraft-web` build in
+their own app (`left_out_held`); the rest don't build here at all.
+
+**In their own apps** (the baseline, rebuilt from the store), against run 1:
+the same packages fail, but for `filmcraft-codecs`, which failed its tests
+in run 1 and passed in run 2, on the same bytes.
+
+**What it shows.** Programs taken apart into hashed pieces rebuild exactly,
+and the same pieces assemble into the same bytes. Five apps and 42 crates
+from four other repositories, put together by six written rules and no
+model, make one build in which everything that built alone still builds,
+and 125 of 127 test suites that passed alone still pass. The two that don't
+are two kinds of loss an assembly can make: a dependency resolved anew, and
+a file the assembly removes.
+
+**What a third freeze would try**, not done here: resolve the composite's
+lockfile from the apps' own, each crate at the version its app locked where
+Cargo can hold it; and leave each app's root manifest in place under
+another name, to see whether a test that only looks for the file is the
+only one that cares.
+
 ### Run 1, 2026-10-25: taking apart held; assembling failed
 
 Run by [run.py](run.py) from the freeze (8849664), 03:52 to 06:35 UTC. Its
