@@ -15,16 +15,16 @@ says how). The first was v0.1.0.
   deserialization, broken tls, ssrf, path traversal, template injection, xss
   sinks, weak crypto, dangerous config, xxe — across Python, JavaScript, PHP,
   Java, Go and Ruby, each cited by file and line as a lead to read, not proof.
-  A sibling to `secrets-audit`; offline, read-only.
+  A sibling to `secrets-audit`; offline, read-only. (#38)
 - `demo/redteam`, a frozen study that composes seven read-only add-ons
   (`secrets-audit`, `advisories`, `install-scripts`, `typosquat`, `pins`,
   `outdated`, `risky-code`) into one authorized-recon pass over a committed
   planted-weakness target, with the intel it needs frozen alongside so it
-  reads the same every run.
+  reads the same every run. (#38)
 - `demo/novelty.py`, a reusable check every demo can run: it asks willow's
   own search — `similar` over the idea pile and the kernel's `rank` over
   every demo's README — whether a combination of pieces has been put
-  together before.
+  together before. (#38)
 - `repo-pile`: a list of public repositories made into a box you can ask.
   Each is cloned, kept only when its own licence file grants one an
   Apache-2.0 project can use (anything else, or none, is left out and said
