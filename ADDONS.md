@@ -18,14 +18,14 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`████░░░░░░░░░░░░░░░░` **93 of 459 built** · 408 need no install · 51 need one
+`████░░░░░░░░░░░░░░░░` **94 of 460 built** · 409 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
 | Reading more kinds of files | 10 | 94 | 96 | 8 |
 | Finding things | 7 | 36 | 32 | 11 |
 | Your own words | 7 | 17 | 21 | 3 |
-| Keeping track | 9 | 47 | 56 | 0 |
+| Keeping track | 10 | 47 | 57 | 0 |
 | Trust and proof | 12 | 32 | 35 | 9 |
 | Privacy and safety | 6 | 8 | 14 | 0 |
 | Assistants | 15 | 40 | 49 | 6 |
@@ -37,19 +37,19 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ### Newest
 
 <!-- willow:newest -->
+- 2026-10-25 · [**stack**](adapters/stdlib/stack/) — One document across a stack of boxes, not just one: each box's digest, export, timeline or readings, composed into one page, every line still cited by its box, file and line.
 - 2026-10-25 · [**risky-code**](adapters/stdlib/risky-code/) — Lines of code matching a known-dangerous pattern (command injection, eval, sql concatenation, broken tls and more), by file and line, as leads to read.
 - 2026-10-24 · [**zed**](adapters/stdlib/zed/) — Zed's assistant asks your folder and hands in suggestions, through the mcp add-on.
 - 2026-10-24 · [**xref**](adapters/stdlib/xref/) — Every reference in your files checked: each link to another file, and each quoted line, still there and still saying it.
 - 2026-10-24 · [**words-pt**](adapters/stdlib/words-pt/) — Portuguese common words ("o", "e").
-- 2026-10-24 · [**words-nl**](adapters/stdlib/words-nl/) — Dutch common words ("de", "en").
 <!-- /willow:newest -->
 
 ### Add-on of the week
 
 <!-- willow:pick week=2026-W43 -->
-**[scan](adapters/stdlib/scan/)** — Index a big folder once, then ask it a list of questions in seconds, with the kernel's own answers: of everything, or only what changed since another index.
+**[slow-tests](adapters/stdlib/slow-tests/)** — Each test's time kept per run, with the slowest named and any that got slower flagged.
 
-*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 93 built add-ons in name order.*
+*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 94 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -288,6 +288,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - **rubric** (idea) — Marking against a rubric you wrote: each mark cites the criterion and the line of work it's for. *new* `no-install` `offline` `read-only` `tracking`
 - **school** (idea) — School letters and emails for parents: trips, forms due, term dates, and what to bring. *new* `no-install` `offline` `read-only` `tracking`
 - **session-cost** (idea) — Tokens each agent session spent, by day and by repo, summed from its own session files and priced from a table you keep. *new* `no-install` `offline` `read-only` `tracking`
+- [**stack**](adapters/stdlib/stack/) — One document across a stack of boxes, not just one: each box's digest, export, timeline or readings, composed into one page, every line still cited by its box, file and line. *new* `no-install` `offline` `read-only` `tracking` `everyday`
 - **subscriptions** (idea) — What you pay for every month, found in bank statements and emails, and when each renews. *new* `no-install` `offline` `read-only` `tracking`
 - **support-plan** (idea) — An IEP or support plan's goals, accommodations and review dates, each cited, for a parent or teacher. *new* `no-install` `offline` `read-only` `tracking`
 - **syllabus** (idea) — A course syllabus as dates: readings, assignments and exams due, each cited. *new* `no-install` `offline` `read-only` `tracking`

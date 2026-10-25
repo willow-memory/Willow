@@ -10,6 +10,11 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `stack`, an add-on that makes one document across a stack of boxes rather
+  than one: it runs a document add-on (`digest`, `export`, `timeline` or
+  `readings`) over every box a `--stack` list or repeated `--box` names, and
+  composes their parts under a heading per box, every line still cited by its
+  box, file and line. It writes no box, reads no key and approves nothing.
 - `risky-code`, an add-on that finds lines of code matching a known-dangerous
   pattern — command injection, `eval`/`exec`, sql concatenation, insecure
   deserialization, broken tls, ssrf, path traversal, template injection, xss

@@ -328,6 +328,10 @@ willow/
 │   │   │   ├── snapshot.py   a page or file fetched once, with its address, time and SHA-256
 │   │   │   ├── test_snapshot.py
 │   │   │   └── README.md
+│   │   ├── stack/
+│   │   │   ├── stack.py      one document across a stack of boxes: each box's digest, export, timeline or readings, composed
+│   │   │   ├── test_stack.py
+│   │   │   └── README.md
 │   │   ├── stale/
 │   │   │   ├── stale.py      approved answers whose cited passage changed or went
 │   │   │   ├── test_stale.py
