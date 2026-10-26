@@ -80,6 +80,9 @@
   "scan": {
     "09336b67f2ff": "Only narrows candidates: the kernel's own rank re-checks each one, so an or here adds passages it drops, never one it serves."
   },
+  "serve": {
+    "02a855817eb0": "Path(__file__).resolve().parents[0] instead of parents[3] still finds kernel.py in the run, so the sys.path insert's target changes no test."
+  },
   "starter-words": {
     "2f4df3ac7eca": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
   },

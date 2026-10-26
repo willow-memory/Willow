@@ -316,6 +316,10 @@ willow/
 │   │   │   ├── secrets_audit.py passwords, keys and card numbers in plain files, by file and line
 │   │   │   ├── test_secrets_audit.py
 │   │   │   └── README.md
+│   │   ├── serve/
+│   │   │   ├── serve.py       the one markdown file a model reads: only a human-sealed scope, pooled, peaks first, by unguessable ids
+│   │   │   ├── test_serve.py
+│   │   │   └── README.md
 │   │   ├── session-seal/
 │   │   │   ├── session_seal.py one seal over a session's rows, proposed through the kernel
 │   │   │   ├── test_session_seal.py

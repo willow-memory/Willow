@@ -585,4 +585,4 @@ No row is sealed. Sealing is the person's, with their key, and nothing in this s
     python demo/craft-assembly/report.py write    # this file, then results/checks.md
     python demo/craft-assembly/report.py check    # exit 1 if either would change
 
-Of willow's add-ons: the kernel's `read` checks the record; `xref` checks every reference in this folder, this file's included; `claim-check` looks for each counted claim in the hand-written README. `serve` (pull request 43, not merged) was left out: it hands a model only a scope the person has sealed, with ids drawn at random each run, so it can't be part of a file made the same every time; once this report is sealed as a scope, it is the way to serve it.
+Of willow's add-ons: the kernel's `read` checks the record; `xref` checks every reference in this folder, this file's included; `claim-check` looks for each counted claim in the hand-written README. `serve` (pull request 43) was left out: it hands a model only a scope the person has sealed, with ids drawn at random each run, so it can't be part of a file made the same every time; once this report is sealed as a scope, it is the way to serve it.
