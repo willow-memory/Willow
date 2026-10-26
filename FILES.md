@@ -394,6 +394,10 @@ willow/
 │   │   │   ├── timeline.py   one matter's lines by date, each cited, written to one file
 │   │   │   ├── test_timeline.py
 │   │   │   └── README.md
+│   │   ├── tip-pin/
+│   │   │   ├── tip_pin.py    where the record ends, pinned outside the box; found cut short or rewritten
+│   │   │   ├── test_tip_pin.py
+│   │   │   └── README.md
 │   │   ├── todo/
 │   │   │   ├── todo.py       things marked to do, oldest first
 │   │   │   ├── test_todo.py

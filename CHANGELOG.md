@@ -10,6 +10,11 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `tip-pin`, an add-on that pins where a box's record ends (its row count and
+  last hash) to a file kept out of the box, and checks the box against it:
+  `tip_pin.py pin --box DIR --to FILE`, then `tip_pin.py check --box DIR
+  --pin FILE`. Rows cut off the end, or removed and then all re-hashed, pass
+  `verify`; the pin finds both (exit 42). Its tests reproduce each.
 - `hosts`, an add-on that holds the assistants which take an MCP server as one
   table (where each one's settings live, and the shape it wants) and prints the
   lines that register mcp-lite with any of them: `hosts.py list`, then

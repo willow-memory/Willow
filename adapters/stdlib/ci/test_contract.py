@@ -122,6 +122,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "wayback": ("wayback.py", ["find", "--url", "https://example.org/", "--to", "{tmp}/w",
                                "--after", "20261016", "--before", "20261001"]),
     "stale": ("stale.py", ["--box", "{box}"]),
+    "tip-pin": ("tip_pin.py", ["pin", "--box", "{box}", "--to", "{tmp}/pin.json"]),
     "starter-words": ("starter.py", ["copy", "--to", "{tmp}/words.txt"]),
     "surprise": ("surprise.py", ["--box", "{box}", *NOW]),
     "todo": ("todo.py", ["--box", "{box}"]),

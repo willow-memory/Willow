@@ -43,8 +43,8 @@ where it falls short today, and a fix is welcome.
   nothing outside the box says what the last hash or the row count should be.
   Seals still can't be forged without the key, so an approval can't be
   invented this way, but the bites, suggestions and declines around it can be
-  dropped. To know, keep the last row's `hash` from the box's record and the row
-  count somewhere the box's writer can't reach, and compare them later.
+  dropped. [tip-pin](adapters/stdlib/tip-pin/) keeps the last row's hash and
+  the row count somewhere the box's writer can't reach, and checks them later.
 - **No index, so time grows with the size of the folder.** On Odile's
   folder a question takes about a quarter of a second; a very large folder
   would want an index, in an add-on.
