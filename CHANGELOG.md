@@ -21,7 +21,7 @@ says how). The first was v0.1.0.
   before; a test in each holds the one `hosts` it imports against a decoy of
   the same name, which kills the `sys.path` break that was accepted for seven of
   them, so those entries are gone from the mutants add-on's accepted list. Prints only: no box
-  written, no key, no network.
+  written, no key, no network. (#53)
 
 - `ci-cache`, an add-on that reads a folder's lockfiles and prints a cache key
   per ecosystem (pip, npm, .NET, Maven), so a CI run caches each one's
