@@ -18,16 +18,16 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`████░░░░░░░░░░░░░░░░` **92 of 458 built** · 407 need no install · 51 need one
+`████░░░░░░░░░░░░░░░░` **96 of 461 built** · 411 need no install · 50 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
 | Reading more kinds of files | 10 | 94 | 96 | 8 |
-| Finding things | 7 | 36 | 32 | 11 |
-| Your own words | 7 | 17 | 21 | 3 |
-| Keeping track | 9 | 47 | 56 | 0 |
+| Finding things | 8 | 35 | 33 | 10 |
+| Your own words | 8 | 17 | 22 | 3 |
+| Keeping track | 10 | 47 | 57 | 0 |
 | Trust and proof | 12 | 32 | 35 | 9 |
-| Privacy and safety | 5 | 8 | 13 | 0 |
+| Privacy and safety | 6 | 8 | 14 | 0 |
 | Assistants | 15 | 40 | 49 | 6 |
 | Ways to use it | 11 | 28 | 35 | 4 |
 | Play | 4 | 36 | 35 | 5 |
@@ -37,19 +37,19 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ### Newest
 
 <!-- willow:newest -->
+- 2026-10-25 · [**typos**](adapters/stdlib/typos/) — Forgives misspellings in questions.
+- 2026-10-25 · [**risky-code**](adapters/stdlib/risky-code/) — Lines of code matching a known-dangerous pattern (command injection, eval, sql concatenation, broken tls and more), by file and line, as leads to read.
+- 2026-10-25 · [**across**](adapters/stdlib/across/) — One document across several boxes, not just one: each box's digest, export, timeline or readings, composed into one page, every line still cited by its box, file and line.
+- 2026-10-25 · [**accents**](adapters/stdlib/accents/) — A word typed without its accent read as your files write it, and the words-list lines that make it last.
 - 2026-10-24 · [**zed**](adapters/stdlib/zed/) — Zed's assistant asks your folder and hands in suggestions, through the mcp add-on.
-- 2026-10-24 · [**xref**](adapters/stdlib/xref/) — Every reference in your files checked: each link to another file, and each quoted line, still there and still saying it.
-- 2026-10-24 · [**words-pt**](adapters/stdlib/words-pt/) — Portuguese common words ("o", "e").
-- 2026-10-24 · [**words-nl**](adapters/stdlib/words-nl/) — Dutch common words ("de", "en").
-- 2026-10-24 · [**words-it**](adapters/stdlib/words-it/) — Italian common words ("il", "e").
 <!-- /willow:newest -->
 
 ### Add-on of the week
 
-<!-- willow:pick week=2026-W43 -->
-**[surprise](adapters/stdlib/surprise/)** — One passage from your folder at random, seeded so it can be replayed.
+<!-- willow:pick week=2026-W44 -->
+**[hook-replay](adapters/stdlib/hook-replay/)** — Every hook's answer kept as a row with the hashes of what it was given and what it said, and check runs it again to prove the same input still gets the same answer.
 
-*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 92 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 96 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -204,7 +204,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - **standards** (idea) — Curriculum standards beside your lessons: which standard each lesson meets, each cited. *new* `no-install` `offline` `read-only` `search`
 - [**surprise**](adapters/stdlib/surprise/) — One passage from your folder at random, seeded so it can be replayed. *bot* `no-install` `offline` `records` `search`
 - **symbols** (idea) — Exact definitions and references for Python code: where a name is defined, and every place it's used. Needs scip-python; MIT. *new* `needs-install` `offline` `read-only` `search`
-- **typos** (idea) — Forgives misspellings in questions. Needs rapidfuzz; MIT. *new* `needs-install` `offline` `read-only` `search`
+- [**typos**](adapters/stdlib/typos/) — Forgives misspellings in questions. *new* `no-install` `offline` `read-only` `search`
 - **upgrade-notes** (idea) — Before an upgrade: the changelog lines between the version you lock and the one you'd move to, from the package's own files. Goes online: the registry (PyPI, npm or crates.io), to fetch the newer version's changelog. *new* `no-install` `online` `read-only` `search`
 - **vectors** (idea) — The meaning add-on's vectors kept in the store's own SQLite file, so they're computed once per passage, not at every question. Needs sqlite-vec and model2vec; MIT or Apache-2.0. *bot* `needs-install` `offline` `writes-output` `search` `pile`
 - **watch** (idea) — A file re-read the moment it changes (inotify, FSEvents, or polling), so the index is always current. *new* `no-install` `offline` `writes-output` `search`
@@ -215,6 +215,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 The blind tests' biggest gap: on day one, a person's words aren't their files' words.
 
 - **abbreviations** (idea) — Your own shorthand, written down once (appt, Rx, w/c), so a question finds either form. *new* `no-install` `offline` `writes-output` `words`
+- [**accents**](adapters/stdlib/accents/) — A word typed without its accent read as your files write it, and the words-list lines that make it last. *new* `no-install` `offline` `read-only` `words`
 - **dialect** (idea) — The words you use far more than the world does: your own dialect, from your files against wordfreq's counts. Needs wordfreq; Apache-2.0, its data CC BY-SA 4.0. *new* `needs-install` `offline` `read-only` `words`
 - **memoir** (idea) — A question a week about your life, answered in your own words and kept, so your story is in your files. *new* `no-install` `offline` `writes-output` `words`
 - **nicknames** (idea) — The names you call people, mapped to who they are, so 'Mum' finds Margaret. *new* `no-install` `offline` `writes-output` `words`
@@ -241,6 +242,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 
 ### Keeping track
 
+- [**across**](adapters/stdlib/across/) — One document across several boxes, not just one: each box's digest, export, timeline or readings, composed into one page, every line still cited by its box, file and line. *new* `no-install` `offline` `read-only` `tracking` `everyday`
 - [**again**](adapters/stdlib/again/) — Questions you keep asking: "asked 4 times; approve an answer?" *bot* `no-install` `offline` `read-only` `tracking`
 - **ask-later** (idea) — A question with no answer yet kept on a list, and asked again whenever a new file arrives. *new* `no-install` `offline` `records` `tracking`
 - **attendance** (idea) — Attendance for a class, club or group, from your register, by week. *new* `no-install` `offline` `read-only` `tracking`
@@ -355,6 +357,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - **package-contents** (idea) — What's inside a wheel, sdist, npm tarball or .crate before you install it: every file, and any code it runs on install. *new* `no-install` `offline` `read-only` `privacy`
 - **pii-audit** (idea) — Personal data sitting in your files (ID numbers, health details, card numbers), listed by file and line. *new* `no-install` `offline` `read-only` `privacy`
 - [**privacy**](adapters/stdlib/privacy/) — Hides phone numbers, emails, card, bank and ID numbers, and API keys in what a question prints, and says what it hid. *bot* `no-install` `offline` `records` `privacy`
+- [**risky-code**](adapters/stdlib/risky-code/) — Lines of code matching a known-dangerous pattern (command injection, eval, sql concatenation, broken tls and more), by file and line, as leads to read. *new* `no-install` `offline` `read-only` `security`
 - **scrub** (idea) — Strips the hidden details (EXIF, author, edit history) from a file before you share it. *new* `no-install` `offline` `writes-output` `privacy`
 - [**secrets-audit**](adapters/stdlib/secrets-audit/) — Finds passwords, keys and card numbers sitting in plain files, by file and line, never showing the value. *bot* `no-install` `offline` `read-only` `privacy` `everyday`
 - **student-records** (idea) — A box of student records that answers only the teacher who owns it, and logs every look. *new* `no-install` `offline` `records` `privacy`

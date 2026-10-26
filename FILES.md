@@ -44,6 +44,14 @@ willow/
 │   ├── README.md             the rules every add-on follows
 │   ├── planned.json          the add-ons not built yet, as this README lists them
 │   ├── stdlib/               add-ons that need nothing beyond Python
+│   │   ├── accents/
+│   │   │   ├── accents.py    a word typed without its accent, read as the files write it; words-list lines
+│   │   │   ├── test_accents.py
+│   │   │   └── README.md
+│   │   ├── across/
+│   │   │   ├── across.py     one document across several boxes: each box's digest, export, timeline or readings, composed
+│   │   │   ├── test_across.py
+│   │   │   └── README.md
 │   │   ├── advisories/
 │   │   │   ├── advisories.py locked dependencies matched to a downloaded OSV advisory database, offline
 │   │   │   ├── test_advisories.py
@@ -296,6 +304,10 @@ willow/
 │   │   │   ├── restack.py    your branches back on top of main, the repo's own conflicts settled
 │   │   │   ├── test_restack.py
 │   │   │   └── README.md
+│   │   ├── risky-code/
+│   │   │   ├── risky_code.py  lines of code matching a known-dangerous pattern, by file and line, as leads to read
+│   │   │   ├── test_risky_code.py
+│   │   │   └── README.md
 │   │   ├── scan/
 │   │   │   ├── scan.py       indexes a folder once, then asks it a list of questions, the kernel's way
 │   │   │   ├── test_scan.py  holds its answers to the kernel's, every ranking vector included
@@ -356,6 +368,10 @@ willow/
 │   │   ├── todo/
 │   │   │   ├── todo.py       things marked to do, oldest first
 │   │   │   ├── test_todo.py
+│   │   │   └── README.md
+│   │   ├── typos/
+│   │   │   ├── typos.py      a misspelt word read as the files spell it, one edit inside, offered not asked
+│   │   │   ├── test_typos.py
 │   │   │   └── README.md
 │   │   ├── typosquat/
 │   │   │   ├── typosquat.py  dependency names a letter off a popular one, checked against a top-packages list
@@ -453,7 +469,10 @@ willow/
 │   └── README.md             how the ports were built and what testing them found
 ├── docs/
 │   ├── tour.md               the first five minutes, in full: a question, a gap, her words, an approval
-│   └── how-it-works.md       what it reads, how it ranks, the key, the record, approvals
+│   ├── how-it-works.md       what it reads, how it ranks, the key, the record, approvals
+│   └── design/
+│       ├── repo-index.md     proposal: the repo as one deterministic-snapshot box, indexed by a custom serve-style stack
+│       └── serve.md          proposal: a sealed stack of piles served to a model, on markdown (the grove's serve, in willow)
 ├── demo/                     four made-up people, a real bug, a real policy change and programs taken apart, to try it on
 │   ├── odile/                piano tuner and beekeeper, caring for her father
 │   │   ├── make_life.py      writes her files into life/, the same bytes every run
@@ -481,6 +500,36 @@ willow/
 │   │   ├── STRIP.md          what each need came to, and what each layer of the stack did
 │   │   ├── stack.py          her files through every reader, start, the finders, privacy, an MCP assistant, and the trust add-ons
 │   │   └── test_stack.py     holds the stack to the states STRIP.md scores
+│   ├── novelty.py           the reusable novelty check: have these pieces been put together before?
+│   ├── test_novelty.py      a novel description reads as novel, one an existing demo holds as prior art
+│   ├── redteam/             a frozen recon composition over a planted target, scanned for novelty
+│   │   ├── README.md         the composition, what is planted, what is frozen, the novelty check
+│   │   ├── FROZEN.json       the SHA-256 of every source, and the finding expected from each section
+│   │   ├── recon.py          runs seven read-only add-ons over the target in an attacker's order
+│   │   ├── test_redteam.py   holds the sources to their hashes and the pass to its planted findings
+│   │   ├── intel/            the offline intel the pass needs, committed so it reads the same every run
+│   │   │   ├── popular.txt    the popular-names list typosquat checks against
+│   │   │   ├── osv/
+│   │   │   │   ├── PyPI/
+│   │   │   │   │   └── GHSA-x84v-xcm2-53pg.json  the Requests credentials-leak advisory
+│   │   │   │   └── npm/
+│   │   │   │       └── GHSA-35jh-r3h4-6jhm.json  the lodash command-injection advisory
+│   │   │   └── registry/
+│   │   │       └── npm/
+│   │   │           └── minimist.json  registry metadata showing minimist long abandoned
+│   │   └── target/           the planted application, read-only
+│   │       ├── package-lock.json  a vulnerable lodash, a misspelled reqeusts, an abandoned minimist
+│   │       ├── requirements.txt   an unpinned flask and a vulnerable requests
+│   │       ├── app/
+│   │       │   ├── client.js    JS sinks: exec, eval, innerHTML, Math.random, TLS off
+│   │       │   ├── config.py    a hardcoded AWS key and password, debug on
+│   │       │   ├── legacy.php   PHP sinks: shell_exec, unserialize, SQL concat, echo, TLS off
+│   │       │   ├── server.go    Go sinks: exec.Command, InsecureSkipVerify
+│   │       │   ├── settings.py  debug on, wildcard CORS, a connection string, a JWT
+│   │       │   └── views.py     Python sinks: shell, pickle, SQL format, eval, verify=False
+│   │       └── node_modules/
+│   │           └── evil-pkg/
+│   │               └── package.json  a postinstall that pipes a remote script to a shell
 │   ├── php2shell/            a real bug: the PHP2Shell result, tested seven ways
 │   │   ├── README.md         the claim, the threats, what is frozen, each phase's results
 │   │   ├── FROZEN.json       the SHA-256 of each frozen file, and of the tools when frozen

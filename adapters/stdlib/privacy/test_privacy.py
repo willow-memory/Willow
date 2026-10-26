@@ -40,6 +40,10 @@ NOW = ["--now", "2026-10-23T00:00:00Z"]
         ("token sk-ant-abcdefghijklmnopqrstuvwxyz0123", "key"),
         ("token ghp_abcdefghijklmnopqrstuvwxyz0123456789", "key"),
         ("-----BEGIN PRIVATE KEY-----\nMIIB\n-----END PRIVATE KEY-----", "key"),
+        ("wifi password: hunter2", "password"),
+        ("user: cwcftp pw = widgets1998", "password"),
+        ("netbank: client 61847720  pw Wendouree#14", "password"),
+        ("wifi: HomeNet / x7Kp9q2z", "password"),
     ],
 )
 def test_each_kind_is_withheld_and_counted(text, kind):
@@ -62,11 +66,54 @@ def test_each_kind_is_withheld_and_counted(text, kind):
         "account 2026-10-22 statement",  # a date, not a bank number
         "accounting for 123456 widgets",  # not the label
         "account 1234",  # too short for a bank number
+        "The password policy changed last year.",  # prose, not a password
+        "pw reset sent, see docs/a / b2c3d4e5",  # no digit; a path, not a login
+        "password: changeme",  # a placeholder
+        "password: env:WIFI",  # names where it comes from
+        "if ($p == $password) { ok(); }",  # a comparison
+        "Q3 / Q4 plans and 2024 / 2025",  # no letter and digit both
+        "ancestry: Considine1911",  # a password only in a file of them
     ],
 )
 def test_lookalikes_are_left(text):
     found = {}
     assert pv.scrub(text, found) == text and found == {}
+
+
+def test_a_login_pair_withholds_the_password_and_keeps_who_it_is_for():
+    found = {}
+    got = pv.scrub("myGov: ana@example.org / Tide2024!", found)
+    assert got == "myGov: [withheld: email] / [withheld: password]"
+    assert found == {"email": 1, "password": 1}
+
+
+def test_in_a_file_of_passwords_every_one_is_withheld():
+    for listed in ("Desktop/passwords.txt", "logins.md", "My Passwords.txt",
+                   "credentials-old.csv", "password.txt"):  # fmt: skip
+        assert pv.password_list(listed), listed
+    for notes in ("notes/password-reset-steps.md", "passwordless.md", "wifi.txt"):
+        assert not pv.password_list(notes), notes
+    text = (
+        "PASSWORDS - do not lose!!\nancestry: Considine1911\n"
+        "netbank: pw Wendouree#14 (changed -> Wendouree#15)\nNetflix: kieran knows\n"
+    )
+    found = {}
+    got = pv.scrub(text, found, listed=True)
+    assert "Considine1911" not in got and "Wendouree" not in got
+    assert "do not lose!!" in got and "kieran knows" in got, "prose stays"
+    assert found == {"password": 3}
+    assert pv.scrub(text, {}, listed=False).count("[withheld") == 1, "only the pw"
+
+
+def test_a_file_name_built_to_backtrack_is_read_at_once():
+    """CodeQL's case: separators and digits repeated, a name that once took
+    seconds per two more. Read in well under a second now, at any length."""
+    import time
+
+    start = time.monotonic()
+    assert not pv.password_list("passwords" + "_0" * 60 + "!")
+    assert pv.password_list("passwords" + "_0" * 60)
+    assert time.monotonic() - start < 1
 
 
 def test_a_bank_number_keeps_its_label_so_the_line_still_reads():
@@ -103,3 +150,17 @@ def test_a_bite_serves_the_same_passages_with_the_data_withheld(tmp_path):
     )  # the kernel itself prints it: that's this add-on's job
     assert mine["withheld"] == {"email": 1, "phone": 1}
     assert "010-0177" not in (b / "record.jsonl").read_text()
+
+
+def test_a_bite_on_a_file_of_passwords_withholds_each_one(tmp_path):
+    pile = tmp_path / "pile"
+    pile.mkdir()
+    (pile / "passwords.txt").write_text("ancestry login: Considine1911\n")
+    b = tmp_path / "box"
+    subprocess.run([sys.executable, str(KERNEL), "init", "--box", str(b), "--pile", str(pile),
+                    "--key", str(tmp_path / "k"), *NOW], check=True, capture_output=True)  # fmt: skip
+    got = subprocess.run([sys.executable, str(HERE / "privacy.py"), "bite", "--box", str(b),
+                          *NOW, "ancestry login"], capture_output=True, text=True)  # fmt: skip
+    doc = json.loads(got.stdout)
+    assert "Considine1911" not in got.stdout and doc["withheld"] == {"password": 1}
+    assert doc["served"][0]["text"] == "ancestry login: [withheld: password]"

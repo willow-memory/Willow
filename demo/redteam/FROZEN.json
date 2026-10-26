@@ -1,0 +1,62 @@
+{
+ "about": "An authorized-recon composition over a committed planted-weakness target, frozen so anyone can rerun it and get the same pass.",
+ "frozen": "2026-10-25",
+ "now": "2026-10-25",
+ "pipeline": "recon.py composes seven read-only add-ons: secrets-audit, advisories, install-scripts, typosquat, pins, outdated, risky-code.",
+ "sources": {
+  "recon.py": "sha256:047cdcafedf2f58a8218ec0e0355f514cd9a3536fdf8f6f5bdc9973ac234f377",
+  "intel/osv/PyPI/GHSA-x84v-xcm2-53pg.json": "sha256:45530c6d8952ff1949191476f00ab04a73f6715de7365d4d10a24af4f14a0648",
+  "intel/osv/npm/GHSA-35jh-r3h4-6jhm.json": "sha256:29728938af3e3c2857c09017c3259ec19728dca8e665abab7a91e41f71d37cf6",
+  "intel/popular.txt": "sha256:047d163d88028c626a7c27397857b9016dd07a7786ee457526090a01e1322f7a",
+  "intel/registry/npm/minimist.json": "sha256:66244f19b4e5e8a46c4862cc87ee36282834aeacfdb988c5886e7dc7f9f97ef8",
+  "target/app/client.js": "sha256:84bf2dc5a409b8042b7cad5a4a8680f37653f9d60aeffb53924c7bfc8a46a910",
+  "target/app/config.py": "sha256:fd8237665dfd3c3d4a675199229d3474afed3c1ab88c19d944e078f427156f07",
+  "target/app/legacy.php": "sha256:2aac224b5a02eb9d5a21ffd8985ff3dc677e02a9f4abbfeb2987ea9d9a10d8a6",
+  "target/app/server.go": "sha256:aafd28c5be592e68a8cd610d5a8a12e401eb198d7f79fb7099d09b7d71846ff3",
+  "target/app/settings.py": "sha256:1ad00e60165691a1742bc437631dbff4d7c5fb72296222c2699c94264f299544",
+  "target/app/views.py": "sha256:9b8bfc65a3bf81da42469c4c386b4f5382cf8b24938300d55dae5f334d36faee",
+  "target/node_modules/evil-pkg/package.json": "sha256:0c756c278e98553d7ed0674387e31c0209d3eab61916c56d1ae7b465a0100cd8",
+  "target/package-lock.json": "sha256:5f7f720e9ef0147342b45d3cbe49f857ece869aaf4debf78341cc9d245175570",
+  "target/requirements.txt": "sha256:865b9db40e969b04cb3baba359b99f0edaa5bd23372e7534a69bd4036abe1d8a"
+ },
+ "expect": {
+  "1 credentials": [
+   "secret in plain text"
+  ],
+  "2 advisories": [
+   "requests 2.19.1",
+   "CVE-2018-18074",
+   "lodash 4.17.4",
+   "CVE-2021-23337"
+  ],
+  "3a install-scripts": [
+   "evil-pkg",
+   "postinstall",
+   "attacker.example"
+  ],
+  "3b typosquat": [
+   "reqeusts",
+   "looks like requests"
+  ],
+  "3c pins": [
+   "flask",
+   ">=2.0",
+   "no lockfile pins it"
+  ],
+  "4 outdated": [
+   "minimist",
+   "last release 2021-04-01"
+  ],
+  "5 risky-code": [
+   "command injection",
+   "sql injection",
+   "pickle.loads",
+   "broken tls",
+   "verify=False",
+   "match a risky-code pattern"
+  ]
+ },
+ "secret_value_never_shown": "hunter2swordfish",
+ "novelty": "red team recon composing risky-code advisories outdated secrets typosquat install-scripts pins over a planted-weakness target",
+ "rule": "Each of the seven sections surfaces its planted finding; no plaintext secret value is printed; and demo/novelty.py scans the composition as novel (nothing on the idea pile close, no demo holds half its description)."
+}

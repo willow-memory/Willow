@@ -1,0 +1,1 @@
+{"id": "GHSA-35jh-r3h4-6jhm", "aliases": ["CVE-2021-23337"], "summary": "Command injection in lodash", "published": "2021-05-06T00:00:00Z", "affected": [{"package": {"ecosystem": "npm", "name": "lodash"}, "ranges": [{"type": "ECOSYSTEM", "events": [{"introduced": "0"}, {"fixed": "4.17.21"}]}]}]}

@@ -21,6 +21,35 @@ says how). The first was v0.1.0.
   rule: all 134 packages that build alone build in it, and all 127 that pass
   their tests alone pass them in it; runs 1 and 2, which failed, are kept
   beside it. CI runs its tools on sources it makes, as `demo:craft-assembly`.
+- `across`, an add-on that makes one document across several boxes rather
+  than one: it runs a document add-on (`digest`, `export`, `timeline` or
+  `readings`) over every box a `--boxes` list or repeated `--box` names, and
+  composes their parts under a heading per box, every line still cited by its
+  box, file and line. It writes no box, reads no key and approves nothing. (#41)
+- `typos`, an add-on that reads a misspelt word of a question as your files
+  spell it, one edit inside the word (its first and last letters kept), the
+  most-held spelling first, and prints the question as read for you to ask:
+  it never asks for you, and writes nothing. Six letters and up, measured on
+  the demo questions. Planned with rapidfuzz; one edit needs nothing
+  installed. From willow-bot's one script's typo rung. (#40)
+- `accents`, an add-on that reads a word typed without its accent ("zoe") as
+  your files write it ("zoë"), both ways round, and with `words` prints the
+  words-list lines that make the kernel read them so every time. (#40)
+- `risky-code`, an add-on that finds lines of code matching a known-dangerous
+  pattern — command injection, `eval`/`exec`, sql concatenation, insecure
+  deserialization, broken tls, ssrf, path traversal, template injection, xss
+  sinks, weak crypto, dangerous config, xxe — across Python, JavaScript, PHP,
+  Java, Go and Ruby, each cited by file and line as a lead to read, not proof.
+  A sibling to `secrets-audit`; offline, read-only. (#38)
+- `demo/redteam`, a frozen study that composes seven read-only add-ons
+  (`secrets-audit`, `advisories`, `install-scripts`, `typosquat`, `pins`,
+  `outdated`, `risky-code`) into one authorized-recon pass over a committed
+  planted-weakness target, with the intel it needs frozen alongside so it
+  reads the same every run. (#38)
+- `demo/novelty.py`, a reusable check every demo can run: it asks willow's
+  own search — `similar` over the idea pile and the kernel's `rank` over
+  every demo's README — whether a combination of pieces has been put
+  together before. (#38)
 - `repo-pile`: a list of public repositories made into a box you can ask.
   Each is cloned, kept only when its own licence file grants one an
   Apache-2.0 project can use (anything else, or none, is left out and said
@@ -314,6 +343,26 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- `kernel.py`'s common words, which never count toward holding a question,
+  now hold "anything", "something", "nothing", "everything" and the
+  "-one", "-body" and "-where" words: they name no topic. "did i promise
+  siobhan anything" found nothing, since no file says "anything"; it now
+  serves the promise. On the sixty demo questions, two answers change, both
+  for the better. The vectors regenerate; the ports read the list from them. (#40)
+- `privacy` withholds passwords: one typed after its label (`password: x`,
+  `pw x`), the second half of a login pair (`user / x`), and, in a file named
+  as a list of them, every value that looks like one (six or more
+  characters, a letter and a digit). `secrets-audit` lists the same. (#40)
+- The `calendar` reader says on a recurring event's first line that it
+  repeats, and how (`(yearly, from this date)`), and says `(cancelled)` on a
+  cancelled one, so a line quoted from it can't pass for this year's date.
+  `coming-up` counts each repeat in its window (a rule's FREQ, INTERVAL,
+  UNTIL and COUNT; one with BY parts isn't guessed) and a birthday every
+  year. (#40)
+- `demo/bernadette`'s stack asks a question again as `typos` and `accents`
+  read it, and its STRIP.md says what each fix changed; it also corrects a
+  finding it had wrong (question 19 missed on "anything", not an accent). (#40)
+
 - `privacy` also withholds a national phone number written from its 0 in
   groups (`0113 555 0122`, `07700 900123`: 10 or 11 digits), and a bank
   number after its label (sort code, account number, acct, a/c, routing),
@@ -354,6 +403,11 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- CI pins its workflow to `ubuntu-24.04`. `ubuntu-latest` rolled to Ubuntu
+  26.04, for which the setup-python action has no Python 3.9 build, so the
+  `tests (3.9)` and `strip (3.9)` jobs failed at setup on every pull request;
+  `kernel.py` promises 3.9+, so the runner is pinned to an image that still
+  carries it rather than 3.9 dropped from the matrix. (#39)
 - `kernel.words` composes text (NFC) before it splits it, so an é saved as
   e and a combining accent, as macOS often saves it, holds the é a person
   types; before, it split into "cafe" and a stray mark, and the question

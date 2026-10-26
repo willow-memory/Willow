@@ -35,7 +35,7 @@ jobs:
     # request. A suggestion, never a gate: similar.py's own check runs in the
     # tests.
     if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
         with:
@@ -60,7 +60,7 @@ jobs:
     # Dependabot's can't write one, and its updates aren't listed: it alone
     # is skipped, which adapters/stdlib/github/github.py check holds.
     if: github.event_name == 'pull_request' && github.event.pull_request.user.login != 'dependabot[bot]'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
         with:
@@ -79,7 +79,7 @@ jobs:
     # failure shows in a minute or two instead of at the end. Every job below
     # still runs all of its part; this one replaces none of them.
     if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
         with:
@@ -107,7 +107,7 @@ jobs:
         run: python adapters/stdlib/ci-why/ci_why.py "$RUNNER_TEMP/ci.log" >> "$GITHUB_STEP_SUMMARY" || true
 
   lint:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
@@ -131,7 +131,7 @@ jobs:
     # the same Pythons: it runs the add-ons' tests again in a copy without
     # GitHub, so in one job it doubled the time. github.py check holds the two
     # to the whole part, and to the same matrix.
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
@@ -156,7 +156,7 @@ jobs:
   strip:
     # tests:strip, test_strip.py: the repo without GitHub, then without any
     # add-on, each still passing.
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
@@ -179,7 +179,7 @@ jobs:
           path: ${{ runner.temp }}/ci-record/record.jsonl
 
   ports:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
@@ -207,7 +207,7 @@ jobs:
           path: ${{ runner.temp }}/ci-record/record.jsonl
 
   demo:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
@@ -233,7 +233,7 @@ jobs:
     # adapters/stdlib/mutants/accepted.json gives the reason it's harmless.
     # Cut in four by ci.py's --shard, each add-on in one of them: the gates
     # take seconds each, so a cut by count ends the four about together.
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
@@ -259,7 +259,7 @@ jobs:
     # Each add-on in adapters/deps gets a fresh virtual environment with only
     # its own pinned requirements, made by ci.py, then another at its floor;
     # deps:floors checks each floor against PyPI. mcp needs Python 3.10+.
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
@@ -281,7 +281,7 @@ jobs:
     # add-on prints (adapters/stdlib/live/live.py). Pinned, so a run says
     # which version read them; one that didn't install is unreachable, and
     # an unreachable gate fails this job: nothing here passes unchecked.
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7

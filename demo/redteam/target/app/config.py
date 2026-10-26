@@ -1,0 +1,3 @@
+DB_PASSWORD = "hunter2swordfish"
+AWS_SECRET = "AKIAIOSFODNN7EXAMPLE"
+DEBUG = True

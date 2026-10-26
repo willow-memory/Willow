@@ -14,8 +14,11 @@ add-on run by its own command line, as a person would type it:
               a question is asked
     ask       every question in QUESTIONS.md through readings' bite on the
               box, and the kernel's bite on the raw files, as the earlier
-              demos ran; a question nothing holds is asked again of scan's
-              bm25, which only points at where to look
+              demos ran. typos and accents say how each would be read as
+              her files spell it, and a question they read differently is
+              asked again as read, as she would once shown it; a question
+              nothing holds is asked of scan's bm25, which only points at
+              where to look
     hide      privacy scrubs everything served, and says what it hid
     assist    an assistant asks and suggests through mcp-lite, by the
               protocol, and can't approve
@@ -124,6 +127,11 @@ def questions() -> list[str]:
     return [m.group(1).strip() for m in re.finditer(r"(?m)^\d+\.\s+(.+)$", text)]
 
 
+def kernel_words(text: str) -> list[str]:
+    """A question's words as the kernel splits them: letters and digits."""
+    return re.findall(r"[^\W_]+", text.lower())
+
+
 def bite_doc(out: str) -> dict:
     try:
         return json.loads(out.strip().splitlines()[-1])
@@ -161,7 +169,18 @@ def ask(go: Run, box: Path, raw: Path) -> list[dict]:
                            if not s.get("echo")],
             "text": [s["text"] for s in doc.get("served", [])],
         })  # fmt: skip
-    empty = [a for a in out if a["state"] != "populated"]
+        read = q
+        for name, script in (("typos", "typos.py"), ("accents", "accents.py")):
+            said = go("ask", STD / name / script, "--box", str(box), read)
+            read = next((x[6:] for x in said.splitlines() if x.startswith("ask:  ")),
+                        read)  # fmt: skip
+        if kernel_words(read) != kernel_words(q):
+            again = bite_doc(go("ask", STD / "readings" / "readings.py", "bite",
+                                "--box", str(box), "--now", go.now, read))  # fmt: skip
+            out[-1].update(read_as=read, read_state=again.get("state"),
+                           read_served=[s["where"] for s in again.get("served", [])
+                                        if not s.get("echo")])  # fmt: skip
+    empty = [a for a in out if a["state"] != "populated" and "read_as" not in a]
     if empty:
         qs = go.to / "empty-questions.txt"
         qs.write_text("".join(f"{a['n']}\t{a['question']}\n" for a in empty))
@@ -298,6 +317,9 @@ def report(doc: dict) -> None:
         raw = "raw: same" if a["raw_state"] == a["state"] else f"raw: {a['raw_state']}"
         print(f"  {a['n']:>2} {a['state']:<10} {a['question'][:44]:<44} {where[:70]}"
               f"  ({raw})")  # fmt: skip
+        if "read_as" in a:
+            print(f"     read as \"{a['read_as']}\": {a['read_state']}, "
+                  + ", ".join(a["read_served"][:2]))  # fmt: skip
     for part in ("hide", "assist", "view"):
         print(part.upper())
         steps.show(part)

@@ -1,0 +1,1 @@
+{"id": "GHSA-x84v-xcm2-53pg", "aliases": ["CVE-2018-18074"], "summary": "Credentials leak in Requests", "published": "2018-10-29T00:00:00Z", "affected": [{"package": {"ecosystem": "PyPI", "name": "requests"}, "ranges": [{"type": "ECOSYSTEM", "events": [{"introduced": "0"}, {"fixed": "2.20.0"}]}]}]}

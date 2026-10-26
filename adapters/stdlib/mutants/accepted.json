@@ -1,4 +1,10 @@
 {
+  "accents": {
+    "0ec1ab158323": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
+  },
+  "across": {
+    "041037f2efda": "`a.startswith(\"--\") or not a` only refuses a token the later `doc not in DOCS` check refuses anyway (no DOC name starts with -- or is empty), so and/or here changes no result."
+  },
   "advisories": {
     "0c47318788a2": "split(sep, 1)[0] takes the text before the first separator; the maxsplit changes only how many pieces follow it, never that first piece, so any value of at least 1 gives the same result."
   },
