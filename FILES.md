@@ -44,6 +44,10 @@ willow/
 │   ├── README.md             the rules every add-on follows
 │   ├── planned.json          the add-ons not built yet, as this README lists them
 │   ├── stdlib/               add-ons that need nothing beyond Python
+│   │   ├── across/
+│   │   │   ├── across.py     one document across several boxes: each box's digest, export, timeline or readings, composed
+│   │   │   ├── test_across.py
+│   │   │   └── README.md
 │   │   ├── advisories/
 │   │   │   ├── advisories.py locked dependencies matched to a downloaded OSV advisory database, offline
 │   │   │   ├── test_advisories.py
@@ -328,10 +332,6 @@ willow/
 │   │   │   ├── snapshot.py   a page or file fetched once, with its address, time and SHA-256
 │   │   │   ├── test_snapshot.py
 │   │   │   └── README.md
-│   │   ├── stack/
-│   │   │   ├── stack.py      one document across a stack of boxes: each box's digest, export, timeline or readings, composed
-│   │   │   ├── test_stack.py
-│   │   │   └── README.md
 │   │   ├── stale/
 │   │   │   ├── stale.py      approved answers whose cited passage changed or went
 │   │   │   ├── test_stale.py
@@ -461,7 +461,9 @@ willow/
 │   └── README.md             how the ports were built and what testing them found
 ├── docs/
 │   ├── tour.md               the first five minutes, in full: a question, a gap, her words, an approval
-│   └── how-it-works.md       what it reads, how it ranks, the key, the record, approvals
+│   ├── how-it-works.md       what it reads, how it ranks, the key, the record, approvals
+│   └── design/
+│       └── serve.md          proposal: a sealed stack of piles served to a model, on markdown (the grove's serve, in willow)
 ├── demo/                     four made-up people, a real bug and a real policy change, to try it on
 │   ├── odile/                piano tuner and beekeeper, caring for her father
 │   │   ├── make_life.py      writes her files into life/, the same bytes every run

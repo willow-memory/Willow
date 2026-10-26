@@ -1,19 +1,19 @@
-"""stack.py: one document across a stack of boxes, not just one. Python 3.9+.
+"""across.py: one document across several boxes, not just one. Python 3.9+.
 
-    python adapters/stdlib/stack/stack.py --stack LIST   DOC [-- ARG ...]
-    python adapters/stdlib/stack/stack.py --box DIR [--box DIR ...] DOC [-- ARG ...]
+    python adapters/stdlib/across/across.py --boxes LIST   DOC [-- ARG ...]
+    python adapters/stdlib/across/across.py --box DIR [--box DIR ...] DOC [-- ARG ...]
 
 DOC is one of the document-making add-ons: `digest`, `export`, `timeline` or
-`readings`. stack runs that add-on over every box in the stack and composes
-what each prints into one document, under a heading per box, every line still
-cited by its own box, file and line. Anything after a lone `--` is passed to
-the add-on unchanged (per box), so:
+`readings`. across runs that add-on over every box and composes what each
+prints into one document, under a heading per box, every line still cited by
+its own box, file and line. Anything after a lone `--` is passed to the
+add-on unchanged (per box), so:
 
-    stack --stack boxes.txt digest -- --days 7
-    stack --box a --box b timeline -- "mould landlord"
-    stack --box a --box b readings -- "when is the meeting"
+    across --boxes boxes.txt digest -- --days 7
+    across --box a --box b timeline -- "mould landlord"
+    across --box a --box b readings -- "when is the meeting"
 
-A `--stack LIST` file names one box folder a line; blank lines and lines
+A `--boxes LIST` file names one box folder a line; blank lines and lines
 beginning `#` are skipped, and a relative path is read from the list's own
 folder. `--box DIR` names boxes directly instead, and repeats; give one way
 or the other, not both.
@@ -21,7 +21,7 @@ or the other, not both.
 It only reads and composes: it runs add-ons that each promise writes:nothing
 and network:none, so the whole pass does too. It never writes a box, never
 reads a key, and approves nothing -- the one-way arrow holds, a box to a
-document. Exit codes, the kernel's: 0 nothing across the stack waits on you;
+document. Exit codes, the kernel's: 0 nothing across the boxes waits on you;
 42 a box has something for you (or an add-on said so); 2 refused (a bad
 command line, a listed folder that isn't a kernel box, or an unknown DOC).
 """
@@ -50,10 +50,10 @@ DOCS = {
 
 
 def parse(argv: list[str]) -> dict | None:
-    """The command line, or None to refuse. One source of boxes (a --stack
+    """The command line, or None to refuse. One source of boxes (a --boxes
     file or one-or-more --box), one DOC, and the args after a lone `--`."""
     boxes: list[str] = []
-    stack_file: str | None = None
+    box_list: str | None = None
     doc: str | None = None
     forwarded: list[str] = []
     i, n = 0, len(argv)
@@ -65,11 +65,11 @@ def parse(argv: list[str]) -> dict | None:
                 if i >= n:
                     return None
                 boxes.append(argv[i])
-            elif a == "--stack":
+            elif a == "--boxes":
                 i += 1
-                if i >= n or stack_file is not None:
+                if i >= n or box_list is not None:
                     return None
-                stack_file = argv[i]
+                box_list = argv[i]
             elif a.startswith("--") or not a:
                 return None  # an unknown flag, or an empty DOC
             else:
@@ -82,13 +82,13 @@ def parse(argv: list[str]) -> dict | None:
         i += 1
     if doc not in DOCS:
         return None
-    if (stack_file is None) == (not boxes):  # neither, or both
+    if (box_list is None) == (not boxes):  # neither, or both
         return None
-    return {"doc": doc, "boxes": boxes, "stack": stack_file, "forwarded": forwarded}
+    return {"doc": doc, "boxes": boxes, "list": box_list, "forwarded": forwarded}
 
 
-def read_stack(path: Path) -> list[str] | None:
-    """The box folders a --stack file names, each kept as written; None if the
+def read_list(path: Path) -> list[str] | None:
+    """The box folders a --boxes file names, each kept as written; None if the
     file can't be read."""
     try:
         lines = path.read_text(encoding="utf-8").splitlines()
@@ -134,22 +134,22 @@ def main(argv: list[str]) -> int:
     if not (STDLIB / folder / script).is_file():
         print(f"refused: the {cfg['doc']} add-on isn't here", file=sys.stderr)
         return kernel.REFUSED
-    if cfg["stack"] is not None:
-        boxes = read_stack(Path(cfg["stack"]))
+    if cfg["list"] is not None:
+        boxes = read_list(Path(cfg["list"]))
         if boxes is None:
-            print(f"refused: can't read the stack list {cfg['stack']}", file=sys.stderr)
+            print(f"refused: can't read the box list {cfg['list']}", file=sys.stderr)
             return kernel.REFUSED
     else:
         boxes = cfg["boxes"]
     if not boxes:
-        print("refused: the stack names no boxes", file=sys.stderr)
+        print("refused: the list names no boxes", file=sys.stderr)
         return kernel.REFUSED
     for box in boxes:
         if not (Path(box) / "kernel.json").exists():
             print(f"refused: {box} isn't a kernel box; init first", file=sys.stderr)
             return kernel.REFUSED
 
-    print(f"stack of {len(boxes)} box{'es' if len(boxes) != 1 else ''}, {cfg['doc']}")
+    print(f"across {len(boxes)} box{'es' if len(boxes) != 1 else ''}, {cfg['doc']}")
     flagged, worst = 0, kernel.ALIVE
     for box in boxes:
         code, text = run_doc(cfg["doc"], box, cfg["forwarded"])
