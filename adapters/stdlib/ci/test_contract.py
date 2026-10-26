@@ -113,6 +113,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "install-scripts": ("install_scripts.py", ["--box", "{box}"]),
     "pins": ("pins.py", ["--box", "{box}"]),
     "scan": ("scan.py", ["index", "--from", "{pile}", "--to", "{tmp}/index"]),
+    "index-cache": ("index_cache.py", ["--from", "{pile}", "--to", "{tmp}/ix"]),
     "slow-tests": ("slow_tests.py", ["--runs", "{pile}"]),
     "snapshot": ("snapshot.py", ["check", "--in", "{pile}"]),
     "wayback": ("wayback.py", ["find", "--url", "https://example.org/", "--to", "{tmp}/w",

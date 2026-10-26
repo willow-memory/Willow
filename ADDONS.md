@@ -18,12 +18,12 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`████░░░░░░░░░░░░░░░░` **100 of 466 built** · 415 need no install · 51 need one
+`████░░░░░░░░░░░░░░░░` **101 of 466 built** · 415 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
 | Reading more kinds of files | 11 | 94 | 96 | 9 |
-| Finding things | 8 | 35 | 33 | 10 |
+| Finding things | 9 | 34 | 33 | 10 |
 | Your own words | 8 | 17 | 22 | 3 |
 | Keeping track | 11 | 47 | 58 | 0 |
 | Trust and proof | 12 | 32 | 35 | 9 |
@@ -40,16 +40,16 @@ or `writes-output`; its section), and any the card's author adds or changes.
 - 2026-10-26 · [**star-system**](adapters/deps/star-system/) — A friend's star-system simulation (science_bitch) run deterministically and written as cited passages: each body's Kepler period and how well the run conserves energy, angular momentum and linear momentum.
 - 2026-10-26 · [**stack**](adapters/stdlib/stack/) — One document from a stack of add-on steps over a box: each step's output grouped into pools and ordered tallest-first, so the peaks are what a reader meets first.
 - 2026-10-26 · [**serve**](adapters/stdlib/serve/) — The one markdown file a model reads: only the passages a human sealed, grouped into pools with the peaks first, by ids it can't guess, and nothing else.
+- 2026-10-26 · [**index-cache**](adapters/stdlib/index-cache/) — The box's index kept between runs and checked against each file's hash, so a question doesn't re-read the folder unless the folder changed.
 - 2026-10-26 · [**fast-tests**](adapters/deps/fast-tests/) — The test suite across every core with pytest-xdist, the same tests in a fraction of the time.
-- 2026-10-25 · [**typos**](adapters/stdlib/typos/) — Forgives misspellings in questions.
 <!-- /willow:newest -->
 
 ### Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[jetbrains](adapters/stdlib/jetbrains/)** — An external tool for IntelliJ, PyCharm and the rest, with answers as links to file and line.
+**[changed](adapters/stdlib/changed/)** — What's new, edited or deleted in your folder since the last check, as fingerprint rows.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 100 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 101 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -179,7 +179,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - **fair-merge** (idea) — Each folder or repo ranked on its own and the lists merged in turns, so a large corpus can't push a small one out on volume alone, and a source that found nothing says so. *bot* `no-install` `offline` `read-only` `search` `pile`
 - **first-mention** (idea) — When your files first mention something, and the line that does. *new* `no-install` `offline` `read-only` `search`
 - **fuzzy-dates** (idea) — Dates that admit doubt ('about 1880', 'sometime in March') read and kept with their doubt, in EDTF. *new* `no-install` `offline` `read-only` `search`
-- **index-cache** (idea) — The box's index kept between runs and checked against each file's hash, so a question doesn't re-read the folder. *new* `no-install` `offline` `writes-output` `search`
+- [**index-cache**](adapters/stdlib/index-cache/) — The box's index kept between runs and checked against each file's hash, so a question doesn't re-read the folder unless the folder changed. *new* `no-install` `offline` `writes-output` `search` `index`
 - **kiwix** (idea) — An offline Wikipedia (or Stack Exchange, or Gutenberg) as a source after your own files, cited by article. Needs libzim, and a ZIM file you download; GPL-3.0. *new* `needs-install` `offline` `read-only` `search`
 - [**latent**](adapters/deps/latent/) — Rank a scan index by meaning, not just words: a question reaches code that shares its sense without sharing its words. Needs numpy; BSD-3-Clause. *new* `needs-install` `offline` `read-only` `search`
 - **meaning** (idea) — Search by meaning: "who owes me money" finds "invoice outstanding". Needs sentence-transformers; Apache-2.0. Goes online: the model, downloaded once from Hugging Face. *new* `needs-install` `online` `writes-output` `search`

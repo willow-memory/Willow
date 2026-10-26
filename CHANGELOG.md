@@ -10,6 +10,16 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `index-cache`, an add-on that keeps a folder's `scan` index between runs and
+  rebuilds it only when the folder changed. It holds a manifest beside the
+  index — each read file's path and the SHA-256 of its text — and on each run
+  hashes the folder's files: when every indexed file still matches it leaves
+  the index as it is (no passage re-read, ask it with `scan`); when a file was
+  added, edited or removed it rebuilds through `scan` and says what moved. The
+  files it hashes are exactly the ones the kernel reads into an index, so a
+  dotfile or a binary changing never forces a rebuild. Writes only under
+  `--to`, reads no box or key, no network. (#48)
+
 - `star-system`, a deps add-on that adapts a friend's project —
   [science_bitch](https://github.com/AllHailSeizure/science_bitch) — into
   willow: it imports and runs that project's own `star_system` simulation

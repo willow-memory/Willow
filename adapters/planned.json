@@ -1362,16 +1362,6 @@
   "tags": "no-install, offline, writes-output, trust"
  },
  {
-  "name": "index-cache",
-  "kind": "stdlib",
-  "section": "Finding things",
-  "line": "The box's index kept between runs and checked against each file's hash, so a question doesn't re-read the folder.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, search"
- },
- {
   "name": "ink-story",
   "kind": "deps",
   "section": "Play",
