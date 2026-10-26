@@ -12,6 +12,8 @@ import sys
 import sysconfig
 from pathlib import Path
 
+import pytest
+
 HERE = Path(__file__).resolve().parent / "kernel.py"
 spec = importlib.util.spec_from_file_location("kernel", HERE)
 k = importlib.util.module_from_spec(spec)
@@ -113,6 +115,95 @@ def test_a_no_is_proved_like_a_seal_and_is_final(tmp_path):
     )
     rows_now, _ = k.read(box / "record.jsonl")
     assert set(k.declined(box, rows_now)) == {s_no}  # the forged No counts for nothing
+
+
+def sealed_box(tmp_path: Path) -> tuple[Path, list[str], str]:
+    """A box with one sealed answer, "Seven.", for the bus question: the box,
+    the options every command takes, and the sealed subject."""
+    pile, box, key = tmp_path / "pile", tmp_path / "box", tmp_path / "keys" / "me.key"
+    pile.mkdir()
+    (pile / "notes.md").write_text("The bus leaves at seven from the square.\n")
+    b = ["--box", str(box), "--now", "2026-10-22T00:00:00Z"]
+    cli("init", *b, "--pile", str(pile), "--key", str(key))
+    got = cli("bite", *b, "when does the bus leave the square")
+    cite = json.loads(got.stdout)["served"][0]["id"]
+    row = {"path": "bus.md", "data": "Seven.", "cites": [cite], "claim": "notes.md"}
+    (tmp_path / "rows.jsonl").write_text(json.dumps(row) + "\n")
+    cli("propose", *b, "--file", str(tmp_path / "rows.jsonl"))
+    subj = k.subject_of(row)
+    assert cli("seal", *b, subj).returncode == 0
+    return box, b, subj
+
+
+def edit_proposal(box: Path, subj: str, **fields) -> None:
+    f = box / "proposals" / f"{subj[9:]}.json"
+    f.write_text(json.dumps({**json.loads(f.read_text()), **fields}))
+
+
+@pytest.mark.xfail(
+    strict=True,
+    reason="bug #54: a sealed answer is served from its proposal file without checking the file still hashes to the sealed subject",
+)
+def test_a_sealed_answer_is_served_only_while_its_bytes_are_the_ones_sealed(tmp_path):
+    """The key signs a subject, the hash of the proposal's bytes. seal checks
+    the file against it (CONST-0-4); serving must too, or whoever can write
+    the box swaps what an approval says without the key."""
+    box, b, subj = sealed_box(tmp_path)
+    edit_proposal(box, subj, data="Never.")
+    got = cli("bite", *b, "when does the bus leave the square")
+    assert "Never." not in got.stdout, (
+        "an answer the key never approved, served as sealed"
+    )
+    assert '"state": "sealed"' not in got.stdout
+
+
+@pytest.mark.xfail(
+    strict=True,
+    reason="bug #54: a sealed answer is served for the question its proposal file names, not the one the record's bite names",
+)
+def test_a_sealed_answer_belongs_to_the_question_the_record_says(tmp_path):
+    """The question an approval answers is on the hash chain, in the bite the
+    proposal names. A file that says another question can't re-point it."""
+    box, b, subj = sealed_box(tmp_path)
+    other = json.loads(cli("bite", *b, "where is the ferry").stdout)["bite_key"]
+    edit_proposal(box, subj, bite_key=other)
+    assert cli("bite", *b, "where is the ferry").returncode == 42, "re-pointed"
+    again = cli("bite", *b, "When does the bus leave the square?")
+    assert again.returncode == 0 and json.loads(again.stdout)["answer"] == "Seven."
+
+
+@pytest.mark.xfail(
+    strict=True,
+    reason="bug #54: verify passes when a sealed subject's proposal file has changed or gone",
+)
+def test_verify_says_when_a_sealed_proposals_file_no_longer_matches(tmp_path):
+    box, b, subj = sealed_box(tmp_path)
+    assert cli("verify", *b).returncode == 0
+    f = box / "proposals" / f"{subj[9:]}.json"
+    held = f.read_text()
+    for what, change in (
+        ("data", lambda: edit_proposal(box, subj, data="Never.")),
+        ("bite_key", lambda: edit_proposal(box, subj, bite_key="0" * 64)),
+        ("gone", lambda: f.unlink()),
+    ):
+        change()
+        got = cli("verify", *b)
+        assert got.returncode == 42, what
+        assert subj in got.stdout and "proposal file" in got.stdout, what
+        f.write_text(held)
+    assert cli("verify", *b).returncode == 0  # put back, it holds again
+
+
+@pytest.mark.xfail(
+    strict=True,
+    reason="bug #54: bite crashes with a traceback when a sealed subject's proposal file is gone",
+)
+def test_a_sealed_proposals_file_gone_never_brings_a_bite_down(tmp_path):
+    box, b, subj = sealed_box(tmp_path)
+    (box / "proposals" / f"{subj[9:]}.json").unlink()
+    got = cli("bite", *b, "when does the bus leave the square")
+    assert "Traceback" not in got.stderr and got.returncode in (0, 42)
+    assert "Seven." not in got.stdout
 
 
 def test_on_windows_the_record_is_locked_with_msvcrt(tmp_path, monkeypatch):
