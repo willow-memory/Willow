@@ -36,6 +36,15 @@ where it falls short today, and a fix is welcome.
   Portuguese common words aside before a question reaches it; other
   languages keep every word. Word forms are English's only, and words in
   other scripts are matched only as written.
+- **A rewritten or cut-short record is not caught by `verify` alone.**
+  `verify` finds an edit to one past row, a row removed from the middle, and
+  a seal the key does not prove. It cannot find rows cut off the end, or rows
+  removed or changed and then all re-hashed from that point on, because
+  nothing outside the box says what the last hash or the row count should be.
+  Seals still can't be forged without the key, so an approval can't be
+  invented this way, but the bites, suggestions and declines around it can be
+  dropped. To know, keep the last row's `hash` from the box's record and the row
+  count somewhere the box's writer can't reach, and compare them later.
 - **No index, so time grows with the size of the folder.** On Odile's
   folder a question takes about a quarter of a second; a very large folder
   would want an index, in an add-on.

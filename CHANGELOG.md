@@ -440,6 +440,10 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- The README no longer says any edit to a past entry is detected: rows cut off
+  the end, or removed and re-hashed from there on, still pass `verify`.
+  LIMITS.md says so, and how to check with a copy of the last row's hash and
+  the row count kept out of the box's reach.
 - `kernel.py`'s common words, which never count toward holding a question,
   now hold "anything", "something", "nothing", "everything" and the
   "-one", "-body" and "-where" words: they name no topic. "did i promise

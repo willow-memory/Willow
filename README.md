@@ -17,8 +17,10 @@ any time.
 - **One file, no dependencies:** Python 3.9 or newer, standard library only.
   Copy `kernel.py` anywhere and run it.
 - **Local only:** it has no network code at all, and a test enforces that.
-- **Verifiable:** the log is a hash chain. Any edit to a past entry is
-  detected, and a forged approval is never accepted.
+- **Verifiable:** the log is a hash chain. An edit to one past entry is
+  detected, and a forged approval is never accepted. A whole chain rewritten
+  and re-hashed from the edit onward is not detected on its own; see
+  [LIMITS.md](LIMITS.md).
 - **Portable:** reimplemented in Java, TypeScript and C#, and all four are held
   to the same 4,668 test cases.
 
