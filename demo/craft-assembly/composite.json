@@ -1,0 +1,4 @@
+{
+ "about": "The composite compose.py assembles: these apps, each a Cargo workspace in the store. Every crate they take by git comes from the store too, at the commit each pinned (freeze 2).",
+ "apps": ["cadcraft", "designcraft", "effectcraft", "filmcraft", "soundcraft"]
+}
