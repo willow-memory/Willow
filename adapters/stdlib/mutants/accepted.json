@@ -48,6 +48,9 @@
   "hook-fail-closed": {
     "22462805a55d": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
   },
+  "index-cache": {
+    "2564baa97861": "sys.path.insert at index 1 instead of 0 still finds kernel.py (scan is inserted after, and the repo root still supplies kernel)."
+  },
   "jetbrains": {
     "2a82bb3953da": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
   },
