@@ -371,16 +371,6 @@
   "tags": "no-install, offline, records, maintainers"
  },
  {
-  "name": "ci-cache",
-  "kind": "stdlib",
-  "section": "For maintainers",
-  "line": "CI caches pip, npm, .NET and Maven downloads keyed on their lockfiles, so a run skips the installs.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, maintainers"
- },
- {
   "name": "ci-logs",
   "kind": "stdlib",
   "section": "Reading more kinds of files",

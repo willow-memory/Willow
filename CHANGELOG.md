@@ -10,6 +10,15 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `ci-cache`, an add-on that reads a folder's lockfiles and prints a cache key
+  per ecosystem (pip, npm, .NET, Maven), so a CI run caches each one's
+  downloads keyed on the files that pin them and skips the reinstall when the
+  pins haven't changed. The key is the SHA-256 over each lockfile's path and
+  the hash of its bytes, so the same pins give the same key on any machine and
+  a changed pin a new one. Hidden folders and `node_modules` are not walked. It
+  reads the folder and prints; writes nothing, reads no box or key, no network.
+  (#51)
+
 - `parallel`, an add-on that runs a reader over several folders at once, across
   every CPU core, into one mirror. Where a reader mirrors one folder of files
   into plain-text passages, `parallel --reader NAME --from ONE --from TWO ...
