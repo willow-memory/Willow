@@ -30,6 +30,7 @@ hand in suggestions they can never approve themselves.
 
 **Contents:** [Your first five minutes](#your-first-five-minutes) · [What you can build on it](#what-you-can-build-on-it) · [How it works](#how-it-works) · [Commands](#commands) · [Guarantees, and the tests behind them](#guarantees-and-the-tests-behind-them) · [Where it falls short](#where-it-falls-short) · [How it's verified](#how-its-verified) · [What's in this repo](#whats-in-this-repo) · [Building on it](#building-on-it) · [Licence](#licence)
 
+
 ## Your first five minutes
 
 Nothing to install beyond Python. Check it works, then ask questions of a
@@ -47,6 +48,7 @@ $ python kernel.py bite --box odile-record "how are the bees"
 The answer is up to three passages from her files, each with its file and
 line. [The full five minutes](docs/tour.md) goes on: a question her files
 don't answer, teaching it her words, and approving an answer with the key.
+
 
 ## Building on it
 
@@ -67,6 +69,7 @@ is generated from. To build a planned one, take its entry out of
 `python vectors/compare.py` with zero unexplained differences. Go and Rust are
 the obvious next ones; [vectors/README.md](vectors/README.md) explains how the
 existing three were made to agree.
+
 
 
 ## What you can build on it
@@ -98,6 +101,7 @@ can pick up ([CONTRIBUTING.md](CONTRIBUTING.md) says how):
 [Every add-on, 93 built of 459, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
+
 ## How it works
 
 ```
@@ -119,6 +123,7 @@ goes on a hash-chained log that `verify` checks.
 
 [How it works, in full](docs/how-it-works.md): what it reads, how it ranks,
 your key, the record folder, and suggestions and approvals.
+
 
 ## Commands
 
@@ -155,6 +160,7 @@ The exit code is meant for scripts and for other programs calling it:
 | `42` | not enough to say a person said it: nothing matched, or something waits on you |
 | `2` | refused: a bad command, a key or record that isn't right, a log that has been changed |
 
+
 ## Guarantees, and the tests behind them
 
 Each is a test that fails if it stops being true. The clause is the one in
@@ -175,6 +181,7 @@ willow's own.
 | Every add-on's tests can fail | none | each add-on's code is broken on purpose a few ways (`mutants`); a break its tests miss fails CI, unless it's listed as harmless with the reason |
 | Every add-on refuses a bad command line, and every reader keeps the same contract | none | one test holds them all to it (`adapters/stdlib/ci/test_contract.py`) |
 
+
 ### The law above them
 
 These guarantees answer to a written law, [CONSTITUTION.md](CONSTITUTION.md),
@@ -189,6 +196,7 @@ a clause cites it by its Trace ID (`CONST-0-4`), and
 [constitution/](constitution/) attacks each of the six against the kernel and
 checks it is refused. A coverage report, rebuilt every CI run, lists every
 clause and where it is cited, and says why for each it found nothing for.
+
 
 ## Where it falls short
 
@@ -207,6 +215,7 @@ words and missed the rest. The fourth of them, Bernadette, wrote her files in
 her apps' raw formats and was run through every add-on at once, readers to
 backups (`demo/bernadette/stack.py`). The full results, misses included, are
 in `demo/*/STRIP.md`.
+
 
 ## How it's verified
 
@@ -238,6 +247,7 @@ in `demo/*/STRIP.md`.
   the check doesn't catch it.
 - **Old runtimes, not assumed:** the tests and every port have also been run
   on Python 3.9.0, JDK 11, Node 14 and .NET 5, all from 2020.
+
 
 ## What's in this repo
 
@@ -278,6 +288,7 @@ willow/
 ├── ruff.toml                 lint settings
 └── LICENSE                   Apache-2.0
 ```
+
 ## Licence
 
 Apache-2.0. See [LICENSE](LICENSE).
