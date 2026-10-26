@@ -48,6 +48,27 @@ The answer is up to three passages from her files, each with its file and
 line. [The full five minutes](docs/tour.md) goes on: a question her files
 don't answer, teaching it her words, and approving an answer with the key.
 
+## Building on it
+
+**Add-ons** go in `adapters/stdlib/` if they need nothing beyond Python, or
+`adapters/deps/` if they need something installed, tested at its pins and
+at its floor (each package's last 2020 release, or its first). An add-on may use
+`kernel.py`; `kernel.py` never uses an add-on, and runs the same without any.
+An add-on writes to the log only through `kernel.py`, so `verify` still holds.
+Each one has its code, a card saying what it's for and what it never does, and
+tests that CI runs. The card opens with a short header (section, one line,
+source, date added) that [What you can build on it](#what-you-can-build-on-it)
+is generated from. To build a planned one, take its entry out of
+`adapters/planned.json` in the same change. The rules are in
+[adapters/README.md](adapters/README.md). What every change follows, add-on or not, is in
+[CONTRIBUTING.md](CONTRIBUTING.md).
+
+**Ports** to another language go in `ports/` and must pass
+`python vectors/compare.py` with zero unexplained differences. Go and Rust are
+the obvious next ones; [vectors/README.md](vectors/README.md) explains how the
+existing three were made to agree.
+
+
 ## What you can build on it
 
 Everything beyond the kernel is an add-on: a folder beside it that uses it and
@@ -257,27 +278,6 @@ willow/
 ├── ruff.toml                 lint settings
 └── LICENSE                   Apache-2.0
 ```
-
-## Building on it
-
-**Add-ons** go in `adapters/stdlib/` if they need nothing beyond Python, or
-`adapters/deps/` if they need something installed, tested at its pins and
-at its floor (each package's last 2020 release, or its first). An add-on may use
-`kernel.py`; `kernel.py` never uses an add-on, and runs the same without any.
-An add-on writes to the log only through `kernel.py`, so `verify` still holds.
-Each one has its code, a card saying what it's for and what it never does, and
-tests that CI runs. The card opens with a short header (section, one line,
-source, date added) that [What you can build on it](#what-you-can-build-on-it)
-is generated from. To build a planned one, take its entry out of
-`adapters/planned.json` in the same change. The rules are in
-[adapters/README.md](adapters/README.md). What every change follows, add-on or not, is in
-[CONTRIBUTING.md](CONTRIBUTING.md).
-
-**Ports** to another language go in `ports/` and must pass
-`python vectors/compare.py` with zero unexplained differences. Go and Rust are
-the obvious next ones; [vectors/README.md](vectors/README.md) explains how the
-existing three were made to agree.
-
 ## Licence
 
 Apache-2.0. See [LICENSE](LICENSE).
