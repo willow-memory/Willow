@@ -790,17 +790,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "fast-tests",
-  "kind": "deps",
-  "section": "For maintainers",
-  "line": "The test suite across every core with pytest-xdist, the same tests in a fraction of the time.",
-  "source": "new",
-  "needs": "pytest-xdist; MIT",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "needs-install, offline, read-only, maintainers"
- },
- {
   "name": "first-mention",
   "kind": "stdlib",
   "section": "Finding things",

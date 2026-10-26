@@ -440,6 +440,12 @@ willow/
 │   │       └── README.md
 │   └── deps/                 add-ons that need something installed
 │       ├── README.md         what one must declare: pins, floors, licences, network
+│       ├── fast-tests/
+│       │   ├── fast_tests.py  the test suite across every core with pytest-xdist, in a fraction of the time
+│       │   ├── requirements.txt  pytest-xdist, pinned
+│       │   ├── requirements-floor.txt  pytest-xdist at its floor, also tested
+│       │   ├── test_fast_tests.py
+│       │   └── README.md
 │       ├── latent/
 │       │   ├── latent.py     ranks a scan index by meaning (TF-IDF + SVD), offline
 │       │   ├── requirements.txt  numpy, pinned

@@ -10,6 +10,14 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `fast-tests`, a deps add-on that runs the test suite across every core with
+  pytest-xdist — the same tests the serial run runs, one worker per core (or
+  `--jobs N`), in a fraction of the time, with a footer naming the workers,
+  cores and wall time. It only runs the suite and reports: no box, no file
+  (pytest's caches are off), no network (xdist's workers talk over pipes), and
+  approves nothing. Needs `pytest-xdist` (MIT); its floor is raised to `3.0.2`
+  because every 2.x imports `py.log`, long gone from pytest, so a 2.x pin
+  installs on today's Python but cannot run a suite. (#46)
 - `stack`, an add-on that makes one document from a stack of add-on steps over
   a box: a markdown stack file names pools (`##` headings) and steps
   (`- NAME -- ARGS` lines, with `{box}` replaced by the box path), and `stack`

@@ -211,7 +211,8 @@ def test_the_floor_rule_takes_the_last_release_of_2020_else_the_first():
 def test_a_floor_above_the_rule_needs_a_reason_on_its_card(monkeypatch):
     uploaded = {"pypdf": {"1.9": "2014-05-17T00:00:00Z", "3.1.0": "2022-12-23T00:00:00Z"},
                 "mcp": {"0.9.1": "2024-11-20T00:00:00Z", "2.0.0": "2026-07-28T00:00:00Z"},
-                "numpy": {"1.19.4": "2020-11-02T00:00:00Z", "2.1.0": "2024-08-18T00:00:00Z"}}  # fmt: skip
+                "numpy": {"1.19.4": "2020-11-02T00:00:00Z", "2.1.0": "2024-08-18T00:00:00Z"},
+                "pytest-xdist": {"2.2.0": "2020-12-14T00:00:00Z", "3.0.2": "2022-10-25T00:00:00Z"}}  # fmt: skip
     monkeypatch.setattr(ci, "releases", lambda package: uploaded[package])
     assert ci.floors()[0] == ci.SATISFIED
     monkeypatch.setattr(ci, "floor_line", lambda name: "")
