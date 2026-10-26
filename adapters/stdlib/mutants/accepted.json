@@ -38,6 +38,9 @@
   "hook-fail-closed": {
     "22462805a55d": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
   },
+  "index-cache": {
+    "2564baa97861": "sys.path.insert at index 1 instead of 0 still finds kernel.py (scan is inserted after, and the repo root still supplies kernel)."
+  },
   "live": {
     "099e4afa6871": "How much of what a program said is quoted in a failure's reason: one character more is the same message, and the state, the part a person and CI act on, is unchanged.",
     "03f95b5e44db": "Where the DevTools message counter starts: replies are matched to requests by id, so starting at 1 instead of 0 matches the same replies."

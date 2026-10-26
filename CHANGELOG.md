@@ -13,10 +13,45 @@ says how). The first was v0.1.0.
 - `hosts`, an add-on that holds the assistants which take an MCP server as one
   table (where each one's settings live, and the shape it wants) and prints the
   lines that register mcp-lite with any of them: `hosts.py list`, then
-  `hosts.py show NAME --box DIR`. Starts with cursor, opencode, windsurf and
-  zed, and a test holds each row to the same bytes that assistant's own add-on
-  prints, so a later assistant is a row, not a script. Prints only: no box
+  `hosts.py show NAME --box DIR`. The twelve add-ons for one assistant each
+  (aider, codex-cli, copilot, cursor, emacs, gemini-cli, jetbrains, opencode,
+  vim, vscode, windsurf, zed) now take their `--box DIR` handling from it, and
+  the seven that register mcp-lite take their row from its table too, so a
+  later assistant is a row, not a script. Each prints the same bytes as
+  before; a test in each holds the one `hosts` it imports against a decoy of
+  the same name, which kills the `sys.path` break that was accepted for seven of
+  them, so those entries are gone from `accepted.json`. Prints only: no box
   written, no key, no network.
+
+- `ci-cache`, an add-on that reads a folder's lockfiles and prints a cache key
+  per ecosystem (pip, npm, .NET, Maven), so a CI run caches each one's
+  downloads keyed on the files that pin them and skips the reinstall when the
+  pins haven't changed. The key is the SHA-256 over each lockfile's path and
+  the hash of its bytes, so the same pins give the same key on any machine and
+  a changed pin a new one. Hidden folders and `node_modules` are not walked. It
+  reads the folder and prints; writes nothing, reads no box or key, no network.
+  (#51)
+
+- `parallel`, an add-on that runs a reader over several folders at once, across
+  every CPU core, into one mirror. Where a reader mirrors one folder of files
+  into plain-text passages, `parallel --reader NAME --from ONE --from TWO ...
+  --to MIRROR` runs it on each folder concurrently into `MIRROR/<folder name>`,
+  so a big mirror of many sources builds in a fraction of the time. Each folder
+  is mirrored whole by the reader, so a sub-mirror is byte-for-byte the reader's
+  own output — a reader that looks across a folder (backlinks) still sees all of
+  it; splitting one folder between workers would give the wrong bytes, so whole
+  folders run in parallel instead. Writes only under `--to` (through the
+  readers), reads no box or key, no network. (#49)
+
+- `index-cache`, an add-on that keeps a folder's `scan` index between runs and
+  rebuilds it only when the folder changed. It holds a manifest beside the
+  index — each read file's path and the SHA-256 of its text — and on each run
+  hashes the folder's files: when every indexed file still matches it leaves
+  the index as it is (no passage re-read, ask it with `scan`); when a file was
+  added, edited or removed it rebuilds through `scan` and says what moved. The
+  files it hashes are exactly the ones the kernel reads into an index, so a
+  dotfile or a binary changing never forces a rebuild. Writes only under
+  `--to`, reads no box or key, no network. (#48)
 
 - `star-system`, a deps add-on that adapts a friend's project —
   [science_bitch](https://github.com/AllHailSeizure/science_bitch) — into
@@ -466,6 +501,15 @@ says how). The first was v0.1.0.
   found nothing. The three ports compose by tables `vectors/gen.py` reads
   out of Python, so no runtime's Unicode version decides a word, and the
   vectors hold every composed character decomposed. (#33)
+
+### Changed
+
+- `AGENTS.md` now cautions, in the mutants step, to run
+  `adapters/stdlib/mutants/mutants.py` only after the add-on's `COMMANDS`
+  line exists and on a clean tree: a mutant counts as killed when the run's
+  tests exit non-zero, so an add-on not yet in `COMMANDS` (or a stray
+  uncommitted add-on folder) fails the contract test and marks every mutant
+  killed — a false pass CI later exposes as the real survivors. (#50)
 
 ## v0.1.0 · 2026-10-23
 

@@ -106,6 +106,10 @@ willow/
 │   │   │   ├── test_bugs.py  bugs.py's tests: strict marks only, and the list made from them
 │   │   │   ├── test_whose.py whose.py's tests: commits, merges, squashes, another host, places refused
 │   │   │   └── README.md     its card: gates, states, the guard and exit codes
+│   │   ├── ci-cache/
+│   │   │   ├── ci_cache.py    a cache key per ecosystem from a repo's lockfiles, so CI skips the reinstall
+│   │   │   ├── test_ci_cache.py
+│   │   │   └── README.md
 │   │   ├── ci-why/
 │   │   │   ├── ci_why.py     the failing block of a red CI log, plain: the test, the assertion, the line to act on
 │   │   │   ├── test_ci_why.py
@@ -203,6 +207,10 @@ willow/
 │   │   │   ├── hosts.py          one table of assistants that take an MCP server, and the lines that register willow with each
 │   │   │   ├── test_hosts.py
 │   │   │   └── README.md
+│   │   ├── index-cache/
+│   │   │   ├── index_cache.py  a folder's scan index kept between runs, rebuilt only when a file's hash changed
+│   │   │   ├── test_index_cache.py
+│   │   │   └── README.md
 │   │   ├── install-scripts/
 │   │   │   ├── install_scripts.py  the install scripts node_modules would run (preinstall, install, postinstall), by file and line
 │   │   │   ├── test_install_scripts.py
@@ -263,6 +271,10 @@ willow/
 │   │   ├── outdated/
 │   │   │   ├── outdated.py   how old each locked dependency is, and which are yanked, deprecated or unmaintained
 │   │   │   ├── test_outdated.py
+│   │   │   └── README.md
+│   │   ├── parallel/
+│   │   │   ├── parallel.py   a reader run over several folders at once, across cores, into one mirror
+│   │   │   ├── test_parallel.py
 │   │   │   └── README.md
 │   │   ├── pins/
 │   │   │   ├── pins.py       version ranges in package.json or requirements.txt that no lockfile pins
