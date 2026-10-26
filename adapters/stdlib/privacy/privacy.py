@@ -16,9 +16,22 @@ kernel's) and withholds, in every passage and approved answer it prints:
     ip                      an address that names a machine (not 127.x or 0.0.0.0)
     key                     a private key block, and AWS, GitHub, Slack, Google,
                             Stripe and model-provider API keys, and a JWT
+    password                one typed after its label (`password: hunter2`,
+                            `pw = widgets1998`, `pw Wendouree#14`), the second
+                            half of a login pair (`ana@example.org / Tide2024!`,
+                            `HomeNet / x7Kp9q2z`), and, in a file whose name
+                            says it's a list of them (passwords.txt, logins.md),
+                            every value that looks like one
 
 Each is replaced by `[withheld: KIND]`, and the output says how many of each
-it withheld (`"withheld": {"phone": 2}`). `scrub` does the same to any text.
+it withheld (`"withheld": {"phone": 2}`). `scrub` does the same to any text,
+except the password-list rule, since a pipe has no file name.
+
+A password's label is kept, so the line still reads. A value only looks like
+a password with six characters or more, a letter and a digit:
+"password policy", "pw reset" and "and / or" are prose and left alone, and so
+is a placeholder ("changeme", "example", "None") or a value that names where
+the password comes from (`env:WIFI`, `$PASS`).
 
 What it misses, said rather than hidden: a street address, and a person's name
 on its own (a name is only a word; the kernel's demo found both getting
@@ -84,6 +97,38 @@ DATE = re.compile(r"\d{4}-\d{2}-\d{2}")
 _OCTET = r"(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)"
 IPV4 = re.compile(rf"(?<![\d.]){_OCTET}(?:\.{_OCTET}){{3}}(?![\d.])")
 NOT_A_HOST = re.compile(r"^(?:127\.|0\.0\.0\.0$|255\.255\.255\.255$)")
+#: what a password looks like: six or more characters, a letter and a digit,
+#: no space; so a word of prose, "lose!!" included, never is one
+SECRET = r"(?=[^\s/,;()]*[A-Za-z])(?=[^\s/,;()]*\d)[^\s/,;()]{6,}"
+_LABEL = r"(?:password|passwd|passphrase|passcode|pwd|pw)"
+_SOURCE = r'(?:""|"?(?:None|null|NULL)"?(?![\w-])|"?env:|\$)'
+#: willow-bot's onescript/scrub.py typed_password: a label, a : or =, a value;
+#: never a comparison, a label alone, or a value that names a source
+TYPED = re.compile(
+    rf"(?i)(?P<label>(?<![\w$])\$?{_LABEL}\b['\"]?\s*(?<![=!<>])[:=](?!=)\s*)"
+    rf"(?!{_SOURCE})(?P<pw>\"[^\"\n]+\"|'[^'\n]+'|[^\s\"',;)}}\]]+)"
+)
+#: the label, a space, the value: `pw Wendouree#14`
+SPACED = re.compile(rf"(?i)(?P<label>(?<![\w$]){_LABEL}[ \t]+)(?P<pw>{SECRET})(?!\S)")
+#: a login, a slash with a space each side, a password: `ana@example.org / Tide2024!`
+PAIR = re.compile(rf"(?P<label>(?<![^\s:])[^\s/:]+[ \t]+/[ \t]+)(?P<pw>{SECRET})(?!\S)")
+#: in a file of passwords, every value that looks like one, wherever it is on
+#: the line: `ancestry: Considine1911`, `(changed -> Wendouree#15)`
+LISTED = re.compile(rf"(?P<label>)(?<![^\s:(>])(?P<pw>{SECRET})(?![^\s,;)])")
+PLACEHOLDER = re.compile(
+    r"(?i)(your|example|xxxx+|placeholder|none|null|true|false|changeme|redacted|\*\*\*)"
+)
+#: a file named as a list of them: passwords.txt, my-logins.md, credentials-old;
+#: the singular only on its own, so password-reset-steps.md is notes, not a list;
+#: a word between separators holds none, so a name of many `_0`s is read once
+LIST_NAME = re.compile(
+    r"(?i)^(?:my[ _-]?)?(?:(?:passwords|logins|credentials)(?:[ _-][^\W_]+)*|password|passwd)$"
+)
+
+
+def password_list(path: str) -> bool:
+    """Whether a file's name says it is a list of passwords."""
+    return bool(LIST_NAME.search(Path(path).stem))
 
 
 def luhn(digits: str) -> bool:
@@ -100,8 +145,9 @@ def iban_ok(value: str) -> bool:
     return int("".join(str(int(c, 36)) for c in s[4:] + s[:4])) % 97 == 1
 
 
-def scrub(text: str, found: dict) -> str:
-    """`text` with every kind withheld; `found` counts each kind."""
+def scrub(text: str, found: dict, listed: bool = False) -> str:
+    """`text` with every kind withheld; `found` counts each kind. `listed`:
+    the text is from a file of passwords (`password_list`)."""
 
     def hide(kind: str, keep=lambda v: False):
         def sub(m: re.Match) -> str:
@@ -115,6 +161,15 @@ def scrub(text: str, found: dict) -> str:
     for rx in KEYS:  # first: a key can hold digits that look like a phone
         text = rx.sub(hide("key"), text)
     text = EMAIL.sub(hide("email"), text)
+
+    def password(m: re.Match) -> str:
+        if PLACEHOLDER.search(m.group("pw")):
+            return m.group(0)
+        found["password"] = found.get("password", 0) + 1
+        return m.group("label") + MARK.format(kind="password")
+
+    for rx in (TYPED, SPACED, PAIR, *((LISTED,) if listed else ())):
+        text = rx.sub(password, text)
     text = IBAN.sub(hide("iban", lambda v: not iban_ok(v)), text)
 
     def account(m: re.Match) -> str:
@@ -162,7 +217,8 @@ def bite(argv: list[str]) -> int:
         return code
     found: dict = {}
     for s in doc.get("served", []):
-        s["text"] = scrub(s["text"], found)
+        listed = password_list(s["where"].rsplit(":", 1)[0])
+        s["text"] = scrub(s["text"], found, listed)
     if "answer" in doc:
         doc["answer"] = scrub(doc["answer"], found)
     doc["withheld"] = dict(sorted(found.items()))

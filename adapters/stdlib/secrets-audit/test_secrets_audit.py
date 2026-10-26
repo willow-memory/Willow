@@ -30,6 +30,8 @@ PV = sa.privacy()
     ("card 4111 1111 1111 1111", ["card"]),
     ("IBAN GB82 WEST 1234 5698 7654 32", ["iban"]),
     ("SSN 078-05-1120", ["ssn"]),
+    ("netbank: client 61847720  pw Wendouree#14", ["password"]),
+    ("myGov: ana@example.org / Tide2024!", ["password"]),
     ("password: changeme", []),
     ("password:", []),
     ("if ($p == $password) { ok(); }", []),
@@ -41,6 +43,19 @@ PV = sa.privacy()
 ])  # fmt: skip
 def test_each_kind_is_found_and_ordinary_lines_are_left_alone(line, kinds):
     assert sa.kinds_in(line, PV) == kinds
+
+
+def test_a_file_of_passwords_is_read_as_one(tmp_path):
+    pile = tmp_path / "pile"
+    (pile / "Desktop").mkdir(parents=True)
+    (pile / "Desktop" / "passwords.txt").write_text(
+        "PASSWORDS - do not lose!!\n\nancestry: Considine1911\nNetflix: kieran knows\n"
+    )
+    (pile / "family.txt").write_text("ancestry: Considine1911 was the census name\n")
+    got = run("--from", str(pile))
+    assert got.returncode == 42 and "Desktop/passwords.txt:3  password" in got.stdout
+    assert "family.txt" not in got.stdout, "the same words in another file aren't one"
+    assert "Considine1911" not in got.stdout and "1 place hold" in got.stdout
 
 
 def make(tmp_path: Path) -> Path:

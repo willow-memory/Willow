@@ -10,6 +10,15 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `typos`, an add-on that reads a misspelt word of a question as your files
+  spell it, one edit inside the word (its first and last letters kept), the
+  most-held spelling first, and prints the question as read for you to ask:
+  it never asks for you, and writes nothing. Six letters and up, measured on
+  the demo questions. Planned with rapidfuzz; one edit needs nothing
+  installed. From willow-bot's one script's typo rung. (#40)
+- `accents`, an add-on that reads a word typed without its accent ("zoe") as
+  your files write it ("zoë"), both ways round, and with `words` prints the
+  words-list lines that make the kernel read them so every time. (#40)
 - `risky-code`, an add-on that finds lines of code matching a known-dangerous
   pattern — command injection, `eval`/`exec`, sql concatenation, insecure
   deserialization, broken tls, ssrf, path traversal, template injection, xss
@@ -317,6 +326,26 @@ says how). The first was v0.1.0.
   II.1, and the generated pages VI.6. Their answers in `constitution/reach.json` go. (#4)
 
 ### Changed
+
+- `kernel.py`'s common words, which never count toward holding a question,
+  now hold "anything", "something", "nothing", "everything" and the
+  "-one", "-body" and "-where" words: they name no topic. "did i promise
+  siobhan anything" found nothing, since no file says "anything"; it now
+  serves the promise. On the sixty demo questions, two answers change, both
+  for the better. The vectors regenerate; the ports read the list from them. (#40)
+- `privacy` withholds passwords: one typed after its label (`password: x`,
+  `pw x`), the second half of a login pair (`user / x`), and, in a file named
+  as a list of them, every value that looks like one (six or more
+  characters, a letter and a digit). `secrets-audit` lists the same. (#40)
+- The `calendar` reader says on a recurring event's first line that it
+  repeats, and how (`(yearly, from this date)`), and says `(cancelled)` on a
+  cancelled one, so a line quoted from it can't pass for this year's date.
+  `coming-up` counts each repeat in its window (a rule's FREQ, INTERVAL,
+  UNTIL and COUNT; one with BY parts isn't guessed) and a birthday every
+  year. (#40)
+- `demo/bernadette`'s stack asks a question again as `typos` and `accents`
+  read it, and its STRIP.md says what each fix changed; it also corrects a
+  finding it had wrong (question 19 missed on "anything", not an accent). (#40)
 
 - `privacy` also withholds a national phone number written from its 0 in
   groups (`0113 555 0122`, `07700 900123`: 10 or 11 digits), and a bank

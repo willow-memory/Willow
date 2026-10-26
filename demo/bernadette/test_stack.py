@@ -17,7 +17,8 @@ HERE = Path(__file__).resolve().parent
 KERNEL = HERE.parents[1] / "kernel.py"
 NOW = "2026-10-24T09:00:00Z"
 #: What each of the twenty questions came to on the mirror, as STRIP.md has it
-STATES = ["populated"] * 18 + ["empty"] * 2
+#: after its fixes: 19 is held now that "anything" is a common word
+STATES = ["populated"] * 19 + ["empty"]
 
 
 def py(*argv: str, cwd: Path | None = None) -> subprocess.CompletedProcess:
@@ -63,6 +64,24 @@ def test_the_questions_come_to_what_strip_scores(ran):
         in (by[3]["served"])
     )  # N2
     assert [n for n, a in by.items() if a["raw_state"] != a["state"]] == [6, 9, 18]
+    assert "Mail/Sent/2022-12-12 Happy 17th to our Aoife.eml.txt:10" in by[19]["served"]
+    # read as her files spell them, by typos, and asked again as read
+    assert {n: a["read_as"] for n, a in by.items() if "read_as" in a} == {
+        11: "what did the jeweller say",
+        20: "dermatologist referral letter",
+    }
+    assert by[20]["read_state"] == "populated"
+    assert (
+        "Documents/Scans/Referral - Dr Tolley 11-02-2026.pdf.txt:1"
+        in (by[20]["read_served"])
+    )
+
+
+def test_the_look_ahead_finds_what_her_files_hold(ran):
+    said = {s["piece"]: s["said"] for s in ran["doc"]["steps"] if s["part"] == "look"}
+    assert said["secrets-audit"].startswith("5 places hold a secret")
+    hide = next(s for s in ran["doc"]["steps"] if s["piece"] == "privacy")
+    assert hide["said"] == "hid 4 email, 3 password"
 
 
 def test_nothing_is_approved_until_the_person_seals(ran):
