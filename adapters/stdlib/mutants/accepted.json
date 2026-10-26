@@ -83,6 +83,9 @@
   "serve": {
     "02a855817eb0": "Path(__file__).resolve().parents[0] instead of parents[3] still finds kernel.py in the run, so the sys.path insert's target changes no test."
   },
+  "stack": {
+    "126465b9e380": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
+  },
   "starter-words": {
     "2f4df3ac7eca": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
   },

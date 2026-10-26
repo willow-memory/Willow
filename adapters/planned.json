@@ -2113,6 +2113,16 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
+  "name": "novelty",
+  "kind": "stdlib",
+  "section": "For maintainers",
+  "line": "Before a new add-on merges, whether its combination of pieces has been assembled before, scanned the way a study checks its own novelty.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, maintainers"
+ },
+ {
   "name": "npm",
   "kind": "stdlib",
   "section": "For maintainers",
@@ -2713,6 +2723,16 @@
   "tags": "no-install, offline, read-only, tracking"
  },
  {
+  "name": "repo-index",
+  "kind": "stdlib",
+  "section": "For maintainers",
+  "line": "This repository as its own deterministic box: its cards, docs and code as dated passages, rebuilt the same bytes each time, so willow can answer questions about itself.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, maintainers"
+ },
+ {
   "name": "report",
   "kind": "stdlib",
   "section": "Trust and proof",
@@ -2964,6 +2984,16 @@
   "writes": "record",
   "network": "none",
   "tags": "no-install, offline, records, assistant"
+ },
+ {
+  "name": "serve-piles",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "serve's piles grouped on all four W's -- who, when, what and where -- not where alone, so a model meets a question from every box that touched it.",
+  "source": "new",
+  "writes": "record, to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, trust, assistant"
  },
  {
   "name": "session-cost",

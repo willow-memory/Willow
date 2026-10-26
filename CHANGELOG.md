@@ -10,6 +10,19 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `stack`, an add-on that makes one document from a stack of add-on steps over
+  a box: a markdown stack file names pools (`##` headings) and steps
+  (`- NAME -- ARGS` lines, with `{box}` replaced by the box path), and `stack`
+  runs every step and composes what each prints — a `##` section per pool, each
+  step's output fenced under it, ordered tallest-first so the peaks are what a
+  reader meets first. The step list is open; each step is held to its own card
+  by the guard, so `stack` writes no box, reads no key and approves nothing.
+  The input side of the serve layer in `docs/design/serve.md`, the heterogeneous
+  counterpart to `across`. (#45)
+- Three ideas added to `adapters/planned.json`: `repo-index` (this repository
+  as its own deterministic box), `serve-piles` (serve grouped on all four W's,
+  not where alone) and `novelty` (a new add-on's combination checked for
+  whether it has been assembled before). (#45)
 - `demo/craft-assembly`, a study: the storytold Craft apps, the AI-built
   clones of Photoshop, Premiere and the rest, taken apart with no model
   anywhere. Fifteen apps and six commits of their shared library go into one
