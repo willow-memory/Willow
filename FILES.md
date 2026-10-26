@@ -72,6 +72,10 @@ willow/
 │   │   │   ├── backup.py     your record in one zip, every byte and the chain checked; never the key
 │   │   │   ├── test_backup.py
 │   │   │   └── README.md
+│   │   ├── bench/
+│   │   │   ├── bench.py       how fast the kernel reads and ranks piles of set sizes, per release
+│   │   │   ├── test_bench.py
+│   │   │   └── README.md
 │   │   ├── books/
 │   │   │   ├── books.py      Kindle highlights and .epub text, as passages
 │   │   │   ├── test_books.py
