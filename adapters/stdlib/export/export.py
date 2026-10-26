@@ -12,15 +12,18 @@ how many were answered by your approval, how many from your files, how many
 found nothing. Counts only: the record never held a question's words, so
 neither can this.
 
+An approval whose proposal file no longer holds the bytes you approved is left
+out and said on standard error, not exported as approved.
+
 It only reads, and writes to standard output. Exit codes, the kernel's: 0
-done; 2 refused (a record that doesn't verify).
+done; 42 done, but an approval was left out and waits on you; 2 refused (a
+record that doesn't verify).
 """
 
 from __future__ import annotations
 
 import csv
 import io
-import json
 import sys
 from pathlib import Path
 
@@ -28,14 +31,19 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 import kernel  # noqa: E402
 
 
-def approved(box: Path, rows: list[dict]) -> list[dict]:
+def approved(box: Path, rows: list[dict]) -> tuple[list[dict], int]:
+    """(the approved answers, how many approvals were left out): one whose
+    proposal file no longer holds the bytes the key signed isn't an answer."""
     places = {}
     for r in rows:
         for s in r.get("served", []):
             places.setdefault(s["id"], s["where"])
-    out = []
+    out, left = [], 0
     for subj, row in sorted(kernel.sealed(box, rows).items(), key=lambda x: x[1]["n"]):
-        prop = json.loads((box / "proposals" / f"{subj[9:]}.json").read_text())
+        prop, _, why = kernel.standing(box, rows, subj, row)
+        if why is not None:
+            left += 1
+            continue
         out.append({
             "approved": row["ts"],
             "answer": prop["data"],
@@ -43,7 +51,7 @@ def approved(box: Path, rows: list[dict]) -> list[dict]:
             "cites": [places.get(c, c[:12]) for c in prop["cites"]],
             "subject": subj,
         })  # fmt: skip
-    return out
+    return out, left
 
 
 def log(rows: list[dict]) -> list[dict]:
@@ -111,8 +119,15 @@ def main(argv: list[str]) -> int:
         print("refused:", *breaks, sep="\n  ", file=sys.stderr)
         return kernel.REFUSED
     is_log = "--log" in flags
-    items = log(rows) if is_log else approved(box, rows)
+    items, left = (log(rows), 0) if is_log else approved(box, rows)
     sys.stdout.write((as_md if fmt == "md" else as_csv)(items, is_log))
+    if left:
+        print(
+            f"{left} approved answer{'s' if left != 1 else ''} left out: "
+            "its proposal file is not what you approved (python kernel.py verify says which)",
+            file=sys.stderr,
+        )
+        return kernel.ESCALATE
     return kernel.ALIVE
 
 

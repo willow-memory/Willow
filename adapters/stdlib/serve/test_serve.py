@@ -167,3 +167,34 @@ def test_not_a_kernel_box_is_refused(tmp_path):
     (tmp_path / "b").mkdir()
     got = run(SERVE, "scope", "--box", str(tmp_path / "b"))
     assert got.returncode == 2 and "not a kernel box" in got.stderr
+
+
+def test_a_sealed_scope_whose_proposal_file_changed_serves_nothing(tmp_path):
+    """The seal covers the scope's bytes. A file widened after the seal to
+    cite another passage is not the scope the person sealed: fail closed."""
+    box, _ = a_box(tmp_path)
+    subj = seal_the_scope(box)
+    other = subprocess.run([sys.executable, str(KERNEL), "bite", "--box", str(box), *NOW,
+                            "mould bedroom"], capture_output=True, text=True)  # fmt: skip
+    mould = json.loads(other.stdout)["served"][0]["id"]
+    f = box / "proposals" / f"{subj[9:]}.json"
+    held = f.read_text()
+    prop = json.loads(held)
+    f.write_text(json.dumps({**prop, "cites": [*prop["cites"], mould]}))
+    out = tmp_path / "served.md"
+    got = run(SERVE, "--box", str(box), "--to", str(out), *NOW)
+    assert got.returncode == 2 and not out.exists(), got.stdout
+    assert "mould" not in got.stdout.lower()
+    f.write_text(held)
+    assert run(SERVE, "--box", str(box), "--to", str(out), *NOW).returncode == 0
+    assert "Reported the mould" not in out.read_text()  # and never the widened one
+
+
+def test_scope_says_how_many_pools_with_the_right_plural(tmp_path):
+    box, _ = a_box(tmp_path)  # the roof bite served one passage, in one pool
+    first = run(SERVE, "scope", "--box", str(box), *NOW).stdout.splitlines()[0]
+    assert first.endswith("in 1 pool, peaks first"), first
+    subprocess.run([sys.executable, str(KERNEL), "bite", "--box", str(box), *NOW,
+                    "mould roof"], check=True, capture_output=True)  # fmt: skip
+    first = run(SERVE, "scope", "--box", str(box), *NOW).stdout.splitlines()[0]
+    assert first.endswith("in 2 pools, peaks first"), first

@@ -46,10 +46,14 @@ def places(served: list[dict], most: int = 3) -> str:
 
 
 def proposal_path(box: Path, subject: str) -> str:
+    """A suggestion's path, said only while its file is the bytes the subject
+    names (the path is in the subject's hash); otherwise just "an answer"."""
     try:
         prop = json.loads((box / "proposals" / f"{subject[9:]}.json").read_text())
+        if kernel.subject_of(prop) != subject:
+            return "an answer"
         return str(prop.get("path") or "an answer")
-    except (OSError, ValueError):
+    except (OSError, ValueError, KeyError, TypeError):
         return "an answer"
 
 

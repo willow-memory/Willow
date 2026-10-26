@@ -22,9 +22,17 @@ their file goes, the id is nowhere in your folder, and this says so exactly.
 The kernel keeps giving an approved answer whatever its sources do; this is
 how you find out the ground moved under one.
 
-**Exit codes:** 0 every approval holds; 42 one has gone stale and waits on
-you; 2 refused (a record that doesn't verify).
+An approval's cited passages are read from its proposal file, so the file has
+to be what you approved. When it isn't (missing, or no longer the bytes the
+key signed) the approval is shown as `broken` with why, never read for its
+cites, and counted:
 
-**Uses:** the kernel's `read`, `sealed`, `config` and `chunks`.
+    broken  proposal:0a6fde95…  its proposal file is not the bytes that were sealed
+    1 approved; 0 stale; 1 broken
+
+**Exit codes:** 0 every approval holds; 42 one has gone stale or broken and
+waits on you; 2 refused (a record that doesn't verify).
+
+**Uses:** the kernel's `read`, `sealed`, `standing`, `config` and `chunks`.
 
 **Never:** writes anything, or takes an approval back; that stays yours.

@@ -103,3 +103,22 @@ def test_a_long_answer_is_shown_cut_and_its_subject_shortened(tmp_path):
     )
     assert len(line.split()[1].rstrip("…")) == 21
     assert line.endswith(repr(long[:57] + "..."))
+
+
+def test_an_approval_whose_proposal_file_changed_is_broken_not_trusted(tmp_path):
+    """Its cited passages are read from that file, so a file that no longer
+    holds the bytes the person approved can't say whether the ground moved."""
+    b, _ = approved(tmp_path)
+    f = next((b / "proposals").glob("*.json"))
+    held = f.read_text()
+    f.write_text(json.dumps({**json.loads(held), "data": "Never.", "cites": []}))
+    got = stale(b)
+    assert got.returncode == 42 and "Never." not in got.stdout
+    assert got.stdout.startswith("broken  proposal:")
+    assert "proposal file is not the bytes that were sealed" in got.stdout
+    assert "1 approved; 0 stale; 1 broken" in got.stdout
+    f.unlink()
+    got = stale(b)
+    assert got.returncode == 42 and "missing or can't be read" in got.stdout
+    f.write_text(held)
+    assert stale(b).returncode == 0

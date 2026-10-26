@@ -519,6 +519,16 @@ says how). The first was v0.1.0.
   question (exit 42). Seal bytes are unchanged, so existing seals hold. The
   three ports follow, and the vectors' session now tampers with the file.
   (bug #54)
+- `stale`, `export` and `serve` read a sealed answer's proposal file through
+  the kernel's `standing`, and `history` checks the file against its subject,
+  as `bite` does since bug #54: a file that isn't the bytes the key signed was
+  shown as approved (`export`, `stale`), served as the sealed scope (`serve`,
+  which served a widened scope's extra passage), or named its path
+  (`history`). Now `stale` shows it as `broken`, `export` leaves it out and
+  says so on standard error (both exit 42), `serve` serves nothing, and
+  `history` says "an answer". `export`'s one accepted mutant no longer
+  survives and is taken out of the accepted-mutants list; `serve`'s plural of
+  "pool" had no test and now does. (bug #54)
 - CI pins its workflow to `ubuntu-24.04`. `ubuntu-latest` rolled to Ubuntu
   26.04, for which the setup-python action has no Python 3.9 build, so the
   `tests (3.9)` and `strip (3.9)` jobs failed at setup on every pull request;

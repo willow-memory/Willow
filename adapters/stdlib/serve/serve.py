@@ -31,7 +31,6 @@ the write form -- no sealed scope).
 from __future__ import annotations
 
 import hashlib
-import json
 import os
 import sys
 from pathlib import Path
@@ -105,14 +104,9 @@ def do_serve(box: Path, to: Path) -> int:
             return kernel.REFUSED
     sealed = kernel.sealed(box, rows)  # via the kernel: never the key itself
     scopes = []
-    for subj in sealed:
-        try:
-            prop = json.loads(
-                (box / "proposals" / f"{subj[9:]}.json").read_text(encoding="utf-8")
-            )
-        except (OSError, ValueError):
-            continue
-        if prop.get("claim") == SCOPE:
+    for subj, row in sealed.items():
+        prop, _, why = kernel.standing(box, rows, subj, row)  # the bytes sealed
+        if why is None and prop.get("claim") == SCOPE:
             scopes.append((subj, prop))
     if not scopes:
         print("refused: no sealed scope; nothing served", file=sys.stderr)

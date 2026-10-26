@@ -106,3 +106,21 @@ def test_a_forged_approval_is_never_exported(tmp_path):
     )
     md = run(str(HERE / "export.py"), "--box", str(b)).stdout
     assert "Forged." not in md and "Six hours." in md
+
+
+def test_an_approval_whose_proposal_file_changed_is_left_out_and_said(tmp_path):
+    """The key signed the bytes the person approved; a file that no longer
+    holds them is not an approved answer, however the seal reads."""
+    b = approved(tmp_path)
+    f = next((b / "proposals").glob("*.json"))
+    held = f.read_text()
+    f.write_text(json.dumps({**json.loads(held), "data": "Never."}))
+    got = run(str(HERE / "export.py"), "--box", str(b))
+    assert got.returncode == 42
+    assert "Never." not in got.stdout and "Six hours." not in got.stdout
+    assert "proposal file" in got.stderr and "1 approved answer left out" in got.stderr
+    f.unlink()  # gone is the same: said, not a traceback
+    got = run(str(HERE / "export.py"), "--box", str(b))
+    assert got.returncode == 42 and "Traceback" not in got.stderr
+    f.write_text(held)
+    assert run(str(HERE / "export.py"), "--box", str(b)).returncode == 0

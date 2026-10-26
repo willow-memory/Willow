@@ -32,9 +32,6 @@
   "diverge": {
     "034127892304": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
   },
-  "export": {
-    "2edb79a5366b": "Days are grouped by a key cut from the same timestamp as the day shown; one more character groups the same rows."
-  },
   "hook-fail-closed": {
     "22462805a55d": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
   },
