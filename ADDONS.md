@@ -18,11 +18,11 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`████░░░░░░░░░░░░░░░░` **101 of 466 built** · 415 need no install · 51 need one
+`████░░░░░░░░░░░░░░░░` **102 of 466 built** · 415 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
-| Reading more kinds of files | 11 | 94 | 96 | 9 |
+| Reading more kinds of files | 12 | 93 | 96 | 9 |
 | Finding things | 9 | 34 | 33 | 10 |
 | Your own words | 8 | 17 | 22 | 3 |
 | Keeping track | 11 | 47 | 58 | 0 |
@@ -40,8 +40,8 @@ or `writes-output`; its section), and any the card's author adds or changes.
 - 2026-10-26 · [**star-system**](adapters/deps/star-system/) — A friend's star-system simulation (science_bitch) run deterministically and written as cited passages: each body's Kepler period and how well the run conserves energy, angular momentum and linear momentum.
 - 2026-10-26 · [**stack**](adapters/stdlib/stack/) — One document from a stack of add-on steps over a box: each step's output grouped into pools and ordered tallest-first, so the peaks are what a reader meets first.
 - 2026-10-26 · [**serve**](adapters/stdlib/serve/) — The one markdown file a model reads: only the passages a human sealed, grouped into pools with the peaks first, by ids it can't guess, and nothing else.
+- 2026-10-26 · [**parallel**](adapters/stdlib/parallel/) — A reader run over several folders at once, across every CPU core, so a big mirror of many sources builds in a fraction of the time.
 - 2026-10-26 · [**index-cache**](adapters/stdlib/index-cache/) — The box's index kept between runs and checked against each file's hash, so a question doesn't re-read the folder unless the folder changed.
-- 2026-10-26 · [**fast-tests**](adapters/deps/fast-tests/) — The test suite across every core with pytest-xdist, the same tests in a fraction of the time.
 <!-- /willow:newest -->
 
 ### Add-on of the week
@@ -49,7 +49,7 @@ or `writes-output`; its section), and any the card's author adds or changes.
 <!-- willow:pick week=2026-W44 -->
 **[changed](adapters/stdlib/changed/)** — What's new, edited or deleted in your folder since the last check, as fingerprint rows.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 101 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 102 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -127,7 +127,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - [**office**](adapters/stdlib/office/) — .docx, .odt, .pptx, .xlsx and .ods, which are all zipped XML. *new* `no-install` `offline` `writes-output` `file-reader`
 - **orders** (idea) — Amazon's order history and other shops' CSV exports: what you bought, when, and for how much. *new* `no-install` `offline` `writes-output` `file-reader`
 - **package-docs** (idea) — The READMEs and docs inside packages you've already installed (site-packages, node_modules, Cargo's registry cache), so you can ask your dependencies offline. *new* `no-install` `offline` `writes-output` `file-reader`
-- **parallel** (idea) — The readers run across every CPU core, so a big mirror folder builds in a fraction of the time. *new* `no-install` `offline` `writes-output` `file-reader`
+- [**parallel**](adapters/stdlib/parallel/) — A reader run over several folders at once, across every CPU core, so a big mirror of many sources builds in a fraction of the time. *new* `no-install` `offline` `writes-output` `file-reader`
 - **past-papers** (idea) — Past exam papers and their mark schemes as passages: which year asked this, and what earned the marks. *new* `no-install` `offline` `writes-output` `file-reader`
 - [**pdf**](adapters/deps/pdf/) — Text out of PDFs. Needs pypdf; BSD-3-Clause. *new* `needs-install` `offline` `writes-output` `file-reader`
 - **pgn** (idea) — Chess games from PGN files: players, dates, openings and your annotations. *new* `no-install` `offline` `writes-output` `file-reader`

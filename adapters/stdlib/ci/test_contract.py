@@ -114,6 +114,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "pins": ("pins.py", ["--box", "{box}"]),
     "scan": ("scan.py", ["index", "--from", "{pile}", "--to", "{tmp}/index"]),
     "index-cache": ("index_cache.py", ["--from", "{pile}", "--to", "{tmp}/ix"]),
+    "parallel": ("parallel.py", ["--reader", "notes", "--from", "{pile}", "--to", "{tmp}/pm"]),
     "slow-tests": ("slow_tests.py", ["--runs", "{pile}"]),
     "snapshot": ("snapshot.py", ["check", "--in", "{pile}"]),
     "wayback": ("wayback.py", ["find", "--url", "https://example.org/", "--to", "{tmp}/w",

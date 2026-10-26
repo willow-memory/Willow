@@ -264,6 +264,10 @@ willow/
 │   │   │   ├── outdated.py   how old each locked dependency is, and which are yanked, deprecated or unmaintained
 │   │   │   ├── test_outdated.py
 │   │   │   └── README.md
+│   │   ├── parallel/
+│   │   │   ├── parallel.py   a reader run over several folders at once, across cores, into one mirror
+│   │   │   ├── test_parallel.py
+│   │   │   └── README.md
 │   │   ├── pins/
 │   │   │   ├── pins.py       version ranges in package.json or requirements.txt that no lockfile pins
 │   │   │   ├── test_pins.py
