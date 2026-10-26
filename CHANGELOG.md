@@ -14,7 +14,7 @@ says how). The first was v0.1.0.
   last hash) to a file kept out of the box, and checks the box against it:
   `tip_pin.py pin --box DIR --to FILE`, then `tip_pin.py check --box DIR
   --pin FILE`. Rows cut off the end, or removed and then all re-hashed, pass
-  `verify`; the pin finds both (exit 42). Its tests reproduce each.
+  `verify`; the pin finds both (exit 42). Its tests reproduce each. (#55)
 - `hosts`, an add-on that holds the assistants which take an MCP server as one
   table (where each one's settings live, and the shape it wants) and prints the
   lines that register mcp-lite with any of them: `hosts.py list`, then
@@ -448,7 +448,7 @@ says how). The first was v0.1.0.
 - The README no longer says any edit to a past entry is detected: rows cut off
   the end, or removed and re-hashed from there on, still pass `verify`.
   LIMITS.md says so, and how to check with a copy of the last row's hash and
-  the row count kept out of the box's reach.
+  the row count kept out of the box's reach. (#55)
 - `kernel.py`'s common words, which never count toward holding a question,
   now hold "anything", "something", "nothing", "everything" and the
   "-one", "-body" and "-where" words: they name no topic. "did i promise
@@ -518,7 +518,7 @@ says how). The first was v0.1.0.
   now says when a sealed subject's file is missing, changed, or names another
   question (exit 42). Seal bytes are unchanged, so existing seals hold. The
   three ports follow, and the vectors' session now tampers with the file.
-  (bug #54)
+  (bug #54, #55)
 - `stale`, `export` and `serve` read a sealed answer's proposal file through
   the kernel's `standing`, and `history` checks the file against its subject,
   as `bite` does since bug #54: a file that isn't the bytes the key signed was
@@ -528,7 +528,7 @@ says how). The first was v0.1.0.
   says so on standard error (both exit 42), `serve` serves nothing, and
   `history` says "an answer". `export`'s one accepted mutant no longer
   survives and is taken out of the accepted-mutants list; `serve`'s plural of
-  "pool" had no test and now does. (bug #54)
+  "pool" had no test and now does. (bug #54, #55)
 - CI pins its workflow to `ubuntu-24.04`. `ubuntu-latest` rolled to Ubuntu
   26.04, for which the setup-python action has no Python 3.9 build, so the
   `tests (3.9)` and `strip (3.9)` jobs failed at setup on every pull request;
