@@ -79,6 +79,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "again": ("again.py", ["--box", "{box}"]),
     "aider": ("aider.py", ["--box", "{box}"]),
     "ci-why": ("ci_why.py", ["--record", "{box}/record.jsonl"]),
+    "ci-cache": ("ci_cache.py", ["--from", "{pile}"]),
     "claude-code": ("hook.py", ["setup", "--box", "{box}"]),
     "codex-cli": ("codex_cli.py", ["--box", "{box}"]),
     "copilot": ("copilot.py", ["--box", "{box}"]),

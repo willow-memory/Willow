@@ -18,7 +18,7 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`████░░░░░░░░░░░░░░░░` **102 of 466 built** · 415 need no install · 51 need one
+`████░░░░░░░░░░░░░░░░` **103 of 466 built** · 415 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
@@ -31,7 +31,7 @@ or `writes-output`; its section), and any the card's author adds or changes.
 | Assistants | 16 | 40 | 50 | 6 |
 | Ways to use it | 11 | 28 | 35 | 4 |
 | Play | 4 | 36 | 35 | 5 |
-| For maintainers | 13 | 29 | 37 | 5 |
+| For maintainers | 14 | 28 | 37 | 5 |
 <!-- /willow:pools -->
 
 ### Newest
@@ -47,9 +47,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ### Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[changed](adapters/stdlib/changed/)** — What's new, edited or deleted in your folder since the last check, as fingerprint rows.
+**[clauses](adapters/stdlib/clauses/)** — A policy, contract or set of terms as one sentence a passage, so an answer lands on the clause, and what changed between two versions, sentence by sentence.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 102 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 103 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -519,7 +519,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - [**ci**](adapters/stdlib/ci/) — This repo's checks as verdict rows on a kernel record, the same every run. Goes online: PyPI, to read each dependency floor's release date. *box* `no-install` `online` `records` `maintainers`
 - **ci-baseline** (idea) — Is your CI normal? How often pull requests everywhere go green first time, from GH Archive. Goes online: data.gharchive.org, its hours downloaded once. *new* `no-install` `online` `read-only` `maintainers`
 - **ci-bets** (idea) — Bet on your own CI: forecasts on each pull request going green, scored against the model's. *new* `no-install` `offline` `records` `maintainers`
-- **ci-cache** (idea) — CI caches pip, npm, .NET and Maven downloads keyed on their lockfiles, so a run skips the installs. *new* `no-install` `offline` `read-only` `maintainers`
+- [**ci-cache**](adapters/stdlib/ci-cache/) — CI caches pip, npm, .NET and Maven downloads keyed on their lockfiles, so a run skips the installs. *new* `no-install` `offline` `read-only` `maintainers`
 - [**ci-why**](adapters/stdlib/ci-why/) — Why CI went red: the failing block pulled out of the job's log, plain, put where people look. *bot* `no-install` `offline` `read-only` `maintainers`
 - **code-stats** (idea) — Lines, code and complexity per language, per release, as rows the list can answer from. Needs the scc program; MIT. *new* `needs-install` `offline` `read-only` `maintainers`
 - **compiled** (idea) — kernel.py compiled with mypyc for speed, held to the same vectors byte for byte. Needs mypyc; MIT. *new* `needs-install` `offline` `read-only` `maintainers`
