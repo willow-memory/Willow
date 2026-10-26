@@ -10,6 +10,14 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `hosts`, an add-on that holds the assistants which take an MCP server as one
+  table (where each one's settings live, and the shape it wants) and prints the
+  lines that register mcp-lite with any of them: `hosts.py list`, then
+  `hosts.py show NAME --box DIR`. Starts with cursor, opencode, windsurf and
+  zed, and a test holds each row to the same bytes that assistant's own add-on
+  prints, so a later assistant is a row, not a script. Prints only: no box
+  written, no key, no network.
+
 - `star-system`, a deps add-on that adapts a friend's project —
   [science_bitch](https://github.com/AllHailSeizure/science_bitch) — into
   willow: it imports and runs that project's own `star_system` simulation

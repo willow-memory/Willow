@@ -199,6 +199,10 @@ willow/
 │   │   │   ├── horoscope.py  a daily reading picked by the SHA-256 of name and date
 │   │   │   ├── test_horoscope.py
 │   │   │   └── README.md
+│   │   ├── hosts/
+│   │   │   ├── hosts.py          one table of assistants that take an MCP server, and the lines that register willow with each
+│   │   │   ├── test_hosts.py
+│   │   │   └── README.md
 │   │   ├── install-scripts/
 │   │   │   ├── install_scripts.py  the install scripts node_modules would run (preinstall, install, postinstall), by file and line
 │   │   │   ├── test_install_scripts.py

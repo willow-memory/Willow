@@ -18,7 +18,7 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`████░░░░░░░░░░░░░░░░` **100 of 466 built** · 415 need no install · 51 need one
+`████░░░░░░░░░░░░░░░░` **101 of 467 built** · 416 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
@@ -28,7 +28,7 @@ or `writes-output`; its section), and any the card's author adds or changes.
 | Keeping track | 11 | 47 | 58 | 0 |
 | Trust and proof | 12 | 32 | 35 | 9 |
 | Privacy and safety | 6 | 8 | 14 | 0 |
-| Assistants | 16 | 40 | 50 | 6 |
+| Assistants | 17 | 40 | 51 | 6 |
 | Ways to use it | 11 | 28 | 35 | 4 |
 | Play | 4 | 36 | 35 | 5 |
 | For maintainers | 13 | 29 | 37 | 5 |
@@ -40,16 +40,16 @@ or `writes-output`; its section), and any the card's author adds or changes.
 - 2026-10-26 · [**star-system**](adapters/deps/star-system/) — A friend's star-system simulation (science_bitch) run deterministically and written as cited passages: each body's Kepler period and how well the run conserves energy, angular momentum and linear momentum.
 - 2026-10-26 · [**stack**](adapters/stdlib/stack/) — One document from a stack of add-on steps over a box: each step's output grouped into pools and ordered tallest-first, so the peaks are what a reader meets first.
 - 2026-10-26 · [**serve**](adapters/stdlib/serve/) — The one markdown file a model reads: only the passages a human sealed, grouped into pools with the peaks first, by ids it can't guess, and nothing else.
+- 2026-10-26 · [**hosts**](adapters/stdlib/hosts/) — One table of the assistants that take an MCP server, printing the lines that register willow with any of them.
 - 2026-10-26 · [**fast-tests**](adapters/deps/fast-tests/) — The test suite across every core with pytest-xdist, the same tests in a fraction of the time.
-- 2026-10-25 · [**typos**](adapters/stdlib/typos/) — Forgives misspellings in questions.
 <!-- /willow:newest -->
 
 ### Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[jetbrains](adapters/stdlib/jetbrains/)** — An external tool for IntelliJ, PyCharm and the rest, with answers as links to file and line.
+**[changed](adapters/stdlib/changed/)** — What's new, edited or deleted in your folder since the last check, as fingerprint rows.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 100 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 101 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -401,6 +401,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - **hook-stop** (idea) — A Stop hook that won't let an assistant's turn end while the record doesn't verify or its changes aren't committed, and says which. *new* `no-install` `offline` `read-only` `assistant` `hooks`
 - **hook-tiers** (idea) — Edits sorted into tiers by the paths they touch, and the top tier held as a proposal until you seal it, by a rule you can read. *new* `no-install` `offline` `records` `assistant` `hooks`
 - **hooks-elsewhere** (idea) — The prompt hook for Gemini CLI, Codex and opencode, wherever they take hooks, held to Claude Code's answer byte for byte. *box* `no-install` `offline` `records` `assistant` `hooks`
+- [**hosts**](adapters/stdlib/hosts/) — One table of the assistants that take an MCP server, printing the lines that register willow with any of them. *new* `no-install` `offline` `read-only` `assistant`
 - **instruction-files** (idea) — For a folder, which instruction files each coding agent would load (AGENTS.md, CLAUDE.md, GEMINI.md, rules folders), in what order, with each file's size and hash. *box* `no-install` `offline` `read-only` `assistant`
 - **issue-answer** (idea) — A workflow that drafts an answer to a new issue from the repo's own docs, each line cited, posted only once a maintainer seals it. Goes online: the forge, through the workflow's token, to post an answer once it is sealed. *new* `no-install` `online` `records` `assistant`
 - **ladder** (idea) — Your files first, then sources you trust such as Jeles and Nestor, then a model, stopping at the first that answers, each answer kept for next time. *bot* `no-install` `offline` `records` `assistant`
