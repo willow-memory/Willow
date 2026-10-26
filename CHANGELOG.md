@@ -23,6 +23,16 @@ says how). The first was v0.1.0.
   them, so those entries are gone from the mutants add-on's accepted list. Prints only: no box
   written, no key, no network. (#53)
 
+- `bench`, an add-on that measures how fast the kernel answers. `run` builds a
+  pile of each `--sizes` passage count (in a scratch folder), reads and ranks
+  it the way a bite answers one question, and prints the median time over
+  `--repeat` runs, tagged with the kernel's version — run it each release and
+  watch for a size whose time jumped, a slowdown the vectors wouldn't catch.
+  The pile is synthetic and the times are the machine's, so the numbers are a
+  trend to compare against the same machine, not a fixed vector. It builds its
+  piles with `tempfile` and reads them; writes no box or file, reads no key, no
+  network. (#52)
+
 - `ci-cache`, an add-on that reads a folder's lockfiles and prints a cache key
   per ecosystem (pip, npm, .NET, Maven), so a CI run caches each one's
   downloads keyed on the files that pin them and skips the reinstall when the

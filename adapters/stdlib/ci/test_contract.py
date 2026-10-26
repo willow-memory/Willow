@@ -136,6 +136,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     **{f"words-{c}": (f"words_{c}.py", ["bite", "--box", "{box}", *NOW, "tomatoes"])
        for c in ("de", "es", "fr", "it", "nl", "pt")},
     "backup": ("backup.py", ["--box", "{box}", "--to", "{tmp}/backups", *NOW]),
+    "bench": ("bench.py", ["run", "--sizes", "20,40"]),
     "history": ("history.py", ["--box", "{box}"]),
     "dice": ("dice.py", ["--box", "{box}", "roll", "2d6", *NOW]),
     "hook-fail-closed": ("hook_fail_closed.py", ["--hook", "true"]),
