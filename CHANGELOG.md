@@ -10,6 +10,14 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `serve`, an add-on that writes the one markdown file a model reads: only
+  the passages a human sealed, grouped into pools with the peaks first, by
+  opaque per-run ids, with no record hash or row number — the model never
+  sees a box, and holding the file is the permission. `scope` proposes what
+  to serve from the last bite (for the human to seal with their key); the
+  write form serves the sealed scope and fails closed without one. It reads
+  the seal through the kernel, never the key, and never seals. First cut of
+  the serve layer in `docs/design/serve.md`. (#43)
 - `across`, an add-on that makes one document across several boxes rather
   than one: it runs a document add-on (`digest`, `export`, `timeline` or
   `readings`) over every box a `--boxes` list or repeated `--box` names, and

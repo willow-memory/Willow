@@ -2916,16 +2916,6 @@
   "tags": "no-install, offline, read-only, tracking"
  },
  {
-  "name": "scope",
-  "kind": "stdlib",
-  "section": "Assistants",
-  "line": "Hands an assistant only the passages in scope, as one file, by ids it can't guess: nothing outside it is named or counted.",
-  "source": "bot",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, assistant"
- },
- {
   "name": "screenplay",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
