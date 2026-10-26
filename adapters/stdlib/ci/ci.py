@@ -419,6 +419,10 @@ def gates() -> list[tuple[str, str, object]]:
     # Bernadette's files through every layer: readers to the trust add-ons
     out.append(("demo", "demo:stack", command(*PYTEST, "demo/bernadette",
                 needs=lambda: missing_module("pytest"))))  # fmt: skip
+    # the Craft apps taken apart and assembled: CI holds what was frozen, and
+    # the tools on sources it makes, which git commits and Cargo builds
+    out.append(("demo", "demo:craft-assembly", command(*PYTEST, "demo/craft-assembly",
+                needs=lambda: missing_module("pytest") or missing_tools("git", "cargo"))))  # fmt: skip
     # a frozen recon composition over a planted target; its intel is committed
     out.append(("demo", "demo:redteam", command(*PYTEST, "demo/redteam",
                 needs=lambda: missing_module("pytest"))))  # fmt: skip

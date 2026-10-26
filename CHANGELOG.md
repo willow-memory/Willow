@@ -23,6 +23,20 @@ says how). The first was v0.1.0.
   as its own deterministic box), `serve-piles` (serve grouped on all four W's,
   not where alone) and `novelty` (a new add-on's combination checked for
   whether it has been assembled before). (#45)
+- `demo/craft-assembly`, a study: the storytold Craft apps, the AI-built
+  clones of Photoshop, Premiere and the rest, taken apart with no model
+  anywhere. Fifteen apps and six commits of their shared library go into one
+  store of pieces, each file once by its SHA-256, and are rebuilt from it to
+  their pinned git trees; five apps and the seven library crates they share
+  are then assembled into one Cargo workspace by seven written rules, and held
+  to building and testing as each app does alone. Frozen before each run, its
+  pass rules kernel verdict rows. Run 3, from the third freeze, held every
+  rule: all 134 packages that build alone build in it, and all 127 that pass
+  their tests alone pass them in it; runs 1 and 2, which failed, are kept
+  beside it. CI runs its tools on sources it makes, as `demo:craft-assembly`.
+  Its full report, REPORT.md, is written by its report.py from the committed
+  files alone, every number counted, and checked by the kernel's `read`,
+  `xref` and `claim-check`, the same bytes every run. (#44)
 - `serve`, an add-on that writes the one markdown file a model reads: only
   the passages a human sealed, grouped into pools with the peaks first, by
   opaque per-run ids, with no record hash or row number — the model never

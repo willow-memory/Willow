@@ -1,0 +1,1755 @@
+{
+ "baseline": {
+  "cadcraft": {
+   "cadcraft": {
+    "builds": true,
+    "tests": true
+   },
+   "cadcraft-cli": {
+    "builds": true,
+    "tests": true
+   },
+   "cadcraft-color": {
+    "builds": true,
+    "tests": true
+   },
+   "cadcraft-constraints": {
+    "builds": true,
+    "tests": true
+   },
+   "cadcraft-doc": {
+    "builds": true,
+    "tests": true
+   },
+   "cadcraft-dwg": {
+    "builds": true,
+    "tests": true
+   },
+   "cadcraft-dxf": {
+    "builds": true,
+    "tests": true
+   },
+   "cadcraft-engine": {
+    "builds": true,
+    "tests": true
+   },
+   "cadcraft-fonts": {
+    "builds": true,
+    "tests": true
+   },
+   "cadcraft-geom": {
+    "builds": true,
+    "tests": true
+   },
+   "cadcraft-io": {
+    "builds": true,
+    "tests": true
+   },
+   "cadcraft-mcp": {
+    "builds": true,
+    "tests": true
+   },
+   "cadcraft-render": {
+    "builds": true,
+    "tests": true
+   },
+   "cadcraft-ui-egui": {
+    "builds": true,
+    "tests": false
+   },
+   "cadcraft-web": {
+    "builds": true,
+    "tests": true
+   },
+   "xtask": {
+    "builds": true,
+    "tests": true
+   }
+  },
+  "designcraft": {
+   "designcraft": {
+    "builds": true,
+    "tests": true
+   },
+   "designcraft-cli": {
+    "builds": true,
+    "tests": true
+   },
+   "designcraft-color": {
+    "builds": true,
+    "tests": true
+   },
+   "designcraft-compose": {
+    "builds": true,
+    "tests": true
+   },
+   "designcraft-doc": {
+    "builds": true,
+    "tests": true
+   },
+   "designcraft-engine": {
+    "builds": true,
+    "tests": true
+   },
+   "designcraft-epub": {
+    "builds": true,
+    "tests": true
+   },
+   "designcraft-fonts": {
+    "builds": true,
+    "tests": true
+   },
+   "designcraft-format": {
+    "builds": true,
+    "tests": true
+   },
+   "designcraft-geom": {
+    "builds": true,
+    "tests": true
+   },
+   "designcraft-idml": {
+    "builds": true,
+    "tests": true
+   },
+   "designcraft-images": {
+    "builds": true,
+    "tests": true
+   },
+   "designcraft-mcp": {
+    "builds": true,
+    "tests": true
+   },
+   "designcraft-pdf": {
+    "builds": true,
+    "tests": true
+   },
+   "designcraft-pptx": {
+    "builds": true,
+    "tests": true
+   },
+   "designcraft-render": {
+    "builds": true,
+    "tests": true
+   },
+   "designcraft-textimport": {
+    "builds": true,
+    "tests": true
+   },
+   "designcraft-tools": {
+    "builds": true,
+    "tests": true
+   },
+   "designcraft-ui-egui": {
+    "builds": true,
+    "tests": false
+   },
+   "designcraft-web": {
+    "builds": true,
+    "tests": true
+   },
+   "xtask": {
+    "builds": true,
+    "tests": true
+   }
+  },
+  "effectcraft": {
+   "effectcraft": {
+    "builds": false,
+    "tests": false
+   },
+   "effectcraft-automation": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-av1enc": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-cli": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-color": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-effects": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-engine": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-export": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-expr": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-geom": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-gpu": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-hevcenc": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-host": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-interchange": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-keyframe": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-lottie": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-media": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-model": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-opusenc": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-path": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-pdf": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-plugin": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-project": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-psd": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-raster": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-render": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-script": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-segment": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-svg": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-text": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-time": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-track": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-ui-egui": {
+    "builds": true,
+    "tests": false
+   },
+   "effectcraft-vp9enc": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-web": {
+    "builds": true,
+    "tests": true
+   },
+   "xtask": {
+    "builds": true,
+    "tests": true
+   }
+  },
+  "filmcraft": {
+   "filmcraft": {
+    "builds": false,
+    "tests": false
+   },
+   "filmcraft-aac": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-ac3": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-apv": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-audio-dsp": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-automation": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-av1": {
+    "builds": true,
+    "tests": false
+   },
+   "filmcraft-avi": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-bitstream": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-captions": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-cfb": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-cli": {
+    "builds": true,
+    "tests": false
+   },
+   "filmcraft-codecs": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-color": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-dng": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-dnx": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-edit": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-engine": {
+    "builds": true,
+    "tests": false
+   },
+   "filmcraft-export": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-flac": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-format": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-frame": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-geom": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-golden": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-gpu": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-h264": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-h264enc": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-hevc": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-interchange": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-isobmff": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-matroska": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-media": {
+    "builds": true,
+    "tests": false
+   },
+   "filmcraft-mpa": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-mpeg2v": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-mpegts": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-mxf": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-ogg": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-opus": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-platform": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-project": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-prores": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-render": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-scopes": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-speech": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-testkit": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-text": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-time": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-tts": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-tts-text": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-ui-egui": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-vp8": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-vp9": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-web": {
+    "builds": true,
+    "tests": true
+   },
+   "xtask": {
+    "builds": true,
+    "tests": true
+   }
+  },
+  "soundcraft": {
+   "soundcraft": {
+    "builds": false,
+    "tests": false
+   },
+   "soundcraft-au-host": {
+    "builds": true,
+    "tests": true
+   },
+   "soundcraft-audio-io": {
+    "builds": true,
+    "tests": true
+   },
+   "soundcraft-automation": {
+    "builds": true,
+    "tests": true
+   },
+   "soundcraft-clap-host": {
+    "builds": true,
+    "tests": true
+   },
+   "soundcraft-cli": {
+    "builds": true,
+    "tests": true
+   },
+   "soundcraft-dsp": {
+    "builds": true,
+    "tests": true
+   },
+   "soundcraft-engine": {
+    "builds": true,
+    "tests": true
+   },
+   "soundcraft-midi": {
+    "builds": true,
+    "tests": true
+   },
+   "soundcraft-mix": {
+    "builds": true,
+    "tests": true
+   },
+   "soundcraft-model": {
+    "builds": true,
+    "tests": true
+   },
+   "soundcraft-playback": {
+    "builds": false,
+    "tests": false
+   },
+   "soundcraft-time": {
+    "builds": true,
+    "tests": true
+   },
+   "soundcraft-ui-egui": {
+    "builds": false,
+    "tests": false
+   },
+   "soundcraft-video": {
+    "builds": true,
+    "tests": true
+   },
+   "soundcraft-vst3-host": {
+    "builds": true,
+    "tests": true
+   },
+   "soundcraft-web": {
+    "builds": true,
+    "tests": true
+   },
+   "xtask": {
+    "builds": true,
+    "tests": true
+   }
+  }
+ },
+ "composite": {
+  "cadcraft": {
+   "cadcraft": {
+    "builds": true,
+    "tests": true
+   },
+   "cadcraft-cli": {
+    "builds": true,
+    "tests": true
+   },
+   "cadcraft-color": {
+    "builds": true,
+    "tests": true
+   },
+   "cadcraft-constraints": {
+    "builds": true,
+    "tests": true
+   },
+   "cadcraft-doc": {
+    "builds": true,
+    "tests": true
+   },
+   "cadcraft-dwg": {
+    "builds": true,
+    "tests": true
+   },
+   "cadcraft-dxf": {
+    "builds": true,
+    "tests": true
+   },
+   "cadcraft-engine": {
+    "builds": true,
+    "tests": true
+   },
+   "cadcraft-fonts": {
+    "builds": true,
+    "tests": true
+   },
+   "cadcraft-geom": {
+    "builds": true,
+    "tests": true
+   },
+   "cadcraft-io": {
+    "builds": true,
+    "tests": true
+   },
+   "cadcraft-mcp": {
+    "builds": true,
+    "tests": true
+   },
+   "cadcraft-render": {
+    "builds": true,
+    "tests": true
+   },
+   "cadcraft-ui-egui": {
+    "builds": true,
+    "tests": false
+   },
+   "cadcraft-web": {
+    "builds": true,
+    "tests": true
+   }
+  },
+  "designcraft": {
+   "designcraft": {
+    "builds": true,
+    "tests": true
+   },
+   "designcraft-cli": {
+    "builds": true,
+    "tests": true
+   },
+   "designcraft-color": {
+    "builds": true,
+    "tests": true
+   },
+   "designcraft-compose": {
+    "builds": true,
+    "tests": true
+   },
+   "designcraft-doc": {
+    "builds": true,
+    "tests": true
+   },
+   "designcraft-engine": {
+    "builds": true,
+    "tests": true
+   },
+   "designcraft-epub": {
+    "builds": true,
+    "tests": true
+   },
+   "designcraft-fonts": {
+    "builds": true,
+    "tests": true
+   },
+   "designcraft-format": {
+    "builds": true,
+    "tests": true
+   },
+   "designcraft-geom": {
+    "builds": true,
+    "tests": true
+   },
+   "designcraft-idml": {
+    "builds": true,
+    "tests": true
+   },
+   "designcraft-images": {
+    "builds": true,
+    "tests": true
+   },
+   "designcraft-mcp": {
+    "builds": true,
+    "tests": true
+   },
+   "designcraft-pdf": {
+    "builds": true,
+    "tests": true
+   },
+   "designcraft-pptx": {
+    "builds": true,
+    "tests": true
+   },
+   "designcraft-render": {
+    "builds": true,
+    "tests": true
+   },
+   "designcraft-textimport": {
+    "builds": true,
+    "tests": true
+   },
+   "designcraft-tools": {
+    "builds": true,
+    "tests": true
+   },
+   "designcraft-ui-egui": {
+    "builds": true,
+    "tests": false
+   },
+   "designcraft-web": {
+    "builds": true,
+    "tests": true
+   }
+  },
+  "effectcraft": {
+   "effectcraft": {
+    "builds": false,
+    "tests": false
+   },
+   "effectcraft-automation": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-av1enc": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-cli": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-color": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-effects": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-engine": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-export": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-expr": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-geom": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-gpu": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-hevcenc": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-host": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-interchange": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-keyframe": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-lottie": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-media": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-model": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-opusenc": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-path": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-pdf": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-plugin": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-project": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-psd": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-raster": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-render": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-script": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-segment": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-svg": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-text": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-time": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-track": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-ui-egui": {
+    "builds": true,
+    "tests": false
+   },
+   "effectcraft-vp9enc": {
+    "builds": true,
+    "tests": true
+   },
+   "effectcraft-web": {
+    "builds": true,
+    "tests": true
+   }
+  },
+  "filmcraft": {
+   "filmcraft": {
+    "builds": false,
+    "tests": false
+   },
+   "filmcraft-aac": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-ac3": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-apv": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-audio-dsp": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-automation": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-av1": {
+    "builds": true,
+    "tests": false
+   },
+   "filmcraft-avi": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-bitstream": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-captions": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-cfb": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-cli": {
+    "builds": true,
+    "tests": false
+   },
+   "filmcraft-codecs": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-color": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-dng": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-dnx": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-edit": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-engine": {
+    "builds": true,
+    "tests": false
+   },
+   "filmcraft-export": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-flac": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-format": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-frame": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-geom": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-golden": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-gpu": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-h264": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-h264enc": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-hevc": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-interchange": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-isobmff": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-matroska": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-media": {
+    "builds": true,
+    "tests": false
+   },
+   "filmcraft-mpa": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-mpeg2v": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-mpegts": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-mxf": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-ogg": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-opus": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-platform": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-project": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-prores": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-render": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-scopes": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-speech": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-testkit": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-text": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-time": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-tts": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-tts-text": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-ui-egui": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-vp8": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-vp9": {
+    "builds": true,
+    "tests": true
+   },
+   "filmcraft-web": {
+    "builds": true,
+    "tests": true
+   }
+  },
+  "soundcraft": {
+   "soundcraft-au-host": {
+    "builds": true,
+    "tests": true
+   },
+   "soundcraft-audio-io": {
+    "builds": true,
+    "tests": true
+   },
+   "soundcraft-automation": {
+    "builds": true,
+    "tests": true
+   },
+   "soundcraft-clap-host": {
+    "builds": true,
+    "tests": true
+   },
+   "soundcraft-cli": {
+    "builds": true,
+    "tests": true
+   },
+   "soundcraft-dsp": {
+    "builds": true,
+    "tests": true
+   },
+   "soundcraft-engine": {
+    "builds": true,
+    "tests": true
+   },
+   "soundcraft-midi": {
+    "builds": true,
+    "tests": true
+   },
+   "soundcraft-mix": {
+    "builds": true,
+    "tests": true
+   },
+   "soundcraft-model": {
+    "builds": true,
+    "tests": true
+   },
+   "soundcraft-time": {
+    "builds": true,
+    "tests": true
+   },
+   "soundcraft-video": {
+    "builds": true,
+    "tests": true
+   },
+   "soundcraft-vst3-host": {
+    "builds": true,
+    "tests": true
+   }
+  }
+ },
+ "composite_members": {
+  "cadcraft": [
+   "cadcraft",
+   "cadcraft-cli",
+   "cadcraft-color",
+   "cadcraft-constraints",
+   "cadcraft-doc",
+   "cadcraft-dwg",
+   "cadcraft-dxf",
+   "cadcraft-engine",
+   "cadcraft-fonts",
+   "cadcraft-geom",
+   "cadcraft-io",
+   "cadcraft-mcp",
+   "cadcraft-render",
+   "cadcraft-ui-egui",
+   "cadcraft-web"
+  ],
+  "designcraft": [
+   "designcraft",
+   "designcraft-cli",
+   "designcraft-color",
+   "designcraft-compose",
+   "designcraft-doc",
+   "designcraft-engine",
+   "designcraft-epub",
+   "designcraft-fonts",
+   "designcraft-format",
+   "designcraft-geom",
+   "designcraft-idml",
+   "designcraft-images",
+   "designcraft-mcp",
+   "designcraft-pdf",
+   "designcraft-pptx",
+   "designcraft-render",
+   "designcraft-textimport",
+   "designcraft-tools",
+   "designcraft-ui-egui",
+   "designcraft-web"
+  ],
+  "effectcraft": [
+   "effectcraft",
+   "effectcraft-automation",
+   "effectcraft-av1enc",
+   "effectcraft-cli",
+   "effectcraft-color",
+   "effectcraft-effects",
+   "effectcraft-engine",
+   "effectcraft-export",
+   "effectcraft-expr",
+   "effectcraft-geom",
+   "effectcraft-gpu",
+   "effectcraft-hevcenc",
+   "effectcraft-host",
+   "effectcraft-interchange",
+   "effectcraft-keyframe",
+   "effectcraft-lottie",
+   "effectcraft-media",
+   "effectcraft-model",
+   "effectcraft-opusenc",
+   "effectcraft-path",
+   "effectcraft-pdf",
+   "effectcraft-plugin",
+   "effectcraft-project",
+   "effectcraft-psd",
+   "effectcraft-raster",
+   "effectcraft-render",
+   "effectcraft-script",
+   "effectcraft-segment",
+   "effectcraft-svg",
+   "effectcraft-text",
+   "effectcraft-time",
+   "effectcraft-track",
+   "effectcraft-ui-egui",
+   "effectcraft-vp9enc",
+   "effectcraft-web"
+  ],
+  "filmcraft": [
+   "filmcraft",
+   "filmcraft-aac",
+   "filmcraft-ac3",
+   "filmcraft-apv",
+   "filmcraft-audio-dsp",
+   "filmcraft-automation",
+   "filmcraft-av1",
+   "filmcraft-avi",
+   "filmcraft-bitstream",
+   "filmcraft-captions",
+   "filmcraft-cfb",
+   "filmcraft-cli",
+   "filmcraft-codecs",
+   "filmcraft-color",
+   "filmcraft-dng",
+   "filmcraft-dnx",
+   "filmcraft-edit",
+   "filmcraft-engine",
+   "filmcraft-export",
+   "filmcraft-flac",
+   "filmcraft-format",
+   "filmcraft-frame",
+   "filmcraft-geom",
+   "filmcraft-golden",
+   "filmcraft-gpu",
+   "filmcraft-h264",
+   "filmcraft-h264enc",
+   "filmcraft-hevc",
+   "filmcraft-interchange",
+   "filmcraft-isobmff",
+   "filmcraft-matroska",
+   "filmcraft-media",
+   "filmcraft-mpa",
+   "filmcraft-mpeg2v",
+   "filmcraft-mpegts",
+   "filmcraft-mxf",
+   "filmcraft-ogg",
+   "filmcraft-opus",
+   "filmcraft-platform",
+   "filmcraft-project",
+   "filmcraft-prores",
+   "filmcraft-render",
+   "filmcraft-scopes",
+   "filmcraft-speech",
+   "filmcraft-testkit",
+   "filmcraft-text",
+   "filmcraft-time",
+   "filmcraft-tts",
+   "filmcraft-tts-text",
+   "filmcraft-ui-egui",
+   "filmcraft-vp8",
+   "filmcraft-vp9",
+   "filmcraft-web"
+  ],
+  "soundcraft": [
+   "soundcraft-au-host",
+   "soundcraft-audio-io",
+   "soundcraft-automation",
+   "soundcraft-clap-host",
+   "soundcraft-cli",
+   "soundcraft-dsp",
+   "soundcraft-engine",
+   "soundcraft-midi",
+   "soundcraft-mix",
+   "soundcraft-model",
+   "soundcraft-time",
+   "soundcraft-video",
+   "soundcraft-vst3-host"
+  ]
+ },
+ "composite_sha256": "63da466fe2f503a1fef43f16bdcc6f964ee8bcda259b59641079fc420bfcd3c8",
+ "glue": {
+  "git": {
+   "craft-atomic": {
+    "folder": "git/craft-libs/e9546e191d/crates/atomic",
+    "source": "craft-libs@e9546e191d",
+    "used_by": [
+     "designcraft"
+    ]
+   },
+   "craft-cms": {
+    "folder": "git/craft-libs/e9546e191d/crates/cms",
+    "source": "craft-libs@e9546e191d",
+    "used_by": [
+     "designcraft"
+    ]
+   },
+   "craft-docpath": {
+    "folder": "git/craft-libs/82a24b006e/crates/docpath",
+    "source": "craft-libs@82a24b006e",
+    "used_by": [
+     "cadcraft",
+     "designcraft",
+     "effectcraft",
+     "filmcraft",
+     "soundcraft"
+    ]
+   },
+   "craft-media": {
+    "folder": "git/craft-libs/f0ad6c1e1d/crates/media",
+    "source": "craft-libs@f0ad6c1e1d",
+    "used_by": [
+     "filmcraft",
+     "soundcraft"
+    ]
+   },
+   "craft-pdf": {
+    "folder": "git/craft-libs/9f75d3dc19/crates/pdf",
+    "source": "craft-libs@9f75d3dc19",
+    "used_by": [
+     "designcraft",
+     "effectcraft"
+    ]
+   },
+   "craft-print": {
+    "folder": "git/craft-libs/d991bf6792/crates/print",
+    "source": "craft-libs@d991bf6792",
+    "used_by": [
+     "designcraft"
+    ]
+   },
+   "craft-ui": {
+    "folder": "git/craft-libs/5c874d51ee/crates/ui",
+    "source": "craft-libs@5c874d51ee",
+    "used_by": [
+     "cadcraft",
+     "designcraft",
+     "effectcraft",
+     "filmcraft",
+     "soundcraft"
+    ]
+   },
+   "filmcraft-aac": {
+    "folder": "git/filmcraft/2c5ba7a726/crates/aac",
+    "source": "filmcraft@2c5ba7a726",
+    "used_by": [
+     "effectcraft"
+    ]
+   },
+   "filmcraft-ac3": {
+    "folder": "git/filmcraft/2c5ba7a726/crates/ac3",
+    "source": "filmcraft@2c5ba7a726",
+    "used_by": []
+   },
+   "filmcraft-av1": {
+    "folder": "git/filmcraft/2c5ba7a726/crates/av1",
+    "source": "filmcraft@2c5ba7a726",
+    "used_by": [
+     "effectcraft"
+    ]
+   },
+   "filmcraft-bitstream": {
+    "folder": "git/filmcraft/2c5ba7a726/crates/bitstream",
+    "source": "filmcraft@2c5ba7a726",
+    "used_by": []
+   },
+   "filmcraft-cfb": {
+    "folder": "git/filmcraft/2c5ba7a726/crates/cfb",
+    "source": "filmcraft@2c5ba7a726",
+    "used_by": []
+   },
+   "filmcraft-codecs": {
+    "folder": "git/filmcraft/2c5ba7a726/crates/codecs",
+    "source": "filmcraft@2c5ba7a726",
+    "used_by": [
+     "effectcraft"
+    ]
+   },
+   "filmcraft-color": {
+    "folder": "git/filmcraft/2c5ba7a726/crates/color",
+    "source": "filmcraft@2c5ba7a726",
+    "used_by": [
+     "effectcraft"
+    ]
+   },
+   "filmcraft-dnx": {
+    "folder": "git/filmcraft/2c5ba7a726/crates/dnx",
+    "source": "filmcraft@2c5ba7a726",
+    "used_by": []
+   },
+   "filmcraft-frame": {
+    "folder": "git/filmcraft/2c5ba7a726/crates/frame",
+    "source": "filmcraft@2c5ba7a726",
+    "used_by": [
+     "effectcraft"
+    ]
+   },
+   "filmcraft-geom": {
+    "folder": "git/filmcraft/2c5ba7a726/crates/geom",
+    "source": "filmcraft@2c5ba7a726",
+    "used_by": [
+     "effectcraft"
+    ]
+   },
+   "filmcraft-h264": {
+    "folder": "git/filmcraft/2c5ba7a726/crates/h264",
+    "source": "filmcraft@2c5ba7a726",
+    "used_by": []
+   },
+   "filmcraft-h264enc": {
+    "folder": "git/filmcraft/2c5ba7a726/crates/h264enc",
+    "source": "filmcraft@2c5ba7a726",
+    "used_by": [
+     "effectcraft"
+    ]
+   },
+   "filmcraft-hevc": {
+    "folder": "git/filmcraft/2c5ba7a726/crates/hevc",
+    "source": "filmcraft@2c5ba7a726",
+    "used_by": [
+     "effectcraft"
+    ]
+   },
+   "filmcraft-interchange": {
+    "folder": "git/filmcraft/2c5ba7a726/crates/interchange",
+    "source": "filmcraft@2c5ba7a726",
+    "used_by": [
+     "effectcraft"
+    ]
+   },
+   "filmcraft-isobmff": {
+    "folder": "git/filmcraft/2c5ba7a726/crates/isobmff",
+    "source": "filmcraft@2c5ba7a726",
+    "used_by": [
+     "effectcraft"
+    ]
+   },
+   "filmcraft-matroska": {
+    "folder": "git/filmcraft/2c5ba7a726/crates/matroska",
+    "source": "filmcraft@2c5ba7a726",
+    "used_by": []
+   },
+   "filmcraft-media": {
+    "folder": "git/filmcraft/2c5ba7a726/crates/media",
+    "source": "filmcraft@2c5ba7a726",
+    "used_by": [
+     "effectcraft"
+    ]
+   },
+   "filmcraft-mpeg2v": {
+    "folder": "git/filmcraft/2c5ba7a726/crates/mpeg2v",
+    "source": "filmcraft@2c5ba7a726",
+    "used_by": []
+   },
+   "filmcraft-mpegts": {
+    "folder": "git/filmcraft/2c5ba7a726/crates/mpegts",
+    "source": "filmcraft@2c5ba7a726",
+    "used_by": []
+   },
+   "filmcraft-mxf": {
+    "folder": "git/filmcraft/2c5ba7a726/crates/mxf",
+    "source": "filmcraft@2c5ba7a726",
+    "used_by": []
+   },
+   "filmcraft-ogg": {
+    "folder": "git/filmcraft/2c5ba7a726/crates/ogg",
+    "source": "filmcraft@2c5ba7a726",
+    "used_by": []
+   },
+   "filmcraft-opus": {
+    "folder": "git/filmcraft/2c5ba7a726/crates/opus",
+    "source": "filmcraft@2c5ba7a726",
+    "used_by": [
+     "effectcraft"
+    ]
+   },
+   "filmcraft-project": {
+    "folder": "git/filmcraft/2c5ba7a726/crates/project",
+    "source": "filmcraft@2c5ba7a726",
+    "used_by": [
+     "effectcraft"
+    ]
+   },
+   "filmcraft-prores": {
+    "folder": "git/filmcraft/2c5ba7a726/crates/prores",
+    "source": "filmcraft@2c5ba7a726",
+    "used_by": [
+     "effectcraft"
+    ]
+   },
+   "filmcraft-testkit": {
+    "folder": "git/filmcraft/2c5ba7a726/crates/testkit",
+    "source": "filmcraft@2c5ba7a726",
+    "used_by": []
+   },
+   "filmcraft-time": {
+    "folder": "git/filmcraft/2c5ba7a726/crates/time",
+    "source": "filmcraft@2c5ba7a726",
+    "used_by": [
+     "effectcraft"
+    ]
+   },
+   "filmcraft-vp9": {
+    "folder": "git/filmcraft/2c5ba7a726/crates/vp9",
+    "source": "filmcraft@2c5ba7a726",
+    "used_by": [
+     "effectcraft"
+    ]
+   },
+   "hayro": {
+    "folder": "git/craft-libs/9f75d3dc19/vendor/hayro",
+    "source": "craft-libs@9f75d3dc19",
+    "used_by": [
+     "designcraft"
+    ]
+   },
+   "hayro-cmap": {
+    "folder": "git/craft-libs/9f75d3dc19/vendor/hayro-cmap",
+    "source": "craft-libs@9f75d3dc19",
+    "used_by": [
+     "designcraft"
+    ]
+   },
+   "hayro-interpret": {
+    "folder": "git/craft-libs/9f75d3dc19/vendor/hayro-interpret",
+    "source": "craft-libs@9f75d3dc19",
+    "used_by": [
+     "designcraft"
+    ]
+   },
+   "hayro-jbig2": {
+    "folder": "git/craft-libs/9f75d3dc19/vendor/hayro-jbig2",
+    "source": "craft-libs@9f75d3dc19",
+    "used_by": [
+     "designcraft",
+     "effectcraft"
+    ]
+   },
+   "hayro-syntax": {
+    "folder": "git/craft-libs/9f75d3dc19/vendor/hayro-syntax",
+    "source": "craft-libs@9f75d3dc19",
+    "used_by": [
+     "designcraft",
+     "effectcraft"
+    ]
+   },
+   "indd": {
+    "folder": "git/indd-utils/7f3060e5bc",
+    "source": "indd-utils@7f3060e5bc",
+    "used_by": [
+     "designcraft"
+    ]
+   },
+   "krilla": {
+    "folder": "git/craft-libs/9f75d3dc19/vendor/krilla",
+    "source": "craft-libs@9f75d3dc19",
+    "used_by": [
+     "designcraft"
+    ]
+   },
+   "winit": {
+    "folder": "git/winit/3d51077fd1",
+    "source": "winit@3d51077fd1",
+    "used_by": [
+     "designcraft"
+    ]
+   }
+  },
+  "left_out": [
+   {
+    "member": "cadcraft/xtask",
+    "why": "the name xtask is in 5 apps"
+   },
+   {
+    "member": "designcraft/xtask",
+    "why": "the name xtask is in 5 apps"
+   },
+   {
+    "member": "effectcraft/xtask",
+    "why": "the name xtask is in 5 apps"
+   },
+   {
+    "member": "filmcraft/xtask",
+    "why": "the name xtask is in 5 apps"
+   },
+   {
+    "member": "soundcraft/apps/soundcraft",
+    "why": "it depends on a member left out for alsa"
+   },
+   {
+    "member": "soundcraft/apps/soundcraft-web",
+    "why": "it depends on a member left out for alsa"
+   },
+   {
+    "member": "soundcraft/crates/playback",
+    "why": "it asks for cpal 0.18, which links alsa, as cpal 0.16 does in more apps"
+   },
+   {
+    "member": "soundcraft/crates/ui-egui",
+    "why": "it depends on a member left out for alsa"
+   },
+   {
+    "member": "soundcraft/xtask",
+    "why": "the name xtask is in 5 apps"
+   }
+  ],
+  "local_cargo_config": [
+   "cadcraft/.cargo/config.toml",
+   "designcraft/.cargo/config.toml",
+   "effectcraft/.cargo/config.toml",
+   "filmcraft/.cargo/config.toml",
+   "soundcraft/.cargo/config.toml"
+  ],
+  "members": 136,
+  "not_pinned": [
+   "derive_arbitrary 1.5.0 -> 1.4.2",
+   "icu_locale_core 2.4.0 -> 2.3.0",
+   "rustls 0.23.46 -> 0.23.45",
+   "schemars_derive 1.2.3 -> 1.2.2",
+   "serde_spanned 1.1.2 -> 1.1.1",
+   "tinystr 0.8.5 -> 0.8.4",
+   "toml_datetime 1.1.2+spec-1.1.0 -> 1.1.1+spec-1.1.0",
+   "yoke 0.8.4 -> 0.8.3",
+   "zerocopy-derive 0.8.63 -> 0.8.61",
+   "zerovec 0.11.9 -> 0.11.8",
+   "zerovec-derive 0.11.7 -> 0.11.6"
+  ],
+  "pinned": [
+   "acadrust 0.6.7 -> 0.6.5",
+   "arbitrary 1.5.0 -> 1.4.2",
+   "basic-udev 0.1.3 -> 0.1.2",
+   "cc 1.10.0 -> 1.6.0",
+   "clipboard-win 5.4.3 -> 5.4.1",
+   "combine 4.6.9 -> 4.6.8",
+   "crc32fast 1.5.3 -> 1.5.2",
+   "deranged 0.5.9 -> 0.5.8",
+   "equivalent 1.0.3 -> 1.0.2",
+   "find-msvc-tools 0.1.15 -> 0.1.14",
+   "icu_provider 2.4.0 -> 2.3.1",
+   "litrs 1.0.1 -> 1.0.0",
+   "lyon_geom 1.0.20 -> 1.0.19",
+   "lyon_tessellation 1.0.23 -> 1.0.22",
+   "memmap2 0.9.12 -> 0.9.11",
+   "mio 1.2.4 -> 1.2.3",
+   "num_threads 0.1.8 -> 0.1.7",
+   "open 5.4.5 -> 5.4.4",
+   "powerfmt 0.2.1 -> 0.2.0",
+   "redox_syscall 0.9.5 -> 0.9.4",
+   "rmcp 3.7.0 -> 3.5.0",
+   "rmcp-macros 3.7.0 -> 3.5.0",
+   "roxmltree 0.21.2 -> 0.21.1",
+   "rustls-native-certs 0.8.5 -> 0.8.4",
+   "rustls-webpki 0.103.16 -> 0.103.15",
+   "schannel 0.1.30 -> 0.1.29",
+   "schemars 1.2.3 -> 1.2.2",
+   "smallvec 1.16.4 -> 1.16.2",
+   "syn 3.0.9 -> 3.0.6",
+   "thin-vec 0.2.21 -> 0.2.20",
+   "tokio 1.54.1 -> 1.53.2",
+   "tokio-util 0.7.20 -> 0.7.19",
+   "toml 1.1.8+spec-1.1.0 -> 1.1.6+spec-1.1.0",
+   "toml_edit 0.25.17+spec-1.1.0 -> 0.25.15+spec-1.1.0",
+   "toml_parser 1.1.5+spec-1.1.0 -> 1.1.3+spec-1.1.0",
+   "toml_writer 1.1.3+spec-1.1.0 -> 1.1.2+spec-1.1.0",
+   "typed-path 0.12.4 -> 0.12.3",
+   "unicode-ident 1.0.27 -> 1.0.26",
+   "unicode-normalization 0.1.26 -> 0.1.25",
+   "ureq 3.5.0 -> 3.4.2",
+   "ureq-proto 0.6.5 -> 0.6.4",
+   "uuid 1.29.0 -> 1.27.0",
+   "wat 1.262.0 -> 1.261.0",
+   "webbrowser 1.2.5 -> 1.2.4",
+   "webpki-root-certs 1.0.11 -> 1.0.9",
+   "zbus_names 4.3.5 -> 4.3.4",
+   "zerocopy 0.8.63 -> 0.8.61",
+   "zeroize 1.9.1 -> 1.9.0",
+   "zip 7.4.0 -> 7.2.0",
+   "zip 9.1.0 -> 9.0.5",
+   "zopfli 0.8.4 -> 0.8.3",
+   "zvariant 5.15.1 -> 5.15.0",
+   "zvariant_derive 5.15.1 -> 5.15.0"
+  ],
+  "profiles_dropped": [
+   "release.codegen-units",
+   "release.debug",
+   "release.opt-level"
+  ],
+  "resolved": true,
+  "unresolved": null
+ },
+ "left_out_held": [
+  "cadcraft/xtask",
+  "designcraft/xtask",
+  "effectcraft/xtask",
+  "filmcraft/xtask",
+  "soundcraft/soundcraft-web",
+  "soundcraft/xtask"
+ ],
+ "lockfile_made": true,
+ "lockfile_sha256": "425bf207ca96c99f1e7c635fba8ce2065529fac17bd486a0ed6be4a78680207c",
+ "pieces": {
+  "files": 22961,
+  "piece_bytes": 422723907,
+  "pieces": 19743,
+  "shared_bytes": 43191944,
+  "shared_pieces": 1662,
+  "sources": 24
+ },
+ "rebuilt": {
+  "artcraft": true,
+  "cadcraft": true,
+  "craft-libs@5c874d51ee": true,
+  "craft-libs@82a24b006e": true,
+  "craft-libs@9f75d3dc19": true,
+  "craft-libs@d991bf6792": true,
+  "craft-libs@e9546e191d": true,
+  "craft-libs@f0ad6c1e1d": true,
+  "designcraft": true,
+  "drawcraft": true,
+  "effectcraft": true,
+  "figcraft": true,
+  "filmcraft": true,
+  "filmcraft@2c5ba7a726": true,
+  "gridcraft": true,
+  "indd-utils@7f3060e5bc": true,
+  "lightcraft": true,
+  "pdfcraft": true,
+  "photocraft": true,
+  "sheetcraft": true,
+  "slidecraft": true,
+  "soundcraft": true,
+  "winit@3d51077fd1": true,
+  "wordcraft": true
+ },
+ "same_composite": true,
+ "same_store": true,
+ "store_sha256": "6f5af1d35d121134f15872038e91764f1451a35d20bdac5597d2e15ce9e93633"
+}
