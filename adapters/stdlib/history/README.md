@@ -31,6 +31,9 @@ written by ci."
 since a history read past a break could tell you something that didn't
 happen.
 
-**Uses:** the kernel's `read`; the suggestions' paths in the box.
+A suggestion's path is said only while its proposal file is the bytes its
+subject names; a file that isn't, or is gone, is said as "an answer".
+
+**Uses:** the kernel's `read` and `subject_of`; the suggestions' paths in the box.
 
 **Never:** writes anything, or shows a question's words or an answer's text.

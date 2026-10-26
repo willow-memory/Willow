@@ -239,3 +239,19 @@ def test_a_no_is_said_as_turned_down(tmp_path, capsys):
         "  09:31  You turned down the suggestion for guess.md."
         in capsys.readouterr().out
     )
+
+
+def test_an_approved_answers_path_is_said_only_while_its_file_stands(tmp_path, capsys):
+    b = life(tmp_path)
+    f = next((b / "proposals").glob("*.json"))
+    held = f.read_text()
+    f.write_text(json.dumps({**json.loads(held), "path": "elsewhere.md"}))
+    assert hs.main(["--box", str(b)]) == 0
+    out = capsys.readouterr().out
+    assert "elsewhere.md" not in out
+    assert "A suggestion was handed in for an answer. It waits for you." in out
+    assert "You approved the suggestion for an answer." in out
+    assert "Your approved answer for an answer answered it." in out
+    f.write_text(held)
+    hs.main(["--box", str(b)])
+    assert "You approved the suggestion for dentist.md." in capsys.readouterr().out

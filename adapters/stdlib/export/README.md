@@ -22,8 +22,13 @@ With `--log`, one line per day: questions asked, answered by your approval,
 answered from your files, and found nothing. Counts only: the record never
 held a question's words, so neither can this.
 
-**Exit codes:** 0 done; 2 refused (a record that doesn't verify).
+An approval whose proposal file is missing, or no longer the bytes the key
+signed, is left out and counted on standard error, never exported as an
+approved answer.
 
-**Uses:** the kernel's `read` and `sealed`.
+**Exit codes:** 0 done; 42 done, but an approval was left out and waits on
+you; 2 refused (a record that doesn't verify).
+
+**Uses:** the kernel's `read`, `sealed` and `standing`.
 
 **Never:** writes anything but to standard output.

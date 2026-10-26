@@ -5,7 +5,7 @@ the repo ever disagree. [README.md](README.md) shows the top of it.
 
 ```
 willow/
-├── kernel.py                 the whole program (about 1,010 lines)
+├── kernel.py                 the whole program (about 1,060 lines)
 ├── test_kernel.py            its tests
 ├── test_docs.py              holds every doc to the files that exist, and the trees to the repo
 ├── test_docs_fires.py        plants a violation for each docs check and makes sure it fails
@@ -393,6 +393,10 @@ willow/
 │   │   ├── timeline/
 │   │   │   ├── timeline.py   one matter's lines by date, each cited, written to one file
 │   │   │   ├── test_timeline.py
+│   │   │   └── README.md
+│   │   ├── tip-pin/
+│   │   │   ├── tip_pin.py    where the record ends, pinned outside the box; found cut short or rewritten
+│   │   │   ├── test_tip_pin.py
 │   │   │   └── README.md
 │   │   ├── todo/
 │   │   │   ├── todo.py       things marked to do, oldest first

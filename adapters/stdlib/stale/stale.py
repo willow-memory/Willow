@@ -25,7 +25,6 @@ nothing, and it doesn't take an approval back; that stays the person's.
 
 from __future__ import annotations
 
-import json
 import sys
 from pathlib import Path
 
@@ -45,14 +44,19 @@ def check(box: Path) -> tuple[int, list[dict]]:
     here = {c["id"] for c in kernel.chunks(Path(kernel.config(box)["pile"]))}
     out = []
     for subj, row in sorted(kernel.sealed(box, rows).items(), key=lambda x: x[1]["n"]):
-        prop = json.loads((box / "proposals" / f"{subj[9:]}.json").read_text())
+        prop, _, why = kernel.standing(box, rows, subj, row)
+        if (
+            why is not None
+        ):  # its cites can't be read from a file that isn't what was sealed
+            out.append({"subject": subj, "broken": why, "gone": [], "row": row["n"]})
+            continue
         gone = [
             {"id": c, "was": places.get(c, "?")} for c in prop["cites"] if c not in here
         ]
         out.append(
             {"subject": subj, "data": prop["data"], "gone": gone, "row": row["n"]}
         )
-    stale = any(e["gone"] for e in out)
+    stale = any(e["gone"] or e.get("broken") for e in out)
     return (kernel.ESCALATE if stale else kernel.ALIVE), out
 
 
@@ -69,6 +73,11 @@ def main(argv: list[str]) -> int:
         if "refused" in e:
             print(f"refused: {e['refused']}", file=sys.stderr)
             continue
+        if "broken" in e:
+            print(
+                f"{'broken':<7} {e['subject'][:21]}…  its proposal file {e['broken']}"
+            )
+            continue
         quote = e["data"] if len(e["data"]) <= 60 else e["data"][:57] + "..."
         print(f"{'stale' if e['gone'] else 'holds':<7} {e['subject'][:21]}…  {quote!r}")
         for g in e["gone"]:
@@ -77,7 +86,10 @@ def main(argv: list[str]) -> int:
             )
     if code != kernel.REFUSED:
         n = sum(bool(e["gone"]) for e in entries)
-        print(f"{len(entries)} approved; {n} stale")
+        bad = sum("broken" in e for e in entries)
+        print(
+            f"{len(entries)} approved; {n} stale" + (f"; {bad} broken" if bad else "")
+        )
     return code
 
 

@@ -49,6 +49,9 @@ number: nothing the model could count or reverse. It writes nowhere inside the
 box or your folder.
 
 **Without a sealed scope it serves nothing and says so** — it fails closed.
+A scope counts only while its proposal file is still the bytes you sealed
+(the kernel's `standing`): one widened or changed after the seal serves
+nothing.
 
 This first cut seals through willow's own key; the `pgp`-verify seal the
 design note names (a script checks the signature, the model never sees the

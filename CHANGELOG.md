@@ -10,6 +10,11 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `tip-pin`, an add-on that pins where a box's record ends (its row count and
+  last hash) to a file kept out of the box, and checks the box against it:
+  `tip_pin.py pin --box DIR --to FILE`, then `tip_pin.py check --box DIR
+  --pin FILE`. Rows cut off the end, or removed and then all re-hashed, pass
+  `verify`; the pin finds both (exit 42). Its tests reproduce each. (#55)
 - `hosts`, an add-on that holds the assistants which take an MCP server as one
   table (where each one's settings live, and the shape it wants) and prints the
   lines that register mcp-lite with any of them: `hosts.py list`, then
@@ -440,6 +445,10 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- The README no longer says any edit to a past entry is detected: rows cut off
+  the end, or removed and re-hashed from there on, still pass `verify`.
+  LIMITS.md says so, and how to check with a copy of the last row's hash and
+  the row count kept out of the box's reach. (#55)
 - `kernel.py`'s common words, which never count toward holding a question,
   now hold "anything", "something", "nothing", "everything" and the
   "-one", "-body" and "-where" words: they name no topic. "did i promise
@@ -500,6 +509,26 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- A sealed answer is served only while its proposal file still hashes to the
+  subject the key signed, and only for the question the record says it was
+  sealed for. `bite` took both from the file, so anyone who could write the
+  box could change what an approval said, or which question it answered,
+  without the key; proposing the same bytes again under another question
+  moved it with no file touched, and a deleted file crashed `bite`. `verify`
+  now says when a sealed subject's file is missing, changed, or names another
+  question (exit 42). Seal bytes are unchanged, so existing seals hold. The
+  three ports follow, and the vectors' session now tampers with the file.
+  (bug #54, #55)
+- `stale`, `export` and `serve` read a sealed answer's proposal file through
+  the kernel's `standing`, and `history` checks the file against its subject,
+  as `bite` does since bug #54: a file that isn't the bytes the key signed was
+  shown as approved (`export`, `stale`), served as the sealed scope (`serve`,
+  which served a widened scope's extra passage), or named its path
+  (`history`). Now `stale` shows it as `broken`, `export` leaves it out and
+  says so on standard error (both exit 42), `serve` serves nothing, and
+  `history` says "an answer". `export`'s one accepted mutant no longer
+  survives and is taken out of the accepted-mutants list; `serve`'s plural of
+  "pool" had no test and now does. (bug #54, #55)
 - CI pins its workflow to `ubuntu-24.04`. `ubuntu-latest` rolled to Ubuntu
   26.04, for which the setup-python action has no Python 3.9 build, so the
   `tests (3.9)` and `strip (3.9)` jobs failed at setup on every pull request;

@@ -654,6 +654,47 @@ def sealed(box: Path, rows: list[dict], act: str = "seal") -> dict[str, dict]:
     return out
 
 
+def proposed_under(
+    rows: list[dict], subj: str, before: int | None = None
+) -> str | None:
+    """The question a proposal was last made under, from the record: the
+    bite its last passing proposal row names (before row `before`, if given).
+    None when the record names none."""
+    last = None
+    for r in rows:
+        if before is not None and r["n"] >= before:
+            break
+        if r["kind"] == "proposal" and r.get("subject") == subj:
+            if r.get("verdict") == "pass":
+                last = r
+    i = last.get("bite_row") if last else None
+    if isinstance(i, bool) or not isinstance(i, int) or not 0 <= i < len(rows):
+        return None
+    key = rows[i].get("bite_key") if rows[i]["kind"] == "bite" else None
+    return key if isinstance(key, str) else None
+
+
+def standing(
+    box: Path, rows: list[dict], subj: str, seal: dict
+) -> tuple[dict | None, str | None, str | None]:
+    """What a seal stands on: (the proposal, the question it was sealed for,
+    None), or (None, None, why not). The key signed the subject, the hash of
+    the proposal's bytes, so the file is served only while it still hashes to
+    that (CONST-0-4); and the question is the record's, the bite the proposal
+    was made under before the seal, never a field of the file."""
+    try:
+        prop = json.loads((box / "proposals" / f"{subj[9:]}.json").read_text())
+        same = subject_of(prop) == subj
+    except (OSError, ValueError, KeyError, TypeError):
+        return None, None, "is missing or can't be read"
+    if not same:
+        return None, None, "is not the bytes that were sealed"
+    key = proposed_under(rows, subj, seal["n"])
+    if key is None:
+        return None, None, "was made under no question the record names"
+    return prop, key, None
+
+
 def declined(box: Path, rows: list[dict]) -> dict[str, dict]:
     """Each proposal the person declined, by subject, while its proof holds."""
     return sealed(box, rows, "decline")
@@ -668,9 +709,11 @@ def bite(box: Path, text: str, ts: str) -> int:
     if k is None:
         print("refused: a bite with no words", file=sys.stderr)
         return REFUSED
-    for subj in sealed(box, rows):  # a sealed answer for these words, first
-        prop = json.loads((box / "proposals" / f"{subj[9:]}.json").read_text())
-        if prop.get("bite_key") == k:
+    for subj, row in sealed(
+        box, rows
+    ).items():  # a sealed answer for these words, first
+        prop, asked, why = standing(box, rows, subj, row)
+        if why is None and asked == k:
             append(box, ts, "bite", bite_key=k, answered_by=subj, served=[])
             print(json.dumps({"state": "sealed", "answer": prop["data"], "by": subj}))
             return ALIVE
@@ -830,11 +873,20 @@ def verify(box: Path) -> int:
     nos = [
         r["n"] for r in rows if r["kind"] == "decline" and r.get("subject") not in no
     ]
+    drifted = []
+    for subj, row in good.items():
+        prop, _, why = standing(box, rows, subj, row)
+        if why is None and prop.get("bite_key") != proposed_under(rows, subj):
+            why = "names another question than the record"
+        if why is not None:
+            drifted.append((subj, why))
+    for subj, why in drifted:
+        print(f"the chain holds; {subj} is sealed, but its proposal file {why}")
     if forged:
         print(f"the chain holds; seal rows {forged} don't prove under your key")
     if nos:
         print(f"the chain holds; decline rows {nos} don't prove under your key")
-    if forged or nos:
+    if forged or nos or drifted:
         return ESCALATE
     print(f"the chain holds: {len(rows)} rows, {len(good)} sealed")
     return ALIVE
