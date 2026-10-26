@@ -329,14 +329,57 @@ def session(impl, root: Path) -> dict:
     return {"shown": shown, "box": box, "key": key}
 
 
+def tamper_with_proposals(impl, box: Path) -> list:
+    """What a seal stands on (CONST-0-4): the sealed proposal's file changed
+    under it, three ways, then put back; then its bytes proposed again under
+    another question. Every implementation says the same of verify and of the
+    bites: an answer is served as sealed only while its file hashes to the
+    sealed subject, and only for the question the record sealed it for."""
+    b = ["--box", str(box), "--now", TS]
+    rows = k.read(box / "record.jsonl")[0]
+    good = next(r["subject"] for r in rows if r["kind"] == "seal")
+    f = box / "proposals" / f"{good[9:]}.json"
+    held = f.read_text(encoding="utf-8")
+    prop = json.loads(held)
+    asked, other = "how much sun do tomatoes want", "tomatoes want how much sun"
+    out = []
+    for what, text in (
+        ("data", json.dumps({**prop, "data": "Never."})),
+        ("bite_key", json.dumps({**prop, "bite_key": "0" * 64})),
+        ("gone", None),
+    ):
+        if text is None:
+            f.unlink()
+        else:
+            f.write_text(text, encoding="utf-8")
+        out.append([what, *run(impl, "verify", *b)])
+        out.append([f"{what} bite", *run(impl, "bite", *b, asked)])
+        f.write_text(held, encoding="utf-8")
+    out.append(["put back", *run(impl, "verify", *b)])
+    out.append(["other words", *run(impl, "bite", *b, other)])
+    again = box.parent / "again.jsonl"
+    again.write_text(
+        json.dumps({x: prop[x] for x in ("path", "data", "cites", "claim")}) + "\n"
+    )
+    out.append(["proposed again", *run(impl, "propose", *b, "--file", str(again))])
+    out.append(["bite after", *run(impl, "bite", *b, other)])
+    out.append(["first still", *run(impl, "bite", *b, asked)])
+    out.append(["verify after", *run(impl, "verify", *b)])
+    return out
+
+
 def forge_and_edit(impl, box: Path) -> list:
     """A forged seal (the right shape, the chain re-hashed), then an edit."""
     b = ["--box", str(box), "--now", TS]
     rows = k.read(box / "record.jsonl")[0]
-    fake = next(r["subject"] for r in reversed(rows) if r.get("verdict") == "pass")
+    good = next(r["subject"] for r in rows if r["kind"] == "seal")
+    fake = next(
+        r["subject"]
+        for r in reversed(rows)
+        if r.get("verdict") == "pass" and r["subject"] != good
+    )
     k.append(box, TS, "seal", who="human", subject=fake, proof="0" * 64)
     out = [["forged", *run(impl, "verify", *b)]]
-    good = next(r["subject"] for r in rows if r["kind"] == "seal")
     k.append(box, TS, "decline", who="human", subject=good, proof="0" * 64)
     out.append(["forged no", *run(impl, "verify", *b)])
     path = box / "record.jsonl"
@@ -387,6 +430,7 @@ def sessions(ports: list, work: Path) -> int:
             "verified_by": {
                 v.name: run(v, "verify", "--box", str(got["box"]))[0] for v in every
             },
+            "tamper": tamper_with_proposals(impl, got["box"]),
             "attacks": forge_and_edit(impl, got["box"]),
         }
     py = sides["kernel.py"]
@@ -423,12 +467,18 @@ def sessions(ports: list, work: Path) -> int:
             port.name,
         )
         check(
+            "the proposal file changed under the seal",
+            py["tamper"],
+            side["tamper"],
+            port.name,
+        )
+        check(
             "the forged seal, the edit, the bite after",
             py["attacks"],
             side["attacks"],
             port.name,
         )
-        steps = len(py["shown"]) + 3
+        steps = len(py["shown"]) + 4
         print(f"  {port.name:<7} {steps - (bad - before)}/{steps} session checks ok")
     names = [i.name for i in every]
     print("  every box, verified by every implementation (0 = the chain holds):")

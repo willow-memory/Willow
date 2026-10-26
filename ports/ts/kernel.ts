@@ -1237,6 +1237,36 @@ function refusedBreaks(r: Read): boolean {
 
 const propFile = (box: string, subj: string) => path.join(box, "proposals", subj.slice(9) + ".json");
 
+/** The question a proposal was last made under, from the record: the bite its last passing proposal row names (before row `before`, if given). null when the record names none. */
+function proposedUnder(rows: JMap[], subj: string, before: number | null = null): string | null {
+  let last: JMap | null = null;
+  for (const r of rows) {
+    if (before !== null && Number(r.get("n") as bigint) >= before) break;
+    if (r.get("kind") === "proposal" && r.get("subject") === subj && r.get("verdict") === "pass") last = r;
+  }
+  const i = last === null ? null : (last.get("bite_row") ?? null);
+  if (typeof i !== "bigint" || i < BigInt(0) || i >= BigInt(rows.length)) return null;
+  const b = rows[Number(i)];
+  const key = b.get("kind") === "bite" ? b.get("bite_key") : null;
+  return typeof key === "string" ? key : null;
+}
+
+/** What a seal stands on: [the proposal, the question it was sealed for, null], or [null, null, why not]. The key signed the subject, the hash of the proposal's bytes, so the file is served only while it still hashes to that; and the question is the record's, never a field of the file. */
+function standing(box: string, rows: JMap[], subj: string, seal: JMap): [JMap | null, string | null, string | null] {
+  let prop: JMap;
+  try {
+    const o = loads(fs.readFileSync(propFile(box, subj), "utf8"));
+    if (!(o instanceof Map) || !["path", "data", "cites", "claim"].every((k) => o.has(k))) throw new Error("not a proposal");
+    prop = o as JMap;
+  } catch {
+    return [null, null, "is missing or can't be read"];
+  }
+  if (subjectOf(prop) !== subj) return [null, null, "is not the bytes that were sealed"];
+  const key = proposedUnder(rows, subj, Number(seal.get("n") as bigint));
+  if (key === null) return [null, null, "was made under no question the record names"];
+  return [prop, key, null];
+}
+
 function bite(box: string, text: string, ts: string): number {
   const r = read(path.join(box, "record.jsonl"));
   if (refusedBreaks(r)) return REFUSED;
@@ -1245,12 +1275,12 @@ function bite(box: string, text: string, ts: string): number {
     console.error("refused: a bite with no words");
     return REFUSED;
   }
-  for (const subj of sealed(box, r.rows).keys()) {
+  for (const [subj, row] of sealed(box, r.rows)) {
     // a sealed answer for these words, first
-    const prop = loads(fs.readFileSync(propFile(box, subj), "utf8")) as JMap;
-    if (prop.get("bite_key") === key) {
+    const [prop, asked, why] = standing(box, r.rows, subj, row);
+    if (why === null && asked === key) {
       append(box, ts, "bite", "kernel", obj(["bite_key", key], ["answered_by", subj], ["served", []]));
-      console.log(dumpsShown(obj(["state", "sealed"], ["answer", prop.get("data")!], ["by", subj])));
+      console.log(dumpsShown(obj(["state", "sealed"], ["answer", prop!.get("data")!], ["by", subj])));
       return ALIVE;
     }
   }
@@ -1386,9 +1416,17 @@ function verify(box: string): number {
   const forged = r.rows.filter((row) => row.get("kind") === "seal" && !good.has(row.get("subject") as string)).map((row) => String(row.get("n")));
   const no = declined(box, r.rows);
   const nos = r.rows.filter((row) => row.get("kind") === "decline" && !no.has(row.get("subject") as string)).map((row) => String(row.get("n")));
+  const drifted: [string, string][] = [];
+  for (const [subj, row] of good) {
+    const [prop, , found] = standing(box, r.rows, subj, row);
+    let why = found;
+    if (why === null && (prop!.get("bite_key") ?? null) !== proposedUnder(r.rows, subj)) why = "names another question than the record";
+    if (why !== null) drifted.push([subj, why]);
+  }
+  for (const [subj, why] of drifted) console.log(`the chain holds; ${subj} is sealed, but its proposal file ${why}`);
   if (forged.length) console.log(`the chain holds; seal rows [${forged.join(", ")}] don't prove under your key`);
   if (nos.length) console.log(`the chain holds; decline rows [${nos.join(", ")}] don't prove under your key`);
-  if (forged.length || nos.length) return ESCALATE;
+  if (forged.length || nos.length || drifted.length) return ESCALATE;
   console.log(`the chain holds: ${r.rows.length} rows, ${good.size} sealed`);
   return ALIVE;
 }

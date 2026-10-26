@@ -509,6 +509,16 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- A sealed answer is served only while its proposal file still hashes to the
+  subject the key signed, and only for the question the record says it was
+  sealed for. `bite` took both from the file, so anyone who could write the
+  box could change what an approval said, or which question it answered,
+  without the key; proposing the same bytes again under another question
+  moved it with no file touched, and a deleted file crashed `bite`. `verify`
+  now says when a sealed subject's file is missing, changed, or names another
+  question (exit 42). Seal bytes are unchanged, so existing seals hold. The
+  three ports follow, and the vectors' session now tampers with the file.
+  (bug #54)
 - CI pins its workflow to `ubuntu-24.04`. `ubuntu-latest` rolled to Ubuntu
   26.04, for which the setup-python action has no Python 3.9 build, so the
   `tests (3.9)` and `strip (3.9)` jobs failed at setup on every pull request;

@@ -12,8 +12,6 @@ import sys
 import sysconfig
 from pathlib import Path
 
-import pytest
-
 HERE = Path(__file__).resolve().parent / "kernel.py"
 spec = importlib.util.spec_from_file_location("kernel", HERE)
 k = importlib.util.module_from_spec(spec)
@@ -140,10 +138,6 @@ def edit_proposal(box: Path, subj: str, **fields) -> None:
     f.write_text(json.dumps({**json.loads(f.read_text()), **fields}))
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason="bug #54: a sealed answer is served from its proposal file without checking the file still hashes to the sealed subject",
-)
 def test_a_sealed_answer_is_served_only_while_its_bytes_are_the_ones_sealed(tmp_path):
     """The key signs a subject, the hash of the proposal's bytes. seal checks
     the file against it (CONST-0-4); serving must too, or whoever can write
@@ -157,10 +151,6 @@ def test_a_sealed_answer_is_served_only_while_its_bytes_are_the_ones_sealed(tmp_
     assert '"state": "sealed"' not in got.stdout
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason="bug #54: a sealed answer is served for the question its proposal file names, not the one the record's bite names",
-)
 def test_a_sealed_answer_belongs_to_the_question_the_record_says(tmp_path):
     """The question an approval answers is on the hash chain, in the bite the
     proposal names. A file that says another question can't re-point it."""
@@ -172,10 +162,6 @@ def test_a_sealed_answer_belongs_to_the_question_the_record_says(tmp_path):
     assert again.returncode == 0 and json.loads(again.stdout)["answer"] == "Seven."
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason="bug #54: proposing a sealed answer's bytes again under another question serves it as sealed there",
-)
 def test_a_sealed_answer_stays_with_the_question_it_was_sealed_for(tmp_path):
     """No file is touched: propose is the agent's verb, and a second proposal
     of the same bytes must not carry the person's seal to a new question."""
@@ -190,10 +176,6 @@ def test_a_sealed_answer_stays_with_the_question_it_was_sealed_for(tmp_path):
     assert json.loads(again.stdout)["answer"] == "Seven."  # and the first still holds
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason="bug #54: verify passes when a sealed subject's proposal file has changed or gone",
-)
 def test_verify_says_when_a_sealed_proposals_file_no_longer_matches(tmp_path):
     box, b, subj = sealed_box(tmp_path)
     assert cli("verify", *b).returncode == 0
@@ -212,10 +194,6 @@ def test_verify_says_when_a_sealed_proposals_file_no_longer_matches(tmp_path):
     assert cli("verify", *b).returncode == 0  # put back, it holds again
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason="bug #54: bite crashes with a traceback when a sealed subject's proposal file is gone",
-)
 def test_a_sealed_proposals_file_gone_never_brings_a_bite_down(tmp_path):
     box, b, subj = sealed_box(tmp_path)
     (box / "proposals" / f"{subj[9:]}.json").unlink()

@@ -127,6 +127,8 @@ A suggestion is one JSON line with exactly four fields:
 Anything else is refused, line by line, with the reason logged. A suggestion
 that passes waits. `seal` approves one by its hash; if its file has changed
 since it was suggested, the approval is refused. An approved answer is given
-for the same words in the same order, regardless of case and punctuation.
+for the same words in the same order, regardless of case and punctuation, and
+only while its file still holds the bytes you approved and the record still
+says which question it was approved for; `verify` says when it doesn't.
 
 Back to the [README](../README.md).

@@ -5,7 +5,7 @@ the repo ever disagree. [README.md](README.md) shows the top of it.
 
 ```
 willow/
-├── kernel.py                 the whole program (about 1,010 lines)
+├── kernel.py                 the whole program (about 1,060 lines)
 ├── test_kernel.py            its tests
 ├── test_docs.py              holds every doc to the files that exist, and the trees to the repo
 ├── test_docs_fires.py        plants a violation for each docs check and makes sure it fails

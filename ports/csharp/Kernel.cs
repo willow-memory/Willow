@@ -1398,6 +1398,38 @@ public static class Kernel
 
     static string PropFile(string box, string subj) => System.IO.Path.Combine(box, "proposals", subj.Substring(9) + ".json");
 
+    /** The question a proposal was last made under, from the record: the bite its last passing proposal row names (before row `before`, if it is not negative). null when the record names none. */
+    static string? ProposedUnder(List<JObj> rows, string subj, int before = -1)
+    {
+        JObj? last = null;
+        foreach (var r in rows)
+        {
+            if (before >= 0 && I(r["n"]) >= before) break;
+            if (r.Get("kind") is "proposal" && r.Get("subject") is string s && s == subj && r.Get("verdict") is "pass") last = r;
+        }
+        var i = last?.Get("bite_row");
+        if (i is not BigInteger bi || bi < 0 || bi >= rows.Count) return null;
+        var b = rows[(int)bi];
+        return b.Get("kind") is "bite" && b.Get("bite_key") is string key ? key : null;
+    }
+
+    /** What a seal stands on: (the proposal, the question it was sealed for, null), or (null, null, why not). The key signed the subject, the hash of the proposal's bytes, so the file is served only while it still hashes to that; and the question is the record's, never a field of the file. */
+    static (JObj? Prop, string? Key, string? Why) Standing(string box, List<JObj> rows, string subj, JObj seal)
+    {
+        JObj prop;
+        try
+        {
+            if (Parser.Loads(File.ReadAllText(PropFile(box, subj), Utf8)) is not JObj o
+                || !new[] { "path", "data", "cites", "claim" }.All(k => o.Has(k))) throw new FormatException("not a proposal");
+            prop = o;
+        }
+        catch (Exception) { return (null, null, "is missing or can't be read"); }
+        if (SubjectOf(prop) != subj) return (null, null, "is not the bytes that were sealed");
+        var key = ProposedUnder(rows, subj, I(seal["n"]));
+        if (key == null) return (null, null, "was made under no question the record names");
+        return (prop, key, null);
+    }
+
     static int Bite(string box, string text, string ts)
     {
         var r = ReadRecord(System.IO.Path.Combine(box, "record.jsonl"));
@@ -1405,14 +1437,14 @@ public static class Kernel
         var key = BiteKey(text);
         if (key == null) { Console.Error.WriteLine("refused: a bite with no words"); return REFUSED; }
         var order = new List<string>();
-        Sealed(box, r.Rows, order);
+        var sealedRows = Sealed(box, r.Rows, order);
         foreach (var subj in order) // a sealed answer for these words, first
         {
-            var prop = (JObj)Parser.Loads(File.ReadAllText(PropFile(box, subj), Utf8))!;
-            if (prop.Get("bite_key") is string bk && bk == key)
+            var (prop, asked, why) = Standing(box, r.Rows, subj, sealedRows[subj]);
+            if (why == null && asked == key)
             {
                 Append(box, ts, "bite", "kernel", Obj("bite_key", key, "answered_by", subj, "served", new List<object?>()));
-                Console.WriteLine(DumpsShown(Obj("state", "sealed", "answer", prop["data"], "by", subj)));
+                Console.WriteLine(DumpsShown(Obj("state", "sealed", "answer", prop!["data"], "by", subj)));
                 return ALIVE;
             }
         }
@@ -1530,13 +1562,23 @@ public static class Kernel
     {
         var r = ReadRecord(System.IO.Path.Combine(box, "record.jsonl"));
         if (r.Breaks.Count > 0) { Console.WriteLine(string.Join("\n", r.Breaks)); return REFUSED; }
-        var good = Sealed(box, r.Rows, new List<string>());
+        var order = new List<string>();
+        var good = Sealed(box, r.Rows, order);
         var forged = r.Rows.Where(x => x.Get("kind") is "seal" && !(x.Get("subject") is string s && good.ContainsKey(s))).Select(x => PyStr(x["n"])).ToList();
         var no = Declined(box, r.Rows);
         var nos = r.Rows.Where(x => x.Get("kind") is "decline" && !(x.Get("subject") is string s && no.ContainsKey(s))).Select(x => PyStr(x["n"])).ToList();
+        var drifted = new List<(string Subj, string Why)>();
+        foreach (var subj in order)
+        {
+            var (prop, _, found) = Standing(box, r.Rows, subj, good[subj]);
+            var why = found;
+            if (why == null && !object.Equals(prop!.Get("bite_key"), ProposedUnder(r.Rows, subj))) why = "names another question than the record";
+            if (why != null) drifted.Add((subj, why));
+        }
+        foreach (var (subj, why) in drifted) Console.WriteLine($"the chain holds; {subj} is sealed, but its proposal file {why}");
         if (forged.Count > 0) Console.WriteLine($"the chain holds; seal rows [{string.Join(", ", forged)}] don't prove under your key");
         if (nos.Count > 0) Console.WriteLine($"the chain holds; decline rows [{string.Join(", ", nos)}] don't prove under your key");
-        if (forged.Count > 0 || nos.Count > 0) return ESCALATE;
+        if (forged.Count > 0 || nos.Count > 0 || drifted.Count > 0) return ESCALATE;
         Console.WriteLine($"the chain holds: {r.Rows.Count} rows, {good.Count} sealed");
         return ALIVE;
     }

@@ -1507,6 +1507,38 @@ public final class Kernel {
 
     private static Path propFile(Path box, String subj) { return box.resolve("proposals").resolve(subj.substring(9) + ".json"); }
 
+    /** The question a proposal was last made under, from the record: the bite its last passing proposal row names (before row `before`, if it is not negative). null when the record names none. */
+    static String proposedUnder(List<Map<String, Object>> rows, String subj, int before) {
+        Map<String, Object> last = null;
+        for (Map<String, Object> r : rows) {
+            if (before >= 0 && ((BigInteger) r.get("n")).intValue() >= before) break;
+            if ("proposal".equals(r.get("kind")) && subj.equals(r.get("subject")) && "pass".equals(r.get("verdict"))) last = r;
+        }
+        Object i = last == null ? null : last.get("bite_row");
+        if (!(i instanceof BigInteger) || ((BigInteger) i).signum() < 0
+                || ((BigInteger) i).compareTo(BigInteger.valueOf(rows.size())) >= 0) return null;
+        Map<String, Object> b = rows.get(((BigInteger) i).intValue());
+        Object key = "bite".equals(b.get("kind")) ? b.get("bite_key") : null;
+        return key instanceof String ? (String) key : null;
+    }
+
+    /** What a seal stands on: {the proposal, the question it was sealed for, null}, or {null, null, why not}. The key signed the subject, the hash of the proposal's bytes, so the file is served only while it still hashes to that; and the question is the record's, never a field of the file. */
+    @SuppressWarnings("unchecked")
+    static Object[] standing(Path box, List<Map<String, Object>> rows, String subj, Map<String, Object> seal) {
+        Map<String, Object> prop;
+        try {
+            prop = (Map<String, Object>) Json.loads(Files.readString(propFile(box, subj)));
+            for (String k : new String[] {"path", "data", "cites", "claim"})
+                if (!prop.containsKey(k)) throw new IllegalArgumentException(k);
+            if (!subjectOf(prop).equals(subj)) return new Object[] {null, null, "is not the bytes that were sealed"};
+        } catch (IOException | RuntimeException e) {
+            return new Object[] {null, null, "is missing or can't be read"};
+        }
+        String key = proposedUnder(rows, subj, ((BigInteger) seal.get("n")).intValue());
+        if (key == null) return new Object[] {null, null, "was made under no question the record names"};
+        return new Object[] {prop, key, null};
+    }
+
     @SuppressWarnings("unchecked")
     static int bite(Path box, String text, String ts) throws IOException {
         Read r = read(box.resolve("record.jsonl"));
@@ -1516,9 +1548,11 @@ public final class Kernel {
             System.err.println("refused: a bite with no words");
             return REFUSED;
         }
-        for (String subj : sealed(box, r.rows).keySet()) { // a sealed answer for these words, first
-            Map<String, Object> prop = (Map<String, Object>) Json.loads(Files.readString(propFile(box, subj)));
-            if (key.equals(prop.get("bite_key"))) {
+        for (Map.Entry<String, Map<String, Object>> sealedRow : sealed(box, r.rows).entrySet()) { // a sealed answer for these words, first
+            String subj = sealedRow.getKey();
+            Object[] st = standing(box, r.rows, subj, sealedRow.getValue());
+            if (st[2] == null && key.equals(st[1])) {
+                Map<String, Object> prop = (Map<String, Object>) st[0];
                 append(box, ts, "bite", "kernel", fields("bite_key", key, "answered_by", subj, "served", new ArrayList<>()));
                 Map<String, Object> doc = new LinkedHashMap<>();
                 doc.put("state", "sealed");
@@ -1709,6 +1743,7 @@ public final class Kernel {
         return ALIVE;
     }
 
+    @SuppressWarnings("unchecked")
     static int verify(Path box) throws IOException {
         Read r = read(box.resolve("record.jsonl"));
         if (!r.breaks.isEmpty()) {
@@ -1723,11 +1758,21 @@ public final class Kernel {
         List<String> nos = new ArrayList<>();
         for (Map<String, Object> row : r.rows)
             if ("decline".equals(row.get("kind")) && !no.containsKey(row.get("subject"))) nos.add(String.valueOf(row.get("n")));
+        List<String[]> drifted = new ArrayList<>();
+        for (Map.Entry<String, Map<String, Object>> sealedRow : good.entrySet()) {
+            String subj = sealedRow.getKey();
+            Object[] st = standing(box, r.rows, subj, sealedRow.getValue());
+            Object why = st[2];
+            if (why == null && !Objects.equals(((Map<String, Object>) st[0]).get("bite_key"), proposedUnder(r.rows, subj, -1)))
+                why = "names another question than the record";
+            if (why != null) drifted.add(new String[] {subj, (String) why});
+        }
+        for (String[] d : drifted) System.out.println("the chain holds; " + d[0] + " is sealed, but its proposal file " + d[1]);
         if (!forged.isEmpty())
             System.out.println("the chain holds; seal rows [" + String.join(", ", forged) + "] don't prove under your key");
         if (!nos.isEmpty())
             System.out.println("the chain holds; decline rows [" + String.join(", ", nos) + "] don't prove under your key");
-        if (!forged.isEmpty() || !nos.isEmpty()) return ESCALATE;
+        if (!forged.isEmpty() || !nos.isEmpty() || !drifted.isEmpty()) return ESCALATE;
         System.out.println("the chain holds: " + r.rows.size() + " rows, " + good.size() + " sealed");
         return ALIVE;
     }
