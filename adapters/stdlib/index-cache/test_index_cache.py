@@ -65,6 +65,22 @@ def test_an_added_then_removed_file_each_rebuild(tmp_path):
     assert removed.returncode == 0 and "-1 removed" in removed.stdout
 
 
+def test_a_manifest_from_another_kernel_forces_a_rebuild(tmp_path):
+    import json
+
+    folder, index = a_folder(tmp_path)
+    cache(folder, index)
+    # a manifest whose files still match, but written by another kernel.py:
+    # the index's passages were that kernel's, so it must be rebuilt, not reused
+    manifest = index / "cache.json"
+    head = json.loads(manifest.read_text())
+    head["kernel"] = "some-other-kernel-version"
+    manifest.write_text(json.dumps(head))
+    got = cache(folder, index)
+    assert got.returncode == 0 and "rebuilt" in got.stdout, got.stdout
+    assert "current" not in got.stdout  # a stale-kernel manifest is never "current"
+
+
 def test_a_change_to_an_unread_file_does_not_rebuild(tmp_path):
     folder, index = a_folder(tmp_path)
     cache(folder, index)
