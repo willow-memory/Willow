@@ -28,7 +28,8 @@ flashcards, a care log), keep approved answers honest, and let AI assistants
 hand in suggestions they can never approve themselves.
 [See every add-on.](ADDONS.md)
 
-**Contents:** [Your first five minutes](#your-first-five-minutes) · [What you can build on it](#what-you-can-build-on-it) · [How it works](#how-it-works) · [Commands](#commands) · [Guarantees, and the tests behind them](#guarantees-and-the-tests-behind-them) · [Where it falls short](#where-it-falls-short) · [How it's verified](#how-its-verified) · [What's in this repo](#whats-in-this-repo) · [Building on it](#building-on-it) · [Licence](#licence)
+**Contents:** [Your first five minutes](#your-first-five-minutes) · [Building on it](#building-on-it) · [What you can build on it](#what-you-can-build-on-it) · [How it works](#how-it-works) · [Commands](#commands) · [Guarantees, and the tests behind them](#guarantees-and-the-tests-behind-them) · [Where it falls short](#where-it-falls-short) · [How it's verified](#how-its-verified) · [What's in this repo](#whats-in-this-repo) · [Licence](#licence)
+
 
 ## Your first five minutes
 
@@ -48,6 +49,29 @@ The answer is up to three passages from her files, each with its file and
 line. [The full five minutes](docs/tour.md) goes on: a question her files
 don't answer, teaching it her words, and approving an answer with the key.
 
+
+## Building on it
+
+**Add-ons** go in `adapters/stdlib/` if they need nothing beyond Python, or
+`adapters/deps/` if they need something installed, tested at its pins and
+at its floor (each package's last 2020 release, or its first). An add-on may use
+`kernel.py`; `kernel.py` never uses an add-on, and runs the same without any.
+An add-on writes to the log only through `kernel.py`, so `verify` still holds.
+Each one has its code, a card saying what it's for and what it never does, and
+tests that CI runs. The card opens with a short header (section, one line,
+source, date added) that [What you can build on it](#what-you-can-build-on-it)
+is generated from. To build a planned one, take its entry out of
+`adapters/planned.json` in the same change. The rules are in
+[adapters/README.md](adapters/README.md). What every change follows, add-on or not, is in
+[CONTRIBUTING.md](CONTRIBUTING.md).
+
+**Ports** to another language go in `ports/` and must pass
+`python vectors/compare.py` with zero unexplained differences. Go and Rust are
+the obvious next ones; [vectors/README.md](vectors/README.md) explains how the
+existing three were made to agree.
+
+
+
 ## What you can build on it
 
 Everything beyond the kernel is an add-on: a folder beside it that uses it and
@@ -56,8 +80,8 @@ can pick up ([CONTRIBUTING.md](CONTRIBUTING.md) says how):
 
 <!-- willow:summary -->
 - **Reading more kinds of files:** PDFs, email, chats, calendars, notes and office files, as text it can search. Built: [books](adapters/stdlib/books/), [calendar](adapters/stdlib/calendar/), [chats](adapters/stdlib/chats/), [clauses](adapters/stdlib/clauses/), [mail](adapters/stdlib/mail/), [notes](adapters/stdlib/notes/), [office](adapters/stdlib/office/), [pdf](adapters/deps/pdf/), [snapshot](adapters/stdlib/snapshot/), [web-pages](adapters/stdlib/web-pages/). Ideas: *agent-transcript, almanac, apple-notes, archivebox, bank, bibtex, bluesky, bookmarks, canvas, chordpro, ci-logs, code-comments, codebase-memory, confluence, corpus-lens, day-one, discord, dotfiles, evernote, family-tree, forgejo-dump, gh-json, git-history, github-archive, gitlab-export, goodreads, google-classroom, google-keep, health, home-sensors, homestead, instapaper, irc, jira, joplin, journiv, jrnl, jupyter, karakeep, latex, lessons, letterboxd, linkedin, listening, location-history, lockfiles, logs, man-pages, manifests, mastodon, matrix, mediawiki, medical-records, meta-archive, moodle, music-library, musicxml, notion, ocr, orders, package-docs, parallel, past-papers, pgn, photos, places, pocket, quiet-corner, readwise, recipes, reddit, rtf, sarif, sbom, screenplay, scripture, scrivener, sheets, shell-history, sigmap, signal, slack, steam, strava, subtitles, takeout, teams, texts, trello, voice, wallabag, writefreely, x-archive, zotero*.
-- **Finding things:** more ways to look: every match, this date in past years, an exact quote, by meaning, past typos. Built: [all](adapters/stdlib/all/), [latent](adapters/deps/latent/), [misquote](adapters/stdlib/misquote/), [on-this-day](adapters/stdlib/on-this-day/), [quote-check](adapters/stdlib/quote-check/), [scan](adapters/stdlib/scan/), [surprise](adapters/stdlib/surprise/). Ideas: *amounts, bm25, by-function, code-first, code-shape, codeowners, crosswalk, duplicates, fair-merge, first-mention, fuzzy-dates, index-cache, kiwix, meaning, my-lessons, people, pile-build, pile-gold, pile-rank, pile-rungs, pile-serve, pile-store, pile-sweep, promises, reading-level, record-sql, rerank, ripgrep, said, standards, symbols, typos, upgrade-notes, vectors, watch, why-not*.
-- **Your own words:** teaching it the words you use, so a question finds what your files call it. Built: [starter-words](adapters/stdlib/starter-words/), [words-de](adapters/stdlib/words-de/), [words-es](adapters/stdlib/words-es/), [words-fr](adapters/stdlib/words-fr/), [words-it](adapters/stdlib/words-it/), [words-nl](adapters/stdlib/words-nl/), [words-pt](adapters/stdlib/words-pt/). Ideas: *abbreviations, dialect, memoir, nicknames, stems, synonyms, tatoeba, vocab, words-ar, words-cy, words-hi, words-ja, words-pl, words-ru, words-sv, words-tr, words-zh*.
+- **Finding things:** more ways to look: every match, this date in past years, an exact quote, by meaning, past typos. Built: [all](adapters/stdlib/all/), [latent](adapters/deps/latent/), [misquote](adapters/stdlib/misquote/), [on-this-day](adapters/stdlib/on-this-day/), [quote-check](adapters/stdlib/quote-check/), [scan](adapters/stdlib/scan/), [surprise](adapters/stdlib/surprise/), [typos](adapters/stdlib/typos/). Ideas: *amounts, bm25, by-function, code-first, code-shape, codeowners, crosswalk, duplicates, fair-merge, first-mention, fuzzy-dates, index-cache, kiwix, meaning, my-lessons, people, pile-build, pile-gold, pile-rank, pile-rungs, pile-serve, pile-store, pile-sweep, promises, reading-level, record-sql, rerank, ripgrep, said, standards, symbols, upgrade-notes, vectors, watch, why-not*.
+- **Your own words:** teaching it the words you use, so a question finds what your files call it. Built: [accents](adapters/stdlib/accents/), [starter-words](adapters/stdlib/starter-words/), [words-de](adapters/stdlib/words-de/), [words-es](adapters/stdlib/words-es/), [words-fr](adapters/stdlib/words-fr/), [words-it](adapters/stdlib/words-it/), [words-nl](adapters/stdlib/words-nl/), [words-pt](adapters/stdlib/words-pt/). Ideas: *abbreviations, dialect, memoir, nicknames, stems, synonyms, tatoeba, vocab, words-ar, words-cy, words-hi, words-ja, words-pl, words-ru, words-sv, words-tr, words-zh*.
 - **Keeping track:** dates coming up, numbers over time, to-dos, care logs, invoices, forecasts and flashcards. Built: [across](adapters/stdlib/across/), [again](adapters/stdlib/again/), [coming-up](adapters/stdlib/coming-up/), [digest](adapters/stdlib/digest/), [gaps](adapters/stdlib/gaps/), [lending](adapters/stdlib/lending/), [outdated](adapters/stdlib/outdated/), [policy-watch](adapters/stdlib/policy-watch/), [readings](adapters/stdlib/readings/), [todo](adapters/stdlib/todo/). Ideas: *ask-later, attendance, baby-log, budget, car, care, contracts, crowd, cycle, debts, flashcards, foia, food-log, forecasts, garden, gifts, gradebook, grant-report, habits, home-upkeep, hours, inventory, invoices, job-hunt, lab-notebook, livestock, market-calls, mileage, milestones, minutes, mood, oakenscroll, pets, predict, reading-log, renewals, rubric, school, session-cost, subscriptions, support-plan, syllabus, symptoms, tax-year, trips, upstream-desk, warranties*.
 - **Trust and proof:** answers you can check later: exports, stale answers, what changed, signed and encrypted records. Built: [backup](adapters/stdlib/backup/), [changed](adapters/stdlib/changed/), [claim-check](adapters/stdlib/claim-check/), [contradictions](adapters/stdlib/contradictions/), [diverge](adapters/stdlib/diverge/), [export](adapters/stdlib/export/), [history](adapters/stdlib/history/), [session-seal](adapters/stdlib/session-seal/), [stale](adapters/stdlib/stale/), [timeline](adapters/stdlib/timeline/), [wayback](adapters/stdlib/wayback/), [xref](adapters/stdlib/xref/). Ideas: *box-health, encrypt, family-box, git-notes, handoff, ids, in-case, in-toto, jeles, licenses, line-origin, losc, merkle, mirror, nestor, notary, opentimestamps, paper-key, pgp, prov, provenance, quote-review, redential, report, retire, ro-crate, sap-gate, signed-commits, sync, thesis, time-capsule, witness*.
 - **Privacy and safety:** phone numbers, card numbers and keys hidden in answers, or found sitting in files. Built: [advisories](adapters/stdlib/advisories/), [install-scripts](adapters/stdlib/install-scripts/), [privacy](adapters/stdlib/privacy/), [risky-code](adapters/stdlib/risky-code/), [secrets-audit](adapters/stdlib/secrets-audit/), [typosquat](adapters/stdlib/typosquat/). Ideas: *a11y-check, forget, kids, package-contents, pii-audit, scrub, student-records, transcript-redact*.
@@ -70,12 +94,13 @@ can pick up ([CONTRIBUTING.md](CONTRIBUTING.md) says how):
 <!-- willow:front show=pick week=2026-W44 -->
 **Add-on of the week**
 
-**[books](adapters/stdlib/books/)** — Kindle "My Clippings.txt" highlights and .epub text.
+**[hook-replay](adapters/stdlib/hook-replay/)** — Every hook's answer kept as a row with the hashes of what it was given and what it said, and check runs it again to prove the same input still gets the same answer.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 94 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 96 built add-ons in name order.*
 
-[Every add-on, 94 built of 460, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 96 built of 461, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
+
 
 ## How it works
 
@@ -98,6 +123,7 @@ goes on a hash-chained log that `verify` checks.
 
 [How it works, in full](docs/how-it-works.md): what it reads, how it ranks,
 your key, the record folder, and suggestions and approvals.
+
 
 ## Commands
 
@@ -134,6 +160,7 @@ The exit code is meant for scripts and for other programs calling it:
 | `42` | not enough to say a person said it: nothing matched, or something waits on you |
 | `2` | refused: a bad command, a key or record that isn't right, a log that has been changed |
 
+
 ## Guarantees, and the tests behind them
 
 Each is a test that fails if it stops being true. The clause is the one in
@@ -154,6 +181,7 @@ willow's own.
 | Every add-on's tests can fail | none | each add-on's code is broken on purpose a few ways (`mutants`); a break its tests miss fails CI, unless it's listed as harmless with the reason |
 | Every add-on refuses a bad command line, and every reader keeps the same contract | none | one test holds them all to it (`adapters/stdlib/ci/test_contract.py`) |
 
+
 ### The law above them
 
 These guarantees answer to a written law, [CONSTITUTION.md](CONSTITUTION.md),
@@ -168,6 +196,7 @@ a clause cites it by its Trace ID (`CONST-0-4`), and
 [constitution/](constitution/) attacks each of the six against the kernel and
 checks it is refused. A coverage report, rebuilt every CI run, lists every
 clause and where it is cited, and says why for each it found nothing for.
+
 
 ## Where it falls short
 
@@ -186,6 +215,7 @@ words and missed the rest. The fourth of them, Bernadette, wrote her files in
 her apps' raw formats and was run through every add-on at once, readers to
 backups (`demo/bernadette/stack.py`). The full results, misses included, are
 in `demo/*/STRIP.md`.
+
 
 ## How it's verified
 
@@ -217,6 +247,7 @@ in `demo/*/STRIP.md`.
   the check doesn't catch it.
 - **Old runtimes, not assumed:** the tests and every port have also been run
   on Python 3.9.0, JDK 11, Node 14 and .NET 5, all from 2020.
+
 
 ## What's in this repo
 
@@ -257,26 +288,6 @@ willow/
 ├── ruff.toml                 lint settings
 └── LICENSE                   Apache-2.0
 ```
-
-## Building on it
-
-**Add-ons** go in `adapters/stdlib/` if they need nothing beyond Python, or
-`adapters/deps/` if they need something installed, tested at its pins and
-at its floor (each package's last 2020 release, or its first). An add-on may use
-`kernel.py`; `kernel.py` never uses an add-on, and runs the same without any.
-An add-on writes to the log only through `kernel.py`, so `verify` still holds.
-Each one has its code, a card saying what it's for and what it never does, and
-tests that CI runs. The card opens with a short header (section, one line,
-source, date added) that [What you can build on it](#what-you-can-build-on-it)
-is generated from. To build a planned one, take its entry out of
-`adapters/planned.json` in the same change. The rules are in
-[adapters/README.md](adapters/README.md). What every change follows, add-on or not, is in
-[CONTRIBUTING.md](CONTRIBUTING.md).
-
-**Ports** to another language go in `ports/` and must pass
-`python vectors/compare.py` with zero unexplained differences. Go and Rust are
-the obvious next ones; [vectors/README.md](vectors/README.md) explains how the
-existing three were made to agree.
 
 ## Licence
 

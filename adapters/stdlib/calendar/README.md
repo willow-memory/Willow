@@ -28,7 +28,18 @@ event has them:
     notes: Ask about the fee; bring a
       spare string
 
-A recurring event is written once, with a `repeats:` line holding its rule.
+A recurring event is written once, under its first date, so its first line
+says that it repeats, and how, in words; a `repeats:` line keeps the rule
+itself. An event marked cancelled says so on its first line too:
+
+    2022-11-03  Car rego due  (yearly, from this date)
+    repeats: FREQ=YEARLY
+
+    2026-08-19 10:30  Skin check  (cancelled)
+
+So a line quoted from one, by an assistant or by you, can't pass for this
+year's date or a booking that stands. [coming-up](../coming-up/) counts each
+repeat in its window.
 Each contact in a .vcf becomes one paragraph, with `phone:`, `email:`, `address:`
 and `birthday:` lines when the card has them:
 
