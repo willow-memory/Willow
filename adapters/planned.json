@@ -2233,16 +2233,6 @@
   "tags": "no-install, offline, writes-output, trust"
  },
  {
-  "name": "parallel",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "The readers run across every CPU core, so a big mirror folder builds in a fraction of the time.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "past-papers",
   "kind": "stdlib",
   "section": "Reading more kinds of files",

@@ -10,6 +10,17 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `parallel`, an add-on that runs a reader over several folders at once, across
+  every CPU core, into one mirror. Where a reader mirrors one folder of files
+  into plain-text passages, `parallel --reader NAME --from ONE --from TWO ...
+  --to MIRROR` runs it on each folder concurrently into `MIRROR/<folder name>`,
+  so a big mirror of many sources builds in a fraction of the time. Each folder
+  is mirrored whole by the reader, so a sub-mirror is byte-for-byte the reader's
+  own output — a reader that looks across a folder (backlinks) still sees all of
+  it; splitting one folder between workers would give the wrong bytes, so whole
+  folders run in parallel instead. Writes only under `--to` (through the
+  readers), reads no box or key, no network. (#49)
+
 - `index-cache`, an add-on that keeps a folder's `scan` index between runs and
   rebuilds it only when the folder changed. It holds a manifest beside the
   index — each read file's path and the SHA-256 of its text — and on each run
