@@ -18,14 +18,14 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`████░░░░░░░░░░░░░░░░` **95 of 460 built** · 410 need no install · 50 need one
+`████░░░░░░░░░░░░░░░░` **96 of 461 built** · 411 need no install · 50 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
 | Reading more kinds of files | 10 | 94 | 96 | 8 |
 | Finding things | 8 | 35 | 33 | 10 |
 | Your own words | 8 | 17 | 22 | 3 |
-| Keeping track | 9 | 47 | 56 | 0 |
+| Keeping track | 10 | 47 | 57 | 0 |
 | Trust and proof | 12 | 32 | 35 | 9 |
 | Privacy and safety | 6 | 8 | 14 | 0 |
 | Assistants | 15 | 40 | 49 | 6 |
@@ -39,17 +39,17 @@ or `writes-output`; its section), and any the card's author adds or changes.
 <!-- willow:newest -->
 - 2026-10-25 · [**typos**](adapters/stdlib/typos/) — Forgives misspellings in questions.
 - 2026-10-25 · [**risky-code**](adapters/stdlib/risky-code/) — Lines of code matching a known-dangerous pattern (command injection, eval, sql concatenation, broken tls and more), by file and line, as leads to read.
+- 2026-10-25 · [**across**](adapters/stdlib/across/) — One document across several boxes, not just one: each box's digest, export, timeline or readings, composed into one page, every line still cited by its box, file and line.
 - 2026-10-25 · [**accents**](adapters/stdlib/accents/) — A word typed without its accent read as your files write it, and the words-list lines that make it last.
 - 2026-10-24 · [**zed**](adapters/stdlib/zed/) — Zed's assistant asks your folder and hands in suggestions, through the mcp add-on.
-- 2026-10-24 · [**xref**](adapters/stdlib/xref/) — Every reference in your files checked: each link to another file, and each quoted line, still there and still saying it.
 <!-- /willow:newest -->
 
 ### Add-on of the week
 
-<!-- willow:pick week=2026-W43 -->
-**[snapshot](adapters/stdlib/snapshot/)** — A web page or data file fetched once into a folder, as it came, with its address, the time and its SHA-256, so later answers cite the copy.
+<!-- willow:pick week=2026-W44 -->
+**[hook-replay](adapters/stdlib/hook-replay/)** — Every hook's answer kept as a row with the hashes of what it was given and what it said, and check runs it again to prove the same input still gets the same answer.
 
-*Drawn for 2026-W43: SHA-256 of "willow add-on of the week 2026-W43", modulo the 95 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 96 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -242,6 +242,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 
 ### Keeping track
 
+- [**across**](adapters/stdlib/across/) — One document across several boxes, not just one: each box's digest, export, timeline or readings, composed into one page, every line still cited by its box, file and line. *new* `no-install` `offline` `read-only` `tracking` `everyday`
 - [**again**](adapters/stdlib/again/) — Questions you keep asking: "asked 4 times; approve an answer?" *bot* `no-install` `offline` `read-only` `tracking`
 - **ask-later** (idea) — A question with no answer yet kept on a list, and asked again whenever a new file arrives. *new* `no-install` `offline` `records` `tracking`
 - **attendance** (idea) — Attendance for a class, club or group, from your register, by week. *new* `no-install` `offline` `read-only` `tracking`

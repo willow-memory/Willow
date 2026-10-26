@@ -10,6 +10,11 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `across`, an add-on that makes one document across several boxes rather
+  than one: it runs a document add-on (`digest`, `export`, `timeline` or
+  `readings`) over every box a `--boxes` list or repeated `--box` names, and
+  composes their parts under a heading per box, every line still cited by its
+  box, file and line. It writes no box, reads no key and approves nothing. (#41)
 - `typos`, an add-on that reads a misspelt word of a question as your files
   spell it, one edit inside the word (its first and last letters kept), the
   most-held spelling first, and prints the question as read for you to ask:
