@@ -131,6 +131,27 @@ knob the operator already believes in: **scope to the peaks** — serve the
 pools above a height and leave the rest, with the three-state/empty rule
 saying what was left (never truncated silently).
 
+## The why: the model's, attached as data
+
+A script needs no why to run — it executes and returns rows. But a model
+wants to say why, every time, so a why is a thing a step may **attach**, not
+one the stack withholds. The split is the point:
+
+- **The served file carries no why.** What the model reads is W's, payload
+  and a trust label — data. A why on the input would read as an instruction.
+- **A proposal carries the model's why.** What the model *returns* — a
+  proposed row — may carry its reason, and that reason rides as any model
+  text does: labelled `untrusted`, never acted on by code, held against the
+  record by id. The planned `hook-cite` rule applies to it — a why that cites
+  a passage the box never served is refused.
+- **The human judges the why at the seal.** `ESCALATE` (42) is the hand-up
+  that owes a why; the card shows the proposal and its reason together, and
+  the seal is the person answering it. (`ALIVE` (0) ran clean and `REFUSED`
+  (2) is a bad command line — neither owes a why.)
+
+So the run is why-free, the served view is why-free, and the why lives where
+it belongs: on the model's proposal, as untrusted data, judged by the human.
+
 ## Why markdown
 
 The operator's rule: the model writes markdown (headings, tables, lists); the
