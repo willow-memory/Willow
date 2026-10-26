@@ -61,6 +61,11 @@ Each of these has been missed at least once, and each is a check that fails.
    kill every break. CI makes the six lowest-id breaks, and an entry in
    `adapters/stdlib/mutants/accepted.json` for a break those six don't
    include fails as stale: list only what CI's own run shows surviving.
+   Run this **after** step 2 (its line in `COMMANDS`) and on a clean tree:
+   a mutant is killed when the run's tests exit non-zero, so an add-on not
+   yet in `COMMANDS`, or a stray uncommitted add-on folder, fails the
+   contract test and marks every mutant killed — a false pass that CI, on
+   the committed tree, then shows as the real survivors.
 8. **Real data, not only fixtures.** Run it on the demo folders
    (`python demo/odile/make_life.py`, and the same for hollis, teodora and
    bernadette). An add-on can pass every test on hand-made files and still be

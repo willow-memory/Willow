@@ -480,6 +480,15 @@ says how). The first was v0.1.0.
   out of Python, so no runtime's Unicode version decides a word, and the
   vectors hold every composed character decomposed. (#33)
 
+### Changed
+
+- `AGENTS.md` now cautions, in the mutants step, to run
+  `adapters/stdlib/mutants/mutants.py` only after the add-on's `COMMANDS`
+  line exists and on a clean tree: a mutant counts as killed when the run's
+  tests exit non-zero, so an add-on not yet in `COMMANDS` (or a stray
+  uncommitted add-on folder) fails the contract test and marks every mutant
+  killed — a false pass CI later exposes as the real survivors. (#50)
+
 ## v0.1.0 · 2026-10-23
 
 The first release: this section, and the two pull requests below it from
