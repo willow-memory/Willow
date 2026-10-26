@@ -88,11 +88,11 @@ def resolve(name: str) -> Path | None:
 
 def run_step(script: Path, args: list[str], box: str) -> tuple[int, str]:
     """Run one step; (its exit code, the text it made). `{box}` in an arg is
-    the box; stdin is closed so a step never waits on a person."""
+    the box. stdin is inherited (not opened here): a step reads no input, and
+    opening /dev/null would itself be a write the card doesn't allow."""
     filled = [a.replace("{box}", box) for a in args]
     got = subprocess.run(
         [sys.executable, str(script), *filled],
-        stdin=subprocess.DEVNULL,
         capture_output=True,
         text=True,
     )
