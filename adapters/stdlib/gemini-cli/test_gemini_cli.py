@@ -76,3 +76,21 @@ def test_what_it_prints_parses_and_uses_the_python_that_ran_it(tmp_path):
 def test_toml_tables_are_written_the_way_toml_reads_them():
     text = mod.toml_table("a.b", {"command": "py", "args": ["x", 'q"uote']})
     assert text == '[a.b]\ncommand = "py"\nargs = ["x", "q\\"uote"]\n'
+
+
+def test_a_hosts_of_the_same_name_earlier_on_the_path_does_not_win(tmp_path):
+    decoy = tmp_path / "decoy"
+    decoy.mkdir()
+    (decoy / "hosts.py").write_text("raise SystemExit('the wrong hosts')\n")
+    code = (
+        "import sys, importlib.util\n"
+        "sys.path.insert(0, sys.argv[1])\n"
+        "s = importlib.util.spec_from_file_location('m', sys.argv[2])\n"
+        "m = importlib.util.module_from_spec(s)\n"
+        "s.loader.exec_module(m)\n"
+        "print(m.hosts.__file__)\n"
+    )
+    got = subprocess.run([sys.executable, "-c", code, str(decoy), str(HERE / "gemini_cli.py")],
+                         capture_output=True, text=True)  # fmt: skip
+    assert got.returncode == 0, got.stderr
+    assert Path(got.stdout.strip()).parent.name == "hosts"

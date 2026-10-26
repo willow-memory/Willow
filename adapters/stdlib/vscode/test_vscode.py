@@ -74,3 +74,21 @@ def test_a_passage_quoting_a_file_and_line_of_its_own_is_not_misread():
     assert m.group(1) == "/home/a/notes/moved.txt" and m.group(2) == "1"
     m = pattern.match(r"C:\Users\a\notes\n.md:3: The bus")
     assert m.group(1) == r"C:\Users\a\notes\n.md" and m.group(2) == "3"
+
+
+def test_a_hosts_of_the_same_name_earlier_on_the_path_does_not_win(tmp_path):
+    decoy = tmp_path / "decoy"
+    decoy.mkdir()
+    (decoy / "hosts.py").write_text("raise SystemExit('the wrong hosts')\n")
+    code = (
+        "import sys, importlib.util\n"
+        "sys.path.insert(0, sys.argv[1])\n"
+        "s = importlib.util.spec_from_file_location('m', sys.argv[2])\n"
+        "m = importlib.util.module_from_spec(s)\n"
+        "s.loader.exec_module(m)\n"
+        "print(m.hosts.__file__)\n"
+    )
+    got = subprocess.run([sys.executable, "-c", code, str(decoy), str(HERE / "vscode.py")],
+                         capture_output=True, text=True)  # fmt: skip
+    assert got.returncode == 0, got.stderr
+    assert Path(got.stdout.strip()).parent.name == "hosts"
