@@ -10,5 +10,6 @@ one takes, is in [CONTRIBUTING.md](CONTRIBUTING.md).
 |---|---|---|
 | #54 | a sealed answer is served for the question its proposal file names, not the one the record's bite names | `test_kernel.py::test_a_sealed_answer_belongs_to_the_question_the_record_says` |
 | #54 | a sealed answer is served from its proposal file without checking the file still hashes to the sealed subject | `test_kernel.py::test_a_sealed_answer_is_served_only_while_its_bytes_are_the_ones_sealed` |
+| #54 | proposing a sealed answer's bytes again under another question serves it as sealed there | `test_kernel.py::test_a_sealed_answer_stays_with_the_question_it_was_sealed_for` |
 | #54 | bite crashes with a traceback when a sealed subject's proposal file is gone | `test_kernel.py::test_a_sealed_proposals_file_gone_never_brings_a_bite_down` |
 | #54 | verify passes when a sealed subject's proposal file has changed or gone | `test_kernel.py::test_verify_says_when_a_sealed_proposals_file_no_longer_matches` |

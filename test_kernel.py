@@ -174,6 +174,24 @@ def test_a_sealed_answer_belongs_to_the_question_the_record_says(tmp_path):
 
 @pytest.mark.xfail(
     strict=True,
+    reason="bug #54: proposing a sealed answer's bytes again under another question serves it as sealed there",
+)
+def test_a_sealed_answer_stays_with_the_question_it_was_sealed_for(tmp_path):
+    """No file is touched: propose is the agent's verb, and a second proposal
+    of the same bytes must not carry the person's seal to a new question."""
+    box, b, subj = sealed_box(tmp_path)
+    other = "which square does the bus leave from at seven"
+    served = json.loads(cli("bite", *b, other).stdout)["served"]
+    assert served and served[0]["text"].startswith("The bus leaves")  # same passage
+    cli("propose", *b, "--file", str(tmp_path / "rows.jsonl"))
+    got = cli("bite", *b, other)
+    assert '"state": "sealed"' not in got.stdout, "carried to a question never sealed"
+    again = cli("bite", *b, "When does the bus leave the square?")
+    assert json.loads(again.stdout)["answer"] == "Seven."  # and the first still holds
+
+
+@pytest.mark.xfail(
+    strict=True,
     reason="bug #54: verify passes when a sealed subject's proposal file has changed or gone",
 )
 def test_verify_says_when_a_sealed_proposals_file_no_longer_matches(tmp_path):
