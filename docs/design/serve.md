@@ -77,9 +77,14 @@ same object from two sides:
   #   digest -- --days 7                # any add-on, run with what it allows
   ```
 
-  This is the same move the new [`across`](../../adapters/stdlib/across/)
-  add-on already makes — run add-ons and compose what they print — only here
-  the steps are heterogeneous and one of them is the seal check.
+  The step list is **open**: any add-on can be a step — built in, or one a
+  user writes for the purpose — run with whatever arguments it allows after
+  the lone `--`. `pgp`, `git`, a content step, the pile itself: the stack
+  doesn't fix the set, and serve doesn't care which add-on produced a part,
+  only that the part carries its receipt and trust label. This is the same
+  move the new [`across`](../../adapters/stdlib/across/) add-on already makes
+  — run add-ons and compose what they print — only here the steps are
+  heterogeneous and one of them is the seal check.
 
 - **Serve groups the result into a stack of piles.** What the steps produce
   becomes record rows; `serve` groups those by the four W's into piles,
@@ -131,22 +136,19 @@ it hands over tools, not a sealed stack of piles. The planned `hook-cite`
 idea ("refuse a claim citing a passage the box never served it") is the same
 family: it only works once serve records what it served, by id.
 
-Two shapes are possible, and this is the main open choice:
+**Decided: a `serve` add-on, over the kernel** (operator, 2026-10-26). The
+add-on holds `piles`/`scope`/`view`/the serve key; it reads the record
+through the kernel, runs the steps (including `pgp`), groups the piles, and
+writes the markdown file. The kernel is not touched, so the one-way arrow
+holds and the sealed, pre-AI core stays as small as it is.
 
-- **A `serve` add-on over the kernel.** `piles`/`scope`/`view`/serve-key live
-  in the add-on; it reads the record through the kernel and writes the
-  markdown file. Smallest blast radius, but the serve key and the view's
-  redaction are security-load-bearing and would sit outside the kernel.
-- **Kernel grows a serving primitive**, and a thin `serve` add-on drives it.
-  Heavier (the kernel is the one sealed, tiny, pre-AI-foundation core), but
-  the redaction and the serve key sit where the seals already are.
-
-My lean is the kernel grows the minimum — the serve key and the view's
-withholding — and a `serve` add-on composes the stack, runs the steps
-(including `pgp`), groups the piles and writes the markdown. The grove's
-first cut keeps serve a module leaning on the kernel, which argues for the
-add-on; the "keep the serving code tiny, readable and sealed" rule argues for
-the kernel. The operator decides.
+The cost of that choice is that the serve key and the view's redaction — the
+two security-load-bearing parts — live in the add-on rather than beside the
+seals. So the add-on carries the weight the kernel would have: it stays tiny
+and readable, the guard holds it to `writes: to` / `network: none` and "never
+the key", and the markdown **shape tests** (below) are what prove the view
+withholds what it must. A part that can't be served under those rules isn't
+served (fails closed).
 
 ## What must stay true (willow's own rules)
 
@@ -163,19 +165,29 @@ the kernel. The operator decides.
 
 ## Open questions for the operator
 
-1. **Add-on or kernel** for the serve key and the view (the shape choice
-   above).
-2. **The stack file's markdown shape** — a plain list of `addon -- args`
-   rows, or a table with a column per field (step, args, role)?
-3. **What `-- git` meant** in the first sketch — a source step inside the
-   stack (a `git` add-on), or the transport the sealed scope travels over?
-4. **The four W's on willow's records** — the kernel's rows carry `who`,
-   `ts` and content; what plays "what" and "where" for piling needs naming
-   before `piles` can group exactly.
-5. **One hook** — serve is the model's only door, so the Read hook narrows to
-   the served file. willow has the assistant add-ons (`claude-code`, …) but
-   not yet a hook that narrows Read to one path; is that in scope here or a
-   separate piece?
+Two still open; the rest are settled or held, below.
+
+1. **The stack file's markdown shape** — a plain markdown list of
+   `addon -- args` rows, friendlier to hand-write, or a table with a column
+   per field (step, args), rigid and easiest to shape-test? (See "Why
+   markdown".)
+2. **The four W's on willow's records.** `piles` groups by exact W, but the
+   kernel's rows carry `who`, a timestamp (`when`, as the day) and content —
+   not an explicit "what" or "where". What plays them: a bite's subject for
+   "what" and a cited passage's path for "where", or does piling start with
+   the W's willow already has (`who`, day) and the rest arrive when rows
+   carry them?
+
+## Settled, and held
+
+- **Serve is an add-on**, not a kernel change (decided 2026-10-26; see "Where
+  this lands in willow").
+- **The step list is open** — any add-on, built in or user-written, run with
+  its own arguments (decided 2026-10-26; see "The two senses of 'stack'").
+- **The model's one door is held.** Serve is the model's only read, so it
+  wants a hook that narrows Read to the served file. The bot has such a hook
+  and the grove removed one; neither was judged strong enough, so the hook is
+  a separate, larger discussion and out of scope for this note.
 
 ## Not in this note
 
