@@ -23,7 +23,7 @@ says how). The first was v0.1.0.
   beside it. CI runs its tools on sources it makes, as `demo:craft-assembly`.
   Its full report, REPORT.md, is written by its report.py from the committed
   files alone, every number counted, and checked by the kernel's `read`,
-  `xref` and `claim-check`, the same bytes every run.
+  `xref` and `claim-check`, the same bytes every run. (#44)
 - `across`, an add-on that makes one document across several boxes rather
   than one: it runs a document add-on (`digest`, `export`, `timeline` or
   `readings`) over every box a `--boxes` list or repeated `--box` names, and
