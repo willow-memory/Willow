@@ -16,9 +16,11 @@ says how). The first was v0.1.0.
   store of pieces, each file once by its SHA-256, and are rebuilt from it to
   their pinned git trees; five apps and the seven library crates they share
   are then assembled into one Cargo workspace by five written rules, and held
-  to building and testing as each app does alone. Frozen before it ran, its
-  pass rules kernel verdict rows; CI runs its tools on sources it makes, as
-  `demo:craft-assembly`.
+  to building and testing as each app does alone. Frozen before each run, its
+  pass rules kernel verdict rows. Run 3, from the third freeze, held every
+  rule: all 134 packages that build alone build in it, and all 127 that pass
+  their tests alone pass them in it; runs 1 and 2, which failed, are kept
+  beside it. CI runs its tools on sources it makes, as `demo:craft-assembly`.
 - `repo-pile`: a list of public repositories made into a box you can ask.
   Each is cloned, kept only when its own licence file grants one an
   Apache-2.0 project can use (anything else, or none, is left out and said

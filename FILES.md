@@ -521,7 +521,8 @@ willow/
 │   │   ├── test_craft_assembly.py holds the frozen files to their hashes, and the tools to their word
 │   │   └── results/
 │   │       ├── run-1.json    the first run's every outcome: the store, each rebuild, each package in both
-│   │       └── run-2.json    the second run's, from freeze 2: the same, and what the rules left out
+│   │       ├── run-2.json    the second run's, from freeze 2: the same, and what the rules left out
+│   │       └── run-3.json    the third run's, from freeze 3: every rule held
 │   └── google-privacy-2026-10-16/  a real policy change: what Google's text says against what the news said
 │       ├── README.md         the claim, the threats, what is frozen, how to reproduce, the results
 │       ├── FROZEN.json       the SHA-256 of each frozen file, and of the tools when frozen

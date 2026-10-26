@@ -176,6 +176,43 @@ crates.io; `--stage pieces` stops before the builds, in about a minute.
 
 ## Results
 
+### Run 3, 2026-10-25: every rule held
+
+Run by [run.py](run.py) from freeze 3 (a268e52), 20:16 to 01:36 UTC. Its
+outcomes are [results/run-3.json](results/run-3.json) (SHA-256
+`a287e07f312bbe26…`), and its verdicts are rows 11 to 15 of the record runs
+1 and 2 are on: `python kernel.py verify --box <box>` said
+`the chain holds: 16 rows, 0 sealed`.
+
+| Pass rule | Verdict | What it found |
+|---|---|---|
+| rebuilt | satisfied | all 24 sources rebuilt from the store hash to their pinned git trees |
+| same-store | satisfied | taking apart twice gave the same store, byte for byte |
+| same-composite | satisfied | composing, resolving and pinning twice gave the same composite, lockfile and all |
+| builds | satisfied | all 134 of the composite's packages that build in their own app build in it |
+| tests | satisfied | all 127 that pass their tests in their own app pass them in it |
+
+Against each app on its own, the composite lost nothing and gained nothing:
+every package builds and passes, or doesn't, exactly as it does alone. The
+two that run 2 lost are back: `cadcraft-io`, with `acadrust` at cadcraft's
+0.6.5 again (rule 7), and `filmcraft-testkit`, with filmcraft's root
+`Cargo.toml` in place (rule 5).
+
+**Rule 7 moved 53 crates** to the versions the apps locked; Cargo refused
+11 moves, each a crate another needed newer, and those 11 cost no test.
+**What the rules left out** is as in run 2: the five `xtask`s and
+soundcraft's `playback` with the three that depend on it; of these, the
+`xtask`s and `soundcraft-web` build in their own app.
+
+**What it shows.** No model anywhere: 24 repositories taken apart into
+19,743 pieces by SHA-256, each rebuilt to its exact git tree; and five of
+the AI-built Craft apps, with 42 crates from four other repositories, all
+from those pieces, assembled by seven written rules into one Cargo
+workspace of 136 packages and one lockfile, the same bytes twice. Every
+package that built and passed its tests on its own builds and passes in it.
+It took three freezes, each made before its run and written down with why,
+and two runs that failed, kept here beside the one that held.
+
 ### Run 2, 2026-10-25: four rules held; two packages lost their tests
 
 Run by [run.py](run.py) from freeze 2 (3b25ab9), 12:55 to 18:37 UTC. Its
