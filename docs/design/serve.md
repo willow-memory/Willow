@@ -165,18 +165,12 @@ served (fails closed).
 
 ## Open questions for the operator
 
-Two still open; the rest are settled or held, below.
+One still open; the rest are settled or held, below.
 
 1. **The stack file's markdown shape** — a plain markdown list of
-   `addon -- args` rows, friendlier to hand-write, or a table with a column
-   per field (step, args), rigid and easiest to shape-test? (See "Why
-   markdown".)
-2. **The four W's on willow's records.** `piles` groups by exact W, but the
-   kernel's rows carry `who`, a timestamp (`when`, as the day) and content —
-   not an explicit "what" or "where". What plays them: a bite's subject for
-   "what" and a cited passage's path for "where", or does piling start with
-   the W's willow already has (`who`, day) and the rest arrive when rows
-   carry them?
+   `addon -- args` rows (my lean: friendlier to write, and a `|`-delimited
+   table would collide with the pipes that step arguments carry), or a table
+   with a column per field? (See "Why markdown".)
 
 ## Settled, and held
 
@@ -184,6 +178,15 @@ Two still open; the rest are settled or held, below.
   this lands in willow").
 - **The step list is open** — any add-on, built in or user-written, run with
   its own arguments (decided 2026-10-26; see "The two senses of 'stack'").
+- **The four W's a pile groups on.** Exact value on four axes, nothing
+  judged: `who`; `when` (the day); `what` (the `bite_key` — same question,
+  same key, by hash, not judgment); and `where`. `where` is deliberately
+  **generic**: not a file path but whatever locator the outside data brought
+  — an IP, GPS coordinates, a URL, a path — so a new kind of source piles on
+  `where` without serve changing. Readers and ingest attach it; serve only
+  groups on what is there, and a row with no value on an axis is in no pile
+  on it (decided 2026-10-26). (Making the record carry a generic `where` is
+  the ingest side's to grow; serve doesn't judge it.)
 - **The model's one door is held.** Serve is the model's only read, so it
   wants a hook that narrows Read to the served file. The bot has such a hook
   and the grove removed one; neither was judged strong enough, so the hook is
