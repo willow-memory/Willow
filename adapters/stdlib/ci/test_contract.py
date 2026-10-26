@@ -125,6 +125,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "lending": ("lending.py", ["--box", "{box}"]),
     "timeline": ("timeline.py", ["--box", "{box}", "--to", "{tmp}/timeline.txt", "tomatoes"]),
     "across": ("across.py", ["--box", "{box}", "digest"]),
+    "stack": ("stack.py", ["--box", "{box}", "--stack", "adapters/stdlib/stack/example.md"]),
     "serve": ("serve.py", ["scope", "--box", "{box}"]),
     "browse": ("browse.py", ["launcher", "--box", "{box}"]),
     "digest": ("digest.py", ["--box", "{box}", *NOW]),

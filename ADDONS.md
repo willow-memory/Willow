@@ -18,38 +18,38 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`████░░░░░░░░░░░░░░░░` **97 of 461 built** · 411 need no install · 50 need one
+`████░░░░░░░░░░░░░░░░` **98 of 465 built** · 415 need no install · 50 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
 | Reading more kinds of files | 10 | 94 | 96 | 8 |
 | Finding things | 8 | 35 | 33 | 10 |
 | Your own words | 8 | 17 | 22 | 3 |
-| Keeping track | 10 | 47 | 57 | 0 |
+| Keeping track | 11 | 47 | 58 | 0 |
 | Trust and proof | 12 | 32 | 35 | 9 |
 | Privacy and safety | 6 | 8 | 14 | 0 |
-| Assistants | 16 | 39 | 49 | 6 |
+| Assistants | 16 | 40 | 50 | 6 |
 | Ways to use it | 11 | 28 | 35 | 4 |
 | Play | 4 | 36 | 35 | 5 |
-| For maintainers | 12 | 28 | 35 | 5 |
+| For maintainers | 12 | 30 | 37 | 5 |
 <!-- /willow:pools -->
 
 ### Newest
 
 <!-- willow:newest -->
+- 2026-10-26 · [**stack**](adapters/stdlib/stack/) — One document from a stack of add-on steps over a box: each step's output grouped into pools and ordered tallest-first, so the peaks are what a reader meets first.
 - 2026-10-26 · [**serve**](adapters/stdlib/serve/) — The one markdown file a model reads: only the passages a human sealed, grouped into pools with the peaks first, by ids it can't guess, and nothing else.
 - 2026-10-25 · [**typos**](adapters/stdlib/typos/) — Forgives misspellings in questions.
 - 2026-10-25 · [**risky-code**](adapters/stdlib/risky-code/) — Lines of code matching a known-dangerous pattern (command injection, eval, sql concatenation, broken tls and more), by file and line, as leads to read.
 - 2026-10-25 · [**across**](adapters/stdlib/across/) — One document across several boxes, not just one: each box's digest, export, timeline or readings, composed into one page, every line still cited by its box, file and line.
-- 2026-10-25 · [**accents**](adapters/stdlib/accents/) — A word typed without its accent read as your files write it, and the words-list lines that make it last.
 <!-- /willow:newest -->
 
 ### Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[repo-pile](adapters/stdlib/repo-pile/)** — Public repositories made into a box you can ask: cloned, kept only under a licence an Apache-2.0 project can use, their docs the pile, indexed for fast questions.
+**[export](adapters/stdlib/export/)** — Approved answers, and the question log (counts only, never words), as Markdown or CSV.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 97 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 98 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -290,6 +290,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - **rubric** (idea) — Marking against a rubric you wrote: each mark cites the criterion and the line of work it's for. *new* `no-install` `offline` `read-only` `tracking`
 - **school** (idea) — School letters and emails for parents: trips, forms due, term dates, and what to bring. *new* `no-install` `offline` `read-only` `tracking`
 - **session-cost** (idea) — Tokens each agent session spent, by day and by repo, summed from its own session files and priced from a table you keep. *new* `no-install` `offline` `read-only` `tracking`
+- [**stack**](adapters/stdlib/stack/) — One document from a stack of add-on steps over a box: each step's output grouped into pools and ordered tallest-first, so the peaks are what a reader meets first. *new* `no-install` `offline` `read-only` `tracking`
 - **subscriptions** (idea) — What you pay for every month, found in bank statements and emails, and when each renews. *new* `no-install` `offline` `read-only` `tracking`
 - **support-plan** (idea) — An IEP or support plan's goals, accommodations and review dates, each cited, for a parent or teacher. *new* `no-install` `offline` `read-only` `tracking`
 - **syllabus** (idea) — A course syllabus as dates: readings, assignments and exams due, each cited. *new* `no-install` `offline` `read-only` `tracking`
@@ -419,6 +420,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - **schema-check** (idea) — A model's answer held to a JSON schema before anything reads it, and a reply that doesn't fit recorded as a result, not lost as an error. *box* `no-install` `offline` `records` `assistant`
 - **second-opinion** (idea) — Two assistants' suggestions for the same question side by side, each waiting for its own seal. *new* `no-install` `offline` `records` `assistant`
 - [**serve**](adapters/stdlib/serve/) — The one markdown file a model reads: only the passages a human sealed, grouped into pools with the peaks first, by ids it can't guess, and nothing else. *bot* `no-install` `offline` `writes-output` `trust` `assistant`
+- **serve-piles** (idea) — serve's piles grouped on all four W's -- who, when, what and where -- not where alone, so a model meets a question from every box that touched it. *new* `no-install` `offline` `writes-output` `trust` `assistant`
 - **silence-log** (idea) — A model that ran and said nothing kept as its own row, so silence is told apart from a model that never ran. *bot* `no-install` `offline` `records` `assistant`
 - **translate** (idea) — An answer translated by a local model, the original kept beside it, the translation held until you seal it. Needs a local model server; licence varies by model. Reaches this machine only. *new* `needs-install` `this-machine` `records` `assistant`
 - [**windsurf**](adapters/stdlib/windsurf/) — Windsurf asks your folder and hands in suggestions, through the mcp add-on. *new* `no-install` `offline` `read-only` `assistant`
@@ -533,6 +535,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - [**live**](adapters/stdlib/live/) — Each way-in add-on run through the real program it's for, a shell, an editor or an AI tool: works, fails, or not here. Goes online: only what the programs it starts reach on their own; it reaches nothing itself. *new* `no-install` `maintainers` `tests` `interface` `assistant`
 - **maven** (idea) — The Java port on Maven Central, built from this repo and checked against the vectors. Goes online: Maven Central, to publish a release a maintainer tags. *new* `no-install` `online` `writes-output` `maintainers`
 - [**mutants**](adapters/stdlib/mutants/) — Breaks each add-on's code on purpose and checks its tests notice. *new* `no-install` `offline` `read-only` `maintainers`
+- **novelty** (idea) — Before a new add-on merges, whether its combination of pieces has been assembled before, scanned the way a study checks its own novelty. *new* `no-install` `offline` `read-only` `maintainers`
 - **npm** (idea) — The TypeScript port on npm, built from this repo, checked against the vectors, and published with provenance; npx runs it. Goes online: registry.npmjs.org, to publish a release a maintainer tags. *new* `no-install` `online` `writes-output` `maintainers`
 - **nuget** (idea) — The C# port on NuGet, built from this repo and checked against the vectors. Goes online: nuget.org, to publish a release a maintainer tags. *new* `no-install` `online` `writes-output` `maintainers`
 - [**pins**](adapters/stdlib/pins/) — Version ranges in package.json, pyproject.toml or Cargo.toml that no lockfile holds. *new* `no-install` `offline` `read-only` `maintainers`
@@ -542,6 +545,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - **pypy** (idea) — The kernel and its tests run under PyPy too, and timed against CPython. *new* `no-install` `offline` `read-only` `maintainers`
 - [**readme**](adapters/stdlib/readme/) — Builds ADDONS.md, and the README's one feature, from the add-ons' own cards. *new* `no-install` `offline` `writes-output` `maintainers`
 - **reconciler** (idea) — willow-reconciler run on this repo's idea list and git history: how much of what was proposed has landed. Needs willow-reconciler; Apache-2.0. *new* `needs-install` `offline` `read-only` `maintainers`
+- **repo-index** (idea) — This repository as its own deterministic box: its cards, docs and code as dated passages, rebuilt the same bytes each time, so willow can answer questions about itself. *new* `no-install` `offline` `writes-output` `maintainers`
 - **repro** (idea) — A release built twice from the same commit, byte for byte the same. *new* `no-install` `offline` `read-only` `maintainers`
 - [**restack**](adapters/stdlib/restack/) — Main merged into your branches, with the conflicts in the files the repo makes or only adds to settled by its own tools, and every other one left to you. *new* `no-install` `offline` `read-only` `maintainers` `git`
 - [**similar**](adapters/stdlib/similar/) — What's already on the add-on list near a new idea, by the kernel's own search. *box* `no-install` `offline` `read-only` `maintainers`
