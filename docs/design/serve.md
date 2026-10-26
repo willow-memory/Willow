@@ -93,7 +93,43 @@ same object from two sides:
 
 So: *add-on steps gather the content; piles and the seal make it safe to
 serve.* The operator's stack is the input; the sealed stack of piles is what
-the model is actually shown.
+the model is actually shown — and its order is the pools-and-peaks order
+below, not one the operator hand-keeps.
+
+## The shape: pools and peaks
+
+The stack is not a flat list *or* a set of boxes; it is both, and the order
+is one willow already has. From the one-script README's merged-tables method
+(["Pile it up; what stacks is what matters"](https://github.com/willow-memory/willows-grove/blob/main/docs/design/one-script/README.md),
+row 7 on row 8): pile the rows up, identical ones dedupe by hash, **mass
+decides attention**, and the tallest stacks — the **peaks** — are what stands
+out. "Code stacks the tables; the model looks only at what stands out."
+
+So the stack file, and the served file, share one markdown shape:
+
+- **A pool is a `##` section** — a who / what / day / where group (the box).
+- **Its steps (or served parts) are a list under it** — the `- addon -- args`
+  lines, or, in the served file, the parts with their trust label and opaque
+  id.
+- **Peaks set the order.** Sections, and the lines within, run tallest first
+  — by how many rows stack in the pool (its mass) — because that is what the
+  model should meet first.
+
+```markdown
+## mould landlord            # a pool; the tallest stack, so first
+- timeline -- "mould landlord"
+- digest -- --days 30
+
+## roof estimate             # a shorter stack, so below it
+- git -- log --oneline
+```
+
+The order falls out of the stacking, so the operator may write a flat list
+and `serve` renders the pooled, peak-ordered form; the flat list and the
+pooled document are the same stack, normalised. It also gives serve a scope
+knob the operator already believes in: **scope to the peaks** — serve the
+pools above a height and leave the rest, with the three-state/empty rule
+saying what was left (never truncated silently).
 
 ## Why markdown
 
@@ -102,10 +138,13 @@ human writes plain text. So **markdown-shape is a cross-check on who authored
 a part**, and every shape a serve relies on gets one fixed test — the
 grove's markdown-testing idea. Concretely for willow:
 
-- The **stack file is markdown** (a list, or a table of steps), so it reads
-  and diffs as prose and a test can hold its shape.
-- The **served file is markdown**: the W's as headings, the payload as a
-  fenced block or table, the trust label and the (opaque) id on each part.
+- The **stack file is markdown** — pools as `##` sections, steps as list
+  items under them, peak-ordered (see "The shape") — so it reads and diffs as
+  prose and a test can hold its shape. A list avoids a `|`-delimited table,
+  whose columns would collide with the pipes step arguments carry.
+- The **served file is markdown**, the same pools-and-peaks shape: the pool's
+  W's as the heading, each part's payload as a fenced block, the trust label
+  and the (opaque) id on each part.
 - A small set of **shape tests** check that a served part is well-formed
   markdown of the expected kind, and that nothing outside the shape leaks
   (no full-width hash, no row number).
@@ -165,12 +204,8 @@ served (fails closed).
 
 ## Open questions for the operator
 
-One still open; the rest are settled or held, below.
-
-1. **The stack file's markdown shape** — a plain markdown list of
-   `addon -- args` rows (my lean: friendlier to write, and a `|`-delimited
-   table would collide with the pipes that step arguments carry), or a table
-   with a column per field? (See "Why markdown".)
+None open. The shape and the W's are settled below; the model's one door is
+held for a separate, larger talk.
 
 ## Settled, and held
 
@@ -178,6 +213,11 @@ One still open; the rest are settled or held, below.
   this lands in willow").
 - **The step list is open** — any add-on, built in or user-written, run with
   its own arguments (decided 2026-10-26; see "The two senses of 'stack'").
+- **The shape is pools and peaks.** The stack file and the served file are
+  one markdown shape — pools as `##` sections, steps and parts as lists under
+  them, ordered tallest-first by mass — produced by the stacking, not
+  hand-kept; serve may scope to the peaks (decided 2026-10-26; see "The
+  shape").
 - **The four W's a pile groups on.** Exact value on four axes, nothing
   judged: `who`; `when` (the day); `what` (the `bite_key` — same question,
   same key, by hash, not judgment); and `where`. `where` is deliberately
