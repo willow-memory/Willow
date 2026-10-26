@@ -126,7 +126,8 @@ def do_serve(box: Path, to: Path) -> int:
     ]  # fmt: skip
     key = os.urandom(16).hex()  # a serve key, fresh each run: ids can't be guessed
     page = served_page(refs, subj, key)
-    to.write_text(page, encoding="utf-8", newline="\n")
+    with to.open("w", encoding="utf-8", newline="\n") as f:  # 3.9: write_text has no newline=
+        f.write(page)
     print(f"served {len(refs)} passage{'s' if len(refs) != 1 else ''} to {to}")
     return kernel.ALIVE
 
