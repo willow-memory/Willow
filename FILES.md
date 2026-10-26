@@ -458,12 +458,25 @@ willow/
 │       │   ├── requirements-floor.txt  mcp at its floor, also tested
 │       │   ├── test_mcp_server.py
 │       │   └── README.md
-│       └── pdf/
-│           ├── pdf.py        text out of PDFs, a headed paragraph a page
-│           ├── requirements.txt  pypdf, pinned
-│           ├── requirements-floor.txt  pypdf at its floor, also tested
-│           ├── test_pdf.py
-│           └── README.md
+│       ├── pdf/
+│       │   ├── pdf.py        text out of PDFs, a headed paragraph a page
+│       │   ├── requirements.txt  pypdf, pinned
+│       │   ├── requirements-floor.txt  pypdf at its floor, also tested
+│       │   ├── test_pdf.py
+│       │   └── README.md
+│       └── star-system/
+│           ├── star_system.py  a friend's star-system sim (science_bitch) run deterministically, as cited passages
+│           ├── requirements.txt  numpy, pinned
+│           ├── requirements-floor.txt  numpy at its floor, also tested
+│           ├── test_star_system.py
+│           ├── README.md
+│           └── example_repo/   a minimal stand-in checkout so the tests need no network
+│               └── simulations/
+│                   ├── __init__.py
+│                   └── star_system/
+│                       ├── __init__.py
+│                       ├── core.py    a plain velocity-Verlet stand-in, not the real integrator
+│                       └── data.py    a tiny stand-in catalog
 ├── ports/                    kernel.py rewritten in other languages
 │   ├── java/
 │   │   └── Kernel.java       JDK 11+, standard library only

@@ -10,6 +10,18 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `star-system`, a deps add-on that adapts a friend's project —
+  [science_bitch](https://github.com/AllHailSeizure/science_bitch) — into
+  willow: it imports and runs that project's own `star_system` simulation
+  (Newtonian N-body gravity, a fixed-step Yoshida integrator) from a `--repo`
+  checkout and writes what it computes as cited markdown — each body's Kepler
+  period and how well the run conserves energy, angular momentum and linear
+  momentum, the same invariants the project's tests check. Fixed-step and
+  deterministic, so the same inputs give the same bytes. Reads the checkout,
+  writes only `--to`, no box, no key, no network. Needs `numpy` (BSD-3-Clause,
+  floored at 2.1.0 for a Python-3.13 wheel); the tests run against a minimal
+  stand-in checkout so the deps gate needs no network. (#47)
+
 - `fast-tests`, a deps add-on that runs the test suite across every core with
   pytest-xdist — the same tests the serial run runs, one worker per core (or
   `--jobs N`), in a fraction of the time, with a footer naming the workers,
