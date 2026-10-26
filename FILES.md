@@ -572,6 +572,7 @@ willow/
 │   │   ├── sources.py        fetches the sources by their pins, and checks each tree without git
 │   │   ├── pieces.py         takes sources apart into one store of pieces, and rebuilds them from it
 │   │   ├── compose.py        assembles one Cargo workspace from the store, by seven written rules
+│   │   ├── conftest.py       gives the tests tomllib on Python 3.9 and 3.10, from pip's own tomli
 │   │   ├── run.py            the stages and the five pass rules, as kernel verdict rows
 │   │   ├── report.py         writes REPORT.md and results/checks.md from the committed files, the same bytes every run
 │   │   ├── test_craft_assembly.py holds the frozen files to their hashes, and the tools to their word
