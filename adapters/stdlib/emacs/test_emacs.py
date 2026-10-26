@@ -53,3 +53,21 @@ def test_a_bad_command_line_or_box_is_refused(tmp_path):
 
 def test_it_prints_with_the_python_that_ran_it(tmp_path):
     assert sys.executable in mod.render(box(tmp_path))
+
+
+def test_a_hosts_of_the_same_name_earlier_on_the_path_does_not_win(tmp_path):
+    decoy = tmp_path / "decoy"
+    decoy.mkdir()
+    (decoy / "hosts.py").write_text("raise SystemExit('the wrong hosts')\n")
+    code = (
+        "import sys, importlib.util\n"
+        "sys.path.insert(0, sys.argv[1])\n"
+        "s = importlib.util.spec_from_file_location('m', sys.argv[2])\n"
+        "m = importlib.util.module_from_spec(s)\n"
+        "s.loader.exec_module(m)\n"
+        "print(m.hosts.__file__)\n"
+    )
+    got = subprocess.run([sys.executable, "-c", code, str(decoy), str(HERE / "emacs.py")],
+                         capture_output=True, text=True)  # fmt: skip
+    assert got.returncode == 0, got.stderr
+    assert Path(got.stdout.strip()).parent.name == "hosts"
