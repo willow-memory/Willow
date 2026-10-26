@@ -190,16 +190,6 @@
   "tags": "no-install, online, records, play"
  },
  {
-  "name": "bench",
-  "kind": "stdlib",
-  "section": "For maintainers",
-  "line": "How fast the kernel answers on boxes of set sizes, per release, so a slowdown is seen.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, maintainers"
- },
- {
   "name": "bibtex",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
