@@ -559,19 +559,25 @@ willow/
 │   │       ├── advisory-words.txt  a words list of acronyms the advisories expand
 │   │       └── null.txt      fifty questions with nothing to do with the bug
 │   ├── craft-assembly/       the Craft apps taken apart into pieces, rebuilt exactly, and five assembled into one
-│   │   ├── README.md         the claim, the threats, what is frozen, what was seen before the freeze, results
+│   │   ├── README.md         the claim, the threats, what is frozen, what was seen before each freeze, results
+│   │   ├── REPORT.md         the full report, written by report.py from the files here, every number counted
+│   │   ├── BACKGROUND.md     the research it answers: AI agents rebuilding large programs, from search summaries
 │   │   ├── FROZEN.json       the SHA-256 of each frozen file, and of the tools when frozen
-│   │   ├── sources.json      the 21 sources by address, commit and git tree hash
+│   │   ├── sources.json      the 24 sources by address, commit and git tree hash
 │   │   ├── composite.json    the five apps the composite assembles, and their library's address
 │   │   ├── sources.py        fetches the sources by their pins, and checks each tree without git
 │   │   ├── pieces.py         takes sources apart into one store of pieces, and rebuilds them from it
-│   │   ├── compose.py        assembles one Cargo workspace from the store, by five written rules
+│   │   ├── compose.py        assembles one Cargo workspace from the store, by seven written rules
 │   │   ├── run.py            the stages and the five pass rules, as kernel verdict rows
+│   │   ├── report.py         writes REPORT.md and results/checks.md from the committed files, the same bytes every run
 │   │   ├── test_craft_assembly.py holds the frozen files to their hashes, and the tools to their word
+│   │   ├── test_report.py    holds the report and its checks to what their files make
 │   │   └── results/
 │   │       ├── run-1.json    the first run's every outcome: the store, each rebuild, each package in both
 │   │       ├── run-2.json    the second run's, from freeze 2: the same, and what the rules left out
-│   │       └── run-3.json    the third run's, from freeze 3: every rule held
+│   │       ├── run-3.json    the third run's, from freeze 3: every rule held
+│   │       ├── record.jsonl  a copy of the record the verdicts are rows on, without its key
+│   │       └── checks.md     what the kernel, xref and claim-check say of the report
 │   └── google-privacy-2026-10-16/  a real policy change: what Google's text says against what the news said
 │       ├── README.md         the claim, the threats, what is frozen, how to reproduce, the results
 │       ├── FROZEN.json       the SHA-256 of each frozen file, and of the tools when frozen

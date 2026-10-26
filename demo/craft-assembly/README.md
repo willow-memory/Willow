@@ -8,6 +8,10 @@ they share, into one program larger than any of them, by written rules
 alone. Every step is checked by hash or by Cargo, and each pass rule is a
 row on a kernel record.
 
+The whole of it, with the research it answers and every number counted
+from the files here, is [REPORT.md](REPORT.md), written by
+[report.py](report.py).
+
 ## The claim
 
 1. **Taken apart, nothing is lost.** Fifteen Craft apps, six commits of
