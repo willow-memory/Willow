@@ -10,6 +10,19 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `hosts`, an add-on that holds the assistants which take an MCP server as one
+  table (where each one's settings live, and the shape it wants) and prints the
+  lines that register mcp-lite with any of them: `hosts.py list`, then
+  `hosts.py show NAME --box DIR`. The twelve add-ons for one assistant each
+  (aider, codex-cli, copilot, cursor, emacs, gemini-cli, jetbrains, opencode,
+  vim, vscode, windsurf, zed) now take their `--box DIR` handling from it, and
+  the seven that register mcp-lite take their row from its table too, so a
+  later assistant is a row, not a script. Each prints the same bytes as
+  before; a test in each holds the one `hosts` it imports against a decoy of
+  the same name, which kills the `sys.path` break that was accepted for seven of
+  them, so those entries are gone from the mutants add-on's accepted list. Prints only: no box
+  written, no key, no network. (#53)
+
 - `bench`, an add-on that measures how fast the kernel answers. `run` builds a
   pile of each `--sizes` passage count (in a scratch folder), reads and ranks
   it the way a bite answers one question, and prints the median time over

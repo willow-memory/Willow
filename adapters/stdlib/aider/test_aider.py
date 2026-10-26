@@ -72,3 +72,21 @@ def test_each_system_gets_its_own_shells_quoting(monkeypatch):
     assert mod.command_line(argv) == "'/a b/python' x"
     monkeypatch.setattr(mod.os, "name", "nt")
     assert mod.command_line(argv) == '"/a b/python" x'
+
+
+def test_a_hosts_of_the_same_name_earlier_on_the_path_does_not_win(tmp_path):
+    decoy = tmp_path / "decoy"
+    decoy.mkdir()
+    (decoy / "hosts.py").write_text("raise SystemExit('the wrong hosts')\n")
+    code = (
+        "import sys, importlib.util\n"
+        "sys.path.insert(0, sys.argv[1])\n"
+        "s = importlib.util.spec_from_file_location('m', sys.argv[2])\n"
+        "m = importlib.util.module_from_spec(s)\n"
+        "s.loader.exec_module(m)\n"
+        "print(m.hosts.__file__)\n"
+    )
+    got = subprocess.run([sys.executable, "-c", code, str(decoy), str(HERE / "aider.py")],
+                         capture_output=True, text=True)  # fmt: skip
+    assert got.returncode == 0, got.stderr
+    assert Path(got.stdout.strip()).parent.name == "hosts"

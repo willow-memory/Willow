@@ -207,6 +207,10 @@ willow/
 │   │   │   ├── horoscope.py  a daily reading picked by the SHA-256 of name and date
 │   │   │   ├── test_horoscope.py
 │   │   │   └── README.md
+│   │   ├── hosts/
+│   │   │   ├── hosts.py          one table of assistants that take an MCP server, and the lines that register willow with each
+│   │   │   ├── test_hosts.py
+│   │   │   └── README.md
 │   │   ├── index-cache/
 │   │   │   ├── index_cache.py  a folder's scan index kept between runs, rebuilt only when a file's hash changed
 │   │   │   ├── test_index_cache.py

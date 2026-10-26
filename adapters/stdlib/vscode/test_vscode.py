@@ -33,11 +33,16 @@ def test_the_lines_run_pipe_with_grep_over_the_box(tmp_path):
     assert "/usr/bin/python3" in text and "pipe/pipe.py" in text
     assert str(b.resolve()) in text and "--grep" in text
     doc = json.loads(text)
+    assert text == json.dumps(doc, indent=2) + "\n"
     import re
 
-    pattern = re.compile(doc["tasks"][0]["problemMatcher"]["pattern"]["regexp"])
-    m = pattern.match("/home/a/notes/n.md:12: The bus leaves at seven.")
-    assert m and m.group(1) == "/home/a/notes/n.md" and m.group(2) == "12"
+    where = doc["tasks"][0]["problemMatcher"]["pattern"]
+    m = re.compile(where["regexp"]).match(
+        "/home/a/notes/n.md:12: The bus leaves at seven."
+    )
+    assert m and m.group(where["file"]) == "/home/a/notes/n.md"
+    assert m.group(where["line"]) == "12"
+    assert m.group(where["message"]) == "The bus leaves at seven."
 
 
 def test_the_pipe_it_names_exists():
@@ -69,3 +74,21 @@ def test_a_passage_quoting_a_file_and_line_of_its_own_is_not_misread():
     assert m.group(1) == "/home/a/notes/moved.txt" and m.group(2) == "1"
     m = pattern.match(r"C:\Users\a\notes\n.md:3: The bus")
     assert m.group(1) == r"C:\Users\a\notes\n.md" and m.group(2) == "3"
+
+
+def test_a_hosts_of_the_same_name_earlier_on_the_path_does_not_win(tmp_path):
+    decoy = tmp_path / "decoy"
+    decoy.mkdir()
+    (decoy / "hosts.py").write_text("raise SystemExit('the wrong hosts')\n")
+    code = (
+        "import sys, importlib.util\n"
+        "sys.path.insert(0, sys.argv[1])\n"
+        "s = importlib.util.spec_from_file_location('m', sys.argv[2])\n"
+        "m = importlib.util.module_from_spec(s)\n"
+        "s.loader.exec_module(m)\n"
+        "print(m.hosts.__file__)\n"
+    )
+    got = subprocess.run([sys.executable, "-c", code, str(decoy), str(HERE / "vscode.py")],
+                         capture_output=True, text=True)  # fmt: skip
+    assert got.returncode == 0, got.stderr
+    assert Path(got.stdout.strip()).parent.name == "hosts"

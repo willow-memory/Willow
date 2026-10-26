@@ -18,7 +18,7 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`████░░░░░░░░░░░░░░░░` **104 of 466 built** · 415 need no install · 51 need one
+`████░░░░░░░░░░░░░░░░` **105 of 467 built** · 416 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
@@ -28,7 +28,7 @@ or `writes-output`; its section), and any the card's author adds or changes.
 | Keeping track | 11 | 47 | 58 | 0 |
 | Trust and proof | 12 | 32 | 35 | 9 |
 | Privacy and safety | 6 | 8 | 14 | 0 |
-| Assistants | 16 | 40 | 50 | 6 |
+| Assistants | 17 | 40 | 51 | 6 |
 | Ways to use it | 11 | 28 | 35 | 4 |
 | Play | 4 | 36 | 35 | 5 |
 | For maintainers | 15 | 27 | 37 | 5 |
@@ -47,9 +47,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ### Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[pdf](adapters/deps/pdf/)** — Text out of PDFs.
+**[xref](adapters/stdlib/xref/)** — Every reference in your files checked: each link to another file, and each quoted line, still there and still saying it.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 104 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 105 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -401,6 +401,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - **hook-stop** (idea) — A Stop hook that won't let an assistant's turn end while the record doesn't verify or its changes aren't committed, and says which. *new* `no-install` `offline` `read-only` `assistant` `hooks`
 - **hook-tiers** (idea) — Edits sorted into tiers by the paths they touch, and the top tier held as a proposal until you seal it, by a rule you can read. *new* `no-install` `offline` `records` `assistant` `hooks`
 - **hooks-elsewhere** (idea) — The prompt hook for Gemini CLI, Codex and opencode, wherever they take hooks, held to Claude Code's answer byte for byte. *box* `no-install` `offline` `records` `assistant` `hooks`
+- [**hosts**](adapters/stdlib/hosts/) — One table of the assistants that take an MCP server, printing the lines that register willow with any of them. *new* `no-install` `offline` `read-only` `assistant`
 - **instruction-files** (idea) — For a folder, which instruction files each coding agent would load (AGENTS.md, CLAUDE.md, GEMINI.md, rules folders), in what order, with each file's size and hash. *box* `no-install` `offline` `read-only` `assistant`
 - **issue-answer** (idea) — A workflow that drafts an answer to a new issue from the repo's own docs, each line cited, posted only once a maintainer seals it. Goes online: the forge, through the workflow's token, to post an answer once it is sealed. *new* `no-install` `online` `records` `assistant`
 - **ladder** (idea) — Your files first, then sources you trust such as Jeles and Nestor, then a model, stopping at the first that answers, each answer kept for next time. *bot* `no-install` `offline` `records` `assistant`

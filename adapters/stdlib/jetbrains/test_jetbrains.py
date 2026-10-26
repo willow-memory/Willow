@@ -70,3 +70,21 @@ def test_a_folder_with_a_space_in_its_name_stays_one_piece(tmp_path):
     argv = shlex.split(params)
     assert argv[argv.index("--box") + 1] == str(b.resolve())
     assert argv[-1] == "$Prompt$"
+
+
+def test_a_hosts_of_the_same_name_earlier_on_the_path_does_not_win(tmp_path):
+    decoy = tmp_path / "decoy"
+    decoy.mkdir()
+    (decoy / "hosts.py").write_text("raise SystemExit('the wrong hosts')\n")
+    code = (
+        "import sys, importlib.util\n"
+        "sys.path.insert(0, sys.argv[1])\n"
+        "s = importlib.util.spec_from_file_location('m', sys.argv[2])\n"
+        "m = importlib.util.module_from_spec(s)\n"
+        "s.loader.exec_module(m)\n"
+        "print(m.hosts.__file__)\n"
+    )
+    got = subprocess.run([sys.executable, "-c", code, str(decoy), str(HERE / "jetbrains.py")],
+                         capture_output=True, text=True)  # fmt: skip
+    assert got.returncode == 0, got.stderr
+    assert Path(got.stdout.strip()).parent.name == "hosts"
