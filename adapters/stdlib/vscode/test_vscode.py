@@ -33,11 +33,16 @@ def test_the_lines_run_pipe_with_grep_over_the_box(tmp_path):
     assert "/usr/bin/python3" in text and "pipe/pipe.py" in text
     assert str(b.resolve()) in text and "--grep" in text
     doc = json.loads(text)
+    assert text == json.dumps(doc, indent=2) + "\n"
     import re
 
-    pattern = re.compile(doc["tasks"][0]["problemMatcher"]["pattern"]["regexp"])
-    m = pattern.match("/home/a/notes/n.md:12: The bus leaves at seven.")
-    assert m and m.group(1) == "/home/a/notes/n.md" and m.group(2) == "12"
+    where = doc["tasks"][0]["problemMatcher"]["pattern"]
+    m = re.compile(where["regexp"]).match(
+        "/home/a/notes/n.md:12: The bus leaves at seven."
+    )
+    assert m and m.group(where["file"]) == "/home/a/notes/n.md"
+    assert m.group(where["line"]) == "12"
+    assert m.group(where["message"]) == "The bus leaves at seven."
 
 
 def test_the_pipe_it_names_exists():

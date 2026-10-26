@@ -37,18 +37,70 @@ def box(tmp_path: Path) -> Path:
     return b
 
 
-@pytest.mark.parametrize("name", sorted(mod.HOSTS))
-def test_each_host_prints_what_its_own_addon_prints(name, tmp_path):
+def test_each_host_has_the_shape_its_assistant_reads(tmp_path):
     b = box(tmp_path)
-    own = load(name, STDLIB / name / f"{name}.py")
-    assert mod.render(name, b, "/usr/bin/python3") == own.render(b, "/usr/bin/python3")
+    py, args = "/usr/bin/python3", [str(mod.SERVER), "--box", str(b.resolve())]
+    plain = {"command": py, "args": args}
+    want = {
+        "cursor": [{"mcpServers": {"willow": plain}}],
+        "gemini-cli": [{"mcpServers": {"willow": plain}}],
+        "windsurf": [{"mcpServers": {"willow": plain}}],
+        "zed": [{"context_servers": {"willow": {**plain, "env": {}}}}],
+        "opencode": [
+            {
+                "$schema": "https://opencode.ai/config.json",
+                "mcp": {
+                    "willow": {"type": "local", "command": [py, *args], "enabled": True}
+                },
+            }
+        ],
+        "copilot": [
+            {"servers": {"willow": {"type": "stdio", **plain}}},
+            {"mcpServers": {"willow": {"type": "local", **plain, "tools": ["*"]}}},
+        ],
+    }
+    assert sorted(mod.HOSTS) == sorted([*want, "codex-cli"])
+    for name, docs in want.items():
+        found = mod.places(name, b, py)
+        assert [kind for _, kind, _ in found] == ["json"] * len(docs)
+        assert [value for _, _, value in found] == docs
+    ((_, kind, text),) = mod.places("codex-cli", b, py)
+    assert kind == "toml"
+    assert text == mod.toml_table("mcp_servers.willow", plain)
+
+
+def test_toml_tables_are_written_the_way_toml_reads_them():
+    text = mod.toml_table("a.b", {"command": "py", "args": ["x", 'q"uote']})
+    assert text == '[a.b]\ncommand = "py"\nargs = ["x", "q\\"uote"]\n'
+
+
+def test_every_one_assistant_addon_is_this_table_and_prints_the_same(tmp_path):
+    b = box(tmp_path)
+    for name in mod.HOSTS:
+        own = load(name, STDLIB / name / f"{name.replace('-', '_')}.py")
+        assert own.render(b, "py") == mod.render(name, b, "py")
+
+
+def test_cli_prints_for_a_box_and_refuses_the_rest(tmp_path, capsys):
+    b = box(tmp_path)
+    doc = "x.py: y.\n\n    python x.py --box DIR\n\nmore"
+    assert mod.cli(doc, lambda box: "hello\n", ["--box", str(b)]) == 0
+    assert capsys.readouterr().out == "hello\n"
+    for bad in ([], ["--box"], ["--to", str(b)], ["--box", str(tmp_path)]):
+        assert mod.cli(doc, lambda box: "hello\n", bad) == 2
+    err = capsys.readouterr().err
+    assert err.count("python x.py --box DIR") == 3 and "not a kernel box" in err
 
 
 @pytest.mark.parametrize("name", sorted(mod.HOSTS))
 def test_each_host_starts_mcp_lite_over_the_box(name, tmp_path):
     b = box(tmp_path)
     text = mod.render(name, b, "/usr/bin/python3").split(":\n\n", 1)[1]
-    doc = json.dumps(json.loads(text))
+    doc = (
+        text
+        if name == "codex-cli"
+        else json.dumps(json.loads(text.split("\n\nAdd this to")[0]))
+    )
     assert "/usr/bin/python3" in doc and "mcp-lite/server.py" in doc
     assert json.dumps(str(b.resolve())) in doc and "--box" in doc
 
