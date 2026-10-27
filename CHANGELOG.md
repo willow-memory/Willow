@@ -10,6 +10,16 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `ci-memo`, an add-on that memoizes CI gates on their inputs' bytes:
+  `ci_memo.py pin --box DIR --to FILE` writes, after a full `ci.py run` of
+  this very tree (each verdict row's `files_sha256` proves which), every
+  gate's key — its reachable files' paths and SHA-256, hashed as ci.py
+  hashes the tree — beside its verdict; `plan --pin FILE` then says which
+  verdicts the bytes still cover and prints the `ci.py run` line for the
+  rest. Reaches are drawn wide, never narrow: an undrawn gate keys on the
+  whole tree, and `deps`, `ports` and `tools` are never memoized, their
+  verdicts reaching past the tree. It decides nothing: a standing verdict is
+  the old run's, the full run stays the merge's evidence.
 - `reading-level`, an add-on that says how hard each file of your folder
   reads, easiest first: `reading_level.py --box DIR`. One row per file, its
   Flesch reading ease by the book, said in a word, with the words a sentence

@@ -80,6 +80,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "first-mention": ("first_mention.py", ["--box", "{box}", "tomatoes"]),
     "again": ("again.py", ["--box", "{box}"]),
     "aider": ("aider.py", ["--box", "{box}"]),
+    "ci-memo": ("ci_memo.py", ["keys", "mutants:accents"]),
     "ci-why": ("ci_why.py", ["--record", "{box}/record.jsonl"]),
     "ci-cache": ("ci_cache.py", ["--from", "{pile}"]),
     "claude-code": ("hook.py", ["setup", "--box", "{box}"]),
