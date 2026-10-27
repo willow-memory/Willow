@@ -292,6 +292,10 @@ willow/
 │   │   │   ├── server.py         the mcp add-on's three tools, the protocol by hand, nothing to install
 │   │   │   ├── test_server.py
 │   │   │   └── README.md
+│   │   ├── merkle/
+│   │   │   ├── merkle.py     a Merkle tree over the record: one row proven with a handful of hashes
+│   │   │   ├── test_merkle.py
+│   │   │   └── README.md
 │   │   ├── misquote/
 │   │   │   ├── misquote.py   a quote almost in your files: the closest passage, and what differs
 │   │   │   ├── test_misquote.py
@@ -332,6 +336,10 @@ willow/
 │   │   ├── people/
 │   │   │   ├── people.py     everyone the files name, by what they do with a name, and each one's every mention
 │   │   │   ├── test_people.py
+│   │   │   └── README.md
+│   │   ├── pii-audit/
+│   │   │   ├── pii_audit.py  the personal numbers in the files, checked never guessed, shown masked
+│   │   │   ├── test_pii_audit.py
 │   │   │   └── README.md
 │   │   ├── pins/
 │   │   │   ├── pins.py       version ranges in package.json or requirements.txt that no lockfile pins
@@ -474,6 +482,10 @@ willow/
 │   │   ├── todo/
 │   │   │   ├── todo.py       things marked to do, oldest first
 │   │   │   ├── test_todo.py
+│   │   │   └── README.md
+│   │   ├── transcript-redact/
+│   │   │   ├── transcript_redact.py  a transcript's keys, home paths and emails taken out, each removal listed
+│   │   │   ├── test_transcript_redact.py
 │   │   │   └── README.md
 │   │   ├── typos/
 │   │   │   ├── typos.py      a misspelt word read as the files spell it, one edit inside, offered not asked

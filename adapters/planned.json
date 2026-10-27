@@ -1759,16 +1759,6 @@
   "tags": "no-install, offline, records, assistant"
  },
  {
-  "name": "merkle",
-  "kind": "stdlib",
-  "section": "Trust and proof",
-  "line": "A Merkle tree over the record, so one row can be proven with a handful of hashes, not the whole file.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, trust"
- },
- {
   "name": "meta-archive",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -2173,16 +2163,6 @@
   "writes": "to",
   "network": "none",
   "tags": "needs-install, offline, writes-output, file-reader"
- },
- {
-  "name": "pii-audit",
-  "kind": "stdlib",
-  "section": "Privacy and safety",
-  "line": "Personal data sitting in your files (ID numbers, health details, card numbers), listed by file and line.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, privacy"
  },
  {
   "name": "pile-build",
@@ -3201,16 +3181,6 @@
   "writes": "record",
   "network": "none",
   "tags": "no-install, offline, records, play"
- },
- {
-  "name": "transcript-redact",
-  "kind": "stdlib",
-  "section": "Privacy and safety",
-  "line": "An agent transcript with keys, home paths and emails taken out before you share it, each removal listed by line.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, privacy"
  },
  {
   "name": "translate",
