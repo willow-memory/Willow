@@ -467,6 +467,14 @@ says how). The first was v0.1.0.
   chosen for `diverge`, `index-cache` and `notes` moved onto breaks their tests
   missed; each now has a test for it (#57)
 
+- The add-ons' tests and `tests:strip` are cut so no job runs them all.
+  `tests:adapters` is now `tests:adapters-1` to `-8` and `tests:strip` is
+  `tests:strip-1` to `-4` (a group's name still runs all of its gates), cut by
+  each test file's past time (`adapters/stdlib/ci/test-times.json`), and the
+  tests and strip jobs are sharded on every Python: one pytest over the
+  add-ons took eight minutes, and strip ran it again, so a tests job took
+  about seventeen. `github.py check` holds that every gate still runs once (#61)
+
 - A seal names the question it answers, and the key signs it. `seal` now
   writes the question's key (`bite_key`) on the seal row, and the proof is
   over the act, the subject and that key. Until now the question lived on the

@@ -141,8 +141,10 @@ never invented, and the eight beats in `test_kernel.py` test it.
 
 A gate added to `gates()` in `adapters/stdlib/ci/ci.py` (a demo, say) is
 also named in the two lists of gates in `adapters/stdlib/ci/test_ci.py`.
-Missed, `tests:adapters` fails, and `tests:strip` with it, since it runs
-the same tests.
+Missed, `tests:adapters-*` fails, and `tests:strip-*` with it, since it runs
+the same tests. A new test file needs nothing: the chunks are cut from the
+files there are, and one not in `adapters/stdlib/ci/test-times.json` counts
+as the median.
 
 ## A deps add-on's floor
 

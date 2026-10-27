@@ -208,7 +208,8 @@ def test_every_gate_a_plan_names_is_a_gate_ci_has(plan_of):
     for path in ("vectors/gen.py", "demo/php2shell/README.md", "constitution/coverage.py",
                  "adapters/deps/mcp/README.md", "adapters/stdlib/github/github.py"):  # fmt: skip
         named = [g for g in gate_names(plan_of(path).stdout) if ":" in g]
-        assert set(named) <= have | {"tests:adapters"}, (path, named)
+        # tests:adapters and tests:strip name a group of ci.py's chunked gates
+        assert all(g in have or ci.select([g], [], None) for g in named), (path, named)
 
 
 def test_a_change_to_the_planner_is_planned_like_any_add_on(plan_of):
