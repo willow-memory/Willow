@@ -16,7 +16,7 @@ says how). The first was v0.1.0.
   out, each removal listed by line with a stub, and the listing never prints
   what it removed. The copy is always written, 0 removals said when nothing
   left; JSON stays JSON; what has no shape slips through and the card says
-  so.
+  so. (#64)
 - `pii-audit`, an add-on that lists the identifying numbers sitting in your
   files, each by file and line, shown masked, never printed whole:
   `pii_audit.py --box DIR` (or `--from FOLDER`). Every number is checked,
@@ -24,7 +24,7 @@ says how). The first was v0.1.0.
   weighted checks for NHS, Medicare and TFN, which also need their name on
   the line, since one ten-digit run in ten passes such a check by luck. A
   run passing nothing is nobody's; what has no checkable shape is said in
-  the output, never mistaken for a clean bill.
+  the output, never mistaken for a clean bill. (#64)
 - `merkle`, an add-on that cuts a Merkle tree over the record so one row is
   proven with a handful of hashes, not the whole file: `root`, `prove --row
   N --to FILE`, and `check --proof FILE [--root HEX]`, which needs no box. A
@@ -32,7 +32,7 @@ says how). The first was v0.1.0.
   other, an odd node rises unchanged, the chain is checked before any proof
   is cut, and a lone proof is self-consistency (42), an answer only beside
   your own copy of the root. On this repo's own 177-row CI record a
-  verdict's proof is 8 hashes.
+  verdict's proof is 8 hashes. (#64)
 - `people`, an add-on that lists everyone your files name, most mentioned
   first, and, named, any one of them with every place they're mentioned:
   `people.py --box DIR [WHO]`. A name is known by what the files do with it,
