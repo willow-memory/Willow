@@ -171,6 +171,10 @@ willow/
 │   │   │   ├── cursor.py         the mcp.json lines that register mcp-lite with Cursor
 │   │   │   ├── test_cursor.py
 │   │   │   └── README.md
+│   │   ├── daily-word/
+│   │   │   ├── daily_word.py the day's word from the folder's own words, six guesses marked on the record
+│   │   │   ├── test_daily_word.py
+│   │   │   └── README.md
 │   │   ├── debts/
 │   │   │   ├── debts.py      lines speaking of money owed, dated and cited, the sum as written, never netted
 │   │   │   ├── test_debts.py

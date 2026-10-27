@@ -535,16 +535,6 @@
   "tags": "no-install, offline, read-only, tracking"
  },
  {
-  "name": "daily-word",
-  "kind": "stdlib",
-  "section": "Play",
-  "line": "A word game drawn from your own files' words, the same puzzle for everyone with the same box.",
-  "source": "new",
-  "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, play"
- },
- {
   "name": "datasette",
   "kind": "deps",
   "section": "Ways to use it",

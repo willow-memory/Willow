@@ -96,6 +96,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "codex-cli": ("codex_cli.py", ["--box", "{box}"]),
     "copilot": ("copilot.py", ["--box", "{box}"]),
     "cursor": ("cursor.py", ["--box", "{box}"]),
+    "daily-word": ("daily_word.py", ["--box", "{box}", "today", *NOW]),
     "debts": ("debts.py", ["--box", "{box}"]),
     "emacs": ("emacs.py", ["--box", "{box}"]),
     "gemini-cli": ("gemini_cli.py", ["--box", "{box}"]),

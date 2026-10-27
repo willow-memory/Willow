@@ -10,6 +10,13 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `daily-word`, an add-on that plays the day's word from the folder's own
+  five-letter words: `daily_word.py --box DIR guess WORD`, and `today` for
+  the board. The word is drawn by the seeded stream from the day and the
+  folder's words themselves, so the same box asks everyone the same word;
+  the folder is the dictionary too, and a guess it doesn't hold costs
+  nothing. Guesses and marks go on the record through the kernel's append;
+  the word shows only when the day is done.
 - `tarot`, an add-on that deals a tarot spread on the record: `tarot.py
   --box DIR draw [N]`, then `check`. The seed is the record's tip, the cards
   come from the seeded stream without replacement, a coin turns each, and
