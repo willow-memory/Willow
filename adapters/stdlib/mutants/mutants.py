@@ -5,7 +5,8 @@
 
 A mutant is the add-on's code with one small thing broken: a comparison
 turned around (`==` to `!=`, `<` to `>=`, `in` to `not in`), an `and` made an
-`or` (or the reverse), or a whole number made one larger. `run` makes up to
+`or` (or the reverse), or a whole number made one larger. (Not the index in
+`sys.path.insert(0, ...)`: second on the path still finds the repo root.) `run` makes up to
 N of them per add-on (6 unless `--per` says), one at a time, in a copy of the
 repo (never the repo itself), and runs that add-on's tests against each, with
 its share of the checks every add-on keeps (ci/test_contract.py). A
@@ -95,6 +96,22 @@ def points(tree: ast.AST) -> list[tuple[str, ast.AST]]:
     return out
 
 
+def inert(tree: ast.AST) -> set[ast.AST]:
+    """The places a break changes no import that works: the index in
+    `sys.path.insert(0, ...)`. A script puts its repo root first on the path
+    only to find kernel.py; second, it still finds it, so no test can tell."""
+    out = set()
+    for n in ast.walk(tree):
+        if (
+            isinstance(n, ast.Call)
+            and ast.unparse(n.func) == "sys.path.insert"
+            and n.args
+            and isinstance(n.args[0], ast.Constant)
+        ):  # fmt: skip
+            out.add(n.args[0])
+    return out
+
+
 def mutants(name: str) -> list[dict]:
     """Every mutant of an add-on, each with its id, sorted by id."""
     out = []
@@ -102,9 +119,13 @@ def mutants(name: str) -> list[dict]:
         source = path.read_text(encoding="utf-8")
         rel = path.relative_to(ROOT).as_posix()
         seen: dict[tuple, int] = {}
-        for i, (kind, node) in enumerate(points(ast.parse(source))):
+        tree = ast.parse(source)
+        skip = inert(tree)
+        for i, (kind, node) in enumerate(points(tree)):
             code = ast.get_source_segment(source, node) or ""
             nth = seen[(kind, code)] = seen.get((kind, code), -1) + 1
+            if node in skip:
+                continue  # counted above, so the other ids stay as they were
             mid = kernel.h256(f"{rel}\x1f{kind}\x1f{code}\x1f{nth}")[:12]
             out.append({"id": mid, "file": rel, "line": node.lineno,
                         "kind": kind, "code": code, "point": i})  # fmt: skip
