@@ -2165,16 +2165,6 @@
   "tags": "needs-install, offline, writes-output, file-reader"
  },
  {
-  "name": "pii-audit",
-  "kind": "stdlib",
-  "section": "Privacy and safety",
-  "line": "Personal data sitting in your files (ID numbers, health details, card numbers), listed by file and line.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, privacy"
- },
- {
   "name": "pile-build",
   "kind": "stdlib",
   "section": "Finding things",

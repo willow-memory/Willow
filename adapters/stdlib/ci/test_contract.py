@@ -131,6 +131,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "outdated": ("outdated.py", ["--box", "{box}"]),
     "typosquat": ("typosquat.py", ["--box", "{box}"]),
     "install-scripts": ("install_scripts.py", ["--box", "{box}"]),
+    "pii-audit": ("pii_audit.py", ["--box", "{box}"]),
     "pins": ("pins.py", ["--box", "{box}"]),
     "scan": ("scan.py", ["index", "--from", "{pile}", "--to", "{tmp}/index"]),
     "index-cache": ("index_cache.py", ["--from", "{pile}", "--to", "{tmp}/ix"]),

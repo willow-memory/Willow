@@ -10,6 +10,14 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `pii-audit`, an add-on that lists the identifying numbers sitting in your
+  files, each by file and line, shown masked, never printed whole:
+  `pii_audit.py --box DIR` (or `--from FOLDER`). Every number is checked,
+  not guessed: Luhn for cards, strict shapes for SSN and NI, and the
+  weighted checks for NHS, Medicare and TFN, which also need their name on
+  the line, since one ten-digit run in ten passes such a check by luck. A
+  run passing nothing is nobody's; what has no checkable shape is said in
+  the output, never mistaken for a clean bill.
 - `merkle`, an add-on that cuts a Merkle tree over the record so one row is
   proven with a handful of hashes, not the whole file: `root`, `prove --row
   N --to FILE`, and `check --proof FILE [--root HEX]`, which needs no box. A

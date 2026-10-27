@@ -337,6 +337,10 @@ willow/
 │   │   │   ├── people.py     everyone the files name, by what they do with a name, and each one's every mention
 │   │   │   ├── test_people.py
 │   │   │   └── README.md
+│   │   ├── pii-audit/
+│   │   │   ├── pii_audit.py  the personal numbers in the files, checked never guessed, shown masked
+│   │   │   ├── test_pii_audit.py
+│   │   │   └── README.md
 │   │   ├── pins/
 │   │   │   ├── pins.py       version ranges in package.json or requirements.txt that no lockfile pins
 │   │   │   ├── test_pins.py
