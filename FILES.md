@@ -171,6 +171,10 @@ willow/
 │   │   │   ├── cursor.py         the mcp.json lines that register mcp-lite with Cursor
 │   │   │   ├── test_cursor.py
 │   │   │   └── README.md
+│   │   ├── daily-word/
+│   │   │   ├── daily_word.py the day's word from the folder's own words, six guesses marked on the record
+│   │   │   ├── test_daily_word.py
+│   │   │   └── README.md
 │   │   ├── debts/
 │   │   │   ├── debts.py      lines speaking of money owed, dated and cited, the sum as written, never netted
 │   │   │   ├── test_debts.py
@@ -365,6 +369,10 @@ willow/
 │   │   │   ├── privacy.py    personal data and keys withheld from what a question prints
 │   │   │   ├── test_privacy.py
 │   │   │   └── README.md
+│   │   ├── quiz/
+│   │   │   ├── quiz.py       a passage of your own writing with a word missing, cut and scored on the record
+│   │   │   ├── test_quiz.py
+│   │   │   └── README.md
 │   │   ├── quote-check/
 │   │   │   ├── quote_check.py is this exact quote in my files, and where
 │   │   │   ├── test_quote_check.py
@@ -463,6 +471,10 @@ willow/
 │   │   │   ├── symptoms.py   one symptom's dated diary, turns marked only where the line says one, each cited
 │   │   │   ├── test_symptoms.py
 │   │   │   └── README.md
+│   │   ├── tarot/
+│   │   │   ├── tarot.py      a tarot spread dealt by the record's tip, replayable by anyone, meaning nothing by itself
+│   │   │   ├── test_tarot.py
+│   │   │   └── README.md
 │   │   ├── test-impact/
 │   │   │   ├── impact.py     which of this repo's checks a change can reach, closest first, in ci's gate names
 │   │   │   ├── test_impact.py
@@ -535,9 +547,17 @@ willow/
 │   │   │   ├── words_nl.py   a question in Dutch, its common words out, then the kernel's bite
 │   │   │   ├── test_words_nl.py
 │   │   │   └── README.md
+│   │   ├── words-pl/
+│   │   │   ├── words_pl.py   Polish questions without Polish's common words, then the kernel's own bite
+│   │   │   ├── test_words_pl.py
+│   │   │   └── README.md
 │   │   ├── words-pt/
 │   │   │   ├── words_pt.py   a question in Portuguese, its common words out, then the kernel's bite
 │   │   │   ├── test_words_pt.py
+│   │   │   └── README.md
+│   │   ├── words-sv/
+│   │   │   ├── words_sv.py   Swedish questions without Swedish's common words, then the kernel's own bite
+│   │   │   ├── test_words_sv.py
 │   │   │   └── README.md
 │   │   ├── xref/
 │   │   │   ├── xref.py       each link and file:line in your files checked, still there

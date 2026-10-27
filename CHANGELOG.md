@@ -10,6 +10,33 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `words-sv` and `words-pl`, two more of the common-words family: Swedish
+  and Polish questions asked through them lose their languages' common words
+  before the kernel's own `bite`, as words-de does for German. Each `list`
+  prints what it leaves out (134 Swedish words, 157 Polish, the cases Polish
+  declines its pronouns through among them); the record still keeps no
+  words, only the question's fingerprint, and English questions are
+  untouched. (#65)
+- `daily-word`, an add-on that plays the day's word from the folder's own
+  five-letter words: `daily_word.py --box DIR guess WORD`, and `today` for
+  the board. The word is drawn by the seeded stream from the day and the
+  folder's words themselves, so the same box asks everyone the same word;
+  the folder is the dictionary too, and a guess it doesn't hold costs
+  nothing. Guesses and marks go on the record through the kernel's append;
+  the word shows only when the day is done. (#65)
+- `tarot`, an add-on that deals a tarot spread on the record: `tarot.py
+  --box DIR draw [N]`, then `check`. The seed is the record's tip, the cards
+  come from the seeded stream without replacement, a coin turns each, and
+  `check` deals every draw on the record again, naming the first that
+  doesn't hold. The deck is the standard 78, named in full; what a card
+  means is never said. (#65)
+- `quiz`, an add-on that cuts a quiz from your own files: a passage with a
+  word missing, for you to fill in from memory: `quiz.py --box DIR ask`,
+  then `answer WORD`. The record's tip draws the puzzle through the seeded
+  stream, the quiz row holds the answer's SHA-256 and never the word, one
+  quiz is open at a time, and the score is the record's own count. Only your
+  own writing is quizzed (no markup, fields or shouting), and a folder that
+  changed under the quiz marks no one wrong. (#65)
 - `transcript-redact`, an add-on that writes a copy of an agent transcript
   fit to share: `transcript_redact.py --from FILE --to FILE`. Keys (by the
   shapes keys wear), the account name in home paths, and emails are taken

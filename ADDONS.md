@@ -18,38 +18,38 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`█████░░░░░░░░░░░░░░░` **127 of 470 built** · 419 need no install · 51 need one
+`██████░░░░░░░░░░░░░░` **132 of 470 built** · 419 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
 | Reading more kinds of files | 14 | 91 | 96 | 9 |
 | Finding things | 16 | 27 | 33 | 10 |
-| Your own words | 9 | 16 | 22 | 3 |
+| Your own words | 11 | 14 | 22 | 3 |
 | Keeping track | 15 | 43 | 58 | 0 |
 | Trust and proof | 15 | 30 | 36 | 9 |
 | Privacy and safety | 9 | 5 | 14 | 0 |
 | Assistants | 17 | 40 | 51 | 6 |
 | Ways to use it | 11 | 28 | 35 | 4 |
-| Play | 4 | 36 | 35 | 5 |
+| Play | 7 | 33 | 35 | 5 |
 | For maintainers | 17 | 27 | 39 | 5 |
 <!-- /willow:pools -->
 
 ## Newest
 
 <!-- willow:newest -->
+- 2026-10-27 · [**words-sv**](adapters/stdlib/words-sv/) — Swedish common words ('och', 'att').
+- 2026-10-27 · [**words-pl**](adapters/stdlib/words-pl/) — Polish common words ('i', 'w').
 - 2026-10-27 · [**transcript-redact**](adapters/stdlib/transcript-redact/) — An agent transcript with keys, home paths and emails taken out before you share it, each removal listed by line.
+- 2026-10-27 · [**tarot**](adapters/stdlib/tarot/) — A seeded tarot draw on the record, replayable by anyone with the seed.
 - 2026-10-27 · [**symptoms**](adapters/stdlib/symptoms/) — A symptom diary over time, ready to show a doctor: what, when, how bad, each line cited.
-- 2026-10-27 · [**subtitles**](adapters/stdlib/subtitles/) — Subtitle and transcript files (.vtt, .srt) as lines cited by timestamp, for podcasts and videos already transcribed.
-- 2026-10-27 · [**said**](adapters/stdlib/said/) — Your own quotes, gathered: every 'so-and-so, on this date: "..."' in your files, as a dated timeline of what was decided.
-- 2026-10-27 · [**renewals**](adapters/stdlib/renewals/) — Passports, licences, insurance and memberships: when each expires, from your documents.
 <!-- /willow:newest -->
 
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[jrnl](adapters/stdlib/jrnl/)** — jrnl journals: each [YYYY-MM-DD HH:MM] entry as a dated passage.
+**[surprise](adapters/stdlib/surprise/)** — One passage from your folder at random, seeded so it can be replayed.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 127 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 132 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -234,10 +234,10 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**words-it**](adapters/stdlib/words-it/) — Italian common words ("il", "e"). *new* `no-install` `offline` `records` `words` `italian`
 - **words-ja** (idea) — Japanese, which has no spaces: a small segmenter of its own and a common-words list. *new* `no-install` `offline` `writes-output` `words`
 - [**words-nl**](adapters/stdlib/words-nl/) — Dutch common words ("de", "en"). *new* `no-install` `offline` `records` `words` `dutch`
-- **words-pl** (idea) — Polish common words ('i', 'w'). *new* `no-install` `offline` `writes-output` `words`
+- [**words-pl**](adapters/stdlib/words-pl/) — Polish common words ('i', 'w'). *new* `no-install` `offline` `records` `words` `polish`
 - [**words-pt**](adapters/stdlib/words-pt/) — Portuguese common words ("o", "e"). *new* `no-install` `offline` `records` `words` `portuguese`
 - **words-ru** (idea) — Russian common words, so questions aren't matched on 'и' and 'в'. *new* `no-install` `offline` `writes-output` `words`
-- **words-sv** (idea) — Swedish common words ('och', 'att'). *new* `no-install` `offline` `writes-output` `words`
+- [**words-sv**](adapters/stdlib/words-sv/) — Swedish common words ('och', 'att'). *new* `no-install` `offline` `records` `words` `swedish`
 - **words-tr** (idea) — Turkish common words ('ve', 'bir'). *new* `no-install` `offline` `writes-output` `words`
 - **words-zh** (idea) — Chinese, which has no spaces: words found by a small segmenter of its own, and a common-words list. *new* `no-install` `offline` `writes-output` `words`
 
@@ -477,7 +477,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - **beacon** (idea) — Draws seeded by a public randomness beacon (drand), so nobody could have picked the result in advance. Goes online: api.drand.sh, to read a beacon round's randomness. *bot* `no-install` `online` `records` `play`
 - **chess-puzzle** (idea) — A Lichess puzzle a day, drawn by a seed: predict whether you'll solve it, then solve it. Goes online: lichess.org, to read the puzzle. *new* `no-install` `online` `records` `play`
 - **connect-four** (idea) — Connect Four as rows on the record, held to the solved result: the first player wins. *new* `no-install` `offline` `records` `play`
-- **daily-word** (idea) — A word game drawn from your own files' words, the same puzzle for everyone with the same box. *new* `no-install` `offline` `records` `play`
+- [**daily-word**](adapters/stdlib/daily-word/) — A word game drawn from your own files' words, the same puzzle for everyone with the same box. *new* `no-install` `offline` `records` `play`
 - [**dice**](adapters/stdlib/dice/) — Seeded dice rolls as rows: every roll replayable and checkable. *bot* `no-install` `offline` `records` `play`
 - **dice5e** (idea) — Full tabletop dice notation (4d6kh3, advantage). Needs dice; MIT. *bot* `needs-install` `offline` `records` `play`
 - **front-page** (idea) — Which new posts will make the Hacker News front page? Wager, and let its search settle it. Goes online: hn.algolia.com, to read the front page. *new* `no-install` `online` `records` `play`
@@ -501,14 +501,14 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - **pile-poetry** (idea) — Verse from the word pairs your own files use most, in your own dialect. *new* `no-install` `offline` `read-only` `play`
 - **predictions** (idea) — Twelve yes-or-no questions about random data, forecast now and answered by a beacon round later, with your Brier score. Goes online: api.drand.sh, to read a beacon round's randomness. *bot* `no-install` `online` `records` `play`
 - **quake-bets** (idea) — Will there be a magnitude 6 this week? Bet, then let the USGS feed settle it against the base rate. Goes online: earthquake.usgs.gov, to read the week's earthquakes. *new* `no-install` `online` `records` `play`
-- **quiz** (idea) — A quiz from your own files: a passage with a word missing, and you fill it in. *new* `no-install` `offline` `records` `play`
+- [**quiz**](adapters/stdlib/quiz/) — A quiz from your own files: a passage with a word missing, and you fill it in. *new* `no-install` `offline` `records` `play`
 - **real-sky** (idea) — A horoscope from where the planets really are, computed offline from a JPL ephemeris. Needs Skyfield; MIT. Goes online: the ephemeris file, downloaded once. *new* `needs-install` `online` `read-only` `play`
 - **reversi** (idea) — Reversi as rows: every move, each flip following from the board. *new* `no-install` `offline` `records` `play`
 - **roll-for-merge** (idea) — A d20 for every pull request, green runs added and red streaks taken away, against a DC the bot calls. *new* `no-install` `offline` `records` `play`
 - **rules** (idea) — A game's or a house's rules, sealed section by section, so 'what does the rule say?' answers with the exact section. *bot* `no-install` `offline` `records` `play`
 - **sokoban** (idea) — Sokoban levels and moves on the record, a solution checked by replaying it. *new* `no-install` `offline` `records` `play`
 - **spurious** (idea) — Everything joined on time and place (CI reds, earthquakes, rain, front pages) to hunt correlations that mean nothing. *new* `no-install` `offline` `read-only` `play`
-- **tarot** (idea) — A seeded tarot draw on the record, replayable by anyone with the seed. *new* `no-install` `offline` `records` `play`
+- [**tarot**](adapters/stdlib/tarot/) — A seeded tarot draw on the record, replayable by anyone with the seed. *new* `no-install` `offline` `records` `play`
 - **tic-tac-toe** (idea) — Tic-tac-toe as rows: every move, and the solver's value of each position; perfect play draws. *new* `no-install` `offline` `records` `play`
 - **tides** (idea) — Tide predictions as a control: if your Brier score on tides isn't near zero, the forecasting plumbing is broken. Goes online: NOAA's tides API, to read predictions and what happened. *new* `no-install` `online` `records` `play`
 - **todays-place** (idea) — One place a day drawn from Natural Earth's public-domain list, for the day's questions and bets. *new* `no-install` `offline` `records` `play`
