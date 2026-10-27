@@ -451,7 +451,7 @@ says how). The first was v0.1.0.
   each test file's past time (`adapters/stdlib/ci/test-times.json`), and the
   tests and strip jobs are sharded on every Python: one pytest over the
   add-ons took eight minutes, and strip ran it again, so a tests job took
-  about seventeen. `github.py check` holds that every gate still runs once.
+  about seventeen. `github.py check` holds that every gate still runs once (#61).
 
 - A seal names the question it answers, and the key signs it. `seal` now
   writes the question's key (`bite_key`) on the seal row, and the proof is
