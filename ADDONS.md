@@ -18,14 +18,14 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`█████░░░░░░░░░░░░░░░` **122 of 470 built** · 419 need no install · 51 need one
+`█████░░░░░░░░░░░░░░░` **123 of 470 built** · 419 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
 | Reading more kinds of files | 14 | 91 | 96 | 9 |
 | Finding things | 15 | 28 | 33 | 10 |
 | Your own words | 9 | 16 | 22 | 3 |
-| Keeping track | 14 | 44 | 58 | 0 |
+| Keeping track | 15 | 43 | 58 | 0 |
 | Trust and proof | 14 | 31 | 36 | 9 |
 | Privacy and safety | 7 | 7 | 14 | 0 |
 | Assistants | 17 | 40 | 51 | 6 |
@@ -37,19 +37,19 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ## Newest
 
 <!-- willow:newest -->
+- 2026-10-27 · [**symptoms**](adapters/stdlib/symptoms/) — A symptom diary over time, ready to show a doctor: what, when, how bad, each line cited.
 - 2026-10-27 · [**subtitles**](adapters/stdlib/subtitles/) — Subtitle and transcript files (.vtt, .srt) as lines cited by timestamp, for podcasts and videos already transcribed.
 - 2026-10-27 · [**said**](adapters/stdlib/said/) — Your own quotes, gathered: every 'so-and-so, on this date: "..."' in your files, as a dated timeline of what was decided.
 - 2026-10-27 · [**renewals**](adapters/stdlib/renewals/) — Passports, licences, insurance and memberships: when each expires, from your documents.
 - 2026-10-27 · [**reading-level**](adapters/stdlib/reading-level/) — How hard a passage reads (sentence length, word length, Flesch), so a teacher can find texts for a class.
-- 2026-10-27 · [**jrnl**](adapters/stdlib/jrnl/) — jrnl journals: each [YYYY-MM-DD HH:MM] entry as a dated passage.
 <!-- /willow:newest -->
 
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[todo](adapters/stdlib/todo/)** — TODO, FIXME and "need to" lines across the folder, oldest first.
+**[mcp-lite](adapters/stdlib/mcp-lite/)** — The mcp add-on's three tools with nothing to install: the protocol by hand, standard library only.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 122 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 123 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -295,7 +295,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - **subscriptions** (idea) — What you pay for every month, found in bank statements and emails, and when each renews. *new* `no-install` `offline` `read-only` `tracking`
 - **support-plan** (idea) — An IEP or support plan's goals, accommodations and review dates, each cited, for a parent or teacher. *new* `no-install` `offline` `read-only` `tracking`
 - **syllabus** (idea) — A course syllabus as dates: readings, assignments and exams due, each cited. *new* `no-install` `offline` `read-only` `tracking`
-- **symptoms** (idea) — A symptom diary over time, ready to show a doctor: what, when, how bad, each line cited. *new* `no-install` `offline` `read-only` `tracking`
+- [**symptoms**](adapters/stdlib/symptoms/) — A symptom diary over time, ready to show a doctor: what, when, how bad, each line cited. *new* `no-install` `offline` `read-only` `tracking`
 - **tax-year** (idea) — One tax year's receipts and statements gathered in one place, each with the file it came from. *new* `no-install` `offline` `read-only` `tracking`
 - [**todo**](adapters/stdlib/todo/) — TODO, FIXME and "need to" lines across the folder, oldest first. *box* `no-install` `offline` `read-only` `tracking`
 - **trips** (idea) — Your trips from booking emails and tickets: where you went, when, and where you stayed. *new* `no-install` `offline` `read-only` `tracking`

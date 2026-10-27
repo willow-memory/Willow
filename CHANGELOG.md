@@ -10,6 +10,13 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `symptoms`, an add-on that gathers one symptom's diary from your files,
+  ready to show a doctor: `symptoms.py --box DIR "knee"`. A line counts when
+  it itself names the symptom (every content word, read the kernel's way);
+  it is dated as the files say and cited, and a turn is marked only where
+  the line says one (worse/better word lists on the card, a mixed line said
+  so, an N/10 score shown as written). Nothing is averaged, trended or
+  diagnosed; the whole matter written to a file stays `timeline`'s job.
 - `habits`, an add-on that gathers the short lines your files write day
   after day into streaks: `habits.py --box DIR`. A habit is the same line
   (its words, digits dropped, one to six of them) on four or more distinct
