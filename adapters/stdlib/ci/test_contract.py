@@ -107,6 +107,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "plain": ("plain.py", ["bite", "--box", "{box}", *NOW, "tomatoes"]),
     "privacy": ("privacy.py", ["bite", "--box", "{box}", *NOW, "tomatoes"]),
     "quote-check": ("quote_check.py", ["--box", "{box}", "Tomatoes want sun"]),
+    "reading-level": ("reading_level.py", ["--box", "{box}"]),
     "misquote": ("misquote.py", ["--box", "{box}", "Tomatoes want rain"]),
     "claim-check": ("claim_check.py", ["--box", "{box}", "tomatoes want sun"]),
     "policy-watch": ("policy_watch.py", ["--url", "http://127.0.0.1:9/terms", "--to", "{tmp}/w"]),

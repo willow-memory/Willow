@@ -10,6 +10,13 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `reading-level`, an add-on that says how hard each file of your folder
+  reads, easiest first: `reading_level.py --box DIR`. One row per file, its
+  Flesch reading ease by the book, said in a word, with the words a sentence
+  and syllables a word it is made of. Sentences are counted as written (a
+  list of notes reads as its items), syllables by rule of thumb, and a file
+  under 30 words is listed as too short, never scored; off English prose the
+  two lengths say more than the score, and the card says so.
 - `first-mention`, an add-on that says when your files first mention
   something, and shows the line that does:
   `first_mention.py --box DIR "your words"`. A mention is a line that itself

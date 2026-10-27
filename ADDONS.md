@@ -18,12 +18,12 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`█████░░░░░░░░░░░░░░░` **109 of 469 built** · 418 need no install · 51 need one
+`█████░░░░░░░░░░░░░░░` **110 of 469 built** · 418 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
 | Reading more kinds of files | 12 | 93 | 96 | 9 |
-| Finding things | 11 | 32 | 33 | 10 |
+| Finding things | 12 | 31 | 33 | 10 |
 | Your own words | 8 | 17 | 22 | 3 |
 | Keeping track | 11 | 47 | 58 | 0 |
 | Trust and proof | 13 | 32 | 36 | 9 |
@@ -37,19 +37,19 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ### Newest
 
 <!-- willow:newest -->
+- 2026-10-27 · [**reading-level**](adapters/stdlib/reading-level/) — How hard a passage reads (sentence length, word length, Flesch), so a teacher can find texts for a class.
 - 2026-10-27 · [**first-mention**](adapters/stdlib/first-mention/) — When your files first mention something, and the line that does.
 - 2026-10-27 · [**amounts**](adapters/stdlib/amounts/) — Every sum of money in your files, with its date and the line it's on.
 - 2026-10-26 · [**tip-pin**](adapters/stdlib/tip-pin/) — Where a box's record ends, kept outside the box, so rows cut off or a whole chain re-hashed are found where verify can't.
 - 2026-10-26 · [**star-system**](adapters/deps/star-system/) — A friend's star-system simulation (science_bitch) run deterministically and written as cited passages: each body's Kepler period and how well the run conserves energy, angular momentum and linear momentum.
-- 2026-10-26 · [**stack**](adapters/stdlib/stack/) — One document from a stack of add-on steps over a box: each step's output grouped into pools and ordered tallest-first, so the peaks are what a reader meets first.
 <!-- /willow:newest -->
 
 ### Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[copilot](adapters/stdlib/copilot/)** — GitHub Copilot, in VS Code and in its own CLI, asks your folder through the mcp add-on.
+**[claim-check](adapters/stdlib/claim-check/)** — A claim checked against your sources: the passages that hold all of its parts, the ones that hold only some, and the parts no file names.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 109 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 110 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -196,7 +196,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - **pile-sweep** (idea) — The passage size measured, not guessed: your box's own questions asked at several sizes, and the size that finds the most of their answers kept. *bot* `no-install` `offline` `read-only` `search` `pile`
 - **promises** (idea) — What a candidate or a council said, by date and source, from the documents you saved. *new* `no-install` `offline` `read-only` `search`
 - [**quote-check**](adapters/stdlib/quote-check/) — Is this exact quote in my files, and where? For writers, journalists and students. *box* `no-install` `offline` `read-only` `search`
-- **reading-level** (idea) — How hard a passage reads (sentence length, word length, Flesch), so a teacher can find texts for a class. *new* `no-install` `offline` `read-only` `search`
+- [**reading-level**](adapters/stdlib/reading-level/) — How hard a passage reads (sentence length, word length, Flesch), so a teacher can find texts for a class. *new* `no-install` `offline` `read-only` `search`
 - **record-sql** (idea) — SQL straight over your record, in place: 'how many answers did I approve in March?' Needs DuckDB; MIT. *new* `needs-install` `offline` `read-only` `search`
 - **rerank** (idea) — A small model on the CPU that reorders the top passages by reading the question and each passage together. Needs FlashRank; Apache-2.0. Goes online: the model, downloaded once. *new* `needs-install` `online` `read-only` `search`
 - **ripgrep** (idea) — Exact search through ripgrep, much faster on a big folder, its hits checked against the kernel's hashes. Needs the ripgrep program; MIT or Unlicense. *new* `needs-install` `offline` `read-only` `search`

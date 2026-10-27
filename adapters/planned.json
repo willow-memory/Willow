@@ -2548,16 +2548,6 @@
   "tags": "no-install, online, read-only, trust"
  },
  {
-  "name": "reading-level",
-  "kind": "stdlib",
-  "section": "Finding things",
-  "line": "How hard a passage reads (sentence length, word length, Flesch), so a teacher can find texts for a class.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, search"
- },
- {
   "name": "reading-log",
   "kind": "stdlib",
   "section": "Keeping track",
