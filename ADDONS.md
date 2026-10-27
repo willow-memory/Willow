@@ -18,14 +18,14 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`█████░░░░░░░░░░░░░░░` **120 of 470 built** · 419 need no install · 51 need one
+`█████░░░░░░░░░░░░░░░` **121 of 470 built** · 419 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
 | Reading more kinds of files | 14 | 91 | 96 | 9 |
 | Finding things | 15 | 28 | 33 | 10 |
 | Your own words | 9 | 16 | 22 | 3 |
-| Keeping track | 12 | 46 | 58 | 0 |
+| Keeping track | 13 | 45 | 58 | 0 |
 | Trust and proof | 14 | 31 | 36 | 9 |
 | Privacy and safety | 7 | 7 | 14 | 0 |
 | Assistants | 17 | 40 | 51 | 6 |
@@ -47,9 +47,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[mcp](adapters/deps/mcp/)** — Lets any MCP client, such as an AI assistant or editor, ask your folder and hand in suggestions.
+**[mutants](adapters/stdlib/mutants/)** — Breaks each add-on's code on purpose and checks its tests notice.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 120 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 121 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -255,7 +255,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - **contracts** (idea) — The dates that matter in your contracts: renewals, notice periods and break clauses, each cited. *new* `no-install` `offline` `read-only` `tracking`
 - **crowd** (idea) — You against the crowd: a prediction market's question copied into your ledger, your probability beside theirs, both scored. Goes online: the market's public API, to read the question and its resolution. *new* `no-install` `online` `records` `tracking`
 - **cycle** (idea) — A menstrual cycle log that never leaves this machine: dates, what's next, and what changed. *new* `no-install` `offline` `read-only` `tracking`
-- **debts** (idea) — Who owes whom, from the IOUs in your notes and messages, each cited. *new* `no-install` `offline` `read-only` `tracking`
+- [**debts**](adapters/stdlib/debts/) — Who owes whom, from the IOUs in your notes and messages, each cited. *new* `no-install` `offline` `read-only` `tracking`
 - [**digest**](adapters/stdlib/digest/) — One page of what your folder needs from you: suggestions waiting, approvals gone stale, dates coming up, questions that keep finding nothing. *bot* `no-install` `offline` `read-only` `tracking` `everyday`
 - **flashcards** (idea) — Approved question-and-answer pairs become cards, scheduled by spaced repetition. *box* `no-install` `offline` `records` `tracking`
 - **foia** (idea) — Freedom-of-information requests: what you asked, when, and when the answer is due by law. *new* `no-install` `offline` `read-only` `tracking`

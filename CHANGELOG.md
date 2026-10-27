@@ -10,6 +10,13 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `debts`, an add-on that lists every line speaking of money owed, oldest
+  first, each with its date, the sum it names (as the amounts add-on reads
+  one) and where it is: `debts.py --box DIR`. The owing words are owe and
+  its forms, IOU, repay, paid back, pay back; lent and borrowed join them
+  only with a sum on the line, so a lent drill stays `lending`'s. Nothing is
+  netted: a paid-back line is listed beside the debt it answers, and whether
+  anything still stands is the files' story to finish.
 - `renewals`, an add-on that lists every line saying an expiry and its own
   date, soonest first, what's gone by marked: `renewals.py --box DIR
   [--now TS]`. The words are expires, expiry, expiration, renew and its

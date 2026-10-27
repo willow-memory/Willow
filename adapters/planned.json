@@ -566,16 +566,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "debts",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "Who owes whom, from the IOUs in your notes and messages, each cited.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
- },
- {
   "name": "deep-links",
   "kind": "stdlib",
   "section": "Ways to use it",

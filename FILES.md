@@ -171,6 +171,10 @@ willow/
 │   │   │   ├── cursor.py         the mcp.json lines that register mcp-lite with Cursor
 │   │   │   ├── test_cursor.py
 │   │   │   └── README.md
+│   │   ├── debts/
+│   │   │   ├── debts.py      lines speaking of money owed, dated and cited, the sum as written, never netted
+│   │   │   ├── test_debts.py
+│   │   │   └── README.md
 │   │   ├── dice/
 │   │   │   ├── dice.py       dice rolled on the record, seeded by its tip; check throws every roll again
 │   │   │   ├── test_dice.py
