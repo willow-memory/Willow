@@ -13,7 +13,7 @@ says how). The first was v0.1.0.
 - One idea added to `adapters/planned.json`: `bot-venv`, which says whether
   willow-bot's own venv (found by the bot's rule) or any you name has what CI
   needs (pytest, and ruff at CI's pin) and prints the line that runs CI with
-  its Python.
+  its Python. (#58)
 - `tip-pin`, an add-on that pins where a box's record ends (its row count and
   last hash) to a file kept out of the box, and checks the box against it:
   `tip_pin.py pin --box DIR --to FILE`, then `tip_pin.py check --box DIR
