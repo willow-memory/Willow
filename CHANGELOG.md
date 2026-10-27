@@ -447,7 +447,7 @@ says how). The first was v0.1.0.
 
 - `mutants` no longer breaks the index in `sys.path.insert(0, ...)`: second on
   the path still finds the repo root, so no test can tell, and 18 add-ons had
-  listed it by hand in `accepted.json`. Other mutants keep their ids. The six
+  listed it by hand in `adapters/stdlib/mutants/accepted.json`. Other mutants keep their ids. The six
   chosen for `diverge`, `index-cache` and `notes` moved onto breaks their tests
   missed; each now has a test for it.
 
