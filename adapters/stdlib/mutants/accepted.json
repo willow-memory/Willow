@@ -1,7 +1,4 @@
 {
-  "accents": {
-    "0ec1ab158323": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
-  },
   "across": {
     "041037f2efda": "`a.startswith(\"--\") or not a` only refuses a token the later `doc not in DOCS` check refuses anyway (no DOC name starts with -- or is empty), so and/or here changes no result."
   },
@@ -17,26 +14,11 @@
   "books": {
     "059f5e759b3b": "Kindle always writes a blank line after a clipping's meta line; starting one line later skips only that blank."
   },
-  "claim-check": {
-    "11c6e5c3ed55": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
-  },
   "clauses": {
     "0df2e008ca77": "The width a file of page headings and no text lines falls back to: with no lines, it is never compared to one."
   },
   "coming-up": {
     "059bb44076f5": "The kernel's dates are exactly eight characters, so d[6:9] is d[6:8]."
-  },
-  "dice": {
-    "080cb53ea56e": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
-  },
-  "diverge": {
-    "034127892304": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
-  },
-  "hook-fail-closed": {
-    "22462805a55d": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
-  },
-  "index-cache": {
-    "2564baa97861": "sys.path.insert at index 1 instead of 0 still finds kernel.py (scan is inserted after, and the repo root still supplies kernel)."
   },
   "live": {
     "099e4afa6871": "How much of what a program said is quoted in a failure's reason: one character more is the same message, and the state, the part a person and CI act on, is unchanged.",
@@ -44,12 +26,6 @@
   },
   "mcp-lite": {
     "0422b2185389": "A propose refusal's reason after its first colon; a maxsplit of 2 differs only when the reason holds a second colon."
-  },
-  "misquote": {
-    "1d105075a976": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
-  },
-  "notes": {
-    "00d9493a4212": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
   },
   "office": {
     "04697c92e4ab": "The promise is that a part is bounded, not its exact size: 64 or 65 MiB refuses the same zip bombs."
@@ -61,38 +37,10 @@
   "pins": {
     "1eb781c3ac07": "pins.py's own repo-root insert on sys.path is redundant: importing advisories inserts the same root and imports kernel, so changing this index only adds a directory that never supplies kernel."
   },
-  "print": {
-    "3c840b9c9283": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
-  },
   "scan": {
     "09336b67f2ff": "Only narrows candidates: the kernel's own rank re-checks each one, so an or here adds passages it drops, never one it serves."
   },
-  "serve": {
-    "02a855817eb0": "Path(__file__).resolve().parents[0] instead of parents[3] still finds kernel.py in the run, so the sys.path insert's target changes no test."
-  },
-  "stack": {
-    "126465b9e380": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
-  },
-  "starter-words": {
-    "2f4df3ac7eca": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
-  },
-  "todo": {
-    "05759b3d5759": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
-  },
   "typosquat": {
-    "0b021f6deb3f": "src is used only via len(src)!=1; with the two-name list, flipping 'o in opts' to 'o not in opts' swaps which names land in src but leaves that length 0/1/2 the same for every command line, so the refuse/pass decision is unchanged.",
-    "0e6387e1f6d0": "sys.path.insert at index 1 instead of 0 still resolves 'import advisories': the repo root inserted just before holds no advisories.py, so the advisories dir is still the first that supplies it."
-  },
-  "wayback": {
-    "0f8f6a1cbbfe": "sys.path.insert at index 1 instead of 0 still finds snapshot.py."
-  },
-  "words-es": {
-    "088d00bd8ee5": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
-  },
-  "words-fr": {
-    "3fb13e910cef": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
-  },
-  "words-it": {
-    "01b92201995a": "sys.path.insert at index 1 instead of 0 still finds kernel.py."
+    "0b021f6deb3f": "src is used only via len(src)!=1; with the two-name list, flipping 'o in opts' to 'o not in opts' swaps which names land in src but leaves that length 0/1/2 the same for every command line, so the refuse/pass decision is unchanged."
   }
 }

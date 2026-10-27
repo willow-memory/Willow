@@ -150,3 +150,18 @@ def test_the_copy_leaves_out_a_demos_life_but_not_an_add_on_named_life():
     assert mu.skipped(str(demo), ["life", "make_life.py"]) == {"life"}
     assert mu.skipped(str(mu.ROOT / "adapters" / "stdlib"), ["life", "dice"]) == set()
     assert mu.skipped(str(mu.ROOT / "ports"), ["bin", "obj", "src"]) == {"bin", "obj"}
+
+
+def test_the_path_insert_index_is_never_broken_and_other_ids_keep_theirs(repo):
+    here, _ = repo
+    code = "import sys\nsys.path.insert(0, 'x')\nA = 0\nB = 0\nC = 0\n"
+    (here / "toy.py").write_text(code)
+    got = mu.mutants("toy")
+    assert [m["code"] for m in got] == ["0", "0", "0"] and {m["line"] for m in got} == {
+        3, 4, 5
+    }  # fmt: skip
+    # the second and third zero are the same ids they had before the insert was skipped
+    (here / "toy.py").write_text(code.replace("sys.path.insert(0, 'x')", "pass"))
+    assert {m["id"] for m in mu.mutants("toy")} == {m["id"] for m in got} | {
+        m["id"] for m in mu.mutants("toy") if m["line"] == 3
+    }  # fmt: skip

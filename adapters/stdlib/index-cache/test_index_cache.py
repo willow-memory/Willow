@@ -128,3 +128,12 @@ def test_a_bad_command_line_is_refused_and_names_the_script(tmp_path):
 def test_a_from_that_is_not_a_folder_is_refused(tmp_path):
     got = run("--from", str(tmp_path / "missing"), "--to", str(tmp_path / "ix"))
     assert got.returncode == 2 and "is not a folder" in got.stderr
+
+
+def test_an_edit_and_an_untouched_file_count_only_the_edit(tmp_path):
+    folder, index = a_folder(tmp_path)
+    (folder / "garden.md").write_text("Tomatoes want sun.\n")
+    cache(folder, index)
+    (folder / "mould.md").write_text("2026-03-02 The mould spread to the hall.\n")
+    got = cache(folder, index)
+    assert "+0 new, ~1 changed, -0 removed" in got.stdout, got.stdout

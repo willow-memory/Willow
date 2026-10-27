@@ -30,6 +30,15 @@ counts as a pass:
 
 The ruff version is the one `.github/workflows/ci.yml` pins.
 
+`adapters/stdlib/ci/ci.py` calls them through the Python that runs it,
+not whichever is first on the path. If they live in a virtual environment,
+run it with that environment's Python and nothing else changes:
+
+    VENV/bin/python adapters/stdlib/ci/ci.py run --box /tmp/ci-main
+
+Run with a Python that lacks them, every lint, tests and mutants row comes
+back unreachable.
+
 ## Before changing anything, take a baseline
 
     python adapters/stdlib/ci/ci.py run --box /tmp/ci-main
