@@ -10,6 +10,13 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `said`, an add-on that gathers every line quoting someone into a dated
+  timeline of who said what: `said.py --box DIR [WHO]`. A quote is read by
+  shape, and three shapes are read: a chat's line (a timestamp, a name, a
+  colon), a speech verb at the line's start, and a name with a colon and
+  quotation marks; a bare `Name:` is a field label, not a speaker. Each is
+  dated by its line, the nearest date above it in its file, or its file's
+  name, saying which; WHO keeps one speaker's.
 - `a11y-check`, an add-on that checks your Markdown and HTML documents for
   what trips a screen reader: `a11y_check.py --box DIR` (or `--from FOLDER`).
   Two things, nothing else guessed at: an image without a description (an

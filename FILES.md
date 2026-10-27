@@ -357,6 +357,10 @@ willow/
 │   │   │   ├── risky_code.py  lines of code matching a known-dangerous pattern, by file and line, as leads to read
 │   │   │   ├── test_risky_code.py
 │   │   │   └── README.md
+│   │   ├── said/
+│   │   │   ├── said.py       who said what, read by shape (a chat's stamp, a speech verb, quotation marks), dated
+│   │   │   ├── test_said.py
+│   │   │   └── README.md
 │   │   ├── scan/
 │   │   │   ├── scan.py       indexes a folder once, then asks it a list of questions, the kernel's way
 │   │   │   ├── test_scan.py  holds its answers to the kernel's, every ranking vector included

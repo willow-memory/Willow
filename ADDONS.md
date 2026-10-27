@@ -18,12 +18,12 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`█████░░░░░░░░░░░░░░░` **113 of 470 built** · 419 need no install · 51 need one
+`█████░░░░░░░░░░░░░░░` **114 of 470 built** · 419 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
 | Reading more kinds of files | 12 | 93 | 96 | 9 |
-| Finding things | 13 | 30 | 33 | 10 |
+| Finding things | 14 | 29 | 33 | 10 |
 | Your own words | 8 | 17 | 22 | 3 |
 | Keeping track | 11 | 47 | 58 | 0 |
 | Trust and proof | 13 | 32 | 36 | 9 |
@@ -37,19 +37,19 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ### Newest
 
 <!-- willow:newest -->
+- 2026-10-27 · [**said**](adapters/stdlib/said/) — Your own quotes, gathered: every 'so-and-so, on this date: "..."' in your files, as a dated timeline of what was decided.
 - 2026-10-27 · [**reading-level**](adapters/stdlib/reading-level/) — How hard a passage reads (sentence length, word length, Flesch), so a teacher can find texts for a class.
 - 2026-10-27 · [**first-mention**](adapters/stdlib/first-mention/) — When your files first mention something, and the line that does.
 - 2026-10-27 · [**duplicates**](adapters/stdlib/duplicates/) — Passages that say the same thing in two files, and which one is newer.
 - 2026-10-27 · [**ci-memo**](adapters/stdlib/ci-memo/) — A CI gate whose inputs' bytes are unchanged keeps its recorded verdict: pin a run's per-gate keys, and run only what a change can reach.
-- 2026-10-27 · [**amounts**](adapters/stdlib/amounts/) — Every sum of money in your files, with its date and the line it's on.
 <!-- /willow:newest -->
 
 ### Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[across](adapters/stdlib/across/)** — One document across several boxes, not just one: each box's digest, export, timeline or readings, composed into one page, every line still cited by its box, file and line.
+**[print](adapters/stdlib/print/)** — An answer as a printable page with its sources, to take to an appointment; --large for big, high-contrast type.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 113 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 114 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -200,7 +200,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - **record-sql** (idea) — SQL straight over your record, in place: 'how many answers did I approve in March?' Needs DuckDB; MIT. *new* `needs-install` `offline` `read-only` `search`
 - **rerank** (idea) — A small model on the CPU that reorders the top passages by reading the question and each passage together. Needs FlashRank; Apache-2.0. Goes online: the model, downloaded once. *new* `needs-install` `online` `read-only` `search`
 - **ripgrep** (idea) — Exact search through ripgrep, much faster on a big folder, its hits checked against the kernel's hashes. Needs the ripgrep program; MIT or Unlicense. *new* `needs-install` `offline` `read-only` `search`
-- **said** (idea) — Your own quotes, gathered: every 'so-and-so, on this date: "..."' in your files, as a dated timeline of what was decided. *new* `no-install` `offline` `read-only` `search`
+- [**said**](adapters/stdlib/said/) — Your own quotes, gathered: every 'so-and-so, on this date: "..."' in your files, as a dated timeline of what was decided. *new* `no-install` `offline` `read-only` `search`
 - [**scan**](adapters/stdlib/scan/) — Index a big folder once, then ask it a list of questions in seconds, with the kernel's own answers: of everything, or only what changed since another index. *box* `no-install` `offline` `writes-output` `search` `index`
 - **standards** (idea) — Curriculum standards beside your lessons: which standard each lesson meets, each cited. *new* `no-install` `offline` `read-only` `search`
 - [**surprise**](adapters/stdlib/surprise/) — One passage from your folder at random, seeded so it can be replayed. *bot* `no-install` `offline` `records` `search`

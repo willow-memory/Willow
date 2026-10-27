@@ -2764,16 +2764,6 @@
   "tags": "no-install, offline, read-only, interface"
  },
  {
-  "name": "said",
-  "kind": "stdlib",
-  "section": "Finding things",
-  "line": "Your own quotes, gathered: every 'so-and-so, on this date: \"...\"' in your files, as a dated timeline of what was decided.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, search"
- },
- {
   "name": "same-way",
   "kind": "stdlib",
   "section": "Assistants",
