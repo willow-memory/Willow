@@ -150,6 +150,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "contradictions": ("contradictions.py", ["--box", "{box}"]),
     "lending": ("lending.py", ["--box", "{box}"]),
     "timeline": ("timeline.py", ["--box", "{box}", "--to", "{tmp}/timeline.txt", "tomatoes"]),
+    "transcript-redact": ("transcript_redact.py", ["--from", "{pile}/garden.md", "--to", "{tmp}/shareable.md"]),
     "across": ("across.py", ["--box", "{box}", "digest"]),
     "stack": ("stack.py", ["--box", "{box}", "--stack", "adapters/stdlib/stack/example.md"]),
     "serve": ("serve.py", ["scope", "--box", "{box}"]),

@@ -10,6 +10,13 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `transcript-redact`, an add-on that writes a copy of an agent transcript
+  fit to share: `transcript_redact.py --from FILE --to FILE`. Keys (by the
+  shapes keys wear), the account name in home paths, and emails are taken
+  out, each removal listed by line with a stub, and the listing never prints
+  what it removed. The copy is always written, 0 removals said when nothing
+  left; JSON stays JSON; what has no shape slips through and the card says
+  so.
 - `pii-audit`, an add-on that lists the identifying numbers sitting in your
   files, each by file and line, shown masked, never printed whole:
   `pii_audit.py --box DIR` (or `--from FOLDER`). Every number is checked,
