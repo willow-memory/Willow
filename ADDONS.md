@@ -18,14 +18,14 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`█████░░░░░░░░░░░░░░░` **121 of 470 built** · 419 need no install · 51 need one
+`█████░░░░░░░░░░░░░░░` **122 of 470 built** · 419 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
 | Reading more kinds of files | 14 | 91 | 96 | 9 |
 | Finding things | 15 | 28 | 33 | 10 |
 | Your own words | 9 | 16 | 22 | 3 |
-| Keeping track | 13 | 45 | 58 | 0 |
+| Keeping track | 14 | 44 | 58 | 0 |
 | Trust and proof | 14 | 31 | 36 | 9 |
 | Privacy and safety | 7 | 7 | 14 | 0 |
 | Assistants | 17 | 40 | 51 | 6 |
@@ -47,9 +47,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[mutants](adapters/stdlib/mutants/)** — Breaks each add-on's code on purpose and checks its tests notice.
+**[todo](adapters/stdlib/todo/)** — TODO, FIXME and "need to" lines across the folder, oldest first.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 121 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 122 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -266,7 +266,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - **gifts** (idea) — Gifts given and received, and who likes what, so nobody gets the same scarf twice. *new* `no-install` `offline` `read-only` `tracking`
 - **gradebook** (idea) — A teacher's gradebook, kept on this machine: each student's marks by assignment, and who is falling behind. *new* `no-install` `offline` `read-only` `tracking`
 - **grant-report** (idea) — For charities and groups: what you promised a funder and what you did, side by side, each cited. *new* `no-install` `offline` `read-only` `tracking`
-- **habits** (idea) — Streaks from the lines you write each day: how many days in a row, and which you missed. *new* `no-install` `offline` `read-only` `tracking`
+- [**habits**](adapters/stdlib/habits/) — Streaks from the lines you write each day: how many days in a row, and which you missed. *new* `no-install` `offline` `read-only` `tracking`
 - **home-upkeep** (idea) — Home upkeep: the boiler service, the filters, the gutters, what's due and when it was last done. *new* `no-install` `offline` `read-only` `tracking`
 - **hours** (idea) — Hours worked or volunteered, per client or group, from your notes. *new* `no-install` `offline` `read-only` `tracking`
 - **inventory** (idea) — What you own, where it is, and where its papers are, for insurance or a will. *new* `no-install` `offline` `read-only` `tracking`

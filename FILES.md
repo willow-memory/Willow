@@ -220,6 +220,10 @@ willow/
 │   │   │   ├── host.json     how GitHub titles the merge of a pull request, for whose.py --host
 │   │   │   ├── test_github.py
 │   │   │   └── README.md     its card: and .github/ belongs to it
+│   │   ├── habits/
+│   │   │   ├── habits.py     streaks from the short lines written day after day, runs and misses by plain counting
+│   │   │   ├── test_habits.py
+│   │   │   └── README.md
 │   │   ├── history/
 │   │   │   ├── history.py    your record in plain sentences, places and counts, never the words
 │   │   │   ├── test_history.py

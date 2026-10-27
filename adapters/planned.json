@@ -972,16 +972,6 @@
   "tags": "no-install, online, records, play"
  },
  {
-  "name": "habits",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "Streaks from the lines you write each day: how many days in a row, and which you missed.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
- },
- {
   "name": "handoff",
   "kind": "stdlib",
   "section": "Trust and proof",

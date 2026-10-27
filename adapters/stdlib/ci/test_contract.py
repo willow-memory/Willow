@@ -99,6 +99,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "debts": ("debts.py", ["--box", "{box}"]),
     "emacs": ("emacs.py", ["--box", "{box}"]),
     "gemini-cli": ("gemini_cli.py", ["--box", "{box}"]),
+    "habits": ("habits.py", ["--box", "{box}"]),
     "hosts": ("hosts.py", ["list"]),
     "ids": ("ids.py", ["--box", "{box}"]),
     "jetbrains": ("jetbrains.py", ["--box", "{box}"]),

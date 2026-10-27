@@ -10,6 +10,13 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `habits`, an add-on that gathers the short lines your files write day
+  after day into streaks: `habits.py --box DIR`. A habit is the same line
+  (its words, digits dropped, one to six of them) on four or more distinct
+  days, dated as the files say; runs and misses are plain counting with no
+  clock consulted, "ends on" being the run the last day closes. A line that
+  shouts throughout, opens with a field's mark or opens as markup is a
+  machine's and never ticks.
 - `debts`, an add-on that lists every line speaking of money owed, oldest
   first, each with its date, the sum it names (as the amounts add-on reads
   one) and where it is: `debts.py --box DIR`. The owing words are owe and
