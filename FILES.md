@@ -292,6 +292,10 @@ willow/
 │   │   │   ├── server.py         the mcp add-on's three tools, the protocol by hand, nothing to install
 │   │   │   ├── test_server.py
 │   │   │   └── README.md
+│   │   ├── merkle/
+│   │   │   ├── merkle.py     a Merkle tree over the record: one row proven with a handful of hashes
+│   │   │   ├── test_merkle.py
+│   │   │   └── README.md
 │   │   ├── misquote/
 │   │   │   ├── misquote.py   a quote almost in your files: the closest passage, and what differs
 │   │   │   ├── test_misquote.py

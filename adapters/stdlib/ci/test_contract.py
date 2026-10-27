@@ -104,6 +104,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "ids": ("ids.py", ["--box", "{box}"]),
     "jetbrains": ("jetbrains.py", ["--box", "{box}"]),
     "mcp-lite": ("server.py", ["--box", "{box}"]),
+    "merkle": ("merkle.py", ["root", "--box", "{box}"]),
     "opencode": ("opencode.py", ["--box", "{box}"]),
     "shell": ("shell.py", ["script", "bash"]),
     "vim": ("vim.py", ["--box", "{box}"]),

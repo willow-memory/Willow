@@ -10,6 +10,14 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `merkle`, an add-on that cuts a Merkle tree over the record so one row is
+  proven with a handful of hashes, not the whole file: `root`, `prove --row
+  N --to FILE`, and `check --proof FILE [--root HEX]`, which needs no box. A
+  leaf wears a zero byte and a node a one byte so neither poses as the
+  other, an odd node rises unchanged, the chain is checked before any proof
+  is cut, and a lone proof is self-consistency (42), an answer only beside
+  your own copy of the root. On this repo's own 177-row CI record a
+  verdict's proof is 8 hashes.
 - `people`, an add-on that lists everyone your files name, most mentioned
   first, and, named, any one of them with every place they're mentioned:
   `people.py --box DIR [WHO]`. A name is known by what the files do with it,
