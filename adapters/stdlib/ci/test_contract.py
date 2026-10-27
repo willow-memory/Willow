@@ -75,6 +75,7 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
 #: {tmp} are filled in. The repo's own tools (ci, readme, similar, mutants,
 #: github) are tested in their own folders.
 COMMANDS: dict[str, tuple[str, list[str]]] = {
+    "a11y-check": ("a11y_check.py", ["--box", "{box}"]),
     "accents": ("accents.py", ["--box", "{box}", "tomatoes"]),
     "amounts": ("amounts.py", ["--box", "{box}"]),
     "first-mention": ("first_mention.py", ["--box", "{box}", "tomatoes"]),

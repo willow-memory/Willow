@@ -10,6 +10,14 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `a11y-check`, an add-on that checks your Markdown and HTML documents for
+  what trips a screen reader: `a11y_check.py --box DIR` (or `--from FOLDER`).
+  Two things, nothing else guessed at: an image without a description (an
+  empty Markdown bracket, or an HTML img with no alt at all — `alt=""` is
+  the author saying decoration), and a heading more than a level deeper than
+  the one before. Fenced code is not document, documents are read by their
+  own bytes rather than a mirror's text, and a folder with no documents is
+  said, never called clean.
 - `duplicates`, an add-on that groups passages saying the same thing in two
   or more files: `duplicates.py --box DIR`. The same thing is the same words
   in order, case, punctuation and spacing aside, nothing else forgiven, and

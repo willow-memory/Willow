@@ -18,7 +18,7 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`█████░░░░░░░░░░░░░░░` **112 of 470 built** · 419 need no install · 51 need one
+`█████░░░░░░░░░░░░░░░` **113 of 470 built** · 419 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
@@ -27,7 +27,7 @@ or `writes-output`; its section), and any the card's author adds or changes.
 | Your own words | 8 | 17 | 22 | 3 |
 | Keeping track | 11 | 47 | 58 | 0 |
 | Trust and proof | 13 | 32 | 36 | 9 |
-| Privacy and safety | 6 | 8 | 14 | 0 |
+| Privacy and safety | 7 | 7 | 14 | 0 |
 | Assistants | 17 | 40 | 51 | 6 |
 | Ways to use it | 11 | 28 | 35 | 4 |
 | Play | 4 | 36 | 35 | 5 |
@@ -47,9 +47,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ### Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[shell](adapters/stdlib/shell/)** — A willow command and tab completion for bash, zsh, fish and PowerShell, on Linux, macOS and Windows.
+**[across](adapters/stdlib/across/)** — One document across several boxes, not just one: each box's digest, export, timeline or readings, composed into one page, every line still cited by its box, file and line.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 112 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 113 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -352,7 +352,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 
 ### Privacy and safety
 
-- **a11y-check** (idea) — Your documents checked for screen-reader problems: images without descriptions, headings out of order. *new* `no-install` `offline` `read-only` `privacy`
+- [**a11y-check**](adapters/stdlib/a11y-check/) — Your documents checked for screen-reader problems: images without descriptions, headings out of order. *new* `no-install` `offline` `read-only` `privacy`
 - [**advisories**](adapters/stdlib/advisories/) — Security advisories from a downloaded OSV or GitHub advisory database, matched to your lockfiles: which dependency each names, and since when. *new* `no-install` `offline` `read-only` `privacy`
 - **forget** (idea) — Stops a file being searched, recorded on the chain, so what was taken out is known and nothing else is touched. *new* `no-install` `offline` `records` `privacy`
 - [**install-scripts**](adapters/stdlib/install-scripts/) — The install scripts the packages in node_modules would run (preinstall, install, postinstall), each cited by file and line. *new* `no-install` `offline` `read-only` `privacy`

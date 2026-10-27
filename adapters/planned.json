@@ -1,15 +1,5 @@
 [
  {
-  "name": "a11y-check",
-  "kind": "stdlib",
-  "section": "Privacy and safety",
-  "line": "Your documents checked for screen-reader problems: images without descriptions, headings out of order.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, privacy"
- },
- {
   "name": "abbreviations",
   "kind": "stdlib",
   "section": "Your own words",

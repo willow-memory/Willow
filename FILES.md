@@ -44,6 +44,10 @@ willow/
 │   ├── README.md             the rules every add-on follows
 │   ├── planned.json          the add-ons not built yet, as this README lists them
 │   ├── stdlib/               add-ons that need nothing beyond Python
+│   │   ├── a11y-check/
+│   │   │   ├── a11y_check.py what trips a screen reader in the documents: images without descriptions, headings out of order
+│   │   │   ├── test_a11y_check.py
+│   │   │   └── README.md
 │   │   ├── accents/
 │   │   │   ├── accents.py    a word typed without its accent, read as the files write it; words-list lines
 │   │   │   ├── test_accents.py
