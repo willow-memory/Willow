@@ -1,25 +1,5 @@
 [
  {
-  "name": "a11y-check",
-  "kind": "stdlib",
-  "section": "Privacy and safety",
-  "line": "Your documents checked for screen-reader problems: images without descriptions, headings out of order.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, privacy"
- },
- {
-  "name": "abbreviations",
-  "kind": "stdlib",
-  "section": "Your own words",
-  "line": "Your own shorthand, written down once (appt, Rx, w/c), so a question finds either form.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, words"
- },
- {
   "name": "agent-transcript",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -48,16 +28,6 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, file-reader"
- },
- {
-  "name": "amounts",
-  "kind": "stdlib",
-  "section": "Finding things",
-  "line": "Every sum of money in your files, with its date and the line it's on.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, search"
  },
  {
   "name": "anki",
@@ -689,16 +659,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "duplicates",
-  "kind": "stdlib",
-  "section": "Finding things",
-  "line": "Passages that say the same thing in two files, and which one is newer.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, search"
- },
- {
   "name": "email-ask",
   "kind": "stdlib",
   "section": "Ways to use it",
@@ -768,16 +728,6 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, file-reader"
- },
- {
-  "name": "first-mention",
-  "kind": "stdlib",
-  "section": "Finding things",
-  "line": "When your files first mention something, and the line that does.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, search"
  },
  {
   "name": "flashcards",
@@ -868,16 +818,6 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, maintainers"
- },
- {
-  "name": "fuzzy-dates",
-  "kind": "stdlib",
-  "section": "Finding things",
-  "line": "Dates that admit doubt ('about 1880', 'sometime in March') read and kept with their doubt, in EDTF.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, search"
  },
  {
   "name": "game-master",
@@ -1312,16 +1252,6 @@
   "tags": "no-install, offline, read-only, tracking"
  },
  {
-  "name": "ids",
-  "kind": "stdlib",
-  "section": "Trust and proof",
-  "line": "Every file and passage given its Software Heritage ID and IPFS CID, names the rest of the world already uses.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, trust"
- },
- {
   "name": "in-case",
   "kind": "stdlib",
   "section": "Trust and proof",
@@ -1467,16 +1397,6 @@
   "kind": "stdlib",
   "section": "Reading more kinds of files",
   "line": "Journiv journal entries, with their moods, as dated lines, once its export format is settled.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
-  "name": "jrnl",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "jrnl journals: each [YYYY-MM-DD HH:MM] entry as a dated passage.",
   "source": "new",
   "writes": "to",
   "network": "none",
@@ -2568,16 +2488,6 @@
   "tags": "no-install, online, read-only, trust"
  },
  {
-  "name": "reading-level",
-  "kind": "stdlib",
-  "section": "Finding things",
-  "line": "How hard a passage reads (sentence length, word length, Flesch), so a teacher can find texts for a class.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, search"
- },
- {
   "name": "reading-log",
   "kind": "stdlib",
   "section": "Keeping track",
@@ -2812,16 +2722,6 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, interface"
- },
- {
-  "name": "said",
-  "kind": "stdlib",
-  "section": "Finding things",
-  "line": "Your own quotes, gathered: every 'so-and-so, on this date: \"...\"' in your files, as a dated timeline of what was decided.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, search"
  },
  {
   "name": "same-way",
@@ -3159,16 +3059,6 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, tracking"
- },
- {
-  "name": "subtitles",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Subtitle and transcript files (.vtt, .srt) as lines cited by timestamp, for podcasts and videos already transcribed.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
  },
  {
   "name": "support-plan",

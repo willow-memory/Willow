@@ -63,7 +63,13 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         "From: Ada Example <ada@example.org>\nDate: Thu, 14 Oct 2026 09:15:00 +0100\n"
         "Subject: Roof estimate\n\nThe estimate is in.\n").encode()}),
     "notes": ("notes.py", {"garden.md": b"Tomatoes want [[sun]].\n"}),
+    "jrnl": ("jrnl.py", {"journal.txt": (
+        "[2024-03-03 10:15] Fixed the gate.\nThe hinge wanted oil, not force.\n\n"
+        "[2024-03-04 09:00] Rain all day.\n").encode()}),
     "office": ("office.py", {"letter.docx": _docx("The roof is fixed.")}),
+    "subtitles": ("subtitles.py", {"ep1.srt": (
+        "1\n00:00:01,000 --> 00:00:04,000\nThe tide keeps its own calendar.\n"
+    ).encode()}),
     "web-pages": ("web_pages.py", {"saved.html": (
         "<!-- saved from url=(0020)https://example.org/ -->\n"
         "<p>The roof is fixed.</p>\n").encode()}),
@@ -75,9 +81,15 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
 #: {tmp} are filled in. The repo's own tools (ci, readme, similar, mutants,
 #: github) are tested in their own folders.
 COMMANDS: dict[str, tuple[str, list[str]]] = {
+    "a11y-check": ("a11y_check.py", ["--box", "{box}"]),
+    "abbreviations": ("abbreviations.py", ["--box", "{box}", "tomatoes"]),
     "accents": ("accents.py", ["--box", "{box}", "tomatoes"]),
+    "amounts": ("amounts.py", ["--box", "{box}"]),
+    "first-mention": ("first_mention.py", ["--box", "{box}", "tomatoes"]),
+    "fuzzy-dates": ("fuzzy_dates.py", ["--box", "{box}"]),
     "again": ("again.py", ["--box", "{box}"]),
     "aider": ("aider.py", ["--box", "{box}"]),
+    "ci-memo": ("ci_memo.py", ["keys", "mutants:accents"]),
     "ci-why": ("ci_why.py", ["--record", "{box}/record.jsonl"]),
     "ci-cache": ("ci_cache.py", ["--from", "{pile}"]),
     "claude-code": ("hook.py", ["setup", "--box", "{box}"]),
@@ -87,6 +99,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "emacs": ("emacs.py", ["--box", "{box}"]),
     "gemini-cli": ("gemini_cli.py", ["--box", "{box}"]),
     "hosts": ("hosts.py", ["list"]),
+    "ids": ("ids.py", ["--box", "{box}"]),
     "jetbrains": ("jetbrains.py", ["--box", "{box}"]),
     "mcp-lite": ("server.py", ["--box", "{box}"]),
     "opencode": ("opencode.py", ["--box", "{box}"]),
@@ -105,6 +118,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "plain": ("plain.py", ["bite", "--box", "{box}", *NOW, "tomatoes"]),
     "privacy": ("privacy.py", ["bite", "--box", "{box}", *NOW, "tomatoes"]),
     "quote-check": ("quote_check.py", ["--box", "{box}", "Tomatoes want sun"]),
+    "reading-level": ("reading_level.py", ["--box", "{box}"]),
     "misquote": ("misquote.py", ["--box", "{box}", "Tomatoes want rain"]),
     "claim-check": ("claim_check.py", ["--box", "{box}", "tomatoes want sun"]),
     "policy-watch": ("policy_watch.py", ["--url", "http://127.0.0.1:9/terms", "--to", "{tmp}/w"]),
@@ -149,8 +163,10 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "odds": ("odds.py", ["2d6"]),
     "changed": ("changed.py", ["--box", "{box}", *NOW]),
     "diverge": ("diverge.py", ["{pile}", "{pile}"]),
+    "duplicates": ("duplicates.py", ["--box", "{box}"]),
     "secrets-audit": ("secrets_audit.py", ["--box", "{box}"]),
     "risky-code": ("risky_code.py", ["--box", "{box}"]),
+    "said": ("said.py", ["--box", "{box}"]),
     "session-seal": ("session_seal.py", ["--box", "{box}", *NOW]),
     "typos": ("typos.py", ["--box", "{box}", "tomatoes"]),
     "xref": ("xref.py", ["--box", "{box}"]),

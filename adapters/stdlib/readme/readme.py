@@ -291,7 +291,7 @@ def section_list(every: list[dict]) -> str:
         f"[{s}](#{re.sub(r'[^a-z0-9 -]', '', s.lower()).replace(' ', '-')})" for s in NAMES
     )]  # fmt: skip
     for title, intro in SECTIONS:
-        lines += ["", f"### {title}", ""]
+        lines += ["", f"## {title}", ""]
         if intro:
             lines += [intro, ""]
         lines += [

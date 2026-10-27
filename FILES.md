@@ -44,6 +44,14 @@ willow/
 │   ├── README.md             the rules every add-on follows
 │   ├── planned.json          the add-ons not built yet, as this README lists them
 │   ├── stdlib/               add-ons that need nothing beyond Python
+│   │   ├── a11y-check/
+│   │   │   ├── a11y_check.py what trips a screen reader in the documents: images without descriptions, headings out of order
+│   │   │   ├── test_a11y_check.py
+│   │   │   └── README.md
+│   │   ├── abbreviations/
+│   │   │   ├── abbreviations.py  a question's shorthand read as the files write it, either way; words-list lines
+│   │   │   ├── test_abbreviations.py
+│   │   │   └── README.md
 │   │   ├── accents/
 │   │   │   ├── accents.py    a word typed without its accent, read as the files write it; words-list lines
 │   │   │   ├── test_accents.py
@@ -67,6 +75,10 @@ willow/
 │   │   ├── all/
 │   │   │   ├── all.py        every passage that holds a question, in the kernel's order
 │   │   │   ├── test_all.py
+│   │   │   └── README.md
+│   │   ├── amounts/
+│   │   │   ├── amounts.py    every sum of money in the files, dated by its line, the date above or the file's name
+│   │   │   ├── test_amounts.py
 │   │   │   └── README.md
 │   │   ├── backup/
 │   │   │   ├── backup.py     your record in one zip, every byte and the chain checked; never the key
@@ -119,6 +131,10 @@ willow/
 │   │   │   ├── ci_cache.py    a cache key per ecosystem from a repo's lockfiles, so CI skips the reinstall
 │   │   │   ├── test_ci_cache.py
 │   │   │   └── README.md
+│   │   ├── ci-memo/
+│   │   │   ├── ci_memo.py    a gate whose inputs' bytes are unchanged keeps its verdict: pin a run's keys, plan the rest
+│   │   │   ├── test_ci_memo.py
+│   │   │   └── README.md
 │   │   ├── ci-why/
 │   │   │   ├── ci_why.py     the failing block of a red CI log, plain: the test, the assertion, the line to act on
 │   │   │   ├── test_ci_why.py
@@ -167,6 +183,10 @@ willow/
 │   │   │   ├── diverge.py    where two copies part: records by row, files, then the first line
 │   │   │   ├── test_diverge.py
 │   │   │   └── README.md
+│   │   ├── duplicates/
+│   │   │   ├── duplicates.py    passages saying the same thing in two files, the newest copy named when it can be
+│   │   │   ├── test_duplicates.py
+│   │   │   └── README.md
 │   │   ├── emacs/
 │   │   │   ├── emacs.py          an M-x willow command: answers in a grep-mode buffer
 │   │   │   ├── test_emacs.py
@@ -174,6 +194,14 @@ willow/
 │   │   ├── export/
 │   │   │   ├── export.py     approved answers and the question log, as Markdown or CSV
 │   │   │   ├── test_export.py
+│   │   │   └── README.md
+│   │   ├── first-mention/
+│   │   │   ├── first_mention.py  when the files first mention something: the earliest dated line that holds every word
+│   │   │   ├── test_first_mention.py
+│   │   │   └── README.md
+│   │   ├── fuzzy-dates/
+│   │   │   ├── fuzzy_dates.py  dates that admit doubt, read with the doubt kept, in EDTF
+│   │   │   ├── test_fuzzy_dates.py
 │   │   │   └── README.md
 │   │   ├── gaps/
 │   │   │   ├── gaps.py       where a log you keep stops: the days it skipped, said as gaps
@@ -216,6 +244,10 @@ willow/
 │   │   │   ├── hosts.py          one table of assistants that take an MCP server, and the lines that register willow with each
 │   │   │   ├── test_hosts.py
 │   │   │   └── README.md
+│   │   ├── ids/
+│   │   │   ├── ids.py        each file and passage by its Software Heritage ID and one-chunk IPFS CID
+│   │   │   ├── test_ids.py
+│   │   │   └── README.md
 │   │   ├── index-cache/
 │   │   │   ├── index_cache.py  a folder's scan index kept between runs, rebuilt only when a file's hash changed
 │   │   │   ├── test_index_cache.py
@@ -227,6 +259,10 @@ willow/
 │   │   ├── jetbrains/
 │   │   │   ├── jetbrains.py      an external tool for JetBrains IDEs: answers as links to file and line
 │   │   │   ├── test_jetbrains.py
+│   │   │   └── README.md
+│   │   ├── jrnl/
+│   │   │   ├── jrnl.py       jrnl journals mirrored, each stamped entry one dated passage
+│   │   │   ├── test_jrnl.py
 │   │   │   └── README.md
 │   │   ├── lending/
 │   │   │   ├── lending.py    what you lent, and what your files say came back
@@ -313,6 +349,10 @@ willow/
 │   │   │   ├── quote_check.py is this exact quote in my files, and where
 │   │   │   ├── test_quote_check.py
 │   │   │   └── README.md
+│   │   ├── reading-level/
+│   │   │   ├── reading_level.py  how hard each file reads: Flesch by the book, counted as written, easiest first
+│   │   │   ├── test_reading_level.py
+│   │   │   └── README.md
 │   │   ├── readings/
 │   │   │   ├── readings.py   notes beside an answer: numbers over time, dates gone by
 │   │   │   ├── test_readings.py
@@ -332,6 +372,10 @@ willow/
 │   │   ├── risky-code/
 │   │   │   ├── risky_code.py  lines of code matching a known-dangerous pattern, by file and line, as leads to read
 │   │   │   ├── test_risky_code.py
+│   │   │   └── README.md
+│   │   ├── said/
+│   │   │   ├── said.py       who said what, read by shape (a chat's stamp, a speech verb, quotation marks), dated
+│   │   │   ├── test_said.py
 │   │   │   └── README.md
 │   │   ├── scan/
 │   │   │   ├── scan.py       indexes a folder once, then asks it a list of questions, the kernel's way
@@ -382,6 +426,10 @@ willow/
 │   │   │   ├── words.txt     a first-day words list, in the kernel's format
 │   │   │   ├── starter.py    copies it where yours will live, readable only by you
 │   │   │   ├── test_starter_words.py
+│   │   │   └── README.md
+│   │   ├── subtitles/
+│   │   │   ├── subtitles.py  .srt and .vtt transcripts mirrored, each cue a line cited by its start
+│   │   │   ├── test_subtitles.py
 │   │   │   └── README.md
 │   │   ├── surprise/
 │   │   │   ├── surprise.py   one passage drawn by a seeded stream, replayable

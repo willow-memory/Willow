@@ -10,6 +10,98 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `subtitles`, a reader that mirrors .srt and .vtt transcripts as plain
+  text the kernel reads: `subtitles.py mirror --from FOLDER --to MIRROR`.
+  Each cue becomes one line, its start first (HH:MM:SS, hours added where a
+  cue leaves them off, fractions dropped), lines joined, styling tags off,
+  and a WebVTT voice tag as its speaker's name with a colon. NOTE and STYLE
+  blocks say nothing; a .vtt without WEBVTT first, or a .srt with no
+  readable cue, is skipped and counted. It keeps the readers' contract. (#62)
+- `jrnl`, a reader that mirrors jrnl journals as plain text the kernel
+  reads: `jrnl.py mirror --from FOLDER --to MIRROR`. A journal is a .txt
+  whose first line that says anything opens with jrnl's own
+  `[YYYY-MM-DD HH:MM]` stamp; each entry becomes one dated paragraph, the
+  brackets off so the kernel reads the date, blank lines inside an entry
+  closed up. Any other .txt is someone else's and is skipped, counted,
+  never guessed at. It keeps the readers' contract. (#62)
+- `ids`, an add-on that names every file of your folder as the world's
+  archives do: `ids.py --box DIR [PATH]`. The Software Heritage ID is the
+  file's git blob SHA-1 (the tests hold it to git's own answer); the IPFS
+  name is a one-chunk raw CIDv1, and past 256 KiB it is said to depend on a
+  chunker's choices rather than guessed. PATH adds one file's passages,
+  each by its first line, so a paragraph can be cited on its own. Computed
+  at home; nothing goes online. (#62)
+- `fuzzy-dates`, an add-on that reads the dates your files say with doubt
+  ("about 1880", "the early 1880s", "spring 1944", "sometime in March",
+  "between 1880 and 1885") and keeps the doubt, in EDTF (ISO 8601-2):
+  `fuzzy_dates.py --box DIR`. The grammar is words, small and said in full;
+  a year is four digits, 1000 to 2999, so a price never reads as one, and a
+  bare question mark is a sentence's. Exact dates stay the kernel's job, so
+  the two never read the same words. (#62)
+- `abbreviations`, an add-on that reads a question's shorthand as your
+  files write it, either way round (`appointment` finds the files' `appt`,
+  and `appt` their `appointment`), from a small table of common shorthand:
+  `abbreviations.py --box DIR "question"`. It prints the question as read,
+  never asking for you, and `lines --box DIR --to FILE` writes the
+  words-list lines that make it last, for you to read before you keep them.
+  Shorthand the kernel splits at a slash (w/c) is out of reach, and the card
+  says so. (#62)
+- `said`, an add-on that gathers every line quoting someone into a dated
+  timeline of who said what: `said.py --box DIR [WHO]`. A quote is read by
+  shape, and three shapes are read: a chat's line (a timestamp, a name, a
+  colon), a speech verb at the line's start, and a name with a colon and
+  quotation marks; a bare `Name:` is a field label, not a speaker. Each is
+  dated by its line, the nearest date above it in its file, or its file's
+  name, saying which; WHO keeps one speaker's. (#62)
+- `a11y-check`, an add-on that checks your Markdown and HTML documents for
+  what trips a screen reader: `a11y_check.py --box DIR` (or `--from FOLDER`).
+  Two things, nothing else guessed at: an image without a description (an
+  empty Markdown bracket, or an HTML img with no alt at all — `alt=""` is
+  the author saying decoration), and a heading more than a level deeper than
+  the one before. Fenced code is not document, documents are read by their
+  own bytes rather than a mirror's text, and a folder with no documents is
+  said, never called clean. (#62)
+- `duplicates`, an add-on that groups passages saying the same thing in two
+  or more files: `duplicates.py --box DIR`. The same thing is the same words
+  in order, case, punctuation and spacing aside, nothing else forgiven, and
+  a passage under 8 words never counts. Each copy is dated by its own text,
+  else its file's name; the newest is named only when its date beats every
+  other, and copies tied to the day leave it unsaid. One file's repeats
+  count only when the passage is also in another file. (#62)
+- `ci-memo`, an add-on that memoizes CI gates on their inputs' bytes:
+  `ci_memo.py pin --box DIR --to FILE` writes, after a full `ci.py run` of
+  this very tree (each verdict row's `files_sha256` proves which), every
+  gate's key — its reachable files' paths and SHA-256, hashed as ci.py
+  hashes the tree — beside its verdict; `plan --pin FILE` then says which
+  verdicts the bytes still cover and prints the `ci.py run` line for the
+  rest. Reaches are drawn wide, never narrow: an undrawn gate keys on the
+  whole tree, and `deps`, `ports` and `tools` are never memoized, their
+  verdicts reaching past the tree. It decides nothing: a standing verdict is
+  the old run's, the full run stays the merge's evidence. (#62)
+- `reading-level`, an add-on that says how hard each file of your folder
+  reads, easiest first: `reading_level.py --box DIR`. One row per file, its
+  Flesch reading ease by the book, said in a word, with the words a sentence
+  and syllables a word it is made of. Sentences are counted as written (a
+  list of notes reads as its items), syllables by rule of thumb, and a file
+  under 30 words is listed as too short, never scored; off English prose the
+  two lengths say more than the score, and the card says so. (#62)
+- `first-mention`, an add-on that says when your files first mention
+  something, and shows the line that does:
+  `first_mention.py --box DIR "your words"`. A mention is a line that itself
+  holds every content word, each read the kernel's way (the words list, and
+  a word's plain form); it is dated by its line, the nearest date above it
+  in its file, or its file's name, each saying which. The earliest dated
+  mention answers; undated mentions are counted beside it, which could be
+  earlier, never placed. (#62)
+- `amounts`, an add-on that lists every sum of money in your files, oldest
+  first, each with its date and the line it's on: `amounts.py --box DIR`. A
+  sum is a number written with its currency (`$20`, `£1,840.00`, `EUR 100`,
+  `200 lei`); a number that reads two ways names no sum, rather than a
+  guessed one, and a bare number is never money. A line that says no date
+  takes the nearest date written above it in its file, else its file's name,
+  saying which; a sum no date reaches is listed `undated`. It only reads,
+  converts nothing and totals nothing. (#62)
+
 - `bot-venv`, an add-on that says whether willow-bot's own venv, or any you
   name, has what CI needs, and prints the line that runs CI with its Python:
   `bot_venv.py [--bot] [--venv DIR ...] [--needs NAME[==VERSION] ...]`.
@@ -550,6 +642,11 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- ADDONS.md's section headings sat two levels under its title (h1 straight
+  to h3), a hole in a screen reader's outline that the new `a11y-check`
+  found on this repo's own page. The generated list's headings (the readme
+  add-on writes them) and the two written by hand (Newest, Add-on of the
+  week) are now h2. (#62)
 - A sealed answer is served only while its proposal file still hashes to the
   subject the key signed, and only for the question the record says it was
   sealed for. `bite` took both from the file, so anyone who could write the
