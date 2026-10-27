@@ -18,13 +18,13 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`█████░░░░░░░░░░░░░░░` **114 of 470 built** · 419 need no install · 51 need one
+`█████░░░░░░░░░░░░░░░` **115 of 470 built** · 419 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
 | Reading more kinds of files | 12 | 93 | 96 | 9 |
 | Finding things | 14 | 29 | 33 | 10 |
-| Your own words | 8 | 17 | 22 | 3 |
+| Your own words | 9 | 16 | 22 | 3 |
 | Keeping track | 11 | 47 | 58 | 0 |
 | Trust and proof | 13 | 32 | 36 | 9 |
 | Privacy and safety | 7 | 7 | 14 | 0 |
@@ -47,9 +47,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ### Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[print](adapters/stdlib/print/)** — An answer as a printable page with its sources, to take to an appointment; --large for big, high-contrast type.
+**[hook-pin](adapters/stdlib/hook-pin/)** — Each hook's SHA-256 kept on the record when you approve it, so a hook that changed since is named before it runs, never silently trusted or skipped.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 114 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 115 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -215,7 +215,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 
 The blind tests' biggest gap: on day one, a person's words aren't their files' words.
 
-- **abbreviations** (idea) — Your own shorthand, written down once (appt, Rx, w/c), so a question finds either form. *new* `no-install` `offline` `writes-output` `words`
+- [**abbreviations**](adapters/stdlib/abbreviations/) — Your own shorthand, written down once (appt, Rx, w/c), so a question finds either form. *new* `no-install` `offline` `writes-output` `words`
 - [**accents**](adapters/stdlib/accents/) — A word typed without its accent read as your files write it, and the words-list lines that make it last. *new* `no-install` `offline` `read-only` `words`
 - **dialect** (idea) — The words you use far more than the world does: your own dialect, from your files against wordfreq's counts. Needs wordfreq; Apache-2.0, its data CC BY-SA 4.0. *new* `needs-install` `offline` `read-only` `words`
 - **memoir** (idea) — A question a week about your life, answered in your own words and kept, so your story is in your files. *new* `no-install` `offline` `writes-output` `words`

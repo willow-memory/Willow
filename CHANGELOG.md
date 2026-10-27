@@ -10,6 +10,14 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `abbreviations`, an add-on that reads a question's shorthand as your
+  files write it, either way round (`appointment` finds the files' `appt`,
+  and `appt` their `appointment`), from a small table of common shorthand:
+  `abbreviations.py --box DIR "question"`. It prints the question as read,
+  never asking for you, and `lines --box DIR --to FILE` writes the
+  words-list lines that make it last, for you to read before you keep them.
+  Shorthand the kernel splits at a slash (w/c) is out of reach, and the card
+  says so.
 - `said`, an add-on that gathers every line quoting someone into a dated
   timeline of who said what: `said.py --box DIR [WHO]`. A quote is read by
   shape, and three shapes are read: a chat's line (a timestamp, a name, a

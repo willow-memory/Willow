@@ -48,6 +48,10 @@ willow/
 │   │   │   ├── a11y_check.py what trips a screen reader in the documents: images without descriptions, headings out of order
 │   │   │   ├── test_a11y_check.py
 │   │   │   └── README.md
+│   │   ├── abbreviations/
+│   │   │   ├── abbreviations.py  a question's shorthand read as the files write it, either way; words-list lines
+│   │   │   ├── test_abbreviations.py
+│   │   │   └── README.md
 │   │   ├── accents/
 │   │   │   ├── accents.py    a word typed without its accent, read as the files write it; words-list lines
 │   │   │   ├── test_accents.py

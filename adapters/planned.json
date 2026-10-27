@@ -1,15 +1,5 @@
 [
  {
-  "name": "abbreviations",
-  "kind": "stdlib",
-  "section": "Your own words",
-  "line": "Your own shorthand, written down once (appt, Rx, w/c), so a question finds either form.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, words"
- },
- {
   "name": "agent-transcript",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
