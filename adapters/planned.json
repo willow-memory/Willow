@@ -760,16 +760,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "first-mention",
-  "kind": "stdlib",
-  "section": "Finding things",
-  "line": "When your files first mention something, and the line that does.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, search"
- },
- {
   "name": "flashcards",
   "kind": "stdlib",
   "section": "Keeping track",

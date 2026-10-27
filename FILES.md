@@ -179,6 +179,10 @@ willow/
 │   │   │   ├── export.py     approved answers and the question log, as Markdown or CSV
 │   │   │   ├── test_export.py
 │   │   │   └── README.md
+│   │   ├── first-mention/
+│   │   │   ├── first_mention.py  when the files first mention something: the earliest dated line that holds every word
+│   │   │   ├── test_first_mention.py
+│   │   │   └── README.md
 │   │   ├── gaps/
 │   │   │   ├── gaps.py       where a log you keep stops: the days it skipped, said as gaps
 │   │   │   ├── test_gaps.py

@@ -10,6 +10,14 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `first-mention`, an add-on that says when your files first mention
+  something, and shows the line that does:
+  `first_mention.py --box DIR "your words"`. A mention is a line that itself
+  holds every content word, each read the kernel's way (the words list, and
+  a word's plain form); it is dated by its line, the nearest date above it
+  in its file, or its file's name, each saying which. The earliest dated
+  mention answers; undated mentions are counted beside it, which could be
+  earlier, never placed.
 - `amounts`, an add-on that lists every sum of money in your files, oldest
   first, each with its date and the line it's on: `amounts.py --box DIR`. A
   sum is a number written with its currency (`$20`, `£1,840.00`, `EUR 100`,

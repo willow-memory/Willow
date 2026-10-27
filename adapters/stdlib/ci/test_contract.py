@@ -77,6 +77,7 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
 COMMANDS: dict[str, tuple[str, list[str]]] = {
     "accents": ("accents.py", ["--box", "{box}", "tomatoes"]),
     "amounts": ("amounts.py", ["--box", "{box}"]),
+    "first-mention": ("first_mention.py", ["--box", "{box}", "tomatoes"]),
     "again": ("again.py", ["--box", "{box}"]),
     "aider": ("aider.py", ["--box", "{box}"]),
     "ci-why": ("ci_why.py", ["--record", "{box}/record.jsonl"]),
