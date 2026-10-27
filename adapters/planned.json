@@ -2418,16 +2418,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "quiz",
-  "kind": "stdlib",
-  "section": "Play",
-  "line": "A quiz from your own files: a passage with a word missing, and you fill it in.",
-  "source": "new",
-  "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, play"
- },
- {
   "name": "quote-review",
   "kind": "stdlib",
   "section": "Trust and proof",

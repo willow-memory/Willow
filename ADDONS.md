@@ -18,7 +18,7 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`█████░░░░░░░░░░░░░░░` **127 of 470 built** · 419 need no install · 51 need one
+`█████░░░░░░░░░░░░░░░` **128 of 470 built** · 419 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
@@ -30,7 +30,7 @@ or `writes-output`; its section), and any the card's author adds or changes.
 | Privacy and safety | 9 | 5 | 14 | 0 |
 | Assistants | 17 | 40 | 51 | 6 |
 | Ways to use it | 11 | 28 | 35 | 4 |
-| Play | 4 | 36 | 35 | 5 |
+| Play | 5 | 35 | 35 | 5 |
 | For maintainers | 17 | 27 | 39 | 5 |
 <!-- /willow:pools -->
 
@@ -47,9 +47,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[jrnl](adapters/stdlib/jrnl/)** — jrnl journals: each [YYYY-MM-DD HH:MM] entry as a dated passage.
+**[emacs](adapters/stdlib/emacs/)** — Answers in an Emacs compilation buffer, each a jump to its file and line.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 127 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 128 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -501,7 +501,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - **pile-poetry** (idea) — Verse from the word pairs your own files use most, in your own dialect. *new* `no-install` `offline` `read-only` `play`
 - **predictions** (idea) — Twelve yes-or-no questions about random data, forecast now and answered by a beacon round later, with your Brier score. Goes online: api.drand.sh, to read a beacon round's randomness. *bot* `no-install` `online` `records` `play`
 - **quake-bets** (idea) — Will there be a magnitude 6 this week? Bet, then let the USGS feed settle it against the base rate. Goes online: earthquake.usgs.gov, to read the week's earthquakes. *new* `no-install` `online` `records` `play`
-- **quiz** (idea) — A quiz from your own files: a passage with a word missing, and you fill it in. *new* `no-install` `offline` `records` `play`
+- [**quiz**](adapters/stdlib/quiz/) — A quiz from your own files: a passage with a word missing, and you fill it in. *new* `no-install` `offline` `records` `play`
 - **real-sky** (idea) — A horoscope from where the planets really are, computed offline from a JPL ephemeris. Needs Skyfield; MIT. Goes online: the ephemeris file, downloaded once. *new* `needs-install` `online` `read-only` `play`
 - **reversi** (idea) — Reversi as rows: every move, each flip following from the board. *new* `no-install` `offline` `records` `play`
 - **roll-for-merge** (idea) — A d20 for every pull request, green runs added and red streaks taken away, against a DC the bot calls. *new* `no-install` `offline` `records` `play`

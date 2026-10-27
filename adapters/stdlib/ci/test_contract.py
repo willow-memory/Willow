@@ -120,6 +120,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "pipe": ("pipe.py", ["--box", "{box}", *NOW]),
     "plain": ("plain.py", ["bite", "--box", "{box}", *NOW, "tomatoes"]),
     "privacy": ("privacy.py", ["bite", "--box", "{box}", *NOW, "tomatoes"]),
+    "quiz": ("quiz.py", ["--box", "{box}", "ask", *NOW]),
     "quote-check": ("quote_check.py", ["--box", "{box}", "Tomatoes want sun"]),
     "reading-level": ("reading_level.py", ["--box", "{box}"]),
     "renewals": ("renewals.py", ["--box", "{box}", *NOW]),

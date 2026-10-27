@@ -10,6 +10,13 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `quiz`, an add-on that cuts a quiz from your own files: a passage with a
+  word missing, for you to fill in from memory: `quiz.py --box DIR ask`,
+  then `answer WORD`. The record's tip draws the puzzle through the seeded
+  stream, the quiz row holds the answer's SHA-256 and never the word, one
+  quiz is open at a time, and the score is the record's own count. Only your
+  own writing is quizzed (no markup, fields or shouting), and a folder that
+  changed under the quiz marks no one wrong.
 - `transcript-redact`, an add-on that writes a copy of an agent transcript
   fit to share: `transcript_redact.py --from FILE --to FILE`. Keys (by the
   shapes keys wear), the account name in home paths, and emails are taken

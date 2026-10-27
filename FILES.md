@@ -365,6 +365,10 @@ willow/
 │   │   │   ├── privacy.py    personal data and keys withheld from what a question prints
 │   │   │   ├── test_privacy.py
 │   │   │   └── README.md
+│   │   ├── quiz/
+│   │   │   ├── quiz.py       a passage of your own writing with a word missing, cut and scored on the record
+│   │   │   ├── test_quiz.py
+│   │   │   └── README.md
 │   │   ├── quote-check/
 │   │   │   ├── quote_check.py is this exact quote in my files, and where
 │   │   │   ├── test_quote_check.py
