@@ -820,16 +820,6 @@
   "tags": "no-install, offline, read-only, maintainers"
  },
  {
-  "name": "fuzzy-dates",
-  "kind": "stdlib",
-  "section": "Finding things",
-  "line": "Dates that admit doubt ('about 1880', 'sometime in March') read and kept with their doubt, in EDTF.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, search"
- },
- {
   "name": "game-master",
   "kind": "stdlib",
   "section": "Play",

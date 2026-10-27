@@ -80,6 +80,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "accents": ("accents.py", ["--box", "{box}", "tomatoes"]),
     "amounts": ("amounts.py", ["--box", "{box}"]),
     "first-mention": ("first_mention.py", ["--box", "{box}", "tomatoes"]),
+    "fuzzy-dates": ("fuzzy_dates.py", ["--box", "{box}"]),
     "again": ("again.py", ["--box", "{box}"]),
     "aider": ("aider.py", ["--box", "{box}"]),
     "ci-memo": ("ci_memo.py", ["keys", "mutants:accents"]),

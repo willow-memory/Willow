@@ -10,6 +10,13 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `fuzzy-dates`, an add-on that reads the dates your files say with doubt
+  ("about 1880", "the early 1880s", "spring 1944", "sometime in March",
+  "between 1880 and 1885") and keeps the doubt, in EDTF (ISO 8601-2):
+  `fuzzy_dates.py --box DIR`. The grammar is words, small and said in full;
+  a year is four digits, 1000 to 2999, so a price never reads as one, and a
+  bare question mark is a sentence's. Exact dates stay the kernel's job, so
+  the two never read the same words.
 - `abbreviations`, an add-on that reads a question's shorthand as your
   files write it, either way round (`appointment` finds the files' `appt`,
   and `appt` their `appointment`), from a small table of common shorthand:
