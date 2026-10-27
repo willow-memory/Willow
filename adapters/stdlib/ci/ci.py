@@ -102,15 +102,16 @@ def missing_tools(*names: str) -> str | None:
     return f"{', '.join(gone)} not on PATH" if gone else None
 
 
-def command(*argv: str, needs=None, judge=None):
+def command(*argv: str, needs=None, judge=None, env: dict | None = None):
     """A gate that runs one command: unreachable when `needs` says why,
-    failing on a non-zero exit or when `judge` says why."""
+    failing on a non-zero exit or when `judge` says why. `env` is added to
+    the environment it runs in."""
 
     def gate() -> tuple[str, str, str | None]:
         why = needs() if needs else None
         if why:
             return UNREACHABLE, "", why
-        code, said = run(argv)
+        code, said = run(argv, env={**os.environ, **env} if env else None)
         if code != 0:
             return FAILING, said, f"exit {code}"
         why = judge(said) if judge else None
@@ -345,6 +346,37 @@ def mutant_targets() -> list[str]:
     )
 
 
+SHARDS = ROOT / "adapters" / "stdlib" / "test-shards" / "shards.py"
+#: one pytest over every add-on took eight minutes, and tests:strip ran it
+#: again, so each is cut into gates a job runs a few of: tests:adapters-1 to
+#: -8, tests:strip-1 to -4 (--shard then spreads them over jobs)
+ADAPTER_CHUNKS = 8
+STRIP_CHUNKS = 4
+
+
+def load_shards():
+    spec = importlib.util.spec_from_file_location("willow_shards_for_ci", SHARDS)
+    shards = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(shards)
+    return shards
+
+
+def chunks(files: list[str], n: int, base: Path = ROOT) -> list[list[str]]:
+    """`files` (paths under `base`) cut into n parts, each file in exactly
+    one, by size: the bigger a test file, the longer it runs. The cut
+    test-shards makes, so the same files cut the same way everywhere."""
+    return load_shards().split({f: (base / f).stat().st_size for f in files}, n)
+
+
+def adapter_tests(base: Path = ROOT) -> list[str]:
+    """Every add-on test file under `base`, as pytest collects them."""
+    return sorted(
+        p.relative_to(base).as_posix()
+        for p in (base / "adapters" / "stdlib").rglob("test_*.py")
+        if "__pycache__" not in p.parts
+    )
+
+
 LIVE = ROOT / "adapters" / "stdlib" / "live" / "live.py"
 
 
@@ -387,18 +419,21 @@ def gates() -> list[tuple[str, str, object]]:
                                         needs=lambda: missing_module("ruff"))),
         ("tests", "tests:beats", command(PY, "kernel.py", "test")),
     ]  # fmt: skip
-    for gate, *target in (
-        ("kernel", "test_kernel.py"),
-        ("docs", "test_docs.py", "test_docs_fires.py"),
-        ("adapters", "adapters/stdlib"),
-        ("vectors", "vectors/test_vectors.py", "-k", "as_it_is_now"),
-        ("strip", "test_strip.py"),
-        ("constitution", "constitution"),
-    ):
-        how = command(*PYTEST, *target, needs=lambda: missing_module("pytest"))
-        if gate == "adapters":
-            how = guarded_tests(*target)
-        out.append(("tests", f"tests:{gate}", how))
+    pytest = lambda *target, **kw: command(  # noqa: E731
+        *PYTEST, *target, needs=lambda: missing_module("pytest"), **kw
+    )
+    out += [
+        ("tests", "tests:kernel", pytest("test_kernel.py")),
+        ("tests", "tests:docs", pytest("test_docs.py", "test_docs_fires.py")),
+    ]
+    for k, part in enumerate(chunks(adapter_tests(), ADAPTER_CHUNKS), 1):
+        out.append(("tests", f"tests:adapters-{k}", guarded_tests(*part)))
+    out.append(("tests", "tests:vectors",
+                pytest("vectors/test_vectors.py", "-k", "as_it_is_now")))  # fmt: skip
+    for k in range(1, STRIP_CHUNKS + 1):
+        out.append(("tests", f"tests:strip-{k}", pytest(
+            "test_strip.py", env={"WILLOW_STRIP_CHUNK": f"{k}/{STRIP_CHUNKS}"})))  # fmt: skip
+    out.append(("tests", "tests:constitution", pytest("constitution")))
     # the coverage report, generated each run: it fails only on a clause the
     # person declared failing, and says why for each one it found nothing for
     out.append(("tests", "tests:coverage", command(PY, "constitution/coverage.py")))
@@ -443,7 +478,6 @@ def gates() -> list[tuple[str, str, object]]:
 
 
 PARTS = ("lint", "tests", "ports", "demo", "deps", "mutants", "tools")
-SHARDS = ROOT / "adapters" / "stdlib" / "test-shards" / "shards.py"
 
 
 def select(names: list[str], without: list[str], shard: str | None) -> list[str]:
@@ -454,25 +488,33 @@ def select(names: list[str], without: list[str], shard: str | None) -> list[str]
     know is refused, so a name spelled wrong never runs nothing."""
     every = [(part, gate) for part, gate, _ in gates()]
     known = set(PARTS) | {g for _, g in every}
+
+    def group(name: str) -> set[str]:
+        """tests:strip is its chunks, tests:strip-1 to -4, when no gate has
+        that name itself."""
+        if name in known:
+            return {name}
+        return {g for _, g in every if re.fullmatch(re.escape(name) + r"-\d+", g)}
+
     for name in names + without:
-        if name not in known:
+        if not group(name):
             raise ValueError(f"{name} isn't a part or a gate of ci.py")
     for name in without:
         if name in PARTS:
             raise ValueError(f"--without takes a gate, and {name} is a part")
+    named = set().union(*map(group, names)) if names else set()
+    left_out = set().union(*map(group, without)) if without else set()
     picked = [
         g
         for p, g in every
-        if (not names or p in names or g in names) and g not in without
+        if (not names or p in named or g in named) and g not in left_out
     ]
     if shard is None:
         return picked
     got = re.fullmatch(r"([1-9]\d*)/([1-9]\d*)", shard)
     if not got or int(got.group(1)) > int(got.group(2)):
         raise ValueError(f"--shard {shard} isn't K/N with K from 1 to N")
-    spec = importlib.util.spec_from_file_location("willow_shards_for_ci", SHARDS)
-    shards = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(shards)
+    shards = load_shards()
     # every gate weighs the same: the record keeps no times to weigh them by
     part = shards.split(dict.fromkeys(picked, 1), int(got.group(2)))[
         int(got.group(1)) - 1

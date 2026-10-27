@@ -118,8 +118,10 @@ def test_the_gates_run_in_one_fixed_order_and_cover_every_part():
     names = [g for _, g, _ in ci.gates()]
     assert names == [
         "lint:check", "lint:format",
-        "tests:beats", "tests:kernel", "tests:docs", "tests:adapters", "tests:vectors",
-        "tests:strip",
+        "tests:beats", "tests:kernel", "tests:docs",
+        *(f"tests:adapters-{k}" for k in range(1, ci.ADAPTER_CHUNKS + 1)),
+        "tests:vectors",
+        *(f"tests:strip-{k}" for k in range(1, ci.STRIP_CHUNKS + 1)),
         "tests:constitution", "tests:coverage",
         *(f"ports:{p}" for p in ci.PORTS),
         *(f"demo:{p}" for p in ci.people()), "demo:php2shell", "demo:google-privacy-2026-10-16",
@@ -146,10 +148,26 @@ def test_shards_run_every_gate_of_what_was_named_once_in_its_order():
 
 def test_a_gate_is_named_or_left_out_by_name():
     tests = [g for p, g, _ in ci.gates() if p == "tests"]
-    assert ci.select(["tests:strip"], [], None) == ["tests:strip"]
-    assert ci.select(["tests"], ["tests:strip"], None) == [g for g in tests if g != "tests:strip"]  # fmt: skip
-    assert ci.select(["lint", "tests:strip"], [], None) == ["lint:check", "lint:format", "tests:strip"]  # fmt: skip
+    strip = [g for g in tests if g.startswith("tests:strip-")]
+    assert ci.select(["tests:strip-2"], [], None) == ["tests:strip-2"]
+    assert ci.select(["tests:strip"], [], None) == strip  # a group is its chunks
+    assert ci.select(["tests"], ["tests:strip"], None) == [g for g in tests if g not in strip]  # fmt: skip
+    assert ci.select(["lint", "tests:strip-1"], [], None) == ["lint:check", "lint:format", "tests:strip-1"]  # fmt: skip
     assert ci.select([], [], None) == [g for _, g, _ in ci.gates()]
+
+
+def test_the_add_on_tests_are_cut_with_none_dropped_twice_or_left_empty():
+    files = ci.adapter_tests()
+    cut = ci.chunks(files, ci.ADAPTER_CHUNKS)
+    assert sorted(f for part in cut for f in part) == files
+    assert all(cut), "an empty chunk would run all of pytest's default paths"
+    # what pytest itself collects from adapters/stdlib, file by file
+    got = subprocess.run(
+        [sys.executable, "-m", "pytest", "--collect-only", "-q", "adapters/stdlib"],
+        cwd=ci.ROOT, capture_output=True, text=True,
+    )  # fmt: skip
+    collected = {ln.split("::")[0] for ln in got.stdout.splitlines() if "::" in ln}
+    assert collected == set(files), sorted(collected ^ set(files))
 
 
 @pytest.mark.parametrize("argv", [["tests:strpi"], ["--without", "tests"], ["--without", "nope"],

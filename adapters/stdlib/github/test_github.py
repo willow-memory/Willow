@@ -183,20 +183,20 @@ def test_the_repos_github_folder_holds():
         # ci.py's gates cut between jobs, each run by exactly one of them
         (
             ".github/workflows/ci.yml",
-            "run tests --without tests:strip --box",
-            "run tests --box",
-            "tests:strip more than once",
+            "run tests --without tests:strip --shard",
+            "run tests --shard",
+            "tests:strip-1 more than once",
         ),  # fmt: skip
         (
             ".github/workflows/ci.yml",
-            "run tests:strip --box",
-            "run tests:kernel --box",
+            "run tests:strip --shard",
+            "run tests:kernel --shard",
             "tests:kernel more than once",
         ),  # fmt: skip
         (
             ".github/workflows/ci.yml",
-            "run tests:strip --box",
-            "run tests:strpi --box",
+            "run tests:strip --shard",
+            "run tests:strpi --shard",
             "what it refuses",
         ),  # fmt: skip
         (
@@ -207,8 +207,8 @@ def test_the_repos_github_folder_holds():
         ),  # fmt: skip
         (
             ".github/workflows/ci.yml",
-            "--shard ${{ matrix.shard }}/4",
-            "--shard ${{ matrix.shard }}/5",
+            "run mutants --shard ${{ matrix.shard }}/4",
+            "run mutants --shard ${{ matrix.shard }}/5",
             "in no job",
         ),  # fmt: skip
         (
@@ -219,8 +219,20 @@ def test_the_repos_github_folder_holds():
         ),  # fmt: skip
         (
             ".github/workflows/ci.yml",
-            '"3.14"]\n    steps:\n      - uses: actions/checkout@v7\n      - uses: actions/setup-python@v7\n        with:\n          python-version: ${{ matrix.python-version }}\n      - run: pip install pytest\n      - run: python adapters/stdlib/ci/ci.py run tests:strip',  # fmt: skip
-            '"3.13"]\n    steps:\n      - uses: actions/checkout@v7\n      - uses: actions/setup-python@v7\n        with:\n          python-version: ${{ matrix.python-version }}\n      - run: pip install pytest\n      - run: python adapters/stdlib/ci/ci.py run tests:strip',  # fmt: skip
+            "--shard ${{ matrix.shard }}/6",
+            "--shard ${{ matrix.shard }}/5",
+            "what it refuses",
+        ),  # fmt: skip
+        (
+            ".github/workflows/ci.yml",
+            "        shard: [1, 2, 3, 4, 5, 6]\n",
+            "        shard: [1, 2, 3, 4, 5]\n",
+            "in no job",
+        ),  # fmt: skip
+        (
+            ".github/workflows/ci.yml",
+            '"3.14"]\n        shard: [1, 2, 3, 4]\n    steps:\n      - uses: actions/checkout@v7\n      - uses: actions/setup-python@v7\n        with:\n          python-version: ${{ matrix.python-version }}\n      - run: pip install pytest\n      - run: python adapters/stdlib/ci/ci.py run tests:strip',  # fmt: skip
+            '"3.13"]\n        shard: [1, 2, 3, 4]\n    steps:\n      - uses: actions/checkout@v7\n      - uses: actions/setup-python@v7\n        with:\n          python-version: ${{ matrix.python-version }}\n      - run: pip install pytest\n      - run: python adapters/stdlib/ci/ci.py run tests:strip',  # fmt: skip
             "Python matrices differ",
         ),
         # CONST-VIII-2: the weekly run that reaches a person when an

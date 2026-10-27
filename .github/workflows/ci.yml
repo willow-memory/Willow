@@ -131,18 +131,22 @@ jobs:
     # the same Pythons: it runs the add-ons' tests again in a copy without
     # GitHub, so in one job it doubled the time. github.py check holds the two
     # to the whole part, and to the same matrix.
+    # Cut in six by ci.py's --shard, on every Python: the add-ons' tests are
+    # tests:adapters-1 to -8, each a share of their files, so no job runs
+    # them all (together they took eight minutes).
     runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
         python-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
+        shard: [1, 2, 3, 4, 5, 6]
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
       - run: pip install pytest
-      - run: python adapters/stdlib/ci/ci.py run tests --without tests:strip --box ${{ runner.temp }}/ci-record | tee "$RUNNER_TEMP/ci.log"
+      - run: python adapters/stdlib/ci/ci.py run tests --without tests:strip --shard ${{ matrix.shard }}/6 --box ${{ runner.temp }}/ci-record | tee "$RUNNER_TEMP/ci.log"
       - if: failure()
         run: python adapters/stdlib/ci-why/ci_why.py "$RUNNER_TEMP/ci.log" --record "$RUNNER_TEMP/ci-record/record.jsonl" >> "$GITHUB_STEP_SUMMARY" || true
       - if: always()
@@ -150,24 +154,26 @@ jobs:
       - if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: ci-record-tests-${{ matrix.python-version }}
+          name: ci-record-tests-${{ matrix.python-version }}-${{ matrix.shard }}
           path: ${{ runner.temp }}/ci-record/record.jsonl
 
   strip:
     # tests:strip, test_strip.py: the repo without GitHub, then without any
-    # add-on, each still passing.
+    # add-on, each still passing. Four gates, tests:strip-1 to -4, each a
+    # share of the add-ons' tests in the stripped copy; one job each.
     runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
         python-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
+        shard: [1, 2, 3, 4]
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
       - run: pip install pytest
-      - run: python adapters/stdlib/ci/ci.py run tests:strip --box ${{ runner.temp }}/ci-record | tee "$RUNNER_TEMP/ci.log"
+      - run: python adapters/stdlib/ci/ci.py run tests:strip --shard ${{ matrix.shard }}/4 --box ${{ runner.temp }}/ci-record | tee "$RUNNER_TEMP/ci.log"
       - if: failure()
         run: python adapters/stdlib/ci-why/ci_why.py "$RUNNER_TEMP/ci.log" --record "$RUNNER_TEMP/ci-record/record.jsonl" >> "$GITHUB_STEP_SUMMARY" || true
       - if: always()
@@ -175,7 +181,7 @@ jobs:
       - if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: ci-record-strip-${{ matrix.python-version }}
+          name: ci-record-strip-${{ matrix.python-version }}-${{ matrix.shard }}
           path: ${{ runner.temp }}/ci-record/record.jsonl
 
   ports:

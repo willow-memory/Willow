@@ -15,6 +15,8 @@ it's published, and a stripped copy has removed files they name.
 
 from __future__ import annotations
 
+import importlib.util
+import os
 import shutil
 import subprocess
 import sys
@@ -59,18 +61,48 @@ def passes(copy: Path, *argv: str) -> None:
 PYTEST = ("-m", "pytest", "-q", "-p", "no:cacheprovider")
 
 
+def chunk() -> tuple[int, int]:
+    """Which part of this file's work to do: WILLOW_STRIP_CHUNK=K/N, as CI's
+    tests:strip-K sets it, or (1, 1), all of it. CI cuts the add-on tests
+    over N-1 jobs, since all of them in one went on for eight minutes; the
+    first has the rest of this file's work, as long as one of the others."""
+    k, n = os.environ.get("WILLOW_STRIP_CHUNK", "1/1").split("/")
+    return int(k), int(n)
+
+
+def adapter_args(copy: Path) -> list[str]:
+    """What pytest runs of the add-ons in `copy`: all of adapters/stdlib, or
+    this chunk's test files of it, cut as ci.py cuts them, none for the first."""
+    k, n = chunk()
+    if n == 1:
+        return ["adapters/stdlib"]
+    if k == 1:
+        return []
+    spec = importlib.util.spec_from_file_location(
+        "willow_ci_for_strip", ROOT / "adapters" / "stdlib" / "ci" / "ci.py"
+    )
+    ci = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(ci)
+    return ci.chunks(ci.adapter_tests(copy), n - 1, copy)[k - 2]
+
+
 def test_without_github_everything_else_passes(tmp_path):
     copy = stripped(tmp_path, HOST)
     assert not (copy / ".github").exists() and not (copy / "adapters/stdlib/github").exists()  # fmt: skip
     passes(
         copy, "adapters/stdlib/readme/readme.py", "write"
     )  # as anyone removing an add-on would
-    passes(copy, "kernel.py", "test")
-    passes(copy, *PYTEST, "test_kernel.py", "adapters/stdlib")
-    passes(copy, *PYTEST, "vectors/test_vectors.py", "-k", "as_it_is_now")
+    first = chunk()[0] == 1
+    if first:
+        passes(copy, "kernel.py", "test")
+    passes(copy, *PYTEST, *(["test_kernel.py"] if first else []), *adapter_args(copy))
+    if first:
+        passes(copy, *PYTEST, "vectors/test_vectors.py", "-k", "as_it_is_now")
 
 
 def test_the_kernel_alone_passes(tmp_path):
+    if chunk()[0] != 1:
+        pytest.skip("in the first chunk")
     copy = stripped(tmp_path, ("adapters/",) + HOST)
     assert not (copy / "adapters").exists()
     passes(copy, "kernel.py", "test")
@@ -81,6 +113,8 @@ def test_the_kernel_alone_passes(tmp_path):
 @pytest.mark.parametrize("without", [HOST, ("adapters/",) + HOST])
 def test_a_leftover_dependency_would_be_caught(tmp_path, without):
     """The strip can fail: a test that reaches for what was taken fails it."""
+    if chunk()[0] != 1:
+        pytest.skip("in the first chunk")
     copy = stripped(tmp_path, without)
     (copy / "test_kernel.py").write_text(
         (copy / "test_kernel.py").read_text(encoding="utf-8")
