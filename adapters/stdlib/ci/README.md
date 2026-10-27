@@ -19,8 +19,8 @@ record is hash-chained like any other and the kernel's `verify` checks it.
     python adapters/stdlib/ci/ci.py verify [--box DIR]
     python adapters/stdlib/ci/ci.py show   [--box DIR]
 
-`run` with no part runs all seven. A gate's own name (`tests:strip`) runs
-just that gate, `--without GATE` leaves one out of what was named, and
+`run` with no part runs all seven. A gate's own name (`tests:strip-2`) runs
+just that gate, and the name of a numbered group (`tests:strip`, `tests:adapters`) all of its gates, `--without GATE` leaves one out of what was named, and
 `--shard K/N` runs the Kth of N parts of it, cut by
 [test-shards](../test-shards/)' own split: the N parts hold every gate once
 between them, in the table's order. A name it doesn't know, or `--without`
@@ -33,7 +33,7 @@ record in the runner's temp folder.
 | Part | Gates, in this order |
 |---|---|
 | lint | `lint:check`, `lint:format` (ruff) |
-| tests | `tests:beats` (`kernel.py test`), `tests:kernel`, `tests:docs` (`test_docs.py`, and `test_docs_fires.py`, which shows each docs check fails on a planted violation), `tests:adapters` (the add-ons in `adapters/stdlib/`, under the guard), `tests:vectors` (pytest), `tests:strip` (`test_strip.py`: the repo without GitHub, then without any add-on), `tests:constitution` (the eternity clause, attacked), `tests:coverage` (`constitution/coverage.py`: which clauses are cited where; failing only on a clause declared failing) |
+| tests | `tests:beats` (`kernel.py test`), `tests:kernel`, `tests:docs` (`test_docs.py`, and `test_docs_fires.py`, which shows each docs check fails on a planted violation), `tests:adapters-1` to `-8` (the add-ons in `adapters/stdlib/`, under the guard, each a share of their test files, cut by the times in [test-times.json](test-times.json)), `tests:vectors` (pytest), `tests:strip-1` to `-4` (`test_strip.py`: the repo without GitHub, then without any add-on; the first the kernel-alone work and the kernel's tests, the others a share of the add-ons' test files in the stripped copy), `tests:constitution` (the eternity clause, attacked), `tests:coverage` (`constitution/coverage.py`: which clauses are cited where; failing only on a clause declared failing) |
 | ports | `ports:java`, `ports:ts`, `ports:csharp`: `vectors/compare.py`, one port at a time |
 | demo | `demo:hollis`, `demo:odile`, `demo:teodora`: each person's files made in a temporary folder and held to their `demo/*/PLANTED.md` |
 | deps | `deps:mcp`, `deps:mcp@floor`, `deps:pdf`, `deps:pdf@floor`, two per add-on in `adapters/deps/`: its tests, under the guard, in a fresh virtual environment with only its own pinned requirements (then its floor's) and pytest; an install that can't be done is unreachable. Then `deps:floors`: each floor against the floor rule, by PyPI's upload dates; PyPI out of reach is unreachable |
@@ -100,9 +100,14 @@ codes.
 merging it.
 
 In CI (`.github/workflows/ci.yml`) each part is its own job with its own
-record, verified and uploaded as that run's artifact, but two: `tests:strip`
-has a job of its own on each Python (it runs the add-ons' tests again, in a
-stripped copy, so beside the rest it doubled the job), and the mutants run
-in four shards. `adapters/stdlib/github/github.py check` holds the cut: every gate run by exactly
+record, verified and uploaded as that run's artifact, but three: `tests:strip`
+has jobs of its own on each Python (it runs the add-ons' tests again, in a
+stripped copy, so beside the rest it doubled the job), and the tests (eight
+shards on each Python), strip (four) and mutants (four) runs are cut with
+`--shard`. All the add-ons' tests in one gate took eight minutes, and strip
+ran them again: the chunk gates are what lets a job run a few of them.
+`test-times.json` is each test file's seconds in one run
+(`pytest adapters/stdlib --junitxml=RUN.xml`, summed by file); it only sets
+the balance, so a stale one runs every test all the same. `adapters/stdlib/github/github.py check` holds the cut: every gate run by exactly
 one job. A job that fails writes [ci-why](../ci-why/)'s reading of its log
 to the run's summary.

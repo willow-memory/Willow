@@ -219,14 +219,14 @@ def test_the_repos_github_folder_holds():
         ),  # fmt: skip
         (
             ".github/workflows/ci.yml",
-            "--shard ${{ matrix.shard }}/6",
+            "--shard ${{ matrix.shard }}/8",
             "--shard ${{ matrix.shard }}/5",
             "what it refuses",
         ),  # fmt: skip
         (
             ".github/workflows/ci.yml",
-            "        shard: [1, 2, 3, 4, 5, 6]\n",
-            "        shard: [1, 2, 3, 4, 5]\n",
+            "        shard: [1, 2, 3, 4, 5, 6, 7, 8]\n",
+            "        shard: [1, 2, 3, 4, 5, 6, 7]\n",
             "in no job",
         ),  # fmt: skip
         (

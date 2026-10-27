@@ -46,6 +46,7 @@ import contextlib
 import hashlib
 import importlib.util
 import io
+import json
 import os
 import re
 import shutil
@@ -361,11 +362,24 @@ def load_shards():
     return shards
 
 
+#: seconds each add-on test file took in one run, for cutting them by time.
+#: Only the balance depends on it, never what runs: a file it doesn't list
+#: counts as the median, one it lists that's gone is ignored. Made by
+#: `pytest adapters/stdlib --junitxml=RUN.xml`, each testcase's time summed
+#: under its file.
+TIMES = Path(__file__).resolve().parent / "test-times.json"
+
+
 def chunks(files: list[str], n: int, base: Path = ROOT) -> list[list[str]]:
     """`files` (paths under `base`) cut into n parts, each file in exactly
-    one, by size: the bigger a test file, the longer it runs. The cut
-    test-shards makes, so the same files cut the same way everywhere."""
-    return load_shards().split({f: (base / f).stat().st_size for f in files}, n)
+    one, by how long each took last time (TIMES), the cut test-shards makes,
+    so the same files cut the same way everywhere."""
+    times = json.loads(TIMES.read_text(encoding="utf-8"))
+    known = sorted(times[f] for f in files if f in times)
+    median = known[len(known) // 2] if known else 1.0
+    return load_shards().split(
+        {f: max(1, round(1000 * times.get(f, median))) for f in files}, n
+    )
 
 
 def adapter_tests(base: Path = ROOT) -> list[str]:

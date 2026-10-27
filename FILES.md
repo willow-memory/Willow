@@ -103,6 +103,7 @@ willow/
 │   │   │   ├── whose.py      which commit wrote these lines, or with a host's host.json which pull request
 │   │   │   ├── guard/
 │   │   │   │   └── sitecustomize.py  holds each add-on to its card while its tests run
+│   │   │   ├── test-times.json  seconds each add-on test file took, to cut the add-ons' tests into even chunks
 │   │   │   ├── test_ci.py    its tests: the same record every run, and every state
 │   │   │   ├── test_guard.py the guard's tests: each broken promise caught
 │   │   │   ├── test_contract.py  what every add-on promises alike, held for all of them
