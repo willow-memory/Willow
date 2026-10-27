@@ -329,6 +329,18 @@ def session(impl, root: Path) -> dict:
     return {"shown": shown, "box": box, "key": key}
 
 
+def rehash(path: Path, rows: list[dict]) -> None:
+    """The record rewritten with every hash redone from the first row: what
+    `verify` alone can't tell from the original."""
+    prev, out = k.GENESIS, []
+    for n, r in enumerate(rows):
+        r = {x: v for x, v in r.items() if x != "hash"}
+        r["n"], r["prev"] = n, prev
+        r["hash"] = prev = k.h256(k.canon(r))
+        out.append(k.canon(r))
+    path.write_text("\n".join(out) + "\n", encoding="utf-8")
+
+
 def tamper_with_proposals(impl, box: Path) -> list:
     """What a seal stands on (CONST-0-4): the sealed proposal's file changed
     under it, three ways, then put back; then its bytes proposed again under
@@ -365,6 +377,39 @@ def tamper_with_proposals(impl, box: Path) -> list:
     out.append(["bite after", *run(impl, "bite", *b, other)])
     out.append(["first still", *run(impl, "bite", *b, asked)])
     out.append(["verify after", *run(impl, "verify", *b)])
+    # the seal names its question, and the key signs it: a record rewritten
+    # and re-hashed can't change that question, strip it, or re-point it
+    path = box / "record.jsonl"
+    record, file_now = path.read_bytes(), f.read_text(encoding="utf-8")
+    rows = k.read(path)[0]
+    seal_n = next(r["n"] for r in rows if r["kind"] == "seal")
+    for what in ("changed", "stripped"):
+        edited = [dict(r) for r in rows]
+        if what == "changed":
+            edited[seal_n]["bite_key"] = "0" * 64
+        else:
+            edited[seal_n].pop("bite_key", None)
+        rehash(path, edited)
+        out.append([f"question {what}", *run(impl, "verify", *b)])
+        out.append([f"question {what} bite", *run(impl, "bite", *b, asked)])
+        path.write_bytes(record)
+    n_other = max(
+        r["n"]
+        for r in rows
+        if r["kind"] == "bite" and r["bite_key"] == k.bite_key(other)
+    )
+    edited = [dict(r) for r in rows]
+    for r in edited:
+        if r["kind"] == "proposal" and r.get("subject") == good:
+            r["bite_row"] = n_other  # made for the other words, now
+    rehash(path, edited)
+    f.write_text(json.dumps({**prop, "bite_key": k.bite_key(other)}), encoding="utf-8")
+    out.append(["re-pointed", *run(impl, "verify", *b)])
+    out.append(["re-pointed bite", *run(impl, "bite", *b, other)])
+    out.append(["re-pointed first", *run(impl, "bite", *b, asked)])
+    path.write_bytes(record)
+    f.write_text(file_now, encoding="utf-8")
+    out.append(["put back again", *run(impl, "verify", *b)])
     return out
 
 

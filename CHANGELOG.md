@@ -445,6 +445,17 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- A seal names the question it answers, and the key signs it. `seal` now
+  writes the question's key (`bite_key`) on the seal row, and the proof is
+  over the act, the subject and that key. Until now the question lived on the
+  hash chain only (a record rewritten and re-hashed could point an approved
+  answer at another question, the gap `tip-pin` catches from outside); now
+  that takes the key. `verify` counts a seal whose question is changed or
+  stripped as one that doesn't prove. A seal from before has no question and
+  is proved the old way, so existing boxes keep working, its question taken
+  from the record as before; seal it again to bind it. The three ports and the
+  vectors follow: half the seal proofs name a question, and the session
+  rewrites the record three ways. (#56)
 - The README no longer says any edit to a past entry is detected: rows cut off
   the end, or removed and re-hashed from there on, still pass `verify`.
   LIMITS.md says so, and how to check with a copy of the last row's hash and

@@ -611,3 +611,99 @@ def test_a_day_and_month_either_way_round_only_when_it_cant_be_misread():
     assert k.newest("5/5/2026") == "20260505"
     assert k.newest("[11/03/2023, 20:00:00]") == ""
     assert k.newest("1/300") == "" and k.newest("14/10/20261") == ""
+
+
+def rehashed(box: Path, rows: list[dict]) -> None:
+    """The record rewritten with every hash redone from the first row: the
+    rewrite `verify` cannot tell from the original."""
+    prev, out = k.GENESIS, []
+    for n, r in enumerate(rows):
+        r = {x: v for x, v in r.items() if x != "hash"}
+        r["n"], r["prev"] = n, prev
+        r["hash"] = prev = k.h256(k.canon(r))
+        out.append(k.canon(r))
+    (box / "record.jsonl").write_text("\n".join(out) + "\n")
+
+
+def the_key(box: Path) -> bytes:
+    return bytes.fromhex(
+        Path(json.loads((box / "kernel.json").read_text())["key"]).read_text().strip()
+    )
+
+
+def test_a_seal_names_the_question_and_the_key_signs_it(tmp_path):
+    """The person's seal covers which question the answer is for, not only the
+    bytes: a seal row carries the question's key, and its proof is over the
+    act, the subject and that key (CONST-0-4)."""
+    box, b, subj = sealed_box(tmp_path)
+    asked = json.loads(cli("bite", *b, "when does the bus leave the square").stdout)
+    rows, _ = k.read(box / "record.jsonl")
+    seal = next(r for r in rows if r["kind"] == "seal")
+    assert seal["bite_key"] == k.bite_key("when does the bus leave the square")
+    key = the_key(box)
+    assert seal["proof"] == k.proof(key, subj, "seal", seal["bite_key"])
+    assert seal["proof"] != k.proof(
+        key, subj
+    )  # not the form that left the question out
+    assert asked["state"] == "sealed" and asked["answer"] == "Seven."
+
+
+def test_a_rewritten_chain_cannot_re_point_a_sealed_answer(tmp_path):
+    """The old binding lived on the hash chain, so a chain rewritten and
+    re-hashed (the gap tip-pin exists for) could name another question. The
+    key signs the question now, so it can't."""
+    box, b, subj = sealed_box(tmp_path)
+    other = k.bite_key("where is the ferry")
+    cli("bite", *b, "where is the ferry")
+    rows, _ = k.read(box / "record.jsonl")
+    n_other = next(
+        r["n"] for r in rows if r["kind"] == "bite" and r["bite_key"] == other
+    )
+    for r in rows:
+        if r["kind"] == "proposal":
+            r["bite_row"] = n_other  # the proposal now says it was made for the ferry
+    rehashed(box, rows)
+    edit_proposal(box, subj, bite_key=other)
+    assert cli("verify", *b).returncode in (0, 42)
+    got = cli("bite", *b, "where is the ferry")
+    assert '"state": "sealed"' not in got.stdout, "re-pointed with no key"
+    again = cli("bite", *b, "when does the bus leave the square")
+    assert json.loads(again.stdout)["answer"] == "Seven."
+
+
+def test_a_seal_rows_question_cannot_be_changed_or_stripped(tmp_path):
+    box, b, subj = sealed_box(tmp_path)
+    key = the_key(box)
+    held, _ = k.read(box / "record.jsonl")
+    n = next(r["n"] for r in held if r["kind"] == "seal")
+    for what in ("changed", "stripped"):
+        rows = [dict(r) for r in held]
+        if what == "changed":
+            rows[n]["bite_key"] = k.bite_key("where is the ferry")
+        else:
+            rows[n].pop("bite_key", None)
+        rehashed(box, rows)
+        got = cli("verify", *b)
+        assert got.returncode == 42 and f"seal rows [{n}] don't prove" in got.stdout, (
+            what
+        )
+        served = cli("bite", *b, "when does the bus leave the square")
+        assert '"state": "sealed"' not in served.stdout, what
+    rehashed(box, held)
+    assert cli("verify", *b).returncode == 0 and key  # put back, it holds
+
+
+def test_a_seal_made_before_the_question_was_signed_still_holds(tmp_path):
+    """Existing boxes: a seal row with no question, proved the old way, still
+    proves and still serves, its question taken from the record as before."""
+    box, b, subj = sealed_box(tmp_path)
+    key = the_key(box)
+    held, _ = k.read(box / "record.jsonl")
+    rows = [dict(r) for r in held]
+    n = next(r["n"] for r in rows if r["kind"] == "seal")
+    rows[n].pop("bite_key", None)
+    rows[n]["proof"] = k.proof(key, subj)
+    rehashed(box, rows)
+    assert cli("verify", *b).returncode == 0
+    got = cli("bite", *b, "When does the bus leave the square?")
+    assert got.returncode == 0 and json.loads(got.stdout)["answer"] == "Seven."

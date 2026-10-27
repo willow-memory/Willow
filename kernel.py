@@ -190,12 +190,12 @@ def lock(f) -> None:
 
 
 # ── the seal and the bite key ───────────────────────────────────────────────
-def proof(key: bytes, subject: str, act: str = "seal") -> str:
+def proof(key: bytes, subject: str, act: str = "seal", asked: str | None = None) -> str:
     """HMAC-SHA-256 under their key, over the act ("seal", or "decline" for a
-    No), a unit separator, the subject."""
-    return hmac.new(
-        key, "\x1f".join((act, subject)).encode(), hashlib.sha256
-    ).hexdigest()
+    No), a unit separator, the subject; and, for a seal that names the
+    question it answers, another separator and that question's key."""
+    parts = (act, subject) if asked is None else (act, subject, asked)
+    return hmac.new(key, "\x1f".join(parts).encode(), hashlib.sha256).hexdigest()
 
 
 def words(text: str) -> list[str]:
@@ -641,14 +641,19 @@ def look(
 def sealed(box: Path, rows: list[dict], act: str = "seal") -> dict[str, dict]:
     """Each proposal a seal row holds, by subject, only while its proof holds
     under the person's key. A forged seal is in neither: it is reported by
-    `verify`, and never served (CONST-0-2, CONST-0-4). With act "decline",
-    the same for the person's No."""
+    `verify`, and never served (CONST-0-2, CONST-0-4). A seal row that names
+    a question (`bite_key`) is proved over it too, so the question is the
+    person's to name; one from before that has no such field and is proved
+    the old way. With act "decline", the same for the person's No."""
     key, _ = read_key(Path(config(box)["key"]), box)
     out = {}
     for r in rows:
         if r["kind"] == act and key is not None:
+            asked = r.get("bite_key") if act == "seal" and "bite_key" in r else None
+            if "bite_key" in r and act == "seal" and not isinstance(asked, str):
+                continue
             if hmac.compare_digest(
-                proof(key, r.get("subject", ""), act), str(r.get("proof"))
+                proof(key, r.get("subject", ""), act, asked), str(r.get("proof"))
             ):
                 out[r["subject"]] = r
     return out
@@ -680,8 +685,10 @@ def standing(
     """What a seal stands on: (the proposal, the question it was sealed for,
     None), or (None, None, why not). The key signed the subject, the hash of
     the proposal's bytes, so the file is served only while it still hashes to
-    that (CONST-0-4); and the question is the record's, the bite the proposal
-    was made under before the seal, never a field of the file."""
+    that (CONST-0-4); and the question is the one the seal names, which its
+    proof covers. A seal from before that names none, and takes the record's:
+    the bite the proposal was made under before the seal. Never a field of
+    the file."""
     try:
         prop = json.loads((box / "proposals" / f"{subj[9:]}.json").read_text())
         same = subject_of(prop) == subj
@@ -689,7 +696,11 @@ def standing(
         return None, None, "is missing or can't be read"
     if not same:
         return None, None, "is not the bytes that were sealed"
-    key = proposed_under(rows, subj, seal["n"])
+    key = (
+        seal["bite_key"]
+        if "bite_key" in seal
+        else proposed_under(rows, subj, seal["n"])
+    )
     if key is None:
         return None, None, "was made under no question the record names"
     return prop, key, None
@@ -824,7 +835,17 @@ def seal(box: Path, subj: str, ts: str) -> int:
             file=sys.stderr,
         )
         return REFUSED
-    append(box, ts, "seal", who="human", subject=subj, proof=proof(key, subj))
+    asked = proposed_under(rows, subj)  # the question this is the answer to
+    if asked is None:
+        print(
+            f"refused: the record names no question {subj} was made under",
+            file=sys.stderr,
+        )
+        return REFUSED
+    append(
+        box, ts, "seal", who="human", subject=subj, bite_key=asked,
+        proof=proof(key, subj, "seal", asked),
+    )  # fmt: skip
     out = box / "written" / prop["path"]
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(prop["data"], encoding="utf-8")

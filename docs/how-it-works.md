@@ -83,7 +83,7 @@ contents.
 
 `init` creates the key: 32 random bytes, written as hex to the file you name,
 readable only by you (mode `600`). An approval is an HMAC-SHA-256 of the exact
-suggested answer, made with that key.
+suggested answer and the question it answers, made with that key.
 
 - Only someone with the key file can approve an answer.
 - `kernel.py` refuses a key stored inside the record folder, so copying the
@@ -128,7 +128,8 @@ Anything else is refused, line by line, with the reason logged. A suggestion
 that passes waits. `seal` approves one by its hash; if its file has changed
 since it was suggested, the approval is refused. An approved answer is given
 for the same words in the same order, regardless of case and punctuation, and
-only while its file still holds the bytes you approved and the record still
-says which question it was approved for; `verify` says when it doesn't.
+only while its file still holds the bytes you approved, for the question your
+seal names; `verify` says when it doesn't. (A seal from before the question
+was signed has none, and takes it from the record.)
 
 Back to the [README](../README.md).
