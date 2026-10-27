@@ -260,6 +260,10 @@ willow/
 │   │   │   ├── jetbrains.py      an external tool for JetBrains IDEs: answers as links to file and line
 │   │   │   ├── test_jetbrains.py
 │   │   │   └── README.md
+│   │   ├── jrnl/
+│   │   │   ├── jrnl.py       jrnl journals mirrored, each stamped entry one dated passage
+│   │   │   ├── test_jrnl.py
+│   │   │   └── README.md
 │   │   ├── lending/
 │   │   │   ├── lending.py    what you lent, and what your files say came back
 │   │   │   ├── test_lending.py

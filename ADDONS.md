@@ -18,11 +18,11 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`█████░░░░░░░░░░░░░░░` **117 of 470 built** · 419 need no install · 51 need one
+`█████░░░░░░░░░░░░░░░` **118 of 470 built** · 419 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
-| Reading more kinds of files | 12 | 93 | 96 | 9 |
+| Reading more kinds of files | 13 | 92 | 96 | 9 |
 | Finding things | 15 | 28 | 33 | 10 |
 | Your own words | 9 | 16 | 22 | 3 |
 | Keeping track | 11 | 47 | 58 | 0 |
@@ -39,17 +39,17 @@ or `writes-output`; its section), and any the card's author adds or changes.
 <!-- willow:newest -->
 - 2026-10-27 · [**said**](adapters/stdlib/said/) — Your own quotes, gathered: every 'so-and-so, on this date: "..."' in your files, as a dated timeline of what was decided.
 - 2026-10-27 · [**reading-level**](adapters/stdlib/reading-level/) — How hard a passage reads (sentence length, word length, Flesch), so a teacher can find texts for a class.
+- 2026-10-27 · [**jrnl**](adapters/stdlib/jrnl/) — jrnl journals: each [YYYY-MM-DD HH:MM] entry as a dated passage.
 - 2026-10-27 · [**ids**](adapters/stdlib/ids/) — Every file and passage given its Software Heritage ID and IPFS CID, names the rest of the world already uses.
 - 2026-10-27 · [**fuzzy-dates**](adapters/stdlib/fuzzy-dates/) — Dates that admit doubt ('about 1880', 'sometime in March') read and kept with their doubt, in EDTF.
-- 2026-10-27 · [**first-mention**](adapters/stdlib/first-mention/) — When your files first mention something, and the line that does.
 <!-- /willow:newest -->
 
 ### Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[ci-memo](adapters/stdlib/ci-memo/)** — A CI gate whose inputs' bytes are unchanged keeps its recorded verdict: pin a run's per-gate keys, and run only what a change can reach.
+**[slow-tests](adapters/stdlib/slow-tests/)** — Each test's time kept per run, with the slowest named and any that got slower flagged.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 117 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 118 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -99,7 +99,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - **jira** (idea) — Jira's issue export, CSV or XML: each issue, comment and status change as dated passages. *new* `no-install` `offline` `writes-output` `file-reader`
 - **joplin** (idea) — Joplin's .jex export, read without unpacking it: each note as plain text with its title and dates. *new* `no-install` `offline` `writes-output` `file-reader`
 - **journiv** (idea) — Journiv journal entries, with their moods, as dated lines, once its export format is settled. *new* `no-install` `offline` `writes-output` `file-reader`
-- **jrnl** (idea) — jrnl journals: each [YYYY-MM-DD HH:MM] entry as a dated passage. *new* `no-install` `offline` `writes-output` `file-reader`
+- [**jrnl**](adapters/stdlib/jrnl/) — jrnl journals: each [YYYY-MM-DD HH:MM] entry as a dated passage. *new* `no-install` `offline` `writes-output` `file-reader`
 - **jupyter** (idea) — Jupyter notebooks: Markdown cells, code and text outputs as passages, cited by cell. *new* `no-install` `offline` `writes-output` `file-reader`
 - **karakeep** (idea) — Karakeep's JSON export: bookmarks, notes and tags as plain text. *new* `no-install` `offline` `writes-output` `file-reader`
 - **latex** (idea) — LaTeX sources as plain prose, commands stripped, cited by the .tex file's own lines. *new* `no-install` `offline` `writes-output` `file-reader`

@@ -63,6 +63,9 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         "From: Ada Example <ada@example.org>\nDate: Thu, 14 Oct 2026 09:15:00 +0100\n"
         "Subject: Roof estimate\n\nThe estimate is in.\n").encode()}),
     "notes": ("notes.py", {"garden.md": b"Tomatoes want [[sun]].\n"}),
+    "jrnl": ("jrnl.py", {"journal.txt": (
+        "[2024-03-03 10:15] Fixed the gate.\nThe hinge wanted oil, not force.\n\n"
+        "[2024-03-04 09:00] Rain all day.\n").encode()}),
     "office": ("office.py", {"letter.docx": _docx("The roof is fixed.")}),
     "web-pages": ("web_pages.py", {"saved.html": (
         "<!-- saved from url=(0020)https://example.org/ -->\n"

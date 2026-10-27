@@ -1403,16 +1403,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "jrnl",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "jrnl journals: each [YYYY-MM-DD HH:MM] entry as a dated passage.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "jupyter",
   "kind": "stdlib",
   "section": "Reading more kinds of files",

@@ -10,6 +10,13 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `jrnl`, a reader that mirrors jrnl journals as plain text the kernel
+  reads: `jrnl.py mirror --from FOLDER --to MIRROR`. A journal is a .txt
+  whose first line that says anything opens with jrnl's own
+  `[YYYY-MM-DD HH:MM]` stamp; each entry becomes one dated paragraph, the
+  brackets off so the kernel reads the date, blank lines inside an entry
+  closed up. Any other .txt is someone else's and is skipped, counted,
+  never guessed at. It keeps the readers' contract.
 - `ids`, an add-on that names every file of your folder as the world's
   archives do: `ids.py --box DIR [PATH]`. The Software Heritage ID is the
   file's git blob SHA-1 (the tests hold it to git's own answer); the IPFS
