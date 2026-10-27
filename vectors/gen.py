@@ -373,14 +373,16 @@ def hmac_cases() -> dict:
         assert got == want, "RFC 4231 vector disagrees with this Python"
         rfc.append({"key": key, "msg": msg, "mac": want})
     seals = []
-    for _ in range(60):
+    for i in range(60):
         key = R.randbytes(32)
         subject = "proposal:" + k.h256(text(10))
         if R.random() < 0.2:
             subject = text(R.randint(0, 20))
-        seals.append(
-            {"key": key.hex(), "subject": subject, "proof": k.proof(key, subject)}
-        )
+        case = {"key": key.hex(), "subject": subject}
+        if i % 2:  # a seal that names its question; derived, so the stream is the same
+            case["asked"] = k.h256("asked " + subject)
+        case["proof"] = k.proof(key, subject, "seal", case.get("asked"))
+        seals.append(case)
     return {"rfc4231": rfc, "seal": seals}
 
 

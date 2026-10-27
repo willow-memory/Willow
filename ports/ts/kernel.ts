@@ -228,7 +228,9 @@ const sha256 = (data: Buffer | string) => crypto.createHash("sha256").update(dat
 const h256 = (text: string) => sha256(Buffer.from(text, "utf8"));
 const hmac = (key: Buffer, msg: Buffer) => crypto.createHmac("sha256", key).update(msg).digest("hex");
 /** onescript/sign.py hmac_parts(key, "seal", subject). */
-const proof = (key: Buffer, subject: string, act = "seal") => hmac(key, Buffer.from(act + "\x1f" + subject, "utf8"));
+/** A seal that names the question it answers (`asked`) is proved over that question's key too. */
+const proof = (key: Buffer, subject: string, act = "seal", asked: string | null = null) =>
+  hmac(key, Buffer.from(asked === null ? act + "\x1f" + subject : act + "\x1f" + subject + "\x1f" + asked, "utf8"));
 
 // ── the tables: Python's decisions, read out of Python ─────────────────────
 class Ranges {
@@ -1219,7 +1221,13 @@ function sealed(box: string, rows: JMap[], act = "seal"): Map<string, JMap> {
   for (const r of rows) {
     if (r.get("kind") === act && key !== null) {
       const subj = r.has("subject") ? r.get("subject")! : "";
-      const want = Buffer.from(proof(key, typeof subj === "string" ? subj : pyStr(subj), act), "utf8");
+      let asked: string | null = null;
+      if (act === "seal" && r.has("bite_key")) {
+        const named = r.get("bite_key");
+        if (typeof named !== "string") continue;
+        asked = named;
+      }
+      const want = Buffer.from(proof(key, typeof subj === "string" ? subj : pyStr(subj), act, asked), "utf8");
       const got = Buffer.from(pyStr(r.has("proof") ? r.get("proof") : null), "utf8");
       if (want.length === got.length && crypto.timingSafeEqual(want, got)) out.set(r.get("subject") as string, r);
     }
@@ -1262,7 +1270,8 @@ function standing(box: string, rows: JMap[], subj: string, seal: JMap): [JMap | 
     return [null, null, "is missing or can't be read"];
   }
   if (subjectOf(prop) !== subj) return [null, null, "is not the bytes that were sealed"];
-  const key = proposedUnder(rows, subj, Number(seal.get("n") as bigint));
+  const named = seal.get("bite_key");
+  const key = seal.has("bite_key") ? (typeof named === "string" ? named : null) : proposedUnder(rows, subj, Number(seal.get("n") as bigint));
   if (key === null) return [null, null, "was made under no question the record names"];
   return [prop, key, null];
 }
@@ -1375,7 +1384,12 @@ function seal(box: string, subj: string, ts: string): number {
     console.error("refused: the proposal's bytes changed since it was proposed");
     return REFUSED;
   }
-  append(box, ts, "seal", "human", obj(["subject", subj], ["proof", proof(key, subj)]));
+  const asked = proposedUnder(r.rows, subj); // the question this is the answer to
+  if (asked === null) {
+    console.error(`refused: the record names no question ${subj} was made under`);
+    return REFUSED;
+  }
+  append(box, ts, "seal", "human", obj(["subject", subj], ["bite_key", asked], ["proof", proof(key, subj, "seal", asked)]));
   const out = path.join(box, "written", prop.get("path") as string);
   fs.mkdirSync(path.dirname(out), { recursive: true });
   fs.writeFileSync(out, prop.get("data") as string, "utf8");
@@ -1466,7 +1480,7 @@ function vectors(casesFile: string, resultsFile: string): number {
     "hmac",
     obj(
       ["rfc4231", (hm.get("rfc4231") as JMap[]).map((m) => obj(["mac", hmac(Buffer.from(m.get("key") as string, "hex"), Buffer.from(m.get("msg") as string, "hex"))]))],
-      ["seal", (hm.get("seal") as JMap[]).map((m) => obj(["proof", proof(Buffer.from(m.get("key") as string, "hex"), m.get("subject") as string)]))],
+      ["seal", (hm.get("seal") as JMap[]).map((m) => obj(["proof", proof(Buffer.from(m.get("key") as string, "hex"), m.get("subject") as string, "seal", (m.get("asked") as string | undefined) ?? null)]))],
     ),
   );
   res.set("html", list("html").map((o) => obj(["out", htmlText(o.get("in") as string)])));

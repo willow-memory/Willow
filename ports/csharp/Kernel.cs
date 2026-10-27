@@ -302,7 +302,9 @@ public static class Kernel
     static string H256(string text) => Sha256(Utf8.GetBytes(text));
     static string Hmac(byte[] key, byte[] msg) { using var h = new HMACSHA256(key); return Hex(h.ComputeHash(msg)); }
     /** onescript/sign.py hmac_parts(key, "seal", subject). */
-    static string Proof(byte[] key, string subject, string act = "seal") => Hmac(key, Utf8.GetBytes(act + "\u001f" + subject));
+    /** A seal that names the question it answers (`asked`) is proved over that question's key too. */
+    static string Proof(byte[] key, string subject, string act = "seal", string? asked = null) =>
+        Hmac(key, Utf8.GetBytes(asked == null ? act + "\u001f" + subject : act + "\u001f" + subject + "\u001f" + asked));
 
     // ── the tables: Python's decisions, read out of Python ─────────────────
     sealed class Ranges
@@ -1376,7 +1378,13 @@ public static class Kernel
             if (r.Get("kind") is string k && k == act && key != null)
             {
                 var subj = r.Has("subject") ? r["subject"] : "";
-                var want = Utf8.GetBytes(Proof(key, subj as string ?? PyStr(subj), act));
+                string? asked = null;
+                if (act == "seal" && r.Has("bite_key"))
+                {
+                    if (r["bite_key"] is not string named) continue;
+                    asked = named;
+                }
+                var want = Utf8.GetBytes(Proof(key, subj as string ?? PyStr(subj), act, asked));
                 var got = Utf8.GetBytes(PyStr(r.Has("proof") ? r["proof"] : null));
                 if (want.Length == got.Length && CryptographicOperations.FixedTimeEquals(want, got))
                 {
@@ -1425,7 +1433,7 @@ public static class Kernel
         }
         catch (Exception) { return (null, null, "is missing or can't be read"); }
         if (SubjectOf(prop) != subj) return (null, null, "is not the bytes that were sealed");
-        var key = ProposedUnder(rows, subj, I(seal["n"]));
+        var key = seal.Has("bite_key") ? seal["bite_key"] as string : ProposedUnder(rows, subj, I(seal["n"]));
         if (key == null) return (null, null, "was made under no question the record names");
         return (prop, key, null);
     }
@@ -1535,7 +1543,9 @@ public static class Kernel
         if (key == null) { Console.Error.WriteLine($"refused: {why}"); return REFUSED; }
         var prop = (JObj)Parser.Loads(File.ReadAllText(PropFile(box, subj), Utf8))!;
         if (SubjectOf(prop) != subj) { Console.Error.WriteLine("refused: the proposal's bytes changed since it was proposed"); return REFUSED; }
-        Append(box, ts, "seal", "human", Obj("subject", subj, "proof", Proof(key, subj)));
+        var asked = ProposedUnder(r.Rows, subj); // the question this is the answer to
+        if (asked == null) { Console.Error.WriteLine($"refused: the record names no question {subj} was made under"); return REFUSED; }
+        Append(box, ts, "seal", "human", Obj("subject", subj, "bite_key", asked, "proof", Proof(key, subj, "seal", asked)));
         var outPath = System.IO.Path.Combine(box, "written", (string)prop["path"]!);
         Directory.CreateDirectory(System.IO.Path.GetDirectoryName(outPath)!);
         File.WriteAllText(outPath, (string)prop["data"]!, Utf8);
@@ -1610,7 +1620,7 @@ public static class Kernel
         var hm = (JObj)c["hmac"]!;
         res["hmac"] = Obj(
             "rfc4231", L(hm["rfc4231"]).Select(x => { var m = (JObj)x!; return (object?)Obj("mac", Hmac(Convert.FromHexString((string)m["key"]!), Convert.FromHexString((string)m["msg"]!))); }).ToList(),
-            "seal", L(hm["seal"]).Select(x => { var m = (JObj)x!; return (object?)Obj("proof", Proof(Convert.FromHexString((string)m["key"]!), (string)m["subject"]!)); }).ToList());
+            "seal", L(hm["seal"]).Select(x => { var m = (JObj)x!; return (object?)Obj("proof", Proof(Convert.FromHexString((string)m["key"]!), (string)m["subject"]!, "seal", m.Get("asked") as string)); }).ToList());
         res["html"] = Part("html").Select(o => (object?)Obj("out", HtmlText((string)o["in"]!))).ToList();
         res["holds"] = Part("holds").Select(o => (object?)Obj("out", Holds((string)o["w"]!, L(o["toks"]).Select(x => (string)x!).ToHashSet(StringComparer.Ordinal)))).ToList();
         res["echo"] = Part("echo").Select(o => (object?)Obj("out", Echo((string)o["bite"]!, (string)o["text"]!))).ToList();

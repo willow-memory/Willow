@@ -355,7 +355,13 @@ public final class Kernel {
 
     /** The same over another act: "decline", for the person's No. */
     static String proof(byte[] key, String subject, String act) {
-        return hmac(key, (act + "\u001f" + subject).getBytes(StandardCharsets.UTF_8));
+        return proof(key, subject, act, null);
+    }
+
+    /** A seal that names the question it answers is proved over that question's key too. */
+    static String proof(byte[] key, String subject, String act, String asked) {
+        String msg = asked == null ? act + "\u001f" + subject : act + "\u001f" + subject + "\u001f" + asked;
+        return hmac(key, msg.getBytes(StandardCharsets.UTF_8));
     }
 
     // ── the tables: Python's decisions, read out of Python ──────────────────
@@ -1481,7 +1487,12 @@ public final class Kernel {
         for (Map<String, Object> r : rows) {
             if (act.equals(r.get("kind")) && k.key != null) {
                 Object subj = r.containsKey("subject") ? r.get("subject") : "";
-                String want = proof(k.key, subj instanceof String ? (String) subj : String.valueOf(subj), act);
+                String asked = null;
+                if (act.equals("seal") && r.containsKey("bite_key")) {
+                    if (!(r.get("bite_key") instanceof String)) continue;
+                    asked = (String) r.get("bite_key");
+                }
+                String want = proof(k.key, subj instanceof String ? (String) subj : String.valueOf(subj), act, asked);
                 Object got = r.containsKey("proof") ? r.get("proof") : NULL;
                 if (MessageDigest.isEqual(want.getBytes(StandardCharsets.UTF_8),
                         pyStr(got).getBytes(StandardCharsets.UTF_8)))
@@ -1534,7 +1545,9 @@ public final class Kernel {
         } catch (IOException | RuntimeException e) {
             return new Object[] {null, null, "is missing or can't be read"};
         }
-        String key = proposedUnder(rows, subj, ((BigInteger) seal.get("n")).intValue());
+        String key = seal.containsKey("bite_key")
+                ? (seal.get("bite_key") instanceof String ? (String) seal.get("bite_key") : null)
+                : proposedUnder(rows, subj, ((BigInteger) seal.get("n")).intValue());
         if (key == null) return new Object[] {null, null, "was made under no question the record names"};
         return new Object[] {prop, key, null};
     }
@@ -1706,7 +1719,12 @@ public final class Kernel {
             System.err.println("refused: the proposal's bytes changed since it was proposed");
             return REFUSED;
         }
-        append(box, ts, "seal", "human", fields("subject", subj, "proof", proof(k.key, subj)));
+        String asked = proposedUnder(r.rows, subj, -1); // the question this is the answer to
+        if (asked == null) {
+            System.err.println("refused: the record names no question " + subj + " was made under");
+            return REFUSED;
+        }
+        append(box, ts, "seal", "human", fields("subject", subj, "bite_key", asked, "proof", proof(k.key, subj, "seal", asked)));
         Path out = box.resolve("written").resolve((String) prop.get("path"));
         Files.createDirectories(out.getParent());
         Files.writeString(out, (String) prop.get("data"));
@@ -1822,7 +1840,8 @@ public final class Kernel {
         }
         for (Object o : (List<Object>) hm.get("seal")) {
             Map<String, Object> m = (Map<String, Object>) o;
-            seals.add(fields("proof", proof(unhex((String) m.get("key")), (String) m.get("subject"))));
+            seals.add(fields("proof", proof(unhex((String) m.get("key")), (String) m.get("subject"), "seal",
+                    m.containsKey("asked") ? (String) m.get("asked") : null)));
         }
         out.put("hmac", fields("rfc4231", rfc, "seal", seals));
 

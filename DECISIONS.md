@@ -31,6 +31,17 @@ An AI model, a script or another person can suggest; only the key holder
 approves. *Held by:* `kernel.py test` rejects a forged approval, even one
 with a re-hashed chain.
 
+**An approval names the question it answers, and the key signs it.** A seal
+row carries the question's key, and its proof is over the act, the subject
+and that key, so a record rewritten and re-hashed can't point an approved
+answer at another question, and a file changed after the seal isn't served
+(`standing`). A seal from before has no question and is proved the old way,
+so existing boxes keep working; its question is read from the record, held by
+the hash chain and by the pin `tip-pin` keeps outside the box. To bind it to
+the key, seal it again. *Held by:* `test_kernel.py` (a rewritten chain, a
+changed or stripped question, an old-form seal) and the vectors' session in
+every port.
+
 **The record never holds your words.** A question is kept as a fingerprint
 and the places it found, so copying the record copies no one's files.
 *Held by:* the guarantees table.
