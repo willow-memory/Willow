@@ -230,6 +230,16 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
+  "name": "bot-venv",
+  "kind": "stdlib",
+  "section": "For maintainers",
+  "line": "Which venv has what CI needs, willow-bot's own by its rule or any you name, and the line that runs CI with its Python.",
+  "source": "bot",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, maintainers"
+ },
+ {
   "name": "box-health",
   "kind": "stdlib",
   "section": "Trust and proof",
