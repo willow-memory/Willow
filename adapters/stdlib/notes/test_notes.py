@@ -293,3 +293,10 @@ def test_bite_finds_a_word_that_only_a_link_shows(tmp_path):
     served = [s for s in doc["served"] if "Q3 Review" in s["where"]]
     assert served and "zebrafish allowance" in served[0]["text"]
     assert "[[" not in served[0]["text"]
+
+
+def test_a_link_with_no_name_and_no_heading_stays_as_written(tmp_path):
+    vault = build(tmp_path / "vault", {"Hub.md": "See [[.md]] and [[#Setup]].\n"})
+    dst = tmp_path / "mirror"
+    assert mirror(vault, dst).returncode == 0
+    assert out(dst, "Hub.md").startswith("See [[.md]] and Setup.\n")

@@ -445,6 +445,12 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- `mutants` no longer breaks the index in `sys.path.insert(0, ...)`: second on
+  the path still finds the repo root, so no test can tell, and 18 add-ons had
+  listed it by hand in `accepted.json`. Other mutants keep their ids. The six
+  chosen for `diverge`, `index-cache` and `notes` moved onto breaks their tests
+  missed; each now has a test for it.
+
 - A seal names the question it answers, and the key signs it. `seal` now
   writes the question's key (`bite_key`) on the seal row, and the proof is
   over the act, the subject and that key. Until now the question lived on the
