@@ -179,6 +179,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "session-seal": ("session_seal.py", ["--box", "{box}", *NOW]),
     "typos": ("typos.py", ["--box", "{box}", "tomatoes"]),
     "xref": ("xref.py", ["--box", "{box}"]),
+    "tarot": ("tarot.py", ["--box", "{box}", "draw", *NOW]),
     "test-impact": ("impact.py", ["plan", "README.md"]),
     "print": ("print.py", ["--box", "{box}", "--to", "{tmp}/page.html", *NOW, "tomatoes"]),
     "start": ("start.py", ["--pile", "{pile}", "--to", "{tmp}/willow"]),

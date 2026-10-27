@@ -10,6 +10,12 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `tarot`, an add-on that deals a tarot spread on the record: `tarot.py
+  --box DIR draw [N]`, then `check`. The seed is the record's tip, the cards
+  come from the seeded stream without replacement, a coin turns each, and
+  `check` deals every draw on the record again, naming the first that
+  doesn't hold. The deck is the standard 78, named in full; what a card
+  means is never said.
 - `quiz`, an add-on that cuts a quiz from your own files: a passage with a
   word missing, for you to fill in from memory: `quiz.py --box DIR ask`,
   then `answer WORD`. The record's tip draws the puzzle through the seeded

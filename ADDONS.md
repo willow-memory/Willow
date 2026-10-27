@@ -18,7 +18,7 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`█████░░░░░░░░░░░░░░░` **128 of 470 built** · 419 need no install · 51 need one
+`█████░░░░░░░░░░░░░░░` **129 of 470 built** · 419 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
@@ -30,7 +30,7 @@ or `writes-output`; its section), and any the card's author adds or changes.
 | Privacy and safety | 9 | 5 | 14 | 0 |
 | Assistants | 17 | 40 | 51 | 6 |
 | Ways to use it | 11 | 28 | 35 | 4 |
-| Play | 5 | 35 | 35 | 5 |
+| Play | 6 | 34 | 35 | 5 |
 | For maintainers | 17 | 27 | 39 | 5 |
 <!-- /willow:pools -->
 
@@ -38,18 +38,18 @@ or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:newest -->
 - 2026-10-27 · [**transcript-redact**](adapters/stdlib/transcript-redact/) — An agent transcript with keys, home paths and emails taken out before you share it, each removal listed by line.
+- 2026-10-27 · [**tarot**](adapters/stdlib/tarot/) — A seeded tarot draw on the record, replayable by anyone with the seed.
 - 2026-10-27 · [**symptoms**](adapters/stdlib/symptoms/) — A symptom diary over time, ready to show a doctor: what, when, how bad, each line cited.
 - 2026-10-27 · [**subtitles**](adapters/stdlib/subtitles/) — Subtitle and transcript files (.vtt, .srt) as lines cited by timestamp, for podcasts and videos already transcribed.
 - 2026-10-27 · [**said**](adapters/stdlib/said/) — Your own quotes, gathered: every 'so-and-so, on this date: "..."' in your files, as a dated timeline of what was decided.
-- 2026-10-27 · [**renewals**](adapters/stdlib/renewals/) — Passports, licences, insurance and memberships: when each expires, from your documents.
 <!-- /willow:newest -->
 
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[emacs](adapters/stdlib/emacs/)** — Answers in an Emacs compilation buffer, each a jump to its file and line.
+**[office](adapters/stdlib/office/)** — .docx, .odt, .pptx, .xlsx and .ods, which are all zipped XML.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 128 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 129 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -508,7 +508,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - **rules** (idea) — A game's or a house's rules, sealed section by section, so 'what does the rule say?' answers with the exact section. *bot* `no-install` `offline` `records` `play`
 - **sokoban** (idea) — Sokoban levels and moves on the record, a solution checked by replaying it. *new* `no-install` `offline` `records` `play`
 - **spurious** (idea) — Everything joined on time and place (CI reds, earthquakes, rain, front pages) to hunt correlations that mean nothing. *new* `no-install` `offline` `read-only` `play`
-- **tarot** (idea) — A seeded tarot draw on the record, replayable by anyone with the seed. *new* `no-install` `offline` `records` `play`
+- [**tarot**](adapters/stdlib/tarot/) — A seeded tarot draw on the record, replayable by anyone with the seed. *new* `no-install` `offline` `records` `play`
 - **tic-tac-toe** (idea) — Tic-tac-toe as rows: every move, and the solver's value of each position; perfect play draws. *new* `no-install` `offline` `records` `play`
 - **tides** (idea) — Tide predictions as a control: if your Brier score on tides isn't near zero, the forecasting plumbing is broken. Goes online: NOAA's tides API, to read predictions and what happened. *new* `no-install` `online` `records` `play`
 - **todays-place** (idea) — One place a day drawn from Natural Earth's public-domain list, for the day's questions and bets. *new* `no-install` `offline` `records` `play`

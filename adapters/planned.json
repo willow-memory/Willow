@@ -3063,16 +3063,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "tarot",
-  "kind": "stdlib",
-  "section": "Play",
-  "line": "A seeded tarot draw on the record, replayable by anyone with the seed.",
-  "source": "new",
-  "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, play"
- },
- {
   "name": "tatoeba",
   "kind": "stdlib",
   "section": "Your own words",
