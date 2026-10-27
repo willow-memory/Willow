@@ -10,6 +10,18 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `bot-venv`, an add-on that says whether willow-bot's own venv, or any you
+  name, has what CI needs, and prints the line that runs CI with its Python:
+  `bot_venv.py [--bot] [--venv DIR ...] [--needs NAME[==VERSION] ...]`.
+  `adapters/stdlib/ci/ci.py` calls pytest and ruff through the Python that
+  runs it, so one that lacks them makes every lint, tests and mutants row
+  unreachable. `--bot` finds the bot's venv by the bot's own rule
+  (`$WILLOW_HOME`, else `$WILLOW_VAULT_BOX`; the venv in the bot, or its old
+  home while only that exists) and refuses without a box rather than guess.
+  It always asks for pytest and ruff; `--needs ruff==0.16.7` holds ruff to
+  CI's pin. A folder with no Python, a Python that doesn't answer and a venv
+  missing a package are three different answers. It runs nothing but each
+  venv's own Python, isolated, and writes nothing. (#59)
 - One idea added to `adapters/planned.json`: `bot-venv`, which says whether
   willow-bot's own venv (found by the bot's rule) or any you name has what CI
   needs (pytest, and ruff at CI's pin) and prints the line that runs CI with

@@ -80,6 +80,10 @@ willow/
 │   │   │   ├── books.py      Kindle highlights and .epub text, as passages
 │   │   │   ├── test_books.py
 │   │   │   └── README.md
+│   │   ├── bot-venv/
+│   │   │   ├── bot_venv.py       does willow-bot's venv, or any named, have what CI needs; the line that runs CI with it
+│   │   │   ├── test_bot_venv.py
+│   │   │   └── README.md
 │   │   ├── browse/
 │   │   │   ├── browse.py     your folder in your browser, on 127.0.0.1: ask, read, approve with a click
 │   │   │   ├── test_browse.py
