@@ -21,7 +21,7 @@ says how). The first was v0.1.0.
   It always asks for pytest and ruff; `--needs ruff==0.16.7` holds ruff to
   CI's pin. A folder with no Python, a Python that doesn't answer and a venv
   missing a package are three different answers. It runs nothing but each
-  venv's own Python, isolated, and writes nothing.
+  venv's own Python, isolated, and writes nothing. (#59)
 - One idea added to `adapters/planned.json`: `bot-venv`, which says whether
   willow-bot's own venv (found by the bot's rule) or any you name has what CI
   needs (pytest, and ruff at CI's pin) and prints the line that runs CI with
