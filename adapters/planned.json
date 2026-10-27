@@ -3061,16 +3061,6 @@
   "tags": "no-install, offline, read-only, tracking"
  },
  {
-  "name": "subtitles",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Subtitle and transcript files (.vtt, .srt) as lines cited by timestamp, for podcasts and videos already transcribed.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "support-plan",
   "kind": "stdlib",
   "section": "Keeping track",

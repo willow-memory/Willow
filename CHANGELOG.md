@@ -10,6 +10,13 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `subtitles`, a reader that mirrors .srt and .vtt transcripts as plain
+  text the kernel reads: `subtitles.py mirror --from FOLDER --to MIRROR`.
+  Each cue becomes one line, its start first (HH:MM:SS, hours added where a
+  cue leaves them off, fractions dropped), lines joined, styling tags off,
+  and a WebVTT voice tag as its speaker's name with a colon. NOTE and STYLE
+  blocks say nothing; a .vtt without WEBVTT first, or a .srt with no
+  readable cue, is skipped and counted. It keeps the readers' contract.
 - `jrnl`, a reader that mirrors jrnl journals as plain text the kernel
   reads: `jrnl.py mirror --from FOLDER --to MIRROR`. A journal is a .txt
   whose first line that says anything opens with jrnl's own

@@ -67,6 +67,9 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         "[2024-03-03 10:15] Fixed the gate.\nThe hinge wanted oil, not force.\n\n"
         "[2024-03-04 09:00] Rain all day.\n").encode()}),
     "office": ("office.py", {"letter.docx": _docx("The roof is fixed.")}),
+    "subtitles": ("subtitles.py", {"ep1.srt": (
+        "1\n00:00:01,000 --> 00:00:04,000\nThe tide keeps its own calendar.\n"
+    ).encode()}),
     "web-pages": ("web_pages.py", {"saved.html": (
         "<!-- saved from url=(0020)https://example.org/ -->\n"
         "<p>The roof is fixed.</p>\n").encode()}),
