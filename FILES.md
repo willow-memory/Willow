@@ -175,6 +175,10 @@ willow/
 │   │   │   ├── diverge.py    where two copies part: records by row, files, then the first line
 │   │   │   ├── test_diverge.py
 │   │   │   └── README.md
+│   │   ├── duplicates/
+│   │   │   ├── duplicates.py    passages saying the same thing in two files, the newest copy named when it can be
+│   │   │   ├── test_duplicates.py
+│   │   │   └── README.md
 │   │   ├── emacs/
 │   │   │   ├── emacs.py          an M-x willow command: answers in a grep-mode buffer
 │   │   │   ├── test_emacs.py

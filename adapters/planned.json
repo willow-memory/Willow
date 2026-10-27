@@ -679,16 +679,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "duplicates",
-  "kind": "stdlib",
-  "section": "Finding things",
-  "line": "Passages that say the same thing in two files, and which one is newer.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, search"
- },
- {
   "name": "email-ask",
   "kind": "stdlib",
   "section": "Ways to use it",

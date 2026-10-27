@@ -10,6 +10,13 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `duplicates`, an add-on that groups passages saying the same thing in two
+  or more files: `duplicates.py --box DIR`. The same thing is the same words
+  in order, case, punctuation and spacing aside, nothing else forgiven, and
+  a passage under 8 words never counts. Each copy is dated by its own text,
+  else its file's name; the newest is named only when its date beats every
+  other, and copies tied to the day leave it unsaid. One file's repeats
+  count only when the passage is also in another file.
 - `ci-memo`, an add-on that memoizes CI gates on their inputs' bytes:
   `ci_memo.py pin --box DIR --to FILE` writes, after a full `ci.py run` of
   this very tree (each verdict row's `files_sha256` proves which), every

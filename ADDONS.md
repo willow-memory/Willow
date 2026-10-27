@@ -18,12 +18,12 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`█████░░░░░░░░░░░░░░░` **111 of 470 built** · 419 need no install · 51 need one
+`█████░░░░░░░░░░░░░░░` **112 of 470 built** · 419 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
 | Reading more kinds of files | 12 | 93 | 96 | 9 |
-| Finding things | 12 | 31 | 33 | 10 |
+| Finding things | 13 | 30 | 33 | 10 |
 | Your own words | 8 | 17 | 22 | 3 |
 | Keeping track | 11 | 47 | 58 | 0 |
 | Trust and proof | 13 | 32 | 36 | 9 |
@@ -39,17 +39,17 @@ or `writes-output`; its section), and any the card's author adds or changes.
 <!-- willow:newest -->
 - 2026-10-27 · [**reading-level**](adapters/stdlib/reading-level/) — How hard a passage reads (sentence length, word length, Flesch), so a teacher can find texts for a class.
 - 2026-10-27 · [**first-mention**](adapters/stdlib/first-mention/) — When your files first mention something, and the line that does.
+- 2026-10-27 · [**duplicates**](adapters/stdlib/duplicates/) — Passages that say the same thing in two files, and which one is newer.
 - 2026-10-27 · [**ci-memo**](adapters/stdlib/ci-memo/) — A CI gate whose inputs' bytes are unchanged keeps its recorded verdict: pin a run's per-gate keys, and run only what a change can reach.
 - 2026-10-27 · [**amounts**](adapters/stdlib/amounts/) — Every sum of money in your files, with its date and the line it's on.
-- 2026-10-26 · [**tip-pin**](adapters/stdlib/tip-pin/) — Where a box's record ends, kept outside the box, so rows cut off or a whole chain re-hashed are found where verify can't.
 <!-- /willow:newest -->
 
 ### Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[stack](adapters/stdlib/stack/)** — One document from a stack of add-on steps over a box: each step's output grouped into pools and ordered tallest-first, so the peaks are what a reader meets first.
+**[shell](adapters/stdlib/shell/)** — A willow command and tab completion for bash, zsh, fish and PowerShell, on Linux, macOS and Windows.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 111 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 112 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -175,7 +175,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - **code-shape** (idea) — Search code by its shape, not its words: every call of a kind, whatever it's named. Needs the ast-grep program; MIT. *new* `needs-install` `offline` `read-only` `search`
 - **codeowners** (idea) — Who owns this file: the CODEOWNERS rule that matches it, cited by line, on GitHub, GitLab and Forgejo alike. *new* `no-install` `offline` `read-only` `search`
 - **crosswalk** (idea) — The outside IDs a passage points to (Wikidata, DOI, ORCID, GeoNames) kept beside it, so your notes join the world's. *new* `no-install` `offline` `writes-output` `search`
-- **duplicates** (idea) — Passages that say the same thing in two files, and which one is newer. *new* `no-install` `offline` `read-only` `search`
+- [**duplicates**](adapters/stdlib/duplicates/) — Passages that say the same thing in two files, and which one is newer. *new* `no-install` `offline` `read-only` `search`
 - **fair-merge** (idea) — Each folder or repo ranked on its own and the lists merged in turns, so a large corpus can't push a small one out on volume alone, and a source that found nothing says so. *bot* `no-install` `offline` `read-only` `search` `pile`
 - [**first-mention**](adapters/stdlib/first-mention/) — When your files first mention something, and the line that does. *new* `no-install` `offline` `read-only` `search`
 - **fuzzy-dates** (idea) — Dates that admit doubt ('about 1880', 'sometime in March') read and kept with their doubt, in EDTF. *new* `no-install` `offline` `read-only` `search`

@@ -153,6 +153,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "odds": ("odds.py", ["2d6"]),
     "changed": ("changed.py", ["--box", "{box}", *NOW]),
     "diverge": ("diverge.py", ["{pile}", "{pile}"]),
+    "duplicates": ("duplicates.py", ["--box", "{box}"]),
     "secrets-audit": ("secrets_audit.py", ["--box", "{box}"]),
     "risky-code": ("risky_code.py", ["--box", "{box}"]),
     "session-seal": ("session_seal.py", ["--box", "{box}", *NOW]),
