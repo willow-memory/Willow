@@ -10,6 +10,13 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `renewals`, an add-on that lists every line saying an expiry and its own
+  date, soonest first, what's gone by marked: `renewals.py --box DIR
+  [--now TS]`. The words are expires, expiry, expiration, renew and its
+  forms, valid until (till, through, thru), cover ends, ends on; the date is
+  the kernel's kind, or written out with a month's name and its day. A
+  renewal naming no day is unplaced, a date reading two ways is never
+  guessed, and an expiry is never stitched to another line's date.
 - `subtitles`, a reader that mirrors .srt and .vtt transcripts as plain
   text the kernel reads: `subtitles.py mirror --from FOLDER --to MIRROR`.
   Each cue becomes one line, its start first (HH:MM:SS, hours added where a

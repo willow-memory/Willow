@@ -2572,16 +2572,6 @@
   "tags": "needs-install, offline, records, trust"
  },
  {
-  "name": "renewals",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "Passports, licences, insurance and memberships: when each expires, from your documents.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
- },
- {
   "name": "repo-index",
   "kind": "stdlib",
   "section": "For maintainers",

@@ -361,6 +361,10 @@ willow/
 │   │   │   ├── readme.py     builds this README's generated sections from the cards
 │   │   │   ├── test_readme.py
 │   │   │   └── README.md     its card: sections, the draw, what it reads
+│   │   ├── renewals/
+│   │   │   ├── renewals.py   when each thing expires, from lines saying an expiry word and their own date
+│   │   │   ├── test_renewals.py
+│   │   │   └── README.md
 │   │   ├── repo-pile/
 │   │   │   ├── repo_pile.py  public repos made into a box: cloned, licence-gated, their docs the pile, indexed
 │   │   │   ├── test_repo_pile.py
