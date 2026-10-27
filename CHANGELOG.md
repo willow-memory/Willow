@@ -449,7 +449,7 @@ says how). The first was v0.1.0.
   the path still finds the repo root, so no test can tell, and 18 add-ons had
   listed it by hand in `adapters/stdlib/mutants/accepted.json`. Other mutants keep their ids. The six
   chosen for `diverge`, `index-cache` and `notes` moved onto breaks their tests
-  missed; each now has a test for it (#57).
+  missed; each now has a test for it (#57)
 
 - A seal names the question it answers, and the key signs it. `seal` now
   writes the question's key (`bite_key`) on the seal row, and the proof is
