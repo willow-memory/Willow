@@ -159,3 +159,15 @@ def test_records_parting_at_their_first_row():
         == "records: the same for 0 rows, then part at row 0"
     )
     assert dv.chains(b"x\n", b"x\n") == "records: the same, 1 rows"
+
+
+def test_a_long_line_is_cut_at_120_characters_in_the_report(tmp_path):
+    a, b = tmp_path / "a", tmp_path / "b"
+    for d, ch in ((a, "p"), (b, "q")):
+        d.mkdir()
+        (d / "long.txt").write_text(ch * 130 + "\n")
+    assert dv.compare(dv.load(a), dv.load(b)) == [
+        "differ:     long.txt (first at line 1)",
+        "  A: " + "p" * 120,
+        "  B: " + "q" * 120,
+    ]
