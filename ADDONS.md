@@ -18,7 +18,7 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`█████░░░░░░░░░░░░░░░` **106 of 469 built** · 418 need no install · 51 need one
+`█████░░░░░░░░░░░░░░░` **107 of 469 built** · 418 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
@@ -31,7 +31,7 @@ or `writes-output`; its section), and any the card's author adds or changes.
 | Assistants | 17 | 40 | 51 | 6 |
 | Ways to use it | 11 | 28 | 35 | 4 |
 | Play | 4 | 36 | 35 | 5 |
-| For maintainers | 15 | 28 | 38 | 5 |
+| For maintainers | 16 | 27 | 38 | 5 |
 <!-- /willow:pools -->
 
 ### Newest
@@ -47,9 +47,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ### Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[words-de](adapters/stdlib/words-de/)** — German common words, so questions aren't matched on "der" and "und".
+**[session-seal](adapters/stdlib/session-seal/)** — One seal at the end of a session, over everything asked and approved in it: yes, these were my actions.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 106 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 107 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -518,7 +518,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 
 - **agents-md-check** (idea) — Commands and paths named in AGENTS.md or CLAUDE.md that no longer exist in the repo. *new* `no-install` `offline` `read-only` `maintainers`
 - [**bench**](adapters/stdlib/bench/) — How fast the kernel answers on boxes of set sizes, per release, so a slowdown is seen. *new* `no-install` `offline` `read-only` `maintainers`
-- **bot-venv** (idea) — Which venv has what CI needs, willow-bot's own by its rule or any you name, and the line that runs CI with its Python. *bot* `no-install` `offline` `read-only` `maintainers`
+- [**bot-venv**](adapters/stdlib/bot-venv/) — Which venv has what CI needs, willow-bot's own by its rule or any you name, and the line that runs CI with its Python. *bot* `no-install` `offline` `read-only` `maintainers`
 - [**ci**](adapters/stdlib/ci/) — This repo's checks as verdict rows on a kernel record, the same every run. Goes online: PyPI, to read each dependency floor's release date. *box* `no-install` `online` `records` `maintainers`
 - **ci-baseline** (idea) — Is your CI normal? How often pull requests everywhere go green first time, from GH Archive. Goes online: data.gharchive.org, its hours downloaded once. *new* `no-install` `online` `read-only` `maintainers`
 - **ci-bets** (idea) — Bet on your own CI: forecasts on each pull request going green, scored against the model's. *new* `no-install` `offline` `records` `maintainers`

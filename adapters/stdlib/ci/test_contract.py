@@ -161,6 +161,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "repo-pile": ("repo_pile.py", ["build", "--to", "{tmp}/base", "--repos",
                                    "{pile}/garden.md", "--key", "{tmp}/base.key"]),
     "test-shards": ("shards.py", ["--shards", "2", "--tests", "{pile}/garden.md"]),
+    "bot-venv": ("bot_venv.py", ["--venv", "{pile}"]),
     "restack": ("restack.py", ["--onto", "HEAD", "HEAD"]),
     **{name: (script, ["mirror", "--from", "{pile}", "--to", "{tmp}/mirror"])
        for name, (script, _) in READERS.items()},
