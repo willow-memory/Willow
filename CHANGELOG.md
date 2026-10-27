@@ -10,6 +10,41 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `people`, an add-on that lists everyone your files name, most mentioned
+  first, and, named, any one of them with every place they're mentioned:
+  `people.py --box DIR [WHO]`. A name is known by what the files do with it,
+  never a list of names: capitalized at least as often as lowercase, at
+  least once doing a person's thing (speaking, coming, calling, being met),
+  and no month or weekday. A mention is a line, cited and dated as the files
+  say; the roster says what it counted, never who matters. (#63)
+- `symptoms`, an add-on that gathers one symptom's diary from your files,
+  ready to show a doctor: `symptoms.py --box DIR "knee"`. A line counts when
+  it itself names the symptom (every content word, read the kernel's way);
+  it is dated as the files say and cited, and a turn is marked only where
+  the line says one (worse/better word lists on the card, a mixed line said
+  so, an N/10 score shown as written). Nothing is averaged, trended or
+  diagnosed; the whole matter written to a file stays `timeline`'s job. (#63)
+- `habits`, an add-on that gathers the short lines your files write day
+  after day into streaks: `habits.py --box DIR`. A habit is the same line
+  (its words, digits dropped, one to six of them) on four or more distinct
+  days, dated as the files say; runs and misses are plain counting with no
+  clock consulted, "ends on" being the run the last day closes. A line that
+  shouts throughout, opens with a field's mark or opens as markup is a
+  machine's and never ticks. (#63)
+- `debts`, an add-on that lists every line speaking of money owed, oldest
+  first, each with its date, the sum it names (as the amounts add-on reads
+  one) and where it is: `debts.py --box DIR`. The owing words are owe and
+  its forms, IOU, repay, paid back, pay back; lent and borrowed join them
+  only with a sum on the line, so a lent drill stays `lending`'s. Nothing is
+  netted: a paid-back line is listed beside the debt it answers, and whether
+  anything still stands is the files' story to finish. (#63)
+- `renewals`, an add-on that lists every line saying an expiry and its own
+  date, soonest first, what's gone by marked: `renewals.py --box DIR
+  [--now TS]`. The words are expires, expiry, expiration, renew and its
+  forms, valid until (till, through, thru), cover ends, ends on; the date is
+  the kernel's kind, or written out with a month's name and its day. A
+  renewal naming no day is unplaced, a date reading two ways is never
+  guessed, and an expiry is never stitched to another line's date. (#63)
 - `subtitles`, a reader that mirrors .srt and .vtt transcripts as plain
   text the kernel reads: `subtitles.py mirror --from FOLDER --to MIRROR`.
   Each cue becomes one line, its start first (HH:MM:SS, hours added where a

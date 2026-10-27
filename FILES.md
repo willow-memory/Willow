@@ -171,6 +171,10 @@ willow/
 │   │   │   ├── cursor.py         the mcp.json lines that register mcp-lite with Cursor
 │   │   │   ├── test_cursor.py
 │   │   │   └── README.md
+│   │   ├── debts/
+│   │   │   ├── debts.py      lines speaking of money owed, dated and cited, the sum as written, never netted
+│   │   │   ├── test_debts.py
+│   │   │   └── README.md
 │   │   ├── dice/
 │   │   │   ├── dice.py       dice rolled on the record, seeded by its tip; check throws every roll again
 │   │   │   ├── test_dice.py
@@ -216,6 +220,10 @@ willow/
 │   │   │   ├── host.json     how GitHub titles the merge of a pull request, for whose.py --host
 │   │   │   ├── test_github.py
 │   │   │   └── README.md     its card: and .github/ belongs to it
+│   │   ├── habits/
+│   │   │   ├── habits.py     streaks from the short lines written day after day, runs and misses by plain counting
+│   │   │   ├── test_habits.py
+│   │   │   └── README.md
 │   │   ├── history/
 │   │   │   ├── history.py    your record in plain sentences, places and counts, never the words
 │   │   │   ├── test_history.py
@@ -321,6 +329,10 @@ willow/
 │   │   │   ├── parallel.py   a reader run over several folders at once, across cores, into one mirror
 │   │   │   ├── test_parallel.py
 │   │   │   └── README.md
+│   │   ├── people/
+│   │   │   ├── people.py     everyone the files name, by what they do with a name, and each one's every mention
+│   │   │   ├── test_people.py
+│   │   │   └── README.md
 │   │   ├── pins/
 │   │   │   ├── pins.py       version ranges in package.json or requirements.txt that no lockfile pins
 │   │   │   ├── test_pins.py
@@ -361,6 +373,10 @@ willow/
 │   │   │   ├── readme.py     builds this README's generated sections from the cards
 │   │   │   ├── test_readme.py
 │   │   │   └── README.md     its card: sections, the draw, what it reads
+│   │   ├── renewals/
+│   │   │   ├── renewals.py   when each thing expires, from lines saying an expiry word and their own date
+│   │   │   ├── test_renewals.py
+│   │   │   └── README.md
 │   │   ├── repo-pile/
 │   │   │   ├── repo_pile.py  public repos made into a box: cloned, licence-gated, their docs the pile, indexed
 │   │   │   ├── test_repo_pile.py
@@ -434,6 +450,10 @@ willow/
 │   │   ├── surprise/
 │   │   │   ├── surprise.py   one passage drawn by a seeded stream, replayable
 │   │   │   ├── test_surprise.py
+│   │   │   └── README.md
+│   │   ├── symptoms/
+│   │   │   ├── symptoms.py   one symptom's dated diary, turns marked only where the line says one, each cited
+│   │   │   ├── test_symptoms.py
 │   │   │   └── README.md
 │   │   ├── test-impact/
 │   │   │   ├── impact.py     which of this repo's checks a change can reach, closest first, in ci's gate names

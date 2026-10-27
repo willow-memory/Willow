@@ -566,16 +566,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "debts",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "Who owes whom, from the IOUs in your notes and messages, each cited.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
- },
- {
   "name": "deep-links",
   "kind": "stdlib",
   "section": "Ways to use it",
@@ -980,16 +970,6 @@
   "writes": "record",
   "network": "gutenberg.org, each book fetched once",
   "tags": "no-install, online, records, play"
- },
- {
-  "name": "habits",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "Streaks from the lines you write each day: how many days in a row, and which you missed.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
  },
  {
   "name": "handoff",
@@ -2143,16 +2123,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "people",
-  "kind": "stdlib",
-  "section": "Finding things",
-  "line": "Everyone your files name, and every place each is mentioned.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, search"
- },
- {
   "name": "persona-card",
   "kind": "stdlib",
   "section": "Assistants",
@@ -2570,16 +2540,6 @@
   "writes": "record",
   "network": "none",
   "tags": "needs-install, offline, records, trust"
- },
- {
-  "name": "renewals",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "Passports, licences, insurance and memberships: when each expires, from your documents.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
  },
  {
   "name": "repo-index",
@@ -3100,16 +3060,6 @@
   "writes": "nothing",
   "network": "none",
   "tags": "needs-install, offline, read-only, search"
- },
- {
-  "name": "symptoms",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "A symptom diary over time, ready to show a doctor: what, when, how bad, each line cited.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
  },
  {
   "name": "sync",
