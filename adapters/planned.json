@@ -2123,16 +2123,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "people",
-  "kind": "stdlib",
-  "section": "Finding things",
-  "line": "Everyone your files name, and every place each is mentioned.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, search"
- },
- {
   "name": "persona-card",
   "kind": "stdlib",
   "section": "Assistants",

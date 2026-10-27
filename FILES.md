@@ -329,6 +329,10 @@ willow/
 │   │   │   ├── parallel.py   a reader run over several folders at once, across cores, into one mirror
 │   │   │   ├── test_parallel.py
 │   │   │   └── README.md
+│   │   ├── people/
+│   │   │   ├── people.py     everyone the files name, by what they do with a name, and each one's every mention
+│   │   │   ├── test_people.py
+│   │   │   └── README.md
 │   │   ├── pins/
 │   │   │   ├── pins.py       version ranges in package.json or requirements.txt that no lockfile pins
 │   │   │   ├── test_pins.py

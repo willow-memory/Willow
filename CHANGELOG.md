@@ -10,6 +10,13 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `people`, an add-on that lists everyone your files name, most mentioned
+  first, and, named, any one of them with every place they're mentioned:
+  `people.py --box DIR [WHO]`. A name is known by what the files do with it,
+  never a list of names: capitalized at least as often as lowercase, at
+  least once doing a person's thing (speaking, coming, calling, being met),
+  and no month or weekday. A mention is a line, cited and dated as the files
+  say; the roster says what it counted, never who matters.
 - `symptoms`, an add-on that gathers one symptom's diary from your files,
   ready to show a doctor: `symptoms.py --box DIR "knee"`. A line counts when
   it itself names the symptom (every content word, read the kernel's way);
