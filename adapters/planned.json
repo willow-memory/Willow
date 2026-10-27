@@ -50,16 +50,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "amounts",
-  "kind": "stdlib",
-  "section": "Finding things",
-  "line": "Every sum of money in your files, with its date and the line it's on.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, search"
- },
- {
   "name": "anki",
   "kind": "stdlib",
   "section": "Ways to use it",

@@ -68,6 +68,10 @@ willow/
 │   │   │   ├── all.py        every passage that holds a question, in the kernel's order
 │   │   │   ├── test_all.py
 │   │   │   └── README.md
+│   │   ├── amounts/
+│   │   │   ├── amounts.py    every sum of money in the files, dated by its line, the date above or the file's name
+│   │   │   ├── test_amounts.py
+│   │   │   └── README.md
 │   │   ├── backup/
 │   │   │   ├── backup.py     your record in one zip, every byte and the chain checked; never the key
 │   │   │   ├── test_backup.py

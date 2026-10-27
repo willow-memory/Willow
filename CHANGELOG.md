@@ -10,6 +10,15 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `amounts`, an add-on that lists every sum of money in your files, oldest
+  first, each with its date and the line it's on: `amounts.py --box DIR`. A
+  sum is a number written with its currency (`$20`, `£1,840.00`, `EUR 100`,
+  `200 lei`); a number that reads two ways names no sum, rather than a
+  guessed one, and a bare number is never money. A line that says no date
+  takes the nearest date written above it in its file, else its file's name,
+  saying which; a sum no date reaches is listed `undated`. It only reads,
+  converts nothing and totals nothing.
+
 - `bot-venv`, an add-on that says whether willow-bot's own venv, or any you
   name, has what CI needs, and prints the line that runs CI with its Python:
   `bot_venv.py [--bot] [--venv DIR ...] [--needs NAME[==VERSION] ...]`.
