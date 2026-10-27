@@ -10,6 +10,13 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `words-sv` and `words-pl`, two more of the common-words family: Swedish
+  and Polish questions asked through them lose their languages' common words
+  before the kernel's own `bite`, as words-de does for German. Each `list`
+  prints what it leaves out (134 Swedish words, 157 Polish, the cases Polish
+  declines its pronouns through among them); the record still keeps no
+  words, only the question's fingerprint, and English questions are
+  untouched.
 - `daily-word`, an add-on that plays the day's word from the folder's own
   five-letter words: `daily_word.py --box DIR guess WORD`, and `today` for
   the board. The word is drawn by the seeded stream from the day and the

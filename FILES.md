@@ -547,9 +547,17 @@ willow/
 │   │   │   ├── words_nl.py   a question in Dutch, its common words out, then the kernel's bite
 │   │   │   ├── test_words_nl.py
 │   │   │   └── README.md
+│   │   ├── words-pl/
+│   │   │   ├── words_pl.py   Polish questions without Polish's common words, then the kernel's own bite
+│   │   │   ├── test_words_pl.py
+│   │   │   └── README.md
 │   │   ├── words-pt/
 │   │   │   ├── words_pt.py   a question in Portuguese, its common words out, then the kernel's bite
 │   │   │   ├── test_words_pt.py
+│   │   │   └── README.md
+│   │   ├── words-sv/
+│   │   │   ├── words_sv.py   Swedish questions without Swedish's common words, then the kernel's own bite
+│   │   │   ├── test_words_sv.py
 │   │   │   └── README.md
 │   │   ├── xref/
 │   │   │   ├── xref.py       each link and file:line in your files checked, still there

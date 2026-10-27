@@ -18,13 +18,13 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`██████░░░░░░░░░░░░░░` **130 of 470 built** · 419 need no install · 51 need one
+`██████░░░░░░░░░░░░░░` **132 of 470 built** · 419 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
 | Reading more kinds of files | 14 | 91 | 96 | 9 |
 | Finding things | 16 | 27 | 33 | 10 |
-| Your own words | 9 | 16 | 22 | 3 |
+| Your own words | 11 | 14 | 22 | 3 |
 | Keeping track | 15 | 43 | 58 | 0 |
 | Trust and proof | 15 | 30 | 36 | 9 |
 | Privacy and safety | 9 | 5 | 14 | 0 |
@@ -37,19 +37,19 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ## Newest
 
 <!-- willow:newest -->
+- 2026-10-27 · [**words-sv**](adapters/stdlib/words-sv/) — Swedish common words ('och', 'att').
+- 2026-10-27 · [**words-pl**](adapters/stdlib/words-pl/) — Polish common words ('i', 'w').
 - 2026-10-27 · [**transcript-redact**](adapters/stdlib/transcript-redact/) — An agent transcript with keys, home paths and emails taken out before you share it, each removal listed by line.
 - 2026-10-27 · [**tarot**](adapters/stdlib/tarot/) — A seeded tarot draw on the record, replayable by anyone with the seed.
 - 2026-10-27 · [**symptoms**](adapters/stdlib/symptoms/) — A symptom diary over time, ready to show a doctor: what, when, how bad, each line cited.
-- 2026-10-27 · [**subtitles**](adapters/stdlib/subtitles/) — Subtitle and transcript files (.vtt, .srt) as lines cited by timestamp, for podcasts and videos already transcribed.
-- 2026-10-27 · [**said**](adapters/stdlib/said/) — Your own quotes, gathered: every 'so-and-so, on this date: "..."' in your files, as a dated timeline of what was decided.
 <!-- /willow:newest -->
 
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[life](adapters/stdlib/life/)** — Conway's Game of Life as rows: a fully deterministic world on the record.
+**[surprise](adapters/stdlib/surprise/)** — One passage from your folder at random, seeded so it can be replayed.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 130 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 132 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -234,10 +234,10 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**words-it**](adapters/stdlib/words-it/) — Italian common words ("il", "e"). *new* `no-install` `offline` `records` `words` `italian`
 - **words-ja** (idea) — Japanese, which has no spaces: a small segmenter of its own and a common-words list. *new* `no-install` `offline` `writes-output` `words`
 - [**words-nl**](adapters/stdlib/words-nl/) — Dutch common words ("de", "en"). *new* `no-install` `offline` `records` `words` `dutch`
-- **words-pl** (idea) — Polish common words ('i', 'w'). *new* `no-install` `offline` `writes-output` `words`
+- [**words-pl**](adapters/stdlib/words-pl/) — Polish common words ('i', 'w'). *new* `no-install` `offline` `records` `words` `polish`
 - [**words-pt**](adapters/stdlib/words-pt/) — Portuguese common words ("o", "e"). *new* `no-install` `offline` `records` `words` `portuguese`
 - **words-ru** (idea) — Russian common words, so questions aren't matched on 'и' and 'в'. *new* `no-install` `offline` `writes-output` `words`
-- **words-sv** (idea) — Swedish common words ('och', 'att'). *new* `no-install` `offline` `writes-output` `words`
+- [**words-sv**](adapters/stdlib/words-sv/) — Swedish common words ('och', 'att'). *new* `no-install` `offline` `records` `words` `swedish`
 - **words-tr** (idea) — Turkish common words ('ve', 'bir'). *new* `no-install` `offline` `writes-output` `words`
 - **words-zh** (idea) — Chinese, which has no spaces: words found by a small segmenter of its own, and a common-words list. *new* `no-install` `offline` `writes-output` `words`
 

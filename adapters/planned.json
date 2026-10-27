@@ -3366,30 +3366,10 @@
   "tags": "no-install, offline, writes-output, words"
  },
  {
-  "name": "words-pl",
-  "kind": "stdlib",
-  "section": "Your own words",
-  "line": "Polish common words ('i', 'w').",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, words"
- },
- {
   "name": "words-ru",
   "kind": "stdlib",
   "section": "Your own words",
   "line": "Russian common words, so questions aren't matched on 'и' and 'в'.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, words"
- },
- {
-  "name": "words-sv",
-  "kind": "stdlib",
-  "section": "Your own words",
-  "line": "Swedish common words ('och', 'att').",
   "source": "new",
   "writes": "to",
   "network": "none",

@@ -159,7 +159,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "browse": ("browse.py", ["launcher", "--box", "{box}"]),
     "digest": ("digest.py", ["--box", "{box}", *NOW]),
     **{f"words-{c}": (f"words_{c}.py", ["bite", "--box", "{box}", *NOW, "tomatoes"])
-       for c in ("de", "es", "fr", "it", "nl", "pt")},
+       for c in ("de", "es", "fr", "it", "nl", "pl", "pt", "sv")},
     "backup": ("backup.py", ["--box", "{box}", "--to", "{tmp}/backups", *NOW]),
     "bench": ("bench.py", ["run", "--sizes", "20,40"]),
     "history": ("history.py", ["--box", "{box}"]),
