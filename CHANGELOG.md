@@ -642,6 +642,11 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- ADDONS.md's section headings sat two levels under its title (h1 straight
+  to h3), a hole in a screen reader's outline that the new `a11y-check`
+  found on this repo's own page. The generated list's headings (the readme
+  add-on writes them) and the two written by hand (Newest, Add-on of the
+  week) are now h2.
 - A sealed answer is served only while its proposal file still hashes to the
   subject the key signed, and only for the question the record says it was
   sealed for. `bite` took both from the file, so anyone who could write the
