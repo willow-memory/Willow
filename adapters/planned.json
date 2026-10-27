@@ -1252,16 +1252,6 @@
   "tags": "no-install, offline, read-only, tracking"
  },
  {
-  "name": "ids",
-  "kind": "stdlib",
-  "section": "Trust and proof",
-  "line": "Every file and passage given its Software Heritage ID and IPFS CID, names the rest of the world already uses.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, trust"
- },
- {
   "name": "in-case",
   "kind": "stdlib",
   "section": "Trust and proof",

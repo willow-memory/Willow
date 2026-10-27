@@ -244,6 +244,10 @@ willow/
 │   │   │   ├── hosts.py          one table of assistants that take an MCP server, and the lines that register willow with each
 │   │   │   ├── test_hosts.py
 │   │   │   └── README.md
+│   │   ├── ids/
+│   │   │   ├── ids.py        each file and passage by its Software Heritage ID and one-chunk IPFS CID
+│   │   │   ├── test_ids.py
+│   │   │   └── README.md
 │   │   ├── index-cache/
 │   │   │   ├── index_cache.py  a folder's scan index kept between runs, rebuilt only when a file's hash changed
 │   │   │   ├── test_index_cache.py

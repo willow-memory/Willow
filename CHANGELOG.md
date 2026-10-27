@@ -10,6 +10,13 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `ids`, an add-on that names every file of your folder as the world's
+  archives do: `ids.py --box DIR [PATH]`. The Software Heritage ID is the
+  file's git blob SHA-1 (the tests hold it to git's own answer); the IPFS
+  name is a one-chunk raw CIDv1, and past 256 KiB it is said to depend on a
+  chunker's choices rather than guessed. PATH adds one file's passages,
+  each by its first line, so a paragraph can be cited on its own. Computed
+  at home; nothing goes online.
 - `fuzzy-dates`, an add-on that reads the dates your files say with doubt
   ("about 1880", "the early 1880s", "spring 1944", "sometime in March",
   "between 1880 and 1885") and keeps the doubt, in EDTF (ISO 8601-2):

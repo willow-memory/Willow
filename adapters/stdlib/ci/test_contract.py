@@ -93,6 +93,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "emacs": ("emacs.py", ["--box", "{box}"]),
     "gemini-cli": ("gemini_cli.py", ["--box", "{box}"]),
     "hosts": ("hosts.py", ["list"]),
+    "ids": ("ids.py", ["--box", "{box}"]),
     "jetbrains": ("jetbrains.py", ["--box", "{box}"]),
     "mcp-lite": ("server.py", ["--box", "{box}"]),
     "opencode": ("opencode.py", ["--box", "{box}"]),
