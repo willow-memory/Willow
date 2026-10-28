@@ -158,3 +158,22 @@ def test_a_bad_command_line_or_a_broken_record_is_refused(tmp_path):
     text = (box / "record.jsonl").read_text().replace('"bite"', '"btie"', 1)
     (box / "record.jsonl").write_text(text)
     assert gold_cmd(box, "--questions", str(qs)).returncode == 2
+
+
+def test_a_words_list_is_read_as_the_kernel_reads_it(tmp_path):
+    pile = tmp_path / "pile"
+    pile.mkdir()
+    (pile / "house.md").write_text("2026-03-01 The furnace is serviced in March.\n")
+    words = tmp_path / "words.txt"
+    words.write_text("boiler = furnace\n")
+    words.chmod(0o600)
+    box = tmp_path / "box"
+    assert k("init", "--box", str(box), "--pile", str(pile), "--key",
+             str(tmp_path / "key"), "--words", str(words)).returncode == 0  # fmt: skip
+    answer(box, tmp_path, "boiler serviced")
+    qs = questions(tmp_path, "boiler serviced")
+    got = gold_cmd(box, "--questions", str(qs))
+    assert got.returncode == 0 and "kernel     found 1 of 1" in got.stdout, got
+    words.chmod(0o644)
+    got = gold_cmd(box, "--questions", str(qs))
+    assert got.returncode == 2 and "chmod 600" in got.stderr
