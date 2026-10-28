@@ -7,6 +7,7 @@ the way its tests would, under the guard."""
 from __future__ import annotations
 
 import os
+import socket
 import subprocess
 import sys
 import textwrap
@@ -137,6 +138,30 @@ def test_going_online_when_the_card_says_none(repo):
     script = addon(root, "nothing", "none", "socket.getaddrinfo('example.org', 443)\n")
     code, log = run(root, script)
     assert code != 0 and "went online" in log
+
+
+@pytest.mark.skipif(not hasattr(socket, "AF_UNIX"), reason="no Unix sockets here")
+def test_a_unix_socket_is_this_machine_not_online(repo):
+    """A Unix socket reaches only this machine: `network: none` allows it,
+    and still catches the same code's lookup of a name."""
+    root, _, _ = repo
+    script = addon(
+        root,
+        "nothing",
+        "none",
+        """\
+        import tempfile
+        here = os.path.join(tempfile.mkdtemp(), "s")
+        server = socket.socket(socket.AF_UNIX)
+        server.bind(here)
+        server.listen()
+        socket.socket(socket.AF_UNIX).connect(here)
+        socket.getaddrinfo("example.org", 443)
+    """,
+    )
+    code, log = run(root, script)
+    assert code != 0 and "socket.getaddrinfo" in log, log
+    assert "socket.connect" not in log, "the Unix socket was not a breach"
 
 
 def test_reaching_out_when_the_card_says_loopback(repo):

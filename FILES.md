@@ -347,6 +347,34 @@ willow/
 │   │   │   ├── pii_audit.py  the personal numbers in the files, checked never guessed, shown masked
 │   │   │   ├── test_pii_audit.py
 │   │   │   └── README.md
+│   │   ├── pile-build/
+│   │   │   ├── pile_build.py  the store built after each change, behind a lock, until it matches the folder
+│   │   │   ├── test_pile_build.py
+│   │   │   └── README.md
+│   │   ├── pile-gold/
+│   │   │   ├── pile_gold.py   your sealed answers as a test of the search, scored as recall at five
+│   │   │   ├── test_pile_gold.py
+│   │   │   └── README.md
+│   │   ├── pile-rank/
+│   │   │   ├── pile_rank.py   BM25F over words and the folder's own word pairs, titles and questions weighted
+│   │   │   ├── test_pile_rank.py
+│   │   │   └── README.md
+│   │   ├── pile-rungs/
+│   │   │   ├── pile_rungs.py  a question climbs words, phrases, embedder; each rung says why it answered or stopped
+│   │   │   ├── test_pile_rungs.py
+│   │   │   └── README.md
+│   │   ├── pile-serve/
+│   │   │   ├── pile_serve.py  the passages held warm by one process, asked over a Unix socket in milliseconds
+│   │   │   ├── test_pile_serve.py
+│   │   │   └── README.md
+│   │   ├── pile-store/
+│   │   │   ├── pile_store.py  a folder's passages in one SQLite file, each repeat once, used only while it matches
+│   │   │   ├── test_pile_store.py
+│   │   │   └── README.md
+│   │   ├── pile-sweep/
+│   │   │   ├── pile_sweep.py  your sealed answers asked at several passage sizes, the best one named
+│   │   │   ├── test_pile_sweep.py
+│   │   │   └── README.md
 │   │   ├── pins/
 │   │   │   ├── pins.py       version ranges in package.json or requirements.txt that no lockfile pins
 │   │   │   ├── test_pins.py
