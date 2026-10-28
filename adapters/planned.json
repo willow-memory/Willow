@@ -2155,16 +2155,6 @@
   "tags": "needs-install, offline, writes-output, file-reader"
  },
  {
-  "name": "pile-build",
-  "kind": "stdlib",
-  "section": "Finding things",
-  "line": "The store built in the background after each change, behind a lock, from orders that say where the key is but never hold it, so your next question finds it warm.",
-  "source": "bot",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, search, pile"
- },
- {
   "name": "pile-gold",
   "kind": "stdlib",
   "section": "Finding things",

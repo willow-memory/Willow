@@ -18,12 +18,12 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`██████░░░░░░░░░░░░░░` **135 of 470 built** · 419 need no install · 51 need one
+`██████░░░░░░░░░░░░░░` **136 of 470 built** · 419 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
 | Reading more kinds of files | 14 | 91 | 96 | 9 |
-| Finding things | 19 | 24 | 33 | 10 |
+| Finding things | 20 | 23 | 33 | 10 |
 | Your own words | 11 | 14 | 22 | 3 |
 | Keeping track | 15 | 43 | 58 | 0 |
 | Trust and proof | 15 | 30 | 36 | 9 |
@@ -40,16 +40,16 @@ or `writes-output`; its section), and any the card's author adds or changes.
 - 2026-10-28 · [**pile-store**](adapters/stdlib/pile-store/) — Your folder's passages read once into one SQLite file, each repeat stored once, and opened read-only only while it still matches the folder, the limits and the kernel that read it, else built again.
 - 2026-10-28 · [**pile-rungs**](adapters/stdlib/pile-rungs/) — Each lookup says which rung answered, words, phrases or an embedder, and why a higher one was skipped, as data beside the passages.
 - 2026-10-28 · [**pile-rank**](adapters/stdlib/pile-rank/) — Phrases as well as words: BM25F over each passage's words and the word pairs your files use together, title and question lines weighted, no model.
+- 2026-10-28 · [**pile-build**](adapters/stdlib/pile-build/) — The store built after each change, behind a lock, until it matches the folder, so your next question finds it warm.
 - 2026-10-27 · [**words-sv**](adapters/stdlib/words-sv/) — Swedish common words ('och', 'att').
-- 2026-10-27 · [**words-pl**](adapters/stdlib/words-pl/) — Polish common words ('i', 'w').
 <!-- /willow:newest -->
 
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[pdf](adapters/deps/pdf/)** — Text out of PDFs.
+**[bench](adapters/stdlib/bench/)** — How fast the kernel answers on boxes of set sizes, per release, so a slowdown is seen.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 135 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 136 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -187,7 +187,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - **my-lessons** (idea) — Your own lesson plans by grade, subject and standard: what did I teach on fractions last year? *new* `no-install` `offline` `read-only` `search`
 - [**on-this-day**](adapters/stdlib/on-this-day/) — What you wrote on this date in earlier years. *box* `no-install` `offline` `read-only` `search`
 - [**people**](adapters/stdlib/people/) — Everyone your files name, and every place each is mentioned. *new* `no-install` `offline` `read-only` `search`
-- **pile-build** (idea) — The store built in the background after each change, behind a lock, from orders that say where the key is but never hold it, so your next question finds it warm. *bot* `no-install` `offline` `writes-output` `search` `pile`
+- [**pile-build**](adapters/stdlib/pile-build/) — The store built after each change, behind a lock, until it matches the folder, so your next question finds it warm. *bot* `no-install` `offline` `writes-output` `search` `pile`
 - **pile-gold** (idea) — Each answer you approve marks the passage that held it, so your own questions become a test of how well the search finds things, scored as recall at five. *box* `no-install` `offline` `records` `search` `pile`
 - [**pile-rank**](adapters/stdlib/pile-rank/) — Phrases as well as words: BM25F over each passage's words and the word pairs your files use together, title and question lines weighted, no model. *bot* `no-install` `offline` `read-only` `search` `pile`
 - [**pile-rungs**](adapters/stdlib/pile-rungs/) — Each lookup says which rung answered, words, phrases or an embedder, and why a higher one was skipped, as data beside the passages. *bot* `no-install` `offline` `read-only` `search` `pile`

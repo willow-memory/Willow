@@ -347,6 +347,10 @@ willow/
 │   │   │   ├── pii_audit.py  the personal numbers in the files, checked never guessed, shown masked
 │   │   │   ├── test_pii_audit.py
 │   │   │   └── README.md
+│   │   ├── pile-build/
+│   │   │   ├── pile_build.py  the store built after each change, behind a lock, until it matches the folder
+│   │   │   ├── test_pile_build.py
+│   │   │   └── README.md
 │   │   ├── pile-rank/
 │   │   │   ├── pile_rank.py   BM25F over words and the folder's own word pairs, titles and questions weighted
 │   │   │   ├── test_pile_rank.py

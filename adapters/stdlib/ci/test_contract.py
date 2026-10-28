@@ -137,6 +137,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "pins": ("pins.py", ["--box", "{box}"]),
     "scan": ("scan.py", ["index", "--from", "{pile}", "--to", "{tmp}/index"]),
     "index-cache": ("index_cache.py", ["--from", "{pile}", "--to", "{tmp}/ix"]),
+    "pile-build": ("pile_build.py", ["--from", "{pile}", "--to", "{tmp}/pile.sqlite"]),
     "pile-rank": ("pile_rank.py", ["--from", "{pile}", "tomatoes"]),
     "pile-rungs": ("pile_rungs.py", ["--from", "{pile}", "tomatoes"]),
     "pile-store": ("pile_store.py", ["--from", "{pile}", "--to", "{tmp}/pile.sqlite"]),

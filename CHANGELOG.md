@@ -10,6 +10,10 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `pile-build`: the pile store built after each change, behind a lock on
+  its folder, again until it matches when the folder changes mid-build, and
+  with `--background` detached so a hook never waits. Unlike willow-bot's,
+  its orders never say where the key is.
 - `pile-rank`, a rank that knows the folder's phrases: BM25F over each
   passage's words and the word pairs two or more of its texts use, titles
   (path and headings) and question lines weighted over the body, no model.
