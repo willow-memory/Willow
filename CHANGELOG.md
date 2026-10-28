@@ -10,6 +10,13 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `pile-store`, the store the other pile ideas stand on: a folder's passages
+  read once into one SQLite file, a text held in several places stored once,
+  and opened read-only only while it still matches the folder, the kernel's
+  reading limits and the kernel.py that read it, else built again whole.
+  `pile_store.load` gives other add-ons exactly `kernel.chunks` and
+  `kernel.dates`; `--check` says stale and why, writing nothing. Unlike
+  willow-bot's, it never matches or names the key.
 - `ci`: `adapters/stdlib/ci/cores.py` runs `ci.py run` as its shards at once on this machine,
   `--shard K/N` each with its own record in `<DIR>/<K>`, then every gate's
   verdict from the N records in ci.py's order, each record verified. One

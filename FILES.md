@@ -347,6 +347,10 @@ willow/
 │   │   │   ├── pii_audit.py  the personal numbers in the files, checked never guessed, shown masked
 │   │   │   ├── test_pii_audit.py
 │   │   │   └── README.md
+│   │   ├── pile-store/
+│   │   │   ├── pile_store.py  a folder's passages in one SQLite file, each repeat once, used only while it matches
+│   │   │   ├── test_pile_store.py
+│   │   │   └── README.md
 │   │   ├── pins/
 │   │   │   ├── pins.py       version ranges in package.json or requirements.txt that no lockfile pins
 │   │   │   ├── test_pins.py

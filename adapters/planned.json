@@ -2215,16 +2215,6 @@
   "tags": "no-install, offline, read-only, search, pile"
  },
  {
-  "name": "pile-store",
-  "kind": "stdlib",
-  "section": "Finding things",
-  "line": "Your folder's passages read once into one SQLite file, each repeat stored once, and opened read-only only while it still matches the folder, the limits and the key, else built again.",
-  "source": "bot",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, search, pile"
- },
- {
   "name": "pile-sweep",
   "kind": "stdlib",
   "section": "Finding things",
