@@ -1,0 +1,128 @@
+{
+ "about": "The twelve known security gaps this study asks of the code their fixes changed. Each fix is a merge (its first parent is the vulnerable side) or a lone commit (its parent is). resolve.py pins them in pins.json.",
+ "written": "2026-10-28",
+ "gaps": [
+  {
+   "id": "KG01",
+   "repo": "kartikeya",
+   "source": "gap 8a236e0e8f55",
+   "source_kind": "gap_record",
+   "class": "credential-name crosses into the sandbox by env prefix",
+   "fix": [{"repo": "kartikeya", "kind": "merge", "pr": 47, "merge": "78b9d82", "date": "2026-09-10", "files": 3}],
+   "fix_kind": "code"
+  },
+  {
+   "id": "KG02",
+   "repo": "kartikeya",
+   "source": "gap bd6284e3496d",
+   "source_kind": "gap_record",
+   "class": "tree-rewrite gate judged by policy, not by the directory the verb runs in",
+   "fix": [{"repo": "kartikeya", "kind": "merge", "pr": 53, "merge": "1b62a69", "date": "2026-09-10", "files": 3}],
+   "fix_kind": "code"
+  },
+  {
+   "id": "KG03",
+   "repo": "kartikeya+willow-mcp",
+   "source": "gap 2955ab69051a, Loki 0E7F0C89",
+   "source_kind": "gap_record",
+   "class": "liveness evidence (worker heartbeats) writable from inside a task",
+   "fix": [
+    {"repo": "kartikeya", "kind": "merge", "pr": 74, "merge": "91ae4a0", "date": "2026-09-28", "files": 7},
+    {"repo": "willow-mcp", "kind": "merge", "pr": 660, "merge": "f217c04", "date": "2026-09-28", "files": 5}
+   ],
+   "fix_kind": "code+config"
+  },
+  {
+   "id": "KG04",
+   "repo": "willow-mcp",
+   "source": "gap 6b4b7737c535",
+   "source_kind": "gap_record",
+   "class": "governance register written with the process umask (group-writable)",
+   "fix": [{"repo": "willow-mcp", "kind": "merge", "pr": 426, "merge": "6cecc02", "date": "2026-09-03", "files": 2}],
+   "fix_kind": "code"
+  },
+  {
+   "id": "KG05",
+   "repo": "willow-mcp",
+   "source": "gap f265d9b3727b, Loki A28BD892 (HIGH)",
+   "source_kind": "gap_record",
+   "class": "apply takes file paths from the signed record it is applying (redirect)",
+   "fix": [{"repo": "willow-mcp", "kind": "commit", "commit": "1dbe8f2", "date": "2026-09-29"}],
+   "fix_kind": "code",
+   "note": "same fix commit as KG06; scored on its own hunks"
+  },
+  {
+   "id": "KG06",
+   "repo": "willow-mcp",
+   "source": "gap 806df5cb08d7, Loki D9E5EF53 (HIGH)",
+   "source_kind": "gap_record",
+   "class": "the judged seat chooses the repo whose pin judges it",
+   "fix": [{"repo": "willow-mcp", "kind": "commit", "commit": "1dbe8f2", "date": "2026-09-29"}],
+   "fix_kind": "code"
+  },
+  {
+   "id": "KG07",
+   "repo": "willow-mcp+kartikeya",
+   "source": "Loki 7173C72A U1, gap 582b1e676fb3, Nestor 3ef0211f",
+   "source_kind": "audit_finding",
+   "class": "allow_localhost shared the host network namespace: full internet, no lease",
+   "fix": [
+    {"repo": "willow-mcp", "kind": "commit", "commit": "57b2cc1", "date": "2026-09-23"},
+    {"repo": "kartikeya", "kind": "commit", "commit": "645f01b", "date": "2026-09-23"}
+   ],
+   "fix_kind": "code",
+   "note": "the gap was opened by an earlier fix (sealed 9fe5e179 exempted allow_localhost from the lease); phase 3 should find that introducing commit"
+  },
+  {
+   "id": "KG08",
+   "repo": "willow-bot",
+   "source": "gap 1045a4056d11, Loki B7B947C4",
+   "source_kind": "gap_record",
+   "class": "process argv read as a repo filter, emptying the open-PR set a guard trusts",
+   "fix": [{"repo": "willow-bot", "kind": "merge", "pr": 33, "merge": "19da483", "date": "2026-09-20", "files": 3}],
+   "fix_kind": "code"
+  },
+  {
+   "id": "KG09",
+   "repo": "willow-bot",
+   "source": "commit a837823 (no gap record)",
+   "source_kind": "commit_message",
+   "class": "a file name with U+2028/2029/0085 cut the record on read and bricked the box",
+   "fix": [{"repo": "willow-bot", "kind": "commit", "commit": "a837823", "landed_in": "452f6ba (PR 160)", "date": "2026-10-21"}],
+   "fix_kind": "code"
+  },
+  {
+   "id": "KG10",
+   "repo": "willow-bot",
+   "source": "commit 55a758a (flatten-2 residue)",
+   "source_kind": "commit_message",
+   "class": "unprivileged run inherited root's proxy, CA path and token env",
+   "fix": [{"repo": "willow-bot", "kind": "commit", "commit": "55a758a", "landed_in": "2bdf3cb", "date": "2026-10-21"}],
+   "fix_kind": "code"
+  },
+  {
+   "id": "KG11",
+   "repo": "willow-bot",
+   "source": "commit 421421e (flatten-2 f14)",
+   "source_kind": "commit_message",
+   "class": "two writers could link to the same tail and fork the hash chain",
+   "fix": [{"repo": "willow-bot", "kind": "commit", "commit": "421421e", "landed_in": "65347c5", "date": "2026-10-20"}],
+   "fix_kind": "code"
+  },
+  {
+   "id": "KG12",
+   "repo": "willows-grove",
+   "source": "commit d6b168a, W4 audit findings S4 and B2 (no gap record)",
+   "source_kind": "commit_message",
+   "class": "the seat's scrub let key-shaped strings (bare hex, base64 runs, key=/token= fields) and a model's ESCALATE reason reach the screen",
+   "fix": [{"repo": "willows-grove", "kind": "commit", "commit": "d6b168a", "landed_in": "96bcce8 (PR 157)", "date": "2026-10-17", "files_scored": ["grove/seat_record.py", "grove/table_boxes.py"]}],
+   "fix_kind": "code",
+   "note": "d6b168a also carries Q2 and N8, which are not security; only the S4 and B2 files count as the fix, chosen before any run"
+  }
+ ],
+ "evidence_weight": {
+  "strong": "source_kind gap_record or audit_finding: the gap's text was written by whoever found it, before the fix",
+  "weaker": "source_kind commit_message (KG09, KG10, KG11, KG12): the only text is the fixer's own, written with the fix in hand, like php2shell's NEWS entries; reported apart from the strong set in every table",
+  "ruled": "operator 2026-10-28: 'keep KG09-11 marked weaker'; 'take d6b168a as 12th'"
+ }
+}

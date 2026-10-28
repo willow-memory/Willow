@@ -745,6 +745,19 @@ willow/
 │   │       ├── reword.txt     the author's eight, rephrased five ways each, blind
 │   │       ├── advisory-words.txt  a words list of acronyms the advisories expand
 │   │       └── null.txt      fifty questions with nothing to do with the bug
+│   ├── known-gaps/           the fleet's own twelve known security gaps, asked of the code their fixes changed
+│   │   ├── README.md         the claim, the threats, what is frozen, how to reproduce, the dry run
+│   │   ├── gaps.json         the twelve gaps, redacted: source, class, fix, and how strong the source is
+│   │   ├── pins.json         each fix's vulnerable and fixed commits and trees, and its diff's SHA-256
+│   │   ├── resolve.py        gaps.json to pins.json, from the fleet's own repositories
+│   │   ├── trees.py          writes each side's tree as git stores it, and checks it without git
+│   │   ├── ask.py            asks a gap's questions of its vulnerable tree: kernel, BM25 and a grep baseline
+│   │   ├── score.py          the hit rule: php2shell's rule 2, with tests, changelogs and version files left out
+│   │   ├── origin.py         which commit wrote each hit line, when, and what its message cites
+│   │   ├── run.py            scores a phase's answers and writes its pass rules as kernel verdict rows
+│   │   ├── spread.py         not built yet: the questions over the other repositories
+│   │   ├── outside.py        not built yet: the same method on cpython's CVE fixes
+│   │   └── test_known_gaps.py  holds the frozen files to their hashes, and the tools to their word
 │   ├── craft-assembly/       the Craft apps taken apart into pieces, rebuilt exactly, and five assembled into one
 │   │   ├── README.md         the claim, the threats, what is frozen, what was seen before each freeze, results
 │   │   ├── REPORT.md         the full report, written by report.py from the files here, every number counted
