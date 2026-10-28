@@ -114,7 +114,10 @@ here. Line level means `hit`; file level means `hit` or `file`.
 ### Phase 1: found it (rule A)
 
 Each question is asked of the passages the fix changed, and all of them are
-ranked. For a (question, unit) pair the statistic is the rank of the first
+ranked. For a unit with `files_scored` (KG05, KG06, KG12), the changed set,
+its random ordering and its chance hold only passages of those files; a
+passage of any other file the fix touched is never in it (a test holds this).
+For a (question, unit) pair the statistic is the rank of the first
 passage that hits; a passage the ranker does not return counts as last, which
 is conservative. The null is a uniform random ordering of the same passages,
 so a pair's chance of each first-hit rank is exact: with n passages, h of them
@@ -140,10 +143,19 @@ pair, `poisson_binomial_tail` for a group, and `recall_at` for the hits.
 
 | Rule | Passes when |
 |---|---|
-| file level above chance, bm25, strong | questions with a file hit in the top 10 beat chance, one-sided p < 0.01 |
-| file level above chance, bm25, weaker | the same for the weaker set |
+| line level above chance, bm25, strong | questions with a line hit in the top 10 beat chance, one-sided p < 0.01 |
+| line level above chance, bm25, weaker | the same for the weaker set |
 
-The line level, and the kernel's and grep's results, are reported, never gates.
+The file level, and the kernel's and grep's results, are reported, never gates.
+For a unit with `files_scored`, only passages of those files count at either
+level.
+
+Which level gates, in order. The first amendment put the gate at the file
+level; the desk did that without asking the operator. The operator then ruled
+(2026-10-28, "I'll take your recommendation on both") that phase 2 is judged
+at the line level, which asks for the lines the fix changed, not just their
+file. The file level stays in every table because it is the weaker claim and
+the cheaper one to hit.
 
 ### Why phase 1 is judged by rank
 
@@ -188,8 +200,8 @@ after the amendment, ran both phases.
 | `trees.py fetch` (14 units, 28 trees) | 4 s; all 14 old, new and fix lines `matches`, exit 0 |
 | `ask.py`, first run (14 tasks, found, top 3) | all exit 0; timings below |
 | `ask.py`, second run (14 units, found and before) | all 28 exit 0; 0.08 to 1.3 s each, the indexes already cached |
-| `run.py found` | 0.6 s; exit 42, as it must be: no hits, so the rank statistic sits far below random (strong 1.04 against 6.42 expected, p 1.0; weaker 0.70 against 2.81, p 1.0) |
-| `run.py before` | 0.06 s; exit 42, as it must be: 0 file hits against 4.52 expected (strong) and 0.39 (weaker) |
+| `run.py found` | exit 42, as it must be: no hits, so the rank statistic sits far below random (strong 1.42 against 7.54 expected, p 1.0; weaker 0.81 against 3.25, p 1.0). Run after amendment 2, with the `files_scored` limit. |
+| `run.py before` | exit 42, as it must be: 0 line hits against 0.57 expected (strong) and 0.016 (weaker); file level 0 against 4.52 and 0.39, reported |
 | verdict rows | 5 written (3 for phase 1, 2 for phase 2); the record's chain holds |
 | `origin.py` | 0 ranges to look up, so 0 rows (nothing hit) |
 
@@ -224,28 +236,30 @@ tasks ran at once on one machine, so each is slower than it would be alone):
   (3 drawn from the changed set) and in phase 2 (10 drawn from the whole old
   tree; the file level counts any passage of a scored file):
 
-| Unit | Changed passages | Hit | Chance, 3 of them | Old tree passages | Hit | In a scored file | Chance, 10 of the tree (line) |
-|---|---|---|---|---|---|---|---|
-| KG01 | 3 | 1 | 1.000 | 1072 | 5 | 193 | 0.046 |
-| KG02 | 16 | 7 | 0.852 | 1158 | 15 | 235 | 0.123 |
-| KG03-kartikeya | 33 | 19 | 0.929 | 2036 | 30 | 294 | 0.138 |
-| KG03-willow-mcp | 8 | 3 | 0.823 | 36734 | 7 | 75 | 0.002 |
-| KG04 | 4 | 4 | 1.000 | 22456 | 6 | 140 | 0.003 |
-| KG05 | 18 | 4 | 0.554 | 39143 | 15 | 276 | 0.004 |
-| KG06 | 18 | 4 | 0.544 | 39143 | 5 | 76 | 0.001 |
-| KG07-kartikeya | 12 | 5 | 0.845 | 1766 | 6 | 266 | 0.034 |
-| KG07-willow-mcp | 60 | 20 | 0.708 | 35090 | 79 | 2497 | 0.022 |
-| KG08 | 43 | 23 | 0.905 | 2445 | 52 | 153 | 0.194 |
-| KG09 | 3 | 1 | 1.000 | 15318 | 1 | 89 | 0.001 |
-| KG10 | 6 | 3 | 0.946 | 13191 | 3 | 214 | 0.002 |
-| KG11 | 7 | 6 | 1.000 | 11717 | 11 | 169 | 0.009 |
-| KG12 | 18 | 6 | 0.736 | 26109 | 10 | 116 | 0.004 |
+| Unit | Changed passages before the limit | After the limit | Hit | Chance, 3 of them | Old tree passages | Hit | In a scored file | Chance, 10 of the tree (line) |
+|---|---|---|---|---|---|---|---|---|
+| KG01 | 3 | 3 | 1 | 1.000 | 1072 | 5 | 193 | 0.046 |
+| KG02 | 16 | 16 | 7 | 0.852 | 1158 | 15 | 235 | 0.123 |
+| KG03-kartikeya | 33 | 33 | 19 | 0.929 | 2036 | 30 | 294 | 0.138 |
+| KG03-willow-mcp | 8 | 8 | 3 | 0.823 | 36734 | 7 | 75 | 0.002 |
+| KG04 | 4 | 4 | 4 | 1.000 | 22456 | 6 | 140 | 0.003 |
+| KG05 | 18 | 4 | 4 | 1.000 | 39143 | 15 | 276 | 0.004 |
+| KG06 | 18 | 4 | 4 | 1.000 | 39143 | 5 | 76 | 0.001 |
+| KG07-kartikeya | 12 | 12 | 5 | 0.845 | 1766 | 6 | 266 | 0.034 |
+| KG07-willow-mcp | 60 | 60 | 20 | 0.708 | 35090 | 79 | 2497 | 0.022 |
+| KG08 | 43 | 43 | 23 | 0.905 | 2445 | 52 | 153 | 0.194 |
+| KG09 | 3 | 3 | 1 | 1.000 | 15318 | 1 | 89 | 0.001 |
+| KG10 | 6 | 6 | 3 | 0.946 | 13191 | 3 | 214 | 0.002 |
+| KG11 | 7 | 7 | 6 | 1.000 | 11717 | 11 | 169 | 0.009 |
+| KG12 | 18 | 6 | 6 | 1.000 | 26109 | 10 | 116 | 0.004 |
 
-  KG05 and KG06 are the rows the file ruling changed: with their own files
-  they hit 4 and 4 of the 18 changed passages (0.554 and 0.544; the first run,
-  scored on all of the shared diff, had 11 and 0.96). Their "changed passages"
-  still count the whole fix, since the passages a fix changed do not depend on
-  which file is scored.
+  The limit (amendment 2) changes three rows: KG05 and KG06 from 18 to 4
+  changed passages and KG12 from 18 to 6, each the passages of its own scored
+  file or files. Every one of those passages is a hit, so in phase 1 a pair on
+  those units has its first hit at rank 1 under every ordering: it adds
+  nothing to the statistic that chance does not already give. KG04 has the
+  same shape (4 of 4) without a limit. Phase 2, which asks the whole tree, is
+  where those units are tested.
 - **The file level's chance is large in places.** Phase 2's file level counts
   any passage of a scored file: 75 to 2,497 passages of a tree. Its chance
   for 10 passages, summed over the dry run's pairs, is 4.52 file hits expected
