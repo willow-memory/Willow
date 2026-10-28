@@ -177,6 +177,9 @@ def test_the_hit_rule():
     assert not score.hit(far, fix) and score.classify(far, fix) == "file"
     assert score.hit(near, fix) and score.classify(near, fix) == "hit"
     assert score.classify(other, fix) == "file"
+    new_side = {**hit, "text": "verify_the_policy_signature(allowed)"}
+    assert not score.hit(new_side, fix)  # a line the fix added is not in the old code
+    assert score.classify(new_side, fix) == "file"
     assert score.classify({"path": "elsewhere.py", "line": 1, "text": near["text"]},
                           fix) == "miss"  # fmt: skip
     after = {**hit, "text": "    context at the very bottom"}
