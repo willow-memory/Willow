@@ -351,6 +351,10 @@ willow/
 │   │   │   ├── pile_build.py  the store built after each change, behind a lock, until it matches the folder
 │   │   │   ├── test_pile_build.py
 │   │   │   └── README.md
+│   │   ├── pile-gold/
+│   │   │   ├── pile_gold.py   your sealed answers as a test of the search, scored as recall at five
+│   │   │   ├── test_pile_gold.py
+│   │   │   └── README.md
 │   │   ├── pile-rank/
 │   │   │   ├── pile_rank.py   BM25F over words and the folder's own word pairs, titles and questions weighted
 │   │   │   ├── test_pile_rank.py

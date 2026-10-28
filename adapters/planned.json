@@ -2155,16 +2155,6 @@
   "tags": "needs-install, offline, writes-output, file-reader"
  },
  {
-  "name": "pile-gold",
-  "kind": "stdlib",
-  "section": "Finding things",
-  "line": "Each answer you approve marks the passage that held it, so your own questions become a test of how well the search finds things, scored as recall at five.",
-  "source": "box",
-  "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, search, pile"
- },
- {
   "name": "pile-poetry",
   "kind": "stdlib",
   "section": "Play",

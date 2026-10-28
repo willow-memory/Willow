@@ -14,6 +14,12 @@ says how). The first was v0.1.0.
   its folder, again until it matches when the folder changes mid-build, and
   with `--background` detached so a hook never waits. Unlike willow-bot's,
   its orders never say where the key is.
+- `pile-gold`: the passages your sealed answers cite are their questions'
+  gold. Asked your questions again (from a file, since the record keeps no
+  words), the kernel's rank and pile-rank are each scored by how many of
+  them land in the top five. Seals are read through the kernel, which checks
+  them against your key; one `gold` row records the counts and the file's
+  SHA-256, never a word.
 - `pile-rank`, a rank that knows the folder's phrases: BM25F over each
   passage's words and the word pairs two or more of its texts use, titles
   (path and headings) and question lines weighted over the body, no model.
