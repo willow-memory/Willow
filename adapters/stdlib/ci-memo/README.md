@@ -17,7 +17,7 @@ record against it — the same move [ci-cache](../ci-cache/) makes for
 downloads, on verdicts.
 
     python adapters/stdlib/ci-memo/ci_memo.py keys [GATE ...]
-    python adapters/stdlib/ci-memo/ci_memo.py pin  --box DIR --to FILE
+    python adapters/stdlib/ci-memo/ci_memo.py pin  --box DIR [--box DIR ...] --to FILE
     python adapters/stdlib/ci-memo/ci_memo.py plan --pin FILE [--bare]
 
 After a full run, pin it; after a change, plan:
@@ -38,6 +38,12 @@ and SHA-256, hashed together exactly as ci.py hashes the whole tree into the
 `files_sha256` on every verdict row. `pin` accepts only a record whose run
 was of this very tree (that field proves it) and whose chain holds, so a
 standing verdict always names the bytes that gave it.
+
+**A run in shards is pinned whole.** A run cut with `--shard`, each shard
+with its own record, is pinned by naming every record, each with its own
+`--box`; a gate two of them hold takes the later one named. Eight shards'
+records of one run pin as one: 185 gates, and after a change to one add-on,
+123 stand and 62 run.
 
 **The reach is drawn wide, never narrow.** A gate this tool hasn't drawn is
 keyed on the whole tree, standing only when nothing at all changed: over-run,

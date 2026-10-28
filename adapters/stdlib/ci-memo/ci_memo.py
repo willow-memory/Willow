@@ -1,7 +1,7 @@
 """ci_memo.py: a gate whose inputs' bytes are unchanged keeps its verdict.
 
     python adapters/stdlib/ci-memo/ci_memo.py keys [GATE ...] [--repo DIR]
-    python adapters/stdlib/ci-memo/ci_memo.py pin  --box DIR --to FILE [--repo DIR]
+    python adapters/stdlib/ci-memo/ci_memo.py pin  --box DIR [--box DIR ...] --to FILE [--repo DIR]
     python adapters/stdlib/ci-memo/ci_memo.py plan --pin FILE [--repo DIR] [--bare]
 
 A full `ci.py run` re-checks every add-on on every change, though most gates
@@ -13,7 +13,9 @@ SHA-256, sorted, as ci.py hashes the whole tree), and memoizes:
 - `pin`, run after a full `ci.py run` on this same tree, writes FILE: each
   gate's key beside the verdict the record holds for it. It refuses a record
   with no run of this tree (every verdict row carries `files_sha256`, the
-  tree it ran on), and a broken chain;
+  tree it ran on), and a broken chain. A run cut into shards, each with its
+  own record, is pinned whole by naming each record with its own `--box`;
+  a gate in two of them takes the later one named;
 - `plan` reads the pin against the tree as it is now. A gate whose key is
   unchanged stands, with the pinned verdict; one whose key changed, or that
   the pin doesn't hold, runs, and the line that runs just those is printed,
@@ -173,19 +175,21 @@ def do_keys(names: list[str], root: Path) -> int:
     return kernel.ALIVE
 
 
-def do_pin(box: Path, to: Path, root: Path) -> int:
-    if not (box / "kernel.json").exists():
-        raise Refused("not a kernel box; run ci.py first")
-    rows, breaks = kernel.read(box / "record.jsonl")
-    if breaks:
-        raise Refused("; ".join(breaks))
+def do_pin(boxes: list[Path], to: Path, root: Path) -> int:
     seen = digests(root)
     tree = key_of(sorted(seen), seen)
-    held = {
-        r["gate"]: r
-        for r in rows
-        if r.get("kind") == "verdict" and r.get("files_sha256") == tree
-    }
+    held = {}
+    for box in boxes:
+        if not (box / "kernel.json").exists():
+            raise Refused(f"{box} is not a kernel box; run ci.py first")
+        rows, breaks = kernel.read(box / "record.jsonl")
+        if breaks:
+            raise Refused(f"{box}: " + "; ".join(breaks))
+        held.update(
+            (r["gate"], r)
+            for r in rows
+            if r.get("kind") == "verdict" and r.get("files_sha256") == tree
+        )
     if not held:
         raise Refused(
             "the record holds no run of this tree (no verdict's files_sha256"
@@ -259,9 +263,12 @@ def do_plan(pin: Path, root: Path, bare: bool) -> int:
 
 def main(argv: list[str]) -> int:
     verb, rest = (argv[0], argv[1:]) if argv else ("", [])
-    opts, args, it = {}, [], iter(rest)
+    opts, args, boxes, it = {}, [], [], iter(rest)
     for a in it:
-        if a in ("--box", "--to", "--repo", "--pin"):
+        if a == "--box":
+            boxes.append(next(it, ""))
+            opts[a] = boxes[-1]
+        elif a in ("--to", "--repo", "--pin"):
             opts[a] = next(it, "")
         elif a == "--bare":
             opts[a] = "yes"
@@ -271,7 +278,10 @@ def main(argv: list[str]) -> int:
     bad = (
         any(a.startswith("-") for a in args)
         or not root.is_dir()
-        or (verb == "pin" and (args or not opts.get("--box") or not opts.get("--to")))
+        or (
+            verb == "pin"
+            and (args or not all(boxes) or not boxes or not opts.get("--to"))
+        )
         or (verb == "plan" and (args or not opts.get("--pin")))
         or verb not in ("keys", "pin", "plan")
     )
@@ -282,7 +292,7 @@ def main(argv: list[str]) -> int:
         if verb == "keys":
             return do_keys(args, root)
         if verb == "pin":
-            return do_pin(Path(opts["--box"]), Path(opts["--to"]), root)
+            return do_pin([Path(b) for b in boxes], Path(opts["--to"]), root)
         return do_plan(Path(opts["--pin"]), root, "--bare" in opts)
     except Refused as e:
         print(f"refused: {e}", file=sys.stderr)

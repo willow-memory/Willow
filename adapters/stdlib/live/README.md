@@ -39,6 +39,9 @@ Each check gives one of three states, kept apart:
 - **works:** the program read the lines and did the thing.
 - **fails:** the program ran but didn't, and the line says why.
 - **not here:** the program isn't on this machine. That's neither a pass nor a failure.
+  A launcher in its place counts too: the program on PATH that, run as the
+  check runs it, exits 127, a shell's "not found" (VS Code's `copilot`,
+  which only says the Copilot CLI isn't installed).
 
 The exit code is the worst of these: 0 everything works; 42 something
 isn't here and nothing fails; 2 something fails, or the command line was bad.

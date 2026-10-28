@@ -49,6 +49,14 @@ NOTES = {
     # a passage quoting a file:line of its own, which a greedy matcher misreads
     "moved.txt": "Moved from old.txt:4: to here, the dentist\n",
 }
+#: the exit a shell gives for a program it couldn't find, and the one a
+#: launcher standing in for an uninstalled program gives (VS Code puts a
+#: `copilot` on PATH that only says the Copilot CLI was not found)
+NOT_FOUND = 127
+
+
+class StandIn(Exception):
+    """The program on PATH said it isn't installed: not here, not failing."""
 
 
 def addon(folder: str, module: str):
@@ -65,7 +73,8 @@ class Place:
     """The scratch folder one check runs in: a box over NOTES, a home folder
     for the program, and the environment that points the program there."""
 
-    def __init__(self, tmp: Path):
+    def __init__(self, tmp: Path, needs: str = ""):
+        self.needs = needs
         self.root = tmp / "with space"
         self.home = self.root / "home"
         notes = self.root / "notes"
@@ -100,7 +109,10 @@ class Place:
             argv, input=stdin, cwd=str(cwd or self.home), env={**self.env, **(env or {})},
             capture_output=True, text=True, timeout=TIMEOUT,
         )  # fmt: skip
-        return got.stdout + got.stderr
+        said = got.stdout + got.stderr
+        if got.returncode == NOT_FOUND and argv[0] == self.needs:
+            raise StandIn(" ".join(said.split())[:200])
+        return said
 
     def expect(self, name: str = "dentist.txt", line: int = 1) -> str:
         return f"{self.notes / name}:{line}"
@@ -493,7 +505,9 @@ def one(name: str) -> tuple[str, str]:
         return ABSENT, f"{needs} not on PATH"
     with tempfile.TemporaryDirectory() as tmp:
         try:
-            why = check(Place(Path(tmp)))
+            why = check(Place(Path(tmp), needs))
+        except StandIn as said:
+            return ABSENT, f"{needs} on PATH isn't it: {said}"
         except subprocess.TimeoutExpired:
             return FAILS, f"{needs} took more than {TIMEOUT}s"
         except (OSError, RuntimeError, ValueError, KeyError, IndexError) as exc:

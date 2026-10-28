@@ -48,10 +48,10 @@ def test_each_shard_writes_its_own_gates_and_every_one_is_shown_once(tmp_path):
 
 def test_never_more_shards_than_gates(tmp_path):
     box = tmp_path / "runs"
-    got = cli("lint:check", "--jobs", "4", "--box", str(box), "--now", NOW)
+    got = cli("demo:hollis", "--jobs", "4", "--box", str(box), "--now", NOW)
     assert got.returncode == 0, got.stdout + got.stderr
     assert sorted(p.name for p in box.iterdir()) == ["1", "1.key"]
-    assert gates_in(box / "1") == ["lint:check"]
+    assert gates_in(box / "1") == ["demo:hollis"]
     assert got.stdout.rstrip().endswith(
         "1 satisfied, 0 unreachable, 0 failing, in 1 records"
     )
@@ -59,9 +59,18 @@ def test_never_more_shards_than_gates(tmp_path):
 
 def test_what_is_left_out_is_not_run(tmp_path):
     box = tmp_path / "runs"
-    got = cli("lint", "--without", "lint:format", "--box", str(box), "--now", NOW)
+    got = cli(
+        "demo:hollis",
+        "demo:odile",
+        "--without",
+        "demo:odile",
+        "--box",
+        str(box),
+        "--now",
+        NOW,
+    )
     assert got.returncode == 0, got.stdout + got.stderr
-    assert gates_in(box / "1") == ["lint:check"]
+    assert gates_in(box / "1") == ["demo:hollis"]
 
 
 @pytest.mark.parametrize("argv", [[], ["demo"], ["--jobs", "0"], ["--jobs", "x"], ["--jobs"],

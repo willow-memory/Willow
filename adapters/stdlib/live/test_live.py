@@ -128,6 +128,32 @@ def test_a_program_that_hangs_fails_by_the_clock(fakes, monkeypatch):
     assert live.one("codex") == (live.FAILS, "codex took more than 1s")
 
 
+SHIM = "GitHub Copilot CLI was not found. Run copilot in a terminal to install it"
+
+
+def test_a_launcher_standing_in_for_its_program_is_not_here(fakes):
+    """VS Code puts a `copilot` on PATH that only says the CLI isn't installed,
+    with the exit a shell gives for a program it can't find."""
+    exe = fakes / "copilot"
+    exe.write_text(f"#!{sys.executable}\nimport sys; print({SHIM!r}); sys.exit(127)\n")
+    state, why = live.one("copilot")
+    assert state == live.ABSENT and why == f"copilot on PATH isn't it: {SHIM}"
+    exe.write_text(f"#!{sys.executable}\nimport sys; print({SHIM!r}); sys.exit(1)\n")
+    assert live.one("copilot")[0] == live.FAILS, "only the not-found exit is not here"
+
+
+@pytest.mark.skipif(not shutil.which("sh"), reason="no sh on this machine")
+def test_another_program_exiting_not_found_still_fails(fakes):
+    """The add-on's own line, run through sh, is what's checked: its exit 127
+    is the add-on's failure, never the program missing."""
+    exe = fakes / "claude"
+    exe.write_text(exe.read_text().replace(
+        'if sys.argv[1:3] == ["mcp", "add"]:\n', 'if sys.argv[1:3] == ["mcp", "add"]:\n    sys.exit(127)\n'
+    ))  # fmt: skip
+    assert "sys.exit(127)" in exe.read_text()
+    assert live.one("claude")[0] == live.FAILS
+
+
 def test_every_check_runs_in_a_folder_with_a_space_and_its_own_home():
     with tempfile.TemporaryDirectory() as tmp:  # as one() makes it
         check_place(live.Place(Path(tmp)))
@@ -299,6 +325,13 @@ def test_chrome_fails_when_a_saved_page_lacks_what_the_script_drew(chrome, monke
     monkeypatch.setenv("FAKE_CHROME", "bare")
     state, why = live.one("chrome")
     assert state == live.FAILS and why.startswith("no line 'Drawn by script.'")
+
+
+def test_a_reply_inside_the_last_second_of_the_clock_is_still_read(chrome, monkeypatch):
+    """Each message to the browser has the whole clock: with one second, a
+    reply that comes within it is read, not given up on early."""
+    monkeypatch.setattr(live, "TIMEOUT", 1)
+    assert live.one("chrome") == (live.WORKS, "")
 
 
 def test_a_browser_that_closes_its_pipe_fails_and_says_so(fakes):

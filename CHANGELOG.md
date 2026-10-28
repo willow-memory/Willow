@@ -15,6 +15,10 @@ says how). The first was v0.1.0.
   verdict from the N records in ci.py's order, each record verified. One
   after another the gates take most of an hour; eight at once took nine
   minutes. AGENTS.md's baseline names it. (#67)
+- `ci-memo` pins a run cut into shards whole: `pin` takes `--box` once for
+  each shard's record, and a gate two of them hold takes the later one
+  named. On this repo, eight shards' records pin as one, 185 gates; after a
+  change to one add-on, 123 stand and 62 run. (#68)
 - `words-sv` and `words-pl`, two more of the common-words family: Swedish
   and Polish questions asked through them lose their languages' common words
   before the kernel's own `bite`, as words-de does for German. Each `list`
@@ -732,6 +736,12 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- `live` counted a launcher standing in for a missing program as failing:
+  VS Code puts a `copilot` on PATH that only says the Copilot CLI isn't
+  installed, so `tools:copilot` failed on any machine with VS Code. A
+  check's own program exiting 127, a shell's "not found", is now not here
+  (unreachable, still no pass); any other exit, or 127 from anything else
+  the check runs, still fails. (#66)
 - ADDONS.md's section headings sat two levels under its title (h1 straight
   to h3), a hole in a screen reader's outline that the new `a11y-check`
   found on this repo's own page. The generated list's headings (the readme
