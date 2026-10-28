@@ -19,21 +19,26 @@ chance are reported beside it.
 | Rule | Passes when |
 |---|---|
 | rank, bm25, GROUP | the group's sum of 1/rank beats random orderings, one-sided p < 0.01 |
-| null questions hit nothing | at least one null question was asked, and none of its top 3, ranked by anything, hit |
+
+Phase 1 asks no null question: a changed set is a handful of passages, and a
+null question with one common word would put a hit in its top 3 by luck.
 
 `before` is phase 2, the main judged test: each question asked of the whole
-vulnerable tree, top 10, scored at line level (a passage holding a counted
-line) and file level (any passage of a scored file). The chance is exact
-(php2shell's phase4 `chance_one` per pair, `poisson_binomial_tail` over a
-group).
+vulnerable tree, top 10, scored at line level (a passage whose lines overlap a
+line the fix changed or borders, by position) and file level (any passage of a
+scored file). The chance is exact (php2shell's phase4 `chance_one` per pair,
+`poisson_binomial_tail` over a group). The null questions are asked here, of
+every unit.
 
 | Rule | Passes when |
 |---|---|
 | line level above chance, bm25, GROUP | questions with a line hit in the top 10 beat chance, one-sided p < 0.01 |
+| null questions not above chance, bm25 | at least one null question was asked, and the null line hits in the top 10 are not above exact chance: the same tail, p >= 0.01 |
 
 The file level, and the kernel's and grep's results, are reported, never gates.
 A unit whose fix has files_scored counts only passages of those files.
-Every later phase is not built: exit 2.
+Answers made in the other mode are refused (exit 2). Every later phase is not
+built: exit 2.
 
 --out gets the scored answers, one JSON line each (origin.py reads it). --box
 is a record (made if there is none; its key beside it); each rule is a
@@ -71,9 +76,7 @@ KS = (3, 10)
 BYS = ("kernel", "bm25", "grep")
 GROUPS = ("strong", "weaker")
 STRONG = ("gap_record", "audit_finding")
-TOOLS = ("kernel.py", "adapters/stdlib/scan/scan.py", "adapters/stdlib/ci/whose.py",
-         "demo/php2shell/phase3.py", "demo/php2shell/phase4.py",
-         "demo/known-gaps/trees.py", "demo/known-gaps/ask.py",
+TOOLS = (*trees.TOOLS, "demo/known-gaps/trees.py", "demo/known-gaps/ask.py",
          "demo/known-gaps/score.py", "demo/known-gaps/run.py")  # fmt: skip
 
 
@@ -135,15 +138,10 @@ def judge(rows: list, scored: list, group_of: dict) -> dict:
                            if mine else (0.0, 1.0))  # fmt: skip
             rank[f"{by}, {group}"] = {"pairs": n, "observed": observed,
                                       "expected": expected, "p": p}  # fmt: skip
-    null = [r for r in scored if r["gap"] == "null"]
-    passes = {
-        **{f"rank, bm25, {g}": rank[f"bm25, {g}"]["pairs"] > 0
-           and rank[f"bm25, {g}"]["p"] < 0.01 for g in GROUPS},
-        "null questions hit nothing": bool(null)
-        and not any("hit" in r["served"][:3] for r in null),
-    }  # fmt: skip
+    passes = {f"rank, bm25, {g}": rank[f"bm25, {g}"]["pairs"] > 0
+              and rank[f"bm25, {g}"]["p"] < 0.01 for g in GROUPS}  # fmt: skip
     return {"seed": SEED, "draws": DRAWS, "rank": rank, "top3_hit_rate": top3,
-            "null_answers": len(null), "passes": passes}  # fmt: skip
+            "passes": passes}  # fmt: skip
 
 
 def judge_before(rows: list, scored: list, group_of: dict) -> dict:
@@ -175,6 +173,19 @@ def judge_before(rows: list, scored: list, group_of: dict) -> dict:
                 passes[f"line level above chance, bm25, {group}"] = (
                     bool(mine) and table[f"{by}, {group}"]["line_p"] < 0.01
                 )
+    # the null questions, asked of every unit: their line hits must not be
+    # above exact chance (the same tail as the main gate)
+    for by in BYS:
+        rs = [r for r in scored if r["gap"] == "null" and r["ranked_by"] == by]
+        ps = [phase4.chance_one(stats[r["unit"]]["changed"],
+                                stats[r["unit"]]["hit_passages"], 10) for r in rs]  # fmt: skip
+        k = sum(phase4.recall_at([{"id": c} for c in r["served"]], {"hit"}, KS)[10]
+                for r in rs)  # fmt: skip
+        above = phase4.poisson_binomial_tail(ps, k) if k else 1.0
+        table[f"{by}, null"] = {"of": len(rs), "line_hits@10": k,
+                                "line_expected": sum(ps), "above_chance_p": above}  # fmt: skip
+        if by == "bm25":
+            passes["null questions not above chance, bm25"] = bool(rs) and above >= 0.01
     return {"table": table, "passes": passes}
 
 
@@ -195,6 +206,10 @@ def main(argv: list[str]) -> int:
     )
     try:
         rows = [json.loads(x) for x in answers.read_text(encoding="utf-8").splitlines()]
+        wrong = [r for r in rows if r.get("mode") != cmd]
+        if not rows or wrong:
+            raise ValueError(f"{answers.name} holds answers that were not asked in "
+                             f"mode {cmd} ({len(wrong)} of {len(rows)} rows)")  # fmt: skip
         scored = score.score([r for r in rows if r.get("type") == "answer"],
                              Path(opts["--to"]) / "fixes")  # fmt: skip
     except (OSError, ValueError, KeyError) as e:

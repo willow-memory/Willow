@@ -39,8 +39,21 @@ NEW_GUARD = (
 )
 
 
+def freeze_is_listed() -> bool:
+    """FILES.md lists FROZEN.json among this folder's files: true from the
+    freeze commit on, which adds the line with the file."""
+    text = (trees.ROOT / "FILES.md").read_text(encoding="utf-8")
+    start = text.index("├── known-gaps/")
+    end = text.index("├── craft-assembly/", start)
+    return "FROZEN.json" in text[start:end]
+
+
 def test_every_frozen_file_is_as_it_was_frozen():
     if not FROZEN_FILE.exists():
+        if freeze_is_listed():
+            pytest.fail(
+                "FROZEN.json is listed in FILES.md but missing: the freeze is gone"
+            )
         pytest.skip("not frozen yet: FROZEN.json is the operator's freeze commit")
     frozen = json.loads(FROZEN_FILE.read_text(encoding="utf-8"))
     for rel, sha in frozen["files"].items():
@@ -50,14 +63,13 @@ def test_every_frozen_file_is_as_it_was_frozen():
         )
     assert {"gaps.json", "pins.json", "score.py", "trees.py", "resolve.py", "ask.py",
             "origin.py", "run.py"} <= set(frozen["files"])  # fmt: skip
-    root = HERE.parents[1]
+    # every tool the rule and the statistics run on, re-hashed too
+    assert set(frozen["tools_at_freeze"]) == set(trees.TOOLS)
     for rel, sha in frozen["tools_at_freeze"].items():
-        assert set(frozen["tools_at_freeze"]) == {
-            "kernel.py",
-            "adapters/stdlib/scan/scan.py",
-            "adapters/stdlib/ci/whose.py",
-        }
-        assert (root / rel).exists(), rel  # the tools' hashes are held by the freeze
+        got = hashlib.sha256((trees.ROOT / rel).read_bytes()).hexdigest()
+        assert got == sha, (
+            f"{rel} changed after it was frozen; a change is a new freeze"
+        )
 
 
 def test_the_twelve_gaps_are_whole_and_redacted():
@@ -187,25 +199,55 @@ def test_the_hit_rule():
         }
     }  # removed lines, and the one line next to an added run; no far context
     assert set(fix["files"]) == {"app/guard.py"}  # tests, changelog, version never
-    hit = {"path": "app/guard.py", "line": 1}
-    far = {**hit, "text": "far away context line one\nfar away context line two"}
-    near = {**hit, "text": "x\nallowed = load_the_whole_policy(root_path)"}
-    other = {**hit, "text": "something else entirely"}
+    # by position: the removed line (3), the line after the added run that
+    # replaces it (4), and the line before the run added at the bottom (6)
+    assert fix["pos"] == {"app/guard.py": {3, 4, 6}}
+    assert fix["hunks"] == {"app/guard.py": [(1, 6)]}
+
+    def at(line, text, path="app/guard.py"):
+        return {"path": path, "line": line, "text": text}
+
+    far = at(1, "far away context line one\nfar away context line two")
+    near = at(2, "x\nallowed = load_the_whole_policy(root_path)")
+    other = at(1, "something else entirely")
     assert not score.hit(far, fix) and score.classify(far, fix) == "file"
     assert score.hit(near, fix) and score.classify(near, fix) == "hit"
     assert score.classify(other, fix) == "file"
-    new_side = {**hit, "text": "verify_the_policy_signature(allowed)"}
+    new_side = at(1, "verify_the_policy_signature(allowed)")
     assert not score.hit(new_side, fix)  # a line the fix added is not in the old code
     assert score.classify(new_side, fix) == "file"
-    assert score.classify({"path": "elsewhere.py", "line": 1, "text": near["text"]},
-                          fix) == "miss"  # fmt: skip
-    after = {**hit, "text": "    context at the very bottom"}
+    assert score.classify(at(2, near["text"], "elsewhere.py"), fix) == "miss"
+    after = at(6, "    context at the very bottom")
     assert score.hit(after, fix)  # the neighbour of an added run counts
-    two_away = {**hit, "text": "context further down the file"}
+    two_away = at(5, "context further down the file")
     assert not score.hit(two_away, fix)  # a context line not next to an added run
-    assert score.hit_lines(near, fix) == [2]
-    assert score.ranges({**hit, "text": near["text"]}, fix) == ["app/guard.py:2-2"]
+    # the same line as a removed one, far from every hunk: text says hit, position no
+    dup = at(40, "allowed = load_the_whole_policy(root_path)")
+    assert score.hit_by_text(dup, fix) and not score.hit(dup, fix)
+    assert score.classify(dup, fix) == "file" and not score.in_a_hunk(dup, fix)
+    assert score.in_a_hunk(far, fix)
+    # a long passage that spans the change is a hit, and names the lines it holds
+    wide = at(1, "\n".join(f"line {n} of the file" for n in range(1, 8)))
+    assert score.hit(wide, fix) and score.hit_lines(wide, fix) == [3, 4, 6]
+    assert score.ranges(wide, fix) == ["app/guard.py:3-4", "app/guard.py:6-6"]
+    assert score.hit_lines(near, fix) == [3]
+    assert score.ranges(near, fix) == ["app/guard.py:3-3"]
     assert trees.phase3.counts is score.PHP2SHELL_COUNTS  # put back after
+
+
+def test_positions_follow_the_hunk_header_not_the_look_of_a_line():
+    d = (
+        "diff --git a/q.sql b/q.sql\n--- a/q.sql\n+++ b/q.sql\n@@ -1,3 +1,2 @@\n"
+        " select the whole table\n"
+        "--- drop the comment line\n"
+        " from some table here\n"
+        "\\ No newline at end of file\n"
+        "diff --git a/new.py b/new.py\n--- /dev/null\n+++ b/new.py\n@@ -0,0 +1,2 @@\n"
+        "+a brand new first line\n+a brand new second line\n"
+    )
+    fix = score.changed(d)
+    assert fix["pos"] == {"q.sql": {2}}  # a removed line that reads like a header
+    assert fix["hunks"] == {"q.sql": [(1, 3)]}
 
 
 def test_files_php2shell_counts_and_ours_left_out():
@@ -223,10 +265,7 @@ def test_a_hit_range_joins_neighbouring_lines():
         "line": 10,
         "text": "aa bb cc one\nxx\naa bb cc two\naa bb cc three",
     }
-    fix = {
-        "old": {"a.py": {"aa bb cc one", "aa bb cc two", "aa bb cc three"}},
-        "files": {"a.py"},
-    }
+    fix = {"pos": {"a.py": {10, 12, 13}}, "files": {"a.py"}}
     assert score.ranges(p, fix) == ["a.py:10-10", "a.py:12-13"]
 
 
@@ -376,10 +415,8 @@ def test_ask_scores_and_origin_follow_the_fix_back(tmp_path):
           ("null 1", "load the whole policy from the root path"), ("KG09 1", "ignored")]  # fmt: skip
     rows = ask.ask(to, ix, "KG01", pin, qs, "found")
     answers = [r for r in rows if r["type"] == "answer"]
-    assert {r["gap"] for r in answers} == {
-        "KG01",
-        "null",
-    }  # another gap's question isn't asked
+    # another gap's question isn't asked, and phase 1 asks no null question
+    assert {r["gap"] for r in answers} == {"KG01"}
     assert {r["ranked_by"] for r in answers} == {"kernel", "bm25", "grep"}
     assert len(list((ix).iterdir())) == 2  # one index a tree hash
     stats = rows[-1]
@@ -399,6 +436,12 @@ def test_ask_scores_and_origin_follow_the_fix_back(tmp_path):
         after["changed"], after["hit_passages"], 10
     )
     assert after["file_passages"] >= 1
+    assert {r["gap"] for r in whole if r["type"] == "answer"} == {"KG01", "null"}
+    for key in ("hit_by_text", "text_only", "text_outside_hunks"):
+        assert key in stats and key in after
+    assert (
+        0 <= stats["text_outside_hunks"] <= stats["text_only"] <= stats["hit_by_text"]
+    )
     scored = score.score(answers, to / "fixes")
     got = {(r["question"], r["ranked_by"]): r for r in scored}
     one = got[("KG01 1", "bm25")]
@@ -472,30 +515,20 @@ def test_phase_1_is_judged_by_the_rank_of_the_first_hit(tmp_path, capsys):
                 out.append(scored_row(u, u, "bm25", served, first, str(q)))
         return out
 
-    null = [scored_row("KG01", "null", "bm25", ten, None)]
-    out = run.judge(stats, pairs(1) + null, group)
-    assert out["passes"] == {"rank, bm25, strong": True, "rank, bm25, weaker": True,
-                             "null questions hit nothing": True}  # fmt: skip
+    out = run.judge(stats, pairs(1), group)
+    # no null gate in phase 1: a null question's hit in a handful of passages
+    # is luck, so the phase asks none
+    assert out["passes"] == {"rank, bm25, strong": True, "rank, bm25, weaker": True}
     assert out["draws"] == 100_000 and out["seed"] == run.SEED
     assert out["rank"]["bm25, strong"]["observed"] == 4.0
     assert out["top3_hit_rate"]["bm25, strong"]["hits"] == 4
-    lost = run.judge(stats, pairs(None) + null, group)  # never returned: last
+    lost = run.judge(stats, pairs(None), group)  # never returned: last
     assert not lost["passes"]["rank, bm25, strong"]
     assert lost["rank"]["bm25, strong"]["observed"] == pytest.approx(0.4)
-    late = run.judge(stats, pairs(10) + null, group)
-    assert (
-        not late["passes"]["rank, bm25, weaker"]
-        and late["passes"]["null questions hit nothing"]
-    )
-    leak = [scored_row("KG01", "null", "grep", ["miss", "hit"], 2)]
-    assert not run.judge(stats, pairs(1) + leak, group)["passes"][
-        "null questions hit nothing"
-    ]
-    deep = [scored_row("KG01", "null", "grep", ["miss"] * 3 + ["hit"], 4)]
-    assert run.judge(stats, pairs(1) + deep, group)["passes"][
-        "null questions hit nothing"
-    ]
-    assert not run.judge(stats, pairs(1), group)["passes"]["null questions hit nothing"]
+    late = run.judge(stats, pairs(10), group)
+    assert not late["passes"]["rank, bm25, weaker"]
+    leak = [scored_row("KG01", "null", "bm25", ["hit"], 1)]
+    assert run.judge(stats, pairs(1) + leak, group)["passes"] == out["passes"]
 
 
 def test_phase_2_is_judged_at_the_line_level_against_exact_chance():
@@ -510,9 +543,14 @@ def test_phase_2_is_judged_at_the_line_level_against_exact_chance():
         return [scored_row(unit, unit, "bm25", served, None, str(q)) for q in range(16)]
 
     hit = ["miss", "hit", "miss"]
-    out = run.judge_before(stats, rows("KG01", hit) + rows("KG09", hit), group)
+    # the null questions, asked of every unit, sit at chance: that passes
+    quiet = [
+        scored_row("KG01", "null", "bm25", ["miss"], None, str(q)) for q in range(16)
+    ]
+    out = run.judge_before(stats, rows("KG01", hit) + rows("KG09", hit) + quiet, group)
     assert out["passes"] == {"line level above chance, bm25, strong": True,
-                             "line level above chance, bm25, weaker": True}  # fmt: skip
+                             "line level above chance, bm25, weaker": True,
+                             "null questions not above chance, bm25": True}  # fmt: skip
     strong = out["table"]["bm25, strong"]
     assert strong["line_hits@10"] == 16 and strong["file_hits@10"] == 16
     assert strong["line_expected"] == pytest.approx(16 * chance)
@@ -534,6 +572,67 @@ def test_phase_2_is_judged_at_the_line_level_against_exact_chance():
     assert not run.judge_before(stats, rows("KG01", deep), group)["passes"][
         "line level above chance, bm25, strong"
     ]
+
+
+def test_phase_2_null_questions_must_not_be_above_chance():
+    run = trees.sibling("run")
+    stats = [{"type": "stats", "unit": u, "gap": u, "changed": 100, "hit_passages": 5,
+              "file_passages": 10, "random_rate": 0.4} for u in ("KG01", "KG09")]  # fmt: skip
+    group = {"KG01": "strong", "KG09": "weaker"}  # chance per null question: 0.416
+
+    def nulls(hits, n=16, by="bm25"):
+        return [scored_row("KG01", "null", by, ["hit"] if q < hits else ["miss"], None, str(q))
+                for q in range(n)]  # fmt: skip
+
+    def gate(rows):
+        return run.judge_before(stats, rows, group)["passes"][
+            "null questions not above chance, bm25"
+        ]
+
+    assert gate(nulls(7))  # 7 of 16 where 6.7 are expected: at chance, passes
+    assert gate(nulls(0))
+    assert not gate(nulls(16))  # every null a hit: well above chance, fails
+    assert not gate(nulls(13))
+    assert not gate([])  # none asked: not a pass
+    # only bm25 is judged; a noisy grep null is reported, not gated
+    assert gate(nulls(7) + nulls(16, by="grep"))
+    table = run.judge_before(stats, nulls(16), group)["table"]["bm25, null"]
+    assert table["line_hits@10"] == 16 and table["above_chance_p"] < 0.01
+
+
+def test_the_changed_set_is_limited_by_path_not_by_text(tmp_path):
+    """An unscored file whose passage reads exactly like a scored file's must
+    not enter the pool (the limit by text id let it in)."""
+    ask = trees.sibling("ask")
+    resolve = trees.sibling("resolve")
+    repo = tmp_path / "repos" / "dup-repo"
+    (repo / "app").mkdir(parents=True)
+    (repo / "docs").mkdir()
+    git(repo, "init", "-q", "-b", "main")
+    for f in ("app/guard.py", "docs/copy.py"):  # the same paragraph, twice
+        (repo / f).write_text(OLD_GUARD)
+    git(repo, "add", "-A")
+    git(repo, "commit", "-qm", "first", date="2026-01-01T12:00:00+00:00")
+    for f in ("app/guard.py", "docs/copy.py"):
+        (repo / f).write_text(NEW_GUARD)
+    git(repo, "add", "-A")
+    git(repo, "commit", "-qm", "fix", date="2026-01-02T12:00:00+00:00")
+    fix = git(repo, "rev-parse", "HEAD")
+    gaps = {"KG10": {"id": "KG10", "fix": [{"repo": "dup-repo", "kind": "commit",
+                                            "commit": fix[:7],
+                                            "files_scored": ["app/guard.py"]}]}}  # fmt: skip
+    units = resolve.resolve(tmp_path / "repos", gaps)
+    to, ix = tmp_path / "work", tmp_path / "ix"
+    trees.fetch_unit(to, tmp_path / "repos", "KG10", units["KG10"])
+    q = "load the whole policy from the root path"
+    rows = ask.ask(to, ix, "KG10", units["KG10"], [("KG10 1", q)], "found")
+    stats = rows[-1]
+    assert stats["changed_all"] == 2 and stats["changed"] == 1  # one passage of each
+    served = {r["ranked_by"]: {s["path"] for s in r["served"]}
+              for r in rows if r["type"] == "answer"}  # fmt: skip
+    assert served["bm25"] == {"app/guard.py"}
+    for by, paths in served.items():
+        assert paths <= {"app/guard.py"}, by
 
 
 def test_the_changed_set_is_limited_to_files_scored(tmp_path):
@@ -564,6 +663,43 @@ def test_run_refuses_what_is_not_built(capsys):
     assert run.main(["found"]) == 2
 
 
+def test_run_refuses_answers_made_in_the_other_mode(tmp_path, capsys, monkeypatch):
+    run = trees.sibling("run")
+    ask = trees.sibling("ask")
+    repos, units, _ = pinned(tmp_path)
+    to = tmp_path / "work"
+    trees.fetch_unit(to, repos, "KG01", units["KG01"])
+    qs = [
+        ("KG01 1", "load the whole policy from the root path"),
+        ("null 1", "qqqq zzzz"),
+    ]
+    monkeypatch.setattr(
+        trees, "load_gaps", lambda: {"KG01": {"source_kind": "gap_record"}}
+    )
+    files = {}
+    for mode in ("found", "before"):
+        rows = ask.ask(to, tmp_path / "ix", "KG01", units["KG01"], qs, mode)
+        files[mode] = tmp_path / f"{mode}.jsonl"
+        files[mode].write_text(
+            "".join(json.dumps(r, sort_keys=True) + "\n" for r in rows)
+        )
+    both = tmp_path / "both.jsonl"
+    both.write_text(files["found"].read_text() + files["before"].read_text())
+    capsys.readouterr()
+    for cmd, answers in (("before", files["found"]), ("found", files["before"]),
+                         ("found", both), ("before", both)):  # fmt: skip
+        box = tmp_path / f"box-{cmd}-{answers.stem}"
+        code = run.main([cmd, "--to", str(to), "--answers", str(answers), "--box",
+                         str(box), "--out", str(tmp_path / "o.jsonl")])  # fmt: skip
+        assert code == 2, (cmd, answers.name)
+        assert "not asked in mode" in capsys.readouterr().err
+        assert not (box / "record.jsonl").exists()  # no verdict was written
+    empty = tmp_path / "empty.jsonl"
+    empty.write_text("")
+    assert run.main(["found", "--to", str(to), "--answers", str(empty), "--box",
+                     str(tmp_path / "box-e"), "--out", str(tmp_path / "o.jsonl")]) == 2  # fmt: skip
+
+
 def test_run_end_to_end_on_a_fixture(tmp_path, capsys, monkeypatch):
     run = trees.sibling("run")
     ask = trees.sibling("ask")
@@ -586,10 +722,11 @@ def test_run_end_to_end_on_a_fixture(tmp_path, capsys, monkeypatch):
     assert code == 42  # no weaker-group answers, so that rule fails
     verdicts = [json.loads(x) for x in (box / "record.jsonl").read_text().splitlines()]
     text = json.dumps(verdicts)
-    assert "phase1:null questions hit nothing" in text
-    assert text.count('"verdict"') >= 3 and "failing" in text and "satisfied" in text
+    assert "phase1:rank, bm25, strong" in text and "phase1:rank, bm25, weaker" in text
+    assert "phase1:null" not in text  # phase 1 has no null gate
+    assert text.count('"verdict"') >= 2 and "failing" in text
     assert any(json.loads(x)["best"] == "hit" for x in scored.read_text().splitlines())
-    assert json.loads(capsys.readouterr().out)["null_answers"] == 3
+    assert "null_answers" not in json.loads(capsys.readouterr().out)
 
 
 def test_phase_2_end_to_end_on_a_fixture(tmp_path, capsys, monkeypatch):
@@ -615,6 +752,7 @@ def test_phase_2_end_to_end_on_a_fixture(tmp_path, capsys, monkeypatch):
     text = (box / "record.jsonl").read_text()
     assert "phase2:line level above chance, bm25, strong" in text
     assert "phase2:line level above chance, bm25, weaker" in text
+    assert "phase2:null questions not above chance, bm25" in text
     out = json.loads(capsys.readouterr().out)
     assert out["table"]["bm25, strong"]["file_hits@10"] == 1
 

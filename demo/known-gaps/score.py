@@ -6,10 +6,15 @@ ANSWERS is what ask.py wrote; DIR is trees.py's `--to`, whose fixes/ holds
 each unit's diff. Each answer is scored against its unit's fix, asked of the
 vulnerable side.
 
-The rule is php2shell's rule 2 (phase3.py `changed` and `hit`): a passage
-hits when it holds a line the fix removed, or the one unchanged line next to
-a run of added lines. A line counts when it is at least 8 characters and 2 of
-the kernel's words long. Context lines further away never count. Never
+The rule is php2shell's rule 2 (phase3.py `changed`) by position, not by text:
+a passage hits when its line range in the old file, [line, line + its lines -
+1], overlaps a line the fix removed, or the one unchanged line just before or
+just after a run of added lines (the old-side line number the diff gives).
+php2shell's `hit` matches a line by its stripped text anywhere in the file, so
+an identical line far from every hunk was a hit: 68 of 159 hit passages over
+the 14 old trees were that (Loki's audit). Text matching is kept as a reported
+column (`hit_by_text`), never the rule. A line counts when it is at least 8
+characters and 2 of the kernel's words long. Context lines further away never count. Never
 counted: any path with a folder named test, tests, testing, spec or changes;
 a file named test_*.py, *_test.py or conftest.py; files named NEWS, UPGRADING,
 ChangeLog, CHANGES, CHANGES.md, CHANGELOG.md, version.h, RELEASE-NOTES.md,
@@ -28,6 +33,7 @@ missing fix.
 from __future__ import annotations
 
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -55,18 +61,110 @@ def counts(path: str) -> bool:
     )
 
 
+def positions(diff: str) -> tuple:
+    """(pos, hunks): per old path, the old-side line numbers rule 2 counts (a
+    removed line; the unchanged line just before and just after a run of added
+    lines, in the same hunk), and each hunk's old-side range. Read by the
+    hunk header's counts, so a removed line that reads like a file header is
+    still a line."""
+    pos: dict = {}
+    hunks: dict = {}
+    meaningful = phase3.score.meaningful
+    lines = diff.splitlines()
+    i, path = 0, None
+    while i < len(lines):
+        ln = lines[i]
+        i += 1
+        if ln.startswith("--- "):
+            path = ln[6:] if ln.startswith("--- a/") else None
+        elif ln.startswith("@@"):
+            m = HUNK.match(ln)
+            if not m:
+                continue
+            old_no = int(m.group(1))
+            old_rem = int(m.group(2) if m.group(2) is not None else 1)
+            new_rem = int(m.group(4) if m.group(4) is not None else 1)
+            keep = path is not None and counts(path)
+            if keep:
+                hunks.setdefault(path, []).append(
+                    (old_no, old_no + max(old_rem, 1) - 1)
+                )
+            prev = None  # (kind, old line number, text) of the line before
+            run = False
+            while (old_rem > 0 or new_rem > 0) and i < len(lines):
+                ln = lines[i]
+                i += 1
+                kind, text = ln[:1], ln[1:].strip()
+                if kind == "\\":
+                    continue
+                if kind == " ":
+                    if run and keep and meaningful(text):
+                        pos.setdefault(path, set()).add(old_no)
+                    run = False
+                    prev = (" ", old_no, text)
+                    old_no += 1
+                    old_rem -= 1
+                    new_rem -= 1
+                elif kind == "-":
+                    if keep and meaningful(text):
+                        pos.setdefault(path, set()).add(old_no)
+                    run = False
+                    prev = ("-", old_no, text)
+                    old_no += 1
+                    old_rem -= 1
+                else:  # "+"
+                    if (
+                        not run
+                        and prev
+                        and prev[0] == " "
+                        and keep
+                        and meaningful(prev[2])
+                    ):
+                        pos.setdefault(path, set()).add(prev[1])
+                    run = True
+                    prev = ("+", old_no, text)
+                    new_rem -= 1
+    return pos, hunks
+
+
+HUNK = re.compile(r"@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@")
+
+
 def changed(diff: str) -> dict:
-    """phase3.changed (rule 2) with this folder's files left out."""
+    """phase3.changed (rule 2) with this folder's files left out, and the
+    positions rule 2 counts (`pos`) and each hunk's old range (`hunks`)."""
     was = phase3.counts
     phase3.counts = counts
     try:
-        return phase3.changed(diff)
+        fix = phase3.changed(diff)
+        fix["pos"], fix["hunks"] = positions(diff)
+        return fix
     finally:
         phase3.counts = was
 
 
-def hit(passage: dict, fix: dict) -> bool:
+def span(passage: dict) -> range:
+    """The old-file lines a passage covers."""
+    return range(passage["line"], passage["line"] + len(passage["text"].splitlines()))
+
+
+def hit_by_text(passage: dict, fix: dict) -> bool:
+    """php2shell's rule: a line of the passage reads like a removed or
+    neighbouring line, wherever it sits. Reported, not the rule."""
     return phase3.hit(passage, fix)
+
+
+def hit(passage: dict, fix: dict) -> bool:
+    """The rule: the passage's lines include a line the fix changed or
+    borders, by position."""
+    pos = fix["pos"].get(passage["path"])
+    return bool(pos) and any(n in pos for n in span(passage))
+
+
+def in_a_hunk(passage: dict, fix: dict) -> bool:
+    """The passage overlaps some hunk of the fix in its file."""
+    return any(a <= n <= b for a, b in fix["hunks"].get(passage["path"], [])
+               for n in span(passage))  # fmt: skip
 
 
 def classify(passage: dict, fix: dict) -> str:
@@ -76,10 +174,9 @@ def classify(passage: dict, fix: dict) -> str:
 
 
 def hit_lines(passage: dict, fix: dict) -> list:
-    """The line numbers within a passage of the lines the rule counts."""
-    old = fix["old"].get(passage["path"], set())
-    return [passage["line"] + n for n, ln in enumerate(passage["text"].splitlines())
-            if ln.strip() in old]  # fmt: skip
+    """The line numbers within a passage that the rule counts, by position."""
+    pos = fix["pos"].get(passage["path"], set())
+    return [n for n in span(passage) if n in pos]
 
 
 def ranges(passage: dict, fix: dict) -> list:

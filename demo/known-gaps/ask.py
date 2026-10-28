@@ -6,9 +6,9 @@
 DIR (--to) is trees.py's; --ix is where indexes are kept, one folder a git
 tree hash (an index of a tree already made is reused: the index cache). The
 vulnerable tree and the fixed one are indexed with scan.py, then each
-question that names the unit's gap (its name starts `KG03 `), and each null
-question (`null `), is asked of the vulnerable index and answered three ways:
-the kernel's rank, BM25, and a word-match grep baseline.
+question that names the unit's gap (its name starts `KG03 `) is asked of the
+vulnerable index and answered three ways: the kernel's rank, BM25, and a
+word-match grep baseline. Null questions (`null `) are asked in `before` only.
 
 `found` (the default, phase 1) asks only the passages the fix changed
 (`--changed-from`) and ranks all of them: top is the changed set's size, so
@@ -18,7 +18,10 @@ tree, top 10.
 
 Writes FILE, one JSON line an answer and, last, the unit's `stats` line: how
 many passages were asked (`changed`; `changed_all` is the set before a
-`files_scored` limit, which keeps only passages of those files), how many of them hit (score.py's rule),
+`files_scored` limit, which keeps only passages of those files, by path), how many
+of them hit (score.py's rule, by position: `hit_passages`), how many a text
+match would count (`hit_by_text`), how many of those are not hits by position
+(`text_only`) and lie in no hunk at all (`text_outside_hunks`),
 how many lie in a file the fix changed (`file_passages`), and a `random_rate`:
 for `found`, the rate at which 3 changed passages drawn at random hit, from
 10,000 draws seeded by SEED; for `before`, the exact chance that 10 passages of
@@ -29,6 +32,7 @@ only --ix and FILE. Exit 0 asked; 2 refused.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import random
 import sys
@@ -49,12 +53,27 @@ TOP = {"found": None, "before": 10}  # found: the whole changed set
 TOP3 = 3  # the top-3 hit rate stays in the output beside the rank statistic
 
 
-def index_of(ix: Path, tree: str, folder: Path) -> Path:
-    at = ix / tree
+def index_of(ix: Path, name: str, folder: Path) -> Path:
+    at = ix / name
     if not (at / "index.json").exists():
         ix.mkdir(parents=True, exist_ok=True)
         scan.build(folder, at)
     return at
+
+
+def limited_index(ix: Path, old_tree: Path, tree: str, files: list) -> Path:
+    """An index of only the scored files of the vulnerable tree, so a limit by
+    path leaves no passage of any other file in the pool, even one whose text
+    matches a passage of a scored file. Its line numbers are the files' own."""
+    key = hashlib.sha1("\n".join(sorted(files)).encode()).hexdigest()[:12]
+    src = ix / f"src-{tree}-{key}"
+    if not src.exists():
+        for f in files:
+            if (old_tree / f).is_file():
+                (src / f).parent.mkdir(parents=True, exist_ok=True)
+                (src / f).write_bytes((old_tree / f).read_bytes())
+        src.mkdir(parents=True, exist_ok=True)
+    return index_of(ix, f"{tree}-{key}", src)
 
 
 def served(passages: list) -> list:
@@ -73,16 +92,17 @@ def ask(to: Path, ix: Path, unit: str, pin: dict, qs: list, mode: str) -> list:
     changed = [c for c in old.pile if before is None or c["id"] not in before]
     changed_all = len(changed)
     if mode == "found" and pin.get("files_scored"):
-        # limited to the files the gap scores: the changed set, the ranking
-        # and the chance draw only on passages from those files
-        scored = set(pin["files_scored"])
-        changed = [c for c in changed if c["path"] in scored]
-        keep = {c["id"] for c in changed}
-        outside = {c["id"] for c in old.pile if c["path"] not in scored}
-        before = before | (outside - keep)  # passages ranked out of the set
+        # limited to the files the gap scores, by path: the changed set, the
+        # ranking and the chance draw only on passages of those files
+        old = scan.Index(limited_index(ix, to / "trees" / unit / "old",
+                                       pin["vulnerable"]["tree"], pin["files_scored"]))  # fmt: skip
+        changed = [c for c in old.pile if c["id"] not in before]
     top = TOP[mode] or max(len(changed), 1)
     rows = []
-    mine = [(n, q) for n, q in qs if n.split(" ")[0] in (pin["gap"], "null")]
+    # null questions are asked in phase 2 only (a changed set is too small for
+    # a null to fail to hit it by anything but luck)
+    names = (pin["gap"], "null") if mode == "before" else (pin["gap"],)
+    mine = [(n, q) for n, q in qs if n.split(" ")[0] in names]
     for by in ("kernel", "bm25", "grep"):
         for n, q in mine:
             if by == "kernel":
@@ -95,6 +115,7 @@ def ask(to: Path, ix: Path, unit: str, pin: dict, qs: list, mode: str) -> list:
                          "question": n, "ranked_by": by, "mode": mode,
                          "served": served(got)})  # fmt: skip
     hits = sum(score.hit(c, fix) for c in changed)
+    by_text = [c for c in changed if score.hit_by_text(c, fix)]
     if mode == "found":
         rng = random.Random(f"{SEED} {unit}")
         k = min(TOP3, len(changed))
@@ -106,7 +127,9 @@ def ask(to: Path, ix: Path, unit: str, pin: dict, qs: list, mode: str) -> list:
     rows.append({"type": "stats", "unit": unit, "gap": pin["gap"], "mode": mode,
                  "changed": len(changed), "changed_all": changed_all,
                  "questions": len(mine),
-                 "hit_passages": hits,
+                 "hit_passages": hits, "hit_by_text": len(by_text),
+                 "text_only": sum(not score.hit(c, fix) for c in by_text),
+                 "text_outside_hunks": sum(not score.in_a_hunk(c, fix) for c in by_text),
                  "file_passages": sum(c["path"] in fix["files"] for c in changed),
                  "random_rate": rate})  # fmt: skip
     print(f"{unit}: asked in {time.monotonic() - t1:.1f}s", file=sys.stderr)

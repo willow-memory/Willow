@@ -49,7 +49,7 @@
    "class": "apply takes file paths from the signed record it is applying (redirect)",
    "fix": [{"repo": "willow-mcp", "kind": "commit", "commit": "1dbe8f2", "date": "2026-09-29", "files_scored": ["src/willow_mcp/trust_owner_verbs.py"]}],
    "fix_kind": "code",
-   "note": "same fix commit as KG06; scored on the one file its finding names, trust_owner_verbs.py (operator 2026-10-28)"
+   "note": "same fix commit as KG06; scored on the one file its finding names, trust_owner_verbs.py (operator 2026-10-28); gap record written 14 minutes before fix 1dbe8f2, from Loki A28BD892"
   },
   {
    "id": "KG06",
@@ -59,7 +59,7 @@
    "class": "the judged seat chooses the repo whose pin judges it",
    "fix": [{"repo": "willow-mcp", "kind": "commit", "commit": "1dbe8f2", "date": "2026-09-29", "files_scored": ["src/willow_mcp/ci_lint_pin.py"]}],
    "fix_kind": "code",
-   "note": "same fix commit as KG05; scored on the one file its finding names, ci_lint_pin.py (operator 2026-10-28)"
+   "note": "same fix commit as KG05; scored on the one file its finding names, ci_lint_pin.py (operator 2026-10-28); gap record written 7 minutes before fix 1dbe8f2, from Loki D9E5EF53"
   },
   {
    "id": "KG07",
@@ -72,7 +72,7 @@
     {"repo": "kartikeya", "kind": "commit", "commit": "645f01b", "date": "2026-09-23"}
    ],
    "fix_kind": "code",
-   "note": "the gap was opened by an earlier fix (sealed 9fe5e179 exempted allow_localhost from the lease); phase 3 should find that introducing commit"
+   "note": "the gap was opened by an earlier fix (sealed 9fe5e179 exempted allow_localhost from the lease); phase 3 should find that introducing commit; writers were given Loki 7173C72A U1's text; gap 582b1e676fb3 records the exemption that caused it"
   },
   {
    "id": "KG08",

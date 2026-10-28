@@ -39,6 +39,21 @@ import make_trees  # noqa: E402
 import phase3  # noqa: E402
 
 DIFF = make_trees.DIFF
+#: every tool file the rule and the statistics run on, by import graph from
+#: this folder's scripts: FROZEN.json holds each one's hash, and the freeze
+#: test re-hashes them, so a php2shell re-freeze can't change results silently
+TOOLS = (
+    "kernel.py",
+    "adapters/stdlib/scan/scan.py",
+    "adapters/stdlib/todo/todo.py",
+    "adapters/stdlib/ci/whose.py",
+    "demo/php2shell/make_trees.py",
+    "demo/php2shell/phase2.py",
+    "demo/php2shell/phase3.py",
+    "demo/php2shell/phase4.py",
+    "demo/php2shell/score.py",
+    "demo/php2shell/score2.py",
+)
 PINS_FILE = HERE / "pins.json"
 
 
