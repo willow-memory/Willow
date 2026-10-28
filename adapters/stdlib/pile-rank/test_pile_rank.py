@@ -56,6 +56,7 @@ def test_a_phrase_outranks_its_words_apart(tmp_path):
     assert where(row)[2] == "apart.md:1", where(row)
     assert row["served"][0]["phrases"] == ["sourdough bread"]
     assert row["served"][2]["phrases"] == []
+    assert [s["rank"] for s in row["served"]] == [1, 2, 3]
 
 
 def test_a_pair_one_text_uses_is_no_phrase(tmp_path):
