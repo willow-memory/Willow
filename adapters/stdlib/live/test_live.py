@@ -327,6 +327,13 @@ def test_chrome_fails_when_a_saved_page_lacks_what_the_script_drew(chrome, monke
     assert state == live.FAILS and why.startswith("no line 'Drawn by script.'")
 
 
+def test_a_reply_inside_the_last_second_of_the_clock_is_still_read(chrome, monkeypatch):
+    """Each message to the browser has the whole clock: with one second, a
+    reply that comes within it is read, not given up on early."""
+    monkeypatch.setattr(live, "TIMEOUT", 1)
+    assert live.one("chrome") == (live.WORKS, "")
+
+
 def test_a_browser_that_closes_its_pipe_fails_and_says_so(fakes):
     exe = fakes / "google-chrome"
     exe.write_text(f"#!{sys.executable}\nimport os\nos.close(4)\n")
