@@ -56,12 +56,12 @@ chosen before any run:
 | Threat | What answers it |
 |---|---|
 | The questions are written with the fix in hand | The strong set's text predates its fix; the weaker set is reported apart. Questions are written from the redacted gap text only, by writers who never see the fix, and frozen before any run (a later bite). |
-| The hit rule is chosen after seeing results | The rule is php2shell's rule 2, unchanged, plus a short list of files that never count. `score.py` is frozen before any scored phase, and `test_known_gaps.py` holds its hash. |
+| The hit rule is chosen after seeing results | The rule is php2shell's rule 2 by position (see "The hit rule"), plus a short list of files that never count. `score.py` and the php2shell modules it runs on are frozen before any scored phase, and `test_known_gaps.py` re-hashes them. |
 | The pass rule is chosen after seeing results | It was changed once, after the dry run and before any real question: see "Why phase 1 is judged by rank". The change is recorded here, and the dry run that prompted it is kept below. |
 | The fix is a different diff on another machine | `resolve.py` pins the vulnerable and fixed commit, each side's git tree hash and the SHA-256 of the diff (php2shell's flags). `trees.py check` re-hashes all of it without git. |
 | A tree is not what git stored | `trees.py` writes each tree as git stores it (php2shell's `write_tree`), then compares its hash to the pin. |
 | Few changed passages make chance high | Phase 1 no longer asks for a hit in the top 3 of 3 to 60 passages. It judges the rank of the first hit against random orderings, and phase 2 asks the whole tree, where chance is small. |
-| The apparatus finds things by accident | A null set is asked of every unit, and phase 1 fails if any null question's top 3 hits. |
+| The apparatus finds things by accident | A null set is asked of every unit in phase 2, and that phase fails if the null questions' line hits are above exact chance. Phase 1 asks none: its sets are too small for a null to miss them by anything but luck. |
 | An open gap leaks into a public branch | Only fixed gaps are in `gaps.json`. Candidates and unfixed gaps live in a private place and never enter this folder. |
 | A model has seen the code | The fleet's repositories are newer than any model's training and were written largely by models; this is a different threat from php2shell's old CVEs and is named, not solved. |
 
@@ -69,11 +69,18 @@ chosen before any run:
 
 At freeze 1, FROZEN.json holds the SHA-256 of `gaps.json`, `pins.json`,
 `resolve.py`, `trees.py`, `ask.py`, `score.py`, `origin.py` and `run.py`, and
-of the tools they lean on (`kernel.py`, `adapters/stdlib/scan/scan.py`,
-`adapters/stdlib/ci/whose.py`). `test_known_gaps.py` re-hashes every one; a
-change is a new freeze, in its own commit, before the phase that needs it
-runs. The freeze file is the operator's commit: until it lands, the freeze
-test skips and says so.
+of every tool file they run on, by import graph: `kernel.py`,
+`adapters/stdlib/scan/scan.py`, `adapters/stdlib/todo/todo.py`,
+`adapters/stdlib/ci/whose.py`, and php2shell's `make_trees.py`, `phase2.py`,
+`phase3.py`, `phase4.py`, `score.py` and `score2.py` (the hit rule's real
+code, the chance and the baselines). `test_known_gaps.py` re-hashes every one,
+and fails on a change; a change is a new freeze, in its own commit, before the
+phase that needs it runs. This means a php2shell re-freeze fails this folder's
+test until this folder is frozen again, which is the point.
+
+The freeze file is the operator's commit. Until it lands the freeze test skips
+and says so. The commit that adds FROZEN.json also adds its line to FILES.md,
+and from then on a missing FROZEN.json fails the test rather than skipping.
 
 `spread.py` and `outside.py` are stubs that exit 2. They are not frozen, and
 are written in their own bites.
@@ -95,10 +102,24 @@ and exits 0, 42 or 2 as the kernel does.
 
 ### The hit rule
 
-`demo/php2shell/phase3.py`'s `changed` and `hit`, which are rule 2 of
-php2shell: a passage hits when it holds a line the fix removed, or the one
-unchanged line just before or after a run of added lines. A line counts when
-it is at least 8 characters and 2 of the kernel's words long.
+Rule 2 of php2shell (`demo/php2shell/phase3.py`'s `changed`), by position: a
+passage hits when its line range in the old file, from its first line to its
+last, overlaps a line the fix removed, or the one unchanged line just before
+or just after a run of added lines, taking the old-side line numbers from the
+diff (a merge's first parent is the old side). A line counts when it is at
+least 8 characters and 2 of the kernel's words long.
+
+**This departs from php2shell's rule.** php2shell's `hit` matches a passage's
+lines to the changed lines by their stripped text, anywhere in the file, so a
+line that reads like a changed line counted wherever it sat. Loki's audit of
+this folder found that 68 of the 159 hit passages over the old trees lay
+entirely outside every hunk of their fix, which makes "line level" mean "a
+line that reads like one the fix changed", not "the lines the fix changed".
+Position is the rule here. The text match stays as a reported column:
+`hit_by_text` (passages it would count), `text_only` (of those, not a hit by
+position) and `text_outside_hunks` (of those, in no hunk at all), per unit in
+ask.py's stats line and in the dry run below. Phase 1's changed sets use the
+same rule, and origin.py blames only the positional hit ranges.
 
 Never counted: a path with a folder named test, tests, testing, spec or
 changes; test_*.py, *_test.py, conftest.py; NEWS, UPGRADING, ChangeLog,
@@ -130,21 +151,26 @@ output, with each unit's random-draw chance beside it.
 |---|---|
 | rank, bm25, strong | the strong set's sum of 1/rank beats random orderings, one-sided p < 0.01 |
 | rank, bm25, weaker | the same for the weaker set |
-| null questions hit nothing | at least one null question was asked, and none of its top 3 hit |
 
-The kernel's and grep's results are reported beside, never gates.
+The kernel's and grep's results are reported beside, never gates. Phase 1 asks
+no null question (Loki's audit: with a changed set of 3 to 60 passages, and
+some wholly hits, any null question with one common word puts a hit in its top
+3, so a rule that fails on that fails by construction). Nulls are judged in
+phase 2.
 
 ### Phase 2: before the fix (the main judged test)
 
 Each question is asked of the whole vulnerable tree, top 10, and scored at the
-line level (a passage holding a counted line) and the file level (any passage
-of a scored file). The chance is exact: php2shell's phase4 `chance_one` for a
-pair, `poisson_binomial_tail` for a group, and `recall_at` for the hits.
+line level (a passage overlapping a changed line, by position) and the file
+level (any passage of a scored file). The chance is exact: php2shell's phase4
+`chance_one` for a pair, `poisson_binomial_tail` for a group, and `recall_at`
+for the hits. The null questions are asked here, of every unit.
 
 | Rule | Passes when |
 |---|---|
 | line level above chance, bm25, strong | questions with a line hit in the top 10 beat chance, one-sided p < 0.01 |
 | line level above chance, bm25, weaker | the same for the weaker set |
+| null questions not above chance, bm25 | at least one null question was asked, and the null line hits in the top 10 are not above exact chance: the same tail, p >= 0.01 |
 
 The file level, and the kernel's and grep's results, are reported, never gates.
 For a unit with `files_scored`, only passages of those files count at either
@@ -166,7 +192,7 @@ lines 71% to 100% of the time (90% pooled for the strong set), and at 100%
 (KG01, KG04, KG09, KG11) no ranking could beat chance. The operator chose rule
 A on 2026-10-28, after the dry run and before any real question was asked, and
 made phase 2 the main test: asked of a whole tree of 1,000 to 39,000 passages,
-chance is 0.1% to 19% a question (the table below).
+chance is 0.1% to 9% a question (the table below, now by position).
 
 ## Reproduce
 
@@ -200,9 +226,9 @@ after the amendment, ran both phases.
 | `trees.py fetch` (14 units, 28 trees) | 4 s; all 14 old, new and fix lines `matches`, exit 0 |
 | `ask.py`, first run (14 tasks, found, top 3) | all exit 0; timings below |
 | `ask.py`, second run (14 units, found and before) | all 28 exit 0; 0.08 to 1.3 s each, the indexes already cached |
-| `run.py found` | exit 42, as it must be: no hits, so the rank statistic sits far below random (strong 1.42 against 7.54 expected, p 1.0; weaker 0.81 against 3.25, p 1.0). Run after amendment 2, with the `files_scored` limit. |
-| `run.py before` | exit 42, as it must be: 0 line hits against 0.57 expected (strong) and 0.016 (weaker); file level 0 against 4.52 and 0.39, reported |
-| verdict rows | 5 written (3 for phase 1, 2 for phase 2); the record's chain holds |
+| `run.py found` | exit 42, as it must be: no hits, so the rank statistic sits far below random (strong 1.42 against 7.50 expected, p 1.0; weaker 0.81 against 3.17, p 1.0). Run after the amendments: the `files_scored` limit, positional hits, no null question. |
+| `run.py before` | exit 42, as it must be: 0 line hits against 0.35 expected (strong) and 0.010 (weaker); 14 null questions, 0 line hits against 0.36 expected, so the null gate passes; file level 0 against 4.52 and 0.39, reported |
+| verdict rows | 5 written (2 for phase 1, 3 for phase 2); the record's chain holds |
 | `origin.py` | 0 ranges to look up, so 0 rows (nothing hit) |
 
 Per-unit timings of the first run (index and ask are `ask.py`'s own; the 14
@@ -231,43 +257,60 @@ tasks ran at once on one machine, so each is slower than it would be alone):
   is empty and every score is `miss`. No number says anything about the
   method. It shows that a fresh checkout can fetch, index, ask, score and
   record both phases, and that each unit fits well inside Kart's limit.
-- **The shape of chance, which is why the rule changed.** For each unit, the
-  passages the fix changed and the chance of a random hit, in phase 1
-  (3 drawn from the changed set) and in phase 2 (10 drawn from the whole old
-  tree; the file level counts any passage of a scored file):
+- **Hits by position and by text, per unit.** Phase 1 columns are the changed
+  set before and after the `files_scored` limit, and its hit passages by
+  position (the rule), by text (php2shell's, reported) and the text hits in no
+  hunk at all. Phase 2 columns are the old tree's passages, hits by position,
+  by text, the text hits that are not hits by position, those in no hunk, the
+  passages in a scored file, and the chance that 10 drawn at random hold a
+  positional hit:
 
-| Unit | Changed passages before the limit | After the limit | Hit | Chance, 3 of them | Old tree passages | Hit | In a scored file | Chance, 10 of the tree (line) |
-|---|---|---|---|---|---|---|---|---|
-| KG01 | 3 | 3 | 1 | 1.000 | 1072 | 5 | 193 | 0.046 |
-| KG02 | 16 | 16 | 7 | 0.852 | 1158 | 15 | 235 | 0.123 |
-| KG03-kartikeya | 33 | 33 | 19 | 0.929 | 2036 | 30 | 294 | 0.138 |
-| KG03-willow-mcp | 8 | 8 | 3 | 0.823 | 36734 | 7 | 75 | 0.002 |
-| KG04 | 4 | 4 | 4 | 1.000 | 22456 | 6 | 140 | 0.003 |
-| KG05 | 18 | 4 | 4 | 1.000 | 39143 | 15 | 276 | 0.004 |
-| KG06 | 18 | 4 | 4 | 1.000 | 39143 | 5 | 76 | 0.001 |
-| KG07-kartikeya | 12 | 12 | 5 | 0.845 | 1766 | 6 | 266 | 0.034 |
-| KG07-willow-mcp | 60 | 60 | 20 | 0.708 | 35090 | 79 | 2497 | 0.022 |
-| KG08 | 43 | 43 | 23 | 0.905 | 2445 | 52 | 153 | 0.194 |
-| KG09 | 3 | 3 | 1 | 1.000 | 15318 | 1 | 89 | 0.001 |
-| KG10 | 6 | 6 | 3 | 0.946 | 13191 | 3 | 214 | 0.002 |
-| KG11 | 7 | 7 | 6 | 1.000 | 11717 | 11 | 169 | 0.009 |
-| KG12 | 18 | 6 | 6 | 1.000 | 26109 | 10 | 116 | 0.004 |
+| Unit | Changed, before limit | After | By position | By text | Text, no hunk | Tree passages | By position | By text | Text only | Text, no hunk | In a scored file | Chance (line) |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| KG01 | 3 | 3 | 1 | 1 | 0 | 1072 | 6 | 5 | 0 | 0 | 193 | 0.055 |
+| KG02 | 16 | 16 | 7 | 7 | 0 | 1158 | 8 | 15 | 7 | 7 | 235 | 0.067 |
+| KG03-kartikeya | 33 | 33 | 18 | 19 | 1 | 2036 | 20 | 30 | 11 | 11 | 294 | 0.094 |
+| KG03-willow-mcp | 8 | 8 | 3 | 3 | 0 | 36734 | 4 | 7 | 3 | 3 | 75 | 0.001 |
+| KG04 | 4 | 4 | 4 | 4 | 0 | 22456 | 6 | 6 | 0 | 0 | 140 | 0.003 |
+| KG05 | 18 | 4 | 4 | 4 | 0 | 39143 | 5 | 15 | 10 | 10 | 276 | 0.001 |
+| KG06 | 18 | 4 | 4 | 4 | 0 | 39143 | 5 | 5 | 0 | 0 | 76 | 0.001 |
+| KG07-kartikeya | 12 | 12 | 5 | 5 | 0 | 1766 | 5 | 6 | 1 | 1 | 266 | 0.028 |
+| KG07-willow-mcp | 60 | 60 | 20 | 20 | 0 | 35090 | 21 | 79 | 58 | 58 | 2497 | 0.006 |
+| KG08 | 43 | 43 | 22 | 23 | 1 | 2445 | 23 | 52 | 29 | 29 | 153 | 0.090 |
+| KG09 | 3 | 3 | 1 | 1 | 0 | 15318 | 1 | 1 | 0 | 0 | 89 | 0.001 |
+| KG10 | 6 | 6 | 3 | 3 | 0 | 13191 | 3 | 3 | 0 | 0 | 214 | 0.002 |
+| KG11 | 7 | 7 | 6 | 6 | 0 | 11717 | 6 | 11 | 5 | 5 | 169 | 0.005 |
+| KG12 | 18 | 6 | 5 | 6 | 1 | 26109 | 5 | 10 | 5 | 5 | 116 | 0.002 |
+
+  Over the 14 old trees the text rule counts 245 passages and the position
+  rule 118; 129 of the text hits (the "text only" column) lie in no hunk at
+  all. Loki's 159 and 68 are the same count over the 12 units it probed,
+  without the two willow-mcp trees (245 less 86 is 159; 129 less 58 and 3 is
+  68). The far hits are in the big files: KG07-willow-mcp 58 of 79, KG08 29 of
+  52, KG03-kartikeya 11 of 30. A few units hit by position in a
+  passage the text rule does not count (KG01 6 against 5): a line longer than
+  the kernel's 500-character chunk is cut short in the passage, so its text no
+  longer reads like the diff's line, but its position still does. No file in
+  the hit rule's files holds a line separator Python splits on and git does
+  not (checked), so passage line numbers and the diff's agree.
 
   The limit (amendment 2) changes three rows: KG05 and KG06 from 18 to 4
   changed passages and KG12 from 18 to 6, each the passages of its own scored
-  file or files. Every one of those passages is a hit, so in phase 1 a pair on
-  those units has its first hit at rank 1 under every ordering: it adds
-  nothing to the statistic that chance does not already give. KG04 has the
-  same shape (4 of 4) without a limit. Phase 2, which asks the whole tree, is
-  where those units are tested.
+  file or files. KG05, KG06 and KG04 have every passage of the set a hit, so in
+  phase 1 a pair on those units has its first hit at rank 1 under every
+  ordering and adds nothing to the statistic that chance does not already give
+  (KG12 has 5 of 6). Phase 2, which asks the whole tree, is where those units
+  are tested.
 - **The file level's chance is large in places.** Phase 2's file level counts
   any passage of a scored file: 75 to 2,497 passages of a tree. Its chance
   for 10 passages, summed over the dry run's pairs, is 4.52 file hits expected
-  from the 10 strong pairs and 0.39 from the 4 weaker ones, against 0.57 and
-  0.02 for the line level. The file level can be won, but is a weaker claim
+  from the 10 strong pairs and 0.39 from the 4 weaker ones, against 0.35 and
+  0.01 for the line level. The file level can be won, but is a weaker claim
   than the line level; both are reported.
-- **The nulls.** A null question hit nothing, in this run, because no question
-  meant anything. That is not yet a test of the null rule.
+- **The nulls.** The 14 null questions (one a unit) hit nothing, because no
+  question meant anything. The null gate passes on 0 hits against 0.36
+  expected, and the test that it fails on hits above chance runs on a fixture.
+  That is not yet a test of the null rule on real questions.
 
 ## What the first real run still owes
 
