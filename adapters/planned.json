@@ -2165,16 +2165,6 @@
   "tags": "no-install, offline, read-only, play"
  },
  {
-  "name": "pile-serve",
-  "kind": "stdlib",
-  "section": "Finding things",
-  "line": "The store held open by one process on this machine, over a Unix socket the way willow-bot's deterministic runner serves, so a hook's lookup takes milliseconds instead of a cold start.",
-  "source": "bot",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, search, pile"
- },
- {
   "name": "pile-sweep",
   "kind": "stdlib",
   "section": "Finding things",

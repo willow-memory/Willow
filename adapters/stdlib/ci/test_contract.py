@@ -141,6 +141,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "pile-gold": ("pile_gold.py", ["--box", "{box}", "--questions", "{pile}/garden.md", *NOW]),
     "pile-rank": ("pile_rank.py", ["--from", "{pile}", "tomatoes"]),
     "pile-rungs": ("pile_rungs.py", ["--from", "{pile}", "tomatoes"]),
+    "pile-serve": ("pile_serve.py", ["serve", "--from", "{pile}", "--to", "{tmp}/s", "--for", "0"]),
     "pile-store": ("pile_store.py", ["--from", "{pile}", "--to", "{tmp}/pile.sqlite"]),
     "parallel": ("parallel.py", ["--reader", "notes", "--from", "{pile}", "--to", "{tmp}/pm"]),
     "people": ("people.py", ["--box", "{box}"]),

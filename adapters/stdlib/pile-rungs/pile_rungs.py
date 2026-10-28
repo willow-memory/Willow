@@ -67,9 +67,10 @@ def phrases_rung(ranker: pile_rank.Ranker, question: str, top: int) -> tuple[lis
 
 
 def climb(
-    pile: list[dict], question: str, top: int, dated=None
+    pile: list[dict], question: str, top: int, dated=None, ranker=None
 ) -> tuple[str | None, list[dict], list]:
-    """(the rung that answered or None, every rung's state, what it served)."""
+    """(the rung that answered or None, every rung's state, what it served).
+    `ranker`: pile-rank's counts of `pile`, when they are already made."""
     rungs: list[dict] = []
     served: list = []
     answered = None
@@ -81,7 +82,7 @@ def climb(
         if name == "words":
             got, why = words_rung(pile, question, top, dated)
         elif name == "phrases":
-            got, why = phrases_rung(pile_rank.Ranker(pile), question, top)
+            got, why = phrases_rung(ranker or pile_rank.Ranker(pile), question, top)
         else:
             rungs.append({"rung": name, "state": "skipped", "why": NO_EMBEDDER})
             continue

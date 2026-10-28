@@ -18,12 +18,12 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`██████░░░░░░░░░░░░░░` **137 of 470 built** · 419 need no install · 51 need one
+`██████░░░░░░░░░░░░░░` **138 of 470 built** · 419 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
 | Reading more kinds of files | 14 | 91 | 96 | 9 |
-| Finding things | 21 | 22 | 33 | 10 |
+| Finding things | 22 | 21 | 33 | 10 |
 | Your own words | 11 | 14 | 22 | 3 |
 | Keeping track | 15 | 43 | 58 | 0 |
 | Trust and proof | 15 | 30 | 36 | 9 |
@@ -38,18 +38,18 @@ or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:newest -->
 - 2026-10-28 · [**pile-store**](adapters/stdlib/pile-store/) — Your folder's passages read once into one SQLite file, each repeat stored once, and opened read-only only while it still matches the folder, the limits and the kernel that read it, else built again.
+- 2026-10-28 · [**pile-serve**](adapters/stdlib/pile-serve/) — The store held open by one process on this machine, over a Unix socket the way willow-bot's deterministic runner serves, so a hook's lookup takes milliseconds instead of a cold start.
 - 2026-10-28 · [**pile-rungs**](adapters/stdlib/pile-rungs/) — Each lookup says which rung answered, words, phrases or an embedder, and why a higher one was skipped, as data beside the passages.
 - 2026-10-28 · [**pile-rank**](adapters/stdlib/pile-rank/) — Phrases as well as words: BM25F over each passage's words and the word pairs your files use together, title and question lines weighted, no model.
 - 2026-10-28 · [**pile-gold**](adapters/stdlib/pile-gold/) — Each answer you approve marks the passage that held it, so your own questions become a test of how well the search finds things, scored as recall at five.
-- 2026-10-28 · [**pile-build**](adapters/stdlib/pile-build/) — The store built after each change, behind a lock, until it matches the folder, so your next question finds it warm.
 <!-- /willow:newest -->
 
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[github](adapters/stdlib/github/)** — What willow's repo needs from GitHub, kept in one folder so it can be taken away.
+**[surprise](adapters/stdlib/surprise/)** — One passage from your folder at random, seeded so it can be replayed.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 137 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 138 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -191,7 +191,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - [**pile-gold**](adapters/stdlib/pile-gold/) — Each answer you approve marks the passage that held it, so your own questions become a test of how well the search finds things, scored as recall at five. *box* `no-install` `offline` `records` `search` `pile`
 - [**pile-rank**](adapters/stdlib/pile-rank/) — Phrases as well as words: BM25F over each passage's words and the word pairs your files use together, title and question lines weighted, no model. *bot* `no-install` `offline` `read-only` `search` `pile`
 - [**pile-rungs**](adapters/stdlib/pile-rungs/) — Each lookup says which rung answered, words, phrases or an embedder, and why a higher one was skipped, as data beside the passages. *bot* `no-install` `offline` `read-only` `search` `pile`
-- **pile-serve** (idea) — The store held open by one process on this machine, over a Unix socket the way willow-bot's deterministic runner serves, so a hook's lookup takes milliseconds instead of a cold start. *bot* `no-install` `offline` `read-only` `search` `pile`
+- [**pile-serve**](adapters/stdlib/pile-serve/) — The store held open by one process on this machine, over a Unix socket the way willow-bot's deterministic runner serves, so a hook's lookup takes milliseconds instead of a cold start. *bot* `no-install` `offline` `writes-output` `search` `pile`
 - [**pile-store**](adapters/stdlib/pile-store/) — Your folder's passages read once into one SQLite file, each repeat stored once, and opened read-only only while it still matches the folder, the limits and the kernel that read it, else built again. *bot* `no-install` `offline` `writes-output` `search` `pile`
 - **pile-sweep** (idea) — The passage size measured, not guessed: your box's own questions asked at several sizes, and the size that finds the most of their answers kept. *bot* `no-install` `offline` `read-only` `search` `pile`
 - **promises** (idea) — What a candidate or a council said, by date and source, from the documents you saved. *new* `no-install` `offline` `read-only` `search`

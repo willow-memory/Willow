@@ -363,6 +363,10 @@ willow/
 │   │   │   ├── pile_rungs.py  a question climbs words, phrases, embedder; each rung says why it answered or stopped
 │   │   │   ├── test_pile_rungs.py
 │   │   │   └── README.md
+│   │   ├── pile-serve/
+│   │   │   ├── pile_serve.py  the passages held warm by one process, asked over a Unix socket in milliseconds
+│   │   │   ├── test_pile_serve.py
+│   │   │   └── README.md
 │   │   ├── pile-store/
 │   │   │   ├── pile_store.py  a folder's passages in one SQLite file, each repeat once, used only while it matches
 │   │   │   ├── test_pile_store.py

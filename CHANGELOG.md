@@ -30,6 +30,12 @@ says how). The first was v0.1.0.
   phrases (pile-rank), then an embedder, and the first rung that answers
   serves. Each rung reached says answered, empty or skipped, and why; the
   embedder rung is always skipped here, since the standard library has none.
+- `pile-serve`: the folder's passages and pile-rank's counts held by one
+  process, asked over a Unix socket (mode 600) by the kernel's rank,
+  pile-rank or pile-rungs; a folder that changed is read again before the
+  next answer. On Hollis's folder a question takes 17 ms on the socket,
+  against 0.35 s cold. Its card says `writes: to`, not the idea's
+  `nothing`: the socket is a file.
 - `pile-store`, the store the other pile ideas stand on: a folder's passages
   read once into one SQLite file, a text held in several places stored once,
   and opened read-only only while it still matches the folder, the kernel's
