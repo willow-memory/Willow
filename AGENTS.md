@@ -50,6 +50,14 @@ change adds. Without the baseline, a tool your machine lacks looks like your
 failure. To run one part, name it: `lint`, `tests`, `ports`, `demo`,
 `deps`, `mutants` or `tools`. Keep the record folder outside the repo.
 
+One after another, every gate takes most of an hour. To run them all at
+once, a shard per CPU, each with its own record under the folder named:
+
+    python adapters/stdlib/ci/cores.py --box /tmp/ci-main
+
+It prints every gate's verdict from all the records together, in `show`'s
+order, so the before and after compare the same way.
+
 ## An add-on, step by step
 
 Each of these has been missed at least once, and each is a check that fails.

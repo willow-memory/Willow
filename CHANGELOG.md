@@ -10,6 +10,11 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `ci`: `adapters/stdlib/ci/cores.py` runs `ci.py run` as its shards at once on this machine,
+  `--shard K/N` each with its own record in `<DIR>/<K>`, then every gate's
+  verdict from the N records in ci.py's order, each record verified. One
+  after another the gates take most of an hour; eight at once took nine
+  minutes. AGENTS.md's baseline names it. (#67)
 - `ci-memo` pins a run cut into shards whole: `pin` takes `--box` once for
   each shard's record, and a gate two of them hold takes the later one
   named. On this repo, eight shards' records pin as one, 185 gates; after a
