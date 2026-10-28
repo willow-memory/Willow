@@ -159,3 +159,13 @@ def test_a_bad_command_line_or_a_broken_record_is_refused(tmp_path):
     record = box / "record.jsonl"
     record.write_text(record.read_text().replace('"boot"', '"btoo"', 1))
     assert sweep_cmd(box, "--questions", str(qs)).returncode == 2
+
+
+def test_without_sizes_it_sweeps_the_documented_five(tmp_path):
+    box, _ = a_box(tmp_path)
+    seal(box, tmp_path, Q)
+    got = sweep_cmd(box, "--questions", str(questions(tmp_path, Q)))
+    assert got.returncode == 0, got.stderr
+    rows = [line.split()[0] for line in got.stdout.splitlines()[2:-1]]
+    assert rows == ["200", "350", "500", "800", "1200"]
+    assert "--sizes 200,350,500,800,1200" in pile_sweep.__doc__
