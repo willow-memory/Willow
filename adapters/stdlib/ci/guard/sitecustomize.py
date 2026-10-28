@@ -17,7 +17,8 @@ whose code asked by walking the call stack to the first frame in the repo:
 
 and an add-on is held to its card's header:
 
-    network: none            no connection and no name lookup at all
+    network: none            no connection and no name lookup at all,
+                             but a Unix socket, which is this machine
     network: loopback        only this machine: localhost, 127.0.0.1, ::1
     network: (anything else) what it reaches and why; not narrowed further
     writes: nothing          writes no file, but in a scratch folder it
@@ -264,7 +265,9 @@ def hook(event: str, args: tuple) -> None:
         if event in NETWORK:
             if event != "socket.getaddrinfo":
                 sock = args[0]
-                if getattr(sock, "family", None) == getattr(os, "AF_UNIX", object()):
+                # AF_UNIX lives in socket, not os: a Unix socket is this machine
+                unix = getattr(sys.modules.get("socket"), "AF_UNIX", object())
+                if getattr(sock, "family", None) == unix:
                     return
             network = card(addon).get("network", "none")
             if network == "none":

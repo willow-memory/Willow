@@ -757,6 +757,11 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- `ci`: the guard meant to let a Unix socket through under `network: none`,
+  as this machine only, but looked for `AF_UNIX` on `os`, which has none
+  (it is `socket`'s), so every Unix socket counted as going online. It now
+  looks on `socket`; a test holds that a Unix socket passes and a name
+  looked up by the same code still breaches.
 - `live` counted a launcher standing in for a missing program as failing:
   VS Code puts a `copilot` on PATH that only says the Copilot CLI isn't
   installed, so `tools:copilot` failed on any machine with VS Code. A
