@@ -347,6 +347,10 @@ willow/
 │   │   │   ├── pii_audit.py  the personal numbers in the files, checked never guessed, shown masked
 │   │   │   ├── test_pii_audit.py
 │   │   │   └── README.md
+│   │   ├── pile-rank/
+│   │   │   ├── pile_rank.py   BM25F over words and the folder's own word pairs, titles and questions weighted
+│   │   │   ├── test_pile_rank.py
+│   │   │   └── README.md
 │   │   ├── pile-store/
 │   │   │   ├── pile_store.py  a folder's passages in one SQLite file, each repeat once, used only while it matches
 │   │   │   ├── test_pile_store.py

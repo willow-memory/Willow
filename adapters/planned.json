@@ -2185,16 +2185,6 @@
   "tags": "no-install, offline, read-only, play"
  },
  {
-  "name": "pile-rank",
-  "kind": "stdlib",
-  "section": "Finding things",
-  "line": "Phrases as well as words: BM25F over each passage's words and the word pairs your files use together, title and question lines weighted, no model.",
-  "source": "bot",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, search, pile"
- },
- {
   "name": "pile-rungs",
   "kind": "stdlib",
   "section": "Finding things",

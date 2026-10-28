@@ -10,6 +10,11 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `pile-rank`, a rank that knows the folder's phrases: BM25F over each
+  passage's words and the word pairs two or more of its texts use, titles
+  (path and headings) and question lines weighted over the body, no model.
+  It points at where to look, as `scan --rank bm25` does, never the
+  kernel's answer. It reads a current pile-store store, else the folder.
 - `pile-store`, the store the other pile ideas stand on: a folder's passages
   read once into one SQLite file, a text held in several places stored once,
   and opened read-only only while it still matches the folder, the kernel's
