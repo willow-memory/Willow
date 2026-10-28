@@ -29,9 +29,10 @@ group).
 
 | Rule | Passes when |
 |---|---|
-| file level above chance, bm25, GROUP | questions with a file hit in the top 10 beat chance, one-sided p < 0.01 |
+| line level above chance, bm25, GROUP | questions with a line hit in the top 10 beat chance, one-sided p < 0.01 |
 
-The line level, and the kernel's and grep's results, are reported, never gates.
+The file level, and the kernel's and grep's results, are reported, never gates.
+A unit whose fix has files_scored counts only passages of those files.
 Every later phase is not built: exit 2.
 
 --out gets the scored answers, one JSON line each (origin.py reads it). --box
@@ -171,8 +172,8 @@ def judge_before(rows: list, scored: list, group_of: dict) -> dict:
                 "file_p": phase4.poisson_binomial_tail(ps_file, file) if file else 1.0,
             }  # fmt: skip
             if by == "bm25":
-                passes[f"file level above chance, bm25, {group}"] = (
-                    bool(mine) and table[f"{by}, {group}"]["file_p"] < 0.01
+                passes[f"line level above chance, bm25, {group}"] = (
+                    bool(mine) and table[f"{by}, {group}"]["line_p"] < 0.01
                 )
     return {"table": table, "passes": passes}
 

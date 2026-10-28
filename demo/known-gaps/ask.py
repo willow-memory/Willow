@@ -17,7 +17,8 @@ passage never returned as last). `before` (phase 2) asks the whole vulnerable
 tree, top 10.
 
 Writes FILE, one JSON line an answer and, last, the unit's `stats` line: how
-many passages were asked (`changed`), how many of them hit (score.py's rule),
+many passages were asked (`changed`; `changed_all` is the set before a
+`files_scored` limit, which keeps only passages of those files), how many of them hit (score.py's rule),
 how many lie in a file the fix changed (`file_passages`), and a `random_rate`:
 for `found`, the rate at which 3 changed passages drawn at random hit, from
 10,000 draws seeded by SEED; for `before`, the exact chance that 10 passages of
@@ -70,6 +71,15 @@ def ask(to: Path, ix: Path, unit: str, pin: dict, qs: list, mode: str) -> list:
     before = {c["id"] for c in scan.passages(new_at)} if mode == "found" else None
     old = scan.Index(old_at)
     changed = [c for c in old.pile if before is None or c["id"] not in before]
+    changed_all = len(changed)
+    if mode == "found" and pin.get("files_scored"):
+        # limited to the files the gap scores: the changed set, the ranking
+        # and the chance draw only on passages from those files
+        scored = set(pin["files_scored"])
+        changed = [c for c in changed if c["path"] in scored]
+        keep = {c["id"] for c in changed}
+        outside = {c["id"] for c in old.pile if c["path"] not in scored}
+        before = before | (outside - keep)  # passages ranked out of the set
     top = TOP[mode] or max(len(changed), 1)
     rows = []
     mine = [(n, q) for n, q in qs if n.split(" ")[0] in (pin["gap"], "null")]
@@ -94,7 +104,8 @@ def ask(to: Path, ix: Path, unit: str, pin: dict, qs: list, mode: str) -> list:
     else:
         rate = phase4.chance_one(len(changed), hits, top)
     rows.append({"type": "stats", "unit": unit, "gap": pin["gap"], "mode": mode,
-                 "changed": len(changed), "questions": len(mine),
+                 "changed": len(changed), "changed_all": changed_all,
+                 "questions": len(mine),
                  "hit_passages": hits,
                  "file_passages": sum(c["path"] in fix["files"] for c in changed),
                  "random_rate": rate})  # fmt: skip

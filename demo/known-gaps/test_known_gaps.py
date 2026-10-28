@@ -498,44 +498,64 @@ def test_phase_1_is_judged_by_the_rank_of_the_first_hit(tmp_path, capsys):
     assert not run.judge(stats, pairs(1), group)["passes"]["null questions hit nothing"]
 
 
-def test_phase_2_is_judged_at_the_file_level_against_exact_chance():
+def test_phase_2_is_judged_at_the_line_level_against_exact_chance():
     run = trees.sibling("run")
     stats = [{"type": "stats", "unit": u, "gap": u, "changed": 100, "hit_passages": 5,
               "file_passages": 10, "random_rate": 0.4} for u in ("KG01", "KG09")]  # fmt: skip
     group = {"KG01": "strong", "KG09": "weaker"}
-    chance = 1 - math.comb(90, 10) / math.comb(100, 10)
-    assert 0.6 < chance < 0.7
+    chance = 1 - math.comb(95, 10) / math.comb(100, 10)
+    assert 0.4 < chance < 0.45
 
     def rows(unit, served):
         return [scored_row(unit, unit, "bm25", served, None, str(q)) for q in range(16)]
 
-    file_only = ["miss", "file", "miss"]
-    out = run.judge_before(
-        stats, rows("KG01", file_only) + rows("KG09", ["hit"]), group
-    )
-    assert out["passes"] == {"file level above chance, bm25, strong": True,
-                             "file level above chance, bm25, weaker": True}  # fmt: skip
+    hit = ["miss", "hit", "miss"]
+    out = run.judge_before(stats, rows("KG01", hit) + rows("KG09", hit), group)
+    assert out["passes"] == {"line level above chance, bm25, strong": True,
+                             "line level above chance, bm25, weaker": True}  # fmt: skip
     strong = out["table"]["bm25, strong"]
-    assert (
-        strong["file_hits@10"] == 16 and strong["line_hits@10"] == 0
-    )  # line level reported
-    assert strong["file_expected"] == pytest.approx(16 * chance)
-    assert strong["file_p"] < 0.01
+    assert strong["line_hits@10"] == 16 and strong["file_hits@10"] == 16
+    assert strong["line_expected"] == pytest.approx(16 * chance)
+    assert strong["line_p"] < 0.01
+    # file hits alone do not pass: the file level is reported, not judged
+    file_only = ["miss", "file", "miss"]
+    only = run.judge_before(stats, rows("KG01", file_only) + rows("KG09", hit), group)
+    assert not only["passes"]["line level above chance, bm25, strong"]
+    assert only["table"]["bm25, strong"]["file_hits@10"] == 16  # still reported
+    assert only["table"]["bm25, strong"]["file_p"] < 0.01
     none = run.judge_before(
-        stats, rows("KG01", ["miss"] * 10) + rows("KG09", ["hit"]), group
+        stats, rows("KG01", ["miss"] * 10) + rows("KG09", hit), group
     )
-    assert not none["passes"]["file level above chance, bm25, strong"]
-    assert none["table"]["bm25, strong"]["file_p"] == 1.0
-    thin = run.judge_before(
-        stats, rows("KG01", file_only)[:3] + rows("KG09", ["hit"]), group
-    )
-    assert not thin["passes"][
-        "file level above chance, bm25, strong"
-    ]  # 3 of 3 is not rare
-    deep = ["miss"] * 10 + ["file"]  # an 11th is outside the top 10
+    assert not none["passes"]["line level above chance, bm25, strong"]
+    assert none["table"]["bm25, strong"]["line_p"] == 1.0
+    thin = run.judge_before(stats, rows("KG01", hit)[:3] + rows("KG09", hit), group)
+    assert not thin["passes"]["line level above chance, bm25, strong"]  # 3 of 3
+    deep = ["miss"] * 10 + ["hit"]  # an 11th is outside the top 10
     assert not run.judge_before(stats, rows("KG01", deep), group)["passes"][
-        "file level above chance, bm25, strong"
+        "line level above chance, bm25, strong"
     ]
+
+
+def test_the_changed_set_is_limited_to_files_scored(tmp_path):
+    ask = trees.sibling("ask")
+    repos, units, _ = pinned(tmp_path)
+    to, ix = tmp_path / "work", tmp_path / "ix"
+    for u in ("KG01", "KG10"):  # the same fix; KG10 scores app/guard.py only
+        trees.fetch_unit(to, repos, u, units[u])
+    q = "assert true load the whole policy from the root path"
+    whole = ask.ask(to, ix, "KG01", units["KG01"], [("KG01 1", q)], "found")
+    limited = ask.ask(to, ix, "KG10", units["KG10"], [("KG10 1", q)], "found")
+    paths = {s["path"] for r in whole if r["type"] == "answer" for s in r["served"]}
+    assert "tests/t.py" in paths  # unlimited, the unscored file's passage is served
+    for r in limited:
+        if r["type"] == "answer":
+            assert {s["path"] for s in r["served"]} <= {"app/guard.py"}, r["ranked_by"]
+    s_all, s_lim = whole[-1], limited[-1]
+    assert s_lim["changed_all"] == s_all["changed"] > s_lim["changed"] >= 1
+    assert s_lim["hit_passages"] == s_all["hit_passages"]  # hits are all in the file
+    assert s_lim["file_passages"] == s_lim["changed"]  # phase 2's file level, too
+    before = ask.ask(to, ix, "KG10", units["KG10"], [("KG10 1", q)], "before")[-1]
+    assert before["file_passages"] == 1  # only app/guard.py of the whole tree
 
 
 def test_run_refuses_what_is_not_built(capsys):
@@ -593,8 +613,8 @@ def test_phase_2_end_to_end_on_a_fixture(tmp_path, capsys, monkeypatch):
                      str(box), "--out", str(scored)])  # fmt: skip
     assert code == 42  # two passages of three in a file the fix changed: not rare
     text = (box / "record.jsonl").read_text()
-    assert "phase2:file level above chance, bm25, strong" in text
-    assert "phase2:file level above chance, bm25, weaker" in text
+    assert "phase2:line level above chance, bm25, strong" in text
+    assert "phase2:line level above chance, bm25, weaker" in text
     out = json.loads(capsys.readouterr().out)
     assert out["table"]["bm25, strong"]["file_hits@10"] == 1
 
