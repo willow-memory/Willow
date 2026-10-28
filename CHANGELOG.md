@@ -10,6 +10,11 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `ci`: `adapters/stdlib/ci/parallel.py` runs `ci.py run` as its shards at once on this machine,
+  `--shard K/N` each with its own record in `<DIR>/<K>`, then every gate's
+  verdict from the N records in ci.py's order, each record verified. One
+  after another the gates take most of an hour; eight at once took nine
+  minutes. AGENTS.md's baseline names it.
 - `words-sv` and `words-pl`, two more of the common-words family: Swedish
   and Polish questions asked through them lose their languages' common words
   before the kernel's own `bite`, as words-de does for German. Each `list`
