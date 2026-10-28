@@ -13,36 +13,36 @@ says how). The first was v0.1.0.
 - `pile-build`: the pile store built after each change, behind a lock on
   its folder, again until it matches when the folder changes mid-build, and
   with `--background` detached so a hook never waits. Unlike willow-bot's,
-  its orders never say where the key is.
+  its orders never say where the key is. (#69)
 - `pile-gold`: the passages your sealed answers cite are their questions'
   gold. Asked your questions again (from a file, since the record keeps no
   words), the kernel's rank and pile-rank are each scored by how many of
   them land in the top five. Seals are read through the kernel, which checks
   them against your key; one `gold` row records the counts and the file's
-  SHA-256, never a word.
+  SHA-256, never a word. (#69)
 - `pile-rank`, a rank that knows the folder's phrases: BM25F over each
   passage's words and the word pairs two or more of its texts use, titles
   (path and headings) and question lines weighted over the body, no model.
-  A pair never spans a comma or a full stop.
+  A pair never spans a comma or a full stop. (#69)
   It points at where to look, as `scan --rank bm25` does, never the
   kernel's answer. It reads a current pile-store store, else the folder.
 - `pile-rungs`: a question climbs the kernel's words, then the folder's
   phrases (pile-rank), then an embedder, and the first rung that answers
   serves. Each rung reached says answered, empty or skipped, and why; the
-  embedder rung is always skipped here, since the standard library has none.
+  embedder rung is always skipped here, since the standard library has none. (#69)
 - `pile-serve`: the folder's passages and pile-rank's counts held by one
   process, asked over a Unix socket (mode 600) by the kernel's rank,
   pile-rank or pile-rungs; a folder that changed is read again before the
   next answer. On Hollis's folder a question takes 17 ms on the socket,
   against 0.35 s cold. Its card says `writes: to`, not the idea's
-  `nothing`: the socket is a file.
+  `nothing`: the socket is a file. (#69)
 - `pile-store`, the store the other pile ideas stand on: a folder's passages
   read once into one SQLite file, a text held in several places stored once,
   and opened read-only only while it still matches the folder, the kernel's
   reading limits and the kernel.py that read it, else built again whole.
   `pile_store.load` gives other add-ons exactly `kernel.chunks` and
   `kernel.dates`; `--check` says stale and why, writing nothing. Unlike
-  willow-bot's, it never matches or names the key.
+  willow-bot's, it never matches or names the key. (#69)
 - `ci`: `adapters/stdlib/ci/cores.py` runs `ci.py run` as its shards at once on this machine,
   `--shard K/N` each with its own record in `<DIR>/<K>`, then every gate's
   verdict from the N records in ci.py's order, each record verified. One
@@ -773,7 +773,7 @@ says how). The first was v0.1.0.
   as this machine only, but looked for `AF_UNIX` on `os`, which has none
   (it is `socket`'s), so every Unix socket counted as going online. It now
   looks on `socket`; a test holds that a Unix socket passes and a name
-  looked up by the same code still breaches.
+  looked up by the same code still breaches. (#69)
 - `live` counted a launcher standing in for a missing program as failing:
   VS Code puts a `copilot` on PATH that only says the Copilot CLI isn't
   installed, so `tools:copilot` failed on any machine with VS Code. A
