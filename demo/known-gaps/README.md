@@ -121,6 +121,28 @@ position) and `text_outside_hunks` (of those, in no hunk at all), per unit in
 ask.py's stats line and in the dry run below. Phase 1's changed sets use the
 same rule, and origin.py blames only the positional hit ranges.
 
+**Lines are counted the way git counts them**: a newline ends a line and
+nothing else does. The diff is read that way, and so is a passage's span.
+The kernel is not: it cuts a file into passages with `str.splitlines()`,
+which also breaks on a vertical tab, a form feed, the control characters
+0x1c to 0x1e, 0x85, U+2028, U+2029 and a carriage return not followed by a
+newline. After one of those its passage line numbers run ahead of git's, so a
+position in that file would be wrong, silently. The kernel is a frozen tool and
+is not edited; instead, a counted file of a vulnerable tree that holds one of
+those characters is **unreachable**: `trees.py check` lists it per file,
+`ask.py` records it (`unreachable_files` in the stats line) and gives it no
+positions, and `score.py` does the same, so no passage of it is ever a hit,
+rather than a hit on a shifted line. None of the 13 distinct vulnerable trees
+holds one in a counted file: 3,195 counted files, 0 with such a character
+(Loki found that KG09's two are in a test file, which never counts). The first outside
+control (phase 6, cpython) has form feeds, so this matters there.
+
+A known limit of the reported `hit_by_text` column, which is not the rule:
+php2shell's parser reads a removed line that begins `-- ` (shown in the diff as
+`--- `) as a file header and drops that file's removed lines, so the text
+column can undercount. Positions are read by the hunk header's counts and are
+not affected.
+
 Never counted: a path with a folder named test, tests, testing, spec or
 changes; test_*.py, *_test.py, conftest.py; NEWS, UPGRADING, ChangeLog,
 CHANGES, CHANGELOG files, RELEASE-NOTES.md; version.h, VERSION, version.txt,
@@ -170,7 +192,7 @@ for the hits. The null questions are asked here, of every unit.
 |---|---|
 | line level above chance, bm25, strong | questions with a line hit in the top 10 beat chance, one-sided p < 0.01 |
 | line level above chance, bm25, weaker | the same for the weaker set |
-| null questions not above chance, bm25 | at least one null question was asked, and the null line hits in the top 10 are not above exact chance: the same tail, p >= 0.01 |
+| null questions not above chance, bm25 | at least one null question was asked and the null set retrieved something (a set that retrieves nothing is "unreachable: the null set retrieved nothing", never a pass), and the null line hits are not above exact chance for the passages each question was actually served: the same tail, p >= 0.01 |
 
 The file level, and the kernel's and grep's results, are reported, never gates.
 For a unit with `files_scored`, only passages of those files count at either
@@ -227,7 +249,8 @@ after the amendment, ran both phases.
 | `ask.py`, first run (14 tasks, found, top 3) | all exit 0; timings below |
 | `ask.py`, second run (14 units, found and before) | all 28 exit 0; 0.08 to 1.3 s each, the indexes already cached |
 | `run.py found` | exit 42, as it must be: no hits, so the rank statistic sits far below random (strong 1.42 against 7.50 expected, p 1.0; weaker 0.81 against 3.17, p 1.0). Run after the amendments: the `files_scored` limit, positional hits, no null question. |
-| `run.py before` | exit 42, as it must be: 0 line hits against 0.35 expected (strong) and 0.010 (weaker); 14 null questions, 0 line hits against 0.36 expected, so the null gate passes; file level 0 against 4.52 and 0.39, reported |
+| `run.py before` | exit 42, as it must be: 0 line hits against 0.35 expected (strong) and 0.010 (weaker); file level 0 against 4.52 and 0.39, reported. The 14 null questions: 0 line hits, and the null gate passes only barely: the meaningless words matched something in 2 of 14 trees, so bm25 served 2 passages in all (12 questions served nothing) and the chance for what was served is 0.0003. A real null question serves ten. |
+| `trees.py check` | after the N1 change, lists any counted file with a character that shifts the kernel's lines: none of the 3,195 counted files in the 13 distinct vulnerable trees |
 | verdict rows | 5 written (2 for phase 1, 3 for phase 2); the record's chain holds |
 | `origin.py` | 0 ranges to look up, so 0 rows (nothing hit) |
 
