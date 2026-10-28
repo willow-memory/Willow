@@ -1,6 +1,6 @@
-"""parallel.py: ci.py's run, its shards at once on this machine. Python 3.9+.
+"""cores.py: ci.py's run, its shards at once on this machine. Python 3.9+.
 
-    python adapters/stdlib/ci/parallel.py --box DIR [--jobs N] [PART|GATE ...]
+    python adapters/stdlib/ci/cores.py --box DIR [--jobs N] [PART|GATE ...]
                                           [--without GATE ...] [--now TS]
 
 Run alone, ci.py runs every gate one after another, which takes most of an
@@ -35,7 +35,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-spec = importlib.util.spec_from_file_location("willow_ci_for_parallel", HERE / "ci.py")
+spec = importlib.util.spec_from_file_location("willow_ci_for_cores", HERE / "ci.py")
 ci = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(ci)
 kernel = ci.kernel

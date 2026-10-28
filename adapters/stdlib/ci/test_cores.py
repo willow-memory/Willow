@@ -1,4 +1,4 @@
-"""parallel.py's tests: every gate once across the shards, the run's verdicts
+"""cores.py's tests: every gate once across the shards, the run's verdicts
 in ci.py's order, never more shards than gates, and refusals that run nothing."""
 
 from __future__ import annotations
@@ -11,16 +11,16 @@ from pathlib import Path
 import pytest
 
 HERE = Path(__file__).resolve().parent
-spec = importlib.util.spec_from_file_location("parallel", HERE / "parallel.py")
-parallel = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(parallel)
-ci, k = parallel.ci, parallel.kernel
+spec = importlib.util.spec_from_file_location("cores", HERE / "cores.py")
+cores = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(cores)
+ci, k = cores.ci, cores.kernel
 NOW = "2026-10-23T00:00:00Z"
 
 
 def cli(*argv: str) -> subprocess.CompletedProcess:
     return subprocess.run(
-        [sys.executable, str(HERE / "parallel.py"), *argv],
+        [sys.executable, str(HERE / "cores.py"), *argv],
         capture_output=True,
         text=True,
     )
@@ -73,5 +73,5 @@ def test_what_it_doesnt_know_is_refused_and_runs_nothing(tmp_path, argv):
     assert got.returncode == k.REFUSED
     assert not box.exists(), "refused before any shard starts"
     assert got.stderr.startswith(
-        ("refused: ", "    python adapters/stdlib/ci/parallel.py")
+        ("refused: ", "    python adapters/stdlib/ci/cores.py")
     )

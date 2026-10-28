@@ -75,12 +75,12 @@ instead, by the merge that brought the commit in and that host's
 host.json. It refuses any place that isn't a line range in a file git
 tracks, since the places may come from a report anyone can write.
 
-**At once, on one machine:** [parallel.py](parallel.py) runs `ci.py run`
+**At once, on one machine:** [cores.py](cores.py) runs `ci.py run`
 as N shards at the same time, `--shard K/N` each with its own record in
 `<DIR>/<K>`, then shows every gate's verdict from the N records in the table's
 order, verifies each record, and exits as `run` would for all of them.
 
-    python adapters/stdlib/ci/parallel.py --box /tmp/ci-main [--jobs N] [PART|GATE ...]
+    python adapters/stdlib/ci/cores.py --box /tmp/ci-main [--jobs N] [PART|GATE ...]
 
 N is the machine's CPUs unless `--jobs` says, never more than there are
 gates. Run one after another, every gate takes most of an hour; eight at once

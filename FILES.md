@@ -117,7 +117,7 @@ willow/
 │   │   │   ├── changelog.py  a change beyond the docs adds its entry to CHANGELOG.md, and names a bug it fixed
 │   │   │   ├── bugs.py       makes BUGS.md from the tests marked as known bugs
 │   │   │   ├── whose.py      which commit wrote these lines, or with a host's host.json which pull request
-│   │   │   ├── parallel.py   ci.py's run as its shards at once on this machine, a record each, shown together
+│   │   │   ├── cores.py      ci.py's run as its shards at once on this machine, a record each, shown together
 │   │   │   ├── guard/
 │   │   │   │   └── sitecustomize.py  holds each add-on to its card while its tests run
 │   │   │   ├── test-times.json  seconds each add-on test file took, to cut the add-ons' tests into even chunks
@@ -127,7 +127,7 @@ willow/
 │   │   │   ├── test_changelog.py  changelog.py's tests: owed, not owed, and in the wrong place
 │   │   │   ├── test_bugs.py  bugs.py's tests: strict marks only, and the list made from them
 │   │   │   ├── test_whose.py whose.py's tests: commits, merges, squashes, another host, places refused
-│   │   │   ├── test_parallel.py  parallel.py's tests: every gate once across the shards, refusals that run nothing
+│   │   │   ├── test_cores.py cores.py's tests: every gate once across the shards, refusals that run nothing
 │   │   │   └── README.md     its card: gates, states, the guard and exit codes
 │   │   ├── ci-cache/
 │   │   │   ├── ci_cache.py    a cache key per ecosystem from a repo's lockfiles, so CI skips the reinstall

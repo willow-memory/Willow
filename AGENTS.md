@@ -53,7 +53,7 @@ failure. To run one part, name it: `lint`, `tests`, `ports`, `demo`,
 One after another, every gate takes most of an hour. To run them all at
 once, a shard per CPU, each with its own record under the folder named:
 
-    python adapters/stdlib/ci/parallel.py --box /tmp/ci-main
+    python adapters/stdlib/ci/cores.py --box /tmp/ci-main
 
 It prints every gate's verdict from all the records together, in `show`'s
 order, so the before and after compare the same way.

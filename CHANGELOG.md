@@ -10,7 +10,7 @@ says how). The first was v0.1.0.
 
 ### Added
 
-- `ci`: `adapters/stdlib/ci/parallel.py` runs `ci.py run` as its shards at once on this machine,
+- `ci`: `adapters/stdlib/ci/cores.py` runs `ci.py run` as its shards at once on this machine,
   `--shard K/N` each with its own record in `<DIR>/<K>`, then every gate's
   verdict from the N records in ci.py's order, each record verified. One
   after another the gates take most of an hour; eight at once took nine
