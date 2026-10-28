@@ -33,7 +33,7 @@ every unit.
 | Rule | Passes when |
 |---|---|
 | line level above chance, bm25, GROUP | questions with a line hit in the top 10 beat chance, one-sided p < 0.01 |
-| null questions not above chance, bm25 | at least one null question was asked, and the null line hits in the top 10 are not above exact chance: the same tail, p >= 0.01 |
+| null questions not above chance, bm25 | at least one null question was asked and the null set retrieved something (a set that retrieves nothing is "unreachable", not a pass), and the null line hits are not above exact chance for the passages each was served: the same tail, p >= 0.01 |
 
 The file level, and the kernel's and grep's results, are reported, never gates.
 A unit whose fix has files_scored counts only passages of those files.
@@ -177,15 +177,26 @@ def judge_before(rows: list, scored: list, group_of: dict) -> dict:
     # above exact chance (the same tail as the main gate)
     for by in BYS:
         rs = [r for r in scored if r["gap"] == "null" and r["ranked_by"] == by]
+        # each question's chance is for the passages it was actually served: a
+        # question the ranker answered with fewer than 10 has less to hit with
         ps = [phase4.chance_one(stats[r["unit"]]["changed"],
-                                stats[r["unit"]]["hit_passages"], 10) for r in rs]  # fmt: skip
+                                stats[r["unit"]]["hit_passages"], len(r["served"]))
+              for r in rs]  # fmt: skip
         k = sum(phase4.recall_at([{"id": c} for c in r["served"]], {"hit"}, KS)[10]
                 for r in rs)  # fmt: skip
         above = phase4.poisson_binomial_tail(ps, k) if k else 1.0
+        served = sum(len(r["served"]) for r in rs)
         table[f"{by}, null"] = {"of": len(rs), "line_hits@10": k,
-                                "line_expected": sum(ps), "above_chance_p": above}  # fmt: skip
+                                "line_expected": sum(ps), "above_chance_p": above,
+                                "served": served,
+                                "served_nothing": sum(not r["served"] for r in rs)}  # fmt: skip
+        if rs and not served:
+            table[f"{by}, null"]["unreachable"] = "the null set retrieved nothing"
         if by == "bm25":
-            passes["null questions not above chance, bm25"] = bool(rs) and above >= 0.01
+            # a null set that retrieves nothing can't be "at chance": it fails
+            passes["null questions not above chance, bm25"] = (
+                bool(rs) and served > 0 and above >= 0.01
+            )
     return {"table": table, "passes": passes}
 
 

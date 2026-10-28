@@ -34,8 +34,11 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import random
+import shutil
 import sys
+import tempfile
 import time
 from pathlib import Path
 
@@ -61,19 +64,44 @@ def index_of(ix: Path, name: str, folder: Path) -> Path:
     return at
 
 
+def limited_paths(ix: Path, tree: str, files: list) -> tuple:
+    """(the cached copy of the scored files, the index made of it)."""
+    key = hashlib.sha1("\n".join(sorted(files)).encode()).hexdigest()[:12]
+    return ix / f"src-{tree}-{key}", ix / f"{tree}-{key}"
+
+
+def limited_source_ok(src: Path, old_tree: Path, files: list) -> bool:
+    """The cached copy holds exactly the scored files of the tree, byte for byte."""
+    want = {f for f in files if (old_tree / f).is_file()}
+    have = {p.relative_to(src).as_posix() for p in src.rglob("*") if p.is_file()}
+    return have == want and all(
+        (src / f).read_bytes() == (old_tree / f).read_bytes() for f in want
+    )
+
+
 def limited_index(ix: Path, old_tree: Path, tree: str, files: list) -> Path:
     """An index of only the scored files of the vulnerable tree, so a limit by
     path leaves no passage of any other file in the pool, even one whose text
-    matches a passage of a scored file. Its line numbers are the files' own."""
-    key = hashlib.sha1("\n".join(sorted(files)).encode()).hexdigest()[:12]
-    src = ix / f"src-{tree}-{key}"
-    if not src.exists():
+    matches a passage of a scored file. Its line numbers are the files' own.
+
+    The tree is held to its pinned git tree hash, and a cached copy is reused
+    only when it matches the tree's own files exactly; otherwise it, and the
+    index made of it, are rebuilt. The copy is written to a temporary folder
+    and renamed into place, so a crash leaves nothing a later run would trust."""
+    if trees.make_trees.git_tree(old_tree) != tree:
+        raise ValueError(f"{old_tree} is not the pinned tree {tree[:12]}")
+    src, at = limited_paths(ix, tree, files)
+    if not (src.is_dir() and limited_source_ok(src, old_tree, files)):
+        shutil.rmtree(src, ignore_errors=True)
+        shutil.rmtree(at, ignore_errors=True)  # an index of a partial copy is no index
+        ix.mkdir(parents=True, exist_ok=True)
+        tmp = Path(tempfile.mkdtemp(prefix=".tmp-src-", dir=ix))
         for f in files:
             if (old_tree / f).is_file():
-                (src / f).parent.mkdir(parents=True, exist_ok=True)
-                (src / f).write_bytes((old_tree / f).read_bytes())
-        src.mkdir(parents=True, exist_ok=True)
-    return index_of(ix, f"{tree}-{key}", src)
+                (tmp / f).parent.mkdir(parents=True, exist_ok=True)
+                (tmp / f).write_bytes((old_tree / f).read_bytes())
+        os.rename(tmp, src)
+    return index_of(ix, at.name, src)
 
 
 def served(passages: list) -> list:
@@ -86,7 +114,10 @@ def ask(to: Path, ix: Path, unit: str, pin: dict, qs: list, mode: str) -> list:
     new_at = index_of(ix, pin["fixed"]["tree"], to / "trees" / unit / "new")
     print(f"{unit}: indexed in {time.monotonic() - t0:.1f}s", file=sys.stderr)
     t1 = time.monotonic()
-    fix = score.changed((to / "fixes" / f"{unit}.diff").read_text(encoding="utf-8"))
+    fix = score.changed(
+        (to / "fixes" / f"{unit}.diff").read_text(encoding="utf-8"),
+        to / "trees" / unit / "old",
+    )
     before = {c["id"] for c in scan.passages(new_at)} if mode == "found" else None
     old = scan.Index(old_at)
     changed = [c for c in old.pile if before is None or c["id"] not in before]
@@ -126,7 +157,7 @@ def ask(to: Path, ix: Path, unit: str, pin: dict, qs: list, mode: str) -> list:
         rate = phase4.chance_one(len(changed), hits, top)
     rows.append({"type": "stats", "unit": unit, "gap": pin["gap"], "mode": mode,
                  "changed": len(changed), "changed_all": changed_all,
-                 "questions": len(mine),
+                 "questions": len(mine), "unreachable_files": fix["unreachable"],
                  "hit_passages": hits, "hit_by_text": len(by_text),
                  "text_only": sum(not score.hit(c, fix) for c in by_text),
                  "text_outside_hunks": sum(not score.in_a_hunk(c, fix) for c in by_text),

@@ -11,7 +11,9 @@ two repositories, the gap and the repository (KG03-kartikeya). It reads local
 repositories only: no network. Each tree is every file of the pinned commit,
 byte for byte, as git stores it (php2shell's phase3 `write_tree`). `check`
 holds each tree to its git tree hash and each diff to its SHA-256, without
-git. --unit limits either to one unit.
+git. It also lists, per file, any counted file of a vulnerable tree that holds
+a character making the kernel count lines differently from git (`unreachable`):
+informational, it does not change the exit code. --unit limits either to one unit.
 
 This module is also the folder's shared ground: the pins, the units, and the
 php2shell modules the other scripts reuse.
@@ -92,6 +94,28 @@ def fetch_unit(to: Path, repos: Path, unit: str, pin: dict) -> None:
     (to / "fixes" / f"{unit}.diff").write_bytes(phase3.git(*argv, cwd=src))
 
 
+def unreachable_files(tree: Path) -> list:
+    """The counted files of a tree that hold a character making the kernel's
+    line numbers differ from git's (a form feed, a vertical tab, U+2028, a
+    lone carriage return, ...). A position in one can't be trusted, so ask.py
+    and score.py give such a file no positions."""
+    score = sibling("score")
+    out = []
+    for p in sorted(tree.rglob("*")):
+        rel = p.relative_to(tree)
+        if not p.is_file() or any(part.startswith(".") for part in rel.parts):
+            continue
+        if not score.counts(rel.as_posix()):
+            continue
+        try:
+            text = p.read_bytes().decode("utf-8")
+        except UnicodeDecodeError:
+            continue  # the kernel leaves it out too
+        if score.shifted(text):
+            out.append(rel.as_posix())
+    return out
+
+
 def check(to: Path, pins: dict) -> int:
     bad = missing = 0
     for unit, pin in pins.items():
@@ -105,6 +129,11 @@ def check(to: Path, pins: dict) -> int:
                 bad += 1
             else:
                 print(f"matches   {unit} {name}")
+                if name == "old":
+                    for path in unreachable_files(t):
+                        print(
+                            f"unreachable   {unit} {path}: positions can't be trusted"
+                        )
         d = to / "fixes" / f"{unit}.diff"
         if not d.is_file():
             print(f"missing   {unit} fix")

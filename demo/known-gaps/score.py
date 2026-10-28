@@ -70,7 +70,7 @@ def positions(diff: str) -> tuple:
     pos: dict = {}
     hunks: dict = {}
     meaningful = phase3.score.meaningful
-    lines = diff.splitlines()
+    lines = diff.split("\n")  # git's lines: a newline ends one, nothing else does
     i, path = 0, None
     while i < len(lines):
         ln = lines[i]
@@ -112,7 +112,7 @@ def positions(diff: str) -> tuple:
                     prev = ("-", old_no, text)
                     old_no += 1
                     old_rem -= 1
-                else:  # "+"
+                elif kind == "+":
                     if (
                         not run
                         and prev
@@ -130,22 +130,48 @@ def positions(diff: str) -> tuple:
 HUNK = re.compile(r"@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@")
 
 
-def changed(diff: str) -> dict:
+#: what `str.splitlines()` breaks a line on and git does not: the kernel cuts a
+#: file into passages with splitlines(), so after one of these its line numbers
+#: are no longer git's, and a position in that file can't be trusted
+SHIFTING = re.compile("[\v\f\x1c\x1d\x1e\x85  ]|\r(?!\n)")
+
+
+def shifted(text: str) -> bool:
+    """The text holds a character that makes the kernel count lines differently
+    from git."""
+    return bool(SHIFTING.search(text))
+
+
+def changed(diff: str, old_tree: Path | None = None) -> dict:
     """phase3.changed (rule 2) with this folder's files left out, and the
-    positions rule 2 counts (`pos`) and each hunk's old range (`hunks`)."""
+    positions rule 2 counts (`pos`) and each hunk's old range (`hunks`). With
+    `old_tree` (the vulnerable side's files), a file with positions that holds
+    a shifting character gives up its positions: it is listed in `unreachable`
+    and no passage of it is a hit, rather than a hit on a shifted line."""
     was = phase3.counts
     phase3.counts = counts
     try:
         fix = phase3.changed(diff)
         fix["pos"], fix["hunks"] = positions(diff)
+        fix["unreachable"] = []
+        for path in sorted(fix["pos"]):
+            f = old_tree / path if old_tree is not None else None
+            if (
+                f is not None
+                and f.is_file()
+                and shifted(f.read_bytes().decode("utf-8", "replace"))
+            ):
+                del fix["pos"][path]
+                fix["unreachable"].append(path)
         return fix
     finally:
         phase3.counts = was
 
 
 def span(passage: dict) -> range:
-    """The old-file lines a passage covers."""
-    return range(passage["line"], passage["line"] + len(passage["text"].splitlines()))
+    """The old-file lines a passage covers (its text is one line a row, joined
+    by newlines)."""
+    return range(passage["line"], passage["line"] + len(passage["text"].split("\n")))
 
 
 def hit_by_text(passage: dict, fix: dict) -> bool:
@@ -195,7 +221,8 @@ def score(answers: list, fixes: Path) -> list:
     for a in answers:
         if a["unit"] not in loaded:
             loaded[a["unit"]] = changed(
-                (fixes / f"{a['unit']}.diff").read_text(encoding="utf-8")
+                (fixes / f"{a['unit']}.diff").read_text(encoding="utf-8"),
+                fixes.parent / "trees" / a["unit"] / "old",
             )
         fix = loaded[a["unit"]]
         got = [classify(s, fix) for s in a["served"]]

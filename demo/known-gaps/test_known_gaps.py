@@ -545,7 +545,8 @@ def test_phase_2_is_judged_at_the_line_level_against_exact_chance():
     hit = ["miss", "hit", "miss"]
     # the null questions, asked of every unit, sit at chance: that passes
     quiet = [
-        scored_row("KG01", "null", "bm25", ["miss"], None, str(q)) for q in range(16)
+        scored_row("KG01", "null", "bm25", ["miss"] * 10, None, str(q))
+        for q in range(16)
     ]
     out = run.judge_before(stats, rows("KG01", hit) + rows("KG09", hit) + quiet, group)
     assert out["passes"] == {"line level above chance, bm25, strong": True,
@@ -580,8 +581,9 @@ def test_phase_2_null_questions_must_not_be_above_chance():
               "file_passages": 10, "random_rate": 0.4} for u in ("KG01", "KG09")]  # fmt: skip
     group = {"KG01": "strong", "KG09": "weaker"}  # chance per null question: 0.416
 
-    def nulls(hits, n=16, by="bm25"):
-        return [scored_row("KG01", "null", by, ["hit"] if q < hits else ["miss"], None, str(q))
+    def nulls(hits, n=16, by="bm25", served=10):
+        return [scored_row("KG01", "null", by, (["hit"] if q < hits else ["miss"]) +
+                           ["miss"] * (served - 1), None, str(q))
                 for q in range(n)]  # fmt: skip
 
     def gate(rows):
@@ -598,6 +600,41 @@ def test_phase_2_null_questions_must_not_be_above_chance():
     assert gate(nulls(7) + nulls(16, by="grep"))
     table = run.judge_before(stats, nulls(16), group)["table"]["bm25, null"]
     assert table["line_hits@10"] == 16 and table["above_chance_p"] < 0.01
+
+
+def test_phase_2_null_chance_is_for_the_passages_actually_served():
+    run = trees.sibling("run")
+    stats = [{"type": "stats", "unit": "KG01", "gap": "KG01", "changed": 100,
+              "hit_passages": 5, "file_passages": 10, "random_rate": 0.4}]  # fmt: skip
+
+    def nulls(hits, served, n=16):
+        return [scored_row("KG01", "null", "bm25", (["hit"] if q < hits else ["miss"]) +
+                           ["miss"] * (served - 1), None, str(q))
+                for q in range(n)]  # fmt: skip
+
+    def judged(rows):
+        out = run.judge_before(stats, rows, {"KG01": "strong"})
+        return out["passes"]["null questions not above chance, bm25"], out["table"]
+
+    ok, _ = judged(nulls(7, served=10))  # 7 of 16, ten served each: at chance
+    assert ok
+    # the same 7 hits when each question was served only 3 passages: the chance
+    # of a hit is 0.14 a question, so 7 of 16 is well above it (assumed 10, it passed)
+    ok, table = judged(nulls(7, served=3))
+    assert not ok
+    assert table["bm25, null"]["line_expected"] == pytest.approx(
+        16 * (1 - math.comb(95, 3) / math.comb(100, 3))
+    )
+    # a set that retrieves nothing is unreachable, never a trivial pass
+    empty = [scored_row("KG01", "null", "bm25", [], None, str(q)) for q in range(16)]
+    ok, table = judged(empty)
+    assert not ok
+    assert table["bm25, null"]["unreachable"] == "the null set retrieved nothing"
+    assert table["bm25, null"]["served_nothing"] == 16
+    # one empty question among served ones is reported, not fatal
+    mixed = nulls(0, served=10)[:15] + empty[:1]
+    ok, table = judged(mixed)
+    assert ok and table["bm25, null"]["served_nothing"] == 1
 
 
 def test_the_changed_set_is_limited_by_path_not_by_text(tmp_path):
@@ -655,6 +692,123 @@ def test_the_changed_set_is_limited_to_files_scored(tmp_path):
     assert s_lim["file_passages"] == s_lim["changed"]  # phase 2's file level, too
     before = ask.ask(to, ix, "KG10", units["KG10"], [("KG10 1", q)], "before")[-1]
     assert before["file_passages"] == 1  # only app/guard.py of the whole tree
+
+
+def test_lines_are_counted_the_way_git_counts_them():
+    # a context line holding U+2028 and then a "-": splitlines() would see a
+    # second line, read as a removal, and shift the real removal by one
+    d = (
+        "diff --git a/q.py b/q.py\n--- a/q.py\n+++ b/q.py\n@@ -4,4 +4,3 @@\n"
+        " context with a -dash starts the second half\n"
+        " first plain line of context\n"
+        "-removed line number six here\n"
+        " last plain context line\n"
+    )
+    fix = score.changed(d)
+    assert fix["pos"] == {"q.py": {6}} and fix["hunks"] == {"q.py": [(4, 7)]}
+    # a passage's rows are joined by newlines: a form feed inside a row is not a line
+    p = {"path": "q.py", "line": 10, "text": "one\x0ctwo\nthree"}
+    assert list(score.span(p)) == [10, 11]
+
+
+def test_the_characters_that_shift_the_kernels_lines():
+    for ch in "\v\f\x1c\x1d\x1e\x85  \r":
+        assert score.shifted(f"a{ch}b\n"), repr(ch)
+    assert not score.shifted("a\r\nb\r\n") and not score.shifted("plain\n\ttext\n")
+
+
+def test_a_file_the_kernel_counts_differently_gets_no_positions(tmp_path, capsys):
+    """A form feed before a removed line: the kernel's passage lines are one
+    ahead of git's. The file is reported unreachable and never a hit; a clean
+    file in the same fix is a hit at git's own line numbers."""
+    ask = trees.sibling("ask")
+    resolve = trees.sibling("resolve")
+    repo = tmp_path / "repos" / "ff-repo"
+    (repo / "app").mkdir(parents=True)
+    git(repo, "init", "-q", "-b", "main")
+    page = "def check(user, path):\n    # a page break \x0c in a comment\n"
+    old = page + "    allowed = load_the_whole_policy(root_path)\n    return allowed\n"
+    new = (
+        page
+        + "    allowed = load_the_whole_policy(user.repo_path)\n    return allowed\n"
+    )
+    (repo / "app" / "guard.py").write_bytes(old.encode())
+    (repo / "app" / "ok.py").write_text(OLD_GUARD)
+    (repo / "tests").mkdir()
+    (repo / "tests" / "test_page.py").write_bytes(b"# \x0c in a test file\n")
+    git(repo, "add", "-A")
+    git(repo, "commit", "-qm", "first", date="2026-01-01T12:00:00+00:00")
+    (repo / "app" / "guard.py").write_bytes(new.encode())
+    (repo / "app" / "ok.py").write_text(NEW_GUARD)
+    git(repo, "add", "-A")
+    git(repo, "commit", "-qm", "fix", date="2026-01-02T12:00:00+00:00")
+    fix = git(repo, "rev-parse", "HEAD")
+    gaps = {"KG01": {"id": "KG01", "fix": [{"repo": "ff-repo", "kind": "commit",
+                                            "commit": fix[:7]}]}}  # fmt: skip
+    units = resolve.resolve(tmp_path / "repos", gaps)
+    to = tmp_path / "work"
+    trees.fetch_unit(to, tmp_path / "repos", "KG01", units["KG01"])
+    old_tree = to / "trees" / "KG01" / "old"
+    # counted files only: the test file's form feed is not reported
+    assert trees.unreachable_files(old_tree) == ["app/guard.py"]
+    capsys.readouterr()
+    assert trees.check(to, units) == 0  # informational: the exit code is unchanged
+    assert "unreachable   KG01 app/guard.py" in capsys.readouterr().out
+    diff = (to / "fixes" / "KG01.diff").read_text()
+    fixed = score.changed(diff, old_tree)
+    assert fixed["unreachable"] == ["app/guard.py"]
+    assert "app/guard.py" not in fixed["pos"] and fixed["pos"]["app/ok.py"] == {2, 3}
+    # without the tree to look at, git's own lines (3 and 4) are all we have
+    assert score.changed(diff)["pos"]["app/guard.py"] == {3, 4}
+    rows = ask.ask(
+        to, tmp_path / "ix", "KG01", units["KG01"],
+        [("KG01 1", "load the whole policy from the root path")], "found",
+    )  # fmt: skip
+    assert rows[-1]["unreachable_files"] == ["app/guard.py"]
+    answers = [r for r in rows if r["type"] == "answer" and r["ranked_by"] == "bm25"]
+    served = answers[0]["served"]
+    assert {s["path"] for s in served} == {"app/guard.py", "app/ok.py"}
+    scored = score.score(answers, to / "fixes")[0]
+    by_path = {s["path"]: c for s, c in zip(served, scored["served"])}
+    assert by_path == {"app/guard.py": "file", "app/ok.py": "hit"}
+    assert scored["ranges"] == ["app/ok.py:2-3"]
+    # and the passage of the shifted file really is one line ahead of git's
+    guard = next(s for s in served if s["path"] == "app/guard.py")
+    assert guard["text"].split("\n")[3].strip().startswith("allowed")  # kernel line 4
+    assert old.split("\n")[2].strip().startswith("allowed")  # git line 3
+
+
+def test_the_scored_files_cache_is_checked_and_written_whole(tmp_path):
+    ask = trees.sibling("ask")
+    repos, units, _ = pinned(tmp_path)
+    to, ix = tmp_path / "work", tmp_path / "ix"
+    trees.fetch_unit(to, repos, "KG10", units["KG10"])
+    pin = units["KG10"]
+    qs = [("KG10 1", "load the whole policy from the root path")]
+    first = ask.ask(to, ix, "KG10", pin, qs, "found")
+    src, at = ask.limited_paths(ix, pin["vulnerable"]["tree"], ["app/guard.py"])
+    good = (src / "app" / "guard.py").read_bytes()
+    assert good == OLD_GUARD.encode() and (at / "index.json").exists()
+    assert ask.ask(to, ix, "KG10", pin, qs, "found") == first  # a good cache is reused
+    # a crash part-way: a truncated copy, a stray file, a leftover temporary
+    # folder, and no index (it was never finished)
+    (src / "app" / "guard.py").write_bytes(good[:10])
+    (src / "stray.py").write_text("stray")
+    shutil.rmtree(at)
+    (ix / ".tmp-src-dead").mkdir()
+    again = ask.ask(to, ix, "KG10", pin, qs, "found")
+    assert again == first  # not the answers of a truncated file
+    assert (src / "app" / "guard.py").read_bytes() == good
+    assert not (src / "stray.py").exists()
+    assert not [
+        p
+        for p in ix.iterdir()
+        if p.name.startswith(".tmp-src-") and p.name != ".tmp-src-dead"
+    ]
+    # a tree that is not the pinned one is refused, whatever the cache holds
+    (to / "trees" / "KG10" / "old" / "app" / "guard.py").write_text("tampered\n")
+    with pytest.raises(ValueError, match="pinned tree"):
+        ask.ask(to, ix, "KG10", pin, qs, "found")
 
 
 def test_run_refuses_what_is_not_built(capsys):
