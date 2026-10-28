@@ -351,6 +351,10 @@ willow/
 │   │   │   ├── pile_rank.py   BM25F over words and the folder's own word pairs, titles and questions weighted
 │   │   │   ├── test_pile_rank.py
 │   │   │   └── README.md
+│   │   ├── pile-rungs/
+│   │   │   ├── pile_rungs.py  a question climbs words, phrases, embedder; each rung says why it answered or stopped
+│   │   │   ├── test_pile_rungs.py
+│   │   │   └── README.md
 │   │   ├── pile-store/
 │   │   │   ├── pile_store.py  a folder's passages in one SQLite file, each repeat once, used only while it matches
 │   │   │   ├── test_pile_store.py

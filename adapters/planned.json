@@ -2185,16 +2185,6 @@
   "tags": "no-install, offline, read-only, play"
  },
  {
-  "name": "pile-rungs",
-  "kind": "stdlib",
-  "section": "Finding things",
-  "line": "Each lookup says which rung answered, words, phrases or an embedder, and why a higher one was skipped, as data beside the passages.",
-  "source": "bot",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, search, pile"
- },
- {
   "name": "pile-serve",
   "kind": "stdlib",
   "section": "Finding things",

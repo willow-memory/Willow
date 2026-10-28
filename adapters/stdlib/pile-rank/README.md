@@ -22,8 +22,9 @@ Each passage is read as three fields: its **body**; its **title**, the file's
 path and any `# heading` line; and its **question lines**, those ending in
 `?`. A term is a word (split and with common words dropped the kernel's way,
 in its plain form by `kernel.stem`) or a **pair** of such words side by side
-on one line, kept only when two or more of the folder's texts use it. A pair
-one note happens to hold is not a phrase of yours.
+in one clause of a line (no comma or full stop between), kept only when two
+or more of the folder's texts use it. A pair one note happens to hold is not
+a phrase of yours, and neither is "sourdough, bread".
 
 BM25F: a term's count in each field, weighted (title 2, question lines 1.5,
 body 1) and normalised by that field's length against its mean (b 0.75), is

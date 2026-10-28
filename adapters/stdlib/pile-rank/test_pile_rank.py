@@ -66,6 +66,14 @@ def test_a_pair_one_text_uses_is_no_phrase(tmp_path):
     assert r.terms("sourdough bread") == ["sourdough", "bread"]
 
 
+def test_a_pair_never_spans_punctuation(tmp_path):
+    folder = a_folder(tmp_path, {**BAKING, "rye.md": "Rye and sourdough, bread.\n"})
+    r = pile_rank.Ranker(pile_rank.kernel.chunks(folder))
+    assert "sourdough bread" not in r.counts[3]["body"], r.pile[3]["path"]
+    assert r.terms("sourdough, bread") == ["sourdough", "bread"]
+    assert r.terms("sourdough bread") == ["sourdough", "bread", "sourdough bread"]
+
+
 def test_a_title_and_a_question_line_weigh_more_than_the_body(tmp_path):
     folder = a_folder(
         tmp_path,

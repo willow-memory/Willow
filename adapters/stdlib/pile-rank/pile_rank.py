@@ -9,8 +9,8 @@ Each passage is read as three fields: its body; its title, the file's path
 and any heading line (`# ...`); and its question lines, those ending in `?`.
 A term is a word, split and with common words dropped the kernel's way and
 taken in its plain form (`kernel.stem`), or a pair of such words next to each
-other on one line, kept only when two or more of the folder's texts use that
-pair. "sourdough bread" is then one term in a folder that bakes, and a
+other in one clause of a line (no comma or full stop between), kept only
+when two or more of the folder's texts use that pair. "sourdough bread" is then one term in a folder that bakes, and a
 passage saying it outranks one that says "bread" here and "sourdough" there.
 
 Scored by BM25F: each field's count of a term, weighted (title 2, question
@@ -39,6 +39,7 @@ from __future__ import annotations
 
 import json
 import math
+import re
 import sys
 from pathlib import Path
 
@@ -52,6 +53,7 @@ TOP = 5
 K1, B = 1.2, 0.75
 WEIGHT = {"title": 2.0, "asks": 1.5, "body": 1.0}
 PAIRED = 2  # texts that must use a pair before it is a phrase of the folder
+BREAK = re.compile(r"[.,;:!?()\[\]{}\"|]")  # a pair never spans one
 
 
 def line_terms(line: str) -> list[str]:
@@ -59,18 +61,23 @@ def line_terms(line: str) -> list[str]:
     return [kernel.stem(w) for w in kernel.words(line) if w not in kernel.FUNCTION]
 
 
+def clauses(line: str) -> list[list[str]]:
+    """A line's terms, cut at punctuation: "sourdough, bread" is no pair."""
+    return [ts for part in BREAK.split(line) if (ts := line_terms(part))]
+
+
 def pairs(ws: list[str]) -> list[str]:
     return [f"{a} {b}" for a, b in zip(ws, ws[1:])]
 
 
 def fields(c: dict) -> dict[str, list[list[str]]]:
-    """A passage's three fields, each as its lines' terms."""
+    """A passage's three fields, each as its clauses' terms."""
     lines = c["text"].splitlines()
     return {
-        "body": [line_terms(x) for x in lines],
+        "body": [ts for x in lines for ts in clauses(x)],
         "title": [line_terms(c["path"])]
-        + [line_terms(x) for x in lines if x.lstrip().startswith("#")],
-        "asks": [line_terms(x) for x in lines if x.rstrip().endswith("?")],
+        + [ts for x in lines if x.lstrip().startswith("#") for ts in clauses(x)],
+        "asks": [ts for x in lines if x.rstrip().endswith("?") for ts in clauses(x)],
     }
 
 
@@ -111,8 +118,9 @@ class Ranker:
 
     def terms(self, question: str) -> list[str]:
         """The question's words, then the folder's phrases among its pairs."""
-        ws = line_terms(question)
-        return list(dict.fromkeys(ws + [p for p in pairs(ws) if p in self.phrases]))
+        cs = clauses(question)
+        ps = [p for ts in cs for p in pairs(ts) if p in self.phrases]
+        return list(dict.fromkeys([t for ts in cs for t in ts] + ps))
 
     def rank(self, question: str, top: int = TOP) -> list[tuple[dict, float, list]]:
         """(passage, score, the phrases it holds) for the `top` best, best first."""
