@@ -727,6 +727,12 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- `live` counted a launcher standing in for a missing program as failing:
+  VS Code puts a `copilot` on PATH that only says the Copilot CLI isn't
+  installed, so `tools:copilot` failed on any machine with VS Code. A
+  check's own program exiting 127, a shell's "not found", is now not here
+  (unreachable, still no pass); any other exit, or 127 from anything else
+  the check runs, still fails. (#66)
 - ADDONS.md's section headings sat two levels under its title (h1 straight
   to h3), a hole in a screen reader's outline that the new `a11y-check`
   found on this repo's own page. The generated list's headings (the readme
