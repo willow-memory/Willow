@@ -54,12 +54,18 @@ def resolve_fix(repos: Path, fix: dict, files: list | None) -> dict:
     if not parents or (fix["kind"] == "commit" and len(parents) != 1):
         raise ValueError(f"{fixed[:12]} in {fix['repo']} has {len(parents)} parents")
     vulnerable = parents[0]
+    names = trees.phase3.git("diff", "--no-renames", "--name-only", vulnerable, fixed,
+                             cwd=repo).decode().splitlines()  # fmt: skip
+    for f in files or []:
+        if f not in names:
+            raise ValueError(f"{f} is not in the diff of {fixed[:12]} in {fix['repo']}")
     argv = [*trees.DIFF, vulnerable, fixed] + (["--", *files] if files else [])
     diff = trees.phase3.git(*argv, cwd=repo)
     if not diff:
         raise ValueError(f"{fixed[:12]} in {fix['repo']}: an empty diff")
     return {"repo": fix["repo"], "vulnerable": side(repo, vulnerable),
             "fixed": side(repo, fixed), "files_scored": files,
+            "diff_files": names,
             "diff_sha256": hashlib.sha256(diff).hexdigest()}  # fmt: skip
 
 

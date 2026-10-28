@@ -13,6 +13,11 @@
     "tree": "40d4b8bdf2e967f2909301f2dcf1a3b01bfc8277"
    },
    "files_scored": null,
+   "diff_files": [
+    "src/kartikeya/data/kart-sandbox.json",
+    "src/kartikeya/sandbox.py",
+    "tests/test_env_deny.py"
+   ],
    "diff_sha256": "b122ca9e11a6e99d55c7da94845dd440293edcd4b524e3c1c07114033f3dd45c"
   },
   "KG02": {
@@ -27,6 +32,11 @@
     "tree": "7159d1885234e9467f6c79a62fba88bada2a1a63"
    },
    "files_scored": null,
+   "diff_files": [
+    "src/kartikeya/sandbox.py",
+    "src/kartikeya/task_scan.py",
+    "tests/test_tree_rewrite.py"
+   ],
    "diff_sha256": "b44e2af809ff5a39014e6b71dca6df91400e948c8bc706d7326b705179aff6cc"
   },
   "KG03-kartikeya": {
@@ -41,6 +51,15 @@
     "tree": "b3d89a076e0355c5469d3d8cb29f89097fefec8f"
    },
    "files_scored": null,
+   "diff_files": [
+    "src/kartikeya/data/kart-sandbox.json",
+    "src/kartikeya/execute.py",
+    "src/kartikeya/sandbox.py",
+    "tests/test_env_deny.py",
+    "tests/test_lane_timeout.py",
+    "tests/test_sandbox.py",
+    "tests/test_worker.py"
+   ],
    "diff_sha256": "27111d22b5feb5d64a91cdd526885c4e7916e64f2feabc1ddf7435d43989b093"
   },
   "KG03-willow-mcp": {
@@ -55,6 +74,13 @@
     "tree": "77b3a649e28feb76d6de1fda3e6a4d81101ed9e7"
    },
    "files_scored": null,
+   "diff_files": [
+    "src/willow_mcp/heartbeat.py",
+    "src/willow_mcp/worker.py",
+    "tests/conftest.py",
+    "tests/test_heartbeat.py",
+    "tests/test_server.py"
+   ],
    "diff_sha256": "764f1ba37ed53215e4fcc3e299721c9d1a9268d77a3643c68a513255ea2d7983"
   },
   "KG04": {
@@ -69,6 +95,10 @@
     "tree": "38c37bf480b2119ae181636ee5ee02767f24be61"
    },
    "files_scored": null,
+   "diff_files": [
+    "docs/OPERATOR-ONBOARD.md",
+    "src/willow_mcp/envelope_authoring.py"
+   ],
    "diff_sha256": "6d4284ebfdaf381ba68605d7d5d6fe55e082ff26a9a1622769aed4d12699cda0"
   },
   "KG05": {
@@ -82,8 +112,17 @@
     "commit": "1dbe8f2233b68917eba2cdc666502e6c3cfcba38",
     "tree": "8b353974501ca01e6124246ce63065a4d65f5d2f"
    },
-   "files_scored": null,
-   "diff_sha256": "2869e650785e214aacd48532a8f1bfd44c5eadbb5dcde727ce80523ae8b404e7"
+   "files_scored": [
+    "src/willow_mcp/trust_owner_verbs.py"
+   ],
+   "diff_files": [
+    "src/willow_mcp/ci_lint_pin.py",
+    "src/willow_mcp/handoff.py",
+    "src/willow_mcp/trust_owner_verbs.py",
+    "tests/test_ci_lint_pin.py",
+    "tests/test_syscall_sync_trust_owner.py"
+   ],
+   "diff_sha256": "ba405d7d3fd57a7ded3ff033b5a5747f46d903c022ddcba98524729f478ba575"
   },
   "KG06": {
    "gap": "KG06",
@@ -96,8 +135,17 @@
     "commit": "1dbe8f2233b68917eba2cdc666502e6c3cfcba38",
     "tree": "8b353974501ca01e6124246ce63065a4d65f5d2f"
    },
-   "files_scored": null,
-   "diff_sha256": "2869e650785e214aacd48532a8f1bfd44c5eadbb5dcde727ce80523ae8b404e7"
+   "files_scored": [
+    "src/willow_mcp/ci_lint_pin.py"
+   ],
+   "diff_files": [
+    "src/willow_mcp/ci_lint_pin.py",
+    "src/willow_mcp/handoff.py",
+    "src/willow_mcp/trust_owner_verbs.py",
+    "tests/test_ci_lint_pin.py",
+    "tests/test_syscall_sync_trust_owner.py"
+   ],
+   "diff_sha256": "4b61e25e23d53dc2f115402c01b44b44453dd016f0f0ff748ac267f5a4b19668"
   },
   "KG07-willow-mcp": {
    "gap": "KG07",
@@ -111,6 +159,18 @@
     "tree": "6906b9332974d97d346bde43047f948408137ac8"
    },
    "files_scored": null,
+   "diff_files": [
+    "docs/design/consent-toggles.md",
+    "hooks/pre_tool_use.py",
+    "skills/kart-tasks.md",
+    "skills/orchestrator-routing.md",
+    "src/willow_mcp/bundle/hooks/pre_tool_use.py",
+    "src/willow_mcp/bundle/skills/kart-tasks.md",
+    "src/willow_mcp/bundle/skills/orchestrator-routing.md",
+    "src/willow_mcp/server.py",
+    "tests/test_consent_toggles.py",
+    "tests/test_server.py"
+   ],
    "diff_sha256": "c92fb02c4361452e21fec1c3090536d156caafe3ea1a08adf89c47ac1671153d"
   },
   "KG07-kartikeya": {
@@ -125,6 +185,12 @@
     "tree": "2d2e28c392dba5b0de90e21ff7663cfda7bad536"
    },
    "files_scored": null,
+   "diff_files": [
+    "src/kartikeya/execute.py",
+    "src/kartikeya/sandbox.py",
+    "tests/test_sandbox.py",
+    "tests/test_worker.py"
+   ],
    "diff_sha256": "74336611e112fa1e687626a9c4ee94644c4dd5786217c808540b9b6e46e0bddc"
   },
   "KG08": {
@@ -139,6 +205,11 @@
     "tree": "b93ece714107138db92a7e54a1e293083b13dbeb"
    },
    "files_scored": null,
+   "diff_files": [
+    "CHANGELOG.md",
+    "tests/steward/test_ci.py",
+    "willow_bot/steward/tick.py"
+   ],
    "diff_sha256": "a87f12632dfc120513f4bd7dd9a43987f95c02ef8fec9677a4b0b226bd6dad27"
   },
   "KG09": {
@@ -153,6 +224,10 @@
     "tree": "c2a453f88832ffc1029d6134cf1514fa0261e44f"
    },
    "files_scored": null,
+   "diff_files": [
+    "one-script/kernel.py",
+    "one-script/onescript/tests/test_kernel.py"
+   ],
    "diff_sha256": "ab3421e3aebb470eb88c39c1cd4f484ea8aa13fda98e07b76ead2b54a4826478"
   },
   "KG10": {
@@ -167,6 +242,10 @@
     "tree": "59382d98fe6de1223d0ad23908ec8fe641ab5892"
    },
    "files_scored": null,
+   "diff_files": [
+    "one-script/onescript/merge_check.py",
+    "one-script/onescript/tests/test_merge_check.py"
+   ],
    "diff_sha256": "099c00ca844f4a1fc92091cba3249f712ebf37aa2119d05bbb7d43bf3d90bd6c"
   },
   "KG11": {
@@ -181,6 +260,12 @@
     "tree": "72d18d1af6b9c4332b84e3b806aa8baab11df624"
    },
    "files_scored": null,
+   "diff_files": [
+    "one-script/onescript/proposals.py",
+    "one-script/onescript/record.py",
+    "one-script/onescript/reverse.py",
+    "one-script/onescript/tests/test_record_lock.py"
+   ],
    "diff_sha256": "6bc6256caf7c0270481e563a7bbaf6402986cfed686fc1feb021ef5b0fa79ac0"
   },
   "KG12": {
@@ -197,6 +282,15 @@
    "files_scored": [
     "grove/seat_record.py",
     "grove/table_boxes.py"
+   ],
+   "diff_files": [
+    "grove/seat_boxes.py",
+    "grove/seat_cli.py",
+    "grove/seat_record.py",
+    "grove/seat_say.py",
+    "grove/table_boxes.py",
+    "tests/test_seat_table.py",
+    "tests/test_table_boxes.py"
    ],
    "diff_sha256": "5c6f83993ade29fd4c975748427d55f87e9a25ca9dd5f0dfb33ede62b31ddf2f"
   }

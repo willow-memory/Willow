@@ -9,6 +9,7 @@ from __future__ import annotations
 import hashlib
 import importlib.util
 import json
+import math
 import os
 import shutil
 import subprocess
@@ -108,6 +109,22 @@ def test_the_pins_are_whole():
         "grove/seat_record.py",
         "grove/table_boxes.py",
     }
+
+
+def test_kg05_and_kg06_are_scored_on_the_file_their_finding_names():
+    pins, gaps = trees.load_pins(), trees.load_gaps()
+    for gid, name in (("KG05", "trust_owner_verbs.py"), ("KG06", "ci_lint_pin.py")):
+        files = pins[gid]["files_scored"]
+        assert len(files) == 1 and files[0].endswith("/" + name), gid
+        assert files == gaps[gid]["fix"][0]["files_scored"]
+        assert files[0] in pins[gid]["diff_files"]  # the fix's diff touches it
+        assert name in gaps[gid]["class"] + " " + gaps[gid]["note"], gid
+    assert pins["KG05"]["files_scored"] != pins["KG06"]["files_scored"]
+    assert pins["KG05"]["diff_sha256"] != pins["KG06"]["diff_sha256"]
+    assert pins["KG05"]["fixed"] == pins["KG06"]["fixed"]  # one fix commit
+    for unit, pin in pins.items():  # every scored file is in its fix's diff
+        for f in pin["files_scored"] or []:
+            assert f in pin["diff_files"], (unit, f)
 
 
 def test_this_folders_score_is_not_php2shells():
@@ -292,6 +309,7 @@ def test_resolve_pins_the_two_sides_and_the_diff(tmp_path):
                           capture_output=True).stdout  # fmt: skip
     assert units["KG01"]["diff_sha256"] == hashlib.sha256(diff).hexdigest()
     assert b"tests/t.py" in diff and units["KG01"]["files_scored"] is None
+    assert units["KG01"]["diff_files"] == ["app/guard.py", "tests/t.py"]
     narrow = subprocess.run(["git", *trees.DIFF, vuln, merge, "--", "app/guard.py"], cwd=repo,
                             check=True, capture_output=True).stdout  # fmt: skip
     assert b"tests/t.py" not in narrow
@@ -313,6 +331,9 @@ def test_resolve_refuses_what_it_cannot_pin(tmp_path):
     twice = {"repo": "demo-repo", "kind": "commit", "commit": lone[:7]}
     with pytest.raises(ValueError, match="twice"):
         resolve.resolve(repos, {"G": {"id": "G", "fix": [twice, twice]}})
+    outside = {**fix, "pr": 7, "files_scored": ["app/nope.py"]}
+    with pytest.raises(ValueError, match="not in the diff"):
+        resolve.resolve(repos, {"G": {"id": "G", "fix": [outside]}})
     assert resolve.main(["--repos", str(repos)]) == 2
 
 
@@ -368,6 +389,16 @@ def test_ask_scores_and_origin_follow_the_fix_back(tmp_path):
         and stats["hit_passages"] >= 1
     )
     assert 0 < stats["random_rate"] <= 1
+    assert stats["file_passages"] >= stats["hit_passages"]
+    ranked = [r for r in answers if r["ranked_by"] == "bm25" and r["gap"] == "KG01"]
+    assert len(ranked[0]["served"]) <= stats["changed"]  # all of the changed set ranked
+    whole = ask.ask(to, ix, "KG01", pin, qs, "before")
+    after = whole[-1]
+    assert after["mode"] == "before" and after["changed"] > stats["changed"]
+    assert after["random_rate"] == ask.phase4.chance_one(
+        after["changed"], after["hit_passages"], 10
+    )
+    assert after["file_passages"] >= 1
     scored = score.score(answers, to / "fixes")
     got = {(r["question"], r["ranked_by"]): r for r in scored}
     one = got[("KG01 1", "bm25")]
@@ -390,37 +421,127 @@ def test_ask_scores_and_origin_follow_the_fix_back(tmp_path):
     assert origin.main([]) == 2
 
 
-def test_run_writes_a_verdict_a_rule_and_refuses_what_is_not_built(tmp_path, capsys):
-    run = trees.sibling("run")
-    import kernel
+def test_the_rank_of_the_first_hit_is_exact_under_random_order():
+    import itertools
 
-    rows = []
-    for unit, gap in (("KG01", "KG01"), ("KG09", "KG09")):
-        for n in range(4):
-            for by in ("kernel", "bm25", "grep"):
-                rows.append({"type": "answer", "unit": unit, "gap": gap, "question": f"{gap} {n}",
-                             "ranked_by": by, "served": []})  # fmt: skip
-        rows.append({"type": "stats", "unit": unit, "gap": gap, "random_rate": 0.1})
+    run = trees.sibling("run")
+    for n, h in [(5, 2), (6, 1), (4, 4), (7, 3)]:
+        firsts = [min(c) for c in itertools.combinations(range(1, n + 1), h)]
+        brute = [firsts.count(r) / len(firsts) for r in range(1, n + 1)]
+        assert run.rank_pmf(n, h) == pytest.approx(brute), (n, h)
+    assert run.rank_pmf(4, 0) == [0.0, 0.0, 0.0, 1.0]  # no hit: counts as last
+    assert run.first_rank({"first_hit_rank": 3}, 7) == 3
+    assert run.first_rank({"first_hit_rank": None}, 7) == 7  # never returned: last
+    assert run.rank_statistic([(1, 5), (2, 5), (4, 5)]) == 1.75
+
+
+def test_the_rank_statistic_beats_random_orderings_only_when_it_should():
+    run = trees.sibling("run")
+    sizes = [(10, 2)] * 12
+    first = run.rank_statistic([(1, 10)] * 12)
+    last = run.rank_statistic([(10, 10)] * 12)
+    expected, p_first = run.rank_p(sizes, first, run.random.Random("a"))
+    _, p_last = run.rank_p(sizes, last, run.random.Random("a"))
+    assert p_first < 0.01 and p_last > 0.9 and last < expected < first
+    again = run.rank_p(sizes, first, run.random.Random("a"))
+    assert again == (expected, p_first)  # the seed fixes it
+
+
+def scored_row(unit, gap, by, served, first, q="1"):
+    return {"unit": unit, "gap": gap, "question": f"{gap} {q}", "ranked_by": by,
+            "served": served, "first_hit_rank": first,
+            "best": "hit" if "hit" in served else "file" if "file" in served else "miss"}  # fmt: skip
+
+
+def test_phase_1_is_judged_by_the_rank_of_the_first_hit(tmp_path, capsys):
+    run = trees.sibling("run")
+    stats = [{"type": "stats", "unit": u, "gap": u, "changed": 10, "hit_passages": 2,
+              "random_rate": 0.5} for u in ("KG01", "KG09")]  # fmt: skip
     group = {"KG01": "strong", "KG09": "weaker"}
-    always = [{**r, "best": "hit"} for r in rows if r["type"] == "answer"]
-    nulls = [{"unit": "KG01", "gap": "null", "ranked_by": "bm25", "best": "miss"}]
-    out = run.judge(rows, always + nulls, group)
-    assert out["passes"] == {"above chance, bm25, strong": True,
-                             "above chance, bm25, weaker": True,
+    ten = ["miss"] * 10
+
+    def pairs(first):
+        out = []
+        for u in ("KG01", "KG09"):
+            for q in range(4):
+                served = (
+                    ten[:]
+                    if first is None
+                    else ten[: first - 1] + ["hit"] + ten[first:]
+                )
+                out.append(scored_row(u, u, "bm25", served, first, str(q)))
+        return out
+
+    null = [scored_row("KG01", "null", "bm25", ten, None)]
+    out = run.judge(stats, pairs(1) + null, group)
+    assert out["passes"] == {"rank, bm25, strong": True, "rank, bm25, weaker": True,
                              "null questions hit nothing": True}  # fmt: skip
-    out = run.judge(rows, [{**r, "best": "miss"} for r in always] + nulls, group)
-    assert not out["passes"]["above chance, bm25, strong"]
-    assert out["groups"]["bm25, strong"]["of"] == 4
-    leak = [{"unit": "KG01", "gap": "null", "ranked_by": "grep", "best": "hit"}]
-    assert not run.judge(rows, always + leak, group)["passes"][
+    assert out["draws"] == 100_000 and out["seed"] == run.SEED
+    assert out["rank"]["bm25, strong"]["observed"] == 4.0
+    assert out["top3_hit_rate"]["bm25, strong"]["hits"] == 4
+    lost = run.judge(stats, pairs(None) + null, group)  # never returned: last
+    assert not lost["passes"]["rank, bm25, strong"]
+    assert lost["rank"]["bm25, strong"]["observed"] == pytest.approx(0.4)
+    late = run.judge(stats, pairs(10) + null, group)
+    assert (
+        not late["passes"]["rank, bm25, weaker"]
+        and late["passes"]["null questions hit nothing"]
+    )
+    leak = [scored_row("KG01", "null", "grep", ["miss", "hit"], 2)]
+    assert not run.judge(stats, pairs(1) + leak, group)["passes"][
         "null questions hit nothing"
     ]
-    assert not run.judge(rows, always, group)["passes"][
+    deep = [scored_row("KG01", "null", "grep", ["miss"] * 3 + ["hit"], 4)]
+    assert run.judge(stats, pairs(1) + deep, group)["passes"][
         "null questions hit nothing"
-    ]  # none asked
-    assert run.main(["before"]) == 2 and run.main([]) == 2
-    assert "not in bite 2" in capsys.readouterr().err
-    assert kernel.ALIVE == 0
+    ]
+    assert not run.judge(stats, pairs(1), group)["passes"]["null questions hit nothing"]
+
+
+def test_phase_2_is_judged_at_the_file_level_against_exact_chance():
+    run = trees.sibling("run")
+    stats = [{"type": "stats", "unit": u, "gap": u, "changed": 100, "hit_passages": 5,
+              "file_passages": 10, "random_rate": 0.4} for u in ("KG01", "KG09")]  # fmt: skip
+    group = {"KG01": "strong", "KG09": "weaker"}
+    chance = 1 - math.comb(90, 10) / math.comb(100, 10)
+    assert 0.6 < chance < 0.7
+
+    def rows(unit, served):
+        return [scored_row(unit, unit, "bm25", served, None, str(q)) for q in range(16)]
+
+    file_only = ["miss", "file", "miss"]
+    out = run.judge_before(
+        stats, rows("KG01", file_only) + rows("KG09", ["hit"]), group
+    )
+    assert out["passes"] == {"file level above chance, bm25, strong": True,
+                             "file level above chance, bm25, weaker": True}  # fmt: skip
+    strong = out["table"]["bm25, strong"]
+    assert (
+        strong["file_hits@10"] == 16 and strong["line_hits@10"] == 0
+    )  # line level reported
+    assert strong["file_expected"] == pytest.approx(16 * chance)
+    assert strong["file_p"] < 0.01
+    none = run.judge_before(
+        stats, rows("KG01", ["miss"] * 10) + rows("KG09", ["hit"]), group
+    )
+    assert not none["passes"]["file level above chance, bm25, strong"]
+    assert none["table"]["bm25, strong"]["file_p"] == 1.0
+    thin = run.judge_before(
+        stats, rows("KG01", file_only)[:3] + rows("KG09", ["hit"]), group
+    )
+    assert not thin["passes"][
+        "file level above chance, bm25, strong"
+    ]  # 3 of 3 is not rare
+    deep = ["miss"] * 10 + ["file"]  # an 11th is outside the top 10
+    assert not run.judge_before(stats, rows("KG01", deep), group)["passes"][
+        "file level above chance, bm25, strong"
+    ]
+
+
+def test_run_refuses_what_is_not_built(capsys):
+    run = trees.sibling("run")
+    assert run.main(["spread"]) == 2 and run.main([]) == 2
+    assert run.main(["found"]) == 2
 
 
 def test_run_end_to_end_on_a_fixture(tmp_path, capsys, monkeypatch):
@@ -449,6 +570,33 @@ def test_run_end_to_end_on_a_fixture(tmp_path, capsys, monkeypatch):
     assert text.count('"verdict"') >= 3 and "failing" in text and "satisfied" in text
     assert any(json.loads(x)["best"] == "hit" for x in scored.read_text().splitlines())
     assert json.loads(capsys.readouterr().out)["null_answers"] == 3
+
+
+def test_phase_2_end_to_end_on_a_fixture(tmp_path, capsys, monkeypatch):
+    run = trees.sibling("run")
+    ask = trees.sibling("ask")
+    repos, units, _ = pinned(tmp_path)
+    to = tmp_path / "work"
+    trees.fetch_unit(to, repos, "KG01", units["KG01"])
+    qs = [
+        ("KG01 1", "load the whole policy from the root path"),
+        ("null 1", "qqqq zzzz"),
+    ]
+    rows = ask.ask(to, tmp_path / "ix", "KG01", units["KG01"], qs, "before")
+    answers = tmp_path / "answers.jsonl"
+    answers.write_text("".join(json.dumps(r, sort_keys=True) + "\n" for r in rows))
+    monkeypatch.setattr(
+        trees, "load_gaps", lambda: {"KG01": {"source_kind": "gap_record"}}
+    )
+    box, scored = tmp_path / "box", tmp_path / "scored.jsonl"
+    code = run.main(["before", "--to", str(to), "--answers", str(answers), "--box",
+                     str(box), "--out", str(scored)])  # fmt: skip
+    assert code == 42  # two passages of three in a file the fix changed: not rare
+    text = (box / "record.jsonl").read_text()
+    assert "phase2:file level above chance, bm25, strong" in text
+    assert "phase2:file level above chance, bm25, weaker" in text
+    out = json.loads(capsys.readouterr().out)
+    assert out["table"]["bm25, strong"]["file_hits@10"] == 1
 
 
 def test_the_stubs_say_they_are_not_built(capsys):

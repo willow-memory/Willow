@@ -47,9 +47,9 @@
    "source": "gap f265d9b3727b, Loki A28BD892 (HIGH)",
    "source_kind": "gap_record",
    "class": "apply takes file paths from the signed record it is applying (redirect)",
-   "fix": [{"repo": "willow-mcp", "kind": "commit", "commit": "1dbe8f2", "date": "2026-09-29"}],
+   "fix": [{"repo": "willow-mcp", "kind": "commit", "commit": "1dbe8f2", "date": "2026-09-29", "files_scored": ["src/willow_mcp/trust_owner_verbs.py"]}],
    "fix_kind": "code",
-   "note": "same fix commit as KG06; scored on its own hunks"
+   "note": "same fix commit as KG06; scored on the one file its finding names, trust_owner_verbs.py (operator 2026-10-28)"
   },
   {
    "id": "KG06",
@@ -57,8 +57,9 @@
    "source": "gap 806df5cb08d7, Loki D9E5EF53 (HIGH)",
    "source_kind": "gap_record",
    "class": "the judged seat chooses the repo whose pin judges it",
-   "fix": [{"repo": "willow-mcp", "kind": "commit", "commit": "1dbe8f2", "date": "2026-09-29"}],
-   "fix_kind": "code"
+   "fix": [{"repo": "willow-mcp", "kind": "commit", "commit": "1dbe8f2", "date": "2026-09-29", "files_scored": ["src/willow_mcp/ci_lint_pin.py"]}],
+   "fix_kind": "code",
+   "note": "same fix commit as KG05; scored on the one file its finding names, ci_lint_pin.py (operator 2026-10-28)"
   },
   {
    "id": "KG07",
