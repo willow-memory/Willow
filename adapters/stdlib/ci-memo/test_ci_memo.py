@@ -78,12 +78,14 @@ def tree(tmp_path: Path, extra: dict | None = None) -> Path:
     return root
 
 
-def pinned_box(tmp_path: Path, root: Path, gates: dict[str, str]) -> Path:
+def pinned_box(
+    tmp_path: Path, root: Path, gates: dict[str, str], name: str = "box"
+) -> Path:
     """A box holding one verdict per gate, of this tree, as ci.py writes
     them."""
-    b = tmp_path / "box"
+    b = tmp_path / name
     run(str(KERNEL), "init", "--box", str(b), "--pile", str(root),
-        "--key", str(tmp_path / "k"), "--now", TS)  # fmt: skip
+        "--key", str(tmp_path / f"{name}.key"), "--now", TS)  # fmt: skip
     seen = cm.digests(root)
     sha = cm.key_of(sorted(seen), seen)
     for gate, state in gates.items():
@@ -118,6 +120,25 @@ def test_pin_then_plan_stands_only_what_the_bytes_still_cover(tmp_path):
     assert "stand  mutants:zed" in got, "another add-on's bytes are its own"
     assert "run    lint:check" in got, "lint reads every .py"
     assert "stand  tests:beats" in got, "the kernel didn't change"
+
+
+def test_a_run_cut_into_shards_is_pinned_whole_from_each_record(tmp_path):
+    root = tree(tmp_path)
+    one = pinned_box(tmp_path, root, {"mutants:accents": "satisfied", "lint:check": "failing"}, "1")  # fmt: skip
+    two = pinned_box(tmp_path, root, {"mutants:zed": "satisfied", "lint:check": "satisfied"}, "2")  # fmt: skip
+    pin = tmp_path / "ci.pin"
+    got = memo("pin", "--box", str(one), "--box", str(two), "--to", str(pin), "--repo", str(root))  # fmt: skip
+    assert got.returncode == 0 and "pinned 3 gates" in got.stdout
+    got = memo("plan", "--pin", str(pin), "--repo", str(root)).stdout
+    assert "stand  mutants:accents" in got and "stand  mutants:zed" in got
+    lint = next(
+        ln.split() for ln in got.splitlines() if ln.startswith("stand  lint:check")
+    )
+    assert lint[2] == "satisfied", "the later record named wins"
+    got = memo("pin", "--box", str(one), "--box", str(tmp_path / "nope"), "--to", str(pin), "--repo", str(root))  # fmt: skip
+    assert got.returncode == 2 and "nope is not a kernel box" in got.stderr
+    got = memo("pin", "--box", str(one), "--box", "", "--to", str(pin), "--repo", str(root))  # fmt: skip
+    assert got.returncode == 2
 
 
 def test_a_script_gaining_a_command_line_reruns_every_add_ons_mutants(tmp_path):
