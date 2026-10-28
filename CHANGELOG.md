@@ -36,6 +36,11 @@ says how). The first was v0.1.0.
   next answer. On Hollis's folder a question takes 17 ms on the socket,
   against 0.35 s cold. Its card says `writes: to`, not the idea's
   `nothing`: the socket is a file. (#69)
+- `pile-sweep`: the passage size measured on your own sealed answers. Each
+  size is read with the kernel's `MAX_CHUNK` set to it in this process only,
+  and an answer is found when a top-five passage overlaps its lines; the best
+  size finds the most, then reads the fewest lines. It names a size and
+  changes nothing. (#69)
 - `pile-store`, the store the other pile ideas stand on: a folder's passages
   read once into one SQLite file, a text held in several places stored once,
   and opened read-only only while it still matches the folder, the kernel's

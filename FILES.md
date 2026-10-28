@@ -371,6 +371,10 @@ willow/
 │   │   │   ├── pile_store.py  a folder's passages in one SQLite file, each repeat once, used only while it matches
 │   │   │   ├── test_pile_store.py
 │   │   │   └── README.md
+│   │   ├── pile-sweep/
+│   │   │   ├── pile_sweep.py  your sealed answers asked at several passage sizes, the best one named
+│   │   │   ├── test_pile_sweep.py
+│   │   │   └── README.md
 │   │   ├── pins/
 │   │   │   ├── pins.py       version ranges in package.json or requirements.txt that no lockfile pins
 │   │   │   ├── test_pins.py
