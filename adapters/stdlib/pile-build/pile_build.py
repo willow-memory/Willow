@@ -14,7 +14,10 @@ current:
   build it checks again, and builds again, up to `ROUNDS` times, so a change
   made mid-build is not left stale.
 - **--background**: it starts itself detached and returns at once, saying
-  the process it started; a hook doesn't wait for the build.
+  the process it started; a hook doesn't wait for the build. The detached
+  build is handed pipes its starter closes at once, and keeps what it would
+  say to itself: no /dev/null is opened, and nothing holds the hook's
+  output open. (`--detached` is how it starts itself; not for people.)
 
 Without fcntl (Windows) there is no lock: two builds may both run, and each
 still replaces the store whole, so no reader meets half of one.
@@ -27,6 +30,7 @@ nothing to read, or it still changed after `ROUNDS` builds; 2 refused.
 
 from __future__ import annotations
 
+import io
 import os
 import subprocess
 import sys
@@ -94,12 +98,18 @@ def main(argv: list[str]) -> int:
     for a in it:
         if a in ("--from", "--to"):
             opts[a] = next(it, "")
-        elif a == "--background":
+        elif a in ("--background", "--detached"):
             opts[a] = ""
         else:
             return usage()
-    if not opts.get("--from") or not opts.get("--to"):
+    if (
+        not opts.get("--from")
+        or not opts.get("--to")
+        or len({"--background", "--detached"} & set(opts)) > 1
+    ):
         return usage()
+    if "--detached" in opts:  # its starter has closed the pipes' other ends
+        sys.stdout = sys.stderr = io.StringIO()
     folder, store = Path(opts["--from"]).resolve(), Path(opts["--to"]).resolve()
     if not folder.is_dir():
         print(f"refused: {opts['--from']} is not a folder", file=sys.stderr)
@@ -119,10 +129,13 @@ def main(argv: list[str]) -> int:
     if "--background" in opts:
         child = subprocess.Popen(
             [sys.executable, str(Path(__file__).resolve()),
-             "--from", str(folder), "--to", opts["--to"]],
-            stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL, start_new_session=True,
+             "--from", str(folder), "--to", opts["--to"],
+             "--detached"],
+            stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE, start_new_session=True,
         )  # fmt: skip
+        for end in (child.stdin, child.stdout, child.stderr):
+            end.close()
         print(f"started: building in the background, process {child.pid}")
         return kernel.ALIVE
     fd = held(store.parent)
