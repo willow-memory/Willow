@@ -13,7 +13,7 @@ says how). The first was v0.1.0.
 - `ci-memo` pins a run cut into shards whole: `pin` takes `--box` once for
   each shard's record, and a gate two of them hold takes the later one
   named. On this repo, eight shards' records pin as one, 185 gates; after a
-  change to one add-on, 123 stand and 62 run.
+  change to one add-on, 123 stand and 62 run. (#68)
 - `words-sv` and `words-pl`, two more of the common-words family: Swedish
   and Polish questions asked through them lose their languages' common words
   before the kernel's own `bite`, as words-de does for German. Each `list`
