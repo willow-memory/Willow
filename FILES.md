@@ -233,6 +233,10 @@ willow/
 │   │   │   ├── daily_word.py the day's word from the folder's own words, six guesses marked on the record
 │   │   │   ├── test_daily_word.py
 │   │   │   └── README.md
+│   │   ├── day-one/
+│   │   │   ├── day_one.py   a journal export entry by entry
+│   │   │   ├── test_day_one.py
+│   │   │   └── README.md
 │   │   ├── debts/
 │   │   │   ├── debts.py      lines speaking of money owed, dated and cited, the sum as written, never netted
 │   │   │   ├── test_debts.py
@@ -273,6 +277,10 @@ willow/
 │   │   │   ├── fair_merge.py   each folder ranked on its own and the lists dealt out in turns, so a large corpus can't bury a small one
 │   │   │   ├── test_fair_merge.py
 │   │   │   └── README.md
+│   │   ├── family-tree/
+│   │   │   ├── family_tree.py   a family tree as a paragraph for each person
+│   │   │   ├── test_family_tree.py
+│   │   │   └── README.md
 │   │   ├── first-mention/
 │   │   │   ├── first_mention.py  when the files first mention something: the earliest dated line that holds every word
 │   │   │   ├── test_first_mention.py
@@ -302,6 +310,10 @@ willow/
 │   │   │   ├── host.json     how GitHub titles the merge of a pull request, for whose.py --host
 │   │   │   ├── test_github.py
 │   │   │   └── README.md     its card: and .github/ belongs to it
+│   │   ├── google-keep/
+│   │   │   ├── google_keep.py   a Keep note or list with its day and labels
+│   │   │   ├── test_google_keep.py
+│   │   │   └── README.md
 │   │   ├── gradebook/
 │   │   │   ├── gradebook.py   students' marks, and who is falling behind
 │   │   │   ├── test_gradebook.py
@@ -402,6 +414,10 @@ willow/
 │   │   │   ├── job_hunt.py   applications sent, replies and who you're waiting on
 │   │   │   ├── test_job_hunt.py
 │   │   │   └── README.md
+│   │   ├── joplin/
+│   │   │   ├── joplin.py   a Joplin export note by note
+│   │   │   ├── test_joplin.py
+│   │   │   └── README.md
 │   │   ├── jrnl/
 │   │   │   ├── jrnl.py       jrnl journals mirrored, each stamped entry one dated passage
 │   │   │   ├── test_jrnl.py
@@ -409,6 +425,10 @@ willow/
 │   │   ├── jupyter/
 │   │   │   ├── jupyter.py   a Jupyter notebook as text, one block for each cell with its number and kind
 │   │   │   ├── test_jupyter.py
+│   │   │   └── README.md
+│   │   ├── karakeep/
+│   │   │   ├── karakeep.py   a bookmark export with tags and notes
+│   │   │   ├── test_karakeep.py
 │   │   │   └── README.md
 │   │   ├── latex/
 │   │   │   ├── latex.py   a LaTeX source as its prose, line for line, commands stripped
@@ -442,9 +462,17 @@ willow/
 │   │   │   ├── mail.py       .eml and .mbox, with sender, date and subject
 │   │   │   ├── test_mail.py
 │   │   │   └── README.md
+│   │   ├── mastodon/
+│   │   │   ├── mastodon.py   your posts as dated lines
+│   │   │   ├── test_mastodon.py
+│   │   │   └── README.md
 │   │   ├── mcp-lite/
 │   │   │   ├── server.py         the mcp add-on's three tools, the protocol by hand, nothing to install
 │   │   │   ├── test_server.py
+│   │   │   └── README.md
+│   │   ├── mediawiki/
+│   │   │   ├── mediawiki.py   a MediaWiki dump as plain text, page by page
+│   │   │   ├── test_mediawiki.py
 │   │   │   └── README.md
 │   │   ├── merkle/
 │   │   │   ├── merkle.py     a Merkle tree over the record: one row proven with a handful of hashes
@@ -469,6 +497,10 @@ willow/
 │   │   ├── mood/
 │   │   │   ├── mood.py   mood scores over weeks and months
 │   │   │   ├── test_mood.py
+│   │   │   └── README.md
+│   │   ├── musicxml/
+│   │   │   ├── musicxml.py   scores as titles, key, tempo, markings and lyrics
+│   │   │   ├── test_musicxml.py
 │   │   │   └── README.md
 │   │   ├── mutants/
 │   │   │   ├── mutants.py    breaks each add-on's code on purpose and checks its tests notice
@@ -655,9 +687,21 @@ willow/
 │   │   │   ├── said.py       who said what, read by shape (a chat's stamp, a speech verb, quotation marks), dated
 │   │   │   ├── test_said.py
 │   │   │   └── README.md
+│   │   ├── sarif/
+│   │   │   ├── sarif.py   scanner findings by file and line
+│   │   │   ├── test_sarif.py
+│   │   │   └── README.md
+│   │   ├── sbom/
+│   │   │   ├── sbom.py   an SBOM component by component with licences
+│   │   │   ├── test_sbom.py
+│   │   │   └── README.md
 │   │   ├── scan/
 │   │   │   ├── scan.py       indexes a folder once, then asks it a list of questions, the kernel's way
 │   │   │   ├── test_scan.py  holds its answers to the kernel's, every ranking vector included
+│   │   │   └── README.md
+│   │   ├── screenplay/
+│   │   │   ├── screenplay.py   scripts as scenes, cues and dialogue
+│   │   │   ├── test_screenplay.py
 │   │   │   └── README.md
 │   │   ├── scrub/
 │   │   │   ├── scrub.py   a copy of a JPEG, PNG, docx, xlsx or pptx without its Exif, author, times and edit history, and what was taken out
@@ -773,6 +817,10 @@ willow/
 │   │   │   ├── vscode.py         a VS Code task: answers in the Problems panel
 │   │   │   ├── test_vscode.py
 │   │   │   └── README.md
+│   │   ├── wallabag/
+│   │   │   ├── wallabag.py   saved articles with tags and highlights
+│   │   │   ├── test_wallabag.py
+│   │   │   └── README.md
 │   │   ├── warranties/
 │   │   │   ├── warranties.py   when a cover ends, and where its receipt is
 │   │   │   ├── test_warranties.py
@@ -840,6 +888,10 @@ willow/
 │   │   ├── words-tr/
 │   │   │   ├── words_tr.py   a question in Turkish, its common words out, then the kernel's bite
 │   │   │   ├── test_words_tr.py
+│   │   │   └── README.md
+│   │   ├── x-archive/
+│   │   │   ├── x_archive.py   your X posts and messages as dated lines
+│   │   │   ├── test_x_archive.py
 │   │   │   └── README.md
 │   │   ├── xref/
 │   │   │   ├── xref.py       each link and file:line in your files checked, still there

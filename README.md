@@ -120,11 +120,11 @@ says how to pick one up:
 <!-- willow:front show=pick week=2026-W44 -->
 **Add-on of the week**
 
-**[annotations](adapters/stdlib/annotations/)** — Approved answers as W3C Web Annotations, so any annotation tool can show what your files say about a page.
+**[renewals](adapters/stdlib/renewals/)** — Passports, licences, insurance and memberships: when each expires, from your documents.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 202 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 215 built add-ons in name order.*
 
-[Every add-on, 202 built of 470, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 215 built of 470, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 

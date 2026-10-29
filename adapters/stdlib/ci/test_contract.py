@@ -63,6 +63,20 @@ def _png() -> bytes:
             + chunk(b"tEXt", b"Author\0Ana") + chunk(b"IDAT", zlib.compress(b"\0\xff\0\0")) + chunk(b"IEND", b""))  # fmt: skip
 
 
+def _tar(files: dict[str, str]) -> bytes:
+    import io
+    import tarfile
+
+    buf = io.BytesIO()
+    with tarfile.open(fileobj=buf, mode="w") as tar:
+        for name, text in files.items():
+            data = text.encode()
+            info = tarfile.TarInfo(name)
+            info.size = len(data)
+            tar.addfile(info, io.BytesIO(data))
+    return buf.getvalue()
+
+
 #: files an add-on needs in the pile besides the default, by add-on
 PILE_EXTRA: dict[str, dict[str, bytes]] = {"scrub": {"photo.png": _png()}}
 
@@ -120,6 +134,89 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         b'<created>20240303T101500Z</created><updated>20240305T080000Z</updated><tag>garden</tag><tag>plots</tag>'
         b'<note-attributes><author>Ada Example</author><source-url>https://example.org/plots</source-url></note-attributes>'
         b'<resource><resource-attributes><file-name>plan.pdf</file-name></resource-attributes></resource></note></en-export>'
+    )}),
+    "family-tree": ("family_tree.py", {"family.ged": (
+        b"0 HEAD\n1 CHAR UTF-8\n0 @I1@ INDI\n1 NAME John /Smith/\n1 BIRT\n2 DATE 2 Mar 1850\n2 PLAC Leeds\n1 DEAT\n2 DATE 1920\n2 PLAC York\n"
+        b"1 FAMC @F1@\n1 FAMS @F2@\n1 NOTE A weaver\n2 CONC  and a singer.\n2 CONT Second line.\n"
+        b"0 @I2@ INDI\n1 NAME Mary /Brown/\n1 FAMS @F2@\n0 @I4@ INDI\n1 NAME Arthur /Smith/\n0 @I5@ INDI\n1 NAME Ann /Jones/\n"
+        b"0 @F1@ FAM\n1 HUSB @I4@\n1 WIFE @I5@\n1 CHIL @I1@\n0 @F2@ FAM\n1 HUSB @I1@\n1 WIFE @I2@\n1 MARR\n2 DATE 1875\n2 PLAC Hull\n0 TRLR\n"
+    )}),
+    "mediawiki": ("mediawiki.py", {"dump.xml": (
+        b'<mediawiki xmlns="http://www.mediawiki.org/xml/export-0.10/" version="0.10"><siteinfo><sitename>Garden</sitename></siteinfo>'
+        b'<page><title>Tomatoes</title><ns>0</ns><id>1</id><revision><timestamp>2024-01-01T10:00:00Z</timestamp><text xml:space="preserve">old text</text></revision>'
+        b'<revision><timestamp>2024-03-03T10:00:00Z</timestamp><text xml:space="preserve">\'\'\'Tomatoes\'\'\' want [[sun|six hours of sun]].{{cite|x}}&lt;ref&gt;n&lt;/ref&gt;\n== Growing ==\n* plant in [[Bed 2]]\n[[Category:Veg]]</text></revision></page>'
+        b'<page><title>Maters</title><ns>0</ns><id>2</id><revision><timestamp>2024-02-02T00:00:00Z</timestamp><text>#REDIRECT [[Tomatoes]]</text></revision></page></mediawiki>'
+    )}),
+    "screenplay": ("screenplay.py", {"garden.fountain": (
+        b"Title: Garden Party\nAuthor: Ana Example\n\n"
+        b"INT. KITCHEN - DAY #1#\n\nAna waters the tomatoes.\n\nANA\nSix hours of sun.\n\nBEN (V.O.)\n(dryly)\nOr so she says.\n\n"
+        b"CUT TO:\n\n.EXT. GARDEN - NIGHT\n\n[[a note]]The moon /* hidden */ rises.\n"
+    )}),
+    "musicxml": ("musicxml.py", {"song.musicxml": (
+        b'<?xml version="1.0"?><score-partwise version="3.1"><work><work-title>Evening Song</work-title></work>'
+        b'<identification><creator type="composer">Ana Example</creator><creator type="lyricist">Ben Sample</creator></identification>'
+        b'<part-list><score-part id="P1"><part-name>Soprano</part-name></score-part></part-list>'
+        b'<part id="P1"><measure number="1"><attributes><key><fifths>1</fifths><mode>major</mode></key><time><beats>3</beats><beat-type>4</beat-type></time></attributes>'
+        b'<direction><direction-type><words>Andante</words></direction-type><sound tempo="72"/></direction>'
+        b'<direction><direction-type><dynamics><p/></dynamics></direction-type></direction>'
+        b'<note><pitch><step>G</step><octave>4</octave></pitch><lyric number="1"><syllabic>begin</syllabic><text>Ev</text></lyric></note>'
+        b'<note><pitch><step>A</step><octave>4</octave></pitch><lyric number="1"><syllabic>end</syllabic><text>ening</text></lyric></note>'
+        b'<note><pitch><step>B</step><octave>4</octave></pitch><lyric number="1"><syllabic>single</syllabic><text>comes</text></lyric><lyric number="2"><syllabic>single</syllabic><text>Morn</text></lyric></note></measure></part></score-partwise>'
+    )}),
+    "joplin": ("joplin.py", {"notes.jex": (
+        _tar({
+        "aaa.md": "Garden\n\nid: aaa\nparent_id: \ncreated_time: 2024-01-01T00:00:00.000Z\ntype_: 2",
+        "bbb.md": "Veg\n\nid: bbb\nparent_id: aaa\ntype_: 2",
+        "n1.md": "Tomato notes\n\nPlant out after the last frost.\nSecond line.\n\nid: n1\nparent_id: bbb\ncreated_time: 2024-03-02T08:00:00.000Z\nupdated_time: 2024-03-05T09:30:00.000Z\ndeleted_time: 0\ntype_: 1",
+        "n2.md": "Bin day\n\nid: n2\nparent_id: \ncreated_time: 2024-04-01T00:00:00.000Z\ntype_: 1",
+        "gone.md": "Old\n\nrubbish\n\nid: g\nparent_id: bbb\ndeleted_time: 1710000000000\ntype_: 1",
+        "tag.md": "mytag\n\nid: t\ntype_: 5",
+        "resources/pic.png": "not markdown",
+        })
+    )}),
+    "day-one": ("day_one.py", {"Journal.json": (
+        b'{"metadata":{"version":"1.0"},"entries":['
+        b'{"creationDate":"2024-03-03T09:00:00Z","text":"Second entry\\\\.","tags":["garden","spring"],"starred":true,"location":{"placeName":"Kitchen","localityName":"Leeds","country":"United Kingdom"},"weather":{"conditionsDescription":"Cloudy","temperatureCelsius":7.6}},'
+        b'{"creationDate":"2024-03-02T08:15:00Z","text":"Planted out the tomatoes. It was 5\\\\-6 degrees\\\\!"},'
+        b'{"creationDate":"2024-03-01T00:00:00Z","text":"  "}]}'
+    )}),
+    "google-keep": ("google_keep.py", {"Shopping.json": (
+        b'{"color":"DEFAULT","isTrashed":false,"isPinned":true,"title":"Shopping","userEditedTimestampUsec":1710000000000000,"createdTimestampUsec":1709380000000000,'
+        b'"labels":[{"name":"home"},{"name":"food"}],"listContent":[{"text":"milk","isChecked":false},{"text":"eggs","isChecked":true},{"text":" ","isChecked":false}]}'
+    )}),
+    "karakeep": ("karakeep.py", {"karakeep.json": (
+        b'{"bookmarks":[{"createdAt":1710000000,"title":"Tomato growing guide","tags":["garden",{"name":"veg"}],"note":"Read the  staking section.","summary":"How to grow tomatoes.",'
+        b'"content":{"type":"link","url":"https://example.org/tomatoes","description":"A guide\\nto tomatoes."}},'
+        b'{"createdAt":"2024-02-01T10:00:00Z","title":"","content":{"type":"text","text":"Remember   the basil."}}]}'
+    )}),
+    "wallabag": ("wallabag.py", {"wallabag.json": (
+        b'[{"title":"Tomato growing guide","url":"https://example.org/tomatoes","created_at":"2024-03-02T10:00:00+0000","tags":["garden",{"label":"veg"},5],'
+        b'"content":"<p>Plant   after <b>frost</b>.</p><script>x()</script><p>Stake early.</p>","annotations":[{"quote":"Stake early.","text":"do this in April"}]},'
+        b'{"title":"","url":"https://example.org/older","created_at":"2024-01-01T00:00:00+0000","content":"<p>Old &amp; dusty.</p>"}, 7]'
+    )}),
+    "sarif": ("sarif.py", {"codeql.sarif": (
+        b'{"version":"2.1.0","runs":[{"tool":{"driver":{"name":"CodeQL","rules":[{"id":"py/sql-injection","shortDescription":{"text":"SQL injection"}}]}},"results":['
+        b'{"ruleId":"py/xss","level":"warning","message":{"text":"Reflected   XSS."},"locations":[{"physicalLocation":{"artifactLocation":{"uri":"src/web.py"},"region":{"startLine":7}}}]},'
+        b'{"ruleId":"py/sql-injection","level":"error","message":{"text":"This query depends on a user-provided value."},"locations":[{"physicalLocation":{"artifactLocation":{"uri":"src/db.py"},"region":{"startLine":42}}}]},'
+        b'{"ruleId":"py/other","message":{"markdown":"Plain **md**"}}]}]}'
+    )}),
+    "sbom": ("sbom.py", {"sbom.json": (
+        b'{"bomFormat":"CycloneDX","specVersion":"1.5","metadata":{"component":{"name":"garden-app","version":"1.0"}},"components":['
+        b'{"name":"urllib3","version":"2.0.7","purl":"pkg:pypi/urllib3@2.0.7","licenses":[{"expression":"MIT OR Apache-2.0"}]},'
+        b'{"name":"requests","version":"2.31.0","purl":"pkg:pypi/requests@2.31.0","licenses":[{"license":{"id":"Apache-2.0"}}]},'
+        b'{"name":"legacy-lib"},{"group":"org.x","name":"Tool","version":"3","licenses":[{"license":{"name":"Custom"}},5]}]}'
+    )}),
+    "mastodon": ("mastodon.py", {"outbox.json": (
+        b'{"type":"OrderedCollection","orderedItems":['
+        b'{"type":"Create","published":"2024-03-03T19:40:00Z","object":{"type":"Note","summary":"gardening","content":"<p>The slugs are <b>winning</b>.</p>","inReplyTo":"https://x/1",'
+        b'"attachment":[{"type":"Document","mediaType":"image/jpeg","name":"slug on a leaf"},{"type":"Document","mediaType":"video/mp4","name":"clip"},{"mediaType":"image/png"}]}},'
+        b'{"type":"Announce","published":"2024-03-02T10:00:00Z","object":"https://x/2"},'
+        b'{"type":"Create","published":"2024-03-02T08:15:00Z","object":{"type":"Note","content":"<p>Planted out the tomatoes   today.</p>"}}]}'
+    )}),
+    "x-archive": ("x_archive.py", {"tweets.js": (
+        b'window.YTD.tweets.part0 = [ {"tweet": {"created_at": "Wed Mar 02 08:15:00 +0000 2022", "full_text": "Planted out the tomatoes. https://t.co/abc &amp; more",'
+        b' "entities": {"urls": [{"url": "https://t.co/abc", "expanded_url": "https://example.org/guide"}]}}},'
+        b' {"tweet": {"created_at": "Thu Mar 03 19:40:00 -0500 2022", "full_text": "@ana the slugs are winning.", "in_reply_to_status_id_str": "123"}} ]'
     )}),
     "notes": ("notes.py", {"garden.md": b"Tomatoes want [[sun]].\n"}),
     "jrnl": ("jrnl.py", {"journal.txt": (
