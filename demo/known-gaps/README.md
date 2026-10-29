@@ -82,8 +82,42 @@ The freeze file is the operator's commit. Until it lands the freeze test skips
 and says so. The commit that adds FROZEN.json also adds its line to FILES.md,
 and from then on a missing FROZEN.json fails the test rather than skipping.
 
+**Freeze 2** (the questions) adds to the same file, before any question is
+asked of any code: the blind questions, byte for byte as the writers wrote them
+(headers included), in `questions/local/` and `questions/claude/` (eight a gap
+for each of the twelve, from the redacted gap text only) and
+`questions/null/null.txt` (fifty about nothing to do with security, written
+with no input); `questions/inputs.md`, the only thing the blind writers were
+given; and `flag.py`, the rule that flags question lines holding identifiers.
+It also changes three files frozen at freeze 1, `ask.py`, `run.py` and
+`score.py`, only to read the questions per writer and tally them (below); no
+gate is changed. The set is committed by the operator, with FROZEN.json
+rebuilt over it.
+
 `spread.py` and `outside.py` are stubs that exit 2. They are not frozen, and
 are written in their own bites.
+
+### The questions and the flagged-line rule
+
+The writers were told to write without identifiers. A question line is
+`flagged` when it still holds one, by a single pattern fixed before any
+question was asked: an underscore between letters or digits, a dot between
+lowercase letters, `()`, a lowercase letter followed by a capital, a slash,
+`:` or `#` before a digit, or seven or more hex digits in a row. One exception:
+`allow_localhost` is a flag a user types, so a line whose only match is that
+word is not flagged. Fixed on these counts, which `test_known_gaps.py` asserts:
+the local writer 48 of 96 lines flagged (46 after the exception), the Claude
+writer 1 of 96 (0 after), the null set 0 of 50.
+
+`ask.py --questions` takes the `questions` folder: a gap's questions are its
+`questions/{writer}/{ID}.txt` lines with headers skipped, and the null set (in
+phase 2 only) is `questions/null/null.txt`. Each answer row carries its
+`writer` and whether it is `flagged`. The gates pool both writers' lines as one
+set, flagged or not, by the rules already frozen: a pair a line. Phase 4,
+the writers compared, is reported and never judged: `run.py found` and
+`run.py before` print, per ranker and writer, the questions asked and those that
+hit (in the top 3 for phase 1, the top 10 for phase 2), twice: with every line,
+and with the flagged lines left out.
 
 ## The scripts
 

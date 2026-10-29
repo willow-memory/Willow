@@ -1,0 +1,12 @@
+# writer: local, nestor_draft, engine ollama:willow-lane4-3b:latest, temperature 0.0
+# prompt_sha256 443a05c9f2fed3a189c05895ba24732654ac4de57e88763be614cd455ec754e6
+# input_sha256 78b8526367410e0b85696b1267c88d12f4d02a627ef05eed763757abc08dee20
+# source: work/blind/inputs.md KG01 (gap 8a236e0e8f55), verbatim; output unedited
+What is the shape of an unconditional env deny list for WILLOW_KEYRING, and how does it differ from the conditional prefix rules?
+If the operator's terminal is broken by deleting the env line, what is the fallback shape for the operator's own tasks?
+Does the conditional strip rule for credential_env_prefixes ever strip the WILLOW_KEYRING prefix, and if so, what is the policy for that?
+How does the operator's own sandbox-scoped override (if any) differ from the unconditional env allow rule?
+What is the policy for a task to be able to read WILLOW_KEYRING but not write it, and how does that differ from the current conditional strip rule?
+Is the operator's terminal a sandboxed task, and if so, what is the policy for a sandboxed task to be able to read WILLOW_KEYRING?
+Does the conditional prefix rule for db_env_prefixes ever strip the WILLOW_KEYRING prefix, and if so, what is the policy for that?
+What is the operator's expectation for the shape of the env deny list, and how does that differ from the current prefix rules?

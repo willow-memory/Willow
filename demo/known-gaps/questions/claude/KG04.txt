@@ -1,0 +1,10 @@
+# writer: claude subagent (sonnet), blind: read only work/blind/inputs.md
+# source: work/blind/inputs.md KG04
+Why does only the first proposal succeed and the later ones fail?
+Why does the pre-approved register end up with the wrong permissions?
+How does umask 002 change the mode of a file written by the server?
+Why is a file that is group-writable refused on every later read?
+Does this failure leave the system open or does it fail closed?
+Do other governance inputs, like the syscall table and fleet roster, have the same weakness?
+Why did only one of eight proposals land in the measurement?
+Should a trusted file's permissions depend on whoever's umask the writer inherited?

@@ -1,0 +1,12 @@
+# writer: local, nestor_draft, engine ollama:willow-lane4-3b:latest, temperature 0.0
+# prompt_sha256 c748a0f281aa6db3562ae793d903331053b1b68b679a482186e83027793ad6e3
+# input_sha256 5be0a055b17fd2da2586717f34558e75cd13b44cdf992ed1694810336fde0407
+# source: work/blind/inputs.md KG05, verbatim; output unedited
+If a pending record can be signed by the broker, what is the least-trusted path a trust-owner unit can write onto the live syscall table?
+What is the default behavior of _apply_syscall_sync when envelope_id=None is present in the pending record?
+What is the behavior of ledger ink failure when the record is written by the trust-owner unit?
+What is the difference between the paths used by _apply_syscall_sync and paths.syscall_table_path?
+What is the least-trusted path a trust-owner unit can write onto the live syscall table, given the default bundle path?
+What is the behavior of _apply_syscall_sync when the pending record's bundle_path points at a planted table?
+What is the behavior of _apply_syscall_sync when the pending record's bundle_path points at a real table but the digest check only binds content to that file?
+What is the least-trusted action a trust-owner unit can perform on the live syscall table, given the envelope-id=None case?

@@ -1,0 +1,10 @@
+# writer: claude subagent (sonnet), blind: read only work/blind/inputs.md
+# source: work/blind/inputs.md KG10
+Why do the journal tests fail with permission denied when run as an unprivileged user?
+Why would a certificate setting point into the root user's home?
+Does the proxy setting from the root session leak into other users' runs?
+Is this a test-only problem or can it hit production?
+How does the environment of the root session get inherited by the nobody user?
+Could the same inherited setting break real network calls too?
+Why does an unreadable certificate path fail the whole test instead of falling back?
+Is it safe to leave root's proxy and certificate settings in the environment?

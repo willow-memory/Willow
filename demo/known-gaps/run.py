@@ -115,6 +115,27 @@ def rank_p(sizes: list, observed: float, rng: random.Random) -> tuple:
     return expected, (1 + as_good) / (1 + DRAWS)
 
 
+def by_writer(scored: list, hit) -> dict:
+    """Phase 4, the writers compared: for each ranker and writer, the questions
+    asked and those that hit (`hit` says what a hit is in this phase), twice:
+    with every line, and with the flagged lines (flag.py) left out. Reported,
+    never judged, and it changes no gate."""
+    out: dict = {}
+    for by in BYS:
+        rows = [r for r in scored if r["ranked_by"] == by and r.get("writer")]
+        for writer in sorted({r["writer"] for r in rows}):
+            mine = [r for r in rows if r["writer"] == writer]
+            clean = [r for r in mine if not r.get("flagged")]
+            out[f"{by}, {writer}"] = {
+                "all": {"of": len(mine), "hits": sum(bool(hit(r)) for r in mine)},
+                "unflagged": {
+                    "of": len(clean),
+                    "hits": sum(bool(hit(r)) for r in clean),
+                },
+            }
+    return out
+
+
 def judge(rows: list, scored: list, group_of: dict) -> dict:
     """Phase 1."""
     stats = {r["unit"]: r for r in rows if r.get("type") == "stats"}
@@ -141,6 +162,7 @@ def judge(rows: list, scored: list, group_of: dict) -> dict:
     passes = {f"rank, bm25, {g}": rank[f"bm25, {g}"]["pairs"] > 0
               and rank[f"bm25, {g}"]["p"] < 0.01 for g in GROUPS}  # fmt: skip
     return {"seed": SEED, "draws": DRAWS, "rank": rank, "top3_hit_rate": top3,
+            "writers": by_writer(scored, lambda r: "hit" in r["served"][:3]),
             "passes": passes}  # fmt: skip
 
 
@@ -197,7 +219,11 @@ def judge_before(rows: list, scored: list, group_of: dict) -> dict:
             passes["null questions not above chance, bm25"] = (
                 bool(rs) and served > 0 and above >= 0.01
             )
-    return {"table": table, "passes": passes}
+    return {
+        "table": table,
+        "writers": by_writer(scored, lambda r: "hit" in r["served"][:10]),
+        "passes": passes,
+    }
 
 
 PHASES = {"found": ("phase1", judge), "before": ("phase2", judge_before)}

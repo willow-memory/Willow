@@ -1,0 +1,12 @@
+# writer: local, nestor_draft, engine ollama:willow-lane4-3b:latest, temperature 0.0
+# prompt_sha256 a8274640e280890250a60a3ed0841cc26faa141472fa0d6403e493a0a5d9b3cd
+# input_sha256 b34c5c6be490473aea98cd5d591a8366f095b70885b847bd376536748224bf92
+# source: work/blind/inputs.md KG06, verbatim; output unedited
+How does the seat's own lint claims against its own repo root ever reach the judge, and what is the seat's role in the lint chain?
+What is the seat's fallback path when its own repo root cannot be resolved, and is it ever reachable?
+What is the seat's role in the gaps_project fallback, and is it ever marked as unreachable?
+How does the seat's repo root ever resolve inside a known fleet checkout, and what is the surface area of that resolution?
+What is the seat's role in the adversarial test for the planted /tmp tree, and what is the test's purpose?
+What is the seat's role in the adversarial test for the unresolvable gaps_project, and what is the test's purpose?
+How does the seat's repo root ever resolve inside a known fleet checkout, and what is the surface area of that resolution?
+What is the seat's fallback path when its own repo root cannot be resolved, and is it ever reachable?

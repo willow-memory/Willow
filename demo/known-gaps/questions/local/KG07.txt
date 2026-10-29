@@ -1,0 +1,12 @@
+# writer: local, nestor_draft, engine ollama:willow-lane4-3b:latest, temperature 0.0
+# prompt_sha256 c6ff3b3595d0a9b15f3363c9347f88fd65e2c94b6b0c306ae005bb4f18bb2832
+# input_sha256 7f16c930d48f0aaca10d9237ae28607291f73641d1827f2caa5c00932e7402ec
+# source: work/blind/inputs.md KG07, verbatim; output unedited
+What is the default network scope for allow_localhost, and what is the envelope it is exempted from?
+How does the sandbox's own implementation of loopback reach contradict the premise that loopback is not egress?
+What is the effect on credentials when a task_net holder has consent.internet on?
+What is the sandbox's policy on exfiltration when the task body can still send data?
+What is the explicit exemption granted to allow_localhost by the audit, and what is the underlying premise?
+How does the sandbox's envelope policy match the audit's stated intent that the envelope is an audit-trail binding, not a privilege boundary?
+What is the explicit policy on sandboxed inference, and what is the shape of that policy as sealed by the verifier?
+What is the corollary to "move the models and runtime into the bot" when the bot is a host process, and what does it imply about Kart reaching localhost?

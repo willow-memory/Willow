@@ -1,0 +1,12 @@
+# writer: local, nestor_draft, engine ollama:willow-lane4-3b:latest, temperature 0.0
+# prompt_sha256 0f4ea2f3f0da4ee7a9db548fbc0aeae9be0b65076d4a7e640770ba7907428727
+# input_sha256 c1cdc3af92e15c0d948ee9ce5bd825b7df36f94412473a210b68a41641a39193
+# source: work/blind/inputs.md KG08, verbatim; output unedited
+What is the pre-existing run_ci legacy clear that was found by Loki, and what is its real purpose?
+How does the scan_mod.main() call in run_once treat the process argv, and what is the unit's argv?
+What is repo_matches_filters in fleet.py, and how does it reject every PR?
+What is the unit's loop command, and how does it affect the repo filter?
+What is the consequence of the steward's own view of open PRs being empty on the live unit?
+What is the legacy clear's real-red guard, and what is it keyed on?
+What is the fix shape for the scan's argv problem, and what is the open_prs_seen receipt field for?
+How does the scan's filter parameter change the steward's view of open PRs, and what is the real-red guard now?

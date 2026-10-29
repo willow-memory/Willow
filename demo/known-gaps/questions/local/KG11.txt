@@ -1,0 +1,12 @@
+# writer: local, nestor_draft, engine ollama:willow-lane4-3b:latest, temperature 0.0
+# prompt_sha256 918425b852cfdbb3ec344069b00bf1fd57f76f2da76f22533354d6b910f7824b
+# input_sha256 95eca36e9e9fb05bf14a68f49df0060e51cabb07cf887863a7daf16282584614
+# source: work/blind/inputs.md KG11, verbatim; output unedited
+What is the tail of a Record.append call — what gets read, hashed, and appended — and how does it affect verification?
+What is the pre-existing state of a Record.append call — the row count and the prev hash — and how does it get written?
+What is the serializing step for a Record.append call, and what does it leave unserialized?
+What is the verification chain's failure mode when two processes read the same tail and link to the same prev?
+What is the pre-existing state of a Record.append call that is not written — and what does that mean for verification?
+What is the serializing step for a Record.append call that is not written — and what does that mean for verification?
+What is the failure mode of a Record.append call when two processes read the same tail and link to the same prev — and what does that mean for the chain's integrity?
+What is the pre-existing state of a Record.append call that is not written — and what does that mean for the chain's integrity?

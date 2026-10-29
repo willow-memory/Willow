@@ -758,6 +758,37 @@ willow/
 │   │   ├── run.py            scores a phase's answers and writes its pass rules as kernel verdict rows
 │   │   ├── spread.py         not built yet: the questions over the other repositories
 │   │   ├── outside.py        not built yet: the same method on cpython's CVE fixes
+│   │   ├── flag.py           the flagged-line rule for question lines, and how the questions' folders are read
+│   │   ├── questions/
+│   │   │   ├── inputs.md     what the blind writers were given: the redacted gap text, and nothing else
+│   │   │   ├── local/
+│   │   │   │   ├── KG01.txt  eight questions a local model wrote, blind, for KG01
+│   │   │   │   ├── KG02.txt  the same for KG02
+│   │   │   │   ├── KG03.txt  the same for KG03
+│   │   │   │   ├── KG04.txt  the same for KG04
+│   │   │   │   ├── KG05.txt  the same for KG05
+│   │   │   │   ├── KG06.txt  the same for KG06
+│   │   │   │   ├── KG07.txt  the same for KG07
+│   │   │   │   ├── KG08.txt  the same for KG08
+│   │   │   │   ├── KG09.txt  the same for KG09
+│   │   │   │   ├── KG10.txt  the same for KG10
+│   │   │   │   ├── KG11.txt  the same for KG11
+│   │   │   │   └── KG12.txt  the same for KG12
+│   │   │   ├── claude/
+│   │   │   │   ├── KG01.txt  eight questions a Claude subagent wrote, blind, for KG01
+│   │   │   │   ├── KG02.txt  the same for KG02
+│   │   │   │   ├── KG03.txt  the same for KG03
+│   │   │   │   ├── KG04.txt  the same for KG04
+│   │   │   │   ├── KG05.txt  the same for KG05
+│   │   │   │   ├── KG06.txt  the same for KG06
+│   │   │   │   ├── KG07.txt  the same for KG07
+│   │   │   │   ├── KG08.txt  the same for KG08
+│   │   │   │   ├── KG09.txt  the same for KG09
+│   │   │   │   ├── KG10.txt  the same for KG10
+│   │   │   │   ├── KG11.txt  the same for KG11
+│   │   │   │   └── KG12.txt  the same for KG12
+│   │   │   └── null/
+│   │   │       └── null.txt  fifty questions with nothing to do with security, written with no input
 │   │   └── test_known_gaps.py  holds the frozen files to their hashes, and the tools to their word
 │   ├── craft-assembly/       the Craft apps taken apart into pieces, rebuilt exactly, and five assembled into one
 │   │   ├── README.md         the claim, the threats, what is frozen, what was seen before each freeze, results

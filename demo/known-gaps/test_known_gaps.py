@@ -1017,6 +1017,163 @@ def test_run_end_to_end_on_a_fixture(tmp_path, capsys, monkeypatch):
     assert "null_answers" not in json.loads(capsys.readouterr().out)
 
 
+QDIR = HERE / "questions"
+flag = trees.sibling("flag")
+
+
+def test_the_flag_counts_are_the_ones_the_rule_was_fixed_on():
+    sets = {
+        w: [q for n in range(1, 13) for q in flag.read(QDIR / w / f"KG{n:02d}.txt")]
+        for w in flag.WRITERS
+    }
+    sets["null"] = flag.read(QDIR / "null" / "null.txt")
+    count = {w: (len(qs), sum(flag.flagged(q, False) for q in qs),
+                 sum(flag.flagged(q) for q in qs)) for w, qs in sets.items()}  # fmt: skip
+    # (questions, flagged before the allow_localhost exception, flagged after it)
+    assert count["claude"] == (96, 1, 0)
+    assert count["null"] == (50, 0, 0)
+    # the local writer's 48 of 96; the exception takes 2 more of its lines out
+    assert count["local"] == (96, 48, 46)
+
+
+def test_the_flag_rule_on_hand_made_lines():
+    for line in ("Why does the cleanup_task fail?", "Where is a.b set?", "Does run() end?",
+                 "Is camelCase flagged?", "Look in a/b please", "At line:12 it stops",
+                 "See issue #12", "What is abcdef1 here?",
+                 "How does allow_localhost use /tmp?"):  # fmt: skip
+        assert flag.flagged(line), line
+    for line in ("Why do I see dead workers in fleet health?",
+                 "Does allow_localhost give a task the internet?"):  # fmt: skip
+        assert not flag.flagged(line), line  # allow_localhost is a flag a user types
+    assert flag.flagged(
+        "Does allow_localhost give a task the internet?", exception=False
+    )
+
+
+def test_the_questions_hold_no_home_path_gap_id_or_key():
+    import re
+
+    spec = importlib.util.spec_from_file_location(
+        "tr", trees.ROOT / "adapters/stdlib/transcript-redact/transcript_redact.py"
+    )
+    tr = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(tr)
+    known = set(re.findall(r"\b[0-9a-f]{12}\b", (HERE / "gaps.json").read_text()))
+    files = sorted(p for p in QDIR.rglob("*") if p.is_file())
+    assert len(files) == 12 + 12 + 1 + 1  # two writers' gaps, the null set, inputs.md
+    for p in files:
+        for line in p.read_text(encoding="utf-8").splitlines():
+            assert tr.redact(line) == (line, []), (p.name, line)
+            assert "/home/" not in line and "/Users/" not in line, (p.name, line)
+            assert "[REDACTED" not in line, (p.name, line)
+            for gid in re.findall(r"\b[0-9a-f]{12}\b", line):
+                assert gid in known, (p.name, gid)  # only a gap id gaps.json holds
+
+
+def test_every_questions_file_is_listed_in_the_freeze():
+    if not FROZEN_FILE.exists():
+        pytest.skip("not frozen yet")
+    frozen = json.loads(FROZEN_FILE.read_text(encoding="utf-8"))["files"]
+    on_disk = {p.relative_to(HERE).as_posix() for p in QDIR.rglob("*") if p.is_file()}
+    assert len(on_disk) == 26 and on_disk <= set(frozen)
+    assert "flag.py" in frozen
+    for rel in on_disk:  # byte for byte as frozen (the freeze test holds it too)
+        assert hashlib.sha256((HERE / rel).read_bytes()).hexdigest() == frozen[rel], rel
+
+
+def test_questions_are_read_per_writer_with_headers_skipped(tmp_path):
+    ask = trees.sibling("ask")
+    files = {
+        "local": [
+            "# writer: local",
+            "# source: x",
+            "First local one?",
+            "",
+            "Second local_one?",
+        ],
+        "claude": ["# writer: claude", "A claude one?"],
+        "null": ["# writer: null", "How is the weather?"],
+    }
+    for w, lines in files.items():
+        (tmp_path / w).mkdir()
+        name = "null.txt" if w == "null" else "KG01.txt"
+        (tmp_path / w / name).write_text("\n".join(lines) + "\n")
+    got = ask.load_questions(tmp_path, "KG01", "before")
+    assert got == [("KG01 local 1", "First local one?", "local"),
+                   ("KG01 local 2", "Second local_one?", "local"),
+                   ("KG01 claude 1", "A claude one?", "claude"),
+                   ("null 1", "How is the weather?", "null")]  # fmt: skip
+    found = [g[0] for g in ask.load_questions(tmp_path, "KG01", "found")]
+    assert found == ["KG01 local 1", "KG01 local 2", "KG01 claude 1"]  # no nulls
+    (tmp_path / "claude" / "KG01.txt").unlink()
+    with pytest.raises(OSError):  # a missing file is never an empty set
+        ask.load_questions(tmp_path, "KG01", "found")
+    # a file of name<TAB>question lines still works (the dry run's form)
+    f = tmp_path / "q.txt"
+    f.write_text("KG01 1\tqqqq zzzz\n")
+    assert ask.load_questions(f, "KG01", "found") == [("KG01 1", "qqqq zzzz")]
+
+
+def test_answer_rows_name_their_writer_and_whether_the_line_is_flagged(tmp_path):
+    ask = trees.sibling("ask")
+    repos, units, _ = pinned(tmp_path)
+    to, ix = tmp_path / "work", tmp_path / "ix"
+    trees.fetch_unit(to, repos, "KG01", units["KG01"])
+    qs = [("KG01 local 1", "How does load_the_whole_policy get its root path?", "local"),
+          ("KG01 claude 1", "How does the whole policy get its root path?", "claude"),
+          ("null 1", "How is the weather?", "null")]  # fmt: skip
+    rows = ask.ask(to, ix, "KG01", units["KG01"], qs, "before")
+    got = {
+        r["question"]: (r["writer"], r["flagged"])
+        for r in rows
+        if r["type"] == "answer"
+    }
+    assert got == {"KG01 local 1": ("local", True), "KG01 claude 1": ("claude", False),
+                   "null 1": ("null", False)}  # fmt: skip
+    found = ask.ask(to, ix, "KG01", units["KG01"], qs, "found")
+    assert {r["writer"] for r in found if r["type"] == "answer"} == {"local", "claude"}
+    scored = score.score([r for r in found if r["type"] == "answer"], to / "fixes")
+    assert {(r["writer"], r["flagged"]) for r in scored} == {
+        ("local", True),
+        ("claude", False),
+    }
+
+
+def test_phase_4_tallies_hits_per_writer_twice_and_the_gates_pool_both():
+    run = trees.sibling("run")
+    stats = [{"type": "stats", "unit": u, "gap": u, "changed": 10, "hit_passages": 2,
+              "file_passages": 4, "random_rate": 0.5} for u in ("KG01", "KG09")]  # fmt: skip
+    group = {"KG01": "strong", "KG09": "weaker"}
+    ten = ["miss"] * 10
+
+    def row(gap, writer, flagged, first, q):
+        served = ten[: first - 1] + ["hit"] + ten[first:] if first else ten[:]
+        return {**scored_row(gap, gap, "bm25", served, first, q),
+                "writer": writer, "flagged": flagged}  # fmt: skip
+
+    rows = [row("KG01", "local", True, 1, "a"), row("KG01", "local", False, 2, "b"),
+            row("KG01", "local", False, None, "c"), row("KG01", "claude", False, 1, "d"),
+            row("KG01", "claude", False, 5, "e"), row("KG09", "claude", True, 2, "f")]  # fmt: skip
+    out = run.judge(stats, rows, group)
+    # phase 1: a hit is one in the top 3
+    assert out["writers"]["bm25, local"] == {"all": {"of": 3, "hits": 2},
+                                              "unflagged": {"of": 2, "hits": 1}}  # fmt: skip
+    assert out["writers"]["bm25, claude"] == {"all": {"of": 3, "hits": 2},
+                                               "unflagged": {"of": 2, "hits": 1}}  # fmt: skip
+    # phase 2: a hit anywhere in the top 10
+    out2 = run.judge_before(stats, rows, group)["writers"]
+    assert out2["bm25, claude"] == {"all": {"of": 3, "hits": 3},
+                                    "unflagged": {"of": 2, "hits": 2}}  # fmt: skip
+    assert out2["bm25, local"] == {"all": {"of": 3, "hits": 2},
+                                   "unflagged": {"of": 2, "hits": 1}}  # fmt: skip
+    # the gates pool both writers' lines, flagged or not, as one set
+    assert out["rank"]["bm25, strong"]["pairs"] == 5
+    assert out["rank"]["bm25, weaker"]["pairs"] == 1
+    # rows from a file of plain questions (no writer) are left out of the tally
+    plain = [scored_row("KG01", "KG01", "bm25", ten, None)]
+    assert run.judge(stats, plain, group)["writers"] == {}
+
+
 def test_phase_2_end_to_end_on_a_fixture(tmp_path, capsys, monkeypatch):
     run = trees.sibling("run")
     ask = trees.sibling("ask")

@@ -1,0 +1,10 @@
+# writer: claude subagent (sonnet), blind: read only work/blind/inputs.md
+# source: work/blind/inputs.md KG11
+Why did the hash chain report broken when nothing was tampered with?
+What happens when two prompt hooks run at the same moment?
+Is there a lock around reading the last row and appending the next?
+Can two writers link to the same previous hash?
+Could an attacker use this race to fork or hide entries in the log?
+How would I tell a race-caused break from real tampering?
+Does a broken chain lose entries or only fail verification?
+Why does reading the tail, hashing, and then writing leave a gap?

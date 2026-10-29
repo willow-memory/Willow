@@ -1,0 +1,12 @@
+# writer: local, nestor_draft, engine ollama:willow-lane4-3b:latest, temperature 0.0
+# prompt_sha256 a368844a4fb28706a2f381af1f4a94a84eff879c78f35ea3aa0ede8f25005f01
+# input_sha256 d911c210466ba89ff83a2df40e2d98d280c4705e07b8c79713c0e4a87807b4e5
+# source: work/blind/inputs.md KG02, verbatim; output unedited
+What is the policy that determines sandbox work root read-only behavior, and how does it differ from the repo the command runs in?
+What is the exact shape of the read-only tree under WILLOW_ROOT that the check_tree_rewrite gate is supposed to recognize?
+What is the behavior of check_tree_rewrite when the command runs inside a read-only bind, and what is the message it returns?
+What is the working directory that check_tree_rewrite is supposed to resolve, and how does it differ from the repo's path?
+What is the exact failure mode of check_tree_rewrite when it refuses a read-only bind — what does the refusal message name?
+What is the allowed workaround for a read-only bind that the gate cannot resolve — what command is permitted instead?
+What is the policy that determines whether a checkout is read-only or read-write, and how does it differ from the gate's behavior?
+What is the policy that determines whether a checkout is allowed to push or stash, and how does it differ from the gate's behavior?

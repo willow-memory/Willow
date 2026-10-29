@@ -1,0 +1,52 @@
+# writer: claude subagent (sonnet), null set, no inputs read
+# rules: nothing about security; no identifiers
+How should the log output be formatted so each line starts with a timestamp?
+Why does the help text for the main command list options in a different order than the docs?
+What is the best way to show durations like 3 minutes 12 seconds in a status table?
+How do I make the config parser accept comments at the end of a line?
+Where does the page size for long lists get decided, and can it be changed?
+How many times should a failed request be tried again before giving up?
+What should the default timeout be for a slow operation?
+Why does the cache keep showing old results after the data changes?
+How do I make a test fixture that builds a small sample project?
+Is the version string shown the same in the help output and in the package metadata?
+How are items sorted when two of them have the same name?
+Can the error message for a missing setting be made clearer?
+What time zone do the dates in the report use?
+How do I show dates in a way that sorts correctly as plain text?
+Why does the second page of results repeat the last item from the first page?
+Should the retry delay grow longer each time, and by how much?
+What does the log say when a job finishes with no output?
+How can the command line tool print its output as a table or as plain lines?
+Which config format is easier to read, TOML or YAML?
+How do I clear the cache without restarting the program?
+Why do some test runs take much longer than others?
+Where should the changelog entry go for a small bug fix?
+How do I bump the version number for a new release?
+What is the right way to round a percentage in a summary line?
+Can the help text include a few short usage examples?
+How should very long messages be cut off in a chat window?
+What happens when a config file has an empty section?
+How do I add a new level of detail to the logging, such as a trace level?
+Why does the dashboard show the date in a different style than the log?
+How do I write a test that checks the exact wording of an error?
+Should the list of tasks be sorted by newest first or oldest first?
+How long should cached answers stay fresh?
+What is a friendly way to word a message when nothing matches a search?
+How can I make the progress output update on one line instead of many?
+Why does the timeout message not say how long it waited?
+How do I show a count of items next to each heading in the docs?
+What is the default number of items per page in the chat history?
+How should a number with many digits be shown, with commas or without?
+How do I test code that depends on the current time?
+Is there a way to print the config as it was finally read, after defaults are filled in?
+Why does the command show a blank line at the end of its output?
+How can I reuse the same sample data across many tests?
+What does the retry count setting mean if I set it to zero?
+How do I keep the README in step with the actual command options?
+What is the cleanest way to show a list of steps with a done or pending mark?
+Why is the log file getting so big, and how can old entries be rotated out?
+How should a missing optional setting be explained in the docs?
+Can the tool print a short summary line at the end of each run?
+How do I make the date range filter include the last day?
+What wording should the version command use when printing its answer?

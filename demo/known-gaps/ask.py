@@ -11,6 +11,11 @@ renamed into place: an index already there is never read. The vulnerable tree
 question that names the unit's gap (its name starts `KG03 `) is asked of the
 vulnerable index and answered three ways: the kernel's rank, BM25, and a
 word-match grep baseline. Null questions (`null `) are asked in `before` only.
+--questions is a folder (flag.py's layout: a gap's questions are
+questions/{writer}/{ID}.txt for the writers local and claude, the null set is
+questions/null/null.txt, `#` headers skipped) or a file of `name<TAB>question`
+lines. Each answer row names its `writer` and whether its question line is
+`flagged` (flag.py).
 
 `found` (the default, phase 1) asks only the passages the fix changed
 (`--changed-from`) and ranks all of them: top is the changed set's size, so
@@ -55,6 +60,7 @@ import phase4  # noqa: E402
 import scan  # noqa: E402
 
 score = trees.sibling("score")
+flag = trees.sibling("flag")
 SEED = "known-gaps phase 1"
 DRAWS = 10_000
 TOP = {"found": None, "before": 10}  # found: the whole changed set
@@ -132,6 +138,16 @@ def limited_index(ix: Path, old_tree: Path, tree: str, files: list) -> Path:
     return fresh_index(ix, at.name, src)  # the copy is checked; its index is always new
 
 
+def load_questions(path: Path, gap: str, mode: str) -> list:
+    """The questions to ask. A folder (flag.py's layout: questions/{writer}/{ID}.txt
+    and questions/null/null.txt) gives the gap's questions by each writer, headers
+    skipped, and the null set in `before` only; a file is `name<TAB>question` lines
+    (scan.py's format), kept for dry runs."""
+    if path.is_dir():
+        return flag.questions(path, gap, nulls=(mode == "before"))
+    return scan.questions(path.read_text(encoding="utf-8"))
+
+
 def served(passages: list) -> list:
     return [{"path": c["path"], "line": c["line"], "text": c["text"]} for c in passages]
 
@@ -168,9 +184,12 @@ def ask(to: Path, ix: Path, unit: str, pin: dict, qs: list, mode: str) -> list:
     # null questions are asked in phase 2 only (a changed set is too small for
     # a null to fail to hit it by anything but luck)
     names = (pin["gap"], "null") if mode == "before" else (pin["gap"],)
-    mine = [(n, q) for n, q in qs if n.split(" ")[0] in names]
+    # a question is (name, text) or (name, text, writer); each answer row names
+    # its writer and whether the question line is flagged (flag.py)
+    mine = [(i[0], i[1], i[2] if len(i) > 2 else None) for i in qs
+            if i[0].split(" ")[0] in names]  # fmt: skip
     for by in ("kernel", "bm25", "grep"):
-        for n, q in mine:
+        for n, q, writer in mine:
             if by == "kernel":
                 got = old.rank(q, {}, top, before)
             elif by == "bm25":
@@ -179,6 +198,7 @@ def ask(to: Path, ix: Path, unit: str, pin: dict, qs: list, mode: str) -> list:
                 got = phase2.grep(changed, q)[:top]
             rows.append({"type": "answer", "unit": unit, "gap": n.split(" ")[0],
                          "question": n, "ranked_by": by, "mode": mode,
+                         "writer": writer, "flagged": flag.flagged(q),
                          "served": served(got)})  # fmt: skip
     hits = sum(score.hit(c, fix) for c in changed)
     by_text = [c for c in changed if score.hit_by_text(c, fix)]
@@ -221,7 +241,9 @@ def main(argv: list[str]) -> int:
         )
         return 2
     try:
-        qs = scan.questions(Path(opts["--questions"]).read_text(encoding="utf-8"))
+        qs = load_questions(
+            Path(opts["--questions"]), pins[opts["--unit"]]["gap"], mode
+        )
         rows = ask(Path(opts["--to"]), Path(opts["--ix"]), opts["--unit"],
                    pins[opts["--unit"]], qs, mode)  # fmt: skip
     except (OSError, ValueError) as e:

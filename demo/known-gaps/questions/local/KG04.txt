@@ -1,0 +1,12 @@
+# writer: local, nestor_draft, engine ollama:willow-lane4-3b:latest, temperature 0.0
+# prompt_sha256 3c8fe3f877ef3a6317ee5e1d85c53f98306d620169e6fd4b720ae831add3ab08
+# input_sha256 59c146e35007f594cbfd8e10c981ec7bd97c2ad9ed8d1b1eddcaf37f06db96a3
+# source: work/blind/inputs.md KG04, verbatim; output unedited
+What is the ownership and permissions of the constitutional/pre-approved.json file, and how does the broker trust it?
+What happens to the pre-approved.json file when the operator proposes a change through envelope_propose?
+What is the behavior of paths.trusted_read when the file it reads is owned by a process with umask 002?
+What is the measured outcome of running envelope_propose eight times on this box?
+What is the exact wording of the "untrusted ownership or permissions" error paths.trusted_read returns?
+How does the fix for this finding differ from the umask fix applied to the test suite in feat/grove-listen?
+What is the class of the problem this finding describes, and what is the same class of problem that the umask fix in feat/grove-listen represents?
+What is the flag or setting that the operator must type to prevent this class of failure from recurring?

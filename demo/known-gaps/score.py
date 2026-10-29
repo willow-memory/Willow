@@ -234,6 +234,7 @@ def score(answers: list, fixes: Path) -> list:
         first = next((i for i, g in enumerate(got, 1) if g == "hit"), None)
         out.append({"unit": a["unit"], "gap": a["gap"], "question": a["question"],
                     "ranked_by": a["ranked_by"], "best": best, "first_hit_rank": first,
+                    "writer": a.get("writer"), "flagged": a.get("flagged"),
                     "served": got,
                     "ranges": [r for s in a["served"] for r in ranges(s, fix)]})  # fmt: skip
     return out
