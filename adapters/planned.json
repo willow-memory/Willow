@@ -281,16 +281,6 @@
   "tags": "no-install, online, records, play"
  },
  {
-  "name": "chordpro",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "ChordPro song sheets: titles, lyrics and chords, so you can ask which song had that line.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "ci-baseline",
   "kind": "stdlib",
   "section": "For maintainers",

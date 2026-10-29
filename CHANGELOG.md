@@ -10,6 +10,10 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `chordpro`: ChordPro song sheets, each song as its title, artist, key and
+  capo, the chords it uses, and its lyrics with the chords taken out of the
+  lines, so a question about a lyric finds the song. Tab sections are
+  dropped.
 - `pgn`: Chess games from PGN files, each game as who played, when, where,
   the result and the opening, then every comment in the moves with the move
   it follows (Black's with three dots). The moves themselves are not copied.

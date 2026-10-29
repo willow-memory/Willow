@@ -120,6 +120,10 @@ willow/
 │   │   │   ├── chats.py      WhatsApp and Telegram exports, a dated line a message
 │   │   │   ├── test_chats.py
 │   │   │   └── README.md
+│   │   ├── chordpro/
+│   │   │   ├── chordpro.py   a ChordPro song as its title line, chords and lyrics with the chords taken out of the lines
+│   │   │   ├── test_chordpro.py
+│   │   │   └── README.md
 │   │   ├── ci/
 │   │   │   ├── ci.py         this repo's checks as verdict rows on a kernel record
 │   │   │   ├── changelog.py  a change beyond the docs adds its entry to CHANGELOG.md, and names a bug it fixed

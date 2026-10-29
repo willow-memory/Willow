@@ -18,11 +18,11 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`███████░░░░░░░░░░░░░` **155 of 470 built** · 419 need no install · 51 need one
+`███████░░░░░░░░░░░░░` **156 of 470 built** · 419 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
-| Reading more kinds of files | 19 | 86 | 96 | 9 |
+| Reading more kinds of files | 20 | 85 | 96 | 9 |
 | Finding things | 24 | 19 | 33 | 10 |
 | Your own words | 15 | 10 | 22 | 3 |
 | Keeping track | 15 | 43 | 58 | 0 |
@@ -47,9 +47,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[instruction-files](adapters/stdlib/instruction-files/)** — For a folder, which instruction files each coding agent would load (AGENTS.md, CLAUDE.md, GEMINI.md, rules folders), in what order, with each file's size and hash.
+**[install-scripts](adapters/stdlib/install-scripts/)** — The install scripts the packages in node_modules would run (preinstall, install, postinstall), each cited by file and line.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 155 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 156 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -71,7 +71,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - [**calendar**](adapters/stdlib/calendar/) — .ics events and .vcf contacts as dated lines. *new* `no-install` `offline` `writes-output` `file-reader`
 - **canvas** (idea) — Canvas course exports: pages, assignments and discussions as passages. *new* `no-install` `offline` `writes-output` `file-reader`
 - [**chats**](adapters/stdlib/chats/) — WhatsApp and Telegram exports, one dated line per message. *new* `no-install` `offline` `writes-output` `file-reader`
-- **chordpro** (idea) — ChordPro song sheets: titles, lyrics and chords, so you can ask which song had that line. *new* `no-install` `offline` `writes-output` `file-reader`
+- [**chordpro**](adapters/stdlib/chordpro/) — ChordPro song sheets: titles, lyrics and chords, so you can ask which song had that line. *new* `no-install` `offline` `writes-output` `file-reader`
 - **ci-logs** (idea) — CI run logs you downloaded (GitHub Actions, GitLab CI, Forgejo Actions): each failing step as a passage, so you can ask when a test last failed. *new* `no-install` `offline` `writes-output` `file-reader`
 - [**clauses**](adapters/stdlib/clauses/) — A policy, contract or set of terms as one sentence a passage, so an answer lands on the clause, and what changed between two versions, sentence by sentence. *new* `no-install` `offline` `writes-output` `file-reader` `policies`
 - **code-comments** (idea) — A codebase's comments and docstrings as passages, cited by file and line. *new* `no-install` `offline` `writes-output` `file-reader`
