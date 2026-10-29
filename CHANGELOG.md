@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `sarif`: SARIF reports from code scanners: each finding as a passage with
+  the tool, rule, level and place, the rule's short description and the
+  message, in file and line order.
 - `wallabag`: wallabag's JSON export: each saved entry, oldest first, with
   its title, URL, tags, highlights and the article's text read as a page.
 - `karakeep`: Karakeep's JSON export: each bookmark, oldest first, with its

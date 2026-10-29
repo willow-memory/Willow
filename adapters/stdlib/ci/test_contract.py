@@ -194,6 +194,12 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         b'"content":"<p>Plant   after <b>frost</b>.</p><script>x()</script><p>Stake early.</p>","annotations":[{"quote":"Stake early.","text":"do this in April"}]},'
         b'{"title":"","url":"https://example.org/older","created_at":"2024-01-01T00:00:00+0000","content":"<p>Old &amp; dusty.</p>"}, 7]'
     )}),
+    "sarif": ("sarif.py", {"codeql.sarif": (
+        b'{"version":"2.1.0","runs":[{"tool":{"driver":{"name":"CodeQL","rules":[{"id":"py/sql-injection","shortDescription":{"text":"SQL injection"}}]}},"results":['
+        b'{"ruleId":"py/xss","level":"warning","message":{"text":"Reflected   XSS."},"locations":[{"physicalLocation":{"artifactLocation":{"uri":"src/web.py"},"region":{"startLine":7}}}]},'
+        b'{"ruleId":"py/sql-injection","level":"error","message":{"text":"This query depends on a user-provided value."},"locations":[{"physicalLocation":{"artifactLocation":{"uri":"src/db.py"},"region":{"startLine":42}}}]},'
+        b'{"ruleId":"py/other","message":{"markdown":"Plain **md**"}}]}]}'
+    )}),
     "notes": ("notes.py", {"garden.md": b"Tomatoes want [[sun]].\n"}),
     "jrnl": ("jrnl.py", {"journal.txt": (
         "[2024-03-03 10:15] Fixed the gate.\nThe hinge wanted oil, not force.\n\n"

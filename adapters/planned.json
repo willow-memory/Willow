@@ -1985,16 +1985,6 @@
   "tags": "needs-install, offline, read-only, trust"
  },
  {
-  "name": "sarif",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "SARIF reports from code scanners such as CodeQL and Semgrep: each finding as a passage with its rule, file and line.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "sbom",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
