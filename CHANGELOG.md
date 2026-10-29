@@ -10,6 +10,12 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `calendar-out`: the dates coming up in your files (found the way
+  `coming-up` finds them) as an .ics file any calendar app can import or
+  subscribe to: an all-day event for each, its title the line it was found on
+  and its description the file and line. Ids are stable so reimporting
+  doesn't double, dates already in a calendar file are not written again, and
+  nothing dated writes nothing.
 - `cloudevents`: the record's rows as CloudEvents 1.0 JSON events, one a
   line: the id is the row's own hash, the source names the box by its first
   row, the type is the row's kind, and the data is the row, so the chain

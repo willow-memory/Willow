@@ -207,6 +207,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "ro-crate": ("ro_crate.py", ["--box", "{box}", "--to", "{tmp}/crate"]),
     "annotations": ("annotations.py", ["--box", "{box}", "--to", "{tmp}/annotations.json"]),
     "cloudevents": ("cloudevents.py", ["--box", "{box}", "--to", "{tmp}/events.jsonl"]),
+    "calendar-out": ("calendar_out.py", ["--box", "{box}", "--to", "{tmp}/coming.ics", *NOW]),
     "history": ("history.py", ["--box", "{box}"]),
     "dice": ("dice.py", ["--box", "{box}", "roll", "2d6", *NOW]),
     "hook-fail-closed": ("hook_fail_closed.py", ["--hook", "true"]),

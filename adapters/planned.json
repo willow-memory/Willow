@@ -211,16 +211,6 @@
   "tags": "needs-install, offline, writes-output, search"
  },
  {
-  "name": "calendar-out",
-  "kind": "stdlib",
-  "section": "Ways to use it",
-  "line": "Dates coming up as an .ics file your calendar app can subscribe to.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, interface"
- },
- {
   "name": "canvas",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
