@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `notion`: Notion's export zip, read without unpacking and one nested zip
+  deep: each page and database with its path, Notion's ids taken off and a
+  page's first heading not repeated.
 - `discord`: Discord's data package zip, read without unpacking: your
   messages, oldest first, as dated lines by server and channel, from the
   older JSON or the newer CSV message files.

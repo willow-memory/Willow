@@ -551,6 +551,10 @@ willow/
 │   │   │   ├── notes.py      Obsidian and Logseq vaults, links and backlinks kept
 │   │   │   ├── test_notes.py
 │   │   │   └── README.md
+│   │   ├── notion/
+│   │   │   ├── notion.py   a Notion export as pages and databases with their paths
+│   │   │   ├── test_notion.py
+│   │   │   └── README.md
 │   │   ├── office/
 │   │   │   ├── office.py     .docx, .odt, .pptx, .xlsx and .ods, as text
 │   │   │   ├── test_office.py

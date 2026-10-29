@@ -1352,16 +1352,6 @@
   "tags": "no-install, online, records, trust"
  },
  {
-  "name": "notion",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Notion's export zip, Markdown and CSV, as plain text with each page's title and path.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "novelty",
   "kind": "stdlib",
   "section": "For maintainers",

@@ -299,6 +299,14 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         "Messages/c456/messages.csv": 'ID,Timestamp,Contents,Attachments\n7,2024-03-02 08:15:30,"Six hours of sun.",\n',
         })
     )}),
+    "notion": ("notion.py", {"notion.zip": (
+        _zip({
+        "Garden 0123456789abcdef0123456789abcdef.md": "# Garden\n\nIntro.\n",
+        "Garden/Veg 11111111111111111111111111111111/Tomato notes 22222222222222222222222222222222.md": "# Tomato notes\n\nCreated: March 2, 2024 8:15 AM\nPlant out after the last frost.\n",
+        "Garden/Seed orders 33333333333333333333333333333333.csv": "Name,Qty,Supplier\nBasil,3,Seeds Ltd\n,,\n",
+        "Garden/photo.png": "not text",
+        })
+    )}),
     "notes": ("notes.py", {"garden.md": b"Tomatoes want [[sun]].\n"}),
     "jrnl": ("jrnl.py", {"journal.txt": (
         "[2024-03-03 10:15] Fixed the gate.\nThe hinge wanted oil, not force.\n\n"
