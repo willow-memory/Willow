@@ -263,6 +263,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "home-upkeep": ("home_upkeep.py", ["--box", "{box}"]),
     "warranties": ("warranties.py", ["--box", "{box}"]),
     "attendance": ("attendance.py", ["--box", "{box}"]),
+    "baby-log": ("baby_log.py", ["--box", "{box}"]),
     "history": ("history.py", ["--box", "{box}"]),
     "dice": ("dice.py", ["--box", "{box}", "roll", "2d6", *NOW]),
     "hook-fail-closed": ("hook_fail_closed.py", ["--hook", "true"]),

@@ -80,16 +80,6 @@
   "tags": "no-install, offline, read-only, assistant"
  },
  {
-  "name": "baby-log",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "Feeds, sleeps and nappies from your notes, by day: when was the last one?",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
- },
- {
   "name": "bank",
   "kind": "stdlib",
   "section": "Reading more kinds of files",

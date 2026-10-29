@@ -92,6 +92,10 @@ willow/
 │   │   │   ├── attendance.py   who was there, by person or by week
 │   │   │   ├── test_attendance.py
 │   │   │   └── README.md
+│   │   ├── baby-log/
+│   │   │   ├── baby_log.py   feeds, sleeps and nappies by day, and the last of each
+│   │   │   ├── test_baby_log.py
+│   │   │   └── README.md
 │   │   ├── backup/
 │   │   │   ├── backup.py     your record in one zip, every byte and the chain checked; never the key
 │   │   │   ├── test_backup.py

@@ -10,6 +10,8 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `baby-log`: Feeds, sleeps and nappies from your notes, counted by day with
+  the last of each and its time.
 - `attendance`: Attendance for a class, club or group from your register:
   each person's days there out of days marked, or the marks of each week.
 - `warranties`: Receipts and warranties: for each thing a line gives a
