@@ -307,6 +307,9 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         "Garden/photo.png": "not text",
         })
     )}),
+    "code-comments": ("code_comments.py", {"cache.py": (
+        b'"""Module docstring.\n\nSecond line."""\n# A cache of parsed answers.\nTTL = 60  # seconds an entry lives\ns = "# not a comment"\n\n\ndef f():\n    """Do the thing."""\n    return 1\n'
+    )}),
     "notes": ("notes.py", {"garden.md": b"Tomatoes want [[sun]].\n"}),
     "jrnl": ("jrnl.py", {"journal.txt": (
         "[2024-03-03 10:15] Fixed the gate.\nThe hinge wanted oil, not force.\n\n"

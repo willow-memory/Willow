@@ -232,16 +232,6 @@
   "tags": "needs-install, online, records, assistant"
  },
  {
-  "name": "code-comments",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "A codebase's comments and docstrings as passages, cited by file and line.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "code-first",
   "kind": "stdlib",
   "section": "Finding things",

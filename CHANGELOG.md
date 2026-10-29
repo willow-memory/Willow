@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `code-comments`: A codebase's comments and docstrings, line for line: each
+  source file becomes a file of the same number of lines holding the comment
+  text of the same line, so a hit is cited by the source's own line number.
 - `notion`: Notion's export zip, read without unpacking and one nested zip
   deep: each page and database with its path, Notion's ids taken off and a
   page's first heading not repeated.
