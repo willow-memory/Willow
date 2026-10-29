@@ -475,6 +475,10 @@ def gates() -> list[tuple[str, str, object]]:
     # a frozen recon composition over a planted target; its intel is committed
     out.append(("demo", "demo:redteam", command(*PYTEST, "demo/redteam",
                 needs=lambda: missing_module("pytest"))))  # fmt: skip
+    # the fleet's own known gaps asked of the code their fixes changed; the
+    # runs read the fleet's repositories, CI holds only what they froze
+    out.append(("demo", "demo:known-gaps", command(*PYTEST, "demo/known-gaps",
+                needs=lambda: missing_module("pytest"))))  # fmt: skip
     # the reusable novelty check every demo can run, over the idea pile and demos
     out.append(("demo", "demo:novelty", command(*PYTEST, "demo/test_novelty.py",
                 needs=lambda: missing_module("pytest"))))  # fmt: skip
