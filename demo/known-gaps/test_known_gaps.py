@@ -811,6 +811,140 @@ def test_the_scored_files_cache_is_checked_and_written_whole(tmp_path):
         ask.ask(to, ix, "KG10", pin, qs, "found")
 
 
+def test_an_index_planted_under_the_pinned_name_is_never_used(tmp_path):
+    ask = trees.sibling("ask")
+    repos, units, _ = pinned(tmp_path)
+    to, ix = tmp_path / "work", tmp_path / "ix"
+    trees.fetch_unit(to, repos, "KG01", units["KG01"])
+    pin = units["KG01"]
+    qs = [("KG01 1", "load the whole policy from the root path"), ("null 1", "policy")]
+    runs = {m: ask.ask(to, ix, "KG01", pin, qs, m) for m in ("found", "before")}
+    other = tmp_path / "other"
+    other.mkdir()
+    (other / "z.py").write_text("load the whole policy from the root path, planted\n")
+    for mode in ("found", "before"):
+        for tree in (pin["vulnerable"]["tree"], pin["fixed"]["tree"]):
+            shutil.rmtree(ix / tree, ignore_errors=True)
+            ask.scan.build(other, ix / tree)  # a whole, valid index of another folder
+        assert ask.ask(to, ix, "KG01", pin, qs, mode) == runs[mode], mode
+    again = ask.ask(to, ix, "KG01", pin, qs, "found")
+    paths = {s["path"] for r in again if r["type"] == "answer" for s in r["served"]}
+    assert "z.py" not in paths
+
+
+def test_a_tree_that_is_not_its_pin_is_refused_and_the_stats_name_what_was_asked(
+    tmp_path,
+):
+    ask = trees.sibling("ask")
+    repos, units, _ = pinned(tmp_path)
+    to, ix = tmp_path / "work", tmp_path / "ix"
+    for u in ("KG01", "KG10"):
+        trees.fetch_unit(to, repos, u, units[u])
+    qs = [("KG01 1", "load the whole policy from the root path")]
+    pin = units["KG01"]
+    found = ask.ask(to, ix, "KG01", pin, qs, "found")[-1]
+    before = ask.ask(to, ix, "KG01", pin, qs, "before")[-1]
+    assert found["old_tree"] == pin["vulnerable"]["tree"]
+    assert found["new_tree"] == pin["fixed"]["tree"]
+    assert found["old_index_sha256"] == ask.index_hash(ix / pin["vulnerable"]["tree"])
+    assert found["new_index_sha256"] == ask.index_hash(ix / pin["fixed"]["tree"])
+    assert found["old_index_sha256"] != found["new_index_sha256"]
+    assert found["limited_index_sha256"] is None
+    assert (
+        before["new_index_sha256"] is None and before["old_tree"] == found["old_tree"]
+    )
+    assert before["old_index_sha256"] == found["old_index_sha256"]  # rebuilt, the same
+    qs10 = [("KG10 1", "load the whole policy from the root path")]
+    lim = ask.ask(to, ix, "KG10", units["KG10"], qs10, "found")[-1]
+    _, at = ask.limited_paths(ix, units["KG10"]["vulnerable"]["tree"], ["app/guard.py"])
+    assert lim["limited_index_sha256"] == ask.index_hash(at)
+    # a tree that differs from its pin, on either side, in either phase
+    for side in ("old", "new"):
+        f = to / "trees" / "KG01" / side / "app" / "guard.py"
+        good = f.read_bytes()
+        f.write_text("tampered\n")
+        for mode in ("found", "before"):
+            with pytest.raises(ValueError, match="pinned tree"):
+                ask.ask(to, ix, "KG01", pin, qs, mode)
+        f.write_bytes(good)
+    assert ask.ask(to, ix, "KG01", pin, qs, "found")[-1] == found  # and then it's fine
+    # and one that isn't there at all
+    shutil.rmtree(to / "trees" / "KG01" / "new")
+    for mode in ("found", "before"):
+        with pytest.raises(ValueError, match="missing"):
+            ask.ask(to, ix, "KG01", pin, qs, mode)
+
+
+def test_a_scored_files_cache_with_an_extra_file_is_rebuilt(tmp_path, monkeypatch):
+    ask = trees.sibling("ask")
+    repos, units, _ = pinned(tmp_path)
+    to, ix = tmp_path / "work", tmp_path / "ix"
+    trees.fetch_unit(to, repos, "KG10", units["KG10"])
+    pin = units["KG10"]
+    qs = [("KG10 1", "load the whole policy from the root path")]
+    first = ask.ask(to, ix, "KG10", pin, qs, "found")
+    src, _ = ask.limited_paths(ix, pin["vulnerable"]["tree"], ["app/guard.py"])
+    extra = src / "docs" / "extra.py"
+    extra.parent.mkdir()
+    extra.write_text(
+        "load the whole policy from the root path, in a file nobody scored\n"
+    )
+    again = ask.ask(to, ix, "KG10", pin, qs, "found")
+    assert again == first and not extra.exists()  # rebuilt without it
+    for r in again:
+        if r["type"] == "answer":
+            for s in r["served"]:
+                assert s["path"] == "app/guard.py" and "nobody" not in s["text"]
+    # the copy is written whole, then renamed into place
+    renames = []
+    real = os.rename
+
+    def spy(a, b):
+        renames.append((Path(a).name, Path(b).name,
+                        sorted(p.name for p in Path(a).rglob("*") if p.is_file())))  # fmt: skip
+        real(a, b)
+
+    monkeypatch.setattr(ask.os, "rename", spy)
+    (src / "app" / "guard.py").write_bytes(b"x")
+    assert ask.ask(to, ix, "KG10", pin, qs, "found") == first
+    into_src = [r for r in renames if r[1] == src.name]
+    assert into_src and into_src[0][0].startswith(".tmp-src-")
+    assert into_src[0][2] == ["guard.py"]  # complete when it appeared
+
+
+def test_a_missing_tree_is_refused_not_skipped(tmp_path, capsys):
+    ask = trees.sibling("ask")
+    run = trees.sibling("run")
+    repos, units, _ = pinned(tmp_path)
+    to, ix = tmp_path / "work", tmp_path / "ix"
+    trees.fetch_unit(to, repos, "KG01", units["KG01"])
+    qs = [("KG01 1", "load the whole policy from the root path")]
+    rows = ask.ask(to, ix, "KG01", units["KG01"], qs, "found")
+    answers = [r for r in rows if r["type"] == "answer"]
+    # the diffs alone, with no trees beside them
+    bare = tmp_path / "bare"
+    (bare / "fixes").mkdir(parents=True)
+    shutil.copy(to / "fixes" / "KG01.diff", bare / "fixes" / "KG01.diff")
+    with pytest.raises(ValueError, match="missing"):
+        score.score(answers, bare / "fixes")
+    with pytest.raises(ValueError, match="missing"):
+        score.changed(
+            (to / "fixes" / "KG01.diff").read_text(), bare / "trees" / "KG01" / "old"
+        )
+    f = tmp_path / "answers.jsonl"
+    f.write_text("".join(json.dumps(r, sort_keys=True) + "\n" for r in rows))
+    box = tmp_path / "box"
+    code = run.main(["found", "--to", str(bare), "--answers", str(f), "--box", str(box),
+                     "--out", str(tmp_path / "o.jsonl")])  # fmt: skip
+    assert code == 2 and not (box / "record.jsonl").exists()
+    assert "missing" in capsys.readouterr().err
+    assert score.main(["--to", str(bare), str(f)]) == 2
+    # a tree that lacks a file the fix changed is not the pinned tree either
+    (to / "trees" / "KG01" / "old" / "app" / "guard.py").unlink()
+    with pytest.raises(ValueError, match="not in"):
+        score.score(answers, to / "fixes")
+
+
 def test_run_refuses_what_is_not_built(capsys):
     run = trees.sibling("run")
     assert run.main(["spread"]) == 2 and run.main([]) == 2

@@ -147,20 +147,24 @@ def changed(diff: str, old_tree: Path | None = None) -> dict:
     positions rule 2 counts (`pos`) and each hunk's old range (`hunks`). With
     `old_tree` (the vulnerable side's files), a file with positions that holds
     a shifting character gives up its positions: it is listed in `unreachable`
-    and no passage of it is a hit, rather than a hit on a shifted line."""
+    and no passage of it is a hit, rather than a hit on a shifted line. A
+    missing tree, or a file of the fix that the tree lacks, is refused with a
+    ValueError, never skipped."""
     was = phase3.counts
     phase3.counts = counts
     try:
         fix = phase3.changed(diff)
         fix["pos"], fix["hunks"] = positions(diff)
         fix["unreachable"] = []
+        if old_tree is not None and not old_tree.is_dir():
+            raise ValueError(f"{old_tree} is missing: fetch the trees first")
         for path in sorted(fix["pos"]):
-            f = old_tree / path if old_tree is not None else None
-            if (
-                f is not None
-                and f.is_file()
-                and shifted(f.read_bytes().decode("utf-8", "replace"))
-            ):
+            if old_tree is None:
+                continue
+            f = old_tree / path
+            if not f.is_file():
+                raise ValueError(f"{path} is not in {old_tree}: not the pinned tree")
+            if shifted(f.read_bytes().decode("utf-8", "replace")):
                 del fix["pos"][path]
                 fix["unreachable"].append(path)
         return fix
@@ -243,7 +247,7 @@ def main(argv: list[str]) -> int:
         rows = [json.loads(x) for x in Path(argv[2]).read_text().splitlines()]
         scored = score([r for r in rows if r.get("type") == "answer"],
                        Path(argv[1]) / "fixes")  # fmt: skip
-    except OSError as e:
+    except (OSError, ValueError) as e:
         print(f"refused: {e}", file=sys.stderr)
         return 2
     for r in scored:

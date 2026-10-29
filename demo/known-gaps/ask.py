@@ -4,8 +4,10 @@
         --unit NAME [--mode found|before]
 
 DIR (--to) is trees.py's; --ix is where indexes are kept, one folder a git
-tree hash (an index of a tree already made is reused: the index cache). The
-vulnerable tree and the fixed one are indexed with scan.py, then each
+tree hash. Every run holds each tree to its pinned git tree hash (a missing or
+different tree is refused) and builds its index afresh, into a temporary folder
+renamed into place: an index already there is never read. The vulnerable tree
+(and, for `found`, the fixed one) are indexed with scan.py, then each
 question that names the unit's gap (its name starts `KG03 `) is asked of the
 vulnerable index and answered three ways: the kernel's rank, BM25, and a
 word-match grep baseline. Null questions (`null `) are asked in `before` only.
@@ -26,7 +28,10 @@ how many lie in a file the fix changed (`file_passages`), and a `random_rate`:
 for `found`, the rate at which 3 changed passages drawn at random hit, from
 10,000 draws seeded by SEED; for `before`, the exact chance that 10 passages of
 the tree drawn at random hold a hit (php2shell's phase4 `chance_one`). Timings
-go to stderr, never into FILE, so the same inputs give the same bytes. Writes
+go to stderr, never into FILE, so the same inputs give the same bytes. The stats
+line also names what was asked: the pinned tree hashes checked, and a SHA-256
+over each index's files (`old_index_sha256`, `new_index_sha256`, and
+`limited_index_sha256` for a `files_scored` unit). Writes
 only --ix and FILE. Exit 0 asked; 2 refused.
 """
 
@@ -56,11 +61,35 @@ TOP = {"found": None, "before": 10}  # found: the whole changed set
 TOP3 = 3  # the top-3 hit rate stays in the output beside the rank statistic
 
 
-def index_of(ix: Path, name: str, folder: Path) -> Path:
+def check_tree(folder: Path, tree: str) -> None:
+    """The folder is there, and is the pinned git tree."""
+    if not folder.is_dir():
+        raise ValueError(f"{folder} is missing: fetch the trees first")
+    if trees.make_trees.git_tree(folder) != tree:
+        raise ValueError(f"{folder} is not the pinned tree {tree[:12]}")
+
+
+def index_hash(at: Path) -> str:
+    """SHA-256 over an index's files, so a verdict names exactly what was asked."""
+    h = hashlib.sha256()
+    for name in ("chunks.jsonl", "words.tsv", "index.json"):
+        h.update(name.encode() + b"\0" + (at / name).read_bytes() + b"\0")
+    return h.hexdigest()
+
+
+def fresh_index(ix: Path, name: str, folder: Path, tree: str | None = None) -> Path:
+    """Index `folder` into ix/name, every run: held to its pinned tree hash
+    first (when `tree` is given), built into a temporary folder and renamed into
+    place. An index already there is never read, so nothing planted or left by a
+    crash can be asked in its stead."""
+    if tree is not None:
+        check_tree(folder, tree)
+    ix.mkdir(parents=True, exist_ok=True)
+    tmp = Path(tempfile.mkdtemp(prefix=".tmp-ix-", dir=ix))
+    scan.build(folder, tmp)
     at = ix / name
-    if not (at / "index.json").exists():
-        ix.mkdir(parents=True, exist_ok=True)
-        scan.build(folder, at)
+    shutil.rmtree(at, ignore_errors=True)
+    os.rename(tmp, at)
     return at
 
 
@@ -88,8 +117,7 @@ def limited_index(ix: Path, old_tree: Path, tree: str, files: list) -> Path:
     only when it matches the tree's own files exactly; otherwise it, and the
     index made of it, are rebuilt. The copy is written to a temporary folder
     and renamed into place, so a crash leaves nothing a later run would trust."""
-    if trees.make_trees.git_tree(old_tree) != tree:
-        raise ValueError(f"{old_tree} is not the pinned tree {tree[:12]}")
+    check_tree(old_tree, tree)
     src, at = limited_paths(ix, tree, files)
     if not (src.is_dir() and limited_source_ok(src, old_tree, files)):
         shutil.rmtree(src, ignore_errors=True)
@@ -101,7 +129,7 @@ def limited_index(ix: Path, old_tree: Path, tree: str, files: list) -> Path:
                 (tmp / f).parent.mkdir(parents=True, exist_ok=True)
                 (tmp / f).write_bytes((old_tree / f).read_bytes())
         os.rename(tmp, src)
-    return index_of(ix, at.name, src)
+    return fresh_index(ix, at.name, src)  # the copy is checked; its index is always new
 
 
 def served(passages: list) -> list:
@@ -110,8 +138,13 @@ def served(passages: list) -> list:
 
 def ask(to: Path, ix: Path, unit: str, pin: dict, qs: list, mode: str) -> list:
     t0 = time.monotonic()
-    old_at = index_of(ix, pin["vulnerable"]["tree"], to / "trees" / unit / "old")
-    new_at = index_of(ix, pin["fixed"]["tree"], to / "trees" / unit / "new")
+    old_tree, new_tree = pin["vulnerable"]["tree"], pin["fixed"]["tree"]
+    old_at = fresh_index(ix, old_tree, to / "trees" / unit / "old", old_tree)
+    if mode == "found":
+        new_at = fresh_index(ix, new_tree, to / "trees" / unit / "new", new_tree)
+    else:  # phase 2 never reads the fixed side, but it must still be the pinned one
+        check_tree(to / "trees" / unit / "new", new_tree)
+        new_at = None
     print(f"{unit}: indexed in {time.monotonic() - t0:.1f}s", file=sys.stderr)
     t1 = time.monotonic()
     fix = score.changed(
@@ -122,11 +155,13 @@ def ask(to: Path, ix: Path, unit: str, pin: dict, qs: list, mode: str) -> list:
     old = scan.Index(old_at)
     changed = [c for c in old.pile if before is None or c["id"] not in before]
     changed_all = len(changed)
+    limited_at = None
     if mode == "found" and pin.get("files_scored"):
         # limited to the files the gap scores, by path: the changed set, the
         # ranking and the chance draw only on passages of those files
-        old = scan.Index(limited_index(ix, to / "trees" / unit / "old",
-                                       pin["vulnerable"]["tree"], pin["files_scored"]))  # fmt: skip
+        limited_at = limited_index(ix, to / "trees" / unit / "old", old_tree,
+                                   pin["files_scored"])  # fmt: skip
+        old = scan.Index(limited_at)
         changed = [c for c in old.pile if c["id"] not in before]
     top = TOP[mode] or max(len(changed), 1)
     rows = []
@@ -158,6 +193,10 @@ def ask(to: Path, ix: Path, unit: str, pin: dict, qs: list, mode: str) -> list:
     rows.append({"type": "stats", "unit": unit, "gap": pin["gap"], "mode": mode,
                  "changed": len(changed), "changed_all": changed_all,
                  "questions": len(mine), "unreachable_files": fix["unreachable"],
+                 "old_tree": old_tree, "new_tree": new_tree,
+                 "old_index_sha256": index_hash(old_at),
+                 "new_index_sha256": index_hash(new_at) if new_at else None,
+                 "limited_index_sha256": index_hash(limited_at) if limited_at else None,
                  "hit_passages": hits, "hit_by_text": len(by_text),
                  "text_only": sum(not score.hit(c, fix) for c in by_text),
                  "text_outside_hunks": sum(not score.in_a_hunk(c, fix) for c in by_text),
