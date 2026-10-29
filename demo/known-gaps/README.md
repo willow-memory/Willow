@@ -555,6 +555,11 @@ of its ten units. What it does not show, and the misses:
 - **The strong set's p-value assumes independence too**, between a gap's two
   writers and its eight questions each; they ask the same thing in different
   words, so 44 is not 44 separate chances.
+- **The harshest bound, not a frozen gate:** counted as if a gap's questions
+  were one draw, each unit hit or not against its own chance, the strong set
+  is 8 of 10 units, p = 9.2e-14, and the weaker set 1 of 4, p = 0.0099, which
+  survives by a hair. The audit computed these after the run, so they are
+  reported beside the gates and judge nothing.
 - **File level is easier and reported only**: 105 of 160 against 72 expected
   for bm25; the kernel's and grep's strong-set file hits sit below chance
   (48 and 65), while grep's weaker set is above it (13 against 6.2, p 0.0068).
@@ -589,9 +594,10 @@ or pull request ids their messages cite:
 
 What it shows: the flawed lines are usually older than the fix by days to
 weeks (the sandbox lift of 07-08 stands under KG01, KG03 and KG07; the longest,
-81 days). Six units show 0 days: the code the fix changed was written the same
-day or the day before, by a feature commit that the fix then corrected (KG02,
-KG05, KG06, KG09, KG10, KG12). Only a handful of commits cite a gap or audit
+81 days). Eight units have a 0-day commit, written the same day as the fix or
+the day before. In six of them every commit is 0-day: a feature commit that
+the fix then corrected (KG02, KG05, KG06, KG09, KG10, KG12). KG07's two units
+add a 0-day commit to much older ones. Only a handful of commits cite a gap or audit
 id (the ids are the study's; most fleet commits before the audit habit do not).
 
 KG07, as the study expected: the sealed ruling (9fe5e179, gap 582b1e676fb3)
@@ -599,19 +605,24 @@ exempted `allow_localhost` from the lease, and the KB note names commits
 e1a5ab03 and ce2d0d96. **Neither commit exists in any local repository**
 (willow-mcp, kartikeya, the other repositories beside them, and the willow-bot
 fork all lack both), so the study cannot confirm them from git. What git does
-say: the lines the KG07 fix rewrote were written by many commits, not one; in
+say: the lines the KG07 fix rewrote were written by many commits, not one. In
 kartikeya the newest is b5313eee61e6 (2026-09-22, "localhost is not egress"),
-a day before the fix, and in willow-mcp a05de373f20b (2026-09-22); both fit an
-exemption added shortly before the fix, but neither names the ruling, and the
-earliest commit to mention the word in kartikeya is 153ac26 (2026-07-17,
-"gate # allow_localhost like # allow_net"). That is consistent with the study's
-expectation and does not prove it.
+a day before the fix, whose body states the exemption: "Signed-envelope gate
+applies only to # allow_net, not allow_localhost." In willow-mcp, commit
+200ce45 (2026-09-22, on the vulnerable side of the fix) names the ruling:
+"Localhost is Kart localhost_tier, not the net authorizer path (9fe5e179)."
+The flag itself is far older: it is in kartikeya's code from the 07-08 lift
+commits (ec3acc0, ff59d05, c1000ee), and 153ac26 (2026-07-17, "gate #
+allow_localhost like # allow_net") is the first commit to name it in its
+message. So git shows the exemption written into both repositories the day
+before the fix, citing the sealed ruling, on top of a flag that had been gated
+like the network since July. The KB note's two commits remain unfound.
 
 ### Phase 4: the writers compared (reported, not judged)
 
 Questions with a hit, per writer, with every line and with the flagged lines
-left out (the local writer wrote 48 flagged lines of 96; Claude 1; the null
-set none). A pair is a question asked of one unit: 112 a writer.
+left out (the local writer wrote 46 flagged lines of 96; Claude and the null
+set none, after the `allow_localhost` exception; 48 and 1 before it). A pair is a question asked of one unit: 112 a writer.
 
 | Phase, ranker | Local, all lines | Local, unflagged | Claude, all lines | Claude, unflagged |
 |---|---|---|---|---|
@@ -625,8 +636,10 @@ set none). A pair is a question asked of one unit: 112 a writer.
 What it shows: in phase 2 the local writer's raw lead over Claude's (28 against
 19, bm25) shrinks once its flagged lines are set aside (12 of 60 is 20%,
 against Claude's 17%): most of its extra hits are on lines that carried an
-identifier. Grep's gap (16 against 7) falls to 3 of 60. In phase 1 the same
-holds weakly (88% unflagged against 72%). What it does not show: which writer
+identifier. Grep's gap (16 against 7) falls to 3 of 60. In phase 1 it does
+not: the local writer's lead stays the same with its flagged lines left out
+(87.5% with every line, 88.3% unflagged, against Claude's 72.3%), since nearly
+every phase-1 question hits whatever it says. What it does not show: which writer
 is better, since the two were not asked the same things and unflagged local
 lines are a selected 60 of 112.
 
