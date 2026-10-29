@@ -10,6 +10,12 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `codeowners`: who owns a file, the CODEOWNERS rule that matches it cited
+  by line, read the way GitHub (last match wins), GitLab (sections and their
+  defaults) and Forgejo (every matching regex) each do.
+- `words-ar` and `words-cy`, which take Arabic's and Welsh's common words out
+  of a question before the kernel's bite. `words-ar` also takes the short
+  vowel marks out of the question, since the kernel splits a word at each.
 - `package-contents`: what a wheel, sdist, npm tarball or crate holds, every
   file with its size, and the code that would run because you installed it,
   by file and line: a `.pth` import line, a setup.py and build backend, the

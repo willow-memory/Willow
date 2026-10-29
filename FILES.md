@@ -153,6 +153,10 @@ willow/
 │   │   │   ├── clauses.py    a long document as one sentence a passage, and a sentence-by-sentence diff
 │   │   │   ├── test_clauses.py
 │   │   │   └── README.md
+│   │   ├── codeowners/
+│   │   │   ├── codeowners.py   who owns a file: the CODEOWNERS rule that matches it, cited by line, on GitHub, GitLab and Forgejo
+│   │   │   ├── test_codeowners.py
+│   │   │   └── README.md
 │   │   ├── codex-cli/
 │   │   │   ├── codex_cli.py      the config.toml lines that register mcp-lite with Codex CLI
 │   │   │   ├── test_codex_cli.py
@@ -560,6 +564,14 @@ willow/
 │   │   ├── windsurf/
 │   │   │   ├── windsurf.py       the mcp_config.json lines that register mcp-lite with Windsurf
 │   │   │   ├── test_windsurf.py
+│   │   │   └── README.md
+│   │   ├── words-ar/
+│   │   │   ├── words_ar.py   a question in Arabic, its common words out, then the kernel's bite
+│   │   │   ├── test_words_ar.py
+│   │   │   └── README.md
+│   │   ├── words-cy/
+│   │   │   ├── words_cy.py   a question in Welsh, its common words out, then the kernel's bite
+│   │   │   ├── test_words_cy.py
 │   │   │   └── README.md
 │   │   ├── words-de/
 │   │   │   ├── words_de.py   a question in German, its common words out, then the kernel's bite

@@ -133,6 +133,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "outdated": ("outdated.py", ["--box", "{box}"]),
     "typosquat": ("typosquat.py", ["--box", "{box}"]),
     "install-scripts": ("install_scripts.py", ["--box", "{box}"]),
+    "codeowners": ("codeowners.py", ["--box", "{box}", "garden.md"]),
     "package-contents": ("package_contents.py", ["--box", "{box}"]),
     "pii-audit": ("pii_audit.py", ["--box", "{box}"]),
     "pins": ("pins.py", ["--box", "{box}"]),
@@ -167,7 +168,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "browse": ("browse.py", ["launcher", "--box", "{box}"]),
     "digest": ("digest.py", ["--box", "{box}", *NOW]),
     **{f"words-{c}": (f"words_{c}.py", ["bite", "--box", "{box}", *NOW, "tomatoes"])
-       for c in ("de", "es", "fr", "it", "nl", "pl", "pt", "ru", "sv", "tr")},
+       for c in ("ar", "cy", "de", "es", "fr", "it", "nl", "pl", "pt", "ru", "sv", "tr")},
     "backup": ("backup.py", ["--box", "{box}", "--to", "{tmp}/backups", *NOW]),
     "bench": ("bench.py", ["run", "--sizes", "20,40"]),
     "history": ("history.py", ["--box", "{box}"]),

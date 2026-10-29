@@ -414,16 +414,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "codeowners",
-  "kind": "stdlib",
-  "section": "Finding things",
-  "line": "Who owns this file: the CODEOWNERS rule that matches it, cited by line, on GitHub, GitLab and Forgejo alike.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, search"
- },
- {
   "name": "compiled",
   "kind": "deps",
   "section": "For maintainers",
@@ -3244,26 +3234,6 @@
   "writes": "record",
   "network": "none",
   "tags": "no-install, offline, records, trust"
- },
- {
-  "name": "words-ar",
-  "kind": "stdlib",
-  "section": "Your own words",
-  "line": "Arabic common words, with the article and prefixes read apart.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, words"
- },
- {
-  "name": "words-cy",
-  "kind": "stdlib",
-  "section": "Your own words",
-  "line": "Welsh common words ('a', 'y', 'yn').",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, words"
  },
  {
   "name": "words-hi",
