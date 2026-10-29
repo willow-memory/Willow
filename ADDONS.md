@@ -18,13 +18,13 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`█████████░░░░░░░░░░░` **206 of 470 built** · 419 need no install · 51 need one
+`█████████░░░░░░░░░░░` **208 of 470 built** · 419 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
 | Reading more kinds of files | 25 | 80 | 96 | 9 |
-| Finding things | 26 | 17 | 33 | 10 |
-| Your own words | 17 | 8 | 22 | 3 |
+| Finding things | 27 | 16 | 33 | 10 |
+| Your own words | 18 | 7 | 22 | 3 |
 | Keeping track | 35 | 23 | 58 | 0 |
 | Trust and proof | 20 | 25 | 36 | 9 |
 | Privacy and safety | 11 | 3 | 14 | 0 |
@@ -47,9 +47,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[pets](adapters/stdlib/pets/)** — Each pet's vet visits, vaccines and medicines, from your records: what's due next.
+**[sheets](adapters/deps/sheets/)** — Spreadsheets with formulas and formatting kept, beyond what the office add-on reads.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 206 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 208 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -197,7 +197,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - **promises** (idea) — What a candidate or a council said, by date and source, from the documents you saved. *new* `no-install` `offline` `read-only` `search`
 - [**quote-check**](adapters/stdlib/quote-check/) — Is this exact quote in my files, and where? For writers, journalists and students. *box* `no-install` `offline` `read-only` `search`
 - [**reading-level**](adapters/stdlib/reading-level/) — How hard a passage reads (sentence length, word length, Flesch), so a teacher can find texts for a class. *new* `no-install` `offline` `read-only` `search`
-- **record-sql** (idea) — SQL straight over your record, in place: 'how many answers did I approve in March?' Needs DuckDB; MIT. *new* `needs-install` `offline` `read-only` `search`
+- [**record-sql**](adapters/deps/record-sql/) — SQL straight over your record, in place: 'how many answers did I approve in March?' Needs DuckDB; MIT. *box* `needs-install` `offline` `read-only` `search`
 - **rerank** (idea) — A small model on the CPU that reorders the top passages by reading the question and each passage together. Needs FlashRank; Apache-2.0. Goes online: the model, downloaded once. *new* `needs-install` `online` `read-only` `search`
 - **ripgrep** (idea) — Exact search through ripgrep, much faster on a big folder, its hits checked against the kernel's hashes. Needs the ripgrep program; MIT or Unlicense. *new* `needs-install` `offline` `read-only` `search`
 - [**said**](adapters/stdlib/said/) — Your own quotes, gathered: every 'so-and-so, on this date: "..."' in your files, as a dated timeline of what was decided. *new* `no-install` `offline` `read-only` `search`
@@ -217,7 +217,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 
 - [**abbreviations**](adapters/stdlib/abbreviations/) — Your own shorthand, written down once (appt, Rx, w/c), so a question finds either form. *new* `no-install` `offline` `writes-output` `words`
 - [**accents**](adapters/stdlib/accents/) — A word typed without its accent read as your files write it, and the words-list lines that make it last. *new* `no-install` `offline` `read-only` `words`
-- **dialect** (idea) — The words you use far more than the world does: your own dialect, from your files against wordfreq's counts. Needs wordfreq; Apache-2.0, its data CC BY-SA 4.0. *new* `needs-install` `offline` `read-only` `words`
+- [**dialect**](adapters/deps/dialect/) — The words you use far more than the world does: your own dialect, from your files against wordfreq's counts. Needs wordfreq; Apache-2.0, its data CC BY-SA 4.0. *new* `needs-install` `offline` `read-only` `words`
 - **memoir** (idea) — A question a week about your life, answered in your own words and kept, so your story is in your files. *new* `no-install` `offline` `writes-output` `words`
 - [**nicknames**](adapters/stdlib/nicknames/) — The names you call people, mapped to who they are, so 'Mum' finds Margaret. *new* `no-install` `offline` `writes-output` `words`
 - [**starter-words**](adapters/stdlib/starter-words/) — A first-day words list to copy and edit (owes = invoice, outstanding; doctor = dr, physician, clinic). *new* `no-install` `offline` `writes-output` `words`

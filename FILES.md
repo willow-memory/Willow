@@ -851,6 +851,12 @@ willow/
 │   │       └── README.md
 │   └── deps/                 add-ons that need something installed
 │       ├── README.md         what one must declare: pins, floors, licences, network
+│       ├── dialect/
+│       │   ├── dialect.py    the words you use far more than the world does, against wordfreq's counts
+│       │   ├── requirements.txt  wordfreq, pinned
+│       │   ├── requirements-floor.txt  wordfreq at its floor, also tested
+│       │   ├── test_dialect.py
+│       │   └── README.md
 │       ├── fast-tests/
 │       │   ├── fast_tests.py  the test suite across every core with pytest-xdist, in a fraction of the time
 │       │   ├── requirements.txt  pytest-xdist, pinned
@@ -886,6 +892,12 @@ willow/
 │       │   ├── requirements.txt  Pillow, pinned
 │       │   ├── requirements-floor.txt  Pillow at its floor, also tested
 │       │   ├── test_photos.py
+│       │   └── README.md
+│       ├── record-sql/
+│       │   ├── record_sql.py  SQL over the record in memory, DuckDB's way out locked shut
+│       │   ├── requirements.txt  duckdb, pinned
+│       │   ├── requirements-floor.txt  duckdb at its floor, also tested
+│       │   ├── test_record_sql.py
 │       │   └── README.md
 │       ├── sheets/
 │       │   ├── sheets.py     spreadsheets as shown: number formats, formulas and notes kept

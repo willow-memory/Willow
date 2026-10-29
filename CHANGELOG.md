@@ -23,6 +23,15 @@ says how). The first was v0.1.0.
 - `manifests`: Docker Compose and Kubernetes YAML, a passage for each service
   and object: its image, ports, volumes, mounts, routes and selectors, and
   environments, ConfigMaps and Secrets by name, never value. Needs PyYAML.
+- `record-sql`: SQL straight over your record, in place: its rows, and each
+  passage a bite served, as two tables in DuckDB's memory, the chain checked
+  first and DuckDB's way out to files, databases and the network locked shut
+  before your SQL runs. Needs DuckDB, floored at 1.1.1, the first with a
+  wheel for Python 3.13.
+- `dialect`: The words you use far more than the world does, from your files
+  against wordfreq's counts: those the world doesn't have, and those you use
+  far beyond its rate; a file's codes in capitals left out. Needs wordfreq,
+  floored at 3.1.0, the first that doesn't import pkg_resources.
 - `budget`: Spending against the monthly budget you wrote down in your own
   words: your statements' lines matched to each category by the markers you
   gave, each month held against it. (#75)

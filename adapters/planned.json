@@ -426,17 +426,6 @@
   "tags": "no-install, offline, records, interface"
  },
  {
-  "name": "dialect",
-  "kind": "deps",
-  "section": "Your own words",
-  "line": "The words you use far more than the world does: your own dialect, from your files against wordfreq's counts.",
-  "source": "new",
-  "needs": "wordfreq; Apache-2.0, its data CC BY-SA 4.0",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "needs-install, offline, read-only, words"
- },
- {
   "name": "dice5e",
   "kind": "deps",
   "section": "Play",
@@ -1866,17 +1855,6 @@
   "writes": "nothing",
   "network": "none",
   "tags": "needs-install, offline, read-only, maintainers"
- },
- {
-  "name": "record-sql",
-  "kind": "deps",
-  "section": "Finding things",
-  "line": "SQL straight over your record, in place: 'how many answers did I approve in March?'",
-  "source": "new",
-  "needs": "DuckDB; MIT",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "needs-install, offline, read-only, search"
  },
  {
   "name": "reddit",

@@ -41,6 +41,8 @@ file, or a `floor:` line that doesn't name each floor version.
 | pdf | pypdf 1.9 (2014) | pypdf 3.1.0 | 1.9 is a Python 2 release; 3.1.0 is the first since the name was revived |
 | mcp | mcp 0.9.1 (its first, 2024) | mcp 2.0.0 | the server is built on MCPServer, which arrived in 2.0.0; 2.x removed 1.x's server API |
 | photos | Pillow 8.0.1 (2020) | Pillow 11.0.0 | 8.0.1 has no wheel for Python 3.13 and won't build there; 11.0.0 is the first with one |
+| record-sql | duckdb 0.2.3 (2020) | duckdb 1.1.1 | 0.2.3 is built for Python 3.6 to 3.9; 1.1.1 is the first with a wheel for 3.13 |
+| dialect | wordfreq 2.3.2 (2020) | wordfreq 3.1.0 | every release before 3.1.0 imports pkg_resources, which a 3.13 environment doesn't have |
 
 An install that isn't there makes the add-on refuse with a message naming it,
 never skip quietly: a check that skips still looks like a pass.

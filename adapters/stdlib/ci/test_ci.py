@@ -235,7 +235,9 @@ def test_a_floor_above_the_rule_needs_a_reason_on_its_card(monkeypatch):
                 "snowballstemmer": {"2.0.0": "2019-10-03T00:00:00Z", "3.1.1": "2026-06-03T00:00:00Z"},
                 "pillow": {"8.0.1": "2020-10-22T00:00:00Z", "11.0.0": "2024-10-15T00:00:00Z"},
                 "openpyxl": {"3.0.5": "2020-08-21T00:00:00Z", "3.1.5": "2024-06-28T00:00:00Z"},
-                "pyyaml": {"5.3.1": "2020-03-18T00:00:00Z", "6.0.3": "2025-09-25T00:00:00Z"}}  # fmt: skip
+                "pyyaml": {"5.3.1": "2020-03-18T00:00:00Z", "6.0.3": "2025-09-25T00:00:00Z"},
+                "duckdb": {"0.2.3": "2020-12-03T00:00:00Z", "1.1.1": "2024-09-24T00:00:00Z"},
+                "wordfreq": {"2.3.2": "2020-05-01T00:00:00Z", "3.1.0": "2023-11-21T00:00:00Z"}}  # fmt: skip
     monkeypatch.setattr(ci, "releases", lambda package: uploaded[package])
     assert ci.floors()[0] == ci.SATISFIED
     monkeypatch.setattr(ci, "floor_line", lambda name: "")
