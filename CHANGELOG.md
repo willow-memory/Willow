@@ -10,6 +10,12 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `profile`: where a question's time goes: how long the kernel takes to read
+  the folder and to rank it, and the functions the time went to, from
+  cProfile, under the kernel's version and release so two releases compare.
+  Its script is named question_profile, since a script called profile shadows
+  the standard library's module. Nothing is written and the question's words
+  are not printed.
 - `box-health`: a box's health in one line: whether the chain holds, how many
   approvals hold and suggestions wait, the files the bite can't read counted
   by kind with the add-on that reads each, whether the words list is the one

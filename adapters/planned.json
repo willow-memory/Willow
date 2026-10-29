@@ -2105,16 +2105,6 @@
   "tags": "no-install, online, records, play"
  },
  {
-  "name": "profile",
-  "kind": "stdlib",
-  "section": "For maintainers",
-  "line": "Where a question's time goes, function by function, from cProfile, per release.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, maintainers"
- },
- {
   "name": "promises",
   "kind": "stdlib",
   "section": "Finding things",

@@ -447,6 +447,10 @@ willow/
 │   │   │   ├── privacy.py    personal data and keys withheld from what a question prints
 │   │   │   ├── test_privacy.py
 │   │   │   └── README.md
+│   │   ├── profile/
+│   │   │   ├── question_profile.py   where a question's time goes: reading the folder, ranking, and the functions the time went to, from cProfile
+│   │   │   ├── test_question_profile.py
+│   │   │   └── README.md
 │   │   ├── prov/
 │   │   │   ├── prov.py   the record as W3C PROV-JSON: what came from what, by which step, sealed by whom
 │   │   │   ├── test_prov.py
