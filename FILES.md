@@ -747,6 +747,7 @@ willow/
 │   │       └── null.txt      fifty questions with nothing to do with the bug
 │   ├── known-gaps/           the fleet's own twelve known security gaps, asked of the code their fixes changed
 │   │   ├── README.md         the claim, the threats, what is frozen, how to reproduce, the dry run
+│   │   ├── FROZEN.json       freeze 1: the SHA-256 of every frozen file and tool; a change is a new freeze
 │   │   ├── gaps.json         the twelve gaps, redacted: source, class, fix, and how strong the source is
 │   │   ├── pins.json         each fix's vulnerable and fixed commits and trees, and its diff's SHA-256
 │   │   ├── resolve.py        gaps.json to pins.json, from the fleet's own repositories

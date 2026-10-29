@@ -1,0 +1,33 @@
+{
+ "about": "Phase 0 of demo/known-gaps: each file's SHA-256 when it was frozen, held by test_known_gaps.py, which re-hashes the files and every tool below. A change is a new freeze, in its own commit, before the phase that needs it runs.",
+ "frozen": "2026-10-28",
+ "files": {
+  "gaps.json": "d8cb3836e867002703db859d51faaca6abe69c4572878dc558a6f4438ee2f1c5",
+  "pins.json": "de25a893f3218a1b14458c656d2464e6eea526ed37526ac21989d179e9c21189",
+  "resolve.py": "af669034dc6e5ede0c674260bde81cd137f4e7a0686b17941ac08c96e6c93f70",
+  "trees.py": "115913787b596e625503e8a45084acdf8a0fc0394c080f924f8defe99a401d78",
+  "ask.py": "1f70411b7b5e99a4ccf7a58a25e68e204399e15eed77634827d32d693113376b",
+  "score.py": "7c3b0a9ba77a8933a543b29c3fa6124cd2edcead62226b4cbf050ffd3b747c26",
+  "origin.py": "d84d45ce3a899f3e2037564b799da8e75c175623ff1efc79a6df4d3ff9e6dab8",
+  "run.py": "3ddfe3243762b50be5932a86edf74bec12fc147c02da72505126bca9af106fcd"
+ },
+ "tools_at_freeze": {
+  "kernel.py": "be6e99a1952d0cb347b0028071b98258e3e69502c21f7ee715557b0ed3145a0d",
+  "adapters/stdlib/scan/scan.py": "ff3717e7f280eb0a3dea479136bdab43360cd72cd6861d7827fbdf1504c2ce9d",
+  "adapters/stdlib/todo/todo.py": "56be091ebcb319711653ab2566d011b8f32a00790c106e63d4ef63516e7e0c45",
+  "adapters/stdlib/ci/whose.py": "0eceae102467c18d847be90cbcceae6f167af10ead5edcce4f3bd43fdb719abd",
+  "demo/php2shell/make_trees.py": "50bbcb8d4d12a7932d0a79f035e82366219430e1773524c117aa71ad55329f12",
+  "demo/php2shell/phase2.py": "5ca4e4a1a80e3e159191935866140d268b7a750b3380b372f75b9ddb0e521cb9",
+  "demo/php2shell/phase3.py": "1328d97cd50f41d6a822cbdadc36d72ad1ab696b668dbb290366a6c36c81146e",
+  "demo/php2shell/phase4.py": "c8d9315b7a119b532614b623e68686e55c3eea7310920255ff2a83623adc67d0",
+  "demo/php2shell/score.py": "084d0a3a0d7e99f5450ccc12536f659d1f3fd0e675dc3b4415d8bc4ef97e7142",
+  "demo/php2shell/score2.py": "ddf0bde4ff821e484875afd5df851398f886db1094a6da4a67086e8df6cd6cba"
+ },
+ "added": {
+  "gaps.json": "2026-10-28, before any question was written: the twelve gaps, redacted",
+  "pins.json": "2026-10-28, before any question was written: each fix's two commits, trees and diff hash",
+  "score.py": "2026-10-28, before any scored phase ran: the hit rule, by position",
+  "run.py": "2026-10-28, before any scored phase ran: phase 1's rank rule, phase 2's line-level and null rules",
+  "tools_at_freeze": "2026-10-28: the php2shell modules the rule and statistics run on, and the tools they lean on, by import graph (Loki's audit)"
+ }
+}
