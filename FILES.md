@@ -410,6 +410,10 @@ willow/
 │   │   │   ├── misquote.py   a quote almost in your files: the closest passage, and what differs
 │   │   │   ├── test_misquote.py
 │   │   │   └── README.md
+│   │   ├── mood/
+│   │   │   ├── mood.py   mood scores over weeks and months
+│   │   │   ├── test_mood.py
+│   │   │   └── README.md
 │   │   ├── mutants/
 │   │   │   ├── mutants.py    breaks each add-on's code on purpose and checks its tests notice
 │   │   │   ├── accepted.json the breaks that change nothing a person could notice, each with why

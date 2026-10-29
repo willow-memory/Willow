@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `mood`: The mood scores you write in a journal, gathered by month or week
+  with the average, the lowest and highest day and the change from the period
+  before.
 - `gradebook`: A teacher's gradebook that stays on this machine: each
   student's marks from the lines you wrote, and who is falling behind, by
   plain arithmetic.

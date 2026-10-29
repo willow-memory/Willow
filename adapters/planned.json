@@ -1560,16 +1560,6 @@
   "tags": "no-install, offline, read-only, assistant"
  },
  {
-  "name": "mood",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "Mood scores you write in a journal, over weeks and months.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
- },
- {
   "name": "moodle",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
