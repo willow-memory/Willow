@@ -132,6 +132,10 @@ willow/
 │   │   │   ├── browse.py     your folder in your browser, on 127.0.0.1: ask, read, approve with a click
 │   │   │   ├── test_browse.py
 │   │   │   └── README.md
+│   │   ├── budget/
+│   │   │   ├── budget.py   spending against a budget you wrote, by month
+│   │   │   ├── test_budget.py
+│   │   │   └── README.md
 │   │   ├── calendar/
 │   │   │   ├── cal.py        .ics events and .vcf contacts, as dated lines
 │   │   │   ├── test_calendar.py
@@ -273,6 +277,10 @@ willow/
 │   │   │   ├── first_mention.py  when the files first mention something: the earliest dated line that holds every word
 │   │   │   ├── test_first_mention.py
 │   │   │   └── README.md
+│   │   ├── foia/
+│   │   │   ├── foia.py   requests sent, answers and when they are due by law
+│   │   │   ├── test_foia.py
+│   │   │   └── README.md
 │   │   ├── fuzzy-dates/
 │   │   │   ├── fuzzy_dates.py  dates that admit doubt, read with the doubt kept, in EDTF
 │   │   │   ├── test_fuzzy_dates.py
@@ -310,6 +318,10 @@ willow/
 │   │   │   ├── home_upkeep.py   what's due at home and when it was last done
 │   │   │   ├── test_home_upkeep.py
 │   │   │   └── README.md
+│   │   ├── hook-compact/
+│   │   │   ├── hook_compact.py   what the record holds open, before a summary
+│   │   │   ├── test_hook_compact.py
+│   │   │   └── README.md
 │   │   ├── hook-fail-closed/
 │   │   │   ├── hook_fail_closed.py a hook that crashes, hangs or says what can't be read blocks the tool
 │   │   │   ├── test_hook_fail_closed.py
@@ -317,6 +329,14 @@ willow/
 │   │   ├── hook-fuzz/
 │   │   │   ├── hook_fuzz.py      bad input thrown at a hook, and each one that breaks it named
 │   │   │   ├── test_hook_fuzz.py
+│   │   │   └── README.md
+│   │   ├── hook-guard/
+│   │   │   ├── hook_guard.py   refuses a call that reads the key or writes the box
+│   │   │   ├── test_hook_guard.py
+│   │   │   └── README.md
+│   │   ├── hook-impact/
+│   │   │   ├── hook_impact.py   hands over the places that name a file before it is edited
+│   │   │   ├── test_hook_impact.py
 │   │   │   └── README.md
 │   │   ├── hook-leaks/
 │   │   │   ├── hook_leaks.py   a PreToolUse hook that refuses a write or command holding a key, password or card number, naming only the kind
@@ -337,6 +357,10 @@ willow/
 │   │   ├── hook-start/
 │   │   │   ├── hook_start.py   a SessionStart hook that tells the assistant what waits on the person, read the way digest reads it
 │   │   │   ├── test_hook_start.py
+│   │   │   └── README.md
+│   │   ├── hook-stop/
+│   │   │   ├── hook_stop.py   a Stop hook: the record verifies and the work is committed
+│   │   │   ├── test_hook_stop.py
 │   │   │   └── README.md
 │   │   ├── horoscope/
 │   │   │   ├── horoscope.py  a daily reading picked by the SHA-256 of name and date
@@ -406,6 +430,10 @@ willow/
 │   │   │   ├── live.py       each way-in add-on run through its real program: works, fails, or not here
 │   │   │   ├── test_live.py
 │   │   │   └── README.md
+│   │   ├── livestock/
+│   │   │   ├── livestock.py   each animal's births, treatments and sales
+│   │   │   ├── test_livestock.py
+│   │   │   └── README.md
 │   │   ├── llms-txt/
 │   │   │   ├── llms_txt.py   an llms.txt written from a folder's text files, and a checker for one
 │   │   │   ├── test_llms_txt.py
@@ -425,6 +453,10 @@ willow/
 │   │   ├── mileage/
 │   │   │   ├── mileage.py   miles driven for work, by tax year
 │   │   │   ├── test_mileage.py
+│   │   │   └── README.md
+│   │   ├── milestones/
+│   │   │   ├── milestones.py   a child's firsts and measurements, by age
+│   │   │   ├── test_milestones.py
 │   │   │   └── README.md
 │   │   ├── minutes/
 │   │   │   ├── minutes.py   decisions and actions from meeting minutes
@@ -467,6 +499,10 @@ willow/
 │   │   │   ├── opencode.py       the opencode.json lines that register mcp-lite with OpenCode
 │   │   │   ├── test_opencode.py
 │   │   │   └── README.md
+│   │   ├── oracle-text/
+│   │   │   ├── oracle_text.py   readings from a Tracery grammar, replayable
+│   │   │   ├── test_oracle_text.py
+│   │   │   └── README.md
 │   │   ├── outdated/
 │   │   │   ├── outdated.py   how old each locked dependency is, and which are yanked, deprecated or unmaintained
 │   │   │   ├── test_outdated.py
@@ -502,6 +538,10 @@ willow/
 │   │   ├── pile-gold/
 │   │   │   ├── pile_gold.py   your sealed answers as a test of the search, scored as recall at five
 │   │   │   ├── test_pile_gold.py
+│   │   │   └── README.md
+│   │   ├── pile-poetry/
+│   │   │   ├── pile_poetry.py   verse from your own word pairs
+│   │   │   ├── test_pile_poetry.py
 │   │   │   └── README.md
 │   │   ├── pile-rank/
 │   │   │   ├── pile_rank.py   BM25F over words and the folder's own word pairs, titles and questions weighted
@@ -570,6 +610,10 @@ willow/
 │   │   ├── reading-level/
 │   │   │   ├── reading_level.py  how hard each file reads: Flesch by the book, counted as written, easiest first
 │   │   │   ├── test_reading_level.py
+│   │   │   └── README.md
+│   │   ├── reading-log/
+│   │   │   ├── reading_log.py   books, pages and minutes read, week by week
+│   │   │   ├── test_reading_log.py
 │   │   │   └── README.md
 │   │   ├── readings/
 │   │   │   ├── readings.py   notes beside an answer: numbers over time, dates gone by
@@ -665,6 +709,10 @@ willow/
 │   │   │   ├── starter.py    copies it where yours will live, readable only by you
 │   │   │   ├── test_starter_words.py
 │   │   │   └── README.md
+│   │   ├── subscriptions/
+│   │   │   ├── subscriptions.py   payments that come round monthly or yearly, and when next
+│   │   │   ├── test_subscriptions.py
+│   │   │   └── README.md
 │   │   ├── subtitles/
 │   │   │   ├── subtitles.py  .srt and .vtt transcripts mirrored, each cue a line cited by its start
 │   │   │   ├── test_subtitles.py
@@ -672,6 +720,10 @@ willow/
 │   │   ├── surprise/
 │   │   │   ├── surprise.py   one passage drawn by a seeded stream, replayable
 │   │   │   ├── test_surprise.py
+│   │   │   └── README.md
+│   │   ├── syllabus/
+│   │   │   ├── syllabus.py   readings, assignments and exams as dates
+│   │   │   ├── test_syllabus.py
 │   │   │   └── README.md
 │   │   ├── symptoms/
 │   │   │   ├── symptoms.py   one symptom's dated diary, turns marked only where the line says one, each cited

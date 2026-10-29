@@ -140,16 +140,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "budget",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "Spending against the budget you wrote down, month by month, from your statements.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
- },
- {
   "name": "by-function",
   "kind": "deps",
   "section": "Finding things",
@@ -560,16 +550,6 @@
   "tags": "no-install, offline, records, tracking"
  },
  {
-  "name": "foia",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "Freedom-of-information requests: what you asked, when, and when the answer is due by law.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
- },
- {
   "name": "food-log",
   "kind": "stdlib",
   "section": "Keeping track",
@@ -872,16 +852,6 @@
   "tags": "no-install, offline, read-only, assistant, hooks"
  },
  {
-  "name": "hook-compact",
-  "kind": "stdlib",
-  "section": "Assistants",
-  "line": "A PreCompact hook that prints what the record still holds open, seals waiting and questions unanswered, so it survives the assistant's summary.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, assistant, hooks"
- },
- {
   "name": "hook-errors",
   "kind": "stdlib",
   "section": "Assistants",
@@ -902,16 +872,6 @@
   "tags": "no-install, offline, records, assistant, hooks"
  },
  {
-  "name": "hook-guard",
-  "kind": "stdlib",
-  "section": "Assistants",
-  "line": "A PreToolUse hook that refuses, by rule and never by judgment, a tool call that would read the key or write a box outside the kernel, naming the rule it hit.",
-  "source": "box",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, assistant, hooks"
- },
- {
   "name": "hook-handoff",
   "kind": "stdlib",
   "section": "Assistants",
@@ -920,16 +880,6 @@
   "writes": "record",
   "network": "none",
   "tags": "no-install, offline, records, assistant, hooks"
- },
- {
-  "name": "hook-impact",
-  "kind": "stdlib",
-  "section": "Assistants",
-  "line": "Before an edit, a hook hands the assistant every place in your files that names what it's about to change, by file and line.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, assistant, hooks"
  },
  {
   "name": "hook-read-first",
@@ -946,16 +896,6 @@
   "kind": "stdlib",
   "section": "Assistants",
   "line": "Rules over what an assistant did before, not just this call: no push until the tests ran on this commit, at most so many deletions a session, read from the record.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, assistant, hooks"
- },
- {
-  "name": "hook-stop",
-  "kind": "stdlib",
-  "section": "Assistants",
-  "line": "A Stop hook that won't let an assistant's turn end while the record doesn't verify or its changes aren't committed, and says which.",
   "source": "new",
   "writes": "nothing",
   "network": "none",
@@ -1235,16 +1175,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "livestock",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "Each animal's births, treatments and sales, from your farm records.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
- },
- {
   "name": "local-model",
   "kind": "deps",
   "section": "Assistants",
@@ -1469,16 +1399,6 @@
   "tags": "no-install, offline, records, assistant"
  },
  {
-  "name": "milestones",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "Your child's firsts, words and heights, from your notes, by age.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
- },
- {
   "name": "mirror",
   "kind": "deps",
   "section": "Trust and proof",
@@ -1693,16 +1613,6 @@
   "tags": "no-install, online, records, trust"
  },
  {
-  "name": "oracle-text",
-  "kind": "stdlib",
-  "section": "Play",
-  "line": "Readings written by a Tracery grammar, every branch picked by the seeded stream, so each one can be replayed.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, play"
- },
- {
   "name": "orders",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -1783,16 +1693,6 @@
   "writes": "to",
   "network": "none",
   "tags": "needs-install, offline, writes-output, file-reader"
- },
- {
-  "name": "pile-poetry",
-  "kind": "stdlib",
-  "section": "Play",
-  "line": "Verse from the word pairs your own files use most, in your own dialect.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, play"
  },
  {
   "name": "plain-language",
@@ -1946,16 +1846,6 @@
   "writes": "nothing",
   "network": "the forge, through the workflow's token, to read the review comments",
   "tags": "no-install, online, read-only, trust"
- },
- {
-  "name": "reading-log",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "A child's reading log: books, pages and minutes, week by week.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
  },
  {
   "name": "readwise",
@@ -2461,16 +2351,6 @@
   "tags": "no-install, offline, records, privacy"
  },
  {
-  "name": "subscriptions",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "What you pay for every month, found in bank statements and emails, and when each renews.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
- },
- {
   "name": "support-plan",
   "kind": "stdlib",
   "section": "Keeping track",
@@ -2489,16 +2369,6 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, maintainers"
- },
- {
-  "name": "syllabus",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "A course syllabus as dates: readings, assignments and exams due, each cited.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
  },
  {
   "name": "symbols",
