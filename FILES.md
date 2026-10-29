@@ -335,6 +335,10 @@ willow/
 │   │   │   ├── outdated.py   how old each locked dependency is, and which are yanked, deprecated or unmaintained
 │   │   │   ├── test_outdated.py
 │   │   │   └── README.md
+│   │   ├── package-contents/
+│   │   │   ├── package_contents.py   what a wheel, sdist, npm tarball or crate holds, and the code it runs on install, by file and line
+│   │   │   ├── test_package_contents.py
+│   │   │   └── README.md
 │   │   ├── parallel/
 │   │   │   ├── parallel.py   a reader run over several folders at once, across cores, into one mirror
 │   │   │   ├── test_parallel.py
@@ -585,9 +589,17 @@ willow/
 │   │   │   ├── words_pt.py   a question in Portuguese, its common words out, then the kernel's bite
 │   │   │   ├── test_words_pt.py
 │   │   │   └── README.md
+│   │   ├── words-ru/
+│   │   │   ├── words_ru.py   a question in Russian, its common words out, then the kernel's bite
+│   │   │   ├── test_words_ru.py
+│   │   │   └── README.md
 │   │   ├── words-sv/
 │   │   │   ├── words_sv.py   Swedish questions without Swedish's common words, then the kernel's own bite
 │   │   │   ├── test_words_sv.py
+│   │   │   └── README.md
+│   │   ├── words-tr/
+│   │   │   ├── words_tr.py   a question in Turkish, its common words out, then the kernel's bite
+│   │   │   ├── test_words_tr.py
 │   │   │   └── README.md
 │   │   ├── xref/
 │   │   │   ├── xref.py       each link and file:line in your files checked, still there

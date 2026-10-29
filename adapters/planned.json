@@ -2053,16 +2053,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "package-contents",
-  "kind": "stdlib",
-  "section": "Privacy and safety",
-  "line": "What's inside a wheel, sdist, npm tarball or .crate before you install it: every file, and any code it runs on install.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, privacy"
- },
- {
   "name": "package-docs",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -3290,26 +3280,6 @@
   "kind": "stdlib",
   "section": "Your own words",
   "line": "Japanese, which has no spaces: a small segmenter of its own and a common-words list.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, words"
- },
- {
-  "name": "words-ru",
-  "kind": "stdlib",
-  "section": "Your own words",
-  "line": "Russian common words, so questions aren't matched on 'и' and 'в'.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, words"
- },
- {
-  "name": "words-tr",
-  "kind": "stdlib",
-  "section": "Your own words",
-  "line": "Turkish common words ('ve', 'bir').",
   "source": "new",
   "writes": "to",
   "network": "none",

@@ -10,6 +10,14 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `package-contents`: what a wheel, sdist, npm tarball or crate holds, every
+  file with its size, and the code that would run because you installed it,
+  by file and line: a `.pth` import line, a setup.py and build backend, the
+  npm install hooks, a build script or procedural macro. Read in memory,
+  never unpacked or run; a path that climbs out of its folder is flagged.
+- `words-ru` and `words-tr`, which take Russian's and Turkish's common words
+  out of a question before the kernel's bite, as the other words add-ons do.
+  `words-tr` reads a capital İ as i first, so it doesn't split a word.
 - `pile-build`: the pile store built after each change, behind a lock on
   its folder, again until it matches when the folder changes mid-build, and
   with `--background` detached so a hook never waits. Unlike willow-bot's,
