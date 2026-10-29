@@ -237,6 +237,14 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         b'.\\" a comment\n.TH LS 1 "March 2024" "coreutils" "User Commands"\n.SH NAME\nls \\- list directory contents\n.SH SYNOPSIS\n.B ls\n[\\fIOPTION\\fR]... [\\fIFILE\\fR]...\n'
         b'.SH DESCRIPTION\nList information about the \\fBFILE\\fRs.\n.TP\n.BR \\-a ", " \\-\\-all\ndo not ignore entries starting with \\&.\n.PP\nSecond \\(em paragraph.\n'
     )}),
+    "matrix": ("matrix.py", {"room.json": (
+        b'{"room_name":"Garden Club","topic":"Plants","messages":['
+        b'{"type":"m.room.message","sender":"@ben:example.org","origin_server_ts":1709367360000,"content":{"msgtype":"m.emote","body":"waves"}},'
+        b'{"type":"m.room.message","sender":"@ana:example.org","origin_server_ts":1709367300000,"content":{"msgtype":"m.text","body":"Six  hours of sun."}},'
+        b'{"type":"m.room.member","sender":"@ben:example.org","origin_server_ts":1709367000000,"content":{"membership":"join"}},'
+        b'{"type":"m.room.message","sender":"@ana:example.org","origin_server_ts":1709367400000,"content":{"msgtype":"m.image","body":"tomato.png"}},'
+        b'{"type":"m.room.message","sender":"@ana:example.org","origin_server_ts":1709367500000,"content":{"msgtype":"m.text","body":""}}]}'
+    )}),
     "notes": ("notes.py", {"garden.md": b"Tomatoes want [[sun]].\n"}),
     "jrnl": ("jrnl.py", {"journal.txt": (
         "[2024-03-03 10:15] Fixed the gate.\nThe hinge wanted oil, not force.\n\n"

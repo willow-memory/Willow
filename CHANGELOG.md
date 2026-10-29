@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `matrix`: Element's JSON room export: each message, oldest first, as a
+  dated line with its room and sender; emotes and image or file descriptions
+  kept; joins, reactions and other events left out.
 - `man-pages`: The man pages installed on this machine, gzipped or not, as
   plain text: title, section headings and the words with fonts, escapes and
   the usual macros read; comments and macro definitions dropped.

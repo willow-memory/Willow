@@ -482,6 +482,10 @@ willow/
 │   │   │   ├── mastodon.py   your posts as dated lines
 │   │   │   ├── test_mastodon.py
 │   │   │   └── README.md
+│   │   ├── matrix/
+│   │   │   ├── matrix.py   a Matrix room export as dated lines of messages
+│   │   │   ├── test_matrix.py
+│   │   │   └── README.md
 │   │   ├── mcp-lite/
 │   │   │   ├── server.py         the mcp add-on's three tools, the protocol by hand, nothing to install
 │   │   │   ├── test_server.py

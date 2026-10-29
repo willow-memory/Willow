@@ -18,11 +18,11 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`█████████░░░░░░░░░░░` **219 of 470 built** · 419 need no install · 51 need one
+`█████████░░░░░░░░░░░` **220 of 470 built** · 419 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
-| Reading more kinds of files | 39 | 66 | 96 | 9 |
+| Reading more kinds of files | 40 | 65 | 96 | 9 |
 | Finding things | 26 | 17 | 33 | 10 |
 | Your own words | 16 | 9 | 22 | 3 |
 | Keeping track | 35 | 23 | 58 | 0 |
@@ -47,9 +47,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[rtf](adapters/stdlib/rtf/)** — RTF documents as plain text.
+**[bot-venv](adapters/stdlib/bot-venv/)** — Which venv has what CI needs, willow-bot's own by its rule or any you name, and the line that runs CI with its Python.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 219 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 220 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -114,7 +114,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - [**man-pages**](adapters/stdlib/man-pages/) — The man pages installed on this machine as plain text, so you can ask your own system's docs. *new* `no-install` `offline` `writes-output` `file-reader`
 - **manifests** (idea) — Docker Compose and Kubernetes YAML: each service, image, port and volume as a passage. Needs PyYAML; MIT. *new* `needs-install` `offline` `writes-output` `file-reader`
 - [**mastodon**](adapters/stdlib/mastodon/) — A Mastodon or Pixelfed account archive's outbox.json: your posts as dated lines. *new* `no-install` `offline` `writes-output` `file-reader`
-- **matrix** (idea) — Element's room export, JSON or HTML: one dated line per message in each Matrix room. *new* `no-install` `offline` `writes-output` `file-reader`
+- [**matrix**](adapters/stdlib/matrix/) — Element's room export, JSON or HTML: one dated line per message in each Matrix room. *new* `no-install` `offline` `writes-output` `file-reader`
 - [**mediawiki**](adapters/stdlib/mediawiki/) — A MediaWiki XML dump: each page's latest text, with its title and when it changed. *new* `no-install` `offline` `writes-output` `file-reader`
 - **medical-records** (idea) — Your health records as FHIR JSON or C-CDA XML: visits, results and prescriptions as dated lines. *new* `no-install` `offline` `writes-output` `file-reader`
 - **meta-archive** (idea) — Facebook and Instagram's Download Your Information files: posts, comments and messages as dated lines. *new* `no-install` `offline` `writes-output` `file-reader`

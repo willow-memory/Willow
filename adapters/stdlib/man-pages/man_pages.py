@@ -60,7 +60,11 @@ FONT_MACROS = {"B", "I", "SM", "SB", "BR", "BI", "IB", "IR", "RB", "RI"}
 
 def words(line: str) -> list[str]:
     """The arguments of a request, quotes honoured."""
-    return [a for a in re.findall(r'"((?:[^"]|"")*)"|(\S+)', line) for a in [a[0].replace('""', '"') if a[0] else a[1]]]
+    return [
+        a
+        for a in re.findall(r'"((?:[^"]|"")*)"|(\S+)', line)
+        for a in [a[0].replace('""', '"') if a[0] else a[1]]
+    ]
 
 
 def plain(text: str) -> str:
@@ -113,7 +117,11 @@ def convert(data: bytes) -> str | None:
         if req in ("de", "de1"):
             state["skip"] = True
         elif req == "TH" and args:
-            state["title"] = f"{plain(args[0])}({plain(args[1])})" if len(args) > 1 else plain(args[0])
+            state["title"] = (
+                f"{plain(args[0])}({plain(args[1])})"
+                if len(args) > 1
+                else plain(args[0])
+            )
         elif req in ("SH", "SS", "Sh", "Ss"):
             flush()
             out += ["", " ".join(plain(" ".join(args)).split())]
@@ -130,7 +138,11 @@ def convert(data: bytes) -> str | None:
             if args:
                 out.append(" ".join(plain(args[0]).split()))
         elif req in FONT_MACROS and args:
-            joined = "".join(plain(a) for a in args) if req in ("BR", "BI", "IB", "IR", "RB", "RI") else " ".join(plain(a) for a in args)
+            joined = (
+                "".join(plain(a) for a in args)
+                if req in ("BR", "BI", "IB", "IR", "RB", "RI")
+                else " ".join(plain(a) for a in args)
+            )
             add(joined)
         elif req in ("br",):
             flush()
@@ -149,7 +161,25 @@ def convert(data: bytes) -> str | None:
         return None
     return (state["title"] + "\n\n" if state["title"] else "") + body + "\n"
 
-EXTS = ('.1', '.2', '.3', '.4', '.5', '.6', '.7', '.8', '.1.gz', '.2.gz', '.3.gz', '.4.gz', '.5.gz', '.6.gz', '.7.gz', '.8.gz')
+
+EXTS = (
+    ".1",
+    ".2",
+    ".3",
+    ".4",
+    ".5",
+    ".6",
+    ".7",
+    ".8",
+    ".1.gz",
+    ".2.gz",
+    ".3.gz",
+    ".4.gz",
+    ".5.gz",
+    ".6.gz",
+    ".7.gz",
+    ".8.gz",
+)
 ERRORS = (OSError, UnicodeDecodeError, ValueError, EOFError)
 
 USAGE = "usage: man_pages.py mirror --from FOLDER --to MIRROR"
@@ -203,7 +233,9 @@ def main(argv: list[str]) -> int:
     src = Path(opts["--from"]).resolve()
     dst = Path(opts["--to"]).resolve()
     if _within(dst, src) or _within(src, dst):
-        print("refused: MIRROR and FOLDER must not be inside one another", file=sys.stderr)
+        print(
+            "refused: MIRROR and FOLDER must not be inside one another", file=sys.stderr
+        )
         return kernel.REFUSED
     wrote, skipped = mirror(src, dst)
     print(f"wrote {wrote} files to {opts['--to']}; skipped {skipped}")

@@ -1198,16 +1198,6 @@
   "tags": "no-install, offline, records, play"
  },
  {
-  "name": "matrix",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Element's room export, JSON or HTML: one dated line per message in each Matrix room.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "maven",
   "kind": "stdlib",
   "section": "For maintainers",
