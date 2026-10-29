@@ -802,16 +802,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "gradebook",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "A teacher's gradebook, kept on this machine: each student's marks by assignment, and who is falling behind.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
- },
- {
   "name": "grant-report",
   "kind": "stdlib",
   "section": "Keeping track",

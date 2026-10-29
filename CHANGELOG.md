@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `gradebook`: A teacher's gradebook that stays on this machine: each
+  student's marks from the lines you wrote, and who is falling behind, by
+  plain arithmetic.
 - `minutes`: Meeting minutes read for what was decided and what is still to
   do: decisions, and actions with their owner and due date, open or closed.
 - `mileage`: Miles driven for work, totalled for each tax year from the lines
