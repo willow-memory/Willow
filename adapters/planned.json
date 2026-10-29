@@ -100,16 +100,6 @@
   "tags": "no-install, offline, read-only, tracking"
  },
  {
-  "name": "badge",
-  "kind": "stdlib",
-  "section": "Ways to use it",
-  "line": "A badge for a page: these answers came from these files and were approved, linked to the check anyone can run.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, interface"
- },
- {
   "name": "bank",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -140,16 +130,6 @@
   "tags": "no-install, online, records, play"
  },
  {
-  "name": "bibtex",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": ".bib files: each reference as a passage, so you can ask which paper said it and get its key.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "bluesky",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -178,16 +158,6 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, file-reader"
- },
- {
-  "name": "braille",
-  "kind": "stdlib",
-  "section": "Ways to use it",
-  "line": "Answers as braille-ready files (BRF) for a braille display or embosser.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, interface"
  },
  {
   "name": "budget",
@@ -259,16 +229,6 @@
   "writes": "record",
   "network": "lichess.org, to read the puzzle",
   "tags": "no-install, online, records, play"
- },
- {
-  "name": "chordpro",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "ChordPro song sheets: titles, lyrics and chords, so you can ask which song had that line.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
  },
  {
   "name": "ci-baseline",
@@ -496,16 +456,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "deep-links",
-  "kind": "stdlib",
-  "section": "Ways to use it",
-  "line": "Each answer as a link that opens the file at the line (RFC 5147 lines, browser text fragments).",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, interface"
- },
- {
   "name": "desktop",
   "kind": "stdlib",
   "section": "Ways to use it",
@@ -608,16 +558,6 @@
   "writes": "record",
   "network": "none",
   "tags": "needs-install, offline, records, trust"
- },
- {
-  "name": "evernote",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Evernote's .enex files: each note as plain text with its notebook, tags and dates.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
  },
  {
   "name": "family-box",
@@ -1253,16 +1193,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "jupyter",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Jupyter notebooks: Markdown cells, code and text outputs as passages, cited by cell.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "karakeep",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -1322,16 +1252,6 @@
   "writes": "record",
   "network": "none",
   "tags": "no-install, offline, records, assistant"
- },
- {
-  "name": "latex",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "LaTeX sources as plain prose, commands stripped, cited by the .tex file's own lines.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
  },
  {
   "name": "launcher",
@@ -1403,16 +1323,6 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, tracking"
- },
- {
-  "name": "llms-txt",
-  "kind": "stdlib",
-  "section": "Ways to use it",
-  "line": "An llms.txt for your folder, written from what's actually in it to the spec's version 2, and any llms.txt you saved checked against that spec.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output"
  },
  {
   "name": "local-model",
@@ -1973,16 +1883,6 @@
   "tags": "no-install, offline, read-only, tracking"
  },
  {
-  "name": "pgn",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Chess games from PGN files: players, dates, openings and your annotations.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "pgp",
   "kind": "deps",
   "section": "Trust and proof",
@@ -2013,16 +1913,6 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, play"
- },
- {
-  "name": "places",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "KML and GeoJSON files: each place's name, note and coordinates as a passage.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
  },
  {
   "name": "plain-language",
@@ -2342,26 +2232,6 @@
   "writes": "record",
   "network": "none",
   "tags": "no-install, offline, records, play"
- },
- {
-  "name": "rss-out",
-  "kind": "stdlib",
-  "section": "Ways to use it",
-  "line": "New approved answers as an RSS feed file, for any feed reader.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, interface"
- },
- {
-  "name": "rtf",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "RTF documents as plain text.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
  },
  {
   "name": "rubric",

@@ -92,9 +92,17 @@ willow/
 │   │   │   ├── backup.py     your record in one zip, every byte and the chain checked; never the key
 │   │   │   ├── test_backup.py
 │   │   │   └── README.md
+│   │   ├── badge/
+│   │   │   ├── badge.py   an SVG badge of the record's counts: answers approved, the files they came from, and whether it holds
+│   │   │   ├── test_badge.py
+│   │   │   └── README.md
 │   │   ├── bench/
 │   │   │   ├── bench.py       how fast the kernel reads and ranks piles of set sizes, per release
 │   │   │   ├── test_bench.py
+│   │   │   └── README.md
+│   │   ├── bibtex/
+│   │   │   ├── bibtex.py   each reference in a .bib file as a passage that begins with its citation key
+│   │   │   ├── test_bibtex.py
 │   │   │   └── README.md
 │   │   ├── books/
 │   │   │   ├── books.py      Kindle highlights and .epub text, as passages
@@ -107,6 +115,10 @@ willow/
 │   │   ├── box-health/
 │   │   │   ├── box_health.py   a box's health in one line: the chain, approvals, files it can't read, the words list, and the last out row
 │   │   │   ├── test_box_health.py
+│   │   │   └── README.md
+│   │   ├── braille/
+│   │   │   ├── braille.py   approved answers as a BRF: uncontracted English braille ASCII in lines of cells and pages, for a display or an embosser
+│   │   │   ├── test_braille.py
 │   │   │   └── README.md
 │   │   ├── browse/
 │   │   │   ├── browse.py     your folder in your browser, on 127.0.0.1: ask, read, approve with a click
@@ -127,6 +139,10 @@ willow/
 │   │   ├── chats/
 │   │   │   ├── chats.py      WhatsApp and Telegram exports, a dated line a message
 │   │   │   ├── test_chats.py
+│   │   │   └── README.md
+│   │   ├── chordpro/
+│   │   │   ├── chordpro.py   a ChordPro song as its title line, chords and lyrics with the chords taken out of the lines
+│   │   │   ├── test_chordpro.py
 │   │   │   └── README.md
 │   │   ├── ci/
 │   │   │   ├── ci.py         this repo's checks as verdict rows on a kernel record
@@ -205,6 +221,10 @@ willow/
 │   │   │   ├── debts.py      lines speaking of money owed, dated and cited, the sum as written, never netted
 │   │   │   ├── test_debts.py
 │   │   │   └── README.md
+│   │   ├── deep-links/
+│   │   │   ├── deep_links.py   each answer as links that open the file at the line: an RFC 5147 file link and a browser text-fragment web link
+│   │   │   ├── test_deep_links.py
+│   │   │   └── README.md
 │   │   ├── dice/
 │   │   │   ├── dice.py       dice rolled on the record, seeded by its tip; check throws every roll again
 │   │   │   ├── test_dice.py
@@ -224,6 +244,10 @@ willow/
 │   │   ├── emacs/
 │   │   │   ├── emacs.py          an M-x willow command: answers in a grep-mode buffer
 │   │   │   ├── test_emacs.py
+│   │   │   └── README.md
+│   │   ├── evernote/
+│   │   │   ├── evernote.py   an Evernote .enex export as its notes: title, notebook, dates, tags, source, attachments and text
+│   │   │   ├── test_evernote.py
 │   │   │   └── README.md
 │   │   ├── export/
 │   │   │   ├── export.py     approved answers and the question log, as Markdown or CSV
@@ -326,6 +350,14 @@ willow/
 │   │   │   ├── jrnl.py       jrnl journals mirrored, each stamped entry one dated passage
 │   │   │   ├── test_jrnl.py
 │   │   │   └── README.md
+│   │   ├── jupyter/
+│   │   │   ├── jupyter.py   a Jupyter notebook as text, one block for each cell with its number and kind
+│   │   │   ├── test_jupyter.py
+│   │   │   └── README.md
+│   │   ├── latex/
+│   │   │   ├── latex.py   a LaTeX source as its prose, line for line, commands stripped
+│   │   │   ├── test_latex.py
+│   │   │   └── README.md
 │   │   ├── lending/
 │   │   │   ├── lending.py    what you lent, and what your files say came back
 │   │   │   ├── test_lending.py
@@ -341,6 +373,10 @@ willow/
 │   │   ├── live/
 │   │   │   ├── live.py       each way-in add-on run through its real program: works, fails, or not here
 │   │   │   ├── test_live.py
+│   │   │   └── README.md
+│   │   ├── llms-txt/
+│   │   │   ├── llms_txt.py   an llms.txt written from a folder's text files, and a checker for one
+│   │   │   ├── test_llms_txt.py
 │   │   │   └── README.md
 │   │   ├── mail/
 │   │   │   ├── mail.py       .eml and .mbox, with sender, date and subject
@@ -403,6 +439,10 @@ willow/
 │   │   │   ├── people.py     everyone the files name, by what they do with a name, and each one's every mention
 │   │   │   ├── test_people.py
 │   │   │   └── README.md
+│   │   ├── pgn/
+│   │   │   ├── pgn.py   a PGN game as who, when, where, the result, the opening and every comment with its move
+│   │   │   ├── test_pgn.py
+│   │   │   └── README.md
 │   │   ├── pii-audit/
 │   │   │   ├── pii_audit.py  the personal numbers in the files, checked never guessed, shown masked
 │   │   │   ├── test_pii_audit.py
@@ -442,6 +482,10 @@ willow/
 │   │   ├── pipe/
 │   │   │   ├── pipe.py           questions in, one answer a line out: JSON lines, or grep's file:line: text
 │   │   │   ├── test_pipe.py
+│   │   │   └── README.md
+│   │   ├── places/
+│   │   │   ├── places.py   KML, GeoJSON and GPX files as places: each one's name, folders, note and coordinates
+│   │   │   ├── test_places.py
 │   │   │   └── README.md
 │   │   ├── plain/
 │   │   │   ├── plain.py      the kernel's answer as sentences
@@ -506,6 +550,14 @@ willow/
 │   │   ├── ro-crate/
 │   │   │   ├── ro_crate.py   a box snapshot as an RO-Crate zip: every file with its SHA-256, size, kind and licence, and the record's tip pinned
 │   │   │   ├── test_ro_crate.py
+│   │   │   └── README.md
+│   │   ├── rss-out/
+│   │   │   ├── rss_out.py   your approved answers as an RSS 2.0 feed, newest first, an item for each
+│   │   │   ├── test_rss_out.py
+│   │   │   └── README.md
+│   │   ├── rtf/
+│   │   │   ├── rtf.py   an RTF document as the plain text it displays
+│   │   │   ├── test_rtf.py
 │   │   │   └── README.md
 │   │   ├── said/
 │   │   │   ├── said.py       who said what, read by shape (a chat's stamp, a speech verb, quotation marks), dated

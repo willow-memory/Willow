@@ -18,18 +18,18 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`███████░░░░░░░░░░░░░` **163 of 470 built** · 419 need no install · 51 need one
+`███████░░░░░░░░░░░░░` **176 of 470 built** · 419 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
-| Reading more kinds of files | 14 | 91 | 96 | 9 |
+| Reading more kinds of files | 22 | 83 | 96 | 9 |
 | Finding things | 26 | 17 | 33 | 10 |
 | Your own words | 16 | 9 | 22 | 3 |
 | Keeping track | 15 | 43 | 58 | 0 |
 | Trust and proof | 20 | 25 | 36 | 9 |
 | Privacy and safety | 11 | 3 | 14 | 0 |
 | Assistants | 21 | 36 | 51 | 6 |
-| Ways to use it | 14 | 25 | 35 | 4 |
+| Ways to use it | 19 | 20 | 35 | 4 |
 | Play | 7 | 33 | 35 | 5 |
 | For maintainers | 19 | 25 | 39 | 5 |
 <!-- /willow:pools -->
@@ -47,9 +47,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[pile-serve](adapters/stdlib/pile-serve/)** — The store held open by one process on this machine, over a Unix socket the way willow-bot's deterministic runner serves, so a hook's lookup takes milliseconds instead of a cold start.
+**[braille](adapters/stdlib/braille/)** — Answers as braille-ready files (BRF) for a braille display or embosser.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 163 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 176 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -64,14 +64,14 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - **apple-notes** (idea) — Apple Notes, read from a copy of its database: each note as plain text with its folder and dates. *new* `no-install` `offline` `writes-output` `file-reader`
 - **archivebox** (idea) — ArchiveBox snapshots: each saved page's text, with its URL and the date it was captured. *new* `no-install` `offline` `writes-output` `file-reader`
 - **bank** (idea) — Bank CSV and OFX statements as dated lines, with spending by month. *new* `no-install` `offline` `writes-output` `file-reader`
-- **bibtex** (idea) — .bib files: each reference as a passage, so you can ask which paper said it and get its key. *new* `no-install` `offline` `writes-output` `file-reader`
+- [**bibtex**](adapters/stdlib/bibtex/) — .bib files: each reference as a passage, so you can ask which paper said it and get its key. *new* `no-install` `offline` `writes-output` `file-reader`
 - **bluesky** (idea) — A Bluesky repo.car export: your posts as dated lines, read by a small CAR and CBOR reader of its own. *new* `no-install` `offline` `writes-output` `file-reader`
 - **bookmarks** (idea) — Browser bookmarks (HTML export, Firefox JSON) and history, read from a copy of its SQLite file. *new* `no-install` `offline` `writes-output` `file-reader`
 - [**books**](adapters/stdlib/books/) — Kindle "My Clippings.txt" highlights and .epub text. *new* `no-install` `offline` `writes-output` `file-reader`
 - [**calendar**](adapters/stdlib/calendar/) — .ics events and .vcf contacts as dated lines. *new* `no-install` `offline` `writes-output` `file-reader`
 - **canvas** (idea) — Canvas course exports: pages, assignments and discussions as passages. *new* `no-install` `offline` `writes-output` `file-reader`
 - [**chats**](adapters/stdlib/chats/) — WhatsApp and Telegram exports, one dated line per message. *new* `no-install` `offline` `writes-output` `file-reader`
-- **chordpro** (idea) — ChordPro song sheets: titles, lyrics and chords, so you can ask which song had that line. *new* `no-install` `offline` `writes-output` `file-reader`
+- [**chordpro**](adapters/stdlib/chordpro/) — ChordPro song sheets: titles, lyrics and chords, so you can ask which song had that line. *new* `no-install` `offline` `writes-output` `file-reader`
 - **ci-logs** (idea) — CI run logs you downloaded (GitHub Actions, GitLab CI, Forgejo Actions): each failing step as a passage, so you can ask when a test last failed. *new* `no-install` `offline` `writes-output` `file-reader`
 - [**clauses**](adapters/stdlib/clauses/) — A policy, contract or set of terms as one sentence a passage, so an answer lands on the clause, and what changed between two versions, sentence by sentence. *new* `no-install` `offline` `writes-output` `file-reader` `policies`
 - **code-comments** (idea) — A codebase's comments and docstrings as passages, cited by file and line. *new* `no-install` `offline` `writes-output` `file-reader`
@@ -81,7 +81,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - **day-one** (idea) — Day One's JSON export: each journal entry as a dated passage, with its place and weather. *new* `no-install` `offline` `writes-output` `file-reader`
 - **discord** (idea) — Discord's data package: your messages, one dated line each, by server and channel. *new* `no-install` `offline` `writes-output` `file-reader`
 - **dotfiles** (idea) — Your dotfiles as passages: which file sets what, for 'where did I set my editor?' *new* `no-install` `offline` `writes-output` `file-reader`
-- **evernote** (idea) — Evernote's .enex files: each note as plain text with its notebook, tags and dates. *new* `no-install` `offline` `writes-output` `file-reader`
+- [**evernote**](adapters/stdlib/evernote/) — Evernote's .enex files: each note as plain text with its notebook, tags and dates. *new* `no-install` `offline` `writes-output` `file-reader`
 - **family-tree** (idea) — Family trees from GEDCOM files: who was born where and when, and which record says so. *new* `no-install` `offline` `writes-output` `file-reader`
 - **forgejo-dump** (idea) — A Forgejo or Gitea dump, Codeberg's included: issues, pull requests and wiki pages as dated passages. *new* `no-install` `offline` `writes-output` `file-reader`
 - **gh-json** (idea) — What gh prints with --json (issues, pull requests, runs), saved to a file and read as dated passages. *new* `no-install` `offline` `writes-output` `file-reader`
@@ -100,9 +100,9 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - **joplin** (idea) — Joplin's .jex export, read without unpacking it: each note as plain text with its title and dates. *new* `no-install` `offline` `writes-output` `file-reader`
 - **journiv** (idea) — Journiv journal entries, with their moods, as dated lines, once its export format is settled. *new* `no-install` `offline` `writes-output` `file-reader`
 - [**jrnl**](adapters/stdlib/jrnl/) — jrnl journals: each [YYYY-MM-DD HH:MM] entry as a dated passage. *new* `no-install` `offline` `writes-output` `file-reader`
-- **jupyter** (idea) — Jupyter notebooks: Markdown cells, code and text outputs as passages, cited by cell. *new* `no-install` `offline` `writes-output` `file-reader`
+- [**jupyter**](adapters/stdlib/jupyter/) — Jupyter notebooks: Markdown cells, code and text outputs as passages, cited by cell. *new* `no-install` `offline` `writes-output` `file-reader`
 - **karakeep** (idea) — Karakeep's JSON export: bookmarks, notes and tags as plain text. *new* `no-install` `offline` `writes-output` `file-reader`
-- **latex** (idea) — LaTeX sources as plain prose, commands stripped, cited by the .tex file's own lines. *new* `no-install` `offline` `writes-output` `file-reader`
+- [**latex**](adapters/stdlib/latex/) — LaTeX sources as plain prose, commands stripped, cited by the .tex file's own lines. *new* `no-install` `offline` `writes-output` `file-reader`
 - **lessons** (idea) — Lesson plans from the Emerging Rule community library, by grade and subject, as passages a teacher can ask. *new* `no-install` `offline` `writes-output` `file-reader`
 - **letterboxd** (idea) — Letterboxd's export: the films you've watched, your ratings and reviews, as dated lines. *new* `no-install` `offline` `writes-output` `file-reader`
 - **linkedin** (idea) — LinkedIn's data export: messages, posts and connections as dated lines. *new* `no-install` `offline` `writes-output` `file-reader`
@@ -130,15 +130,15 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - [**parallel**](adapters/stdlib/parallel/) — A reader run over several folders at once, across every CPU core, so a big mirror of many sources builds in a fraction of the time. *new* `no-install` `offline` `writes-output` `file-reader`
 - **past-papers** (idea) — Past exam papers and their mark schemes as passages: which year asked this, and what earned the marks. *new* `no-install` `offline` `writes-output` `file-reader`
 - [**pdf**](adapters/deps/pdf/) — Text out of PDFs. Needs pypdf; BSD-3-Clause. *new* `needs-install` `offline` `writes-output` `file-reader`
-- **pgn** (idea) — Chess games from PGN files: players, dates, openings and your annotations. *new* `no-install` `offline` `writes-output` `file-reader`
+- [**pgn**](adapters/stdlib/pgn/) — Chess games from PGN files: players, dates, openings and your annotations. *new* `no-install` `offline` `writes-output` `file-reader`
 - **photos** (idea) — When and where each photo was taken, as dated lines. Needs Pillow; MIT-CMU. *new* `needs-install` `offline` `writes-output` `file-reader`
-- **places** (idea) — KML and GeoJSON files: each place's name, note and coordinates as a passage. *new* `no-install` `offline` `writes-output` `file-reader`
+- [**places**](adapters/stdlib/places/) — KML and GeoJSON files: each place's name, note and coordinates as a passage. *new* `no-install` `offline` `writes-output` `file-reader`
 - **pocket** (idea) — Pocket's export, the HTML and CSV in its zip, as one dated line per saved article, now that Pocket is gone. *new* `no-install` `offline` `writes-output` `file-reader`
 - **quiet-corner** (idea) — A Quiet Corner backup file: a teacher's classroom observations as dated passages, for that teacher's questions alone. *new* `no-install` `offline` `writes-output` `file-reader`
 - **readwise** (idea) — Readwise's highlights export: every highlight with its book or article, and your note on it. *new* `no-install` `offline` `writes-output` `file-reader`
 - **recipes** (idea) — Recipes from saved web pages and recipe-app exports, as plain text: what can I cook with leeks? *new* `no-install` `offline` `writes-output` `file-reader`
 - **reddit** (idea) — Reddit's data export: your posts, comments and saved items as dated lines. *new* `no-install` `offline` `writes-output` `file-reader`
-- **rtf** (idea) — RTF documents as plain text. *new* `no-install` `offline` `writes-output` `file-reader`
+- [**rtf**](adapters/stdlib/rtf/) — RTF documents as plain text. *new* `no-install` `offline` `writes-output` `file-reader`
 - **sarif** (idea) — SARIF reports from code scanners such as CodeQL and Semgrep: each finding as a passage with its rule, file and line. *new* `no-install` `offline` `writes-output` `file-reader`
 - **sbom** (idea) — SBOMs in SPDX or CycloneDX JSON: each component, its version and licence, as passages. *new* `no-install` `offline` `writes-output` `file-reader`
 - **screenplay** (idea) — Fountain and Final Draft scripts: scenes, characters and lines, cited by scene. *new* `no-install` `offline` `writes-output` `file-reader`
@@ -433,13 +433,13 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 
 - **anki** (idea) — Approved answers as an Anki deck, built without Anki installed. *new* `no-install` `offline` `writes-output` `interface`
 - [**annotations**](adapters/stdlib/annotations/) — Approved answers as W3C Web Annotations, so any annotation tool can show what your files say about a page. *new* `no-install` `offline` `writes-output` `interface`
-- **badge** (idea) — A badge for a page: these answers came from these files and were approved, linked to the check anyone can run. *new* `no-install` `offline` `writes-output` `interface`
-- **braille** (idea) — Answers as braille-ready files (BRF) for a braille display or embosser. *new* `no-install` `offline` `writes-output` `interface`
+- [**badge**](adapters/stdlib/badge/) — A badge for a page: these answers came from these files and were approved, linked to the check anyone can run. *new* `no-install` `offline` `writes-output` `interface`
+- [**braille**](adapters/stdlib/braille/) — Answers as braille-ready files (BRF) for a braille display or embosser. *new* `no-install` `offline` `writes-output` `interface`
 - [**browse**](adapters/stdlib/browse/) — Your folder in your web browser: ask, read each answer at its file and line, and approve suggestions with a click, from this machine only. Reaches this machine only. *new* `no-install` `this-machine` `records` `interface` `everyday`
 - [**calendar-out**](adapters/stdlib/calendar-out/) — Dates coming up as an .ics file your calendar app can subscribe to. *new* `no-install` `offline` `writes-output` `interface`
 - [**cloudevents**](adapters/stdlib/cloudevents/) — Record rows in the CloudEvents envelope, for any tool that already reads them. *new* `no-install` `offline` `writes-output` `interface`
 - **datasette** (idea) — Your record and approved answers browsable in Datasette, read only: tables, facets and SQL on this machine. Needs Datasette; Apache-2.0. Reaches this machine only. *new* `needs-install` `this-machine` `read-only` `interface`
-- **deep-links** (idea) — Each answer as a link that opens the file at the line (RFC 5147 lines, browser text fragments). *new* `no-install` `offline` `read-only` `interface`
+- [**deep-links**](adapters/stdlib/deep-links/) — Each answer as a link that opens the file at the line (RFC 5147 lines, browser text fragments). *new* `no-install` `offline` `read-only` `interface`
 - **desktop** (idea) — A small window to ask and approve, with nothing to install: Python's own tkinter. *new* `no-install` `offline` `records` `interface`
 - **dictate** (idea) — Ask out loud: your question spoken and turned to text on this machine. Needs faster-whisper; MIT. Goes online: the model, downloaded once. *new* `needs-install` `online` `read-only` `interface`
 - [**emacs**](adapters/stdlib/emacs/) — Answers in an Emacs compilation buffer, each a jump to its file and line. *new* `no-install` `offline` `read-only` `interface`
@@ -449,7 +449,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - [**jetbrains**](adapters/stdlib/jetbrains/) — An external tool for IntelliJ, PyCharm and the rest, with answers as links to file and line. *new* `no-install` `offline` `read-only` `interface`
 - **kiosk** (idea) — A shared machine in a library or classroom: one box, ask only, nobody's key on it. Reaches this machine only. *new* `no-install` `this-machine` `read-only` `interface`
 - **launcher** (idea) — Ask from Alfred, Raycast, KRunner or PowerToys Run, answers with file and line. *new* `no-install` `offline` `read-only` `interface`
-- **llms-txt** (idea) — An llms.txt for your folder, written from what's actually in it to the spec's version 2, and any llms.txt you saved checked against that spec. *new* `no-install` `offline` `writes-output`
+- [**llms-txt**](adapters/stdlib/llms-txt/) — An llms.txt for your folder, written from what's actually in it to the spec's version 2, and any llms.txt you saved checked against that spec. *new* `no-install` `offline` `writes-output`
 - **obsidian** (idea) — Ask from inside Obsidian, answers as links to the note and line. Reaches this machine only. *new* `no-install` `this-machine` `read-only` `interface`
 - [**pipe**](adapters/stdlib/pipe/) — Questions in on standard input, answers out one per line: JSON lines, or file:line: text for grep and fzf. *box* `no-install` `offline` `records` `interface`
 - [**plain**](adapters/stdlib/plain/) — Answers as sentences instead of JSON, each with its file and line. *new* `no-install` `offline` `records` `interface`
@@ -457,7 +457,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - [**print**](adapters/stdlib/print/) — An answer as a printable page with its sources, to take to an appointment; --large for big, high-contrast type. *new* `no-install` `offline` `records` `interface` `everyday`
 - **qr** (idea) — An answer as a QR code on screen, to carry it to your phone without the network. *new* `no-install` `offline` `read-only` `interface`
 - [**repo-pile**](adapters/stdlib/repo-pile/) — Public repositories made into a box you can ask: cloned, kept only under a licence an Apache-2.0 project can use, their docs the pile, indexed for fast questions. Goes online: github.com (or the --source you give), to clone the repositories you list. *new* `no-install` `online` `records` `interface` `research`
-- **rss-out** (idea) — New approved answers as an RSS feed file, for any feed reader. *new* `no-install` `offline` `writes-output` `interface`
+- [**rss-out**](adapters/stdlib/rss-out/) — New approved answers as an RSS feed file, for any feed reader. *new* `no-install` `offline` `writes-output` `interface`
 - **safe-app** (idea) — willow as a SAFE app: installed from the SAFE App Store, authorized per session, and deleted clean. *new* `no-install` `offline` `read-only` `interface`
 - **share** (idea) — One sealed answer to send someone, checkable by them, without giving them the folder. *new* `no-install` `offline` `writes-output` `interface`
 - [**shell**](adapters/stdlib/shell/) — A willow command and tab completion for bash, zsh, fish and PowerShell, on Linux, macOS and Windows. *new* `no-install` `offline` `records` `interface`

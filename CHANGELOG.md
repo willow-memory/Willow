@@ -10,6 +10,62 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `badge`: an SVG badge for a page from the record: how many answers are
+  approved and from how many files, green when the chain holds and every
+  approval stands, amber when one doesn't, red when the chain breaks, grey
+  when nothing is approved. Its description says how to check it, and
+  `--link` prints the Markdown for a page. (#72)
+- `llms-txt`: an llms.txt written from what is actually in a folder (a title,
+  a summary, a section for each folder, a link and a one-line note for each
+  text file, files over 50 KB under Optional), and a check of one against the
+  llmstxt.org format, each departure at its line. Nothing is invented. (#72)
+- `braille`: approved answers (or any text file) as a braille-ready file:
+  uncontracted (grade 1) English braille in North American Braille ASCII,
+  with capitals, number signs and punctuation, in lines of 40 cells and pages
+  of 25 lines. Characters with no cell are counted and said. Nothing is sent
+  to a device. (#72)
+- `deep-links`: each approved answer, or each passage a question holds, as
+  links that open the file at the line: a `file://` link with an RFC 5147
+  `#line=` fragment and, with `--base`, a web link with a browser text
+  fragment, encoded as the standards ask. Nothing is opened or written. (#72)
+- `rss-out`: your approved answers as an RSS 2.0 feed file, newest first:
+  each item's title the answer's first line, its description the answer with
+  the reason it was given and the places it cites, its date when you approved
+  it. `--since` keeps only what is new. A forged approval is never in it, a
+  changed proposal is left out and said. (#72)
+- `evernote`: Evernote's .enex files, each note as a paragraph with its
+  title, notebook (the export file's name), dates, tags, source and
+  attachment names, then its text with lists, checkboxes and tables read as
+  text. (#72)
+- `places`: KML, GeoJSON and GPX files, each place as a paragraph with its
+  name, the folders it is in, your note on it and its coordinates (a line or
+  an area as its kind and first point), so a question about a place finds
+  what you wrote. (#72)
+- `chordpro`: ChordPro song sheets, each song as its title, artist, key and
+  capo, the chords it uses, and its lyrics with the chords taken out of the
+  lines, so a question about a lyric finds the song. Tab sections are
+  dropped. (#72)
+- `pgn`: Chess games from PGN files, each game as who played, when, where,
+  the result and the opening, then every comment in the moves with the move
+  it follows (Black's with three dots). The moves themselves are not copied. (#72)
+- `latex`: LaTeX sources as plain prose, line for line: the mirror has the
+  source's lines, so a passage is cited by the .tex file's own line.
+  Comments, the preamble (but the title and author), math, verbatim and
+  picture environments and layout commands are dropped; section, emphasis,
+  caption and footnote text, citations as [key], accents and dashes are kept. (#72)
+- `jupyter`: Jupyter notebooks, each cell as a block headed by its number and
+  kind: Markdown and code as written, and a code cell's text outputs (printed
+  text, a result's plain form, an error's name and message) under "output:".
+  Pictures are left out. Older nbformat 3 notebooks are read too. (#72)
+- `rtf`: RTF documents as plain text: paragraphs and line breaks kept, the
+  font and style tables, formatting words, pictures, headers and footers
+  dropped, escaped letters and Unicode read as the characters they are, and a
+  field's shown result kept. (#72)
+- `bibtex`: `.bib` files, each reference as a passage that begins with its
+  citation key, with its title, year, authors, where it appeared, doi,
+  keywords and abstract, so you can ask which paper said it and get the key
+  to cite. `@string` macros are filled in and LaTeX accents are read as the
+  letters they make. (#72)
 - `calendar-out`: the dates coming up in your files (found the way
   `coming-up` finds them) as an .ics file any calendar app can import or
   subscribe to: an all-day event for each, its title the line it was found on
