@@ -10,6 +10,14 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `demo/known-gaps`: php2shell's method pointed at the fleet's own twelve
+  known security gaps, and at seven cpython CVE fixes as the outside control.
+  A question written from a gap's own text, asked of the code before the fix,
+  reaches the changed lines in the whole old tree far above chance, and
+  cannot order the changed passages themselves; the same verdicts on cpython,
+  with a far smaller effect. Four freezes, blind questions from two writers
+  and a null set, every number quoted from a kernel record; phase 5's
+  findings stay private. CI gains the `demo:known-gaps` gate. (#74)
 - `job-hunt`: Applications sent, replies and interviews by company: where
   each stands and how long you have waited, from lines about a job search.
   (#73)
