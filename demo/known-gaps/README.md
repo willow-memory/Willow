@@ -94,7 +94,7 @@ and exits 0, 42 or 2 as the kernel does.
 |---|---|
 | `resolve.py` | gaps.json to pins.json, from the fleet's own local repositories (`--repos`). Refuses a merge that does not name its pull request, and a scored file that is not in the diff. |
 | `trees.py` | `fetch` writes each unit's vulnerable (old) and fixed (new) tree and the fix diff; `check` holds them to the pins. No network. |
-| `ask.py` | per unit, indexes both trees with `scan.py` (cached by tree hash) and asks the unit's questions three ways: the kernel's rank, BM25, a grep baseline. `found` ranks every passage the fix changed; `--mode before` asks the whole old tree, top 10. Also writes the unit's counts and its chance. |
+| `ask.py` | per unit, holds each tree to its pinned git tree hash (a missing or different tree is refused), builds its index afresh with `scan.py` into a temporary folder and renames it into place, every run, never reusing one, and asks the unit's questions three ways: the kernel's rank, BM25, a grep baseline. `found` ranks every passage the fix changed; `--mode before` asks the whole old tree, top 10. Also writes the unit's counts, its chance, and the tree hashes it checked and a SHA-256 over each index it asked, so a verdict names what was asked. |
 | `score.py` | the hit rule below, per answer, with the rank of the first hit and the `path:first-last` ranges that hit. |
 | `origin.py` | for every hit range, `whose.py` at the vulnerable commit: the commit that wrote it, its date, the gap, audit and pull request ids its message cites, and the days before the fix. |
 | `run.py` | `found` (phase 1) and `before` (phase 2): scores the answers, applies the pass rules per kind, writes each rule as a kernel verdict row. |
@@ -232,7 +232,7 @@ read, never written). Python 3.9 or newer.
     python -m pytest demo/known-gaps
 
 Run `ask.py` once a unit and a mode: Kart kills a task at 300 seconds, and the
-largest unit took about 25 seconds to index (below).
+slowest unit rebuilt its indexes in under 7 seconds (below).
 
 ## The dry run
 
@@ -251,8 +251,29 @@ after the amendment, ran both phases.
 | `run.py found` | exit 42, as it must be: no hits, so the rank statistic sits far below random (strong 1.42 against 7.50 expected, p 1.0; weaker 0.81 against 3.17, p 1.0). Run after the amendments: the `files_scored` limit, positional hits, no null question. |
 | `run.py before` | exit 42, as it must be: 0 line hits against 0.35 expected (strong) and 0.010 (weaker); file level 0 against 4.52 and 0.39, reported. The 14 null questions: 0 line hits, and the null gate passes only barely: the meaningless words matched something in 2 of 14 trees, so bm25 served 2 passages in all (12 questions served nothing) and the chance for what was served is 0.0003. A real null question serves ten. |
 | `trees.py check` | after the N1 change, lists any counted file with a character that shifts the kernel's lines: none of the 3,195 counted files in the 13 distinct vulnerable trees |
+| `ask.py`, third run (amendment 5, every index rebuilt from the pinned tree) | all 28 exit 0; the rebuild takes 0.1 to 6.7 s a unit (below); every count unchanged, and an index rebuilt for `before` has the same SHA-256 as the one rebuilt for `found` |
 | verdict rows | 5 written (2 for phase 1, 3 for phase 2); the record's chain holds |
 | `origin.py` | 0 ranges to look up, so 0 rows (nothing hit) |
+
+Rebuild time per unit in the third run (the vulnerable index, plus the fixed
+one for `found`; the units ran in seven Kart tasks, some at once):
+
+| Unit | found | before |
+|---|---|---|
+| KG01 | 0.1 s | 0.1 s |
+| KG02 | 0.1 s | 0.1 s |
+| KG03-kartikeya | 0.2 s | 0.1 s |
+| KG03-willow-mcp | 4.8 s | 2.8 s |
+| KG04 | 2.4 s | 1.2 s |
+| KG05 | 5.0 s | 3.7 s |
+| KG06 | 5.0 s | 3.9 s |
+| KG07-kartikeya | 0.2 s | 0.1 s |
+| KG07-willow-mcp | 6.7 s | 3.4 s |
+| KG08 | 0.3 s | 0.2 s |
+| KG09 | 3.1 s | 1.5 s |
+| KG10 | 2.5 s | 1.3 s |
+| KG11 | 2.3 s | 1.1 s |
+| KG12 | 5.5 s | 1.8 s |
 
 Per-unit timings of the first run (index and ask are `ask.py`'s own; the 14
 tasks ran at once on one machine, so each is slower than it would be alone):
