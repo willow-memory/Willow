@@ -10,6 +10,8 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `reading-log`: A child's reading log from the lines you wrote: days, pages
+  and minutes for each week and for each book.
 - `subscriptions`: What you pay every month or year, found by the rhythm of
   the payments in your statements and emails (a month apart three times, or a
   year apart twice), with the latest amount and when the next is about due.

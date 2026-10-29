@@ -273,6 +273,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "oracle-text": ("oracle_text.py", ["--seed", "demo"]),
     "pile-poetry": ("pile_poetry.py", ["--box", "{box}"]),
     "subscriptions": ("subscriptions.py", ["--box", "{box}"]),
+    "reading-log": ("reading_log.py", ["--box", "{box}"]),
     "history": ("history.py", ["--box", "{box}"]),
     "dice": ("dice.py", ["--box", "{box}", "roll", "2d6", *NOW]),
     "hook-fail-closed": ("hook_fail_closed.py", ["--hook", "true"]),

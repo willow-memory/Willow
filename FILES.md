@@ -595,6 +595,10 @@ willow/
 │   │   │   ├── reading_level.py  how hard each file reads: Flesch by the book, counted as written, easiest first
 │   │   │   ├── test_reading_level.py
 │   │   │   └── README.md
+│   │   ├── reading-log/
+│   │   │   ├── reading_log.py   books, pages and minutes read, week by week
+│   │   │   ├── test_reading_log.py
+│   │   │   └── README.md
 │   │   ├── readings/
 │   │   │   ├── readings.py   notes beside an answer: numbers over time, dates gone by
 │   │   │   ├── test_readings.py

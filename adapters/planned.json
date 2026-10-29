@@ -1888,16 +1888,6 @@
   "tags": "no-install, online, read-only, trust"
  },
  {
-  "name": "reading-log",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "A child's reading log: books, pages and minutes, week by week.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
- },
- {
   "name": "readwise",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
