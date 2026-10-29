@@ -18,14 +18,14 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`████████░░░░░░░░░░░░` **177 of 470 built** · 419 need no install · 51 need one
+`████████░░░░░░░░░░░░` **178 of 470 built** · 419 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
 | Reading more kinds of files | 22 | 83 | 96 | 9 |
 | Finding things | 26 | 17 | 33 | 10 |
 | Your own words | 16 | 9 | 22 | 3 |
-| Keeping track | 16 | 42 | 58 | 0 |
+| Keeping track | 17 | 41 | 58 | 0 |
 | Trust and proof | 20 | 25 | 36 | 9 |
 | Privacy and safety | 11 | 3 | 14 | 0 |
 | Assistants | 21 | 36 | 51 | 6 |
@@ -47,9 +47,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[clauses](adapters/stdlib/clauses/)** — A policy, contract or set of terms as one sentence a passage, so an answer lands on the clause, and what changed between two versions, sentence by sentence.
+**[pile-gold](adapters/stdlib/pile-gold/)** — Each answer you approve marks the passage that held it, so your own questions become a test of how well the search finds things, scored as recall at five.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 177 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 178 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -276,7 +276,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**lending**](adapters/stdlib/lending/) — Things you lent, to whom and when, and which are still out. *new* `no-install` `offline` `read-only` `tracking`
 - **livestock** (idea) — Each animal's births, treatments and sales, from your farm records. *new* `no-install` `offline` `read-only` `tracking`
 - **market-calls** (idea) — Market calls kept as wagers on the record ('SPY closes up on Friday'), settled later, with the losers kept. *bot* `no-install` `offline` `records` `tracking`
-- **mileage** (idea) — Miles driven for work, from your trips and notes, totalled for a tax year. *new* `no-install` `offline` `read-only` `tracking`
+- [**mileage**](adapters/stdlib/mileage/) — Miles driven for work, from your trips and notes, totalled for a tax year. *new* `no-install` `offline` `read-only` `tracking`
 - **milestones** (idea) — Your child's firsts, words and heights, from your notes, by age. *new* `no-install` `offline` `read-only` `tracking`
 - **minutes** (idea) — Meeting minutes: who decided what and when, and which actions are still open. *new* `no-install` `offline` `read-only` `tracking`
 - **mood** (idea) — Mood scores you write in a journal, over weeks and months. *new* `no-install` `offline` `read-only` `tracking`

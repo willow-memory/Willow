@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `mileage`: Miles driven for work, totalled for each tax year from the lines
+  of your notes that say a drive and how far; miles and kilometres kept
+  apart, odometer readings left out.
 - `hours`: Hours worked or volunteered, added up for each client or group
   your notes name, from lines that say a work word and a length of time.
 - `badge`: an SVG badge for a page from the record: how many answers are

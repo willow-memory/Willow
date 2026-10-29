@@ -1539,16 +1539,6 @@
   "tags": "no-install, offline, records, assistant"
  },
  {
-  "name": "mileage",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "Miles driven for work, from your trips and notes, totalled for a tax year.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
- },
- {
   "name": "milestones",
   "kind": "stdlib",
   "section": "Keeping track",
