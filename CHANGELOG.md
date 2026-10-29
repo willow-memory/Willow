@@ -10,6 +10,10 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `places`: KML, GeoJSON and GPX files, each place as a paragraph with its
+  name, the folders it is in, your note on it and its coordinates (a line or
+  an area as its kind and first point), so a question about a place finds
+  what you wrote.
 - `chordpro`: ChordPro song sheets, each song as its title, artist, key and
   capo, the chords it uses, and its lyrics with the chords taken out of the
   lines, so a question about a lyric finds the song. Tab sections are

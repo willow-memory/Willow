@@ -90,6 +90,11 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         b"{title: Down by the Estuary}\n{artist: Ada Example}\n{key: G}\n{capo: 2}\n# a comment\n\n{start_of_verse}\n"
         b"[G]Down by the [C]estuary the [D]tide comes [Em]in\n{end_of_verse}\n{soc}\nOh, the [G]water, the [D]water\n{eoc}\n"
     )}),
+    "places": ("places.py", {"leeds.kml": (
+        b'<?xml version="1.0"?><kml xmlns="http://www.opengis.net/kml/2.2"><Document><name>Leeds</name><Folder><name>Plots</name>'
+        b'<Placemark><name>Allotment</name><description><![CDATA[<p>Plot 14, the <b>gate</b> sticks.</p>]]></description>'
+        b'<Point><coordinates>-1.5491,53.8008,0</coordinates></Point></Placemark></Folder></Document></kml>'
+    )}),
     "notes": ("notes.py", {"garden.md": b"Tomatoes want [[sun]].\n"}),
     "jrnl": ("jrnl.py", {"journal.txt": (
         "[2024-03-03 10:15] Fixed the gate.\nThe hinge wanted oil, not force.\n\n"

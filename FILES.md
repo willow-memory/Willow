@@ -427,6 +427,10 @@ willow/
 │   │   │   ├── pipe.py           questions in, one answer a line out: JSON lines, or grep's file:line: text
 │   │   │   ├── test_pipe.py
 │   │   │   └── README.md
+│   │   ├── places/
+│   │   │   ├── places.py   KML, GeoJSON and GPX files as places: each one's name, folders, note and coordinates
+│   │   │   ├── test_places.py
+│   │   │   └── README.md
 │   │   ├── plain/
 │   │   │   ├── plain.py      the kernel's answer as sentences
 │   │   │   ├── test_plain.py

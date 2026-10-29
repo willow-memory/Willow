@@ -2055,16 +2055,6 @@
   "tags": "no-install, offline, read-only, play"
  },
  {
-  "name": "places",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "KML and GeoJSON files: each place's name, note and coordinates as a passage.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "plain-language",
   "kind": "stdlib",
   "section": "Assistants",
