@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `budget`: Spending against the monthly budget you wrote down in your own
+  words: your statements' lines matched to each category by the markers you
+  gave, each month held against it.
 - `foia`: Freedom-of-information requests from your notes: who you asked,
   when, when an answer is due (a date you wrote, or the time the law you name
   gives), and which are answered.

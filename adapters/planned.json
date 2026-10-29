@@ -140,16 +140,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "budget",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "Spending against the budget you wrote down, month by month, from your statements.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
- },
- {
   "name": "by-function",
   "kind": "deps",
   "section": "Finding things",

@@ -132,6 +132,10 @@ willow/
 │   │   │   ├── browse.py     your folder in your browser, on 127.0.0.1: ask, read, approve with a click
 │   │   │   ├── test_browse.py
 │   │   │   └── README.md
+│   │   ├── budget/
+│   │   │   ├── budget.py   spending against a budget you wrote, by month
+│   │   │   ├── test_budget.py
+│   │   │   └── README.md
 │   │   ├── calendar/
 │   │   │   ├── cal.py        .ics events and .vcf contacts, as dated lines
 │   │   │   ├── test_calendar.py
