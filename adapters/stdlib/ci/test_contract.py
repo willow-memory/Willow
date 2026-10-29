@@ -184,6 +184,11 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         b'{"color":"DEFAULT","isTrashed":false,"isPinned":true,"title":"Shopping","userEditedTimestampUsec":1710000000000000,"createdTimestampUsec":1709380000000000,'
         b'"labels":[{"name":"home"},{"name":"food"}],"listContent":[{"text":"milk","isChecked":false},{"text":"eggs","isChecked":true},{"text":" ","isChecked":false}]}'
     )}),
+    "karakeep": ("karakeep.py", {"karakeep.json": (
+        b'{"bookmarks":[{"createdAt":1710000000,"title":"Tomato growing guide","tags":["garden",{"name":"veg"}],"note":"Read the  staking section.","summary":"How to grow tomatoes.",'
+        b'"content":{"type":"link","url":"https://example.org/tomatoes","description":"A guide\\nto tomatoes."}},'
+        b'{"createdAt":"2024-02-01T10:00:00Z","title":"","content":{"type":"text","text":"Remember   the basil."}}]}'
+    )}),
     "notes": ("notes.py", {"garden.md": b"Tomatoes want [[sun]].\n"}),
     "jrnl": ("jrnl.py", {"journal.txt": (
         "[2024-03-03 10:15] Fixed the gate.\nThe hinge wanted oil, not force.\n\n"

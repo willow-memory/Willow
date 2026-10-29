@@ -426,6 +426,10 @@ willow/
 │   │   │   ├── jupyter.py   a Jupyter notebook as text, one block for each cell with its number and kind
 │   │   │   ├── test_jupyter.py
 │   │   │   └── README.md
+│   │   ├── karakeep/
+│   │   │   ├── karakeep.py   a bookmark export with tags and notes
+│   │   │   ├── test_karakeep.py
+│   │   │   └── README.md
 │   │   ├── latex/
 │   │   │   ├── latex.py   a LaTeX source as its prose, line for line, commands stripped
 │   │   │   ├── test_latex.py

@@ -1013,16 +1013,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "karakeep",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Karakeep's JSON export: bookmarks, notes and tags as plain text.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "kids",
   "kind": "stdlib",
   "section": "Privacy and safety",

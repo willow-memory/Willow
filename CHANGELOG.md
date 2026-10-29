@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `karakeep`: Karakeep's JSON export: each bookmark, oldest first, with its
+  day, title, URL, tags, your note, its summary and the page description or
+  text.
 - `google-keep`: Google Keep notes from Takeout: each note or list as a dated
   passage with its labels and ticked items; notes in the bin and other JSON
   skipped and counted.
