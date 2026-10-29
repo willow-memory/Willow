@@ -15,6 +15,7 @@ import re
 import shutil
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 import pytest
@@ -826,7 +827,12 @@ def test_an_index_planted_under_the_pinned_name_is_never_used(tmp_path):
     for mode in ("found", "before"):
         for tree in (pin["vulnerable"]["tree"], pin["fixed"]["tree"]):
             shutil.rmtree(ix / tree, ignore_errors=True)
-            ask.scan.build(other, ix / tree)  # a whole, valid index of another folder
+            # a whole, valid index of another folder, planted under the pinned
+            # name; built in scan's own scratch (its card says writes: to, and
+            # CI's guard holds it to that) and moved into place by the test
+            planted = Path(tempfile.mkdtemp(prefix="planted-"))
+            ask.scan.build(other, planted / "ix")
+            shutil.move(str(planted / "ix"), str(ix / tree))
         assert ask.ask(to, ix, "KG01", pin, qs, mode) == runs[mode], mode
     again = ask.ask(to, ix, "KG01", pin, qs, "found")
     paths = {s["path"] for r in again if r["type"] == "answer" for s in r["served"]}
