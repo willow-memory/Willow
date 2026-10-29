@@ -609,14 +609,18 @@ say: the lines the KG07 fix rewrote were written by many commits, not one. In
 kartikeya the newest is b5313eee61e6 (2026-09-22, "localhost is not egress"),
 a day before the fix, whose body states the exemption: "Signed-envelope gate
 applies only to # allow_net, not allow_localhost." In willow-mcp, commit
-200ce45 (2026-09-22, on the vulnerable side of the fix) names the ruling:
+200ce45 (2026-09-22, on the vulnerable side of the fix), a change to the tests
+only, names the ruling:
 "Localhost is Kart localhost_tier, not the net authorizer path (9fe5e179)."
 The flag itself is far older: it is in kartikeya's code from the 07-08 lift
 commits (ec3acc0, ff59d05, c1000ee), and 153ac26 (2026-07-17, "gate #
 allow_localhost like # allow_net") is the first commit to name it in its
-message. So git shows the exemption written into both repositories the day
-before the fix, citing the sealed ruling, on top of a flag that had been gated
-like the network since July. The KB note's two commits remain unfound.
+message. So git shows the exemption written into kartikeya the day before the
+fix (b5313ee), and a willow-mcp test change the same day citing the sealed
+ruling (200ce45), on top of a flag gated like the network since July. Which
+willow-mcp commit wrote the exemption into code is not shown (the newest
+commit under its hit lines, a05de37, does not mention it), and the KB note's
+two commits remain unfound.
 
 ### Phase 4: the writers compared (reported, not judged)
 
