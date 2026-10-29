@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `hook-guard`: A PreToolUse hook that refuses, by two named rules and never
+  by judgment, a call that would read the box's key or change a file inside
+  the box other than through the kernel.
 - `hook-compact`: A PreCompact hook that prints what the record still holds
   open, the suggestions waiting for a seal and the questions asked again and
   never answered, so they survive an assistant's summary.

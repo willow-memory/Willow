@@ -892,16 +892,6 @@
   "tags": "no-install, offline, records, assistant, hooks"
  },
  {
-  "name": "hook-guard",
-  "kind": "stdlib",
-  "section": "Assistants",
-  "line": "A PreToolUse hook that refuses, by rule and never by judgment, a tool call that would read the key or write a box outside the kernel, naming the rule it hit.",
-  "source": "box",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, assistant, hooks"
- },
- {
   "name": "hook-handoff",
   "kind": "stdlib",
   "section": "Assistants",
