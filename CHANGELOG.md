@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `discord`: Discord's data package zip, read without unpacking: your
+  messages, oldest first, as dated lines by server and channel, from the
+  older JSON or the newer CSV message files.
 - `slack`: Slack's export zip, read without unpacking: each message, oldest
   first, as a dated line with its channel and author; users, channels and
   links written as words; joins and similar left out.

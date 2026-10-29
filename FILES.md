@@ -253,6 +253,10 @@ willow/
 │   │   │   ├── digest.py     one page of what waits on you, gone stale, coming up; writes nothing
 │   │   │   ├── test_digest.py
 │   │   │   └── README.md
+│   │   ├── discord/
+│   │   │   ├── discord.py   a Discord data package as dated lines of your messages
+│   │   │   ├── test_discord.py
+│   │   │   └── README.md
 │   │   ├── diverge/
 │   │   │   ├── diverge.py    where two copies part: records by row, files, then the first line
 │   │   │   ├── test_diverge.py

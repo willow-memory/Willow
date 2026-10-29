@@ -290,6 +290,15 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         "garden/2024-03-03.json": '[{"type":"message","subtype":"me_message","user":"U1","text":"waves","ts":"1709460000.0"}]',
         })
     )}),
+    "discord": ("discord.py", {"discord.zip": (
+        _zip({
+        "Messages/index.json": '{"123": "Direct Message with ben", "456": "garden"}',
+        "Messages/c123/channel.json": '{"id":"123","type":1}',
+        "Messages/c123/messages.json": '[{"ID":"1","Timestamp":"2024-03-02 08:16:00","Contents":"See you  Saturday.","Attachments":""},{"ID":"2","Timestamp":"2024-03-02 08:20:00","Contents":"","Attachments":"https://cdn/x.png"},{"ID":"3","Timestamp":"2024-03-02 08:21:00","Contents":"","Attachments":""}]',
+        "Messages/c456/channel.json": '{"id":"456","type":0,"name":"garden","guild":{"id":"9","name":"Garden Club"}}',
+        "Messages/c456/messages.csv": 'ID,Timestamp,Contents,Attachments\n7,2024-03-02 08:15:30,"Six hours of sun.",\n',
+        })
+    )}),
     "notes": ("notes.py", {"garden.md": b"Tomatoes want [[sun]].\n"}),
     "jrnl": ("jrnl.py", {"journal.txt": (
         "[2024-03-03 10:15] Fixed the gate.\nThe hinge wanted oil, not force.\n\n"

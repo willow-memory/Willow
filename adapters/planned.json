@@ -449,16 +449,6 @@
   "tags": "needs-install, online, read-only, interface"
  },
  {
-  "name": "discord",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Discord's data package: your messages, one dated line each, by server and channel.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "docs-i18n",
   "kind": "stdlib",
   "section": "For maintainers",
