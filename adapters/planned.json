@@ -10,16 +10,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "agents-md-check",
-  "kind": "stdlib",
-  "section": "For maintainers",
-  "line": "Commands and paths named in AGENTS.md or CLAUDE.md that no longer exist in the repo.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, maintainers"
- },
- {
   "name": "almanac",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -412,16 +402,6 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, file-reader"
- },
- {
-  "name": "codeowners",
-  "kind": "stdlib",
-  "section": "Finding things",
-  "line": "Who owns this file: the CODEOWNERS rule that matches it, cited by line, on GitHub, GitLab and Forgejo alike.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, search"
  },
  {
   "name": "compiled",
@@ -1232,16 +1212,6 @@
   "tags": "no-install, offline, writes-output, trust"
  },
  {
-  "name": "in-toto",
-  "kind": "stdlib",
-  "section": "Trust and proof",
-  "line": "A sealed answer exported as an in-toto Statement, the envelope SLSA uses, so others can check it.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, trust"
- },
- {
   "name": "ink-story",
   "kind": "deps",
   "section": "Play",
@@ -1261,16 +1231,6 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, file-reader"
- },
- {
-  "name": "instruction-files",
-  "kind": "stdlib",
-  "section": "Assistants",
-  "line": "For a folder, which instruction files each coding agent would load (AGENTS.md, CLAUDE.md, GEMINI.md, rules folders), in what order, with each file's size and hash.",
-  "source": "box",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, assistant"
  },
  {
   "name": "inventory",
@@ -1482,16 +1442,6 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, file-reader"
- },
- {
-  "name": "licenses",
-  "kind": "stdlib",
-  "section": "Trust and proof",
-  "line": "The licence of every installed dependency, read from its own metadata on this machine: which are copyleft, and which file says so.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, trust"
  },
  {
   "name": "line-origin",
@@ -2053,16 +2003,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "package-contents",
-  "kind": "stdlib",
-  "section": "Privacy and safety",
-  "line": "What's inside a wheel, sdist, npm tarball or .crate before you install it: every file, and any code it runs on install.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, privacy"
- },
- {
   "name": "package-docs",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -2254,16 +2194,6 @@
   "writes": "nothing",
   "network": "none",
   "tags": "needs-install, offline, read-only, maintainers"
- },
- {
-  "name": "prov",
-  "kind": "stdlib",
-  "section": "Trust and proof",
-  "line": "The record exported as W3C PROV: what came from what, by which step, sealed by whom.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, trust"
  },
  {
   "name": "provenance",
@@ -3256,26 +3186,6 @@
   "tags": "no-install, offline, records, trust"
  },
  {
-  "name": "words-ar",
-  "kind": "stdlib",
-  "section": "Your own words",
-  "line": "Arabic common words, with the article and prefixes read apart.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, words"
- },
- {
-  "name": "words-cy",
-  "kind": "stdlib",
-  "section": "Your own words",
-  "line": "Welsh common words ('a', 'y', 'yn').",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, words"
- },
- {
   "name": "words-hi",
   "kind": "stdlib",
   "section": "Your own words",
@@ -3290,26 +3200,6 @@
   "kind": "stdlib",
   "section": "Your own words",
   "line": "Japanese, which has no spaces: a small segmenter of its own and a common-words list.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, words"
- },
- {
-  "name": "words-ru",
-  "kind": "stdlib",
-  "section": "Your own words",
-  "line": "Russian common words, so questions aren't matched on 'и' and 'в'.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, words"
- },
- {
-  "name": "words-tr",
-  "kind": "stdlib",
-  "section": "Your own words",
-  "line": "Turkish common words ('ve', 'bir').",
   "source": "new",
   "writes": "to",
   "network": "none",

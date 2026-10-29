@@ -68,9 +68,9 @@ def test_only_your_own_writing_is_quizzed():
 
 
 def test_the_tip_cuts_the_puzzle_and_the_record_never_holds_the_answer(tmp_path):
-    b = box(tmp_path, {"hives.txt": TEXT})
+    b = box(tmp_path, {"apiary.txt": TEXT})
     got = quiz_cmd(b, "ask")
-    assert got.returncode == 0 and "hives.txt:1" in got.stdout
+    assert got.returncode == 0 and "apiary.txt:1" in got.stdout
     assert "_" * 4 in got.stdout, "a blank as long as its word"
     row = json.loads((b / "record.jsonl").read_text().splitlines()[-1])
     assert row["kind"] == "quiz" and "answer_sha256" in row

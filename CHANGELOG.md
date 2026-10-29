@@ -10,6 +10,38 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `prov`: the record as W3C PROV-JSON, every row an activity and every
+  seal traced to its answer, the suggestion it approved, the passages that
+  suggestion cites and the person who approved it. A seal that doesn't prove
+  under the key, or whose proposal file changed, is left out and said. (#70)
+- `in-toto`: each approved answer as an in-toto Statement (v1), its subject
+  the sha256 of the file as written, its predicate the claim, the cited
+  passages, the question's fingerprint and the record row that holds the
+  approval. Unsigned: signing takes the key, which no add-on reads. (#70)
+- `agents-md-check`: the commands, paths, links, make targets, npm scripts
+  and `@` imports an AGENTS.md or CLAUDE.md names that the repo no longer
+  has, by file and line. (#70)
+- `licenses`: the licence of every installed Python and npm package, read
+  from its own metadata, in four classes (permissive, weak copyleft, strong
+  copyleft, undeclared), with an SPDX expression read through; everything but
+  the permissive ones is listed by file and line. (#70)
+- `instruction-files`: for a folder, the instruction files each of eight
+  coding agents would load, general first, with each file's size and hash
+  and the `@` imports Claude Code would follow. (#70)
+- `codeowners`: who owns a file, the CODEOWNERS rule that matches it cited
+  by line, read the way GitHub (last match wins), GitLab (sections and their
+  defaults) and Forgejo (every matching regex) each do. (#70)
+- `words-ar` and `words-cy`, which take Arabic's and Welsh's common words out
+  of a question before the kernel's bite. `words-ar` also takes the short
+  vowel marks out of the question, since the kernel splits a word at each. (#70)
+- `package-contents`: what a wheel, sdist, npm tarball or crate holds, every
+  file with its size, and the code that would run because you installed it,
+  by file and line: a `.pth` import line, a setup.py and build backend, the
+  npm install hooks, a build script or procedural macro. Read in memory,
+  never unpacked or run; a path that climbs out of its folder is flagged. (#70)
+- `words-ru` and `words-tr`, which take Russian's and Turkish's common words
+  out of a question before the kernel's bite, as the other words add-ons do.
+  `words-tr` reads a capital İ as i first, so it doesn't split a word. (#70)
 - `pile-build`: the pile store built after each change, behind a lock on
   its folder, again until it matches when the folder changes mid-build, and
   with `--background` detached so a hook never waits. Unlike willow-bot's,

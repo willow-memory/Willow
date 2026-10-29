@@ -18,38 +18,38 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`██████░░░░░░░░░░░░░░` **139 of 470 built** · 419 need no install · 51 need one
+`██████░░░░░░░░░░░░░░` **150 of 470 built** · 419 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
 | Reading more kinds of files | 14 | 91 | 96 | 9 |
-| Finding things | 23 | 20 | 33 | 10 |
-| Your own words | 11 | 14 | 22 | 3 |
+| Finding things | 24 | 19 | 33 | 10 |
+| Your own words | 15 | 10 | 22 | 3 |
 | Keeping track | 15 | 43 | 58 | 0 |
-| Trust and proof | 15 | 30 | 36 | 9 |
-| Privacy and safety | 9 | 5 | 14 | 0 |
-| Assistants | 17 | 40 | 51 | 6 |
+| Trust and proof | 18 | 27 | 36 | 9 |
+| Privacy and safety | 10 | 4 | 14 | 0 |
+| Assistants | 18 | 39 | 51 | 6 |
 | Ways to use it | 11 | 28 | 35 | 4 |
 | Play | 7 | 33 | 35 | 5 |
-| For maintainers | 17 | 27 | 39 | 5 |
+| For maintainers | 18 | 26 | 39 | 5 |
 <!-- /willow:pools -->
 
 ## Newest
 
 <!-- willow:newest -->
-- 2026-10-28 · [**pile-sweep**](adapters/stdlib/pile-sweep/) — The passage size measured, not guessed: your box's own questions asked at several sizes, and the size that finds the most of their answers named.
-- 2026-10-28 · [**pile-store**](adapters/stdlib/pile-store/) — Your folder's passages read once into one SQLite file, each repeat stored once, and opened read-only only while it still matches the folder, the limits and the kernel that read it, else built again.
-- 2026-10-28 · [**pile-serve**](adapters/stdlib/pile-serve/) — The store held open by one process on this machine, over a Unix socket the way willow-bot's deterministic runner serves, so a hook's lookup takes milliseconds instead of a cold start.
-- 2026-10-28 · [**pile-rungs**](adapters/stdlib/pile-rungs/) — Each lookup says which rung answered, words, phrases or an embedder, and why a higher one was skipped, as data beside the passages.
-- 2026-10-28 · [**pile-rank**](adapters/stdlib/pile-rank/) — Phrases as well as words: BM25F over each passage's words and the word pairs your files use together, title and question lines weighted, no model.
+- 2026-10-29 · [**words-tr**](adapters/stdlib/words-tr/) — Turkish common words ("ve", "bir").
+- 2026-10-29 · [**words-ru**](adapters/stdlib/words-ru/) — Russian common words ("и", "в", "на").
+- 2026-10-29 · [**words-cy**](adapters/stdlib/words-cy/) — Welsh common words ("a", "y", "yn").
+- 2026-10-29 · [**words-ar**](adapters/stdlib/words-ar/) — Arabic common words ("في", "من", "على").
+- 2026-10-29 · [**prov**](adapters/stdlib/prov/) — The record exported as W3C PROV: what came from what, by which step, sealed by whom.
 <!-- /willow:newest -->
 
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[abbreviations](adapters/stdlib/abbreviations/)** — Your own shorthand, written down once (appt, Rx, w/c), so a question finds either form.
+**[pile-sweep](adapters/stdlib/pile-sweep/)** — The passage size measured, not guessed: your box's own questions asked at several sizes, and the size that finds the most of their answers named.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 139 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 150 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -173,7 +173,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - **by-function** (idea) — Code read by function and class instead of by line, so a hit names the function it's in. Needs tree-sitter and its language pack; MIT. *new* `needs-install` `offline` `writes-output` `search`
 - **code-first** (idea) — Questions code can answer exactly (counts, dates, ids) answered by code before any model, with a wrong answer counted as a defect. *bot* `no-install` `offline` `read-only` `search`
 - **code-shape** (idea) — Search code by its shape, not its words: every call of a kind, whatever it's named. Needs the ast-grep program; MIT. *new* `needs-install` `offline` `read-only` `search`
-- **codeowners** (idea) — Who owns this file: the CODEOWNERS rule that matches it, cited by line, on GitHub, GitLab and Forgejo alike. *new* `no-install` `offline` `read-only` `search`
+- [**codeowners**](adapters/stdlib/codeowners/) — Who owns this file: the CODEOWNERS rule that matches it, cited by line, on GitHub, GitLab and Forgejo alike. *new* `no-install` `offline` `read-only` `search`
 - **crosswalk** (idea) — The outside IDs a passage points to (Wikidata, DOI, ORCID, GeoNames) kept beside it, so your notes join the world's. *new* `no-install` `offline` `writes-output` `search`
 - [**duplicates**](adapters/stdlib/duplicates/) — Passages that say the same thing in two files, and which one is newer. *new* `no-install` `offline` `read-only` `search`
 - **fair-merge** (idea) — Each folder or repo ranked on its own and the lists merged in turns, so a large corpus can't push a small one out on volume alone, and a source that found nothing says so. *bot* `no-install` `offline` `read-only` `search` `pile`
@@ -225,8 +225,8 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - **synonyms** (idea) — Suggests words-list lines for a word no file has. Needs nltk and WordNet; Apache-2.0. Goes online: the WordNet data, downloaded once. *new* `needs-install` `online` `writes-output` `words`
 - **tatoeba** (idea) — A question in one language finds the same idea in another, through Tatoeba's sentence pairs, downloaded once. *new* `no-install` `offline` `writes-output` `words`
 - **vocab** (idea) — The words you're learning, from your notes and the texts you read, with where you met each one. *new* `no-install` `offline` `writes-output` `words`
-- **words-ar** (idea) — Arabic common words, with the article and prefixes read apart. *new* `no-install` `offline` `writes-output` `words`
-- **words-cy** (idea) — Welsh common words ('a', 'y', 'yn'). *new* `no-install` `offline` `writes-output` `words`
+- [**words-ar**](adapters/stdlib/words-ar/) — Arabic common words ("في", "من", "على"). *new* `no-install` `offline` `records` `words` `arabic`
+- [**words-cy**](adapters/stdlib/words-cy/) — Welsh common words ("a", "y", "yn"). *new* `no-install` `offline` `records` `words` `welsh`
 - [**words-de**](adapters/stdlib/words-de/) — German common words, so questions aren't matched on "der" and "und". *new* `no-install` `offline` `records` `words` `german`
 - [**words-es**](adapters/stdlib/words-es/) — Spanish common words ("el", "y"). *new* `no-install` `offline` `records` `words` `spanish`
 - [**words-fr**](adapters/stdlib/words-fr/) — French common words ("le", "et"). *new* `no-install` `offline` `records` `words` `french`
@@ -236,9 +236,9 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**words-nl**](adapters/stdlib/words-nl/) — Dutch common words ("de", "en"). *new* `no-install` `offline` `records` `words` `dutch`
 - [**words-pl**](adapters/stdlib/words-pl/) — Polish common words ('i', 'w'). *new* `no-install` `offline` `records` `words` `polish`
 - [**words-pt**](adapters/stdlib/words-pt/) — Portuguese common words ("o", "e"). *new* `no-install` `offline` `records` `words` `portuguese`
-- **words-ru** (idea) — Russian common words, so questions aren't matched on 'и' and 'в'. *new* `no-install` `offline` `writes-output` `words`
+- [**words-ru**](adapters/stdlib/words-ru/) — Russian common words ("и", "в", "на"). *new* `no-install` `offline` `records` `words` `russian`
 - [**words-sv**](adapters/stdlib/words-sv/) — Swedish common words ('och', 'att'). *new* `no-install` `offline` `records` `words` `swedish`
-- **words-tr** (idea) — Turkish common words ('ve', 'bir'). *new* `no-install` `offline` `writes-output` `words`
+- [**words-tr**](adapters/stdlib/words-tr/) — Turkish common words ("ve", "bir"). *new* `no-install` `offline` `records` `words` `turkish`
 - **words-zh** (idea) — Chinese, which has no spaces: words found by a small segmenter of its own, and a common-words list. *new* `no-install` `offline` `writes-output` `words`
 
 ## Keeping track
@@ -318,9 +318,9 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**history**](adapters/stdlib/history/) — Your record in plain sentences: what was asked when, what found nothing, what you approved; places and counts, never the words. *new* `no-install` `offline` `read-only` `trust` `everyday`
 - [**ids**](adapters/stdlib/ids/) — Every file and passage given its Software Heritage ID and IPFS CID, names the rest of the world already uses. *new* `no-install` `offline` `read-only` `trust`
 - **in-case** (idea) — A letter for the people you trust, if something happens to you: where things are and who to call, from your files, sealed by you. *new* `no-install` `offline` `writes-output` `trust`
-- **in-toto** (idea) — A sealed answer exported as an in-toto Statement, the envelope SLSA uses, so others can check it. *new* `no-install` `offline` `writes-output` `trust`
+- [**in-toto**](adapters/stdlib/in-toto/) — A sealed answer exported as an in-toto Statement, the envelope SLSA uses, so others can check it. *new* `no-install` `offline` `writes-output` `trust`
 - **jeles** (idea) — Your approved answers as Jeles nuggets, with question, answer, sources and who sealed it, and Jeles' own verified nuggets read back as passages. *new* `no-install` `offline` `writes-output` `trust`
-- **licenses** (idea) — The licence of every installed dependency, read from its own metadata on this machine: which are copyleft, and which file says so. *new* `no-install` `offline` `read-only` `trust`
+- [**licenses**](adapters/stdlib/licenses/) — The licence of every installed dependency, read from its own metadata on this machine: which are copyleft, and which file says so. *new* `no-install` `offline` `read-only` `trust`
 - **line-origin** (idea) — Which agent session wrote this line of code: git blame to the commit, then the transcript turn that made it. Needs the git program; GPL, called not linked. *new* `needs-install` `offline` `read-only` `trust`
 - **losc** (idea) — Does a project pass the Local Only Servers Club's test: no accounts, no cloud, and your data your own? *bot* `no-install` `offline` `read-only` `trust`
 - [**merkle**](adapters/stdlib/merkle/) — A Merkle tree over the record, so one row can be proven with a handful of hashes, not the whole file. *new* `no-install` `offline` `writes-output` `trust`
@@ -330,7 +330,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - **opentimestamps** (idea) — The record's newest hash anchored by OpenTimestamps, proof that it existed by a given block. Goes online: the OpenTimestamps calendars, sent only the hash. *new* `no-install` `online` `records` `trust`
 - **paper-key** (idea) — Your key printed as words on paper, to keep somewhere safe, and typed back in to restore it. *new* `no-install` `offline` `writes-output` `trust`
 - **pgp** (idea) — Signs exports and reports with your PGP key, verifiable anywhere. Needs the gpg program and python-gnupg; BSD. *new* `needs-install` `offline` `writes-output` `trust`
-- **prov** (idea) — The record exported as W3C PROV: what came from what, by which step, sealed by whom. *new* `no-install` `offline` `writes-output` `trust`
+- [**prov**](adapters/stdlib/prov/) — The record exported as W3C PROV: what came from what, by which step, sealed by whom. *new* `no-install` `offline` `writes-output` `trust`
 - **provenance** (idea) — Checks a package's Sigstore provenance or PyPI attestation names the repo and commit it claims, before you trust it. Needs sigstore; Apache-2.0. Goes online: the registry and Sigstore's log, to fetch the attestation. *new* `needs-install` `online` `read-only` `trust`
 - **quote-review** (idea) — A review comment that quotes the repo, checked: does the quoted line still say that at the pull request's head? Goes online: the forge, through the workflow's token, to read the review comments. *new* `no-install` `online` `read-only` `trust`
 - **redential** (idea) — The bundle redential-cli's scan makes, written to the record before you submit it, so what left your machine can be checked later. Needs the redential program, run through npx; Apache-2.0. *new* `needs-install` `offline` `records` `trust`
@@ -357,7 +357,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - **forget** (idea) — Stops a file being searched, recorded on the chain, so what was taken out is known and nothing else is touched. *new* `no-install` `offline` `records` `privacy`
 - [**install-scripts**](adapters/stdlib/install-scripts/) — The install scripts the packages in node_modules would run (preinstall, install, postinstall), each cited by file and line. *new* `no-install` `offline` `read-only` `privacy`
 - **kids** (idea) — A box for a child: answers only from the folder you choose for them, and nothing they can approve. *new* `no-install` `offline` `read-only` `privacy`
-- **package-contents** (idea) — What's inside a wheel, sdist, npm tarball or .crate before you install it: every file, and any code it runs on install. *new* `no-install` `offline` `read-only` `privacy`
+- [**package-contents**](adapters/stdlib/package-contents/) — What's inside a wheel, sdist, npm tarball or .crate before you install it: every file, and any code it runs on install. *new* `no-install` `offline` `read-only` `privacy`
 - [**pii-audit**](adapters/stdlib/pii-audit/) — Personal data sitting in your files (ID numbers, health details, card numbers), listed by file and line. *new* `no-install` `offline` `read-only` `privacy`
 - [**privacy**](adapters/stdlib/privacy/) — Hides phone numbers, emails, card, bank and ID numbers, and API keys in what a question prints, and says what it hid. *bot* `no-install` `offline` `records` `privacy`
 - [**risky-code**](adapters/stdlib/risky-code/) — Lines of code matching a known-dangerous pattern (command injection, eval, sql concatenation, broken tls and more), by file and line, as leads to read. *new* `no-install` `offline` `read-only` `security`
@@ -403,7 +403,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - **hook-tiers** (idea) — Edits sorted into tiers by the paths they touch, and the top tier held as a proposal until you seal it, by a rule you can read. *new* `no-install` `offline` `records` `assistant` `hooks`
 - **hooks-elsewhere** (idea) — The prompt hook for Gemini CLI, Codex and opencode, wherever they take hooks, held to Claude Code's answer byte for byte. *box* `no-install` `offline` `records` `assistant` `hooks`
 - [**hosts**](adapters/stdlib/hosts/) — One table of the assistants that take an MCP server, printing the lines that register willow with any of them. *new* `no-install` `offline` `read-only` `assistant`
-- **instruction-files** (idea) — For a folder, which instruction files each coding agent would load (AGENTS.md, CLAUDE.md, GEMINI.md, rules folders), in what order, with each file's size and hash. *box* `no-install` `offline` `read-only` `assistant`
+- [**instruction-files**](adapters/stdlib/instruction-files/) — For a folder, which instruction files each coding agent would load (AGENTS.md, CLAUDE.md, GEMINI.md, rules folders), in what order, with each file's size and hash. *box* `no-install` `offline` `read-only` `assistant`
 - **issue-answer** (idea) — A workflow that drafts an answer to a new issue from the repo's own docs, each line cited, posted only once a maintainer seals it. Goes online: the forge, through the workflow's token, to post an answer once it is sealed. *new* `no-install` `online` `records` `assistant`
 - **ladder** (idea) — Your files first, then sources you trust such as Jeles and Nestor, then a model, stopping at the first that answers, each answer kept for next time. *bot* `no-install` `offline` `records` `assistant`
 - **local-model** (idea) — Suggestions from a model on this machine only, such as Ollama or llama.cpp. Needs a local model server; licence varies by model. Reaches this machine only. *new* `needs-install` `this-machine` `records` `assistant`
@@ -516,7 +516,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 
 ## For maintainers
 
-- **agents-md-check** (idea) — Commands and paths named in AGENTS.md or CLAUDE.md that no longer exist in the repo. *new* `no-install` `offline` `read-only` `maintainers`
+- [**agents-md-check**](adapters/stdlib/agents-md-check/) — Commands and paths named in AGENTS.md or CLAUDE.md that no longer exist in the repo. *new* `no-install` `offline` `read-only` `maintainers`
 - [**bench**](adapters/stdlib/bench/) — How fast the kernel answers on boxes of set sizes, per release, so a slowdown is seen. *new* `no-install` `offline` `read-only` `maintainers`
 - [**bot-venv**](adapters/stdlib/bot-venv/) — Which venv has what CI needs, willow-bot's own by its rule or any you name, and the line that runs CI with its Python. *bot* `no-install` `offline` `read-only` `maintainers`
 - [**ci**](adapters/stdlib/ci/) — This repo's checks as verdict rows on a kernel record, the same every run. Goes online: PyPI, to read each dependency floor's release date. *box* `no-install` `online` `records` `maintainers`

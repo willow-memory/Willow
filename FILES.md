@@ -68,6 +68,10 @@ willow/
 │   │   │   ├── again.py      the questions you keep asking, counted from the record
 │   │   │   ├── test_again.py
 │   │   │   └── README.md
+│   │   ├── agents-md-check/
+│   │   │   ├── agents_md_check.py   the commands and paths AGENTS.md or CLAUDE.md name that the repo no longer has
+│   │   │   ├── test_agents_md_check.py
+│   │   │   └── README.md
 │   │   ├── aider/
 │   │   │   ├── aider.py          the /run line that brings answers into Aider's chat
 │   │   │   ├── test_aider.py
@@ -152,6 +156,10 @@ willow/
 │   │   ├── clauses/
 │   │   │   ├── clauses.py    a long document as one sentence a passage, and a sentence-by-sentence diff
 │   │   │   ├── test_clauses.py
+│   │   │   └── README.md
+│   │   ├── codeowners/
+│   │   │   ├── codeowners.py   who owns a file: the CODEOWNERS rule that matches it, cited by line, on GitHub, GitLab and Forgejo
+│   │   │   ├── test_codeowners.py
 │   │   │   └── README.md
 │   │   ├── codex-cli/
 │   │   │   ├── codex_cli.py      the config.toml lines that register mcp-lite with Codex CLI
@@ -262,6 +270,10 @@ willow/
 │   │   │   ├── ids.py        each file and passage by its Software Heritage ID and one-chunk IPFS CID
 │   │   │   ├── test_ids.py
 │   │   │   └── README.md
+│   │   ├── in-toto/
+│   │   │   ├── in_toto.py   each approved answer as an in-toto Statement, its subject hashed from the file written
+│   │   │   ├── test_in_toto.py
+│   │   │   └── README.md
 │   │   ├── index-cache/
 │   │   │   ├── index_cache.py  a folder's scan index kept between runs, rebuilt only when a file's hash changed
 │   │   │   ├── test_index_cache.py
@@ -269,6 +281,10 @@ willow/
 │   │   ├── install-scripts/
 │   │   │   ├── install_scripts.py  the install scripts node_modules would run (preinstall, install, postinstall), by file and line
 │   │   │   ├── test_install_scripts.py
+│   │   │   └── README.md
+│   │   ├── instruction-files/
+│   │   │   ├── instruction_files.py   which instruction files each coding agent would load for a folder, in order, with size and hash
+│   │   │   ├── test_instruction_files.py
 │   │   │   └── README.md
 │   │   ├── jetbrains/
 │   │   │   ├── jetbrains.py      an external tool for JetBrains IDEs: answers as links to file and line
@@ -281,6 +297,10 @@ willow/
 │   │   ├── lending/
 │   │   │   ├── lending.py    what you lent, and what your files say came back
 │   │   │   ├── test_lending.py
+│   │   │   └── README.md
+│   │   ├── licenses/
+│   │   │   ├── licenses.py   the licence of every installed Python and npm package, and which are copyleft, by file and line
+│   │   │   ├── test_licenses.py
 │   │   │   └── README.md
 │   │   ├── life/
 │   │   │   ├── life.py       Conway's Game of Life as one row; check plays it again
@@ -334,6 +354,10 @@ willow/
 │   │   ├── outdated/
 │   │   │   ├── outdated.py   how old each locked dependency is, and which are yanked, deprecated or unmaintained
 │   │   │   ├── test_outdated.py
+│   │   │   └── README.md
+│   │   ├── package-contents/
+│   │   │   ├── package_contents.py   what a wheel, sdist, npm tarball or crate holds, and the code it runs on install, by file and line
+│   │   │   ├── test_package_contents.py
 │   │   │   └── README.md
 │   │   ├── parallel/
 │   │   │   ├── parallel.py   a reader run over several folders at once, across cores, into one mirror
@@ -398,6 +422,10 @@ willow/
 │   │   ├── privacy/
 │   │   │   ├── privacy.py    personal data and keys withheld from what a question prints
 │   │   │   ├── test_privacy.py
+│   │   │   └── README.md
+│   │   ├── prov/
+│   │   │   ├── prov.py   the record as W3C PROV-JSON: what came from what, by which step, sealed by whom
+│   │   │   ├── test_prov.py
 │   │   │   └── README.md
 │   │   ├── quiz/
 │   │   │   ├── quiz.py       a passage of your own writing with a word missing, cut and scored on the record
@@ -557,6 +585,14 @@ willow/
 │   │   │   ├── windsurf.py       the mcp_config.json lines that register mcp-lite with Windsurf
 │   │   │   ├── test_windsurf.py
 │   │   │   └── README.md
+│   │   ├── words-ar/
+│   │   │   ├── words_ar.py   a question in Arabic, its common words out, then the kernel's bite
+│   │   │   ├── test_words_ar.py
+│   │   │   └── README.md
+│   │   ├── words-cy/
+│   │   │   ├── words_cy.py   a question in Welsh, its common words out, then the kernel's bite
+│   │   │   ├── test_words_cy.py
+│   │   │   └── README.md
 │   │   ├── words-de/
 │   │   │   ├── words_de.py   a question in German, its common words out, then the kernel's bite
 │   │   │   ├── test_words_de.py
@@ -585,9 +621,17 @@ willow/
 │   │   │   ├── words_pt.py   a question in Portuguese, its common words out, then the kernel's bite
 │   │   │   ├── test_words_pt.py
 │   │   │   └── README.md
+│   │   ├── words-ru/
+│   │   │   ├── words_ru.py   a question in Russian, its common words out, then the kernel's bite
+│   │   │   ├── test_words_ru.py
+│   │   │   └── README.md
 │   │   ├── words-sv/
 │   │   │   ├── words_sv.py   Swedish questions without Swedish's common words, then the kernel's own bite
 │   │   │   ├── test_words_sv.py
+│   │   │   └── README.md
+│   │   ├── words-tr/
+│   │   │   ├── words_tr.py   a question in Turkish, its common words out, then the kernel's bite
+│   │   │   ├── test_words_tr.py
 │   │   │   └── README.md
 │   │   ├── xref/
 │   │   │   ├── xref.py       each link and file:line in your files checked, still there
