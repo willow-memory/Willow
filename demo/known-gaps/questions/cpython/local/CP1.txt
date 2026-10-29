@@ -1,0 +1,12 @@
+# writer: local, nestor_draft, engine ollama:willow-lane4-3b:latest, temperature 0.0
+# prompt_sha256 c85d9006bda804749c81106ecbb3e201e2a2246229ee5218d092788435de19b6
+# input_sha256 110347ca612ce3e1dcdead199912b3bc08417b880584160d5b4e2f769508b440
+# source: work/blind/cpython/inputs.md CP1, verbatim; output unedited
+What is the default behavior of Python's setup script when run from an in-tree layout versus an installed file layout, and how does it affect privilege escalation?
+On which platforms does the VPATH fallback for landmark detection exist, and which platforms are unlikely to have a landmark reference outside the install directory?
+What is the legacy installer's default install location for all users, and how does it affect the risk of privilege escalation?
+What is the recommended mitigation on Windows for the VPATH fallback, and how does it differ from the alternative of preemptively creating and restricting access to a Modules directory?
+Why are only 3.13 and 3.14 releases expected to receive updated legacy installers, and what are the earlier fixes as sources?
+What is the pybuilddir.txt landmark file, and how has it been generated on Windows since 3.11, and on other platforms for longer?
+What is the fallback behavior for when a more specific landmark is absent, and how does it affect builds that need to work in-tree?
+What is the expected behavior of future releases of Python regarding the VPATH fallback, and how does it differ from the current behavior?

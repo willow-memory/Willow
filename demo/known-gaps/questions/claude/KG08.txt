@@ -1,0 +1,10 @@
+# writer: claude subagent (sonnet), blind: read only work/blind/inputs.md
+# source: work/blind/inputs.md KG08
+Why does the steward think there are no open pull requests when there are?
+How does the word loop on the command line end up used as a repo filter?
+Why is the open set blanked on every tick?
+What decisions rely on the open pull request list and are now wrong?
+Does the clear of legacy red state run without its real-red safeguard?
+Why does the catch-up pass refill only a few repos per tick?
+How could I tell from the heartbeat that the open set was empty by mistake?
+Should a scanner ever read the process arguments directly?

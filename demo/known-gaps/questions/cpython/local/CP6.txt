@@ -1,0 +1,12 @@
+# writer: local, nestor_draft, engine ollama:willow-lane4-3b:latest, temperature 0.0
+# prompt_sha256 cc8c87d51c2c1daee6c3ca8734c5ec5f8c90408d0362dd246a83493f5dc8395a
+# input_sha256 abc42591d528df80641fe4d1e877b69161561db3260acbb6f00d7b000872a002
+# source: work/blind/cpython/inputs.md CP6, verbatim; output unedited
+What is the worst-case scenario for a stack overflow in a library that handles XML documents, and what does it imply about the library's handling of recursive entity expansion?
+How does the library's handling of XML entity expansion depth become a denial-of-service vulnerability, and what is the attack vector?
+What is the difference between a stack overflow and a memory corruption, and how does this vulnerability fit into either category?
+How does the vulnerability differ from a known XML parsing bug (e.g., the 2014 libxml2 XML external entity denial-of-service) and what does that tell you about the library's design?
+What is the typical environment in which this vulnerability would manifest, and what would be the expected behavior of the system in that environment?
+How does the vulnerability differ from a typical XML parsing error (e.g., an invalid entity reference), and what does that tell you about the library's parsing logic?
+What is the most likely way that a stack overflow in this library would be exploited, and what would be the expected outcome?
+How does the existence of this vulnerability in a widely-used library affect the overall security posture of a system that depends on it, and what steps would be necessary to mitigate the risk?

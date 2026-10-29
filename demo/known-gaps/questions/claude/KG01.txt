@@ -1,0 +1,10 @@
+# writer: claude subagent (sonnet), blind: read only work/blind/inputs.md
+# source: work/blind/inputs.md KG01
+Why does the keyring setting reach every sandboxed task even though nobody asked for it?
+Is there any way in config to stop a specific environment variable from entering a task?
+What happens when a variable name matches an allowed prefix by accident?
+Could a task read the keyring location and use it to get at secrets it should not see?
+Why are there allow lists and conditional strip lists but no unconditional deny list?
+If I delete the line that sets the variable, what else breaks for me as the operator?
+Can a prefix-based allow rule be bypassed or abused by naming a variable to match it?
+Should a deny list or a per-sandbox override decide what the task environment looks like?

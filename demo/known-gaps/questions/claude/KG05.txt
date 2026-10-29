@@ -1,0 +1,10 @@
+# writer: claude subagent (sonnet), blind: read only work/blind/inputs.md
+# source: work/blind/inputs.md KG05
+Can a signed pending record point the apply step at a file the attacker planted?
+Why does the digest check not stop a swapped-in table?
+Who can sign a pending record, and how much do we trust them?
+Can the live syscall table be overwritten with attacker-chosen content through this path?
+Why does startup ignore the record paths but the apply step trusts them?
+Why is there no sealed grant tied to this apply?
+What happens when writing the audit entry fails and the error is swallowed?
+Is this a privilege escalation from the broker to the trust-owner unit?

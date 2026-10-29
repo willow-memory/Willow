@@ -1,0 +1,12 @@
+# writer: local, nestor_draft, engine ollama:willow-lane4-3b:latest, temperature 0.0
+# prompt_sha256 c658ac7a7b1687edefc668a6bf48003308c282d1fe3e25fb4b3513c005a664e0
+# input_sha256 37bb3de49aa1431c52c47a5c89dde4671df5df2311f91e456760443ec71696b1
+# source: work/blind/cpython/inputs.md CP3, verbatim; output unedited
+What is the worst-case XML content model that an Expat parser with a registered ElementDeclHandler can be forced to parse?
+What is the stack overflow's exact cause, and what is the parser's role in it?
+What is the registered ElementDeclHandler's purpose, and how does it fail in this scenario?
+What is the parser's default behavior when it encounters a deeply nested content model?
+What is the parser's maximum recursion depth, and how does it relate to the stack overflow?
+What is the parser's policy for handling unregistered ElementDeclHandlers, and how does this scenario exploit it?
+What is the parser's policy for handling unresolvable ElementDeclHandlers, and how does this scenario exploit it?
+What is the parser's policy for handling unresolvable ElementDeclHandlers when the parser is in a deeply nested content model, and how does this scenario exploit it?

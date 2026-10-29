@@ -1,0 +1,10 @@
+# writer: claude subagent (sonnet), blind: read only work/blind/inputs.md
+# source: work/blind/inputs.md KG09
+Why did one odd filename make every later command refuse the box?
+Which unusual characters in a name break reading the record back?
+Why does a line splitter cut a record at these characters?
+Can an outsider choose a name that permanently locks the box?
+Is the damage recoverable or permanent once the record is garbled?
+Why keep names raw instead of escaping them when saving?
+Does this corrupt the stored record or only the way it is read?
+Could the same trick be used to hide or forge entries in the log?

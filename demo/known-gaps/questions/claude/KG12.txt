@@ -1,0 +1,10 @@
+# writer: claude subagent (sonnet), blind: read only work/blind/inputs.md
+# source: work/blind/inputs.md KG12
+Why does the screen only say the model escalated and not give the reason?
+Where does the model's reason for escalating go?
+Is the escalate reason lost or is it only not displayed?
+What kinds of secret-looking strings does the scrubber hold back?
+Could a key slip through if it is split into pieces or glued into a word?
+Does the scrubber miss base64 shorter than 32 characters?
+Are fields named key, seed, secret or token always withheld, or only with a colon or equals sign?
+How do I know the scrubber is not hiding a legitimate record hash?

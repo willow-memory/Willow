@@ -1,0 +1,298 @@
+{
+ "about": "pins.json: each gap's vulnerable and fixed commits and trees, and the SHA-256 of the fix's diff. Made by resolve.py from gaps.json.",
+ "units": {
+  "KG01": {
+   "gap": "KG01",
+   "repo": "kartikeya",
+   "vulnerable": {
+    "commit": "b1dcaa7cbdaf9c287032de9add4587163f6c7a39",
+    "tree": "7348775722c5e1578b466a4800e3084acb090b46"
+   },
+   "fixed": {
+    "commit": "78b9d823ab99d4079e96ceef8462cde69061c8c2",
+    "tree": "40d4b8bdf2e967f2909301f2dcf1a3b01bfc8277"
+   },
+   "files_scored": null,
+   "diff_files": [
+    "src/kartikeya/data/kart-sandbox.json",
+    "src/kartikeya/sandbox.py",
+    "tests/test_env_deny.py"
+   ],
+   "diff_sha256": "b122ca9e11a6e99d55c7da94845dd440293edcd4b524e3c1c07114033f3dd45c"
+  },
+  "KG02": {
+   "gap": "KG02",
+   "repo": "kartikeya",
+   "vulnerable": {
+    "commit": "bf50dcaeae82da7245ca3a2aa74f273b0098c426",
+    "tree": "39d324d3c5b27e15b469dd42c355d8ec1c925bed"
+   },
+   "fixed": {
+    "commit": "1b62a693da4d76b3014a7098955d6ff686f43d0e",
+    "tree": "7159d1885234e9467f6c79a62fba88bada2a1a63"
+   },
+   "files_scored": null,
+   "diff_files": [
+    "src/kartikeya/sandbox.py",
+    "src/kartikeya/task_scan.py",
+    "tests/test_tree_rewrite.py"
+   ],
+   "diff_sha256": "b44e2af809ff5a39014e6b71dca6df91400e948c8bc706d7326b705179aff6cc"
+  },
+  "KG03-kartikeya": {
+   "gap": "KG03",
+   "repo": "kartikeya",
+   "vulnerable": {
+    "commit": "fd2410f9435043d8fcd7869d22c7e357960577b8",
+    "tree": "38f00e1771836a155e53bc96276383e5246cd415"
+   },
+   "fixed": {
+    "commit": "91ae4a0c21d8e7604a77d97596280cd17fe02184",
+    "tree": "b3d89a076e0355c5469d3d8cb29f89097fefec8f"
+   },
+   "files_scored": null,
+   "diff_files": [
+    "src/kartikeya/data/kart-sandbox.json",
+    "src/kartikeya/execute.py",
+    "src/kartikeya/sandbox.py",
+    "tests/test_env_deny.py",
+    "tests/test_lane_timeout.py",
+    "tests/test_sandbox.py",
+    "tests/test_worker.py"
+   ],
+   "diff_sha256": "27111d22b5feb5d64a91cdd526885c4e7916e64f2feabc1ddf7435d43989b093"
+  },
+  "KG03-willow-mcp": {
+   "gap": "KG03",
+   "repo": "willow-mcp",
+   "vulnerable": {
+    "commit": "0db97b39fd37e16bb5fd6481c8d093b14cd60ca3",
+    "tree": "ed1371c819ca32fb3ac2763cc338db3c76f7cf79"
+   },
+   "fixed": {
+    "commit": "f217c04b7c8f35c79ba44558185b9c26890d958f",
+    "tree": "77b3a649e28feb76d6de1fda3e6a4d81101ed9e7"
+   },
+   "files_scored": null,
+   "diff_files": [
+    "src/willow_mcp/heartbeat.py",
+    "src/willow_mcp/worker.py",
+    "tests/conftest.py",
+    "tests/test_heartbeat.py",
+    "tests/test_server.py"
+   ],
+   "diff_sha256": "764f1ba37ed53215e4fcc3e299721c9d1a9268d77a3643c68a513255ea2d7983"
+  },
+  "KG04": {
+   "gap": "KG04",
+   "repo": "willow-mcp",
+   "vulnerable": {
+    "commit": "4ea81b12b7945769fb1ae2fb49e6a5d0003d6a17",
+    "tree": "d64c89eb692499e99c015230636ea0ad7af93cd9"
+   },
+   "fixed": {
+    "commit": "6cecc02fc64799e893d78b4f1b1371835fa29005",
+    "tree": "38c37bf480b2119ae181636ee5ee02767f24be61"
+   },
+   "files_scored": null,
+   "diff_files": [
+    "docs/OPERATOR-ONBOARD.md",
+    "src/willow_mcp/envelope_authoring.py"
+   ],
+   "diff_sha256": "6d4284ebfdaf381ba68605d7d5d6fe55e082ff26a9a1622769aed4d12699cda0"
+  },
+  "KG05": {
+   "gap": "KG05",
+   "repo": "willow-mcp",
+   "vulnerable": {
+    "commit": "0542db0737e766207988382cd9240d58f5ffb3e4",
+    "tree": "f8997513089d2225381acc9214271a391989143e"
+   },
+   "fixed": {
+    "commit": "1dbe8f2233b68917eba2cdc666502e6c3cfcba38",
+    "tree": "8b353974501ca01e6124246ce63065a4d65f5d2f"
+   },
+   "files_scored": [
+    "src/willow_mcp/trust_owner_verbs.py"
+   ],
+   "diff_files": [
+    "src/willow_mcp/ci_lint_pin.py",
+    "src/willow_mcp/handoff.py",
+    "src/willow_mcp/trust_owner_verbs.py",
+    "tests/test_ci_lint_pin.py",
+    "tests/test_syscall_sync_trust_owner.py"
+   ],
+   "diff_sha256": "ba405d7d3fd57a7ded3ff033b5a5747f46d903c022ddcba98524729f478ba575"
+  },
+  "KG06": {
+   "gap": "KG06",
+   "repo": "willow-mcp",
+   "vulnerable": {
+    "commit": "0542db0737e766207988382cd9240d58f5ffb3e4",
+    "tree": "f8997513089d2225381acc9214271a391989143e"
+   },
+   "fixed": {
+    "commit": "1dbe8f2233b68917eba2cdc666502e6c3cfcba38",
+    "tree": "8b353974501ca01e6124246ce63065a4d65f5d2f"
+   },
+   "files_scored": [
+    "src/willow_mcp/ci_lint_pin.py"
+   ],
+   "diff_files": [
+    "src/willow_mcp/ci_lint_pin.py",
+    "src/willow_mcp/handoff.py",
+    "src/willow_mcp/trust_owner_verbs.py",
+    "tests/test_ci_lint_pin.py",
+    "tests/test_syscall_sync_trust_owner.py"
+   ],
+   "diff_sha256": "4b61e25e23d53dc2f115402c01b44b44453dd016f0f0ff748ac267f5a4b19668"
+  },
+  "KG07-willow-mcp": {
+   "gap": "KG07",
+   "repo": "willow-mcp",
+   "vulnerable": {
+    "commit": "f452362e215a591bddfd234b6bb8c716b9e375d7",
+    "tree": "3941a410dd3cd2fd0104fd0d6393c1239e6194dc"
+   },
+   "fixed": {
+    "commit": "57b2cc1151528e635285c1c766e0a81e545af0e6",
+    "tree": "6906b9332974d97d346bde43047f948408137ac8"
+   },
+   "files_scored": null,
+   "diff_files": [
+    "docs/design/consent-toggles.md",
+    "hooks/pre_tool_use.py",
+    "skills/kart-tasks.md",
+    "skills/orchestrator-routing.md",
+    "src/willow_mcp/bundle/hooks/pre_tool_use.py",
+    "src/willow_mcp/bundle/skills/kart-tasks.md",
+    "src/willow_mcp/bundle/skills/orchestrator-routing.md",
+    "src/willow_mcp/server.py",
+    "tests/test_consent_toggles.py",
+    "tests/test_server.py"
+   ],
+   "diff_sha256": "c92fb02c4361452e21fec1c3090536d156caafe3ea1a08adf89c47ac1671153d"
+  },
+  "KG07-kartikeya": {
+   "gap": "KG07",
+   "repo": "kartikeya",
+   "vulnerable": {
+    "commit": "e9c7d2c9d0db80c9acb8080d76b42456d4ca8880",
+    "tree": "a84c759a14450597380433d4e95532ca7efd24b5"
+   },
+   "fixed": {
+    "commit": "645f01b0d44b13939c105f4071b714ea7423704c",
+    "tree": "2d2e28c392dba5b0de90e21ff7663cfda7bad536"
+   },
+   "files_scored": null,
+   "diff_files": [
+    "src/kartikeya/execute.py",
+    "src/kartikeya/sandbox.py",
+    "tests/test_sandbox.py",
+    "tests/test_worker.py"
+   ],
+   "diff_sha256": "74336611e112fa1e687626a9c4ee94644c4dd5786217c808540b9b6e46e0bddc"
+  },
+  "KG08": {
+   "gap": "KG08",
+   "repo": "willow-bot",
+   "vulnerable": {
+    "commit": "22e51f8d7cf689c9a6bba86011167bfdf7dd5092",
+    "tree": "c076e62ee389a471b11a6d7ad9b0c01b871439cd"
+   },
+   "fixed": {
+    "commit": "19da483fe06440ce6a2240c46e9c0fb7e15dc9e1",
+    "tree": "b93ece714107138db92a7e54a1e293083b13dbeb"
+   },
+   "files_scored": null,
+   "diff_files": [
+    "CHANGELOG.md",
+    "tests/steward/test_ci.py",
+    "willow_bot/steward/tick.py"
+   ],
+   "diff_sha256": "a87f12632dfc120513f4bd7dd9a43987f95c02ef8fec9677a4b0b226bd6dad27"
+  },
+  "KG09": {
+   "gap": "KG09",
+   "repo": "willow-bot",
+   "vulnerable": {
+    "commit": "cc1c8b7f944aa359adc12e9e4b1086f3556226c3",
+    "tree": "0b3188cc0197c14901c21910f831ba3c8d04fe4e"
+   },
+   "fixed": {
+    "commit": "a837823d63e2ad811817905a80e86b30d33c9a9b",
+    "tree": "c2a453f88832ffc1029d6134cf1514fa0261e44f"
+   },
+   "files_scored": null,
+   "diff_files": [
+    "one-script/kernel.py",
+    "one-script/onescript/tests/test_kernel.py"
+   ],
+   "diff_sha256": "ab3421e3aebb470eb88c39c1cd4f484ea8aa13fda98e07b76ead2b54a4826478"
+  },
+  "KG10": {
+   "gap": "KG10",
+   "repo": "willow-bot",
+   "vulnerable": {
+    "commit": "0f36f94b372589c50cb7d4f54429f17c9be7c07e",
+    "tree": "61ddb2de67317a9a4d57ce971153a80849d0a2b7"
+   },
+   "fixed": {
+    "commit": "55a758a2196c718740094590b50f4aee933ce37f",
+    "tree": "59382d98fe6de1223d0ad23908ec8fe641ab5892"
+   },
+   "files_scored": null,
+   "diff_files": [
+    "one-script/onescript/merge_check.py",
+    "one-script/onescript/tests/test_merge_check.py"
+   ],
+   "diff_sha256": "099c00ca844f4a1fc92091cba3249f712ebf37aa2119d05bbb7d43bf3d90bd6c"
+  },
+  "KG11": {
+   "gap": "KG11",
+   "repo": "willow-bot",
+   "vulnerable": {
+    "commit": "f767d439a094e726359ebb3feb4f1092b491f514",
+    "tree": "0287df1ee30db3ed650386f435608af022a77e88"
+   },
+   "fixed": {
+    "commit": "421421e36e7f1d2adc1cb608a27aba0fb748160d",
+    "tree": "72d18d1af6b9c4332b84e3b806aa8baab11df624"
+   },
+   "files_scored": null,
+   "diff_files": [
+    "one-script/onescript/proposals.py",
+    "one-script/onescript/record.py",
+    "one-script/onescript/reverse.py",
+    "one-script/onescript/tests/test_record_lock.py"
+   ],
+   "diff_sha256": "6bc6256caf7c0270481e563a7bbaf6402986cfed686fc1feb021ef5b0fa79ac0"
+  },
+  "KG12": {
+   "gap": "KG12",
+   "repo": "willows-grove",
+   "vulnerable": {
+    "commit": "426bfa4ab286bf220fa8318760338ac8b844faff",
+    "tree": "1c85f7344b8d7bbd6f161a87b5fe23c6dfb6d5fb"
+   },
+   "fixed": {
+    "commit": "d6b168a38ab5628bf130853fe0ae2586da26a74d",
+    "tree": "eec12f5cc94ebc3c4a48f5f4d150623cc6cdd5fa"
+   },
+   "files_scored": [
+    "grove/seat_record.py",
+    "grove/table_boxes.py"
+   ],
+   "diff_files": [
+    "grove/seat_boxes.py",
+    "grove/seat_cli.py",
+    "grove/seat_record.py",
+    "grove/seat_say.py",
+    "grove/table_boxes.py",
+    "tests/test_seat_table.py",
+    "tests/test_table_boxes.py"
+   ],
+   "diff_sha256": "5c6f83993ade29fd4c975748427d55f87e9a25ca9dd5f0dfb33ede62b31ddf2f"
+  }
+ }
+}

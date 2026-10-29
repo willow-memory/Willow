@@ -1,0 +1,10 @@
+# writer: claude subagent (sonnet), blind: read only work/blind/cpython/inputs.md
+# source: work/blind/cpython/inputs.md CP3
+Can a small XML document crash my whole Python process just by being parsed?
+How deep does the nesting in a document type definition have to be to trigger the overflow?
+Does this only matter when an element declaration callback is registered, or is every parser affected?
+Is this just a denial of service, or could a C stack overflow give an attacker memory corruption?
+Do I have to accept an inline document type definition from untrusted input for this to be reachable?
+Can I catch this as an exception, or does the interpreter die outright?
+Would disabling inline definitions or limiting input size protect a service that parses uploaded XML?
+Which applications are realistically exposed, such as those parsing feeds, SOAP messages or office files?

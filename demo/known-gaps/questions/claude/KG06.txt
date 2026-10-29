@@ -1,0 +1,10 @@
+# writer: claude subagent (sonnet), blind: read only work/blind/inputs.md
+# source: work/blind/inputs.md KG06
+Can the agent being judged choose which repo's lint pin is used to judge it?
+What stops a planted directory with no pin from making any lint version pass?
+Why is a root written by the seat consulted before the project named in the dispatch?
+Why does an unresolvable project fall back silently to a default root?
+How would a reviewer notice that a lint claim was accepted against the wrong repo?
+Does accepting any ancestor with a project file make the check meaningless?
+Why should an unresolvable project be reported as unreachable instead of defaulting?
+Is this a case of the judged party grading its own work?

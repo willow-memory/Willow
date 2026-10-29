@@ -1,0 +1,12 @@
+# writer: local, nestor_draft, engine ollama:willow-lane4-3b:latest, temperature 0.0
+# prompt_sha256 bc7d6a0bb39ff3b7ffe9c4c14cbbda07e23b03e5fc9caae8afaeae149eadff3c
+# input_sha256 39fa9fe046c5c391fa302320a9f5163948271e386535fc14ddd3c9dca78f46cf
+# source: work/blind/inputs.md KG09, verbatim; output unedited
+What is the canonical format of a file name in this system, and what encoding does it support?
+What happens to a file name containing U+2028, U+2029, or U+0085 when it is read back into a string?
+What is the behavior of str.splitlines() on a string containing a U+2028, U+2029, or U+0085 character?
+What is the effect of str.splitlines() on a file name that was cut by it when the record was read back?
+What is the canonical format of a file name in this system, and what encoding does it support?
+What is the behavior of str.splitlines() on a string containing a U+2028, U+2029, or U+0085 character?
+What is the effect of str.splitlines() on a file name that was cut by it when the record was read back?
+What is the canonical format of a file name in this system, and what encoding does it support?

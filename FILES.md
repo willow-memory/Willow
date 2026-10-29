@@ -945,6 +945,69 @@ willow/
 │   │       ├── reword.txt     the author's eight, rephrased five ways each, blind
 │   │       ├── advisory-words.txt  a words list of acronyms the advisories expand
 │   │       └── null.txt      fifty questions with nothing to do with the bug
+│   ├── known-gaps/           the fleet's own twelve known security gaps, asked of the code their fixes changed
+│   │   ├── README.md         the claim, the threats, what is frozen, how to reproduce, the dry run
+│   │   ├── FROZEN.json       freeze 1: the SHA-256 of every frozen file and tool; a change is a new freeze
+│   │   ├── gaps.json         the twelve gaps, redacted: source, class, fix, and how strong the source is
+│   │   ├── pins.json         each fix's vulnerable and fixed commits and trees, and its diff's SHA-256
+│   │   ├── resolve.py        gaps.json to pins.json, from the fleet's own repositories
+│   │   ├── trees.py          writes each side's tree as git stores it, and checks it without git
+│   │   ├── ask.py            asks a gap's questions of its vulnerable tree: kernel, BM25 and a grep baseline
+│   │   ├── score.py          the hit rule: php2shell's rule 2, with tests, changelogs and version files left out
+│   │   ├── origin.py         which commit wrote each hit line, when, and what its message cites
+│   │   ├── run.py            scores a phase's answers and writes its pass rules as kernel verdict rows
+│   │   ├── spread.py         phase 5: the frozen questions asked of another repository, the passages several reach kept as private candidates
+│   │   ├── outside.py        phase 6: the same method on seven cpython CVE fixes, the outside control
+│   │   ├── cpython_sources.json  those seven units: CVE, OSV address, fetch time, advisory text hashes, commits, trees, weight; never the text
+│   │   ├── flag.py           the flagged-line rule for question lines, and how the questions' folders are read
+│   │   ├── questions/
+│   │   │   ├── inputs.md     what the blind writers were given: the redacted gap text, and nothing else
+│   │   │   ├── local/
+│   │   │   │   ├── KG01.txt  eight questions a local model wrote, blind, for KG01
+│   │   │   │   ├── KG02.txt  the same for KG02
+│   │   │   │   ├── KG03.txt  the same for KG03
+│   │   │   │   ├── KG04.txt  the same for KG04
+│   │   │   │   ├── KG05.txt  the same for KG05
+│   │   │   │   ├── KG06.txt  the same for KG06
+│   │   │   │   ├── KG07.txt  the same for KG07
+│   │   │   │   ├── KG08.txt  the same for KG08
+│   │   │   │   ├── KG09.txt  the same for KG09
+│   │   │   │   ├── KG10.txt  the same for KG10
+│   │   │   │   ├── KG11.txt  the same for KG11
+│   │   │   │   └── KG12.txt  the same for KG12
+│   │   │   ├── claude/
+│   │   │   │   ├── KG01.txt  eight questions a Claude subagent wrote, blind, for KG01
+│   │   │   │   ├── KG02.txt  the same for KG02
+│   │   │   │   ├── KG03.txt  the same for KG03
+│   │   │   │   ├── KG04.txt  the same for KG04
+│   │   │   │   ├── KG05.txt  the same for KG05
+│   │   │   │   ├── KG06.txt  the same for KG06
+│   │   │   │   ├── KG07.txt  the same for KG07
+│   │   │   │   ├── KG08.txt  the same for KG08
+│   │   │   │   ├── KG09.txt  the same for KG09
+│   │   │   │   ├── KG10.txt  the same for KG10
+│   │   │   │   ├── KG11.txt  the same for KG11
+│   │   │   │   └── KG12.txt  the same for KG12
+│   │   │   ├── cpython/
+│   │   │   │   ├── local/
+│   │   │   │   │   ├── CP1.txt  eight questions a local model wrote, blind, for CP1
+│   │   │   │   │   ├── CP2.txt  the same for CP2
+│   │   │   │   │   ├── CP3.txt  the same for CP3
+│   │   │   │   │   ├── CP4.txt  the same for CP4
+│   │   │   │   │   ├── CP5.txt  the same for CP5
+│   │   │   │   │   ├── CP6.txt  the same for CP6
+│   │   │   │   │   └── CP7.txt  the same for CP7
+│   │   │   │   └── claude/
+│   │   │   │       ├── CP1.txt  eight questions a Claude subagent wrote, blind, for CP1
+│   │   │   │       ├── CP2.txt  the same for CP2
+│   │   │   │       ├── CP3.txt  the same for CP3
+│   │   │   │       ├── CP4.txt  the same for CP4
+│   │   │   │       ├── CP5.txt  the same for CP5
+│   │   │   │       ├── CP6.txt  the same for CP6
+│   │   │   │       └── CP7.txt  the same for CP7
+│   │   │   └── null/
+│   │   │       └── null.txt  fifty questions with nothing to do with security, written with no input
+│   │   └── test_known_gaps.py  holds the frozen files to their hashes, and the tools to their word
 │   ├── craft-assembly/       the Craft apps taken apart into pieces, rebuilt exactly, and five assembled into one
 │   │   ├── README.md         the claim, the threats, what is frozen, what was seen before each freeze, results
 │   │   ├── REPORT.md         the full report, written by report.py from the files here, every number counted

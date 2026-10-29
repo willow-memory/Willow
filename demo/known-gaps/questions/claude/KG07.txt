@@ -1,0 +1,10 @@
+# writer: claude subagent (sonnet), blind: read only work/blind/inputs.md
+# source: work/blind/inputs.md KG07
+Does allow_localhost really give a task full network access with no lease?
+Why was loopback treated as not being egress?
+How can a task reach the internet through a localhost path?
+If credentials are stripped, can data still be exfiltrated?
+Who needs to hold which permissions for this bypass to work?
+Why does this skip both the lease and the envelope check?
+Is the earlier ruling that exempted localhost still valid?
+How would I detect a task sending data out this way?

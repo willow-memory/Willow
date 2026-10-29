@@ -1,0 +1,10 @@
+# writer: claude subagent (sonnet), blind: read only work/blind/inputs.md
+# source: work/blind/inputs.md KG03
+Why do I see dead workers in fleet health when the workers are fine?
+Can a sandboxed task write into the live heartbeat directory?
+Why is the heartbeat directory mounted writable if only the host writes to it?
+How did a test run in the sandbox end up looking like a real worker?
+Is the sandbox-detection check a real boundary or just a hint?
+Stopping the heartbeat location from reaching tasks as a variable, is that enough to protect it?
+Could a task forge heartbeats to hide a real worker failure?
+What would break if the directory became read-only inside the sandbox?

@@ -1,0 +1,10 @@
+# writer: claude subagent (sonnet), blind: read only work/blind/cpython/inputs.md
+# source: work/blind/cpython/inputs.md CP5
+How can a tiny XML document make the parser allocate a huge amount of memory?
+Is this the classic billion-laughs style expansion, or a different trick?
+Will my service run out of memory or just slow down when it parses a hostile document?
+Which versions of the XML parsing library are affected, and how do I find out which one my software bundles?
+Do I need to be parsing untrusted input for this to matter?
+Can I cap the memory a single parse is allowed to use as a workaround?
+Does the problem live in the library itself or in how the language wraps it?
+How large is the ratio between the input size and the memory consumed in a worst case?

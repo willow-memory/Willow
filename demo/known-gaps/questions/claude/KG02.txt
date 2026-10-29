@@ -1,0 +1,10 @@
+# writer: claude subagent (sonnet), blind: read only work/blind/inputs.md
+# source: work/blind/inputs.md KG02
+Why was my git checkout refused inside a repo that is mounted read-write?
+Why does the refusal message point me at the wrong directory for this repo?
+Does the tree-rewrite guard look at the repo I am in or at the sandbox policy as a whole?
+Which paths are actually read-only, and does the guard know the difference?
+Is a false refusal here a safety problem or only an annoyance?
+Could the guard be tricked by a leading directory change in the command?
+Why is stash push allowed but stash pop and checkout of a file blocked?
+How does the gate work out the working directory of a command fragment before deciding?

@@ -1,0 +1,12 @@
+# writer: local, nestor_draft, engine ollama:willow-lane4-3b:latest, temperature 0.0
+# prompt_sha256 bcc04bdb6318470a3248cde95cf7476b0368d6a3b56887a5ecbb27bbebb84b05
+# input_sha256 1f8cc0c0b5eec89589dd132608c087390bad26322702e3187fd6ee366ed533aa
+# source: work/blind/inputs.md KG12, verbatim; output unedited
+Does the seat's handoff ever carry evidence for a model escalation, or is the escalation itself the only finding?
+What happens to a model's ESCALATE reason when it reaches the seat's card or screen — is it ever written down?
+Does the seat's scrub field ever hold a record hash, a served id, or any evidence that the field was ever written?
+What happens to a 40-hex field that is not a commit/sha/green on-head value, and is it ever written down?
+Can a 0x hex field be written down, and if so, what does it mean?
+Are there any fields that are written down but are not record hashes, and if so, what do they represent?
+Does the seat's scrub field ever hold a base64 run of 32+ characters with digits, and if so, what does it mean?
+Can a field that is glued into a word or pieces that add up to a key ever be written down, and if so, what does it represent?
