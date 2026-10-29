@@ -127,6 +127,12 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         b"0 @I2@ INDI\n1 NAME Mary /Brown/\n1 FAMS @F2@\n0 @I4@ INDI\n1 NAME Arthur /Smith/\n0 @I5@ INDI\n1 NAME Ann /Jones/\n"
         b"0 @F1@ FAM\n1 HUSB @I4@\n1 WIFE @I5@\n1 CHIL @I1@\n0 @F2@ FAM\n1 HUSB @I1@\n1 WIFE @I2@\n1 MARR\n2 DATE 1875\n2 PLAC Hull\n0 TRLR\n"
     )}),
+    "mediawiki": ("mediawiki.py", {"dump.xml": (
+        b'<mediawiki xmlns="http://www.mediawiki.org/xml/export-0.10/" version="0.10"><siteinfo><sitename>Garden</sitename></siteinfo>'
+        b'<page><title>Tomatoes</title><ns>0</ns><id>1</id><revision><timestamp>2024-01-01T10:00:00Z</timestamp><text xml:space="preserve">old text</text></revision>'
+        b'<revision><timestamp>2024-03-03T10:00:00Z</timestamp><text xml:space="preserve">\'\'\'Tomatoes\'\'\' want [[sun|six hours of sun]].{{cite|x}}&lt;ref&gt;n&lt;/ref&gt;\n== Growing ==\n* plant in [[Bed 2]]\n[[Category:Veg]]</text></revision></page>'
+        b'<page><title>Maters</title><ns>0</ns><id>2</id><revision><timestamp>2024-02-02T00:00:00Z</timestamp><text>#REDIRECT [[Tomatoes]]</text></revision></page></mediawiki>'
+    )}),
     "notes": ("notes.py", {"garden.md": b"Tomatoes want [[sun]].\n"}),
     "jrnl": ("jrnl.py", {"journal.txt": (
         "[2024-03-03 10:15] Fixed the gate.\nThe hinge wanted oil, not force.\n\n"

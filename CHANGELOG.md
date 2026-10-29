@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `mediawiki`: A MediaWiki XML dump: each page's latest revision as plain
+  text with its title and the day it changed, the wiki markup taken off; a
+  file that declares entities is not read.
 - `family-tree`: Family trees from GEDCOM files: each person as a paragraph
   that names its own record, with births, deaths, parents, spouses and notes
   as the file writes them.

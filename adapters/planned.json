@@ -1329,16 +1329,6 @@
   "tags": "needs-install, online, writes-output, search"
  },
  {
-  "name": "mediawiki",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "A MediaWiki XML dump: each page's latest text, with its title and when it changed.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "medical-records",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
