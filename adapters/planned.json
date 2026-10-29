@@ -322,16 +322,6 @@
   "tags": "needs-install, online, records, assistant"
  },
  {
-  "name": "cloudevents",
-  "kind": "stdlib",
-  "section": "Ways to use it",
-  "line": "Record rows in the CloudEvents envelope, for any tool that already reads them.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, interface"
- },
- {
   "name": "code-comments",
   "kind": "stdlib",
   "section": "Reading more kinds of files",

@@ -165,6 +165,10 @@ willow/
 │   │   │   ├── clauses.py    a long document as one sentence a passage, and a sentence-by-sentence diff
 │   │   │   ├── test_clauses.py
 │   │   │   └── README.md
+│   │   ├── cloudevents/
+│   │   │   ├── cloudevents.py   the record's rows as CloudEvents 1.0 JSON events, one a line, the id each row's own hash
+│   │   │   ├── test_cloudevents.py
+│   │   │   └── README.md
 │   │   ├── codeowners/
 │   │   │   ├── codeowners.py   who owns a file: the CODEOWNERS rule that matches it, cited by line, on GitHub, GitLab and Forgejo
 │   │   │   ├── test_codeowners.py

@@ -10,6 +10,11 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `cloudevents`: the record's rows as CloudEvents 1.0 JSON events, one a
+  line: the id is the row's own hash, the source names the box by its first
+  row, the type is the row's kind, and the data is the row, so the chain
+  still checks. `--from-row` and `--kinds` narrow it. The record holds no
+  question's words, and neither do the events.
 - `annotations`: approved answers as W3C Web Annotations in an annotation
   page: the answer as the body, and a target for each cited passage with its
   file, its lines as an RFC 5147 fragment and its words as a quote, so an
