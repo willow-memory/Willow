@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `subscriptions`: What you pay every month or year, found by the rhythm of
+  the payments in your statements and emails (a month apart three times, or a
+  year apart twice), with the latest amount and when the next is about due.
 - `pile-poetry`: Verse walked along the pairs of words your own files put
   side by side more than once, drawn by the seeded stream so a poem can be
   made again; nothing in it your files do not have.

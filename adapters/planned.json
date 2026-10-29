@@ -2401,16 +2401,6 @@
   "tags": "no-install, offline, records, privacy"
  },
  {
-  "name": "subscriptions",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "What you pay for every month, found in bank statements and emails, and when each renews.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
- },
- {
   "name": "support-plan",
   "kind": "stdlib",
   "section": "Keeping track",

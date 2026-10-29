@@ -689,6 +689,10 @@ willow/
 │   │   │   ├── starter.py    copies it where yours will live, readable only by you
 │   │   │   ├── test_starter_words.py
 │   │   │   └── README.md
+│   │   ├── subscriptions/
+│   │   │   ├── subscriptions.py   payments that come round monthly or yearly, and when next
+│   │   │   ├── test_subscriptions.py
+│   │   │   └── README.md
 │   │   ├── subtitles/
 │   │   │   ├── subtitles.py  .srt and .vtt transcripts mirrored, each cue a line cited by its start
 │   │   │   ├── test_subtitles.py
