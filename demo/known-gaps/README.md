@@ -6,10 +6,10 @@ PHP advisory and checked whether the code a fix changed came back. Here the
 "advisory" is the gap as its finder wrote it (a gap record, an audit finding)
 or, for four of them, as the fixer wrote it (a commit message).
 
-**This page is the state at the first freeze.** It holds the claim, the
-threats, what is frozen, the two rules that will judge it and the dry run.
-There are no results yet: no real question has been written, and no scored
-phase has run. They come in later bites, each frozen before it runs.
+**This page is the state after the first real runs.** It holds the claim, the
+threats, what is frozen, the rules that judge it, the dry run, and, at the end,
+the results of phases 1, 2, 3, 4 and 7 on the frozen questions. Phase 1 failed
+its gates; phase 2 passed all of its. Phases 5 and 6 have not run.
 
 ## The claim
 
@@ -19,9 +19,11 @@ before the fix, finds the code the fix changed more often than chance: in the
 changed passages it ranks the hit early, and asked of the whole old tree it
 reaches the fixed file.
 
-Nothing in this folder yet tests that. What it holds is the apparatus: the
-gaps, the fixes pinned by hash, and the scripts that fetch, ask, score and
-record, checked end to end on questions that mean nothing (the dry run below).
+The Results section at the end tests that: the second half held (asked of the
+whole old tree, the questions reach the fix's lines far above chance) and the
+first half did not (ranking inside the changed passages is no better than a
+random order). The dry run below shows the apparatus on questions that mean
+nothing, before any real question was asked.
 
 ## The gaps
 
@@ -390,8 +392,282 @@ tasks ran at once on one machine, so each is slower than it would be alone):
   expected, and the test that it fails on hits above chance runs on a fixture.
   That is not yet a test of the null rule on real questions.
 
-## What the first real run still owes
+## Results
 
-Questions (a later freeze), the real runs of phases 1 and 2, phases 3, 4 and 7,
-the spread and the outside control. None is run, and nothing here claims a
-result.
+Run on Kart on 2026-10-28 at freeze 2 (d8d741a): the working tree clean, the
+suite green (41 passed), every tree matching its pin. Every question is the
+frozen set, unedited: eight a gap from each writer (local, Claude), 96 each,
+and fifty null questions. Phase 1 asked each gap's 16 questions of its
+changed passages (a pair is a question and a unit: 160 strong, 64 weaker);
+phase 2 asked them of the whole old tree, and the fifty nulls of every unit
+(700 null pairs a ranker). Nothing was re-asked or reworded, and every output
+sits in a private folder; this page quotes the numbers.
+
+The verdict rows are in a kernel record made for the run, and
+`kernel.py verify` of it says: `the chain holds: 6 rows, 0 sealed`. Its 5
+verdict rows are phase 1's two rules and phase 2's three, each stamped with the
+SHA-256 of the answers file and of the tools below.
+
+| What | SHA-256 |
+|---|---|
+| phase 1 answers (14 units, joined) | 2c244eea248acffb654e2ea9bef664f859f315cd2cf0762bdd2308d6ade70206 |
+| phase 2 answers | ffe482eaef1aacc438c311329045fe74eace7b6704c6cbba26b66f1106aaf02a |
+| phase 1 scored rows | aa728ee273b08f162c39af68729ced05faf32849411faa41d1545b8e79f25318 |
+| phase 2 scored rows | 5bdcb4d0fb236162d8c59d65efd2cb08460d9f03646a8262136fe5fe08231f9f |
+| phase 1 result | 47f1886dcdb9f2c038fc3829f681e12e55a3dd8deed0938cbe2237e8d4f18f6e |
+| phase 2 result | 171ff256fc436008d41bd826bc586aa41ba3800e6ecf6d1d99ad4f0e2215cd23 |
+
+The tools, as FROZEN.json holds them (first 12 digits): kernel.py be6e99a1952d,
+scan.py ff3717e7f280, todo.py 56be091ebcb3, whose.py 0eceae102467, php2shell's
+make_trees.py 50bbcb8d4d12, phase2.py 5ca4e4a1a80e, phase3.py 1328d97cd50f,
+phase4.py c8d9315b7a11, score.py 084d0a3a0d7e and score2.py ddf0bde4ff82; this
+folder's trees.py 115913787b59, ask.py 41f4b1084fac, score.py 6dc8d70fdc7a,
+run.py 50eb674fc551 and flag.py e6c24ea59570. Timings on the real question
+count: indexing a unit takes 0.2 to 7.5 s, phase 1's ask 0.3 to 8.3 s a unit,
+phase 2's ask 1.3 to 50 s a unit (66 questions on a tree of up to 39,000
+passages), `run.py found` 12 s for its 100,000 random orderings, `run.py before`
+0.3 s; with a dozen tasks at once on one machine a four-unit task took up to
+100 s, inside Kart's limit.
+
+### The gates
+
+| Gate | Verdict | The numbers |
+|---|---|---|
+| phase 1, rank, bm25, strong | **failed** | 160 pairs; sum of 1/rank 117.27, random orderings give 119.94; p = 0.787 |
+| phase 1, rank, bm25, weaker | **failed** | 64 pairs; 45.35 against 50.70 expected; p = 0.997 |
+| phase 2, line level, bm25, strong | **passed** | 44 of 160 questions have a line hit in the top 10, 5.55 expected; p = 5.6e-30 |
+| phase 2, line level, bm25, weaker | **passed** | 3 of 64, 0.16 expected; p = 5.6e-4 |
+| phase 2, null questions, bm25 | **passed** | 14 of 700 null pairs hit, 17.84 expected at chance; p(above chance) = 0.859 |
+
+`run.py found` exited 42 (a rule failed) and `run.py before` exited 0.
+
+### Phase 1: find it among the changed passages (failed)
+
+Each question ranks every passage the fix changed; the statistic is the rank
+of the first one that hits. A ranker that does no better than a random order
+scores about what chance does, and bm25 did:
+
+| Ranker, group | Pairs | Sum of 1/rank | Random orderings | p |
+|---|---|---|---|---|
+| kernel, strong | 160 | 38.26 | 119.94 | 1.0 |
+| kernel, weaker | 64 | 13.79 | 50.70 | 1.0 |
+| **bm25, strong** | 160 | 117.27 | 119.94 | **0.787** |
+| **bm25, weaker** | 64 | 45.35 | 50.70 | **0.997** |
+| grep, strong | 160 | 121.71 | 119.94 | 0.297 |
+| grep, weaker | 64 | 48.26 | 50.70 | 0.894 |
+
+The top-3 hit rate, kept beside it, is not a test: a fix changes so few
+passages that three drawn at random already hit 90% of the time (strong) and
+99% (weaker). bm25 hit 128 of 160 and 51 of 64; grep 126 and 52; the kernel
+19 and 1, because its rule serves a passage only if it holds half the
+question's words, and for most questions it serves none (counted as last).
+
+Per unit (bm25): the changed set n, the passages that hit h, the chance that
+3 drawn at random hit, the questions with a hit in the top 3 of 16, and the
+mean rank of the first hit against the random mean (n+1)/(h+1):
+
+| Unit | Changed before limit | n | h | Chance (3) | Top-3 hits | Mean first-hit rank | Random mean |
+|---|---|---|---|---|---|---|---|
+| KG01 | 3 | 3 | 1 | 1.000 | 10 of 16 | 1.88 | 2.00 |
+| KG02 | 16 | 16 | 7 | 0.852 | 12 of 16 | 3.00 | 2.12 |
+| KG03-kartikeya | 33 | 33 | 18 | 0.913 | 14 of 16 | 5.31 | 1.79 |
+| KG03-willow-mcp | 8 | 8 | 3 | 0.823 | 11 of 16 | 3.88 | 2.25 |
+| KG04 | 4 | 4 | 4 | 1.000 | 8 of 16 | 2.50 | 1.00 |
+| KG05 | 18 | 4 | 4 | 1.000 | 13 of 16 | 1.56 | 1.00 |
+| KG06 | 18 | 4 | 4 | 1.000 | 13 of 16 | 1.56 | 1.00 |
+| KG07-kartikeya | 12 | 12 | 5 | 0.845 | 16 of 16 | 1.19 | 2.17 |
+| KG07-willow-mcp | 60 | 60 | 20 | 0.708 | 16 of 16 | 1.44 | 2.90 |
+| KG08 | 43 | 43 | 22 | 0.890 | 15 of 16 | 1.56 | 1.91 |
+| KG09 | 3 | 3 | 1 | 1.000 | 9 of 16 | 2.00 | 2.00 |
+| KG10 | 6 | 6 | 3 | 0.946 | 13 of 16 | 2.75 | 1.75 |
+| KG11 | 7 | 7 | 6 | 1.000 | 13 of 16 | 2.44 | 1.14 |
+| KG12 | 18 | 6 | 5 | 1.000 | 16 of 16 | 1.00 | 1.17 |
+
+What it shows: bm25 ranks the hit early only where the changed passages are
+many and share the question's words (KG07 in both repositories, KG08 and
+KG12: first hit at 1.0 to 1.6 against a random 1.2 to 2.9). Where the set is
+tiny or all of it hits (KG01, KG04, KG05, KG06, KG09), the mean rank above 1
+says only that bm25 returned nothing for some questions, which counts as
+last, so those rows measure whether any word matched. In KG02, KG03, KG10 and
+KG11 the first hit sat later than a random order's. What it does not show: that the
+changed code is hard to find, which phase 2 contradicts; phase 1's changed
+sets are the passages the fix touched, so it asks only "which of these", and a
+set of 3 to 60 with half of it a hit gives a ranker little room. Both the
+strong and the weaker set fail, and no gate was changed after the dry run
+except as the README records above.
+
+### Phase 2: before the fix, the whole old tree (passed)
+
+Each question asks the whole vulnerable tree (1,072 to 39,143 passages), top
+10; a hit is a passage overlapping a line the fix changed or borders.
+
+| Ranker, group | Questions with a line hit | Expected at chance | p | File level (hits, expected, p) |
+|---|---|---|---|---|
+| kernel, strong | 19 of 160 | 5.55 | 1.7e-6 | 48, 72.4, 1.0 |
+| kernel, weaker | 0 of 64 | 0.16 | 1.0 | 6, 6.2, 0.59 |
+| **bm25, strong** | **44 of 160** | 5.55 | **5.6e-30** | 105, 72.4, 4.1e-15 |
+| **bm25, weaker** | **3 of 64** | 0.16 | **5.6e-4** | 17, 6.2, 6.8e-5 |
+| grep, strong | 21 of 160 | 5.55 | 7.8e-8 | 65, 72.4, 0.96 |
+| grep, weaker | 2 of 64 | 0.16 | 0.011 | 13, 6.2, 0.0068 |
+
+The null questions (fifty, asked of all 14 units): bm25 14 hits of 700 where
+17.84 are expected, p(above chance) 0.859, every question served ten
+passages; the kernel 0 of 700 (286 served nothing); grep 3 of 700. Only
+bm25's is the gate; the null gate passed.
+
+Per unit (bm25, the 16 questions of the gap): the old tree's passages N, the
+passages that hit, the chance that 10 drawn at random hold a hit, the
+questions with a hit expected at chance (16 times that), and observed, with
+the kernel's and grep's counts, the questions that reached a changed file
+(bm25), and the local and Claude writers' split of bm25's hits:
+
+| Unit | N | Hit passages | Chance (10) | Expected | bm25 | kernel | grep | bm25, file level | Local / Claude |
+|---|---|---|---|---|---|---|---|---|---|
+| KG01 | 1072 | 6 | 0.0548 | 0.88 | 6 | 2 | 5 | 16 | 5 / 1 |
+| KG02 | 1158 | 8 | 0.0672 | 1.08 | 12 | 4 | 6 | 16 | 6 / 6 |
+| KG03-kartikeya | 2036 | 20 | 0.0942 | 1.51 | 4 | 1 | 3 | 12 | 3 / 1 |
+| KG03-willow-mcp | 36734 | 4 | 0.0011 | 0.02 | **0** | 0 | 0 | 7 | 0 / 0 |
+| KG04 | 22456 | 6 | 0.0027 | 0.04 | **0** | 0 | 1 | 5 | 0 / 0 |
+| KG05 | 39143 | 5 | 0.0013 | 0.02 | 1 | 2 | 0 | 9 | 1 / 0 |
+| KG06 | 39143 | 5 | 0.0013 | 0.02 | 3 | 0 | 0 | 7 | 2 / 1 |
+| KG07-kartikeya | 1766 | 5 | 0.0280 | 0.45 | 9 | 2 | 5 | 15 | 5 / 4 |
+| KG07-willow-mcp | 35090 | 21 | 0.0060 | 0.10 | 8 | 7 | 1 | 11 | 4 / 4 |
+| KG08 | 2445 | 23 | 0.0903 | 1.44 | 1 | 1 | 0 | 7 | 1 / 0 |
+| KG09 | 15318 | 1 | 0.0007 | 0.01 | **0** | 0 | 0 | **0** | 0 / 0 |
+| KG10 | 13191 | 3 | 0.0023 | 0.04 | **0** | 0 | 0 | 9 | 0 / 0 |
+| KG11 | 11717 | 6 | 0.0051 | 0.08 | **0** | 0 | 0 | 5 | 0 / 0 |
+| KG12 | 26109 | 5 | 0.0019 | 0.03 | 3 | 0 | 2 | 3 | 1 / 2 |
+
+What it shows: asked of the whole old tree in the words of the gap, bm25 puts
+a passage that overlaps the fix's lines in the top ten for 44 of 160 strong
+questions where 5.5 would be luck, and the strong set's hits come from eight
+of its ten units. What it does not show, and the misses:
+
+- **Five units were not found by bm25**: KG03-willow-mcp, KG04, KG09, KG10 and
+  KG11 had no line hit in 16 questions; the kernel found none in them either,
+  and grep one (KG04). KG09 never reached the changed file; KG03-willow-mcp,
+  KG04, KG10 and KG11 reached it in 5 to 9 of 16 questions, but not the
+  changed lines. KG08 found 1 against 1.4 expected, and KG03-kartikeya 4
+  against 1.5.
+- **The weaker set's pass is thin.** Its 3 hits are all KG12's; KG09, KG10 and
+  KG11, the other three, have none. The gate passes (p 5.6e-4) on three
+  questions in one gap, and a gap's 16 questions are not independent draws.
+- **The strong set's p-value assumes independence too**, between a gap's two
+  writers and its eight questions each; they ask the same thing in different
+  words, so 44 is not 44 separate chances.
+- **File level is easier and reported only**: 105 of 160 against 72 expected
+  for bm25; the kernel's and grep's strong-set file hits sit below chance
+  (48 and 65), while grep's weaker set is above it (13 against 6.2, p 0.0068).
+- **The kernel** serves a passage only when it holds half the question's words
+  and so served nothing for 286 of 700 null questions and most gap questions;
+  its 19 strong hits are real (p 1.7e-6) but few.
+
+### Phase 3: when, and why, was the code written
+
+Every positional hit range from phases 1 and 2, 124 and 55 ranges, was
+blamed at its vulnerable commit by `origin.py`; none failed to resolve.
+Per unit, the commits that wrote the hit lines, oldest first, with the days
+from that commit to the fix (the merge, or the lone commit), and the gap, audit
+or pull request ids their messages cite:
+
+| Unit | Commits that wrote the hit lines (date, days to the fix) | Cited ids |
+|---|---|---|
+| KG01 | ff59d05ee600 stage1(b) lift of the sandbox core (07-08, 63 d); e37735193b9d bind the root read-only (09-01, 8 d); ca1fd845e975 allow_db warning (09-07, 3 d) | none |
+| KG02 | e3a9f2fde444 refuse tree-rewriting git verbs under a read-only root (09-10, 0 d) | 52fcbd04dedb, 5fd840cb5000 |
+| KG03-kartikeya | ff59d05ee600, c1000eeb9d16 stage1 lifts (07-08, 81 d); 8664271a7f83 gate Postgres behind allow_db (07-21, 68 d); c1e25fb434f6 env_deny by exact name (09-10, 17 d); 920237592a4d and a71a91ad78c3 ruff format and fixes (09-12, 15 d) | 8a236e0e8f55 (KG01's gap) and five more |
+| KG03-willow-mcp | b2e5135e1701 worker liveness heartbeat (07-08, 81 d); bde624d8161d caps-on worker (07-21, 68 d); 849594389942 worker liveness told honestly (09-10, 17 d) | 5fd840cb5000 and three more |
+| KG04 | afdd675c5b41 envelope accrual PR5 (08-25, 9 d); 8fc1122f060f doc reconcile (08-26, 8 d) | none |
+| KG05 | 2f1ac93850fe defer syscall table writes to trust-owner apply (09-28, 0 d) | 7b1fee1f2861 |
+| KG06 | bd2c1b2dd868 lint CI pin follows the dispatch project (09-28, 0 d) | 0b5a2aa26001 |
+| KG07-willow-mcp | ten commits from 1d10998ef3e1 (07-08, 76 d) through ecad0ed16991 per-task network authorization (07-18, 67 d) to a05de373f20b broker Kart unit enable (09-22, 0 d) | 60CB6361, D8AFF2DA, 5ecb87cfdf56 |
+| KG07-kartikeya | ff59d05ee600 and c1000eeb9d16 (07-08, 76 d); 8664271a7f83 (07-21, 63 d); b5313eee61e6 localhost is not egress (09-22, 0 d) | none |
+| KG08 | 884f201b924b package steward (09-12, 8 d); a32dcf88d8e0, 5cb6b25396d8 ci step (09-14, 5 d); 3fcd1f4c7b32 catchup step and a merge (09-15, 5 d) | #76, 8d1bcb2b7c02 |
+| KG09 | 4b5dc893d565 the one-script kernel (10-22, 0 d) | none |
+| KG10 | f8ee4e860f93 merge-check as a non-root user (10-21, 0 d) | none |
+| KG11 | 6cdd825373ba move the one-script skeleton in (10-07, 13 d); 3adeefeaa07d functions first (10-07, 12 d) | none |
+| KG12 | a600f822eea0 the table's boxes (10-17, 0 d); 426bfa4ab286 the table on the seat's screen (10-17, 0 d) | none |
+
+What it shows: the flawed lines are usually older than the fix by days to
+weeks (the sandbox lift of 07-08 stands under KG01, KG03 and KG07; the longest,
+81 days). Six units show 0 days: the code the fix changed was written the same
+day or the day before, by a feature commit that the fix then corrected (KG02,
+KG05, KG06, KG09, KG10, KG12). Only a handful of commits cite a gap or audit
+id (the ids are the study's; most fleet commits before the audit habit do not).
+
+KG07, as the study expected: the sealed ruling (9fe5e179, gap 582b1e676fb3)
+exempted `allow_localhost` from the lease, and the KB note names commits
+e1a5ab03 and ce2d0d96. **Neither commit exists in any local repository**
+(willow-mcp, kartikeya, the other repositories beside them, and the willow-bot
+fork all lack both), so the study cannot confirm them from git. What git does
+say: the lines the KG07 fix rewrote were written by many commits, not one; in
+kartikeya the newest is b5313eee61e6 (2026-09-22, "localhost is not egress"),
+a day before the fix, and in willow-mcp a05de373f20b (2026-09-22); both fit an
+exemption added shortly before the fix, but neither names the ruling, and the
+earliest commit to mention the word in kartikeya is 153ac26 (2026-07-17,
+"gate # allow_localhost like # allow_net"). That is consistent with the study's
+expectation and does not prove it.
+
+### Phase 4: the writers compared (reported, not judged)
+
+Questions with a hit, per writer, with every line and with the flagged lines
+left out (the local writer wrote 48 flagged lines of 96; Claude 1; the null
+set none). A pair is a question asked of one unit: 112 a writer.
+
+| Phase, ranker | Local, all lines | Local, unflagged | Claude, all lines | Claude, unflagged |
+|---|---|---|---|---|
+| 1 (top 3), bm25 | 98 of 112 | 53 of 60 | 81 of 112 | 81 of 112 |
+| 1 (top 3), grep | 97 of 112 | 52 of 60 | 81 of 112 | 81 of 112 |
+| 1 (top 3), kernel | 8 of 112 | 3 of 60 | 12 of 112 | 12 of 112 |
+| 2 (top 10), bm25 | 28 of 112 | 12 of 60 | 19 of 112 | 19 of 112 |
+| 2 (top 10), grep | 16 of 112 | 3 of 60 | 7 of 112 | 7 of 112 |
+| 2 (top 10), kernel | 9 of 112 | 3 of 60 | 10 of 112 | 10 of 112 |
+
+What it shows: in phase 2 the local writer's raw lead over Claude's (28 against
+19, bm25) shrinks once its flagged lines are set aside (12 of 60 is 20%,
+against Claude's 17%): most of its extra hits are on lines that carried an
+identifier. Grep's gap (16 against 7) falls to 3 of 60. In phase 1 the same
+holds weakly (88% unflagged against 72%). What it does not show: which writer
+is better, since the two were not asked the same things and unflagged local
+lines are a selected 60 of 112.
+
+### Phase 7: same bytes
+
+Phases 1 and 2 were run four times, from a fresh index each time: Python
+3.14.4 with hash seed 0 and 4242, and Python 3.12.13 (one of uv's, offline)
+with hash seed 0 and 4242. The four answers files, the four scored files and
+the four result files are byte-identical; their SHA-256 are the six in the
+table at the top of this section, the same for all four runs. The indexes,
+whose hashes are in each unit's stats row, are therefore the same too.
+
+`index.rank` against `kernel.rank` over the whole tree, by phase 6's method
+(every passage, in order), on the unit's own 16 questions: every question
+compared agreed, in all 14 units. The kernel's rank over a tree of 22,000 to
+39,000 passages takes several seconds a question, so the larger trees were cut
+at a time budget and not every question was compared:
+
+| Unit | Compared | Same |
+|---|---|---|
+| KG01 | 16 of 16 | 16 |
+| KG02 | 16 of 16 | 16 |
+| KG03-kartikeya | 16 of 16 | 16 |
+| KG03-willow-mcp | 8 of 16 | 8 |
+| KG04 | 14 of 16 | 14 |
+| KG05 | 6 of 16 | 6 |
+| KG06 | 7 of 16 | 7 |
+| KG07-kartikeya | 16 of 16 | 16 |
+| KG07-willow-mcp | 11 of 16 | 11 |
+| KG08 | 16 of 16 | 16 |
+| KG09 | 16 of 16 | 16 |
+| KG10 | 16 of 16 | 16 |
+| KG11 | 16 of 16 | 16 |
+| KG12 | 7 of 16 | 7 |
+
+Note that many of these compare two empty lists (the kernel serves a passage
+only if it holds half the question's words), which agree trivially; they also
+agree where it served some.
+
+### Not run
+
+Phase 5 (spread: the gaps' questions over the other repositories) and phase 6
+(the cpython control, which needs an egress lease) have not run. Nothing here
+claims a result for either.
