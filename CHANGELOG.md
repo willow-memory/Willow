@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `slack`: Slack's export zip, read without unpacking: each message, oldest
+  first, as a dated line with its channel and author; users, channels and
+  links written as words; joins and similar left out.
 - `location-history`: Google Maps Timeline exports, Takeout's semantic
   location history or the newer Timeline file: each place visited and each
   trip as a dated line with the hours it covers.

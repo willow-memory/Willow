@@ -18,11 +18,11 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`██████████░░░░░░░░░░` **224 of 470 built** · 419 need no install · 51 need one
+`██████████░░░░░░░░░░` **225 of 470 built** · 419 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
-| Reading more kinds of files | 44 | 61 | 96 | 9 |
+| Reading more kinds of files | 45 | 60 | 96 | 9 |
 | Finding things | 26 | 17 | 33 | 10 |
 | Your own words | 16 | 9 | 22 | 3 |
 | Keeping track | 35 | 23 | 58 | 0 |
@@ -47,9 +47,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[timeline](adapters/stdlib/timeline/)** — A dated timeline of one matter (a dispute, an illness, a tenancy), every line cited, to hand to a lawyer, doctor or council.
+**[restack](adapters/stdlib/restack/)** — Main merged into your branches, with the conflicts in the files the repo makes or only adds to settled by its own tools, and every other one left to you.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 224 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 225 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -148,7 +148,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - **shell-history** (idea) — Your bash, zsh and fish history: what you ran, and when the shell recorded it. *new* `no-install` `offline` `writes-output` `file-reader`
 - **sigmap** (idea) — SigMap's signature map of a codebase as plain text: each function's signature with its file and line, for questions about the code. *new* `no-install` `offline` `writes-output` `file-reader`
 - **signal** (idea) — A Signal backup, decrypted with its passphrase, as one dated line per message. Needs cryptography; Apache-2.0 or BSD. *new* `needs-install` `offline` `writes-output` `file-reader`
-- **slack** (idea) — Slack's export zip: one dated line per message, with channel and author. *new* `no-install` `offline` `writes-output` `file-reader`
+- [**slack**](adapters/stdlib/slack/) — Slack's export zip: one dated line per message, with channel and author. *new* `no-install` `offline` `writes-output` `file-reader`
 - [**snapshot**](adapters/stdlib/snapshot/) — A web page or data file fetched once into a folder, as it came, with its address, the time and its SHA-256, so later answers cite the copy. Goes online: the address you give, fetched once. *bot* `no-install` `online` `writes-output` `file-reader` `sources`
 - [**star-system**](adapters/deps/star-system/) — A friend's star-system simulation (science_bitch) run deterministically and written as cited passages: each body's Kepler period and how well the run conserves energy, angular momentum and linear momentum. Needs numpy; BSD-3-Clause. *bot* `needs-install` `offline` `writes-output`
 - **steam** (idea) — Your Steam library from its local files: games, playtime and when you last played. *new* `no-install` `offline` `writes-output` `file-reader`

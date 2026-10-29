@@ -2038,16 +2038,6 @@
   "tags": "no-install, offline, records, assistant"
  },
  {
-  "name": "slack",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Slack's export zip: one dated line per message, with channel and author.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "socratic",
   "kind": "stdlib",
   "section": "Ways to use it",

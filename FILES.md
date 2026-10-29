@@ -759,6 +759,10 @@ willow/
 │   │   │   ├── similar.py    what's already on the list near a new idea
 │   │   │   ├── test_similar.py
 │   │   │   └── README.md
+│   │   ├── slack/
+│   │   │   ├── slack.py   a Slack export as dated lines of messages
+│   │   │   ├── test_slack.py
+│   │   │   └── README.md
 │   │   ├── slow-tests/
 │   │   │   ├── slow_tests.py each test's time over several runs, the slowest named, any that got slower flagged
 │   │   │   ├── test_slow_tests.py

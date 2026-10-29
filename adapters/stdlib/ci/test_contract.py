@@ -47,6 +47,16 @@ def _docx(text: str) -> bytes:
     return buf.getvalue()
 
 
+def _zip(files: dict[str, str]) -> bytes:
+    from io import BytesIO
+
+    buf = BytesIO()
+    with zipfile.ZipFile(buf, "w") as z:
+        for name, text in files.items():
+            z.writestr(name, text)
+    return buf.getvalue()
+
+
 def _png() -> bytes:
     import struct
     import zlib
@@ -268,6 +278,17 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         b'{"timelineObjects":[{"activitySegment":{"activityType":"WALKING","distance":1500,"duration":{"startTimestamp":"2024-03-02T09:10:00Z","endTimestamp":"2024-03-02T09:40:00Z"}}},'
         b'{"placeVisit":{"location":{"name":"Kitchen Cafe","address":"1 High St, Leeds"},"duration":{"startTimestamp":"2024-03-02T08:15:00.000Z","endTimestamp":"2024-03-02T09:10:00.000Z"}}},'
         b'{"placeVisit":{"location":{},"duration":{"startTimestamp":"2024-03-02T23:00:00Z","endTimestamp":"2024-03-03T07:00:00Z"}}},{"placeVisit":{"duration":{}}}]}'
+    )}),
+    "slack": ("slack.py", {"slack.zip": (
+        _zip({
+        "users.json": '[{"id":"U1","name":"ana","real_name":"Ana Lopez","profile":{"display_name":"ana"}},{"id":"U2","name":"ben","real_name":"Ben Ruiz","profile":{"display_name":""}}]',
+        "channels.json": '[{"id":"C1","name":"garden"}]',
+        "garden/2024-03-02.json": '[{"type":"message","user":"U1","text":"Six hours of sun, <@U2>? &amp; <#C1|garden>","ts":"1709367300.000100"},'
+        '{"type":"message","user":"U2","text":"See <https://example.org/guide|the guide> <!here>","ts":"1709367360.000200"},'
+        '{"type":"message","subtype":"channel_join","user":"U2","text":"<@U2> has joined","ts":"1709367000.000000"},'
+        '{"type":"message","user":"U3","text":"","ts":"1709367400.0"}]',
+        "garden/2024-03-03.json": '[{"type":"message","subtype":"me_message","user":"U1","text":"waves","ts":"1709460000.0"}]',
+        })
     )}),
     "notes": ("notes.py", {"garden.md": b"Tomatoes want [[sun]].\n"}),
     "jrnl": ("jrnl.py", {"journal.txt": (
