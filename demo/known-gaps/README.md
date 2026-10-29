@@ -874,7 +874,7 @@ CP3's 4 from 2001 to 2023 (985 to 9,166); CP4's single range from PEP 578 in
 vendored upstream expat updates, from 2002 to 2024 (123 to 8,434). CP7 has no
 hit range. No blamed commit cites the unit's own advisory; two cite other,
 older CVEs (one in CP5's ranges, one in CP6's), and the references the rest
-carry are issue and pull request numbers.
+carry are mostly issue and pull request numbers.
 
 **Phase 4, the writers compared (reported, never judged; every line, then the
 unflagged lines).**
@@ -915,7 +915,8 @@ fleet's strong gaps reached a line in 44 of 160 asks (27.5 per cent), cpython's
 strong units in 2 of 80 (2.5 per cent), and the weaker 3 of 64 against 3 of
 32. The cpython pass for the strong group rests on two asks from one unit,
 and the weaker group's on one unit that is a vendored library. The p-values
-assume a unit's eight questions, and its two writers, are independent draws;
+assume a unit's sixteen questions, eight from each of two writers, are
+independent draws;
 they ask the same advisory in different words, so 2 is not 2 separate chances.
 Counted as the fleet's harshest bound was, each unit one draw against its own
 chance, the strong group is 1 of 5 units, p = 3.8e-4, and the weaker 1 of 2,
