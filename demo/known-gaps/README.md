@@ -652,9 +652,16 @@ lines are a selected 60 of 112.
 
 ### Phase 7: same bytes
 
-Phases 1 and 2 were run four times, from a fresh index each time: Python
-3.14.4 with hash seed 0 and 4242, and Python 3.12.13 (one of uv's, offline)
-with hash seed 0 and 4242. The four answers files, the four scored files and
+Phases 1 and 2 were run four times, from a fresh index each time: twice under
+Python 3.14.4 and twice under Python 3.12.13 (one of uv's, offline). The runs
+were labelled with hash seeds 0 and 4242, but the labels were not in effect:
+the scripts ran as `PYTHONHASHSEED=n python -I ...`, and `-I` (isolated mode)
+ignores `PYTHONHASHSEED`, so each process drew its own random seed (checked:
+under `-I` the hash of the same string differs from one run to the next). So
+the four runs had unpinned, effectively random hash seeds, and being
+byte-identical under those is at least as strong a test of seed-independence
+as two fixed seeds. Phase 6's cpython control (below) runs with `-s`, so its
+seeds are real. The four answers files, the four scored files and
 the four result files are byte-identical; their SHA-256 are the six in the
 table at the top of this section, the same for all four runs. The indexes,
 whose hashes are in each unit's stats row, are therefore the same too.
@@ -813,8 +820,8 @@ two minutes.
 One run, python 3.14.4 with `PYTHONHASHSEED=0`, on the frozen questions and
 the frozen `outside.py` (freeze 4), 28 asks (7 `found`, 21 `before` in three
 parts), the verdicts in a fresh record. The record verifies: `the chain holds:
-6 rows, 0 sealed`. **Phase 7 (the same bytes under a second Python and both
-hash seeds) is not part of these results**; nothing here claims it.
+6 rows, 0 sealed`. The numbers below are that run's, and phase 7 (below) shows
+the other three runs gave the same bytes.
 
 **Phase 1, rank (the 16 questions of a unit asked of the passages its fix
 changed, bm25). Both gates fail.**
@@ -909,9 +916,27 @@ is few, and the advisories describe behaviour more than the lines that
 changed. The questions were written blind, once; nothing here shows how a
 different writer or a different method would do. A model has seen cpython
 (its fixes are public and old), so a hit is not evidence of a discovery.
-Phase 7 (byte-identity across Pythons and seeds) was not completed.
+
+**Phase 7, same bytes.** The same 28 asks, in the same three parts, were run
+four times, from a fresh index each time: Python 3.14.4 and Python 3.12.13
+(one of uv's, offline), each with `PYTHONHASHSEED` 0 and 1. These seeds are
+real: the runs used `python -s`, not `-I`, so the variable was honoured
+(unlike the fleet's runs above). The joined answers files, the scored files
+and the judged outputs of all four runs are byte-identical, so the six SHA-256
+in the table above are the same for every run:
+
+| Run | Python | Hash seed | Six files equal to the table |
+|---|---|---|---|
+| A0 | 3.14.4 | 0 | yes (the run reported above) |
+| A1 | 3.14.4 | 1 | yes |
+| B0 | 3.12.13 | 0 | yes |
+| B1 | 3.12.13 | 1 | yes |
+
+The parts are the same in every run (`--part 1/3`, `2/3`, `3/3`), because a
+joined three-part file does not hash like a whole run. The verdicts were
+written to a fresh record for the first run only; the other three were judged
+into their own records and agree with it.
 
 ### Not run
 
 Phase 5's findings are private and nothing here claims a result for them.
-Phase 7 for phase 6 is not claimed above.
