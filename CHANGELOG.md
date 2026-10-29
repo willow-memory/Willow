@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `home-upkeep`: Home upkeep from your notes and receipts: the boiler,
+  filters, gutters and the rest, when each was last done and what is due by a
+  date or interval you wrote.
 - `pets`: Each pet's vet visits, vaccines, worming and medicines from your
   records: the last of each, its cost by currency sign, and what is due by a
   date or interval you wrote.

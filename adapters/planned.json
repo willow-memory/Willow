@@ -872,16 +872,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "home-upkeep",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "Home upkeep: the boiler service, the filters, the gutters, what's due and when it was last done.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
- },
- {
   "name": "homestead",
   "kind": "stdlib",
   "section": "Reading more kinds of files",

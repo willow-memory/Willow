@@ -260,6 +260,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "mood": ("mood.py", ["--box", "{box}"]),
     "car": ("car.py", ["--box", "{box}"]),
     "pets": ("pets.py", ["--box", "{box}"]),
+    "home-upkeep": ("home_upkeep.py", ["--box", "{box}"]),
     "history": ("history.py", ["--box", "{box}"]),
     "dice": ("dice.py", ["--box", "{box}", "roll", "2d6", *NOW]),
     "hook-fail-closed": ("hook_fail_closed.py", ["--hook", "true"]),

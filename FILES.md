@@ -294,6 +294,10 @@ willow/
 │   │   │   ├── history.py    your record in plain sentences, places and counts, never the words
 │   │   │   ├── test_history.py
 │   │   │   └── README.md
+│   │   ├── home-upkeep/
+│   │   │   ├── home_upkeep.py   what's due at home and when it was last done
+│   │   │   ├── test_home_upkeep.py
+│   │   │   └── README.md
 │   │   ├── hook-fail-closed/
 │   │   │   ├── hook_fail_closed.py a hook that crashes, hangs or says what can't be read blocks the tool
 │   │   │   ├── test_hook_fail_closed.py
