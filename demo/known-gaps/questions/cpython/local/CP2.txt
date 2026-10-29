@@ -1,0 +1,12 @@
+# writer: local, nestor_draft, engine ollama:willow-lane4-3b:latest, temperature 0.0
+# prompt_sha256 6ad72198b1a3b5962b5a4d69286b9b8853a6613008bd712d3bfbafca56059294
+# input_sha256 2e2f85f323f01248ac82d486fbade65bb55f3eee2a6766ce574562532c078e64
+# source: work/blind/cpython/inputs.md CP2, verbatim; output unedited
+What is the security finding about http.cookies.Morsel that was not patched?
+What control characters were allowed to bypass input validation in http.cookies.Morsel?
+What paths were not patched against control characters in http.cookies.Morsel?
+What validation was applied to BaseCookie.output() but not to BaseCookie.js_output()?
+What is the root cause of the incomplete fix for CVE-2026-0672?
+What is the difference between the validation applied to BaseCookie.output() and BaseCookie.js_output()?
+What is the security impact of allowing control characters to bypass input validation in http.cookies.Morsel?
+What is the status of the CVE-2026-0672 fix in terms of which parts were actually patched?

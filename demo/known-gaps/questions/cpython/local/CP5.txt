@@ -1,0 +1,12 @@
+# writer: local, nestor_draft, engine ollama:willow-lane4-3b:latest, temperature 0.0
+# prompt_sha256 de9c5564fb07816e1ca857d414739ee3d3058e80813b62ebd7b5877d536e8a9c
+# input_sha256 3fb605f2794a46127ae8258e6ffc82920426af2292eb818b7f998e3a6e380da6
+# source: work/blind/cpython/inputs.md CP5, verbatim; output unedited
+What is the maximum amount of memory an attacker could force libexpat to allocate in a single Expat parsing session?
+What is the smallest document that an attacker could submit to trigger a large libexpat allocation?
+How does libexpat's parsing behavior differ from a typical, safe document, and what makes the attacker's document so different?
+What is the maximum amount of memory libexpat allocates per allocation, and how does that relate to the attacker's goal?
+What is the smallest document that an attacker could submit to trigger a large libexpat allocation, and how does that relate to the attacker's goal?
+How does libexpat's parsing behavior change when it is parsing a document that is intentionally crafted to trigger large allocations?
+What is the maximum amount of memory libexpat allocates per allocation, and how does that relate to the attacker's goal?
+What is the smallest document that an attacker could submit to trigger a large libexpat allocation, and how does that relate to the attacker's goal?

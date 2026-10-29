@@ -1,0 +1,10 @@
+# writer: claude subagent (sonnet), blind: read only work/blind/cpython/inputs.md
+# source: work/blind/cpython/inputs.md CP4
+Why would loading compiled bytecode files without source skip the audit event that other imports raise?
+Can an attacker run code from a bytecode-only file without my security monitoring ever seeing it open?
+What kinds of tools rely on that audit hook and would now have a blind spot?
+Is this a way to execute code, or only a way to hide that a file was read?
+Does it affect only legacy bytecode files placed next to or instead of source files?
+How would I detect that bytecode was loaded without an audit record?
+Does a policy that restricts which files can be opened for execution get bypassed by this?
+Who needs to worry, a normal application developer or only people running hardened audit setups?

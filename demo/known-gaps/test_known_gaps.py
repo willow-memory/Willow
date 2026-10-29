@@ -11,6 +11,7 @@ import importlib.util
 import json
 import math
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -1060,7 +1061,8 @@ def test_the_questions_hold_no_home_path_gap_id_or_key():
     spec.loader.exec_module(tr)
     known = set(re.findall(r"\b[0-9a-f]{12}\b", (HERE / "gaps.json").read_text()))
     files = sorted(p for p in QDIR.rglob("*") if p.is_file())
-    assert len(files) == 12 + 12 + 1 + 1  # two writers' gaps, the null set, inputs.md
+    # two writers' gaps, the null set, inputs.md, and two writers' seven cpython units
+    assert len(files) == 12 + 12 + 1 + 1 + 7 + 7
     for p in files:
         for line in p.read_text(encoding="utf-8").splitlines():
             assert tr.redact(line) == (line, []), (p.name, line)
@@ -1075,7 +1077,7 @@ def test_every_questions_file_is_listed_in_the_freeze():
         pytest.skip("not frozen yet")
     frozen = json.loads(FROZEN_FILE.read_text(encoding="utf-8"))["files"]
     on_disk = {p.relative_to(HERE).as_posix() for p in QDIR.rglob("*") if p.is_file()}
-    assert len(on_disk) == 26 and on_disk <= set(frozen)
+    assert len(on_disk) == 26 + 14 and on_disk <= set(frozen)
     assert "flag.py" in frozen
     for rel in on_disk:  # byte for byte as frozen (the freeze test holds it too)
         assert hashlib.sha256((HERE / rel).read_bytes()).hexdigest() == frozen[rel], rel
@@ -1202,10 +1204,363 @@ def test_phase_2_end_to_end_on_a_fixture(tmp_path, capsys, monkeypatch):
     assert out["table"]["bm25, strong"]["file_hits@10"] == 1
 
 
-def test_the_stub_says_it_is_not_built(capsys):
-    mod = trees.sibling("outside")
-    assert mod.main([]) == 2
-    assert "not in bite 2" in capsys.readouterr().err
+# -- phase 6, outside: cpython as the control --------------------------------
+
+
+def make_cpython(tmp: Path) -> tuple:
+    """(repos, draft, advisory rows): a repository `cpython` with seven fixes,
+    each a commit naming its CVE, in the shape the desk's draft has."""
+    repo = tmp / "repos" / "cpython"
+    repo.mkdir(parents=True)
+    git(repo, "init", "-q", "-b", "main")
+    (repo / "Lib").mkdir()
+    for n in range(1, 8):
+        (repo / "Lib" / f"mod{n}.py").write_text(
+            f"def old{n}(value):\n    return value + {n}\n    # alpha{n} beta{n} gamma{n}\n"
+        )
+    git(repo, "add", "-A")
+    git(repo, "commit", "-qm", "base", date="2026-01-01T12:00:00+00:00")
+    units, rows = [], []
+    for n in range(1, 8):
+        parent = git(repo, "rev-parse", "HEAD")
+        (repo / "Lib" / f"mod{n}.py").write_text(
+            f"def old{n}(value):\n    return check{n}(value) + {n}\n    # delta{n} epsilon{n} zeta{n}\n"
+        )
+        git(repo, "add", "-A")
+        cve = f"CVE-2026-100{n}"
+        git(repo, "commit", "-qm", f"fix parsing {n} ({cve})",
+            date=f"2026-01-{n + 1:02d}T12:00:00+00:00")  # fmt: skip
+        fix = git(repo, "rev-parse", "HEAD")
+        weaker = n in (5, 6)
+        units.append({"id": f"CP{n}", "cve": cve, "fix": fix[:11], "vulnerable": parent[:11],
+                      "tree_old": git(repo, "rev-parse", parent + "^{tree}")[:12],
+                      "tree_new": git(repo, "rev-parse", fix + "^{tree}")[:12],
+                      "code_files": 1, "weight": "weaker" if weaker else "strong",
+                      **({"why_weaker": "the advisory is another project's"} if weaker else {})})  # fmt: skip
+        rows.append({"id": cve, "address": f"https://api.osv.dev/v1/vulns/{cve}",
+                     "fetched_at": "2026-10-28T20:27Z", "osv_modified": "2026-10-28T02:30:39Z",
+                     "summary": None if n == 1 else f"Planted title number {n} of the fixture",
+                     "details": f"Planted details sentence number {n} of the fixture. Then more.",
+                     "osv_fix_commits_main": [fix[:11]]})  # fmt: skip
+    return tmp / "repos", {"units": units}, rows
+
+
+def cpython_units(tmp: Path) -> tuple:
+    outside = trees.sibling("outside")
+    repos, draft, rows = make_cpython(tmp)
+    return repos, outside.resolve(repos, draft, rows), draft, rows
+
+
+def test_outside_pins_each_unit_from_git_and_keeps_no_advisory_text(tmp_path):
+    outside = trees.sibling("outside")
+    repos, doc, draft, rows = cpython_units(tmp_path)
+    repo = repos / "cpython"
+    outside.check_sources(doc)
+    assert list(doc["units"]) == [f"CP{n}" for n in range(1, 8)]
+    for name, u in doc["units"].items():
+        fix = u["fixed"]["commit"]
+        assert u["vulnerable"]["commit"] == git(
+            repo, "rev-parse", fix + "^"
+        )  # first parent
+        assert u["vulnerable"]["tree"] == git(repo, "rev-parse", fix + "^^{tree}")
+        assert u["fixed"]["tree"] == git(repo, "rev-parse", fix + "^{tree}")
+        assert u["gap"] == name and u["counted_files"] == 1
+        assert u["osv_address"] == "https://api.osv.dev/v1/vulns/" + u["cve"]
+        diff = subprocess.run(["git", *trees.DIFF, u["vulnerable"]["commit"], fix], cwd=repo,
+                              check=True, capture_output=True).stdout  # fmt: skip
+        assert u["diff_sha256"] == hashlib.sha256(diff).hexdigest()
+    row = rows[3]
+    assert (
+        doc["units"]["CP4"]["details_sha256"]
+        == hashlib.sha256(row["details"].encode()).hexdigest()
+    )
+    assert (
+        doc["units"]["CP4"]["summary_sha256"]
+        == hashlib.sha256(row["summary"].encode()).hexdigest()
+    )
+    assert doc["units"]["CP1"]["summary_sha256"] is None  # an advisory with no summary
+    text = json.dumps(doc)
+    assert all(
+        r["details"][:20] not in text and "Planted title" not in text for r in rows
+    )
+
+
+def test_outside_refuses_a_draft_that_git_does_not_bear_out(tmp_path):
+    outside = trees.sibling("outside")
+    repos, draft, rows = make_cpython(tmp_path)
+    repo = repos / "cpython"
+
+    def refused(change, row_change=None, match=""):
+        d = {
+            "units": [
+                {**u, **(change if u["id"] == "CP3" else {})} for u in draft["units"]
+            ]
+        }
+        rs = [
+            {**r, **(row_change or {})} if r["id"] == "CVE-2026-1003" else r
+            for r in rows
+        ]
+        with pytest.raises(ValueError, match=match):
+            outside.resolve(repos, d, rs)
+
+    fix = draft["units"][2]["fix"]
+    grandparent = git(repo, "rev-parse", fix + "~2")[:11]
+    refused({"vulnerable": grandparent}, match="first parent")  # the wrong parent
+    refused({"tree_old": "0" * 12}, match="vulnerable tree")
+    refused({"tree_new": "0" * 12}, match="fixed tree")
+    refused({"cve": "CVE-2026-9999"}, match="no advisory row|advisory row")
+    refused({}, {"osv_fix_commits_main": [draft["units"][3]["fix"]]}, match="OSV names")
+    refused(
+        {}, {"address": "https://api.osv.dev/v1/vulns/CVE-2026-1"}, match="advisory row"
+    )
+    refused({}, {"details_sha256": "0" * 64}, match="details hash")
+    # a fix whose message does not name the CVE is tied to it by OSV, or refused
+    (repo / "Lib" / "mod3.py").write_text(
+        "def other():\n    return 3  # something else\n"
+    )
+    git(repo, "add", "-A")
+    git(repo, "commit", "-qm", "an unrelated change")
+    new = git(repo, "rev-parse", "HEAD")
+    d3 = {**draft["units"][2], "fix": new[:11], "vulnerable": git(repo, "rev-parse", new + "^")[:11],
+          "tree_old": git(repo, "rev-parse", new + "^^{tree}")[:12],
+          "tree_new": git(repo, "rev-parse", new + "^{tree}")[:12]}  # fmt: skip
+    with pytest.raises(ValueError, match="neither"):
+        outside.resolve_unit(repo, d3, {**rows[2], "osv_fix_commits_main": []})
+    assert outside.resolve_unit(
+        repo, d3, {**rows[2], "osv_fix_commits_main": [new[:11]]}
+    )
+
+
+def test_outside_sources_file_is_whole_and_splits_five_and_two():
+    outside = trees.sibling("outside")
+    doc = json.loads(outside.SOURCES.read_text(encoding="utf-8"))
+    outside.check_sources(doc)
+    weights = {n: u["weight"] for n, u in doc["units"].items()}
+    assert [n for n, w in weights.items() if w == "weaker"] == ["CP5", "CP6"]
+    assert sum(w == "strong" for w in weights.values()) == 5
+    for u in doc["units"].values():
+        assert u["osv_address"].startswith("https://api.osv.dev/v1/vulns/CVE-")
+        assert "summary" not in u and "details" not in u  # hashes only, never text
+    # a swapped weight, a stray text field and a missing unit are each refused
+    for bad in (lambda d: d["units"]["CP1"].update(weight="weaker"),
+                lambda d: d["units"]["CP5"].update(weight="strong"),
+                lambda d: d["units"]["CP2"].update(details="x"),
+                lambda d: d["units"].pop("CP7")):  # fmt: skip
+        d = json.loads(json.dumps(doc))
+        bad(d)
+        with pytest.raises(ValueError):
+            outside.check_sources(d)
+
+
+def first_sentence(text: str) -> str:
+    text = " ".join(text.split())
+    cut = re.search(r"(?<=[.!?]) ", text)
+    return text[: cut.start()] if cut else text
+
+
+def leaks(sentences: list, files: dict) -> list:
+    """(sentence, file) for each sentence found in a file's text, whitespace
+    folded."""
+    folded = {f: " ".join(t.split()) for f, t in files.items()}
+    return [(s, f) for s in sentences for f, t in folded.items() if s in t]
+
+
+def tracked_texts() -> dict:
+    out = subprocess.run(["git", "ls-files", "-z"], cwd=trees.ROOT, check=True,
+                         capture_output=True).stdout.decode().split("\0")  # fmt: skip
+    files = {}
+    for rel in filter(None, out):
+        p = trees.ROOT / rel
+        if p.is_file() and not p.is_symlink() and p.stat().st_size < 5_000_000:
+            files[rel] = p.read_bytes().decode("utf-8", "ignore")
+    return files
+
+
+def test_the_leak_check_finds_a_planted_sentence():
+    sentence = first_sentence(
+        "Planted details sentence number 9 of\nthe fixture. Then more."
+    )
+    assert sentence == "Planted details sentence number 9 of the fixture."
+    clean = {
+        "a.md": "nothing here",
+        "b.md": "Planted details sentence number 8 of the fixture.",
+    }
+    assert leaks([sentence], clean) == []
+    dirty = {**clean, "c.md": "x Planted details sentence number 9\nof the fixture.  y"}
+    assert leaks([sentence], dirty) == [(sentence, "c.md")]
+
+
+#: the desk's private advisory rows, beside this worktree (KNOWN_GAPS_ADVISORIES
+#: names another place, for a scratch worktree)
+ADVISORIES = Path(
+    os.environ.get("KNOWN_GAPS_ADVISORIES")
+    or trees.ROOT.parent / "work" / "private" / "cpython" / "advisories.jsonl"
+)
+
+
+def test_no_advisory_text_is_in_the_branch():
+    if not ADVISORIES.exists():
+        pytest.skip(f"the advisory text is private and is not here ({ADVISORIES.name}): "
+                    "nothing to check it against")  # fmt: skip
+    rows = [
+        json.loads(x)
+        for x in ADVISORIES.read_text(encoding="utf-8").splitlines()
+        if x.strip()
+    ]
+    sentences = [
+        first_sentence(r[k]) for r in rows for k in ("summary", "details") if r.get(k)
+    ]
+    assert len(sentences) >= 7 and all(len(s) >= 20 for s in sentences)
+    assert leaks(sentences, tracked_texts()) == []
+
+
+def write_cpython_questions(qdir: Path) -> None:
+    for w in ("local", "claude"):
+        (qdir / "cpython" / w).mkdir(parents=True)
+        for n in range(1, 8):
+            (qdir / "cpython" / w / f"CP{n}.txt").write_text(
+                f"# header {w}\nwhere does old{n} return value alpha{n} beta{n}\n"
+                f"which function checks gamma{n} and delta{n}\n"
+            )
+    (qdir / "null").mkdir()
+    (qdir / "null" / "null.txt").write_text("# null\nwhat is the weather like today\n")
+
+
+def test_outside_runs_the_frozen_method_on_its_units(tmp_path, capsys):
+    outside = trees.sibling("outside")
+    repos, doc, draft, rows = cpython_units(tmp_path)
+    units = doc["units"]
+    to = tmp_path / "to"
+    to.mkdir()
+    for name, pin in units.items():
+        trees.fetch_unit(to, repos, name, pin)
+    assert trees.check(to, units) == 0
+    qdir = tmp_path / "q"
+    write_cpython_questions(qdir)
+    frozen = {f"questions/{p.relative_to(qdir).as_posix()}": hashlib.sha256(p.read_bytes()).hexdigest()
+              for p in qdir.rglob("*.txt")}  # fmt: skip
+    qs = outside.unit_questions(qdir, "CP5", "before", frozen)
+    assert [q[2] for q in qs] == ["local"] * 2 + ["claude"] * 2 + ["null"]
+    assert [q[0] for q in qs][:2] == ["CP5 local 1", "CP5 local 2"]  # headers skipped
+    assert [q[2] for q in outside.unit_questions(qdir, "CP5", "found", frozen)] == [
+        "local"
+    ] * 2 + ["claude"] * 2
+    # a changed question file is not the frozen one
+    edited = qdir / "cpython" / "local" / "CP5.txt"
+    original = edited.read_text()
+    edited.write_text("where does something else live\n")
+    with pytest.raises(ValueError, match="not the file FROZEN.json holds"):
+        outside.unit_questions(qdir, "CP5", "before", frozen)
+    edited.write_text(original)
+    assert len(outside.unit_questions(qdir, "CP5", "before", frozen)) == 5
+    # each mode, every unit, then the judge: strong and weaker apart
+    for mode in ("found", "before"):
+        lines = []
+        for name in units:
+            for r in outside.ask_unit(to, tmp_path / "ix", name, mode, units,
+                                      outside.unit_questions(qdir, name, mode, None)):  # fmt: skip
+                lines.append(json.dumps(r, sort_keys=True))
+        answers = tmp_path / f"{mode}.jsonl"
+        answers.write_text("\n".join(lines) + "\n")
+        capsys.readouterr()
+        code = outside.judge(
+            mode,
+            to,
+            answers,
+            tmp_path / f"box-{mode}",
+            tmp_path / f"scored-{mode}.jsonl",
+            units,
+        )
+        assert code in (0, 42)
+        out = json.loads(capsys.readouterr().out)
+        if mode == "found":
+            # 5 strong units and 2 weaker, 4 questions each, per ranker
+            assert out["rank"]["bm25, strong"]["pairs"] == 5 * 4
+            assert out["rank"]["bm25, weaker"]["pairs"] == 2 * 4
+        else:
+            assert out["table"]["bm25, strong"]["of"] == 5 * 4
+            assert out["table"]["bm25, weaker"]["of"] == 2 * 4
+            assert (
+                out["table"]["bm25, null"]["of"] == 7
+            )  # the null question, every unit
+        record = (tmp_path / f"box-{mode}" / "record.jsonl").read_text()
+        assert ("phase1:rank, bm25, weaker" if mode == "found"
+                else "phase2:line level above chance, bm25, weaker") in record  # fmt: skip
+
+
+def test_outside_parts_ask_every_question_once_under_its_own_name(tmp_path):
+    outside = trees.sibling("outside")
+    qs = [(f"CP1 local {n}", f"q{n}", "local") for n in range(1, 11)]
+    for n in (1, 2, 3, 4, 7, 10, 11):
+        parts = [outside.part_of(qs, f"{i}/{n}") for i in range(1, n + 1)]
+        assert [q for p in parts for q in p] == qs  # joined: the list, in order, once
+        assert max(map(len, parts)) - min(map(len, parts)) <= 1 or n > len(qs)
+    for bad in ("0/3", "4/3", "3", "a/b", "1/0", ""):
+        with pytest.raises(ValueError, match="not a part"):
+            outside.part_of(qs, bad)
+    # the same answers, asked whole or in parts
+    repos, doc, draft, rows = cpython_units(tmp_path)
+    units = doc["units"]
+    to = tmp_path / "to"
+    to.mkdir()
+    trees.fetch_unit(to, repos, "CP2", units["CP2"])
+    qdir = tmp_path / "q"
+    write_cpython_questions(qdir)
+    full = outside.unit_questions(qdir, "CP2", "before", None)
+    whole = outside.ask_unit(to, tmp_path / "ix", "CP2", "before", units, full)
+    joined = []
+    for i in (1, 2, 3):
+        joined += outside.ask_unit(to, tmp_path / "ix", "CP2", "before", units,
+                                   outside.part_of(full, f"{i}/3"))  # fmt: skip
+
+    def answers(rs):
+        return sorted(
+            json.dumps(r, sort_keys=True) for r in rs if r["type"] == "answer"
+        )
+
+    def stats(rs):  # the unit's own counts, but for how many questions this call asked
+        return [{k: v for k, v in r.items() if k != "questions"}
+                for r in rs if r["type"] == "stats"]  # fmt: skip
+
+    assert answers(joined) == answers(whole) and len(answers(whole)) == 3 * len(full)
+    assert all(s == stats(whole)[0] for s in stats(joined))
+
+
+def test_outside_main_refuses_a_bad_command_line_and_missing_questions(
+    capsys, tmp_path
+):
+    outside = trees.sibling("outside")
+    assert outside.main([]) == 2
+    assert outside.main(["ask", "--unit", "CP1"]) == 2
+    assert outside.main(["fetch", "--to", str(tmp_path)]) == 2
+    assert outside.main(["check", "--to", str(tmp_path), "--unit", "CP9"]) == 2
+    capsys.readouterr()
+    # the real command, with the frozen questions, refuses when the trees are not
+    # there: nothing is asked and nothing is written
+    code = outside.main(["ask", "--to", str(tmp_path), "--ix", str(tmp_path / "ix"),
+                         "--unit", "CP1", "--mode", "before", "--out", str(tmp_path / "o")])  # fmt: skip
+    assert code == 2 and "missing" in capsys.readouterr().err
+    assert not (tmp_path / "o").exists()
+
+
+def test_the_cpython_questions_are_frozen_eight_a_unit_a_writer():
+    outside = trees.sibling("outside")
+    frozen = json.loads(FROZEN_FILE.read_text(encoding="utf-8"))["files"]
+    assert not (
+        outside.QDIR / "cpython" / "inputs.md"
+    ).exists()  # it holds advisory text
+    flagged = {"local": 0, "claude": 0}
+    for w in ("local", "claude"):
+        for n in range(1, 8):
+            rel = f"questions/cpython/{w}/CP{n}.txt"
+            assert frozen[rel] == hashlib.sha256((HERE / rel).read_bytes()).hexdigest()
+            lines = flag.read(HERE / rel)
+            assert len(lines) == 8, rel
+            flagged[w] += sum(flag.flagged(q) for q in lines)
+    assert flagged == {"local": 22, "claude": 1}  # counted when they were frozen
+    for mode, extra in (("found", 0), ("before", 50)):
+        qs = outside.unit_questions(outside.QDIR, "CP5", mode, frozen)
+        assert len(qs) == 16 + extra
 
 
 # -- phase 5, spread --------------------------------------------------------

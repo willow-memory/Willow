@@ -37,7 +37,23 @@
   "questions/local/KG11.txt": "169682dc7fb8b6da046dfdc315884b7121deb20246382262be3b2f85d2fef401",
   "questions/local/KG12.txt": "0e3f310cc2d6396ede7a8a5430d71ec4a4c97f6257d613a34206dbbda019ec69",
   "questions/null/null.txt": "11a3b356f089f34f70535f2f3b66ed94c088ac78fe1b3d335a60594ee326e843",
-  "spread.py": "144ee1accea0dd13ee285cbd7c258d0603e6311ea67007c2f3d9a775bdfb7c01"
+  "spread.py": "144ee1accea0dd13ee285cbd7c258d0603e6311ea67007c2f3d9a775bdfb7c01",
+  "outside.py": "7a8cf50d600112afdfb71443daa4f72f2c54f9645428f43574bdbef899f9923f",
+  "cpython_sources.json": "c20b1fd4925029d3a9f79b3a152928ab759d957570e51c4dd2aff2aebf94aaad",
+  "questions/cpython/local/CP1.txt": "50706f7e94546f0df0172d9add368e20e10526b05c4705d65f9b2df75867e4cd",
+  "questions/cpython/local/CP2.txt": "eb72efee8f0ba69928b597b0dbafd170056eacd3294dcb7e73c3abe7e962a25e",
+  "questions/cpython/local/CP3.txt": "411dc8e26eb4769c846569e434fc20fe10bc884295069b691506ecd2fbc94417",
+  "questions/cpython/local/CP4.txt": "638678e7c49baba4977bee1e4b17d420fba8466f4f34b52b132c14b333cc90ec",
+  "questions/cpython/local/CP5.txt": "1c7d38f0e5ed86006eec00bee6af1eb736f3677ced8b4993129a50a057e43511",
+  "questions/cpython/local/CP6.txt": "58fc43aeff9bd9ba881dffa13f5cec5dc6e6561912dfb02b1d266cd45a83b68f",
+  "questions/cpython/local/CP7.txt": "b43529112f7ee0c9db69e23460b20208303e88a9819990d6385c739645f3012d",
+  "questions/cpython/claude/CP1.txt": "99e5d834b62266cab2d36919159a193a577910ff91b9bfe91ed2f292b475e79f",
+  "questions/cpython/claude/CP2.txt": "dc4d03560bc83702139276d1882eaaac091088c03839dbdcc1a24cacd572fdf6",
+  "questions/cpython/claude/CP3.txt": "d082031409de0e5e769ad87b4a9f015d388be1e3cc14c6b2beceae7f6a73e59a",
+  "questions/cpython/claude/CP4.txt": "0f24a3aa07d2c72b3bbf6ca70a21046ae4856704d3ba7c3d9f6dd50e965404fe",
+  "questions/cpython/claude/CP5.txt": "b3bfc6551bc099098b54828a4845a7ebde2ba0b80e68f8d6079a60dfaf329e72",
+  "questions/cpython/claude/CP6.txt": "a7d2b11486509decbe0efb3f3fbf15c51ea5d1a7ba2b491b41fcdf2b61b686bd",
+  "questions/cpython/claude/CP7.txt": "248e86c17852995970075a0ba7da85698267eb18e95e18c6d9a0bdd13f4d47cc"
  },
  "tools_at_freeze": {
   "kernel.py": "be6e99a1952d0cb347b0028071b98258e3e69502c21f7ee715557b0ed3145a0d",
@@ -60,6 +76,9 @@
   "freeze 2": "2026-10-28, before any question was asked of any code: the blind questions (local and claude writers, 12 gaps each; the null set; the writers' input), the flagged-line rule (flag.py), and ask.py, run.py and score.py reading the questions per writer and tallying them for phase 4",
   "flag.py": "2026-10-28, freeze 2: the rule that flags question lines holding identifiers, fixed on the counts local 48 of 96, claude 1 of 96, null 0 of 50",
   "questions/": "2026-10-28, freeze 2: byte for byte the unedited output of the blind writers, headers included",
-  "spread.py": "2026-10-28, freeze 3, before it was run on any repository: phase 5, the candidate rule (top 10 by bm25, at least 4 of a gap's 16 questions, at least one from each writer) with its exact chance, findings written only to a private place"
+  "spread.py": "2026-10-28, freeze 3, before it was run on any repository: phase 5, the candidate rule (top 10 by bm25, at least 4 of a gap's 16 questions, at least one from each writer) with its exact chance, findings written only to a private place",
+  "outside.py": "2026-10-28, freeze 4, before it was run on any unit: phase 6, the frozen method on seven cpython CVE fixes (same hit rule, rank statistic, line-level and null gates, two writers)",
+  "cpython_sources.json": "2026-10-28, freeze 4: the seven cpython units' CVE, OSV address, fetch time, advisory text hashes, commits, trees and weights; never the advisory text",
+  "questions/cpython/": "2026-10-28, freeze 4, before any unit was asked: byte for byte the unedited output of the blind writers (local and claude, eight questions per unit, CP1 to CP7), headers included; their input file holds the advisory text and is kept privately"
  }
 }

@@ -757,7 +757,8 @@ willow/
 │   │   ├── origin.py         which commit wrote each hit line, when, and what its message cites
 │   │   ├── run.py            scores a phase's answers and writes its pass rules as kernel verdict rows
 │   │   ├── spread.py         phase 5: the frozen questions asked of another repository, the passages several reach kept as private candidates
-│   │   ├── outside.py        not built yet: the same method on cpython's CVE fixes
+│   │   ├── outside.py        phase 6: the same method on seven cpython CVE fixes, the outside control
+│   │   ├── cpython_sources.json  those seven units: CVE, OSV address, fetch time, advisory text hashes, commits, trees, weight; never the text
 │   │   ├── flag.py           the flagged-line rule for question lines, and how the questions' folders are read
 │   │   ├── questions/
 │   │   │   ├── inputs.md     what the blind writers were given: the redacted gap text, and nothing else
@@ -787,6 +788,23 @@ willow/
 │   │   │   │   ├── KG10.txt  the same for KG10
 │   │   │   │   ├── KG11.txt  the same for KG11
 │   │   │   │   └── KG12.txt  the same for KG12
+│   │   │   ├── cpython/
+│   │   │   │   ├── local/
+│   │   │   │   │   ├── CP1.txt  eight questions a local model wrote, blind, for CP1
+│   │   │   │   │   ├── CP2.txt  the same for CP2
+│   │   │   │   │   ├── CP3.txt  the same for CP3
+│   │   │   │   │   ├── CP4.txt  the same for CP4
+│   │   │   │   │   ├── CP5.txt  the same for CP5
+│   │   │   │   │   ├── CP6.txt  the same for CP6
+│   │   │   │   │   └── CP7.txt  the same for CP7
+│   │   │   │   └── claude/
+│   │   │   │       ├── CP1.txt  eight questions a Claude subagent wrote, blind, for CP1
+│   │   │   │       ├── CP2.txt  the same for CP2
+│   │   │   │       ├── CP3.txt  the same for CP3
+│   │   │   │       ├── CP4.txt  the same for CP4
+│   │   │   │       ├── CP5.txt  the same for CP5
+│   │   │   │       ├── CP6.txt  the same for CP6
+│   │   │   │       └── CP7.txt  the same for CP7
 │   │   │   └── null/
 │   │   │       └── null.txt  fifty questions with nothing to do with security, written with no input
 │   │   └── test_known_gaps.py  holds the frozen files to their hashes, and the tools to their word

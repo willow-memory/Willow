@@ -1,0 +1,10 @@
+# writer: claude subagent (sonnet), blind: read only work/blind/cpython/inputs.md
+# source: work/blind/cpython/inputs.md CP7
+How much CPU can one request burn when a cookie value is stuffed with backslashes?
+What does quadratic slowdown mean in practice for a cookie of a few kilobytes?
+Can a single unauthenticated client tie up my web server just by sending a crafted cookie header?
+Why does escaping a character inside a quoted value make the parser slow?
+Does a limit on header size at my reverse proxy neutralize it?
+Why is this rated low severity, and in what setup would it be worse?
+Are only quoted cookie values affected, or all cookie parsing?
+How would I spot this attack in logs or CPU graphs?

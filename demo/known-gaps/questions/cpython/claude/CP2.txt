@@ -1,0 +1,10 @@
+# writer: claude subagent (sonnet), blind: read only work/blind/cpython/inputs.md
+# source: work/blind/cpython/inputs.md CP2
+How can control characters still get into a cookie even though an earlier fix was supposed to reject them?
+Which ways of changing a cookie's attributes skip the validation check?
+Can a cookie that is loaded from pickled data smuggle in control characters?
+What can an attacker do with a newline or other control character inside a cookie value or attribute?
+Could this lead to HTTP header injection or response splitting in my web app?
+Does the script-style output of a cookie jar get checked the way the normal header output does?
+If my app builds cookies from user-supplied input, am I exposed, and how would I notice?
+Why was the first fix incomplete, and how do I make sure all entry points are validated now?

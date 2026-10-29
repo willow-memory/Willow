@@ -1,0 +1,10 @@
+# writer: claude subagent (sonnet), blind: read only work/blind/cpython/inputs.md
+# source: work/blind/cpython/inputs.md CP6
+Can a document with deeply nested entity references crash the XML parser?
+Why does the parser recurse without a limit when expanding entities?
+Is the impact only a crash and denial of service, or can it become memory corruption?
+Does it depend on the platform or the thread stack size?
+Do I need to accept inline entity definitions from untrusted users for this to be exploitable?
+Would a process manager that restarts crashed workers hide repeated attacks?
+How do I know whether my application statically bundles the vulnerable parser?
+Can limiting the size or depth of incoming XML at the edge block this?

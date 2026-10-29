@@ -1,0 +1,204 @@
+{
+ "about": "cpython_sources.json: phase 6's pins. For each outside unit, the CVE, the OSV address and fetch time, the SHA-256 of the advisory's summary and details (the text itself is kept outside this branch), the fix and vulnerable commits and trees, the diff's SHA-256 and the unit's weight. Made by outside.py resolve. The writers' input file, which holds the advisory text, is kept privately with the advisories, named by the same address and hashes.",
+ "repo": "cpython",
+ "units": {
+  "CP1": {
+   "gap": "CP1",
+   "repo": "cpython",
+   "cve": "CVE-2026-12003",
+   "osv_address": "https://api.osv.dev/v1/vulns/CVE-2026-12003",
+   "fetched_at": "2026-10-28T20:27Z",
+   "osv_modified": "2026-10-28T02:30:39.698079379Z",
+   "summary_sha256": "a2ebed1323801076492b36ffacaf0804f56cb53782dfa3769141ad21781fb131",
+   "details_sha256": "64916a14c8f8d5e6fe728cd70f8fc952dbc71038e17d01762e7ad84d1685a078",
+   "weight": "strong",
+   "vulnerable": {
+    "commit": "c2ca7724af94df6e078a4b2e86d1be8c410d9940",
+    "tree": "31e2b5552b771de1b1befd5257f100f494193df2"
+   },
+   "fixed": {
+    "commit": "9e863fab283eddca9c2a8f9d1ee30f4dc243e314",
+    "tree": "ae6471f29ec92be857374a5538c19e95687391ab"
+   },
+   "files_scored": null,
+   "diff_files": [
+    "Makefile.pre.in",
+    "Misc/NEWS.d/next/Security/2026-06-16-14-58-02.gh-issue-151544._bexVy.rst",
+    "Modules/getpath.py"
+   ],
+   "counted_files": 3,
+   "diff_sha256": "9a01595229c9f521d1cb350839243ac7bad38f6f864549ed9b08db80f745008b"
+  },
+  "CP2": {
+   "gap": "CP2",
+   "repo": "cpython",
+   "cve": "CVE-2026-3644",
+   "osv_address": "https://api.osv.dev/v1/vulns/CVE-2026-3644",
+   "fetched_at": "2026-10-28T20:27Z",
+   "osv_modified": "2026-10-28T02:31:07.059890217Z",
+   "summary_sha256": "0374496d9f1e1de84af110862137714667134e0a889d8d616b430eccfae1efd6",
+   "details_sha256": "55d956890b20b1e342c743853a9597ae7bac13add799a01e77ce620a72938043",
+   "weight": "strong",
+   "vulnerable": {
+    "commit": "77632f085d0cec29c7576b8528849276109801a1",
+    "tree": "28a5406d49c343ffda2fa50e0767c587dd4a028c"
+   },
+   "fixed": {
+    "commit": "57e88c1cf95e1481b94ae57abe1010469d47a6b4",
+    "tree": "0344e27e14e7586c00756b0984291b4c33440eda"
+   },
+   "files_scored": null,
+   "diff_files": [
+    "Lib/http/cookies.py",
+    "Lib/test/test_http_cookies.py",
+    "Misc/NEWS.d/next/Security/2026-03-06-17-03-38.gh-issue-145599.kchwZV.rst"
+   ],
+   "counted_files": 2,
+   "diff_sha256": "ef67845cb2a8a918f32eb19a45f4a546046ecd50b7b69b0904d516d54916159c"
+  },
+  "CP3": {
+   "gap": "CP3",
+   "repo": "cpython",
+   "cve": "CVE-2026-4224",
+   "osv_address": "https://api.osv.dev/v1/vulns/CVE-2026-4224",
+   "fetched_at": "2026-10-28T20:27Z",
+   "osv_modified": "2026-10-28T10:51:44.288008356Z",
+   "summary_sha256": "f60dd5e5b0a0760a1be8620d9bf0523e770df0fbf48146eeb7050141bb87ec8b",
+   "details_sha256": "274ea3e0714745ab84113711ae294900ed4cf7cd15c24aa240aee63d53323389",
+   "weight": "strong",
+   "vulnerable": {
+    "commit": "33044b015ba1589887629e217d68bba35b1fced5",
+    "tree": "86e596c5a9cfbc5169b3d6837a3775743783514b"
+   },
+   "fixed": {
+    "commit": "eb0e8be3a7e11b87d198a2c3af1ed0eccf532768",
+    "tree": "f2534561cc91f7151ce8ab85a27715c796344c52"
+   },
+   "files_scored": null,
+   "diff_files": [
+    "Lib/test/test_pyexpat.py",
+    "Misc/NEWS.d/next/Security/2026-03-14-17-31-39.gh-issue-145986.ifSSr8.rst",
+    "Modules/pyexpat.c"
+   ],
+   "counted_files": 2,
+   "diff_sha256": "304548b2755b062a3f98561603a38c1d9a2648be3ce18c1596c6a2c25b1d70a1"
+  },
+  "CP4": {
+   "gap": "CP4",
+   "repo": "cpython",
+   "cve": "CVE-2026-2297",
+   "osv_address": "https://api.osv.dev/v1/vulns/CVE-2026-2297",
+   "fetched_at": "2026-10-28T20:27Z",
+   "osv_modified": "2026-10-28T10:51:13.057781960Z",
+   "summary_sha256": "10d5eb89e1ac8c39c55e9164248ba7b1affc2d81fdf3f2a32ba97f08bd74f937",
+   "details_sha256": "cbce147ca6fb6b711e971862d68440b099a2964b1207fbd90512cc031df59613",
+   "weight": "strong",
+   "vulnerable": {
+    "commit": "0a51113a4901502e1e14c892e4c31768a14faa60",
+    "tree": "3a9ff623408706c9f3b48496018ffdc5f4124a48"
+   },
+   "fixed": {
+    "commit": "a51b1b512de1d56b3714b65628a2eae2b07e535e",
+    "tree": "d364c4cc004ad6069321a5b692562564f1c38408"
+   },
+   "files_scored": null,
+   "diff_files": [
+    "Lib/importlib/_bootstrap_external.py",
+    "Misc/NEWS.d/next/Security/2026-03-04-18-59-17.gh-issue-145506.6hwvEh.rst"
+   ],
+   "counted_files": 2,
+   "diff_sha256": "e159431335fc748146cecbabdcb3b76a3366791add7b298d91c2e5bcc5731064"
+  },
+  "CP5": {
+   "gap": "CP5",
+   "repo": "cpython",
+   "cve": "CVE-2025-59375",
+   "osv_address": "https://api.osv.dev/v1/vulns/CVE-2025-59375",
+   "fetched_at": "2026-10-28T20:27Z",
+   "osv_modified": "2026-10-28T02:30:39.933283423Z",
+   "summary_sha256": null,
+   "details_sha256": "1ee600f6aa4041f2fac67c226a3eb0c3ddabc8cc530d7db222d3aad24fea51f1",
+   "weight": "weaker",
+   "vulnerable": {
+    "commit": "0aab07ccf79f335e3afa8021ddcbcfb8afa4d70c",
+    "tree": "bc7adec975b92e30cc710629e4854e93458872c2"
+   },
+   "fixed": {
+    "commit": "f04bea44c37793561d753dd4ca6e7cd658137553",
+    "tree": "8acbb0a5e4f551bc29a7ac9e330fc49cd09c702f"
+   },
+   "files_scored": null,
+   "diff_files": [
+    "Doc/library/pyexpat.rst",
+    "Doc/whatsnew/3.15.rst",
+    "Include/pyexpat.h",
+    "Lib/test/test_pyexpat.py",
+    "Misc/NEWS.d/next/Library/2025-09-22-14-40-11.gh-issue-90949.UM35nb.rst",
+    "Modules/clinic/pyexpat.c.h",
+    "Modules/expat/pyexpatns.h",
+    "Modules/pyexpat.c"
+   ],
+   "counted_files": 7,
+   "diff_sha256": "da5c694c0fca2b9d917b7428ffb41349c7b7de2e5d89bb69ec7addfa04753912",
+   "why_weaker": "the advisory is libexpat's; cpython's commit adds an API guard rather than the upstream fix"
+  },
+  "CP6": {
+   "gap": "CP6",
+   "repo": "cpython",
+   "cve": "CVE-2024-8176",
+   "osv_address": "https://api.osv.dev/v1/vulns/CVE-2024-8176",
+   "fetched_at": "2026-10-28T20:27Z",
+   "osv_modified": "2026-10-28T02:30:45.233021361Z",
+   "summary_sha256": "23c981dd27a42a9a24d4861f394697032b1a6de1daa9c8c742e61217b63dd952",
+   "details_sha256": "39ced3ca8333339714a64e143fd3c83b22255fbac318e3f44ffd62f53431302d",
+   "weight": "weaker",
+   "vulnerable": {
+    "commit": "978e37bb5f979cccce36613637ac2d94b43c71b2",
+    "tree": "52f7eb072bacae81a0ab7a20f8875f5c01861124"
+   },
+   "fixed": {
+    "commit": "bb0268f60dfe903a9bdb8d84104247a9318c6b18",
+    "tree": "accab29c77b5b016b3cf4292da09bc22554eb0f3"
+   },
+   "files_scored": null,
+   "diff_files": [
+    "Misc/NEWS.d/next/Security/2025-03-14-23-28-39.gh-issue-131261.0aB6nM.rst",
+    "Misc/sbom.spdx.json",
+    "Modules/expat/expat.h",
+    "Modules/expat/refresh.sh",
+    "Modules/expat/xmlparse.c",
+    "Tools/build/.warningignore_macos"
+   ],
+   "counted_files": 6,
+   "diff_sha256": "852f75886afa9638f99ec7e5ddc45506016d3b0067f83a2c5409b3c543c18f62",
+   "why_weaker": "a vendored libexpat version bump; the changed lines are upstream C, not cpython's own"
+  },
+  "CP7": {
+   "gap": "CP7",
+   "repo": "cpython",
+   "cve": "CVE-2024-7592",
+   "osv_address": "https://api.osv.dev/v1/vulns/CVE-2024-7592",
+   "fetched_at": "2026-10-28T20:27Z",
+   "osv_modified": "2026-10-28T02:31:00.097967085Z",
+   "summary_sha256": "486c6674ab6157a7fffe6f7d33d40f3c9a716a42d4e951e8b83122c498109a62",
+   "details_sha256": "b519baba1b3c6ad543a313412764d08b8584979f86d78bdef27ff27b754713f1",
+   "weight": "strong",
+   "vulnerable": {
+    "commit": "d60b97a833fd3284f2ee249d32c97fc359d83486",
+    "tree": "adf6949b610c636334b4ef649eac730b9e2c2364"
+   },
+   "fixed": {
+    "commit": "44e458357fca05ca0ae2658d62c8c595b048b5ef",
+    "tree": "768f7f526ee50f37b70b8545891b27b0496c4117"
+   },
+   "files_scored": null,
+   "diff_files": [
+    "Lib/http/cookies.py",
+    "Lib/test/test_http_cookies.py",
+    "Misc/NEWS.d/next/Library/2024-08-16-19-13-21.gh-issue-123067.Nx9O4R.rst"
+   ],
+   "counted_files": 2,
+   "diff_sha256": "b5da8f1e5f9db3f552709332be6c500482bda0e16d8f50385f995c61e3d772cf"
+  }
+ }
+}

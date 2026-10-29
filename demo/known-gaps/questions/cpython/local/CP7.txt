@@ -1,0 +1,12 @@
+# writer: local, nestor_draft, engine ollama:willow-lane4-3b:latest, temperature 0.0
+# prompt_sha256 3297a3cf051dee67e00399a65fdb3b26a39d8c4018c1d753341fd08abedc44fa
+# input_sha256 468a783fd919641fc995cc748079918ac8ccd7eed5f336e5c601fcfecae0f82e
+# source: work/blind/cpython/inputs.md CP7, verbatim; output unedited
+What is the standard library module in CPython that parses HTTP cookies, and what is its parsing behavior for quoted characters?
+What is the specific vulnerability found in this module when parsing cookies with backslashes for quoted characters?
+What is the algorithm used by the module for parsing quoted characters in cookie values, and what is its complexity?
+What is the expected behavior of the module when parsing a cookie value containing a backslash for a quoted character?
+What is the actual behavior of the module when parsing a cookie value containing a backslash for a quoted character, and what is the consequence?
+What is the threshold for the module to be considered vulnerable, and what is the severity of the vulnerability?
+What is the impact of this vulnerability on the system's CPU resources when parsing a cookie value containing a backslash for a quoted character?
+What is the recommended fix for this vulnerability, and what is the expected behavior of the module after the fix is applied?

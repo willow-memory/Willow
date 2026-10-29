@@ -1,0 +1,10 @@
+# writer: claude subagent (sonnet), blind: read only work/blind/cpython/inputs.md
+# source: work/blind/cpython/inputs.md CP1
+Can a low-privilege user on a shared Windows machine get Python to load their own standard library instead of the installed one?
+Why does Python treat a folder it finds outside its install directory as proof that it is running from a source tree?
+Which Windows installs are exposed, and how do I tell whether mine is one of them?
+Does a per-user install avoid this, and why would the permissions on the parent directories matter?
+Who can create the marker folder two levels above the install, and what permissions does that take?
+Is this only a Windows problem, or can Linux and macOS builds be tricked the same way?
+If I can't move off the old installer, is pre-creating and locking down the marker directory enough to block it?
+What happens to older Python releases that won't get updated installers, and are they left permanently exposed?

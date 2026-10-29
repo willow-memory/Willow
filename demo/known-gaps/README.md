@@ -96,9 +96,10 @@ It also changes three files frozen at freeze 1, `ask.py`, `run.py` and
 gate is changed. The set is committed by the operator, with FROZEN.json
 rebuilt over it.
 
-`outside.py` is a stub that exits 2; it is not frozen and is written in its
-own bite. **Freeze 3** adds `spread.py` (phase 5, below) to the same file,
-before it is run on any repository; no file frozen earlier is changed.
+**Freeze 3** added `spread.py` (phase 5, below) to the same file, before it
+was run on any repository. **Freeze 4** adds `outside.py` (a stub that exited 2
+until phase 6, below), `cpython_sources.json` and the cpython questions, before
+any unit is asked; no file frozen earlier is changed by either.
 
 ### The questions and the flagged-line rule
 
@@ -136,7 +137,7 @@ and exits 0, 42 or 2 as the kernel does.
 | `origin.py` | for every hit range, `whose.py` at the vulnerable commit: the commit that wrote it, its date, the gap, audit and pull request ids its message cites, and the days before the fix. |
 | `run.py` | `found` (phase 1) and `before` (phase 2): scores the answers, applies the pass rules per kind, writes each rule as a kernel verdict row. |
 | `spread.py` | phase 5: a gap's 16 frozen questions asked of another repository at its HEAD, and the passages several of them reach, written to a private place (below). |
-| `outside.py` | not built yet. |
+| `outside.py` | phase 6: the same method on seven cpython CVE fixes (below). `resolve` makes `cpython_sources.json` from the desk's draft, the local cpython repository and the advisory rows; `fetch`, `check`, `index`, `ask` and `judge` hand the units to `trees.py`, `ask.py`, `score.py` and `run.py` unchanged. |
 
 ### The hit rule
 
@@ -740,8 +741,72 @@ only the frozen questions: exactly 16 a gap, each file's hash equal to
 FROZEN.json's and recorded in the stats row. Nothing about a result is
 published here.
 
+### Phase 6: cpython as the outside control (frozen; not yet run)
+
+The twelve gaps are the fleet's own, written and fixed by the same people and
+models, so a pass there has no yardstick beside it. Phase 6 asks the **same
+method, unchanged,** of a program whose advisories and fixes are public: seven
+CVE fixes in cpython, each a commit on main whose first parent is the
+vulnerable side. `outside.py` only names the units and hands them to
+`trees.py`, `ask.py`, `score.py` and `run.py`: the same hit rule by position,
+the same rank statistic (phase 1), the same line-level and null gates (phase
+2), the same two writers, the same null set. No frozen rule file changes.
+
+| Unit | CVE | Weight |
+|---|---|---|
+| CP1 | CVE-2026-12003 | strong |
+| CP2 | CVE-2026-3644 | strong |
+| CP3 | CVE-2026-4224 | strong |
+| CP4 | CVE-2026-2297 | strong |
+| CP5 | CVE-2025-59375 | weaker |
+| CP6 | CVE-2024-8176 | weaker |
+| CP7 | CVE-2024-7592 | strong |
+
+**Why two are weaker.** CP5 and CP6 are libexpat advisories. The advisory
+describes upstream's bug, and cpython's own commit is not the upstream fix:
+for CP5 it adds an API guard, for CP6 it is a vendored version bump whose
+changed lines are upstream C. A question written from the advisory can't be
+expected to land on those lines the way it lands on a fix cpython wrote, so
+the two are judged apart as the fleet's commit-message-only gaps are (the
+`weaker` group), and never pooled with the five. In those two units the frozen
+rule also gives positions in non-code files (CP5: `Doc/library/pyexpat.rst`, 2
+positions; CP6: `Misc/sbom.spdx.json`, 6, and `Modules/expat/refresh.sh`, 3).
+They are reported, not pinned away, so the rule stays as frozen.
+
+**What the branch holds.** `cpython_sources.json` carries, for each unit, the
+CVE id, the OSV address, the fetch time and OSV's modified stamp, the SHA-256
+of the advisory's summary and of its details, the fix and vulnerable commits
+and trees, the diff's SHA-256 and the weight. **Advisory text is kept by
+address and hash:** the text itself is private (the desk's, outside this
+branch), is what the blind writers are given, and is never written here; a
+test checks that no first sentence of any advisory is in any tracked file.
+`outside.py resolve` makes the file from the desk's draft, the local cpython
+repository and the advisory rows, and refuses a draft git does not bear out
+(the first parent is not the draft's, a tree differs, OSV names another
+commit, a fix names its CVE in neither its message nor OSV, or its diff
+changes no file the hit rule counts).
+
+**The questions.** The local and Claude writers' questions for CP1 to CP7 are
+`questions/cpython/{local,claude}/CPn.txt`, the null set is the same
+`questions/null/null.txt`, and each file is held to the hash FROZEN.json holds
+or `outside.py ask` refuses. They were written blind from the advisories and
+frozen (freeze 4) before any unit was asked: eight questions per unit per
+writer, 56 a writer, 112 in all. The writers' input file holds the advisory
+text, so it is not in the branch; it is kept privately with the advisories.
+
+**The run.** One task per unit per mode, each under `timeout 280`: `fetch` once
+(the 14 trees), then `ask` a unit in `found` and in `before`, join a mode's
+answers, and `judge` them. A cpython tree has about 420,000 passages and one
+index of it takes 20 to 40 seconds. In a dry run on one unit (the answers
+thrown away, the questions borrowed from a fleet gap only to time the rankers)
+`found` took 44 seconds, but `before`, which asks the unit's questions and the
+50 null questions three ways of the whole tree, took 254 seconds for 66
+questions, too near the 280. So `before` is asked in three parts,
+`ask --part 1/3`, `2/3`, `3/3` (about 100 seconds each); every question is
+asked once, under its own name, and the parts are joined before `judge`.
+
 ### Not run
 
-Phase 6 (the cpython control, which needs an egress lease) has not run.
-Phase 5 ran on 44 repositories (above); its findings are private and nothing
-here claims a result for it. Nothing here claims a result for phase 6.
+Phase 6 is frozen and has not run. Phase 5 ran on
+44 repositories (above); its findings are private and nothing here claims a
+result for it. Nothing here claims a result for phase 6.

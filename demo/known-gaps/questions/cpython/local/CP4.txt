@@ -1,0 +1,12 @@
+# writer: local, nestor_draft, engine ollama:willow-lane4-3b:latest, temperature 0.0
+# prompt_sha256 f4b78a248b07e075936195ca1c8e86c3dc8abab4e1d4bc7c22813e09c99d51b4
+# input_sha256 9e590474b6318ec3bd6c2a71ef584061ef4072f1ca5d451a27b4de08c30e911a
+# source: work/blind/cpython/inputs.md CP4, verbatim; output unedited
+Does the SourcelessFileLoader hook ever read a .pyc file, and if so, how does it do it?
+What is the behavior of FileLoader when it encounters a .pyc file, and is it supposed to read it?
+Does the audit's SourcelessFileLoader event ever fire, and if not, what is the cause?
+What is the purpose of the SourcelessFileLoader hook, and is it still needed in modern Python?
+Are there any other file formats that SourcelessFileLoader handles, and if so, how?
+Does the FileLoader base class inherit behavior from SourcelessFileLoader, and if so, what is it?
+Are there any other audit events that SourcelessFileLoader's failure could trigger, and if so, what are they?
+Does the audit's SourcelessFileLoader event ever fire on a Python interpreter that does not support SourcelessFileLoader, and if so, what is the behavior?
