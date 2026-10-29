@@ -47,6 +47,25 @@ def _docx(text: str) -> bytes:
     return buf.getvalue()
 
 
+def _png() -> bytes:
+    import struct
+    import zlib
+
+    def chunk(kind: bytes, body: bytes) -> bytes:
+        return (
+            struct.pack(">I", len(body))
+            + kind
+            + body
+            + struct.pack(">I", zlib.crc32(kind + body))
+        )
+
+    return (b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", struct.pack(">IIBBBBB", 1, 1, 8, 2, 0, 0, 0))
+            + chunk(b"tEXt", b"Author\0Ana") + chunk(b"IDAT", zlib.compress(b"\0\xff\0\0")) + chunk(b"IEND", b""))  # fmt: skip
+
+
+#: files an add-on needs in the pile besides the default, by add-on
+PILE_EXTRA: dict[str, dict[str, bytes]] = {"scrub": {"photo.png": _png()}}
+
 #: one small readable file per reader, by the name it is written under
 READERS: dict[str, tuple[str, dict[str, bytes]]] = {
     "books": ("books.py", {"My Clippings.txt": (
@@ -62,6 +81,46 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
     "mail": ("mail.py", {"roof.eml": (
         "From: Ada Example <ada@example.org>\nDate: Thu, 14 Oct 2026 09:15:00 +0100\n"
         "Subject: Roof estimate\n\nThe estimate is in.\n").encode()}),
+    "bibtex": ("bibtex.py", {"refs.bib": (
+        b'% a comment\n@string{jms = "Journal of Made-Up Studies"}\n@article{smith2020,\n  author = {Example, Ada and Sample, Cy},\n'
+        b'  title = {Tides of the {E}stuary},\n  journal = jms,\n  year = 2020, volume = {12}, number = {3}, pages = {45--67},\n'
+        b'  doi = "10.1000/xyz123", keywords = {tides, estuaries},\n  abstract = {We measure the tide at six harbours.}\n}\n'
+    )}),
+    "rtf": ("rtf.py", {"letter.rtf": (
+        b"{\\rtf1\\ansi\\deff0{\\fonttbl{\\f0 Arial;}}{\\colortbl;\\red0\\green0\\blue0;}"
+        b"\\pard\\b The roof\\b0  is fixed.\\par\nBills go out on Thursday.\\par}"
+    )}),
+    "jupyter": ("jupyter.py", {"tides.ipynb": (
+        b'{"nbformat": 4, "nbformat_minor": 5, "metadata": {"kernelspec": {"name": "python3", "display_name": "Tide analysis"}, "language_info": {"name": "python"}},'
+        b' "cells": [{"cell_type": "markdown", "source": ["# Tides at the estuary\\n", "Six harbours."]},'
+        b' {"cell_type": "code", "source": "df = load(\\"harbours.csv\\")\\nprint(len(df))", "outputs": [{"output_type": "stream", "name": "stdout", "text": ["6 rows\\n"]},'
+        b' {"output_type": "display_data", "data": {"image/png": "iVBORw0KGgo=", "text/plain": ["<Figure size 640x480>"]}}]}]}'
+    )}),
+    "latex": ("latex.py", {"main.tex": (
+        b"\\documentclass{article}\n\\usepackage{amsmath}\n\\title{Tides of the Estuary}\n\\author{Ada Example}\n\\begin{document}\n\\maketitle\n"
+        b"\\section{Method}\\label{sec:m}\nWe measure the tide at six harbours \\cite{smith2020}. % a comment\n"
+        b"The result is $x = 1$ and\n\\begin{equation}\ny = mx + b\n\\end{equation}\nholds \\emph{everywhere}.\n\\end{document}\n"
+    )}),
+    "pgn": ("pgn.py", {"club.pgn": (
+        b'[Event "Club Championship"]\n[Site "Leeds"]\n[Date "2024.03.03"]\n[White "Ada Example"]\n[Black "Cy Sample"]\n[Result "1-0"]\n[ECO "B20"]\n[Opening "Sicilian Defense"]\n\n'
+        b'1. e4 {My usual start.} c5 2. Nf3 d6 (2... Nc6 {Also fine}) 3. d4 cxd4 4. Nxd4 Nf6 14. Qd7 {I missed the fork here.} 1-0\n'
+    )}),
+    "chordpro": ("chordpro.py", {"estuary.cho": (
+        b"{title: Down by the Estuary}\n{artist: Ada Example}\n{key: G}\n{capo: 2}\n# a comment\n\n{start_of_verse}\n"
+        b"[G]Down by the [C]estuary the [D]tide comes [Em]in\n{end_of_verse}\n{soc}\nOh, the [G]water, the [D]water\n{eoc}\n"
+    )}),
+    "places": ("places.py", {"leeds.kml": (
+        b'<?xml version="1.0"?><kml xmlns="http://www.opengis.net/kml/2.2"><Document><name>Leeds</name><Folder><name>Plots</name>'
+        b'<Placemark><name>Allotment</name><description><![CDATA[<p>Plot 14, the <b>gate</b> sticks.</p>]]></description>'
+        b'<Point><coordinates>-1.5491,53.8008,0</coordinates></Point></Placemark></Folder></Document></kml>'
+    )}),
+    "evernote": ("evernote.py", {"Garden.enex": (
+        b'<?xml version="1.0" encoding="UTF-8"?><en-export export-date="20240306T000000Z"><note><title>Allotment plan</title>'
+        b'<content><![CDATA[<?xml version="1.0" encoding="UTF-8"?><en-note><div>Plot 14 gets the beans.</div><div><en-todo checked="true"/>Order seed</div><div><en-todo/>Fix the gate</div></en-note>]]></content>'
+        b'<created>20240303T101500Z</created><updated>20240305T080000Z</updated><tag>garden</tag><tag>plots</tag>'
+        b'<note-attributes><author>Ada Example</author><source-url>https://example.org/plots</source-url></note-attributes>'
+        b'<resource><resource-attributes><file-name>plan.pdf</file-name></resource-attributes></resource></note></en-export>'
+    )}),
     "notes": ("notes.py", {"garden.md": b"Tomatoes want [[sun]].\n"}),
     "jrnl": ("jrnl.py", {"journal.txt": (
         "[2024-03-03 10:15] Fixed the gate.\nThe hinge wanted oil, not force.\n\n"
@@ -133,6 +192,13 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "outdated": ("outdated.py", ["--box", "{box}"]),
     "typosquat": ("typosquat.py", ["--box", "{box}"]),
     "install-scripts": ("install_scripts.py", ["--box", "{box}"]),
+    "agents-md-check": ("agents_md_check.py", ["--box", "{box}"]),
+    "instruction-files": ("instruction_files.py", ["--box", "{box}"]),
+    "licenses": ("licenses.py", ["--box", "{box}"]),
+    "codeowners": ("codeowners.py", ["--box", "{box}", "garden.md"]),
+    "in-toto": ("in_toto.py", ["--box", "{box}", "--to", "{tmp}/in-toto.jsonl"]),
+    "prov": ("prov.py", ["--box", "{box}", "--to", "{tmp}/prov.json"]),
+    "package-contents": ("package_contents.py", ["--box", "{box}"]),
     "pii-audit": ("pii_audit.py", ["--box", "{box}"]),
     "pins": ("pins.py", ["--box", "{box}"]),
     "scan": ("scan.py", ["index", "--from", "{pile}", "--to", "{tmp}/index"]),
@@ -166,9 +232,40 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "browse": ("browse.py", ["launcher", "--box", "{box}"]),
     "digest": ("digest.py", ["--box", "{box}", *NOW]),
     **{f"words-{c}": (f"words_{c}.py", ["bite", "--box", "{box}", *NOW, "tomatoes"])
-       for c in ("de", "es", "fr", "it", "nl", "pl", "pt", "sv")},
+       for c in ("ar", "cy", "de", "es", "fr", "it", "nl", "pl", "pt", "ru", "sv", "tr")},
     "backup": ("backup.py", ["--box", "{box}", "--to", "{tmp}/backups", *NOW]),
     "bench": ("bench.py", ["run", "--sizes", "20,40"]),
+    "hook-leaks": ("hook_leaks.py", ["check", "--from", "{pile}/garden.md"]),
+    "hook-shell": ("hook_shell.py", ["split", "ls -la"]),
+    "hook-start": ("hook_start.py", ["--box", "{box}", *NOW]),
+    "why-not": ("why_not.py", ["--box", "{box}", "tomatoes"]),
+    "fair-merge": ("fair_merge.py", ["--box", "{box}", "tomatoes"]),
+    "nicknames": ("nicknames.py", ["--box", "{box}", "--to", "{tmp}/nicknames.txt"]),
+    "box-health": ("box_health.py", ["--box", "{box}", *NOW]),
+    "profile": ("question_profile.py", ["--box", "{box}", "tomatoes"]),
+    "scrub": ("scrub.py", ["--from", "{pile}/photo.png", "--to", "{tmp}/clean.png"]),
+    "ro-crate": ("ro_crate.py", ["--box", "{box}", "--to", "{tmp}/crate"]),
+    "annotations": ("annotations.py", ["--box", "{box}", "--to", "{tmp}/annotations.json"]),
+    "cloudevents": ("cloudevents.py", ["--box", "{box}", "--to", "{tmp}/events.jsonl"]),
+    "calendar-out": ("calendar_out.py", ["--box", "{box}", "--to", "{tmp}/coming.ics", *NOW]),
+    "rss-out": ("rss_out.py", ["--box", "{box}", "--to", "{tmp}/feed.xml"]),
+    "deep-links": ("deep_links.py", ["--box", "{box}"]),
+    "braille": ("braille.py", ["--box", "{box}", "--to", "{tmp}/answers.brf"]),
+    "llms-txt": ("llms_txt.py", ["write", "--from", "{pile}", "--to", "{tmp}/llms.txt"]),
+    "badge": ("badge.py", ["--box", "{box}", "--to", "{tmp}/badge.svg"]),
+    "hours": ("hours.py", ["--box", "{box}"]),
+    "mileage": ("mileage.py", ["--box", "{box}"]),
+    "minutes": ("minutes.py", ["--box", "{box}"]),
+    "gradebook": ("gradebook.py", ["--box", "{box}"]),
+    "mood": ("mood.py", ["--box", "{box}"]),
+    "car": ("car.py", ["--box", "{box}"]),
+    "pets": ("pets.py", ["--box", "{box}"]),
+    "home-upkeep": ("home_upkeep.py", ["--box", "{box}"]),
+    "warranties": ("warranties.py", ["--box", "{box}"]),
+    "attendance": ("attendance.py", ["--box", "{box}"]),
+    "baby-log": ("baby_log.py", ["--box", "{box}"]),
+    "garden": ("garden.py", ["--box", "{box}"]),
+    "job-hunt": ("job_hunt.py", ["--box", "{box}"]),
     "history": ("history.py", ["--box", "{box}"]),
     "dice": ("dice.py", ["--box", "{box}", "roll", "2d6", *NOW]),
     "hook-fail-closed": ("hook_fail_closed.py", ["--hook", "true"]),
@@ -233,9 +330,8 @@ def test_a_bad_command_line_is_refused_and_says_how_to_run_it(name, tmp_path):
     assert got.returncode == 2 and script_name in got.stderr, got.stderr
     pile = tmp_path / "pile"
     pile.mkdir()
-    for rel, data in READERS.get(name, ("", {"garden.md": b"Tomatoes want sun.\n"}))[
-        1
-    ].items():
+    files = READERS.get(name, ("", {"garden.md": b"Tomatoes want sun.\n"}))[1]
+    for rel, data in {**files, **PILE_EXTRA.get(name, {})}.items():
         (pile / rel).write_bytes(data)
     box = tmp_path / "box"
     subprocess.run([sys.executable, str(KERNEL), "init", "--box", str(box), "--pile",

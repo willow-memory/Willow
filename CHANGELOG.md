@@ -10,6 +10,197 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `job-hunt`: Applications sent, replies and interviews by company: where
+  each stands and how long you have waited, from lines about a job search.
+  (#73)
+- `garden`: What you planted, where and when, and how it did, season by
+  season, from garden notes that say a planting or a harvest. (#73)
+- `baby-log`: Feeds, sleeps and nappies from your notes, counted by day with
+  the last of each and its time. (#73)
+- `attendance`: Attendance for a class, club or group from your register:
+  each person's days there out of days marked, or the marks of each week.
+  (#73)
+- `warranties`: Receipts and warranties: for each thing a line gives a
+  warranty, the day its cover ends (said, or bought plus a length) and where
+  its receipt is. (#73)
+- `home-upkeep`: Home upkeep from your notes and receipts: the boiler,
+  filters, gutters and the rest, when each was last done and what is due by a
+  date or interval you wrote. (#73)
+- `pets`: Each pet's vet visits, vaccines, worming and medicines from your
+  records: the last of each, its cost by currency sign, and what is due by a
+  date or interval you wrote. (#73)
+- `car`: Your car's services, repairs and inspections from receipts and
+  notes: the last of each kind, what it cost by currency sign, and what is
+  due by a date or interval you wrote. (#73)
+- `mood`: The mood scores you write in a journal, gathered by month or week
+  with the average, the lowest and highest day and the change from the period
+  before. (#73)
+- `gradebook`: A teacher's gradebook that stays on this machine: each
+  student's marks from the lines you wrote, and who is falling behind, by
+  plain arithmetic. (#73)
+- `minutes`: Meeting minutes read for what was decided and what is still to
+  do: decisions, and actions with their owner and due date, open or closed.
+  (#73)
+- `mileage`: Miles driven for work, totalled for each tax year from the lines
+  of your notes that say a drive and how far; miles and kilometres kept
+  apart, odometer readings left out. (#73)
+- `hours`: Hours worked or volunteered, added up for each client or group
+  your notes name, from lines that say a work word and a length of time.
+  (#73)
+- `badge`: an SVG badge for a page from the record: how many answers are
+  approved and from how many files, green when the chain holds and every
+  approval stands, amber when one doesn't, red when the chain breaks, grey
+  when nothing is approved. Its description says how to check it, and
+  `--link` prints the Markdown for a page. (#72)
+- `llms-txt`: an llms.txt written from what is actually in a folder (a title,
+  a summary, a section for each folder, a link and a one-line note for each
+  text file, files over 50 KB under Optional), and a check of one against the
+  llmstxt.org format, each departure at its line. Nothing is invented. (#72)
+- `braille`: approved answers (or any text file) as a braille-ready file:
+  uncontracted (grade 1) English braille in North American Braille ASCII,
+  with capitals, number signs and punctuation, in lines of 40 cells and pages
+  of 25 lines. Characters with no cell are counted and said. Nothing is sent
+  to a device. (#72)
+- `deep-links`: each approved answer, or each passage a question holds, as
+  links that open the file at the line: a `file://` link with an RFC 5147
+  `#line=` fragment and, with `--base`, a web link with a browser text
+  fragment, encoded as the standards ask. Nothing is opened or written. (#72)
+- `rss-out`: your approved answers as an RSS 2.0 feed file, newest first:
+  each item's title the answer's first line, its description the answer with
+  the reason it was given and the places it cites, its date when you approved
+  it. `--since` keeps only what is new. A forged approval is never in it, a
+  changed proposal is left out and said. (#72)
+- `evernote`: Evernote's .enex files, each note as a paragraph with its
+  title, notebook (the export file's name), dates, tags, source and
+  attachment names, then its text with lists, checkboxes and tables read as
+  text. (#72)
+- `places`: KML, GeoJSON and GPX files, each place as a paragraph with its
+  name, the folders it is in, your note on it and its coordinates (a line or
+  an area as its kind and first point), so a question about a place finds
+  what you wrote. (#72)
+- `chordpro`: ChordPro song sheets, each song as its title, artist, key and
+  capo, the chords it uses, and its lyrics with the chords taken out of the
+  lines, so a question about a lyric finds the song. Tab sections are
+  dropped. (#72)
+- `pgn`: Chess games from PGN files, each game as who played, when, where,
+  the result and the opening, then every comment in the moves with the move
+  it follows (Black's with three dots). The moves themselves are not copied. (#72)
+- `latex`: LaTeX sources as plain prose, line for line: the mirror has the
+  source's lines, so a passage is cited by the .tex file's own line.
+  Comments, the preamble (but the title and author), math, verbatim and
+  picture environments and layout commands are dropped; section, emphasis,
+  caption and footnote text, citations as [key], accents and dashes are kept. (#72)
+- `jupyter`: Jupyter notebooks, each cell as a block headed by its number and
+  kind: Markdown and code as written, and a code cell's text outputs (printed
+  text, a result's plain form, an error's name and message) under "output:".
+  Pictures are left out. Older nbformat 3 notebooks are read too. (#72)
+- `rtf`: RTF documents as plain text: paragraphs and line breaks kept, the
+  font and style tables, formatting words, pictures, headers and footers
+  dropped, escaped letters and Unicode read as the characters they are, and a
+  field's shown result kept. (#72)
+- `bibtex`: `.bib` files, each reference as a passage that begins with its
+  citation key, with its title, year, authors, where it appeared, doi,
+  keywords and abstract, so you can ask which paper said it and get the key
+  to cite. `@string` macros are filled in and LaTeX accents are read as the
+  letters they make. (#72)
+- `calendar-out`: the dates coming up in your files (found the way
+  `coming-up` finds them) as an .ics file any calendar app can import or
+  subscribe to: an all-day event for each, its title the line it was found on
+  and its description the file and line. Ids are stable so reimporting
+  doesn't double, dates already in a calendar file are not written again, and
+  nothing dated writes nothing. (#71)
+- `cloudevents`: the record's rows as CloudEvents 1.0 JSON events, one a
+  line: the id is the row's own hash, the source names the box by its first
+  row, the type is the row's kind, and the data is the row, so the chain
+  still checks. `--from-row` and `--kinds` narrow it. The record holds no
+  question's words, and neither do the events. (#71)
+- `annotations`: approved answers as W3C Web Annotations in an annotation
+  page: the answer as the body, and a target for each cited passage with its
+  file, its lines as an RFC 5147 fragment and its words as a quote, so an
+  annotation tool can show what your files say beside the page. A citation no
+  longer in your files is left off and said. (#71)
+- `ro-crate`: a box snapshot as an RO-Crate research object, a zip a
+  repository such as Zenodo can read: every file with its SHA-256, size, kind
+  and licence, the record and the approved answers, and the record's tip
+  pinned. The key and the box's settings are not in it, the licence is never
+  guessed, and the copy is checked before it is kept. (#71)
+- `scrub`: a copy of a JPEG, PNG, docx, xlsx or pptx without its hidden
+  details, and a list of what was taken out: Exif, XMP and IPTC (keeping the
+  orientation), PNG text chunks, an Office file's author, times, revision,
+  company, edit-session ids and the names on comments and tracked changes.
+  Anything else is refused rather than copied unchanged. (#71)
+- `profile`: where a question's time goes: how long the kernel takes to read
+  the folder and to rank it, and the functions the time went to, from
+  cProfile, under the kernel's version and release so two releases compare.
+  Its script is named question_profile, since a script called profile shadows
+  the standard library's module. Nothing is written and the question's words
+  are not printed. (#71)
+- `box-health`: a box's health in one line: whether the chain holds, how many
+  approvals hold and suggestions wait, the files the bite can't read counted
+  by kind with the add-on that reads each, whether the words list is the one
+  last used, and when the record last had an `out` row. Writes nothing, not
+  even an `out` row. (#71)
+- `nicknames`: the names you call people, as a words list written from what
+  your own files say: a family word beside a capitalised name ("Mum
+  (Margaret)", "my dad Robert", "Auntie Jean") becomes `mum = margaret`, with
+  the file and line it came from, so "Mum" finds Margaret. Days, months, chat
+  labels and titles are no names; a nickname two names claim is said. (#71)
+- `fair-merge`: each folder of a pile ranked on its own by the kernel and the
+  lists dealt out in turns, so a large corpus can't push a small one out on
+  volume alone; a source that found nothing says so, and one with more says
+  how many. Nothing is written. (#71)
+- `why-not`: why a question got "not enough to say": for each word that
+  counts, how many passages hold it; the nearest passages and what they
+  lacked; a close spelling with the words-list line that would teach it; and
+  the kind of file that would have answered. It asks the kernel's way without
+  asking, so nothing is written, not even a record row. (#71)
+- `hook-start`: a SessionStart hook that tells the assistant what waits on
+  the person (suggestions to approve, stale answers, dates coming up), read
+  the way `digest` reads it, as the JSON a hook reads. A quiet box prints
+  nothing, and opening a session writes nothing, not even an `out` row. (#71)
+- `hook-shell`: a command split the way the shell splits it before a rule
+  judges it: quotes, escapes, `$'...'` strings, variables, substitutions,
+  `bash -c` and `eval` payloads and `sudo`/`env`/`xargs` wrappers, so `r""m`,
+  a full path and `$a$b` are all `rm`. `run` is a PreToolUse hook that
+  refuses a denied command, or one whose command word is only known at run
+  time. (#71)
+- `hook-leaks`: a PreToolUse hook that refuses a Write, Edit, notebook cell
+  or Bash command holding a key, a password or a card number, by the
+  `privacy` add-on's shapes. The reason names only the kind, never the value,
+  and text an edit takes out is not looked at, so a secret can still be
+  removed. (#71)
+- `prov`: the record as W3C PROV-JSON, every row an activity and every
+  seal traced to its answer, the suggestion it approved, the passages that
+  suggestion cites and the person who approved it. A seal that doesn't prove
+  under the key, or whose proposal file changed, is left out and said. (#70)
+- `in-toto`: each approved answer as an in-toto Statement (v1), its subject
+  the sha256 of the file as written, its predicate the claim, the cited
+  passages, the question's fingerprint and the record row that holds the
+  approval. Unsigned: signing takes the key, which no add-on reads. (#70)
+- `agents-md-check`: the commands, paths, links, make targets, npm scripts
+  and `@` imports an AGENTS.md or CLAUDE.md names that the repo no longer
+  has, by file and line. (#70)
+- `licenses`: the licence of every installed Python and npm package, read
+  from its own metadata, in four classes (permissive, weak copyleft, strong
+  copyleft, undeclared), with an SPDX expression read through; everything but
+  the permissive ones is listed by file and line. (#70)
+- `instruction-files`: for a folder, the instruction files each of eight
+  coding agents would load, general first, with each file's size and hash
+  and the `@` imports Claude Code would follow. (#70)
+- `codeowners`: who owns a file, the CODEOWNERS rule that matches it cited
+  by line, read the way GitHub (last match wins), GitLab (sections and their
+  defaults) and Forgejo (every matching regex) each do. (#70)
+- `words-ar` and `words-cy`, which take Arabic's and Welsh's common words out
+  of a question before the kernel's bite. `words-ar` also takes the short
+  vowel marks out of the question, since the kernel splits a word at each. (#70)
+- `package-contents`: what a wheel, sdist, npm tarball or crate holds, every
+  file with its size, and the code that would run because you installed it,
+  by file and line: a `.pth` import line, a setup.py and build backend, the
+  npm install hooks, a build script or procedural macro. Read in memory,
+  never unpacked or run; a path that climbs out of its folder is flagged. (#70)
+- `words-ru` and `words-tr`, which take Russian's and Turkish's common words
+  out of a question before the kernel's bite, as the other words add-ons do.
+  `words-tr` reads a capital İ as i first, so it doesn't split a word. (#70)
 - `pile-build`: the pile store built after each change, behind a lock on
   its folder, again until it matches when the folder changes mid-build, and
   with `--background` detached so a hook never waits. Unlike willow-bot's,

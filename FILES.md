@@ -68,6 +68,10 @@ willow/
 │   │   │   ├── again.py      the questions you keep asking, counted from the record
 │   │   │   ├── test_again.py
 │   │   │   └── README.md
+│   │   ├── agents-md-check/
+│   │   │   ├── agents_md_check.py   the commands and paths AGENTS.md or CLAUDE.md name that the repo no longer has
+│   │   │   ├── test_agents_md_check.py
+│   │   │   └── README.md
 │   │   ├── aider/
 │   │   │   ├── aider.py          the /run line that brings answers into Aider's chat
 │   │   │   ├── test_aider.py
@@ -80,13 +84,33 @@ willow/
 │   │   │   ├── amounts.py    every sum of money in the files, dated by its line, the date above or the file's name
 │   │   │   ├── test_amounts.py
 │   │   │   └── README.md
+│   │   ├── annotations/
+│   │   │   ├── annotations.py   approved answers as W3C Web Annotations: the answer as the body, each cited passage as a target with its lines and words
+│   │   │   ├── test_annotations.py
+│   │   │   └── README.md
+│   │   ├── attendance/
+│   │   │   ├── attendance.py   who was there, by person or by week
+│   │   │   ├── test_attendance.py
+│   │   │   └── README.md
+│   │   ├── baby-log/
+│   │   │   ├── baby_log.py   feeds, sleeps and nappies by day, and the last of each
+│   │   │   ├── test_baby_log.py
+│   │   │   └── README.md
 │   │   ├── backup/
 │   │   │   ├── backup.py     your record in one zip, every byte and the chain checked; never the key
 │   │   │   ├── test_backup.py
 │   │   │   └── README.md
+│   │   ├── badge/
+│   │   │   ├── badge.py   an SVG badge of the record's counts: answers approved, the files they came from, and whether it holds
+│   │   │   ├── test_badge.py
+│   │   │   └── README.md
 │   │   ├── bench/
 │   │   │   ├── bench.py       how fast the kernel reads and ranks piles of set sizes, per release
 │   │   │   ├── test_bench.py
+│   │   │   └── README.md
+│   │   ├── bibtex/
+│   │   │   ├── bibtex.py   each reference in a .bib file as a passage that begins with its citation key
+│   │   │   ├── test_bibtex.py
 │   │   │   └── README.md
 │   │   ├── books/
 │   │   │   ├── books.py      Kindle highlights and .epub text, as passages
@@ -96,6 +120,14 @@ willow/
 │   │   │   ├── bot_venv.py       does willow-bot's venv, or any named, have what CI needs; the line that runs CI with it
 │   │   │   ├── test_bot_venv.py
 │   │   │   └── README.md
+│   │   ├── box-health/
+│   │   │   ├── box_health.py   a box's health in one line: the chain, approvals, files it can't read, the words list, and the last out row
+│   │   │   ├── test_box_health.py
+│   │   │   └── README.md
+│   │   ├── braille/
+│   │   │   ├── braille.py   approved answers as a BRF: uncontracted English braille ASCII in lines of cells and pages, for a display or an embosser
+│   │   │   ├── test_braille.py
+│   │   │   └── README.md
 │   │   ├── browse/
 │   │   │   ├── browse.py     your folder in your browser, on 127.0.0.1: ask, read, approve with a click
 │   │   │   ├── test_browse.py
@@ -104,6 +136,14 @@ willow/
 │   │   │   ├── cal.py        .ics events and .vcf contacts, as dated lines
 │   │   │   ├── test_calendar.py
 │   │   │   └── README.md
+│   │   ├── calendar-out/
+│   │   │   ├── calendar_out.py   the dates coming up as an .ics file: an all-day event for each, the line as its title and the file and line as its description
+│   │   │   ├── test_calendar_out.py
+│   │   │   └── README.md
+│   │   ├── car/
+│   │   │   ├── car.py   a car's jobs, costs and what's due
+│   │   │   ├── test_car.py
+│   │   │   └── README.md
 │   │   ├── changed/
 │   │   │   ├── changed.py    what's new, edited or deleted since the last check, as fingerprint rows
 │   │   │   ├── test_changed.py
@@ -111,6 +151,10 @@ willow/
 │   │   ├── chats/
 │   │   │   ├── chats.py      WhatsApp and Telegram exports, a dated line a message
 │   │   │   ├── test_chats.py
+│   │   │   └── README.md
+│   │   ├── chordpro/
+│   │   │   ├── chordpro.py   a ChordPro song as its title line, chords and lyrics with the chords taken out of the lines
+│   │   │   ├── test_chordpro.py
 │   │   │   └── README.md
 │   │   ├── ci/
 │   │   │   ├── ci.py         this repo's checks as verdict rows on a kernel record
@@ -153,6 +197,14 @@ willow/
 │   │   │   ├── clauses.py    a long document as one sentence a passage, and a sentence-by-sentence diff
 │   │   │   ├── test_clauses.py
 │   │   │   └── README.md
+│   │   ├── cloudevents/
+│   │   │   ├── cloudevents.py   the record's rows as CloudEvents 1.0 JSON events, one a line, the id each row's own hash
+│   │   │   ├── test_cloudevents.py
+│   │   │   └── README.md
+│   │   ├── codeowners/
+│   │   │   ├── codeowners.py   who owns a file: the CODEOWNERS rule that matches it, cited by line, on GitHub, GitLab and Forgejo
+│   │   │   ├── test_codeowners.py
+│   │   │   └── README.md
 │   │   ├── codex-cli/
 │   │   │   ├── codex_cli.py      the config.toml lines that register mcp-lite with Codex CLI
 │   │   │   ├── test_codex_cli.py
@@ -181,6 +233,10 @@ willow/
 │   │   │   ├── debts.py      lines speaking of money owed, dated and cited, the sum as written, never netted
 │   │   │   ├── test_debts.py
 │   │   │   └── README.md
+│   │   ├── deep-links/
+│   │   │   ├── deep_links.py   each answer as links that open the file at the line: an RFC 5147 file link and a browser text-fragment web link
+│   │   │   ├── test_deep_links.py
+│   │   │   └── README.md
 │   │   ├── dice/
 │   │   │   ├── dice.py       dice rolled on the record, seeded by its tip; check throws every roll again
 │   │   │   ├── test_dice.py
@@ -201,9 +257,17 @@ willow/
 │   │   │   ├── emacs.py          an M-x willow command: answers in a grep-mode buffer
 │   │   │   ├── test_emacs.py
 │   │   │   └── README.md
+│   │   ├── evernote/
+│   │   │   ├── evernote.py   an Evernote .enex export as its notes: title, notebook, dates, tags, source, attachments and text
+│   │   │   ├── test_evernote.py
+│   │   │   └── README.md
 │   │   ├── export/
 │   │   │   ├── export.py     approved answers and the question log, as Markdown or CSV
 │   │   │   ├── test_export.py
+│   │   │   └── README.md
+│   │   ├── fair-merge/
+│   │   │   ├── fair_merge.py   each folder ranked on its own and the lists dealt out in turns, so a large corpus can't bury a small one
+│   │   │   ├── test_fair_merge.py
 │   │   │   └── README.md
 │   │   ├── first-mention/
 │   │   │   ├── first_mention.py  when the files first mention something: the earliest dated line that holds every word
@@ -217,6 +281,10 @@ willow/
 │   │   │   ├── gaps.py       where a log you keep stops: the days it skipped, said as gaps
 │   │   │   ├── test_gaps.py
 │   │   │   └── README.md
+│   │   ├── garden/
+│   │   │   ├── garden.py   what was planted and harvested, season by season
+│   │   │   ├── test_garden.py
+│   │   │   └── README.md
 │   │   ├── gemini-cli/
 │   │   │   ├── gemini_cli.py     the settings.json lines that register mcp-lite with Gemini CLI
 │   │   │   ├── test_gemini_cli.py
@@ -226,6 +294,10 @@ willow/
 │   │   │   ├── host.json     how GitHub titles the merge of a pull request, for whose.py --host
 │   │   │   ├── test_github.py
 │   │   │   └── README.md     its card: and .github/ belongs to it
+│   │   ├── gradebook/
+│   │   │   ├── gradebook.py   students' marks, and who is falling behind
+│   │   │   ├── test_gradebook.py
+│   │   │   └── README.md
 │   │   ├── habits/
 │   │   │   ├── habits.py     streaks from the short lines written day after day, runs and misses by plain counting
 │   │   │   ├── test_habits.py
@@ -233,6 +305,10 @@ willow/
 │   │   ├── history/
 │   │   │   ├── history.py    your record in plain sentences, places and counts, never the words
 │   │   │   ├── test_history.py
+│   │   │   └── README.md
+│   │   ├── home-upkeep/
+│   │   │   ├── home_upkeep.py   what's due at home and when it was last done
+│   │   │   ├── test_home_upkeep.py
 │   │   │   └── README.md
 │   │   ├── hook-fail-closed/
 │   │   │   ├── hook_fail_closed.py a hook that crashes, hangs or says what can't be read blocks the tool
@@ -242,6 +318,10 @@ willow/
 │   │   │   ├── hook_fuzz.py      bad input thrown at a hook, and each one that breaks it named
 │   │   │   ├── test_hook_fuzz.py
 │   │   │   └── README.md
+│   │   ├── hook-leaks/
+│   │   │   ├── hook_leaks.py   a PreToolUse hook that refuses a write or command holding a key, password or card number, naming only the kind
+│   │   │   ├── test_hook_leaks.py
+│   │   │   └── README.md
 │   │   ├── hook-pin/
 │   │   │   ├── hook_pin.py       a hook runs only as the bytes you approved, pinned on the record
 │   │   │   ├── test_hook_pin.py
@@ -249,6 +329,14 @@ willow/
 │   │   ├── hook-replay/
 │   │   │   ├── hook_replay.py    every hook answer a row of hashes, and each one run again
 │   │   │   ├── test_hook_replay.py
+│   │   │   └── README.md
+│   │   ├── hook-shell/
+│   │   │   ├── hook_shell.py   a command split as the shell splits it, quotes, variables and chains included, before a rule judges it
+│   │   │   ├── test_hook_shell.py
+│   │   │   └── README.md
+│   │   ├── hook-start/
+│   │   │   ├── hook_start.py   a SessionStart hook that tells the assistant what waits on the person, read the way digest reads it
+│   │   │   ├── test_hook_start.py
 │   │   │   └── README.md
 │   │   ├── horoscope/
 │   │   │   ├── horoscope.py  a daily reading picked by the SHA-256 of name and date
@@ -258,9 +346,17 @@ willow/
 │   │   │   ├── hosts.py          one table of assistants that take an MCP server, and the lines that register willow with each
 │   │   │   ├── test_hosts.py
 │   │   │   └── README.md
+│   │   ├── hours/
+│   │   │   ├── hours.py   hours worked or volunteered, per client
+│   │   │   ├── test_hours.py
+│   │   │   └── README.md
 │   │   ├── ids/
 │   │   │   ├── ids.py        each file and passage by its Software Heritage ID and one-chunk IPFS CID
 │   │   │   ├── test_ids.py
+│   │   │   └── README.md
+│   │   ├── in-toto/
+│   │   │   ├── in_toto.py   each approved answer as an in-toto Statement, its subject hashed from the file written
+│   │   │   ├── test_in_toto.py
 │   │   │   └── README.md
 │   │   ├── index-cache/
 │   │   │   ├── index_cache.py  a folder's scan index kept between runs, rebuilt only when a file's hash changed
@@ -270,17 +366,37 @@ willow/
 │   │   │   ├── install_scripts.py  the install scripts node_modules would run (preinstall, install, postinstall), by file and line
 │   │   │   ├── test_install_scripts.py
 │   │   │   └── README.md
+│   │   ├── instruction-files/
+│   │   │   ├── instruction_files.py   which instruction files each coding agent would load for a folder, in order, with size and hash
+│   │   │   ├── test_instruction_files.py
+│   │   │   └── README.md
 │   │   ├── jetbrains/
 │   │   │   ├── jetbrains.py      an external tool for JetBrains IDEs: answers as links to file and line
 │   │   │   ├── test_jetbrains.py
+│   │   │   └── README.md
+│   │   ├── job-hunt/
+│   │   │   ├── job_hunt.py   applications sent, replies and who you're waiting on
+│   │   │   ├── test_job_hunt.py
 │   │   │   └── README.md
 │   │   ├── jrnl/
 │   │   │   ├── jrnl.py       jrnl journals mirrored, each stamped entry one dated passage
 │   │   │   ├── test_jrnl.py
 │   │   │   └── README.md
+│   │   ├── jupyter/
+│   │   │   ├── jupyter.py   a Jupyter notebook as text, one block for each cell with its number and kind
+│   │   │   ├── test_jupyter.py
+│   │   │   └── README.md
+│   │   ├── latex/
+│   │   │   ├── latex.py   a LaTeX source as its prose, line for line, commands stripped
+│   │   │   ├── test_latex.py
+│   │   │   └── README.md
 │   │   ├── lending/
 │   │   │   ├── lending.py    what you lent, and what your files say came back
 │   │   │   ├── test_lending.py
+│   │   │   └── README.md
+│   │   ├── licenses/
+│   │   │   ├── licenses.py   the licence of every installed Python and npm package, and which are copyleft, by file and line
+│   │   │   ├── test_licenses.py
 │   │   │   └── README.md
 │   │   ├── life/
 │   │   │   ├── life.py       Conway's Game of Life as one row; check plays it again
@@ -289,6 +405,10 @@ willow/
 │   │   ├── live/
 │   │   │   ├── live.py       each way-in add-on run through its real program: works, fails, or not here
 │   │   │   ├── test_live.py
+│   │   │   └── README.md
+│   │   ├── llms-txt/
+│   │   │   ├── llms_txt.py   an llms.txt written from a folder's text files, and a checker for one
+│   │   │   ├── test_llms_txt.py
 │   │   │   └── README.md
 │   │   ├── mail/
 │   │   │   ├── mail.py       .eml and .mbox, with sender, date and subject
@@ -302,14 +422,30 @@ willow/
 │   │   │   ├── merkle.py     a Merkle tree over the record: one row proven with a handful of hashes
 │   │   │   ├── test_merkle.py
 │   │   │   └── README.md
+│   │   ├── mileage/
+│   │   │   ├── mileage.py   miles driven for work, by tax year
+│   │   │   ├── test_mileage.py
+│   │   │   └── README.md
+│   │   ├── minutes/
+│   │   │   ├── minutes.py   decisions and actions from meeting minutes
+│   │   │   ├── test_minutes.py
+│   │   │   └── README.md
 │   │   ├── misquote/
 │   │   │   ├── misquote.py   a quote almost in your files: the closest passage, and what differs
 │   │   │   ├── test_misquote.py
+│   │   │   └── README.md
+│   │   ├── mood/
+│   │   │   ├── mood.py   mood scores over weeks and months
+│   │   │   ├── test_mood.py
 │   │   │   └── README.md
 │   │   ├── mutants/
 │   │   │   ├── mutants.py    breaks each add-on's code on purpose and checks its tests notice
 │   │   │   ├── accepted.json the breaks that change nothing a person could notice, each with why
 │   │   │   ├── test_mutants.py
+│   │   │   └── README.md
+│   │   ├── nicknames/
+│   │   │   ├── nicknames.py   the names you call people, found beside a family word in your files, as a words list
+│   │   │   ├── test_nicknames.py
 │   │   │   └── README.md
 │   │   ├── notes/
 │   │   │   ├── notes.py      Obsidian and Logseq vaults, links and backlinks kept
@@ -335,6 +471,10 @@ willow/
 │   │   │   ├── outdated.py   how old each locked dependency is, and which are yanked, deprecated or unmaintained
 │   │   │   ├── test_outdated.py
 │   │   │   └── README.md
+│   │   ├── package-contents/
+│   │   │   ├── package_contents.py   what a wheel, sdist, npm tarball or crate holds, and the code it runs on install, by file and line
+│   │   │   ├── test_package_contents.py
+│   │   │   └── README.md
 │   │   ├── parallel/
 │   │   │   ├── parallel.py   a reader run over several folders at once, across cores, into one mirror
 │   │   │   ├── test_parallel.py
@@ -342,6 +482,14 @@ willow/
 │   │   ├── people/
 │   │   │   ├── people.py     everyone the files name, by what they do with a name, and each one's every mention
 │   │   │   ├── test_people.py
+│   │   │   └── README.md
+│   │   ├── pets/
+│   │   │   ├── pets.py   each pet's care and what's due
+│   │   │   ├── test_pets.py
+│   │   │   └── README.md
+│   │   ├── pgn/
+│   │   │   ├── pgn.py   a PGN game as who, when, where, the result, the opening and every comment with its move
+│   │   │   ├── test_pgn.py
 │   │   │   └── README.md
 │   │   ├── pii-audit/
 │   │   │   ├── pii_audit.py  the personal numbers in the files, checked never guessed, shown masked
@@ -383,6 +531,10 @@ willow/
 │   │   │   ├── pipe.py           questions in, one answer a line out: JSON lines, or grep's file:line: text
 │   │   │   ├── test_pipe.py
 │   │   │   └── README.md
+│   │   ├── places/
+│   │   │   ├── places.py   KML, GeoJSON and GPX files as places: each one's name, folders, note and coordinates
+│   │   │   ├── test_places.py
+│   │   │   └── README.md
 │   │   ├── plain/
 │   │   │   ├── plain.py      the kernel's answer as sentences
 │   │   │   ├── test_plain.py
@@ -398,6 +550,14 @@ willow/
 │   │   ├── privacy/
 │   │   │   ├── privacy.py    personal data and keys withheld from what a question prints
 │   │   │   ├── test_privacy.py
+│   │   │   └── README.md
+│   │   ├── profile/
+│   │   │   ├── question_profile.py   where a question's time goes: reading the folder, ranking, and the functions the time went to, from cProfile
+│   │   │   ├── test_question_profile.py
+│   │   │   └── README.md
+│   │   ├── prov/
+│   │   │   ├── prov.py   the record as W3C PROV-JSON: what came from what, by which step, sealed by whom
+│   │   │   ├── test_prov.py
 │   │   │   └── README.md
 │   │   ├── quiz/
 │   │   │   ├── quiz.py       a passage of your own writing with a word missing, cut and scored on the record
@@ -435,6 +595,18 @@ willow/
 │   │   │   ├── risky_code.py  lines of code matching a known-dangerous pattern, by file and line, as leads to read
 │   │   │   ├── test_risky_code.py
 │   │   │   └── README.md
+│   │   ├── ro-crate/
+│   │   │   ├── ro_crate.py   a box snapshot as an RO-Crate zip: every file with its SHA-256, size, kind and licence, and the record's tip pinned
+│   │   │   ├── test_ro_crate.py
+│   │   │   └── README.md
+│   │   ├── rss-out/
+│   │   │   ├── rss_out.py   your approved answers as an RSS 2.0 feed, newest first, an item for each
+│   │   │   ├── test_rss_out.py
+│   │   │   └── README.md
+│   │   ├── rtf/
+│   │   │   ├── rtf.py   an RTF document as the plain text it displays
+│   │   │   ├── test_rtf.py
+│   │   │   └── README.md
 │   │   ├── said/
 │   │   │   ├── said.py       who said what, read by shape (a chat's stamp, a speech verb, quotation marks), dated
 │   │   │   ├── test_said.py
@@ -442,6 +614,10 @@ willow/
 │   │   ├── scan/
 │   │   │   ├── scan.py       indexes a folder once, then asks it a list of questions, the kernel's way
 │   │   │   ├── test_scan.py  holds its answers to the kernel's, every ranking vector included
+│   │   │   └── README.md
+│   │   ├── scrub/
+│   │   │   ├── scrub.py   a copy of a JPEG, PNG, docx, xlsx or pptx without its Exif, author, times and edit history, and what was taken out
+│   │   │   ├── test_scrub.py
 │   │   │   └── README.md
 │   │   ├── secrets-audit/
 │   │   │   ├── secrets_audit.py passwords, keys and card numbers in plain files, by file and line
@@ -545,6 +721,10 @@ willow/
 │   │   │   ├── vscode.py         a VS Code task: answers in the Problems panel
 │   │   │   ├── test_vscode.py
 │   │   │   └── README.md
+│   │   ├── warranties/
+│   │   │   ├── warranties.py   when a cover ends, and where its receipt is
+│   │   │   ├── test_warranties.py
+│   │   │   └── README.md
 │   │   ├── wayback/
 │   │   │   ├── wayback.py    the Wayback Machine's copy of a page, saved and compared byte for byte
 │   │   │   ├── test_wayback.py
@@ -553,9 +733,21 @@ willow/
 │   │   │   ├── web_pages.py  saved .html and .mhtml as their paragraphs, under the address they came from
 │   │   │   ├── test_web_pages.py
 │   │   │   └── README.md
+│   │   ├── why-not/
+│   │   │   ├── why_not.py   why a question got not enough to say: which words nothing holds, the nearest passages and what kind of file would answer
+│   │   │   ├── test_why_not.py
+│   │   │   └── README.md
 │   │   ├── windsurf/
 │   │   │   ├── windsurf.py       the mcp_config.json lines that register mcp-lite with Windsurf
 │   │   │   ├── test_windsurf.py
+│   │   │   └── README.md
+│   │   ├── words-ar/
+│   │   │   ├── words_ar.py   a question in Arabic, its common words out, then the kernel's bite
+│   │   │   ├── test_words_ar.py
+│   │   │   └── README.md
+│   │   ├── words-cy/
+│   │   │   ├── words_cy.py   a question in Welsh, its common words out, then the kernel's bite
+│   │   │   ├── test_words_cy.py
 │   │   │   └── README.md
 │   │   ├── words-de/
 │   │   │   ├── words_de.py   a question in German, its common words out, then the kernel's bite
@@ -585,9 +777,17 @@ willow/
 │   │   │   ├── words_pt.py   a question in Portuguese, its common words out, then the kernel's bite
 │   │   │   ├── test_words_pt.py
 │   │   │   └── README.md
+│   │   ├── words-ru/
+│   │   │   ├── words_ru.py   a question in Russian, its common words out, then the kernel's bite
+│   │   │   ├── test_words_ru.py
+│   │   │   └── README.md
 │   │   ├── words-sv/
 │   │   │   ├── words_sv.py   Swedish questions without Swedish's common words, then the kernel's own bite
 │   │   │   ├── test_words_sv.py
+│   │   │   └── README.md
+│   │   ├── words-tr/
+│   │   │   ├── words_tr.py   a question in Turkish, its common words out, then the kernel's bite
+│   │   │   ├── test_words_tr.py
 │   │   │   └── README.md
 │   │   ├── xref/
 │   │   │   ├── xref.py       each link and file:line in your files checked, still there

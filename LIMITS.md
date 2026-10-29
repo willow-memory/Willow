@@ -31,9 +31,10 @@ where it falls short today, and a fix is welcome.
   files say "invoice outstanding" and it finds nothing until a words list
   connects them.
 - **English is built in.** The kernel's common-word list and word-form
-  rules are English. The words-de, words-es, words-fr, words-it, words-nl
-  and words-pt add-ons set German, Spanish, French, Italian, Dutch and
-  Portuguese common words aside before a question reaches it; other
+  rules are English. The words-ar, words-cy, words-de, words-es, words-fr,
+  words-it, words-nl, words-pt, words-ru and words-tr add-ons set Arabic,
+  Welsh, German, Spanish, French, Italian, Dutch, Portuguese, Russian and
+  Turkish common words aside before a question reaches it; other
   languages keep every word. Word forms are English's only, and words in
   other scripts are matched only as written.
 - **A rewritten or cut-short record is not caught by `verify` alone.**
