@@ -63,6 +63,20 @@ def _png() -> bytes:
             + chunk(b"tEXt", b"Author\0Ana") + chunk(b"IDAT", zlib.compress(b"\0\xff\0\0")) + chunk(b"IEND", b""))  # fmt: skip
 
 
+def _tar(files: dict[str, str]) -> bytes:
+    import io
+    import tarfile
+
+    buf = io.BytesIO()
+    with tarfile.open(fileobj=buf, mode="w") as tar:
+        for name, text in files.items():
+            data = text.encode()
+            info = tarfile.TarInfo(name)
+            info.size = len(data)
+            tar.addfile(info, io.BytesIO(data))
+    return buf.getvalue()
+
+
 #: files an add-on needs in the pile besides the default, by add-on
 PILE_EXTRA: dict[str, dict[str, bytes]] = {"scrub": {"photo.png": _png()}}
 
@@ -148,6 +162,17 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         b'<note><pitch><step>G</step><octave>4</octave></pitch><lyric number="1"><syllabic>begin</syllabic><text>Ev</text></lyric></note>'
         b'<note><pitch><step>A</step><octave>4</octave></pitch><lyric number="1"><syllabic>end</syllabic><text>ening</text></lyric></note>'
         b'<note><pitch><step>B</step><octave>4</octave></pitch><lyric number="1"><syllabic>single</syllabic><text>comes</text></lyric><lyric number="2"><syllabic>single</syllabic><text>Morn</text></lyric></note></measure></part></score-partwise>'
+    )}),
+    "joplin": ("joplin.py", {"notes.jex": (
+        _tar({
+        "aaa.md": "Garden\n\nid: aaa\nparent_id: \ncreated_time: 2024-01-01T00:00:00.000Z\ntype_: 2",
+        "bbb.md": "Veg\n\nid: bbb\nparent_id: aaa\ntype_: 2",
+        "n1.md": "Tomato notes\n\nPlant out after the last frost.\nSecond line.\n\nid: n1\nparent_id: bbb\ncreated_time: 2024-03-02T08:00:00.000Z\nupdated_time: 2024-03-05T09:30:00.000Z\ndeleted_time: 0\ntype_: 1",
+        "n2.md": "Bin day\n\nid: n2\nparent_id: \ncreated_time: 2024-04-01T00:00:00.000Z\ntype_: 1",
+        "gone.md": "Old\n\nrubbish\n\nid: g\nparent_id: bbb\ndeleted_time: 1710000000000\ntype_: 1",
+        "tag.md": "mytag\n\nid: t\ntype_: 5",
+        "resources/pic.png": "not markdown",
+        })
     )}),
     "notes": ("notes.py", {"garden.md": b"Tomatoes want [[sun]].\n"}),
     "jrnl": ("jrnl.py", {"journal.txt": (

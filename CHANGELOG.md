@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `joplin`: Joplin's .jex export, read as the tar archive it is without
+  unpacking: each note with its title, notebook path and dates, then its
+  text; the trash, tags and pictures left out.
 - `musicxml`: MusicXML scores: each as its titles, credits, key, time, tempo,
   markings and lyrics in words, the notes themselves not copied; a file that
   declares entities is not read.

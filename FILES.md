@@ -406,6 +406,10 @@ willow/
 │   │   │   ├── job_hunt.py   applications sent, replies and who you're waiting on
 │   │   │   ├── test_job_hunt.py
 │   │   │   └── README.md
+│   │   ├── joplin/
+│   │   │   ├── joplin.py   a Joplin export note by note
+│   │   │   ├── test_joplin.py
+│   │   │   └── README.md
 │   │   ├── jrnl/
 │   │   │   ├── jrnl.py       jrnl journals mirrored, each stamped entry one dated passage
 │   │   │   ├── test_jrnl.py

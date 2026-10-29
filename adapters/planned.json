@@ -1023,16 +1023,6 @@
   "tags": "no-install, offline, records, play"
  },
  {
-  "name": "joplin",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Joplin's .jex export, read without unpacking it: each note as plain text with its title and dates.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "journiv",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
