@@ -10,16 +10,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "agents-md-check",
-  "kind": "stdlib",
-  "section": "For maintainers",
-  "line": "Commands and paths named in AGENTS.md or CLAUDE.md that no longer exist in the repo.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, maintainers"
- },
- {
   "name": "almanac",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -1253,16 +1243,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "instruction-files",
-  "kind": "stdlib",
-  "section": "Assistants",
-  "line": "For a folder, which instruction files each coding agent would load (AGENTS.md, CLAUDE.md, GEMINI.md, rules folders), in what order, with each file's size and hash.",
-  "source": "box",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, assistant"
- },
- {
   "name": "inventory",
   "kind": "stdlib",
   "section": "Keeping track",
@@ -1472,16 +1452,6 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, file-reader"
- },
- {
-  "name": "licenses",
-  "kind": "stdlib",
-  "section": "Trust and proof",
-  "line": "The licence of every installed dependency, read from its own metadata on this machine: which are copyleft, and which file says so.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, trust"
  },
  {
   "name": "line-origin",

@@ -18,7 +18,7 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`██████░░░░░░░░░░░░░░` **145 of 470 built** · 419 need no install · 51 need one
+`██████░░░░░░░░░░░░░░` **148 of 470 built** · 419 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
@@ -26,12 +26,12 @@ or `writes-output`; its section), and any the card's author adds or changes.
 | Finding things | 24 | 19 | 33 | 10 |
 | Your own words | 15 | 10 | 22 | 3 |
 | Keeping track | 15 | 43 | 58 | 0 |
-| Trust and proof | 15 | 30 | 36 | 9 |
+| Trust and proof | 16 | 29 | 36 | 9 |
 | Privacy and safety | 10 | 4 | 14 | 0 |
-| Assistants | 17 | 40 | 51 | 6 |
+| Assistants | 18 | 39 | 51 | 6 |
 | Ways to use it | 11 | 28 | 35 | 4 |
 | Play | 7 | 33 | 35 | 5 |
-| For maintainers | 17 | 27 | 39 | 5 |
+| For maintainers | 18 | 26 | 39 | 5 |
 <!-- /willow:pools -->
 
 ## Newest
@@ -47,9 +47,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[pile-store](adapters/stdlib/pile-store/)** — Your folder's passages read once into one SQLite file, each repeat stored once, and opened read-only only while it still matches the folder, the limits and the kernel that read it, else built again.
+**[test-shards](adapters/stdlib/test-shards/)** — The CI test jobs split by each test's past time, so every job finishes about together.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 145 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 148 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -320,7 +320,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - **in-case** (idea) — A letter for the people you trust, if something happens to you: where things are and who to call, from your files, sealed by you. *new* `no-install` `offline` `writes-output` `trust`
 - **in-toto** (idea) — A sealed answer exported as an in-toto Statement, the envelope SLSA uses, so others can check it. *new* `no-install` `offline` `writes-output` `trust`
 - **jeles** (idea) — Your approved answers as Jeles nuggets, with question, answer, sources and who sealed it, and Jeles' own verified nuggets read back as passages. *new* `no-install` `offline` `writes-output` `trust`
-- **licenses** (idea) — The licence of every installed dependency, read from its own metadata on this machine: which are copyleft, and which file says so. *new* `no-install` `offline` `read-only` `trust`
+- [**licenses**](adapters/stdlib/licenses/) — The licence of every installed dependency, read from its own metadata on this machine: which are copyleft, and which file says so. *new* `no-install` `offline` `read-only` `trust`
 - **line-origin** (idea) — Which agent session wrote this line of code: git blame to the commit, then the transcript turn that made it. Needs the git program; GPL, called not linked. *new* `needs-install` `offline` `read-only` `trust`
 - **losc** (idea) — Does a project pass the Local Only Servers Club's test: no accounts, no cloud, and your data your own? *bot* `no-install` `offline` `read-only` `trust`
 - [**merkle**](adapters/stdlib/merkle/) — A Merkle tree over the record, so one row can be proven with a handful of hashes, not the whole file. *new* `no-install` `offline` `writes-output` `trust`
@@ -403,7 +403,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - **hook-tiers** (idea) — Edits sorted into tiers by the paths they touch, and the top tier held as a proposal until you seal it, by a rule you can read. *new* `no-install` `offline` `records` `assistant` `hooks`
 - **hooks-elsewhere** (idea) — The prompt hook for Gemini CLI, Codex and opencode, wherever they take hooks, held to Claude Code's answer byte for byte. *box* `no-install` `offline` `records` `assistant` `hooks`
 - [**hosts**](adapters/stdlib/hosts/) — One table of the assistants that take an MCP server, printing the lines that register willow with any of them. *new* `no-install` `offline` `read-only` `assistant`
-- **instruction-files** (idea) — For a folder, which instruction files each coding agent would load (AGENTS.md, CLAUDE.md, GEMINI.md, rules folders), in what order, with each file's size and hash. *box* `no-install` `offline` `read-only` `assistant`
+- [**instruction-files**](adapters/stdlib/instruction-files/) — For a folder, which instruction files each coding agent would load (AGENTS.md, CLAUDE.md, GEMINI.md, rules folders), in what order, with each file's size and hash. *box* `no-install` `offline` `read-only` `assistant`
 - **issue-answer** (idea) — A workflow that drafts an answer to a new issue from the repo's own docs, each line cited, posted only once a maintainer seals it. Goes online: the forge, through the workflow's token, to post an answer once it is sealed. *new* `no-install` `online` `records` `assistant`
 - **ladder** (idea) — Your files first, then sources you trust such as Jeles and Nestor, then a model, stopping at the first that answers, each answer kept for next time. *bot* `no-install` `offline` `records` `assistant`
 - **local-model** (idea) — Suggestions from a model on this machine only, such as Ollama or llama.cpp. Needs a local model server; licence varies by model. Reaches this machine only. *new* `needs-install` `this-machine` `records` `assistant`
@@ -516,7 +516,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 
 ## For maintainers
 
-- **agents-md-check** (idea) — Commands and paths named in AGENTS.md or CLAUDE.md that no longer exist in the repo. *new* `no-install` `offline` `read-only` `maintainers`
+- [**agents-md-check**](adapters/stdlib/agents-md-check/) — Commands and paths named in AGENTS.md or CLAUDE.md that no longer exist in the repo. *new* `no-install` `offline` `read-only` `maintainers`
 - [**bench**](adapters/stdlib/bench/) — How fast the kernel answers on boxes of set sizes, per release, so a slowdown is seen. *new* `no-install` `offline` `read-only` `maintainers`
 - [**bot-venv**](adapters/stdlib/bot-venv/) — Which venv has what CI needs, willow-bot's own by its rule or any you name, and the line that runs CI with its Python. *bot* `no-install` `offline` `read-only` `maintainers`
 - [**ci**](adapters/stdlib/ci/) — This repo's checks as verdict rows on a kernel record, the same every run. Goes online: PyPI, to read each dependency floor's release date. *box* `no-install` `online` `records` `maintainers`

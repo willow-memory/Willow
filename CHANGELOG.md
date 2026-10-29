@@ -10,6 +10,16 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `agents-md-check`: the commands, paths, links, make targets, npm scripts
+  and `@` imports an AGENTS.md or CLAUDE.md names that the repo no longer
+  has, by file and line.
+- `licenses`: the licence of every installed Python and npm package, read
+  from its own metadata, in four classes (permissive, weak copyleft, strong
+  copyleft, undeclared), with an SPDX expression read through; everything but
+  the permissive ones is listed by file and line.
+- `instruction-files`: for a folder, the instruction files each of eight
+  coding agents would load, general first, with each file's size and hash
+  and the `@` imports Claude Code would follow.
 - `codeowners`: who owns a file, the CODEOWNERS rule that matches it cited
   by line, read the way GitHub (last match wins), GitLab (sections and their
   defaults) and Forgejo (every matching regex) each do.

@@ -68,6 +68,10 @@ willow/
 │   │   │   ├── again.py      the questions you keep asking, counted from the record
 │   │   │   ├── test_again.py
 │   │   │   └── README.md
+│   │   ├── agents-md-check/
+│   │   │   ├── agents_md_check.py   the commands and paths AGENTS.md or CLAUDE.md name that the repo no longer has
+│   │   │   ├── test_agents_md_check.py
+│   │   │   └── README.md
 │   │   ├── aider/
 │   │   │   ├── aider.py          the /run line that brings answers into Aider's chat
 │   │   │   ├── test_aider.py
@@ -274,6 +278,10 @@ willow/
 │   │   │   ├── install_scripts.py  the install scripts node_modules would run (preinstall, install, postinstall), by file and line
 │   │   │   ├── test_install_scripts.py
 │   │   │   └── README.md
+│   │   ├── instruction-files/
+│   │   │   ├── instruction_files.py   which instruction files each coding agent would load for a folder, in order, with size and hash
+│   │   │   ├── test_instruction_files.py
+│   │   │   └── README.md
 │   │   ├── jetbrains/
 │   │   │   ├── jetbrains.py      an external tool for JetBrains IDEs: answers as links to file and line
 │   │   │   ├── test_jetbrains.py
@@ -285,6 +293,10 @@ willow/
 │   │   ├── lending/
 │   │   │   ├── lending.py    what you lent, and what your files say came back
 │   │   │   ├── test_lending.py
+│   │   │   └── README.md
+│   │   ├── licenses/
+│   │   │   ├── licenses.py   the licence of every installed Python and npm package, and which are copyleft, by file and line
+│   │   │   ├── test_licenses.py
 │   │   │   └── README.md
 │   │   ├── life/
 │   │   │   ├── life.py       Conway's Game of Life as one row; check plays it again
