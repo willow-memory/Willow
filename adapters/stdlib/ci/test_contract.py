@@ -270,6 +270,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "hook-guard": ("hook_guard.py", ["rules"]),
     "hook-impact": ("hook_impact.py", ["check", "--box", "{box}", "{pile}/garden.md"]),
     "hook-stop": ("hook_stop.py", ["check", "--box", "{box}", "--repo", "{tmp}"]),
+    "oracle-text": ("oracle_text.py", ["--seed", "demo"]),
     "history": ("history.py", ["--box", "{box}"]),
     "dice": ("dice.py", ["--box", "{box}", "roll", "2d6", *NOW]),
     "hook-fail-closed": ("hook_fail_closed.py", ["--hook", "true"]),

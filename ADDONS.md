@@ -18,7 +18,7 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`████████░░░░░░░░░░░░` **193 of 470 built** · 419 need no install · 51 need one
+`████████░░░░░░░░░░░░` **194 of 470 built** · 419 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
@@ -30,7 +30,7 @@ or `writes-output`; its section), and any the card's author adds or changes.
 | Privacy and safety | 11 | 3 | 14 | 0 |
 | Assistants | 25 | 32 | 51 | 6 |
 | Ways to use it | 19 | 20 | 35 | 4 |
-| Play | 7 | 33 | 35 | 5 |
+| Play | 8 | 32 | 35 | 5 |
 | For maintainers | 19 | 25 | 39 | 5 |
 <!-- /willow:pools -->
 
@@ -47,9 +47,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[lending](adapters/stdlib/lending/)** — Things you lent, to whom and when, and which are still out.
+**[starter-words](adapters/stdlib/starter-words/)** — A first-day words list to copy and edit (owes = invoice, outstanding; doctor = dr, physician, clinic).
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 193 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 194 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -496,7 +496,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - **nim** (idea) — Nim as rows: the heaps and each take, a position lost exactly when the heaps' XOR is 0. *new* `no-install` `offline` `records` `play`
 - **ninety-percent** (idea) — The calibration drill: give a range you're 90% sure of for a real number, and see how many hold. Goes online: Our World in Data, its numbers downloaded once. *new* `no-install` `online` `records` `play`
 - [**odds**](adapters/stdlib/odds/) — Exact odds, as fractions, for a game's dice and tables: what each outcome's chance really is. *bot* `no-install` `offline` `read-only` `play`
-- **oracle-text** (idea) — Readings written by a Tracery grammar, every branch picked by the seeded stream, so each one can be replayed. *new* `no-install` `offline` `read-only` `play`
+- [**oracle-text**](adapters/stdlib/oracle-text/) — Readings written by a Tracery grammar, every branch picked by the seeded stream, so each one can be replayed. *new* `no-install` `offline` `read-only` `play`
 - **pageviews** (idea) — Two Wikipedia articles drawn at random: which gets more views tomorrow? Goes online: the Wikimedia pageviews API, to settle it. *new* `no-install` `online` `records` `play`
 - **pile-poetry** (idea) — Verse from the word pairs your own files use most, in your own dialect. *new* `no-install` `offline` `read-only` `play`
 - **predictions** (idea) — Twelve yes-or-no questions about random data, forecast now and answered by a beacon round later, with your Brier score. Goes online: api.drand.sh, to read a beacon round's randomness. *bot* `no-install` `online` `records` `play`

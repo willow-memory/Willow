@@ -1653,16 +1653,6 @@
   "tags": "no-install, online, records, trust"
  },
  {
-  "name": "oracle-text",
-  "kind": "stdlib",
-  "section": "Play",
-  "line": "Readings written by a Tracery grammar, every branch picked by the seeded stream, so each one can be replayed.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, play"
- },
- {
   "name": "orders",
   "kind": "stdlib",
   "section": "Reading more kinds of files",

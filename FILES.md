@@ -483,6 +483,10 @@ willow/
 │   │   │   ├── opencode.py       the opencode.json lines that register mcp-lite with OpenCode
 │   │   │   ├── test_opencode.py
 │   │   │   └── README.md
+│   │   ├── oracle-text/
+│   │   │   ├── oracle_text.py   readings from a Tracery grammar, replayable
+│   │   │   ├── test_oracle_text.py
+│   │   │   └── README.md
 │   │   ├── outdated/
 │   │   │   ├── outdated.py   how old each locked dependency is, and which are yanked, deprecated or unmaintained
 │   │   │   ├── test_outdated.py

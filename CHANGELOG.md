@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `oracle-text`: Readings written by a Tracery grammar, every branch picked
+  by the seeded stream, so any reading can be made again from its seed:
+  modifiers, named expansions, a built-in grammar or your own file.
 - `hook-stop`: A Stop hook that won't let an assistant's turn end while the
   record doesn't verify or the repository has uncommitted work, and says
   which; it lets go once it has already held the turn.
