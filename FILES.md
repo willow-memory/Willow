@@ -805,6 +805,10 @@ willow/
 │   │   │   ├── vscode.py         a VS Code task: answers in the Problems panel
 │   │   │   ├── test_vscode.py
 │   │   │   └── README.md
+│   │   ├── wallabag/
+│   │   │   ├── wallabag.py   saved articles with tags and highlights
+│   │   │   ├── test_wallabag.py
+│   │   │   └── README.md
 │   │   ├── warranties/
 │   │   │   ├── warranties.py   when a cover ends, and where its receipt is
 │   │   │   ├── test_warranties.py

@@ -10,6 +10,8 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `wallabag`: wallabag's JSON export: each saved entry, oldest first, with
+  its title, URL, tags, highlights and the article's text read as a page.
 - `karakeep`: Karakeep's JSON export: each bookmark, oldest first, with its
   day, title, URL, tags, your note, its summary and the page description or
   text.

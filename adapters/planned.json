@@ -2526,16 +2526,6 @@
   "tags": "needs-install, online, writes-output, file-reader"
  },
  {
-  "name": "wallabag",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "wallabag's JSON or HTML export: saved entries as plain text, with their tags.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "warm",
   "kind": "stdlib",
   "section": "Ways to use it",

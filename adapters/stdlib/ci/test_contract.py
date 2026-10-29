@@ -189,6 +189,11 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         b'"content":{"type":"link","url":"https://example.org/tomatoes","description":"A guide\\nto tomatoes."}},'
         b'{"createdAt":"2024-02-01T10:00:00Z","title":"","content":{"type":"text","text":"Remember   the basil."}}]}'
     )}),
+    "wallabag": ("wallabag.py", {"wallabag.json": (
+        b'[{"title":"Tomato growing guide","url":"https://example.org/tomatoes","created_at":"2024-03-02T10:00:00+0000","tags":["garden",{"label":"veg"},5],'
+        b'"content":"<p>Plant   after <b>frost</b>.</p><script>x()</script><p>Stake early.</p>","annotations":[{"quote":"Stake early.","text":"do this in April"}]},'
+        b'{"title":"","url":"https://example.org/older","created_at":"2024-01-01T00:00:00+0000","content":"<p>Old &amp; dusty.</p>"}, 7]'
+    )}),
     "notes": ("notes.py", {"garden.md": b"Tomatoes want [[sun]].\n"}),
     "jrnl": ("jrnl.py", {"journal.txt": (
         "[2024-03-03 10:15] Fixed the gate.\nThe hinge wanted oil, not force.\n\n"
