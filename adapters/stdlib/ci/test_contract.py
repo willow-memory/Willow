@@ -71,6 +71,12 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         b"{\\rtf1\\ansi\\deff0{\\fonttbl{\\f0 Arial;}}{\\colortbl;\\red0\\green0\\blue0;}"
         b"\\pard\\b The roof\\b0  is fixed.\\par\nBills go out on Thursday.\\par}"
     )}),
+    "jupyter": ("jupyter.py", {"tides.ipynb": (
+        b'{"nbformat": 4, "nbformat_minor": 5, "metadata": {"kernelspec": {"name": "python3", "display_name": "Tide analysis"}, "language_info": {"name": "python"}},'
+        b' "cells": [{"cell_type": "markdown", "source": ["# Tides at the estuary\\n", "Six harbours."]},'
+        b' {"cell_type": "code", "source": "df = load(\\"harbours.csv\\")\\nprint(len(df))", "outputs": [{"output_type": "stream", "name": "stdout", "text": ["6 rows\\n"]},'
+        b' {"output_type": "display_data", "data": {"image/png": "iVBORw0KGgo=", "text/plain": ["<Figure size 640x480>"]}}]}]}'
+    )}),
     "notes": ("notes.py", {"garden.md": b"Tomatoes want [[sun]].\n"}),
     "jrnl": ("jrnl.py", {"journal.txt": (
         "[2024-03-03 10:15] Fixed the gate.\nThe hinge wanted oil, not force.\n\n"

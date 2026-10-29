@@ -1323,16 +1323,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "jupyter",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Jupyter notebooks: Markdown cells, code and text outputs as passages, cited by cell.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "karakeep",
   "kind": "stdlib",
   "section": "Reading more kinds of files",

@@ -298,6 +298,10 @@ willow/
 │   │   │   ├── jrnl.py       jrnl journals mirrored, each stamped entry one dated passage
 │   │   │   ├── test_jrnl.py
 │   │   │   └── README.md
+│   │   ├── jupyter/
+│   │   │   ├── jupyter.py   a Jupyter notebook as text, one block for each cell with its number and kind
+│   │   │   ├── test_jupyter.py
+│   │   │   └── README.md
 │   │   ├── lending/
 │   │   │   ├── lending.py    what you lent, and what your files say came back
 │   │   │   ├── test_lending.py

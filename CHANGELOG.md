@@ -10,6 +10,10 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `jupyter`: Jupyter notebooks, each cell as a block headed by its number and
+  kind: Markdown and code as written, and a code cell's text outputs (printed
+  text, a result's plain form, an error's name and message) under "output:".
+  Pictures are left out. Older nbformat 3 notebooks are read too.
 - `rtf`: RTF documents as plain text: paragraphs and line breaks kept, the
   font and style tables, formatting words, pictures, headers and footers
   dropped, escaped letters and Unicode read as the characters they are, and a
