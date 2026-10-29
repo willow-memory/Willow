@@ -18,14 +18,14 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`████████░░░░░░░░░░░░` **184 of 470 built** · 419 need no install · 51 need one
+`████████░░░░░░░░░░░░` **185 of 470 built** · 419 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
 | Reading more kinds of files | 22 | 83 | 96 | 9 |
 | Finding things | 26 | 17 | 33 | 10 |
 | Your own words | 16 | 9 | 22 | 3 |
-| Keeping track | 23 | 35 | 58 | 0 |
+| Keeping track | 24 | 34 | 58 | 0 |
 | Trust and proof | 20 | 25 | 36 | 9 |
 | Privacy and safety | 11 | 3 | 14 | 0 |
 | Assistants | 21 | 36 | 51 | 6 |
@@ -47,9 +47,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[hook-shell](adapters/stdlib/hook-shell/)** — A command split the way the shell will split it, quotes, variables and chained commands included, before any rule judges it, so a rule can't be dodged by spelling.
+**[evernote](adapters/stdlib/evernote/)** — Evernote's .enex files: each note as plain text with its notebook, tags and dates.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 184 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 185 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -300,7 +300,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**todo**](adapters/stdlib/todo/) — TODO, FIXME and "need to" lines across the folder, oldest first. *box* `no-install` `offline` `read-only` `tracking`
 - **trips** (idea) — Your trips from booking emails and tickets: where you went, when, and where you stayed. *new* `no-install` `offline` `read-only` `tracking`
 - **upstream-desk** (idea) — Your work in other people's projects, in one place: notifications sorted into what needs you, and your open pull requests there. Goes online: GitHub, through gh, with your own login. *bot* `no-install` `online` `read-only` `tracking`
-- **warranties** (idea) — Receipts and warranties: when the dishwasher's cover ends, and where its receipt is. *new* `no-install` `offline` `read-only` `tracking`
+- [**warranties**](adapters/stdlib/warranties/) — Receipts and warranties: when the dishwasher's cover ends, and where its receipt is. *new* `no-install` `offline` `read-only` `tracking`
 
 ## Trust and proof
 

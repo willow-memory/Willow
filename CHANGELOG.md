@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `warranties`: Receipts and warranties: for each thing a line gives a
+  warranty, the day its cover ends (said, or bought plus a length) and where
+  its receipt is.
 - `home-upkeep`: Home upkeep from your notes and receipts: the boiler,
   filters, gutters and the rest, when each was last done and what is due by a
   date or interval you wrote.

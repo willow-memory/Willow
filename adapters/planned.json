@@ -2796,16 +2796,6 @@
   "tags": "no-install, this-machine, read-only, interface"
  },
  {
-  "name": "warranties",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "Receipts and warranties: when the dishwasher's cover ends, and where its receipt is.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
- },
- {
   "name": "watch",
   "kind": "stdlib",
   "section": "Finding things",
