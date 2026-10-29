@@ -138,6 +138,17 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         b"INT. KITCHEN - DAY #1#\n\nAna waters the tomatoes.\n\nANA\nSix hours of sun.\n\nBEN (V.O.)\n(dryly)\nOr so she says.\n\n"
         b"CUT TO:\n\n.EXT. GARDEN - NIGHT\n\n[[a note]]The moon /* hidden */ rises.\n"
     )}),
+    "musicxml": ("musicxml.py", {"song.musicxml": (
+        b'<?xml version="1.0"?><score-partwise version="3.1"><work><work-title>Evening Song</work-title></work>'
+        b'<identification><creator type="composer">Ana Example</creator><creator type="lyricist">Ben Sample</creator></identification>'
+        b'<part-list><score-part id="P1"><part-name>Soprano</part-name></score-part></part-list>'
+        b'<part id="P1"><measure number="1"><attributes><key><fifths>1</fifths><mode>major</mode></key><time><beats>3</beats><beat-type>4</beat-type></time></attributes>'
+        b'<direction><direction-type><words>Andante</words></direction-type><sound tempo="72"/></direction>'
+        b'<direction><direction-type><dynamics><p/></dynamics></direction-type></direction>'
+        b'<note><pitch><step>G</step><octave>4</octave></pitch><lyric number="1"><syllabic>begin</syllabic><text>Ev</text></lyric></note>'
+        b'<note><pitch><step>A</step><octave>4</octave></pitch><lyric number="1"><syllabic>end</syllabic><text>ening</text></lyric></note>'
+        b'<note><pitch><step>B</step><octave>4</octave></pitch><lyric number="1"><syllabic>single</syllabic><text>comes</text></lyric><lyric number="2"><syllabic>single</syllabic><text>Morn</text></lyric></note></measure></part></score-partwise>'
+    )}),
     "notes": ("notes.py", {"garden.md": b"Tomatoes want [[sun]].\n"}),
     "jrnl": ("jrnl.py", {"journal.txt": (
         "[2024-03-03 10:15] Fixed the gate.\nThe hinge wanted oil, not force.\n\n"

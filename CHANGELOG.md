@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `musicxml`: MusicXML scores: each as its titles, credits, key, time, tempo,
+  markings and lyrics in words, the notes themselves not copied; a file that
+  declares entities is not read.
 - `screenplay`: Fountain and Final Draft scripts: each as its scenes, with
   action, cues and dialogue, so a line can be cited by scene; notes,
   transitions and parentheticals left out.

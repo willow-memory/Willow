@@ -1431,16 +1431,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "musicxml",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "MusicXML scores: titles, lyrics, tempo and performance markings as passages.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "my-lessons",
   "kind": "stdlib",
   "section": "Finding things",

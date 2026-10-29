@@ -478,6 +478,10 @@ willow/
 │   │   │   ├── mood.py   mood scores over weeks and months
 │   │   │   ├── test_mood.py
 │   │   │   └── README.md
+│   │   ├── musicxml/
+│   │   │   ├── musicxml.py   scores as titles, key, tempo, markings and lyrics
+│   │   │   ├── test_musicxml.py
+│   │   │   └── README.md
 │   │   ├── mutants/
 │   │   │   ├── mutants.py    breaks each add-on's code on purpose and checks its tests notice
 │   │   │   ├── accepted.json the breaks that change nothing a person could notice, each with why
