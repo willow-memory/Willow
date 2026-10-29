@@ -379,6 +379,10 @@ willow/
 │   │   │   ├── people.py     everyone the files name, by what they do with a name, and each one's every mention
 │   │   │   ├── test_people.py
 │   │   │   └── README.md
+│   │   ├── pgn/
+│   │   │   ├── pgn.py   a PGN game as who, when, where, the result, the opening and every comment with its move
+│   │   │   ├── test_pgn.py
+│   │   │   └── README.md
 │   │   ├── pii-audit/
 │   │   │   ├── pii_audit.py  the personal numbers in the files, checked never guessed, shown masked
 │   │   │   ├── test_pii_audit.py

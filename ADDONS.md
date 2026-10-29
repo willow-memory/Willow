@@ -18,11 +18,11 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`███████░░░░░░░░░░░░░` **154 of 470 built** · 419 need no install · 51 need one
+`███████░░░░░░░░░░░░░` **155 of 470 built** · 419 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
-| Reading more kinds of files | 18 | 87 | 96 | 9 |
+| Reading more kinds of files | 19 | 86 | 96 | 9 |
 | Finding things | 24 | 19 | 33 | 10 |
 | Your own words | 15 | 10 | 22 | 3 |
 | Keeping track | 15 | 43 | 58 | 0 |
@@ -47,9 +47,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[fast-tests](adapters/deps/fast-tests/)** — The test suite across every core with pytest-xdist, the same tests in a fraction of the time.
+**[instruction-files](adapters/stdlib/instruction-files/)** — For a folder, which instruction files each coding agent would load (AGENTS.md, CLAUDE.md, GEMINI.md, rules folders), in what order, with each file's size and hash.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 154 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 155 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -130,7 +130,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - [**parallel**](adapters/stdlib/parallel/) — A reader run over several folders at once, across every CPU core, so a big mirror of many sources builds in a fraction of the time. *new* `no-install` `offline` `writes-output` `file-reader`
 - **past-papers** (idea) — Past exam papers and their mark schemes as passages: which year asked this, and what earned the marks. *new* `no-install` `offline` `writes-output` `file-reader`
 - [**pdf**](adapters/deps/pdf/) — Text out of PDFs. Needs pypdf; BSD-3-Clause. *new* `needs-install` `offline` `writes-output` `file-reader`
-- **pgn** (idea) — Chess games from PGN files: players, dates, openings and your annotations. *new* `no-install` `offline` `writes-output` `file-reader`
+- [**pgn**](adapters/stdlib/pgn/) — Chess games from PGN files: players, dates, openings and your annotations. *new* `no-install` `offline` `writes-output` `file-reader`
 - **photos** (idea) — When and where each photo was taken, as dated lines. Needs Pillow; MIT-CMU. *new* `needs-install` `offline` `writes-output` `file-reader`
 - **places** (idea) — KML and GeoJSON files: each place's name, note and coordinates as a passage. *new* `no-install` `offline` `writes-output` `file-reader`
 - **pocket** (idea) — Pocket's export, the HTML and CSV in its zip, as one dated line per saved article, now that Pocket is gone. *new* `no-install` `offline` `writes-output` `file-reader`

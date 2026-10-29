@@ -2033,16 +2033,6 @@
   "tags": "no-install, offline, read-only, tracking"
  },
  {
-  "name": "pgn",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Chess games from PGN files: players, dates, openings and your annotations.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "pgp",
   "kind": "deps",
   "section": "Trust and proof",

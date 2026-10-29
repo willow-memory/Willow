@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `pgn`: Chess games from PGN files, each game as who played, when, where,
+  the result and the opening, then every comment in the moves with the move
+  it follows (Black's with three dots). The moves themselves are not copied.
 - `latex`: LaTeX sources as plain prose, line for line: the mirror has the
   source's lines, so a passage is cited by the .tex file's own line.
   Comments, the preamble (but the title and author), math, verbatim and
