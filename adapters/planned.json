@@ -650,16 +650,6 @@
   "tags": "no-install, offline, records, play"
  },
  {
-  "name": "garden",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "What you planted, where and when, and how it did, season by season.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
- },
- {
   "name": "gh-json",
   "kind": "stdlib",
   "section": "Reading more kinds of files",

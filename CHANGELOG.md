@@ -10,6 +10,8 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `garden`: What you planted, where and when, and how it did, season by
+  season, from garden notes that say a planting or a harvest.
 - `baby-log`: Feeds, sleeps and nappies from your notes, counted by day with
   the last of each and its time.
 - `attendance`: Attendance for a class, club or group from your register:
