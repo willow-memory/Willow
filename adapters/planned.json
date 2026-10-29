@@ -1052,16 +1052,6 @@
   "tags": "no-install, offline, records, play"
  },
  {
-  "name": "hours",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "Hours worked or volunteered, per client or group, from your notes.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
- },
- {
   "name": "in-case",
   "kind": "stdlib",
   "section": "Trust and proof",

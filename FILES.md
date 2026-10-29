@@ -322,6 +322,10 @@ willow/
 │   │   │   ├── hosts.py          one table of assistants that take an MCP server, and the lines that register willow with each
 │   │   │   ├── test_hosts.py
 │   │   │   └── README.md
+│   │   ├── hours/
+│   │   │   ├── hours.py   hours worked or volunteered, per client
+│   │   │   ├── test_hours.py
+│   │   │   └── README.md
 │   │   ├── ids/
 │   │   │   ├── ids.py        each file and passage by its Software Heritage ID and one-chunk IPFS CID
 │   │   │   ├── test_ids.py

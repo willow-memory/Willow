@@ -253,6 +253,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "braille": ("braille.py", ["--box", "{box}", "--to", "{tmp}/answers.brf"]),
     "llms-txt": ("llms_txt.py", ["write", "--from", "{pile}", "--to", "{tmp}/llms.txt"]),
     "badge": ("badge.py", ["--box", "{box}", "--to", "{tmp}/badge.svg"]),
+    "hours": ("hours.py", ["--box", "{box}"]),
     "history": ("history.py", ["--box", "{box}"]),
     "dice": ("dice.py", ["--box", "{box}", "roll", "2d6", *NOW]),
     "hook-fail-closed": ("hook_fail_closed.py", ["--hook", "true"]),

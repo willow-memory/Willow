@@ -10,6 +10,8 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `hours`: Hours worked or volunteered, added up for each client or group
+  your notes name, from lines that say a work word and a length of time.
 - `badge`: an SVG badge for a page from the record: how many answers are
   approved and from how many files, green when the chain holds and every
   approval stands, amber when one doesn't, red when the chain breaks, grey
