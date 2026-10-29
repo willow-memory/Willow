@@ -84,6 +84,10 @@ willow/
 │   │   │   ├── amounts.py    every sum of money in the files, dated by its line, the date above or the file's name
 │   │   │   ├── test_amounts.py
 │   │   │   └── README.md
+│   │   ├── annotations/
+│   │   │   ├── annotations.py   approved answers as W3C Web Annotations: the answer as the body, each cited passage as a target with its lines and words
+│   │   │   ├── test_annotations.py
+│   │   │   └── README.md
 │   │   ├── backup/
 │   │   │   ├── backup.py     your record in one zip, every byte and the chain checked; never the key
 │   │   │   ├── test_backup.py
@@ -100,6 +104,10 @@ willow/
 │   │   │   ├── bot_venv.py       does willow-bot's venv, or any named, have what CI needs; the line that runs CI with it
 │   │   │   ├── test_bot_venv.py
 │   │   │   └── README.md
+│   │   ├── box-health/
+│   │   │   ├── box_health.py   a box's health in one line: the chain, approvals, files it can't read, the words list, and the last out row
+│   │   │   ├── test_box_health.py
+│   │   │   └── README.md
 │   │   ├── browse/
 │   │   │   ├── browse.py     your folder in your browser, on 127.0.0.1: ask, read, approve with a click
 │   │   │   ├── test_browse.py
@@ -107,6 +115,10 @@ willow/
 │   │   ├── calendar/
 │   │   │   ├── cal.py        .ics events and .vcf contacts, as dated lines
 │   │   │   ├── test_calendar.py
+│   │   │   └── README.md
+│   │   ├── calendar-out/
+│   │   │   ├── calendar_out.py   the dates coming up as an .ics file: an all-day event for each, the line as its title and the file and line as its description
+│   │   │   ├── test_calendar_out.py
 │   │   │   └── README.md
 │   │   ├── changed/
 │   │   │   ├── changed.py    what's new, edited or deleted since the last check, as fingerprint rows
@@ -156,6 +168,10 @@ willow/
 │   │   ├── clauses/
 │   │   │   ├── clauses.py    a long document as one sentence a passage, and a sentence-by-sentence diff
 │   │   │   ├── test_clauses.py
+│   │   │   └── README.md
+│   │   ├── cloudevents/
+│   │   │   ├── cloudevents.py   the record's rows as CloudEvents 1.0 JSON events, one a line, the id each row's own hash
+│   │   │   ├── test_cloudevents.py
 │   │   │   └── README.md
 │   │   ├── codeowners/
 │   │   │   ├── codeowners.py   who owns a file: the CODEOWNERS rule that matches it, cited by line, on GitHub, GitLab and Forgejo
@@ -213,6 +229,10 @@ willow/
 │   │   │   ├── export.py     approved answers and the question log, as Markdown or CSV
 │   │   │   ├── test_export.py
 │   │   │   └── README.md
+│   │   ├── fair-merge/
+│   │   │   ├── fair_merge.py   each folder ranked on its own and the lists dealt out in turns, so a large corpus can't bury a small one
+│   │   │   ├── test_fair_merge.py
+│   │   │   └── README.md
 │   │   ├── first-mention/
 │   │   │   ├── first_mention.py  when the files first mention something: the earliest dated line that holds every word
 │   │   │   ├── test_first_mention.py
@@ -250,6 +270,10 @@ willow/
 │   │   │   ├── hook_fuzz.py      bad input thrown at a hook, and each one that breaks it named
 │   │   │   ├── test_hook_fuzz.py
 │   │   │   └── README.md
+│   │   ├── hook-leaks/
+│   │   │   ├── hook_leaks.py   a PreToolUse hook that refuses a write or command holding a key, password or card number, naming only the kind
+│   │   │   ├── test_hook_leaks.py
+│   │   │   └── README.md
 │   │   ├── hook-pin/
 │   │   │   ├── hook_pin.py       a hook runs only as the bytes you approved, pinned on the record
 │   │   │   ├── test_hook_pin.py
@@ -257,6 +281,14 @@ willow/
 │   │   ├── hook-replay/
 │   │   │   ├── hook_replay.py    every hook answer a row of hashes, and each one run again
 │   │   │   ├── test_hook_replay.py
+│   │   │   └── README.md
+│   │   ├── hook-shell/
+│   │   │   ├── hook_shell.py   a command split as the shell splits it, quotes, variables and chains included, before a rule judges it
+│   │   │   ├── test_hook_shell.py
+│   │   │   └── README.md
+│   │   ├── hook-start/
+│   │   │   ├── hook_start.py   a SessionStart hook that tells the assistant what waits on the person, read the way digest reads it
+│   │   │   ├── test_hook_start.py
 │   │   │   └── README.md
 │   │   ├── horoscope/
 │   │   │   ├── horoscope.py  a daily reading picked by the SHA-256 of name and date
@@ -330,6 +362,10 @@ willow/
 │   │   │   ├── mutants.py    breaks each add-on's code on purpose and checks its tests notice
 │   │   │   ├── accepted.json the breaks that change nothing a person could notice, each with why
 │   │   │   ├── test_mutants.py
+│   │   │   └── README.md
+│   │   ├── nicknames/
+│   │   │   ├── nicknames.py   the names you call people, found beside a family word in your files, as a words list
+│   │   │   ├── test_nicknames.py
 │   │   │   └── README.md
 │   │   ├── notes/
 │   │   │   ├── notes.py      Obsidian and Logseq vaults, links and backlinks kept
@@ -423,6 +459,10 @@ willow/
 │   │   │   ├── privacy.py    personal data and keys withheld from what a question prints
 │   │   │   ├── test_privacy.py
 │   │   │   └── README.md
+│   │   ├── profile/
+│   │   │   ├── question_profile.py   where a question's time goes: reading the folder, ranking, and the functions the time went to, from cProfile
+│   │   │   ├── test_question_profile.py
+│   │   │   └── README.md
 │   │   ├── prov/
 │   │   │   ├── prov.py   the record as W3C PROV-JSON: what came from what, by which step, sealed by whom
 │   │   │   ├── test_prov.py
@@ -463,6 +503,10 @@ willow/
 │   │   │   ├── risky_code.py  lines of code matching a known-dangerous pattern, by file and line, as leads to read
 │   │   │   ├── test_risky_code.py
 │   │   │   └── README.md
+│   │   ├── ro-crate/
+│   │   │   ├── ro_crate.py   a box snapshot as an RO-Crate zip: every file with its SHA-256, size, kind and licence, and the record's tip pinned
+│   │   │   ├── test_ro_crate.py
+│   │   │   └── README.md
 │   │   ├── said/
 │   │   │   ├── said.py       who said what, read by shape (a chat's stamp, a speech verb, quotation marks), dated
 │   │   │   ├── test_said.py
@@ -470,6 +514,10 @@ willow/
 │   │   ├── scan/
 │   │   │   ├── scan.py       indexes a folder once, then asks it a list of questions, the kernel's way
 │   │   │   ├── test_scan.py  holds its answers to the kernel's, every ranking vector included
+│   │   │   └── README.md
+│   │   ├── scrub/
+│   │   │   ├── scrub.py   a copy of a JPEG, PNG, docx, xlsx or pptx without its Exif, author, times and edit history, and what was taken out
+│   │   │   ├── test_scrub.py
 │   │   │   └── README.md
 │   │   ├── secrets-audit/
 │   │   │   ├── secrets_audit.py passwords, keys and card numbers in plain files, by file and line
@@ -580,6 +628,10 @@ willow/
 │   │   ├── web-pages/
 │   │   │   ├── web_pages.py  saved .html and .mhtml as their paragraphs, under the address they came from
 │   │   │   ├── test_web_pages.py
+│   │   │   └── README.md
+│   │   ├── why-not/
+│   │   │   ├── why_not.py   why a question got not enough to say: which words nothing holds, the nearest passages and what kind of file would answer
+│   │   │   ├── test_why_not.py
 │   │   │   └── README.md
 │   │   ├── windsurf/
 │   │   │   ├── windsurf.py       the mcp_config.json lines that register mcp-lite with Windsurf
