@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `ci-logs`: CI run logs from GitHub Actions, Forgejo Actions or GitLab CI:
+  each failing step as a passage with its name, the time, its last lines and
+  the error; passing runs skipped and counted.
 - `stems`: Word forms for some thirty languages through Snowball's stemmer,
   so "häuser" finds "haus" and "книги" finds "книга": a word no file holds
   is read as the form of its stem the most passages hold, offered, never

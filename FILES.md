@@ -181,6 +181,10 @@ willow/
 │   │   │   ├── ci_cache.py    a cache key per ecosystem from a repo's lockfiles, so CI skips the reinstall
 │   │   │   ├── test_ci_cache.py
 │   │   │   └── README.md
+│   │   ├── ci-logs/
+│   │   │   ├── ci_logs.py   a CI run log as its failing steps
+│   │   │   ├── test_ci_logs.py
+│   │   │   └── README.md
 │   │   ├── ci-memo/
 │   │   │   ├── ci_memo.py    a gate whose inputs' bytes are unchanged keeps its verdict: pin a run's keys, plan the rest
 │   │   │   ├── test_ci_memo.py

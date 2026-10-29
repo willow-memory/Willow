@@ -211,16 +211,6 @@
   "tags": "no-install, offline, records, maintainers"
  },
  {
-  "name": "ci-logs",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "CI run logs you downloaded (GitHub Actions, GitLab CI, Forgejo Actions): each failing step as a passage, so you can ask when a test last failed.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "claude",
   "kind": "deps",
   "section": "Assistants",
