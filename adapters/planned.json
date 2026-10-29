@@ -1195,16 +1195,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "livestock",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "Each animal's births, treatments and sales, from your farm records.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
- },
- {
   "name": "local-model",
   "kind": "deps",
   "section": "Assistants",

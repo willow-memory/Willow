@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `livestock`: Each animal's births, treatments and sales from your farm
+  records, gathered by tag or name: born, treated and last treated, sold or
+  died with its price.
 - `milestones`: Your child's firsts, milestones and measurements from your
   notes, each with the child's age on the day, counted from the birth date
   you give.

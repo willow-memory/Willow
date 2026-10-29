@@ -275,6 +275,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "subscriptions": ("subscriptions.py", ["--box", "{box}"]),
     "reading-log": ("reading_log.py", ["--box", "{box}"]),
     "milestones": ("milestones.py", ["--box", "{box}", "--born", "2020-01-01"]),
+    "livestock": ("livestock.py", ["--box", "{box}"]),
     "history": ("history.py", ["--box", "{box}"]),
     "dice": ("dice.py", ["--box", "{box}", "roll", "2d6", *NOW]),
     "hook-fail-closed": ("hook_fail_closed.py", ["--hook", "true"]),

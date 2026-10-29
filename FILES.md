@@ -422,6 +422,10 @@ willow/
 │   │   │   ├── live.py       each way-in add-on run through its real program: works, fails, or not here
 │   │   │   ├── test_live.py
 │   │   │   └── README.md
+│   │   ├── livestock/
+│   │   │   ├── livestock.py   each animal's births, treatments and sales
+│   │   │   ├── test_livestock.py
+│   │   │   └── README.md
 │   │   ├── llms-txt/
 │   │   │   ├── llms_txt.py   an llms.txt written from a folder's text files, and a checker for one
 │   │   │   ├── test_llms_txt.py

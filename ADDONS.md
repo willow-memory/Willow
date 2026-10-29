@@ -18,14 +18,14 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`████████░░░░░░░░░░░░` **198 of 470 built** · 419 need no install · 51 need one
+`████████░░░░░░░░░░░░` **199 of 470 built** · 419 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
 | Reading more kinds of files | 22 | 83 | 96 | 9 |
 | Finding things | 26 | 17 | 33 | 10 |
 | Your own words | 16 | 9 | 22 | 3 |
-| Keeping track | 31 | 27 | 58 | 0 |
+| Keeping track | 32 | 26 | 58 | 0 |
 | Trust and proof | 20 | 25 | 36 | 9 |
 | Privacy and safety | 11 | 3 | 14 | 0 |
 | Assistants | 25 | 32 | 51 | 6 |
@@ -47,9 +47,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[tip-pin](adapters/stdlib/tip-pin/)** — Where a box's record ends, kept outside the box, so rows cut off or a whole chain re-hashed are found where verify can't.
+**[hook-compact](adapters/stdlib/hook-compact/)** — A PreCompact hook that prints what the record still holds open, seals waiting and questions unanswered, so it survives the assistant's summary.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 198 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 199 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -274,7 +274,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**job-hunt**](adapters/stdlib/job-hunt/) — Applications sent, replies and interviews, by date: who you're still waiting on. *new* `no-install` `offline` `read-only` `tracking`
 - **lab-notebook** (idea) — A lab notebook's dated entries, by sample and experiment: what was done to what, and when. *new* `no-install` `offline` `read-only` `tracking`
 - [**lending**](adapters/stdlib/lending/) — Things you lent, to whom and when, and which are still out. *new* `no-install` `offline` `read-only` `tracking`
-- **livestock** (idea) — Each animal's births, treatments and sales, from your farm records. *new* `no-install` `offline` `read-only` `tracking`
+- [**livestock**](adapters/stdlib/livestock/) — Each animal's births, treatments and sales, from your farm records. *new* `no-install` `offline` `read-only` `tracking`
 - **market-calls** (idea) — Market calls kept as wagers on the record ('SPY closes up on Friday'), settled later, with the losers kept. *bot* `no-install` `offline` `records` `tracking`
 - [**mileage**](adapters/stdlib/mileage/) — Miles driven for work, from your trips and notes, totalled for a tax year. *new* `no-install` `offline` `read-only` `tracking`
 - [**milestones**](adapters/stdlib/milestones/) — Your child's firsts, words and heights, from your notes, by age. *new* `no-install` `offline` `read-only` `tracking`
