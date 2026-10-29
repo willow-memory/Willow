@@ -2454,16 +2454,6 @@
   "tags": "no-install, offline, writes-output, interface"
  },
  {
-  "name": "rtf",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "RTF documents as plain text.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "rubric",
   "kind": "stdlib",
   "section": "Keeping track",

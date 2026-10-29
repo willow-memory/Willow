@@ -467,6 +467,10 @@ willow/
 │   │   │   ├── risky_code.py  lines of code matching a known-dangerous pattern, by file and line, as leads to read
 │   │   │   ├── test_risky_code.py
 │   │   │   └── README.md
+│   │   ├── rtf/
+│   │   │   ├── rtf.py   an RTF document as the plain text it displays
+│   │   │   ├── test_rtf.py
+│   │   │   └── README.md
 │   │   ├── said/
 │   │   │   ├── said.py       who said what, read by shape (a chat's stamp, a speech verb, quotation marks), dated
 │   │   │   ├── test_said.py

@@ -10,6 +10,10 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `rtf`: RTF documents as plain text: paragraphs and line breaks kept, the
+  font and style tables, formatting words, pictures, headers and footers
+  dropped, escaped letters and Unicode read as the characters they are, and a
+  field's shown result kept.
 - `bibtex`: `.bib` files, each reference as a passage that begins with its
   citation key, with its title, year, authors, where it appeared, doi,
   keywords and abstract, so you can ask which paper said it and get the key
