@@ -6,10 +6,12 @@ PHP advisory and checked whether the code a fix changed came back. Here the
 "advisory" is the gap as its finder wrote it (a gap record, an audit finding)
 or, for four of them, as the fixer wrote it (a commit message).
 
-**This page is the state after the first real runs.** It holds the claim, the
+**This page is the state after the real runs.** It holds the claim, the
 threats, what is frozen, the rules that judge it, the dry run, and, at the end,
-the results of phases 1, 2, 3, 4 and 7 on the frozen questions. Phase 1 failed
-its gates; phase 2 passed all of its. Phases 5 and 6 have not run.
+the results of phases 1, 2, 3, 4 and 7 on the frozen questions, the count for
+phase 5 (its findings are private), and phase 6, the cpython control, with its
+own phase 7. On the fleet phase 1 failed its gates and phase 2 passed all of
+its; on cpython the verdicts are the same.
 
 ## The claim
 
@@ -658,10 +660,10 @@ were labelled with hash seeds 0 and 4242, but the labels were not in effect:
 the scripts ran as `PYTHONHASHSEED=n python -I ...`, and `-I` (isolated mode)
 ignores `PYTHONHASHSEED`, so each process drew its own random seed (checked:
 under `-I` the hash of the same string differs from one run to the next). So
-the four runs had unpinned, effectively random hash seeds, and being
-byte-identical under those is at least as strong a test of seed-independence
-as two fixed seeds. Phase 6's cpython control (below) runs with `-s`, so its
-seeds are real. The four answers files, the four scored files and
+the four runs had unpinned hash seeds that were not recorded; the four were
+byte-identical under whatever seeds they drew, which is a test of
+seed-independence, but not one that names its seeds. Phase 6's cpython control
+(below) runs with `-s`, so its seeds are real. The four answers files, the four scored files and
 the four result files are byte-identical; their SHA-256 are the six in the
 table at the top of this section, the same for all four runs. The indexes,
 whose hashes are in each unit's stats row, are therefore the same too.
@@ -865,13 +867,14 @@ others' are 0.0003 or less.
 
 **Phase 3, origin (blame at the vulnerable commit in cpython, every positional
 hit range; 0 unresolved).** The hit ranges are old code, not code written
-close to the fix: CP1's 6 ranges come from the 2021 getpath port, 1,621 to
-1,656 days before the fix; CP2's 4 from 2000 to 2015 (4,015 to 9,340 days);
+close to the fix: CP1's 6 ranges come from the getpath port and its follow-ups
+in 2021 and 2022, 1,621 to 1,656 days before the fix; CP2's 4 from 2000 to 2015 (4,015 to 9,340 days);
 CP3's 4 from 2001 to 2023 (985 to 9,166); CP4's single range from PEP 578 in
 2019 (2,477); CP5's 10 from 2000 to 2025 (183 to 9,309 days); CP6's 81, mostly
 vendored upstream expat updates, from 2002 to 2024 (123 to 8,434). CP7 has no
-hit range. No commit message cites an advisory id; the references some carry
-are issue and pull request numbers.
+hit range. No blamed commit cites the unit's own advisory; two cite other,
+older CVEs (one in CP5's ranges, one in CP6's), and the references the rest
+carry are issue and pull request numbers.
 
 **Phase 4, the writers compared (reported, never judged; every line, then the
 unflagged lines).**
@@ -903,15 +906,21 @@ public-advisory fixes the same happens, with the same reading: the questions
 reach the changed code in the whole tree above chance, though rarely (the
 line-level gates pass at p 1.8e-5 and 4.6e-6, and the null questions retrieve
 nothing above chance), and do no better than a random order inside a tiny set
-of changed passages. So on verdicts the fleet result looks like what the same
-method gives on a public-advisory control, and does not look like something
-particular to the fleet's own writing.
+of changed passages. So on verdicts, and on verdicts only, the fleet result
+looks like what the same method gives on a public-advisory control. The two
+gate tables say nothing more than that; the rates differ, below.
 
 **What it does not show.** The size differs, and a pass is not a find: the
 fleet's strong gaps reached a line in 44 of 160 asks (27.5 per cent), cpython's
 strong units in 2 of 80 (2.5 per cent), and the weaker 3 of 64 against 3 of
 32. The cpython pass for the strong group rests on two asks from one unit,
-and the weaker group's on one unit that is a vendored library. Seven units
+and the weaker group's on one unit that is a vendored library. The p-values
+assume a unit's eight questions, and its two writers, are independent draws;
+they ask the same advisory in different words, so 2 is not 2 separate chances.
+Counted as the fleet's harshest bound was, each unit one draw against its own
+chance, the strong group is 1 of 5 units, p = 3.8e-4, and the weaker 1 of 2,
+p = 2.0e-3; the audit computed these after the run, so they are reported
+beside the gates and judge nothing. Seven units
 is few, and the advisories describe behaviour more than the lines that
 changed. The questions were written blind, once; nothing here shows how a
 different writer or a different method would do. A model has seen cpython
