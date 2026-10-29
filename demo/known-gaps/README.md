@@ -103,6 +103,14 @@ was run on any repository. **Freeze 4** adds `outside.py` (a stub that exited 2
 until phase 6, below), `cpython_sources.json` and the cpython questions, before
 any unit is asked; no file frozen earlier is changed by either.
 
+**Freeze 5** (2026-10-29, after every run) changes one frozen file,
+`origin.py`, by one rule: its `stamp()` reads git's trailing `Z` (UTC in
+`%cI`) as `+00:00`, which `datetime.fromisoformat` refuses on Python 3.9 and
+3.10, the two CI runs where phase 3's own test then failed. No result
+changes: every run on this page was made on Python 3.12 or 3.14, where both
+forms already parsed to the same instant, and `origin.py` is not one of the
+tools a verdict row names. The reason is in FROZEN.json's `added` entry.
+
 ### The questions and the flagged-line rule
 
 The writers were told to write without identifiers. A question line is

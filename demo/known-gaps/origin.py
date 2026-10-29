@@ -62,7 +62,13 @@ def blame(repo: Path, rev: str, path: str, first: int, last: int) -> list:
 
 
 def stamp(text: str) -> datetime:
-    return datetime.fromisoformat(text.strip())
+    # git's %cI writes UTC as a trailing Z; datetime.fromisoformat reads that
+    # only from Python 3.11 on (freeze 5: CI's 3.9 and 3.10 parsed it as a
+    # "why" row, never as a date)
+    text = text.strip()
+    if text.endswith("Z"):
+        text = text[:-1] + "+00:00"
+    return datetime.fromisoformat(text)
 
 
 def origins(repos: Path, pins: dict, ranges: set) -> list:

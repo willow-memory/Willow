@@ -8,7 +8,7 @@
   "trees.py": "115913787b596e625503e8a45084acdf8a0fc0394c080f924f8defe99a401d78",
   "ask.py": "41f4b1084fac5c644a872854ab8b371f65f086039b43d791046e61410c421296",
   "score.py": "6dc8d70fdc7a22ef984f79430e375c04ddaa5bbd7570c769fba41fd0a3283023",
-  "origin.py": "d84d45ce3a899f3e2037564b799da8e75c175623ff1efc79a6df4d3ff9e6dab8",
+  "origin.py": "253237cd3c64322dd34bc907a5302ae5e7c43fe29b2ffd30793d04d51cce9841",
   "run.py": "50eb674fc55184d6c52574c35214099968f8f9dd770e4832f806f7e9c808f804",
   "flag.py": "e6c24ea595709a8c8052d213074a3cb2c84ddd1b602bd7f7c148a528a00dc8f3",
   "questions/claude/KG01.txt": "c7703b6bc536fcfd517cad1ef951fb65d5fd55635a314c992c3df7b17ecbe028",
@@ -79,6 +79,7 @@
   "spread.py": "2026-10-28, freeze 3, before it was run on any repository: phase 5, the candidate rule (top 10 by bm25, at least 4 of a gap's 16 questions, at least one from each writer) with its exact chance, findings written only to a private place",
   "outside.py": "2026-10-28, freeze 4, before it was run on any unit: phase 6, the frozen method on seven cpython CVE fixes (same hit rule, rank statistic, line-level and null gates, two writers)",
   "cpython_sources.json": "2026-10-28, freeze 4: the seven cpython units' CVE, OSV address, fetch time, advisory text hashes, commits, trees and weights; never the advisory text",
-  "questions/cpython/": "2026-10-28, freeze 4, before any unit was asked: byte for byte the unedited output of the blind writers (local and claude, eight questions per unit, CP1 to CP7), headers included; their input file holds the advisory text and is kept privately"
+  "questions/cpython/": "2026-10-28, freeze 4, before any unit was asked: byte for byte the unedited output of the blind writers (local and claude, eight questions per unit, CP1 to CP7), headers included; their input file holds the advisory text and is kept privately",
+  "origin.py": "2026-10-29, freeze 5, after every run: stamp() reads git's trailing Z as +00:00, which Python 3.9 and 3.10 refuse; no result changed (every run was on 3.12 or 3.14, where both forms already parsed the same)"
  }
 }
