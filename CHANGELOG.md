@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `hook-compact`: A PreCompact hook that prints what the record still holds
+  open, the suggestions waiting for a seal and the questions asked again and
+  never answered, so they survive an assistant's summary.
 - `demo/known-gaps`: php2shell's method pointed at the fleet's own twelve
   known security gaps, and at seven cpython CVE fixes as the outside control.
   A question written from a gap's own text, asked of the code before the fix,

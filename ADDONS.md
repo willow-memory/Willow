@@ -18,7 +18,7 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`████████░░░░░░░░░░░░` **189 of 470 built** · 419 need no install · 51 need one
+`████████░░░░░░░░░░░░` **190 of 470 built** · 419 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
@@ -28,7 +28,7 @@ or `writes-output`; its section), and any the card's author adds or changes.
 | Keeping track | 28 | 30 | 58 | 0 |
 | Trust and proof | 20 | 25 | 36 | 9 |
 | Privacy and safety | 11 | 3 | 14 | 0 |
-| Assistants | 21 | 36 | 51 | 6 |
+| Assistants | 22 | 35 | 51 | 6 |
 | Ways to use it | 19 | 20 | 35 | 4 |
 | Play | 7 | 33 | 35 | 5 |
 | For maintainers | 19 | 25 | 39 | 5 |
@@ -47,9 +47,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[box-health](adapters/stdlib/box-health/)** — A box's health in one line: files it can't read, readers out of date, and when the chain was last checked.
+**[parallel](adapters/stdlib/parallel/)** — A reader run over several folders at once, across every CPU core, so a big mirror of many sources builds in a fraction of the time.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 189 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 190 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -384,7 +384,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - **hermes** (idea) — Hermes Agent asking your folder as a plugin, and its memories, and what its dreaming plugin consolidates, handed in through propose. *new* `no-install` `offline` `records` `assistant`
 - **hook-checks** (idea) — A PostToolUse hook that runs the repo's own fast checks on the file just edited and hands back only what failed, the same output for the same file. *new* `no-install` `offline` `read-only` `assistant` `hooks`
 - **hook-cite** (idea) — A hook that refuses an assistant's claim citing a passage the box never served it, checked against the record by id. *new* `no-install` `offline` `read-only` `assistant` `hooks`
-- **hook-compact** (idea) — A PreCompact hook that prints what the record still holds open, seals waiting and questions unanswered, so it survives the assistant's summary. *new* `no-install` `offline` `read-only` `assistant` `hooks`
+- [**hook-compact**](adapters/stdlib/hook-compact/) — A PreCompact hook that prints what the record still holds open, seals waiting and questions unanswered, so it survives the assistant's summary. *box* `no-install` `offline` `read-only` `assistant` `hooks`
 - **hook-errors** (idea) — Each failed command an assistant runs kept as a row of its hash and exit code, so the same failure the third time is named, not retried blind. *new* `no-install` `offline` `records` `assistant` `hooks`
 - [**hook-fail-closed**](adapters/stdlib/hook-fail-closed/) — Wraps any hook so a crash, a timeout or output it can't read blocks the tool, since Claude Code, Gemini CLI, Codex and Cursor all let the tool run by default. *new* `no-install` `offline` `read-only` `assistant` `hooks`
 - **hook-feedback** (idea) — Your corrections to an assistant (no, wrong, I said) caught by fixed patterns at each prompt and handed in through propose, for you to keep or drop. *new* `no-install` `offline` `records` `assistant` `hooks`

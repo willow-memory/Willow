@@ -266,6 +266,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "baby-log": ("baby_log.py", ["--box", "{box}"]),
     "garden": ("garden.py", ["--box", "{box}"]),
     "job-hunt": ("job_hunt.py", ["--box", "{box}"]),
+    "hook-compact": ("hook_compact.py", ["--box", "{box}"]),
     "history": ("history.py", ["--box", "{box}"]),
     "dice": ("dice.py", ["--box", "{box}", "roll", "2d6", *NOW]),
     "hook-fail-closed": ("hook_fail_closed.py", ["--hook", "true"]),

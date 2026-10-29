@@ -310,6 +310,10 @@ willow/
 │   │   │   ├── home_upkeep.py   what's due at home and when it was last done
 │   │   │   ├── test_home_upkeep.py
 │   │   │   └── README.md
+│   │   ├── hook-compact/
+│   │   │   ├── hook_compact.py   what the record holds open, before a summary
+│   │   │   ├── test_hook_compact.py
+│   │   │   └── README.md
 │   │   ├── hook-fail-closed/
 │   │   │   ├── hook_fail_closed.py a hook that crashes, hangs or says what can't be read blocks the tool
 │   │   │   ├── test_hook_fail_closed.py

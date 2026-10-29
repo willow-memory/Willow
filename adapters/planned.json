@@ -872,16 +872,6 @@
   "tags": "no-install, offline, read-only, assistant, hooks"
  },
  {
-  "name": "hook-compact",
-  "kind": "stdlib",
-  "section": "Assistants",
-  "line": "A PreCompact hook that prints what the record still holds open, seals waiting and questions unanswered, so it survives the assistant's summary.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, assistant, hooks"
- },
- {
   "name": "hook-errors",
   "kind": "stdlib",
   "section": "Assistants",
