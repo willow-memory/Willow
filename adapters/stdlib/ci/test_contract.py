@@ -245,6 +245,14 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         b'{"type":"m.room.message","sender":"@ana:example.org","origin_server_ts":1709367400000,"content":{"msgtype":"m.image","body":"tomato.png"}},'
         b'{"type":"m.room.message","sender":"@ana:example.org","origin_server_ts":1709367500000,"content":{"msgtype":"m.text","body":""}}]}'
     )}),
+    "trello": ("trello.py", {"garden.json": (
+        b'{"name":"Garden","lists":[{"id":"l1","name":"To do"},{"id":"l2","name":"Done"},{"id":"l3","name":"Old","closed":true}],'
+        b'"cards":[{"id":"c1","idList":"l1","name":"Stake the tomatoes","desc":"Use the  long canes.","due":"2024-03-09T12:00:00.000Z","labels":[{"name":"urgent"},{"name":""},{"name":"veg"}],"idChecklists":["k1"]},'
+        b'{"id":"c2","idList":"l2","name":"Order seed"},{"id":"c3","idList":"l1","name":"Archived","closed":true},{"id":"c4","idList":"l3","name":"In a closed list"}],'
+        b'"checklists":[{"id":"k1","name":"Tools","checkItems":[{"name":"canes","state":"complete"},{"name":"twine","state":"incomplete"}]}],'
+        b'"actions":[{"type":"commentCard","date":"2024-03-02T08:00:00.000Z","data":{"text":"Borrow Ben\'s.","card":{"id":"c1"}},"memberCreator":{"fullName":"Ana"}},'
+        b'{"type":"updateCard","data":{"card":{"id":"c1"}}}]}'
+    )}),
     "notes": ("notes.py", {"garden.md": b"Tomatoes want [[sun]].\n"}),
     "jrnl": ("jrnl.py", {"journal.txt": (
         "[2024-03-03 10:15] Fixed the gate.\nThe hinge wanted oil, not force.\n\n"

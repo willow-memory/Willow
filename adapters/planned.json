@@ -2364,16 +2364,6 @@
   "tags": "needs-install, this-machine, records, assistant"
  },
  {
-  "name": "trello",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "A Trello board's JSON export: cards, checklists and comments, by list.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "trips",
   "kind": "stdlib",
   "section": "Keeping track",

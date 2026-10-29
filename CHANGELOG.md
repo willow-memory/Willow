@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `trello`: A Trello board's JSON export: each open list with its open cards,
+  their due days, labels, descriptions, checklists with ticks and comments,
+  archived lists and cards left out.
 - `matrix`: Element's JSON room export: each message, oldest first, as a
   dated line with its room and sender; emotes and image or file descriptions
   kept; joins, reactions and other events left out.
