@@ -217,6 +217,10 @@ willow/
 │   │   │   ├── emacs.py          an M-x willow command: answers in a grep-mode buffer
 │   │   │   ├── test_emacs.py
 │   │   │   └── README.md
+│   │   ├── evernote/
+│   │   │   ├── evernote.py   an Evernote .enex export as its notes: title, notebook, dates, tags, source, attachments and text
+│   │   │   ├── test_evernote.py
+│   │   │   └── README.md
 │   │   ├── export/
 │   │   │   ├── export.py     approved answers and the question log, as Markdown or CSV
 │   │   │   ├── test_export.py

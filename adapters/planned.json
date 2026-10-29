@@ -630,16 +630,6 @@
   "tags": "needs-install, offline, records, trust"
  },
  {
-  "name": "evernote",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Evernote's .enex files: each note as plain text with its notebook, tags and dates.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "fair-merge",
   "kind": "stdlib",
   "section": "Finding things",

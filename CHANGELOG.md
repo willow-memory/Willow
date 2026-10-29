@@ -10,6 +10,10 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `evernote`: Evernote's .enex files, each note as a paragraph with its
+  title, notebook (the export file's name), dates, tags, source and
+  attachment names, then its text with lists, checkboxes and tables read as
+  text.
 - `places`: KML, GeoJSON and GPX files, each place as a paragraph with its
   name, the folders it is in, your note on it and its coordinates (a line or
   an area as its kind and first point), so a question about a place finds
