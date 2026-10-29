@@ -1083,16 +1083,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "job-hunt",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "Applications sent, replies and interviews, by date: who you're still waiting on.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
- },
- {
   "name": "joins",
   "kind": "stdlib",
   "section": "Play",

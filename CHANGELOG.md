@@ -10,6 +10,8 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `job-hunt`: Applications sent, replies and interviews by company: where
+  each stands and how long you have waited, from lines about a job search.
 - `garden`: What you planted, where and when, and how it did, season by
   season, from garden notes that say a planting or a harvest.
 - `baby-log`: Feeds, sleeps and nappies from your notes, counted by day with

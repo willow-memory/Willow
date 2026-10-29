@@ -374,6 +374,10 @@ willow/
 │   │   │   ├── jetbrains.py      an external tool for JetBrains IDEs: answers as links to file and line
 │   │   │   ├── test_jetbrains.py
 │   │   │   └── README.md
+│   │   ├── job-hunt/
+│   │   │   ├── job_hunt.py   applications sent, replies and who you're waiting on
+│   │   │   ├── test_job_hunt.py
+│   │   │   └── README.md
 │   │   ├── jrnl/
 │   │   │   ├── jrnl.py       jrnl journals mirrored, each stamped entry one dated passage
 │   │   │   ├── test_jrnl.py
