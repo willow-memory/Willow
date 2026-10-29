@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `lockfiles`: Lockfiles (package-lock.json, yarn.lock, pnpm-lock.yaml,
+  Cargo.lock, poetry.lock, uv.lock, go.sum): a heading and a line for each
+  locked package and version, in name order.
 - `listening`: Spotify's data download, account data or extended history:
   each play, oldest first, as a dated line with its length; skips of under
   thirty seconds left out.

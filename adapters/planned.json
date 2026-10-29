@@ -1126,16 +1126,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "lockfiles",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Lockfiles as passages (package-lock.json, pnpm-lock.yaml, poetry.lock, uv.lock, Cargo.lock, go.sum): which version of each dependency, and which lockfile says so.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "logs",
   "kind": "stdlib",
   "section": "Reading more kinds of files",

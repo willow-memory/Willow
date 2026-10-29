@@ -229,6 +229,10 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         b'{"ts":"2024-03-03T10:00:00Z","episode_name":"Staking tomatoes","episode_show_name":"Garden Radio","ms_played":1450000},'
         b'{"ts":"2024-03-03T11:00:00Z","ms_played":60000}]'
     )}),
+    "lockfiles": ("lockfiles.py", {"package-lock.json": (
+        b'{"lockfileVersion":3,"packages":{"":{"name":"app","version":"1.0.0"},"node_modules/lodash":{"version":"4.17.21","resolved":"x","integrity":"y"},'
+        b'"node_modules/left-pad":{"version":"1.3.0"},"node_modules/a/node_modules/left-pad":{"version":"0.0.3"},"node_modules/@scope/pkg":{"version":"2.0.0"},"node_modules/bad":{}}}'
+    )}),
     "notes": ("notes.py", {"garden.md": b"Tomatoes want [[sun]].\n"}),
     "jrnl": ("jrnl.py", {"journal.txt": (
         "[2024-03-03 10:15] Fixed the gate.\nThe hinge wanted oil, not force.\n\n"

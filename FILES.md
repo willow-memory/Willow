@@ -466,6 +466,10 @@ willow/
 │   │   │   ├── llms_txt.py   an llms.txt written from a folder's text files, and a checker for one
 │   │   │   ├── test_llms_txt.py
 │   │   │   └── README.md
+│   │   ├── lockfiles/
+│   │   │   ├── lockfiles.py   lockfiles as a line for each locked package
+│   │   │   ├── test_lockfiles.py
+│   │   │   └── README.md
 │   │   ├── mail/
 │   │   │   ├── mail.py       .eml and .mbox, with sender, date and subject
 │   │   │   ├── test_mail.py
