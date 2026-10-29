@@ -30,16 +30,6 @@
   "tags": "no-install, offline, writes-output, interface"
  },
  {
-  "name": "annotations",
-  "kind": "stdlib",
-  "section": "Ways to use it",
-  "line": "Approved answers as W3C Web Annotations, so any annotation tool can show what your files say about a page.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, interface"
- },
- {
   "name": "apple-notes",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -170,16 +160,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "box-health",
-  "kind": "stdlib",
-  "section": "Trust and proof",
-  "line": "A box's health in one line: files it can't read, readers out of date, and when the chain was last checked.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, trust"
- },
- {
   "name": "budget",
   "kind": "stdlib",
   "section": "Keeping track",
@@ -199,16 +179,6 @@
   "writes": "to",
   "network": "none",
   "tags": "needs-install, offline, writes-output, search"
- },
- {
-  "name": "calendar-out",
-  "kind": "stdlib",
-  "section": "Ways to use it",
-  "line": "Dates coming up as an .ics file your calendar app can subscribe to.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, interface"
  },
  {
   "name": "canvas",
@@ -300,16 +270,6 @@
   "writes": "record",
   "network": "api.anthropic.com, to ask for suggestions",
   "tags": "needs-install, online, records, assistant"
- },
- {
-  "name": "cloudevents",
-  "kind": "stdlib",
-  "section": "Ways to use it",
-  "line": "Record rows in the CloudEvents envelope, for any tool that already reads them.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, interface"
  },
  {
   "name": "code-comments",
@@ -598,16 +558,6 @@
   "writes": "record",
   "network": "none",
   "tags": "needs-install, offline, records, trust"
- },
- {
-  "name": "fair-merge",
-  "kind": "stdlib",
-  "section": "Finding things",
-  "line": "Each folder or repo ranked on its own and the lists merged in turns, so a large corpus can't push a small one out on volume alone, and a source that found nothing says so.",
-  "source": "bot",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, search, pile"
  },
  {
   "name": "family-box",
@@ -1042,16 +992,6 @@
   "tags": "no-install, offline, read-only, assistant, hooks"
  },
  {
-  "name": "hook-leaks",
-  "kind": "stdlib",
-  "section": "Assistants",
-  "line": "A PreToolUse hook that refuses a write or a command holding a key, password or card number, by the privacy add-on's shapes, naming only the kind.",
-  "source": "box",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, assistant, hooks"
- },
- {
   "name": "hook-read-first",
   "kind": "stdlib",
   "section": "Assistants",
@@ -1067,26 +1007,6 @@
   "section": "Assistants",
   "line": "Rules over what an assistant did before, not just this call: no push until the tests ran on this commit, at most so many deletions a session, read from the record.",
   "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, assistant, hooks"
- },
- {
-  "name": "hook-shell",
-  "kind": "stdlib",
-  "section": "Assistants",
-  "line": "A command split the way the shell will split it, quotes, variables and chained commands included, before any rule judges it, so a rule can't be dodged by spelling.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, assistant, hooks"
- },
- {
-  "name": "hook-start",
-  "kind": "stdlib",
-  "section": "Assistants",
-  "line": "A SessionStart hook that hands the assistant what needs you, read the way digest reads it, so opening a session writes nothing.",
-  "source": "bot",
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, assistant, hooks"
@@ -1751,16 +1671,6 @@
   "tags": "no-install, offline, writes-output, trust"
  },
  {
-  "name": "nicknames",
-  "kind": "stdlib",
-  "section": "Your own words",
-  "line": "The names you call people, mapped to who they are, so 'Mum' finds Margaret.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, words"
- },
- {
   "name": "night-batch",
   "kind": "deps",
   "section": "Assistants",
@@ -2055,16 +1965,6 @@
   "tags": "no-install, online, records, play"
  },
  {
-  "name": "profile",
-  "kind": "stdlib",
-  "section": "For maintainers",
-  "line": "Where a question's time goes, function by function, from cProfile, per release.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, maintainers"
- },
- {
   "name": "promises",
   "kind": "stdlib",
   "section": "Finding things",
@@ -2324,16 +2224,6 @@
   "tags": "needs-install, offline, read-only, search"
  },
  {
-  "name": "ro-crate",
-  "kind": "stdlib",
-  "section": "Trust and proof",
-  "line": "A box snapshot as an RO-Crate research object Zenodo can read: each file with its hash and licence.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, trust"
- },
- {
   "name": "roll-for-merge",
   "kind": "stdlib",
   "section": "Play",
@@ -2463,16 +2353,6 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, file-reader"
- },
- {
-  "name": "scrub",
-  "kind": "stdlib",
-  "section": "Privacy and safety",
-  "line": "Strips the hidden details (EXIF, author, edit history) from a file before you share it.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, privacy"
  },
  {
   "name": "second-opinion",
@@ -3034,16 +2914,6 @@
   "writes": "nothing",
   "network": "the forge, through the workflow's token, to post the thank-you",
   "tags": "no-install, online, read-only, maintainers"
- },
- {
-  "name": "why-not",
-  "kind": "stdlib",
-  "section": "Finding things",
-  "line": "When the answer is 'not enough to say', which words found nothing, and what kind of file would have answered.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, search"
  },
  {
   "name": "witness",

@@ -66,6 +66,72 @@ says how). The first was v0.1.0.
   keywords and abstract, so you can ask which paper said it and get the key
   to cite. `@string` macros are filled in and LaTeX accents are read as the
   letters they make.
+- `calendar-out`: the dates coming up in your files (found the way
+  `coming-up` finds them) as an .ics file any calendar app can import or
+  subscribe to: an all-day event for each, its title the line it was found on
+  and its description the file and line. Ids are stable so reimporting
+  doesn't double, dates already in a calendar file are not written again, and
+  nothing dated writes nothing. (#71)
+- `cloudevents`: the record's rows as CloudEvents 1.0 JSON events, one a
+  line: the id is the row's own hash, the source names the box by its first
+  row, the type is the row's kind, and the data is the row, so the chain
+  still checks. `--from-row` and `--kinds` narrow it. The record holds no
+  question's words, and neither do the events. (#71)
+- `annotations`: approved answers as W3C Web Annotations in an annotation
+  page: the answer as the body, and a target for each cited passage with its
+  file, its lines as an RFC 5147 fragment and its words as a quote, so an
+  annotation tool can show what your files say beside the page. A citation no
+  longer in your files is left off and said. (#71)
+- `ro-crate`: a box snapshot as an RO-Crate research object, a zip a
+  repository such as Zenodo can read: every file with its SHA-256, size, kind
+  and licence, the record and the approved answers, and the record's tip
+  pinned. The key and the box's settings are not in it, the licence is never
+  guessed, and the copy is checked before it is kept. (#71)
+- `scrub`: a copy of a JPEG, PNG, docx, xlsx or pptx without its hidden
+  details, and a list of what was taken out: Exif, XMP and IPTC (keeping the
+  orientation), PNG text chunks, an Office file's author, times, revision,
+  company, edit-session ids and the names on comments and tracked changes.
+  Anything else is refused rather than copied unchanged. (#71)
+- `profile`: where a question's time goes: how long the kernel takes to read
+  the folder and to rank it, and the functions the time went to, from
+  cProfile, under the kernel's version and release so two releases compare.
+  Its script is named question_profile, since a script called profile shadows
+  the standard library's module. Nothing is written and the question's words
+  are not printed. (#71)
+- `box-health`: a box's health in one line: whether the chain holds, how many
+  approvals hold and suggestions wait, the files the bite can't read counted
+  by kind with the add-on that reads each, whether the words list is the one
+  last used, and when the record last had an `out` row. Writes nothing, not
+  even an `out` row. (#71)
+- `nicknames`: the names you call people, as a words list written from what
+  your own files say: a family word beside a capitalised name ("Mum
+  (Margaret)", "my dad Robert", "Auntie Jean") becomes `mum = margaret`, with
+  the file and line it came from, so "Mum" finds Margaret. Days, months, chat
+  labels and titles are no names; a nickname two names claim is said. (#71)
+- `fair-merge`: each folder of a pile ranked on its own by the kernel and the
+  lists dealt out in turns, so a large corpus can't push a small one out on
+  volume alone; a source that found nothing says so, and one with more says
+  how many. Nothing is written. (#71)
+- `why-not`: why a question got "not enough to say": for each word that
+  counts, how many passages hold it; the nearest passages and what they
+  lacked; a close spelling with the words-list line that would teach it; and
+  the kind of file that would have answered. It asks the kernel's way without
+  asking, so nothing is written, not even a record row. (#71)
+- `hook-start`: a SessionStart hook that tells the assistant what waits on
+  the person (suggestions to approve, stale answers, dates coming up), read
+  the way `digest` reads it, as the JSON a hook reads. A quiet box prints
+  nothing, and opening a session writes nothing, not even an `out` row. (#71)
+- `hook-shell`: a command split the way the shell splits it before a rule
+  judges it: quotes, escapes, `$'...'` strings, variables, substitutions,
+  `bash -c` and `eval` payloads and `sudo`/`env`/`xargs` wrappers, so `r""m`,
+  a full path and `$a$b` are all `rm`. `run` is a PreToolUse hook that
+  refuses a denied command, or one whose command word is only known at run
+  time. (#71)
+- `hook-leaks`: a PreToolUse hook that refuses a Write, Edit, notebook cell
+  or Bash command holding a key, a password or a card number, by the
+  `privacy` add-on's shapes. The reason names only the kind, never the value,
+  and text an edit takes out is not looked at, so a secret can still be
+  removed. (#71)
 - `prov`: the record as W3C PROV-JSON, every row an activity and every
   seal traced to its answer, the suggestion it approved, the passages that
   suggestion cites and the person who approved it. A seal that doesn't prove
