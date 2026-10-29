@@ -80,16 +80,6 @@
   "tags": "no-install, offline, read-only, assistant"
  },
  {
-  "name": "attendance",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "Attendance for a class, club or group, from your register, by week.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
- },
- {
   "name": "baby-log",
   "kind": "stdlib",
   "section": "Keeping track",

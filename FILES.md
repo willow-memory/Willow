@@ -88,6 +88,10 @@ willow/
 │   │   │   ├── annotations.py   approved answers as W3C Web Annotations: the answer as the body, each cited passage as a target with its lines and words
 │   │   │   ├── test_annotations.py
 │   │   │   └── README.md
+│   │   ├── attendance/
+│   │   │   ├── attendance.py   who was there, by person or by week
+│   │   │   ├── test_attendance.py
+│   │   │   └── README.md
 │   │   ├── backup/
 │   │   │   ├── backup.py     your record in one zip, every byte and the chain checked; never the key
 │   │   │   ├── test_backup.py
