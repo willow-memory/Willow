@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `day-one`: Day One's JSON export: each journal entry, oldest first, as a
+  dated passage with its place, weather and tags and its Markdown escapes
+  undone.
 - `joplin`: Joplin's .jex export, read as the tar archive it is without
   unpacking: each note with its title, notebook path and dates, then its
   text; the trash, tags and pictures left out.

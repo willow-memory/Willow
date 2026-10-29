@@ -174,6 +174,12 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         "resources/pic.png": "not markdown",
         })
     )}),
+    "day-one": ("day_one.py", {"Journal.json": (
+        b'{"metadata":{"version":"1.0"},"entries":['
+        b'{"creationDate":"2024-03-03T09:00:00Z","text":"Second entry\\\\.","tags":["garden","spring"],"starred":true,"location":{"placeName":"Kitchen","localityName":"Leeds","country":"United Kingdom"},"weather":{"conditionsDescription":"Cloudy","temperatureCelsius":7.6}},'
+        b'{"creationDate":"2024-03-02T08:15:00Z","text":"Planted out the tomatoes. It was 5\\\\-6 degrees\\\\!"},'
+        b'{"creationDate":"2024-03-01T00:00:00Z","text":"  "}]}'
+    )}),
     "notes": ("notes.py", {"garden.md": b"Tomatoes want [[sun]].\n"}),
     "jrnl": ("jrnl.py", {"journal.txt": (
         "[2024-03-03 10:15] Fixed the gate.\nThe hinge wanted oil, not force.\n\n"

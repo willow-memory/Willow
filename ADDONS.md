@@ -18,11 +18,11 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`█████████░░░░░░░░░░░` **207 of 470 built** · 419 need no install · 51 need one
+`█████████░░░░░░░░░░░` **208 of 470 built** · 419 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
-| Reading more kinds of files | 27 | 78 | 96 | 9 |
+| Reading more kinds of files | 28 | 77 | 96 | 9 |
 | Finding things | 26 | 17 | 33 | 10 |
 | Your own words | 16 | 9 | 22 | 3 |
 | Keeping track | 35 | 23 | 58 | 0 |
@@ -47,9 +47,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[tip-pin](adapters/stdlib/tip-pin/)** — Where a box's record ends, kept outside the box, so rows cut off or a whole chain re-hashed are found where verify can't.
+**[serve](adapters/stdlib/serve/)** — The one markdown file a model reads: only the passages a human sealed, grouped into pools with the peaks first, by ids it can't guess, and nothing else.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 207 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 208 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -78,7 +78,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - **codebase-memory** (idea) — codebase-memory-mcp's code graph, read from a copy of its SQLite file: each function, what calls it, and its file and line. *new* `no-install` `offline` `writes-output` `file-reader`
 - **confluence** (idea) — A Confluence space's HTML export as plain text, page by page. *new* `no-install` `offline` `writes-output` `file-reader`
 - **corpus-lens** (idea) — corpus-lens's process reports on your own sessions with agents, as passages: where your intent arrives, who writes the code. *new* `no-install` `offline` `writes-output` `file-reader`
-- **day-one** (idea) — Day One's JSON export: each journal entry as a dated passage, with its place and weather. *new* `no-install` `offline` `writes-output` `file-reader`
+- [**day-one**](adapters/stdlib/day-one/) — Day One's JSON export: each journal entry as a dated passage, with its place and weather. *new* `no-install` `offline` `writes-output` `file-reader`
 - **discord** (idea) — Discord's data package: your messages, one dated line each, by server and channel. *new* `no-install` `offline` `writes-output` `file-reader`
 - **dotfiles** (idea) — Your dotfiles as passages: which file sets what, for 'where did I set my editor?' *new* `no-install` `offline` `writes-output` `file-reader`
 - [**evernote**](adapters/stdlib/evernote/) — Evernote's .enex files: each note as plain text with its notebook, tags and dates. *new* `no-install` `offline` `writes-output` `file-reader`

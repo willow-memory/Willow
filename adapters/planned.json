@@ -406,16 +406,6 @@
   "tags": "needs-install, this-machine, read-only, interface"
  },
  {
-  "name": "day-one",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Day One's JSON export: each journal entry as a dated passage, with its place and weather.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "desktop",
   "kind": "stdlib",
   "section": "Ways to use it",
