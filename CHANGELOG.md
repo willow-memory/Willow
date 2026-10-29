@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `listening`: Spotify's data download, account data or extended history:
+  each play, oldest first, as a dated line with its length; skips of under
+  thirty seconds left out.
 - `irc`: IRC logs from WeeChat, irssi or ZNC: one dated line per message and
   action with its channel; joins, parts and modes left out; a log of
   something else skipped and counted.

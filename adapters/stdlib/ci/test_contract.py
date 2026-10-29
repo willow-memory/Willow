@@ -222,6 +222,13 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         b"2024-03-02 08:15:30\tana\tSix hours of sun, I read.\n2024-03-02 08:15:50\t--> \tben (~b@host) has joined #garden\n"
         b"2024-03-02 08:16:01\t *\tben waves\n2024-03-03 19:40:00\tben\tThe slugs are winning.\n"
     )}),
+    "listening": ("listening.py", {"StreamingHistory0.json": (
+        b'[{"endTime":"2024-03-02 09:02","artistName":"Nina Simone","trackName":"Sinnerman","msPlayed":620000},'
+        b'{"endTime":"2024-03-02 08:15","artistName":"X","trackName":"Skipped","msPlayed":29999},'
+        b'{"ts":"2024-03-02T07:30:00Z","master_metadata_track_name":"Feeling Good","master_metadata_album_artist_name":"Nina Simone","ms_played":175500},'
+        b'{"ts":"2024-03-03T10:00:00Z","episode_name":"Staking tomatoes","episode_show_name":"Garden Radio","ms_played":1450000},'
+        b'{"ts":"2024-03-03T11:00:00Z","ms_played":60000}]'
+    )}),
     "notes": ("notes.py", {"garden.md": b"Tomatoes want [[sun]].\n"}),
     "jrnl": ("jrnl.py", {"journal.txt": (
         "[2024-03-03 10:15] Fixed the gate.\nThe hinge wanted oil, not force.\n\n"

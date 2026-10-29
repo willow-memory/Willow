@@ -18,11 +18,11 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`█████████░░░░░░░░░░░` **216 of 470 built** · 419 need no install · 51 need one
+`█████████░░░░░░░░░░░` **217 of 470 built** · 419 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
-| Reading more kinds of files | 36 | 69 | 96 | 9 |
+| Reading more kinds of files | 37 | 68 | 96 | 9 |
 | Finding things | 26 | 17 | 33 | 10 |
 | Your own words | 16 | 9 | 22 | 3 |
 | Keeping track | 35 | 23 | 58 | 0 |
@@ -47,9 +47,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[renewals](adapters/stdlib/renewals/)** — Passports, licences, insurance and memberships: when each expires, from your documents.
+**[jetbrains](adapters/stdlib/jetbrains/)** — An external tool for IntelliJ, PyCharm and the rest, with answers as links to file and line.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 216 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 217 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -106,7 +106,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - **lessons** (idea) — Lesson plans from the Emerging Rule community library, by grade and subject, as passages a teacher can ask. *new* `no-install` `offline` `writes-output` `file-reader`
 - **letterboxd** (idea) — Letterboxd's export: the films you've watched, your ratings and reviews, as dated lines. *new* `no-install` `offline` `writes-output` `file-reader`
 - **linkedin** (idea) — LinkedIn's data export: messages, posts and connections as dated lines. *new* `no-install` `offline` `writes-output` `file-reader`
-- **listening** (idea) — Spotify's data download: what you listened to, by day, so you can ask what was on that summer. *new* `no-install` `offline` `writes-output` `file-reader`
+- [**listening**](adapters/stdlib/listening/) — Spotify's data download: what you listened to, by day, so you can ask what was on that summer. *new* `no-install` `offline` `writes-output` `file-reader`
 - **location-history** (idea) — Google Maps Timeline and other location exports: where you were, by day. *new* `no-install` `offline` `writes-output` `file-reader`
 - **lockfiles** (idea) — Lockfiles as passages (package-lock.json, pnpm-lock.yaml, poetry.lock, uv.lock, Cargo.lock, go.sum): which version of each dependency, and which lockfile says so. *new* `no-install` `offline` `writes-output` `file-reader`
 - **logs** (idea) — System and app logs (syslog, journald's export, nginx): each line dated, so you can ask when it started. *new* `no-install` `offline` `writes-output` `file-reader`

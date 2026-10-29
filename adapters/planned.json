@@ -1105,16 +1105,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "listening",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Spotify's data download: what you listened to, by day, so you can ask what was on that summer.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "local-model",
   "kind": "deps",
   "section": "Assistants",

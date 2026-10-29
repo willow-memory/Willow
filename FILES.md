@@ -450,6 +450,10 @@ willow/
 │   │   │   ├── life.py       Conway's Game of Life as one row; check plays it again
 │   │   │   ├── test_life.py
 │   │   │   └── README.md
+│   │   ├── listening/
+│   │   │   ├── listening.py   what you listened to, as dated lines of plays
+│   │   │   ├── test_listening.py
+│   │   │   └── README.md
 │   │   ├── live/
 │   │   │   ├── live.py       each way-in add-on run through its real program: works, fails, or not here
 │   │   │   ├── test_live.py
