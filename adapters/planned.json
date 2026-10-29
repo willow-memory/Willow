@@ -1735,16 +1735,6 @@
   "tags": "needs-install, offline, writes-output, file-reader"
  },
  {
-  "name": "pile-poetry",
-  "kind": "stdlib",
-  "section": "Play",
-  "line": "Verse from the word pairs your own files use most, in your own dialect.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, play"
- },
- {
   "name": "plain-language",
   "kind": "stdlib",
   "section": "Assistants",

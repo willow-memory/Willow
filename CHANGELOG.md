@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `pile-poetry`: Verse walked along the pairs of words your own files put
+  side by side more than once, drawn by the seeded stream so a poem can be
+  made again; nothing in it your files do not have.
 - `oracle-text`: Readings written by a Tracery grammar, every branch picked
   by the seeded stream, so any reading can be made again from its seed:
   modifiers, named expansions, a built-in grammar or your own file.

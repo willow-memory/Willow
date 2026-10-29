@@ -523,6 +523,10 @@ willow/
 │   │   │   ├── pile_gold.py   your sealed answers as a test of the search, scored as recall at five
 │   │   │   ├── test_pile_gold.py
 │   │   │   └── README.md
+│   │   ├── pile-poetry/
+│   │   │   ├── pile_poetry.py   verse from your own word pairs
+│   │   │   ├── test_pile_poetry.py
+│   │   │   └── README.md
 │   │   ├── pile-rank/
 │   │   │   ├── pile_rank.py   BM25F over words and the folder's own word pairs, titles and questions weighted
 │   │   │   ├── test_pile_rank.py
