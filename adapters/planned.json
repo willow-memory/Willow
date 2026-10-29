@@ -1429,16 +1429,6 @@
   "tags": "no-install, offline, records, assistant"
  },
  {
-  "name": "milestones",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "Your child's firsts, words and heights, from your notes, by age.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
- },
- {
   "name": "mirror",
   "kind": "deps",
   "section": "Trust and proof",

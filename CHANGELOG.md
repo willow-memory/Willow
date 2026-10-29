@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `milestones`: Your child's firsts, milestones and measurements from your
+  notes, each with the child's age on the day, counted from the birth date
+  you give.
 - `reading-log`: A child's reading log from the lines you wrote: days, pages
   and minutes for each week and for each book.
 - `subscriptions`: What you pay every month or year, found by the rhythm of
