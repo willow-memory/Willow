@@ -18,14 +18,14 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`████████░░░░░░░░░░░░` **181 of 470 built** · 419 need no install · 51 need one
+`████████░░░░░░░░░░░░` **182 of 470 built** · 419 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
 | Reading more kinds of files | 22 | 83 | 96 | 9 |
 | Finding things | 26 | 17 | 33 | 10 |
 | Your own words | 16 | 9 | 22 | 3 |
-| Keeping track | 20 | 38 | 58 | 0 |
+| Keeping track | 21 | 37 | 58 | 0 |
 | Trust and proof | 20 | 25 | 36 | 9 |
 | Privacy and safety | 11 | 3 | 14 | 0 |
 | Assistants | 21 | 36 | 51 | 6 |
@@ -47,9 +47,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[bench](adapters/stdlib/bench/)** — How fast the kernel answers on boxes of set sizes, per release, so a slowdown is seen.
+**[pile-rungs](adapters/stdlib/pile-rungs/)** — Each lookup says which rung answered, words, phrases or an embedder, and why a higher one was skipped, as data beside the passages.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 181 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 182 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -249,7 +249,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - **attendance** (idea) — Attendance for a class, club or group, from your register, by week. *new* `no-install` `offline` `read-only` `tracking`
 - **baby-log** (idea) — Feeds, sleeps and nappies from your notes, by day: when was the last one? *new* `no-install` `offline` `read-only` `tracking`
 - **budget** (idea) — Spending against the budget you wrote down, month by month, from your statements. *new* `no-install` `offline` `read-only` `tracking`
-- **car** (idea) — Your car's services, repairs and inspection dates, from receipts and notes: what's due, and what it cost. *new* `no-install` `offline` `read-only` `tracking`
+- [**car**](adapters/stdlib/car/) — Your car's services, repairs and inspection dates, from receipts and notes: what's due, and what it cost. *new* `no-install` `offline` `read-only` `tracking`
 - **care** (idea) — For caregivers: medications, vitals and appointments from a care log, what's due and what moved. *box* `no-install` `offline` `read-only` `tracking`
 - [**coming-up**](adapters/stdlib/coming-up/) — Dates written in your files in the next N days: appointments, renewals, deadlines. *box* `no-install` `offline` `read-only` `tracking`
 - **contracts** (idea) — The dates that matter in your contracts: renewals, notice periods and break clauses, each cited. *new* `no-install` `offline` `read-only` `tracking`

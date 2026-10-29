@@ -191,16 +191,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "car",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "Your car's services, repairs and inspection dates, from receipts and notes: what's due, and what it cost.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
- },
- {
   "name": "care",
   "kind": "stdlib",
   "section": "Keeping track",

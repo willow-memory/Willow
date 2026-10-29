@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `car`: Your car's services, repairs and inspections from receipts and
+  notes: the last of each kind, what it cost by currency sign, and what is
+  due by a date or interval you wrote.
 - `mood`: The mood scores you write in a journal, gathered by month or week
   with the average, the lowest and highest day and the change from the period
   before.
