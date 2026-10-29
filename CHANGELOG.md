@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `google-keep`: Google Keep notes from Takeout: each note or list as a dated
+  passage with its labels and ticked items; notes in the bin and other JSON
+  skipped and counted.
 - `day-one`: Day One's JSON export: each journal entry, oldest first, as a
   dated passage with its place, weather and tags and its Markdown escapes
   undone.

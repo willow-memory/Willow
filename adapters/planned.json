@@ -712,16 +712,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "google-keep",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Google Keep from Takeout: notes, lists and labels as dated passages.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "grant-report",
   "kind": "stdlib",
   "section": "Keeping track",
