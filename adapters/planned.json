@@ -1415,16 +1415,6 @@
   "tags": "no-install, offline, read-only, tracking"
  },
  {
-  "name": "llms-txt",
-  "kind": "stdlib",
-  "section": "Ways to use it",
-  "line": "An llms.txt for your folder, written from what's actually in it to the spec's version 2, and any llms.txt you saved checked against that spec.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output"
- },
- {
   "name": "local-model",
   "kind": "deps",
   "section": "Assistants",

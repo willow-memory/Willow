@@ -10,6 +10,10 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `llms-txt`: an llms.txt written from what is actually in a folder (a title,
+  a summary, a section for each folder, a link and a one-line note for each
+  text file, files over 50 KB under Optional), and a check of one against the
+  llmstxt.org format, each departure at its line. Nothing is invented.
 - `braille`: approved answers (or any text file) as a braille-ready file:
   uncontracted (grade 1) English braille in North American Braille ASCII,
   with capitals, number signs and punctuation, in lines of 40 cells and pages
