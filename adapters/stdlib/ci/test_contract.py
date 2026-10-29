@@ -253,6 +253,12 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         b'"actions":[{"type":"commentCard","date":"2024-03-02T08:00:00.000Z","data":{"text":"Borrow Ben\'s.","card":{"id":"c1"}},"memberCreator":{"fullName":"Ana"}},'
         b'{"type":"updateCard","data":{"card":{"id":"c1"}}}]}'
     )}),
+    "gh-json": ("gh_json.py", {"issues.json": (
+        b'[{"number":14,"title":"Move tomatoes to bed 2","state":"MERGED","createdAt":"2024-03-04T09:00:00Z","author":{"login":"ben"},"headRefName":"bed-2","mergedAt":"2024-03-05T10:00:00Z"},'
+        b'{"number":12,"title":"Tomatoes want more sun","state":"OPEN","createdAt":"2024-03-02T08:15:00Z","author":{"login":"ana"},"body":"The bed by the  fence\\nis shaded.",'
+        b'"labels":[{"name":"bug"},{"name":"garden"}],"comments":[{"author":{"login":"ben"},"createdAt":"2024-03-03T10:00:00Z","body":"Move them."},{"body":" "}]},'
+        b'{"databaseId":1234,"name":"ci","workflowName":"CI","conclusion":"failure","headBranch":"main","createdAt":"2024-03-04T09:30:00Z","displayTitle":"Move tomatoes"}]'
+    )}),
     "notes": ("notes.py", {"garden.md": b"Tomatoes want [[sun]].\n"}),
     "jrnl": ("jrnl.py", {"journal.txt": (
         "[2024-03-03 10:15] Fixed the gate.\nThe hinge wanted oil, not force.\n\n"

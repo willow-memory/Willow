@@ -305,6 +305,10 @@ willow/
 │   │   │   ├── gemini_cli.py     the settings.json lines that register mcp-lite with Gemini CLI
 │   │   │   ├── test_gemini_cli.py
 │   │   │   └── README.md
+│   │   ├── gh-json/
+│   │   │   ├── gh_json.py   gh --json output as dated lines
+│   │   │   ├── test_gh_json.py
+│   │   │   └── README.md
 │   │   ├── github/
 │   │   │   ├── github.py     what the repo needs from GitHub: a security report's comment, .github/ held to the repo
 │   │   │   ├── host.json     how GitHub titles the merge of a pull request, for whose.py --host

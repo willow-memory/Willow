@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `gh-json`: What gh prints with --json for issues, pull requests and runs,
+  saved to a file: each item, oldest first, as a dated passage with its
+  state, author, labels, body and comments.
 - `trello`: A Trello board's JSON export: each open list with its open cards,
   their due days, labels, descriptions, checklists with ticks and comments,
   archived lists and cards left out.

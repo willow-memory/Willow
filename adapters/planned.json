@@ -610,16 +610,6 @@
   "tags": "no-install, offline, records, play"
  },
  {
-  "name": "gh-json",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "What gh prints with --json (issues, pull requests, runs), saved to a file and read as dated passages.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "gifts",
   "kind": "stdlib",
   "section": "Keeping track",
