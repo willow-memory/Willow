@@ -10,6 +10,8 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `syllabus`: A course syllabus as dates: the readings, assignments and exams
+  that fall due, soonest first, each cited and measured from today.
 - `livestock`: Each animal's births, treatments and sales from your farm
   records, gathered by tag or name: born, treated and last treated, sold or
   died with its price.

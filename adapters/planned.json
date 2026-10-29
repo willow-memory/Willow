@@ -2391,16 +2391,6 @@
   "tags": "no-install, offline, read-only, maintainers"
  },
  {
-  "name": "syllabus",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "A course syllabus as dates: readings, assignments and exams due, each cited.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
- },
- {
   "name": "symbols",
   "kind": "deps",
   "section": "Finding things",
