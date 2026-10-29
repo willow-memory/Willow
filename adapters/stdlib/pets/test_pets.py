@@ -5,6 +5,7 @@ and due dates."""
 from __future__ import annotations
 
 import importlib.util
+import json
 import subprocess
 import sys
 from pathlib import Path
@@ -36,9 +37,24 @@ def box(tmp_path: Path, files: dict) -> Path:
 
 
 def test_the_sibling_it_reads_through_is_put_at_the_front():
-    here = sys.path.index(str(HERE.parent / "car"))
+    """In a process of its own, so another test's imports can't move the path."""
+    code = (
+        "import importlib.util, json, sys\n"
+        f"s = importlib.util.spec_from_file_location('m', {str(HERE / 'pets.py')!r})\n"
+        "m = importlib.util.module_from_spec(s)\n"
+        "s.loader.exec_module(m)\n"
+        "print(json.dumps(sys.path))\n"
+    )
+    got = json.loads(
+        subprocess.run(
+            [sys.executable, "-c", code], capture_output=True, text=True
+        ).stdout
+    )
+    here = got.index(str(HERE.parent / "car"))
     root = str(HERE.parents[2])
-    assert sys.path[here - 1] == root and sys.path[here + 1] == root
+    assert got[here - 1] == root and got[here + 1] == root, (
+        "the sibling is put at the front, so nothing else answers to its name"
+    )
 
 
 def test_a_pet_is_named_only_by_what_the_line_says():

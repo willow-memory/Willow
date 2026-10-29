@@ -4,6 +4,7 @@ never added, the tax year from the date you give, odometer readings left out."""
 from __future__ import annotations
 
 import importlib.util
+import json
 import subprocess
 import sys
 from datetime import date
@@ -61,12 +62,28 @@ def test_the_tax_year_starts_where_you_say():
         assert ml.month_day(bad) is None, bad
 
 
-def test_the_sibling_it_reads_through_comes_first_and_the_year_defaults_to_the_calendar():
-    here = sys.path.index(str(HERE.parent / "habits"))
+def test_the_sibling_it_reads_through_is_put_at_the_front():
+    """In a process of its own, so another test's imports can't move the path."""
+    code = (
+        "import importlib.util, json, sys\n"
+        f"s = importlib.util.spec_from_file_location('m', {str(HERE / 'mileage.py')!r})\n"
+        "m = importlib.util.module_from_spec(s)\n"
+        "s.loader.exec_module(m)\n"
+        "print(json.dumps(sys.path))\n"
+    )
+    got = json.loads(
+        subprocess.run(
+            [sys.executable, "-c", code], capture_output=True, text=True
+        ).stdout
+    )
+    here = got.index(str(HERE.parent / "habits"))
     root = str(HERE.parents[2])
-    assert sys.path[here - 1] == root and sys.path[here + 1] == root, (
+    assert got[here - 1] == root and got[here + 1] == root, (
         "the sibling is put at the front, so nothing else answers to its name"
     )
+
+
+def test_the_year_defaults_to_the_calendar():
     pile = [{"path": "log.md", "line": 1, "text": "2026-05-01 drove 4 miles\n"}]
     assert ml.tally(pile) == ml.tally(pile, (1, 1))
     assert list(ml.tally(pile)) == [date(2026, 1, 1)]
