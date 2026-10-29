@@ -88,6 +88,14 @@ willow/
 │   │   │   ├── annotations.py   approved answers as W3C Web Annotations: the answer as the body, each cited passage as a target with its lines and words
 │   │   │   ├── test_annotations.py
 │   │   │   └── README.md
+│   │   ├── attendance/
+│   │   │   ├── attendance.py   who was there, by person or by week
+│   │   │   ├── test_attendance.py
+│   │   │   └── README.md
+│   │   ├── baby-log/
+│   │   │   ├── baby_log.py   feeds, sleeps and nappies by day, and the last of each
+│   │   │   ├── test_baby_log.py
+│   │   │   └── README.md
 │   │   ├── backup/
 │   │   │   ├── backup.py     your record in one zip, every byte and the chain checked; never the key
 │   │   │   ├── test_backup.py
@@ -131,6 +139,10 @@ willow/
 │   │   ├── calendar-out/
 │   │   │   ├── calendar_out.py   the dates coming up as an .ics file: an all-day event for each, the line as its title and the file and line as its description
 │   │   │   ├── test_calendar_out.py
+│   │   │   └── README.md
+│   │   ├── car/
+│   │   │   ├── car.py   a car's jobs, costs and what's due
+│   │   │   ├── test_car.py
 │   │   │   └── README.md
 │   │   ├── changed/
 │   │   │   ├── changed.py    what's new, edited or deleted since the last check, as fingerprint rows
@@ -269,6 +281,10 @@ willow/
 │   │   │   ├── gaps.py       where a log you keep stops: the days it skipped, said as gaps
 │   │   │   ├── test_gaps.py
 │   │   │   └── README.md
+│   │   ├── garden/
+│   │   │   ├── garden.py   what was planted and harvested, season by season
+│   │   │   ├── test_garden.py
+│   │   │   └── README.md
 │   │   ├── gemini-cli/
 │   │   │   ├── gemini_cli.py     the settings.json lines that register mcp-lite with Gemini CLI
 │   │   │   ├── test_gemini_cli.py
@@ -278,6 +294,10 @@ willow/
 │   │   │   ├── host.json     how GitHub titles the merge of a pull request, for whose.py --host
 │   │   │   ├── test_github.py
 │   │   │   └── README.md     its card: and .github/ belongs to it
+│   │   ├── gradebook/
+│   │   │   ├── gradebook.py   students' marks, and who is falling behind
+│   │   │   ├── test_gradebook.py
+│   │   │   └── README.md
 │   │   ├── habits/
 │   │   │   ├── habits.py     streaks from the short lines written day after day, runs and misses by plain counting
 │   │   │   ├── test_habits.py
@@ -285,6 +305,10 @@ willow/
 │   │   ├── history/
 │   │   │   ├── history.py    your record in plain sentences, places and counts, never the words
 │   │   │   ├── test_history.py
+│   │   │   └── README.md
+│   │   ├── home-upkeep/
+│   │   │   ├── home_upkeep.py   what's due at home and when it was last done
+│   │   │   ├── test_home_upkeep.py
 │   │   │   └── README.md
 │   │   ├── hook-fail-closed/
 │   │   │   ├── hook_fail_closed.py a hook that crashes, hangs or says what can't be read blocks the tool
@@ -322,6 +346,10 @@ willow/
 │   │   │   ├── hosts.py          one table of assistants that take an MCP server, and the lines that register willow with each
 │   │   │   ├── test_hosts.py
 │   │   │   └── README.md
+│   │   ├── hours/
+│   │   │   ├── hours.py   hours worked or volunteered, per client
+│   │   │   ├── test_hours.py
+│   │   │   └── README.md
 │   │   ├── ids/
 │   │   │   ├── ids.py        each file and passage by its Software Heritage ID and one-chunk IPFS CID
 │   │   │   ├── test_ids.py
@@ -345,6 +373,10 @@ willow/
 │   │   ├── jetbrains/
 │   │   │   ├── jetbrains.py      an external tool for JetBrains IDEs: answers as links to file and line
 │   │   │   ├── test_jetbrains.py
+│   │   │   └── README.md
+│   │   ├── job-hunt/
+│   │   │   ├── job_hunt.py   applications sent, replies and who you're waiting on
+│   │   │   ├── test_job_hunt.py
 │   │   │   └── README.md
 │   │   ├── jrnl/
 │   │   │   ├── jrnl.py       jrnl journals mirrored, each stamped entry one dated passage
@@ -390,9 +422,21 @@ willow/
 │   │   │   ├── merkle.py     a Merkle tree over the record: one row proven with a handful of hashes
 │   │   │   ├── test_merkle.py
 │   │   │   └── README.md
+│   │   ├── mileage/
+│   │   │   ├── mileage.py   miles driven for work, by tax year
+│   │   │   ├── test_mileage.py
+│   │   │   └── README.md
+│   │   ├── minutes/
+│   │   │   ├── minutes.py   decisions and actions from meeting minutes
+│   │   │   ├── test_minutes.py
+│   │   │   └── README.md
 │   │   ├── misquote/
 │   │   │   ├── misquote.py   a quote almost in your files: the closest passage, and what differs
 │   │   │   ├── test_misquote.py
+│   │   │   └── README.md
+│   │   ├── mood/
+│   │   │   ├── mood.py   mood scores over weeks and months
+│   │   │   ├── test_mood.py
 │   │   │   └── README.md
 │   │   ├── mutants/
 │   │   │   ├── mutants.py    breaks each add-on's code on purpose and checks its tests notice
@@ -438,6 +482,10 @@ willow/
 │   │   ├── people/
 │   │   │   ├── people.py     everyone the files name, by what they do with a name, and each one's every mention
 │   │   │   ├── test_people.py
+│   │   │   └── README.md
+│   │   ├── pets/
+│   │   │   ├── pets.py   each pet's care and what's due
+│   │   │   ├── test_pets.py
 │   │   │   └── README.md
 │   │   ├── pgn/
 │   │   │   ├── pgn.py   a PGN game as who, when, where, the result, the opening and every comment with its move
@@ -672,6 +720,10 @@ willow/
 │   │   ├── vscode/
 │   │   │   ├── vscode.py         a VS Code task: answers in the Problems panel
 │   │   │   ├── test_vscode.py
+│   │   │   └── README.md
+│   │   ├── warranties/
+│   │   │   ├── warranties.py   when a cover ends, and where its receipt is
+│   │   │   ├── test_warranties.py
 │   │   │   └── README.md
 │   │   ├── wayback/
 │   │   │   ├── wayback.py    the Wayback Machine's copy of a page, saved and compared byte for byte

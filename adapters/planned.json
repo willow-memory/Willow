@@ -80,26 +80,6 @@
   "tags": "no-install, offline, read-only, assistant"
  },
  {
-  "name": "attendance",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "Attendance for a class, club or group, from your register, by week.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
- },
- {
-  "name": "baby-log",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "Feeds, sleeps and nappies from your notes, by day: when was the last one?",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
- },
- {
   "name": "bank",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -189,16 +169,6 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, file-reader"
- },
- {
-  "name": "car",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "Your car's services, repairs and inspection dates, from receipts and notes: what's due, and what it cost.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
  },
  {
   "name": "care",
@@ -680,16 +650,6 @@
   "tags": "no-install, offline, records, play"
  },
  {
-  "name": "garden",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "What you planted, where and when, and how it did, season by season.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
- },
- {
   "name": "gh-json",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -802,16 +762,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "gradebook",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "A teacher's gradebook, kept on this machine: each student's marks by assignment, and who is falling behind.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
- },
- {
   "name": "grant-report",
   "kind": "stdlib",
   "section": "Keeping track",
@@ -890,16 +840,6 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, file-reader"
- },
- {
-  "name": "home-upkeep",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "Home upkeep: the boiler service, the filters, the gutters, what's due and when it was last done.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
  },
  {
   "name": "homestead",
@@ -1052,16 +992,6 @@
   "tags": "no-install, offline, records, play"
  },
  {
-  "name": "hours",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "Hours worked or volunteered, per client or group, from your notes.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
- },
- {
   "name": "in-case",
   "kind": "stdlib",
   "section": "Trust and proof",
@@ -1151,16 +1081,6 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, file-reader"
- },
- {
-  "name": "job-hunt",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "Applications sent, replies and interviews, by date: who you're still waiting on.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
  },
  {
   "name": "joins",
@@ -1549,30 +1469,10 @@
   "tags": "no-install, offline, records, assistant"
  },
  {
-  "name": "mileage",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "Miles driven for work, from your trips and notes, totalled for a tax year.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
- },
- {
   "name": "milestones",
   "kind": "stdlib",
   "section": "Keeping track",
   "line": "Your child's firsts, words and heights, from your notes, by age.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
- },
- {
-  "name": "minutes",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "Meeting minutes: who decided what and when, and which actions are still open.",
   "source": "new",
   "writes": "nothing",
   "network": "none",
@@ -1598,16 +1498,6 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, assistant"
- },
- {
-  "name": "mood",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "Mood scores you write in a journal, over weeks and months.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
  },
  {
   "name": "moodle",
@@ -1871,16 +1761,6 @@
   "writes": "record",
   "network": "none",
   "tags": "no-install, offline, records, assistant"
- },
- {
-  "name": "pets",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "Each pet's vet visits, vaccines and medicines, from your records: what's due next.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
  },
  {
   "name": "pgp",
@@ -2874,16 +2754,6 @@
   "writes": "nothing",
   "network": "loopback",
   "tags": "no-install, this-machine, read-only, interface"
- },
- {
-  "name": "warranties",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "Receipts and warranties: when the dishwasher's cover ends, and where its receipt is.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
  },
  {
   "name": "watch",

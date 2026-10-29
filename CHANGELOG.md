@@ -10,6 +10,43 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `job-hunt`: Applications sent, replies and interviews by company: where
+  each stands and how long you have waited, from lines about a job search.
+  (#73)
+- `garden`: What you planted, where and when, and how it did, season by
+  season, from garden notes that say a planting or a harvest. (#73)
+- `baby-log`: Feeds, sleeps and nappies from your notes, counted by day with
+  the last of each and its time. (#73)
+- `attendance`: Attendance for a class, club or group from your register:
+  each person's days there out of days marked, or the marks of each week.
+  (#73)
+- `warranties`: Receipts and warranties: for each thing a line gives a
+  warranty, the day its cover ends (said, or bought plus a length) and where
+  its receipt is. (#73)
+- `home-upkeep`: Home upkeep from your notes and receipts: the boiler,
+  filters, gutters and the rest, when each was last done and what is due by a
+  date or interval you wrote. (#73)
+- `pets`: Each pet's vet visits, vaccines, worming and medicines from your
+  records: the last of each, its cost by currency sign, and what is due by a
+  date or interval you wrote. (#73)
+- `car`: Your car's services, repairs and inspections from receipts and
+  notes: the last of each kind, what it cost by currency sign, and what is
+  due by a date or interval you wrote. (#73)
+- `mood`: The mood scores you write in a journal, gathered by month or week
+  with the average, the lowest and highest day and the change from the period
+  before. (#73)
+- `gradebook`: A teacher's gradebook that stays on this machine: each
+  student's marks from the lines you wrote, and who is falling behind, by
+  plain arithmetic. (#73)
+- `minutes`: Meeting minutes read for what was decided and what is still to
+  do: decisions, and actions with their owner and due date, open or closed.
+  (#73)
+- `mileage`: Miles driven for work, totalled for each tax year from the lines
+  of your notes that say a drive and how far; miles and kilometres kept
+  apart, odometer readings left out. (#73)
+- `hours`: Hours worked or volunteered, added up for each client or group
+  your notes name, from lines that say a work word and a length of time.
+  (#73)
 - `badge`: an SVG badge for a page from the record: how many answers are
   approved and from how many files, green when the chain holds and every
   approval stands, amber when one doesn't, red when the chain breaks, grey
