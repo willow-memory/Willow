@@ -1212,16 +1212,6 @@
   "tags": "no-install, offline, writes-output, trust"
  },
  {
-  "name": "in-toto",
-  "kind": "stdlib",
-  "section": "Trust and proof",
-  "line": "A sealed answer exported as an in-toto Statement, the envelope SLSA uses, so others can check it.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, trust"
- },
- {
   "name": "ink-story",
   "kind": "deps",
   "section": "Play",
@@ -2204,16 +2194,6 @@
   "writes": "nothing",
   "network": "none",
   "tags": "needs-install, offline, read-only, maintainers"
- },
- {
-  "name": "prov",
-  "kind": "stdlib",
-  "section": "Trust and proof",
-  "line": "The record exported as W3C PROV: what came from what, by which step, sealed by whom.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, trust"
  },
  {
   "name": "provenance",

@@ -10,6 +10,14 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `prov`: the record as W3C PROV-JSON, every row an activity and every
+  seal traced to its answer, the suggestion it approved, the passages that
+  suggestion cites and the person who approved it. A seal that doesn't prove
+  under the key, or whose proposal file changed, is left out and said.
+- `in-toto`: each approved answer as an in-toto Statement (v1), its subject
+  the sha256 of the file as written, its predicate the claim, the cited
+  passages, the question's fingerprint and the record row that holds the
+  approval. Unsigned: signing takes the key, which no add-on reads.
 - `agents-md-check`: the commands, paths, links, make targets, npm scripts
   and `@` imports an AGENTS.md or CLAUDE.md names that the repo no longer
   has, by file and line.

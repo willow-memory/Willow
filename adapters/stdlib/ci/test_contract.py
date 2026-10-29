@@ -137,6 +137,8 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "instruction-files": ("instruction_files.py", ["--box", "{box}"]),
     "licenses": ("licenses.py", ["--box", "{box}"]),
     "codeowners": ("codeowners.py", ["--box", "{box}", "garden.md"]),
+    "in-toto": ("in_toto.py", ["--box", "{box}", "--to", "{tmp}/in-toto.jsonl"]),
+    "prov": ("prov.py", ["--box", "{box}", "--to", "{tmp}/prov.json"]),
     "package-contents": ("package_contents.py", ["--box", "{box}"]),
     "pii-audit": ("pii_audit.py", ["--box", "{box}"]),
     "pins": ("pins.py", ["--box", "{box}"]),

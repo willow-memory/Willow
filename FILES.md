@@ -270,6 +270,10 @@ willow/
 │   │   │   ├── ids.py        each file and passage by its Software Heritage ID and one-chunk IPFS CID
 │   │   │   ├── test_ids.py
 │   │   │   └── README.md
+│   │   ├── in-toto/
+│   │   │   ├── in_toto.py   each approved answer as an in-toto Statement, its subject hashed from the file written
+│   │   │   ├── test_in_toto.py
+│   │   │   └── README.md
 │   │   ├── index-cache/
 │   │   │   ├── index_cache.py  a folder's scan index kept between runs, rebuilt only when a file's hash changed
 │   │   │   ├── test_index_cache.py
@@ -418,6 +422,10 @@ willow/
 │   │   ├── privacy/
 │   │   │   ├── privacy.py    personal data and keys withheld from what a question prints
 │   │   │   ├── test_privacy.py
+│   │   │   └── README.md
+│   │   ├── prov/
+│   │   │   ├── prov.py   the record as W3C PROV-JSON: what came from what, by which step, sealed by whom
+│   │   │   ├── test_prov.py
 │   │   │   └── README.md
 │   │   ├── quiz/
 │   │   │   ├── quiz.py       a passage of your own writing with a word missing, cut and scored on the record
