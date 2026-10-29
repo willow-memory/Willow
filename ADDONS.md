@@ -18,11 +18,11 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`█████████░░░░░░░░░░░` **202 of 470 built** · 419 need no install · 51 need one
+`█████████░░░░░░░░░░░` **203 of 470 built** · 419 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
-| Reading more kinds of files | 22 | 83 | 96 | 9 |
+| Reading more kinds of files | 23 | 82 | 96 | 9 |
 | Finding things | 26 | 17 | 33 | 10 |
 | Your own words | 16 | 9 | 22 | 3 |
 | Keeping track | 35 | 23 | 58 | 0 |
@@ -47,9 +47,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[annotations](adapters/stdlib/annotations/)** — Approved answers as W3C Web Annotations, so any annotation tool can show what your files say about a page.
+**[family-tree](adapters/stdlib/family-tree/)** — Family trees from GEDCOM files: who was born where and when, and which record says so.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 202 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 203 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -82,7 +82,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - **discord** (idea) — Discord's data package: your messages, one dated line each, by server and channel. *new* `no-install` `offline` `writes-output` `file-reader`
 - **dotfiles** (idea) — Your dotfiles as passages: which file sets what, for 'where did I set my editor?' *new* `no-install` `offline` `writes-output` `file-reader`
 - [**evernote**](adapters/stdlib/evernote/) — Evernote's .enex files: each note as plain text with its notebook, tags and dates. *new* `no-install` `offline` `writes-output` `file-reader`
-- **family-tree** (idea) — Family trees from GEDCOM files: who was born where and when, and which record says so. *new* `no-install` `offline` `writes-output` `file-reader`
+- [**family-tree**](adapters/stdlib/family-tree/) — Family trees from GEDCOM files: who was born where and when, and which record says so. *new* `no-install` `offline` `writes-output` `file-reader`
 - **forgejo-dump** (idea) — A Forgejo or Gitea dump, Codeberg's included: issues, pull requests and wiki pages as dated passages. *new* `no-install` `offline` `writes-output` `file-reader`
 - **gh-json** (idea) — What gh prints with --json (issues, pull requests, runs), saved to a file and read as dated passages. *new* `no-install` `offline` `writes-output` `file-reader`
 - **git-history** (idea) — Commit messages and diffs as a dated pile: "when did we change the retry limit?" Needs the git program; GPL, called not linked. *new* `needs-install` `offline` `writes-output` `file-reader`

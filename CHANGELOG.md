@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `family-tree`: Family trees from GEDCOM files: each person as a paragraph
+  that names its own record, with births, deaths, parents, spouses and notes
+  as the file writes them.
 - `budget`: Spending against the monthly budget you wrote down in your own
   words: your statements' lines matched to each category by the markers you
   gave, each month held against it. (#75)

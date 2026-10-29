@@ -530,16 +530,6 @@
   "tags": "no-install, offline, records, trust"
  },
  {
-  "name": "family-tree",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Family trees from GEDCOM files: who was born where and when, and which record says so.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "flashcards",
   "kind": "stdlib",
   "section": "Keeping track",

@@ -121,6 +121,12 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         b'<note-attributes><author>Ada Example</author><source-url>https://example.org/plots</source-url></note-attributes>'
         b'<resource><resource-attributes><file-name>plan.pdf</file-name></resource-attributes></resource></note></en-export>'
     )}),
+    "family-tree": ("family_tree.py", {"family.ged": (
+        b"0 HEAD\n1 CHAR UTF-8\n0 @I1@ INDI\n1 NAME John /Smith/\n1 BIRT\n2 DATE 2 Mar 1850\n2 PLAC Leeds\n1 DEAT\n2 DATE 1920\n2 PLAC York\n"
+        b"1 FAMC @F1@\n1 FAMS @F2@\n1 NOTE A weaver\n2 CONC  and a singer.\n2 CONT Second line.\n"
+        b"0 @I2@ INDI\n1 NAME Mary /Brown/\n1 FAMS @F2@\n0 @I4@ INDI\n1 NAME Arthur /Smith/\n0 @I5@ INDI\n1 NAME Ann /Jones/\n"
+        b"0 @F1@ FAM\n1 HUSB @I4@\n1 WIFE @I5@\n1 CHIL @I1@\n0 @F2@ FAM\n1 HUSB @I1@\n1 WIFE @I2@\n1 MARR\n2 DATE 1875\n2 PLAC Hull\n0 TRLR\n"
+    )}),
     "notes": ("notes.py", {"garden.md": b"Tomatoes want [[sun]].\n"}),
     "jrnl": ("jrnl.py", {"journal.txt": (
         "[2024-03-03 10:15] Fixed the gate.\nThe hinge wanted oil, not force.\n\n"

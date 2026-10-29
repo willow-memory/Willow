@@ -273,6 +273,10 @@ willow/
 │   │   │   ├── fair_merge.py   each folder ranked on its own and the lists dealt out in turns, so a large corpus can't bury a small one
 │   │   │   ├── test_fair_merge.py
 │   │   │   └── README.md
+│   │   ├── family-tree/
+│   │   │   ├── family_tree.py   a family tree as a paragraph for each person
+│   │   │   ├── test_family_tree.py
+│   │   │   └── README.md
 │   │   ├── first-mention/
 │   │   │   ├── first_mention.py  when the files first mention something: the earliest dated line that holds every word
 │   │   │   ├── test_first_mention.py
