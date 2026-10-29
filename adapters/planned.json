@@ -190,16 +190,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "box-health",
-  "kind": "stdlib",
-  "section": "Trust and proof",
-  "line": "A box's health in one line: files it can't read, readers out of date, and when the chain was last checked.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, trust"
- },
- {
   "name": "braille",
   "kind": "stdlib",
   "section": "Ways to use it",

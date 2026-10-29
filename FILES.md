@@ -100,6 +100,10 @@ willow/
 │   │   │   ├── bot_venv.py       does willow-bot's venv, or any named, have what CI needs; the line that runs CI with it
 │   │   │   ├── test_bot_venv.py
 │   │   │   └── README.md
+│   │   ├── box-health/
+│   │   │   ├── box_health.py   a box's health in one line: the chain, approvals, files it can't read, the words list, and the last out row
+│   │   │   ├── test_box_health.py
+│   │   │   └── README.md
 │   │   ├── browse/
 │   │   │   ├── browse.py     your folder in your browser, on 127.0.0.1: ask, read, approve with a click
 │   │   │   ├── test_browse.py

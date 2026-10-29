@@ -182,6 +182,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "why-not": ("why_not.py", ["--box", "{box}", "tomatoes"]),
     "fair-merge": ("fair_merge.py", ["--box", "{box}", "tomatoes"]),
     "nicknames": ("nicknames.py", ["--box", "{box}", "--to", "{tmp}/nicknames.txt"]),
+    "box-health": ("box_health.py", ["--box", "{box}", *NOW]),
     "history": ("history.py", ["--box", "{box}"]),
     "dice": ("dice.py", ["--box", "{box}", "roll", "2d6", *NOW]),
     "hook-fail-closed": ("hook_fail_closed.py", ["--hook", "true"]),

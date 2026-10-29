@@ -10,6 +10,11 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `box-health`: a box's health in one line: whether the chain holds, how many
+  approvals hold and suggestions wait, the files the bite can't read counted
+  by kind with the add-on that reads each, whether the words list is the one
+  last used, and when the record last had an `out` row. Writes nothing, not
+  even an `out` row.
 - `nicknames`: the names you call people, as a words list written from what
   your own files say: a family word beside a capitalised name ("Mum
   (Margaret)", "my dad Robert", "Auntie Jean") becomes `mum = margaret`, with
