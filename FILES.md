@@ -250,6 +250,10 @@ willow/
 │   │   │   ├── hook_fuzz.py      bad input thrown at a hook, and each one that breaks it named
 │   │   │   ├── test_hook_fuzz.py
 │   │   │   └── README.md
+│   │   ├── hook-leaks/
+│   │   │   ├── hook_leaks.py   a PreToolUse hook that refuses a write or command holding a key, password or card number, naming only the kind
+│   │   │   ├── test_hook_leaks.py
+│   │   │   └── README.md
 │   │   ├── hook-pin/
 │   │   │   ├── hook_pin.py       a hook runs only as the bytes you approved, pinned on the record
 │   │   │   ├── test_hook_pin.py

@@ -10,6 +10,11 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `hook-leaks`: a PreToolUse hook that refuses a Write, Edit, notebook cell
+  or Bash command holding a key, a password or a card number, by the
+  `privacy` add-on's shapes. The reason names only the kind, never the value,
+  and text an edit takes out is not looked at, so a secret can still be
+  removed.
 - `prov`: the record as W3C PROV-JSON, every row an activity and every
   seal traced to its answer, the suggestion it approved, the passages that
   suggestion cites and the person who approved it. A seal that doesn't prove
