@@ -10,6 +10,8 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `minutes`: Meeting minutes read for what was decided and what is still to
+  do: decisions, and actions with their owner and due date, open or closed.
 - `mileage`: Miles driven for work, totalled for each tax year from the lines
   of your notes that say a drive and how far; miles and kilometres kept
   apart, odometer readings left out.

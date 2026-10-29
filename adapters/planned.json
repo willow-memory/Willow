@@ -1549,16 +1549,6 @@
   "tags": "no-install, offline, read-only, tracking"
  },
  {
-  "name": "minutes",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "Meeting minutes: who decided what and when, and which actions are still open.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
- },
- {
   "name": "mirror",
   "kind": "deps",
   "section": "Trust and proof",
