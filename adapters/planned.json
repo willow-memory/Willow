@@ -190,16 +190,6 @@
   "tags": "no-install, offline, read-only, trust"
  },
  {
-  "name": "braille",
-  "kind": "stdlib",
-  "section": "Ways to use it",
-  "line": "Answers as braille-ready files (BRF) for a braille display or embosser.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, interface"
- },
- {
   "name": "budget",
   "kind": "stdlib",
   "section": "Keeping track",

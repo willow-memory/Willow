@@ -18,7 +18,7 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`███████░░░░░░░░░░░░░` **160 of 470 built** · 419 need no install · 51 need one
+`███████░░░░░░░░░░░░░` **161 of 470 built** · 419 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
@@ -29,7 +29,7 @@ or `writes-output`; its section), and any the card's author adds or changes.
 | Trust and proof | 18 | 27 | 36 | 9 |
 | Privacy and safety | 10 | 4 | 14 | 0 |
 | Assistants | 18 | 39 | 51 | 6 |
-| Ways to use it | 13 | 26 | 35 | 4 |
+| Ways to use it | 14 | 25 | 35 | 4 |
 | Play | 7 | 33 | 35 | 5 |
 | For maintainers | 18 | 26 | 39 | 5 |
 <!-- /willow:pools -->
@@ -47,9 +47,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[places](adapters/stdlib/places/)** — KML and GeoJSON files: each place's name, note and coordinates as a passage.
+**[pii-audit](adapters/stdlib/pii-audit/)** — Personal data sitting in your files (ID numbers, health details, card numbers), listed by file and line.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 160 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 161 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -434,7 +434,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - **anki** (idea) — Approved answers as an Anki deck, built without Anki installed. *new* `no-install` `offline` `writes-output` `interface`
 - **annotations** (idea) — Approved answers as W3C Web Annotations, so any annotation tool can show what your files say about a page. *new* `no-install` `offline` `writes-output` `interface`
 - **badge** (idea) — A badge for a page: these answers came from these files and were approved, linked to the check anyone can run. *new* `no-install` `offline` `writes-output` `interface`
-- **braille** (idea) — Answers as braille-ready files (BRF) for a braille display or embosser. *new* `no-install` `offline` `writes-output` `interface`
+- [**braille**](adapters/stdlib/braille/) — Answers as braille-ready files (BRF) for a braille display or embosser. *new* `no-install` `offline` `writes-output` `interface`
 - [**browse**](adapters/stdlib/browse/) — Your folder in your web browser: ask, read each answer at its file and line, and approve suggestions with a click, from this machine only. Reaches this machine only. *new* `no-install` `this-machine` `records` `interface` `everyday`
 - **calendar-out** (idea) — Dates coming up as an .ics file your calendar app can subscribe to. *new* `no-install` `offline` `writes-output` `interface`
 - **cloudevents** (idea) — Record rows in the CloudEvents envelope, for any tool that already reads them. *new* `no-install` `offline` `writes-output` `interface`

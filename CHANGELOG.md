@@ -10,6 +10,11 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `braille`: approved answers (or any text file) as a braille-ready file:
+  uncontracted (grade 1) English braille in North American Braille ASCII,
+  with capitals, number signs and punctuation, in lines of 40 cells and pages
+  of 25 lines. Characters with no cell are counted and said. Nothing is sent
+  to a device.
 - `deep-links`: each approved answer, or each passage a question holds, as
   links that open the file at the line: a `file://` link with an RFC 5147
   `#line=` fragment and, with `--base`, a web link with a browser text
