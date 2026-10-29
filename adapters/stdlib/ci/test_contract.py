@@ -259,6 +259,11 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         b'"labels":[{"name":"bug"},{"name":"garden"}],"comments":[{"author":{"login":"ben"},"createdAt":"2024-03-03T10:00:00Z","body":"Move them."},{"body":" "}]},'
         b'{"databaseId":1234,"name":"ci","workflowName":"CI","conclusion":"failure","headBranch":"main","createdAt":"2024-03-04T09:30:00Z","displayTitle":"Move tomatoes"}]'
     )}),
+    "meta-archive": ("meta_archive.py", {"message_1.json": (
+        b'{"participants":[{"name":"Ana"},{"name":"Ben"}],"title":"Garden chat","messages":['
+        b'{"sender_name":"Ben","timestamp_ms":1709370000000,"content":"Caf\xc3\x83\xc2\xa9 later?"},'
+        b'{"sender_name":"Ana","timestamp_ms":1709367300000,"content":"Six  hours of sun."},{"sender_name":"Ana","timestamp_ms":1709367400000,"photos":[{}]}]}'
+    )}),
     "notes": ("notes.py", {"garden.md": b"Tomatoes want [[sun]].\n"}),
     "jrnl": ("jrnl.py", {"journal.txt": (
         "[2024-03-03 10:15] Fixed the gate.\nThe hinge wanted oil, not force.\n\n"

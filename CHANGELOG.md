@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `meta-archive`: Facebook and Instagram's Download Your Information JSON:
+  messages with their conversation and sender, posts and comments, oldest
+  first as dated lines, the export's garbled accents put right.
 - `gh-json`: What gh prints with --json for issues, pull requests and runs,
   saved to a file: each item, oldest first, as a dated passage with its
   state, author, labels, body and comments.

@@ -1249,16 +1249,6 @@
   "tags": "no-install, offline, records, assistant"
  },
  {
-  "name": "meta-archive",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Facebook and Instagram's Download Your Information files: posts, comments and messages as dated lines.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "mex",
   "kind": "stdlib",
   "section": "Assistants",
