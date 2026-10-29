@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `location-history`: Google Maps Timeline exports, Takeout's semantic
+  location history or the newer Timeline file: each place visited and each
+  trip as a dated line with the hours it covers.
 - `meta-archive`: Facebook and Instagram's Download Your Information JSON:
   messages with their conversation and sender, posts and comments, oldest
   first as dated lines, the export's garbled accents put right.

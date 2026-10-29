@@ -264,6 +264,11 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         b'{"sender_name":"Ben","timestamp_ms":1709370000000,"content":"Caf\xc3\x83\xc2\xa9 later?"},'
         b'{"sender_name":"Ana","timestamp_ms":1709367300000,"content":"Six  hours of sun."},{"sender_name":"Ana","timestamp_ms":1709367400000,"photos":[{}]}]}'
     )}),
+    "location-history": ("location_history.py", {"2024_MARCH.json": (
+        b'{"timelineObjects":[{"activitySegment":{"activityType":"WALKING","distance":1500,"duration":{"startTimestamp":"2024-03-02T09:10:00Z","endTimestamp":"2024-03-02T09:40:00Z"}}},'
+        b'{"placeVisit":{"location":{"name":"Kitchen Cafe","address":"1 High St, Leeds"},"duration":{"startTimestamp":"2024-03-02T08:15:00.000Z","endTimestamp":"2024-03-02T09:10:00.000Z"}}},'
+        b'{"placeVisit":{"location":{},"duration":{"startTimestamp":"2024-03-02T23:00:00Z","endTimestamp":"2024-03-03T07:00:00Z"}}},{"placeVisit":{"duration":{}}}]}'
+    )}),
     "notes": ("notes.py", {"garden.md": b"Tomatoes want [[sun]].\n"}),
     "jrnl": ("jrnl.py", {"journal.txt": (
         "[2024-03-03 10:15] Fixed the gate.\nThe hinge wanted oil, not force.\n\n"

@@ -470,6 +470,10 @@ willow/
 │   │   │   ├── llms_txt.py   an llms.txt written from a folder's text files, and a checker for one
 │   │   │   ├── test_llms_txt.py
 │   │   │   └── README.md
+│   │   ├── location-history/
+│   │   │   ├── location_history.py   places and trips from a Timeline export, by day
+│   │   │   ├── test_location_history.py
+│   │   │   └── README.md
 │   │   ├── lockfiles/
 │   │   │   ├── lockfiles.py   lockfiles as a line for each locked package
 │   │   │   ├── test_lockfiles.py

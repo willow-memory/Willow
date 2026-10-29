@@ -1106,16 +1106,6 @@
   "tags": "needs-install, this-machine, records, assistant"
  },
  {
-  "name": "location-history",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Google Maps Timeline and other location exports: where you were, by day.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "logs",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
