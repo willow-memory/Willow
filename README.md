@@ -7,16 +7,33 @@
 **Ask questions of your own files, and get back only what you wrote or what
 you approved.**
 
-`kernel.py` is a single Python file that searches a folder you choose, answers
-in your files' own lines with the file and line number for each, and refuses
-to guess when your files don't hold an answer. Answers from anywhere else (an
-AI model, a script, another person) are held until you approve them with a
-private key. Every step is written to a tamper-evident log you can audit at
-any time.
+*A pure kernel for private knowledge, plus the add-ons you choose.
+Plant it and everything grows.*
+
+willow is two things:
+
+1. **The kernel.** `kernel.py` is a single Python file that searches a folder
+   you choose, answers in your files' own lines with the file and line number
+   for each, and refuses to guess when your files don't hold an answer.
+   Answers from anywhere else (an AI model, a script, another person) are held
+   until you approve them with a private key. Every step is written to a
+   tamper-evident log you can audit at any time.
+2. **Add-ons.** An open place for the parts you choose, or write yourself:
+   they read more kinds of files (PDFs, email, chats, office documents), track
+   what matters (dates coming up, forecasts, flashcards, a care log), keep
+   approved answers honest, and let AI assistants hand in suggestions they can
+   never approve themselves. [See every add-on.](ADDONS.md)
+
+Run the kernel alone, or assemble your own local stack. The kernel is the
+seed: complete on its own, and it needs nothing from what grows from it. The
+arrow points one way: an add-on uses the kernel, and the kernel never names an
+add-on, so it runs the same if you delete every one.
 
 - **One file, no dependencies:** Python 3.9 or newer, standard library only.
   Copy `kernel.py` anywhere and run it.
 - **Local only:** it has no network code at all, and a test enforces that.
+- **Extractive only:** an answer is passages from your files, each with its
+  file and line, or it says it doesn't know.
 - **Verifiable:** the log is a hash chain. An edit to one past entry is
   detected, and a forged approval is never accepted. A whole chain rewritten
   and re-hashed from the edit onward is not detected on its own; see
@@ -24,13 +41,7 @@ any time.
 - **Portable:** reimplemented in Java, TypeScript and C#, and all four are held
   to the same 4,668 test cases.
 
-**Built to be built on.** Add-ons read more kinds of files (PDFs, email,
-chats, office documents), track what matters (dates coming up, forecasts,
-flashcards, a care log), keep approved answers honest, and let AI assistants
-hand in suggestions they can never approve themselves.
-[See every add-on.](ADDONS.md)
-
-**Contents:** [Your first five minutes](#your-first-five-minutes) · [Building on it](#building-on-it) · [What you can build on it](#what-you-can-build-on-it) · [How it works](#how-it-works) · [Commands](#commands) · [Guarantees, and the tests behind them](#guarantees-and-the-tests-behind-them) · [Where it falls short](#where-it-falls-short) · [How it's verified](#how-its-verified) · [What's in this repo](#whats-in-this-repo) · [Licence](#licence)
+**Contents:** [Your first five minutes](#your-first-five-minutes) · [What it is not](#what-it-is-not) · [Building on it](#building-on-it) · [What you can build on it](#what-you-can-build-on-it) · [How it works](#how-it-works) · [Commands](#commands) · [Guarantees, and the tests behind them](#guarantees-and-the-tests-behind-them) · [Where it falls short](#where-it-falls-short) · [How it's verified](#how-its-verified) · [What's in this repo](#whats-in-this-repo) · [Licence](#licence)
 
 
 ## Your first five minutes
@@ -50,6 +61,18 @@ $ python kernel.py bite --box odile-record "how are the bees"
 The answer is up to three passages from her files, each with its file and
 line. [The full five minutes](docs/tour.md) goes on: a question her files
 don't answer, teaching it her words, and approving an answer with the key.
+
+
+## What it is not
+
+- Not a RAG framework that tries to do everything for you.
+- Not a system that generates answers: it quotes your files, and anything an
+  assistant suggests waits for you.
+- Not something that needs a server, an account or an API key.
+- Not a project that hides its rules. [CONSTITUTION.md](CONSTITUTION.md) holds
+  the rules the code is written to enforce, [DECISIONS.md](DECISIONS.md) why
+  the design is the way it is, and [LIMITS.md](LIMITS.md) what it falls short
+  of.
 
 
 ## Building on it
