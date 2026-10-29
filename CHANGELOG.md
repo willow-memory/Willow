@@ -884,6 +884,9 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- `README.md` opens with the kernel and the add-ons as its two parts, says the
+  kernel is the seed and never names an add-on, and gains a "What it is not"
+  section (#76)
 - `mutants` no longer breaks the index in `sys.path.insert(0, ...)`: second on
   the path still finds the repo root, so no test can tell, and 18 add-ons had
   listed it by hand in `adapters/stdlib/mutants/accepted.json`. Other mutants keep their ids. The six
