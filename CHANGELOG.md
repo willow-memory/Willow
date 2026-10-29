@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `hook-impact`: A PreToolUse hook that, before an edit, hands the assistant
+  every place in the person's files that names the file by its whole name, by
+  file and line; it never blocks.
 - `hook-guard`: A PreToolUse hook that refuses, by two named rules and never
   by judgment, a call that would read the box's key or change a file inside
   the box other than through the kernel.

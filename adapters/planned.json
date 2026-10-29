@@ -902,16 +902,6 @@
   "tags": "no-install, offline, records, assistant, hooks"
  },
  {
-  "name": "hook-impact",
-  "kind": "stdlib",
-  "section": "Assistants",
-  "line": "Before an edit, a hook hands the assistant every place in your files that names what it's about to change, by file and line.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, assistant, hooks"
- },
- {
   "name": "hook-read-first",
   "kind": "stdlib",
   "section": "Assistants",

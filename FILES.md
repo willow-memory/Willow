@@ -326,6 +326,10 @@ willow/
 │   │   │   ├── hook_guard.py   refuses a call that reads the key or writes the box
 │   │   │   ├── test_hook_guard.py
 │   │   │   └── README.md
+│   │   ├── hook-impact/
+│   │   │   ├── hook_impact.py   hands over the places that name a file before it is edited
+│   │   │   ├── test_hook_impact.py
+│   │   │   └── README.md
 │   │   ├── hook-leaks/
 │   │   │   ├── hook_leaks.py   a PreToolUse hook that refuses a write or command holding a key, password or card number, naming only the kind
 │   │   │   ├── test_hook_leaks.py
