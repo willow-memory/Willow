@@ -12,41 +12,42 @@ says how). The first was v0.1.0.
 
 - `budget`: Spending against the monthly budget you wrote down in your own
   words: your statements' lines matched to each category by the markers you
-  gave, each month held against it.
+  gave, each month held against it. (#75)
 - `foia`: Freedom-of-information requests from your notes: who you asked,
   when, when an answer is due (a date you wrote, or the time the law you name
-  gives), and which are answered.
+  gives), and which are answered. (#75)
 - `syllabus`: A course syllabus as dates: the readings, assignments and exams
-  that fall due, soonest first, each cited and measured from today.
+  that fall due, soonest first, each cited and measured from today. (#75)
 - `livestock`: Each animal's births, treatments and sales from your farm
   records, gathered by tag or name: born, treated and last treated, sold or
-  died with its price.
+  died with its price. (#75)
 - `milestones`: Your child's firsts, milestones and measurements from your
   notes, each with the child's age on the day, counted from the birth date
-  you give.
+  you give. (#75)
 - `reading-log`: A child's reading log from the lines you wrote: days, pages
-  and minutes for each week and for each book.
+  and minutes for each week and for each book. (#75)
 - `subscriptions`: What you pay every month or year, found by the rhythm of
   the payments in your statements and emails (a month apart three times, or a
   year apart twice), with the latest amount and when the next is about due.
+  (#75)
 - `pile-poetry`: Verse walked along the pairs of words your own files put
   side by side more than once, drawn by the seeded stream so a poem can be
-  made again; nothing in it your files do not have.
+  made again; nothing in it your files do not have. (#75)
 - `oracle-text`: Readings written by a Tracery grammar, every branch picked
   by the seeded stream, so any reading can be made again from its seed:
-  modifiers, named expansions, a built-in grammar or your own file.
+  modifiers, named expansions, a built-in grammar or your own file. (#75)
 - `hook-stop`: A Stop hook that won't let an assistant's turn end while the
   record doesn't verify or the repository has uncommitted work, and says
-  which; it lets go once it has already held the turn.
+  which; it lets go once it has already held the turn. (#75)
 - `hook-impact`: A PreToolUse hook that, before an edit, hands the assistant
   every place in the person's files that names the file by its whole name, by
-  file and line; it never blocks.
+  file and line; it never blocks. (#75)
 - `hook-guard`: A PreToolUse hook that refuses, by two named rules and never
   by judgment, a call that would read the box's key or change a file inside
-  the box other than through the kernel.
+  the box other than through the kernel. (#75)
 - `hook-compact`: A PreCompact hook that prints what the record still holds
   open, the suggestions waiting for a seal and the questions asked again and
-  never answered, so they survive an assistant's summary.
+  never answered, so they survive an assistant's summary. (#75)
 - `demo/known-gaps`: php2shell's method pointed at the fleet's own twelve
   known security gaps, and at seven cpython CVE fixes as the outside control.
   A question written from a gap's own text, asked of the code before the fix,
