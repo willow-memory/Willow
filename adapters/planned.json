@@ -1257,17 +1257,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "manifests",
-  "kind": "deps",
-  "section": "Reading more kinds of files",
-  "line": "Docker Compose and Kubernetes YAML: each service, image, port and volume as a passage.",
-  "source": "new",
-  "needs": "PyYAML; MIT",
-  "writes": "to",
-  "network": "none",
-  "tags": "needs-install, offline, writes-output, file-reader"
- },
- {
   "name": "market-calls",
   "kind": "stdlib",
   "section": "Keeping track",
@@ -1682,17 +1671,6 @@
   "writes": "to",
   "network": "none",
   "tags": "needs-install, offline, writes-output, trust"
- },
- {
-  "name": "photos",
-  "kind": "deps",
-  "section": "Reading more kinds of files",
-  "line": "When and where each photo was taken, as dated lines.",
-  "source": "new",
-  "needs": "Pillow; MIT-CMU",
-  "writes": "to",
-  "network": "none",
-  "tags": "needs-install, offline, writes-output, file-reader"
  },
  {
   "name": "plain-language",
@@ -2165,17 +2143,6 @@
   "tags": "no-install, offline, writes-output, interface"
  },
  {
-  "name": "sheets",
-  "kind": "deps",
-  "section": "Reading more kinds of files",
-  "line": "Spreadsheets with formulas and formatting kept, beyond what the office add-on reads.",
-  "source": "new",
-  "needs": "openpyxl; MIT",
-  "writes": "to",
-  "network": "none",
-  "tags": "needs-install, offline, writes-output, file-reader"
- },
- {
   "name": "shell-history",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -2318,17 +2285,6 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, file-reader"
- },
- {
-  "name": "stems",
-  "kind": "deps",
-  "section": "Your own words",
-  "line": "Word forms for 20+ languages, so \"maisons\" finds \"maison\".",
-  "source": "new",
-  "needs": "snowballstemmer; BSD-3",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "needs-install, offline, read-only, words"
  },
  {
   "name": "strava",

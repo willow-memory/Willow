@@ -863,6 +863,12 @@ willow/
 │       │   ├── requirements-floor.txt  numpy at its floor, also tested
 │       │   ├── test_latent.py
 │       │   └── README.md
+│       ├── manifests/
+│       │   ├── manifests.py  Compose services and Kubernetes objects, a passage each; secrets by name only
+│       │   ├── requirements.txt  PyYAML, pinned
+│       │   ├── requirements-floor.txt  PyYAML at its floor, also tested
+│       │   ├── test_manifests.py
+│       │   └── README.md
 │       ├── mcp/
 │       │   ├── server.py     your folder for any MCP client: ask and suggest, never approve
 │       │   ├── requirements.txt  mcp, pinned
@@ -875,19 +881,37 @@ willow/
 │       │   ├── requirements-floor.txt  pypdf at its floor, also tested
 │       │   ├── test_pdf.py
 │       │   └── README.md
-│       └── star-system/
-│           ├── star_system.py  a friend's star-system sim (science_bitch) run deterministically, as cited passages
-│           ├── requirements.txt  numpy, pinned
-│           ├── requirements-floor.txt  numpy at its floor, also tested
-│           ├── test_star_system.py
-│           ├── README.md
-│           └── example_repo/   a minimal stand-in checkout so the tests need no network
-│               └── simulations/
-│                   ├── __init__.py
-│                   └── star_system/
-│                       ├── __init__.py
-│                       ├── core.py    a plain velocity-Verlet stand-in, not the real integrator
-│                       └── data.py    a tiny stand-in catalog
+│       ├── photos/
+│       │   ├── photos.py     when and where each photo was taken, from its EXIF
+│       │   ├── requirements.txt  Pillow, pinned
+│       │   ├── requirements-floor.txt  Pillow at its floor, also tested
+│       │   ├── test_photos.py
+│       │   └── README.md
+│       ├── sheets/
+│       │   ├── sheets.py     spreadsheets as shown: number formats, formulas and notes kept
+│       │   ├── requirements.txt  openpyxl, pinned
+│       │   ├── requirements-floor.txt  openpyxl at its floor, also tested
+│       │   ├── test_sheets.py
+│       │   └── README.md
+│       ├── star-system/
+│       │   ├── star_system.py  a friend's star-system sim (science_bitch) run deterministically, as cited passages
+│       │   ├── requirements.txt  numpy, pinned
+│       │   ├── requirements-floor.txt  numpy at its floor, also tested
+│       │   ├── test_star_system.py
+│       │   ├── README.md
+│       │   └── example_repo/   a minimal stand-in checkout so the tests need no network
+│       │       └── simulations/
+│       │           ├── __init__.py
+│       │           └── star_system/
+│       │               ├── __init__.py
+│       │               ├── core.py    a plain velocity-Verlet stand-in, not the real integrator
+│       │               └── data.py    a tiny stand-in catalog
+│       └── stems/
+│           ├── stems.py      a word's other forms, by Snowball's stemmer for 30 languages
+│           ├── requirements.txt  snowballstemmer, pinned
+│           ├── requirements-floor.txt  snowballstemmer at its floor, also tested
+│           ├── test_stems.py
+│           └── README.md
 ├── ports/                    kernel.py rewritten in other languages
 │   ├── java/
 │   │   └── Kernel.java       JDK 11+, standard library only

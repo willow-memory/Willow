@@ -10,6 +10,19 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `stems`: Word forms for some thirty languages through Snowball's stemmer,
+  so "häuser" finds "haus" and "книги" finds "книга": a word no file holds
+  is read as the form of its stem the most passages hold, offered, never
+  asked. Needs snowballstemmer.
+- `photos`: When and where each photo was taken, from its EXIF, as a dated
+  passage in a mirror: the date and time, the GPS position, the camera.
+  Needs Pillow, floored at 11.0.0, the first with a wheel for Python 3.13.
+- `sheets`: Spreadsheets as a person sees them, beyond what the office add-on
+  reads: each cell by its address and number format, each formula after its
+  saved result, and the notes on cells. Needs openpyxl.
+- `manifests`: Docker Compose and Kubernetes YAML, a passage for each service
+  and object: its image, ports, volumes, mounts, routes and selectors, and
+  environments, ConfigMaps and Secrets by name, never value. Needs PyYAML.
 - `budget`: Spending against the monthly budget you wrote down in your own
   words: your statements' lines matched to each category by the markers you
   gave, each month held against it. (#75)
