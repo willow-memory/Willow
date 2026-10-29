@@ -47,6 +47,25 @@ def _docx(text: str) -> bytes:
     return buf.getvalue()
 
 
+def _png() -> bytes:
+    import struct
+    import zlib
+
+    def chunk(kind: bytes, body: bytes) -> bytes:
+        return (
+            struct.pack(">I", len(body))
+            + kind
+            + body
+            + struct.pack(">I", zlib.crc32(kind + body))
+        )
+
+    return (b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", struct.pack(">IIBBBBB", 1, 1, 8, 2, 0, 0, 0))
+            + chunk(b"tEXt", b"Author\0Ana") + chunk(b"IDAT", zlib.compress(b"\0\xff\0\0")) + chunk(b"IEND", b""))  # fmt: skip
+
+
+#: files an add-on needs in the pile besides the default, by add-on
+PILE_EXTRA: dict[str, dict[str, bytes]] = {"scrub": {"photo.png": _png()}}
+
 #: one small readable file per reader, by the name it is written under
 READERS: dict[str, tuple[str, dict[str, bytes]]] = {
     "books": ("books.py", {"My Clippings.txt": (
@@ -184,6 +203,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "nicknames": ("nicknames.py", ["--box", "{box}", "--to", "{tmp}/nicknames.txt"]),
     "box-health": ("box_health.py", ["--box", "{box}", *NOW]),
     "profile": ("question_profile.py", ["--box", "{box}", "tomatoes"]),
+    "scrub": ("scrub.py", ["--from", "{pile}/photo.png", "--to", "{tmp}/clean.png"]),
     "history": ("history.py", ["--box", "{box}"]),
     "dice": ("dice.py", ["--box", "{box}", "roll", "2d6", *NOW]),
     "hook-fail-closed": ("hook_fail_closed.py", ["--hook", "true"]),
@@ -248,9 +268,8 @@ def test_a_bad_command_line_is_refused_and_says_how_to_run_it(name, tmp_path):
     assert got.returncode == 2 and script_name in got.stderr, got.stderr
     pile = tmp_path / "pile"
     pile.mkdir()
-    for rel, data in READERS.get(name, ("", {"garden.md": b"Tomatoes want sun.\n"}))[
-        1
-    ].items():
+    files = READERS.get(name, ("", {"garden.md": b"Tomatoes want sun.\n"}))[1]
+    for rel, data in {**files, **PILE_EXTRA.get(name, {})}.items():
         (pile / rel).write_bytes(data)
     box = tmp_path / "box"
     subprocess.run([sys.executable, str(KERNEL), "init", "--box", str(box), "--pile",

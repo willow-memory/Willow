@@ -18,7 +18,7 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`███████░░░░░░░░░░░░░` **158 of 470 built** · 419 need no install · 51 need one
+`███████░░░░░░░░░░░░░` **159 of 470 built** · 419 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
@@ -27,7 +27,7 @@ or `writes-output`; its section), and any the card's author adds or changes.
 | Your own words | 16 | 9 | 22 | 3 |
 | Keeping track | 15 | 43 | 58 | 0 |
 | Trust and proof | 19 | 26 | 36 | 9 |
-| Privacy and safety | 10 | 4 | 14 | 0 |
+| Privacy and safety | 11 | 3 | 14 | 0 |
 | Assistants | 21 | 36 | 51 | 6 |
 | Ways to use it | 11 | 28 | 35 | 4 |
 | Play | 7 | 33 | 35 | 5 |
@@ -47,9 +47,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[history](adapters/stdlib/history/)** — Your record in plain sentences: what was asked when, what found nothing, what you approved; places and counts, never the words.
+**[words-nl](adapters/stdlib/words-nl/)** — Dutch common words ("de", "en").
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 158 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 159 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -361,7 +361,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**pii-audit**](adapters/stdlib/pii-audit/) — Personal data sitting in your files (ID numbers, health details, card numbers), listed by file and line. *new* `no-install` `offline` `read-only` `privacy`
 - [**privacy**](adapters/stdlib/privacy/) — Hides phone numbers, emails, card, bank and ID numbers, and API keys in what a question prints, and says what it hid. *bot* `no-install` `offline` `records` `privacy`
 - [**risky-code**](adapters/stdlib/risky-code/) — Lines of code matching a known-dangerous pattern (command injection, eval, sql concatenation, broken tls and more), by file and line, as leads to read. *new* `no-install` `offline` `read-only` `security`
-- **scrub** (idea) — Strips the hidden details (EXIF, author, edit history) from a file before you share it. *new* `no-install` `offline` `writes-output` `privacy`
+- [**scrub**](adapters/stdlib/scrub/) — Strips the hidden details (EXIF, author, edit history) from a file before you share it. *new* `no-install` `offline` `writes-output` `privacy`
 - [**secrets-audit**](adapters/stdlib/secrets-audit/) — Finds passwords, keys and card numbers sitting in plain files, by file and line, never showing the value. *bot* `no-install` `offline` `read-only` `privacy` `everyday`
 - **student-records** (idea) — A box of student records that answers only the teacher who owns it, and logs every look. *new* `no-install` `offline` `records` `privacy`
 - [**transcript-redact**](adapters/stdlib/transcript-redact/) — An agent transcript with keys, home paths and emails taken out before you share it, each removal listed by line. *new* `no-install` `offline` `writes-output` `privacy`

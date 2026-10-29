@@ -2525,16 +2525,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "scrub",
-  "kind": "stdlib",
-  "section": "Privacy and safety",
-  "line": "Strips the hidden details (EXIF, author, edit history) from a file before you share it.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, privacy"
- },
- {
   "name": "second-opinion",
   "kind": "stdlib",
   "section": "Assistants",
