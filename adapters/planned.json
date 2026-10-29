@@ -1813,16 +1813,6 @@
   "tags": "no-install, offline, records, assistant"
  },
  {
-  "name": "pets",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "Each pet's vet visits, vaccines and medicines, from your records: what's due next.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
- },
- {
   "name": "pgp",
   "kind": "deps",
   "section": "Trust and proof",

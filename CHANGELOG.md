@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `pets`: Each pet's vet visits, vaccines, worming and medicines from your
+  records: the last of each, its cost by currency sign, and what is due by a
+  date or interval you wrote.
 - `car`: Your car's services, repairs and inspections from receipts and
   notes: the last of each kind, what it cost by currency sign, and what is
   due by a date or interval you wrote.
