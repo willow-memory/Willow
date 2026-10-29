@@ -10,6 +10,8 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `sbom`: SBOMs in SPDX or CycloneDX JSON: a heading and a line for each
+  component with its version, licence and package URL, in name order.
 - `sarif`: SARIF reports from code scanners: each finding as a passage with
   the tool, rule, level and place, the rule's short description and the
   message, in file and line order.

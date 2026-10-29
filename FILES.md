@@ -687,6 +687,10 @@ willow/
 │   │   │   ├── sarif.py   scanner findings by file and line
 │   │   │   ├── test_sarif.py
 │   │   │   └── README.md
+│   │   ├── sbom/
+│   │   │   ├── sbom.py   an SBOM component by component with licences
+│   │   │   ├── test_sbom.py
+│   │   │   └── README.md
 │   │   ├── scan/
 │   │   │   ├── scan.py       indexes a folder once, then asks it a list of questions, the kernel's way
 │   │   │   ├── test_scan.py  holds its answers to the kernel's, every ranking vector included

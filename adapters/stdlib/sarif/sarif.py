@@ -33,6 +33,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 import kernel  # noqa: E402
 
+
 def text(v: object) -> str:
     return " ".join(v.split()) if isinstance(v, str) else ""
 
@@ -43,7 +44,9 @@ def message(m: object) -> str:
 
 def place(result: dict) -> tuple[str, int]:
     """(file, line) of a finding's first location, ("", 0) when it has none."""
-    for loc in result.get("locations") if isinstance(result.get("locations"), list) else []:
+    for loc in (
+        result.get("locations") if isinstance(result.get("locations"), list) else []
+    ):
         phys = loc.get("physicalLocation") if isinstance(loc, dict) else None
         if not isinstance(phys, dict):
             continue
@@ -51,27 +54,41 @@ def place(result: dict) -> tuple[str, int]:
         uri = text(art.get("uri")) if isinstance(art, dict) else ""
         region = phys.get("region")
         line = region.get("startLine") if isinstance(region, dict) else 0
-        return uri, line if isinstance(line, int) and not isinstance(line, bool) and line > 0 else 0
+        return uri, line if isinstance(line, int) and not isinstance(
+            line, bool
+        ) and line > 0 else 0
     return "", 0
 
 
 def convert(data: bytes) -> str | None:
     doc = json.loads(data.decode("utf-8-sig"))
-    if not (isinstance(doc, dict) and isinstance(doc.get("runs"), list) and isinstance(doc.get("version"), str)):
+    if not (
+        isinstance(doc, dict)
+        and isinstance(doc.get("runs"), list)
+        and isinstance(doc.get("version"), str)
+    ):
         return None
     rows = []
     for run in doc["runs"]:
         if not isinstance(run, dict):
             continue
-        driver = (run.get("tool") or {}).get("driver") if isinstance(run.get("tool"), dict) else None
+        driver = (
+            (run.get("tool") or {}).get("driver")
+            if isinstance(run.get("tool"), dict)
+            else None
+        )
         driver = driver if isinstance(driver, dict) else {}
         tool = text(driver.get("name")) or "scanner"
         shorts = {}
-        for rule in driver.get("rules") if isinstance(driver.get("rules"), list) else []:
+        for rule in (
+            driver.get("rules") if isinstance(driver.get("rules"), list) else []
+        ):
             if isinstance(rule, dict) and text(rule.get("id")):
                 short = rule.get("shortDescription")
                 shorts[text(rule["id"])] = message(short)
-        for result in run.get("results") if isinstance(run.get("results"), list) else []:
+        for result in (
+            run.get("results") if isinstance(run.get("results"), list) else []
+        ):
             if not isinstance(result, dict):
                 continue
             rule = text(result.get("ruleId")) or "(no rule)"
@@ -82,9 +99,14 @@ def convert(data: bytes) -> str | None:
             short, msg = shorts.get(rule, ""), message(result.get("message"))
             second = ": ".join(x for x in (short, msg) if x)
             rows.append(((uri, line, rule), first + ("\n" + second if second else "")))
-    return "\n\n".join(t for _k, t in sorted(rows, key=lambda r: r[0])) + "\n" if rows else None
+    return (
+        "\n\n".join(t for _k, t in sorted(rows, key=lambda r: r[0])) + "\n"
+        if rows
+        else None
+    )
 
-EXTS = ('.sarif', '.sarif.json')
+
+EXTS = (".sarif", ".sarif.json")
 ERRORS = (OSError, UnicodeDecodeError, ValueError)
 
 USAGE = "usage: sarif.py mirror --from FOLDER --to MIRROR"
@@ -138,7 +160,9 @@ def main(argv: list[str]) -> int:
     src = Path(opts["--from"]).resolve()
     dst = Path(opts["--to"]).resolve()
     if _within(dst, src) or _within(src, dst):
-        print("refused: MIRROR and FOLDER must not be inside one another", file=sys.stderr)
+        print(
+            "refused: MIRROR and FOLDER must not be inside one another", file=sys.stderr
+        )
         return kernel.REFUSED
     wrote, skipped = mirror(src, dst)
     print(f"wrote {wrote} files to {opts['--to']}; skipped {skipped}")

@@ -1985,16 +1985,6 @@
   "tags": "needs-install, offline, read-only, trust"
  },
  {
-  "name": "sbom",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "SBOMs in SPDX or CycloneDX JSON: each component, its version and licence, as passages.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "schema-check",
   "kind": "stdlib",
   "section": "Assistants",

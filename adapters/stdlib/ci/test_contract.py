@@ -200,6 +200,12 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         b'{"ruleId":"py/sql-injection","level":"error","message":{"text":"This query depends on a user-provided value."},"locations":[{"physicalLocation":{"artifactLocation":{"uri":"src/db.py"},"region":{"startLine":42}}}]},'
         b'{"ruleId":"py/other","message":{"markdown":"Plain **md**"}}]}]}'
     )}),
+    "sbom": ("sbom.py", {"sbom.json": (
+        b'{"bomFormat":"CycloneDX","specVersion":"1.5","metadata":{"component":{"name":"garden-app","version":"1.0"}},"components":['
+        b'{"name":"urllib3","version":"2.0.7","purl":"pkg:pypi/urllib3@2.0.7","licenses":[{"expression":"MIT OR Apache-2.0"}]},'
+        b'{"name":"requests","version":"2.31.0","purl":"pkg:pypi/requests@2.31.0","licenses":[{"license":{"id":"Apache-2.0"}}]},'
+        b'{"name":"legacy-lib"},{"group":"org.x","name":"Tool","version":"3","licenses":[{"license":{"name":"Custom"}},5]}]}'
+    )}),
     "notes": ("notes.py", {"garden.md": b"Tomatoes want [[sun]].\n"}),
     "jrnl": ("jrnl.py", {"journal.txt": (
         "[2024-03-03 10:15] Fixed the gate.\nThe hinge wanted oil, not force.\n\n"
