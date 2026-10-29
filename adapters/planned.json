@@ -150,16 +150,6 @@
   "tags": "no-install, online, records, play"
  },
  {
-  "name": "bibtex",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": ".bib files: each reference as a passage, so you can ask which paper said it and get its key.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "bluesky",
   "kind": "stdlib",
   "section": "Reading more kinds of files",

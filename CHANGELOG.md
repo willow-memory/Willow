@@ -10,6 +10,11 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `bibtex`: `.bib` files, each reference as a passage that begins with its
+  citation key, with its title, year, authors, where it appeared, doi,
+  keywords and abstract, so you can ask which paper said it and get the key
+  to cite. `@string` macros are filled in and LaTeX accents are read as the
+  letters they make.
 - `prov`: the record as W3C PROV-JSON, every row an activity and every
   seal traced to its answer, the suggestion it approved, the passages that
   suggestion cites and the person who approved it. A seal that doesn't prove
