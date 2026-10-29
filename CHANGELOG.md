@@ -10,6 +10,10 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `hook-start`: a SessionStart hook that tells the assistant what waits on
+  the person (suggestions to approve, stale answers, dates coming up), read
+  the way `digest` reads it, as the JSON a hook reads. A quiet box prints
+  nothing, and opening a session writes nothing, not even an `out` row.
 - `hook-shell`: a command split the way the shell splits it before a rule
   judges it: quotes, escapes, `$'...'` strings, variables, substitutions,
   `bash -c` and `eval` payloads and `sudo`/`env`/`xargs` wrappers, so `r""m`,

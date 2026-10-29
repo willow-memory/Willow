@@ -266,6 +266,10 @@ willow/
 │   │   │   ├── hook_shell.py   a command split as the shell splits it, quotes, variables and chains included, before a rule judges it
 │   │   │   ├── test_hook_shell.py
 │   │   │   └── README.md
+│   │   ├── hook-start/
+│   │   │   ├── hook_start.py   a SessionStart hook that tells the assistant what waits on the person, read the way digest reads it
+│   │   │   ├── test_hook_start.py
+│   │   │   └── README.md
 │   │   ├── horoscope/
 │   │   │   ├── horoscope.py  a daily reading picked by the SHA-256 of name and date
 │   │   │   ├── test_horoscope.py

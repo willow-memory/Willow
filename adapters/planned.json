@@ -1122,16 +1122,6 @@
   "tags": "no-install, offline, read-only, assistant, hooks"
  },
  {
-  "name": "hook-start",
-  "kind": "stdlib",
-  "section": "Assistants",
-  "line": "A SessionStart hook that hands the assistant what needs you, read the way digest reads it, so opening a session writes nothing.",
-  "source": "bot",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, assistant, hooks"
- },
- {
   "name": "hook-stop",
   "kind": "stdlib",
   "section": "Assistants",

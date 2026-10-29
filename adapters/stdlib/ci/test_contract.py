@@ -178,6 +178,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "bench": ("bench.py", ["run", "--sizes", "20,40"]),
     "hook-leaks": ("hook_leaks.py", ["check", "--from", "{pile}/garden.md"]),
     "hook-shell": ("hook_shell.py", ["split", "ls -la"]),
+    "hook-start": ("hook_start.py", ["--box", "{box}", *NOW]),
     "history": ("history.py", ["--box", "{box}"]),
     "dice": ("dice.py", ["--box", "{box}", "roll", "2d6", *NOW]),
     "hook-fail-closed": ("hook_fail_closed.py", ["--hook", "true"]),

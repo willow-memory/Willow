@@ -18,7 +18,7 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`██████░░░░░░░░░░░░░░` **152 of 470 built** · 419 need no install · 51 need one
+`███████░░░░░░░░░░░░░` **153 of 470 built** · 419 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
@@ -28,7 +28,7 @@ or `writes-output`; its section), and any the card's author adds or changes.
 | Keeping track | 15 | 43 | 58 | 0 |
 | Trust and proof | 18 | 27 | 36 | 9 |
 | Privacy and safety | 10 | 4 | 14 | 0 |
-| Assistants | 20 | 37 | 51 | 6 |
+| Assistants | 21 | 36 | 51 | 6 |
 | Ways to use it | 11 | 28 | 35 | 4 |
 | Play | 7 | 33 | 35 | 5 |
 | For maintainers | 18 | 26 | 39 | 5 |
@@ -47,9 +47,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[words-pt](adapters/stdlib/words-pt/)** — Portuguese common words ("o", "e").
+**[backup](adapters/stdlib/backup/)** — Your record in one zip, every byte and the chain checked before it's kept; never beside your key, and it never reads the key.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 152 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 153 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -398,7 +398,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - [**hook-replay**](adapters/stdlib/hook-replay/) — Every hook's answer kept as a row with the hashes of what it was given and what it said, and check runs it again to prove the same input still gets the same answer. *new* `no-install` `offline` `records` `assistant` `hooks`
 - **hook-sequence** (idea) — Rules over what an assistant did before, not just this call: no push until the tests ran on this commit, at most so many deletions a session, read from the record. *new* `no-install` `offline` `read-only` `assistant` `hooks`
 - [**hook-shell**](adapters/stdlib/hook-shell/) — A command split the way the shell will split it, quotes, variables and chained commands included, before any rule judges it, so a rule can't be dodged by spelling. *new* `no-install` `offline` `read-only` `assistant` `hooks`
-- **hook-start** (idea) — A SessionStart hook that hands the assistant what needs you, read the way digest reads it, so opening a session writes nothing. *bot* `no-install` `offline` `read-only` `assistant` `hooks`
+- [**hook-start**](adapters/stdlib/hook-start/) — A SessionStart hook that hands the assistant what needs you, read the way digest reads it, so opening a session writes nothing. *bot* `no-install` `offline` `read-only` `assistant` `hooks`
 - **hook-stop** (idea) — A Stop hook that won't let an assistant's turn end while the record doesn't verify or its changes aren't committed, and says which. *new* `no-install` `offline` `read-only` `assistant` `hooks`
 - **hook-tiers** (idea) — Edits sorted into tiers by the paths they touch, and the top tier held as a proposal until you seal it, by a rule you can read. *new* `no-install` `offline` `records` `assistant` `hooks`
 - **hooks-elsewhere** (idea) — The prompt hook for Gemini CLI, Codex and opencode, wherever they take hooks, held to Claude Code's answer byte for byte. *box* `no-install` `offline` `records` `assistant` `hooks`
