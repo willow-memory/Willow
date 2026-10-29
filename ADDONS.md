@@ -18,7 +18,7 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`███████░░░░░░░░░░░░░` **159 of 470 built** · 419 need no install · 51 need one
+`███████░░░░░░░░░░░░░` **160 of 470 built** · 419 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
@@ -29,7 +29,7 @@ or `writes-output`; its section), and any the card's author adds or changes.
 | Trust and proof | 18 | 27 | 36 | 9 |
 | Privacy and safety | 10 | 4 | 14 | 0 |
 | Assistants | 18 | 39 | 51 | 6 |
-| Ways to use it | 12 | 27 | 35 | 4 |
+| Ways to use it | 13 | 26 | 35 | 4 |
 | Play | 7 | 33 | 35 | 5 |
 | For maintainers | 18 | 26 | 39 | 5 |
 <!-- /willow:pools -->
@@ -47,9 +47,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[words-nl](adapters/stdlib/words-nl/)** — Dutch common words ("de", "en").
+**[places](adapters/stdlib/places/)** — KML and GeoJSON files: each place's name, note and coordinates as a passage.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 159 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 160 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -439,7 +439,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - **calendar-out** (idea) — Dates coming up as an .ics file your calendar app can subscribe to. *new* `no-install` `offline` `writes-output` `interface`
 - **cloudevents** (idea) — Record rows in the CloudEvents envelope, for any tool that already reads them. *new* `no-install` `offline` `writes-output` `interface`
 - **datasette** (idea) — Your record and approved answers browsable in Datasette, read only: tables, facets and SQL on this machine. Needs Datasette; Apache-2.0. Reaches this machine only. *new* `needs-install` `this-machine` `read-only` `interface`
-- **deep-links** (idea) — Each answer as a link that opens the file at the line (RFC 5147 lines, browser text fragments). *new* `no-install` `offline` `read-only` `interface`
+- [**deep-links**](adapters/stdlib/deep-links/) — Each answer as a link that opens the file at the line (RFC 5147 lines, browser text fragments). *new* `no-install` `offline` `read-only` `interface`
 - **desktop** (idea) — A small window to ask and approve, with nothing to install: Python's own tkinter. *new* `no-install` `offline` `records` `interface`
 - **dictate** (idea) — Ask out loud: your question spoken and turned to text on this machine. Needs faster-whisper; MIT. Goes online: the model, downloaded once. *new* `needs-install` `online` `read-only` `interface`
 - [**emacs**](adapters/stdlib/emacs/) — Answers in an Emacs compilation buffer, each a jump to its file and line. *new* `no-install` `offline` `read-only` `interface`

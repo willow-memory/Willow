@@ -516,16 +516,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "deep-links",
-  "kind": "stdlib",
-  "section": "Ways to use it",
-  "line": "Each answer as a link that opens the file at the line (RFC 5147 lines, browser text fragments).",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, interface"
- },
- {
   "name": "desktop",
   "kind": "stdlib",
   "section": "Ways to use it",

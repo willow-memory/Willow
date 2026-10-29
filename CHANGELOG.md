@@ -10,6 +10,10 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `deep-links`: each approved answer, or each passage a question holds, as
+  links that open the file at the line: a `file://` link with an RFC 5147
+  `#line=` fragment and, with `--base`, a web link with a browser text
+  fragment, encoded as the standards ask. Nothing is opened or written.
 - `rss-out`: your approved answers as an RSS 2.0 feed file, newest first:
   each item's title the answer's first line, its description the answer with
   the reason it was given and the places it cites, its date when you approved
