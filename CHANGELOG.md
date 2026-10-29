@@ -10,6 +10,11 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `why-not`: why a question got "not enough to say": for each word that
+  counts, how many passages hold it; the nearest passages and what they
+  lacked; a close spelling with the words-list line that would teach it; and
+  the kind of file that would have answered. It asks the kernel's way without
+  asking, so nothing is written, not even a record row.
 - `hook-start`: a SessionStart hook that tells the assistant what waits on
   the person (suggestions to approve, stale answers, dates coming up), read
   the way `digest` reads it, as the JSON a hook reads. A quiet box prints

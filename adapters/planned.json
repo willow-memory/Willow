@@ -3136,16 +3136,6 @@
   "tags": "no-install, online, read-only, maintainers"
  },
  {
-  "name": "why-not",
-  "kind": "stdlib",
-  "section": "Finding things",
-  "line": "When the answer is 'not enough to say', which words found nothing, and what kind of file would have answered.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, search"
- },
- {
   "name": "witness",
   "kind": "stdlib",
   "section": "Trust and proof",
