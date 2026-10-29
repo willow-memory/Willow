@@ -10,6 +10,11 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `annotations`: approved answers as W3C Web Annotations in an annotation
+  page: the answer as the body, and a target for each cited passage with its
+  file, its lines as an RFC 5147 fragment and its words as a quote, so an
+  annotation tool can show what your files say beside the page. A citation no
+  longer in your files is left off and said.
 - `ro-crate`: a box snapshot as an RO-Crate research object, a zip a
   repository such as Zenodo can read: every file with its SHA-256, size, kind
   and licence, the record and the approved answers, and the record's tip

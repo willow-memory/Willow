@@ -30,16 +30,6 @@
   "tags": "no-install, offline, writes-output, interface"
  },
  {
-  "name": "annotations",
-  "kind": "stdlib",
-  "section": "Ways to use it",
-  "line": "Approved answers as W3C Web Annotations, so any annotation tool can show what your files say about a page.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, interface"
- },
- {
   "name": "apple-notes",
   "kind": "stdlib",
   "section": "Reading more kinds of files",

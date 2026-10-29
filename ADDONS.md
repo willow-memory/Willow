@@ -18,7 +18,7 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`███████░░░░░░░░░░░░░` **160 of 470 built** · 419 need no install · 51 need one
+`███████░░░░░░░░░░░░░` **161 of 470 built** · 419 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
@@ -29,7 +29,7 @@ or `writes-output`; its section), and any the card's author adds or changes.
 | Trust and proof | 20 | 25 | 36 | 9 |
 | Privacy and safety | 11 | 3 | 14 | 0 |
 | Assistants | 21 | 36 | 51 | 6 |
-| Ways to use it | 11 | 28 | 35 | 4 |
+| Ways to use it | 12 | 27 | 35 | 4 |
 | Play | 7 | 33 | 35 | 5 |
 | For maintainers | 19 | 25 | 39 | 5 |
 <!-- /willow:pools -->
@@ -47,9 +47,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[policy-watch](adapters/stdlib/policy-watch/)** — A terms or policy page fetched each time you run it, by snapshot, and what changed since last time, sentence by sentence, by clauses.
+**[pile-build](adapters/stdlib/pile-build/)** — The store built after each change, behind a lock, until it matches the folder, so your next question finds it warm.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 160 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 161 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -432,7 +432,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 ## Ways to use it
 
 - **anki** (idea) — Approved answers as an Anki deck, built without Anki installed. *new* `no-install` `offline` `writes-output` `interface`
-- **annotations** (idea) — Approved answers as W3C Web Annotations, so any annotation tool can show what your files say about a page. *new* `no-install` `offline` `writes-output` `interface`
+- [**annotations**](adapters/stdlib/annotations/) — Approved answers as W3C Web Annotations, so any annotation tool can show what your files say about a page. *new* `no-install` `offline` `writes-output` `interface`
 - **badge** (idea) — A badge for a page: these answers came from these files and were approved, linked to the check anyone can run. *new* `no-install` `offline` `writes-output` `interface`
 - **braille** (idea) — Answers as braille-ready files (BRF) for a braille display or embosser. *new* `no-install` `offline` `writes-output` `interface`
 - [**browse**](adapters/stdlib/browse/) — Your folder in your web browser: ask, read each answer at its file and line, and approve suggestions with a click, from this machine only. Reaches this machine only. *new* `no-install` `this-machine` `records` `interface` `everyday`

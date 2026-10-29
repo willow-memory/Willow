@@ -84,6 +84,10 @@ willow/
 │   │   │   ├── amounts.py    every sum of money in the files, dated by its line, the date above or the file's name
 │   │   │   ├── test_amounts.py
 │   │   │   └── README.md
+│   │   ├── annotations/
+│   │   │   ├── annotations.py   approved answers as W3C Web Annotations: the answer as the body, each cited passage as a target with its lines and words
+│   │   │   ├── test_annotations.py
+│   │   │   └── README.md
 │   │   ├── backup/
 │   │   │   ├── backup.py     your record in one zip, every byte and the chain checked; never the key
 │   │   │   ├── test_backup.py
