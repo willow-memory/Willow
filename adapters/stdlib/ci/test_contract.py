@@ -206,6 +206,13 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         b'{"name":"requests","version":"2.31.0","purl":"pkg:pypi/requests@2.31.0","licenses":[{"license":{"id":"Apache-2.0"}}]},'
         b'{"name":"legacy-lib"},{"group":"org.x","name":"Tool","version":"3","licenses":[{"license":{"name":"Custom"}},5]}]}'
     )}),
+    "mastodon": ("mastodon.py", {"outbox.json": (
+        b'{"type":"OrderedCollection","orderedItems":['
+        b'{"type":"Create","published":"2024-03-03T19:40:00Z","object":{"type":"Note","summary":"gardening","content":"<p>The slugs are <b>winning</b>.</p>","inReplyTo":"https://x/1",'
+        b'"attachment":[{"type":"Document","mediaType":"image/jpeg","name":"slug on a leaf"},{"type":"Document","mediaType":"video/mp4","name":"clip"},{"mediaType":"image/png"}]}},'
+        b'{"type":"Announce","published":"2024-03-02T10:00:00Z","object":"https://x/2"},'
+        b'{"type":"Create","published":"2024-03-02T08:15:00Z","object":{"type":"Note","content":"<p>Planted out the tomatoes   today.</p>"}}]}'
+    )}),
     "notes": ("notes.py", {"garden.md": b"Tomatoes want [[sun]].\n"}),
     "jrnl": ("jrnl.py", {"journal.txt": (
         "[2024-03-03 10:15] Fixed the gate.\nThe hinge wanted oil, not force.\n\n"

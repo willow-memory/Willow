@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `mastodon`: A Mastodon or Pixelfed account archive's outbox: your own
+  posts, oldest first, as dated lines with content warnings, replies and
+  attachment descriptions; boosts and likes left out.
 - `sbom`: SBOMs in SPDX or CycloneDX JSON: a heading and a line for each
   component with its version, licence and package URL, in name order.
 - `sarif`: SARIF reports from code scanners: each finding as a passage with

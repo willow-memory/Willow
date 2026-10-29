@@ -1238,16 +1238,6 @@
   "tags": "no-install, offline, records, play"
  },
  {
-  "name": "mastodon",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "A Mastodon or Pixelfed account archive's outbox.json: your posts as dated lines.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "matrix",
   "kind": "stdlib",
   "section": "Reading more kinds of files",

@@ -462,6 +462,10 @@ willow/
 │   │   │   ├── mail.py       .eml and .mbox, with sender, date and subject
 │   │   │   ├── test_mail.py
 │   │   │   └── README.md
+│   │   ├── mastodon/
+│   │   │   ├── mastodon.py   your posts as dated lines
+│   │   │   ├── test_mastodon.py
+│   │   │   └── README.md
 │   │   ├── mcp-lite/
 │   │   │   ├── server.py         the mcp add-on's three tools, the protocol by hand, nothing to install
 │   │   │   ├── test_server.py
