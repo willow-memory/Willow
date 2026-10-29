@@ -96,8 +96,9 @@ It also changes three files frozen at freeze 1, `ask.py`, `run.py` and
 gate is changed. The set is committed by the operator, with FROZEN.json
 rebuilt over it.
 
-`spread.py` and `outside.py` are stubs that exit 2. They are not frozen, and
-are written in their own bites.
+`outside.py` is a stub that exits 2; it is not frozen and is written in its
+own bite. **Freeze 3** adds `spread.py` (phase 5, below) to the same file,
+before it is run on any repository; no file frozen earlier is changed.
 
 ### The questions and the flagged-line rule
 
@@ -134,7 +135,8 @@ and exits 0, 42 or 2 as the kernel does.
 | `score.py` | the hit rule below, per answer, with the rank of the first hit and the `path:first-last` ranges that hit. |
 | `origin.py` | for every hit range, `whose.py` at the vulnerable commit: the commit that wrote it, its date, the gap, audit and pull request ids its message cites, and the days before the fix. |
 | `run.py` | `found` (phase 1) and `before` (phase 2): scores the answers, applies the pass rules per kind, writes each rule as a kernel verdict row. |
-| `spread.py`, `outside.py` | not in this bite. |
+| `spread.py` | phase 5: a gap's 16 frozen questions asked of another repository at its HEAD, and the passages several of them reach, written to a private place (below). |
+| `outside.py` | not built yet. |
 
 ### The hit rule
 
@@ -683,8 +685,59 @@ Note that many of these compare two empty lists (the kernel serves a passage
 only if it holds half the question's words), which agree trivially; they also
 agree where it served some.
 
+### Phase 5: spread (the rule; not yet run)
+
+Phase 5 asks the same frozen questions of the fleet's **other** repositories at
+their current HEAD, the way phase 2 asked a whole tree, and records where they
+land. It has **no pass rule**. What it makes is a list of places for a person
+to look at; a *candidate* is a passage several of a gap's questions reach, and
+this study never calls a candidate a flaw. `spread.py` is frozen (freeze 3)
+before it is run on any repository.
+
+For a gap G and a repository R:
+
+1. R's HEAD tree is written as git stores it, vendored folders left out
+   (node_modules, vendor, third_party, venv, .venv, target, dist, build), and
+   indexed afresh, as phase 2 does; the stats row names the git tree hash and
+   the index's SHA-256.
+2. G's 16 questions (both writers) are asked with bm25, top 10, over the whole
+   tree. The kernel's rank and grep are not asked.
+3. A passage is a **candidate** when it is in the top 10 for at least 4 of the
+   16 questions, with at least one question from each writer. The two-writer
+   requirement keeps out a passage reached only through one writer's words.
+4. A candidate row keeps the gap, repository, path, line range, how many
+   questions reached it, which writers, its best rank, the SHA-256 of the
+   passage (never its text), and whether R is the repository G's fix landed
+   in (`own_repo`: a check that the fixed code no longer reads like the gap).
+5. Beside each (gap, repository) the chance: with N passages each question puts
+   a given passage in its top 10 with probability 10/N, so the expected number
+   of passages that reach the top 10 for 4 or more of 16 questions at random is
+   N times P(Binomial(16, 10/N) >= 4), computed exactly. A pair whose count is
+   at or below its chance is marked so. It is still a count, not a verdict.
+   What the chance assumes: that the 16 questions are independent uniform
+   draws of 10 passages from N (they are not: a gap's questions share words and
+   bm25 is not uniform, so real counts run above it); and that it counts 4 of 16
+   from *any* writer, while a candidate needs both, so it is an upper bound on
+   the candidates a random ranking would give. The stats row's
+   `reached_4_any_writer` is the like-for-like count, set beside the chance;
+   `at_or_below_chance` compares the both-writer count and should be read with
+   it.
+
+The number of repositories asked (a number, not their names) is written here
+once the run is done. **Findings are private** until a person has checked each one and any fix has
+landed: the candidates, the gap and repository pairings, the paths and the
+per-repository counts are kept outside this branch. `spread.py` writes to one
+private root only (the `work/private` folder beside this worktree), which may
+not lie inside any git work tree, and refuses an output, index or repository
+path that is not strictly under it, that leads out of it by a link or `..`,
+or that would name the root itself or something above it. It never follows a
+symlink in a repository it reads (each is removed and counted), and it asks
+only the frozen questions: exactly 16 a gap, each file's hash equal to
+FROZEN.json's and recorded in the stats row. Nothing about a result is
+published here.
+
 ### Not run
 
-Phase 5 (spread: the gaps' questions over the other repositories) and phase 6
-(the cpython control, which needs an egress lease) have not run. Nothing here
-claims a result for either.
+Phase 6 (the cpython control, which needs an egress lease) has not run, and
+phase 5 has not yet been run on any repository. Nothing here claims a result
+for either.

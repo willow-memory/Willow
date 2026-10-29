@@ -756,7 +756,7 @@ willow/
 │   │   ├── score.py          the hit rule: php2shell's rule 2, with tests, changelogs and version files left out
 │   │   ├── origin.py         which commit wrote each hit line, when, and what its message cites
 │   │   ├── run.py            scores a phase's answers and writes its pass rules as kernel verdict rows
-│   │   ├── spread.py         not built yet: the questions over the other repositories
+│   │   ├── spread.py         phase 5: the frozen questions asked of another repository, the passages several reach kept as private candidates
 │   │   ├── outside.py        not built yet: the same method on cpython's CVE fixes
 │   │   ├── flag.py           the flagged-line rule for question lines, and how the questions' folders are read
 │   │   ├── questions/

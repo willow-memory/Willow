@@ -1202,8 +1202,381 @@ def test_phase_2_end_to_end_on_a_fixture(tmp_path, capsys, monkeypatch):
     assert out["table"]["bm25, strong"]["file_hits@10"] == 1
 
 
-def test_the_stubs_say_they_are_not_built(capsys):
-    for name in ("spread", "outside"):
-        mod = trees.sibling(name)
-        assert mod.main([]) == 2
-        assert "not in bite 2" in capsys.readouterr().err
+def test_the_stub_says_it_is_not_built(capsys):
+    mod = trees.sibling("outside")
+    assert mod.main([]) == 2
+    assert "not in bite 2" in capsys.readouterr().err
+
+
+# -- phase 5, spread --------------------------------------------------------
+
+
+def make_spread_repo(tmp: Path, name: str = "fixrepo") -> Path:
+    repo = tmp / "repos" / name
+    files = {
+        "docs/a.md": "zebraword alpha notes thing\n",
+        "docs/b.md": "quokkaword beta notes thing\n",
+        "docs/c.md": "yakword gamma notes thing\n",
+        "docs/d.md": "ibexword delta notes thing\n",
+        "node_modules/pkg/e.md": "zebraword inside a vendored folder\n",
+    }
+    for rel, text in files.items():
+        (repo / rel).parent.mkdir(parents=True, exist_ok=True)
+        (repo / rel).write_text(text)
+    git(repo, "init", "-q", "-b", "main")
+    git(repo, "add", "-A")
+    git(repo, "commit", "-qm", "fixture", date="2026-01-01T12:00:00+00:00")
+    return repo
+
+
+def spread_questions(tmp: Path, local: list, claude: list) -> Path:
+    q = tmp / "q"
+    for w, lines in (("local", local), ("claude", claude)):
+        (q / w).mkdir(parents=True, exist_ok=True)
+        (q / w / "KG01.txt").write_text("# header\n" + "\n".join(lines) + "\n")
+    return q
+
+
+def ask_about(word: str) -> str:
+    return f"What about {word} please?"
+
+
+def threshold_questions(tmp: Path) -> Path:
+    """zebra: 2 local + 2 claude (4, both writers); quokka: 4 local (4, one
+    writer); yak: 1 local + 2 claude (3); ibex: 1 local + 3 claude (4, one
+    local, the least both writers allow)."""
+    local = ([ask_about("zebraword")] * 2 + [ask_about("quokkaword")] * 4
+             + [ask_about("yakword")] + [ask_about("ibexword")])  # fmt: skip
+    claude = ([ask_about("zebraword")] * 2 + [ask_about("yakword")] * 2
+              + [ask_about("ibexword")] * 3 + ["qqqq zzzz"] * 1)  # fmt: skip
+    assert len(local) == len(claude) == 8
+    return spread_questions(tmp, local, claude)
+
+
+def test_a_candidate_needs_four_questions_and_both_writers(tmp_path):
+    spread = trees.sibling("spread")
+    repo = make_spread_repo(tmp_path)
+    q = threshold_questions(tmp_path)
+    rows, stats = spread.spread_repo(repo, ["KG01"], q, tmp_path / "ix" / "fixrepo", {})
+    assert [(r["path"], r["questions"], r["writers"]) for r in rows] == [
+        ("docs/a.md", 4, ["claude", "local"]),
+        ("docs/d.md", 4, ["claude", "local"]),
+    ]  # quokka reached 4 times by one writer, yak 3 times: neither is one
+    assert all(r["best_rank"] == 1 and r["gap"] == "KG01" and r["repo"] == "fixrepo"
+               for r in rows)  # fmt: skip
+    assert all(len(r["sha256"]) == 64 and "text" not in r for r in rows)
+    s = stats[0]
+    assert (
+        s["candidates"] == 2 and s["passages"] == 4 and s["reached_4_any_writer"] == 3
+    )
+    assert s["chance"] == 4.0 and s["at_or_below_chance"] is True
+    assert s["skipped"] == [
+        "node_modules"
+    ]  # the vendored copy of zebraword is not asked
+    assert (
+        len(s["head"]) == 40 and len(s["tree"]) == 40 and len(s["index_sha256"]) == 64
+    )
+
+
+def test_the_top_ten_is_the_limit(tmp_path):
+    spread = trees.sibling("spread")
+    repo = tmp_path / "repos" / "crowd"
+    for n in range(12):  # twelve passages hold the word; a question reaches ten
+        (repo / f"f{n}.md").parent.mkdir(parents=True, exist_ok=True)
+        (repo / f"f{n}.md").write_text(f"commonword number {n} here\n")
+    git(repo, "init", "-q", "-b", "main")
+    git(repo, "add", "-A")
+    git(repo, "commit", "-qm", "crowd", date="2026-01-01T12:00:00+00:00")
+    q = spread_questions(
+        tmp_path, [ask_about("commonword")] * 8, [ask_about("commonword")] * 8
+    )
+    rows, stats = spread.spread_repo(repo, ["KG01"], q, tmp_path / "ix" / "crowd", {})
+    assert len(rows) == 10 and {r["questions"] for r in rows} == {16}
+    assert {r["best_rank"] for r in rows} == set(range(1, 11))
+    assert stats[0]["passages"] == 12
+
+
+def test_the_chance_is_exact(tmp_path):
+    spread = trees.sibling("spread")
+
+    def brute(n):  # every pattern of the 16 questions that reach a passage
+        p = min(1, 10 / n)
+        total = 0.0
+        for pattern in range(1 << 16):
+            k = bin(pattern).count("1")
+            if k >= 4:
+                total += p**k * (1 - p) ** (16 - k)
+        return n * total
+
+    for n in (5, 12, 40, 1000):
+        assert spread.chance(n) == pytest.approx(brute(n), rel=1e-9), n
+    assert spread.chance(5) == pytest.approx(5.0)  # ten reach every passage of five
+    assert spread.chance(0) == 0.0
+    assert 0 < spread.chance(1000) < 1  # a big tree: well under one passage by luck
+
+
+def test_own_repo_is_marked_for_the_repository_the_fix_landed_in(tmp_path):
+    spread = trees.sibling("spread")
+    pins = trees.load_pins()
+    assert spread.own_repo("KG01", "kartikeya", pins)
+    assert not spread.own_repo("KG01", "willow-mcp", pins)
+    assert spread.own_repo("KG03", "kartikeya", pins) and spread.own_repo(
+        "KG03", "willow-mcp", pins
+    )
+    assert not spread.own_repo("KG08", "kartikeya", pins) and spread.own_repo(
+        "KG08", "willow-bot", pins
+    )
+    repo = make_spread_repo(tmp_path)
+    q = threshold_questions(tmp_path)
+    fixture = {"KG01": {"gap": "KG01", "repo": "fixrepo"}}
+    rows, stats = spread.spread_repo(
+        repo, ["KG01"], q, tmp_path / "ix1" / "fixrepo", fixture
+    )
+    assert rows and all(r["own_repo"] for r in rows) and stats[0]["own_repo"] is True
+    elsewhere = {"KG01": {"gap": "KG01", "repo": "somewhere-else"}}
+    rows, stats = spread.spread_repo(
+        repo, ["KG01"], q, tmp_path / "ix2" / "fixrepo", elsewhere
+    )
+    assert (
+        rows and not any(r["own_repo"] for r in rows) and stats[0]["own_repo"] is False
+    )
+
+
+def spread_run(repo, root, *extra):
+    """spread.main on the frozen questions, one private root."""
+    spread = trees.sibling("spread")
+    out = root / "candidates.jsonl"
+    return spread.main(["--repo", str(repo), "--gap", "KG01", "--out", str(out),
+                        "--private", str(root), *extra])  # fmt: skip
+
+
+def test_findings_go_to_the_one_private_root_and_the_frozen_questions(tmp_path, capsys):
+    spread = trees.sibling("spread")
+    repo = make_spread_repo(tmp_path)
+    root = tmp_path / "work" / "private"
+    assert spread_run(repo, root) == 0
+    stats = [json.loads(x) for x in (root / "stats.jsonl").read_text().splitlines()]
+    assert len(stats) == 1 and stats[0]["question_count"] == 16
+    frozen = json.loads(FROZEN_FILE.read_text())["files"]
+    assert stats[0]["questions_sha256"] == {
+        f"{w}/KG01.txt": frozen[f"questions/{w}/KG01.txt"] for w in ("local", "claude")
+    }  # the files the freeze holds, named by hash
+    assert stats[0]["symlinks_skipped"] == 0
+    assert spread_run(repo, root) == 0  # appended, not rewritten
+    assert len((root / "stats.jsonl").read_text().splitlines()) == 2
+    # the default root is the one beside this worktree, never a path of the caller's
+    assert spread.DEFAULT_ROOT == trees.ROOT.parent / "work" / "private"
+    capsys.readouterr()
+    assert spread.main([]) == 2 and spread.main(["--repo", str(repo)]) == 2
+    code = spread.main(["--repo", str(repo), "--gap", "KG99", "--out", str(root / "c.jsonl"),
+                        "--private", str(root)])  # fmt: skip
+    assert code == 2
+
+
+def test_every_output_lies_strictly_under_the_root_and_in_no_git_work_tree(
+    tmp_path, capsys
+):
+    spread = trees.sibling("spread")
+    repo = make_spread_repo(tmp_path)
+    root = tmp_path / "work" / "private"
+    assert spread_run(repo, root) == 0
+    outside = tmp_path / "elsewhere"
+    outside.mkdir()
+    (root / "lnk").symlink_to(outside)  # a link under the root that leaves it
+    other = make_spread_repo(tmp_path, "other")
+    main_checkout = Path(subprocess.run(
+        ["git", "rev-parse", "--git-common-dir"], cwd=trees.ROOT, capture_output=True,
+        text=True, check=True).stdout.strip()).resolve().parent  # fmt: skip
+    capsys.readouterr()
+    base = ["--repo", str(repo), "--gap", "KG01", "--private", str(root)]
+    bad_outs = [
+        tmp_path / "candidates.jsonl",  # not under the root
+        root,  # the root itself
+        root / "lnk" / "c.jsonl",  # a link out of the root
+        root / ".." / "c.jsonl",  # a dot-dot out of it
+        trees.ROOT / "c.jsonl",  # inside this worktree
+    ]
+    for bad in bad_outs:
+        assert spread.main([*base, "--out", str(bad)]) == 2, bad
+        assert "refused" in capsys.readouterr().err
+    for flag_ in ("--stats", "--ix"):  # each option is held to the same root
+        for bad in (tmp_path / "x", root / "lnk" / "x", root):
+            code = spread.main([*base, "--out", str(root / "c.jsonl"), flag_, str(bad)])
+            assert code == 2, (flag_, bad)
+    assert (
+        not (outside / "c.jsonl").exists()
+        and not (tmp_path / "candidates.jsonl").exists()
+    )
+    # a root inside a git work tree is refused, whatever its name: the scanned
+    # repository's own work/private, another repository's, and the main checkout's
+    for bad_root in (repo / "work" / "private", other / "work" / "private",
+                     main_checkout / "work" / "private"):  # fmt: skip
+        code = spread.main(["--repo", str(repo), "--gap", "KG01", "--private", str(bad_root),
+                            "--out", str(bad_root / "c.jsonl")])  # fmt: skip
+        assert code == 2, bad_root
+        assert "git work tree" in capsys.readouterr().err
+        assert not (bad_root / "c.jsonl").exists()
+    assert not (repo / "work").exists() and not (other / "work").exists()
+
+
+def test_the_git_environment_cannot_switch_off_the_work_tree_refusal(
+    tmp_path, capsys, monkeypatch
+):
+    spread = trees.sibling("spread")
+    repo = make_spread_repo(tmp_path)
+    main_checkout = Path(subprocess.run(
+        ["git", "rev-parse", "--git-common-dir"], cwd=trees.ROOT, capture_output=True,
+        text=True, check=True).stdout.strip()).resolve().parent  # fmt: skip
+    bare = tmp_path / "bare.git"
+    git(tmp_path, "init", "-q", "--bare", str(bare))
+    target = main_checkout / "work" / "private"
+    assert spread.in_git_tree(target)  # the plain answer
+    # GIT_DIR at a bare repository made `git rev-parse --show-toplevel` fail
+    # everywhere, and a ceiling can hide the checkout: neither may matter
+    monkeypatch.setenv("GIT_DIR", str(bare))
+    monkeypatch.setenv("GIT_CEILING_DIRECTORIES", str(main_checkout))
+    assert spread.in_git_tree(target)
+    assert spread.in_git_tree(repo / "work" / "private")
+    with pytest.raises(ValueError, match="git work tree"):
+        spread.private_root(target)  # as the root
+    fake_root = repo / "work" / "private"  # a root's output that is in a work tree
+    with pytest.raises(ValueError, match="git work tree"):
+        spread.under(fake_root, fake_root / "c.jsonl")  # as an output
+    root = tmp_path / "work" / "private"
+    capsys.readouterr()
+    code = spread.main(["--repo", str(repo), "--gap", "KG01", "--private", str(target),
+                        "--out", str(target / "c.jsonl")])  # fmt: skip
+    assert code == 2 and "git work tree" in capsys.readouterr().err
+    assert not (main_checkout / "work" / "private" / "c.jsonl").exists()
+    # a run itself is unaffected by the variables, which it removes
+    monkeypatch.setenv("GIT_DIR", str(bare))
+    assert spread_run(repo, root) == 0
+    assert "GIT_DIR" not in os.environ
+
+
+def test_the_private_root_must_be_an_absolute_path(tmp_path, capsys, monkeypatch):
+    spread = trees.sibling("spread")
+    repo = make_spread_repo(tmp_path)
+    work = tmp_path / "cwd"
+    work.mkdir()
+    monkeypatch.chdir(
+        work
+    )  # a folder in no git work tree: a relative root would work there
+    capsys.readouterr()
+    code = spread.main(["--repo", str(repo), "--gap", "KG01", "--private", "work/private",
+                        "--out", str(work / "work" / "private" / "c.jsonl")])  # fmt: skip
+    assert code == 2 and "absolute" in capsys.readouterr().err
+    assert not (work / "work").exists()
+    with pytest.raises(ValueError, match="absolute"):
+        spread.private_root(Path("work/private"))
+
+
+def test_the_stats_row_names_the_freeze_it_read(tmp_path):
+    repo = make_spread_repo(tmp_path)
+    root = tmp_path / "work" / "private"
+    assert spread_run(repo, root) == 0
+    stats = [json.loads(x) for x in (root / "stats.jsonl").read_text().splitlines()]
+    assert (
+        stats[0]["frozen_json_sha256"]
+        == hashlib.sha256(FROZEN_FILE.read_bytes()).hexdigest()
+    )
+
+
+def test_a_repo_that_would_name_the_private_root_is_refused(
+    tmp_path, capsys, monkeypatch
+):
+    spread = trees.sibling("spread")
+    repo = make_spread_repo(tmp_path)
+    root = tmp_path / "work" / "private"
+    assert spread_run(repo, root) == 0
+    (root / "keep.jsonl").write_text("keep\n")
+    before = sorted(p.name for p in root.iterdir())
+    capsys.readouterr()
+    monkeypatch.chdir(tmp_path)
+    for arg in (str(repo / "docs" / ".."),  # ends in ..: its name is ".."
+                ".",  # an empty name
+                "..",
+                str(root),  # the private root
+                str(root / "ix-spread"),  # inside it
+                str(tmp_path / "work"),  # above it
+                str(tmp_path)):  # fmt: skip
+        assert spread_run(arg, root) == 2, arg
+        assert "refused" in capsys.readouterr().err
+    assert sorted(p.name for p in root.iterdir()) == before  # nothing was replaced
+    assert (root / "keep.jsonl").read_text() == "keep\n"
+    assert (root / "ix-spread").is_dir()
+    # a repository spelt with a dot is only that repository, and is asked
+    assert spread.repo_path(str(repo) + "/.", root) == repo.resolve()
+
+
+def test_a_symlink_in_a_repository_is_never_followed(tmp_path):
+    spread = trees.sibling("spread")
+    secret = tmp_path / "secret.txt"
+    secret.write_text("zebraword leaked from outside the repository\n")
+    repo = make_spread_repo(tmp_path)
+    (repo / "link.md").symlink_to(secret)  # a link to a file outside
+    (repo / "linkdir").symlink_to(tmp_path / "repos")  # a link to a folder
+    git(repo, "add", "-A")
+    git(repo, "commit", "-qm", "links", date="2026-01-02T12:00:00+00:00")
+    q = threshold_questions(tmp_path)
+    ix = tmp_path / "work" / "private" / "ix" / "fixrepo"
+    rows, stats = spread.spread_repo(repo, ["KG01"], q, ix, {})
+    assert stats[0]["symlinks_skipped"] == 2 and stats[0]["passages"] == 4
+    index = trees.sibling("ask").scan.Index(ix)
+    assert not any("leaked" in c["text"] for c in index.pile)
+    assert not any(c["path"].startswith("link") for c in index.pile)
+    # the zebra passage was not made a second one by the link: still 4 questions
+    assert [(r["path"], r["questions"]) for r in rows] == [
+        ("docs/a.md", 4),
+        ("docs/d.md", 4),
+    ]
+
+
+def test_the_question_set_is_the_frozen_one_or_nothing(tmp_path, capsys, monkeypatch):
+    spread = trees.sibling("spread")
+    repo = make_spread_repo(tmp_path)
+    root = tmp_path / "work" / "private"
+    # a copy of the questions with one word changed is refused, and nothing is written
+    copy = tmp_path / "qcopy"
+    shutil.copytree(spread.QDIR, copy)
+    victim = copy / "local" / "KG01.txt"
+    victim.write_text(
+        victim.read_text() + "# edited\n"
+    )  # a header line: same questions
+    monkeypatch.setattr(spread, "QDIR", copy)
+    capsys.readouterr()
+    assert spread_run(repo, root) == 2
+    assert "FROZEN.json" in capsys.readouterr().err
+    assert not (root / "candidates.jsonl").exists()
+    monkeypatch.undo()
+    # there is no option to name another set
+    assert spread.main(["--repo", str(repo), "--gap", "KG01", "--out", str(root / "c.jsonl"),
+                        "--private", str(root), "--questions", str(tmp_path / "q")]) == 2  # fmt: skip
+    # and the library refuses a gap whose questions are not 16, 8 a writer
+    short = spread_questions(tmp_path / "short", ["one"] * 7, ["two"] * 8)
+    with pytest.raises(ValueError, match="not 16"):
+        spread.spread_repo(repo, ["KG01"], short, tmp_path / "ix" / "fixrepo", {})
+    lopsided = spread_questions(tmp_path / "lop", ["one"] * 9, ["two"] * 7)
+    with pytest.raises(ValueError, match="not 16"):
+        spread.spread_repo(repo, ["KG01"], lopsided, tmp_path / "ix" / "fixrepo", {})
+
+
+def test_an_unreachable_repository_is_listed_and_exits_42(tmp_path):
+    root = tmp_path / "work" / "private"
+    nothing = tmp_path / "repos" / "nothing"
+    nothing.mkdir(parents=True)
+    plain = tmp_path / "repos" / "plain"
+    plain.mkdir()
+    for repo in (nothing, plain, tmp_path / "repos" / "missing"):
+        assert spread_run(repo, root) == 42, repo
+    stats = [json.loads(x) for x in (root / "stats.jsonl").read_text().splitlines()]
+    assert len(stats) == 3 and all(
+        "unreachable" in s and "candidates" not in s for s in stats
+    )
+    assert (root / "candidates.jsonl").read_text() == ""
+
+
+def test_the_vendored_folders_are_left_out():
+    spread = trees.sibling("spread")
+    assert spread.SKIP_DIRS == {".git", "node_modules", "vendor", "third_party", "venv",
+                                ".venv", "target", "dist", "build"}  # fmt: skip

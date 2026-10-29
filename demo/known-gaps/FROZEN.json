@@ -36,7 +36,8 @@
   "questions/local/KG10.txt": "f1b5bcb2ade71b21ee2c24b7048d775c39a0676630783879e98321f1fee84422",
   "questions/local/KG11.txt": "169682dc7fb8b6da046dfdc315884b7121deb20246382262be3b2f85d2fef401",
   "questions/local/KG12.txt": "0e3f310cc2d6396ede7a8a5430d71ec4a4c97f6257d613a34206dbbda019ec69",
-  "questions/null/null.txt": "11a3b356f089f34f70535f2f3b66ed94c088ac78fe1b3d335a60594ee326e843"
+  "questions/null/null.txt": "11a3b356f089f34f70535f2f3b66ed94c088ac78fe1b3d335a60594ee326e843",
+  "spread.py": "144ee1accea0dd13ee285cbd7c258d0603e6311ea67007c2f3d9a775bdfb7c01"
  },
  "tools_at_freeze": {
   "kernel.py": "be6e99a1952d0cb347b0028071b98258e3e69502c21f7ee715557b0ed3145a0d",
@@ -58,6 +59,7 @@
   "tools_at_freeze": "2026-10-28: the php2shell modules the rule and statistics run on, and the tools they lean on, by import graph (Loki's audit)",
   "freeze 2": "2026-10-28, before any question was asked of any code: the blind questions (local and claude writers, 12 gaps each; the null set; the writers' input), the flagged-line rule (flag.py), and ask.py, run.py and score.py reading the questions per writer and tallying them for phase 4",
   "flag.py": "2026-10-28, freeze 2: the rule that flags question lines holding identifiers, fixed on the counts local 48 of 96, claude 1 of 96, null 0 of 50",
-  "questions/": "2026-10-28, freeze 2: byte for byte the unedited output of the blind writers, headers included"
+  "questions/": "2026-10-28, freeze 2: byte for byte the unedited output of the blind writers, headers included",
+  "spread.py": "2026-10-28, freeze 3, before it was run on any repository: phase 5, the candidate rule (top 10 by bm25, at least 4 of a gap's 16 questions, at least one from each writer) with its exact chance, findings written only to a private place"
  }
 }
