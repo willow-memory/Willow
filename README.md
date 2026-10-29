@@ -7,7 +7,8 @@
 **Ask questions of your own files, and get back only what you wrote or what
 you approved.**
 
-*A pure kernel for private knowledge, plus the add-ons you choose.*
+*A pure kernel for private knowledge, plus the add-ons you choose.
+Plant it and everything grows.*
 
 willow is two things:
 
@@ -23,9 +24,10 @@ willow is two things:
    approved answers honest, and let AI assistants hand in suggestions they can
    never approve themselves. [See every add-on.](ADDONS.md)
 
-Run the kernel alone, or assemble your own local stack. The arrow points one
-way: an add-on uses the kernel, and the kernel never names an add-on, so it
-runs the same if you delete every one.
+Run the kernel alone, or assemble your own local stack. The kernel is the
+seed: complete on its own, and it needs nothing from what grows from it. The
+arrow points one way: an add-on uses the kernel, and the kernel never names an
+add-on, so it runs the same if you delete every one.
 
 - **One file, no dependencies:** Python 3.9 or newer, standard library only.
   Copy `kernel.py` anywhere and run it.
