@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `foia`: Freedom-of-information requests from your notes: who you asked,
+  when, when an answer is due (a date you wrote, or the time the law you name
+  gives), and which are answered.
 - `syllabus`: A course syllabus as dates: the readings, assignments and exams
   that fall due, soonest first, each cited and measured from today.
 - `livestock`: Each animal's births, treatments and sales from your farm

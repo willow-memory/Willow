@@ -560,16 +560,6 @@
   "tags": "no-install, offline, records, tracking"
  },
  {
-  "name": "foia",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "Freedom-of-information requests: what you asked, when, and when the answer is due by law.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
- },
- {
   "name": "food-log",
   "kind": "stdlib",
   "section": "Keeping track",
