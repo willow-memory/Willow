@@ -269,6 +269,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "hook-compact": ("hook_compact.py", ["--box", "{box}"]),
     "hook-guard": ("hook_guard.py", ["rules"]),
     "hook-impact": ("hook_impact.py", ["check", "--box", "{box}", "{pile}/garden.md"]),
+    "hook-stop": ("hook_stop.py", ["check", "--box", "{box}", "--repo", "{tmp}"]),
     "history": ("history.py", ["--box", "{box}"]),
     "dice": ("dice.py", ["--box", "{box}", "roll", "2d6", *NOW]),
     "hook-fail-closed": ("hook_fail_closed.py", ["--hook", "true"]),

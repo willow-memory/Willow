@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `hook-stop`: A Stop hook that won't let an assistant's turn end while the
+  record doesn't verify or the repository has uncommitted work, and says
+  which; it lets go once it has already held the turn.
 - `hook-impact`: A PreToolUse hook that, before an edit, hands the assistant
   every place in the person's files that names the file by its whole name, by
   file and line; it never blocks.

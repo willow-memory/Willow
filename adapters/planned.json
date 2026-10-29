@@ -922,16 +922,6 @@
   "tags": "no-install, offline, read-only, assistant, hooks"
  },
  {
-  "name": "hook-stop",
-  "kind": "stdlib",
-  "section": "Assistants",
-  "line": "A Stop hook that won't let an assistant's turn end while the record doesn't verify or its changes aren't committed, and says which.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, assistant, hooks"
- },
- {
   "name": "hook-tiers",
   "kind": "stdlib",
   "section": "Assistants",
