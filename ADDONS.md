@@ -18,12 +18,12 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`███████░░░░░░░░░░░░░` **154 of 470 built** · 419 need no install · 51 need one
+`███████░░░░░░░░░░░░░` **155 of 470 built** · 419 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
 | Reading more kinds of files | 14 | 91 | 96 | 9 |
-| Finding things | 25 | 18 | 33 | 10 |
+| Finding things | 26 | 17 | 33 | 10 |
 | Your own words | 15 | 10 | 22 | 3 |
 | Keeping track | 15 | 43 | 58 | 0 |
 | Trust and proof | 18 | 27 | 36 | 9 |
@@ -47,9 +47,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[first-mention](adapters/stdlib/first-mention/)** — When your files first mention something, and the line that does.
+**[in-toto](adapters/stdlib/in-toto/)** — A sealed answer exported as an in-toto Statement, the envelope SLSA uses, so others can check it.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 154 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 155 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -176,7 +176,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - [**codeowners**](adapters/stdlib/codeowners/) — Who owns this file: the CODEOWNERS rule that matches it, cited by line, on GitHub, GitLab and Forgejo alike. *new* `no-install` `offline` `read-only` `search`
 - **crosswalk** (idea) — The outside IDs a passage points to (Wikidata, DOI, ORCID, GeoNames) kept beside it, so your notes join the world's. *new* `no-install` `offline` `writes-output` `search`
 - [**duplicates**](adapters/stdlib/duplicates/) — Passages that say the same thing in two files, and which one is newer. *new* `no-install` `offline` `read-only` `search`
-- **fair-merge** (idea) — Each folder or repo ranked on its own and the lists merged in turns, so a large corpus can't push a small one out on volume alone, and a source that found nothing says so. *bot* `no-install` `offline` `read-only` `search` `pile`
+- [**fair-merge**](adapters/stdlib/fair-merge/) — Each folder or repo ranked on its own and the lists merged in turns, so a large corpus can't push a small one out on volume alone, and a source that found nothing says so. *bot* `no-install` `offline` `read-only` `search` `pile`
 - [**first-mention**](adapters/stdlib/first-mention/) — When your files first mention something, and the line that does. *new* `no-install` `offline` `read-only` `search`
 - [**fuzzy-dates**](adapters/stdlib/fuzzy-dates/) — Dates that admit doubt ('about 1880', 'sometime in March') read and kept with their doubt, in EDTF. *new* `no-install` `offline` `read-only` `search`
 - [**index-cache**](adapters/stdlib/index-cache/) — The box's index kept between runs and checked against each file's hash, so a question doesn't re-read the folder unless the folder changed. *new* `no-install` `offline` `writes-output` `search` `index`

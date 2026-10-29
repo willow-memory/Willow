@@ -660,16 +660,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "fair-merge",
-  "kind": "stdlib",
-  "section": "Finding things",
-  "line": "Each folder or repo ranked on its own and the lists merged in turns, so a large corpus can't push a small one out on volume alone, and a source that found nothing says so.",
-  "source": "bot",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, search, pile"
- },
- {
   "name": "family-box",
   "kind": "stdlib",
   "section": "Trust and proof",

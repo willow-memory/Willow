@@ -213,6 +213,10 @@ willow/
 │   │   │   ├── export.py     approved answers and the question log, as Markdown or CSV
 │   │   │   ├── test_export.py
 │   │   │   └── README.md
+│   │   ├── fair-merge/
+│   │   │   ├── fair_merge.py   each folder ranked on its own and the lists dealt out in turns, so a large corpus can't bury a small one
+│   │   │   ├── test_fair_merge.py
+│   │   │   └── README.md
 │   │   ├── first-mention/
 │   │   │   ├── first_mention.py  when the files first mention something: the earliest dated line that holds every word
 │   │   │   ├── test_first_mention.py

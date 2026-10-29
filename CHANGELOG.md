@@ -10,6 +10,10 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `fair-merge`: each folder of a pile ranked on its own by the kernel and the
+  lists dealt out in turns, so a large corpus can't push a small one out on
+  volume alone; a source that found nothing says so, and one with more says
+  how many. Nothing is written.
 - `why-not`: why a question got "not enough to say": for each word that
   counts, how many passages hold it; the nearest passages and what they
   lacked; a close spelling with the words-list line that would teach it; and
