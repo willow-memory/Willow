@@ -2384,16 +2384,6 @@
   "tags": "no-install, offline, records, play"
  },
  {
-  "name": "rss-out",
-  "kind": "stdlib",
-  "section": "Ways to use it",
-  "line": "New approved answers as an RSS feed file, for any feed reader.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, interface"
- },
- {
   "name": "rubric",
   "kind": "stdlib",
   "section": "Keeping track",

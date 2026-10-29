@@ -10,6 +10,11 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `rss-out`: your approved answers as an RSS 2.0 feed file, newest first:
+  each item's title the answer's first line, its description the answer with
+  the reason it was given and the places it cites, its date when you approved
+  it. `--since` keeps only what is new. A forged approval is never in it, a
+  changed proposal is left out and said.
 - `evernote`: Evernote's .enex files, each note as a paragraph with its
   title, notebook (the export file's name), dates, tags, source and
   attachment names, then its text with lists, checkboxes and tables read as

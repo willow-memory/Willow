@@ -18,7 +18,7 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`███████░░░░░░░░░░░░░` **158 of 470 built** · 419 need no install · 51 need one
+`███████░░░░░░░░░░░░░` **159 of 470 built** · 419 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
@@ -29,7 +29,7 @@ or `writes-output`; its section), and any the card's author adds or changes.
 | Trust and proof | 18 | 27 | 36 | 9 |
 | Privacy and safety | 10 | 4 | 14 | 0 |
 | Assistants | 18 | 39 | 51 | 6 |
-| Ways to use it | 11 | 28 | 35 | 4 |
+| Ways to use it | 12 | 27 | 35 | 4 |
 | Play | 7 | 33 | 35 | 5 |
 | For maintainers | 18 | 26 | 39 | 5 |
 <!-- /willow:pools -->
@@ -47,9 +47,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[habits](adapters/stdlib/habits/)** — Streaks from the lines you write each day: how many days in a row, and which you missed.
+**[words-nl](adapters/stdlib/words-nl/)** — Dutch common words ("de", "en").
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 158 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 159 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -457,7 +457,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - [**print**](adapters/stdlib/print/) — An answer as a printable page with its sources, to take to an appointment; --large for big, high-contrast type. *new* `no-install` `offline` `records` `interface` `everyday`
 - **qr** (idea) — An answer as a QR code on screen, to carry it to your phone without the network. *new* `no-install` `offline` `read-only` `interface`
 - [**repo-pile**](adapters/stdlib/repo-pile/) — Public repositories made into a box you can ask: cloned, kept only under a licence an Apache-2.0 project can use, their docs the pile, indexed for fast questions. Goes online: github.com (or the --source you give), to clone the repositories you list. *new* `no-install` `online` `records` `interface` `research`
-- **rss-out** (idea) — New approved answers as an RSS feed file, for any feed reader. *new* `no-install` `offline` `writes-output` `interface`
+- [**rss-out**](adapters/stdlib/rss-out/) — New approved answers as an RSS feed file, for any feed reader. *new* `no-install` `offline` `writes-output` `interface`
 - **safe-app** (idea) — willow as a SAFE app: installed from the SAFE App Store, authorized per session, and deleted clean. *new* `no-install` `offline` `read-only` `interface`
 - **share** (idea) — One sealed answer to send someone, checkable by them, without giving them the folder. *new* `no-install` `offline` `writes-output` `interface`
 - [**shell**](adapters/stdlib/shell/) — A willow command and tab completion for bash, zsh, fish and PowerShell, on Linux, macOS and Windows. *new* `no-install` `offline` `records` `interface`
