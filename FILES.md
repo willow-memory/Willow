@@ -474,6 +474,10 @@ willow/
 │   │   │   ├── mail.py       .eml and .mbox, with sender, date and subject
 │   │   │   ├── test_mail.py
 │   │   │   └── README.md
+│   │   ├── man-pages/
+│   │   │   ├── man_pages.py   man pages as plain text
+│   │   │   ├── test_man_pages.py
+│   │   │   └── README.md
 │   │   ├── mastodon/
 │   │   │   ├── mastodon.py   your posts as dated lines
 │   │   │   ├── test_mastodon.py

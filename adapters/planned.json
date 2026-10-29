@@ -1167,16 +1167,6 @@
   "tags": "needs-install, offline, read-only, play"
  },
  {
-  "name": "man-pages",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "The man pages installed on this machine as plain text, so you can ask your own system's docs.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "manifests",
   "kind": "deps",
   "section": "Reading more kinds of files",

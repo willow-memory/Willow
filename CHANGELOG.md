@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `man-pages`: The man pages installed on this machine, gzipped or not, as
+  plain text: title, section headings and the words with fonts, escapes and
+  the usual macros read; comments and macro definitions dropped.
 - `lockfiles`: Lockfiles (package-lock.json, yarn.lock, pnpm-lock.yaml,
   Cargo.lock, poetry.lock, uv.lock, go.sum): a heading and a line for each
   locked package and version, in name order.

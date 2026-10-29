@@ -233,6 +233,10 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         b'{"lockfileVersion":3,"packages":{"":{"name":"app","version":"1.0.0"},"node_modules/lodash":{"version":"4.17.21","resolved":"x","integrity":"y"},'
         b'"node_modules/left-pad":{"version":"1.3.0"},"node_modules/a/node_modules/left-pad":{"version":"0.0.3"},"node_modules/@scope/pkg":{"version":"2.0.0"},"node_modules/bad":{}}}'
     )}),
+    "man-pages": ("man_pages.py", {"ls.1": (
+        b'.\\" a comment\n.TH LS 1 "March 2024" "coreutils" "User Commands"\n.SH NAME\nls \\- list directory contents\n.SH SYNOPSIS\n.B ls\n[\\fIOPTION\\fR]... [\\fIFILE\\fR]...\n'
+        b'.SH DESCRIPTION\nList information about the \\fBFILE\\fRs.\n.TP\n.BR \\-a ", " \\-\\-all\ndo not ignore entries starting with \\&.\n.PP\nSecond \\(em paragraph.\n'
+    )}),
     "notes": ("notes.py", {"garden.md": b"Tomatoes want [[sun]].\n"}),
     "jrnl": ("jrnl.py", {"journal.txt": (
         "[2024-03-03 10:15] Fixed the gate.\nThe hinge wanted oil, not force.\n\n"
