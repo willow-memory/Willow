@@ -18,11 +18,11 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`█████████░░░░░░░░░░░` **204 of 470 built** · 419 need no install · 51 need one
+`█████████░░░░░░░░░░░` **205 of 470 built** · 419 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
-| Reading more kinds of files | 24 | 81 | 96 | 9 |
+| Reading more kinds of files | 25 | 80 | 96 | 9 |
 | Finding things | 26 | 17 | 33 | 10 |
 | Your own words | 16 | 9 | 22 | 3 |
 | Keeping track | 35 | 23 | 58 | 0 |
@@ -47,9 +47,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[annotations](adapters/stdlib/annotations/)** — Approved answers as W3C Web Annotations, so any annotation tool can show what your files say about a page.
+**[reading-level](adapters/stdlib/reading-level/)** — How hard a passage reads (sentence length, word length, Flesch), so a teacher can find texts for a class.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 204 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 205 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -141,7 +141,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - [**rtf**](adapters/stdlib/rtf/) — RTF documents as plain text. *new* `no-install` `offline` `writes-output` `file-reader`
 - **sarif** (idea) — SARIF reports from code scanners such as CodeQL and Semgrep: each finding as a passage with its rule, file and line. *new* `no-install` `offline` `writes-output` `file-reader`
 - **sbom** (idea) — SBOMs in SPDX or CycloneDX JSON: each component, its version and licence, as passages. *new* `no-install` `offline` `writes-output` `file-reader`
-- **screenplay** (idea) — Fountain and Final Draft scripts: scenes, characters and lines, cited by scene. *new* `no-install` `offline` `writes-output` `file-reader`
+- [**screenplay**](adapters/stdlib/screenplay/) — Fountain and Final Draft scripts: scenes, characters and lines, cited by scene. *new* `no-install` `offline` `writes-output` `file-reader`
 - **scripture** (idea) — A scripture or other canonical text with your study notes beside it, cited by book, chapter and verse. *new* `no-install` `offline` `writes-output` `file-reader`
 - **scrivener** (idea) — Scrivener projects: each document in the binder as plain text, by its place in the manuscript. *new* `no-install` `offline` `writes-output` `file-reader`
 - **sheets** (idea) — Spreadsheets with formulas and formatting kept, beyond what the office add-on reads. Needs openpyxl; MIT. *new* `needs-install` `offline` `writes-output` `file-reader`

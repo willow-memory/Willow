@@ -667,6 +667,10 @@ willow/
 │   │   │   ├── scan.py       indexes a folder once, then asks it a list of questions, the kernel's way
 │   │   │   ├── test_scan.py  holds its answers to the kernel's, every ranking vector included
 │   │   │   └── README.md
+│   │   ├── screenplay/
+│   │   │   ├── screenplay.py   scripts as scenes, cues and dialogue
+│   │   │   ├── test_screenplay.py
+│   │   │   └── README.md
 │   │   ├── scrub/
 │   │   │   ├── scrub.py   a copy of a JPEG, PNG, docx, xlsx or pptx without its Exif, author, times and edit history, and what was taken out
 │   │   │   ├── test_scrub.py

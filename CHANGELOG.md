@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `screenplay`: Fountain and Final Draft scripts: each as its scenes, with
+  action, cues and dialogue, so a line can be cited by scene; notes,
+  transitions and parentheticals left out.
 - `mediawiki`: A MediaWiki XML dump: each page's latest revision as plain
   text with its title and the day it changed, the wiki markup taken off; a
   file that declares entities is not read.

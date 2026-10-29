@@ -2075,16 +2075,6 @@
   "tags": "no-install, offline, read-only, tracking"
  },
  {
-  "name": "screenplay",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Fountain and Final Draft scripts: scenes, characters and lines, cited by scene.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "scripture",
   "kind": "stdlib",
   "section": "Reading more kinds of files",

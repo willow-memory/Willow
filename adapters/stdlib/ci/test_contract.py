@@ -133,6 +133,11 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         b'<revision><timestamp>2024-03-03T10:00:00Z</timestamp><text xml:space="preserve">\'\'\'Tomatoes\'\'\' want [[sun|six hours of sun]].{{cite|x}}&lt;ref&gt;n&lt;/ref&gt;\n== Growing ==\n* plant in [[Bed 2]]\n[[Category:Veg]]</text></revision></page>'
         b'<page><title>Maters</title><ns>0</ns><id>2</id><revision><timestamp>2024-02-02T00:00:00Z</timestamp><text>#REDIRECT [[Tomatoes]]</text></revision></page></mediawiki>'
     )}),
+    "screenplay": ("screenplay.py", {"garden.fountain": (
+        b"Title: Garden Party\nAuthor: Ana Example\n\n"
+        b"INT. KITCHEN - DAY #1#\n\nAna waters the tomatoes.\n\nANA\nSix hours of sun.\n\nBEN (V.O.)\n(dryly)\nOr so she says.\n\n"
+        b"CUT TO:\n\n.EXT. GARDEN - NIGHT\n\n[[a note]]The moon /* hidden */ rises.\n"
+    )}),
     "notes": ("notes.py", {"garden.md": b"Tomatoes want [[sun]].\n"}),
     "jrnl": ("jrnl.py", {"journal.txt": (
         "[2024-03-03 10:15] Fixed the gate.\nThe hinge wanted oil, not force.\n\n"
