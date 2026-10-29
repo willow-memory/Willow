@@ -741,7 +741,7 @@ only the frozen questions: exactly 16 a gap, each file's hash equal to
 FROZEN.json's and recorded in the stats row. Nothing about a result is
 published here.
 
-### Phase 6: cpython as the outside control (frozen; not yet run)
+### Phase 6: cpython as the outside control (frozen; run once)
 
 The twelve gaps are the fleet's own, written and fixed by the same people and
 models, so a pass there has no yardstick beside it. Phase 6 asks the **same
@@ -802,11 +802,116 @@ thrown away, the questions borrowed from a fleet gap only to time the rankers)
 `found` took 44 seconds, but `before`, which asks the unit's questions and the
 50 null questions three ways of the whole tree, took 254 seconds for 66
 questions, too near the 280. So `before` is asked in three parts,
-`ask --part 1/3`, `2/3`, `3/3` (about 100 seconds each); every question is
-asked once, under its own name, and the parts are joined before `judge`.
+`ask --part 1/3`, `2/3`, `3/3`; every question is asked once, under its own
+name, and the parts are joined before `judge`. Run four at a time on the
+box's cores they took 156 to 190 seconds each; `found` took 80 to 98 seconds a
+unit; the 14 trees were written in 39 seconds. Judging and origin took under
+two minutes.
+
+### Phase 6 results: cpython as the outside control
+
+One run, python 3.14.4 with `PYTHONHASHSEED=0`, on the frozen questions and
+the frozen `outside.py` (freeze 4), 28 asks (7 `found`, 21 `before` in three
+parts), the verdicts in a fresh record. The record verifies: `the chain holds:
+6 rows, 0 sealed`. **Phase 7 (the same bytes under a second Python and both
+hash seeds) is not part of these results**; nothing here claims it.
+
+**Phase 1, rank (the 16 questions of a unit asked of the passages its fix
+changed, bm25). Both gates fail.**
+
+| Group | Pairs | Observed sum of 1/rank | Expected at random | p |
+|---|---|---|---|---|
+| strong (CP1 to CP4, CP7) | 80 | 54.36 | 75.10 | 1.0 |
+| weaker (CP5, CP6) | 32 | 19.64 | 24.36 | 0.997 |
+
+The changed sets are small (1 to 19 passages, except CP6's 107 of a vendored
+library), so a random order already puts a hit near the top; the questions
+did worse than a random order. Questions with a hit in their top 3, bm25:
+35 of 80 strong, 20 of 32 weaker (random 0.998 and 0.938 a question; p 1.0
+for both). The kernel's rank hit 0 of 80 and 1 of 32; the grep baseline 35
+and 21.
+
+**Phase 2, line level (the same questions asked of the whole vulnerable tree,
+about 420,000 to 493,000 passages, top 10). All three gates pass.**
+
+| Gate | Hits | Expected by chance | p | Pass |
+|---|---|---|---|---|
+| line level above chance, bm25, strong | 2 of 80 | 0.006 | 1.8e-5 | yes |
+| line level above chance, bm25, weaker | 3 of 32 | 0.032 | 4.6e-6 | yes |
+| null questions not above chance, bm25 | 0 of 350 | 0.118 | 1.0 | yes |
+
+At file level (a passage anywhere in a file the fix changed) bm25 reached 9
+of 80 strong (p 1.9e-9) and 10 of 32 weaker (p 3.6e-9); the kernel's rank 3 of
+80 (p 0.014) and 3 of 32 (p 0.045); grep 4 of 80 and 7 of 32. The file level
+is reported, never a gate.
+
+**Misses, named.** Line hits by unit (bm25, of 16 questions): CP1 2, CP6 3,
+and none for CP2, CP3, CP4, CP5 or CP7. So four of the five strong units, and
+the weaker CP5, were never reached at line level by any of their 16
+questions; CP2, CP3, CP4 and CP5 were reached at file level (2, 1, 3 and 4
+questions) and CP7 not at all (no hit even at file level, and no hit
+range in phase 1's top 3 for any of its 16 questions). The two strong-unit
+hits are both the local writer's, in CP1 (the getpath port). CP6's three are
+two local and one Claude, and CP6 is a vendored libexpat bump with 72 hit
+passages of 438,535, which is why its chance per question is 0.0016 where the
+others' are 0.0003 or less.
+
+**Phase 3, origin (blame at the vulnerable commit in cpython, every positional
+hit range; 0 unresolved).** The hit ranges are old code, not code written
+close to the fix: CP1's 6 ranges come from the 2021 getpath port, 1,621 to
+1,656 days before the fix; CP2's 4 from 2000 to 2015 (4,015 to 9,340 days);
+CP3's 4 from 2001 to 2023 (985 to 9,166); CP4's single range from PEP 578 in
+2019 (2,477); CP5's 10 from 2000 to 2025 (183 to 9,309 days); CP6's 81, mostly
+vendored upstream expat updates, from 2002 to 2024 (123 to 8,434). CP7 has no
+hit range. No commit message cites an advisory id; the references some carry
+are issue and pull request numbers.
+
+**Phase 4, the writers compared (reported, never judged; every line, then the
+unflagged lines).**
+
+| Ranker, writer | Phase 1 top 3 | Phase 2 top 10 |
+|---|---|---|
+| bm25, local | 25 of 56 (15 of 34) | 4 of 56 (3 of 34) |
+| bm25, claude | 30 of 56 (29 of 55) | 1 of 56 (1 of 55) |
+| grep, local | 25 of 56 (15 of 34) | 0 of 56 (0 of 34) |
+| grep, claude | 31 of 56 (30 of 55) | 1 of 56 (1 of 55) |
+| kernel, local | 0 of 56 (0 of 34) | 0 of 56 (0 of 34) |
+| kernel, claude | 1 of 56 (1 of 55) | 0 of 56 (0 of 55) |
+| any ranker, null | n/a | 0 of 350 |
+
+**The answers, by SHA-256.**
+
+| File | SHA-256 |
+|---|---|
+| answers, `found` (joined) | `8ec1f82f74fd09fdaf9a16fef47b2ed5d9cfd6173d6eb66dd0f6e47ab9b9bc9e` |
+| answers, `before` (joined) | `c89fe3ed00cff0cfac38fcf84d33c6a1005083aeca399402bfd6ea20e316fed9` |
+| scored, `found` | `ae1f3f035aa43c3e2d5ecd919595f9f856d9f25aea62e772540f6df593789b4b` |
+| scored, `before` | `64acb422b0c8ed04d0b05e0e7303a17a0db3a6a5593ac2565d75bf17a43d1d06` |
+| judged output, `found` | `e93f9423be31d29de96e77cafa8db3aae13111238a975f72c75c10d32eeaf38e` |
+| judged output, `before` | `1ba51ee965a7e1397902d03bac6987d8be2ad1e1c3a3879315c36e2d29dbd609` |
+
+**What it shows.** The verdicts match the fleet's. On the fleet's twelve gaps
+phase 1 failed both gates and phase 2 passed all three; on cpython's seven
+public-advisory fixes the same happens, with the same reading: the questions
+reach the changed code in the whole tree above chance, though rarely (the
+line-level gates pass at p 1.8e-5 and 4.6e-6, and the null questions retrieve
+nothing above chance), and do no better than a random order inside a tiny set
+of changed passages. So on verdicts the fleet result looks like what the same
+method gives on a public-advisory control, and does not look like something
+particular to the fleet's own writing.
+
+**What it does not show.** The size differs, and a pass is not a find: the
+fleet's strong gaps reached a line in 44 of 160 asks (27.5 per cent), cpython's
+strong units in 2 of 80 (2.5 per cent), and the weaker 3 of 64 against 3 of
+32. The cpython pass for the strong group rests on two asks from one unit,
+and the weaker group's on one unit that is a vendored library. Seven units
+is few, and the advisories describe behaviour more than the lines that
+changed. The questions were written blind, once; nothing here shows how a
+different writer or a different method would do. A model has seen cpython
+(its fixes are public and old), so a hit is not evidence of a discovery.
+Phase 7 (byte-identity across Pythons and seeds) was not completed.
 
 ### Not run
 
-Phase 6 is frozen and has not run. Phase 5 ran on
-44 repositories (above); its findings are private and nothing here claims a
-result for it. Nothing here claims a result for phase 6.
+Phase 5's findings are private and nothing here claims a result for them.
+Phase 7 for phase 6 is not claimed above.
