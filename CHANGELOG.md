@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `x-archive`: An X (Twitter) archive: your posts, replies and direct
+  messages, oldest first, as dated lines with links expanded and entities
+  read; the archive's other data files skipped and counted.
 - `mastodon`: A Mastodon or Pixelfed account archive's outbox: your own
   posts, oldest first, as dated lines with content warnings, replies and
   attachment descriptions; boosts and likes left out.

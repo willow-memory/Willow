@@ -213,6 +213,11 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         b'{"type":"Announce","published":"2024-03-02T10:00:00Z","object":"https://x/2"},'
         b'{"type":"Create","published":"2024-03-02T08:15:00Z","object":{"type":"Note","content":"<p>Planted out the tomatoes   today.</p>"}}]}'
     )}),
+    "x-archive": ("x_archive.py", {"tweets.js": (
+        b'window.YTD.tweets.part0 = [ {"tweet": {"created_at": "Wed Mar 02 08:15:00 +0000 2022", "full_text": "Planted out the tomatoes. https://t.co/abc &amp; more",'
+        b' "entities": {"urls": [{"url": "https://t.co/abc", "expanded_url": "https://example.org/guide"}]}}},'
+        b' {"tweet": {"created_at": "Thu Mar 03 19:40:00 -0500 2022", "full_text": "@ana the slugs are winning.", "in_reply_to_status_id_str": "123"}} ]'
+    )}),
     "notes": ("notes.py", {"garden.md": b"Tomatoes want [[sun]].\n"}),
     "jrnl": ("jrnl.py", {"journal.txt": (
         "[2024-03-03 10:15] Fixed the gate.\nThe hinge wanted oil, not force.\n\n"

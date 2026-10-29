@@ -18,11 +18,11 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`█████████░░░░░░░░░░░` **214 of 470 built** · 419 need no install · 51 need one
+`█████████░░░░░░░░░░░` **215 of 470 built** · 419 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
-| Reading more kinds of files | 34 | 71 | 96 | 9 |
+| Reading more kinds of files | 35 | 70 | 96 | 9 |
 | Finding things | 26 | 17 | 33 | 10 |
 | Your own words | 16 | 9 | 22 | 3 |
 | Keeping track | 35 | 23 | 58 | 0 |
@@ -37,19 +37,19 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ## Newest
 
 <!-- willow:newest -->
+- 2026-10-29 · [**x-archive**](adapters/stdlib/x-archive/) — An X (Twitter) archive: your posts, replies and DMs as dated lines.
 - 2026-10-29 · [**words-tr**](adapters/stdlib/words-tr/) — Turkish common words ("ve", "bir").
 - 2026-10-29 · [**words-ru**](adapters/stdlib/words-ru/) — Russian common words ("и", "в", "на").
 - 2026-10-29 · [**words-cy**](adapters/stdlib/words-cy/) — Welsh common words ("a", "y", "yn").
 - 2026-10-29 · [**words-ar**](adapters/stdlib/words-ar/) — Arabic common words ("في", "من", "على").
-- 2026-10-29 · [**why-not**](adapters/stdlib/why-not/) — When the answer is 'not enough to say', which words found nothing, and what kind of file would have answered.
 <!-- /willow:newest -->
 
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[hook-replay](adapters/stdlib/hook-replay/)** — Every hook's answer kept as a row with the hashes of what it was given and what it said, and check runs it again to prove the same input still gets the same answer.
+**[renewals](adapters/stdlib/renewals/)** — Passports, licences, insurance and memberships: when each expires, from your documents.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 214 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 215 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -162,7 +162,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - [**wallabag**](adapters/stdlib/wallabag/) — wallabag's JSON or HTML export: saved entries as plain text, with their tags. *new* `no-install` `offline` `writes-output` `file-reader`
 - [**web-pages**](adapters/stdlib/web-pages/) — Saved web pages, .html and .mhtml, as their readable text, with the address they came from. *new* `no-install` `offline` `writes-output` `file-reader`
 - **writefreely** (idea) — WriteFreely posts, from its export or a copy of its SQLite database, as dated text. *new* `no-install` `offline` `writes-output` `file-reader`
-- **x-archive** (idea) — An X (Twitter) archive: your posts, replies and DMs as dated lines. *new* `no-install` `offline` `writes-output` `file-reader`
+- [**x-archive**](adapters/stdlib/x-archive/) — An X (Twitter) archive: your posts, replies and DMs as dated lines. *new* `no-install` `offline` `writes-output` `file-reader`
 - **zotero** (idea) — Your Zotero library, from a copy of zotero.sqlite: items, notes and PDF annotations, each with its citation. *new* `no-install` `offline` `writes-output` `file-reader`
 
 ## Finding things

@@ -2586,16 +2586,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "x-archive",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "An X (Twitter) archive: your posts, replies and DMs as dated lines.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "zotero",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
