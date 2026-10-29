@@ -924,7 +924,7 @@ says how). The first was v0.1.0.
 
 - `readme` shows each section of the README's summary with a built example or
   two, chosen by hand in `EXAMPLES`, instead of listing every add-on built and
-  planned; the full list stays in ADDONS.md
+  planned; the full list stays in ADDONS.md (#78)
 - `README.md` opens with the kernel and the add-ons as its two parts, says the
   kernel is the seed and never names an add-on, and gains a "What it is not"
   section (#76)
