@@ -2364,16 +2364,6 @@
   "tags": "needs-install, offline, read-only, search"
  },
  {
-  "name": "ro-crate",
-  "kind": "stdlib",
-  "section": "Trust and proof",
-  "line": "A box snapshot as an RO-Crate research object Zenodo can read: each file with its hash and licence.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, trust"
- },
- {
   "name": "roll-for-merge",
   "kind": "stdlib",
   "section": "Play",

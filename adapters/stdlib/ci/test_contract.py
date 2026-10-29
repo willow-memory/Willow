@@ -204,6 +204,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "box-health": ("box_health.py", ["--box", "{box}", *NOW]),
     "profile": ("question_profile.py", ["--box", "{box}", "tomatoes"]),
     "scrub": ("scrub.py", ["--from", "{pile}/photo.png", "--to", "{tmp}/clean.png"]),
+    "ro-crate": ("ro_crate.py", ["--box", "{box}", "--to", "{tmp}/crate"]),
     "history": ("history.py", ["--box", "{box}"]),
     "dice": ("dice.py", ["--box", "{box}", "roll", "2d6", *NOW]),
     "hook-fail-closed": ("hook_fail_closed.py", ["--hook", "true"]),

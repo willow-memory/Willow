@@ -10,6 +10,11 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `ro-crate`: a box snapshot as an RO-Crate research object, a zip a
+  repository such as Zenodo can read: every file with its SHA-256, size, kind
+  and licence, the record and the approved answers, and the record's tip
+  pinned. The key and the box's settings are not in it, the licence is never
+  guessed, and the copy is checked before it is kept.
 - `scrub`: a copy of a JPEG, PNG, docx, xlsx or pptx without its hidden
   details, and a list of what was taken out: Exif, XMP and IPTC (keeping the
   orientation), PNG text chunks, an Office file's author, times, revision,
