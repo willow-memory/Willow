@@ -723,8 +723,12 @@ For a gap G and a repository R:
    `at_or_below_chance` compares the both-writer count and should be read with
    it.
 
-The number of repositories asked (a number, not their names) is written here
-once the run is done. **Findings are private** until a person has checked each one and any fix has
+The number of repositories asked (a number, not their names) is 44, each at its
+HEAD, with all twelve gaps. Of the 47 on the list, one was held out by the
+rule on vault paths, one is a link to another repository on the list, and one
+could not be read: `spread.py` stops on a repository that holds a submodule
+(`phase3.write_tree` cannot read a gitlink), which is a known limit left
+unfixed because `spread.py` is frozen. **Findings are private** until a person has checked each one and any fix has
 landed: the candidates, the gap and repository pairings, the paths and the
 per-repository counts are kept outside this branch. `spread.py` writes to one
 private root only (the `work/private` folder beside this worktree), which may
@@ -738,6 +742,6 @@ published here.
 
 ### Not run
 
-Phase 6 (the cpython control, which needs an egress lease) has not run, and
-phase 5 has not yet been run on any repository. Nothing here claims a result
-for either.
+Phase 6 (the cpython control, which needs an egress lease) has not run.
+Phase 5 ran on 44 repositories (above); its findings are private and nothing
+here claims a result for it. Nothing here claims a result for phase 6.
