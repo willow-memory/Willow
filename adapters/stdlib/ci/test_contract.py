@@ -77,6 +77,11 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         b' {"cell_type": "code", "source": "df = load(\\"harbours.csv\\")\\nprint(len(df))", "outputs": [{"output_type": "stream", "name": "stdout", "text": ["6 rows\\n"]},'
         b' {"output_type": "display_data", "data": {"image/png": "iVBORw0KGgo=", "text/plain": ["<Figure size 640x480>"]}}]}]}'
     )}),
+    "latex": ("latex.py", {"main.tex": (
+        b"\\documentclass{article}\n\\usepackage{amsmath}\n\\title{Tides of the Estuary}\n\\author{Ada Example}\n\\begin{document}\n\\maketitle\n"
+        b"\\section{Method}\\label{sec:m}\nWe measure the tide at six harbours \\cite{smith2020}. % a comment\n"
+        b"The result is $x = 1$ and\n\\begin{equation}\ny = mx + b\n\\end{equation}\nholds \\emph{everywhere}.\n\\end{document}\n"
+    )}),
     "notes": ("notes.py", {"garden.md": b"Tomatoes want [[sun]].\n"}),
     "jrnl": ("jrnl.py", {"journal.txt": (
         "[2024-03-03 10:15] Fixed the gate.\nThe hinge wanted oil, not force.\n\n"

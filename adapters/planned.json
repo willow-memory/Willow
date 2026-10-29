@@ -1384,16 +1384,6 @@
   "tags": "no-install, offline, records, assistant"
  },
  {
-  "name": "latex",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "LaTeX sources as plain prose, commands stripped, cited by the .tex file's own lines.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "launcher",
   "kind": "stdlib",
   "section": "Ways to use it",

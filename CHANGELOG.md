@@ -10,6 +10,11 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `latex`: LaTeX sources as plain prose, line for line: the mirror has the
+  source's lines, so a passage is cited by the .tex file's own line.
+  Comments, the preamble (but the title and author), math, verbatim and
+  picture environments and layout commands are dropped; section, emphasis,
+  caption and footnote text, citations as [key], accents and dashes are kept.
 - `jupyter`: Jupyter notebooks, each cell as a block headed by its number and
   kind: Markdown and code as written, and a code cell's text outputs (printed
   text, a result's plain form, an error's name and message) under "output:".

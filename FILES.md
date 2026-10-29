@@ -302,6 +302,10 @@ willow/
 │   │   │   ├── jupyter.py   a Jupyter notebook as text, one block for each cell with its number and kind
 │   │   │   ├── test_jupyter.py
 │   │   │   └── README.md
+│   │   ├── latex/
+│   │   │   ├── latex.py   a LaTeX source as its prose, line for line, commands stripped
+│   │   │   ├── test_latex.py
+│   │   │   └── README.md
 │   │   ├── lending/
 │   │   │   ├── lending.py    what you lent, and what your files say came back
 │   │   │   ├── test_lending.py
