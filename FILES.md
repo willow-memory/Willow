@@ -88,6 +88,10 @@ willow/
 │   │   │   ├── backup.py     your record in one zip, every byte and the chain checked; never the key
 │   │   │   ├── test_backup.py
 │   │   │   └── README.md
+│   │   ├── badge/
+│   │   │   ├── badge.py   an SVG badge of the record's counts: answers approved, the files they came from, and whether it holds
+│   │   │   ├── test_badge.py
+│   │   │   └── README.md
 │   │   ├── bench/
 │   │   │   ├── bench.py       how fast the kernel reads and ranks piles of set sizes, per release
 │   │   │   ├── test_bench.py

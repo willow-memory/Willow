@@ -110,16 +110,6 @@
   "tags": "no-install, offline, read-only, tracking"
  },
  {
-  "name": "badge",
-  "kind": "stdlib",
-  "section": "Ways to use it",
-  "line": "A badge for a page: these answers came from these files and were approved, linked to the check anyone can run.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, interface"
- },
- {
   "name": "bank",
   "kind": "stdlib",
   "section": "Reading more kinds of files",

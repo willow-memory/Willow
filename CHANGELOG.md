@@ -10,6 +10,11 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `badge`: an SVG badge for a page from the record: how many answers are
+  approved and from how many files, green when the chain holds and every
+  approval stands, amber when one doesn't, red when the chain breaks, grey
+  when nothing is approved. Its description says how to check it, and
+  `--link` prints the Markdown for a page.
 - `llms-txt`: an llms.txt written from what is actually in a folder (a title,
   a summary, a section for each folder, a link and a one-line note for each
   text file, files over 50 KB under Optional), and a check of one against the

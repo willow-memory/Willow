@@ -201,7 +201,10 @@ def test_a_bad_command_line_says_how_to_run_it(tmp_path):
     for argv in ([], ["--box"], ["--box", str(b), "a", "b"], ["--box", str(b), "--base", "ftp://x"], ["--box", str(b), "--base"], ["--box", str(b), "--stray"],
                  ["--box", str(tmp_path)]):  # fmt: skip
         assert run(*argv).returncode == 2, argv
-    assert run().stderr.strip() == "python adapters/stdlib/deep-links/deep_links.py --box DIR [--base URL]"
+    assert (
+        run().stderr.strip()
+        == "python adapters/stdlib/deep-links/deep_links.py --box DIR [--base URL]"
+    )
 
 
 def test_a_long_passage_is_cut_at_a_hundred_characters(tmp_path):
