@@ -1801,16 +1801,6 @@
   "tags": "no-install, offline, writes-output, trust"
  },
  {
-  "name": "nicknames",
-  "kind": "stdlib",
-  "section": "Your own words",
-  "line": "The names you call people, mapped to who they are, so 'Mum' finds Margaret.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, words"
- },
- {
   "name": "night-batch",
   "kind": "deps",
   "section": "Assistants",

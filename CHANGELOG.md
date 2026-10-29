@@ -10,6 +10,11 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `nicknames`: the names you call people, as a words list written from what
+  your own files say: a family word beside a capitalised name ("Mum
+  (Margaret)", "my dad Robert", "Auntie Jean") becomes `mum = margaret`, with
+  the file and line it came from, so "Mum" finds Margaret. Days, months, chat
+  labels and titles are no names; a nickname two names claim is said.
 - `fair-merge`: each folder of a pile ranked on its own by the kernel and the
   lists dealt out in turns, so a large corpus can't push a small one out on
   volume alone; a source that found nothing says so, and one with more says

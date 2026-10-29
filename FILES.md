@@ -347,6 +347,10 @@ willow/
 │   │   │   ├── accepted.json the breaks that change nothing a person could notice, each with why
 │   │   │   ├── test_mutants.py
 │   │   │   └── README.md
+│   │   ├── nicknames/
+│   │   │   ├── nicknames.py   the names you call people, found beside a family word in your files, as a words list
+│   │   │   ├── test_nicknames.py
+│   │   │   └── README.md
 │   │   ├── notes/
 │   │   │   ├── notes.py      Obsidian and Logseq vaults, links and backlinks kept
 │   │   │   ├── test_notes.py
