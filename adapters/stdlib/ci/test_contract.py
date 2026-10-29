@@ -218,6 +218,10 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         b' "entities": {"urls": [{"url": "https://t.co/abc", "expanded_url": "https://example.org/guide"}]}}},'
         b' {"tweet": {"created_at": "Thu Mar 03 19:40:00 -0500 2022", "full_text": "@ana the slugs are winning.", "in_reply_to_status_id_str": "123"}} ]'
     )}),
+    "irc": ("irc.py", {"irc.libera.#garden.weechatlog": (
+        b"2024-03-02 08:15:30\tana\tSix hours of sun, I read.\n2024-03-02 08:15:50\t--> \tben (~b@host) has joined #garden\n"
+        b"2024-03-02 08:16:01\t *\tben waves\n2024-03-03 19:40:00\tben\tThe slugs are winning.\n"
+    )}),
     "notes": ("notes.py", {"garden.md": b"Tomatoes want [[sun]].\n"}),
     "jrnl": ("jrnl.py", {"journal.txt": (
         "[2024-03-03 10:15] Fixed the gate.\nThe hinge wanted oil, not force.\n\n"

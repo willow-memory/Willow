@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `irc`: IRC logs from WeeChat, irssi or ZNC: one dated line per message and
+  action with its channel; joins, parts and modes left out; a log of
+  something else skipped and counted.
 - `x-archive`: An X (Twitter) archive: your posts, replies and direct
   messages, oldest first, as dated lines with links expanded and entities
   read; the archive's other data files skipped and counted. (#77)

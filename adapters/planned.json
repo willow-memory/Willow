@@ -953,16 +953,6 @@
   "tags": "no-install, offline, read-only, tracking"
  },
  {
-  "name": "irc",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "IRC logs from WeeChat, irssi or ZNC, one dated line per message, by network and channel.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "issue-answer",
   "kind": "stdlib",
   "section": "Assistants",
