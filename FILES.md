@@ -262,6 +262,10 @@ willow/
 │   │   │   ├── hook_replay.py    every hook answer a row of hashes, and each one run again
 │   │   │   ├── test_hook_replay.py
 │   │   │   └── README.md
+│   │   ├── hook-shell/
+│   │   │   ├── hook_shell.py   a command split as the shell splits it, quotes, variables and chains included, before a rule judges it
+│   │   │   ├── test_hook_shell.py
+│   │   │   └── README.md
 │   │   ├── horoscope/
 │   │   │   ├── horoscope.py  a daily reading picked by the SHA-256 of name and date
 │   │   │   ├── test_horoscope.py

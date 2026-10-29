@@ -1122,16 +1122,6 @@
   "tags": "no-install, offline, read-only, assistant, hooks"
  },
  {
-  "name": "hook-shell",
-  "kind": "stdlib",
-  "section": "Assistants",
-  "line": "A command split the way the shell will split it, quotes, variables and chained commands included, before any rule judges it, so a rule can't be dodged by spelling.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, assistant, hooks"
- },
- {
   "name": "hook-start",
   "kind": "stdlib",
   "section": "Assistants",

@@ -10,6 +10,12 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `hook-shell`: a command split the way the shell splits it before a rule
+  judges it: quotes, escapes, `$'...'` strings, variables, substitutions,
+  `bash -c` and `eval` payloads and `sudo`/`env`/`xargs` wrappers, so `r""m`,
+  a full path and `$a$b` are all `rm`. `run` is a PreToolUse hook that
+  refuses a denied command, or one whose command word is only known at run
+  time.
 - `hook-leaks`: a PreToolUse hook that refuses a Write, Edit, notebook cell
   or Bash command holding a key, a password or a card number, by the
   `privacy` add-on's shapes. The reason names only the kind, never the value,

@@ -177,6 +177,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "backup": ("backup.py", ["--box", "{box}", "--to", "{tmp}/backups", *NOW]),
     "bench": ("bench.py", ["run", "--sizes", "20,40"]),
     "hook-leaks": ("hook_leaks.py", ["check", "--from", "{pile}/garden.md"]),
+    "hook-shell": ("hook_shell.py", ["split", "ls -la"]),
     "history": ("history.py", ["--box", "{box}"]),
     "dice": ("dice.py", ["--box", "{box}", "roll", "2d6", *NOW]),
     "hook-fail-closed": ("hook_fail_closed.py", ["--hook", "true"]),
