@@ -1103,6 +1103,7 @@ willow/
 │   ├── test_vectors.py       fails if the cases are stale or a port disagrees
 │   └── README.md             how the ports were built and what testing them found
 ├── docs/
+│   ├── handoff.md            a note for the next session: make-it-so's state and the unverified tribute idea; delete before merging
 │   ├── tour.md               the first five minutes, in full: a question, a gap, her words, an approval
 │   ├── how-it-works.md       what it reads, how it ranks, the key, the record, approvals
 │   └── design/
