@@ -3,9 +3,9 @@
  "frozen": "2026-10-30",
  "files": {
   "sources.json": "a54980827bce9bf3c7d88b48c8c73371a519eaa84b22429c8ac26eadf50c10ab",
-  "questions.json": "e1cd903e44f4d26619015661657e5e9cd297e4c0f3ee84d9736fc3d9fd018d45",
-  "fetch.py": "a69b096706e844a24de6df48b7b2ad1b10f5d7ccf190e46a4a32f1412d7a74cb",
-  "run.py": "1a42811f15845460f110b164ab75f978affc781c55eb7e28c99ebb5427afb71c"
+  "questions.json": "6ed4caa1e4d6d9f7ca8a38970cb9027300f6a01b7bc617f735bf985fbf92d96e",
+  "fetch.py": "1a138c402760d3f53527c678ce393b37b0ed2f68c4ceb561d2485e83594e60b2",
+  "run.py": "97f0c9c39f0c9356dfb76d54e32804461c91adfae2582272282764b2fafb9152"
  },
  "tools_at_freeze": {
   "kernel.py": "be6e99a1952d0cb347b0028071b98258e3e69502c21f7ee715557b0ed3145a0d",
@@ -48,7 +48,18 @@
   {
    "n": 1,
    "date": "2026-10-30",
-   "why": "the sources, questions, traps, hit rule and pass rules, after one dry run with nonsense and before any question was asked; Wren's files not yet written"
+   "why": "the sources, questions, traps, hit rule and pass rules, after one dry run with nonsense and before any question was asked; Wren's files not yet written",
+   "files": {
+    "sources.json": "a54980827bce9bf3c7d88b48c8c73371a519eaa84b22429c8ac26eadf50c10ab",
+    "questions.json": "e1cd903e44f4d26619015661657e5e9cd297e4c0f3ee84d9736fc3d9fd018d45",
+    "fetch.py": "a69b096706e844a24de6df48b7b2ad1b10f5d7ccf190e46a4a32f1412d7a74cb",
+    "run.py": "1a42811f15845460f110b164ab75f978affc781c55eb7e28c99ebb5427afb71c"
+   }
+  },
+  {
+   "n": 2,
+   "date": "2026-10-30",
+   "why": "after run 1 failed two rules (README, 'What failed'): fetch.py writes a line longer than the kernel reads as its sentences, so bug #89 drops nothing; T1 is judged by claim-check alone, since contradictions reads dates, not bare years; and T5, a wrong birth date the sources give as a full date, is added for contradictions, chosen knowing it needs one. Rules unchanged otherwise. One dry run with nonsense before this freeze."
   }
  ]
 }

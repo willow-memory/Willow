@@ -8,7 +8,8 @@ data file at a commit, is held whole, by its bytes. A news page is held by
 its article's lines: its text by the kernel's own `html_text`, each line
 with its spaces squeezed, and only the lines whose SHA-256 was frozen kept,
 in page order, so a sidebar that changes by the hour changes nothing here.
-The parody line comes from
+A line longer than the kernel reads (bug #89) is written as its sentences,
+one a line, every word kept. The parody line comes from
 a willows-grove checkout (--grove, default the one beside this repo), at its
 pinned commit, into DIR/parody/gerald.txt: the G28 atom only.
 
@@ -30,6 +31,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import subprocess
 import sys
 import time
@@ -78,6 +80,25 @@ def get(src: dict, grove: Path) -> bytes:
     raise OSError("unreachable")
 
 
+def folded(text: str) -> str:
+    """Each line longer than the kernel reads (bug #89: past MAX_CHUNK
+    characters a line is dropped) as its sentences, one a line, and a
+    sentence still too long at its spaces; every word kept, in order."""
+    out = []
+    for line in text.split("\n"):
+        if len(line) <= kernel.MAX_CHUNK:
+            out.append(line)
+            continue
+        for sent in re.split(r"(?<=[.!?])\s+", line):
+            while len(sent) > kernel.MAX_CHUNK:
+                cut = sent.rfind(" ", 0, kernel.MAX_CHUNK)
+                cut = cut if cut > 0 else kernel.MAX_CHUNK
+                out.append(sent[:cut])
+                sent = sent[cut:].lstrip(" ")
+            out.append(sent)
+    return "\n".join(out)
+
+
 def parody_block(text: str) -> str:
     """The G28 atom: its heading to the next heading."""
     start = text.index(G28)
@@ -109,7 +130,7 @@ def fetch(to: Path, grove: Path, offline: bool) -> dict[str, str]:
             if not kept:
                 states[src["id"]] = "changed"
                 continue
-            out.write_text("\n".join(kept) + "\n", encoding="utf-8")
+            out.write_text(folded("\n".join(kept)) + "\n", encoding="utf-8")
             states[src["id"]] = "held" if n == m else f"{n} of {m} lines"
             continue
         if sha(raw) != src["bytes_sha256"]:
@@ -121,7 +142,9 @@ def fetch(to: Path, grove: Path, offline: bool) -> dict[str, str]:
                 parody_block(text), encoding="utf-8"
             )
         else:
-            (to / "sources" / f"{src['id']}.txt").write_text(text, encoding="utf-8")
+            (to / "sources" / f"{src['id']}.txt").write_text(
+                folded(text), encoding="utf-8"
+            )
         states[src["id"]] = "held"
     return states
 

@@ -24,11 +24,12 @@ him.
    Wikipedia, Deadline, Variety and CNN; one of them is a host willow-mcp's
    web search trusts; and willows-grove's four checks pass on its sentence
    against those passages.
-2. **What isn't held is shown, not repeated.** Four traps are planted in
+2. **What isn't held is shown, not repeated.** Five traps are planted in
    her files, each labelled as what it is: a friend's wrong fact (the
    memoir "a 2021 memoir"), a misquote, a reseller's "signed by Patrick
-   Stewart", and a Klingon word typed in the wrong case. Each must be
-   caught by the check named for it.
+   Stewart", a Klingon word typed in the wrong case, and (from freeze 2) the
+   same friend's wrong birth date, set beside the sources' own. Each must
+   be caught by the check named for it.
 3. **Her files don't know what came after them.** Asked whether he died,
    her files hold no passage that says so, and no date in them is after
    2026-10-22.
@@ -57,7 +58,8 @@ box's own, made for the run, is made or read.
 ## What is frozen
 
 [FROZEN.json](FROZEN.json) holds each frozen file's SHA-256, and the tools'
-from all five repositories with each one's commit;
+from all five repositories with each one's commit, for the freeze in force
+(freeze 2), with freeze 1's file hashes kept beside its reason;
 `test_stewart_crossover.py` fails if a frozen file changes. A change is a
 new freeze, in its own commit, with its reason.
 
@@ -67,10 +69,12 @@ new freeze, in its own commit, with its reason.
   sidebars rotate other stories, one of them a "Cause Of Death Revealed"
   headline), so it is held by its article's own lines: each line's SHA-256,
   and only those lines are read. [fetch.py](fetch.py) fetches them again and
-  says of each whether it is held.
+  says of each whether it is held, and (from freeze 2) writes any line
+  longer than the kernel reads as its sentences, one a line, every word kept
+  (known bug #89: the kernel drops a line's text past its 500th character).
 - [questions.json](questions.json): the seven facts with their claims and
-  sentences, two quotes, four traps, five beats, every line of Wren's that
-  may name him, the hit rule and seventeen pass rules.
+  sentences, two quotes, five traps, five beats, every line of Wren's that
+  may name him, the hit rule and eighteen pass rules.
 - [run.py](run.py): judges every rule, and writes each as a verdict row on a
   kernel record outside the repo, with the SHA-256 of the results and of
   every tool.
@@ -116,6 +120,29 @@ the whole pile (death, K1, M1) found the nonsense where the stub held it,
 which shows her files are wired in. It could not see whether a real claim
 finds its passages, or whether contradictions pairs T1's line with a
 source's: those are what the run is for.
+
+## Freeze 2
+
+Run 1 (below) failed two rules, and the person asked for a new freeze. It
+changes three things, each for a reason run 1 showed, and nothing else:
+
+- **fetch.py folds long lines.** "Make it so" is in CNN's page past the
+  kernel's 500th character of its line, where nothing built on the kernel
+  reads (bug #89, filed from this run). A line over 500 characters is now
+  written as its sentences, one a line; no word is dropped or changed. The
+  quote rule is as it was.
+- **T1 is judged by claim-check alone.** contradictions reads a date, never
+  a bare year, and no source gives the memoir more than its year, so T1's
+  second check could not have held. Its first, which held, is its rule now.
+- **T5 is added for contradictions:** "Kati swears Patrick Stewart was born
+  on 13 July 1941 in Mirfield." The sources give his birth as a full date,
+  so contradictions can read both sides. It was chosen knowing that, after
+  run 1, and so it tests the tool on a case it is built for, not a blind
+  one.
+
+Before freeze 2, run.py ran once more with nonsense, on the folded sources:
+no error, no line over 500 characters left in them, and the same verdicts as
+the first dry run, with T5 failing as nonsense must.
 
 ## How to run it
 

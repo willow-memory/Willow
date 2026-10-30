@@ -160,10 +160,12 @@ def judge(boxes: dict[str, Path], wren: Path, nonsense: bool) -> dict[str, dict]
 
     t = {x["id"]: x for x in Q["traps"]}
     code, out = tool("claim_check.py", "--box", src, say(t["T1"]["claim"]))
+    res["T1"] = {"ok": code == 42, "claim_exit": code, "out": out}
+    code, out = tool("claim_check.py", "--box", src, say(t["T5"]["claim"]))
     _, contra = tool("contradictions.py", "--box", str(boxes["all"]))
     groups = re.split(r"\n(?=(?:DATE|AMOUNT) )", contra)
-    beside = [g for g in groups if say(t["T1"]["line"]) in g and "sources/" in g]
-    res["T1"] = {
+    beside = [g for g in groups if say(t["T5"]["line"]) in g and "sources/" in g]
+    res["T5"] = {
         "ok": code == 42 and bool(beside),
         "claim_exit": code,
         "beside": beside,
