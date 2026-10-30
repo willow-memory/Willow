@@ -10,6 +10,10 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- A language form for issues (`.github/ISSUE_TEMPLATE/language.yml`): a
+  language's code, common words, quirks and where its list comes from, so a
+  pack can start without Python; `config.yml` links the languages and the
+  add-on ideas, and the pull request template asks for `Part of #`. (#92)
 - `words-tlh`: Klingon common words ("'ej", "nuq") out of a question before
   the kernel's bite. Each of its 27 words is in two sources pinned by
   revision or commit and SHA-256, and its card says what the kernel's
@@ -1086,6 +1090,10 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- `readme` writes a Languages section in ADDONS.md: every `words-<code>`
+  add-on, built and planned, by code. The contract test runs every language
+  pack from its folder rather than a hand-kept list, and names one that
+  isn't `words-` and its code with `words_<code>.py` beside it. (#92)
 - `readme` shows each section of the README's summary with a built example or
   two, chosen by hand in `EXAMPLES`, instead of listing every add-on built and
   planned; the full list stays in ADDONS.md (#78)
