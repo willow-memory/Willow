@@ -125,8 +125,61 @@ source's: those are what the run is for.
     python kernel.py verify --box BOX
 
 with willows-grove, willow-mcp, willow-bot and Forge checked out beside this
-repository. Wren's files come next, after the freeze.
+repository. Wren's files are made by [make_life.py](make_life.py) into
+`life/` (`--check` holds them to the frozen lines); they were written after
+freeze 1, and only the frozen lines in them name him.
 
-## Results
+## Results: run 1, 2026-10-30
 
-Not run yet.
+Every source held when fetched (each news page's frozen lines all there).
+**15 of the 17 rules held; 2 failed.** The verdicts are rows on a kernel
+record, copied to [results/record.jsonl](results/record.jsonl) without its
+key; `kernel.py verify` says "the chain holds: 18 rows, 0 sealed", and so
+does willow-bot's. [results/run-1.json](results/run-1.json) is every
+outcome, less the words misquote printed from CNN's line (so its hash is not
+the record's `results_sha256`, which is of the whole file).
+
+| Rule | Verdict | What was found |
+|---|---|---|
+| facts | held | every fact whole in 2 or 3 publishers: Wikipedia with Deadline (memoir 2023, the last season), with Variety and CNN (2020 to 2023), Deadline and CNN (Paramount+, 1987, Mirfield 1940), Deadline and Variety (Xavier) |
+| facts-trusted | held | Wikipedia, the one host here willow-mcp trusts, holds each; it trusts none of deadline.com, variety.com or edition.cnn.com |
+| facts-grove | held | the seat's four checks on each sentence: cites served, every box cited, nothing the boxes lack, and no quote ("na") |
+| quotes | **failed** | the CNN line "the distinction between Jean-Luc Picard and Patrick Stewart became thinner and thinner" found verbatim; **"Make it so" not found verbatim anywhere** |
+| T1 | **failed** | claim-check found no source with "memoir Making It So 2021" (held), but **contradictions didn't set Kati's line beside a source** |
+| T2 | held | the misquote isn't in any source; misquote's closest passage is CNN's, the line that holds the real quote |
+| T3 | held | no source holds "Patrick Stewart signed Enterprise model": the seller's claim stays the seller's |
+| T4 | held | "qapla'" is in boQwI' only as "same words", never verbatim (it spells `Qapla'`); the kernel's words for the two are the same, the cost words-tlh's card names |
+| death | held | no passage of hers holds "Patrick Stewart died" |
+| dates | held | no date of hers after 2026-10-22 |
+| G1 | held | asked "Patrick Stewart on a screen", the kernel served the Gerald line second: Gerald shows up |
+| G2 | held | no source holds Sir Patrik Stewpott, always on a screen, never present |
+| K1 | held | "nuq 'oH Qapla'?" through words-tlh asked "qapla" and was served boQwI''s entries, after Dev's chat line |
+| M1 | held | make-it-so wrote the order, "engage: rewatch Star Trek: Picard, season one", beside its passages, and check said it holds; it was never run |
+| unseen | held | every line of hers naming him, the show or the memoir is a frozen line |
+| fiction | held | each of her eight files says so first |
+| verify | held | both kernels, on the record |
+
+## What failed, and why
+
+**"Make it so" is in CNN's page, and the kernel never reads it.** The line
+that says it ("His oft-repeated line, “Make it so,” became a signature
+tagline.") is the end of a 542-character paragraph ("Make it so" starts at its
+503rd), and `kernel.chunks`
+keeps a line's first 500 characters (`line[:MAX_CHUNK]`) and drops the rest
+without a word. So no tool built on the kernel (quote-check, claim-check,
+bite) can find anything past the 500th character of a long line, here or in
+any folder; Wikipedia's paragraphs often run longer. LIMITS.md and BUGS.md
+don't say so. The kernel isn't changed here: this is said for the
+maintainer, and quote1 stays failed.
+
+**contradictions reads a date, not a year.** Kati's "a 2021 memoir" and the
+sources' 2023 are bare years, and contradictions takes the kernel's reading
+of a date, which never makes a day out of a month, let alone a year: given
+two lines that differ only by "2021" and "2023" it says nothing in the
+folder states a date. The trap was frozen with a check that could not have
+caught it; the mistake is in the rule, made before the freeze, not in the
+tool, which does what its card says. claim-check caught the wrong year
+alone.
+
+Neither is fixed by changing a frozen file. A freeze 2 would be its own
+commit, with these reasons.

@@ -1335,7 +1335,11 @@ willow/
 │       ├── fetch.py          fetches the sources again and says of each whether it is held
 │       ├── run.py            judges every pass rule and writes each as a kernel verdict row
 │       ├── make_life.py      Wren's files, seeded: every frozen line in them word for word, each file labelled fiction
-│       └── test_stewart_crossover.py holds the frozen files to their hashes, and the parts that need no network
+│       ├── test_stewart_crossover.py holds the frozen files to their hashes, and the parts that need no network
+│       ├── test_wren.py      holds Wren's files to the frozen lines, the fiction label and her last day
+│       └── results/
+│           ├── run-1.json    the first run's every outcome, less the words misquote printed from a source
+│           └── record.jsonl  a copy of the record the verdicts are rows on, without its key
 ├── .github/
 │   ├── workflows/
 │   │   ├── ci.yml            runs adapters/stdlib/ci/ci.py a part or a cut of one a job, tests on Python 3.9 to 3.14
