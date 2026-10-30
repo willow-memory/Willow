@@ -1091,6 +1091,12 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- CI runs a pull request's tests on Python 3.9 and 3.14 only, and a
+  push to main's on all six. The six Pythons were 72 of a pull request's 84
+  jobs, run 20 at a time, so its CI took 14 to 21 minutes for 6 minutes'
+  longest job.
+  `github` check holds the tests and strip jobs to the same exclude, as it
+  holds them to the same Pythons. (#97)
 - `readme` writes a Languages section in ADDONS.md: every `words-<code>`
   add-on, built and planned, by code. The contract test runs every language
   pack from its folder rather than a hand-kept list, and names one that

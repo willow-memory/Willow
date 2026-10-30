@@ -126,7 +126,9 @@ jobs:
           path: ${{ runner.temp }}/ci-record/record.jsonl
 
   tests:
-    # kernel.py says 3.9+, so 3.9 is in the matrix, not assumed. Every gate of
+    # kernel.py says 3.9+, so 3.9 is in the matrix, not assumed; a pull request
+    # runs 3.9 and 3.14 only, since the six Pythons were 72 of its 84 jobs
+    # behind a 20-job limit, and a push to main runs all six. Every gate of
     # the tests part but tests:strip, which the strip job runs beside it on
     # the same Pythons: it runs the add-ons' tests again in a copy without
     # GitHub, so in one job it doubled the time. github.py check holds the two
@@ -140,6 +142,9 @@ jobs:
       matrix:
         python-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
         shard: [1, 2, 3, 4, 5, 6, 7, 8]
+        # A pull request runs the oldest and newest Python; a push to main
+        # runs all six.
+        exclude: ${{ github.event_name == 'pull_request' && fromJSON('[{"python-version":"3.10"},{"python-version":"3.11"},{"python-version":"3.12"},{"python-version":"3.13"}]') || fromJSON('[]') }}
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
@@ -167,6 +172,9 @@ jobs:
       matrix:
         python-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
         shard: [1, 2, 3, 4]
+        # A pull request runs the oldest and newest Python; a push to main
+        # runs all six.
+        exclude: ${{ github.event_name == 'pull_request' && fromJSON('[{"python-version":"3.10"},{"python-version":"3.11"},{"python-version":"3.12"},{"python-version":"3.13"}]') || fromJSON('[]') }}
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
