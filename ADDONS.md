@@ -18,13 +18,13 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`███████████░░░░░░░░░` **252 of 470 built** · 419 need no install · 51 need one
+`███████████░░░░░░░░░` **253 of 471 built** · 420 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
 | Reading more kinds of files | 64 | 41 | 96 | 9 |
 | Finding things | 29 | 14 | 33 | 10 |
-| Your own words | 18 | 7 | 22 | 3 |
+| Your own words | 19 | 7 | 23 | 3 |
 | Keeping track | 35 | 23 | 58 | 0 |
 | Trust and proof | 21 | 24 | 36 | 9 |
 | Privacy and safety | 11 | 3 | 14 | 0 |
@@ -37,19 +37,19 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ## Newest
 
 <!-- willow:newest -->
+- 2026-10-30 · [**words-tlh**](adapters/stdlib/words-tlh/) — Klingon common words ("'ej", "nuq").
 - 2026-10-30 · [**static-search**](adapters/deps/static-search/) — An exported page of approved answers with its own search built in, no server of its own, served from any static host.
 - 2026-10-30 · [**ripgrep**](adapters/deps/ripgrep/) — Exact search through ripgrep, much faster on a big folder, its hits checked against the kernel's hashes.
 - 2026-10-30 · [**pgp**](adapters/deps/pgp/) — Signs exports and reports with your PGP key, verifiable anywhere.
 - 2026-10-30 · [**ocr**](adapters/deps/ocr/) — Text out of photos of letters and scanned PDFs.
-- 2026-10-30 · [**launcher**](adapters/stdlib/launcher/) — Ask from Alfred, Raycast, KRunner or PowerToys Run, answers with file and line.
 <!-- /willow:newest -->
 
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[hook-guard](adapters/stdlib/hook-guard/)** — A PreToolUse hook that refuses, by rule and never by judgment, a tool call that would read the key or write a box outside the kernel, naming the rule it hit.
+**[typos](adapters/stdlib/typos/)** — Forgives misspellings in questions.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 252 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 253 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -238,6 +238,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**words-pt**](adapters/stdlib/words-pt/) — Portuguese common words ("o", "e"). *new* `no-install` `offline` `records` `words` `portuguese`
 - [**words-ru**](adapters/stdlib/words-ru/) — Russian common words ("и", "в", "на"). *new* `no-install` `offline` `records` `words` `russian`
 - [**words-sv**](adapters/stdlib/words-sv/) — Swedish common words ('och', 'att'). *new* `no-install` `offline` `records` `words` `swedish`
+- [**words-tlh**](adapters/stdlib/words-tlh/) — Klingon common words ("'ej", "nuq"). *new* `no-install` `offline` `records` `words` `klingon`
 - [**words-tr**](adapters/stdlib/words-tr/) — Turkish common words ("ve", "bir"). *new* `no-install` `offline` `records` `words` `turkish`
 - **words-zh** (idea) — Chinese, which has no spaces: words found by a small segmenter of its own, and a common-words list. *new* `no-install` `offline` `writes-output` `words`
 
