@@ -1,0 +1,50 @@
+name: A language for willow
+description: Your language's common words, so a question in it matches on the words that say something. No Python needed.
+labels: ["language"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The kernel leaves English's common words ("the", "when", "is") out of
+        a match. A question in any other language keeps all of its words, so
+        its common ones count too. A language pack, `words-` and the
+        language's code, takes them out first. ADDONS.md's Languages table
+        lists the ones built and planned.
+
+        Bring the list and what you know about the language; someone can
+        wrap it into a pack, with your name on it. To build it yourself,
+        copy `adapters/stdlib/words-cy` and see CONTRIBUTING.md.
+  - type: input
+    id: language
+    attributes:
+      label: Language
+      description: Its name in English, and in itself if that's different
+    validations:
+      required: true
+  - type: input
+    id: code
+    attributes:
+      label: Its code
+      description: The ISO 639 code, two or three lowercase letters, such as cy or tlh
+    validations:
+      required: true
+  - type: textarea
+    id: words
+    attributes:
+      label: Its common words
+      description: Conjunctions, prepositions, particles, pronouns, the verb "be", question words, yes and no. One a line, or separated by commas.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: quirks
+    attributes:
+      label: What it does that English doesn't
+      description: Letters that change at the start or end of a word, words joined by an apostrophe, no spaces between words, capitals that are different letters. Leave empty if you don't know.
+  - type: input
+    id: source
+    attributes:
+      label: Where the list comes from, and its licence
+      description: Your own knowledge is a fine answer. A list copied from a book or a site may not be ours to use, so say which.
+    validations:
+      required: true

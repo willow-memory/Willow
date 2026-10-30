@@ -34,6 +34,36 @@ or `writes-output`; its section), and any the card's author adds or changes.
 | For maintainers | 19 | 25 | 39 | 5 |
 <!-- /willow:pools -->
 
+## Languages
+
+A language pack takes one language's common words out of a question before
+the kernel's `bite`, as the kernel already does for English. A pack is mostly
+its list: someone who speaks the language can add one without much Python.
+[CONTRIBUTING.md](CONTRIBUTING.md#pick-one-up) says how.
+
+<!-- willow:languages -->
+**13 built, 3 planned**, beside English, which the kernel has built in.
+
+| Code | Pack | What it does |
+|---|---|---|
+| `ar` | [words-ar](adapters/stdlib/words-ar/) | Arabic common words ("في", "من", "على"). |
+| `cy` | [words-cy](adapters/stdlib/words-cy/) | Welsh common words ("a", "y", "yn"). |
+| `de` | [words-de](adapters/stdlib/words-de/) | German common words, so questions aren't matched on "der" and "und". |
+| `es` | [words-es](adapters/stdlib/words-es/) | Spanish common words ("el", "y"). |
+| `fr` | [words-fr](adapters/stdlib/words-fr/) | French common words ("le", "et"). |
+| `hi` | words-hi *(idea)* | Hindi common words ('और', 'है'). |
+| `it` | [words-it](adapters/stdlib/words-it/) | Italian common words ("il", "e"). |
+| `ja` | words-ja *(idea)* | Japanese, which has no spaces: a small segmenter of its own and a common-words list. |
+| `nl` | [words-nl](adapters/stdlib/words-nl/) | Dutch common words ("de", "en"). |
+| `pl` | [words-pl](adapters/stdlib/words-pl/) | Polish common words ('i', 'w'). |
+| `pt` | [words-pt](adapters/stdlib/words-pt/) | Portuguese common words ("o", "e"). |
+| `ru` | [words-ru](adapters/stdlib/words-ru/) | Russian common words ("и", "в", "на"). |
+| `sv` | [words-sv](adapters/stdlib/words-sv/) | Swedish common words ('och', 'att'). |
+| `tlh` | [words-tlh](adapters/stdlib/words-tlh/) | Klingon common words ("'ej", "nuq"). |
+| `tr` | [words-tr](adapters/stdlib/words-tr/) | Turkish common words ("ve", "bir"). |
+| `zh` | words-zh *(idea)* | Chinese, which has no spaces: words found by a small segmenter of its own, and a common-words list. |
+<!-- /willow:languages -->
+
 ## Newest
 
 <!-- willow:newest -->
