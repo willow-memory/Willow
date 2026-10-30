@@ -12,7 +12,8 @@ says how). The first was v0.1.0.
 
 - A language form for issues (`.github/ISSUE_TEMPLATE/language.yml`): a
   language's code, common words, quirks and where its list comes from, so a
-  pack can start without Python; `config.yml` links the languages and the
+  pack can start without Python;
+  `.github/ISSUE_TEMPLATE/config.yml` links the languages and the
   add-on ideas, and the pull request template asks for `Part of #`. (#92)
 - `words-tlh`: Klingon common words ("'ej", "nuq") out of a question before
   the kernel's bite. Each of its 27 words is in two sources pinned by
