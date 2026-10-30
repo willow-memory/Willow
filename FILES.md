@@ -839,10 +839,14 @@ willow/
 │   │   │   ├── stack.py       one document from a stack of add-on steps over a box, pooled and peaks-first
 │   │   │   ├── test_stack.py
 │   │   │   ├── example.md
-│   │   │   ├── examples/      stacks to start from: a choir's secretary, a smallholding, a library's maintainer
+│   │   │   ├── examples/      stacks to start from, one kind of folder each: a choir, a smallholding, a code library, a class, a story, foster dogs, a knee
 │   │   │   │   ├── choir.md
+│   │   │   │   ├── comeback.md
+│   │   │   │   ├── foster.md
 │   │   │   │   ├── maintainer.md
-│   │   │   │   └── smallholding.md
+│   │   │   │   ├── reporter.md
+│   │   │   │   ├── smallholding.md
+│   │   │   │   └── teacher.md
 │   │   │   └── README.md
 │   │   ├── stale/
 │   │   │   ├── stale.py      approved answers whose cited passage changed or went
