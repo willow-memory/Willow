@@ -310,6 +310,78 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
     "code-comments": ("code_comments.py", {"cache.py": (
         b'"""Module docstring.\n\nSecond line."""\n# A cache of parsed answers.\nTTL = 60  # seconds an entry lives\ns = "# not a comment"\n\n\ndef f():\n    """Do the thing."""\n    return 1\n'
     )}),
+    "ci-logs": ("ci_logs.py", {"run.log": (
+        b"2026-10-29T03:28:14.1000000Z ##[group]Run actions/checkout@v7\n2026-10-29T03:28:14.2000000Z with:\n2026-10-29T03:28:14.3000000Z ##[endgroup]\n"
+        b"2026-10-29T03:28:15.0000000Z ##[group]Run pytest\n2026-10-29T03:28:15.5000000Z \x1b[31mFAILED\x1b[0m tests/test_garden.py::test_sun - assert 5 == 6\n"
+        b"2026-10-29T03:28:16.0000000Z ===== 1 failed, 40 passed in 2.31s =====\n2026-10-29T03:28:17.0000000Z ##[error]Process completed with exit code 1.\n"
+        b"2026-10-29T03:28:18.0000000Z Post job cleanup.\n"
+    )}),
+    "health": ("health.py", {"export.xml": (
+        b'<?xml version="1.0"?><HealthData locale="en_GB"><Record type="HKQuantityTypeIdentifierStepCount" unit="count" startDate="2024-03-02 07:00:00 +0000" value="5000"/>'
+        b'<Record type="HKQuantityTypeIdentifierStepCount" unit="count" startDate="2024-03-02 12:00:00 +0000" value="3123"/>'
+        b'<Record type="HKQuantityTypeIdentifierDistanceWalkingRunning" unit="mi" startDate="2024-03-02 07:00:00 +0000" value="3.6"/>'
+        b'<Record type="HKQuantityTypeIdentifierHeartRate" unit="count/min" startDate="2024-03-02 07:00:00 +0000" value="70"/>'
+        b'<Record type="HKQuantityTypeIdentifierHeartRate" unit="count/min" startDate="2024-03-02 08:00:00 +0000" value="72"/>'
+        b'<Record type="HKQuantityTypeIdentifierBodyMass" unit="lb" startDate="2024-03-02 06:00:00 +0000" value="160"/>'
+        b'<Record type="HKQuantityTypeIdentifierBodyMass" unit="kg" startDate="2024-03-02 09:00:00 +0000" value="72.4"/>'
+        b'<Record type="HKQuantityTypeIdentifierStepCount" unit="count" startDate="2024-03-03 07:00:00 +0000" value="10442"/>'
+        b'<Record type="HKCategoryTypeIdentifierSleepAnalysis" startDate="2024-03-03 01:00:00 +0000" value="HKCategoryValueSleepAnalysisAsleep"/>'
+        b'<Workout workoutActivityType="HKWorkoutActivityTypeRunning" startDate="2024-03-03 07:00:00 +0000"/></HealthData>'
+    )}),
+    "home-sensors": ("home_sensors.py", {"history.json": (
+        b'[[{"entity_id":"sensor.kitchen_temp","state":"21.0","last_changed":"2024-03-02T08:00:00+00:00","attributes":{"unit_of_measurement":"C","friendly_name":"Kitchen temperature"}},'
+        b'{"entity_id":"sensor.kitchen_temp","state":"21.8","last_changed":"2024-03-02T20:00:00+00:00","attributes":{}},'
+        b'{"entity_id":"sensor.kitchen_temp","state":"unavailable","last_changed":"2024-03-02T21:00:00+00:00"},'
+        b'{"entity_id":"sensor.kitchen_temp","state":"20.9","last_changed":"2024-03-03T08:00:00+00:00"}],'
+        b'[{"entity_id":"sensor.hall_humidity","state":"48.5","last_changed":"2024-03-02T09:00:00+00:00","attributes":{"unit_of_measurement":"%","friendly_name":"Hall, humidity"}}],'
+        b'[{"entity_id":"light.hall","state":"on","last_changed":"2024-03-02T09:00:00+00:00"}]]'
+    )}),
+    "jira": ("jira.py", {"export.xml": (
+        b'<rss version="0.92"><channel><item><title>[GARDEN-12] Tomatoes want more sun</title><key id="1">GARDEN-12</key><summary>Tomatoes want more sun</summary>'
+        b'<type>Bug</type><status>Open</status><reporter username="a">ana</reporter><assignee username="b">ben</assignee><created>Sat, 2 Mar 2024 08:15:00 +0000</created>'
+        b'<description>&lt;p&gt;The bed by the  fence is shaded.&lt;/p&gt;</description><labels><label>garden</label><label>urgent</label></labels>'
+        b'<comments><comment id="1" author="ben" created="Sun, 3 Mar 2024 10:00:00 +0000">Move them to bed 2.</comment></comments></item>'
+        b'<item><title>[GARDEN-3] Order seed</title><key id="2">GARDEN-3</key><type>Task</type><status>Done</status><reporter>cy</reporter><assignee>Unassigned</assignee><created>Fri, 1 Mar 2024 09:00:00 +0000</created></item></channel></rss>'
+    )}),
+    "letterboxd": ("letterboxd.py", {"diary.csv": (
+        b'Date,Name,Year,Letterboxd URI,Rating,Rewatch,Review,Tags,Watched Date\n'
+        b'2024-03-05,Heat,1995,https://boxd.it/1,4.5,Yes,,"crime, night",2024-03-02\n'
+        b'2024-03-10,Paddington 2,2017,https://boxd.it/2,4,,Funnier than it has   any right to be.,,2024-03-09\n'
+    )}),
+    "goodreads": ("goodreads.py", {"goodreads_library_export.csv": (
+        b'Book Id,Title,Author,My Rating,Date Read,Date Added,Bookshelves,Exclusive Shelf,My Review,Private Notes\n'
+        b'1,The Hobbit,J.R.R. Tolkien,4,2024/03/02,2023/01/05,"fantasy, favourites",read,A comfort   read.,secret\n'
+        b'2,Dune,Frank Herbert,0,,2024/03/09,,currently-reading,,\n'
+        b'3,Piranesi,Susanna Clarke,0,,2023/12/01,,to-read,,\n'
+    )}),
+    "linkedin": ("linkedin.py", {"messages.csv": (
+        b'CONVERSATION ID,CONVERSATION TITLE,FROM,SENDER PROFILE URL,TO,RECIPIENT PROFILE URLS,DATE,SUBJECT,CONTENT,FOLDER\n'
+        b'c1,,Ana Lopez,https://x/a,Ben Ruiz,https://x/b,2024-03-02 08:15:30 UTC,Garden talk,Are you   coming on Saturday?,INBOX\n'
+        b'c1,,Ben Ruiz,https://x/b,Ana Lopez,https://x/a,2024-03-02 08:20:00 UTC,,Yes!,SENT\n'
+        b'c2,,Cy,https://x/c,Ben Ruiz,https://x/b,2024-03-01 09:00:00 UTC,,,INBOX\n'
+    )}),
+    "reddit": ("reddit.py", {"posts.csv": (
+        b'id,permalink,date,ip,subreddit,gildings,title,url,body\n'
+        b'abc,https://www.reddit.com/r/gardening/comments/abc/,2024-03-02 08:15:30 UTC,1.2.3.4,gardening,0,Tomatoes want more sun,,The bed by the   fence is shaded.\n'
+        b'def,https://www.reddit.com/r/gardening/comments/def/,2024-03-01 09:00:00 UTC,1.2.3.4,gardening,0,Link only,https://example.org,\n'
+    )}),
+    "orders": ("orders.py", {"Retail.OrderHistory.1.csv": (
+        b'Website,Order ID,Order Date,Currency,Unit Price,Total Owed,Product Name,Order Status\n'
+        b'Amazon.co.uk,026-1234567-8901234,2024-03-02T08:15:00Z,GBP,4.5,"4.50",Basil seeds,   3 packets,Closed\n'
+        b'Amazon.co.uk,026-7654321-0987654,2024-03-09T10:00:00Z,GBP,6.99,6.99,Garden twine,Closed\n'
+    )}),
+    "bank": ("bank.py", {"statement.csv": (
+        b'Date,Description,Amount,Balance\n2024-03-05,ACME PAYROLL,2000.00,3000.00\n2024-03-02,TESCO STORES 3241,-45.20,1000.00\n'
+    )}),
+    "readwise": ("readwise.py", {"readwise-data.csv": (
+        b'Highlight,Book Title,Book Author,Amazon Book ID,Note,Color,Tags,Location Type,Location,Highlighted at\n'
+        b'"In a hole in the ground there lived a hobbit.",The Hobbit,J.R.R. Tolkien,B1,the best   opening,yellow,fantasy,location,120,2024-03-02 08:15:00\n'
+        b'Tie the stem loosely.,Staking tomatoes,Ana Lopez,,,,,,,2024-03-04T10:00:00Z\n'
+    )}),
+    "logs": ("logs.py", {"syslog.log": (
+        b"Mar  2 08:15:30 host sshd[1234]: Accepted publickey for ana from 10.0.0.2\nMar  2 08:16:01 host cron: (root) CMD (run-parts /etc/cron.hourly)\n"
+        b"    at stack frame\n2024-03-02T08:17:00.123456+00:00 host app[7]: started\n"
+    )}),
     "notes": ("notes.py", {"garden.md": b"Tomatoes want [[sun]].\n"}),
     "jrnl": ("jrnl.py", {"journal.txt": (
         "[2024-03-03 10:15] Fixed the gate.\nThe hinge wanted oil, not force.\n\n"
@@ -468,6 +540,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "syllabus": ("syllabus.py", ["--box", "{box}"]),
     "foia": ("foia.py", ["--box", "{box}"]),
     "budget": ("budget.py", ["--box", "{box}"]),
+    "launcher": ("launcher.py", ["--box", "{box}"]),
     "history": ("history.py", ["--box", "{box}"]),
     "dice": ("dice.py", ["--box", "{box}", "roll", "2d6", *NOW]),
     "hook-fail-closed": ("hook_fail_closed.py", ["--hook", "true"]),

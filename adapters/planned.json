@@ -80,16 +80,6 @@
   "tags": "no-install, offline, read-only, assistant"
  },
  {
-  "name": "bank",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Bank CSV and OFX statements as dated lines, with spending by month.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "basic-memory",
   "kind": "stdlib",
   "section": "Assistants",
@@ -209,16 +199,6 @@
   "writes": "record",
   "network": "none",
   "tags": "no-install, offline, records, maintainers"
- },
- {
-  "name": "ci-logs",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "CI run logs you downloaded (GitHub Actions, GitLab CI, Forgejo Actions): each failing step as a passage, so you can ask when a test last failed.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
  },
  {
   "name": "claude",
@@ -651,16 +631,6 @@
   "tags": "no-install, offline, read-only, maintainers"
  },
  {
-  "name": "goodreads",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Goodreads and StoryGraph exports: the books you've read, when, and what you thought of them.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "google-classroom",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -711,16 +681,6 @@
   "tags": "no-install, offline, records, play"
  },
  {
-  "name": "health",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Apple Health and Google Fit exports as daily numbers the readings add-on can trend.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "hermes",
   "kind": "stdlib",
   "section": "Assistants",
@@ -739,16 +699,6 @@
   "writes": "nothing",
   "network": "your Home Assistant, on your own network, to answer its voice assistant",
   "tags": "no-install, online, read-only, interface"
- },
- {
-  "name": "home-sensors",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Home Assistant's history export: sensor readings as dated numbers the readings add-on can trend.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
  },
  {
   "name": "homestead",
@@ -932,16 +882,6 @@
   "tags": "no-install, offline, writes-output, trust"
  },
  {
-  "name": "jira",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Jira's issue export, CSV or XML: each issue, comment and status change as dated passages.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "joins",
   "kind": "stdlib",
   "section": "Play",
@@ -1013,30 +953,10 @@
   "tags": "no-install, offline, records, assistant"
  },
  {
-  "name": "launcher",
-  "kind": "stdlib",
-  "section": "Ways to use it",
-  "line": "Ask from Alfred, Raycast, KRunner or PowerToys Run, answers with file and line.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, interface"
- },
- {
   "name": "lessons",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
   "line": "Lesson plans from the Emerging Rule community library, by grade and subject, as passages a teacher can ask.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
-  "name": "letterboxd",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Letterboxd's export: the films you've watched, your ratings and reviews, as dated lines.",
   "source": "new",
   "writes": "to",
   "network": "none",
@@ -1054,16 +974,6 @@
   "tags": "needs-install, offline, read-only, trust"
  },
  {
-  "name": "linkedin",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "LinkedIn's data export: messages, posts and connections as dated lines.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "local-model",
   "kind": "deps",
   "section": "Assistants",
@@ -1073,16 +983,6 @@
   "writes": "record",
   "network": "loopback",
   "tags": "needs-install, this-machine, records, assistant"
- },
- {
-  "name": "logs",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "System and app logs (syslog, journald's export, nginx): each line dated, so you can ask when it started.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
  },
  {
   "name": "lore",
@@ -1401,16 +1301,6 @@
   "tags": "no-install, online, records, trust"
  },
  {
-  "name": "orders",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Amazon's order history and other shops' CSV exports: what you bought, when, and for how much.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "package-docs",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -1625,16 +1515,6 @@
   "tags": "no-install, online, read-only, trust"
  },
  {
-  "name": "readwise",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Readwise's highlights export: every highlight with its book or article, and your note on it.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "real-sky",
   "kind": "deps",
   "section": "Play",
@@ -1665,16 +1545,6 @@
   "writes": "nothing",
   "network": "none",
   "tags": "needs-install, offline, read-only, maintainers"
- },
- {
-  "name": "reddit",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Reddit's data export: your posts, comments and saved items as dated lines.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
  },
  {
   "name": "redential",

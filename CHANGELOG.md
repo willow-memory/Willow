@@ -10,6 +10,45 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `launcher`: Ask from a launcher: the passages your folder holds for a
+  question as Alfred Script Filter JSON (which Raycast reads too) or
+  tab-separated lines, each with its file and line; nothing written. (#81)
+- `logs`: System and app logs (syslog, journald's export, nginx and Apache
+  access logs): each entry as a dated line with host, program and message; no
+  year is invented for classic syslog. (#81)
+- `readwise`: Readwise's highlights export: each highlight, oldest first, as
+  a dated line with its book or article, author, location, your note and
+  tags. (#81)
+- `bank`: Bank statements, OFX or QFX and CSV: each transaction, oldest
+  first, as a dated line, then the months added up as spent, received and
+  net; an ambiguous date is never guessed. (#81)
+- `orders`: Amazon's order history and other shops' order CSVs: each item,
+  oldest first, as a dated line with its cost, currency and order number; a
+  date that reads either way round is never guessed. (#81)
+- `reddit`: Reddit's data request CSVs: your posts and comments, oldest
+  first, as dated lines with their subreddit, and saved items by permalink;
+  IP addresses not copied. (#81)
+- `linkedin`: LinkedIn's data export CSVs (messages, connections, shares,
+  comments): each row, oldest first, as a dated line; emails and profile
+  addresses not copied. (#81)
+- `goodreads`: Goodreads and StoryGraph library exports: each book, oldest
+  first, as a dated line with its shelf, rating out of five, review and tags.
+  (#81)
+- `letterboxd`: Letterboxd's export CSVs: each film row, oldest first, as a
+  dated line (watched, rated or listed) with its rating out of five, rewatch
+  mark, review and tags. (#81)
+- `jira`: Jira's issue export, XML or CSV: each issue, oldest first, with its
+  status, type, people, labels, description and comments as a dated passage.
+  (#81)
+- `home-sensors`: Home Assistant's history export as a table of daily
+  numbers, a column for each entity headed by its friendly name and unit, the
+  form the readings add-on can trend. (#81)
+- `health`: Apple Health's export.xml as a table of daily numbers (steps,
+  distance, energy, exercise, heart rate, weight) the readings add-on can
+  trend; read as a stream, entities refused. (#81)
+- `ci-logs`: CI run logs from GitHub Actions, Forgejo Actions or GitLab CI:
+  each failing step as a passage with its name, the time, its last lines and
+  the error; passing runs skipped and counted. (#81)
 - `code-comments`: A codebase's comments and docstrings, line for line: each
   source file becomes a file of the same number of lines holding the comment
   text of the same line, so a hit is cited by the source's own line number.
