@@ -13,22 +13,22 @@ says how). The first was v0.1.0.
 - `ripgrep`: Exact search through ripgrep, much faster on a big folder: each
   hit shown with the id of the kernel's own passage that holds it, and one
   the kernel doesn't read as written counted, never shown. Needs the rg
-  program, from the ripgrep wheel or your own.
+  program, from the ripgrep wheel or your own. (#82)
 - `code-shape`: Code searched by its shape through ast-grep, a pattern with
   holes (`requests.get($$$)`) matching every use however it is written, each
   match checked against the kernel's passages. Needs ast-grep, from
-  ast-grep-cli or your own.
+  ast-grep-cli or your own. (#82)
 - `static-search`: Your approved answers as a static site, a page each and a
   Pagefind search over them, from any static host or Python's http.server;
   only approvals that prove under your key. Needs Pagefind, floored at
-  1.2.0, its first stable release.
+  1.2.0, its first stable release. (#82)
 - `ocr`: Text out of pictures and scanned PDF pages, read by tesseract into
   a mirror; a PDF page with text of its own left to the pdf add-on. Needs
-  pytesseract, Pillow, pypdf and the tesseract program.
+  pytesseract, Pillow, pypdf and the tesseract program. (#82)
 - `pgp`: A file signed with your own gpg key, as a detached OpenPGP
   signature anyone can check, and a signature checked back; a `--key` it
   can't use refused rather than signed with another. Needs gpg and
-  python-gnupg.
+  python-gnupg. (#82)
 - `launcher`: Ask from a launcher: the passages your folder holds for a
   question as Alfred Script Filter JSON (which Raycast reads too) or
   tab-separated lines, each with its file and line; nothing written. (#81)
