@@ -26,19 +26,23 @@ branch merges.
 The user read that Patrick Stewart had died and wanted a tribute: a demo
 over his life from verified sources, and perhaps a more special make-it-so.
 
-**That claim is not established.** On 2026-10-30 two web searches found no
-credible report of his death. One result called the reports a hoax (updated
-2026-08-06); the other results were low-quality pages that contradict each
-other. Recent trade press (July 2026) has him alive, denying retirement
-rumours around Avengers: Doomsday (December 2026). Before anything is built:
+**Update, 2026-10-30, later:** the earlier note was out of date. The user
+sent a screenshot of Google's top stories (Yahoo, 4 hours ago; NPR, 6 hours
+ago). A search then found the death reported by NPR, ABC News, Variety, The
+Hollywood Reporter, Deadline and Fox News (from AP): he died on 28 October
+2026 at his home in Los Angeles, aged 86. His family gave the cause as
+Alzheimer's disease and Lewy body dementia. The pages themselves could not
+be opened from the cloud session, because its network policy denies
+npr.org and variety.com, so no page is hashed yet. A demo's freeze has to fetch and
+hash them where those hosts are allowed.
 
-1. Ask the user for the source they read, and check it against the BBC,
-   Reuters or the like. Do not state a death as fact on the user's word or on
-   search results alone.
-2. If it is false, say so plainly. A demo of a living person's life from
-   verified sources, framed as a profile or a retrospective and not as a
-   memorial, is still possible, if the user wants it.
-3. Never write a demo or a page that presents an unverified death as news.
+- NPR: https://www.npr.org/2026/10/29/1230906945/patrick-stewart-dead
+- ABC News: https://abcnews.com/GMA/Culture/star-trek-star-patrick-stewart-dies-86/story?id=137684409
+- Variety: https://variety.com/2026/tv/news/patrick-stewart-dead-star-trek-picardx-men-xavier-1236934412/
+- The Hollywood Reporter: https://www.hollywoodreporter.com/movies/movie-news/patrick-stewart-dead-star-trek-x-men-1236742932/
+- Deadline: https://deadline.com/2026/10/patrick-stewart-dead-1237208580/
+
+The user has not yet said whether the demo goes ahead.
 
 ## If a demo goes ahead
 
