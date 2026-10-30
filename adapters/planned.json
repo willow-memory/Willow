@@ -406,16 +406,6 @@
   "tags": "needs-install, this-machine, read-only, interface"
  },
  {
-  "name": "day-one",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Day One's JSON export: each journal entry as a dated passage, with its place and weather.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "desktop",
   "kind": "stdlib",
   "section": "Ways to use it",
@@ -517,16 +507,6 @@
   "writes": "record",
   "network": "none",
   "tags": "no-install, offline, records, trust"
- },
- {
-  "name": "family-tree",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Family trees from GEDCOM files: who was born where and when, and which record says so.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
  },
  {
   "name": "flashcards",
@@ -715,16 +695,6 @@
   "kind": "stdlib",
   "section": "Reading more kinds of files",
   "line": "Google Classroom from Takeout: assignments, announcements and comments as dated passages.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
-  "name": "google-keep",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Google Keep from Takeout: notes, lists and labels as dated passages.",
   "source": "new",
   "writes": "to",
   "network": "none",
@@ -1022,30 +992,10 @@
   "tags": "no-install, offline, records, play"
  },
  {
-  "name": "joplin",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Joplin's .jex export, read without unpacking it: each note as plain text with its title and dates.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "journiv",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
   "line": "Journiv journal entries, with their moods, as dated lines, once its export format is settled.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
-  "name": "karakeep",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Karakeep's JSON export: bookmarks, notes and tags as plain text.",
   "source": "new",
   "writes": "to",
   "network": "none",
@@ -1266,16 +1216,6 @@
   "tags": "no-install, offline, records, play"
  },
  {
-  "name": "mastodon",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "A Mastodon or Pixelfed account archive's outbox.json: your posts as dated lines.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "matrix",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -1315,16 +1255,6 @@
   "writes": "to",
   "network": "the model, downloaded once from Hugging Face",
   "tags": "needs-install, online, writes-output, search"
- },
- {
-  "name": "mediawiki",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "A MediaWiki XML dump: each page's latest text, with its title and when it changed.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
  },
  {
   "name": "medical-records",
@@ -1423,16 +1353,6 @@
   "kind": "stdlib",
   "section": "Reading more kinds of files",
   "line": "Your music files' tags (MP3, FLAC, M4A): artist, album, year and track, as lines.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
-  "name": "musicxml",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "MusicXML scores: titles, lyrics, tempo and performance markings as passages.",
   "source": "new",
   "writes": "to",
   "network": "none",
@@ -2011,26 +1931,6 @@
   "tags": "needs-install, offline, read-only, trust"
  },
  {
-  "name": "sarif",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "SARIF reports from code scanners such as CodeQL and Semgrep: each finding as a passage with its rule, file and line.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
-  "name": "sbom",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "SBOMs in SPDX or CycloneDX JSON: each component, its version and licence, as passages.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "schema-check",
   "kind": "stdlib",
   "section": "Assistants",
@@ -2049,16 +1949,6 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, tracking"
- },
- {
-  "name": "screenplay",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Fountain and Final Draft scripts: scenes, characters and lines, cited by scene.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
  },
  {
   "name": "scripture",
@@ -2540,16 +2430,6 @@
   "tags": "needs-install, online, writes-output, file-reader"
  },
  {
-  "name": "wallabag",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "wallabag's JSON or HTML export: saved entries as plain text, with their tags.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "warm",
   "kind": "stdlib",
   "section": "Ways to use it",
@@ -2634,16 +2514,6 @@
   "kind": "stdlib",
   "section": "Reading more kinds of files",
   "line": "WriteFreely posts, from its export or a copy of its SQLite database, as dated text.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
-  "name": "x-archive",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "An X (Twitter) archive: your posts, replies and DMs as dated lines.",
   "source": "new",
   "writes": "to",
   "network": "none",

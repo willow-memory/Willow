@@ -271,17 +271,27 @@ def test_every_section_says_what_its_for():
     assert list(rd.WHAT) == rd.NAMES
 
 
-def test_the_summary_links_what_is_built_and_names_what_is_still_an_idea(repo):
-    line = next(
+def test_the_summary_gives_a_built_example_not_the_whole_list(repo, monkeypatch):
+    monkeypatch.setitem(rd.EXAMPLES, "Play", ["alpha", "gamma", "beta"])
+    play = next(
         ln for ln in rd.section_summary(rd.addons()).splitlines() if "**Play:**" in ln
     )
-    assert (
-        "Built: [alpha](adapters/stdlib/alpha/), [beta](adapters/deps/beta/)." in line
+    assert play.endswith(
+        "For example [alpha](adapters/stdlib/alpha/) and [beta](adapters/deps/beta/)."
     )
-    assert line.endswith("Ideas: *gamma*.")
+    assert "Built:" not in play and "gamma" not in play
+    monkeypatch.setitem(rd.EXAMPLES, "Keeping track", ["alpha"])
     keeping = next(
         ln
         for ln in rd.section_summary(rd.addons()).splitlines()
         if "**Keeping track:**" in ln
     )
-    assert "Built: nothing yet." in keeping and "Ideas" not in keeping
+    assert "For example" not in keeping
+
+
+def test_every_example_is_built_and_in_its_section():
+    every = {a["name"]: a for a in rd.addons() if a["built"]}
+    assert set(rd.EXAMPLES) <= set(rd.NAMES)
+    for title, names in rd.EXAMPLES.items():
+        for name in names:
+            assert every[name]["section"] == title

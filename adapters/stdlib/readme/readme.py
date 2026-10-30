@@ -22,7 +22,7 @@ ADDONS.md holds these sections, in this order:
     list     every add-on, built and planned, by section, A to Z
 
 README.md holds two: `summary`, one line per section saying what it's for,
-what's built and what's still an idea; and `front`, one of pools, newest or
+with a built example or two; and `front`, one of pools, newest or
 pick, as its `show=` says (`<!-- willow:front show=pick week=2026-W43 -->`),
 and a link to the rest. To switch the front page's feature, change `show=`
 and run `write`.
@@ -112,6 +112,20 @@ WHAT = {
     "Ways to use it": "other ways in: pipes, your shell and your editor, plain sentences, a page on this machine, answers read aloud",
     "Play": "seeded, replayable games on the record, such as dice and the Game of Life",
     "For maintainers": "the repo's own tools: CI, the list, tests that can fail",
+}  # fmt: skip
+#: built add-ons that show what a section is like, for the README's summary:
+#: chosen by hand, and checked to be built and in that section
+EXAMPLES = {
+    "Reading more kinds of files": ["pdf", "mail"],
+    "Finding things": ["on-this-day", "quote-check"],
+    "Your own words": ["nicknames", "abbreviations"],
+    "Keeping track": ["coming-up", "subscriptions"],
+    "Trust and proof": ["stale", "tip-pin"],
+    "Privacy and safety": ["privacy", "secrets-audit"],
+    "Assistants": ["claude-code", "mcp"],
+    "Ways to use it": ["browse", "print"],
+    "Play": ["quiz", "life"],
+    "For maintainers": ["mutants", "ci"],
 }  # fmt: skip
 FIELDS = {"section", "line", "source", "writes", "network", "tags"}
 #: at most this many tags an add-on carries
@@ -303,18 +317,19 @@ def section_list(every: list[dict]) -> str:
 
 
 def section_summary(every: list[dict]) -> str:
-    """One line per section: what it's for, what's built (linked) and what's
-    still an idea, so the front page says it all without the full list."""
+    """One line per section: what it's for and a built example or two, so the
+    front page shows what an add-on is like; the full list is ADDONS.md."""
+    built = {a["name"]: a for a in every if a["built"]}
     lines = []
     for title in NAMES:
-        mine = sorted(
-            (a for a in every if a["section"] == title), key=lambda a: a["name"]
-        )
-        built = ", ".join(f"[{a['name']}]({a['path']})" for a in mine if a["built"])
-        ideas = ", ".join(a["name"] for a in mine if not a["built"])
+        shown = [
+            f"[{built[n]['name']}]({built[n]['path']})"
+            for n in EXAMPLES.get(title, [])
+            if n in built and built[n]["section"] == title
+        ]
         lines.append(
-            f"- **{title}:** {WHAT[title]}. Built: {built or 'nothing yet'}."
-            + (f" Ideas: *{ideas}*." if ideas else "")
+            f"- **{title}:** {WHAT[title]}."
+            + (f" For example {' and '.join(shown)}." if shown else "")
         )
     return "\n".join(lines)
 

@@ -29,8 +29,9 @@ ADDONS.md holds all four, each between `<!-- willow:NAME -->` and
 and never touched.
 
 **The front page.** README.md holds two blocks. `summary` gives one line per
-section: what it's for (the phrase in readme.py's `WHAT`), what's built,
-linked, and what's still an idea. `front` shows
+section: what it's for (the phrase in readme.py's `WHAT`), and a built
+example or two, linked (readme.py's `EXAMPLES`, chosen by hand and checked to
+be built and in that section). `front` shows
 one of pools, newest or pick, as its `show=` says, and links to ADDONS.md. To
 switch it, change `show=` in the marker (`<!-- willow:front show=newest -->`)
 and run `write`; anything else there is refused.

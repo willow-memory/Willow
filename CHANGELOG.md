@@ -34,6 +34,44 @@ says how). The first was v0.1.0.
   against wordfreq's counts: those the world doesn't have, and those you use
   far beyond its rate; a file's codes in capitals left out. Needs wordfreq,
   floored at 3.1.0, the first that doesn't import pkg_resources. (#80)
+- `x-archive`: An X (Twitter) archive: your posts, replies and direct
+  messages, oldest first, as dated lines with links expanded and entities
+  read; the archive's other data files skipped and counted. (#77)
+- `mastodon`: A Mastodon or Pixelfed account archive's outbox: your own
+  posts, oldest first, as dated lines with content warnings, replies and
+  attachment descriptions; boosts and likes left out. (#77)
+- `sbom`: SBOMs in SPDX or CycloneDX JSON: a heading and a line for each
+  component with its version, licence and package URL, in name order. (#77)
+- `sarif`: SARIF reports from code scanners: each finding as a passage with
+  the tool, rule, level and place, the rule's short description and the
+  message, in file and line order. (#77)
+- `wallabag`: wallabag's JSON export: each saved entry, oldest first, with
+  its title, URL, tags, highlights and the article's text read as a page.
+  (#77)
+- `karakeep`: Karakeep's JSON export: each bookmark, oldest first, with its
+  day, title, URL, tags, your note, its summary and the page description or
+  text. (#77)
+- `google-keep`: Google Keep notes from Takeout: each note or list as a dated
+  passage with its labels and ticked items; notes in the bin and other JSON
+  skipped and counted. (#77)
+- `day-one`: Day One's JSON export: each journal entry, oldest first, as a
+  dated passage with its place, weather and tags and its Markdown escapes
+  undone. (#77)
+- `joplin`: Joplin's .jex export, read as the tar archive it is without
+  unpacking: each note with its title, notebook path and dates, then its
+  text; the trash, tags and pictures left out. (#77)
+- `musicxml`: MusicXML scores: each as its titles, credits, key, time, tempo,
+  markings and lyrics in words, the notes themselves not copied; a file that
+  declares entities is not read. (#77)
+- `screenplay`: Fountain and Final Draft scripts: each as its scenes, with
+  action, cues and dialogue, so a line can be cited by scene; notes,
+  transitions and parentheticals left out. (#77)
+- `mediawiki`: A MediaWiki XML dump: each page's latest revision as plain
+  text with its title and the day it changed, the wiki markup taken off; a
+  file that declares entities is not read. (#77)
+- `family-tree`: Family trees from GEDCOM files: each person as a paragraph
+  that names its own record, with births, deaths, parents, spouses and notes
+  as the file writes them. (#77)
 - `budget`: Spending against the monthly budget you wrote down in your own
   words: your statements' lines matched to each category by the markers you
   gave, each month held against it. (#75)
@@ -946,6 +984,9 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- `readme` shows each section of the README's summary with a built example or
+  two, chosen by hand in `EXAMPLES`, instead of listing every add-on built and
+  planned; the full list stays in ADDONS.md (#78)
 - `README.md` opens with the kernel and the add-ons as its two parts, says the
   kernel is the seed and never names an add-on, and gains a "What it is not"
   section (#76)
