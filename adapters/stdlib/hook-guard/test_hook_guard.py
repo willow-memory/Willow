@@ -10,6 +10,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 HERE = Path(__file__).resolve().parent
 SCRIPT = HERE / "hook_guard.py"
 KERNEL = HERE.parents[2] / "kernel.py"
@@ -231,3 +233,27 @@ def test_it_writes_nothing_and_the_same_call_gets_the_same_answer(tmp_path):
     first = run("run", "--box", str(b), stdin=raw)
     assert run("run", "--box", str(b), stdin=raw).stderr == first.stderr
     assert {p: p.read_bytes() for p in tmp_path.rglob("*") if p.is_file()} == before
+
+
+@pytest.mark.xfail(
+    strict=True,
+    reason="bug #90: a Grep or recursive Glob over the folder holding the key is allowed",
+)
+def test_a_search_of_the_folder_holding_the_key_is_refused(tmp_path):
+    b, key = box(tmp_path)
+    for raw in (call("Grep", pattern=".", path=str(key.parent)),
+                call("Glob", pattern="**/*", path=str(key.parent))):  # fmt: skip
+        assert hg.judge(raw, b, key)[0] == 2
+
+
+@pytest.mark.xfail(
+    strict=True,
+    reason="bug #91: a command that runs kernel.py seal is allowed, and seal reads the key",
+)
+def test_a_command_that_seals_is_refused(tmp_path):
+    b, key = box(tmp_path)
+    for verb in ("seal", "decline"):
+        raw = call(
+            "Bash", command=f"python {KERNEL} {verb} --box {b} proposal:{'0' * 64}"
+        )
+        assert hg.judge(raw, b, key)[0] == 2
