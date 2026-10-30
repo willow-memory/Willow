@@ -99,3 +99,16 @@ def test_refusals(tmp_path):
     assert ask(b, "--full", "").returncode == 2
     assert ask(b, "stray").returncode == 2
     assert run(str(HERE / "pair_drift.py")).returncode == 2
+
+
+def test_a_bare_range_reaching_three_digits_is_a_figure():
+    assert pd.figures("40 to 99 people") == []
+    assert pd.figures("40 to 100 people") == ["40-100"]
+    assert pd.figures("99 to 40 people") == []
+
+
+def test_a_long_summary_line_is_cut_to_a_hundred_characters(tmp_path):
+    line = "It cost $12 " + "x" * 200
+    b = box(tmp_path, {"t/DRAFT.md": "it cost $10\n", "t/README.md": line + "\n"})
+    row = ask(b).stdout.splitlines()[1]
+    assert row.endswith(line[:100]) and not row.endswith(line[:101])
