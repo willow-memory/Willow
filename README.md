@@ -120,11 +120,11 @@ says how to pick one up:
 <!-- willow:front show=pick week=2026-W44 -->
 **Add-on of the week**
 
-**[package-contents](adapters/stdlib/package-contents/)** — What's inside a wheel, sdist, npm tarball or .crate before you install it: every file, and any code it runs on install.
+**[ci-logs](adapters/stdlib/ci-logs/)** — CI run logs you downloaded (GitHub Actions, GitLab CI, Forgejo Actions): each failing step as a passage.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 234 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 247 built add-ons in name order.*
 
-[Every add-on, 234 built of 470, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 247 built of 470, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 

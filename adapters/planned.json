@@ -212,16 +212,6 @@
   "tags": "needs-install, online, records, assistant"
  },
  {
-  "name": "code-comments",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "A codebase's comments and docstrings as passages, cited by file and line.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "code-first",
   "kind": "stdlib",
   "section": "Finding things",
@@ -418,16 +408,6 @@
   "tags": "needs-install, online, read-only, interface"
  },
  {
-  "name": "discord",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Discord's data package: your messages, one dated line each, by server and channel.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "docs-i18n",
   "kind": "stdlib",
   "section": "For maintainers",
@@ -577,16 +557,6 @@
   "writes": "record",
   "network": "none",
   "tags": "no-install, offline, records, play"
- },
- {
-  "name": "gh-json",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "What gh prints with --json (issues, pull requests, runs), saved to a file and read as dated passages.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
  },
  {
   "name": "gifts",
@@ -892,16 +862,6 @@
   "tags": "no-install, offline, read-only, tracking"
  },
  {
-  "name": "irc",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "IRC logs from WeeChat, irssi or ZNC, one dated line per message, by network and channel.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "issue-answer",
   "kind": "stdlib",
   "section": "Assistants",
@@ -1014,16 +974,6 @@
   "tags": "needs-install, offline, read-only, trust"
  },
  {
-  "name": "listening",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Spotify's data download: what you listened to, by day, so you can ask what was on that summer.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "local-model",
   "kind": "deps",
   "section": "Assistants",
@@ -1033,26 +983,6 @@
   "writes": "record",
   "network": "loopback",
   "tags": "needs-install, this-machine, records, assistant"
- },
- {
-  "name": "location-history",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Google Maps Timeline and other location exports: where you were, by day.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
-  "name": "lockfiles",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Lockfiles as passages (package-lock.json, pnpm-lock.yaml, poetry.lock, uv.lock, Cargo.lock, go.sum): which version of each dependency, and which lockfile says so.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
  },
  {
   "name": "lore",
@@ -1086,16 +1016,6 @@
   "tags": "needs-install, offline, read-only, play"
  },
  {
-  "name": "man-pages",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "The man pages installed on this machine as plain text, so you can ask your own system's docs.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "market-calls",
   "kind": "stdlib",
   "section": "Keeping track",
@@ -1114,16 +1034,6 @@
   "writes": "record",
   "network": "none",
   "tags": "no-install, offline, records, play"
- },
- {
-  "name": "matrix",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Element's room export, JSON or HTML: one dated line per message in each Matrix room.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
  },
  {
   "name": "maven",
@@ -1185,16 +1095,6 @@
   "writes": "record",
   "network": "none",
   "tags": "no-install, offline, records, assistant"
- },
- {
-  "name": "meta-archive",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Facebook and Instagram's Download Your Information files: posts, comments and messages as dated lines.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
  },
  {
   "name": "mex",
@@ -1318,16 +1218,6 @@
   "writes": "record",
   "network": "an RFC 3161 time server you choose, sent only the hash",
   "tags": "no-install, online, records, trust"
- },
- {
-  "name": "notion",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Notion's export zip, Markdown and CSV, as plain text with each page's title and path.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
  },
  {
   "name": "novelty",
@@ -1933,16 +1823,6 @@
   "tags": "no-install, offline, records, assistant"
  },
  {
-  "name": "slack",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Slack's export zip: one dated line per message, with channel and author.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "socratic",
   "kind": "stdlib",
   "section": "Ways to use it",
@@ -2216,16 +2096,6 @@
   "writes": "record",
   "network": "loopback",
   "tags": "needs-install, this-machine, records, assistant"
- },
- {
-  "name": "trello",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "A Trello board's JSON export: cards, checklists and comments, by list.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
  },
  {
   "name": "trips",

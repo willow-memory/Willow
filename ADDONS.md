@@ -18,11 +18,11 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`██████████░░░░░░░░░░` **234 of 470 built** · 419 need no install · 51 need one
+`███████████░░░░░░░░░` **247 of 470 built** · 419 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
-| Reading more kinds of files | 50 | 55 | 96 | 9 |
+| Reading more kinds of files | 63 | 42 | 96 | 9 |
 | Finding things | 27 | 16 | 33 | 10 |
 | Your own words | 18 | 7 | 22 | 3 |
 | Keeping track | 35 | 23 | 58 | 0 |
@@ -47,9 +47,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[package-contents](adapters/stdlib/package-contents/)** — What's inside a wheel, sdist, npm tarball or .crate before you install it: every file, and any code it runs on install.
+**[ci-logs](adapters/stdlib/ci-logs/)** — CI run logs you downloaded (GitHub Actions, GitLab CI, Forgejo Actions): each failing step as a passage.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 234 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 247 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -74,17 +74,17 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - [**chordpro**](adapters/stdlib/chordpro/) — ChordPro song sheets: titles, lyrics and chords, so you can ask which song had that line. *new* `no-install` `offline` `writes-output` `file-reader`
 - [**ci-logs**](adapters/stdlib/ci-logs/) — CI run logs you downloaded (GitHub Actions, GitLab CI, Forgejo Actions): each failing step as a passage. *new* `no-install` `offline` `writes-output` `file-reader`
 - [**clauses**](adapters/stdlib/clauses/) — A policy, contract or set of terms as one sentence a passage, so an answer lands on the clause, and what changed between two versions, sentence by sentence. *new* `no-install` `offline` `writes-output` `file-reader` `policies`
-- **code-comments** (idea) — A codebase's comments and docstrings as passages, cited by file and line. *new* `no-install` `offline` `writes-output` `file-reader`
+- [**code-comments**](adapters/stdlib/code-comments/) — A codebase's comments and docstrings as passages, cited by file and line. *new* `no-install` `offline` `writes-output` `file-reader`
 - **codebase-memory** (idea) — codebase-memory-mcp's code graph, read from a copy of its SQLite file: each function, what calls it, and its file and line. *new* `no-install` `offline` `writes-output` `file-reader`
 - **confluence** (idea) — A Confluence space's HTML export as plain text, page by page. *new* `no-install` `offline` `writes-output` `file-reader`
 - **corpus-lens** (idea) — corpus-lens's process reports on your own sessions with agents, as passages: where your intent arrives, who writes the code. *new* `no-install` `offline` `writes-output` `file-reader`
 - [**day-one**](adapters/stdlib/day-one/) — Day One's JSON export: each journal entry as a dated passage, with its place and weather. *new* `no-install` `offline` `writes-output` `file-reader`
-- **discord** (idea) — Discord's data package: your messages, one dated line each, by server and channel. *new* `no-install` `offline` `writes-output` `file-reader`
+- [**discord**](adapters/stdlib/discord/) — Discord's data package: your messages, one dated line each, by server and channel. *new* `no-install` `offline` `writes-output` `file-reader`
 - **dotfiles** (idea) — Your dotfiles as passages: which file sets what, for 'where did I set my editor?' *new* `no-install` `offline` `writes-output` `file-reader`
 - [**evernote**](adapters/stdlib/evernote/) — Evernote's .enex files: each note as plain text with its notebook, tags and dates. *new* `no-install` `offline` `writes-output` `file-reader`
 - [**family-tree**](adapters/stdlib/family-tree/) — Family trees from GEDCOM files: who was born where and when, and which record says so. *new* `no-install` `offline` `writes-output` `file-reader`
 - **forgejo-dump** (idea) — A Forgejo or Gitea dump, Codeberg's included: issues, pull requests and wiki pages as dated passages. *new* `no-install` `offline` `writes-output` `file-reader`
-- **gh-json** (idea) — What gh prints with --json (issues, pull requests, runs), saved to a file and read as dated passages. *new* `no-install` `offline` `writes-output` `file-reader`
+- [**gh-json**](adapters/stdlib/gh-json/) — What gh prints with --json (issues, pull requests, runs), saved to a file and read as dated passages. *new* `no-install` `offline` `writes-output` `file-reader`
 - **git-history** (idea) — Commit messages and diffs as a dated pile: "when did we change the retry limit?" Needs the git program; GPL, called not linked. *new* `needs-install` `offline` `writes-output` `file-reader`
 - **github-archive** (idea) — Your GitHub account's data export: the issues, pull requests, reviews and comments you wrote, as dated passages with their links. *new* `no-install` `offline` `writes-output` `file-reader`
 - **gitlab-export** (idea) — A GitLab project export, read without unpacking it: its issues, merge requests and comments as dated passages. *new* `no-install` `offline` `writes-output` `file-reader`
@@ -95,7 +95,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - [**home-sensors**](adapters/stdlib/home-sensors/) — Home Assistant's history export: sensor readings as dated numbers the readings add-on can trend. *new* `no-install` `offline` `writes-output` `file-reader`
 - **homestead** (idea) — Homestead's exports from its law, ledger and health modules: records, deadlines and evidence as dated passages. *new* `no-install` `offline` `writes-output` `file-reader`
 - **instapaper** (idea) — Instapaper's CSV and HTML export: saved articles and highlights as dated lines. *new* `no-install` `offline` `writes-output` `file-reader`
-- **irc** (idea) — IRC logs from WeeChat, irssi or ZNC, one dated line per message, by network and channel. *new* `no-install` `offline` `writes-output` `file-reader`
+- [**irc**](adapters/stdlib/irc/) — IRC logs from WeeChat, irssi or ZNC, one dated line per message, by network and channel. *new* `no-install` `offline` `writes-output` `file-reader`
 - [**jira**](adapters/stdlib/jira/) — Jira's issue export, CSV or XML: each issue, comment and status change as dated passages. *new* `no-install` `offline` `writes-output` `file-reader`
 - [**joplin**](adapters/stdlib/joplin/) — Joplin's .jex export, read without unpacking it: each note as plain text with its title and dates. *new* `no-install` `offline` `writes-output` `file-reader`
 - **journiv** (idea) — Journiv journal entries, with their moods, as dated lines, once its export format is settled. *new* `no-install` `offline` `writes-output` `file-reader`
@@ -106,23 +106,23 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - **lessons** (idea) — Lesson plans from the Emerging Rule community library, by grade and subject, as passages a teacher can ask. *new* `no-install` `offline` `writes-output` `file-reader`
 - [**letterboxd**](adapters/stdlib/letterboxd/) — Letterboxd's export: the films you've watched, your ratings and reviews, as dated lines. *new* `no-install` `offline` `writes-output` `file-reader`
 - [**linkedin**](adapters/stdlib/linkedin/) — LinkedIn's data export: messages, posts and connections as dated lines. *new* `no-install` `offline` `writes-output` `file-reader`
-- **listening** (idea) — Spotify's data download: what you listened to, by day, so you can ask what was on that summer. *new* `no-install` `offline` `writes-output` `file-reader`
-- **location-history** (idea) — Google Maps Timeline and other location exports: where you were, by day. *new* `no-install` `offline` `writes-output` `file-reader`
-- **lockfiles** (idea) — Lockfiles as passages (package-lock.json, pnpm-lock.yaml, poetry.lock, uv.lock, Cargo.lock, go.sum): which version of each dependency, and which lockfile says so. *new* `no-install` `offline` `writes-output` `file-reader`
+- [**listening**](adapters/stdlib/listening/) — Spotify's data download: what you listened to, by day, so you can ask what was on that summer. *new* `no-install` `offline` `writes-output` `file-reader`
+- [**location-history**](adapters/stdlib/location-history/) — Google Maps Timeline and other location exports: where you were, by day. *new* `no-install` `offline` `writes-output` `file-reader`
+- [**lockfiles**](adapters/stdlib/lockfiles/) — Lockfiles as passages (package-lock.json, pnpm-lock.yaml, poetry.lock, uv.lock, Cargo.lock, go.sum): each package and its locked version. *new* `no-install` `offline` `writes-output` `file-reader`
 - [**logs**](adapters/stdlib/logs/) — System and app logs (syslog, journald's export, nginx): each line dated, so you can ask when it started. *new* `no-install` `offline` `writes-output` `file-reader`
 - [**mail**](adapters/stdlib/mail/) — .eml and .mbox files, with sender, date and subject kept. *new* `no-install` `offline` `writes-output` `file-reader`
-- **man-pages** (idea) — The man pages installed on this machine as plain text, so you can ask your own system's docs. *new* `no-install` `offline` `writes-output` `file-reader`
+- [**man-pages**](adapters/stdlib/man-pages/) — The man pages installed on this machine as plain text, so you can ask your own system's docs. *new* `no-install` `offline` `writes-output` `file-reader`
 - [**manifests**](adapters/deps/manifests/) — Docker Compose and Kubernetes YAML: each service, image, port and volume as a passage. Needs PyYAML; MIT. *new* `needs-install` `offline` `writes-output` `file-reader`
 - [**mastodon**](adapters/stdlib/mastodon/) — A Mastodon or Pixelfed account archive's outbox.json: your posts as dated lines. *new* `no-install` `offline` `writes-output` `file-reader`
-- **matrix** (idea) — Element's room export, JSON or HTML: one dated line per message in each Matrix room. *new* `no-install` `offline` `writes-output` `file-reader`
+- [**matrix**](adapters/stdlib/matrix/) — Element's room export, JSON or HTML: one dated line per message in each Matrix room. *new* `no-install` `offline` `writes-output` `file-reader`
 - [**mediawiki**](adapters/stdlib/mediawiki/) — A MediaWiki XML dump: each page's latest text, with its title and when it changed. *new* `no-install` `offline` `writes-output` `file-reader`
 - **medical-records** (idea) — Your health records as FHIR JSON or C-CDA XML: visits, results and prescriptions as dated lines. *new* `no-install` `offline` `writes-output` `file-reader`
-- **meta-archive** (idea) — Facebook and Instagram's Download Your Information files: posts, comments and messages as dated lines. *new* `no-install` `offline` `writes-output` `file-reader`
+- [**meta-archive**](adapters/stdlib/meta-archive/) — Facebook and Instagram's Download Your Information files: posts, comments and messages as dated lines. *new* `no-install` `offline` `writes-output` `file-reader`
 - **moodle** (idea) — Moodle course backups: pages, assignments, quizzes and forum posts as passages. *new* `no-install` `offline` `writes-output` `file-reader`
 - **music-library** (idea) — Your music files' tags (MP3, FLAC, M4A): artist, album, year and track, as lines. *new* `no-install` `offline` `writes-output` `file-reader`
 - [**musicxml**](adapters/stdlib/musicxml/) — MusicXML scores: titles, lyrics, tempo and performance markings as passages. *new* `no-install` `offline` `writes-output` `file-reader`
 - [**notes**](adapters/stdlib/notes/) — Obsidian and Logseq vaults, with [[links]] and #tags kept and backlinks listed. *new* `no-install` `offline` `writes-output` `file-reader`
-- **notion** (idea) — Notion's export zip, Markdown and CSV, as plain text with each page's title and path. *new* `no-install` `offline` `writes-output` `file-reader`
+- [**notion**](adapters/stdlib/notion/) — Notion's export zip, Markdown and CSV, as plain text with each page's title and path. *new* `no-install` `offline` `writes-output` `file-reader`
 - **ocr** (idea) — Text out of photos of letters and scanned PDFs. Needs pytesseract and the tesseract program; Apache-2.0. *new* `needs-install` `offline` `writes-output` `file-reader`
 - [**office**](adapters/stdlib/office/) — .docx, .odt, .pptx, .xlsx and .ods, which are all zipped XML. *new* `no-install` `offline` `writes-output` `file-reader`
 - [**orders**](adapters/stdlib/orders/) — Amazon's order history and other shops' CSV exports: what you bought, when, and for how much. *new* `no-install` `offline` `writes-output` `file-reader`
@@ -148,7 +148,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - **shell-history** (idea) — Your bash, zsh and fish history: what you ran, and when the shell recorded it. *new* `no-install` `offline` `writes-output` `file-reader`
 - **sigmap** (idea) — SigMap's signature map of a codebase as plain text: each function's signature with its file and line, for questions about the code. *new* `no-install` `offline` `writes-output` `file-reader`
 - **signal** (idea) — A Signal backup, decrypted with its passphrase, as one dated line per message. Needs cryptography; Apache-2.0 or BSD. *new* `needs-install` `offline` `writes-output` `file-reader`
-- **slack** (idea) — Slack's export zip: one dated line per message, with channel and author. *new* `no-install` `offline` `writes-output` `file-reader`
+- [**slack**](adapters/stdlib/slack/) — Slack's export zip: one dated line per message, with channel and author. *new* `no-install` `offline` `writes-output` `file-reader`
 - [**snapshot**](adapters/stdlib/snapshot/) — A web page or data file fetched once into a folder, as it came, with its address, the time and its SHA-256, so later answers cite the copy. Goes online: the address you give, fetched once. *bot* `no-install` `online` `writes-output` `file-reader` `sources`
 - [**star-system**](adapters/deps/star-system/) — A friend's star-system simulation (science_bitch) run deterministically and written as cited passages: each body's Kepler period and how well the run conserves energy, angular momentum and linear momentum. Needs numpy; BSD-3-Clause. *bot* `needs-install` `offline` `writes-output`
 - **steam** (idea) — Your Steam library from its local files: games, playtime and when you last played. *new* `no-install` `offline` `writes-output` `file-reader`
@@ -157,7 +157,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - **takeout** (idea) — Google Takeout's My Activity and YouTube history, JSON or HTML, as dated lines. *new* `no-install` `offline` `writes-output` `file-reader`
 - **teams** (idea) — Microsoft Teams chats from your Microsoft account's export, one dated line per message. *new* `no-install` `offline` `writes-output` `file-reader`
 - **texts** (idea) — Phone text messages, from an Android SMS backup or an iPhone backup's copy, one dated line per message. *new* `no-install` `offline` `writes-output` `file-reader`
-- **trello** (idea) — A Trello board's JSON export: cards, checklists and comments, by list. *new* `no-install` `offline` `writes-output` `file-reader`
+- [**trello**](adapters/stdlib/trello/) — A Trello board's JSON export: cards, checklists and comments, by list. *new* `no-install` `offline` `writes-output` `file-reader`
 - **voice** (idea) — Dictation, calls and lectures transcribed into dated text. Needs faster-whisper; MIT. Goes online: the model, downloaded once. *new* `needs-install` `online` `writes-output` `file-reader`
 - [**wallabag**](adapters/stdlib/wallabag/) — wallabag's JSON or HTML export: saved entries as plain text, with their tags. *new* `no-install` `offline` `writes-output` `file-reader`
 - [**web-pages**](adapters/stdlib/web-pages/) — Saved web pages, .html and .mhtml, as their readable text, with the address they came from. *new* `no-install` `offline` `writes-output` `file-reader`

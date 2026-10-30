@@ -49,6 +49,46 @@ says how). The first was v0.1.0.
 - `ci-logs`: CI run logs from GitHub Actions, Forgejo Actions or GitLab CI:
   each failing step as a passage with its name, the time, its last lines and
   the error; passing runs skipped and counted. (#81)
+- `code-comments`: A codebase's comments and docstrings, line for line: each
+  source file becomes a file of the same number of lines holding the comment
+  text of the same line, so a hit is cited by the source's own line number.
+  (#79)
+- `notion`: Notion's export zip, read without unpacking and one nested zip
+  deep: each page and database with its path, Notion's ids taken off and a
+  page's first heading not repeated. (#79)
+- `discord`: Discord's data package zip, read without unpacking: your
+  messages, oldest first, as dated lines by server and channel, from the
+  older JSON or the newer CSV message files. (#79)
+- `slack`: Slack's export zip, read without unpacking: each message, oldest
+  first, as a dated line with its channel and author; users, channels and
+  links written as words; joins and similar left out. (#79)
+- `location-history`: Google Maps Timeline exports, Takeout's semantic
+  location history or the newer Timeline file: each place visited and each
+  trip as a dated line with the hours it covers. (#79)
+- `meta-archive`: Facebook and Instagram's Download Your Information JSON:
+  messages with their conversation and sender, posts and comments, oldest
+  first as dated lines, the export's garbled accents put right. (#79)
+- `gh-json`: What gh prints with --json for issues, pull requests and runs,
+  saved to a file: each item, oldest first, as a dated passage with its
+  state, author, labels, body and comments. (#79)
+- `trello`: A Trello board's JSON export: each open list with its open cards,
+  their due days, labels, descriptions, checklists with ticks and comments,
+  archived lists and cards left out. (#79)
+- `matrix`: Element's JSON room export: each message, oldest first, as a
+  dated line with its room and sender; emotes and image or file descriptions
+  kept; joins, reactions and other events left out. (#79)
+- `man-pages`: The man pages installed on this machine, gzipped or not, as
+  plain text: title, section headings and the words with fonts, escapes and
+  the usual macros read; comments and macro definitions dropped. (#79)
+- `lockfiles`: Lockfiles (package-lock.json, yarn.lock, pnpm-lock.yaml,
+  Cargo.lock, poetry.lock, uv.lock, go.sum): a heading and a line for each
+  locked package and version, in name order. (#79)
+- `listening`: Spotify's data download, account data or extended history:
+  each play, oldest first, as a dated line with its length; skips of under
+  thirty seconds left out. (#79)
+- `irc`: IRC logs from WeeChat, irssi or ZNC: one dated line per message and
+  action with its channel; joins, parts and modes left out; a log of
+  something else skipped and counted. (#79)
 - `stems`: Word forms for some thirty languages through Snowball's stemmer,
   so "häuser" finds "haus" and "книги" finds "книга": a word no file holds
   is read as the form of its stem the most passages hold, offered, never
