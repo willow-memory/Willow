@@ -120,11 +120,11 @@ says how to pick one up:
 <!-- willow:front show=pick week=2026-W44 -->
 **Add-on of the week**
 
-**[hook-fuzz](adapters/stdlib/hook-fuzz/)** — Throws empty, malformed, oversized and non-UTF-8 input at a hook and fails it if any of them crash it, since a crashed hook lets the tool run.
+**[package-contents](adapters/stdlib/package-contents/)** — What's inside a wheel, sdist, npm tarball or .crate before you install it: every file, and any code it runs on install.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 233 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 234 built add-ons in name order.*
 
-[Every add-on, 233 built of 470, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 234 built of 470, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 

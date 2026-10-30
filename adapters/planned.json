@@ -993,16 +993,6 @@
   "tags": "no-install, offline, records, assistant"
  },
  {
-  "name": "launcher",
-  "kind": "stdlib",
-  "section": "Ways to use it",
-  "line": "Ask from Alfred, Raycast, KRunner or PowerToys Run, answers with file and line.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, interface"
- },
- {
   "name": "lessons",
   "kind": "stdlib",
   "section": "Reading more kinds of files",

@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `launcher`: Ask from a launcher: the passages your folder holds for a
+  question as Alfred Script Filter JSON (which Raycast reads too) or
+  tab-separated lines, each with its file and line; nothing written.
 - `logs`: System and app logs (syslog, journald's export, nginx and Apache
   access logs): each entry as a dated line with host, program and message; no
   year is invented for classic syslog.
