@@ -10,6 +10,37 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `demo/stewart-crossover`, a study: a fictional Star Trek fan's files beside
+  the real record of 2020 to 2023 of Patrick Stewart's life, every word about
+  him a fact two publishers hold, a quote a source holds, or a planted trap,
+  judged with tools from Willow, willows-grove, willow-mcp, willow-bot and
+  Forge. Run 1 held 15 of 17 rules, run 2 16 of 18, and run 3, from a third
+  freeze, all 18; what failed each time is written down with its cause, and
+  one of them is bug #89. (#100)
+- `make-it-so`: An order held for you: your question, the command you name
+  (kept as given and never run), the passages that bear on it and their file
+  hashes, written once to a file of yours; `check` says whether those files
+  still hold what they held. (#100)
+- `stack`: Seven example stacks for #87, each for a different kind of
+  folder: a choir's secretary, a smallholding, a small library's maintainer,
+  a teacher's class, a local reporter's story, a dog-rescue fosterer and a
+  runner back from a knee injury, in `adapters/stdlib/stack/examples/`.
+  (#98)
+- A language form for issues (`.github/ISSUE_TEMPLATE/language.yml`): a
+  language's code, common words, quirks and where its list comes from, so a
+  pack can start without Python;
+  `.github/ISSUE_TEMPLATE/config.yml` links the languages and the
+  add-on ideas, and the pull request template asks for `Part of #`. (#92)
+- `words-tlh`: Klingon common words ("'ej", "nuq") out of a question before
+  the kernel's bite. Each of its 27 words is in two sources pinned by
+  revision or commit and SHA-256, and its card says what the kernel's
+  lowercasing and apostrophe splitting cost a Klingon question. (#88)
+- `lesson-time`: Lesson plans whose timed parts do not add up to the time
+  the plan says it takes, ranged parts held as ranges and optional parts
+  left out. (#99)
+- `pair-drift`: Figures a summary says that its full text does not, a
+  draft and its packet side by side, with ranges and scale words read as
+  written. (#99)
 - `ripgrep`: Exact search through ripgrep, much faster on a big folder: each
   hit shown with the id of the kernel's own passage that holds it, and one
   the kernel doesn't read as written counted, never shown. Needs the rg
@@ -1093,6 +1124,21 @@ says how). The first was v0.1.0.
   own, and a private key block whole: written `\n` on one line in a JSON
   transcript, or line by line from BEGIN to END, where its BEGIN line alone
   went before.
+- Known bugs as tests expected to fail: #101 (`said` names "If I" a
+  speaker), #102 (`agents-md-check` reads a GitHub owner/repo as a missing
+  path), #111 (`snapshot` saves a page under a name the kernel doesn't read)
+  and #112 (`pdf` writes ligatures as glyph names). LIMITS.md says how a date
+  is read and that the same words in two files are one passage. (#110)
+- CI runs a pull request's tests on Python 3.9 and 3.14 only, and a
+  push to main's on all six. The six Pythons were 72 of a pull request's 84
+  jobs, run 20 at a time, so its CI took 14 to 21 minutes for 6 minutes'
+  longest job.
+  `github` check holds the tests and strip jobs to the same exclude, as it
+  holds them to the same Pythons. (#97)
+- `readme` writes a Languages section in ADDONS.md: every `words-<code>`
+  add-on, built and planned, by code. The contract test runs every language
+  pack from its folder rather than a hand-kept list, and names one that
+  isn't `words-` and its code with `words_<code>.py` beside it. (#92)
 - `readme` shows each section of the README's summary with a built example or
   two, chosen by hand in `EXAMPLES`, instead of listing every add-on built and
   planned; the full list stays in ADDONS.md (#78)

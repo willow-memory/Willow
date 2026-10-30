@@ -482,6 +482,10 @@ willow/
 │   │   │   ├── lending.py    what you lent, and what your files say came back
 │   │   │   ├── test_lending.py
 │   │   │   └── README.md
+│   │   ├── lesson-time/
+│   │   │   ├── lesson_time.py   lesson plans whose timed parts do not add up to the time they say
+│   │   │   ├── test_lesson_time.py
+│   │   │   └── README.md
 │   │   ├── letterboxd/
 │   │   │   ├── letterboxd.py   films watched, rated and reviewed as dated lines
 │   │   │   ├── test_letterboxd.py
@@ -529,6 +533,10 @@ willow/
 │   │   ├── mail/
 │   │   │   ├── mail.py       .eml and .mbox, with sender, date and subject
 │   │   │   ├── test_mail.py
+│   │   │   └── README.md
+│   │   ├── make-it-so/
+│   │   │   ├── make_it_so.py   an order held for you with the passages it rests on, never run; a check they still stand
+│   │   │   ├── test_make_it_so.py
 │   │   │   └── README.md
 │   │   ├── man-pages/
 │   │   │   ├── man_pages.py   man pages as plain text
@@ -630,6 +638,10 @@ willow/
 │   │   ├── package-contents/
 │   │   │   ├── package_contents.py   what a wheel, sdist, npm tarball or crate holds, and the code it runs on install, by file and line
 │   │   │   ├── test_package_contents.py
+│   │   │   └── README.md
+│   │   ├── pair-drift/
+│   │   │   ├── pair_drift.py   figures a summary says that its full text does not
+│   │   │   ├── test_pair_drift.py
 │   │   │   └── README.md
 │   │   ├── parallel/
 │   │   │   ├── parallel.py   a reader run over several folders at once, across cores, into one mirror
@@ -839,6 +851,14 @@ willow/
 │   │   │   ├── stack.py       one document from a stack of add-on steps over a box, pooled and peaks-first
 │   │   │   ├── test_stack.py
 │   │   │   ├── example.md
+│   │   │   ├── examples/      stacks to start from, one kind of folder each: a choir, a smallholding, a code library, a class, a story, foster dogs, a knee
+│   │   │   │   ├── choir.md
+│   │   │   │   ├── comeback.md
+│   │   │   │   ├── foster.md
+│   │   │   │   ├── maintainer.md
+│   │   │   │   ├── reporter.md
+│   │   │   │   ├── smallholding.md
+│   │   │   │   └── teacher.md
 │   │   │   └── README.md
 │   │   ├── stale/
 │   │   │   ├── stale.py      approved answers whose cited passage changed or went
@@ -988,6 +1008,10 @@ willow/
 │   │   ├── words-sv/
 │   │   │   ├── words_sv.py   Swedish questions without Swedish's common words, then the kernel's own bite
 │   │   │   ├── test_words_sv.py
+│   │   │   └── README.md
+│   │   ├── words-tlh/
+│   │   │   ├── words_tlh.py   a question in Klingon, its common words out, then the kernel's bite
+│   │   │   ├── test_words_tlh.py
 │   │   │   └── README.md
 │   │   ├── words-tr/
 │   │   │   ├── words_tr.py   a question in Turkish, its common words out, then the kernel's bite
@@ -1303,31 +1327,49 @@ willow/
 │   │       ├── run-3.json    the third run's, from freeze 3: every rule held
 │   │       ├── record.jsonl  a copy of the record the verdicts are rows on, without its key
 │   │       └── checks.md     what the kernel, xref and claim-check say of the report
-│   └── google-privacy-2026-10-16/  a real policy change: what Google's text says against what the news said
-│       ├── README.md         the claim, the threats, what is frozen, how to reproduce, the results
-│       ├── FROZEN.json       the SHA-256 of each frozen file, and of the tools when frozen
-│       ├── sources.json      each source fetched, with its address, time and SHA-256
-│       ├── fetch.py          saves the sources into a pile once, and checks them offline
-│       ├── targets.json      the frozen hit rule: the clauses a question lands on, and what supports a claim
-│       ├── study.py          every phase and pass rule: the versions, the changes, nulls, blind, absence
-│       ├── test_google_privacy.py holds the frozen files to their hashes, and the rules to their word
-│       └── questions/
-│           ├── reporters.txt   the reporting's claim, in the reporters' own words
-│           ├── claims.txt      "Google scans Gmail for ads", as the reporting words it
-│           ├── policy-quotes.txt  the policy as each report quotes it
-│           ├── blind-reporters.txt  the reporters' lines, reworded three ways, blind
-│           ├── blind-claims.txt     the claims, reworded three ways, blind
-│           └── null.txt        thirty questions about the policy with nothing to do with ads
+│   ├── google-privacy-2026-10-16/  a real policy change: what Google's text says against what the news said
+│   │   ├── README.md         the claim, the threats, what is frozen, how to reproduce, the results
+│   │   ├── FROZEN.json       the SHA-256 of each frozen file, and of the tools when frozen
+│   │   ├── sources.json      each source fetched, with its address, time and SHA-256
+│   │   ├── fetch.py          saves the sources into a pile once, and checks them offline
+│   │   ├── targets.json      the frozen hit rule: the clauses a question lands on, and what supports a claim
+│   │   ├── study.py          every phase and pass rule: the versions, the changes, nulls, blind, absence
+│   │   ├── test_google_privacy.py holds the frozen files to their hashes, and the rules to their word
+│   │   └── questions/
+│   │       ├── reporters.txt   the reporting's claim, in the reporters' own words
+│   │       ├── claims.txt      "Google scans Gmail for ads", as the reporting words it
+│   │       ├── policy-quotes.txt  the policy as each report quotes it
+│   │       ├── blind-reporters.txt  the reporters' lines, reworded three ways, blind
+│   │       ├── blind-claims.txt     the claims, reworded three ways, blind
+│   │       └── null.txt        thirty questions about the policy with nothing to do with ads
+│   └── stewart-crossover/    a fictional fan's files beside a real life: every word about him from a source
+│       ├── README.md         the claim, the five repositories' parts, what is frozen, the dry run, the results
+│       ├── FROZEN.json       the SHA-256 of each frozen file, and of the tools in five repositories when frozen
+│       ├── sources.json      eight sources by address, time and SHA-256, a news page by its article's lines
+│       ├── questions.json    the facts, quotes, traps, beats, every line of hers that may name him, the pass rules
+│       ├── fetch.py          fetches the sources again and says of each whether it is held
+│       ├── run.py            judges every pass rule and writes each as a kernel verdict row
+│       ├── make_life.py      Wren's files, seeded: every frozen line in them word for word, each file labelled fiction
+│       ├── test_stewart_crossover.py holds the frozen files to their hashes, and the parts that need no network
+│       ├── test_wren.py      holds Wren's files to the frozen lines, the fiction label and her last day
+│       └── results/
+│           ├── run-1.json    the first run's every outcome, less the words misquote printed from a source
+│           ├── record.jsonl  a copy of run 1's record, the verdicts as rows, without its key
+│           ├── run-2.json    the second run's, from freeze 2
+│           ├── record-2.jsonl  a copy of run 2's record, without its key
+│           ├── run-3.json    the third run's, from freeze 3: every rule held
+│           └── record-3.jsonl  a copy of run 3's record, without its key
 ├── .github/
 │   ├── workflows/
-│   │   ├── ci.yml            runs adapters/stdlib/ci/ci.py a part or a cut of one a job, tests on Python 3.9 to 3.14
+│   │   ├── ci.yml            runs adapters/stdlib/ci/ci.py a part or a cut of one a job, tests on Python 3.9 to 3.14 (3.9 and 3.14 on a pull request)
 │   │   ├── law.yml           every Monday, the law's check: an expired emergency amendment fails it
 │   │   └── security.yml      posts the github add-on's comment on a security report
 │   ├── ISSUE_TEMPLATE/
 │   │   ├── bug.yml           the form for something wrong
 │   │   ├── idea.yml          the form for an add-on idea: the same fields as planned.json
+│   │   ├── language.yml      the form for a language: its code, common words, quirks and where the list comes from
 │   │   ├── security.yml      the form for a security problem, in public
-│   │   └── config.yml        a link to the contributing rules
+│   │   └── config.yml        links to the contributing rules, the languages and the add-on ideas
 │   ├── pull_request_template.md  what a pull request says, and what to check before opening one
 │   └── dependabot.yml        weekly updates for the workflow's actions, never the add-ons' pins
 ├── .gitignore                generated files and build output

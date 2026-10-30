@@ -120,11 +120,11 @@ says how to pick one up:
 <!-- willow:front show=pick week=2026-W44 -->
 **Add-on of the week**
 
-**[hook-guard](adapters/stdlib/hook-guard/)** — A PreToolUse hook that refuses, by rule and never by judgment, a tool call that would read the key or write a box outside the kernel, naming the rule it hit.
+**[pile-gold](adapters/stdlib/pile-gold/)** — Each answer you approve marks the passage that held it, so your own questions become a test of how well the search finds things, scored as recall at five.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 252 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 256 built add-ons in name order.*
 
-[Every add-on, 252 built of 470, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 256 built of 474, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 
@@ -252,7 +252,7 @@ in `demo/*/STRIP.md`.
   A tool that isn't installed is recorded as unreachable, never as a pass.
   It is deterministic: the same files give the same record, byte for byte.
   CI runs the same script on every pull request and every push to main, with the tests on Python 3.9 through
-  3.14, and keeps each job's record as an artifact. The verdicts are draft;
+  3.14 (a pull request on 3.9 and 3.14 only, every push to main on all six), and keeps each job's record as an artifact. The verdicts are draft;
   merging is the person's call. See [adapters/stdlib/ci](adapters/stdlib/ci/).
 - **Four implementations, one behaviour.** `vectors/gen.py` reads 4,668 cases
   out of `kernel.py`, covering canonical JSON, word splitting, HTML text,

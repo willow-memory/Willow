@@ -1,0 +1,342 @@
+{
+ "facts": {
+  "ok": true,
+  "each": {
+   "fact1": {
+    "all_parts": [
+     "deadline.txt:20",
+     "wp-memoir.txt:1",
+     "wp-memoir.txt:11",
+     "wp-memoir.txt:19",
+     "wp-stewart.txt:38",
+     "wp-stewart.txt:207",
+     "wp-stewart.txt:213"
+    ],
+    "publishers": [
+     "deadline",
+     "wikipedia"
+    ],
+    "ok": true
+   },
+   "fact2": {
+    "all_parts": [
+     "cnn.txt:4",
+     "variety.txt:4",
+     "wp-picard.txt:77",
+     "wp-picard.txt:91",
+     "wp-picard.txt:97",
+     "wp-picard.txt:925",
+     "wp-stewart.txt:31"
+    ],
+    "publishers": [
+     "cnn",
+     "variety",
+     "wikipedia"
+    ],
+    "ok": true
+   },
+   "fact3": {
+    "all_parts": [
+     "deadline.txt:8",
+     "wp-picard.txt:97"
+    ],
+    "publishers": [
+     "deadline",
+     "wikipedia"
+    ],
+    "ok": true
+   },
+   "fact4": {
+    "all_parts": [
+     "cnn.txt:4",
+     "deadline.txt:8",
+     "wp-picard.txt:77",
+     "wp-picard.txt:91",
+     "wp-picard.txt:97",
+     "wp-picard.txt:214",
+     "wp-picard.txt:564",
+     "wp-picard.txt:566",
+     "wp-picard.txt:810",
+     "wp-picard.txt:856",
+     "wp-picard.txt:904",
+     "wp-picard.txt:916",
+     "wp-picard.txt:934"
+    ],
+    "publishers": [
+     "cnn",
+     "deadline",
+     "wikipedia"
+    ],
+    "ok": true
+   },
+   "fact5": {
+    "all_parts": [
+     "cnn.txt:4",
+     "deadline.txt:7",
+     "wp-stewart.txt:31",
+     "wp-stewart.txt:56"
+    ],
+    "publishers": [
+     "cnn",
+     "deadline",
+     "wikipedia"
+    ],
+    "ok": true
+   },
+   "fact6": {
+    "all_parts": [
+     "deadline.txt:10",
+     "variety.txt:1",
+     "variety.txt:5",
+     "variety.txt:9",
+     "wp-stewart.txt:33",
+     "wp-stewart.txt:71",
+     "wp-stewart.txt:83"
+    ],
+    "publishers": [
+     "deadline",
+     "variety",
+     "wikipedia"
+    ],
+    "ok": true
+   },
+   "fact7": {
+    "all_parts": [
+     "cnn.txt:8",
+     "deadline.txt:6",
+     "wp-stewart.txt:38"
+    ],
+    "publishers": [
+     "cnn",
+     "deadline",
+     "wikipedia"
+    ],
+    "ok": true
+   }
+  }
+ },
+ "facts-trusted": {
+  "ok": true,
+  "each": {
+   "fact1": {
+    "hosts": [
+     "deadline.com",
+     "en.wikipedia.org"
+    ],
+    "ok": true
+   },
+   "fact2": {
+    "hosts": [
+     "edition.cnn.com",
+     "en.wikipedia.org",
+     "variety.com"
+    ],
+    "ok": true
+   },
+   "fact3": {
+    "hosts": [
+     "deadline.com",
+     "en.wikipedia.org"
+    ],
+    "ok": true
+   },
+   "fact4": {
+    "hosts": [
+     "deadline.com",
+     "edition.cnn.com",
+     "en.wikipedia.org"
+    ],
+    "ok": true
+   },
+   "fact5": {
+    "hosts": [
+     "deadline.com",
+     "edition.cnn.com",
+     "en.wikipedia.org"
+    ],
+    "ok": true
+   },
+   "fact6": {
+    "hosts": [
+     "deadline.com",
+     "en.wikipedia.org",
+     "variety.com"
+    ],
+    "ok": true
+   },
+   "fact7": {
+    "hosts": [
+     "deadline.com",
+     "edition.cnn.com",
+     "en.wikipedia.org"
+    ],
+    "ok": true
+   }
+  }
+ },
+ "facts-grove": {
+  "ok": true,
+  "each": {
+   "fact1": {
+    "checks": [
+     true,
+     true,
+     true,
+     "na"
+    ],
+    "ok": true
+   },
+   "fact2": {
+    "checks": [
+     true,
+     true,
+     true,
+     "na"
+    ],
+    "ok": true
+   },
+   "fact3": {
+    "checks": [
+     true,
+     true,
+     true,
+     "na"
+    ],
+    "ok": true
+   },
+   "fact4": {
+    "checks": [
+     true,
+     true,
+     true,
+     "na"
+    ],
+    "ok": true
+   },
+   "fact5": {
+    "checks": [
+     true,
+     true,
+     true,
+     "na"
+    ],
+    "ok": true
+   },
+   "fact6": {
+    "checks": [
+     true,
+     true,
+     true,
+     "na"
+    ],
+    "ok": true
+   },
+   "fact7": {
+    "checks": [
+     true,
+     true,
+     true,
+     "na"
+    ],
+    "ok": true
+   }
+  }
+ },
+ "quotes": {
+  "ok": false,
+  "each": {
+   "quote1": {
+    "verbatim": [],
+    "ok": false
+   },
+   "quote2": {
+    "verbatim": [
+     "cnn.txt:12"
+    ],
+    "ok": true
+   }
+  }
+ },
+ "T1": {
+  "ok": false,
+  "claim_exit": 42,
+  "beside": []
+ },
+ "T2": {
+  "ok": true,
+  "quote_exit": 42,
+  "closest": [
+   "cnn.txt:12"
+  ]
+ },
+ "T3": {
+  "ok": true,
+  "claim_exit": 42,
+  "out": "some parts   wp-picard.txt:151   patrick, stewart, enterprise   lacks signed, model\nsome parts   wp-picard.txt:167   patrick, stewart, signed   lacks enterprise, model\nsome parts   wp-stewart.txt:101   patrick, stewart, signed   lacks enterprise, model\n"
+ },
+ "T4": {
+  "ok": true,
+  "same_words": [
+   "boqwi-q.txt:1143",
+   "boqwi-q.txt:1412",
+   "boqwi-q.txt:1432",
+   "boqwi-q.txt:1441",
+   "boqwi-q.txt:1461",
+   "boqwi-q.txt:1481",
+   "boqwi-q.txt:1496"
+  ],
+  "verbatim": [],
+  "kernel_blind": true
+ },
+ "death": {
+  "ok": true,
+  "claim_exit": 42,
+  "out": "some parts   chat/watch-group.txt:12   patrick, stewart   lacks died\nsome parts   merch/collection.txt:4   patrick, stewart   lacks died\nsome parts   notes/fan-facts.md:16   patrick, stewart   lacks died\nno file has  died\n"
+ },
+ "dates": {
+  "ok": true,
+  "after_today": []
+ },
+ "G1": {
+  "ok": true,
+  "served": [
+   "sources/wp-stewart.txt:138",
+   "parody/gerald.txt:3",
+   "sources/wp-stewart.txt:18"
+  ]
+ },
+ "G2": {
+  "ok": true,
+  "claim_exit": 42,
+  "out": "some parts   boqwi-q.txt:4545   always   lacks patrik, stewpott, screen, never, present\nsome parts   cnn.txt:13   always   lacks patrik, stewpott, screen, never, present\nsome parts   cnn.txt:16   screen   lacks patrik, stewpott, always, never, present\nno file has  patrik, stewpott\n"
+ },
+ "K1": {
+  "ok": true,
+  "exit": 0,
+  "served": [
+   "wren/chat/watch-group.txt:35",
+   "sources/boqwi-q.txt:1143",
+   "sources/boqwi-q.txt:1412"
+  ]
+ },
+ "M1": {
+  "ok": true,
+  "plan_exit": 0,
+  "check_exit": 0,
+  "check": "holds"
+ },
+ "unseen": {
+  "ok": true,
+  "unseen": []
+ },
+ "fiction": {
+  "ok": true,
+  "unlabelled": []
+ },
+ "verify": {
+  "ok": true,
+  "willow": 0,
+  "willow_bot": 0,
+  "willow_bot_said": "the chain holds: 17 rows, 0 sealed"
+ }
+}

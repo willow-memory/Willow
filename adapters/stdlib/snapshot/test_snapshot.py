@@ -153,3 +153,15 @@ def test_names_and_bad_command_lines():
     assert run("fetch", "--url", "file:///etc/passwd", "--to", "/tmp/x").returncode == 2
     assert run("fetch", "--url", "https://x.org").returncode == 2
     assert run("check", "--in", "a", "--to", "b").returncode == 2
+
+
+@pytest.mark.xfail(
+    strict=True,
+    reason="bug #111: a page fetched under its default name gets no extension, so the kernel never reads it",
+)
+def test_a_page_fetched_under_its_default_name_is_one_the_kernel_reads(site, tmp_path):
+    pile = tmp_path / "pile"
+    got = run("fetch", "--url", f"{site}/news/", "--to", str(pile), *NOW)
+    assert got.returncode == 0, got.stderr
+    saved = [p for p in pile.iterdir() if not p.name.startswith(".")]
+    assert [p.suffix for p in saved] == [".html"], saved
