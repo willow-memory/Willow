@@ -712,6 +712,17 @@ def test_a_seal_made_before_the_question_was_signed_still_holds(tmp_path):
 
 
 @pytest.mark.xfail(
+    strict=True, reason="bug #89: a line's text past its 500th character is never read"
+)
+def test_every_word_of_a_long_line_is_read(tmp_path):
+    (tmp_path / "long.txt").write_text(
+        "word " * 110 + "the tribble is in the airlock.\n"
+    )
+    read = " ".join(c["text"] for c in k.chunks(tmp_path))
+    assert "airlock" in read
+
+
+@pytest.mark.xfail(
     strict=True,
     reason="bug #95: a date inside a web address dates the line around it",
 )

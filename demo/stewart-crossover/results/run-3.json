@@ -1,0 +1,367 @@
+{
+ "facts": {
+  "ok": true,
+  "each": {
+   "fact1": {
+    "all_parts": [
+     "deadline.txt:30",
+     "wp-memoir.txt:1",
+     "wp-memoir.txt:10",
+     "wp-memoir.txt:42",
+     "wp-memoir.txt:43",
+     "wp-picard.txt:668",
+     "wp-stewart.txt:52",
+     "wp-stewart.txt:489",
+     "wp-stewart.txt:495"
+    ],
+    "publishers": [
+     "deadline",
+     "wikipedia"
+    ],
+    "ok": true
+   },
+   "fact2": {
+    "all_parts": [
+     "cnn.txt:4",
+     "variety.txt:8",
+     "wp-picard.txt:77",
+     "wp-picard.txt:91",
+     "wp-picard.txt:106",
+     "wp-picard.txt:1167",
+     "wp-stewart.txt:38",
+     "wp-stewart.txt:169"
+    ],
+    "publishers": [
+     "cnn",
+     "variety",
+     "wikipedia"
+    ],
+    "ok": true
+   },
+   "fact3": {
+    "all_parts": [
+     "deadline.txt:10",
+     "wp-picard.txt:106"
+    ],
+    "publishers": [
+     "deadline",
+     "wikipedia"
+    ],
+    "ok": true
+   },
+   "fact4": {
+    "all_parts": [
+     "cnn.txt:4",
+     "deadline.txt:10",
+     "wp-picard.txt:77",
+     "wp-picard.txt:91",
+     "wp-picard.txt:216",
+     "wp-picard.txt:282",
+     "wp-picard.txt:285",
+     "wp-picard.txt:671",
+     "wp-picard.txt:683",
+     "wp-picard.txt:689",
+     "wp-picard.txt:691",
+     "wp-picard.txt:1019",
+     "wp-picard.txt:1079",
+     "wp-picard.txt:1145",
+     "wp-picard.txt:1158",
+     "wp-picard.txt:1176"
+    ],
+    "publishers": [
+     "cnn",
+     "deadline",
+     "wikipedia"
+    ],
+    "ok": true
+   },
+   "fact5": {
+    "all_parts": [
+     "cnn.txt:4",
+     "deadline.txt:9",
+     "wp-stewart.txt:38",
+     "wp-stewart.txt:118"
+    ],
+    "publishers": [
+     "cnn",
+     "deadline",
+     "wikipedia"
+    ],
+    "ok": true
+   },
+   "fact6": {
+    "all_parts": [
+     "deadline.txt:12",
+     "variety.txt:1",
+     "variety.txt:9",
+     "variety.txt:15",
+     "wp-picard.txt:222",
+     "wp-stewart.txt:44",
+     "wp-stewart.txt:160",
+     "wp-stewart.txt:178"
+    ],
+    "publishers": [
+     "deadline",
+     "variety",
+     "wikipedia"
+    ],
+    "ok": true
+   },
+   "fact7": {
+    "all_parts": [
+     "cnn.txt:8",
+     "deadline.txt:8",
+     "wp-stewart.txt:52"
+    ],
+    "publishers": [
+     "cnn",
+     "deadline",
+     "wikipedia"
+    ],
+    "ok": true
+   }
+  }
+ },
+ "facts-trusted": {
+  "ok": true,
+  "each": {
+   "fact1": {
+    "hosts": [
+     "deadline.com",
+     "en.wikipedia.org"
+    ],
+    "ok": true
+   },
+   "fact2": {
+    "hosts": [
+     "edition.cnn.com",
+     "en.wikipedia.org",
+     "variety.com"
+    ],
+    "ok": true
+   },
+   "fact3": {
+    "hosts": [
+     "deadline.com",
+     "en.wikipedia.org"
+    ],
+    "ok": true
+   },
+   "fact4": {
+    "hosts": [
+     "deadline.com",
+     "edition.cnn.com",
+     "en.wikipedia.org"
+    ],
+    "ok": true
+   },
+   "fact5": {
+    "hosts": [
+     "deadline.com",
+     "edition.cnn.com",
+     "en.wikipedia.org"
+    ],
+    "ok": true
+   },
+   "fact6": {
+    "hosts": [
+     "deadline.com",
+     "en.wikipedia.org",
+     "variety.com"
+    ],
+    "ok": true
+   },
+   "fact7": {
+    "hosts": [
+     "deadline.com",
+     "edition.cnn.com",
+     "en.wikipedia.org"
+    ],
+    "ok": true
+   }
+  }
+ },
+ "facts-grove": {
+  "ok": true,
+  "each": {
+   "fact1": {
+    "checks": [
+     true,
+     true,
+     true,
+     "na"
+    ],
+    "ok": true
+   },
+   "fact2": {
+    "checks": [
+     true,
+     true,
+     true,
+     "na"
+    ],
+    "ok": true
+   },
+   "fact3": {
+    "checks": [
+     true,
+     true,
+     true,
+     "na"
+    ],
+    "ok": true
+   },
+   "fact4": {
+    "checks": [
+     true,
+     true,
+     true,
+     "na"
+    ],
+    "ok": true
+   },
+   "fact5": {
+    "checks": [
+     true,
+     true,
+     true,
+     "na"
+    ],
+    "ok": true
+   },
+   "fact6": {
+    "checks": [
+     true,
+     true,
+     true,
+     "na"
+    ],
+    "ok": true
+   },
+   "fact7": {
+    "checks": [
+     true,
+     true,
+     true,
+     "na"
+    ],
+    "ok": true
+   }
+  }
+ },
+ "quotes": {
+  "ok": true,
+  "each": {
+   "quote1": {
+    "verbatim": [
+     "cnn.txt:14"
+    ],
+    "ok": true
+   },
+   "quote2": {
+    "verbatim": [
+     "cnn.txt:15"
+    ],
+    "ok": true
+   }
+  }
+ },
+ "T1": {
+  "ok": true,
+  "claim_exit": 42,
+  "out": "some parts   deadline.txt:30   memoir, making   lacks 2021\nsome parts   wp-memoir.txt:1   memoir, making   lacks 2021\nsome parts   wp-memoir.txt:10   memoir, making   lacks 2021\n"
+ },
+ "T5": {
+  "ok": true,
+  "claim_exit": 42,
+  "beside": [
+   "deadline.txt:8",
+   "wp-stewart.txt:52"
+  ],
+  "publishers": [
+   "deadline",
+   "wikipedia"
+  ]
+ },
+ "T2": {
+  "ok": true,
+  "quote_exit": 42,
+  "closest": [
+   "cnn.txt:15"
+  ]
+ },
+ "T3": {
+  "ok": true,
+  "claim_exit": 42,
+  "out": "some parts   wp-picard.txt:165   patrick, stewart, enterprise   lacks signed, model\nsome parts   wp-picard.txt:188   patrick, stewart, signed   lacks enterprise, model\nsome parts   wp-stewart.txt:120   patrick, stewart, enterprise   lacks signed, model\n"
+ },
+ "T4": {
+  "ok": true,
+  "same_words": [
+   "boqwi-q.txt:1145",
+   "boqwi-q.txt:1414",
+   "boqwi-q.txt:1434",
+   "boqwi-q.txt:1443",
+   "boqwi-q.txt:1463",
+   "boqwi-q.txt:1483",
+   "boqwi-q.txt:1498"
+  ],
+  "verbatim": [],
+  "kernel_blind": true
+ },
+ "death": {
+  "ok": true,
+  "claim_exit": 42,
+  "out": "some parts   chat/watch-group.txt:12   patrick, stewart   lacks died\nsome parts   merch/collection.txt:4   patrick, stewart   lacks died\nsome parts   notes/fan-facts.md:16   patrick, stewart   lacks died\nno file has  died\n"
+ },
+ "dates": {
+  "ok": true,
+  "after_today": []
+ },
+ "G1": {
+  "ok": true,
+  "all_parts": [
+   "parody/gerald.txt:3",
+   "sources/wp-stewart.txt:18",
+   "sources/wp-stewart.txt:28",
+   "sources/wp-stewart.txt:109",
+   "sources/wp-stewart.txt:140",
+   "sources/wp-stewart.txt:202",
+   "sources/wp-stewart.txt:312"
+  ]
+ },
+ "G2": {
+  "ok": true,
+  "claim_exit": 42,
+  "out": "some parts   boqwi-q.txt:4550   always   lacks patrik, stewpott, screen, never, present\nsome parts   cnn.txt:16   always   lacks patrik, stewpott, screen, never, present\nsome parts   cnn.txt:19   screen   lacks patrik, stewpott, always, never, present\nno file has  patrik, stewpott\n"
+ },
+ "K1": {
+  "ok": true,
+  "exit": 0,
+  "served": [
+   "wren/chat/watch-group.txt:35",
+   "sources/boqwi-q.txt:1145",
+   "sources/boqwi-q.txt:1414"
+  ]
+ },
+ "M1": {
+  "ok": true,
+  "plan_exit": 0,
+  "check_exit": 0,
+  "check": "holds"
+ },
+ "unseen": {
+  "ok": true,
+  "unseen": []
+ },
+ "fiction": {
+  "ok": true,
+  "unlabelled": []
+ },
+ "verify": {
+  "ok": true,
+  "willow": 0,
+  "willow_bot": 0,
+  "willow_bot_said": "the chain holds: 18 rows, 0 sealed"
+ }
+}

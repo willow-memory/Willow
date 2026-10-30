@@ -8,6 +8,7 @@ one takes, is in [CONTRIBUTING.md](CONTRIBUTING.md).
 
 | Bug | What goes wrong | The test that shows it |
 |---|---|---|
+| #89 | a line's text past its 500th character is never read | `test_kernel.py::test_every_word_of_a_long_line_is_read` |
 | #90 | a Grep or recursive Glob over the folder holding the key is allowed | `adapters/stdlib/hook-guard/test_hook_guard.py::test_a_search_of_the_folder_holding_the_key_is_refused` |
 | #91 | a command that runs kernel.py seal is allowed, and seal reads the key | `adapters/stdlib/hook-guard/test_hook_guard.py::test_a_command_that_seals_is_refused` |
 | #93 | amounts drops a scale word, so $5 billion and $5 million both print as $5 | `adapters/stdlib/amounts/test_amounts.py::test_a_scale_word_is_kept_with_its_sum_or_the_sum_is_refused` |
