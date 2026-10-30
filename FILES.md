@@ -104,6 +104,10 @@ willow/
 │   │   │   ├── badge.py   an SVG badge of the record's counts: answers approved, the files they came from, and whether it holds
 │   │   │   ├── test_badge.py
 │   │   │   └── README.md
+│   │   ├── bank/
+│   │   │   ├── bank.py   bank statements as dated lines with monthly totals
+│   │   │   ├── test_bank.py
+│   │   │   └── README.md
 │   │   ├── bench/
 │   │   │   ├── bench.py       how fast the kernel reads and ranks piles of set sizes, per release
 │   │   │   ├── test_bench.py

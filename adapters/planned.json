@@ -80,16 +80,6 @@
   "tags": "no-install, offline, read-only, assistant"
  },
  {
-  "name": "bank",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Bank CSV and OFX statements as dated lines, with spending by month.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "basic-memory",
   "kind": "stdlib",
   "section": "Assistants",

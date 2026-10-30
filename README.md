@@ -120,11 +120,11 @@ says how to pick one up:
 <!-- willow:front show=pick week=2026-W44 -->
 **Add-on of the week**
 
-**[quiz](adapters/stdlib/quiz/)** — A quiz from your own files: a passage with a word missing, and you fill it in.
+**[codex-cli](adapters/stdlib/codex-cli/)** — OpenAI's Codex CLI asks your folder and hands in suggestions, through the mcp add-on.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 230 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 231 built add-ons in name order.*
 
-[Every add-on, 230 built of 470, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 231 built of 470, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 

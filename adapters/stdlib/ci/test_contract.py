@@ -278,6 +278,9 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         b'Amazon.co.uk,026-1234567-8901234,2024-03-02T08:15:00Z,GBP,4.5,"4.50",Basil seeds,   3 packets,Closed\n'
         b'Amazon.co.uk,026-7654321-0987654,2024-03-09T10:00:00Z,GBP,6.99,6.99,Garden twine,Closed\n'
     )}),
+    "bank": ("bank.py", {"statement.csv": (
+        b'Date,Description,Amount,Balance\n2024-03-05,ACME PAYROLL,2000.00,3000.00\n2024-03-02,TESCO STORES 3241,-45.20,1000.00\n'
+    )}),
     "notes": ("notes.py", {"garden.md": b"Tomatoes want [[sun]].\n"}),
     "jrnl": ("jrnl.py", {"journal.txt": (
         "[2024-03-03 10:15] Fixed the gate.\nThe hinge wanted oil, not force.\n\n"

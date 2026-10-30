@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `bank`: Bank statements, OFX or QFX and CSV: each transaction, oldest
+  first, as a dated line, then the months added up as spent, received and
+  net; an ambiguous date is never guessed.
 - `orders`: Amazon's order history and other shops' order CSVs: each item,
   oldest first, as a dated line with its cost, currency and order number; a
   date that reads either way round is never guessed.
