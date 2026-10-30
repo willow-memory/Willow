@@ -6,4 +6,11 @@ made from those tests by `python adapters/stdlib/ci/bugs.py write`, and
 `test_docs.py` fails if it's out of date. How to add one, and what fixing
 one takes, is in [CONTRIBUTING.md](CONTRIBUTING.md).
 
-None known: no test in the repo is marked as a known bug.
+| Bug | What goes wrong | The test that shows it |
+|---|---|---|
+| #90 | a Grep or recursive Glob over the folder holding the key is allowed | `adapters/stdlib/hook-guard/test_hook_guard.py::test_a_search_of_the_folder_holding_the_key_is_refused` |
+| #91 | a command that runs kernel.py seal is allowed, and seal reads the key | `adapters/stdlib/hook-guard/test_hook_guard.py::test_a_command_that_seals_is_refused` |
+| #93 | amounts drops a scale word, so $5 billion and $5 million both print as $5 | `adapters/stdlib/amounts/test_amounts.py::test_a_scale_word_is_kept_with_its_sum_or_the_sum_is_refused` |
+| #94 | stack counts an add-on's 42 for none found as a flagged step | `adapters/stdlib/stack/test_stack.py::test_a_step_that_found_nothing_is_not_flagged` |
+| #95 | a date inside a web address dates the line around it | `test_kernel.py::test_a_date_inside_a_web_address_dates_nothing` |
+| #96 | propose exits 0 when every suggestion is refused | `test_kernel.py::test_a_propose_whose_every_suggestion_is_refused_does_not_exit_0` |

@@ -24,6 +24,12 @@ says how). The first was v0.1.0.
   the kernel's bite. Each of its 27 words is in two sources pinned by
   revision or commit and SHA-256, and its card says what the kernel's
   lowercasing and apostrophe splitting cost a Klingon question. (#88)
+- `lesson-time`: Lesson plans whose timed parts do not add up to the time
+  the plan says it takes, ranged parts held as ranges and optional parts
+  left out. (#99)
+- `pair-drift`: Figures a summary says that its full text does not, a
+  draft and its packet side by side, with ranges and scale words read as
+  written. (#99)
 - `ripgrep`: Exact search through ripgrep, much faster on a big folder: each
   hit shown with the id of the kernel's own passage that holds it, and one
   the kernel doesn't read as written counted, never shown. Needs the rg

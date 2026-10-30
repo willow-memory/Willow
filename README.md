@@ -120,11 +120,11 @@ says how to pick one up:
 <!-- willow:front show=pick week=2026-W44 -->
 **Add-on of the week**
 
-**[typos](adapters/stdlib/typos/)** — Forgives misspellings in questions.
+**[pile-rank](adapters/stdlib/pile-rank/)** — Phrases as well as words: BM25F over each passage's words and the word pairs your files use together, title and question lines weighted, no model.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 253 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 255 built add-ons in name order.*
 
-[Every add-on, 253 built of 471, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 255 built of 473, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 

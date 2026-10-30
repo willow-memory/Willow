@@ -482,6 +482,10 @@ willow/
 │   │   │   ├── lending.py    what you lent, and what your files say came back
 │   │   │   ├── test_lending.py
 │   │   │   └── README.md
+│   │   ├── lesson-time/
+│   │   │   ├── lesson_time.py   lesson plans whose timed parts do not add up to the time they say
+│   │   │   ├── test_lesson_time.py
+│   │   │   └── README.md
 │   │   ├── letterboxd/
 │   │   │   ├── letterboxd.py   films watched, rated and reviewed as dated lines
 │   │   │   ├── test_letterboxd.py
@@ -630,6 +634,10 @@ willow/
 │   │   ├── package-contents/
 │   │   │   ├── package_contents.py   what a wheel, sdist, npm tarball or crate holds, and the code it runs on install, by file and line
 │   │   │   ├── test_package_contents.py
+│   │   │   └── README.md
+│   │   ├── pair-drift/
+│   │   │   ├── pair_drift.py   figures a summary says that its full text does not
+│   │   │   ├── test_pair_drift.py
 │   │   │   └── README.md
 │   │   ├── parallel/
 │   │   │   ├── parallel.py   a reader run over several folders at once, across cores, into one mirror
