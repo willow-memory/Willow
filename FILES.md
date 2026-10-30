@@ -326,6 +326,10 @@ willow/
 │   │   │   ├── habits.py     streaks from the short lines written day after day, runs and misses by plain counting
 │   │   │   ├── test_habits.py
 │   │   │   └── README.md
+│   │   ├── health/
+│   │   │   ├── health.py   an Apple Health export as daily numbers
+│   │   │   ├── test_health.py
+│   │   │   └── README.md
 │   │   ├── history/
 │   │   │   ├── history.py    your record in plain sentences, places and counts, never the words
 │   │   │   ├── test_history.py

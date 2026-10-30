@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `health`: Apple Health's export.xml as a table of daily numbers (steps,
+  distance, energy, exercise, heart rate, weight) the readings add-on can
+  trend; read as a stream, entities refused.
 - `ci-logs`: CI run logs from GitHub Actions, Forgejo Actions or GitLab CI:
   each failing step as a passage with its name, the time, its last lines and
   the error; passing runs skipped and counted.

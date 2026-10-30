@@ -731,16 +731,6 @@
   "tags": "no-install, offline, records, play"
  },
  {
-  "name": "health",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Apple Health and Google Fit exports as daily numbers the readings add-on can trend.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "hermes",
   "kind": "stdlib",
   "section": "Assistants",

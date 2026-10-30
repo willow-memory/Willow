@@ -224,6 +224,18 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         b"2026-10-29T03:28:16.0000000Z ===== 1 failed, 40 passed in 2.31s =====\n2026-10-29T03:28:17.0000000Z ##[error]Process completed with exit code 1.\n"
         b"2026-10-29T03:28:18.0000000Z Post job cleanup.\n"
     )}),
+    "health": ("health.py", {"export.xml": (
+        b'<?xml version="1.0"?><HealthData locale="en_GB"><Record type="HKQuantityTypeIdentifierStepCount" unit="count" startDate="2024-03-02 07:00:00 +0000" value="5000"/>'
+        b'<Record type="HKQuantityTypeIdentifierStepCount" unit="count" startDate="2024-03-02 12:00:00 +0000" value="3123"/>'
+        b'<Record type="HKQuantityTypeIdentifierDistanceWalkingRunning" unit="mi" startDate="2024-03-02 07:00:00 +0000" value="3.6"/>'
+        b'<Record type="HKQuantityTypeIdentifierHeartRate" unit="count/min" startDate="2024-03-02 07:00:00 +0000" value="70"/>'
+        b'<Record type="HKQuantityTypeIdentifierHeartRate" unit="count/min" startDate="2024-03-02 08:00:00 +0000" value="72"/>'
+        b'<Record type="HKQuantityTypeIdentifierBodyMass" unit="lb" startDate="2024-03-02 06:00:00 +0000" value="160"/>'
+        b'<Record type="HKQuantityTypeIdentifierBodyMass" unit="kg" startDate="2024-03-02 09:00:00 +0000" value="72.4"/>'
+        b'<Record type="HKQuantityTypeIdentifierStepCount" unit="count" startDate="2024-03-03 07:00:00 +0000" value="10442"/>'
+        b'<Record type="HKCategoryTypeIdentifierSleepAnalysis" startDate="2024-03-03 01:00:00 +0000" value="HKCategoryValueSleepAnalysisAsleep"/>'
+        b'<Workout workoutActivityType="HKWorkoutActivityTypeRunning" startDate="2024-03-03 07:00:00 +0000"/></HealthData>'
+    )}),
     "notes": ("notes.py", {"garden.md": b"Tomatoes want [[sun]].\n"}),
     "jrnl": ("jrnl.py", {"journal.txt": (
         "[2024-03-03 10:15] Fixed the gate.\nThe hinge wanted oil, not force.\n\n"
