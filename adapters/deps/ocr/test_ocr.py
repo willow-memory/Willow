@@ -148,12 +148,10 @@ def test_without_tesseract_it_refuses_and_names_the_install(tmp_path):
     assert got.returncode == 2 and "tesseract-ocr" in got.stderr
 
 
-def test_without_pytesseract_it_refuses_and_names_the_install(tmp_path):
+def test_without_pypdf_it_refuses_and_names_the_install(tmp_path):
     blocker = tmp_path / "block"
     blocker.mkdir()
-    (blocker / "pytesseract.py").write_text(
-        "raise ImportError('hidden', name='pytesseract')\n"
-    )
+    (blocker / "pypdf.py").write_text("raise ImportError('hidden', name='pypdf')\n")
     src = folder(tmp_path)
     script = (
         "import runpy, sys\n"

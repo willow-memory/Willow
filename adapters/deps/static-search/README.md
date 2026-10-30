@@ -4,7 +4,7 @@ line: An exported page of approved answers with its own search built in, no serv
 source: box
 added: 2026-10-30
 needs: Pagefind, its Python package pagefind and its program pagefind-bin; MIT
-floor: pagefind 1.2.0, pagefind-bin 1.2.0; the rule names 1.2.0a4 and 1.2.0a5, the first uploads of each, both alphas, and 1.2.0 is the first stable release
+floor: pagefind 1.3.0, pagefind-bin 1.3.0; the rule names 1.2.0a4 and 1.2.0a5, the first uploads, both alphas; 1.2.0's index differs from build to build, and the card promises the same bytes, which 1.3.0 is the first to keep (40 builds of the same answers, all alike)
 writes: to
 network: none
 tags: needs-install, offline, writes-output, interface

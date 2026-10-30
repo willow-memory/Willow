@@ -2,12 +2,15 @@
 
     python adapters/deps/ocr/ocr.py mirror --from FOLDER --to MIRROR [--lang LANGS]
 
-Needs pytesseract (Apache-2.0), Pillow (MIT-CMU) and pypdf (BSD-3-Clause),
-pinned in requirements.txt beside this file, and the tesseract program
-(Apache-2.0), which pytesseract runs, never links:
+Needs Pillow (MIT-CMU) and pypdf (BSD-3-Clause), pinned in requirements.txt
+beside this file, and the tesseract program (Apache-2.0), run, never linked:
 
     pip install -r adapters/deps/ocr/requirements.txt
     sudo apt install tesseract-ocr     # or: brew install tesseract
+
+Each picture is handed to tesseract on its standard input and its text read
+from its standard output, so nothing is written for it, not even a scratch
+file.
 
 For each picture under FOLDER (.png, .jpg, .jpeg, .tif, .tiff, .bmp, .gif,
 .webp) and each PDF with a scanned page, it writes `MIRROR/<same relative
@@ -27,7 +30,7 @@ skipped and counted, never a crash, and so is one with no text in it.
 OCR guesses: a word it misreads is in the mirror misread. What it wrote is
 the mirror's, never the original's; the kernel cites the mirror's line.
 
-Without pytesseract, Pillow, pypdf or the tesseract program it refuses and
+Without Pillow, pypdf or the tesseract program it refuses and
 names the install; it never skips quietly. Exit codes, the kernel's: 0
 wrote at least one file; 42 nothing readable; 2 refused.
 """
@@ -36,6 +39,8 @@ from __future__ import annotations
 
 import io
 import os
+import shutil
+import subprocess
 import sys
 import warnings
 from pathlib import Path
@@ -59,22 +64,32 @@ def tidy(text: str) -> str:
     return "\n".join(out).strip("\n")
 
 
-def read(image, lang: str) -> str:
-    import pytesseract
+def tesseract(tess: str, *args: str, given: bytes = b"") -> str:
+    """What tesseract prints for `args`, `given` on its standard input:
+    pipes only, never a file, never /dev/null."""
+    got = subprocess.run([tess, *args], input=given, capture_output=True)
+    if got.returncode != 0:
+        raise RuntimeError(got.stderr.decode("utf-8", "replace").strip()[:200])
+    return got.stdout.decode("utf-8", "replace")
 
-    return tidy(pytesseract.image_to_string(image.convert("RGB"), lang=lang))
+
+def read(tess: str, image, lang: str) -> str:
+    """One picture's text: handed to tesseract as a PNG on its standard input."""
+    buf = io.BytesIO()
+    image.convert("RGB").save(buf, "PNG")
+    return tidy(tesseract(tess, "stdin", "stdout", "-l", lang, given=buf.getvalue()))
 
 
-def picture(path: Path, lang: str) -> list[str]:
+def picture(tess: str, path: Path, lang: str) -> list[str]:
     """The text of each frame of a picture (a TIFF may hold several pages)."""
     from PIL import Image, ImageSequence
 
     with Image.open(path) as im:
         frames = [f.copy() for f in ImageSequence.Iterator(im)]
-    return [read(f, lang) for f in frames]
+    return [read(tess, f, lang) for f in frames]
 
 
-def scanned(path: Path, lang: str) -> list[tuple[int, str]] | None:
+def scanned(tess: str, path: Path, lang: str) -> list[tuple[int, str]] | None:
     """[(page number, its text)] for each page of a PDF with no text layer;
     None when every page has text of its own (the pdf add-on's to read)."""
     from PIL import Image
@@ -88,20 +103,20 @@ def scanned(path: Path, lang: str) -> list[tuple[int, str]] | None:
         if (page.extract_text() or "").strip():
             continue
         any_scan = True
-        texts = [read(Image.open(io.BytesIO(f.data)), lang) for f in page.images]
+        texts = [read(tess, Image.open(io.BytesIO(f.data)), lang) for f in page.images]
         out.append((n, "\n\n".join(t for t in texts if t)))
     return out if any_scan else None
 
 
-def as_text(path: Path, lang: str) -> str | None:
+def as_text(tess: str, path: Path, lang: str) -> str | None:
     """The mirror file's text; "" when there is none to write, None for a
     PDF whose every page has text of its own (the pdf add-on's to read)."""
     if path.suffix.lower() == ".pdf":
-        pages = scanned(path, lang)
+        pages = scanned(tess, path, lang)
         if pages is None:
             return None
     else:
-        texts = picture(path, lang)
+        texts = picture(tess, path, lang)
         if len(texts) == 1:
             return texts[0] + "\n" if texts[0] else ""
         pages = list(enumerate(texts, 1))
@@ -127,14 +142,16 @@ def mirror(src: Path, dst: Path, lang: str) -> int:
     try:
         import PIL  # noqa: F401
         import pypdf  # noqa: F401
-        import pytesseract
     except ImportError as exc:
         print(f"refused: ocr needs {exc.name}: {INSTALL}", file=sys.stderr)
         return kernel.REFUSED
+    tess = shutil.which("tesseract")
     try:
-        pytesseract.get_tesseract_version()
-        have = set(pytesseract.get_languages(config=""))
-    except Exception:  # TesseractNotFoundError, or a broken install
+        listed = tesseract(tess, "--list-langs") if tess else ""
+    except (OSError, RuntimeError):  # a broken install
+        listed = ""
+    have = {x.strip() for x in listed.splitlines()[1:] if x.strip()}
+    if not have:
         print(f"refused: ocr needs {PROGRAM}", file=sys.stderr)
         return kernel.REFUSED
     missing = [x for x in lang.split("+") if x not in have]
@@ -162,7 +179,7 @@ def mirror(src: Path, dst: Path, lang: str) -> int:
         try:
             with warnings.catch_warnings():
                 warnings.simplefilter("error", bomb())  # too big: skipped
-                text = as_text(p, lang)
+                text = as_text(tess, p, lang)
         except Exception:  # a damaged file, or one too big to open safely
             skipped += 1
             continue

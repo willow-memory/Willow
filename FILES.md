@@ -1045,8 +1045,8 @@ willow/
 │       │   └── README.md
 │       ├── ocr/
 │       │   ├── ocr.py        text out of pictures and scanned PDF pages, read by tesseract
-│       │   ├── requirements.txt  pytesseract, Pillow and pypdf, pinned
-│       │   ├── requirements-floor.txt  pytesseract, Pillow and pypdf at their floors, also tested
+│       │   ├── requirements.txt  Pillow and pypdf, pinned
+│       │   ├── requirements-floor.txt  Pillow and pypdf at their floors, also tested
 │       │   ├── test_ocr.py
 │       │   └── README.md
 │       ├── pdf/

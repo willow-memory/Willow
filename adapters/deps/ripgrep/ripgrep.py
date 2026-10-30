@@ -22,7 +22,8 @@ counted, never shown as a passage:
     letters/county.txt:4  3f2a9c1b04de  You may file a response within 180 days
     2 hits in 2 passages; 1 not as the kernel reads it
 
-It reads only, and writes nothing but a scratch folder of links it removes.
+It reads only, and writes nothing but a scratch copy of the files with
+hits, removed after.
 Without ripgrep it refuses and names the install; it never skips quietly.
 Exit codes, the kernel's: 0 a hit in a passage; 42 none; 2 refused.
 """
@@ -73,12 +74,15 @@ def hits(rg: str, pile: Path, text: str, fold: bool) -> list[tuple[str, int, str
 
 def passages(pile: Path, paths: set[str]) -> dict[str, list[dict]]:
     """The kernel's passages of just these files, by path: the kernel's own
-    `chunks`, run on a scratch folder of links to them at the same paths."""
+    `chunks`, run on a scratch copy of them at the same paths. One too big for
+    the kernel to read isn't copied: it reads none of it."""
     with tempfile.TemporaryDirectory() as tmp:
         for rel in paths:
-            link = Path(tmp) / rel
-            link.parent.mkdir(parents=True, exist_ok=True)
-            os.symlink(pile / rel, link)
+            if (pile / rel).stat().st_size > kernel.MAX_FILE:
+                continue
+            copy = Path(tmp) / rel
+            copy.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(pile / rel, copy)
         out: dict[str, list[dict]] = {}
         for c in kernel.chunks(Path(tmp)):
             out.setdefault(c["path"], []).append(c)

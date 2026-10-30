@@ -3,8 +3,8 @@ section: Reading more kinds of files
 line: Text out of photos of letters and scanned PDFs.
 source: new
 added: 2026-10-30
-needs: pytesseract, Pillow and pypdf, and the tesseract program, run not linked; Apache-2.0, MIT-CMU, BSD-3-Clause
-floor: Pillow 11.0.0, pypdf 3.1.0, pytesseract 0.3.9; the rule names Pillow 8.0.1, which won't build on Python 3.13, pypdf 1.9, a Python 2 release, and pytesseract 0.3.7, which imports distutils, gone since Python 3.12; each floor is the first that works
+needs: Pillow and pypdf, and the tesseract program, run not linked; MIT-CMU, BSD-3-Clause, Apache-2.0
+floor: Pillow 11.0.0, pypdf 3.1.0; the rule names Pillow 8.0.1, which won't build on Python 3.13, and pypdf 1.9, a Python 2 release; each floor is the first that works
 writes: to
 network: none
 tags: needs-install, offline, writes-output, file-reader
@@ -46,7 +46,7 @@ file gives the same bytes from the same tesseract; a file that can't be
 read (corrupt, or a picture too big to open safely) is skipped and counted,
 never a crash, and so is one with no text in it.
 
-**Without pytesseract, Pillow, pypdf or tesseract** it refuses and names the
+**Without Pillow, pypdf or tesseract** it refuses and names the
 install: exit 2, never a quiet skip.
 
 **Uses:** the kernel's exit codes: 0 wrote at least one file; 42 nothing

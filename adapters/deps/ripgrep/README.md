@@ -29,7 +29,7 @@ it doesn't.
 **What it reads is the kernel's.** Hidden files and folders are skipped, as
 the kernel skips them, and `.gitignore` is not obeyed, since the kernel
 doesn't obey it. The files holding a hit are cut into passages by the
-kernel's own `chunks` (on a scratch folder of links to them, removed after),
+kernel's own `chunks` (on a scratch copy of them, removed after),
 so a passage's id here is the id the kernel has. A hit the kernel doesn't
 read as written, in a binary, a file not UTF-8 or too big, a web page's
 markup, or past where it cuts a long line, is counted, never shown as a

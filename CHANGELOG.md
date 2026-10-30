@@ -21,10 +21,10 @@ says how). The first was v0.1.0.
 - `static-search`: Your approved answers as a static site, a page each and a
   Pagefind search over them, from any static host or Python's http.server;
   only approvals that prove under your key. Needs Pagefind, floored at
-  1.2.0, its first stable release. (#82)
+  1.3.0, the first whose index is the same bytes every build. (#82)
 - `ocr`: Text out of pictures and scanned PDF pages, read by tesseract into
   a mirror; a PDF page with text of its own left to the pdf add-on. Needs
-  pytesseract, Pillow, pypdf and the tesseract program. (#82)
+  Pillow, pypdf and the tesseract program, run on pipes. (#82)
 - `pgp`: A file signed with your own gpg key, as a detached OpenPGP
   signature anyone can check, and a signature checked back; a `--key` it
   can't use refused rather than signed with another. Needs gpg and
