@@ -563,6 +563,10 @@ willow/
 │   │   │   ├── oracle_text.py   readings from a Tracery grammar, replayable
 │   │   │   ├── test_oracle_text.py
 │   │   │   └── README.md
+│   │   ├── orders/
+│   │   │   ├── orders.py   what you bought, as dated lines with prices
+│   │   │   ├── test_orders.py
+│   │   │   └── README.md
 │   │   ├── outdated/
 │   │   │   ├── outdated.py   how old each locked dependency is, and which are yanked, deprecated or unmaintained
 │   │   │   ├── test_outdated.py

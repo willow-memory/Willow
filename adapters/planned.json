@@ -1441,16 +1441,6 @@
   "tags": "no-install, online, records, trust"
  },
  {
-  "name": "orders",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Amazon's order history and other shops' CSV exports: what you bought, when, and for how much.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "package-docs",
   "kind": "stdlib",
   "section": "Reading more kinds of files",

@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `orders`: Amazon's order history and other shops' order CSVs: each item,
+  oldest first, as a dated line with its cost, currency and order number; a
+  date that reads either way round is never guessed.
 - `reddit`: Reddit's data request CSVs: your posts and comments, oldest
   first, as dated lines with their subreddit, and saved items by permalink;
   IP addresses not copied.
