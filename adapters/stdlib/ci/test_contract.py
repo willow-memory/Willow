@@ -397,6 +397,9 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         "<h1>Terms</h1><p>We keep your data. We delete it on request.</p>\n").encode()}),
 }  # fmt: skip
 
+#: the language packs' codes: a pack is words- and its language's ISO 639 code
+LANGUAGES = sorted(p.name[6:] for p in STDLIB.glob("words-*") if re.fullmatch(r"words-[a-z]{2,3}", p.name))  # fmt: skip
+
 #: a command that works, for each add-on a person runs; {box}, {pile} and
 #: {tmp} are filled in. The repo's own tools (ci, readme, similar, mutants,
 #: github) are tested in their own folders.
@@ -494,8 +497,9 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "serve": ("serve.py", ["scope", "--box", "{box}"]),
     "browse": ("browse.py", ["launcher", "--box", "{box}"]),
     "digest": ("digest.py", ["--box", "{box}", *NOW]),
+    # every language pack, from its folder: a new one is run here without a line of its own
     **{f"words-{c}": (f"words_{c}.py", ["bite", "--box", "{box}", *NOW, "tomatoes"])
-       for c in ("ar", "cy", "de", "es", "fr", "it", "nl", "pl", "pt", "ru", "sv", "tlh", "tr")},
+       for c in LANGUAGES},
     "backup": ("backup.py", ["--box", "{box}", "--to", "{tmp}/backups", *NOW]),
     "bench": ("bench.py", ["run", "--sizes", "20,40"]),
     "hook-leaks": ("hook_leaks.py", ["check", "--from", "{pile}/garden.md"]),
@@ -597,6 +601,19 @@ def test_every_add_on_a_person_runs_is_listed_here():
         if "__main__" in p.read_text(encoding="utf-8") and not p.name.startswith("test_")
     } - {"ci", "readme", "similar", "mutants", "github"}  # fmt: skip
     assert run_by_people == set(COMMANDS)
+
+
+def test_a_language_pack_is_named_by_its_code():
+    """words- and a two- or three-letter code, with words_<code>.py beside its
+    card, so the table above runs it and ADDONS.md lists it as a language."""
+    for folder in STDLIB.glob("words-*"):
+        code = folder.name[6:]
+        assert re.fullmatch(r"[a-z]{2,3}", code), (
+            f"{folder.name}: words- and an ISO 639 code"
+        )
+        assert (folder / f"words_{code}.py").is_file(), (
+            f"{folder.name} has no words_{code}.py"
+        )
 
 
 @pytest.mark.parametrize("name", only(COMMANDS))

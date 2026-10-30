@@ -1338,8 +1338,9 @@ willow/
 │   ├── ISSUE_TEMPLATE/
 │   │   ├── bug.yml           the form for something wrong
 │   │   ├── idea.yml          the form for an add-on idea: the same fields as planned.json
+│   │   ├── language.yml      the form for a language: its code, common words, quirks and where the list comes from
 │   │   ├── security.yml      the form for a security problem, in public
-│   │   └── config.yml        a link to the contributing rules
+│   │   └── config.yml        links to the contributing rules, the languages and the add-on ideas
 │   ├── pull_request_template.md  what a pull request says, and what to check before opening one
 │   └── dependabot.yml        weekly updates for the workflow's actions, never the add-ons' pins
 ├── .gitignore                generated files and build output
