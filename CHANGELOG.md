@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `readwise`: Readwise's highlights export: each highlight, oldest first, as
+  a dated line with its book or article, author, location, your note and
+  tags.
 - `bank`: Bank statements, OFX or QFX and CSV: each transaction, oldest
   first, as a dated line, then the months added up as spent, received and
   net; an ambiguous date is never guessed.

@@ -120,11 +120,11 @@ says how to pick one up:
 <!-- willow:front show=pick week=2026-W44 -->
 **Add-on of the week**
 
-**[codex-cli](adapters/stdlib/codex-cli/)** — OpenAI's Codex CLI asks your folder and hands in suggestions, through the mcp add-on.
+**[restack](adapters/stdlib/restack/)** — Main merged into your branches, with the conflicts in the files the repo makes or only adds to settled by its own tools, and every other one left to you.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 231 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 232 built add-ons in name order.*
 
-[Every add-on, 231 built of 470, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 232 built of 470, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 

@@ -691,6 +691,10 @@ willow/
 │   │   │   ├── readme.py     builds this README's generated sections from the cards
 │   │   │   ├── test_readme.py
 │   │   │   └── README.md     its card: sections, the draw, what it reads
+│   │   ├── readwise/
+│   │   │   ├── readwise.py   highlights with their book and your note
+│   │   │   ├── test_readwise.py
+│   │   │   └── README.md
 │   │   ├── reddit/
 │   │   │   ├── reddit.py   Reddit posts, comments and saved items as dated lines
 │   │   │   ├── test_reddit.py

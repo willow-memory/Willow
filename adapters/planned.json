@@ -1645,16 +1645,6 @@
   "tags": "no-install, online, read-only, trust"
  },
  {
-  "name": "readwise",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Readwise's highlights export: every highlight with its book or article, and your note on it.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "real-sky",
   "kind": "deps",
   "section": "Play",
