@@ -103,6 +103,7 @@ def fan_facts() -> str:
         "# Not checked",
         "",
         f"- {TRAP['T1']}",
+        f"- {TRAP['T5']}",
         "",
     ])  # fmt: skip
 
