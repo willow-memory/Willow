@@ -1177,6 +1177,10 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- `profile`: its test read a row's location as one run of non-spaces, so it
+  failed whenever a frozen module's function (`<frozen posixpath>:71 join`,
+  as Python 3.11 and later name them) was among the top own times; the
+  location is now any text up to its `:line`. (#83)
 - `ci`: the guard meant to let a Unix socket through under `network: none`,
   as this machine only, but looked for `AF_UNIX` on `os`, which has none
   (it is `socket`'s), so every Unix socket counted as going online. It now
