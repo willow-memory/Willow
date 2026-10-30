@@ -32,11 +32,12 @@ def test_the_real_list_has_no_two_entries_the_same():
 def test_near_serves_a_built_add_on_and_an_idea_with_the_words_they_share():
     every = sim.entries()
     found = {a["name"]: shared for a, shared in sim.near(every, "Text out of PDFs.")}
-    assert "pdf" in found and "ocr" in found
+    assert "pdf" in found and "ocr" in found and "dictate" in found
     assert {"pdfs", "text"} <= set(found["pdf"])
     lines = cli("near", "Text out of PDFs.").stdout
     assert "[**pdf**](adapters/deps/pdf/), built: connect to it." in lines
-    assert "**ocr**, an idea already on the list." in lines
+    assert "[**ocr**](adapters/deps/ocr/), built: connect to it." in lines
+    assert "**dictate**, an idea already on the list." in lines
 
 
 def test_a_long_line_still_finds_the_short_entry_it_contains():
@@ -79,7 +80,7 @@ def test_a_pull_request_report_names_what_it_adds_and_what_is_near():
     before = {a["name"]: a["line"] for a in every if a["name"] != "pdf"}
     text = sim.report(every, before)
     assert "**pdf** (built): Text out of PDFs." in text
-    assert "**ocr**, an idea already on the list." in text
+    assert "**dictate**, an idea already on the list." in text
     assert text.count(" (built): ") + text.count(" (idea): ") == 1  # only what changed
 
 
