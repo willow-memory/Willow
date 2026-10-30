@@ -20,6 +20,9 @@
   "coming-up": {
     "059bb44076f5": "The kernel's dates are exactly eight characters, so d[6:9] is d[6:8]."
   },
+  "lesson-time": {
+    "05dbd1b2d85d": "said_at's starting value is never read: a plan that states its time sets said_at to that line, and one that states none is skipped or shown as from --period, so the starting 0 changes no result."
+  },
   "live": {
     "099e4afa6871": "How much of what a program said is quoted in a failure's reason: one character more is the same message, and the state, the part a person and CI act on, is unchanged.",
     "03f95b5e44db": "Where the DevTools message counter starts: replies are matched to requests by id, so starting at 1 instead of 0 matches the same replies."
