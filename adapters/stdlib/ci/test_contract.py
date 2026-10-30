@@ -473,6 +473,8 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "pile-store": ("pile_store.py", ["--from", "{pile}", "--to", "{tmp}/pile.sqlite"]),
     "parallel": ("parallel.py", ["--reader", "notes", "--from", "{pile}", "--to", "{tmp}/pm"]),
     "people": ("people.py", ["--box", "{box}"]),
+    "lesson-time": ("lesson_time.py", ["--box", "{box}"]),
+    "pair-drift": ("pair_drift.py", ["--box", "{box}"]),
     "slow-tests": ("slow_tests.py", ["--runs", "{pile}"]),
     "snapshot": ("snapshot.py", ["check", "--in", "{pile}"]),
     "wayback": ("wayback.py", ["find", "--url", "https://example.org/", "--to", "{tmp}/w",
