@@ -13,25 +13,27 @@ says how). The first was v0.1.0.
 - `stems`: Word forms for some thirty languages through Snowball's stemmer,
   so "häuser" finds "haus" and "книги" finds "книга": a word no file holds
   is read as the form of its stem the most passages hold, offered, never
-  asked. Needs snowballstemmer.
+  asked. Needs snowballstemmer. (#80)
 - `photos`: When and where each photo was taken, from its EXIF, as a dated
   passage in a mirror: the date and time, the GPS position, the camera.
   Needs Pillow, floored at 11.0.0, the first with a wheel for Python 3.13.
+  (#80)
 - `sheets`: Spreadsheets as a person sees them, beyond what the office add-on
   reads: each cell by its address and number format, each formula after its
-  saved result, and the notes on cells. Needs openpyxl.
+  saved result, and the notes on cells. Needs openpyxl. (#80)
 - `manifests`: Docker Compose and Kubernetes YAML, a passage for each service
   and object: its image, ports, volumes, mounts, routes and selectors, and
   environments, ConfigMaps and Secrets by name, never value. Needs PyYAML.
+  (#80)
 - `record-sql`: SQL straight over your record, in place: its rows, and each
   passage a bite served, as two tables in DuckDB's memory, the chain checked
   first and DuckDB's way out to files, databases and the network locked shut
   before your SQL runs. Needs DuckDB, floored at 1.1.1, the first with a
-  wheel for Python 3.13.
+  wheel for Python 3.13. (#80)
 - `dialect`: The words you use far more than the world does, from your files
   against wordfreq's counts: those the world doesn't have, and those you use
   far beyond its rate; a file's codes in capitals left out. Needs wordfreq,
-  floored at 3.1.0, the first that doesn't import pkg_resources.
+  floored at 3.1.0, the first that doesn't import pkg_resources. (#80)
 - `budget`: Spending against the monthly budget you wrote down in your own
   words: your statements' lines matched to each category by the markers you
   gave, each month held against it. (#75)
