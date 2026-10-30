@@ -1102,6 +1102,10 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- Known bugs #101 (`said` names "If I" a speaker) and #102
+  (`agents-md-check` reads a GitHub owner/repo as a missing path) as tests
+  expected to fail, and LIMITS.md says how a date is read and that the same
+  words in two files are one passage.
 - CI runs a pull request's tests on Python 3.9 and 3.14 only, and a
   push to main's on all six. The six Pythons were 72 of a pull request's 84
   jobs, run 20 at a time, so its CI took 14 to 21 minutes for 6 minutes'

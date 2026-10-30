@@ -9,6 +9,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 HERE = Path(__file__).resolve().parent
 KERNEL = HERE.parents[2] / "kernel.py"
 spec = importlib.util.spec_from_file_location("said", HERE / "said.py")
@@ -117,3 +119,11 @@ def test_a_bad_command_line_and_a_folder_that_is_no_box_are_refused(tmp_path):
     assert got.returncode == 2 and "not a kernel box" in got.stderr
     got = run(str(HERE / "said.py"), "--box", str(tmp_path), "ana", "gerry")
     assert got.returncode == 2 and "said.py" in got.stderr, "WHO is one argument"
+
+
+@pytest.mark.xfail(
+    strict=True,
+    reason="bug #101: a sentence opening with a common word, such as If I said, names a speaker",
+)
+def test_a_sentence_opening_with_a_common_word_names_no_speaker():
+    assert sd.spoken("If I said it once, I said it twice.") is None

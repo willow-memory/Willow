@@ -46,6 +46,16 @@ where it falls short today, and a fix is welcome.
   invented this way, but the bites, suggestions and declines around it can be
   dropped. [tip-pin](adapters/stdlib/tip-pin/) keeps the last row's hash and
   the row count somewhere the box's writer can't reach, and checks them later.
+- **A date is read only when it is written in full.** A passage takes the
+  latest full date in it, above it in its file, or in its file's name
+  (2026-10-14, 20261014, 21/10/2026). A name with only a year and month
+  (2026-06-essay.md) dates nothing, since the kernel never guesses a day,
+  and "Nov 17" with no year is not read. Every full date counts, an example
+  in a how-to included, so a folder of documentation shows its examples'
+  dates as coming up.
+- **The same words in two files are one passage.** A passage's id is the
+  hash of its text, so a paragraph copied into a second file is served once,
+  and an add-on that counts passages counts it once.
 - **No index, so time grows with the size of the folder.** On Odile's
   folder a question takes about a quarter of a second; a very large folder
   would want an index, in an add-on.
