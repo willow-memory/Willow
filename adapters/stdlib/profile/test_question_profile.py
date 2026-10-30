@@ -82,7 +82,7 @@ def test_the_functions_are_listed_biggest_own_time_first_and_are_the_kernels(tmp
     own = [float(r.split()[1]) for r in rows]
     assert own == sorted(own, reverse=True)
     assert all(
-        re.match(r"\s*\d+\s+\d+\.\d{3}\s+\d+\.\d{3}\s+\S+:\d+ \S", r) for r in rows
+        re.match(r"\s*\d+\s+\d+\.\d{3}\s+\d+\.\d{3}\s+\S.*:\d+ \S", r) for r in rows
     )
     assert any("kernel.py:" in r for r in rows)
 
