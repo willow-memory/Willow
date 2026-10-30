@@ -1033,16 +1033,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "letterboxd",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Letterboxd's export: the films you've watched, your ratings and reviews, as dated lines.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "line-origin",
   "kind": "deps",
   "section": "Trust and proof",

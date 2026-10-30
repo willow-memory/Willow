@@ -18,11 +18,11 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`██████████░░░░░░░░░░` **225 of 470 built** · 419 need no install · 51 need one
+`██████████░░░░░░░░░░` **226 of 470 built** · 419 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
-| Reading more kinds of files | 42 | 63 | 96 | 9 |
+| Reading more kinds of files | 43 | 62 | 96 | 9 |
 | Finding things | 27 | 16 | 33 | 10 |
 | Your own words | 18 | 7 | 22 | 3 |
 | Keeping track | 35 | 23 | 58 | 0 |
@@ -47,9 +47,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[restack](adapters/stdlib/restack/)** — Main merged into your branches, with the conflicts in the files the repo makes or only adds to settled by its own tools, and every other one left to you.
+**[accents](adapters/stdlib/accents/)** — A word typed without its accent read as your files write it, and the words-list lines that make it last.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 225 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 226 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -104,7 +104,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - [**karakeep**](adapters/stdlib/karakeep/) — Karakeep's JSON export: bookmarks, notes and tags as plain text. *new* `no-install` `offline` `writes-output` `file-reader`
 - [**latex**](adapters/stdlib/latex/) — LaTeX sources as plain prose, commands stripped, cited by the .tex file's own lines. *new* `no-install` `offline` `writes-output` `file-reader`
 - **lessons** (idea) — Lesson plans from the Emerging Rule community library, by grade and subject, as passages a teacher can ask. *new* `no-install` `offline` `writes-output` `file-reader`
-- **letterboxd** (idea) — Letterboxd's export: the films you've watched, your ratings and reviews, as dated lines. *new* `no-install` `offline` `writes-output` `file-reader`
+- [**letterboxd**](adapters/stdlib/letterboxd/) — Letterboxd's export: the films you've watched, your ratings and reviews, as dated lines. *new* `no-install` `offline` `writes-output` `file-reader`
 - **linkedin** (idea) — LinkedIn's data export: messages, posts and connections as dated lines. *new* `no-install` `offline` `writes-output` `file-reader`
 - **listening** (idea) — Spotify's data download: what you listened to, by day, so you can ask what was on that summer. *new* `no-install` `offline` `writes-output` `file-reader`
 - **location-history** (idea) — Google Maps Timeline and other location exports: where you were, by day. *new* `no-install` `offline` `writes-output` `file-reader`

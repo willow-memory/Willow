@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `letterboxd`: Letterboxd's export CSVs: each film row, oldest first, as a
+  dated line (watched, rated or listed) with its rating out of five, rewatch
+  mark, review and tags.
 - `jira`: Jira's issue export, XML or CSV: each issue, oldest first, with its
   status, type, people, labels, description and comments as a dated passage.
 - `home-sensors`: Home Assistant's history export as a table of daily

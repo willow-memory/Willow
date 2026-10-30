@@ -251,6 +251,11 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         b'<comments><comment id="1" author="ben" created="Sun, 3 Mar 2024 10:00:00 +0000">Move them to bed 2.</comment></comments></item>'
         b'<item><title>[GARDEN-3] Order seed</title><key id="2">GARDEN-3</key><type>Task</type><status>Done</status><reporter>cy</reporter><assignee>Unassigned</assignee><created>Fri, 1 Mar 2024 09:00:00 +0000</created></item></channel></rss>'
     )}),
+    "letterboxd": ("letterboxd.py", {"diary.csv": (
+        b'Date,Name,Year,Letterboxd URI,Rating,Rewatch,Review,Tags,Watched Date\n'
+        b'2024-03-05,Heat,1995,https://boxd.it/1,4.5,Yes,,"crime, night",2024-03-02\n'
+        b'2024-03-10,Paddington 2,2017,https://boxd.it/2,4,,Funnier than it has   any right to be.,,2024-03-09\n'
+    )}),
     "notes": ("notes.py", {"garden.md": b"Tomatoes want [[sun]].\n"}),
     "jrnl": ("jrnl.py", {"journal.txt": (
         "[2024-03-03 10:15] Fixed the gate.\nThe hinge wanted oil, not force.\n\n"
