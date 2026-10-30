@@ -43,6 +43,8 @@ file, or a `floor:` line that doesn't name each floor version.
 | photos | Pillow 8.0.1 (2020) | Pillow 11.0.0 | 8.0.1 has no wheel for Python 3.13 and won't build there; 11.0.0 is the first with one |
 | record-sql | duckdb 0.2.3 (2020) | duckdb 1.1.1 | 0.2.3 is built for Python 3.6 to 3.9; 1.1.1 is the first with a wheel for 3.13 |
 | dialect | wordfreq 2.3.2 (2020) | wordfreq 3.1.0 | every release before 3.1.0 imports pkg_resources, which a 3.13 environment doesn't have |
+| static-search | pagefind 1.2.0a4, pagefind-bin 1.2.0a5 (their first, 2024) | 1.2.0 of each | the first uploads are alphas; 1.2.0 is the first stable release |
+| ocr | Pillow 8.0.1, pypdf 1.9, pytesseract 0.3.7 | Pillow 11.0.0, pypdf 3.1.0, pytesseract 0.3.9 | none of the three rule versions runs on Python 3.13: no wheel, Python 2, distutils |
 
 An install that isn't there makes the add-on refuse with a message naming it,
 never skip quietly: a check that skips still looks like a pass.

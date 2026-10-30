@@ -1,0 +1,2 @@
+pagefind==1.5.2
+pagefind-bin==1.5.2
