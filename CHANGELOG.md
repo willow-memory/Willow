@@ -13,7 +13,7 @@ says how). The first was v0.1.0.
 - `words-tlh`: Klingon common words ("'ej", "nuq") out of a question before
   the kernel's bite. Each of its 27 words is in two sources pinned by
   revision or commit and SHA-256, and its card says what the kernel's
-  lowercasing and apostrophe splitting cost a Klingon question.
+  lowercasing and apostrophe splitting cost a Klingon question. (#88)
 - `ripgrep`: Exact search through ripgrep, much faster on a big folder: each
   hit shown with the id of the kernel's own passage that holds it, and one
   the kernel doesn't read as written counted, never shown. Needs the rg
