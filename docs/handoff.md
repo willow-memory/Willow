@@ -42,7 +42,35 @@ hash them where those hosts are allowed.
 - The Hollywood Reporter: https://www.hollywoodreporter.com/movies/movie-news/patrick-stewart-dead-star-trek-x-men-1236742932/
 - Deadline: https://deadline.com/2026/10/patrick-stewart-dead-1237208580/
 
-The user has not yet said whether the demo goes ahead.
+The user has not yet said whether the demo goes ahead. They are starting a
+new session with network access so the sources can be fetched; ask there
+before building anything.
+
+## For the next session (2026-10-30)
+
+- **Branch:** the work is on `ccr-530710db-76jnnn`, which is
+  `claude/wizardly-gauss-eo7d5z-next3` plus a merge of `main` at `8a456a0`
+  (profile, #83; no conflicts) and this note. Fetch it with its own refspec
+  (`git fetch origin +refs/heads/ccr-530710db-76jnnn:refs/remotes/origin/ccr-530710db-76jnnn`),
+  since a shallow clone fetches only `main`.
+- **Checked after the merge:** make-it-so, profile, `test_contract.py` and
+  `test_docs.py` passed (334), and ruff is clean on make-it-so. The full CI
+  gate set and mutants were not run again after the merge.
+- **No PR is open.** The user has been asked whether to open it and has not
+  answered. Do not open it unasked.
+- **Hosts to allow** for fetching sources: npr.org, variety.com,
+  abcnews.com, hollywoodreporter.com, deadline.com, foxnews.com. Wikipedia
+  is fine for leads but is not itself a source. The search tool refuses
+  apnews.com, reuters.com and bbc.com/bbc.co.uk, but a direct fetch might
+  still work if the network allows them.
+- **First check once there is network access:** open each article, confirm
+  the facts above (died 28 October 2026, Los Angeles, 86, cause as his
+  family gave it), and note where they disagree (NPR says "Wednesday";
+  Deadline says 28 October). Record each page's address, fetch time and
+  SHA-256, never its text.
+- **Open questions for the user:** does the demo go ahead, on this branch
+  or a branch of its own, and does it link to `make-it-so` (an order held
+  beside the passages it rests on, never run)?
 
 ## If a demo goes ahead
 
