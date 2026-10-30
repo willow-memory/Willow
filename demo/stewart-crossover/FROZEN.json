@@ -1,0 +1,54 @@
+{
+ "about": "demo/stewart-crossover's freeze 1: each file's SHA-256 when it was frozen, held by test_stewart_crossover.py, and the tools' in this repo and the four beside it. A change is a new freeze, in its own commit, with its reason.",
+ "frozen": "2026-10-30",
+ "files": {
+  "sources.json": "a54980827bce9bf3c7d88b48c8c73371a519eaa84b22429c8ac26eadf50c10ab",
+  "questions.json": "e1cd903e44f4d26619015661657e5e9cd297e4c0f3ee84d9736fc3d9fd018d45",
+  "fetch.py": "a69b096706e844a24de6df48b7b2ad1b10f5d7ccf190e46a4a32f1412d7a74cb",
+  "run.py": "1a42811f15845460f110b164ab75f978affc781c55eb7e28c99ebb5427afb71c"
+ },
+ "tools_at_freeze": {
+  "kernel.py": "be6e99a1952d0cb347b0028071b98258e3e69502c21f7ee715557b0ed3145a0d",
+  "adapters/stdlib/claim-check/claim_check.py": "4f0d171909eb536b6b9d9206e49db850d0b76836359711317f880146513f257a",
+  "adapters/stdlib/quote-check/quote_check.py": "f8dd5e5591490da8fefb3708ec899f906420d0dc6150a823b46001f079715be1",
+  "adapters/stdlib/misquote/misquote.py": "07720230995791625d73edb739a4eec8af517313625d8d0a0889d2db72578f6a",
+  "adapters/stdlib/contradictions/contradictions.py": "ebedd370e05e91a71e0d82f1e3eed7a309d503f9e558736c1b0659987cecf7f8",
+  "adapters/stdlib/words-tlh/words_tlh.py": "2f07897d00914c7d7912c46aaa87458be7f93e1333e8347a0baa84503a4f3219",
+  "adapters/stdlib/make-it-so/make_it_so.py": "b4b2d1846fc92ca930ffa323b7ec2eb604235a1605f3b599c8b17679be9bf60a"
+ },
+ "other_repos_at_freeze": {
+  "willows-grove": {
+   "commit": "8fb62e96b658cfd84a76b425b3b52c30e2d5fedc",
+   "files": {
+    "grove/seat_say.py": "915de3bdf1a72da06daa67e926d0ee61d01f2e29b8d760684be415f9c4d3553b",
+    "grove/seat_boxes.py": "73fe32f321085ea0dfcada22915ffd7f5c588ebcea4392abdef431c4e86330f2",
+    "docs/design/gerald/gerald-session-atoms-2026-10-06.md": "91e3fa94f29488f82273b928877d07a3ae85bceac4b96df814fdd81b6dcde558"
+   }
+  },
+  "willow-mcp": {
+   "commit": "10aa98374d2e6fd51ce46f1004bcc892ddb5bc57",
+   "files": {
+    "src/willow_mcp/web_search.py": "541ffb274dc9d5a61bb3a7b1f8f54e09049af7559f52fc9c6b93a530562d33a6"
+   }
+  },
+  "willow-bot": {
+   "commit": "6558a5f62e10640a323d799a122a4cdfb3c1e498",
+   "files": {
+    "one-script/kernel.py": "d8fefe3ab44214592f61e68438b625ceca8c520971b2156722f8ab93fa453669"
+   }
+  },
+  "Forge": {
+   "commit": "83e240128cd36fd933866ce258928e8ed0d353be",
+   "files": {
+    "forge/measure_panel.py": "100a3f5101b4b47d6bea1040dc3d976601339f5bdbd90539e449c98c82c1c9cc"
+   }
+  }
+ },
+ "freezes": [
+  {
+   "n": 1,
+   "date": "2026-10-30",
+   "why": "the sources, questions, traps, hit rule and pass rules, after one dry run with nonsense and before any question was asked; Wren's files not yet written"
+  }
+ ]
+}
