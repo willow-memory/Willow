@@ -14,6 +14,7 @@ says how). The first was v0.1.0.
   folder: a choir's secretary, a smallholding, a small library's maintainer,
   a teacher's class, a local reporter's story, a dog-rescue fosterer and a
   runner back from a knee injury, in `adapters/stdlib/stack/examples/`.
+  (#98)
 - A language form for issues (`.github/ISSUE_TEMPLATE/language.yml`): a
   language's code, common words, quirks and where its list comes from, so a
   pack can start without Python;
