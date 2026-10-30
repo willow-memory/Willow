@@ -1334,6 +1334,7 @@ willow/
 │       ├── questions.json    the facts, quotes, traps, beats, every line of hers that may name him, the pass rules
 │       ├── fetch.py          fetches the sources again and says of each whether it is held
 │       ├── run.py            judges every pass rule and writes each as a kernel verdict row
+│       ├── make_life.py      Wren's files, seeded: every frozen line in them word for word, each file labelled fiction
 │       └── test_stewart_crossover.py holds the frozen files to their hashes, and the parts that need no network
 ├── .github/
 │   ├── workflows/
