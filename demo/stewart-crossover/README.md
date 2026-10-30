@@ -5,8 +5,8 @@ Star Trek fan, Wren Castellano, beside the real record of a few years of his
 life (2020 to 2023: the three seasons of *Star Trek: Picard* and his memoir,
 *Making It So*), and asks one thing: **can every word about him in her files
 be shown to come from a source, with what the sources don't hold shown as
-not held?** Her files end on 2026-10-22, six days before his death, so they
-must not know of it.
+not held?** Her files are as she left them on 2026-10-22 (her last entry
+is from 2023), six days before his death, so they must not know of it.
 
 Wren is fiction, and every file of hers says so on its first line. He is
 not, so nothing about him is made up: her files name him only in lines
@@ -35,8 +35,8 @@ him.
    2026-10-22.
 4. **Parody is told from fact.** The Gerald canon's Sir Patrik Stewpott (a
    parody mirror, "always on a screen, never present", from willows-grove)
-   is in the pile. Asked about him on a screen, the kernel finds it: Gerald
-   shows up. Asked of the sources, nothing holds it.
+   is in the pile. Asked about him on a screen, it is among the passages
+   that hold the question whole: Gerald shows up. Asked of the sources, nothing holds it.
 5. **Nothing about him goes unseen.** Every line of hers that names him,
    the show or the memoir holds a frozen line word for word; any other is
    unseen, never sound, as Forge's measure panel counts what nothing
