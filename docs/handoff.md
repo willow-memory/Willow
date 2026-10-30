@@ -9,8 +9,9 @@ before the branch merges.
   of 6, on this branch; no pull request yet. Its CHANGELOG entry needs the
   pull request's number once one is open.
 - **words-tlh**: merged to main as #88.
-- **demo/stewart-crossover**: freeze 1 (`b6cc2e2`), Wren's files after it,
-  and run 1: 15 of 17 rules held. Read its README's results and "What failed".
+- **demo/stewart-crossover**: freeze 1 (`b6cc2e2`) and run 1, 15 of 17
+  held; freeze 2 (`0bd8719`) and run 2, 16 of 18 held. Its README has both
+  runs and what failed in each. A freeze 3 is the person's call.
   The study uses make-it-so, so it stacks on this branch.
 
 ## Established
@@ -27,11 +28,9 @@ Gerald shows up, we're on the right track").
 
 ## Open
 
-- The kernel keeps a line's first 500 characters and drops the rest
-  (`kernel.py`, `chunks`, `line[:MAX_CHUNK]`). Found by run 1; not in
-  LIMITS.md or BUGS.md. The kernel is the maintainer's to change.
-- Whether to make a freeze 2 for the two failed rules. A new freeze is its
-  own commit with its reason; run 1 stays as it is.
+- Bug #89, filed: the kernel drops a line's text past its 500th character.
+  A strict expected-to-fail test in test_kernel.py holds it; BUGS.md lists it.
+- The person said "not yet" to the make-it-so pull request.
 
 ## Rules that bite
 

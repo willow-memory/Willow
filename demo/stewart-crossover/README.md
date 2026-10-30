@@ -210,3 +210,40 @@ alone.
 
 Neither is fixed by changing a frozen file. A freeze 2 would be its own
 commit, with these reasons.
+
+## Results: run 2, from freeze 2, 2026-10-30
+
+Every source held. **16 of the 18 rules held; 2 failed**, one of them new.
+The record is [results/record-2.jsonl](results/record-2.jsonl) (both
+kernels: "the chain holds: 19 rows, 0 sealed"), every outcome
+[results/run-2.json](results/run-2.json), less misquote's words as before.
+
+| Rule | Run 1 | Run 2 | What changed |
+|---|---|---|---|
+| quotes | failed | **held** | with CNN's long line folded, "Make it so" is found verbatim on it |
+| T1 | failed | **held** | judged by claim-check alone, which held both times |
+| T5 | (new) | **failed** | claim-check held (no source has a birth in 1941), but contradictions didn't set the line beside a source |
+| G1 | held | **failed** | the Gerald line is no longer among the three passages served |
+| the other 14 | held | held | facts, facts-trusted, facts-grove, T2, T3, T4, death, dates, G2, K1, M1, unseen, fiction, verify |
+
+## What failed in run 2, and why
+
+**T5: the kernel reads dates in figures only.** Its `newest` reads an ISO
+date, a compact one, or day and month in figures with a four-digit year
+(21/10/2026). "13 July 1941" and "July 13, 1940", as Kati and the sources
+write them, are not dates to it, so contradictions found no date on either
+line, and T5 could never have held. That was knowable from the kernel's own
+docstring before freeze 2, and was missed: the mistake is in the freeze,
+again, not the tool.
+
+**G1: folding moved the ranking.** Freeze 2 cut Wikipedia's long
+paragraphs into sentences, so more, shorter passages of his article hold
+"Patrick Stewart" and "screen" together, and three of them now fill the
+kernel's top three ahead of the Gerald line, which run 1 served second.
+The parody is still in the pile and G2 still holds (no source has it); it
+just doesn't surface first. A change made to fix one rule broke another,
+and it is written down as that.
+
+Run 1's results stand beside these. A freeze 3 would be the person's call,
+in its own commit with its reasons.
+
