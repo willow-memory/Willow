@@ -252,7 +252,7 @@ in `demo/*/STRIP.md`.
   A tool that isn't installed is recorded as unreachable, never as a pass.
   It is deterministic: the same files give the same record, byte for byte.
   CI runs the same script on every pull request and every push to main, with the tests on Python 3.9 through
-  3.14, and keeps each job's record as an artifact. The verdicts are draft;
+  3.14 (a pull request on 3.9 and 3.14 only, every push to main on all six), and keeps each job's record as an artifact. The verdicts are draft;
   merging is the person's call. See [adapters/stdlib/ci](adapters/stdlib/ci/).
 - **Four implementations, one behaviour.** `vectors/gen.py` reads 4,668 cases
   out of `kernel.py`, covering canonical JSON, word splitting, HTML text,

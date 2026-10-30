@@ -231,8 +231,14 @@ def test_the_repos_github_folder_holds():
         ),  # fmt: skip
         (
             ".github/workflows/ci.yml",
-            '"3.14"]\n        shard: [1, 2, 3, 4]\n    steps:\n      - uses: actions/checkout@v7\n      - uses: actions/setup-python@v7\n        with:\n          python-version: ${{ matrix.python-version }}\n      - run: pip install pytest\n      - run: python adapters/stdlib/ci/ci.py run tests:strip',  # fmt: skip
-            '"3.13"]\n        shard: [1, 2, 3, 4]\n    steps:\n      - uses: actions/checkout@v7\n      - uses: actions/setup-python@v7\n        with:\n          python-version: ${{ matrix.python-version }}\n      - run: pip install pytest\n      - run: python adapters/stdlib/ci/ci.py run tests:strip',  # fmt: skip
+            '"3.14"]\n        shard: [1, 2, 3, 4]\n',
+            '"3.13"]\n        shard: [1, 2, 3, 4]\n',
+            "Python matrices differ",
+        ),
+        (
+            ".github/workflows/ci.yml",
+            '{"python-version":"3.13"}]\') || fromJSON(\'[]\') }}\n    steps:\n      - uses: actions/checkout@v7\n      - uses: actions/setup-python@v7\n        with:\n          python-version: ${{ matrix.python-version }}\n      - run: pip install pytest\n      - run: python adapters/stdlib/ci/ci.py run tests:strip',  # fmt: skip
+            '{"python-version":"3.12"}]\') || fromJSON(\'[]\') }}\n    steps:\n      - uses: actions/checkout@v7\n      - uses: actions/setup-python@v7\n        with:\n          python-version: ${{ matrix.python-version }}\n      - run: pip install pytest\n      - run: python adapters/stdlib/ci/ci.py run tests:strip',  # fmt: skip
             "Python matrices differ",
         ),
         # CONST-VIII-2: the weekly run that reaches a person when an

@@ -15,7 +15,7 @@ it anywhere and read all of it; there is nothing to install and nothing
 else to trust. *Held by:* `test_kernel.py` fails on any import from outside
 Python's own library, add-ons included; `test_strip.py` runs the kernel
 with `adapters/` deleted; and CI runs the tests on every Python from 3.9 to
-3.14.
+3.14 on every push to main, and on 3.9 and 3.14 on a pull request.
 
 **It never goes online.** A tool trusted with someone's own files has no
 business with a network. *Held by:* `test_kernel.py` fails on any network

@@ -106,7 +106,8 @@ CI_PY = Path(__file__).resolve().parents[1] / "ci" / "ci.py"
 def split_problems(ci: str) -> list[str]:
     """ci.yml's jobs cut ci.py's gates between them (tests:strip in a job of
     its own, mutants in shards): each gate run by exactly one job, so a cut
-    never drops one, and every Python matrix the same, so tests:strip runs
+    never drops one, and every Python matrix the same, its Pythons and what
+    it excludes from them, so tests:strip runs
     on each Python the other tests do. Each job's `ci.py run` is read with
     ci.py's own `select`, once for each value of its matrix's `shard`."""
     spec = importlib.util.spec_from_file_location("willow_ci_for_github", CI_PY)
@@ -142,7 +143,10 @@ def split_problems(ci: str) -> list[str]:
             out.append(f"ci.yml runs {gate} in no job")
         elif len(jobs) > 1:
             out.append(f"ci.yml runs {gate} more than once, in {', '.join(jobs)}")
-    if len(set(re.findall(r"python-version: \[(.*?)\]", ci))) > 1:
+    if (
+        len(set(re.findall(r"python-version: \[(.*?)\]", ci))) > 1
+        or len(set(re.findall(r"^        exclude: (.*)$", ci, re.M))) > 1
+    ):
         out.append(
             "ci.yml's Python matrices differ, so a job doesn't run on every Python"
         )
