@@ -268,6 +268,11 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         b'c1,,Ben Ruiz,https://x/b,Ana Lopez,https://x/a,2024-03-02 08:20:00 UTC,,Yes!,SENT\n'
         b'c2,,Cy,https://x/c,Ben Ruiz,https://x/b,2024-03-01 09:00:00 UTC,,,INBOX\n'
     )}),
+    "reddit": ("reddit.py", {"posts.csv": (
+        b'id,permalink,date,ip,subreddit,gildings,title,url,body\n'
+        b'abc,https://www.reddit.com/r/gardening/comments/abc/,2024-03-02 08:15:30 UTC,1.2.3.4,gardening,0,Tomatoes want more sun,,The bed by the   fence is shaded.\n'
+        b'def,https://www.reddit.com/r/gardening/comments/def/,2024-03-01 09:00:00 UTC,1.2.3.4,gardening,0,Link only,https://example.org,\n'
+    )}),
     "notes": ("notes.py", {"garden.md": b"Tomatoes want [[sun]].\n"}),
     "jrnl": ("jrnl.py", {"journal.txt": (
         "[2024-03-03 10:15] Fixed the gate.\nThe hinge wanted oil, not force.\n\n"

@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `reddit`: Reddit's data request CSVs: your posts and comments, oldest
+  first, as dated lines with their subreddit, and saved items by permalink;
+  IP addresses not copied.
 - `linkedin`: LinkedIn's data export CSVs (messages, connections, shares,
   comments): each row, oldest first, as a dated line; emails and profile
   addresses not copied.

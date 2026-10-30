@@ -18,11 +18,11 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`██████████░░░░░░░░░░` **228 of 470 built** · 419 need no install · 51 need one
+`██████████░░░░░░░░░░` **229 of 470 built** · 419 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
-| Reading more kinds of files | 45 | 60 | 96 | 9 |
+| Reading more kinds of files | 46 | 59 | 96 | 9 |
 | Finding things | 27 | 16 | 33 | 10 |
 | Your own words | 18 | 7 | 22 | 3 |
 | Keeping track | 35 | 23 | 58 | 0 |
@@ -47,9 +47,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[health](adapters/stdlib/health/)** — Apple Health and Google Fit exports as daily numbers the readings add-on can trend.
+**[slow-tests](adapters/stdlib/slow-tests/)** — Each test's time kept per run, with the slowest named and any that got slower flagged.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 228 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 229 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -137,7 +137,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - **quiet-corner** (idea) — A Quiet Corner backup file: a teacher's classroom observations as dated passages, for that teacher's questions alone. *new* `no-install` `offline` `writes-output` `file-reader`
 - **readwise** (idea) — Readwise's highlights export: every highlight with its book or article, and your note on it. *new* `no-install` `offline` `writes-output` `file-reader`
 - **recipes** (idea) — Recipes from saved web pages and recipe-app exports, as plain text: what can I cook with leeks? *new* `no-install` `offline` `writes-output` `file-reader`
-- **reddit** (idea) — Reddit's data export: your posts, comments and saved items as dated lines. *new* `no-install` `offline` `writes-output` `file-reader`
+- [**reddit**](adapters/stdlib/reddit/) — Reddit's data export: your posts, comments and saved items as dated lines. *new* `no-install` `offline` `writes-output` `file-reader`
 - [**rtf**](adapters/stdlib/rtf/) — RTF documents as plain text. *new* `no-install` `offline` `writes-output` `file-reader`
 - [**sarif**](adapters/stdlib/sarif/) — SARIF reports from code scanners such as CodeQL and Semgrep: each finding as a passage with its rule and place. *new* `no-install` `offline` `writes-output` `file-reader`
 - [**sbom**](adapters/stdlib/sbom/) — SBOMs in SPDX or CycloneDX JSON: each component, its version and licence, as passages. *new* `no-install` `offline` `writes-output` `file-reader`

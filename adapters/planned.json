@@ -1707,16 +1707,6 @@
   "tags": "needs-install, offline, read-only, maintainers"
  },
  {
-  "name": "reddit",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Reddit's data export: your posts, comments and saved items as dated lines.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "redential",
   "kind": "deps",
   "section": "Trust and proof",
