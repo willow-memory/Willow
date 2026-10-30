@@ -720,3 +720,34 @@ def test_every_word_of_a_long_line_is_read(tmp_path):
     )
     read = " ".join(c["text"] for c in k.chunks(tmp_path))
     assert "airlock" in read
+
+
+@pytest.mark.xfail(
+    strict=True,
+    reason="bug #95: a date inside a web address dates the line around it",
+)
+def test_a_date_inside_a_web_address_dates_nothing():
+    assert (
+        k.newest("Nvidia rose 3% (https://example.com/snap/2026-10-24-nvda.html)") == ""
+    )
+
+
+@pytest.mark.xfail(
+    strict=True, reason="bug #96: propose exits 0 when every suggestion is refused"
+)
+def test_a_propose_whose_every_suggestion_is_refused_does_not_exit_0(tmp_path):
+    pile, box = tmp_path / "pile", tmp_path / "box"
+    pile.mkdir()
+    (pile / "notes.md").write_text("The bus leaves at seven from the square.\n")
+    b = ["--box", str(box), "--now", "2026-10-22T00:00:00Z"]
+    assert (
+        cli("init", *b, "--pile", str(pile), "--key", str(tmp_path / "k")).returncode
+        == 0
+    )
+    assert cli("bite", *b, "when does the bus leave the square").returncode == 0
+    row = {"path": "bus.md", "data": "Seven.", "cites": ["0" * 64], "claim": "notes.md"}
+    rows = tmp_path / "rows.jsonl"
+    rows.write_text(json.dumps(row) + "\n")
+    got = cli("propose", *b, "--file", str(rows))
+    assert "refused" in got.stdout
+    assert got.returncode != 0

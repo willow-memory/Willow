@@ -482,6 +482,10 @@ willow/
 │   │   │   ├── lending.py    what you lent, and what your files say came back
 │   │   │   ├── test_lending.py
 │   │   │   └── README.md
+│   │   ├── lesson-time/
+│   │   │   ├── lesson_time.py   lesson plans whose timed parts do not add up to the time they say
+│   │   │   ├── test_lesson_time.py
+│   │   │   └── README.md
 │   │   ├── letterboxd/
 │   │   │   ├── letterboxd.py   films watched, rated and reviewed as dated lines
 │   │   │   ├── test_letterboxd.py
@@ -634,6 +638,10 @@ willow/
 │   │   ├── package-contents/
 │   │   │   ├── package_contents.py   what a wheel, sdist, npm tarball or crate holds, and the code it runs on install, by file and line
 │   │   │   ├── test_package_contents.py
+│   │   │   └── README.md
+│   │   ├── pair-drift/
+│   │   │   ├── pair_drift.py   figures a summary says that its full text does not
+│   │   │   ├── test_pair_drift.py
 │   │   │   └── README.md
 │   │   ├── parallel/
 │   │   │   ├── parallel.py   a reader run over several folders at once, across cores, into one mirror
@@ -843,6 +851,14 @@ willow/
 │   │   │   ├── stack.py       one document from a stack of add-on steps over a box, pooled and peaks-first
 │   │   │   ├── test_stack.py
 │   │   │   ├── example.md
+│   │   │   ├── examples/      stacks to start from, one kind of folder each: a choir, a smallholding, a code library, a class, a story, foster dogs, a knee
+│   │   │   │   ├── choir.md
+│   │   │   │   ├── comeback.md
+│   │   │   │   ├── foster.md
+│   │   │   │   ├── maintainer.md
+│   │   │   │   ├── reporter.md
+│   │   │   │   ├── smallholding.md
+│   │   │   │   └── teacher.md
 │   │   │   └── README.md
 │   │   ├── stale/
 │   │   │   ├── stale.py      approved answers whose cited passage changed or went
@@ -1346,14 +1362,15 @@ willow/
 │           └── record-3.jsonl  a copy of run 3's record, without its key
 ├── .github/
 │   ├── workflows/
-│   │   ├── ci.yml            runs adapters/stdlib/ci/ci.py a part or a cut of one a job, tests on Python 3.9 to 3.14
+│   │   ├── ci.yml            runs adapters/stdlib/ci/ci.py a part or a cut of one a job, tests on Python 3.9 to 3.14 (3.9 and 3.14 on a pull request)
 │   │   ├── law.yml           every Monday, the law's check: an expired emergency amendment fails it
 │   │   └── security.yml      posts the github add-on's comment on a security report
 │   ├── ISSUE_TEMPLATE/
 │   │   ├── bug.yml           the form for something wrong
 │   │   ├── idea.yml          the form for an add-on idea: the same fields as planned.json
+│   │   ├── language.yml      the form for a language: its code, common words, quirks and where the list comes from
 │   │   ├── security.yml      the form for a security problem, in public
-│   │   └── config.yml        a link to the contributing rules
+│   │   └── config.yml        links to the contributing rules, the languages and the add-on ideas
 │   ├── pull_request_template.md  what a pull request says, and what to check before opening one
 │   └── dependabot.yml        weekly updates for the workflow's actions, never the add-ons' pins
 ├── .gitignore                generated files and build output

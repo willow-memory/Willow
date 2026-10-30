@@ -31,6 +31,9 @@ Written by hand.
 <!-- willow:pools -->
 <!-- /willow:pools -->
 
+<!-- willow:languages -->
+<!-- /willow:languages -->
+
 <!-- willow:newest -->
 <!-- /willow:newest -->
 
@@ -295,3 +298,25 @@ def test_every_example_is_built_and_in_its_section():
     for title, names in rd.EXAMPLES.items():
         for name in names:
             assert every[name]["section"] == title
+
+
+def test_the_languages_are_the_words_packs_built_and_planned(repo):
+    for name, line in (("words-cy", "Welsh common words."), ("words-tlh", "Klingon | words."),
+                       ("words-list", "Not a language: four letters.")):  # fmt: skip
+        (repo / "adapters" / "stdlib" / name).mkdir()
+        (repo / "adapters" / "stdlib" / name / "README.md").write_text(
+            card(section="Your own words", line=line)
+        )
+    planned = json.loads((repo / "adapters" / "planned.json").read_text())
+    planned.append({"name": "words-zh", "kind": "stdlib", "section": "Your own words",
+                    "line": "Chinese.", "source": "new", "writes": "record",
+                    "network": "none", "tags": "words"})  # fmt: skip
+    (repo / "adapters" / "planned.json").write_text(json.dumps(planned))
+    got = rd.section_languages(rd.addons())
+    assert got.startswith("**2 built, 1 planned**")
+    rows = [r for r in got.splitlines() if r.startswith("| `")]
+    assert rows == [
+        "| `cy` | [words-cy](adapters/stdlib/words-cy/) | Welsh common words. |",
+        "| `tlh` | [words-tlh](adapters/stdlib/words-tlh/) | Klingon \\| words. |",
+        "| `zh` | words-zh *(idea)* | Chinese. |",
+    ]  # words-list isn't a language: only words- and a two- or three-letter code

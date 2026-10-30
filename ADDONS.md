@@ -18,21 +18,51 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`███████████░░░░░░░░░` **254 of 472 built** · 421 need no install · 51 need one
+`███████████░░░░░░░░░` **256 of 474 built** · 423 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
 | Reading more kinds of files | 64 | 41 | 96 | 9 |
 | Finding things | 29 | 14 | 33 | 10 |
 | Your own words | 19 | 7 | 23 | 3 |
-| Keeping track | 35 | 23 | 58 | 0 |
-| Trust and proof | 21 | 24 | 36 | 9 |
+| Keeping track | 36 | 23 | 59 | 0 |
+| Trust and proof | 22 | 24 | 37 | 9 |
 | Privacy and safety | 11 | 3 | 14 | 0 |
 | Assistants | 25 | 32 | 51 | 6 |
 | Ways to use it | 22 | 18 | 36 | 4 |
 | Play | 9 | 31 | 35 | 5 |
 | For maintainers | 19 | 25 | 39 | 5 |
 <!-- /willow:pools -->
+
+## Languages
+
+A language pack takes one language's common words out of a question before
+the kernel's `bite`, as the kernel already does for English. A pack is mostly
+its list: someone who speaks the language can add one without much Python.
+[CONTRIBUTING.md](CONTRIBUTING.md#pick-one-up) says how.
+
+<!-- willow:languages -->
+**13 built, 3 planned**, beside English, which the kernel has built in.
+
+| Code | Pack | What it does |
+|---|---|---|
+| `ar` | [words-ar](adapters/stdlib/words-ar/) | Arabic common words ("في", "من", "على"). |
+| `cy` | [words-cy](adapters/stdlib/words-cy/) | Welsh common words ("a", "y", "yn"). |
+| `de` | [words-de](adapters/stdlib/words-de/) | German common words, so questions aren't matched on "der" and "und". |
+| `es` | [words-es](adapters/stdlib/words-es/) | Spanish common words ("el", "y"). |
+| `fr` | [words-fr](adapters/stdlib/words-fr/) | French common words ("le", "et"). |
+| `hi` | words-hi *(idea)* | Hindi common words ('और', 'है'). |
+| `it` | [words-it](adapters/stdlib/words-it/) | Italian common words ("il", "e"). |
+| `ja` | words-ja *(idea)* | Japanese, which has no spaces: a small segmenter of its own and a common-words list. |
+| `nl` | [words-nl](adapters/stdlib/words-nl/) | Dutch common words ("de", "en"). |
+| `pl` | [words-pl](adapters/stdlib/words-pl/) | Polish common words ('i', 'w'). |
+| `pt` | [words-pt](adapters/stdlib/words-pt/) | Portuguese common words ("o", "e"). |
+| `ru` | [words-ru](adapters/stdlib/words-ru/) | Russian common words ("и", "в", "на"). |
+| `sv` | [words-sv](adapters/stdlib/words-sv/) | Swedish common words ('och', 'att'). |
+| `tlh` | [words-tlh](adapters/stdlib/words-tlh/) | Klingon common words ("'ej", "nuq"). |
+| `tr` | [words-tr](adapters/stdlib/words-tr/) | Turkish common words ("ve", "bir"). |
+| `zh` | words-zh *(idea)* | Chinese, which has no spaces: words found by a small segmenter of its own, and a common-words list. |
+<!-- /willow:languages -->
 
 ## Newest
 
@@ -47,9 +77,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[discord](adapters/stdlib/discord/)** — Discord's data package: your messages, one dated line each, by server and channel.
+**[pile-gold](adapters/stdlib/pile-gold/)** — Each answer you approve marks the passage that held it, so your own questions become a test of how well the search finds things, scored as recall at five.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 254 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 256 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -275,6 +305,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**job-hunt**](adapters/stdlib/job-hunt/) — Applications sent, replies and interviews, by date: who you're still waiting on. *new* `no-install` `offline` `read-only` `tracking`
 - **lab-notebook** (idea) — A lab notebook's dated entries, by sample and experiment: what was done to what, and when. *new* `no-install` `offline` `read-only` `tracking`
 - [**lending**](adapters/stdlib/lending/) — Things you lent, to whom and when, and which are still out. *new* `no-install` `offline` `read-only` `tracking`
+- [**lesson-time**](adapters/stdlib/lesson-time/) — Lesson plans whose timed parts don't add up to the time the plan says it takes, each part's minutes shown beside the total. *new* `no-install` `offline` `read-only` `tracking` `teaching`
 - [**livestock**](adapters/stdlib/livestock/) — Each animal's births, treatments and sales, from your farm records. *new* `no-install` `offline` `read-only` `tracking`
 - **market-calls** (idea) — Market calls kept as wagers on the record ('SPY closes up on Friday'), settled later, with the losers kept. *bot* `no-install` `offline` `records` `tracking`
 - [**mileage**](adapters/stdlib/mileage/) — Miles driven for work, from your trips and notes, totalled for a tax year. *new* `no-install` `offline` `read-only` `tracking`
@@ -329,6 +360,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - **nestor** (idea) — Answers Nestor records a person has checked, read from a copy of its SQLite store, each citing who checked it and when. *new* `no-install` `offline` `writes-output` `trust`
 - **notary** (idea) — The record's newest hash timestamped by an outside time server, so anyone can see it existed by then. Goes online: an RFC 3161 time server you choose, sent only the hash. *new* `no-install` `online` `records` `trust`
 - **opentimestamps** (idea) — The record's newest hash anchored by OpenTimestamps, proof that it existed by a given block. Goes online: the OpenTimestamps calendars, sent only the hash. *new* `no-install` `online` `records` `trust`
+- [**pair-drift**](adapters/stdlib/pair-drift/) — Figures a summary says that its full text doesn't: a draft and its packet side by side, ranges and billions read as written. *new* `no-install` `offline` `read-only` `trust` `writing`
 - **paper-key** (idea) — Your key printed as words on paper, to keep somewhere safe, and typed back in to restore it. *new* `no-install` `offline` `writes-output` `trust`
 - [**pgp**](adapters/deps/pgp/) — Signs exports and reports with your PGP key, verifiable anywhere. Needs the gpg program, run not linked, and python-gnupg; GPL, BSD-3-Clause. *new* `needs-install` `offline` `writes-output` `trust`
 - [**prov**](adapters/stdlib/prov/) — The record exported as W3C PROV: what came from what, by which step, sealed by whom. *new* `no-install` `offline` `writes-output` `trust`
