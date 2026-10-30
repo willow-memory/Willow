@@ -3,3 +3,9 @@ contact_links:
   - name: How to contribute
     url: https://github.com/willow-memory/Willow/blob/main/CONTRIBUTING.md
     about: The rules every change follows, adding an idea, and picking one up.
+  - name: Languages, built and wanted
+    url: https://github.com/willow-memory/Willow/issues/84
+    about: Which languages are taken, and how to add yours. The form above is for a new one.
+  - name: Build an add-on
+    url: https://github.com/willow-memory/Willow/issues/85
+    about: The ideas waiting on the list, and how to pick one up.

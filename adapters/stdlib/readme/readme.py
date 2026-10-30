@@ -16,6 +16,9 @@ ADDONS.md holds these sections, in this order:
 
     pools    how the add-ons spread: by section, built and ideas, and how
              many need an install
+    languages
+             the language packs, `words-` and a language's code, built and
+             planned, A to Z by code
     newest   the five most recently added add-ons that are built
     pick     the add-on of the week, drawn from the built ones by a hash of
              the week, so anyone can recompute the draw
@@ -144,6 +147,8 @@ WRITES = {"nothing", "record", "to"}
 SOURCES = {"bot", "box", "new"}
 HEADER = re.compile(r"\A<!-- willow-addon\n(.*?)\n-->\n", re.S)
 NAME = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*")
+#: a language pack: words- and the language's ISO 639 code
+LANGUAGE = re.compile(r"words-([a-z]{2,3})")
 
 
 class Refused(Exception):
@@ -354,6 +359,25 @@ def section_pools(every: list[dict]) -> str:
     return "\n".join(lines)
 
 
+def section_languages(every: list[dict]) -> str:
+    """The language packs, built and planned, one row each, A to Z by code."""
+    packs = sorted(
+        (a for a in every if LANGUAGE.fullmatch(a["name"])), key=lambda a: a["name"]
+    )
+    built = sum(a["built"] for a in packs)
+    lines = [
+        f"**{built} built, {len(packs) - built} planned**, beside English, which the kernel has built in.",
+        "",
+        "| Code | Pack | What it does |",
+        "|---|---|---|",
+    ]  # fmt: skip
+    for a in packs:
+        code = LANGUAGE.fullmatch(a["name"]).group(1)
+        pack = f"[{a['name']}]({a['path']})" if a["built"] else f"{a['name']} *(idea)*"
+        lines.append(f"| `{code}` | {pack} | {a['line'].replace('|', chr(92) + '|')} |")
+    return "\n".join(lines)
+
+
 def section_newest(every: list[dict]) -> str:
     built = sorted(
         (a for a in every if a["built"]), key=lambda a: (a["added"], a["name"])
@@ -383,7 +407,7 @@ def section_pick(every: list[dict], week: str) -> str:
 BLOCK = re.compile(
     r"<!-- willow:(\w+)((?: \w+=\S+)*) -->\n.*?<!-- /willow:\1 -->", re.S
 )
-ORDER = ("pools", "newest", "pick", "list")
+ORDER = ("pools", "languages", "newest", "pick", "list")
 #: what the front page can show, and the title it shows it under
 FRONT = {
     "pick": "Add-on of the week",
@@ -414,8 +438,9 @@ def rebuild(text: str, week: str | None, needs: tuple = ORDER, page: str = "ADDO
     def made(name: str, attrs: dict) -> str:
         if name == "pick":
             return drawn(attrs)
-        return {"pools": section_pools, "newest": section_newest,
-                "list": section_list, "summary": section_summary}[name](every)  # fmt: skip
+        return {"pools": section_pools, "languages": section_languages,
+                "newest": section_newest, "list": section_list,
+                "summary": section_summary}[name](every)  # fmt: skip
 
     def fill(m: re.Match) -> str:
         name, attrs = m.group(1), dict(a.split("=") for a in m.group(2).split())

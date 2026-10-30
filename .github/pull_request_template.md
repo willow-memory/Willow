@@ -3,6 +3,12 @@
 <!-- One idea per pull request. What it does in a sentence or two, and why
      it's worth doing. The diff says how; this says why. -->
 
+Part of #
+
+<!-- The issue this belongs to, such as #84 for a language: it links the two
+     without closing the issue. Write "Closes #" for an issue this finishes,
+     or delete the line if there's none. -->
+
 ## Its promises
 
 <!-- For an add-on: its card's `writes` and `network`, and whether this
