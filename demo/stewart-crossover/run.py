@@ -49,7 +49,6 @@ TOOLS = {
     "claim_check.py": A / "claim-check" / "claim_check.py",
     "quote_check.py": A / "quote-check" / "quote_check.py",
     "misquote.py": A / "misquote" / "misquote.py",
-    "contradictions.py": A / "contradictions" / "contradictions.py",
     "words_tlh.py": A / "words-tlh" / "words_tlh.py",
     "make_it_so.py": A / "make-it-so" / "make_it_so.py",
     "willows-grove/grove/seat_say.py": REPOS / "willows-grove" / "grove" / "seat_say.py",
@@ -161,14 +160,17 @@ def judge(boxes: dict[str, Path], wren: Path, nonsense: bool) -> dict[str, dict]
     t = {x["id"]: x for x in Q["traps"]}
     code, out = tool("claim_check.py", "--box", src, say(t["T1"]["claim"]))
     res["T1"] = {"ok": code == 42, "claim_exit": code, "out": out}
+    # the kernel reads a date only in figures, and no source writes his
+    # birth so; the wrong claim and the sources' own are set side by side
     code, out = tool("claim_check.py", "--box", src, say(t["T5"]["claim"]))
-    _, contra = tool("contradictions.py", "--box", str(boxes["all"]))
-    groups = re.split(r"\n(?=(?:DATE|AMOUNT) )", contra)
-    beside = [g for g in groups if say(t["T5"]["line"]) in g and "sources/" in g]
+    _, truth = tool("claim_check.py", "--box", src, say(t["T5"]["truth"]))
+    beside = rows(truth, "all parts")
+    pubs = sorted({SOURCES[s]["publisher"] for w in beside if (s := source_of(w))})
     res["T5"] = {
-        "ok": code == 42 and bool(beside),
+        "ok": code == 42 and len(pubs) >= 2,
         "claim_exit": code,
         "beside": beside,
+        "publishers": pubs,
     }
 
     code, out = tool("quote_check.py", "--box", src, say(t["T2"]["quote"]))
@@ -197,10 +199,11 @@ def judge(boxes: dict[str, Path], wren: Path, nonsense: bool) -> dict[str, dict]
                    if m.group(0) > Q["wren_today"]})  # fmt: skip
     res["dates"] = {"ok": not late, "after_today": late}
 
-    got = subprocess.run([sys.executable, str(TOOLS["kernel.py"]), "bite", "--box", str(boxes["all"]),
-                          "--now", NOW, say(b["G1"]["text"])], capture_output=True, text=True)  # fmt: skip
-    served = [s["where"] for s in json.loads(got.stdout or "{}").get("served", [])]
-    res["G1"] = {"ok": any(w.startswith("parody/") for w in served), "served": served}
+    # every passage holding the question whole, not only the kernel's top
+    # three, which folded sources fill (run 2)
+    code, out = tool("claim_check.py", "--box", str(boxes["all"]), say(b["G1"]["text"]))
+    found = rows(out, "all parts")
+    res["G1"] = {"ok": any(w.startswith("parody/") for w in found), "all_parts": found}
     code, out = tool("claim_check.py", "--box", src, say(b["G2"]["text"]))
     res["G2"] = {"ok": code == 42, "claim_exit": code, "out": out}
 

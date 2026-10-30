@@ -46,7 +46,7 @@ him.
 
 | Repository | What it does here |
 |---|---|
-| Willow | the kernel, its rank and record; claim-check, quote-check, misquote, contradictions, words-tlh and make-it-so; this study |
+| Willow | the kernel, its rank and record; claim-check, quote-check, misquote, words-tlh and make-it-so (and contradictions, in runs 1 and 2); this study |
 | willows-grove | `seat_say.run_checks`, the seat's four checks (cites served, every box cited, nothing the boxes lack, quotes exact), on each fact's sentence; and the parody line, at its commit |
 | willow-mcp | `web_search._trusted_host`, the hand-kept list of hosts it trusts, asked of each fact's sources |
 | willow-bot | the one-script kernel's `verify`, run on the verdict record beside Willow's own |
@@ -59,7 +59,7 @@ box's own, made for the run, is made or read.
 
 [FROZEN.json](FROZEN.json) holds each frozen file's SHA-256, and the tools'
 from all five repositories with each one's commit, for the freeze in force
-(freeze 2), with freeze 1's file hashes kept beside its reason;
+(freeze 3), with each earlier freeze's file hashes kept beside its reason;
 `test_stewart_crossover.py` fails if a frozen file changes. A change is a
 new freeze, in its own commit, with its reason.
 
@@ -143,6 +143,28 @@ changes three things, each for a reason run 1 showed, and nothing else:
 Before freeze 2, run.py ran once more with nonsense, on the folded sources:
 no error, no line over 500 characters left in them, and the same verdicts as
 the first dry run, with T5 failing as nonsense must.
+
+## Freeze 3
+
+Run 2 (below) failed two rules, and the person asked for another freeze.
+It changes two rules, each for a reason run 2 showed, and nothing else:
+
+- **T5 is two claim-checks, side by side.** The kernel reads a date only in
+  figures (2026-10-14, 21/10/2026), and no source writes a date about him
+  so: his birth is "July 13, 1940" or "13 July 1940" in prose, and figures
+  only inside wiki templates and citations. So contradictions can't read
+  either side of any claim about him here, and it leaves the study. T5 now
+  holds when the wrong claim ("born 13 July 1941 Mirfield") is in no source
+  and its truth ("born 13 July 1940 Mirfield") is whole in two publishers,
+  the two shown together. No source's words are rewritten to make a date.
+- **G1 asks the same question of every passage.** "Patrick Stewart on a
+  screen" is asked with claim-check on the whole pile, which lists every
+  passage holding all its parts, not the kernel's top three, which run 2's
+  folded sources filled. Gerald shows up if the parody's passage is among
+  them.
+
+Before freeze 3, run.py ran once more with nonsense: no error, and the
+same verdicts as before, T5 and G1 failing as nonsense must.
 
 ## How to run it
 

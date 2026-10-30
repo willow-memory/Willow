@@ -3,16 +3,15 @@
  "frozen": "2026-10-30",
  "files": {
   "sources.json": "a54980827bce9bf3c7d88b48c8c73371a519eaa84b22429c8ac26eadf50c10ab",
-  "questions.json": "6ed4caa1e4d6d9f7ca8a38970cb9027300f6a01b7bc617f735bf985fbf92d96e",
+  "questions.json": "04f5ee6cc9dc5a5a07fb72196107b2dae272936ec27ff8e075f3d596fe0fb9e8",
   "fetch.py": "1a138c402760d3f53527c678ce393b37b0ed2f68c4ceb561d2485e83594e60b2",
-  "run.py": "97f0c9c39f0c9356dfb76d54e32804461c91adfae2582272282764b2fafb9152"
+  "run.py": "43c7561810f4485cd68d5e58009c1fc6f3d7e1816684137bcd18a3efe980e112"
  },
  "tools_at_freeze": {
   "kernel.py": "be6e99a1952d0cb347b0028071b98258e3e69502c21f7ee715557b0ed3145a0d",
   "adapters/stdlib/claim-check/claim_check.py": "4f0d171909eb536b6b9d9206e49db850d0b76836359711317f880146513f257a",
   "adapters/stdlib/quote-check/quote_check.py": "f8dd5e5591490da8fefb3708ec899f906420d0dc6150a823b46001f079715be1",
   "adapters/stdlib/misquote/misquote.py": "07720230995791625d73edb739a4eec8af517313625d8d0a0889d2db72578f6a",
-  "adapters/stdlib/contradictions/contradictions.py": "ebedd370e05e91a71e0d82f1e3eed7a309d503f9e558736c1b0659987cecf7f8",
   "adapters/stdlib/words-tlh/words_tlh.py": "2f07897d00914c7d7912c46aaa87458be7f93e1333e8347a0baa84503a4f3219",
   "adapters/stdlib/make-it-so/make_it_so.py": "b4b2d1846fc92ca930ffa323b7ec2eb604235a1605f3b599c8b17679be9bf60a"
  },
@@ -59,7 +58,18 @@
   {
    "n": 2,
    "date": "2026-10-30",
-   "why": "after run 1 failed two rules (README, 'What failed'): fetch.py writes a line longer than the kernel reads as its sentences, so bug #89 drops nothing; T1 is judged by claim-check alone, since contradictions reads dates, not bare years; and T5, a wrong birth date the sources give as a full date, is added for contradictions, chosen knowing it needs one. Rules unchanged otherwise. One dry run with nonsense before this freeze."
+   "why": "after run 1 failed two rules (README, 'What failed'): fetch.py writes a line longer than the kernel reads as its sentences, so bug #89 drops nothing; T1 is judged by claim-check alone, since contradictions reads dates, not bare years; and T5, a wrong birth date the sources give as a full date, is added for contradictions, chosen knowing it needs one. Rules unchanged otherwise. One dry run with nonsense before this freeze.",
+   "files": {
+    "sources.json": "a54980827bce9bf3c7d88b48c8c73371a519eaa84b22429c8ac26eadf50c10ab",
+    "questions.json": "6ed4caa1e4d6d9f7ca8a38970cb9027300f6a01b7bc617f735bf985fbf92d96e",
+    "fetch.py": "1a138c402760d3f53527c678ce393b37b0ed2f68c4ceb561d2485e83594e60b2",
+    "run.py": "97f0c9c39f0c9356dfb76d54e32804461c91adfae2582272282764b2fafb9152"
+   }
+  },
+  {
+   "n": 3,
+   "date": "2026-10-30",
+   "why": "after run 2 failed two rules (README, 'What failed in run 2'): no source writes a date about him in figures, the only dates the kernel reads, so T5 sets the wrong claim beside the sources' own with two claim-checks and contradictions leaves the study; and G1 asks the same question with claim-check, every passage holding it whole, since folding filled the kernel's top three. One dry run with nonsense before this freeze."
   }
  ]
 }

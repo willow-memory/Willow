@@ -21,7 +21,7 @@
   {"id": "T2", "kind": "misquote", "line": "Dev in the group chat: \"the line between Jean-Luc Picard and Patrick Stewart got thinner and thinner\"", "quote": "the line between Jean-Luc Picard and Patrick Stewart got thinner and thinner"},
   {"id": "T3", "kind": "signed by", "line": "Enterprise-D model, 1:2500, signed by Patrick Stewart (seller's claim), $340", "claim": "Patrick Stewart signed Enterprise model"},
   {"id": "T4", "kind": "Klingon case slip", "line": "Dev signs off every Picard night with qapla'", "quote": "qapla'"},
-  {"id": "T5", "kind": "wrong date", "line": "Kati swears Patrick Stewart was born on 13 July 1941 in Mirfield.", "claim": "born 13 July 1941 Mirfield"}
+  {"id": "T5", "kind": "wrong date", "line": "Kati swears Patrick Stewart was born on 13 July 1941 in Mirfield.", "claim": "born 13 July 1941 Mirfield", "truth": "born 13 July 1940 Mirfield"}
  ],
  "fiction_lines": [
   "Picard watch party at the library after closing. Kati brought the good tea.",
@@ -31,7 +31,7 @@
  ],
  "beats": [
   {"id": "death", "ask": "claim", "box": "wren", "text": "Patrick Stewart died"},
-  {"id": "G1", "ask": "bite", "box": "all", "text": "Patrick Stewart on a screen"},
+  {"id": "G1", "ask": "claim", "box": "all", "text": "Patrick Stewart on a screen"},
   {"id": "G2", "ask": "claim", "box": "sources", "text": "Patrik Stewpott always on a screen never present"},
   {"id": "K1", "ask": "words-tlh", "box": "all", "text": "nuq 'oH Qapla'?"},
   {"id": "M1", "ask": "make-it-so", "box": "all", "text": "rewatched first season Picard", "cmd": "engage: rewatch Star Trek: Picard, season one"}
@@ -46,10 +46,10 @@
   "T2": "quote-check on the sources box doesn't find T2's quote (exit 42), and misquote names a passage of the source that holds quote2 as the closest.",
   "T3": "claim-check on the sources box finds no 'all parts' passage for T3's claim (exit 42).",
   "T4": "quote-check on the sources box finds T4's quote as 'same words' and never 'verbatim', in the boqwi-q source; the kernel's words for it and for \"Qapla'\" are the same (the case words-tlh's card says the kernel can't see).",
-  "T5": "claim-check on the sources box finds no 'all parts' passage for T5's claim (exit 42), and contradictions on the all box lists T5's line beside a source line.",
+  "T5": "claim-check on the sources box finds no 'all parts' passage for T5's claim (exit 42), and finds its truth whole in sources from at least two publishers: the two side by side.",
   "death": "claim-check on Wren's box finds no 'all parts' passage (exit 42): her files, ending 2026-10-22, don't hold his death.",
   "dates": "No date in Wren's files is after 2026-10-22.",
-  "G1": "The kernel's bite on the all box serves a passage of the parody file: Gerald shows up.",
+  "G1": "claim-check on the all box lists a passage of the parody file among those holding every part of the question: Gerald shows up.",
   "G2": "claim-check on the sources box finds no 'all parts' passage (exit 42): the parody is in no source.",
   "K1": "words-tlh's bite on the all box answers (exit 0) with a passage of boqwi-q.",
   "M1": "make-it-so plans the order on the all box (exit 0) and check says it holds (exit 0); the command is never run.",
