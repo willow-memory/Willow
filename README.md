@@ -120,11 +120,11 @@ says how to pick one up:
 <!-- willow:front show=pick week=2026-W44 -->
 **Add-on of the week**
 
-**[test-shards](adapters/stdlib/test-shards/)** — The CI test jobs split by each test's past time, so every job finishes about together.
+**[restack](adapters/stdlib/restack/)** — Main merged into your branches, with the conflicts in the files the repo makes or only adds to settled by its own tools, and every other one left to you.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 224 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 225 built add-ons in name order.*
 
-[Every add-on, 224 built of 470, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 225 built of 470, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 

@@ -18,11 +18,11 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`██████████░░░░░░░░░░` **224 of 470 built** · 419 need no install · 51 need one
+`██████████░░░░░░░░░░` **225 of 470 built** · 419 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
-| Reading more kinds of files | 41 | 64 | 96 | 9 |
+| Reading more kinds of files | 42 | 63 | 96 | 9 |
 | Finding things | 27 | 16 | 33 | 10 |
 | Your own words | 18 | 7 | 22 | 3 |
 | Keeping track | 35 | 23 | 58 | 0 |
@@ -47,9 +47,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[test-shards](adapters/stdlib/test-shards/)** — The CI test jobs split by each test's past time, so every job finishes about together.
+**[restack](adapters/stdlib/restack/)** — Main merged into your branches, with the conflicts in the files the repo makes or only adds to settled by its own tools, and every other one left to you.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 224 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 225 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -96,7 +96,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - **homestead** (idea) — Homestead's exports from its law, ledger and health modules: records, deadlines and evidence as dated passages. *new* `no-install` `offline` `writes-output` `file-reader`
 - **instapaper** (idea) — Instapaper's CSV and HTML export: saved articles and highlights as dated lines. *new* `no-install` `offline` `writes-output` `file-reader`
 - **irc** (idea) — IRC logs from WeeChat, irssi or ZNC, one dated line per message, by network and channel. *new* `no-install` `offline` `writes-output` `file-reader`
-- **jira** (idea) — Jira's issue export, CSV or XML: each issue, comment and status change as dated passages. *new* `no-install` `offline` `writes-output` `file-reader`
+- [**jira**](adapters/stdlib/jira/) — Jira's issue export, CSV or XML: each issue, comment and status change as dated passages. *new* `no-install` `offline` `writes-output` `file-reader`
 - [**joplin**](adapters/stdlib/joplin/) — Joplin's .jex export, read without unpacking it: each note as plain text with its title and dates. *new* `no-install` `offline` `writes-output` `file-reader`
 - **journiv** (idea) — Journiv journal entries, with their moods, as dated lines, once its export format is settled. *new* `no-install` `offline` `writes-output` `file-reader`
 - [**jrnl**](adapters/stdlib/jrnl/) — jrnl journals: each [YYYY-MM-DD HH:MM] entry as a dated passage. *new* `no-install` `offline` `writes-output` `file-reader`

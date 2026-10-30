@@ -10,6 +10,8 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `jira`: Jira's issue export, XML or CSV: each issue, oldest first, with its
+  status, type, people, labels, description and comments as a dated passage.
 - `home-sensors`: Home Assistant's history export as a table of daily
   numbers, a column for each entity headed by its friendly name and unit, the
   form the readings add-on can trend.

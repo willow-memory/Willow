@@ -422,6 +422,10 @@ willow/
 │   │   │   ├── jetbrains.py      an external tool for JetBrains IDEs: answers as links to file and line
 │   │   │   ├── test_jetbrains.py
 │   │   │   └── README.md
+│   │   ├── jira/
+│   │   │   ├── jira.py   a Jira export issue by issue
+│   │   │   ├── test_jira.py
+│   │   │   └── README.md
 │   │   ├── job-hunt/
 │   │   │   ├── job_hunt.py   applications sent, replies and who you're waiting on
 │   │   │   ├── test_job_hunt.py

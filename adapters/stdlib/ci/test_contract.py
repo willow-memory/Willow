@@ -244,6 +244,13 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         b'[{"entity_id":"sensor.hall_humidity","state":"48.5","last_changed":"2024-03-02T09:00:00+00:00","attributes":{"unit_of_measurement":"%","friendly_name":"Hall, humidity"}}],'
         b'[{"entity_id":"light.hall","state":"on","last_changed":"2024-03-02T09:00:00+00:00"}]]'
     )}),
+    "jira": ("jira.py", {"export.xml": (
+        b'<rss version="0.92"><channel><item><title>[GARDEN-12] Tomatoes want more sun</title><key id="1">GARDEN-12</key><summary>Tomatoes want more sun</summary>'
+        b'<type>Bug</type><status>Open</status><reporter username="a">ana</reporter><assignee username="b">ben</assignee><created>Sat, 2 Mar 2024 08:15:00 +0000</created>'
+        b'<description>&lt;p&gt;The bed by the  fence is shaded.&lt;/p&gt;</description><labels><label>garden</label><label>urgent</label></labels>'
+        b'<comments><comment id="1" author="ben" created="Sun, 3 Mar 2024 10:00:00 +0000">Move them to bed 2.</comment></comments></item>'
+        b'<item><title>[GARDEN-3] Order seed</title><key id="2">GARDEN-3</key><type>Task</type><status>Done</status><reporter>cy</reporter><assignee>Unassigned</assignee><created>Fri, 1 Mar 2024 09:00:00 +0000</created></item></channel></rss>'
+    )}),
     "notes": ("notes.py", {"garden.md": b"Tomatoes want [[sun]].\n"}),
     "jrnl": ("jrnl.py", {"journal.txt": (
         "[2024-03-03 10:15] Fixed the gate.\nThe hinge wanted oil, not force.\n\n"

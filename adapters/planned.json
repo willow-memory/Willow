@@ -942,16 +942,6 @@
   "tags": "no-install, offline, writes-output, trust"
  },
  {
-  "name": "jira",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Jira's issue export, CSV or XML: each issue, comment and status change as dated passages.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "joins",
   "kind": "stdlib",
   "section": "Play",
