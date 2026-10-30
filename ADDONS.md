@@ -18,11 +18,11 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`██████████░░░░░░░░░░` **226 of 470 built** · 419 need no install · 51 need one
+`██████████░░░░░░░░░░` **227 of 470 built** · 419 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
-| Reading more kinds of files | 43 | 62 | 96 | 9 |
+| Reading more kinds of files | 44 | 61 | 96 | 9 |
 | Finding things | 27 | 16 | 33 | 10 |
 | Your own words | 18 | 7 | 22 | 3 |
 | Keeping track | 35 | 23 | 58 | 0 |
@@ -47,9 +47,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[accents](adapters/stdlib/accents/)** — A word typed without its accent read as your files write it, and the words-list lines that make it last.
+**[words-de](adapters/stdlib/words-de/)** — German common words, so questions aren't matched on "der" and "und".
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 226 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 227 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -88,7 +88,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - **git-history** (idea) — Commit messages and diffs as a dated pile: "when did we change the retry limit?" Needs the git program; GPL, called not linked. *new* `needs-install` `offline` `writes-output` `file-reader`
 - **github-archive** (idea) — Your GitHub account's data export: the issues, pull requests, reviews and comments you wrote, as dated passages with their links. *new* `no-install` `offline` `writes-output` `file-reader`
 - **gitlab-export** (idea) — A GitLab project export, read without unpacking it: its issues, merge requests and comments as dated passages. *new* `no-install` `offline` `writes-output` `file-reader`
-- **goodreads** (idea) — Goodreads and StoryGraph exports: the books you've read, when, and what you thought of them. *new* `no-install` `offline` `writes-output` `file-reader`
+- [**goodreads**](adapters/stdlib/goodreads/) — Goodreads and StoryGraph exports: the books you've read, when, and what you thought of them. *new* `no-install` `offline` `writes-output` `file-reader`
 - **google-classroom** (idea) — Google Classroom from Takeout: assignments, announcements and comments as dated passages. *new* `no-install` `offline` `writes-output` `file-reader`
 - [**google-keep**](adapters/stdlib/google-keep/) — Google Keep from Takeout: notes, lists and labels as dated passages. *new* `no-install` `offline` `writes-output` `file-reader`
 - [**health**](adapters/stdlib/health/) — Apple Health and Google Fit exports as daily numbers the readings add-on can trend. *new* `no-install` `offline` `writes-output` `file-reader`

@@ -256,6 +256,12 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         b'2024-03-05,Heat,1995,https://boxd.it/1,4.5,Yes,,"crime, night",2024-03-02\n'
         b'2024-03-10,Paddington 2,2017,https://boxd.it/2,4,,Funnier than it has   any right to be.,,2024-03-09\n'
     )}),
+    "goodreads": ("goodreads.py", {"goodreads_library_export.csv": (
+        b'Book Id,Title,Author,My Rating,Date Read,Date Added,Bookshelves,Exclusive Shelf,My Review,Private Notes\n'
+        b'1,The Hobbit,J.R.R. Tolkien,4,2024/03/02,2023/01/05,"fantasy, favourites",read,A comfort   read.,secret\n'
+        b'2,Dune,Frank Herbert,0,,2024/03/09,,currently-reading,,\n'
+        b'3,Piranesi,Susanna Clarke,0,,2023/12/01,,to-read,,\n'
+    )}),
     "notes": ("notes.py", {"garden.md": b"Tomatoes want [[sun]].\n"}),
     "jrnl": ("jrnl.py", {"journal.txt": (
         "[2024-03-03 10:15] Fixed the gate.\nThe hinge wanted oil, not force.\n\n"

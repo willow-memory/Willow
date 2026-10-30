@@ -671,16 +671,6 @@
   "tags": "no-install, offline, read-only, maintainers"
  },
  {
-  "name": "goodreads",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Goodreads and StoryGraph exports: the books you've read, when, and what you thought of them.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "google-classroom",
   "kind": "stdlib",
   "section": "Reading more kinds of files",

@@ -10,6 +10,8 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `goodreads`: Goodreads and StoryGraph library exports: each book, oldest
+  first, as a dated line with its shelf, rating out of five, review and tags.
 - `letterboxd`: Letterboxd's export CSVs: each film row, oldest first, as a
   dated line (watched, rated or listed) with its rating out of five, rewatch
   mark, review and tags.

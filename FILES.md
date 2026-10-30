@@ -314,6 +314,10 @@ willow/
 │   │   │   ├── host.json     how GitHub titles the merge of a pull request, for whose.py --host
 │   │   │   ├── test_github.py
 │   │   │   └── README.md     its card: and .github/ belongs to it
+│   │   ├── goodreads/
+│   │   │   ├── goodreads.py   books read, reading and wanted, as dated lines
+│   │   │   ├── test_goodreads.py
+│   │   │   └── README.md
 │   │   ├── google-keep/
 │   │   │   ├── google_keep.py   a Keep note or list with its day and labels
 │   │   │   ├── test_google_keep.py
