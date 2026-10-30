@@ -222,17 +222,6 @@
   "tags": "no-install, offline, read-only, search"
  },
  {
-  "name": "code-shape",
-  "kind": "deps",
-  "section": "Finding things",
-  "line": "Search code by its shape, not its words: every call of a kind, whatever it's named.",
-  "source": "new",
-  "needs": "the ast-grep program; MIT",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "needs-install, offline, read-only, search"
- },
- {
   "name": "code-stats",
   "kind": "deps",
   "section": "For maintainers",
@@ -1270,17 +1259,6 @@
   "tags": "no-install, this-machine, read-only, interface"
  },
  {
-  "name": "ocr",
-  "kind": "deps",
-  "section": "Reading more kinds of files",
-  "line": "Text out of photos of letters and scanned PDFs.",
-  "source": "new",
-  "needs": "pytesseract and the tesseract program; Apache-2.0",
-  "writes": "to",
-  "network": "none",
-  "tags": "needs-install, offline, writes-output, file-reader"
- },
- {
   "name": "openai-compatible",
   "kind": "stdlib",
   "section": "Assistants",
@@ -1349,17 +1327,6 @@
   "writes": "record",
   "network": "none",
   "tags": "no-install, offline, records, assistant"
- },
- {
-  "name": "pgp",
-  "kind": "deps",
-  "section": "Trust and proof",
-  "line": "Signs exports and reports with your PGP key, verifiable anywhere.",
-  "source": "new",
-  "needs": "the gpg program and python-gnupg; BSD",
-  "writes": "to",
-  "network": "none",
-  "tags": "needs-install, offline, writes-output, trust"
  },
  {
   "name": "plain-language",
@@ -1619,17 +1586,6 @@
   "tags": "no-install, offline, records, play"
  },
  {
-  "name": "ripgrep",
-  "kind": "deps",
-  "section": "Finding things",
-  "line": "Exact search through ripgrep, much faster on a big folder, its hits checked against the kernel's hashes.",
-  "source": "new",
-  "needs": "the ripgrep program; MIT or Unlicense",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "needs-install, offline, read-only, search"
- },
- {
   "name": "roll-for-merge",
   "kind": "stdlib",
   "section": "Play",
@@ -1882,17 +1838,6 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, search"
- },
- {
-  "name": "static-search",
-  "kind": "deps",
-  "section": "Ways to use it",
-  "line": "An exported page of approved answers with its own search built in, no server, opened in any browser.",
-  "source": "new",
-  "needs": "Pagefind; MIT",
-  "writes": "to",
-  "network": "none",
-  "tags": "needs-install, offline, writes-output, interface"
  },
  {
   "name": "steam",

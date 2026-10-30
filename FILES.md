@@ -1007,6 +1007,12 @@ willow/
 │   │       └── README.md
 │   └── deps/                 add-ons that need something installed
 │       ├── README.md         what one must declare: pins, floors, licences, network
+│       ├── code-shape/
+│       │   ├── code_shape.py  code by its shape through ast-grep, each match checked against the kernel's passages
+│       │   ├── requirements.txt  ast-grep-cli, pinned
+│       │   ├── requirements-floor.txt  ast-grep-cli at its floor, also tested
+│       │   ├── test_code_shape.py
+│       │   └── README.md
 │       ├── dialect/
 │       │   ├── dialect.py    the words you use far more than the world does, against wordfreq's counts
 │       │   ├── requirements.txt  wordfreq, pinned
@@ -1037,11 +1043,23 @@ willow/
 │       │   ├── requirements-floor.txt  mcp at its floor, also tested
 │       │   ├── test_mcp_server.py
 │       │   └── README.md
+│       ├── ocr/
+│       │   ├── ocr.py        text out of pictures and scanned PDF pages, read by tesseract
+│       │   ├── requirements.txt  Pillow and pypdf, pinned
+│       │   ├── requirements-floor.txt  Pillow and pypdf at their floors, also tested
+│       │   ├── test_ocr.py
+│       │   └── README.md
 │       ├── pdf/
 │       │   ├── pdf.py        text out of PDFs, a headed paragraph a page
 │       │   ├── requirements.txt  pypdf, pinned
 │       │   ├── requirements-floor.txt  pypdf at its floor, also tested
 │       │   ├── test_pdf.py
+│       │   └── README.md
+│       ├── pgp/
+│       │   ├── pgp.py        signs a file with your own gpg key, and checks a signature
+│       │   ├── requirements.txt  python-gnupg, pinned
+│       │   ├── requirements-floor.txt  python-gnupg at its floor, also tested
+│       │   ├── test_pgp.py
 │       │   └── README.md
 │       ├── photos/
 │       │   ├── photos.py     when and where each photo was taken, from its EXIF
@@ -1055,11 +1073,23 @@ willow/
 │       │   ├── requirements-floor.txt  duckdb at its floor, also tested
 │       │   ├── test_record_sql.py
 │       │   └── README.md
+│       ├── ripgrep/
+│       │   ├── ripgrep.py    exact search through rg, each hit checked against the kernel's passages
+│       │   ├── requirements.txt  ripgrep, pinned
+│       │   ├── requirements-floor.txt  ripgrep at its floor, also tested
+│       │   ├── test_ripgrep.py
+│       │   └── README.md
 │       ├── sheets/
 │       │   ├── sheets.py     spreadsheets as shown: number formats, formulas and notes kept
 │       │   ├── requirements.txt  openpyxl, pinned
 │       │   ├── requirements-floor.txt  openpyxl at its floor, also tested
 │       │   ├── test_sheets.py
+│       │   └── README.md
+│       ├── static-search/
+│       │   ├── static_search.py  approved answers as a static site, searched by Pagefind
+│       │   ├── requirements.txt  pagefind and pagefind-bin, pinned
+│       │   ├── requirements-floor.txt  pagefind and pagefind-bin at their floors, also tested
+│       │   ├── test_static_search.py
 │       │   └── README.md
 │       ├── star-system/
 │       │   ├── star_system.py  a friend's star-system sim (science_bitch) run deterministically, as cited passages

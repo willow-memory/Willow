@@ -265,12 +265,15 @@ jobs:
     # Each add-on in adapters/deps gets a fresh virtual environment with only
     # its own pinned requirements, made by ci.py, then another at its floor;
     # deps:floors checks each floor against PyPI. mcp needs Python 3.10+.
+    # The programs a deps add-on runs and PyPI doesn't carry come from the
+    # runner's Ubuntu: tesseract for ocr (gpg, for pgp, comes with the image).
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
         with:
           python-version: "3.13"
+      - run: sudo apt-get update -q && sudo apt-get install -y -q tesseract-ocr
       - run: python adapters/stdlib/ci/ci.py run deps --box ${{ runner.temp }}/ci-record | tee "$RUNNER_TEMP/ci.log"
       - if: failure()
         run: python adapters/stdlib/ci-why/ci_why.py "$RUNNER_TEMP/ci.log" --record "$RUNNER_TEMP/ci-record/record.jsonl" >> "$GITHUB_STEP_SUMMARY" || true
