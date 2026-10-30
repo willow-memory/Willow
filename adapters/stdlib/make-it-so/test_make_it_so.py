@@ -168,7 +168,8 @@ def test_something_that_is_not_a_box_is_refused(tmp_path):
 def test_the_boxs_words_list_is_used_and_a_list_that_does_not_read_is_refused(tmp_path):
     b, _ = box(tmp_path, words="sunshine = sun\n")
     to = tmp_path / "plan.json"
-    assert plan(b, to, "echo hi", "how much sunshine do tomatoes want").returncode == 0
+    assert plan(b, to, "echo hi", "sunshine").returncode == 0
+    assert json.loads(to.read_text())["passages"][0]["line"] == 3
     (tmp_path / "w.txt").write_text("not a list line\n")
     bad = plan(b, tmp_path / "other.json", "echo hi", "sunshine")
     assert bad.returncode == 2 and not (tmp_path / "other.json").exists()
