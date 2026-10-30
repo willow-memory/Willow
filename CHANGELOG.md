@@ -16,11 +16,11 @@ says how). The first was v0.1.0.
   judged with tools from Willow, willows-grove, willow-mcp, willow-bot and
   Forge. Run 1 held 15 of 17 rules, run 2 16 of 18, and run 3, from a third
   freeze, all 18; what failed each time is written down with its cause, and
-  one of them is bug #89.
+  one of them is bug #89. (#100)
 - `make-it-so`: An order held for you: your question, the command you name
   (kept as given and never run), the passages that bear on it and their file
   hashes, written once to a file of yours; `check` says whether those files
-  still hold what they held.
+  still hold what they held. (#100)
 - `stack`: Seven example stacks for #87, each for a different kind of
   folder: a choir's secretary, a smallholding, a small library's maintainer,
   a teacher's class, a local reporter's story, a dog-rescue fosterer and a
