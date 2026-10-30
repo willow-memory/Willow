@@ -47,6 +47,16 @@ def _docx(text: str) -> bytes:
     return buf.getvalue()
 
 
+def _zip(files: dict[str, str]) -> bytes:
+    from io import BytesIO
+
+    buf = BytesIO()
+    with zipfile.ZipFile(buf, "w") as z:
+        for name, text in files.items():
+            z.writestr(name, text)
+    return buf.getvalue()
+
+
 def _png() -> bytes:
     import struct
     import zlib
@@ -218,6 +228,160 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         b' "entities": {"urls": [{"url": "https://t.co/abc", "expanded_url": "https://example.org/guide"}]}}},'
         b' {"tweet": {"created_at": "Thu Mar 03 19:40:00 -0500 2022", "full_text": "@ana the slugs are winning.", "in_reply_to_status_id_str": "123"}} ]'
     )}),
+    "irc": ("irc.py", {"irc.libera.#garden.weechatlog": (
+        b"2024-03-02 08:15:30\tana\tSix hours of sun, I read.\n2024-03-02 08:15:50\t--> \tben (~b@host) has joined #garden\n"
+        b"2024-03-02 08:16:01\t *\tben waves\n2024-03-03 19:40:00\tben\tThe slugs are winning.\n"
+    )}),
+    "listening": ("listening.py", {"StreamingHistory0.json": (
+        b'[{"endTime":"2024-03-02 09:02","artistName":"Nina Simone","trackName":"Sinnerman","msPlayed":620000},'
+        b'{"endTime":"2024-03-02 08:15","artistName":"X","trackName":"Skipped","msPlayed":29999},'
+        b'{"ts":"2024-03-02T07:30:00Z","master_metadata_track_name":"Feeling Good","master_metadata_album_artist_name":"Nina Simone","ms_played":175500},'
+        b'{"ts":"2024-03-03T10:00:00Z","episode_name":"Staking tomatoes","episode_show_name":"Garden Radio","ms_played":1450000},'
+        b'{"ts":"2024-03-03T11:00:00Z","ms_played":60000}]'
+    )}),
+    "lockfiles": ("lockfiles.py", {"package-lock.json": (
+        b'{"lockfileVersion":3,"packages":{"":{"name":"app","version":"1.0.0"},"node_modules/lodash":{"version":"4.17.21","resolved":"x","integrity":"y"},'
+        b'"node_modules/left-pad":{"version":"1.3.0"},"node_modules/a/node_modules/left-pad":{"version":"0.0.3"},"node_modules/@scope/pkg":{"version":"2.0.0"},"node_modules/bad":{}}}'
+    )}),
+    "man-pages": ("man_pages.py", {"ls.1": (
+        b'.\\" a comment\n.TH LS 1 "March 2024" "coreutils" "User Commands"\n.SH NAME\nls \\- list directory contents\n.SH SYNOPSIS\n.B ls\n[\\fIOPTION\\fR]... [\\fIFILE\\fR]...\n'
+        b'.SH DESCRIPTION\nList information about the \\fBFILE\\fRs.\n.TP\n.BR \\-a ", " \\-\\-all\ndo not ignore entries starting with \\&.\n.PP\nSecond \\(em paragraph.\n'
+    )}),
+    "matrix": ("matrix.py", {"room.json": (
+        b'{"room_name":"Garden Club","topic":"Plants","messages":['
+        b'{"type":"m.room.message","sender":"@ben:example.org","origin_server_ts":1709367360000,"content":{"msgtype":"m.emote","body":"waves"}},'
+        b'{"type":"m.room.message","sender":"@ana:example.org","origin_server_ts":1709367300000,"content":{"msgtype":"m.text","body":"Six  hours of sun."}},'
+        b'{"type":"m.room.member","sender":"@ben:example.org","origin_server_ts":1709367000000,"content":{"membership":"join"}},'
+        b'{"type":"m.room.message","sender":"@ana:example.org","origin_server_ts":1709367400000,"content":{"msgtype":"m.image","body":"tomato.png"}},'
+        b'{"type":"m.room.message","sender":"@ana:example.org","origin_server_ts":1709367500000,"content":{"msgtype":"m.text","body":""}}]}'
+    )}),
+    "trello": ("trello.py", {"garden.json": (
+        b'{"name":"Garden","lists":[{"id":"l1","name":"To do"},{"id":"l2","name":"Done"},{"id":"l3","name":"Old","closed":true}],'
+        b'"cards":[{"id":"c1","idList":"l1","name":"Stake the tomatoes","desc":"Use the  long canes.","due":"2024-03-09T12:00:00.000Z","labels":[{"name":"urgent"},{"name":""},{"name":"veg"}],"idChecklists":["k1"]},'
+        b'{"id":"c2","idList":"l2","name":"Order seed"},{"id":"c3","idList":"l1","name":"Archived","closed":true},{"id":"c4","idList":"l3","name":"In a closed list"}],'
+        b'"checklists":[{"id":"k1","name":"Tools","checkItems":[{"name":"canes","state":"complete"},{"name":"twine","state":"incomplete"}]}],'
+        b'"actions":[{"type":"commentCard","date":"2024-03-02T08:00:00.000Z","data":{"text":"Borrow Ben\'s.","card":{"id":"c1"}},"memberCreator":{"fullName":"Ana"}},'
+        b'{"type":"updateCard","data":{"card":{"id":"c1"}}}]}'
+    )}),
+    "gh-json": ("gh_json.py", {"issues.json": (
+        b'[{"number":14,"title":"Move tomatoes to bed 2","state":"MERGED","createdAt":"2024-03-04T09:00:00Z","author":{"login":"ben"},"headRefName":"bed-2","mergedAt":"2024-03-05T10:00:00Z"},'
+        b'{"number":12,"title":"Tomatoes want more sun","state":"OPEN","createdAt":"2024-03-02T08:15:00Z","author":{"login":"ana"},"body":"The bed by the  fence\\nis shaded.",'
+        b'"labels":[{"name":"bug"},{"name":"garden"}],"comments":[{"author":{"login":"ben"},"createdAt":"2024-03-03T10:00:00Z","body":"Move them."},{"body":" "}]},'
+        b'{"databaseId":1234,"name":"ci","workflowName":"CI","conclusion":"failure","headBranch":"main","createdAt":"2024-03-04T09:30:00Z","displayTitle":"Move tomatoes"}]'
+    )}),
+    "meta-archive": ("meta_archive.py", {"message_1.json": (
+        b'{"participants":[{"name":"Ana"},{"name":"Ben"}],"title":"Garden chat","messages":['
+        b'{"sender_name":"Ben","timestamp_ms":1709370000000,"content":"Caf\xc3\x83\xc2\xa9 later?"},'
+        b'{"sender_name":"Ana","timestamp_ms":1709367300000,"content":"Six  hours of sun."},{"sender_name":"Ana","timestamp_ms":1709367400000,"photos":[{}]}]}'
+    )}),
+    "location-history": ("location_history.py", {"2024_MARCH.json": (
+        b'{"timelineObjects":[{"activitySegment":{"activityType":"WALKING","distance":1500,"duration":{"startTimestamp":"2024-03-02T09:10:00Z","endTimestamp":"2024-03-02T09:40:00Z"}}},'
+        b'{"placeVisit":{"location":{"name":"Kitchen Cafe","address":"1 High St, Leeds"},"duration":{"startTimestamp":"2024-03-02T08:15:00.000Z","endTimestamp":"2024-03-02T09:10:00.000Z"}}},'
+        b'{"placeVisit":{"location":{},"duration":{"startTimestamp":"2024-03-02T23:00:00Z","endTimestamp":"2024-03-03T07:00:00Z"}}},{"placeVisit":{"duration":{}}}]}'
+    )}),
+    "slack": ("slack.py", {"slack.zip": (
+        _zip({
+        "users.json": '[{"id":"U1","name":"ana","real_name":"Ana Lopez","profile":{"display_name":"ana"}},{"id":"U2","name":"ben","real_name":"Ben Ruiz","profile":{"display_name":""}}]',
+        "channels.json": '[{"id":"C1","name":"garden"}]',
+        "garden/2024-03-02.json": '[{"type":"message","user":"U1","text":"Six hours of sun, <@U2>? &amp; <#C1|garden>","ts":"1709367300.000100"},'
+        '{"type":"message","user":"U2","text":"See <https://example.org/guide|the guide> <!here>","ts":"1709367360.000200"},'
+        '{"type":"message","subtype":"channel_join","user":"U2","text":"<@U2> has joined","ts":"1709367000.000000"},'
+        '{"type":"message","user":"U3","text":"","ts":"1709367400.0"}]',
+        "garden/2024-03-03.json": '[{"type":"message","subtype":"me_message","user":"U1","text":"waves","ts":"1709460000.0"}]',
+        })
+    )}),
+    "discord": ("discord.py", {"discord.zip": (
+        _zip({
+        "Messages/index.json": '{"123": "Direct Message with ben", "456": "garden"}',
+        "Messages/c123/channel.json": '{"id":"123","type":1}',
+        "Messages/c123/messages.json": '[{"ID":"1","Timestamp":"2024-03-02 08:16:00","Contents":"See you  Saturday.","Attachments":""},{"ID":"2","Timestamp":"2024-03-02 08:20:00","Contents":"","Attachments":"https://cdn/x.png"},{"ID":"3","Timestamp":"2024-03-02 08:21:00","Contents":"","Attachments":""}]',
+        "Messages/c456/channel.json": '{"id":"456","type":0,"name":"garden","guild":{"id":"9","name":"Garden Club"}}',
+        "Messages/c456/messages.csv": 'ID,Timestamp,Contents,Attachments\n7,2024-03-02 08:15:30,"Six hours of sun.",\n',
+        })
+    )}),
+    "notion": ("notion.py", {"notion.zip": (
+        _zip({
+        "Garden 0123456789abcdef0123456789abcdef.md": "# Garden\n\nIntro.\n",
+        "Garden/Veg 11111111111111111111111111111111/Tomato notes 22222222222222222222222222222222.md": "# Tomato notes\n\nCreated: March 2, 2024 8:15 AM\nPlant out after the last frost.\n",
+        "Garden/Seed orders 33333333333333333333333333333333.csv": "Name,Qty,Supplier\nBasil,3,Seeds Ltd\n,,\n",
+        "Garden/photo.png": "not text",
+        })
+    )}),
+    "code-comments": ("code_comments.py", {"cache.py": (
+        b'"""Module docstring.\n\nSecond line."""\n# A cache of parsed answers.\nTTL = 60  # seconds an entry lives\ns = "# not a comment"\n\n\ndef f():\n    """Do the thing."""\n    return 1\n'
+    )}),
+    "ci-logs": ("ci_logs.py", {"run.log": (
+        b"2026-10-29T03:28:14.1000000Z ##[group]Run actions/checkout@v7\n2026-10-29T03:28:14.2000000Z with:\n2026-10-29T03:28:14.3000000Z ##[endgroup]\n"
+        b"2026-10-29T03:28:15.0000000Z ##[group]Run pytest\n2026-10-29T03:28:15.5000000Z \x1b[31mFAILED\x1b[0m tests/test_garden.py::test_sun - assert 5 == 6\n"
+        b"2026-10-29T03:28:16.0000000Z ===== 1 failed, 40 passed in 2.31s =====\n2026-10-29T03:28:17.0000000Z ##[error]Process completed with exit code 1.\n"
+        b"2026-10-29T03:28:18.0000000Z Post job cleanup.\n"
+    )}),
+    "health": ("health.py", {"export.xml": (
+        b'<?xml version="1.0"?><HealthData locale="en_GB"><Record type="HKQuantityTypeIdentifierStepCount" unit="count" startDate="2024-03-02 07:00:00 +0000" value="5000"/>'
+        b'<Record type="HKQuantityTypeIdentifierStepCount" unit="count" startDate="2024-03-02 12:00:00 +0000" value="3123"/>'
+        b'<Record type="HKQuantityTypeIdentifierDistanceWalkingRunning" unit="mi" startDate="2024-03-02 07:00:00 +0000" value="3.6"/>'
+        b'<Record type="HKQuantityTypeIdentifierHeartRate" unit="count/min" startDate="2024-03-02 07:00:00 +0000" value="70"/>'
+        b'<Record type="HKQuantityTypeIdentifierHeartRate" unit="count/min" startDate="2024-03-02 08:00:00 +0000" value="72"/>'
+        b'<Record type="HKQuantityTypeIdentifierBodyMass" unit="lb" startDate="2024-03-02 06:00:00 +0000" value="160"/>'
+        b'<Record type="HKQuantityTypeIdentifierBodyMass" unit="kg" startDate="2024-03-02 09:00:00 +0000" value="72.4"/>'
+        b'<Record type="HKQuantityTypeIdentifierStepCount" unit="count" startDate="2024-03-03 07:00:00 +0000" value="10442"/>'
+        b'<Record type="HKCategoryTypeIdentifierSleepAnalysis" startDate="2024-03-03 01:00:00 +0000" value="HKCategoryValueSleepAnalysisAsleep"/>'
+        b'<Workout workoutActivityType="HKWorkoutActivityTypeRunning" startDate="2024-03-03 07:00:00 +0000"/></HealthData>'
+    )}),
+    "home-sensors": ("home_sensors.py", {"history.json": (
+        b'[[{"entity_id":"sensor.kitchen_temp","state":"21.0","last_changed":"2024-03-02T08:00:00+00:00","attributes":{"unit_of_measurement":"C","friendly_name":"Kitchen temperature"}},'
+        b'{"entity_id":"sensor.kitchen_temp","state":"21.8","last_changed":"2024-03-02T20:00:00+00:00","attributes":{}},'
+        b'{"entity_id":"sensor.kitchen_temp","state":"unavailable","last_changed":"2024-03-02T21:00:00+00:00"},'
+        b'{"entity_id":"sensor.kitchen_temp","state":"20.9","last_changed":"2024-03-03T08:00:00+00:00"}],'
+        b'[{"entity_id":"sensor.hall_humidity","state":"48.5","last_changed":"2024-03-02T09:00:00+00:00","attributes":{"unit_of_measurement":"%","friendly_name":"Hall, humidity"}}],'
+        b'[{"entity_id":"light.hall","state":"on","last_changed":"2024-03-02T09:00:00+00:00"}]]'
+    )}),
+    "jira": ("jira.py", {"export.xml": (
+        b'<rss version="0.92"><channel><item><title>[GARDEN-12] Tomatoes want more sun</title><key id="1">GARDEN-12</key><summary>Tomatoes want more sun</summary>'
+        b'<type>Bug</type><status>Open</status><reporter username="a">ana</reporter><assignee username="b">ben</assignee><created>Sat, 2 Mar 2024 08:15:00 +0000</created>'
+        b'<description>&lt;p&gt;The bed by the  fence is shaded.&lt;/p&gt;</description><labels><label>garden</label><label>urgent</label></labels>'
+        b'<comments><comment id="1" author="ben" created="Sun, 3 Mar 2024 10:00:00 +0000">Move them to bed 2.</comment></comments></item>'
+        b'<item><title>[GARDEN-3] Order seed</title><key id="2">GARDEN-3</key><type>Task</type><status>Done</status><reporter>cy</reporter><assignee>Unassigned</assignee><created>Fri, 1 Mar 2024 09:00:00 +0000</created></item></channel></rss>'
+    )}),
+    "letterboxd": ("letterboxd.py", {"diary.csv": (
+        b'Date,Name,Year,Letterboxd URI,Rating,Rewatch,Review,Tags,Watched Date\n'
+        b'2024-03-05,Heat,1995,https://boxd.it/1,4.5,Yes,,"crime, night",2024-03-02\n'
+        b'2024-03-10,Paddington 2,2017,https://boxd.it/2,4,,Funnier than it has   any right to be.,,2024-03-09\n'
+    )}),
+    "goodreads": ("goodreads.py", {"goodreads_library_export.csv": (
+        b'Book Id,Title,Author,My Rating,Date Read,Date Added,Bookshelves,Exclusive Shelf,My Review,Private Notes\n'
+        b'1,The Hobbit,J.R.R. Tolkien,4,2024/03/02,2023/01/05,"fantasy, favourites",read,A comfort   read.,secret\n'
+        b'2,Dune,Frank Herbert,0,,2024/03/09,,currently-reading,,\n'
+        b'3,Piranesi,Susanna Clarke,0,,2023/12/01,,to-read,,\n'
+    )}),
+    "linkedin": ("linkedin.py", {"messages.csv": (
+        b'CONVERSATION ID,CONVERSATION TITLE,FROM,SENDER PROFILE URL,TO,RECIPIENT PROFILE URLS,DATE,SUBJECT,CONTENT,FOLDER\n'
+        b'c1,,Ana Lopez,https://x/a,Ben Ruiz,https://x/b,2024-03-02 08:15:30 UTC,Garden talk,Are you   coming on Saturday?,INBOX\n'
+        b'c1,,Ben Ruiz,https://x/b,Ana Lopez,https://x/a,2024-03-02 08:20:00 UTC,,Yes!,SENT\n'
+        b'c2,,Cy,https://x/c,Ben Ruiz,https://x/b,2024-03-01 09:00:00 UTC,,,INBOX\n'
+    )}),
+    "reddit": ("reddit.py", {"posts.csv": (
+        b'id,permalink,date,ip,subreddit,gildings,title,url,body\n'
+        b'abc,https://www.reddit.com/r/gardening/comments/abc/,2024-03-02 08:15:30 UTC,1.2.3.4,gardening,0,Tomatoes want more sun,,The bed by the   fence is shaded.\n'
+        b'def,https://www.reddit.com/r/gardening/comments/def/,2024-03-01 09:00:00 UTC,1.2.3.4,gardening,0,Link only,https://example.org,\n'
+    )}),
+    "orders": ("orders.py", {"Retail.OrderHistory.1.csv": (
+        b'Website,Order ID,Order Date,Currency,Unit Price,Total Owed,Product Name,Order Status\n'
+        b'Amazon.co.uk,026-1234567-8901234,2024-03-02T08:15:00Z,GBP,4.5,"4.50",Basil seeds,   3 packets,Closed\n'
+        b'Amazon.co.uk,026-7654321-0987654,2024-03-09T10:00:00Z,GBP,6.99,6.99,Garden twine,Closed\n'
+    )}),
+    "bank": ("bank.py", {"statement.csv": (
+        b'Date,Description,Amount,Balance\n2024-03-05,ACME PAYROLL,2000.00,3000.00\n2024-03-02,TESCO STORES 3241,-45.20,1000.00\n'
+    )}),
+    "readwise": ("readwise.py", {"readwise-data.csv": (
+        b'Highlight,Book Title,Book Author,Amazon Book ID,Note,Color,Tags,Location Type,Location,Highlighted at\n'
+        b'"In a hole in the ground there lived a hobbit.",The Hobbit,J.R.R. Tolkien,B1,the best   opening,yellow,fantasy,location,120,2024-03-02 08:15:00\n'
+        b'Tie the stem loosely.,Staking tomatoes,Ana Lopez,,,,,,,2024-03-04T10:00:00Z\n'
+    )}),
+    "logs": ("logs.py", {"syslog.log": (
+        b"Mar  2 08:15:30 host sshd[1234]: Accepted publickey for ana from 10.0.0.2\nMar  2 08:16:01 host cron: (root) CMD (run-parts /etc/cron.hourly)\n"
+        b"    at stack frame\n2024-03-02T08:17:00.123456+00:00 host app[7]: started\n"
+    )}),
     "notes": ("notes.py", {"garden.md": b"Tomatoes want [[sun]].\n"}),
     "jrnl": ("jrnl.py", {"journal.txt": (
         "[2024-03-03 10:15] Fixed the gate.\nThe hinge wanted oil, not force.\n\n"
@@ -376,6 +540,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "syllabus": ("syllabus.py", ["--box", "{box}"]),
     "foia": ("foia.py", ["--box", "{box}"]),
     "budget": ("budget.py", ["--box", "{box}"]),
+    "launcher": ("launcher.py", ["--box", "{box}"]),
     "history": ("history.py", ["--box", "{box}"]),
     "dice": ("dice.py", ["--box", "{box}", "roll", "2d6", *NOW]),
     "hook-fail-closed": ("hook_fail_closed.py", ["--hook", "true"]),

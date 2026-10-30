@@ -104,6 +104,10 @@ willow/
 │   │   │   ├── badge.py   an SVG badge of the record's counts: answers approved, the files they came from, and whether it holds
 │   │   │   ├── test_badge.py
 │   │   │   └── README.md
+│   │   ├── bank/
+│   │   │   ├── bank.py   bank statements as dated lines with monthly totals
+│   │   │   ├── test_bank.py
+│   │   │   └── README.md
 │   │   ├── bench/
 │   │   │   ├── bench.py       how fast the kernel reads and ranks piles of set sizes, per release
 │   │   │   ├── test_bench.py
@@ -181,6 +185,10 @@ willow/
 │   │   │   ├── ci_cache.py    a cache key per ecosystem from a repo's lockfiles, so CI skips the reinstall
 │   │   │   ├── test_ci_cache.py
 │   │   │   └── README.md
+│   │   ├── ci-logs/
+│   │   │   ├── ci_logs.py   a CI run log as its failing steps
+│   │   │   ├── test_ci_logs.py
+│   │   │   └── README.md
 │   │   ├── ci-memo/
 │   │   │   ├── ci_memo.py    a gate whose inputs' bytes are unchanged keeps its verdict: pin a run's keys, plan the rest
 │   │   │   ├── test_ci_memo.py
@@ -204,6 +212,10 @@ willow/
 │   │   ├── cloudevents/
 │   │   │   ├── cloudevents.py   the record's rows as CloudEvents 1.0 JSON events, one a line, the id each row's own hash
 │   │   │   ├── test_cloudevents.py
+│   │   │   └── README.md
+│   │   ├── code-comments/
+│   │   │   ├── code_comments.py   a source file's comments on the lines they were on
+│   │   │   ├── test_code_comments.py
 │   │   │   └── README.md
 │   │   ├── codeowners/
 │   │   │   ├── codeowners.py   who owns a file: the CODEOWNERS rule that matches it, cited by line, on GitHub, GitLab and Forgejo
@@ -252,6 +264,10 @@ willow/
 │   │   ├── digest/
 │   │   │   ├── digest.py     one page of what waits on you, gone stale, coming up; writes nothing
 │   │   │   ├── test_digest.py
+│   │   │   └── README.md
+│   │   ├── discord/
+│   │   │   ├── discord.py   a Discord data package as dated lines of your messages
+│   │   │   ├── test_discord.py
 │   │   │   └── README.md
 │   │   ├── diverge/
 │   │   │   ├── diverge.py    where two copies part: records by row, files, then the first line
@@ -305,11 +321,19 @@ willow/
 │   │   │   ├── gemini_cli.py     the settings.json lines that register mcp-lite with Gemini CLI
 │   │   │   ├── test_gemini_cli.py
 │   │   │   └── README.md
+│   │   ├── gh-json/
+│   │   │   ├── gh_json.py   gh --json output as dated lines
+│   │   │   ├── test_gh_json.py
+│   │   │   └── README.md
 │   │   ├── github/
 │   │   │   ├── github.py     what the repo needs from GitHub: a security report's comment, .github/ held to the repo
 │   │   │   ├── host.json     how GitHub titles the merge of a pull request, for whose.py --host
 │   │   │   ├── test_github.py
 │   │   │   └── README.md     its card: and .github/ belongs to it
+│   │   ├── goodreads/
+│   │   │   ├── goodreads.py   books read, reading and wanted, as dated lines
+│   │   │   ├── test_goodreads.py
+│   │   │   └── README.md
 │   │   ├── google-keep/
 │   │   │   ├── google_keep.py   a Keep note or list with its day and labels
 │   │   │   ├── test_google_keep.py
@@ -322,9 +346,17 @@ willow/
 │   │   │   ├── habits.py     streaks from the short lines written day after day, runs and misses by plain counting
 │   │   │   ├── test_habits.py
 │   │   │   └── README.md
+│   │   ├── health/
+│   │   │   ├── health.py   an Apple Health export as daily numbers
+│   │   │   ├── test_health.py
+│   │   │   └── README.md
 │   │   ├── history/
 │   │   │   ├── history.py    your record in plain sentences, places and counts, never the words
 │   │   │   ├── test_history.py
+│   │   │   └── README.md
+│   │   ├── home-sensors/
+│   │   │   ├── home_sensors.py   Home Assistant history as daily numbers
+│   │   │   ├── test_home_sensors.py
 │   │   │   └── README.md
 │   │   ├── home-upkeep/
 │   │   │   ├── home_upkeep.py   what's due at home and when it was last done
@@ -406,9 +438,17 @@ willow/
 │   │   │   ├── instruction_files.py   which instruction files each coding agent would load for a folder, in order, with size and hash
 │   │   │   ├── test_instruction_files.py
 │   │   │   └── README.md
+│   │   ├── irc/
+│   │   │   ├── irc.py   IRC logs as dated lines of messages
+│   │   │   ├── test_irc.py
+│   │   │   └── README.md
 │   │   ├── jetbrains/
 │   │   │   ├── jetbrains.py      an external tool for JetBrains IDEs: answers as links to file and line
 │   │   │   ├── test_jetbrains.py
+│   │   │   └── README.md
+│   │   ├── jira/
+│   │   │   ├── jira.py   a Jira export issue by issue
+│   │   │   ├── test_jira.py
 │   │   │   └── README.md
 │   │   ├── job-hunt/
 │   │   │   ├── job_hunt.py   applications sent, replies and who you're waiting on
@@ -434,9 +474,17 @@ willow/
 │   │   │   ├── latex.py   a LaTeX source as its prose, line for line, commands stripped
 │   │   │   ├── test_latex.py
 │   │   │   └── README.md
+│   │   ├── launcher/
+│   │   │   ├── launcher.py   ask from a launcher, passages with file and line
+│   │   │   ├── test_launcher.py
+│   │   │   └── README.md
 │   │   ├── lending/
 │   │   │   ├── lending.py    what you lent, and what your files say came back
 │   │   │   ├── test_lending.py
+│   │   │   └── README.md
+│   │   ├── letterboxd/
+│   │   │   ├── letterboxd.py   films watched, rated and reviewed as dated lines
+│   │   │   ├── test_letterboxd.py
 │   │   │   └── README.md
 │   │   ├── licenses/
 │   │   │   ├── licenses.py   the licence of every installed Python and npm package, and which are copyleft, by file and line
@@ -445,6 +493,14 @@ willow/
 │   │   ├── life/
 │   │   │   ├── life.py       Conway's Game of Life as one row; check plays it again
 │   │   │   ├── test_life.py
+│   │   │   └── README.md
+│   │   ├── linkedin/
+│   │   │   ├── linkedin.py   LinkedIn messages, posts, comments and connections as dated lines
+│   │   │   ├── test_linkedin.py
+│   │   │   └── README.md
+│   │   ├── listening/
+│   │   │   ├── listening.py   what you listened to, as dated lines of plays
+│   │   │   ├── test_listening.py
 │   │   │   └── README.md
 │   │   ├── live/
 │   │   │   ├── live.py       each way-in add-on run through its real program: works, fails, or not here
@@ -458,13 +514,33 @@ willow/
 │   │   │   ├── llms_txt.py   an llms.txt written from a folder's text files, and a checker for one
 │   │   │   ├── test_llms_txt.py
 │   │   │   └── README.md
+│   │   ├── location-history/
+│   │   │   ├── location_history.py   places and trips from a Timeline export, by day
+│   │   │   ├── test_location_history.py
+│   │   │   └── README.md
+│   │   ├── lockfiles/
+│   │   │   ├── lockfiles.py   lockfiles as a line for each locked package
+│   │   │   ├── test_lockfiles.py
+│   │   │   └── README.md
+│   │   ├── logs/
+│   │   │   ├── logs.py   system and web server logs as dated lines
+│   │   │   ├── test_logs.py
+│   │   │   └── README.md
 │   │   ├── mail/
 │   │   │   ├── mail.py       .eml and .mbox, with sender, date and subject
 │   │   │   ├── test_mail.py
 │   │   │   └── README.md
+│   │   ├── man-pages/
+│   │   │   ├── man_pages.py   man pages as plain text
+│   │   │   ├── test_man_pages.py
+│   │   │   └── README.md
 │   │   ├── mastodon/
 │   │   │   ├── mastodon.py   your posts as dated lines
 │   │   │   ├── test_mastodon.py
+│   │   │   └── README.md
+│   │   ├── matrix/
+│   │   │   ├── matrix.py   a Matrix room export as dated lines of messages
+│   │   │   ├── test_matrix.py
 │   │   │   └── README.md
 │   │   ├── mcp-lite/
 │   │   │   ├── server.py         the mcp add-on's three tools, the protocol by hand, nothing to install
@@ -477,6 +553,10 @@ willow/
 │   │   ├── merkle/
 │   │   │   ├── merkle.py     a Merkle tree over the record: one row proven with a handful of hashes
 │   │   │   ├── test_merkle.py
+│   │   │   └── README.md
+│   │   ├── meta-archive/
+│   │   │   ├── meta_archive.py   Facebook and Instagram messages, posts and comments as dated lines
+│   │   │   ├── test_meta_archive.py
 │   │   │   └── README.md
 │   │   ├── mileage/
 │   │   │   ├── mileage.py   miles driven for work, by tax year
@@ -515,6 +595,10 @@ willow/
 │   │   │   ├── notes.py      Obsidian and Logseq vaults, links and backlinks kept
 │   │   │   ├── test_notes.py
 │   │   │   └── README.md
+│   │   ├── notion/
+│   │   │   ├── notion.py   a Notion export as pages and databases with their paths
+│   │   │   ├── test_notion.py
+│   │   │   └── README.md
 │   │   ├── office/
 │   │   │   ├── office.py     .docx, .odt, .pptx, .xlsx and .ods, as text
 │   │   │   ├── test_office.py
@@ -534,6 +618,10 @@ willow/
 │   │   ├── oracle-text/
 │   │   │   ├── oracle_text.py   readings from a Tracery grammar, replayable
 │   │   │   ├── test_oracle_text.py
+│   │   │   └── README.md
+│   │   ├── orders/
+│   │   │   ├── orders.py   what you bought, as dated lines with prices
+│   │   │   ├── test_orders.py
 │   │   │   └── README.md
 │   │   ├── outdated/
 │   │   │   ├── outdated.py   how old each locked dependency is, and which are yanked, deprecated or unmaintained
@@ -655,6 +743,14 @@ willow/
 │   │   │   ├── readme.py     builds this README's generated sections from the cards
 │   │   │   ├── test_readme.py
 │   │   │   └── README.md     its card: sections, the draw, what it reads
+│   │   ├── readwise/
+│   │   │   ├── readwise.py   highlights with their book and your note
+│   │   │   ├── test_readwise.py
+│   │   │   └── README.md
+│   │   ├── reddit/
+│   │   │   ├── reddit.py   Reddit posts, comments and saved items as dated lines
+│   │   │   ├── test_reddit.py
+│   │   │   └── README.md
 │   │   ├── renewals/
 │   │   │   ├── renewals.py   when each thing expires, from lines saying an expiry word and their own date
 │   │   │   ├── test_renewals.py
@@ -726,6 +822,10 @@ willow/
 │   │   ├── similar/
 │   │   │   ├── similar.py    what's already on the list near a new idea
 │   │   │   ├── test_similar.py
+│   │   │   └── README.md
+│   │   ├── slack/
+│   │   │   ├── slack.py   a Slack export as dated lines of messages
+│   │   │   ├── test_slack.py
 │   │   │   └── README.md
 │   │   ├── slow-tests/
 │   │   │   ├── slow_tests.py each test's time over several runs, the slowest named, any that got slower flagged
@@ -800,6 +900,10 @@ willow/
 │   │   ├── transcript-redact/
 │   │   │   ├── transcript_redact.py  a transcript's keys, home paths and emails taken out, each removal listed
 │   │   │   ├── test_transcript_redact.py
+│   │   │   └── README.md
+│   │   ├── trello/
+│   │   │   ├── trello.py   a Trello board by list with cards, checklists and comments
+│   │   │   ├── test_trello.py
 │   │   │   └── README.md
 │   │   ├── typos/
 │   │   │   ├── typos.py      a misspelt word read as the files spell it, one edit inside, offered not asked

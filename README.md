@@ -120,11 +120,11 @@ says how to pick one up:
 <!-- willow:front show=pick week=2026-W44 -->
 **Add-on of the week**
 
-**[accents](adapters/stdlib/accents/)** — A word typed without its accent read as your files write it, and the words-list lines that make it last.
+**[hook-guard](adapters/stdlib/hook-guard/)** — A PreToolUse hook that refuses, by rule and never by judgment, a tool call that would read the key or write a box outside the kernel, naming the rule it hit.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 226 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 252 built add-ons in name order.*
 
-[Every add-on, 226 built of 470, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 252 built of 470, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 
