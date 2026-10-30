@@ -10,6 +10,10 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `make-it-so`: An order held for you: your question, the command you name
+  (kept as given and never run), the passages that bear on it and their file
+  hashes, written once to a file of yours; `check` says whether those files
+  still hold what they held.
 - `launcher`: Ask from a launcher: the passages your folder holds for a
   question as Alfred Script Filter JSON (which Raycast reads too) or
   tab-separated lines, each with its file and line; nothing written. (#81)

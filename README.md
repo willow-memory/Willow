@@ -120,11 +120,11 @@ says how to pick one up:
 <!-- willow:front show=pick week=2026-W44 -->
 **Add-on of the week**
 
-**[ci-logs](adapters/stdlib/ci-logs/)** — CI run logs you downloaded (GitHub Actions, GitLab CI, Forgejo Actions): each failing step as a passage.
+**[export](adapters/stdlib/export/)** — Approved answers, and the question log (counts only, never words), as Markdown or CSV.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 247 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 248 built add-ons in name order.*
 
-[Every add-on, 247 built of 470, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 248 built of 471, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 

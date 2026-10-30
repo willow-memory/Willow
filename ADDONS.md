@@ -18,7 +18,7 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`███████████░░░░░░░░░` **247 of 470 built** · 419 need no install · 51 need one
+`███████████░░░░░░░░░` **248 of 471 built** · 420 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
@@ -29,7 +29,7 @@ or `writes-output`; its section), and any the card's author adds or changes.
 | Trust and proof | 20 | 25 | 36 | 9 |
 | Privacy and safety | 11 | 3 | 14 | 0 |
 | Assistants | 25 | 32 | 51 | 6 |
-| Ways to use it | 20 | 19 | 35 | 4 |
+| Ways to use it | 21 | 19 | 36 | 4 |
 | Play | 9 | 31 | 35 | 5 |
 | For maintainers | 19 | 25 | 39 | 5 |
 <!-- /willow:pools -->
@@ -37,19 +37,19 @@ or `writes-output`; its section), and any the card's author adds or changes.
 ## Newest
 
 <!-- willow:newest -->
+- 2026-10-30 · [**make-it-so**](adapters/stdlib/make-it-so/) — An order held for you, with the passages it rests on and a check that they still stand; never carried out.
 - 2026-10-30 · [**launcher**](adapters/stdlib/launcher/) — Ask from Alfred, Raycast, KRunner or PowerToys Run, answers with file and line.
 - 2026-10-29 · [**x-archive**](adapters/stdlib/x-archive/) — An X (Twitter) archive: your posts, replies and DMs as dated lines.
 - 2026-10-29 · [**words-tr**](adapters/stdlib/words-tr/) — Turkish common words ("ve", "bir").
 - 2026-10-29 · [**words-ru**](adapters/stdlib/words-ru/) — Russian common words ("и", "в", "на").
-- 2026-10-29 · [**words-cy**](adapters/stdlib/words-cy/) — Welsh common words ("a", "y", "yn").
 <!-- /willow:newest -->
 
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[ci-logs](adapters/stdlib/ci-logs/)** — CI run logs you downloaded (GitHub Actions, GitLab CI, Forgejo Actions): each failing step as a passage.
+**[export](adapters/stdlib/export/)** — Approved answers, and the question log (counts only, never words), as Markdown or CSV.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 247 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 248 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -450,6 +450,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - **kiosk** (idea) — A shared machine in a library or classroom: one box, ask only, nobody's key on it. Reaches this machine only. *new* `no-install` `this-machine` `read-only` `interface`
 - [**launcher**](adapters/stdlib/launcher/) — Ask from Alfred, Raycast, KRunner or PowerToys Run, answers with file and line. *new* `no-install` `offline` `read-only` `interface`
 - [**llms-txt**](adapters/stdlib/llms-txt/) — An llms.txt for your folder, written from what's actually in it to the spec's version 2, and any llms.txt you saved checked against that spec. *new* `no-install` `offline` `writes-output`
+- [**make-it-so**](adapters/stdlib/make-it-so/) — An order held for you, with the passages it rests on and a check that they still stand; never carried out. *new* `no-install` `offline` `writes-output` `interface`
 - **obsidian** (idea) — Ask from inside Obsidian, answers as links to the note and line. Reaches this machine only. *new* `no-install` `this-machine` `read-only` `interface`
 - [**pipe**](adapters/stdlib/pipe/) — Questions in on standard input, answers out one per line: JSON lines, or file:line: text for grep and fzf. *box* `no-install` `offline` `records` `interface`
 - [**plain**](adapters/stdlib/plain/) — Answers as sentences instead of JSON, each with its file and line. *new* `no-install` `offline` `records` `interface`
