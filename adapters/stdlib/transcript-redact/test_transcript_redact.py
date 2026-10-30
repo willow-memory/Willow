@@ -108,3 +108,48 @@ def test_refusals_never_write(tmp_path):
     assert got.returncode == 2 and "transcript_redact.py" in got.stderr
     got = run("--from", str(src), "--to", str(tmp_path / "o2"), "--stray", "x")
     assert got.returncode == 2 and not (tmp_path / "o2").exists()
+
+
+def test_the_privacy_add_ons_key_shapes_are_taken_out_too():
+    for token in ("gsk_" + "a" * 24, "hf_" + "b" * 24, "xai-" + "c" * 24,
+                  "ASIA" + "D" * 16, "rk_live_" + "e" * 16):  # fmt: skip
+        line, got = tr.redact(f"token {token} here")
+        assert [g[0] for g in got] == ["a key"], token
+        assert token not in line
+
+
+def test_a_key_block_in_a_json_transcript_goes_and_the_json_stays(tmp_path):
+    pem = "-----BEGIN RSA PRIVATE KEY-----\nMIIEow+IBAAK/CAQEA==\n-----END RSA PRIVATE KEY-----"
+    src = tmp_path / "t.jsonl"
+    src.write_text(json.dumps({"out": f"cat id_rsa\n{pem}\n", "next": "ok"}) + "\n")
+    to = tmp_path / "out.jsonl"
+    assert run("--from", str(src), "--to", str(to)).returncode == 0
+    back = json.loads(to.read_text())
+    assert back == {"out": "cat id_rsa\n[redacted:key]\n", "next": "ok"}
+
+
+def test_a_key_blocks_body_lines_go_with_it(tmp_path):
+    src = tmp_path / "t.txt"
+    src.write_text("before\n-----BEGIN OPENSSH PRIVATE KEY-----\nb3BlbnNzaC1rZXk\n"
+                   "AAAAB3NzaC1yc2E\n-----END OPENSSH PRIVATE KEY----- after\nlast\n")  # fmt: skip
+    to = tmp_path / "out.txt"
+    got = run("--from", str(src), "--to", str(to))
+    assert to.read_text() == (
+        "before\n[redacted:key]\n[redacted:key]\n[redacted:key]\n[redacted:key] after\nlast\n"
+    )
+    assert "b3Blbn" not in got.stdout and "4 removals on 4 lines" in got.stdout
+
+
+def test_with_the_privacy_add_on_deleted_its_own_shapes_still_work(tmp_path):
+    root = tmp_path / "willow"
+    (root / "adapters" / "stdlib" / "transcript-redact").mkdir(parents=True)
+    (root / "kernel.py").write_text((HERE.parents[2] / "kernel.py").read_text())
+    copy = root / "adapters" / "stdlib" / "transcript-redact" / "transcript_redact.py"
+    copy.write_text((HERE / "transcript_redact.py").read_text())
+    src = tmp_path / "t.txt"
+    src.write_text(f"auth {KEY} and gsk_{'a' * 24}\n")
+    to = tmp_path / "out.txt"
+    got = subprocess.run([sys.executable, str(copy), "--from", str(src), "--to", str(to)],
+                         capture_output=True, text=True)  # fmt: skip
+    assert got.returncode == 0
+    assert to.read_text() == f"auth [redacted:key] and gsk_{'a' * 24}\n"
