@@ -1341,7 +1341,9 @@ willow/
 │           ├── run-1.json    the first run's every outcome, less the words misquote printed from a source
 │           ├── record.jsonl  a copy of run 1's record, the verdicts as rows, without its key
 │           ├── run-2.json    the second run's, from freeze 2
-│           └── record-2.jsonl  a copy of run 2's record, without its key
+│           ├── record-2.jsonl  a copy of run 2's record, without its key
+│           ├── run-3.json    the third run's, from freeze 3: every rule held
+│           └── record-3.jsonl  a copy of run 3's record, without its key
 ├── .github/
 │   ├── workflows/
 │   │   ├── ci.yml            runs adapters/stdlib/ci/ci.py a part or a cut of one a job, tests on Python 3.9 to 3.14

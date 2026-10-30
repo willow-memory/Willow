@@ -269,3 +269,27 @@ and it is written down as that.
 Run 1's results stand beside these. A freeze 3 would be the person's call,
 in its own commit with its reasons.
 
+## Results: run 3, from freeze 3, 2026-10-30
+
+Every source held. **All 18 rules held.** The record is
+[results/record-3.jsonl](results/record-3.jsonl) (both kernels: "the chain
+holds: 19 rows, 0 sealed"), every outcome [results/run-3.json](results/run-3.json).
+
+| Rule | Run 1 | Run 2 | Run 3 |
+|---|---|---|---|
+| facts, facts-trusted, facts-grove | held | held | held |
+| quotes | failed | held | held |
+| T1 | failed | held | held |
+| T2, T3, T4 | held | held | held |
+| T5 | (new) | failed | **held**: no source has a birth in 1941; Deadline and Wikipedia hold 13 July 1940 in Mirfield, whole |
+| death, dates | held | held | held |
+| G1 | held | failed | **held**: the Gerald line is first of seven passages holding "Patrick Stewart on a screen" whole |
+| G2, K1, M1, unseen, fiction, verify | held | held | held |
+
+Three freezes to hold every rule is itself a result. Each freeze changed
+only what the run before it showed broken, and each is in its own commit
+with its reason. The reasons were a kernel bug (#89), the kernel's reading
+of dates (figures only), and a side effect of the first fix (ranking moved).
+None loosened a rule: each made the check ask the sources what the rule
+always meant. Runs 1 and 2 stand beside run 3, failures and all.
+

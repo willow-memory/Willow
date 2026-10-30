@@ -10,8 +10,8 @@ before the branch merges.
   pull request's number once one is open.
 - **words-tlh**: merged to main as #88.
 - **demo/stewart-crossover**: freeze 1 (`b6cc2e2`) and run 1, 15 of 17
-  held; freeze 2 (`0bd8719`) and run 2, 16 of 18 held. Its README has both
-  runs and what failed in each. A freeze 3 is the person's call.
+  held; freeze 2 (`0bd8719`) and run 2, 16 of 18; freeze 3 (`797eb68`) and
+  run 3, all 18 held. Its README has every run and what failed in each.
   The study uses make-it-so, so it stacks on this branch.
 
 ## Established

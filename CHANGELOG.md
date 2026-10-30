@@ -14,9 +14,9 @@ says how). The first was v0.1.0.
   the real record of 2020 to 2023 of Patrick Stewart's life, every word about
   him a fact two publishers hold, a quote a source holds, or a planted trap,
   judged with tools from Willow, willows-grove, willow-mcp, willow-bot and
-  Forge. Run 1 held 15 of 17 rules and run 2, from a second freeze, 16 of
-  18; what failed each time is written down with its cause, and one of them
-  is bug #89.
+  Forge. Run 1 held 15 of 17 rules, run 2 16 of 18, and run 3, from a third
+  freeze, all 18; what failed each time is written down with its cause, and
+  one of them is bug #89.
 - `make-it-so`: An order held for you: your question, the command you name
   (kept as given and never run), the passages that bear on it and their file
   hashes, written once to a file of yours; `check` says whether those files
