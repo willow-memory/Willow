@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `logs`: System and app logs (syslog, journald's export, nginx and Apache
+  access logs): each entry as a dated line with host, program and message; no
+  year is invented for classic syslog.
 - `readwise`: Readwise's highlights export: each highlight, oldest first, as
   a dated line with its book or article, author, location, your note and
   tags.

@@ -1065,16 +1065,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "logs",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "System and app logs (syslog, journald's export, nginx): each line dated, so you can ask when it started.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "lore",
   "kind": "stdlib",
   "section": "Play",

@@ -286,6 +286,10 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         b'"In a hole in the ground there lived a hobbit.",The Hobbit,J.R.R. Tolkien,B1,the best   opening,yellow,fantasy,location,120,2024-03-02 08:15:00\n'
         b'Tie the stem loosely.,Staking tomatoes,Ana Lopez,,,,,,,2024-03-04T10:00:00Z\n'
     )}),
+    "logs": ("logs.py", {"syslog.log": (
+        b"Mar  2 08:15:30 host sshd[1234]: Accepted publickey for ana from 10.0.0.2\nMar  2 08:16:01 host cron: (root) CMD (run-parts /etc/cron.hourly)\n"
+        b"    at stack frame\n2024-03-02T08:17:00.123456+00:00 host app[7]: started\n"
+    )}),
     "notes": ("notes.py", {"garden.md": b"Tomatoes want [[sun]].\n"}),
     "jrnl": ("jrnl.py", {"journal.txt": (
         "[2024-03-03 10:15] Fixed the gate.\nThe hinge wanted oil, not force.\n\n"

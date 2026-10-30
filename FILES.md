@@ -490,6 +490,10 @@ willow/
 │   │   │   ├── llms_txt.py   an llms.txt written from a folder's text files, and a checker for one
 │   │   │   ├── test_llms_txt.py
 │   │   │   └── README.md
+│   │   ├── logs/
+│   │   │   ├── logs.py   system and web server logs as dated lines
+│   │   │   ├── test_logs.py
+│   │   │   └── README.md
 │   │   ├── mail/
 │   │   │   ├── mail.py       .eml and .mbox, with sender, date and subject
 │   │   │   ├── test_mail.py
