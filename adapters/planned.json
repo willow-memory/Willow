@@ -1034,16 +1034,6 @@
   "tags": "needs-install, offline, read-only, trust"
  },
  {
-  "name": "linkedin",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "LinkedIn's data export: messages, posts and connections as dated lines.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "listening",
   "kind": "stdlib",
   "section": "Reading more kinds of files",

@@ -120,11 +120,11 @@ says how to pick one up:
 <!-- willow:front show=pick week=2026-W44 -->
 **Add-on of the week**
 
-**[words-de](adapters/stdlib/words-de/)** — German common words, so questions aren't matched on "der" and "und".
+**[health](adapters/stdlib/health/)** — Apple Health and Google Fit exports as daily numbers the readings add-on can trend.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 227 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 228 built add-ons in name order.*
 
-[Every add-on, 227 built of 470, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 228 built of 470, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 

@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `linkedin`: LinkedIn's data export CSVs (messages, connections, shares,
+  comments): each row, oldest first, as a dated line; emails and profile
+  addresses not copied.
 - `goodreads`: Goodreads and StoryGraph library exports: each book, oldest
   first, as a dated line with its shelf, rating out of five, review and tags.
 - `letterboxd`: Letterboxd's export CSVs: each film row, oldest first, as a

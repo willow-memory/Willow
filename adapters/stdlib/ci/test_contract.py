@@ -262,6 +262,12 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         b'2,Dune,Frank Herbert,0,,2024/03/09,,currently-reading,,\n'
         b'3,Piranesi,Susanna Clarke,0,,2023/12/01,,to-read,,\n'
     )}),
+    "linkedin": ("linkedin.py", {"messages.csv": (
+        b'CONVERSATION ID,CONVERSATION TITLE,FROM,SENDER PROFILE URL,TO,RECIPIENT PROFILE URLS,DATE,SUBJECT,CONTENT,FOLDER\n'
+        b'c1,,Ana Lopez,https://x/a,Ben Ruiz,https://x/b,2024-03-02 08:15:30 UTC,Garden talk,Are you   coming on Saturday?,INBOX\n'
+        b'c1,,Ben Ruiz,https://x/b,Ana Lopez,https://x/a,2024-03-02 08:20:00 UTC,,Yes!,SENT\n'
+        b'c2,,Cy,https://x/c,Ben Ruiz,https://x/b,2024-03-01 09:00:00 UTC,,,INBOX\n'
+    )}),
     "notes": ("notes.py", {"garden.md": b"Tomatoes want [[sun]].\n"}),
     "jrnl": ("jrnl.py", {"journal.txt": (
         "[2024-03-03 10:15] Fixed the gate.\nThe hinge wanted oil, not force.\n\n"
