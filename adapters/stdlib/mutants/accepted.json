@@ -43,6 +43,9 @@
   "scan": {
     "09336b67f2ff": "Only narrows candidates: the kernel's own rank re-checks each one, so an or here adds passages it drops, never one it serves."
   },
+  "transcript-redact": {
+    "2f8474d895a6": "split(\"@\", 1)[1] takes the text after an email's one @; the email shape allows a single @, so any maxsplit of at least 1 gives the same domain."
+  },
   "typosquat": {
     "0b021f6deb3f": "src is used only via len(src)!=1; with the two-name list, flipping 'o in opts' to 'o not in opts' swaps which names land in src but leaves that length 0/1/2 the same for every command line, so the refuse/pass decision is unchanged."
   }

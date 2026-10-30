@@ -12,10 +12,22 @@ kernel's) and withholds, in every passage and approved answer it prints:
                             number, acct, a/c or routing; the label is kept
     card                    13 to 19 digits that pass the Luhn check, or 4x4 groups
     iban                    an IBAN whose mod-97 check holds
-    ssn                     a US social security number, labelled or 3-2-4
-    ip                      an address that names a machine (not 127.x or 0.0.0.0)
-    key                     a private key block, and AWS, GitHub, Slack, Google,
-                            Stripe and model-provider API keys, and a JWT
+    ssn, itin               a US social security number, labelled or 3-2-4; an
+                            ITIN, 9xx-7x-xxxx in its ranges
+    ein                     a US employer number, 12-3456789
+    birthdate, passport,    a number after its label (DOB, passport no., driver's
+    licence, medical, case  licence, MRN, case or claim no.); the label is kept,
+                            and the number holds a digit, so "passport renewal"
+                            and "claim no longer open" are prose and left
+    ip                      an address that names a machine (not 127.x or 0.0.0.0,
+                            and an IPv6 one of three groups or more)
+    mac, wallet, location   a MAC address; a Bitcoin or Ethereum address; a
+                            latitude and longitude to four places
+    discord                 a Discord mention, <@ and the person's id
+    key                     a private key block; AWS, GitHub (fine-grained too),
+                            Slack, Google, Stripe, Groq, Hugging Face, Cerebras,
+                            xAI and model-provider API keys; a JWT; a Discord
+                            bot token
     password                one typed after its label (`password: hunter2`,
                             `pw = widgets1998`, `pw Wendouree#14`), the second
                             half of a login pair (`ana@example.org / Tide2024!`,
@@ -35,12 +47,16 @@ the password comes from (`env:WIFI`, `$PASS`).
 
 What it misses, said rather than hidden: a street address, and a person's name
 on its own (a name is only a word; the kernel's demo found both getting
-through). Checksums keep it from crying wolf on order numbers and serials.
+through). A home path's account name is transcript-redact's to take out, not
+this. Checksums keep it from crying wolf on order numbers and serials; an EIN
+has none, so an order number written 12-3456789 is withheld too.
 
 The shapes are willow-bot's `onescript/scrub.py` (its `pii` and `credentials`
 sets), rebuilt here for a person's own folder: the same patterns, Luhn and
 mod-97 checks, and the rule that loopback and unspecified addresses name no
-one.
+one. Two differences: a labelled number must hold a digit (the one script's
+takes the word after "case number" or "passport"), and a GitHub fine-grained
+token, which the one script misses, is a key.
 
 It never writes to the record (the kernel's bite row holds no words anyway),
 and it never changes which passages are served, only what they show.
@@ -65,12 +81,63 @@ KEYS = [
     re.compile(rf"-----BEGIN {_PEM}-----.*?(?:-----END {_PEM}-----|\Z)", re.DOTALL),
     re.compile(r"(?:AKIA|ASIA)[0-9A-Z]{16,}"),
     re.compile(r"gh[posur]_[A-Za-z0-9]{36,}"),
+    re.compile(r"github_pat_[A-Za-z0-9_]{20,}"),  # a fine-grained GitHub token
     re.compile(r"xox[baprs]-[A-Za-z0-9-]{10,}"),
     re.compile(r"AIza[0-9A-Za-z_\-]{35,}"),
     re.compile(r"(?:sk|rk)_live_[0-9a-zA-Z]{16,}"),
+    re.compile(r"gsk_[A-Za-z0-9]{20,}"),  # Groq
+    re.compile(r"hf_[A-Za-z0-9]{20,}"),  # Hugging Face
+    re.compile(r"csk-[A-Za-z0-9]{20,}"),  # Cerebras
+    re.compile(r"xai-[A-Za-z0-9]{20,}"),  # xAI
     re.compile(r"sk-(?:ant-)?[A-Za-z0-9_\-]{20,}"),
     re.compile(r"eyJ[A-Za-z0-9_\-]{6,}\.eyJ[A-Za-z0-9_\-]{6,}\.[A-Za-z0-9_\-]{6,}"),
+    # a Discord bot token
+    re.compile(r"[MN][A-Za-z0-9_-]{23,26}\.[A-Za-z0-9_-]{6}\.[A-Za-z0-9_-]{27,}"),
 ]
+_NO = r"(?:\s*(?:no\b\.?|number\b|#))?[\s#:.]*"
+#: a number that holds a digit, so "passport renewal" is prose and left
+_NUM = r"(?=[A-Za-z0-9-]*\d)[A-Za-z0-9-]"
+#: a number after its label, the label kept so the line still reads
+LABELLED = [
+    (
+        "birthdate",
+        re.compile(
+            r"(?i)(?P<label>\b(?:dob\b|d\.o\.b\.?|date of birth|birth\s?date|born(?:\s+on)?\b)"
+            r"[\s:.]*)(?P<num>\d{1,4}[-/]\d{1,2}[-/]\d{1,4}|[A-Za-z]+\.?\s+\d{1,2},?\s+\d{4})"
+        ),
+    ),
+    (
+        "passport",
+        re.compile(rf"(?i)(?P<label>\bpassport{_NO})(?P<num>{_NUM}{{6,9}})\b"),
+    ),
+    (
+        "licence",
+        re.compile(
+            rf"(?i)(?P<label>\b(?:driver'?s?\s+licen[cs]e|DL\b){_NO})(?P<num>{_NUM}{{5,15}})\b"
+        ),
+    ),
+    (
+        "medical",
+        re.compile(
+            rf"(?i)(?P<label>\b(?:MRN|medical record){_NO})(?P<num>{_NUM}{{5,12}})\b"
+        ),
+    ),
+    (
+        "case",
+        re.compile(
+            r"(?i)(?P<label>\b(?:case|claim)\s*(?:no\b\.?|number\b|#)[\s#:.]*)"
+            rf"(?P<num>{_NUM}+)\b"
+        ),
+    ),
+]
+#: 9xx-7x-xxxx in the ITIN's ranges; read before the SSN, which it also looks like
+ITIN = re.compile(r"\b9\d{2}[-\s](?:5\d|6[0-5]|7\d|8[0-8]|9[0-24-9])[-\s]\d{4}\b")
+EIN = re.compile(r"\b\d{2}-\d{7}\b")
+WALLET = re.compile(r"\b(?:bc1[a-z0-9]{25,59}|0x[0-9a-fA-F]{40})\b")
+MAC = re.compile(r"(?<![\w:-])(?:[0-9A-Fa-f]{2}[:-]){5}[0-9A-Fa-f]{2}(?![\w:-])")
+#: a latitude and longitude to four places or more: where someone was
+LOCATION = re.compile(r"(?<![\d.])-?\d{1,2}\.\d{4,},\s*-?\d{1,3}\.\d{4,}(?![\d.])")
+DISCORD_USER = re.compile(r"<@!?\d{17,20}>")
 EMAIL = re.compile(r"[^\s@\"'<>()\[\],;:]+@[^\s@\"'<>()\[\],;:]+\.[A-Za-z]{2,}\b")
 SSN = re.compile(
     r"\b(?:ssn|social security(?: number| no\.?)?)\b[\s#:.]*\d{3}-?\d{2}-?\d{4}\b"
@@ -96,6 +163,17 @@ ACCOUNT = re.compile(
 DATE = re.compile(r"\d{4}-\d{2}-\d{2}")
 _OCTET = r"(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)"
 IPV4 = re.compile(rf"(?<![\d.]){_OCTET}(?:\.{_OCTET}){{3}}(?![\d.])")
+IPV6 = re.compile(
+    r"(?<![\w:])(?:[0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4}(?![\w:])"
+    r"|(?<![\w:])(?:[0-9A-Fa-f]{1,4}:){1,6}:(?:[0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4}(?![\w:])"
+)
+
+
+def v6_host(value: str) -> bool:
+    """An IPv6 address with three groups or more: `a::b` is C++, not a host."""
+    return len([g for g in value.split(":") if g]) >= 3
+
+
 NOT_A_HOST = re.compile(r"^(?:127\.|0\.0\.0\.0$|255\.255\.255\.255$)")
 #: what a password looks like: six or more characters, a letter and a digit,
 #: no space; so a word of prose, "lose!!" included, never is one
@@ -180,13 +258,30 @@ def scrub(text: str, found: dict, listed: bool = False) -> str:
         return m.group("label") + MARK.format(kind="account")
 
     text = ACCOUNT.sub(account, text)
+
+    def labelled(kind: str):
+        def sub(m: re.Match) -> str:
+            found[kind] = found.get(kind, 0) + 1
+            return m.group("label") + MARK.format(kind=kind)
+
+        return sub
+
+    for kind, rx in LABELLED:
+        text = rx.sub(labelled(kind), text)
+    text = DISCORD_USER.sub(hide("discord"), text)  # its digits before a card
+    text = ITIN.sub(hide("itin"), text)
     text = SSN.sub(hide("ssn"), text)
     text = CARD_GROUPS.sub(hide("card"), text)
     text = CARD_BARE.sub(hide("card", lambda v: not luhn(v)), text)
+    text = EIN.sub(hide("ein"), text)
+    text = WALLET.sub(hide("wallet"), text)
+    text = MAC.sub(hide("mac"), text)
+    text = LOCATION.sub(hide("location"), text)
     text = PHONE.sub(hide("phone"), text)
     digits = lambda v: sum(c.isdigit() for c in v)  # noqa: E731
     text = PHONE_NATIONAL.sub(hide("phone", lambda v: digits(v) not in (10, 11)), text)
     text = IPV4.sub(hide("ip", lambda v: bool(NOT_A_HOST.match(v))), text)
+    text = IPV6.sub(hide("ip", lambda v: not v6_host(v)), text)
     return text
 
 

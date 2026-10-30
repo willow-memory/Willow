@@ -16,8 +16,10 @@ what left before the transcript does:
 
 - **keys**: the shapes keys wear — sk- and similar prefixed tokens, GitHub's
   ghp_ and github_pat_ families, AWS's AKIA ids, Slack's xox tokens,
-  Google's AIza, and a JWT's three dotted base64 blocks — each replaced
-  with `[redacted:key]`;
+  Google's AIza, a JWT's three dotted base64 blocks, and every key shape the
+  privacy add-on knows (its own shapes still work if it was deleted) — each
+  replaced with `[redacted:key]`; a private key block goes whole, on one line
+  with its breaks written `\\n` or over many, BEGIN to END;
 - **home paths**: the account name in /home/NAME, /Users/NAME and
   C:\\Users\\NAME becomes [redacted], the rest of the path kept, so the
   transcript still reads;
@@ -43,11 +45,33 @@ from __future__ import annotations
 import os
 import re
 import sys
+import types
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+STDLIB = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(STDLIB.parents[1]))
 import kernel  # noqa: E402
 
+
+def privacy_keys() -> list[re.Pattern]:
+    """The privacy add-on's key shapes, from its source; none if it was deleted."""
+    path = STDLIB / "privacy" / "privacy.py"
+    if not path.is_file():
+        return []
+    mod = types.ModuleType("redact_privacy")
+    mod.__file__ = str(path)
+    exec(compile(path.read_text(encoding="utf-8"), str(path), "exec"), mod.__dict__)
+    return list(mod.KEYS)
+
+
+_PEM = r"(?:RSA |EC |OPENSSH |DSA |PGP |ENCRYPTED )?PRIVATE KEY(?: BLOCK)?"
+#: a private key block on one line, its line breaks real or written `\n` (as a
+#: JSON transcript holds one), never past a quote, so JSON stays JSON
+PEM = re.compile(
+    rf"-----BEGIN {_PEM}-----(?:\\[nr]|[A-Za-z0-9+/=:,. \t]|-(?!----))*(?:-----END {_PEM}-----)?"
+)
+PEM_BEGIN = re.compile(rf"-----BEGIN {_PEM}-----")
+PEM_END = re.compile(rf"-----END {_PEM}-----")
 KEY = re.compile(
     r"\b(?:sk|pk|rk)-[A-Za-z0-9_-]{16,}"
     r"|\bgh[pousr]_[A-Za-z0-9]{16,}"
@@ -61,6 +85,9 @@ HOME = re.compile(
     r"(?P<base>/home/|/Users/|C:\\{1,2}Users\\{1,2})(?P<name>[A-Za-z0-9._-]+)"
 )
 EMAIL = re.compile(r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b")
+#: this file's own shapes and the privacy add-on's, so it never takes out less
+#: than either; a match holding a quote or a backslash is left to PEM
+KEYS = [PEM, *privacy_keys(), KEY]
 
 
 def redact(line: str) -> tuple[str, list[tuple[str, str, str]]]:
@@ -68,6 +95,8 @@ def redact(line: str) -> tuple[str, list[tuple[str, str, str]]]:
     out = []
 
     def key(m: re.Match) -> str:
+        if m.re is not PEM and ('"' in m.group() or "\\" in m.group()):
+            return m.group()
         out.append(("a key", "[redacted:key]", "…" + m.group()[-4:]))
         return "[redacted:key]"
 
@@ -81,10 +110,35 @@ def redact(line: str) -> tuple[str, list[tuple[str, str, str]]]:
         out.append(("an email", "[redacted:email]", "…" + m.group()[0] + "@" + at))
         return "[redacted:email]"
 
-    line = KEY.sub(key, line)
+    for rx in KEYS:
+        line = rx.sub(key, line)
     line = HOME.sub(home, line)
     line = EMAIL.sub(email, line)
     return line, out
+
+
+def redact_lines(text: str) -> tuple[list[str], list[tuple]]:
+    """(each line redacted, [(line, kind, what it became, a stub)]). A key
+    block's body lines, between a BEGIN with no END and its END, go whole."""
+    kept, listed, inside = [], [], False
+    for n, line in enumerate(text.splitlines(keepends=True), 1):
+        if inside:
+            body = line.rstrip("\r\n")
+            end = PEM_END.search(body)
+            cut = end.end() if end else len(body)
+            inside = not end
+            if body[:cut].strip():
+                listed.append(
+                    (n, "a key", "[redacted:key]", "…" + body[:cut].strip()[-4:])
+                )
+                line = "[redacted:key]" + line[cut:]
+        else:
+            begin = PEM_BEGIN.search(line)
+            inside = bool(begin) and not PEM_END.search(line, begin.end())
+        clean, got = redact(line)
+        kept.append(clean)
+        listed += [(n, *x) for x in got]
+    return kept, listed
 
 
 def main(argv: list[str]) -> int:
@@ -106,11 +160,7 @@ def main(argv: list[str]) -> int:
     except (OSError, UnicodeDecodeError) as e:
         print(f"refused: could not read {src}: {type(e).__name__}", file=sys.stderr)
         return kernel.REFUSED
-    kept, listed = [], []
-    for n, line in enumerate(text.splitlines(keepends=True), 1):
-        clean, got = redact(line)
-        kept.append(clean)
-        listed += [(n, *x) for x in got]
+    kept, listed = redact_lines(text)
     try:
         fd = os.open(to, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
     except OSError as e:

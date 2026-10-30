@@ -44,6 +44,25 @@ NOW = ["--now", "2026-10-23T00:00:00Z"]
         ("user: cwcftp pw = widgets1998", "password"),
         ("netbank: client 61847720  pw Wendouree#14", "password"),
         ("wifi: HomeNet / x7Kp9q2z", "password"),
+        ("token github_pat_11ABCDEFG0abcdefghijkl_mnopqrstuv", "key"),
+        ("groq gsk_abcdefghijklmnopqrstuvwx", "key"),
+        ("hf hf_abcdefghijklmnopqrstuvwx", "key"),
+        ("cerebras csk-abcdefghijklmnopqrstuvwx", "key"),
+        ("xai xai-abcdefghijklmnopqrstuvwx", "key"),
+        ("bot " + "M" + "x" * 24 + "." + "y" * 6 + "." + "z" * 27, "key"),  # Discord
+        ("DOB: 1984-03-07", "birthdate"),
+        ("born on March 7, 1984", "birthdate"),
+        ("passport no. 123456789", "passport"),
+        ("driver's licence: D1234567", "licence"),
+        ("MRN 00123456", "medical"),
+        ("claim number CL-2024-0091", "case"),
+        ("ITIN 912-78-1234", "itin"),
+        ("EIN 12-3456789", "ein"),
+        ("tip 0x52908400098527886E0F7030069857D2E4169EE7", "wallet"),
+        ("laptop 00:1A:2B:3C:4D:5E", "mac"),
+        ("parked at 51.50740, -0.12780", "location"),
+        ("thanks <@123456789012345678>", "discord"),
+        ("host 2001:db8:85a3::8a2e:370:7334", "ip"),
     ],
 )
 def test_each_kind_is_withheld_and_counted(text, kind):
@@ -73,6 +92,14 @@ def test_each_kind_is_withheld_and_counted(text, kind):
         "if ($p == $password) { ok(); }",  # a comparison
         "Q3 / Q4 plans and 2024 / 2025",  # no letter and digit both
         "ancestry: Considine1911",  # a password only in a file of them
+        "passport renewal is due in May",  # a label with no number after it
+        "driver's licence expires soon",
+        "medical record request sent",
+        "case number unknown, claim no longer open",
+        "the DL folder and dl 5 files",
+        "std::vector and a::b",  # C++, not a host
+        "born in the spring",
+        "at 12:30:45 the 3.14159 run",  # a time, and pi alone is no place
     ],
 )
 def test_lookalikes_are_left(text):

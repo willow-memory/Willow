@@ -1113,6 +1113,17 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- `privacy` withholds every kind willow-bot's one-script scrub does, but a
+  home path: Groq, Hugging Face, Cerebras and xAI keys, a GitHub fine-grained
+  token, a Discord bot token; a birth date, passport, driver's licence,
+  medical record and case number after their labels; an ITIN, an EIN, an
+  IPv6 address, a MAC, a wallet, a latitude and longitude, a Discord mention.
+  A labelled number must hold a digit, so "claim no longer open" is prose,
+  where the one script's takes the next word. (#117)
+- `transcript-redact` takes out the privacy add-on's key shapes as well as its
+  own, and a private key block whole: written `\n` on one line in a JSON
+  transcript, or line by line from BEGIN to END, where its BEGIN line alone
+  went before. (#117)
 - Known bugs as tests expected to fail: #101 (`said` names "If I" a
   speaker), #102 (`agents-md-check` reads a GitHub owner/repo as a missing
   path), #111 (`snapshot` saves a page under a name the kernel doesn't read)
