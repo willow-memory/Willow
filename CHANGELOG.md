@@ -1113,6 +1113,11 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- Known bugs as tests expected to fail: #101 (`said` names "If I" a
+  speaker), #102 (`agents-md-check` reads a GitHub owner/repo as a missing
+  path), #111 (`snapshot` saves a page under a name the kernel doesn't read)
+  and #112 (`pdf` writes ligatures as glyph names). LIMITS.md says how a date
+  is read and that the same words in two files are one passage. (#110)
 - CI runs a pull request's tests on Python 3.9 and 3.14 only, and a
   push to main's on all six. The six Pythons were 72 of a pull request's 84
   jobs, run 20 at a time, so its CI took 14 to 21 minutes for 6 minutes'

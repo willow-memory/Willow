@@ -3,10 +3,13 @@ reader contract; and a refusal, never a quiet skip, without pypdf."""
 
 from __future__ import annotations
 
+import importlib.util
 import json
 import subprocess
 import sys
 from pathlib import Path
+
+import pytest
 
 HERE = Path(__file__).resolve().parent
 KERNEL = HERE.parents[2] / "kernel.py"
@@ -148,3 +151,15 @@ def test_without_pypdf_it_refuses_and_names_the_install(tmp_path):
     )
     got = run("-c", script, "mirror", "--from", str(src), "--to", str(tmp_path / "m"))
     assert got.returncode == 2 and "requirements.txt" in got.stderr
+
+
+@pytest.mark.xfail(
+    strict=True,
+    reason="bug #112: ligatures come through as glyph names, so /f_inancing is never found as financing",
+)
+def test_a_ligature_is_written_as_its_letters_not_its_glyph_name():
+    spec = importlib.util.spec_from_file_location("pdf_addon", HERE / "pdf.py")
+    pdf = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(pdf)
+    text = pdf.as_text(["/f_inancing to /f_irms, o/uniFB00-balance"])
+    assert "financing to firms, off-balance" in text, text
