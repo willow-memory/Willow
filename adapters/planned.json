@@ -751,16 +751,6 @@
   "tags": "no-install, online, read-only, interface"
  },
  {
-  "name": "home-sensors",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Home Assistant's history export: sensor readings as dated numbers the readings add-on can trend.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "homestead",
   "kind": "stdlib",
   "section": "Reading more kinds of files",

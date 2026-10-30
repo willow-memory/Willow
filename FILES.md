@@ -334,6 +334,10 @@ willow/
 │   │   │   ├── history.py    your record in plain sentences, places and counts, never the words
 │   │   │   ├── test_history.py
 │   │   │   └── README.md
+│   │   ├── home-sensors/
+│   │   │   ├── home_sensors.py   Home Assistant history as daily numbers
+│   │   │   ├── test_home_sensors.py
+│   │   │   └── README.md
 │   │   ├── home-upkeep/
 │   │   │   ├── home_upkeep.py   what's due at home and when it was last done
 │   │   │   ├── test_home_upkeep.py

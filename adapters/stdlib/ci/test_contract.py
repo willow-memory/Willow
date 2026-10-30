@@ -236,6 +236,14 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         b'<Record type="HKCategoryTypeIdentifierSleepAnalysis" startDate="2024-03-03 01:00:00 +0000" value="HKCategoryValueSleepAnalysisAsleep"/>'
         b'<Workout workoutActivityType="HKWorkoutActivityTypeRunning" startDate="2024-03-03 07:00:00 +0000"/></HealthData>'
     )}),
+    "home-sensors": ("home_sensors.py", {"history.json": (
+        b'[[{"entity_id":"sensor.kitchen_temp","state":"21.0","last_changed":"2024-03-02T08:00:00+00:00","attributes":{"unit_of_measurement":"C","friendly_name":"Kitchen temperature"}},'
+        b'{"entity_id":"sensor.kitchen_temp","state":"21.8","last_changed":"2024-03-02T20:00:00+00:00","attributes":{}},'
+        b'{"entity_id":"sensor.kitchen_temp","state":"unavailable","last_changed":"2024-03-02T21:00:00+00:00"},'
+        b'{"entity_id":"sensor.kitchen_temp","state":"20.9","last_changed":"2024-03-03T08:00:00+00:00"}],'
+        b'[{"entity_id":"sensor.hall_humidity","state":"48.5","last_changed":"2024-03-02T09:00:00+00:00","attributes":{"unit_of_measurement":"%","friendly_name":"Hall, humidity"}}],'
+        b'[{"entity_id":"light.hall","state":"on","last_changed":"2024-03-02T09:00:00+00:00"}]]'
+    )}),
     "notes": ("notes.py", {"garden.md": b"Tomatoes want [[sun]].\n"}),
     "jrnl": ("jrnl.py", {"journal.txt": (
         "[2024-03-03 10:15] Fixed the gate.\nThe hinge wanted oil, not force.\n\n"
