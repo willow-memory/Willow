@@ -1234,6 +1234,9 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- `said` no longer treats a sentence that starts with a common word or a
+  bare pronoun, such as "If I said..." or "Someone said...", as a quote by a
+  speaker with that name. (bug #101)
 - `profile`: its test read a row's location as one run of non-spaces, so it
   failed whenever a frozen module's function (`<frozen posixpath>:71 join`,
   as Python 3.11 and later name them) was among the top own times; the

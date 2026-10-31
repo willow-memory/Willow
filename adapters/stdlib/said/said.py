@@ -61,13 +61,19 @@ SHAPES = (
 )
 
 
+def names_someone(who: str) -> bool:
+    """A speaker's name never starts with a common word like "if" or "he"."""
+    ws = kernel.words(who)
+    return bool(ws) and ws[0] not in kernel.FUNCTION
+
+
 def spoken(line: str) -> tuple[str, str] | None:
     """(who, what they said) when the line quotes someone by shape, else
     None. The shapes are tried in turn, a chat's timestamp first, so a
     stamped line never needs quotation marks and a bare one always does."""
     for shape in SHAPES:
         m = shape.match(line)
-        if m:
+        if m and names_someone(m.group("who")):
             return m.group("who"), " ".join(m.group("what").split())
     return None
 
