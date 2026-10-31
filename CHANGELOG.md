@@ -10,6 +10,22 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `git-history`, `persona-card` and `corpus-lens`: commit messages and
+  diffs as a dated pile, the git program called not linked; a persona card
+  compiled into the same system-prompt bytes every time, with the prompt's
+  hash on the record; and corpus-lens process reports as passages, where
+  your intent arrives and who writes the code. (#130)
+- `agent-transcript`, `session-cost`, `codebase-memory`, `format-rot` and
+  `nestor`: session files as numbered spoken turns; tokens those sessions
+  spent, by day and repo; a code-graph SQLite file as passages; formats
+  that may stop opening, flagged while you can still convert them; and
+  answers a person has checked in Nestor, each citing who and when. (#130)
+- `fixity`, `three-two-one` and `restore-drill`: a folder's files hashed
+  again now and then, a hash that moved with no newer mtime flagged as rot;
+  how many verified copies of the record exist, held to three copies, two
+  kinds of storage, one away from home; and a backup zip restored into
+  scratch and verified there, so you know it restores before the day you
+  need it. (#130)
 - Five ideas added to `adapters/planned.json` about keeping archives whole:
   `warc` (web archives read as captured pages), `restore-drill` (a backup
   restored into scratch and verified), `fixity` (file hashes on the record,
