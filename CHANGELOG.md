@@ -1249,7 +1249,7 @@ says how). The first was v0.1.0.
 
 - `box-health` says how many of the files the bite can't read are over the
   kernel's 1 MB, which a text file too big read the same as one that isn't
-  UTF-8.
+  UTF-8. (#127)
 - `stack` no longer counts add-ons whose 42 exit means "none found" as
   flagged steps, and it can flag add-ons such as `contradictions` whose
   successful exit means something was found, fixing bug #94. (#122)
