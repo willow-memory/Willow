@@ -10,11 +10,12 @@ import subprocess
 import sys
 from pathlib import Path
 
-import pytest
-
 HERE = Path(__file__).resolve().parent
 STACK = HERE / "stack.py"
 KERNEL = HERE.parents[2] / "kernel.py"
+sys.path.insert(0, str(HERE))
+import stack as st  # noqa: E402
+
 NOW = ["--now", "2026-10-23T00:00:00Z"]
 
 
@@ -105,6 +106,15 @@ def test_a_flagged_step_makes_the_stack_exit_42(tmp_path):
     assert "(exit 2)" in got.stdout  # the step's own refusal, surfaced and flagged
 
 
+def test_step_results_follow_the_add_ons_cards():
+    assert st.step_result("amounts", 42) == (False, "none found")
+    assert st.step_result("said", 42) == (False, "none found")
+    assert st.step_result("duplicates", 42) == (False, "none found")
+    assert st.step_result("contradictions", 42) == (False, "none found")
+    assert st.step_result("contradictions", 0) == (True, "flagged")
+    assert st.step_result("export", 2) == (True, "exit 2")
+
+
 def test_not_a_kernel_box_is_refused(tmp_path):
     (tmp_path / "b").mkdir()
     stack = a_stack(tmp_path, "## p\n- export -- --box {box}\n")
@@ -142,12 +152,11 @@ def test_the_stack_writes_nothing_to_the_box(tmp_path):
     assert snapshot(box) == before, "stack reads and composes; it writes no box"
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason="bug #94: stack counts an add-on's 42 for none found as a flagged step",
-)
 def test_a_step_that_found_nothing_is_not_flagged(tmp_path):
     box = a_box(tmp_path)  # 4200 is written with no currency: no sums
     got = run("--box", str(box), "--stack",
               str(a_stack(tmp_path, "## money\n- amounts -- --box {box}\n")))  # fmt: skip
+    assert got.returncode == 0, got.stdout + got.stderr
+    assert "(none found)" in got.stdout
     assert "1 of 1 steps flagged" not in got.stdout
+    assert "0 of 1 steps flagged" in got.stdout

@@ -22,7 +22,8 @@ step, so stack names network:none for its own run and leaves each step's reach
 to the step's own card. Exit codes, the kernel's: 0 nothing in the stack waits
 on you; 42 a step flagged something (or refused); 2 refused (a bad command
 line, a box that isn't a kernel box, an unreadable or empty stack, or a step
-whose add-on isn't here).
+whose add-on isn't here). For add-ons whose 42 means "none found", that is
+shown but not flagged.
 """
 
 from __future__ import annotations
@@ -36,6 +37,9 @@ HERE = Path(__file__).resolve().parent
 STDLIB = HERE.parent
 sys.path.insert(0, str(STDLIB.parents[1]))
 import kernel  # noqa: E402
+
+NONE_FOUND = {"amounts", "contradictions", "duplicates", "said"}
+FLAGS_ON_ALIVE = {"contradictions"}
 
 
 def parse_stack(text: str) -> tuple[list, str | None]:
@@ -104,6 +108,17 @@ def mass(text: str) -> int:
     return sum(1 for ln in text.splitlines() if ln.strip())
 
 
+def step_result(name: str, code: int) -> tuple[bool, str]:
+    """(flagged, note) for a step's exit code, by that add-on's card."""
+    if code == kernel.ALIVE and name in FLAGS_ON_ALIVE:
+        return True, "flagged"
+    if code == kernel.ESCALATE and name in NONE_FOUND:
+        return False, "none found"
+    if code == kernel.ALIVE:
+        return False, ""
+    return True, f"exit {code}"
+
+
 def compose(ran: list, box: str) -> str:
     """The one markdown document: a `##` per pool, peaks first; each step's
     output fenced under it, with its exit flagged when it isn't clean."""
@@ -116,9 +131,9 @@ def compose(ran: list, box: str) -> str:
     for heading, done in ran:
         out.append(f"## {heading}")
         out.append("")
-        for _, _, name, args, code, text in done:
+        for _, _, name, args, _code, text, note in done:
             label = f"{name} -- {' '.join(args)}" if args else name
-            flag = "" if code == kernel.ALIVE else f"  (exit {code})"
+            flag = f"  ({note})" if note else ""
             out.append(f"- `{label}`{flag}")
             out.append("  ```")
             out += ["  " + ln for ln in (text.splitlines() or ["(nothing)"])]
@@ -169,8 +184,9 @@ def main(argv: list[str]) -> int:
         for idx, (name, args) in enumerate(steps):
             nsteps += 1
             code, out = run_step(scripts[name], args, str(box))
-            done.append((mass(out), idx, name, args, code, out))
-            if code != kernel.ALIVE:
+            is_flagged, note = step_result(name, code)
+            done.append((mass(out), idx, name, args, code, out, note))
+            if is_flagged:
                 flagged += 1
                 worst = kernel.ESCALATE
         done.sort(key=lambda s: (-s[0], s[1]))
