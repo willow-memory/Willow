@@ -56,7 +56,7 @@
   "questions/cpython/claude/CP7.txt": "248e86c17852995970075a0ba7da85698267eb18e95e18c6d9a0bdd13f4d47cc"
  },
  "tools_at_freeze": {
-  "kernel.py": "be6e99a1952d0cb347b0028071b98258e3e69502c21f7ee715557b0ed3145a0d",
+  "kernel.py": "45bdf12b9bfb841717dd0292cddde4f62546f4d5905c4b10acc1b269838ec301",
   "adapters/stdlib/scan/scan.py": "ff3717e7f280eb0a3dea479136bdab43360cd72cd6861d7827fbdf1504c2ce9d",
   "adapters/stdlib/todo/todo.py": "56be091ebcb319711653ab2566d011b8f32a00790c106e63d4ef63516e7e0c45",
   "adapters/stdlib/ci/whose.py": "0eceae102467c18d847be90cbcceae6f167af10ead5edcce4f3bd43fdb719abd",
@@ -80,6 +80,7 @@
   "outside.py": "2026-10-28, freeze 4, before it was run on any unit: phase 6, the frozen method on seven cpython CVE fixes (same hit rule, rank statistic, line-level and null gates, two writers)",
   "cpython_sources.json": "2026-10-28, freeze 4: the seven cpython units' CVE, OSV address, fetch time, advisory text hashes, commits, trees and weights; never the advisory text",
   "questions/cpython/": "2026-10-28, freeze 4, before any unit was asked: byte for byte the unedited output of the blind writers (local and claude, eight questions per unit, CP1 to CP7), headers included; their input file holds the advisory text and is kept privately",
-  "origin.py": "2026-10-29, freeze 5, after every run: stamp() reads git's trailing Z as +00:00, which Python 3.9 and 3.10 refuse; no result changed (every run was on 3.12 or 3.14, where both forms already parsed the same)"
+  "origin.py": "2026-10-29, freeze 5, after every run: stamp() reads git's trailing Z as +00:00, which Python 3.9 and 3.10 refuse; no result changed (every run was on 3.12 or 3.14, where both forms already parsed the same)",
+  "kernel.py": "2026-10-30, freeze 6, after every run: newest() skips dates inside http(s) web addresses; no frozen input uses a date-bearing web address, and file-path dates still count"
  }
 }
