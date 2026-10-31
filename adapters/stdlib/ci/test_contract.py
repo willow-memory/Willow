@@ -92,6 +92,10 @@ PILE_EXTRA: dict[str, dict[str, bytes]] = {"scrub": {"photo.png": _png()}}
 
 #: one small readable file per reader, by the name it is written under
 READERS: dict[str, tuple[str, dict[str, bytes]]] = {
+    "almanac": ("almanac.py", {"catalog.json": (
+        '{"name": "Made-Up Almanac", "entries": [{"id": "tide-gauge-records", '
+        '"title": "Tide Gauge Records", "source": {"canonical_url": '
+        '"https://stats.example.org/tides"}, "status": "live"}]}\n').encode()}),
     "books": ("books.py", {"My Clippings.txt": (
         "Made-Up Harbour (Ada Example)\n- Your Highlight on page 12 | Location 180 | "
         "Added on Sunday, 3 March 2024 10:15:22\n\nThe tide keeps its own calendar.\n"

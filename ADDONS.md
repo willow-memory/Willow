@@ -18,11 +18,11 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`██████████░░░░░░░░░░` **256 of 491 built** · 435 need no install · 56 need one
+`██████████░░░░░░░░░░` **257 of 491 built** · 435 need no install · 56 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
-| Reading more kinds of files | 64 | 41 | 96 | 9 |
+| Reading more kinds of files | 65 | 40 | 96 | 9 |
 | Finding things | 29 | 14 | 33 | 10 |
 | Your own words | 19 | 7 | 23 | 3 |
 | Keeping track | 36 | 23 | 59 | 0 |
@@ -67,19 +67,19 @@ its list: someone who speaks the language can add one without much Python.
 ## Newest
 
 <!-- willow:newest -->
+- 2026-10-31 · [**almanac**](adapters/stdlib/almanac/) — An Almanac's catalog.json (climate, health, civic and the rest): each public dataset's description and source as passages, with when its link was last checked.
 - 2026-10-30 · [**words-tlh**](adapters/stdlib/words-tlh/) — Klingon common words ("'ej", "nuq").
 - 2026-10-30 · [**static-search**](adapters/deps/static-search/) — An exported page of approved answers with its own search built in, no server of its own, served from any static host.
 - 2026-10-30 · [**ripgrep**](adapters/deps/ripgrep/) — Exact search through ripgrep, much faster on a big folder, its hits checked against the kernel's hashes.
 - 2026-10-30 · [**pgp**](adapters/deps/pgp/) — Signs exports and reports with your PGP key, verifiable anywhere.
-- 2026-10-30 · [**ocr**](adapters/deps/ocr/) — Text out of photos of letters and scanned PDFs.
 <!-- /willow:newest -->
 
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[pile-gold](adapters/stdlib/pile-gold/)** — Each answer you approve marks the passage that held it, so your own questions become a test of how well the search finds things, scored as recall at five.
+**[claude-code](adapters/stdlib/claude-code/)** — Claude Code sees cited passages from your folder with each prompt, through its prompt hook.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 256 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 257 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -90,7 +90,7 @@ its list: someone who speaks the language can add one without much Python.
 Each writes plain text into a mirror folder the kernel searches, so your originals are never touched.
 
 - **agent-transcript** (idea) — Claude Code, Codex, Gemini CLI, Cursor and Copilot session files as plain text, each turn numbered, so you can ask what an agent was told. *new* `no-install` `offline` `writes-output` `file-reader`
-- **almanac** (idea) — An Almanac's catalog.json (climate, health, civic and the rest): each public dataset's description and source as passages, with when its link was last checked. *new* `no-install` `offline` `writes-output` `file-reader`
+- [**almanac**](adapters/stdlib/almanac/) — An Almanac's catalog.json (climate, health, civic and the rest): each public dataset's description and source as passages, with when its link was last checked. *new* `no-install` `offline` `writes-output` `file-reader`
 - **apple-notes** (idea) — Apple Notes, read from a copy of its database: each note as plain text with its folder and dates. *new* `no-install` `offline` `writes-output` `file-reader`
 - **archivebox** (idea) — ArchiveBox snapshots: each saved page's text, with its URL and the date it was captured. *new* `no-install` `offline` `writes-output` `file-reader`
 - [**bank**](adapters/stdlib/bank/) — Bank CSV and OFX statements as dated lines, with spending by month. *new* `no-install` `offline` `writes-output` `file-reader`

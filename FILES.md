@@ -80,6 +80,10 @@ willow/
 │   │   │   ├── all.py        every passage that holds a question, in the kernel's order
 │   │   │   ├── test_all.py
 │   │   │   └── README.md
+│   │   ├── almanac/
+│   │   │   ├── almanac.py    an Almanac's catalog.json: each public dataset's description and source as a passage
+│   │   │   ├── test_almanac.py
+│   │   │   └── README.md
 │   │   ├── amounts/
 │   │   │   ├── amounts.py    every sum of money in the files, dated by its line, the date above or the file's name
 │   │   │   ├── test_amounts.py
