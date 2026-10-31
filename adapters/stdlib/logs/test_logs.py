@@ -131,6 +131,48 @@ def test_a_mirror_is_written_at_the_same_path_with_txt_added(tmp_path):
     )
 
 
+def _journal(n: int) -> bytes:
+    """`n` entries of journald's export, each message about 200 characters."""
+    block = (
+        "__REALTIME_TIMESTAMP={t}\nSYSLOG_IDENTIFIER=steward\n_HOSTNAME=box\n"
+        "MESSAGE=tick {i} " + "x" * 200 + "\n\n"
+    )
+    return "".join(
+        block.format(t=1793426400000000 + i * 1000000, i=i) for i in range(n)
+    ).encode()
+
+
+def test_a_mirror_bigger_than_the_kernel_reads_is_cut_into_parts_it_can(tmp_path):
+    """2026-10-31: one day of a steward's journal mirrored to 5.9 MB, and the
+    kernel, which reads at most `kernel.MAX_FILE` from a file, left it all out."""
+    got, out = mirror_of(tmp_path, {"steward.log": _journal(12000)})
+    assert got.returncode == 0, got.stderr
+    made = sorted(p.name for p in out.iterdir())
+    assert made[0] == "steward.log.part2.txt" and "steward.log.txt" in made
+    assert len(made) >= 3
+    assert all((out / m).stat().st_size <= mod.kernel.MAX_FILE for m in made)
+    text = "".join(
+        (out / mod._part_name("steward.log", n)).read_text()
+        for n in range(1, len(made) + 1)
+    )
+    assert text == mod.convert(_journal(12000))
+    assert all((out / m).read_text().endswith("\n") for m in made)
+
+
+def test_a_shorter_run_removes_the_parts_a_longer_one_left(tmp_path):
+    got, out = mirror_of(tmp_path, {"steward.log": _journal(12000)})
+    assert (out / "steward.log.part2.txt").is_file()
+    (tmp_path / "src" / "steward.log").write_bytes(_journal(10))
+    run("mirror", "--from", str(tmp_path / "src"), "--to", str(out))
+    assert sorted(p.name for p in out.iterdir()) == ["steward.log.txt"]
+
+
+def test_a_line_longer_than_a_part_is_shortened_to_fit():
+    got = mod.parts("a\n" + "é" * 40 + "\nb\n", limit=20)
+    assert all(len(p.encode()) <= 20 for p in got)
+    assert got[0] == "a\n" and got[-1].endswith("b\n") and got[1].endswith("\n")
+
+
 def test_hidden_files_and_folders_are_not_read(tmp_path):
     got, out = mirror_of(
         tmp_path,
