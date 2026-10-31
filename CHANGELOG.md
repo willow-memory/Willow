@@ -1234,6 +1234,9 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- `amounts` keeps scale words and abbreviations after sums, such as $5
+  billion, $5 million and EUR 10m, so amounts that differ by scale no longer
+  print as the same sum, fixing bug #93. (#121)
 - `snapshot fetch` gives default names without a suffix an extension from the
   response content type, so saved HTML, text, JSON and PDF pages are names the
   kernel can read while explicit names stay as given, fixing bug #111. (#120)
