@@ -1234,6 +1234,9 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- `snapshot fetch` gives default names without a suffix an extension from the
+  response content type, so saved HTML, text, JSON and PDF pages are names the
+  kernel can read while explicit names stay as given, fixing bug #111.
 - `said` no longer treats a sentence that starts with a common word or a
   bare pronoun, such as "If I said..." or "Someone said...", as a quote by a
   speaker with that name, fixing bug #101. (#118)

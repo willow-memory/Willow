@@ -16,5 +16,4 @@ one takes, is in [CONTRIBUTING.md](CONTRIBUTING.md).
 | #95 | a date inside a web address dates the line around it | `test_kernel.py::test_a_date_inside_a_web_address_dates_nothing` |
 | #96 | propose exits 0 when every suggestion is refused | `test_kernel.py::test_a_propose_whose_every_suggestion_is_refused_does_not_exit_0` |
 | #102 | a GitHub owner/repo the line calls a repo is reported as a missing path | `adapters/stdlib/agents-md-check/test_agents_md_check.py::test_a_name_the_line_calls_a_repo_is_not_a_missing_path` |
-| #111 | a page fetched under its default name gets no extension, so the kernel never reads it | `adapters/stdlib/snapshot/test_snapshot.py::test_a_page_fetched_under_its_default_name_is_one_the_kernel_reads` |
 | #112 | ligatures come through as glyph names, so /f_inancing is never found as financing | `adapters/deps/pdf/test_pdf.py::test_a_ligature_is_written_as_its_letters_not_its_glyph_name` |
