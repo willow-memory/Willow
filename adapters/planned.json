@@ -479,6 +479,16 @@
   "tags": "no-install, offline, records, trust"
  },
  {
+  "name": "fixity",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "Your folder's files hashed again now and then, the hashes kept on the record, and a file that changed with no edit of yours flagged as rot.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, trust"
+ },
+ {
   "name": "flashcards",
   "kind": "stdlib",
   "section": "Keeping track",
@@ -547,6 +557,16 @@
   "writes": "record",
   "network": "none",
   "tags": "no-install, offline, records, privacy"
+ },
+ {
+  "name": "format-rot",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "Files in formats that may stop opening (old office files, proprietary ones, those no reader handles) flagged while you can still convert them.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, trust"
  },
  {
   "name": "front-page",
@@ -1701,6 +1721,16 @@
   "tags": "needs-install, online, read-only, search"
  },
  {
+  "name": "restore-drill",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "A backup zip restored into scratch and verified there, chain and every file, so you know it restores before the day you need it.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, trust"
+ },
+ {
   "name": "retire",
   "kind": "stdlib",
   "section": "Trust and proof",
@@ -2137,6 +2167,16 @@
   "tags": "no-install, offline, read-only, trust"
  },
  {
+  "name": "three-two-one",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "How many verified copies of your record exist and where, held to three copies, on two kinds of storage, one away from home.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, trust"
+ },
+ {
   "name": "tic-tac-toe",
   "kind": "stdlib",
   "section": "Play",
@@ -2258,6 +2298,16 @@
   "writes": "to",
   "network": "the model, downloaded once",
   "tags": "needs-install, online, writes-output, file-reader"
+ },
+ {
+  "name": "warc",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "WARC web archives, from Webrecorder, Heritrix or the Internet Archive, read without unpacking: each captured page's text with its address and the time it was captured.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, file-reader"
  },
  {
   "name": "warm",

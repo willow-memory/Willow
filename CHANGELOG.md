@@ -10,6 +10,12 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- Five ideas added to `adapters/planned.json` about keeping archives whole:
+  `warc` (web archives read as captured pages), `restore-drill` (a backup
+  restored into scratch and verified), `fixity` (file hashes on the record,
+  so rot is told from an edit), `format-rot` (files in formats that may stop
+  opening) and `three-two-one` (how many verified copies of the record exist,
+  and where).
 - Seventeen ideas added to `adapters/planned.json` about models: `model-card`
   (the model behind an assistant named on a card, its hash on the record);
   holding a model to its card and judging it by the record (`cite-honesty`,
