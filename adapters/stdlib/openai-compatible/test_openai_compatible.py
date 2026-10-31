@@ -224,3 +224,26 @@ def test_a_refused_bite_is_the_kernels_word(tmp_path, model):
     got = run("ask", "--box", str(tmp_path / "nobox"), "--url", model.url,
               "--model", "m", "biscochitos")  # fmt: skip
     assert got.returncode != 0 and model.sent == []
+
+
+def test_it_waits_fifteen_minutes_for_a_slow_model(monkeypatch):
+    """The card's promise: a model on a laptop's CPU is given 900 seconds."""
+    seen = {}
+
+    class Reply:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *a):
+            return False
+
+        def read(self):
+            return b'{"choices": [{"message": {"content": "ok"}}]}'
+
+    def urlopen(req, timeout):
+        seen["timeout"] = timeout
+        return Reply()
+
+    monkeypatch.setattr(oc.urllib.request, "urlopen", urlopen)
+    assert oc.ask_model("http://127.0.0.1:9/v1", "m", []) == "ok"
+    assert seen == {"timeout": 900}

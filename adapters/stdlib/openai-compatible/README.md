@@ -32,7 +32,8 @@ passage under it has nothing to say, and is not given the chance.
 propose`, citing the passages its brackets name, and waits there for your
 seal. A reply whose brackets name no served passage is printed and
 proposed to no one. Asked at temperature 0 with a fixed seed, so a server
-that honours them says the same thing twice.
+that honours them says the same thing twice. It waits up to fifteen
+minutes for a reply, since a model on a laptop's CPU can be slow.
 
 `--system FILE` puts a voice before the rule (a persona, a tone), never in
 place of it. An API key, when the endpoint wants one, comes from
