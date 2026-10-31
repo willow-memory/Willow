@@ -1247,6 +1247,9 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- `box-health` says how many of the files the bite can't read are over the
+  kernel's 1 MB, which a text file too big read the same as one that isn't
+  UTF-8. (#127)
 - `logs` cuts a mirror bigger than the kernel reads from one file (1 MB)
   into parts it can read, `<name>.txt`, `<name>.part2.txt` and on. A busy
   day's journal mirrored to one 5.9 MB file, which the kernel left out

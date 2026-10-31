@@ -55,6 +55,18 @@ def reader_for(ext: str) -> str | None:
     return None
 
 
+def too_large(pile: Path) -> int:
+    """How many files the bite skips for size alone: over `kernel.MAX_FILE`.
+    A reader's mirror that big is cut, not converted again."""
+    return sum(
+        1
+        for p in pile.rglob("*")
+        if p.is_file()
+        and not any(part.startswith(".") for part in p.relative_to(pile).parts)
+        and p.stat().st_size > kernel.MAX_FILE
+    )
+
+
 def unreadable(pile: Path) -> dict[str, int]:
     """Files the bite can't read, by extension: not text, too large, not UTF-8."""
     out: dict[str, int] = {}
@@ -151,8 +163,10 @@ def health(box: Path, today: date) -> tuple[str, list[str], list[str]]:
             r = reader_for(ext)
             parts.append(f"{n} {ext}" + (f", read by {r}" if r else ""))
         total = sum(skipped.values())
+        big = too_large(Path(cfg["pile"]))
         needs.append(
             f"{total} file{'s' if total != 1 else ''} can't be read ({'; '.join(parts)})"
+            + (f", {big} of them over {kernel.MAX_FILE // 1_000_000} MB" if big else "")
         )
     else:
         fine.append("every file readable")
