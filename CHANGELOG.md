@@ -10,6 +10,12 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- Five ideas added to `adapters/planned.json` about keeping archives whole:
+  `warc` (web archives read as captured pages), `restore-drill` (a backup
+  restored into scratch and verified), `fixity` (file hashes on the record,
+  so rot is told from an edit), `format-rot` (files in formats that may stop
+  opening) and `three-two-one` (how many verified copies of the record exist,
+  and where). (#128)
 - Seventeen ideas added to `adapters/planned.json` about models: `model-card`
   (the model behind an assistant named on a card, its hash on the record);
   holding a model to its card and judging it by the record (`cite-honesty`,
@@ -1250,6 +1256,13 @@ says how). The first was v0.1.0.
 - `propose` now exits 42 when every suggestion is refused, so a file that
   leaves nothing waiting for a seal no longer looks like an approved answer,
   fixing bug #96. (#129)
+- `box-health` says how many of the files the bite can't read are over the
+  kernel's 1 MB, which a text file too big read the same as one that isn't
+  UTF-8. (#127)
+- `logs` cuts a mirror bigger than the kernel reads from one file (1 MB)
+  into parts it can read, `<name>.txt`, `<name>.part2.txt` and on. A busy
+  day's journal mirrored to one 5.9 MB file, which the kernel left out
+  without a word. (#126)
 - The kernel no longer reads dates that appear only inside `http://` or
   `https://` web addresses, fixing bug #95. (#125)
 - `stack` no longer counts add-ons whose 42 exit means "none found" as

@@ -182,6 +182,15 @@ def test_a_file_too_large_is_unreadable(tmp_path):
     assert "1 file can't be read (1 .txt)" in got.stdout
 
 
+def test_a_file_too_large_says_so_beside_the_count(tmp_path):
+    """2026-10-31: three journal mirrors of 1.3 to 5.9 MB read as "3 files
+    can't be read (3 .txt)", the same words as text that isn't UTF-8."""
+    big = b"x\n" * (kernel.MAX_FILE // 2 + 1)
+    files = {"big.txt": big, "bad.txt": b"\xff\xfe not utf8", "ok.txt": b"fine\n"}
+    got = run("--box", str(box(tmp_path, files)), *NOW)
+    assert "2 files can't be read (2 .txt), 1 of them over 1 MB" in got.stdout
+
+
 def test_the_words_list_changed_since_the_last_question_needs_you(tmp_path):
     b = box(tmp_path, words="sun = sunshine\n")
     k("bite", "--box", str(b), *NOW, "how much sun do tomatoes want")
