@@ -1247,6 +1247,8 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- The kernel no longer reads dates that appear only inside `http://` or
+  `https://` web addresses, fixing bug #95. (#125)
 - `stack` no longer counts add-ons whose 42 exit means "none found" as
   flagged steps, and it can flag add-ons such as `contradictions` whose
   successful exit means something was found, fixing bug #94. (#122)
