@@ -124,7 +124,7 @@ says how to pick one up:
 
 *Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 257 built add-ons in name order.*
 
-[Every add-on, 257 built of 474, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 257 built of 491, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 

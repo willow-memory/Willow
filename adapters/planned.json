@@ -90,6 +90,17 @@
   "tags": "no-install, online, records, play"
  },
  {
+  "name": "bedrock",
+  "kind": "deps",
+  "section": "Assistants",
+  "line": "Suggestions from a model on Amazon Bedrock, under your own AWS account and region, citing your passages.",
+  "source": "new",
+  "needs": "boto3; Apache-2.0",
+  "writes": "record",
+  "network": "Amazon Bedrock's endpoint in your region, to ask for suggestions",
+  "tags": "needs-install, online, records, assistant"
+ },
+ {
   "name": "bluesky",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -118,6 +129,16 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "browser-model",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "Suggestions from a model running in your browser, Chrome's built-in model or one run on WebGPU, through a page served on this machine.",
+  "source": "new",
+  "writes": "record",
+  "network": "loopback",
+  "tags": "no-install, this-machine, records, assistant"
  },
  {
   "name": "by-function",
@@ -189,6 +210,16 @@
   "writes": "record",
   "network": "none",
   "tags": "no-install, offline, records, maintainers"
+ },
+ {
+  "name": "cite-honesty",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "How often each model's suggestions were refused at propose for citing a passage the last bite never returned, read from the record by model card.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, assistant"
  },
  {
   "name": "claude",
@@ -456,6 +487,16 @@
   "writes": "record",
   "network": "none",
   "tags": "no-install, offline, records, tracking"
+ },
+ {
+  "name": "folder-card",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "A card for your folder itself (what the files are, their dates, the gaps you know of), compiled from the pile and your notes and handed to a model as context.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, assistant"
  },
  {
   "name": "food-log",
@@ -800,6 +841,17 @@
   "tags": "no-install, offline, writes-output, trust"
  },
  {
+  "name": "in-process",
+  "kind": "deps",
+  "section": "Assistants",
+  "line": "Suggestions from a GGUF model loaded inside the add-on itself through llama-cpp-python: no server, no port, nothing listening.",
+  "source": "new",
+  "needs": "llama-cpp-python; MIT; licence of the model varies",
+  "writes": "record",
+  "network": "none",
+  "tags": "needs-install, offline, records, assistant"
+ },
+ {
   "name": "ink-story",
   "kind": "deps",
   "section": "Play",
@@ -953,10 +1005,21 @@
   "tags": "needs-install, offline, read-only, trust"
  },
  {
+  "name": "llm-cli",
+  "kind": "deps",
+  "section": "Assistants",
+  "line": "Suggestions through the llm command, so any model its plugins reach (local or hosted) can hand one in, with llm's own log naming the model.",
+  "source": "new",
+  "needs": "llm and the plugin for your model; Apache-2.0",
+  "writes": "record",
+  "network": "the model its plugin reaches, to ask for suggestions",
+  "tags": "needs-install, online, records, assistant"
+ },
+ {
   "name": "local-model",
   "kind": "deps",
   "section": "Assistants",
-  "line": "Suggestions from a model on this machine only, such as Ollama or llama.cpp.",
+  "line": "Suggestions from a model on this machine only, such as Ollama, llama.cpp's server, llamafile, KoboldCpp or Jan.",
   "source": "new",
   "needs": "a local model server; licence varies by model",
   "writes": "record",
@@ -1035,6 +1098,16 @@
   "tags": "no-install, offline, read-only, assistant"
  },
  {
+  "name": "mcp-sampling",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "Suggestions from whatever model your MCP client already runs, asked through MCP sampling, so willow needs no model or key of its own.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, assistant"
+ },
+ {
   "name": "meaning",
   "kind": "deps",
   "section": "Finding things",
@@ -1097,10 +1170,71 @@
   "tags": "needs-install, online, read-only, trust"
  },
  {
+  "name": "mlx",
+  "kind": "deps",
+  "section": "Assistants",
+  "line": "Suggestions from a model run on Apple silicon through MLX, on this Mac alone.",
+  "source": "new",
+  "needs": "mlx-lm, on Apple silicon only; MIT; licence of the model varies",
+  "writes": "record",
+  "network": "none",
+  "tags": "needs-install, offline, records, assistant"
+ },
+ {
+  "name": "model-card",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "A card naming the model behind an assistant (version or weights hash, where it runs, licence, known limits), with the card's hash on the record so each suggestion can say which model made it.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, assistant"
+ },
+ {
+  "name": "model-drift",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "Your frozen questions asked again of a model now and then, flagging when its answers change while its name and card stay the same.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "the endpoint you configure, to ask your questions again",
+  "tags": "no-install, online, read-only, assistant"
+ },
+ {
+  "name": "model-exam",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "Any model scored against the answers you sealed, your own questions as its exam, before you trust its suggestions.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "the endpoint you configure, to ask your sealed questions",
+  "tags": "no-install, online, read-only, assistant"
+ },
+ {
   "name": "model-fit",
   "kind": "stdlib",
   "section": "Assistants",
   "line": "Whether this machine's GPU, NPU or Apple silicon can run a local model, and about how fast, before you download one.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, assistant"
+ },
+ {
+  "name": "model-recall",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "Every sealed answer a model suggested, listed for a second look once you mark its card as flawed; nothing is unsealed for you.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, trust"
+ },
+ {
+  "name": "model-shelf",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "Every model already on this machine, read from Ollama's, LM Studio's, Jan's and GPT4All's folders and the Hugging Face cache: its runtime, size, quantization and hash, before you download another.",
   "source": "new",
   "writes": "nothing",
   "network": "none",
@@ -1252,7 +1386,7 @@
   "name": "openai-compatible",
   "kind": "stdlib",
   "section": "Assistants",
-  "line": "Suggestions from any OpenAI-compatible endpoint you choose (LM Studio, vLLM, OpenRouter), citing your passages.",
+  "line": "Suggestions from any OpenAI-compatible endpoint you choose (LM Studio, vLLM, LocalAI, SGLang, Docker Model Runner, OpenRouter, Groq, Mistral), citing your passages.",
   "source": "new",
   "writes": "record",
   "network": "the endpoint you configure, to ask for suggestions",
@@ -1267,6 +1401,17 @@
   "writes": "record",
   "network": "the OpenTimestamps calendars, sent only the hash",
   "tags": "no-install, online, records, trust"
+ },
+ {
+  "name": "os-model",
+  "kind": "deps",
+  "section": "Assistants",
+  "line": "Suggestions from the model built into the operating system, such as Apple's Foundation Models on a Mac: nothing to download, nothing leaving the device.",
+  "source": "new",
+  "needs": "macOS 26 with Apple Intelligence on, and a small Swift helper; Apple's terms",
+  "writes": "record",
+  "network": "none",
+  "tags": "needs-install, offline, records, assistant"
  },
  {
   "name": "package-docs",
@@ -1685,6 +1830,16 @@
   "writes": "record",
   "network": "none",
   "tags": "no-install, offline, records, assistant"
+ },
+ {
+  "name": "sent-log",
+  "kind": "stdlib",
+  "section": "Privacy and safety",
+  "line": "Which of your passages went to which online model, read from the record by model card: what left this machine and where to.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, privacy"
  },
  {
   "name": "serve-piles",
@@ -2133,6 +2288,26 @@
   "writes": "record",
   "network": "api.open-meteo.com, to read the forecast and the outcome",
   "tags": "no-install, online, records, play"
+ },
+ {
+  "name": "weights-card",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "A model card filled in from the weights file's own header, GGUF or safetensors (architecture, quantization, context length, licence), so the card says what the file says.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, assistant"
+ },
+ {
+  "name": "weights-pin",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "A local model's weights file hashed before each run and refused when it differs from the hash on its model card.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, trust"
  },
  {
   "name": "welcome",
