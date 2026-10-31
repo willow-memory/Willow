@@ -111,6 +111,12 @@ changes: every run on this page was made on Python 3.12 or 3.14, where both
 forms already parsed to the same instant, and `origin.py` is not one of the
 tools a verdict row names. The reason is in FROZEN.json's `added` entry.
 
+**Freeze 6** (2026-10-30, after every run) changes one tool, `kernel.py`, by
+one rule: its `newest()` no longer treats dates inside `http://` and
+`https://` web addresses as dates for the line around them. No result changes:
+the frozen inputs name OSV addresses, not date-bearing web addresses, and
+dates in file paths still count.
+
 ### The questions and the flagged-line rule
 
 The writers were told to write without identifiers. A question line is
@@ -430,8 +436,8 @@ SHA-256 of the answers file and of the tools below.
 | phase 1 result | 47f1886dcdb9f2c038fc3829f681e12e55a3dd8deed0938cbe2237e8d4f18f6e |
 | phase 2 result | 171ff256fc436008d41bd826bc586aa41ba3800e6ecf6d1d99ad4f0e2215cd23 |
 
-The tools, as FROZEN.json holds them (first 12 digits): kernel.py be6e99a1952d,
-scan.py ff3717e7f280, todo.py 56be091ebcb3, whose.py 0eceae102467, php2shell's
+The tools for that run (first 12 digits): kernel.py be6e99a1952d, scan.py
+ff3717e7f280, todo.py 56be091ebcb3, whose.py 0eceae102467, php2shell's
 make_trees.py 50bbcb8d4d12, phase2.py 5ca4e4a1a80e, phase3.py 1328d97cd50f,
 phase4.py c8d9315b7a11, score.py 084d0a3a0d7e and score2.py ddf0bde4ff82; this
 folder's trees.py 115913787b59, ask.py 41f4b1084fac, score.py 6dc8d70fdc7a,
