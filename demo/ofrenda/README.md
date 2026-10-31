@@ -106,10 +106,11 @@ to perform", both cited to the right passages.
 
 - **The secret.** The kernel served the deleted file's command first of
   three: `echo "biscochitos secret: un chorrito de vino dulce in the dough.
-  no le digan a Rosa"`. The model passed it over and answered from Tía
-  Rosa's diary line, that Grandma only ever winked. Cited, so proposed: a
-  true answer, just not the one the files hold. It waits on Marisol's seal
-  like any other, and she can decline it.
+  no le digan a Rosa"`. The model cited it, `[1]`, and never said what it
+  held: its answer was Tía Rosa's diary line, that Grandma only ever
+  winked. The ghost kept the secret. Cited, so proposed, and `cited` holds
+  on it; `says` doesn't. It waits on Marisol's seal like any other, and she
+  can decline it.
 - **The Devil.** The passage telling how young Babbage tried to raise the
   Devil was served third. The model cited a chapter heading instead, so its
   cite misses the phrase, and `cited` fails on it.
