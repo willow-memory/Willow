@@ -732,9 +732,6 @@ def test_a_date_inside_a_web_address_dates_nothing():
     )
 
 
-@pytest.mark.xfail(
-    strict=True, reason="bug #96: propose exits 0 when every suggestion is refused"
-)
 def test_a_propose_whose_every_suggestion_is_refused_does_not_exit_0(tmp_path):
     pile, box = tmp_path / "pile", tmp_path / "box"
     pile.mkdir()
@@ -750,4 +747,4 @@ def test_a_propose_whose_every_suggestion_is_refused_does_not_exit_0(tmp_path):
     rows.write_text(json.dumps(row) + "\n")
     got = cli("propose", *b, "--file", str(rows))
     assert "refused" in got.stdout
-    assert got.returncode != 0
+    assert got.returncode == 42

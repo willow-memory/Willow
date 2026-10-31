@@ -1253,6 +1253,9 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- `propose` now exits 42 when every suggestion is refused, so a file that
+  leaves nothing waiting for a seal no longer looks like an approved answer,
+  fixing bug #96. (#129)
 - `box-health` says how many of the files the bite can't read are over the
   kernel's 1 MB, which a text file too big read the same as one that isn't
   UTF-8. (#127)

@@ -117,6 +117,10 @@ one rule: its `newest()` no longer treats dates inside `http://` and
 the frozen inputs name OSV addresses, not date-bearing web addresses, and
 dates in file paths still count.
 
+**Freeze 7** (2026-10-31, after every run) changes one tool, `kernel.py`, by
+one rule: `propose` exits 42 when every suggestion is refused, instead of
+exiting 0. No result changes: known-gaps does not use `propose`.
+
 ### The questions and the flagged-line rule
 
 The writers were told to write without identifiers. A question line is
