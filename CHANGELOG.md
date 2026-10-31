@@ -1249,7 +1249,7 @@ says how). The first was v0.1.0.
 
 - `propose` now exits 42 when every suggestion is refused, so a file that
   leaves nothing waiting for a seal no longer looks like an approved answer,
-  fixing bug #96.
+  fixing bug #96. (#129)
 - The kernel no longer reads dates that appear only inside `http://` or
   `https://` web addresses, fixing bug #95. (#125)
 - `stack` no longer counts add-ons whose 42 exit means "none found" as
