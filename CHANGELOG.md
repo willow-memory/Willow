@@ -10,6 +10,10 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `almanac`: An Almanac's catalog.json (climate, health, civic and the rest):
+  each public dataset's description, publisher and source as a passage, with
+  the curator's status and when the link checker last reached it. Reads every
+  catalog.json under a folder of almanac checkouts; never fetches one.
 - `demo/stewart-crossover`, a study: a fictional Star Trek fan's files beside
   the real record of 2020 to 2023 of Patrick Stewart's life, every word about
   him a fact two publishers hold, a quote a source holds, or a planted trap,
