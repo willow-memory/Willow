@@ -722,13 +722,13 @@ def test_every_word_of_a_long_line_is_read(tmp_path):
     assert "airlock" in read
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason="bug #95: a date inside a web address dates the line around it",
-)
 def test_a_date_inside_a_web_address_dates_nothing():
     assert (
         k.newest("Nvidia rose 3% (https://example.com/snap/2026-10-24-nvda.html)") == ""
+    )
+    assert (
+        k.newest("See http://example.com/20261024, then check 2026-10-25.")
+        == "20261025"
     )
 
 
