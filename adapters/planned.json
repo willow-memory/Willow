@@ -1107,6 +1107,16 @@
   "tags": "needs-install, online, read-only, trust"
  },
  {
+  "name": "model-card",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "A card naming the model behind an assistant (version or weights hash, where it runs, licence, known limits), with the card's hash on the record so each suggestion can say which model made it.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, assistant"
+ },
+ {
   "name": "model-fit",
   "kind": "stdlib",
   "section": "Assistants",
