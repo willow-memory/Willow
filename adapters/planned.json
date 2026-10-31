@@ -10,16 +10,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "almanac",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "An Almanac's catalog.json (climate, health, civic and the rest): each public dataset's description and source as passages, with when its link was last checked.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "anki",
   "kind": "stdlib",
   "section": "Ways to use it",

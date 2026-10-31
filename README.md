@@ -120,11 +120,11 @@ says how to pick one up:
 <!-- willow:front show=pick week=2026-W44 -->
 **Add-on of the week**
 
-**[pile-gold](adapters/stdlib/pile-gold/)** — Each answer you approve marks the passage that held it, so your own questions become a test of how well the search finds things, scored as recall at five.
+**[claude-code](adapters/stdlib/claude-code/)** — Claude Code sees cited passages from your folder with each prompt, through its prompt hook.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 256 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 257 built add-ons in name order.*
 
-[Every add-on, 256 built of 474, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 257 built of 474, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 
