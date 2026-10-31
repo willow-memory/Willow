@@ -1354,6 +1354,20 @@ willow/
 │   │       ├── blind-reporters.txt  the reporters' lines, reworded three ways, blind
 │   │       ├── blind-claims.txt     the claims, reworded three ways, blind
 │   │       └── null.txt        thirty questions about the policy with nothing to do with ads
+│   ├── ofrenda/              a séance with a local Gemma: a made-up abuela's files and two real books, every word cited or silent
+│   │   ├── README.md         the story, the claim, what is frozen, the dry run, how to run it, the results
+│   │   ├── CHARACTER.md      Femia, Marisol and the ofrenda kept up year round
+│   │   ├── FROZEN.json       the SHA-256 of each frozen file, the tools and the two Gemma models
+│   │   ├── sources.json      Babbage's memoir and Ada Lovelace's Notes, by address, time and SHA-256
+│   │   ├── questions.json    the planted lines, the seven questions, their voices, the hit rule, the pass rules
+│   │   ├── fetch.py          fetches the two books again and says of each whether it is held
+│   │   ├── make_life.py      Femia's old Dell and Marisol's diary, seeded, each file labelled fiction
+│   │   ├── run.py            asks each question through openai-compatible and writes each pass rule as a kernel verdict row
+│   │   ├── test_ofrenda.py   holds the frozen files to their hashes, and her files to what was planted
+│   │   └── voices/
+│   │       ├── femia.md      the abuela's voice, put before the rule, never in place of it
+│   │       ├── babbage.md    Babbage's
+│   │       └── ada.md        Ada Lovelace's
 │   └── stewart-crossover/    a fictional fan's files beside a real life: every word about him from a source
 │       ├── README.md         the claim, the five repositories' parts, what is frozen, the dry run, the results
 │       ├── FROZEN.json       the SHA-256 of each frozen file, and of the tools in five repositories when frozen
