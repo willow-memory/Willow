@@ -18,7 +18,7 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`███████████░░░░░░░░░` **257 of 474 built** · 423 need no install · 51 need one
+`██████████░░░░░░░░░░` **257 of 491 built** · 435 need no install · 56 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
@@ -26,9 +26,9 @@ or `writes-output`; its section), and any the card's author adds or changes.
 | Finding things | 29 | 14 | 33 | 10 |
 | Your own words | 19 | 7 | 23 | 3 |
 | Keeping track | 36 | 23 | 59 | 0 |
-| Trust and proof | 22 | 24 | 37 | 9 |
-| Privacy and safety | 11 | 3 | 14 | 0 |
-| Assistants | 25 | 32 | 51 | 6 |
+| Trust and proof | 22 | 26 | 39 | 9 |
+| Privacy and safety | 11 | 4 | 15 | 0 |
+| Assistants | 25 | 46 | 60 | 11 |
 | Ways to use it | 22 | 18 | 36 | 4 |
 | Play | 9 | 31 | 35 | 5 |
 | For maintainers | 19 | 25 | 39 | 5 |
@@ -357,6 +357,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - **losc** (idea) — Does a project pass the Local Only Servers Club's test: no accounts, no cloud, and your data your own? *bot* `no-install` `offline` `read-only` `trust`
 - [**merkle**](adapters/stdlib/merkle/) — A Merkle tree over the record, so one row can be proven with a handful of hashes, not the whole file. *new* `no-install` `offline` `writes-output` `trust`
 - **mirror** (idea) — Checks each mirror of a repo on another forge holds the same commits as the original, so losing a host loses nothing. Needs the git program; GPL, called not linked. Goes online: each mirror's git URL, to read its refs. *new* `needs-install` `online` `read-only` `trust`
+- **model-recall** (idea) — Every sealed answer a model suggested, listed for a second look once you mark its card as flawed; nothing is unsealed for you. *new* `no-install` `offline` `read-only` `trust`
 - **nestor** (idea) — Answers Nestor records a person has checked, read from a copy of its SQLite store, each citing who checked it and when. *new* `no-install` `offline` `writes-output` `trust`
 - **notary** (idea) — The record's newest hash timestamped by an outside time server, so anyone can see it existed by then. Goes online: an RFC 3161 time server you choose, sent only the hash. *new* `no-install` `online` `records` `trust`
 - **opentimestamps** (idea) — The record's newest hash anchored by OpenTimestamps, proof that it existed by a given block. Goes online: the OpenTimestamps calendars, sent only the hash. *new* `no-install` `online` `records` `trust`
@@ -380,6 +381,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**timeline**](adapters/stdlib/timeline/) — A dated timeline of one matter (a dispute, an illness, a tenancy), every line cited, to hand to a lawyer, doctor or council. *new* `no-install` `offline` `writes-output` `trust`
 - [**tip-pin**](adapters/stdlib/tip-pin/) — Where a box's record ends, kept outside the box, so rows cut off or a whole chain re-hashed are found where verify can't. *new* `no-install` `offline` `writes-output` `trust`
 - [**wayback**](adapters/stdlib/wayback/) — The Wayback Machine's copy of a page from a window of days, saved beside your own snapshot and compared with it byte for byte. Goes online: archive.org, to find the archived copy and fetch it. *new* `no-install` `online` `writes-output` `trust` `sources`
+- **weights-pin** (idea) — A local model's weights file hashed before each run and refused when it differs from the hash on its model card. *new* `no-install` `offline` `read-only` `trust`
 - **witness** (idea) — A second person's seal beside yours, for answers that need two people to agree. *new* `no-install` `offline` `records` `trust`
 - [**xref**](adapters/stdlib/xref/) — Every reference in your files checked: each link to another file, and each quoted line, still there and still saying it. *bot* `no-install` `offline` `read-only` `trust` `everyday`
 
@@ -396,6 +398,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**risky-code**](adapters/stdlib/risky-code/) — Lines of code matching a known-dangerous pattern (command injection, eval, sql concatenation, broken tls and more), by file and line, as leads to read. *new* `no-install` `offline` `read-only` `security`
 - [**scrub**](adapters/stdlib/scrub/) — Strips the hidden details (EXIF, author, edit history) from a file before you share it. *new* `no-install` `offline` `writes-output` `privacy`
 - [**secrets-audit**](adapters/stdlib/secrets-audit/) — Finds passwords, keys and card numbers sitting in plain files, by file and line, never showing the value. *bot* `no-install` `offline` `read-only` `privacy` `everyday`
+- **sent-log** (idea) — Which of your passages went to which online model, read from the record by model card: what left this machine and where to. *new* `no-install` `offline` `read-only` `privacy`
 - **student-records** (idea) — A box of student records that answers only the teacher who owns it, and logs every look. *new* `no-install` `offline` `records` `privacy`
 - [**transcript-redact**](adapters/stdlib/transcript-redact/) — An agent transcript with keys, home paths and emails taken out before you share it, each removal listed by line. *new* `no-install` `offline` `writes-output` `privacy`
 - [**typosquat**](adapters/stdlib/typosquat/) — Dependency names a letter off from a popular one (reqeusts, lodahs), checked against a list of top packages you downloaded. *new* `no-install` `offline` `read-only` `privacy`
@@ -407,12 +410,16 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - [**aider**](adapters/stdlib/aider/) — Aider reads answers from your folder with its /run command, file and line included. *new* `no-install` `offline` `read-only` `assistant`
 - **assistant-scores** (idea) — How often each assistant's suggestions were sealed or set aside, from the record. *new* `no-install` `offline` `read-only` `assistant`
 - **basic-memory** (idea) — Basic Memory's Markdown notes where an AI wrote them: each observation and relation handed in through propose, waiting for your seal. *new* `no-install` `offline` `records` `assistant`
+- **bedrock** (idea) — Suggestions from a model on Amazon Bedrock, under your own AWS account and region, citing your passages. Needs boto3; Apache-2.0. Goes online: Amazon Bedrock's endpoint in your region, to ask for suggestions. *new* `needs-install` `online` `records` `assistant`
+- **browser-model** (idea) — Suggestions from a model running in your browser, Chrome's built-in model or one run on WebGPU, through a page served on this machine. Reaches this machine only. *new* `no-install` `this-machine` `records` `assistant`
 - **cassettes** (idea) — Each exchange with a model kept as a row (what was asked, what came back, the model and its seed), replayed later as a test, and drift between models found by plain diff. *bot* `no-install` `offline` `records` `assistant`
+- **cite-honesty** (idea) — How often each model's suggestions were refused at propose for citing a passage the last bite never returned, read from the record by model card. *new* `no-install` `offline` `read-only` `assistant`
 - **claude** (idea) — Suggestions from Claude through the Anthropic API, citing your passages. Needs anthropic; MIT. Goes online: api.anthropic.com, to ask for suggestions. *new* `needs-install` `online` `records` `assistant`
 - [**claude-code**](adapters/stdlib/claude-code/) — Claude Code sees cited passages from your folder with each prompt, through its prompt hook. *bot* `no-install` `offline` `records` `assistant`
 - [**codex-cli**](adapters/stdlib/codex-cli/) — OpenAI's Codex CLI asks your folder and hands in suggestions, through the mcp add-on. *new* `no-install` `offline` `read-only` `assistant`
 - [**copilot**](adapters/stdlib/copilot/) — GitHub Copilot, in VS Code and in its own CLI, asks your folder through the mcp add-on. *new* `no-install` `offline` `read-only` `assistant`
 - [**cursor**](adapters/stdlib/cursor/) — Cursor asks your folder and hands in suggestions, through the mcp add-on. *new* `no-install` `offline` `read-only` `assistant`
+- **folder-card** (idea) — A card for your folder itself (what the files are, their dates, the gaps you know of), compiled from the pile and your notes and handed to a model as context. *new* `no-install` `offline` `writes-output` `assistant`
 - [**gemini-cli**](adapters/stdlib/gemini-cli/) — Google's Gemini CLI asks your folder and hands in suggestions, through the mcp add-on. *new* `no-install` `offline` `read-only` `assistant`
 - **hermes** (idea) — Hermes Agent asking your folder as a plugin, and its memories, and what its dreaming plugin consolidates, handed in through propose. *new* `no-install` `offline` `records` `assistant`
 - **hook-checks** (idea) — A PostToolUse hook that runs the repo's own fast checks on the file just edited and hands back only what failed, the same output for the same file. *new* `no-install` `offline` `read-only` `assistant` `hooks`
@@ -436,19 +443,28 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - **hook-tiers** (idea) — Edits sorted into tiers by the paths they touch, and the top tier held as a proposal until you seal it, by a rule you can read. *new* `no-install` `offline` `records` `assistant` `hooks`
 - **hooks-elsewhere** (idea) — The prompt hook for Gemini CLI, Codex and opencode, wherever they take hooks, held to Claude Code's answer byte for byte. *box* `no-install` `offline` `records` `assistant` `hooks`
 - [**hosts**](adapters/stdlib/hosts/) — One table of the assistants that take an MCP server, printing the lines that register willow with any of them. *new* `no-install` `offline` `read-only` `assistant`
+- **in-process** (idea) — Suggestions from a GGUF model loaded inside the add-on itself through llama-cpp-python: no server, no port, nothing listening. Needs llama-cpp-python; MIT; licence of the model varies. *new* `needs-install` `offline` `records` `assistant`
 - [**instruction-files**](adapters/stdlib/instruction-files/) — For a folder, which instruction files each coding agent would load (AGENTS.md, CLAUDE.md, GEMINI.md, rules folders), in what order, with each file's size and hash. *box* `no-install` `offline` `read-only` `assistant`
 - **issue-answer** (idea) — A workflow that drafts an answer to a new issue from the repo's own docs, each line cited, posted only once a maintainer seals it. Goes online: the forge, through the workflow's token, to post an answer once it is sealed. *new* `no-install` `online` `records` `assistant`
 - **ladder** (idea) — Your files first, then sources you trust such as Jeles and Nestor, then a model, stopping at the first that answers, each answer kept for next time. *bot* `no-install` `offline` `records` `assistant`
-- **local-model** (idea) — Suggestions from a model on this machine only, such as Ollama or llama.cpp. Needs a local model server; licence varies by model. Reaches this machine only. *new* `needs-install` `this-machine` `records` `assistant`
+- **llm-cli** (idea) — Suggestions through the llm command, so any model its plugins reach (local or hosted) can hand one in, with llm's own log naming the model. Needs llm and the plugin for your model; Apache-2.0. Goes online: the model its plugin reaches, to ask for suggestions. *new* `needs-install` `online` `records` `assistant`
+- **local-model** (idea) — Suggestions from a model on this machine only, such as Ollama, llama.cpp's server, llamafile, KoboldCpp or Jan. Needs a local model server; licence varies by model. Reaches this machine only. *new* `needs-install` `this-machine` `records` `assistant`
 - [**mcp**](adapters/deps/mcp/) — Lets any MCP client, such as an AI assistant or editor, ask your folder and hand in suggestions. Needs mcp; MIT. *new* `needs-install` `offline` `records` `assistant`
 - **mcp-by-hash** (idea) — Your passages served as MCP resources named by their SHA-256, so an assistant cites exactly the bytes it read and a changed passage gets a new name. *bot* `no-install` `offline` `read-only` `assistant`
 - [**mcp-lite**](adapters/stdlib/mcp-lite/) — The mcp add-on's three tools with nothing to install: the protocol by hand, standard library only. *box* `no-install` `offline` `records` `assistant`
+- **mcp-sampling** (idea) — Suggestions from whatever model your MCP client already runs, asked through MCP sampling, so willow needs no model or key of its own. *new* `no-install` `offline` `records` `assistant`
 - **memory-import** (idea) — An AI assistant's memory store, SQLite or Markdown, handed in through propose: one suggestion per memory, none trusted until you seal it. *new* `no-install` `offline` `records` `assistant`
 - **mex** (idea) — mex's project memory for coding agents: its scaffold read as cited passages, and what an agent writes back held for your seal. *new* `no-install` `offline` `records` `assistant`
+- **mlx** (idea) — Suggestions from a model run on Apple silicon through MLX, on this Mac alone. Needs mlx-lm, on Apple silicon only; MIT; licence of the model varies. *new* `needs-install` `offline` `records` `assistant`
+- **model-card** (idea) — A card naming the model behind an assistant (version or weights hash, where it runs, licence, known limits), with the card's hash on the record so each suggestion can say which model made it. *new* `no-install` `offline` `records` `assistant`
+- **model-drift** (idea) — Your frozen questions asked again of a model now and then, flagging when its answers change while its name and card stay the same. Goes online: the endpoint you configure, to ask your questions again. *new* `no-install` `online` `read-only` `assistant`
+- **model-exam** (idea) — Any model scored against the answers you sealed, your own questions as its exam, before you trust its suggestions. Goes online: the endpoint you configure, to ask your sealed questions. *new* `no-install` `online` `read-only` `assistant`
 - **model-fit** (idea) — Whether this machine's GPU, NPU or Apple silicon can run a local model, and about how fast, before you download one. *new* `no-install` `offline` `read-only` `assistant`
+- **model-shelf** (idea) — Every model already on this machine, read from Ollama's, LM Studio's, Jan's and GPT4All's folders and the Hugging Face cache: its runtime, size, quantization and hash, before you download another. *new* `no-install` `offline` `read-only` `assistant`
 - **night-batch** (idea) — Questions waiting for suggestions batched into one local-model run overnight, stopped the moment you're back. Needs a local model server; licence varies by model. Reaches this machine only. *new* `needs-install` `this-machine` `records` `assistant`
-- **openai-compatible** (idea) — Suggestions from any OpenAI-compatible endpoint you choose (LM Studio, vLLM, OpenRouter), citing your passages. Goes online: the endpoint you configure, to ask for suggestions. *new* `no-install` `online` `records` `assistant`
+- **openai-compatible** (idea) — Suggestions from any OpenAI-compatible endpoint you choose (LM Studio, vLLM, LocalAI, SGLang, Docker Model Runner, OpenRouter, Groq, Mistral), citing your passages. Goes online: the endpoint you configure, to ask for suggestions. *new* `no-install` `online` `records` `assistant`
 - [**opencode**](adapters/stdlib/opencode/) — OpenCode asks your folder and hands in suggestions, through the mcp add-on. *new* `no-install` `offline` `read-only` `assistant`
+- **os-model** (idea) — Suggestions from the model built into the operating system, such as Apple's Foundation Models on a Mac: nothing to download, nothing leaving the device. Needs macOS 26 with Apple Intelligence on, and a small Swift helper; Apple's terms. *new* `needs-install` `offline` `records` `assistant`
 - **persona-card** (idea) — A persona written as a card and compiled into the same system-prompt bytes every time, with the prompt's hash on the record. *box* `no-install` `offline` `records` `assistant`
 - **plain-language** (idea) — An approved answer rewritten in plain language by a model, the rewrite held until you seal it. *new* `no-install` `offline` `records` `assistant`
 - **quantized** (idea) — Finds the smallest quantized local model that still gets your box's own questions right, so suggestions come faster. Needs a local model server; licence varies by model. Reaches this machine only. *new* `needs-install` `this-machine` `read-only` `assistant`
@@ -459,6 +475,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - **serve-piles** (idea) — serve's piles grouped on all four W's -- who, when, what and where -- not where alone, so a model meets a question from every box that touched it. *new* `no-install` `offline` `writes-output` `trust` `assistant`
 - **silence-log** (idea) — A model that ran and said nothing kept as its own row, so silence is told apart from a model that never ran. *bot* `no-install` `offline` `records` `assistant`
 - **translate** (idea) — An answer translated by a local model, the original kept beside it, the translation held until you seal it. Needs a local model server; licence varies by model. Reaches this machine only. *new* `needs-install` `this-machine` `records` `assistant`
+- **weights-card** (idea) — A model card filled in from the weights file's own header, GGUF or safetensors (architecture, quantization, context length, licence), so the card says what the file says. *new* `no-install` `offline` `writes-output` `assistant`
 - [**windsurf**](adapters/stdlib/windsurf/) — Windsurf asks your folder and hands in suggestions, through the mcp add-on. *new* `no-install` `offline` `read-only` `assistant`
 - [**zed**](adapters/stdlib/zed/) — Zed's assistant asks your folder and hands in suggestions, through the mcp add-on. *new* `no-install` `offline` `read-only` `assistant`
 

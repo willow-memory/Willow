@@ -210,6 +210,11 @@ A result tested against what anyone can rerun, as in
 - **Merging makes a merge commit**; squash isn't allowed on this repo.
 - **Open it, then write its number** in CHANGELOG.md. Another pull request
   may take the number you guessed.
+- **Stack on the open pull requests.** Before opening one, list what's
+  open; one that touches a file yours does (CHANGELOG.md, the generated
+  lists, `adapters/planned.json`) is merged into your branch and named as
+  its base, so the two meet in your branch, not on `main` after one lands.
+  The steps are in CONTRIBUTING.md's Pull requests.
 - **Work that needs another unmerged branch stacks on it.** An add-on whose
   idea, or whose card's link, exists only on another branch is built from
   that branch, and its pull request's base is that branch; built from

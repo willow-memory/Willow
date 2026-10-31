@@ -204,6 +204,14 @@ beside the GitHub one: a host.json for `adapters/stdlib/ci/whose.py`, and that s
 - Regenerate the add-on list (ADDONS.md, and the README's one feature) with
   `python adapters/stdlib/readme/readme.py write`, never by hand;
   `test_docs.py` fails if it's stale.
+- Stack on the open pull requests before you open yours. List them first;
+  one that changes a file yours changes (almost any does: CHANGELOG.md and
+  the generated lists are in nearly every one) is merged into your branch,
+  and your pull request's base is its branch, not `main`. With several, merge
+  each into your branch and name the newest as its base. Regenerate what's
+  generated after the merge, and merge CHANGELOG.md by hand, newest first.
+  When the one below merges and its branch is deleted, GitHub moves yours
+  onto `main`; if its branch stays, change your base to `main` yourself.
 
 ## Bugs
 
