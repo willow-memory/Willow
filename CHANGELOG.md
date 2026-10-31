@@ -1234,6 +1234,9 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- `stack` no longer counts add-ons whose 42 exit means "none found" as
+  flagged steps, and it can flag add-ons such as `contradictions` whose
+  successful exit means something was found, fixing bug #94.
 - `amounts` keeps scale words and abbreviations after sums, such as $5
   billion, $5 million and EUR 10m, so amounts that differ by scale no longer
   print as the same sum, fixing bug #93. (#121)
