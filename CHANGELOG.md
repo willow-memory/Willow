@@ -10,6 +10,13 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `openai-compatible`, suggestions from a model at any OpenAI-compatible
+  endpoint (llama.cpp's server, Ollama, LM Studio, vLLM, or a hosted one):
+  `openai_compatible.py ask --box DIR --url URL --model NAME "question"`.
+  The kernel bites first and only the passages it served go to the model;
+  when it serves none, no model is asked. The reply goes to `propose`
+  citing the passages its brackets name, and one citing none is proposed to
+  no one. It never seals.
 - `shell-history`, a reader that mirrors bash, zsh and fish history as
   plain text the kernel reads: `shell_history.py mirror --from FOLDER --to
   MIRROR`. Each command is one line with the time its shell recorded it,

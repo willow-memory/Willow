@@ -120,11 +120,11 @@ says how to pick one up:
 <!-- willow:front show=pick week=2026-W44 -->
 **Add-on of the week**
 
-**[said](adapters/stdlib/said/)** — Your own quotes, gathered: every 'so-and-so, on this date: "..."' in your files, as a dated timeline of what was decided.
+**[pgn](adapters/stdlib/pgn/)** — Chess games from PGN files: players, dates, openings and your annotations.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 258 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 259 built add-ons in name order.*
 
-[Every add-on, 258 built of 496, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 259 built of 496, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 

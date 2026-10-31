@@ -18,7 +18,7 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`██████████░░░░░░░░░░` **258 of 496 built** · 440 need no install · 56 need one
+`██████████░░░░░░░░░░` **259 of 496 built** · 440 need no install · 56 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
@@ -28,7 +28,7 @@ or `writes-output`; its section), and any the card's author adds or changes.
 | Keeping track | 36 | 23 | 59 | 0 |
 | Trust and proof | 22 | 30 | 43 | 9 |
 | Privacy and safety | 11 | 4 | 15 | 0 |
-| Assistants | 25 | 46 | 60 | 11 |
+| Assistants | 26 | 45 | 60 | 11 |
 | Ways to use it | 22 | 18 | 36 | 4 |
 | Play | 9 | 31 | 35 | 5 |
 | For maintainers | 19 | 25 | 39 | 5 |
@@ -68,18 +68,18 @@ its list: someone who speaks the language can add one without much Python.
 
 <!-- willow:newest -->
 - 2026-10-31 · [**shell-history**](adapters/stdlib/shell-history/) — Your bash, zsh and fish history: what you ran, and when the shell recorded it.
+- 2026-10-31 · [**openai-compatible**](adapters/stdlib/openai-compatible/) — Suggestions from any OpenAI-compatible endpoint you choose (LM Studio, vLLM, LocalAI, SGLang, Docker Model Runner, OpenRouter, Groq, Mistral), citing your passages.
 - 2026-10-31 · [**almanac**](adapters/stdlib/almanac/) — An Almanac's catalog.json (climate, health, civic and the rest): each public dataset's description and source as passages, with when its link was last checked.
 - 2026-10-30 · [**words-tlh**](adapters/stdlib/words-tlh/) — Klingon common words ("'ej", "nuq").
 - 2026-10-30 · [**static-search**](adapters/deps/static-search/) — An exported page of approved answers with its own search built in, no server of its own, served from any static host.
-- 2026-10-30 · [**ripgrep**](adapters/deps/ripgrep/) — Exact search through ripgrep, much faster on a big folder, its hits checked against the kernel's hashes.
 <!-- /willow:newest -->
 
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[said](adapters/stdlib/said/)** — Your own quotes, gathered: every 'so-and-so, on this date: "..."' in your files, as a dated timeline of what was decided.
+**[pgn](adapters/stdlib/pgn/)** — Chess games from PGN files: players, dates, openings and your annotations.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 258 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 259 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -467,7 +467,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - **model-fit** (idea) — Whether this machine's GPU, NPU or Apple silicon can run a local model, and about how fast, before you download one. *new* `no-install` `offline` `read-only` `assistant`
 - **model-shelf** (idea) — Every model already on this machine, read from Ollama's, LM Studio's, Jan's and GPT4All's folders and the Hugging Face cache: its runtime, size, quantization and hash, before you download another. *new* `no-install` `offline` `read-only` `assistant`
 - **night-batch** (idea) — Questions waiting for suggestions batched into one local-model run overnight, stopped the moment you're back. Needs a local model server; licence varies by model. Reaches this machine only. *new* `needs-install` `this-machine` `records` `assistant`
-- **openai-compatible** (idea) — Suggestions from any OpenAI-compatible endpoint you choose (LM Studio, vLLM, LocalAI, SGLang, Docker Model Runner, OpenRouter, Groq, Mistral), citing your passages. Goes online: the endpoint you configure, to ask for suggestions. *new* `no-install` `online` `records` `assistant`
+- [**openai-compatible**](adapters/stdlib/openai-compatible/) — Suggestions from any OpenAI-compatible endpoint you choose (LM Studio, vLLM, LocalAI, SGLang, Docker Model Runner, OpenRouter, Groq, Mistral), citing your passages. Goes online: the endpoint you configure, to ask for suggestions. *new* `no-install` `online` `records` `assistant`
 - [**opencode**](adapters/stdlib/opencode/) — OpenCode asks your folder and hands in suggestions, through the mcp add-on. *new* `no-install` `offline` `read-only` `assistant`
 - **os-model** (idea) — Suggestions from the model built into the operating system, such as Apple's Foundation Models on a Mac: nothing to download, nothing leaving the device. Needs macOS 26 with Apple Intelligence on, and a small Swift helper; Apple's terms. *new* `needs-install` `offline` `records` `assistant`
 - **persona-card** (idea) — A persona written as a card and compiled into the same system-prompt bytes every time, with the prompt's hash on the record. *box* `no-install` `offline` `records` `assistant`

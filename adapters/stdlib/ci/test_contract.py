@@ -419,6 +419,8 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "fuzzy-dates": ("fuzzy_dates.py", ["--box", "{box}"]),
     "again": ("again.py", ["--box", "{box}"]),
     "aider": ("aider.py", ["--box", "{box}"]),
+    "openai-compatible": ("openai_compatible.py", ["ask", "--box", "{box}", "--url",
+                          "http://127.0.0.1:9/v1", "--model", "m", "tomatoes"]),
     "ci-memo": ("ci_memo.py", ["keys", "mutants:accents"]),
     "ci-why": ("ci_why.py", ["--record", "{box}/record.jsonl"]),
     "ci-cache": ("ci_cache.py", ["--from", "{pile}"]),

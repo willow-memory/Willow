@@ -623,6 +623,10 @@ willow/
 │   │   │   ├── on_this_day.py what your files say happened on this date in other years
 │   │   │   ├── test_on_this_day.py
 │   │   │   └── README.md
+│   │   ├── openai-compatible/
+│   │   │   ├── openai_compatible.py  a model at any OpenAI-compatible endpoint suggests from the passages served, held for your seal
+│   │   │   ├── test_openai_compatible.py
+│   │   │   └── README.md
 │   │   ├── opencode/
 │   │   │   ├── opencode.py       the opencode.json lines that register mcp-lite with OpenCode
 │   │   │   ├── test_opencode.py
