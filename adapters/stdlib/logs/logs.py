@@ -20,7 +20,10 @@ entries (a stack trace under an error) are left out. A file is a log of one of t
 kinds when most of its first twenty lines are; one over 50 MB is not read.
 
 Each file is written to MIRROR at the same relative path with `.txt` added.
-FOLDER is only read.
+A mirror bigger than the kernel reads from one file (`kernel.MAX_FILE`, 1 MB)
+is cut between entries into parts it can: `NAME.txt`, then `NAME.part2.txt`
+and on, so a busy day's journal is still asked of rather than silently left
+out. Parts a shorter earlier run left behind are removed. FOLDER is only read.
 
 Exit codes, the kernel's: 0 wrote some; 42 nothing readable; 2 refused (FOLDER
 is not a folder, or MIRROR and FOLDER are inside one another).
@@ -143,6 +146,31 @@ def _within(inner: Path, outer: Path) -> bool:
     return inner == outer or outer in inner.parents
 
 
+def parts(text: str, limit: int = kernel.MAX_FILE) -> list[str]:
+    """`text` cut between lines into pieces of at most `limit` bytes as UTF-8.
+    A single line longer than that is shortened to fit, never split."""
+    out: list[str] = []
+    piece: list[str] = []
+    size = 0
+    for line in text.splitlines(keepends=True):
+        raw = len(line.encode("utf-8"))
+        if raw > limit:
+            line = line.encode("utf-8")[: limit - 1].decode("utf-8", "ignore") + "\n"
+            raw = len(line.encode("utf-8"))
+        if piece and size + raw > limit:
+            out.append("".join(piece))
+            piece, size = [], 0
+        piece.append(line)
+        size += raw
+    if piece:
+        out.append("".join(piece))
+    return out
+
+
+def _part_name(name: str, n: int) -> str:
+    return f"{name}.txt" if n == 1 else f"{name}.part{n}.txt"
+
+
 def mirror(src: Path, dst: Path) -> tuple[int, int]:
     """Write the mirror of `src` into `dst`. Returns (written, skipped)."""
     wrote = skipped = 0
@@ -153,9 +181,15 @@ def mirror(src: Path, dst: Path) -> tuple[int, int]:
             if text is None:
                 skipped += 1
                 continue
-            target = dst.joinpath(rel.parent, rel.name + ".txt")
-            target.parent.mkdir(parents=True, exist_ok=True)
-            target.write_bytes(text.encode("utf-8"))
+            folder = dst.joinpath(rel.parent)
+            folder.mkdir(parents=True, exist_ok=True)
+            pieces = parts(text)
+            for n, piece in enumerate(pieces, 1):
+                (folder / _part_name(rel.name, n)).write_bytes(piece.encode("utf-8"))
+            n = len(pieces) + 1
+            while (folder / _part_name(rel.name, n)).is_file():
+                (folder / _part_name(rel.name, n)).unlink()
+                n += 1
         except ERRORS:
             skipped += 1
             continue
