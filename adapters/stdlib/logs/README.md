@@ -28,6 +28,10 @@ one of these when most of its first twenty lines are; any other `.log` is
 skipped and counted, and one over 50 MB is not read.
 
 Each file is written to MIRROR at the same relative path with .txt added.
+A mirror bigger than the kernel reads from one file (1 MB) is cut between
+entries into parts it can read, `<name>.txt`, then `<name>.part2.txt` and
+on, so a busy day's journal isn't silently left out; parts a shorter earlier
+run left behind are removed.
 FOLDER is only read: hidden folders and files are skipped, and nothing is
 written inside it. A file that can't be read is skipped and counted, never a
 crash:

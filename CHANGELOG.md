@@ -1247,6 +1247,10 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- `logs` cuts a mirror bigger than the kernel reads from one file (1 MB)
+  into parts it can read, `<name>.txt`, `<name>.part2.txt` and on. A busy
+  day's journal mirrored to one 5.9 MB file, which the kernel left out
+  without a word. (#126)
 - The kernel no longer reads dates that appear only inside `http://` or
   `https://` web addresses, fixing bug #95. (#125)
 - `stack` no longer counts add-ons whose 42 exit means "none found" as
