@@ -18,9 +18,10 @@ restores before the day you need it.
 
 Unzips ZIP into scratch this add-on makes itself (never a folder you name),
 then checks every member stays inside that scratch, every CRC, that the
-box's kernel.json and record.jsonl are there, and that the restored
-record's chain holds, read by the kernel. The scratch is deleted when the
-run ends.
+zip holds kernel.json and record.jsonl, and that the restored record's
+chain holds, read by the kernel. kernel.json is confirmed, never written
+into scratch: a folder that holds one is a box. The scratch is deleted
+when the run ends.
 
 It never compares the zip to a live box: [backup](../backup/) already
 checked the copy the day it was written. This one asks the other question:

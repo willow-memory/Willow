@@ -6,8 +6,12 @@ Unzips ZIP into scratch the add-on makes itself, then checks:
 
 - every name stays inside that scratch (no `..`, no absolute path);
 - every member's bytes match the zip's CRC;
-- `kernel.json` and `record.jsonl` are there;
+- `kernel.json` and `record.jsonl` are in the zip;
 - the restored record's chain holds, read by the kernel.
+
+`kernel.json` is confirmed, never written: a folder that holds one is a
+box, and a box is written only through the kernel. The key is never
+extracted.
 
 A zip that held is one you can restore on the day you need it. The scratch
 is deleted when the run ends. It never writes beside ZIP, never reads the
@@ -57,7 +61,16 @@ def drill(path: Path) -> tuple[int, str]:
                 return kernel.ESCALATE, "nothing there: not a willow backup"
             with tempfile.TemporaryDirectory() as tmp:
                 dest = Path(tmp)
-                z.extractall(dest)
+                for name in names:
+                    leaf = Path(name).name
+                    if leaf == "kernel.json":
+                        z.read(name)
+                        continue
+                    if leaf.endswith(".key"):
+                        continue
+                    target = dest / name
+                    target.parent.mkdir(parents=True, exist_ok=True)
+                    target.write_bytes(z.read(name))
                 rows, breaks = kernel.read(dest / "record.jsonl")
     except (OSError, zipfile.BadZipFile) as e:
         return kernel.ESCALATE, f"couldn't read it: {type(e).__name__}"
