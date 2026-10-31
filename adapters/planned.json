@@ -201,6 +201,16 @@
   "tags": "no-install, offline, records, maintainers"
  },
  {
+  "name": "cite-honesty",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "How often each model's suggestions were refused at propose for citing a passage the last bite never returned, read from the record by model card.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, assistant"
+ },
+ {
   "name": "claude",
   "kind": "deps",
   "section": "Assistants",
@@ -466,6 +476,16 @@
   "writes": "record",
   "network": "none",
   "tags": "no-install, offline, records, tracking"
+ },
+ {
+  "name": "folder-card",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "A card for your folder itself (what the files are, their dates, the gaps you know of), compiled from the pile and your notes and handed to a model as context.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, assistant"
  },
  {
   "name": "food-log",
@@ -1117,6 +1137,26 @@
   "tags": "no-install, offline, records, assistant"
  },
  {
+  "name": "model-drift",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "Your frozen questions asked again of a model now and then, flagging when its answers change while its name and card stay the same.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "the endpoint you configure, to ask your questions again",
+  "tags": "no-install, online, read-only, assistant"
+ },
+ {
+  "name": "model-exam",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "Any model scored against the answers you sealed, your own questions as its exam, before you trust its suggestions.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "the endpoint you configure, to ask your sealed questions",
+  "tags": "no-install, online, read-only, assistant"
+ },
+ {
   "name": "model-fit",
   "kind": "stdlib",
   "section": "Assistants",
@@ -1125,6 +1165,16 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, assistant"
+ },
+ {
+  "name": "model-recall",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "Every sealed answer a model suggested, listed for a second look once you mark its card as flawed; nothing is unsealed for you.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, trust"
  },
  {
   "name": "moodle",
@@ -1707,6 +1757,16 @@
   "tags": "no-install, offline, records, assistant"
  },
  {
+  "name": "sent-log",
+  "kind": "stdlib",
+  "section": "Privacy and safety",
+  "line": "Which of your passages went to which online model, read from the record by model card: what left this machine and where to.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, privacy"
+ },
+ {
   "name": "serve-piles",
   "kind": "stdlib",
   "section": "Assistants",
@@ -2153,6 +2213,16 @@
   "writes": "record",
   "network": "api.open-meteo.com, to read the forecast and the outcome",
   "tags": "no-install, online, records, play"
+ },
+ {
+  "name": "weights-pin",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "A local model's weights file hashed before each run and refused when it differs from the hash on its model card.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, trust"
  },
  {
   "name": "welcome",
