@@ -100,6 +100,17 @@
   "tags": "no-install, online, records, play"
  },
  {
+  "name": "bedrock",
+  "kind": "deps",
+  "section": "Assistants",
+  "line": "Suggestions from a model on Amazon Bedrock, under your own AWS account and region, citing your passages.",
+  "source": "new",
+  "needs": "boto3; Apache-2.0",
+  "writes": "record",
+  "network": "Amazon Bedrock's endpoint in your region, to ask for suggestions",
+  "tags": "needs-install, online, records, assistant"
+ },
+ {
   "name": "bluesky",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -128,6 +139,16 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, file-reader"
+ },
+ {
+  "name": "browser-model",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "Suggestions from a model running in your browser, Chrome's built-in model or one run on WebGPU, through a page served on this machine.",
+  "source": "new",
+  "writes": "record",
+  "network": "loopback",
+  "tags": "no-install, this-machine, records, assistant"
  },
  {
   "name": "by-function",
@@ -830,6 +851,17 @@
   "tags": "no-install, offline, writes-output, trust"
  },
  {
+  "name": "in-process",
+  "kind": "deps",
+  "section": "Assistants",
+  "line": "Suggestions from a GGUF model loaded inside the add-on itself through llama-cpp-python: no server, no port, nothing listening.",
+  "source": "new",
+  "needs": "llama-cpp-python; MIT; licence of the model varies",
+  "writes": "record",
+  "network": "none",
+  "tags": "needs-install, offline, records, assistant"
+ },
+ {
   "name": "ink-story",
   "kind": "deps",
   "section": "Play",
@@ -983,10 +1015,21 @@
   "tags": "needs-install, offline, read-only, trust"
  },
  {
+  "name": "llm-cli",
+  "kind": "deps",
+  "section": "Assistants",
+  "line": "Suggestions through the llm command, so any model its plugins reach (local or hosted) can hand one in, with llm's own log naming the model.",
+  "source": "new",
+  "needs": "llm and the plugin for your model; Apache-2.0",
+  "writes": "record",
+  "network": "the model its plugin reaches, to ask for suggestions",
+  "tags": "needs-install, online, records, assistant"
+ },
+ {
   "name": "local-model",
   "kind": "deps",
   "section": "Assistants",
-  "line": "Suggestions from a model on this machine only, such as Ollama or llama.cpp.",
+  "line": "Suggestions from a model on this machine only, such as Ollama, llama.cpp's server, llamafile, KoboldCpp or Jan.",
   "source": "new",
   "needs": "a local model server; licence varies by model",
   "writes": "record",
@@ -1065,6 +1108,16 @@
   "tags": "no-install, offline, read-only, assistant"
  },
  {
+  "name": "mcp-sampling",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "Suggestions from whatever model your MCP client already runs, asked through MCP sampling, so willow needs no model or key of its own.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, assistant"
+ },
+ {
   "name": "meaning",
   "kind": "deps",
   "section": "Finding things",
@@ -1127,6 +1180,17 @@
   "tags": "needs-install, online, read-only, trust"
  },
  {
+  "name": "mlx",
+  "kind": "deps",
+  "section": "Assistants",
+  "line": "Suggestions from a model run on Apple silicon through MLX, on this Mac alone.",
+  "source": "new",
+  "needs": "mlx-lm, on Apple silicon only; MIT; licence of the model varies",
+  "writes": "record",
+  "network": "none",
+  "tags": "needs-install, offline, records, assistant"
+ },
+ {
   "name": "model-card",
   "kind": "stdlib",
   "section": "Assistants",
@@ -1175,6 +1239,16 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, trust"
+ },
+ {
+  "name": "model-shelf",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "Every model already on this machine, read from Ollama's, LM Studio's, Jan's and GPT4All's folders and the Hugging Face cache: its runtime, size, quantization and hash, before you download another.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, assistant"
  },
  {
   "name": "moodle",
@@ -1322,7 +1396,7 @@
   "name": "openai-compatible",
   "kind": "stdlib",
   "section": "Assistants",
-  "line": "Suggestions from any OpenAI-compatible endpoint you choose (LM Studio, vLLM, OpenRouter), citing your passages.",
+  "line": "Suggestions from any OpenAI-compatible endpoint you choose (LM Studio, vLLM, LocalAI, SGLang, Docker Model Runner, OpenRouter, Groq, Mistral), citing your passages.",
   "source": "new",
   "writes": "record",
   "network": "the endpoint you configure, to ask for suggestions",
@@ -1337,6 +1411,17 @@
   "writes": "record",
   "network": "the OpenTimestamps calendars, sent only the hash",
   "tags": "no-install, online, records, trust"
+ },
+ {
+  "name": "os-model",
+  "kind": "deps",
+  "section": "Assistants",
+  "line": "Suggestions from the model built into the operating system, such as Apple's Foundation Models on a Mac: nothing to download, nothing leaving the device.",
+  "source": "new",
+  "needs": "macOS 26 with Apple Intelligence on, and a small Swift helper; Apple's terms",
+  "writes": "record",
+  "network": "none",
+  "tags": "needs-install, offline, records, assistant"
  },
  {
   "name": "package-docs",
@@ -2213,6 +2298,16 @@
   "writes": "record",
   "network": "api.open-meteo.com, to read the forecast and the outcome",
   "tags": "no-install, online, records, play"
+ },
+ {
+  "name": "weights-card",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "A model card filled in from the weights file's own header, GGUF or safetensors (architecture, quantization, context length, licence), so the card says what the file says.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "tags": "no-install, offline, writes-output, assistant"
  },
  {
   "name": "weights-pin",
