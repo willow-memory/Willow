@@ -101,7 +101,8 @@ def test_a_redirect_is_followed_and_said(site, tmp_path):
     got = run("fetch", "--url", f"{site}/moved", "--to", str(tmp_path), *NOW)
     assert got.returncode == 0
     assert logged(tmp_path)[0]["final_url"] == f"{site}/policy.pdf"
-    assert (tmp_path / "moved").read_bytes() == PAGES["/policy.pdf"][1]
+    assert logged(tmp_path)[0]["file"] == "moved.pdf"
+    assert (tmp_path / "moved.pdf").read_bytes() == PAGES["/policy.pdf"][1]
 
 
 def test_an_error_or_no_answer_writes_no_file_but_its_line(site, tmp_path):
@@ -127,15 +128,15 @@ def test_check_says_holds_changed_missing_and_unlisted(site, tmp_path):
     got = run("check", "--in", str(tmp_path))
     assert got.returncode == 0
     assert [s.split()[:2] for s in got.stdout.splitlines()] == [
-        ["holds", "news"], ["holds", "policy.pdf"]]  # fmt: skip
+        ["holds", "news.html"], ["holds", "policy.pdf"]]  # fmt: skip
     (tmp_path / "policy.pdf").write_bytes(b"edited")
-    (tmp_path / "news").unlink()
+    (tmp_path / "news.html").unlink()
     (tmp_path / "extra.txt").write_text("from nowhere")
     (tmp_path / ".hidden").write_text("not read")
     got = run("check", "--in", str(tmp_path))
     assert got.returncode == 42
     assert [s.split()[:2] for s in got.stdout.splitlines()] == [
-        ["missing", "news"], ["CHANGED", "policy.pdf"], ["unlisted", "extra.txt"]]  # fmt: skip
+        ["missing", "news.html"], ["CHANGED", "policy.pdf"], ["unlisted", "extra.txt"]]  # fmt: skip
     assert run("check", "--in", str(tmp_path / "nope")).returncode == 2
 
 
@@ -155,13 +156,17 @@ def test_names_and_bad_command_lines():
     assert run("check", "--in", "a", "--to", "b").returncode == 2
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason="bug #111: a page fetched under its default name gets no extension, so the kernel never reads it",
-)
 def test_a_page_fetched_under_its_default_name_is_one_the_kernel_reads(site, tmp_path):
     pile = tmp_path / "pile"
     got = run("fetch", "--url", f"{site}/news/", "--to", str(pile), *NOW)
     assert got.returncode == 0, got.stderr
     saved = [p for p in pile.iterdir() if not p.name.startswith(".")]
     assert [p.suffix for p in saved] == [".html"], saved
+    assert logged(pile)[0]["file"] == "news.html"
+    named = tmp_path / "named"
+    got = run(
+        "fetch", "--url", f"{site}/news/", "--to", str(named), "--name", "saved", *NOW
+    )
+    assert got.returncode == 0, got.stderr
+    assert (named / "saved").is_file()
+    assert logged(named)[0]["file"] == "saved"

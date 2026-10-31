@@ -45,6 +45,12 @@ LOG = ".snapshots.jsonl"
 AGENT = "willow-snapshot/1 (+https://github.com/willow-memory/willow)"
 TIMEOUT = 60
 SAFE = re.compile(r"[^A-Za-z0-9._-]+")
+EXTENSION = {
+    "application/json": ".json",
+    "application/pdf": ".pdf",
+    "text/html": ".html",
+    "text/plain": ".txt",
+}
 
 
 def name_for(url: str) -> str:
@@ -54,6 +60,14 @@ def name_for(url: str) -> str:
     last = parts.path.rstrip("/").rsplit("/", 1)[-1] if parts.path.strip("/") else ""
     name = SAFE.sub("-", last or parts.netloc).strip("-.")
     return name or "page"
+
+
+def name_with_type(name: str, kind: str) -> str:
+    """A default name with no suffix gets the extension its content type says."""
+    if Path(name).suffix:
+        return name
+    ext = EXTENSION.get(kind.split(";", 1)[0].strip().lower())
+    return name + ext if ext else name
 
 
 def lines(folder: Path) -> list[dict]:
@@ -81,7 +95,9 @@ def get(url: str) -> tuple[int, str, bytes, str]:
         return e.code, e.headers.get("Content-Type", "") if e.headers else "", b"", url
 
 
-def save(url: str, folder: Path, name: str, now: str, **extra) -> int:
+def save(
+    url: str, folder: Path, name: str, now: str, infer_type: bool = False, **extra
+) -> int:
     """Fetch `url` once into folder/name, and its line; also used by wayback."""
     if "/" in name or "\\" in name or name.startswith(".") or not name:
         print(f"refused: {name!r} is not a plain file name", file=sys.stderr)
@@ -108,6 +124,15 @@ def save(url: str, folder: Path, name: str, now: str, **extra) -> int:
         )
         print(f"couldn't fetch {url}: it answered {status}")
         return kernel.ESCALATE
+    if infer_type:
+        name = name_with_type(name, kind)
+        row["file"] = name
+        if (folder / name).exists() or any(
+            r.get("file") == name for r in lines(folder)
+        ):
+            print(f"refused: {name} is already in {folder}; a snapshot is fetched once",
+                  file=sys.stderr)  # fmt: skip
+            return kernel.REFUSED
     (folder / name).write_bytes(body)
     sha = hashlib.sha256(body).hexdigest()
     if final != url:
@@ -165,7 +190,13 @@ def main(argv: list[str]) -> int:
         if urllib.parse.urlsplit(url).scheme not in ("http", "https"):
             print("refused: an address starts http:// or https://", file=sys.stderr)
             return kernel.REFUSED
-        return save(url, Path(args["--to"]), args.get("--name") or name_for(url), now)
+        return save(
+            url,
+            Path(args["--to"]),
+            args.get("--name") or name_for(url),
+            now,
+            infer_type="--name" not in args,
+        )
     if argv[:1] == ["check"] and set(args) == {"--in"}:
         return check(Path(args["--in"]))
     print(__doc__.split("\n\n")[1], file=sys.stderr)
