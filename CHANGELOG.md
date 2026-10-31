@@ -10,6 +10,15 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- Seventeen ideas added to `adapters/planned.json` about models: `model-card`
+  (the model behind an assistant named on a card, its hash on the record);
+  holding a model to its card and judging it by the record (`cite-honesty`,
+  `model-drift`, `model-exam`, `model-recall`, `sent-log`, `weights-pin`,
+  `folder-card`); finding and describing the models on this machine
+  (`model-shelf`, `weights-card`); and the ways a model runs that no idea
+  covered (`in-process`, `mlx`, `os-model`, `browser-model`, `llm-cli`,
+  `bedrock`, `mcp-sampling`). `local-model` and `openai-compatible` now name
+  the runtimes they reach. (#124)
 - `demo/stewart-crossover`, a study: a fictional Star Trek fan's files beside
   the real record of 2020 to 2023 of Patrick Stewart's life, every word about
   him a fact two publishers hold, a quote a source holds, or a planted trap,
