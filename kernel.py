@@ -803,7 +803,6 @@ def propose(box: Path, lines: list[str], ts: str) -> int:
         print("refused: propose answers a bite; bite first", file=sys.stderr)
         return REFUSED
     served = {s["id"] for s in last.get("served", [])}
-    waiting = 0
     for i, line in enumerate(lines):
         try:
             prop = json.loads(line)
@@ -819,12 +818,12 @@ def propose(box: Path, lines: list[str], ts: str) -> int:
                 box, ts, "proposal", subject=subj, verdict="pass", bite_row=last["n"]
             )
             print(f"pass  {subj}  waiting on your seal")
-            waiting += 1
         else:
             append(box, ts, "proposal", verdict="refused", line=i, why=why)
             print(f"refused  line {i}: {why}")
-    # passing the door is not acceptance: it waits for the person (CONST-0-1)
-    return ESCALATE if waiting else ALIVE
+    # Passing the door is not acceptance: nothing `propose` reads is an answer
+    # until the person seals it (CONST-0-1).
+    return ESCALATE
 
 
 def seal(box: Path, subj: str, ts: str) -> int:
