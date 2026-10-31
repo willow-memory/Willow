@@ -128,6 +128,29 @@ Written after reading the results: the `says` words were frozen as a rough
 test of the model, and they are rough. The 4B's reply about the Devil quotes no
 frozen word because it said almost nothing.
 
+## Run 2, not frozen: Qwen2.5 3B
+
+Run after run 1, with the same questions, voices and rules, on a model freeze 1
+didn't name: Qwen2.5-3B-Instruct, Q4_K_M, from Qwen's own GGUF repository
+(SHA-256 `626b4a66…5c62d`). It isn't part of the claim above. It is here
+because swapping the model is the point.
+
+| `served` | `cited` | `says` | `unsealed` | `verify` |
+|---|---|---|---|---|
+| **held** | failed: the Ghost Club, the Devil | failed: the Devil | **held** | **held** |
+
+**Qwen told the secret.** In Spanish, from the deleted file's command, cited:
+*el secreto era añadir un chorro de vino dulce al pan antes de hornearlo y
+no decírselo a Rosa.* Neither Gemma did. It also explained the beep and gave
+Ada's line, both cited.
+
+**It quoted the right words under the wrong number.** Asked about the Ghost
+Club, it quoted the passage served third word for word, but labelled it
+`[1]`, the chapter's table of contents. The words are right and the
+citation points somewhere else, so `cited` fails, as it should: a reader
+following `[1]` lands on the wrong passage. On the Devil it cited the
+heading, like the 4B, and said honestly that the heading gives no details.
+
 ## Run it yourself
 
     python demo/ofrenda/make_life.py

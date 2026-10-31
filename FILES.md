@@ -1368,7 +1368,9 @@ willow/
 │   │   │   ├── run-1-gemma-3-4b-it.json   run 1 with the primary model: every reply, passage served and cite
 │   │   │   ├── run-1-gemma-3-1b-it.json   the same with the 1B, every guess caught
 │   │   │   ├── record-gemma-3-4b-it.jsonl the verdict box's record for the 4B, without its key
-│   │   │   └── record-gemma-3-1b-it.jsonl the same for the 1B
+│   │   │   ├── record-gemma-3-1b-it.jsonl the same for the 1B
+│   │   │   ├── run-2-qwen2.5-3b-instruct.json  run 2, not frozen: the same questions with Qwen2.5 3B
+│   │   │   └── record-qwen2.5-3b-instruct.jsonl the verdict box's record for run 2, without its key
 │   │   └── voices/
 │   │       ├── femia.md      the abuela's voice, put before the rule, never in place of it
 │   │       ├── babbage.md    Babbage's
