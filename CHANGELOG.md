@@ -10,6 +10,12 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `shell-history`, a reader that mirrors bash, zsh and fish history as
+  plain text the kernel reads: `shell_history.py mirror --from FOLDER --to
+  MIRROR`. Each command is one line with the time its shell recorded it,
+  in UTC, and a day's commands are one paragraph. A file is known by its
+  name (`bash_history`, `zsh_history`, `histfile`, `fish_history`), never
+  by what it holds; a command with no recorded time is written bare.
 - Five ideas added to `adapters/planned.json` about keeping archives whole:
   `warc` (web archives read as captured pages), `restore-drill` (a backup
   restored into scratch and verified), `fixity` (file hashes on the record,

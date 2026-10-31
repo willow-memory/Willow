@@ -835,6 +835,10 @@ willow/
 │   │   │   ├── shell.py          a willow command and tab completion for bash, zsh, fish, PowerShell and cmd
 │   │   │   ├── test_shell.py
 │   │   │   └── README.md
+│   │   ├── shell-history/
+│   │   │   ├── shell_history.py  bash, zsh and fish history, each command a line with its shell's time
+│   │   │   ├── test_shell_history.py
+│   │   │   └── README.md
 │   │   ├── similar/
 │   │   │   ├── similar.py    what's already on the list near a new idea
 │   │   │   ├── test_similar.py

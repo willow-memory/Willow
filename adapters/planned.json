@@ -1902,16 +1902,6 @@
   "tags": "no-install, offline, writes-output, interface"
  },
  {
-  "name": "shell-history",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Your bash, zsh and fish history: what you ran, and when the shell recorded it.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "sigmap",
   "kind": "stdlib",
   "section": "Reading more kinds of files",

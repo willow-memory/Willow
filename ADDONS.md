@@ -18,11 +18,11 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`██████████░░░░░░░░░░` **257 of 496 built** · 440 need no install · 56 need one
+`██████████░░░░░░░░░░` **258 of 496 built** · 440 need no install · 56 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
-| Reading more kinds of files | 65 | 41 | 97 | 9 |
+| Reading more kinds of files | 66 | 40 | 97 | 9 |
 | Finding things | 29 | 14 | 33 | 10 |
 | Your own words | 19 | 7 | 23 | 3 |
 | Keeping track | 36 | 23 | 59 | 0 |
@@ -67,19 +67,19 @@ its list: someone who speaks the language can add one without much Python.
 ## Newest
 
 <!-- willow:newest -->
+- 2026-10-31 · [**shell-history**](adapters/stdlib/shell-history/) — Your bash, zsh and fish history: what you ran, and when the shell recorded it.
 - 2026-10-31 · [**almanac**](adapters/stdlib/almanac/) — An Almanac's catalog.json (climate, health, civic and the rest): each public dataset's description and source as passages, with when its link was last checked.
 - 2026-10-30 · [**words-tlh**](adapters/stdlib/words-tlh/) — Klingon common words ("'ej", "nuq").
 - 2026-10-30 · [**static-search**](adapters/deps/static-search/) — An exported page of approved answers with its own search built in, no server of its own, served from any static host.
 - 2026-10-30 · [**ripgrep**](adapters/deps/ripgrep/) — Exact search through ripgrep, much faster on a big folder, its hits checked against the kernel's hashes.
-- 2026-10-30 · [**pgp**](adapters/deps/pgp/) — Signs exports and reports with your PGP key, verifiable anywhere.
 <!-- /willow:newest -->
 
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[claude-code](adapters/stdlib/claude-code/)** — Claude Code sees cited passages from your folder with each prompt, through its prompt hook.
+**[said](adapters/stdlib/said/)** — Your own quotes, gathered: every 'so-and-so, on this date: "..."' in your files, as a dated timeline of what was decided.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 257 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 258 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -175,7 +175,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - **scripture** (idea) — A scripture or other canonical text with your study notes beside it, cited by book, chapter and verse. *new* `no-install` `offline` `writes-output` `file-reader`
 - **scrivener** (idea) — Scrivener projects: each document in the binder as plain text, by its place in the manuscript. *new* `no-install` `offline` `writes-output` `file-reader`
 - [**sheets**](adapters/deps/sheets/) — Spreadsheets with formulas and formatting kept, beyond what the office add-on reads. Needs openpyxl; MIT. *new* `needs-install` `offline` `writes-output` `file-reader`
-- **shell-history** (idea) — Your bash, zsh and fish history: what you ran, and when the shell recorded it. *new* `no-install` `offline` `writes-output` `file-reader`
+- [**shell-history**](adapters/stdlib/shell-history/) — Your bash, zsh and fish history: what you ran, and when the shell recorded it. *new* `no-install` `offline` `writes-output` `file-reader`
 - **sigmap** (idea) — SigMap's signature map of a codebase as plain text: each function's signature with its file and line, for questions about the code. *new* `no-install` `offline` `writes-output` `file-reader`
 - **signal** (idea) — A Signal backup, decrypted with its passphrase, as one dated line per message. Needs cryptography; Apache-2.0 or BSD. *new* `needs-install` `offline` `writes-output` `file-reader`
 - [**slack**](adapters/stdlib/slack/) — Slack's export zip: one dated line per message, with channel and author. *new* `no-install` `offline` `writes-output` `file-reader`
