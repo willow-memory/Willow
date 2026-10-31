@@ -1408,6 +1408,21 @@ willow/
 │   │   ├── make_life.py      Femia's old Dell and Marisol's diary, seeded, each file labelled fiction
 │   │   ├── run.py            asks each question through openai-compatible and writes each pass rule as a kernel verdict row
 │   │   ├── test_ofrenda.py   holds the frozen files to their hashes, and her files to what was planted
+│   │   ├── screenshots/      seven terminal captures for the write-up: each an .svg drawn from the .txt it shows
+│   │   │   ├── 1-the-history.svg  bash remembering the cron line and the deleted secret
+│   │   │   ├── 1-the-history.txt  the commands and their output, word for word
+│   │   │   ├── 2-the-haunting.svg  Femia's ghost explains the midnight beep
+│   │   │   ├── 2-the-haunting.txt  the commands and their output, word for word
+│   │   │   ├── 3-the-silence.svg  two questions nothing holds: no model asked
+│   │   │   ├── 3-the-silence.txt  the commands and their output, word for word
+│   │   │   ├── 4-the-secret.svg  the 4B keeps the secret, Qwen tells it
+│   │   │   ├── 4-the-secret.txt  the commands and their output, word for word
+│   │   │   ├── 5-the-real-ghosts.svg  Babbage and Ada, from their own books
+│   │   │   ├── 5-the-real-ghosts.txt  the commands and their output, word for word
+│   │   │   ├── 6-caught.svg  the 1B's guesses, proposed to no one
+│   │   │   ├── 6-caught.txt  the commands and their output, word for word
+│   │   │   ├── 7-verify.svg  both chains hold, nothing sealed
+│   │   │   └── 7-verify.txt  the commands and their output, word for word
 │   │   ├── results/
 │   │   │   ├── run-1-gemma-3-4b-it.json   run 1 with the primary model: every reply, passage served and cite
 │   │   │   ├── run-1-gemma-3-1b-it.json   the same with the 1B, every guess caught

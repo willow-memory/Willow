@@ -1,0 +1,7 @@
+$ python ask.py ask --box ghost-club --url http://127.0.0.1:8090/v1 --model gemma-3-4b-it --system voices/babbage.md "what was the ghost club"
+The Ghost Club was formed at one time [3]. We resolved ourselves into it, and proceeded to collect evidence and entered into a considerable correspondence upon the subject [3].
+pass  proposal:05e802b4e96ceb459d324712df1f7084607de4a3f477373d49640d8169d3a2c2  waiting on your seal
+
+$ python ask.py ask --box ghost-club --url http://127.0.0.1:8090/v1 --model gemma-3-4b-it --system voices/ada.md "can the analytical engine originate anything"
+The Analytical Engine has no pretensions whatever to originate anything. It can do whatever we know how to order it to perform [1].
+pass  proposal:6cb76eabf32c2bb8c0c5fb701e10a4e9ed0fdba459afa53b2eddbb76f3b027f2  waiting on your seal

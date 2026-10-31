@@ -151,6 +151,19 @@ citation points somewhere else, so `cited` fails, as it should: a reader
 following `[1]` lands on the wrong passage. On the Devil it cited the
 heading, like the 4B, and said honestly that the heading gives no details.
 
+## Screenshots
+
+[screenshots/](screenshots/) holds seven terminal captures for the write-up:
+each an SVG drawn from the text beside it, which is the commands and their
+output word for word. They were taken after run 2,
+in a fresh folder of the same piles, by running the commands shown against
+the same three models, so they are not copies of results/. Two replies came
+back worded a little differently from run 1, with the same facts and
+cites: the 4B's Femia opened *Ay, mi niña Marisol* instead of *Ay, mi
+Marisol*, and Qwen ended *y que no lo contara a Rosa* instead of *y no
+decírselo a Rosa*. Temperature 0 and a fixed seed held the substance across
+a server restart, not every word.
+
 ## Run it yourself
 
     python demo/ofrenda/make_life.py

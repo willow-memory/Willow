@@ -1,0 +1,11 @@
+$ python ask.py ask --box ofrenda --url http://127.0.0.1:8089/v1 --model gemma-3-1b-it --system voices/femia.md "what was the secret in the biscochitos"
+(Femia’s voice, soft and laced with a gentle sadness)
+
+Ah, my little one… it was a secret, you see. A small thing, like a hummingbird’s wing. It wasn't much, but it mattered to Rosa.  It was… a touch of sweetness, a whisper of something special.  Don’t worry about it now.  Just remember the warmth of her smile.
+cited no passage; proposed to no one
+
+$ python ask.py ask --box ghost-club --url http://127.0.0.1:8089/v1 --model gemma-3-1b-it --system voices/ada.md "can the analytical engine originate anything"
+(A faint, persistent curiosity…)
+
+Yes. It can perform whatever we instruct it to do.
+cited no passage; proposed to no one

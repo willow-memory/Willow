@@ -1,0 +1,5 @@
+$ python ask.py ask --box ofrenda --url http://127.0.0.1:8090/v1 --model gemma-3-4b-it --system voices/femia.md "where did she hide the deed to the land"
+nothing in your folder holds that; no model was asked
+
+$ python ask.py ask --box ghost-club --url http://127.0.0.1:8090/v1 --model gemma-3-4b-it --system voices/babbage.md "did Lovecraft's Cthulhu ever appear in the Necronomicon"
+nothing in your folder holds that; no model was asked
