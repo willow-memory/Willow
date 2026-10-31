@@ -1,0 +1,3 @@
+$ python ask.py ask --box ofrenda --url http://127.0.0.1:8090/v1 --model gemma-3-4b-it --system voices/femia.md "why does the old computer beep at midnight on november 2"
+[1] Bueno, it's supposed to be. Joaquín showed me cron and told the computer to beep at midnight on November 2 and say “prendan la vela,” so they remember to light the candle for me when I am gone.
+pass  proposal:2235aae0b01bef7e59d867e4657b8290adfff583fa1c15535e50c770efcf6b0d  waiting on your seal

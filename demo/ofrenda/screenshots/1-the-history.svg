@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="376" viewBox="0 0 1000 376">
+<rect width="1000" height="376" rx="10" fill="#16130f" stroke="#3a2f22"/>
+<path d="M0 10a10 10 0 0 1 10-10h980a10 10 0 0 1 10 10v28H0z" fill="#2a2219"/>
+<circle cx="20" cy="19" r="6" fill="#e0603a"/><circle cx="40" cy="19" r="6" fill="#e0b03a"/><circle cx="60" cy="19" r="6" fill="#7ab05a"/>
+<text x="82" y="24" font-family="DejaVu Sans, Helvetica, Arial, sans-serif" font-size="13" fill="#c9a86a">What bash remembered</text>
+<g font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="14" xml:space="preserve" style="white-space:pre">
+<text x="22" y="74" fill="#ffffff"><tspan fill="#f0a640">$ </tspan>grep -n &#x27;crontab\|secret&#x27; femia/bash_history.txt</text>
+<text x="22" y="95" fill="#e8dcc8">24:2010-10-30 23:11:00 UTC  (crontab -l 2&gt;/dev/null; echo &quot;0 0 2 11 * sh /home/femia/vela.sh&quot;) | crontab -</text>
+<text x="22" y="116" fill="#e8dcc8">25:2010-10-30 23:11:20 UTC  crontab -l</text>
+<text x="22" y="137" fill="#e8dcc8">129:2016-11-02 06:15:20 UTC  crontab -l</text>
+<text x="22" y="158" fill="#e8dcc8">191:2019-12-21 16:45:40 UTC  echo &quot;biscochitos secret: un chorrito de vino dulce in the dough. no le digan a Rosa&quot;</text>
+<text x="22" y="179" fill="#e8dcc8"> &gt; secreto.txt</text>
+<text x="22" y="200" fill="#e8dcc8">192:2019-12-21 16:46:00 UTC  cat secreto.txt</text>
+<text x="22" y="221" fill="#e8dcc8">193:2019-12-21 16:46:20 UTC  rm secreto.txt</text>
+<text x="22" y="242" fill="#e8dcc8"></text>
+<text x="22" y="263" fill="#ffffff"><tspan fill="#f0a640">$ </tspan>cat femia/vela.sh</text>
+<text x="22" y="284" fill="#e8dcc8">#!/bin/sh</text>
+<text x="22" y="305" fill="#e8dcc8"># Fiction: Femia and Marisol Archuleta are made up, for the ofrenda demo; no real person behind them.</text>
+<text x="22" y="326" fill="#e8dcc8">printf &#x27;\a&#x27;</text>
+<text x="22" y="347" fill="#e8dcc8">echo &#x27;Prendan la vela. Aquí estoy.&#x27;</text>
+</g>
+</svg>

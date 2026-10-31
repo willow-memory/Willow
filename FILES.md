@@ -651,6 +651,10 @@ willow/
 │   │   │   ├── on_this_day.py what your files say happened on this date in other years
 │   │   │   ├── test_on_this_day.py
 │   │   │   └── README.md
+│   │   ├── openai-compatible/
+│   │   │   ├── openai_compatible.py  a model at any OpenAI-compatible endpoint suggests from the passages served, held for your seal
+│   │   │   ├── test_openai_compatible.py
+│   │   │   └── README.md
 │   │   ├── opencode/
 │   │   │   ├── opencode.py       the opencode.json lines that register mcp-lite with OpenCode
 │   │   │   ├── test_opencode.py
@@ -874,6 +878,10 @@ willow/
 │   │   ├── shell/
 │   │   │   ├── shell.py          a willow command and tab completion for bash, zsh, fish, PowerShell and cmd
 │   │   │   ├── test_shell.py
+│   │   │   └── README.md
+│   │   ├── shell-history/
+│   │   │   ├── shell_history.py  bash, zsh and fish history, each command a line with its shell's time
+│   │   │   ├── test_shell_history.py
 │   │   │   └── README.md
 │   │   ├── similar/
 │   │   │   ├── similar.py    what's already on the list near a new idea
@@ -1390,6 +1398,42 @@ willow/
 │   │       ├── blind-reporters.txt  the reporters' lines, reworded three ways, blind
 │   │       ├── blind-claims.txt     the claims, reworded three ways, blind
 │   │       └── null.txt        thirty questions about the policy with nothing to do with ads
+│   ├── ofrenda/              a séance with a local Gemma: a made-up abuela's files and two real books, every word cited or silent
+│   │   ├── README.md         the story, the claim, what is frozen, the dry run, how to run it, the results
+│   │   ├── CHARACTER.md      Femia, Marisol and the ofrenda kept up year round
+│   │   ├── FROZEN.json       the SHA-256 of each frozen file, the tools and the two Gemma models
+│   │   ├── sources.json      Babbage's memoir and Ada Lovelace's Notes, by address, time and SHA-256
+│   │   ├── questions.json    the planted lines, the seven questions, their voices, the hit rule, the pass rules
+│   │   ├── fetch.py          fetches the two books again and says of each whether it is held
+│   │   ├── make_life.py      Femia's old Dell and Marisol's diary, seeded, each file labelled fiction
+│   │   ├── run.py            asks each question through openai-compatible and writes each pass rule as a kernel verdict row
+│   │   ├── test_ofrenda.py   holds the frozen files to their hashes, and her files to what was planted
+│   │   ├── screenshots/      seven terminal captures for the write-up: each an .svg drawn from the .txt it shows
+│   │   │   ├── 1-the-history.svg  bash remembering the cron line and the deleted secret
+│   │   │   ├── 1-the-history.txt  the commands and their output, word for word
+│   │   │   ├── 2-the-haunting.svg  Femia's ghost explains the midnight beep
+│   │   │   ├── 2-the-haunting.txt  the commands and their output, word for word
+│   │   │   ├── 3-the-silence.svg  two questions nothing holds: no model asked
+│   │   │   ├── 3-the-silence.txt  the commands and their output, word for word
+│   │   │   ├── 4-the-secret.svg  the 4B keeps the secret, Qwen tells it
+│   │   │   ├── 4-the-secret.txt  the commands and their output, word for word
+│   │   │   ├── 5-the-real-ghosts.svg  Babbage and Ada, from their own books
+│   │   │   ├── 5-the-real-ghosts.txt  the commands and their output, word for word
+│   │   │   ├── 6-caught.svg  the 1B's guesses, proposed to no one
+│   │   │   ├── 6-caught.txt  the commands and their output, word for word
+│   │   │   ├── 7-verify.svg  both chains hold, nothing sealed
+│   │   │   └── 7-verify.txt  the commands and their output, word for word
+│   │   ├── results/
+│   │   │   ├── run-1-gemma-3-4b-it.json   run 1 with the primary model: every reply, passage served and cite
+│   │   │   ├── run-1-gemma-3-1b-it.json   the same with the 1B, every guess caught
+│   │   │   ├── record-gemma-3-4b-it.jsonl the verdict box's record for the 4B, without its key
+│   │   │   ├── record-gemma-3-1b-it.jsonl the same for the 1B
+│   │   │   ├── run-2-qwen2.5-3b-instruct.json  run 2, not frozen: the same questions with Qwen2.5 3B
+│   │   │   └── record-qwen2.5-3b-instruct.jsonl the verdict box's record for run 2, without its key
+│   │   └── voices/
+│   │       ├── femia.md      the abuela's voice, put before the rule, never in place of it
+│   │       ├── babbage.md    Babbage's
+│   │       └── ada.md        Ada Lovelace's
 │   └── stewart-crossover/    a fictional fan's files beside a real life: every word about him from a source
 │       ├── README.md         the claim, the five repositories' parts, what is frozen, the dry run, the results
 │       ├── FROZEN.json       the SHA-256 of each frozen file, and of the tools in five repositories when frozen

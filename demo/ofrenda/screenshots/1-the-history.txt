@@ -1,0 +1,13 @@
+$ grep -n 'crontab\|secret' femia/bash_history.txt
+24:2010-10-30 23:11:00 UTC  (crontab -l 2>/dev/null; echo "0 0 2 11 * sh /home/femia/vela.sh") | crontab -
+25:2010-10-30 23:11:20 UTC  crontab -l
+129:2016-11-02 06:15:20 UTC  crontab -l
+191:2019-12-21 16:45:40 UTC  echo "biscochitos secret: un chorrito de vino dulce in the dough. no le digan a Rosa" > secreto.txt
+192:2019-12-21 16:46:00 UTC  cat secreto.txt
+193:2019-12-21 16:46:20 UTC  rm secreto.txt
+
+$ cat femia/vela.sh
+#!/bin/sh
+# Fiction: Femia and Marisol Archuleta are made up, for the ofrenda demo; no real person behind them.
+printf '\a'
+echo 'Prendan la vela. Aquí estoy.'

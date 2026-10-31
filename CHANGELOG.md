@@ -10,6 +10,27 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `demo/ofrenda`, a séance where the ghost can't lie: a local Gemma,
+  through `openai-compatible`, speaks for a made-up New Mexico abuela from
+  her old computer's files (her terminal history read by `shell-history`)
+  and for Babbage and Ada Lovelace from their own books. Frozen before it
+  was asked: the kernel served the right passage for every answerable
+  question and nothing for the silent ones; the 4B answered most from the
+  passages, cited; every guess the 1B made cited nothing and was proposed
+  to no one. Nothing was sealed. (#131)
+- `openai-compatible`, suggestions from a model at any OpenAI-compatible
+  endpoint (llama.cpp's server, Ollama, LM Studio, vLLM, or a hosted one):
+  `openai_compatible.py ask --box DIR --url URL --model NAME "question"`.
+  The kernel bites first and only the passages it served go to the model;
+  when it serves none, no model is asked. The reply goes to `propose`
+  citing the passages its brackets name, and one citing none is proposed to
+  no one. It never seals. (#131)
+- `shell-history`, a reader that mirrors bash, zsh and fish history as
+  plain text the kernel reads: `shell_history.py mirror --from FOLDER --to
+  MIRROR`. Each command is one line with the time its shell recorded it,
+  in UTC, and a day's commands are one paragraph. A file is known by its
+  name (`bash_history`, `zsh_history`, `histfile`, `fish_history`), never
+  by what it holds; a command with no recorded time is written bare. (#131)
 - `git-history`, `persona-card` and `corpus-lens`: commit messages and
   diffs as a dated pile, the git program called not linked; a persona card
   compiled into the same system-prompt bytes every time, with the prompt's

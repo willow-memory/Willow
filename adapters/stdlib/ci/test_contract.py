@@ -420,6 +420,9 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         b"    at stack frame\n2024-03-02T08:17:00.123456+00:00 host app[7]: started\n"
     )}),
     "notes": ("notes.py", {"garden.md": b"Tomatoes want [[sun]].\n"}),
+    "shell-history": ("shell_history.py", {"zsh_history": (
+        b": 1709460900:0;git push\n: 1709461000:0;rsync -a photos/ /mnt/backup/\n"
+    )}),
     "jrnl": ("jrnl.py", {"journal.txt": (
         "[2024-03-03 10:15] Fixed the gate.\nThe hinge wanted oil, not force.\n\n"
         "[2024-03-04 09:00] Rain all day.\n").encode()}),
@@ -449,6 +452,8 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "fuzzy-dates": ("fuzzy_dates.py", ["--box", "{box}"]),
     "again": ("again.py", ["--box", "{box}"]),
     "aider": ("aider.py", ["--box", "{box}"]),
+    "openai-compatible": ("openai_compatible.py", ["ask", "--box", "{box}", "--url",
+                          "http://127.0.0.1:9/v1", "--model", "m", "tomatoes"]),
     "ci-memo": ("ci_memo.py", ["keys", "mutants:accents"]),
     "ci-why": ("ci_why.py", ["--record", "{box}/record.jsonl"]),
     "ci-cache": ("ci_cache.py", ["--from", "{pile}"]),

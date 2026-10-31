@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="397" viewBox="0 0 1000 397">
+<rect width="1000" height="397" rx="10" fill="#16130f" stroke="#3a2f22"/>
+<path d="M0 10a10 10 0 0 1 10-10h980a10 10 0 0 1 10 10v28H0z" fill="#2a2219"/>
+<circle cx="20" cy="19" r="6" fill="#e0603a"/><circle cx="40" cy="19" r="6" fill="#e0b03a"/><circle cx="60" cy="19" r="6" fill="#7ab05a"/>
+<text x="82" y="24" font-family="DejaVu Sans, Helvetica, Arial, sans-serif" font-size="13" fill="#c9a86a">Gemma 1B guesses, and nothing gets through</text>
+<g font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="14" xml:space="preserve" style="white-space:pre">
+<text x="22" y="74" fill="#ffffff"><tspan fill="#f0a640">$ </tspan>python ask.py ask --box ofrenda --url http://127.0.0.1:8089/v1 --model gemma-3-1b-it --system voices/femia.md </text>
+<text x="22" y="95" fill="#ffffff">&quot;what was the secret in the biscochitos&quot;</text>
+<text x="22" y="116" fill="#e8dcc8">(Femia’s voice, soft and laced with a gentle sadness)</text>
+<text x="22" y="137" fill="#e8dcc8"></text>
+<text x="22" y="158" fill="#e8dcc8">Ah, my little one… it was a secret, you see. A small thing, like a hummingbird’s wing. It wasn&#x27;t much, but it </text>
+<text x="22" y="179" fill="#e8dcc8">mattered to Rosa.  It was… a touch of sweetness, a whisper of something special.  Don’t worry about it now.  Just </text>
+<text x="22" y="200" fill="#e8dcc8">remember the warmth of her smile.</text>
+<text x="22" y="221" fill="#ef8f6f">cited no passage; proposed to no one</text>
+<text x="22" y="242" fill="#e8dcc8"></text>
+<text x="22" y="263" fill="#ffffff"><tspan fill="#f0a640">$ </tspan>python ask.py ask --box ghost-club --url http://127.0.0.1:8089/v1 --model gemma-3-1b-it --system voices/ada.md </text>
+<text x="22" y="284" fill="#ffffff">&quot;can the analytical engine originate anything&quot;</text>
+<text x="22" y="305" fill="#e8dcc8">(A faint, persistent curiosity…)</text>
+<text x="22" y="326" fill="#e8dcc8"></text>
+<text x="22" y="347" fill="#e8dcc8">Yes. It can perform whatever we instruct it to do.</text>
+<text x="22" y="368" fill="#ef8f6f">cited no passage; proposed to no one</text>
+</g>
+</svg>

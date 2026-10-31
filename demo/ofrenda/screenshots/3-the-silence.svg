@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="229" viewBox="0 0 1000 229">
+<rect width="1000" height="229" rx="10" fill="#16130f" stroke="#3a2f22"/>
+<path d="M0 10a10 10 0 0 1 10-10h980a10 10 0 0 1 10 10v28H0z" fill="#2a2219"/>
+<circle cx="20" cy="19" r="6" fill="#e0603a"/><circle cx="40" cy="19" r="6" fill="#e0b03a"/><circle cx="60" cy="19" r="6" fill="#7ab05a"/>
+<text x="82" y="24" font-family="DejaVu Sans, Helvetica, Arial, sans-serif" font-size="13" fill="#c9a86a">Nothing holds it, so no model is asked</text>
+<g font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="14" xml:space="preserve" style="white-space:pre">
+<text x="22" y="74" fill="#ffffff"><tspan fill="#f0a640">$ </tspan>python ask.py ask --box ofrenda --url http://127.0.0.1:8090/v1 --model gemma-3-4b-it --system voices/femia.md </text>
+<text x="22" y="95" fill="#ffffff">&quot;where did she hide the deed to the land&quot;</text>
+<text x="22" y="116" fill="#ef8f6f">nothing in your folder holds that; no model was asked</text>
+<text x="22" y="137" fill="#e8dcc8"></text>
+<text x="22" y="158" fill="#ffffff"><tspan fill="#f0a640">$ </tspan>python ask.py ask --box ghost-club --url http://127.0.0.1:8090/v1 --model gemma-3-4b-it --system </text>
+<text x="22" y="179" fill="#ffffff">voices/babbage.md &quot;did Lovecraft&#x27;s Cthulhu ever appear in the Necronomicon&quot;</text>
+<text x="22" y="200" fill="#ef8f6f">nothing in your folder holds that; no model was asked</text>
+</g>
+</svg>

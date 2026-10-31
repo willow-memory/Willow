@@ -120,11 +120,11 @@ says how to pick one up:
 <!-- willow:front show=pick week=2026-W44 -->
 **Add-on of the week**
 
-**[sarif](adapters/stdlib/sarif/)** — SARIF reports from code scanners such as CodeQL and Semgrep: each finding as a passage with its rule and place.
+**[sbom](adapters/stdlib/sbom/)** — SBOMs in SPDX or CycloneDX JSON: each component, its version and licence, as passages.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 268 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 270 built add-ons in name order.*
 
-[Every add-on, 268 built of 496, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 270 built of 496, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 

@@ -1,0 +1,41 @@
+{
+ "about": "demo/ofrenda's freeze 1: each file's SHA-256 when it was frozen, held by test_ofrenda.py, the tools', and the models'. A change is a new freeze, in its own commit, with its reason.",
+ "frozen": "2026-10-31",
+ "files": {
+  "sources.json": "7a8fab98f0d7abddfba7c6dcfea5a2b5e380316d289da73bfd5cb2c86beeca2c",
+  "questions.json": "d9312e4aad31eec15439774a7ea758b05cc79c4c3db2c6ffaef7ae5fa824ddab",
+  "fetch.py": "82adbed51542f53f78eff8946d63093d893e50bf8b76641484d14d10e6967729",
+  "run.py": "35f41fcbef907d2c751352fd5c56d323e9f30b05c1baad3ce98a080f2498222e",
+  "make_life.py": "f67796732cdcd0d21548479648d0fe6044ddbdeb8bfb0d62abbc8f5cc2949bab",
+  "voices/ada.md": "a2530ce56ef3d513c2ec3b37ac2cf5a0e764627fc43de3ef021b149270b320f7",
+  "voices/babbage.md": "9236a38710112d730bef40537fb3b77cc7376d95dcd21f9586a5a6ee10681f6e",
+  "voices/femia.md": "95194070b2ca5564c7ee0760d0642b4ea4cf8c3d4a7396e2a3ca4386060f817d"
+ },
+ "tools_at_freeze": {
+  "kernel.py": "dc1050cfe58eb2dc082ec870406b98eba695ea69989bf1809b1f855f269de0da",
+  "adapters/stdlib/openai-compatible/openai_compatible.py": "d8b5ee2c19cf83d28df1757979293667bfd2f28ff81f9410c00279098529b716",
+  "adapters/stdlib/shell-history/shell_history.py": "9f932c6acde57223eaf5a72fbdf8ab1d31c87425d2098143980d89a3cc7f9d78"
+ },
+ "models": {
+  "server": "llama-cpp-python 0.3.36, python -m llama_cpp.server --host 127.0.0.1 --n_ctx 8192, CPU only",
+  "primary": {
+   "name": "gemma-3-4b-it",
+   "file": "gemma-3-4b-it-Q4_K_M.gguf",
+   "url": "https://huggingface.co/ggml-org/gemma-3-4b-it-GGUF/resolve/main/gemma-3-4b-it-Q4_K_M.gguf",
+   "sha256": "882e8d2db44dc554fb0ea5077cb7e4bc49e7342a1f0da57901c0802ea21a0863"
+  },
+  "also": {
+   "name": "gemma-3-1b-it",
+   "file": "gemma-3-1b-it-Q4_K_M.gguf",
+   "url": "https://huggingface.co/ggml-org/gemma-3-1b-it-GGUF/resolve/main/gemma-3-1b-it-Q4_K_M.gguf",
+   "sha256": "8ccc5cd1f1b3602548715ae25a66ed73fd5dc68a210412eea643eb20eb75a135"
+  }
+ },
+ "freezes": [
+  {
+   "n": 1,
+   "date": "2026-10-31",
+   "why": "the sources, the planted lines, the questions, the voices, the hit rule and every pass rule, after one dry run with nonsense (wiring held: piles, the history mirror, boxes, verdict rows, verify) and before any real question was asked of the kernel or a model. The primary model is gemma-3-4b-it; gemma-3-1b-it is run too and reported beside it, never in its place."
+  }
+ ]
+}

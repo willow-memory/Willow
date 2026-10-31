@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="313" viewBox="0 0 1000 313">
+<rect width="1000" height="313" rx="10" fill="#16130f" stroke="#3a2f22"/>
+<path d="M0 10a10 10 0 0 1 10-10h980a10 10 0 0 1 10 10v28H0z" fill="#2a2219"/>
+<circle cx="20" cy="19" r="6" fill="#e0603a"/><circle cx="40" cy="19" r="6" fill="#e0b03a"/><circle cx="60" cy="19" r="6" fill="#7ab05a"/>
+<text x="82" y="24" font-family="DejaVu Sans, Helvetica, Arial, sans-serif" font-size="13" fill="#c9a86a">Babbage and Ada, from their own books (Gemma 4B)</text>
+<g font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="14" xml:space="preserve" style="white-space:pre">
+<text x="22" y="74" fill="#ffffff"><tspan fill="#f0a640">$ </tspan>python ask.py ask --box ghost-club --url http://127.0.0.1:8090/v1 --model gemma-3-4b-it --system </text>
+<text x="22" y="95" fill="#ffffff">voices/babbage.md &quot;what was the ghost club&quot;</text>
+<text x="22" y="116" fill="#e8dcc8">The Ghost Club was formed at one time [3]. We resolved ourselves into it, and proceeded to collect evidence and </text>
+<text x="22" y="137" fill="#e8dcc8">entered into a considerable correspondence upon the subject [3].</text>
+<text x="22" y="158" fill="#8fd18f">pass  proposal:05e802b4e96ceb459d324712df1f7084607de4a3f477373d49640d8169d3a2c2  waiting on your seal</text>
+<text x="22" y="179" fill="#e8dcc8"></text>
+<text x="22" y="200" fill="#ffffff"><tspan fill="#f0a640">$ </tspan>python ask.py ask --box ghost-club --url http://127.0.0.1:8090/v1 --model gemma-3-4b-it --system voices/ada.md </text>
+<text x="22" y="221" fill="#ffffff">&quot;can the analytical engine originate anything&quot;</text>
+<text x="22" y="242" fill="#e8dcc8">The Analytical Engine has no pretensions whatever to originate anything. It can do whatever we know how to order </text>
+<text x="22" y="263" fill="#e8dcc8">it to perform [1].</text>
+<text x="22" y="284" fill="#8fd18f">pass  proposal:6cb76eabf32c2bb8c0c5fb701e10a4e9ed0fdba459afa53b2eddbb76f3b027f2  waiting on your seal</text>
+</g>
+</svg>

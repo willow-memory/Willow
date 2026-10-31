@@ -1,0 +1,5 @@
+$ python kernel.py verify --box ofrenda
+the chain holds: 9 rows, 0 sealed
+
+$ python kernel.py verify --box ghost-club
+the chain holds: 7 rows, 0 sealed

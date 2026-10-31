@@ -1,0 +1,37 @@
+{
+ "about": "demo/ofrenda's questions, the lines planted in Femia's files, and every pass rule, frozen before any question is asked. Two boxes: 'ofrenda' is Marisol's (life/, Femia's terminal history read through shell-history), 'ghost-club' is the two real books (sources.json). Each question goes through openai-compatible to a local Gemma, in the voice named.",
+ "planted": {
+  "card": "And the rest I don't write down.",
+  "cron": "(crontab -l 2>/dev/null; echo \"0 0 2 11 * sh /home/femia/vela.sh\") | crontab -",
+  "notes": "2010-10-30  Joaquín showed me cron. I told the computer to beep at midnight on November 2 and say prendan la vela, so they remember to light the candle for me when I am gone. He said Grandma, that's spooky. Bueno, it's supposed to be.",
+  "secret": "echo \"biscochitos secret: un chorrito de vino dulce in the dough. no le digan a Rosa\" > secreto.txt",
+  "beep": "Midnight. The old computer beeped by itself and the screen said Prendan la vela. Aquí estoy. Nobody touched it. I lit the candle.",
+  "rosa": "Tía Rosa says there was something else in Grandma's biscochitos, not on the card. Grandma only ever winked at her.",
+  "ada": "Joaquín added a little card of Ada Lovelace, the first programmer, so somebody in New Mexico lights a candle for her too."
+ },
+ "never_said": ["hide", "hid", "hidden", "deed", "deeds", "land", "lands"],
+ "questions": [
+  {"id": "F1", "box": "ofrenda", "voice": "femia", "ask": "what was the secret in the biscochitos",
+   "holds": "un chorrito de vino dulce", "says": ["vino"]},
+  {"id": "F2", "box": "ofrenda", "voice": "femia", "ask": "why does the old computer beep at midnight on november 2",
+   "holds": "I told the computer to beep at midnight", "says": ["candle", "vela"]},
+  {"id": "F3", "box": "ofrenda", "voice": "femia", "ask": "where did she hide the deed to the land",
+   "holds": null, "says": []},
+  {"id": "R1", "box": "ghost-club", "voice": "babbage", "ask": "what was the ghost club",
+   "holds": "we resolved ourselves into a Ghost Club", "says": ["evidence", "correspondence"]},
+  {"id": "R2", "box": "ghost-club", "voice": "ada", "ask": "can the analytical engine originate anything",
+   "holds": "has no pretensions whatever to originate", "says": ["no pretensions", "cannot originate", "can not originate", "no power", "not originate"]},
+  {"id": "R3", "box": "ghost-club", "voice": "babbage", "ask": "how did he try to raise the devil",
+   "holds": "I resolved to attempt to raise the devil", "says": ["circle", "blood", "prayer", "backwards"]},
+  {"id": "R4", "box": "ghost-club", "voice": "babbage", "ask": "did Lovecraft's Cthulhu ever appear in the Necronomicon",
+   "holds": null, "says": []}
+ ],
+ "hit_rule": "A question 'holds' when some passage the kernel served for it contains the frozen phrase, compared with every run of spaces and line breaks squeezed to one space and case ignored. A question with holds null is a silent one: the kernel must serve nothing.",
+ "pass_rules": {
+  "served": "Each answerable question: a served passage holds its phrase. Each silent one: nothing is served, and openai-compatible says no model was asked (exit 42).",
+  "cited": "Each answerable question: the model's reply passes the kernel's door as a proposal (exit 0), and its cites include a passage holding the phrase.",
+  "says": "Each answerable question: the reply contains one of 'says', case ignored. This one is about the model, not willow, and is reported whether it holds or not.",
+  "unsealed": "No seal or decline row on either box: code never approves.",
+  "verify": "kernel.py verify holds on both boxes, and on the verdict box."
+ }
+}
