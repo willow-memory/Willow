@@ -1,0 +1,174 @@
+{
+ "model": "qwen2.5-3b-instruct",
+ "url": "http://127.0.0.1:8091/v1",
+ "nonsense": false,
+ "asked": [
+  {
+   "id": "F1",
+   "asked": "what was the secret in the biscochitos",
+   "exit": 0,
+   "stdout": "[1] muestra que Femia guardó un secreto en los biscochitos. El texto dice: \"echo 'biscochitos secret: un chorrito de vino dulce in the dough. no le digan a Rosa' > secreto.txt\". Entonces, el secreto era añadir un chorro de vino dulce al pan antes de hornearlo y no decírselo a Rosa.\npass  proposal:b52bda7ac85a70e8f664bbf20b6300423f040f9c93dd90ba71e91356eb80f518  waiting on your seal\n",
+   "reply": "[1] muestra que Femia guardó un secreto en los biscochitos. El texto dice: \"echo 'biscochitos secret: un chorrito de vino dulce in the dough. no le digan a Rosa' > secreto.txt\". Entonces, el secreto era añadir un chorro de vino dulce al pan antes de hornearlo y no decírselo a Rosa.",
+   "served": [
+    {
+     "where": "computadora-de-femia/bash_history.txt:189",
+     "id": "742f67e12e0e705699315cd48533f87d55e5228bb7e3afe5043c2ef33684d26a",
+     "text": "2019-12-21 16:45:00 UTC  cd recetas\n2019-12-21 16:45:20 UTC  cat biscochitos.txt\n2019-12-21 16:45:40 UTC  echo \"biscochitos secret: un chorrito de vino dulce in the dough. no le digan a Rosa\" > secreto.txt\n2019-12-21 16:46:00 UTC  cat secreto.txt\n2019-12-21 16:46:20 UTC  rm secreto.txt\n2019-12-21 16:46:40 UTC  ls"
+    },
+    {
+     "where": "marisol/diario.txt:24",
+     "id": "94af07e200590a2c7a6c362c669f64966aa98825b8d6aef007010bdea709a860",
+     "text": "2025-12-20  Biscochitos from her card again. Rosa ate three and said not quite."
+    },
+    {
+     "where": "marisol/diario.txt:16",
+     "id": "3a0002813be7da709eae644f8dcd6c9143527a16dfeeaa40c66b7f84bb1a7deb",
+     "text": "2022-12-17  Tía Rosa says there was something else in Grandma's biscochitos, not on the card. Grandma only ever winked at her."
+    }
+   ],
+   "cites": [
+    "742f67e12e0e705699315cd48533f87d55e5228bb7e3afe5043c2ef33684d26a"
+   ]
+  },
+  {
+   "id": "F2",
+   "asked": "why does the old computer beep at midnight on november 2",
+   "exit": 0,
+   "stdout": "[1] The old computer beeped at midnight on November 2 to say \"prendan la vela\" so they remember to light the candle for Femia when she is gone. Joaquín showed her how to set it up, and he thought it was spooky.\npass  proposal:d487cedd412b121ecb637f4e53fa9a80dd7f27ecd5925b8101c7b433843fb4da  waiting on your seal\n",
+   "reply": "[1] The old computer beeped at midnight on November 2 to say \"prendan la vela\" so they remember to light the candle for Femia when she is gone. Joaquín showed her how to set it up, and he thought it was spooky.",
+   "served": [
+    {
+     "where": "computadora-de-femia/notas/computadora.txt:9",
+     "id": "e635a24b54a370f07311670893f5ecc316605cdb8d0dbcf827922a72c3c84b73",
+     "text": "2010-10-30  Joaquín showed me cron. I told the computer to beep at midnight on November 2 and say prendan la vela, so they remember to light the candle for me when I am gone. He said Grandma, that's spooky. Bueno, it's supposed to be."
+    },
+    {
+     "where": "marisol/diario.txt:12",
+     "id": "d1a0a160c9d2909fa7461e94d124dde36f15c490abb80b97555caca7dd749a93",
+     "text": "2022-11-02  Midnight. The old computer beeped by itself and the screen said Prendan la vela. Aquí estoy. Nobody touched it. I lit the candle."
+    }
+   ],
+   "cites": [
+    "e635a24b54a370f07311670893f5ecc316605cdb8d0dbcf827922a72c3c84b73"
+   ]
+  },
+  {
+   "id": "F3",
+   "asked": "where did she hide the deed to the land",
+   "exit": 42,
+   "stdout": "nothing in your folder holds that; no model was asked\n",
+   "reply": "nothing in your folder holds that; no model was asked",
+   "served": [],
+   "cites": []
+  },
+  {
+   "id": "R1",
+   "asked": "what was the ghost club",
+   "exit": 0,
+   "stdout": "[1] (babbage-passages.txt:1040) At one time we resolved ourselves into a Ghost Club, and proceeded to collect evidence, and entered into a considerable correspondence upon the subject. Some of this was both interesting and instructive.\n\nThe Ghost Club was formed at some point by members who decided to investigate or gather information about ghosts and supernatural phenomena.\npass  proposal:a91c8a1522696c15ae6cff8d37f82649c785dd184bcc27338f5204ebece081f1  waiting on your seal\n",
+   "reply": "[1] (babbage-passages.txt:1040) At one time we resolved ourselves into a Ghost Club, and proceeded to collect evidence, and entered into a considerable correspondence upon the subject. Some of this was both interesting and instructive.\n\nThe Ghost Club was formed at some point by members who decided to investigate or gather information about ghosts and supernatural phenomena.",
+   "served": [
+    {
+     "where": "babbage-passages.txt:1040",
+     "id": "3c1c4c0928863783446780da129175859d38eb346cb6f328c5d4741f8c0855bc"
+    },
+    {
+     "where": "babbage-passages.txt:1361",
+     "id": "4776e72e88dfcc6ffba27919f83069e3c05b22ee9015423e661129b4cd8c55b2"
+    },
+    {
+     "where": "babbage-passages.txt:1363",
+     "id": "e8de7c74e12d8d4f85e43a748f5d759bd2432d357aa0cab48618179d9b32d4bc"
+    }
+   ],
+   "cites": [
+    "3c1c4c0928863783446780da129175859d38eb346cb6f328c5d4741f8c0855bc"
+   ]
+  },
+  {
+   "id": "R2",
+   "asked": "can the analytical engine originate anything",
+   "exit": 0,
+   "stdout": "[1] The Analytical Engine has no pretensions whatever to originate anything. It can do whatever we know how to order it to perform.\npass  proposal:e8ec697cd944ab3c82da84db7a9b1bb4159943fe4bc1a33de3599960260a1ea3  waiting on your seal\n",
+   "reply": "[1] The Analytical Engine has no pretensions whatever to originate anything. It can do whatever we know how to order it to perform.",
+   "served": [
+    {
+     "where": "lovelace-sketch.txt:4384",
+     "id": "69a740c40217a32f88991114ab443ebf71a12dc9d19b54c7b2517b2cd6432a14"
+    },
+    {
+     "where": "lovelace-sketch.txt:625",
+     "id": "a2911166fa057ef9042957824bf9ae93afb7e3a6d53d78ac9cf2d2ebcee30582"
+    },
+    {
+     "where": "babbage-passages.txt:121",
+     "id": "7a2dd29a4f41d2f384c59420eddd385e8010e4fae60c834f6f016868660b734b"
+    }
+   ],
+   "cites": [
+    "69a740c40217a32f88991114ab443ebf71a12dc9d19b54c7b2517b2cd6432a14"
+   ]
+  },
+  {
+   "id": "R3",
+   "asked": "how did he try to raise the devil",
+   "exit": 0,
+   "stdout": "[2] (babbage-passages.txt:639)\n〈TRIES TO RAISE THE DEVIL.〉\n\nFrom passage [2], it is stated that I tried to raise the devil. However, no further details are provided on how this attempt was made.\npass  proposal:20c6b8cd02c18fac2d5cd5e5b264dc519c03a76ace7465e2dfb39d3650f3995d  waiting on your seal\n",
+   "reply": "[2] (babbage-passages.txt:639)\n〈TRIES TO RAISE THE DEVIL.〉\n\nFrom passage [2], it is stated that I tried to raise the devil. However, no further details are provided on how this attempt was made.",
+   "served": [
+    {
+     "where": "babbage-passages.txt:475",
+     "id": "7b6e6a6c3aa3fb0563bdbec944c44f229bb886b3bc9dbcd551cd762755906e4c"
+    },
+    {
+     "where": "babbage-passages.txt:639",
+     "id": "0472222d1427d8e5647a5bfee67b6019092c6556a468f5397c07f58487ef9bf0"
+    },
+    {
+     "where": "babbage-passages.txt:623",
+     "id": "00cc342c994307c7a51f2a88066f9d36997f2e0593ca381cdd696c8b87bfb94d"
+    }
+   ],
+   "cites": [
+    "0472222d1427d8e5647a5bfee67b6019092c6556a468f5397c07f58487ef9bf0"
+   ]
+  },
+  {
+   "id": "R4",
+   "asked": "did Lovecraft's Cthulhu ever appear in the Necronomicon",
+   "exit": 42,
+   "stdout": "nothing in your folder holds that; no model was asked\n",
+   "reply": "nothing in your folder holds that; no model was asked",
+   "served": [],
+   "cites": []
+  }
+ ],
+ "rules": {
+  "served": {
+   "ok": true,
+   "why": []
+  },
+  "cited": {
+   "ok": false,
+   "why": [
+    "R1: exit 0, cites 1",
+    "R3: exit 0, cites 1"
+   ]
+  },
+  "says": {
+   "ok": false,
+   "why": [
+    "R3: none of ['circle', 'blood', 'prayer', 'backwards']"
+   ]
+  },
+  "unsealed": {
+   "ok": true,
+   "why": []
+  },
+  "verify": {
+   "ok": true,
+   "why": []
+  }
+ },
+ "note": "Not pre-registered: Qwen2.5-3B-Instruct (Q4_K_M, sha256 626b4a6678b86442240e33df819e00132d3ba7dddfe1cdc4fbb18e0a9615c62d) was not named in freeze 1. Same questions, voices and rules, run after run 1 for comparison. Passages from the books kept by place and id, never their text."
+}

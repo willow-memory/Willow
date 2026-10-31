@@ -1,0 +1,18 @@
+[
+ {
+  "id": "babbage-passages",
+  "title": "Charles Babbage, Passages from the Life of a Philosopher (1864), Project Gutenberg #57532, plain text",
+  "url": "https://www.gutenberg.org/cache/epub/57532/pg57532.txt",
+  "fetched": "2026-10-31",
+  "kind": "text",
+  "bytes_sha256": "290061b3a888380a24fa2ad22221f6a7834aada3bec4a4c93f93bb37ada6e411"
+ },
+ {
+  "id": "lovelace-sketch",
+  "title": "L. F. Menabrea, Sketch of the Analytical Engine invented by Charles Babbage, translated with Notes by Ada Augusta, Countess of Lovelace (1843), Project Gutenberg #75107, HTML",
+  "url": "https://www.gutenberg.org/cache/epub/75107/pg75107-images.html",
+  "fetched": "2026-10-31",
+  "kind": "html",
+  "bytes_sha256": "922b0379ec68106da86d551a5cf1e873fc4b01fe3a00b62f25ea98f4a2581727"
+ }
+]

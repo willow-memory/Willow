@@ -1332,16 +1332,6 @@
   "tags": "no-install, this-machine, read-only, interface"
  },
  {
-  "name": "openai-compatible",
-  "kind": "stdlib",
-  "section": "Assistants",
-  "line": "Suggestions from any OpenAI-compatible endpoint you choose (LM Studio, vLLM, LocalAI, SGLang, Docker Model Runner, OpenRouter, Groq, Mistral), citing your passages.",
-  "source": "new",
-  "writes": "record",
-  "network": "the endpoint you configure, to ask for suggestions",
-  "tags": "no-install, online, records, assistant"
- },
- {
   "name": "opentimestamps",
   "kind": "stdlib",
   "section": "Trust and proof",
@@ -1799,16 +1789,6 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, interface"
- },
- {
-  "name": "shell-history",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Your bash, zsh and fish history: what you ran, and when the shell recorded it.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
  },
  {
   "name": "sigmap",
