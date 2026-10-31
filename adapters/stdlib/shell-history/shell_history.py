@@ -40,6 +40,7 @@ import re
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import Optional, Tuple
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 import kernel  # noqa: E402
@@ -51,7 +52,7 @@ FISH_CMD = re.compile(r"^- cmd: ?(.*)$")
 FISH_WHEN = re.compile(r"^  when: *(\d+)$")
 META = 0x83  # zsh writes a byte it keeps for itself as META, then the byte ^ 32
 
-Command = tuple[int | None, str]  # when the shell recorded it, the command
+Command = Tuple[Optional[int], str]  # when the shell recorded it, the command
 
 
 def shell_of(name: str) -> str | None:
