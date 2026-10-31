@@ -9,8 +9,6 @@ import subprocess
 import sys
 from pathlib import Path
 
-import pytest
-
 HERE = Path(__file__).resolve().parent
 KERNEL = HERE.parents[2] / "kernel.py"
 spec = importlib.util.spec_from_file_location("amounts", HERE / "amounts.py")
@@ -125,9 +123,9 @@ def test_a_bad_command_line_and_a_folder_that_is_no_box_are_refused(tmp_path):
     assert got.returncode == 2 and "not a kernel box" in got.stderr
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason="bug #93: amounts drops a scale word, so $5 billion and $5 million both print as $5",
-)
 def test_a_scale_word_is_kept_with_its_sum_or_the_sum_is_refused():
-    assert "$5" not in am.sums("a $5 billion loan, and $5 million in fees")
+    assert am.sums("a $5 billion loan, and $5 million in fees") == [
+        "$5 billion",
+        "$5 million",
+    ]
+    assert am.sums("raised EUR 10m and spent £250k") == ["EUR 10m", "£250k"]

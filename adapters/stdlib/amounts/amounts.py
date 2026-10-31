@@ -10,10 +10,10 @@ Every line of your folder that writes a sum with its currency, oldest first:
 
 A sum is a number written with its currency: a symbol before it ($20,
 £1,840.00, € 45, US$9.50), a code before it (EUR 100), or a code or
-"lei" after it (45.50 USD, 200 lei). The number may group thousands with
-commas and give pence after a dot. A number written any other way is not
-read at all, rather than guessed: 100,00 and 1.995 name no sum here, and a
-bare number is never money.
+"lei" after it (45.50 USD, 200 lei). A scale word after it is kept ($5
+billion). The number may group thousands with commas and give pence after a
+dot. A number written any other way is not read at all, rather than guessed:
+100,00 and 1.995 name no sum here, and a bare number is never money.
 
 A line's date is the latest it says, read as the kernel reads one (its
 `newest`: 11/03/2026, either way round, is never guessed). A line that says
@@ -48,6 +48,7 @@ MONEY = re.compile(
     rf"|\b(?P<before>[A-Z]{{3}}) ?{NUMBER}"
     rf"|(?<![\w.,]){NUMBER} ?(?P<after>[A-Za-z]{{3}})\b"
 )
+SCALE = re.compile(r" ?(?:thousand|million|billion|trillion|k|m|bn|b)\b", re.I)
 
 
 def sums(line: str) -> list[str]:
@@ -61,7 +62,8 @@ def sums(line: str) -> list[str]:
         after = m.group("after")
         if after and after.upper() not in CODES and after.lower() != "lei":
             continue
-        out.append(m.group())
+        scale = SCALE.match(line, m.end())
+        out.append(m.group() + (scale.group() if scale else ""))
     return out
 
 
