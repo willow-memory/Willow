@@ -1,0 +1,176 @@
+{
+ "model": "gemma-3-4b-it",
+ "url": "http://127.0.0.1:8090/v1",
+ "nonsense": false,
+ "asked": [
+  {
+   "id": "F1",
+   "asked": "what was the secret in the biscochitos",
+   "exit": 0,
+   "stdout": "Ay, mi Marisol, [2] Rosa said they weren’t quite right. [3] Tía Rosa says there was something else, and Grandma just winked! [1]\npass  proposal:e5b3d5923964176665da533db054caab525c04225b8f298fb3359c32ed8ae086  waiting on your seal\n",
+   "reply": "Ay, mi Marisol, [2] Rosa said they weren’t quite right. [3] Tía Rosa says there was something else, and Grandma just winked! [1]",
+   "served": [
+    {
+     "where": "computadora-de-femia/bash_history.txt:189",
+     "id": "742f67e12e0e705699315cd48533f87d55e5228bb7e3afe5043c2ef33684d26a",
+     "text": "2019-12-21 16:45:00 UTC  cd recetas\n2019-12-21 16:45:20 UTC  cat biscochitos.txt\n2019-12-21 16:45:40 UTC  echo \"biscochitos secret: un chorrito de vino dulce in the dough. no le digan a Rosa\" > secreto.txt\n2019-12-21 16:46:00 UTC  cat secreto.txt\n2019-12-21 16:46:20 UTC  rm secreto.txt\n2019-12-21 16:46:40 UTC  ls"
+    },
+    {
+     "where": "marisol/diario.txt:24",
+     "id": "94af07e200590a2c7a6c362c669f64966aa98825b8d6aef007010bdea709a860",
+     "text": "2025-12-20  Biscochitos from her card again. Rosa ate three and said not quite."
+    },
+    {
+     "where": "marisol/diario.txt:16",
+     "id": "3a0002813be7da709eae644f8dcd6c9143527a16dfeeaa40c66b7f84bb1a7deb",
+     "text": "2022-12-17  Tía Rosa says there was something else in Grandma's biscochitos, not on the card. Grandma only ever winked at her."
+    }
+   ],
+   "cites": [
+    "94af07e200590a2c7a6c362c669f64966aa98825b8d6aef007010bdea709a860",
+    "3a0002813be7da709eae644f8dcd6c9143527a16dfeeaa40c66b7f84bb1a7deb",
+    "742f67e12e0e705699315cd48533f87d55e5228bb7e3afe5043c2ef33684d26a"
+   ]
+  },
+  {
+   "id": "F2",
+   "asked": "why does the old computer beep at midnight on november 2",
+   "exit": 0,
+   "stdout": "[1] Bueno, it's supposed to be. Joaquín showed me cron and told the computer to beep at midnight on November 2 and say “prendan la vela,” so they remember to light the candle for me when I am gone.\npass  proposal:2235aae0b01bef7e59d867e4657b8290adfff583fa1c15535e50c770efcf6b0d  waiting on your seal\n",
+   "reply": "[1] Bueno, it's supposed to be. Joaquín showed me cron and told the computer to beep at midnight on November 2 and say “prendan la vela,” so they remember to light the candle for me when I am gone.",
+   "served": [
+    {
+     "where": "computadora-de-femia/notas/computadora.txt:9",
+     "id": "e635a24b54a370f07311670893f5ecc316605cdb8d0dbcf827922a72c3c84b73",
+     "text": "2010-10-30  Joaquín showed me cron. I told the computer to beep at midnight on November 2 and say prendan la vela, so they remember to light the candle for me when I am gone. He said Grandma, that's spooky. Bueno, it's supposed to be."
+    },
+    {
+     "where": "marisol/diario.txt:12",
+     "id": "d1a0a160c9d2909fa7461e94d124dde36f15c490abb80b97555caca7dd749a93",
+     "text": "2022-11-02  Midnight. The old computer beeped by itself and the screen said Prendan la vela. Aquí estoy. Nobody touched it. I lit the candle."
+    }
+   ],
+   "cites": [
+    "e635a24b54a370f07311670893f5ecc316605cdb8d0dbcf827922a72c3c84b73"
+   ]
+  },
+  {
+   "id": "F3",
+   "asked": "where did she hide the deed to the land",
+   "exit": 42,
+   "stdout": "nothing in your folder holds that; no model was asked\n",
+   "reply": "nothing in your folder holds that; no model was asked",
+   "served": [],
+   "cites": []
+  },
+  {
+   "id": "R1",
+   "asked": "what was the ghost club",
+   "exit": 0,
+   "stdout": "The Ghost Club was formed at one time [3]. We resolved ourselves into it, and proceeded to collect evidence and entered into a considerable correspondence upon the subject [3].\npass  proposal:05e802b4e96ceb459d324712df1f7084607de4a3f477373d49640d8169d3a2c2  waiting on your seal\n",
+   "reply": "The Ghost Club was formed at one time [3]. We resolved ourselves into it, and proceeded to collect evidence and entered into a considerable correspondence upon the subject [3].",
+   "served": [
+    {
+     "where": "babbage-passages.txt:1040",
+     "id": "3c1c4c0928863783446780da129175859d38eb346cb6f328c5d4741f8c0855bc"
+    },
+    {
+     "where": "babbage-passages.txt:1361",
+     "id": "4776e72e88dfcc6ffba27919f83069e3c05b22ee9015423e661129b4cd8c55b2"
+    },
+    {
+     "where": "babbage-passages.txt:1363",
+     "id": "e8de7c74e12d8d4f85e43a748f5d759bd2432d357aa0cab48618179d9b32d4bc"
+    }
+   ],
+   "cites": [
+    "e8de7c74e12d8d4f85e43a748f5d759bd2432d357aa0cab48618179d9b32d4bc"
+   ]
+  },
+  {
+   "id": "R2",
+   "asked": "can the analytical engine originate anything",
+   "exit": 0,
+   "stdout": "The Analytical Engine has no pretensions whatever to originate anything. It can do whatever we know how to order it to perform [1].\npass  proposal:6cb76eabf32c2bb8c0c5fb701e10a4e9ed0fdba459afa53b2eddbb76f3b027f2  waiting on your seal\n",
+   "reply": "The Analytical Engine has no pretensions whatever to originate anything. It can do whatever we know how to order it to perform [1].",
+   "served": [
+    {
+     "where": "lovelace-sketch.txt:4384",
+     "id": "69a740c40217a32f88991114ab443ebf71a12dc9d19b54c7b2517b2cd6432a14"
+    },
+    {
+     "where": "lovelace-sketch.txt:625",
+     "id": "a2911166fa057ef9042957824bf9ae93afb7e3a6d53d78ac9cf2d2ebcee30582"
+    },
+    {
+     "where": "babbage-passages.txt:121",
+     "id": "7a2dd29a4f41d2f384c59420eddd385e8010e4fae60c834f6f016868660b734b"
+    }
+   ],
+   "cites": [
+    "69a740c40217a32f88991114ab443ebf71a12dc9d19b54c7b2517b2cd6432a14"
+   ]
+  },
+  {
+   "id": "R3",
+   "asked": "how did he try to raise the devil",
+   "exit": 0,
+   "stdout": "[2]〈TRIES TO RAISE THE DEVIL.〉\npass  proposal:0634a2b27be2bbdfeddbe7c57bedc25d02290eec998966aab1c2e4bdb7fce0be  waiting on your seal\n",
+   "reply": "[2]〈TRIES TO RAISE THE DEVIL.〉",
+   "served": [
+    {
+     "where": "babbage-passages.txt:475",
+     "id": "7b6e6a6c3aa3fb0563bdbec944c44f229bb886b3bc9dbcd551cd762755906e4c"
+    },
+    {
+     "where": "babbage-passages.txt:639",
+     "id": "0472222d1427d8e5647a5bfee67b6019092c6556a468f5397c07f58487ef9bf0"
+    },
+    {
+     "where": "babbage-passages.txt:623",
+     "id": "00cc342c994307c7a51f2a88066f9d36997f2e0593ca381cdd696c8b87bfb94d"
+    }
+   ],
+   "cites": [
+    "0472222d1427d8e5647a5bfee67b6019092c6556a468f5397c07f58487ef9bf0"
+   ]
+  },
+  {
+   "id": "R4",
+   "asked": "did Lovecraft's Cthulhu ever appear in the Necronomicon",
+   "exit": 42,
+   "stdout": "nothing in your folder holds that; no model was asked\n",
+   "reply": "nothing in your folder holds that; no model was asked",
+   "served": [],
+   "cites": []
+  }
+ ],
+ "rules": {
+  "served": {
+   "ok": true,
+   "why": []
+  },
+  "cited": {
+   "ok": false,
+   "why": [
+    "R3: exit 0, cites 1"
+   ]
+  },
+  "says": {
+   "ok": false,
+   "why": [
+    "F1: none of ['vino']",
+    "R3: none of ['circle', 'blood', 'prayer', 'backwards']"
+   ]
+  },
+  "unsealed": {
+   "ok": true,
+   "why": []
+  },
+  "verify": {
+   "ok": true,
+   "why": []
+  }
+ },
+ "note": "Passages from the two books are kept by where they are and their id (the SHA-256 of the passage), never their text; fetch.py brings the books back. Femia's and Marisol's passages are fiction from make_life.py and kept whole."
+}

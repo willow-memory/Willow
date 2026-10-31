@@ -10,6 +10,14 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `demo/ofrenda`, a séance where the ghost can't lie: a local Gemma,
+  through `openai-compatible`, speaks for a made-up New Mexico abuela from
+  her old computer's files (her terminal history read by `shell-history`)
+  and for Babbage and Ada Lovelace from their own books. Frozen before it
+  was asked: the kernel served the right passage for every answerable
+  question and nothing for the silent ones; the 4B answered most from the
+  passages, cited; every guess the 1B made cited nothing and was proposed
+  to no one. Nothing was sealed.
 - `openai-compatible`, suggestions from a model at any OpenAI-compatible
   endpoint (llama.cpp's server, Ollama, LM Studio, vLLM, or a hosted one):
   `openai_compatible.py ask --box DIR --url URL --model NAME "question"`.

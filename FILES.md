@@ -1364,6 +1364,11 @@ willow/
 │   │   ├── make_life.py      Femia's old Dell and Marisol's diary, seeded, each file labelled fiction
 │   │   ├── run.py            asks each question through openai-compatible and writes each pass rule as a kernel verdict row
 │   │   ├── test_ofrenda.py   holds the frozen files to their hashes, and her files to what was planted
+│   │   ├── results/
+│   │   │   ├── run-1-gemma-3-4b-it.json   run 1 with the primary model: every reply, passage served and cite
+│   │   │   ├── run-1-gemma-3-1b-it.json   the same with the 1B, every guess caught
+│   │   │   ├── record-gemma-3-4b-it.jsonl the verdict box's record for the 4B, without its key
+│   │   │   └── record-gemma-3-1b-it.jsonl the same for the 1B
 │   │   └── voices/
 │   │       ├── femia.md      the abuela's voice, put before the rule, never in place of it
 │   │       ├── babbage.md    Babbage's
