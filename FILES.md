@@ -68,6 +68,10 @@ willow/
 │   │   │   ├── again.py      the questions you keep asking, counted from the record
 │   │   │   ├── test_again.py
 │   │   │   └── README.md
+│   │   ├── agent-transcript/
+│   │   │   ├── agent_transcript.py  Claude Code, Cursor and other session files as numbered spoken turns
+│   │   │   ├── test_agent_transcript.py
+│   │   │   └── README.md
 │   │   ├── agents-md-check/
 │   │   │   ├── agents_md_check.py   the commands and paths AGENTS.md or CLAUDE.md name that the repo no longer has
 │   │   │   ├── test_agents_md_check.py
@@ -221,6 +225,10 @@ willow/
 │   │   │   ├── code_comments.py   a source file's comments on the lines they were on
 │   │   │   ├── test_code_comments.py
 │   │   │   └── README.md
+│   │   ├── codebase-memory/
+│   │   │   ├── codebase_memory.py  a code-graph SQLite file: each function, what it calls, its file and line
+│   │   │   ├── test_codebase_memory.py
+│   │   │   └── README.md
 │   │   ├── codeowners/
 │   │   │   ├── codeowners.py   who owns a file: the CODEOWNERS rule that matches it, cited by line, on GitHub, GitLab and Forgejo
 │   │   │   ├── test_codeowners.py
@@ -240,6 +248,10 @@ willow/
 │   │   ├── copilot/
 │   │   │   ├── copilot.py        the mcp.json lines that register mcp-lite with Copilot, in VS Code and its CLI
 │   │   │   ├── test_copilot.py
+│   │   │   └── README.md
+│   │   ├── corpus-lens/
+│   │   │   ├── corpus_lens.py  corpus-lens process reports: where intent arrives, who writes the code
+│   │   │   ├── test_corpus_lens.py
 │   │   │   └── README.md
 │   │   ├── cursor/
 │   │   │   ├── cursor.py         the mcp.json lines that register mcp-lite with Cursor
@@ -305,9 +317,17 @@ willow/
 │   │   │   ├── first_mention.py  when the files first mention something: the earliest dated line that holds every word
 │   │   │   ├── test_first_mention.py
 │   │   │   └── README.md
+│   │   ├── fixity/
+│   │   │   ├── fixity.py     files hashed again now and then; a hash that moved with no newer mtime is rot
+│   │   │   ├── test_fixity.py
+│   │   │   └── README.md
 │   │   ├── foia/
 │   │   │   ├── foia.py   requests sent, answers and when they are due by law
 │   │   │   ├── test_foia.py
+│   │   │   └── README.md
+│   │   ├── format-rot/
+│   │   │   ├── format_rot.py  files in formats that may stop opening, flagged while you can still convert them
+│   │   │   ├── test_format_rot.py
 │   │   │   └── README.md
 │   │   ├── fuzzy-dates/
 │   │   │   ├── fuzzy_dates.py  dates that admit doubt, read with the doubt kept, in EDTF
@@ -328,6 +348,10 @@ willow/
 │   │   ├── gh-json/
 │   │   │   ├── gh_json.py   gh --json output as dated lines
 │   │   │   ├── test_gh_json.py
+│   │   │   └── README.md
+│   │   ├── git-history/
+│   │   │   ├── git_history.py  commit messages and diffs as a dated pile, git called not linked
+│   │   │   ├── test_git_history.py
 │   │   │   └── README.md
 │   │   ├── github/
 │   │   │   ├── github.py     what the repo needs from GitHub: a security report's comment, .github/ held to the repo
@@ -603,6 +627,10 @@ willow/
 │   │   │   ├── nicknames.py   the names you call people, found beside a family word in your files, as a words list
 │   │   │   ├── test_nicknames.py
 │   │   │   └── README.md
+│   │   ├── nestor/
+│   │   │   ├── nestor.py     answers a person has checked in Nestor, from a copy of its store
+│   │   │   ├── test_nestor.py
+│   │   │   └── README.md
 │   │   ├── notes/
 │   │   │   ├── notes.py      Obsidian and Logseq vaults, links and backlinks kept
 │   │   │   ├── test_notes.py
@@ -654,6 +682,10 @@ willow/
 │   │   ├── people/
 │   │   │   ├── people.py     everyone the files name, by what they do with a name, and each one's every mention
 │   │   │   ├── test_people.py
+│   │   │   └── README.md
+│   │   ├── persona-card/
+│   │   │   ├── persona_card.py  a persona card compiled to the same prompt bytes; the hash on the record
+│   │   │   ├── test_persona_card.py
 │   │   │   └── README.md
 │   │   ├── pets/
 │   │   │   ├── pets.py   each pet's care and what's due
@@ -779,6 +811,10 @@ willow/
 │   │   │   ├── restack.py    your branches back on top of main, the repo's own conflicts settled
 │   │   │   ├── test_restack.py
 │   │   │   └── README.md
+│   │   ├── restore-drill/
+│   │   │   ├── restore_drill.py  a backup zip restored into scratch; the chain and every file checked there
+│   │   │   ├── test_restore_drill.py
+│   │   │   └── README.md
 │   │   ├── risky-code/
 │   │   │   ├── risky_code.py  lines of code matching a known-dangerous pattern, by file and line, as leads to read
 │   │   │   ├── test_risky_code.py
@@ -826,6 +862,10 @@ willow/
 │   │   ├── serve/
 │   │   │   ├── serve.py       the one markdown file a model reads: only a human-sealed scope, pooled, peaks first, by unguessable ids
 │   │   │   ├── test_serve.py
+│   │   │   └── README.md
+│   │   ├── session-cost/
+│   │   │   ├── session_cost.py  tokens each agent session spent, by day and by repo, priced from a table you keep
+│   │   │   ├── test_session_cost.py
 │   │   │   └── README.md
 │   │   ├── session-seal/
 │   │   │   ├── session_seal.py one seal over a session's rows, proposed through the kernel
@@ -908,6 +948,10 @@ willow/
 │   │   ├── test-shards/
 │   │   │   ├── shards.py     splits the test run into parts by each test's past time
 │   │   │   ├── test_shards.py
+│   │   │   └── README.md
+│   │   ├── three-two-one/
+│   │   │   ├── three_two_one.py  how many verified copies of the record exist, held to three, two kinds, one away
+│   │   │   ├── test_three_two_one.py
 │   │   │   └── README.md
 │   │   ├── timeline/
 │   │   │   ├── timeline.py   one matter's lines by date, each cited, written to one file
