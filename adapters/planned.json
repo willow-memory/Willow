@@ -1,15 +1,5 @@
 [
  {
-  "name": "agent-transcript",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Claude Code, Codex, Gemini CLI, Cursor and Copilot session files as plain text, each turn numbered, so you can ask what an agent was told.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "anki",
   "kind": "stdlib",
   "section": "Ways to use it",
@@ -254,16 +244,6 @@
   "tags": "needs-install, offline, read-only, maintainers"
  },
  {
-  "name": "codebase-memory",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "codebase-memory-mcp's code graph, read from a copy of its SQLite file: each function, what calls it, and its file and line.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "compiled",
   "kind": "deps",
   "section": "For maintainers",
@@ -323,16 +303,6 @@
   "writes": "nothing",
   "network": "GitHub, through gh, with your own login",
   "tags": "no-install, online, read-only, maintainers"
- },
- {
-  "name": "corpus-lens",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "corpus-lens's process reports on your own sessions with agents, as passages: where your intent arrives, who writes the code.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
  },
  {
   "name": "crates",
@@ -479,16 +449,6 @@
   "tags": "no-install, offline, records, trust"
  },
  {
-  "name": "fixity",
-  "kind": "stdlib",
-  "section": "Trust and proof",
-  "line": "Your folder's files hashed again now and then, the hashes kept on the record, and a file that changed with no edit of yours flagged as rot.",
-  "source": "new",
-  "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, trust"
- },
- {
   "name": "flashcards",
   "kind": "stdlib",
   "section": "Keeping track",
@@ -559,16 +519,6 @@
   "tags": "no-install, offline, records, privacy"
  },
  {
-  "name": "format-rot",
-  "kind": "stdlib",
-  "section": "Trust and proof",
-  "line": "Files in formats that may stop opening (old office files, proprietary ones, those no reader handles) flagged while you can still convert them.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, trust"
- },
- {
   "name": "front-page",
   "kind": "stdlib",
   "section": "Play",
@@ -607,17 +557,6 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, tracking"
- },
- {
-  "name": "git-history",
-  "kind": "deps",
-  "section": "Reading more kinds of files",
-  "line": "Commit messages and diffs as a dated pile: \"when did we change the retry limit?\"",
-  "source": "new",
-  "needs": "the git program; GPL, called not linked",
-  "writes": "to",
-  "network": "none",
-  "tags": "needs-install, offline, writes-output, file-reader"
  },
  {
   "name": "git-notes",
@@ -1302,16 +1241,6 @@
   "tags": "no-install, offline, read-only, search"
  },
  {
-  "name": "nestor",
-  "kind": "stdlib",
-  "section": "Trust and proof",
-  "line": "Answers Nestor records a person has checked, read from a copy of its SQLite store, each citing who checked it and when.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, trust"
- },
- {
   "name": "night-batch",
   "kind": "deps",
   "section": "Assistants",
@@ -1462,16 +1391,6 @@
   "writes": "to",
   "network": "none",
   "tags": "no-install, offline, writes-output, file-reader"
- },
- {
-  "name": "persona-card",
-  "kind": "stdlib",
-  "section": "Assistants",
-  "line": "A persona written as a card and compiled into the same system-prompt bytes every time, with the prompt's hash on the record.",
-  "source": "box",
-  "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, assistant"
  },
  {
   "name": "plain-language",
@@ -1711,16 +1630,6 @@
   "tags": "needs-install, online, read-only, search"
  },
  {
-  "name": "restore-drill",
-  "kind": "stdlib",
-  "section": "Trust and proof",
-  "line": "A backup zip restored into scratch and verified there, chain and every file, so you know it restores before the day you need it.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, trust"
- },
- {
   "name": "retire",
   "kind": "stdlib",
   "section": "Trust and proof",
@@ -1870,16 +1779,6 @@
   "writes": "record, to",
   "network": "none",
   "tags": "no-install, offline, writes-output, trust, assistant"
- },
- {
-  "name": "session-cost",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "Tokens each agent session spent, by day and by repo, summed from its own session files and priced from a table you keep.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
  },
  {
   "name": "share",
@@ -2141,16 +2040,6 @@
   "kind": "stdlib",
   "section": "Trust and proof",
   "line": "A thesis's claims, each tied to the source that backs it, and a list of the ones with none.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, trust"
- },
- {
-  "name": "three-two-one",
-  "kind": "stdlib",
-  "section": "Trust and proof",
-  "line": "How many verified copies of your record exist and where, held to three copies, on two kinds of storage, one away from home.",
   "source": "new",
   "writes": "nothing",
   "network": "none",

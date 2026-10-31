@@ -73,6 +73,18 @@ def _png() -> bytes:
             + chunk(b"tEXt", b"Author\0Ana") + chunk(b"IDAT", zlib.compress(b"\0\xff\0\0")) + chunk(b"IEND", b""))  # fmt: skip
 
 
+def _sqlite(script: str) -> bytes:
+    import sqlite3
+    import tempfile
+
+    path = Path(tempfile.mkdtemp()) / "t.db"
+    con = sqlite3.connect(path)
+    con.executescript(script)
+    con.commit()
+    con.close()
+    return path.read_bytes()
+
+
 def _tar(files: dict[str, str]) -> bytes:
     import io
     import tarfile
@@ -92,6 +104,27 @@ PILE_EXTRA: dict[str, dict[str, bytes]] = {"scrub": {"photo.png": _png()}}
 
 #: one small readable file per reader, by the name it is written under
 READERS: dict[str, tuple[str, dict[str, bytes]]] = {
+    "agent-transcript": ("agent_transcript.py", {"sess.jsonl": (
+        b'{"type":"user","sessionId":"s1","origin":{"kind":"human"},'
+        b'"message":{"role":"user","content":"When is the dentist?"}}\n'
+        b'{"type":"assistant","sessionId":"s1","message":{"role":"assistant",'
+        b'"content":[{"type":"text","text":"Tuesday at 3."}]}}\n')}),
+    "corpus-lens": ("corpus_lens.py", {"report.md": (
+        b"# corpuslens report\n\n"
+        b"- **steering_density** - 70.0% of your prompt turns arrive mid-task.\n"
+        b"- **composition_mix** - You authored code in 0.0% of your prompts.\n")}),
+    "codebase-memory": ("codebase_memory.py", {"graph.db": _sqlite(
+        "CREATE TABLE symbols (fqn TEXT, name TEXT, kind TEXT, file_path TEXT, "
+        "start_line INTEGER);\n"
+        "CREATE TABLE edges (source_fqn TEXT, target_fqn TEXT, edge_type TEXT);\n"
+        "INSERT INTO symbols VALUES ('mod.run','run','function','mod.py',10);\n"
+    )}),
+    "nestor": ("nestor.py", {"nestor.db": _sqlite(
+        "CREATE TABLE tm_pairs (source_text TEXT, verifier TEXT, status TEXT, "
+        "created_at TEXT);\n"
+        "INSERT INTO tm_pairs VALUES ('tomatoes want sun','ada','sealed',"
+        "'2026-10-01');\n"
+    )}),
     "almanac": ("almanac.py", {"catalog.json": (
         '{"name": "Made-Up Almanac", "entries": [{"id": "tide-gauge-records", '
         '"title": "Tide Gauge Records", "source": {"canonical_url": '
@@ -510,6 +543,13 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     **{f"words-{c}": (f"words_{c}.py", ["bite", "--box", "{box}", *NOW, "tomatoes"])
        for c in LANGUAGES},
     "backup": ("backup.py", ["--box", "{box}", "--to", "{tmp}/backups", *NOW]),
+    "fixity": ("fixity.py", ["--box", "{box}", *NOW]),
+    "format-rot": ("format_rot.py", ["--from", "{pile}"]),
+    "git-history": ("git_history.py", ["mirror", "--from", "{pile}", "--to", "{tmp}/gh"]),
+    "persona-card": ("persona_card.py", ["--box", "{box}", "--from", "{pile}/garden.md", *NOW]),
+    "restore-drill": ("restore_drill.py", ["--from", "{pile}/garden.md"]),
+    "session-cost": ("session_cost.py", ["--from", "{pile}"]),
+    "three-two-one": ("three_two_one.py", ["--box", "{box}"]),
     "bench": ("bench.py", ["run", "--sizes", "20,40"]),
     "hook-leaks": ("hook_leaks.py", ["check", "--from", "{pile}/garden.md"]),
     "hook-shell": ("hook_shell.py", ["split", "ls -la"]),
