@@ -1234,6 +1234,9 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- `agents-md-check` no longer reports a backticked owner/repo-shaped name as
+  a missing path when the same line says it is a repo, while still reporting
+  real missing file paths, fixing bug #102. (#119)
 - `said` no longer treats a sentence that starts with a common word or a
   bare pronoun, such as "If I said..." or "Someone said...", as a quote by a
   speaker with that name, fixing bug #101. (#118)
