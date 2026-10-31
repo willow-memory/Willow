@@ -438,15 +438,29 @@ def _day_month(a: str, b: str, y: str) -> str:
     return ""
 
 
+def _web_address(text: str, i: int) -> int:
+    """How many characters from `i` are an http(s) address, or 0."""
+    for scheme in ("http://", "https://"):
+        if text.startswith(scheme, i):
+            j = i + len(scheme)
+            while j < len(text) and not text[j].isspace():
+                j += 1
+            return j - i
+    return 0
+
+
 def newest(text: str) -> str:
     """The latest date written in `text`, as YYYYMMDD, or "" for none: an ISO
     date (2026-10-14), a compact one (20261014, a calendar's), or a day and a
     month either way round with a four-digit year (21/10/2026, 10.21.2026),
     read only when one part is over 12. Each a whole run of ASCII digits, never
-    part of a longer number. Read by hand, not by a regex, so a port reads the
-    same dates."""
+    part of a longer number, and not inside a web address. Read by hand, not
+    by a regex, so a port reads the same dates."""
     best, i = "", 0
     while i < len(text):
+        if url := _web_address(text, i):
+            i += url
+            continue
         n = _digits(text, i)
         if n == 0:
             i += 1
