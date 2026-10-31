@@ -15,5 +15,4 @@ one takes, is in [CONTRIBUTING.md](CONTRIBUTING.md).
 | #94 | stack counts an add-on's 42 for none found as a flagged step | `adapters/stdlib/stack/test_stack.py::test_a_step_that_found_nothing_is_not_flagged` |
 | #95 | a date inside a web address dates the line around it | `test_kernel.py::test_a_date_inside_a_web_address_dates_nothing` |
 | #96 | propose exits 0 when every suggestion is refused | `test_kernel.py::test_a_propose_whose_every_suggestion_is_refused_does_not_exit_0` |
-| #102 | a GitHub owner/repo the line calls a repo is reported as a missing path | `adapters/stdlib/agents-md-check/test_agents_md_check.py::test_a_name_the_line_calls_a_repo_is_not_a_missing_path` |
 | #112 | ligatures come through as glyph names, so /f_inancing is never found as financing | `adapters/deps/pdf/test_pdf.py::test_a_ligature_is_written_as_its_letters_not_its_glyph_name` |

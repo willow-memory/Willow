@@ -72,6 +72,7 @@ EXT = re.compile(
 )
 NOT_THIS_REPO = re.compile(r"[<>{}*$|\;&=]|\.\.\.|^(?:[A-Za-z][\w+.-]*:|~|/|#)")
 PLACEHOLDER = re.compile(r"^[A-Z][A-Z0-9_-]*(?:/|$)")
+REPO_WORD = re.compile(r"\brepo(?:sitory|s)?\b", re.I)
 
 
 def candidate(token: str) -> str | None:
@@ -85,6 +86,13 @@ def candidate(token: str) -> str | None:
     if re.fullmatch(r"\d+(?:\.\d+)+", token) or token.endswith(("i.e", "e.g")):
         return None
     return token
+
+
+def named_as_repo(token: str, line: str) -> bool:
+    """A two-part owner/repo name is not a path when the line says it is a repo."""
+    return (
+        token.count("/") == 1 and not EXT.search(token) and bool(REPO_WORD.search(line))
+    )
 
 
 def exists(root: Path, here: Path, rel: str) -> bool:
@@ -178,6 +186,8 @@ def check_text(text: str, root: Path, here: Path):
                     candidate(thing) if kind != "import" else candidate(thing) or thing
                 )
                 if rel is None:
+                    continue
+                if named_as_repo(rel, line):
                     continue
                 missing = not exists(root, here, rel)
                 why = (

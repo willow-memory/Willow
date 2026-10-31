@@ -9,8 +9,6 @@ import subprocess
 import sys
 from pathlib import Path
 
-import pytest
-
 HERE = Path(__file__).resolve().parent
 SCRIPT = HERE / "agents_md_check.py"
 KERNEL = HERE.parents[2] / "kernel.py"
@@ -163,10 +161,6 @@ def test_a_runner_given_by_its_path_is_still_a_runner(tmp_path):
     ]
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason="bug #102: a GitHub owner/repo the line calls a repo is reported as a missing path",
-)
 def test_a_name_the_line_calls_a_repo_is_not_a_missing_path(tmp_path):
     r = repo(
         tmp_path,
@@ -174,3 +168,10 @@ def test_a_name_the_line_calls_a_repo_is_not_a_missing_path(tmp_path):
     )
     got = run("--from", str(r))
     assert got.returncode == 0, got.stdout
+
+
+def test_a_real_missing_path_is_still_reported_when_the_line_says_repo(tmp_path):
+    r = repo(tmp_path, {"AGENTS.md": "This repo still needs `src/gone.py`.\n"})
+    got = run("--from", str(r))
+    assert got.returncode == 42
+    assert lines(got) == ["AGENTS.md:1 src/gone.py path: no such file"]
