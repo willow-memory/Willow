@@ -10,6 +10,13 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `capture`, a note written into your folder in one line:
+  `capture.py --to DIR --type idea --tags garden,veg "the note"` writes one
+  file holding one paragraph, the note then its `type:` and `tags:` lines, so
+  `bite` finds it by any of them. A missing folder or a box is refused, not
+  made or written, a note too long for one passage is refused, and the file is
+  created exclusively, so two captures never overwrite each other. Its card
+  keeps the promise `writes: to`.
 - Six ideas added to `adapters/planned.json` from an audit of the SAFE App
   Store against willow, each checked with `similar near` first:
   `weakest-link` (inputs marked measured, fitted or assumed, the result worth
