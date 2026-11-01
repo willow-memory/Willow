@@ -1413,16 +1413,6 @@
   "tags": "no-install, online, read-only, interface"
  },
  {
-  "name": "predict",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "Write down what you'll do next before you do it, and grade it after; the record counts how often you were right.",
-  "source": "bot",
-  "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, tracking"
- },
- {
   "name": "predictions",
   "kind": "stdlib",
   "section": "Play",
