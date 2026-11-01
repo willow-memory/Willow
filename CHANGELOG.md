@@ -16,7 +16,7 @@ says how). The first was v0.1.0.
   `predict` row, then bites and writes a `graded` row; `predict.py score`
   says how often each answer held. A tie goes to `empty`. Ported back from
   willow-bot's one script, whose rebuild on willow's pieces now leans on
-  serve, tip-pin and pile-rungs.
+  serve, tip-pin and pile-rungs. (#138)
 - `texts`, phone text messages and calls as one dated line per message:
   `texts.py mirror --from FOLDER --to MIRROR [--me NAME] [--tz ZONE]`.
   Reads an Android backup from SMS Backup & Restore (its messages, picture
