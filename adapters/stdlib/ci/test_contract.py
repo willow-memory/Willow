@@ -502,6 +502,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "vim": ("vim.py", ["--box", "{box}"]),
     "vscode": ("vscode.py", ["--box", "{box}"]),
     "live": ("live.py", ["list"]),
+    "weakest-link": ("weakest_link.py", ["--box", "{box}"]),
     "windsurf": ("windsurf.py", ["--box", "{box}"]),
     "zed": ("zed.py", ["--box", "{box}"]),
     "all": ("all.py", ["--box", "{box}", "tomatoes"]),
