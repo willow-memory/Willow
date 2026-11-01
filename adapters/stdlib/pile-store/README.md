@@ -1,6 +1,6 @@
 <!-- willow-addon
 section: Finding things
-line: Your folder's passages read once into one SQLite file, each repeat stored once, and opened read-only only while it still matches the folder, the limits and the kernel that read it, else built again.
+line: Your folder's passages kept in one file between questions, used only while the folder hasn't changed, so other add-ons don't re-read it every time.
 source: bot
 added: 2026-10-28
 writes: to

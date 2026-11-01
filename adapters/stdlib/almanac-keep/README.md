@@ -1,11 +1,11 @@
 <!-- willow-addon
-section: Keeping track
+section: Reading more kinds of files
 line: An Almanac entry's best permitted copy, from the publisher or its ranked recovery list, fetched into your folder with its SHA-256.
 source: new
 added: 2026-11-01
 writes: to
 network: the copy's address, fetched once
-tags: no-install, online, writes-output, tracking
+tags: no-install, online, writes-output, file-reader
 -->
 # almanac-keep
 

@@ -1,6 +1,6 @@
 <!-- willow-addon
 section: Finding things
-line: Each lookup says which rung answered, words, phrases or an embedder, and why a higher one was skipped, as data beside the passages.
+line: Tries the strict word match first, then your folder's phrases, and says which one found the answer and why the others didn't.
 source: bot
 added: 2026-10-28
 writes: nothing

@@ -1,6 +1,6 @@
 <!-- willow-addon
 section: Ways to use it
-line: An order held for you, with the passages it rests on and a check that they still stand; never carried out.
+line: Write down what you want done and the passages it rests on; it checks they still hold, and never does it for you.
 source: new
 added: 2026-10-30
 writes: to

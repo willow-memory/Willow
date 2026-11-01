@@ -1,6 +1,6 @@
 <!-- willow-addon
 section: Finding things
-line: The store built after each change, behind a lock, until it matches the folder, so your next question finds it warm.
+line: Rebuilds pile-store's saved passages after each change, one build at a time, so your next question doesn't wait for it.
 source: bot
 added: 2026-10-28
 writes: to

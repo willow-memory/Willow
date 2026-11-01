@@ -1,6 +1,6 @@
 <!-- willow-addon
 section: Finding things
-line: The passage size measured, not guessed: your box's own questions asked at several sizes, and the size that finds the most of their answers named.
+line: Finds the passage length that suits your folder, by asking your own answered questions at several lengths and naming the one that finds the most.
 source: bot
 added: 2026-10-28
 writes: nothing

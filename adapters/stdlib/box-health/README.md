@@ -1,6 +1,6 @@
 <!-- willow-addon
 section: Trust and proof
-line: A box's health in one line: files it can't read, readers out of date, and when the chain was last checked.
+line: Is your willow all right? One line: files it can't read, readers out of date, and when its record was last checked.
 source: new
 added: 2026-10-29
 writes: nothing

@@ -1,6 +1,6 @@
 <!-- willow-addon
 section: Finding things
-line: Rank a scan index by meaning, not just words: a question reaches code that shares its sense without sharing its words.
+line: Finds code by meaning, not just matching words, using scan's index: a question reaches code that says the same thing another way.
 source: new
 added: 2026-10-24
 needs: numpy; BSD-3-Clause

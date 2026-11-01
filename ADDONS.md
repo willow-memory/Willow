@@ -22,14 +22,14 @@ or `writes-output`; its section), and any the card's author adds or changes.
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
-| Reading more kinds of files | 71 | 35 | 98 | 8 |
-| Finding things | 31 | 14 | 35 | 10 |
+| Reading more kinds of files | 73 | 35 | 100 | 8 |
+| Finding things | 32 | 14 | 36 | 10 |
 | Your own words | 19 | 7 | 23 | 3 |
-| Keeping track | 45 | 16 | 61 | 0 |
+| Keeping track | 40 | 16 | 56 | 0 |
 | Trust and proof | 31 | 23 | 45 | 9 |
-| Privacy and safety | 12 | 3 | 15 | 0 |
-| Assistants | 29 | 43 | 61 | 11 |
-| Ways to use it | 23 | 18 | 37 | 4 |
+| Privacy and safety | 13 | 3 | 16 | 0 |
+| Assistants | 28 | 43 | 60 | 11 |
+| Ways to use it | 25 | 18 | 39 | 4 |
 | Play | 12 | 29 | 37 | 4 |
 | For maintainers | 19 | 25 | 39 | 5 |
 <!-- /willow:pools -->
@@ -70,7 +70,7 @@ its list: someone who speaks the language can add one without much Python.
 - 2026-11-01 · [**weakest-link**](adapters/stdlib/weakest-link/) — Each answer's inputs marked measured, fitted or assumed, and the result worth its weakest input, never an average.
 - 2026-11-01 · [**thesis**](adapters/stdlib/thesis/) — A thesis's claims, each tied to the source that backs it, and a list of the ones with none.
 - 2026-11-01 · [**sent-log**](adapters/stdlib/sent-log/) — Which of your passages went to which online model, read from the record by model card: what left this machine and where to.
-- 2026-11-01 · [**rules**](adapters/stdlib/rules/) — A game's or a house's rules, sealed section by section, so 'what does the rule say?' answers with the exact section.
+- 2026-11-01 · [**rules**](adapters/stdlib/rules/) — A game's or a house's rules, approved one section at a time, so asking what a rule says gives back that exact section, word for word.
 - 2026-11-01 · [**quotes**](adapters/stdlib/quotes/) — Every quote in a document checked against your files: as written, almost (and what it adds, drops or changes), or not there.
 <!-- /willow:newest -->
 
@@ -91,6 +91,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 
 - [**agent-transcript**](adapters/stdlib/agent-transcript/) — Claude Code, Codex, Gemini CLI, Cursor and Copilot session files as plain text, each turn numbered, so you can ask what an agent was told. *new* `no-install` `offline` `writes-output` `file-reader`
 - [**almanac**](adapters/stdlib/almanac/) — An Almanac's catalog.json (climate, health, civic and the rest): each public dataset's description and source as passages, with when its link was last checked. *new* `no-install` `offline` `writes-output` `file-reader`
+- [**almanac-keep**](adapters/stdlib/almanac-keep/) — An Almanac entry's best permitted copy, from the publisher or its ranked recovery list, fetched into your folder with its SHA-256. Goes online: the copy's address, fetched once. *new* `no-install` `online` `writes-output` `file-reader`
 - **apple-notes** (idea) — Apple Notes, read from a copy of its database: each note as plain text with its folder and dates. *new* `no-install` `offline` `writes-output` `file-reader`
 - **archivebox** (idea) — ArchiveBox snapshots: each saved page's text, with its URL and the date it was captured. *new* `no-install` `offline` `writes-output` `file-reader`
 - [**bank**](adapters/stdlib/bank/) — Bank CSV and OFX statements as dated lines, with spending by month. *new* `no-install` `offline` `writes-output` `file-reader`
@@ -153,6 +154,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - [**musicxml**](adapters/stdlib/musicxml/) — MusicXML scores: titles, lyrics, tempo and performance markings as passages. *new* `no-install` `offline` `writes-output` `file-reader`
 - [**notes**](adapters/stdlib/notes/) — Obsidian and Logseq vaults, with [[links]] and #tags kept and backlinks listed. *new* `no-install` `offline` `writes-output` `file-reader`
 - [**notion**](adapters/stdlib/notion/) — Notion's export zip, Markdown and CSV, as plain text with each page's title and path. *new* `no-install` `offline` `writes-output` `file-reader`
+- [**oakenscroll**](adapters/stdlib/oakenscroll/) — Oakenscroll's Office prediction ledger as dated passages you can ask: what you believed, how sure you were, and how it turned out. *new* `no-install` `offline` `writes-output` `file-reader`
 - [**ocr**](adapters/deps/ocr/) — Text out of photos of letters and scanned PDFs. Needs Pillow and pypdf, and the tesseract program, run not linked; MIT-CMU, BSD-3-Clause, Apache-2.0. *new* `needs-install` `offline` `writes-output` `file-reader`
 - [**office**](adapters/stdlib/office/) — .docx, .odt, .pptx, .xlsx and .ods, which are all zipped XML. *new* `no-install` `offline` `writes-output` `file-reader`
 - [**orders**](adapters/stdlib/orders/) — Amazon's order history and other shops' CSV exports: what you bought, when, and for how much. *new* `no-install` `offline` `writes-output` `file-reader`
@@ -210,22 +212,22 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - [**fair-merge**](adapters/stdlib/fair-merge/) — Each folder or repo ranked on its own and the lists merged in turns, so a large corpus can't push a small one out on volume alone, and a source that found nothing says so. *bot* `no-install` `offline` `read-only` `search` `pile`
 - [**first-mention**](adapters/stdlib/first-mention/) — When your files first mention something, and the line that does. *new* `no-install` `offline` `read-only` `search`
 - [**fuzzy-dates**](adapters/stdlib/fuzzy-dates/) — Dates that admit doubt ('about 1880', 'sometime in March') read and kept with their doubt, in EDTF. *new* `no-install` `offline` `read-only` `search`
-- [**index-cache**](adapters/stdlib/index-cache/) — The box's index kept between runs and checked against each file's hash, so a question doesn't re-read the folder unless the folder changed. *new* `no-install` `offline` `writes-output` `search` `index`
+- [**index-cache**](adapters/stdlib/index-cache/) — Keeps scan's index between runs and rebuilds it only when a file in your folder actually changed. *new* `no-install` `offline` `writes-output` `search` `index`
 - **kiwix** (idea) — An offline Wikipedia (or Stack Exchange, or Gutenberg) as a source after your own files, cited by article. Needs libzim, and a ZIM file you download; GPL-3.0. *new* `needs-install` `offline` `read-only` `search`
-- [**latent**](adapters/deps/latent/) — Rank a scan index by meaning, not just words: a question reaches code that shares its sense without sharing its words. Needs numpy; BSD-3-Clause. *new* `needs-install` `offline` `read-only` `search`
+- [**latent**](adapters/deps/latent/) — Finds code by meaning, not just matching words, using scan's index: a question reaches code that says the same thing another way. Needs numpy; BSD-3-Clause. *new* `needs-install` `offline` `read-only` `search`
 - **meaning** (idea) — Search by meaning: "who owes me money" finds "invoice outstanding". Needs sentence-transformers; Apache-2.0. Goes online: the model, downloaded once from Hugging Face. *new* `needs-install` `online` `writes-output` `search`
 - [**misquote**](adapters/stdlib/misquote/) — A quote that is almost in your files: the closest passage, and the words it adds, drops or changes, so a misquote shows as one. *new* `no-install` `offline` `read-only` `search`
 - [**month-first**](adapters/stdlib/month-first/) — For a folder you know writes dates month first: each one's ISO form written beside it, so it can be placed. *new* `no-install` `offline` `writes-output` `file-reader`
 - **my-lessons** (idea) — Your own lesson plans by grade, subject and standard: what did I teach on fractions last year? *new* `no-install` `offline` `read-only` `search`
 - [**on-this-day**](adapters/stdlib/on-this-day/) — What you wrote on this date in earlier years. *box* `no-install` `offline` `read-only` `search`
 - [**people**](adapters/stdlib/people/) — Everyone your files name, and every place each is mentioned. *new* `no-install` `offline` `read-only` `search`
-- [**pile-build**](adapters/stdlib/pile-build/) — The store built after each change, behind a lock, until it matches the folder, so your next question finds it warm. *bot* `no-install` `offline` `writes-output` `search` `pile`
-- [**pile-gold**](adapters/stdlib/pile-gold/) — Each answer you approve marks the passage that held it, so your own questions become a test of how well the search finds things, scored as recall at five. *box* `no-install` `offline` `records` `search` `pile`
-- [**pile-rank**](adapters/stdlib/pile-rank/) — Phrases as well as words: BM25F over each passage's words and the word pairs your files use together, title and question lines weighted, no model. *bot* `no-install` `offline` `read-only` `search` `pile`
-- [**pile-rungs**](adapters/stdlib/pile-rungs/) — Each lookup says which rung answered, words, phrases or an embedder, and why a higher one was skipped, as data beside the passages. *bot* `no-install` `offline` `read-only` `search` `pile`
-- [**pile-serve**](adapters/stdlib/pile-serve/) — The store held open by one process on this machine, over a Unix socket the way willow-bot's deterministic runner serves, so a hook's lookup takes milliseconds instead of a cold start. *bot* `no-install` `offline` `writes-output` `search` `pile`
-- [**pile-store**](adapters/stdlib/pile-store/) — Your folder's passages read once into one SQLite file, each repeat stored once, and opened read-only only while it still matches the folder, the limits and the kernel that read it, else built again. *bot* `no-install` `offline` `writes-output` `search` `pile`
-- [**pile-sweep**](adapters/stdlib/pile-sweep/) — The passage size measured, not guessed: your box's own questions asked at several sizes, and the size that finds the most of their answers named. *bot* `no-install` `offline` `read-only` `search` `pile`
+- [**pile-build**](adapters/stdlib/pile-build/) — Rebuilds pile-store's saved passages after each change, one build at a time, so your next question doesn't wait for it. *bot* `no-install` `offline` `writes-output` `search` `pile`
+- [**pile-gold**](adapters/stdlib/pile-gold/) — Your approved answers used as a test: each question asked again, scored by how often the search puts the passage that held it in its top five. *box* `no-install` `offline` `records` `search` `pile`
+- [**pile-rank**](adapters/stdlib/pile-rank/) — Finds passages that use your folder's own phrases ("sourdough bread"), not just the separate words, ranked without any AI model. *bot* `no-install` `offline` `read-only` `search` `pile`
+- [**pile-rungs**](adapters/stdlib/pile-rungs/) — Tries the strict word match first, then your folder's phrases, and says which one found the answer and why the others didn't. *bot* `no-install` `offline` `read-only` `search` `pile`
+- [**pile-serve**](adapters/stdlib/pile-serve/) — Keeps your folder's search ready in one background process on this machine, so a hook's lookup answers in milliseconds instead of seconds. *bot* `no-install` `offline` `writes-output` `search` `pile`
+- [**pile-store**](adapters/stdlib/pile-store/) — Your folder's passages kept in one file between questions, used only while the folder hasn't changed, so other add-ons don't re-read it every time. *bot* `no-install` `offline` `writes-output` `search` `pile`
+- [**pile-sweep**](adapters/stdlib/pile-sweep/) — Finds the passage length that suits your folder, by asking your own answered questions at several lengths and naming the one that finds the most. *bot* `no-install` `offline` `read-only` `search` `pile`
 - **promises** (idea) — What a candidate or a council said, by date and source, from the documents you saved. *new* `no-install` `offline` `read-only` `search`
 - [**quote-check**](adapters/stdlib/quote-check/) — Is this exact quote in my files, and where? For writers, journalists and students. *box* `no-install` `offline` `read-only` `search`
 - [**quotes**](adapters/stdlib/quotes/) — Every quote in a document checked against your files: as written, almost (and what it adds, drops or changes), or not there. *new* `no-install` `offline` `read-only` `search`
@@ -233,6 +235,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - [**record-sql**](adapters/deps/record-sql/) — SQL straight over your record, in place: 'how many answers did I approve in March?' Needs DuckDB; MIT. *box* `needs-install` `offline` `read-only` `search`
 - **rerank** (idea) — A small model on the CPU that reorders the top passages by reading the question and each passage together. Needs FlashRank; Apache-2.0. Goes online: the model, downloaded once. *new* `needs-install` `online` `read-only` `search`
 - [**ripgrep**](adapters/deps/ripgrep/) — Exact search through ripgrep, much faster on a big folder, its hits checked against the kernel's hashes. Needs the ripgrep program, from the ripgrep wheel on PyPI or your own rg; MIT or Unlicense. *new* `needs-install` `offline` `read-only` `search`
+- [**rules**](adapters/stdlib/rules/) — A game's or a house's rules, approved one section at a time, so asking what a rule says gives back that exact section, word for word. *bot* `no-install` `offline` `records` `search`
 - [**said**](adapters/stdlib/said/) — Your own quotes, gathered: every 'so-and-so, on this date: "..."' in your files, as a dated timeline of what was decided. *new* `no-install` `offline` `read-only` `search`
 - [**scan**](adapters/stdlib/scan/) — Index a big folder once, then ask it a list of questions in seconds, with the kernel's own answers: of everything, or only what changed since another index. *box* `no-install` `offline` `writes-output` `search` `index`
 - **standards** (idea) — Curriculum standards beside your lessons: which standard each lesson meets, each cited. *new* `no-install` `offline` `read-only` `search`
@@ -277,9 +280,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 
 ## Keeping track
 
-- [**across**](adapters/stdlib/across/) — One document across several boxes, not just one: each box's digest, export, timeline or readings, composed into one page, every line still cited by its box, file and line. *new* `no-install` `offline` `read-only` `tracking` `everyday`
 - [**again**](adapters/stdlib/again/) — Questions you keep asking: "asked 4 times; approve an answer?" *bot* `no-install` `offline` `read-only` `tracking`
-- [**almanac-keep**](adapters/stdlib/almanac-keep/) — An Almanac entry's best permitted copy, from the publisher or its ranked recovery list, fetched into your folder with its SHA-256. Goes online: the copy's address, fetched once. *new* `no-install` `online` `writes-output` `tracking`
 - **ask-later** (idea) — A question with no answer yet kept on a list, and asked again whenever a new file arrives. *new* `no-install` `offline` `records` `tracking`
 - [**attendance**](adapters/stdlib/attendance/) — Attendance for a class, club or group, from your register, by week. *new* `no-install` `offline` `read-only` `tracking`
 - [**baby-log**](adapters/stdlib/baby-log/) — Feeds, sleeps and nappies from your notes, by day: when was the last one? *new* `no-install` `offline` `read-only` `tracking`
@@ -316,19 +317,16 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**milestones**](adapters/stdlib/milestones/) — Your child's firsts, words and heights, from your notes, by age. *new* `no-install` `offline` `read-only` `tracking`
 - [**minutes**](adapters/stdlib/minutes/) — Meeting minutes: who decided what and when, and which actions are still open. *new* `no-install` `offline` `read-only` `tracking`
 - [**mood**](adapters/stdlib/mood/) — Mood scores you write in a journal, over weeks and months. *new* `no-install` `offline` `read-only` `tracking`
-- [**nightstand**](adapters/stdlib/nightstand/) — Set heavy things down, pick up one bite: at most one thing in hand, and nothing deleted. *new* `no-install` `offline` `records` `tracking`
-- [**oakenscroll**](adapters/stdlib/oakenscroll/) — Oakenscroll's Office calibration ledger: what you believed, how hard, and how it resolved, as dated passages. *new* `no-install` `offline` `writes-output` `tracking`
-- [**outdated**](adapters/stdlib/outdated/) — How old each locked dependency is, and which are yanked, deprecated or two years without a release, from a registry index you downloaded. *new* `no-install` `offline` `read-only` `tracking`
+- [**nightstand**](adapters/stdlib/nightstand/) — Set heavy things down at night and pick up just one small next step in the morning: at most one thing in hand, and nothing ever deleted. *new* `no-install` `offline` `records` `tracking`
 - [**pets**](adapters/stdlib/pets/) — Each pet's vet visits, vaccines and medicines, from your records: what's due next. *new* `no-install` `offline` `read-only` `tracking`
 - [**policy-watch**](adapters/stdlib/policy-watch/) — A terms or policy page fetched each time you run it, by snapshot, and what changed since last time, sentence by sentence, by clauses. Goes online: the page you name, fetched each time you run it. *new* `no-install` `online` `writes-output` `tracking` `policies`
 - [**predict**](adapters/stdlib/predict/) — Write down what a question will come to before you ask it, and grade it after; the record counts how often it was right. *bot* `no-install` `offline` `records` `tracking`
 - [**reading-log**](adapters/stdlib/reading-log/) — A child's reading log: books, pages and minutes, week by week. *new* `no-install` `offline` `read-only` `tracking`
-- [**readings**](adapters/stdlib/readings/) — Numbers over time and a date gone by, beside an answer. *box* `no-install` `offline` `records` `tracking`
+- [**readings**](adapters/stdlib/readings/) — Two hints beside an answer: a number in your files that moved a lot lately, and a date in a log that passed with nothing written since. *box* `no-install` `offline` `records` `tracking`
 - [**renewals**](adapters/stdlib/renewals/) — Passports, licences, insurance and memberships: when each expires, from your documents. *new* `no-install` `offline` `read-only` `tracking`
 - **rubric** (idea) — Marking against a rubric you wrote: each mark cites the criterion and the line of work it's for. *new* `no-install` `offline` `read-only` `tracking`
 - **school** (idea) — School letters and emails for parents: trips, forms due, term dates, and what to bring. *new* `no-install` `offline` `read-only` `tracking`
 - [**session-cost**](adapters/stdlib/session-cost/) — Tokens each agent session spent, by day and by repo, summed from its own session files and priced from a table you keep. *new* `no-install` `offline` `read-only` `tracking`
-- [**stack**](adapters/stdlib/stack/) — One document from a stack of add-on steps over a box: each step's output grouped into pools and ordered tallest-first, so the peaks are what a reader meets first. *new* `no-install` `offline` `read-only` `tracking`
 - [**subscriptions**](adapters/stdlib/subscriptions/) — What you pay for every month, found in bank statements and emails, and when each renews. *new* `no-install` `offline` `read-only` `tracking`
 - **support-plan** (idea) — An IEP or support plan's goals, accommodations and review dates, each cited, for a parent or teacher. *new* `no-install` `offline` `read-only` `tracking`
 - [**syllabus**](adapters/stdlib/syllabus/) — A course syllabus as dates: readings, assignments and exams due, each cited. *new* `no-install` `offline` `read-only` `tracking`
@@ -342,12 +340,12 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 ## Trust and proof
 
 - [**backup**](adapters/stdlib/backup/) — Your record in one zip, every byte and the chain checked before it's kept; never beside your key, and it never reads the key. *new* `no-install` `offline` `writes-output` `trust` `everyday`
-- [**box-health**](adapters/stdlib/box-health/) — A box's health in one line: files it can't read, readers out of date, and when the chain was last checked. *new* `no-install` `offline` `read-only` `trust`
+- [**box-health**](adapters/stdlib/box-health/) — Is your willow all right? One line: files it can't read, readers out of date, and when its record was last checked. *new* `no-install` `offline` `read-only` `trust`
 - [**changed**](adapters/stdlib/changed/) — What's new, edited or deleted in your folder since the last check, as fingerprint rows. *bot* `no-install` `offline` `records` `trust` `everyday`
 - [**claim-check**](adapters/stdlib/claim-check/) — A claim checked against your sources: the passages that hold all of its parts, the ones that hold only some, and the parts no file names. *new* `no-install` `offline` `read-only` `trust`
 - [**contradictions**](adapters/stdlib/contradictions/) — Two passages that disagree about the same date or amount, side by side. *new* `no-install` `offline` `read-only` `trust`
 - [**decisions**](adapters/stdlib/decisions/) — A recorded no with its reason and the condition that would reopen it, so a rejection is kept, not forgotten. *new* `no-install` `offline` `records` `trust`
-- [**diverge**](adapters/stdlib/diverge/) — Where two copies of a folder or a box part, a backup zip included, narrowed to the first row, file and line that differ. *bot* `no-install` `offline` `read-only` `trust` `everyday`
+- [**diverge**](adapters/stdlib/diverge/) — Where two copies part, your record and its backup zip or two copies of a folder, down to the first row, file and line that differ. *bot* `no-install` `offline` `read-only` `trust` `everyday`
 - **encrypt** (idea) — Keeps the record folder encrypted at rest. Needs cryptography; Apache-2.0 or BSD. *new* `needs-install` `offline` `records` `trust`
 - [**export**](adapters/stdlib/export/) — Approved answers, and the question log (counts only, never words), as Markdown or CSV. *box* `no-install` `offline` `read-only` `trust`
 - **family-box** (idea) — One box for a household: each person's own seal, and every answer showing whose it is. *new* `no-install` `offline` `records` `trust`
@@ -379,7 +377,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - **report** (idea) — A self-checking bundle: the record, the approved answers, and a script that re-verifies them on any machine. *box* `no-install` `offline` `writes-output` `trust`
 - [**restore-drill**](adapters/stdlib/restore-drill/) — A backup zip restored into scratch and verified there, chain and every file, so you know it restores before the day you need it. *new* `no-install` `offline` `read-only` `trust`
 - **retire** (idea) — Proposes setting aside approved answers that no longer hold, each one gone only when you seal it. *bot* `no-install` `offline` `records` `trust`
-- [**ro-crate**](adapters/stdlib/ro-crate/) — A box snapshot as an RO-Crate research object Zenodo can read: each file with its hash and licence. *new* `no-install` `offline` `writes-output` `trust`
+- [**ro-crate**](adapters/stdlib/ro-crate/) — Your willow (the files it reads, its record and your approved answers) as an RO-Crate research object that Zenodo and similar archives can read. *new* `no-install` `offline` `writes-output` `trust`
 - **sap-gate** (idea) — The mcp add-on's tool calls checked against SAP/1.0 grants before they run, through openclaw-sap-gate. Needs openclaw-sap-gate; MIT. *new* `needs-install` `offline` `read-only` `trust`
 - [**session-seal**](adapters/stdlib/session-seal/) — One seal at the end of a session, over everything asked and approved in it: yes, these were my actions. *bot* `no-install` `offline` `records` `trust`
 - **signed-commits** (idea) — Which commits are signed, and by whose key, checked on this machine against the keys you trust. Needs the git program; GPL, called not linked. *new* `needs-install` `offline` `read-only` `trust`
@@ -389,7 +387,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**three-two-one**](adapters/stdlib/three-two-one/) — How many verified copies of your record exist and where, held to three copies, on two kinds of storage, one away from home. *new* `no-install` `offline` `read-only` `trust`
 - **time-capsule** (idea) — A note sealed now and opened on a date you choose, with the record proving it wasn't changed. *new* `no-install` `offline` `records` `trust`
 - [**timeline**](adapters/stdlib/timeline/) — A dated timeline of one matter (a dispute, an illness, a tenancy), every line cited, to hand to a lawyer, doctor or council. *new* `no-install` `offline` `writes-output` `trust`
-- [**tip-pin**](adapters/stdlib/tip-pin/) — Where a box's record ends, kept outside the box, so rows cut off or a whole chain re-hashed are found where verify can't. *new* `no-install` `offline` `writes-output` `trust`
+- [**tip-pin**](adapters/stdlib/tip-pin/) — Where your record ends, written down somewhere willow can't reach, so rows cut off the end or rewritten from some point on are caught where verify can't. *new* `no-install` `offline` `writes-output` `trust`
 - [**wayback**](adapters/stdlib/wayback/) — The Wayback Machine's copy of a page from a window of days, saved beside your own snapshot and compared with it byte for byte. Goes online: archive.org, to find the archived copy and fetch it. *new* `no-install` `online` `writes-output` `trust` `sources`
 - [**weakest-link**](adapters/stdlib/weakest-link/) — Each answer's inputs marked measured, fitted or assumed, and the result worth its weakest input, never an average. *new* `no-install` `offline` `read-only` `trust`
 - **weights-pin** (idea) — A local model's weights file hashed before each run and refused when it differs from the hash on its model card. *new* `no-install` `offline` `read-only` `trust`
@@ -403,6 +401,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - **forget** (idea) — Stops a file being searched, recorded on the chain, so what was taken out is known and nothing else is touched. *new* `no-install` `offline` `records` `privacy`
 - [**install-scripts**](adapters/stdlib/install-scripts/) — The install scripts the packages in node_modules would run (preinstall, install, postinstall), each cited by file and line. *new* `no-install` `offline` `read-only` `privacy`
 - **kids** (idea) — A box for a child: answers only from the folder you choose for them, and nothing they can approve. *new* `no-install` `offline` `read-only` `privacy`
+- [**outdated**](adapters/stdlib/outdated/) — How old each locked dependency is, and which are yanked, deprecated or two years without a release, from a registry index you downloaded. *new* `no-install` `offline` `read-only` `privacy`
 - [**package-contents**](adapters/stdlib/package-contents/) — What's inside a wheel, sdist, npm tarball or .crate before you install it: every file, and any code it runs on install. *new* `no-install` `offline` `read-only` `privacy`
 - [**pii-audit**](adapters/stdlib/pii-audit/) — Personal data sitting in your files (ID numbers, health details, card numbers), listed by file and line. *new* `no-install` `offline` `read-only` `privacy`
 - [**privacy**](adapters/stdlib/privacy/) — Hides phone numbers, emails, card, bank and ID numbers, and API keys in what a question prints, and says what it hid. *bot* `no-install` `offline` `records` `privacy`
@@ -430,7 +429,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - [**codex-cli**](adapters/stdlib/codex-cli/) — OpenAI's Codex CLI asks your folder and hands in suggestions, through the mcp add-on. *new* `no-install` `offline` `read-only` `assistant`
 - [**copilot**](adapters/stdlib/copilot/) — GitHub Copilot, in VS Code and in its own CLI, asks your folder through the mcp add-on. *new* `no-install` `offline` `read-only` `assistant`
 - [**cursor**](adapters/stdlib/cursor/) — Cursor asks your folder and hands in suggestions, through the mcp add-on. *new* `no-install` `offline` `read-only` `assistant`
-- [**folder-card**](adapters/stdlib/folder-card/) — A card for your folder itself (what the files are, their dates, the gaps you know of), compiled from the pile and your notes and handed to a model as context. *new* `no-install` `offline` `writes-output` `assistant`
+- [**folder-card**](adapters/stdlib/folder-card/) — A card for your folder itself (what the files are, their dates, the gaps you know of), made from your files and your notes and handed to a model as context. *new* `no-install` `offline` `writes-output` `assistant`
 - [**gemini-cli**](adapters/stdlib/gemini-cli/) — Google's Gemini CLI asks your folder and hands in suggestions, through the mcp add-on. *new* `no-install` `offline` `read-only` `assistant`
 - **hermes** (idea) — Hermes Agent asking your folder as a plugin, and its memories, and what its dreaming plugin consolidates, handed in through propose. *new* `no-install` `offline` `records` `assistant`
 - **hook-checks** (idea) — A PostToolUse hook that runs the repo's own fast checks on the file just edited and hands back only what failed, the same output for the same file. *new* `no-install` `offline` `read-only` `assistant` `hooks`
@@ -440,7 +439,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - [**hook-fail-closed**](adapters/stdlib/hook-fail-closed/) — Wraps any hook so a crash, a timeout or output it can't read blocks the tool, since Claude Code, Gemini CLI, Codex and Cursor all let the tool run by default. *new* `no-install` `offline` `read-only` `assistant` `hooks`
 - **hook-feedback** (idea) — Your corrections to an assistant (no, wrong, I said) caught by fixed patterns at each prompt and handed in through propose, for you to keep or drop. *new* `no-install` `offline` `records` `assistant` `hooks`
 - [**hook-fuzz**](adapters/stdlib/hook-fuzz/) — Throws empty, malformed, oversized and non-UTF-8 input at a hook and fails it if any of them crash it, since a crashed hook lets the tool run. *new* `no-install` `offline` `read-only` `assistant` `hooks`
-- [**hook-guard**](adapters/stdlib/hook-guard/) — A PreToolUse hook that refuses, by rule and never by judgment, a tool call that would read the key or write a box outside the kernel, naming the rule it hit. *box* `no-install` `offline` `read-only` `assistant` `hooks`
+- [**hook-guard**](adapters/stdlib/hook-guard/) — A PreToolUse hook that blocks, by fixed rule and never by judgment, a tool call that would read your key or write willow's record behind its back, naming the rule. *box* `no-install` `offline` `read-only` `assistant` `hooks`
 - **hook-handoff** (idea) — A Stop hook that writes where the session ended, and the next session's first prompt gets it back, so nothing rides on the assistant's memory. *new* `no-install` `offline` `records` `assistant` `hooks`
 - [**hook-impact**](adapters/stdlib/hook-impact/) — Before an edit, a hook hands the assistant every place in your files that names what it's about to change, by file and line. *box* `no-install` `offline` `read-only` `assistant` `hooks`
 - [**hook-leaks**](adapters/stdlib/hook-leaks/) — A PreToolUse hook that refuses a write or a command holding a key, password or card number, by the privacy add-on's shapes, naming only the kind. *box* `no-install` `offline` `read-only` `assistant` `hooks`
@@ -479,11 +478,10 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - [**persona-card**](adapters/stdlib/persona-card/) — A persona written as a card and compiled into the same system-prompt bytes every time, with the prompt's hash on the record. *box* `no-install` `offline` `records` `assistant`
 - **plain-language** (idea) — An approved answer rewritten in plain language by a model, the rewrite held until you seal it. *new* `no-install` `offline` `records` `assistant`
 - **quantized** (idea) — Finds the smallest quantized local model that still gets your box's own questions right, so suggestions come faster. Needs a local model server; licence varies by model. Reaches this machine only. *new* `needs-install` `this-machine` `read-only` `assistant`
-- [**rules**](adapters/stdlib/rules/) — A game's or a house's rules, sealed section by section, so 'what does the rule say?' answers with the exact section. *bot* `no-install` `offline` `records` `assistant`
 - **same-way** (idea) — A local model asked each of your box's questions three times, and how often its answer flips, since a model that answers the same way every time is one you can build on. Goes online: this-machine. *new* `no-install` `this-machine` `read-only` `assistant`
 - **schema-check** (idea) — A model's answer held to a JSON schema before anything reads it, and a reply that doesn't fit recorded as a result, not lost as an error. *box* `no-install` `offline` `records` `assistant`
 - **second-opinion** (idea) — Two assistants' suggestions for the same question side by side, each waiting for its own seal. *new* `no-install` `offline` `records` `assistant`
-- [**serve**](adapters/stdlib/serve/) — The one markdown file a model reads: only the passages a human sealed, grouped into pools with the peaks first, by ids it can't guess, and nothing else. *bot* `no-install` `offline` `writes-output` `trust` `assistant`
+- [**serve**](adapters/stdlib/serve/) — The one file an AI model may read: only the passages you approved, under ids it can't guess, and nothing else. *bot* `no-install` `offline` `writes-output` `trust` `assistant`
 - **serve-piles** (idea) — serve's piles grouped on all four W's -- who, when, what and where -- not where alone, so a model meets a question from every box that touched it. *new* `no-install` `offline` `writes-output` `trust` `assistant`
 - **silence-log** (idea) — A model that ran and said nothing kept as its own row, so silence is told apart from a model that never ran. *bot* `no-install` `offline` `records` `assistant`
 - **translate** (idea) — An answer translated by a local model, the original kept beside it, the translation held until you seal it. Needs a local model server; licence varies by model. Reaches this machine only. *new* `needs-install` `this-machine` `records` `assistant`
@@ -493,6 +491,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 
 ## Ways to use it
 
+- [**across**](adapters/stdlib/across/) — One page made from several willow records at once (each one's digest, export, timeline or readings), every line still cited by where it came from. *new* `no-install` `offline` `read-only` `interface` `everyday`
 - **anki** (idea) — Approved answers as an Anki deck, built without Anki installed. *new* `no-install` `offline` `writes-output` `interface`
 - [**annotations**](adapters/stdlib/annotations/) — Approved answers as W3C Web Annotations, so any annotation tool can show what your files say about a page. *new* `no-install` `offline` `writes-output` `interface`
 - [**badge**](adapters/stdlib/badge/) — A badge for a page: these answers came from these files and were approved, linked to the check anyone can run. *new* `no-install` `offline` `writes-output` `interface`
@@ -513,21 +512,22 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - **kiosk** (idea) — A shared machine in a library or classroom: one box, ask only, nobody's key on it. Reaches this machine only. *new* `no-install` `this-machine` `read-only` `interface`
 - [**launcher**](adapters/stdlib/launcher/) — Ask from Alfred, Raycast, KRunner or PowerToys Run, answers with file and line. *new* `no-install` `offline` `read-only` `interface`
 - [**llms-txt**](adapters/stdlib/llms-txt/) — An llms.txt for your folder, written from what's actually in it to the spec's version 2, and any llms.txt you saved checked against that spec. *new* `no-install` `offline` `writes-output`
-- [**make-it-so**](adapters/stdlib/make-it-so/) — An order held for you, with the passages it rests on and a check that they still stand; never carried out. *new* `no-install` `offline` `writes-output` `interface`
+- [**make-it-so**](adapters/stdlib/make-it-so/) — Write down what you want done and the passages it rests on; it checks they still hold, and never does it for you. *new* `no-install` `offline` `writes-output` `interface`
 - **obsidian** (idea) — Ask from inside Obsidian, answers as links to the note and line. Reaches this machine only. *new* `no-install` `this-machine` `read-only` `interface`
 - [**pipe**](adapters/stdlib/pipe/) — Questions in on standard input, answers out one per line: JSON lines, or file:line: text for grep and fzf. *box* `no-install` `offline` `records` `interface`
 - [**plain**](adapters/stdlib/plain/) — Answers as sentences instead of JSON, each with its file and line. *new* `no-install` `offline` `records` `interface`
 - **pr-context** (idea) — On a pull request, the passages in the repo's docs that name the files it changes, posted as one comment. Goes online: the forge, through the workflow's token, to post the comment. *new* `no-install` `online` `read-only` `interface`
 - [**print**](adapters/stdlib/print/) — An answer as a printable page with its sources, to take to an appointment; --large for big, high-contrast type. *new* `no-install` `offline` `records` `interface` `everyday`
 - **qr** (idea) — An answer as a QR code on screen, to carry it to your phone without the network. *new* `no-install` `offline` `read-only` `interface`
-- [**repo-pile**](adapters/stdlib/repo-pile/) — Public repositories made into a box you can ask: cloned, kept only under a licence an Apache-2.0 project can use, their docs the pile, indexed for fast questions. Goes online: github.com (or the --source you give), to clone the repositories you list. *new* `no-install` `online` `records` `interface` `research`
+- [**repo-pile**](adapters/stdlib/repo-pile/) — Public repositories you list, cloned and made askable, keeping only those under a licence an Apache-2.0 project can use. Goes online: github.com (or the --source you give), to clone the repositories you list. *new* `no-install` `online` `records` `interface` `research`
 - [**rss-out**](adapters/stdlib/rss-out/) — New approved answers as an RSS feed file, for any feed reader. *new* `no-install` `offline` `writes-output` `interface`
 - **safe-app** (idea) — willow as a SAFE app: installed from the SAFE App Store, authorized per session, and deleted clean. *new* `no-install` `offline` `read-only` `interface`
 - **share** (idea) — One sealed answer to send someone, checkable by them, without giving them the folder. *new* `no-install` `offline` `writes-output` `interface`
 - [**shell**](adapters/stdlib/shell/) — A willow command and tab completion for bash, zsh, fish and PowerShell, on Linux, macOS and Windows. *new* `no-install` `offline` `records` `interface`
 - **socratic** (idea) — Asks you questions about your own notes instead of answering, each citing the passage it asked from. *new* `no-install` `offline` `records` `interface`
 - **speak** (idea) — Reads answers aloud. Needs pyttsx3; MPL-2.0. *new* `needs-install` `offline` `read-only` `interface`
-- [**start**](adapters/stdlib/start/) — First run in one step: asks where your files are, makes the box and key where they belong, copies in the starter words, and prints the double-click launcher. *new* `no-install` `offline` `records` `interface` `everyday`
+- [**stack**](adapters/stdlib/stack/) — One page made from several add-ons run in the order you list them, their results grouped so the biggest come first. *new* `no-install` `offline` `read-only` `interface`
+- [**start**](adapters/stdlib/start/) — First run in one step: asks where your files are, sets up willow's record and your key, copies in a starter words list, and prints a double-click launcher. *new* `no-install` `offline` `records` `interface` `everyday`
 - [**static-search**](adapters/deps/static-search/) — An exported page of approved answers with its own search built in, no server of its own, served from any static host. Needs Pagefind, its Python package pagefind and its program pagefind-bin; MIT. *box* `needs-install` `offline` `writes-output` `interface`
 - **telegram-bot** (idea) — Ask from your phone through a Telegram bot only you can talk to. Goes online: api.telegram.org, to receive your questions and send answers. *new* `no-install` `online` `read-only` `interface`
 - **tui** (idea) — A full-screen terminal view to ask, read passages and approve, in curses. *new* `no-install` `offline` `records` `interface`
@@ -542,7 +542,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - [**catgrid**](adapters/stdlib/catgrid/) — A seeded logic grid with one cat in every row, column and colour region and a unique answer, replayed from its moves. *new* `no-install` `offline` `records` `play`
 - **chess-puzzle** (idea) — A Lichess puzzle a day, drawn by a seed: predict whether you'll solve it, then solve it. Goes online: lichess.org, to read the puzzle. *new* `no-install` `online` `records` `play`
 - **connect-four** (idea) — Connect Four as rows on the record, held to the solved result: the first player wins. *new* `no-install` `offline` `records` `play`
-- [**daily-word**](adapters/stdlib/daily-word/) — A word game drawn from your own files' words, the same puzzle for everyone with the same box. *new* `no-install` `offline` `records` `play`
+- [**daily-word**](adapters/stdlib/daily-word/) — A five-letter word game drawn from your own files' words: a new word each day, the same for anyone asking the same folder. *new* `no-install` `offline` `records` `play`
 - [**dice**](adapters/stdlib/dice/) — Seeded dice rolls as rows: every roll replayable and checkable. *bot* `no-install` `offline` `records` `play`
 - [**dice5e**](adapters/stdlib/dice5e/) — Full tabletop dice notation (4d6kh3, advantage), rolled on the record and checkable like dice. *bot* `no-install` `offline` `records` `play`
 - **fight5e** (idea) — Tabletop combat run from stat blocks on dice5e's rolls, every attack on the record and replayable. *new* `no-install` `offline` `records` `play`

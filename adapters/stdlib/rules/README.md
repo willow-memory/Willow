@@ -1,11 +1,11 @@
 <!-- willow-addon
-section: Assistants
-line: A game's or a house's rules, sealed section by section, so 'what does the rule say?' answers with the exact section.
+section: Finding things
+line: A game's or a house's rules, approved one section at a time, so asking what a rule says gives back that exact section, word for word.
 source: bot
 added: 2026-11-01
 writes: record
 network: none
-tags: no-install, offline, records, assistant
+tags: no-install, offline, records, search
 -->
 # rules
 

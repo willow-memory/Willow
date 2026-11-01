@@ -1,6 +1,6 @@
 <!-- willow-addon
 section: Finding things
-line: The store held open by one process on this machine, over a Unix socket the way willow-bot's deterministic runner serves, so a hook's lookup takes milliseconds instead of a cold start.
+line: Keeps your folder's search ready in one background process on this machine, so a hook's lookup answers in milliseconds instead of seconds.
 source: bot
 added: 2026-10-28
 writes: to

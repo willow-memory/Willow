@@ -1,11 +1,11 @@
 <!-- willow-addon
-section: Keeping track
-line: Oakenscroll's Office calibration ledger: what you believed, how hard, and how it resolved, as dated passages.
+section: Reading more kinds of files
+line: Oakenscroll's Office prediction ledger as dated passages you can ask: what you believed, how sure you were, and how it turned out.
 source: new
 added: 2026-11-01
 writes: to
 network: none
-tags: no-install, offline, writes-output, tracking
+tags: no-install, offline, writes-output, file-reader
 -->
 # oakenscroll
 

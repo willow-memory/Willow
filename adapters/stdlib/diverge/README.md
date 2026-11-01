@@ -1,6 +1,6 @@
 <!-- willow-addon
 section: Trust and proof
-line: Where two copies of a folder or a box part, a backup zip included, narrowed to the first row, file and line that differ.
+line: Where two copies part, your record and its backup zip or two copies of a folder, down to the first row, file and line that differ.
 source: bot
 added: 2026-10-24
 writes: nothing
