@@ -17,6 +17,40 @@ says how). The first was v0.1.0.
   that is the bytes proposed, and says what it cannot see: a person's own
   suggestion looks the same, and an ask that cited nothing or failed leaves a
   bite with no proposal. Reads only.
+- `folder-card`, a card for your folder itself: `folder_card.py --box DIR
+  --to card.md --notes me.txt` writes each file's size, first and last date
+  and fiction label, the files it could not read, and the gaps the `gaps`
+  rule finds, each marked told or untold by the gaps you named in your notes,
+  and each gap you named marked as shown or contradicted by the files. Your
+  notes go in word for word. Written once, never over a file. (#148)
+- `capture`, a note written into your folder in one line:
+  `capture.py --to DIR --type idea --tags garden,veg "the note"` writes one
+  file holding one paragraph, the note then its `type:` and `tags:` lines, so
+  `bite` finds it by any of them. A missing folder or a box is refused, not
+  made or written, a note too long for one passage is refused, and the file is
+  created exclusively, so two captures never overwrite each other. Its card
+  keeps the promise `writes: to`. (#147)
+- `catgrid`, a cat in every row, column and colour region, played on the
+  record: `catgrid.py --box DIR play --moves A1,B3` builds a 4 to 8 square
+  board with exactly one answer from the bot's seeded stream (seeded by the
+  record's tip unless you say), plays your moves against three hearts, and
+  writes one row; `check` builds every board and plays every game again.
+  It draws from sha256-stream rather than the source app's xorshift, and
+  leaves out its hints, trivia, daily boards, duels and multi-cat boards. (#146)
+- `decisions`, what you decided and what you ruled out, each with its reason:
+  `decisions.py chose --box DIR --question Q --answer A --reason R` (with
+  `--replaces ROW` to keep the lineage) and `no ... --never` or
+  `--reopen-when CONDITION`, so a never is told from a not-yet when it is
+  written; `reopen` records that a condition came true, and `ask QUESTION`
+  reads back the answer that stands, what it replaced, every no and each
+  condition to check. Rows stand unattested; the SAFE App Store
+  `aristarchus`'s signing is not here, only your seal approves. (#145)
+- `nightstand`, set heavy things down and pick up one bite: `down`, `pick`,
+  `back`, `done` and `archive` as `nightstand` rows through the kernel, state
+  only ever replayed from them. At most one thing is in hand (a pick-up names
+  the thing it puts down, in the same row), every pick-up needs a bite, and
+  there is no delete; `one` offers the lightest, oldest thing and `check`
+  names the first row that breaks a rule. (#144)
 - `weakest-link`, each approved answer worth its weakest cited input:
   `weakest_link.py --box DIR`. A passage marks itself `provenance: measured`,
   `fitted` or `assumed`; an approval is worth the min() of what it cites,
