@@ -333,6 +333,10 @@ willow/
 │   │   │   ├── foia.py   requests sent, answers and when they are due by law
 │   │   │   ├── test_foia.py
 │   │   │   └── README.md
+│   │   ├── folder-card/
+│   │   │   ├── folder_card.py  a card for your folder: its files, dates and gaps, with your notes, written to a file
+│   │   │   ├── test_folder_card.py
+│   │   │   └── README.md
 │   │   ├── forecasts/
 │   │   │   ├── forecasts.py  a wager before the outcome, settled by your seal, scored by Brier
 │   │   │   ├── test_forecasts.py

@@ -10,6 +10,12 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `folder-card`, a card for your folder itself: `folder_card.py --box DIR
+  --to card.md --notes me.txt` writes each file's size, first and last date
+  and fiction label, the files it could not read, and the gaps the `gaps`
+  rule finds, each marked told or untold by the gaps you named in your notes,
+  and each gap you named marked as shown or contradicted by the files. Your
+  notes go in word for word. Written once, never over a file.
 - Six ideas added to `adapters/planned.json` from an audit of the SAFE App
   Store against willow, each checked with `similar near` first:
   `weakest-link` (inputs marked measured, fitted or assumed, the result worth
