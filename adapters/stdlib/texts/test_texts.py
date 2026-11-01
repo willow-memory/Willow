@@ -128,6 +128,21 @@ def test_calls_with_their_kind_and_length(tmp_path):
     )
 
 
+def test_a_minute_is_where_seconds_become_minutes(tmp_path):
+    folder, to = tmp_path / "phone", tmp_path / "mirror"
+    calls = "".join(
+        f'<call number="+15550100" duration="{secs}" date="{ms(DEC3 + i * 60)}" '
+        'type="1" contact_name="Dev Raman"/>\n'
+        for i, secs in enumerate((59, 60))
+    )
+    put(folder, "calls.xml", HEAD + "<calls>\n" + calls + "</calls>\n")
+    assert mirror(folder, to, "--tz", "UTC").returncode == 0
+    assert out_of(to, "calls.xml").endswith(
+        "2024-12-03 00:00  incoming call, 59 s\n"
+        "2024-12-03 00:01  incoming call, 1 min\n"
+    )
+
+
 def test_tz_names_the_zone_the_times_are_written_in(tmp_path):
     folder, to = tmp_path / "phone", tmp_path / "mirror"
     put(
