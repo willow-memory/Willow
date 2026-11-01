@@ -458,6 +458,16 @@
   "tags": "no-install, offline, records, trust"
  },
  {
+  "name": "fight5e",
+  "kind": "stdlib",
+  "section": "Play",
+  "line": "Tabletop combat run from stat blocks on dice5e's rolls, every attack on the record and replayable.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, play"
+ },
+ {
   "name": "flashcards",
   "kind": "stdlib",
   "section": "Keeping track",

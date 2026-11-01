@@ -18,7 +18,7 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`███████████░░░░░░░░░` **281 of 503 built** · 449 need no install · 54 need one
+`███████████░░░░░░░░░` **281 of 504 built** · 450 need no install · 54 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
@@ -30,7 +30,7 @@ or `writes-output`; its section), and any the card's author adds or changes.
 | Privacy and safety | 11 | 4 | 15 | 0 |
 | Assistants | 28 | 44 | 61 | 11 |
 | Ways to use it | 22 | 18 | 36 | 4 |
-| Play | 10 | 30 | 36 | 4 |
+| Play | 10 | 31 | 37 | 4 |
 | For maintainers | 19 | 25 | 39 | 5 |
 <!-- /willow:pools -->
 
@@ -544,6 +544,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - [**daily-word**](adapters/stdlib/daily-word/) — A word game drawn from your own files' words, the same puzzle for everyone with the same box. *new* `no-install` `offline` `records` `play`
 - [**dice**](adapters/stdlib/dice/) — Seeded dice rolls as rows: every roll replayable and checkable. *bot* `no-install` `offline` `records` `play`
 - [**dice5e**](adapters/stdlib/dice5e/) — Full tabletop dice notation (4d6kh3, advantage), rolled on the record and checkable like dice. *bot* `no-install` `offline` `records` `play`
+- **fight5e** (idea) — Tabletop combat run from stat blocks on dice5e's rolls, every attack on the record and replayable. *new* `no-install` `offline` `records` `play`
 - **front-page** (idea) — Which new posts will make the Hacker News front page? Wager, and let its search settle it. Goes online: hn.algolia.com, to read the front page. *new* `no-install` `online` `records` `play`
 - **game-master** (idea) — A tabletop game's rolls and rulings as rows on the record, with the game master's calls sealed. *bot* `no-install` `offline` `records` `play`
 - **gutenberg** (idea) — A paragraph from a public-domain book beside one of yours, for serendipity. Goes online: gutenberg.org, each book fetched once. *new* `no-install` `online` `records` `play`
