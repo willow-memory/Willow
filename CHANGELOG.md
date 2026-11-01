@@ -1338,6 +1338,13 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- Security: `ocr` and `photos` pin Pillow 13.0.0 and `ocr` and `pdf` pin
+  pypdf 6.21.4, past the advisories filed against Pillow 12.3.0 (heap
+  overflows and decompression-bomb bypasses among them) and pypdf 6.21.2
+  (infinite loops and runaway memory on crafted files). The floors stay
+  where the floor rule puts them. `.github/secret_scanning.yml` keeps the
+  redteam demo's planted, fake credentials out of secret scanning.
+
 - `transcript-redact` no longer takes the `n` of a JSON `\n` as the start
   of an email: `\n@AGENTS.md` and `\n@pytest.mark` read as addresses, and
   removing them left `\[redacted:email]`, which JSON can't read, so four

@@ -1509,7 +1509,8 @@ willow/
 │   │   ├── security.yml      the form for a security problem, in public
 │   │   └── config.yml        links to the contributing rules, the languages and the add-on ideas
 │   ├── pull_request_template.md  what a pull request says, and what to check before opening one
-│   └── dependabot.yml        weekly updates for the workflow's actions, never the add-ons' pins
+│   ├── dependabot.yml        weekly updates for the workflow's actions, never the add-ons' pins
+│   └── secret_scanning.yml   keeps the redteam demo's planted, fake credentials out of secret scanning
 ├── .gitignore                generated files and build output
 ├── .gitattributes            every file checked out with LF line endings, on every system
 ├── .editorconfig             the same line endings and indents, for editors
