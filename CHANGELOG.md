@@ -12,7 +12,7 @@ says how). The first was v0.1.0.
 
 - `demo/small-models`: Gemma 3 4B and 1B and Qwen2.5 3B, run locally, given
   willow's own 270 add-on cards to assemble and teodora's files to act on,
-  every result kept, and `build.py` putting all of it, with the session that
+  every result kept, and `demo/small-models/build.py` putting all of it, with the session that
   ran it, into one box to ask. The session is kept by its first bytes and
   their SHA-256, never its text, and read through `transcript-redact` and
   `agent-transcript`. Picking from cards, neither model invented a name; a
