@@ -28,8 +28,11 @@ with the nearest passage (`--top`, 1) and what it lacks; the list at the end
 is all the short ones, naming the parts no file has. claim-check is the
 one-claim view; this is the whole document.
 
-- **Sentences**: split at `.`, `!` or `?` and a space; a bullet or numbered
-  item starts a new one. Headings and fenced code are not claims.
+- **Sentences**: split at `.`, `!` or `?` and a space, except after a short
+  list of abbreviations (`Co.`, `Dr.`, `etc.`); a bullet or numbered item
+  starts a new one. Headings, fenced code and indented blocks are not claims.
+  It reads prose: a bulleted line of commands is still put to the sources.
+- **Lacks** names at most eight missing parts, then how many more.
 - **Skipped**: a sentence with fewer than two parts (its words less the
   common ones) is only counted; one part cannot be checked part by part.
 

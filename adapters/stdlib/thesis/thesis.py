@@ -46,6 +46,10 @@ spec.loader.exec_module(claim_check)
 TOP = 1
 SHOWN = 70  # characters of a claim shown
 END = re.compile(r"(?<=[.!?])\s+")
+ABBREVIATIONS = frozenset(
+    "co dr mr mrs ms st vs etc eg ie no fig approx".split()
+)  # a full stop after these ends no sentence
+LACKS = 8  # missing parts named for one short claim
 LEAD = re.compile(r"^\s*(?:[-*+>]\s+|\d+[.)]\s+)+")
 
 
@@ -63,12 +67,17 @@ def claims(text: str) -> list[tuple[int, str]]:
             piece = line + " "
             flat += piece
             at += [n] * len(piece)
-        pos = 0
-        for s in END.split(flat):
-            i = flat.index(s, pos)
-            pos = i + len(s)
-            if s.strip():
-                out.append((at[i], " ".join(s.split())))
+        start = 0
+        for m in [*END.finditer(flat), None]:
+            end = m.start() if m else len(flat)
+            word = re.sub(r"\W", "", flat[start:end].split(" ")[-1]).lower()
+            if m and word in ABBREVIATIONS and flat[end - 1] == ".":
+                continue  # "Co. Clare": the stop ends no sentence
+            piece = flat[start:end]
+            if piece.strip():
+                first = start + len(piece) - len(piece.lstrip())
+                out.append((at[first], " ".join(piece.split())))
+            start = m.end() if m else end
         para.clear()
 
     for n, line in enumerate(text.splitlines(), 1):
@@ -77,6 +86,8 @@ def claims(text: str) -> list[tuple[int, str]]:
             fenced = not fenced
         elif fenced or not line.strip() or line.lstrip().startswith("#"):
             flush()
+        elif line.startswith(("    ", "\t")) and not para:
+            continue  # an indented block is code, not prose
         else:
             bullet = LEAD.match(line)
             if bullet:
@@ -84,6 +95,11 @@ def claims(text: str) -> list[tuple[int, str]]:
             para.append((n, LEAD.sub("", line)))
     flush()
     return out
+
+
+def lacking(ws: list[str]) -> str:
+    more = f" (+{len(ws) - LACKS} more)" if len(ws) > LACKS else ""
+    return ", ".join(ws[:LACKS]) + more
 
 
 def short(s: str) -> str:
@@ -136,7 +152,7 @@ def main(argv: list[str]) -> int:
         else:
             near = "; ".join(
                 f"{c['path']}:{c['line']} lacks "
-                + ", ".join(w for w in want if w not in h)
+                + lacking([w for w in want if w not in h])
                 for c, h in got["some"]
             )
             print(f"line {line:<4} short  {near or 'no part held'}   {short(sentence)}")

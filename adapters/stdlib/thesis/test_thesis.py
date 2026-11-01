@@ -147,3 +147,39 @@ def test_it_writes_nothing(tmp_path):
     before = {p: p.read_bytes() for p in tmp_path.rglob("*") if p.is_file()}
     run(b, d)
     assert before == {p: p.read_bytes() for p in tmp_path.rglob("*") if p.is_file()}
+
+
+def test_a_full_stop_after_an_abbreviation_ends_no_sentence():
+    got = thesis.claims(
+        "She was born in Ennis, Co. Clare, in 1959. Dr. Okafor agrees!\n"
+    )
+    assert got == [
+        (1, "She was born in Ennis, Co. Clare, in 1959."),
+        (1, "Dr. Okafor agrees!"),
+    ]
+    assert thesis.claims("Born in Ennis, etc. Then left.\n")[0][1].endswith(
+        "etc. Then left."
+    )
+    assert (
+        len(thesis.claims("The word is co. It ends here.\n")) == 1
+    )  # "co." then a stop
+
+
+def test_an_indented_block_is_code_but_a_wrapped_line_is_prose():
+    text = "Run this:\n\n    python tool.py --box box\n\nThen read it\n    carefully again.\n"
+    assert thesis.claims(text) == [
+        (1, "Run this:"),
+        (5, "Then read it carefully again."),
+    ]
+
+
+def test_a_long_list_of_missing_parts_is_cut_short(tmp_path):
+    d = doc_of(
+        tmp_path,
+        "Basil alpha bravo charlie delta echo foxtrot golf hotel india juliet.\n",
+    )
+    out = run(box(tmp_path), d).stdout
+    assert (
+        "lacks alpha, bravo, charlie, delta, echo, foxtrot, golf, hotel (+2 more)"
+        in out
+    )
