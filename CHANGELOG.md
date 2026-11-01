@@ -18,7 +18,7 @@ says how). The first was v0.1.0.
   `catgrid` (a seeded logic grid with a unique answer; its rng is already the
   one script's xorshift), `fight5e` (combat from stat blocks on dice5e's
   rolls; the stat blocks' licence to be checked before it is built) and
-  `capture` (a one-line note written into your folder).
+  `capture` (a one-line note written into your folder). (#142)
 - `dice5e`, full tabletop dice notation on the record:
   `dice5e.py --box DIR roll 4d6kh3` (or `adv+5`, `dis`, `2d20kl1`), seeded
   and drawn as dice is, every die written, kept or not; `check` throws every
