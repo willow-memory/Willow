@@ -33,7 +33,10 @@ def subject(row: dict) -> str:
 
 
 def approved(
-    tmp_path: Path, files: dict[str, str], n: int | None = None
+    tmp_path: Path,
+    files: dict[str, str],
+    n: int | None = None,
+    data: str = "Six hours.",
 ) -> tuple[Path, Path]:
     """A box over `files`, with one approval citing every passage the bite served (or the first n)."""
     pile = tmp_path / "pile"
@@ -46,7 +49,7 @@ def approved(
     cites = [s["id"] for s in got["served"]][:n]
     row = {
         "path": "sun.md",
-        "data": "Six hours.",
+        "data": data,
         "cites": cites,
         "claim": "the garden notes",
     }
@@ -194,3 +197,16 @@ def test_it_writes_nothing(tmp_path):
     wl(b)
     after = {p: p.read_bytes() for d in (b, pile) for p in d.rglob("*") if p.is_file()}
     assert before == after
+
+
+def test_an_answer_of_sixty_characters_shows_whole_and_longer_is_cut(tmp_path):
+    line = "Six hours of full sun a day, in the long rows by the south wal"
+    whole, cut = line[:60], line[:61]
+    sun = {"a.md": "Tomatoes want six hours of sun.\nprovenance: measured\n"}
+    for d in ("w", "c"):
+        (tmp_path / d).mkdir()
+    b, _ = approved(tmp_path / "w", sun, data=whole)
+    assert repr(whole) in wl(b).stdout
+    b, _ = approved(tmp_path / "c", sun, data=cut)
+    shown = wl(b).stdout.splitlines()[0]
+    assert repr(cut[:57] + "...") in shown and repr(cut) not in shown
