@@ -1025,6 +1025,10 @@ willow/
 │   │   │   ├── texts.py      Android and iPhone text backups and call logs, a dated line a message
 │   │   │   ├── test_texts.py
 │   │   │   └── README.md
+│   │   ├── thesis/
+│   │   │   ├── thesis.py     a document's claims, each against your sources, and the ones no passage holds
+│   │   │   ├── test_thesis.py
+│   │   │   └── README.md
 │   │   ├── three-two-one/
 │   │   │   ├── three_two_one.py  how many verified copies of the record exist, held to three, two kinds, one away
 │   │   │   ├── test_three_two_one.py
