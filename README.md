@@ -120,11 +120,11 @@ says how to pick one up:
 <!-- willow:front show=pick week=2026-W44 -->
 **Add-on of the week**
 
-**[bench](adapters/stdlib/bench/)** — How fast the kernel answers on boxes of set sizes, per release, so a slowdown is seen.
+**[symptoms](adapters/stdlib/symptoms/)** — A symptom diary over time, ready to show a doctor: what, when, how bad, each line cited.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 273 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 275 built add-ons in name order.*
 
-[Every add-on, 273 built of 498, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 275 built of 499, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 

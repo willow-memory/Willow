@@ -10,6 +10,20 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `texts`, phone text messages and calls as one dated line per message:
+  `texts.py mirror --from FOLDER --to MIRROR [--me NAME] [--tz ZONE]`.
+  Reads an Android backup from SMS Backup & Restore (its messages, picture
+  messages' words, and its call log) and an iPhone's messages database,
+  known by what it holds under its hashed backup name and opened read-only.
+  One section per conversation, a paragraph a day, so each passage the
+  kernel serves is one day with one person. Built from a script written for
+  a real folder of texts, with its names and time zone made options.
+- `month-first`, for a folder you know writes dates month first:
+  `month_first.py mirror --from FOLDER --to MIRROR` writes each text file
+  with every 11/03/2026, 11/03/26 and Nov. 3rd, 2026 followed by its ISO
+  form, so the kernel, which never guesses an order, and timeline, gaps and
+  coming-up can place it. Not-dates (13/03/2026, Feb 30) and marked dates
+  are left as they are.
 - `invoices`, the invoices you sent matched to their payments by number
   alone: `invoices.py --box DIR --id 'INV-\d+'`. Each is found in a CSV
   ledger row or a file named for it, and is paid only when a line naming
