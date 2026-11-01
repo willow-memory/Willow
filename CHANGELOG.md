@@ -16,7 +16,7 @@ says how). The first was v0.1.0.
   `jeles.py export --box DIR --questions FILE --to OUT.json` writes approvals
   as a Jeles seed file, each paired with a question only when its words hash
   to the key the approval was sealed under. Jeles installs them at its
-  asserted rung: a willow seal is not a Nestor seal.
+  asserted rung: a willow seal is not a Nestor seal. (#139)
 - `predict`, what a question will come to, written down before it is
   asked: `predict.py ask --box DIR QUESTION`. It counts what the box's
   earlier bites came to (sealed, served or empty), writes the likeliest as a
