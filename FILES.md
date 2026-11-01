@@ -168,6 +168,10 @@ willow/
 │   │   │   ├── car.py   a car's jobs, costs and what's due
 │   │   │   ├── test_car.py
 │   │   │   └── README.md
+│   │   ├── catgrid/
+│   │   │   ├── catgrid.py    a seeded logic grid with one answer, played on the record; check plays every game again
+│   │   │   ├── test_catgrid.py
+│   │   │   └── README.md
 │   │   ├── changed/
 │   │   │   ├── changed.py    what's new, edited or deleted since the last check, as fingerprint rows
 │   │   │   ├── test_changed.py
@@ -280,6 +284,10 @@ willow/
 │   │   ├── deep-links/
 │   │   │   ├── deep_links.py   each answer as links that open the file at the line: an RFC 5147 file link and a browser text-fragment web link
 │   │   │   ├── test_deep_links.py
+│   │   │   └── README.md
+│   │   ├── decisions/
+│   │   │   ├── decisions.py  a yes and a no with their reasons, a never told from a not-yet, asked about a new question
+│   │   │   ├── test_decisions.py
 │   │   │   └── README.md
 │   │   ├── dice/
 │   │   │   ├── dice.py       dice rolled on the record, seeded by its tip; check throws every roll again
@@ -662,6 +670,10 @@ willow/
 │   │   ├── nestor/
 │   │   │   ├── nestor.py     answers a person has checked in Nestor, from a copy of its store
 │   │   │   ├── test_nestor.py
+│   │   │   └── README.md
+│   │   ├── nightstand/
+│   │   │   ├── nightstand.py  things set down, one bite picked up: one in hand, a bite every time, nothing deleted
+│   │   │   ├── test_nightstand.py
 │   │   │   └── README.md
 │   │   ├── notes/
 │   │   │   ├── notes.py      Obsidian and Logseq vaults, links and backlinks kept
