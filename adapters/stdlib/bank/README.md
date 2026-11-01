@@ -24,9 +24,9 @@ are added up under them:
 
 An OFX or QFX statement is read by its `STMTTRN` entries (date posted, amount,
 name and memo), in the SGML form banks usually send or in XML. A CSV is a
-statement when its header has a date column, a description column, and either a
-signed `Amount` or a pair of money out and money in columns. A negative amount is
-money spent. A date is read as the kernel reads one, so one that reads either way
+statement when its header has, named in any case, a date column, a description
+column, and either a signed `Amount` or a pair of money out and money in
+columns. A negative amount is money spent. A date is read as the kernel reads one, so one that reads either way
 round (03/04/2024) is never guessed: that row is written without a day and left
 out of the months. Account numbers, balances and the rest are not copied. Any
 other CSV is skipped and counted.

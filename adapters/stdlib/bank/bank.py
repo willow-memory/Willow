@@ -14,8 +14,8 @@ and writes each transaction, oldest first, as a dated line, then the months:
 
 An OFX or QFX statement is read by its `STMTTRN` entries (date posted, amount,
 name and memo), in the SGML form banks usually send or in XML. A CSV is a
-statement when its header has a date column (`Date`, `Transaction Date`, `Posted
-Date` or `Booking Date`), a description (`Description`, `Details`, `Memo`,
+statement when its header has, in any case, a date column (`Date`, `Transaction
+Date`, `Posted Date` or `Booking Date`), a description (`Description`, `Details`, `Memo`,
 `Payee`, `Narrative` or `Name`) and either one signed `Amount` or a pair of money
 out and money in columns (`Debit`/`Credit`, `Paid out`/`Paid in`, `Money
 out`/`Money in`). A date is read as the kernel reads one, so a date that reads
@@ -89,16 +89,22 @@ def from_ofx(text: str) -> list[tuple[str, float, str]]:
 
 def from_csv(text: str) -> list[tuple[str, float, str]]:
     reader = csv.DictReader(io.StringIO(text))
-    head = reader.fieldnames or []
-    date_col = next((c for c in DATES if c in head), "")
-    name_col = next((c for c in NAMES if c in head), "")
-    pair = next((p for p in OUT_IN if p[0] in head and p[1] in head), None)
-    if not (date_col and name_col and ("Amount" in head or pair)):
+    named = {h.strip().lower(): h for h in reader.fieldnames or []}
+
+    def col(name: str) -> str:
+        """The header as the file writes it, for a column named in any case."""
+        return named.get(name.lower(), "")
+
+    date_col = next((col(c) for c in DATES if col(c)), "")
+    name_col = next((col(c) for c in NAMES if col(c)), "")
+    amount_col = col("Amount")
+    pair = next(((col(a), col(b)) for a, b in OUT_IN if col(a) and col(b)), None)
+    if not (date_col and name_col and (amount_col or pair)):
         return []
     out = []
     for r in reader:
-        if "Amount" in head and amount(r.get("Amount")) is not None:
-            value = amount(r.get("Amount"))
+        if amount_col and amount(r.get(amount_col)) is not None:
+            value = amount(r.get(amount_col))
         elif pair:
             spent, got = amount(r.get(pair[0])), amount(r.get(pair[1]))
             value = (

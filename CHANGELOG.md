@@ -1290,6 +1290,10 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- `bank` reads a CSV statement whose header names its columns in lower case
+  (`date,description,amount`, as teodora's demo files do) or in capitals:
+  every one of her 58 statements was skipped. Found by a small local model
+  that picked `bank` for her and got nothing back.
 - `propose` now exits 42 when every suggestion is refused, so a file that
   leaves nothing waiting for a seal no longer looks like an approved answer,
   fixing bug #96. (#129)
