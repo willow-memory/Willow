@@ -14,7 +14,7 @@ says how). The first was v0.1.0.
   `thesis.py --box DIR FILE` puts each sentence to claim-check and prints it
   held (a passage holds every part) or short (the nearest passage, what it
   lacks), then lists the short ones with the parts no file has. It finds where
-  to read and never judges. Writes nothing; the standard library only.
+  to read and never judges. Writes nothing; the standard library only. (#150)
 - `sent-log`, which passages were handed to which model, and where to, read
   from the record: `sent_log.py --box DIR`. The record holds no model identity
   (a proposal row is the kernel's, and `model-card` is not built), so it reads
