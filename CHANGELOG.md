@@ -10,6 +10,12 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `nightstand`, set heavy things down and pick up one bite: `down`, `pick`,
+  `back`, `done` and `archive` as `nightstand` rows through the kernel, state
+  only ever replayed from them. At most one thing is in hand (a pick-up names
+  the thing it puts down, in the same row), every pick-up needs a bite, and
+  there is no delete; `one` offers the lightest, oldest thing and `check`
+  names the first row that breaks a rule.
 - Six ideas added to `adapters/planned.json` from an audit of the SAFE App
   Store against willow, each checked with `similar near` first:
   `weakest-link` (inputs marked measured, fitted or assumed, the result worth
