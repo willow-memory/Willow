@@ -660,3 +660,14 @@ def test_status_and_check_only_read(t):
         t.run(*argv)
         t.run(*argv, world=False)
     assert t.raw() == before
+
+
+def test_status_names_the_place_the_scene_is_set_in(t):
+    t.run("open")
+    assert "at The bridge" in t.run("status").stdout
+    t.run("act", "Grit")
+    t.run("act", "Wit")
+    t.run("ask")
+    t.k("seal", t.subject())
+    t.run("settle")
+    assert "at The inn" in t.run("status").stdout
