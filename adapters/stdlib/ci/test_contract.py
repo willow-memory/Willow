@@ -132,6 +132,9 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         "INSERT INTO tm_pairs VALUES ('tomatoes want sun','ada','sealed',"
         "'2026-10-01');\n"
     )}),
+    "jeles": ("jeles.py", {"seed.json": (
+        b'{"pairs": [{"source_text": "how much sun do tomatoes want", '
+        b'"target_text": "Six hours."}]}\n')}),
     "almanac": ("almanac.py", {"catalog.json": (
         '{"name": "Made-Up Almanac", "entries": [{"id": "tide-gauge-records", '
         '"title": "Tide Gauge Records", "source": {"canonical_url": '
@@ -552,6 +555,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "transcript-redact": ("transcript_redact.py", ["--from", "{pile}/garden.md", "--to", "{tmp}/shareable.md"]),
     "across": ("across.py", ["--box", "{box}", "digest"]),
     "stack": ("stack.py", ["--box", "{box}", "--stack", "adapters/stdlib/stack/example.md"]),
+    "predict": ("predict.py", ["ask", "--box", "{box}", *NOW, "tomatoes"]),
     "serve": ("serve.py", ["scope", "--box", "{box}"]),
     "browse": ("browse.py", ["launcher", "--box", "{box}"]),
     "digest": ("digest.py", ["--box", "{box}", *NOW]),

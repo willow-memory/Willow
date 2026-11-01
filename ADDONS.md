@@ -18,15 +18,15 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`███████████░░░░░░░░░` **275 of 499 built** · 444 need no install · 55 need one
+`███████████░░░░░░░░░` **277 of 499 built** · 444 need no install · 55 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
 | Reading more kinds of files | 71 | 35 | 98 | 8 |
 | Finding things | 31 | 14 | 35 | 10 |
 | Your own words | 19 | 7 | 23 | 3 |
-| Keeping track | 39 | 21 | 60 | 0 |
-| Trust and proof | 27 | 25 | 43 | 9 |
+| Keeping track | 40 | 20 | 60 | 0 |
+| Trust and proof | 28 | 24 | 43 | 9 |
 | Privacy and safety | 11 | 4 | 15 | 0 |
 | Assistants | 27 | 44 | 60 | 11 |
 | Ways to use it | 22 | 18 | 36 | 4 |
@@ -68,18 +68,18 @@ its list: someone who speaks the language can add one without much Python.
 
 <!-- willow:newest -->
 - 2026-11-01 · [**quotes**](adapters/stdlib/quotes/) — Every quote in a document checked against your files: as written, almost (and what it adds, drops or changes), or not there.
+- 2026-11-01 · [**predict**](adapters/stdlib/predict/) — Write down what a question will come to before you ask it, and grade it after; the record counts how often it was right.
+- 2026-11-01 · [**jeles**](adapters/stdlib/jeles/) — Your approved answers as Jeles nuggets, with question, answer, sources and who sealed it, and Jeles' own verified nuggets read back as passages.
 - 2026-11-01 · [**invoices**](adapters/stdlib/invoices/) — For freelancers: invoices and payments matched by the id pattern you give, never guessed.
 - 2026-11-01 · [**almanac-keep**](adapters/stdlib/almanac-keep/) — An Almanac entry's best permitted copy, from the publisher or its ranked recovery list, fetched into your folder with its SHA-256.
-- 2026-10-31 · [**three-two-one**](adapters/stdlib/three-two-one/) — How many verified copies of your record exist and where, held to three copies, on two kinds of storage, one away from home.
-- 2026-10-31 · [**texts**](adapters/stdlib/texts/) — Phone text messages, from an Android SMS backup or an iPhone backup's copy, one dated line per message.
 <!-- /willow:newest -->
 
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[symptoms](adapters/stdlib/symptoms/)** — A symptom diary over time, ready to show a doctor: what, when, how bad, each line cited.
+**[tarot](adapters/stdlib/tarot/)** — A seeded tarot draw on the record, replayable by anyone with the seed.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 275 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 277 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -320,7 +320,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**outdated**](adapters/stdlib/outdated/) — How old each locked dependency is, and which are yanked, deprecated or two years without a release, from a registry index you downloaded. *new* `no-install` `offline` `read-only` `tracking`
 - [**pets**](adapters/stdlib/pets/) — Each pet's vet visits, vaccines and medicines, from your records: what's due next. *new* `no-install` `offline` `read-only` `tracking`
 - [**policy-watch**](adapters/stdlib/policy-watch/) — A terms or policy page fetched each time you run it, by snapshot, and what changed since last time, sentence by sentence, by clauses. Goes online: the page you name, fetched each time you run it. *new* `no-install` `online` `writes-output` `tracking` `policies`
-- **predict** (idea) — Write down what you'll do next before you do it, and grade it after; the record counts how often you were right. *bot* `no-install` `offline` `records` `tracking`
+- [**predict**](adapters/stdlib/predict/) — Write down what a question will come to before you ask it, and grade it after; the record counts how often it was right. *bot* `no-install` `offline` `records` `tracking`
 - [**reading-log**](adapters/stdlib/reading-log/) — A child's reading log: books, pages and minutes, week by week. *new* `no-install` `offline` `read-only` `tracking`
 - [**readings**](adapters/stdlib/readings/) — Numbers over time and a date gone by, beside an answer. *box* `no-install` `offline` `records` `tracking`
 - [**renewals**](adapters/stdlib/renewals/) — Passports, licences, insurance and memberships: when each expires, from your documents. *new* `no-install` `offline` `read-only` `tracking`
@@ -357,7 +357,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**ids**](adapters/stdlib/ids/) — Every file and passage given its Software Heritage ID and IPFS CID, names the rest of the world already uses. *new* `no-install` `offline` `read-only` `trust`
 - **in-case** (idea) — A letter for the people you trust, if something happens to you: where things are and who to call, from your files, sealed by you. *new* `no-install` `offline` `writes-output` `trust`
 - [**in-toto**](adapters/stdlib/in-toto/) — A sealed answer exported as an in-toto Statement, the envelope SLSA uses, so others can check it. *new* `no-install` `offline` `writes-output` `trust`
-- **jeles** (idea) — Your approved answers as Jeles nuggets, with question, answer, sources and who sealed it, and Jeles' own verified nuggets read back as passages. *new* `no-install` `offline` `writes-output` `trust`
+- [**jeles**](adapters/stdlib/jeles/) — Your approved answers as Jeles nuggets, with question, answer, sources and who sealed it, and Jeles' own verified nuggets read back as passages. *new* `no-install` `offline` `writes-output` `trust`
 - [**licenses**](adapters/stdlib/licenses/) — The licence of every installed dependency, read from its own metadata on this machine: which are copyleft, and which file says so. *new* `no-install` `offline` `read-only` `trust`
 - **line-origin** (idea) — Which agent session wrote this line of code: git blame to the commit, then the transcript turn that made it. Needs the git program; GPL, called not linked. *new* `needs-install` `offline` `read-only` `trust`
 - **losc** (idea) — Does a project pass the Local Only Servers Club's test: no accounts, no cloud, and your data your own? *bot* `no-install` `offline` `read-only` `trust`

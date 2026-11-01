@@ -478,6 +478,10 @@ willow/
 │   │   │   ├── irc.py   IRC logs as dated lines of messages
 │   │   │   ├── test_irc.py
 │   │   │   └── README.md
+│   │   ├── jeles/
+│   │   │   ├── jeles.py      Jeles' nuggets as passages, and your approved answers as Jeles nuggets, paired by question hash
+│   │   │   ├── test_jeles.py
+│   │   │   └── README.md
 │   │   ├── jetbrains/
 │   │   │   ├── jetbrains.py      an external tool for JetBrains IDEs: answers as links to file and line
 │   │   │   ├── test_jetbrains.py
@@ -766,6 +770,10 @@ willow/
 │   │   ├── policy-watch/
 │   │   │   ├── policy_watch.py  a policy page fetched each run, and what changed since, sentence by sentence
 │   │   │   ├── test_policy_watch.py
+│   │   │   └── README.md
+│   │   ├── predict/
+│   │   │   ├── predict.py    what a question will come to, on the record before it is asked, graded after
+│   │   │   ├── test_predict.py
 │   │   │   └── README.md
 │   │   ├── print/
 │   │   │   ├── print.py      an answer as a page to print, with its sources; --large for big type

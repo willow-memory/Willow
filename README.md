@@ -120,11 +120,11 @@ says how to pick one up:
 <!-- willow:front show=pick week=2026-W44 -->
 **Add-on of the week**
 
-**[symptoms](adapters/stdlib/symptoms/)** — A symptom diary over time, ready to show a doctor: what, when, how bad, each line cited.
+**[tarot](adapters/stdlib/tarot/)** — A seeded tarot draw on the record, replayable by anyone with the seed.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 275 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 277 built add-ons in name order.*
 
-[Every add-on, 275 built of 499, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 277 built of 499, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 

@@ -852,16 +852,6 @@
   "tags": "no-install, online, records, assistant"
  },
  {
-  "name": "jeles",
-  "kind": "stdlib",
-  "section": "Trust and proof",
-  "line": "Your approved answers as Jeles nuggets, with question, answer, sources and who sealed it, and Jeles' own verified nuggets read back as passages.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, trust"
- },
- {
   "name": "joins",
   "kind": "stdlib",
   "section": "Play",
@@ -1411,16 +1401,6 @@
   "writes": "nothing",
   "network": "the forge, through the workflow's token, to post the comment",
   "tags": "no-install, online, read-only, interface"
- },
- {
-  "name": "predict",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "Write down what you'll do next before you do it, and grade it after; the record counts how often you were right.",
-  "source": "bot",
-  "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, tracking"
  },
  {
   "name": "predictions",
