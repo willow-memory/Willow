@@ -1,0 +1,9 @@
+{
+ "about": "The Claude Code session that ran the small-models night (and the ofrenda demo, the add-ons and both pull requests before it), held by its first `bytes` bytes and their SHA-256, never its text. It holds the user's own context and the assistant's instructions, so it is not in this repository; build.py reads it from the user's copy, redacts it with transcript-redact and mirrors it with agent-transcript. A session file only grows, so a later copy still holds this part.",
+ "id": "2c17530b-bfb2-5222-8c4f-177cc34bb62c",
+ "tool": "Claude Code",
+ "frozen": "2026-11-01",
+ "bytes": 5944224,
+ "lines": 1838,
+ "sha256": "bef2cdc4ce7911a63adc2a63215982552d8254683e211bc7114eb67cef823b38"
+}

@@ -1,0 +1,116 @@
+{
+ "model": "gemma-3-4b-it",
+ "person": "teodora",
+ "rank": "bm25",
+ "needs": [
+  "When is Maisie's school due?",
+  "When did I last pay Sam?",
+  "When did I stop AAT?",
+  "When was Chidi’s last invoice?",
+  "When did I drop a ball?"
+ ],
+ "served": {
+  "When is Maisie's school due?": [
+   "syllabus",
+   "pets",
+   "car"
+  ],
+  "When did I last pay Sam?": [
+   "subscriptions",
+   "changed",
+   "baby-log"
+  ],
+  "When did I stop AAT?": [
+   "hook-stop",
+   "format-rot"
+  ],
+  "When was Chidi’s last invoice?": [
+   "starter-words",
+   "changed",
+   "baby-log"
+  ],
+  "When did I drop a ball?": []
+ },
+ "pool": [
+  "baby-log",
+  "car",
+  "changed",
+  "format-rot",
+  "hook-stop",
+  "pets",
+  "starter-words",
+  "subscriptions",
+  "syllabus"
+ ],
+ "plan": {
+  "why": "To help Teo manage her client invoices and track outstanding payments, ensuring she doesn't miss deadlines or forget important details.",
+  "steps": [
+   {
+    "name": "changed",
+    "words": "or empty",
+    "does": "Detects changes in the invoices/work directory to highlight any overdue or missed invoices."
+   },
+   {
+    "name": "subscriptions",
+    "words": "or empty",
+    "does": "Identifies subscription renewals from bank statements and emails, alerting her to upcoming payments."
+   },
+   {
+    "name": "syllabus",
+    "words": "or empty",
+    "does": "Tracks AAT Level 4 deadlines and assignments based on the syllabus."
+   },
+   {
+    "name": "starter-words",
+    "words": "or empty",
+    "does": "Provides a list of relevant terms (owes, invoice) to quickly search within invoices and notes."
+   }
+  ]
+ },
+ "raw": [
+  "{\"needs\": [\"When is Maisie's school due?\", \"When did I last pay Sam?\", \"When did I stop AAT?\", \"When was Chidi’s last invoice?\", \"When did I drop a ball?\"]}\n",
+  "{\"why\": \"To help Teo manage her client invoices and track outstanding payments, ensuring she doesn't miss deadlines or forget important details.\", \"steps\": [{\"name\": \"changed\", \"words\": \"or empty\", \"does\": \"Detects changes in the invoices/work directory to highlight any overdue or missed invoices.\"}, {\"name\": \"subscriptions\", \"words\": \"or empty\", \"does\": \"Identifies subscription renewals from bank statements and emails, alerting her to upcoming payments.\"}, {\"name\": \"syllabus\", \"words\": \"or empty\", \"does\": \"Tracks AAT Level 4 deadlines and assignments based on the syllabus.\"}, {\"name\": \"starter-words\", \"words\": \"or empty\", \"does\": \"Provides a list of relevant terms (owes, invoice) to quickly search within invoices and notes.\"}]}"
+ ],
+ "steps": [
+  {
+   "name": "changed",
+   "words": "or empty",
+   "does": "Detects changes in the invoices/work directory to highlight any overdue or missed invoices.",
+   "ran": true,
+   "exit": 0,
+   "lines": 1,
+   "head": "First check: 308 files fingerprinted. The next check says what changed since.\n",
+   "cmd": "/home/user/Willow/adapters/stdlib/changed/changed.py --box <tmp>/box"
+  },
+  {
+   "name": "subscriptions",
+   "words": "or empty",
+   "does": "Identifies subscription renewals from bank statements and emails, alerting her to upcoming payments.",
+   "ran": true,
+   "exit": 0,
+   "lines": 9,
+   "head": "so holmwood lettings       575.00  monthly  last 2026-10-01  next about 2026-10-31  (58 payments, was 540.00)\nso okafor joint            300.00  monthly  last 2026-10-02  next about 2026-11-01  (58 payments)\nso marinescu to            160.00  monthly  last 2026-09-28  next about 2026-10-28  (57 payments)\ndd harbour pensions        150.00  monthly  last 2026-10-15  next about 2026-11-14  (58 payments)\ndd northern energy          68.00  monthly  last 2026-10-08  next about 2026-11-07  (58 payments, was 112.00)\ndeb larchmont mutual       179.80  yearly   last 2025-11-04  next about 2026-11-04  (3 payments, was 171.20)\ndd vela mobile              14.00  monthly  last 2026-10-12  next about 2026-11-11  (58 payments)\ndd streambox membership     10.99  monthly  last 2026-09-22  next about 2026-10-22  (57 payments)\n8 subscriptions: about 1277.99 a month, 15515.68 a year\n",
+   "cmd": "/home/user/Willow/adapters/stdlib/subscriptions/subscriptions.py --box <tmp>/box"
+  },
+  {
+   "name": "syllabus",
+   "words": "or empty",
+   "does": "Tracks AAT Level 4 deadlines and assignments based on the syllabus.",
+   "ran": true,
+   "exit": 42,
+   "lines": 1,
+   "head": "No line of your folder gives a reading, an assignment or an exam for a course a day.\n",
+   "cmd": "/home/user/Willow/adapters/stdlib/syllabus/syllabus.py --box <tmp>/box"
+  },
+  {
+   "name": "starter-words",
+   "words": "or empty",
+   "does": "Provides a list of relevant terms (owes, invoice) to quickly search within invoices and notes.",
+   "ran": true,
+   "exit": 1,
+   "lines": 0,
+   "head": "",
+   "cmd": "/home/user/Willow/adapters/stdlib/starter-words/starter.py copy --to '~/my-words.txt'"
+  }
+ ]
+}

@@ -63,6 +63,24 @@ def test_a_json_transcript_stays_json(tmp_path):
     assert back["mail"] == "[redacted:email]"
 
 
+def test_a_line_break_in_json_is_not_part_of_an_email(tmp_path):
+    """In a JSON transcript a line break is the two characters \\n, so a line
+    that starts @AGENTS.md or @pytest.mark sits as \\n@AGENTS.md: no email,
+    and taking the n would leave an escape JSON can't read. A real address
+    after a line break is still taken, and the break kept."""
+    page = {"read": "Contents of CLAUDE.md:\n\n@AGENTS.md\n",
+            "code": "x = 1\n@pytest.mark.parametrize('a', [1])\ndef t(a): ...",
+            "mail": "cc:\nbob@example.org\tdone"}  # fmt: skip
+    src = tmp_path / "t.jsonl"
+    src.write_text(json.dumps(page) + "\n")
+    to = tmp_path / "out.jsonl"
+    assert run("--from", str(src), "--to", str(to)).returncode == 0
+    back = json.loads(to.read_text())
+    assert back["read"] == page["read"]
+    assert back["code"] == page["code"]
+    assert back["mail"] == "cc:\n[redacted:email]\tdone"
+
+
 def test_the_copy_is_written_even_clean_and_twice_gives_the_same_bytes(tmp_path):
     src = tmp_path / "clean.txt"
     src.write_text("nothing to see here\n")

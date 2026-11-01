@@ -1,0 +1,117 @@
+{
+ "model": "gemma-3-4b-it",
+ "person": "teodora",
+ "pool": [
+  "agent-transcript",
+  "backup",
+  "badge",
+  "browse",
+  "car",
+  "ci",
+  "claude-code",
+  "code-shape",
+  "dice",
+  "fixity",
+  "google-keep",
+  "home-upkeep",
+  "hook-impact",
+  "listening",
+  "lockfiles",
+  "mcp",
+  "mileage",
+  "odds",
+  "openai-compatible",
+  "orders",
+  "persona-card",
+  "photos",
+  "pii-audit",
+  "pile-store",
+  "privacy",
+  "quote-check",
+  "renewals",
+  "ripgrep",
+  "risky-code",
+  "session-seal",
+  "shell-history",
+  "slack",
+  "stems",
+  "test-impact",
+  "three-two-one",
+  "typos",
+  "vim",
+  "vscode",
+  "words-de"
+ ],
+ "raw": "{\"why\": \"It helps Teo quickly find information related to her clients, finances, and home upkeep, reducing the 'shoebox' feeling of her paperwork.\", \"steps\": [{\"name\": \"browse\", \"words\": \"recipes from grandmother\", \"does\": \"Allows Teo to directly browse her grandmother’s recipe files within Willow, finding specific recipes by typing a partial query.\"}, {\"name\": \"ripgrep\", \"words\": \"clients invoices\", \"does\": \"Quickly searches all of Teo's invoice files for mentions of her clients, identifying relevant documents efficiently.\"}, {\"name\": \"odds\", \"words\": \"2d6+1 boiler repair\", \"does\": \"Calculates the probability of a specific outcome (boiler repair cost) based on historical data, providing a quick estimate.\"}, {\"name\": \"fixity\", \"words\": \"\", \"does\": \"Ensures the integrity of her key files (like invoices and AAT notes) by regularly hashing them, alerting her to any potential corruption.\"}]}",
+ "plan": {
+  "why": "It helps Teo quickly find information related to her clients, finances, and home upkeep, reducing the 'shoebox' feeling of her paperwork.",
+  "steps": [
+   {
+    "name": "browse",
+    "words": "recipes from grandmother",
+    "does": "Allows Teo to directly browse her grandmother’s recipe files within Willow, finding specific recipes by typing a partial query."
+   },
+   {
+    "name": "ripgrep",
+    "words": "clients invoices",
+    "does": "Quickly searches all of Teo's invoice files for mentions of her clients, identifying relevant documents efficiently."
+   },
+   {
+    "name": "odds",
+    "words": "2d6+1 boiler repair",
+    "does": "Calculates the probability of a specific outcome (boiler repair cost) based on historical data, providing a quick estimate."
+   },
+   {
+    "name": "fixity",
+    "words": "",
+    "does": "Ensures the integrity of her key files (like invoices and AAT notes) by regularly hashing them, alerting her to any potential corruption."
+   }
+  ]
+ },
+ "steps": [
+  {
+   "name": "browse",
+   "words": "recipes from grandmother",
+   "does": "Allows Teo to directly browse her grandmother’s recipe files within Willow, finding specific recipes by typing a partial query.",
+   "ran": true,
+   "exit": "still running after 60s",
+   "cmd": "/home/user/Willow/adapters/stdlib/browse/browse.py --box <tmp>/box",
+   "lines": 5,
+   "head": "willow is open on this machine only:\n\n    http://127.0.0.1:36347/start?key=dlzqw4AvIxcojC1TN7_Ck5Bi25OqyQAYxxt--SdqC74\n\nCtrl-C stops it.\n",
+   "stderr": ""
+  },
+  {
+   "name": "ripgrep",
+   "words": "clients invoices",
+   "does": "Quickly searches all of Teo's invoice files for mentions of her clients, identifying relevant documents efficiently.",
+   "ran": true,
+   "exit": 42,
+   "cmd": "/home/user/Willow/adapters/deps/ripgrep/ripgrep.py --box <tmp>/box 'clients invoices'",
+   "lines": 1,
+   "head": "0 hits in 0 passages\n",
+   "stderr": ""
+  },
+  {
+   "name": "odds",
+   "words": "2d6+1 boiler repair",
+   "does": "Calculates the probability of a specific outcome (boiler repair cost) based on historical data, providing a quick estimate.",
+   "ran": true,
+   "exit": 0,
+   "cmd": "/home/user/Willow/adapters/stdlib/odds/odds.py 2d6",
+   "lines": 12,
+   "head": "2d6\n     2   1/36    2.78%\n     3   1/18    5.56%\n     4   1/12    8.33%\n     5   1/9    11.11%\n     6   5/36   13.89%\n     7   1/6    16.67%\n     8   5/36   13.89%\n     9   1/9    11.11%\n    10   1/12    8.33%\n    11   1/18    5.56%\n    12   1/36    2.78%\n",
+   "stderr": ""
+  },
+  {
+   "name": "fixity",
+   "words": "",
+   "does": "Ensures the integrity of her key files (like invoices and AAT notes) by regularly hashing them, alerting her to any potential corruption.",
+   "ran": true,
+   "exit": 0,
+   "cmd": "/home/user/Willow/adapters/stdlib/fixity/fixity.py --box <tmp>/box",
+   "lines": 1,
+   "head": "First fixity check: 308 files hashed. The next check says which changed without an edit.\n",
+   "stderr": ""
+  }
+ ]
+}

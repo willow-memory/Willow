@@ -1,0 +1,27 @@
+{
+ "model": "gemma-3-4b-it",
+ "person": "teodora",
+ "now": "2026-10-22T09:00:00Z",
+ "facts": [
+  "OWED TO YOU: Bramble & Bean Ltd owes you £2,140.00 on 3 invoice(s) you sent (INV-0427 £680.00 due 2026-07-30, INV-0431 £720.00 due 2026-08-30, INV-0435 £740.00 due 2026-09-30); the oldest is 84 days overdue. Your last reminder: email/2026-10-06_outstanding-invoices.eml. Source: work/invoices/invoice_ledger.csv rows 228, 232, 236.",
+  "POSSIBLY PAID: your invoice INV-0434 to Hargreaves Plumbing & Heating Ltd (£520.00, due 2026-09-30) has no paid date, but a credit of £520.00 from HPS LTD BACS arrived on 2026-09-02. Check before chasing it. Source: work/invoices/invoice_ledger.csv row 235; your bank statements.",
+  "RENEWS: a yearly payment of £179.80 to DEB LARCHMONT MUTUAL is due about 2026-11-04 (last paid 2025-11-04); check it will go through. Source: your bank statements, via subscriptions.",
+  "DATE: 2026-10-22: Pub quiz w Dev. Source: calendar/teo.ics:273.",
+  "DATE: 2026-10-26: Half term. Source: calendar/teo.ics:278.",
+  "DATE: 2026-10-27: We will collect the premium on or after 27/10/2026. If your payment. Source: email/2026-10-06_pi-renewal-2026.eml:16.",
+  "AN INVOICE YOU SENT FALLS DUE: INV-0438 to Hargreaves Plumbing & Heating Ltd (£557.75) is due to be paid to you on 2026-10-30. Source: work/invoices/INV-0438_hargreaves.txt:9.",
+  "AN INVOICE YOU SENT FALLS DUE: INV-0440 to Fernside Dog Grooming (£173.25) is due to be paid to you on 2026-10-30. Source: work/invoices/INV-0440_fernside.txt:9.",
+  "DATE: 2026-10-31: Month end — invoices out. Source: calendar/teo.ics:284.",
+  "DATE: 2026-11-05: Maisie museum trip (Y4). Source: calendar/teo.ics:290."
+ ],
+ "raw": "{\"points\": [\"Follow up on the outstanding £2,140.00 owed by Bramble & Bean Ltd [1]\", \"Check if the Hargreaves Plumbing & Heating Ltd invoice INV-0434 (£520.00) has been paid after the credit payment [2]\", \"Ensure the yearly payment of £179.80 to DEB LARCHMONT MUTUAL goes through before 2026-11-04 [3]\", \"Attend the pub quiz with Dev on 2026-10-22 [4]\", \"Prepare for premium collection on or after 2026-10-27 [6]\", \"Process month-end invoices by 2026-10-31 [9]\"]}",
+ "note": [
+  "Follow up on the outstanding £2,140.00 owed by Bramble & Bean Ltd [1]",
+  "Check if the Hargreaves Plumbing & Heating Ltd invoice INV-0434 (£520.00) has been paid after the credit payment [2]",
+  "Ensure the yearly payment of £179.80 to DEB LARCHMONT MUTUAL goes through before 2026-11-04 [3]",
+  "Attend the pub quiz with Dev on 2026-10-22 [4]",
+  "Prepare for premium collection on or after 2026-10-27 [6]",
+  "Process month-end invoices by 2026-10-31 [9]"
+ ],
+ "struck": []
+}

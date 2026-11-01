@@ -1,0 +1,115 @@
+{
+ "model": "gemma-3-4b-it",
+ "person": "teodora",
+ "rank": "bm25",
+ "uses": true,
+ "needs": [
+  "When is Maisie's school date?",
+  "When did I last pay invoices?",
+  "When did I stop AAT study?",
+  "When is Sam expecting baby?",
+  "When did Ana get engaged?",
+  "When did Chidi leave work?"
+ ],
+ "served": {
+  "When is Maisie's school date?": [
+   "on-this-day",
+   "hours",
+   "job-hunt"
+  ],
+  "When did I last pay invoices?": [
+   "subscriptions",
+   "amounts",
+   "changed"
+  ],
+  "When did I stop AAT study?": [
+   "hook-stop",
+   "format-rot"
+  ],
+  "When is Sam expecting baby?": [
+   "baby-log"
+  ],
+  "When did Ana get engaged?": [
+   "horoscope",
+   "bibtex",
+   "daily-word"
+  ],
+  "When did Chidi leave work?": [
+   "mileage",
+   "sheets",
+   "hook-stop"
+  ]
+ },
+ "pool": [
+  "amounts",
+  "baby-log",
+  "bibtex",
+  "changed",
+  "daily-word",
+  "format-rot",
+  "hook-stop",
+  "horoscope",
+  "hours",
+  "job-hunt",
+  "mileage",
+  "on-this-day",
+  "sheets",
+  "subscriptions"
+ ],
+ "plan": {
+  "why": "To quickly find out if she's missed any payments or appointments related to her clients and family, and track her work hours.",
+  "steps": [
+   {
+    "name": "amounts",
+    "words": "invoice",
+    "does": "Find all money owed to her by her clients and the amounts."
+   },
+   {
+    "name": "hours",
+    "words": "",
+    "does": "Calculate total hours worked on client invoices."
+   },
+   {
+    "name": "changed",
+    "words": "reminder",
+    "does": "Identify any new notes or edits related to appointments or outstanding payments."
+   }
+  ]
+ },
+ "raw": [
+  "{\"needs\": [\"When is Maisie's school date?\", \"When did I last pay invoices?\", \"When did I stop AAT study?\", \"When is Sam expecting baby?\", \"When did Ana get engaged?\", \"When did Chidi leave work?\"]}\n",
+  "{\"why\": \"To quickly find out if she's missed any payments or appointments related to her clients and family, and track her work hours.\", \"steps\": [{\"name\": \"amounts\", \"words\": \"invoice\", \"does\": \"Find all money owed to her by her clients and the amounts.\"}, {\"name\": \"hours\", \"words\": \"\", \"does\": \"Calculate total hours worked on client invoices.\"}, {\"name\": \"changed\", \"words\": \"reminder\", \"does\": \"Identify any new notes or edits related to appointments or outstanding payments.\"}]}\n"
+ ],
+ "steps": [
+  {
+   "name": "amounts",
+   "words": "invoice",
+   "does": "Find all money owed to her by her clients and the amounts.",
+   "ran": true,
+   "exit": 0,
+   "lines": 137,
+   "head": "2023-09-15  £1,195.00  email/2023-09-15_aat-welcome.eml:10                                      is confirmed. Fee paid: £1,195.00.  (date from file name)\n2023-09-16  £1,195     notes/journal/2023-09-16.md:3                                            Enrolled on AAT Level 4 with Northgate. £1,195. Sam says it's the right call and that I'm wasted doing shoeboxes. He's r  (date from line 1)\n2024-05-14  £45.00     receipts/kinetic_physio_2024-05-14_sam.txt:4                             £45.00 paid card (T MARINESCU)  (date from file name)\n2024-05-28  £45.00     receipts/kinetic_physio_2024-05-28_sam.txt:4                             £45.00 paid card (T MARINESCU)  (date from file name)\n2024-06-11  £45.00     receipts/kinetic_physio_2024-06-11_sam.txt:4                             £45.00 paid card (T MARINESCU)  (date from file name)\n2024-12-03  £3,680     notes/journal/2024-12-03.md:3                                            Boiler condemned. £3,680. Dev offered £600 before I'd even finished asking. Cold showers at the gym till Friday.  (date from line 1)\n2024-12-03  £600       notes/journal/2024-12-03.md:3                                            Boiler condemned. £3,680. Dev offered £600 before I'd even finished asking. Cold showers at the gym till Friday.  (date from line 1)\n2024-12-06  £1,840.00  receipts/warmline_2024-12-06.txt:3                                       Part payment £1,840.00 card (T MARINESCU)  (date from file name)\n2024-12-06  £1,840.00  receipts/warmline",
+   "cmd": "/home/user/Willow/adapters/stdlib/amounts/amounts.py --box <tmp>/box"
+  },
+  {
+   "name": "hours",
+   "words": "",
+   "does": "Calculate total hours worked on client invoices.",
+   "ran": true,
+   "exit": 42,
+   "lines": 1,
+   "head": "No line of your folder says work and a length of time.\n",
+   "cmd": "/home/user/Willow/adapters/stdlib/hours/hours.py --box <tmp>/box"
+  },
+  {
+   "name": "changed",
+   "words": "reminder",
+   "does": "Identify any new notes or edits related to appointments or outstanding payments.",
+   "ran": true,
+   "exit": 0,
+   "lines": 1,
+   "head": "First check: 308 files fingerprinted. The next check says what changed since.\n",
+   "cmd": "/home/user/Willow/adapters/stdlib/changed/changed.py --box <tmp>/box"
+  }
+ ]
+}

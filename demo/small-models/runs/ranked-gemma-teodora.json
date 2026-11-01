@@ -1,0 +1,29 @@
+{
+ "model": "gemma-3-4b-it",
+ "person": "teodora",
+ "now": "2026-10-22T09:00:00Z",
+ "facts": [
+  "OWED TO YOU: Bramble & Bean Ltd owes you £2,140.00 on 3 invoice(s) you sent (INV-0427 £680.00 due 2026-07-30, INV-0431 £720.00 due 2026-08-30, INV-0435 £740.00 due 2026-09-30); the oldest is 84 days overdue. Your last reminder: work/invoices/INV-0435_bramble.txt. Source: work/invoices/invoice_ledger.csv rows 228, 232, 236.",
+  "OWED TO YOU: Hargreaves Plumbing & Heating Ltd owes you £520.00 on 1 invoice(s) you sent (INV-0434 £520.00 due 2026-09-30); the oldest is 22 days overdue. Your last reminder: work/invoices/INV-0434_hargreaves.txt. Source: work/invoices/invoice_ledger.csv rows 235.",
+  "RENEWS: a yearly payment of £179.80 to DEB LARCHMONT MUTUAL is due about 2026-11-04 (last paid 2025-11-04); check it will go through. Source: your bank statements, via subscriptions.",
+  "DATE: 2026-10-22: Pub quiz w Dev. Source: calendar/teo.ics:273.",
+  "DATE: 2026-10-26: Half term. Source: calendar/teo.ics:278.",
+  "DATE: 2026-10-27: We will collect the premium on or after 27/10/2026. If your payment. Source: email/2026-10-06_pi-renewal-2026.eml:16.",
+  "DATE: 2026-10-30: Payment due: 30/10/2026 (30 days). Source: work/invoices/INV-0438_hargreaves.txt:9.",
+  "DATE: 2026-10-30: Payment due: 30/10/2026 (30 days). Source: work/invoices/INV-0439_petalrow.txt:9.",
+  "DATE: 2026-10-30: Payment due: 30/10/2026 (30 days). Source: work/invoices/INV-0440_fernside.txt:9.",
+  "DATE: 2026-10-30: INV-0438,2026-09-30,Hargreaves Plumbing & Heating Ltd,September 2026,557.75,2026-10-30,sent,. Source: work/invoices/invoice_ledger.csv:239.",
+  "DATE: 2026-10-30: INV-0439,2026-09-30,Petal Row Flowers,September 2026,360.00,2026-10-30,paid,2026-10-06. Source: work/invoices/invoice_ledger.csv:240.",
+  "DATE: 2026-10-30: INV-0440,2026-09-30,Fernside Dog Grooming,September 2026,173.25,2026-10-30,sent,. Source: work/invoices/invoice_ledger.csv:241.",
+  "DATE: 2026-10-31: Month end — invoices out. Source: calendar/teo.ics:284.",
+  "DATE: 2026-11-05: Maisie museum trip (Y4). Source: calendar/teo.ics:290."
+ ],
+ "raw": "{\"points\": [\"Follow up on the overdue invoice from Bramble & Bean Ltd (£2,140.00) due 2026-09-30 [1]\", \"Chase Hargreaves Plumbing & Heating Ltd for the overdue invoice (£520.00) due 2026-09-30 [2, 3]\", \"Check the renewal payment to DEB LARCHMONT MUTUAL (£179.80) is processed by 2026-11-04 [3]\", \"Attend the pub quiz with Dev on 2026-10-22 [4]\"]}",
+ "note": [
+  "Follow up on the overdue invoice from Bramble & Bean Ltd (£2,140.00) due 2026-09-30 [1]",
+  "Chase Hargreaves Plumbing & Heating Ltd for the overdue invoice (£520.00) due 2026-09-30 [2, 3]",
+  "Check the renewal payment to DEB LARCHMONT MUTUAL (£179.80) is processed by 2026-11-04 [3]",
+  "Attend the pub quiz with Dev on 2026-10-22 [4]"
+ ],
+ "struck": []
+}

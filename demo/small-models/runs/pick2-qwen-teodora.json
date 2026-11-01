@@ -1,0 +1,120 @@
+{
+ "model": "qwen2.5-3b-instruct",
+ "person": "teodora",
+ "rank": "bm25",
+ "uses": true,
+ "needs": [
+  "when is my next AAT deadline",
+  "what's left to pack for Maisie's school trip",
+  "who paid for the new chair",
+  "how much did I spend on groceries this month",
+  "are there any overdue bills",
+  "next insurance renewal date"
+ ],
+ "served": {
+  "when is my next AAT deadline": [
+   "coming-up",
+   "pets",
+   "pile-build"
+  ],
+  "what's left to pack for Maisie's school trip": [
+   "gaps",
+   "a11y-check",
+   "restack"
+  ],
+  "who paid for the new chair": [
+   "changed",
+   "rss-out",
+   "similar"
+  ],
+  "how much did I spend on groceries this month": [
+   "budget",
+   "subscriptions",
+   "bank"
+  ],
+  "are there any overdue bills": [
+   "sbom",
+   "mcp",
+   "hosts"
+  ],
+  "next insurance renewal date": [
+   "renewals",
+   "coming-up",
+   "pets"
+  ]
+ },
+ "pool": [
+  "a11y-check",
+  "bank",
+  "budget",
+  "changed",
+  "coming-up",
+  "gaps",
+  "hosts",
+  "mcp",
+  "pets",
+  "pile-build",
+  "renewals",
+  "restack",
+  "rss-out",
+  "sbom",
+  "similar",
+  "subscriptions"
+ ],
+ "plan": {
+  "why": "This pipeline helps Teo streamline her financial and administrative tasks by automating the creation of reports, tracking expenses, and managing subscriptions.",
+  "steps": [
+   {
+    "name": "bank",
+    "words": "",
+    "does": "automates the process of extracting bank statements into a searchable format, allowing Teo to easily track spending and payments."
+   },
+   {
+    "name": "subscriptions",
+    "words": "",
+    "does": "automatically identifies and tracks her monthly subscriptions, providing reminders for renewal dates and saving her time in managing these expenses."
+   },
+   {
+    "name": "renewals",
+    "words": "",
+    "does": "creates a register of upcoming renewals from her documents, helping Teo stay organized and avoid missing important deadlines."
+   }
+  ]
+ },
+ "raw": [
+  "{\"needs\": [\"when is my next AAT deadline\", \"what's left to pack for Maisie's school trip\", \"who paid for the new chair\", \"how much did I spend on groceries this month\", \"are there any overdue bills\", \"next insurance renewal date\"]}",
+  "{\"why\": \"This pipeline helps Teo streamline her financial and administrative tasks by automating the creation of reports, tracking expenses, and managing subscriptions.\", \"steps\": [{\"name\": \"bank\", \"words\": \"\", \"does\": \"automates the process of extracting bank statements into a searchable format, allowing Teo to easily track spending and payments.\"}, {\"name\": \"subscriptions\", \"words\": \"\", \"does\": \"automatically identifies and tracks her monthly subscriptions, providing reminders for renewal dates and saving her time in managing these expenses.\"}, {\"name\": \"renewals\", \"words\": \"\", \"does\": \"creates a register of upcoming renewals from her documents, helping Teo stay organized and avoid missing important deadlines.\"}]}"
+ ],
+ "steps": [
+  {
+   "name": "bank",
+   "words": "",
+   "does": "automates the process of extracting bank statements into a searchable format, allowing Teo to easily track spending and payments.",
+   "ran": true,
+   "exit": 42,
+   "lines": 1,
+   "head": "wrote 0 files to /tmp/tmp_q92mohj/bank.out; skipped 60\n",
+   "cmd": "/home/user/Willow/adapters/stdlib/bank/bank.py mirror --from /home/user/Willow/demo/teodora/life --to <tmp>/bank.out"
+  },
+  {
+   "name": "subscriptions",
+   "words": "",
+   "does": "automatically identifies and tracks her monthly subscriptions, providing reminders for renewal dates and saving her time in managing these expenses.",
+   "ran": true,
+   "exit": 0,
+   "lines": 9,
+   "head": "so holmwood lettings       575.00  monthly  last 2026-10-01  next about 2026-10-31  (58 payments, was 540.00)\nso okafor joint            300.00  monthly  last 2026-10-02  next about 2026-11-01  (58 payments)\nso marinescu to            160.00  monthly  last 2026-09-28  next about 2026-10-28  (57 payments)\ndd harbour pensions        150.00  monthly  last 2026-10-15  next about 2026-11-14  (58 payments)\ndd northern energy          68.00  monthly  last 2026-10-08  next about 2026-11-07  (58 payments, was 112.00)\ndeb larchmont mutual       179.80  yearly   last 2025-11-04  next about 2026-11-04  (3 payments, was 171.20)\ndd vela mobile              14.00  monthly  last 2026-10-12  next about 2026-11-11  (58 payments)\ndd streambox membership     10.99  monthly  last 2026-09-22  next about 2026-10-22  (57 payments)\n8 subscriptions: about 1277.99 a month, 15515.68 a year\n",
+   "cmd": "/home/user/Willow/adapters/stdlib/subscriptions/subscriptions.py --box <tmp>/box"
+  },
+  {
+   "name": "renewals",
+   "words": "",
+   "does": "creates a register of upcoming renewals from her documents, helping Teo stay organized and avoid missing important deadlines.",
+   "ran": true,
+   "exit": 0,
+   "lines": 2,
+   "head": "gone by  2026-04-22  car/car_insurance_2026.txt:2  Renewed 22/04/2026 by Direct Debit, £38.20/month. Insurer: Tollgate Motor (example).\n1 renewal: 1 gone by, 0 to come\n",
+   "cmd": "/home/user/Willow/adapters/stdlib/renewals/renewals.py --box <tmp>/box"
+  }
+ ]
+}

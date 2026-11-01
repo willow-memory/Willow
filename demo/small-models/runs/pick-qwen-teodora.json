@@ -1,0 +1,112 @@
+{
+ "model": "qwen2.5-3b-instruct",
+ "person": "teodora",
+ "rank": "bm25",
+ "needs": [
+  "when is my next AAT deadline",
+  "what receipts do i need for tax",
+  "who paid me last week",
+  "how much did i spend on groceries",
+  "is there a reminder for Maisie's dentist appointment"
+ ],
+ "served": {
+  "when is my next AAT deadline": [
+   "pets",
+   "coming-up",
+   "pile-build"
+  ],
+  "what receipts do i need for tax": [
+   "mileage",
+   "todo",
+   "warranties"
+  ],
+  "who paid me last week": [
+   "attendance",
+   "reading-log",
+   "mood"
+  ],
+  "how much did i spend on groceries": [],
+  "is there a reminder for Maisie's dentist appointment": [
+   "print",
+   "abbreviations"
+  ]
+ },
+ "pool": [
+  "abbreviations",
+  "attendance",
+  "coming-up",
+  "mileage",
+  "mood",
+  "pets",
+  "pile-build",
+  "print",
+  "reading-log",
+  "todo",
+  "warranties"
+ ],
+ "plan": {
+  "why": "This pipeline helps Teo efficiently find and manage her work-related documents, appointments, and client information by organizing them into a searchable store.",
+  "steps": [
+   {
+    "name": "pile-build",
+    "words:": "",
+    "does": "Organizes all of Teo's work files into a searchable store so she can quickly locate important documents."
+   },
+   {
+    "name": "todo",
+    "words:": "",
+    "does": "Lists out her tasks and appointments, helping her stay organized and not miss any deadlines or meetings."
+   },
+   {
+    "name": "coming-up",
+    "words:": "",
+    "does": "Highlights upcoming events and reminders in the next few days, ensuring she doesn't forget important dates like client meetings or payments due."
+   },
+   {
+    "name": "print",
+    "words:": "\"when is the appointment\"",
+    "does": "Generates a printable page with relevant appointments for her to take to an appointment, making it easier to carry necessary information on-the-go."
+   }
+  ]
+ },
+ "raw": [
+  "{\"needs\": [\"when is my next AAT deadline\", \"what receipts do i need for tax\", \"who paid me last week\", \"how much did i spend on groceries\", \"is there a reminder for Maisie's dentist appointment\"]}",
+  "{\n  \"why\": \"This pipeline helps Teo efficiently find and manage her work-related documents, appointments, and client information by organizing them into a searchable store.\",\n  \"steps\": [\n    {\"name\": \"pile-build\", \"words:\": \"\", \"does\": \"Organizes all of Teo's work files into a searchable store so she can quickly locate important documents.\"},\n    {\"name\": \"todo\", \"words:\": \"\", \"does\": \"Lists out her tasks and appointments, helping her stay organized and not miss any deadlines or meetings.\"},\n    {\"name\": \"coming-up\", \"words:\": \"\", \"does\": \"Highlights upcoming events and reminders in the next few days, ensuring she doesn't forget important dates like client meetings or payments due.\"},\n    {\"name\": \"print\", \"words:\": \"\\\"when is the appointment\\\"\", \"does\": \"Generates a printable page with relevant appointments for her to take to an appointment, making it easier to carry necessary information on-the-go.\"}\n  ]\n}"
+ ],
+ "steps": [
+  {
+   "name": "pile-build",
+   "words": "",
+   "does": "Organizes all of Teo's work files into a searchable store so she can quickly locate important documents.",
+   "ran": false,
+   "why": "needs STORE, which the plan can't give"
+  },
+  {
+   "name": "todo",
+   "words": "",
+   "does": "Lists out her tasks and appointments, helping her stay organized and not miss any deadlines or meetings.",
+   "ran": true,
+   "exit": 0,
+   "lines": 24,
+   "head": "2025-04-08  email/2025-04-08_making-tax-digital-for-income-tax-what-bookkeepe.eml:4  Subject: Making Tax Digital for income tax — what bookkeepers need to know\n2025-04-08  email/2025-04-08_making-tax-digital-for-income-tax-what-bookkeepe.eml:7  This week's issue: Making Tax Digital for income tax — what bookkeepers need to know.\n2025-09-14  chats/WhatsApp Chat with Dev.txt:10                                      [28/02/2025, 17:45:00] Dev Raman: didn't need to! cheers\n2026-05-29  email/2026-05-29_small-run-of-hardback-books-quote.eml:11                Around 40 copies. They'd need to be in Romania (Cluj) in the first week\n2026-09-09  chats/WhatsApp Chat with Jo.txt:18                                       [09/09/2026, 20:40:00] Jo Whitlam: aw!! yes of course, we'll need to swap that week, sort nearer the time\nundated     recipes/bunica/index.md:17                                               - [ ] Ardei umpluți — tape 2, 09:10\nundated     recipes/bunica/index.md:18                                               - [ ] Chiftele — tape 1, 19:00\nundated     recipes/bunica/index.md:19                                               - [ ] Drob de miel — tape 4, 02:00\nundated     recipes/bunica/index.md:20                                               - [ ] Tochitură — tape 4, 05:30\nundated     recipes/bunica/index.md:21                                               - [ ] Varză călită — tape 2, 12:45\nundated     recipes/bunica/index.md:22                                               ",
+   "cmd": "/home/user/Willow/adapters/stdlib/todo/todo.py --box <tmp>/box"
+  },
+  {
+   "name": "coming-up",
+   "words": "",
+   "does": "Highlights upcoming events and reminders in the next few days, ensuring she doesn't forget important dates like client meetings or payments due.",
+   "ran": true,
+   "exit": 0,
+   "lines": 4,
+   "head": "2026-11-01  calendar/teo.ics:285  DTEND;VALUE=DATE:20261101  SUMMARY:Month end — invoices out\n2026-11-05  calendar/teo.ics:290  DTSTART;VALUE=DATE:20261105  SUMMARY:Maisie museum trip (Y4)\n2026-11-06  calendar/teo.ics:291  DTEND;VALUE=DATE:20261106  SUMMARY:Maisie museum trip (Y4)\n2026-11-07  calendar/teo.ics:296  DTSTART;TZID=Europe/London:20261107T140000  SUMMARY:Ruby's party, soft play\n",
+   "cmd": "/home/user/Willow/adapters/stdlib/coming-up/coming_up.py --box <tmp>/box"
+  },
+  {
+   "name": "print",
+   "words": "",
+   "does": "Generates a printable page with relevant appointments for her to take to an appointment, making it easier to carry necessary information on-the-go.",
+   "ran": false,
+   "why": "needs words and the plan gave none"
+  }
+ ]
+}

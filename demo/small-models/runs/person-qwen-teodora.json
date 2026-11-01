@@ -1,0 +1,101 @@
+{
+ "model": "qwen2.5-3b-instruct",
+ "person": "teodora",
+ "pool": [
+  "backup",
+  "bank",
+  "browse",
+  "ci-memo",
+  "coming-up",
+  "daily-word",
+  "dice",
+  "digest",
+  "fixity",
+  "hook-impact",
+  "hook-pin",
+  "hook-replay",
+  "letterboxd",
+  "listening",
+  "mail",
+  "meta-archive",
+  "nestor",
+  "notes",
+  "package-contents",
+  "persona-card",
+  "photos",
+  "pile-build",
+  "pile-gold",
+  "pile-sweep",
+  "pipe",
+  "print",
+  "privacy",
+  "reading-level",
+  "serve",
+  "sheets",
+  "shell-history",
+  "slow-tests",
+  "syllabus",
+  "test-impact",
+  "timeline",
+  "todo",
+  "vim",
+  "vscode",
+  "web-pages",
+  "words-de",
+  "words-es",
+  "words-fr",
+  "xref"
+ ],
+ "raw": "{\n  \"why\": \"This pipeline helps Teo efficiently manage her financial transactions and client information, reducing the need to search through multiple files.\",\n  \"steps\": [\n    {\n      \"name\": \"bank\",\n      \"words\": \"\",\n      \"does\": \"Automatically categorizes and summarizes her monthly bank statements for easy tracking of expenses.\"\n    },\n    {\n      \"name\": \"digest\",\n      \"words\": \"\",\n      \"does\": \"Generates a summary page highlighting upcoming deadlines, appointments, and other important dates in her life.\"\n    },\n    {\n      \"name\": \"letters\",\n      \"words\": \"\",\n      \"does\": \"Provides an export of her Letterboxd data, allowing her to easily review what films she's watched and rated.\"\n    }\n  ]\n}",
+ "plan": {
+  "why": "This pipeline helps Teo efficiently manage her financial transactions and client information, reducing the need to search through multiple files.",
+  "steps": [
+   {
+    "name": "bank",
+    "words": "",
+    "does": "Automatically categorizes and summarizes her monthly bank statements for easy tracking of expenses."
+   },
+   {
+    "name": "digest",
+    "words": "",
+    "does": "Generates a summary page highlighting upcoming deadlines, appointments, and other important dates in her life."
+   },
+   {
+    "name": "letters",
+    "words": "",
+    "does": "Provides an export of her Letterboxd data, allowing her to easily review what films she's watched and rated."
+   }
+  ]
+ },
+ "steps": [
+  {
+   "name": "bank",
+   "words": "",
+   "does": "Automatically categorizes and summarizes her monthly bank statements for easy tracking of expenses.",
+   "ran": true,
+   "exit": 42,
+   "cmd": "/home/user/Willow/adapters/stdlib/bank/bank.py mirror --from /home/user/Willow/demo/teodora/life --to <tmp>/bank.out",
+   "lines": 1,
+   "head": "wrote 0 files to /tmp/tmp2jze82_v/bank.out; skipped 60\n",
+   "stderr": ""
+  },
+  {
+   "name": "digest",
+   "words": "",
+   "does": "Generates a summary page highlighting upcoming deadlines, appointments, and other important dates in her life.",
+   "ran": true,
+   "exit": 0,
+   "cmd": "/home/user/Willow/adapters/stdlib/digest/digest.py --box <tmp>/box",
+   "lines": 25,
+   "head": "Waiting for you\n\n  Nothing is waiting for your approval.\n\nGone stale\n\n  Every approved answer's sources still hold.\n\nComing up (next 14 days)\n\n  2026-10-31  calendar/teo.ics:279  DTEND;VALUE=DATE:20261031 SUMMARY:Half term\n\n  2026-10-31  calendar/teo.ics:284  DTSTART;VALUE=DATE:20261031 SUMMARY:Month end — invoices out\n\n  2026-11-01  calendar/teo.ics:285  DTEND;VALUE=DATE:20261101 SUMMARY:Month end — invoices out\n\n  2026-11-05  calendar/teo.ics:290  DTSTART;VALUE=DATE:20261105 SUMMARY:Maisie museum trip (Y4)\n\n  2026-11-06  calendar/teo.ics:291  DTEND;VALUE=DATE:20261106 SUMMARY:Maisie museum trip (Y4)\n\n  2026-11-07  calendar/teo.ics:296  DTSTART;TZID=Europe/London:20261107T140000 SUMMARY:Ruby's party, soft play\n\nAsked again\n\n  No question has gone unanswered twice.\n",
+   "stderr": ""
+  },
+  {
+   "name": "letters",
+   "words": "",
+   "does": "Provides an export of her Letterboxd data, allowing her to easily review what films she's watched and rated.",
+   "ran": false,
+   "why": "not on offer: thrown out"
+  }
+ ]
+}
