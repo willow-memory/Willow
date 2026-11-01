@@ -10,6 +10,13 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `market-calls`, market calls kept as forecasts' wagers, losers and all:
+  `market_calls.py call --box DIR --p 0.7 SPY up 2026-11-06` (or
+  `above:600`), one call per question and before 13:00 UTC on the close
+  date; `close SYMBOL DATE CLOSE PREV_CLOSE` records the closes you read and
+  proposes each call's outcome for your seal; `score` lists every call,
+  right, wrong or open, with the Brier score. Offline: nothing fetches a
+  price.
 - `forecasts`, a prediction written down before the outcome:
   `forecasts.py wager --box DIR --p 0.8 CLAIM` keeps the p and the claim's
   hash, never its words; `settle ROW yes|no` proposes what happened through
