@@ -1,0 +1,326 @@
+{
+ "model": "qwen2.5-3b-instruct",
+ "url": "http://127.0.0.1:8091/v1",
+ "map": [
+  {
+   "section": "Finding things",
+   "cards": 20,
+   "seconds": 75.6,
+   "raw": "{\"names\": [\"pile-build\", \"pile-gold\"], \"why\": \"Together, pile-build creates a store of your files' content after each change for quick access, while pile-gold marks passages you approve, scoring the search's recall.\"}",
+   "kept": [
+    "pile-build",
+    "pile-gold"
+   ],
+   "invented": [],
+   "why": "Together, pile-build creates a store of your files' content after each change for quick access, while pile-gold marks passages you approve, scoring the search's recall.",
+   "ok": true
+  },
+  {
+   "section": "Finding things",
+   "cards": 9,
+   "seconds": 38.6,
+   "raw": "{\"names\": [\"pile-sweep\", \"reading-level\"], \"why\": \"Together, pile-sweep helps organize and categorize passages by size, while reading-level provides readability metrics for educational purposes.\"}",
+   "kept": [
+    "pile-sweep",
+    "reading-level"
+   ],
+   "invented": [],
+   "why": "Together, pile-sweep helps organize and categorize passages by size, while reading-level provides readability metrics for educational purposes.",
+   "ok": true
+  },
+  {
+   "section": "Your own words",
+   "cards": 19,
+   "seconds": 66.1,
+   "raw": "{\"names\": [\"words-es\", \"words-de\", \"words-fr\"], \"why\": \"These three add-ons, words-es, words-de, and words-fr, are chosen because they cover a wide range of common words from different European languages, which can significantly enhance the tool's ability to understand and respond to queries in multiple languages.\"}",
+   "kept": [
+    "words-es",
+    "words-de",
+    "words-fr"
+   ],
+   "invented": [],
+   "why": "These three add-ons, words-es, words-de, and words-fr, are chosen because they cover a wide range of common words from different European languages, which can significantly enhance the tool's ability to understand and respond to queries in multiple languages.",
+   "ok": true
+  },
+  {
+   "section": "For maintainers",
+   "cards": 19,
+   "seconds": 69.4,
+   "raw": "{\"names\": [\"test-impact\", \"slow-tests\", \"ci-memo\"], \"why\": \"These add-ons work together to improve CI efficiency by focusing on impactful tests and caching memoized results, leading to faster and more reliable builds.\"}",
+   "kept": [
+    "test-impact",
+    "slow-tests",
+    "ci-memo"
+   ],
+   "invented": [],
+   "why": "These add-ons work together to improve CI efficiency by focusing on impactful tests and caching memoized results, leading to faster and more reliable builds.",
+   "ok": true
+  },
+  {
+   "section": "Reading more kinds of files",
+   "cards": 20,
+   "seconds": 57.2,
+   "raw": "{\"names\": [\"bank\", \"sheets\", \"photos\"], \"why\": \"These add-ons together provide comprehensive financial management, detailed spreadsheet tracking, and photo history analysis for a person's life.\"}",
+   "kept": [
+    "bank",
+    "sheets",
+    "photos"
+   ],
+   "invented": [],
+   "why": "These add-ons together provide comprehensive financial management, detailed spreadsheet tracking, and photo history analysis for a person's life.",
+   "ok": true
+  },
+  {
+   "section": "Reading more kinds of files",
+   "cards": 20,
+   "seconds": 58.0,
+   "raw": "{\"names\": [\"letterboxd\", \"listening\"], \"why\": \"These add-ons can help a person track their movie-watching history and music listening habits, providing insights into what they've enjoyed over time.\"}",
+   "kept": [
+    "letterboxd",
+    "listening"
+   ],
+   "invented": [],
+   "why": "These add-ons can help a person track their movie-watching history and music listening habits, providing insights into what they've enjoyed over time.",
+   "ok": true
+  },
+  {
+   "section": "Reading more kinds of files",
+   "cards": 20,
+   "seconds": 65.6,
+   "raw": "{\"names\": [\"notes\", \"mail\", \"meta-archive\"], \"why\": \"These three add-ons cover different aspects of a person's digital life, allowing them to manage their notes and backlinks, keep track of emails and communications, and archive important personal information from social media.\"}",
+   "kept": [
+    "notes",
+    "mail",
+    "meta-archive"
+   ],
+   "invented": [],
+   "why": "These three add-ons cover different aspects of a person's digital life, allowing them to manage their notes and backlinks, keep track of emails and communications, and archive important personal information from social media.",
+   "ok": true
+  },
+  {
+   "section": "Reading more kinds of files",
+   "cards": 10,
+   "seconds": 34.3,
+   "raw": "{\"names\": [\"shell-history\", \"web-pages\"], \"why\": \"Together, they provide a comprehensive view of the user's command history and browsing activity.\"}",
+   "kept": [
+    "shell-history",
+    "web-pages"
+   ],
+   "invented": [],
+   "why": "Together, they provide a comprehensive view of the user's command history and browsing activity.",
+   "ok": true
+  },
+  {
+   "section": "Assistants",
+   "cards": 20,
+   "seconds": 71.9,
+   "raw": "{\"names\": [\"hook-impact\", \"hook-pin\", \"hook-replay\"], \"why\": \"These add-ons together provide a comprehensive security and accountability framework, allowing for the identification of changes made to files during interactions and ensuring that only approved hooks are executed.\"}",
+   "kept": [
+    "hook-impact",
+    "hook-pin",
+    "hook-replay"
+   ],
+   "invented": [],
+   "why": "These add-ons together provide a comprehensive security and accountability framework, allowing for the identification of changes made to files during interactions and ensuring that only approved hooks are executed.",
+   "ok": true
+  },
+  {
+   "section": "Assistants",
+   "cards": 7,
+   "seconds": 34.3,
+   "raw": "{\"names\": [\"serve\", \"persona-card\"], \"why\": \"Serve and Persona-Card can work together to provide a structured approach for organizing passages into pools, enhancing the organization and retrieval of information.\"}",
+   "kept": [
+    "serve",
+    "persona-card"
+   ],
+   "invented": [],
+   "why": "Serve and Persona-Card can work together to provide a structured approach for organizing passages into pools, enhancing the organization and retrieval of information.",
+   "ok": true
+  },
+  {
+   "section": "Trust and proof",
+   "cards": 20,
+   "seconds": 65.2,
+   "raw": "{\"names\": [\"backup\", \"fixity\", \"nestor\"], \"why\": \"These add-ons work together to ensure data integrity, track changes and usage, and verify the provenance of files.\"}",
+   "kept": [
+    "backup",
+    "fixity",
+    "nestor"
+   ],
+   "invented": [],
+   "why": "These add-ons work together to ensure data integrity, track changes and usage, and verify the provenance of files.",
+   "ok": true
+  },
+  {
+   "section": "Trust and proof",
+   "cards": 7,
+   "seconds": 35.5,
+   "raw": "{\"names\": [\"xref\", \"timeline\"], \"why\": \"Together, xref ensures all references are still valid and up-to-date, while timeline provides a comprehensive record for legal or administrative purposes.\"}",
+   "kept": [
+    "xref",
+    "timeline"
+   ],
+   "invented": [],
+   "why": "Together, xref ensures all references are still valid and up-to-date, while timeline provides a comprehensive record for legal or administrative purposes.",
+   "ok": true
+  },
+  {
+   "section": "Ways to use it",
+   "cards": 20,
+   "seconds": 64.9,
+   "raw": "{\"names\": [\"browse\", \"pipe\", \"print\"], \"why\": \"These three add-ons provide a comprehensive workflow for managing and accessing files, with browse offering direct file access, pipe providing command-line interface, and print generating accessible documents.\"}",
+   "kept": [
+    "browse",
+    "pipe",
+    "print"
+   ],
+   "invented": [],
+   "why": "These three add-ons provide a comprehensive workflow for managing and accessing files, with browse offering direct file access, pipe providing command-line interface, and print generating accessible documents.",
+   "ok": true
+  },
+  {
+   "section": "Ways to use it",
+   "cards": 2,
+   "seconds": 29.1,
+   "raw": "{\"names\": [\"vscode\", \"vim\"], \"why\": \"Combining these tools allows a person to leverage the strengths of both, with VS Code's Problems panel for more structured feedback and Vim's quickfix list for a more flexible workflow.\"}",
+   "kept": [
+    "vscode",
+    "vim"
+   ],
+   "invented": [],
+   "why": "Combining these tools allows a person to leverage the strengths of both, with VS Code's Problems panel for more structured feedback and Vim's quickfix list for a more flexible workflow.",
+   "ok": true
+  },
+  {
+   "section": "Privacy and safety",
+   "cards": 11,
+   "seconds": 40.1,
+   "raw": "{\"names\": [\"privacy\", \"package-contents\"], \"why\": \"Privacy addon hides sensitive data while package-contents provides insight into what's inside packages being installed, aiding in understanding dependencies.\"}",
+   "kept": [
+    "privacy",
+    "package-contents"
+   ],
+   "invented": [],
+   "why": "Privacy addon hides sensitive data while package-contents provides insight into what's inside packages being installed, aiding in understanding dependencies.",
+   "ok": true
+  },
+  {
+   "section": "Keeping track",
+   "cards": 20,
+   "seconds": 52.4,
+   "raw": "{\"names\": [\"coming-up\", \"digest\"], \"why\": \"Together, 'coming-up' highlights upcoming events and tasks in the next N days, while 'digest' provides a summary of what needs attention from your files.\"}",
+   "kept": [
+    "coming-up",
+    "digest"
+   ],
+   "invented": [],
+   "why": "Together, 'coming-up' highlights upcoming events and tasks in the next N days, while 'digest' provides a summary of what needs attention from your files.",
+   "ok": true
+  },
+  {
+   "section": "Keeping track",
+   "cards": 17,
+   "seconds": 59.8,
+   "raw": "{\"names\": [\"syllabus\", \"todo\"], \"why\": \"These two add-ons, when used together, can help a teacher or student manage course readings and assignments efficiently by keeping track of what's due each week.\"}",
+   "kept": [
+    "syllabus",
+    "todo"
+   ],
+   "invented": [],
+   "why": "These two add-ons, when used together, can help a teacher or student manage course readings and assignments efficiently by keeping track of what's due each week.",
+   "ok": true
+  },
+  {
+   "section": "Play",
+   "cards": 9,
+   "seconds": 29.4,
+   "raw": "{\"names\": [\"dice\", \"daily-word\"], \"why\": \"Dice rolls and daily word puzzles can be a fun, interactive way to engage with one's own files in a playful manner.\"}",
+   "kept": [
+    "dice",
+    "daily-word"
+   ],
+   "invented": [],
+   "why": "Dice rolls and daily word puzzles can be a fun, interactive way to engage with one's own files in a playful manner.",
+   "ok": true
+  }
+ ],
+ "assemble": {
+  "seconds": 192.9,
+  "raw": "{\"for\": \"a teacher\", \"goal\": \"helps a teacher manage course readings and assignments efficiently by keeping track of what's due each week.\", \"steps\": [{\"name\": \"syllabus\", \"does\": \"provides a dated timeline of readings, assignments, and exams due, each cited\"}, {\"name\": \"todo\", \"does\": \"keeps TODO, FIXME, and 'need to' lines across the folder, oldest first\"}, {\"name\": \"timeline\", \"does\": \"provides a comprehensive record for legal or administrative purposes\"}]}",
+  "plan": {
+   "for": "a teacher",
+   "goal": "helps a teacher manage course readings and assignments efficiently by keeping track of what's due each week.",
+   "steps": [
+    {
+     "name": "syllabus",
+     "does": "provides a dated timeline of readings, assignments, and exams due, each cited"
+    },
+    {
+     "name": "todo",
+     "does": "keeps TODO, FIXME, and 'need to' lines across the folder, oldest first"
+    },
+    {
+     "name": "timeline",
+     "does": "provides a comprehensive record for legal or administrative purposes"
+    }
+   ]
+  },
+  "check": {
+   "steps": 3,
+   "not_offered": [],
+   "repeats": [],
+   "online": [],
+   "writes": {
+    "syllabus": "nothing",
+    "todo": "nothing",
+    "timeline": "to"
+   },
+   "ok": true
+  },
+  "offered": [
+   "backup",
+   "bank",
+   "browse",
+   "ci-memo",
+   "coming-up",
+   "daily-word",
+   "dice",
+   "digest",
+   "fixity",
+   "hook-impact",
+   "hook-pin",
+   "hook-replay",
+   "letterboxd",
+   "listening",
+   "mail",
+   "meta-archive",
+   "nestor",
+   "notes",
+   "package-contents",
+   "persona-card",
+   "photos",
+   "pile-build",
+   "pile-gold",
+   "pile-sweep",
+   "pipe",
+   "print",
+   "privacy",
+   "reading-level",
+   "serve",
+   "sheets",
+   "shell-history",
+   "slow-tests",
+   "syllabus",
+   "test-impact",
+   "timeline",
+   "todo",
+   "vim",
+   "vscode",
+   "web-pages",
+   "words-de",
+   "words-es",
+   "words-fr",
+   "xref"
+  ]
+ }
+}

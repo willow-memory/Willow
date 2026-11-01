@@ -1,0 +1,330 @@
+{
+ "model": "gemma-3-4b-it",
+ "url": "http://127.0.0.1:8090/v1",
+ "map": [
+  {
+   "section": "Finding things",
+   "cards": 20,
+   "seconds": 48.4,
+   "raw": "{\"names\": [\"ripgrep\", \"code-shape\"], \"why\": \"Using ripgrep for fast, exact code searching combined with code-shape allows a user to quickly identify code blocks based on their structure and content.\"}\n",
+   "kept": [
+    "ripgrep",
+    "code-shape"
+   ],
+   "invented": [],
+   "why": "Using ripgrep for fast, exact code searching combined with code-shape allows a user to quickly identify code blocks based on their structure and content.",
+   "ok": true
+  },
+  {
+   "section": "Finding things",
+   "cards": 9,
+   "seconds": 31.4,
+   "raw": "{\"names\": [\"quote-check\", \"pile-store\", \"typos\"], \"why\": \"These add-ons would be useful together for verifying the accuracy of information within a user's files, handling potential misspellings in questions, and ensuring reliable storage of passages.\"}\n",
+   "kept": [
+    "quote-check",
+    "pile-store",
+    "typos"
+   ],
+   "invented": [],
+   "why": "These add-ons would be useful together for verifying the accuracy of information within a user's files, handling potential misspellings in questions, and ensuring reliable storage of passages.",
+   "ok": true
+  },
+  {
+   "section": "Your own words",
+   "cards": 19,
+   "seconds": 33.0,
+   "raw": "{\"names\": [\"stems\", \"words-de\"], \"why\": \"Combining stems and words-de would allow Willow to accurately identify and process word forms across multiple languages, improving question understanding and response accuracy.\"}\n",
+   "kept": [
+    "stems",
+    "words-de"
+   ],
+   "invented": [],
+   "why": "Combining stems and words-de would allow Willow to accurately identify and process word forms across multiple languages, improving question understanding and response accuracy.",
+   "ok": true
+  },
+  {
+   "section": "For maintainers",
+   "cards": 19,
+   "seconds": 41.5,
+   "raw": "{\"names\": [\"ci\", \"test-impact\"], \"why\": \"Using CI to ensure consistent test verdicts and then using test-impact to only run the relevant tests after a change would provide confidence in the quality of the code.\"}\n",
+   "kept": [
+    "ci",
+    "test-impact"
+   ],
+   "invented": [],
+   "why": "Using CI to ensure consistent test verdicts and then using test-impact to only run the relevant tests after a change would provide confidence in the quality of the code.",
+   "ok": true
+  },
+  {
+   "section": "Reading more kinds of files",
+   "cards": 20,
+   "seconds": 33.0,
+   "raw": "{\"names\": [\"agent-transcript\", \"photos\"], \"why\": \"Combining agent transcripts with photos would allow for detailed contextual analysis of conversations and their associated visual evidence.\"}\n",
+   "kept": [
+    "agent-transcript",
+    "photos"
+   ],
+   "invented": [],
+   "why": "Combining agent transcripts with photos would allow for detailed contextual analysis of conversations and their associated visual evidence.",
+   "ok": true
+  },
+  {
+   "section": "Reading more kinds of files",
+   "cards": 20,
+   "seconds": 32.8,
+   "raw": "{\"names\": [\"google-keep\", \"listening\"], \"why\": \"Combining Google Keep with Spotify's data allows for tracking notes related to music listening experiences and their context.\"}\n",
+   "kept": [
+    "google-keep",
+    "listening"
+   ],
+   "invented": [],
+   "why": "Combining Google Keep with Spotify's data allows for tracking notes related to music listening experiences and their context.",
+   "ok": true
+  },
+  {
+   "section": "Reading more kinds of files",
+   "cards": 20,
+   "seconds": 34.3,
+   "raw": "{\"names\": [\"lockfiles\", \"orders\"], \"why\": \"Combining lockfiles and orders would allow a user to track the versions of software they've installed alongside their purchase history, providing valuable context for troubleshooting or auditing.\"}\n",
+   "kept": [
+    "lockfiles",
+    "orders"
+   ],
+   "invented": [],
+   "why": "Combining lockfiles and orders would allow a user to track the versions of software they've installed alongside their purchase history, providing valuable context for troubleshooting or auditing.",
+   "ok": true
+  },
+  {
+   "section": "Reading more kinds of files",
+   "cards": 10,
+   "seconds": 21.0,
+   "raw": "{\"names\": [\"shell-history\", \"slack\"], \"why\": \"Combining shell history and Slack exports allows a user to trace the context of communication alongside their actions.\"}\n",
+   "kept": [
+    "shell-history",
+    "slack"
+   ],
+   "invented": [],
+   "why": "Combining shell history and Slack exports allows a user to trace the context of communication alongside their actions.",
+   "ok": true
+  },
+  {
+   "section": "Assistants",
+   "cards": 20,
+   "seconds": 46.7,
+   "raw": "{\"names\": [\"hook-impact\", \"mcp\", \"claude-code\"], \"why\": \"These add-ons would allow a user to understand exactly what changes are being made before they're committed, while also providing a mechanism for an AI assistant like Claude Code to access and suggest edits based on cited passages.\"}\n",
+   "kept": [
+    "hook-impact",
+    "mcp",
+    "claude-code"
+   ],
+   "invented": [],
+   "why": "These add-ons would allow a user to understand exactly what changes are being made before they're committed, while also providing a mechanism for an AI assistant like Claude Code to access and suggest edits based on cited passages.",
+   "ok": true
+  },
+  {
+   "section": "Assistants",
+   "cards": 7,
+   "seconds": 22.9,
+   "raw": "{\"names\": [\"openai-compatible\", \"persona-card\"], \"why\": \"Combining OpenAI compatibility with a consistent persona card would allow for more targeted and reliable suggestions based on established context.\"}\n",
+   "kept": [
+    "openai-compatible",
+    "persona-card"
+   ],
+   "invented": [],
+   "why": "Combining OpenAI compatibility with a consistent persona card would allow for more targeted and reliable suggestions based on established context.",
+   "ok": true
+  },
+  {
+   "section": "Trust and proof",
+   "cards": 20,
+   "seconds": 33.9,
+   "raw": "{\"names\": [\"backup\", \"fixity\"], \"why\": \"Combining backup and fixity ensures a reliable, verifiable copy of your files with continuous integrity checks.\"}\n",
+   "kept": [
+    "backup",
+    "fixity"
+   ],
+   "invented": [],
+   "why": "Combining backup and fixity ensures a reliable, verifiable copy of your files with continuous integrity checks.",
+   "ok": true
+  },
+  {
+   "section": "Trust and proof",
+   "cards": 7,
+   "seconds": 22.8,
+   "raw": "{\"names\": [\"session-seal\", \"three-two-one\"], \"why\": \"Combining these ensures a robust, verifiable record with multiple copies maintained for redundancy and trust.\"}\n",
+   "kept": [
+    "session-seal",
+    "three-two-one"
+   ],
+   "invented": [],
+   "why": "Combining these ensures a robust, verifiable record with multiple copies maintained for redundancy and trust.",
+   "ok": true
+  },
+  {
+   "section": "Ways to use it",
+   "cards": 20,
+   "seconds": 36.3,
+   "raw": "{\"names\": [\"browse\", \"badge\"], \"why\": \"The browse add-on allows for interactive approval of answers, while the badge add-on provides a verifiable record of those approved answers.\"}\n",
+   "kept": [
+    "browse",
+    "badge"
+   ],
+   "invented": [],
+   "why": "The browse add-on allows for interactive approval of answers, while the badge add-on provides a verifiable record of those approved answers.",
+   "ok": true
+  },
+  {
+   "section": "Ways to use it",
+   "cards": 2,
+   "seconds": 19.5,
+   "raw": "{\"names\": [\"vim\", \"vscode\"], \"why\": \"Using both Vim and VS Code together would allow a user to leverage the strengths of both editors for answering questions, providing detailed jump-to-file/line functionality from multiple sources.\"}\n",
+   "kept": [
+    "vim",
+    "vscode"
+   ],
+   "invented": [],
+   "why": "Using both Vim and VS Code together would allow a user to leverage the strengths of both editors for answering questions, providing detailed jump-to-file/line functionality from multiple sources.",
+   "ok": true
+  },
+  {
+   "section": "Privacy and safety",
+   "cards": 11,
+   "seconds": 31.3,
+   "raw": "{\"names\": [\"pii-audit\", \"risky-code\", \"privacy\"], \"why\": \"These add-ons would be useful together to identify and redact sensitive personal information and potentially dangerous code patterns within a user's files, ensuring both privacy and security.\"}\n",
+   "kept": [
+    "pii-audit",
+    "risky-code",
+    "privacy"
+   ],
+   "invented": [],
+   "why": "These add-ons would be useful together to identify and redact sensitive personal information and potentially dangerous code patterns within a user's files, ensuring both privacy and security.",
+   "ok": true
+  },
+  {
+   "section": "Keeping track",
+   "cards": 20,
+   "seconds": 30.8,
+   "raw": "{\"names\": [\"car\", \"home-upkeep\"], \"why\": \"Tracking car maintenance and home upkeep together provides a comprehensive overview of recurring expenses and scheduled tasks.\"}\n",
+   "kept": [
+    "car",
+    "home-upkeep"
+   ],
+   "invented": [],
+   "why": "Tracking car maintenance and home upkeep together provides a comprehensive overview of recurring expenses and scheduled tasks.",
+   "ok": true
+  },
+  {
+   "section": "Keeping track",
+   "cards": 17,
+   "seconds": 28.0,
+   "raw": "{\"names\": [\"renewals\", \"mileage\"], \"why\": \"Tracking expiry dates of important documents alongside mileage data would be useful for tax preparation and ensuring timely renewals.\"}\n",
+   "kept": [
+    "renewals",
+    "mileage"
+   ],
+   "invented": [],
+   "why": "Tracking expiry dates of important documents alongside mileage data would be useful for tax preparation and ensuring timely renewals.",
+   "ok": true
+  },
+  {
+   "section": "Play",
+   "cards": 9,
+   "seconds": 21.4,
+   "raw": "{\"names\": [\"dice\", \"odds\"], \"why\": \"Using dice and odds together would allow a user to analyze the probabilities of different outcomes, providing a deeper understanding of chance events.\"}\n",
+   "kept": [
+    "dice",
+    "odds"
+   ],
+   "invented": [],
+   "why": "Using dice and odds together would allow a user to analyze the probabilities of different outcomes, providing a deeper understanding of chance events.",
+   "ok": true
+  }
+ ],
+ "assemble": {
+  "seconds": 131.0,
+  "raw": "{\"for\": \"Software Engineers\", \"goal\": \"To quickly identify and fix potential security vulnerabilities in their codebase.\", \"steps\": [\n  {\"name\": \"pii-audit\", \"does\": \"Identifies sensitive personal information and potentially dangerous code patterns within the files.\"},\n  {\"name\": \"risky-code\", \"does\": \"Lists lines of code matching known-dangerous patterns, providing immediate alerts.\"},\n  {\"name\": \"hook-impact\", \"does\": \"Provides a hook to hand the assistant every place in your files that names what it's about to change, by file and line.\"},\n  {\"name\": \"ci\", \"does\": \"Runs checks on the repo’s code as verdict rows on a kernel record\"},\n  {\"name\": \"shell-history\", \"does\": \"Traces the context of communication alongside their actions\"}\n]}",
+  "plan": {
+   "for": "Software Engineers",
+   "goal": "To quickly identify and fix potential security vulnerabilities in their codebase.",
+   "steps": [
+    {
+     "name": "pii-audit",
+     "does": "Identifies sensitive personal information and potentially dangerous code patterns within the files."
+    },
+    {
+     "name": "risky-code",
+     "does": "Lists lines of code matching known-dangerous patterns, providing immediate alerts."
+    },
+    {
+     "name": "hook-impact",
+     "does": "Provides a hook to hand the assistant every place in your files that names what it's about to change, by file and line."
+    },
+    {
+     "name": "ci",
+     "does": "Runs checks on the repo’s code as verdict rows on a kernel record"
+    },
+    {
+     "name": "shell-history",
+     "does": "Traces the context of communication alongside their actions"
+    }
+   ]
+  },
+  "check": {
+   "steps": 5,
+   "not_offered": [],
+   "repeats": [],
+   "online": [
+    "ci"
+   ],
+   "writes": {
+    "pii-audit": "nothing",
+    "risky-code": "nothing",
+    "hook-impact": "nothing",
+    "ci": "record, BUGS.md",
+    "shell-history": "to"
+   },
+   "ok": true
+  },
+  "offered": [
+   "agent-transcript",
+   "backup",
+   "badge",
+   "browse",
+   "car",
+   "ci",
+   "claude-code",
+   "code-shape",
+   "dice",
+   "fixity",
+   "google-keep",
+   "home-upkeep",
+   "hook-impact",
+   "listening",
+   "lockfiles",
+   "mcp",
+   "mileage",
+   "odds",
+   "openai-compatible",
+   "orders",
+   "persona-card",
+   "photos",
+   "pii-audit",
+   "pile-store",
+   "privacy",
+   "quote-check",
+   "renewals",
+   "ripgrep",
+   "risky-code",
+   "session-seal",
+   "shell-history",
+   "slack",
+   "stems",
+   "test-impact",
+   "three-two-one",
+   "typos",
+   "vim",
+   "vscode",
+   "words-de"
+  ]
+ }
+}

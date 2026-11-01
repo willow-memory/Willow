@@ -84,7 +84,12 @@ KEY = re.compile(
 HOME = re.compile(
     r"(?P<base>/home/|/Users/|C:\\{1,2}Users\\{1,2})(?P<name>[A-Za-z0-9._-]+)"
 )
-EMAIL = re.compile(r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b")
+# An address starts at a word's edge, or just after a JSON escape (\n, \t ...)
+# whose letter is never taken as part of it: "\n@AGENTS.md" is no email, and
+# taking its n would leave "\[" behind, which JSON can't read.
+EMAIL = re.compile(
+    r"(?:(?<=\\[nrtbf])|(?<![\w.%+\\-]))[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b"
+)
 #: this file's own shapes and the privacy add-on's, so it never takes out less
 #: than either; a match holding a quote or a backslash is left to PEM
 KEYS = [PEM, *privacy_keys(), KEY]

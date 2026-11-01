@@ -10,6 +10,15 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `demo/small-models`: Gemma 3 4B and 1B and Qwen2.5 3B, run locally, given
+  willow's own 270 add-on cards to assemble and teodora's files to act on,
+  every result kept, and `build.py` putting all of it, with the session that
+  ran it, into one box to ask. The session is kept by its first bytes and
+  their SHA-256, never its text, and read through `transcript-redact` and
+  `agent-transcript`. Picking from cards, neither model invented a name; a
+  note they wrote alone missed or reversed her urgent items; with code
+  ranking the facts, Gemma's note put her £2,140 owed first, the right way
+  round.
 - `demo/ofrenda`, a séance where the ghost can't lie: a local Gemma,
   through `openai-compatible`, speaks for a made-up New Mexico abuela from
   her old computer's files (her terminal history read by `shell-history`)
@@ -1290,6 +1299,11 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- `transcript-redact` no longer takes the `n` of a JSON `\n` as the start
+  of an email: `\n@AGENTS.md` and `\n@pytest.mark` read as addresses, and
+  removing them left `\[redacted:email]`, which JSON can't read, so four
+  lines of a real Claude Code session came out broken and `agent-transcript`
+  skipped the file. An address after a line break is still taken.
 - `bank` reads a CSV statement whose header names its columns in lower case
   (`date,description,amount`, as teodora's demo files do) or in capitals:
   every one of her 58 statements was skipped. Found by a small local model

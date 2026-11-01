@@ -1434,6 +1434,32 @@ willow/
 │   │       ├── femia.md      the abuela's voice, put before the rule, never in place of it
 │   │       ├── babbage.md    Babbage's
 │   │       └── ada.md        Ada Lovelace's
+│   ├── small-models/         Gemma 3 and Qwen2.5 on willow's own cards and teodora's files, and one box of it all
+│   │   ├── README.md         what was tried, what came of it, the box, what asking it found
+│   │   ├── SESSION.json      the session that ran it, by its first bytes and their SHA-256, never its text
+│   │   ├── build.py          one box of every run, the code and the session, through transcript-redact and agent-transcript
+│   │   ├── test_small_models.py  holds the box to every run, and the session to its frozen bytes
+│   │   ├── experiments/
+│   │   │   ├── cards.py      the 270 cards and each README's opening paragraph, from the repo
+│   │   │   ├── assemble.py   cards in batches to a model, picks checked, one pipeline
+│   │   │   ├── forperson.py  a pipeline for a demo person, then each step run on their files
+│   │   │   ├── cardpick.py   willow serves each need its cards; the plan may use only those
+│   │   │   ├── weeknote.py   a this-week note: lines kept in chunks, written citing [n], each point held
+│   │   │   └── ranked.py     facts labelled and ranked by rule; the model only phrases them
+│   │   └── runs/
+│   │       ├── assemble-gemma.json  cards picked in batches, then one pipeline
+│   │       ├── assemble-qwen.json  cards picked in batches, then one pipeline
+│   │       ├── person-gemma-teodora.json  a pipeline for teodora, run on her files
+│   │       ├── person-qwen-teodora.json  a pipeline for teodora, run on her files
+│   │       ├── pick-gemma-teodora.json  willow served the cards for her needs
+│   │       ├── pick-qwen-teodora.json  willow served the cards for her needs
+│   │       ├── pick2-gemma-teodora.json  the same, each card with its opening paragraph
+│   │       ├── pick2-qwen-teodora.json  the same, each card with its opening paragraph
+│   │       ├── ranked-gemma-teodora.json  code ranked the facts, the model phrased
+│   │       ├── ranked2-gemma-teodora.json  the same, with the bank held against the ledger
+│   │       ├── weeknote-gemma-teodora.json  a this-week note the model wrote
+│   │       ├── weeknote-qwen-teodora.json  a this-week note the model wrote
+│   │       └── weeknote2-qwen-teodora.json  the same, five lines kept a chunk
 │   └── stewart-crossover/    a fictional fan's files beside a real life: every word about him from a source
 │       ├── README.md         the claim, the five repositories' parts, what is frozen, the dry run, the results
 │       ├── FROZEN.json       the SHA-256 of each frozen file, and of the tools in five repositories when frozen
