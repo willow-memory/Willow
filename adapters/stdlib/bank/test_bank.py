@@ -237,3 +237,12 @@ def test_a_header_is_read_in_any_case():
     assert mod.convert(upper) == want
     pair = b"Date,Details,paid out,PAID IN\n2024-03-02,TESCO STORES 3241,45.20,\n2024-03-05,ACME PAYROLL,,2000.00\n"
     assert mod.convert(pair) == want
+
+
+def test_only_a_bracket_on_both_sides_marks_money_out():
+    """An accountant writes money out as (45.20); a stray bracket on one side
+    is a typo, not a minus sign."""
+    assert mod.amount("(45.20)") == -45.20
+    assert mod.amount("£(1,045.20)") == -1045.20
+    assert mod.amount("45.20)") == 45.20
+    assert mod.amount("(45.20") == 45.20
