@@ -18,7 +18,7 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`███████████░░░░░░░░░` **281 of 502 built** · 448 need no install · 54 need one
+`███████████░░░░░░░░░` **281 of 503 built** · 449 need no install · 54 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
@@ -30,7 +30,7 @@ or `writes-output`; its section), and any the card's author adds or changes.
 | Privacy and safety | 11 | 4 | 15 | 0 |
 | Assistants | 28 | 44 | 61 | 11 |
 | Ways to use it | 22 | 18 | 36 | 4 |
-| Play | 10 | 29 | 35 | 4 |
+| Play | 10 | 30 | 36 | 4 |
 | For maintainers | 19 | 25 | 39 | 5 |
 <!-- /willow:pools -->
 
@@ -538,6 +538,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 
 - **art-of-the-day** (idea) — An artwork from the Met's public-domain collection, drawn for the day or for each sealed session. Goes online: collectionapi.metmuseum.org, to read the artwork. *new* `no-install` `online` `records` `play`
 - **beacon** (idea) — Draws seeded by a public randomness beacon (drand), so nobody could have picked the result in advance. Goes online: api.drand.sh, to read a beacon round's randomness. *bot* `no-install` `online` `records` `play`
+- **catgrid** (idea) — A seeded logic grid with one cat in every row, column and colour region and a unique answer, replayed from its moves. *new* `no-install` `offline` `records` `play`
 - **chess-puzzle** (idea) — A Lichess puzzle a day, drawn by a seed: predict whether you'll solve it, then solve it. Goes online: lichess.org, to read the puzzle. *new* `no-install` `online` `records` `play`
 - **connect-four** (idea) — Connect Four as rows on the record, held to the solved result: the first player wins. *new* `no-install` `offline` `records` `play`
 - [**daily-word**](adapters/stdlib/daily-word/) — A word game drawn from your own files' words, the same puzzle for everyone with the same box. *new* `no-install` `offline` `records` `play`
