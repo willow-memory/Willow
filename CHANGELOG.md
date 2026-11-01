@@ -10,6 +10,13 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `jeles`, Jeles' nuggets as passages and your approved answers as Jeles
+  nuggets: `jeles.py mirror --from FOLDER --to MIRROR` reads Jeles seed files
+  and corpus stores (never a signature, a deleted record or a logged gap), and
+  `jeles.py export --box DIR --questions FILE --to OUT.json` writes approvals
+  as a Jeles seed file, each paired with a question only when its words hash
+  to the key the approval was sealed under. Jeles installs them at its
+  asserted rung: a willow seal is not a Nestor seal.
 - `predict`, what a question will come to, written down before it is
   asked: `predict.py ask --box DIR QUESTION`. It counts what the box's
   earlier bites came to (sealed, served or empty), writes the likeliest as a
