@@ -16,7 +16,7 @@ says how). The first was v0.1.0.
   the model and endpoint from a proposal's claim, only from a proposal file
   that is the bytes proposed, and says what it cannot see: a person's own
   suggestion looks the same, and an ask that cited nothing or failed leaves a
-  bite with no proposal. Reads only.
+  bite with no proposal. Reads only. (#149)
 - `folder-card`, a card for your folder itself: `folder_card.py --box DIR
   --to card.md --notes me.txt` writes each file's size, first and last date
   and fiction label, the files it could not read, and the gaps the `gaps`
