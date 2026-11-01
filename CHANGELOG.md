@@ -15,13 +15,13 @@ says how). The first was v0.1.0.
   as written (quote-check's verdict), almost (misquote's closest passage, with
   what the quote adds, drops or changes), or not there, with a summary line.
   Built to check the quotes an Almanac entry's notes record against copies of
-  the pages they came from.
+  the pages they came from. (#135)
 - `almanac-keep`, an Almanac entry's best permitted copy fetched into your
   folder through snapshot: `keep.py --catalog FILE --id ID --to FOLDER`. The
   publisher's own address first when the entry is live or frozen, then its
   recovery copies by authenticity; a copy marked excluded is never tried, one
   marked review only with `--review`. Wayback captures are fetched raw, and
-  the copy's SHA-256 is compared with the entry's fingerprint.
+  the copy's SHA-256 is compared with the entry's fingerprint. (#135)
 - `demo/small-models`: Gemma 3 4B and 1B and Qwen2.5 3B, run locally, given
   willow's own 270 add-on cards to assemble and teodora's files to act on,
   every result kept, and `demo/small-models/build.py` putting all of it, with the session that
@@ -1192,7 +1192,7 @@ says how). The first was v0.1.0.
 
 - `almanac` mirrors more of each entry: its fingerprint baselines, each
   recovery copy in the almanac's order (never one marked excluded), and the
-  entry's kind and collection when it isn't a plain dataset.
+  entry's kind and collection when it isn't a plain dataset. (#135)
 - `privacy` withholds every kind willow-bot's one-script scrub does, but a
   home path: Groq, Hugging Face, Cerebras and xAI keys, a GitHub fine-grained
   token, a Discord bot token; a birth date, passport, driver's licence,
