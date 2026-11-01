@@ -220,3 +220,29 @@ def test_a_bad_command_line_says_how_to_run_it():
     ):
         got = run(*argv)
         assert got.returncode == 2 and "bank.py" in got.stderr
+
+
+def test_a_header_is_read_in_any_case():
+    """A bank that writes its columns in lower case, as teodora's does
+    (date,type,description,reference,amount,balance), or in capitals, is the
+    same statement as one written Date,Description,Amount."""
+    want = mod.convert(SAMPLE)
+    lower = (
+        b"date,type,description,reference,amount,balance\n"
+        b"2024-03-05,BGC,ACME PAYROLL,PAY,2000.00,3000.00\n"
+        b"2024-03-02,DEB,TESCO STORES 3241,,-45.20,1000.00\n"
+    )
+    upper = b"DATE,DESCRIPTION,AMOUNT\n2024-03-05,ACME PAYROLL,2000.00\n2024-03-02,TESCO STORES 3241,-45.20\n"
+    assert mod.convert(lower) == want
+    assert mod.convert(upper) == want
+    pair = b"Date,Details,paid out,PAID IN\n2024-03-02,TESCO STORES 3241,45.20,\n2024-03-05,ACME PAYROLL,,2000.00\n"
+    assert mod.convert(pair) == want
+
+
+def test_only_a_bracket_on_both_sides_marks_money_out():
+    """An accountant writes money out as (45.20); a stray bracket on one side
+    is a typo, not a minus sign."""
+    assert mod.amount("(45.20)") == -45.20
+    assert mod.amount("£(1,045.20)") == -1045.20
+    assert mod.amount("45.20)") == 45.20
+    assert mod.amount("(45.20") == 45.20
