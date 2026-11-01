@@ -366,17 +366,6 @@
   "tags": "no-install, offline, records, interface"
  },
  {
-  "name": "dice5e",
-  "kind": "deps",
-  "section": "Play",
-  "line": "Full tabletop dice notation (4d6kh3, advantage).",
-  "source": "bot",
-  "needs": "dice; MIT",
-  "writes": "record",
-  "network": "none",
-  "tags": "needs-install, offline, records, play"
- },
- {
   "name": "dictate",
   "kind": "deps",
   "section": "Ways to use it",
@@ -477,16 +466,6 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, tracking"
- },
- {
-  "name": "forecasts",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "Write a prediction before the outcome, settle it later, see your Brier score.",
-  "source": "bot",
-  "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, tracking"
  },
  {
   "name": "forgejo",
@@ -995,16 +974,6 @@
   "writes": "nothing",
   "network": "none",
   "tags": "needs-install, offline, read-only, play"
- },
- {
-  "name": "market-calls",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "Market calls kept as wagers on the record ('SPY closes up on Friday'), settled later, with the losers kept.",
-  "source": "bot",
-  "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, tracking"
  },
  {
   "name": "mastermind",
@@ -1638,16 +1607,6 @@
   "writes": "nothing",
   "network": "none",
   "tags": "no-install, offline, read-only, tracking"
- },
- {
-  "name": "rules",
-  "kind": "stdlib",
-  "section": "Play",
-  "line": "A game's or a house's rules, sealed section by section, so 'what does the rule say?' answers with the exact section.",
-  "source": "bot",
-  "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, play"
  },
  {
   "name": "safe-app",

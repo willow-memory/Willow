@@ -20,6 +20,9 @@
   "coming-up": {
     "059bb44076f5": "The kernel's dates are exactly eight characters, so d[6:9] is d[6:8]."
   },
+  "dice5e": {
+    "10e98042170d": "A term's sign is only ever -1 or 1, so `sign < 0` and `sign < 1` pick the same terms."
+  },
   "lesson-time": {
     "05dbd1b2d85d": "said_at's starting value is never read: a plan that states its time sets said_at to that line, and one that states none is skipped or shown as from --period, so the starting 0 changes no result."
   },

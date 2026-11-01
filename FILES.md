@@ -281,6 +281,10 @@ willow/
 │   │   │   ├── dice.py       dice rolled on the record, seeded by its tip; check throws every roll again
 │   │   │   ├── test_dice.py
 │   │   │   └── README.md
+│   │   ├── dice5e/
+│   │   │   ├── dice5e.py     4d6kh3, adv and dis on the record, seeded as dice is; check throws every roll again
+│   │   │   ├── test_dice5e.py
+│   │   │   └── README.md
 │   │   ├── digest/
 │   │   │   ├── digest.py     one page of what waits on you, gone stale, coming up; writes nothing
 │   │   │   ├── test_digest.py
@@ -328,6 +332,10 @@ willow/
 │   │   ├── foia/
 │   │   │   ├── foia.py   requests sent, answers and when they are due by law
 │   │   │   ├── test_foia.py
+│   │   │   └── README.md
+│   │   ├── forecasts/
+│   │   │   ├── forecasts.py  a wager before the outcome, settled by your seal, scored by Brier
+│   │   │   ├── test_forecasts.py
 │   │   │   └── README.md
 │   │   ├── format-rot/
 │   │   │   ├── format_rot.py  files in formats that may stop opening, flagged while you can still convert them
@@ -581,6 +589,10 @@ willow/
 │   │   ├── man-pages/
 │   │   │   ├── man_pages.py   man pages as plain text
 │   │   │   ├── test_man_pages.py
+│   │   │   └── README.md
+│   │   ├── market-calls/
+│   │   │   ├── market_calls.py  market calls as wagers, closed by the closes you type, settled by your seal, losers kept
+│   │   │   ├── test_market_calls.py
 │   │   │   └── README.md
 │   │   ├── mastodon/
 │   │   │   ├── mastodon.py   your posts as dated lines
@@ -858,6 +870,10 @@ willow/
 │   │   ├── rtf/
 │   │   │   ├── rtf.py   an RTF document as the plain text it displays
 │   │   │   ├── test_rtf.py
+│   │   │   └── README.md
+│   │   ├── rules/
+│   │   │   ├── rules.py      a rules file sealed section by section; the kernel then answers 'rule NAME' word for word
+│   │   │   ├── test_rules.py
 │   │   │   └── README.md
 │   │   ├── said/
 │   │   │   ├── said.py       who said what, read by shape (a chat's stamp, a speech verb, quotation marks), dated

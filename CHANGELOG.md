@@ -10,6 +10,29 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `dice5e`, full tabletop dice notation on the record:
+  `dice5e.py --box DIR roll 4d6kh3` (or `adv+5`, `dis`, `2d20kl1`), seeded
+  and drawn as dice is, every die written, kept or not; `check` throws every
+  roll again. The standard library only, where the idea had named the MIT
+  `dice` library. (#141)
+- `rules`, a game's or a house's rules sealed section by section:
+  `rules.py propose --box DIR FILE` proposes each heading's section as the
+  answer to "rule NAME", and once you seal it the kernel itself answers that
+  bite word for word (`rules.py ask NAME`). `list` says which are sealed,
+  waiting, or changed in your folder since you sealed them. (#141)
+- `market-calls`, market calls kept as forecasts' wagers, losers and all:
+  `market_calls.py call --box DIR --p 0.7 SPY up 2026-11-06` (or
+  `above:600`), one call per question and before 13:00 UTC on the close
+  date; `close SYMBOL DATE CLOSE PREV_CLOSE` records the closes you read and
+  proposes each call's outcome for your seal; `score` lists every call,
+  right, wrong or open, with the Brier score. Offline: nothing fetches a
+  price. (#141)
+- `forecasts`, a prediction written down before the outcome:
+  `forecasts.py wager --box DIR --p 0.8 CLAIM` keeps the p and the claim's
+  hash, never its words; `settle ROW yes|no` proposes what happened through
+  the kernel's door, and it counts only once you seal it; `score` gives the
+  Brier and log scores and how often each band of confidence was right.
+  The scores are willow-bot's one script's calibration module, unchanged. (#141)
 - `jeles`, Jeles' nuggets as passages and your approved answers as Jeles
   nuggets: `jeles.py mirror --from FOLDER --to MIRROR` reads Jeles seed files
   and corpus stores (never a signature, a deleted record or a logged gap), and
