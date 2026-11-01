@@ -569,6 +569,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
        for c in LANGUAGES},
     "backup": ("backup.py", ["--box", "{box}", "--to", "{tmp}/backups", *NOW]),
     "fixity": ("fixity.py", ["--box", "{box}", *NOW]),
+    "flashcards": ("flashcards.py", ["--box", "{box}", "due", *NOW]),
     "format-rot": ("format_rot.py", ["--from", "{pile}"]),
     "git-history": ("git_history.py", ["mirror", "--from", "{pile}", "--to", "{tmp}/gh"]),
     "persona-card": ("persona_card.py", ["--box", "{box}", "--from", "{pile}/garden.md", *NOW]),

@@ -329,6 +329,10 @@ willow/
 │   │   │   ├── fixity.py     files hashed again now and then; a hash that moved with no newer mtime is rot
 │   │   │   ├── test_fixity.py
 │   │   │   └── README.md
+│   │   ├── flashcards/
+│   │   │   ├── flashcards.py  sealed approvals as cards, scheduled by FSRS-5 replayed from review rows
+│   │   │   ├── test_flashcards.py
+│   │   │   └── README.md
 │   │   ├── foia/
 │   │   │   ├── foia.py   requests sent, answers and when they are due by law
 │   │   │   ├── test_foia.py

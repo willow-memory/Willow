@@ -10,6 +10,11 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `flashcards`, your sealed approvals as flashcards: `flashcards.py --box DIR due`
+  lists what to study, `review ID good` writes your grade as a record row and
+  says when the card is next due. The schedule is FSRS-5 (MIT, written from
+  its published formulas, default parameters) replayed from the grades, so a
+  fixed `--now` reproduces it; `check` holds every row to the replay.
 - Six ideas added to `adapters/planned.json` from an audit of the SAFE App
   Store against willow, each checked with `similar near` first:
   `weakest-link` (inputs marked measured, fitted or assumed, the result worth

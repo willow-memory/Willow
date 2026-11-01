@@ -18,14 +18,14 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`███████████░░░░░░░░░` **281 of 505 built** · 451 need no install · 54 need one
+`███████████░░░░░░░░░` **282 of 505 built** · 451 need no install · 54 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
 | Reading more kinds of files | 71 | 35 | 98 | 8 |
 | Finding things | 31 | 14 | 35 | 10 |
 | Your own words | 19 | 7 | 23 | 3 |
-| Keeping track | 42 | 19 | 61 | 0 |
+| Keeping track | 43 | 18 | 61 | 0 |
 | Trust and proof | 28 | 26 | 45 | 9 |
 | Privacy and safety | 11 | 4 | 15 | 0 |
 | Assistants | 28 | 44 | 61 | 11 |
@@ -77,9 +77,9 @@ its list: someone who speaks the language can add one without much Python.
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[three-two-one](adapters/stdlib/three-two-one/)** — How many verified copies of your record exist and where, held to three copies, on two kinds of storage, one away from home.
+**[hook-stop](adapters/stdlib/hook-stop/)** — A Stop hook that won't let an assistant's turn end while the record doesn't verify or its changes aren't committed, and says which.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 281 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 282 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -292,7 +292,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - **cycle** (idea) — A menstrual cycle log that never leaves this machine: dates, what's next, and what changed. *new* `no-install` `offline` `read-only` `tracking`
 - [**debts**](adapters/stdlib/debts/) — Who owes whom, from the IOUs in your notes and messages, each cited. *new* `no-install` `offline` `read-only` `tracking`
 - [**digest**](adapters/stdlib/digest/) — One page of what your folder needs from you: suggestions waiting, approvals gone stale, dates coming up, questions that keep finding nothing. *bot* `no-install` `offline` `read-only` `tracking` `everyday`
-- **flashcards** (idea) — Approved question-and-answer pairs become cards, scheduled by spaced repetition. *box* `no-install` `offline` `records` `tracking`
+- [**flashcards**](adapters/stdlib/flashcards/) — Approved question-and-answer pairs become cards, scheduled by spaced repetition. *box* `no-install` `offline` `records` `tracking`
 - [**foia**](adapters/stdlib/foia/) — Freedom-of-information requests: what you asked, when, and when the answer is due by law. *new* `no-install` `offline` `read-only` `tracking`
 - **food-log** (idea) — What you ate, from your notes, by day. *new* `no-install` `offline` `read-only` `tracking`
 - [**forecasts**](adapters/stdlib/forecasts/) — Write a prediction before the outcome, settle it later with your seal, see your Brier score. *bot* `no-install` `offline` `records` `tracking`
