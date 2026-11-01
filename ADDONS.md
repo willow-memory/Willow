@@ -18,7 +18,7 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`███████████░░░░░░░░░` **281 of 499 built** · 445 need no install · 54 need one
+`███████████░░░░░░░░░` **281 of 500 built** · 446 need no install · 54 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
@@ -26,7 +26,7 @@ or `writes-output`; its section), and any the card's author adds or changes.
 | Finding things | 31 | 14 | 35 | 10 |
 | Your own words | 19 | 7 | 23 | 3 |
 | Keeping track | 42 | 18 | 60 | 0 |
-| Trust and proof | 28 | 24 | 43 | 9 |
+| Trust and proof | 28 | 25 | 44 | 9 |
 | Privacy and safety | 11 | 4 | 15 | 0 |
 | Assistants | 28 | 44 | 61 | 11 |
 | Ways to use it | 22 | 18 | 36 | 4 |
@@ -389,6 +389,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**timeline**](adapters/stdlib/timeline/) — A dated timeline of one matter (a dispute, an illness, a tenancy), every line cited, to hand to a lawyer, doctor or council. *new* `no-install` `offline` `writes-output` `trust`
 - [**tip-pin**](adapters/stdlib/tip-pin/) — Where a box's record ends, kept outside the box, so rows cut off or a whole chain re-hashed are found where verify can't. *new* `no-install` `offline` `writes-output` `trust`
 - [**wayback**](adapters/stdlib/wayback/) — The Wayback Machine's copy of a page from a window of days, saved beside your own snapshot and compared with it byte for byte. Goes online: archive.org, to find the archived copy and fetch it. *new* `no-install` `online` `writes-output` `trust` `sources`
+- **weakest-link** (idea) — Each answer's inputs marked measured, fitted or assumed, and the result worth its weakest input, never an average. *new* `no-install` `offline` `read-only` `trust`
 - **weights-pin** (idea) — A local model's weights file hashed before each run and refused when it differs from the hash on its model card. *new* `no-install` `offline` `read-only` `trust`
 - **witness** (idea) — A second person's seal beside yours, for answers that need two people to agree. *new* `no-install` `offline` `records` `trust`
 - [**xref**](adapters/stdlib/xref/) — Every reference in your files checked: each link to another file, and each quoted line, still there and still saying it. *bot* `no-install` `offline` `read-only` `trust` `everyday`

@@ -2118,6 +2118,16 @@
   "tags": "no-install, offline, writes-output, search"
  },
  {
+  "name": "weakest-link",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "Each answer's inputs marked measured, fitted or assumed, and the result worth its weakest input, never an average.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "tags": "no-install, offline, read-only, trust"
+ },
+ {
   "name": "weather-bet",
   "kind": "stdlib",
   "section": "Play",
