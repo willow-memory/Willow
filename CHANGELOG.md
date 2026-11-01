@@ -10,6 +10,14 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `game-master`, a tabletop story played beat by beat with its rolls and
+  rulings as rows on the record: `game_master.py --box DIR act Grit --world
+  W.json` rolls dice's 2d6 plus the character's stat and reads it strong, weak
+  or miss; a decision beat is handed in through the kernel's `propose` with
+  `ask` and moves only once you have run `kernel.py seal` (or `decline`) and
+  `settle` has read your proof back. `check` throws every roll again and
+  finds a ruling no seal of yours stands behind. One world format, action and
+  decision beats only; the idea's writes and network promises are unchanged.
 - Six ideas added to `adapters/planned.json` from an audit of the SAFE App
   Store against willow, each checked with `similar near` first:
   `weakest-link` (inputs marked measured, fitted or assumed, the result worth

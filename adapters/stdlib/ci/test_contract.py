@@ -555,6 +555,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "transcript-redact": ("transcript_redact.py", ["--from", "{pile}/garden.md", "--to", "{tmp}/shareable.md"]),
     "across": ("across.py", ["--box", "{box}", "digest"]),
     "stack": ("stack.py", ["--box", "{box}", "--stack", "adapters/stdlib/stack/example.md"]),
+    "game-master": ("game_master.py", ["--box", "{box}", "check"]),
     "dice5e": ("dice5e.py", ["--box", "{box}", "roll", "4d6kh3", *NOW]),
     "rules": ("rules.py", ["list", "--box", "{box}"]),
     "market-calls": ("market_calls.py", ["score", "--box", "{box}"]),
