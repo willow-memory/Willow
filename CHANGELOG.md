@@ -16,7 +16,7 @@ says how). The first was v0.1.0.
   record's tip unless you say), plays your moves against three hearts, and
   writes one row; `check` builds every board and plays every game again.
   It draws from sha256-stream rather than the source app's xorshift, and
-  leaves out its hints, trivia, daily boards, duels and multi-cat boards.
+  leaves out its hints, trivia, daily boards, duels and multi-cat boards. (#146)
 - `decisions`, what you decided and what you ruled out, each with its reason:
   `decisions.py chose --box DIR --question Q --answer A --reason R` (with
   `--replaces ROW` to keep the lineage) and `no ... --never` or
