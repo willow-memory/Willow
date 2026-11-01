@@ -104,7 +104,7 @@
   "name": "bm25",
   "kind": "stdlib",
   "section": "Finding things",
-  "line": "A BM25 rank from SQLite's own full-text index, beside the kernel's words rank: rare words weigh more.",
+  "line": "BM25 over a box in one go, with no index to build first: the rank scan --rank bm25 gives, for a folder you ask once.",
   "source": "new",
   "writes": "nothing",
   "network": "none",

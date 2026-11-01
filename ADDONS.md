@@ -200,7 +200,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 
 - [**all**](adapters/stdlib/all/) — Every matching passage, ranked, not just the top three. *box* `no-install` `offline` `read-only` `search`
 - [**amounts**](adapters/stdlib/amounts/) — Every sum of money in your files, with its date and the line it's on. *new* `no-install` `offline` `read-only` `search`
-- **bm25** (idea) — A BM25 rank from SQLite's own full-text index, beside the kernel's words rank: rare words weigh more. *new* `no-install` `offline` `read-only` `search`
+- **bm25** (idea) — BM25 over a box in one go, with no index to build first: the rank scan --rank bm25 gives, for a folder you ask once. *new* `no-install` `offline` `read-only` `search`
 - **by-function** (idea) — Code read by function and class instead of by line, so a hit names the function it's in. Needs tree-sitter and its language pack; MIT. *new* `needs-install` `offline` `writes-output` `search`
 - **code-first** (idea) — Questions code can answer exactly (counts, dates, ids) answered by code before any model, with a wrong answer counted as a defect. *bot* `no-install` `offline` `read-only` `search`
 - [**code-shape**](adapters/deps/code-shape/) — Search code by its shape, not its words: every call of a kind, whatever it's named. Needs the ast-grep program, from ast-grep-cli on PyPI or your own ast-grep; MIT. *new* `needs-install` `offline` `read-only` `search`
