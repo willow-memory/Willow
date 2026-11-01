@@ -659,6 +659,10 @@ willow/
 │   │   │   ├── nestor.py     answers a person has checked in Nestor, from a copy of its store
 │   │   │   ├── test_nestor.py
 │   │   │   └── README.md
+│   │   ├── nightstand/
+│   │   │   ├── nightstand.py  things set down, one bite picked up: one in hand, a bite every time, nothing deleted
+│   │   │   ├── test_nightstand.py
+│   │   │   └── README.md
 │   │   ├── notes/
 │   │   │   ├── notes.py      Obsidian and Logseq vaults, links and backlinks kept
 │   │   │   ├── test_notes.py

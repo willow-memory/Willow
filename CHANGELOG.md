@@ -10,6 +10,12 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `nightstand`, set heavy things down and pick up one bite: `down`, `pick`,
+  `back`, `done` and `archive` as `nightstand` rows through the kernel, state
+  only ever replayed from them. At most one thing is in hand (a pick-up names
+  the thing it puts down, in the same row), every pick-up needs a bite, and
+  there is no delete; `one` offers the lightest, oldest thing and `check`
+  names the first row that breaks a rule. (#144)
 - `weakest-link`, each approved answer worth its weakest cited input:
   `weakest_link.py --box DIR`. A passage marks itself `provenance: measured`,
   `fitted` or `assumed`; an approval is worth the min() of what it cites,
