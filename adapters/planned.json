@@ -1201,6 +1201,16 @@
   "tags": "needs-install, this-machine, records, assistant"
  },
  {
+  "name": "nightstand",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "Set heavy things down, pick up one bite: at most one thing in hand, and nothing deleted.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "tags": "no-install, offline, records, tracking"
+ },
+ {
   "name": "nim",
   "kind": "stdlib",
   "section": "Play",
