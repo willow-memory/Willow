@@ -17,7 +17,7 @@ says how). The first was v0.1.0.
   `ask` and moves only once you have run `kernel.py seal` (or `decline`) and
   `settle` has read your proof back. `check` throws every roll again and
   finds a ruling no seal of yours stands behind. One world format, action and
-  decision beats only; the idea's writes and network promises are unchanged.
+  decision beats only; the idea's writes and network promises are unchanged. (#153)
 - `oakenscroll`: Oakenscroll's Office calibration ledger (what you believed,
   how hard, and how it resolved) as dated passages: each claim with its
   revisions, grade and note, and where it stands now. Reads every office.db
