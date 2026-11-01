@@ -18,7 +18,7 @@ says how). The first was v0.1.0.
   `agent-transcript`. Picking from cards, neither model invented a name; a
   note they wrote alone missed or reversed her urgent items; with code
   ranking the facts, Gemma's note put her £2,140 owed first, the right way
-  round.
+  round. (#134)
 - `demo/ofrenda`, a séance where the ghost can't lie: a local Gemma,
   through `openai-compatible`, speaks for a made-up New Mexico abuela from
   her old computer's files (her terminal history read by `shell-history`)
@@ -1303,7 +1303,7 @@ says how). The first was v0.1.0.
   of an email: `\n@AGENTS.md` and `\n@pytest.mark` read as addresses, and
   removing them left `\[redacted:email]`, which JSON can't read, so four
   lines of a real Claude Code session came out broken and `agent-transcript`
-  skipped the file. An address after a line break is still taken.
+  skipped the file. An address after a line break is still taken. (#134)
 - `bank` reads a CSV statement whose header names its columns in lower case
   (`date,description,amount`, as teodora's demo files do) or in capitals:
   every one of her 58 statements was skipped. Found by a small local model
