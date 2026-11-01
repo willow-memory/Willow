@@ -152,16 +152,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "capture",
-  "kind": "stdlib",
-  "section": "Ways to use it",
-  "line": "A note written into your folder in one line, with its type and tags, so the next question can find it.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, interface"
- },
- {
   "name": "care",
   "kind": "stdlib",
   "section": "Keeping track",
@@ -180,16 +170,6 @@
   "writes": "record",
   "network": "none",
   "tags": "no-install, offline, records, assistant"
- },
- {
-  "name": "catgrid",
-  "kind": "stdlib",
-  "section": "Play",
-  "line": "A seeded logic grid with one cat in every row, column and colour region and a unique answer, replayed from its moves.",
-  "source": "new",
-  "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, play"
  },
  {
   "name": "chess-puzzle",
@@ -376,16 +356,6 @@
   "tags": "needs-install, this-machine, read-only, interface"
  },
  {
-  "name": "decisions",
-  "kind": "stdlib",
-  "section": "Trust and proof",
-  "line": "A recorded no with its reason and the condition that would reopen it, so a rejection is kept, not forgotten.",
-  "source": "new",
-  "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, trust"
- },
- {
   "name": "desktop",
   "kind": "stdlib",
   "section": "Ways to use it",
@@ -476,26 +446,6 @@
   "writes": "record",
   "network": "none",
   "tags": "no-install, offline, records, play"
- },
- {
-  "name": "flashcards",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "Approved question-and-answer pairs become cards, scheduled by spaced repetition.",
-  "source": "box",
-  "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, tracking"
- },
- {
-  "name": "folder-card",
-  "kind": "stdlib",
-  "section": "Assistants",
-  "line": "A card for your folder itself (what the files are, their dates, the gaps you know of), compiled from the pile and your notes and handed to a model as context.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, assistant"
  },
  {
   "name": "food-log",
@@ -1241,16 +1191,6 @@
   "tags": "needs-install, this-machine, records, assistant"
  },
  {
-  "name": "nightstand",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "Set heavy things down, pick up one bite: at most one thing in hand, and nothing deleted.",
-  "source": "new",
-  "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, tracking"
- },
- {
   "name": "nim",
   "kind": "stdlib",
   "section": "Play",
@@ -1730,16 +1670,6 @@
   "tags": "no-install, offline, records, assistant"
  },
  {
-  "name": "sent-log",
-  "kind": "stdlib",
-  "section": "Privacy and safety",
-  "line": "Which of your passages went to which online model, read from the record by model card: what left this machine and where to.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, privacy"
- },
- {
   "name": "serve-piles",
   "kind": "stdlib",
   "section": "Assistants",
@@ -1993,16 +1923,6 @@
   "writes": "nothing",
   "network": "api.telegram.org, to receive your questions and send answers",
   "tags": "no-install, online, read-only, interface"
- },
- {
-  "name": "thesis",
-  "kind": "stdlib",
-  "section": "Trust and proof",
-  "line": "A thesis's claims, each tied to the source that backs it, and a list of the ones with none.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, trust"
  },
  {
   "name": "tic-tac-toe",

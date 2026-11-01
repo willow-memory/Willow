@@ -160,9 +160,17 @@ willow/
 │   │   │   ├── calendar_out.py   the dates coming up as an .ics file: an all-day event for each, the line as its title and the file and line as its description
 │   │   │   ├── test_calendar_out.py
 │   │   │   └── README.md
+│   │   ├── capture/
+│   │   │   ├── capture.py   a note written into your folder as one paragraph with its type and tags
+│   │   │   ├── test_capture.py
+│   │   │   └── README.md
 │   │   ├── car/
 │   │   │   ├── car.py   a car's jobs, costs and what's due
 │   │   │   ├── test_car.py
+│   │   │   └── README.md
+│   │   ├── catgrid/
+│   │   │   ├── catgrid.py    a seeded logic grid with one answer, played on the record; check plays every game again
+│   │   │   ├── test_catgrid.py
 │   │   │   └── README.md
 │   │   ├── changed/
 │   │   │   ├── changed.py    what's new, edited or deleted since the last check, as fingerprint rows
@@ -277,6 +285,10 @@ willow/
 │   │   │   ├── deep_links.py   each answer as links that open the file at the line: an RFC 5147 file link and a browser text-fragment web link
 │   │   │   ├── test_deep_links.py
 │   │   │   └── README.md
+│   │   ├── decisions/
+│   │   │   ├── decisions.py  a yes and a no with their reasons, a never told from a not-yet, asked about a new question
+│   │   │   ├── test_decisions.py
+│   │   │   └── README.md
 │   │   ├── dice/
 │   │   │   ├── dice.py       dice rolled on the record, seeded by its tip; check throws every roll again
 │   │   │   ├── test_dice.py
@@ -329,9 +341,17 @@ willow/
 │   │   │   ├── fixity.py     files hashed again now and then; a hash that moved with no newer mtime is rot
 │   │   │   ├── test_fixity.py
 │   │   │   └── README.md
+│   │   ├── flashcards/
+│   │   │   ├── flashcards.py  sealed approvals as cards, scheduled by FSRS-5 replayed from review rows
+│   │   │   ├── test_flashcards.py
+│   │   │   └── README.md
 │   │   ├── foia/
 │   │   │   ├── foia.py   requests sent, answers and when they are due by law
 │   │   │   ├── test_foia.py
+│   │   │   └── README.md
+│   │   ├── folder-card/
+│   │   │   ├── folder_card.py  a card for your folder: its files, dates and gaps, with your notes, written to a file
+│   │   │   ├── test_folder_card.py
 │   │   │   └── README.md
 │   │   ├── forecasts/
 │   │   │   ├── forecasts.py  a wager before the outcome, settled by your seal, scored by Brier
@@ -659,6 +679,10 @@ willow/
 │   │   │   ├── nestor.py     answers a person has checked in Nestor, from a copy of its store
 │   │   │   ├── test_nestor.py
 │   │   │   └── README.md
+│   │   ├── nightstand/
+│   │   │   ├── nightstand.py  things set down, one bite picked up: one in hand, a bite every time, nothing deleted
+│   │   │   ├── test_nightstand.py
+│   │   │   └── README.md
 │   │   ├── notes/
 │   │   │   ├── notes.py      Obsidian and Logseq vaults, links and backlinks kept
 │   │   │   ├── test_notes.py
@@ -907,6 +931,10 @@ willow/
 │   │   │   ├── secrets_audit.py passwords, keys and card numbers in plain files, by file and line
 │   │   │   ├── test_secrets_audit.py
 │   │   │   └── README.md
+│   │   ├── sent-log/
+│   │   │   ├── sent_log.py    which passages went to which model and where, from what the record holds; says what it can't see
+│   │   │   ├── test_sent_log.py
+│   │   │   └── README.md
 │   │   ├── serve/
 │   │   │   ├── serve.py       the one markdown file a model reads: only a human-sealed scope, pooled, peaks first, by unguessable ids
 │   │   │   ├── test_serve.py
@@ -1004,6 +1032,10 @@ willow/
 │   │   ├── texts/
 │   │   │   ├── texts.py      Android and iPhone text backups and call logs, a dated line a message
 │   │   │   ├── test_texts.py
+│   │   │   └── README.md
+│   │   ├── thesis/
+│   │   │   ├── thesis.py     a document's claims, each against your sources, and the ones no passage holds
+│   │   │   ├── test_thesis.py
 │   │   │   └── README.md
 │   │   ├── three-two-one/
 │   │   │   ├── three_two_one.py  how many verified copies of the record exist, held to three, two kinds, one away
