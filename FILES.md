@@ -1053,6 +1053,10 @@ willow/
 │   │   │   ├── wayback.py    the Wayback Machine's copy of a page, saved and compared byte for byte
 │   │   │   ├── test_wayback.py
 │   │   │   └── README.md
+│   │   ├── weakest-link/
+│   │   │   ├── weakest_link.py  each approved answer worth its weakest cited input: measured, fitted, assumed or unmarked
+│   │   │   ├── test_weakest_link.py
+│   │   │   └── README.md
 │   │   ├── web-pages/
 │   │   │   ├── web_pages.py  saved .html and .mhtml as their paragraphs, under the address they came from
 │   │   │   ├── test_web_pages.py
