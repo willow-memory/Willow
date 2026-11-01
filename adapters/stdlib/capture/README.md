@@ -30,7 +30,7 @@ note whose paragraph would run past the kernel's 500-character chunk is refused,
 because a longer one would be cut in two and its type and tags parted from it.
 
 The file is named for the second of capture and a fingerprint of what it holds,
-`20261101T093000Z-1a2b3c4d.txt`, and is created, never opened over one that is
+`20261101T093000Z-<8 hex>.txt`, and is created, never opened over one that is
 there: two captures never overwrite each other, and the same note twice in one
 second becomes `-2`, `-3`. After you add notes, `kernel.py scan --box BOX` to
 pick them up.

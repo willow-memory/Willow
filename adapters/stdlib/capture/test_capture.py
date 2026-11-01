@@ -177,6 +177,8 @@ def test_a_note_too_long_for_one_passage_is_refused_at_the_edge(tmp_path):
     assert len(kernel.chunks(tmp_path)) == 1
     got = cap("--to", str(tmp_path), "--now", NOW, fits + "y")
     assert got.returncode == 2 and "one passage holds" in got.stderr
+    assert f"the note is {len(fits) + fixed + 1} characters" in got.stderr
+    assert f"holds {kernel.MAX_CHUNK - 1}" in got.stderr
     assert list(tmp_path.iterdir()) == [f]
 
 
