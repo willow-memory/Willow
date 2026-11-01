@@ -219,3 +219,23 @@ def test_it_never_seals_and_writes_only_review_rows(tmp_path):
 def test_the_front_is_the_words_of_the_file_name():
     assert fc.front({"path": "answers/why-runs_a.and.b.md"}) == "why runs a and b"
     assert fc.front({"path": "x/---.md"}) == "---"
+
+
+def test_the_schedule_matches_py_fsrs_reviewed_on_each_due_day():
+    # (stability, difficulty, days) read off py-fsrs 4.1.1 (MIT) with no learning
+    # steps and no fuzz, each review made on the day the card was due
+    want = {
+        (3, 3): [(3.173, 5.282434, 3), (10.738926, 5.272968, 11)],
+        (3, 1): [(3.173, 5.282434, 3), (1.055561, 6.796933, 1)],
+        (3, 2): [(3.173, 5.282434, 3), (4.924512, 6.034950, 5)],
+        (3, 4): [(3.173, 5.282434, 3), (25.793605, 4.510985, 26)],
+        (4, 3, 2): [(15.69105, 3.224502, 16), (60.708279, 3.224502, 61),
+                    (94.573037, 4.318882, 95)],
+    }  # fmt: skip
+    for grades, steps in want.items():
+        card, days = None, 0
+        for g, (s, d, due) in zip(grades, steps):
+            card = fc.step(card, g, days)
+            assert abs(card[0] - s) < 1e-5 and abs(card[1] - d) < 1e-5, (grades, g)
+            days = fc.interval(card[0])
+            assert days == due
