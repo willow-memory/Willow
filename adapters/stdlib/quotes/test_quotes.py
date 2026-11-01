@@ -87,3 +87,32 @@ def test_refusals(tmp_path):
     assert run(b, tmp_path / "bin").returncode == 2
     got = subprocess.run([sys.executable, str(SCRIPT)], capture_output=True, text=True)
     assert got.returncode == 2 and "quotes.py" in got.stderr
+
+
+def test_check_returns_the_verdict_place_and_words_kept():
+    pile = [
+        {
+            "path": "policy.txt",
+            "line": 4,
+            "text": "The council met on Tuesday and approved the budget.",
+        }
+    ]
+    assert quotes.check(pile, "The council met on Tuesday and approved the budget") == (
+        "as written", "policy.txt:4", 9, [])  # fmt: skip
+    verdict, place, kept, diffs = quotes.check(
+        pile, "The council met on Monday and approved the budget"
+    )
+    assert (verdict, place, kept) == ("almost", "policy.txt:4", 8)
+    assert diffs == [("changed", ["Monday"], ["Tuesday"])]
+    assert quotes.check(pile, "Nothing like this sentence appears anywhere") == (
+        "not there",
+        "",
+        0,
+        [],
+    )
+
+
+def test_a_long_quote_is_shortened_at_sixty_characters():
+    exactly = "x" * 60
+    assert quotes.short(exactly) == f'"{exactly}"'
+    assert quotes.short(exactly + "y") == '"' + "x" * 59 + '…"'

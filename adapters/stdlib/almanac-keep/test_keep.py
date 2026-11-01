@@ -148,3 +148,10 @@ def test_refusals(site, tmp_path):
     assert got.returncode == 2
     got = subprocess.run([sys.executable, str(SCRIPT)], capture_output=True, text=True)
     assert got.returncode == 2 and "keep.py" in got.stderr
+
+
+def test_a_copy_without_an_address_or_not_a_mapping_is_skipped():
+    e = {"id": "h", "status": "dark", "recovery": [
+        "https://not-a-mapping.example/", {"via": "wayback", "permission": "ok"},
+        {"via": "wayback", "url": "https://copy.example/x", "permission": "ok"}]}  # fmt: skip
+    assert keep.candidates(e, review=False) == [("https://copy.example/x", "wayback")]
