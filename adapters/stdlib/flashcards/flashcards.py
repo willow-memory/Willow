@@ -129,7 +129,10 @@ def replay(rs: list[dict]) -> list[tuple[int, str, tuple[float, float]]]:
 
 def front(prop: dict) -> str:
     stem = Path(prop["path"]).stem
-    return " ".join(re.sub(r"[-_.]+", " ", stem).split()) or stem
+    words = " ".join(re.sub(r"[-_.]+", " ", stem).split())
+    return (
+        words if re.search(r"[^\W\d_]", words) else prop["path"]
+    )  # "0-15" asks nothing
 
 
 def cards(box: Path, rows: list[dict]) -> tuple[list[dict], int]:

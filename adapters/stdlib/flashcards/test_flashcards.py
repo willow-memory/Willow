@@ -218,7 +218,8 @@ def test_it_never_seals_and_writes_only_review_rows(tmp_path):
 
 def test_the_front_is_the_words_of_the_file_name():
     assert fc.front({"path": "answers/why-runs_a.and.b.md"}) == "why runs a and b"
-    assert fc.front({"path": "x/---.md"}) == "---"
+    assert fc.front({"path": "sessions/19-25.json"}) == "sessions/19-25.json"
+    assert fc.front({"path": "x/---.md"}) == "x/---.md"
 
 
 def test_the_schedule_matches_py_fsrs_reviewed_on_each_due_day():

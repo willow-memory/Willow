@@ -28,7 +28,8 @@ the bytes that were sealed (a broken one is counted, never studied). The
 back is the answer you approved. The front is the words of its file name,
 because the record keeps no question words, only their hash: name a proposal for
 the question ("why runs a and b diverged", in dashes) and that is what you
-are asked.
+are asked. A name with no letters
+in it (a session digest, 0-15) asks nothing, so the front is its whole path.
 
 **A review is a record row.** `review` writes one `review` row through the
 kernel's own `append`: the card, your grade (1 again, 2 hard, 3 good, 4
