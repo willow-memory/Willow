@@ -376,16 +376,6 @@
   "tags": "needs-install, this-machine, read-only, interface"
  },
  {
-  "name": "decisions",
-  "kind": "stdlib",
-  "section": "Trust and proof",
-  "line": "A recorded no with its reason and the condition that would reopen it, so a rejection is kept, not forgotten.",
-  "source": "new",
-  "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, trust"
- },
- {
   "name": "desktop",
   "kind": "stdlib",
   "section": "Ways to use it",

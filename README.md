@@ -120,11 +120,11 @@ says how to pick one up:
 <!-- willow:front show=pick week=2026-W44 -->
 **Add-on of the week**
 
-**[life](adapters/stdlib/life/)** — Conway's Game of Life as rows: a fully deterministic world on the record.
+**[goodreads](adapters/stdlib/goodreads/)** — Goodreads and StoryGraph exports: the books you've read, when, and what you thought of them.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 283 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 284 built add-ons in name order.*
 
-[Every add-on, 283 built of 505, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 284 built of 505, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 
