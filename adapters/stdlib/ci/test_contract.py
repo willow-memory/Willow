@@ -100,7 +100,14 @@ def _tar(files: dict[str, str]) -> bytes:
 
 
 #: files an add-on needs in the pile besides the default, by add-on
-PILE_EXTRA: dict[str, dict[str, bytes]] = {"scrub": {"photo.png": _png()}}
+PILE_EXTRA: dict[str, dict[str, bytes]] = {
+    "scrub": {"photo.png": _png()},
+    # an entry with no permitted copy: almanac-keep answers before any fetch
+    "almanac-keep": {
+        "catalog.json": b'{"entries": [{"id": "tides", "status": "dark", '
+        b'"recovery": [{"url": "https://x.example/", "permission": "excluded"}]}]}'
+    },
+}
 
 #: one small readable file per reader, by the name it is written under
 READERS: dict[str, tuple[str, dict[str, bytes]]] = {
@@ -491,6 +498,8 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "reading-level": ("reading_level.py", ["--box", "{box}"]),
     "renewals": ("renewals.py", ["--box", "{box}", *NOW]),
     "misquote": ("misquote.py", ["--box", "{box}", "Tomatoes want rain"]),
+    "quotes": ("quotes.py", ["--box", "{box}", "--in", "{pile}/garden.md"]),
+    "almanac-keep": ("keep.py", ["--catalog", "{pile}/catalog.json", "--id", "tides", "--to", "{tmp}/kept"]),
     "claim-check": ("claim_check.py", ["--box", "{box}", "tomatoes want sun"]),
     "policy-watch": ("policy_watch.py", ["--url", "http://127.0.0.1:9/terms", "--to", "{tmp}/w"]),
     "readings": ("readings.py", ["bite", "--box", "{box}", *NOW, "tomatoes"]),

@@ -88,6 +88,10 @@ willow/
 │   │   │   ├── almanac.py    an Almanac's catalog.json: each public dataset's description and source as a passage
 │   │   │   ├── test_almanac.py
 │   │   │   └── README.md
+│   │   ├── almanac-keep/
+│   │   │   ├── keep.py       an Almanac entry's best permitted copy, publisher or ranked recovery list, fetched into your folder
+│   │   │   ├── test_keep.py
+│   │   │   └── README.md
 │   │   ├── amounts/
 │   │   │   ├── amounts.py    every sum of money in the files, dated by its line, the date above or the file's name
 │   │   │   ├── test_amounts.py
@@ -778,6 +782,10 @@ willow/
 │   │   ├── quote-check/
 │   │   │   ├── quote_check.py is this exact quote in my files, and where
 │   │   │   ├── test_quote_check.py
+│   │   │   └── README.md
+│   │   ├── quotes/
+│   │   │   ├── quotes.py     every quote in a document checked: as written, almost (and what differs), or not there
+│   │   │   ├── test_quotes.py
 │   │   │   └── README.md
 │   │   ├── reading-level/
 │   │   │   ├── reading_level.py  how hard each file reads: Flesch by the book, counted as written, easiest first
