@@ -10,6 +10,12 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `forecasts`, a prediction written down before the outcome:
+  `forecasts.py wager --box DIR --p 0.8 CLAIM` keeps the p and the claim's
+  hash, never its words; `settle ROW yes|no` proposes what happened through
+  the kernel's door, and it counts only once you seal it; `score` gives the
+  Brier and log scores and how often each band of confidence was right.
+  The scores are willow-bot's one script's calibration module, unchanged.
 - `predict`, what a question will come to, written down before it is
   asked: `predict.py ask --box DIR QUESTION`. It counts what the box's
   earlier bites came to (sealed, served or empty), writes the likeliest as a

@@ -329,6 +329,10 @@ willow/
 │   │   │   ├── foia.py   requests sent, answers and when they are due by law
 │   │   │   ├── test_foia.py
 │   │   │   └── README.md
+│   │   ├── forecasts/
+│   │   │   ├── forecasts.py  a wager before the outcome, settled by your seal, scored by Brier
+│   │   │   ├── test_forecasts.py
+│   │   │   └── README.md
 │   │   ├── format-rot/
 │   │   │   ├── format_rot.py  files in formats that may stop opening, flagged while you can still convert them
 │   │   │   ├── test_format_rot.py

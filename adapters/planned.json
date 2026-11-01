@@ -479,16 +479,6 @@
   "tags": "no-install, offline, read-only, tracking"
  },
  {
-  "name": "forecasts",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "Write a prediction before the outcome, settle it later, see your Brier score.",
-  "source": "bot",
-  "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, tracking"
- },
- {
   "name": "forgejo",
   "kind": "stdlib",
   "section": "For maintainers",
