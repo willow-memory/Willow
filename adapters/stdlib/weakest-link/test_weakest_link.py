@@ -71,7 +71,7 @@ def test_all_measured_is_measured_and_holds(tmp_path):
     assert got.returncode == 0, got.stdout + got.stderr
     assert (
         got.stdout.startswith("measured ")
-        and "1 measured, 0 fitted, 0 assumed, 0 unmarked" in got.stdout
+        and "1 measured, 0 fitted, 0 assumed, 0 unmarked, 0 cites-nothing" in got.stdout
     )
     assert "fix this first" not in got.stdout
 
@@ -210,3 +210,14 @@ def test_an_answer_of_sixty_characters_shows_whole_and_longer_is_cut(tmp_path):
     b, _ = approved(tmp_path / "c", sun, data=cut)
     shown = wl(b).stdout.splitlines()[0]
     assert repr(cut[:57] + "...") in shown and repr(cut) not in shown
+
+
+def test_an_approval_citing_nothing_is_shown_counted_and_not_escalated(tmp_path):
+    b, _ = approved(
+        tmp_path,
+        {"a.md": "Tomatoes want six hours of sun.\nprovenance: measured\n"},
+        n=0,
+    )
+    got = wl(b)
+    assert got.returncode == 0, got.stdout
+    assert got.stdout.startswith("cites-nothing ") and "1 cites-nothing" in got.stdout

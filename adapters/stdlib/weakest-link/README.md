@@ -16,7 +16,7 @@ Each approved answer, worth the weakest input it cites.
     assumed  proposal:0a6fde95…  'Six hours.'
              assumed   garden.md:1   <- the weakest: fix this first
              measured  sun.md:3
-    1 approved: 0 measured, 0 fitted, 1 assumed, 0 unmarked
+    1 approved: 0 measured, 0 fitted, 1 assumed, 0 unmarked, 0 cites-nothing
 
 A passage says what it rests on with a line in your file, such as
 `provenance: measured`, `provenance: fitted` or `provenance: assumed`, in any
@@ -40,6 +40,12 @@ are different facts. A passage marked twice is worth its weaker mark. An
 approval whose proposal file isn't the bytes that were sealed is `broken`,
 shown with why and counted, as [stale](../stale/) shows it.
 
+An approval that cites **no passage at all**, such as
+[session-seal](../session-seal/)'s summary of what you did, is
+`cites-nothing`. It is shown and counted, never escalated. It makes no claim
+about your folder, so there is no input in it to be weak. Without this, every
+box that uses session-seal would wait on you forever.
+
 It reads the marks you wrote. It doesn't decide what is measured. A line that
 says `provenance: measured` over a guess is a wrong mark in your file, and
 this can't see that.
@@ -47,7 +53,8 @@ this can't see that.
 **From:** the SAFE App Store's field-acoustics (its provenance report) and
 kitchen-pudding (its weakest-link rule), rebuilt over the kernel's approvals.
 
-**Exit codes:** 0 every approval is measured, or there are none; 42 an
+**Exit codes:** 0 every approval that cites anything is measured, or there
+are none; 42 an
 approval rests on something weaker, unmarked, gone or broken, and waits on
 you; 2 refused (a record that doesn't verify).
 

@@ -20,9 +20,10 @@ one. A passage marked twice is worth the weaker mark.
     assumed  proposal:0a6fde95…  'Six hours.'
              assumed   garden.md:1   <- the weakest: fix this first
              measured  sun.md:3
-    1 approved: 0 measured, 0 fitted, 1 assumed, 0 unmarked
+    1 approved: 0 measured, 0 fitted, 1 assumed, 0 unmarked, 0 cites-nothing
 
-Exit codes, the kernel's: 0 every approval is measured (or there are none); 42
+Exit codes, the kernel's: 0 every approval that cites anything is measured
+(or there are none); 42
 an approval rests on something weaker, or unmarked, or its cited passage is
 gone, or its proposal is broken, and that waits on you; 2 refused (a record
 that doesn't verify).
@@ -42,7 +43,7 @@ import kernel  # noqa: E402
 
 STATES = ("assumed", "fitted", "measured")  # weakest first, so min() is the rule
 MARK = re.compile(r"\bprovenance\s*[:=]\s*(measured|fitted|assumed)\b", re.I)
-UNMARKED, GONE = "unmarked", "gone"
+UNMARKED, GONE, UNCITED = "unmarked", "gone", "cites-nothing"
 
 
 def state_of(text: str) -> str:
@@ -55,7 +56,7 @@ def worth(states: list[str]) -> str:
     """An answer's worth: the weakest of its cited states. Anything gone or
     unmarked means the answer makes no provenance claim at all."""
     if not states:
-        return UNMARKED  # an approval citing nothing rests on nothing that says
+        return UNCITED  # rests on no passage: not a claim about the folder at all
     if GONE in states or UNMARKED in states:
         return UNMARKED
     return min(states, key=STATES.index)
@@ -80,7 +81,7 @@ def check(box: Path) -> tuple[int, list[dict]]:
                           "where": f"{got['path']}:{got['line']}" if got else "?"})  # fmt: skip
         out.append({"subject": subj, "data": prop["data"], "row": row["n"],
                     "cites": cites, "worth": worth([c["state"] for c in cites])})  # fmt: skip
-    weak = any("broken" in e or e["worth"] != "measured" for e in out)
+    weak = any("broken" in e or e["worth"] not in ("measured", UNCITED) for e in out)
     return (kernel.ESCALATE if weak else kernel.ALIVE), out
 
 
@@ -93,7 +94,7 @@ def main(argv: list[str]) -> int:
         print("refused: not a kernel box; init first", file=sys.stderr)
         return kernel.REFUSED
     code, entries = check(box)
-    tally = {s: 0 for s in (*reversed(STATES), UNMARKED)}
+    tally = {s: 0 for s in (*reversed(STATES), UNMARKED, UNCITED)}
     broken = 0
     for e in entries:
         if "refused" in e:
