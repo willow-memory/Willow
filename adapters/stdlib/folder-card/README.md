@@ -23,10 +23,10 @@ gap you know of, with your reason; every other line is kept as you wrote it:
 The card (Markdown) then reads, in part:
 
     ## Files (11: 10 read, 1 not)
-    - `diary.md`: 70 bytes, 4 dated days, 2026-01-05 to 2026-01-26; labels itself fiction
-    - `photo.bin`: 3 bytes, not read (binary, too large or not UTF-8)
+    - `<diary>.md`: 70 bytes, 4 dated days, 2026-01-05 to 2026-01-26; labels itself fiction
+    - `<photo>.bin`: 3 bytes, not read (binary, too large or not UTF-8)
     ## Dates and gaps
-    - `notes/`, files named by a date, 7 entries, 2026-03-01 to 2026-03-14, typical spacing 1 day
+    - `<folder>/`, files named by a date, 7 entries, 2026-03-01 to 2026-03-14, typical spacing 1 day
       - GAP 2026-03-04 to 2026-03-12, 7 days with no entry; told: flu, no writing
     ## Gaps you know of
     - 2026-03-06 to 2026-03-10: flu, no writing (the files show it too)
