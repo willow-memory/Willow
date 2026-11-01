@@ -236,3 +236,52 @@ def test_kernel_serves_a_dataset_from_the_mirror(tmp_path):
     got = run(KERNEL, "bite", "--box", box, *NOW, "hourly sea level harbour gauge")
     assert got.returncode == 0, got.stderr
     assert "Hourly sea level at the harbour gauge." in got.stdout
+
+
+def test_archived_copies_fingerprint_kind_and_collection_are_kept(tmp_path):
+    folder, to = tmp_path / "f", tmp_path / "m"
+    folder.mkdir()
+    entry = _entry(
+        "harbour-records",
+        "Harbour Records",
+        type="document",
+        collection="harbour-papers",
+        fingerprint={"sha256": None, "lead_hash": "ab" * 32, "captured": "2026-10-31"},
+        recovery=[
+            {"via": "wayback", "url": "https://web.archive.org/web/20261025/x",
+             "authenticity": "timestamped", "permission": "ok", "captured": "2026-10-25"},
+            {"via": "community", "url": "https://mirror.example/x",
+             "authenticity": "asserted", "permission": "excluded"},
+        ],
+    )  # fmt: skip
+    (folder / "catalog.json").write_text(
+        json.dumps({"entries": [entry]}), encoding="utf-8"
+    )
+    assert mirror(folder, to).returncode == 0
+    text = (to / "catalog.json.txt").read_text(encoding="utf-8")
+    assert (
+        "Harbour Records (harbour-records)\nkind: document\ncollection: harbour-papers\n"
+        in text
+    )
+    assert "fingerprint: lead baseline taken 2026-10-31\n" in text
+    assert (
+        "archived copy: timestamped, via wayback, captured 2026-10-25: "
+        "https://web.archive.org/web/20261025/x\n"
+    ) in text
+    # an excluded copy is kept for audit by the almanac, and never surfaced here
+    assert "mirror.example" not in text
+
+
+def test_a_dataset_says_no_kind_and_an_unrated_copy_says_so(tmp_path):
+    folder, to = tmp_path / "f", tmp_path / "m"
+    folder.mkdir()
+    entry = _entry("plain", "Plain", recovery=[{"url": "https://copy.example/p"}],
+                   fingerprint={"sha256": "cd" * 32, "lead_hash": "ef" * 32})  # fmt: skip
+    (folder / "catalog.json").write_text(
+        json.dumps({"entries": [entry]}), encoding="utf-8"
+    )
+    assert mirror(folder, to).returncode == 0
+    text = (to / "catalog.json.txt").read_text(encoding="utf-8")
+    assert "kind:" not in text and "collection:" not in text
+    assert "fingerprint: full and lead baseline taken an unknown date\n" in text
+    assert "archived copy: unrated, via somewhere: https://copy.example/p\n" in text

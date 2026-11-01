@@ -37,6 +37,16 @@ with its HTTP status, `no response`, or `not yet probed`. `status` is the
 curator's word, kept as written; this never decides whether a dataset is
 alive. A field an entry lacks leaves its line out.
 
+Where the entry has them, three more kinds of line follow `link last
+checked`. `fingerprint` says which baselines the almanac took while the
+source was live (`full`, the whole file's hash; `lead`, its title and opening
+text) and when. Each `archived copy` is one of the entry's recovery copies,
+in the almanac's own order: how verifiable it is, where it is, when it was
+captured, and its address. A copy marked `excluded` is never shown. An entry
+that isn't a dataset says its `kind` (a `document`, say), and one in a
+`collection` names it. To fetch one of those copies into your folder, use
+[almanac-keep](../almanac-keep/).
+
 Each catalog is written to MIRROR at the same relative path with .txt added:
 `FOLDER/<vertical>/catalog.json` becomes `MIRROR/<vertical>/catalog.json.txt`.
 A file that isn't a catalog (not JSON, or no `entries` list) is skipped and

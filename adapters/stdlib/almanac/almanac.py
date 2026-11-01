@@ -77,6 +77,11 @@ def entry_text(entry: dict) -> str:
     """One entry as one paragraph, its lines in a fixed order."""
     title = _one_line(entry.get("title")) or _one_line(entry.get("id"))
     lines = [f"{title} ({_one_line(entry.get('id'))})"]
+    kind = _one_line(entry.get("type"))
+    if kind and kind != "dataset":
+        lines.append(f"kind: {kind}")
+    if _one_line(entry.get("collection")):
+        lines.append(f"collection: {_one_line(entry.get('collection'))}")
     if _one_line(entry.get("description")):
         lines.append(_one_line(entry.get("description")))
     if _one_line(entry.get("publisher")):
@@ -92,6 +97,20 @@ def entry_text(entry: dict) -> str:
     lines.append(f"status: {said}" + (f"; licence: {licence}" if licence else ""))
     observed = entry.get("observed") if isinstance(entry.get("observed"), dict) else {}
     lines.append(f"link last checked: {_checked(observed)}")
+    fp = entry.get("fingerprint") if isinstance(entry.get("fingerprint"), dict) else {}
+    kinds = [k for k, key in (("full", "sha256"), ("lead", "lead_hash")) if fp.get(key)]
+    if kinds:
+        when = _one_line(fp.get("captured")) or "an unknown date"
+        lines.append(f"fingerprint: {' and '.join(kinds)} baseline taken {when}")
+    for copy in entry.get("recovery") or []:
+        if not isinstance(copy, dict) or copy.get("permission") == "excluded":
+            continue  # excluded copies are kept for audit, never surfaced
+        how = _one_line(copy.get("authenticity")) or "unrated"
+        via = _one_line(copy.get("via")) or "somewhere"
+        when = _one_line(copy.get("captured"))
+        lines.append(f"archived copy: {how}, via {via}"
+                     + (f", captured {when}" if when else "")
+                     + f": {_one_line(copy.get('url'))}")  # fmt: skip
     coverage = entry.get("coverage") if isinstance(entry.get("coverage"), dict) else {}
     span = [_one_line(coverage.get(k)) for k in ("spatial", "temporal", "cadence")]
     if any(span):

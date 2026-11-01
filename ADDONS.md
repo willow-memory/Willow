@@ -18,14 +18,14 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`███████████░░░░░░░░░` **270 of 496 built** · 441 need no install · 55 need one
+`███████████░░░░░░░░░` **272 of 498 built** · 443 need no install · 55 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
 | Reading more kinds of files | 70 | 36 | 98 | 8 |
-| Finding things | 29 | 14 | 33 | 10 |
+| Finding things | 30 | 14 | 34 | 10 |
 | Your own words | 19 | 7 | 23 | 3 |
-| Keeping track | 37 | 22 | 59 | 0 |
+| Keeping track | 38 | 22 | 60 | 0 |
 | Trust and proof | 27 | 25 | 43 | 9 |
 | Privacy and safety | 11 | 4 | 15 | 0 |
 | Assistants | 27 | 44 | 60 | 11 |
@@ -67,19 +67,19 @@ its list: someone who speaks the language can add one without much Python.
 ## Newest
 
 <!-- willow:newest -->
+- 2026-11-01 · [**quotes**](adapters/stdlib/quotes/) — Every quote in a document checked against your files: as written, almost (and what it adds, drops or changes), or not there.
+- 2026-11-01 · [**almanac-keep**](adapters/stdlib/almanac-keep/) — An Almanac entry's best permitted copy, from the publisher or its ranked recovery list, fetched into your folder with its SHA-256.
 - 2026-10-31 · [**three-two-one**](adapters/stdlib/three-two-one/) — How many verified copies of your record exist and where, held to three copies, on two kinds of storage, one away from home.
 - 2026-10-31 · [**shell-history**](adapters/stdlib/shell-history/) — Your bash, zsh and fish history: what you ran, and when the shell recorded it.
 - 2026-10-31 · [**session-cost**](adapters/stdlib/session-cost/) — Tokens each agent session spent, by day and by repo, summed from its own session files and priced from a table you keep.
-- 2026-10-31 · [**restore-drill**](adapters/stdlib/restore-drill/) — A backup zip restored into scratch and verified there, chain and every file, so you know it restores before the day you need it.
-- 2026-10-31 · [**persona-card**](adapters/stdlib/persona-card/) — A persona written as a card and compiled into the same system-prompt bytes every time, with the prompt's hash on the record.
 <!-- /willow:newest -->
 
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[sbom](adapters/stdlib/sbom/)** — SBOMs in SPDX or CycloneDX JSON: each component, its version and licence, as passages.
+**[musicxml](adapters/stdlib/musicxml/)** — MusicXML scores: titles, lyrics, tempo and performance markings as passages.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 270 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 272 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -227,6 +227,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - [**pile-sweep**](adapters/stdlib/pile-sweep/) — The passage size measured, not guessed: your box's own questions asked at several sizes, and the size that finds the most of their answers named. *bot* `no-install` `offline` `read-only` `search` `pile`
 - **promises** (idea) — What a candidate or a council said, by date and source, from the documents you saved. *new* `no-install` `offline` `read-only` `search`
 - [**quote-check**](adapters/stdlib/quote-check/) — Is this exact quote in my files, and where? For writers, journalists and students. *box* `no-install` `offline` `read-only` `search`
+- [**quotes**](adapters/stdlib/quotes/) — Every quote in a document checked against your files: as written, almost (and what it adds, drops or changes), or not there. *new* `no-install` `offline` `read-only` `search`
 - [**reading-level**](adapters/stdlib/reading-level/) — How hard a passage reads (sentence length, word length, Flesch), so a teacher can find texts for a class. *new* `no-install` `offline` `read-only` `search`
 - [**record-sql**](adapters/deps/record-sql/) — SQL straight over your record, in place: 'how many answers did I approve in March?' Needs DuckDB; MIT. *box* `needs-install` `offline` `read-only` `search`
 - **rerank** (idea) — A small model on the CPU that reorders the top passages by reading the question and each passage together. Needs FlashRank; Apache-2.0. Goes online: the model, downloaded once. *new* `needs-install` `online` `read-only` `search`
@@ -277,6 +278,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 
 - [**across**](adapters/stdlib/across/) — One document across several boxes, not just one: each box's digest, export, timeline or readings, composed into one page, every line still cited by its box, file and line. *new* `no-install` `offline` `read-only` `tracking` `everyday`
 - [**again**](adapters/stdlib/again/) — Questions you keep asking: "asked 4 times; approve an answer?" *bot* `no-install` `offline` `read-only` `tracking`
+- [**almanac-keep**](adapters/stdlib/almanac-keep/) — An Almanac entry's best permitted copy, from the publisher or its ranked recovery list, fetched into your folder with its SHA-256. Goes online: the copy's address, fetched once. *new* `no-install` `online` `writes-output` `tracking`
 - **ask-later** (idea) — A question with no answer yet kept on a list, and asked again whenever a new file arrives. *new* `no-install` `offline` `records` `tracking`
 - [**attendance**](adapters/stdlib/attendance/) — Attendance for a class, club or group, from your register, by week. *new* `no-install` `offline` `read-only` `tracking`
 - [**baby-log**](adapters/stdlib/baby-log/) — Feeds, sleeps and nappies from your notes, by day: when was the last one? *new* `no-install` `offline` `read-only` `tracking`
