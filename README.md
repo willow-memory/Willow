@@ -120,11 +120,11 @@ says how to pick one up:
 <!-- willow:front show=pick week=2026-W44 -->
 **Add-on of the week**
 
-**[hook-stop](adapters/stdlib/hook-stop/)** — A Stop hook that won't let an assistant's turn end while the record doesn't verify or its changes aren't committed, and says which.
+**[licenses](adapters/stdlib/licenses/)** — The licence of every installed dependency, read from its own metadata on this machine: which are copyleft, and which file says so.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 282 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 283 built add-ons in name order.*
 
-[Every add-on, 282 built of 505, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 283 built of 505, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 
