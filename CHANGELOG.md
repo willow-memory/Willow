@@ -1269,6 +1269,11 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- `bm25`, the idea, now points at what willow already has: `scan --rank bm25`
+  ranks by BM25 with the kernel's own passages and tokenizer. Building the
+  idea as first written would have been a second, cruder BM25 (on odile,
+  "who is the doctor" served memos matched only on "the" and "who"). What
+  is left to build is the one-shot over a box with no index step.
 - `almanac` mirrors more of each entry: its fingerprint baselines, each
   recovery copy in the almanac's order (never one marked excluded), and the
   entry's kind and collection when it isn't a plain dataset. (#135)
