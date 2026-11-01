@@ -18,19 +18,19 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`███████████░░░░░░░░░` **281 of 499 built** · 445 need no install · 54 need one
+`███████████░░░░░░░░░` **281 of 505 built** · 451 need no install · 54 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
 | Reading more kinds of files | 71 | 35 | 98 | 8 |
 | Finding things | 31 | 14 | 35 | 10 |
 | Your own words | 19 | 7 | 23 | 3 |
-| Keeping track | 42 | 18 | 60 | 0 |
-| Trust and proof | 28 | 24 | 43 | 9 |
+| Keeping track | 42 | 19 | 61 | 0 |
+| Trust and proof | 28 | 26 | 45 | 9 |
 | Privacy and safety | 11 | 4 | 15 | 0 |
 | Assistants | 28 | 44 | 61 | 11 |
-| Ways to use it | 22 | 18 | 36 | 4 |
-| Play | 10 | 29 | 35 | 4 |
+| Ways to use it | 22 | 19 | 37 | 4 |
+| Play | 10 | 31 | 37 | 4 |
 | For maintainers | 19 | 25 | 39 | 5 |
 <!-- /willow:pools -->
 
@@ -316,6 +316,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**milestones**](adapters/stdlib/milestones/) — Your child's firsts, words and heights, from your notes, by age. *new* `no-install` `offline` `read-only` `tracking`
 - [**minutes**](adapters/stdlib/minutes/) — Meeting minutes: who decided what and when, and which actions are still open. *new* `no-install` `offline` `read-only` `tracking`
 - [**mood**](adapters/stdlib/mood/) — Mood scores you write in a journal, over weeks and months. *new* `no-install` `offline` `read-only` `tracking`
+- **nightstand** (idea) — Set heavy things down, pick up one bite: at most one thing in hand, and nothing deleted. *new* `no-install` `offline` `records` `tracking`
 - **oakenscroll** (idea) — Oakenscroll's Office calibration ledger: what you believed, how hard, and how it resolved, as dated passages. *new* `no-install` `offline` `writes-output` `tracking`
 - [**outdated**](adapters/stdlib/outdated/) — How old each locked dependency is, and which are yanked, deprecated or two years without a release, from a registry index you downloaded. *new* `no-install` `offline` `read-only` `tracking`
 - [**pets**](adapters/stdlib/pets/) — Each pet's vet visits, vaccines and medicines, from your records: what's due next. *new* `no-install` `offline` `read-only` `tracking`
@@ -345,6 +346,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**changed**](adapters/stdlib/changed/) — What's new, edited or deleted in your folder since the last check, as fingerprint rows. *bot* `no-install` `offline` `records` `trust` `everyday`
 - [**claim-check**](adapters/stdlib/claim-check/) — A claim checked against your sources: the passages that hold all of its parts, the ones that hold only some, and the parts no file names. *new* `no-install` `offline` `read-only` `trust`
 - [**contradictions**](adapters/stdlib/contradictions/) — Two passages that disagree about the same date or amount, side by side. *new* `no-install` `offline` `read-only` `trust`
+- **decisions** (idea) — A recorded no with its reason and the condition that would reopen it, so a rejection is kept, not forgotten. *new* `no-install` `offline` `records` `trust`
 - [**diverge**](adapters/stdlib/diverge/) — Where two copies of a folder or a box part, a backup zip included, narrowed to the first row, file and line that differ. *bot* `no-install` `offline` `read-only` `trust` `everyday`
 - **encrypt** (idea) — Keeps the record folder encrypted at rest. Needs cryptography; Apache-2.0 or BSD. *new* `needs-install` `offline` `records` `trust`
 - [**export**](adapters/stdlib/export/) — Approved answers, and the question log (counts only, never words), as Markdown or CSV. *box* `no-install` `offline` `read-only` `trust`
@@ -389,6 +391,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**timeline**](adapters/stdlib/timeline/) — A dated timeline of one matter (a dispute, an illness, a tenancy), every line cited, to hand to a lawyer, doctor or council. *new* `no-install` `offline` `writes-output` `trust`
 - [**tip-pin**](adapters/stdlib/tip-pin/) — Where a box's record ends, kept outside the box, so rows cut off or a whole chain re-hashed are found where verify can't. *new* `no-install` `offline` `writes-output` `trust`
 - [**wayback**](adapters/stdlib/wayback/) — The Wayback Machine's copy of a page from a window of days, saved beside your own snapshot and compared with it byte for byte. Goes online: archive.org, to find the archived copy and fetch it. *new* `no-install` `online` `writes-output` `trust` `sources`
+- **weakest-link** (idea) — Each answer's inputs marked measured, fitted or assumed, and the result worth its weakest input, never an average. *new* `no-install` `offline` `read-only` `trust`
 - **weights-pin** (idea) — A local model's weights file hashed before each run and refused when it differs from the hash on its model card. *new* `no-install` `offline` `read-only` `trust`
 - **witness** (idea) — A second person's seal beside yours, for answers that need two people to agree. *new* `no-install` `offline` `records` `trust`
 - [**xref**](adapters/stdlib/xref/) — Every reference in your files checked: each link to another file, and each quoted line, still there and still saying it. *bot* `no-install` `offline` `read-only` `trust` `everyday`
@@ -496,6 +499,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - [**braille**](adapters/stdlib/braille/) — Answers as braille-ready files (BRF) for a braille display or embosser. *new* `no-install` `offline` `writes-output` `interface`
 - [**browse**](adapters/stdlib/browse/) — Your folder in your web browser: ask, read each answer at its file and line, and approve suggestions with a click, from this machine only. Reaches this machine only. *new* `no-install` `this-machine` `records` `interface` `everyday`
 - [**calendar-out**](adapters/stdlib/calendar-out/) — Dates coming up as an .ics file your calendar app can subscribe to. *new* `no-install` `offline` `writes-output` `interface`
+- **capture** (idea) — A note written into your folder in one line, with its type and tags, so the next question can find it. *new* `no-install` `offline` `writes-output` `interface`
 - [**cloudevents**](adapters/stdlib/cloudevents/) — Record rows in the CloudEvents envelope, for any tool that already reads them. *new* `no-install` `offline` `writes-output` `interface`
 - **datasette** (idea) — Your record and approved answers browsable in Datasette, read only: tables, facets and SQL on this machine. Needs Datasette; Apache-2.0. Reaches this machine only. *new* `needs-install` `this-machine` `read-only` `interface`
 - [**deep-links**](adapters/stdlib/deep-links/) — Each answer as a link that opens the file at the line (RFC 5147 lines, browser text fragments). *new* `no-install` `offline` `read-only` `interface`
@@ -535,11 +539,13 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 
 - **art-of-the-day** (idea) — An artwork from the Met's public-domain collection, drawn for the day or for each sealed session. Goes online: collectionapi.metmuseum.org, to read the artwork. *new* `no-install` `online` `records` `play`
 - **beacon** (idea) — Draws seeded by a public randomness beacon (drand), so nobody could have picked the result in advance. Goes online: api.drand.sh, to read a beacon round's randomness. *bot* `no-install` `online` `records` `play`
+- **catgrid** (idea) — A seeded logic grid with one cat in every row, column and colour region and a unique answer, replayed from its moves. *new* `no-install` `offline` `records` `play`
 - **chess-puzzle** (idea) — A Lichess puzzle a day, drawn by a seed: predict whether you'll solve it, then solve it. Goes online: lichess.org, to read the puzzle. *new* `no-install` `online` `records` `play`
 - **connect-four** (idea) — Connect Four as rows on the record, held to the solved result: the first player wins. *new* `no-install` `offline` `records` `play`
 - [**daily-word**](adapters/stdlib/daily-word/) — A word game drawn from your own files' words, the same puzzle for everyone with the same box. *new* `no-install` `offline` `records` `play`
 - [**dice**](adapters/stdlib/dice/) — Seeded dice rolls as rows: every roll replayable and checkable. *bot* `no-install` `offline` `records` `play`
 - [**dice5e**](adapters/stdlib/dice5e/) — Full tabletop dice notation (4d6kh3, advantage), rolled on the record and checkable like dice. *bot* `no-install` `offline` `records` `play`
+- **fight5e** (idea) — Tabletop combat run from stat blocks on dice5e's rolls, every attack on the record and replayable. *new* `no-install` `offline` `records` `play`
 - **front-page** (idea) — Which new posts will make the Hacker News front page? Wager, and let its search settle it. Goes online: hn.algolia.com, to read the front page. *new* `no-install` `online` `records` `play`
 - **game-master** (idea) — A tabletop game's rolls and rulings as rows on the record, with the game master's calls sealed. *bot* `no-install` `offline` `records` `play`
 - **gutenberg** (idea) — A paragraph from a public-domain book beside one of yours, for serendipity. Goes online: gutenberg.org, each book fetched once. *new* `no-install` `online` `records` `play`
