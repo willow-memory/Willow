@@ -120,11 +120,11 @@ says how to pick one up:
 <!-- willow:front show=pick week=2026-W44 -->
 **Add-on of the week**
 
-**[licenses](adapters/stdlib/licenses/)** — The licence of every installed dependency, read from its own metadata on this machine: which are copyleft, and which file says so.
+**[secrets-audit](adapters/stdlib/secrets-audit/)** — Finds passwords, keys and card numbers sitting in plain files, by file and line, never showing the value.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 283 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 290 built add-ons in name order.*
 
-[Every add-on, 283 built of 505, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 290 built of 505, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 
