@@ -633,6 +633,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "horoscope": ("horoscope.py", ["Ana", "--date", "2026-10-24"]),
     "life": ("life.py", ["--box", "{box}", "play", "--generations", "8", *NOW]),
     "odds": ("odds.py", ["2d6"]),
+    "nightstand": ("nightstand.py", ["--box", "{box}", "down", "tomatoes", *NOW]),
     "changed": ("changed.py", ["--box", "{box}", *NOW]),
     "diverge": ("diverge.py", ["{pile}", "{pile}"]),
     "duplicates": ("duplicates.py", ["--box", "{box}"]),
