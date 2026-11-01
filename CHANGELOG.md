@@ -16,7 +16,7 @@ says how). The first was v0.1.0.
   `bite` finds it by any of them. A missing folder or a box is refused, not
   made or written, a note too long for one passage is refused, and the file is
   created exclusively, so two captures never overwrite each other. Its card
-  keeps the promise `writes: to`.
+  keeps the promise `writes: to`. (#147)
 - `catgrid`, a cat in every row, column and colour region, played on the
   record: `catgrid.py --box DIR play --moves A1,B3` builds a 4 to 8 square
   board with exactly one answer from the bot's seeded stream (seeded by the
