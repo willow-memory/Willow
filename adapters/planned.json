@@ -1311,16 +1311,6 @@
   "tags": "no-install, online, writes-output, maintainers"
  },
  {
-  "name": "oakenscroll",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "Oakenscroll's Office calibration ledger: what you believed, how hard, and how it resolved, as dated passages.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, tracking"
- },
- {
   "name": "obsidian",
   "kind": "stdlib",
   "section": "Ways to use it",

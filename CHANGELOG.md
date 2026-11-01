@@ -10,6 +10,10 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `oakenscroll`: Oakenscroll's Office calibration ledger (what you believed,
+  how hard, and how it resolved) as dated passages: each claim with its
+  revisions, grade and note, and where it stands now. Reads every office.db
+  under a folder, read-only and immutable; scores nothing (see `forecasts`).
 - Six ideas added to `adapters/planned.json` from an audit of the SAFE App
   Store against willow, each checked with `similar near` first:
   `weakest-link` (inputs marked measured, fitted or assumed, the result worth
