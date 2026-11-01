@@ -842,16 +842,6 @@
   "tags": "no-install, offline, read-only, tracking"
  },
  {
-  "name": "invoices",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "For freelancers: invoices and payments matched by the id pattern you give, never guessed.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
- },
- {
   "name": "issue-answer",
   "kind": "stdlib",
   "section": "Assistants",

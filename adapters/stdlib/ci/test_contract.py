@@ -455,6 +455,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "abbreviations": ("abbreviations.py", ["--box", "{box}", "tomatoes"]),
     "accents": ("accents.py", ["--box", "{box}", "tomatoes"]),
     "amounts": ("amounts.py", ["--box", "{box}"]),
+    "invoices": ("invoices.py", ["--box", "{box}", "--id", "INV-\\d+"]),
     "first-mention": ("first_mention.py", ["--box", "{box}", "tomatoes"]),
     "fuzzy-dates": ("fuzzy_dates.py", ["--box", "{box}"]),
     "again": ("again.py", ["--box", "{box}"]),

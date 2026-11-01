@@ -470,6 +470,10 @@ willow/
 │   │   │   ├── instruction_files.py   which instruction files each coding agent would load for a folder, in order, with size and hash
 │   │   │   ├── test_instruction_files.py
 │   │   │   └── README.md
+│   │   ├── invoices/
+│   │   │   ├── invoices.py   invoices you sent, paid only when a line names the number as paid; the rest overdue first
+│   │   │   ├── test_invoices.py
+│   │   │   └── README.md
 │   │   ├── irc/
 │   │   │   ├── irc.py   IRC logs as dated lines of messages
 │   │   │   ├── test_irc.py

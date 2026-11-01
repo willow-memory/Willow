@@ -10,6 +10,15 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `invoices`, the invoices you sent matched to their payments by number
+  alone: `invoices.py --box DIR --id 'INV-\d+'`. Each is found in a CSV
+  ledger row or a file named for it, and is paid only when a line naming
+  its number says so; the rest are listed overdue first with the last line
+  that named them. A bank credit or remittance of the same sum that names
+  no invoice is shown to check by hand, never counted as paid. On
+  teodora's files: Bramble & Bean's £2,140 over three invoices, and the
+  Hargreaves payment that quotes no number set beside its invoice. On
+  hollis's: one overdue, the theatre's $640, out of 111. (#136)
 - `quotes`, every quotation in a document checked against your files at
   once: `quotes.py --box DIR --in FILE`. Each quote of four words or more is
   as written (quote-check's verdict), almost (misquote's closest passage, with
