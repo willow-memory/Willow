@@ -193,7 +193,7 @@ def ledger_text(path: Path) -> str | None:
     finally:
         con.close()
     # the events table is appended in id order; that order is the history
-    events.sort(key=lambda e: (e["id"] is None, e["id"]))
+    events.sort(key=lambda e: e["id"])
     by_claim: dict[str, list[dict]] = {}
     for e in events:
         by_claim.setdefault(e["prediction_id"], []).append(e)

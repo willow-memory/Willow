@@ -172,6 +172,17 @@ def test_an_empty_ledger_says_so(tmp_path):
     ) == "oakenscroll: 0 claims\n\n"
 
 
+def test_one_claim_is_counted_in_the_singular(tmp_path):
+    folder, to = tmp_path / "f", tmp_path / "m"
+    con = make_ledger(folder / "office.db")
+    claim(con, "a0000009", "the tide turns", 0.5, "2026-10-02")
+    con.commit()
+    con.close()
+    assert mirror(folder, to).returncode == 0
+    text = (to / "office.db.txt").read_text(encoding="utf-8")
+    assert text.startswith("oakenscroll: 1 claim (1 open)\n\n")
+
+
 def test_a_v01_ledger_without_the_evidence_column_is_read(tmp_path):
     folder, to = tmp_path / "f", tmp_path / "m"
     old = SCHEMA.replace("evidence TEXT, ", "")
