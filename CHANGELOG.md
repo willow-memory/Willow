@@ -10,6 +10,15 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `weakest-link`, each approved answer worth its weakest cited input:
+  `weakest_link.py --box DIR`. A passage marks itself `provenance: measured`,
+  `fitted` or `assumed`; an approval is worth the min() of what it cites,
+  never an average, and the weakest inputs are flagged to fix first. A cited
+  passage that marks nothing is `unmarked`, and so is any answer citing one or
+  a passage gone from the folder: recorded as its own value, never read as
+  assumed. An approval citing no passage (session-seal's summaries) is
+  `cites-nothing`, counted and not escalated. Rebuilt from the SAFE App
+  Store's field-acoustics and kitchen-pudding; reads only. (#143)
 - Six ideas added to `adapters/planned.json` from an audit of the SAFE App
   Store against willow, each checked with `similar near` first:
   `weakest-link` (inputs marked measured, fitted or assumed, the result worth
