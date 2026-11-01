@@ -17,8 +17,9 @@ Each nugget becomes one paragraph:
     sources: https://science.nasa.gov/universe/black-holes/
     verified: human, by ada, 2026-10-01
 
-A seed pair with no signature says `verified: asserted (a seed pair nobody has
-signed)`, as Jeles itself would. A signature is never copied; a deleted record
+A seed pair with no signature says so: `verified: unsigned seed pair (Jeles sets
+its rung when it installs the seed)`. Jeles installs most such pairs at its
+`asserted` rung, but cited commons pairs at `human`, so the rung is Jeles' to say. A signature is never copied; a deleted record
 and a logged gap (a question with no answer) are left out. Each file is written
 to MIRROR at the same relative path with .txt added; FOLDER is only read.
 
@@ -52,7 +53,7 @@ USAGE = (
     "usage: jeles.py mirror --from FOLDER --to MIRROR\n"
     "       jeles.py export --box DIR --questions FILE --to OUT.json"
 )
-UNSIGNED = "asserted (a seed pair nobody has signed)"
+UNSIGNED = "unsigned seed pair (Jeles sets its rung when it installs the seed)"
 
 
 def _one_line(value) -> str:

@@ -33,8 +33,10 @@ Each nugget becomes one paragraph:
     verified: human, by ada, 2026-10-01
 
 The `verified` line is Jeles' own word for how far a nugget has been checked
-(its rung, who and when). A seed pair nobody has signed says `asserted (a seed
-pair nobody has signed)`, as Jeles itself treats it. A signature is never
+(its rung, who and when). A seed pair nobody has signed says `unsigned seed
+pair (Jeles sets its rung when it installs the seed)`: Jeles installs most such
+pairs at `asserted`, but cited commons pairs at `human`, and that rule is
+Jeles' own, not something to copy here. A signature is never
 copied, a deleted record is left out, and so is a logged gap (a question with
 no answer yet). Each file goes to MIRROR at the same relative path with .txt
 added; a file that isn't either shape is skipped and counted. Point the kernel

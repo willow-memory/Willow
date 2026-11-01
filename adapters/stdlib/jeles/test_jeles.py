@@ -69,7 +69,7 @@ def test_a_seed_file_becomes_passages_and_a_signature_is_never_copied(tmp_path):
         "When is high tide at the harbour?\nTwice a day, about 12 hours 25 minutes apart.\n"
         "reason: Tides are semidiurnal here.\n"
         "sources: https://almanac.example.org/tides, https://tides.example.org/harbour\n"
-        "verified: asserted (a seed pair nobody has signed)\n\n"
+        "verified: unsigned seed pair (Jeles sets its rung when it installs the seed)\n\n"
     ) in text
     assert "verified: signed, by ada\n" in text
     assert "c2VjcmV0" not in text and "no question" not in text
