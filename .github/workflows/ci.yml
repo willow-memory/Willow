@@ -88,6 +88,9 @@ jobs:
         with:
           python-version: "3.13"
       - run: pip install pytest ruff==0.16.7
+      # A change to ocr runs deps:ocr here, which needs tesseract, as the
+      # deps job below does.
+      - run: sudo apt-get update -q && sudo apt-get install -y -q tesseract-ocr
       - env:
           BASE: origin/${{ github.base_ref }}
         # A change it can't place widens to every gate, which the jobs below
