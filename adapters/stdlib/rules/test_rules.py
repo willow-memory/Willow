@@ -169,6 +169,13 @@ def test_a_file_outside_the_folder_or_with_no_sections_is_refused(tmp_path):
     got = run("propose", "--box", str(box), "bad.md")
     assert got.returncode == 2 and "can't be read as text" in got.stderr
     assert run("list", "--box", str(box)).stdout.startswith("no rules proposed yet")
+    run("bite", "--box", str(box), *NOW, "seven cards", script=KERNEL)
+    other = {"path": "notes/cards.md", "data": "Seven.", "cites": [], "claim": "mine"}
+    (tmp_path / "rows.jsonl").write_text(json.dumps(other) + "\n")
+    got = run("propose", "--box", str(box), "--file", str(tmp_path / "rows.jsonl"),
+              *NOW, script=KERNEL)  # fmt: skip
+    assert any(r.get("verdict") == "pass" for r in rows(box)), got.stdout + got.stderr
+    assert rl.proposals(box, rows(box)) == [], "another add-on's proposal isn't a rule"
 
 
 def test_a_bad_command_line_or_box_is_refused(tmp_path):
@@ -177,6 +184,7 @@ def test_a_bad_command_line_or_box_is_refused(tmp_path):
     for argv in ([], ["fly"], ["propose", "--box", b], ["propose", "--box", b, "a", "b"],
                  ["ask", "--box", b], ["list", "--box", b, "x"],
                  ["list", "--box", b, *NOW], ["ask", "--box", "", "x"],
+                 ["ask", "--box", b, "--now", "", "x"],
                  ["ask", "--box", b, "--top", "3", "x"]):  # fmt: skip
         got = run(*argv)
         assert got.returncode == 2 and "rules.py" in got.stderr, argv
