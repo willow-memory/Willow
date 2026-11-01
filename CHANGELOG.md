@@ -10,6 +10,13 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `sent-log`, which passages were handed to which model, and where to, read
+  from the record: `sent_log.py --box DIR`. The record holds no model identity
+  (a proposal row is the kernel's, and `model-card` is not built), so it reads
+  the model and endpoint from a proposal's claim, only from a proposal file
+  that is the bytes proposed, and says what it cannot see: a person's own
+  suggestion looks the same, and an ask that cited nothing or failed leaves a
+  bite with no proposal. Reads only.
 - Six ideas added to `adapters/planned.json` from an audit of the SAFE App
   Store against willow, each checked with `similar near` first:
   `weakest-link` (inputs marked measured, fitted or assumed, the result worth

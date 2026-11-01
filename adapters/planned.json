@@ -1740,16 +1740,6 @@
   "tags": "no-install, offline, records, assistant"
  },
  {
-  "name": "sent-log",
-  "kind": "stdlib",
-  "section": "Privacy and safety",
-  "line": "Which of your passages went to which online model, read from the record by model card: what left this machine and where to.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, privacy"
- },
- {
   "name": "serve-piles",
   "kind": "stdlib",
   "section": "Assistants",

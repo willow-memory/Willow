@@ -635,6 +635,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "diverge": ("diverge.py", ["{pile}", "{pile}"]),
     "duplicates": ("duplicates.py", ["--box", "{box}"]),
     "secrets-audit": ("secrets_audit.py", ["--box", "{box}"]),
+    "sent-log": ("sent_log.py", ["--box", "{box}"]),
     "risky-code": ("risky_code.py", ["--box", "{box}"]),
     "said": ("said.py", ["--box", "{box}"]),
     "session-seal": ("session_seal.py", ["--box", "{box}", *NOW]),
