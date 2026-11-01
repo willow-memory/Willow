@@ -160,6 +160,10 @@ willow/
 │   │   │   ├── calendar_out.py   the dates coming up as an .ics file: an all-day event for each, the line as its title and the file and line as its description
 │   │   │   ├── test_calendar_out.py
 │   │   │   └── README.md
+│   │   ├── capture/
+│   │   │   ├── capture.py   a note written into your folder as one paragraph with its type and tags
+│   │   │   ├── test_capture.py
+│   │   │   └── README.md
 │   │   ├── car/
 │   │   │   ├── car.py   a car's jobs, costs and what's due
 │   │   │   ├── test_car.py

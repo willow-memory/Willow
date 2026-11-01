@@ -152,16 +152,6 @@
   "tags": "no-install, offline, writes-output, file-reader"
  },
  {
-  "name": "capture",
-  "kind": "stdlib",
-  "section": "Ways to use it",
-  "line": "A note written into your folder in one line, with its type and tags, so the next question can find it.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, interface"
- },
- {
   "name": "care",
   "kind": "stdlib",
   "section": "Keeping track",
