@@ -15,7 +15,10 @@ never an average. One assumed input and the whole answer is assumed, however
 many measured ones sit beside it. A cited passage that says none is
 `unmarked`, and so is any answer that cites one. That is recorded as its own
 value, never quietly read as assumed: no claim is a different fact from a weak
-one. A passage marked twice is worth the weaker mark.
+one. A passage marked twice is worth the weaker mark. An approval that cites
+no passage at all, such as session-seal's summary of what you did, is
+`cites-nothing`: shown and counted, never escalated, because it makes no
+claim about your folder for an input to be weak in.
 
     assumed  proposal:0a6fde95…  'Six hours.'
              assumed   garden.md:1   <- the weakest: fix this first
@@ -23,10 +26,9 @@ one. A passage marked twice is worth the weaker mark.
     1 approved: 0 measured, 0 fitted, 1 assumed, 0 unmarked, 0 cites-nothing
 
 Exit codes, the kernel's: 0 every approval that cites anything is measured
-(or there are none); 42
-an approval rests on something weaker, or unmarked, or its cited passage is
-gone, or its proposal is broken, and that waits on you; 2 refused (a record
-that doesn't verify).
+(or there are none); 42 an approval rests on something weaker, or unmarked,
+or its cited passage is gone, or its proposal is broken, and that waits on
+you; 2 refused (a record that doesn't verify).
 
 It only reads: the record, the approved suggestions, your folder. It writes
 nothing, marks nothing, and never takes an approval back.
