@@ -185,3 +185,15 @@ def test_sums_in_two_currencies_are_added_up_apart():
     assert invoices.total([]) == "0.00"
     assert invoices.currency("amount_gbp") == "£" and invoices.currency("€ 4") == "€"
     assert invoices.money("TOTAL DUE   $  640.00") == 640.00
+
+
+def test_not_yet_due_is_soonest_first_and_an_unread_date_last(tmp_path):
+    ledger = ("Invoice,Client,Amount,Due,Status\n"
+              "INV-0007,Late Co,10.00,2026-11-20,sent\n"
+              "INV-0008,Soon Co,20.00,2026-10-25,sent\n"
+              "INV-0009,Odd Co,30.00,09/11/2026,sent\n")  # fmt: skip
+    got = ask(box(tmp_path, {"ledger.csv": ledger}))
+    heads = [
+        ln.split()[2] for ln in got.stdout.splitlines() if ln.startswith("not due")
+    ]
+    assert heads == ["INV-0008", "INV-0007", "INV-0009"]
