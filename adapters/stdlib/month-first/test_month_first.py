@@ -71,6 +71,29 @@ def test_what_is_not_a_date_is_left_as_it_is(tmp_path):
     assert one(tmp_path, text) == text
 
 
+def test_a_file_whose_dates_say_day_first_keeps_its_numbered_dates(tmp_path):
+    folder, to = tmp_path / "in", tmp_path / "out"
+    put(folder, "uk.md", "Due 02/03/2026, paid 13/03/2026, filed Nov 3, 2026.\n")
+    put(folder, "us.md", "Due 02/03/2026.\n")
+    got = mirror(folder, to)
+    assert got.returncode == 0, got.stderr
+    assert out_of(to, "uk.md") == (
+        "Due 02/03/2026, paid 13/03/2026, filed Nov 3, 2026 [2026-11-03].\n"
+    )
+    assert out_of(to, "us.md") == "Due 02/03/2026 [2026-02-03].\n"
+    assert got.stdout.splitlines() == [
+        "2 month-first dates given their ISO form",
+        "1 files whose own dates say day first: their numbered dates left",
+        f"wrote 2 files to {to}; skipped 0",
+    ]
+    assert "day first: uk.md, its numbered dates left as they are" in got.stderr
+
+
+def test_a_number_over_12_that_is_no_date_says_nothing_of_the_order(tmp_path):
+    got = one(tmp_path, "Due 02/03/2026; part 14/40/2026 and 31/02/2026.\n")
+    assert got.startswith("Due 02/03/2026 [2026-02-03];")
+
+
 def test_a_two_digit_year_from_70_is_the_1900s(tmp_path):
     got = one(tmp_path, "7/4/76, 7/4/69 and 1/1/70\n")
     assert got == "7/4/76 [1976-07-04], 7/4/69 [2069-07-04] and 1/1/70 [1970-01-01]\n"

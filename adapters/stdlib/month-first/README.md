@@ -35,10 +35,16 @@ text stays, with the ISO dates added; a page's tags are dropped, as the
 kernel drops them. It says how many dates it gave their ISO form. A file
 that isn't UTF-8 is skipped and counted.
 
-**It is your word, not its finding.** Run on a folder written day first, it
-reads 03/11/2026 as March 11. Only you know who wrote the folder; a file
-whose own dates say day first (a first number over 12) still gains no wrong
-date from those, as they can't be read month first.
+**A file that says otherwise is believed.** A file whose own dates say day
+first (13/03/2026 reads no other way) keeps its numbered dates as they are,
+and is named, as chats leaves a file that contradicts its flag; its dates in
+words (Nov 3, 2026) still gain their ISO form, since they read one way only.
+On teodora's demo folder, written in England, that leaves 68 files' dates
+alone.
+
+**Otherwise it is your word, not its finding.** A day-first file with no day
+over 12 can't show its order, so run on one it reads 03/11/2026 as March 11:
+teodora's folder still has 13 of those. Only you know who wrote the folder.
 
 **Exit codes:** 0 wrote some; 42 nothing readable; 2 refused (MIRROR inside
 FOLDER or the other way round, or FOLDER not a folder).

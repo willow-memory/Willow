@@ -17,6 +17,11 @@ isn't one (13/03/2026, Feb 30, 2026), or falls outside 1900 to 2099, is left
 as it is. The original text stays; a page's tags are dropped, as the kernel
 drops them. A date already followed by its ISO form is not marked again.
 
+A file whose own dates say day first (13/03/2026 reads no other way) is not
+the folder you said it was: its numbered dates are left as they are and the
+file named, as chats leaves a file that contradicts its flag. Its dates in
+words (Nov 3, 2026) still gain their ISO form, as they read only one way.
+
 Every text file is written, marked or not, so MIRROR is a whole folder to
 build a box from. A file that isn't UTF-8 is skipped and counted.
 
@@ -82,9 +87,19 @@ def iso(year: str, month: int, day: int) -> str | None:
         return None
 
 
-def mark(text: str) -> tuple[str, int]:
-    """`text` with each month-first date's ISO form after it, and how many."""
+def day_first(text: str) -> bool:
+    """`text`'s own dates say day first: one reads only that way (13/03/2026)."""
+    return any(
+        int(m[1]) > 12 and iso(m[3], int(m[2]), int(m[1]))
+        for m in NUMBERS.finditer(text)
+    )
+
+
+def mark(text: str) -> tuple[str, int, bool]:
+    """`text` with each month-first date's ISO form after it, how many, and
+    whether its own dates say day first, so its numbered ones are left."""
     count = 0
+    dmy = day_first(text)
 
     def beside(m: re.Match, got: str | None) -> str:
         nonlocal count
@@ -93,11 +108,12 @@ def mark(text: str) -> tuple[str, int]:
         count += 1
         return f"{m[0]} [{got}]"
 
-    text = NUMBERS.sub(lambda m: beside(m, iso(m[3], int(m[1]), int(m[2]))), text)
+    if not dmy:
+        text = NUMBERS.sub(lambda m: beside(m, iso(m[3], int(m[1]), int(m[2]))), text)
     text = WORDS.sub(
         lambda m: beside(m, iso(m[3], MONTHS[m[1].lower()], int(m[2]))), text
     )
-    return text, count
+    return text, count, dmy
 
 
 def sources(root: Path) -> list[Path]:
@@ -125,7 +141,7 @@ def mirror(folder: Path, to: Path) -> int:
     if to.exists() and not to.is_dir():
         print(f"refused: {to} is not a folder", file=sys.stderr)
         return kernel.REFUSED
-    written = skipped = dates = 0
+    written = skipped = dates = dmy = 0
     for rel in sources(src):
         suffix = rel.suffix.lower()
         if suffix not in TEXT + PAGE:
@@ -142,14 +158,19 @@ def mirror(folder: Path, to: Path) -> int:
             continue
         if suffix in PAGE:
             text = kernel.html_text(text)
-        text, n = mark(text)
+        text, n, says = mark(text)
         dates += n
+        if says:
+            dmy += 1
+            print(f"day first: {rel.as_posix()}, its numbered dates left as they are", file=sys.stderr)  # fmt: skip
         out = to / rel
         out = out.with_name(out.name + ".txt")
         out.parent.mkdir(parents=True, exist_ok=True)
         out.write_bytes(text.encode("utf-8"))
         written += 1
     print(f"{dates} month-first dates given their ISO form")
+    if dmy:
+        print(f"{dmy} files whose own dates say day first: their numbered dates left")
     print(f"wrote {written} files to {to}; skipped {skipped}")
     return kernel.ALIVE if written else kernel.ESCALATE
 

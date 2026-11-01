@@ -23,7 +23,8 @@ says how). The first was v0.1.0.
   with every 11/03/2026, 11/03/26 and Nov. 3rd, 2026 followed by its ISO
   form, so the kernel, which never guesses an order, and timeline, gaps and
   coming-up can place it. Not-dates (13/03/2026, Feb 30) and marked dates
-  are left as they are.
+  are left as they are, and so are the numbered dates of a file whose own
+  dates say day first: 68 of teodora's English files.
 - `invoices`, the invoices you sent matched to their payments by number
   alone: `invoices.py --box DIR --id 'INV-\d+'`. Each is found in a CSV
   ledger row or a file named for it, and is paid only when a line naming
