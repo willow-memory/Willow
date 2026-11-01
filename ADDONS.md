@@ -18,7 +18,7 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`████████████░░░░░░░░` **291 of 505 built** · 451 need no install · 54 need one
+`████████████░░░░░░░░` **292 of 505 built** · 451 need no install · 54 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
@@ -30,7 +30,7 @@ or `writes-output`; its section), and any the card's author adds or changes.
 | Privacy and safety | 12 | 3 | 15 | 0 |
 | Assistants | 29 | 43 | 61 | 11 |
 | Ways to use it | 23 | 18 | 37 | 4 |
-| Play | 11 | 30 | 37 | 4 |
+| Play | 12 | 29 | 37 | 4 |
 | For maintainers | 19 | 25 | 39 | 5 |
 <!-- /willow:pools -->
 
@@ -77,9 +77,9 @@ its list: someone who speaks the language can add one without much Python.
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[nicknames](adapters/stdlib/nicknames/)** — The names you call people, mapped to who they are, so 'Mum' finds Margaret.
+**[habits](adapters/stdlib/habits/)** — Streaks from the lines you write each day: how many days in a row, and which you missed.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 291 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 292 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -547,7 +547,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - [**dice5e**](adapters/stdlib/dice5e/) — Full tabletop dice notation (4d6kh3, advantage), rolled on the record and checkable like dice. *bot* `no-install` `offline` `records` `play`
 - **fight5e** (idea) — Tabletop combat run from stat blocks on dice5e's rolls, every attack on the record and replayable. *new* `no-install` `offline` `records` `play`
 - **front-page** (idea) — Which new posts will make the Hacker News front page? Wager, and let its search settle it. Goes online: hn.algolia.com, to read the front page. *new* `no-install` `online` `records` `play`
-- **game-master** (idea) — A tabletop game's rolls and rulings as rows on the record, with the game master's calls sealed. *bot* `no-install` `offline` `records` `play`
+- [**game-master**](adapters/stdlib/game-master/) — A tabletop game's rolls and rulings as rows on the record, with the game master's calls sealed. *bot* `no-install` `offline` `records` `play`
 - **gutenberg** (idea) — A paragraph from a public-domain book beside one of yours, for serendipity. Goes online: gutenberg.org, each book fetched once. *new* `no-install` `online` `records` `play`
 - **hanoi** (idea) — Towers of Hanoi as rows: each move, n discs in 2^n - 1. *new* `no-install` `offline` `records` `play`
 - [**horoscope**](adapters/stdlib/horoscope/) — A daily horoscope keyed on your name and the date: same name, same day, same reading, always. *bot* `no-install` `offline` `read-only` `play`

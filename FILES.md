@@ -365,6 +365,10 @@ willow/
 │   │   │   ├── fuzzy_dates.py  dates that admit doubt, read with the doubt kept, in EDTF
 │   │   │   ├── test_fuzzy_dates.py
 │   │   │   └── README.md
+│   │   ├── game-master/
+│   │   │   ├── game_master.py  a world played beat by beat: 2d6 rolls on the record, rulings that move only on your seal
+│   │   │   ├── test_game_master.py
+│   │   │   └── README.md
 │   │   ├── gaps/
 │   │   │   ├── gaps.py       where a log you keep stops: the days it skipped, said as gaps
 │   │   │   ├── test_gaps.py

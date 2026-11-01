@@ -508,16 +508,6 @@
   "tags": "no-install, offline, read-only, maintainers"
  },
  {
-  "name": "game-master",
-  "kind": "stdlib",
-  "section": "Play",
-  "line": "A tabletop game's rolls and rulings as rows on the record, with the game master's calls sealed.",
-  "source": "bot",
-  "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, play"
- },
- {
   "name": "gifts",
   "kind": "stdlib",
   "section": "Keeping track",
