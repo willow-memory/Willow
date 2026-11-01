@@ -17,7 +17,7 @@ says how). The first was v0.1.0.
   written; `reopen` records that a condition came true, and `ask QUESTION`
   reads back the answer that stands, what it replaced, every no and each
   condition to check. Rows stand unattested; the SAFE App Store
-  `aristarchus`'s signing is not here, only your seal approves.
+  `aristarchus`'s signing is not here, only your seal approves. (#145)
 - `nightstand`, set heavy things down and pick up one bite: `down`, `pick`,
   `back`, `done` and `archive` as `nightstand` rows through the kernel, state
   only ever replayed from them. At most one thing is in hand (a pick-up names
