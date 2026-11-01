@@ -366,17 +366,6 @@
   "tags": "no-install, offline, records, interface"
  },
  {
-  "name": "dice5e",
-  "kind": "deps",
-  "section": "Play",
-  "line": "Full tabletop dice notation (4d6kh3, advantage).",
-  "source": "bot",
-  "needs": "dice; MIT",
-  "writes": "record",
-  "network": "none",
-  "tags": "needs-install, offline, records, play"
- },
- {
   "name": "dictate",
   "kind": "deps",
   "section": "Ways to use it",

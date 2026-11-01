@@ -281,6 +281,10 @@ willow/
 │   │   │   ├── dice.py       dice rolled on the record, seeded by its tip; check throws every roll again
 │   │   │   ├── test_dice.py
 │   │   │   └── README.md
+│   │   ├── dice5e/
+│   │   │   ├── dice5e.py     4d6kh3, adv and dis on the record, seeded as dice is; check throws every roll again
+│   │   │   ├── test_dice5e.py
+│   │   │   └── README.md
 │   │   ├── digest/
 │   │   │   ├── digest.py     one page of what waits on you, gone stale, coming up; writes nothing
 │   │   │   ├── test_digest.py

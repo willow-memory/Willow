@@ -120,11 +120,11 @@ says how to pick one up:
 <!-- willow:front show=pick week=2026-W44 -->
 **Add-on of the week**
 
-**[test-impact](adapters/stdlib/test-impact/)** — Only the tests a change can reach run first, from the import graph; the full suite still runs after.
+**[mastodon](adapters/stdlib/mastodon/)** — A Mastodon or Pixelfed account archive's outbox.json: your posts as dated lines.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 279 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 280 built add-ons in name order.*
 
-[Every add-on, 279 built of 499, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 280 built of 499, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 

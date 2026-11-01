@@ -10,6 +10,11 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `dice5e`, full tabletop dice notation on the record:
+  `dice5e.py --box DIR roll 4d6kh3` (or `adv+5`, `dis`, `2d20kl1`), seeded
+  and drawn as dice is, every die written, kept or not; `check` throws every
+  roll again. The standard library only, where the idea had named the MIT
+  `dice` library.
 - `rules`, a game's or a house's rules sealed section by section:
   `rules.py propose --box DIR FILE` proposes each heading's section as the
   answer to "rule NAME", and once you seal it the kernel itself answers that
