@@ -139,6 +139,15 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         '{"name": "Made-Up Almanac", "entries": [{"id": "tide-gauge-records", '
         '"title": "Tide Gauge Records", "source": {"canonical_url": '
         '"https://stats.example.org/tides"}, "status": "live"}]}\n').encode()}),
+    "oakenscroll": ("oakenscroll.py", {"office.db": _sqlite(
+        "CREATE TABLE predictions (id TEXT PRIMARY KEY, claim TEXT NOT NULL, "
+        "confidence REAL NOT NULL, stated_at INTEGER NOT NULL, due INTEGER, "
+        "tags TEXT NOT NULL DEFAULT '[]');\n"
+        "CREATE TABLE events (id INTEGER PRIMARY KEY AUTOINCREMENT, "
+        "prediction_id TEXT NOT NULL, kind TEXT NOT NULL, confidence REAL, "
+        "outcome INTEGER, note TEXT, evidence TEXT, at INTEGER NOT NULL);\n"
+        "INSERT INTO predictions VALUES ('a1b2c3d4','tomatoes want sun',0.7,"
+        "1790000000,NULL,'[]');\n")}),
     "books": ("books.py", {"My Clippings.txt": (
         "Made-Up Harbour (Ada Example)\n- Your Highlight on page 12 | Location 180 | "
         "Added on Sunday, 3 March 2024 10:15:22\n\nThe tide keeps its own calendar.\n"
@@ -464,6 +473,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "abbreviations": ("abbreviations.py", ["--box", "{box}", "tomatoes"]),
     "accents": ("accents.py", ["--box", "{box}", "tomatoes"]),
     "amounts": ("amounts.py", ["--box", "{box}"]),
+    "capture": ("capture.py", ["--to", "{tmp}", "--type", "idea", "--tags", "garden,veg", *NOW, "Plant out the tomatoes."]),
     "invoices": ("invoices.py", ["--box", "{box}", "--id", "INV-\\d+"]),
     "first-mention": ("first_mention.py", ["--box", "{box}", "tomatoes"]),
     "fuzzy-dates": ("fuzzy_dates.py", ["--box", "{box}"]),
@@ -549,6 +559,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "starter-words": ("starter.py", ["copy", "--to", "{tmp}/words.txt"]),
     "surprise": ("surprise.py", ["--box", "{box}", *NOW]),
     "symptoms": ("symptoms.py", ["--box", "{box}", "tomatoes"]),
+    "thesis": ("thesis.py", ["--box", "{box}", "{pile}/garden.md"]),
     "todo": ("todo.py", ["--box", "{box}"]),
     "contradictions": ("contradictions.py", ["--box", "{box}"]),
     "lending": ("lending.py", ["--box", "{box}"]),
@@ -571,6 +582,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
        for c in LANGUAGES},
     "backup": ("backup.py", ["--box", "{box}", "--to", "{tmp}/backups", *NOW]),
     "fixity": ("fixity.py", ["--box", "{box}", *NOW]),
+    "flashcards": ("flashcards.py", ["--box", "{box}", "due", *NOW]),
     "format-rot": ("format_rot.py", ["--from", "{pile}"]),
     "git-history": ("git_history.py", ["mirror", "--from", "{pile}", "--to", "{tmp}/gh"]),
     "persona-card": ("persona_card.py", ["--box", "{box}", "--from", "{pile}/garden.md", *NOW]),
@@ -621,10 +633,13 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "livestock": ("livestock.py", ["--box", "{box}"]),
     "syllabus": ("syllabus.py", ["--box", "{box}"]),
     "foia": ("foia.py", ["--box", "{box}"]),
+    "folder-card": ("folder_card.py", ["--box", "{box}", "--to", "{tmp}/card.md"]),
     "budget": ("budget.py", ["--box", "{box}"]),
     "launcher": ("launcher.py", ["--box", "{box}"]),
     "history": ("history.py", ["--box", "{box}"]),
     "make-it-so": ("make_it_so.py", ["plan", "--box", "{box}", "--to", "{tmp}/plan.json", "--cmd", "echo hi", "tomatoes"]),
+    "catgrid": ("catgrid.py", ["--box", "{box}", "play", *NOW]),
+    "decisions": ("decisions.py", ["ask", "--box", "{box}", "tomatoes"]),
     "dice": ("dice.py", ["--box", "{box}", "roll", "2d6", *NOW]),
     "hook-fail-closed": ("hook_fail_closed.py", ["--hook", "true"]),
     "hook-fuzz": ("hook_fuzz.py", ["--hook", "true"]),
@@ -633,10 +648,12 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "horoscope": ("horoscope.py", ["Ana", "--date", "2026-10-24"]),
     "life": ("life.py", ["--box", "{box}", "play", "--generations", "8", *NOW]),
     "odds": ("odds.py", ["2d6"]),
+    "nightstand": ("nightstand.py", ["--box", "{box}", "down", "tomatoes", *NOW]),
     "changed": ("changed.py", ["--box", "{box}", *NOW]),
     "diverge": ("diverge.py", ["{pile}", "{pile}"]),
     "duplicates": ("duplicates.py", ["--box", "{box}"]),
     "secrets-audit": ("secrets_audit.py", ["--box", "{box}"]),
+    "sent-log": ("sent_log.py", ["--box", "{box}"]),
     "risky-code": ("risky_code.py", ["--box", "{box}"]),
     "said": ("said.py", ["--box", "{box}"]),
     "session-seal": ("session_seal.py", ["--box", "{box}", *NOW]),
