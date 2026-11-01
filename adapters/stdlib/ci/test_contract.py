@@ -132,6 +132,9 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         "INSERT INTO tm_pairs VALUES ('tomatoes want sun','ada','sealed',"
         "'2026-10-01');\n"
     )}),
+    "jeles": ("jeles.py", {"seed.json": (
+        b'{"pairs": [{"source_text": "how much sun do tomatoes want", '
+        b'"target_text": "Six hours."}]}\n')}),
     "almanac": ("almanac.py", {"catalog.json": (
         '{"name": "Made-Up Almanac", "entries": [{"id": "tide-gauge-records", '
         '"title": "Tide Gauge Records", "source": {"canonical_url": '

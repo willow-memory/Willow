@@ -831,16 +831,6 @@
   "tags": "no-install, online, records, assistant"
  },
  {
-  "name": "jeles",
-  "kind": "stdlib",
-  "section": "Trust and proof",
-  "line": "Your approved answers as Jeles nuggets, with question, answer, sources and who sealed it, and Jeles' own verified nuggets read back as passages.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, trust"
- },
- {
   "name": "joins",
   "kind": "stdlib",
   "section": "Play",
