@@ -767,6 +767,10 @@ willow/
 │   │   │   ├── policy_watch.py  a policy page fetched each run, and what changed since, sentence by sentence
 │   │   │   ├── test_policy_watch.py
 │   │   │   └── README.md
+│   │   ├── predict/
+│   │   │   ├── predict.py    what a question will come to, on the record before it is asked, graded after
+│   │   │   ├── test_predict.py
+│   │   │   └── README.md
 │   │   ├── print/
 │   │   │   ├── print.py      an answer as a page to print, with its sources; --large for big type
 │   │   │   ├── test_print.py
