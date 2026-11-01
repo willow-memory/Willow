@@ -164,6 +164,10 @@ willow/
 │   │   │   ├── car.py   a car's jobs, costs and what's due
 │   │   │   ├── test_car.py
 │   │   │   └── README.md
+│   │   ├── catgrid/
+│   │   │   ├── catgrid.py    a seeded logic grid with one answer, played on the record; check plays every game again
+│   │   │   ├── test_catgrid.py
+│   │   │   └── README.md
 │   │   ├── changed/
 │   │   │   ├── changed.py    what's new, edited or deleted since the last check, as fingerprint rows
 │   │   │   ├── test_changed.py

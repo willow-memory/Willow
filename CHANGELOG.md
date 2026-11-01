@@ -10,6 +10,13 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `catgrid`, a cat in every row, column and colour region, played on the
+  record: `catgrid.py --box DIR play --moves A1,B3` builds a 4 to 8 square
+  board with exactly one answer from the bot's seeded stream (seeded by the
+  record's tip unless you say), plays your moves against three hearts, and
+  writes one row; `check` builds every board and plays every game again.
+  It draws from sha256-stream rather than the source app's xorshift, and
+  leaves out its hints, trivia, daily boards, duels and multi-cat boards. (#146)
 - `decisions`, what you decided and what you ruled out, each with its reason:
   `decisions.py chose --box DIR --question Q --answer A --reason R` (with
   `--replaces ROW` to keep the lineage) and `no ... --never` or

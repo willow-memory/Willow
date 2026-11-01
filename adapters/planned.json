@@ -182,16 +182,6 @@
   "tags": "no-install, offline, records, assistant"
  },
  {
-  "name": "catgrid",
-  "kind": "stdlib",
-  "section": "Play",
-  "line": "A seeded logic grid with one cat in every row, column and colour region and a unique answer, replayed from its moves.",
-  "source": "new",
-  "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, play"
- },
- {
   "name": "chess-puzzle",
   "kind": "stdlib",
   "section": "Play",

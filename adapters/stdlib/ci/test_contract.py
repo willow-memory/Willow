@@ -624,6 +624,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "launcher": ("launcher.py", ["--box", "{box}"]),
     "history": ("history.py", ["--box", "{box}"]),
     "make-it-so": ("make_it_so.py", ["plan", "--box", "{box}", "--to", "{tmp}/plan.json", "--cmd", "echo hi", "tomatoes"]),
+    "catgrid": ("catgrid.py", ["--box", "{box}", "play", *NOW]),
     "decisions": ("decisions.py", ["ask", "--box", "{box}", "tomatoes"]),
     "dice": ("dice.py", ["--box", "{box}", "roll", "2d6", *NOW]),
     "hook-fail-closed": ("hook_fail_closed.py", ["--hook", "true"]),
