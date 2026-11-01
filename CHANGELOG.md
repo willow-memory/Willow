@@ -18,7 +18,7 @@ says how). The first was v0.1.0.
   a passage gone from the folder: recorded as its own value, never read as
   assumed. An approval citing no passage (session-seal's summaries) is
   `cites-nothing`, counted and not escalated. Rebuilt from the SAFE App
-  Store's field-acoustics and kitchen-pudding; reads only.
+  Store's field-acoustics and kitchen-pudding; reads only. (#143)
 - Six ideas added to `adapters/planned.json` from an audit of the SAFE App
   Store against willow, each checked with `similar near` first:
   `weakest-link` (inputs marked measured, fitted or assumed, the result worth
