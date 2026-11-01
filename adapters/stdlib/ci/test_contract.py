@@ -552,6 +552,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "transcript-redact": ("transcript_redact.py", ["--from", "{pile}/garden.md", "--to", "{tmp}/shareable.md"]),
     "across": ("across.py", ["--box", "{box}", "digest"]),
     "stack": ("stack.py", ["--box", "{box}", "--stack", "adapters/stdlib/stack/example.md"]),
+    "rules": ("rules.py", ["list", "--box", "{box}"]),
     "market-calls": ("market_calls.py", ["score", "--box", "{box}"]),
     "forecasts": ("forecasts.py", ["wager", "--box", "{box}", "--p", "0.7", *NOW,
                   "tomatoes"]),  # fmt: skip

@@ -863,6 +863,10 @@ willow/
 │   │   │   ├── rtf.py   an RTF document as the plain text it displays
 │   │   │   ├── test_rtf.py
 │   │   │   └── README.md
+│   │   ├── rules/
+│   │   │   ├── rules.py      a rules file sealed section by section; the kernel then answers 'rule NAME' word for word
+│   │   │   ├── test_rules.py
+│   │   │   └── README.md
 │   │   ├── said/
 │   │   │   ├── said.py       who said what, read by shape (a chat's stamp, a speech verb, quotation marks), dated
 │   │   │   ├── test_said.py

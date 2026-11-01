@@ -10,6 +10,11 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `rules`, a game's or a house's rules sealed section by section:
+  `rules.py propose --box DIR FILE` proposes each heading's section as the
+  answer to "rule NAME", and once you seal it the kernel itself answers that
+  bite word for word (`rules.py ask NAME`). `list` says which are sealed,
+  waiting, or changed in your folder since you sealed them.
 - `market-calls`, market calls kept as forecasts' wagers, losers and all:
   `market_calls.py call --box DIR --p 0.7 SPY up 2026-11-06` (or
   `above:600`), one call per question and before 13:00 UTC on the close

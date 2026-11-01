@@ -120,11 +120,11 @@ says how to pick one up:
 <!-- willow:front show=pick week=2026-W44 -->
 **Add-on of the week**
 
-**[mcp-lite](adapters/stdlib/mcp-lite/)** — The mcp add-on's three tools with nothing to install: the protocol by hand, standard library only.
+**[test-impact](adapters/stdlib/test-impact/)** — Only the tests a change can reach run first, from the import graph; the full suite still runs after.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 278 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 279 built add-ons in name order.*
 
-[Every add-on, 278 built of 499, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 279 built of 499, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 

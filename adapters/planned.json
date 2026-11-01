@@ -1630,16 +1630,6 @@
   "tags": "no-install, offline, read-only, tracking"
  },
  {
-  "name": "rules",
-  "kind": "stdlib",
-  "section": "Play",
-  "line": "A game's or a house's rules, sealed section by section, so 'what does the rule say?' answers with the exact section.",
-  "source": "bot",
-  "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, play"
- },
- {
   "name": "safe-app",
   "kind": "stdlib",
   "section": "Ways to use it",
