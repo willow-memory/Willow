@@ -18,14 +18,14 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`███████████░░░░░░░░░` **272 of 498 built** · 443 need no install · 55 need one
+`███████████░░░░░░░░░` **273 of 498 built** · 443 need no install · 55 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
 | Reading more kinds of files | 70 | 36 | 98 | 8 |
 | Finding things | 30 | 14 | 34 | 10 |
 | Your own words | 19 | 7 | 23 | 3 |
-| Keeping track | 38 | 22 | 60 | 0 |
+| Keeping track | 39 | 21 | 60 | 0 |
 | Trust and proof | 27 | 25 | 43 | 9 |
 | Privacy and safety | 11 | 4 | 15 | 0 |
 | Assistants | 27 | 44 | 60 | 11 |
@@ -68,18 +68,18 @@ its list: someone who speaks the language can add one without much Python.
 
 <!-- willow:newest -->
 - 2026-11-01 · [**quotes**](adapters/stdlib/quotes/) — Every quote in a document checked against your files: as written, almost (and what it adds, drops or changes), or not there.
+- 2026-11-01 · [**invoices**](adapters/stdlib/invoices/) — For freelancers: invoices and payments matched by the id pattern you give, never guessed.
 - 2026-11-01 · [**almanac-keep**](adapters/stdlib/almanac-keep/) — An Almanac entry's best permitted copy, from the publisher or its ranked recovery list, fetched into your folder with its SHA-256.
 - 2026-10-31 · [**three-two-one**](adapters/stdlib/three-two-one/) — How many verified copies of your record exist and where, held to three copies, on two kinds of storage, one away from home.
 - 2026-10-31 · [**shell-history**](adapters/stdlib/shell-history/) — Your bash, zsh and fish history: what you ran, and when the shell recorded it.
-- 2026-10-31 · [**session-cost**](adapters/stdlib/session-cost/) — Tokens each agent session spent, by day and by repo, summed from its own session files and priced from a table you keep.
 <!-- /willow:newest -->
 
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[musicxml](adapters/stdlib/musicxml/)** — MusicXML scores: titles, lyrics, tempo and performance markings as passages.
+**[bench](adapters/stdlib/bench/)** — How fast the kernel answers on boxes of set sizes, per release, so a slowdown is seen.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 272 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 273 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -304,7 +304,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**home-upkeep**](adapters/stdlib/home-upkeep/) — Home upkeep: the boiler service, the filters, the gutters, what's due and when it was last done. *new* `no-install` `offline` `read-only` `tracking`
 - [**hours**](adapters/stdlib/hours/) — Hours worked or volunteered, per client or group, from your notes. *new* `no-install` `offline` `read-only` `tracking`
 - **inventory** (idea) — What you own, where it is, and where its papers are, for insurance or a will. *new* `no-install` `offline` `read-only` `tracking`
-- **invoices** (idea) — For freelancers: invoices and payments matched by the id pattern you give, never guessed. *new* `no-install` `offline` `read-only` `tracking`
+- [**invoices**](adapters/stdlib/invoices/) — For freelancers: invoices and payments matched by the id pattern you give, never guessed. *new* `no-install` `offline` `read-only` `tracking`
 - [**job-hunt**](adapters/stdlib/job-hunt/) — Applications sent, replies and interviews, by date: who you're still waiting on. *new* `no-install` `offline` `read-only` `tracking`
 - **lab-notebook** (idea) — A lab notebook's dated entries, by sample and experiment: what was done to what, and when. *new* `no-install` `offline` `read-only` `tracking`
 - [**lending**](adapters/stdlib/lending/) — Things you lent, to whom and when, and which are still out. *new* `no-install` `offline` `read-only` `tracking`
