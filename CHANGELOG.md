@@ -1357,7 +1357,7 @@ says how). The first was v0.1.0.
   overflows and decompression-bomb bypasses among them) and pypdf 6.21.2
   (infinite loops and runaway memory on crafted files). The floors stay
   where the floor rule puts them. `.github/secret_scanning.yml` keeps the
-  redteam demo's planted, fake credentials out of secret scanning.
+  redteam demo's planted, fake credentials out of secret scanning. (#140)
 
 - `transcript-redact` no longer takes the `n` of a JSON `\n` as the start
   of an email: `\n@AGENTS.md` and `\n@pytest.mark` read as addresses, and
