@@ -18,7 +18,7 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`███████████░░░░░░░░░` **282 of 505 built** · 451 need no install · 54 need one
+`███████████░░░░░░░░░` **283 of 505 built** · 451 need no install · 54 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
@@ -26,7 +26,7 @@ or `writes-output`; its section), and any the card's author adds or changes.
 | Finding things | 31 | 14 | 35 | 10 |
 | Your own words | 19 | 7 | 23 | 3 |
 | Keeping track | 42 | 19 | 61 | 0 |
-| Trust and proof | 28 | 26 | 45 | 9 |
+| Trust and proof | 29 | 25 | 45 | 9 |
 | Privacy and safety | 11 | 4 | 15 | 0 |
 | Assistants | 29 | 43 | 61 | 11 |
 | Ways to use it | 22 | 19 | 37 | 4 |
@@ -67,19 +67,19 @@ its list: someone who speaks the language can add one without much Python.
 ## Newest
 
 <!-- willow:newest -->
+- 2026-11-01 · [**weakest-link**](adapters/stdlib/weakest-link/) — Each answer's inputs marked measured, fitted or assumed, and the result worth its weakest input, never an average.
 - 2026-11-01 · [**rules**](adapters/stdlib/rules/) — A game's or a house's rules, sealed section by section, so 'what does the rule say?' answers with the exact section.
 - 2026-11-01 · [**quotes**](adapters/stdlib/quotes/) — Every quote in a document checked against your files: as written, almost (and what it adds, drops or changes), or not there.
 - 2026-11-01 · [**predict**](adapters/stdlib/predict/) — Write down what a question will come to before you ask it, and grade it after; the record counts how often it was right.
 - 2026-11-01 · [**market-calls**](adapters/stdlib/market-calls/) — Market calls kept as wagers on the record ('SPY closes up on Friday'), settled later by your seal, with the losers kept.
-- 2026-11-01 · [**jeles**](adapters/stdlib/jeles/) — Your approved answers as Jeles nuggets, with question, answer, sources and who sealed it, and Jeles' own verified nuggets read back as passages.
 <!-- /willow:newest -->
 
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[hook-stop](adapters/stdlib/hook-stop/)** — A Stop hook that won't let an assistant's turn end while the record doesn't verify or its changes aren't committed, and says which.
+**[licenses](adapters/stdlib/licenses/)** — The licence of every installed dependency, read from its own metadata on this machine: which are copyleft, and which file says so.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 282 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 283 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -391,7 +391,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**timeline**](adapters/stdlib/timeline/) — A dated timeline of one matter (a dispute, an illness, a tenancy), every line cited, to hand to a lawyer, doctor or council. *new* `no-install` `offline` `writes-output` `trust`
 - [**tip-pin**](adapters/stdlib/tip-pin/) — Where a box's record ends, kept outside the box, so rows cut off or a whole chain re-hashed are found where verify can't. *new* `no-install` `offline` `writes-output` `trust`
 - [**wayback**](adapters/stdlib/wayback/) — The Wayback Machine's copy of a page from a window of days, saved beside your own snapshot and compared with it byte for byte. Goes online: archive.org, to find the archived copy and fetch it. *new* `no-install` `online` `writes-output` `trust` `sources`
-- **weakest-link** (idea) — Each answer's inputs marked measured, fitted or assumed, and the result worth its weakest input, never an average. *new* `no-install` `offline` `read-only` `trust`
+- [**weakest-link**](adapters/stdlib/weakest-link/) — Each answer's inputs marked measured, fitted or assumed, and the result worth its weakest input, never an average. *new* `no-install` `offline` `read-only` `trust`
 - **weights-pin** (idea) — A local model's weights file hashed before each run and refused when it differs from the hash on its model card. *new* `no-install` `offline` `read-only` `trust`
 - **witness** (idea) — A second person's seal beside yours, for answers that need two people to agree. *new* `no-install` `offline` `records` `trust`
 - [**xref**](adapters/stdlib/xref/) — Every reference in your files checked: each link to another file, and each quoted line, still there and still saying it. *bot* `no-install` `offline` `read-only` `trust` `everyday`
