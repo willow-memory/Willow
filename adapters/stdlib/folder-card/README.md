@@ -36,9 +36,12 @@ leaves them: its size, its first and last dated line (or the date in its
 name), and "labels itself fiction" when its first line starts with `fiction`
 or `fictional`. A file the kernel does not read (binary, over its size cap,
 not UTF-8) is listed as not read, never dropped.
+Five or more files named by a date in one folder are one line (their count,
+first and last date, total size), so a card stays short enough to hand over.
 
 **Gaps.** Found by the `gaps` add-on's own rule, which this loads and does not
-repeat: a spacing more than three times the log's typical one. Each is marked
+repeat: a spacing more than three times the log's typical one. A log lists its ten longest, and says how many shorter it left out; a gap you
+named is always listed. Each is marked
 `told` with your reason when a gap you named overlaps it, else `untold`. Each
 gap you named is marked as shown by the files, as not shown, or as
 contradicted, with the count of dated entries the files hold inside it. A
