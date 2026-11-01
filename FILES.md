@@ -923,6 +923,10 @@ willow/
 │   │   │   ├── secrets_audit.py passwords, keys and card numbers in plain files, by file and line
 │   │   │   ├── test_secrets_audit.py
 │   │   │   └── README.md
+│   │   ├── sent-log/
+│   │   │   ├── sent_log.py    which passages went to which model and where, from what the record holds; says what it can't see
+│   │   │   ├── test_sent_log.py
+│   │   │   └── README.md
 │   │   ├── serve/
 │   │   │   ├── serve.py       the one markdown file a model reads: only a human-sealed scope, pooled, peaks first, by unguessable ids
 │   │   │   ├── test_serve.py

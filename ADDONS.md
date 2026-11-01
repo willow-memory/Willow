@@ -18,7 +18,7 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`███████████░░░░░░░░░` **287 of 505 built** · 451 need no install · 54 need one
+`███████████░░░░░░░░░` **288 of 505 built** · 451 need no install · 54 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
@@ -27,7 +27,7 @@ or `writes-output`; its section), and any the card's author adds or changes.
 | Your own words | 19 | 7 | 23 | 3 |
 | Keeping track | 43 | 18 | 61 | 0 |
 | Trust and proof | 30 | 24 | 45 | 9 |
-| Privacy and safety | 11 | 4 | 15 | 0 |
+| Privacy and safety | 12 | 3 | 15 | 0 |
 | Assistants | 29 | 43 | 61 | 11 |
 | Ways to use it | 23 | 18 | 37 | 4 |
 | Play | 11 | 30 | 37 | 4 |
@@ -68,18 +68,18 @@ its list: someone who speaks the language can add one without much Python.
 
 <!-- willow:newest -->
 - 2026-11-01 · [**weakest-link**](adapters/stdlib/weakest-link/) — Each answer's inputs marked measured, fitted or assumed, and the result worth its weakest input, never an average.
+- 2026-11-01 · [**sent-log**](adapters/stdlib/sent-log/) — Which of your passages went to which online model, read from the record by model card: what left this machine and where to.
 - 2026-11-01 · [**rules**](adapters/stdlib/rules/) — A game's or a house's rules, sealed section by section, so 'what does the rule say?' answers with the exact section.
 - 2026-11-01 · [**quotes**](adapters/stdlib/quotes/) — Every quote in a document checked against your files: as written, almost (and what it adds, drops or changes), or not there.
 - 2026-11-01 · [**predict**](adapters/stdlib/predict/) — Write down what a question will come to before you ask it, and grade it after; the record counts how often it was right.
-- 2026-11-01 · [**nightstand**](adapters/stdlib/nightstand/) — Set heavy things down, pick up one bite: at most one thing in hand, and nothing deleted.
 <!-- /willow:newest -->
 
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[dice5e](adapters/stdlib/dice5e/)** — Full tabletop dice notation (4d6kh3, advantage), rolled on the record and checkable like dice.
+**[scrub](adapters/stdlib/scrub/)** — Strips the hidden details (EXIF, author, edit history) from a file before you share it.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 287 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 288 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -409,7 +409,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**risky-code**](adapters/stdlib/risky-code/) — Lines of code matching a known-dangerous pattern (command injection, eval, sql concatenation, broken tls and more), by file and line, as leads to read. *new* `no-install` `offline` `read-only` `security`
 - [**scrub**](adapters/stdlib/scrub/) — Strips the hidden details (EXIF, author, edit history) from a file before you share it. *new* `no-install` `offline` `writes-output` `privacy`
 - [**secrets-audit**](adapters/stdlib/secrets-audit/) — Finds passwords, keys and card numbers sitting in plain files, by file and line, never showing the value. *bot* `no-install` `offline` `read-only` `privacy` `everyday`
-- **sent-log** (idea) — Which of your passages went to which online model, read from the record by model card: what left this machine and where to. *new* `no-install` `offline` `read-only` `privacy`
+- [**sent-log**](adapters/stdlib/sent-log/) — Which of your passages went to which online model, read from the record by model card: what left this machine and where to. *new* `no-install` `offline` `read-only` `privacy`
 - **student-records** (idea) — A box of student records that answers only the teacher who owns it, and logs every look. *new* `no-install` `offline` `records` `privacy`
 - [**transcript-redact**](adapters/stdlib/transcript-redact/) — An agent transcript with keys, home paths and emails taken out before you share it, each removal listed by line. *new* `no-install` `offline` `writes-output` `privacy`
 - [**typosquat**](adapters/stdlib/typosquat/) — Dependency names a letter off from a popular one (reqeusts, lodahs), checked against a list of top packages you downloaded. *new* `no-install` `offline` `read-only` `privacy`
