@@ -1357,7 +1357,9 @@ says how). The first was v0.1.0.
   overflows and decompression-bomb bypasses among them) and pypdf 6.21.2
   (infinite loops and runaway memory on crafted files). The floors stay
   where the floor rule puts them. `.github/secret_scanning.yml` keeps the
-  redteam demo's planted, fake credentials out of secret scanning. (#140)
+  redteam demo's planted, fake credentials out of secret scanning. CI's
+  first job installs tesseract, as the deps job does, so a change to `ocr`
+  can be tested there. (#140)
 
 - `transcript-redact` no longer takes the `n` of a JSON `\n` as the start
   of an email: `\n@AGENTS.md` and `\n@pytest.mark` read as addresses, and
