@@ -10,6 +10,10 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `oakenscroll`: Oakenscroll's Office calibration ledger (what you believed,
+  how hard, and how it resolved) as dated passages: each claim with its
+  revisions, grade and note, and where it stands now. Reads every office.db
+  under a folder, read-only and immutable; scores nothing (see `forecasts`). (#152)
 - `flashcards`, your sealed approvals as flashcards: `flashcards.py --box DIR due`
   lists what to study, `review ID good` writes your grade as a record row and
   says when the card is next due. The schedule is FSRS-5 (MIT, written from

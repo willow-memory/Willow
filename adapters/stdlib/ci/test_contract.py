@@ -139,6 +139,15 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         '{"name": "Made-Up Almanac", "entries": [{"id": "tide-gauge-records", '
         '"title": "Tide Gauge Records", "source": {"canonical_url": '
         '"https://stats.example.org/tides"}, "status": "live"}]}\n').encode()}),
+    "oakenscroll": ("oakenscroll.py", {"office.db": _sqlite(
+        "CREATE TABLE predictions (id TEXT PRIMARY KEY, claim TEXT NOT NULL, "
+        "confidence REAL NOT NULL, stated_at INTEGER NOT NULL, due INTEGER, "
+        "tags TEXT NOT NULL DEFAULT '[]');\n"
+        "CREATE TABLE events (id INTEGER PRIMARY KEY AUTOINCREMENT, "
+        "prediction_id TEXT NOT NULL, kind TEXT NOT NULL, confidence REAL, "
+        "outcome INTEGER, note TEXT, evidence TEXT, at INTEGER NOT NULL);\n"
+        "INSERT INTO predictions VALUES ('a1b2c3d4','tomatoes want sun',0.7,"
+        "1790000000,NULL,'[]');\n")}),
     "books": ("books.py", {"My Clippings.txt": (
         "Made-Up Harbour (Ada Example)\n- Your Highlight on page 12 | Location 180 | "
         "Added on Sunday, 3 March 2024 10:15:22\n\nThe tide keeps its own calendar.\n"
