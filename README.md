@@ -120,11 +120,11 @@ says how to pick one up:
 <!-- willow:front show=pick week=2026-W44 -->
 **Add-on of the week**
 
-**[three-two-one](adapters/stdlib/three-two-one/)** — How many verified copies of your record exist and where, held to three copies, on two kinds of storage, one away from home.
+**[horoscope](adapters/stdlib/horoscope/)** — A daily horoscope keyed on your name and the date: same name, same day, same reading, always.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 281 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 282 built add-ons in name order.*
 
-[Every add-on, 281 built of 505, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 282 built of 505, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 

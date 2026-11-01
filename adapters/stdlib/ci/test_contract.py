@@ -548,6 +548,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "starter-words": ("starter.py", ["copy", "--to", "{tmp}/words.txt"]),
     "surprise": ("surprise.py", ["--box", "{box}", *NOW]),
     "symptoms": ("symptoms.py", ["--box", "{box}", "tomatoes"]),
+    "thesis": ("thesis.py", ["--box", "{box}", "{pile}/garden.md"]),
     "todo": ("todo.py", ["--box", "{box}"]),
     "contradictions": ("contradictions.py", ["--box", "{box}"]),
     "lending": ("lending.py", ["--box", "{box}"]),

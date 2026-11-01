@@ -10,6 +10,11 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `thesis`, a document's claims against your sources:
+  `thesis.py --box DIR FILE` puts each sentence to claim-check and prints it
+  held (a passage holds every part) or short (the nearest passage, what it
+  lacks), then lists the short ones with the parts no file has. It finds where
+  to read and never judges. Writes nothing; the standard library only.
 - Six ideas added to `adapters/planned.json` from an audit of the SAFE App
   Store against willow, each checked with `similar near` first:
   `weakest-link` (inputs marked measured, fitted or assumed, the result worth

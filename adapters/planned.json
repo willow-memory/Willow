@@ -2005,16 +2005,6 @@
   "tags": "no-install, online, read-only, interface"
  },
  {
-  "name": "thesis",
-  "kind": "stdlib",
-  "section": "Trust and proof",
-  "line": "A thesis's claims, each tied to the source that backs it, and a list of the ones with none.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, trust"
- },
- {
   "name": "tic-tac-toe",
   "kind": "stdlib",
   "section": "Play",
