@@ -17,6 +17,20 @@ says how). The first was v0.1.0.
   writes one row; `check` builds every board and plays every game again.
   It draws from sha256-stream rather than the source app's xorshift, and
   leaves out its hints, trivia, daily boards, duels and multi-cat boards.
+- `decisions`, what you decided and what you ruled out, each with its reason:
+  `decisions.py chose --box DIR --question Q --answer A --reason R` (with
+  `--replaces ROW` to keep the lineage) and `no ... --never` or
+  `--reopen-when CONDITION`, so a never is told from a not-yet when it is
+  written; `reopen` records that a condition came true, and `ask QUESTION`
+  reads back the answer that stands, what it replaced, every no and each
+  condition to check. Rows stand unattested; the SAFE App Store
+  `aristarchus`'s signing is not here, only your seal approves. (#145)
+- `nightstand`, set heavy things down and pick up one bite: `down`, `pick`,
+  `back`, `done` and `archive` as `nightstand` rows through the kernel, state
+  only ever replayed from them. At most one thing is in hand (a pick-up names
+  the thing it puts down, in the same row), every pick-up needs a bite, and
+  there is no delete; `one` offers the lightest, oldest thing and `check`
+  names the first row that breaks a rule. (#144)
 - `weakest-link`, each approved answer worth its weakest cited input:
   `weakest_link.py --box DIR`. A passage marks itself `provenance: measured`,
   `fitted` or `assumed`; an approval is worth the min() of what it cites,

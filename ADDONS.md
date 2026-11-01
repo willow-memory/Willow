@@ -18,15 +18,15 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`███████████░░░░░░░░░` **283 of 505 built** · 451 need no install · 54 need one
+`███████████░░░░░░░░░` **285 of 505 built** · 451 need no install · 54 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
 | Reading more kinds of files | 71 | 35 | 98 | 8 |
 | Finding things | 31 | 14 | 35 | 10 |
 | Your own words | 19 | 7 | 23 | 3 |
-| Keeping track | 42 | 19 | 61 | 0 |
-| Trust and proof | 29 | 25 | 45 | 9 |
+| Keeping track | 43 | 18 | 61 | 0 |
+| Trust and proof | 30 | 24 | 45 | 9 |
 | Privacy and safety | 11 | 4 | 15 | 0 |
 | Assistants | 28 | 44 | 61 | 11 |
 | Ways to use it | 22 | 19 | 37 | 4 |
@@ -71,15 +71,15 @@ its list: someone who speaks the language can add one without much Python.
 - 2026-11-01 · [**rules**](adapters/stdlib/rules/) — A game's or a house's rules, sealed section by section, so 'what does the rule say?' answers with the exact section.
 - 2026-11-01 · [**quotes**](adapters/stdlib/quotes/) — Every quote in a document checked against your files: as written, almost (and what it adds, drops or changes), or not there.
 - 2026-11-01 · [**predict**](adapters/stdlib/predict/) — Write down what a question will come to before you ask it, and grade it after; the record counts how often it was right.
-- 2026-11-01 · [**market-calls**](adapters/stdlib/market-calls/) — Market calls kept as wagers on the record ('SPY closes up on Friday'), settled later by your seal, with the losers kept.
+- 2026-11-01 · [**nightstand**](adapters/stdlib/nightstand/) — Set heavy things down, pick up one bite: at most one thing in hand, and nothing deleted.
 <!-- /willow:newest -->
 
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[licenses](adapters/stdlib/licenses/)** — The licence of every installed dependency, read from its own metadata on this machine: which are copyleft, and which file says so.
+**[annotations](adapters/stdlib/annotations/)** — Approved answers as W3C Web Annotations, so any annotation tool can show what your files say about a page.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 283 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 285 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -316,7 +316,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**milestones**](adapters/stdlib/milestones/) — Your child's firsts, words and heights, from your notes, by age. *new* `no-install` `offline` `read-only` `tracking`
 - [**minutes**](adapters/stdlib/minutes/) — Meeting minutes: who decided what and when, and which actions are still open. *new* `no-install` `offline` `read-only` `tracking`
 - [**mood**](adapters/stdlib/mood/) — Mood scores you write in a journal, over weeks and months. *new* `no-install` `offline` `read-only` `tracking`
-- **nightstand** (idea) — Set heavy things down, pick up one bite: at most one thing in hand, and nothing deleted. *new* `no-install` `offline` `records` `tracking`
+- [**nightstand**](adapters/stdlib/nightstand/) — Set heavy things down, pick up one bite: at most one thing in hand, and nothing deleted. *new* `no-install` `offline` `records` `tracking`
 - **oakenscroll** (idea) — Oakenscroll's Office calibration ledger: what you believed, how hard, and how it resolved, as dated passages. *new* `no-install` `offline` `writes-output` `tracking`
 - [**outdated**](adapters/stdlib/outdated/) — How old each locked dependency is, and which are yanked, deprecated or two years without a release, from a registry index you downloaded. *new* `no-install` `offline` `read-only` `tracking`
 - [**pets**](adapters/stdlib/pets/) — Each pet's vet visits, vaccines and medicines, from your records: what's due next. *new* `no-install` `offline` `read-only` `tracking`
@@ -346,7 +346,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**changed**](adapters/stdlib/changed/) — What's new, edited or deleted in your folder since the last check, as fingerprint rows. *bot* `no-install` `offline` `records` `trust` `everyday`
 - [**claim-check**](adapters/stdlib/claim-check/) — A claim checked against your sources: the passages that hold all of its parts, the ones that hold only some, and the parts no file names. *new* `no-install` `offline` `read-only` `trust`
 - [**contradictions**](adapters/stdlib/contradictions/) — Two passages that disagree about the same date or amount, side by side. *new* `no-install` `offline` `read-only` `trust`
-- **decisions** (idea) — A recorded no with its reason and the condition that would reopen it, so a rejection is kept, not forgotten. *new* `no-install` `offline` `records` `trust`
+- [**decisions**](adapters/stdlib/decisions/) — A recorded no with its reason and the condition that would reopen it, so a rejection is kept, not forgotten. *new* `no-install` `offline` `records` `trust`
 - [**diverge**](adapters/stdlib/diverge/) — Where two copies of a folder or a box part, a backup zip included, narrowed to the first row, file and line that differ. *bot* `no-install` `offline` `read-only` `trust` `everyday`
 - **encrypt** (idea) — Keeps the record folder encrypted at rest. Needs cryptography; Apache-2.0 or BSD. *new* `needs-install` `offline` `records` `trust`
 - [**export**](adapters/stdlib/export/) — Approved answers, and the question log (counts only, never words), as Markdown or CSV. *box* `no-install` `offline` `read-only` `trust`

@@ -366,16 +366,6 @@
   "tags": "needs-install, this-machine, read-only, interface"
  },
  {
-  "name": "decisions",
-  "kind": "stdlib",
-  "section": "Trust and proof",
-  "line": "A recorded no with its reason and the condition that would reopen it, so a rejection is kept, not forgotten.",
-  "source": "new",
-  "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, trust"
- },
- {
   "name": "desktop",
   "kind": "stdlib",
   "section": "Ways to use it",
@@ -1229,16 +1219,6 @@
   "writes": "record",
   "network": "loopback",
   "tags": "needs-install, this-machine, records, assistant"
- },
- {
-  "name": "nightstand",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "Set heavy things down, pick up one bite: at most one thing in hand, and nothing deleted.",
-  "source": "new",
-  "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, tracking"
  },
  {
   "name": "nim",
