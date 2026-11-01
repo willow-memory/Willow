@@ -120,11 +120,11 @@ says how to pick one up:
 <!-- willow:front show=pick week=2026-W44 -->
 **Add-on of the week**
 
-**[goodreads](adapters/stdlib/goodreads/)** — Goodreads and StoryGraph exports: the books you've read, when, and what you thought of them.
+**[dice5e](adapters/stdlib/dice5e/)** — Full tabletop dice notation (4d6kh3, advantage), rolled on the record and checkable like dice.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 286 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 287 built add-ons in name order.*
 
-[Every add-on, 286 built of 505, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 287 built of 505, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 

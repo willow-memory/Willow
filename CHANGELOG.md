@@ -10,6 +10,12 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `folder-card`, a card for your folder itself: `folder_card.py --box DIR
+  --to card.md --notes me.txt` writes each file's size, first and last date
+  and fiction label, the files it could not read, and the gaps the `gaps`
+  rule finds, each marked told or untold by the gaps you named in your notes,
+  and each gap you named marked as shown or contradicted by the files. Your
+  notes go in word for word. Written once, never over a file. (#148)
 - `capture`, a note written into your folder in one line:
   `capture.py --to DIR --type idea --tags garden,veg "the note"` writes one
   file holding one paragraph, the note then its `type:` and `tags:` lines, so

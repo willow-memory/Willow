@@ -621,6 +621,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "livestock": ("livestock.py", ["--box", "{box}"]),
     "syllabus": ("syllabus.py", ["--box", "{box}"]),
     "foia": ("foia.py", ["--box", "{box}"]),
+    "folder-card": ("folder_card.py", ["--box", "{box}", "--to", "{tmp}/card.md"]),
     "budget": ("budget.py", ["--box", "{box}"]),
     "launcher": ("launcher.py", ["--box", "{box}"]),
     "history": ("history.py", ["--box", "{box}"]),

@@ -18,7 +18,7 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`███████████░░░░░░░░░` **286 of 505 built** · 451 need no install · 54 need one
+`███████████░░░░░░░░░` **287 of 505 built** · 451 need no install · 54 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
@@ -28,7 +28,7 @@ or `writes-output`; its section), and any the card's author adds or changes.
 | Keeping track | 43 | 18 | 61 | 0 |
 | Trust and proof | 30 | 24 | 45 | 9 |
 | Privacy and safety | 11 | 4 | 15 | 0 |
-| Assistants | 28 | 44 | 61 | 11 |
+| Assistants | 29 | 43 | 61 | 11 |
 | Ways to use it | 23 | 18 | 37 | 4 |
 | Play | 11 | 30 | 37 | 4 |
 | For maintainers | 19 | 25 | 39 | 5 |
@@ -77,9 +77,9 @@ its list: someone who speaks the language can add one without much Python.
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W44 -->
-**[goodreads](adapters/stdlib/goodreads/)** — Goodreads and StoryGraph exports: the books you've read, when, and what you thought of them.
+**[dice5e](adapters/stdlib/dice5e/)** — Full tabletop dice notation (4d6kh3, advantage), rolled on the record and checkable like dice.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 286 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 287 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -430,7 +430,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - [**codex-cli**](adapters/stdlib/codex-cli/) — OpenAI's Codex CLI asks your folder and hands in suggestions, through the mcp add-on. *new* `no-install` `offline` `read-only` `assistant`
 - [**copilot**](adapters/stdlib/copilot/) — GitHub Copilot, in VS Code and in its own CLI, asks your folder through the mcp add-on. *new* `no-install` `offline` `read-only` `assistant`
 - [**cursor**](adapters/stdlib/cursor/) — Cursor asks your folder and hands in suggestions, through the mcp add-on. *new* `no-install` `offline` `read-only` `assistant`
-- **folder-card** (idea) — A card for your folder itself (what the files are, their dates, the gaps you know of), compiled from the pile and your notes and handed to a model as context. *new* `no-install` `offline` `writes-output` `assistant`
+- [**folder-card**](adapters/stdlib/folder-card/) — A card for your folder itself (what the files are, their dates, the gaps you know of), compiled from the pile and your notes and handed to a model as context. *new* `no-install` `offline` `writes-output` `assistant`
 - [**gemini-cli**](adapters/stdlib/gemini-cli/) — Google's Gemini CLI asks your folder and hands in suggestions, through the mcp add-on. *new* `no-install` `offline` `read-only` `assistant`
 - **hermes** (idea) — Hermes Agent asking your folder as a plugin, and its memories, and what its dreaming plugin consolidates, handed in through propose. *new* `no-install` `offline` `records` `assistant`
 - **hook-checks** (idea) — A PostToolUse hook that runs the repo's own fast checks on the file just edited and hands back only what failed, the same output for the same file. *new* `no-install` `offline` `read-only` `assistant` `hooks`

@@ -458,16 +458,6 @@
   "tags": "no-install, offline, records, tracking"
  },
  {
-  "name": "folder-card",
-  "kind": "stdlib",
-  "section": "Assistants",
-  "line": "A card for your folder itself (what the files are, their dates, the gaps you know of), compiled from the pile and your notes and handed to a model as context.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, assistant"
- },
- {
   "name": "food-log",
   "kind": "stdlib",
   "section": "Keeping track",
