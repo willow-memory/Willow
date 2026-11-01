@@ -143,6 +143,12 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
     "calendar": ("cal.py", {"home.ics": (
         "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nBEGIN:VEVENT\r\nDTSTART:20261028T140000Z\r\n"
         "SUMMARY:Dentist\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n").encode()}),
+    "texts": ("texts.py", {"sms.xml": (
+        "<?xml version='1.0' encoding='UTF-8'?>\n<smses count=\"1\">\n"
+        "<sms address=\"+15550100\" date=\"1733213400000\" type=\"1\" "
+        "body=\"I can do 600 tonight\" contact_name=\"Dev Raman\" />\n</smses>\n").encode()}),
+    "month-first": ("month_first.py", {"letter.md": (
+        "Hearing moved to 11/03/2026.\n").encode()}),
     "chats": ("chats.py", {"chat.txt": (
         "[13/12/2024, 08:10:00] Dev Raman: I can do 600 tonight\n"
         "[13/12/2024, 08:11:00] Ada: Done\n").encode()}),

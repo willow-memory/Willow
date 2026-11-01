@@ -2016,16 +2016,6 @@
   "tags": "no-install, online, read-only, interface"
  },
  {
-  "name": "texts",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Phone text messages, from an Android SMS backup or an iPhone backup's copy, one dated line per message.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
- },
- {
   "name": "thesis",
   "kind": "stdlib",
   "section": "Trust and proof",
