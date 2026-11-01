@@ -120,11 +120,11 @@ says how to pick one up:
 <!-- willow:front show=pick week=2026-W44 -->
 **Add-on of the week**
 
-**[pgp](adapters/deps/pgp/)** — Signs exports and reports with your PGP key, verifiable anywhere.
+**[secrets-audit](adapters/stdlib/secrets-audit/)** — Finds passwords, keys and card numbers sitting in plain files, by file and line, never showing the value.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 289 built add-ons in name order.*
+*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 290 built add-ons in name order.*
 
-[Every add-on, 289 built of 505, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 290 built of 505, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 

@@ -10,6 +10,11 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `flashcards`, your sealed approvals as flashcards: `flashcards.py --box DIR due`
+  lists what to study, `review ID good` writes your grade as a record row and
+  says when the card is next due. The schedule is FSRS-5 (MIT, written from
+  its published formulas, default parameters) replayed from the grades, so a
+  fixed `--now` reproduces it; `check` holds every row to the replay. (#151)
 - `thesis`, a document's claims against your sources:
   `thesis.py --box DIR FILE` puts each sentence to claim-check and prints it
   held (a passage holds every part) or short (the nearest passage, what it

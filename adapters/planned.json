@@ -448,16 +448,6 @@
   "tags": "no-install, offline, records, play"
  },
  {
-  "name": "flashcards",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "Approved question-and-answer pairs become cards, scheduled by spaced repetition.",
-  "source": "box",
-  "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, tracking"
- },
- {
   "name": "food-log",
   "kind": "stdlib",
   "section": "Keeping track",
