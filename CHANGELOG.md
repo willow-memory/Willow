@@ -17,7 +17,7 @@ says how). The first was v0.1.0.
   openai-compatible's bite-then-propose, with the first running server and
   its first model when none is named, and a URL off this machine refused
   before anything is sent. Built in stdlib: the server is a program you
-  run, reached over HTTP, not a package it imports.
+  run, reached over HTTP, not a package it imports. (#165)
 - `model-drift`, frozen questions asked again of a model, flagging answers
   that change while its name and card stay the same: `model_drift.py freeze
   ... > frozen.json` prints the model's name, its card's SHA-256 and each
