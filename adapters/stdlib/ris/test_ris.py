@@ -293,3 +293,12 @@ def test_a_bad_command_line_says_how_to_run_it():
     ):
         got = run(*argv)
         assert got.returncode == 2 and "ris.py" in got.stderr
+
+
+def test_the_first_date_tag_gives_the_year_and_a_date_with_no_year_gives_none():
+    assert convert(
+        "TY  - JOUR\nTI  - X\nPY  - 1948\nY1  - 1950///\nER  - \n"
+    ).startswith("(1948). X.\n")
+    assert convert("TY  - JOUR\nTI  - X\nDA  - Spring\nER  - \n").startswith(
+        "X.\nJOUR\nSpring\n\n"
+    )
