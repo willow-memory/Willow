@@ -5,7 +5,6 @@ source: new
 added: 2026-10-26
 writes: nothing
 network: none
-tags: no-install, offline, read-only, maintainers
 -->
 # bench
 

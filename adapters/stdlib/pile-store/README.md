@@ -5,7 +5,7 @@ source: bot
 added: 2026-10-28
 writes: to
 network: none
-tags: no-install, offline, writes-output, search, pile
+tags: pile
 -->
 # pile-store
 

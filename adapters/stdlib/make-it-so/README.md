@@ -5,7 +5,6 @@ source: new
 added: 2026-10-30
 writes: to
 network: none
-tags: no-install, offline, writes-output, interface
 -->
 # make-it-so
 

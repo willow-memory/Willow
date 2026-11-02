@@ -3,10 +3,11 @@
     python adapters/stdlib/similar/similar.py near "your idea in a sentence"
     python adapters/stdlib/similar/similar.py check
     python adapters/stdlib/similar/similar.py new --base REF
+    python adapters/stdlib/similar/similar.py tags [NAME...]
 
 The list is every add-on in this repo, built and planned: each one's line,
-and the tags a person chose for it (not the four filled in from its card,
-which nearly every entry shares). Nothing outside this repo is read.
+and the one tag a person chose for it, if any. Nothing outside this repo is
+read.
 
 `near` asks the kernel's own search (`kernel.rank`, the same as a `bite`)
 which entries hold your words: up to three, each with the words it shares.
@@ -17,6 +18,20 @@ something already on the list, to pick up rather than add twice.
 same order, whatever the case or punctuation (the kernel's `bite_key`). CI
 runs it; a near idea is shown, never refused, since only a person can say
 two ideas are one.
+
+`tags` prints each entry's tags and the three entries nearest it, as the
+add-on list shows them. None of it is stored: it is worked out from the cards
+every time, so it can't go stale when a card changes. Five tags at most:
+
+    install   no-install or needs-install, from the card's kind
+    network   offline, this-machine or online, from its network line
+    two topics
+              words the entry shares with its nearest entries, which say what
+              it is about: the entries are ranked against the whole card by
+              pile-rank's BM25, and a topic is a word from their names and
+              one-line descriptions that also appears in this card, used by
+              a handful of entries and not by most
+    its own   the one tag the card's author chose, if any: the open slot
 
 `new` writes Markdown for a pull request: each entry added, or whose line
 changed, since REF (a git commit or branch), and what on the list is close
@@ -31,13 +46,17 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import re
 import subprocess
 import sys
+from collections import Counter, defaultdict
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "pile-rank"))
 import kernel  # noqa: E402
+import pile_rank  # noqa: E402
 
 _spec = importlib.util.spec_from_file_location(
     "willow_readme", ROOT / "adapters" / "stdlib" / "readme" / "readme.py"
@@ -47,7 +66,8 @@ _spec.loader.exec_module(readme)
 
 USAGE = """usage: similar.py near "your idea in a sentence"
        similar.py check
-       similar.py new --base REF"""
+       similar.py new --base REF
+       similar.py tags [NAME...]"""
 
 
 def entries() -> list[dict]:
@@ -55,20 +75,111 @@ def entries() -> list[dict]:
     return readme.addons()
 
 
-#: the tags readme.py fills in from a card's other lines; on nearly every
-#: entry, so they'd make everything near everything
-AUTO_TAGS = {
-    "no-install", "needs-install", "offline", "this-machine", "online",
-    "read-only", "records", "writes-output", *readme.SECTION_TAG.values(),
-}  # fmt: skip
-
-
 def text_of(a: dict) -> str:
-    """What is searched for an entry: its line, and the tags a person chose.
-    Not the card's whole text: its common words (answers, reads, only) made
-    unrelated add-ons near each other."""
-    own = [t for t in readme.split_tags(a["tags"]) if t not in AUTO_TAGS]
+    """What `near` searches for an entry: its line, and the tag a person
+    chose. Not the card's whole text: its common words (answers, reads, only)
+    made unrelated add-ons near each other."""
+    own = readme.split_tags(a.get("tags", ""))
     return a["line"] + ("\n" + " ".join(own) if own else "")
+
+
+# ── tags, worked out ─────────────────────────────────────────────────────────
+#: words that say how a card is written, not what its add-on is about; the one
+#: list to tune when a topic reads as noise
+HOW = set("""
+about across add added adds after again against all almost also always another answer answered
+answering answers any are ask asked asking asks back before being big both built came can card
+cards change changed changes check checked checks cited come comes could day does done downloaded
+each else even every exact exist exists few find finds first folder folders from gets give given
+gives going gone hand hands has hasn have here hold holds input into its just keep keeping keeps
+kept kind last later leave leaves less like line lines list machine made make makes many may more
+most much must name named names need needs never new next none not nothing now off often old once
+one ones only other others out over own part per picked place plain put read reading reads ready
+right run runs said same say says see seen set shows side since some something still such take
+takes tell than that the them then there these they thing things this those through time times too
+turn two type under until use used uses using very want way ways well what when where which while
+who whole why will willow with without word words write writes writing written wrote yes yet you
+your yours kernel record records box boxes pile passage passages file files question questions
+idea ideas com www http https org toward nearly three four five ons guess
+""".split())
+#: a topic is used by at least this many entries' names and lines, and at most
+#: the other: it groups a handful, never most of the list
+TOPIC_USE = (2, 25)
+NEIGHBOURS = 6
+#: what the install and network tags can be; the card's own tag is never one
+FACT_TAGS = {"no-install", "needs-install", "offline", "this-machine", "online"}
+
+
+def card_text(a: dict, root: Path = ROOT) -> str:
+    """An entry's name, its line and, for a built one, the first two
+    paragraphs of its card: what it is, in the words its author chose."""
+    out = a["name"].replace("-", " ") + ". " + a["line"]
+    if a["built"]:
+        body = (root / a["path"] / "README.md").read_text(encoding="utf-8")
+        body = re.sub(r"<!--.*?-->", "", body, flags=re.S)
+        paras = [p for p in body.split("\n\n") if p.strip()
+                 and not p.lstrip().startswith(("#", "```", "|", "    "))]  # fmt: skip
+        out += " " + " ".join(paras[:2])
+    return out
+
+
+def topic_words(text: str) -> list[tuple[str, str]]:
+    """(plain form, word as written) for each word that could be a topic."""
+    out = []
+    for w in kernel.words(text):
+        lw = w.lower()
+        if lw in kernel.FUNCTION or lw in HOW or len(lw) < 3:
+            continue
+        if any(c.isdigit() for c in lw):
+            continue
+        out.append((kernel.stem(lw), lw))
+    return out
+
+
+def facts_tags(a: dict) -> list[str]:
+    net = {"none": "offline", "loopback": "this-machine"}.get(a["network"], "online")
+    return ["no-install" if a["kind"] == "stdlib" else "needs-install", net]
+
+
+def worked_out(every: list[dict], root: Path = ROOT) -> dict[str, dict]:
+    """{name: {"tags": [...], "near": [three names]}} for every entry, the
+    same for the same cards on any machine."""
+    text = {a["name"]: card_text(a, root) for a in every}
+    whole = {n: {s for s, _ in topic_words(t)} for n, t in text.items()}
+    form: dict[str, Counter] = defaultdict(Counter)
+    short, use = {}, Counter()
+    for a in every:
+        got = topic_words(a["name"].replace("-", " ") + ". " + a["line"])
+        for s, w in got:
+            form[s][w] += 1
+        short[a["name"]] = {s for s, _ in got}
+        use.update(short[a["name"]])
+    ranker = pile_rank.Ranker(
+        [{"path": n, "line": 1, "text": t, "id": kernel.h256(t)} for n, t in text.items()]
+    )
+    out = {}
+    for a in every:
+        n = a["name"]
+        nb = [c["path"] for c, _, _ in ranker.rank(text[n], NEIGHBOURS + 1)
+              if c["path"] != n][:NEIGHBOURS]  # fmt: skip
+        shared = Counter(
+            s for m in nb for s in whole[n] & short[m]
+            if TOPIC_USE[0] <= use[s] <= TOPIC_USE[1]
+        )  # fmt: skip
+        own = readme.split_tags(a.get("tags", ""))
+        topics = []
+        for s in sorted(
+            (s for s in shared if shared[s] >= 2 or s in short[n]),
+            key=lambda s: (-shared[s] - (s in short[n]), use[s], s),
+        ):
+            word = sorted(form[s].items(), key=lambda x: (-x[1], x[0]))[0][0]
+            taken = {kernel.stem(w) for t in topics + own for w in t.split("-")}
+            if s not in taken and word not in FACT_TAGS:  # "hook" beside "hooks" says it twice
+                topics.append(word)
+            if len(topics) == 2:
+                break
+        out[n] = {"tags": facts_tags(a) + topics + own, "near": nb[:3]}
+    return out
 
 
 def pile(every: list[dict], leave_out: str | None = None) -> list[dict]:
@@ -197,6 +308,16 @@ def main(argv: list[str]) -> int:
         if dups:
             return kernel.REFUSED
         print(f"{len(every)} add-ons and ideas, no two the same")
+        return kernel.ALIVE
+    if argv[:1] == ["tags"]:
+        got = worked_out(every)
+        names = argv[1:] or sorted(got)
+        unknown = [n for n in names if n not in got]
+        if unknown:
+            print(f"refused: no add-on or idea named {unknown[0]!r}", file=sys.stderr)
+            return kernel.REFUSED
+        for n in names:
+            print(f"{n}: {', '.join(got[n]['tags'])} · near: {', '.join(got[n]['near'])}")
         return kernel.ALIVE
     if len(argv) == 3 and argv[:2] == ["new", "--base"]:
         print(report(every, at(argv[2])), end="")

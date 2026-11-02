@@ -5,7 +5,7 @@ source: new
 added: 2026-10-24
 writes: record, to
 network: github.com (or the --source you give), to clone the repositories you list
-tags: no-install, online, records, interface, research
+tags: research
 -->
 # repo-pile
 

@@ -49,7 +49,7 @@ The card opens with a header that the add-on list in ADDONS.md is generated from
     added: 2026-10-22
     writes: nothing
     network: none
-    tags: no-install, offline, read-only, tracking
+    tags: health
     -->
 
 `section` is one of the list's sections, `line` is one sentence, `source` is
@@ -58,16 +58,17 @@ kernel has) or `new`, and `added` is the date it was built. An add-on in
 `deps/` adds `needs` (what to install, and its licence) and `floor` (its
 floor versions, and why when above the rule's).
 
-`tags` are up to five, lowercase words joined by -, for finding it. When a
-card or idea has none,
+`tags` is optional: one tag of your own, lowercase words joined by -, for
+finding it. The rest are worked out every time the list is written, never
+stored, so they follow the card when it changes: whether it needs an
+install, whether it goes online, and two topic words it shares with the
+add-ons nearest it, found by [similar](stdlib/similar/). See what an add-on
+gets with
 
-    python adapters/stdlib/readme/readme.py tags
+    python adapters/stdlib/similar/similar.py tags NAME
 
-fills in four from what the header already says (an install or none, where
-it goes online, what it writes, its section), leaving the fifth for you. It
-never touches tags that are there: change them as you like. Tags are for
-finding things, never a promise: what it needs and where it goes are said
-from `needs` and `network`, whatever the tags say.
+Tags are for finding things, never a promise: what it needs and where it
+goes are said from `needs` and `network`, whatever the tags say.
 
 ## Its promises, checked
 

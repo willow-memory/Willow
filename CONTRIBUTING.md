@@ -128,14 +128,15 @@ that adds one entry to [adapters/planned.json](adapters/planned.json):
  "source": "new",
  "writes": "to",
  "network": "none",
- "tags": "no-install, offline, writes-output, file-reader, money"
+ "tags": "money"
 }
 ```
 
 - `kind` is `stdlib` if it needs nothing installed, else `deps`, with a
   `needs` line naming each install and its licence.
-- `tags` are up to five; leave them out and `readme.py tags` fills in four
-  from the rest, or write your own.
+- `tags` is optional: one tag of your own. The rest (needs an install or not,
+  goes online or not, two topic words) are worked out from the card each time
+  the list is written; `similar.py tags NAME` shows them.
 - `writes` and `network` are its promises, set out in
   [adapters/README.md](adapters/README.md#its-promises-checked). Whoever
   builds it is held to them.

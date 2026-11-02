@@ -5,7 +5,7 @@ source: box
 added: 2026-10-28
 writes: record
 network: none
-tags: no-install, offline, records, search, pile
+tags: pile
 -->
 # pile-gold
 

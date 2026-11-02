@@ -5,7 +5,7 @@ source: new
 added: 2026-10-24
 writes: nothing
 network: only what the programs it starts reach on their own; it reaches nothing itself
-tags: no-install, maintainers, tests, interface, assistant
+tags: tests
 -->
 # live
 

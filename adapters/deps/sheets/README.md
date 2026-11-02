@@ -7,7 +7,6 @@ needs: openpyxl; MIT
 floor: openpyxl 3.0.5
 writes: to
 network: none
-tags: needs-install, offline, writes-output, file-reader
 -->
 # sheets
 

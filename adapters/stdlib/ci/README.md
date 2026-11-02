@@ -5,7 +5,6 @@ source: box
 added: 2026-10-23
 writes: record, BUGS.md
 network: PyPI, to read each dependency floor's release date
-tags: no-install, online, records, maintainers
 -->
 # ci
 

@@ -5,7 +5,7 @@ source: new
 added: 2026-10-24
 writes: record
 network: loopback
-tags: no-install, this-machine, records, interface, everyday
+tags: everyday
 -->
 # browse
 

@@ -5,7 +5,6 @@ source: bot
 added: 2026-10-26
 writes: record, to
 network: none
-tags: no-install, offline, writes-output, trust, assistant
 -->
 # serve
 

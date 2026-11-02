@@ -5,7 +5,6 @@ source: new
 added: 2026-11-01
 writes: to
 network: the copy's address, fetched once
-tags: no-install, online, writes-output, file-reader
 -->
 # almanac-keep
 
