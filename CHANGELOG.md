@@ -10,6 +10,14 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `same-way`, a local model asked each question several times and how
+  often it flips: `same_way.py --box DIR --url URL --model NAME --questions
+  FILE [--times N]` ranks each question against your folder as a bite would
+  (nothing goes on the record), sends the passages served N times (three
+  unless said) with openai-compatible's chat at temperature 0 and a fixed
+  seed, and counts a change in the words or in what is cited as a flip. The
+  URL must be on this machine; the idea's `this-machine` is promised as
+  `loopback`.
 - `model-card`, a card naming the model behind an assistant, its hash on
   the record: `model_card.py add --box DIR --from CARD` appends the SHA-256
   of a `willow-model` card (weights-card's header, with `runs`, `licence`
