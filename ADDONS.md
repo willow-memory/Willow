@@ -19,7 +19,7 @@ is written: `no-install` or `needs-install`; `offline`, `this-machine` or
 tag its author chose, if any. *near* names the three add-ons closest to it.
 
 <!-- willow:pools -->
-`████████████░░░░░░░░` **300 of 505 built** · 451 need no install · 54 need one
+`████████████░░░░░░░░` **301 of 505 built** · 452 need no install · 53 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
@@ -29,7 +29,7 @@ tag its author chose, if any. *near* names the three add-ons closest to it.
 | Keeping track | 40 | 16 | 56 | 0 |
 | Trust and proof | 32 | 22 | 45 | 9 |
 | Privacy and safety | 13 | 3 | 16 | 0 |
-| Assistants | 35 | 36 | 60 | 11 |
+| Assistants | 36 | 35 | 61 | 10 |
 | Ways to use it | 25 | 18 | 39 | 4 |
 | Play | 12 | 29 | 37 | 4 |
 | For maintainers | 19 | 25 | 39 | 5 |
@@ -78,9 +78,9 @@ its list: someone who speaks the language can add one without much Python.
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W45 -->
-**[sheets](adapters/deps/sheets/)** — Spreadsheets with formulas and formatting kept, beyond what the office add-on reads.
+**[across](adapters/stdlib/across/)** — One page made from several willow records at once (each one's digest, export, timeline or readings), every line still cited by where it came from.
 
-*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 300 built add-ons in name order.*
+*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 301 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -246,7 +246,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - **upgrade-notes** (idea) — Before an upgrade: the changelog lines between the version you lock and the one you'd move to, from the package's own files. Goes online: the registry (PyPI, npm or crates.io), to fetch the newer version's changelog. *new* `no-install` `online` `package` `version` · near: lockfiles, package-contents, install-scripts
 - **vectors** (idea) — The meaning add-on's vectors kept in the store's own SQLite file, so they're computed once per passage, not at every question. Needs sqlite-vec and model2vec; MIT or Apache-2.0. *bot* `needs-install` `offline` `sqlite` `store` `pile` · near: pile-store, codebase-memory, welcome
 - **watch** (idea) — A file re-read the moment it changes (inotify, FSEvents, or polling), so the index is always current. *new* `no-install` `offline` `index` `moment` · near: index-cache, scan, policy-watch
-- [**why-not**](adapters/stdlib/why-not/) — When the answer is 'not enough to say', which words found nothing, and what kind of file would have answered. *new* `no-install` `offline` · near: nicknames, scan, daily-word
+- [**why-not**](adapters/stdlib/why-not/) — When the answer is 'not enough to say', which words found nothing, and what kind of file would have answered. *new* `no-install` `offline` · near: nicknames, scan, latent
 
 ## Your own words
 
@@ -289,7 +289,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**car**](adapters/stdlib/car/) — Your car's services, repairs and inspection dates, from receipts and notes: what's due, and what it cost. Uses habits. *new* `no-install` `offline` `due` `receipts` · near: home-upkeep, pets, subscriptions
 - **care** (idea) — For caregivers: medications, vitals and appointments from a care log, what's due and what moved. *box* `no-install` `offline` `due` `car` · near: car, coming-up, bluesky
 - [**coming-up**](adapters/stdlib/coming-up/) — Dates written in your files in the next N days: appointments, renewals, deadlines. *box* `no-install` `offline` `coming` `days` · near: calendar-out, digest, on-this-day
-- **contracts** (idea) — The dates that matter in your contracts: renewals, notice periods and break clauses, each cited. *new* `no-install` `offline` `break` `contracts` · near: clauses, support-plan, mutants
+- **contracts** (idea) — The dates that matter in your contracts: renewals, notice periods and break clauses, each cited. *new* `no-install` `offline` `break` `contracts` · near: clauses, mutants, support-plan
 - **crowd** (idea) — You against the crowd: a prediction market's question copied into your ledger, your probability beside theirs, both scored. Goes online: the market's public API, to read the question and its resolution. *new* `no-install` `online` `prediction` `score` · near: predictions, oakenscroll, market-calls
 - **cycle** (idea) — A menstrual cycle log that never leaves this machine: dates, what's next, and what changed. *new* `no-install` `offline` `log` · near: coming-up, silence-log, sent-log
 - [**debts**](adapters/stdlib/debts/) — Who owes whom, from the IOUs in your notes and messages, each cited. Uses amounts. *new* `no-install` `offline` · near: amounts, symptoms, renewals
@@ -361,7 +361,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**jeles**](adapters/stdlib/jeles/) — Your approved answers as Jeles nuggets, with question, answer, sources and who sealed it, and Jeles' own verified nuggets read back as passages. *new* `no-install` `offline` `sources` · near: oakenscroll, almanac, pile-gold
 - [**licenses**](adapters/stdlib/licenses/) — The licence of every installed dependency, read from its own metadata on this machine: which are copyleft, and which file says so. *new* `no-install` `offline` `dependency` · near: claude-code, lending, on-this-day
 - **line-origin** (idea) — Which agent session wrote this line of code: git blame to the commit, then the transcript turn that made it. Needs the git program; GPL, called not linked. *new* `needs-install` `offline` `agent` `transcript` · near: agent-transcript, session-cost, transcript-redact
-- **losc** (idea) — Does a project pass the Local Only Servers Club's test: no accounts, no cloud, and your data your own? *bot* `no-install` `offline` `account` `server` · near: local-model, github-archive, discord
+- **losc** (idea) — Does a project pass the Local Only Servers Club's test: no accounts, no cloud, and your data your own? *bot* `no-install` `offline` `account` `server` · near: github-archive, local-model, discord
 - [**merkle**](adapters/stdlib/merkle/) — A Merkle tree over the record, so one row can be proven with a handful of hashes, not the whole file. *new* `no-install` `offline` `hash` `rows` · near: ci, hook-replay, hosts
 - **mirror** (idea) — Checks each mirror of a repo on another forge holds the same commits as the original, so losing a host loses nothing. Needs the git program; GPL, called not linked. Goes online: each mirror's git URL, to read its refs. *new* `needs-install` `online` `commit` `repo` · near: repro, git-notes, provenance
 - **model-recall** (idea) — Every sealed answer a model suggested, listed for a second look once you mark its card as flawed; nothing is unsealed for you. *new* `no-install` `offline` `second` · near: openai-compatible, model-exam, share
@@ -407,7 +407,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**pii-audit**](adapters/stdlib/pii-audit/) — Personal data sitting in your files (ID numbers, health details, card numbers), listed by file and line. *new* `no-install` `offline` `numbers` `audit` · near: secrets-audit, privacy, debts
 - [**privacy**](adapters/stdlib/privacy/) — Hides phone numbers, emails, card, bank and ID numbers, and API keys in what a question prints, and says what it hid. *bot* `no-install` `offline` `numbers` · near: plain, readings, pii-audit
 - [**risky-code**](adapters/stdlib/risky-code/) — Lines of code matching a known-dangerous pattern (command injection, eval, sql concatenation, broken tls and more), by file and line, as leads to read. *new* `no-install` `offline` `matched` `command` `security` · near: secrets-audit, advisories, xref
-- [**scrub**](adapters/stdlib/scrub/) — Strips the hidden details (EXIF, author, edit history) from a file before you share it. *new* `no-install` `offline` `history` `share` · near: photos, transcript-redact, a11y-check
+- [**scrub**](adapters/stdlib/scrub/) — Strips the hidden details (EXIF, author, edit history) from a file before you share it. *new* `no-install` `offline` `share` `taken` · near: photos, transcript-redact, a11y-check
 - [**secrets-audit**](adapters/stdlib/secrets-audit/) — Finds passwords, keys and card numbers sitting in plain files, by file and line, never showing the value. Uses privacy. *bot* `no-install` `offline` `numbers` `key` `everyday` · near: pii-audit, hook-leaks, risky-code
 - [**sent-log**](adapters/stdlib/sent-log/) — Which of your passages went to which online model, read from the record by model card: what left this machine and where to. Uses openai-compatible. *new* `no-install` `offline` `left` `log` · near: cite-honesty, gaps, model-card
 - **student-records** (idea) — A box of student records that answers only the teacher who owns it, and logs every look. *new* `no-install` `offline` `student` `log` · near: kids, ci-why, export
@@ -422,7 +422,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - **assistant-scores** (idea) — How often each assistant's suggestions were sealed or set aside, from the record. *new* `no-install` `offline` `score` `assistant` · near: retire, second-opinion, cite-honesty
 - **basic-memory** (idea) — Basic Memory's Markdown notes where an AI wrote them: each observation and relation handed in through propose, waiting for your seal. *new* `no-install` `offline` `handed` `propose` · near: memory-import, hermes, hook-feedback
 - **bedrock** (idea) — Suggestions from a model on Amazon Bedrock, under your own AWS account and region, citing your passages. Needs boto3; Apache-2.0. Goes online: Amazon Bedrock's endpoint in your region, to ask for suggestions. *new* `needs-install` `online` `citing` · near: cite-honesty, claude, os-model
-- **browser-model** (idea) — Suggestions from a model running in your browser, Chrome's built-in model or one run on WebGPU, through a page served on this machine. Reaches this machine only. *new* `no-install` `this-machine` `browser` · near: mlx, os-model, local-model
+- **browser-model** (idea) — Suggestions from a model running in your browser, Chrome's built-in model or one run on WebGPU, through a page served on this machine. Reaches this machine only. *new* `no-install` `this-machine` `browser` · near: mlx, os-model, night-batch
 - **cassettes** (idea) — Each exchange with a model kept as a row (what was asked, what came back, the model and its seed), replayed later as a test, and drift between models found by plain diff. *bot* `no-install` `offline` `rows` `drift` · near: hook-replay, lending, hook-errors
 - **cite-honesty** (idea) — How often each model's suggestions were refused at propose for citing a passage the last bite never returned, read from the record by model card. *new* `no-install` `offline` `refuses` `citing` · near: sent-log, hook-cite, model-card
 - **claude** (idea) — Suggestions from Claude through the Anthropic API, citing your passages. Needs anthropic; MIT. Goes online: api.anthropic.com, to ask for suggestions. *new* `needs-install` `online` `citing` `claude` · near: claude-code, bedrock, cite-honesty
@@ -459,7 +459,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - **issue-answer** (idea) — A workflow that drafts an answer to a new issue from the repo's own docs, each line cited, posted only once a maintainer seals it. Goes online: the forge, through the workflow's token, to post an answer once it is sealed. *new* `no-install` `online` `repo` `docs` · near: hook-checks, repo-index, pr-context
 - **ladder** (idea) — Your files first, then sources you trust such as Jeles and Nestor, then a model, stopping at the first that answers, each answer kept for next time. *bot* `no-install` `offline` `jeles` `nestor` · near: jeles, first-mention, nestor
 - **llm-cli** (idea) — Suggestions through the llm command, so any model its plugins reach (local or hosted) can hand one in, with llm's own log naming the model. Needs llm and the plugin for your model; Apache-2.0. Goes online: the model its plugin reaches, to ask for suggestions. *new* `needs-install` `online` `cli` `llm` · near: codex-cli, gemini-cli, hermes
-- **local-model** (idea) — Suggestions from a model on this machine only, such as Ollama, llama.cpp's server, llamafile, KoboldCpp or Jan. Needs a local model server; licence varies by model. Reaches this machine only. *new* `needs-install` `this-machine` `cpp` `jan` · near: openai-compatible, in-process, os-model
+- [**local-model**](adapters/stdlib/local-model/) — Suggestions from a model on this machine only, such as Ollama, llama.cpp's server, llamafile, KoboldCpp or Jan. Uses openai-compatible. Reaches this machine only. *new* `no-install` `this-machine` `jan` `ollama` · near: openai-compatible, model-shelf, model-card
 - [**mcp**](adapters/deps/mcp/) — Lets any MCP client, such as an AI assistant or editor, ask your folder and hand in suggestions. Needs mcp; MIT. *new* `needs-install` `offline` `mcp` `assistant` · near: mcp-lite, zed, cursor
 - **mcp-by-hash** (idea) — Your passages served as MCP resources named by their SHA-256, so an assistant cites exactly the bytes it read and a changed passage gets a new name. *bot* `no-install` `offline` `assistant` `sha` · near: model-card, snapshot, hook-read-first
 - [**mcp-lite**](adapters/stdlib/mcp-lite/) — The mcp add-on's three tools with nothing to install: the protocol by hand, standard library only. *box* `no-install` `offline` `mcp` · near: mcp, cursor, opencode
@@ -467,18 +467,18 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - **memory-import** (idea) — An AI assistant's memory store, SQLite or Markdown, handed in through propose: one suggestion per memory, none trusted until you seal it. *new* `no-install` `offline` `handed` `propose` · near: basic-memory, hermes, hook-feedback
 - **mex** (idea) — mex's project memory for coding agents: its scaffold read as cited passages, and what an agent writes back held for your seal. *new* `no-install` `offline` `agent` `memory` · near: instruction-files, claude-code, codebase-memory
 - **mlx** (idea) — Suggestions from a model run on Apple silicon through MLX, on this Mac alone. Needs mlx-lm, on Apple silicon only; MIT; licence of the model varies. *new* `needs-install` `offline` `apple` `silicon` · near: browser-model, os-model, night-batch
-- [**model-card**](adapters/stdlib/model-card/) — A card naming the model behind an assistant (version or weights hash, where it runs, licence, known limits), with the card's hash on the record so each suggestion can say which model made it. Uses weights-card. *new* `no-install` `offline` `hash` `weights` · near: weights-card, weights-pin, model-drift
+- [**model-card**](adapters/stdlib/model-card/) — A card naming the model behind an assistant (version or weights hash, where it runs, licence, known limits), with the card's hash on the record so each suggestion can say which model made it. Uses weights-card. *new* `no-install` `offline` `hash` `weights` · near: local-model, weights-card, weights-pin
 - [**model-drift**](adapters/stdlib/model-drift/) — Your frozen questions asked again of a model now and then, flagging when its answers change while its name and card stay the same. Uses openai-compatible. Goes online: the endpoint you configure, to ask your questions again. *new* `no-install` `online` · near: same-way, model-card, model-exam
-- [**model-exam**](adapters/stdlib/model-exam/) — Any model scored against the answers you sealed, your own questions as its exam, before you trust its suggestions. Uses openai-compatible. Goes online: the endpoint you configure, to ask your sealed questions. *new* `no-install` `online` `score` · near: same-way, model-drift, ci-bets
-- [**model-fit**](adapters/stdlib/model-fit/) — Whether this machine's GPU, NPU or Apple silicon can run a local model, and about how fast, before you download one. *new* `no-install` `offline` `weights` `silicon` · near: model-shelf, weights-card, weights-pin
-- [**model-shelf**](adapters/stdlib/model-shelf/) — Every model already on this machine, read from Ollama's, LM Studio's, Jan's and GPT4All's folders and the Hugging Face cache: its runtime, size, quantization and hash, before you download another. Uses weights-card. *new* `no-install` `offline` `hash` `quantization` · near: weights-card, model-fit, weights-pin
+- [**model-exam**](adapters/stdlib/model-exam/) — Any model scored against the answers you sealed, your own questions as its exam, before you trust its suggestions. Uses openai-compatible. Goes online: the endpoint you configure, to ask your sealed questions. *new* `no-install` `online` `mark` `citing` · near: same-way, model-drift, ci-bets
+- [**model-fit**](adapters/stdlib/model-fit/) — Whether this machine's GPU, NPU or Apple silicon can run a local model, and about how fast, before you download one. *new* `no-install` `offline` `weights` `local` · near: model-shelf, weights-card, weights-pin
+- [**model-shelf**](adapters/stdlib/model-shelf/) — Every model already on this machine, read from Ollama's, LM Studio's, Jan's and GPT4All's folders and the Hugging Face cache: its runtime, size, quantization and hash, before you download another. Uses weights-card. *new* `no-install` `offline` `hash` `jan` · near: weights-card, model-fit, local-model
 - **night-batch** (idea) — Questions waiting for suggestions batched into one local-model run overnight, stopped the moment you're back. Needs a local model server; licence varies by model. Reaches this machine only. *new* `needs-install` `this-machine` `local` · near: local-model, browser-model, quantized
-- [**openai-compatible**](adapters/stdlib/openai-compatible/) — Suggestions from any OpenAI-compatible endpoint you choose (LM Studio, vLLM, LocalAI, SGLang, Docker Model Runner, OpenRouter, Groq, Mistral), citing your passages. Goes online: the endpoint you configure, to ask for suggestions. *new* `no-install` `online` `cpp` `llama` · near: local-model, model-shelf, in-process
+- [**openai-compatible**](adapters/stdlib/openai-compatible/) — Suggestions from any OpenAI-compatible endpoint you choose (LM Studio, vLLM, LocalAI, SGLang, Docker Model Runner, OpenRouter, Groq, Mistral), citing your passages. Goes online: the endpoint you configure, to ask for suggestions. *new* `no-install` `online` `cpp` `llama` · near: local-model, in-process, model-shelf
 - [**opencode**](adapters/stdlib/opencode/) — OpenCode asks your folder and hands in suggestions, through the mcp add-on. Uses hosts. *new* `no-install` `offline` `mcp` · near: cursor, windsurf, zed
-- **os-model** (idea) — Suggestions from the model built into the operating system, such as Apple's Foundation Models on a Mac: nothing to download, nothing leaving the device. Needs macOS 26 with Apple Intelligence on, and a small Swift helper; Apple's terms. *new* `needs-install` `offline` `apple` `mac` · near: mlx, local-model, browser-model
+- **os-model** (idea) — Suggestions from the model built into the operating system, such as Apple's Foundation Models on a Mac: nothing to download, nothing leaving the device. Needs macOS 26 with Apple Intelligence on, and a small Swift helper; Apple's terms. *new* `needs-install` `offline` `apple` `mac` · near: mlx, browser-model, local-model
 - [**persona-card**](adapters/stdlib/persona-card/) — A persona written as a card and compiled into the same system-prompt bytes every time, with the prompt's hash on the record. *box* `no-install` `offline` · near: folder-card, tip-pin, serve
 - **plain-language** (idea) — An approved answer rewritten in plain language by a model, the rewrite held until you seal it. *new* `no-install` `offline` `held` · near: translate, hook-tiers, memory-import
-- **quantized** (idea) — Finds the smallest quantized local model that still gets your box's own questions right, so suggestions come faster. Needs a local model server; licence varies by model. Reaches this machine only. *new* `needs-install` `this-machine` `local` · near: local-model, night-batch, model-exam
+- **quantized** (idea) — Finds the smallest quantized local model that still gets your box's own questions right, so suggestions come faster. Needs a local model server; licence varies by model. Reaches this machine only. *new* `needs-install` `this-machine` `local` · near: night-batch, local-model, model-exam
 - [**same-way**](adapters/stdlib/same-way/) — A local model asked each of your box's questions three times, and how often its answer flips, since a model that answers the same way every time is one you can build on. Uses openai-compatible. Reaches this machine only. *new* `no-install` `this-machine` `local` · near: model-exam, model-drift, local-model
 - **schema-check** (idea) — A model's answer held to a JSON schema before anything reads it, and a reply that doesn't fit recorded as a result, not lost as an error. *box* `no-install` `offline` `result` `fit` · near: weights-pin, model-fit, connect-four
 - **second-opinion** (idea) — Two assistants' suggestions for the same question side by side, each waiting for its own seal. *new* `no-install` `offline` `assistant` `waiting` · near: assistant-scores, contradictions, pile-poetry
@@ -499,7 +499,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - [**braille**](adapters/stdlib/braille/) — Answers as braille-ready files (BRF) for a braille display or embosser. *new* `no-install` `offline` · near: annotations, rss-out, calendar
 - [**browse**](adapters/stdlib/browse/) — Your folder in your web browser: ask, read each answer at its file and line, and approve suggestions with a click, from this machine only. Reaches this machine only. *new* `no-install` `this-machine` `web` `everyday` · near: digest, launcher, hook-start
 - [**calendar-out**](adapters/stdlib/calendar-out/) — Dates coming up as an .ics file your calendar app can subscribe to. Uses coming-up. *new* `no-install` `offline` `coming` `calendar` · near: coming-up, digest, calendar
-- [**capture**](adapters/stdlib/capture/) — A note written into your folder in one line, with its type and tags, so the next question can find it. *new* `no-install` `offline` `tags` · near: coming-up, notes, plain
+- [**capture**](adapters/stdlib/capture/) — A note written into your folder in one line, with its type and tags, so the next question can find it. *new* `no-install` `offline` `tags` · near: coming-up, notes, serve
 - [**cloudevents**](adapters/stdlib/cloudevents/) — Record rows in the CloudEvents envelope, for any tool that already reads them. *new* `no-install` `offline` `envelope` `tool` · near: prov, ro-crate, in-toto
 - **datasette** (idea) — Your record and approved answers browsable in Datasette, read only: tables, facets and SQL on this machine. Needs Datasette; Apache-2.0. Reaches this machine only. *new* `needs-install` `this-machine` `sql` · near: record-sql, report, ro-crate
 - [**deep-links**](adapters/stdlib/deep-links/) — Each answer as a link that opens the file at the line (RFC 5147 lines, browser text fragments). *new* `no-install` `offline` `links` `browser` · near: jetbrains, browse, vscode
@@ -578,7 +578,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - **tic-tac-toe** (idea) — Tic-tac-toe as rows: every move, and the solver's value of each position; perfect play draws. *new* `no-install` `offline` `rows` `move` · near: reversi, catgrid, nim
 - **tides** (idea) — Tide predictions as a control: if your Brier score on tides isn't near zero, the forecasting plumbing is broken. Goes online: NOAA's tides API, to read predictions and what happened. *new* `no-install` `online` `score` `forecast` · near: predictions, forecasts, horoscope-grades
 - **todays-place** (idea) — One place a day drawn from Natural Earth's public-domain list, for the day's questions and bets. *new* `no-install` `offline` `public` `domain` · near: art-of-the-day, gutenberg, tax-year
-- **weather-bet** (idea) — Wager on rain tomorrow before you look, against Open-Meteo's own forecast, and see whose Brier score wins. Goes online: api.open-meteo.com, to read the forecast and the outcome. *new* `no-install` `online` `score` `forecast` · near: forecasts, horoscope-grades, ci-bets
+- **weather-bet** (idea) — Wager on rain tomorrow before you look, against Open-Meteo's own forecast, and see whose Brier score wins. Goes online: api.open-meteo.com, to read the forecast and the outcome. *new* `no-install` `online` `forecast` `score` · near: forecasts, horoscope-grades, ci-bets
 
 ## For maintainers
 

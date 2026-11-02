@@ -599,6 +599,10 @@ willow/
 │   │   │   ├── llms_txt.py   an llms.txt written from a folder's text files, and a checker for one
 │   │   │   ├── test_llms_txt.py
 │   │   │   └── README.md
+│   │   ├── local-model/
+│   │   │   ├── local_model.py  suggestions from a model on this machine only, finding the server and model running
+│   │   │   ├── test_local_model.py
+│   │   │   └── README.md
 │   │   ├── location-history/
 │   │   │   ├── location_history.py   places and trips from a Timeline export, by day
 │   │   │   ├── test_location_history.py

@@ -833,16 +833,6 @@
   "network": "the model its plugin reaches, to ask for suggestions"
  },
  {
-  "name": "local-model",
-  "kind": "deps",
-  "section": "Assistants",
-  "line": "Suggestions from a model on this machine only, such as Ollama, llama.cpp's server, llamafile, KoboldCpp or Jan.",
-  "source": "new",
-  "needs": "a local model server; licence varies by model",
-  "writes": "record",
-  "network": "loopback"
- },
- {
   "name": "lore",
   "kind": "stdlib",
   "section": "Play",

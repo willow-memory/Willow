@@ -681,6 +681,9 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "model-shelf": ("model_shelf.py", ["list", "--home", "{tmp}"]),
     "model-fit": ("model_fit.py", ["check", "--root", "{tmp}"]),
     "model-card": ("model_card.py", ["list", "--box", "{box}"]),
+    # a closed port on this machine: the bite serves, the ask is unreachable, 42
+    "local-model": ("local_model.py", ["ask", "--box", "{box}", "--url", "http://127.0.0.1:9/v1",
+                    "--model", "m", "tomatoes"]),
     # the question is the passage itself, an echo: nothing is asked, the port never reached
     "same-way": ("same_way.py", ["--box", "{box}", "--url", "http://127.0.0.1:9/v1",
                  "--model", "m", "--questions", "{pile}/garden.md"]),
