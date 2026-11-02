@@ -391,6 +391,8 @@ def place(changed: list[str], graph: Graph) -> Plan:
                 plan.gate(f"ports:{port}", p, "vectors/")
         elif port := under(p, "ports/"):
             plan.gate(f"ports:{port}", p, f"ports/{port}")
+        elif p.startswith("ui/") and not p.endswith(".md"):
+            plan.gate("tests:ui", p, "ui/, willow's own UI")
         elif person := under(p, "demo/"):
             if person == "php2shell":
                 plan.gate("demo:php2shell", p, "demo/php2shell")
@@ -439,6 +441,8 @@ def place(changed: list[str], graph: Graph) -> Plan:
             plan.gate("tests:vectors", t, "reached by import")
         elif t.startswith(STACK.rsplit("/", 1)[0] + "/"):
             plan.gate("demo:stack", t, "reached by import")  # its tests are that gate
+        elif t.startswith("ui/"):
+            plan.gate("tests:ui", t, "reached by import")
         elif t == TEODORA_WORDS:
             plan.gate("demo:teodora-words", t, "reached by import")
         elif person := under(t, "demo/"):

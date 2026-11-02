@@ -121,8 +121,10 @@ def test_an_add_on_gets_its_tests_its_share_of_the_contract_its_docs_and_its_mut
 def test_the_steps_are_ordered_cheapest_first(plan_of):
     got = plan_of("adapters/stdlib/changed/changed.py").stdout
     order = [g for g in gate_names(got)]
+    # tests:ui: ui/canvas.py names stack.py, the runner it runs, and a file
+    # named so is the stack demo's, which runs changed: by name, never less
     assert order == ["lint:check", "lint:format", "tests:adapters", "tests:adapters",
-                     "tests:docs", "demo:stack", "mutants:changed"]  # fmt: skip
+                     "tests:docs", "tests:ui", "demo:stack", "mutants:changed"]  # fmt: skip
     narrow, own = (
         "WILLOW_ONLY=changed pytest",
         "pytest adapters/stdlib/changed/test_changed.py",
