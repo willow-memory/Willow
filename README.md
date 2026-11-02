@@ -126,11 +126,11 @@ says how to pick one up:
 <!-- willow:front show=pick week=2026-W45 -->
 **Add-on of the week**
 
-**[model-fit](adapters/stdlib/model-fit/)** — Whether this machine's GPU, NPU or Apple silicon can run a local model, and about how fast, before you download one.
+**[almanac-keep](adapters/stdlib/almanac-keep/)** — An Almanac entry's best permitted copy, from the publisher or its ranked recovery list, fetched into your folder with its SHA-256.
 
-*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 309 built add-ons in name order.*
+*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 310 built add-ons in name order.*
 
-[Every add-on, 309 built of 510, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 310 built of 511, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 

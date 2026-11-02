@@ -19,11 +19,11 @@ is written: `no-install` or `needs-install`; `offline`, `this-machine` or
 tag its author chose, if any. *near* names the three add-ons closest to it.
 
 <!-- willow:pools -->
-`████████████░░░░░░░░` **309 of 510 built** · 460 need no install · 50 need one
+`████████████░░░░░░░░` **310 of 511 built** · 461 need no install · 50 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
-| Reading more kinds of files | 78 | 35 | 105 | 8 |
+| Reading more kinds of files | 79 | 35 | 106 | 8 |
 | Finding things | 32 | 14 | 36 | 10 |
 | Your own words | 19 | 7 | 23 | 3 |
 | Keeping track | 40 | 16 | 56 | 0 |
@@ -78,9 +78,9 @@ its list: someone who speaks the language can add one without much Python.
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W45 -->
-**[model-fit](adapters/stdlib/model-fit/)** — Whether this machine's GPU, NPU or Apple silicon can run a local model, and about how fast, before you download one.
+**[almanac-keep](adapters/stdlib/almanac-keep/)** — An Almanac entry's best permitted copy, from the publisher or its ranked recovery list, fetched into your folder with its SHA-256.
 
-*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 309 built add-ons in name order.*
+*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 310 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -110,7 +110,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - [**codebase-memory**](adapters/stdlib/codebase-memory/) — codebase-memory-mcp's code graph, read from a copy of its SQLite file: each function, what calls it, and its file and line. *new* `no-install` `offline` `codebase` `sqlite` · near: nestor, code-comments, bookmarks
 - **confluence** (idea) — A Confluence space's HTML export as plain text, page by page. *new* `no-install` `offline` `html` · near: wallabag, recipes, mediawiki
 - [**corpus-lens**](adapters/stdlib/corpus-lens/) — corpus-lens's process reports on your own sessions with agents, as passages: where your intent arrives, who writes the code. *new* `no-install` `offline` `agent` `session` · near: agent-transcript, session-cost, sarif
-- [**csv-rows**](adapters/stdlib/csv-rows/) — CSV and TSV tables as one passage per row, the header row kept once as the first. *new* `no-install` `offline` `readings` `log` · near: json-paths, google-keep, irc
+- [**csv-rows**](adapters/stdlib/csv-rows/) — CSV and TSV tables as one passage per row, the header row kept once as the first. *new* `no-install` `offline` `csv` `log` · near: json-paths, google-keep, irc
 - [**day-one**](adapters/stdlib/day-one/) — Day One's JSON export: each journal entry as a dated passage, with its place and weather. *new* `no-install` `offline` `json` · near: gh-json, chats, karakeep
 - [**discord**](adapters/stdlib/discord/) — Discord's data package: your messages, one dated line each, by server and channel. *new* `no-install` `offline` `message` `channel` · near: slack, irc, matrix
 - **dotfiles** (idea) — Your dotfiles as passages: which file sets what, for 'where did I set my editor?' *new* `no-install` `offline` `sets` `editor` · near: start, clauses, mcp
@@ -133,10 +133,10 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - [**joplin**](adapters/stdlib/joplin/) — Joplin's .jex export, read without unpacking it: each note as plain text with its title and dates. *new* `no-install` `offline` `unpacking` `title` · near: evernote, apple-notes, karakeep
 - **journiv** (idea) — Journiv journal entries, with their moods, as dated lines, once its export format is settled. *new* `no-install` `offline` `journal` `entry` · near: day-one, mood, jrnl
 - [**jrnl**](adapters/stdlib/jrnl/) — jrnl journals: each [YYYY-MM-DD HH:MM] entry as a dated passage. *new* `no-install` `offline` `journal` `entry` · near: shell-history, outdated, day-one
-- [**json-paths**](adapters/stdlib/json-paths/) — Any JSON or JSON Lines file as plain lines, one passage per record, each value beside its key. *new* `no-install` `offline` `paths` `key` · near: org, csv-rows, matrix
+- [**json-paths**](adapters/stdlib/json-paths/) — Any JSON or JSON Lines file as plain lines, one passage per record, each value beside its key. *new* `no-install` `offline` `paths` `key` · near: org, csv-rows, rst
 - [**jupyter**](adapters/stdlib/jupyter/) — Jupyter notebooks: Markdown cells, code and text outputs as passages, cited by cell. *new* `no-install` `offline` `markdown` `notebook` · near: code-comments, markdown, evernote
 - [**karakeep**](adapters/stdlib/karakeep/) — Karakeep's JSON export: bookmarks, notes and tags as plain text. *new* `no-install` `offline` `tags` `json` · near: wallabag, evernote, joplin
-- [**latex**](adapters/stdlib/latex/) — LaTeX sources as plain prose, commands stripped, cited by the .tex file's own lines. *new* `no-install` `offline` · near: org, code-comments, bibtex
+- [**latex**](adapters/stdlib/latex/) — LaTeX sources as plain prose, commands stripped, cited by the .tex file's own lines. *new* `no-install` `offline` `prose` · near: org, code-comments, rst
 - **lessons** (idea) — Lesson plans from the Emerging Rule community library, by grade and subject, as passages a teacher can ask. *new* `no-install` `offline` `plan` `lesson` · near: my-lessons, lesson-time, support-plan
 - [**letterboxd**](adapters/stdlib/letterboxd/) — Letterboxd's export: the films you've watched, your ratings and reviews, as dated lines. *new* `no-install` `offline` `title` · near: goodreads, matrix, musicxml
 - [**linkedin**](adapters/stdlib/linkedin/) — LinkedIn's data export: messages, posts and connections as dated lines. *new* `no-install` `offline` `posts` `message` · near: reddit, meta-archive, discord
@@ -147,7 +147,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - [**mail**](adapters/stdlib/mail/) — .eml and .mbox files, with sender, date and subject kept. *new* `no-install` `offline` · near: text, office, calendar
 - [**man-pages**](adapters/stdlib/man-pages/) — The man pages installed on this machine as plain text, so you can ask your own system's docs. *new* `no-install` `offline` · near: rtf, books, notion
 - [**manifests**](adapters/deps/manifests/) — Docker Compose and Kubernetes YAML: each service, image, port and volume as a passage. Needs PyYAML; MIT. *new* `needs-install` `offline` · near: photos, pdf, ocr
-- [**markdown**](adapters/stdlib/markdown/) — Any Markdown file as the text it shows, line for line, with no word the file doesn't hold. *new* `no-install` `offline` `markdown` · near: rtf, text, evernote
+- [**markdown**](adapters/stdlib/markdown/) — Any Markdown file as the text it shows, line for line, with no word the file doesn't hold. *new* `no-install` `offline` `markdown` · near: rtf, rst, text
 - [**mastodon**](adapters/stdlib/mastodon/) — A Mastodon or Pixelfed account archive's outbox.json: your posts as dated lines. *new* `no-install` `offline` `posts` `archive` · near: x-archive, meta-archive, linkedin
 - [**matrix**](adapters/stdlib/matrix/) — Element's room export, JSON or HTML: one dated line per message in each Matrix room. *new* `no-install` `offline` `message` · near: slack, chats, irc
 - [**mediawiki**](adapters/stdlib/mediawiki/) — A MediaWiki XML dump: each page's latest text, with its title and when it changed. *new* `no-install` `offline` `title` `xml` · near: notion, jira, joplin
@@ -175,7 +175,8 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - [**readwise**](adapters/stdlib/readwise/) — Readwise's highlights export: every highlight with its book or article, and your note on it. *new* `no-install` `offline` `book` `highlights` · near: wallabag, books, goodreads
 - **recipes** (idea) — Recipes from saved web pages and recipe-app exports, as plain text: what can I cook with leeks? *new* `no-install` `offline` `web` `saved` · near: web-pages, confluence, wallabag
 - [**reddit**](adapters/stdlib/reddit/) — Reddit's data export: your posts, comments and saved items as dated lines. *new* `no-install` `offline` `posts` `data` · near: linkedin, meta-archive, mastodon
-- [**rtf**](adapters/stdlib/rtf/) — RTF documents as plain text. *new* `no-install` `offline` · near: markdown, evernote, books
+- [**rst**](adapters/stdlib/rst/) — reStructuredText files as plain prose, line for line, with directives, roles, links and tables read. *new* `no-install` `offline` `prose` `links` · near: markdown, rtf, latex
+- [**rtf**](adapters/stdlib/rtf/) — RTF documents as plain text. *new* `no-install` `offline` · near: markdown, rst, evernote
 - [**sarif**](adapters/stdlib/sarif/) — SARIF reports from code scanners such as CodeQL and Semgrep: each finding as a passage with its rule and place. *new* `no-install` `offline` `reports` · near: code-comments, places, codebase-memory
 - [**sbom**](adapters/stdlib/sbom/) — SBOMs in SPDX or CycloneDX JSON: each component, its version and licence, as passages. *new* `no-install` `offline` `json` `version` · near: lockfiles, gh-json, day-one
 - [**screenplay**](adapters/stdlib/screenplay/) — Fountain and Final Draft scripts: scenes, characters and lines, cited by scene. *new* `no-install` `offline` · near: code-comments, bibtex, jupyter
@@ -358,7 +359,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**fixity**](adapters/stdlib/fixity/) — Your folder's files hashed again now and then, the hashes kept on the record, and a file that changed with no edit of yours flagged as rot. *new* `no-install` `offline` `rot` `flagged` · near: hook-replay, hook-pin, changed
 - [**format-rot**](adapters/stdlib/format-rot/) — Files in formats that may stop opening (old office files, proprietary ones, those no reader handles) flagged while you can still convert them. *new* `no-install` `offline` `office` `rot` · near: office, fixity, sheets
 - **git-notes** (idea) — Approved answers kept as git notes on the commits they cite, so they travel with the repo to any forge. Needs the git program; GPL, called not linked. *new* `needs-install` `offline` `commit` `forge` · near: mirror, stale, git-history
-- **handoff** (idea) — A box handed to the person you name (an executor, a carer): read only, your seals kept, theirs their own. *new* `no-install` `offline` `person` · near: family-box, datasette, serve
+- **handoff** (idea) — A box handed to the person you name (an executor, a carer): read only, your seals kept, theirs their own. *new* `no-install` `offline` `person` · near: family-box, serve, datasette
 - [**history**](adapters/stdlib/history/) — Your record in plain sentences: what was asked when, what found nothing, what you approved; places and counts, never the words. *new* `no-install` `offline` `counts` `sentence` `everyday` · near: export, again, plain
 - [**ids**](adapters/stdlib/ids/) — Every file and passage given its Software Heritage ID and IPFS CID, names the rest of the world already uses. *new* `no-install` `offline` `world` `ids` · near: dialect, a11y-check, ripgrep
 - **in-case** (idea) — A letter for the people you trust, if something happens to you: where things are and who to call, from your files, sealed by you. *new* `no-install` `offline` `people` `trust` · near: witness, people, nicknames
@@ -402,7 +403,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 
 ## Privacy and safety
 
-- [**a11y-check**](adapters/stdlib/a11y-check/) — Your documents checked for screen-reader problems: images without descriptions, headings out of order. *new* `no-install` `offline` `problems` `order` · near: scrub, transcript-redact, vscode
+- [**a11y-check**](adapters/stdlib/a11y-check/) — Your documents checked for screen-reader problems: images without descriptions, headings out of order. *new* `no-install` `offline` `problems` `share` · near: scrub, transcript-redact, vscode
 - [**advisories**](adapters/stdlib/advisories/) — Security advisories from a downloaded OSV or GitHub advisory database, matched to your lockfiles: which dependency each names, and since when. *new* `no-install` `offline` `lockfiles` `dependency` · near: outdated, typosquat, pins
 - **forget** (idea) — Stops a file being searched, recorded on the chain, so what was taken out is known and nothing else is touched. *new* `no-install` `offline` `taken` `known` · near: ro-crate, merkle, transcript-redact
 - [**install-scripts**](adapters/stdlib/install-scripts/) — The install scripts the packages in node_modules would run (preinstall, install, postinstall), each cited by file and line. *new* `no-install` `offline` `install` `package` · near: package-contents, package-docs, code-comments
@@ -507,7 +508,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - [**capture**](adapters/stdlib/capture/) — A note written into your folder in one line, with its type and tags, so the next question can find it. *new* `no-install` `offline` `tags` · near: coming-up, notes, serve
 - [**cloudevents**](adapters/stdlib/cloudevents/) — Record rows in the CloudEvents envelope, for any tool that already reads them. *new* `no-install` `offline` `envelope` `tool` · near: prov, ro-crate, in-toto
 - **datasette** (idea) — Your record and approved answers browsable in Datasette, read only: tables, facets and SQL on this machine. Needs Datasette; Apache-2.0. Reaches this machine only. *new* `needs-install` `this-machine` `sql` · near: record-sql, report, ro-crate
-- [**deep-links**](adapters/stdlib/deep-links/) — Each answer as a link that opens the file at the line (RFC 5147 lines, browser text fragments). *new* `no-install` `offline` `links` `browser` · near: jetbrains, browse, vscode
+- [**deep-links**](adapters/stdlib/deep-links/) — Each answer as a link that opens the file at the line (RFC 5147 lines, browser text fragments). *new* `no-install` `offline` `links` `browser` · near: browse, jetbrains, vscode
 - **desktop** (idea) — A small window to ask and approve, with nothing to install: Python's own tkinter. *new* `no-install` `offline` · near: copilot, cursor, opencode
 - **dictate** (idea) — Ask out loud: your question spoken and turned to text on this machine. Needs faster-whisper; MIT. Goes online: the model, downloaded once. *new* `needs-install` `online` `turned` · near: oakenscroll, agent-transcript, man-pages
 - [**emacs**](adapters/stdlib/emacs/) — Answers in an Emacs compilation buffer, each a jump to its file and line. Uses hosts. *new* `no-install` `offline` `jump` `command` · near: vim, vscode, pipe
@@ -521,9 +522,9 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - [**make-it-so**](adapters/stdlib/make-it-so/) — Write down what you want done and the passages it rests on; it checks they still hold, and never does it for you. *new* `no-install` `offline` `down` · near: decisions, predict, tip-pin
 - **obsidian** (idea) — Ask from inside Obsidian, answers as links to the note and line. Reaches this machine only. *new* `no-install` `this-machine` `links` `obsidian` · near: jetbrains, notes, deep-links
 - [**pipe**](adapters/stdlib/pipe/) — Questions in on standard input, answers out one per line: JSON lines, or file:line: text for grep and fzf. *box* `no-install` `offline` `json` · near: vim, shell, emacs
-- [**plain**](adapters/stdlib/plain/) — Answers as sentences instead of JSON, each with its file and line. *new* `no-install` `offline` `sentence` · near: readings, privacy, aider
+- [**plain**](adapters/stdlib/plain/) — Answers as sentences instead of JSON, each with its file and line. *new* `no-install` `offline` · near: readings, privacy, aider
 - **pr-context** (idea) — On a pull request, the passages in the repo's docs that name the files it changes, posted as one comment. Goes online: the forge, through the workflow's token, to post the comment. *new* `no-install` `online` `pull` `requests` · near: quote-review, github-archive, forgejo-dump
-- [**print**](adapters/stdlib/print/) — An answer as a printable page with its sources, to take to an appointment; --large for big, high-contrast type. *new* `no-install` `offline` `prints` `everyday` · near: web-pages, pipe, hosts
+- [**print**](adapters/stdlib/print/) — An answer as a printable page with its sources, to take to an appointment; --large for big, high-contrast type. *new* `no-install` `offline` `prints` `everyday` · near: web-pages, pipe, across
 - **qr** (idea) — An answer as a QR code on screen, to carry it to your phone without the network. *new* `no-install` `offline` `screen` `phone` · near: scrub, a11y-check, code-first
 - [**repo-pile**](adapters/stdlib/repo-pile/) — Public repositories you list, cloned and made askable, keeping only those under a licence an Apache-2.0 project can use. Uses again, backup, changed, digest, export, history, privacy, quote-check, scan, secrets-audit, stale, todo, xref. Goes online: github.com (or the --source you give), to clone the repositories you list. *new* `no-install` `online` `project` `research` · near: upstream-desk, pile-build, pile-serve
 - [**rss-out**](adapters/stdlib/rss-out/) — New approved answers as an RSS feed file, for any feed reader. *new* `no-install` `offline` · near: annotations, in-toto, static-search
@@ -601,7 +602,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - **contribute** (idea) — For anyone on GitHub, what they can do next in the projects they work on: open pull requests, reviews asked of them, issues assigned. Goes online: GitHub, through gh, with your own login. *bot* `no-install` `online` `requests` `pull` · near: upstream-desk, github-archive, quote-review
 - **contributions** (idea) — A ledger of who contributes to the repo: first-timers and outside contributors called out, bots known by type, never by name. Goes online: GitHub, through gh, with your own login. *bot* `no-install` `online` `bot` `calls` · near: bot-venv, hook-guard, welcome
 - **crates** (idea) — A Rust port of kernel.py on crates.io, held to the same vectors as the other four. Goes online: crates.io, to publish a release a maintainer tags. *new* `no-install` `online` `vectors` `port` · near: go, swift, compiled
-- **docs-i18n** (idea) — The README in other languages, each checked for drift against the English one. *new* `no-install` `offline` `readme` `drift` · near: readme, llms-txt, package-docs
+- **docs-i18n** (idea) — The README in other languages, each checked for drift against the English one. *new* `no-install` `offline` `readme` `drift` · near: readme, llms-txt, pair-drift
 - [**fast-tests**](adapters/deps/fast-tests/) — The test suite across every core with pytest-xdist, the same tests in a fraction of the time. Needs pytest-xdist; MIT. *new* `needs-install` `offline` `core` `fraction` · near: parallel, pdf, mcp
 - **forgejo** (idea) — What willow's repo needs from Forgejo, Gitea or Codeberg: its host.json and an Actions file, so the repo can move there. Goes online: the Forgejo instance's API, to read the author of a pull request a security report points to. *new* `no-install` `online` `repo` `actions` · near: gitlab, sourcehut, github
 - **fuzz** (idea) — Random and broken inputs thrown at the kernel's commands, every crash kept as a test. *new* `no-install` `offline` `test` `fuzz` · near: hook-fuzz, property-tests, hook-replay

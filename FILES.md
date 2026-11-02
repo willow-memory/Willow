@@ -956,6 +956,10 @@ willow/
 │   │   │   ├── rss_out.py   your approved answers as an RSS 2.0 feed, newest first, an item for each
 │   │   │   ├── test_rss_out.py
 │   │   │   └── README.md
+│   │   ├── rst/
+│   │   │   ├── rst.py   a reStructuredText file as the text it shows, line for line, markup taken off
+│   │   │   ├── test_rst.py
+│   │   │   └── README.md
 │   │   ├── rtf/
 │   │   │   ├── rtf.py   an RTF document as the plain text it displays
 │   │   │   ├── test_rtf.py

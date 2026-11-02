@@ -485,6 +485,10 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         b"#+TITLE: Agenda\n* Home\n** TODO [#A] Ring the vet  :pets:\nSCHEDULED: <2024-03-05 Tue 09:00 +1w>\n:PROPERTIES:\n:CREATED: [2024-03-01 Fri]\n:END:\n"
         b"| Plant | Sown |\n|-------+------|\n| Leek | 2024-03-01 |\n"
     )}),
+    "rst": ("rst.py", {"tides.rst": (
+        b"Tides\n=====\n\n.. note:: Bring a coat.\n\nWe measure the tide at "
+        b"`six harbours <https://tides.example/>`_.\n\n.. code-block:: python\n\n   rise = 4.2\n"
+    )}),
 }  # fmt: skip
 
 #: the language packs' codes: a pack is words- and its language's ISO 639 code
