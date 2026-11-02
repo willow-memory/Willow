@@ -477,6 +477,10 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
     )}),
     "text": ("text.py", {"boiler.txt": b"\xff\xfe" + (
         "Boiler service\r\n\r\nServiced by Keane Heating on 12 March 2019.\r\n").encode("utf-16-le")}),
+    "json-paths": ("json_paths.py", {"orders.json": (
+        b'{"shop": "Hollow Lane", "orders": [{"id": 7, "items": [{"name": "leeks", "qty": 2}]},'
+        b' {"id": 8, "items": [{"name": "oats", "qty": 1}]}]}\n'
+    ), "log.jsonl": b'{"day": "2026-03-02", "said": "the boiler is fixed"}\nnot json\n'}),
 }  # fmt: skip
 
 #: the language packs' codes: a pack is words- and its language's ISO 639 code
