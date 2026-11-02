@@ -5,6 +5,7 @@ source: bot
 added: 2026-11-01
 writes: record
 network: none
+uses: forecasts
 -->
 # market-calls
 

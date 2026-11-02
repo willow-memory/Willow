@@ -6,6 +6,7 @@ added: 2026-10-28
 writes: to
 network: none
 tags: pile
+uses: pile-rank, pile-rungs
 -->
 # pile-serve
 

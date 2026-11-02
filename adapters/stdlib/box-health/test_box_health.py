@@ -19,6 +19,9 @@ NOW = ["--now", "2026-10-24T00:00:00Z"]
 spec = importlib.util.spec_from_file_location("kernel_for_box_health", KERNEL)
 kernel = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(kernel)
+_bh = importlib.util.spec_from_file_location("box_health_for_test", SCRIPT)
+bh = importlib.util.module_from_spec(_bh)
+_bh.loader.exec_module(bh)
 
 
 def k(*argv: str) -> subprocess.CompletedProcess:
@@ -170,9 +173,16 @@ def test_files_the_bite_cant_read_are_counted_by_extension_with_the_add_on_that_
              "f": b"\0", ".hidden/x.pdf": b"\0", "ok.txt": b"fine\n"}  # fmt: skip
     got = run("--box", str(box(tmp_path, files)), *NOW)
     assert got.returncode == 42
+    # a reader is named only when it's here: all of them in willow
+    pdf, office = (", read by " + n if bh.reader_for(e) else "" for n, e in (("pdf", ".pdf"), ("office", ".docx")))  # fmt: skip
     assert (
-        "6 files can't be read (2 .pdf, read by pdf; 1 (no extension); 1 .bin; 1 .docx, read by office; 1 .txt)"
+        f"6 files can't be read (2 .pdf{pdf}; 1 (no extension); 1 .bin; 1 .docx{office}; 1 .txt)"
         in got.stdout
+    )
+    adapters = HERE.parents[1]
+    assert bool(pdf) == (adapters / "deps" / "pdf").is_dir()
+    assert bool(office) == any(
+        (adapters / k / "office").is_dir() for k in ("stdlib", "deps")
     )
 
 

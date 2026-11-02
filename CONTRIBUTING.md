@@ -137,6 +137,10 @@ that adds one entry to [adapters/planned.json](adapters/planned.json):
 - `tags` is optional: one tag of your own. The rest (needs an install or not,
   goes online or not, two topic words) are worked out from the card each time
   the list is written; `similar.py tags NAME` shows them.
+- `uses` and `looks-for` name the add-ons it leans on: what it needs beside it,
+  and what it uses only when it's there (it says so when it isn't). CI runs
+  its tests in a copy holding only it and what it `uses`
+  ([adapters/README.md](adapters/README.md#what-a-folder-holds)).
 - `writes` and `network` are its promises, set out in
   [adapters/README.md](adapters/README.md#its-promises-checked). Whoever
   builds it is held to them.

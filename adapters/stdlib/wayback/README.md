@@ -6,6 +6,7 @@ added: 2026-10-24
 writes: to
 network: archive.org, to find the archived copy and fetch it
 tags: sources
+uses: snapshot
 -->
 # wayback
 

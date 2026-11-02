@@ -13,6 +13,9 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 SCRIPT = HERE / "hook_start.py"
 KERNEL = HERE.parents[2] / "kernel.py"
+#: what it tells comes from digest, whose stale and coming-up sections each
+#: need that add-on beside it: each test holds it to whichever is here
+BESIDE = {n: (HERE.parent / n).is_dir() for n in ("stale", "coming-up")}
 NOW = ["--now", "2026-10-24T00:00:00Z"]
 
 
@@ -104,13 +107,16 @@ def test_what_waits_is_told_as_the_json_a_session_start_hook_reads(tmp_path):
     assert "1 suggestion waiting for their approval" in text
     assert "only the person approves, and an assistant never does" in text
     assert "30 October (why: the note)" in text
-    assert "1 approved answer is stale" in text
-    assert "Coming up (next 14 days): 2026-10-30 car.txt:1" in text
+    assert ("1 approved answer is stale" in text) == BESIDE["stale"]
+    assert ("Coming up (next 14 days): 2026-10-30 car.txt:1" in text) == BESIDE[
+        "coming-up"
+    ]
 
 
 def test_the_days_window_decides_what_is_coming_up(tmp_path):
     b = life(tmp_path)
-    assert "Coming up" in context(run("--box", str(b), "--days", "6", *NOW))
+    six = "Coming up" in context(run("--box", str(b), "--days", "6", *NOW))
+    assert six == BESIDE["coming-up"]
     assert "Coming up" not in context(run("--box", str(b), "--days", "5", *NOW))
 
 

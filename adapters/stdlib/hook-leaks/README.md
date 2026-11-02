@@ -6,6 +6,7 @@ added: 2026-10-29
 writes: nothing
 network: none
 tags: hooks
+uses: privacy
 -->
 # hook-leaks
 

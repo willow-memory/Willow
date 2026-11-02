@@ -6,6 +6,7 @@ added: 2026-10-24
 writes: nothing
 network: none
 tags: everyday
+uses: privacy
 -->
 # secrets-audit
 

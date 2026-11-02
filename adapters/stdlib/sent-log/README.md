@@ -5,6 +5,7 @@ source: new
 added: 2026-11-01
 writes: nothing
 network: none
+uses: openai-compatible
 -->
 # sent-log
 

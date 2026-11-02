@@ -190,6 +190,7 @@ willow/
 │   │   │   ├── bugs.py       makes BUGS.md from the tests marked as known bugs
 │   │   │   ├── whose.py      which commit wrote these lines, or with a host's host.json which pull request
 │   │   │   ├── cores.py      ci.py's run as its shards at once on this machine, a record each, shown together
+│   │   │   ├── alone.py      each add-on's tests in a copy holding only the kernel, the add-on and what its card uses
 │   │   │   ├── guard/
 │   │   │   │   └── sitecustomize.py  holds each add-on to its card while its tests run
 │   │   │   ├── test-times.json  seconds each add-on test file took, to cut the add-ons' tests into even chunks
@@ -200,6 +201,7 @@ willow/
 │   │   │   ├── test_bugs.py  bugs.py's tests: strict marks only, and the list made from them
 │   │   │   ├── test_whose.py whose.py's tests: commits, merges, squashes, another host, places refused
 │   │   │   ├── test_cores.py cores.py's tests: every gate once across the shards, refusals that run nothing
+│   │   │   ├── test_alone.py alone.py's tests: what a card uses comes along, and leaning on what it doesn't name fails
 │   │   │   └── README.md     its card: gates, states, the guard and exit codes
 │   │   ├── ci-cache/
 │   │   │   ├── ci_cache.py    a cache key per ecosystem from a repo's lockfiles, so CI skips the reinstall

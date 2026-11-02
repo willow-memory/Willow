@@ -6,6 +6,7 @@ added: 2026-10-28
 writes: record
 network: none
 tags: pile
+uses: pile-rank, scan
 -->
 # pile-gold
 

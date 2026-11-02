@@ -5,6 +5,7 @@ source: new
 added: 2026-10-26
 writes: nothing
 network: none
+uses: mcp-lite, pipe
 -->
 # hosts
 

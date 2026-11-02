@@ -122,6 +122,7 @@ def test_the_gates_run_in_one_fixed_order_and_cover_every_part():
         "lint:check", "lint:format",
         "tests:beats", "tests:kernel", "tests:docs",
         *(f"tests:adapters-{k}" for k in range(1, ci.ADAPTER_CHUNKS + 1)),
+        "tests:alone",
         "tests:vectors",
         *(f"tests:strip-{k}" for k in range(1, ci.STRIP_CHUNKS + 1)),
         "tests:constitution", "tests:coverage",

@@ -52,6 +52,20 @@ A name is built when its folder exists, and then it must not also be planned.
 Nothing is decided by hand in the list: building an add-on is what turns its
 an idea into a built one.
 
+What an add-on leans on is on its card, never found by reading its code:
+
+    uses:       the add-ons it needs beside it, to run or to be tested; a
+                stack that has it has these too
+    looks-for:  the add-ons it uses when they're beside it; without one it
+                still runs and says what's missing, and its tests hold
+                either way
+    runs-in:    repo, for a tool that works on willow's own repository (CI,
+                the list, the branches); it isn't copied out of it
+
+Each is optional, a list of add-on names with commas between. `check`
+refuses a name that isn't an add-on (built, for a built one), the add-on
+itself, or a name in both lists.
+
 Tags: each entry in the list shows up to five, worked out by the similar
 add-on every time the list is written and never stored, so they can't go
 stale when a card changes: whether it needs an install, whether it goes
@@ -132,6 +146,9 @@ EXAMPLES = {
     "For maintainers": ["mutants", "ci"],
 }  # fmt: skip
 FIELDS = {"section", "line", "source", "writes", "network"}
+#: what an add-on leans on, by name: optional, and checked against the list
+LEANS = ("uses", "looks-for")
+RUNS_IN = {"repo"}
 #: the tags the similar add-on works out, which a card's own tag is never one of
 FACT_TAGS = {"no-install", "needs-install", "offline", "this-machine", "online"}
 #: what an add-on may write: the guard in adapters/stdlib/ci/guard holds it
@@ -222,6 +239,20 @@ def addons() -> list[dict]:
             raise Refused(f"{where}: a stdlib add-on needs nothing")
         if a["built"] and not re.fullmatch(r"\d{4}-\d{2}-\d{2}", a.get("added", "")):
             raise Refused(f"{where}: added is the date it was built, YYYY-MM-DD")
+        if a.get("runs-in", "repo") not in RUNS_IN:
+            raise Refused(f"{where}: runs-in is repo, or left out")
+    names = {a["name"]: a["built"] for a in out}
+    for a in out:
+        where = a.get("path") or f"planned.json: {a['name']}"
+        lists = {k: split_tags(a.get(k, "")) for k in LEANS}
+        for k, got in lists.items():
+            for n in got:
+                if n == a["name"]:
+                    raise Refused(f"{where}: {k} names the add-on itself")
+                if n not in names or (a["built"] and not names[n]):
+                    raise Refused(f"{where}: {k} names {n!r}, which isn't a built add-on")  # fmt: skip
+        if set(lists["uses"]) & set(lists["looks-for"]):
+            raise Refused(f"{where}: an add-on is in uses or looks-for, not both")
     return out
 
 
@@ -236,6 +267,8 @@ def facts(a: dict) -> str:
     out = []
     if a["kind"] == "deps":
         out.append(f"Needs {a['needs']}.")
+    if a.get("uses"):
+        out.append(f"Uses {', '.join(split_tags(a['uses']))}.")
     if a["network"] == "loopback":
         out.append("Reaches this machine only.")
     elif a["network"] != "none":

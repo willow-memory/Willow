@@ -6,6 +6,7 @@ added: 2026-10-26
 writes: to
 network: none
 tags: index
+uses: scan
 -->
 # index-cache
 

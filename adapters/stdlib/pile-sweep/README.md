@@ -6,6 +6,7 @@ added: 2026-10-28
 writes: nothing
 network: none
 tags: pile
+uses: pile-gold, pile-rank, scan
 -->
 # pile-sweep
 

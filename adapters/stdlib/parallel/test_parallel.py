@@ -3,17 +3,67 @@ mirror. Each folder is mirrored whole by the reader, so a sub-mirror is exactly
 the reader's own bytes (backlinks and all); it sums what the readers wrote,
 is deterministic, escalates when nothing was readable, and refuses a bad
 command line, an unknown reader, a non-folder, or two folders sharing a name.
-It drives the real notes reader."""
+
+It drives a stand-in reader named notes, in a scratch copy beside this
+parallel.py and the kernel, that keeps the readers' contract: `mirror --from
+FOLDER --to MIRROR` writes each .md file's text, upper-cased, and says `wrote
+N files to MIRROR; skipped M`. So these tests hold wherever parallel.py is,
+and test parallel, not the reader it runs."""
 
 from __future__ import annotations
 
+import shutil
 import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 HERE = Path(__file__).resolve().parent
-PAR = HERE / "parallel.py"
-NOTES = HERE.parent / "notes" / "notes.py"
+PAR = None  # the scratch copy's parallel.py, set for each test
+NOTES = None  # and its stand-in reader
+
+READER = """import sys
+from pathlib import Path
+
+argv = sys.argv[1:]
+if argv[:1] != ["mirror"] or "--from" not in argv or "--to" not in argv:
+    print("usage: notes.py mirror --from FOLDER --to MIRROR", file=sys.stderr)
+    sys.exit(2)
+src, to = Path(argv[argv.index("--from") + 1]), Path(argv[argv.index("--to") + 1])
+wrote = skipped = 0
+for f in sorted(src.rglob("*")):
+    if not f.is_file():
+        continue
+    if f.suffix != ".md":
+        skipped += 1
+        continue
+    out = to / f.relative_to(src)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(f.read_text(encoding="utf-8").upper(), encoding="utf-8")
+    wrote += 1
+print(f"wrote {wrote} files to {to}; skipped {skipped}")
+if __name__ == "__main__":
+    sys.exit(0 if wrote else 42)
+"""
+
+
+@pytest.fixture(autouse=True)
+def scratch(tmp_path_factory, monkeypatch):
+    root = tmp_path_factory.mktemp("willow")
+    (root / "adapters" / "stdlib" / "parallel").mkdir(parents=True)
+    (root / "adapters" / "stdlib" / "notes").mkdir(parents=True)
+    shutil.copy2(HERE.parents[2] / "kernel.py", root / "kernel.py")
+    shutil.copy2(
+        HERE / "parallel.py", root / "adapters" / "stdlib" / "parallel" / "parallel.py"
+    )
+    (root / "adapters" / "stdlib" / "notes" / "notes.py").write_text(READER)
+    monkeypatch.setitem(
+        globals(), "PAR", root / "adapters" / "stdlib" / "parallel" / "parallel.py"
+    )
+    monkeypatch.setitem(
+        globals(), "NOTES", root / "adapters" / "stdlib" / "notes" / "notes.py"
+    )
 
 
 def run(*argv: str) -> subprocess.CompletedProcess:

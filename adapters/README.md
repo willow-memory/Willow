@@ -58,6 +58,21 @@ kernel has) or `new`, and `added` is the date it was built. An add-on in
 `deps/` adds `needs` (what to install, and its licence) and `floor` (its
 floor versions, and why when above the rule's).
 
+What an add-on leans on is on its card too, so whoever copies it knows what
+to copy with it:
+
+    uses: amounts
+    looks-for: coming-up, stale
+
+`uses` names the add-ons it needs beside it, to run or to be tested; a stack
+that has it has these too. `looks-for` names the ones it uses when they're
+there: without one it still runs and says what's missing, and its tests hold
+either way. `runs-in: repo` marks a tool that works on willow's own
+repository, which isn't copied out of it. Each is optional. CI holds every
+add-on to them twice: `stdlib/ci/test_contract.py` fails one whose code reaches an
+add-on its card doesn't name, and `tests:alone` runs each add-on's tests in a
+copy holding only the kernel, the add-on and what it `uses`.
+
 `tags` is optional: one tag of your own, lowercase words joined by -, for
 finding it. The rest are worked out every time the list is written, never
 stored, so they follow the card when it changes: whether it needs an

@@ -5,6 +5,8 @@ source: new
 added: 2026-10-24
 writes: nothing
 network: none
+uses: ci
+runs-in: repo
 -->
 # test-impact
 

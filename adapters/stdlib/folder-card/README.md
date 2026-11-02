@@ -5,6 +5,7 @@ source: new
 added: 2026-11-01
 writes: to
 network: none
+uses: gaps
 -->
 # folder-card
 

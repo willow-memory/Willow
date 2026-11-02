@@ -6,6 +6,7 @@ added: 2026-10-24
 writes: record
 network: loopback
 tags: everyday
+looks-for: digest, words-de, words-es, words-fr, words-pt
 -->
 # browse
 

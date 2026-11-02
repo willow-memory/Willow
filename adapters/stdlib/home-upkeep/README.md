@@ -5,6 +5,7 @@ source: new
 added: 2026-10-29
 writes: nothing
 network: none
+uses: car
 -->
 # home-upkeep
 

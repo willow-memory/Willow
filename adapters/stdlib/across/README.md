@@ -6,6 +6,7 @@ added: 2026-10-25
 writes: nothing
 network: none
 tags: everyday
+looks-for: digest, export, readings, timeline
 -->
 # across
 

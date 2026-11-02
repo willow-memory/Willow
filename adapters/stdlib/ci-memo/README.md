@@ -5,6 +5,8 @@ source: new
 added: 2026-10-27
 writes: to
 network: none
+uses: ci
+runs-in: repo
 -->
 # ci-memo
 
