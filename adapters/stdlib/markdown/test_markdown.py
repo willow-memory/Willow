@@ -230,6 +230,14 @@ def test_table_cells_empty_escaped_extra_and_where_the_table_ends():
     ) == ["", "a; b", "1; x | y", "2", "5; 6; 7", "after", "", "", "only; header"]
 
 
+def test_a_line_with_no_pipe_ends_a_table_and_is_read_as_what_it_is():
+    """A heading or a list item straight after a table's last row, with no
+    blank line between, is markup of its own, not one more row."""
+    assert md("| unit | mark |\n|---|---|\n| APMA | 71% |\n## Next steps\n- [ ] book **BSTX**\n") == [
+        "", "unit; mark", "APMA; 71%", "Next steps", "- [ ] book BSTX"
+    ]  # fmt: skip
+
+
 def test_a_table_with_only_its_header_and_one_at_the_very_end():
     assert md("text\na | b\n--|--\nafter\n") == ["text", "", "a; b", "after"]
     assert mod.convert(b"| a | b |\n|---|---|") == "\na; b\n"
