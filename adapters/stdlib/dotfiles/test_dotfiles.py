@@ -161,6 +161,10 @@ def test_fish_set_abbr_paths_and_functions():
     got = lines("config/fish/config.fish", REPO["config/fish/config.fish"])
     assert got == {1: "PAGER=less", 2: "gco=git checkout",
                    3: "fish_add_path ~/.cargo/bin", 4: "mkcd()"}  # fmt: skip
+    both = "alias ll 'ls -la'\nalias la='ls -A'\nabbr -a gp\n"
+    assert lines("config.fish", both) == {1: "ll=ls -la", 2: "la=ls -A"}, (
+        "fish takes an alias either way; an abbr with no expansion is not one"
+    )
 
 
 def test_ini_conf_and_properties_files():
