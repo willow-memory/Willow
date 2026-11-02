@@ -227,3 +227,30 @@ def test_a_bad_command_line_is_refused(tmp_path):
     got = run("--from", w, "--to", tmp_path / "c.md")
     assert got.returncode == 2 and "could not write" in got.stderr
     assert (tmp_path / "c.md").read_text(encoding="utf-8") == "mine\n"
+
+
+def test_a_card_reads_back_as_it_was_written(tmp_path):
+    w = write(tmp_path, "m.gguf", gguf(GEMMA))
+    assert run("--from", w, "--to", tmp_path / "card.md").returncode == 0
+    fields = wc.header((tmp_path / "card.md").read_text(encoding="utf-8"))
+    assert list(fields) == list(wc.FIELDS)
+    assert (fields["name"], fields["quantization"], fields["file"]) == (
+        "Gemma 3 4b It",
+        "Q4_K_M",
+        "m.gguf",
+    )
+    assert fields["sha256"] == hashlib.sha256(w.read_bytes()).hexdigest()
+
+
+@pytest.mark.parametrize(
+    "text, want",
+    [
+        ("# notes\n<!-- willow-model\nname: X\nlimits: slow: very\nno colon\n-->\nbody: not read\n",
+         {"name": "X", "limits": "slow: very"}),
+        ("<!-- willow-model\nname: X\n", {}),
+        ("name: X\n-->\n", {}),
+        ("<!-- willow-model\nname:\n-->\n", {"name": ""}),
+    ],
+)  # fmt: skip
+def test_a_header_is_read_only_between_its_marks(text, want):
+    assert wc.header(text) == want

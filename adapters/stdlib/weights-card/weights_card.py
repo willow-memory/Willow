@@ -21,7 +21,8 @@ file's SHA-256 and size. CARD is written once, a new file:
     -->
 
 A value the header doesn't hold is written as `not in the header`, never
-guessed and never left out. Only the file's name goes on the card, not
+guessed and never left out. `header(text)` reads a card back, for the add-ons
+that read cards. Only the file's name goes on the card, not
 where it lives, so the same file gives the same bytes on any machine.
 
 Exit codes, the kernel's: 0 a card written; 42 not a weights file it can
@@ -254,6 +255,22 @@ def sha256_file(path: Path) -> str:
         for block in iter(lambda: f.read(io.DEFAULT_BUFFER_SIZE), b""):
             h.update(block)
     return h.hexdigest()
+
+
+def header(text: str) -> dict[str, str]:
+    """A card's willow-model header, key to value, as written; empty when the
+    text has none. The one reader of the format, for the add-ons that read
+    cards (weights-pin, model-card)."""
+    _, marker, rest = text.partition(MARKER)
+    head, end, _ = rest.partition("-->")
+    if not marker or not end:
+        return {}
+    fields = {}
+    for line in head.splitlines():
+        key, sep, value = line.partition(":")
+        if sep:
+            fields[key.strip()] = value.strip()
+    return fields
 
 
 def card(path: Path) -> str:
