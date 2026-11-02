@@ -10,6 +10,15 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `csv-rows`: CSV and TSV tables as one passage per row, numbered by the
+  row's line in the file, with the header row kept once as the first
+  passage, so a question about one row finds that row and not a run of 500
+  characters. No word is written in every row, not even a header, so a
+  question about something absent is answered by no row. The delimiter
+  (comma, tab, semicolon or pipe) is chosen by one fixed rule; a first line
+  holding a number is data, not a header; a wide row is cut at a cell so
+  nothing is lost. A file not in UTF-8, with no data row or malformed is
+  skipped and counted. (#172)
 - `markdown`: any Markdown file as the text it shows, line for line, so a
   passage in the mirror is on the .md file's own line, and no word the file
   doesn't hold. Front matter as its values; a table's header once, at the

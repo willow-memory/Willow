@@ -471,6 +471,10 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         "<p>The roof is fixed.</p>\n").encode()}),
     "clauses": ("clauses.py", {"terms.html": (
         "<h1>Terms</h1><p>We keep your data. We delete it on request.</p>\n").encode()}),
+    "csv-rows": ("csv_rows.py", {"census.csv": (
+        b"Surname,Forename,Townland,Age,Occupation\n"
+        b"Considine,Patrick,Caherfeenick,17,Farm Labourer\n"
+    )}),
 }  # fmt: skip
 
 #: the language packs' codes: a pack is words- and its language's ISO 639 code
