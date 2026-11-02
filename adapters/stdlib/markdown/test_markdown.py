@@ -116,6 +116,34 @@ def test_a_list_under_a_key_is_joined_onto_its_line_only_when_it_runs_to_the_end
     ]
 
 
+def test_front_matter_edges_a_person_would_see():
+    # an empty quoted value, a bracket that never closes, a comment line,
+    # YAML closed with ..., an empty block, and three items run to the end
+    assert md('---\nempty: ""\nnote: [draft\n# a comment\nk: v\n...\nbody\n') == [
+        "",
+        "",
+        "[draft",
+        "",
+        "v",
+        "",
+        "body",
+    ]
+    assert md("---\n---\nbody\n") == ["", "", "body"]
+    assert md("---\n---\n- a\n---\n") == ["", "", "- a"]
+    assert md("---\ntags:\n- a\n- b\n- c\n---\nx\n") == [
+        "",
+        "a, b, c",
+        "",
+        "",
+        "",
+        "",
+        "x",
+    ]
+    # no front matter: a first line that comes again is just a line
+    assert md("same\nmiddle\nsame\n") == ["same", "middle", "same"]
+    assert md("+++\nx\n") == ["+++", "x"]
+
+
 def test_toml_front_matter_and_a_fence_that_never_closes():
     assert md('+++\ntitle = "Hives"\ntags = ["bees", "honey"]\n[extra]\n+++\nx\n') == [
         "",
@@ -217,6 +245,31 @@ def test_table_cells_empty_escaped_extra_and_where_the_table_ends():
     ]
 
 
+def test_a_table_with_only_its_header_and_one_at_the_very_end():
+    assert md("a | b\n--|--\nafter\n") == ["a; b", "", "after"]
+    assert mod.convert(b"| a | b |\n|---|---|") == "a; b\n"
+
+
+def test_setext_edges_and_what_is_never_a_setext_heading():
+    assert mod.convert(b"Title\n===") == "Title\n"
+    assert md("Title\n==\nnext\n") == ["Title", "", "next"]
+    assert md("> quoted\n---\nafter\n") == ["quoted", "", "after"]
+
+
+def test_fences_close_only_on_their_own_kind_and_length():
+    assert md("````\n```\n~~~~\n````\nafter *em*\n") == [
+        "",
+        "```",
+        "~~~~",
+        "",
+        "after em",
+    ]
+
+
+def test_a_comment_that_closes_at_the_start_of_a_line():
+    assert md("a <!-- x\n-->after\nb <!--\n--> c\n") == ["a", "after", "b", "c"]
+
+
 def test_emphasis_is_taken_off_but_never_inside_a_word_or_a_sum():
     assert md(
         "**bold** __strong__ *em* _em_ ~~gone~~ snake_case_name 2*3*4 a * b\n"
@@ -265,9 +318,15 @@ def test_images_and_badges_are_their_alt_text():
 
 def test_reference_links_are_their_text_and_their_definitions_blank():
     assert md(
-        "Use [the guide][g], [g], [Guide][] and ![a map][g]; [unknown] stays.\n\n"
+        "Use [the guide][g], [g], [Guide][] and ![a map][g]; [unknown] and [x][nope] stay.\n\n"
         '[g]: https://guide.example "Guide"\n[guide]: <https://guide.example>\nend\n'
-    ) == ["Use the guide, g, Guide and a map; [unknown] stays.", "", "", "", "end"]
+    ) == [
+        "Use the guide, g, Guide and a map; [unknown] and [x][nope] stay.",
+        "",
+        "",
+        "",
+        "end",
+    ]
 
 
 def test_wikilinks_and_embeds_are_the_text_they_show():
