@@ -16,7 +16,7 @@ says how). The first was v0.1.0.
   and `kernel.py`'s own `flock` on the record. `vectors/compare.py --port go`
   holds it to all 4,668 vectors and the whole session, both ways, with zero
   unexplained differences, and CI's ports job runs it as `ports:go`. The
-  `go` idea comes off the list.
+  `go` idea comes off the list. (#191)
 - `in-process`, suggestions from a GGUF model loaded inside the add-on
   itself through llama-cpp-python: `in_process.py ask --box DIR --model
   FILE.gguf "question"` is openai-compatible's bite-then-propose with no
