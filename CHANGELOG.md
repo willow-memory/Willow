@@ -10,6 +10,11 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `strava`, Strava's export and GPX files as dated lines: `python
+  adapters/stdlib/strava/strava.py mirror --from FOLDER --to MIRROR` writes
+  each run, ride and walk in activities.csv, a .gpx or a .tcx (gzipped or
+  not) as a line with its date, type, name, distance and time, in the zone
+  the file gives, never a guessed one. .fit files are skipped and counted.
 - `ui/`, willow's own UI (v1): `python ui/canvas.py` opens a page on this
   machine that goes the way a person does. Choose your folders; see what the
   kernel alone makes of them, as counts, never a file's words or name; start
