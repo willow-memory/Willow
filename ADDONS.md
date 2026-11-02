@@ -18,7 +18,7 @@ Each carries up to five tags: four filled in from its card (`no-install` or
 or `writes-output`; its section), and any the card's author adds or changes.
 
 <!-- willow:pools -->
-`████████████░░░░░░░░` **292 of 505 built** · 451 need no install · 54 need one
+`████████████░░░░░░░░` **293 of 505 built** · 451 need no install · 54 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
@@ -28,7 +28,7 @@ or `writes-output`; its section), and any the card's author adds or changes.
 | Keeping track | 45 | 16 | 61 | 0 |
 | Trust and proof | 31 | 23 | 45 | 9 |
 | Privacy and safety | 12 | 3 | 15 | 0 |
-| Assistants | 29 | 43 | 61 | 11 |
+| Assistants | 30 | 42 | 61 | 11 |
 | Ways to use it | 23 | 18 | 37 | 4 |
 | Play | 12 | 29 | 37 | 4 |
 | For maintainers | 19 | 25 | 39 | 5 |
@@ -67,19 +67,19 @@ its list: someone who speaks the language can add one without much Python.
 ## Newest
 
 <!-- willow:newest -->
+- 2026-11-02 · [**weights-card**](adapters/stdlib/weights-card/) — A model card filled in from the weights file's own header, GGUF or safetensors (architecture, quantization, context length, licence), so the card says what the file says.
 - 2026-11-01 · [**weakest-link**](adapters/stdlib/weakest-link/) — Each answer's inputs marked measured, fitted or assumed, and the result worth its weakest input, never an average.
 - 2026-11-01 · [**thesis**](adapters/stdlib/thesis/) — A thesis's claims, each tied to the source that backs it, and a list of the ones with none.
 - 2026-11-01 · [**sent-log**](adapters/stdlib/sent-log/) — Which of your passages went to which online model, read from the record by model card: what left this machine and where to.
 - 2026-11-01 · [**rules**](adapters/stdlib/rules/) — A game's or a house's rules, sealed section by section, so 'what does the rule say?' answers with the exact section.
-- 2026-11-01 · [**quotes**](adapters/stdlib/quotes/) — Every quote in a document checked against your files: as written, almost (and what it adds, drops or changes), or not there.
 <!-- /willow:newest -->
 
 ## Add-on of the week
 
-<!-- willow:pick week=2026-W44 -->
-**[habits](adapters/stdlib/habits/)** — Streaks from the lines you write each day: how many days in a row, and which you missed.
+<!-- willow:pick week=2026-W45 -->
+**[install-scripts](adapters/stdlib/install-scripts/)** — The install scripts the packages in node_modules would run (preinstall, install, postinstall), each cited by file and line.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 292 built add-ons in name order.*
+*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 293 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -487,7 +487,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - **serve-piles** (idea) — serve's piles grouped on all four W's -- who, when, what and where -- not where alone, so a model meets a question from every box that touched it. *new* `no-install` `offline` `writes-output` `trust` `assistant`
 - **silence-log** (idea) — A model that ran and said nothing kept as its own row, so silence is told apart from a model that never ran. *bot* `no-install` `offline` `records` `assistant`
 - **translate** (idea) — An answer translated by a local model, the original kept beside it, the translation held until you seal it. Needs a local model server; licence varies by model. Reaches this machine only. *new* `needs-install` `this-machine` `records` `assistant`
-- **weights-card** (idea) — A model card filled in from the weights file's own header, GGUF or safetensors (architecture, quantization, context length, licence), so the card says what the file says. *new* `no-install` `offline` `writes-output` `assistant`
+- [**weights-card**](adapters/stdlib/weights-card/) — A model card filled in from the weights file's own header, GGUF or safetensors (architecture, quantization, context length, licence), so the card says what the file says. *new* `no-install` `offline` `writes-output` `assistant`
 - [**windsurf**](adapters/stdlib/windsurf/) — Windsurf asks your folder and hands in suggestions, through the mcp add-on. *new* `no-install` `offline` `read-only` `assistant`
 - [**zed**](adapters/stdlib/zed/) — Zed's assistant asks your folder and hands in suggestions, through the mcp add-on. *new* `no-install` `offline` `read-only` `assistant`
 

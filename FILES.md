@@ -1101,6 +1101,10 @@ willow/
 │   │   │   ├── web_pages.py  saved .html and .mhtml as their paragraphs, under the address they came from
 │   │   │   ├── test_web_pages.py
 │   │   │   └── README.md
+│   │   ├── weights-card/
+│   │   │   ├── weights_card.py  a model card from a GGUF or safetensors file's own header, with the file's SHA-256
+│   │   │   ├── test_weights_card.py
+│   │   │   └── README.md
 │   │   ├── why-not/
 │   │   │   ├── why_not.py   why a question got not enough to say: which words nothing holds, the nearest passages and what kind of file would answer
 │   │   │   ├── test_why_not.py

@@ -10,6 +10,14 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `weights-card`, a model card filled in from the weights file's own
+  header: `weights_card.py --from FILE --to CARD` reads a GGUF (v2, v3) or
+  safetensors header for the architecture, name, quantization (llama.cpp's
+  name for `general.file_type`, or safetensors' types by parameters),
+  context length, licence and parameter count, adds the whole file's SHA-256
+  and size, and writes `not in the header` for what the file doesn't say.
+  Only the file's name goes on the card. Checked against llama.cpp's own
+  `gguf` reader on two real GGUF files.
 - `game-master`, a tabletop story played beat by beat with its rolls and
   rulings as rows on the record: `game_master.py --box DIR act Grit --world
   W.json` rolls dice's 2d6 plus the character's stat and reads it strong, weak

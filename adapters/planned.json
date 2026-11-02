@@ -2078,16 +2078,6 @@
   "tags": "no-install, online, records, play"
  },
  {
-  "name": "weights-card",
-  "kind": "stdlib",
-  "section": "Assistants",
-  "line": "A model card filled in from the weights file's own header, GGUF or safetensors (architecture, quantization, context length, licence), so the card says what the file says.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, assistant"
- },
- {
   "name": "weights-pin",
   "kind": "stdlib",
   "section": "Trust and proof",
