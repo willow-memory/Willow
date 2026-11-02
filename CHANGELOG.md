@@ -10,6 +10,12 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `webarchive`, pages Safari saved as .webarchive as their readable text:
+  `webarchive.py mirror --from FOLDER --to MIRROR` writes what web-pages
+  writes for the same page (the address it came from, its title, its
+  paragraphs), then each frame's text under the frame's own address.
+  It reads the archive's charset, then the page's, then UTF-8; a file that
+  isn't a web archive, or a saved PDF or picture, is skipped and counted.
 - `ui/`, willow's own UI (v1): `python ui/canvas.py` opens a page on this
   machine that goes the way a person does. Choose your folders; see what the
   kernel alone makes of them, as counts, never a file's words or name; start

@@ -21,6 +21,7 @@ tests and its share of these, and nothing else.
 from __future__ import annotations
 
 import os
+import plistlib
 import re
 import subprocess
 import sys
@@ -458,6 +459,9 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
     "web-pages": ("web_pages.py", {"saved.html": (
         "<!-- saved from url=(0020)https://example.org/ -->\n"
         "<p>The roof is fixed.</p>\n").encode()}),
+    "webarchive": ("webarchive.py", {"roof.webarchive": plistlib.dumps({"WebMainResource": {
+        "WebResourceData": b"<title>Roof</title><p>The roof is fixed.</p>", "WebResourceMIMEType": "text/html",
+        "WebResourceTextEncodingName": "UTF-8", "WebResourceURL": "https://example.org/"}}, fmt=plistlib.FMT_BINARY)}),
     "clauses": ("clauses.py", {"terms.html": (
         "<h1>Terms</h1><p>We keep your data. We delete it on request.</p>\n").encode()}),
 }  # fmt: skip
