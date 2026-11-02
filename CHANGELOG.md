@@ -18,7 +18,7 @@ says how). The first was v0.1.0.
   (comma, tab, semicolon or pipe) is chosen by one fixed rule; a first line
   holding a number is data, not a header; a wide row is cut at a cell so
   nothing is lost. A file not in UTF-8, with no data row or malformed is
-  skipped and counted.
+  skipped and counted. (#172)
 - `markdown`: any Markdown file as the text it shows, line for line, so a
   passage in the mirror is on the .md file's own line, and no word the file
   doesn't hold. Front matter as its values; a table's header once, at the
