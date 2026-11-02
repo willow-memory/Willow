@@ -481,6 +481,10 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         b'{"shop": "Hollow Lane", "orders": [{"id": 7, "items": [{"name": "leeks", "qty": 2}]},'
         b' {"id": 8, "items": [{"name": "oats", "qty": 1}]}]}\n'
     ), "log.jsonl": b'{"day": "2026-03-02", "said": "the boiler is fixed"}\nnot json\n'}),
+    "org": ("org.py", {"todo.org": (
+        b"#+TITLE: Agenda\n* Home\n** TODO [#A] Ring the vet  :pets:\nSCHEDULED: <2024-03-05 Tue 09:00 +1w>\n:PROPERTIES:\n:CREATED: [2024-03-01 Fri]\n:END:\n"
+        b"| Plant | Sown |\n|-------+------|\n| Leek | 2024-03-01 |\n"
+    )}),
 }  # fmt: skip
 
 #: the language packs' codes: a pack is words- and its language's ISO 639 code

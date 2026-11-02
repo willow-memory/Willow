@@ -10,6 +10,15 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `org`: Emacs Org-mode files as plain lines, line for line: the mirror has
+  the source's lines, so a passage is cited by the .org file's own line.
+  Org's markup comes off (stars, drawer and block lines, a timestamp's
+  brackets and day name, link brackets, emphasis where Org reads it), a
+  heading with only headings under it is said once on the headline below so
+  each outline entry is its own passage, and a table's header begins the
+  passage of its rows. It adds no word of its own: TODO, SCHEDULED, CLOCK and a
+  property's name stay as written, and a test asks that no word but a date's
+  digits is in most passages of a file. (#175)
 - `json-paths`: any JSON or JSON Lines file as plain lines, one passage per
   record: each value beside its key, numbers digit for digit, each element
   of the first array too big for one passage (and each JSON Lines line) its
