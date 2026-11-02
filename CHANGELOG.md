@@ -10,6 +10,14 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `bookmarks`: browser bookmarks and history: the bookmark HTML export every
+  browser writes, a Firefox backup (.json or .jsonlz4), Chrome's
+  `Bookmarks` file, and copies of Firefox's `places.sqlite` and Chrome's
+  `History`, opened read-only. Each bookmark is a passage with its day,
+  title, address, folder, tags and description; each page visited is one
+  passage with its last visit, visit count and the days it was visited. No
+  label or other word stands on every passage, so a question about something
+  the folder lacks isn't answered by one. (#178)
 - `asciidoc`: AsciiDoc documents (.adoc, .asciidoc, and .asc when it isn't
   PGP armor) as the text they show, line for line, so a passage is cited by
   the file's own line. Titles, the document's own attributes as `name: value`,

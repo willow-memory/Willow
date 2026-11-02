@@ -19,11 +19,11 @@ is written: `no-install` or `needs-install`; `offline`, `this-machine` or
 tag its author chose, if any. *near* names the three add-ons closest to it.
 
 <!-- willow:pools -->
-`████████████░░░░░░░░` **311 of 512 built** · 462 need no install · 50 need one
+`████████████░░░░░░░░` **312 of 512 built** · 462 need no install · 50 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
-| Reading more kinds of files | 80 | 35 | 107 | 8 |
+| Reading more kinds of files | 81 | 34 | 107 | 8 |
 | Finding things | 32 | 14 | 36 | 10 |
 | Your own words | 19 | 7 | 23 | 3 |
 | Keeping track | 40 | 16 | 56 | 0 |
@@ -78,9 +78,9 @@ its list: someone who speaks the language can add one without much Python.
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W45 -->
-**[starter-words](adapters/stdlib/starter-words/)** — A first-day words list to copy and edit (owes = invoice, outstanding; doctor = dr, physician, clinic).
+**[jira](adapters/stdlib/jira/)** — Jira's issue export, CSV or XML: each issue, comment and status change as dated passages.
 
-*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 311 built add-ons in name order.*
+*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 312 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -99,7 +99,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - [**bank**](adapters/stdlib/bank/) — Bank CSV and OFX statements as dated lines, with spending by month. *new* `no-install` `offline` · near: mastodon, discord, linkedin
 - [**bibtex**](adapters/stdlib/bibtex/) — .bib files: each reference as a passage, so you can ask which paper said it and get its key. *new* `no-install` `offline` · near: pgn, code-comments, latex
 - **bluesky** (idea) — A Bluesky repo.car export: your posts as dated lines, read by a small CAR and CBOR reader of its own. *new* `no-install` `offline` `posts` `repo` · near: mastodon, linkedin, reddit
-- **bookmarks** (idea) — Browser bookmarks (HTML export, Firefox JSON) and history, read from a copy of its SQLite file. *new* `no-install` `offline` `sqlite` `html` · near: codebase-memory, nestor, writefreely
+- [**bookmarks**](adapters/stdlib/bookmarks/) — Browser bookmarks (HTML export, Firefox JSON) and history, read from a copy of its SQLite file. *new* `no-install` `offline` `json` `sqlite` · near: codebase-memory, nestor, wallabag
 - [**books**](adapters/stdlib/books/) — Kindle "My Clippings.txt" highlights and .epub text. *new* `no-install` `offline` `highlights` `book` · near: oakenscroll, almanac, text
 - [**calendar**](adapters/stdlib/calendar/) — .ics events and .vcf contacts as dated lines. *new* `no-install` `offline` · near: texts, chats, office
 - **canvas** (idea) — Canvas course exports: pages, assignments and discussions as passages. *new* `no-install` `offline` `assignments` `course` · near: moodle, syllabus, google-classroom
@@ -108,7 +108,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - [**ci-logs**](adapters/stdlib/ci-logs/) — CI run logs you downloaded (GitHub Actions, GitLab CI, Forgejo Actions): each failing step as a passage. *new* `no-install` `offline` `log` `failed` · near: ci-why, logs, ci-cache
 - [**clauses**](adapters/stdlib/clauses/) — A policy, contract or set of terms as one sentence a passage, so an answer lands on the clause, and what changed between two versions, sentence by sentence. *new* `no-install` `offline` `policies` · near: web-pages, photos, pdf
 - [**code-comments**](adapters/stdlib/code-comments/) — A codebase's comments and docstrings as passages, cited by file and line. *new* `no-install` `offline` `codebase` · near: codebase-memory, asciidoc, latex
-- [**codebase-memory**](adapters/stdlib/codebase-memory/) — codebase-memory-mcp's code graph, read from a copy of its SQLite file: each function, what calls it, and its file and line. *new* `no-install` `offline` `codebase` `sqlite` · near: nestor, code-comments, bookmarks
+- [**codebase-memory**](adapters/stdlib/codebase-memory/) — codebase-memory-mcp's code graph, read from a copy of its SQLite file: each function, what calls it, and its file and line. *new* `no-install` `offline` `codebase` `sqlite` · near: bookmarks, nestor, code-comments
 - **confluence** (idea) — A Confluence space's HTML export as plain text, page by page. *new* `no-install` `offline` `html` · near: wallabag, recipes, mediawiki
 - [**corpus-lens**](adapters/stdlib/corpus-lens/) — corpus-lens's process reports on your own sessions with agents, as passages: where your intent arrives, who writes the code. *new* `no-install` `offline` `agent` `session` · near: agent-transcript, session-cost, sarif
 - [**csv-rows**](adapters/stdlib/csv-rows/) — CSV and TSV tables as one passage per row, the header row kept once as the first. *new* `no-install` `offline` `csv` `log` · near: json-paths, google-keep, irc
@@ -119,7 +119,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - [**family-tree**](adapters/stdlib/family-tree/) — Family trees from GEDCOM files: who was born where and when, and which record says so. *new* `no-install` `offline` · near: places, bibtex, code-comments
 - **forgejo-dump** (idea) — A Forgejo or Gitea dump, Codeberg's included: issues, pull requests and wiki pages as dated passages. *new* `no-install` `offline` `requests` `issues` · near: github-archive, forgejo, gh-json
 - [**gh-json**](adapters/stdlib/gh-json/) — What gh prints with --json (issues, pull requests, runs), saved to a file and read as dated passages. *new* `no-install` `offline` `issues` `pull` · near: goodreads, day-one, jira
-- [**git-history**](adapters/stdlib/git-history/) — Commit messages and diffs as a dated pile: "when did we change the retry limit?" *new* `no-install` `offline` `message` `history` · near: clauses, location-history, discord
+- [**git-history**](adapters/stdlib/git-history/) — Commit messages and diffs as a dated pile: "when did we change the retry limit?" *new* `no-install` `offline` `history` `message` · near: clauses, location-history, discord
 - **github-archive** (idea) — Your GitHub account's data export: the issues, pull requests, reviews and comments you wrote, as dated passages with their links. *new* `no-install` `offline` `issues` `requests` · near: quote-review, contribute, forgejo-dump
 - **gitlab-export** (idea) — A GitLab project export, read without unpacking it: its issues, merge requests and comments as dated passages. *new* `no-install` `offline` `issues` `comments` · near: github-archive, joplin, warc
 - [**goodreads**](adapters/stdlib/goodreads/) — Goodreads and StoryGraph exports: the books you've read, when, and what you thought of them. *new* `no-install` `offline` `title` `book` · near: letterboxd, slack, musicxml
@@ -199,10 +199,10 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - [**texts**](adapters/stdlib/texts/) — Phone text messages, from an Android SMS backup or an iPhone backup's copy, one dated line per message. *new* `no-install` `offline` `message` `backup` · near: chats, slack, irc
 - [**trello**](adapters/stdlib/trello/) — A Trello board's JSON export: cards, checklists and comments, by list. *new* `no-install` `offline` `comments` `json` · near: karakeep, day-one, reddit
 - **voice** (idea) — Dictation, calls and lectures transcribed into dated text. Needs faster-whisper; MIT. Goes online: the model, downloaded once. *new* `needs-install` `online` `transcribed` `voice` · near: writefreely, texts, calendar
-- [**wallabag**](adapters/stdlib/wallabag/) — wallabag's JSON or HTML export: saved entries as plain text, with their tags. *new* `no-install` `offline` `highlights` `tags` · near: karakeep, readwise, evernote
+- [**wallabag**](adapters/stdlib/wallabag/) — wallabag's JSON or HTML export: saved entries as plain text, with their tags. *new* `no-install` `offline` `html` `json` · near: karakeep, readwise, evernote
 - **warc** (idea) — WARC web archives, from Webrecorder, Heritrix or the Internet Archive, read without unpacking: each captured page's text with its address and the time it was captured. *new* `no-install` `offline` `address` `unpacking` · near: gitlab-export, joplin, archivebox
 - [**web-pages**](adapters/stdlib/web-pages/) — Saved web pages, .html and .mhtml, as their readable text, with the address they came from. Uses clauses. *new* `no-install` `offline` `address` `web` · near: snapshot, pdf, photos
-- **writefreely** (idea) — WriteFreely posts, from its export or a copy of its SQLite database, as dated text. *new* `no-install` `offline` `copy` `sqlite` · near: bookmarks, apple-notes, nestor
+- **writefreely** (idea) — WriteFreely posts, from its export or a copy of its SQLite database, as dated text. *new* `no-install` `offline` `copy` `sqlite` · near: apple-notes, bookmarks, nestor
 - [**x-archive**](adapters/stdlib/x-archive/) — An X (Twitter) archive: your posts, replies and DMs as dated lines. *new* `no-install` `offline` `posts` `message` · near: meta-archive, mastodon, linkedin
 - **zotero** (idea) — Your Zotero library, from a copy of zotero.sqlite: items, notes and PDF annotations, each with its citation. *new* `no-install` `offline` `copy` `sqlite` · near: annotations, apple-notes, writefreely
 
@@ -251,7 +251,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - **symbols** (idea) — Exact definitions and references for Python code: where a name is defined, and every place it's used. Needs scip-python; MIT. *new* `needs-install` `offline` `reference` · near: hook-impact, people, code-shape
 - [**typos**](adapters/stdlib/typos/) — Forgives misspellings in questions. *new* `no-install` `offline` · near: accents, abbreviations, again
 - **upgrade-notes** (idea) — Before an upgrade: the changelog lines between the version you lock and the one you'd move to, from the package's own files. Goes online: the registry (PyPI, npm or crates.io), to fetch the newer version's changelog. *new* `no-install` `online` `package` `version` · near: lockfiles, package-contents, install-scripts
-- **vectors** (idea) — The meaning add-on's vectors kept in the store's own SQLite file, so they're computed once per passage, not at every question. Needs sqlite-vec and model2vec; MIT or Apache-2.0. *bot* `needs-install` `offline` `sqlite` `store` `pile` · near: pile-store, codebase-memory, welcome
+- **vectors** (idea) — The meaning add-on's vectors kept in the store's own SQLite file, so they're computed once per passage, not at every question. Needs sqlite-vec and model2vec; MIT or Apache-2.0. *bot* `needs-install` `offline` `store` `sqlite` `pile` · near: pile-store, codebase-memory, welcome
 - **watch** (idea) — A file re-read the moment it changes (inotify, FSEvents, or polling), so the index is always current. *new* `no-install` `offline` `index` `moment` · near: index-cache, scan, policy-watch
 - [**why-not**](adapters/stdlib/why-not/) — When the answer is 'not enough to say', which words found nothing, and what kind of file would have answered. *new* `no-install` `offline` · near: nicknames, scan, latent
 
@@ -352,7 +352,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**changed**](adapters/stdlib/changed/) — What's new, edited or deleted in your folder since the last check, as fingerprint rows. *bot* `no-install` `offline` `edit` `rows` `everyday` · near: box-health, policy-watch, stale
 - [**claim-check**](adapters/stdlib/claim-check/) — A claim checked against your sources: the passages that hold all of its parts, the ones that hold only some, and the parts no file names. *new* `no-install` `offline` `claim` `top` · near: thesis, all, typosquat
 - [**contradictions**](adapters/stdlib/contradictions/) — Two passages that disagree about the same date or amount, side by side. *new* `no-install` `offline` `amount` · near: duplicates, joins, amounts
-- [**decisions**](adapters/stdlib/decisions/) — A recorded no with its reason and the condition that would reopen it, so a rejection is kept, not forgotten. *new* `no-install` `offline` · near: predict, again, pile-sweep
+- [**decisions**](adapters/stdlib/decisions/) — A recorded no with its reason and the condition that would reopen it, so a rejection is kept, not forgotten. *new* `no-install` `offline` · near: predict, pile-sweep, again
 - [**diverge**](adapters/stdlib/diverge/) — Where two copies part, your record and its backup zip or two copies of a folder, down to the first row, file and line that differ. *bot* `no-install` `offline` `backup` `zip` `everyday` · near: backup, three-two-one, restore-drill
 - **encrypt** (idea) — Keeps the record folder encrypted at rest. Needs cryptography; Apache-2.0 or BSD. *new* `needs-install` `offline` `rest` · near: make-it-so, almanac-keep, google-keep
 - [**export**](adapters/stdlib/export/) — Approved answers, and the question log (counts only, never words), as Markdown or CSV. *box* `no-install` `offline` `counts` · near: again, history, pgp
@@ -372,7 +372,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**merkle**](adapters/stdlib/merkle/) — A Merkle tree over the record, so one row can be proven with a handful of hashes, not the whole file. *new* `no-install` `offline` `hash` `rows` · near: ci, hook-replay, hosts
 - **mirror** (idea) — Checks each mirror of a repo on another forge holds the same commits as the original, so losing a host loses nothing. Needs the git program; GPL, called not linked. Goes online: each mirror's git URL, to read its refs. *new* `needs-install` `online` `commit` `repo` · near: repro, git-notes, provenance
 - **model-recall** (idea) — Every sealed answer a model suggested, listed for a second look once you mark its card as flawed; nothing is unsealed for you. *new* `no-install` `offline` `second` · near: openai-compatible, model-exam, share
-- [**nestor**](adapters/stdlib/nestor/) — Answers Nestor records a person has checked, read from a copy of its SQLite store, each citing who checked it and when. *new* `no-install` `offline` `sqlite` `copy` · near: codebase-memory, bookmarks, bibtex
+- [**nestor**](adapters/stdlib/nestor/) — Answers Nestor records a person has checked, read from a copy of its SQLite store, each citing who checked it and when. *new* `no-install` `offline` `sqlite` `copy` · near: bookmarks, codebase-memory, pile-store
 - **notary** (idea) — The record's newest hash timestamped by an outside time server, so anyone can see it existed by then. Goes online: an RFC 3161 time server you choose, sent only the hash. *new* `no-install` `online` `hash` `existed` · near: opentimestamps, persona-card, three-two-one
 - **opentimestamps** (idea) — The record's newest hash anchored by OpenTimestamps, proof that it existed by a given block. Goes online: the OpenTimestamps calendars, sent only the hash. *new* `no-install` `online` `hash` `existed` · near: notary, merkle, fight5e
 - [**pair-drift**](adapters/stdlib/pair-drift/) — Figures a summary says that its full text doesn't: a draft and its packet side by side, ranges and billions read as written. *new* `no-install` `offline` `ranges` `pairs` `writing` · near: contradictions, pins, nightstand
@@ -396,7 +396,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - **time-capsule** (idea) — A note sealed now and opened on a date you choose, with the record proving it wasn't changed. *new* `no-install` `offline` `prov` `open` · near: prov, hook-compact, fixity
 - [**timeline**](adapters/stdlib/timeline/) — A dated timeline of one matter (a dispute, an illness, a tenancy), every line cited, to hand to a lawyer, doctor or council. *new* `no-install` `offline` `timeline` · near: said, across, first-mention
 - [**tip-pin**](adapters/stdlib/tip-pin/) — Where your record ends, written down somewhere willow can't reach, so rows cut off the end or rewritten from some point on are caught where verify can't. *new* `no-install` `offline` `rows` `pin` · near: ci-memo, ci, persona-card
-- [**wayback**](adapters/stdlib/wayback/) — The Wayback Machine's copy of a page from a window of days, saved beside your own snapshot and compared with it byte for byte. Uses snapshot. Goes online: archive.org, to find the archived copy and fetch it. *new* `no-install` `online` `snapshot` `byte` `sources` · near: snapshot, policy-watch, archivebox
+- [**wayback**](adapters/stdlib/wayback/) — The Wayback Machine's copy of a page from a window of days, saved beside your own snapshot and compared with it byte for byte. Uses snapshot. Goes online: archive.org, to find the archived copy and fetch it. *new* `no-install` `online` `snapshot` `copy` `sources` · near: snapshot, policy-watch, archivebox
 - [**weakest-link**](adapters/stdlib/weakest-link/) — Each answer's inputs marked measured, fitted or assumed, and the result worth its weakest input, never an average. *new* `no-install` `offline` `links` · near: stale, export, jetbrains
 - [**weights-pin**](adapters/stdlib/weights-pin/) — A local model's weights file hashed before each run and refused when it differs from the hash on its model card. Uses weights-card. *new* `no-install` `offline` `local` `weights` · near: weights-card, model-card, model-fit
 - **witness** (idea) — A second person's seal beside yours, for answers that need two people to agree. *new* `no-install` `offline` `beside` `second` · near: second-opinion, translate, model-recall
@@ -414,7 +414,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**pii-audit**](adapters/stdlib/pii-audit/) — Personal data sitting in your files (ID numbers, health details, card numbers), listed by file and line. *new* `no-install` `offline` `numbers` `audit` · near: secrets-audit, privacy, debts
 - [**privacy**](adapters/stdlib/privacy/) — Hides phone numbers, emails, card, bank and ID numbers, and API keys in what a question prints, and says what it hid. *bot* `no-install` `offline` `numbers` · near: plain, readings, pii-audit
 - [**risky-code**](adapters/stdlib/risky-code/) — Lines of code matching a known-dangerous pattern (command injection, eval, sql concatenation, broken tls and more), by file and line, as leads to read. *new* `no-install` `offline` `matched` `command` `security` · near: secrets-audit, advisories, xref
-- [**scrub**](adapters/stdlib/scrub/) — Strips the hidden details (EXIF, author, edit history) from a file before you share it. *new* `no-install` `offline` `share` `taken` · near: photos, transcript-redact, a11y-check
+- [**scrub**](adapters/stdlib/scrub/) — Strips the hidden details (EXIF, author, edit history) from a file before you share it. *new* `no-install` `offline` `history` `share` · near: photos, transcript-redact, bookmarks
 - [**secrets-audit**](adapters/stdlib/secrets-audit/) — Finds passwords, keys and card numbers sitting in plain files, by file and line, never showing the value. Uses privacy. *bot* `no-install` `offline` `numbers` `key` `everyday` · near: pii-audit, hook-leaks, risky-code
 - [**sent-log**](adapters/stdlib/sent-log/) — Which of your passages went to which online model, read from the record by model card: what left this machine and where to. Uses openai-compatible. *new* `no-install` `offline` `left` `log` · near: cite-honesty, gaps, model-card
 - **student-records** (idea) — A box of student records that answers only the teacher who owns it, and logs every look. *new* `no-install` `offline` `student` `log` · near: kids, ci-why, export
@@ -525,7 +525,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - [**pipe**](adapters/stdlib/pipe/) — Questions in on standard input, answers out one per line: JSON lines, or file:line: text for grep and fzf. *box* `no-install` `offline` `json` · near: vim, shell, emacs
 - [**plain**](adapters/stdlib/plain/) — Answers as sentences instead of JSON, each with its file and line. *new* `no-install` `offline` · near: readings, privacy, aider
 - **pr-context** (idea) — On a pull request, the passages in the repo's docs that name the files it changes, posted as one comment. Goes online: the forge, through the workflow's token, to post the comment. *new* `no-install` `online` `pull` `requests` · near: quote-review, github-archive, forgejo-dump
-- [**print**](adapters/stdlib/print/) — An answer as a printable page with its sources, to take to an appointment; --large for big, high-contrast type. *new* `no-install` `offline` `prints` `everyday` · near: web-pages, pipe, across
+- [**print**](adapters/stdlib/print/) — An answer as a printable page with its sources, to take to an appointment; --large for big, high-contrast type. *new* `no-install` `offline` `prints` `everyday` · near: web-pages, pipe, hosts
 - **qr** (idea) — An answer as a QR code on screen, to carry it to your phone without the network. *new* `no-install` `offline` `screen` `phone` · near: scrub, a11y-check, code-first
 - [**repo-pile**](adapters/stdlib/repo-pile/) — Public repositories you list, cloned and made askable, keeping only those under a licence an Apache-2.0 project can use. Uses again, backup, changed, digest, export, history, privacy, quote-check, scan, secrets-audit, stale, todo, xref. Goes online: github.com (or the --source you give), to clone the repositories you list. *new* `no-install` `online` `project` `research` · near: upstream-desk, pile-build, pile-serve
 - [**rss-out**](adapters/stdlib/rss-out/) — New approved answers as an RSS feed file, for any feed reader. *new* `no-install` `offline` · near: annotations, in-toto, static-search
