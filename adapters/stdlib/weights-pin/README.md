@@ -41,8 +41,9 @@ Exit codes, the kernel's: 0 the file is the one on its card; 42 it differs;
 2 refused (a bad command line, `--from` not a file, `--card` not a model
 card with a sha256 and a size).
 
-**Uses:** the kernel's exit codes; [weights-card](../weights-card/)'s card
-format, and weights-card itself in its tests.
+**Uses:** the kernel's exit codes; [weights-card](../weights-card/)'s
+`header`, the one reader of the card format, and weights-card itself in its
+tests.
 
 **Never:** changes the card or the file, runs the model, goes online, or
 reads your key.

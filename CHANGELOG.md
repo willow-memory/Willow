@@ -22,14 +22,14 @@ says how). The first was v0.1.0.
   first local server, a suggestion held for your seal), skips those sealed
   or already waiting, and stops before the next question once a row appears
   that the run didn't write (you bit, sealed or declined) or it is past
-  `--until`. Built in stdlib, like local-model.
+  `--until`. Built in stdlib, like local-model. (#167)
 - `translate`, an answer you sealed translated by a model on this machine:
   `translate.py --box DIR --into LANGUAGE "question"` finds the answer you
   sealed for the question, has the first local server translate it keeping
   each `[n]`, and proposes it as the answer to "question in LANGUAGE" (never
   the original's question) with the original kept beside it, held for your
   seal. A translation whose citations differ from the original's is
-  proposed to no one. Built in stdlib, like local-model.
+  proposed to no one. Built in stdlib, like local-model. (#166)
 - `local-model`, suggestions from a model on this machine only:
   `local_model.py servers` asks each local runtime's model list on its
   usual port (Ollama, LM Studio, llama.cpp, vLLM, KoboldCpp, Jan, GPT4All)
@@ -37,13 +37,13 @@ says how). The first was v0.1.0.
   openai-compatible's bite-then-propose, with the first running server and
   its first model when none is named, and a URL off this machine refused
   before anything is sent. Built in stdlib: the server is a program you
-  run, reached over HTTP, not a package it imports.
+  run, reached over HTTP, not a package it imports. (#165)
 - `model-drift`, frozen questions asked again of a model, flagging answers
   that change while its name and card stay the same: `model_drift.py freeze
   ... > frozen.json` prints the model's name, its card's SHA-256 and each
   answer with the passages served (writing nothing), and `again --frozen
   frozen.json` asks the same model now, flagging a changed answer as drift
-  only when the passages, the name and the card all held still.
+  only when the passages, the name and the card all held still. (#164)
 - `model-exam`, any model scored against the answers you sealed:
   `model_exam.py --box DIR --url URL --model NAME --questions FILE` asks
   each question you sealed an answer for (the kernel's `sealed` and
@@ -51,6 +51,7 @@ says how). The first was v0.1.0.
   `rank` serves now (no bite on the record), and passes a reply that cites a
   passage your answer cites and holds half the content words of the shorter
   of the two. Questions with no sealed answer are said and never asked.
+  (#163)
 - `same-way`, a local model asked each question several times and how
   often it flips: `same_way.py --box DIR --url URL --model NAME --questions
   FILE [--times N]` ranks each question against your folder as a bite would
@@ -58,7 +59,7 @@ says how). The first was v0.1.0.
   unless said) with openai-compatible's chat at temperature 0 and a fixed
   seed, and counts a change in the words or in what is cited as a flip. The
   URL must be on this machine; the idea's `this-machine` is promised as
-  `loopback`.
+  `loopback`. (#162)
 - `model-card`, a card naming the model behind an assistant, its hash on
   the record: `model_card.py add --box DIR --from CARD` appends the SHA-256
   of a `willow-model` card (weights-card's header, with `runs`, `licence`
@@ -66,7 +67,7 @@ says how). The first was v0.1.0.
   weights' hash or `model version`, and where it runs, never the card's
   text; `check` holds a card file to its row (`same`, `changed`, `never
   added`) and `list` says each name's latest. No assistant names its card in
-  a suggestion yet; sent-log's card now says so.
+  a suggestion yet; sent-log's card now says so. (#161)
 - `model-fit`, whether this machine can run a local model before you
   download one: `model_fit.py check [--model FILE] [--measure]` reads
   memory, the CPU, each GPU (its own memory from the driver or
@@ -74,7 +75,7 @@ says how). The first was v0.1.0.
   `sysctl` with Apple silicon's GPU share, and says where a model of a
   weights file's or a weights-card's size fits (its weights and a fifth),
   or the most each place holds. `--measure` times a memory copy for a guess
-  at tokens a second on the CPU.
+  at tokens a second on the CPU. (#160)
 - `model-shelf`, every model already on this machine before you download
   another: `model_shelf.py list [--home DIR]
   [--hash]` reads Ollama's manifests,
@@ -84,21 +85,23 @@ says how). The first was v0.1.0.
   (by weights-card's header reader) and SHA-256: Ollama's and the cache's
   own content names, others only with `--hash`. The same weights under two
   names are said, and a runtime not on this machine says where it looked.
+  (#159)
 - `weights-pin`, a weights file held to the hash on its model card before
   it runs: `weights_pin.py --card CARD --from FILE` reads the `sha256` and
   `bytes` of a `willow-model` header (as weights-card writes one), compares
   the size first and then the whole file's SHA-256, and says `same` (0) or
   `differs` with both hashes and sizes (42), so `weights_pin.py ... &&
   llama-server ...` never runs a file that differs. The hash decides, never
-  the file's name.
+  the file's name. It reads the card with weights-card's `header`. (#158)
 - `weights-card`, a model card filled in from the weights file's own
   header: `weights_card.py --from FILE --to CARD` reads a GGUF (v2, v3) or
   safetensors header for the architecture, name, quantization (llama.cpp's
   name for `general.file_type`, or safetensors' types by parameters),
   context length, licence and parameter count, adds the whole file's SHA-256
   and size, and writes `not in the header` for what the file doesn't say.
-  Only the file's name goes on the card. Checked against llama.cpp's own
-  `gguf` reader on two real GGUF files.
+  Only the file's name goes on the card, and `header()` reads one back for
+  the add-ons that read cards. Checked against llama.cpp's own `gguf` reader
+  on two real GGUF files. (#157)
 - `ui/`, willow's own UI (v1): `python ui/canvas.py` opens a page on this
   machine that goes the way a person does. Choose your folders; see what the
   kernel alone makes of them, as counts, never a file's words or name; start
