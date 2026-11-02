@@ -5,7 +5,7 @@ source: bot
 added: 2026-10-24
 writes: record
 network: none
-tags: no-install, offline, records, assistant
+uses: mcp-lite
 -->
 # claude-code
 

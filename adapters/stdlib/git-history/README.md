@@ -5,7 +5,6 @@ source: new
 added: 2026-10-31
 writes: to
 network: none
-tags: needs-install, offline, writes-output, file-reader
 -->
 # git-history
 

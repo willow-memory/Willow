@@ -1,11 +1,12 @@
 <!-- willow-addon
-section: Keeping track
-line: One document across several boxes, not just one: each box's digest, export, timeline or readings, composed into one page, every line still cited by its box, file and line.
+section: Ways to use it
+line: One page made from several willow records at once (each one's digest, export, timeline or readings), every line still cited by where it came from.
 source: new
 added: 2026-10-25
 writes: nothing
 network: none
-tags: no-install, offline, read-only, tracking, everyday
+tags: everyday
+looks-for: digest, export, readings, timeline
 -->
 # across
 

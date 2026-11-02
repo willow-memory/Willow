@@ -5,7 +5,8 @@ source: bot
 added: 2026-10-24
 writes: nothing
 network: none
-tags: no-install, offline, read-only, privacy, everyday
+tags: everyday
+uses: privacy
 -->
 # secrets-audit
 

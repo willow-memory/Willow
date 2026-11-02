@@ -1,11 +1,12 @@
 <!-- willow-addon
 section: Finding things
-line: Phrases as well as words: BM25F over each passage's words and the word pairs your files use together, title and question lines weighted, no model.
+line: Finds passages that use your folder's own phrases ("sourdough bread"), not just the separate words, ranked without any AI model.
 source: bot
 added: 2026-10-28
 writes: nothing
 network: none
-tags: no-install, offline, read-only, search, pile
+tags: pile
+uses: pile-store
 -->
 # pile-rank
 

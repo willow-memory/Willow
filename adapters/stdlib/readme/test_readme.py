@@ -60,7 +60,7 @@ FRONT = """# the front page
 
 def card(section="Play", line="A thing.", source="new", added="2026-10-23", **more):
     head = {"section": section, "line": line, "source": source, "added": added,
-            "writes": "nothing", "network": "none", "tags": "play, thing", **more}  # fmt: skip
+            "writes": "nothing", "network": "none", **more}  # fmt: skip
     body = "".join(f"{k}: {v}\n" for k, v in head.items())
     return f"<!-- willow-addon\n{body}-->\n# card\n"
 
@@ -105,15 +105,14 @@ def test_the_real_readme_is_current():
 
 def test_building_an_add_on_is_what_turns_planned_into_built(repo):
     text = rd.rebuild(PAGE, None)
+    assert "- [**alpha**](adapters/stdlib/alpha/) — A thing. *new* `no-install` `offline`" in text  # fmt: skip
     assert (
-        "- [**alpha**](adapters/stdlib/alpha/) — A thing. *new* `play` `thing`" in text
-    )
-    assert (
-        "- [**beta**](adapters/deps/beta/) — A thing. Needs somepkg; MIT. *new* `play` `thing`"
+        "- [**beta**](adapters/deps/beta/) — A thing. Needs somepkg; MIT. *new* `needs-install` `offline`"
         in text
     )
     assert (
-        "- **gamma** (idea) — Later. Reaches this machine only. *box* `later`" in text
+        "- **gamma** (idea) — Later. Reaches this machine only. *box* `no-install` `this-machine` `later`"
+        in text
     )
     assert "**2 of 3 built**" in text
     (repo / "adapters" / "stdlib" / "gamma").mkdir()  # built, and still planned
@@ -169,14 +168,11 @@ def test_the_draw_is_the_weeks_and_anyone_can_redo_it(repo):
         ),
         ("stdlib/delta", card().replace("network: none\n", ""), "needs network"),
         ("stdlib/Delta", card(), "lowercase words joined by -"),
-        ("stdlib/delta", card(tags="a, b, c, d, e, f"), "tags are up to 5"),
-        ("stdlib/delta", card(tags="Has Caps"), "tags are up to 5"),
-        ("stdlib/delta", card(tags="a, a"), "tags are up to 5"),
-        (
-            "stdlib/delta",
-            card().replace("tags: play, thing\n", ""),
-            "run readme.py tags",
-        ),
+        ("stdlib/delta", card(tags="a, b"), "tags is your one tag"),
+        ("stdlib/delta", card(tags="Has Caps"), "tags is your one tag"),
+        ("stdlib/delta", card(tags="offline"), "worked out from the card"),
+        ("stdlib/delta", card(tags="money"), None),
+        ("stdlib/delta", card(), None),  # a tag of your own is optional
         ("stdlib/alpha2", "", "has no README.md card"),
     ],
 )
@@ -202,21 +198,18 @@ def test_a_readme_missing_a_section_is_refused(repo):
         )
 
 
-def test_tags_fills_only_what_is_missing_and_keeps_what_a_person_wrote(repo):
-    """Auto-populated, never overwritten: the card's tags are its author's."""
-    card_file = repo / "adapters" / "stdlib" / "alpha" / "README.md"
-    card_file.write_text(card_file.read_text().replace("tags: play, thing\n", ""))
-    beta = repo / "adapters" / "deps" / "beta" / "README.md"
-    planned = repo / "adapters" / "planned.json"
-    planned.write_text(planned.read_text().replace(', "tags": "later"', ""))
-    before = beta.read_text()
-    assert rd.main(["tags"]) == 0
-    assert "tags: no-install, offline, read-only, play\n-->" in card_file.read_text()
-    assert beta.read_text() == before  # a person's tags, untouched
-    assert json.loads(planned.read_text())[0]["tags"] == (
-        "no-install, this-machine, writes-output, play"
-    )
-    assert rd.main(["tags"]) == 0 and beta.read_text() == before  # twice: no change
+def test_tags_are_worked_out_and_never_written_into_a_card(repo):
+    """A card keeps only its author's own tag; the rest are a view of the card,
+    so changing what the card says changes them, with no tag to edit."""
+    cards = sorted((repo / "adapters").rglob("README.md"))
+    before = {c: c.read_text() for c in cards}
+    planned = (repo / "adapters" / "planned.json").read_text()
+    assert rd.main(["write"]) == 0
+    assert {c: c.read_text() for c in cards} == before
+    assert (repo / "adapters" / "planned.json").read_text() == planned
+    alpha = repo / "adapters" / "stdlib" / "alpha" / "README.md"
+    alpha.write_text(alpha.read_text().replace("network: none", "network: loopback"))
+    assert "*new* `no-install` `this-machine`" in rd.rebuild(PAGE, None)
 
 
 def test_check_keeps_the_week_written_whatever_week_it_is(repo):

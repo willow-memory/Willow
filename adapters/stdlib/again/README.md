@@ -5,7 +5,6 @@ source: bot
 added: 2026-10-23
 writes: nothing
 network: none
-tags: no-install, offline, read-only, tracking
 -->
 # again
 

@@ -1,11 +1,12 @@
 <!-- willow-addon
 section: Finding things
-line: The box's index kept between runs and checked against each file's hash, so a question doesn't re-read the folder unless the folder changed.
+line: Keeps scan's index between runs and rebuilds it only when a file in your folder actually changed.
 source: new
 added: 2026-10-26
 writes: to
 network: none
-tags: no-install, offline, writes-output, search, index
+tags: index
+uses: scan
 -->
 # index-cache
 

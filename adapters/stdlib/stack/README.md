@@ -1,11 +1,10 @@
 <!-- willow-addon
-section: Keeping track
-line: One document from a stack of add-on steps over a box: each step's output grouped into pools and ordered tallest-first, so the peaks are what a reader meets first.
+section: Ways to use it
+line: One page made from several add-ons run in the order you list them, their results grouped so the biggest come first.
 source: new
 added: 2026-10-26
 writes: nothing
 network: none
-tags: no-install, offline, read-only, tracking
 -->
 # stack
 

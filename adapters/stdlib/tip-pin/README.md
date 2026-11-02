@@ -1,11 +1,10 @@
 <!-- willow-addon
 section: Trust and proof
-line: Where a box's record ends, kept outside the box, so rows cut off or a whole chain re-hashed are found where verify can't.
+line: Where your record ends, written down somewhere willow can't reach, so rows cut off the end or rewritten from some point on are caught where verify can't.
 source: new
 added: 2026-10-26
 writes: to
 network: none
-tags: no-install, offline, writes-output, trust
 -->
 # tip-pin
 

@@ -5,7 +5,7 @@ source: new
 added: 2026-10-29
 writes: record
 network: none
-tags: no-install, offline, records, words, welsh
+tags: welsh
 -->
 # words-cy
 

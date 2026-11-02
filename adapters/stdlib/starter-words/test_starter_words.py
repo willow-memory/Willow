@@ -1,12 +1,12 @@
 """starter-words: a list the kernel accepts, copied so the kernel will read it,
-and what it does on a blind character's folder, measured, not assumed."""
+and what it does on a line from a blind character's folder, measured, not
+assumed (the whole folder is demo/teodora's own test)."""
 
 from __future__ import annotations
 
 import importlib.util
 import json
 import os
-import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -50,12 +50,20 @@ def test_copy_writes_it_for_you_alone_and_never_overwrites(tmp_path):
     assert ok.returncode == 0  # the kernel accepts the copy as it is
 
 
-def test_teodoras_debt_is_served_with_it_and_not_without(tmp_path):
+def test_a_debt_written_as_lend_is_served_with_it_and_not_without(tmp_path):
     """Teodora (demo/teodora, built blind) asks "how much do I still owe dev".
-    Her files say Dev would "lend" the money; none says "owe". Without a list
-    nothing is served; with this one, the chat where Dev offers to lend is."""
-    shutil.copytree(ROOT / "demo" / "teodora", tmp_path / "teodora")
-    assert run(str(tmp_path / "teodora" / "make_life.py")).returncode == 0
+    Her files say Dev would "lend" the money; none says "owe". Here, the chat
+    line from her files that holds it, as make_life.py writes it: without a
+    list nothing is served; with this one, that chat is. demo/teodora's own
+    test holds the same claim on everything her folder holds."""
+    pile = tmp_path / "pile"
+    pile.mkdir()
+    (pile / "WhatsApp Chat with Sam.txt").write_text(
+        "[03/12/2024, 07:18:02] Sam: How much is the boiler going to be?\n"
+        "[03/12/2024, 07:20:45] Teo: 3.6k. Dev says he can lend us some till Jan\n"
+        "[03/12/2024, 07:21:10] Sam: ok. Dinner at mum's on Sunday\n"
+    )
+    (pile / "list.txt").write_text("Shopping: eggs, flour, tomatoes\n")
     run(str(HERE / "starter.py"), "copy", "--to", str(tmp_path / "words.txt"))
     q = "how much do I still owe dev"
     served = {}
@@ -64,7 +72,7 @@ def test_teodoras_debt_is_served_with_it_and_not_without(tmp_path):
         ("with", ["--words", str(tmp_path / "words.txt")]),
     ):
         b = tmp_path / name
-        run(str(KERNEL), "init", "--box", str(b), "--pile", str(tmp_path / "teodora" / "life"),
+        run(str(KERNEL), "init", "--box", str(b), "--pile", str(pile),
             "--key", str(tmp_path / "k"), *NOW, *extra)  # fmt: skip
         served[name] = json.loads(
             run(str(KERNEL), "bite", "--box", str(b), *NOW, q).stdout

@@ -5,7 +5,10 @@ source: new
 added: 2026-10-24
 writes: nothing
 network: only what the programs it starts reach on their own; it reaches nothing itself
-tags: no-install, maintainers, tests, interface, assistant
+tags: tests
+uses: mcp-lite, pipe
+looks-for: claude-code, emacs, shell, vim, vscode, web-pages
+runs-in: repo
 -->
 # live
 

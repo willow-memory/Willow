@@ -1,11 +1,10 @@
 <!-- willow-addon
 section: Keeping track
-line: Numbers over time and a date gone by, beside an answer.
+line: Two hints beside an answer: a number in your files that moved a lot lately, and a date in a log that passed with nothing written since.
 source: box
 added: 2026-10-22
 writes: record
 network: none
-tags: no-install, offline, records, tracking
 -->
 # readings
 

@@ -3,7 +3,6 @@ add-ons themselves.
 
     python adapters/stdlib/readme/readme.py write [--week YYYY-Www]
     python adapters/stdlib/readme/readme.py check
-    python adapters/stdlib/readme/readme.py tags
 
 Each generated section sits between two markers, `<!-- willow:NAME -->` and
 `<!-- /willow:NAME -->`; everything outside them is written by hand and never
@@ -42,7 +41,7 @@ What it reads:
       added: 2026-10-22
       writes: nothing
       network: none
-      tags: no-install, offline, read-only, tracking
+      tags: health
       -->
 
   plus `needs:` and `floor:` for one in `adapters/deps/`;
@@ -53,12 +52,28 @@ A name is built when its folder exists, and then it must not also be planned.
 Nothing is decided by hand in the list: building an add-on is what turns its
 an idea into a built one.
 
-Tags: every add-on and idea carries `tags:`, up to five, lowercase words
-joined by -. `tags` fills them in for any entry that has none, from what its
-card already says (an install or none, where it goes online, what it writes,
-its section), leaving the fifth for a person, and never touches tags that are
-there: once written, they are the card's to edit. `check` refuses an entry with
-no tags, more than five, or one that isn't a tag.
+What an add-on leans on is on its card, never found by reading its code:
+
+    uses:       the add-ons it needs beside it, to run or to be tested; a
+                stack that has it has these too
+    looks-for:  the add-ons it uses when they're beside it; without one it
+                still runs and says what's missing, and its tests hold
+                either way
+    runs-in:    repo, for a tool that works on willow's own repository (CI,
+                the list, the branches); it isn't copied out of it
+
+Each is optional, a list of add-on names with commas between. `check`
+refuses a name that isn't an add-on (built, for a built one), the add-on
+itself, or a name in both lists.
+
+Tags: each entry in the list shows up to five, worked out by the similar
+add-on every time the list is written and never stored, so they can't go
+stale when a card changes: whether it needs an install, whether it goes
+online, two topic words it shares with its nearest entries, and the one tag
+its author chose, if any. That one is a card's `tags:` line (or an idea's
+`tags`), optional: a lowercase word or words joined by -, and never one of
+the worked-out ones. `similar.py tags NAME` shows what an entry gets. Each
+entry also names the three entries nearest it.
 
 The week of `pick` is part of the section (`<!-- willow:pick week=2026-W43
 -->`). `write` sets it to this week, or to `--week`; `check` rebuilds with the
@@ -130,17 +145,12 @@ EXAMPLES = {
     "Play": ["quiz", "life"],
     "For maintainers": ["mutants", "ci"],
 }  # fmt: skip
-FIELDS = {"section", "line", "source", "writes", "network", "tags"}
-#: at most this many tags an add-on carries
-MAX_TAGS = 5
-#: the tag each section gives an entry that has none yet
-SECTION_TAG = {
-    "Reading more kinds of files": "file-reader", "Finding things": "search",
-    "Your own words": "words", "Keeping track": "tracking",
-    "Trust and proof": "trust", "Privacy and safety": "privacy",
-    "Assistants": "assistant", "Ways to use it": "interface", "Play": "play",
-    "For maintainers": "maintainers",
-}  # fmt: skip
+FIELDS = {"section", "line", "source", "writes", "network"}
+#: what an add-on leans on, by name: optional, and checked against the list
+LEANS = ("uses", "looks-for")
+RUNS_IN = {"repo"}
+#: the tags the similar add-on works out, which a card's own tag is never one of
+FACT_TAGS = {"no-install", "needs-install", "offline", "this-machine", "online"}
 #: what an add-on may write: the guard in adapters/stdlib/ci/guard holds it
 #: to this while its tests run; a file of the repo may also be named
 WRITES = {"nothing", "record", "to"}
@@ -175,10 +185,9 @@ def card(folder: Path) -> dict:
     return fields
 
 
-def addons(tagged: bool = True) -> list[dict]:
+def addons() -> list[dict]:
     """Every add-on, built and planned, each checked; refused on the first
-    that doesn't hold together. `tagged=False` is for `tags`, which fills
-    them in."""
+    that doesn't hold together."""
     out = []
     for kind in KINDS:
         for folder in sorted(p for p in (ADAPTERS / kind).glob("*") if p.is_dir()):
@@ -203,18 +212,15 @@ def addons(tagged: bool = True) -> list[dict]:
         seen.add(a["name"])
         if a.get("kind") not in KINDS:
             raise Refused(f"{where}: kind is stdlib or deps")
-        if "tags" not in a and not tagged:
-            a["tags"] = ""
         if not FIELDS <= a.keys():
             missing = ", ".join(sorted(FIELDS - a.keys()))
-            hint = "; run readme.py tags" if missing == "tags" else ""
-            raise Refused(f"{where}: needs {missing}{hint}")
+            raise Refused(f"{where}: needs {missing}")
+        a.setdefault("tags", "")
         tags = split_tags(a["tags"])
-        bad = [t for t in tags if not NAME.fullmatch(t)]
-        if bad or len(tags) > MAX_TAGS or len(set(tags)) < len(tags):
-            raise Refused(f"{where}: tags are up to {MAX_TAGS} distinct lowercase words joined by -: {a['tags']!r}")  # fmt: skip
-        if tagged and not tags:
-            raise Refused(f"{where}: no tags; run readme.py tags")
+        if len(tags) > 1 or any(not NAME.fullmatch(t) for t in tags):
+            raise Refused(f"{where}: tags is your one tag, lowercase words joined by -, the rest are worked out: {a['tags']!r}")  # fmt: skip
+        if set(tags) & FACT_TAGS:
+            raise Refused(f"{where}: {tags[0]} is worked out from the card; tags is for a tag of your own")  # fmt: skip
         if a["section"] not in NAMES:
             raise Refused(f"{where}: no section {a['section']!r}")
         if a["source"] not in SOURCES:
@@ -233,6 +239,20 @@ def addons(tagged: bool = True) -> list[dict]:
             raise Refused(f"{where}: a stdlib add-on needs nothing")
         if a["built"] and not re.fullmatch(r"\d{4}-\d{2}-\d{2}", a.get("added", "")):
             raise Refused(f"{where}: added is the date it was built, YYYY-MM-DD")
+        if a.get("runs-in", "repo") not in RUNS_IN:
+            raise Refused(f"{where}: runs-in is repo, or left out")
+    names = {a["name"]: a["built"] for a in out}
+    for a in out:
+        where = a.get("path") or f"planned.json: {a['name']}"
+        lists = {k: split_tags(a.get(k, "")) for k in LEANS}
+        for k, got in lists.items():
+            for n in got:
+                if n == a["name"]:
+                    raise Refused(f"{where}: {k} names the add-on itself")
+                if n not in names or (a["built"] and not names[n]):
+                    raise Refused(f"{where}: {k} names {n!r}, which isn't a built add-on")  # fmt: skip
+        if set(lists["uses"]) & set(lists["looks-for"]):
+            raise Refused(f"{where}: an add-on is in uses or looks-for, not both")
     return out
 
 
@@ -247,6 +267,8 @@ def facts(a: dict) -> str:
     out = []
     if a["kind"] == "deps":
         out.append(f"Needs {a['needs']}.")
+    if a.get("uses"):
+        out.append(f"Uses {', '.join(split_tags(a['uses']))}.")
     if a["network"] == "loopback":
         out.append("Reaches this machine only.")
     elif a["network"] != "none":
@@ -254,67 +276,38 @@ def facts(a: dict) -> str:
     return "".join(f" {f}" for f in out)
 
 
-def entry(a: dict) -> str:
+def entry(a: dict, worked: dict) -> str:
     name = (
         f"[**{a['name']}**]({a['path']})" if a["built"] else f"**{a['name']}** (idea)"
     )
-    tags = " ".join(f"`{t}`" for t in split_tags(a["tags"]))
-    return f"- {name} — {a['line']}{facts(a)} *{a['source']}* {tags}"
+    tags = " ".join(f"`{t}`" for t in worked["tags"])
+    near = f" · near: {', '.join(worked['near'])}" if worked["near"] else ""
+    return f"- {name} — {a['line']}{facts(a)} *{a['source']}* {tags}{near}"
 
 
-def auto_tags(a: dict) -> list[str]:
-    """Four tags from what the card already says, for an entry that has none;
-    the fifth is left for a person to choose."""
-    writes = split_tags(a["writes"])
-    out = [
-        "no-install" if a["kind"] == "stdlib" else "needs-install",
-        {"none": "offline", "loopback": "this-machine"}.get(a["network"], "online"),
-        "read-only" if writes == ["nothing"] else "records" if "record" in writes
-        else "writes-output",
-        SECTION_TAG[a["section"]],
-    ]  # fmt: skip
-    return out
+def worked_out(every: list[dict]) -> dict[str, dict]:
+    """Each entry's tags and nearest entries, from the similar add-on."""
+    import importlib.util
 
-
-def fill_tags() -> int:
-    """Write tags into every card and idea that has none; touch no others."""
-    every = addons(tagged=False)
-    filled = 0
-    for a in every:
-        if split_tags(a["tags"]):
-            continue
-        line = ", ".join(auto_tags(a))
-        if a["built"]:
-            card_file = ROOT / a["path"] / "README.md"
-            text = card_file.read_text(encoding="utf-8")
-            end = text.index("\n-->\n")
-            card_file.write_text(
-                text[:end] + f"\ntags: {line}" + text[end:], encoding="utf-8"
-            )
-        else:
-            a["tags"] = line
-        filled += 1
-    planned = json.loads(PLANNED.read_text(encoding="utf-8"))
-    tags = {a["name"]: a["tags"] for a in every if not a["built"]}
-    for e in planned:
-        e["tags"] = e.get("tags") or tags[e["name"]]
-    PLANNED.write_text(
-        json.dumps(planned, indent=1, ensure_ascii=False) + "\n", encoding="utf-8"
+    spec = importlib.util.spec_from_file_location(
+        "willow_similar", Path(__file__).resolve().parents[1] / "similar" / "similar.py"
     )
-    print(f"tags filled for {filled} add-ons and ideas; the rest kept as written")
-    return kernel.ALIVE
+    similar = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(similar)
+    return similar.worked_out(every, ROOT)
 
 
 def section_list(every: list[dict]) -> str:
     lines = ["**Contents:** " + " · ".join(
         f"[{s}](#{re.sub(r'[^a-z0-9 -]', '', s.lower()).replace(' ', '-')})" for s in NAMES
     )]  # fmt: skip
+    worked = worked_out(every)
     for title, intro in SECTIONS:
         lines += ["", f"## {title}", ""]
         if intro:
             lines += [intro, ""]
         lines += [
-            entry(a)
+            entry(a, worked[a["name"]])
             for a in sorted(every, key=lambda a: a["name"])
             if a["section"] == title
         ]
@@ -472,12 +465,6 @@ def main(argv: list[str]) -> int:
     week = None
     if rest[:1] == ["--week"] and len(rest) == 2:
         week, rest = rest[1], []
-    if verb == "tags" and not rest:
-        try:
-            return fill_tags()
-        except Refused as e:
-            print(f"refused: {e}", file=sys.stderr)
-            return kernel.REFUSED
     if rest or verb not in ("write", "check") or (week and verb == "check"):
         print(__doc__.split("\n\n")[1], file=sys.stderr)
         return kernel.REFUSED

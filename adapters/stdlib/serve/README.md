@@ -1,11 +1,10 @@
 <!-- willow-addon
 section: Assistants
-line: The one markdown file a model reads: only the passages a human sealed, grouped into pools with the peaks first, by ids it can't guess, and nothing else.
+line: The one file an AI model may read: only the passages you approved, under ids it can't guess, and nothing else.
 source: bot
 added: 2026-10-26
 writes: record, to
 network: none
-tags: no-install, offline, writes-output, trust, assistant
 -->
 # serve
 

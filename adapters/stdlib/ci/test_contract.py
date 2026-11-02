@@ -774,3 +774,97 @@ def check_reader(script: Path, sample: dict[str, bytes], tmp: Path) -> None:
 def test_every_reader_keeps_the_readers_contract(name, tmp_path):
     script, sample = READERS[name]
     check_reader(STDLIB / name / script, sample, tmp_path)
+
+
+# ── what an add-on leans on is on its card ──────────────────────────────────
+#: a name of another add-on used as a place: beside this one (HERE.parent,
+#: STDLIB, parents[1], "stdlib"), or fetched as a sibling
+REACH = re.compile(
+    r"""(?:STDLIB|HERE\.parent|parents\[1\]|["']stdlib["'])\s*/\s*["']([a-z0-9]+(?:-[a-z0-9]+)*)["']"""
+    r"""|sibling\(\s*["']([a-z0-9]+(?:-[a-z0-9]+)*)["']"""
+)
+ADDONS = {p.name: p for k in ("stdlib", "deps") for p in (ROOT / "adapters" / k).glob("*")
+          if p.is_dir() and (p / "README.md").is_file()}  # fmt: skip
+
+
+#: a function that turns its first argument into a sibling's path:
+#: `def addon(name)` whose body says `STDLIB / name`
+FINDER = re.compile(r"^def (\w+)\((\w+)", re.M)
+BESIDE = r"(?:STDLIB|HERE\.parent|parents\[1\])\s*/\s*"
+
+
+def reached(folder: Path) -> set[str]:
+    """Every other add-on this one's own code names as a place, whether
+    spelled out or passed to a function of its own that finds a sibling by
+    name; its tests are held to the card by the alone gate, which runs them."""
+    out = set()
+    for f in folder.rglob("*.py"):
+        if f.name.startswith("test_") or "__pycache__" in f.parts:
+            continue
+        text = f.read_text(encoding="utf-8")
+        finders = []
+        for m in FINDER.finditer(text):
+            end = text.find("\ndef ", m.end())
+            body = text[m.end() : end if end != -1 else len(text)]
+            if re.search(BESIDE + re.escape(m.group(2)) + r"\b", body):
+                finders.append(m.group(1))
+        called = re.compile(rf"\b(?:{'|'.join(finders)})\(\s*[\"']([a-z0-9]+(?:-[a-z0-9]+)*)[\"']") if finders else None  # fmt: skip
+        for line in text.splitlines():
+            code = line.split("#")[0]
+            names = [m.group(1) or m.group(2) for m in REACH.finditer(code)]
+            names += called.findall(code) if called else []
+            out |= {n for n in names if n in ADDONS and n != folder.name}
+    return out
+
+
+def declared(folder: Path) -> set[str]:
+    head = (folder / "README.md").read_text(encoding="utf-8").split("\n-->\n")[0]
+    got = set()
+    for key in ("uses", "looks-for"):
+        m = re.search(rf"^{key}: (.*)$", head, re.M)
+        got |= {n.strip() for n in m.group(1).split(",")} if m else set()
+    return got
+
+
+@pytest.mark.parametrize("name", only(ADDONS))
+def test_every_add_on_its_code_reaches_is_on_its_card(name):
+    """An add-on that reaches another without saying so breaks, unseen, in
+    any copy that left the other out: its card says `uses` or `looks-for`."""
+    missing = reached(ADDONS[name]) - declared(ADDONS[name])
+    assert not missing, (
+        f"{name} reaches {', '.join(sorted(missing))} but its card doesn't say so: "
+        "add `uses:` (it needs it) or `looks-for:` (it says when it isn't there)"
+    )
+
+
+def test_reaching_is_seen_however_it_is_spelled(tmp_path):
+    """The check can fail: each way an add-on names a sibling is caught."""
+    folder = tmp_path / "probe"
+    folder.mkdir()
+    (folder / "README.md").write_text("<!-- willow-addon\nsection: Play\n-->\n")
+    for spelling in ('HERE.parent / "dice" / "dice.py"', 'STDLIB / "dice"',
+                     'Path(__file__).resolve().parents[1] / "dice"',
+                     'ROOT / "adapters" / "stdlib" / "dice"', 'sibling("dice", "dice")'):  # fmt: skip
+        (folder / "probe.py").write_text(f"x = {spelling}\n")
+        assert reached(folder) == {"dice"}, spelling
+    (folder / "probe.py").write_text(
+        "def addon(name):\n    return STDLIB / name / f'{name}.py'\n\n\nx = addon(\"dice\")\n"
+    )
+    assert reached(folder) == {"dice"}, "found through a function of its own"
+    (folder / "probe.py").write_text(
+        'notes = self.root / "notes"  # a folder, not an add-on\n'
+    )
+    assert reached(folder) == set()
+
+
+def test_every_assistant_hosts_lists_has_its_add_on():
+    """hosts is the table the assistant add-ons print from; in willow, each
+    row is an add-on of its own, so no assistant is listed and missing."""
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location(
+        "contract_hosts", STDLIB / "hosts" / "hosts.py"
+    )
+    hosts = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(hosts)
+    assert hosts.HOSTS and [n for n in hosts.HOSTS if not (STDLIB / n).is_dir()] == []

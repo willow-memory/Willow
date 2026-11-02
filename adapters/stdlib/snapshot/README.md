@@ -5,7 +5,7 @@ source: bot
 added: 2026-10-24
 writes: to
 network: the address you give, fetched once
-tags: no-install, online, writes-output, file-reader, sources
+tags: sources
 -->
 # snapshot
 

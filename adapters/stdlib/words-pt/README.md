@@ -5,7 +5,7 @@ source: new
 added: 2026-10-24
 writes: record
 network: none
-tags: no-install, offline, records, words, portuguese
+tags: portuguese
 -->
 # words-pt
 

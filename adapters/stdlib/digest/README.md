@@ -5,7 +5,8 @@ source: bot
 added: 2026-10-24
 writes: nothing
 network: none
-tags: no-install, offline, read-only, tracking, everyday
+tags: everyday
+looks-for: coming-up, stale
 -->
 # digest
 

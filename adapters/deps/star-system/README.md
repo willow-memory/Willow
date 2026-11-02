@@ -7,7 +7,6 @@ needs: numpy; BSD-3-Clause
 floor: numpy 2.1.0; the 2020 rule names 1.19, which has no wheel for Python 3.13 (the version the deps CI job runs), and 2.1.0 is the first that does
 writes: to
 network: none
-tags: needs-install, offline, writes-output
 -->
 # star-system
 

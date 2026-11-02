@@ -1,11 +1,12 @@
 <!-- willow-addon
 section: Finding things
-line: Each answer you approve marks the passage that held it, so your own questions become a test of how well the search finds things, scored as recall at five.
+line: Your approved answers used as a test: each question asked again, scored by how often the search puts the passage that held it in its top five.
 source: box
 added: 2026-10-28
 writes: record
 network: none
-tags: no-install, offline, records, search, pile
+tags: pile
+uses: pile-rank, scan
 -->
 # pile-gold
 
