@@ -199,6 +199,16 @@ def test_a_key_in_most_records_is_left_out_and_a_key_naming_its_value_stays():
     assert "a:" not in most and "b: 6" in most
 
 
+def test_a_key_at_the_top_counts_with_the_same_key_in_the_records():
+    rows = [{"t": "long words " * 20} for _ in range(4)]
+    rows[0]["note"] = rows[1]["note"] = "x"
+    out = conv({"note": "top", "rows": rows})
+    assert blocks(out)[0] == ["top"], "in the top and two records: three of five"
+    rows[1].pop("note")
+    out = conv({"note": "top", "rows": rows})
+    assert blocks(out)[0] == ["note: top"] and "note: x" in out
+
+
 def test_an_absent_question_finds_nothing_and_real_questions_still_land(tmp_path):
     """The owner's test: each word in most passages of a mirror file, paired
     with a word the folder doesn't hold, is served nothing; the questions a
