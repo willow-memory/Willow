@@ -376,3 +376,24 @@ def test_fractions_of_a_second_count_toward_the_elapsed_time():
     assert mod.convert(data, "x.gpx") == (
         "2015-12-11 run, 11 m in 0:00:01 (Friday 11 December 2015, started 15:43 +01:00)\n"
     )
+
+
+def test_a_short_track_is_in_whole_metres_and_a_single_point_has_no_distance():
+    data = b"""<gpx version="1.1" xmlns="http://www.topografix.com/GPX/1/1"><trk><name>Pool</name><type>walking</type><trkseg>
+<trkpt lat="0" lon="0"><time>2024-03-03T10:00:00Z</time></trkpt>
+<trkpt lat="0.006" lon="0"><time>2024-03-03T10:08:00Z</time></trkpt></trkseg></trk></gpx>"""
+    # 0.006 degrees of latitude is 667.17 m
+    assert mod.convert(data, "w.gpx").startswith(
+        "2024-03-03 walk: Pool, 667 m in 0:08:00"
+    )
+    one = b"""<gpx version="1.1"><trk><name>Start</name><trkseg>
+<trkpt lat="0" lon="0"><time>2024-03-03T10:00:00Z</time></trkpt></trkseg></trk></gpx>"""
+    assert mod.convert(one, "o.gpx") == (
+        "2024-03-03 activity: Start, distance and time not given (Sunday 3 March 2024, started 10:00 UTC)\n"
+    )
+
+
+def test_the_gz_limit_is_the_one_the_card_promises():
+    card = (HERE / "README.md").read_text(encoding="utf-8")
+    assert "opens to more than 256 MB is skipped" in card
+    assert mod.GZ_LIMIT == 256 * 1024 * 1024
