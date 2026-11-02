@@ -182,6 +182,10 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         b' {"cell_type": "code", "source": "df = load(\\"harbours.csv\\")\\nprint(len(df))", "outputs": [{"output_type": "stream", "name": "stdout", "text": ["6 rows\\n"]},'
         b' {"output_type": "display_data", "data": {"image/png": "iVBORw0KGgo=", "text/plain": ["<Figure size 640x480>"]}}]}]}'
     )}),
+    "shortcuts": ("shortcuts.py", {"Allotment rules.url": (
+        b"[{000214A0-0000-0000-C000-000000000046}]\r\nProp3=19,11\r\n[InternetShortcut]\r\n"
+        b"IDList=\r\nURL=https://example.org/allotment/rules\r\nIconIndex=13\r\nHotKey=0\r\n"
+    )}),
     "latex": ("latex.py", {"main.tex": (
         b"\\documentclass{article}\n\\usepackage{amsmath}\n\\title{Tides of the Estuary}\n\\author{Ada Example}\n\\begin{document}\n\\maketitle\n"
         b"\\section{Method}\\label{sec:m}\nWe measure the tide at six harbours \\cite{smith2020}. % a comment\n"

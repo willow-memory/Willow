@@ -10,6 +10,10 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `shortcuts`: the link files dragged out of a browser onto a desktop or
+  into a folder (Windows `.url`, macOS `.webloc`, Linux `.desktop`), each as
+  the title its name gives and the address it holds; a Linux launcher as its
+  name and the command it runs. A Windows `.lnk` is left alone.
 - `ui/`, willow's own UI (v1): `python ui/canvas.py` opens a page on this
   machine that goes the way a person does. Choose your folders; see what the
   kernel alone makes of them, as counts, never a file's words or name; start
