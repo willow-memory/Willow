@@ -10,6 +10,14 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `asciidoc`: AsciiDoc documents (.adoc, .asciidoc, and .asc when it isn't
+  PGP armor) as the text they show, line for line, so a passage is cited by
+  the file's own line. Titles, the document's own attributes as `name: value`,
+  admonitions as `note:`, links with an outside address after their text,
+  footnotes, lists and descriptions are kept; comments, delimiters, attribute
+  lines and includes are blank; listing and source blocks stay as written. A
+  table's line is its cells, the header row kept once rather than written onto
+  every row, so no added word sits in every passage.
 - `ui/`, willow's own UI (v1): `python ui/canvas.py` opens a page on this
   machine that goes the way a person does. Choose your folders; see what the
   kernel alone makes of them, as counts, never a file's words or name; start

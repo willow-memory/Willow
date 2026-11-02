@@ -107,6 +107,10 @@ willow/
 │   │   │   ├── annotations.py   approved answers as W3C Web Annotations: the answer as the body, each cited passage as a target with its lines and words
 │   │   │   ├── test_annotations.py
 │   │   │   └── README.md
+│   │   ├── asciidoc/
+│   │   │   ├── asciidoc.py   an AsciiDoc document as the text it shows, line for line, markup taken off
+│   │   │   ├── test_asciidoc.py
+│   │   │   └── README.md
 │   │   ├── attendance/
 │   │   │   ├── attendance.py   who was there, by person or by week
 │   │   │   ├── test_attendance.py
