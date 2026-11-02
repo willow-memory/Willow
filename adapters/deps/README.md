@@ -45,6 +45,7 @@ file, or a `floor:` line that doesn't name each floor version.
 | dialect | wordfreq 2.3.2 (2020) | wordfreq 3.1.0 | every release before 3.1.0 imports pkg_resources, which a 3.13 environment doesn't have |
 | static-search | pagefind 1.2.0a4, pagefind-bin 1.2.0a5 (their first, 2024) | 1.3.0 of each | the first uploads are alphas, and 1.2.0's index differs from build to build; 1.3.0 is the first to give the same bytes |
 | ocr | Pillow 8.0.1, pypdf 1.9 | Pillow 11.0.0, pypdf 3.1.0 | neither rule version runs on Python 3.13: no wheel, Python 2 |
+| in-process | llama-cpp-python 0.1.1 (its first, 2023) | llama-cpp-python 0.2.29 | 0.1.1 reads no GGUF; a chat takes a seed from 0.2.15; before 0.2.29 each quiet load opens /dev/null to write, a write the guard holds it to |
 
 An install that isn't there makes the add-on refuse with a message naming it,
 never skip quietly: a check that skips still looks like a pass.

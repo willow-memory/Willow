@@ -675,16 +675,6 @@
   "network": "none"
  },
  {
-  "name": "in-process",
-  "kind": "deps",
-  "section": "Assistants",
-  "line": "Suggestions from a GGUF model loaded inside the add-on itself through llama-cpp-python: no server, no port, nothing listening.",
-  "source": "new",
-  "needs": "llama-cpp-python; MIT; licence of the model varies",
-  "writes": "record",
-  "network": "none"
- },
- {
   "name": "ink-story",
   "kind": "deps",
   "section": "Play",
