@@ -283,7 +283,30 @@ def test_an_outline_with_a_link_to_one_feed_stays_an_outline_with_its_notes():
         '<outline text="Kitchen" _note="tiles"/>'
         '<outline type="rss" text="Gazette" xmlUrl="https://g.example/rss"/>'
     )
-    assert "for the newsletter" in out and "tiles" in out
+    assert out == (
+        "- Ideas\n  for the newsletter\n- Kitchen\n  tiles\n"
+        "- Gazette <https://g.example/rss>\n"
+    )
+
+
+def test_an_include_and_a_link_without_an_address_keep_what_they_have():
+    out = opml(
+        '<outline text="Archive" type="include" url="https://x.example/old.opml"/>'
+        '<outline text="Broken link" type="link"/>'
+    )
+    assert out == "- Archive <https://x.example/old.opml>\n- Broken link\n"
+
+
+def test_a_passage_fits_as_the_kernel_counts_it_newlines_and_all(tmp_path):
+    """Ten lines of 498 characters with their newlines are 508: two passages,
+    each one of the kernel's, never one the kernel cuts where it likes."""
+    kids = "".join(f'<outline text="{chr(97 + i) * 51}"/>' for i in range(9))
+    out = opml(f'<outline text="T">{kids}</outline>')
+    parts = passages(out)
+    assert len(parts) == 2
+    (tmp_path / "m").mkdir()
+    (tmp_path / "m" / "o.txt").write_text(out)
+    assert [c["text"] for c in kernel.chunks(tmp_path / "m")] == parts
 
 
 def test_a_feed_list_keeps_a_stray_item_and_its_note():

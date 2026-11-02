@@ -27,8 +27,9 @@ is a passage of its own, not headed by its folder, and one too long for a
 passage is cut, each piece starting again with the podcast's line.
 
 An outline (OmniOutliner, Workflowy, Dynalist, Logseq, Bike) is each item on its
-own line, indented by depth with "- ", and its note under it. An item's created
-date follows it in brackets, as written; a completed item is ticked, "✓", a
+own line, indented by depth with "- ", and its note under it. An item's address
+(a link's, an include's or a feed's) follows it in angle brackets and its
+created date in round ones, as written; a completed item is ticked, "✓", a
 mark that is no word, so a list of done items doesn't answer "done". A
 top-level item with children is a passage of its own, set apart by blank lines.
 One too long for a passage of the kernel's (MAX_CHUNK characters) is cut at its
@@ -117,8 +118,9 @@ def _item(el: ET.Element, depth: int) -> list[str]:
     """One outline item's own line, without its note, wrapped at its indent."""
     done = any((el.get(k) or "").lower() == v for k, v in DONE)
     line = "- " + (f"{TICK} " if done else "") + _name(el)
-    if el.get("type") == "link" and el.get("url"):
-        line += f" <{_one(el.get('url'))}>"
+    for key in ("url", "xmlUrl"):  # a link's or include's address; a feed's
+        if el.get(key):
+            line += f" <{_one(el.get(key))}>"
     if el.get("created"):
         line += f" ({_one(el.get('created'))})"
     return _wrap(line, "  " * depth)

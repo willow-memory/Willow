@@ -34,7 +34,8 @@ address. One too long for a passage is cut, each piece starting again with the
 podcast's line.
 
 An **outline** is each item on its own line, indented by depth with "- ", and
-its note under it; a created date follows in brackets, as written; a
+its note under it; a link's address follows in angle brackets and a created
+date in round ones, as written; a
 completed item is ticked "✓". A top-level item with children is its own
 passage, set apart by blank lines, so what you noted under "Garden plans" is
 found together:
