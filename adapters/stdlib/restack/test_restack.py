@@ -4,6 +4,7 @@ passes."""
 
 from __future__ import annotations
 
+import ast
 import json
 import os
 import shutil
@@ -222,3 +223,185 @@ def test_a_checkout_with_changes_of_yours_is_never_moved(clone, tmp_path):
 def test_a_branch_git_does_not_know_is_refused(clone):
     got = run(clone, "--onto", "main", "no-such-branch")
     assert got.returncode == 2 and "git doesn't know no-such-branch" in got.stdout
+
+
+# ── test_contract.py, settled by what each side added ────────────────────────
+BASE = """import os
+
+NOW = ["--now"]
+
+PILE_EXTRA: dict = {
+    "scrub": {"photo.png": b""},
+}
+
+READERS: dict = {
+    "office": ("office.py", {"a.docx": (
+        b"roof"
+    )}),
+    "clauses": ("clauses.py", {"t.html": b"terms"}),
+}  # fmt: skip
+
+COMMANDS: dict = {
+    "amounts": ("amounts.py", ["--box", "{box}"]),
+    **{name: (script, ["mirror"]) for name, (script, _) in READERS.items()},
+}  # fmt: skip
+"""
+MARKDOWN = """    "markdown": ("markdown.py", {"notes.md": (
+        b"# Notes"
+    )}),
+"""
+CSV = """    "csv-rows": ("csv_rows.py", {"rows.csv": (
+        b"a,b"
+    )}),
+"""
+SPLAT = "READERS.items()},\n"
+
+
+def after_office(text: str, entry: str) -> str:
+    """`entry` put after office's, whose last line every such entry shares."""
+    old = '    )}),\n    "clauses"'
+    assert text.count(old) == 1
+    return text.replace(old, "    )}),\n" + entry + '    "clauses"')
+
+
+def swapped(text: str, old: str, new: str) -> str:
+    assert text.count(old) == 1, old
+    return text.replace(old, new)
+
+
+def test_contract_entries_puts_each_sides_new_entries_whole_at_its_dicts_end():
+    ref = after_office(BASE, CSV)
+    mine = after_office(BASE, MARKDOWN)
+    mine = swapped(
+        mine, SPLAT, SPLAT + '    # said over it\n    "zed": ("zed.py", [])\n'
+    )
+    mine = swapped(
+        mine, '"photo.png": b""},\n', '"photo.png": b""},\n    "w": {}  # w\n'
+    )
+    mine = swapped(mine, "import os\n", "import os\nimport json\n")
+    got = rs.contract_entries(BASE, ref, mine)
+    ast.parse(got)
+    assert got.count(MARKDOWN) == got.count(CSV) == 1
+    assert got.index(CSV) < got.index(MARKDOWN) < got.index("}  # fmt: skip"), (
+        "REF's entries first, the branch's at the end, before the closing brace"
+    )
+    assert SPLAT + '    # said over it\n    "zed": ("zed.py", []),\n}' in got, (
+        "after a splat, its comment with it, given a comma"
+    )
+    assert '"photo.png": b""},\n    "w": {},  # w\n}' in got
+    assert got.startswith("import os\nimport json\n\nNOW"), "the branch's import"
+    readers = rs.keyed(got, rs.tables(ast.parse(got))["READERS"])
+    assert list(readers) == ['"office"', '"csv-rows"', '"clauses"', '"markdown"']
+    assert rs.contract_entries(BASE, BASE, BASE) == BASE
+
+
+def test_contract_entries_carries_only_whats_new_to_ref():
+    both = after_office(BASE, MARKDOWN)
+    assert rs.contract_entries(BASE, both, both) == both, "REF has it already"
+    amounts = '    "amounts": ("amounts.py", ["--box", "{box}"]),\n'
+    plain = swapped(BASE, amounts, "")
+    ref = swapped(
+        plain, "    **{name", '    "amounts": ("amounts.py", []),\n    **{name'
+    )
+    with pytest.raises(rs.Stop, match='both sides added "amounts" to COMMANDS'):
+        rs.contract_entries(plain, ref, BASE)
+    bare = swapped(BASE, 'b"terms"}),\n}', 'b"terms"})\n}')
+    mine = swapped(bare, 'b"terms"})\n}', 'b"terms"}),\n' + CSV + "}")
+    with pytest.raises(rs.Stop, match="not only adds entries"):
+        rs.contract_entries(bare, bare, mine)  # the branch gave base's last a comma
+    got = rs.contract_entries(BASE, bare, after_office(BASE, CSV))
+    assert 'b"terms"}),\n' + CSV + "}" in got, "REF's last entry given its comma"
+
+
+@pytest.mark.parametrize("change", [
+    ('b"roof"', 'b"a new roof"'),  # an entry that was there, changed
+    ('    "amounts": ("amounts.py", ["--box", "{box}"]),\n', ""),  # one removed
+    ('NOW = ["--now"]', 'NOW = ["--then"]'),  # another statement
+    ("import os\n", ""),  # an import gone
+    ("}  # fmt: skip\n\nCOMMANDS", "}  # fmt: skip\n# a word\nCOMMANDS"),
+])  # fmt: skip
+def test_contract_entries_stops_when_the_branch_changed_anything_but_adding(change):
+    mine = after_office(swapped(BASE, *change), MARKDOWN)
+    with pytest.raises(rs.Stop, match="not only adds entries"):
+        rs.contract_entries(BASE, after_office(BASE, CSV), mine)
+
+
+def test_contract_entries_stops_on_what_it_cant_take_whole():
+    ref, mine = after_office(BASE, CSV), after_office(BASE, MARKDOWN)
+    with pytest.raises(rs.Stop, match="doesn't parse on the branch"):
+        rs.contract_entries(BASE, ref, BASE + "def (\n")
+    shared = swapped(BASE, '    "clauses"', '    "x": 1, "clauses"')
+    with pytest.raises(rs.Stop, match='READERS\'s "x" shares a line'):
+        rs.contract_entries(BASE, ref, shared)
+    with pytest.raises(rs.Stop, match="REF has no READERS"):
+        rs.contract_entries(BASE, "import os\n", mine)
+    flat = swapped(ref, 'b"terms"}),\n}', 'b"terms"})}')
+    with pytest.raises(rs.Stop, match="doesn't close on a line of its own"):
+        rs.contract_entries(BASE, flat, mine)
+    with pytest.raises(rs.Stop, match="no import to put"):
+        rs.contract_entries(
+            BASE, swapped(ref, "import os\n", ""), "import json\n" + BASE
+        )
+
+
+CONTRACT_FILE = "adapters/stdlib/ci/test_contract.py"
+
+
+def reader(name: str) -> str:
+    return (f'    "{name}": ("{name}.py", {{"{name}.md": (\n'
+            f'        b"# {name} notes\\n"\n    )}}),\n')  # fmt: skip
+
+
+def add_reader(repo: Path, branch: str, name: str, also=lambda t: t) -> None:
+    """On `branch`, a READERS entry after codebase-memory's, as each reader adds
+    its own after one that is there."""
+    git(repo, "checkout", "-q", branch)
+    path = repo / CONTRACT_FILE
+    text = swapped(path.read_text(encoding="utf-8"), '    )}),\n    "nestor"',
+                   "    )}),\n" + reader(name) + '    "nestor"')  # fmt: skip
+    path.write_text(also(text), encoding="utf-8")
+    git(repo, "commit", "-q", "-am", f"{name}, a reader")
+
+
+def test_two_readers_conflicting_in_readers_are_settled_whole(clone):
+    add_reader(clone, "work", "markdown",
+               lambda t: swapped(t, "import zipfile\n", "import zipfile\nimport base64\n"))  # fmt: skip
+    add_reader(clone, "main", "csv-rows")
+    # the failure as it was met: git splits the two entries, so neither side
+    # of the conflict holds a whole one and the line rule can't settle it
+    git(clone, "checkout", "-q", "--detach", "work")
+    subprocess.run(["git", "merge", "-q", "main"], cwd=clone, env=ENV, capture_output=True)  # fmt: skip
+    split = (clone / CONTRACT_FILE).read_text(encoding="utf-8")
+    assert "<<<<<<<" in split
+    with pytest.raises((rs.Stop, SyntaxError)):
+        ast.parse(rs.contract(rs.swap(split)))
+    git(clone, "merge", "--abort")
+    git(clone, "checkout", "-q", "--detach")
+    old = git(clone, "rev-parse", "work")
+    got = run(clone, "--onto", "main", "work")
+    if not docs_pass(clone):
+        assert got.returncode == 2 and "test_docs.py fails" in got.stdout, got.stdout
+        assert git(clone, "rev-parse", "work") == old
+        return
+    assert got.returncode == 0, got.stdout + got.stderr
+    assert CONTRACT_FILE in got.stdout
+    text = git(clone, "show", f"work:{CONTRACT_FILE}") + "\n"
+    ast.parse(text)
+    assert text.count(reader("markdown")) == text.count(reader("csv-rows")) == 1
+    assert text.count("\nimport base64\n") == 1 and "<<<<<<<" not in text
+
+
+@pytest.mark.parametrize("change", [
+    ('{"letter.docx": _docx("The roof is fixed.")}', '{"letter.docx": _docx("Fixed.")}'),
+    ('NOW = ["--now", "2026-10-23T00:00:00Z"]', 'NOW = ["--now", "2026-10-24T00:00:00Z"]'),
+])  # fmt: skip
+def test_a_reader_branch_that_changed_more_than_it_added_stops_untouched(clone, change):  # fmt: skip
+    add_reader(clone, "work", "markdown", lambda t: swapped(t, *change))
+    add_reader(clone, "main", "csv-rows")
+    git(clone, "checkout", "-q", "--detach")
+    old = git(clone, "rev-parse", "work")
+    got = run(clone, "--onto", "main", "work")
+    assert got.returncode == 2, got.stdout + got.stderr
+    assert "work: stopped, left as it was: test_contract.py: the branch changes" in got.stdout  # fmt: skip
+    assert git(clone, "rev-parse", "work") == old
+    assert git(clone, "worktree", "list").count("\n") == 0
