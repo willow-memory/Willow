@@ -299,14 +299,16 @@ def test_an_include_and_a_link_without_an_address_keep_what_they_have():
 
 def test_a_passage_fits_as_the_kernel_counts_it_newlines_and_all(tmp_path):
     """Ten lines of 498 characters with their newlines are 508: two passages,
-    each one of the kernel's, never one the kernel cuts where it likes."""
-    kids = "".join(f'<outline text="{chr(97 + i) * 51}"/>' for i in range(9))
-    out = opml(f'<outline text="T">{kids}</outline>')
-    parts = passages(out)
-    assert len(parts) == 2
+    each one of the kernel's, never one the kernel cuts where it likes. Ten of
+    489 are 499, which the kernel keeps whole: one passage, not cut early."""
     (tmp_path / "m").mkdir()
-    (tmp_path / "m" / "o.txt").write_text(out)
-    assert [c["text"] for c in kernel.chunks(tmp_path / "m")] == parts
+    for width, count in ((51, 2), (50, 1)):
+        kids = "".join(f'<outline text="{chr(97 + i) * width}"/>' for i in range(9))
+        out = opml(f'<outline text="T">{kids}</outline>')
+        parts = passages(out)
+        assert len(parts) == count
+        (tmp_path / "m" / "o.txt").write_text(out)
+        assert [c["text"] for c in kernel.chunks(tmp_path / "m")] == parts
 
 
 def test_a_feed_list_keeps_a_stray_item_and_its_note():
