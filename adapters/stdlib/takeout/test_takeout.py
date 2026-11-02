@@ -95,33 +95,38 @@ def js(items) -> bytes:
 
 
 def when(raw: str) -> str:
-    """The time an HTML date line is written as."""
-    return mod.convert(page(cell("YouTube", SEARCHED.format(raw))), "a.html").split(
-        " YouTube:"
-    )[0]
+    """The time an HTML date line is written as (the line before its title)."""
+    got = mod.convert(page(cell("YouTube", SEARCHED.format(raw))), "a.html")
+    return got.split("\n\n")[-1].split(" Searched for")[0]
+
+
+def zones(*raws: str) -> str:
+    """The first passage of a page whose activities carry these dates."""
+    html = page(*(cell("YouTube", SEARCHED.format(r)) for r in raws))
+    return mod.convert(html, "a.html").split("\n\n")[0]
 
 
 # ── JSON ────────────────────────────────────────────────────────────────────
 def test_a_search_is_one_dated_line_in_utc_to_the_minute_each_its_own_passage():
     assert mod.convert(js(SEARCH), "MyActivity.json") == (
-        "2024-03-03 10:15 Search: Searched for leek soup\n\n"
-        "2024-02-28 21:04 Search: Searched for tomato blight\n"
+        "2024-03-03 10:15 Searched for leek soup\n\n"
+        "2024-02-28 21:04 Searched for tomato blight\n"
     )
 
 
 def test_a_watch_keeps_its_channel_and_an_ad_says_so():
     assert mod.convert(js(WATCH), "watch-history.json") == (
-        "2024-03-02 19:40 YouTube: Watched Leek and potato soup in 10 minutes, channel: Soup Kitchen\n\n"
-        "2024-03-01 08:00 YouTube: Watched a video that has been removed\n\n"
-        "2024-03-01 07:59 YouTube: Watched Garden hose 50% off [From Google Ads]\n"
+        "2024-03-02 19:40 Watched Leek and potato soup in 10 minutes (Soup Kitchen)\n\n"
+        "2024-03-01 08:00 Watched a video that has been removed\n\n"
+        "2024-03-01 07:59 Watched Garden hose 50% off [From Google Ads]\n"
     )
 
 
-def test_subtitles_of_anything_but_a_watch_follow_in_brackets():
+def test_subtitles_follow_in_brackets_and_only_named_ones():
     item = {"header": "Maps", "title": "Viewed area around Leeds", "time": "2024-03-01T08:00:00Z",
             "subtitles": [{"name": "Kirkgate Market"}, {"name": ""}, {"url": "x"}, "loose", {"name": "Leeds"}]}  # fmt: skip
     assert mod.convert(js([item]), "a.json") == (
-        "2024-03-01 08:00 Maps: Viewed area around Leeds (Kirkgate Market; Leeds)\n"
+        "2024-03-01 08:00 Viewed area around Leeds (Kirkgate Market; Leeds)\n"
     )
 
 
@@ -131,29 +136,23 @@ def test_a_time_that_is_not_utc_or_not_a_day_is_kept_as_written():
             js([{"header": "Search", "title": "x", "time": t}]), "a.json"
         )
 
-    assert at("2024-03-01T08:00:00+00:00") == "2024-03-01 08:00 Search: x\n"
-    assert at("2024-03-01T08:00:00+01:00") == "[2024-03-01T08:00:00+01:00] Search: x\n"
-    assert at("2024-02-30T08:00:00Z") == "[2024-02-30T08:00:00Z] Search: x\n"
-    assert (
-        at("2024-03-01T08:00:00Z trailing")
-        == "[2024-03-01T08:00:00Z trailing] Search: x\n"
-    )
-    assert at("") == "[no date] Search: x\n"
-    assert (
-        mod.convert(js([{"header": "Search", "title": "x"}]), "a.json")
-        == "[no date] Search: x\n"
-    )
+    assert at("2024-03-01T08:00:00+00:00") == "2024-03-01 08:00 x\n"
+    assert at("2024-03-01T08:00:00+01:00") == "[2024-03-01T08:00:00+01:00] x\n"
+    assert at("2024-02-30T08:00:00Z") == "[2024-02-30T08:00:00Z] x\n"
+    assert at("2024-03-01T08:00:00Z trailing") == "[2024-03-01T08:00:00Z trailing] x\n"
 
 
-def test_a_missing_product_or_title_is_said_not_left_out():
+def test_a_missing_part_adds_no_word_and_an_empty_activity_is_left_out():
     items = [
-        {"header": "", "products": ["Chrome"], "title": "Visited Leek soup", "time": "2024-03-01T08:00:00Z"},
-        {"header": None, "title": "", "time": "2024-03-01T08:00:00Z"},
-    ]  # fmt: skip
+        {"header": "Search", "title": "Searched for leek soup"},
+        {"header": "Search", "title": "", "time": "2024-03-01T08:00:00Z"},
+        {"header": "Search", "title": "  ", "time": ""},
+        {"header": "Search", "title": None, "details": [{"name": "From Google Ads"}]},
+    ]
     assert mod.convert(js(items), "a.json") == (
-        "2024-03-01 08:00 Chrome: Visited Leek soup\n\n"
-        "2024-03-01 08:00 (no product): (no title)\n"
+        "Searched for leek soup\n\n2024-03-01 08:00\n\n[From Google Ads]\n"
     )
+    assert mod.convert(js(items[2:3]), "a.json") is None
 
 
 def test_whitespace_in_a_title_is_one_space():
@@ -163,8 +162,7 @@ def test_whitespace_in_a_title_is_one_space():
         "time": "2024-03-01T08:00:00Z",
     }
     assert (
-        mod.convert(js([item]), "a.json")
-        == "2024-03-01 08:00 Search: Searched for leek soup\n"
+        mod.convert(js([item]), "a.json") == "2024-03-01 08:00 Searched for leek soup\n"
     )
 
 
@@ -182,20 +180,30 @@ def test_an_html_page_reads_as_the_json_does():
         cell("YouTube", WATCHED.format("Mar 2, 2024, 7:40:05 PM UTC")),
     )
     assert mod.convert(html, "search-history.html") == (
-        "2024-03-03 10:15 YouTube: Searched for leek soup\n\n"
-        "2024-03-02 19:40 YouTube: Watched Leek and potato soup in 10 minutes, channel: Soup Kitchen\n"
+        "2024-03-03 10:15 Searched for leek soup\n\n"
+        "2024-03-02 19:40 Watched Leek and potato soup in 10 minutes (Soup Kitchen)\n"
     )
 
 
-def test_an_english_html_date_is_read_and_its_zone_kept_unless_utc():
+def test_an_english_html_date_is_read_to_the_minute_as_it_reads():
     assert when("Mar 3, 2024, 10:15:22 AM GMT") == "2024-03-03 10:15"
     assert when("Mar 3, 2024, 10:15:22 AM GMT") == "2024-03-03 10:15"
-    assert when("Mar 3, 2024, 7:05:00 PM CET") == "2024-03-03 19:05 CET"
+    assert when("Mar 3, 2024, 7:05:00 PM CET") == "2024-03-03 19:05"
     assert when("Mar 3, 2024, 12:05:00 AM GMT") == "2024-03-03 00:05"
     assert when("Mar 3, 2024, 12:05:00 PM GMT") == "2024-03-03 12:05"
-    assert when("Sept 3, 2024, 1:05:00 PM GMT+01:00") == "2024-09-03 13:05 GMT+01:00"
+    assert when("Sept 3, 2024, 1:05:00 PM GMT+01:00") == "2024-09-03 13:05"
     assert when("3 Mar 2024, 07:59:00 GMT") == "2024-03-03 07:59"
-    assert when("3 December 2024, 23:59:00 BST") == "2024-12-03 23:59 BST"
+    assert when("3 December 2024, 23:59:00 BST") == "2024-12-03 23:59"
+
+
+def test_a_zone_other_than_utc_is_named_once_at_the_top_never_on_each_line():
+    utc = "Mar 3, 2024, 10:15:22 AM GMT"
+    cet, cest = "Mar 3, 2024, 7:05:00 PM CET", "Jul 3, 2024, 7:05:00 PM CEST"
+    assert zones(cet, cest, cet) == "time zone: CET, CEST"
+    assert zones(utc, cet) == "time zone: GMT, CET"
+    assert zones(utc, "Mar 3, 2024, 10:15:22 AM UTC").startswith("2024-03-03 10:15 ")
+    html = page(*(cell("YouTube", SEARCHED.format(r)) for r in (cet, cest, cet)))
+    assert mod.convert(html, "a.html").count("CE") == 2
 
 
 def test_an_html_date_that_does_not_read_in_full_is_kept_as_written():
@@ -209,6 +217,7 @@ def test_an_html_date_that_does_not_read_in_full_is_kept_as_written():
         "Mar 3, 2024",
     ):
         assert when(raw) == f"[{raw}]", raw
+        assert zones(raw).startswith("["), "a date not read names no zone"
 
 
 def test_html_details_are_kept_and_the_rest_of_the_caption_is_not():
@@ -220,16 +229,13 @@ def test_html_details_are_kept_and_the_rest_of_the_caption_is_not():
         )
     )
     assert mod.convert(html, "watch-history.html") == (
-        "2024-03-01 07:59 YouTube: Watched Leek and potato soup in 10 minutes, channel: Soup Kitchen [From Google Ads]\n"
+        "2024-03-01 07:59 Watched Leek and potato soup in 10 minutes (Soup Kitchen) [From Google Ads]\n"
     )
 
 
-def test_an_html_activity_with_no_date_line_says_so_and_an_empty_cell_is_passed_over():
+def test_an_html_activity_with_no_date_line_is_its_title_and_an_empty_cell_is_passed_over():
     html = page(cell("Search", "Searched for leek soup"), cell("Search", ""))
-    assert (
-        mod.convert(html, "MyActivity.html")
-        == "[no date] Search: Searched for leek soup\n"
-    )
+    assert mod.convert(html, "MyActivity.html") == "Searched for leek soup\n"
 
 
 def test_a_line_break_in_the_source_is_not_a_break_in_the_page():
@@ -241,7 +247,7 @@ def test_a_line_break_in_the_source_is_not_a_break_in_the_page():
     )
     assert (
         mod.convert(html, "MyActivity.html")
-        == "2024-03-03 10:15 Search: Searched for leek soup\n"
+        == "2024-03-03 10:15 Searched for leek soup\n"
     )
 
 
@@ -272,7 +278,43 @@ def test_when_did_i_search_for_leek_soup_is_answered_by_its_own_line(tmp_path):
     pile = kernel.chunks(out)
     assert len(pile) == 21, "each activity its own passage"
     served = kernel.rank(pile, "when did I search for leek soup")
-    assert served[0]["text"] == "2024-03-03 10:15 Search: Searched for leek soup"
+    assert served[0]["text"] == "2024-03-03 10:15 Searched for leek soup"
+
+
+def test_no_word_the_reader_adds_is_in_most_passages(tmp_path):
+    """A word in most passages is half of any two-word question: paired with
+    one the export doesn't hold, it must serve nothing. The only words left
+    in most passages are Google's own titles ("Searched for", "Watched") and
+    the dates' digits; the path's words (YouTube, history) are the export's."""
+    files = {
+        "watch-history.json": js(WATCH + [dict(WATCH[0], title="Watched " + t) for t in ("Stock", "Croutons", "Barley broth", "Nettles", "Chowder")]),
+        "search-history.html": page(*(
+            cell("YouTube", SEARCHED.format(f"Mar {d}, 2024, 7:05:00 PM CET")) for d in range(1, 8)
+        )),
+    }  # fmt: skip
+    got, out = mirror_of(tmp_path, files)
+    assert got.returncode == 0, got.stderr
+    pile = kernel.chunks(out)
+    for f in ("watch-history.json.txt", "search-history.html.txt"):
+        mine = [c for c in pile if c["path"] == f]
+        count: dict[str, int] = {}
+        for c in mine:
+            for w in set(kernel.words(c["text"])):
+                count[w] = count.get(w, 0) + 1
+        common = {w for w, n in count.items() if n * 2 > len(mine) and not w.isdigit()}
+        assert common <= {"watched", "searched", "for", "soup", "kitchen", "leek"}, (
+            common
+        )
+    source = {"watched", "searched", "leek", "soup", "kitchen"}
+    for w in ("youtube", "channel", "product", "date", "title", "cet", "zone", "time"):
+        assert w not in source
+        served = [c["text"] for c in kernel.rank(pile, f"volcano {w}")]
+        if w in ("cet", "zone", "time"):  # the one heading passage, never an activity
+            assert served == ["time zone: CET"], (w, served)
+        else:
+            assert served == [], (w, served)
+    texts = [c["text"] for c in kernel.rank(pile, "what did I watch from Soup Kitchen")]
+    assert texts[0].endswith("(Soup Kitchen)")
 
 
 # ── the command line ────────────────────────────────────────────────────────
@@ -298,9 +340,7 @@ def test_mirror_writes_each_activity_file_beside_its_path_and_leaves_the_rest(tm
         "Takeout/My Activity/Search/MyActivity.json.txt",
         "Takeout/YouTube and YouTube Music/history/watch-history.html.txt",
     ]
-    assert (
-        (out / made[1]).read_text().startswith("2024-03-02 19:40 YouTube: Watched Leek")
-    )
+    assert (out / made[1]).read_text().startswith("2024-03-02 19:40 Watched Leek")
 
 
 def test_the_same_folder_gives_the_same_bytes_and_is_never_changed(tmp_path):
@@ -344,11 +384,11 @@ def test_a_mirror_bigger_than_the_kernel_reads_is_cut_into_parts_it_can(tmp_path
         (out / mod._part_name("watch-history.json", n)).read_text() for n in (1, 2)
     ]
     assert all(len(t.encode()) <= kernel.MAX_FILE for t in texts)
-    assert texts[0].startswith("2024-03-01 08:00 YouTube: Watched video 0 ")
+    assert texts[0].startswith("2024-03-01 08:00 Watched video 0 ")
     assert texts[0].endswith("x\n") and not texts[0].endswith("\n\n")
     every = (texts[0] + "\n" + texts[1]).split("\n\n")
     assert len(every) == 12000 and every[-1].startswith(
-        "2024-03-01 08:00 YouTube: Watched video 11999 "
+        "2024-03-01 08:00 Watched video 11999 "
     )
 
     (tmp_path / "src" / "watch-history.json").write_bytes(js(big[:2]))
@@ -411,5 +451,7 @@ def test_main_in_process_writes_and_says_so(tmp_path, capsys, monkeypatch):
     assert mod.main(argv) == kernel.ALIVE
     assert capsys.readouterr().out == f"wrote 1 files to {out}; skipped 0\n"
     assert (
-        (out / "MyActivity.json.txt").read_text().startswith("2024-03-03 10:15 Search:")
+        (out / "MyActivity.json.txt")
+        .read_text()
+        .startswith("2024-03-03 10:15 Searched for")
     )

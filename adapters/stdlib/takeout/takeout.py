@@ -6,35 +6,42 @@ Walks FOLDER for .json and .html files that are a My Activity export (hidden
 folders and files skipped; any other JSON or HTML skipped and counted) and
 writes each activity as one dated line, in the file's own order:
 
-    2024-03-03 10:15 Search: Searched for leek soup
+    2024-03-03 10:15 Searched for leek soup
 
-    2024-03-02 19:40 YouTube: Watched Leek and potato soup, channel: Soup Kitchen
+    2024-03-02 19:40 Watched Leek and potato soup (Soup Kitchen)
 
 Takeout writes the same shape for every product: `My Activity/<Product>/
 MyActivity.json` (or `.html`), and YouTube's `history/watch-history` and
 `search-history`, as JSON or HTML. A JSON file is a list of activities, each
 with a `header` (the product), a `title` ("Searched for ..."), a `time` and
 `subtitles` (a watch's channel); an HTML file is the same in `outer-cell`
-blocks, a `header-cell` naming the product and a `content-cell` holding the
-title, the channel and the date. A file is told by what it holds, not by its
-name.
+blocks, a `content-cell` holding the title, the channel and the date. A file
+is told by what it holds, not by its name.
 
 The time is the file's: a JSON `time` is in UTC, written to the minute. An
 HTML date is written in the account's own time zone and language; an English
 one ("Mar 3, 2024, 10:15:22 AM GMT", or "3 Mar 2024, 10:15:22 GMT") is
-written to the minute, with its zone after it unless that is GMT or UTC. A
-date in another language, or one that doesn't read in full, is kept as
-written in brackets ("[3 mars 2024, 10:15:22 UTC]"), never guessed, and an
-activity with no date at all says "[no date]".
+written to the minute as it reads, the clock of the zone it names. When any
+zone is other than GMT or UTC, the zones the file uses are named once, in a
+passage of its own at the top ("time zone: CET, CEST"), not on every line, so
+a line's time is the local one and which of those zones it was in is not
+said beside it. A date in another language, or one that doesn't read in full,
+is kept as written in brackets ("[3 mars 2024, 10:15:22 UTC]"), never guessed.
 
-A watch's channel follows its title; any other activity's subtitles follow in
-brackets, and its details ("From Google Ads") in square brackets. Links,
-`products`, `activityControls` and places (`locationInfos`) are not copied.
+Only what the file says is written: the title as Google wrote it, then its
+subtitles (a watch's channel) in brackets and its details ("From Google Ads")
+in square brackets. Nothing is added to every line: no product name (the
+file's path holds it), no labels, and nothing for a part that is missing: an
+activity with no date starts with its title, one with no title is its date,
+and one with neither is left out. Links, `products`, `activityControls` and
+places (`locationInfos`) are not copied.
 
 Each activity is its own passage, with a blank line between: the kernel
 serves a passage that holds half of a question's words, so "when did I
 search for leek soup" is answered by the one line that holds the search and
-its date, never by a run of other searches that happens to hold "soup".
+its date, never by a run of other searches that happens to hold "soup". A
+word written into every passage would be half of any two-word question, and
+would serve an unrelated activity for something the export doesn't hold.
 
 Each file is written to MIRROR at the same relative path with `.txt` added.
 A mirror bigger than the kernel reads from one file (`kernel.MAX_FILE`, 1 MB),
@@ -108,48 +115,43 @@ def stamp(y: int, mo: int, d: int, h: int, mi: int) -> str | None:
 
 
 def json_when(raw: object) -> str:
-    """A JSON `time` as "YYYY-MM-DD HH:MM" (UTC), else as written."""
+    """A JSON `time` as "YYYY-MM-DD HH:MM" (UTC), else as written, or "" for none."""
     text = clean(raw)
     if not text:
-        return "[no date]"
+        return ""
     m = ISO.fullmatch(text)
     got = m and stamp(*(int(g) for g in m.groups()))
     return got or f"[{text}]"
 
 
-def html_when(raw: str) -> str:
-    """An HTML date line to the minute, with its zone unless UTC; else as written."""
+def html_when(raw: str) -> tuple[str, str]:
+    """An HTML date line to the minute and its zone as written, else as
+    written in brackets with no zone."""
     text = clean(raw)
-    if not text:
-        return "[no date]"
     m = US.fullmatch(text) or GB.fullmatch(text)
     mo = m and MONTHS.get(m.group("mon").lower())
     if not m or not mo:
-        return f"[{text}]"
+        return f"[{text}]", ""
     h = int(m.group("h"))
     if "ap" in m.groupdict():
         if not 1 <= h <= 12:
-            return f"[{text}]"
+            return f"[{text}]", ""
         h = h % 12 + (12 if m.group("ap")[0] in "Pp" else 0)
     got = stamp(int(m.group("y")), mo, int(m.group("d")), h, int(m.group("mi")))
     if not got:
-        return f"[{text}]"
-    zone = m.group("zone")
-    return got if zone in ("GMT", "UTC") else f"{got} {zone}"
+        return f"[{text}]", ""
+    return got, m.group("zone")
 
 
-def line(
-    when: str, product: str, title: str, subs: list[str], details: list[str]
-) -> str:
-    """One activity: its time, its product, its title, its channel or subtitles."""
-    text = title or "(no title)"
-    if subs and text.startswith("Watched "):
-        text += ", channel: " + "; ".join(subs)
-    elif subs:
-        text += " (" + "; ".join(subs) + ")"
+def line(when: str, title: str, subs: list[str], details: list[str]) -> str:
+    """One activity: its time, its title, its subtitles and details, each only
+    when the file has it ("" when it has none)."""
+    out = [when, title]
+    if subs:
+        out.append("(" + "; ".join(subs) + ")")
     if details:
-        text += " [" + "; ".join(details) + "]"
-    return f"{when} {product or '(no product)'}: {text}"
+        out.append("[" + "; ".join(details) + "]")
+    return " ".join(t for t in out if t)
 
 
 def from_json(data: bytes) -> list[str] | None:
@@ -166,25 +168,21 @@ def from_json(data: bytes) -> list[str] | None:
         return None
     out = []
     for it in items:
-        product = clean(it.get("header"))
-        if not product and isinstance(it.get("products"), list) and it["products"]:
-            product = clean(it["products"][0])
         names = []
         for key in ("subtitles", "details"):
             got = it.get(key) if isinstance(it.get(key), list) else []
             names.append(
                 [n for s in got if isinstance(s, dict) and (n := clean(s.get("name")))]
             )
-        out.append(
-            line(json_when(it.get("time")), product, clean(it.get("title")), *names)
-        )
-    return out
+        got = line(json_when(it.get("time")), clean(it.get("title")), *names)
+        if got:
+            out.append(got)
+    return out or None
 
 
 class Cells(HTMLParser):
-    """The `outer-cell` blocks of a My Activity page: for each, its header, its
-    body's lines (split at <br>) and its caption's lines, a bold label as
-    "\x00label"."""
+    """The `outer-cell` blocks of a My Activity page: for each, its body's
+    lines (split at <br>) and its caption's lines, a bold label as "\x00label"."""
 
     def __init__(self) -> None:
         super().__init__(convert_charrefs=True)
@@ -199,17 +197,15 @@ class Cells(HTMLParser):
             cls = (dict(attrs).get("class") or "").split()
             role = None
             if "outer-cell" in cls:
-                self.cells.append({"header": "", "body": "", "caption": ""})
+                self.cells.append({"body": "", "caption": ""})
                 role = "outer"
-            elif self.cells and "header-cell" in cls:
-                role = "header"
             elif self.cells and "content-cell" in cls:
                 if "mdl-typography--caption" in cls:
                     role = "caption"
                 elif "mdl-typography--text-right" not in cls:
                     role = "body"
             self.stack.append(role)
-        elif tag == "br" and self.part() in ("body", "caption", "header"):
+        elif tag == "br" and self.part() in ("body", "caption"):
             self.cells[-1][self.part()] += "\n"
         elif tag == "b" and self.part() == "caption":
             self.cells[-1]["caption"] += "\n\x00"
@@ -221,7 +217,7 @@ class Cells(HTMLParser):
             self.cells[-1]["caption"] += "\n"
 
     def handle_data(self, data: str) -> None:
-        if self.part() in ("body", "caption", "header"):  # a line ends only at <br>
+        if self.part() in ("body", "caption"):  # a line ends only at <br>
             self.cells[-1][self.part()] += data.replace("\n", " ").replace("\r", " ")
 
 
@@ -240,21 +236,24 @@ def from_html(data: bytes) -> list[str] | None:
     page = Cells()
     page.feed(text)
     page.close()
-    out = []
+    out, zones = [], []
     for cell in page.cells:
         body = lines_of(cell["body"])
         if not body:
             continue
         title, *rest = body
-        when = html_when(rest.pop()) if rest else "[no date]"
+        when, zone = html_when(rest.pop()) if rest else ("", "")
+        if zone and zone not in zones:
+            zones.append(zone)
         details, label = [], ""
         for t in lines_of(cell["caption"]):
             if t.startswith("\x00"):
                 label = t[1:].strip().rstrip(":")
             elif label == "Details":
                 details.append(t)
-        product = " ".join(lines_of(cell["header"]))
-        out.append(line(when, product, title, rest, details))
+        out.append(line(when, title, rest, details))
+    if out and set(zones) - {"GMT", "UTC"}:
+        out.insert(0, "time zone: " + ", ".join(zones))
     return out or None
 
 
