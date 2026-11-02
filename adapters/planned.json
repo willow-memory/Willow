@@ -340,15 +340,6 @@
   "network": "none"
  },
  {
-  "name": "dotfiles",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Your dotfiles as passages: which file sets what, for 'where did I set my editor?'",
-  "source": "new",
-  "writes": "to",
-  "network": "none"
- },
- {
   "name": "email-ask",
   "kind": "stdlib",
   "section": "Ways to use it",

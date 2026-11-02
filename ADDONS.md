@@ -19,11 +19,11 @@ is written: `no-install` or `needs-install`; `offline`, `this-machine` or
 tag its author chose, if any. *near* names the three add-ons closest to it.
 
 <!-- willow:pools -->
-`████████████░░░░░░░░` **322 of 517 built** · 467 need no install · 50 need one
+`████████████░░░░░░░░` **323 of 517 built** · 467 need no install · 50 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
-| Reading more kinds of files | 91 | 29 | 112 | 8 |
+| Reading more kinds of files | 92 | 28 | 112 | 8 |
 | Finding things | 32 | 14 | 36 | 10 |
 | Your own words | 19 | 7 | 23 | 3 |
 | Keeping track | 40 | 16 | 56 | 0 |
@@ -78,9 +78,9 @@ its list: someone who speaks the language can add one without much Python.
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W45 -->
-**[across](adapters/stdlib/across/)** — One page made from several willow records at once (each one's digest, export, timeline or readings), every line still cited by where it came from.
+**[mutants](adapters/stdlib/mutants/)** — Breaks each add-on's code on purpose and checks its tests notice.
 
-*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 322 built add-ons in name order.*
+*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 323 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -106,7 +106,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - **canvas** (idea) — Canvas course exports: pages, assignments and discussions as passages. *new* `no-install` `offline` `assignments` `course` · near: moodle, syllabus, google-classroom
 - [**chats**](adapters/stdlib/chats/) — WhatsApp and Telegram exports, one dated line per message. *new* `no-install` `offline` `message` `chats` · near: texts, matrix, slack
 - [**chordpro**](adapters/stdlib/chordpro/) — ChordPro song sheets: titles, lyrics and chords, so you can ask which song had that line. *new* `no-install` `offline` `title` `lyrics` · near: musicxml, letterboxd, mediawiki
-- [**ci-logs**](adapters/stdlib/ci-logs/) — CI run logs you downloaded (GitHub Actions, GitLab CI, Forgejo Actions): each failing step as a passage. *new* `no-install` `offline` `log` `failed` · near: ci-why, logs, ci-cache
+- [**ci-logs**](adapters/stdlib/ci-logs/) — CI run logs you downloaded (GitHub Actions, GitLab CI, Forgejo Actions): each failing step as a passage. *new* `no-install` `offline` `log` `failed` · near: ci-why, ci-cache, logs
 - [**clauses**](adapters/stdlib/clauses/) — A policy, contract or set of terms as one sentence a passage, so an answer lands on the clause, and what changed between two versions, sentence by sentence. *new* `no-install` `offline` `policies` · near: web-pages, photos, pdf
 - [**code-comments**](adapters/stdlib/code-comments/) — A codebase's comments and docstrings as passages, cited by file and line. *new* `no-install` `offline` `codebase` · near: codebase-memory, asciidoc, latex
 - [**codebase-memory**](adapters/stdlib/codebase-memory/) — codebase-memory-mcp's code graph, read from a copy of its SQLite file: each function, what calls it, and its file and line. *new* `no-install` `offline` `sqlite` `copy` · near: bookmarks, nestor, code-comments
@@ -115,7 +115,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - [**csv-rows**](adapters/stdlib/csv-rows/) — CSV and TSV tables as one passage per row, the header row kept once as the first. *new* `no-install` `offline` `csv` `log` · near: json-paths, google-keep, irc
 - [**day-one**](adapters/stdlib/day-one/) — Day One's JSON export: each journal entry as a dated passage, with its place and weather. *new* `no-install` `offline` `json` · near: gh-json, chats, karakeep
 - [**discord**](adapters/stdlib/discord/) — Discord's data package: your messages, one dated line each, by server and channel. *new* `no-install` `offline` `message` `channel` · near: slack, irc, matrix
-- **dotfiles** (idea) — Your dotfiles as passages: which file sets what, for 'where did I set my editor?' *new* `no-install` `offline` `sets` `editor` · near: start, clauses, mcp
+- [**dotfiles**](adapters/stdlib/dotfiles/) — Your dotfiles as passages: which file sets what, for 'where did I set my editor?' *new* `no-install` `offline` · near: org, json-paths, latex
 - [**evernote**](adapters/stdlib/evernote/) — Evernote's .enex files: each note as plain text with its notebook, tags and dates. *new* `no-install` `offline` `tags` · near: joplin, karakeep, wallabag
 - [**family-tree**](adapters/stdlib/family-tree/) — Family trees from GEDCOM files: who was born where and when, and which record says so. *new* `no-install` `offline` · near: places, bibtex, org
 - **forgejo-dump** (idea) — A Forgejo or Gitea dump, Codeberg's included: issues, pull requests and wiki pages as dated passages. *new* `no-install` `offline` `requests` `issues` · near: github-archive, forgejo, gh-json
@@ -267,7 +267,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**abbreviations**](adapters/stdlib/abbreviations/) — Your own shorthand, written down once (appt, Rx, w/c), so a question finds either form. *new* `no-install` `offline` `form` `down` · near: accents, stems, month-first
 - [**accents**](adapters/stdlib/accents/) — A word typed without its accent read as your files write it, and the words-list lines that make it last. *new* `no-install` `offline` · near: abbreviations, stems, typos
 - [**dialect**](adapters/deps/dialect/) — The words you use far more than the world does: your own dialect, from your files against wordfreq's counts. Needs wordfreq; Apache-2.0, its data CC BY-SA 4.0. *new* `needs-install` `offline` · near: code-shape, stems, record-sql
-- **memoir** (idea) — A question a week about your life, answered in your own words and kept, so your story is in your files. *new* `no-install` `offline` `life` · near: quiz, browse, why-not
+- **memoir** (idea) — A question a week about your life, answered in your own words and kept, so your story is in your files. *new* `no-install` `offline` · near: quiz, why-not, browse
 - [**nicknames**](adapters/stdlib/nicknames/) — The names you call people, mapped to who they are, so 'Mum' finds Margaret. *new* `no-install` `offline` `starter` · near: starter-words, abbreviations, notes
 - [**starter-words**](adapters/stdlib/starter-words/) — A first-day words list to copy and edit (owes = invoice, outstanding; doctor = dr, physician, clinic). *new* `no-install` `offline` `copy` `starter` · near: start, snapshot, pdf
 - [**stems**](adapters/deps/stems/) — Word forms for 20+ languages, so "häuser" finds "haus" and "книги" finds "книга". Needs snowballstemmer; BSD-3-Clause. *new* `needs-install` `offline` `form` · near: accents, abbreviations, ocr
@@ -329,7 +329,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**mileage**](adapters/stdlib/mileage/) — Miles driven for work, from your trips and notes, totalled for a tax year. Uses habits. *new* `no-install` `offline` `tax` `work` · near: garden, home-upkeep, subscriptions
 - [**milestones**](adapters/stdlib/milestones/) — Your child's firsts, words and heights, from your notes, by age. Uses habits. *new* `no-install` `offline` `child` · near: baby-log, syllabus, minutes
 - [**minutes**](adapters/stdlib/minutes/) — Meeting minutes: who decided what and when, and which actions are still open. Uses habits. *new* `no-install` `offline` `minutes` `due` · near: syllabus, foia, reading-log
-- [**mood**](adapters/stdlib/mood/) — Mood scores you write in a journal, over weeks and months. Uses habits. *new* `no-install` `offline` `week` · near: job-hunt, foia, baby-log
+- [**mood**](adapters/stdlib/mood/) — Mood scores you write in a journal, over weeks and months. Uses habits. *new* `no-install` `offline` `week` · near: job-hunt, foia, reading-log
 - [**nightstand**](adapters/stdlib/nightstand/) — Set heavy things down at night and pick up just one small next step in the morning: at most one thing in hand, and nothing ever deleted. *new* `no-install` `offline` `step` · near: start, all, game-master
 - [**pets**](adapters/stdlib/pets/) — Each pet's vet visits, vaccines and medicines, from your records: what's due next. Uses car. *new* `no-install` `offline` `due` · near: home-upkeep, car, garden
 - [**policy-watch**](adapters/stdlib/policy-watch/) — A terms or policy page fetched each time you run it, by snapshot, and what changed since last time, sentence by sentence, by clauses. Uses clauses, snapshot. Goes online: the page you name, fetched each time you run it. *new* `no-install` `online` `snapshot` `clauses` `policies` · near: snapshot, clauses, wayback
@@ -569,7 +569,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - **joins** (idea) — Two passages from two different folders, drawn by chance, for you to say what joins them. *bot* `no-install` `offline` `joins` `drawn` · near: contradictions, pageviews, crosswalk
 - [**life**](adapters/stdlib/life/) — Conway's Game of Life as rows: a fully deterministic world on the record. *bot* `no-install` `offline` `rows` `game` · near: catgrid, game-master, tarot
 - **lore** (idea) — For a world you're writing: each fact about it sealed one at a time, so a story can be checked against its canon. *bot* `no-install` `offline` `world` · near: mutants, llms-txt, claim-check
-- **lunatic** (idea) — The moon's real phase sets how far typos are forgiven: everything at full moon, nothing at new. Needs Skyfield; MIT. *new* `needs-install` `offline` `real` `far` · near: typos, real-sky, dotfiles
+- **lunatic** (idea) — The moon's real phase sets how far typos are forgiven: everything at full moon, nothing at new. Needs Skyfield; MIT. *new* `needs-install` `offline` `real` `far` · near: typos, real-sky, dialect
 - **mastermind** (idea) — Mastermind with the secret's hash at the open: each guess and score on the record. *new* `no-install` `offline` `open` `score` · near: assistant-scores, secrets-audit, weather-bet
 - **movie** (idea) — Your record as a Gource film: every question, approval and miss growing like a tree. Needs the gource program; GPL-3.0, called not linked. *new* `needs-install` `offline` `tree` `film` · near: bench, family-tree, vectors
 - **nim** (idea) — Nim as rows: the heaps and each take, a position lost exactly when the heaps' XOR is 0. *new* `no-install` `offline` `rows` `lost` · near: tic-tac-toe, cloudevents, hosts

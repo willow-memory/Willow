@@ -10,6 +10,13 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `dotfiles`, a reader that mirrors a dotfiles repository (bashrc, zshrc,
+  gitconfig, tmux.conf, init.vim, .ini, .conf, .toml and their kind) as its
+  settings: `dotfiles.py mirror --from FOLDER --to MIRROR`. Each setting is
+  on its own line, in the file's own words (`EDITOR=nvim`, `core.editor =
+  nvim`), every other line blank, so "where did I set my editor" lands on
+  it. A value named or shaped like a secret is written `[withheld]`. Hidden
+  files are skipped, so point it at the repository, not your home folder. (#189)
 - `webarchive`, pages Safari saved as .webarchive as their readable text:
   `webarchive.py mirror --from FOLDER --to MIRROR` writes what web-pages
   writes for the same page (the address it came from, its title, its
