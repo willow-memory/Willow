@@ -896,6 +896,10 @@ willow/
 │   │   │   ├── restore_drill.py  a backup zip restored into scratch; the chain and every file checked there
 │   │   │   ├── test_restore_drill.py
 │   │   │   └── README.md
+│   │   ├── ris/
+│   │   │   ├── ris.py   each reference in a RIS citation export as a passage that opens with its citation
+│   │   │   ├── test_ris.py
+│   │   │   └── README.md
 │   │   ├── risky-code/
 │   │   │   ├── risky_code.py  lines of code matching a known-dangerous pattern, by file and line, as leads to read
 │   │   │   ├── test_risky_code.py

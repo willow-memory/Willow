@@ -19,11 +19,11 @@ is written: `no-install` or `needs-install`; `offline`, `this-machine` or
 tag its author chose, if any. *near* names the three add-ons closest to it.
 
 <!-- willow:pools -->
-`████████████░░░░░░░░` **292 of 505 built** · 451 need no install · 54 need one
+`████████████░░░░░░░░` **293 of 506 built** · 452 need no install · 54 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
-| Reading more kinds of files | 73 | 35 | 100 | 8 |
+| Reading more kinds of files | 74 | 35 | 101 | 8 |
 | Finding things | 32 | 14 | 36 | 10 |
 | Your own words | 19 | 7 | 23 | 3 |
 | Keeping track | 40 | 16 | 56 | 0 |
@@ -68,19 +68,19 @@ its list: someone who speaks the language can add one without much Python.
 ## Newest
 
 <!-- willow:newest -->
+- 2026-11-02 · [**ris**](adapters/stdlib/ris/) — RIS citation exports from EndNote, Zotero, Mendeley and the journal databases: each reference as a passage that opens with its citation.
 - 2026-11-01 · [**weakest-link**](adapters/stdlib/weakest-link/) — Each answer's inputs marked measured, fitted or assumed, and the result worth its weakest input, never an average.
 - 2026-11-01 · [**thesis**](adapters/stdlib/thesis/) — A thesis's claims, each tied to the source that backs it, and a list of the ones with none.
 - 2026-11-01 · [**sent-log**](adapters/stdlib/sent-log/) — Which of your passages went to which online model, read from the record by model card: what left this machine and where to.
 - 2026-11-01 · [**rules**](adapters/stdlib/rules/) — A game's or a house's rules, approved one section at a time, so asking what a rule says gives back that exact section, word for word.
-- 2026-11-01 · [**quotes**](adapters/stdlib/quotes/) — Every quote in a document checked against your files: as written, almost (and what it adds, drops or changes), or not there.
 <!-- /willow:newest -->
 
 ## Add-on of the week
 
-<!-- willow:pick week=2026-W44 -->
-**[habits](adapters/stdlib/habits/)** — Streaks from the lines you write each day: how many days in a row, and which you missed.
+<!-- willow:pick week=2026-W45 -->
+**[install-scripts](adapters/stdlib/install-scripts/)** — The install scripts the packages in node_modules would run (preinstall, install, postinstall), each cited by file and line.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 292 built add-ons in name order.*
+*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 293 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -96,7 +96,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - **apple-notes** (idea) — Apple Notes, read from a copy of its database: each note as plain text with its folder and dates. *new* `no-install` `offline` `database` `copy` · near: joplin, evernote, writefreely
 - **archivebox** (idea) — ArchiveBox snapshots: each saved page's text, with its URL and the date it was captured. *new* `no-install` `offline` `snapshot` `saved` · near: warc, wayback, snapshot
 - [**bank**](adapters/stdlib/bank/) — Bank CSV and OFX statements as dated lines, with spending by month. *new* `no-install` `offline` · near: mastodon, discord, linkedin
-- [**bibtex**](adapters/stdlib/bibtex/) — .bib files: each reference as a passage, so you can ask which paper said it and get its key. *new* `no-install` `offline` · near: pgn, code-comments, latex
+- [**bibtex**](adapters/stdlib/bibtex/) — .bib files: each reference as a passage, so you can ask which paper said it and get its key. *new* `no-install` `offline` `reference` · near: ris, pgn, code-comments
 - **bluesky** (idea) — A Bluesky repo.car export: your posts as dated lines, read by a small CAR and CBOR reader of its own. *new* `no-install` `offline` `posts` `repo` · near: mastodon, linkedin, reddit
 - **bookmarks** (idea) — Browser bookmarks (HTML export, Firefox JSON) and history, read from a copy of its SQLite file. *new* `no-install` `offline` `sqlite` `html` · near: codebase-memory, nestor, writefreely
 - [**books**](adapters/stdlib/books/) — Kindle "My Clippings.txt" highlights and .epub text. *new* `no-install` `offline` `highlights` `book` · near: oakenscroll, almanac, wallabag
@@ -161,7 +161,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - [**orders**](adapters/stdlib/orders/) — Amazon's order history and other shops' CSV exports: what you bought, when, and for how much. *new* `no-install` `offline` `csv` `history` · near: location-history, reddit, bank
 - **package-docs** (idea) — The READMEs and docs inside packages you've already installed (site-packages, node_modules, Cargo's registry cache), so you can ask your dependencies offline. *new* `no-install` `offline` `install` `package` · near: install-scripts, pins, package-contents
 - [**parallel**](adapters/stdlib/parallel/) — A reader run over several folders at once, across every CPU core, so a big mirror of many sources builds in a fraction of the time. *new* `no-install` `offline` `core` `fraction` · near: fast-tests, index-cache, test-shards
-- **past-papers** (idea) — Past exam papers and their mark schemes as passages: which year asked this, and what earned the marks. *new* `no-install` `offline` `exam` `paper` · near: model-exam, bibtex, paper-key
+- **past-papers** (idea) — Past exam papers and their mark schemes as passages: which year asked this, and what earned the marks. *new* `no-install` `offline` `exam` `paper` · near: model-exam, bibtex, syllabus
 - [**pdf**](adapters/deps/pdf/) — Text out of PDFs. Needs pypdf; BSD-3-Clause. *new* `needs-install` `offline` `pdf` · near: ocr, photos, sheets
 - [**pgn**](adapters/stdlib/pgn/) — Chess games from PGN files: players, dates, openings and your annotations. *new* `no-install` `offline` · near: bibtex, letterboxd, matrix
 - [**photos**](adapters/deps/photos/) — When and where each photo was taken, as dated lines. Needs Pillow; MIT-CMU. *new* `needs-install` `offline` `photos` · near: pdf, ocr, sheets
@@ -171,6 +171,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - [**readwise**](adapters/stdlib/readwise/) — Readwise's highlights export: every highlight with its book or article, and your note on it. *new* `no-install` `offline` `book` `highlights` · near: wallabag, books, goodreads
 - **recipes** (idea) — Recipes from saved web pages and recipe-app exports, as plain text: what can I cook with leeks? *new* `no-install` `offline` `web` `saved` · near: web-pages, confluence, wallabag
 - [**reddit**](adapters/stdlib/reddit/) — Reddit's data export: your posts, comments and saved items as dated lines. *new* `no-install` `offline` `posts` `data` · near: linkedin, meta-archive, mastodon
+- [**ris**](adapters/stdlib/ris/) — RIS citation exports from EndNote, Zotero, Mendeley and the journal databases: each reference as a passage that opens with its citation. *new* `no-install` `offline` `zotero` `citation` · near: bibtex, day-one, notion
 - [**rtf**](adapters/stdlib/rtf/) — RTF documents as plain text. *new* `no-install` `offline` · near: evernote, books, karakeep
 - [**sarif**](adapters/stdlib/sarif/) — SARIF reports from code scanners such as CodeQL and Semgrep: each finding as a passage with its rule and place. *new* `no-install` `offline` `reports` · near: code-comments, places, codebase-memory
 - [**sbom**](adapters/stdlib/sbom/) — SBOMs in SPDX or CycloneDX JSON: each component, its version and licence, as passages. *new* `no-install` `offline` `json` `version` · near: lockfiles, gh-json, day-one
@@ -197,7 +198,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - [**web-pages**](adapters/stdlib/web-pages/) — Saved web pages, .html and .mhtml, as their readable text, with the address they came from. Uses clauses. *new* `no-install` `offline` `address` `web` · near: snapshot, pdf, photos
 - **writefreely** (idea) — WriteFreely posts, from its export or a copy of its SQLite database, as dated text. *new* `no-install` `offline` `copy` `sqlite` · near: bookmarks, apple-notes, nestor
 - [**x-archive**](adapters/stdlib/x-archive/) — An X (Twitter) archive: your posts, replies and DMs as dated lines. *new* `no-install` `offline` `posts` `message` · near: meta-archive, mastodon, linkedin
-- **zotero** (idea) — Your Zotero library, from a copy of zotero.sqlite: items, notes and PDF annotations, each with its citation. *new* `no-install` `offline` `copy` `sqlite` · near: annotations, apple-notes, writefreely
+- **zotero** (idea) — Your Zotero library, from a copy of zotero.sqlite: items, notes and PDF annotations, each with its citation. *new* `no-install` `offline` `copy` `sqlite` · near: ris, annotations, apple-notes
 
 ## Finding things
 
@@ -306,7 +307,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**habits**](adapters/stdlib/habits/) — Streaks from the lines you write each day: how many days in a row, and which you missed. *new* `no-install` `offline` · near: pets, renewals, car
 - [**home-upkeep**](adapters/stdlib/home-upkeep/) — Home upkeep: the boiler service, the filters, the gutters, what's due and when it was last done. Uses car. *new* `no-install` `offline` `due` `service` · near: car, pets, garden
 - [**hours**](adapters/stdlib/hours/) — Hours worked or volunteered, per client or group, from your notes. Uses habits. *new* `no-install` `offline` `group` · near: symptoms, mood, baby-log
-- **inventory** (idea) — What you own, where it is, and where its papers are, for insurance or a will. *new* `no-install` `offline` `paper` `insurance` · near: paper-key, past-papers, renewals
+- **inventory** (idea) — What you own, where it is, and where its papers are, for insurance or a will. *new* `no-install` `offline` `paper` `insurance` · near: renewals, paper-key, past-papers
 - [**invoices**](adapters/stdlib/invoices/) — For freelancers: invoices and payments matched by the id pattern you give, never guessed. Uses amounts, bank. *new* `no-install` `offline` `pattern` `matched` · near: serve, privacy, on-this-day
 - [**job-hunt**](adapters/stdlib/job-hunt/) — Applications sent, replies and interviews, by date: who you're still waiting on. Uses habits. *new* `no-install` `offline` · near: mood, warranties, foia
 - **lab-notebook** (idea) — A lab notebook's dated entries, by sample and experiment: what was done to what, and when. *new* `no-install` `offline` `entries` `sampling` · near: joplin, mcp-sampling, journiv
@@ -403,7 +404,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**install-scripts**](adapters/stdlib/install-scripts/) — The install scripts the packages in node_modules would run (preinstall, install, postinstall), each cited by file and line. *new* `no-install` `offline` `install` `package` · near: package-contents, package-docs, code-comments
 - **kids** (idea) — A box for a child: answers only from the folder you choose for them, and nothing they can approve. *new* `no-install` `offline` · near: student-records, export, browse
 - [**outdated**](adapters/stdlib/outdated/) — How old each locked dependency is, and which are yanked, deprecated or two years without a release, from a registry index you downloaded. Uses advisories. *new* `no-install` `offline` `dependency` · near: advisories, typosquat, pins
-- [**package-contents**](adapters/stdlib/package-contents/) — What's inside a wheel, sdist, npm tarball or .crate before you install it: every file, and any code it runs on install. *new* `no-install` `offline` `install` `package` · near: install-scripts, ci-cache, launcher
+- [**package-contents**](adapters/stdlib/package-contents/) — What's inside a wheel, sdist, npm tarball or .crate before you install it: every file, and any code it runs on install. *new* `no-install` `offline` `install` `package` · near: install-scripts, ci-cache, instruction-files
 - [**pii-audit**](adapters/stdlib/pii-audit/) — Personal data sitting in your files (ID numbers, health details, card numbers), listed by file and line. *new* `no-install` `offline` `numbers` `audit` · near: secrets-audit, privacy, debts
 - [**privacy**](adapters/stdlib/privacy/) — Hides phone numbers, emails, card, bank and ID numbers, and API keys in what a question prints, and says what it hid. *bot* `no-install` `offline` `numbers` · near: plain, readings, pii-audit
 - [**risky-code**](adapters/stdlib/risky-code/) — Lines of code matching a known-dangerous pattern (command injection, eval, sql concatenation, broken tls and more), by file and line, as leads to read. *new* `no-install` `offline` `matched` `command` `security` · near: secrets-audit, advisories, xref
@@ -547,7 +548,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - [**dice**](adapters/stdlib/dice/) — Seeded dice rolls as rows: every roll replayable and checkable. *bot* `no-install` `offline` `seeded` `dice` · near: dice5e, game-master, tarot
 - [**dice5e**](adapters/stdlib/dice5e/) — Full tabletop dice notation (4d6kh3, advantage), rolled on the record and checkable like dice. Uses dice. *bot* `no-install` `offline` `rolls` `rows` · near: dice, game-master, fight5e
 - **fight5e** (idea) — Tabletop combat run from stat blocks on dice5e's rolls, every attack on the record and replayable. *new* `no-install` `offline` `rolls` `replayable` · near: dice5e, dice, roll-for-merge
-- **front-page** (idea) — Which new posts will make the Hacker News front page? Wager, and let its search settle it. Goes online: hn.algolia.com, to read the front page. *new* `no-install` `online` `settled` `front` · near: spurious, quake-bets, readme
+- **front-page** (idea) — Which new posts will make the Hacker News front page? Wager, and let its search settle it. Goes online: hn.algolia.com, to read the front page. *new* `no-install` `online` `front` `let` · near: spurious, quake-bets, readme
 - [**game-master**](adapters/stdlib/game-master/) — A tabletop game's rolls and rulings as rows on the record, with the game master's calls sealed. Uses dice, odds. *bot* `no-install` `offline` `rows` `dice` · near: life, dice5e, dice
 - **gutenberg** (idea) — A paragraph from a public-domain book beside one of yours, for serendipity. Goes online: gutenberg.org, each book fetched once. *new* `no-install` `online` `book` `domain` · near: todays-place, art-of-the-day, witness
 - **hanoi** (idea) — Towers of Hanoi as rows: each move, n discs in 2^n - 1. *new* `no-install` `offline` `rows` `move` · near: reversi, session-seal, tic-tac-toe
@@ -558,7 +559,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - [**life**](adapters/stdlib/life/) — Conway's Game of Life as rows: a fully deterministic world on the record. *bot* `no-install` `offline` `rows` `game` · near: catgrid, game-master, tarot
 - **lore** (idea) — For a world you're writing: each fact about it sealed one at a time, so a story can be checked against its canon. *bot* `no-install` `offline` `world` · near: mutants, llms-txt, claim-check
 - **lunatic** (idea) — The moon's real phase sets how far typos are forgiven: everything at full moon, nothing at new. Needs Skyfield; MIT. *new* `needs-install` `offline` `real` `far` · near: typos, real-sky, dotfiles
-- **mastermind** (idea) — Mastermind with the secret's hash at the open: each guess and score on the record. *new* `no-install` `offline` `open` `score` · near: assistant-scores, secrets-audit, weather-bet
+- **mastermind** (idea) — Mastermind with the secret's hash at the open: each guess and score on the record. *new* `no-install` `offline` `open` `score` · near: assistant-scores, secrets-audit, model-card
 - **movie** (idea) — Your record as a Gource film: every question, approval and miss growing like a tree. Needs the gource program; GPL-3.0, called not linked. *new* `needs-install` `offline` `tree` `film` · near: bench, family-tree, vectors
 - **nim** (idea) — Nim as rows: the heaps and each take, a position lost exactly when the heaps' XOR is 0. *new* `no-install` `offline` `rows` `lost` · near: tic-tac-toe, cloudevents, hosts
 - **ninety-percent** (idea) — The calibration drill: give a range you're 90% sure of for a real number, and see how many hold. Goes online: Our World in Data, its numbers downloaded once. *new* `no-install` `online` `ranges` `drill` · near: oakenscroll, restore-drill, pins
