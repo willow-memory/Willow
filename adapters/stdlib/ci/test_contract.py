@@ -684,6 +684,9 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     # the question is the passage itself, an echo: nothing is asked, the port never reached
     "same-way": ("same_way.py", ["--box", "{box}", "--url", "http://127.0.0.1:9/v1",
                  "--model", "m", "--questions", "{pile}/garden.md"]),
+    # no answer sealed for the question: nothing is asked, the port never reached
+    "model-exam": ("model_exam.py", ["--box", "{box}", "--url", "http://127.0.0.1:9/v1",
+                   "--model", "m", "--questions", "{pile}/garden.md"]),
     **{name: (script, ["mirror", "--from", "{pile}", "--to", "{tmp}/mirror"])
        for name, (script, _) in READERS.items()},
 }  # fmt: skip
