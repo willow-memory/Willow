@@ -667,6 +667,10 @@ willow/
 │   │   │   ├── misquote.py   a quote almost in your files: the closest passage, and what differs
 │   │   │   ├── test_misquote.py
 │   │   │   └── README.md
+│   │   ├── model-fit/
+│   │   │   ├── model_fit.py  the memory, CPU, GPUs and NPUs this machine has, and where a model of a given size fits
+│   │   │   ├── test_model_fit.py
+│   │   │   └── README.md
 │   │   ├── model-shelf/
 │   │   │   ├── model_shelf.py  every model on this machine, from each runtime's own folder, with its quantization and hash
 │   │   │   ├── test_model_shelf.py
