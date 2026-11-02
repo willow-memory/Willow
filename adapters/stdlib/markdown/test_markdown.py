@@ -263,6 +263,12 @@ def test_a_comment_that_closes_at_the_start_of_a_line():
     assert md("a <!-- x\n-->after\nb <!--\n--> c\n") == ["a", "after", "b", "c"]
 
 
+def test_a_comment_closed_by_bang_dash_dash_leaves_none_of_its_text():
+    """Browsers also end a comment at --!>; its text must not reach the mirror,
+    whether it closes on its own line or one below."""
+    assert md("a <!-- hidden --!> b\nc <!-- also\nhidden --!>d\n") == ["a b", "c", "d"]
+
+
 def test_emphasis_is_taken_off_but_never_inside_a_word_or_a_sum():
     assert md(
         "**bold** __strong__ *em* _em_ ~~gone~~ snake_case_name 2*3*4 a * b\n"
