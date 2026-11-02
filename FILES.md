@@ -716,6 +716,10 @@ willow/
 │   │   │   ├── nestor.py     answers a person has checked in Nestor, from a copy of its store
 │   │   │   ├── test_nestor.py
 │   │   │   └── README.md
+│   │   ├── night-batch/
+│   │   │   ├── night_batch.py  waiting questions asked of a local model in one run, stopped once you're back
+│   │   │   ├── test_night_batch.py
+│   │   │   └── README.md
 │   │   ├── nightstand/
 │   │   │   ├── nightstand.py  things set down, one bite picked up: one in hand, a bite every time, nothing deleted
 │   │   │   ├── test_nightstand.py
