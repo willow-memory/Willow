@@ -24,7 +24,7 @@ says how). The first was v0.1.0.
   doesn't hold. Front matter as its values; a table's header once, at the
   head of the passage with its rows, and each row as its cells; links as their text with an outside address, images as
   their alt text, wikilinks as the text they show; emphasis, HTML, comments,
-  escapes and footnote markers off; fenced code as written.
+  escapes and footnote markers off; fenced code as written. (#171)
 - `quantized`, the smallest local model that still gets your own questions
   right: `quantized.py --box DIR --questions FILE` has each model the local
   server offers (or each `--model`) sit model-exam's exam of your sealed
