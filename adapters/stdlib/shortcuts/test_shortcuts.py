@@ -88,6 +88,9 @@ def test_a_desktop_entry_without_a_name_takes_the_files_and_its_escapes_are_read
     )
     app = b"[Desktop Entry]\nType=Application\nExec=tool\n"
     assert mod.convert(app, "tool.desktop") == "tool\ntool\n"
+    # an escape the spec doesn't name is left as written, backslash and all
+    app = b'[Desktop Entry]\nType=Application\nName=Backup\nExec=sh -c "cp \\$HOME/notes D:\\x"\n'
+    assert mod.convert(app, "b.desktop") == 'Backup\nsh -c "cp \\$HOME/notes D:\\x"\n'
 
 
 def test_a_deleted_folder_or_unknown_desktop_entry_holds_no_link():
