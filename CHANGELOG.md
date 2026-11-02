@@ -10,6 +10,17 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- Cards say what an add-on leans on: `uses` (the add-ons it needs beside it,
+  to run or to be tested), `looks-for` (the ones it uses when they're there,
+  saying so when they aren't) and `runs-in: repo` (a tool for willow's own
+  repository). readme.py checks them and ADDONS.md says "Uses …"; 86 cards
+  declare. `adapters/stdlib/ci/test_contract.py` fails code that reaches an
+  add-on its card doesn't name, however it's spelled, and a new gate,
+  `tests:alone` (`adapters/stdlib/ci/alone.py`), runs each add-on's tests in a
+  copy holding only the kernel, the add-on and what it uses: 268 of 268 hold.
+  (#155)
+- `demo:teodora-words`: Teodora's whole blind folder against the starter
+  words list, moved from starter-words' own tests to the demo. (#155)
 - `game-master`, a tabletop story played beat by beat with its rolls and
   rulings as rows on the record: `game_master.py --box DIR act Grit --world
   W.json` rolls dice's 2d6 plus the character's stat and reads it strong, weak
@@ -1332,6 +1343,17 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- Cards in plain words: 28 one-line descriptions rewritten to name the thing
+  and say what it does, for someone who has never seen willow, and six cards
+  moved to the section their piece belongs in (rules, across, stack,
+  oakenscroll, almanac-keep, outdated). No card's writes or network changes.
+  (#155)
+- Tags are worked out by similar every time the list is written, never
+  stored: needs an install or not, goes online or not, two topic words a card
+  shares with its nearest, and the author's own tag, the one a card's `tags:`
+  now holds. Each entry names its three nearest. readme.py's `tags`, which
+  wrote tags into cards, is gone, and its card writes only README.md and
+  ADDONS.md. (#155)
 - `bm25`, the idea, now points at what willow already has: `scan --rank bm25`
   ranks by BM25 with the kernel's own passages and tokenizer. Building the
   idea as first written would have been a second, cruder BM25 (on odile,
@@ -1461,6 +1483,11 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- An add-on's tests hold in a copy of its folder, not only in willow: scan,
+  start, browse, digest, stack, starter-words, across, parallel, hosts,
+  hook-start and box-health assumed an add-on beside them that each only
+  looks for, or read a file of willow's; each now holds either way, nothing
+  skipped. test-impact places Teodora's words test in its own gate. (#155)
 - Security: `ocr` and `photos` pin Pillow 13.0.0 and `ocr` and `pdf` pin
   pypdf 6.21.4, past the advisories filed against Pillow 12.3.0 (heap
   overflows and decompression-bomb bypasses among them) and pypdf 6.21.2

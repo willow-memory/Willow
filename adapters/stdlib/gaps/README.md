@@ -5,7 +5,7 @@ source: new
 added: 2026-10-24
 writes: nothing
 network: none
-tags: no-install, offline, read-only, tracking, journal
+tags: journal
 -->
 # gaps
 

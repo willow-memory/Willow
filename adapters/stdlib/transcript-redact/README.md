@@ -5,7 +5,7 @@ source: new
 added: 2026-10-27
 writes: to
 network: none
-tags: no-install, offline, writes-output, privacy
+uses: privacy
 -->
 # transcript-redact
 

@@ -75,8 +75,12 @@ def test_toml_tables_are_written_the_way_toml_reads_them():
 
 
 def test_every_one_assistant_addon_is_this_table_and_prints_the_same(tmp_path):
+    """Each assistant's own add-on beside this one prints what this table
+    does: all of them in willow (ci's test_contract holds that every row has
+    one), the ones a copy holds in a copy."""
     b = box(tmp_path)
-    for name in mod.HOSTS:
+    beside = [n for n in mod.HOSTS if (STDLIB / n).is_dir()]
+    for name in beside:
         own = load(name, STDLIB / name / f"{name.replace('-', '_')}.py")
         assert own.render(b, "py") == mod.render(name, b, "py")
 

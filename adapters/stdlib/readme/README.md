@@ -3,9 +3,10 @@ section: For maintainers
 line: Builds ADDONS.md, and the README's one feature, from the add-ons' own cards.
 source: new
 added: 2026-10-23
-writes: README.md, ADDONS.md, adapters/planned.json, adapters/*/*/README.md
+writes: README.md, ADDONS.md
 network: none
-tags: no-install, offline, writes-output, maintainers
+uses: similar
+runs-in: repo
 -->
 # readme
 
@@ -15,7 +16,6 @@ the repo.
 
     python adapters/stdlib/readme/readme.py write [--week YYYY-Www]
     python adapters/stdlib/readme/readme.py check
-    python adapters/stdlib/readme/readme.py tags
 
 | Section | What it shows |
 |---|---|
@@ -43,13 +43,13 @@ for the ones not built yet. A name is built when its folder exists; then it
 must not also be planned. Building an add-on is what turns an idea into a
 built one.
 
-**Tags:** up to five per add-on. `tags` fills in four for any card or idea
-that has none, from what its header already says (`no-install` or
-`needs-install`; `offline`, `this-machine` or `online`; `read-only`,
-`records` or `writes-output`; its section), and leaves the fifth for a
-person. It never touches tags that are there: once written, they are the
-card's. That is why its card says it writes the cards and
-`adapters/planned.json`, as well as README.md.
+**Tags:** up to five per add-on, worked out by
+[similar](../similar/) each time the list is written and never stored, so
+they can't go stale when a card changes: `no-install` or `needs-install`;
+`offline`, `this-machine` or `online`; two topic words the add-on shares
+with its nearest neighbours on the list; and the one tag its author chose,
+the card's `tags:` line, if it has one. Each entry also names its three
+nearest neighbours. It never writes a card or `adapters/planned.json`.
 
 **Deterministic:** the same repo gives the same README. The week of the pick is
 written into its section, `write` sets it, and `check` rebuilds with it, so the

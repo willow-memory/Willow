@@ -5,7 +5,7 @@ source: new
 added: 2026-10-30
 writes: record
 network: none
-tags: no-install, offline, records, words, klingon
+tags: klingon
 -->
 # words-tlh
 

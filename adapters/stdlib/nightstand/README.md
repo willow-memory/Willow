@@ -1,11 +1,10 @@
 <!-- willow-addon
 section: Keeping track
-line: Set heavy things down, pick up one bite: at most one thing in hand, and nothing deleted.
+line: Set heavy things down at night and pick up just one small next step in the morning: at most one thing in hand, and nothing ever deleted.
 source: new
 added: 2026-11-01
 writes: record
 network: none
-tags: no-install, offline, records, tracking
 -->
 # nightstand
 

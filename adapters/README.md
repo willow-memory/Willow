@@ -49,7 +49,7 @@ The card opens with a header that the add-on list in ADDONS.md is generated from
     added: 2026-10-22
     writes: nothing
     network: none
-    tags: no-install, offline, read-only, tracking
+    tags: health
     -->
 
 `section` is one of the list's sections, `line` is one sentence, `source` is
@@ -58,16 +58,32 @@ kernel has) or `new`, and `added` is the date it was built. An add-on in
 `deps/` adds `needs` (what to install, and its licence) and `floor` (its
 floor versions, and why when above the rule's).
 
-`tags` are up to five, lowercase words joined by -, for finding it. When a
-card or idea has none,
+What an add-on leans on is on its card too, so whoever copies it knows what
+to copy with it:
 
-    python adapters/stdlib/readme/readme.py tags
+    uses: amounts
+    looks-for: coming-up, stale
 
-fills in four from what the header already says (an install or none, where
-it goes online, what it writes, its section), leaving the fifth for you. It
-never touches tags that are there: change them as you like. Tags are for
-finding things, never a promise: what it needs and where it goes are said
-from `needs` and `network`, whatever the tags say.
+`uses` names the add-ons it needs beside it, to run or to be tested; a stack
+that has it has these too. `looks-for` names the ones it uses when they're
+there: without one it still runs and says what's missing, and its tests hold
+either way. `runs-in: repo` marks a tool that works on willow's own
+repository, which isn't copied out of it. Each is optional. CI holds every
+add-on to them twice: `stdlib/ci/test_contract.py` fails one whose code reaches an
+add-on its card doesn't name, and `tests:alone` runs each add-on's tests in a
+copy holding only the kernel, the add-on and what it `uses`.
+
+`tags` is optional: one tag of your own, lowercase words joined by -, for
+finding it. The rest are worked out every time the list is written, never
+stored, so they follow the card when it changes: whether it needs an
+install, whether it goes online, and two topic words it shares with the
+add-ons nearest it, found by [similar](stdlib/similar/). See what an add-on
+gets with
+
+    python adapters/stdlib/similar/similar.py tags NAME
+
+Tags are for finding things, never a promise: what it needs and where it
+goes are said from `needs` and `network`, whatever the tags say.
 
 ## Its promises, checked
 

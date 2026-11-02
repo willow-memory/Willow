@@ -1,11 +1,10 @@
 <!-- willow-addon
 section: Trust and proof
-line: A box snapshot as an RO-Crate research object Zenodo can read: each file with its hash and licence.
+line: Your willow (the files it reads, its record and your approved answers) as an RO-Crate research object that Zenodo and similar archives can read.
 source: new
 added: 2026-10-29
 writes: to
 network: none
-tags: no-install, offline, writes-output, trust
 -->
 # ro-crate
 

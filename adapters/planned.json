@@ -6,8 +6,7 @@
   "line": "Approved answers as an Anki deck, built without Anki installed.",
   "source": "new",
   "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, interface"
+  "network": "none"
  },
  {
   "name": "apple-notes",
@@ -16,8 +15,7 @@
   "line": "Apple Notes, read from a copy of its database: each note as plain text with its folder and dates.",
   "source": "new",
   "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
+  "network": "none"
  },
  {
   "name": "archivebox",
@@ -26,8 +24,7 @@
   "line": "ArchiveBox snapshots: each saved page's text, with its URL and the date it was captured.",
   "source": "new",
   "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
+  "network": "none"
  },
  {
   "name": "art-of-the-day",
@@ -36,8 +33,7 @@
   "line": "An artwork from the Met's public-domain collection, drawn for the day or for each sealed session.",
   "source": "new",
   "writes": "record",
-  "network": "collectionapi.metmuseum.org, to read the artwork",
-  "tags": "no-install, online, records, play"
+  "network": "collectionapi.metmuseum.org, to read the artwork"
  },
  {
   "name": "ask-later",
@@ -46,8 +42,7 @@
   "line": "A question with no answer yet kept on a list, and asked again whenever a new file arrives.",
   "source": "new",
   "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, tracking"
+  "network": "none"
  },
  {
   "name": "assistant-scores",
@@ -56,8 +51,7 @@
   "line": "How often each assistant's suggestions were sealed or set aside, from the record.",
   "source": "new",
   "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, assistant"
+  "network": "none"
  },
  {
   "name": "basic-memory",
@@ -66,8 +60,7 @@
   "line": "Basic Memory's Markdown notes where an AI wrote them: each observation and relation handed in through propose, waiting for your seal.",
   "source": "new",
   "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, assistant"
+  "network": "none"
  },
  {
   "name": "beacon",
@@ -76,8 +69,7 @@
   "line": "Draws seeded by a public randomness beacon (drand), so nobody could have picked the result in advance.",
   "source": "bot",
   "writes": "record",
-  "network": "api.drand.sh, to read a beacon round's randomness",
-  "tags": "no-install, online, records, play"
+  "network": "api.drand.sh, to read a beacon round's randomness"
  },
  {
   "name": "bedrock",
@@ -87,8 +79,7 @@
   "source": "new",
   "needs": "boto3; Apache-2.0",
   "writes": "record",
-  "network": "Amazon Bedrock's endpoint in your region, to ask for suggestions",
-  "tags": "needs-install, online, records, assistant"
+  "network": "Amazon Bedrock's endpoint in your region, to ask for suggestions"
  },
  {
   "name": "bluesky",
@@ -97,8 +88,7 @@
   "line": "A Bluesky repo.car export: your posts as dated lines, read by a small CAR and CBOR reader of its own.",
   "source": "new",
   "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
+  "network": "none"
  },
  {
   "name": "bm25",
@@ -107,8 +97,7 @@
   "line": "BM25 over a box in one go, with no index to build first: the rank scan --rank bm25 gives, for a folder you ask once.",
   "source": "new",
   "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, search"
+  "network": "none"
  },
  {
   "name": "bookmarks",
@@ -117,8 +106,7 @@
   "line": "Browser bookmarks (HTML export, Firefox JSON) and history, read from a copy of its SQLite file.",
   "source": "new",
   "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
+  "network": "none"
  },
  {
   "name": "browser-model",
@@ -127,8 +115,7 @@
   "line": "Suggestions from a model running in your browser, Chrome's built-in model or one run on WebGPU, through a page served on this machine.",
   "source": "new",
   "writes": "record",
-  "network": "loopback",
-  "tags": "no-install, this-machine, records, assistant"
+  "network": "loopback"
  },
  {
   "name": "by-function",
@@ -138,8 +125,7 @@
   "source": "new",
   "needs": "tree-sitter and its language pack; MIT",
   "writes": "to",
-  "network": "none",
-  "tags": "needs-install, offline, writes-output, search"
+  "network": "none"
  },
  {
   "name": "canvas",
@@ -148,8 +134,7 @@
   "line": "Canvas course exports: pages, assignments and discussions as passages.",
   "source": "new",
   "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
+  "network": "none"
  },
  {
   "name": "care",
@@ -158,8 +143,7 @@
   "line": "For caregivers: medications, vitals and appointments from a care log, what's due and what moved.",
   "source": "box",
   "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
+  "network": "none"
  },
  {
   "name": "cassettes",
@@ -168,8 +152,7 @@
   "line": "Each exchange with a model kept as a row (what was asked, what came back, the model and its seed), replayed later as a test, and drift between models found by plain diff.",
   "source": "bot",
   "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, assistant"
+  "network": "none"
  },
  {
   "name": "chess-puzzle",
@@ -178,8 +161,7 @@
   "line": "A Lichess puzzle a day, drawn by a seed: predict whether you'll solve it, then solve it.",
   "source": "new",
   "writes": "record",
-  "network": "lichess.org, to read the puzzle",
-  "tags": "no-install, online, records, play"
+  "network": "lichess.org, to read the puzzle"
  },
  {
   "name": "ci-baseline",
@@ -188,8 +170,7 @@
   "line": "Is your CI normal? How often pull requests everywhere go green first time, from GH Archive.",
   "source": "new",
   "writes": "nothing",
-  "network": "data.gharchive.org, its hours downloaded once",
-  "tags": "no-install, online, read-only, maintainers"
+  "network": "data.gharchive.org, its hours downloaded once"
  },
  {
   "name": "ci-bets",
@@ -198,8 +179,7 @@
   "line": "Bet on your own CI: forecasts on each pull request going green, scored against the model's.",
   "source": "new",
   "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, maintainers"
+  "network": "none"
  },
  {
   "name": "cite-honesty",
@@ -208,8 +188,7 @@
   "line": "How often each model's suggestions were refused at propose for citing a passage the last bite never returned, read from the record by model card.",
   "source": "new",
   "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, assistant"
+  "network": "none"
  },
  {
   "name": "claude",
@@ -219,8 +198,7 @@
   "source": "new",
   "needs": "anthropic; MIT",
   "writes": "record",
-  "network": "api.anthropic.com, to ask for suggestions",
-  "tags": "needs-install, online, records, assistant"
+  "network": "api.anthropic.com, to ask for suggestions"
  },
  {
   "name": "code-first",
@@ -229,8 +207,7 @@
   "line": "Questions code can answer exactly (counts, dates, ids) answered by code before any model, with a wrong answer counted as a defect.",
   "source": "bot",
   "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, search"
+  "network": "none"
  },
  {
   "name": "code-stats",
@@ -240,8 +217,7 @@
   "source": "new",
   "needs": "the scc program; MIT",
   "writes": "nothing",
-  "network": "none",
-  "tags": "needs-install, offline, read-only, maintainers"
+  "network": "none"
  },
  {
   "name": "compiled",
@@ -251,8 +227,7 @@
   "source": "new",
   "needs": "mypyc; MIT",
   "writes": "nothing",
-  "network": "none",
-  "tags": "needs-install, offline, read-only, maintainers"
+  "network": "none"
  },
  {
   "name": "confluence",
@@ -261,8 +236,7 @@
   "line": "A Confluence space's HTML export as plain text, page by page.",
   "source": "new",
   "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
+  "network": "none"
  },
  {
   "name": "connect-four",
@@ -271,8 +245,7 @@
   "line": "Connect Four as rows on the record, held to the solved result: the first player wins.",
   "source": "new",
   "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, play"
+  "network": "none"
  },
  {
   "name": "contracts",
@@ -281,8 +254,7 @@
   "line": "The dates that matter in your contracts: renewals, notice periods and break clauses, each cited.",
   "source": "new",
   "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
+  "network": "none"
  },
  {
   "name": "contribute",
@@ -291,8 +263,7 @@
   "line": "For anyone on GitHub, what they can do next in the projects they work on: open pull requests, reviews asked of them, issues assigned.",
   "source": "bot",
   "writes": "nothing",
-  "network": "GitHub, through gh, with your own login",
-  "tags": "no-install, online, read-only, maintainers"
+  "network": "GitHub, through gh, with your own login"
  },
  {
   "name": "contributions",
@@ -301,8 +272,7 @@
   "line": "A ledger of who contributes to the repo: first-timers and outside contributors called out, bots known by type, never by name.",
   "source": "bot",
   "writes": "nothing",
-  "network": "GitHub, through gh, with your own login",
-  "tags": "no-install, online, read-only, maintainers"
+  "network": "GitHub, through gh, with your own login"
  },
  {
   "name": "crates",
@@ -311,8 +281,7 @@
   "line": "A Rust port of kernel.py on crates.io, held to the same vectors as the other four.",
   "source": "new",
   "writes": "to",
-  "network": "crates.io, to publish a release a maintainer tags",
-  "tags": "no-install, online, writes-output, maintainers"
+  "network": "crates.io, to publish a release a maintainer tags"
  },
  {
   "name": "crosswalk",
@@ -321,8 +290,7 @@
   "line": "The outside IDs a passage points to (Wikidata, DOI, ORCID, GeoNames) kept beside it, so your notes join the world's.",
   "source": "new",
   "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, search"
+  "network": "none"
  },
  {
   "name": "crowd",
@@ -331,8 +299,7 @@
   "line": "You against the crowd: a prediction market's question copied into your ledger, your probability beside theirs, both scored.",
   "source": "new",
   "writes": "record",
-  "network": "the market's public API, to read the question and its resolution",
-  "tags": "no-install, online, records, tracking"
+  "network": "the market's public API, to read the question and its resolution"
  },
  {
   "name": "cycle",
@@ -341,8 +308,7 @@
   "line": "A menstrual cycle log that never leaves this machine: dates, what's next, and what changed.",
   "source": "new",
   "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
+  "network": "none"
  },
  {
   "name": "datasette",
@@ -352,8 +318,7 @@
   "source": "new",
   "needs": "Datasette; Apache-2.0",
   "writes": "nothing",
-  "network": "loopback",
-  "tags": "needs-install, this-machine, read-only, interface"
+  "network": "loopback"
  },
  {
   "name": "desktop",
@@ -362,8 +327,7 @@
   "line": "A small window to ask and approve, with nothing to install: Python's own tkinter.",
   "source": "new",
   "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, interface"
+  "network": "none"
  },
  {
   "name": "dictate",
@@ -373,8 +337,7 @@
   "source": "new",
   "needs": "faster-whisper; MIT",
   "writes": "nothing",
-  "network": "the model, downloaded once",
-  "tags": "needs-install, online, read-only, interface"
+  "network": "the model, downloaded once"
  },
  {
   "name": "docs-i18n",
@@ -383,8 +346,7 @@
   "line": "The README in other languages, each checked for drift against the English one.",
   "source": "new",
   "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, maintainers"
+  "network": "none"
  },
  {
   "name": "dotfiles",
@@ -393,8 +355,7 @@
   "line": "Your dotfiles as passages: which file sets what, for 'where did I set my editor?'",
   "source": "new",
   "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
+  "network": "none"
  },
  {
   "name": "email-ask",
@@ -403,8 +364,7 @@
   "line": "Ask by emailing yourself; the answer comes back as a reply with its sources.",
   "source": "new",
   "writes": "nothing",
-  "network": "your own mail server, over IMAP and SMTP, to read questions and reply",
-  "tags": "no-install, online, read-only, interface"
+  "network": "your own mail server, over IMAP and SMTP, to read questions and reply"
  },
  {
   "name": "emergency-card",
@@ -413,8 +373,7 @@
   "line": "One page of your medicines, allergies and contacts, from your files, to print or keep on your phone.",
   "source": "new",
   "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, interface"
+  "network": "none"
  },
  {
   "name": "encrypt",
@@ -424,8 +383,7 @@
   "source": "new",
   "needs": "cryptography; Apache-2.0 or BSD",
   "writes": "record",
-  "network": "none",
-  "tags": "needs-install, offline, records, trust"
+  "network": "none"
  },
  {
   "name": "family-box",
@@ -434,8 +392,7 @@
   "line": "One box for a household: each person's own seal, and every answer showing whose it is.",
   "source": "new",
   "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, trust"
+  "network": "none"
  },
  {
   "name": "fight5e",
@@ -444,8 +401,7 @@
   "line": "Tabletop combat run from stat blocks on dice5e's rolls, every attack on the record and replayable.",
   "source": "new",
   "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, play"
+  "network": "none"
  },
  {
   "name": "food-log",
@@ -454,8 +410,7 @@
   "line": "What you ate, from your notes, by day.",
   "source": "new",
   "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
+  "network": "none"
  },
  {
   "name": "forgejo",
@@ -464,8 +419,7 @@
   "line": "What willow's repo needs from Forgejo, Gitea or Codeberg: its host.json and an Actions file, so the repo can move there.",
   "source": "new",
   "writes": "nothing",
-  "network": "the Forgejo instance's API, to read the author of a pull request a security report points to",
-  "tags": "no-install, online, read-only, maintainers"
+  "network": "the Forgejo instance's API, to read the author of a pull request a security report points to"
  },
  {
   "name": "forgejo-dump",
@@ -474,8 +428,7 @@
   "line": "A Forgejo or Gitea dump, Codeberg's included: issues, pull requests and wiki pages as dated passages.",
   "source": "new",
   "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
+  "network": "none"
  },
  {
   "name": "forget",
@@ -484,8 +437,7 @@
   "line": "Stops a file being searched, recorded on the chain, so what was taken out is known and nothing else is touched.",
   "source": "new",
   "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, privacy"
+  "network": "none"
  },
  {
   "name": "front-page",
@@ -494,8 +446,7 @@
   "line": "Which new posts will make the Hacker News front page? Wager, and let its search settle it.",
   "source": "new",
   "writes": "record",
-  "network": "hn.algolia.com, to read the front page",
-  "tags": "no-install, online, records, play"
+  "network": "hn.algolia.com, to read the front page"
  },
  {
   "name": "fuzz",
@@ -504,8 +455,7 @@
   "line": "Random and broken inputs thrown at the kernel's commands, every crash kept as a test.",
   "source": "new",
   "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, maintainers"
+  "network": "none"
  },
  {
   "name": "gifts",
@@ -514,8 +464,7 @@
   "line": "Gifts given and received, and who likes what, so nobody gets the same scarf twice.",
   "source": "new",
   "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
+  "network": "none"
  },
  {
   "name": "git-notes",
@@ -525,8 +474,7 @@
   "source": "new",
   "needs": "the git program; GPL, called not linked",
   "writes": "to",
-  "network": "none",
-  "tags": "needs-install, offline, writes-output, trust"
+  "network": "none"
  },
  {
   "name": "github-archive",
@@ -535,8 +483,7 @@
   "line": "Your GitHub account's data export: the issues, pull requests, reviews and comments you wrote, as dated passages with their links.",
   "source": "new",
   "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
+  "network": "none"
  },
  {
   "name": "gitlab",
@@ -545,8 +492,7 @@
   "line": "What willow's repo needs from GitLab, as github does for GitHub: its host.json and CI file, so the repo can move there.",
   "source": "new",
   "writes": "nothing",
-  "network": "GitLab, through glab, to read the author of a merge request a security report points to",
-  "tags": "no-install, online, read-only, maintainers"
+  "network": "GitLab, through glab, to read the author of a merge request a security report points to"
  },
  {
   "name": "gitlab-export",
@@ -555,8 +501,7 @@
   "line": "A GitLab project export, read without unpacking it: its issues, merge requests and comments as dated passages.",
   "source": "new",
   "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
+  "network": "none"
  },
  {
   "name": "go",
@@ -565,8 +510,7 @@
   "line": "A Go port of kernel.py, held to the same vectors as the others.",
   "source": "new",
   "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, maintainers"
+  "network": "none"
  },
  {
   "name": "google-classroom",
@@ -575,8 +519,7 @@
   "line": "Google Classroom from Takeout: assignments, announcements and comments as dated passages.",
   "source": "new",
   "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
+  "network": "none"
  },
  {
   "name": "grant-report",
@@ -585,8 +528,7 @@
   "line": "For charities and groups: what you promised a funder and what you did, side by side, each cited.",
   "source": "new",
   "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
+  "network": "none"
  },
  {
   "name": "gutenberg",
@@ -595,8 +537,7 @@
   "line": "A paragraph from a public-domain book beside one of yours, for serendipity.",
   "source": "new",
   "writes": "record",
-  "network": "gutenberg.org, each book fetched once",
-  "tags": "no-install, online, records, play"
+  "network": "gutenberg.org, each book fetched once"
  },
  {
   "name": "handoff",
@@ -605,8 +546,7 @@
   "line": "A box handed to the person you name (an executor, a carer): read only, your seals kept, theirs their own.",
   "source": "new",
   "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, trust"
+  "network": "none"
  },
  {
   "name": "hanoi",
@@ -615,8 +555,7 @@
   "line": "Towers of Hanoi as rows: each move, n discs in 2^n - 1.",
   "source": "new",
   "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, play"
+  "network": "none"
  },
  {
   "name": "hermes",
@@ -625,8 +564,7 @@
   "line": "Hermes Agent asking your folder as a plugin, and its memories, and what its dreaming plugin consolidates, handed in through propose.",
   "source": "new",
   "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, assistant"
+  "network": "none"
  },
  {
   "name": "home-assistant",
@@ -635,8 +573,7 @@
   "line": "Ask through Home Assistant's voice assistant, answered from your files.",
   "source": "new",
   "writes": "nothing",
-  "network": "your Home Assistant, on your own network, to answer its voice assistant",
-  "tags": "no-install, online, read-only, interface"
+  "network": "your Home Assistant, on your own network, to answer its voice assistant"
  },
  {
   "name": "homestead",
@@ -645,8 +582,7 @@
   "line": "Homestead's exports from its law, ledger and health modules: records, deadlines and evidence as dated passages.",
   "source": "new",
   "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
+  "network": "none"
  },
  {
   "name": "hook-checks",
@@ -656,7 +592,7 @@
   "source": "new",
   "writes": "nothing",
   "network": "none",
-  "tags": "no-install, offline, read-only, assistant, hooks"
+  "tags": "hooks"
  },
  {
   "name": "hook-cite",
@@ -666,7 +602,7 @@
   "source": "new",
   "writes": "nothing",
   "network": "none",
-  "tags": "no-install, offline, read-only, assistant, hooks"
+  "tags": "hooks"
  },
  {
   "name": "hook-errors",
@@ -676,7 +612,7 @@
   "source": "new",
   "writes": "record",
   "network": "none",
-  "tags": "no-install, offline, records, assistant, hooks"
+  "tags": "hooks"
  },
  {
   "name": "hook-feedback",
@@ -686,7 +622,7 @@
   "source": "new",
   "writes": "record",
   "network": "none",
-  "tags": "no-install, offline, records, assistant, hooks"
+  "tags": "hooks"
  },
  {
   "name": "hook-handoff",
@@ -696,7 +632,7 @@
   "source": "new",
   "writes": "record",
   "network": "none",
-  "tags": "no-install, offline, records, assistant, hooks"
+  "tags": "hooks"
  },
  {
   "name": "hook-read-first",
@@ -706,7 +642,7 @@
   "source": "new",
   "writes": "record",
   "network": "none",
-  "tags": "no-install, offline, records, assistant, hooks"
+  "tags": "hooks"
  },
  {
   "name": "hook-sequence",
@@ -716,7 +652,7 @@
   "source": "new",
   "writes": "nothing",
   "network": "none",
-  "tags": "no-install, offline, read-only, assistant, hooks"
+  "tags": "hooks"
  },
  {
   "name": "hook-tiers",
@@ -726,7 +662,7 @@
   "source": "new",
   "writes": "record",
   "network": "none",
-  "tags": "no-install, offline, records, assistant, hooks"
+  "tags": "hooks"
  },
  {
   "name": "hooks-elsewhere",
@@ -736,7 +672,7 @@
   "source": "box",
   "writes": "record",
   "network": "none",
-  "tags": "no-install, offline, records, assistant, hooks"
+  "tags": "hooks"
  },
  {
   "name": "horoscope-grades",
@@ -745,8 +681,7 @@
   "line": "Every horoscope logged as a forecast and settled against the day, so the stars get a Brier score.",
   "source": "new",
   "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, play"
+  "network": "none"
  },
  {
   "name": "in-case",
@@ -755,8 +690,7 @@
   "line": "A letter for the people you trust, if something happens to you: where things are and who to call, from your files, sealed by you.",
   "source": "new",
   "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, trust"
+  "network": "none"
  },
  {
   "name": "in-process",
@@ -766,8 +700,7 @@
   "source": "new",
   "needs": "llama-cpp-python; MIT; licence of the model varies",
   "writes": "record",
-  "network": "none",
-  "tags": "needs-install, offline, records, assistant"
+  "network": "none"
  },
  {
   "name": "ink-story",
@@ -777,8 +710,7 @@
   "source": "new",
   "needs": "inkjs; MIT",
   "writes": "record",
-  "network": "none",
-  "tags": "needs-install, offline, records, play"
+  "network": "none"
  },
  {
   "name": "instapaper",
@@ -787,8 +719,7 @@
   "line": "Instapaper's CSV and HTML export: saved articles and highlights as dated lines.",
   "source": "new",
   "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
+  "network": "none"
  },
  {
   "name": "inventory",
@@ -797,8 +728,7 @@
   "line": "What you own, where it is, and where its papers are, for insurance or a will.",
   "source": "new",
   "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
+  "network": "none"
  },
  {
   "name": "issue-answer",
@@ -807,8 +737,7 @@
   "line": "A workflow that drafts an answer to a new issue from the repo's own docs, each line cited, posted only once a maintainer seals it.",
   "source": "new",
   "writes": "record",
-  "network": "the forge, through the workflow's token, to post an answer once it is sealed",
-  "tags": "no-install, online, records, assistant"
+  "network": "the forge, through the workflow's token, to post an answer once it is sealed"
  },
  {
   "name": "joins",
@@ -817,8 +746,7 @@
   "line": "Two passages from two different folders, drawn by chance, for you to say what joins them.",
   "source": "bot",
   "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, play"
+  "network": "none"
  },
  {
   "name": "journiv",
@@ -827,8 +755,7 @@
   "line": "Journiv journal entries, with their moods, as dated lines, once its export format is settled.",
   "source": "new",
   "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
+  "network": "none"
  },
  {
   "name": "kids",
@@ -837,8 +764,7 @@
   "line": "A box for a child: answers only from the folder you choose for them, and nothing they can approve.",
   "source": "new",
   "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, privacy"
+  "network": "none"
  },
  {
   "name": "kiosk",
@@ -847,8 +773,7 @@
   "line": "A shared machine in a library or classroom: one box, ask only, nobody's key on it.",
   "source": "new",
   "writes": "nothing",
-  "network": "loopback",
-  "tags": "no-install, this-machine, read-only, interface"
+  "network": "loopback"
  },
  {
   "name": "kiwix",
@@ -858,8 +783,7 @@
   "source": "new",
   "needs": "libzim, and a ZIM file you download; GPL-3.0",
   "writes": "nothing",
-  "network": "none",
-  "tags": "needs-install, offline, read-only, search"
+  "network": "none"
  },
  {
   "name": "lab-notebook",
@@ -868,8 +792,7 @@
   "line": "A lab notebook's dated entries, by sample and experiment: what was done to what, and when.",
   "source": "new",
   "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
+  "network": "none"
  },
  {
   "name": "ladder",
@@ -878,8 +801,7 @@
   "line": "Your files first, then sources you trust such as Jeles and Nestor, then a model, stopping at the first that answers, each answer kept for next time.",
   "source": "bot",
   "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, assistant"
+  "network": "none"
  },
  {
   "name": "lessons",
@@ -888,8 +810,7 @@
   "line": "Lesson plans from the Emerging Rule community library, by grade and subject, as passages a teacher can ask.",
   "source": "new",
   "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
+  "network": "none"
  },
  {
   "name": "line-origin",
@@ -899,8 +820,7 @@
   "source": "new",
   "needs": "the git program; GPL, called not linked",
   "writes": "nothing",
-  "network": "none",
-  "tags": "needs-install, offline, read-only, trust"
+  "network": "none"
  },
  {
   "name": "llm-cli",
@@ -910,8 +830,7 @@
   "source": "new",
   "needs": "llm and the plugin for your model; Apache-2.0",
   "writes": "record",
-  "network": "the model its plugin reaches, to ask for suggestions",
-  "tags": "needs-install, online, records, assistant"
+  "network": "the model its plugin reaches, to ask for suggestions"
  },
  {
   "name": "local-model",
@@ -921,8 +840,7 @@
   "source": "new",
   "needs": "a local model server; licence varies by model",
   "writes": "record",
-  "network": "loopback",
-  "tags": "needs-install, this-machine, records, assistant"
+  "network": "loopback"
  },
  {
   "name": "lore",
@@ -931,8 +849,7 @@
   "line": "For a world you're writing: each fact about it sealed one at a time, so a story can be checked against its canon.",
   "source": "bot",
   "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, play"
+  "network": "none"
  },
  {
   "name": "losc",
@@ -941,8 +858,7 @@
   "line": "Does a project pass the Local Only Servers Club's test: no accounts, no cloud, and your data your own?",
   "source": "bot",
   "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, trust"
+  "network": "none"
  },
  {
   "name": "lunatic",
@@ -952,8 +868,7 @@
   "source": "new",
   "needs": "Skyfield; MIT",
   "writes": "nothing",
-  "network": "none",
-  "tags": "needs-install, offline, read-only, play"
+  "network": "none"
  },
  {
   "name": "mastermind",
@@ -962,8 +877,7 @@
   "line": "Mastermind with the secret's hash at the open: each guess and score on the record.",
   "source": "new",
   "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, play"
+  "network": "none"
  },
  {
   "name": "maven",
@@ -972,8 +886,7 @@
   "line": "The Java port on Maven Central, built from this repo and checked against the vectors.",
   "source": "new",
   "writes": "to",
-  "network": "Maven Central, to publish a release a maintainer tags",
-  "tags": "no-install, online, writes-output, maintainers"
+  "network": "Maven Central, to publish a release a maintainer tags"
  },
  {
   "name": "mcp-by-hash",
@@ -982,8 +895,7 @@
   "line": "Your passages served as MCP resources named by their SHA-256, so an assistant cites exactly the bytes it read and a changed passage gets a new name.",
   "source": "bot",
   "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, assistant"
+  "network": "none"
  },
  {
   "name": "mcp-sampling",
@@ -992,8 +904,7 @@
   "line": "Suggestions from whatever model your MCP client already runs, asked through MCP sampling, so willow needs no model or key of its own.",
   "source": "new",
   "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, assistant"
+  "network": "none"
  },
  {
   "name": "meaning",
@@ -1003,8 +914,7 @@
   "source": "new",
   "needs": "sentence-transformers; Apache-2.0",
   "writes": "to",
-  "network": "the model, downloaded once from Hugging Face",
-  "tags": "needs-install, online, writes-output, search"
+  "network": "the model, downloaded once from Hugging Face"
  },
  {
   "name": "medical-records",
@@ -1013,8 +923,7 @@
   "line": "Your health records as FHIR JSON or C-CDA XML: visits, results and prescriptions as dated lines.",
   "source": "new",
   "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
+  "network": "none"
  },
  {
   "name": "memoir",
@@ -1023,8 +932,7 @@
   "line": "A question a week about your life, answered in your own words and kept, so your story is in your files.",
   "source": "new",
   "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, words"
+  "network": "none"
  },
  {
   "name": "memory-import",
@@ -1033,8 +941,7 @@
   "line": "An AI assistant's memory store, SQLite or Markdown, handed in through propose: one suggestion per memory, none trusted until you seal it.",
   "source": "new",
   "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, assistant"
+  "network": "none"
  },
  {
   "name": "mex",
@@ -1043,8 +950,7 @@
   "line": "mex's project memory for coding agents: its scaffold read as cited passages, and what an agent writes back held for your seal.",
   "source": "new",
   "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, assistant"
+  "network": "none"
  },
  {
   "name": "mirror",
@@ -1054,8 +960,7 @@
   "source": "new",
   "needs": "the git program; GPL, called not linked",
   "writes": "nothing",
-  "network": "each mirror's git URL, to read its refs",
-  "tags": "needs-install, online, read-only, trust"
+  "network": "each mirror's git URL, to read its refs"
  },
  {
   "name": "mlx",
@@ -1065,8 +970,7 @@
   "source": "new",
   "needs": "mlx-lm, on Apple silicon only; MIT; licence of the model varies",
   "writes": "record",
-  "network": "none",
-  "tags": "needs-install, offline, records, assistant"
+  "network": "none"
  },
  {
   "name": "model-card",
@@ -1075,8 +979,7 @@
   "line": "A card naming the model behind an assistant (version or weights hash, where it runs, licence, known limits), with the card's hash on the record so each suggestion can say which model made it.",
   "source": "new",
   "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, assistant"
+  "network": "none"
  },
  {
   "name": "model-drift",
@@ -1085,8 +988,7 @@
   "line": "Your frozen questions asked again of a model now and then, flagging when its answers change while its name and card stay the same.",
   "source": "new",
   "writes": "nothing",
-  "network": "the endpoint you configure, to ask your questions again",
-  "tags": "no-install, online, read-only, assistant"
+  "network": "the endpoint you configure, to ask your questions again"
  },
  {
   "name": "model-exam",
@@ -1095,8 +997,7 @@
   "line": "Any model scored against the answers you sealed, your own questions as its exam, before you trust its suggestions.",
   "source": "new",
   "writes": "nothing",
-  "network": "the endpoint you configure, to ask your sealed questions",
-  "tags": "no-install, online, read-only, assistant"
+  "network": "the endpoint you configure, to ask your sealed questions"
  },
  {
   "name": "model-fit",
@@ -1105,8 +1006,7 @@
   "line": "Whether this machine's GPU, NPU or Apple silicon can run a local model, and about how fast, before you download one.",
   "source": "new",
   "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, assistant"
+  "network": "none"
  },
  {
   "name": "model-recall",
@@ -1115,8 +1015,7 @@
   "line": "Every sealed answer a model suggested, listed for a second look once you mark its card as flawed; nothing is unsealed for you.",
   "source": "new",
   "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, trust"
+  "network": "none"
  },
  {
   "name": "model-shelf",
@@ -1125,8 +1024,7 @@
   "line": "Every model already on this machine, read from Ollama's, LM Studio's, Jan's and GPT4All's folders and the Hugging Face cache: its runtime, size, quantization and hash, before you download another.",
   "source": "new",
   "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, assistant"
+  "network": "none"
  },
  {
   "name": "moodle",
@@ -1135,8 +1033,7 @@
   "line": "Moodle course backups: pages, assignments, quizzes and forum posts as passages.",
   "source": "new",
   "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
+  "network": "none"
  },
  {
   "name": "movie",
@@ -1146,8 +1043,7 @@
   "source": "new",
   "needs": "the gource program; GPL-3.0, called not linked",
   "writes": "to",
-  "network": "none",
-  "tags": "needs-install, offline, writes-output, play"
+  "network": "none"
  },
  {
   "name": "music-library",
@@ -1156,8 +1052,7 @@
   "line": "Your music files' tags (MP3, FLAC, M4A): artist, album, year and track, as lines.",
   "source": "new",
   "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
+  "network": "none"
  },
  {
   "name": "my-lessons",
@@ -1166,8 +1061,7 @@
   "line": "Your own lesson plans by grade, subject and standard: what did I teach on fractions last year?",
   "source": "new",
   "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, search"
+  "network": "none"
  },
  {
   "name": "night-batch",
@@ -1177,8 +1071,7 @@
   "source": "new",
   "needs": "a local model server; licence varies by model",
   "writes": "record",
-  "network": "loopback",
-  "tags": "needs-install, this-machine, records, assistant"
+  "network": "loopback"
  },
  {
   "name": "nim",
@@ -1187,8 +1080,7 @@
   "line": "Nim as rows: the heaps and each take, a position lost exactly when the heaps' XOR is 0.",
   "source": "new",
   "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, play"
+  "network": "none"
  },
  {
   "name": "ninety-percent",
@@ -1197,8 +1089,7 @@
   "line": "The calibration drill: give a range you're 90% sure of for a real number, and see how many hold.",
   "source": "new",
   "writes": "record",
-  "network": "Our World in Data, its numbers downloaded once",
-  "tags": "no-install, online, records, play"
+  "network": "Our World in Data, its numbers downloaded once"
  },
  {
   "name": "notary",
@@ -1207,8 +1098,7 @@
   "line": "The record's newest hash timestamped by an outside time server, so anyone can see it existed by then.",
   "source": "new",
   "writes": "record",
-  "network": "an RFC 3161 time server you choose, sent only the hash",
-  "tags": "no-install, online, records, trust"
+  "network": "an RFC 3161 time server you choose, sent only the hash"
  },
  {
   "name": "novelty",
@@ -1217,8 +1107,7 @@
   "line": "Before a new add-on merges, whether its combination of pieces has been assembled before, scanned the way a study checks its own novelty.",
   "source": "new",
   "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, maintainers"
+  "network": "none"
  },
  {
   "name": "npm",
@@ -1227,8 +1116,7 @@
   "line": "The TypeScript port on npm, built from this repo, checked against the vectors, and published with provenance; npx runs it.",
   "source": "new",
   "writes": "to",
-  "network": "registry.npmjs.org, to publish a release a maintainer tags",
-  "tags": "no-install, online, writes-output, maintainers"
+  "network": "registry.npmjs.org, to publish a release a maintainer tags"
  },
  {
   "name": "nuget",
@@ -1237,8 +1125,7 @@
   "line": "The C# port on NuGet, built from this repo and checked against the vectors.",
   "source": "new",
   "writes": "to",
-  "network": "nuget.org, to publish a release a maintainer tags",
-  "tags": "no-install, online, writes-output, maintainers"
+  "network": "nuget.org, to publish a release a maintainer tags"
  },
  {
   "name": "obsidian",
@@ -1247,8 +1134,7 @@
   "line": "Ask from inside Obsidian, answers as links to the note and line.",
   "source": "new",
   "writes": "nothing",
-  "network": "loopback",
-  "tags": "no-install, this-machine, read-only, interface"
+  "network": "loopback"
  },
  {
   "name": "opentimestamps",
@@ -1257,8 +1143,7 @@
   "line": "The record's newest hash anchored by OpenTimestamps, proof that it existed by a given block.",
   "source": "new",
   "writes": "record",
-  "network": "the OpenTimestamps calendars, sent only the hash",
-  "tags": "no-install, online, records, trust"
+  "network": "the OpenTimestamps calendars, sent only the hash"
  },
  {
   "name": "os-model",
@@ -1268,8 +1153,7 @@
   "source": "new",
   "needs": "macOS 26 with Apple Intelligence on, and a small Swift helper; Apple's terms",
   "writes": "record",
-  "network": "none",
-  "tags": "needs-install, offline, records, assistant"
+  "network": "none"
  },
  {
   "name": "package-docs",
@@ -1278,8 +1162,7 @@
   "line": "The READMEs and docs inside packages you've already installed (site-packages, node_modules, Cargo's registry cache), so you can ask your dependencies offline.",
   "source": "new",
   "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
+  "network": "none"
  },
  {
   "name": "pageviews",
@@ -1288,8 +1171,7 @@
   "line": "Two Wikipedia articles drawn at random: which gets more views tomorrow?",
   "source": "new",
   "writes": "record",
-  "network": "the Wikimedia pageviews API, to settle it",
-  "tags": "no-install, online, records, play"
+  "network": "the Wikimedia pageviews API, to settle it"
  },
  {
   "name": "paper-key",
@@ -1298,8 +1180,7 @@
   "line": "Your key printed as words on paper, to keep somewhere safe, and typed back in to restore it.",
   "source": "new",
   "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, trust"
+  "network": "none"
  },
  {
   "name": "past-papers",
@@ -1308,8 +1189,7 @@
   "line": "Past exam papers and their mark schemes as passages: which year asked this, and what earned the marks.",
   "source": "new",
   "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
+  "network": "none"
  },
  {
   "name": "plain-language",
@@ -1318,8 +1198,7 @@
   "line": "An approved answer rewritten in plain language by a model, the rewrite held until you seal it.",
   "source": "new",
   "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, assistant"
+  "network": "none"
  },
  {
   "name": "pocket",
@@ -1328,8 +1207,7 @@
   "line": "Pocket's export, the HTML and CSV in its zip, as one dated line per saved article, now that Pocket is gone.",
   "source": "new",
   "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
+  "network": "none"
  },
  {
   "name": "pr-context",
@@ -1338,8 +1216,7 @@
   "line": "On a pull request, the passages in the repo's docs that name the files it changes, posted as one comment.",
   "source": "new",
   "writes": "nothing",
-  "network": "the forge, through the workflow's token, to post the comment",
-  "tags": "no-install, online, read-only, interface"
+  "network": "the forge, through the workflow's token, to post the comment"
  },
  {
   "name": "predictions",
@@ -1348,8 +1225,7 @@
   "line": "Twelve yes-or-no questions about random data, forecast now and answered by a beacon round later, with your Brier score.",
   "source": "bot",
   "writes": "record",
-  "network": "api.drand.sh, to read a beacon round's randomness",
-  "tags": "no-install, online, records, play"
+  "network": "api.drand.sh, to read a beacon round's randomness"
  },
  {
   "name": "promises",
@@ -1358,8 +1234,7 @@
   "line": "What a candidate or a council said, by date and source, from the documents you saved.",
   "source": "new",
   "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, search"
+  "network": "none"
  },
  {
   "name": "property-tests",
@@ -1369,8 +1244,7 @@
   "source": "new",
   "needs": "Hypothesis; MPL-2.0",
   "writes": "nothing",
-  "network": "none",
-  "tags": "needs-install, offline, read-only, maintainers"
+  "network": "none"
  },
  {
   "name": "provenance",
@@ -1380,8 +1254,7 @@
   "source": "new",
   "needs": "sigstore; Apache-2.0",
   "writes": "nothing",
-  "network": "the registry and Sigstore's log, to fetch the attestation",
-  "tags": "needs-install, online, read-only, trust"
+  "network": "the registry and Sigstore's log, to fetch the attestation"
  },
  {
   "name": "pypi",
@@ -1390,8 +1263,7 @@
   "line": "kernel.py on PyPI as a package with no dependencies, built from this repo, checked against the vectors, and attested on upload; uvx and pipx run it.",
   "source": "new",
   "writes": "to",
-  "network": "upload.pypi.org, to publish a release a maintainer tags",
-  "tags": "no-install, online, writes-output, maintainers"
+  "network": "upload.pypi.org, to publish a release a maintainer tags"
  },
  {
   "name": "pypy",
@@ -1400,8 +1272,7 @@
   "line": "The kernel and its tests run under PyPy too, and timed against CPython.",
   "source": "new",
   "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, maintainers"
+  "network": "none"
  },
  {
   "name": "qr",
@@ -1410,8 +1281,7 @@
   "line": "An answer as a QR code on screen, to carry it to your phone without the network.",
   "source": "new",
   "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, interface"
+  "network": "none"
  },
  {
   "name": "quake-bets",
@@ -1420,8 +1290,7 @@
   "line": "Will there be a magnitude 6 this week? Bet, then let the USGS feed settle it against the base rate.",
   "source": "new",
   "writes": "record",
-  "network": "earthquake.usgs.gov, to read the week's earthquakes",
-  "tags": "no-install, online, records, play"
+  "network": "earthquake.usgs.gov, to read the week's earthquakes"
  },
  {
   "name": "quantized",
@@ -1431,8 +1300,7 @@
   "source": "new",
   "needs": "a local model server; licence varies by model",
   "writes": "nothing",
-  "network": "loopback",
-  "tags": "needs-install, this-machine, read-only, assistant"
+  "network": "loopback"
  },
  {
   "name": "quiet-corner",
@@ -1441,8 +1309,7 @@
   "line": "A Quiet Corner backup file: a teacher's classroom observations as dated passages, for that teacher's questions alone.",
   "source": "new",
   "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
+  "network": "none"
  },
  {
   "name": "quote-review",
@@ -1451,8 +1318,7 @@
   "line": "A review comment that quotes the repo, checked: does the quoted line still say that at the pull request's head?",
   "source": "new",
   "writes": "nothing",
-  "network": "the forge, through the workflow's token, to read the review comments",
-  "tags": "no-install, online, read-only, trust"
+  "network": "the forge, through the workflow's token, to read the review comments"
  },
  {
   "name": "real-sky",
@@ -1462,8 +1328,7 @@
   "source": "new",
   "needs": "Skyfield; MIT",
   "writes": "nothing",
-  "network": "the ephemeris file, downloaded once",
-  "tags": "needs-install, online, read-only, play"
+  "network": "the ephemeris file, downloaded once"
  },
  {
   "name": "recipes",
@@ -1472,8 +1337,7 @@
   "line": "Recipes from saved web pages and recipe-app exports, as plain text: what can I cook with leeks?",
   "source": "new",
   "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
+  "network": "none"
  },
  {
   "name": "reconciler",
@@ -1483,8 +1347,7 @@
   "source": "new",
   "needs": "willow-reconciler; Apache-2.0",
   "writes": "nothing",
-  "network": "none",
-  "tags": "needs-install, offline, read-only, maintainers"
+  "network": "none"
  },
  {
   "name": "redential",
@@ -1494,8 +1357,7 @@
   "source": "new",
   "needs": "the redential program, run through npx; Apache-2.0",
   "writes": "record",
-  "network": "none",
-  "tags": "needs-install, offline, records, trust"
+  "network": "none"
  },
  {
   "name": "repo-index",
@@ -1504,8 +1366,7 @@
   "line": "This repository as its own deterministic box: its cards, docs and code as dated passages, rebuilt the same bytes each time, so willow can answer questions about itself.",
   "source": "new",
   "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, maintainers"
+  "network": "none"
  },
  {
   "name": "report",
@@ -1514,8 +1375,7 @@
   "line": "A self-checking bundle: the record, the approved answers, and a script that re-verifies them on any machine.",
   "source": "box",
   "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, trust"
+  "network": "none"
  },
  {
   "name": "repro",
@@ -1524,8 +1384,7 @@
   "line": "A release built twice from the same commit, byte for byte the same.",
   "source": "new",
   "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, maintainers"
+  "network": "none"
  },
  {
   "name": "rerank",
@@ -1535,8 +1394,7 @@
   "source": "new",
   "needs": "FlashRank; Apache-2.0",
   "writes": "nothing",
-  "network": "the model, downloaded once",
-  "tags": "needs-install, online, read-only, search"
+  "network": "the model, downloaded once"
  },
  {
   "name": "retire",
@@ -1545,8 +1403,7 @@
   "line": "Proposes setting aside approved answers that no longer hold, each one gone only when you seal it.",
   "source": "bot",
   "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, trust"
+  "network": "none"
  },
  {
   "name": "reversi",
@@ -1555,8 +1412,7 @@
   "line": "Reversi as rows: every move, each flip following from the board.",
   "source": "new",
   "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, play"
+  "network": "none"
  },
  {
   "name": "roll-for-merge",
@@ -1565,8 +1421,7 @@
   "line": "A d20 for every pull request, green runs added and red streaks taken away, against a DC the bot calls.",
   "source": "new",
   "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, play"
+  "network": "none"
  },
  {
   "name": "rubric",
@@ -1575,8 +1430,7 @@
   "line": "Marking against a rubric you wrote: each mark cites the criterion and the line of work it's for.",
   "source": "new",
   "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
+  "network": "none"
  },
  {
   "name": "safe-app",
@@ -1585,8 +1439,7 @@
   "line": "willow as a SAFE app: installed from the SAFE App Store, authorized per session, and deleted clean.",
   "source": "new",
   "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, interface"
+  "network": "none"
  },
  {
   "name": "same-way",
@@ -1595,8 +1448,7 @@
   "line": "A local model asked each of your box's questions three times, and how often its answer flips, since a model that answers the same way every time is one you can build on.",
   "source": "new",
   "writes": "nothing",
-  "network": "this-machine",
-  "tags": "no-install, this-machine, read-only, assistant"
+  "network": "this-machine"
  },
  {
   "name": "sap-gate",
@@ -1606,8 +1458,7 @@
   "source": "new",
   "needs": "openclaw-sap-gate; MIT",
   "writes": "nothing",
-  "network": "none",
-  "tags": "needs-install, offline, read-only, trust"
+  "network": "none"
  },
  {
   "name": "schema-check",
@@ -1616,8 +1467,7 @@
   "line": "A model's answer held to a JSON schema before anything reads it, and a reply that doesn't fit recorded as a result, not lost as an error.",
   "source": "box",
   "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, assistant"
+  "network": "none"
  },
  {
   "name": "school",
@@ -1626,8 +1476,7 @@
   "line": "School letters and emails for parents: trips, forms due, term dates, and what to bring.",
   "source": "new",
   "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
+  "network": "none"
  },
  {
   "name": "scripture",
@@ -1636,8 +1485,7 @@
   "line": "A scripture or other canonical text with your study notes beside it, cited by book, chapter and verse.",
   "source": "new",
   "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
+  "network": "none"
  },
  {
   "name": "scrivener",
@@ -1646,8 +1494,7 @@
   "line": "Scrivener projects: each document in the binder as plain text, by its place in the manuscript.",
   "source": "new",
   "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
+  "network": "none"
  },
  {
   "name": "second-opinion",
@@ -1656,8 +1503,7 @@
   "line": "Two assistants' suggestions for the same question side by side, each waiting for its own seal.",
   "source": "new",
   "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, assistant"
+  "network": "none"
  },
  {
   "name": "serve-piles",
@@ -1666,8 +1512,7 @@
   "line": "serve's piles grouped on all four W's -- who, when, what and where -- not where alone, so a model meets a question from every box that touched it.",
   "source": "new",
   "writes": "record, to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, trust, assistant"
+  "network": "none"
  },
  {
   "name": "share",
@@ -1676,8 +1521,7 @@
   "line": "One sealed answer to send someone, checkable by them, without giving them the folder.",
   "source": "new",
   "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, interface"
+  "network": "none"
  },
  {
   "name": "sigmap",
@@ -1686,8 +1530,7 @@
   "line": "SigMap's signature map of a codebase as plain text: each function's signature with its file and line, for questions about the code.",
   "source": "new",
   "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
+  "network": "none"
  },
  {
   "name": "signal",
@@ -1697,8 +1540,7 @@
   "source": "new",
   "needs": "cryptography; Apache-2.0 or BSD",
   "writes": "to",
-  "network": "none",
-  "tags": "needs-install, offline, writes-output, file-reader"
+  "network": "none"
  },
  {
   "name": "signed-commits",
@@ -1708,8 +1550,7 @@
   "source": "new",
   "needs": "the git program; GPL, called not linked",
   "writes": "nothing",
-  "network": "none",
-  "tags": "needs-install, offline, read-only, trust"
+  "network": "none"
  },
  {
   "name": "silence-log",
@@ -1718,8 +1559,7 @@
   "line": "A model that ran and said nothing kept as its own row, so silence is told apart from a model that never ran.",
   "source": "bot",
   "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, assistant"
+  "network": "none"
  },
  {
   "name": "socratic",
@@ -1728,8 +1568,7 @@
   "line": "Asks you questions about your own notes instead of answering, each citing the passage it asked from.",
   "source": "new",
   "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, interface"
+  "network": "none"
  },
  {
   "name": "sokoban",
@@ -1738,8 +1577,7 @@
   "line": "Sokoban levels and moves on the record, a solution checked by replaying it.",
   "source": "new",
   "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, play"
+  "network": "none"
  },
  {
   "name": "sourcehut",
@@ -1748,8 +1586,7 @@
   "line": "What willow's repo needs from SourceHut: its host.json for patches by email and a builds.sr.ht manifest.",
   "source": "new",
   "writes": "nothing",
-  "network": "sr.ht, through hut, to read the author of a patch a security report points to",
-  "tags": "no-install, online, read-only, maintainers"
+  "network": "sr.ht, through hut, to read the author of a patch a security report points to"
  },
  {
   "name": "speak",
@@ -1759,8 +1596,7 @@
   "source": "new",
   "needs": "pyttsx3; MPL-2.0",
   "writes": "nothing",
-  "network": "none",
-  "tags": "needs-install, offline, read-only, interface"
+  "network": "none"
  },
  {
   "name": "spurious",
@@ -1769,8 +1605,7 @@
   "line": "Everything joined on time and place (CI reds, earthquakes, rain, front pages) to hunt correlations that mean nothing.",
   "source": "new",
   "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, play"
+  "network": "none"
  },
  {
   "name": "standards",
@@ -1779,8 +1614,7 @@
   "line": "Curriculum standards beside your lessons: which standard each lesson meets, each cited.",
   "source": "new",
   "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, search"
+  "network": "none"
  },
  {
   "name": "steam",
@@ -1789,8 +1623,7 @@
   "line": "Your Steam library from its local files: games, playtime and when you last played.",
   "source": "new",
   "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
+  "network": "none"
  },
  {
   "name": "strava",
@@ -1799,8 +1632,7 @@
   "line": "Strava's export and GPX files: each run, ride and walk as a dated line with its distance and time.",
   "source": "new",
   "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
+  "network": "none"
  },
  {
   "name": "student-records",
@@ -1809,8 +1641,7 @@
   "line": "A box of student records that answers only the teacher who owns it, and logs every look.",
   "source": "new",
   "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, privacy"
+  "network": "none"
  },
  {
   "name": "support-plan",
@@ -1819,8 +1650,7 @@
   "line": "An IEP or support plan's goals, accommodations and review dates, each cited, for a parent or teacher.",
   "source": "new",
   "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
+  "network": "none"
  },
  {
   "name": "swift",
@@ -1829,8 +1659,7 @@
   "line": "A Swift port of kernel.py for iPhone and Mac apps, held to the same vectors.",
   "source": "new",
   "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, maintainers"
+  "network": "none"
  },
  {
   "name": "symbols",
@@ -1840,8 +1669,7 @@
   "source": "new",
   "needs": "scip-python; MIT",
   "writes": "nothing",
-  "network": "none",
-  "tags": "needs-install, offline, read-only, search"
+  "network": "none"
  },
  {
   "name": "sync",
@@ -1850,8 +1678,7 @@
   "line": "Your record kept on two devices through any synced folder, with the chain checked on each before it's trusted.",
   "source": "new",
   "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, trust"
+  "network": "none"
  },
  {
   "name": "synonyms",
@@ -1861,8 +1688,7 @@
   "source": "new",
   "needs": "nltk and WordNet; Apache-2.0",
   "writes": "to",
-  "network": "the WordNet data, downloaded once",
-  "tags": "needs-install, online, writes-output, words"
+  "network": "the WordNet data, downloaded once"
  },
  {
   "name": "takeout",
@@ -1871,8 +1697,7 @@
   "line": "Google Takeout's My Activity and YouTube history, JSON or HTML, as dated lines.",
   "source": "new",
   "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
+  "network": "none"
  },
  {
   "name": "tatoeba",
@@ -1881,8 +1706,7 @@
   "line": "A question in one language finds the same idea in another, through Tatoeba's sentence pairs, downloaded once.",
   "source": "new",
   "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, words"
+  "network": "none"
  },
  {
   "name": "tax-year",
@@ -1891,8 +1715,7 @@
   "line": "One tax year's receipts and statements gathered in one place, each with the file it came from.",
   "source": "new",
   "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
+  "network": "none"
  },
  {
   "name": "teams",
@@ -1901,8 +1724,7 @@
   "line": "Microsoft Teams chats from your Microsoft account's export, one dated line per message.",
   "source": "new",
   "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
+  "network": "none"
  },
  {
   "name": "telegram-bot",
@@ -1911,8 +1733,7 @@
   "line": "Ask from your phone through a Telegram bot only you can talk to.",
   "source": "new",
   "writes": "nothing",
-  "network": "api.telegram.org, to receive your questions and send answers",
-  "tags": "no-install, online, read-only, interface"
+  "network": "api.telegram.org, to receive your questions and send answers"
  },
  {
   "name": "tic-tac-toe",
@@ -1921,8 +1742,7 @@
   "line": "Tic-tac-toe as rows: every move, and the solver's value of each position; perfect play draws.",
   "source": "new",
   "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, play"
+  "network": "none"
  },
  {
   "name": "tides",
@@ -1931,8 +1751,7 @@
   "line": "Tide predictions as a control: if your Brier score on tides isn't near zero, the forecasting plumbing is broken.",
   "source": "new",
   "writes": "record",
-  "network": "NOAA's tides API, to read predictions and what happened",
-  "tags": "no-install, online, records, play"
+  "network": "NOAA's tides API, to read predictions and what happened"
  },
  {
   "name": "time-capsule",
@@ -1941,8 +1760,7 @@
   "line": "A note sealed now and opened on a date you choose, with the record proving it wasn't changed.",
   "source": "new",
   "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, trust"
+  "network": "none"
  },
  {
   "name": "todays-place",
@@ -1951,8 +1769,7 @@
   "line": "One place a day drawn from Natural Earth's public-domain list, for the day's questions and bets.",
   "source": "new",
   "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, play"
+  "network": "none"
  },
  {
   "name": "translate",
@@ -1962,8 +1779,7 @@
   "source": "new",
   "needs": "a local model server; licence varies by model",
   "writes": "record",
-  "network": "loopback",
-  "tags": "needs-install, this-machine, records, assistant"
+  "network": "loopback"
  },
  {
   "name": "trips",
@@ -1972,8 +1788,7 @@
   "line": "Your trips from booking emails and tickets: where you went, when, and where you stayed.",
   "source": "new",
   "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, tracking"
+  "network": "none"
  },
  {
   "name": "tui",
@@ -1982,8 +1797,7 @@
   "line": "A full-screen terminal view to ask, read passages and approve, in curses.",
   "source": "new",
   "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, interface"
+  "network": "none"
  },
  {
   "name": "upgrade-notes",
@@ -1992,8 +1806,7 @@
   "line": "Before an upgrade: the changelog lines between the version you lock and the one you'd move to, from the package's own files.",
   "source": "new",
   "writes": "nothing",
-  "network": "the registry (PyPI, npm or crates.io), to fetch the newer version's changelog",
-  "tags": "no-install, online, read-only, search"
+  "network": "the registry (PyPI, npm or crates.io), to fetch the newer version's changelog"
  },
  {
   "name": "upstream-desk",
@@ -2002,8 +1815,7 @@
   "line": "Your work in other people's projects, in one place: notifications sorted into what needs you, and your open pull requests there.",
   "source": "bot",
   "writes": "nothing",
-  "network": "GitHub, through gh, with your own login",
-  "tags": "no-install, online, read-only, tracking"
+  "network": "GitHub, through gh, with your own login"
  },
  {
   "name": "vectors",
@@ -2014,7 +1826,7 @@
   "needs": "sqlite-vec and model2vec; MIT or Apache-2.0",
   "writes": "to",
   "network": "none",
-  "tags": "needs-install, offline, writes-output, search, pile"
+  "tags": "pile"
  },
  {
   "name": "vocab",
@@ -2023,8 +1835,7 @@
   "line": "The words you're learning, from your notes and the texts you read, with where you met each one.",
   "source": "new",
   "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, words"
+  "network": "none"
  },
  {
   "name": "voice",
@@ -2034,8 +1845,7 @@
   "source": "new",
   "needs": "faster-whisper; MIT",
   "writes": "to",
-  "network": "the model, downloaded once",
-  "tags": "needs-install, online, writes-output, file-reader"
+  "network": "the model, downloaded once"
  },
  {
   "name": "warc",
@@ -2044,8 +1854,7 @@
   "line": "WARC web archives, from Webrecorder, Heritrix or the Internet Archive, read without unpacking: each captured page's text with its address and the time it was captured.",
   "source": "new",
   "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
+  "network": "none"
  },
  {
   "name": "warm",
@@ -2054,8 +1863,7 @@
   "line": "The kernel kept running between questions on this machine, so each question skips the start-up.",
   "source": "new",
   "writes": "nothing",
-  "network": "loopback",
-  "tags": "no-install, this-machine, read-only, interface"
+  "network": "loopback"
  },
  {
   "name": "watch",
@@ -2064,8 +1872,7 @@
   "line": "A file re-read the moment it changes (inotify, FSEvents, or polling), so the index is always current.",
   "source": "new",
   "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, search"
+  "network": "none"
  },
  {
   "name": "weather-bet",
@@ -2074,8 +1881,7 @@
   "line": "Wager on rain tomorrow before you look, against Open-Meteo's own forecast, and see whose Brier score wins.",
   "source": "new",
   "writes": "record",
-  "network": "api.open-meteo.com, to read the forecast and the outcome",
-  "tags": "no-install, online, records, play"
+  "network": "api.open-meteo.com, to read the forecast and the outcome"
  },
  {
   "name": "weights-card",
@@ -2084,8 +1890,7 @@
   "line": "A model card filled in from the weights file's own header, GGUF or safetensors (architecture, quantization, context length, licence), so the card says what the file says.",
   "source": "new",
   "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, assistant"
+  "network": "none"
  },
  {
   "name": "weights-pin",
@@ -2094,8 +1899,7 @@
   "line": "A local model's weights file hashed before each run and refused when it differs from the hash on its model card.",
   "source": "new",
   "writes": "nothing",
-  "network": "none",
-  "tags": "no-install, offline, read-only, trust"
+  "network": "none"
  },
  {
   "name": "welcome",
@@ -2104,8 +1908,7 @@
   "line": "One plain thank-you on a first-time contributor's first pull request, once per person, and only where it's turned on.",
   "source": "bot",
   "writes": "nothing",
-  "network": "the forge, through the workflow's token, to post the thank-you",
-  "tags": "no-install, online, read-only, maintainers"
+  "network": "the forge, through the workflow's token, to post the thank-you"
  },
  {
   "name": "witness",
@@ -2114,8 +1917,7 @@
   "line": "A second person's seal beside yours, for answers that need two people to agree.",
   "source": "new",
   "writes": "record",
-  "network": "none",
-  "tags": "no-install, offline, records, trust"
+  "network": "none"
  },
  {
   "name": "words-hi",
@@ -2124,8 +1926,7 @@
   "line": "Hindi common words ('और', 'है').",
   "source": "new",
   "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, words"
+  "network": "none"
  },
  {
   "name": "words-ja",
@@ -2134,8 +1935,7 @@
   "line": "Japanese, which has no spaces: a small segmenter of its own and a common-words list.",
   "source": "new",
   "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, words"
+  "network": "none"
  },
  {
   "name": "words-zh",
@@ -2144,8 +1944,7 @@
   "line": "Chinese, which has no spaces: words found by a small segmenter of its own, and a common-words list.",
   "source": "new",
   "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, words"
+  "network": "none"
  },
  {
   "name": "writefreely",
@@ -2154,8 +1953,7 @@
   "line": "WriteFreely posts, from its export or a copy of its SQLite database, as dated text.",
   "source": "new",
   "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
+  "network": "none"
  },
  {
   "name": "zotero",
@@ -2164,7 +1962,6 @@
   "line": "Your Zotero library, from a copy of zotero.sqlite: items, notes and PDF annotations, each with its citation.",
   "source": "new",
   "writes": "to",
-  "network": "none",
-  "tags": "no-install, offline, writes-output, file-reader"
+  "network": "none"
  }
 ]

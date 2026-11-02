@@ -5,7 +5,6 @@ source: box
 added: 2026-10-24
 writes: record
 network: none
-tags: no-install, offline, records, assistant
 -->
 # mcp-lite
 

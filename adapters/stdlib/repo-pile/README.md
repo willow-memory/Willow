@@ -1,11 +1,12 @@
 <!-- willow-addon
 section: Ways to use it
-line: Public repositories made into a box you can ask: cloned, kept only under a licence an Apache-2.0 project can use, their docs the pile, indexed for fast questions.
+line: Public repositories you list, cloned and made askable, keeping only those under a licence an Apache-2.0 project can use.
 source: new
 added: 2026-10-24
 writes: record, to
 network: github.com (or the --source you give), to clone the repositories you list
-tags: no-install, online, records, interface, research
+tags: research
+uses: again, backup, changed, digest, export, history, privacy, quote-check, scan, secrets-audit, stale, todo, xref
 -->
 # repo-pile
 

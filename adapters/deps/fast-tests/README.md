@@ -7,7 +7,6 @@ needs: pytest-xdist; MIT
 floor: pytest-xdist 3.0.2; the rule names 2.2.0, but every 2.x imports py.log, long gone from pytest, so 2.x installs on today's Python yet cannot run a suite; 3.0.0 dropped the py dependency, so 3.0.2 is the oldest that runs
 writes: nothing
 network: none
-tags: needs-install, offline, read-only, maintainers
 -->
 # fast-tests
 

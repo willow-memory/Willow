@@ -442,6 +442,9 @@ def gates() -> list[tuple[str, str, object]]:
     ]
     for k, part in enumerate(chunks(adapter_tests(), ADAPTER_CHUNKS), 1):
         out.append(("tests", f"tests:adapters-{k}", guarded_tests(*part)))
+    # each add-on's tests again, in a copy holding only what its card uses
+    out.append(("tests", "tests:alone", command(PY, "adapters/stdlib/ci/alone.py",
+                needs=lambda: missing_module("pytest"))))  # fmt: skip
     out.append(("tests", "tests:vectors",
                 pytest("vectors/test_vectors.py", "-k", "as_it_is_now")))  # fmt: skip
     for k in range(1, STRIP_CHUNKS + 1):
@@ -467,6 +470,9 @@ def gates() -> list[tuple[str, str, object]]:
         needs=lambda: missing_module("pytest"))))  # fmt: skip
     # Bernadette's files through every layer: readers to the trust add-ons
     out.append(("demo", "demo:stack", command(*PYTEST, "demo/bernadette",
+                needs=lambda: missing_module("pytest"))))  # fmt: skip
+    # Teodora's whole folder against the starter words list
+    out.append(("demo", "demo:teodora-words", command(*PYTEST, "demo/teodora",
                 needs=lambda: missing_module("pytest"))))  # fmt: skip
     # the Craft apps taken apart and assembled: CI holds what was frozen, and
     # the tools on sources it makes, which git commits and Cargo builds

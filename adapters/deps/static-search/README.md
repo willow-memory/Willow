@@ -7,7 +7,6 @@ needs: Pagefind, its Python package pagefind and its program pagefind-bin; MIT
 floor: pagefind 1.3.0, pagefind-bin 1.3.0; the rule names 1.2.0a4 and 1.2.0a5, the first uploads, both alphas; 1.2.0's index differs from build to build, and the card promises the same bytes, which 1.3.0 is the first to keep (40 builds of the same answers, all alike)
 writes: to
 network: none
-tags: needs-install, offline, writes-output, interface
 -->
 # static-search
 

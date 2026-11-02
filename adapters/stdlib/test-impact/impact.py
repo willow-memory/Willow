@@ -334,6 +334,10 @@ class Plan:
             self.why[path].append(why)
 
 
+#: the one demo test that is a gate of its own, beside its person's
+TEODORA_WORDS = "demo/teodora/test_words.py"
+
+
 def place(changed: list[str], graph: Graph) -> Plan:
     plan = Plan(changed)
     stdlib_dirs = {
@@ -392,6 +396,8 @@ def place(changed: list[str], graph: Graph) -> Plan:
                 plan.gate("demo:php2shell", p, "demo/php2shell")
             else:
                 plan.gate(f"demo:{person}", p, f"demo/{person}")
+            if p == TEODORA_WORDS:
+                plan.gate("demo:teodora-words", p, "its own test")
             if p.startswith(STACK.rsplit("/", 1)[0] + "/"):
                 plan.gate("demo:stack", p, STACK.rsplit("/", 1)[0])
         elif p.startswith(".github/"):
@@ -433,6 +439,8 @@ def place(changed: list[str], graph: Graph) -> Plan:
             plan.gate("tests:vectors", t, "reached by import")
         elif t.startswith(STACK.rsplit("/", 1)[0] + "/"):
             plan.gate("demo:stack", t, "reached by import")  # its tests are that gate
+        elif t == TEODORA_WORDS:
+            plan.gate("demo:teodora-words", t, "reached by import")
         elif person := under(t, "demo/"):
             plan.gate(f"demo:{person}", t, "reached by import")
         elif t.startswith("adapters/deps/"):

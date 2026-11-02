@@ -5,7 +5,6 @@ source: new
 added: 2026-11-01
 writes: nothing
 network: none
-tags: no-install, offline, read-only, trust
 -->
 # weakest-link
 

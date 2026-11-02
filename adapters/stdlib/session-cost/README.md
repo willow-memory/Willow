@@ -5,7 +5,6 @@ source: new
 added: 2026-10-31
 writes: nothing
 network: none
-tags: no-install, offline, read-only, tracking
 -->
 # session-cost
 

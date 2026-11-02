@@ -19,6 +19,13 @@ dg = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(dg)
 NOW = ["--now", "2026-10-24T00:00:00Z"]
 TODAY = date(2026, 10, 24)
+#: the add-ons two of its sections are read by: each test holds digest to
+#: whichever is true here, so a copy with only some add-ons is checked too
+BESIDE = {n: (HERE.parent / n).is_dir() for n in ("stale", "coming-up")}
+
+
+def gone(name: str) -> dict:
+    return {"state": "unreachable", "why": f"the {name} add-on isn't here", "items": []}
 
 
 def k(*argv: str, stdin: str = "") -> subprocess.CompletedProcess:
@@ -61,12 +68,18 @@ def life(tmp_path: Path) -> Path:
 def test_each_section_shows_what_it_found(tmp_path):
     doc = dg.digest(life(tmp_path), TODAY)
     assert [w["answer"] for w in doc["waiting"]["items"]] == ["30 October"]
-    assert [e["data"] for e in doc["stale"]["items"]] == ["Thursday night"]
-    assert [(c["date"], c["where"]) for c in doc["coming"]["items"]] == [
-        ("2026-10-30", "car.txt:1")
-    ]
+    if BESIDE["stale"]:
+        assert [e["data"] for e in doc["stale"]["items"]] == ["Thursday night"]
+    else:
+        assert doc["stale"] == gone("stale")
+    if BESIDE["coming-up"]:
+        assert [(c["date"], c["where"]) for c in doc["coming"]["items"]] == [
+            ("2026-10-30", "car.txt:1")
+        ]
+    else:
+        assert doc["coming"] == gone("coming-up")
     assert doc["again"]["items"] == [2]
-    assert {s["state"] for s in doc.values()} == {"populated"}
+    assert doc["waiting"]["state"] == doc["again"]["state"] == "populated"
     assert dg.code_of(doc) == 42
 
 
@@ -105,8 +118,11 @@ def test_nothing_is_said_as_nothing(tmp_path, capsys):
     assert dg.main(["--box", str(b), *NOW]) == 0
     out = capsys.readouterr().out
     assert "Nothing is waiting for your approval." in out
-    assert "Every approved answer's sources still hold." in out
-    assert "Nothing dated in that window." in out
+    assert ("Every approved answer's sources still hold." in out) == BESIDE["stale"]
+    assert ("Nothing dated in that window." in out) == BESIDE["coming-up"]
+    assert ("couldn't look: the coming-up add-on isn't here" in out) != BESIDE[
+        "coming-up"
+    ]
     assert "No question has gone unanswered twice." in out
 
 
@@ -115,17 +131,16 @@ def test_a_deleted_add_on_is_couldnt_look_and_the_rest_still_show(
 ):
     b = life(tmp_path)
     fake = tmp_path / "stdlib"
-    shutil.copytree(HERE.parent / "coming-up", fake / "coming-up")
+    fake.mkdir()
+    if BESIDE["coming-up"]:
+        shutil.copytree(HERE.parent / "coming-up", fake / "coming-up")
     monkeypatch.setattr(dg, "STDLIB", fake)
     doc = dg.digest(b, TODAY)
-    assert doc["stale"] == {
-        "state": "unreachable",
-        "why": "the stale add-on isn't here",
-        "items": [],
-    }
-    assert (
-        doc["coming"]["state"] == "populated" and doc["waiting"]["state"] == "populated"
+    assert doc["stale"] == gone("stale")
+    assert doc["coming"]["state"] == (
+        "populated" if BESIDE["coming-up"] else "unreachable"
     )
+    assert doc["waiting"]["state"] == "populated"
     assert dg.code_of(doc) == 42
     print(dg.render(doc, 14))
     assert "couldn't look: the stale add-on isn't here" in capsys.readouterr().out
@@ -133,8 +148,11 @@ def test_a_deleted_add_on_is_couldnt_look_and_the_rest_still_show(
 
 def test_the_window_is_the_days_asked(tmp_path):
     b = life(tmp_path)
-    assert dg.digest(b, TODAY, 5)["coming"]["state"] == "empty"
-    assert dg.digest(b, TODAY, 6)["coming"]["state"] == "populated"
+    five, six = (dg.digest(b, TODAY, n)["coming"]["state"] for n in (5, 6))
+    if BESIDE["coming-up"]:
+        assert (five, six) == ("empty", "populated")
+    else:
+        assert five == six == "unreachable"
 
 
 def test_an_answered_question_asked_again_is_not_counted(tmp_path):

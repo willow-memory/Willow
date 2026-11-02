@@ -7,7 +7,6 @@ needs: Pillow and pypdf, and the tesseract program, run not linked; MIT-CMU, BSD
 floor: Pillow 11.0.0, pypdf 3.1.0; the rule names Pillow 8.0.1, which won't build on Python 3.13, and pypdf 1.9, a Python 2 release; each floor is the first that works
 writes: to
 network: none
-tags: needs-install, offline, writes-output, file-reader
 -->
 # ocr
 
