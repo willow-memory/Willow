@@ -107,6 +107,10 @@ willow/
 │   │   │   ├── annotations.py   approved answers as W3C Web Annotations: the answer as the body, each cited passage as a target with its lines and words
 │   │   │   ├── test_annotations.py
 │   │   │   └── README.md
+│   │   ├── asciidoc/
+│   │   │   ├── asciidoc.py   an AsciiDoc document as the text it shows, line for line, markup taken off
+│   │   │   ├── test_asciidoc.py
+│   │   │   └── README.md
 │   │   ├── attendance/
 │   │   │   ├── attendance.py   who was there, by person or by week
 │   │   │   ├── test_attendance.py
@@ -134,6 +138,10 @@ willow/
 │   │   ├── bibtex/
 │   │   │   ├── bibtex.py   each reference in a .bib file as a passage that begins with its citation key
 │   │   │   ├── test_bibtex.py
+│   │   │   └── README.md
+│   │   ├── bookmarks/
+│   │   │   ├── bookmarks.py   browser bookmarks and history, from an export, a backup or a copy of the database
+│   │   │   ├── test_bookmarks.py
 │   │   │   └── README.md
 │   │   ├── books/
 │   │   │   ├── books.py      Kindle highlights and .epub text, as passages
@@ -273,6 +281,10 @@ willow/
 │   │   ├── corpus-lens/
 │   │   │   ├── corpus_lens.py  corpus-lens process reports: where intent arrives, who writes the code
 │   │   │   ├── test_corpus_lens.py
+│   │   │   └── README.md
+│   │   ├── csv-rows/
+│   │   │   ├── csv_rows.py   a CSV or TSV table as one passage per row, the header row once as the first
+│   │   │   ├── test_csv_rows.py
 │   │   │   └── README.md
 │   │   ├── cursor/
 │   │   │   ├── cursor.py         the mcp.json lines that register mcp-lite with Cursor
@@ -543,6 +555,10 @@ willow/
 │   │   │   ├── jrnl.py       jrnl journals mirrored, each stamped entry one dated passage
 │   │   │   ├── test_jrnl.py
 │   │   │   └── README.md
+│   │   ├── json-paths/
+│   │   │   ├── json_paths.py   any JSON or JSON Lines file as plain lines, one passage per record
+│   │   │   ├── test_json_paths.py
+│   │   │   └── README.md
 │   │   ├── jupyter/
 │   │   │   ├── jupyter.py   a Jupyter notebook as text, one block for each cell with its number and kind
 │   │   │   ├── test_jupyter.py
@@ -599,6 +615,10 @@ willow/
 │   │   │   ├── llms_txt.py   an llms.txt written from a folder's text files, and a checker for one
 │   │   │   ├── test_llms_txt.py
 │   │   │   └── README.md
+│   │   ├── local-model/
+│   │   │   ├── local_model.py  suggestions from a model on this machine only, finding the server and model running
+│   │   │   ├── test_local_model.py
+│   │   │   └── README.md
 │   │   ├── location-history/
 │   │   │   ├── location_history.py   places and trips from a Timeline export, by day
 │   │   │   ├── test_location_history.py
@@ -622,6 +642,10 @@ willow/
 │   │   ├── man-pages/
 │   │   │   ├── man_pages.py   man pages as plain text
 │   │   │   ├── test_man_pages.py
+│   │   │   └── README.md
+│   │   ├── markdown/
+│   │   │   ├── markdown.py   a Markdown file as the text it shows, line for line, with no word the file lacks
+│   │   │   ├── test_markdown.py
 │   │   │   └── README.md
 │   │   ├── market-calls/
 │   │   │   ├── market_calls.py  market calls as wagers, closed by the closes you type, settled by your seal, losers kept
@@ -667,6 +691,26 @@ willow/
 │   │   │   ├── misquote.py   a quote almost in your files: the closest passage, and what differs
 │   │   │   ├── test_misquote.py
 │   │   │   └── README.md
+│   │   ├── model-card/
+│   │   │   ├── model_card.py  a card naming the model behind an assistant, its SHA-256 on the record
+│   │   │   ├── test_model_card.py
+│   │   │   └── README.md
+│   │   ├── model-drift/
+│   │   │   ├── model_drift.py  your frozen questions asked again, flagging answers that changed under the same name and card
+│   │   │   ├── test_model_drift.py
+│   │   │   └── README.md
+│   │   ├── model-exam/
+│   │   │   ├── model_exam.py  a model scored against the answers you sealed, your questions as its exam
+│   │   │   ├── test_model_exam.py
+│   │   │   └── README.md
+│   │   ├── model-fit/
+│   │   │   ├── model_fit.py  the memory, CPU, GPUs and NPUs this machine has, and where a model of a given size fits
+│   │   │   ├── test_model_fit.py
+│   │   │   └── README.md
+│   │   ├── model-shelf/
+│   │   │   ├── model_shelf.py  every model on this machine, from each runtime's own folder, with its quantization and hash
+│   │   │   ├── test_model_shelf.py
+│   │   │   └── README.md
 │   │   ├── month-first/
 │   │   │   ├── month_first.py   a folder written month first, mirrored with each date's ISO form beside it
 │   │   │   ├── test_month_first.py
@@ -691,6 +735,10 @@ willow/
 │   │   ├── nestor/
 │   │   │   ├── nestor.py     answers a person has checked in Nestor, from a copy of its store
 │   │   │   ├── test_nestor.py
+│   │   │   └── README.md
+│   │   ├── night-batch/
+│   │   │   ├── night_batch.py  waiting questions asked of a local model in one run, stopped once you're back
+│   │   │   ├── test_night_batch.py
 │   │   │   └── README.md
 │   │   ├── nightstand/
 │   │   │   ├── nightstand.py  things set down, one bite picked up: one in hand, a bite every time, nothing deleted
@@ -728,6 +776,10 @@ willow/
 │   │   │   ├── opencode.py       the opencode.json lines that register mcp-lite with OpenCode
 │   │   │   ├── test_opencode.py
 │   │   │   └── README.md
+│   │   ├── opml/
+│   │   │   ├── opml.py   an OPML feed list as a line per feed under its folder, an outline as indented items with their notes
+│   │   │   ├── test_opml.py
+│   │   │   └── README.md
 │   │   ├── oracle-text/
 │   │   │   ├── oracle_text.py   readings from a Tracery grammar, replayable
 │   │   │   ├── test_oracle_text.py
@@ -735,6 +787,10 @@ willow/
 │   │   ├── orders/
 │   │   │   ├── orders.py   what you bought, as dated lines with prices
 │   │   │   ├── test_orders.py
+│   │   │   └── README.md
+│   │   ├── org/
+│   │   │   ├── org.py   an Org-mode file as plain lines, line for line, its markup taken off
+│   │   │   ├── test_org.py
 │   │   │   └── README.md
 │   │   ├── outdated/
 │   │   │   ├── outdated.py   how old each locked dependency is, and which are yanked, deprecated or unmaintained
@@ -820,6 +876,10 @@ willow/
 │   │   │   ├── plain.py      the kernel's answer as sentences
 │   │   │   ├── test_plain.py
 │   │   │   └── README.md
+│   │   ├── pocket/
+│   │   │   ├── pocket.py     Pocket's export, its HTML and the CSVs in its zip, one dated line per saved article
+│   │   │   ├── test_pocket.py
+│   │   │   └── README.md
 │   │   ├── policy-watch/
 │   │   │   ├── policy_watch.py  a policy page fetched each run, and what changed since, sentence by sentence
 │   │   │   ├── test_policy_watch.py
@@ -843,6 +903,10 @@ willow/
 │   │   ├── prov/
 │   │   │   ├── prov.py   the record as W3C PROV-JSON: what came from what, by which step, sealed by whom
 │   │   │   ├── test_prov.py
+│   │   │   └── README.md
+│   │   ├── quantized/
+│   │   │   ├── quantized.py  the smallest local model that still passes your sealed questions
+│   │   │   ├── test_quantized.py
 │   │   │   └── README.md
 │   │   ├── quiz/
 │   │   │   ├── quiz.py       a passage of your own writing with a word missing, cut and scored on the record
@@ -896,6 +960,10 @@ willow/
 │   │   │   ├── restore_drill.py  a backup zip restored into scratch; the chain and every file checked there
 │   │   │   ├── test_restore_drill.py
 │   │   │   └── README.md
+│   │   ├── ris/
+│   │   │   ├── ris.py   each reference in a RIS citation export as a passage that opens with its citation
+│   │   │   ├── test_ris.py
+│   │   │   └── README.md
 │   │   ├── risky-code/
 │   │   │   ├── risky_code.py  lines of code matching a known-dangerous pattern, by file and line, as leads to read
 │   │   │   ├── test_risky_code.py
@@ -908,6 +976,10 @@ willow/
 │   │   │   ├── rss_out.py   your approved answers as an RSS 2.0 feed, newest first, an item for each
 │   │   │   ├── test_rss_out.py
 │   │   │   └── README.md
+│   │   ├── rst/
+│   │   │   ├── rst.py   a reStructuredText file as the text it shows, line for line, markup taken off
+│   │   │   ├── test_rst.py
+│   │   │   └── README.md
 │   │   ├── rtf/
 │   │   │   ├── rtf.py   an RTF document as the plain text it displays
 │   │   │   ├── test_rtf.py
@@ -919,6 +991,10 @@ willow/
 │   │   ├── said/
 │   │   │   ├── said.py       who said what, read by shape (a chat's stamp, a speech verb, quotation marks), dated
 │   │   │   ├── test_said.py
+│   │   │   └── README.md
+│   │   ├── same-way/
+│   │   │   ├── same_way.py  a local model asked each question several times, and how often its answer flips
+│   │   │   ├── test_same_way.py
 │   │   │   └── README.md
 │   │   ├── sarif/
 │   │   │   ├── sarif.py   scanner findings by file and line
@@ -1014,6 +1090,10 @@ willow/
 │   │   │   ├── starter.py    copies it where yours will live, readable only by you
 │   │   │   ├── test_starter_words.py
 │   │   │   └── README.md
+│   │   ├── strava/
+│   │   │   ├── strava.py     Strava's activities.csv, GPX and TCX files: each activity a dated line with its distance and time
+│   │   │   ├── test_strava.py
+│   │   │   └── README.md
 │   │   ├── subscriptions/
 │   │   │   ├── subscriptions.py   payments that come round monthly or yearly, and when next
 │   │   │   ├── test_subscriptions.py
@@ -1034,6 +1114,10 @@ willow/
 │   │   │   ├── symptoms.py   one symptom's dated diary, turns marked only where the line says one, each cited
 │   │   │   ├── test_symptoms.py
 │   │   │   └── README.md
+│   │   ├── takeout/
+│   │   │   ├── takeout.py    My Activity and YouTube history, JSON or HTML, one dated line each
+│   │   │   ├── test_takeout.py
+│   │   │   └── README.md
 │   │   ├── tarot/
 │   │   │   ├── tarot.py      a tarot spread dealt by the record's tip, replayable by anyone, meaning nothing by itself
 │   │   │   ├── test_tarot.py
@@ -1045,6 +1129,10 @@ willow/
 │   │   ├── test-shards/
 │   │   │   ├── shards.py     splits the test run into parts by each test's past time
 │   │   │   ├── test_shards.py
+│   │   │   └── README.md
+│   │   ├── text/
+│   │   │   ├── text.py       every .txt as UTF-8 the kernel reads whole: UTF-16, a named code page, over 1 MB
+│   │   │   ├── test_text.py
 │   │   │   └── README.md
 │   │   ├── texts/
 │   │   │   ├── texts.py      Android and iPhone text backups and call logs, a dated line a message
@@ -1074,6 +1162,10 @@ willow/
 │   │   │   ├── transcript_redact.py  a transcript's keys, home paths and emails taken out, each removal listed
 │   │   │   ├── test_transcript_redact.py
 │   │   │   └── README.md
+│   │   ├── translate/
+│   │   │   ├── translate.py  an answer you sealed, translated on this machine, held for your seal beside the original
+│   │   │   ├── test_translate.py
+│   │   │   └── README.md
 │   │   ├── trello/
 │   │   │   ├── trello.py   a Trello board by list with cards, checklists and comments
 │   │   │   ├── test_trello.py
@@ -1098,6 +1190,10 @@ willow/
 │   │   │   ├── wallabag.py   saved articles with tags and highlights
 │   │   │   ├── test_wallabag.py
 │   │   │   └── README.md
+│   │   ├── warc/
+│   │   │   ├── warc.py       WARC web archives (.warc, .warc.gz, .wacz) as each captured page's text, under its time and address
+│   │   │   ├── test_warc.py
+│   │   │   └── README.md
 │   │   ├── warranties/
 │   │   │   ├── warranties.py   when a cover ends, and where its receipt is
 │   │   │   ├── test_warranties.py
@@ -1113,6 +1209,14 @@ willow/
 │   │   ├── web-pages/
 │   │   │   ├── web_pages.py  saved .html and .mhtml as their paragraphs, under the address they came from
 │   │   │   ├── test_web_pages.py
+│   │   │   └── README.md
+│   │   ├── weights-card/
+│   │   │   ├── weights_card.py  a model card from a GGUF or safetensors file's own header, with the file's SHA-256
+│   │   │   ├── test_weights_card.py
+│   │   │   └── README.md
+│   │   ├── weights-pin/
+│   │   │   ├── weights_pin.py  a weights file held to the SHA-256 and size on its model card before it runs
+│   │   │   ├── test_weights_pin.py
 │   │   │   └── README.md
 │   │   ├── why-not/
 │   │   │   ├── why_not.py   why a question got not enough to say: which words nothing holds, the nearest passages and what kind of file would answer
@@ -1182,9 +1286,13 @@ willow/
 │   │   │   ├── xref.py       each link and file:line in your files checked, still there
 │   │   │   ├── test_xref.py
 │   │   │   └── README.md
-│   │   └── zed/
-│   │       ├── zed.py            the settings.json lines that register mcp-lite with Zed
-│   │       ├── test_zed.py
+│   │   ├── zed/
+│   │   │   ├── zed.py            the settings.json lines that register mcp-lite with Zed
+│   │   │   ├── test_zed.py
+│   │   │   └── README.md
+│   │   └── zotero/
+│   │       ├── zotero.py   a copy of zotero.sqlite: each item, note and PDF annotation, with its citation
+│   │       ├── test_zotero.py
 │   │       └── README.md
 │   └── deps/                 add-ons that need something installed
 │       ├── README.md         what one must declare: pins, floors, licences, network
