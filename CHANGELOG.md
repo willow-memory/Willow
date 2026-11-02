@@ -15,7 +15,7 @@ says how). The first was v0.1.0.
   writes for the same page (the address it came from, its title, its
   paragraphs), then each frame's text under the frame's own address.
   It reads the archive's charset, then the page's, then UTF-8; a file that
-  isn't a web archive, or a saved PDF or picture, is skipped and counted.
+  isn't a web archive, or a saved PDF or picture, is skipped and counted. (#188)
 - `apple-mail`: Apple Mail's .emlx and .partial.emlx messages as plain text,
   each read with mail's own code so it gives the same text as the same message
   saved as an .eml (sender, recipients, date and subject, then the body and the
