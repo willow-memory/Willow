@@ -10,6 +10,12 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `quantized`, the smallest local model that still gets your own questions
+  right: `quantized.py --box DIR --questions FILE` has each model the local
+  server offers (or each `--model`) sit model-exam's exam of your sealed
+  answers, sorts them by the size Ollama's own list gives, and names the
+  smallest that passes every marked question. Writes nothing. Built in
+  stdlib, like local-model. (#168)
 - `night-batch`, waiting questions asked of a local model in one run,
   stopped the moment you're back: `night_batch.py run --box DIR --questions
   FILE [--until TS]` asks each question as local-model does (bite, the

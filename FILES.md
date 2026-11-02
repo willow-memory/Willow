@@ -872,6 +872,10 @@ willow/
 │   │   │   ├── prov.py   the record as W3C PROV-JSON: what came from what, by which step, sealed by whom
 │   │   │   ├── test_prov.py
 │   │   │   └── README.md
+│   │   ├── quantized/
+│   │   │   ├── quantized.py  the smallest local model that still passes your sealed questions
+│   │   │   ├── test_quantized.py
+│   │   │   └── README.md
 │   │   ├── quiz/
 │   │   │   ├── quiz.py       a passage of your own writing with a word missing, cut and scored on the record
 │   │   │   ├── test_quiz.py
