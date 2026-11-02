@@ -5,7 +5,6 @@ source: new
 added: 2026-10-29
 writes: to
 network: none
-tags: no-install, offline, writes-output, file-reader
 -->
 # meta-archive
 

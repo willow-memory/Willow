@@ -96,3 +96,42 @@ def test_the_list_at_a_commit_is_read_from_git():
     before = sim.at("HEAD")
     assert before["pdf"] == "Text out of PDFs."
     assert before["bank"].startswith("Bank CSV and OFX statements")
+
+
+def test_tags_are_worked_out_the_same_every_time_and_never_more_than_five():
+    """Never stored, so a card can't carry stale ones: the same cards give
+    the same tags, install and network first, the author's own tag last."""
+    every = sim.entries()
+    got = sim.worked_out(every)
+    assert got == sim.worked_out(every)
+    for a in every:
+        tags = got[a["name"]]["tags"]
+        assert len(tags) <= 5 and len(set(tags)) == len(tags), (a["name"], tags)
+        assert tags[:2] == sim.facts_tags(a)
+        own = sim.readme.split_tags(a["tags"])
+        assert tags[len(tags) - len(own) :] == own
+        assert len(tags) - 2 - len(own) <= 2  # two topics at most
+        assert a["name"] not in got[a["name"]]["near"]
+    assert got["ocr"]["tags"][:2] == ["needs-install", "offline"]
+    assert got["vim"]["near"][0] == "emacs"
+
+
+def test_a_tag_follows_the_card_when_the_card_changes():
+    every = sim.entries()
+    vim = next(a for a in every if a["name"] == "vim")
+    moved = [a if a is not vim else {**vim, "network": "loopback"} for a in every]
+    assert sim.worked_out(moved)["vim"]["tags"][1] == "this-machine"
+
+
+def test_a_topic_never_says_the_authors_own_tag_again():
+    """hook-guard's author tagged it hooks; "hook" beside it would say it twice."""
+    tags = sim.worked_out(sim.entries())["hook-guard"]["tags"]
+    assert tags[-1] == "hooks" and "hook" not in tags
+
+
+def test_tags_on_the_command_line():
+    got = cli("tags", "vim", "ocr")
+    assert got.returncode == 0, got.stderr
+    assert got.stdout.startswith("vim: no-install, offline")
+    assert "· near: emacs" in got.stdout and "\nocr: needs-install" in got.stdout
+    assert cli("tags", "no-such-add-on").returncode == 2

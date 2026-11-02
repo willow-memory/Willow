@@ -5,7 +5,8 @@ source: new
 added: 2026-10-24
 writes: to
 network: the page you name, fetched each time you run it
-tags: no-install, online, writes-output, tracking, policies
+tags: policies
+uses: clauses, snapshot
 -->
 # policy-watch
 

@@ -1,11 +1,11 @@
 <!-- willow-addon
 section: Assistants
-line: A PreToolUse hook that refuses, by rule and never by judgment, a tool call that would read the key or write a box outside the kernel, naming the rule it hit.
+line: A PreToolUse hook that blocks, by fixed rule and never by judgment, a tool call that would read your key or write willow's record behind its back, naming the rule.
 source: box
 added: 2026-10-29
 writes: nothing
 network: none
-tags: no-install, offline, read-only, assistant, hooks
+tags: hooks
 -->
 # hook-guard
 

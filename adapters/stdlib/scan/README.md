@@ -5,7 +5,8 @@ source: box
 added: 2026-10-24
 writes: to
 network: none
-tags: no-install, offline, writes-output, search, index
+tags: index
+uses: todo
 -->
 # scan
 

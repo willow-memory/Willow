@@ -1,11 +1,11 @@
 <!-- willow-addon
 section: Assistants
-line: A card for your folder itself (what the files are, their dates, the gaps you know of), compiled from the pile and your notes and handed to a model as context.
+line: A card for your folder itself (what the files are, their dates, the gaps you know of), made from your files and your notes and handed to a model as context.
 source: new
 added: 2026-11-01
 writes: to
 network: none
-tags: no-install, offline, writes-output, assistant
+uses: gaps
 -->
 # folder-card
 

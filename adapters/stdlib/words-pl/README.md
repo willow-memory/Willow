@@ -5,7 +5,7 @@ source: new
 added: 2026-10-27
 writes: record
 network: none
-tags: no-install, offline, records, words, polish
+tags: polish
 -->
 # words-pl
 

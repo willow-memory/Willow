@@ -1,13 +1,13 @@
 <!-- willow-addon
 section: Finding things
-line: Rank a scan index by meaning, not just words: a question reaches code that shares its sense without sharing its words.
+line: Finds code by meaning, not just matching words, using scan's index: a question reaches code that says the same thing another way.
 source: new
 added: 2026-10-24
 needs: numpy; BSD-3-Clause
 floor: numpy 2.1.0; the 2020 rule names 1.19, which has no wheel for Python 3.13 (the version the deps CI job runs), and 2.1.0 is the first that does
 writes: nothing
 network: none
-tags: needs-install, offline, read-only, search
+uses: scan
 -->
 # latent
 

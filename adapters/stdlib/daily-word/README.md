@@ -1,11 +1,10 @@
 <!-- willow-addon
 section: Play
-line: A word game drawn from your own files' words, the same puzzle for everyone with the same box.
+line: A five-letter word game drawn from your own files' words: a new word each day, the same for anyone asking the same folder.
 source: new
 added: 2026-10-27
 writes: record
 network: none
-tags: no-install, offline, records, play
 -->
 # daily-word
 

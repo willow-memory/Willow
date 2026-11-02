@@ -5,7 +5,7 @@ source: new
 added: 2026-10-27
 writes: record
 network: none
-tags: no-install, offline, records, words, swedish
+tags: swedish
 -->
 # words-sv
 

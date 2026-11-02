@@ -40,6 +40,13 @@ willow/
 │   │   ├── 0005.md           VI.7, every change carries its account: made 0.14
 │   │   └── 0006.md           VIII.2, the emergency door on a timer: made 0.15
 │   └── README.md             what the kernel answers for, and what it doesn't claim
+├── ui/                       willow's own UI: put your willow together on a page, on this machine only
+│   ├── canvas.py             the page and its server: folders, the kernel's baseline, add-ons, batches, the seal
+│   ├── page.html             the page itself, served by canvas.py
+│   ├── assemble.py           a stack made from this willow, one add-on at a time, each a row on its record
+│   ├── search-words.txt      how people ask for an add-on, and the words its card uses, for the search
+│   ├── test_ui.py            its tests: its server over a scratch stack, counts only, batches, the seal
+│   └── README.md             what it does, where your stack is kept, and what it never does
 ├── adapters/                 add-ons built on top of kernel.py
 │   ├── README.md             the rules every add-on follows
 │   ├── planned.json          the add-ons not built yet, as this README lists them
@@ -190,6 +197,7 @@ willow/
 │   │   │   ├── bugs.py       makes BUGS.md from the tests marked as known bugs
 │   │   │   ├── whose.py      which commit wrote these lines, or with a host's host.json which pull request
 │   │   │   ├── cores.py      ci.py's run as its shards at once on this machine, a record each, shown together
+│   │   │   ├── alone.py      each add-on's tests in a copy holding only the kernel, the add-on and what its card uses
 │   │   │   ├── guard/
 │   │   │   │   └── sitecustomize.py  holds each add-on to its card while its tests run
 │   │   │   ├── test-times.json  seconds each add-on test file took, to cut the add-ons' tests into even chunks
@@ -200,6 +208,7 @@ willow/
 │   │   │   ├── test_bugs.py  bugs.py's tests: strict marks only, and the list made from them
 │   │   │   ├── test_whose.py whose.py's tests: commits, merges, squashes, another host, places refused
 │   │   │   ├── test_cores.py cores.py's tests: every gate once across the shards, refusals that run nothing
+│   │   │   ├── test_alone.py alone.py's tests: what a card uses comes along, and leaning on what it doesn't name fails
 │   │   │   └── README.md     its card: gates, states, the guard and exit codes
 │   │   ├── ci-cache/
 │   │   │   ├── ci_cache.py    a cache key per ecosystem from a repo's lockfiles, so CI skips the reinstall
@@ -1324,7 +1333,8 @@ willow/
 │   │   ├── CHARACTER.md
 │   │   ├── PLANTED.md
 │   │   ├── QUESTIONS.md
-│   │   └── STRIP.md
+│   │   ├── STRIP.md
+│   │   └── test_words.py     the starter words list against her whole folder: her debt to Dev, served with it and not without
 │   ├── bernadette/           built blind, in her apps' raw formats, and run through the whole stack
 │   │   ├── make_life.py      her mail, calendars, chats, vault, office files, Kindle and PDFs, the same bytes every run
 │   │   ├── CHARACTER.md

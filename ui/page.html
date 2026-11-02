@@ -1,0 +1,320 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<title>Put your willow together</title><style>
+:root{--bg:#f7f6f2;--ink:#222;--mute:#6f6c64;--line:#d9d6cc;--card:#fff;--acc:#2f6d4f;--accl:#e6f2ea;--warn:#a2561b;--warnl:#f6e2cf;--fix:#eef0f6}
+*{box-sizing:border-box}body{user-select:none;-webkit-user-select:none;margin:0;font:15px/1.45 system-ui,sans-serif;background:var(--bg);color:var(--ink);display:grid;grid-template-columns:340px 1fr;height:100vh}
+input[type=text]{user-select:text;-webkit-user-select:text;width:100%;padding:7px;border:1px solid var(--line);border-radius:5px;font:inherit}
+button{font:inherit;padding:6px 12px;border:1px solid var(--line);border-radius:5px;background:#fff;cursor:pointer}button.go{background:var(--acc);color:#fff;border-color:var(--acc)}button:disabled{opacity:.4;cursor:default}button.link{border:0;background:none;color:var(--acc);padding:0;text-decoration:underline}
+aside{border-right:1px solid var(--line);overflow:auto;padding:16px;background:#fbfaf7}main{overflow:auto;padding:22px 30px 120px}
+h1{font-size:22px;margin:0 0 4px}h2{font-size:17px;margin:0}h3{font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--mute);margin:16px 0 6px}
+.lede{color:var(--mute);margin:0 0 14px;max-width:760px}.steps{display:flex;gap:10px;margin:0 0 22px;flex-wrap:wrap}
+.steps div{background:#fff;border:1px solid var(--line);border-radius:20px;padding:4px 12px;font-size:14px}.steps b{color:var(--acc);margin-right:4px}
+.flow{max-width:780px}.stage{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px}.stage.sel{border-color:var(--acc);box-shadow:0 0 0 2px var(--accl)}
+.stage.fixed{background:var(--fix);border-style:solid}.stage.fixed h2::after{content:" · always there";font-weight:400;color:var(--mute);font-size:13px}
+.stage .say{color:var(--mute);font-size:14px;margin:2px 0 8px}.stage .none{color:var(--mute);font-size:13px;font-style:italic}
+.stage header{display:flex;align-items:baseline;gap:10px}.stage header h2{flex:1}
+.down{text-align:center;color:#b5b1a6;font-size:20px;line-height:1;margin:4px 0}
+.chips{display:flex;flex-wrap:wrap;gap:8px;min-height:10px;border-radius:6px;padding:2px}.chips.on{background:var(--accl)}
+.chip{background:#fff;border:1px solid #bdb9ad;border-radius:7px;padding:6px 9px;width:230px;cursor:grab;position:relative}
+.chip b{display:block;padding-right:16px}.chip small{display:block;color:var(--mute);font-size:12px;line-height:1.3}.chip .x{position:absolute;top:2px;right:4px;border:0;background:none;color:var(--mute);padding:0 4px;font-size:16px}
+.chip.before{box-shadow:-4px 0 0 var(--acc)}.chip.after{box-shadow:4px 0 0 var(--acc)}
+.tag{display:inline-block;font-size:11px;padding:0 6px;border-radius:8px;background:#eee;margin:3px 4px 0 0}.tag.net{background:var(--warnl);color:var(--warn)}.tag.inst{background:#e9e4f5;color:#5a3f8f}.tag.have{background:var(--accl);color:var(--acc)}
+.shelf-head{margin-bottom:10px}.shelf-head p{color:var(--mute);font-size:14px;margin:4px 0 10px}
+.piece{background:#fff;border:1px solid var(--line);border-radius:7px;padding:7px 9px;margin:6px 0;cursor:pointer}.piece:hover{border-color:var(--acc)}
+.piece.idea{background:#f0efea;color:var(--mute);cursor:default}.piece.used{opacity:.5;cursor:default}.piece b{display:block}.piece small{display:block;color:var(--mute);font-size:13px;line-height:1.35}
+.folder{display:flex;gap:8px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:7px;padding:6px 9px;margin:6px 0}.folder span{flex:1;word-break:break-all;font-size:14px}.folder small{color:var(--mute)}
+#picker{border:1px solid var(--line);border-radius:7px;background:#fff;padding:8px;margin-top:8px}.ppath{font-family:monospace;font-size:12px;word-break:break-all;margin-bottom:6px}
+.plist{max-height:280px;overflow:auto;border-top:1px solid var(--line)}.plist div{padding:4px 6px;cursor:pointer;border-bottom:1px solid #f0eee8}.plist div:hover{background:var(--accl)}.plist .up{color:var(--mute)}
+footer{position:fixed;left:340px;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);padding:12px 30px;display:flex;gap:14px;align-items:center}footer .sum{flex:1}
+.review{max-width:780px;background:#fff;border:2px solid var(--acc);border-radius:10px;padding:16px 18px;margin:0 0 20px}.review ul{margin:8px 0 12px;padding-left:20px}.review li{margin:3px 0}
+.why{background:var(--fix);border-radius:7px;padding:10px 12px;font-size:14px;margin:10px 0}.subj{font-family:monospace;font-size:11px;word-break:break-all;color:var(--mute)}
+.msg{font-size:14px}.msg.err{color:#b00}.gap{color:var(--warn);font-size:13px;margin:2px 0}
+.find{position:relative;margin-bottom:14px}.find input{font-size:16px;padding:9px 30px 9px 10px;border-color:var(--acc)}.find .x{position:absolute;right:6px;top:6px;border:0;background:none;font-size:18px;color:var(--mute)}
+.topic{display:inline-block;font-size:11px;padding:0 6px;border-radius:8px;background:#e8eef8;color:#2b4f86;margin:3px 4px 0 0;cursor:pointer;border:0}.topic:hover{background:#d3e0f5}
+.goes{font-size:12px;color:var(--mute);margin-top:4px}.goes button{font-size:12px;padding:0 4px;border:0;background:none;color:var(--acc);text-decoration:underline;cursor:pointer}
+.where{font-size:12px;color:var(--acc);margin-top:3px}
+.started{max-width:780px;background:#fff;border:2px solid var(--acc);border-radius:10px;padding:16px 18px;margin:0 0 20px}
+.started ol{margin:8px 0 12px;padding-left:20px}.started li{margin:5px 0}.started li small{display:block;color:var(--mute);word-break:break-word}
+.st-done{color:var(--acc)}.st-refused,.st-failed{color:#b00}.st-unreachable,.st-needs{color:var(--warn)}
+.started pre{max-height:420px;overflow:auto;background:#f6f5f0;border:1px solid var(--line);border-radius:6px;padding:10px;font-size:12px;user-select:text;-webkit-user-select:text;white-space:pre-wrap}
+#ask .box{border:2px solid var(--warn);background:var(--warnl);border-radius:7px;padding:10px;margin-bottom:12px;font-size:14px}#ask .box div{display:flex;gap:8px;margin-top:8px}
+.tree{margin-top:6px}.node{display:flex;align-items:flex-start;gap:6px;padding:4px 0;border-bottom:1px solid #efede6}.node .tw{width:16px;flex:none;cursor:pointer;color:var(--mute);user-select:none}.node .tw.none{cursor:default}
+.node input{margin-top:3px;flex:none}.node .what{flex:1}.node b{font-weight:600}.node small{display:block;color:var(--mute);font-size:12.5px;line-height:1.3}
+.node.off{color:var(--mute)}.node .note{font-size:12px;color:var(--acc)}.node .note.opt{color:#2b4f86}.node .note.no{color:var(--warn)}
+.base{margin-top:4px}.bfold{border-top:1px solid #d6d9e4;padding:8px 0}.bpath{font-family:monospace;font-size:12px;color:var(--mute);word-break:break-all}
+.bline{margin:4px 0;font-size:14px}.bline.ok{color:var(--acc)}.bline.mute{color:var(--mute);font-size:12.5px}.bcant{margin:4px 0;padding-left:18px;font-size:14px}.bcant li{margin:3px 0}.bcant button.link{font-size:13px}
+.batches{max-width:780px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:0 0 18px}
+.batches h2{font-size:16px}.batches .save{display:flex;gap:8px;margin:8px 0}.batches .save input{max-width:320px}
+.batches ul{list-style:none;padding:0;margin:6px 0 0}.batches li{display:flex;gap:10px;align-items:center;padding:6px 0;border-top:1px solid #efede6}.batches li b{flex:1}.batches li small{color:var(--mute)}
+.examples .q,.batches .q{border:2px solid var(--warn);background:var(--warnl);border-radius:7px;padding:10px;margin:8px 0;font-size:14px}.examples .q div,.batches .q div{display:flex;gap:8px;margin-top:8px}
+.examples{max-width:780px;margin-top:22px}.examples>h2{font-size:17px}.ex{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:10px 0}
+.ex h3{font-size:15px;text-transform:none;letter-spacing:0;color:var(--ink);margin:0 0 4px}.ex p{margin:0 0 6px;color:var(--mute);font-size:14px}.ex .steps{font-size:13px;margin:6px 0}
+.ex .steps span{display:inline-block;margin:2px 6px 2px 0;padding:1px 7px;border-radius:9px;background:#eef0f6}.ex .steps span.no{background:#f0efea;color:var(--mute)}.ex .opt{color:#2b4f86}
+.chip .runs{font-family:monospace;font-size:11px;color:#2b4f86;display:block}
+header.fold{cursor:pointer;display:flex;align-items:baseline;gap:8px}header.fold h2{flex:none}header.fold .sum{flex:1;color:var(--mute);font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+header.fold .caret,.exhead .caret{color:var(--mute);width:12px;flex:none}header.fold button.link{margin-left:auto}
+.examples-stage{background:#fdfcf8}.ex .exhead{display:flex;align-items:baseline;gap:8px;cursor:pointer}.ex .exhead h3{flex:1;margin:0}.ex.folded{padding:8px 12px}.ex.folded .steps{margin:4px 0 0 20px}
+details.more{margin-top:18px}details.more summary{cursor:pointer;color:var(--mute)}
+</style></head><body>
+<aside>
+<div class="find"><input type="text" id="find" placeholder="What do you want willow to do?"><button class="x" id="findx" title="clear" hidden>×</button></div>
+<div id="ask"></div>
+<div class="shelf-head" id="shelfhead"></div>
+<div id="shelf"></div>
+</aside>
+<main>
+<h1>Put your willow together</h1>
+<p class="lede">Willow answers questions from your own folders, in their own words, with the file and line for each answer. It never makes an answer up: when your files don't say it, it says so. Here you choose what it reads and what else it does. Nothing runs until you look it over and seal it.</p>
+<div class="steps"><div><b>1</b>Choose your folders</div><div><b>2</b>Add what you want it to do</div><div><b>3</b>Look it over, and seal it</div></div>
+<section class="batches" id="batches"></section>
+<div id="started"></div>
+<div id="review"></div>
+<div class="flow" id="flow"></div>
+
+</main>
+<footer><div class="sum" id="sum"></div><span class="msg" id="msg"></span><button class="go" id="look">Look it over</button></footer>
+<script>
+const T=location.pathname.replace(/\/$/,'');
+const api=(p,b)=>fetch(T+'/api/'+p,b?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)}:{}).then(r=>r.json());
+const el=(t,a={},...k)=>{const e=document.createElement(t);for(const[x,v]of Object.entries(a)){if(x==='text')e.textContent=v;else if(x.startsWith('on'))e.addEventListener(x.slice(2),v);else e.setAttribute(x,v)}for(const c of k)if(c!=null)e.append(c);return e};
+const STAGES=[
+ {key:'folders',title:'Your folders',say:'What willow may read. It only ever reads them: it never changes, moves or uploads a file.'},
+ {key:'kernel',title:'Willow’s kernel',fixed:true,say:'What it does on your folders alone, before any add-on, shown below as counts. Every question comes here. It finds the passages of your files that hold the question’s words and gives up to three, each with its file and line. If none do, it says it doesn’t know. Every step goes on a record that can’t be quietly changed.'},
+ {key:'read',title:'Reading other kinds of files',sec:'Reading more kinds of files',say:'Turns PDFs, email, chats and office files into text it can search. Without any, it reads plain text, markdown and web pages.'},
+ {key:'words',title:'Your own words',sec:'Your own words',say:'Teaches it the words you use, so a question finds what your files call it ("doc" finds "doctor").'},
+ {key:'find',title:'More ways to find things',sec:'Finding things',say:'Other ways to look when a plain match misses: every match, phrases, this day in past years, an exact quote.'},
+ {key:'watch',title:'Things it keeps watch on',sec:'Keeping track',say:'What it notices without being asked: dates coming up, to-dos, numbers over time.'},
+ {key:'hide',title:'What it hides',sec:'Privacy and safety',say:'Blanks out phone numbers, card numbers and keys before anything is shown, and finds secrets sitting in files.'},
+ {key:'suggest',title:'Assistants',sec:'Assistants',say:'AI assistants, and what they’re allowed to see. They can ask and suggest answers, but none of them can approve one.'},
+ {key:'you',title:'You',fixed:true,say:'A suggested answer counts only once you seal it. Sealing is you saying “yes, this is mine”. The same goes for this whole arrangement.'},
+ {key:'honest',title:'Keeping it honest',sec:'Trust and proof',say:'Checks that stay true later: an approved answer whose source changed is flagged, the record is backed up and pinned.'},
+ {key:'use',title:'How you’ll use it',sec:'Ways to use it',say:'Where you ask from: a page in your browser, your shell, your editor. Without one, you type commands.'},
+ {key:'extra',title:'Extras',sec:['Play','For maintainers'],say:'Games on the record, and tools for people working on willow itself.'},
+];
+const SUGGEST={read:['pdf','mail','office'],words:['starter-words','nicknames'],find:['all','pile-rungs','on-this-day'],watch:['coming-up','todo'],hide:['privacy'],suggest:['claude-code','mcp-lite'],honest:['stale','backup','tip-pin'],use:['browse','shell']};
+const KEY='willow-canvas-2';
+let P={},S=JSON.parse(localStorage.getItem(KEY)||'null'),cur='folders',subject=null,drag=null,here='';
+const stageOf=p=>{for(const s of STAGES)if(s.sec&&[].concat(s.sec).includes(p.section))return s.key;return'extra'};
+const save=()=>localStorage.setItem(KEY,JSON.stringify(S));
+function say(t,err){const m=document.getElementById('msg');m.textContent=t||'';m.className='msg'+(err?' err':'')}
+function plainTags(p){const t=[];if(p.network&&p.network!=='none')t.push(el('span',{class:'tag net',text:p.network==='loopback'?'this machine only':'goes online: '+p.network}));
+ if(p.kind==='deps')t.push(el('span',{class:'tag inst',text:'needs installing'}));if((p.writes||'').includes('to'))t.push(el('span',{class:'tag',text:'writes only where you point it'}));
+ if(p.in_stack)t.push(el('span',{class:'tag have',text:'already here'}));return t}
+const all=()=>STAGES.flatMap(s=>(S.stages[s.key]||[]));
+const FACT=new Set(['no-install','needs-install','offline','this-machine','online']);
+// a tag you can click: every piece that shares it
+function topics(p){return(p.tags||[]).filter(t=>!FACT.has(t)).map(t=>el('button',{class:'topic',text:'#'+t,title:'every piece tagged '+t,onclick:e=>{e.stopPropagation();find('#'+t)}}))}
+function stageTitle(p){const k=stageOf(p);return STAGES.find(s=>s.key===k).title}
+function pieceCard(p,why){const used=all().includes(p.name),idea=!!cantAdd(p.name);
+ return el('div',{class:'piece'+(idea?' idea':'')+(used?' used':''),title:idea?cantAdd(p.name):used?'already in your flow':'click to add',onclick:()=>{if(!idea&&!used)addPiece(p.name)}},
+  el('b',{text:p.name+(used?'  ✓':'')}),el('small',{text:(p.runs_in==='repo'?'works on willow itself · ':'')+p.line}),...plainTags(p),...topics(p),why?el('div',{class:'where',text:'goes in: '+stageTitle(p)+(why?' · '+why:'')}):null)}
+const BASE={};
+async function baseline(path){if(BASE[path])return;BASE[path]={loading:true};flow();BASE[path]=await api('baseline?path='+encodeURIComponent(path));flow()}
+const n2=(n,w)=>n.toLocaleString()+' '+w+(n===1?'':'s');
+function baselines(){const box=el('div',{class:'base'});
+ if(!S.folders.length){box.append(el('div',{class:'none',text:'Choose a folder first: this is where you’ll see what the kernel makes of it on its own.'}));return box}
+ for(const f of S.folders){const b=BASE[f.path];if(!b){baseline(f.path);continue}
+  const sec=el('div',{class:'bfold'},el('div',{class:'bpath',text:f.path}));box.append(sec);
+  if(b.loading){sec.append(el('div',{class:'none',text:'Reading it the way the kernel does…'}));continue}
+  if(!b.ok){sec.append(el('div',{class:'none',text:b.why}));continue}
+  sec.append(el('div',{class:'bline'},el('b',{text:n2(b.read,'file')}),' it can read, making ',el('b',{text:n2(b.passages,'passage')}),' it can answer from.'));
+  const cant=b.cant.reduce((t,c)=>t+c.files,0);
+  if(!cant)sec.append(el('div',{class:'bline ok',text:'Every file it found, it can read.'}));
+  else{sec.append(el('div',{class:'bline',text:n2(cant,'file')+' it can’t read:'}));const ul=el('ul',{class:'bcant'});
+   for(const c of b.cant){const why=Object.entries(c.why).map(([w,n])=>w).join(', ');
+    const adds=c.readers.map(r=>all().includes(r)?el('span',{class:'tag have',text:r+' ✓'}):cantAdd(r)?el('span',{class:'tag',text:r+' ('+cantAdd(r)+')'}):el('button',{class:'link',text:'+ '+r,title:P[r]?.line||'',onclick:()=>addPiece(r)}));
+    ul.append(el('li',{},el('b',{text:c.kind}),' '+c.files+' · '+why+(adds.length?' · could be read by ':c.text?'':' · no reader for it yet'),...adds.flatMap((a,i)=>i?[' ',a]:[a])))}
+   sec.append(ul)}
+  if(b.hidden)sec.append(el('div',{class:'bline mute',text:n2(b.hidden,'file')+' in hidden folders, which it never reads.'}))}
+ box.append(el('div',{class:'bline mute',text:'Counts only: nothing of what your files say, and none of their names, is shown here.'}));return box}
+// ── saved batches: the add-ons you picked, by name ──────────────────────────
+let BATCHES={};
+async function loadBatches(){const r=await api('batches');BATCHES=r.refused?{}:r;batchPanel(r.refused||'')}
+function ask(text,buttons,where='bask'){const q=document.getElementById(where);q.innerHTML='';q.className='q';q.append(el('span',{text}),el('div',{},...buttons.map(([t,f,go])=>el('button',{class:go?'go':'',text:t,onclick:()=>{q.innerHTML='';q.className='';f&&f()}}))));q.scrollIntoView({behavior:'smooth',block:'nearest'})}
+function picked(){const st={};for(const k of Object.keys(S.stages))if((S.stages[k]||[]).length)st[k]=[...S.stages[k]];return st}
+async function saveBatch(name,replace){const r=await api('batches/save',{name,stages:picked(),replace});
+ if(r.exists){const b=BATCHES[r.exists];ask('There’s already a batch called “'+r.exists+'” ('+b.pieces+' pieces, saved '+b.saved.slice(0,10)+'). Replace it with what you’ve picked now?',[['Replace it',()=>saveBatch(name,true),1],['Keep the old one']]);return}
+ if(r.refused){say(r.refused,1);return}say('Saved “'+r.saved+'”.');await loadBatches()}
+function recall(name){const b=BATCHES[name];if(!b)return;const n=all().length;
+ const go=(replace)=>{if(replace)S.stages={};const want=Object.values(b.stages).flat(),skipped=[];
+  for(const x of want){if(all().includes(x))continue;if(cantAdd(x)){skipped.push(x+' ('+cantAdd(x)+')');continue}
+   for(const y of[...needs(x),x])if(!all().includes(y))(S.stages[stageOf(P[y])]??=[]).push(y)}
+  changed();say('Recalled “'+name+'”'+(skipped.length?'; left out: '+skipped.join(', '):'')+'.',!!skipped.length)};
+ if(!n){go(true);return}
+ const them=n===1?'it':'them';ask('You have '+n+' piece'+(n===1?'':'s')+' picked. Replace '+them+' with “'+name+'” ('+b.pieces+' pieces), or add the batch to '+them+'?',[['Replace '+them,()=>go(true),1],['Add to '+them,()=>go(false)],['Cancel']])}
+function deleteBatch(name){ask('Delete the batch “'+name+'”? It’s removed for good; the add-ons you have picked now stay as they are.',[['Delete it',async()=>{const r=await api('batches/delete',{name});if(r.refused){say(r.refused,1);return}say('Deleted “'+name+'”.');await loadBatches()},1],['Keep it']])}
+let BWHY='';
+function batchPanel(why){if(why!==undefined)BWHY=why;why=BWHY;const box=document.getElementById('batches');box.innerHTML='';const n0=Object.keys(BATCHES).length;
+ box.append(foldHead('batches',el('h2',{text:'Saved batches'}),n0?n0+' saved':'none saved yet'),el('div',{id:'bask'}));
+ if(!isOpen('batches'))return;
+ const name=el('input',{type:'text',placeholder:'name what you’ve picked, e.g. farm records'});
+ const save=el('button',{class:'go',text:'Save these'});save.onclick=()=>{const v=name.value.trim();if(!v){name.focus();return}if(!all().length){say('Pick some add-ons first: a batch is what you’ve chosen.',1);return}saveBatch(v,false)};
+ name.addEventListener('keydown',e=>{if(e.key==='Enter')save.click()});
+ box.append(el('h2',{text:'Saved batches'}),el('p',{class:'lede',style:'margin:2px 0 0',text:'A batch is the add-ons you’ve picked, saved by name to bring back later, on any folder. Your folders aren’t part of it.'}),
+  el('div',{class:'save'},name,save));
+ if(why)box.append(el('p',{class:'msg err',text:why}));
+ const names=Object.keys(BATCHES).sort((a,b)=>a.localeCompare(b));
+ if(!names.length){box.append(el('p',{class:'none',text:'None saved yet.'}));return}
+ const ul=el('ul');for(const n of names){const b=BATCHES[n];
+  ul.append(el('li',{},el('b',{text:n}),el('small',{text:b.pieces+' piece'+(b.pieces===1?'':'s')+' · saved '+b.saved.slice(0,10)}),el('button',{text:'Recall',onclick:()=>recall(n)}),el('button',{text:'Delete',onclick:()=>deleteBatch(n)})))}
+ box.append(ul)}
+// ── examples: the stack add-on's own, from your stack ───────────────────────
+let EX=null;
+async function loadExamples(){EX=await api('examples');flow()}
+function examplesCard(){const st=el('section',{class:'stage examples-stage'}),n=EX?.found?.length||0,open=isOpen('examples');
+ st.append(foldHead('examples',el('h2',{text:'Start from an example'}),EX?(EX.state==='unreachable'?'not here':n+' examples, folders like someone’s'):'reading…'),el('div',{id:'exask'}));
+ if(!open)return st;
+ st.append(el('div',{class:'say',text:'Folders like someone’s, and the add-ons that suit them, as the stack add-on in your stack ships them. Each step keeps the options it runs with.'}));
+ if(!EX){st.append(el('div',{class:'none',text:'Reading them…'}));return st}
+ if(EX.state==='unreachable'){st.append(el('div',{class:'none',text:EX.why}));return st}
+ for(const e of EX.found){const names=[...new Set(e.steps.map(x=>x.name))],key='ex:'+e.file,o=isOpen(key);
+  const steps=el('div',{class:'steps'},...names.map(n=>{const x=e.steps.find(y=>y.name===n),opt=x.args.replace('--box {box}','').trim(),no=cantAdd(n);
+   return el('span',{class:no?'no':'',title:no||P[n]?.line||''},n,o&&opt?el('span',{class:'opt',text:' '+opt}):null,o&&no?' ('+no+')':'')}));
+  const card=el('div',{class:'ex'+(o?'':' folded')});
+  card.append(el('div',{class:'exhead',onclick:ev=>{if(ev.target.tagName!=='BUTTON'){toggle(key)}}},el('span',{class:'caret',text:o?'▾':'▸'}),el('h3',{text:e.title.charAt(0).toUpperCase()+e.title.slice(1)}),el('button',{text:'Use this',onclick:()=>useExample(e)})),steps);
+  if(o)card.insertBefore(el('p',{text:e.about}),steps);
+  st.append(card)}
+ return st}
+function useExample(e){const n=all().length,them=n===1?'it':'them';
+ const go=(replace)=>{if(replace){S.stages={};S.args={}}S.args??={};const skipped=[];
+  for(const st of e.steps){const x=st.name;if(cantAdd(x)){if(!skipped.includes(x))skipped.push(x+' ('+cantAdd(x)+')');continue}
+   if(!S.args[x])S.args[x]=st.args;for(const y of[...needs(x),x])if(!all().includes(y))(S.stages[stageOf(P[y])]??=[]).push(y)}
+  changed();say('Started from “'+e.title+'”'+(skipped.length?'; left out: '+skipped.join(', '):'')+'.',!!skipped.length);document.getElementById('flow').scrollIntoView({behavior:'smooth'})};
+ if(!n){go(true);return}
+ ask('You have '+n+' piece'+(n===1?'':'s')+' picked. Replace '+them+' with the example “'+e.title+'”, or add the example to '+them+'?',[['Replace '+them,()=>go(true),1],['Add to '+them,()=>go(false)],['Cancel']],'exask')}
+// ── folding: a card is its title and a line until you open it ──────────────
+const FOLDKEY='willow-canvas-open';const OPEN=new Set(JSON.parse(localStorage.getItem(FOLDKEY)||'["folders","kernel","examples"]'));
+const isOpen=k=>OPEN.has(k);
+function toggle(k){OPEN.has(k)?OPEN.delete(k):OPEN.add(k);localStorage.setItem(FOLDKEY,JSON.stringify([...OPEN]));flow();batchPanel()}
+function foldHead(key,title,summary,...more){const o=isOpen(key);
+ return el('header',{class:'fold',title:o?'fold it':'open it',onclick:ev=>{if(!['BUTTON','INPUT','A'].includes(ev.target.tagName))toggle(key)}},el('span',{class:'caret',text:o?'▾':'▸'}),title,o?null:el('span',{class:'sum',text:summary}),...more)}
+let findT=null;const openRows=new Set();
+function find(q){const f=document.getElementById('find');f.value=q;document.getElementById('findx').hidden=!q;clearTimeout(findT);findT=setTimeout(found,q.startsWith('#')?0:250)}
+async function found(){const q=document.getElementById('find').value.trim(),head=document.getElementById('shelfhead'),box=document.getElementById('shelf');
+ if(!q){shelf();return}head.innerHTML='';box.innerHTML='';head.append(el('h3',{text:'Looking for'}),el('h2',{text:q}));
+ let hits;if(q.startsWith('#')){const t=q.slice(1).toLowerCase();hits=Object.values(P).filter(p=>(p.tags||[]).includes(t)).sort((a,b)=>(a.state>b.state)-(a.state<b.state)||a.name.localeCompare(b.name)).map(p=>[p,'tagged '+t])}
+ else{box.append(el('p',{class:'none',text:'Looking…'}));const r=await api('search?q='+encodeURIComponent(q));box.innerHTML='';if(document.getElementById('find').value.trim()!==q)return;
+  if(r.state==='unreachable'){box.append(el('p',{class:'none',text:'Search isn’t here: '+r.why}));return}hits=r.found.filter(f=>P[f.name]).map(f=>[P[f.name],f.why])}
+ if(!hits.length){box.append(el('p',{class:'none',text:'Nothing matches that. Try other words, or click a tag on any piece.'}));return}
+ box.append(el('p',{class:'none',text:'Click one to add it. Each goes into its own step of the flow.'}));for(const[p,why]of hits)box.append(pieceCard(p,why))}
+function pulled(){const have=new Set(all()),out=[],todo=[...have];while(todo.length){const n=todo.shift();for(const h of(P[n]?.hard||[]))if(!have.has(h)&&!out.includes(h)){out.push(h);todo.push(h)}}return out}
+function freshState(){const st={};const deps=new Set(Object.values(P).filter(p=>p.in_stack).flatMap(p=>p.hard));
+ for(const p of Object.values(P))if(p.in_stack&&!deps.has(p.name))(st[stageOf(p)]??=[]).push(p.name);return{stages:st,folders:[]}}
+function changed(){save();subject=null;document.getElementById('review').innerHTML='';flow();document.getElementById('find').value.trim()?found():shelf();summary()}
+// ── a piece needs its parents: what its card uses, and theirs ───────────────
+function needs(n){const out=[],todo=[...(P[n]?.hard||[])];while(todo.length){const h=todo.shift();if(out.includes(h)||!P[h])continue;out.push(h);todo.push(...(P[h].hard||[]))}return out}
+function needing(n){return all().filter(m=>m!==n&&needs(m).includes(n))}
+function cantAdd(n){const p=P[n];if(!p)return'not on the list';if(p.runs_in==='repo')return'works on willow’s own repository';if(p.state!=='built')return'not built yet';
+ const no=needs(n).filter(h=>P[h].state!=='built'||P[h].runs_in==='repo');return no.length?'needs '+no.join(', ')+', not built yet':''}
+function addPiece(n){if(all().includes(n)||cantAdd(n))return;const add=[...needs(n),n].filter(x=>!all().includes(x));
+ for(const x of add)(S.stages[stageOf(P[x])]??=[]).push(x);cur=stageOf(P[n]);changed();
+ const extra=add.filter(x=>x!==n);if(extra.length)say('Added '+n+', and '+extra.join(', ')+', which it needs.')}
+function takeOut(names){for(const k of Object.keys(S.stages))S.stages[k]=S.stages[k].filter(x=>!names.includes(x));for(const x of names)if(S.args)delete S.args[x];document.getElementById('ask').innerHTML='';changed()}
+function removePiece(n){const dep=needing(n),ask=document.getElementById('ask');ask.innerHTML='';if(!dep.length){takeOut([n]);return}
+ ask.append(el('div',{class:'box'},el('b',{text:'Taking out '+n+' also takes out '+dep.join(', ')+'. '}),(dep.length===1?'It needs ':'They need ')+n+' to work.',
+  el('div',{},el('button',{class:'go',text:'Take '+(dep.length===1?'both':'them all')+' out',onclick:()=>takeOut([n,...dep])}),el('button',{text:'Keep '+n,onclick:()=>{ask.innerHTML='';flow();shelf()}}))));
+ ask.scrollIntoView({behavior:'smooth'})}
+// ── the flow ────────────────────────────────────────────────────────────────
+function slot(box,e){const cs=[...box.querySelectorAll('.chip')];let i=0;for(const c of cs){const r=c.getBoundingClientRect();if(e.clientY>r.bottom||(e.clientY>=r.top&&e.clientX>r.left+r.width/2))i++}return i}
+function mark(box,i){const cs=box.querySelectorAll('.chip');cs.forEach((c,k)=>{c.classList.toggle('before',k===i);c.classList.toggle('after',i===cs.length&&k===i-1)})}
+function chips(s){const box=el('div',{class:'chips'}),list=S.stages[s.key]??=[];
+ list.forEach((n,i)=>{const p=P[n]||{name:n,line:''};const pulls=(p.hard||[]).length?el('small',{text:'needs '+p.hard.map(h=>h+(all().includes(h)?' ✓':' (not in your flow)')).join(', ')}):null,looks=(p.soft||[]).filter(x=>!all().includes(x)&&P[x]).length?el('small',{text:'uses if you add it: '+(p.soft||[]).filter(x=>!all().includes(x)&&P[x]).join(', ')}):null;
+  const near=(p.near||[]).filter(m=>P[m]?.state==='built'&&!all().includes(m)),goes=near.length?el('div',{class:'goes'},'goes well with ',...near.flatMap((m,k)=>[k?', ':'',el('button',{text:m,title:P[m].line+' (click to add)',onclick:()=>addPiece(m)})])):null;
+  const c=el('div',{class:'chip',draggable:'true',title:'drag to reorder'},el('button',{class:'x',text:'×',title:'take it out',onclick:()=>removePiece(n)}),el('b',{text:n}),(S.args||{})[n]&&S.args[n]!=='--box {box}'?el('span',{class:'runs',title:'the options it runs with',text:S.args[n].replace('--box {box}','').trim()}):null,el('small',{text:p.line}),...plainTags(p),...topics(p),pulls,looks,goes);
+  c.addEventListener('dragstart',e=>{drag={stage:s.key,i};e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain',n)});c.addEventListener('dragend',()=>{drag=null});box.append(c)});
+ box.addEventListener('dragover',e=>{if(!drag||drag.stage!==s.key)return;e.preventDefault();box.classList.add('on');mark(box,slot(box,e))});
+ box.addEventListener('dragleave',e=>{if(!box.contains(e.relatedTarget)){box.classList.remove('on');mark(box,-1)}});
+ box.addEventListener('drop',e=>{e.preventDefault();box.classList.remove('on');if(!drag||drag.stage!==s.key)return;let j=slot(box,e);const[n]=list.splice(drag.i,1);if(drag.i<j)j--;list.splice(j,0,n);drag=null;changed()});
+ return box}
+function stageSummary(s){if(s.key==='folders')return S.folders.length?S.folders.length+' folder'+(S.folders.length===1?'':'s'):'none yet';
+ if(s.key==='kernel'){const bs=S.folders.map(f=>BASE[f.path]).filter(b=>b&&b.ok);return bs.length?bs.reduce((t,b)=>t+b.read,0).toLocaleString()+' files it can read, '+bs.reduce((t,b)=>t+b.cant.reduce((u,c)=>u+c.files,0),0).toLocaleString()+' it can’t':'always there'}
+ if(s.key==='you')return'your seal';const ns=S.stages[s.key]||[];return ns.length?ns.length+' piece'+(ns.length===1?'':'s')+': '+ns.slice(0,4).join(', ')+(ns.length>4?', …':''):'nothing here'}
+function flow(){const f=document.getElementById('flow');f.innerHTML='';
+ STAGES.forEach((s,i)=>{if(i)f.append(el('div',{class:'down',text:'↓'}));const st=el('section',{class:'stage'+(s.fixed?' fixed':'')+(cur===s.key?' sel':'')});
+  const add=s.fixed?null:el('button',{class:'link',text:s.key==='folders'?'+ add a folder':'+ add',onclick:()=>{cur=s.key;find('');if(!isOpen(s.key))OPEN.add(s.key);flow();shelf()}});
+  st.append(foldHead(s.key,el('h2',{text:s.title}),stageSummary(s),add));
+  if(!isOpen(s.key)){f.append(st);if(s.key==='kernel'){f.append(el('div',{class:'down',text:'↓'}),examplesCard())}return}
+  st.append(el('div',{class:'say',text:s.say}));
+  if(s.key==='folders'){if(!S.folders.length)st.append(el('div',{class:'none',text:'No folders yet. Add at least one: it’s what willow answers from.'}));
+   S.folders.forEach((fo,k)=>st.append(el('div',{class:'folder'},el('span',{text:fo.path}),el('small',{text:fo.files+' files'}),el('button',{class:'link',text:'remove',onclick:()=>{S.folders.splice(k,1);changed()}}))))}
+  else if(s.key==='kernel')st.append(baselines());
+  else if(!s.fixed){if(!(S.stages[s.key]||[]).length)st.append(el('div',{class:'none',text:'Nothing here: this step is skipped.'}));st.append(chips(s))}
+  f.append(st);if(s.key==='kernel')f.append(el('div',{class:'down',text:'↓'}),examplesCard())})}
+// ── the shelf: what can go in the chosen stage ──────────────────────────────
+async function browse(path){const r=await api('dirs?path='+encodeURIComponent(path));if(!r.ok){say(r.path+': '+r.why,1);return}here=r.path;
+ document.getElementById('ppath').textContent=r.path;const l=document.getElementById('plist');l.innerHTML='';
+ if(r.parent)l.append(el('div',{class:'up',text:'↑ up to '+r.parent,onclick:()=>browse(r.parent)}));
+ for(const d of r.dirs)l.append(el('div',{text:'📁 '+d,onclick:()=>browse(r.path.replace(/\/$/,'')+'/'+d)}));if(!r.dirs.length)l.append(el('div',{class:'up',text:'no folders inside'}))}
+async function addFolder(path){const r=await api('folder?path='+encodeURIComponent(path));if(!r.ok){say(path+': '+r.why,1);return}if(!S.folders.some(f=>f.path===r.path))S.folders.push({path:r.path,files:r.files});say('');changed();baseline(r.path)}
+function shelf(){const s=STAGES.find(x=>x.key===cur),head=document.getElementById('shelfhead'),box=document.getElementById('shelf');head.innerHTML='';box.innerHTML='';
+ head.append(el('h3',{text:'Adding to'}),el('h2',{text:s.title}),el('p',{text:s.say}));
+ if(s.key==='folders'){const t=el('input',{type:'text',placeholder:'or type a path and press Enter'});t.addEventListener('keydown',e=>{if(e.key==='Enter'&&t.value.trim()){addFolder(t.value.trim());t.value=''}});
+  box.append(el('div',{id:'picker'},el('div',{class:'ppath',id:'ppath'}),el('div',{class:'plist',id:'plist'}),el('div',{style:'display:flex;gap:8px;margin-top:8px'},el('button',{class:'go',text:'Add this folder',onclick:()=>here&&addFolder(here)}))),el('div',{style:'margin-top:10px'},t));
+  browse(here||S.folders.at(-1)?.path||'');return}
+ const secs=[].concat(s.sec),q=el('input',{type:'text',placeholder:'filter these'}),list=el('div',{class:'tree'});box.append(q,list);
+ const mine=Object.values(P).filter(p=>secs.includes(p.section)),inStage=new Set(mine.map(p=>p.name));
+ const under={};for(const p of mine)for(const h of(p.hard||[]))if(inStage.has(h))(under[h]??=[]).push(p.name);
+ const rank=p=>(SUGGEST[s.key]||[]).includes(p.name)?0:cantAdd(p.name)?2:1,order=(a,b)=>rank(P[a])-rank(P[b])||a.localeCompare(b);
+ const node=(n,depth,trail)=>{const p=P[n],kids=(under[n]||[]).filter(c=>!trail.includes(c)).sort(order),used=all().includes(n),no=cantAdd(n);
+  const cb=el('input',{type:'checkbox',title:no||(used?'take it out':'add it')});cb.checked=used;cb.disabled=!!no&&!used;
+  if(used&&kids.some(c=>all().includes(c))&&kids.some(c=>!all().includes(c)&&!cantAdd(c)))cb.indeterminate=true;  // some of what's below is in
+  cb.addEventListener('change',()=>cb.checked?addPiece(n):removePiece(n));
+  const out=(p.hard||[]).filter(h=>!inStage.has(h)),opt=(p.soft||[]).filter(h=>P[h]);
+  const open=openRows.has(n),tw=el('span',{class:'tw'+(kids.length?'':' none'),text:kids.length?(open?'▾':'▸'):'',title:kids.length?kids.length+' that need it':''});
+  if(kids.length)tw.onclick=()=>{open?openRows.delete(n):openRows.add(n);draw()};
+  list.append(el('div',{class:'node'+(no&&!used?' off':''),style:'padding-left:'+(depth*18)+'px'},tw,cb,el('div',{class:'what'},el('b',{text:n}),kids.length?el('small',{text:kids.length+' below need it'}):null,el('small',{text:p.line}),...plainTags(p),...topics(p),
+   out.length?el('div',{class:'note',text:'needs '+out.join(', ')+(out.every(h=>all().includes(h))?' ✓':' (added with it)')}):null,
+   opt.length?el('div',{class:'note opt',text:'works with '+opt.join(', ')+', if you add '+(opt.length===1?'it':'them')}):null,
+   no&&!used?el('div',{class:'note no',text:no}):null)));
+  if(open)for(const c of kids)node(c,depth+1,[...trail,n])};
+ const draw=()=>{list.innerHTML='';const w=q.value.toLowerCase();
+  if(w){for(const p of mine.filter(p=>(p.name+' '+p.line+' '+(p.tags||[]).join(' ')).toLowerCase().includes(w)).sort((a,b)=>order(a.name,b.name)))node(p.name,0,[]);return}
+  const roots=mine.filter(p=>!(p.hard||[]).some(h=>inStage.has(h))).map(p=>p.name).sort(order);
+  let last=-1;for(const n of roots){const r=rank(P[n]);if(r!==last){list.append(el('h3',{text:r===0?'A good start':r===1?'Everything else':'Can’t be added yet'}));last=r}node(n,0,[])}};
+ q.addEventListener('input',draw);draw()}
+// ── the summary, the look-over, the seal ────────────────────────────────────
+function summary(){const n=all().length,b=pulled().length,net=[...new Set([...all(),...pulled()].map(x=>P[x]?.network).filter(x=>x&&x!=='none'))];
+ const s=document.getElementById('sum');s.innerHTML='';s.append(el('b',{text:`${S.folders.length} folder${S.folders.length===1?'':'s'}, ${n} piece${n===1?'':'s'}`}),b?` (and ${b} they bring along)`:'',' · ',net.length?el('span',{style:'color:var(--warn)',text:'goes online: '+net.join('; ')}):'never goes online')}
+async function look(){if(!S.folders.length){cur='folders';flow();shelf();say('Add a folder first: it’s what willow answers from.',1);return}
+ const lanes=STAGES.filter(s=>!s.fixed&&s.key!=='folders').map(s=>({title:s.title,steps:(S.stages[s.key]||[]).map(n=>({name:n,args:(S.args||{})[n]||'--box {box}'}))})).filter(l=>l.steps.length);
+ const r=await api('propose',{name:'my willow',folders:S.folders.map(f=>f.path),lanes});if(r.refused){say(r.refused,1);return}subject=r.subject;const a=r.arrangement;
+ const named=k=>(S.stages[k]||[]).join(', ');const li=(t)=>el('li',{text:t});const rv=document.getElementById('review');rv.innerHTML='';
+ const one=a.folders.length===1;
+ const ul=el('ul',{},li('It reads '+a.folders.join(', ')+', and never changes '+(one?'it':'them')+'.'),
+  named('read')?null:li('It reads plain text, markdown and web pages; nothing else.'),
+  li('It answers only from what it reads, with the file and line, and says so when nothing there holds an answer.'),
+  li(a.reach.length?'It goes online: '+a.reach.join('; ')+'.':'It never goes online.'),
+  li('It writes its own record'+(a.writes.includes('to')?', and files only where you point it':'')+'.'),
+  a.installs.length?li('Needs installing first: '+a.installs.join(', ')+'.'):null);
+ const parts=el('div');for(const st of STAGES){const ns=S.stages[st.key]||[];if(st.fixed||st.key==='folders'||!ns.length)continue;
+  parts.append(el('h3',{text:st.title}),el('ul',{},...ns.map(n=>el('li',{},el('b',{text:n}),' — '+(P[n]?.line||'')))))}
+ if(a.pulled_in.length)parts.append(el('h3',{text:'Brought along, because pieces above need them'}),el('ul',{},...a.pulled_in.map(n=>el('li',{},el('b',{text:n}),' — '+(P[n]?.line||'')))));
+ const sealB=el('button',{class:'go',text:'Seal it'}),asmB=el('button',{text:'Put it together',disabled:''}),out=el('div',{class:'msg'});
+ sealB.onclick=async()=>{const x=await api('seal',{subject});if(x.refused||!x.sealed){out.className='msg err';out.textContent='Not sealed: '+(x.refused||x.said);return}
+  sealB.disabled=true;asmB.disabled=false;out.className='msg';out.textContent='Sealed. This is yours now. “Put it together” copies in the pieces that aren’t here yet, each one written on the record.'};
+ asmB.onclick=async()=>{const x=await api('assemble',{subject});if(x.refused){out.className='msg err';out.textContent=x.refused;return}asmB.disabled=true;
+  out.textContent=(x.added.length?'Put together: '+x.added.join(', ')+'.':'Every piece was already here.')+(x.skipped?.length?' Not added, they need installing: '+x.skipped.join(', ')+'.':'');P=await api('pieces');flow();shelf();offerStart(subject,'my willow')};
+ rv.append(el('section',{class:'review'},el('h2',{text:'Here’s what you’re putting together'}),ul,parts,
+  el('div',{class:'why'},el('b',{text:'What sealing means. '}),'Sealing is you saying “yes, this is mine, run it this way.” Until you do, nothing above runs. Your seal is made with your key, a file only you should be able to read; after that, any change to this arrangement needs a new seal. ',
+   el('i',{text:'Today that key is a file on this computer, so a program running as you could seal too. That’s the next thing to fix.'})),
+  el('div',{style:'display:flex;gap:10px;align-items:center'},sealB,asmB,el('button',{class:'link',text:'change something',onclick:()=>{rv.innerHTML='';subject=null}})),out,el('div',{class:'subj',text:'what you’d be sealing: '+subject})));
+ rv.scrollIntoView({behavior:'smooth'})}
+document.getElementById('look').onclick=look;
+// ── start it ────────────────────────────────────────────────────────────────
+function offerStart(subj,name){const box=document.getElementById('started');box.innerHTML='';
+ const go=el('button',{class:'go',text:'Start it'});go.onclick=async()=>{go.disabled=true;const r=await api('start',{subject:subj});if(r.refused){box.append(el('p',{class:'msg err',text:r.refused}));go.disabled=false;return}watch()};
+ box.append(el('section',{class:'started'},el('h2',{text:'“'+name+'” is sealed and put together'}),
+  el('p',{class:'lede',text:'Starting it sets up your willow over the folders you chose, checks every piece with its own tests, runs the flow you sealed once so you can see what each step gives, and opens a page where you can ask your files.'}),
+  el('p',{class:'lede',text:'For now it uses the stack’s key, so a seal you make there is made with the same key as this one.'}),go,el('div',{id:'progress'})));
+ box.scrollIntoView({behavior:'smooth'})}
+const SAY={done:'✓',ready:'✓',refused:'✗',failed:'✗',unreachable:'–','needs you':'!'};
+async function watch(){const pr=document.getElementById('progress');const j=await api('start');pr.innerHTML='';
+ const ol=el('ol');for(const s of j.steps||[])ol.append(el('li',{class:'st-'+s.state.split(' ')[0]},(SAY[s.state]||'·')+' '+s.step+' — '+s.state,s.said?el('small',{text:s.said}):null));
+ if(j.state==='running')ol.append(el('li',{text:'… working (tests take a minute or two)'}));pr.append(ol);
+ if(j.browse)pr.append(el('p',{},el('a',{href:j.browse,target:'_blank',class:'go',style:'display:inline-block;padding:8px 14px;background:var(--acc);color:#fff;border-radius:5px;text-decoration:none',text:'Open your willow and ask it something →'})));
+ if(j.flow)pr.append(el('details',{},el('summary',{text:'What your flow gave, step by step'}),el('pre',{text:j.flow})));
+ if(j.state==='running')setTimeout(watch,1500)}
+document.getElementById('find').addEventListener('input',e=>find(e.target.value));document.getElementById('findx').onclick=()=>find('');
+(async()=>{P=await api('pieces');loadBatches();if(!S)S=freshState();loadExamples();
+ const st=await api('state');const last=(st.stacks||[]).filter(x=>x.sealed).at(-1);if(last){offerStart(last.subject,last.name||'my willow');const j=await api('start');if(j.state&&j.state!=='none')watch()}
+ for(const f of st.folders||[])if(!S.folders.some(x=>x.path===f))await addFolder(f);flow();shelf();summary()})();
+</script></body></html>

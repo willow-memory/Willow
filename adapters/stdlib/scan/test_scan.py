@@ -18,9 +18,16 @@ import kernel  # noqa: E402
 import scan  # noqa: E402
 
 SCAN = HERE / "scan.py"
-CASES = json.loads((ROOT / "vectors" / "cases.json").read_text(encoding="utf-8"))[
-    "cases"
-]
+#: the kernel's own contract, which one test holds the index to; read only by
+#: that test, so the rest stand in a copy of this folder taken without it
+VECTORS = ROOT / "vectors" / "cases.json"
+
+
+def cases() -> dict:
+    if not VECTORS.is_file():
+        pytest.fail(f"this test needs the kernel's vectors, {VECTORS}: copy "
+                    "vectors/cases.json beside kernel.py, as willow keeps it")  # fmt: skip
+    return json.loads(VECTORS.read_text(encoding="utf-8"))["cases"]
 
 
 def run(*argv: str) -> subprocess.CompletedProcess:
@@ -107,6 +114,7 @@ def test_the_kernel_is_put_back(indexed):
 def test_every_ranking_vector_the_four_kernels_are_held_to(tmp_path):
     """vectors/cases.json: the piles, written byte for byte, and each case's
     passages as kernel.py, Java, TypeScript and C# serve them."""
+    CASES = cases()
     ixs = []
     for n, case in enumerate(CASES["chunks"]):
         folder = tmp_path / f"pile{n}"

@@ -17,6 +17,9 @@ from urllib.parse import urlencode
 import pytest
 
 HERE = Path(__file__).resolve().parent
+#: the front page's summary is digest's; without it the page says so
+DIGEST = (HERE.parent / "digest").is_dir()
+NO_DIGEST = "The digest add-on isn't here, so there's no summary."
 KERNEL = HERE.parents[2] / "kernel.py"
 spec = importlib.util.spec_from_file_location("browse", HERE / "browse.py")
 br = importlib.util.module_from_spec(spec)
@@ -94,9 +97,8 @@ def test_the_link_hands_over_a_cookie_no_other_site_can_send(site):
     cookie = r.getheader("Set-Cookie")
     assert "HttpOnly" in cookie and "SameSite=Strict" in cookie and "Path=/" in cookie
     r, text = site.req("GET", "/")
-    assert (
-        r.status == 200 and "Ask your folder" in text and "Nothing is waiting" in text
-    )
+    assert r.status == 200 and "Ask your folder" in text
+    assert ("Nothing is waiting" in text) == DIGEST and (NO_DIGEST in text) != DIGEST
 
 
 def test_without_this_starts_secret_nothing_answers(site):
@@ -211,7 +213,10 @@ def test_a_suggestion_waits_with_its_sources_and_a_click_approves_it(site, tmp_p
         == 42
     )
     site.start()
-    assert "1 suggestion waiting" in site.req("GET", "/")[1]
+    front = site.req("GET", "/")[1]
+    assert ("1 suggestion waiting" in front) == DIGEST and (
+        NO_DIGEST in front
+    ) != DIGEST
     r, text = site.req("GET", "/waiting")
     assert r.status == 200 and (
         "Tuesday at 3pm" in text
@@ -234,6 +239,12 @@ def test_a_suggestion_waits_with_its_sources_and_a_click_approves_it(site, tmp_p
 
 
 def test_with_a_language_its_common_words_are_left_out(tmp_path):
+    if not (
+        HERE.parent / "words-de"
+    ).is_dir():  # a copy without German: said, not guessed
+        with pytest.raises(ValueError, match="the words-de add-on isn't here"):
+            br.Willow(make_box(tmp_path), "de")
+        return
     s = Open(make_box(tmp_path), "de")
     try:
         s.start()

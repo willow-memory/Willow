@@ -5,7 +5,7 @@ source: bot
 added: 2026-10-29
 writes: nothing
 network: none
-tags: no-install, offline, read-only, search, pile
+tags: pile
 -->
 # fair-merge
 

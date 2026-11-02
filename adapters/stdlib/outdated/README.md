@@ -1,11 +1,11 @@
 <!-- willow-addon
-section: Keeping track
+section: Privacy and safety
 line: How old each locked dependency is, and which are yanked, deprecated or two years without a release, from a registry index you downloaded.
 source: new
 added: 2026-10-24
 writes: nothing
 network: none
-tags: no-install, offline, read-only, tracking
+uses: advisories
 -->
 # outdated
 

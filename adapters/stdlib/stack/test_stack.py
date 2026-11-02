@@ -2,19 +2,61 @@
 steps into pools, runs each, composes their output peaks-first (tallest pool,
 and tallest step within, come first), substitutes the box into a step's args,
 flags a step that doesn't run clean, writes nothing, and refuses a malformed
-stack or command line."""
+stack or command line.
+
+Its steps here are stand-ins, written into a scratch copy beside this
+stack.py and the kernel: `heavy` prints five lines, `light` one, and
+`amounts` finds nothing, the way the real amounts does on a folder with no
+sums. So these tests hold wherever stack.py is, whichever add-ons are beside
+it, and test stack, not the add-ons it runs."""
 
 from __future__ import annotations
 
+import shutil
 import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 HERE = Path(__file__).resolve().parent
-STACK = HERE / "stack.py"
 KERNEL = HERE.parents[2] / "kernel.py"
 sys.path.insert(0, str(HERE))
 import stack as st  # noqa: E402
+
+STANDIN = """import sys
+from pathlib import Path
+
+argv = sys.argv[1:]
+box = Path(argv[argv.index("--box") + 1]) if "--box" in argv else None
+if box is None or not (box / "kernel.json").is_file():
+    print("refused: not a kernel box", file=sys.stderr)
+    sys.exit(2)
+rows = (box / "record.jsonl").read_text(encoding="utf-8").count("\\n")
+for i in range({lines}):
+    print(f"{name} line {{i + 1}}, over a box of {{rows}} rows")
+if __name__ == "__main__":
+    sys.exit({code})
+"""
+STACK = None  # the scratch copy's stack.py, set for each test
+
+
+@pytest.fixture(autouse=True)
+def scratch(tmp_path, monkeypatch):
+    root = tmp_path / "willow"
+    (root / "adapters" / "stdlib" / "stack").mkdir(parents=True)
+    shutil.copy2(KERNEL, root / "kernel.py")
+    shutil.copy2(HERE / "stack.py", root / "adapters" / "stdlib" / "stack" / "stack.py")
+    for name, lines, code in (("heavy", 5, 0), ("light", 1, 0), ("amounts", 0, 42)):
+        folder = root / "adapters" / "stdlib" / name
+        folder.mkdir()
+        (folder / f"{name}.py").write_text(
+            STANDIN.format(name=name, lines=lines, code=code)
+        )
+    monkeypatch.setitem(
+        globals(), "STACK", root / "adapters" / "stdlib" / "stack" / "stack.py"
+    )
+
 
 NOW = ["--now", "2026-10-23T00:00:00Z"]
 
@@ -58,12 +100,12 @@ def snapshot(root: Path) -> dict:
 
 def test_a_stack_composes_its_pools_with_peaks_first(tmp_path):
     box = a_box(tmp_path)
-    # mmm is the heaviest (digest); aaa and zzz are equal light pools (one
-    # export each). File order is zzz, mmm, aaa, so the right order -- by mass,
+    # mmm is the heaviest (heavy); aaa and zzz are equal light pools (one
+    # light each). File order is zzz, mmm, aaa, so the right order -- by mass,
     # then heading for a tie -- is mmm, aaa, zzz, which is neither the file
     # order nor grouped by the steps, so only mass-then-heading gives it.
-    stack = a_stack(tmp_path, "## zzz\n- export -- --box {box}\n## mmm\n"
-                    "- digest -- --box {box}\n## aaa\n- export -- --box {box}\n")  # fmt: skip
+    stack = a_stack(tmp_path, "## zzz\n- light -- --box {box}\n## mmm\n"
+                    "- heavy -- --box {box}\n## aaa\n- light -- --box {box}\n")  # fmt: skip
     got = run("--box", str(box), "--stack", str(stack))
     assert got.returncode == 0, got.stdout + got.stderr
     page = got.stdout
@@ -74,18 +116,18 @@ def test_a_stack_composes_its_pools_with_peaks_first(tmp_path):
 
 def test_the_box_is_substituted_into_a_steps_args(tmp_path):
     box = a_box(tmp_path)
-    stack = a_stack(tmp_path, "## p\n- export -- --box {box}\n")
+    stack = a_stack(tmp_path, "## p\n- light -- --box {box}\n")
     got = run("--box", str(box), "--stack", str(stack))
     assert got.returncode == 0, got.stderr
-    # export ran against the real box: its own output, not a not-a-box refusal
-    assert "# Approved answers" in got.stdout
+    # light ran against the real box: its own output, not a not-a-box refusal
+    assert "light line 1, over a box of 1 rows" in got.stdout
     assert "not a kernel box" not in got.stdout
     assert "1 step in 1 pool," in got.stdout  # counted, and singular
 
 
 def test_a_step_before_any_pool_is_refused(tmp_path):
     box = a_box(tmp_path)
-    stack = a_stack(tmp_path, "- export -- --box {box}\n")
+    stack = a_stack(tmp_path, "- light -- --box {box}\n")
     got = run("--box", str(box), "--stack", str(stack))
     assert got.returncode == 2 and "before any ## pool" in got.stderr
 
@@ -100,7 +142,7 @@ def test_an_unknown_add_on_is_refused_and_names_it(tmp_path):
 def test_a_flagged_step_makes_the_stack_exit_42(tmp_path):
     box = a_box(tmp_path)
     # the box is real, but the step points one level below it, which is not one
-    stack = a_stack(tmp_path, "## p\n- export -- --box {box}/nope\n")
+    stack = a_stack(tmp_path, "## p\n- light -- --box {box}/nope\n")
     got = run("--box", str(box), "--stack", str(stack))
     assert got.returncode == 42, got.stdout + got.stderr
     assert "(exit 2)" in got.stdout  # the step's own refusal, surfaced and flagged
@@ -117,7 +159,7 @@ def test_step_results_follow_the_add_ons_cards():
 
 def test_not_a_kernel_box_is_refused(tmp_path):
     (tmp_path / "b").mkdir()
-    stack = a_stack(tmp_path, "## p\n- export -- --box {box}\n")
+    stack = a_stack(tmp_path, "## p\n- light -- --box {box}\n")
     got = run("--box", str(tmp_path / "b"), "--stack", str(stack))
     assert got.returncode == 2 and "not a kernel box" in got.stderr
 
@@ -130,7 +172,7 @@ def test_an_unreadable_stack_is_refused(tmp_path):
 
 def test_a_bad_command_line_is_refused_and_names_the_script(tmp_path):
     box = a_box(tmp_path)
-    stack = a_stack(tmp_path, "## p\n- export -- --box {box}\n")
+    stack = a_stack(tmp_path, "## p\n- light -- --box {box}\n")
     for argv in (
         [],  # nothing
         ["--box", str(box)],  # no --stack
@@ -143,9 +185,7 @@ def test_a_bad_command_line_is_refused_and_names_the_script(tmp_path):
 
 def test_the_stack_writes_nothing_to_the_box(tmp_path):
     box = a_box(tmp_path)
-    stack = a_stack(
-        tmp_path, "## p\n- digest -- --box {box}\n- export -- --box {box}\n"
-    )
+    stack = a_stack(tmp_path, "## p\n- heavy -- --box {box}\n- light -- --box {box}\n")
     before = snapshot(box)
     got = run("--box", str(box), "--stack", str(stack))
     assert got.returncode == 0, got.stderr

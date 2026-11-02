@@ -1,18 +1,76 @@
 """across: one document composed across several boxes. It runs a document
 add-on (digest, export, timeline, readings) over every box, heads each box's
 part, and refuses a bad command line, a folder that isn't a box, or an
-unknown document. It writes nothing of its own."""
+unknown document. It writes nothing of its own.
+
+The four document add-ons are stand-ins here, in a scratch copy beside this
+across.py and the kernel, each run the way across runs the real one: digest
+and export say how many rows the box holds; readings and timeline give the
+box's lines that hold the words (timeline into the file across hands it,
+and exit 42 when the words are only common ones). So these tests hold
+wherever across.py is, and test across, not the documents it composes."""
 
 from __future__ import annotations
 
+import shutil
 import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 HERE = Path(__file__).resolve().parent
-ACROSS = HERE / "across.py"
 KERNEL = HERE.parents[2] / "kernel.py"
 NOW = ["--now", "2026-10-23T00:00:00Z"]
+ACROSS = None  # the scratch copy's across.py, set for each test
+
+STANDIN = """import json
+import sys
+from pathlib import Path
+
+argv = sys.argv[1:]
+box = Path(argv[argv.index("--box") + 1])
+if not (box / "kernel.json").is_file():
+    print("refused: not a kernel box", file=sys.stderr)
+    sys.exit(2)
+to = Path(argv[argv.index("--to") + 1]) if "--to" in argv else None
+words = [a for a in argv[argv.index("--box") + 2 :] if not a.startswith("--") and a != str(to)]
+if "{name}" in ("digest", "export"):
+    rows = (box / "record.jsonl").read_text(encoding="utf-8").count("\\n")
+    print("{name}: " + str(rows) + " rows")
+    sys.exit(0)
+if words and set(" ".join(words).split()) <= {{"the", "of", "and"}}:
+    print("only common words", file=sys.stderr)
+    sys.exit(42)
+pile = Path(json.loads((box / "kernel.json").read_text(encoding="utf-8"))["pile"])
+lines = [ln for f in sorted(pile.rglob("*")) if f.is_file()
+         for ln in f.read_text(encoding="utf-8").splitlines() if any(w in ln for w in words)]
+text = "\\n".join(lines) + "\\n"
+if to is not None:
+    to.write_text(text, encoding="utf-8")
+else:
+    print(text, end="")
+if __name__ == "__main__":
+    sys.exit(0)
+"""
+
+
+@pytest.fixture(autouse=True)
+def scratch(tmp_path_factory, monkeypatch):
+    root = tmp_path_factory.mktemp("willow")
+    (root / "adapters" / "stdlib" / "across").mkdir(parents=True)
+    shutil.copy2(KERNEL, root / "kernel.py")
+    shutil.copy2(
+        HERE / "across.py", root / "adapters" / "stdlib" / "across" / "across.py"
+    )
+    for name in ("digest", "export", "readings", "timeline"):
+        (root / "adapters" / "stdlib" / name).mkdir()
+        (root / "adapters" / "stdlib" / name / f"{name}.py").write_text(
+            STANDIN.format(name=name)
+        )
+    monkeypatch.setitem(
+        globals(), "ACROSS", root / "adapters" / "stdlib" / "across" / "across.py"
+    )
 
 
 def run(*argv: str) -> subprocess.CompletedProcess:

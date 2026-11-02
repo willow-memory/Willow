@@ -24,6 +24,12 @@ willow is two things:
    approved answers honest, and let AI assistants hand in suggestions they can
    never approve themselves. [See every add-on.](ADDONS.md)
 
+**Put it together on a page.** `python ui/canvas.py` opens willow's own UI on
+this machine: choose your folders, see what the kernel makes of them on its
+own (as counts, never your files' words or names), start from an example or
+pick the add-ons you want, each coming with what it needs, then seal it.
+[How the UI works.](ui/README.md)
+
 Run the kernel alone, or assemble your own local stack. The kernel is the
 seed: complete on its own, and it needs nothing from what grows from it. The
 arrow points one way: an add-on uses the kernel, and the kernel never names an
@@ -303,6 +309,7 @@ willow/
 ├── LIMITS.md                 what willow doesn't do, on purpose or not yet
 ├── CONSTITUTION.md           the law the kernel is written to enforce (always a draft; now 0.15)
 ├── constitution/             the checks that answer to it
+├── ui/                       willow's own UI: put your willow together on a page
 ├── adapters/                 add-ons built on top of kernel.py
 ├── ports/                    kernel.py rewritten in other languages
 ├── vectors/                  what keeps the four implementations identical
