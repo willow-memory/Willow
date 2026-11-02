@@ -167,11 +167,11 @@ def test_an_empty_file_is_skipped_and_counted(tmp_path):
     assert got.stdout.strip().endswith("wrote 1 files to " + str(out) + "; skipped 1")
 
 
-def test_a_file_over_the_biggest_is_not_read(monkeypatch):
-    monkeypatch.setattr(mod, "BIGGEST", 10)
+def test_a_file_over_50_mb_is_not_read_and_one_of_50_mb_is():
+    mb50 = 50 * 1024 * 1024
     with pytest.raises(mod.Skip, match="over 50 MB"):
-        mod.decode(b"x" * 11)
-    assert mod.decode(b"x" * 10) == "x" * 10
+        mod.decode(b"x" * (mb50 + 1))
+    assert len(mod.decode(b"x" * mb50)) == mb50
 
 
 # ── line for line ───────────────────────────────────────────────────────────
