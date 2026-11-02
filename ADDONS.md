@@ -68,7 +68,7 @@ its list: someone who speaks the language can add one without much Python.
 ## Newest
 
 <!-- willow:newest -->
-- 2026-11-02 · [**csv-rows**](adapters/stdlib/csv-rows/) — CSV and TSV tables as one passage per row, each value beside its column's header.
+- 2026-11-02 · [**csv-rows**](adapters/stdlib/csv-rows/) — CSV and TSV tables as one passage per row, the header row kept once as the first.
 - 2026-11-01 · [**weakest-link**](adapters/stdlib/weakest-link/) — Each answer's inputs marked measured, fitted or assumed, and the result worth its weakest input, never an average.
 - 2026-11-01 · [**thesis**](adapters/stdlib/thesis/) — A thesis's claims, each tied to the source that backs it, and a list of the ones with none.
 - 2026-11-01 · [**sent-log**](adapters/stdlib/sent-log/) — Which of your passages went to which online model, read from the record by model card: what left this machine and where to.
@@ -110,7 +110,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - [**codebase-memory**](adapters/stdlib/codebase-memory/) — codebase-memory-mcp's code graph, read from a copy of its SQLite file: each function, what calls it, and its file and line. *new* `no-install` `offline` `codebase` `sqlite` · near: nestor, code-comments, bookmarks
 - **confluence** (idea) — A Confluence space's HTML export as plain text, page by page. *new* `no-install` `offline` `html` · near: wallabag, recipes, mediawiki
 - [**corpus-lens**](adapters/stdlib/corpus-lens/) — corpus-lens's process reports on your own sessions with agents, as passages: where your intent arrives, who writes the code. *new* `no-install` `offline` `agent` `session` · near: agent-transcript, session-cost, sarif
-- [**csv-rows**](adapters/stdlib/csv-rows/) — CSV and TSV tables as one passage per row, each value beside its column's header. *new* `no-install` `offline` `readings` `csv` · near: google-keep, irc, logs
+- [**csv-rows**](adapters/stdlib/csv-rows/) — CSV and TSV tables as one passage per row, the header row kept once as the first. *new* `no-install` `offline` `readings` `csv` · near: google-keep, irc, logs
 - [**day-one**](adapters/stdlib/day-one/) — Day One's JSON export: each journal entry as a dated passage, with its place and weather. *new* `no-install` `offline` `json` `entries` · near: gh-json, chats, karakeep
 - [**discord**](adapters/stdlib/discord/) — Discord's data package: your messages, one dated line each, by server and channel. *new* `no-install` `offline` `message` `channel` · near: slack, irc, matrix
 - **dotfiles** (idea) — Your dotfiles as passages: which file sets what, for 'where did I set my editor?' *new* `no-install` `offline` `sets` `editor` · near: start, clauses, mcp
@@ -261,7 +261,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**starter-words**](adapters/stdlib/starter-words/) — A first-day words list to copy and edit (owes = invoice, outstanding; doctor = dr, physician, clinic). *new* `no-install` `offline` `copy` `starter` · near: start, snapshot, pdf
 - [**stems**](adapters/deps/stems/) — Word forms for 20+ languages, so "häuser" finds "haus" and "книги" finds "книга". Needs snowballstemmer; BSD-3-Clause. *new* `needs-install` `offline` `form` · near: accents, abbreviations, ocr
 - **synonyms** (idea) — Suggests words-list lines for a word no file has. Needs nltk and WordNet; Apache-2.0. Goes online: the WordNet data, downloaded once. *new* `needs-install` `online` · near: accents, starter-words, abbreviations
-- **tatoeba** (idea) — A question in one language finds the same idea in another, through Tatoeba's sentence pairs, downloaded once. *new* `no-install` `offline` `language` · near: why-not, stems, latent
+- **tatoeba** (idea) — A question in one language finds the same idea in another, through Tatoeba's sentence pairs, downloaded once. *new* `no-install` `offline` `pairs` `language` · near: why-not, stems, latent
 - **vocab** (idea) — The words you're learning, from your notes and the texts you read, with where you met each one. *new* `no-install` `offline` · near: apple-notes, oracle-text, starter-words
 - [**words-ar**](adapters/stdlib/words-ar/) — Arabic common words ("في", "من", "على"). *new* `no-install` `offline` `common` `arabic` · near: words-it, words-pl, words-pt
 - [**words-cy**](adapters/stdlib/words-cy/) — Welsh common words ("a", "y", "yn"). *new* `no-install` `offline` `common` `welsh` · near: words-it, words-es, words-pl
@@ -424,7 +424,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - **basic-memory** (idea) — Basic Memory's Markdown notes where an AI wrote them: each observation and relation handed in through propose, waiting for your seal. *new* `no-install` `offline` `handed` `propose` · near: memory-import, hermes, hook-feedback
 - **bedrock** (idea) — Suggestions from a model on Amazon Bedrock, under your own AWS account and region, citing your passages. Needs boto3; Apache-2.0. Goes online: Amazon Bedrock's endpoint in your region, to ask for suggestions. *new* `needs-install` `online` `citing` · near: cite-honesty, claude, os-model
 - **browser-model** (idea) — Suggestions from a model running in your browser, Chrome's built-in model or one run on WebGPU, through a page served on this machine. Reaches this machine only. *new* `no-install` `this-machine` `browser` · near: mlx, os-model, local-model
-- **cassettes** (idea) — Each exchange with a model kept as a row (what was asked, what came back, the model and its seed), replayed later as a test, and drift between models found by plain diff. *bot* `no-install` `offline` `rows` `drift` · near: hook-replay, lending, hook-errors
+- **cassettes** (idea) — Each exchange with a model kept as a row (what was asked, what came back, the model and its seed), replayed later as a test, and drift between models found by plain diff. *bot* `no-install` `offline` `rows` `drift` · near: hook-replay, lending, model-drift
 - **cite-honesty** (idea) — How often each model's suggestions were refused at propose for citing a passage the last bite never returned, read from the record by model card. *new* `no-install` `offline` `refuses` `citing` · near: sent-log, model-card, hook-cite
 - **claude** (idea) — Suggestions from Claude through the Anthropic API, citing your passages. Needs anthropic; MIT. Goes online: api.anthropic.com, to ask for suggestions. *new* `needs-install` `online` `citing` `claude` · near: claude-code, bedrock, cite-honesty
 - [**claude-code**](adapters/stdlib/claude-code/) — Claude Code sees cited passages from your folder with each prompt, through its prompt hook. Uses mcp-lite. *bot* `no-install` `offline` `claude` `hook` · near: hooks-elsewhere, hook-impact, vscode
@@ -485,7 +485,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - **second-opinion** (idea) — Two assistants' suggestions for the same question side by side, each waiting for its own seal. *new* `no-install` `offline` `assistant` `waiting` · near: assistant-scores, contradictions, pile-poetry
 - [**serve**](adapters/stdlib/serve/) — The one file an AI model may read: only the passages you approved, under ids it can't guess, and nothing else. *bot* `no-install` `offline` · near: stack, decisions, export
 - **serve-piles** (idea) — serve's piles grouped on all four W's -- who, when, what and where -- not where alone, so a model meets a question from every box that touched it. *new* `no-install` `offline` `serve` · near: pile-serve, pile-rungs, serve
-- **silence-log** (idea) — A model that ran and said nothing kept as its own row, so silence is told apart from a model that never ran. *bot* `no-install` `offline` `log` `rows` · near: said, cassettes, llm-cli
+- **silence-log** (idea) — A model that ran and said nothing kept as its own row, so silence is told apart from a model that never ran. *bot* `no-install` `offline` `log` `rows` · near: said, cassettes, csv-rows
 - **translate** (idea) — An answer translated by a local model, the original kept beside it, the translation held until you seal it. Needs a local model server; licence varies by model. Reaches this machine only. *new* `needs-install` `this-machine` `local` `held` · near: plain-language, hook-tiers, local-model
 - **weights-card** (idea) — A model card filled in from the weights file's own header, GGUF or safetensors (architecture, quantization, context length, licence), so the card says what the file says. *new* `no-install` `offline` `weights` `licence` · near: weights-pin, model-card, folder-card
 - [**windsurf**](adapters/stdlib/windsurf/) — Windsurf asks your folder and hands in suggestions, through the mcp add-on. Uses hosts. *new* `no-install` `offline` `mcp` · near: cursor, opencode, zed

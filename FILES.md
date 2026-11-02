@@ -275,7 +275,7 @@ willow/
 │   │   │   ├── test_corpus_lens.py
 │   │   │   └── README.md
 │   │   ├── csv-rows/
-│   │   │   ├── csv_rows.py   a CSV or TSV table as one passage per row, each value beside its column's header
+│   │   │   ├── csv_rows.py   a CSV or TSV table as one passage per row, the header row once as the first
 │   │   │   ├── test_csv_rows.py
 │   │   │   └── README.md
 │   │   ├── cursor/

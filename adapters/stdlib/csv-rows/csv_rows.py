@@ -3,20 +3,23 @@ r"""csv_rows.py: CSV and TSV tables as one passage per row. Python 3.9+.
     python adapters/stdlib/csv-rows/csv_rows.py mirror --from FOLDER --to MIRROR
 
 Walks FOLDER for .csv and .tsv files (hidden folders and files skipped) and
-writes each data row as one passage, every value beside its column's header,
-with a blank line between rows:
+writes the header row once, as the first passage, then each data row as one
+passage of its values, with a blank line between rows:
 
-    Surname,Forename,Townland,Age        ->   [2] Surname: Considine; Forename: Honora; Townland: Caherfeenick; Age: 52
-    Considine,Honora,Caherfeenick,52
+    Surname,Forename,Townland,Age        ->   [1] Surname; Forename; Townland; Age
+    Considine,Honora,Caherfeenick,52     ->   [2] Considine; Honora; Caherfeenick; 52
 
 The number in brackets is the line of the source file the row starts on (a
 quoted value holding newlines starts on its first line), so a passage is found
-again in the table by it. An empty cell is left out. A cell beyond the header,
-or under a blank header cell, is its value alone. A row whose passage would
-pass the kernel's MAX_CHUNK is cut at a cell (or, for one long cell, at a
-space) into lines that each start with the same number, so nothing is cut off.
-No word is added that the table doesn't hold: a word in every passage would
-let a question about something the folder doesn't have be answered by any row.
+again in the table by it. An empty cell keeps its place ("a; ; c") so each
+value stays under its header; empty cells at the end of a row are dropped. A
+row whose passage would pass the kernel's MAX_CHUNK is cut at a cell (or, for
+one long cell, at a space) into lines that each start with the same number, so
+nothing is cut off.
+
+No word is written in every passage, not even the table's own headers: the
+kernel serves a passage holding half a question's words, so a word in every
+row would let "religion of Seamus" be answered by a row with no Seamus in it.
 
 The delimiter: a .tsv is read by tabs. For a .csv, the first line that isn't a
 note decides: the one of comma, tab, semicolon and pipe that cuts it into the
@@ -25,7 +28,7 @@ one column. Nothing else is tried.
 
 The header: the first line that isn't a note, unless one of its cells is a
 number or a date (digits with only + - . , / : between them), as in a bank
-export with no header; then every row is data and each cell its value alone.
+export with no header; then every row is data.
 Lines before it whose first cell starts with "#" are notes, kept with their
 line number in brackets.
 
@@ -76,28 +79,27 @@ def _clean(value: str) -> str:
     return " ".join(value.split())
 
 
-def _lines(n: int, pairs: list[str]) -> list[str]:
-    """Row `n`'s pairs as lines of at most MAX_CHUNK characters."""
+def _lines(n: int, cells: list[str]) -> list[str]:
+    """Row `n`'s cells as lines of at most MAX_CHUNK characters."""
     head = f"[{n}] "
     out: list[str] = []
-    line = head
-    for pair in pairs:
-        joined = pair if line == head else "; " + pair
+    line, bare = head, True
+    for cell in cells:
+        joined = cell if bare else "; " + cell
         if len(line) + len(joined) <= kernel.MAX_CHUNK:
-            line += joined
+            line, bare = line + joined, False
             continue
-        if line != head:
+        if not bare:
             out.append(line)
             line = head
-        lo = pair.find(": ") + 2  # a header is never parted from its value
-        while len(line) + len(pair) > kernel.MAX_CHUNK:  # one cell too long
+        while len(line) + len(cell) > kernel.MAX_CHUNK:  # one cell too long
             room = kernel.MAX_CHUNK - len(line)
-            cut = pair.rfind(" ", lo, room + 1)
-            cut = cut if cut >= lo else room
-            out.append(line + pair[:cut].rstrip())
-            pair, line, lo = pair[cut:].lstrip(), head, 1
-        line += pair
-    if line != head:
+            cut = cell.rfind(" ", 1, room + 1)
+            cut = cut if cut > 0 else room
+            out.append(line + cell[:cut].rstrip())
+            cell, line = cell[cut:].lstrip(), head
+        line, bare = line + cell, False
+    if not bare:
         out.append(line)
     return out
 
@@ -114,26 +116,22 @@ def convert(data: bytes, tsv: bool = False) -> str | None:
     sep = delimiter(lines[first], tsv)
     table = io.StringIO("".join(lines[first:]), newline="")
     reader = csv.reader(table, delimiter=sep, strict=True)
-    header: list[str] | None = None
+    header = False
     rows = 0
     found = False
     for row in reader:
         n = first + 1 + rows
         rows = reader.line_num
-        if not any(cell.strip() for cell in row):
+        cells = [_clean(cell) for cell in row]
+        while cells and not cells[-1]:
+            cells.pop()
+        if not cells:
             continue
-        if header is None:
-            header = [_clean(h) for h in row]
-            if not any(NUMBER.fullmatch(h) for h in header):
+        passages.append("\n".join(_lines(n, cells)))
+        if not header:
+            header = True
+            if not any(NUMBER.fullmatch(c) for c in cells):
                 continue
-            header = []
-        names = [header[k] if k < len(header) else "" for k in range(len(row))]
-        pairs = [
-            f"{name}: {_clean(cell)}" if name else _clean(cell)
-            for name, cell in zip(names, row)
-            if cell.strip()
-        ]
-        passages.append("\n".join(_lines(n, pairs)))
         found = True
     if not found:
         return None

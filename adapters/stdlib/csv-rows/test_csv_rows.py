@@ -1,5 +1,7 @@
-"""csv-rows: a table as one passage per row, each value beside its header and
-cited by the row's own line, with no word of the reader's own repeated; the delimiter by one fixed rule; a headerless
+"""csv-rows: a table's header row once, then each row as one passage of its
+values, cited by the row's own line, with no word repeated from row to row (so
+a question about something absent is answered by no row); the delimiter by one
+fixed rule; a headerless
 table, notes above the header, a wide row cut so nothing is lost; a file with
 no data row, not UTF-8 or not well-formed skipped and counted; the same bytes
 twice, originals unchanged, and MIRROR and FOLDER kept apart."""
@@ -46,12 +48,11 @@ def rows(data: bytes, tsv: bool = False) -> list[str]:
     return mod.convert(data, tsv).rstrip("\n").split("\n\n")
 
 
-def test_each_row_is_one_passage_with_each_value_beside_its_header():
+def test_the_header_once_then_each_row_as_its_values():
     assert mod.convert(CENSUS) == (
-        "[2] Surname: Considine; Forename: Honora; Townland: Caherfeenick; DED: Kilmurry; "
-        "County: Clare; Age: 52; Sex: Female; Relation to head: Head of Family; Occupation: Farmer\n\n"
-        "[3] Surname: Considine; Forename: Patrick; Townland: Caherfeenick; DED: Kilmurry; "
-        "County: Clare; Age: 17; Sex: Male; Relation to head: Son; Occupation: Farm Labourer\n"
+        "[1] Surname; Forename; Townland; DED; County; Age; Sex; Relation to head; Occupation\n\n"
+        "[2] Considine; Honora; Caherfeenick; Kilmurry; Clare; 52; Female; Head of Family; Farmer\n\n"
+        "[3] Considine; Patrick; Caherfeenick; Kilmurry; Clare; 17; Male; Son; Farm Labourer\n"
     )
 
 
@@ -63,37 +64,50 @@ def test_a_row_is_numbered_by_the_line_it_starts_on_in_the_source():
         b"2024-03-09,planted,onions\r\n"
     )
     assert rows(data) == [
-        "[2] date: 2024-03-01; what: sowed; notes: broad beans, row two",
-        "[5] date: 2024-03-09; what: planted; notes: onions",
+        "[1] date; what; notes",
+        "[2] 2024-03-01; sowed; broad beans, row two",
+        "[5] 2024-03-09; planted; onions",
     ]
 
 
-def test_empty_cells_extra_cells_short_rows_and_blank_headers():
-    data = b"a,,c\n1,2,3,4,5\n,x\n7,,\n"
+def test_an_empty_cell_keeps_its_place_and_empty_cells_at_the_end_go():
+    data = b"a,,c\n1,2,3,4,5\n,x\n7,,\ndate,in,out\n"
     assert rows(data) == [
-        "[2] a: 1; 2; c: 3; 4; 5",
-        "[3] x",
-        "[4] a: 7",
+        "[1] a; ; c",
+        "[2] 1; 2; 3; 4; 5",
+        "[3] ; x",
+        "[4] 7",
+        "[5] date; in; out",
+    ]
+    assert rows(b"date,in,out\n2020-11-05,,148\n") == [
+        "[1] date; in; out",
+        "[2] 2020-11-05; ; 148",
     ]
 
 
 def test_a_row_of_empty_cells_is_not_a_passage():
-    assert rows(b"a,b\n1,2\n , \n3,4\n") == ["[2] a: 1; b: 2", "[4] a: 3; b: 4"]
+    assert rows(b"a,b\n1,2\n , \n3,4\n") == ["[1] a; b", "[2] 1; 2", "[4] 3; 4"]
 
 
 def test_the_delimiter_is_the_one_that_cuts_the_first_line_into_most_cells():
-    assert rows(b"day;amount,net\n3;4,5\n") == ["[2] day;amount: 3;4; net: 5"]
-    assert rows(b"day|amount\n3|4\n") == ["[2] day: 3; amount: 4"]
-    assert rows(b"day\tamount\n3\t4\n") == ["[2] day: 3; amount: 4"]
-    assert rows(b"day,amount;x\n3,4;y\n") == ["[2] day: 3; amount;x: 4;y"]
-    assert rows(b'"day;a",amount,x\n3,4,5\n') == ["[2] day;a: 3; amount: 4; x: 5"]
-    assert rows(b"species\nThemeda triandra\n") == ["[2] species: Themeda triandra"]
+    assert rows(b"day;amount,net\n3;4,5\n") == ["[1] day;amount; net", "[2] 3;4; 5"]
+    assert rows(b"day|amount\n3|4\n") == ["[1] day; amount", "[2] 3; 4"]
+    assert rows(b"day\tamount\n3\t4\n") == ["[1] day; amount", "[2] 3; 4"]
+    assert rows(b"day,amount;x\n3,4;y\n") == ["[1] day; amount;x", "[2] 3; 4;y"]
+    assert rows(b'"day;a",amount,x\n3,4,5\n') == ["[1] day;a; amount; x", "[2] 3; 4; 5"]
+    assert rows(b"species\nThemeda triandra\n") == [
+        "[1] species",
+        "[2] Themeda triandra",
+    ]
 
 
 def test_a_tsv_is_read_by_tabs_whatever_its_first_line_holds():
     data = b"name\tplace, county\nHonora\tKilmurry, Clare\n"
-    assert rows(data, tsv=True) == ["[2] name: Honora; place, county: Kilmurry, Clare"]
-    assert rows(b"a,b,c\td\n1,2,3\t4\n", tsv=True) == ["[2] a,b,c: 1,2,3; d: 4"]
+    assert rows(data, tsv=True) == [
+        "[1] name; place, county",
+        "[2] Honora; Kilmurry, Clare",
+    ]
+    assert rows(b"a,b,c\td\n1,2,3\t4\n", tsv=True) == ["[1] a,b,c; d", "[2] 1,2,3; 4"]
 
 
 def test_a_first_line_with_a_number_or_a_date_is_data_not_a_header():
@@ -102,7 +116,11 @@ def test_a_first_line_with_a_number_or_a_date_is_data_not_a_header():
         "[1] 30/06/2022; -112.87; WOOLWORTHS 3350; +26648.24",
         "[2] 28/06/2022; -45.38; ALDI",
     ]
-    assert rows(b"Name,Value\n12:30,4\n") == ["[2] Name: 12:30; Value: 4"]
+    assert mod.convert(b"30/06/2022,x\n") == "[1] 30/06/2022; x\n", (
+        "one data row is a table"
+    )
+    assert mod.convert(b"Name,Value\n") is None, "a header alone is not"
+    assert rows(b"Name,Value\n12:30,4\n") == ["[1] Name; Value", "[2] 12:30; 4"]
 
 
 def test_notes_above_the_header_are_kept_by_their_line():
@@ -110,56 +128,55 @@ def test_notes_above_the_header_are_kept_by_their_line():
     assert rows(data) == [
         '[1] "# reader export, device 7"',
         "[2] # routing 0110",
-        "[4] date: 2021-05-08; amount: 24",
+        "[3] date; amount",
+        "[4] 2021-05-08; 24",
     ]
 
 
 def test_a_byte_order_mark_is_not_part_of_the_first_header():
-    assert rows(b"\xef\xbb\xbfDate,Rent\nJul,1680\n") == ["[2] Date: Jul; Rent: 1680"]
+    assert rows(b"\xef\xbb\xbfDate,Rent\nJul,1680\n") == [
+        "[1] Date; Rent",
+        "[2] Jul; 1680",
+    ]
 
 
 def test_a_wide_row_is_cut_at_a_cell_and_nothing_is_lost():
-    header = ",".join(f"col{k}" for k in range(60)).encode()
-    cells = ",".join(f"value{k}" for k in range(60)).encode()
-    out = mod.convert(header + b"\n" + cells + b"\n")
-    lines = out.rstrip("\n").split("\n")
-    assert "" not in lines, "one passage: no blank line inside the row"
-    assert len(lines) > 1 and all(len(x) <= kernel.MAX_CHUNK for x in lines)
-    assert lines[0].startswith("[2] col0: value0; ")
-    assert all(x.startswith("[2] col") for x in lines[1:])
-    pairs = [p for x in lines for p in x[4:].split("; ")]
-    assert pairs == [f"col{k}: value{k}" for k in range(60)]
-    assert not any(x.endswith(";") for x in lines)
+    header = ",".join(f"col{k}" for k in range(80)).encode()
+    cells = ",".join(f"value{k}" for k in range(80)).encode()
+    head, row = rows(header + b"\n" + cells + b"\n")
+    for passage, n, word in ((head, 1, "col"), (row, 2, "value")):
+        lines = passage.split("\n")
+        assert len(lines) > 1 and all(len(x) <= kernel.MAX_CHUNK for x in lines)
+        assert all(x.startswith(f"[{n}] {word}") for x in lines)
+        got = [c for x in lines for c in x[4:].split("; ")]
+        assert got == [f"{word}{k}" for k in range(80)]
+        assert not any(x.endswith(";") for x in lines)
 
 
 def test_one_long_cell_is_cut_at_a_space_into_lines_the_kernel_keeps_whole(tmp_path):
     words = " ".join(f"word{k}" for k in range(300))
     out = mod.convert(b'when,notes\n2024-03-01,"' + words.encode() + b'"\n')
-    lines = out.rstrip("\n").split("\n")
+    lines = out.rstrip("\n").split("\n\n")[1].split("\n")
     assert len(lines) > 2 and all(len(x) <= kernel.MAX_CHUNK for x in lines)
-    assert lines[0] == "[2] when: 2024-03-01"
-    assert lines[1].startswith("[2] notes: word0 word1 ")
-    assert all(x.startswith("[2] word") for x in lines[2:])
-    rest = [x[4:] for x in lines[2:]]
-    assert " ".join([lines[1].split("notes: ", 1)[1], *rest]) == words
+    assert lines[0] == "[2] 2024-03-01"
+    assert all(x.startswith("[2] word") for x in lines[1:])
+    assert lines[1].startswith("[2] word0 word1 ")
+    assert " ".join(x[4:] for x in lines[1:]) == words
     (tmp_path / "t.txt").write_text(out)
     got = " ".join(c["text"] for c in kernel.chunks(tmp_path))
     assert all(f"word{k} " in got + " " for k in range(300)), "nothing cut off"
 
 
 def test_a_cell_with_no_space_is_cut_where_it_must_be():
-    out = mod.convert(b"k\n" + b"x" * 1200 + b"\n")
-    lines = out.rstrip("\n").split("\n")
-    assert all(len(x) <= kernel.MAX_CHUNK for x in lines)
-    assert lines[0].startswith("[2] k: xxx") and len(lines) == 3
-    assert "".join(x[4:] for x in lines) == "k: " + "x" * 1200
+    lines = rows(b"k\n" + b"x" * 1200 + b"\n")[1].split("\n")
+    assert len(lines) == 3 and all(len(x) <= kernel.MAX_CHUNK for x in lines)
+    assert "".join(x[4:] for x in lines) == "x" * 1200
 
 
 def test_a_word_is_cut_only_where_no_space_fits():
-    cell = "w" * 492 + " a " + "b" * 600
-    lines = mod.convert(b"k\n" + cell.encode() + b"\n").rstrip("\n").split("\n")
-    assert lines == [
-        "[2] k: " + "w" * 492,
+    cell = "w" * 496 + " a " + "b" * 600
+    assert rows(b"k\n" + cell.encode() + b"\n")[1].split("\n") == [
+        "[2] " + "w" * 496,
         "[2] a",
         "[2] " + "b" * (kernel.MAX_CHUNK - 4),
         "[2] " + "b" * (600 - kernel.MAX_CHUNK + 4),
@@ -183,7 +200,7 @@ def test_a_mirror_is_written_at_the_same_path_with_txt_added(tmp_path):
     )
     assert got.returncode == 0, got.stderr
     assert (out / "Family History/census.csv.txt").read_text() == mod.convert(CENSUS)
-    assert (out / "log.TSV.txt").read_text() == "[2] a: 1; b: 2\n"
+    assert (out / "log.TSV.txt").read_text() == "[1] a; b\n\n[2] 1; 2\n"
     assert got.stdout.strip().endswith("wrote 2 files to " + str(out) + "; skipped 0")
 
 
@@ -272,30 +289,34 @@ SEEDS = (
 BANK = b'30/06/2022,"-112.87","WOOLWORTHS 3350","+26648.24"\n28/06/2022,"-45.38","ALDI",""\n'
 
 
-def test_no_word_the_reader_adds_repeats_from_passage_to_passage(tmp_path):
+def test_no_word_repeats_from_row_to_row_so_an_absent_question_finds_no_row(tmp_path):
     files = {"census.csv": CENSUS, "seeds.csv": SEEDS, "bank.csv": BANK}
     got, out = mirror_of(tmp_path, files)
     pile = kernel.chunks(out)
     for name, data in files.items():
-        held = set(kernel.words(data.decode()))
-        mine = [
-            set(kernel.words(c["text"])) for c in pile if c["path"] == name + ".txt"
-        ]
+        mine = [c for c in pile if c["path"] == name + ".txt"]
         assert len(mine) > 1
-        common = {
-            w for w in set.union(*mine) if sum(w in m for m in mine) > len(mine) / 2
-        }
-        assert common <= held, f"{name}: the reader added {common - held}"
-    for word in ("row", "column", "line", "continued"):
-        assert not kernel.rank(pile, f"volcano {word}"), word
+        header, body = data.decode().split("\n", 1)
+        # a header word that is also a value ("Head of Family") is the row's own
+        for word in (
+            set(kernel.words(header)) - set(kernel.words(body)) - kernel.FUNCTION
+        ):
+            served = kernel.rank(pile, f"volcano {word}")
+            assert all(c["text"].startswith("[1] ") for c in served), (name, word)
+    for word in ("row", "column", "line", "continued", "occupation", "religion"):
+        assert not [c for c in kernel.rank(pile, f"volcano {word}") if c["line"] > 1], (
+            word
+        )
+    head = kernel.rank(pile, "Seamus occupation")
+    assert [c["text"][:14] for c in head] == ["[1] Surname; F"], "the header row only"
 
 
 def test_real_questions_land_on_their_row(tmp_path):
     got, out = mirror_of(tmp_path, {"census.csv": CENSUS, "seeds.csv": SEEDS})
     pile = kernel.chunks(out)
     for question, holds in (
-        ("how old was Patrick Considine", "Age: 17"),
-        ("viability of the Hakea decurrens seed", "Viability %: 96"),
+        ("how old was Patrick Considine", "Patrick; Caherfeenick; Kilmurry; Clare; 17"),
+        ("Hakea decurrens seed", "Hakea decurrens; BBG-2026004; 15.1; 96"),
         ("when did I bank the Bursaria spinosa", "05/02/2026"),
     ):
         found = kernel.rank(pile, question)
