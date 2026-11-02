@@ -63,10 +63,10 @@ def test_the_mirror_has_the_sources_lines_so_a_passage_is_cited_by_its_own_line(
         "AAT Level 4",
         "",
         "",
-        "",
-        "unit: DAIF; status: passed; date: 2023-12-15; mark: 74%",
-        "unit: APMA; status: passed; date: 2024-02-09; mark: 71%",
-        "unit: BSTX; status: started; date: 2024-09",
+        "unit; status; date; mark",
+        "DAIF; passed; 2023-12-15; 74%",
+        "APMA; passed; 2024-02-09; 71%",
+        "BSTX; started; 2024-09",
         "",
         "Next",
         "- [ ] book BSTX exam, see the portal (https://aat.example/book)",
@@ -74,17 +74,14 @@ def test_the_mirror_has_the_sources_lines_so_a_passage_is_cited_by_its_own_line(
     ]
 
 
-def test_a_question_about_a_tables_row_is_answered_by_that_row_with_its_column_named(
+def test_a_question_about_a_tables_row_is_answered_by_the_passage_with_its_header(
     tmp_path,
 ):
     (tmp_path / "m").mkdir()
     (tmp_path / "m" / "progress.md.txt").write_text(mod.convert(SAMPLE))
     got = kernel.rank(kernel.chunks(tmp_path / "m"), "what mark did I get on APMA")
-    assert (
-        got
-        and "unit: APMA; status: passed; date: 2024-02-09; mark: 71%"
-        in (got[0]["text"])
-    )
+    assert got and got[0]["text"].startswith("unit; status; date; mark\n")
+    assert "APMA; passed; 2024-02-09; 71%" in got[0]["text"]
 
 
 def test_front_matter_keeps_its_values_not_its_keys_and_its_fences_are_blank():
@@ -211,43 +208,31 @@ def test_no_word_is_added_so_a_question_about_something_absent_finds_nothing(
     assert kernel.rank(pile, "when did I sow tomatoes")
 
 
-def test_table_headers_are_the_one_label_kept_and_they_answer_as_the_raw_file_does(
-    tmp_path,
-):
-    """A table's headers are the source's own labels, written on each row so
-    a row answers for its columns. Measured by the owner's test: a question
-    pairing a header with an absent word is served the table, by the raw file
-    and the mirror alike; without them "what mark did I get on APMA" holds
-    one word of three and finds nothing."""
+def test_a_tables_header_is_written_once_and_answers_as_the_raw_file_does(tmp_path):
+    """A table's headers are the source's own labels: written once, at the
+    head of the passage holding the rows, never again on each row, so no
+    header word repeats from passage to passage. By the owner's test, a
+    question pairing a header with an absent word is served the table by the
+    raw file and the mirror alike, and no more."""
     (tmp_path / "raw").mkdir()
     (tmp_path / "m").mkdir()
     (tmp_path / "raw" / "progress.md").write_bytes(SAMPLE)
     (tmp_path / "m" / "progress.md.txt").write_text(mod.convert(SAMPLE))
     raw, mirror = kernel.chunks(tmp_path / "raw"), kernel.chunks(tmp_path / "m")
-    for q in ("volcano mark", "volcano status"):
-        assert bool(kernel.rank(raw, q)) == bool(kernel.rank(mirror, q))
-    unlabelled = [dict(c, text=c["text"].replace("mark: ", "")) for c in mirror]
-    assert kernel.rank(unlabelled, "what mark did I get on APMA") == []
+    for q in ("volcano mark", "volcano status", "volcano unit"):
+        assert len(kernel.rank(raw, q)) == len(kernel.rank(mirror, q)) == 1, q
+    assert mod.convert(SAMPLE).count("mark") == 1
 
 
 def test_table_cells_empty_escaped_extra_and_where_the_table_ends():
     assert md(
         "a | b\n--|:-:\n1 | x \\| y\n| | 2 |\n|5|6|7|\nafter\n\n| only | header |\n|---|---|\n"
-    ) == [
-        "",
-        "",
-        "a: 1; b: x | y",
-        "b: 2",
-        "a: 5; b: 6; 7",
-        "after",
-        "",
-        "only; header",
-    ]
+    ) == ["", "a; b", "1; x | y", "2", "5; 6; 7", "after", "", "", "only; header"]
 
 
 def test_a_table_with_only_its_header_and_one_at_the_very_end():
-    assert md("a | b\n--|--\nafter\n") == ["a; b", "", "after"]
-    assert mod.convert(b"| a | b |\n|---|---|") == "a; b\n"
+    assert md("text\na | b\n--|--\nafter\n") == ["text", "", "a; b", "after"]
+    assert mod.convert(b"| a | b |\n|---|---|") == "\na; b\n"
 
 
 def test_setext_edges_and_what_is_never_a_setext_heading():

@@ -8,15 +8,15 @@ has the same number of lines as the source and each line is the source's
 line, so a passage found in the mirror is on that line of the .md file:
 
     ## Tomatoes                          ->   Tomatoes
-    | APMA | passed | 71% |              ->   unit: APMA; status: passed; mark: 71%
+    | APMA | passed | 71% |              ->   APMA; passed; 71%
     - [x] pay the **gas** bill           ->   - [x] pay the gas bill
     See [the shop](https://x.example).   ->   See the shop (https://x.example).
 
 Front matter (YAML between `---` lines, or TOML between `+++` lines) is kept
 as its values, keys off; a list that runs to the end of the block is joined
-onto its key's line. A heading is its text. A table's body row names each
-value by its column's header (the one label kept: without it "what mark did
-I get on APMA" finds nothing). Emphasis, code backticks, HTML tags and
+onto its key's line. A heading is its text. A table is its header row once,
+moved onto the separator's line so it starts the passage holding the rows,
+then each row as its cells joined by "; ". Emphasis, code backticks, HTML tags and
 comments, escapes and footnote markers are taken off; a link is its text,
 with an outside address after it; an image is its alt text; a wikilink is the
 text it shows. A task keeps its [ ] or [x]. A fenced code block is
@@ -251,8 +251,7 @@ def convert(data: bytes) -> str | None:
             refs[d.group(1).strip().lower()] = d.group(2)
 
     fence = ""
-    header: list[str] | None = None
-    head_at = 0
+    table = False
     comment = False
     i = top
     while i < len(lines):
@@ -271,7 +270,7 @@ def convert(data: bytes) -> str | None:
             i += 1
             continue
         if m and not comment:
-            fence, header = m.group(2), None
+            fence, table = m.group(2), False
             i += 1
             continue
 
@@ -286,23 +285,22 @@ def convert(data: bytes) -> str | None:
         if "<!--" in line:
             comment, line = True, line[: line.index("<!--")]
 
-        if header is not None:  # inside a table's body
+        if table:  # inside a table's body: a row is its cells
             if "|" in line and line.strip():
-                vals = [inline(c, refs) for c in cells(line)]
-                pairs = [
-                    f"{header[n]}: {v}" if n < len(header) and header[n] else v
-                    for n, v in enumerate(vals)
-                    if v
-                ]
-                out[i] = "; ".join(pairs)
-                out[head_at] = ""  # each row names its columns now
+                out[i] = "; ".join(
+                    v for v in (inline(c, refs) for c in cells(line)) if v
+                )
                 i += 1
                 continue
-            header = None
+            table = False
         if _is_table_start(lines, i) and not comment:
-            header, head_at = [inline(c, refs) for c in cells(line)], i
-            out[i] = "; ".join(h for h in header if h)
-            i += 2  # the separator row stays blank
+            # the header once, on the separator's line, so it starts the
+            # passage that holds the rows; its own line stays blank
+            out[i + 1] = "; ".join(
+                h for h in (inline(c, refs) for c in cells(line)) if h
+            )
+            table = True
+            i += 2
             continue
 
         if i + 1 < len(lines) and SETEXT.match(lines[i + 1]) and _paragraph_line(line):

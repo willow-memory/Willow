@@ -12,8 +12,8 @@ says how). The first was v0.1.0.
 
 - `markdown`: any Markdown file as the text it shows, line for line, so a
   passage in the mirror is on the .md file's own line, and no word the file
-  doesn't hold. Front matter as its values; a table's body rows as
-  header: value pairs; links as their text with an outside address, images as
+  doesn't hold. Front matter as its values; a table's header once, at the
+  head of the passage with its rows, and each row as its cells; links as their text with an outside address, images as
   their alt text, wikilinks as the text they show; emphasis, HTML, comments,
   escapes and footnote markers off; fenced code as written.
 - `ui/`, willow's own UI (v1): `python ui/canvas.py` opens a page on this

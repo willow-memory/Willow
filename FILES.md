@@ -624,7 +624,7 @@ willow/
 │   │   │   ├── test_man_pages.py
 │   │   │   └── README.md
 │   │   ├── markdown/
-│   │   │   ├── markdown.py   a Markdown file as the text it shows, line for line; table rows named by their columns
+│   │   │   ├── markdown.py   a Markdown file as the text it shows, line for line, with no word the file lacks
 │   │   │   ├── test_markdown.py
 │   │   │   └── README.md
 │   │   ├── market-calls/

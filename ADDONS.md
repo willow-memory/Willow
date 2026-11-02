@@ -68,7 +68,7 @@ its list: someone who speaks the language can add one without much Python.
 ## Newest
 
 <!-- willow:newest -->
-- 2026-11-02 · [**markdown**](adapters/stdlib/markdown/) — Any Markdown file as the text it shows, line for line, with a table's rows named by their columns.
+- 2026-11-02 · [**markdown**](adapters/stdlib/markdown/) — Any Markdown file as the text it shows, line for line, with no word the file doesn't hold.
 - 2026-11-01 · [**weakest-link**](adapters/stdlib/weakest-link/) — Each answer's inputs marked measured, fitted or assumed, and the result worth its weakest input, never an average.
 - 2026-11-01 · [**thesis**](adapters/stdlib/thesis/) — A thesis's claims, each tied to the source that backs it, and a list of the ones with none.
 - 2026-11-01 · [**sent-log**](adapters/stdlib/sent-log/) — Which of your passages went to which online model, read from the record by model card: what left this machine and where to.
@@ -145,7 +145,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - [**mail**](adapters/stdlib/mail/) — .eml and .mbox files, with sender, date and subject kept. *new* `no-install` `offline` · near: office, calendar, books
 - [**man-pages**](adapters/stdlib/man-pages/) — The man pages installed on this machine as plain text, so you can ask your own system's docs. *new* `no-install` `offline` · near: rtf, books, notion
 - [**manifests**](adapters/deps/manifests/) — Docker Compose and Kubernetes YAML: each service, image, port and volume as a passage. Needs PyYAML; MIT. *new* `needs-install` `offline` · near: photos, pdf, ocr
-- [**markdown**](adapters/stdlib/markdown/) — Any Markdown file as the text it shows, line for line, with a table's rows named by their columns. *new* `no-install` `offline` `markdown` `table` · near: rtf, notion, places
+- [**markdown**](adapters/stdlib/markdown/) — Any Markdown file as the text it shows, line for line, with no word the file doesn't hold. *new* `no-install` `offline` `markdown` · near: rtf, evernote, jupyter
 - [**mastodon**](adapters/stdlib/mastodon/) — A Mastodon or Pixelfed account archive's outbox.json: your posts as dated lines. *new* `no-install` `offline` `posts` `archive` · near: x-archive, meta-archive, linkedin
 - [**matrix**](adapters/stdlib/matrix/) — Element's room export, JSON or HTML: one dated line per message in each Matrix room. *new* `no-install` `offline` `message` · near: slack, chats, irc
 - [**mediawiki**](adapters/stdlib/mediawiki/) — A MediaWiki XML dump: each page's latest text, with its title and when it changed. *new* `no-install` `offline` `title` `xml` · near: notion, jira, joplin
@@ -262,7 +262,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**stems**](adapters/deps/stems/) — Word forms for 20+ languages, so "häuser" finds "haus" and "книги" finds "книга". Needs snowballstemmer; BSD-3-Clause. *new* `needs-install` `offline` `form` · near: accents, abbreviations, ocr
 - **synonyms** (idea) — Suggests words-list lines for a word no file has. Needs nltk and WordNet; Apache-2.0. Goes online: the WordNet data, downloaded once. *new* `needs-install` `online` · near: accents, starter-words, abbreviations
 - **tatoeba** (idea) — A question in one language finds the same idea in another, through Tatoeba's sentence pairs, downloaded once. *new* `no-install` `offline` `pairs` `language` · near: why-not, stems, latent
-- **vocab** (idea) — The words you're learning, from your notes and the texts you read, with where you met each one. *new* `no-install` `offline` · near: apple-notes, oracle-text, starter-words
+- **vocab** (idea) — The words you're learning, from your notes and the texts you read, with where you met each one. *new* `no-install` `offline` `met` · near: apple-notes, oracle-text, starter-words
 - [**words-ar**](adapters/stdlib/words-ar/) — Arabic common words ("في", "من", "على"). *new* `no-install` `offline` `common` `arabic` · near: words-it, words-pl, words-pt
 - [**words-cy**](adapters/stdlib/words-cy/) — Welsh common words ("a", "y", "yn"). *new* `no-install` `offline` `common` `welsh` · near: words-it, words-es, words-pl
 - [**words-de**](adapters/stdlib/words-de/) — German common words, so questions aren't matched on "der" and "und". *new* `no-install` `offline` `common` `german` · near: words-nl, words-pl, words-it
@@ -404,7 +404,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**install-scripts**](adapters/stdlib/install-scripts/) — The install scripts the packages in node_modules would run (preinstall, install, postinstall), each cited by file and line. *new* `no-install` `offline` `install` `package` · near: package-contents, package-docs, code-comments
 - **kids** (idea) — A box for a child: answers only from the folder you choose for them, and nothing they can approve. *new* `no-install` `offline` · near: student-records, export, browse
 - [**outdated**](adapters/stdlib/outdated/) — How old each locked dependency is, and which are yanked, deprecated or two years without a release, from a registry index you downloaded. Uses advisories. *new* `no-install` `offline` `dependency` · near: advisories, typosquat, pins
-- [**package-contents**](adapters/stdlib/package-contents/) — What's inside a wheel, sdist, npm tarball or .crate before you install it: every file, and any code it runs on install. *new* `no-install` `offline` `install` `package` · near: install-scripts, ci-cache, launcher
+- [**package-contents**](adapters/stdlib/package-contents/) — What's inside a wheel, sdist, npm tarball or .crate before you install it: every file, and any code it runs on install. *new* `no-install` `offline` `install` `package` · near: install-scripts, ci-cache, instruction-files
 - [**pii-audit**](adapters/stdlib/pii-audit/) — Personal data sitting in your files (ID numbers, health details, card numbers), listed by file and line. *new* `no-install` `offline` `numbers` `audit` · near: secrets-audit, privacy, debts
 - [**privacy**](adapters/stdlib/privacy/) — Hides phone numbers, emails, card, bank and ID numbers, and API keys in what a question prints, and says what it hid. *bot* `no-install` `offline` `numbers` · near: plain, readings, pii-audit
 - [**risky-code**](adapters/stdlib/risky-code/) — Lines of code matching a known-dangerous pattern (command injection, eval, sql concatenation, broken tls and more), by file and line, as leads to read. *new* `no-install` `offline` `matched` `command` `security` · near: secrets-audit, advisories, xref
@@ -424,7 +424,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - **basic-memory** (idea) — Basic Memory's Markdown notes where an AI wrote them: each observation and relation handed in through propose, waiting for your seal. *new* `no-install` `offline` `handed` `propose` · near: memory-import, hermes, hook-feedback
 - **bedrock** (idea) — Suggestions from a model on Amazon Bedrock, under your own AWS account and region, citing your passages. Needs boto3; Apache-2.0. Goes online: Amazon Bedrock's endpoint in your region, to ask for suggestions. *new* `needs-install` `online` `citing` · near: cite-honesty, claude, os-model
 - **browser-model** (idea) — Suggestions from a model running in your browser, Chrome's built-in model or one run on WebGPU, through a page served on this machine. Reaches this machine only. *new* `no-install` `this-machine` `browser` · near: mlx, os-model, local-model
-- **cassettes** (idea) — Each exchange with a model kept as a row (what was asked, what came back, the model and its seed), replayed later as a test, and drift between models found by plain diff. *bot* `no-install` `offline` `rows` `drift` · near: hook-replay, lending, hook-errors
+- **cassettes** (idea) — Each exchange with a model kept as a row (what was asked, what came back, the model and its seed), replayed later as a test, and drift between models found by plain diff. *bot* `no-install` `offline` `rows` `drift` · near: hook-replay, hook-errors, lending
 - **cite-honesty** (idea) — How often each model's suggestions were refused at propose for citing a passage the last bite never returned, read from the record by model card. *new* `no-install` `offline` `refuses` `citing` · near: sent-log, model-card, hook-cite
 - **claude** (idea) — Suggestions from Claude through the Anthropic API, citing your passages. Needs anthropic; MIT. Goes online: api.anthropic.com, to ask for suggestions. *new* `needs-install` `online` `citing` `claude` · near: claude-code, bedrock, cite-honesty
 - [**claude-code**](adapters/stdlib/claude-code/) — Claude Code sees cited passages from your folder with each prompt, through its prompt hook. Uses mcp-lite. *bot* `no-install` `offline` `claude` `hook` · near: hooks-elsewhere, hook-impact, vscode
@@ -551,7 +551,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - **front-page** (idea) — Which new posts will make the Hacker News front page? Wager, and let its search settle it. Goes online: hn.algolia.com, to read the front page. *new* `no-install` `online` `front` `let` · near: spurious, quake-bets, readme
 - [**game-master**](adapters/stdlib/game-master/) — A tabletop game's rolls and rulings as rows on the record, with the game master's calls sealed. Uses dice, odds. *bot* `no-install` `offline` `rows` `dice` · near: life, dice5e, dice
 - **gutenberg** (idea) — A paragraph from a public-domain book beside one of yours, for serendipity. Goes online: gutenberg.org, each book fetched once. *new* `no-install` `online` `book` `domain` · near: todays-place, art-of-the-day, witness
-- **hanoi** (idea) — Towers of Hanoi as rows: each move, n discs in 2^n - 1. *new* `no-install` `offline` `rows` `move` · near: reversi, tic-tac-toe, session-seal
+- **hanoi** (idea) — Towers of Hanoi as rows: each move, n discs in 2^n - 1. *new* `no-install` `offline` `rows` `move` · near: reversi, session-seal, tic-tac-toe
 - [**horoscope**](adapters/stdlib/horoscope/) — A daily horoscope keyed on your name and the date: same name, same day, same reading, always. *bot* `no-install` `offline` `daily` · near: daily-word, goodreads, gaps
 - **horoscope-grades** (idea) — Every horoscope logged as a forecast and settled against the day, so the stars get a Brier score. *new* `no-install` `offline` `forecast` `score` · near: forecasts, weather-bet, predictions
 - **ink-story** (idea) — A branching ink story where every choice made for you comes from a seed on the record. Needs inkjs; MIT. *new* `needs-install` `offline` `branch` `seed` · near: oracle-text, restack, timeline

@@ -1,6 +1,6 @@
 <!-- willow-addon
 section: Reading more kinds of files
-line: Any Markdown file as the text it shows, line for line, with a table's rows named by their columns.
+line: Any Markdown file as the text it shows, line for line, with no word the file doesn't hold.
 source: new
 added: 2026-11-02
 writes: to
@@ -18,7 +18,7 @@ The mirror is the same file with the markup taken off. It has the same number
 of lines as the source, and each line is the source's line, so a passage found
 in the mirror is on that same line of the .md file:
 
-    | APMA | passed | 2024-02-09 | 71% |    unit: APMA; status: passed; date: 2024-02-09; mark: 71%
+    | APMA | passed | 2024-02-09 | 71% |    APMA; passed; 2024-02-09; 71%
     ## Tomatoes                             Tomatoes
     - [x] pay the **gas** bill              - [x] pay the gas bill
     See [the shop](https://shop.example).   See the shop (https://shop.example).
@@ -28,7 +28,7 @@ in the mirror is on that same line of the .md file:
 | front matter (YAML between `---` lines, TOML between `+++` lines) | its values, quotes and list brackets off; the keys and the fence lines blank |
 | a list under a front-matter key | joined onto the key's line when it runs to the end of the block, so the block stays one passage; else each item on its own line |
 | a heading, `#` or underlined with `===` or `---` | its text; the underline blank |
-| a table | the separator row blank; each body row as `header: value; header: value`, empty cells left out; the header row blank once a row names its columns |
+| a table | the header row once, moved down onto the separator's line so it heads the passage that holds the rows; each body row as its cells joined by "; ", empty cells left out |
 | bold, italic, struck-through text, code backticks | the words without the marks; never an underscore inside a word, as in snake_case |
 | a link | its text, with the address after it in brackets when it goes outside the folder; a link to a file in the folder is only its text |
 | an image | its alt text |
@@ -45,10 +45,10 @@ written into passage after passage ("done", "note", a heading repeated above
 each section) would answer a question about something the folder doesn't
 hold. So the mirror adds none, and drops front matter's keys: date and tags
 head every daily note, and the raw folder serves those notes for
-"volcano tags"; the mirror serves nothing. A table's headers are the one
-label kept, on each row: a question pairing a header with an absent word is
-served the table by the raw file and the mirror alike, and without them
-"what mark did I get on APMA" holds one word of three and finds nothing.
+"volcano tags"; the mirror serves nothing. A table's header is written once,
+never on each row, so "what mark did I get on APMA" lands on the passage
+that starts with the header, as in the raw file. A table longer than one
+passage (500 characters) loses its header in the passages after the first.
 
 Each file (.md or .markdown) is written to MIRROR at the same relative path
 with .txt added. Point the kernel at MIRROR in place of the raw folder:
@@ -58,12 +58,12 @@ that holds no text once read, is skipped and counted, never a crash:
 
     wrote 278 files to MIRROR; skipped 0
 
-**What it changes in answers.** On the four demo lives' 278 .md files and on
-this repository's own docs, a question about a table's row is served the row
-with its columns named ("what is the floor for duckdb" gets the row that says
-`Floor: duckdb 1.1.1`, where the raw file served three passages without it).
-Most answers on the lives are the same passages as before, now without their
-markup. An HTML comment is gone from the mirror, and with it anything said
+**What it changes in answers.** On the four demo lives' 278 .md files the
+answers are the same passages as from the raw files, now without their
+markup. On this repository's own docs a table row reads as its cells
+("what did odile ask about the van" gets `N6 the van; found, unasked; …`),
+and "what is the floor for duckdb" is missed, as in the raw file: that row
+sits past the first passage of its table, away from the Floor header. An HTML comment is gone from the mirror, and with it anything said
 only there: the header of a card like this one, so "what does the bank add-on
 read" no longer finds the bank card's first lines.
 
