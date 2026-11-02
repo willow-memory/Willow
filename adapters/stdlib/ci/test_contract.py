@@ -102,6 +102,8 @@ def _tar(files: dict[str, str]) -> bytes:
 #: files an add-on needs in the pile besides the default, by add-on
 PILE_EXTRA: dict[str, dict[str, bytes]] = {
     "scrub": {"photo.png": _png()},
+    # a GGUF header with no keys and no tensors: a card that says so
+    "weights-card": {"m.gguf": b"GGUF\x03" + b"\0" * 16},
     # an entry with no permitted copy: almanac-keep answers before any fetch
     "almanac-keep": {
         "catalog.json": b'{"entries": [{"id": "tides", "status": "dark", '
@@ -669,6 +671,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "test-shards": ("shards.py", ["--shards", "2", "--tests", "{pile}/garden.md"]),
     "bot-venv": ("bot_venv.py", ["--venv", "{pile}"]),
     "restack": ("restack.py", ["--onto", "HEAD", "HEAD"]),
+    "weights-card": ("weights_card.py", ["--from", "{pile}/m.gguf", "--to", "{tmp}/card.md"]),
     **{name: (script, ["mirror", "--from", "{pile}", "--to", "{tmp}/mirror"])
        for name, (script, _) in READERS.items()},
 }  # fmt: skip

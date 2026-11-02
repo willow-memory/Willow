@@ -19,7 +19,7 @@ is written: `no-install` or `needs-install`; `offline`, `this-machine` or
 tag its author chose, if any. *near* names the three add-ons closest to it.
 
 <!-- willow:pools -->
-`████████████░░░░░░░░` **292 of 505 built** · 451 need no install · 54 need one
+`████████████░░░░░░░░` **293 of 505 built** · 451 need no install · 54 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
@@ -29,7 +29,7 @@ tag its author chose, if any. *near* names the three add-ons closest to it.
 | Keeping track | 40 | 16 | 56 | 0 |
 | Trust and proof | 31 | 23 | 45 | 9 |
 | Privacy and safety | 13 | 3 | 16 | 0 |
-| Assistants | 28 | 43 | 60 | 11 |
+| Assistants | 29 | 42 | 60 | 11 |
 | Ways to use it | 25 | 18 | 39 | 4 |
 | Play | 12 | 29 | 37 | 4 |
 | For maintainers | 19 | 25 | 39 | 5 |
@@ -68,19 +68,19 @@ its list: someone who speaks the language can add one without much Python.
 ## Newest
 
 <!-- willow:newest -->
+- 2026-11-02 · [**weights-card**](adapters/stdlib/weights-card/) — A model card filled in from the weights file's own header, GGUF or safetensors (architecture, quantization, context length, licence), so the card says what the file says.
 - 2026-11-01 · [**weakest-link**](adapters/stdlib/weakest-link/) — Each answer's inputs marked measured, fitted or assumed, and the result worth its weakest input, never an average.
 - 2026-11-01 · [**thesis**](adapters/stdlib/thesis/) — A thesis's claims, each tied to the source that backs it, and a list of the ones with none.
 - 2026-11-01 · [**sent-log**](adapters/stdlib/sent-log/) — Which of your passages went to which online model, read from the record by model card: what left this machine and where to.
 - 2026-11-01 · [**rules**](adapters/stdlib/rules/) — A game's or a house's rules, approved one section at a time, so asking what a rule says gives back that exact section, word for word.
-- 2026-11-01 · [**quotes**](adapters/stdlib/quotes/) — Every quote in a document checked against your files: as written, almost (and what it adds, drops or changes), or not there.
 <!-- /willow:newest -->
 
 ## Add-on of the week
 
-<!-- willow:pick week=2026-W44 -->
-**[habits](adapters/stdlib/habits/)** — Streaks from the lines you write each day: how many days in a row, and which you missed.
+<!-- willow:pick week=2026-W45 -->
+**[install-scripts](adapters/stdlib/install-scripts/)** — The install scripts the packages in node_modules would run (preinstall, install, postinstall), each cited by file and line.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 292 built add-ons in name order.*
+*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 293 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -212,7 +212,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - [**duplicates**](adapters/stdlib/duplicates/) — Passages that say the same thing in two files, and which one is newer. *new* `no-install` `offline` · near: contradictions, xref, three-two-one
 - [**fair-merge**](adapters/stdlib/fair-merge/) — Each folder or repo ranked on its own and the lists merged in turns, so a large corpus can't push a small one out on volume alone, and a source that found nothing says so. *bot* `no-install` `offline` `sources` `pile` · near: scan, parallel, ripgrep
 - [**first-mention**](adapters/stdlib/first-mention/) — When your files first mention something, and the line that does. *new* `no-install` `offline` `mention` · near: people, timeline, pipe
-- [**fuzzy-dates**](adapters/stdlib/fuzzy-dates/) — Dates that admit doubt ('about 1880', 'sometime in March') read and kept with their doubt, in EDTF. *new* `no-install` `offline` · near: family-tree, syllabus, minutes
+- [**fuzzy-dates**](adapters/stdlib/fuzzy-dates/) — Dates that admit doubt ('about 1880', 'sometime in March') read and kept with their doubt, in EDTF. *new* `no-install` `offline` · near: family-tree, syllabus, mood
 - [**index-cache**](adapters/stdlib/index-cache/) — Keeps scan's index between runs and rebuilds it only when a file in your folder actually changed. Uses scan. *new* `no-install` `offline` `between` `scan` `index` · near: scan, parallel, policy-watch
 - **kiwix** (idea) — An offline Wikipedia (or Stack Exchange, or Gutenberg) as a source after your own files, cited by article. Needs libzim, and a ZIM file you download; GPL-3.0. *new* `needs-install` `offline` `stack` `wikipedia` · near: pageviews, codeowners, stack
 - [**latent**](adapters/deps/latent/) — Finds code by meaning, not just matching words, using scan's index: a question reaches code that says the same thing another way. Needs numpy; BSD-3-Clause. Uses scan. *new* `needs-install` `offline` `matched` `ranked` · near: scan, all, pile-rank
@@ -260,7 +260,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**starter-words**](adapters/stdlib/starter-words/) — A first-day words list to copy and edit (owes = invoice, outstanding; doctor = dr, physician, clinic). *new* `no-install` `offline` `copy` `starter` · near: start, snapshot, pdf
 - [**stems**](adapters/deps/stems/) — Word forms for 20+ languages, so "häuser" finds "haus" and "книги" finds "книга". Needs snowballstemmer; BSD-3-Clause. *new* `needs-install` `offline` `form` · near: accents, abbreviations, ocr
 - **synonyms** (idea) — Suggests words-list lines for a word no file has. Needs nltk and WordNet; Apache-2.0. Goes online: the WordNet data, downloaded once. *new* `needs-install` `online` · near: accents, starter-words, abbreviations
-- **tatoeba** (idea) — A question in one language finds the same idea in another, through Tatoeba's sentence pairs, downloaded once. *new* `no-install` `offline` `pairs` `language` · near: why-not, stems, latent
+- **tatoeba** (idea) — A question in one language finds the same idea in another, through Tatoeba's sentence pairs, downloaded once. *new* `no-install` `offline` `language` · near: why-not, stems, latent
 - **vocab** (idea) — The words you're learning, from your notes and the texts you read, with where you met each one. *new* `no-install` `offline` · near: apple-notes, oracle-text, starter-words
 - [**words-ar**](adapters/stdlib/words-ar/) — Arabic common words ("في", "من", "على"). *new* `no-install` `offline` `common` `arabic` · near: words-it, words-pl, words-pt
 - [**words-cy**](adapters/stdlib/words-cy/) — Welsh common words ("a", "y", "yn"). *new* `no-install` `offline` `common` `welsh` · near: words-it, words-es, words-pl
@@ -311,7 +311,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**job-hunt**](adapters/stdlib/job-hunt/) — Applications sent, replies and interviews, by date: who you're still waiting on. Uses habits. *new* `no-install` `offline` · near: mood, warranties, foia
 - **lab-notebook** (idea) — A lab notebook's dated entries, by sample and experiment: what was done to what, and when. *new* `no-install` `offline` `entries` `sampling` · near: joplin, mcp-sampling, journiv
 - [**lending**](adapters/stdlib/lending/) — Things you lent, to whom and when, and which are still out. *new* `no-install` `offline` · near: on-this-day, xref, licenses
-- [**lesson-time**](adapters/stdlib/lesson-time/) — Lesson plans whose timed parts don't add up to the time the plan says it takes, each part's minutes shown beside the total. *new* `no-install` `offline` `lesson` `plan` `teaching` · near: make-it-so, test-impact, my-lessons
+- [**lesson-time**](adapters/stdlib/lesson-time/) — Lesson plans whose timed parts don't add up to the time the plan says it takes, each part's minutes shown beside the total. *new* `no-install` `offline` `lesson` `plan` `teaching` · near: test-impact, make-it-so, my-lessons
 - [**livestock**](adapters/stdlib/livestock/) — Each animal's births, treatments and sales, from your farm records. Uses habits. *new* `no-install` `offline` · near: calendar-out, hook-impact, habits
 - [**market-calls**](adapters/stdlib/market-calls/) — Market calls kept as wagers on the record ('SPY closes up on Friday'), settled later by your seal, with the losers kept. Uses forecasts. *bot* `no-install` `offline` `settled` `calls` · near: forecasts, predict, car
 - [**mileage**](adapters/stdlib/mileage/) — Miles driven for work, from your trips and notes, totalled for a tax year. Uses habits. *new* `no-install` `offline` `tax` `work` · near: garden, home-upkeep, hours
@@ -391,7 +391,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**tip-pin**](adapters/stdlib/tip-pin/) — Where your record ends, written down somewhere willow can't reach, so rows cut off the end or rewritten from some point on are caught where verify can't. *new* `no-install` `offline` `rows` `pin` · near: ci-memo, ci, persona-card
 - [**wayback**](adapters/stdlib/wayback/) — The Wayback Machine's copy of a page from a window of days, saved beside your own snapshot and compared with it byte for byte. Uses snapshot. Goes online: archive.org, to find the archived copy and fetch it. *new* `no-install` `online` `snapshot` `byte` `sources` · near: snapshot, policy-watch, archivebox
 - [**weakest-link**](adapters/stdlib/weakest-link/) — Each answer's inputs marked measured, fitted or assumed, and the result worth its weakest input, never an average. *new* `no-install` `offline` `links` · near: stale, export, jetbrains
-- **weights-pin** (idea) — A local model's weights file hashed before each run and refused when it differs from the hash on its model card. *new* `no-install` `offline` `local` `weights` · near: model-card, weights-card, model-fit
+- **weights-pin** (idea) — A local model's weights file hashed before each run and refused when it differs from the hash on its model card. *new* `no-install` `offline` `local` `weights` · near: weights-card, model-card, model-fit
 - **witness** (idea) — A second person's seal beside yours, for answers that need two people to agree. *new* `no-install` `offline` `beside` `second` · near: second-opinion, model-recall, gutenberg
 - [**xref**](adapters/stdlib/xref/) — Every reference in your files checked: each link to another file, and each quoted line, still there and still saying it. *bot* `no-install` `offline` `quote` `everyday` · near: quote-review, quotes, secrets-audit
 
@@ -407,7 +407,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**pii-audit**](adapters/stdlib/pii-audit/) — Personal data sitting in your files (ID numbers, health details, card numbers), listed by file and line. *new* `no-install` `offline` `numbers` `audit` · near: secrets-audit, privacy, debts
 - [**privacy**](adapters/stdlib/privacy/) — Hides phone numbers, emails, card, bank and ID numbers, and API keys in what a question prints, and says what it hid. *bot* `no-install` `offline` `numbers` · near: plain, readings, pii-audit
 - [**risky-code**](adapters/stdlib/risky-code/) — Lines of code matching a known-dangerous pattern (command injection, eval, sql concatenation, broken tls and more), by file and line, as leads to read. *new* `no-install` `offline` `matched` `command` `security` · near: secrets-audit, advisories, xref
-- [**scrub**](adapters/stdlib/scrub/) — Strips the hidden details (EXIF, author, edit history) from a file before you share it. *new* `no-install` `offline` `share` `taken` · near: photos, transcript-redact, a11y-check
+- [**scrub**](adapters/stdlib/scrub/) — Strips the hidden details (EXIF, author, edit history) from a file before you share it. *new* `no-install` `offline` `history` `share` · near: photos, transcript-redact, a11y-check
 - [**secrets-audit**](adapters/stdlib/secrets-audit/) — Finds passwords, keys and card numbers sitting in plain files, by file and line, never showing the value. Uses privacy. *bot* `no-install` `offline` `numbers` `key` `everyday` · near: pii-audit, hook-leaks, risky-code
 - [**sent-log**](adapters/stdlib/sent-log/) — Which of your passages went to which online model, read from the record by model card: what left this machine and where to. Uses openai-compatible. *new* `no-install` `offline` `left` `log` · near: cite-honesty, gaps, model-card
 - **student-records** (idea) — A box of student records that answers only the teacher who owns it, and logs every look. *new* `no-install` `offline` `student` `log` · near: kids, ci-why, export
@@ -486,7 +486,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - **serve-piles** (idea) — serve's piles grouped on all four W's -- who, when, what and where -- not where alone, so a model meets a question from every box that touched it. *new* `no-install` `offline` `serve` · near: pile-serve, pile-rungs, serve
 - **silence-log** (idea) — A model that ran and said nothing kept as its own row, so silence is told apart from a model that never ran. *bot* `no-install` `offline` `log` `rows` · near: said, cassettes, llm-cli
 - **translate** (idea) — An answer translated by a local model, the original kept beside it, the translation held until you seal it. Needs a local model server; licence varies by model. Reaches this machine only. *new* `needs-install` `this-machine` `local` `held` · near: plain-language, hook-tiers, local-model
-- **weights-card** (idea) — A model card filled in from the weights file's own header, GGUF or safetensors (architecture, quantization, context length, licence), so the card says what the file says. *new* `no-install` `offline` `weights` `licence` · near: weights-pin, model-card, folder-card
+- [**weights-card**](adapters/stdlib/weights-card/) — A model card filled in from the weights file's own header, GGUF or safetensors (architecture, quantization, context length, licence), so the card says what the file says. *new* `no-install` `offline` `weights` `licence` · near: weights-pin, model-card, folder-card
 - [**windsurf**](adapters/stdlib/windsurf/) — Windsurf asks your folder and hands in suggestions, through the mcp add-on. Uses hosts. *new* `no-install` `offline` `mcp` · near: cursor, opencode, zed
 - [**zed**](adapters/stdlib/zed/) — Zed's assistant asks your folder and hands in suggestions, through the mcp add-on. Uses hosts. *new* `no-install` `offline` `mcp` · near: cursor, opencode, windsurf
 
@@ -588,7 +588,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - [**ci**](adapters/stdlib/ci/) — This repo's checks as verdict rows on a kernel record, the same every run. Uses live, readme, test-shards. Goes online: PyPI, to read each dependency floor's release date. *box* `no-install` `online` `rows` `verdict` · near: ci-memo, bot-venv, ci-why
 - **ci-baseline** (idea) — Is your CI normal? How often pull requests everywhere go green first time, from GH Archive. Goes online: data.gharchive.org, its hours downloaded once. *new* `no-install` `online` `pull` `requests` · near: ci-bets, welcome, github-archive
 - **ci-bets** (idea) — Bet on your own CI: forecasts on each pull request going green, scored against the model's. *new* `no-install` `offline` `pull` `requests` · near: ci-baseline, roll-for-merge, weather-bet
-- [**ci-cache**](adapters/stdlib/ci-cache/) — CI caches pip, npm, .NET and Maven downloads keyed on their lockfiles, so a run skips the installs. *new* `no-install` `offline` `npm` `cache` · near: ci-memo, ci-logs, ci
+- [**ci-cache**](adapters/stdlib/ci-cache/) — CI caches pip, npm, .NET and Maven downloads keyed on their lockfiles, so a run skips the installs. *new* `no-install` `offline` `npm` `cache` · near: ci-memo, ci, ci-logs
 - [**ci-memo**](adapters/stdlib/ci-memo/) — A CI gate whose inputs' bytes are unchanged keeps its recorded verdict: pin a run's per-gate keys, and run only what a change can reach. Uses ci. *new* `no-install` `offline` `pin` `reach` · near: ci-cache, test-impact, ci
 - [**ci-why**](adapters/stdlib/ci-why/) — Why CI went red: the failing block pulled out of the job's log, plain, put where people look. *bot* `no-install` `offline` `job` `failed` · near: ci, ci-logs, gh-json
 - **code-stats** (idea) — Lines, code and complexity per language, per release, as rows the list can answer from. Needs the scc program; MIT. *new* `needs-install` `offline` `release` `language` · near: profile, bench, plain-language

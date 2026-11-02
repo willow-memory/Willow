@@ -1884,15 +1884,6 @@
   "network": "api.open-meteo.com, to read the forecast and the outcome"
  },
  {
-  "name": "weights-card",
-  "kind": "stdlib",
-  "section": "Assistants",
-  "line": "A model card filled in from the weights file's own header, GGUF or safetensors (architecture, quantization, context length, licence), so the card says what the file says.",
-  "source": "new",
-  "writes": "to",
-  "network": "none"
- },
- {
   "name": "weights-pin",
   "kind": "stdlib",
   "section": "Trust and proof",
