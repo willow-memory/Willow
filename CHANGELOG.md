@@ -15,7 +15,7 @@ says how). The first was v0.1.0.
   of the first array too big for one passage (and each JSON Lines line) its
   own passage. A key in most of a file's records is left out, so a question
   pairing it with a word the file doesn't hold finds nothing. Bad files and
-  bad lines are skipped and counted; a mirror over 1 MB is cut into parts.
+  bad lines are skipped and counted; a mirror over 1 MB is cut into parts. (#174)
 - `text`: every .txt and .text file as UTF-8 the kernel reads whole, line
   for line. A Windows "Unicode" file (UTF-16 with its mark), UTF-32, and
   UTF-16 with no mark when every other byte is NUL are read; an old code page
