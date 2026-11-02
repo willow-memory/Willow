@@ -10,6 +10,14 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `opml`: OPML files from feed readers, podcast apps and outliners. A feed
+  list is a line per feed, its title and addresses, each folder a passage
+  headed by its name, and an Overcast export's episodes under their podcast;
+  an outline is its items indented by depth with their notes, each top-level
+  item with children a passage, cut at its children when it is too long for
+  one. Only the file's own words are written. A file that declares a DTD or
+  an entity is skipped and counted, never parsed, so an entity bomb is never
+  expanded.
 - `ui/`, willow's own UI (v1): `python ui/canvas.py` opens a page on this
   machine that goes the way a person does. Choose your folders; see what the
   kernel alone makes of them, as counts, never a file's words or name; start
