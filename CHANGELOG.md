@@ -10,6 +10,14 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `model-card`, a card naming the model behind an assistant, its hash on
+  the record: `model_card.py add --box DIR --from CARD` appends the SHA-256
+  of a `willow-model` card (weights-card's header, with `runs`, `licence`
+  and `limits` added by hand) through the kernel, with the model's name, its
+  weights' hash or `model version`, and where it runs, never the card's
+  text; `check` holds a card file to its row (`same`, `changed`, `never
+  added`) and `list` says each name's latest. No assistant names its card in
+  a suggestion yet; sent-log's card now says so. (#161)
 - `model-fit`, whether this machine can run a local model before you
   download one: `model_fit.py check [--model FILE] [--measure]` reads
   memory, the CPU, each GPU (its own memory from the driver or

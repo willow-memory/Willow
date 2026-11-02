@@ -680,6 +680,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "weights-pin": ("weights_pin.py", ["--card", "{pile}/m.md", "--from", "{pile}/m.bin"]),
     "model-shelf": ("model_shelf.py", ["list", "--home", "{tmp}"]),
     "model-fit": ("model_fit.py", ["check", "--root", "{tmp}"]),
+    "model-card": ("model_card.py", ["list", "--box", "{box}"]),
     **{name: (script, ["mirror", "--from", "{pile}", "--to", "{tmp}/mirror"])
        for name, (script, _) in READERS.items()},
 }  # fmt: skip
