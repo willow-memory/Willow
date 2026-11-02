@@ -13,7 +13,7 @@ says how). The first was v0.1.0.
 - `pocket`: Pocket's export, now that Pocket is gone: the older
   ril_export.html and the 2025 CSVs, loose or read from the zip without
   unpacking it, as one dated line per saved article, oldest first, with its
-  title, address, tags and whether it was read; other files left alone.
+  title, address, tags and whether it was read; other files left alone. (#179)
 - `bookmarks`: browser bookmarks and history: the bookmark HTML export every
   browser writes, a Firefox backup (.json or .jsonlz4), Chrome's
   `Bookmarks` file, and copies of Firefox's `places.sqlite` and Chrome's
