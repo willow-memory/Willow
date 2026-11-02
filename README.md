@@ -126,11 +126,11 @@ says how to pick one up:
 <!-- willow:front show=pick week=2026-W45 -->
 **Add-on of the week**
 
-**[index-cache](adapters/stdlib/index-cache/)** — Keeps scan's index between runs and rebuilds it only when a file in your folder actually changed.
+**[joplin](adapters/stdlib/joplin/)** — Joplin's .jex export, read without unpacking it: each note as plain text with its title and dates.
 
-*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 293 built add-ons in name order.*
+*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 306 built add-ons in name order.*
 
-[Every add-on, 293 built of 506, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 306 built of 507, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 
