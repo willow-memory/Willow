@@ -440,3 +440,8 @@ def test_a_bad_command_line_says_how_to_run_it():
     ):
         got = run(*argv)
         assert got.returncode == 2 and "rst.py" in got.stderr
+
+
+def test_an_overlined_title_at_the_very_end_of_a_file_is_still_a_title():
+    # its text would read as a list item if it weren't taken as a title
+    assert rst("=============\n* Appendix *\n=============") == "\n* Appendix *\n"
