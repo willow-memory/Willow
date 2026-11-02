@@ -1,0 +1,47 @@
+# How people ask for an add-on, and the words its card uses. The kernel's
+# words-list format: one of your words, then the card's words for it. The
+# canvas's search reads it; edit it when a search misses what you meant.
+
+# reading things
+email = mail, eml, mbox, inbox
+emails = mail, eml, mbox
+messages = chats, texts, slack, discord, whatsapp, telegram
+texts = sms, messages
+photos = photo, exif, images, pictures
+scans = ocr, scanned
+spreadsheet = sheets, xlsx, csv, office
+word = docx, office
+notes = obsidian, logseq, joplin, evernote, keep
+journal = diary, jrnl, entries
+bookmarks = karakeep, wallabag, readwise, links
+
+# keeping track
+remind = coming, due, dates, deadline, renewals
+reminders = coming, due, dates, deadline
+due = coming, deadline, renewals, expires
+deadlines = coming, due, dates
+spend = budget, bank, spending, statements, subscriptions
+spending = budget, bank, statements
+money = bank, budget, invoices, amounts, debts
+todo = todos, fixme
+tasks = todo, nightstand, minutes
+
+# keeping it safe
+backup = backup, backups, copies, zip, restore
+back = backup
+private = privacy, hides, redact
+hide = privacy, hides, redact, scrub
+secrets = keys, passwords, secrets
+safe = privacy, backup, verify
+
+# ways in
+editor = vim, emacs, vscode, jetbrains, zed
+terminal = shell, pipe, plain
+browser = browse, page
+phone = mobile, texts
+ai = assistant, assistants, model, claude, mcp
+assistant = mcp, claude, suggestions
+chatgpt = openai, model, suggestions
+
+# play
+games = game, play, dice, quiz
