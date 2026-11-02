@@ -252,8 +252,8 @@ def test_a_tcx_activity_is_its_laps_added_up_with_its_notes():
 
 
 def test_distances_and_times_are_rounded_as_a_person_reads_them():
-    assert [mod.distance(m) for m in (None, 0, 4.9, 999.4, 999.6, 1000, 1051, 5230.5, 42195)] == [
-        "?", "0.00", "0.00", "1.00", "1.00", "1.0", "1.1", "5.2", "42.2"]  # fmt: skip
+    assert [mod.distance(m) for m in (None, 0, 4.9, 505.2, 999.4, 999.6, 1000, 1051, 5230.5, 42195)] == [
+        "?", "0.00", "0.00", "0.51", "1.00", "1.00", "1.0", "1.1", "5.2", "42.2"]  # fmt: skip
     assert [mod.duration(s) for s in (None, -1, 0, 59.6, 3599, 3600, 90061)] == [
         "?", "?", "0:00:00", "0:01:00", "0:59:59", "1:00:00", "25:01:01"]  # fmt: skip
 
