@@ -10,6 +10,13 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `zotero`: your Zotero library from a copy of zotero.sqlite, each item, note
+  and PDF annotation as a passage that begins with its citation (authors in
+  Zotero's order, the year from the date field alone, the title, where it
+  appeared). An annotation is quoted with its page and your comment; an ink
+  or image one with no text is counted, not quoted. The trash and RSS feeds
+  are left out, and the file is opened read-only and immutable, so no
+  journal appears beside it.
 - `ui/`, willow's own UI (v1): `python ui/canvas.py` opens a page on this
   machine that goes the way a person does. Choose your folders; see what the
   kernel alone makes of them, as counts, never a file's words or name; start

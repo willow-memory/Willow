@@ -1178,9 +1178,13 @@ willow/
 │   │   │   ├── xref.py       each link and file:line in your files checked, still there
 │   │   │   ├── test_xref.py
 │   │   │   └── README.md
-│   │   └── zed/
-│   │       ├── zed.py            the settings.json lines that register mcp-lite with Zed
-│   │       ├── test_zed.py
+│   │   ├── zed/
+│   │   │   ├── zed.py            the settings.json lines that register mcp-lite with Zed
+│   │   │   ├── test_zed.py
+│   │   │   └── README.md
+│   │   └── zotero/
+│   │       ├── zotero.py   a copy of zotero.sqlite: each item, note and PDF annotation, with its citation
+│   │       ├── test_zotero.py
 │   │       └── README.md
 │   └── deps/                 add-ons that need something installed
 │       ├── README.md         what one must declare: pins, floors, licences, network

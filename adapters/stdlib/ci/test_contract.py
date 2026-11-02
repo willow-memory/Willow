@@ -132,6 +132,30 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         "INSERT INTO tm_pairs VALUES ('tomatoes want sun','ada','sealed',"
         "'2026-10-01');\n"
     )}),
+    # Zotero's own table and column names (resource/schema/userdata.sql)
+    "zotero": ("zotero.py", {"zotero.sqlite": _sqlite(
+        "CREATE TABLE itemTypes (itemTypeID INTEGER PRIMARY KEY, typeName TEXT, "
+        "templateItemTypeID INT, display INT DEFAULT 1);\n"
+        "CREATE TABLE fields (fieldID INTEGER PRIMARY KEY, fieldName TEXT, fieldFormatID INT);\n"
+        "CREATE TABLE creatorTypes (creatorTypeID INTEGER PRIMARY KEY, creatorType TEXT);\n"
+        "CREATE TABLE items (itemID INTEGER PRIMARY KEY, itemTypeID INT NOT NULL, "
+        "dateAdded TIMESTAMP, libraryID INT NOT NULL, key TEXT NOT NULL);\n"
+        "CREATE TABLE itemDataValues (valueID INTEGER PRIMARY KEY, value UNIQUE);\n"
+        "CREATE TABLE itemData (itemID INT, fieldID INT, valueID, PRIMARY KEY (itemID, fieldID));\n"
+        "CREATE TABLE itemNotes (itemID INTEGER PRIMARY KEY, parentItemID INT, note TEXT, title TEXT);\n"
+        "CREATE TABLE creators (creatorID INTEGER PRIMARY KEY, firstName TEXT, lastName TEXT, fieldMode INT);\n"
+        "CREATE TABLE itemCreators (itemID INT NOT NULL, creatorID INT NOT NULL, "
+        "creatorTypeID INT NOT NULL DEFAULT 1, orderIndex INT NOT NULL DEFAULT 0);\n"
+        "CREATE TABLE deletedItems (itemID INTEGER PRIMARY KEY, dateDeleted DEFAULT CURRENT_TIMESTAMP NOT NULL);\n"
+        "INSERT INTO itemTypes VALUES (7, 'book', NULL, 1);\n"
+        "INSERT INTO fields VALUES (1, 'title', NULL), (6, 'date', NULL);\n"
+        "INSERT INTO creatorTypes VALUES (1, 'author');\n"
+        "INSERT INTO items VALUES (1, 7, '2024-03-02 08:15:00', 1, 'ABCD2345');\n"
+        "INSERT INTO itemDataValues VALUES (1, 'Tomatoes Want Sun'), (2, '2020-00-00 2020');\n"
+        "INSERT INTO itemData VALUES (1, 1, 1), (1, 6, 2);\n"
+        "INSERT INTO creators VALUES (1, 'Ada', 'Example', 0);\n"
+        "INSERT INTO itemCreators VALUES (1, 1, 1, 0);\n"
+    )}),
     "jeles": ("jeles.py", {"seed.json": (
         b'{"pairs": [{"source_text": "how much sun do tomatoes want", '
         b'"target_text": "Six hours."}]}\n')}),
