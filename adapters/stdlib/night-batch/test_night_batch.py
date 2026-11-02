@@ -316,3 +316,20 @@ def test_a_bad_command_line_is_refused(box, tmp_path):
         f.write('{"n": 99}\n')
     got = run(*base)
     assert got.returncode == 2 and "doesn't verify" in got.stderr
+
+
+def test_a_refused_suggestion_on_the_record_leaves_its_question_waiting(
+    box, server, tmp_path
+):
+    served = json.loads(k("bite", "--box", box, Q1).stdout)["served"]
+    bad = tmp_path / "bad.jsonl"
+    bad.write_text(
+        json.dumps({"path": "a.md", "data": "x", "cites": ["nope"], "claim": "c"})
+        + "\n"
+    )
+    assert "refused" in k("propose", "--box", box, "--file", bad).stdout and served
+    got = run(
+        "run", "--box", box, "--url", server.url, "--questions", questions(tmp_path, Q1)
+    )
+    assert got.returncode == 0, got.stdout + got.stderr
+    assert got.stdout.startswith(f"asked    {Q1}\n")
