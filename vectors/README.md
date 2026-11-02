@@ -141,6 +141,7 @@ vectors had to catch them. Each time one got through, a case was added.
 | No boundary after `script`/`style`; only ASCII space before `>` | html |
 | A comment's `-->` allowed to overlap its `<!--` | html |
 | `def` found inside a word; one space only after it; no digits in a name | look |
+| `propose` exiting 0 when every line is refused (the three older ports did, after bug #96's fix to kernel.py) | session (a propose with every line refused, added for this) |
 | A name counted where it's only the front of a longer word | look (added for this) |
 | `contains("..")` for path parts | door |
 | **Not caught:** float scores truncated to six decimals | Only moves an answer when two top scores are within a millionth; no case has that. The realistic float bug, a plain sum, is caught |
@@ -194,8 +195,3 @@ box at the same instant are kept apart only among C#, Go, Rust and `kernel.py`.
   surfaces.
 - Next ports: C or C++, two to three days (ICU-free, since the tables carry
   Unicode; the Rust port's SHA-256 and big integer are the shape to follow).
-- `propose` with every suggestion refused exits 42 in `kernel.py` (bug #96's
-  fix), in Go and in Rust, but still 0 in Java, TypeScript and C#, which were written
-  before the fix. The session doesn't exercise it: every `propose` in it has a
-  line that passes. A session step with none, and the three one-line fixes,
-  are the next change here.

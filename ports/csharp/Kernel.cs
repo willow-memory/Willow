@@ -1503,7 +1503,6 @@ public static class Kernel
         if (last == null) { Console.Error.WriteLine("refused: propose answers a bite; bite first"); return REFUSED; }
         var served = new HashSet<string>(StringComparer.Ordinal);
         if (last.Get("served") is List<object?> sv) foreach (var s in sv) served.Add((string)((JObj)s!)["id"]!);
-        int waiting = 0;
         for (int i = 0; i < lines.Count; i++)
         {
             object? prop = null;
@@ -1520,7 +1519,6 @@ public static class Kernel
                 File.WriteAllText(PropFile(box, subj), DumpsDefault(kept, false), Utf8);
                 Append(box, ts, "proposal", "kernel", Obj("subject", subj, "verdict", "pass", "bite_row", last["n"]));
                 Console.WriteLine($"pass  {subj}  waiting on your seal");
-                waiting++;
             }
             else
             {
@@ -1528,7 +1526,9 @@ public static class Kernel
                 Console.WriteLine($"refused  line {i}: {why}");
             }
         }
-        return waiting > 0 ? ESCALATE : ALIVE;
+        // Passing the door is not acceptance: nothing propose reads is an answer
+        // until the person seals it (CONST-0-1).
+        return ESCALATE;
     }
 
     static int Seal(string box, string subj, string ts)

@@ -7,8 +7,9 @@ number to read:
 
 1. **vectors.** The port answers `cases.json` (`<port> vectors cases.json
    results.json`); every answer is lined up against kernel.py's.
-2. **sessions.** The same scripted session (init, bites, proposals, a seal,
-   a decline, out, verify, a forged seal and a forged decline, an edit) run through kernel.py's command line
+2. **sessions.** The same scripted session (init, bites, proposals, one with
+   every line refused, a seal, a decline, out, verify, a forged seal and a
+   forged decline, an edit) run through kernel.py's command line
    and the port's, on the same paths with the same key, so each box is
    directly comparable: exit codes, what the person was shown, kernel.json,
    proposal files, and every record row but `version`, `hash`, `prev` and
@@ -344,6 +345,9 @@ def session(impl, root: Path) -> dict:
         + "\n"
     )
     step("propose", *b, "--file", str(rows_file))
+    none = root / "none.jsonl"  # every line refused: still not a yes
+    none.write_text(json.dumps({**good, "cites": ["nope"]}) + "\nnot json\n")
+    step("propose", *b, "--file", str(none))
     step("seal", *b, k.subject_of(good))
     step("bite", *b, "How much SUN do tomatoes want?!")  # sealed now
     step("bite", *b, "tomatoes want how much sun")  # other words: not sealed

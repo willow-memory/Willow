@@ -1740,6 +1740,11 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- The Java, TypeScript and C# ports exit 42 from a `propose` whose every
+  line is refused, as `kernel.py` has since bug #96's fix; they exited 0,
+  which looked like an approved answer. The vectors' session now proposes a
+  file with every line refused, so a port that drifts here fails
+  `vectors/compare.py`. (#191)
 - `mail` reads a header sent as raw 8-bit UTF-8 as UTF-8: a subject such as
   "income tax — what you owe, £412.67" no longer comes out with each of
   its non-ASCII letters replaced by `���`, and a From or To name with an

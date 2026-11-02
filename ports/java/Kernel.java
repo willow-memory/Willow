@@ -1666,7 +1666,6 @@ public final class Kernel {
         Set<String> served = new HashSet<>();
         Object sv = last.get("served");
         if (sv instanceof List) for (Object s : (List<Object>) sv) served.add((String) ((Map<String, Object>) s).get("id"));
-        int waiting = 0;
         for (int i = 0; i < lines.size(); i++) {
             Object prop;
             try {
@@ -1684,13 +1683,14 @@ public final class Kernel {
                 Files.writeString(propFile(box, subj), dumpsDefault(kept, false));
                 append(box, ts, "proposal", "kernel", fields("subject", subj, "verdict", "pass", "bite_row", last.get("n")));
                 System.out.println("pass  " + subj + "  waiting on your seal");
-                waiting++;
             } else {
                 append(box, ts, "proposal", "kernel", fields("verdict", "refused", "line", BigInteger.valueOf(i), "why", why));
                 System.out.println("refused  line " + i + ": " + why);
             }
         }
-        return waiting > 0 ? ESCALATE : ALIVE;
+        // Passing the door is not acceptance: nothing propose reads is an answer
+        // until the person seals it (CONST-0-1).
+        return ESCALATE;
     }
 
     @SuppressWarnings("unchecked")
