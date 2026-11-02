@@ -126,11 +126,11 @@ says how to pick one up:
 <!-- willow:front show=pick week=2026-W45 -->
 **Add-on of the week**
 
-**[install-scripts](adapters/stdlib/install-scripts/)** — The install scripts the packages in node_modules would run (preinstall, install, postinstall), each cited by file and line.
+**[matrix](adapters/stdlib/matrix/)** — Element's room export, JSON or HTML: one dated line per message in each Matrix room.
 
-*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 293 built add-ons in name order.*
+*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 307 built add-ons in name order.*
 
-[Every add-on, 293 built of 506, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 307 built of 508, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 
