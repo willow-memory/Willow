@@ -17,6 +17,136 @@ says how). The first was v0.1.0.
   holds it to all 4,668 vectors and the whole session, both ways, with zero
   unexplained differences, and CI's ports job runs it as `ports:go`. The
   `go` idea comes off the list.
+- `in-process`, suggestions from a GGUF model loaded inside the add-on
+  itself through llama-cpp-python: `in_process.py ask --box DIR --model
+  FILE.gguf "question"` is openai-compatible's bite-then-propose with no
+  server and no port, the claim naming the file by name and SHA-256. Its
+  tests run llama.cpp on a model of a few kilobytes that
+  `adapters/deps/in-process/conftest.py` writes from seeded weights, so
+  nothing is downloaded. Floor llama-cpp-python 0.2.29: a chat takes a
+  seed from 0.2.15, and before 0.2.29 every quiet load opens /dev/null to
+  write, which the guard holds. (#190)
+- `dotfiles`, a reader that mirrors a dotfiles repository (bashrc, zshrc,
+  gitconfig, tmux.conf, init.vim, .ini, .conf, .toml and their kind) as its
+  settings: `dotfiles.py mirror --from FOLDER --to MIRROR`. Each setting is
+  on its own line, in the file's own words (`EDITOR=nvim`, `core.editor =
+  nvim`), every other line blank, so "where did I set my editor" lands on
+  it. A value named or shaped like a secret is written `[withheld]`. Hidden
+  files are skipped, so point it at the repository, not your home folder.
+- `webarchive`, pages Safari saved as .webarchive as their readable text:
+  `webarchive.py mirror --from FOLDER --to MIRROR` writes what web-pages
+  writes for the same page (the address it came from, its title, its
+  paragraphs), then each frame's text under the frame's own address.
+  It reads the archive's charset, then the page's, then UTF-8; a file that
+  isn't a web archive, or a saved PDF or picture, is skipped and counted.
+- `apple-mail`: Apple Mail's .emlx and .partial.emlx messages as plain text,
+  each read with mail's own code so it gives the same text as the same message
+  saved as an .eml (sender, recipients, date and subject, then the body and the
+  attachments' names). A message with no Date header takes Apple Mail's date
+  received, in UTC; the run says how many, the text adds no word for it. A file whose byte count is malformed or which
+  is shorter than it is skipped and counted.
+- `shortcuts`: the link files dragged out of a browser onto a desktop or
+  into a folder (Windows `.url`, macOS `.webloc`, Linux `.desktop`), each as
+  the title its name gives and the address it holds; a Linux launcher as its
+  name and the command it runs. A Windows `.lnk` is left alone.
+- `opml`: OPML files from feed readers, podcast apps and outliners. A feed
+  list is a line per feed, its title and addresses, each folder a passage
+  headed by its name, and an Overcast export's episodes under their podcast;
+  an outline is its items indented by depth with their notes, each top-level
+  item with children a passage, cut at its children when it is too long for
+  one. Only the file's own words are written. A file that declares a DTD or
+  an entity is skipped and counted, never parsed, so an entity bomb is never
+  expanded.
+- `ris`: RIS citation exports (.ris, the export of EndNote, Zotero, Mendeley,
+  Web of Science and Scopus), each reference as a passage that opens with its
+  citation (authors, year, title, journal, volume, issue and pages), then its
+  type code, doi, keywords, abstract and notes, with no label repeated in
+  every passage. The year comes only from the date tags; a broken reference
+  is skipped and counted in the file's closing passage. A .enw file is read as RIS or as EndNote's own tagged lines,
+  by what it holds.
+- `zotero`: your Zotero library from a copy of zotero.sqlite, each item, note
+  and PDF annotation as a passage that begins with its citation (authors in
+  Zotero's order, the year from the date field alone, the title, where it
+  appeared). An annotation is quoted with its page and your comment; an ink
+  or image one with no text is counted, not quoted. Only the library's own
+  words and numbers are written, no labels or type words, so a question
+  about something absent isn't answered by a word in every passage. The
+  trash and RSS feeds are left out, and the file is opened read-only and
+  immutable, so no journal appears beside it.
+- `takeout`: Google Takeout's My Activity and YouTube watch and search
+  history, JSON or HTML: each activity as its own dated line, in UTC as the
+  file gives it, Google's title with a watch's channel and nothing added to
+  every line; an HTML date in another language kept as written, never
+  guessed; other JSON and HTML skipped and counted.
+- `strava`, Strava's export and GPX files as dated lines: `python
+  adapters/stdlib/strava/strava.py mirror --from FOLDER --to MIRROR` writes
+  each run, ride and walk in activities.csv, a .gpx or a .tcx (gzipped or
+  not) as a line with its start, name, distance and time, in the zone the
+  file gives, never a guessed one, and no word of its own beside them.
+  .fit files are skipped and counted.
+- `pocket`: Pocket's export, now that Pocket is gone: the older
+  ril_export.html and the 2025 CSVs, loose or read from the zip without
+  unpacking it, as one dated line per saved article, oldest first, with its
+  title, address, tags and whether it was read; other files left alone.
+- `bookmarks`: browser bookmarks and history: the bookmark HTML export every
+  browser writes, a Firefox backup (.json or .jsonlz4), Chrome's
+  `Bookmarks` file, and copies of Firefox's `places.sqlite` and Chrome's
+  `History`, opened read-only. Each bookmark is a passage with its day,
+  title, address, folder, tags and description; each page visited is one
+  passage with its last visit, visit count and the days it was visited. No
+  label or other word stands on every passage, so a question about something
+  the folder lacks isn't answered by one.
+- `asciidoc`: AsciiDoc documents (.adoc, .asciidoc, and .asc when it isn't
+  PGP armor) as the text they show, line for line, so a passage is cited by
+  the file's own line. Titles, the document's own attributes as `name: value`,
+  admonitions as `note:`, links with an outside address after their text,
+  footnotes, lists and descriptions are kept; comments, delimiters, attribute
+  lines and includes are blank; listing and source blocks stay as written. A
+  table's line is its cells, the header row kept once rather than written onto
+  every row, so no added word sits in every passage.
+- `rst`: reStructuredText files as plain prose, line for line, Python
+  standard library only. Titles keep their text and lose their adornment
+  rows; admonitions read "note:" or "warning:"; code and literal blocks are
+  kept as written; links, roles, substitutions, footnotes and fields read as
+  their text; a table's rows are their cells. Nothing that would repeat on
+  every passage is added: no title path, no header beside each value.
+- `org`: Emacs Org-mode files as plain lines, line for line: the mirror has
+  the source's lines, so a passage is cited by the .org file's own line.
+  Org's markup comes off (stars, drawer and block lines, a timestamp's
+  brackets and day name, link brackets, emphasis where Org reads it), a
+  heading with only headings under it is said once on the headline below so
+  each outline entry is its own passage, and a table's header begins the
+  passage of its rows. It adds no word of its own: TODO, SCHEDULED, CLOCK and a
+  property's name stay as written, and a test asks that no word but a date's
+  digits is in most passages of a file.
+- `json-paths`: any JSON or JSON Lines file as plain lines, one passage per
+  record: each value beside its key, numbers digit for digit, each element
+  of the first array too big for one passage (and each JSON Lines line) its
+  own passage. A key in most of a file's records is left out, so a question
+  pairing it with a word the file doesn't hold finds nothing. Bad files and
+  bad lines are skipped and counted; a mirror over 1 MB is cut into parts.
+- `text`: every .txt and .text file as UTF-8 the kernel reads whole, line
+  for line. A Windows "Unicode" file (UTF-16 with its mark), UTF-32, and
+  UTF-16 with no mark when every other byte is NUL are read; an old code page
+  only when named with `--encoding`, never guessed. CR and CRLF become LF, a
+  line over 500 characters (which the kernel cut short) is broken at spaces,
+  and a file over 1 MB (which it dropped) is cut into parts; a hidden
+  `.lines` map says where those lines go, so nothing is written into the text.
+- `csv-rows`: CSV and TSV tables as one passage per row, numbered by the
+  row's line in the file, with the header row kept once as the first
+  passage, so a question about one row finds that row and not a run of 500
+  characters. No word is written in every row, not even a header, so a
+  question about something absent is answered by no row. The delimiter
+  (comma, tab, semicolon or pipe) is chosen by one fixed rule; a first line
+  holding a number is data, not a header; a wide row is cut at a cell so
+  nothing is lost. A file not in UTF-8, with no data row or malformed is
+  skipped and counted.
+- `markdown`: any Markdown file as the text it shows, line for line, so a
+  passage in the mirror is on the .md file's own line, and no word the file
+  doesn't hold. Front matter as its values; a table's header once, at the
+  head of the passage with its rows, and each row as its cells; links as their text with an outside address, images as
+  their alt text, wikilinks as the text they show; emphasis, HTML, comments,
+  escapes and footnote markers off; fenced code as written.
 - `quantized`, the smallest local model that still gets your own questions
   right: `quantized.py --box DIR --questions FILE` has each model the local
   server offers (or each `--model`) sit model-exam's exam of your sealed
@@ -116,6 +246,12 @@ says how). The first was v0.1.0.
   save a pick as a batch; look it over, seal it, put it together and start
   it. `ui/assemble.py` makes the stack from this willow, outside the
   repository. CI runs its tests as `tests:ui`. (#156)
+- `warc`, web archives read without unpacking: each page a .warc, .warc.gz
+  or .wacz captured (Heritrix, wget, the Internet Archive, Webrecorder) as a
+  passage under its capture time, address and title, then its paragraphs.
+  Records are read by their length; chunked, gzipped and deflated bodies are
+  read, and revisits, requests, redirects, images, scripts and Brotli bodies
+  are passed over and counted per file.
 - Cards say what an add-on leans on: `uses` (the add-ons it needs beside it,
   to run or to be tested), `looks-for` (the ones it uses when they're there,
   saying so when they aren't) and `runs-in: repo` (a tool for willow's own
@@ -1449,6 +1585,13 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- `restack` settles test_contract.py when two reader branches meet in
+  `READERS`: git splits their new entries around one shared closing line, so
+  neither side of the conflict holds a whole entry and the rule on lines
+  stopped every time. It now reads the file at the base and on both sides and
+  takes REF's, with the entries the branch added to `COMMANDS`, `READERS` or
+  `PILE_EXTRA`, and its imports, whole. A branch that changed anything else
+  there still stops. (#170)
 - Cards in plain words: 28 one-line descriptions rewritten to name the thing
   and say what it does, for someone who has never seen willow, and six cards
   moved to the section their piece belongs in (rules, across, stack,

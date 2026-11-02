@@ -100,15 +100,6 @@
   "network": "none"
  },
  {
-  "name": "bookmarks",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Browser bookmarks (HTML export, Firefox JSON) and history, read from a copy of its SQLite file.",
-  "source": "new",
-  "writes": "to",
-  "network": "none"
- },
- {
   "name": "browser-model",
   "kind": "stdlib",
   "section": "Assistants",
@@ -346,15 +337,6 @@
   "line": "The README in other languages, each checked for drift against the English one.",
   "source": "new",
   "writes": "nothing",
-  "network": "none"
- },
- {
-  "name": "dotfiles",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Your dotfiles as passages: which file sets what, for 'where did I set my editor?'",
-  "source": "new",
-  "writes": "to",
   "network": "none"
  },
  {
@@ -681,16 +663,6 @@
   "line": "A letter for the people you trust, if something happens to you: where things are and who to call, from your files, sealed by you.",
   "source": "new",
   "writes": "to",
-  "network": "none"
- },
- {
-  "name": "in-process",
-  "kind": "deps",
-  "section": "Assistants",
-  "line": "Suggestions from a GGUF model loaded inside the add-on itself through llama-cpp-python: no server, no port, nothing listening.",
-  "source": "new",
-  "needs": "llama-cpp-python; MIT; licence of the model varies",
-  "writes": "record",
   "network": "none"
  },
  {
@@ -1127,15 +1099,6 @@
   "network": "none"
  },
  {
-  "name": "pocket",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Pocket's export, the HTML and CSV in its zip, as one dated line per saved article, now that Pocket is gone.",
-  "source": "new",
-  "writes": "to",
-  "network": "none"
- },
- {
   "name": "pr-context",
   "kind": "stdlib",
   "section": "Ways to use it",
@@ -1533,15 +1496,6 @@
   "network": "none"
  },
  {
-  "name": "strava",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Strava's export and GPX files: each run, ride and walk as a dated line with its distance and time.",
-  "source": "new",
-  "writes": "to",
-  "network": "none"
- },
- {
   "name": "student-records",
   "kind": "stdlib",
   "section": "Privacy and safety",
@@ -1596,15 +1550,6 @@
   "needs": "nltk and WordNet; Apache-2.0",
   "writes": "to",
   "network": "the WordNet data, downloaded once"
- },
- {
-  "name": "takeout",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Google Takeout's My Activity and YouTube history, JSON or HTML, as dated lines.",
-  "source": "new",
-  "writes": "to",
-  "network": "none"
  },
  {
   "name": "tatoeba",
@@ -1745,15 +1690,6 @@
   "network": "the model, downloaded once"
  },
  {
-  "name": "warc",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "WARC web archives, from Webrecorder, Heritrix or the Internet Archive, read without unpacking: each captured page's text with its address and the time it was captured.",
-  "source": "new",
-  "writes": "to",
-  "network": "none"
- },
- {
   "name": "warm",
   "kind": "stdlib",
   "section": "Ways to use it",
@@ -1830,15 +1766,6 @@
   "kind": "stdlib",
   "section": "Reading more kinds of files",
   "line": "WriteFreely posts, from its export or a copy of its SQLite database, as dated text.",
-  "source": "new",
-  "writes": "to",
-  "network": "none"
- },
- {
-  "name": "zotero",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Your Zotero library, from a copy of zotero.sqlite: items, notes and PDF annotations, each with its citation.",
   "source": "new",
   "writes": "to",
   "network": "none"
