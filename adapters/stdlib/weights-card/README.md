@@ -60,6 +60,11 @@ read (no GGUF or safetensors header, an older GGUF, or one cut short), and
 nothing written; 2 refused (a bad command line, `--from` not a file,
 `--to` already there or its folder missing).
 
+**Reading a card back.** `weights_card.header(text)` returns a card's
+header as written, key to value, or nothing when the text has none: the
+one reader of the format, for the add-ons that read cards rather than
+each keeping its own.
+
 **Uses:** the kernel's exit codes.
 
 **Never:** loads or runs the model, goes online, writes anywhere but

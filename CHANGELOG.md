@@ -25,7 +25,7 @@ says how). The first was v0.1.0.
   `sysctl` with Apple silicon's GPU share, and says where a model of a
   weights file's or a weights-card's size fits (its weights and a fifth),
   or the most each place holds. `--measure` times a memory copy for a guess
-  at tokens a second on the CPU.
+  at tokens a second on the CPU. (#160)
 - `model-shelf`, every model already on this machine before you download
   another: `model_shelf.py list [--home DIR]
   [--hash]` reads Ollama's manifests,
@@ -35,21 +35,23 @@ says how). The first was v0.1.0.
   (by weights-card's header reader) and SHA-256: Ollama's and the cache's
   own content names, others only with `--hash`. The same weights under two
   names are said, and a runtime not on this machine says where it looked.
+  (#159)
 - `weights-pin`, a weights file held to the hash on its model card before
   it runs: `weights_pin.py --card CARD --from FILE` reads the `sha256` and
   `bytes` of a `willow-model` header (as weights-card writes one), compares
   the size first and then the whole file's SHA-256, and says `same` (0) or
   `differs` with both hashes and sizes (42), so `weights_pin.py ... &&
   llama-server ...` never runs a file that differs. The hash decides, never
-  the file's name.
+  the file's name. It reads the card with weights-card's `header`. (#158)
 - `weights-card`, a model card filled in from the weights file's own
   header: `weights_card.py --from FILE --to CARD` reads a GGUF (v2, v3) or
   safetensors header for the architecture, name, quantization (llama.cpp's
   name for `general.file_type`, or safetensors' types by parameters),
   context length, licence and parameter count, adds the whole file's SHA-256
   and size, and writes `not in the header` for what the file doesn't say.
-  Only the file's name goes on the card. Checked against llama.cpp's own
-  `gguf` reader on two real GGUF files.
+  Only the file's name goes on the card, and `header()` reads one back for
+  the add-ons that read cards. Checked against llama.cpp's own `gguf` reader
+  on two real GGUF files. (#157)
 - `ui/`, willow's own UI (v1): `python ui/canvas.py` opens a page on this
   machine that goes the way a person does. Choose your folders; see what the
   kernel alone makes of them, as counts, never a file's words or name; start
