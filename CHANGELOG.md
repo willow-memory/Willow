@@ -16,7 +16,7 @@ says how). The first was v0.1.0.
   the size first and then the whole file's SHA-256, and says `same` (0) or
   `differs` with both hashes and sizes (42), so `weights_pin.py ... &&
   llama-server ...` never runs a file that differs. The hash decides, never
-  the file's name.
+  the file's name. It reads the card with weights-card's `header`. (#158)
 - `weights-card`, a model card filled in from the weights file's own
   header: `weights_card.py --from FILE --to CARD` reads a GGUF (v2, v3) or
   safetensors header for the architecture, name, quantization (llama.cpp's

@@ -23,31 +23,24 @@ sha256 and a size).
 from __future__ import annotations
 
 import hashlib
+import importlib.util
 import io
 import re
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE.parents[2]))
 import kernel  # noqa: E402
 
+_spec = importlib.util.spec_from_file_location(
+    "willow_weights_card_for_pin", HERE.parent / "weights-card" / "weights_card.py"
+)
+weights_card = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(weights_card)
+
 USAGE = "usage: weights_pin.py --card CARD --from FILE"
-MARKER = "<!-- willow-model"
 SHA = re.compile(r"[0-9a-f]{64}")
-
-
-def pin_of(text: str) -> dict[str, str]:
-    """The card's header lines, key to value; empty when there is none."""
-    start = text.find(MARKER)
-    end = text.find("-->", start)
-    if start < 0 or end < 0:
-        return {}
-    fields = {}
-    for line in text[start + len(MARKER) : end].splitlines():
-        key, sep, value = line.partition(":")
-        if sep:
-            fields[key.strip()] = value.strip()
-    return fields
 
 
 def sha256_file(path: Path) -> str:
@@ -73,7 +66,7 @@ def main(argv: list[str]) -> int:
         print(f"refused: not a file: {src}", file=sys.stderr)
         return kernel.REFUSED
     try:
-        pin = pin_of(card.read_text(encoding="utf-8"))
+        pin = weights_card.header(card.read_text(encoding="utf-8"))
     except (OSError, UnicodeDecodeError) as e:
         print(f"refused: could not read the card: {type(e).__name__}", file=sys.stderr)
         return kernel.REFUSED
