@@ -558,6 +558,11 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         '<div class="content-cell mdl-cell mdl-cell--6-col mdl-typography--body-1">Watched&nbsp;<a href="https://www.youtube.com/watch?v=a">Leek soup</a>'
         '<br><a href="https://www.youtube.com/channel/UC1">Soup Kitchen</a><br>Mar 2, 2024, 7:40:05\u202fPM GMT<br></div></div></div>\n'
     ).encode()}),
+    "opml": ("opml.py", {"subs.opml": (
+        b'<?xml version="1.0"?>\n<opml version="1.0"><head><title>Feeds</title></head><body>'
+        b'<outline text="Gardening"><outline type="rss" text="Hedgerow Diaries" '
+        b'xmlUrl="https://hedgerow.example.org/feed.xml"/></outline></body></opml>\n'
+    )}),
 }  # fmt: skip
 
 #: the language packs' codes: a pack is words- and its language's ISO 639 code

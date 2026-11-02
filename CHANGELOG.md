@@ -10,6 +10,14 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `opml`: OPML files from feed readers, podcast apps and outliners. A feed
+  list is a line per feed, its title and addresses, each folder a passage
+  headed by its name, and an Overcast export's episodes under their podcast;
+  an outline is its items indented by depth with their notes, each top-level
+  item with children a passage, cut at its children when it is too long for
+  one. Only the file's own words are written. A file that declares a DTD or
+  an entity is skipped and counted, never parsed, so an entity bomb is never
+  expanded. (#185)
 - `ris`: RIS citation exports (.ris, the export of EndNote, Zotero, Mendeley,
   Web of Science and Scopus), each reference as a passage that opens with its
   citation (authors, year, title, journal, volume, issue and pages), then its

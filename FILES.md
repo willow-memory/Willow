@@ -776,6 +776,10 @@ willow/
 │   │   │   ├── opencode.py       the opencode.json lines that register mcp-lite with OpenCode
 │   │   │   ├── test_opencode.py
 │   │   │   └── README.md
+│   │   ├── opml/
+│   │   │   ├── opml.py   an OPML feed list as a line per feed under its folder, an outline as indented items with their notes
+│   │   │   ├── test_opml.py
+│   │   │   └── README.md
 │   │   ├── oracle-text/
 │   │   │   ├── oracle_text.py   readings from a Tracery grammar, replayable
 │   │   │   ├── test_oracle_text.py
