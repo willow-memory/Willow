@@ -230,7 +230,7 @@ BASE = """import os
 
 NOW = ["--now"]
 
-PILE_EXTRA: dict = {
+PILE_EXTRA = {
     "scrub": {"photo.png": b""},
 }
 
