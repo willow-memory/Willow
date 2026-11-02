@@ -21,11 +21,11 @@ says how). The first was v0.1.0.
   saved as an .eml (sender, recipients, date and subject, then the body and the
   attachments' names). A message with no Date header takes Apple Mail's date
   received, in UTC; the run says how many, the text adds no word for it. A file whose byte count is malformed or which
-  is shorter than it is skipped and counted.
+  is shorter than it is skipped and counted. (#187)
 - `shortcuts`: the link files dragged out of a browser onto a desktop or
   into a folder (Windows `.url`, macOS `.webloc`, Linux `.desktop`), each as
   the title its name gives and the address it holds; a Linux launcher as its
-  name and the command it runs. A Windows `.lnk` is left alone.
+  name and the command it runs. A Windows `.lnk` is left alone. (#186)
 - `opml`: OPML files from feed readers, podcast apps and outliners. A feed
   list is a line per feed, its title and addresses, each folder a passage
   headed by its name, and an Overcast export's episodes under their podcast;
@@ -33,14 +33,14 @@ says how). The first was v0.1.0.
   item with children a passage, cut at its children when it is too long for
   one. Only the file's own words are written. A file that declares a DTD or
   an entity is skipped and counted, never parsed, so an entity bomb is never
-  expanded.
+  expanded. (#185)
 - `ris`: RIS citation exports (.ris, the export of EndNote, Zotero, Mendeley,
   Web of Science and Scopus), each reference as a passage that opens with its
   citation (authors, year, title, journal, volume, issue and pages), then its
   type code, doi, keywords, abstract and notes, with no label repeated in
   every passage. The year comes only from the date tags; a broken reference
   is skipped and counted in the file's closing passage. A .enw file is read as RIS or as EndNote's own tagged lines,
-  by what it holds.
+  by what it holds. (#184)
 - `zotero`: your Zotero library from a copy of zotero.sqlite, each item, note
   and PDF annotation as a passage that begins with its citation (authors in
   Zotero's order, the year from the date field alone, the title, where it
@@ -49,22 +49,22 @@ says how). The first was v0.1.0.
   words and numbers are written, no labels or type words, so a question
   about something absent isn't answered by a word in every passage. The
   trash and RSS feeds are left out, and the file is opened read-only and
-  immutable, so no journal appears beside it.
+  immutable, so no journal appears beside it. (#183)
 - `takeout`: Google Takeout's My Activity and YouTube watch and search
   history, JSON or HTML: each activity as its own dated line, in UTC as the
   file gives it, Google's title with a watch's channel and nothing added to
   every line; an HTML date in another language kept as written, never
-  guessed; other JSON and HTML skipped and counted.
+  guessed; other JSON and HTML skipped and counted. (#181)
 - `strava`, Strava's export and GPX files as dated lines: `python
   adapters/stdlib/strava/strava.py mirror --from FOLDER --to MIRROR` writes
   each run, ride and walk in activities.csv, a .gpx or a .tcx (gzipped or
   not) as a line with its start, name, distance and time, in the zone the
   file gives, never a guessed one, and no word of its own beside them.
-  .fit files are skipped and counted.
+  .fit files are skipped and counted. (#180)
 - `pocket`: Pocket's export, now that Pocket is gone: the older
   ril_export.html and the 2025 CSVs, loose or read from the zip without
   unpacking it, as one dated line per saved article, oldest first, with its
-  title, address, tags and whether it was read; other files left alone.
+  title, address, tags and whether it was read; other files left alone. (#179)
 - `bookmarks`: browser bookmarks and history: the bookmark HTML export every
   browser writes, a Firefox backup (.json or .jsonlz4), Chrome's
   `Bookmarks` file, and copies of Firefox's `places.sqlite` and Chrome's
@@ -72,7 +72,7 @@ says how). The first was v0.1.0.
   title, address, folder, tags and description; each page visited is one
   passage with its last visit, visit count and the days it was visited. No
   label or other word stands on every passage, so a question about something
-  the folder lacks isn't answered by one.
+  the folder lacks isn't answered by one. (#178)
 - `asciidoc`: AsciiDoc documents (.adoc, .asciidoc, and .asc when it isn't
   PGP armor) as the text they show, line for line, so a passage is cited by
   the file's own line. Titles, the document's own attributes as `name: value`,
@@ -80,13 +80,13 @@ says how). The first was v0.1.0.
   footnotes, lists and descriptions are kept; comments, delimiters, attribute
   lines and includes are blank; listing and source blocks stay as written. A
   table's line is its cells, the header row kept once rather than written onto
-  every row, so no added word sits in every passage.
+  every row, so no added word sits in every passage. (#177)
 - `rst`: reStructuredText files as plain prose, line for line, Python
   standard library only. Titles keep their text and lose their adornment
   rows; admonitions read "note:" or "warning:"; code and literal blocks are
   kept as written; links, roles, substitutions, footnotes and fields read as
   their text; a table's rows are their cells. Nothing that would repeat on
-  every passage is added: no title path, no header beside each value.
+  every passage is added: no title path, no header beside each value. (#176)
 - `org`: Emacs Org-mode files as plain lines, line for line: the mirror has
   the source's lines, so a passage is cited by the .org file's own line.
   Org's markup comes off (stars, drawer and block lines, a timestamp's
@@ -95,20 +95,20 @@ says how). The first was v0.1.0.
   each outline entry is its own passage, and a table's header begins the
   passage of its rows. It adds no word of its own: TODO, SCHEDULED, CLOCK and a
   property's name stay as written, and a test asks that no word but a date's
-  digits is in most passages of a file.
+  digits is in most passages of a file. (#175)
 - `json-paths`: any JSON or JSON Lines file as plain lines, one passage per
   record: each value beside its key, numbers digit for digit, each element
   of the first array too big for one passage (and each JSON Lines line) its
   own passage. A key in most of a file's records is left out, so a question
   pairing it with a word the file doesn't hold finds nothing. Bad files and
-  bad lines are skipped and counted; a mirror over 1 MB is cut into parts.
+  bad lines are skipped and counted; a mirror over 1 MB is cut into parts. (#174)
 - `text`: every .txt and .text file as UTF-8 the kernel reads whole, line
   for line. A Windows "Unicode" file (UTF-16 with its mark), UTF-32, and
   UTF-16 with no mark when every other byte is NUL are read; an old code page
   only when named with `--encoding`, never guessed. CR and CRLF become LF, a
   line over 500 characters (which the kernel cut short) is broken at spaces,
   and a file over 1 MB (which it dropped) is cut into parts; a hidden
-  `.lines` map says where those lines go, so nothing is written into the text.
+  `.lines` map says where those lines go, so nothing is written into the text. (#173)
 - `csv-rows`: CSV and TSV tables as one passage per row, numbered by the
   row's line in the file, with the header row kept once as the first
   passage, so a question about one row finds that row and not a run of 500
@@ -117,13 +117,13 @@ says how). The first was v0.1.0.
   (comma, tab, semicolon or pipe) is chosen by one fixed rule; a first line
   holding a number is data, not a header; a wide row is cut at a cell so
   nothing is lost. A file not in UTF-8, with no data row or malformed is
-  skipped and counted.
+  skipped and counted. (#172)
 - `markdown`: any Markdown file as the text it shows, line for line, so a
   passage in the mirror is on the .md file's own line, and no word the file
   doesn't hold. Front matter as its values; a table's header once, at the
   head of the passage with its rows, and each row as its cells; links as their text with an outside address, images as
   their alt text, wikilinks as the text they show; emphasis, HTML, comments,
-  escapes and footnote markers off; fenced code as written.
+  escapes and footnote markers off; fenced code as written. (#171)
 - `quantized`, the smallest local model that still gets your own questions
   right: `quantized.py --box DIR --questions FILE` has each model the local
   server offers (or each `--model`) sit model-exam's exam of your sealed
@@ -228,7 +228,7 @@ says how). The first was v0.1.0.
   passage under its capture time, address and title, then its paragraphs.
   Records are read by their length; chunked, gzipped and deflated bodies are
   read, and revisits, requests, redirects, images, scripts and Brotli bodies
-  are passed over and counted per file.
+  are passed over and counted per file. (#182)
 - Cards say what an add-on leans on: `uses` (the add-ons it needs beside it,
   to run or to be tested), `looks-for` (the ones it uses when they're there,
   saying so when they aren't) and `runs-in: repo` (a tool for willow's own
