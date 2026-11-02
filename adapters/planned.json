@@ -973,15 +973,6 @@
   "network": "none"
  },
  {
-  "name": "model-drift",
-  "kind": "stdlib",
-  "section": "Assistants",
-  "line": "Your frozen questions asked again of a model now and then, flagging when its answers change while its name and card stay the same.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "the endpoint you configure, to ask your questions again"
- },
- {
   "name": "model-recall",
   "kind": "stdlib",
   "section": "Trust and proof",
