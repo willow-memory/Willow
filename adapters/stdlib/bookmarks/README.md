@@ -13,25 +13,35 @@ looked at a page about something.
 
     python adapters/stdlib/bookmarks/bookmarks.py mirror --from FOLDER --to MIRROR
 
-Each bookmark is one passage, in the browser's own order, with the day it was
-added, its title, URL, folder, tags and description:
+Each bookmark is one passage, in the browser's own order: the day it was
+added, its title, its address, the folder it's in, its tags and its
+description, each line there only when the bookmark has it:
 
-    2024-03-02  bookmarked  Tomato growing guide
-    url: https://example.org/tomatoes
-    folder: Bookmarks Toolbar / Garden
-    tags: garden, veg
-    description: Staking and pruning, step by step.
+    2024-03-02  Tomato growing guide
+    example.org/tomatoes
+    in Garden / Seeds
+    #garden, #veg
+    Staking and pruning, step by step.
 
 Each page in a history is one passage too, not one line per visit, so a page
-read fifty times is still one answer: its last visit, how many visits, and the
-days it was visited (the newest twenty, or fewer when a long address would
-cut the passage in two for the kernel; older days are counted, not listed).
-Pages come oldest last visit first:
+read fifty times is still one answer: its last visit (date and time, UTC), its
+title and address, then × and how many visits, and the days it was visited.
+Up to twenty of the newest days are listed, fewer when a long address would
+cut the passage in two for the kernel, and + counts the older ones. Pages come
+oldest last visit first:
 
-    2024-03-05  visited  Tomato blight: what to do
-    url: https://example.org/blight
-    visits: 3, last 2024-03-05 15:02 UTC
-    days: 2024-03-01, 2024-03-05
+    2024-03-05 15:02  Tomato blight: what to do
+    example.org/blight
+    ×3  2024-03-01, 2024-03-05
+
+No word is added that would stand on every passage: a question pairing it
+with something your folder lacks ("volcano bookmarked") would be answered
+with a passage that isn't about it. So there are no labels, an address loses
+the `https://` and `www.` nearly every one starts with, a browser's own root
+folders (the menu, the toolbar, other bookmarks) aren't named, and a missing
+date or title leaves its place empty. The cost: "what's on my bookmarks
+toolbar" can't be asked. A host's own parts (com, org) are the address and
+are kept, so on a history of mostly .com sites, "volcano com" is answered.
 
 | Read | Recognised by | Its times |
 |---|---|---|
@@ -42,8 +52,7 @@ Pages come oldest last visit first:
 | a copy of Chrome's `History` | its `urls` and `visits` tables | microseconds since 1601 |
 
 A file is read for what it holds, whatever its name; any other file is left
-alone and not counted. Days are UTC. A bookmark with no date says `no date`;
-one with no title says `(no title)`. Firefox's saved searches (`place:`
+alone and not counted. Firefox's saved searches (`place:`
 addresses), separators and its tag folders are not bookmarks; a bookmark's
 tags are kept on it. A history leaves out the pages a browser hides, and
 visits to a page's frames or embedded parts, which you did not make. When a

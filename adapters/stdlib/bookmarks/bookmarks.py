@@ -13,26 +13,30 @@ by what it holds rather than its name, one of:
   Chrome's `History`, opened read-only so nothing is written beside it.
 
 Any other file is left alone and not counted. Each bookmark is one passage, in
-the browser's own order:
+the browser's own order: the day it was added, its title, its address, its
+folder, its tags and its description:
 
-    2024-03-02  bookmarked  Tomato growing guide
-    url: https://example.org/tomatoes
-    folder: Bookmarks Toolbar / Garden
-    tags: garden, veg
-    description: Staking and pruning, step by step.
+    2024-03-02  Tomato growing guide
+    example.org/tomatoes
+    in Garden / Seeds
+    #garden, #veg
+    Staking and pruning, step by step.
 
-and each page in a history is one passage, oldest last visit first, with the
-days it was visited (the newest twenty, or fewer if a long address would
-cut the passage in two; older ones counted, not listed):
+and each page in a history is one passage, oldest last visit first: its last
+visit, title, address, how many visits, and the days it was visited (the
+newest twenty, or fewer if a long address would cut the passage in two; the
+older days counted after a +):
 
-    2024-03-05  visited  Tomato blight: what to do
-    url: https://example.org/blight
-    visits: 3, last 2024-03-05 14:02 UTC
-    days: 2024-03-01, 2024-03-05
+    2024-03-05 15:02  Tomato blight: what to do
+    example.org/blight
+    ×3  2024-03-01, 2024-03-05
 
-Days are UTC. A bookmark with no date says `no date`. Times are read as each
-format stores them: the HTML export in Unix seconds, Firefox in microseconds
-since 1970, Chrome in microseconds since 1601.
+No word is added that would stand on every passage, since a question pairing
+that word with a topic the folder lacks would then be answered: no labels, no
+`https://` or `www.` before an address, no browser's root folder (the menu,
+the toolbar, other bookmarks), and nothing in place of a missing date or title.
+Times are UTC, read as each format stores them: the HTML export in Unix
+seconds, Firefox in microseconds since 1970, Chrome in microseconds since 1601.
 
 Each file is written to MIRROR at the same relative path with `.txt` added; a
 mirror bigger than the kernel reads from one file (`kernel.MAX_FILE`) is cut
@@ -66,17 +70,11 @@ UNIX = datetime(1970, 1, 1, tzinfo=timezone.utc)
 WINDOWS = datetime(1601, 1, 1, tzinfo=timezone.utc)  # Chrome's epoch
 ERRORS = (OSError, UnicodeDecodeError, ValueError, IndexError, sqlite3.Error)
 
-#: Firefox's root folders, by the name a backup gives them and by their guid
-ROOTS = {
-    "bookmarksMenuFolder": "Bookmarks Menu",
-    "toolbarFolder": "Bookmarks Toolbar",
-    "unfiledBookmarksFolder": "Other Bookmarks",
-    "mobileFolder": "Mobile Bookmarks",
-    "menu________": "Bookmarks Menu",
-    "toolbar_____": "Bookmarks Toolbar",
-    "unfiled_____": "Other Bookmarks",
-    "mobile______": "Mobile Bookmarks",
-}
+#: a browser's own root folders: they hold every bookmark, so their names are
+#: not written (a word on every passage answers questions the folder can't)
+ROOTS = ("menu________", "toolbar_____", "unfiled_____", "mobile______", "root________")
+#: the attributes the HTML export marks the toolbar and other bookmarks with
+ROOT_MARKS = ("personal_toolbar_folder", "unfiled_bookmarks_folder")
 
 
 # ── times ───────────────────────────────────────────────────────────────────
@@ -96,7 +94,16 @@ def moment(value: object, epoch: datetime, per_second: int) -> datetime | None:
 
 
 def day(t: datetime | None) -> str:
-    return t.strftime("%Y-%m-%d") if t else "no date"
+    return t.strftime("%Y-%m-%d") if t else ""
+
+
+def address(url: object) -> str:
+    """A URL without the `https://` and `www.` that nearly every one has."""
+    u = one_line(url)
+    if u.startswith("https://"):
+        u = u[len("https://") :]
+        u = u[len("www.") :] if u.startswith("www.") else u
+    return u
 
 
 def one_line(value: object) -> str:
@@ -107,14 +114,17 @@ def one_line(value: object) -> str:
 def bookmark(
     when: datetime | None, title: str, url: str, folder: list, tags: list, about: str
 ) -> str:
-    lines = [f"{day(when)}  bookmarked  {one_line(title) or '(no title)'}"]
-    lines.append(f"url: {one_line(url)}")
-    lines.append("folder: " + (" / ".join(f for f in folder if f) or "(top level)"))
+    head = "  ".join(x for x in (day(when), one_line(title)) if x)
+    lines = [head] if head else []
+    lines.append(address(url))
+    path = " / ".join(f for f in folder if f)
+    if path:
+        lines.append(f"in {path}")  # "in" is a word the kernel never counts
     tags = [one_line(t) for t in tags if one_line(t)]
     if tags:
-        lines.append("tags: " + ", ".join(tags))
+        lines.append(", ".join("#" + t for t in tags))
     if one_line(about):
-        lines.append(f"description: {one_line(about)}")
+        lines.append(one_line(about))
     return "\n".join(lines)
 
 
@@ -125,20 +135,18 @@ def page(title: str, url: str, visits: list, count: int, last: datetime | None) 
         visits = sorted(visits)
         count, last = len(visits), visits[-1]
     days = sorted({day(t) for t in visits})
-    lines = [f"{day(last)}  visited  {one_line(title) or '(no title)'}"]
-    lines.append(f"url: {one_line(url)}")
-    when = f", last {last.strftime('%Y-%m-%d %H:%M')} UTC" if last else ""
-    lines.append(f"visits: {count}{when}")
+    when = last.strftime("%Y-%m-%d %H:%M") if last else ""
+    head = "  ".join(x for x in (when, one_line(title)) if x)
+    lines = ([head] if head else []) + [address(url)]
+    said = f"×{count}"
     shown = days[-DAYS:]
     while shown:  # as many of the newest as keep the page one passage for the kernel
         more = len(days) - len(shown)
-        said = "days: " + ", ".join(shown)
-        said += f", and {more} earlier day{'s' * (more > 1)}" if more else ""
+        said = f"×{count}  " + ", ".join(shown) + (f" +{more}" if more else "")
         if len("\n".join(lines + [said])) <= kernel.MAX_CHUNK or len(shown) == 1:
-            lines.append(said)
             break
         shown = shown[1:]
-    return "\n".join(lines)
+    return "\n".join(lines + [said])
 
 
 # ── the HTML export ─────────────────────────────────────────────────────────
@@ -150,7 +158,8 @@ class Netscape(HTMLParser):
         super().__init__(convert_charrefs=True)
         self.out: list[str] = []
         self.path: list[str] = []
-        self.heading = ""  # an <H1>'s or <H3>'s text, for the <DL> that follows
+        self.heading = ""  # an <H3>'s text, for the <DL> that follows
+        self.root = False  # the heading is the export's own: <H1>, the toolbar
         self.text: list[str] | None = None  # text being gathered
         self.into = ""  # what that text is: h, a or dd
         self.mark: dict | None = None  # the bookmark a <DD> would describe
@@ -172,6 +181,7 @@ class Netscape(HTMLParser):
             self.done()
         if tag in ("h1", "h3"):
             self.text, self.into = [], "h"
+            self.root = tag == "h1" or any(k in ROOT_MARKS for k, _ in attrs)
         elif tag == "dl":
             self.path.append(self.heading)
             self.heading = ""
@@ -192,7 +202,8 @@ class Netscape(HTMLParser):
 
     def handle_endtag(self, tag: str) -> None:
         if tag in ("h1", "h3") and self.into == "h":
-            self.heading = self.close_text()
+            text = self.close_text()
+            self.heading = "" if self.root else text
         elif tag == "a" and self.into == "a":
             self.mark["title"] = self.close_text()
         elif tag == "dl":
@@ -223,7 +234,7 @@ def firefox_json(node: dict, folder: list, out: list) -> None:
     if kind == "text/x-moz-place-container":
         if node.get("root") == "tagsFolder":
             return  # each bookmark carries its own tags
-        name = ROOTS.get(node.get("root"), one_line(node.get("title")))
+        name = "" if node.get("root") else one_line(node.get("title"))
         for child in node.get("children") or []:
             if isinstance(child, dict):
                 firefox_json(child, folder + [name], out)
@@ -256,8 +267,10 @@ def from_json(data: bytes) -> list[str] | None:
     roots = doc.get("roots")
     if isinstance(roots, dict) and {"bookmark_bar", "other"} <= set(roots):
         for key in sorted(roots, key=lambda k: (k != "bookmark_bar", k != "other", k)):
-            if isinstance(roots[key], dict):
-                chrome_json(roots[key], [], out)
+            root = roots[key] if isinstance(roots[key], dict) else {}
+            for child in root.get("children") or []:
+                if isinstance(child, dict):
+                    chrome_json(child, [], out)
         return out
     if doc.get("type") == "text/x-moz-place-container":
         firefox_json(doc, [], out)
@@ -343,7 +356,7 @@ def firefox_places(con: sqlite3.Connection) -> list[str]:
                 if guid == "tags________":
                     continue
                 if kind == 2:
-                    walk(bid, folder + [ROOTS.get(guid, one_line(title))])
+                    walk(bid, folder + ["" if guid in ROOTS else one_line(title)])
                 elif kind == 1 and fk in places:
                     url = places[fk][0] or ""
                     if url.startswith("place:"):

@@ -181,7 +181,7 @@ INSERT INTO moz_places (id, url, title, rev_host, visit_count, hidden, last_visi
   (2, 'https://example.org/blight', 'Tomato blight: what to do', 'gro.elpmaxe.', 3, 0, 1709650920000000, 'p2p2p2p2p2p2', NULL),
   (3, 'https://ads.example.net/frame', 'ad frame', 'ten.elpmaxe.sda.', 1, 1, 1709650920000000, 'p3p3p3p3p3p3', NULL),
   (4, 'place:sort=8&maxResults=10', NULL, NULL, 0, 0, NULL, 'p4p4p4p4p4p4', NULL),
-  (5, 'https://example.org/old', 'Expired visits', 'gro.elpmaxe.', 7, 0, 1577836800000000, 'p5p5p5p5p5p5', NULL),
+  (5, 'https://example.org/old', 'Allotment rota', 'gro.elpmaxe.', 7, 0, 1577836800000000, 'p5p5p5p5p5p5', NULL),
   (6, 'https://example.org/never', 'Bookmarked, never visited', 'gro.elpmaxe.', 0, 0, NULL, 'p6p6p6p6p6p6', NULL),
   (7, 'https://example.org/embed', 'Only embedded', 'gro.elpmaxe.', 0, 0, NULL, 'p7p7p7p7p7p7', NULL);
 INSERT INTO moz_historyvisits (id, from_visit, place_id, visit_date, visit_type, session) VALUES
@@ -307,30 +307,25 @@ def test_firefoxs_html_export_one_passage_per_bookmark_with_its_folder_tags_and_
     got, out = mirror_of(tmp_path, {"bookmarks.html": FIREFOX_HTML.encode()})
     assert got.returncode == 0, got.stderr
     assert passages((out / "bookmarks.html.txt").read_text()) == [
-        "2024-03-02  bookmarked  Tomato growing guide\n"
-        "url: https://example.org/tomatoes\n"
-        "folder: Bookmarks Menu / Bookmarks Toolbar / Garden\n"
-        "tags: garden, veg\n"
-        "description: Staking & pruning, step by step.",
-        "2024-03-04  bookmarked  Blight\n"
-        "url: https://example.org/blight\n"
-        "folder: Bookmarks Menu / Bookmarks Toolbar / Garden",
-        "no date  bookmarked  Sourdough <starter>\n"
-        "url: https://example.com/bread\n"
-        "folder: Bookmarks Menu",
+        # the export's own <H1> and the toolbar hold everything: not written
+        "2024-03-02  Tomato growing guide\n"
+        "example.org/tomatoes\n"
+        "in Garden\n"
+        "#garden, #veg\n"
+        "Staking & pruning, step by step.",
+        "2024-03-04  Blight\nexample.org/blight\nin Garden",
+        "Sourdough <starter>\nexample.com/bread",
     ]
 
 
 def test_chromes_html_export_and_a_bookmark_at_the_top_level(tmp_path):
     assert mod.netscape(CHROME_HTML) == [
-        "2024-03-02  bookmarked  Roof repair quotes\n"
-        "url: https://example.org/roof\n"
-        "folder: Bookmarks / Bookmarks bar"
+        "2024-03-02  Roof repair quotes\nexample.org/roof"
     ]
-    bare = "<!DOCTYPE NETSCAPE-Bookmark-file-1>\n<DL><p>\n<DT><A HREF='https://a.example/'>A</A>\n</DL>"
-    assert mod.netscape(bare) == [
-        "no date  bookmarked  A\nurl: https://a.example/\nfolder: (top level)"
-    ]
+    bare = "<!DOCTYPE NETSCAPE-Bookmark-file-1>\n<DL><p>\n<DT><A HREF='http://www.a.example/'></A>\n</DL>"
+    assert mod.netscape(bare) == ["http://www.a.example/"], (
+        "no date, no title: nothing in their place"
+    )
 
 
 def test_a_description_ends_at_the_next_folder_and_a_folders_own_is_not_a_bookmarks():
@@ -342,13 +337,10 @@ def test_a_description_ends_at_the_next_folder_and_a_folders_own_is_not_a_bookma
         '<DT><A HREF="https://c.example/">C</A>\n<DD>about c'
     )
     got = mod.netscape(html)
-    assert [p.splitlines()[-1] for p in got] == [
-        "description: about a",
-        "description: about b",
-        "description: about c",
-    ]
+    assert [p.splitlines()[-1] for p in got] == ["about a", "about b", "about c"]
     assert "folder's note" not in "".join(got)
-    assert got[2].splitlines()[2] == "folder: B", "the folder F closed before C"
+    assert got[1].splitlines()[2] == "in F"
+    assert got[2] == "C\nc.example/\nabout c", "the folder F closed before C"
 
 
 def test_a_firefox_backup_keeps_its_folders_tags_and_description_and_drops_queries(
@@ -357,14 +349,12 @@ def test_a_firefox_backup_keeps_its_folders_tags_and_description_and_drops_queri
     got, out = mirror_of(tmp_path, {"bookmarks-2024-03-02.json": json.dumps(FIREFOX_BACKUP).encode()})  # fmt: skip
     assert got.returncode == 0, got.stderr
     assert passages((out / "bookmarks-2024-03-02.json.txt").read_text()) == [
-        "2024-03-02  bookmarked  Sourdough starter\n"
-        "url: https://example.com/starter\n"
-        "folder: Bookmarks Menu / Kitchen\n"
-        "tags: baking, bread\n"
-        "description: Feed it twice a day.",
-        "no date  bookmarked  Train times\n"
-        "url: https://example.net/trains\n"
-        "folder: Bookmarks Toolbar",
+        "2024-03-02  Sourdough starter\n"
+        "example.com/starter\n"
+        "in Kitchen\n"
+        "#baking, #bread\n"
+        "Feed it twice a day.",
+        "Train times\nexample.net/trains",
     ]
 
 
@@ -389,15 +379,9 @@ def test_chromes_bookmarks_file_bar_first_with_its_folders_and_dates(tmp_path):
     )
     assert got.returncode == 0, got.stderr
     assert passages((out / "Default/Bookmarks.txt").read_text()) == [
-        "2024-03-02  bookmarked  Library hours\n"
-        "url: https://example.org/library\n"
-        "folder: Bookmarks bar",
-        "2024-03-03  bookmarked  Bus timetable\n"
-        "url: https://example.org/bus\n"
-        "folder: Bookmarks bar / Travel",
-        "no date  bookmarked  Undated thing\n"
-        "url: https://example.org/undated\n"
-        "folder: Other bookmarks",
+        "2024-03-02  Library hours\nexample.org/library",
+        "2024-03-03  Bus timetable\nexample.org/bus\nin Travel",
+        "Undated thing\nexample.org/undated",
     ]
 
 
@@ -406,23 +390,17 @@ def test_a_copy_of_places_sqlite_gives_its_bookmarks_then_each_page_visited(tmp_
     got, out = mirror_of(tmp_path / "x", {"places.sqlite": db.read_bytes()})
     assert got.returncode == 0, got.stderr
     assert passages((out / "places.sqlite.txt").read_text()) == [
-        "2024-03-02  bookmarked  Tomato growing guide\n"
-        "url: https://example.org/tomatoes\n"
-        "folder: Bookmarks Toolbar / Garden\n"
-        "tags: veg\n"
-        "description: How to grow tomatoes.",
+        "2024-03-02  Tomato growing guide\n"
+        "example.org/tomatoes\n"
+        "in Garden\n"
+        "#veg\n"
+        "How to grow tomatoes.",
         # history, oldest last visit first; a page whose visits expired keeps its count
-        "2020-01-01  visited  Expired visits\n"
-        "url: https://example.org/old\n"
-        "visits: 7, last 2020-01-01 00:00 UTC",
-        "2024-03-02  visited  Tomatoes | Example\n"
-        "url: https://example.org/tomatoes\n"
-        "visits: 1, last 2024-03-02 11:15 UTC\n"
-        "days: 2024-03-02",
-        "2024-03-05  visited  Tomato blight: what to do\n"
-        "url: https://example.org/blight\n"
-        "visits: 3, last 2024-03-05 15:02 UTC\n"
-        "days: 2024-03-01, 2024-03-05",
+        "2020-01-01 00:00  Allotment rota\nexample.org/old\n×7",
+        "2024-03-02 11:15  Tomatoes | Example\nexample.org/tomatoes\n×1  2024-03-02",
+        "2024-03-05 15:02  Tomato blight: what to do\n"
+        "example.org/blight\n"
+        "×3  2024-03-01, 2024-03-05",
     ]
 
 
@@ -431,10 +409,9 @@ def test_a_copy_of_chromes_history_counts_your_visits_and_not_a_pages_frames(tmp
     got, out = mirror_of(tmp_path / "x", {"History": db.read_bytes()})
     assert got.returncode == 0, got.stderr
     assert (out / "History.txt").read_text() == (
-        "2024-03-03  visited  Heat pump sizing calculator\n"
-        "url: https://example.org/heat-pump\n"
-        "visits: 2, last 2024-03-03 11:15 UTC\n"
-        "days: 2024-03-02, 2024-03-03\n"
+        "2024-03-03 11:15  Heat pump sizing calculator\n"
+        "example.org/heat-pump\n"
+        "×2  2024-03-02, 2024-03-03\n"
     )
 
 
@@ -455,19 +432,13 @@ def test_a_page_visited_on_many_days_lists_the_newest_twenty_and_counts_the_rest
     visits = [utc(2024, 1, d, 9) for d in range(1, 26)] + [utc(2024, 1, 25, 18)]
     got = mod.page("Tides", "https://t.example/", visits, 0, None)
     lines = got.splitlines()
-    assert lines[0] == "2024-01-25  visited  Tides"
-    assert lines[2] == "visits: 26, last 2024-01-25 18:00 UTC"
+    assert lines[:2] == ["2024-01-25 18:00  Tides", "t.example/"]
     assert (
-        lines[3]
-        == "days: "
-        + ", ".join(f"2024-01-{d:02}" for d in range(6, 26))
-        + ", and 5 earlier days"
+        lines[2] == "×26  " + ", ".join(f"2024-01-{d:02}" for d in range(6, 26)) + " +5"
     )
-    one_more = mod.page("T", "u", visits[4:], 0, None).splitlines()[3]
-    assert one_more.endswith("2024-01-25, and 1 earlier day")
-    assert (
-        mod.page("T", "u", visits[5:], 0, None).splitlines()[3].endswith("2024-01-25")
-    )
+    assert mod.page("T", "u", visits[4:], 0, None).endswith("2024-01-25 +1")
+    assert mod.page("T", "u", visits[5:], 0, None).endswith(", 2024-01-25")
+    assert mod.page("", "u", [], 4, utc(2020, 1, 1)) == "2020-01-01 00:00\nu\n×4"
 
 
 def test_a_long_address_lists_fewer_days_so_the_page_stays_one_passage():
@@ -479,14 +450,14 @@ def test_a_long_address_lists_fewer_days_so_the_page_stays_one_passage():
         <= mod.kernel.MAX_CHUNK
         < len(mod.page("Tides", "u", visits, 0, None)) + len(url)
     )
-    days = got.splitlines()[3]
-    assert days.startswith("days: 2024-01-") and ", 2024-01-25, and " in days
+    days = got.splitlines()[2]
+    assert days.startswith("×25  2024-01-") and ", 2024-01-25 +" in days
     shown = days.count("2024-")
-    assert 1 <= shown < 20 and days.endswith(f"and {25 - shown} earlier days")
-    one_more = got.replace(days, "days: 2024-01-%02d, " % (25 - shown) + days[6:])
+    assert 1 <= shown < 20 and days.endswith(f" +{25 - shown}")
+    one_more = got.replace(days, "×25  2024-01-%02d, " % (25 - shown) + days[5:])
     assert len(one_more) > mod.kernel.MAX_CHUNK, "as many days as fit, not fewer"
     huge = mod.page("T", "https://x.example/" + "y" * 600, visits, 0, None)
-    assert huge.splitlines()[3] == "days: 2024-01-25, and 24 earlier days"
+    assert huge.splitlines()[2] == "×25  2024-01-25 +24"
 
 
 # ── the clocks ──────────────────────────────────────────────────────────────
@@ -505,7 +476,14 @@ def test_the_epochs_edges():
     assert mod.day(mod.moment(253402300799, mod.UNIX, 1)) == "9999-12-31"
     for nothing in (0, "0", -1, None, "", "soon", 253402300800, 10**30):
         assert mod.moment(nothing, mod.UNIX, 1) is None, nothing
-    assert mod.day(None) == "no date"
+    assert mod.day(None) == ""
+
+
+def test_an_address_loses_only_the_https_and_www_nearly_every_one_has():
+    assert mod.address("https://www.example.org/a?b=c") == "example.org/a?b=c"
+    assert mod.address("https://wwwexample.org/") == "wwwexample.org/"
+    assert mod.address("http://www.example.org/") == "http://www.example.org/"
+    assert mod.address("ftp://files.example/x") == "ftp://files.example/x"
 
 
 # ── the compression ─────────────────────────────────────────────────────────
@@ -574,11 +552,11 @@ def test_a_known_file_it_cannot_read_or_that_holds_nothing_is_skipped_and_counte
 
 
 def test_a_big_history_is_cut_between_passages_into_parts_the_kernel_reads(tmp_path):
-    text = "\n\n".join(f"2024-01-01  visited  page {i}\nurl: https://x.example/{i}" for i in range(9)) + "\n"  # fmt: skip
+    text = "\n\n".join(f"2024-01-01 09:00  Page {i}\nx.example/{i}\n×1" for i in range(9)) + "\n"  # fmt: skip
     pieces = mod.parts(text, limit=120)
     assert all(len(p.encode()) <= 120 for p in pieces) and len(pieces) > 1
     assert "\n\n".join(p.rstrip("\n") for p in pieces) + "\n" == text
-    assert all(p.startswith("2024-01-01  visited") for p in pieces)
+    assert all(p.startswith("2024-01-01 09:00  Page") for p in pieces)
     assert mod.parts("x" * 300, limit=100) == ["x" * 99 + "\n"]
 
 
@@ -591,7 +569,7 @@ def test_a_big_mirror_is_written_in_parts_and_stale_parts_are_removed(
     # in-process, the command line the guard reads is this one
     monkeypatch.setattr(sys, "argv", ["bookmarks.py", "mirror", "--from", str(src), "--to", str(dst)])  # fmt: skip
     real = mod.parts
-    monkeypatch.setattr(mod, "parts", lambda t: real(t, 200))
+    monkeypatch.setattr(mod, "parts", lambda t: real(t, 80))
     assert mod.mirror(src, dst) == (1, 0)
     names = sorted(p.name for p in dst.iterdir())
     assert names == ["b.html.part2.txt", "b.html.part3.txt", "b.html.txt"]
@@ -599,6 +577,83 @@ def test_a_big_mirror_is_written_in_parts_and_stale_parts_are_removed(
     monkeypatch.setattr(mod, "parts", lambda t: real(t, 10_000))
     assert mod.mirror(src, dst) == (1, 0)
     assert sorted(p.name for p in dst.iterdir()) == ["b.html.txt"]
+
+
+# ── no word on every passage ────────────────────────────────────────────────
+#: a folder of several passages of each kind, with the hosts a real one has
+ABSENT_HTML = """<!DOCTYPE NETSCAPE-Bookmark-file-1>
+<TITLE>Bookmarks</TITLE>
+<H1>Bookmarks Menu</H1>
+<DL><p>
+    <DT><H3 PERSONAL_TOOLBAR_FOLDER="true">Bookmarks Toolbar</H3>
+    <DL><p>
+        <DT><H3>Kitchen</H3>
+        <DL><p>
+            <DT><A HREF="https://www.seriouseats.com/sourdough-starter" ADD_DATE="1709378130" TAGS="baking">Sourdough starter guide</A>
+            <DT><A HREF="https://cooking.nytimes.com/recipes/focaccia" ADD_DATE="1709510400">Focaccia</A>
+        </DL><p>
+        <DT><H3>House</H3>
+        <DL><p>
+            <DT><A HREF="https://www.energysavingtrust.org.uk/heat-pumps" ADD_DATE="1709600000">Heat pump sizing calculator</A>
+            <DD>Which size for a three-bed semi.
+            <DT><A HREF="https://github.com/home-assistant/core" ADD_DATE="1709700000" TAGS="smart-home">Home Assistant</A>
+        </DL><p>
+        <DT><A HREF="https://en.wikipedia.org/wiki/Tide" ADD_DATE="1709800000">Tide - Wikipedia</A>
+        <DT><A HREF="https://www.bbc.co.uk/weather/2644688" ADD_DATE="1709900000">Leeds weather</A>
+    </DL><p>
+</DL>
+"""
+
+ABSENT_HISTORY = """
+INSERT INTO moz_places (id, url, title, visit_count, hidden, last_visit_date) VALUES
+  (20, 'https://www.rhs.org.uk/disease/tomato-blight', 'Tomato blight / RHS Gardening', 2, 0, NULL),
+  (21, 'https://docs.python.org/3/library/asyncio.html', 'asyncio — Asynchronous I/O', 5, 0, NULL),
+  (22, 'https://www.thetrainline.com/en/train-times/leeds-to-york', 'Leeds to York train times', 1, 0, NULL),
+  (23, 'https://news.ycombinator.com/item?id=39561234', 'Show HN: a tiny search engine', 1, 0, NULL),
+  (24, 'https://www.gov.uk/self-assessment-tax-returns/deadlines', 'Self Assessment deadlines - GOV.UK', 3, 0, NULL);
+INSERT INTO moz_historyvisits (id, place_id, visit_date, visit_type) VALUES
+  (20, 20, 1709280000000000, 1), (21, 20, 1709380000000000, 1),
+  (22, 21, 1709480000000000, 1), (23, 22, 1709580000000000, 2),
+  (24, 23, 1709680000000000, 1), (25, 24, 1709780000000000, 1), (26, 24, 1709880000000000, 1);
+"""
+
+
+def test_a_word_on_most_passages_answers_no_question_about_something_absent(tmp_path):
+    db = make_db(tmp_path / "places.sqlite", PLACES_SCHEMA + ABSENT_HISTORY)
+    _, out = mirror_of(
+        tmp_path / "x",
+        {"export.html": ABSENT_HTML.encode(), "places.sqlite": db.read_bytes()},
+    )
+    pile = mod.kernel.chunks(out)
+    common: set = set()
+    for path in {c["path"] for c in pile}:
+        mine = [set(mod.kernel.words(c["text"])) for c in pile if c["path"] == path]
+        counts: dict = {}
+        for ws in mine:
+            for w in ws - mod.kernel.FUNCTION:
+                counts[w] = counts.get(w, 0) + 1
+        # dates stay as digits, which the kernel reads as dates
+        common |= {
+            w for w, n in counts.items() if 2 * n > len(mine) and not w.isdigit()
+        }
+    # what this reader used to write on every passage, and what it measured
+    filler = {"bookmarked", "visited", "url", "folder", "tags", "description",
+              "visits", "last", "days", "date", "utc", "https", "www", "menu",
+              "toolbar", "bar", "earlier", "title", "top", "level"}  # fmt: skip
+    # a host's own parts are the address, kept: "that rhs page", "the github one"
+    hosts = {"org", "com", "uk", "example"}
+    assert common <= hosts, common - hosts
+    for w in sorted((common - hosts) | filler):
+        assert mod.kernel.rank(pile, f"volcano {w}") == [], w
+
+    def lands(question: str, needle: str) -> bool:
+        return any(needle in c["text"] for c in mod.kernel.rank(pile, question))
+
+    assert lands("when did I bookmark the sourdough starter guide", "seriouseats.com")
+    assert lands("heat pump sizing calculator", "energysavingtrust")
+    assert lands("when did I look at tomato blight", "rhs.org.uk/disease")
+    assert lands("Leeds to York train times", "×1  2024-03-04")
+    assert lands("what did I save in Kitchen", "Focaccia")
 
 
 # ── the contract ────────────────────────────────────────────────────────────
