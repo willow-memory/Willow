@@ -126,11 +126,11 @@ says how to pick one up:
 <!-- willow:front show=pick week=2026-W45 -->
 **Add-on of the week**
 
-**[abbreviations](adapters/stdlib/abbreviations/)** — Your own shorthand, written down once (appt, Rx, w/c), so a question finds either form.
+**[format-rot](adapters/stdlib/format-rot/)** — Files in formats that may stop opening (old office files, proprietary ones, those no reader handles) flagged while you can still convert them.
 
-*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 320 built add-ons in name order.*
+*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 321 built add-ons in name order.*
 
-[Every add-on, 320 built of 515, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 321 built of 516, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 
