@@ -10,6 +10,10 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `takeout`: Google Takeout's My Activity and YouTube watch and search
+  history, JSON or HTML: each activity as its own dated line, in UTC as the
+  file gives it, a watch with its channel; an HTML date in another language
+  kept as written, never guessed; other JSON and HTML skipped and counted.
 - `ui/`, willow's own UI (v1): `python ui/canvas.py` opens a page on this
   machine that goes the way a person does. Choose your folders; see what the
   kernel alone makes of them, as counts, never a file's words or name; start
