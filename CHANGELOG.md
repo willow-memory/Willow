@@ -16,7 +16,7 @@ says how). The first was v0.1.0.
   type code, doi, keywords, abstract and notes, with no label repeated in
   every passage. The year comes only from the date tags; a broken reference
   is skipped and counted in the file's closing passage. A .enw file is read as RIS or as EndNote's own tagged lines,
-  by what it holds.
+  by what it holds. (#184)
 - `zotero`: your Zotero library from a copy of zotero.sqlite, each item, note
   and PDF annotation as a passage that begins with its citation (authors in
   Zotero's order, the year from the date field alone, the title, where it
