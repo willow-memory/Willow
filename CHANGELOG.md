@@ -10,6 +10,14 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `local-model`, suggestions from a model on this machine only:
+  `local_model.py servers` asks each local runtime's model list on its
+  usual port (Ollama, LM Studio, llama.cpp, vLLM, KoboldCpp, Jan, GPT4All)
+  and says what runs and what it offers; `ask --box DIR "question"` is
+  openai-compatible's bite-then-propose, with the first running server and
+  its first model when none is named, and a URL off this machine refused
+  before anything is sent. Built in stdlib: the server is a program you
+  run, reached over HTTP, not a package it imports.
 - `model-drift`, frozen questions asked again of a model, flagging answers
   that change while its name and card stay the same: `model_drift.py freeze
   ... > frozen.json` prints the model's name, its card's SHA-256 and each
