@@ -153,6 +153,8 @@ def test_hugging_face_cache_from_the_environment_and_a_blob_not_named_by_hash(tm
     snap.mkdir(parents=True)
     (snap / "t.gguf").symlink_to(repo / "blobs/etag-not-a-hash")
     (repo / "snapshots/r2").mkdir(parents=True)
+    put(repo / "snapshots/r2/config.json", b"{}")  # not weights: not a model
+    (repo / "snapshots/r2/dir.gguf").mkdir()  # a folder, whatever its name
     (repo / "snapshots/r2/t.gguf").symlink_to(repo / "blobs/etag-not-a-hash")
     got = run("list", "--home", tmp_path, env={"HF_HOME": str(cache)})
     lines = [
