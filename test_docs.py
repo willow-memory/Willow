@@ -141,6 +141,10 @@ FILE = re.compile(
 #: where it lives. An entry its doc no longer names fails too, so this list
 #: can't go stale.
 ELSEWHERE = {
+    "ui/README.md": {
+        "STACK.json": "in the person's stack, made by assemble.py outside this repo",
+        "batches.json": "beside the person's stack, written by canvas.py",
+    },
     "docs/how-it-works.md": {
         "dad/": "in Odile's generated files (test_odiles_files_are_what_the_docs_say)",
     },

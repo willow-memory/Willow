@@ -10,6 +10,13 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `ui/`, willow's own UI (v1): `python ui/canvas.py` opens a page on this
+  machine that goes the way a person does. Choose your folders; see what the
+  kernel alone makes of them, as counts, never a file's words or name; start
+  from an example or pick add-ons, each coming with what its card uses;
+  save a pick as a batch; look it over, seal it, put it together and start
+  it. `ui/assemble.py` makes the stack from this willow, outside the
+  repository. CI runs its tests as `tests:ui`. (#156)
 - Cards say what an add-on leans on: `uses` (the add-ons it needs beside it,
   to run or to be tested), `looks-for` (the ones it uses when they're there,
   saying so when they aren't) and `runs-in: repo` (a tool for willow's own

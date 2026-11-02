@@ -40,6 +40,13 @@ willow/
 │   │   ├── 0005.md           VI.7, every change carries its account: made 0.14
 │   │   └── 0006.md           VIII.2, the emergency door on a timer: made 0.15
 │   └── README.md             what the kernel answers for, and what it doesn't claim
+├── ui/                       willow's own UI: put your willow together on a page, on this machine only
+│   ├── canvas.py             the page and its server: folders, the kernel's baseline, add-ons, batches, the seal
+│   ├── page.html             the page itself, served by canvas.py
+│   ├── assemble.py           a stack made from this willow, one add-on at a time, each a row on its record
+│   ├── search-words.txt      how people ask for an add-on, and the words its card uses, for the search
+│   ├── test_ui.py            its tests: its server over a scratch stack, counts only, batches, the seal
+│   └── README.md             what it does, where your stack is kept, and what it never does
 ├── adapters/                 add-ons built on top of kernel.py
 │   ├── README.md             the rules every add-on follows
 │   ├── planned.json          the add-ons not built yet, as this README lists them
