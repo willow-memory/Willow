@@ -1797,14 +1797,5 @@
   "source": "new",
   "writes": "to",
   "network": "none"
- },
- {
-  "name": "zotero",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Your Zotero library, from a copy of zotero.sqlite: items, notes and PDF annotations, each with its citation.",
-  "source": "new",
-  "writes": "to",
-  "network": "none"
  }
 ]
