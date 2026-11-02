@@ -10,6 +10,10 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `pocket`: Pocket's export, now that Pocket is gone: the older
+  ril_export.html and the 2025 CSVs, loose or read from the zip without
+  unpacking it, as one dated line per saved article, oldest first, with its
+  title, address, tags and whether it was read; other files left alone.
 - `ui/`, willow's own UI (v1): `python ui/canvas.py` opens a page on this
   machine that goes the way a person does. Choose your folders; see what the
   kernel alone makes of them, as counts, never a file's words or name; start

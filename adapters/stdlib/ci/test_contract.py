@@ -246,6 +246,14 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         "resources/pic.png": "not markdown",
         })
     )}),
+    "pocket": ("pocket.py", {"pocket.zip": _zip({
+        "part_000000.csv": "title,url,time_added,tags,status\n"
+        '"Rye, spelt and the slow ferment",https://example.org/rye,1717236000,baking|bread,unread\n'
+        "https://example.org/bare,https://example.org/bare,1717322400,,archive\n",
+        "annotations/part_000000.json": "[]",
+        "ril_export.html": '<h1>Unread</h1><ul><li><a href="https://example.org/s" time_added="1677925200" '
+        'tags="baking">Sourdough &amp; you</a></li></ul><h1>Read Archive</h1><ul></ul>',
+    })}),
     "day-one": ("day_one.py", {"Journal.json": (
         b'{"metadata":{"version":"1.0"},"entries":['
         b'{"creationDate":"2024-03-03T09:00:00Z","text":"Second entry\\\\.","tags":["garden","spring"],"starred":true,"location":{"placeName":"Kitchen","localityName":"Leeds","country":"United Kingdom"},"weather":{"conditionsDescription":"Cloudy","temperatureCelsius":7.6}},'
