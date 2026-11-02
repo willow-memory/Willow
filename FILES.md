@@ -274,6 +274,10 @@ willow/
 │   │   │   ├── corpus_lens.py  corpus-lens process reports: where intent arrives, who writes the code
 │   │   │   ├── test_corpus_lens.py
 │   │   │   └── README.md
+│   │   ├── csv-rows/
+│   │   │   ├── csv_rows.py   a CSV or TSV table as one passage per row, each value beside its column's header
+│   │   │   ├── test_csv_rows.py
+│   │   │   └── README.md
 │   │   ├── cursor/
 │   │   │   ├── cursor.py         the mcp.json lines that register mcp-lite with Cursor
 │   │   │   ├── test_cursor.py
