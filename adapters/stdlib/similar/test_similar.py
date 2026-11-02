@@ -109,7 +109,7 @@ def test_tags_are_worked_out_the_same_every_time_and_never_more_than_five():
         assert len(tags) <= 5 and len(set(tags)) == len(tags), (a["name"], tags)
         assert tags[:2] == sim.facts_tags(a)
         own = sim.readme.split_tags(a["tags"])
-        assert tags[len(tags) - len(own):] == own
+        assert tags[len(tags) - len(own) :] == own
         assert len(tags) - 2 - len(own) <= 2  # two topics at most
         assert a["name"] not in got[a["name"]]["near"]
     assert got["ocr"]["tags"][:2] == ["needs-install", "offline"]

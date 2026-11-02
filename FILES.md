@@ -1320,7 +1320,8 @@ willow/
 │   │   ├── CHARACTER.md
 │   │   ├── PLANTED.md
 │   │   ├── QUESTIONS.md
-│   │   └── STRIP.md
+│   │   ├── STRIP.md
+│   │   └── test_words.py     the starter words list against her whole folder: her debt to Dev, served with it and not without
 │   ├── bernadette/           built blind, in her apps' raw formats, and run through the whole stack
 │   │   ├── make_life.py      her mail, calendars, chats, vault, office files, Kindle and PDFs, the same bytes every run
 │   │   ├── CHARACTER.md

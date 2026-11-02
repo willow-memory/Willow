@@ -86,7 +86,8 @@ def text_of(a: dict) -> str:
 # ── tags, worked out ─────────────────────────────────────────────────────────
 #: words that say how a card is written, not what its add-on is about; the one
 #: list to tune when a topic reads as noise
-HOW = set("""
+HOW = set(
+    """
 about across add added adds after again against all almost also always another answer answered
 answering answers any are ask asked asking asks back before being big both built came can card
 cards change changed changes check checked checks cited come comes could day does done downloaded
@@ -101,7 +102,8 @@ turn two type under until use used uses using very want way ways well what when 
 who whole why will willow with without word words write writes writing written wrote yes yet you
 your yours kernel record records box boxes pile passage passages file files question questions
 idea ideas com www http https org toward nearly three four five ons guess
-""".split())
+""".split()
+)
 #: a topic is used by at least this many entries' names and lines, and at most
 #: the other: it groups a handful, never most of the list
 TOPIC_USE = (2, 25)
@@ -155,7 +157,10 @@ def worked_out(every: list[dict], root: Path = ROOT) -> dict[str, dict]:
         short[a["name"]] = {s for s, _ in got}
         use.update(short[a["name"]])
     ranker = pile_rank.Ranker(
-        [{"path": n, "line": 1, "text": t, "id": kernel.h256(t)} for n, t in text.items()]
+        [
+            {"path": n, "line": 1, "text": t, "id": kernel.h256(t)}
+            for n, t in text.items()
+        ]
     )
     out = {}
     for a in every:
@@ -174,7 +179,9 @@ def worked_out(every: list[dict], root: Path = ROOT) -> dict[str, dict]:
         ):
             word = sorted(form[s].items(), key=lambda x: (-x[1], x[0]))[0][0]
             taken = {kernel.stem(w) for t in topics + own for w in t.split("-")}
-            if s not in taken and word not in FACT_TAGS:  # "hook" beside "hooks" says it twice
+            if (
+                s not in taken and word not in FACT_TAGS
+            ):  # "hook" beside "hooks" says it twice
                 topics.append(word)
             if len(topics) == 2:
                 break
@@ -317,7 +324,9 @@ def main(argv: list[str]) -> int:
             print(f"refused: no add-on or idea named {unknown[0]!r}", file=sys.stderr)
             return kernel.REFUSED
         for n in names:
-            print(f"{n}: {', '.join(got[n]['tags'])} · near: {', '.join(got[n]['near'])}")
+            print(
+                f"{n}: {', '.join(got[n]['tags'])} · near: {', '.join(got[n]['near'])}"
+            )
         return kernel.ALIVE
     if len(argv) == 3 and argv[:2] == ["new", "--base"]:
         print(report(every, at(argv[2])), end="")
