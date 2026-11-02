@@ -22,7 +22,7 @@ says how). The first was v0.1.0.
   only when named with `--encoding`, never guessed. CR and CRLF become LF, a
   line over 500 characters (which the kernel cut short) is broken at spaces,
   and a file over 1 MB (which it dropped) is cut into parts; a hidden
-  `.lines` map says where those lines go, so nothing is written into the text.
+  `.lines` map says where those lines go, so nothing is written into the text. (#173)
 - `csv-rows`: CSV and TSV tables as one passage per row, numbered by the
   row's line in the file, with the header row kept once as the first
   passage, so a question about one row finds that row and not a run of 500
@@ -31,13 +31,13 @@ says how). The first was v0.1.0.
   (comma, tab, semicolon or pipe) is chosen by one fixed rule; a first line
   holding a number is data, not a header; a wide row is cut at a cell so
   nothing is lost. A file not in UTF-8, with no data row or malformed is
-  skipped and counted.
+  skipped and counted. (#172)
 - `markdown`: any Markdown file as the text it shows, line for line, so a
   passage in the mirror is on the .md file's own line, and no word the file
   doesn't hold. Front matter as its values; a table's header once, at the
   head of the passage with its rows, and each row as its cells; links as their text with an outside address, images as
   their alt text, wikilinks as the text they show; emphasis, HTML, comments,
-  escapes and footnote markers off; fenced code as written.
+  escapes and footnote markers off; fenced code as written. (#171)
 - `quantized`, the smallest local model that still gets your own questions
   right: `quantized.py --box DIR --questions FILE` has each model the local
   server offers (or each `--model`) sit model-exam's exam of your sealed
