@@ -16,7 +16,7 @@ says how). The first was v0.1.0.
   each `[n]`, and proposes it as the answer to "question in LANGUAGE" (never
   the original's question) with the original kept beside it, held for your
   seal. A translation whose citations differ from the original's is
-  proposed to no one. Built in stdlib, like local-model.
+  proposed to no one. Built in stdlib, like local-model. (#166)
 - `local-model`, suggestions from a model on this machine only:
   `local_model.py servers` asks each local runtime's model list on its
   usual port (Ollama, LM Studio, llama.cpp, vLLM, KoboldCpp, Jan, GPT4All)
