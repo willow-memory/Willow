@@ -96,7 +96,7 @@ or higher with a reason on the card. Old machines are real. *Held by:*
 
 ## The ports
 
-**Four languages, one behaviour.** Java, TypeScript and C# answer the same
+**Five languages, one behaviour.** Java, TypeScript, C# and Go answer the same
 cases as `kernel.py`, byte for byte. *Held by:* `vectors/compare.py`, one CI gate per
 port.
 

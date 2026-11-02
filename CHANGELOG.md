@@ -10,6 +10,13 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `ports/go`, a fourth port of `kernel.py`: Go 1.15+, the standard library
+  only, following the Java port function for function with the scanners
+  every port shares, Python's decisions read from `vectors/kernel_tables.json`,
+  and `kernel.py`'s own `flock` on the record. `vectors/compare.py --port go`
+  holds it to all 4,668 vectors and the whole session, both ways, with zero
+  unexplained differences, and CI's ports job runs it as `ports:go`. The
+  `go` idea comes off the list.
 - `quantized`, the smallest local model that still gets your own questions
   right: `quantized.py --box DIR --questions FILE` has each model the local
   server offers (or each `--model`) sit model-exam's exam of your sealed

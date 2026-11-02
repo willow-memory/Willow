@@ -19,7 +19,7 @@ is written: `no-install` or `needs-install`; `offline`, `this-machine` or
 tag its author chose, if any. *near* names the three add-ons closest to it.
 
 <!-- willow:pools -->
-`████████████░░░░░░░░` **304 of 505 built** · 455 need no install · 50 need one
+`████████████░░░░░░░░` **304 of 504 built** · 454 need no install · 50 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
@@ -32,7 +32,7 @@ tag its author chose, if any. *near* names the three add-ons closest to it.
 | Assistants | 39 | 32 | 64 | 7 |
 | Ways to use it | 25 | 18 | 39 | 4 |
 | Play | 12 | 29 | 37 | 4 |
-| For maintainers | 19 | 25 | 39 | 5 |
+| For maintainers | 19 | 24 | 38 | 5 |
 <!-- /willow:pools -->
 
 ## Languages
@@ -592,17 +592,16 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - [**ci-memo**](adapters/stdlib/ci-memo/) — A CI gate whose inputs' bytes are unchanged keeps its recorded verdict: pin a run's per-gate keys, and run only what a change can reach. Uses ci. *new* `no-install` `offline` `pin` `reach` · near: ci-cache, test-impact, ci
 - [**ci-why**](adapters/stdlib/ci-why/) — Why CI went red: the failing block pulled out of the job's log, plain, put where people look. *bot* `no-install` `offline` `job` `failed` · near: ci, ci-logs, gh-json
 - **code-stats** (idea) — Lines, code and complexity per language, per release, as rows the list can answer from. Needs the scc program; MIT. *new* `needs-install` `offline` `release` `language` · near: profile, bench, plain-language
-- **compiled** (idea) — kernel.py compiled with mypyc for speed, held to the same vectors byte for byte. Needs mypyc; MIT. *new* `needs-install` `offline` `held` `vectors` · near: go, swift, crates
+- **compiled** (idea) — kernel.py compiled with mypyc for speed, held to the same vectors byte for byte. Needs mypyc; MIT. *new* `needs-install` `offline` `byte` `held` · near: swift, crates, repro
 - **contribute** (idea) — For anyone on GitHub, what they can do next in the projects they work on: open pull requests, reviews asked of them, issues assigned. Goes online: GitHub, through gh, with your own login. *bot* `no-install` `online` `requests` `pull` · near: upstream-desk, github-archive, quote-review
 - **contributions** (idea) — A ledger of who contributes to the repo: first-timers and outside contributors called out, bots known by type, never by name. Goes online: GitHub, through gh, with your own login. *bot* `no-install` `online` `bot` `calls` · near: bot-venv, hook-guard, welcome
-- **crates** (idea) — A Rust port of kernel.py on crates.io, held to the same vectors as the other four. Goes online: crates.io, to publish a release a maintainer tags. *new* `no-install` `online` `vectors` `port` · near: go, swift, compiled
+- **crates** (idea) — A Rust port of kernel.py on crates.io, held to the same vectors as the other four. Goes online: crates.io, to publish a release a maintainer tags. *new* `no-install` `online` `vectors` `port` · near: swift, compiled, connect-four
 - **docs-i18n** (idea) — The README in other languages, each checked for drift against the English one. *new* `no-install` `offline` `readme` `drift` · near: readme, llms-txt, package-docs
 - [**fast-tests**](adapters/deps/fast-tests/) — The test suite across every core with pytest-xdist, the same tests in a fraction of the time. Needs pytest-xdist; MIT. *new* `needs-install` `offline` `core` `fraction` · near: parallel, pdf, mcp
 - **forgejo** (idea) — What willow's repo needs from Forgejo, Gitea or Codeberg: its host.json and an Actions file, so the repo can move there. Goes online: the Forgejo instance's API, to read the author of a pull request a security report points to. *new* `no-install` `online` `repo` `actions` · near: gitlab, sourcehut, github
 - **fuzz** (idea) — Random and broken inputs thrown at the kernel's commands, every crash kept as a test. *new* `no-install` `offline` `test` `fuzz` · near: hook-fuzz, property-tests, hook-replay
 - [**github**](adapters/stdlib/github/) — What willow's repo needs from GitHub, kept in one folder so it can be taken away. Uses ci, readme. Goes online: GitHub, through gh, to read the author of a pull request a security report points to. *box* `no-install` `online` `repo` `github` · near: gitlab, ci, live
 - **gitlab** (idea) — What willow's repo needs from GitLab, as github does for GitHub: its host.json and CI file, so the repo can move there. Goes online: GitLab, through glab, to read the author of a merge request a security report points to. *new* `no-install` `online` `github` `repo` · near: forgejo, github, sourcehut
-- **go** (idea) — A Go port of kernel.py, held to the same vectors as the others. *new* `no-install` `offline` `vectors` `port` · near: crates, swift, compiled
 - [**live**](adapters/stdlib/live/) — Each way-in add-on run through the real program it's for, a shell, an editor or an AI tool: works, fails, or not here. Uses mcp-lite, pipe. Goes online: only what the programs it starts reach on their own; it reaches nothing itself. *new* `no-install` `online` `tests` · near: mutants, github, ci
 - **maven** (idea) — The Java port on Maven Central, built from this repo and checked against the vectors. Goes online: Maven Central, to publish a release a maintainer tags. *new* `no-install` `online` `repo` `vectors` · near: nuget, npm, pypi
 - [**mutants**](adapters/stdlib/mutants/) — Breaks each add-on's code on purpose and checks its tests notice. *new* `no-install` `offline` `test` · near: live, slow-tests, ci
@@ -622,7 +621,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - [**similar**](adapters/stdlib/similar/) — What's already on the add-on list near a new idea, by the kernel's own search. Uses pile-rank, readme. *box* `no-install` `offline` `search` · near: readme, restack, repo-pile
 - [**slow-tests**](adapters/stdlib/slow-tests/) — Each test's time kept per run, with the slowest named and any that got slower flagged. *new* `no-install` `offline` `test` · near: test-shards, mutants, profile
 - **sourcehut** (idea) — What willow's repo needs from SourceHut: its host.json for patches by email and a builds.sr.ht manifest. Goes online: sr.ht, through hut, to read the author of a patch a security report points to. *new* `no-install` `online` `host` `repo` · near: forgejo, gitlab, github
-- **swift** (idea) — A Swift port of kernel.py for iPhone and Mac apps, held to the same vectors. *new* `no-install` `offline` `vectors` `port` · near: go, crates, compiled
+- **swift** (idea) — A Swift port of kernel.py for iPhone and Mac apps, held to the same vectors. *new* `no-install` `offline` `vectors` `port` · near: crates, compiled, nuget
 - [**test-impact**](adapters/stdlib/test-impact/) — Only the tests a change can reach run first, from the import graph; the full suite still runs after. Uses ci. *new* `no-install` `offline` `test` `suite` · near: ci-memo, lesson-time, stale
 - [**test-shards**](adapters/stdlib/test-shards/) — The CI test jobs split by each test's past time, so every job finishes about together. *new* `no-install` `offline` `test` `job` · near: slow-tests, ci, profile
 - **welcome** (idea) — One plain thank-you on a first-time contributor's first pull request, once per person, and only where it's turned on. Goes online: the forge, through the workflow's token, to post the thank-you. *bot* `no-install` `online` `pull` `requests` · near: ci-baseline, pr-context, upstream-desk

@@ -9,6 +9,7 @@ ports/ts/dist/
 ports/csharp/obj/
 ports/csharp/bin/
 ports/csharp/out/
+ports/go/out/
 out/
 
 # the CI record and its key (adapters/ci)

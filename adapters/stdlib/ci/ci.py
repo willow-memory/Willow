@@ -62,8 +62,13 @@ import kernel  # noqa: E402
 
 SATISFIED, FAILING, UNREACHABLE = "satisfied", "failing", "unreachable"
 WHO = "ci"
-PORTS = ("java", "ts", "csharp")
-TOOLS = {"java": ("javac", "java"), "ts": ("node", "npm", "npx"), "csharp": ("dotnet",)}
+PORTS = ("java", "ts", "csharp", "go")
+TOOLS = {
+    "java": ("javac", "java"),
+    "ts": ("node", "npm", "npx"),
+    "csharp": ("dotnet",),
+    "go": ("go",),
+}
 PY = sys.executable
 PYTEST = (PY, "-m", "pytest", "-q", "-p", "no:cacheprovider")
 #: what changes between two runs of the same command on the same files

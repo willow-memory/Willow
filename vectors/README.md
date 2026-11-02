@@ -6,13 +6,14 @@ port answers the same cases byte for byte, writes boxes `kernel.py` verifies,
 and verifies boxes `kernel.py` wrote. The vectors are the converter, both
 directions.
 
-Three ports so far, every one passing everything:
+Four ports so far, every one passing everything:
 
 | Port | File | Runtime | Made from |
 |---|---|---|---|
 | Java | `ports/java/Kernel.java` | JDK 11+, standard library | `kernel.py` |
 | TypeScript | `ports/ts/kernel.ts` | Node 14+, standard library (TypeScript 4.0+ to build) | `kernel.py` and Java |
 | C# | `ports/csharp/Kernel.cs` | .NET 5+, base class library | Java's shape, TypeScript's scanners |
+| Go | `ports/go/kernel.go` | Go 1.15+, standard library | Java's shape, the same scanners |
 
 Made 2026-10-21 in willow-bot, after asking its pile what the fleet already
 had. The pieces were already there; this puts them together for ports:
@@ -39,7 +40,7 @@ had. The pieces were already there; this puts them together for ports:
 ```
 python3 gen.py                 # after any change to kernel.py; commit both JSON files
 python3 compare.py             # every port whose toolchain is here
-python3 compare.py --port ts   # one port
+python3 compare.py --port go   # one port
 ```
 
 It ends with a grid, every box under every implementation (0 = the chain
@@ -49,12 +50,13 @@ holds), and `unexplained differences: 0`.
 changed and the vectors weren't remade, and runs `compare.py` when any port's
 toolchain is on the machine.
 
-The ports by themselves (`KERNEL_TABLES` names the tables for all three):
+The ports by themselves (`KERNEL_TABLES` names the tables for all four):
 
 ```
 javac -d out ../ports/java/Kernel.java && java -cp out Kernel bite --box BOX "your words"
 (cd ../ports/ts && npm install && npx tsc) && node ../ports/ts/dist/kernel.js bite --box BOX "your words"
 dotnet build ../ports/csharp/Kernel.csproj -o ../ports/csharp/out && dotnet ../ports/csharp/out/Kernel.dll bite --box BOX "your words"
+(cd ../ports/go && go build -o out/kernel .) && ../ports/go/out/kernel bite --box BOX "your words"
 ```
 
 **Java needs a UTF-8 locale.** Without one the JVM can't even name a file with
@@ -72,6 +74,7 @@ when 3.9.0 came out (2026-10-21, at the operator's ask):
 | Java | JDK 11.0.9 (2020-10-20), JDK 15 (2020-09-15) | AdoptOpenJDK builds, checksums verified | everything passes, unchanged |
 | Node, TypeScript | Node 14.15.0 LTS and 15.0.0 (2020-10), TypeScript 4.0.5 | the npm registry | everything passes, after one change: `TextDecoder` imported from `util` (a global in Node 14, but typed only in `util` then) |
 | .NET | 5.0.0 runtime (2020-11-10), C# 9 | NuGet's runtime packs, self-contained | everything passes, after the port stopped using .NET 6 and 7 conveniences (see below) |
+| Go | 1.15.15, the last of the 1.15 line (1.15.0 is from 2020-08-11) | go.dev's archive | everything passes, unchanged: `ioutil` for the file calls, build tags in both spellings, no generics |
 
 .NET 5 does its hashing through OpenSSL 1.1, which a 2024 system doesn't
 carry; it ran with Ubuntu 20.04's OpenSSL 1.1.1f (checked against focal's
@@ -84,14 +87,14 @@ Python's `resolve()` than walking links); and the file mode (read, and 0600 at
 creation) is the library's on .NET 7+ and libc's before it, the only `#if`.
 
 `compare.py` takes a build made elsewhere: `KERNEL_TS_DIST` (a `dist/`
-folder) and `KERNEL_CS_EXE` (a self-contained `Kernel`), with the old Node or
-JDK first on `PATH`.
+folder), `KERNEL_CS_EXE` (a self-contained `Kernel`) and `KERNEL_GO_EXE` (a
+built `kernel`), with the old Node or JDK first on `PATH`.
 
 ## Scanners, not regular expressions
 
 The kernel has four patterns: a page's hidden `<script>`, `<style>` and
 comment spans, its tags, its character references, and the name after
-`def`/`function`/`fn`. All three ports match them with small hand-written
+`def`/`function`/`fn`. All four ports match them with small hand-written
 scanners, the same in each, written from Python's rules:
 
 - .NET matches UTF-16 units and can't put an astral code point in a
@@ -102,7 +105,10 @@ scanners, the same in each, written from Python's rules:
   vectors caught it on three pages). Python's fold and backreference are in
   the tables now, and every port reads them.
 
-So the next ports (Go, Rust, C, C++) can follow any of the three line by line.
+So the next ports (Rust, C, C++) can follow any of the four line by line. The
+Go port did: Java's shape, function for function, with text as code points
+(`[]rune`), exact scores as `big.Rat`, and `flock` from `syscall`, which is
+the one call that needs a build tag (`flock_unix.go`, `flock_windows.go`).
 
 ## Is it really testing anything?
 
@@ -157,9 +163,10 @@ without one.
 | C# | libc's `flock`, blocking, called directly; .NET's own lock emulation is off (`ports/csharp/Kernel.csproj`), since it takes a shared `flock` on every read and so trips over kernel.py's writer | Yes, both ways (tested: each waited for the other, then wrote) |
 | Java | `FileChannel.lock`, a POSIX record lock (`fcntl`), which Linux keeps separate from `flock` | No: Java has no `flock` call |
 | TypeScript | A directory made beside the record (Node has no lock call) | No |
+| Go | `syscall.Flock`, blocking, on the record (`flock_unix.go`) | Yes (tested: it waited on kernel.py's writer, then wrote) |
 
 Two writers of the same port never collide. Two different ones writing one
-box at the same instant are kept apart only for C# and `kernel.py`.
+box at the same instant are kept apart only among C#, Go and `kernel.py`.
 
 ## Open
 
@@ -173,5 +180,10 @@ box at the same instant are kept apart only for C# and `kernel.py`.
   SubtleCrypto. A browser build, the person's own folder through the File
   System Access API, is the natural next step for Grove's web and phone
   surfaces.
-- Next ports: Go and Rust about a day each now, following the scanners; C or
-  C++ two to three days (ICU-free, since the tables carry Unicode).
+- Next ports: Rust about a day now, following the scanners; C or C++ two to
+  three days (ICU-free, since the tables carry Unicode).
+- `propose` with every suggestion refused exits 42 in `kernel.py` (bug #96's
+  fix) and in Go, but still 0 in Java, TypeScript and C#, which were written
+  before the fix. The session doesn't exercise it: every `propose` in it has a
+  line that passes. A session step with none, and the three one-line fixes,
+  are the next change here.

@@ -212,6 +212,9 @@ jobs:
       - uses: actions/setup-dotnet@v6
         with:
           dotnet-version: "8.0.x"
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.24"
       - run: python adapters/stdlib/ci/ci.py run ports --box ${{ runner.temp }}/ci-record | tee "$RUNNER_TEMP/ci.log"
       - if: failure()
         run: python adapters/stdlib/ci-why/ci_why.py "$RUNNER_TEMP/ci.log" --record "$RUNNER_TEMP/ci-record/record.jsonl" >> "$GITHUB_STEP_SUMMARY" || true
