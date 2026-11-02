@@ -235,3 +235,22 @@ def test_a_box_with_a_words_list_is_ranked_with_it(tmp_path, model):
     wl.write_text("cookies biscochitos\n")
     got = run("--box", b, "--url", model.url, "--model", "m", "--questions", q)
     assert got.returncode == 2 and "words list line 1" in got.stderr
+
+
+def test_two_times_is_the_least_it_asks(box, model, tmp_path):
+    model.replies = ["Lard [1]."]
+    q = questions(tmp_path, "what goes in biscochitos")
+    got = run(
+        "--box",
+        box,
+        "--url",
+        model.url,
+        "--model",
+        "m",
+        "--questions",
+        q,
+        "--times",
+        "2",
+    )
+    assert got.returncode == 0 and got.stdout.startswith("same     2 of 2  ")
+    assert len(model.sent) == 2
