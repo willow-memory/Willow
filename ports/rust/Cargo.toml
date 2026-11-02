@@ -1,0 +1,11 @@
+[package]
+name = "kernel"
+version = "0.1.0"
+edition = "2018"
+description = "kernel.py in Rust: one file, the standard library only"
+
+[dependencies]
+
+[[bin]]
+name = "kernel"
+path = "kernel.rs"

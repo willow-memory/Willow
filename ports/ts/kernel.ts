@@ -1335,7 +1335,6 @@ function propose(box: string, lines: string[], ts: string): number {
     return REFUSED;
   }
   const served = new Set(((last.get("served") as J[]) ?? []).map((s) => (s as JMap).get("id") as string));
-  let waiting = 0;
   lines.forEach((line, i) => {
     let prop: J | undefined;
     try {
@@ -1353,13 +1352,14 @@ function propose(box: string, lines: string[], ts: string): number {
       fs.writeFileSync(propFile(box, subj), dumpsDefault(kept2, false));
       append(box, ts, "proposal", "kernel", obj(["subject", subj], ["verdict", "pass"], ["bite_row", last.get("n")!]));
       console.log(`pass  ${subj}  waiting on your seal`);
-      waiting++;
     } else {
       append(box, ts, "proposal", "kernel", obj(["verdict", "refused"], ["line", BigInt(i)], ["why", why]));
       console.log(`refused  line ${i}: ${why}`);
     }
   });
-  return waiting ? ESCALATE : ALIVE;
+  // Passing the door is not acceptance: nothing propose reads is an answer
+  // until the person seals it (CONST-0-1).
+  return ESCALATE;
 }
 
 function seal(box: string, subj: string, ts: string): number {

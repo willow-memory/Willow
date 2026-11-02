@@ -10,6 +10,21 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `ports/rust`, a fifth port of `kernel.py`: Rust, the standard library
+  only and no crates, following the Go port function for function. What
+  Rust's library lacks is written in and held by the vectors: SHA-256 and
+  HMAC (RFC 4231's cases), JSON as Python reads and writes it, base64, and a
+  whole number of any size so the rank's scores compare exactly.
+  `vectors/compare.py --port rust` holds it to all 4,668 vectors and the
+  whole session, both ways, with zero unexplained differences; CI's ports
+  job runs it as `ports:rust`. (#191)
+- `ports/go`, a fourth port of `kernel.py`: Go 1.15+, the standard library
+  only, following the Java port function for function with the scanners
+  every port shares, Python's decisions read from `vectors/kernel_tables.json`,
+  and `kernel.py`'s own `flock` on the record. `vectors/compare.py --port go`
+  holds it to all 4,668 vectors and the whole session, both ways, with zero
+  unexplained differences, and CI's ports job runs it as `ports:go`. The
+  `go` idea comes off the list. (#191)
 - `in-process`, suggestions from a GGUF model loaded inside the add-on
   itself through llama-cpp-python: `in_process.py ask --box DIR --model
   FILE.gguf "question"` is openai-compatible's bite-then-propose with no
@@ -1725,6 +1740,11 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- The Java, TypeScript and C# ports exit 42 from a `propose` whose every
+  line is refused, as `kernel.py` has since bug #96's fix; they exited 0,
+  which looked like an approved answer. The vectors' session now proposes a
+  file with every line refused, so a port that drifts here fails
+  `vectors/compare.py`. (#191)
 - `mail` reads a header sent as raw 8-bit UTF-8 as UTF-8: a subject such as
   "income tax — what you owe, £412.67" no longer comes out with each of
   its non-ASCII letters replaced by `���`, and a From or To name with an

@@ -44,8 +44,8 @@ add-on, so it runs the same if you delete every one.
   detected, and a forged approval is never accepted. A whole chain rewritten
   and re-hashed from the edit onward is not detected on its own; see
   [LIMITS.md](LIMITS.md).
-- **Portable:** reimplemented in Java, TypeScript and C#, and all four are held
-  to the same 4,668 test cases.
+- **Portable:** reimplemented in Java, TypeScript, C#, Go and Rust, and all
+  six are held to the same 4,668 test cases.
 
 **Contents:** [Your first five minutes](#your-first-five-minutes) · [What it is not](#what-it-is-not) · [Building on it](#building-on-it) · [What you can build on it](#what-you-can-build-on-it) · [How it works](#how-it-works) · [Commands](#commands) · [Guarantees, and the tests behind them](#guarantees-and-the-tests-behind-them) · [Where it falls short](#where-it-falls-short) · [How it's verified](#how-its-verified) · [What's in this repo](#whats-in-this-repo) · [Licence](#licence)
 
@@ -97,9 +97,9 @@ is generated from. To build a planned one, take its entry out of
 [CONTRIBUTING.md](CONTRIBUTING.md).
 
 **Ports** to another language go in `ports/` and must pass
-`python vectors/compare.py` with zero unexplained differences. Go and Rust are
-the obvious next ones; [vectors/README.md](vectors/README.md) explains how the
-existing three were made to agree.
+`python vectors/compare.py` with zero unexplained differences. C is the
+obvious next one; [vectors/README.md](vectors/README.md) explains how the
+existing five were made to agree.
 
 
 
@@ -130,7 +130,7 @@ says how to pick one up:
 
 *Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 324 built add-ons in name order.*
 
-[Every add-on, 324 built of 517, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 324 built of 516, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 
@@ -260,12 +260,12 @@ in `demo/*/STRIP.md`.
   CI runs the same script on every pull request and every push to main, with the tests on Python 3.9 through
   3.14 (a pull request on 3.9 and 3.14 only, every push to main on all six), and keeps each job's record as an artifact. The verdicts are draft;
   merging is the person's call. See [adapters/stdlib/ci](adapters/stdlib/ci/).
-- **Four implementations, one behaviour.** `vectors/gen.py` reads 4,668 cases
+- **Six implementations, one behaviour.** `vectors/gen.py` reads 4,668 cases
   out of `kernel.py`, covering canonical JSON, word splitting, HTML text,
-  ranking, dates, word forms and every refusal. The Java, TypeScript and C#
-  ports must give byte-identical answers. Then the same session runs through
-  all four command lines, and every implementation's log is verified by every
-  other.
+  ranking, dates, word forms and every refusal. The Java, TypeScript, C#, Go
+  and Rust ports must give byte-identical answers. Then the same session runs
+  through all six command lines, and every implementation's log is verified
+  by every other.
 - **The tests were tested.** Bugs were planted deliberately in copies of the
   ports (sorting by UTF-16 instead of code points, floating-point scores, a
   BOM dropped by Node's decoder, and more). A case was added for each one the
@@ -279,7 +279,8 @@ in `demo/*/STRIP.md`.
   violation for each of those checks in a copy of the repo, and fails if
   the check doesn't catch it.
 - **Old runtimes, not assumed:** the tests and every port have also been run
-  on Python 3.9.0, JDK 11, Node 14 and .NET 5, all from 2020.
+  on Python 3.9.0, JDK 11, Node 14, .NET 5, Go 1.15 and Rust 1.47, all from
+  2020.
 
 
 ## What's in this repo
@@ -312,7 +313,7 @@ willow/
 ├── ui/                       willow's own UI: put your willow together on a page
 ├── adapters/                 add-ons built on top of kernel.py
 ├── ports/                    kernel.py rewritten in other languages
-├── vectors/                  what keeps the four implementations identical
+├── vectors/                  what keeps the six implementations identical
 ├── demo/                     four made-up people, and one real bug, to try it on
 ├── docs/                     the full first five minutes, and how it works in full
 ├── .github/                  CI, the issue forms, the pull request template: the GitHub add-on's

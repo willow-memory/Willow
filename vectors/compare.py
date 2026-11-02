@@ -1,14 +1,15 @@
 """Hold the ports to kernel.py: every vector, whole sessions, and each other's boxes.
 
-    python3 compare.py [--port all|java|ts|csharp] [--keep DIR]
+    python3 compare.py [--port all|java|ts|csharp|go|rust] [--keep DIR]
 
 Three checks for each port, each said as a count; "unexplained" is the
 number to read:
 
 1. **vectors.** The port answers `cases.json` (`<port> vectors cases.json
    results.json`); every answer is lined up against kernel.py's.
-2. **sessions.** The same scripted session (init, bites, proposals, a seal,
-   a decline, out, verify, a forged seal and a forged decline, an edit) run through kernel.py's command line
+2. **sessions.** The same scripted session (init, bites, proposals, one with
+   every line refused, a seal, a decline, out, verify, a forged seal and a
+   forged decline, an edit) run through kernel.py's command line
    and the port's, on the same paths with the same key, so each box is
    directly comparable: exit codes, what the person was shown, kernel.json,
    proposal files, and every record row but `version`, `hash`, `prev` and
@@ -23,7 +24,8 @@ when nothing is unexplained, 1 otherwise.
 Toolchains: Java needs a JDK and a UTF-8 locale (the JVM can't name a
 non-ASCII file without one; it runs here with LC_ALL=C.UTF-8). TypeScript
 needs Node 18+ and npm (it installs `ports/ts/`'s two dev dependencies once).
-C# needs the .NET 8 SDK.
+C# needs the .NET 8 SDK. Go needs Go 1.15+ (`go build`, no packages). Rust
+needs cargo (`cargo build --offline`, no crates).
 """
 
 from __future__ import annotations
@@ -148,7 +150,49 @@ class CSharp:
         return ["dotnet", str(self.out / "Kernel.dll"), *args]
 
 
-PORTS = {"java": Java, "ts": TypeScript, "csharp": CSharp}
+class Go:
+    name = "go"
+    tools = ("go",)
+
+    def __init__(self, work: Path):
+        self.exe = os.environ.get("KERNEL_GO_EXE")  # a build made elsewhere
+        if self.exe:
+            return
+        self.exe = str(work / "go-out" / "kernel")
+        _build(["go", "build", "-o", self.exe, "."], cwd=PORT_SRC / "go")
+
+    def argv(self, *args: str) -> list[str]:
+        return [self.exe, *args]
+
+
+class Rust:
+    name = "rust"
+    tools = ("cargo",)
+
+    def __init__(self, work: Path):
+        self.exe = os.environ.get("KERNEL_RS_EXE")  # a build made elsewhere
+        if self.exe:
+            return
+        target = work / "rust-target"
+        _build(
+            [
+                "cargo",
+                "build",
+                "--release",
+                "--offline",
+                "-q",
+                "--target-dir",
+                str(target),
+            ],
+            cwd=PORT_SRC / "rust",
+        )
+        self.exe = str(target / "release" / "kernel")
+
+    def argv(self, *args: str) -> list[str]:
+        return [self.exe, *args]
+
+
+PORTS = {"java": Java, "ts": TypeScript, "csharp": CSharp, "go": Go, "rust": Rust}
 
 
 class Python:
@@ -301,6 +345,9 @@ def session(impl, root: Path) -> dict:
         + "\n"
     )
     step("propose", *b, "--file", str(rows_file))
+    none = root / "none.jsonl"  # every line refused: still not a yes
+    none.write_text(json.dumps({**good, "cites": ["nope"]}) + "\nnot json\n")
+    step("propose", *b, "--file", str(none))
     step("seal", *b, k.subject_of(good))
     step("bite", *b, "How much SUN do tomatoes want?!")  # sealed now
     step("bite", *b, "tomatoes want how much sun")  # other words: not sealed

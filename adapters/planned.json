@@ -486,15 +486,6 @@
   "network": "none"
  },
  {
-  "name": "go",
-  "kind": "stdlib",
-  "section": "For maintainers",
-  "line": "A Go port of kernel.py, held to the same vectors as the others.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none"
- },
- {
   "name": "google-classroom",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
