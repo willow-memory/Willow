@@ -17,7 +17,7 @@ says how). The first was v0.1.0.
   `sysctl` with Apple silicon's GPU share, and says where a model of a
   weights file's or a weights-card's size fits (its weights and a fifth),
   or the most each place holds. `--measure` times a memory copy for a guess
-  at tokens a second on the CPU.
+  at tokens a second on the CPU. (#160)
 - `model-shelf`, every model already on this machine before you download
   another: `model_shelf.py list [--home DIR]
   [--hash]` reads Ollama's manifests,
