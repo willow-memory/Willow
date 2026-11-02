@@ -352,6 +352,10 @@ def reader(name: str) -> str:
             f'        b"# {name} notes\\n"\n    )}}),\n')  # fmt: skip
 
 
+#: two readers no add-on is named, so a real reader landing never collides
+ONE, TWO = "made-up-reader-one", "made-up-reader-two"
+
+
 def add_reader(repo: Path, branch: str, name: str, also=lambda t: t) -> None:
     """On `branch`, a READERS entry after codebase-memory's, as each reader adds
     its own after one that is there."""
@@ -364,9 +368,9 @@ def add_reader(repo: Path, branch: str, name: str, also=lambda t: t) -> None:
 
 
 def test_two_readers_conflicting_in_readers_are_settled_whole(clone):
-    add_reader(clone, "work", "markdown",
+    add_reader(clone, "work", ONE,
                lambda t: swapped(t, "import zipfile\n", "import zipfile\nimport base64\n"))  # fmt: skip
-    add_reader(clone, "main", "csv-rows")
+    add_reader(clone, "main", TWO)
     # the failure as it was met: git splits the two entries, so neither side
     # of the conflict holds a whole one and the line rule can't settle it
     git(clone, "checkout", "-q", "--detach", "work")
@@ -387,7 +391,7 @@ def test_two_readers_conflicting_in_readers_are_settled_whole(clone):
     assert CONTRACT_FILE in got.stdout
     text = git(clone, "show", f"work:{CONTRACT_FILE}") + "\n"
     ast.parse(text)
-    assert text.count(reader("markdown")) == text.count(reader("csv-rows")) == 1
+    assert text.count(reader(ONE)) == text.count(reader(TWO)) == 1
     assert text.count("\nimport base64\n") == 1 and "<<<<<<<" not in text
 
 
@@ -396,8 +400,8 @@ def test_two_readers_conflicting_in_readers_are_settled_whole(clone):
     ('NOW = ["--now", "2026-10-23T00:00:00Z"]', 'NOW = ["--now", "2026-10-24T00:00:00Z"]'),
 ])  # fmt: skip
 def test_a_reader_branch_that_changed_more_than_it_added_stops_untouched(clone, change):  # fmt: skip
-    add_reader(clone, "work", "markdown", lambda t: swapped(t, *change))
-    add_reader(clone, "main", "csv-rows")
+    add_reader(clone, "work", ONE, lambda t: swapped(t, *change))
+    add_reader(clone, "main", TWO)
     git(clone, "checkout", "-q", "--detach")
     old = git(clone, "rev-parse", "work")
     got = run(clone, "--onto", "main", "work")
