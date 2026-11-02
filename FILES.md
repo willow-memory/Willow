@@ -135,6 +135,10 @@ willow/
 │   │   │   ├── bibtex.py   each reference in a .bib file as a passage that begins with its citation key
 │   │   │   ├── test_bibtex.py
 │   │   │   └── README.md
+│   │   ├── bookmarks/
+│   │   │   ├── bookmarks.py   browser bookmarks and history, from an export, a backup or a copy of the database
+│   │   │   ├── test_bookmarks.py
+│   │   │   └── README.md
 │   │   ├── books/
 │   │   │   ├── books.py      Kindle highlights and .epub text, as passages
 │   │   │   ├── test_books.py

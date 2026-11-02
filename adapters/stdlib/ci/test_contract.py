@@ -148,6 +148,10 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         "outcome INTEGER, note TEXT, evidence TEXT, at INTEGER NOT NULL);\n"
         "INSERT INTO predictions VALUES ('a1b2c3d4','tomatoes want sun',0.7,"
         "1790000000,NULL,'[]');\n")}),
+    "bookmarks": ("bookmarks.py", {"bookmarks.html": (
+        b'<!DOCTYPE NETSCAPE-Bookmark-file-1>\n<TITLE>Bookmarks</TITLE>\n<H1>Bookmarks</H1>\n<DL><p>\n'
+        b'    <DT><A HREF="https://example.org/tomatoes" ADD_DATE="1709378130" TAGS="garden">Tomato growing guide</A>\n'
+        b'    <DD>Staking and pruning.\n</DL><p>\n')}),
     "books": ("books.py", {"My Clippings.txt": (
         "Made-Up Harbour (Ada Example)\n- Your Highlight on page 12 | Location 180 | "
         "Added on Sunday, 3 March 2024 10:15:22\n\nThe tide keeps its own calendar.\n"

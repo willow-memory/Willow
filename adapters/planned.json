@@ -100,15 +100,6 @@
   "network": "none"
  },
  {
-  "name": "bookmarks",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Browser bookmarks (HTML export, Firefox JSON) and history, read from a copy of its SQLite file.",
-  "source": "new",
-  "writes": "to",
-  "network": "none"
- },
- {
   "name": "browser-model",
   "kind": "stdlib",
   "section": "Assistants",

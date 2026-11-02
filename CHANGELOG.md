@@ -10,6 +10,12 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `bookmarks`: browser bookmarks and history: the bookmark HTML export every
+  browser writes, a Firefox backup (.json or .jsonlz4), Chrome's
+  `Bookmarks` file, and copies of Firefox's `places.sqlite` and Chrome's
+  `History`, opened read-only. Each bookmark is a passage with its day,
+  title, URL, folder, tags and description; each page visited is one passage
+  with its visit count, last visit and the days it was visited.
 - `ui/`, willow's own UI (v1): `python ui/canvas.py` opens a page on this
   machine that goes the way a person does. Choose your folders; see what the
   kernel alone makes of them, as counts, never a file's words or name; start
