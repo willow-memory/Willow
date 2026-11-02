@@ -16,7 +16,7 @@ says how). The first was v0.1.0.
   first local server, a suggestion held for your seal), skips those sealed
   or already waiting, and stops before the next question once a row appears
   that the run didn't write (you bit, sealed or declined) or it is past
-  `--until`. Built in stdlib, like local-model.
+  `--until`. Built in stdlib, like local-model. (#167)
 - `translate`, an answer you sealed translated by a model on this machine:
   `translate.py --box DIR --into LANGUAGE "question"` finds the answer you
   sealed for the question, has the first local server translate it keeping
