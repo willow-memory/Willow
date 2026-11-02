@@ -489,6 +489,11 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         b"Tides\n=====\n\n.. note:: Bring a coat.\n\nWe measure the tide at "
         b"`six harbours <https://tides.example/>`_.\n\n.. code-block:: python\n\n   rise = 4.2\n"
     )}),
+    "asciidoc": ("asciidoc.py", {"tides.adoc": (
+        b"= Tides of the Estuary\nAda Example\n:revdate: 2024-03-03\n\n== Method\n\n"
+        b"We measure the tide at *six* harbours.footnote:[Calibrated in March.]\n\n"
+        b"|===\n| Harbour | Gauges\n| Leeds | 6\n|===\n"
+    )}),
 }  # fmt: skip
 
 #: the language packs' codes: a pack is words- and its language's ISO 639 code
