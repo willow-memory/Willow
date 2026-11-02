@@ -73,7 +73,8 @@ class Server:
 TAGS = {"models": [
     {"name": "gemma3:4b", "size": 3338801804, "details": {"quantization_level": "Q4_K_M"}},
     {"name": "gemma3:1b", "size": 815319791, "details": {"quantization_level": "Q4_K_M"}},
-    {"name": "gemma3:12b", "size": 8149190253, "details": {}},
+    {"name": "gemma3:12b", "size": 8149190253, "details": {"quantization_level": "Q2_K"}},
+    {"name": "big", "size": 9000000000, "details": {}},
     {"name": "odd", "size": "big"}, "stray",
 ]}  # fmt: skip
 
@@ -83,6 +84,7 @@ def server():
     s = Server(TAGS)
     s.say = {
         "gemma3:12b": RIGHT,
+        "big": {},
         "gemma3:4b": RIGHT,
         "gemma3:1b": {Q1: RIGHT[Q1], Q2: "The hinge wants oil [1]."},
     }
@@ -157,10 +159,13 @@ def test_the_smallest_model_that_passes_everything_is_named(box, server, tmp_pat
     assert got.stdout == (
         "gemma3:1b   815319791 bytes  Q4_K_M  passed 1 of 2\n"
         "gemma3:4b   3338801804 bytes  Q4_K_M  passed 2 of 2\n"
-        "gemma3:12b  8149190253 bytes  quantization not said  passed 2 of 2\n"
+        "gemma3:12b  8149190253 bytes  Q2_K  passed 2 of 2\n"
+        "big         9000000000 bytes  quantization not said  passed 0 of 2\n"
         "smallest passing all 2: gemma3:4b, 3338801804 bytes\n"
     )
-    assert sorted(server.sent) == sorted(["gemma3:12b", "gemma3:4b", "gemma3:1b"] * 2)
+    assert sorted(server.sent) == sorted(
+        ["gemma3:12b", "gemma3:4b", "gemma3:1b", "big"] * 2
+    )
     assert (box / "record.jsonl").read_bytes() == before
 
 
@@ -308,3 +313,21 @@ def test_a_bad_command_line_is_refused(box, tmp_path):
         f.write('{"n": 99}\n')
     got = run(*base)
     assert got.returncode == 2 and "doesn't verify" in got.stderr
+
+
+def test_a_reply_of_one_word_can_pass(box, server, tmp_path):
+    server.say["terse"] = {Q1: "Lard [1]."}
+    got = run(
+        "--box",
+        box,
+        "--url",
+        server.url,
+        "--questions",
+        questions(tmp_path, Q1),
+        "--model",
+        "terse",
+    )
+    assert (
+        got.returncode == 0
+        and "terse  size not said by the server  passed 1 of 1\n" in got.stdout
+    )
