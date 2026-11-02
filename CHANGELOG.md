@@ -10,6 +10,13 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `model-exam`, any model scored against the answers you sealed:
+  `model_exam.py --box DIR --url URL --model NAME --questions FILE` asks
+  each question you sealed an answer for (the kernel's `sealed` and
+  `standing`), once, with openai-compatible's chat over what the kernel's
+  `rank` serves now (no bite on the record), and passes a reply that cites a
+  passage your answer cites and holds half the content words of the shorter
+  of the two. Questions with no sealed answer are said and never asked.
 - `same-way`, a local model asked each question several times and how
   often it flips: `same_way.py --box DIR --url URL --model NAME --questions
   FILE [--times N]` ranks each question against your folder as a bite would
