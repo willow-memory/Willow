@@ -210,6 +210,29 @@ def test_only_a_sealed_pick_is_put_together_and_the_seal_is_the_kernels(site, tm
     assert not breaks and subject in k.sealed(cv.box, rows)
 
 
+def test_only_a_piece_that_makes_a_page_runs_as_a_step(site, tmp_path):
+    """Ticked with no words of their own, a page server, a hook's setup, a
+    reader and stack itself are put in, not run: run with only --box, browse
+    never ends and the others refuse."""
+    cv, call = site
+    pick = {"name": "ticked", "folders": [str(a_folder(tmp_path))], "lanes": [
+        {"title": "watch", "steps": [{"name": "digest"}, {"name": "browse"}]},
+        {"title": "assistants", "steps": [{"name": "claude-code"}, {"name": "stack"}]},
+        {"title": "read", "steps": [{"name": "office"}]},
+        {"title": "scores", "steps": [{"name": "predict", "args": "score --box {box}"}]},
+    ]}  # fmt: skip
+    arr, why = cv.arrangement(pick)
+    assert why == ""
+    steps = {s["name"]: s["args"] for ln in arr["lanes"] for s in ln["steps"]}
+    assert steps == {"digest": "--box {box}", "predict": "score --box {box}"}
+    assert arr["kept"] == ["browse", "claude-code", "stack", "office"]
+    assert {"browse", "claude-code", "stack", "office"} <= set(arr["pieces"])
+    assert "## read" not in arr["stack_md"]  # a lane left empty isn't there
+    assert "not run on the page: browse, claude-code, stack, office" in arr["stack_md"]
+    only = {"lanes": [{"steps": [{"name": "browse"}]}]}
+    assert "none of its pieces makes a page" in cv.arrangement(only)[1]
+
+
 def test_no_stack_is_made_inside_this_repository(tmp_path, capsys):
     assert canvas.ready(canvas.WILLOW / "a-stack") == assemble.REFUSED
     assert (
