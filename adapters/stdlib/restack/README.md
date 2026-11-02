@@ -33,7 +33,7 @@ merge conflicts:
 | BUGS.md | REF's, then made again by `adapters/stdlib/ci/bugs.py write` |
 | CHANGELOG.md | under `## Unreleased`, the branch's entries above REF's |
 | FILES.md | both sides' folders, A to Z |
-| test_contract.py | both sides' `COMMANDS` lines |
+| test_contract.py | both sides' `COMMANDS` lines, and entries either side added to `COMMANDS`, `READERS` or `PILE_EXTRA`, with imports, whole |
 | adapters/planned.json | REF's ideas, less the ones the branch built, plus any it added |
 
 These are the files every add-on's pull request touches and that main's
@@ -42,6 +42,17 @@ exactly as it was, saying which file: two sides changing the same code is a
 person's call. A conflict in one of these files that doesn't fit its rule
 (a changelog conflict outside Unreleased, a tree entry both sides changed)
 stops it too.
+
+**test_contract.py by what was added.** Two readers each add a sample to
+`READERS`, and git lines the two new entries up against one shared closing
+line, so neither side of the conflict holds a whole entry and no rule on
+lines can settle it. When the lines aren't only `COMMANDS` lines, it reads
+the file at the base and on both sides with Python's own parser and takes
+REF's, with each entry the branch added to `COMMANDS`, `READERS` or
+`PILE_EXTRA` put whole at the end of its dict, and any import the branch
+added after REF's last. An entry REF already has is left as REF has it. A
+branch that changed or removed an entry that was there, or changed anything
+else in the file, stops: that is a person's call.
 
 **Nothing moves until it checks.** After the merge, `test_docs.py` runs in
 the scratch worktree; it is the check that catches a merge settled wrong. Only
