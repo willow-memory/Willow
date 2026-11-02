@@ -37,9 +37,11 @@ as you like, each on this machine.
 machine: the kernel bites first, only the passages it served go to the
 model, under the rule to answer only from them, and a reply is proposed
 through `kernel.py propose` citing the passages its brackets name, to wait
-for your seal. Without `--url` it asks the first server running in the
-order above; without `--model`, the first model that server lists. A
-server whose list doesn't answer is asked only when you name both.
+for your seal. It asks the first server answering among those `--url`
+names (as many as you like, tried in turn), or else in the order above;
+without `--model`, the first model that server lists. A server whose list
+doesn't answer is asked only when it is the one `--url` and you name the
+model too.
 
 **Built in stdlib.** The idea was filed as needing an install: a local
 model server. That server is a program you run, not a package this

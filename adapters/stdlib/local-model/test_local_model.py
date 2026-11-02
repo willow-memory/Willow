@@ -38,7 +38,10 @@ class Server:
                 doc = (
                     listing
                     if listing is not None
-                    else {"data": [{"id": m} for m in offered]}
+                    else {
+                        "data": [{"id": m} for m in offered]
+                        + ["stray", {"name": "no id"}]
+                    }
                 )
                 self.send(200, json.dumps(doc).encode())
 
@@ -185,10 +188,39 @@ def test_no_server_running_on_the_usual_ports_is_42(box):
         assert "http://127.0.0.1:11434/v1, http://127.0.0.1:1234/v1" in got.stdout
         assert kinds(box) == ["boot"]
     got = run("servers")
-    assert got.stdout.splitlines()[0].startswith(
-        "ollama         http://127.0.0.1:11434/v1  "
+    assert [" ".join(line.split()[:2]) for line in got.stdout.splitlines()] == [
+        "ollama http://127.0.0.1:11434/v1",
+        "lm-studio http://127.0.0.1:1234/v1",
+        "llama.cpp http://127.0.0.1:8080/v1",
+        "vllm http://127.0.0.1:8000/v1",
+        "koboldcpp http://127.0.0.1:5001/v1",
+        "jan http://127.0.0.1:1337/v1",
+        "gpt4all http://127.0.0.1:4891/v1",
+    ]
+
+
+def test_ask_tries_each_url_in_turn(box, server):
+    closed = "http://127.0.0.1:9/v1"
+    got = run(
+        "ask",
+        "--box",
+        box,
+        "--url",
+        closed,
+        "--url",
+        server.url,
+        *NOW,
+        "what goes in biscochitos",
     )
-    assert len(got.stdout.splitlines()) == 7
+    assert got.returncode == 0, got.stdout + got.stderr
+    assert server.sent[0]["model"] == "gemma3:4b"
+    got = run("ask", "--box", box, "--url", closed, "--url", closed, "--model", "m", *NOW,
+              "what goes in biscochitos")  # fmt: skip
+    assert got.returncode == 42
+    assert (
+        got.stdout
+        == f"no local model server is running (looked at {closed}, {closed})\n"
+    )
 
 
 @pytest.mark.parametrize(

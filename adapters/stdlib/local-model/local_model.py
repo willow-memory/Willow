@@ -1,7 +1,7 @@
 """local_model.py: suggestions from a model on this machine only.
 
     python adapters/stdlib/local-model/local_model.py servers [--url URL ...]
-    python adapters/stdlib/local-model/local_model.py ask --box DIR [--url URL]
+    python adapters/stdlib/local-model/local_model.py ask --box DIR [--url URL ...]
         [--model NAME] [--system FILE] [--now TS] "your question"
 
 `servers` says which local model servers are running, and the models each
@@ -15,9 +15,9 @@ and GPT4All (4891).
 
 `ask` is openai-compatible's ask, held to this machine: the kernel bites
 first, only the passages served go to the model, and its reply is proposed
-for your seal citing the passages its brackets name. Without `--url`, the
-first server running in the order above is asked; without `--model`, the
-first model it lists. A URL off this machine (anything but a loopback
+for your seal citing the passages its brackets name. The first server
+answering among those `--url` names, or else in the order above, is asked;
+without `--model`, the first model it lists. A URL off this machine (anything but a loopback
 address or localhost) is refused before anything is sent.
 
 Exit codes, the kernel's: for `servers`, 0 one is running, 42 none; for
@@ -49,7 +49,7 @@ _spec.loader.exec_module(oc)
 
 USAGE = (
     "usage: local_model.py servers [--url URL ...]\n"
-    "       local_model.py ask --box DIR [--url URL] [--model NAME]"
+    "       local_model.py ask --box DIR [--url URL ...] [--model NAME]"
     ' [--system FILE] [--now TS] "your question"'
 )
 #: where each runtime listens unless told otherwise, in the order they are tried
@@ -123,32 +123,37 @@ def main(argv: list[str]) -> int:
             print(f"refused: not on this machine: {', '.join(off)}", file=sys.stderr)
             return kernel.REFUSED
         return servers(urls)
-    rest, given = [], {}
+    rest, urls, given = [], [], {}
     it = iter(argv[1:])
     for a in it:
-        if a in ("--url", "--model") and a not in given:
+        if a == "--url":
+            urls.append(next(it, ""))
+        elif a == "--model" and a not in given:
             given[a] = next(it, "")
         else:
             rest.append(a)
-    if verb != "ask" or "" in given.values():
+    if verb != "ask" or "" in urls or "" in given.values():
         print(USAGE, file=sys.stderr)
         return kernel.REFUSED
-    if "--url" in given and not on_this_machine(given["--url"]):
-        print(f"refused: {given['--url']} is not on this machine; local-model asks a local model",
+    off = [u for u in urls if not on_this_machine(u)]
+    if off:
+        print(f"refused: not on this machine: {', '.join(off)}; local-model asks a local model",
               file=sys.stderr)  # fmt: skip
         return kernel.REFUSED
     # what openai-compatible would refuse, it refuses before any server is looked for
     if oc.parse(["ask", *rest, "--url", "u", "--model", "m"]) is None:
         print(USAGE, file=sys.stderr)
         return kernel.REFUSED
-    url, offered = given.get("--url"), None
-    tried = [url] if url else [u for _, u in known([])]
+    tried = urls or [u for _, u in known([])]
+    url, offered = None, None
     for u in tried:
         offered = models(u)
         if offered is not None:
             url = u
             break
-    if offered is None and not (url and "--model" in given):
+    if url is None and len(urls) == 1 and "--model" in given:
+        url = urls[0]  # one server, one model named: asked though it lists none
+    if url is None:
         print(f"no local model server is running (looked at {', '.join(tried)})")
         return kernel.ESCALATE
     model = given.get("--model") or (offered[0] if offered else "")
