@@ -181,7 +181,7 @@ def test_a_resource_record_has_no_http_envelope(tmp_path):
     data += record("resource", "urn:pageinfo:https://example.org/", "2024-05-06T07:08:09Z",
                    b'{"pages": 1}', "application/json", version="1.1")  # fmt: skip
     assert text_of(data, tmp_path) == (
-        "2024-05-06 07:08 https://example.org/notes.txt\n(no title)\nBins go out on Thursday.\n"
+        "2024-05-06 07:08 https://example.org/notes.txt\nBins go out on Thursday.\n"
     )
 
 
@@ -226,9 +226,8 @@ def test_a_broken_body_is_left_out_and_the_rest_of_the_file_still_read(tmp_path)
     )  # fmt: skip
     got, out = mirror_of(tmp_path, {"c.warc": data})
     assert (
-        (out / "c.warc.txt").read_text()
-        == "2024-03-02 08:01 https://example.org/good\n(no title)\nGood page.\n"
-    )
+        out / "c.warc.txt"
+    ).read_text() == "2024-03-02 08:01 https://example.org/good\nGood page.\n"
     assert "c.warc: 1 pages; left out 1 encoding, 1 not http" in got.stdout
 
 
@@ -241,8 +240,8 @@ def test_a_chunked_body_cut_off_keeps_what_arrived_and_one_stored_joined_is_read
         + response("https://example.org/ext", "2024-03-02T08:02:00Z", b"4;name=v\nSome\n0\n\n", extra=("Transfer-Encoding: chunked",))
     )  # fmt: skip
     text = text_of(data, tmp_path)
-    assert "(no title)\nHello Wor\n" in text and "(no title)\nAlready joined.\n" in text
-    assert "(no title)\nSome\n" in text
+    assert "Hello Wor\n" in text and "Already joined.\n" in text
+    assert "Some\n" in text
 
 
 def test_a_heading_that_repeats_the_title_is_not_written_twice(tmp_path):
@@ -279,8 +278,8 @@ def test_the_same_address_captured_twice_is_two_passages_with_their_own_dates(tm
         "https://example.org/news", "2024-06-09T17:45:59Z", b"<p>New news.</p>"
     )
     text = text_of(data, tmp_path)
-    assert "2024-03-02 08:00 https://example.org/news\n(no title)\nOld news." in text
-    assert "2024-06-09 17:45 https://example.org/news\n(no title)\nNew news." in text
+    assert "2024-03-02 08:00 https://example.org/news\nOld news." in text
+    assert "2024-06-09 17:45 https://example.org/news\nNew news." in text
 
 
 def test_a_long_page_is_wrapped_for_the_kernel_and_only_its_first_passage_holds_the_address(
@@ -300,15 +299,14 @@ def test_a_long_page_is_wrapped_for_the_kernel_and_only_its_first_passage_holds_
     assert sum("example.org/long" in c["text"] for c in pile) == 1
 
 
-def test_a_page_past_max_page_says_how_much_was_left_out(tmp_path):
+def test_a_page_past_max_page_is_cut_and_the_cut_is_said_on_the_files_line_not_in_it(
+    tmp_path,
+):
     body = b"".join(b"<p>" + b"x" * 999 + b"</p>" for _ in range(30))
-    text = text_of(
-        response("https://example.org/big", "2024-03-02T08:00:00Z", body), tmp_path
-    )
-    assert text.count("x" * 999) == 20
-    assert text.rstrip().endswith(
-        "(the rest of this page, 9990 characters, is left out)"
-    )
+    got, out = mirror_of(tmp_path, {"c.warc": response("https://example.org/big", "2024-03-02T08:00:00Z", body)})  # fmt: skip
+    text = (out / "c.warc.txt").read_text()
+    assert text.count("x" * 999) == 20 and text.rstrip().endswith("x" * 999)
+    assert "c.warc: 1 pages; left out 1 cut short" in got.stdout
 
 
 def test_a_mirror_past_the_kernels_max_file_goes_on_in_a_second_file(tmp_path):
@@ -325,9 +323,17 @@ def test_a_mirror_past_the_kernels_max_file_goes_on_in_a_second_file(tmp_path):
     assert "wrote 2 files" in got.stdout and len(kernel.chunks(out)) > 1000
 
 
-def test_an_odd_date_is_kept_as_written_and_a_missing_address_is_said(tmp_path):
+def test_an_odd_date_is_kept_as_written_and_nothing_stands_in_for_a_missing_address_or_title(
+    tmp_path,
+):
     data = record("resource", "", "March 2024", b"Plain.\n", "text/plain")
-    assert text_of(data, tmp_path).startswith("March 2024 address not in the record\n")
+    data += record(
+        "resource", "https://example.org/n.txt", "", b"Undated.\n", "text/plain"
+    )
+    assert (
+        text_of(data, tmp_path)
+        == "March 2024\nPlain.\n\nhttps://example.org/n.txt\nUndated.\n"
+    )
 
 
 def test_a_header_line_folded_onto_the_next_is_read_as_one():
@@ -419,3 +425,37 @@ def test_an_attribute_holding_a_comment_or_a_bracket_is_not_read_as_text(tmp_pat
         "Heritrix is the Internet Archive's crawler.",
     ]
     assert "data-mw" not in text and "ref name" not in text and '"b"' not in text
+
+
+def test_no_word_the_reader_adds_holds_a_question_about_something_absent(tmp_path):
+    """Willow's first promise: a word written into passage after passage
+    would hold half of a two-word question about anything. Every word in most
+    passages is the archive's own, from a WARC-Target-URI or a WARC-Date
+    (kept: they are the values a person asks by); none is the reader's, and
+    no stand-in the reader could write is served for an absent question."""
+    pages = [("roof", "<title>Roof</title><p>Kowalski fixed the roof.</p>"),
+             ("garden", "<p>The tomatoes went in.</p><p>Beans next.</p>"),
+             ("bins", "<p>Bins go out on Thursday.</p>"),
+             ("big", "".join(f"<p>{i} " + "z" * 900 + "</p>" for i in range(30))),
+             ("gone", "<p>Not here</p>")]  # fmt: skip
+    data = WARCINFO + REQUEST + REVISIT
+    for i, (name, html) in enumerate(pages):
+        data += response(f"https://example.org/{name}", f"2024-03-0{i + 1}T08:00:00Z", html.encode())  # fmt: skip
+    data += record("resource", "", "", b"Loose note.\n", "text/plain")
+    got, out = mirror_of(tmp_path, {"c.warc": data})
+    pile = kernel.chunks(out)
+    heads = [c for c in pile if c["text"][:4] == "2024"]
+    count: dict[str, int] = {}
+    for c in heads + [c for c in pile if "zzz" not in c["text"]]:
+        for w in set(kernel.words(c["text"])) - kernel.FUNCTION:
+            count[w] = count.get(w, 0) + 1
+    common = {w for w, n in count.items() if n >= len(heads)}
+    record_values = {"https", "example", "org", "2024", "03", "08", "00"}
+    assert common == record_values, common
+    filler = ["title", "untitled", "address", "record", "date", "left", "characters", "rest", "cut", "short", "captured", "page"]  # fmt: skip
+    for w in filler:
+        assert all(w not in kernel.words(c["text"]) for c in pile), w
+        assert kernel.rank(pile, f"volcano {w}") == [], w
+    assert "Kowalski" in kernel.rank(pile, "who fixed the roof")[0]["text"]
+    assert "Thursday" in kernel.rank(pile, "when do bins go out")[0]["text"]
+    assert "tomatoes" in kernel.rank(pile, "what is planted in the garden")[0]["text"]

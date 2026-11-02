@@ -43,8 +43,9 @@ each file is said on the line printed for it.
 Each file is written to MIRROR at the same relative path with .txt added;
 one that would pass the kernel's MAX_FILE goes on in .2.txt, .3.txt and so
 on, a page never split across two. A page's text past MAX_PAGE characters is
-left out, and its last line says how much. A file is skipped only when no
-page in it can be read.
+left out, and the file's printed line counts it as cut short. A file is
+skipped only when no page in it can be read. Nothing the record doesn't hold
+is written into the mirror: no stand-in for a missing title, address or date.
 
 Exit codes, the kernel's: 0 wrote some; 42 nothing readable; 2 refused (FOLDER
 is not a folder, or MIRROR and FOLDER are inside one another).
@@ -233,28 +234,31 @@ def page_text(body: bytes, ctype: str) -> tuple[str, list[str]]:
 def when(date: str) -> str:
     """WARC-Date to the minute, `YYYY-MM-DD HH:MM`; anything else as written."""
     m = WHEN.match(date)
-    return f"{m.group(1)} {m.group(2)}" if m else (date or "date not in the record")
+    return f"{m.group(1)} {m.group(2)}" if m else date
 
 
-def passage(head: dict[str, str], title: str, paras: list[str]) -> str:
-    url = (
-        head.get("warc-target-uri", "").strip().strip("<>")
-        or "address not in the record"
-    )
-    lines = [f"{when(head.get('warc-date', '').strip())} {url}", title or "(no title)"]
-    body, size = [], 0
-    for i, p in enumerate(paras):
+def passage(head: dict[str, str], title: str, paras: list[str]) -> tuple[str, bool]:
+    """A page's passage, and whether its text was cut at MAX_PAGE. Nothing
+    the record doesn't hold is written: no stand-in for a missing title,
+    address or date, and the cut is said on the file's printed line, since a
+    word written into passage after passage would hold questions about
+    something the archive never had."""
+    url = head.get("warc-target-uri", "").strip().strip("<>")
+    top = " ".join(x for x in (when(head.get("warc-date", "").strip()), url) if x)
+    body, size, cut = [], 0, False
+    for p in paras:
         if size + len(p) > MAX_PAGE:
-            left = sum(len(q) for q in paras[i:])
-            body.append(f"(the rest of this page, {left} characters, is left out)")
+            cut = True
             break
         body.append(p)
         size += len(p)
-    return "\n".join(lines) + "\n" + "\n\n".join(body) + "\n"
+    lines = [x for x in (top, title) if x]
+    return "\n".join(lines) + "\n" + "\n\n".join(body) + "\n", cut
 
 
 def page(head: dict[str, str], block: bytes) -> tuple[str | None, str]:
-    """A record's passage, or None and why it was left out."""
+    """A record's passage, or None and why it was left out ("cut short"
+    with a passage whose text stopped at MAX_PAGE)."""
     kind = head.get("warc-type", "").lower()
     if kind not in PAGES:
         return None, kind or "no type"
@@ -278,7 +282,8 @@ def page(head: dict[str, str], block: bytes) -> tuple[str | None, str]:
     title, paras = page_text(body, ctype)
     if not title and not paras:
         return None, "no text"
-    return passage(head, title, paras), ""
+    text, cut = passage(head, title, paras)
+    return text, "cut short" if cut else ""
 
 
 # ── a file ──────────────────────────────────────────────────────────────────
@@ -318,10 +323,10 @@ def read(path: Path) -> tuple[list[str], dict[str, int]]:
                         text, why = page(head, block)
                     except Unreadable as e:
                         text, why = None, str(e)
-                if text is None:
-                    left[why] = left.get(why, 0) + 1
-                else:
+                if text is not None:
                     found.append(text)
+                if why:  # left out, or (with a text) cut short
+                    left[why] = left.get(why, 0) + 1
         except ERRORS:
             left["unreadable rest"] = left.get("unreadable rest", 0) + 1
     return found, left

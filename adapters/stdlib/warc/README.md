@@ -29,7 +29,7 @@ each captured page a passage of its own:
 
 The first line is the time it was captured (WARC-Date, which is UTC, to
 the minute) and its address (WARC-Target-URI); the second is the page's
-title, or `(no title)`; then its paragraphs, one per paragraph, heading or
+title, when it has one; then its paragraphs, one per paragraph, heading or
 list item, a blank line between them (a first heading that only repeats
 the title is left out). The same address captured twice is two passages,
 each under its own date.
@@ -40,6 +40,17 @@ is above them in the same file, which is where the kernel already looks for
 a passage's date, and the kernel cites the file and line. A tag on every
 paragraph would make every paragraph of a site hold the site's words, so a
 question naming the site and one other word would be held by all of them.
+
+**Nothing but what the archive holds.** No word the reader makes up goes
+into a passage: no `(no title)`, no stand-in for a missing address or date,
+no count of what was cut. A word written into passage after passage would
+hold half of any two-word question, so a question about something the
+archive never had would be answered with an unrelated page; a test asks
+each such word beside one the folder lacks and is served nothing. What does
+repeat is the archive's own: each page's address and capture time, which
+are what you ask by. Their cost: a short question naming a site, such as
+"what did example.org say about volcanoes", is held by that site's
+headings even when no page mentions volcanoes.
 
 **Read without unpacking.** A .warc.gz is read through gzip, whether each
 record is its own gzip member (as crawlers write it) or the whole file is
@@ -68,7 +79,8 @@ held no pages says why:
 
 **Capped for the kernel.** A long paragraph is wrapped at 200 characters,
 so the kernel can cut it into passages of its own size. A page's text past
-20,000 characters is left out, and its last line says how many characters.
+20,000 characters is left out, and the file's printed line counts it
+(`1 cut short`), not the mirror.
 A mirror file that would pass the kernel's 1,000,000-byte limit, which the
 kernel won't read, goes on in `<same path>.2.txt`, `<same path>.3.txt` and so on, a
 page never split between two.
