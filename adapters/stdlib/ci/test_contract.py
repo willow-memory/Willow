@@ -187,6 +187,10 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         b"\\section{Method}\\label{sec:m}\nWe measure the tide at six harbours \\cite{smith2020}. % a comment\n"
         b"The result is $x = 1$ and\n\\begin{equation}\ny = mx + b\n\\end{equation}\nholds \\emph{everywhere}.\n\\end{document}\n"
     )}),
+    "markdown": ("markdown.py", {"progress.md": (
+        b"---\ndate: 2024-03-03\ntags: [study]\n---\n# AAT Level 4\n\n| unit | mark |\n|---|---|\n| APMA | 71% |\n\n"
+        b"## Next\n- [ ] book **BSTX**, see [the portal](https://aat.example/book) and [[Exam plan]]\n"
+    )}),
     "pgn": ("pgn.py", {"club.pgn": (
         b'[Event "Club Championship"]\n[Site "Leeds"]\n[Date "2024.03.03"]\n[White "Ada Example"]\n[Black "Cy Sample"]\n[Result "1-0"]\n[ECO "B20"]\n[Opening "Sicilian Defense"]\n\n'
         b'1. e4 {My usual start.} c5 2. Nf3 d6 (2... Nc6 {Also fine}) 3. d4 cxd4 4. Nxd4 Nf6 14. Qd7 {I missed the fork here.} 1-0\n'

@@ -10,6 +10,13 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `markdown`: any Markdown file as the text it shows, line for line, so a
+  passage in the mirror is on the .md file's own line. Front matter as
+  key: value lines; a table's body rows as header: value pairs; a heading with
+  its text straight under it after the headings above it; links as their text
+  with an outside address, images as their alt text, wikilinks as the text
+  they show; tasks as to do or done; emphasis, HTML, comments, escapes and
+  footnote markers off; fenced code as written.
 - `ui/`, willow's own UI (v1): `python ui/canvas.py` opens a page on this
   machine that goes the way a person does. Choose your folders; see what the
   kernel alone makes of them, as counts, never a file's words or name; start
