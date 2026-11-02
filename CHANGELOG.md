@@ -17,7 +17,7 @@ says how). The first was v0.1.0.
   footnotes, lists and descriptions are kept; comments, delimiters, attribute
   lines and includes are blank; listing and source blocks stay as written. A
   table's line is its cells, the header row kept once rather than written onto
-  every row, so no added word sits in every passage.
+  every row, so no added word sits in every passage. (#177)
 - `rst`: reStructuredText files as plain prose, line for line, Python
   standard library only. Titles keep their text and lose their adornment
   rows; admonitions read "note:" or "warning:"; code and literal blocks are
