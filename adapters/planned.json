@@ -1009,16 +1009,6 @@
   "network": "none"
  },
  {
-  "name": "night-batch",
-  "kind": "deps",
-  "section": "Assistants",
-  "line": "Questions waiting for suggestions batched into one local-model run overnight, stopped the moment you're back.",
-  "source": "new",
-  "needs": "a local model server; licence varies by model",
-  "writes": "record",
-  "network": "loopback"
- },
- {
   "name": "nim",
   "kind": "stdlib",
   "section": "Play",
