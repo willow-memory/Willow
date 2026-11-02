@@ -10,6 +10,12 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `rst`: reStructuredText files as plain prose, line for line, Python
+  standard library only. Titles keep their text and lose their adornment
+  rows; admonitions read "note:" or "warning:"; code and literal blocks are
+  kept as written; links, roles, substitutions, footnotes and fields read as
+  their text; a table's rows are their cells. Nothing that would repeat on
+  every passage is added: no title path, no header beside each value.
 - `ui/`, willow's own UI (v1): `python ui/canvas.py` opens a page on this
   machine that goes the way a person does. Choose your folders; see what the
   kernel alone makes of them, as counts, never a file's words or name; start
