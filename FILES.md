@@ -1214,6 +1214,10 @@ willow/
 │   │   │   ├── web_pages.py  saved .html and .mhtml as their paragraphs, under the address they came from
 │   │   │   ├── test_web_pages.py
 │   │   │   └── README.md
+│   │   ├── webarchive/
+│   │   │   ├── webarchive.py  Safari's .webarchive as web-pages reads the page, then each frame under its address
+│   │   │   ├── test_webarchive.py
+│   │   │   └── README.md
 │   │   ├── weights-card/
 │   │   │   ├── weights_card.py  a model card from a GGUF or safetensors file's own header, with the file's SHA-256
 │   │   │   ├── test_weights_card.py

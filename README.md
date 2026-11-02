@@ -126,11 +126,11 @@ says how to pick one up:
 <!-- willow:front show=pick week=2026-W45 -->
 **Add-on of the week**
 
-**[format-rot](adapters/stdlib/format-rot/)** — Files in formats that may stop opening (old office files, proprietary ones, those no reader handles) flagged while you can still convert them.
+**[across](adapters/stdlib/across/)** — One page made from several willow records at once (each one's digest, export, timeline or readings), every line still cited by where it came from.
 
-*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 321 built add-ons in name order.*
+*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 322 built add-ons in name order.*
 
-[Every add-on, 321 built of 516, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 322 built of 517, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 
