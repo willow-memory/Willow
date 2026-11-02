@@ -15,7 +15,7 @@ says how). The first was v0.1.0.
   saved as an .eml (sender, recipients, date and subject, then the body and the
   attachments' names). A message with no Date header takes Apple Mail's date
   received, in UTC; the run says how many, the text adds no word for it. A file whose byte count is malformed or which
-  is shorter than it is skipped and counted.
+  is shorter than it is skipped and counted. (#187)
 - `shortcuts`: the link files dragged out of a browser onto a desktop or
   into a folder (Windows `.url`, macOS `.webloc`, Linux `.desktop`), each as
   the title its name gives and the address it holds; a Linux launcher as its
