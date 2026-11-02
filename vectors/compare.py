@@ -1,6 +1,6 @@
 """Hold the ports to kernel.py: every vector, whole sessions, and each other's boxes.
 
-    python3 compare.py [--port all|java|ts|csharp|go] [--keep DIR]
+    python3 compare.py [--port all|java|ts|csharp|go|rust] [--keep DIR]
 
 Three checks for each port, each said as a count; "unexplained" is the
 number to read:
@@ -23,7 +23,8 @@ when nothing is unexplained, 1 otherwise.
 Toolchains: Java needs a JDK and a UTF-8 locale (the JVM can't name a
 non-ASCII file without one; it runs here with LC_ALL=C.UTF-8). TypeScript
 needs Node 18+ and npm (it installs `ports/ts/`'s two dev dependencies once).
-C# needs the .NET 8 SDK. Go needs Go 1.15+ (`go build`, no packages).
+C# needs the .NET 8 SDK. Go needs Go 1.15+ (`go build`, no packages). Rust
+needs cargo (`cargo build --offline`, no crates).
 """
 
 from __future__ import annotations
@@ -163,7 +164,34 @@ class Go:
         return [self.exe, *args]
 
 
-PORTS = {"java": Java, "ts": TypeScript, "csharp": CSharp, "go": Go}
+class Rust:
+    name = "rust"
+    tools = ("cargo",)
+
+    def __init__(self, work: Path):
+        self.exe = os.environ.get("KERNEL_RS_EXE")  # a build made elsewhere
+        if self.exe:
+            return
+        target = work / "rust-target"
+        _build(
+            [
+                "cargo",
+                "build",
+                "--release",
+                "--offline",
+                "-q",
+                "--target-dir",
+                str(target),
+            ],
+            cwd=PORT_SRC / "rust",
+        )
+        self.exe = str(target / "release" / "kernel")
+
+    def argv(self, *args: str) -> list[str]:
+        return [self.exe, *args]
+
+
+PORTS = {"java": Java, "ts": TypeScript, "csharp": CSharp, "go": Go, "rust": Rust}
 
 
 class Python:

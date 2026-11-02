@@ -1429,12 +1429,15 @@ willow/
 │   ├── csharp/
 │   │   ├── Kernel.cs         .NET 5+, no packages
 │   │   └── Kernel.csproj
-│   └── go/
-│       ├── kernel.go         Go 1.15+, standard library only
-│       ├── flock_unix.go     the record's lock, kernel.py's own flock
-│       ├── flock_windows.go  no lock there, as the C# port has none
-│       └── go.mod
-├── vectors/                  what keeps the five implementations identical
+│   ├── go/
+│   │   ├── kernel.go         Go 1.15+, standard library only
+│   │   ├── flock_unix.go     the record's lock, kernel.py's own flock
+│   │   ├── flock_windows.go  no lock there, as the C# port has none
+│   │   └── go.mod
+│   └── rust/
+│       ├── kernel.rs         Rust 1.47+, standard library only, no crates: SHA-256 and HMAC written in
+│       └── Cargo.toml
+├── vectors/                  what keeps the six implementations identical
 │   ├── gen.py                reads the test cases out of kernel.py
 │   ├── cases.json            4,668 cases, with the answers kernel.py gives
 │   ├── kernel_tables.json    Python's Unicode and HTML rules, so ports don't use their own

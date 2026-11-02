@@ -10,6 +10,8 @@ ports/csharp/obj/
 ports/csharp/bin/
 ports/csharp/out/
 ports/go/out/
+ports/rust/target/
+ports/rust/Cargo.lock
 out/
 
 # the CI record and its key (adapters/ci)

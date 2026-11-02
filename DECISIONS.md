@@ -96,8 +96,8 @@ or higher with a reason on the card. Old machines are real. *Held by:*
 
 ## The ports
 
-**Five languages, one behaviour.** Java, TypeScript, C# and Go answer the same
-cases as `kernel.py`, byte for byte. *Held by:* `vectors/compare.py`, one CI gate per
+**Six languages, one behaviour.** Java, TypeScript, C#, Go and Rust answer the
+same cases as `kernel.py`, byte for byte. *Held by:* `vectors/compare.py`, one CI gate per
 port.
 
 ## How the repo works

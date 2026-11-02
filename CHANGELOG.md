@@ -10,6 +10,14 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `ports/rust`, a fifth port of `kernel.py`: Rust, the standard library
+  only and no crates, following the Go port function for function. What
+  Rust's library lacks is written in and held by the vectors: SHA-256 and
+  HMAC (RFC 4231's cases), JSON as Python reads and writes it, base64, and a
+  whole number of any size so the rank's scores compare exactly.
+  `vectors/compare.py --port rust` holds it to all 4,668 vectors and the
+  whole session, both ways, with zero unexplained differences; CI's ports
+  job runs it as `ports:rust`. (#191)
 - `ports/go`, a fourth port of `kernel.py`: Go 1.15+, the standard library
   only, following the Java port function for function with the scanners
   every port shares, Python's decisions read from `vectors/kernel_tables.json`,

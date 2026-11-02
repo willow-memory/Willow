@@ -6,7 +6,7 @@ port answers the same cases byte for byte, writes boxes `kernel.py` verifies,
 and verifies boxes `kernel.py` wrote. The vectors are the converter, both
 directions.
 
-Four ports so far, every one passing everything:
+Five ports so far, every one passing everything:
 
 | Port | File | Runtime | Made from |
 |---|---|---|---|
@@ -14,6 +14,7 @@ Four ports so far, every one passing everything:
 | TypeScript | `ports/ts/kernel.ts` | Node 14+, standard library (TypeScript 4.0+ to build) | `kernel.py` and Java |
 | C# | `ports/csharp/Kernel.cs` | .NET 5+, base class library | Java's shape, TypeScript's scanners |
 | Go | `ports/go/kernel.go` | Go 1.15+, standard library | Java's shape, the same scanners |
+| Rust | `ports/rust/kernel.rs` | Rust 1.47+, standard library, no crates | Go, function for function |
 
 Made 2026-10-21 in willow-bot, after asking its pile what the fleet already
 had. The pieces were already there; this puts them together for ports:
@@ -40,7 +41,7 @@ had. The pieces were already there; this puts them together for ports:
 ```
 python3 gen.py                 # after any change to kernel.py; commit both JSON files
 python3 compare.py             # every port whose toolchain is here
-python3 compare.py --port go   # one port
+python3 compare.py --port rust # one port
 ```
 
 It ends with a grid, every box under every implementation (0 = the chain
@@ -50,13 +51,14 @@ holds), and `unexplained differences: 0`.
 changed and the vectors weren't remade, and runs `compare.py` when any port's
 toolchain is on the machine.
 
-The ports by themselves (`KERNEL_TABLES` names the tables for all four):
+The ports by themselves (`KERNEL_TABLES` names the tables for all five):
 
 ```
 javac -d out ../ports/java/Kernel.java && java -cp out Kernel bite --box BOX "your words"
 (cd ../ports/ts && npm install && npx tsc) && node ../ports/ts/dist/kernel.js bite --box BOX "your words"
 dotnet build ../ports/csharp/Kernel.csproj -o ../ports/csharp/out && dotnet ../ports/csharp/out/Kernel.dll bite --box BOX "your words"
 (cd ../ports/go && go build -o out/kernel .) && ../ports/go/out/kernel bite --box BOX "your words"
+(cd ../ports/rust && cargo build --release --offline) && ../ports/rust/target/release/kernel bite --box BOX "your words"
 ```
 
 **Java needs a UTF-8 locale.** Without one the JVM can't even name a file with
@@ -75,6 +77,7 @@ when 3.9.0 came out (2026-10-21, at the operator's ask):
 | Node, TypeScript | Node 14.15.0 LTS and 15.0.0 (2020-10), TypeScript 4.0.5 | the npm registry | everything passes, after one change: `TextDecoder` imported from `util` (a global in Node 14, but typed only in `util` then) |
 | .NET | 5.0.0 runtime (2020-11-10), C# 9 | NuGet's runtime packs, self-contained | everything passes, after the port stopped using .NET 6 and 7 conveniences (see below) |
 | Go | 1.15.15, the last of the 1.15 line (1.15.0 is from 2020-08-11) | go.dev's archive | everything passes, unchanged: `ioutil` for the file calls, build tags in both spellings, no generics |
+| Rust | 1.47.0 (2020-10-08) | rustup | everything passes, unchanged, once the Cargo.lock a 2026 cargo writes (format 4) is left out of the repo: the crate has no dependencies, so it says nothing |
 
 .NET 5 does its hashing through OpenSSL 1.1, which a 2024 system doesn't
 carry; it ran with Ubuntu 20.04's OpenSSL 1.1.1f (checked against focal's
@@ -87,14 +90,14 @@ Python's `resolve()` than walking links); and the file mode (read, and 0600 at
 creation) is the library's on .NET 7+ and libc's before it, the only `#if`.
 
 `compare.py` takes a build made elsewhere: `KERNEL_TS_DIST` (a `dist/`
-folder), `KERNEL_CS_EXE` (a self-contained `Kernel`) and `KERNEL_GO_EXE` (a
-built `kernel`), with the old Node or JDK first on `PATH`.
+folder), `KERNEL_CS_EXE` (a self-contained `Kernel`), `KERNEL_GO_EXE` and
+`KERNEL_RS_EXE` (a built `kernel`), with the old Node or JDK first on `PATH`.
 
 ## Scanners, not regular expressions
 
 The kernel has four patterns: a page's hidden `<script>`, `<style>` and
 comment spans, its tags, its character references, and the name after
-`def`/`function`/`fn`. All four ports match them with small hand-written
+`def`/`function`/`fn`. All five ports match them with small hand-written
 scanners, the same in each, written from Python's rules:
 
 - .NET matches UTF-16 units and can't put an astral code point in a
@@ -105,10 +108,18 @@ scanners, the same in each, written from Python's rules:
   vectors caught it on three pages). Python's fold and backreference are in
   the tables now, and every port reads them.
 
-So the next ports (Rust, C, C++) can follow any of the four line by line. The
-Go port did: Java's shape, function for function, with text as code points
+So the next ports (C, C++) can follow any of the five line by line. The Go
+port did: Java's shape, function for function, with text as code points
 (`[]rune`), exact scores as `big.Rat`, and `flock` from `syscall`, which is
 the one call that needs a build tag (`flock_unix.go`, `flock_windows.go`).
+The Rust port followed Go the same way, and is the first whose standard
+library lacks what the kernel leans on: SHA-256, HMAC, a big integer, JSON,
+base64 and a temporary folder are each written in, small, and the vectors
+hold them (RFC 4231's cases for the HMAC, the canon cases for the JSON).
+Its rank compares scores by cross-multiplying whole numbers of any size, so
+no float and no overflow decides an order. `flock` is an `extern "C"` call,
+behind `cfg(unix)`. Publishing it to crates.io is the `crates` idea, still
+on the list.
 
 ## Is it really testing anything?
 
@@ -164,9 +175,10 @@ without one.
 | Java | `FileChannel.lock`, a POSIX record lock (`fcntl`), which Linux keeps separate from `flock` | No: Java has no `flock` call |
 | TypeScript | A directory made beside the record (Node has no lock call) | No |
 | Go | `syscall.Flock`, blocking, on the record (`flock_unix.go`) | Yes (tested: it waited on kernel.py's writer, then wrote) |
+| Rust | libc's `flock`, blocking, declared `extern "C"` (`cfg(unix)`) | Yes (tested the same way) |
 
 Two writers of the same port never collide. Two different ones writing one
-box at the same instant are kept apart only among C#, Go and `kernel.py`.
+box at the same instant are kept apart only among C#, Go, Rust and `kernel.py`.
 
 ## Open
 
@@ -180,10 +192,10 @@ box at the same instant are kept apart only among C#, Go and `kernel.py`.
   SubtleCrypto. A browser build, the person's own folder through the File
   System Access API, is the natural next step for Grove's web and phone
   surfaces.
-- Next ports: Rust about a day now, following the scanners; C or C++ two to
-  three days (ICU-free, since the tables carry Unicode).
+- Next ports: C or C++, two to three days (ICU-free, since the tables carry
+  Unicode; the Rust port's SHA-256 and big integer are the shape to follow).
 - `propose` with every suggestion refused exits 42 in `kernel.py` (bug #96's
-  fix) and in Go, but still 0 in Java, TypeScript and C#, which were written
+  fix), in Go and in Rust, but still 0 in Java, TypeScript and C#, which were written
   before the fix. The session doesn't exercise it: every `propose` in it has a
   line that passes. A session step with none, and the three one-line fixes,
   are the next change here.
