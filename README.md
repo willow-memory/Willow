@@ -126,11 +126,11 @@ says how to pick one up:
 <!-- willow:front show=pick week=2026-W45 -->
 **Add-on of the week**
 
-**[model-card](adapters/stdlib/model-card/)** — A card naming the model behind an assistant (version or weights hash, where it runs, licence, known limits), with the card's hash on the record so each suggestion can say which model made it.
+**[abbreviations](adapters/stdlib/abbreviations/)** — Your own shorthand, written down once (appt, Rx, w/c), so a question finds either form.
 
-*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 303 built add-ons in name order.*
+*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 304 built add-ons in name order.*
 
-[Every add-on, 303 built of 505, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 304 built of 505, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 

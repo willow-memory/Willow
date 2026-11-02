@@ -687,6 +687,8 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     # a time long gone: it stops before the first question, no server looked for
     "night-batch": ("night_batch.py", ["run", "--box", "{box}", "--questions", "{pile}/garden.md",
                     "--until", "2000-01-01T00:00:00Z"]),
+    # nothing sealed for the question: nothing to mark, no server looked for
+    "quantized": ("quantized.py", ["--box", "{box}", "--questions", "{pile}/garden.md"]),
     "local-model": ("local_model.py", ["ask", "--box", "{box}", "--url", "http://127.0.0.1:9/v1",
                     "--model", "m", "tomatoes"]),
     # the question is the passage itself, an echo: nothing is asked, the port never reached

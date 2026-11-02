@@ -1228,16 +1228,6 @@
   "network": "earthquake.usgs.gov, to read the week's earthquakes"
  },
  {
-  "name": "quantized",
-  "kind": "deps",
-  "section": "Assistants",
-  "line": "Finds the smallest quantized local model that still gets your box's own questions right, so suggestions come faster.",
-  "source": "new",
-  "needs": "a local model server; licence varies by model",
-  "writes": "nothing",
-  "network": "loopback"
- },
- {
   "name": "quiet-corner",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
