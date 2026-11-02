@@ -684,6 +684,9 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     # the question is the passage itself, an echo: nothing is asked, the port never reached
     "same-way": ("same_way.py", ["--box", "{box}", "--url", "http://127.0.0.1:9/v1",
                  "--model", "m", "--questions", "{pile}/garden.md"]),
+    # the question is the passage itself, an echo: nothing is frozen, the port never reached
+    "model-drift": ("model_drift.py", ["freeze", "--box", "{box}", "--url", "http://127.0.0.1:9/v1",
+                    "--model", "m", "--questions", "{pile}/garden.md"]),
     # no answer sealed for the question: nothing is asked, the port never reached
     "model-exam": ("model_exam.py", ["--box", "{box}", "--url", "http://127.0.0.1:9/v1",
                    "--model", "m", "--questions", "{pile}/garden.md"]),

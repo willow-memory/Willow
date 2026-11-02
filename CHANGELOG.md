@@ -10,6 +10,12 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `model-drift`, frozen questions asked again of a model, flagging answers
+  that change while its name and card stay the same: `model_drift.py freeze
+  ... > frozen.json` prints the model's name, its card's SHA-256 and each
+  answer with the passages served (writing nothing), and `again --frozen
+  frozen.json` asks the same model now, flagging a changed answer as drift
+  only when the passages, the name and the card all held still. (#164)
 - `model-exam`, any model scored against the answers you sealed:
   `model_exam.py --box DIR --url URL --model NAME --questions FILE` asks
   each question you sealed an answer for (the kernel's `sealed` and

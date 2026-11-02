@@ -671,6 +671,10 @@ willow/
 │   │   │   ├── model_card.py  a card naming the model behind an assistant, its SHA-256 on the record
 │   │   │   ├── test_model_card.py
 │   │   │   └── README.md
+│   │   ├── model-drift/
+│   │   │   ├── model_drift.py  your frozen questions asked again, flagging answers that changed under the same name and card
+│   │   │   ├── test_model_drift.py
+│   │   │   └── README.md
 │   │   ├── model-exam/
 │   │   │   ├── model_exam.py  a model scored against the answers you sealed, your questions as its exam
 │   │   │   ├── test_model_exam.py
