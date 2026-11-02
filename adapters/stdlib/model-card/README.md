@@ -58,8 +58,8 @@ refused (a bad command line, not a box, a record that doesn't verify, a
 card that doesn't name its model or say which).
 
 **Uses:** the kernel's `read`, `append` and exit codes;
-[weights-card](../weights-card/)'s card format, and weights-card itself in
-its tests.
+[weights-card](../weights-card/)'s `header`, the one reader of the card
+format, and weights-card itself in its tests.
 
 **Never:** writes the card's text onto the record, changes the card, seals,
 goes online, or reads your key.

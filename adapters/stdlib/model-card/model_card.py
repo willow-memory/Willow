@@ -32,12 +32,21 @@ card that doesn't name its model or say which).
 from __future__ import annotations
 
 import hashlib
+import importlib.util
 import re
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE.parents[2]))
 import kernel  # noqa: E402
+
+_spec = importlib.util.spec_from_file_location(
+    "willow_weights_card_for_model_card",
+    HERE.parent / "weights-card" / "weights_card.py",
+)
+weights_card = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(weights_card)
 
 USAGE = (
     "usage: model_card.py add --box DIR --from CARD [--now TS]\n"
@@ -45,24 +54,14 @@ USAGE = (
     "       model_card.py list --box DIR"
 )
 KIND = "model-card"
-MARKER = "<!-- willow-model"
-MISSING = "not in the header"
 SHA = re.compile(r"[0-9a-f]{64}")
 
 
 def header(text: str) -> dict[str, str]:
-    """The card's header lines, key to value; a value it doesn't hold is absent."""
-    start = text.find(MARKER)
-    end = text.find("-->", start)
-    if start < 0 or end < 0:
-        return {}
-    fields = {}
-    for line in text[start + len(MARKER) : end].splitlines():
-        key, sep, value = line.partition(":")
-        value = value.strip()
-        if sep and value and value != MISSING:
-            fields[key.strip()] = value
-    return fields
+    """The card's header as weights-card reads it, without the values it
+    doesn't hold: empty, or written `not in the header`."""
+    got = weights_card.header(text)
+    return {k: v for k, v in got.items() if v and v != weights_card.MISSING}
 
 
 def card_of(path: Path) -> tuple[dict[str, str], str]:
