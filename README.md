@@ -126,11 +126,11 @@ says how to pick one up:
 <!-- willow:front show=pick week=2026-W45 -->
 **Add-on of the week**
 
-**[across](adapters/stdlib/across/)** — One page made from several willow records at once (each one's digest, export, timeline or readings), every line still cited by where it came from.
+**[code-shape](adapters/deps/code-shape/)** — Search code by its shape, not its words: every call of a kind, whatever it's named.
 
-*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 301 built add-ons in name order.*
+*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 302 built add-ons in name order.*
 
-[Every add-on, 301 built of 505, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 302 built of 505, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 
