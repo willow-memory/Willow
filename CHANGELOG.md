@@ -15,7 +15,7 @@ says how). The first was v0.1.0.
   each run, ride and walk in activities.csv, a .gpx or a .tcx (gzipped or
   not) as a line with its start, name, distance and time, in the zone the
   file gives, never a guessed one, and no word of its own beside them.
-  .fit files are skipped and counted.
+  .fit files are skipped and counted. (#180)
 - `pocket`: Pocket's export, now that Pocket is gone: the older
   ril_export.html and the 2025 CSVs, loose or read from the zip without
   unpacking it, as one dated line per saved article, oldest first, with its
