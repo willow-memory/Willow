@@ -1,4 +1,4 @@
-"""tiny_gguf.py: a llama-shaped GGUF model of a few kilobytes, for the tests.
+"""conftest.py: a llama-shaped GGUF model of a few kilobytes, for the tests.
 
 One layer, an embedding of 16, two heads, and a vocabulary of the 256 bytes
 with <unk>, <s> and </s>: enough for llama.cpp to load it, tokenize any text
@@ -6,8 +6,8 @@ and generate, from weights drawn by a seeded generator, so the same seed
 writes the same bytes. What it says is noise; that it says it in this process,
 the same way twice, is what the tests need.
 
-    from tiny_gguf import write
-    write(Path("tiny.gguf"))
+Its `model` fixture writes one into the test's own folder. Here, not
+beside the add-on's code, so its writes are the tests' own.
 """
 
 from __future__ import annotations
@@ -15,6 +15,8 @@ from __future__ import annotations
 import random
 import struct
 from pathlib import Path
+
+import pytest
 
 ALIGN = 32
 EMBD, HEADS, FF, LAYERS, CTX = 16, 2, 32, 1, 256
@@ -101,3 +103,8 @@ def write(path: Path, seed: int = 0) -> Path:
     head += b"".join(_kv(*m) for m in meta) + infos
     path.write_bytes(head + b"\0" * _pad(len(head)) + b"".join(datas))
     return path
+
+
+@pytest.fixture
+def model(tmp_path) -> Path:
+    return write(tmp_path / "tiny.gguf")

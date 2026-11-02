@@ -10,6 +10,15 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `in-process`, suggestions from a GGUF model loaded inside the add-on
+  itself through llama-cpp-python: `in_process.py ask --box DIR --model
+  FILE.gguf "question"` is openai-compatible's bite-then-propose with no
+  server and no port, the claim naming the file by name and SHA-256. Its
+  tests run llama.cpp on a model of a few kilobytes that
+  `adapters/deps/in-process/conftest.py` writes from seeded weights, so
+  nothing is downloaded. Floor
+  llama-cpp-python 0.2.29: a chat takes a seed from 0.2.15, and before
+  0.2.29 every quiet load opens /dev/null to write, which the guard holds.
 - `quantized`, the smallest local model that still gets your own questions
   right: `quantized.py --box DIR --questions FILE` has each model the local
   server offers (or each `--model`) sit model-exam's exam of your sealed

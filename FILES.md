@@ -1250,6 +1250,13 @@ willow/
 │       │   ├── requirements-floor.txt  pytest-xdist at its floor, also tested
 │       │   ├── test_fast_tests.py
 │       │   └── README.md
+│       ├── in-process/
+│       │   ├── conftest.py   a llama-shaped GGUF of a few kilobytes from seeded weights, for the tests
+│       │   ├── in_process.py  suggestions from a GGUF model loaded in this process through llama-cpp-python, nothing listening
+│       │   ├── requirements.txt  llama-cpp-python, pinned
+│       │   ├── requirements-floor.txt  llama-cpp-python at its floor, also tested
+│       │   ├── test_in_process.py
+│       │   └── README.md
 │       ├── latent/
 │       │   ├── latent.py     ranks a scan index by meaning (TF-IDF + SVD), offline
 │       │   ├── requirements.txt  numpy, pinned

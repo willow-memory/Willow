@@ -136,7 +136,16 @@ def main(argv: list[str]) -> int:
         return kernel.ESCALATE
     try:
         reply = answer(load(path), oc.messages(question, served, voice))
-    except (ValueError, RuntimeError, OSError, KeyError, IndexError, TypeError) as e:
+    # a file that won't load: ValueError at the pin, AssertionError at the floor
+    except (
+        ValueError,
+        AssertionError,
+        RuntimeError,
+        OSError,
+        KeyError,
+        IndexError,
+        TypeError,
+    ) as e:
         print(f"the model didn't answer: {path.name} ({e.__class__.__name__})")
         return kernel.ESCALATE
     print(reply.strip())
@@ -154,7 +163,9 @@ def main(argv: list[str]) -> int:
     with tempfile.TemporaryDirectory() as tmp:
         f = Path(tmp) / "suggestion.jsonl"
         f.write_text(json.dumps(row, ensure_ascii=False) + "\n", encoding="utf-8")
-        _, out = oc.kernel_says(["propose", "--box", opts["--box"], *now, "--file", str(f)])
+        _, out = oc.kernel_says(
+            ["propose", "--box", opts["--box"], *now, "--file", str(f)]
+        )
     print(out, end="")
     return kernel.ALIVE if out.split()[:1] == ["pass"] else kernel.ESCALATE
 
