@@ -16,7 +16,12 @@ branch, and it is left exactly as it was:
     CHANGELOG.md             under ## Unreleased, the branch's entries above
                              REF's, newest first
     FILES.md                 both sides' folders, A to Z
-    test_contract.py         both sides' COMMANDS lines
+    test_contract.py         both sides' COMMANDS lines; or, when a conflict
+                             is more than those, the entries either side
+                             added to COMMANDS, READERS or PILE_EXTRA, with
+                             imports, whole (read with ast, from the base and
+                             both sides: a branch that changed anything else
+                             stops)
     adapters/planned.json    REF's list, less the ideas the branch built, plus
                              any it added
 
@@ -34,6 +39,7 @@ stopped on a conflict it has no rule for, or failed its check.
 
 from __future__ import annotations
 
+import ast
 import json
 import os
 import re
@@ -58,6 +64,8 @@ MADE = {
     "BUGS.md": "adapters/stdlib/ci/bugs.py",
 }
 ENTRY = re.compile(r'^\s+(?:"[\w-]+": \(|\*\*\{)')  # a COMMANDS line
+CONTRACT = "adapters/stdlib/ci/test_contract.py"
+DICTS = ("COMMANDS", "READERS", "PILE_EXTRA")  # test_contract.py's, added to by add-ons
 BRANCH = re.compile(r"^(?P<lead>[│ ]*)[├└]── (?P<name>\S+)")
 
 
@@ -151,6 +159,120 @@ def contract(text: str) -> str:
     return hunks(text, combine)
 
 
+def parsed(text: str, side: str) -> ast.Module:
+    try:
+        return ast.parse(text)
+    except SyntaxError as e:
+        raise Stop(f"test_contract.py doesn't parse {side}: {e.msg}") from e
+
+
+def tables(tree: ast.Module) -> dict[str, ast.Dict]:
+    """test_contract.py's module-level dicts an add-on adds to, by name."""
+    out = {}
+    for node in tree.body:
+        if isinstance(node, ast.AnnAssign):
+            target = node.target
+        elif isinstance(node, ast.Assign) and len(node.targets) == 1:
+            target = node.targets[0]
+        else:
+            continue
+        if isinstance(node.value, ast.Dict) and getattr(target, "id", "") in DICTS:
+            out[target.id] = node.value
+    return out
+
+
+def keyed(text: str, table: ast.Dict) -> dict[str, ast.expr]:
+    """A dict's entries by their key's source; a `**{...}` splat has none."""
+    pairs = zip(table.keys, table.values)
+    return {ast.get_source_segment(text, k): v for k, v in pairs if k is not None}
+
+
+def comma(line: str, col: int) -> str:
+    """`line` with a comma after its value, which ends at byte `col`, if it
+    has none: an entry moved to the end of a dict must not be the last bare."""
+    raw = line.encode("utf-8")
+    if raw[col:].lstrip().startswith(b","):
+        return line
+    return (raw[:col] + b"," + raw[col:]).decode("utf-8")
+
+
+def contract_entries(base: str, ref: str, mine: str) -> str:
+    """REF's test_contract.py, plus the entries the branch added to COMMANDS,
+    READERS or PILE_EXTRA, each whole at the end of its dict, and the imports
+    it added. Two reader branches always conflict there with neither side
+    holding a whole entry, so no rule on lines can settle it; this reads the
+    three files instead. A branch that changed anything else stops."""
+    b_tree, r_tree, m_tree = (parsed(text, side) for text, side in
+                              ((base, "at the base"), (ref, "on REF"), (mine, "on the branch")))  # fmt: skip
+    lines = mine.splitlines(keepends=True)
+    kept = [True] * len(lines)  # the branch's lines, less what it added
+    adds: dict[str, list[tuple[str, ast.expr, str]]] = {}
+    b_tables, r_tables = tables(b_tree), tables(r_tree)
+    for name, table in tables(m_tree).items():
+        old = keyed(base, b_tables[name]) if name in b_tables else {}
+        pairs = list(zip(table.keys, table.values))
+        for i, (k, v) in enumerate(pairs):
+            key = None if k is None else ast.get_source_segment(mine, k)
+            if key is None or key in old:
+                continue
+            nxt = (pairs[i + 1][0] or pairs[i + 1][1]) if i + 1 < len(pairs) else None
+            stop = nxt.lineno if nxt is not None else table.end_lineno
+            before = pairs[i - 1][1].end_lineno if i else table.lineno
+            if k.lineno <= before or v.end_lineno >= stop:
+                raise Stop(f"test_contract.py: {name}'s {key} shares a line")
+            first = k.lineno - 1  # 0-based, as `lines` is
+            while first > before and lines[first - 1].lstrip().startswith("#"):
+                first -= 1  # the comment written over it goes with it
+            entry = lines[first : v.end_lineno]
+            entry[-1] = comma(entry[-1], v.end_col_offset)
+            kept[first : v.end_lineno] = [False] * (v.end_lineno - first)
+            adds.setdefault(name, []).append((key, v, "".join(entry)))
+    b_imports = {ast.get_source_segment(base, n) for n in b_tree.body
+                 if isinstance(n, (ast.Import, ast.ImportFrom))}  # fmt: skip
+    imports = []
+    for n in m_tree.body:
+        if isinstance(n, (ast.Import, ast.ImportFrom)) and ast.get_source_segment(mine, n) not in b_imports:  # fmt: skip
+            imports.append("".join(lines[n.lineno - 1 : n.end_lineno]))
+            kept[n.lineno - 1 : n.end_lineno] = [False] * (n.end_lineno - n.lineno + 1)  # fmt: skip
+    rest, was = [x for x, k in zip(lines, kept) if k], base.splitlines(keepends=True)
+    if rest != was:
+        at = next((i for i, (x, y) in enumerate(zip(rest, was)) if x != y),
+                  min(len(rest), len(was)))  # fmt: skip
+        raise Stop(
+            f"test_contract.py: the branch changes its line {at + 1} at the base, "
+            "not only adds entries; settle it by hand"
+        )
+    out = ref.splitlines(keepends=True)
+    for name in adds:
+        if name not in r_tables:
+            raise Stop(f"test_contract.py: REF has no {name} to add to")
+    for name in sorted(adds, key=lambda n: -r_tables[n].end_lineno):  # bottom first
+        table, have = r_tables[name], keyed(ref, r_tables[name])
+        close = table.end_lineno - 1  # 0-based: the line of the closing brace
+        last = table.values[-1] if table.values else None
+        if last is None or last.end_lineno > close or not out[close].lstrip().startswith("}"):  # fmt: skip
+            raise Stop(f"test_contract.py: REF's {name} doesn't close on a line of its own")  # fmt: skip
+        new = []
+        for key, value, entry in adds[name]:
+            if key not in have:
+                new.append(entry)
+            elif ast.dump(have[key]) != ast.dump(value):
+                raise Stop(f"test_contract.py: both sides added {key} to {name}, differently")  # fmt: skip
+        if new:
+            out[last.end_lineno - 1] = comma(out[last.end_lineno - 1], last.end_col_offset)  # fmt: skip
+            out[close:close] = new
+    r_imports = [n for n in r_tree.body if isinstance(n, (ast.Import, ast.ImportFrom))]
+    have_imports = {"".join(out[n.lineno - 1 : n.end_lineno]) for n in r_imports}
+    new = [x for x in dict.fromkeys(imports) if x not in have_imports]
+    if new:
+        if not r_imports:
+            raise Stop("test_contract.py: REF has no import to put the branch's after")
+        out[r_imports[-1].end_lineno : r_imports[-1].end_lineno] = new
+    text = "".join(out)
+    parsed(text, "once settled")
+    return text
+
+
 def planned(base: str, ref: str, mine: str) -> str:
     """REF's ideas, less those the branch took off the list (built), plus those
     it put on; in REF's order, the new ones after, as the file is written."""
@@ -168,7 +290,7 @@ def planned(base: str, ref: str, mine: str) -> str:
 SETTLE = {
     "CHANGELOG.md": changelog,
     "FILES.md": files_tree,
-    "adapters/stdlib/ci/test_contract.py": contract,
+    CONTRACT: contract,
 }
 
 
@@ -199,6 +321,13 @@ def swap(text: str) -> str:
     )
 
 
+def stages(work: Path, name: str) -> tuple[str, str, str]:
+    """A conflicted file at the base, on REF and on the branch. In a merge the
+    branch is ours (stage 2) and REF theirs (stage 3)."""
+    base, mine, ref = (git("show", f":{i}:{name}", cwd=work).stdout for i in (1, 2, 3))  # fmt: skip
+    return base, ref, mine
+
+
 def settle(work: Path) -> list[str]:
     """Settle the merge's conflicts by the rules; the files settled. In a merge
     the branch is ours and REF theirs."""
@@ -217,8 +346,15 @@ def settle(work: Path) -> list[str]:
         if n in MADE:
             git("checkout", "--theirs", "--", n, cwd=work)
         elif n == "adapters/planned.json":
-            base, mine, ref = (git("show", f":{i}:{n}", cwd=work).stdout for i in (1, 2, 3))  # fmt: skip
-            p.write_text(planned(base, ref, mine), encoding="utf-8")
+            p.write_text(planned(*stages(work, n)), encoding="utf-8")
+        elif n == CONTRACT:
+            text = swap(p.read_text(encoding="utf-8"))
+            try:  # both sides' COMMANDS lines, when that is all they are
+                text = contract(text)
+                parsed(text, "once its lines are settled")
+            except Stop:  # else what each side added, each entry read whole
+                text = contract_entries(*stages(work, n))
+            p.write_text(text, encoding="utf-8")
         else:
             text = swap(p.read_text(encoding="utf-8"))
             p.write_text(SETTLE[n](text), encoding="utf-8")
