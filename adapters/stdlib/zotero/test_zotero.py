@@ -208,7 +208,7 @@ def sample(path: Path) -> Path:
         a,
         '<div data-schema-version="9"><p>Read for <b>chapter&nbsp;2</b>.</p><p>Ask Lee about the gauges.</p></div>',
     )
-    z.note(None, "<p>Buy a tide table for Brest.</p>")
+    z.note(None, "<p>Buy a tide table for Brest.</p><p>Ask at the harbour.</p>")
     pdf = z.pdf(a, title="Full Text PDF")
     z.mark(
         pdf,
@@ -274,7 +274,7 @@ def test_a_note_is_read_as_the_words_it_shows_under_its_items_citation(tmp_path)
         "Example, Sample & Lee (2020). Tides of the Estuary. Journal of Tides.\n"
         "2023-05-01 09:00\nRead for chapter 2.\nAsk Lee about the gauges." in ps
     )
-    assert "Buy a tide table for Brest.\n2023-05-01 09:00" in ps
+    assert "Buy a tide table for Brest.\n2023-05-01 09:00\nAsk at the harbour." in ps
 
 
 def test_an_annotation_is_quoted_with_its_page_and_comment(tmp_path):
