@@ -10,6 +10,12 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `json-paths`: any JSON or JSON Lines file as plain lines, one passage per
+  record: each value beside its key, numbers digit for digit, each element
+  of the first array too big for one passage (and each JSON Lines line) its
+  own passage. A key in most of a file's records is left out, so a question
+  pairing it with a word the file doesn't hold finds nothing. Bad files and
+  bad lines are skipped and counted; a mirror over 1 MB is cut into parts.
 - `ui/`, willow's own UI (v1): `python ui/canvas.py` opens a page on this
   machine that goes the way a person does. Choose your folders; see what the
   kernel alone makes of them, as counts, never a file's words or name; start

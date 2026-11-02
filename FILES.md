@@ -543,6 +543,10 @@ willow/
 │   │   │   ├── jrnl.py       jrnl journals mirrored, each stamped entry one dated passage
 │   │   │   ├── test_jrnl.py
 │   │   │   └── README.md
+│   │   ├── json-paths/
+│   │   │   ├── json_paths.py   any JSON or JSON Lines file as plain lines, one passage per record
+│   │   │   ├── test_json_paths.py
+│   │   │   └── README.md
 │   │   ├── jupyter/
 │   │   │   ├── jupyter.py   a Jupyter notebook as text, one block for each cell with its number and kind
 │   │   │   ├── test_jupyter.py
