@@ -1094,6 +1094,10 @@ willow/
 │   │   │   ├── wallabag.py   saved articles with tags and highlights
 │   │   │   ├── test_wallabag.py
 │   │   │   └── README.md
+│   │   ├── warc/
+│   │   │   ├── warc.py       WARC web archives (.warc, .warc.gz, .wacz) as each captured page's text, under its time and address
+│   │   │   ├── test_warc.py
+│   │   │   └── README.md
 │   │   ├── warranties/
 │   │   │   ├── warranties.py   when a cover ends, and where its receipt is
 │   │   │   ├── test_warranties.py

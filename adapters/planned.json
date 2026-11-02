@@ -1848,15 +1848,6 @@
   "network": "the model, downloaded once"
  },
  {
-  "name": "warc",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "WARC web archives, from Webrecorder, Heritrix or the Internet Archive, read without unpacking: each captured page's text with its address and the time it was captured.",
-  "source": "new",
-  "writes": "to",
-  "network": "none"
- },
- {
   "name": "warm",
   "kind": "stdlib",
   "section": "Ways to use it",

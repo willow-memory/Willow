@@ -455,6 +455,12 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
     "subtitles": ("subtitles.py", {"ep1.srt": (
         "1\n00:00:01,000 --> 00:00:04,000\nThe tide keeps its own calendar.\n"
     ).encode()}),
+    "warc": ("warc.py", {"crawl.warc": (
+        b"WARC/1.0\r\nWARC-Type: response\r\nWARC-Date: 2024-03-02T08:15:30Z\r\n"
+        b"WARC-Target-URI: https://example.org/roof\r\nContent-Type: application/http; msgtype=response\r\n"
+        b"Content-Length: 88\r\n\r\nHTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n"
+        b"<title>Roof</title><p>The roof is fixed.</p>\r\n\r\n"
+    )}),
     "web-pages": ("web_pages.py", {"saved.html": (
         "<!-- saved from url=(0020)https://example.org/ -->\n"
         "<p>The roof is fixed.</p>\n").encode()}),
