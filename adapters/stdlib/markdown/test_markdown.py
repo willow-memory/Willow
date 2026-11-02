@@ -1,6 +1,6 @@
 """markdown: a Markdown file as the text it shows, line for line; front matter as
-key: value lines, a table's rows named by their columns, headings placed under
-the headings above them; hidden files and folders skipped, an unreadable file
+its values, a table's rows named by their columns, no word the source lacks;
+hidden files and folders skipped, an unreadable file
 skipped and counted, the same bytes twice, originals unchanged, and MIRROR and
 FOLDER kept apart."""
 
@@ -57,8 +57,8 @@ def test_the_mirror_has_the_sources_lines_so_a_passage_is_cited_by_its_own_line(
     assert len(lines) == len(src)
     assert lines == [
         "",
-        "date: 2024-03-03",
-        "tags: study, aat",
+        "2024-03-03",
+        "study, aat",
         "",
         "AAT Level 4",
         "",
@@ -68,9 +68,9 @@ def test_the_mirror_has_the_sources_lines_so_a_passage_is_cited_by_its_own_line(
         "unit: APMA; status: passed; date: 2024-02-09; mark: 71%",
         "unit: BSTX; status: started; date: 2024-09",
         "",
-        "AAT Level 4 › Next",
-        "- to do: book BSTX exam, see the portal (https://aat.example/book)",
-        "- done: pay the fee",
+        "Next",
+        "- [ ] book BSTX exam, see the portal (https://aat.example/book)",
+        "- [x] pay the fee",
     ]
 
 
@@ -87,39 +87,30 @@ def test_a_question_about_a_tables_row_is_answered_by_that_row_with_its_column_n
     )
 
 
-def test_front_matter_keeps_its_keys_and_values_and_its_fences_are_blank():
+def test_front_matter_keeps_its_values_not_its_keys_and_its_fences_are_blank():
     assert md(
         "---\ntitle: \"Tomatoes\"\nrating: 4\nnested:\n  sub: 'x'\n---\nbody\n"
-    ) == [
-        "",
-        "title: Tomatoes",
-        "rating: 4",
-        "nested:",
-        "sub: x",
-        "",
-        "body",
-    ]
+    ) == ["", "Tomatoes", "4", "", "x", "", "body"]
 
 
 def test_a_list_under_a_key_is_joined_onto_its_line_only_when_it_runs_to_the_end():
     # running to the closing fence: joined, the item lines blank beside it
     assert md("---\ntitle: Seeds\ntags:\n  - garden\n  - seed bank\n---\nx\n") == [
         "",
-        "title: Seeds",
-        "tags: garden, seed bank",
+        "Seeds",
+        "garden, seed bank",
         "",
         "",
         "",
         "x",
     ]
-    # a key after it: blank lines would cut the block in two, so each item
-    # names its key on its own line
+    # a key after it: each item on its own line
     assert md("---\ntags:\n- garden\n- bees\ntitle: Seeds\n---\nx\n") == [
         "",
-        "tags:",
-        "tags: garden",
-        "tags: bees",
-        "title: Seeds",
+        "",
+        "garden",
+        "bees",
+        "Seeds",
         "",
         "x",
     ]
@@ -128,8 +119,8 @@ def test_a_list_under_a_key_is_joined_onto_its_line_only_when_it_runs_to_the_end
 def test_toml_front_matter_and_a_fence_that_never_closes():
     assert md('+++\ntitle = "Hives"\ntags = ["bees", "honey"]\n[extra]\n+++\nx\n') == [
         "",
-        "title: Hives",
-        "tags: bees, honey",
+        "Hives",
+        "bees, honey",
         "extra",
         "",
         "x",
@@ -153,25 +144,62 @@ def test_atx_and_setext_headings_with_their_underlines_blank():
     ]
 
 
-def test_a_heading_names_the_headings_above_it_when_its_text_runs_straight_on():
-    lines = md(
-        "# Garden\n\n## Tomatoes\nSown 3 March.\n### Pests\nAphids.\n"
-        "## Beans\n\nNone yet.\n# Bees\n## Hive 4\nQueenless.\n"
-    )
-    assert lines == [
+def test_a_heading_is_only_its_own_words_never_the_headings_above_it():
+    assert md("# Garden\n\n## Tomatoes\nSown 3 March.\n### Pests\nAphids.\n") == [
         "Garden",
         "",
-        "Garden › Tomatoes",
+        "Tomatoes",
         "Sown 3 March.",
-        "Garden › Tomatoes › Pests",
+        "Pests",
         "Aphids.",
-        "Beans",  # on its own: only its words
-        "",
-        "None yet.",
-        "Bees",
-        "Bees › Hive 4",
-        "Queenless.",
     ]
+
+
+def test_no_word_is_added_so_a_question_about_something_absent_finds_nothing(
+    tmp_path,
+):
+    """The owner's rule: a word the reader writes into passage after passage
+    answers a question about anything paired with it. Daily notes with front
+    matter, tasks, headings and a footnote: nothing in the mirror is a word
+    the source lacks, and a question pairing a repeated word with one the
+    folder doesn't hold is served nothing."""
+    (tmp_path / "m").mkdir()
+    sources = {}
+    for day in ("2024-03-01", "2024-03-02", "2024-03-03"):
+        sources[day] = (
+            f"---\ndate: {day}\ntags: [daily]\n---\n# Garden\n\n## Beds\n"
+            "- [x] water the beans[^1]\n- [ ] sow tomatoes\n\n"
+            "[^1]: Rain due.\n"
+        )
+        (tmp_path / "m" / f"{day}.md.txt").write_text(
+            mod.convert(sources[day].encode())
+        )
+    pile = kernel.chunks(tmp_path / "m")
+    for c in pile:
+        day = c["path"][:10]
+        assert set(kernel.words(c["text"])) <= set(kernel.words(sources[day]))
+    for word in ("tags", "date", "done", "note"):
+        assert kernel.rank(pile, f"volcano {word}") == [], word
+    assert kernel.rank(pile, "when did I sow tomatoes")
+
+
+def test_table_headers_are_the_one_label_kept_and_they_answer_as_the_raw_file_does(
+    tmp_path,
+):
+    """A table's headers are the source's own labels, written on each row so
+    a row answers for its columns. Measured by the owner's test: a question
+    pairing a header with an absent word is served the table, by the raw file
+    and the mirror alike; without them "what mark did I get on APMA" holds
+    one word of three and finds nothing."""
+    (tmp_path / "raw").mkdir()
+    (tmp_path / "m").mkdir()
+    (tmp_path / "raw" / "progress.md").write_bytes(SAMPLE)
+    (tmp_path / "m" / "progress.md.txt").write_text(mod.convert(SAMPLE))
+    raw, mirror = kernel.chunks(tmp_path / "raw"), kernel.chunks(tmp_path / "m")
+    for q in ("volcano mark", "volcano status"):
+        assert bool(kernel.rank(raw, q)) == bool(kernel.rank(mirror, q))
+    unlabelled = [dict(c, text=c["text"].replace("mark: ", "")) for c in mirror]
+    assert kernel.rank(unlabelled, "what mark did I get on APMA") == []
 
 
 def test_table_cells_empty_escaped_extra_and_where_the_table_ends():
@@ -265,9 +293,9 @@ def test_quotes_lists_tasks_and_rules():
         "- plus",
         "3. third",
         "12. twelfth",
-        "- done: Netflix",
-        "- to do: Lakeside",
-        "- done: Origin",
+        "- [x] Netflix",
+        "- [ ] Lakeside",
+        "- [X] Origin",
         "",
         "",
         "end",
@@ -277,7 +305,7 @@ def test_quotes_lists_tasks_and_rules():
 def test_footnotes_escapes_and_a_hard_break():
     assert md(
         "Text[^1] here.\\\nmore \\*not em\\* and \\[x\\] and C:\\\\dir\\\n[^1]: The note.\n"
-    ) == ["Text here.", "more *not em* and [x] and C:\\dir", "note 1: The note."]
+    ) == ["Text here.", "more *not em* and [x] and C:\\dir", "1: The note."]
 
 
 def test_a_file_with_no_text_is_not_a_result():

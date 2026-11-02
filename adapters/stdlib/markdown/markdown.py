@@ -7,19 +7,19 @@ and writes each as the text it shows, with the markup taken off. The mirror
 has the same number of lines as the source and each line is the source's
 line, so a passage found in the mirror is on that line of the .md file:
 
-    ## Tomatoes                          ->   Garden › Tomatoes
+    ## Tomatoes                          ->   Tomatoes
     | APMA | passed | 71% |              ->   unit: APMA; status: passed; mark: 71%
-    - [x] pay the **gas** bill           ->   - done: pay the gas bill
+    - [x] pay the **gas** bill           ->   - [x] pay the gas bill
     See [the shop](https://x.example).   ->   See the shop (https://x.example).
 
 Front matter (YAML between `---` lines, or TOML between `+++` lines) is kept
-as `key: value` lines; a list under a key is joined onto the key's line when
-it runs to the end of the block, else each item is `key: item`. A heading is
-its text after the headings it sits under. A table's body row names each
-value by its column's header. Emphasis, code backticks, HTML tags and
+as its values, keys off; a list that runs to the end of the block is joined
+onto its key's line. A heading is its text. A table's body row names each
+value by its column's header (the one label kept: without it "what mark did
+I get on APMA" finds nothing). Emphasis, code backticks, HTML tags and
 comments, escapes and footnote markers are taken off; a link is its text,
 with an outside address after it; an image is its alt text; a wikilink is the
-text it shows. Task items say "to do:" or "done:". A fenced code block is
+text it shows. A task keeps its [ ] or [x]. A fenced code block is
 kept as written. Fence lines, table separators, rules, setext underlines and
 reference definitions are blank, so the numbering holds.
 
@@ -42,7 +42,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 import kernel  # noqa: E402
 
-SEP = " › "  # between a heading and the headings it sits under
+SEP = " › "  # between a page and its heading in a wikilink
 # a stand-in for text already settled (a code span, an escaped character),
 # so later rules don't touch it: private-use characters never typed
 HOLD_OPEN, HOLD_CLOSE = "\ue000", "\ue001"
@@ -119,9 +119,10 @@ def front_matter(lines: list[str]) -> int:
 
 
 def matter_lines(block: list[str], toml: bool) -> list[str]:
-    """Front matter's inner lines as `key: value` lines, one for one."""
+    """Front matter's inner lines as their values, one for one. The keys go:
+    a key such as date or tags heads every note, so a passage holding only
+    it would answer a question about anything with that word in it."""
     out: list[str] = []
-    key = ""
     for i, raw in enumerate(block):
         line = raw.strip()
         if not line or line.startswith("#"):
@@ -129,37 +130,26 @@ def matter_lines(block: list[str], toml: bool) -> list[str]:
             continue
         if toml:
             m = re.match(r"^\[+\s*([^\]]+?)\s*\]+$", line)
-            if m:
-                out.append(m.group(1))
-                continue
             k, eq, v = line.partition("=")
-            out.append(f"{_unquote(k)}: {_flow(v)}" if eq else line)
+            out.append(m.group(1) if m else _flow(v) if eq else line)
             continue
-        if line.startswith("- ") or line == "-":
-            item = _flow(line[1:])
-            out.append(f"{key}: {item}" if key else item)
+        if line.startswith("-"):
+            out.append(_flow(line[1:]))
             continue
         m = re.match(r"^([^:\s][^:]*?)\s*:(?:\s+(.*))?$", line)
-        if not m:
-            out.append(line)
-            continue
-        if raw[:1] in " \t":  # a nested key: the text, as written
-            out.append(f"{m.group(1)}: {_flow(m.group(2) or '')}".rstrip())
-            continue
-        key, value = m.group(1), _flow(m.group(2) or "")
+        value = _flow(m.group(2) or "") if m else line
         rest = block[i + 1 :]
         n = 0
         while n < len(rest) and rest[n].strip().startswith("-"):
             n += 1
-        if not value and n and n == len(rest):
-            # a list that runs to the closing fence: joined onto the key's
+        if m and not value and n and n == len(rest):
+            # a list that runs to the closing fence: joined onto its key's
             # line, the item lines blank beside the blank fence, so the
             # block stays one passage
-            value = ", ".join(_flow(r.strip()[1:]) for r in rest)
-            out.append(f"{key}: {value}")
+            out.append(", ".join(_flow(r.strip()[1:]) for r in rest))
             out.extend("" for _ in rest)
             break
-        out.append(f"{key}: {value}" if value else f"{key}:")
+        out.append(value)
     return out
 
 
@@ -260,16 +250,6 @@ def convert(data: bytes) -> str | None:
         if not fence and d:
             refs[d.group(1).strip().lower()] = d.group(2)
 
-    path: list[tuple[int, str]] = []  # the headings this line sits under
-    placed: dict[int, str] = {}  # a heading's line: it after those above it
-
-    def heading(at: int, level: int, words: str) -> str:
-        while path and path[-1][0] >= level:
-            path.pop()
-        path.append((level, words))
-        placed[at] = SEP.join(w for _, w in path if w)
-        return words
-
     fence = ""
     header: list[str] | None = None
     head_at = 0
@@ -326,8 +306,7 @@ def convert(data: bytes) -> str | None:
             continue
 
         if i + 1 < len(lines) and SETEXT.match(lines[i + 1]) and _paragraph_line(line):
-            level = 1 if lines[i + 1].strip().startswith("=") else 2
-            out[i] = heading(i, level, inline(line, refs))
+            out[i] = inline(line, refs)
             i += 2  # the underline stays blank
             continue
         if RULE.match(line) or REF_DEF.match(line):
@@ -335,17 +314,11 @@ def convert(data: bytes) -> str | None:
             continue
         h = ATX.match(line)
         if h:
-            out[i] = heading(i, len(h.group(1)), inline(h.group(2) or "", refs))
+            out[i] = inline(h.group(2) or "", refs)
             i += 1
             continue
         out[i] = block_line(line, refs)
         i += 1
-    # a heading whose text runs straight on under it names where it sits, so
-    # that passage says so; one standing alone between blank lines is only
-    # its own words, so a bare run of headings doesn't outrank what's under them
-    for at, full in placed.items():
-        if at + 1 < len(out) and out[at + 1].strip():
-            out[at] = full
     result = "\n".join(out)
     return result.rstrip("\n") + "\n" if result.strip() else None
 
@@ -358,7 +331,7 @@ def block_line(line: str, refs: dict[str, str]) -> str:
         line = line.rstrip()[:-1]
     f = FOOT_DEF.match(line)
     if f:
-        return f"note {f.group(1)}: {inline(f.group(2), refs)}".rstrip()
+        return f"{f.group(1)}: {inline(f.group(2), refs)}".rstrip()
     m = LIST.match(line)
     if not m:
         return inline(line, refs)
@@ -366,7 +339,7 @@ def block_line(line: str, refs: dict[str, str]) -> str:
     mark = f"{m.group(2)}." if m.group(2) else "-"
     t = TASK.match(rest)
     if t:
-        mark += " to do:" if t.group(1) == " " else " done:"
+        mark += f" [{t.group(1)}]"  # as written: no word is added
         rest = rest[t.end() :]
     return f"{mark} {inline(rest, refs)}".rstrip()
 
