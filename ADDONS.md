@@ -19,11 +19,11 @@ is written: `no-install` or `needs-install`; `offline`, `this-machine` or
 tag its author chose, if any. *near* names the three add-ons closest to it.
 
 <!-- willow:pools -->
-`████████████░░░░░░░░` **317 of 512 built** · 462 need no install · 50 need one
+`████████████░░░░░░░░` **318 of 513 built** · 463 need no install · 50 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
-| Reading more kinds of files | 86 | 29 | 107 | 8 |
+| Reading more kinds of files | 87 | 29 | 108 | 8 |
 | Finding things | 32 | 14 | 36 | 10 |
 | Your own words | 19 | 7 | 23 | 3 |
 | Keeping track | 40 | 16 | 56 | 0 |
@@ -78,9 +78,9 @@ its list: someone who speaks the language can add one without much Python.
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W45 -->
-**[odds](adapters/stdlib/odds/)** — Exact odds, as fractions, for a game's dice and tables: what each outcome's chance really is.
+**[mastodon](adapters/stdlib/mastodon/)** — A Mastodon or Pixelfed account archive's outbox.json: your posts as dated lines.
 
-*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 317 built add-ons in name order.*
+*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 318 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -97,7 +97,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - **archivebox** (idea) — ArchiveBox snapshots: each saved page's text, with its URL and the date it was captured. *new* `no-install` `offline` `snapshot` `saved` · near: warc, wayback, snapshot
 - [**asciidoc**](adapters/stdlib/asciidoc/) — AsciiDoc documents as the text they show, line for line, markup taken off, cited by the file's own lines. *new* `no-install` `offline` `markup` `documents` · near: org, markdown, latex
 - [**bank**](adapters/stdlib/bank/) — Bank CSV and OFX statements as dated lines, with spending by month. *new* `no-install` `offline` · near: mastodon, discord, linkedin
-- [**bibtex**](adapters/stdlib/bibtex/) — .bib files: each reference as a passage, so you can ask which paper said it and get its key. *new* `no-install` `offline` · near: pgn, code-comments, latex
+- [**bibtex**](adapters/stdlib/bibtex/) — .bib files: each reference as a passage, so you can ask which paper said it and get its key. *new* `no-install` `offline` `reference` · near: ris, pgn, code-comments
 - **bluesky** (idea) — A Bluesky repo.car export: your posts as dated lines, read by a small CAR and CBOR reader of its own. *new* `no-install` `offline` `posts` `repo` · near: mastodon, linkedin, reddit
 - [**bookmarks**](adapters/stdlib/bookmarks/) — Browser bookmarks (HTML export, Firefox JSON) and history, read from a copy of its SQLite file. *new* `no-install` `offline` `html` `json` · near: codebase-memory, nestor, wallabag
 - [**books**](adapters/stdlib/books/) — Kindle "My Clippings.txt" highlights and .epub text. *new* `no-install` `offline` `highlights` `book` · near: oakenscroll, almanac, text
@@ -120,7 +120,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - **forgejo-dump** (idea) — A Forgejo or Gitea dump, Codeberg's included: issues, pull requests and wiki pages as dated passages. *new* `no-install` `offline` `requests` `issues` · near: github-archive, forgejo, gh-json
 - [**gh-json**](adapters/stdlib/gh-json/) — What gh prints with --json (issues, pull requests, runs), saved to a file and read as dated passages. *new* `no-install` `offline` `issues` `pull` · near: goodreads, day-one, jira
 - [**git-history**](adapters/stdlib/git-history/) — Commit messages and diffs as a dated pile: "when did we change the retry limit?" *new* `no-install` `offline` `history` `message` · near: clauses, location-history, discord
-- **github-archive** (idea) — Your GitHub account's data export: the issues, pull requests, reviews and comments you wrote, as dated passages with their links. *new* `no-install` `offline` `issues` `requests` · near: quote-review, contribute, forgejo-dump
+- **github-archive** (idea) — Your GitHub account's data export: the issues, pull requests, reviews and comments you wrote, as dated passages with their links. *new* `no-install` `offline` `requests` `pull` · near: quote-review, contribute, forgejo-dump
 - **gitlab-export** (idea) — A GitLab project export, read without unpacking it: its issues, merge requests and comments as dated passages. *new* `no-install` `offline` `issues` `comments` · near: github-archive, joplin, google-classroom
 - [**goodreads**](adapters/stdlib/goodreads/) — Goodreads and StoryGraph exports: the books you've read, when, and what you thought of them. *new* `no-install` `offline` `title` `book` · near: letterboxd, slack, musicxml
 - **google-classroom** (idea) — Google Classroom from Takeout: assignments, announcements and comments as dated passages. *new* `no-install` `offline` `comments` `takeout` · near: gitlab-export, google-keep, takeout
@@ -176,6 +176,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - [**readwise**](adapters/stdlib/readwise/) — Readwise's highlights export: every highlight with its book or article, and your note on it. *new* `no-install` `offline` `book` `highlights` · near: wallabag, books, goodreads
 - **recipes** (idea) — Recipes from saved web pages and recipe-app exports, as plain text: what can I cook with leeks? *new* `no-install` `offline` `web` `saved` · near: web-pages, confluence, wallabag
 - [**reddit**](adapters/stdlib/reddit/) — Reddit's data export: your posts, comments and saved items as dated lines. *new* `no-install` `offline` `posts` `data` · near: linkedin, meta-archive, mastodon
+- [**ris**](adapters/stdlib/ris/) — RIS citation exports from EndNote, Zotero, Mendeley and the journal databases: each reference as a passage that opens with its citation. *new* `no-install` `offline` `zotero` `citation` · near: zotero, bibtex, day-one
 - [**rst**](adapters/stdlib/rst/) — reStructuredText files as plain prose, line for line, with directives, roles, links and tables read. *new* `no-install` `offline` `prose` `links` · near: markdown, asciidoc, rtf
 - [**rtf**](adapters/stdlib/rtf/) — RTF documents as plain text. *new* `no-install` `offline` `documents` · near: markdown, asciidoc, rst
 - [**sarif**](adapters/stdlib/sarif/) — SARIF reports from code scanners such as CodeQL and Semgrep: each finding as a passage with its rule and place. *new* `no-install` `offline` `reports` · near: code-comments, places, codebase-memory
@@ -204,7 +205,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - [**web-pages**](adapters/stdlib/web-pages/) — Saved web pages, .html and .mhtml, as their readable text, with the address they came from. Uses clauses. *new* `no-install` `offline` `address` `web` · near: snapshot, pdf, photos
 - **writefreely** (idea) — WriteFreely posts, from its export or a copy of its SQLite database, as dated text. *new* `no-install` `offline` `copy` `sqlite` · near: apple-notes, bookmarks, nestor
 - [**x-archive**](adapters/stdlib/x-archive/) — An X (Twitter) archive: your posts, replies and DMs as dated lines. *new* `no-install` `offline` `posts` `message` · near: meta-archive, mastodon, linkedin
-- [**zotero**](adapters/stdlib/zotero/) — Your Zotero library, from a copy of zotero.sqlite: items, notes and PDF annotations, each with its citation. *new* `no-install` `offline` `items` `annotations` · near: readwise, evernote, joplin
+- [**zotero**](adapters/stdlib/zotero/) — Your Zotero library, from a copy of zotero.sqlite: items, notes and PDF annotations, each with its citation. *new* `no-install` `offline` `zotero` `annotations` · near: ris, readwise, evernote
 
 ## Finding things
 
@@ -509,7 +510,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - [**capture**](adapters/stdlib/capture/) — A note written into your folder in one line, with its type and tags, so the next question can find it. *new* `no-install` `offline` `tags` · near: coming-up, notes, serve
 - [**cloudevents**](adapters/stdlib/cloudevents/) — Record rows in the CloudEvents envelope, for any tool that already reads them. *new* `no-install` `offline` `envelope` `tool` · near: prov, ro-crate, in-toto
 - **datasette** (idea) — Your record and approved answers browsable in Datasette, read only: tables, facets and SQL on this machine. Needs Datasette; Apache-2.0. Reaches this machine only. *new* `needs-install` `this-machine` `sql` · near: record-sql, report, ro-crate
-- [**deep-links**](adapters/stdlib/deep-links/) — Each answer as a link that opens the file at the line (RFC 5147 lines, browser text fragments). *new* `no-install` `offline` `links` `browser` · near: browse, jetbrains, vscode
+- [**deep-links**](adapters/stdlib/deep-links/) — Each answer as a link that opens the file at the line (RFC 5147 lines, browser text fragments). *new* `no-install` `offline` `links` `browser` · near: jetbrains, browse, vscode
 - **desktop** (idea) — A small window to ask and approve, with nothing to install: Python's own tkinter. *new* `no-install` `offline` · near: copilot, cursor, opencode
 - **dictate** (idea) — Ask out loud: your question spoken and turned to text on this machine. Needs faster-whisper; MIT. Goes online: the model, downloaded once. *new* `needs-install` `online` `turned` · near: oakenscroll, agent-transcript, man-pages
 - [**emacs**](adapters/stdlib/emacs/) — Answers in an Emacs compilation buffer, each a jump to its file and line. Uses hosts. *new* `no-install` `offline` `jump` `command` · near: vim, vscode, pipe

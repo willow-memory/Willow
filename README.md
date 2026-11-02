@@ -126,11 +126,11 @@ says how to pick one up:
 <!-- willow:front show=pick week=2026-W45 -->
 **Add-on of the week**
 
-**[odds](adapters/stdlib/odds/)** — Exact odds, as fractions, for a game's dice and tables: what each outcome's chance really is.
+**[mastodon](adapters/stdlib/mastodon/)** — A Mastodon or Pixelfed account archive's outbox.json: your posts as dated lines.
 
-*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 317 built add-ons in name order.*
+*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 318 built add-ons in name order.*
 
-[Every add-on, 317 built of 512, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 318 built of 513, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 

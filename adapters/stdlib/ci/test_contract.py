@@ -207,6 +207,10 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         b'  title = {Tides of the {E}stuary},\n  journal = jms,\n  year = 2020, volume = {12}, number = {3}, pages = {45--67},\n'
         b'  doi = "10.1000/xyz123", keywords = {tides, estuaries},\n  abstract = {We measure the tide at six harbours.}\n}\n'
     )}),
+    "ris": ("ris.py", {"zotero.ris": (
+        b"TY  - JOUR\r\nTI  - Tides of the Estuary\r\nAU  - Example, Ada\r\nAU  - Sample, Cy\r\nT2  - Journal of Made-Up Studies\r\n"
+        b"PY  - 2020\r\nVL  - 12\r\nIS  - 3\r\nSP  - 45\r\nEP  - 67\r\nDO  - 10.1000/xyz123\r\nKW  - tides\r\nER  - \r\n\r\n"
+    )}),
     "rtf": ("rtf.py", {"letter.rtf": (
         b"{\\rtf1\\ansi\\deff0{\\fonttbl{\\f0 Arial;}}{\\colortbl;\\red0\\green0\\blue0;}"
         b"\\pard\\b The roof\\b0  is fixed.\\par\nBills go out on Thursday.\\par}"
