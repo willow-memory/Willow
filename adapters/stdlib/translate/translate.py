@@ -155,9 +155,6 @@ def main(argv: list[str]) -> int:
     except ValueError:
         print(out, end="")
         return code
-    if doc.get("state") == "sealed":
-        print(f"sealed already: {doc['answer'].split(SPLIT)[0].strip()}")
-        return kernel.ALIVE
     served = {s["id"] for s in doc.get("served", [])}
     row = {
         "path": f"answers/{oc.slug(question)}.{oc.slug(into)}.md",
