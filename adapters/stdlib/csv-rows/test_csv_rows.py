@@ -159,6 +159,17 @@ def test_a_cell_with_no_space_is_cut_where_it_must_be():
     assert "".join(x.split(": ", 1)[1] for x in lines) == "k: " + "x" * 1200
 
 
+def test_a_word_is_cut_only_where_no_space_fits():
+    cell = "w" * 489 + " a " + "b" * 600
+    lines = mod.convert(b"k\n" + cell.encode() + b"\n").rstrip("\n").split("\n")
+    assert lines == [
+        "row 2: k: " + "w" * 489,
+        "row 2, continued: a",
+        "row 2, continued: " + "b" * (kernel.MAX_CHUNK - 18),
+        "row 2, continued: " + "b" * (600 - kernel.MAX_CHUNK + 18),
+    ]
+
+
 def test_a_table_with_no_data_row_is_not_a_result():
     for data in (
         b"",
