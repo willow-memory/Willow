@@ -1588,7 +1588,7 @@ says how). The first was v0.1.0.
   accent keeps it. The email package hands such a header back as a Header
   whose text has already swapped the bytes away; its bytes are now read
   before that. Ten of the demo lives' 224 messages, all Teodora's, read
-  right now.
+  right now. (#169)
 
 - An add-on's tests hold in a copy of its folder, not only in willow: scan,
   start, browse, digest, stack, starter-words, across, parallel, hosts,
