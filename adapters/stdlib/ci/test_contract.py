@@ -678,6 +678,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "restack": ("restack.py", ["--onto", "HEAD", "HEAD"]),
     "weights-card": ("weights_card.py", ["--from", "{pile}/m.gguf", "--to", "{tmp}/card.md"]),
     "weights-pin": ("weights_pin.py", ["--card", "{pile}/m.md", "--from", "{pile}/m.bin"]),
+    "model-shelf": ("model_shelf.py", ["list", "--home", "{tmp}"]),
     **{name: (script, ["mirror", "--from", "{pile}", "--to", "{tmp}/mirror"])
        for name, (script, _) in READERS.items()},
 }  # fmt: skip
