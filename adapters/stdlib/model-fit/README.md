@@ -28,7 +28,8 @@ does), NVIDIA's from its driver under /proc and, when `nvidia-smi` is
 installed, its memory from that, and each NPU from /sys/class/accel.
 `--root DIR` reads those under DIR instead of /. On macOS: `sysctl`; on
 Apple silicon the GPU shares memory, and macOS lets it use about two thirds
-of it, three quarters past 36 GiB. A GPU whose memory isn't read says so,
+of it, three quarters past 36 GiB. A GPU whose memory isn't read (`nvidia-smi`
+says `[N/A]` for one that shares memory) says so,
 and holds nothing in the sums. An NPU is named, and said to be one no
 runtime here is told to use.
 

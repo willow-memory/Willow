@@ -164,8 +164,11 @@ def nvidia_smi() -> list[dict]:
     gpus = []
     for line in out.splitlines():
         name, _, mib = line.rpartition(",")
-        if name.strip() and mib.strip().isdigit():
-            gpus.append({"name": name.strip(), "vram": int(mib) * 1024**2})
+        if not name.strip():
+            continue
+        mib = mib.strip()  # "[N/A]" where the GPU shares memory
+        vram = int(mib) * 1024**2 if mib.isdigit() else None
+        gpus.append({"name": name.strip(), "vram": vram})
     return gpus
 
 

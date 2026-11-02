@@ -145,12 +145,15 @@ def test_nvidia_from_its_driver_then_from_nvidia_smi(tmp_path):
     bin_ = tmp_path / "bin"
     put(
         bin_ / "nvidia-smi",
-        "#!/bin/sh\necho 'NVIDIA GeForce RTX 4070, 12282'\necho 'junk'\n",
+        "#!/bin/sh\necho 'NVIDIA GeForce RTX 4070, 12282'\necho 'junk'\n"
+        "echo 'NVIDIA H100, 100000'\necho 'NVIDIA GH200, [N/A]'\n",
     )
     (bin_ / "nvidia-smi").chmod(0o755)
     env = {**BARE, "PATH": f"{bin_}{os.pathsep}{BARE['PATH']}"}
     got = run("check", "--root", root, "--model", weights(tmp_path, 9 * GIB), env=env)
-    assert got.stdout.count("gpu      ") == 1
+    assert got.stdout.count("gpu      ") == 3, "nvidia-smi's GPUs, not the driver's too"
+    assert "gpu      NVIDIA H100, 97.7 GiB of its own memory\n" in got.stdout
+    assert "gpu      NVIDIA GH200, its memory not read\n" in got.stdout
     assert (
         "gpu      NVIDIA GeForce RTX 4070, 12.0 GiB of its own memory\n" in got.stdout
     )
@@ -190,6 +193,27 @@ def test_macos_is_read_from_sysctl_and_its_gpu_shares_memory():
     )
     assert mf.apple_gpu_share(36 * GIB) == 24 * GIB, "two thirds up to 36 GiB"
     assert mf.apple_gpu_share(48 * GIB) == 36 * GIB, "three quarters past it"
+    assert mf.apple_gpu_share(37 * GIB) == 37 * GIB * 3 // 4
+
+
+def test_an_nvidia_card_without_its_driver_is_named_from_sys(tmp_path):
+    root = machine(tmp_path / "root")
+    put(root / "sys/class/drm/card0/device/vendor", "0x10de\n")
+    put(root / "sys/class/drm/card0/device/device", "0x2786\n")
+    got = run("check", "--root", root)
+    assert "gpu      NVIDIA GPU 0x2786, its memory not read\n" in got.stdout
+
+
+def test_sizes_are_said_to_the_mebibyte(tmp_path):
+    root = machine(tmp_path / "root", total_kb=100 * 1024**2, free_kb=None)
+    card = tmp_path / "big.md"
+    put(card, f"<!-- willow-model\nbytes: {80 * GIB}\n-->\n")
+    got = run("check", "--root", root, "--model", card)
+    assert got.stdout.startswith("memory   100.0 GiB\n")
+    assert "model    big.md, 80.0 GiB of weights, about 96.0 GiB to run\n" in got.stdout
+    put(card, f"<!-- willow-model\nbytes: {1000 * 1024**2}\n-->\n")
+    got = run("check", "--root", root, "--model", card)
+    assert "model    big.md, 1000 MiB of weights, about 1.2 GiB to run\n" in got.stdout
 
 
 def test_nothing_to_read_is_42(tmp_path):
