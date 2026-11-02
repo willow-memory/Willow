@@ -1018,15 +1018,6 @@
   "network": "none"
  },
  {
-  "name": "model-shelf",
-  "kind": "stdlib",
-  "section": "Assistants",
-  "line": "Every model already on this machine, read from Ollama's, LM Studio's, Jan's and GPT4All's folders and the Hugging Face cache: its runtime, size, quantization and hash, before you download another.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none"
- },
- {
   "name": "moodle",
   "kind": "stdlib",
   "section": "Reading more kinds of files",

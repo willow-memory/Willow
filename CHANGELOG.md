@@ -10,6 +10,16 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `model-shelf`, every model already on this machine before you download
+  another: `model_shelf.py list [--home DIR]
+  [--hash]` reads Ollama's manifests,
+  LM Studio's, Jan's and GPT4All's folders (Linux, macOS and Windows places)
+  and the Hugging Face cache (`OLLAMA_MODELS`, `HF_HUB_CACHE` and `HF_HOME`
+  respected), one line per model with its runtime, name, size, quantization
+  (by weights-card's header reader) and SHA-256: Ollama's and the cache's
+  own content names, others only with `--hash`. The same weights under two
+  names are said, and a runtime not on this machine says where it looked.
+  (#159)
 - `weights-pin`, a weights file held to the hash on its model card before
   it runs: `weights_pin.py --card CARD --from FILE` reads the `sha256` and
   `bytes` of a `willow-model` header (as weights-card writes one), compares

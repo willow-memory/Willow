@@ -667,6 +667,10 @@ willow/
 │   │   │   ├── misquote.py   a quote almost in your files: the closest passage, and what differs
 │   │   │   ├── test_misquote.py
 │   │   │   └── README.md
+│   │   ├── model-shelf/
+│   │   │   ├── model_shelf.py  every model on this machine, from each runtime's own folder, with its quantization and hash
+│   │   │   ├── test_model_shelf.py
+│   │   │   └── README.md
 │   │   ├── month-first/
 │   │   │   ├── month_first.py   a folder written month first, mirrored with each date's ISO form beside it
 │   │   │   ├── test_month_first.py

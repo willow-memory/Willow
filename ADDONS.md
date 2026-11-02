@@ -19,7 +19,7 @@ is written: `no-install` or `needs-install`; `offline`, `this-machine` or
 tag its author chose, if any. *near* names the three add-ons closest to it.
 
 <!-- willow:pools -->
-`████████████░░░░░░░░` **294 of 505 built** · 451 need no install · 54 need one
+`████████████░░░░░░░░` **295 of 505 built** · 451 need no install · 54 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
@@ -29,7 +29,7 @@ tag its author chose, if any. *near* names the three add-ons closest to it.
 | Keeping track | 40 | 16 | 56 | 0 |
 | Trust and proof | 32 | 22 | 45 | 9 |
 | Privacy and safety | 13 | 3 | 16 | 0 |
-| Assistants | 29 | 42 | 60 | 11 |
+| Assistants | 30 | 41 | 60 | 11 |
 | Ways to use it | 25 | 18 | 39 | 4 |
 | Play | 12 | 29 | 37 | 4 |
 | For maintainers | 19 | 25 | 39 | 5 |
@@ -70,17 +70,17 @@ its list: someone who speaks the language can add one without much Python.
 <!-- willow:newest -->
 - 2026-11-02 · [**weights-pin**](adapters/stdlib/weights-pin/) — A local model's weights file hashed before each run and refused when it differs from the hash on its model card.
 - 2026-11-02 · [**weights-card**](adapters/stdlib/weights-card/) — A model card filled in from the weights file's own header, GGUF or safetensors (architecture, quantization, context length, licence), so the card says what the file says.
+- 2026-11-02 · [**model-shelf**](adapters/stdlib/model-shelf/) — Every model already on this machine, read from Ollama's, LM Studio's, Jan's and GPT4All's folders and the Hugging Face cache: its runtime, size, quantization and hash, before you download another.
 - 2026-11-01 · [**weakest-link**](adapters/stdlib/weakest-link/) — Each answer's inputs marked measured, fitted or assumed, and the result worth its weakest input, never an average.
 - 2026-11-01 · [**thesis**](adapters/stdlib/thesis/) — A thesis's claims, each tied to the source that backs it, and a list of the ones with none.
-- 2026-11-01 · [**sent-log**](adapters/stdlib/sent-log/) — Which of your passages went to which online model, read from the record by model card: what left this machine and where to.
 <!-- /willow:newest -->
 
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W45 -->
-**[irc](adapters/stdlib/irc/)** — IRC logs from WeeChat, irssi or ZNC, one dated line per message, by network and channel.
+**[sheets](adapters/deps/sheets/)** — Spreadsheets with formulas and formatting kept, beyond what the office add-on reads.
 
-*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 294 built add-ons in name order.*
+*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 295 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -139,7 +139,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - [**letterboxd**](adapters/stdlib/letterboxd/) — Letterboxd's export: the films you've watched, your ratings and reviews, as dated lines. *new* `no-install` `offline` · near: goodreads, matrix, musicxml
 - [**linkedin**](adapters/stdlib/linkedin/) — LinkedIn's data export: messages, posts and connections as dated lines. *new* `no-install` `offline` `posts` `message` · near: reddit, meta-archive, discord
 - [**listening**](adapters/stdlib/listening/) — Spotify's data download: what you listened to, by day, so you can ask what was on that summer. *new* `no-install` `offline` `data` `download` · near: discord, linkedin, reddit
-- [**location-history**](adapters/stdlib/location-history/) — Google Maps Timeline and other location exports: where you were, by day. *new* `no-install` `offline` `google` `history` · near: google-keep, orders, day-one
+- [**location-history**](adapters/stdlib/location-history/) — Google Maps Timeline and other location exports: where you were, by day. *new* `no-install` `offline` `google` `history` · near: orders, google-keep, day-one
 - [**lockfiles**](adapters/stdlib/lockfiles/) — Lockfiles as passages (package-lock.json, pnpm-lock.yaml, poetry.lock, uv.lock, Cargo.lock, go.sum): each package and its locked version. *new* `no-install` `offline` `json` `version` · near: sbom, pins, discord
 - [**logs**](adapters/stdlib/logs/) — System and app logs (syslog, journald's export, nginx): each line dated, so you can ask when it started. *new* `no-install` `offline` `message` `log` · near: discord, irc, linkedin
 - [**mail**](adapters/stdlib/mail/) — .eml and .mbox files, with sender, date and subject kept. *new* `no-install` `offline` · near: office, calendar, books
@@ -212,7 +212,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - [**duplicates**](adapters/stdlib/duplicates/) — Passages that say the same thing in two files, and which one is newer. *new* `no-install` `offline` · near: contradictions, xref, three-two-one
 - [**fair-merge**](adapters/stdlib/fair-merge/) — Each folder or repo ranked on its own and the lists merged in turns, so a large corpus can't push a small one out on volume alone, and a source that found nothing says so. *bot* `no-install` `offline` `sources` `pile` · near: scan, parallel, ripgrep
 - [**first-mention**](adapters/stdlib/first-mention/) — When your files first mention something, and the line that does. *new* `no-install` `offline` `mention` · near: people, timeline, pipe
-- [**fuzzy-dates**](adapters/stdlib/fuzzy-dates/) — Dates that admit doubt ('about 1880', 'sometime in March') read and kept with their doubt, in EDTF. *new* `no-install` `offline` · near: family-tree, syllabus, mood
+- [**fuzzy-dates**](adapters/stdlib/fuzzy-dates/) — Dates that admit doubt ('about 1880', 'sometime in March') read and kept with their doubt, in EDTF. *new* `no-install` `offline` · near: family-tree, syllabus, minutes
 - [**index-cache**](adapters/stdlib/index-cache/) — Keeps scan's index between runs and rebuilds it only when a file in your folder actually changed. Uses scan. *new* `no-install` `offline` `between` `scan` `index` · near: scan, parallel, policy-watch
 - **kiwix** (idea) — An offline Wikipedia (or Stack Exchange, or Gutenberg) as a source after your own files, cited by article. Needs libzim, and a ZIM file you download; GPL-3.0. *new* `needs-install` `offline` `stack` `wikipedia` · near: pageviews, codeowners, stack
 - [**latent**](adapters/deps/latent/) — Finds code by meaning, not just matching words, using scan's index: a question reaches code that says the same thing another way. Needs numpy; BSD-3-Clause. Uses scan. *new* `needs-install` `offline` `matched` `ranked` · near: scan, all, pile-rank
@@ -287,7 +287,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**baby-log**](adapters/stdlib/baby-log/) — Feeds, sleeps and nappies from your notes, by day: when was the last one? Uses habits. *new* `no-install` `offline` `log` · near: milestones, mood, syllabus
 - [**budget**](adapters/stdlib/budget/) — Spending against the budget you wrote down, month by month, from your statements. Uses habits. *new* `no-install` `offline` `month` `statements` · near: mood, baby-log, reading-log
 - [**car**](adapters/stdlib/car/) — Your car's services, repairs and inspection dates, from receipts and notes: what's due, and what it cost. Uses habits. *new* `no-install` `offline` `due` `receipts` · near: home-upkeep, pets, subscriptions
-- **care** (idea) — For caregivers: medications, vitals and appointments from a care log, what's due and what moved. *box* `no-install` `offline` `car` `due` · near: car, coming-up, bluesky
+- **care** (idea) — For caregivers: medications, vitals and appointments from a care log, what's due and what moved. *box* `no-install` `offline` `due` `car` · near: car, coming-up, bluesky
 - [**coming-up**](adapters/stdlib/coming-up/) — Dates written in your files in the next N days: appointments, renewals, deadlines. *box* `no-install` `offline` `coming` `days` · near: calendar-out, digest, on-this-day
 - **contracts** (idea) — The dates that matter in your contracts: renewals, notice periods and break clauses, each cited. *new* `no-install` `offline` `break` `contracts` · near: clauses, support-plan, mutants
 - **crowd** (idea) — You against the crowd: a prediction market's question copied into your ledger, your probability beside theirs, both scored. Goes online: the market's public API, to read the question and its resolution. *new* `no-install` `online` `prediction` `score` · near: predictions, oakenscroll, market-calls
@@ -345,7 +345,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**changed**](adapters/stdlib/changed/) — What's new, edited or deleted in your folder since the last check, as fingerprint rows. *bot* `no-install` `offline` `edit` `rows` `everyday` · near: box-health, policy-watch, stale
 - [**claim-check**](adapters/stdlib/claim-check/) — A claim checked against your sources: the passages that hold all of its parts, the ones that hold only some, and the parts no file names. *new* `no-install` `offline` `claim` `top` · near: thesis, all, typosquat
 - [**contradictions**](adapters/stdlib/contradictions/) — Two passages that disagree about the same date or amount, side by side. *new* `no-install` `offline` `amount` · near: duplicates, joins, amounts
-- [**decisions**](adapters/stdlib/decisions/) — A recorded no with its reason and the condition that would reopen it, so a rejection is kept, not forgotten. *new* `no-install` `offline` · near: again, pile-sweep, predict
+- [**decisions**](adapters/stdlib/decisions/) — A recorded no with its reason and the condition that would reopen it, so a rejection is kept, not forgotten. *new* `no-install` `offline` · near: pile-sweep, again, predict
 - [**diverge**](adapters/stdlib/diverge/) — Where two copies part, your record and its backup zip or two copies of a folder, down to the first row, file and line that differ. *bot* `no-install` `offline` `backup` `zip` `everyday` · near: backup, three-two-one, restore-drill
 - **encrypt** (idea) — Keeps the record folder encrypted at rest. Needs cryptography; Apache-2.0 or BSD. *new* `needs-install` `offline` `rest` · near: make-it-so, almanac-keep, google-keep
 - [**export**](adapters/stdlib/export/) — Approved answers, and the question log (counts only, never words), as Markdown or CSV. *box* `no-install` `offline` `counts` `markdown` · near: again, history, pgp
@@ -470,8 +470,8 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - **model-card** (idea) — A card naming the model behind an assistant (version or weights hash, where it runs, licence, known limits), with the card's hash on the record so each suggestion can say which model made it. *new* `no-install` `offline` `weights` `hash` · near: weights-pin, weights-card, cite-honesty
 - **model-drift** (idea) — Your frozen questions asked again of a model now and then, flagging when its answers change while its name and card stay the same. Goes online: the endpoint you configure, to ask your questions again. *new* `no-install` `online` `flagged` · near: pile-gold, ask-later, fixity
 - **model-exam** (idea) — Any model scored against the answers you sealed, your own questions as its exam, before you trust its suggestions. Goes online: the endpoint you configure, to ask your sealed questions. *new* `no-install` `online` `trust` `score` · near: code-first, ci-bets, llm-cli
-- **model-fit** (idea) — Whether this machine's GPU, NPU or Apple silicon can run a local model, and about how fast, before you download one. *new* `no-install` `offline` `local` `apple` · near: mlx, local-model, model-shelf
-- **model-shelf** (idea) — Every model already on this machine, read from Ollama's, LM Studio's, Jan's and GPT4All's folders and the Hugging Face cache: its runtime, size, quantization and hash, before you download another. *new* `no-install` `offline` `cache` `download` · near: openai-compatible, model-fit, local-model
+- **model-fit** (idea) — Whether this machine's GPU, NPU or Apple silicon can run a local model, and about how fast, before you download one. *new* `no-install` `offline` `local` `apple` · near: mlx, local-model, weights-pin
+- [**model-shelf**](adapters/stdlib/model-shelf/) — Every model already on this machine, read from Ollama's, LM Studio's, Jan's and GPT4All's folders and the Hugging Face cache: its runtime, size, quantization and hash, before you download another. Uses weights-card. *new* `no-install` `offline` `jan` `ollama` · near: weights-card, weights-pin, openai-compatible
 - **night-batch** (idea) — Questions waiting for suggestions batched into one local-model run overnight, stopped the moment you're back. Needs a local model server; licence varies by model. Reaches this machine only. *new* `needs-install` `this-machine` `local` · near: local-model, browser-model, quantized
 - [**openai-compatible**](adapters/stdlib/openai-compatible/) — Suggestions from any OpenAI-compatible endpoint you choose (LM Studio, vLLM, LocalAI, SGLang, Docker Model Runner, OpenRouter, Groq, Mistral), citing your passages. Goes online: the endpoint you configure, to ask for suggestions. *new* `no-install` `online` `cpp` `llama` · near: local-model, model-shelf, in-process
 - [**opencode**](adapters/stdlib/opencode/) — OpenCode asks your folder and hands in suggestions, through the mcp add-on. Uses hosts. *new* `no-install` `offline` `mcp` · near: cursor, windsurf, zed
@@ -486,7 +486,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - **serve-piles** (idea) — serve's piles grouped on all four W's -- who, when, what and where -- not where alone, so a model meets a question from every box that touched it. *new* `no-install` `offline` `serve` · near: pile-serve, pile-rungs, serve
 - **silence-log** (idea) — A model that ran and said nothing kept as its own row, so silence is told apart from a model that never ran. *bot* `no-install` `offline` `log` `rows` · near: said, cassettes, llm-cli
 - **translate** (idea) — An answer translated by a local model, the original kept beside it, the translation held until you seal it. Needs a local model server; licence varies by model. Reaches this machine only. *new* `needs-install` `this-machine` `local` `held` · near: plain-language, hook-tiers, local-model
-- [**weights-card**](adapters/stdlib/weights-card/) — A model card filled in from the weights file's own header, GGUF or safetensors (architecture, quantization, context length, licence), so the card says what the file says. *new* `no-install` `offline` `weights` `licence` · near: weights-pin, model-card, folder-card
+- [**weights-card**](adapters/stdlib/weights-card/) — A model card filled in from the weights file's own header, GGUF or safetensors (architecture, quantization, context length, licence), so the card says what the file says. *new* `no-install` `offline` `weights` `licence` · near: model-shelf, weights-pin, model-card
 - [**windsurf**](adapters/stdlib/windsurf/) — Windsurf asks your folder and hands in suggestions, through the mcp add-on. Uses hosts. *new* `no-install` `offline` `mcp` · near: cursor, opencode, zed
 - [**zed**](adapters/stdlib/zed/) — Zed's assistant asks your folder and hands in suggestions, through the mcp add-on. Uses hosts. *new* `no-install` `offline` `mcp` · near: cursor, opencode, windsurf
 
@@ -611,7 +611,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - **nuget** (idea) — The C# port on NuGet, built from this repo and checked against the vectors. Goes online: nuget.org, to publish a release a maintainer tags. *new* `no-install` `online` `repo` `vectors` · near: maven, npm, pypi
 - [**pins**](adapters/stdlib/pins/) — Version ranges in package.json, pyproject.toml or Cargo.toml that no lockfile holds. Uses advisories. *new* `no-install` `offline` `dependency` `package` · near: lockfiles, advisories, typosquat
 - [**profile**](adapters/stdlib/profile/) — Where a question's time goes, function by function, from cProfile, per release. *new* `no-install` `offline` `release` · near: bench, test-shards, calendar
-- **property-tests** (idea) — Thousands of odd inputs (combining marks, empty strings, huge seeds) thrown at the byte rules by Hypothesis. Needs Hypothesis; MPL-2.0. *new* `needs-install` `offline` `inputs` `rule` · near: fuzz, hook-fuzz, weakest-link
+- **property-tests** (idea) — Thousands of odd inputs (combining marks, empty strings, huge seeds) thrown at the byte rules by Hypothesis. Needs Hypothesis; MPL-2.0. *new* `needs-install` `offline` `inputs` `empty` · near: fuzz, hook-fuzz, weakest-link
 - **pypi** (idea) — kernel.py on PyPI as a package with no dependencies, built from this repo, checked against the vectors, and attested on upload; uvx and pipx run it. Goes online: upload.pypi.org, to publish a release a maintainer tags. *new* `no-install` `online` `repo` `vectors` · near: npm, nuget, maven
 - **pypy** (idea) — The kernel and its tests run under PyPy too, and timed against CPython. *new* `no-install` `offline` `test` · near: slow-tests, test-shards, mutants
 - [**readme**](adapters/stdlib/readme/) — Builds ADDONS.md, and the README's one feature, from the add-ons' own cards. Uses similar. *new* `no-install` `offline` · near: similar, live, front-page
