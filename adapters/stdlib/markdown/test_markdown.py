@@ -329,6 +329,23 @@ def test_reference_links_are_their_text_and_their_definitions_blank():
     ]
 
 
+def test_a_reference_definition_inside_code_is_code_not_a_link():
+    assert md("````\n```\n[g]: https://g.example\n````\nsee [g]\n") == [
+        "",
+        "```",
+        "[g]: https://g.example",
+        "",
+        "see [g]",
+    ]
+    assert md("```\n~~~\n[h]: https://h.example\n```\nsee [h]\n") == [
+        "",
+        "~~~",
+        "[h]: https://h.example",
+        "",
+        "see [h]",
+    ]
+
+
 def test_wikilinks_and_embeds_are_the_text_they_show():
     assert md(
         "[[Seed bank]] [[Gerry|my husband]] ![[plot.png]] [[Health#Gerry]]\n"
