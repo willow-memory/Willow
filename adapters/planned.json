@@ -1708,16 +1708,6 @@
   "network": "none"
  },
  {
-  "name": "translate",
-  "kind": "deps",
-  "section": "Assistants",
-  "line": "An answer translated by a local model, the original kept beside it, the translation held until you seal it.",
-  "source": "new",
-  "needs": "a local model server; licence varies by model",
-  "writes": "record",
-  "network": "loopback"
- },
- {
   "name": "trips",
   "kind": "stdlib",
   "section": "Keeping track",

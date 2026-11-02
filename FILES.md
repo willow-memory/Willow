@@ -1098,6 +1098,10 @@ willow/
 │   │   │   ├── transcript_redact.py  a transcript's keys, home paths and emails taken out, each removal listed
 │   │   │   ├── test_transcript_redact.py
 │   │   │   └── README.md
+│   │   ├── translate/
+│   │   │   ├── translate.py  an answer you sealed, translated on this machine, held for your seal beside the original
+│   │   │   ├── test_translate.py
+│   │   │   └── README.md
 │   │   ├── trello/
 │   │   │   ├── trello.py   a Trello board by list with cards, checklists and comments
 │   │   │   ├── test_trello.py

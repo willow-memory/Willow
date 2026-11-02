@@ -682,6 +682,8 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "model-fit": ("model_fit.py", ["check", "--root", "{tmp}"]),
     "model-card": ("model_card.py", ["list", "--box", "{box}"]),
     # a closed port on this machine: the bite serves, the ask is unreachable, 42
+    # nothing sealed for the question: no server is looked for
+    "translate": ("translate.py", ["--box", "{box}", "--into", "Spanish", "tomatoes"]),
     "local-model": ("local_model.py", ["ask", "--box", "{box}", "--url", "http://127.0.0.1:9/v1",
                     "--model", "m", "tomatoes"]),
     # the question is the passage itself, an echo: nothing is asked, the port never reached
