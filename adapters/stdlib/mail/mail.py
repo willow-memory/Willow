@@ -120,11 +120,23 @@ def _text_of(s: str) -> str:
         return s
 
 
+def _raw(value: object) -> str:
+    """A header's text before any decoding. A header holding 8-bit bytes comes
+    back from the email package as a Header whose str() swaps each byte for
+    U+FFFD; its chunks still hold the bytes, read here as UTF-8."""
+    if isinstance(value, email.header.Header):
+        return "".join(
+            c.decode("utf-8", "replace") if isinstance(c, bytes) else c
+            for c, _ in email.header.decode_header(value)
+        )
+    return _text_of(str(value))
+
+
 def _header(value: object) -> str:
     """A header value, RFC 2047 words decoded, folds and runs of spaces made one."""
     if value is None:
         return ""
-    s = " ".join(_text_of(str(value)).split())
+    s = " ".join(_raw(value).split())
     out = []
     for chunk, charset in email.header.decode_header(s):
         if isinstance(chunk, bytes):
@@ -184,7 +196,7 @@ def render(msg: email.message.Message) -> str:
         body = "\n".join(ln.rstrip() for ln in body.split("\n")).strip("\n")
     lines = [
         f"From: {_header(msg.get('From')) or 'none'}",
-        f"To: {_header(', '.join(str(v) for v in msg.get_all('To') or [])) or 'none'}",
+        f"To: {_header(', '.join(_raw(v) for v in msg.get_all('To') or [])) or 'none'}",
         f"Date: {_date(msg.get('Date'))}",
         f"Subject: {_header(msg.get('Subject')) or 'none'}",
         "",
