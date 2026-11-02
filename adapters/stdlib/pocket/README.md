@@ -12,11 +12,12 @@ What you saved to Pocket, and when, searchable now that Pocket has closed.
 
     python adapters/stdlib/pocket/pocket.py mirror --from FOLDER --to MIRROR
 
-Each saved article becomes one line, the day you saved it first:
+Each saved article becomes one line, the day you saved it first, then only
+what Pocket held:
 
-    2023-03-04 saved: How to keep a sourdough starter alive & happy <https://example.org/sourdough> [baking, bread] (unread)
+    2023-03-04 How to keep a sourdough starter alive & happy <https://example.org/sourdough> [baking, bread] (unread)
 
-    2024-06-02 saved: https://example.org/bare (archived)
+    2024-06-02 https://example.org/bare (archive)
 
 It reads both shapes Pocket exported, and knows them by what they hold, not
 by their names:
@@ -36,24 +37,23 @@ mouth.
 **The line.** The day is the UTC day of Pocket's `time_added`, so the same
 export gives the same lines on any machine. A title that is blank, or is the
 address itself, is written as just the address. Tags are left out when there
-are none. Pocket's "archive" and "read", and the HTML's "Read Archive", are
-written "archived"; "unread" stays; a status Pocket didn't give is left out,
-and one it gave that isn't these is written as it was. An article with no
-time is written `(no date) saved:`, never given one.
+are none. The status is written as Pocket wrote it ("unread", "archive"; the
+HTML's "Read Archive" heading as "archive"), and left out when it gave none.
+An article with no time starts "undated", never given one.
 
-**Why a line per article, a blank line between.** The kernel cuts a file into
-passages at blank lines and serves a passage only when it holds half the
-question's words. Each article is a passage of its own, so "when did I save
-that article about sourdough" is held by that one line (its "saved" and
-"sourdough") and served with its own day, not inside a run of other titles.
-The lines go oldest first, undated ones at the top, because the kernel dates
-a passage by the latest date at or above it in its file: newest first, every
+**No word of its own on every line.** The kernel serves a passage only when
+it holds half the question's words, so a word this added to every line (such
+as "saved") would answer "what did I save about volcanoes" with an unrelated
+article. It adds none, and that question gets an honest nothing. The cost:
+"when did I save that article about sourdough" misses too; ask "that
+sourdough article". The status is Pocket's own word and stays, so
+"what is unread about volcanoes" is still half held by every unread line.
+
+**Why a line per article, a blank line between.** Each article is a passage
+of its own, served with its own day, not inside a run of other titles. The
+lines go oldest first, undated ones at the top, because the kernel dates a
+passage by the latest date at or above it in its file: newest first, every
 article would wear the newest one's day.
-
-One thing that follows: every line says "saved", so a two-word question such
-as "what did I save about volcanoes" is half held by every line, and the
-kernel serves the closest lines it has even when none is about volcanoes.
-Ask with the topic's own words ("volcano article") to get an honest "nothing".
 
 Each file is written to MIRROR at the same relative path with .txt added.
 FOLDER is only read: hidden folders and files are skipped, and nothing is

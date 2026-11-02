@@ -73,37 +73,39 @@ def lines(text: str) -> list[str]:
 
 def test_the_csv_is_one_dated_line_per_article_oldest_first():
     assert mod.convert("part_000000.csv", CSV) == (
-        "2024-03-02 saved: Tide tables, explained <https://example.org/tides> [tides] (archived)\n\n"
-        "2024-03-03 saved: https://example.org/blank (unread)\n\n"
-        "2024-06-01 saved: Rye, spelt and the slow ferment <https://example.org/rye> [baking, bread] (unread)\n\n"
-        "2024-06-02 saved: https://example.org/bare (archived)\n"
+        "2024-03-02 Tide tables, explained <https://example.org/tides> [tides] (archive)\n\n"
+        "2024-03-03 https://example.org/blank (unread)\n\n"
+        "2024-06-01 Rye, spelt and the slow ferment <https://example.org/rye> [baking, bread] (unread)\n\n"
+        "2024-06-02 https://example.org/bare (archive)\n"
     )
 
 
 def test_the_html_export_reads_both_lists_and_its_entities():
     assert lines(mod.convert("ril_export.html", HTML)) == [
-        "2018-03-02 saved: Why the tide is late <https://example.org/tide> [tides] (archived)",
-        "2023-03-04 saved: How to keep a sourdough starter alive & happy <https://example.org/sourdough> [baking, bread] (unread)",
-        "2023-03-05 saved: https://example.org/no-title (unread)",
+        "2018-03-02 Why the tide is late <https://example.org/tide> [tides] (archive)",
+        "2023-03-04 How to keep a sourdough starter alive & happy <https://example.org/sourdough> [baking, bread] (unread)",
+        "2023-03-05 https://example.org/no-title (unread)",
     ]
 
 
-def test_each_status_pocket_wrote_is_said_and_one_it_did_not_is_left_out():
+def test_each_status_is_written_as_pocket_wrote_it_and_none_is_left_out():
     rows = "".join(
         f"T{i},https://x.example/{i},1700000000,,{s}\n"
-        for i, s in enumerate(["unread", "archive", "read", "Archive", "", "later"])
+        for i, s in enumerate(["unread", "archive", "read", " Archive ", "", "a  b"])
     )
     got = lines(
         mod.convert("a.csv", ("title,url,time_added,tags,status\n" + rows).encode())
     )
     assert [x.rsplit(">", 1)[1] for x in got] == [
         " (unread)",
-        " (archived)",
-        " (archived)",
-        " (archived)",
+        " (archive)",
+        " (read)",
+        " (Archive)",
         "",
-        " (later)",
+        " (a b)",
     ]
+    html = lines(mod.convert("ril_export.html", HTML))
+    assert [x.rsplit(" ", 1)[1] for x in html] == ["(archive)", "(unread)", "(unread)"]
 
 
 def test_a_missing_or_broken_time_is_said_and_goes_first_so_it_takes_no_other_date():
@@ -115,10 +117,10 @@ def test_a_missing_or_broken_time_is_said_and_goes_first_so_it_takes_no_other_da
         b"Same day first,https://x.example/a,1717236001,,unread\n"
     )
     assert [x.split(" <")[0] for x in lines(mod.convert("a.csv", csv))] == [
-        "(no date) saved: Undated",
-        "(no date) saved: Garbled",
-        "2024-06-01 saved: New",
-        "2024-06-01 saved: Same day first",
+        "undated Undated",
+        "undated Garbled",
+        "2024-06-01 New",
+        "2024-06-01 Same day first",
     ]
 
 
@@ -145,9 +147,9 @@ def test_a_row_with_neither_title_nor_address_is_not_a_line_and_one_with_a_title
         b"Long row,https://x.example/l,1700000000,t,unread,extra\n"
     )
     assert lines(mod.convert("a.csv", csv)) == [
-        "(no date) saved: Short row <https://x.example/s>",
-        "2023-11-14 saved: A title only (unread)",
-        "2023-11-14 saved: Long row <https://x.example/l> [t] (unread)",
+        "undated Short row <https://x.example/s>",
+        "2023-11-14 A title only (unread)",
+        "2023-11-14 Long row <https://x.example/l> [t] (unread)",
     ]
 
 
@@ -188,7 +190,7 @@ def test_the_zip_is_read_without_unpacking_into_one_mirror_beside_its_path(tmp_p
     text = (out / "mail/pocket.zip.txt").read_text(encoding="utf-8")
     assert (
         lines(text)[0]
-        == "2023-07-22 saved: On allotments <https://example.org/allot> [garden] (unread)"
+        == "2023-07-22 On allotments <https://example.org/allot> [garden] (unread)"
     )
     assert len(lines(text)) == 5 and text.count("Rye, spelt") == 1
     assert sorted(p.name for p in (tmp_path / "src/mail").iterdir()) == ["pocket.zip"]
@@ -197,7 +199,7 @@ def test_the_zip_is_read_without_unpacking_into_one_mirror_beside_its_path(tmp_p
 def test_a_zip_holding_the_old_html_is_read_too():
     assert lines(mod.convert("Pocket.ZIP", zipped({"ril_export.html": HTML})))[
         0
-    ].startswith("2018-03-02 saved: Why the tide is late")
+    ].startswith("2018-03-02 Why the tide is late")
 
 
 def test_a_member_over_the_limit_is_left_out(monkeypatch):
@@ -245,12 +247,39 @@ def test_each_article_is_one_passage_and_the_kernel_serves_the_one_asked_about(
     )
     pile = kernel.chunks(tmp_path)
     assert len(pile) == 7 and all("\n" not in c["text"] for c in pile)
-    served = kernel.rank(pile, "when did I save that article about sourdough")
+    for q in ("that sourdough article", "the article on rye bread"):
+        assert len(kernel.rank(pile, q)) == 1, q
+    served = kernel.rank(pile, "that sourdough article")
     assert [c["text"][:10] for c in served] == ["2023-03-04"]
+    # the accepted cost of no "saved" on every line: half of save, article,
+    # sourdough is two words, and the line holds only one
+    assert kernel.rank(pile, "when did I save that article about sourdough") == []
     assert kernel.dates([c for c in pile])[-1] == 20240602, (
         "oldest first: each line its own date"
     )
     assert [d for d in kernel.dates(pile)] == sorted(kernel.dates(pile))
+
+
+def test_no_word_of_the_readers_own_on_every_line_answers_a_question_the_folder_cannot(
+    tmp_path,
+):
+    """Two content words: one on most lines would be half, and the kernel would
+    serve an unrelated article. Volcanoes are in no line."""
+    text = mod.convert("pocket.zip", zipped({"a.csv": CSV, "ril_export.html": HTML}))
+    (tmp_path / "a.txt").write_text(text, encoding="utf-8")
+    pile = kernel.chunks(tmp_path)
+    source = set(kernel.words((CSV + HTML).decode()))
+    most = {
+        w
+        for w in {w for c in pile for w in kernel.words(c["text"])}
+        if sum(w in kernel.words(c["text"]) for c in pile) * 2 > len(pile)
+    } - kernel.FUNCTION
+    own = {w for w in most if w not in source and not any(ch.isdigit() for ch in w)}
+    assert own == set(), own
+    for w in sorted(own | {"saved", "save", "added", "pocket"}):
+        assert kernel.rank(pile, f"volcano {w}") == [], w
+    assert kernel.rank(pile, "what did I save about volcanoes") == []
+    assert kernel.rank(pile, "what did I save about sourdough") != []
 
 
 def test_a_mirror_is_written_at_the_same_path_with_txt_added(tmp_path):

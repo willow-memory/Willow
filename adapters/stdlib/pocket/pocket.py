@@ -10,19 +10,23 @@ its shapes, recognised by what they hold, never by their names:
 - the 2025 CSV (`part_000000.csv` and on), whose header is exactly
   `title,url,time_added,tags,status`, tags joined by `|`.
 
-Each saved article is one line, the day it was saved (UTC) first:
+Each article is one line, the day it was saved (UTC) first, then only what
+Pocket held: title, address, tags, and the status as Pocket wrote it
+("unread", "archive"; the HTML's "Read Archive" heading is written "archive"):
 
-    2024-03-02 saved: How to keep a sourdough starter <https://example.org/s> [baking, bread] (archived)
+    2024-03-02 How to keep a sourdough starter <https://example.org/s> [baking, bread] (archive)
 
-A title that is blank or is the address itself is written as just the address.
-Tags are left out when there are none, the status (unread, or archived for
-Pocket's "archive", "read" and "Read Archive") when the export gives none, and
-an article with no time_added is "(no date) saved:".
+No word of this script's own goes on every line (no "saved", no "archived"):
+the kernel serves a passage holding half a question's words, so a word on
+every line would answer "what did I save about volcanoes" with an unrelated
+article. A title that is blank or is the address itself is written as just
+the address; tags are left out when there are none, the status when Pocket
+gave none; an article with no time_added starts "undated".
 
 Each line is a paragraph of its own, a blank line between, so the kernel's
-`chunks` makes each article one passage: "when did I save that article about
-sourdough" is held by that one line (its "saved" and "sourdough"), served with
-its own date, never in a run of other articles' titles. The lines go oldest
+`chunks` makes each article one passage: "that sourdough article" is held by
+that one line and served with its own date, never in a run of other
+articles' titles. The lines go oldest
 first, undated ones at the top, because the kernel dates a passage by the
 latest date at or above it in its file: newest first, every article would wear
 the newest one's date.
@@ -57,8 +61,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 import kernel  # noqa: E402
 
 HEADER = ["title", "url", "time_added", "tags", "status"]
-STATUS = {"unread": "unread", "archive": "archived", "read": "archived"}
-SECTIONS = {"unread": "unread", "read archive": "archived"}
+SECTIONS = {"unread": "unread", "read archive": "archive"}
 BIGGEST = 64 * 1024 * 1024  # bytes of one zip member read
 
 
@@ -78,10 +81,11 @@ def day(stamp: str) -> str:
 def line(title: str, url: str, stamp: str, tags: list[str], status: str) -> str:
     title, url = " ".join(title.split()), url.strip()
     what = url if not title or title == url else f"{title} <{url}>" if url else title
-    out = f"{day(stamp) or '(no date)'} saved: {what}"
+    out = f"{day(stamp) or 'undated'} {what}"
     kept = [t for t in (" ".join(t.split()) for t in tags) if t]
     if kept:
         out += f" [{', '.join(kept)}]"
+    status = " ".join(status.split())
     return out + (f" ({status})" if status else "")
 
 
@@ -95,13 +99,7 @@ def from_csv(text: str) -> list[tuple[str, str]]:
         title, url, stamp, tags, status = (row + [""] * 5)[:5]
         if not (title.strip() or url.strip()):
             continue
-        s = status.strip()
-        out.append(
-            (
-                day(stamp),
-                line(title, url, stamp, tags.split("|"), STATUS.get(s.lower(), s)),
-            )
-        )
+        out.append((day(stamp), line(title, url, stamp, tags.split("|"), status)))
     return out
 
 
