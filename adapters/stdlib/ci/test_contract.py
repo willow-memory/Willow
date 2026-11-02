@@ -102,6 +102,13 @@ def _tar(files: dict[str, str]) -> bytes:
 #: files an add-on needs in the pile besides the default, by add-on
 PILE_EXTRA: dict[str, dict[str, bytes]] = {
     "scrub": {"photo.png": _png()},
+    # a GGUF header with no keys and no tensors: a card that says so
+    "weights-card": {"m.gguf": b"GGUF\x03" + b"\0" * 16},
+    # a card pinning another file of the same size: it differs, 42
+    "weights-pin": {
+        "m.bin": b"weights",
+        "m.md": b"<!-- willow-model\nsha256: " + b"0" * 64 + b"\nbytes: 7\n-->\n",
+    },
     # an entry with no permitted copy: almanac-keep answers before any fetch
     "almanac-keep": {
         "catalog.json": b'{"entries": [{"id": "tides", "status": "dark", '
@@ -148,6 +155,10 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         "outcome INTEGER, note TEXT, evidence TEXT, at INTEGER NOT NULL);\n"
         "INSERT INTO predictions VALUES ('a1b2c3d4','tomatoes want sun',0.7,"
         "1790000000,NULL,'[]');\n")}),
+    "bookmarks": ("bookmarks.py", {"bookmarks.html": (
+        b'<!DOCTYPE NETSCAPE-Bookmark-file-1>\n<TITLE>Bookmarks</TITLE>\n<H1>Bookmarks</H1>\n<DL><p>\n'
+        b'    <DT><A HREF="https://example.org/tomatoes" ADD_DATE="1709378130" TAGS="garden">Tomato growing guide</A>\n'
+        b'    <DD>Staking and pruning.\n</DL><p>\n')}),
     "books": ("books.py", {"My Clippings.txt": (
         "Made-Up Harbour (Ada Example)\n- Your Highlight on page 12 | Location 180 | "
         "Added on Sunday, 3 March 2024 10:15:22\n\nThe tide keeps its own calendar.\n"
@@ -186,6 +197,10 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         b"\\documentclass{article}\n\\usepackage{amsmath}\n\\title{Tides of the Estuary}\n\\author{Ada Example}\n\\begin{document}\n\\maketitle\n"
         b"\\section{Method}\\label{sec:m}\nWe measure the tide at six harbours \\cite{smith2020}. % a comment\n"
         b"The result is $x = 1$ and\n\\begin{equation}\ny = mx + b\n\\end{equation}\nholds \\emph{everywhere}.\n\\end{document}\n"
+    )}),
+    "markdown": ("markdown.py", {"progress.md": (
+        b"---\ndate: 2024-03-03\ntags: [study]\n---\n# AAT Level 4\n\n| unit | mark |\n|---|---|\n| APMA | 71% |\n\n"
+        b"## Next\n- [ ] book **BSTX**, see [the portal](https://aat.example/book) and [[Exam plan]]\n"
     )}),
     "pgn": ("pgn.py", {"club.pgn": (
         b'[Event "Club Championship"]\n[Site "Leeds"]\n[Date "2024.03.03"]\n[White "Ada Example"]\n[Black "Cy Sample"]\n[Result "1-0"]\n[ECO "B20"]\n[Opening "Sicilian Defense"]\n\n'
@@ -246,6 +261,14 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         "resources/pic.png": "not markdown",
         })
     )}),
+    "pocket": ("pocket.py", {"pocket.zip": _zip({
+        "part_000000.csv": "title,url,time_added,tags,status\n"
+        '"Rye, spelt and the slow ferment",https://example.org/rye,1717236000,baking|bread,unread\n'
+        "https://example.org/bare,https://example.org/bare,1717322400,,archive\n",
+        "annotations/part_000000.json": "[]",
+        "ril_export.html": '<h1>Unread</h1><ul><li><a href="https://example.org/s" time_added="1677925200" '
+        'tags="baking">Sourdough &amp; you</a></li></ul><h1>Read Archive</h1><ul></ul>',
+    })}),
     "day-one": ("day_one.py", {"Journal.json": (
         b'{"metadata":{"version":"1.0"},"entries":['
         b'{"creationDate":"2024-03-03T09:00:00Z","text":"Second entry\\\\.","tags":["garden","spring"],"starred":true,"location":{"placeName":"Kitchen","localityName":"Leeds","country":"United Kingdom"},"weather":{"conditionsDescription":"Cloudy","temperatureCelsius":7.6}},'
@@ -466,6 +489,47 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         "<p>The roof is fixed.</p>\n").encode()}),
     "clauses": ("clauses.py", {"terms.html": (
         "<h1>Terms</h1><p>We keep your data. We delete it on request.</p>\n").encode()}),
+    "csv-rows": ("csv_rows.py", {"census.csv": (
+        b"Surname,Forename,Townland,Age,Occupation\n"
+        b"Considine,Patrick,Caherfeenick,17,Farm Labourer\n"
+    )}),
+    "text": ("text.py", {"boiler.txt": b"\xff\xfe" + (
+        "Boiler service\r\n\r\nServiced by Keane Heating on 12 March 2019.\r\n").encode("utf-16-le")}),
+    "json-paths": ("json_paths.py", {"orders.json": (
+        b'{"shop": "Hollow Lane", "orders": [{"id": 7, "items": [{"name": "leeks", "qty": 2}]},'
+        b' {"id": 8, "items": [{"name": "oats", "qty": 1}]}]}\n'
+    ), "log.jsonl": b'{"day": "2026-03-02", "said": "the boiler is fixed"}\nnot json\n'}),
+    "org": ("org.py", {"todo.org": (
+        b"#+TITLE: Agenda\n* Home\n** TODO [#A] Ring the vet  :pets:\nSCHEDULED: <2024-03-05 Tue 09:00 +1w>\n:PROPERTIES:\n:CREATED: [2024-03-01 Fri]\n:END:\n"
+        b"| Plant | Sown |\n|-------+------|\n| Leek | 2024-03-01 |\n"
+    )}),
+    "rst": ("rst.py", {"tides.rst": (
+        b"Tides\n=====\n\n.. note:: Bring a coat.\n\nWe measure the tide at "
+        b"`six harbours <https://tides.example/>`_.\n\n.. code-block:: python\n\n   rise = 4.2\n"
+    )}),
+    "asciidoc": ("asciidoc.py", {"tides.adoc": (
+        b"= Tides of the Estuary\nAda Example\n:revdate: 2024-03-03\n\n== Method\n\n"
+        b"We measure the tide at *six* harbours.footnote:[Calibrated in March.]\n\n"
+        b"|===\n| Harbour | Gauges\n| Leeds | 6\n|===\n"
+    )}),
+    "strava": ("strava.py", {
+        "activities.csv": (
+            b"Activity ID,Activity Date,Activity Name,Activity Type,Elapsed Time,Distance,Elapsed Time,Distance\n"
+            b'1,"Mar 3, 2024, 7:15:22 AM",Harbour Loop,Run,1694,5.23,1694.0,5230.5\n'),
+        "run.gpx": (
+            b'<?xml version="1.0"?><gpx version="1.1" xmlns="http://www.topografix.com/GPX/1/1"><trk><name>Harbour Loop</name>'
+            b'<type>running</type><trkseg><trkpt lat="0" lon="0"><time>2024-03-03T07:15:22Z</time></trkpt>'
+            b'<trkpt lat="0.05" lon="0"><time>2024-03-03T07:43:36Z</time></trkpt></trkseg></trk></gpx>'),
+    }),
+    "takeout": ("takeout.py", {"MyActivity.json": (
+        b'[{"header":"Search","title":"Searched for leek soup","titleUrl":"https://www.google.com/search?q=leek+soup",'
+        b'"time":"2024-03-03T10:15:22.517Z","products":["Search"],"activityControls":["Web & App Activity"]}]'
+    ), "watch-history.html": (
+        '<div class="outer-cell mdl-cell mdl-cell--12-col mdl-shadow--2dp"><div class="mdl-grid">'
+        '<div class="header-cell mdl-cell mdl-cell--12-col"><p class="mdl-typography--title">YouTube<br></p></div>'
+        '<div class="content-cell mdl-cell mdl-cell--6-col mdl-typography--body-1">Watched&nbsp;<a href="https://www.youtube.com/watch?v=a">Leek soup</a>'
+        '<br><a href="https://www.youtube.com/channel/UC1">Soup Kitchen</a><br>Mar 2, 2024, 7:40:05\u202fPM GMT<br></div></div></div>\n'
+    ).encode()}),
 }  # fmt: skip
 
 #: the language packs' codes: a pack is words- and its language's ISO 639 code
@@ -675,6 +739,30 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "test-shards": ("shards.py", ["--shards", "2", "--tests", "{pile}/garden.md"]),
     "bot-venv": ("bot_venv.py", ["--venv", "{pile}"]),
     "restack": ("restack.py", ["--onto", "HEAD", "HEAD"]),
+    "weights-card": ("weights_card.py", ["--from", "{pile}/m.gguf", "--to", "{tmp}/card.md"]),
+    "weights-pin": ("weights_pin.py", ["--card", "{pile}/m.md", "--from", "{pile}/m.bin"]),
+    "model-shelf": ("model_shelf.py", ["list", "--home", "{tmp}"]),
+    "model-fit": ("model_fit.py", ["check", "--root", "{tmp}"]),
+    "model-card": ("model_card.py", ["list", "--box", "{box}"]),
+    # a closed port on this machine: the bite serves, the ask is unreachable, 42
+    # nothing sealed for the question: no server is looked for
+    "translate": ("translate.py", ["--box", "{box}", "--into", "Spanish", "tomatoes"]),
+    # a time long gone: it stops before the first question, no server looked for
+    "night-batch": ("night_batch.py", ["run", "--box", "{box}", "--questions", "{pile}/garden.md",
+                    "--until", "2000-01-01T00:00:00Z"]),
+    # nothing sealed for the question: nothing to mark, no server looked for
+    "quantized": ("quantized.py", ["--box", "{box}", "--questions", "{pile}/garden.md"]),
+    "local-model": ("local_model.py", ["ask", "--box", "{box}", "--url", "http://127.0.0.1:9/v1",
+                    "--model", "m", "tomatoes"]),
+    # the question is the passage itself, an echo: nothing is asked, the port never reached
+    "same-way": ("same_way.py", ["--box", "{box}", "--url", "http://127.0.0.1:9/v1",
+                 "--model", "m", "--questions", "{pile}/garden.md"]),
+    # the question is the passage itself, an echo: nothing is frozen, the port never reached
+    "model-drift": ("model_drift.py", ["freeze", "--box", "{box}", "--url", "http://127.0.0.1:9/v1",
+                    "--model", "m", "--questions", "{pile}/garden.md"]),
+    # no answer sealed for the question: nothing is asked, the port never reached
+    "model-exam": ("model_exam.py", ["--box", "{box}", "--url", "http://127.0.0.1:9/v1",
+                   "--model", "m", "--questions", "{pile}/garden.md"]),
     **{name: (script, ["mirror", "--from", "{pile}", "--to", "{tmp}/mirror"])
        for name, (script, _) in READERS.items()},
 }  # fmt: skip

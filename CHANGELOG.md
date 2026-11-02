@@ -10,6 +10,172 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `takeout`: Google Takeout's My Activity and YouTube watch and search
+  history, JSON or HTML: each activity as its own dated line, in UTC as the
+  file gives it, Google's title with a watch's channel and nothing added to
+  every line; an HTML date in another language kept as written, never
+  guessed; other JSON and HTML skipped and counted.
+- `strava`, Strava's export and GPX files as dated lines: `python
+  adapters/stdlib/strava/strava.py mirror --from FOLDER --to MIRROR` writes
+  each run, ride and walk in activities.csv, a .gpx or a .tcx (gzipped or
+  not) as a line with its start, name, distance and time, in the zone the
+  file gives, never a guessed one, and no word of its own beside them.
+  .fit files are skipped and counted.
+- `pocket`: Pocket's export, now that Pocket is gone: the older
+  ril_export.html and the 2025 CSVs, loose or read from the zip without
+  unpacking it, as one dated line per saved article, oldest first, with its
+  title, address, tags and whether it was read; other files left alone.
+- `bookmarks`: browser bookmarks and history: the bookmark HTML export every
+  browser writes, a Firefox backup (.json or .jsonlz4), Chrome's
+  `Bookmarks` file, and copies of Firefox's `places.sqlite` and Chrome's
+  `History`, opened read-only. Each bookmark is a passage with its day,
+  title, address, folder, tags and description; each page visited is one
+  passage with its last visit, visit count and the days it was visited. No
+  label or other word stands on every passage, so a question about something
+  the folder lacks isn't answered by one.
+- `asciidoc`: AsciiDoc documents (.adoc, .asciidoc, and .asc when it isn't
+  PGP armor) as the text they show, line for line, so a passage is cited by
+  the file's own line. Titles, the document's own attributes as `name: value`,
+  admonitions as `note:`, links with an outside address after their text,
+  footnotes, lists and descriptions are kept; comments, delimiters, attribute
+  lines and includes are blank; listing and source blocks stay as written. A
+  table's line is its cells, the header row kept once rather than written onto
+  every row, so no added word sits in every passage.
+- `rst`: reStructuredText files as plain prose, line for line, Python
+  standard library only. Titles keep their text and lose their adornment
+  rows; admonitions read "note:" or "warning:"; code and literal blocks are
+  kept as written; links, roles, substitutions, footnotes and fields read as
+  their text; a table's rows are their cells. Nothing that would repeat on
+  every passage is added: no title path, no header beside each value.
+- `org`: Emacs Org-mode files as plain lines, line for line: the mirror has
+  the source's lines, so a passage is cited by the .org file's own line.
+  Org's markup comes off (stars, drawer and block lines, a timestamp's
+  brackets and day name, link brackets, emphasis where Org reads it), a
+  heading with only headings under it is said once on the headline below so
+  each outline entry is its own passage, and a table's header begins the
+  passage of its rows. It adds no word of its own: TODO, SCHEDULED, CLOCK and a
+  property's name stay as written, and a test asks that no word but a date's
+  digits is in most passages of a file.
+- `json-paths`: any JSON or JSON Lines file as plain lines, one passage per
+  record: each value beside its key, numbers digit for digit, each element
+  of the first array too big for one passage (and each JSON Lines line) its
+  own passage. A key in most of a file's records is left out, so a question
+  pairing it with a word the file doesn't hold finds nothing. Bad files and
+  bad lines are skipped and counted; a mirror over 1 MB is cut into parts.
+- `text`: every .txt and .text file as UTF-8 the kernel reads whole, line
+  for line. A Windows "Unicode" file (UTF-16 with its mark), UTF-32, and
+  UTF-16 with no mark when every other byte is NUL are read; an old code page
+  only when named with `--encoding`, never guessed. CR and CRLF become LF, a
+  line over 500 characters (which the kernel cut short) is broken at spaces,
+  and a file over 1 MB (which it dropped) is cut into parts; a hidden
+  `.lines` map says where those lines go, so nothing is written into the text.
+- `csv-rows`: CSV and TSV tables as one passage per row, numbered by the
+  row's line in the file, with the header row kept once as the first
+  passage, so a question about one row finds that row and not a run of 500
+  characters. No word is written in every row, not even a header, so a
+  question about something absent is answered by no row. The delimiter
+  (comma, tab, semicolon or pipe) is chosen by one fixed rule; a first line
+  holding a number is data, not a header; a wide row is cut at a cell so
+  nothing is lost. A file not in UTF-8, with no data row or malformed is
+  skipped and counted.
+- `markdown`: any Markdown file as the text it shows, line for line, so a
+  passage in the mirror is on the .md file's own line, and no word the file
+  doesn't hold. Front matter as its values; a table's header once, at the
+  head of the passage with its rows, and each row as its cells; links as their text with an outside address, images as
+  their alt text, wikilinks as the text they show; emphasis, HTML, comments,
+  escapes and footnote markers off; fenced code as written.
+- `quantized`, the smallest local model that still gets your own questions
+  right: `quantized.py --box DIR --questions FILE` has each model the local
+  server offers (or each `--model`) sit model-exam's exam of your sealed
+  answers, sorts them by the size Ollama's own list gives, and names the
+  smallest that passes every marked question. Writes nothing. Built in
+  stdlib, like local-model. (#168)
+- `night-batch`, waiting questions asked of a local model in one run,
+  stopped the moment you're back: `night_batch.py run --box DIR --questions
+  FILE [--until TS]` asks each question as local-model does (bite, the
+  first local server, a suggestion held for your seal), skips those sealed
+  or already waiting, and stops before the next question once a row appears
+  that the run didn't write (you bit, sealed or declined) or it is past
+  `--until`. Built in stdlib, like local-model. (#167)
+- `translate`, an answer you sealed translated by a model on this machine:
+  `translate.py --box DIR --into LANGUAGE "question"` finds the answer you
+  sealed for the question, has the first local server translate it keeping
+  each `[n]`, and proposes it as the answer to "question in LANGUAGE" (never
+  the original's question) with the original kept beside it, held for your
+  seal. A translation whose citations differ from the original's is
+  proposed to no one. Built in stdlib, like local-model. (#166)
+- `local-model`, suggestions from a model on this machine only:
+  `local_model.py servers` asks each local runtime's model list on its
+  usual port (Ollama, LM Studio, llama.cpp, vLLM, KoboldCpp, Jan, GPT4All)
+  and says what runs and what it offers; `ask --box DIR "question"` is
+  openai-compatible's bite-then-propose, with the first running server and
+  its first model when none is named, and a URL off this machine refused
+  before anything is sent. Built in stdlib: the server is a program you
+  run, reached over HTTP, not a package it imports. (#165)
+- `model-drift`, frozen questions asked again of a model, flagging answers
+  that change while its name and card stay the same: `model_drift.py freeze
+  ... > frozen.json` prints the model's name, its card's SHA-256 and each
+  answer with the passages served (writing nothing), and `again --frozen
+  frozen.json` asks the same model now, flagging a changed answer as drift
+  only when the passages, the name and the card all held still. (#164)
+- `model-exam`, any model scored against the answers you sealed:
+  `model_exam.py --box DIR --url URL --model NAME --questions FILE` asks
+  each question you sealed an answer for (the kernel's `sealed` and
+  `standing`), once, with openai-compatible's chat over what the kernel's
+  `rank` serves now (no bite on the record), and passes a reply that cites a
+  passage your answer cites and holds half the content words of the shorter
+  of the two. Questions with no sealed answer are said and never asked.
+  (#163)
+- `same-way`, a local model asked each question several times and how
+  often it flips: `same_way.py --box DIR --url URL --model NAME --questions
+  FILE [--times N]` ranks each question against your folder as a bite would
+  (nothing goes on the record), sends the passages served N times (three
+  unless said) with openai-compatible's chat at temperature 0 and a fixed
+  seed, and counts a change in the words or in what is cited as a flip. The
+  URL must be on this machine; the idea's `this-machine` is promised as
+  `loopback`. (#162)
+- `model-card`, a card naming the model behind an assistant, its hash on
+  the record: `model_card.py add --box DIR --from CARD` appends the SHA-256
+  of a `willow-model` card (weights-card's header, with `runs`, `licence`
+  and `limits` added by hand) through the kernel, with the model's name, its
+  weights' hash or `model version`, and where it runs, never the card's
+  text; `check` holds a card file to its row (`same`, `changed`, `never
+  added`) and `list` says each name's latest. No assistant names its card in
+  a suggestion yet; sent-log's card now says so. (#161)
+- `model-fit`, whether this machine can run a local model before you
+  download one: `model_fit.py check [--model FILE] [--measure]` reads
+  memory, the CPU, each GPU (its own memory from the driver or
+  `nvidia-smi`) and NPU from Linux's /proc and /sys, or macOS's
+  `sysctl` with Apple silicon's GPU share, and says where a model of a
+  weights file's or a weights-card's size fits (its weights and a fifth),
+  or the most each place holds. `--measure` times a memory copy for a guess
+  at tokens a second on the CPU. (#160)
+- `model-shelf`, every model already on this machine before you download
+  another: `model_shelf.py list [--home DIR]
+  [--hash]` reads Ollama's manifests,
+  LM Studio's, Jan's and GPT4All's folders (Linux, macOS and Windows places)
+  and the Hugging Face cache (`OLLAMA_MODELS`, `HF_HUB_CACHE` and `HF_HOME`
+  respected), one line per model with its runtime, name, size, quantization
+  (by weights-card's header reader) and SHA-256: Ollama's and the cache's
+  own content names, others only with `--hash`. The same weights under two
+  names are said, and a runtime not on this machine says where it looked.
+  (#159)
+- `weights-pin`, a weights file held to the hash on its model card before
+  it runs: `weights_pin.py --card CARD --from FILE` reads the `sha256` and
+  `bytes` of a `willow-model` header (as weights-card writes one), compares
+  the size first and then the whole file's SHA-256, and says `same` (0) or
+  `differs` with both hashes and sizes (42), so `weights_pin.py ... &&
+  llama-server ...` never runs a file that differs. The hash decides, never
+  the file's name. It reads the card with weights-card's `header`. (#158)
+- `weights-card`, a model card filled in from the weights file's own
+  header: `weights_card.py --from FILE --to CARD` reads a GGUF (v2, v3) or
+  safetensors header for the architecture, name, quantization (llama.cpp's
+  name for `general.file_type`, or safetensors' types by parameters),
+  context length, licence and parameter count, adds the whole file's SHA-256
+  and size, and writes `not in the header` for what the file doesn't say.
+  Only the file's name goes on the card, and `header()` reads one back for
+  the add-ons that read cards. Checked against llama.cpp's own `gguf` reader
+  on two real GGUF files. (#157)
 - `ui/`, willow's own UI (v1): `python ui/canvas.py` opens a page on this
   machine that goes the way a person does. Choose your folders; see what the
   kernel alone makes of them, as counts, never a file's words or name; start
@@ -1495,6 +1661,14 @@ says how). The first was v0.1.0.
   it skips anyone else. (#9)
 
 ### Fixed
+
+- `mail` reads a header sent as raw 8-bit UTF-8 as UTF-8: a subject such as
+  "income tax — what you owe, £412.67" no longer comes out with each of
+  its non-ASCII letters replaced by `���`, and a From or To name with an
+  accent keeps it. The email package hands such a header back as a Header
+  whose text has already swapped the bytes away; its bytes are now read
+  before that. Ten of the demo lives' 224 messages, all Teodora's, read
+  right now. (#169)
 
 - An add-on's tests hold in a copy of its folder, not only in willow: scan,
   start, browse, digest, stack, starter-words, across, parallel, hosts,
