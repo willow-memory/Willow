@@ -104,6 +104,11 @@ PILE_EXTRA: dict[str, dict[str, bytes]] = {
     "scrub": {"photo.png": _png()},
     # a GGUF header with no keys and no tensors: a card that says so
     "weights-card": {"m.gguf": b"GGUF\x03" + b"\0" * 16},
+    # a card pinning another file of the same size: it differs, 42
+    "weights-pin": {
+        "m.bin": b"weights",
+        "m.md": b"<!-- willow-model\nsha256: " + b"0" * 64 + b"\nbytes: 7\n-->\n",
+    },
     # an entry with no permitted copy: almanac-keep answers before any fetch
     "almanac-keep": {
         "catalog.json": b'{"entries": [{"id": "tides", "status": "dark", '
@@ -672,6 +677,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "bot-venv": ("bot_venv.py", ["--venv", "{pile}"]),
     "restack": ("restack.py", ["--onto", "HEAD", "HEAD"]),
     "weights-card": ("weights_card.py", ["--from", "{pile}/m.gguf", "--to", "{tmp}/card.md"]),
+    "weights-pin": ("weights_pin.py", ["--card", "{pile}/m.md", "--from", "{pile}/m.bin"]),
     **{name: (script, ["mirror", "--from", "{pile}", "--to", "{tmp}/mirror"])
        for name, (script, _) in READERS.items()},
 }  # fmt: skip

@@ -10,6 +10,13 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `weights-pin`, a weights file held to the hash on its model card before
+  it runs: `weights_pin.py --card CARD --from FILE` reads the `sha256` and
+  `bytes` of a `willow-model` header (as weights-card writes one), compares
+  the size first and then the whole file's SHA-256, and says `same` (0) or
+  `differs` with both hashes and sizes (42), so `weights_pin.py ... &&
+  llama-server ...` never runs a file that differs. The hash decides, never
+  the file's name. It reads the card with weights-card's `header`. (#158)
 - `weights-card`, a model card filled in from the weights file's own
   header: `weights_card.py --from FILE --to CARD` reads a GGUF (v2, v3) or
   safetensors header for the architecture, name, quantization (llama.cpp's
