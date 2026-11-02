@@ -10,6 +10,13 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `text`: every .txt and .text file as UTF-8 the kernel reads whole, line
+  for line. A Windows "Unicode" file (UTF-16 with its mark), UTF-32, and
+  UTF-16 with no mark when every other byte is NUL are read; an old code page
+  only when named with `--encoding`, never guessed. CR and CRLF become LF, a
+  line over 500 characters (which the kernel cut short) is broken at spaces,
+  and a file over 1 MB (which it dropped) is cut into parts; a hidden
+  `.lines` map says where those lines go, so nothing is written into the text. (#173)
 - `csv-rows`: CSV and TSV tables as one passage per row, numbered by the
   row's line in the file, with the header row kept once as the first
   passage, so a question about one row finds that row and not a run of 500

@@ -475,6 +475,8 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         b"Surname,Forename,Townland,Age,Occupation\n"
         b"Considine,Patrick,Caherfeenick,17,Farm Labourer\n"
     )}),
+    "text": ("text.py", {"boiler.txt": b"\xff\xfe" + (
+        "Boiler service\r\n\r\nServiced by Keane Heating on 12 March 2019.\r\n").encode("utf-16-le")}),
 }  # fmt: skip
 
 #: the language packs' codes: a pack is words- and its language's ISO 639 code

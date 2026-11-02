@@ -126,11 +126,11 @@ says how to pick one up:
 <!-- willow:front show=pick week=2026-W45 -->
 **Add-on of the week**
 
-**[joplin](adapters/stdlib/joplin/)** — Joplin's .jex export, read without unpacking it: each note as plain text with its title and dates.
+**[matrix](adapters/stdlib/matrix/)** — Element's room export, JSON or HTML: one dated line per message in each Matrix room.
 
-*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 306 built add-ons in name order.*
+*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 307 built add-ons in name order.*
 
-[Every add-on, 306 built of 507, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 307 built of 508, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 

@@ -1086,6 +1086,10 @@ willow/
 │   │   │   ├── shards.py     splits the test run into parts by each test's past time
 │   │   │   ├── test_shards.py
 │   │   │   └── README.md
+│   │   ├── text/
+│   │   │   ├── text.py       every .txt as UTF-8 the kernel reads whole: UTF-16, a named code page, over 1 MB
+│   │   │   ├── test_text.py
+│   │   │   └── README.md
 │   │   ├── texts/
 │   │   │   ├── texts.py      Android and iPhone text backups and call logs, a dated line a message
 │   │   │   ├── test_texts.py
