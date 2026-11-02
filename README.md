@@ -126,11 +126,11 @@ says how to pick one up:
 <!-- willow:front show=pick week=2026-W45 -->
 **Add-on of the week**
 
-**[jira](adapters/stdlib/jira/)** — Jira's issue export, CSV or XML: each issue, comment and status change as dated passages.
+**[jetbrains](adapters/stdlib/jetbrains/)** — An external tool for IntelliJ, PyCharm and the rest, with answers as links to file and line.
 
-*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 312 built add-ons in name order.*
+*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 313 built add-ons in name order.*
 
-[Every add-on, 312 built of 512, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 313 built of 512, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 
