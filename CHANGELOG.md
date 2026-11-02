@@ -10,6 +10,12 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `apple-mail`: Apple Mail's .emlx and .partial.emlx messages as plain text,
+  each read with mail's own code so it gives the same text as the same message
+  saved as an .eml (sender, recipients, date and subject, then the body and the
+  attachments' names). A message with no Date header takes Apple Mail's date
+  received, in UTC; the run says how many, the text adds no word for it. A file whose byte count is malformed or which
+  is shorter than it is skipped and counted.
 - `ui/`, willow's own UI (v1): `python ui/canvas.py` opens a page on this
   machine that goes the way a person does. Choose your folders; see what the
   kernel alone makes of them, as counts, never a file's words or name; start

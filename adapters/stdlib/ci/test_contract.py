@@ -167,6 +167,10 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
     "mail": ("mail.py", {"roof.eml": (
         "From: Ada Example <ada@example.org>\nDate: Thu, 14 Oct 2026 09:15:00 +0100\n"
         "Subject: Roof estimate\n\nThe estimate is in.\n").encode()}),
+    "apple-mail": ("apple_mail.py", {"12.emlx": (
+        b"80        \nFrom: Ada Example <ada@example.org>\nSubject: Roof estimate\n\nThe estimate is in.\n"
+        b'<?xml version="1.0" encoding="UTF-8"?>\n<plist version="1.0"><dict><key>date-received</key>'
+        b"<integer>1791964000</integer><key>flags</key><integer>8590195713</integer></dict></plist>\n")}),
     "bibtex": ("bibtex.py", {"refs.bib": (
         b'% a comment\n@string{jms = "Journal of Made-Up Studies"}\n@article{smith2020,\n  author = {Example, Ada and Sample, Cy},\n'
         b'  title = {Tides of the {E}stuary},\n  journal = jms,\n  year = 2020, volume = {12}, number = {3}, pages = {45--67},\n'

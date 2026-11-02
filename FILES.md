@@ -107,6 +107,10 @@ willow/
 │   │   │   ├── annotations.py   approved answers as W3C Web Annotations: the answer as the body, each cited passage as a target with its lines and words
 │   │   │   ├── test_annotations.py
 │   │   │   └── README.md
+│   │   ├── apple-mail/
+│   │   │   ├── apple_mail.py     Apple Mail's .emlx, read as mail reads an .eml
+│   │   │   ├── test_apple_mail.py
+│   │   │   └── README.md
 │   │   ├── attendance/
 │   │   │   ├── attendance.py   who was there, by person or by week
 │   │   │   ├── test_attendance.py
