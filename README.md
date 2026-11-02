@@ -126,11 +126,11 @@ says how to pick one up:
 <!-- willow:front show=pick week=2026-W45 -->
 **Add-on of the week**
 
-**[livestock](adapters/stdlib/livestock/)** — Each animal's births, treatments and sales, from your farm records.
+**[abbreviations](adapters/stdlib/abbreviations/)** — Your own shorthand, written down once (appt, Rx, w/c), so a question finds either form.
 
-*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 319 built add-ons in name order.*
+*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 320 built add-ons in name order.*
 
-[Every add-on, 319 built of 514, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 320 built of 515, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 

@@ -1044,6 +1044,10 @@ willow/
 │   │   │   ├── shell_history.py  bash, zsh and fish history, each command a line with its shell's time
 │   │   │   ├── test_shell_history.py
 │   │   │   └── README.md
+│   │   ├── shortcuts/
+│   │   │   ├── shortcuts.py   link files from a desktop or folder (.url, .webloc, .desktop) as title and address
+│   │   │   ├── test_shortcuts.py
+│   │   │   └── README.md
 │   │   ├── similar/
 │   │   │   ├── similar.py    what's already on the list near a new idea
 │   │   │   ├── test_similar.py

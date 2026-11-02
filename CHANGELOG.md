@@ -10,6 +10,10 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `shortcuts`: the link files dragged out of a browser onto a desktop or
+  into a folder (Windows `.url`, macOS `.webloc`, Linux `.desktop`), each as
+  the title its name gives and the address it holds; a Linux launcher as its
+  name and the command it runs. A Windows `.lnk` is left alone. (#186)
 - `opml`: OPML files from feed readers, podcast apps and outliners. A feed
   list is a line per feed, its title and addresses, each folder a passage
   headed by its name, and an Overcast export's episodes under their podcast;
