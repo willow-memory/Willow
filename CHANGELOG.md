@@ -19,6 +19,7 @@ says how). The first was v0.1.0.
   (by weights-card's header reader) and SHA-256: Ollama's and the cache's
   own content names, others only with `--hash`. The same weights under two
   names are said, and a runtime not on this machine says where it looked.
+  (#159)
 - `weights-pin`, a weights file held to the hash on its model card before
   it runs: `weights_pin.py --card CARD --from FILE` reads the `sha256` and
   `bytes` of a `willow-model` header (as weights-card writes one), compares
