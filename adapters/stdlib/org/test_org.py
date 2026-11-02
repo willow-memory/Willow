@@ -290,6 +290,10 @@ def test_drawers_keep_their_lines_as_written_with_their_markers_blank():
     assert out[:9] == ["", "", "Effort: 1:00", "", "", "", "", "Keep this", ""], (
         "an ID or CUSTOM_ID is a link's target, not something said"
     )
+    out = org(":PROPERTIES:\nset by hand\n:END:\n:NOTES:\n:not: a property\n:END:\n")
+    assert out[:6] == ["", "set by hand", "", "", ":not: a property", ""], (
+        "a stray line in a property drawer, and any line of another drawer, as written"
+    )
     out = org(
         "text\n:END:\n* H\nCLOCK: [2024-03-03 Sun 10:00]--[2024-03-04 Mon 01:00] =>  15:00\n"
     )
