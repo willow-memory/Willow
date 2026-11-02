@@ -123,14 +123,14 @@ says how to pick one up:
 - **For maintainers:** the repo's own tools: CI, the list, tests that can fail. For example [mutants](adapters/stdlib/mutants/) and [ci](adapters/stdlib/ci/).
 <!-- /willow:summary -->
 
-<!-- willow:front show=pick week=2026-W44 -->
+<!-- willow:front show=pick week=2026-W45 -->
 **Add-on of the week**
 
-**[habits](adapters/stdlib/habits/)** — Streaks from the lines you write each day: how many days in a row, and which you missed.
+**[index-cache](adapters/stdlib/index-cache/)** — Keeps scan's index between runs and rebuilds it only when a file in your folder actually changed.
 
-*Drawn for 2026-W44: SHA-256 of "willow add-on of the week 2026-W44", modulo the 292 built add-ons in name order.*
+*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 293 built add-ons in name order.*
 
-[Every add-on, 292 built of 505, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 293 built of 505, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 

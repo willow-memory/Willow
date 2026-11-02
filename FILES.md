@@ -318,6 +318,10 @@ willow/
 │   │   │   ├── diverge.py    where two copies part: records by row, files, then the first line
 │   │   │   ├── test_diverge.py
 │   │   │   └── README.md
+│   │   ├── dotfiles/
+│   │   │   ├── dotfiles.py    a dotfiles repository's settings, each on its own line in the file's own words, secrets withheld
+│   │   │   ├── test_dotfiles.py
+│   │   │   └── README.md
 │   │   ├── duplicates/
 │   │   │   ├── duplicates.py    passages saying the same thing in two files, the newest copy named when it can be
 │   │   │   ├── test_duplicates.py
