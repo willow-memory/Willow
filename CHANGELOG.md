@@ -1448,7 +1448,7 @@ says how). The first was v0.1.0.
   stopped every time. It now reads the file at the base and on both sides and
   takes REF's, with the entries the branch added to `COMMANDS`, `READERS` or
   `PILE_EXTRA`, and its imports, whole. A branch that changed anything else
-  there still stops.
+  there still stops. (#170)
 - Cards in plain words: 28 one-line descriptions rewritten to name the thing
   and say what it does, for someone who has never seen willow, and six cards
   moved to the section their piece belongs in (rules, across, stack,
