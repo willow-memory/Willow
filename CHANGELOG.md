@@ -16,7 +16,7 @@ says how). The first was v0.1.0.
   on its own line, in the file's own words (`EDITOR=nvim`, `core.editor =
   nvim`), every other line blank, so "where did I set my editor" lands on
   it. A value named or shaped like a secret is written `[withheld]`. Hidden
-  files are skipped, so point it at the repository, not your home folder.
+  files are skipped, so point it at the repository, not your home folder. (#189)
 - `webarchive`, pages Safari saved as .webarchive as their readable text:
   `webarchive.py mirror --from FOLDER --to MIRROR` writes what web-pages
   writes for the same page (the address it came from, its title, its
