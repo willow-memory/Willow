@@ -25,15 +25,16 @@ says how). The first was v0.1.0.
   the size first and then the whole file's SHA-256, and says `same` (0) or
   `differs` with both hashes and sizes (42), so `weights_pin.py ... &&
   llama-server ...` never runs a file that differs. The hash decides, never
-  the file's name.
+  the file's name. It reads the card with weights-card's `header`. (#158)
 - `weights-card`, a model card filled in from the weights file's own
   header: `weights_card.py --from FILE --to CARD` reads a GGUF (v2, v3) or
   safetensors header for the architecture, name, quantization (llama.cpp's
   name for `general.file_type`, or safetensors' types by parameters),
   context length, licence and parameter count, adds the whole file's SHA-256
   and size, and writes `not in the header` for what the file doesn't say.
-  Only the file's name goes on the card. Checked against llama.cpp's own
-  `gguf` reader on two real GGUF files.
+  Only the file's name goes on the card, and `header()` reads one back for
+  the add-ons that read cards. Checked against llama.cpp's own `gguf` reader
+  on two real GGUF files. (#157)
 - `ui/`, willow's own UI (v1): `python ui/canvas.py` opens a page on this
   machine that goes the way a person does. Choose your folders; see what the
   kernel alone makes of them, as counts, never a file's words or name; start
