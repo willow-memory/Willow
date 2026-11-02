@@ -100,15 +100,6 @@
   "network": "none"
  },
  {
-  "name": "bookmarks",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Browser bookmarks (HTML export, Firefox JSON) and history, read from a copy of its SQLite file.",
-  "source": "new",
-  "writes": "to",
-  "network": "none"
- },
- {
   "name": "browser-model",
   "kind": "stdlib",
   "section": "Assistants",
@@ -833,16 +824,6 @@
   "network": "the model its plugin reaches, to ask for suggestions"
  },
  {
-  "name": "local-model",
-  "kind": "deps",
-  "section": "Assistants",
-  "line": "Suggestions from a model on this machine only, such as Ollama, llama.cpp's server, llamafile, KoboldCpp or Jan.",
-  "source": "new",
-  "needs": "a local model server; licence varies by model",
-  "writes": "record",
-  "network": "loopback"
- },
- {
   "name": "lore",
   "kind": "stdlib",
   "section": "Play",
@@ -973,55 +954,10 @@
   "network": "none"
  },
  {
-  "name": "model-card",
-  "kind": "stdlib",
-  "section": "Assistants",
-  "line": "A card naming the model behind an assistant (version or weights hash, where it runs, licence, known limits), with the card's hash on the record so each suggestion can say which model made it.",
-  "source": "new",
-  "writes": "record",
-  "network": "none"
- },
- {
-  "name": "model-drift",
-  "kind": "stdlib",
-  "section": "Assistants",
-  "line": "Your frozen questions asked again of a model now and then, flagging when its answers change while its name and card stay the same.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "the endpoint you configure, to ask your questions again"
- },
- {
-  "name": "model-exam",
-  "kind": "stdlib",
-  "section": "Assistants",
-  "line": "Any model scored against the answers you sealed, your own questions as its exam, before you trust its suggestions.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "the endpoint you configure, to ask your sealed questions"
- },
- {
-  "name": "model-fit",
-  "kind": "stdlib",
-  "section": "Assistants",
-  "line": "Whether this machine's GPU, NPU or Apple silicon can run a local model, and about how fast, before you download one.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none"
- },
- {
   "name": "model-recall",
   "kind": "stdlib",
   "section": "Trust and proof",
   "line": "Every sealed answer a model suggested, listed for a second look once you mark its card as flawed; nothing is unsealed for you.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none"
- },
- {
-  "name": "model-shelf",
-  "kind": "stdlib",
-  "section": "Assistants",
-  "line": "Every model already on this machine, read from Ollama's, LM Studio's, Jan's and GPT4All's folders and the Hugging Face cache: its runtime, size, quantization and hash, before you download another.",
   "source": "new",
   "writes": "nothing",
   "network": "none"
@@ -1062,16 +998,6 @@
   "source": "new",
   "writes": "nothing",
   "network": "none"
- },
- {
-  "name": "night-batch",
-  "kind": "deps",
-  "section": "Assistants",
-  "line": "Questions waiting for suggestions batched into one local-model run overnight, stopped the moment you're back.",
-  "source": "new",
-  "needs": "a local model server; licence varies by model",
-  "writes": "record",
-  "network": "loopback"
  },
  {
   "name": "nim",
@@ -1201,15 +1127,6 @@
   "network": "none"
  },
  {
-  "name": "pocket",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Pocket's export, the HTML and CSV in its zip, as one dated line per saved article, now that Pocket is gone.",
-  "source": "new",
-  "writes": "to",
-  "network": "none"
- },
- {
   "name": "pr-context",
   "kind": "stdlib",
   "section": "Ways to use it",
@@ -1291,16 +1208,6 @@
   "source": "new",
   "writes": "record",
   "network": "earthquake.usgs.gov, to read the week's earthquakes"
- },
- {
-  "name": "quantized",
-  "kind": "deps",
-  "section": "Assistants",
-  "line": "Finds the smallest quantized local model that still gets your box's own questions right, so suggestions come faster.",
-  "source": "new",
-  "needs": "a local model server; licence varies by model",
-  "writes": "nothing",
-  "network": "loopback"
  },
  {
   "name": "quiet-corner",
@@ -1440,15 +1347,6 @@
   "source": "new",
   "writes": "nothing",
   "network": "none"
- },
- {
-  "name": "same-way",
-  "kind": "stdlib",
-  "section": "Assistants",
-  "line": "A local model asked each of your box's questions three times, and how often its answer flips, since a model that answers the same way every time is one you can build on.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "this-machine"
  },
  {
   "name": "sap-gate",
@@ -1626,15 +1524,6 @@
   "network": "none"
  },
  {
-  "name": "strava",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Strava's export and GPX files: each run, ride and walk as a dated line with its distance and time.",
-  "source": "new",
-  "writes": "to",
-  "network": "none"
- },
- {
   "name": "student-records",
   "kind": "stdlib",
   "section": "Privacy and safety",
@@ -1689,15 +1578,6 @@
   "needs": "nltk and WordNet; Apache-2.0",
   "writes": "to",
   "network": "the WordNet data, downloaded once"
- },
- {
-  "name": "takeout",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Google Takeout's My Activity and YouTube history, JSON or HTML, as dated lines.",
-  "source": "new",
-  "writes": "to",
-  "network": "none"
  },
  {
   "name": "tatoeba",
@@ -1772,16 +1652,6 @@
   "network": "none"
  },
  {
-  "name": "translate",
-  "kind": "deps",
-  "section": "Assistants",
-  "line": "An answer translated by a local model, the original kept beside it, the translation held until you seal it.",
-  "source": "new",
-  "needs": "a local model server; licence varies by model",
-  "writes": "record",
-  "network": "loopback"
- },
- {
   "name": "trips",
   "kind": "stdlib",
   "section": "Keeping track",
@@ -1848,15 +1718,6 @@
   "network": "the model, downloaded once"
  },
  {
-  "name": "warc",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "WARC web archives, from Webrecorder, Heritrix or the Internet Archive, read without unpacking: each captured page's text with its address and the time it was captured.",
-  "source": "new",
-  "writes": "to",
-  "network": "none"
- },
- {
   "name": "warm",
   "kind": "stdlib",
   "section": "Ways to use it",
@@ -1882,24 +1743,6 @@
   "source": "new",
   "writes": "record",
   "network": "api.open-meteo.com, to read the forecast and the outcome"
- },
- {
-  "name": "weights-card",
-  "kind": "stdlib",
-  "section": "Assistants",
-  "line": "A model card filled in from the weights file's own header, GGUF or safetensors (architecture, quantization, context length, licence), so the card says what the file says.",
-  "source": "new",
-  "writes": "to",
-  "network": "none"
- },
- {
-  "name": "weights-pin",
-  "kind": "stdlib",
-  "section": "Trust and proof",
-  "line": "A local model's weights file hashed before each run and refused when it differs from the hash on its model card.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none"
  },
  {
   "name": "welcome",
