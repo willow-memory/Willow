@@ -1415,15 +1415,6 @@
   "network": "none"
  },
  {
-  "name": "same-way",
-  "kind": "stdlib",
-  "section": "Assistants",
-  "line": "A local model asked each of your box's questions three times, and how often its answer flips, since a model that answers the same way every time is one you can build on.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "this-machine"
- },
- {
   "name": "sap-gate",
   "kind": "deps",
   "section": "Trust and proof",

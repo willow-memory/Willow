@@ -126,11 +126,11 @@ says how to pick one up:
 <!-- willow:front show=pick week=2026-W45 -->
 **Add-on of the week**
 
-**[sheets](adapters/deps/sheets/)** — Spreadsheets with formulas and formatting kept, beyond what the office add-on reads.
+**[readme](adapters/stdlib/readme/)** — Builds ADDONS.md, and the README's one feature, from the add-ons' own cards.
 
-*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 297 built add-ons in name order.*
+*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 298 built add-ons in name order.*
 
-[Every add-on, 297 built of 505, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 298 built of 505, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 

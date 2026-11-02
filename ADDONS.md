@@ -19,7 +19,7 @@ is written: `no-install` or `needs-install`; `offline`, `this-machine` or
 tag its author chose, if any. *near* names the three add-ons closest to it.
 
 <!-- willow:pools -->
-`████████████░░░░░░░░` **297 of 505 built** · 451 need no install · 54 need one
+`████████████░░░░░░░░` **298 of 505 built** · 451 need no install · 54 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
@@ -29,7 +29,7 @@ tag its author chose, if any. *near* names the three add-ons closest to it.
 | Keeping track | 40 | 16 | 56 | 0 |
 | Trust and proof | 32 | 22 | 45 | 9 |
 | Privacy and safety | 13 | 3 | 16 | 0 |
-| Assistants | 32 | 39 | 60 | 11 |
+| Assistants | 33 | 38 | 60 | 11 |
 | Ways to use it | 25 | 18 | 39 | 4 |
 | Play | 12 | 29 | 37 | 4 |
 | For maintainers | 19 | 25 | 39 | 5 |
@@ -70,17 +70,17 @@ its list: someone who speaks the language can add one without much Python.
 <!-- willow:newest -->
 - 2026-11-02 · [**weights-pin**](adapters/stdlib/weights-pin/) — A local model's weights file hashed before each run and refused when it differs from the hash on its model card.
 - 2026-11-02 · [**weights-card**](adapters/stdlib/weights-card/) — A model card filled in from the weights file's own header, GGUF or safetensors (architecture, quantization, context length, licence), so the card says what the file says.
+- 2026-11-02 · [**same-way**](adapters/stdlib/same-way/) — A local model asked each of your box's questions three times, and how often its answer flips, since a model that answers the same way every time is one you can build on.
 - 2026-11-02 · [**model-shelf**](adapters/stdlib/model-shelf/) — Every model already on this machine, read from Ollama's, LM Studio's, Jan's and GPT4All's folders and the Hugging Face cache: its runtime, size, quantization and hash, before you download another.
 - 2026-11-02 · [**model-fit**](adapters/stdlib/model-fit/) — Whether this machine's GPU, NPU or Apple silicon can run a local model, and about how fast, before you download one.
-- 2026-11-02 · [**model-card**](adapters/stdlib/model-card/) — A card naming the model behind an assistant (version or weights hash, where it runs, licence, known limits), with the card's hash on the record so each suggestion can say which model made it.
 <!-- /willow:newest -->
 
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W45 -->
-**[sheets](adapters/deps/sheets/)** — Spreadsheets with formulas and formatting kept, beyond what the office add-on reads.
+**[readme](adapters/stdlib/readme/)** — Builds ADDONS.md, and the README's one feature, from the add-ons' own cards.
 
-*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 297 built add-ons in name order.*
+*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 298 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -212,7 +212,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - [**duplicates**](adapters/stdlib/duplicates/) — Passages that say the same thing in two files, and which one is newer. *new* `no-install` `offline` · near: contradictions, xref, three-two-one
 - [**fair-merge**](adapters/stdlib/fair-merge/) — Each folder or repo ranked on its own and the lists merged in turns, so a large corpus can't push a small one out on volume alone, and a source that found nothing says so. *bot* `no-install` `offline` `sources` `pile` · near: scan, parallel, ripgrep
 - [**first-mention**](adapters/stdlib/first-mention/) — When your files first mention something, and the line that does. *new* `no-install` `offline` `mention` · near: people, timeline, pipe
-- [**fuzzy-dates**](adapters/stdlib/fuzzy-dates/) — Dates that admit doubt ('about 1880', 'sometime in March') read and kept with their doubt, in EDTF. *new* `no-install` `offline` · near: family-tree, syllabus, mood
+- [**fuzzy-dates**](adapters/stdlib/fuzzy-dates/) — Dates that admit doubt ('about 1880', 'sometime in March') read and kept with their doubt, in EDTF. *new* `no-install` `offline` · near: family-tree, syllabus, minutes
 - [**index-cache**](adapters/stdlib/index-cache/) — Keeps scan's index between runs and rebuilds it only when a file in your folder actually changed. Uses scan. *new* `no-install` `offline` `between` `scan` `index` · near: scan, parallel, policy-watch
 - **kiwix** (idea) — An offline Wikipedia (or Stack Exchange, or Gutenberg) as a source after your own files, cited by article. Needs libzim, and a ZIM file you download; GPL-3.0. *new* `needs-install` `offline` `stack` `wikipedia` · near: pageviews, codeowners, stack
 - [**latent**](adapters/deps/latent/) — Finds code by meaning, not just matching words, using scan's index: a question reaches code that says the same thing another way. Needs numpy; BSD-3-Clause. Uses scan. *new* `needs-install` `offline` `matched` `ranked` · near: scan, all, pile-rank
@@ -352,7 +352,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - **family-box** (idea) — One box for a household: each person's own seal, and every answer showing whose it is. *new* `no-install` `offline` `person` `family` · near: second-opinion, dialect, handoff
 - [**fixity**](adapters/stdlib/fixity/) — Your folder's files hashed again now and then, the hashes kept on the record, and a file that changed with no edit of yours flagged as rot. *new* `no-install` `offline` `rot` `flagged` · near: hook-replay, hook-pin, changed
 - [**format-rot**](adapters/stdlib/format-rot/) — Files in formats that may stop opening (old office files, proprietary ones, those no reader handles) flagged while you can still convert them. *new* `no-install` `offline` `office` `rot` · near: office, fixity, sheets
-- **git-notes** (idea) — Approved answers kept as git notes on the commits they cite, so they travel with the repo to any forge. Needs the git program; GPL, called not linked. *new* `needs-install` `offline` `commit` `forge` · near: mirror, stale, git-history
+- **git-notes** (idea) — Approved answers kept as git notes on the commits they cite, so they travel with the repo to any forge. Needs the git program; GPL, called not linked. *new* `needs-install` `offline` `commit` `forge` · near: mirror, stale, annotations
 - **handoff** (idea) — A box handed to the person you name (an executor, a carer): read only, your seals kept, theirs their own. *new* `no-install` `offline` `person` · near: family-box, datasette, serve
 - [**history**](adapters/stdlib/history/) — Your record in plain sentences: what was asked when, what found nothing, what you approved; places and counts, never the words. *new* `no-install` `offline` `counts` `sentence` `everyday` · near: export, again, plain
 - [**ids**](adapters/stdlib/ids/) — Every file and passage given its Software Heritage ID and IPFS CID, names the rest of the world already uses. *new* `no-install` `offline` `world` `ids` · near: dialect, a11y-check, ripgrep
@@ -391,7 +391,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**tip-pin**](adapters/stdlib/tip-pin/) — Where your record ends, written down somewhere willow can't reach, so rows cut off the end or rewritten from some point on are caught where verify can't. *new* `no-install` `offline` `rows` `pin` · near: ci-memo, ci, persona-card
 - [**wayback**](adapters/stdlib/wayback/) — The Wayback Machine's copy of a page from a window of days, saved beside your own snapshot and compared with it byte for byte. Uses snapshot. Goes online: archive.org, to find the archived copy and fetch it. *new* `no-install` `online` `snapshot` `byte` `sources` · near: snapshot, policy-watch, archivebox
 - [**weakest-link**](adapters/stdlib/weakest-link/) — Each answer's inputs marked measured, fitted or assumed, and the result worth its weakest input, never an average. *new* `no-install` `offline` `links` · near: stale, export, jetbrains
-- [**weights-pin**](adapters/stdlib/weights-pin/) — A local model's weights file hashed before each run and refused when it differs from the hash on its model card. Uses weights-card. *new* `no-install` `offline` `local` `weights` · near: weights-card, model-card, same-way
+- [**weights-pin**](adapters/stdlib/weights-pin/) — A local model's weights file hashed before each run and refused when it differs from the hash on its model card. Uses weights-card. *new* `no-install` `offline` `local` `weights` · near: weights-card, model-card, model-fit
 - **witness** (idea) — A second person's seal beside yours, for answers that need two people to agree. *new* `no-install` `offline` `beside` `second` · near: second-opinion, model-recall, gutenberg
 - [**xref**](adapters/stdlib/xref/) — Every reference in your files checked: each link to another file, and each quoted line, still there and still saying it. *bot* `no-install` `offline` `quote` `everyday` · near: quote-review, quotes, secrets-audit
 
@@ -403,7 +403,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**install-scripts**](adapters/stdlib/install-scripts/) — The install scripts the packages in node_modules would run (preinstall, install, postinstall), each cited by file and line. *new* `no-install` `offline` `install` `package` · near: package-contents, package-docs, code-comments
 - **kids** (idea) — A box for a child: answers only from the folder you choose for them, and nothing they can approve. *new* `no-install` `offline` · near: student-records, export, browse
 - [**outdated**](adapters/stdlib/outdated/) — How old each locked dependency is, and which are yanked, deprecated or two years without a release, from a registry index you downloaded. Uses advisories. *new* `no-install` `offline` `dependency` · near: advisories, typosquat, pins
-- [**package-contents**](adapters/stdlib/package-contents/) — What's inside a wheel, sdist, npm tarball or .crate before you install it: every file, and any code it runs on install. *new* `no-install` `offline` `install` `package` · near: install-scripts, ci-cache, launcher
+- [**package-contents**](adapters/stdlib/package-contents/) — What's inside a wheel, sdist, npm tarball or .crate before you install it: every file, and any code it runs on install. *new* `no-install` `offline` `install` `package` · near: install-scripts, ci-cache, instruction-files
 - [**pii-audit**](adapters/stdlib/pii-audit/) — Personal data sitting in your files (ID numbers, health details, card numbers), listed by file and line. *new* `no-install` `offline` `numbers` `audit` · near: secrets-audit, privacy, debts
 - [**privacy**](adapters/stdlib/privacy/) — Hides phone numbers, emails, card, bank and ID numbers, and API keys in what a question prints, and says what it hid. *bot* `no-install` `offline` `numbers` · near: plain, readings, pii-audit
 - [**risky-code**](adapters/stdlib/risky-code/) — Lines of code matching a known-dangerous pattern (command injection, eval, sql concatenation, broken tls and more), by file and line, as leads to read. *new* `no-install` `offline` `matched` `command` `security` · near: secrets-audit, advisories, xref
@@ -479,8 +479,8 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - [**persona-card**](adapters/stdlib/persona-card/) — A persona written as a card and compiled into the same system-prompt bytes every time, with the prompt's hash on the record. *box* `no-install` `offline` · near: folder-card, tip-pin, serve
 - **plain-language** (idea) — An approved answer rewritten in plain language by a model, the rewrite held until you seal it. *new* `no-install` `offline` `held` · near: translate, hook-tiers, memory-import
 - **quantized** (idea) — Finds the smallest quantized local model that still gets your box's own questions right, so suggestions come faster. Needs a local model server; licence varies by model. Reaches this machine only. *new* `needs-install` `this-machine` `local` · near: local-model, model-exam, night-batch
-- **same-way** (idea) — A local model asked each of your box's questions three times, and how often its answer flips, since a model that answers the same way every time is one you can build on. Goes online: this-machine. *new* `no-install` `online` `local` `build` · near: weights-pin, pile-build, night-batch
-- **schema-check** (idea) — A model's answer held to a JSON schema before anything reads it, and a reply that doesn't fit recorded as a result, not lost as an error. *box* `no-install` `offline` `result` `doesn` · near: weights-pin, model-fit, connect-four
+- [**same-way**](adapters/stdlib/same-way/) — A local model asked each of your box's questions three times, and how often its answer flips, since a model that answers the same way every time is one you can build on. Uses openai-compatible. Reaches this machine only. *new* `no-install` `this-machine` `local` `build` · near: local-model, launcher, weights-pin
+- **schema-check** (idea) — A model's answer held to a JSON schema before anything reads it, and a reply that doesn't fit recorded as a result, not lost as an error. *box* `no-install` `offline` `result` `fit` · near: weights-pin, model-fit, connect-four
 - **second-opinion** (idea) — Two assistants' suggestions for the same question side by side, each waiting for its own seal. *new* `no-install` `offline` `assistant` `waiting` · near: assistant-scores, contradictions, pile-poetry
 - [**serve**](adapters/stdlib/serve/) — The one file an AI model may read: only the passages you approved, under ids it can't guess, and nothing else. *bot* `no-install` `offline` · near: stack, decisions, export
 - **serve-piles** (idea) — serve's piles grouped on all four W's -- who, when, what and where -- not where alone, so a model meets a question from every box that touched it. *new* `no-install` `offline` `serve` · near: pile-serve, pile-rungs, serve
@@ -511,7 +511,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - **home-assistant** (idea) — Ask through Home Assistant's voice assistant, answered from your files. Goes online: your Home Assistant, on your own network, to answer its voice assistant. *new* `no-install` `online` `assistant` `voice` · near: home-sensors, mcp-sampling, launcher
 - [**jetbrains**](adapters/stdlib/jetbrains/) — An external tool for IntelliJ, PyCharm and the rest, with answers as links to file and line. Uses hosts. *new* `no-install` `offline` `links` · near: vscode, privacy, aider
 - **kiosk** (idea) — A shared machine in a library or classroom: one box, ask only, nobody's key on it. Reaches this machine only. *new* `no-install` `this-machine` `share` `key` · near: family-box, transcript-redact, share
-- [**launcher**](adapters/stdlib/launcher/) — Ask from Alfred, Raycast, KRunner or PowerToys Run, answers with file and line. *new* `no-install` `offline` · near: aider, browse, pile-store
+- [**launcher**](adapters/stdlib/launcher/) — Ask from Alfred, Raycast, KRunner or PowerToys Run, answers with file and line. *new* `no-install` `offline` · near: aider, browse, same-way
 - [**llms-txt**](adapters/stdlib/llms-txt/) — An llms.txt for your folder, written from what's actually in it to the spec's version 2, and any llms.txt you saved checked against that spec. *new* `no-install` `offline` `llm` · near: typosquat, serve, capture
 - [**make-it-so**](adapters/stdlib/make-it-so/) — Write down what you want done and the passages it rests on; it checks they still hold, and never does it for you. *new* `no-install` `offline` `down` · near: decisions, predict, tip-pin
 - **obsidian** (idea) — Ask from inside Obsidian, answers as links to the note and line. Reaches this machine only. *new* `no-install` `this-machine` `links` `obsidian` · near: jetbrains, notes, deep-links
@@ -570,7 +570,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - **quake-bets** (idea) — Will there be a magnitude 6 this week? Bet, then let the USGS feed settle it against the base rate. Goes online: earthquake.usgs.gov, to read the week's earthquakes. *new* `no-install` `online` `bet` `settled` · near: horoscope-grades, ci-bets, weather-bet
 - [**quiz**](adapters/stdlib/quiz/) — A quiz from your own files: a passage with a word missing, and you fill it in. *new* `no-install` `offline` · near: daily-word, serve, plain
 - **real-sky** (idea) — A horoscope from where the planets really are, computed offline from a JPL ephemeris. Needs Skyfield; MIT. Goes online: the ephemeris file, downloaded once. *new* `needs-install` `online` `horoscope` `computed` · near: horoscope, horoscope-grades, odds
-- **reversi** (idea) — Reversi as rows: every move, each flip following from the board. *new* `no-install` `offline` `move` `rows` · near: tic-tac-toe, catgrid, hanoi
+- **reversi** (idea) — Reversi as rows: every move, each flip following from the board. *new* `no-install` `offline` `move` `rows` · near: tic-tac-toe, catgrid, same-way
 - **roll-for-merge** (idea) — A d20 for every pull request, green runs added and red streaks taken away, against a DC the bot calls. *new* `no-install` `offline` `pull` `requests` · near: ci-bets, ci-baseline, github
 - **sokoban** (idea) — Sokoban levels and moves on the record, a solution checked by replaying it. *new* `no-install` `offline` `replayed` `level` · near: hook-replay, catgrid, reading-level
 - **spurious** (idea) — Everything joined on time and place (CI reds, earthquakes, rain, front pages) to hunt correlations that mean nothing. *new* `no-install` `offline` `front` `red` · near: front-page, ci-why, readme
@@ -588,7 +588,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - [**ci**](adapters/stdlib/ci/) — This repo's checks as verdict rows on a kernel record, the same every run. Uses live, readme, test-shards. Goes online: PyPI, to read each dependency floor's release date. *box* `no-install` `online` `rows` `verdict` · near: ci-memo, bot-venv, ci-why
 - **ci-baseline** (idea) — Is your CI normal? How often pull requests everywhere go green first time, from GH Archive. Goes online: data.gharchive.org, its hours downloaded once. *new* `no-install` `online` `pull` `requests` · near: ci-bets, welcome, github-archive
 - **ci-bets** (idea) — Bet on your own CI: forecasts on each pull request going green, scored against the model's. *new* `no-install` `offline` `pull` `requests` · near: ci-baseline, roll-for-merge, weather-bet
-- [**ci-cache**](adapters/stdlib/ci-cache/) — CI caches pip, npm, .NET and Maven downloads keyed on their lockfiles, so a run skips the installs. *new* `no-install` `offline` `npm` `cache` · near: ci-memo, ci-logs, ci
+- [**ci-cache**](adapters/stdlib/ci-cache/) — CI caches pip, npm, .NET and Maven downloads keyed on their lockfiles, so a run skips the installs. *new* `no-install` `offline` `npm` `cache` · near: ci-memo, ci, ci-logs
 - [**ci-memo**](adapters/stdlib/ci-memo/) — A CI gate whose inputs' bytes are unchanged keeps its recorded verdict: pin a run's per-gate keys, and run only what a change can reach. Uses ci. *new* `no-install` `offline` `pin` `reach` · near: ci-cache, test-impact, ci
 - [**ci-why**](adapters/stdlib/ci-why/) — Why CI went red: the failing block pulled out of the job's log, plain, put where people look. *bot* `no-install` `offline` `job` `failed` · near: ci, ci-logs, gh-json
 - **code-stats** (idea) — Lines, code and complexity per language, per release, as rows the list can answer from. Needs the scc program; MIT. *new* `needs-install` `offline` `release` `language` · near: profile, bench, plain-language
@@ -616,7 +616,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - **pypy** (idea) — The kernel and its tests run under PyPy too, and timed against CPython. *new* `no-install` `offline` `test` · near: slow-tests, test-shards, mutants
 - [**readme**](adapters/stdlib/readme/) — Builds ADDONS.md, and the README's one feature, from the add-ons' own cards. Uses similar. *new* `no-install` `offline` · near: similar, live, front-page
 - **reconciler** (idea) — willow-reconciler run on this repo's idea list and git history: how much of what was proposed has landed. Needs willow-reconciler; Apache-2.0. *new* `needs-install` `offline` `repo` `git` · near: git-history, hook-checks, git-notes
-- **repo-index** (idea) — This repository as its own deterministic box: its cards, docs and code as dated passages, rebuilt the same bytes each time, so willow can answer questions about itself. *new* `no-install` `offline` `repositories` `index` · near: persona-card, latent, same-way
+- **repo-index** (idea) — This repository as its own deterministic box: its cards, docs and code as dated passages, rebuilt the same bytes each time, so willow can answer questions about itself. *new* `no-install` `offline` `repositories` `index` · near: same-way, persona-card, latent
 - **repro** (idea) — A release built twice from the same commit, byte for byte the same. *new* `no-install` `offline` `byte` `twice` · near: compiled, mirror, hooks-elsewhere
 - [**restack**](adapters/stdlib/restack/) — Main merged into your branches, with the conflicts in the files the repo makes or only adds to settled by its own tools, and every other one left to you. *new* `no-install` `offline` `branch` `repo` `git` · near: github, similar, oracle-text
 - [**similar**](adapters/stdlib/similar/) — What's already on the add-on list near a new idea, by the kernel's own search. Uses pile-rank, readme. *box* `no-install` `offline` `search` · near: readme, restack, repo-pile

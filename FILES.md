@@ -932,6 +932,10 @@ willow/
 │   │   │   ├── said.py       who said what, read by shape (a chat's stamp, a speech verb, quotation marks), dated
 │   │   │   ├── test_said.py
 │   │   │   └── README.md
+│   │   ├── same-way/
+│   │   │   ├── same_way.py  a local model asked each question several times, and how often its answer flips
+│   │   │   ├── test_same_way.py
+│   │   │   └── README.md
 │   │   ├── sarif/
 │   │   │   ├── sarif.py   scanner findings by file and line
 │   │   │   ├── test_sarif.py
