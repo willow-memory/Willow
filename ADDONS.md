@@ -19,11 +19,11 @@ is written: `no-install` or `needs-install`; `offline`, `this-machine` or
 tag its author chose, if any. *near* names the three add-ons closest to it.
 
 <!-- willow:pools -->
-`████████████░░░░░░░░` **313 of 512 built** · 462 need no install · 50 need one
+`████████████░░░░░░░░` **314 of 512 built** · 462 need no install · 50 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
-| Reading more kinds of files | 82 | 33 | 107 | 8 |
+| Reading more kinds of files | 83 | 32 | 107 | 8 |
 | Finding things | 32 | 14 | 36 | 10 |
 | Your own words | 19 | 7 | 23 | 3 |
 | Keeping track | 40 | 16 | 56 | 0 |
@@ -72,15 +72,15 @@ its list: someone who speaks the language can add one without much Python.
 - 2026-11-02 · [**weights-card**](adapters/stdlib/weights-card/) — A model card filled in from the weights file's own header, GGUF or safetensors (architecture, quantization, context length, licence), so the card says what the file says.
 - 2026-11-02 · [**translate**](adapters/stdlib/translate/) — An answer translated by a local model, the original kept beside it, the translation held until you seal it.
 - 2026-11-02 · [**text**](adapters/stdlib/text/) — Plain-text files the kernel leaves out (UTF-16, an old code page, over 1 MB, lines past 500 characters) as UTF-8 it reads, line for line.
-- 2026-11-02 · [**same-way**](adapters/stdlib/same-way/) — A local model asked each of your box's questions three times, and how often its answer flips, since a model that answers the same way every time is one you can build on.
+- 2026-11-02 · [**strava**](adapters/stdlib/strava/) — Strava's export and GPX files: each run, ride and walk as a dated line with its distance and time.
 <!-- /willow:newest -->
 
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W45 -->
-**[jetbrains](adapters/stdlib/jetbrains/)** — An external tool for IntelliJ, PyCharm and the rest, with answers as links to file and line.
+**[bank](adapters/stdlib/bank/)** — Bank CSV and OFX statements as dated lines, with spending by month.
 
-*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 313 built add-ons in name order.*
+*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 314 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -191,7 +191,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - [**snapshot**](adapters/stdlib/snapshot/) — A web page or data file fetched once into a folder, as it came, with its address, the time and its SHA-256, so later answers cite the copy. Goes online: the address you give, fetched once. *bot* `no-install` `online` `snapshot` `copy` `sources` · near: web-pages, wayback, policy-watch
 - [**star-system**](adapters/deps/star-system/) — A friend's star-system simulation (science_bitch) run deterministically and written as cited passages: each body's Kepler period and how well the run conserves energy, angular momentum and linear momentum. Needs numpy; BSD-3-Clause. *bot* `needs-install` `offline` · near: static-search, manifests, ripgrep
 - **steam** (idea) — Your Steam library from its local files: games, playtime and when you last played. *new* `no-install` `offline` `game` `library` · near: life, game-master, music-library
-- **strava** (idea) — Strava's export and GPX files: each run, ride and walk as a dated line with its distance and time. *new* `no-install` `offline` · near: habits, instapaper, chats
+- [**strava**](adapters/stdlib/strava/) — Strava's export and GPX files: each run, ride and walk as a dated line with its distance and time. *new* `no-install` `offline` · near: chats, slack, matrix
 - [**subtitles**](adapters/stdlib/subtitles/) — Subtitle and transcript files (.vtt, .srt) as lines cited by timestamp, for podcasts and videos already transcribed. *new* `no-install` `offline` `transcript` · near: shell-history, calendar, text
 - **takeout** (idea) — Google Takeout's My Activity and YouTube history, JSON or HTML, as dated lines. *new* `no-install` `offline` `html` `json` · near: matrix, google-classroom, google-keep
 - **teams** (idea) — Microsoft Teams chats from your Microsoft account's export, one dated line per message. *new* `no-install` `offline` `message` `chats` · near: chats, signal, texts

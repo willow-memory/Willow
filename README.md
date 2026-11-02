@@ -126,11 +126,11 @@ says how to pick one up:
 <!-- willow:front show=pick week=2026-W45 -->
 **Add-on of the week**
 
-**[jetbrains](adapters/stdlib/jetbrains/)** — An external tool for IntelliJ, PyCharm and the rest, with answers as links to file and line.
+**[bank](adapters/stdlib/bank/)** — Bank CSV and OFX statements as dated lines, with spending by month.
 
-*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 313 built add-ons in name order.*
+*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 314 built add-ons in name order.*
 
-[Every add-on, 313 built of 512, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 314 built of 512, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 

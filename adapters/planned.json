@@ -1524,15 +1524,6 @@
   "network": "none"
  },
  {
-  "name": "strava",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Strava's export and GPX files: each run, ride and walk as a dated line with its distance and time.",
-  "source": "new",
-  "writes": "to",
-  "network": "none"
- },
- {
   "name": "student-records",
   "kind": "stdlib",
   "section": "Privacy and safety",

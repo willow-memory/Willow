@@ -1078,6 +1078,10 @@ willow/
 │   │   │   ├── starter.py    copies it where yours will live, readable only by you
 │   │   │   ├── test_starter_words.py
 │   │   │   └── README.md
+│   │   ├── strava/
+│   │   │   ├── strava.py     Strava's activities.csv, GPX and TCX files: each activity a dated line with its distance and time
+│   │   │   ├── test_strava.py
+│   │   │   └── README.md
 │   │   ├── subscriptions/
 │   │   │   ├── subscriptions.py   payments that come round monthly or yearly, and when next
 │   │   │   ├── test_subscriptions.py

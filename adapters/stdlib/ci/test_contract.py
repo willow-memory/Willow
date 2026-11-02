@@ -506,6 +506,15 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         b"We measure the tide at *six* harbours.footnote:[Calibrated in March.]\n\n"
         b"|===\n| Harbour | Gauges\n| Leeds | 6\n|===\n"
     )}),
+    "strava": ("strava.py", {
+        "activities.csv": (
+            b"Activity ID,Activity Date,Activity Name,Activity Type,Elapsed Time,Distance,Elapsed Time,Distance\n"
+            b'1,"Mar 3, 2024, 7:15:22 AM",Harbour Loop,Run,1694,5.23,1694.0,5230.5\n'),
+        "run.gpx": (
+            b'<?xml version="1.0"?><gpx version="1.1" xmlns="http://www.topografix.com/GPX/1/1"><trk><name>Harbour Loop</name>'
+            b'<type>running</type><trkseg><trkpt lat="0" lon="0"><time>2024-03-03T07:15:22Z</time></trkpt>'
+            b'<trkpt lat="0.05" lon="0"><time>2024-03-03T07:43:36Z</time></trkpt></trkseg></trk></gpx>'),
+    }),
 }  # fmt: skip
 
 #: the language packs' codes: a pack is words- and its language's ISO 639 code
