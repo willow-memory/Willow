@@ -1582,6 +1582,14 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- `mail` reads a header sent as raw 8-bit UTF-8 as UTF-8: a subject such as
+  "income tax — what you owe, £412.67" no longer comes out with each of
+  its non-ASCII letters replaced by `���`, and a From or To name with an
+  accent keeps it. The email package hands such a header back as a Header
+  whose text has already swapped the bytes away; its bytes are now read
+  before that. Ten of the demo lives' 224 messages, all Teodora's, read
+  right now. (#169)
+
 - An add-on's tests hold in a copy of its folder, not only in willow: scan,
   start, browse, digest, stack, starter-words, across, parallel, hosts,
   hook-start and box-health assumed an add-on beside them that each only

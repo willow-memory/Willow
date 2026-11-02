@@ -183,6 +183,31 @@ def test_encoded_subject_and_quoted_printable_body_are_decoded(tmp_path):
     assert "Price is €40 for the tour,starting Monday." in out
 
 
+def test_raw_utf8_headers_are_read_as_utf8_not_replaced(tmp_path):
+    """A header sent as 8-bit UTF-8, not RFC 2047 words, as many mailers do:
+    the email package hands it back as a Header whose str() is U+FFFD."""
+    raw = (
+        "From: Zoë Example <zoe@example.org>\n"
+        "To: Teodora Mărinescu <teo@example.org>\n"
+        "Date: Tue, 20 Oct 2026 12:00:00 +0000\n"
+        "Subject: income tax — what you owe, £412.67\n"
+        "\n"
+        "See attached.\n"
+    )
+    folder, dest = tmp_path / "src", tmp_path / "out"
+    put(folder, "a.eml", raw)
+    put(folder, "b.mbox", "From zoe@example.org Tue Oct 20 12:00:00 2026\n" + raw)
+    assert mirror(folder, dest).returncode == 0
+    for out in ((dest / "a.eml.txt").read_text(encoding="utf-8"),
+                (dest / "b.mbox.txt").read_text(encoding="utf-8")):  # fmt: skip
+        assert "\ufffd" not in out
+        assert "\nSubject: income tax — what you owe, £412.67\n" in out
+        assert out.startswith("From: Zoë Example <zoe@example.org>\n") or (
+            "\nFrom: Zoë Example <zoe@example.org>\n" in out
+        )
+        assert "\nTo: Teodora Mărinescu <teo@example.org>\n" in out
+
+
 def test_mbox_with_two_messages_is_numbered(tmp_path):
     folder, dest = tmp_path / "src", tmp_path / "out"
     put(folder, "mail/all.mbox", MBOX)
