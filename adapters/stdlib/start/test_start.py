@@ -13,6 +13,10 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 KERNEL = HERE.parents[2] / "kernel.py"
+#: start's siblings, which it uses when they're beside it and says so when
+#: they aren't: each test holds it to whichever is true here, so a copy of
+#: willow with only some add-ons is checked as strictly as willow itself
+BESIDE = {n: (HERE.parent / n).is_dir() for n in ("starter-words", "browse", "backup")}
 spec = importlib.util.spec_from_file_location("start_addon", HERE / "start.py")
 st = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(st)
@@ -35,14 +39,15 @@ def test_one_step_makes_the_box_key_and_words_and_says_what_next(tmp_path):
     got = run("--pile", str(pile), "--to", str(home))
     assert got.returncode == 0, got.stderr
     cfg = json.loads((home / "box" / "kernel.json").read_text())
-    assert cfg == {
-        "pile": str(pile.resolve()),
-        "key": str((home / "key").resolve()),
-        "words": str((home / "my-words.txt").resolve()),
-    }
+    want = {"pile": str(pile.resolve()), "key": str((home / "key").resolve())}
+    if BESIDE["starter-words"]:
+        want["words"] = str((home / "my-words.txt").resolve())
+    assert cfg == want
+    assert (home / "my-words.txt").exists() == BESIDE["starter-words"]
     if os.name == "posix":
         assert (home / "key").stat().st_mode & 0o077 == 0
-        assert (home / "my-words.txt").stat().st_mode & 0o077 == 0
+        if BESIDE["starter-words"]:
+            assert (home / "my-words.txt").stat().st_mode & 0o077 == 0
     assert (
         subprocess.run(
             [sys.executable, str(KERNEL), "verify", "--box", str(home / "box")]
@@ -54,7 +59,9 @@ def test_one_step_makes_the_box_key_and_words_and_says_what_next(tmp_path):
     assert json.loads(bite.stdout)["state"] == "populated"
     out = got.stdout
     assert out.startswith("Set up. Your files: ")
-    assert "browse.py --box" in out and "save as" in out and "backup.py --box" in out
+    assert ("browse.py --box" in out and "save as" in out) == BESIDE["browse"]
+    assert ("backup.py --box" in out) == BESIDE["backup"]
+    assert ("no words list yet" in out) != BESIDE["starter-words"]
     assert str(home / "key") in out and "keep a copy somewhere safe" in out
 
 
@@ -92,7 +99,9 @@ def test_a_words_list_already_there_is_used_as_it_is(tmp_path):
     mine.write_text("tooth = dentist\n")
     mine.chmod(0o600)
     got = run("--pile", str(pile), "--to", str(home))
-    assert got.returncode == 0 and "used as it is" in got.stdout
+    assert got.returncode == 0
+    # used as it is when starter-words is beside start; never touched either way
+    assert ("used as it is" in got.stdout) == BESIDE["starter-words"]
     assert mine.read_text() == "tooth = dentist\n"
 
 
