@@ -10,6 +10,11 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `takeout`: Google Takeout's My Activity and YouTube watch and search
+  history, JSON or HTML: each activity as its own dated line, in UTC as the
+  file gives it, Google's title with a watch's channel and nothing added to
+  every line; an HTML date in another language kept as written, never
+  guessed; other JSON and HTML skipped and counted. (#181)
 - `strava`, Strava's export and GPX files as dated lines: `python
   adapters/stdlib/strava/strava.py mirror --from FOLDER --to MIRROR` writes
   each run, ride and walk in activities.csv, a .gpx or a .tcx (gzipped or

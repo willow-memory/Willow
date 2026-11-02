@@ -515,6 +515,15 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
             b'<type>running</type><trkseg><trkpt lat="0" lon="0"><time>2024-03-03T07:15:22Z</time></trkpt>'
             b'<trkpt lat="0.05" lon="0"><time>2024-03-03T07:43:36Z</time></trkpt></trkseg></trk></gpx>'),
     }),
+    "takeout": ("takeout.py", {"MyActivity.json": (
+        b'[{"header":"Search","title":"Searched for leek soup","titleUrl":"https://www.google.com/search?q=leek+soup",'
+        b'"time":"2024-03-03T10:15:22.517Z","products":["Search"],"activityControls":["Web & App Activity"]}]'
+    ), "watch-history.html": (
+        '<div class="outer-cell mdl-cell mdl-cell--12-col mdl-shadow--2dp"><div class="mdl-grid">'
+        '<div class="header-cell mdl-cell mdl-cell--12-col"><p class="mdl-typography--title">YouTube<br></p></div>'
+        '<div class="content-cell mdl-cell mdl-cell--6-col mdl-typography--body-1">Watched&nbsp;<a href="https://www.youtube.com/watch?v=a">Leek soup</a>'
+        '<br><a href="https://www.youtube.com/channel/UC1">Soup Kitchen</a><br>Mar 2, 2024, 7:40:05\u202fPM GMT<br></div></div></div>\n'
+    ).encode()}),
 }  # fmt: skip
 
 #: the language packs' codes: a pack is words- and its language's ISO 639 code

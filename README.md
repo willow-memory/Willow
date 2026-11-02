@@ -126,11 +126,11 @@ says how to pick one up:
 <!-- willow:front show=pick week=2026-W45 -->
 **Add-on of the week**
 
-**[bank](adapters/stdlib/bank/)** — Bank CSV and OFX statements as dated lines, with spending by month.
+**[capture](adapters/stdlib/capture/)** — A note written into your folder in one line, with its type and tags, so the next question can find it.
 
-*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 314 built add-ons in name order.*
+*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 315 built add-ons in name order.*
 
-[Every add-on, 314 built of 512, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 315 built of 512, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 

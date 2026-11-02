@@ -1102,6 +1102,10 @@ willow/
 │   │   │   ├── symptoms.py   one symptom's dated diary, turns marked only where the line says one, each cited
 │   │   │   ├── test_symptoms.py
 │   │   │   └── README.md
+│   │   ├── takeout/
+│   │   │   ├── takeout.py    My Activity and YouTube history, JSON or HTML, one dated line each
+│   │   │   ├── test_takeout.py
+│   │   │   └── README.md
 │   │   ├── tarot/
 │   │   │   ├── tarot.py      a tarot spread dealt by the record's tip, replayable by anyone, meaning nothing by itself
 │   │   │   ├── test_tarot.py

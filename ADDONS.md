@@ -19,11 +19,11 @@ is written: `no-install` or `needs-install`; `offline`, `this-machine` or
 tag its author chose, if any. *near* names the three add-ons closest to it.
 
 <!-- willow:pools -->
-`████████████░░░░░░░░` **314 of 512 built** · 462 need no install · 50 need one
+`████████████░░░░░░░░` **315 of 512 built** · 462 need no install · 50 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
-| Reading more kinds of files | 83 | 32 | 107 | 8 |
+| Reading more kinds of files | 84 | 31 | 107 | 8 |
 | Finding things | 32 | 14 | 36 | 10 |
 | Your own words | 19 | 7 | 23 | 3 |
 | Keeping track | 40 | 16 | 56 | 0 |
@@ -72,15 +72,15 @@ its list: someone who speaks the language can add one without much Python.
 - 2026-11-02 · [**weights-card**](adapters/stdlib/weights-card/) — A model card filled in from the weights file's own header, GGUF or safetensors (architecture, quantization, context length, licence), so the card says what the file says.
 - 2026-11-02 · [**translate**](adapters/stdlib/translate/) — An answer translated by a local model, the original kept beside it, the translation held until you seal it.
 - 2026-11-02 · [**text**](adapters/stdlib/text/) — Plain-text files the kernel leaves out (UTF-16, an old code page, over 1 MB, lines past 500 characters) as UTF-8 it reads, line for line.
-- 2026-11-02 · [**strava**](adapters/stdlib/strava/) — Strava's export and GPX files: each run, ride and walk as a dated line with its distance and time.
+- 2026-11-02 · [**takeout**](adapters/stdlib/takeout/) — Google Takeout's My Activity and YouTube history, JSON or HTML, as dated lines.
 <!-- /willow:newest -->
 
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W45 -->
-**[bank](adapters/stdlib/bank/)** — Bank CSV and OFX statements as dated lines, with spending by month.
+**[capture](adapters/stdlib/capture/)** — A note written into your folder in one line, with its type and tags, so the next question can find it.
 
-*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 314 built add-ons in name order.*
+*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 315 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -99,7 +99,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - [**bank**](adapters/stdlib/bank/) — Bank CSV and OFX statements as dated lines, with spending by month. *new* `no-install` `offline` · near: mastodon, discord, linkedin
 - [**bibtex**](adapters/stdlib/bibtex/) — .bib files: each reference as a passage, so you can ask which paper said it and get its key. *new* `no-install` `offline` · near: pgn, code-comments, latex
 - **bluesky** (idea) — A Bluesky repo.car export: your posts as dated lines, read by a small CAR and CBOR reader of its own. *new* `no-install` `offline` `posts` `repo` · near: mastodon, linkedin, reddit
-- [**bookmarks**](adapters/stdlib/bookmarks/) — Browser bookmarks (HTML export, Firefox JSON) and history, read from a copy of its SQLite file. *new* `no-install` `offline` `html` `sqlite` · near: codebase-memory, nestor, wallabag
+- [**bookmarks**](adapters/stdlib/bookmarks/) — Browser bookmarks (HTML export, Firefox JSON) and history, read from a copy of its SQLite file. *new* `no-install` `offline` `html` `json` · near: codebase-memory, nestor, wallabag
 - [**books**](adapters/stdlib/books/) — Kindle "My Clippings.txt" highlights and .epub text. *new* `no-install` `offline` `highlights` `book` · near: oakenscroll, almanac, text
 - [**calendar**](adapters/stdlib/calendar/) — .ics events and .vcf contacts as dated lines. *new* `no-install` `offline` · near: texts, chats, office
 - **canvas** (idea) — Canvas course exports: pages, assignments and discussions as passages. *new* `no-install` `offline` `assignments` `course` · near: moodle, syllabus, google-classroom
@@ -120,15 +120,15 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - **forgejo-dump** (idea) — A Forgejo or Gitea dump, Codeberg's included: issues, pull requests and wiki pages as dated passages. *new* `no-install` `offline` `requests` `issues` · near: github-archive, forgejo, gh-json
 - [**gh-json**](adapters/stdlib/gh-json/) — What gh prints with --json (issues, pull requests, runs), saved to a file and read as dated passages. *new* `no-install` `offline` `issues` `pull` · near: goodreads, day-one, jira
 - [**git-history**](adapters/stdlib/git-history/) — Commit messages and diffs as a dated pile: "when did we change the retry limit?" *new* `no-install` `offline` `history` `message` · near: clauses, location-history, discord
-- **github-archive** (idea) — Your GitHub account's data export: the issues, pull requests, reviews and comments you wrote, as dated passages with their links. *new* `no-install` `offline` `issues` `requests` · near: quote-review, contribute, forgejo-dump
+- **github-archive** (idea) — Your GitHub account's data export: the issues, pull requests, reviews and comments you wrote, as dated passages with their links. *new* `no-install` `offline` `requests` `pull` · near: quote-review, contribute, forgejo-dump
 - **gitlab-export** (idea) — A GitLab project export, read without unpacking it: its issues, merge requests and comments as dated passages. *new* `no-install` `offline` `issues` `comments` · near: github-archive, joplin, warc
 - [**goodreads**](adapters/stdlib/goodreads/) — Goodreads and StoryGraph exports: the books you've read, when, and what you thought of them. *new* `no-install` `offline` `title` `book` · near: letterboxd, slack, musicxml
 - **google-classroom** (idea) — Google Classroom from Takeout: assignments, announcements and comments as dated passages. *new* `no-install` `offline` `comments` `takeout` · near: gitlab-export, google-keep, takeout
-- [**google-keep**](adapters/stdlib/google-keep/) — Google Keep from Takeout: notes, lists and labels as dated passages. *new* `no-install` `offline` `google` · near: location-history, day-one, mastodon
-- [**health**](adapters/stdlib/health/) — Apple Health and Google Fit exports as daily numbers the readings add-on can trend. *new* `no-install` `offline` `google` `trend` · near: home-sensors, sheets, location-history
+- [**google-keep**](adapters/stdlib/google-keep/) — Google Keep from Takeout: notes, lists and labels as dated passages. *new* `no-install` `offline` `google` `takeout` · near: takeout, location-history, day-one
+- [**health**](adapters/stdlib/health/) — Apple Health and Google Fit exports as daily numbers the readings add-on can trend. *new* `no-install` `offline` `google` `trend` · near: home-sensors, sheets, takeout
 - [**home-sensors**](adapters/stdlib/home-sensors/) — Home Assistant's history export: sensor readings as dated numbers the readings add-on can trend. *new* `no-install` `offline` `history` `trend` · near: health, location-history, sheets
 - **homestead** (idea) — Homestead's exports from its law, ledger and health modules: records, deadlines and evidence as dated passages. *new* `no-install` `offline` `health` `ledger` · near: gitlab-export, oakenscroll, github-archive
-- **instapaper** (idea) — Instapaper's CSV and HTML export: saved articles and highlights as dated lines. *new* `no-install` `offline` `html` `saved` · near: pocket, wallabag, readwise
+- **instapaper** (idea) — Instapaper's CSV and HTML export: saved articles and highlights as dated lines. *new* `no-install` `offline` `html` `article` · near: pocket, wallabag, readwise
 - [**irc**](adapters/stdlib/irc/) — IRC logs from WeeChat, irssi or ZNC, one dated line per message, by network and channel. *new* `no-install` `offline` `message` `channel` · near: slack, matrix, discord
 - [**jira**](adapters/stdlib/jira/) — Jira's issue export, CSV or XML: each issue, comment and status change as dated passages. *new* `no-install` `offline` `comments` `xml` · near: mediawiki, linkedin, day-one
 - [**joplin**](adapters/stdlib/joplin/) — Joplin's .jex export, read without unpacking it: each note as plain text with its title and dates. *new* `no-install` `offline` `unpacking` `title` · near: evernote, apple-notes, karakeep
@@ -139,12 +139,12 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - [**karakeep**](adapters/stdlib/karakeep/) — Karakeep's JSON export: bookmarks, notes and tags as plain text. *new* `no-install` `offline` `tags` `json` · near: wallabag, evernote, joplin
 - [**latex**](adapters/stdlib/latex/) — LaTeX sources as plain prose, commands stripped, cited by the .tex file's own lines. *new* `no-install` `offline` `prose` · near: org, asciidoc, code-comments
 - **lessons** (idea) — Lesson plans from the Emerging Rule community library, by grade and subject, as passages a teacher can ask. *new* `no-install` `offline` `plan` `lesson` · near: my-lessons, lesson-time, support-plan
-- [**letterboxd**](adapters/stdlib/letterboxd/) — Letterboxd's export: the films you've watched, your ratings and reviews, as dated lines. *new* `no-install` `offline` `title` · near: goodreads, matrix, musicxml
+- [**letterboxd**](adapters/stdlib/letterboxd/) — Letterboxd's export: the films you've watched, your ratings and reviews, as dated lines. *new* `no-install` `offline` · near: goodreads, takeout, matrix
 - [**linkedin**](adapters/stdlib/linkedin/) — LinkedIn's data export: messages, posts and connections as dated lines. *new* `no-install` `offline` `posts` `message` · near: reddit, meta-archive, discord
 - [**listening**](adapters/stdlib/listening/) — Spotify's data download: what you listened to, by day, so you can ask what was on that summer. *new* `no-install` `offline` `data` `download` · near: discord, linkedin, reddit
-- [**location-history**](adapters/stdlib/location-history/) — Google Maps Timeline and other location exports: where you were, by day. *new* `no-install` `offline` `google` `history` · near: orders, google-keep, day-one
+- [**location-history**](adapters/stdlib/location-history/) — Google Maps Timeline and other location exports: where you were, by day. *new* `no-install` `offline` `google` `history` · near: google-keep, orders, day-one
 - [**lockfiles**](adapters/stdlib/lockfiles/) — Lockfiles as passages (package-lock.json, pnpm-lock.yaml, poetry.lock, uv.lock, Cargo.lock, go.sum): each package and its locked version. *new* `no-install` `offline` `json` `version` · near: sbom, pins, discord
-- [**logs**](adapters/stdlib/logs/) — System and app logs (syslog, journald's export, nginx): each line dated, so you can ask when it started. *new* `no-install` `offline` `message` `log` · near: discord, linkedin, irc
+- [**logs**](adapters/stdlib/logs/) — System and app logs (syslog, journald's export, nginx): each line dated, so you can ask when it started. *new* `no-install` `offline` `message` `log` · near: discord, irc, linkedin
 - [**mail**](adapters/stdlib/mail/) — .eml and .mbox files, with sender, date and subject kept. *new* `no-install` `offline` · near: text, office, calendar
 - [**man-pages**](adapters/stdlib/man-pages/) — The man pages installed on this machine as plain text, so you can ask your own system's docs. *new* `no-install` `offline` · near: rtf, books, notion
 - [**manifests**](adapters/deps/manifests/) — Docker Compose and Kubernetes YAML: each service, image, port and volume as a passage. Needs PyYAML; MIT. *new* `needs-install` `offline` · near: photos, pdf, ocr
@@ -191,9 +191,9 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - [**snapshot**](adapters/stdlib/snapshot/) — A web page or data file fetched once into a folder, as it came, with its address, the time and its SHA-256, so later answers cite the copy. Goes online: the address you give, fetched once. *bot* `no-install` `online` `snapshot` `copy` `sources` · near: web-pages, wayback, policy-watch
 - [**star-system**](adapters/deps/star-system/) — A friend's star-system simulation (science_bitch) run deterministically and written as cited passages: each body's Kepler period and how well the run conserves energy, angular momentum and linear momentum. Needs numpy; BSD-3-Clause. *bot* `needs-install` `offline` · near: static-search, manifests, ripgrep
 - **steam** (idea) — Your Steam library from its local files: games, playtime and when you last played. *new* `no-install` `offline` `game` `library` · near: life, game-master, music-library
-- [**strava**](adapters/stdlib/strava/) — Strava's export and GPX files: each run, ride and walk as a dated line with its distance and time. *new* `no-install` `offline` · near: chats, slack, matrix
+- [**strava**](adapters/stdlib/strava/) — Strava's export and GPX files: each run, ride and walk as a dated line with its distance and time. *new* `no-install` `offline` · near: takeout, chats, slack
 - [**subtitles**](adapters/stdlib/subtitles/) — Subtitle and transcript files (.vtt, .srt) as lines cited by timestamp, for podcasts and videos already transcribed. *new* `no-install` `offline` `transcript` · near: shell-history, calendar, text
-- **takeout** (idea) — Google Takeout's My Activity and YouTube history, JSON or HTML, as dated lines. *new* `no-install` `offline` `html` `json` · near: matrix, google-classroom, google-keep
+- [**takeout**](adapters/stdlib/takeout/) — Google Takeout's My Activity and YouTube history, JSON or HTML, as dated lines. *new* `no-install` `offline` `html` `json` · near: matrix, chats, pocket
 - **teams** (idea) — Microsoft Teams chats from your Microsoft account's export, one dated line per message. *new* `no-install` `offline` `message` `chats` · near: chats, signal, texts
 - [**text**](adapters/stdlib/text/) — Plain-text files the kernel leaves out (UTF-16, an old code page, over 1 MB, lines past 500 characters) as UTF-8 it reads, line for line. *new* `no-install` `offline` · near: mail, calendar, books
 - [**texts**](adapters/stdlib/texts/) — Phone text messages, from an Android SMS backup or an iPhone backup's copy, one dated line per message. *new* `no-install` `offline` `message` `backup` · near: chats, slack, irc
@@ -312,7 +312,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - **grant-report** (idea) — For charities and groups: what you promised a funder and what you did, side by side, each cited. *new* `no-install` `offline` · near: second-opinion, contradictions, standards
 - [**habits**](adapters/stdlib/habits/) — Streaks from the lines you write each day: how many days in a row, and which you missed. *new* `no-install` `offline` · near: pets, renewals, car
 - [**home-upkeep**](adapters/stdlib/home-upkeep/) — Home upkeep: the boiler service, the filters, the gutters, what's due and when it was last done. Uses car. *new* `no-install` `offline` `due` `service` · near: car, pets, garden
-- [**hours**](adapters/stdlib/hours/) — Hours worked or volunteered, per client or group, from your notes. Uses habits. *new* `no-install` `offline` `group` · near: symptoms, mood, baby-log
+- [**hours**](adapters/stdlib/hours/) — Hours worked or volunteered, per client or group, from your notes. Uses habits. *new* `no-install` `offline` `group` · near: symptoms, mood, home-upkeep
 - **inventory** (idea) — What you own, where it is, and where its papers are, for insurance or a will. *new* `no-install` `offline` `paper` `insurance` · near: paper-key, past-papers, renewals
 - [**invoices**](adapters/stdlib/invoices/) — For freelancers: invoices and payments matched by the id pattern you give, never guessed. Uses amounts, bank. *new* `no-install` `offline` `pattern` `matched` · near: serve, privacy, on-this-day
 - [**job-hunt**](adapters/stdlib/job-hunt/) — Applications sent, replies and interviews, by date: who you're still waiting on. Uses habits. *new* `no-install` `offline` · near: mood, warranties, foia
