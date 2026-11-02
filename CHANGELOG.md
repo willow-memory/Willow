@@ -15,7 +15,7 @@ says how). The first was v0.1.0.
   rows; admonitions read "note:" or "warning:"; code and literal blocks are
   kept as written; links, roles, substitutions, footnotes and fields read as
   their text; a table's rows are their cells. Nothing that would repeat on
-  every passage is added: no title path, no header beside each value.
+  every passage is added: no title path, no header beside each value. (#176)
 - `org`: Emacs Org-mode files as plain lines, line for line: the mirror has
   the source's lines, so a passage is cited by the .org file's own line.
   Org's markup comes off (stars, drawer and block lines, a timestamp's
