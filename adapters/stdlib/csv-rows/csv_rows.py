@@ -6,15 +6,17 @@ Walks FOLDER for .csv and .tsv files (hidden folders and files skipped) and
 writes each data row as one passage, every value beside its column's header,
 with a blank line between rows:
 
-    Surname,Forename,Townland,Age        ->   row 2: Surname: Considine; Forename: Honora; Townland: Caherfeenick; Age: 52
+    Surname,Forename,Townland,Age        ->   [2] Surname: Considine; Forename: Honora; Townland: Caherfeenick; Age: 52
     Considine,Honora,Caherfeenick,52
 
-N in "row N" is the line of the source file the row starts on (a quoted value
-holding newlines starts on its first line), so a passage is found again in the
-table by its number. An empty cell is left out. A cell beyond the header is
-"column K", as is a header cell that is blank. A row whose passage would pass
-the kernel's MAX_CHUNK is cut at a cell (or, for one long cell, at a space)
-into lines that each start "row N, continued", so nothing is cut off.
+The number in brackets is the line of the source file the row starts on (a
+quoted value holding newlines starts on its first line), so a passage is found
+again in the table by it. An empty cell is left out. A cell beyond the header,
+or under a blank header cell, is its value alone. A row whose passage would
+pass the kernel's MAX_CHUNK is cut at a cell (or, for one long cell, at a
+space) into lines that each start with the same number, so nothing is cut off.
+No word is added that the table doesn't hold: a word in every passage would
+let a question about something the folder doesn't have be answered by any row.
 
 The delimiter: a .tsv is read by tabs. For a .csv, the first line that isn't a
 note decides: the one of comma, tab, semicolon and pipe that cuts it into the
@@ -23,9 +25,9 @@ one column. Nothing else is tried.
 
 The header: the first line that isn't a note, unless one of its cells is a
 number or a date (digits with only + - . , / : between them), as in a bank
-export with no header; then every row is data and each cell is "column K".
-Lines before it whose first cell starts with "#" are notes, kept as "line N:"
-with their text.
+export with no header; then every row is data and each cell its value alone.
+Lines before it whose first cell starts with "#" are notes, kept with their
+line number in brackets.
 
 The text must be UTF-8, with or without a byte-order mark; anything else is
 skipped and counted, never decoded by guess. So is a table with no data row (a
@@ -76,26 +78,26 @@ def _clean(value: str) -> str:
 
 def _lines(n: int, pairs: list[str]) -> list[str]:
     """Row `n`'s pairs as lines of at most MAX_CHUNK characters."""
-    head, more = f"row {n}: ", f"row {n}, continued: "
+    head = f"[{n}] "
     out: list[str] = []
     line = head
     for pair in pairs:
-        joined = pair if line in (head, more) else "; " + pair
+        joined = pair if line == head else "; " + pair
         if len(line) + len(joined) <= kernel.MAX_CHUNK:
             line += joined
             continue
-        if line not in (head, more):
+        if line != head:
             out.append(line)
-            line = more
+            line = head
         lo = pair.find(": ") + 2  # a header is never parted from its value
         while len(line) + len(pair) > kernel.MAX_CHUNK:  # one cell too long
             room = kernel.MAX_CHUNK - len(line)
             cut = pair.rfind(" ", lo, room + 1)
             cut = cut if cut >= lo else room
             out.append(line + pair[:cut].rstrip())
-            pair, line, lo = pair[cut:].lstrip(), more, 1
+            pair, line, lo = pair[cut:].lstrip(), head, 1
         line += pair
-    if line not in (head, more):
+    if line != head:
         out.append(line)
     return out
 
@@ -107,13 +109,14 @@ def convert(data: bytes, tsv: bool = False) -> str | None:
     if first is None:
         return None
     passages = [
-        f"line {i + 1}: {_clean(x)}" for i, x in enumerate(lines[:first]) if x.strip()
+        f"[{i + 1}] {_clean(x)}" for i, x in enumerate(lines[:first]) if x.strip()
     ]
     sep = delimiter(lines[first], tsv)
     table = io.StringIO("".join(lines[first:]), newline="")
     reader = csv.reader(table, delimiter=sep, strict=True)
     header: list[str] | None = None
     rows = 0
+    found = False
     for row in reader:
         n = first + 1 + rows
         rows = reader.line_num
@@ -126,12 +129,13 @@ def convert(data: bytes, tsv: bool = False) -> str | None:
             header = []
         names = [header[k] if k < len(header) else "" for k in range(len(row))]
         pairs = [
-            f"{name or f'column {k + 1}'}: {_clean(cell)}"
-            for k, (name, cell) in enumerate(zip(names, row))
+            f"{name}: {_clean(cell)}" if name else _clean(cell)
+            for name, cell in zip(names, row)
             if cell.strip()
         ]
         passages.append("\n".join(_lines(n, pairs)))
-    if not any(p.startswith("row ") for p in passages):
+        found = True
+    if not found:
         return None
     return "\n\n".join(passages) + "\n"
 

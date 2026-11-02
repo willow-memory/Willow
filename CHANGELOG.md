@@ -11,13 +11,15 @@ says how). The first was v0.1.0.
 ### Added
 
 - `csv-rows`: CSV and TSV tables as one passage per row, each value beside
-  its column's header (`row 3: Surname: Considine; Forename: Patrick; Age:
+  its column's header (`[3] Surname: Considine; Forename: Patrick; Age:
   17`), numbered by the row's line in the file and empty cells left out, so
   a question about one row finds that row and not a run of 500 characters
   with the header lost. The delimiter (comma, tab, semicolon or pipe) is
   chosen by one fixed rule; a first line holding a number is data, not a
-  header; a wide row is cut at a cell so nothing is lost. A file not in
-  UTF-8, with no data row or malformed is skipped and counted.
+  header; a wide row is cut at a cell so nothing is lost. It adds no word of
+  its own to every passage; the headers, which repeat, are kept, and the
+  card says what they cost. A file not in UTF-8, with no data row or
+  malformed is skipped and counted.
 - `ui/`, willow's own UI (v1): `python ui/canvas.py` opens a page on this
   machine that goes the way a person does. Choose your folders; see what the
   kernel alone makes of them, as counts, never a file's words or name; start
