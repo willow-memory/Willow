@@ -49,7 +49,7 @@ notes and annotations with it, and a collection in the trash is not named.
 An RSS feed's items are not your library and are left out. An ink or image
 annotation with no text is left out and counted on the last line:
 
-    left out: 2 annotations with no text (image 1, ink 1)
+    left out: 2 annotations with no text (1 image, 1 ink)
 
 A file is read when its name ends in .sqlite and it holds Zotero's tables
 (items, itemData, itemDataValues, fields, itemTypes, creators, itemCreators,

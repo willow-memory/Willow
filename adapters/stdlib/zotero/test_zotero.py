@@ -292,7 +292,7 @@ def test_an_annotation_is_quoted_with_its_page_comment_and_colour(tmp_path):
 
 def test_ink_and_image_annotations_with_no_text_are_counted_not_shown(tmp_path):
     text = text_of(tmp_path)
-    assert text.endswith("\n\nleft out: 2 annotations with no text (image 1, ink 1)\n")
+    assert text.endswith("\n\nleft out: 2 annotations with no text (1 image, 1 ink)\n")
     assert "p. 13" not in text and "p. 14" not in text
     assert text.startswith("Zotero library: 2 items, 2 notes, 1 annotation\n\n")
 
@@ -422,6 +422,19 @@ def test_a_long_note_is_cut_into_passages_that_each_keep_the_citation(tmp_path):
         " ".join(w for c in found for w in c["text"].split() if w.startswith("tide"))
         == words
     )
+
+
+def test_an_annotation_type_zotero_adds_later_is_named_by_its_number(tmp_path):
+    def build(path):
+        z = Lib(path)
+        pdf = z.pdf(z.item("journalArticle", date="2020-00-00 2020", title="New"))
+        z.mark(pdf, 9, text="a future kind", color="#123456")
+        z.mark(pdf, 9, page="2")
+        return z.done()
+
+    text = text_of(tmp_path, build)
+    assert "“a future kind”\ntype 9, #123456, made " in text
+    assert text.endswith("\n\nleft out: 1 annotation with no text (1 type 9)\n")
 
 
 def test_a_book_sections_book_is_cited_and_its_publisher_is_not_lost(tmp_path):

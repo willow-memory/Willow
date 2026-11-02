@@ -364,7 +364,7 @@ def library_text(lib: Library) -> str:
     head = f"Zotero library: {s(len(items), 'item')}, {s(n_notes, 'note')}, {s(n_marks, 'annotation')}"
     tail = []
     if blank:
-        kinds = ", ".join(f"{k} {n}" for k, n in sorted(blank.items()))
+        kinds = ", ".join(f"{n} {k}" for k, n in sorted(blank.items()))
         tail = [
             f"left out: {s(sum(blank.values()), 'annotation')} with no text ({kinds})"
         ]
