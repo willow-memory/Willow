@@ -18,7 +18,7 @@ says how). The first was v0.1.0.
   words and numbers are written, no labels or type words, so a question
   about something absent isn't answered by a word in every passage. The
   trash and RSS feeds are left out, and the file is opened read-only and
-  immutable, so no journal appears beside it.
+  immutable, so no journal appears beside it. (#183)
 - `takeout`: Google Takeout's My Activity and YouTube watch and search
   history, JSON or HTML: each activity as its own dated line, in UTC as the
   file gives it, Google's title with a watch's channel and nothing added to
