@@ -599,6 +599,10 @@ willow/
 │   │   │   ├── llms_txt.py   an llms.txt written from a folder's text files, and a checker for one
 │   │   │   ├── test_llms_txt.py
 │   │   │   └── README.md
+│   │   ├── local-model/
+│   │   │   ├── local_model.py  suggestions from a model on this machine only, finding the server and model running
+│   │   │   ├── test_local_model.py
+│   │   │   └── README.md
 │   │   ├── location-history/
 │   │   │   ├── location_history.py   places and trips from a Timeline export, by day
 │   │   │   ├── test_location_history.py
@@ -671,6 +675,26 @@ willow/
 │   │   │   ├── misquote.py   a quote almost in your files: the closest passage, and what differs
 │   │   │   ├── test_misquote.py
 │   │   │   └── README.md
+│   │   ├── model-card/
+│   │   │   ├── model_card.py  a card naming the model behind an assistant, its SHA-256 on the record
+│   │   │   ├── test_model_card.py
+│   │   │   └── README.md
+│   │   ├── model-drift/
+│   │   │   ├── model_drift.py  your frozen questions asked again, flagging answers that changed under the same name and card
+│   │   │   ├── test_model_drift.py
+│   │   │   └── README.md
+│   │   ├── model-exam/
+│   │   │   ├── model_exam.py  a model scored against the answers you sealed, your questions as its exam
+│   │   │   ├── test_model_exam.py
+│   │   │   └── README.md
+│   │   ├── model-fit/
+│   │   │   ├── model_fit.py  the memory, CPU, GPUs and NPUs this machine has, and where a model of a given size fits
+│   │   │   ├── test_model_fit.py
+│   │   │   └── README.md
+│   │   ├── model-shelf/
+│   │   │   ├── model_shelf.py  every model on this machine, from each runtime's own folder, with its quantization and hash
+│   │   │   ├── test_model_shelf.py
+│   │   │   └── README.md
 │   │   ├── month-first/
 │   │   │   ├── month_first.py   a folder written month first, mirrored with each date's ISO form beside it
 │   │   │   ├── test_month_first.py
@@ -695,6 +719,10 @@ willow/
 │   │   ├── nestor/
 │   │   │   ├── nestor.py     answers a person has checked in Nestor, from a copy of its store
 │   │   │   ├── test_nestor.py
+│   │   │   └── README.md
+│   │   ├── night-batch/
+│   │   │   ├── night_batch.py  waiting questions asked of a local model in one run, stopped once you're back
+│   │   │   ├── test_night_batch.py
 │   │   │   └── README.md
 │   │   ├── nightstand/
 │   │   │   ├── nightstand.py  things set down, one bite picked up: one in hand, a bite every time, nothing deleted
@@ -848,6 +876,10 @@ willow/
 │   │   │   ├── prov.py   the record as W3C PROV-JSON: what came from what, by which step, sealed by whom
 │   │   │   ├── test_prov.py
 │   │   │   └── README.md
+│   │   ├── quantized/
+│   │   │   ├── quantized.py  the smallest local model that still passes your sealed questions
+│   │   │   ├── test_quantized.py
+│   │   │   └── README.md
 │   │   ├── quiz/
 │   │   │   ├── quiz.py       a passage of your own writing with a word missing, cut and scored on the record
 │   │   │   ├── test_quiz.py
@@ -923,6 +955,10 @@ willow/
 │   │   ├── said/
 │   │   │   ├── said.py       who said what, read by shape (a chat's stamp, a speech verb, quotation marks), dated
 │   │   │   ├── test_said.py
+│   │   │   └── README.md
+│   │   ├── same-way/
+│   │   │   ├── same_way.py  a local model asked each question several times, and how often its answer flips
+│   │   │   ├── test_same_way.py
 │   │   │   └── README.md
 │   │   ├── sarif/
 │   │   │   ├── sarif.py   scanner findings by file and line
@@ -1074,6 +1110,10 @@ willow/
 │   │   │   ├── transcript_redact.py  a transcript's keys, home paths and emails taken out, each removal listed
 │   │   │   ├── test_transcript_redact.py
 │   │   │   └── README.md
+│   │   ├── translate/
+│   │   │   ├── translate.py  an answer you sealed, translated on this machine, held for your seal beside the original
+│   │   │   ├── test_translate.py
+│   │   │   └── README.md
 │   │   ├── trello/
 │   │   │   ├── trello.py   a Trello board by list with cards, checklists and comments
 │   │   │   ├── test_trello.py
@@ -1113,6 +1153,14 @@ willow/
 │   │   ├── web-pages/
 │   │   │   ├── web_pages.py  saved .html and .mhtml as their paragraphs, under the address they came from
 │   │   │   ├── test_web_pages.py
+│   │   │   └── README.md
+│   │   ├── weights-card/
+│   │   │   ├── weights_card.py  a model card from a GGUF or safetensors file's own header, with the file's SHA-256
+│   │   │   ├── test_weights_card.py
+│   │   │   └── README.md
+│   │   ├── weights-pin/
+│   │   │   ├── weights_pin.py  a weights file held to the SHA-256 and size on its model card before it runs
+│   │   │   ├── test_weights_pin.py
 │   │   │   └── README.md
 │   │   ├── why-not/
 │   │   │   ├── why_not.py   why a question got not enough to say: which words nothing holds, the nearest passages and what kind of file would answer

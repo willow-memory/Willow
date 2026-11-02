@@ -126,11 +126,11 @@ says how to pick one up:
 <!-- willow:front show=pick week=2026-W45 -->
 **Add-on of the week**
 
-**[install-scripts](adapters/stdlib/install-scripts/)** — The install scripts the packages in node_modules would run (preinstall, install, postinstall), each cited by file and line.
+**[hook-pin](adapters/stdlib/hook-pin/)** — Each hook's SHA-256 kept on the record when you approve it, so a hook that changed since is named before it runs, never silently trusted or skipped.
 
-*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 293 built add-ons in name order.*
+*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 305 built add-ons in name order.*
 
-[Every add-on, 293 built of 506, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 305 built of 506, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 
