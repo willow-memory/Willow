@@ -18,8 +18,9 @@ Which of your passages went to which model, and where to, read from the record.
            went: garden.md:1 63d9b600aca4
     1 proposal(s) on the record; 0 bite(s) served passages and were proposed on by no one, which this cannot see past; 0 refused proposal(s) name nothing
 
-**There is no model card on the record yet.** The idea says "by model card",
-but [model-card](../../planned.json) is not built, and nothing the kernel
+**No suggestion names a model card yet.** The idea says "by model card", and
+[model-card](../model-card/) puts a card's hash on the record, but no
+assistant names that hash in what it proposes, and nothing the kernel
 writes names a model: a `proposal` row holds its subject, verdict and the bite
 it answered, and its `who` is the kernel's, whoever made the suggestion. So
 this reads the one place a model is named, the proposal's `claim`. For
@@ -41,7 +42,7 @@ address is `this machine`; any other host is `online: HOST`.
   counted ("proposed on by no one"). So the list is a floor, never a clean bill.
 - A refused proposal keeps no claim, so it names nothing.
 
-When `model-card` lands and puts a card's hash on each suggestion, this is the
+Once an assistant names its card's hash in each suggestion, this is the
 add-on to read it.
 
 **Exit codes**, the kernel's: 0 every proposal names its model and endpoint
