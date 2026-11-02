@@ -135,6 +135,7 @@ def test_every_kind_of_value_is_read_past(tmp_path):
     pairs = [(f"x.{k}", k, 1) for k in FORMATS]
     pairs += [(f"a.{k}", ARR, (k, [1, 0])) for k in FORMATS]
     pairs += [("a.nested", ARR, (ARR, [(U8, [1]), (STR, ["z"])]))]
+    pairs += [("a.empty", ARR, (U32, []))]
     pairs += [("general.name", STR, "After All"), ("general.file_type", U32, 32)]
     fields = wc.read_header(write(tmp_path, "m.gguf", gguf(pairs)))
     assert (fields["name"], fields["quantization"]) == ("After All", "BF16")
@@ -165,13 +166,15 @@ def test_a_safetensors_header_fills_in_what_it_holds(tmp_path):
         "norm.weight": {"dtype": "F32", "shape": [8], "data_offsets": [64, 96]},
         "embed.weight": {"dtype": "BF16", "shape": [2, 8], "data_offsets": [96, 128]},
         "zeros": {"dtype": "I8", "shape": [8], "data_offsets": [128, 136]},
+        "none": {"dtype": "F16", "shape": [0, 8], "data_offsets": [136, 136]},
+        "scale": {"dtype": "I8", "shape": [], "data_offsets": [136, 137]},
     }
     w = write(tmp_path, "model.safetensors", safetensors(head))
     assert run("--from", w, "--to", tmp_path / "card.md").returncode == 0
     text = (tmp_path / "card.md").read_text(encoding="utf-8")
     assert "\nformat: safetensors\n" in text
-    assert "\nquantization: BF16, F32, I8\n" in text, "most parameters first"
-    assert "\nparameters: 64\n" in text
+    assert "\nquantization: BF16, I8, F32, F16\n" in text, "most parameters first"
+    assert "\nparameters: 65\n" in text, "a scalar is one, a zero-length tensor none"
     assert "\nlicence: apache-2.0\n" in text
     assert "\ncontext length: not in the header\n" in text
     assert "\narchitecture: not in the header\n" in text
