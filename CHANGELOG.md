@@ -10,6 +10,13 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `text`: every .txt and .text file as UTF-8 the kernel reads whole, line
+  for line. A Windows "Unicode" file (UTF-16 with its mark), UTF-32, and
+  UTF-16 with no mark when every other byte is NUL are read; an old code page
+  only when named with `--encoding`, never guessed. CR and CRLF become LF, a
+  line over 500 characters (which the kernel cut short) is broken at spaces,
+  and a file over 1 MB (which it dropped) is cut into parts; a hidden
+  `.lines` map says where those lines go, so nothing is written into the text.
 - `ui/`, willow's own UI (v1): `python ui/canvas.py` opens a page on this
   machine that goes the way a person does. Choose your folders; see what the
   kernel alone makes of them, as counts, never a file's words or name; start
