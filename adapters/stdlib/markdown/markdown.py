@@ -60,6 +60,9 @@ REF_DEF = re.compile(
     r"^ {0,3}\[([^\]^][^\]]*)\]:\s*<?(\S+?)>?(?:\s+[\"'(].*[\"')])?\s*$"
 )
 FOOT_DEF = re.compile(r"^ {0,3}\[\^([^\]]+)\]:\s?(.*)$")
+#: an HTML comment, closed by --> or by --!> as browsers also close one
+COMMENT = re.compile(r"<!--.*?--!?>", re.S)
+COMMENT_END = re.compile(r"--!?>")
 TAG = re.compile(r"</?[A-Za-z][A-Za-z0-9-]*(?:\s[^<>]*)?/?>")
 BREAK_TAG = re.compile(r"<br\s*/?>", re.I)
 CODE = re.compile(r"(`+)(?!`)(.+?)(?<!`)\1(?!`)")
@@ -164,7 +167,7 @@ def inline(text: str, refs: dict[str, str]) -> str:
     text = CODE.sub(lambda m: hold(m.group(2).strip() or m.group(2)), text)
     text = ESCAPE.sub(lambda m: hold(m.group(1)), text)
     text = AUTOLINK.sub(lambda m: hold(m.group(1)), text)
-    text = re.sub(r"<!--.*?-->", "", text)
+    text = COMMENT.sub("", text)
     text = BREAK_TAG.sub(" ", text)
     text = TAG.sub("", text)
     text = WIKI.sub(
@@ -276,12 +279,12 @@ def convert(data: bytes) -> str | None:
 
         line = raw
         if comment:  # inside a <!-- comment --> that began on a line above
-            end = line.find("-->")
-            if end < 0:
+            end = COMMENT_END.search(line)
+            if end is None:
                 i += 1
                 continue
-            comment, line = False, line[end + 3 :]
-        line = re.sub(r"<!--.*?-->", "", line)
+            comment, line = False, line[end.end() :]
+        line = COMMENT.sub("", line)
         if "<!--" in line:
             comment, line = True, line[: line.index("<!--")]
 
