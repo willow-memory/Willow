@@ -1,6 +1,6 @@
 """text: every .txt as UTF-8 the kernel reads whole, line for line; an encoding
 decoded only when certain or named, a binary skipped, long lines and big files
-cut with markers that say where they pick up, the same bytes twice, originals
+cut with a hidden map of where they go, no word added, the same bytes twice, originals
 unchanged, and MIRROR and FOLDER kept apart."""
 
 from __future__ import annotations
