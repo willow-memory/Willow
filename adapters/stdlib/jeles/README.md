@@ -38,8 +38,10 @@ pairs at `asserted`, but cited commons pairs at `human`, and that rule is
 Jeles' own, not something to copy here. A signature is never
 copied, a deleted record is left out, and so is a logged gap (a question with
 no answer yet). Each file goes to MIRROR at the same relative path with .txt
-added; a file that isn't either shape is skipped and counted. Point the kernel
-at MIRROR to ask what Jeles knows.
+added; a file that isn't either shape is skipped and counted. One the kernel
+would leave out for its size (more than its `MAX_FILE`, as a real store is)
+goes in parts it reads whole, `store.db.1.txt`, `store.db.2.txt` and on, cut
+only between nuggets. Point the kernel at MIRROR to ask what Jeles knows.
 
 ## export
 
