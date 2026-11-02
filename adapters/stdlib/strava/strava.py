@@ -5,34 +5,38 @@ r"""strava.py: Strava's export and GPX files, each activity as a dated line. Pyt
 Walks FOLDER (hidden folders and files skipped) for Strava's bulk export
 summary, `activities.csv`, and for activity files: .gpx and .tcx, plain or
 gzipped (.gpx.gz, .tcx.gz, as Strava's export keeps them). Each activity is
-one paragraph, opening with its line:
+one paragraph, opening with its line: its start (date, clock and zone), its
+name, its distance in km, and its time as H:MM:SS:
 
-    2024-03-03 run: Harbour Loop, 5.2 km in 0:28:14 (Sunday 3 March 2024, started 07:15 UTC)
+    2024-03-03 07:15Z Harbour Loop, 5.2, 0:28:14
+
+Only the file's own values are written: no type word, no unit, no label, no
+weekday or month name, since a word written into every passage would let a
+question about something the folder doesn't hold ("when did I run a
+marathon") be answered by any activity. A value the file doesn't give is "?".
 
 activities.csv: one paragraph per row, in the file's order, with the row's
-description, private note and gear under its line when it has them. It is
-known by its header ("Activity ID", "Activity Date", "Activity Type"), so any
-other CSV is not read. Its header names "Distance" and "Elapsed Time" twice:
-the distance is the later "Distance" column, which is always metres (the
-first is in your display units, and a swim's is metres there too); the time
-is the first "Elapsed Time" column, in seconds. "Activity Date" is written in
-UTC, as "Mar 3, 2024, 7:15:22 AM"; a date in any other form is kept as
-written.
+description, private note and gear on their own lines under it when it has
+them. It is known by its header ("Activity ID", "Activity Date", "Activity
+Type"), so any other CSV is not read. Its header names "Distance" and
+"Elapsed Time" twice: the distance is the later "Distance" column, which is
+always metres (the first is in your display units, and a swim's is metres
+there too); the time is the first "Elapsed Time" column, in seconds.
+"Activity Date" is written in UTC, as "Mar 3, 2024, 7:15:22 AM"; a date in
+any other form is kept as written.
 
-GPX: each track is an activity, named by its <name> and typed by its <type>.
-Its distance is the sum of the great-circle (haversine) distances between
-consecutive points of each segment; its time is elapsed, from its first
-point's time to its last, pauses included. Its date is its first point's
-time (the file's own <time> is when the file was made, so it is not used).
-TCX: each Activity, typed by its Sport, dated by its Id; its distance and
-time are its laps' DistanceMeters and TotalTimeSeconds added up (the
-device's timer, so pauses are left out).
+GPX: each track is an activity, named by its <name>. Its distance is the sum
+of the great-circle (haversine) distances between consecutive points of each
+segment; its time is elapsed, from its first point's time to its last, pauses
+included. Its date is its first point's time (the file's own <time> is when
+the file was made, so it is not used). TCX: each Activity, dated by its Id;
+its distance and time are its laps' DistanceMeters and TotalTimeSeconds added
+up (the device's timer, so pauses are left out), with its Notes under it.
 
 A time is shown in the zone its file gives (Z is UTC, +01:00 is kept as
 +01:00); a time with no zone is shown as written, and no zone is guessed. A
 distance of a kilometre or more is in km to one decimal place, a shorter one
-in whole metres. What a file doesn't give is said: "distance not given",
-"time not given", "date not given".
+to two (0.67).
 
 .fit files (and .fit.gz) are binary and not read: each is skipped, counted,
 and named in a note on stderr.
@@ -63,24 +67,7 @@ import kernel  # noqa: E402
 
 EARTH_KM = 6371.0  # the mean radius, as most route tools use
 GZ_LIMIT = 256 * 1024 * 1024  # bytes a .gz may open to; a bigger one is skipped
-MONTHS = ("January February March April May June July August September October "
-          "November December").split()  # fmt: skip
-DAYS = "Monday Tuesday Wednesday Thursday Friday Saturday Sunday".split()
-#: the word a person says for a type a GPX or TCX file writes
-KINDS = {
-    "running": "run",
-    "run": "run",
-    "cycling": "ride",
-    "biking": "ride",
-    "ride": "ride",
-    "walking": "walk",
-    "walk": "walk",
-    "hiking": "hike",
-    "hike": "hike",
-    "swimming": "swim",
-    "swim": "swim",
-    "other": "activity",
-}
+MONTHS = "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split()
 ISO = re.compile(
     r"\s*(\d{4})-(\d\d)-(\d\d)[T ](\d\d):(\d\d):(\d\d)([.,]\d+)?"
     r"\s*(Z|[+-]\d\d:?\d\d)?\s*$"
@@ -114,31 +101,17 @@ def haversine_km(a: tuple[float, float], b: tuple[float, float]) -> float:
     return 2 * EARTH_KM * math.asin(min(1.0, math.sqrt(h)))
 
 
-def kind(raw: str) -> str:
-    """The type as a person says it: Run is "run", Virtual Ride is "virtual
-    ride", TrailRun is "trail run", running is "run". A number (Strava's GPX
-    writes one) is kept as written."""
-    raw = " ".join(raw.split())
-    if not raw:
-        return "activity"
-    if raw.isdigit():
-        return f"activity (type {raw})"
-    if raw.lower() in KINDS:
-        return KINDS[raw.lower()]
-    return re.sub(r"(?<=[a-z])(?=[A-Z])", " ", raw).lower()
-
-
 def distance(metres: float | None) -> str:
+    """In km, without the unit: one decimal place from a kilometre up, two
+    below it. "?" when the file gives none."""
     if metres is None:
-        return "distance not given"
-    if metres >= 1000:
-        return f"{metres / 1000:.1f} km"
-    return f"{round(metres)} m"
+        return "?"
+    return f"{metres / 1000:.1f}" if metres >= 1000 else f"{metres / 1000:.2f}"
 
 
 def duration(seconds: float | None) -> str:
     if seconds is None or seconds < 0:
-        return "time not given"
+        return "?"
     s = int(round(seconds))
     return f"{s // 3600}:{s % 3600 // 60:02d}:{s % 60:02d}"
 
@@ -151,16 +124,11 @@ class When:
     def __init__(self, t: dt.datetime, zone: str | None):
         self.t, self.zone = t, zone
 
-    def day(self) -> str:
-        return self.t.strftime("%Y-%m-%d")
-
-    def words(self) -> str:
-        d = self.t
-        clock = f"started {d.hour:02d}:{d.minute:02d}"
-        zone = f" {self.zone}" if self.zone else ""
-        return (
-            f"{DAYS[d.weekday()]} {d.day} {MONTHS[d.month - 1]} {d.year}, {clock}{zone}"
-        )
+    def start(self) -> str:
+        """ "2024-03-03 07:15Z", "2024-03-03 08:15+01:00", or with no zone
+        "2024-03-03 07:15": digits, which the kernel reads as a date."""
+        zone = {"UTC": "Z", None: ""}.get(self.zone, self.zone)
+        return f"{self.t:%Y-%m-%d %H:%M}{zone}"
 
     def seconds_to(self, other: When) -> float | None:
         if (self.zone is None) != (other.zone is None):
@@ -200,9 +168,9 @@ def iso(raw: str | None) -> When | None:
 def strava_date(raw: str) -> When | None:
     """ "Mar 3, 2024, 7:15:22 AM", in UTC, as activities.csv writes it."""
     m = STRAVA_DATE.match(raw)
-    if not m or m.group(1) not in [x[:3] for x in MONTHS]:
+    if not m or m.group(1) not in MONTHS:
         return None
-    mon = [x[:3] for x in MONTHS].index(m.group(1)) + 1
+    mon = MONTHS.index(m.group(1)) + 1
     hour = int(m.group(4)) % 12 + (12 if m.group(7) == "PM" else 0)
     try:
         t = dt.datetime(int(m.group(3)), mon, int(m.group(2)), hour,
@@ -212,22 +180,11 @@ def strava_date(raw: str) -> When | None:
     return When(t, "UTC")
 
 
-def line(when: When | str | None, what: str, name: str, metres, seconds) -> str:
-    """One activity's line: its date, its type, its name, how far and how long."""
-    if isinstance(when, When):
-        day, words = when.day(), f" ({when.words()})"
-    else:
-        day, words = (when or "date not given"), ""
-    head = f"{day} {what}: {name}" if name else f"{day} {what}"
-    if metres is None and seconds is None:
-        tail = "distance and time not given"
-    elif seconds is None:
-        tail = f"{distance(metres)}, time not given"
-    elif metres is None:
-        tail = f"distance not given, {duration(seconds)}"
-    else:
-        tail = f"{distance(metres)} in {duration(seconds)}"
-    return f"{head}, {tail}{words}"
+def line(when: When | str | None, name: str, metres, seconds) -> str:
+    """One activity's line: its start, its name, how far and how long."""
+    start = when.start() if isinstance(when, When) else (when or "?")
+    head = f"{start} {name}" if name else start
+    return f"{head}, {distance(metres)}, {duration(seconds)}"
 
 
 # ── activities.csv ──────────────────────────────────────────────────────────
@@ -258,7 +215,7 @@ def activities_csv(text: str) -> list[str]:
         at = [i for i, h in enumerate(header) if h == name]
         return at[1] if len(at) > 1 else None
 
-    col = {n: first(n) for n in ("Activity Date", "Activity Name", "Activity Type",
+    col = {n: first(n) for n in ("Activity Date", "Activity Name",
            "Activity Description", "Activity Private Note", "Activity Gear")}  # fmt: skip
     metres_at, elapsed = (
         later("Distance"),
@@ -277,12 +234,10 @@ def activities_csv(text: str) -> list[str]:
         secs = next(
             (s for s in (number(cell(i)) for i in elapsed) if s is not None), None
         )
-        lines = [line(when, kind(cell(col["Activity Type"])), cell(col["Activity Name"]),
-                      number(cell(metres_at)), secs)]  # fmt: skip
-        for label, key in (("description", "Activity Description"),
-                           ("note", "Activity Private Note"), ("gear", "Activity Gear")):  # fmt: skip
+        lines = [line(when, cell(col["Activity Name"]), number(cell(metres_at)), secs)]
+        for key in ("Activity Description", "Activity Private Note", "Activity Gear"):
             if cell(col[key]):
-                lines.append(f"{label}: {cell(col[key])}")
+                lines.append(cell(col[key]))
         out.append("\n".join(lines))
     return out
 
@@ -323,8 +278,7 @@ def gpx(data: bytes) -> list[str]:
         start = times[0] if times else None
         secs = times[0].seconds_to(times[-1]) if len(times) > 1 else None
         name = text_of(trk, "name") or meta_name
-        what = kind(text_of(trk, "type"))
-        out.append(line(start, what, name, metres if points > 1 else None, secs))
+        out.append(line(start, name, metres if points > 1 else None, secs))
     return out
 
 
@@ -342,11 +296,11 @@ def tcx(data: bytes) -> list[str]:
         secs = [number(text_of(lap, "TotalTimeSeconds")) for lap in laps]
         known_m = [m for m in metres if m is not None]
         known_s = [s for s in secs if s is not None]
-        lines = [line(start, kind(act.get("Sport", "")), "",
+        lines = [line(start, "",
                       sum(known_m) if known_m else None,
                       sum(known_s) if known_s else None)]  # fmt: skip
         if text_of(act, "Notes"):
-            lines.append(f"note: {text_of(act, 'Notes')}")
+            lines.append(text_of(act, "Notes"))
         out.append("\n".join(lines))
     return out
 

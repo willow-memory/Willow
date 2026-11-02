@@ -147,12 +147,10 @@ def test_haversine_matches_a_known_distance():
 def test_each_csv_row_is_a_dated_line_with_the_metres_column_and_the_utc_start():
     out = mod.convert(CSV.encode(), "activities.csv")
     assert out.split("\n\n") == [
-        "2024-03-03 run: Harbour Loop, 5.2 km in 0:28:14 (Sunday 3 March 2024, started 07:15 UTC)\n"
-        "description: Easy, legs fresh\ngear: Pegasus 40",
+        "2024-03-03 07:15Z Harbour Loop, 5.2, 0:28:14\nEasy, legs fresh\nPegasus 40",
         # the summary column says "1,500" for a swim; the metres column says 1500.0
-        "2024-03-04 swim: Lunch Swim, 1.5 km in 0:35:00 (Monday 4 March 2024, started 17:40 UTC)\n"
-        "note: felt slow",
-        "2024-03-09 virtual ride: Dales loop, 61.1 km in 2:02:02 (Saturday 9 March 2024, started 09:02 UTC)\n",
+        "2024-03-04 17:40Z Lunch Swim, 1.5, 0:35:00\nfelt slow",
+        "2024-03-09 09:02Z Dales loop, 61.1, 2:02:02\n",
     ]
 
 
@@ -169,22 +167,20 @@ def test_a_csv_that_is_not_stravas_is_not_read(tmp_path):
     assert not (out / "comments.csv.txt").exists()
 
 
-def test_a_date_strava_did_not_write_its_way_is_kept_as_written_and_nothing_is_missing_unsaid():
+def test_a_date_strava_did_not_write_its_way_is_kept_as_written_and_a_missing_value_is_a_question_mark():
     text = HEADER + row("1", "3. März 2024, 07:15:22", "", "Workout", "", "", "",
                         "", "", "", "", "", "")  # fmt: skip
-    assert mod.convert(text.encode(), "a.csv") == (
-        "3. März 2024, 07:15:22 workout, distance and time not given\n"
-    )
+    assert mod.convert(text.encode(), "a.csv") == "3. März 2024, 07:15:22, ?, ?\n"
     text = HEADER + row("1", "Mar 3, 2024, 12:05:00 AM", "Night", "Run", "", "",
                         "", "", "", "", "600", "", "")  # fmt: skip
-    assert mod.convert(text.encode(), "a.csv").startswith(
-        "2024-03-03 run: Night, distance not given, 0:10:00 (Sunday 3 March 2024, started 00:05 UTC)"
+    assert (
+        mod.convert(text.encode(), "a.csv") == "2024-03-03 00:05Z Night, ?, 0:10:00\n"
     )
     text = HEADER + row("1", "Mar 3, 2024, 12:05:00 PM", "Noon", "Walk", "", "",
                         "", "", "", "", "", "", "640.4")  # fmt: skip
-    assert mod.convert(text.encode(), "a.csv") == (
-        "2024-03-03 walk: Noon, 640 m, time not given (Sunday 3 March 2024, started 12:05 UTC)\n"
-    )
+    assert mod.convert(text.encode(), "a.csv") == "2024-03-03 12:05Z Noon, 0.64, ?\n"
+    text = HEADER + row("1", "", "Lost", "Walk", "", "60", "", "", "", "", "", "", "")
+    assert mod.convert(text.encode(), "a.csv") == "? Lost, ?, 0:01:00\n"
 
 
 def test_a_csv_with_one_distance_column_writes_no_distance_rather_than_guess_its_unit():
@@ -193,13 +189,13 @@ def test_a_csv_with_one_distance_column_writes_no_distance_rather_than_guess_its
         '1,"Mar 3, 2024, 7:15:22 AM",Harbour Loop,Run,1694,5.23\n'
     )
     assert mod.convert(text.encode(), "activities.csv") == (
-        "2024-03-03 run: Harbour Loop, distance not given, 0:28:14 (Sunday 3 March 2024, started 07:15 UTC)\n"
+        "2024-03-03 07:15Z Harbour Loop, ?, 0:28:14\n"
     )
 
 
 def test_a_gpx_track_is_its_haversine_distance_and_its_elapsed_time():
     assert mod.convert(GPX, "Harbour_Loop.gpx") == (
-        "2024-03-03 run: Harbour Loop, 5.6 km in 0:28:14 (Sunday 3 March 2024, started 07:15 UTC)\n"
+        "2024-03-03 07:15Z Harbour Loop, 5.6, 0:28:14\n"
     )
 
 
@@ -208,14 +204,12 @@ def test_a_gpx_gz_is_read_through_gzip_and_written_with_txt_added(tmp_path):
         tmp_path, {"activities/11234.gpx.gz": gzip.compress(GPX, mtime=0)}
     )
     assert got.returncode == 0, got.stderr
-    assert (
-        (out / "activities/11234.gpx.gz.txt")
-        .read_text(encoding="utf-8")
-        .startswith("2024-03-03 run: Harbour Loop, 5.6 km")
+    assert (out / "activities/11234.gpx.gz.txt").read_text(encoding="utf-8") == (
+        "2024-03-03 07:15Z Harbour Loop, 5.6, 0:28:14\n"
     )
 
 
-def test_gpx_10_its_offset_kept_its_segments_not_joined_and_a_number_type_kept():
+def test_gpx_10_its_offset_kept_and_its_segments_not_joined():
     data = b"""<?xml version="1.0"?>
 <gpx version="1.0" creator="x" xmlns="http://www.topografix.com/GPX/1/0"><name>Old file</name>
 <trk><type>9</type><trkseg>
@@ -225,7 +219,7 @@ def test_gpx_10_its_offset_kept_its_segments_not_joined_and_a_number_type_kept()
 <trkpt lat="5.01" lon="5"><time>2024-03-03T09:20:00+01:00</time></trkpt></trkseg></trk></gpx>"""
     # two segments of 1.11 km each; the 785 km between them is not walked
     assert mod.convert(data, "old.gpx") == (
-        "2024-03-03 activity (type 9): Old file, 2.2 km in 1:05:00 (Sunday 3 March 2024, started 08:15 +01:00)\n"
+        "2024-03-03 08:15+01:00 Old file, 2.2, 1:05:00\n"
     )
 
 
@@ -233,9 +227,7 @@ def test_a_time_with_no_zone_is_shown_as_written_and_no_zone_is_guessed():
     data = b"""<gpx version="1.1" xmlns="http://www.topografix.com/GPX/1/1"><trk><name>Walk</name><type>walking</type><trkseg>
 <trkpt lat="0" lon="0"><time>2024-03-03T23:50:00</time></trkpt>
 <trkpt lat="0.001" lon="0"><time>2024-03-04T00:10:30</time></trkpt></trkseg></trk></gpx>"""
-    assert mod.convert(data, "w.gpx") == (
-        "2024-03-03 walk: Walk, 111 m in 0:20:30 (Sunday 3 March 2024, started 23:50)\n"
-    )
+    assert mod.convert(data, "w.gpx") == "2024-03-03 23:50 Walk, 0.11, 0:20:30\n"
 
 
 def test_a_gpx_of_waypoints_only_has_no_activity_and_a_track_with_no_times_says_so():
@@ -247,34 +239,59 @@ def test_a_gpx_of_waypoints_only_has_no_activity_and_a_track_with_no_times_says_
         is None
     )
     data = b'<gpx version="1.1"><metadata><time>2024-05-01T10:00:00Z</time></metadata><trk><name>Hill</name><type>hiking</type><trkseg><trkpt lat="0" lon="0"/><trkpt lat="0.02" lon="0"/></trkseg></trk></gpx>'
-    assert mod.convert(data, "h.gpx") == (
-        "date not given hike: Hill, 2.2 km, time not given\n"
-    )
+    assert mod.convert(data, "h.gpx") == "? Hill, 2.2, ?\n"
 
 
-def test_a_tcx_activity_is_its_laps_added_up_and_its_sport_as_a_word():
+def test_a_tcx_activity_is_its_laps_added_up_with_its_notes():
     assert mod.convert(TCX, "ride.tcx") == (
-        "2024-03-05 ride, 21.4 km in 0:55:14 (Tuesday 5 March 2024, started 16:20 UTC)\n"
-        "note: Commute home, headwind\n"
+        "2024-03-05 16:20Z, 21.4, 0:55:14\nCommute home, headwind\n"
     )
     assert mod.convert(gzip.compress(TCX, mtime=0), "ride.tcx.gz") == mod.convert(
         TCX, "ride.tcx"
     )
 
 
-def test_types_are_the_words_a_person_says():
-    assert [mod.kind(x) for x in ("Run", "Ride", "Walk", "Hike", "Swim", "running",
-            "Biking", "TrailRun", "E-Bike Ride", "Weight Training", "", "16", "Other")] == [
-        "run", "ride", "walk", "hike", "swim", "run", "ride", "trail run",
-        "e-bike ride", "weight training", "activity", "activity (type 16)", "activity"]  # fmt: skip
-
-
 def test_distances_and_times_are_rounded_as_a_person_reads_them():
-    assert [mod.distance(m) for m in (None, 0, 999.4, 999.6, 1000, 5230.5, 42195)] == [
-        "distance not given", "0 m", "999 m", "1000 m", "1.0 km", "5.2 km", "42.2 km"]  # fmt: skip
+    assert [mod.distance(m) for m in (None, 0, 4.9, 999.4, 999.6, 1000, 5230.5, 42195)] == [
+        "?", "0.00", "0.00", "1.00", "1.00", "1.0", "5.2", "42.2"]  # fmt: skip
     assert [mod.duration(s) for s in (None, -1, 0, 59.6, 3599, 3600, 90061)] == [
-        "time not given", "time not given", "0:00:00", "0:01:00", "0:59:59",
-        "1:00:00", "25:01:01"]  # fmt: skip
+        "?", "?", "0:00:00", "0:01:00", "0:59:59", "1:00:00", "25:01:01"]  # fmt: skip
+
+
+def test_no_word_of_the_readers_own_answers_a_question_the_folder_cannot():
+    """A word the reader wrote into every passage ("run", "km", "UTC", a
+    weekday) would let a question about something the folder doesn't hold be
+    answered by any activity. Pair each word most passages hold with one the
+    folder doesn't: nothing is served. The real questions still land."""
+    texts = {
+        "activities.csv.txt": mod.convert(CSV.encode(), "activities.csv"),
+        "activities/11234.gpx.gz.txt": mod.convert(GPX, "11234.gpx"),
+        "activities/11236.tcx.txt": mod.convert(TCX, "11236.tcx"),
+    }
+    pile = [
+        {"path": path, "line": i, "text": t, "id": mod.kernel.h256(t)}
+        for path, text in texts.items()
+        for i, t in enumerate(text.strip().split("\n\n"), 1)
+    ]
+    # the reader adds no word of its own: every word a passage holds is one
+    # the files hold, or a date, a clock or a number
+    source = set(mod.kernel.words(CSV + GPX.decode() + TCX.decode()))
+    added = {w for c in pile for w in mod.kernel.words(c["text"])} - source
+    assert not [w for w in added if not any(ch.isdigit() for ch in w)], added
+    # and the words it used to add hold nothing alone (paths as Strava's export
+    # names them, whose own folder is "activities")
+    for w in ("run", "ride", "km", "utc", "march", "sunday", "started", "given"):
+        assert mod.kernel.rank(pile, f"{w} volcano") == [], w
+    assert mod.kernel.rank(pile, "when did I run a marathon") == []
+    for question, starts in (
+        ("how far was the harbour loop", "2024-03-03 07:15Z Harbour Loop"),
+        ("when was the lunch swim", "2024-03-04 17:40Z Lunch Swim"),
+        ("the commute home in a headwind", "2024-03-05 16:20Z, 21.4"),
+        ("which shoes, Pegasus 40?", "2024-03-03 07:15Z Harbour Loop"),
+        ("dales loop", "2024-03-09 09:02Z Dales loop"),
+    ):
+        got = mod.kernel.rank(pile, question)
+        assert got and got[0]["text"].startswith(starts), question
 
 
 def test_a_fit_file_is_skipped_counted_and_named(tmp_path):
@@ -337,7 +354,9 @@ def test_a_gz_that_opens_too_big_is_skipped(tmp_path, monkeypatch):
     else:
         raise AssertionError("a .gz bigger than the limit is refused")
     monkeypatch.setattr(mod, "GZ_LIMIT", len(GPX))
-    assert mod.convert(gzip.compress(GPX), "x.gpx.gz").startswith("2024-03-03 run")
+    assert mod.convert(gzip.compress(GPX), "x.gpx.gz").startswith(
+        "2024-03-03 07:15Z Harbour Loop"
+    )
 
 
 def test_a_folder_with_nothing_to_read_waits_on_you(tmp_path):
@@ -373,24 +392,18 @@ def test_fractions_of_a_second_count_toward_the_elapsed_time():
     data = b"""<gpx version="1.1" xmlns="http://www.topografix.com/GPX/1/1"><trk><type>running</type><trkseg>
 <trkpt lat="0" lon="0"><time>2015-12-11T15:43:13.000+01:00</time></trkpt>
 <trkpt lat="0" lon="0.0001"><time>2015-12-11T15:43:13.994+01:00</time></trkpt></trkseg></trk></gpx>"""
-    assert mod.convert(data, "x.gpx") == (
-        "2015-12-11 run, 11 m in 0:00:01 (Friday 11 December 2015, started 15:43 +01:00)\n"
-    )
+    assert mod.convert(data, "x.gpx") == ("2015-12-11 15:43+01:00, 0.01, 0:00:01\n")
 
 
-def test_a_short_track_is_in_whole_metres_and_a_single_point_has_no_distance():
+def test_a_short_track_is_in_km_to_two_places_and_a_single_point_has_no_distance():
     data = b"""<gpx version="1.1" xmlns="http://www.topografix.com/GPX/1/1"><trk><name>Pool</name><type>walking</type><trkseg>
 <trkpt lat="0" lon="0"><time>2024-03-03T10:00:00Z</time></trkpt>
-<trkpt lat="0.006" lon="0"><time>2024-03-03T10:08:00Z</time></trkpt></trkseg></trk></gpx>"""
-    # 0.006 degrees of latitude is 667.17 m
-    assert mod.convert(data, "w.gpx").startswith(
-        "2024-03-03 walk: Pool, 667 m in 0:08:00"
-    )
+<trkpt lat="0.00454" lon="0"><time>2024-03-03T10:08:00Z</time></trkpt></trkseg></trk></gpx>"""
+    # 0.00454 degrees of latitude is 504.8 m: 0.50 km, not 0.51
+    assert mod.convert(data, "w.gpx") == "2024-03-03 10:00Z Pool, 0.50, 0:08:00\n"
     one = b"""<gpx version="1.1"><trk><name>Start</name><trkseg>
 <trkpt lat="0" lon="0"><time>2024-03-03T10:00:00Z</time></trkpt></trkseg></trk></gpx>"""
-    assert mod.convert(one, "o.gpx") == (
-        "2024-03-03 activity: Start, distance and time not given (Sunday 3 March 2024, started 10:00 UTC)\n"
-    )
+    assert mod.convert(one, "o.gpx") == "2024-03-03 10:00Z Start, ?, ?\n"
 
 
 def test_the_gz_limit_is_the_one_the_card_promises():
