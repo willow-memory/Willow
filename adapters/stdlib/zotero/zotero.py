@@ -10,24 +10,32 @@ annotation becomes one passage that begins with the item's citation, so a
 question about a paper, a note or a highlight finds which paper it was:
 
     Example, Sample & Lee (2020). Tides of the Estuary. Journal of Tides.
-    journal article, added 2021-03-04 10:22 UTC
-    date: March 2020
-    creators: Ada Example (author); Cy Sample (author); Bo Lee (author)
-    doi: 10.1000/xyz123
-    tags: tides, estuaries
-    collections: Thesis / Chapter 2
+    2021-03-04 10:22
+    March 2020
+    Ada Example; Cy Sample; Bo Lee; Di Moss
+    12(3), 45-67
+    10.1000/xyz123
+    estuaries, tides
+    Thesis / Chapter 2
 
-    Example, Sample & Lee (2020). Tides of the Estuary. Journal of Tides, p. 12:
+    Example, Sample & Lee (2020). Tides of the Estuary. Journal of Tides, at 12:
     "the tide turns twice a day" — check this against Lee
-    highlight, yellow, made 2023-05-01 09:00 UTC
+    2023-05-01 09:00
 
-Only regular items are passages (not attachments, notes or annotations as
-items), and nothing in the trash. A year is read from the item's date field
-alone, never guessed: an item without one is "(n.d.)". A note's HTML is read
-as the words it shows; a standalone note starts with "note:". An ink or image
-annotation with no text is left out and counted on the last line. Times are
-Zotero's own, in UTC. A long note or abstract is cut into passages that each
-start with the citation again.
+Only the library's own words and numbers are written: no labels, no "added",
+no type or colour words, which would sit in every passage and let a question
+about something the library doesn't hold be answered by any of them. An item
+is its citation, when it was added (UTC), its date as written, all its
+creators in Zotero's order, volume(issue), pages,
+place, ISBN, ISSN, DOI, URL, the rest of where it appeared, its tags and its
+collections, each on its own line when it has one. Only regular items are
+passages (not attachments, notes or annotations as items), and nothing in
+the trash. A year is read from the item's date field alone, never guessed:
+an item without one has none in its citation. A note's HTML is read as the
+words it shows; a standalone note starts with its own first line. An ink or
+image annotation with no text is left out and counted in a passage of its
+own at the end; a library with nothing in it says so. A long note or abstract is cut into passages that each start
+with the citation again.
 
 The file is opened read-only and immutable, so SQLite writes no journal
 beside it and FOLDER is unchanged. Each library is written to MIRROR at the
@@ -65,38 +73,26 @@ PUBLISHED = ("publicationTitle", "bookTitle", "proceedingsTitle", "websiteTitle"
              "forumTitle", "encyclopediaTitle", "dictionaryTitle", "programTitle", "conferenceName",
              "publisher", "university", "institution", "repository", "company", "label", "studio",
              "network", "distributor", "court", "reporter", "code")  # fmt: skip
-SHOWN = (("volume", "volume"), ("issue", "issue"), ("pages", "pages"), ("place", "place"),
-         ("ISBN", "isbn"), ("ISSN", "issn"), ("DOI", "doi"), ("url", "url"))  # fmt: skip
-#: Zotero's annotation types, and its eight colours
+SHOWN = ("place", "ISBN", "ISSN", "DOI", "url")
+#: Zotero's annotation types, named only in the count of those with no text
 KINDS = {1: "highlight", 2: "note", 3: "image", 4: "ink", 5: "underline", 6: "text"}
-COLOURS = {"#ffd400": "yellow", "#ff6666": "red", "#5fb236": "green", "#2ea8e5": "blue",
-           "#a28ae5": "purple", "#e56eee": "magenta", "#f19837": "orange", "#aaaaaa": "gray"}  # fmt: skip
 SQLDATE = re.compile(r"(\d{4})-\d\d-\d\d(?: (.*))?$", re.S)
 BLOCK = re.compile(r"<(?:br|/p|/h[1-6]|/li|/div|/blockquote|/pre|/tr)\b[^>]*>", re.I)
 INLINE = re.compile(r"</?(?:b|i|u|s|em|strong|span|a|sub|sup|code|mark)\b[^>]*>", re.I)
 ROOM = kernel.MAX_CHUNK - 1  # a passage, its newlines counted, stays one chunk
 WIDTH = 160  # a line is wrapped here, so the kernel never cuts one short
 HEAD = 240  # a citation longer than this is cut, with an ellipsis
-CITED = 5  # names in a citation before "et al."; every name is on "creators:"
+CITED = 5  # names in a citation before "et al."; every name is on the item's own line
 
 
 def one(value) -> str:
     return " ".join(str(value).split()) if value is not None else ""
 
 
-def words_of(type_name: str) -> str:
-    """journalArticle -> journal article."""
-    return re.sub(r"(?<=[a-z])(?=[A-Z])", " ", type_name).lower()
-
-
 def stamp(value) -> str:
     """Zotero's 'YYYY-MM-DD HH:MM:SS' (UTC) to the minute, else as written."""
     text = one(value)
-    return (
-        f"{text[:16]} UTC"
-        if re.fullmatch(r"\d{4}-\d\d-\d\d \d\d:\d\d:\d\d", text)
-        else text
-    )
+    return text[:16] if re.fullmatch(r"\d{4}-\d\d-\d\d \d\d:\d\d:\d\d", text) else text
 
 
 def year_of(date: str) -> tuple[str, str]:
@@ -105,9 +101,9 @@ def year_of(date: str) -> tuple[str, str]:
     there is no year: never one guessed from anything else."""
     m = SQLDATE.match(date)
     if not m:
-        return "n.d.", one(date)
-    year = m.group(1) if m.group(1) != "0000" else "n.d."
-    return year, one(m.group(2)) or (year if year != "n.d." else "")
+        return "", one(date)
+    year = m.group(1) if m.group(1) != "0000" else ""
+    return year, one(m.group(2)) or year
 
 
 def wrap(line: str) -> list[str]:
@@ -263,7 +259,8 @@ class Library:
         year, _ = year_of(data.get("date", ""))
         title = next((one(data[f]) for f in TITLE if one(data.get(f))), "(untitled)")
         pub = next((one(data[f]) for f in PUBLISHED if one(data.get(f))), "")
-        parts = [f"{who} ({year})" if who else f"{title} ({year})"]
+        when = f" ({year})" if year else ""
+        parts = [f"{who}{when}" if who else f"{title}{when}"]
         if who:
             parts.append(title)
         if pub:
@@ -272,38 +269,30 @@ class Library:
 
     def item(self, i: int) -> list[str]:
         data = self.data.get(i, {})
-        kind, added = self.items[i]
-        lines = [f"{words_of(kind)}, added {added}"]
-        written = year_of(data.get("date", ""))[1]
-        lines.append(f"date: {written}" if written else "date: none")
-        people = self.creators.get(i, [])
-        if people:
-            lines.append("creators: " + "; ".join(f"{f} ({r})" for _, f, r in people))
-        lines += [f"{label}: {one(data[f])}" for f, label in SHOWN if one(data.get(f))]
+        got = lambda f: one(data.get(f))  # noqa: E731
+        lines = [self.items[i][1], year_of(data.get("date", ""))[1]]
+        lines.append("; ".join(f for _, f, _ in self.creators.get(i, [])))
+        issue = f"({got('issue')})" if got("issue") else ""
+        lines.append(", ".join(x for x in (got("volume") + issue, got("pages")) if x))
+        lines += [got(f) for f in SHOWN]
         # the citation names where it appeared; the publisher of a book
         # section, a paper's conference, are said here
-        also = [f for f in PUBLISHED if one(data.get(f))][1:]
-        lines += [f"{words_of(f)}: {one(data[f])}" for f in also]
-        if self.tags.get(i):
-            lines.append("tags: " + ", ".join(self.tags[i]))
-        if self.collections.get(i):
-            lines.append("collections: " + "; ".join(sorted(self.collections[i])))
+        lines += [got(f) for f in PUBLISHED if got(f)][1:]
+        lines.append(", ".join(self.tags.get(i, [])))
+        lines.append("; ".join(sorted(self.collections.get(i, []))))
         cit = self.citation(i)
-        out = pack(cit, lines)
-        abstract = one(data.get("abstractNote"))
-        if abstract:
-            out += pack(cit, ["abstract: " + abstract])
+        out = pack(cit, [x for x in lines if x])
+        if got("abstractNote"):
+            out += pack(cit, [got("abstractNote")])
         return out
 
     def note(self, i: int, parent, html: str) -> list[str]:
-        head = self.citation(parent) if self.regular(parent) else "note:"
-        when = (
-            f"note, written {self.items[i][1]}"
-            if head != "note:"
-            else f"written {self.items[i][1]}"
-        )
-        tags = [f"tags: {', '.join(self.tags[i])}"] if self.tags.get(i) else []
-        return pack(head, [when, *tags, *(note_lines(html) or ["(empty)"])])
+        lines = note_lines(html) or ["(empty)"]
+        if self.regular(parent):
+            head = self.citation(parent)
+        else:  # a standalone note: its own first line
+            head, lines = lines[0], lines[1:]
+        return pack(head, [self.items[i][1], ", ".join(self.tags.get(i, [])), *lines])
 
     def annotation(self, row: tuple, owner) -> list[str]:
         i, _, kind, text, comment, color, page, _ = row
@@ -311,15 +300,13 @@ class Library:
             head = self.citation(owner).removesuffix(".")
         else:  # on a PDF that belongs to no item: the PDF's own title
             head = one(self.data.get(row[1], {}).get("title")) or "attachment"
-        head += f", p. {one(page)}:" if one(page) else ":"
+        head += f", at {one(page)}:" if one(page) else ":"
         text, comment = one(text), one(comment)
         said = " — ".join(
             x for x in (f"\u201c{text}\u201d" if text else "", comment) if x
         )
-        what = ", ".join(x for x in (KINDS.get(kind, f"type {kind}"),
-                                     COLOURS.get(one(color).lower(), one(color))) if x)  # fmt: skip
-        tags = [f"tags: {', '.join(self.tags[i])}"] if self.tags.get(i) else []
-        return pack(head, [said, f"{what}, made {self.items[i][1]}", *tags])
+        tags = ", ".join(self.tags.get(i, []))
+        return pack(head, [x for x in (said, self.items[i][1], tags) if x])
 
 
 def library_text(lib: Library) -> str:
@@ -348,7 +335,6 @@ def library_text(lib: Library) -> str:
             continue
         marks.setdefault(owner if lib.regular(owner) else None, []).append(row)
     passages: list[str] = []
-    n_notes = n_marks = 0
     for key in [*items, None]:
         if key is not None:
             passages += lib.item(key)
@@ -356,19 +342,12 @@ def library_text(lib: Library) -> str:
             notes.get(key, []), key=lambda n: (lib.items[n[0]][1], n[0])
         ):
             passages += lib.note(i, parent, html)
-            n_notes += 1
         for row in marks.get(key, []):
             passages += lib.annotation(row, key)
-            n_marks += 1
-    s = lambda n, word: f"{n} {word}{'' if n == 1 else 's'}"  # noqa: E731
-    head = f"Zotero library: {s(len(items), 'item')}, {s(n_notes, 'note')}, {s(n_marks, 'annotation')}"
-    tail = []
-    if blank:
+    if blank:  # a count, in a passage of its own, in as few words as it takes
         kinds = ", ".join(f"{n} {k}" for k, n in sorted(blank.items()))
-        tail = [
-            f"left out: {s(sum(blank.values()), 'annotation')} with no text ({kinds})"
-        ]
-    return "\n\n".join([head, *passages, *tail]) + "\n"
+        passages.append(f"{sum(blank.values())} annotations with no text: {kinds}")
+    return "\n\n".join(passages or ["no items, notes or annotations"]) + "\n"
 
 
 def library_of(path: Path) -> str | None:

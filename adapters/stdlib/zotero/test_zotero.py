@@ -72,7 +72,7 @@ TYPES = {
     28: "note",
 }
 FIELDS = {1: "title", 2: "abstractNote", 6: "date", 13: "url", 19: "volume", 20: "issue", 32: "pages",
-          38: "publicationTitle", 59: "DOI", 115: "bookTitle", 8: "publisher"}  # fmt: skip
+          38: "publicationTitle", 7: "place", 59: "DOI", 115: "bookTitle", 8: "publisher"}  # fmt: skip
 ROLES = {1: "author", 2: "contributor", 3: "editor"}
 
 
@@ -234,7 +234,7 @@ def run(*argv: str) -> subprocess.CompletedProcess:
 
 def text_of(tmp_path: Path, build=sample) -> str:
     src = tmp_path / "src"
-    src.mkdir(exist_ok=True)
+    src.mkdir(parents=True, exist_ok=True)
     build(src / "zotero.sqlite")
     out = tmp_path / "out"
     got = run("mirror", "--from", str(src), "--to", str(out))
@@ -246,28 +246,24 @@ def passages(text: str) -> list[str]:
     return text.rstrip("\n").split("\n\n")
 
 
-def test_an_item_is_one_passage_with_its_citation_type_doi_tags_and_collections(
-    tmp_path,
-):
+def test_an_item_is_one_passage_of_its_own_words_and_numbers(tmp_path):
     first = next(p for p in passages(text_of(tmp_path)) if p.startswith("Example"))
     assert first.split("\n") == [
         "Example, Sample & Lee (2020). Tides of the Estuary. Journal of Tides.",
-        "journal article, added 2021-03-04 10:22 UTC",
-        "date: March 2020",
-        "creators: Ada Example (author); Cy Sample (author); Bo Lee (author); Di Moss (editor)",
-        "volume: 12",
-        "issue: 3",
-        "pages: 45-67",
-        "doi: 10.1000/xyz123",
-        "tags: estuaries, tides",
-        "collections: Thesis / Chapter 2",
+        "2021-03-04 10:22",
+        "March 2020",
+        "Ada Example; Cy Sample; Bo Lee; Di Moss",
+        "12(3), 45-67",
+        "10.1000/xyz123",
+        "estuaries, tides",
+        "Thesis / Chapter 2",
     ]
 
 
 def test_the_abstract_is_its_own_passage_under_the_citation(tmp_path):
     assert (
         "Example, Sample & Lee (2020). Tides of the Estuary. Journal of Tides.\n"
-        "abstract: We measure the tide at six harbours along the coast."
+        "We measure the tide at six harbours along the coast."
         in passages(text_of(tmp_path))
     )
 
@@ -276,55 +272,51 @@ def test_a_note_is_read_as_the_words_it_shows_under_its_items_citation(tmp_path)
     ps = passages(text_of(tmp_path))
     assert (
         "Example, Sample & Lee (2020). Tides of the Estuary. Journal of Tides.\n"
-        "note, written 2023-05-01 09:00 UTC\nRead for chapter 2.\nAsk Lee about the gauges."
-        in ps
+        "2023-05-01 09:00\nRead for chapter 2.\nAsk Lee about the gauges." in ps
     )
-    assert "note:\nwritten 2023-05-01 09:00 UTC\nBuy a tide table for Brest." in ps
+    assert "Buy a tide table for Brest.\n2023-05-01 09:00" in ps
 
 
-def test_an_annotation_is_quoted_with_its_page_comment_and_colour(tmp_path):
+def test_an_annotation_is_quoted_with_its_page_and_comment(tmp_path):
     assert (
-        "Example, Sample & Lee (2020). Tides of the Estuary. Journal of Tides, p. 12:\n"
+        "Example, Sample & Lee (2020). Tides of the Estuary. Journal of Tides, at 12:\n"
         "“the tide turns twice a day” — check this against Lee\n"
-        "highlight, yellow, made 2023-05-02 08:30 UTC" in passages(text_of(tmp_path))
+        "2023-05-02 08:30" in passages(text_of(tmp_path))
     )
 
 
-def test_ink_and_image_annotations_with_no_text_are_counted_not_shown(tmp_path):
+def test_ink_and_image_annotations_with_no_text_are_counted_in_a_passage_of_their_own(
+    tmp_path,
+):
     text = text_of(tmp_path)
-    assert text.endswith("\n\nleft out: 2 annotations with no text (1 image, 1 ink)\n")
-    assert "p. 13" not in text and "p. 14" not in text
-    assert text.startswith("Zotero library: 2 items, 2 notes, 1 annotation\n\n")
+    assert text.endswith("\n\n2 annotations with no text: 1 image, 1 ink\n")
+    assert "at 13" not in text and "at 14" not in text
+    assert text.startswith("Coastal Survey Office. A Book")
 
 
-def test_a_single_field_name_and_no_date_say_so_and_never_guess_a_year(tmp_path):
+def test_a_single_field_name_and_no_date_never_guess_a_year(tmp_path):
     ps = passages(text_of(tmp_path))
     book = next(p for p in ps if p.startswith("Coastal"))
-    assert book.split("\n")[:3] == [
-        "Coastal Survey Office (n.d.). A Book With No Date. Harbour Press.",
-        "book, added 2021-03-04 10:22 UTC",
-        "date: none",
+    assert book.split("\n") == [
+        "Coastal Survey Office. A Book With No Date. Harbour Press.",
+        "2021-03-04 10:22",
+        "Coastal Survey Office",
     ]
 
 
 def test_the_trash_attachments_notes_and_annotations_are_not_items(tmp_path):
     text = text_of(tmp_path)
     assert "Thrown Away Paper" not in text and "Full Text PDF" not in text
-    assert (
-        sum(
-            p.split("\n")[1].startswith(("journal article", "book"))
-            for p in passages(text)[1:-1]
-        )
-        == 2
-    )
+    # two items, an abstract, two notes, one annotation, the count
+    assert len(passages(text)) == 7
 
 
 def test_the_year_is_only_the_date_fields_own():
     assert mod.year_of("2020-03-00 March 2020") == ("2020", "March 2020")
-    assert mod.year_of("0000-00-00 Spring, some year") == ("n.d.", "Spring, some year")
-    assert mod.year_of("circa 1990") == ("n.d.", "circa 1990")
+    assert mod.year_of("0000-00-00 Spring, some year") == ("", "Spring, some year")
+    assert mod.year_of("circa 1990") == ("", "circa 1990")
     assert mod.year_of("2020-00-00") == ("2020", "2020")
-    assert mod.year_of("") == ("n.d.", "")
+    assert mod.year_of("") == ("", "")
 
 
 def test_two_names_three_names_and_more_than_five(tmp_path):
@@ -342,12 +334,14 @@ def test_two_names_three_names_and_more_than_five(tmp_path):
         z.creator(ed, 2, "Kale", "K", role=2)
         return z.done()
 
-    heads = [p.split("\n")[0] for p in passages(text_of(tmp_path, build))[1:]]
-    assert heads == [
+    ps = passages(text_of(tmp_path, build))
+    assert [p.split("\n")[0] for p in ps] == [
         "Ash & Birch (2001). Two.",
         "Cedar, Dogwood, Elm, Fir, Gum et al. (2002). Many.",
         "Ivy & Juniper (2003). Edited.",
     ]
+    assert "Cedar; Dogwood; Elm; Fir; Gum; Hazel" in ps[1].split("\n")
+    assert "I Ivy; J Juniper; K Kale" in ps[2]
 
 
 def test_a_trashed_parent_takes_its_notes_and_annotations_with_it(tmp_path):
@@ -365,11 +359,8 @@ def test_a_trashed_parent_takes_its_notes_and_annotations_with_it(tmp_path):
 
     text = text_of(tmp_path, build)
     assert "orphaned" not in text and "trashed" not in text and "Trashed" not in text
-    assert (
-        "Loose scan:\na loose comment\nnote, yellow, made 2023-05-02 08:30 UTC"
-        in passages(text)
-    )
-    assert text.startswith("Zotero library: 1 item, 0 notes, 1 annotation\n")
+    assert "Loose scan:\na loose comment\n2023-05-02 08:30" in passages(text)
+    assert passages(text)[0].startswith("Kept (2021).") and len(passages(text)) == 2
 
 
 def test_a_trashed_collection_and_its_children_are_not_named(tmp_path):
@@ -385,7 +376,7 @@ def test_a_trashed_collection_and_its_children_are_not_named(tmp_path):
         return z.done()
 
     text = text_of(tmp_path, build)
-    assert "collections: Reading\n" in text and "Old" not in text
+    assert passages(text)[0].split("\n")[-1] == "Reading" and "Old" not in text
 
 
 def test_an_rss_feeds_items_are_not_the_library(tmp_path):
@@ -424,7 +415,7 @@ def test_a_long_note_is_cut_into_passages_that_each_keep_the_citation(tmp_path):
     )
 
 
-def test_an_annotation_type_zotero_adds_later_is_named_by_its_number(tmp_path):
+def test_an_annotation_type_zotero_adds_later_is_counted_by_its_number(tmp_path):
     def build(path):
         z = Lib(path)
         pdf = z.pdf(z.item("journalArticle", date="2020-00-00 2020", title="New"))
@@ -433,22 +424,28 @@ def test_an_annotation_type_zotero_adds_later_is_named_by_its_number(tmp_path):
         return z.done()
 
     text = text_of(tmp_path, build)
-    assert "“a future kind”\ntype 9, #123456, made " in text
-    assert text.endswith("\n\nleft out: 1 annotation with no text (1 type 9)\n")
+    assert "New (2020)., at 12:" not in text
+    assert "“a future kind”\n2023-05-02 08:30" in text
+    assert text.endswith("\n\n1 annotations with no text: 1 type 9\n")
 
 
 def test_a_book_sections_book_is_cited_and_its_publisher_is_not_lost(tmp_path):
     def build(path):
         z = Lib(path)
         s = z.item("bookSection", date="2015-00-00 2015", title="Sediment",
-                   bookTitle="Coastal Processes", publisher="Springer")  # fmt: skip
+                   bookTitle="Coastal Processes", publisher="Springer", place="Cham")  # fmt: skip
         z.creator(s, 0, "Weiss", "Hannah")
         return z.done()
 
-    item = passages(text_of(tmp_path, build))[1].split("\n")
-    assert item[0] == "Weiss (2015). Sediment. Coastal Processes."
-    assert item[1] == "book section, added 2021-03-04 10:22 UTC"
-    assert "publisher: Springer" in item and "book title: Coastal Processes" not in item
+    item = passages(text_of(tmp_path, build))[0].split("\n")
+    assert item == [
+        "Weiss (2015). Sediment. Coastal Processes.",
+        "2021-03-04 10:22",
+        "2015",
+        "Hannah Weiss",
+        "Cham",
+        "Springer",
+    ]
 
 
 def test_an_overlong_citation_is_cut_with_an_ellipsis():
@@ -463,9 +460,70 @@ def test_the_kernel_finds_a_highlight_by_its_words_and_says_whose_it_is(tmp_path
     assert top and top[0]["text"].startswith("Example, Sample & Lee (2020)")
     noted = kernel.rank(pile, "what did I note about the gauges")
     assert noted and "Ask Lee about the gauges." in noted[0]["text"]
-    assert all("left out" not in c["text"] for c in noted), "a count is no note"
+    assert all("no text" not in c["text"] for c in noted), "a count is no note"
+    # with no "doi:" label the paper's note and highlight hold as much of
+    # this as its item does, and are newer: the right paper, maybe not its DOI
+    doi = kernel.rank(pile, "the DOI of Tides of the Estuary")
+    assert doi and all(c["text"].startswith("Example, Sample & Lee") for c in doi)
+    # "added" is no longer written, so a paper's newer note and highlight,
+    # which hold its title too, come first: the accepted cost, on the card
     when = kernel.rank(pile, "when did I add Tides of the Estuary")
-    assert when and "added 2021-03-04" in when[0]["text"]
+    assert when and all(c["text"].startswith("Example, Sample & Lee") for c in when)
+
+
+def shelf(path: Path) -> Path:
+    """Items alone, every field filled: the library where a label or a type
+    word would sit in every passage."""
+    z = Lib(path)
+    for n, (who, title, journal, tag) in enumerate([
+        ("Ash", "Salt marsh accretion", "Wetlands", "marsh"),
+        ("Birch", "Dune grass roots", "Coastal Ecology", "dunes"),
+        ("Cedar", "Kelp forest decline", "Marine Biology", "kelp"),
+        ("Dogwood", "Oyster reef restoration", "Restoration Notes", "oysters"),
+        ("Elm", "Seagrass and storms", "Ocean Letters", "seagrass"),
+    ]):  # fmt: skip
+        month = ("January", "February", "March", "April", "May")[n]
+        i = z.item("journalArticle", date=f"201{n}-0{n + 1}-00 {month} 201{n}", title=title,
+                   publicationTitle=journal, DOI=f"10.1000/x{n}", volume=str(n + 3),
+                   issue="2", pages=f"{n}1-{n}9")  # fmt: skip
+        z.creator(i, 0, who, title.split()[0])
+        z.creator(i, 1, who + "ley", journal.split()[0], role=3)
+        z.tag(i, tag)
+    return z.done()
+
+
+def test_no_word_the_reader_adds_answers_a_question_about_something_absent(tmp_path):
+    """A word in most passages of a file (not a date's digits) is asked with a
+    word the library doesn't hold; nothing may be served. A citation, each
+    passage's first line, is the library's own words and kept: one paper with
+    many notes puts its authors and title in most passages, and "Example
+    volcano" is then served that paper, measured below and on the card."""
+    for name, build in (("sample", sample), ("shelf", shelf)):
+        text = text_of(tmp_path / name, build)
+        ps = [set(kernel.words(p)) for p in passages(text)]
+        cited = {w for p in passages(text) for w in kernel.words(p.split("\n")[0])}
+        seen = set().union(*ps) - kernel.FUNCTION - cited
+        common = sorted(
+            w for w in seen
+            if sum(w in p for p in ps) * 2 > len(ps) and not w.isdigit()
+        )  # fmt: skip
+        pile = kernel.chunks(tmp_path / name / "out")
+        for w in common:
+            assert kernel.rank(pile, f"{w} volcano") == [], (name, w)
+        assert common == [], (name, common)  # none: the reader adds no such word
+    pile = kernel.chunks(tmp_path / "sample" / "out")
+    served = kernel.rank(pile, "Example volcano")
+    assert served and all(c["text"].startswith("Example, Sample & Lee") for c in served)
+    pile = kernel.chunks(tmp_path / "shelf" / "out")
+    assert kernel.rank(pile, "kelp forest decline")[0]["text"].startswith(
+        "Cedar (2012)"
+    )
+    for q in ("when did I add Kelp forest decline", "the DOI of Kelp forest decline"):
+        got = [c["text"] for c in kernel.rank(pile, q)]
+        assert any("\n2021-03-04 10:22\n" in t and "10.1000/x2" in t for t in got), q
+    for gone in ("doi volcano", "added volcano", "journal volcano", "author volcano",
+                 "article volcano", "abstract volcano", "tags volcano"):  # fmt: skip
+        assert kernel.rank(pile, gone) == [], gone
 
 
 def test_the_folder_is_unchanged_and_no_journal_or_wal_appears(tmp_path):
@@ -531,8 +589,7 @@ def test_hidden_files_and_folders_are_not_read(tmp_path):
 
 def test_an_empty_library_says_so(tmp_path):
     assert (
-        text_of(tmp_path, lambda p: Lib(p).done())
-        == "Zotero library: 0 items, 0 notes, 0 annotations\n"
+        text_of(tmp_path, lambda p: Lib(p).done()) == "no items, notes or annotations\n"
     )
 
 
