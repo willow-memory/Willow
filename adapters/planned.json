@@ -1000,15 +1000,6 @@
   "network": "the endpoint you configure, to ask your sealed questions"
  },
  {
-  "name": "model-fit",
-  "kind": "stdlib",
-  "section": "Assistants",
-  "line": "Whether this machine's GPU, NPU or Apple silicon can run a local model, and about how fast, before you download one.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none"
- },
- {
   "name": "model-recall",
   "kind": "stdlib",
   "section": "Trust and proof",
