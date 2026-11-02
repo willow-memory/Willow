@@ -183,6 +183,12 @@ says how). The first was v0.1.0.
   save a pick as a batch; look it over, seal it, put it together and start
   it. `ui/assemble.py` makes the stack from this willow, outside the
   repository. CI runs its tests as `tests:ui`. (#156)
+- `warc`, web archives read without unpacking: each page a .warc, .warc.gz
+  or .wacz captured (Heritrix, wget, the Internet Archive, Webrecorder) as a
+  passage under its capture time, address and title, then its paragraphs.
+  Records are read by their length; chunked, gzipped and deflated bodies are
+  read, and revisits, requests, redirects, images, scripts and Brotli bodies
+  are passed over and counted per file. (#182)
 - Cards say what an add-on leans on: `uses` (the add-ons it needs beside it,
   to run or to be tested), `looks-for` (the ones it uses when they're there,
   saying so when they aren't) and `runs-in: repo` (a tool for willow's own
