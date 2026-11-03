@@ -7,6 +7,7 @@
     python adapters/stdlib/share/share.py check   --package FILE
     python adapters/stdlib/share/share.py log     --box DIR
     python adapters/stdlib/share/share.py witness --box DIR --package FILE[,...]
+    python adapters/stdlib/share/share.py rotate  --box DIR --id IDFILE --to NEWIDFILE [--now TS]
 
 A seal is an HMAC under your key: only that key can check it, so it can't
 travel. A package can. `id` makes you an identity of your own, an Ed25519
@@ -29,6 +30,17 @@ passed the old one on to, so the correction can follow it.
 
 `check` reads a package alone, every layer, and `log` lists what your record
 says you sent and received.
+
+`rotate` changes your identity loudly, never silently: a new key, signed by
+the old and accepted by the new, on your record, and carried in every
+package from then on, so whoever had your old key sees the new one as yours.
+A record speaks with one key at a time: `send` and `forward` refuse any
+other. `receive` names a key's rung on your own chain, willow-gate's names
+earned from its packages that held (rookie, then steady from one, veteran
+from five), never from anything a package says; and says loudly when a
+chain you know speaks with a key it never rotated to. Every layer also says,
+inside its signature, what it proves: who signed it and what it shows,
+never that the sender's record holds nothing else.
 
 `witness` holds a box's record to the packages other people kept. Each layer
 of a package is signed over where its sender's record stood when it was
@@ -62,8 +74,17 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import ed25519  # noqa: E402
 
 MARK = b"willow-share/1\x1f"  # what a signature is over, before the layer
+TURN = b"willow-share-rotate/1\x1f"  # what a rotation's two signatures are over
+#: what a package proves, inside its signature so it can't be stripped or
+#: raised: willow-gate's sidecar label, authenticity and never completeness
+PROVES = ("who signed each layer, the answers and rows it shows, and where the "
+          "sender's record stood; never that the record holds nothing else")  # fmt: skip
 LAYER = {"share", "from", "for", "chain", "ts", "note", "replaces",
-         "answers", "wraps", "rows", "sig"}  # fmt: skip
+         "answers", "wraps", "rows", "proves", "rotations", "sig"}  # fmt: skip
+TURNED = {"old", "new", "start", "at", "sig_old", "sig_new"}
+#: willow-gate's ladder names for a key, earned on your own chain from its
+#: packages that held: (fewest packages that held, name), highest first
+RUNGS = ((5, "veteran"), (1, "steady"), (0, "rookie"))
 ANSWER = {"path", "data", "cites", "claim", "bite_key", "places", "rows"}
 CHAIN = {"start", "rows", "tip"}
 DEEPEST = 64  # layers a package may have
@@ -77,6 +98,7 @@ FLAGS = {
     "check": ({"--package"}, set()),
     "log": ({"--box"}, set()),
     "witness": ({"--box", "--package"}, set()),
+    "rotate": ({"--box", "--id", "--to"}, {"--now"}),
 }  # fmt: skip
 
 
@@ -205,6 +227,9 @@ def problems(pkg: object, depth: int = 0) -> list[str]:
         out.append(f"{at}: ts and note are text")
     if pkg["replaces"] is not None and not is_package_id(pkg["replaces"]):
         out.append(f"{at}: replaces names a package")
+    if pkg["proves"] != PROVES:
+        out.append(f"{at}: it says it proves something else than a package proves")
+    out += turn_problems(pkg["rotations"], pkg["from"], chain["start"], at)
     answers, rows = pkg["answers"], pkg["rows"]
     if not isinstance(answers, list) or not isinstance(rows, list):
         return out + [f"{at}: answers and rows are lists"]
@@ -230,9 +255,49 @@ def problems(pkg: object, depth: int = 0) -> list[str]:
         out.append(
             f"{at}: its row isn't the sender's record of receiving what it wraps"
         )
-    if isinstance(inner, dict) and inner.get("for") != pkg["from"]:
+    turns = pkg["rotations"] if isinstance(pkg["rotations"], list) else []
+    keys = [t.get("old") for t in turns if isinstance(t, dict)] + [pkg["from"]]
+    if isinstance(inner, dict) and inner.get("for") not in keys:
         out.append(f"{at}: what it wraps was for someone else, not its sender")
     return out + problems(inner, depth + 1)
+
+
+def turn_part(turn: dict) -> bytes:
+    return (
+        TURN
+        + kernel.canon({k: turn[k] for k in ("old", "new", "start", "at")}).encode()
+    )
+
+
+def turn_problems(turns: object, key: str, start: str, at: str) -> list[str]:
+    """Why a layer's rotations don't hold: each signed by the key it leaves
+    and the key it goes to, for this chain, one after another, ending at the
+    key that signed the layer. None at all is a key never rotated."""
+    if not isinstance(turns, list):
+        return [f"{at}: rotations are a list"]
+    out, last = [], None
+    for i, t in enumerate(turns):
+        if not isinstance(t, dict) or t.keys() != TURNED or not all(
+            is_hex(t[k], n) for k, n in
+            (("old", 64), ("new", 64), ("start", 64), ("sig_old", 128), ("sig_new", 128))
+        ) or not isinstance(t["at"], str):  # fmt: skip
+            return out + [f"{at}: rotation {i} is not one"]
+        part = turn_part(t)
+        if not (
+            ed25519.check(bytes.fromhex(t["old"]), part, bytes.fromhex(t["sig_old"]))
+            and ed25519.check(
+                bytes.fromhex(t["new"]), part, bytes.fromhex(t["sig_new"])
+            )
+        ):
+            out.append(f"{at}: rotation {i} isn't signed by both its keys")
+        if t["start"] != start:
+            out.append(f"{at}: rotation {i} is for another chain")
+        if last is not None and t["old"] != last:
+            out.append(f"{at}: rotation {i} doesn't follow the one before it")
+        last = t["new"]
+    if last is not None and last != key:
+        out.append(f"{at}: its key isn't the one its rotations end at")
+    return out
 
 
 def answer_problems(ans: object, at: str) -> list[str]:
@@ -308,7 +373,8 @@ def pack(seed: bytes, rows: list[dict], to_key: str, ts: str, note: str,
     layer = {
         "share": 1, "from": ed25519.public(seed).hex(), "for": to_key,
         "chain": stood(rows), "ts": ts, "note": note, "replaces": replaces,
-        "answers": answers, "wraps": wraps, "rows": its_rows,
+        "answers": answers, "wraps": wraps, "rows": its_rows, "proves": PROVES,
+        "rotations": turns_of(rows),
     }  # fmt: skip
     layer["sig"] = ed25519.sign(seed, signed_part(layer)).hex()
     return layer
@@ -322,12 +388,75 @@ def out_of_box(box: Path, opts: dict) -> tuple[list[dict], bytes | None, str | N
     seed, why = read_id(Path(opts["--id"]), box)
     if why:
         return [], None, why
+    why = not_current(rows, ed25519.public(seed).hex())
+    if why:
+        return [], None, why
     if not is_hex(opts["--for"], 64):
         return [], None, "--for is the public key id printed for them, 64 hex"
     rep = opts.get("--replaces")
     if rep is not None and not (is_package_id(rep) and mine(rows, "sent", rep)):
         return [], None, f"--replaces {rep} is not a package your record says you sent"
     return rows, seed, None
+
+
+def turns_of(rows: list[dict]) -> list[dict]:
+    return [{k: r[k] for k in TURNED} for r in rows if r["kind"] == "rotated"]
+
+
+def current(rows: list[dict]) -> str | None:
+    """The key this record speaks with: the last it rotated to, else the
+    one it first sent or received with; None when it has done neither."""
+    turns = turns_of(rows)
+    if turns:
+        return turns[-1]["new"]
+    return next((r.get("key") for r in rows if r["kind"] in ("sent", "received")), None)
+
+
+def not_current(rows: list[dict], key: str) -> str | None:
+    """Why this key may not sign for this record, or None. A record speaks
+    with one key at a time; another is a rotation, never a silent swap."""
+    now = current(rows)
+    if now is None or now == key:
+        return None
+    if any(t["old"] == key for t in turns_of(rows)):
+        return (
+            f"this identity was rotated away; this record speaks with {short(now)} now"
+        )
+    return (f"this record speaks with {short(now)}; to change key, rotate "
+            "(share.py rotate), never swap it silently")  # fmt: skip
+
+
+def do_rotate(opts: dict, ts: str) -> int:
+    box = Path(opts["--box"])
+    rows, why = chain_of(box)
+    if why:
+        return refuse(why)
+    seed, why = read_id(Path(opts["--id"]), box)
+    if why:
+        return refuse(why)
+    old = ed25519.public(seed).hex()
+    if current(rows) is None:
+        return refuse("this record has sent nothing; there is no key to rotate from")
+    why = not_current(rows, old)
+    if why:
+        return refuse(why)
+    new_seed = os.urandom(32)
+    turn = {"old": old, "new": ed25519.public(new_seed).hex(),
+            "start": rows[0]["hash"], "at": ts}  # fmt: skip
+    part = turn_part(turn)
+    turn.update(sig_old=ed25519.sign(seed, part).hex(),
+                sig_new=ed25519.sign(new_seed, part).hex())  # fmt: skip
+    why = new_file(Path(opts["--to"]), f"ed25519 {new_seed.hex()}\n", 0o600, box)
+    if why:
+        return refuse(why)
+    row = kernel.append(box, ts, "rotated", who="share", **turn)
+    print(turn["new"])
+    print(
+        f"rotated from {short(old)} at row {row['n']}; the new identity is in "
+        f"{opts['--to']}, and every package from now on carries the rotation",
+        file=sys.stderr,
+    )
+    return kernel.ALIVE
 
 
 def written(box: Path, opts: dict, pkg: dict, ts: str, **fields) -> int:
@@ -391,21 +520,33 @@ def do_forward(opts: dict, ts: str) -> int:
     return written(box, opts, pkg, ts, wraps=iid)
 
 
-def known(rows: list[dict], key: str, start: str) -> str:
-    """Whether a key has signed to you before. Only a package that held
-    counts: a broken one's `from` is only what it claims."""
-    seen = [
-        r
-        for r in rows
-        if r["kind"] == "received" and r.get("from") == key and r.get("from_chain")
-    ]
+def known(rows: list[dict], layer: dict) -> str:
+    """What your record says of a layer's key: its rung, earned only from
+    its packages that held on your chain (a broken one's `from` is only what
+    it claims), through its rotations; and, loudly, a chain you know that
+    now speaks with a key it never rotated to."""
+    key, start = layer["from"], layer["chain"]["start"]
+    line = [t["old"] for t in layer["rotations"]] + [key]
+    held = [r for r in rows if r["kind"] == "received" and r.get("from_chain")]
+    seen = [r for r in held if r.get("from") in line]
+    count = len(seen)
+    rung = next(name for least, name in RUNGS if count >= least)
     if not seen:
-        return "a key you haven't had a package from before"
+        said = f"{rung}: a key you haven't had a package from before"
+    else:
+        said = f"{rung}: {count} package{'s' * (count != 1)} that held, since row {seen[0]['n']}"
+        if any(r.get("from") != key for r in seen):
+            said += f"; first as {short(seen[0]['from'])}, rotated since"
     other = [r["n"] for r in seen if r.get("from_chain") != start]
-    said = f"known since row {seen[0]['n']}"
-    return said + (
-        f"; but it signed for another chain at row {other[0]}" if other else ""
-    )
+    if other:
+        said += f"; but it signed for another chain at row {other[0]}"
+    swap = [
+        r for r in held if r.get("from_chain") == start and r.get("from") not in line
+    ]
+    if swap:
+        said += (f"; and its chain spoke with {short(swap[0]['from'])} at row "
+                 f"{swap[0]['n']}, a key this one is not rotated from")  # fmt: skip
+    return said
 
 
 def do_receive(opts: dict, ts: str) -> int:
@@ -416,6 +557,10 @@ def do_receive(opts: dict, ts: str) -> int:
     seed, why = read_id(Path(opts["--id"]), box)
     if why:
         return refuse(why)
+    me = ed25519.public(seed).hex()
+    why = not_current(rows, me)
+    if why:
+        return refuse(why)
     pkg, why = read_package(Path(opts["--package"]))
     if why:
         return refuse(why)
@@ -424,8 +569,10 @@ def do_receive(opts: dict, ts: str) -> int:
         print(f"already received at row {had['n']}: {had.get('verdict')}")
         return kernel.ALIVE if had.get("verdict") == "good" else kernel.ESCALATE
     found = problems(pkg)
-    me = ed25519.public(seed).hex()
-    held = not found and pkg["for"] == me
+    my_keys = [t["old"] for t in turns_of(rows)] + [
+        me
+    ]  # a key you rotated from is yours
+    held = not found and pkg["for"] in my_keys
     verdict = "good" if held else "not-for-you" if not found else "broken"
     fields = {"from": pkg.get("from"), "replaces": pkg.get("replaces")}
     fields["from_chain"] = (pkg.get("chain") or {}).get("start") if not found else None
@@ -434,12 +581,12 @@ def do_receive(opts: dict, ts: str) -> int:
         print(f"  {p}")
     if not found:
         said(pkg, rows)
-        if pkg["for"] != me:
+        if pkg["for"] not in my_keys:
             print(f"  it is for {short(pkg['for'])}, not you")
         follow(rows, pkg["replaces"])
     row = kernel.append(box, ts, "received", who="share", package=pid,
                         verdict=verdict, layers=len(layers(pkg)) if not found else None,
-                        **fields)  # fmt: skip
+                        key=me, **fields)  # fmt: skip
     print(f"row {row['n']}: received, not sealed by you")
     return kernel.ALIVE if held else kernel.ESCALATE
 
@@ -449,7 +596,7 @@ def said(pkg: dict, rows: list[dict] | None) -> None:
     for i, layer in enumerate(layers(pkg)):
         who = short(layer["from"])
         if rows is not None:
-            who += f" ({known(rows, layer['from'], layer['chain']['start'])})"
+            who += f" ({known(rows, layer)})"
         note = f' "{layer["note"]}"' if layer["note"] else ""
         print(f"  {'  ' * i}{'└ ' if i else ''}from {who}, {layer['ts']}{note}")
         for a in layer["answers"]:
@@ -503,6 +650,10 @@ def do_log(opts: dict) -> int:
         elif r["kind"] == "received":
             print(f"row {r['n']}  received  {r['package']} from {short(str(r.get('from')))}"
                   f"  {r.get('verdict')}  {r['ts']}")  # fmt: skip
+        elif r["kind"] == "rotated":
+            print(
+                f"row {r['n']}  rotated   {short(r['old'])} to {short(r['new'])}  {r['ts']}"
+            )
     return kernel.ALIVE
 
 
@@ -571,7 +722,8 @@ def main(argv: list[str]) -> int:
         return do_id(Path(opts["--to"]))
     return {"send": lambda: do_send(opts, ts), "forward": lambda: do_forward(opts, ts),
             "receive": lambda: do_receive(opts, ts), "check": lambda: do_check(opts),
-            "log": lambda: do_log(opts), "witness": lambda: do_witness(opts)}[cmd]()  # fmt: skip
+            "log": lambda: do_log(opts), "witness": lambda: do_witness(opts),
+            "rotate": lambda: do_rotate(opts, ts)}[cmd]()  # fmt: skip
 
 
 if __name__ == "__main__":

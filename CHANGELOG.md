@@ -21,13 +21,19 @@ says how). The first was v0.1.0.
   record to the packages other people kept: each layer is signed over where
   its sender's record stood, so a record rewritten and re-hashed, which
   `verify` can't see, or cut short, is caught by anyone holding a package
-  sent after the change. Ed25519 is written in
+  sent after the change. Three rules come from willow-gate: each layer
+  says what it proves inside its signature (authenticity, never
+  completeness); `rotate` changes a key loudly, signed by the old key and
+  the new and carried in every later package, while any other key is
+  refused; and `receive` names a key's rung (rookie, steady, veteran)
+  earned from its packages that held on your own chain. Ed25519 is written in
   the standard library (`adapters/stdlib/share/ed25519.py`), held to RFC 8032's vectors and to
   ones from an audited library. Its card promises `writes: record, to`
   where the idea said `to`: the `sent` and `received` rows are the point.
   The `share` idea comes off the list. `demo/johnson` passes one report
-  between five people's willows, through a forged copy a correction and a
-  rewritten record that four other people's packages catch, and CI runs it
+  between five people's willows, through a forged copy a correction, a key
+  rotated on the way and a rewritten record that four other people's
+  packages catch, and CI runs it
   as `demo:share`.
 - `ports/rust`, a fifth port of `kernel.py`: Rust, the standard library
   only and no crates, following the Go port function for function. What

@@ -91,6 +91,26 @@ def test_every_kept_package_tells_her_real_record_from_a_rewritten_one(played):
         }, who
 
 
+def test_walts_new_key_is_seen_as_walts(played):
+    out = played["got"].stdout
+    assert "Walt rotates their key (the laptop was replaced)" in out
+    assert (
+        "rotated since"
+        in out.split("Aurelie receives walt-to-aurelie-v2:")[1].split("\n")[2]
+    )
+    assert "not rotated from" not in out
+    pkg = json.loads((played["to"] / "walt-to-aurelie-v2.pkg").read_text())
+    assert pkg["rotations"][0]["old"] == played["doc"]["people"]["walt"]["key"]
+
+
+def test_every_layer_says_what_it_proves(played):
+    for p in played["to"].glob("*.pkg"):
+        pkg = json.loads(p.read_text())
+        while pkg:
+            assert "never that the record holds nothing else" in pkg["proves"], p.name
+            pkg = pkg["wraps"]
+
+
 def test_no_package_holds_a_line_of_anyones_files(played):
     lines = {line.strip() for p in played["life"].rglob("*.md")
              for line in p.read_text().splitlines() if len(line.strip()) > 30}  # fmt: skip

@@ -19,8 +19,9 @@ along the way can change. Each hop is a row on both people's chains.
     python adapters/stdlib/share/share.py check   --package FILE
     python adapters/stdlib/share/share.py log     --box DIR
     python adapters/stdlib/share/share.py witness --box DIR --package FILE[,...]
+    python adapters/stdlib/share/share.py rotate  --box DIR --id IDFILE --to NEWIDFILE
 
-`send`, `forward` and `receive` take `--now TS` as the kernel does.
+`send`, `forward`, `receive` and `rotate` take `--now TS` as the kernel does.
 
 **Why a key of its own.** A seal is an HMAC under your key: only that key
 can check it, so a seal can't travel without giving the key away, and with
@@ -57,6 +58,29 @@ one on, to whom, and the package to name in your own `--replaces`: a
 correction follows the same path the first one took, a hop at a time, and
 everyone's first seal and first receipt stay on their chains.
 
+**willow-gate's rules.** Three come from
+[willow-gate](https://github.com/willow-memory/willow-gate), the agents'
+check-in gate:
+
+- *The label is inside the signature.* Every layer says what it proves,
+  "who signed each layer, the answers and rows it shows, and where the
+  sender's record stood; never that the record holds nothing else", and a
+  layer that says anything else is broken, so the label can be neither
+  stripped nor raised.
+- *A key is rotated, never swapped.* `rotate` writes a new identity to
+  NEWIDFILE and a `rotated` row naming both keys, signed by the old key and
+  by the new. Every package after it carries the record's rotations, so
+  whoever had the old key sees the new one as the same person. A record
+  speaks with one key at a time: `send`, `forward` and `receive` refuse any
+  other, the rotated-away one included. A package for a key you rotated from
+  is still yours, and so is forwarding it.
+- *Trust is earned, not claimed.* `receive` names each key's rung on your
+  own chain, willow-gate's names counted from that key's packages that held
+  (through its rotations): `rookie` until one has, `steady` from one,
+  `veteran` from five. A broken package counts for nothing either way: its
+  sender is only a claim. A chain you know arriving with a key it never
+  rotated to is said loudly.
+
 **The people as witnesses.** Every layer is signed over where its sender's
 record stood, and its `sent` row, with the key that signed, is the next row
 on that record. So everyone who keeps a package holds a signed pin of the
@@ -88,7 +112,7 @@ with an audited library, and checked against that library on random keys
 and messages while it was written. It is not constant-time: fine on your
 own machine, not for a server signing for strangers.
 
-**Exit codes:** 0 done, a package that holds, or a record every witness
+**Exit codes:** 0 done (a rotation written), a package that holds, or a record every witness
 holds to; 42 a package that doesn't hold or isn't for you, or a record a
 witness doesn't hold to, and waits on you; 2 refused.
 

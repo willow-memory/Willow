@@ -23,10 +23,10 @@ afterwards. The people are made up, and so is everything they write down.
    the roofer's quote. Each cites the line it came from. (Sealing is the
    person's act; the scene plays it through the kernel's own `seal`, as
    bernadette's stack test does.)
-2. **Walt asks for the report.** She packs the four answers for his key.
+2. **Walt asks for the report.** She packs the four answers for Walt's key.
    Her chain gets a `sent` row; the package holds the answers, their places
    (`johnson/calls.md:3`) and fingerprints, never her files' text.
-3. **It goes on.** Walt receives it (`received` on his chain) and forwards
+3. **It goes on.** Walt receives it (`received` on Walt's chain) and forwards
    it to Aurelie with "Reviewed, approved"; Aurelie to Tamsin, "For the
    file"; Tamsin to Harold, "Exhibit 4". Harold sees four layers, each
    signed, each by the person the layer inside it was for.
@@ -37,7 +37,10 @@ afterwards. The people are made up, and so is everything they write down.
    2026-03-04; her call log says 2026-03-06. She seals the right answer and
    sends a new report that `--replaces` the first. At each hop `receive`
    says who the old report went to next and which package to name, so the
-   correction walks the same path out to Harold.
+   correction walks the same path out to Harold. On the way, Walt's laptop
+   is replaced: Walt rotates to a new key, signed by the old one and on
+   Walt's chain, and Aurelie's `receive` says `steady: 1 package that held
+   … first as <the old key>, rotated since`, not a stranger.
 6. **The people are the witnesses.** Ines rewrites a copy of her record:
    the seal on her wrong answer backdated, every row after it re-hashed.
    Her own `verify` still says the chain holds; that is the limit
@@ -66,13 +69,18 @@ package holds a line of anyone's files.
   hold proves nothing about who sent it, so now only packages that held
   count.
 - **Inner signers are met only through the outer one.** Harold has never had
-  a package from Ines, only from Tamsin; he can check Ines's signature but
+  a package from Ines, only from Tamsin; Harold can check Ines's signature but
   not that her key is Ines. Who a key belongs to is still learned the old
   way: in person, or from someone you already trust.
 - **Witnesses only for what was sent.** A package pins its sender's record
   up to the row it was signed at. A rewrite of rows after the last package
   anyone holds is unseen until the next one goes out; and a record nobody
   was ever sent anything from has no witness but `tip-pin`.
+- **A rotation has to reach the forward rule.** Walt's correction was
+  packed for Walt's old key; after rotating, Walt's forward of it was refused
+  as "for someone else". A forward is now good when what it wraps was for
+  its signer's key or one its signed rotations leave, and a package for a
+  key you rotated from is still yours at `receive`.
 - **A received answer can't become yours.** The kernel seals only answers
   made from your own files' passages. Walt can pass Ines's report on and
   everyone can check it, but it never becomes Walt's own sealed answer.

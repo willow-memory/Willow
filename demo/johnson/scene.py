@@ -9,7 +9,7 @@ there yet. Then the scene:
 1. Ines asks her own files four questions and seals her answers: the
    person's act, played here as bernadette's stack test plays it, through
    the kernel's own `seal`.
-2. Walt asks for the report. She packs the four for him (share send).
+2. Walt asks for the report. She packs the four for Walt's key (share send).
 3. Walt receives it and forwards it to Aurelie at the insurer; Aurelie to
    Tamsin, its counsel; Tamsin to Harold, the mediator. Each hop is a row on
    both people's chains, and each forward a layer the next can't change.
@@ -18,6 +18,8 @@ there yet. Then the scene:
 5. Ines finds her report gave the wrong day for the call. She seals the
    right answer and sends a new report that replaces the first. At each hop
    `receive` says who the old one went to next, and the correction follows.
+   Walt's laptop is replaced on the way: Walt rotates to a new key, signed by
+   the old, and Aurelie sees the new key as Walt's, not a stranger's.
 6. Ines rewrites a copy of her record: her wrong answer's seal backdated
    and every row after it re-hashed, so her own `verify` still says it
    holds. Each of the others holds her record to the packages they kept
@@ -82,6 +84,7 @@ class Scene:
     def __init__(self, life: Path, to: Path, now: datetime):
         self.life, self.to, self.now = life, to, now
         self.pub: dict[str, str] = {}
+        self.ids: dict[str, Path] = {}
         self.wrong: list[str] = []
         self.packages: dict[str, str] = {}
 
@@ -104,7 +107,7 @@ class Scene:
         return self.to / who / "box"
 
     def share(self, cmd: str, who: str, *argv: str, want=(0,)) -> str:
-        args = ["--box", self.box(who), "--id", self.to / who / "id", *argv]
+        args = ["--box", self.box(who), "--id", self.ids[who], *argv]
         return self.run(SHARE, cmd, *args, "--now", self.ts(), want=want)
 
     # ── the acts ───────────────────────────────────────────────────────────
@@ -114,7 +117,8 @@ class Scene:
             (self.to / who).mkdir()
             self.run(KERNEL, "init", "--box", self.box(who), "--pile", self.life / who,
                      "--key", self.to / who / "key", "--now", self.ts())  # fmt: skip
-            self.pub[who] = self.run(SHARE, "id", "--to", self.to / who / "id").strip()
+            self.ids[who] = self.to / who / "id"
+            self.pub[who] = self.run(SHARE, "id", "--to", self.ids[who]).strip()
             self.say(f"{NAMES[who]:8} box made, identity {self.pub[who][:12]}…")
 
     def seal(self, question: str, source: str, data: str, claim: str) -> str:
@@ -220,6 +224,13 @@ class Scene:
             said = self.receive(who, got)
             if f"--replaces {self.packages[old]}" not in said:
                 self.wrong.append(f"{NAMES[who]} wasn't told where the old one went")
+            if (
+                who == "aurelie"
+                and f"first as {self.pub['walt'][:12]}…, rotated since" not in said
+            ):
+                self.wrong.append("Aurelie didn't see Walt's new key as Walt's")
+            if who == "walt":
+                self.rotate("walt", "the laptop was replaced")
             self.forward(who, got, nxt, name, "Replaces what I sent you", replaces=old)
         final = self.receive("harold", "tamsin-to-harold-v2")
         if "you received at row" not in final or RIGHT not in final:
@@ -230,6 +241,16 @@ class Scene:
 
         self.say("\n── 7. every chain")
         return self.summary()
+
+    def rotate(self, who: str, why: str) -> None:
+        """A new identity, signed by the old one: never a silent swap."""
+        new = self.to / who / "id-2"
+        key = self.run(SHARE, "rotate", "--box", self.box(who), "--id", self.ids[who],
+                       "--to", new, "--now", self.ts()).strip()  # fmt: skip
+        self.say(
+            f"{NAMES[who]} rotates their key ({why}): {self.pub[who][:12]}… to {key[:12]}…"
+        )
+        self.ids[who], self.rotated = new, {who: (self.pub[who], key)}
 
     def witnesses(self) -> None:
         """Each person holds Ines's record to the packages they kept, then to

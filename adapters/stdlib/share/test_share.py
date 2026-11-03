@@ -228,7 +228,7 @@ def test_a_second_package_from_the_same_key_is_known(three):
     b.receive(out / "p1")
     got = b.receive(out / "p2")
     first = [r for r in b.rows() if r["kind"] == "received"][0]["n"]
-    assert f"known since row {first})" in got.stdout
+    assert f"(steady: 1 package that held, since row {first})" in got.stdout
 
 
 def test_receiving_the_same_package_twice_writes_one_row(three):
@@ -755,6 +755,212 @@ def test_one_key_signing_for_two_chains_is_said(three):
     got = b.receive(out / "q")
     row = [r for r in b.rows() if r["kind"] == "received"][0]["n"]
     assert (
-        f"known since row {row}; but it signed for another chain at row {row}"
+        f"steady: 1 package that held, since row {row}; but it signed for another chain at row {row}"
         in got.stdout
     )
+
+
+# ── willow-gate's rules: the label, rotation, earned rungs ─────────────────
+def test_what_a_package_proves_is_inside_its_signature(three):
+    import share as sh  # noqa: PLC0415
+
+    a, b, _, out, subs = three
+    a.send(subs, b, out / "p")
+    pkg = load(out / "p")
+    assert (
+        pkg["proves"] == sh.PROVES
+        and "never that the record holds nothing else" in pkg["proves"]
+    )
+    pkg["proves"] = "everything"
+    broken(b, dump(out / "e", pkg), "layer 0: the signature isn't")
+    pkg = load(out / "p")
+    pkg["proves"] = "the whole record"
+    broken(b, dump(out / "e2", resign(pkg, a.id)),
+           "it says it proves something else than a package proves")  # fmt: skip
+
+
+def rotate(
+    p: "Person", to: Path, idfile: Path | None = None
+) -> subprocess.CompletedProcess:
+    return share("rotate", "--box", p.box, "--id", idfile or p.id, "--to", to, *NOW)
+
+
+def test_rotate_needs_a_key_to_rotate_from(three, tmp_path):
+    a, b, _, out, subs = three
+    got = rotate(b, tmp_path / "new")
+    assert got.returncode == 2 and "there is no key to rotate from" in got.stderr
+    assert not (tmp_path / "new").exists()
+
+
+def test_a_rotation_is_signed_by_both_keys_and_on_the_record(three, tmp_path):
+    import share as sh  # noqa: PLC0415
+
+    a, b, _, out, subs = three
+    a.send(subs, b, out / "p")
+    got = rotate(a, tmp_path / "new")
+    assert got.returncode == 0, got.stderr
+    new = got.stdout.strip()
+    assert (tmp_path / "new").stat().st_mode & 0o777 == 0o600
+    seed = bytes.fromhex((tmp_path / "new").read_text().split()[1])
+    assert ed25519.public(seed).hex() == new
+    [r] = [r for r in a.rows() if r["kind"] == "rotated"]
+    assert (r["old"], r["new"], r["start"]) == (a.pub, new, a.rows()[0]["hash"])
+    assert sh.turn_problems(sh.turns_of(a.rows()), new, r["start"], "x") == []
+    assert (
+        f"rotated   {a.pub[:12]}… to {new[:12]}…" in share("log", "--box", a.box).stdout
+    )
+    got = rotate(a, tmp_path / "again")  # the old key can't rotate twice
+    assert got.returncode == 2 and "rotated away" in got.stderr
+
+
+def test_after_a_rotation_only_the_new_key_signs(three, tmp_path):
+    a, b, _, out, subs = three
+    a.send(subs, b, out / "p1")
+    new = rotate(a, tmp_path / "new").stdout.strip()
+    got = a.send(subs, b, out / "p2")
+    assert got.returncode == 2 and "this identity was rotated away" in got.stderr
+    a.id = tmp_path / "new"
+    got = a.send(subs, b, out / "p2")
+    assert got.returncode == 0, got.stderr
+    pkg = load(out / "p2")
+    assert pkg["from"] == new and [t["old"] for t in pkg["rotations"]] == [a.pub]
+    assert witness(a.box, out / "p1", out / "p2").returncode == 0
+
+
+def test_whoever_had_the_old_key_sees_the_new_one_as_the_same(three, tmp_path):
+    a, b, _, out, subs = three
+    a.send(subs, b, out / "p1")
+    b.receive(out / "p1")
+    rotate(a, tmp_path / "new")
+    a.id = tmp_path / "new"
+    a.send(subs, b, out / "p2")
+    got = b.receive(out / "p2")
+    assert got.returncode == 0, got.stdout
+    first = [r for r in b.rows() if r["kind"] == "received"][0]["n"]
+    assert (f"steady: 1 package that held, since row {first}; first as {a.pub[:12]}…, "
+            "rotated since") in got.stdout  # fmt: skip
+    assert "not rotated from" not in got.stdout
+
+
+def test_a_key_is_never_swapped_silently(three):
+    a, b, c, out, subs = three
+    a.send(subs, b, out / "p")
+    got = share("send", "--box", a.box, "--id", c.id, "--answer", subs[0],
+                "--for", b.pub, "--to", out / "q", *NOW)  # fmt: skip
+    assert got.returncode == 2 and "never swap it silently" in got.stderr
+
+
+def test_a_known_chain_with_an_unrotated_key_is_said_loudly(three):
+    a, b, c, out, subs = three
+    a.send(subs[:1], b, out / "p1")
+    b.receive(out / "p1")
+    a.send(subs[1:], b, out / "p2")
+    pkg = load(out / "p2")
+    pkg["from"] = c.pub  # a's chain, signed by a key it never rotated to
+    got = b.receive(dump(out / "e", resign(pkg, c.id)))
+    first = [r for r in b.rows() if r["kind"] == "received"][0]["n"]
+    assert (f"its chain spoke with {a.pub[:12]}… at row {first}, a key this one is "
+            "not rotated from") in got.stdout  # fmt: skip
+
+
+@pytest.mark.parametrize("edit, why", [
+    (lambda t, p: t.update(sig_new="0" * 128), "rotation 0 isn't signed by both its keys"),
+    (lambda t, p: t.update(sig_old="0" * 128), "rotation 0 isn't signed by both its keys"),
+    (lambda t, p: t.update(start="0" * 64), "rotation 0 is for another chain"),
+    (lambda t, p: t.update(at=7), "rotation 0 is not one"),
+    (lambda t, p: t.pop("sig_new"), "rotation 0 is not one"),
+    (lambda t, p: p["rotations"].append(dict(t)), "rotation 1 doesn't follow the one before it"),
+    (lambda t, p: p.update(rotations="no"), "rotations are a list"),
+])  # fmt: skip
+def test_a_rotation_that_doesnt_hold_is_said(three, tmp_path, edit, why):
+    a, b, _, out, subs = three
+    a.send(subs, b, out / "p1")
+    rotate(a, tmp_path / "new")
+    a.id = tmp_path / "new"
+    a.send(subs, b, out / "p2")
+    pkg = load(out / "p2")
+    edit(pkg["rotations"][0], pkg)
+    broken(b, dump(out / "e", resign(pkg, a.id)), why)
+
+
+def test_rotations_must_end_at_the_key_that_signed(three, tmp_path):
+    a, b, c, out, subs = three
+    a.send(subs, b, out / "p1")
+    rotate(a, tmp_path / "new")
+    a.id = tmp_path / "new"
+    a.send(subs, b, out / "p2")
+    pkg = load(out / "p2")
+    pkg["from"] = c.pub
+    broken(
+        b,
+        dump(out / "e", resign(pkg, c.id)),
+        "its key isn't the one its rotations end at",
+    )
+
+
+def test_a_rung_is_earned_from_packages_that_held_and_nothing_else(three):
+    a, b, _, out, subs = three
+    rungs = []
+    for i in range(7):
+        a.send(subs, b, out / f"p{i}")
+        if i == 2:  # an edited copy claiming a's key earns nothing
+            pkg = load(out / "p2")
+            pkg["note"] = "edited"
+            broken(b, dump(out / "e", pkg))
+            got = b.receive(out / "p2")
+        else:
+            got = b.receive(out / f"p{i}")
+        rungs.append(got.stdout.split("(")[1].split(":")[0])
+    assert rungs == [
+        "rookie",
+        "steady",
+        "steady",
+        "steady",
+        "steady",
+        "veteran",
+        "veteran",
+    ]
+    assert (
+        "(veteran: 5 packages that held" in got.stdout
+        or "(veteran: 6 packages" in got.stdout
+    )
+
+
+def test_a_package_for_your_old_key_can_be_forwarded_after_you_rotate(three, tmp_path):
+    """The rotation, inside the forwarder's signed layer, shows the package
+    was for a key the forwarder rotated from."""
+    a, b, c, out, subs = three
+    a.send(subs, b, out / "p")
+    b.receive(out / "p")
+    rotate(b, tmp_path / "bnew")
+    b.id = tmp_path / "bnew"
+    got = b.forward(out / "p", c, out / "f")
+    assert got.returncode == 0, got.stderr
+    got = c.receive(out / "f")
+    assert got.returncode == 0 and got.stdout.split()[1] == "good", got.stdout
+    pkg = load(out / "f")
+    pkg["rotations"] = []
+    broken(c, dump(out / "e", resign(pkg, b.id)), "what it wraps was for someone else")
+
+
+def test_a_package_for_the_key_you_rotated_from_is_still_yours(three, tmp_path):
+    a, b, _, out, subs = three
+    a.send(subs[:1], b, out / "p1")
+    b.receive(out / "p1")
+    a.send(subs[1:], b, out / "p2")  # packed for b's old key
+    rotate(b, tmp_path / "bnew")
+    got = b.receive(out / "p2")  # with the old identity: refused, rotated away
+    assert got.returncode == 2 and "rotated away" in got.stderr
+    b.id = tmp_path / "bnew"
+    got = b.receive(out / "p2")
+    assert got.returncode == 0 and got.stdout.split()[1] == "good", got.stdout
+    assert [r for r in b.rows() if r["kind"] == "received"][-1]["key"] != b.pub
+
+
+def test_receiving_with_another_key_than_the_records_is_refused(three):
+    a, b, c, out, subs = three
+    a.send(subs, b, out / "p")
+    b.receive(out / "p")
+    a.send(subs, c, out / "q")
+    got = share("receive", "--box", b.box, "--id", c.id, "--package", out / "q", *NOW)
+    assert got.returncode == 2 and "never swap it silently" in got.stderr
