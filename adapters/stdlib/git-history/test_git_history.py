@@ -88,6 +88,23 @@ def test_each_commit_is_a_dated_passage_with_its_diff(tmp_path):
     assert "Ada" not in texts
 
 
+def test_messages_only_keeps_the_commit_and_leaves_the_diff_out(tmp_path):
+    folder, to = tmp_path / "repo", tmp_path / "m"
+    make_repo(folder)
+    got = run(SCRIPT, "mirror", "--from", folder, "--to", to, "--messages")
+    assert got.returncode == 0, got.stderr
+    files = sorted(to.glob("*.txt"))
+    assert len(files) == 2
+    texts = "\n".join(p.read_text(encoding="utf-8") for p in files)
+    assert "date: 2026-10-01" in texts and "subject: raise the retry limit" in texts
+    assert "diff --git" not in texts and "+retry=5" not in texts
+    with_diff = tmp_path / "d"
+    assert mirror(folder, with_diff).returncode == 0
+    assert "+retry=5" in "".join(
+        p.read_text(encoding="utf-8") for p in with_diff.glob("*.txt")
+    )
+
+
 def test_a_folder_with_no_git_history_is_nothing_there(tmp_path):
     folder, to = tmp_path / "f", tmp_path / "m"
     folder.mkdir()

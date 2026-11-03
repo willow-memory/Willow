@@ -50,7 +50,9 @@ def guard(
         return kernel.REFUSED, p.stderr, ""
     if p.returncode != 0:
         why = "it was killed" if p.returncode < 0 else f"it exited {p.returncode}"
-        return kernel.REFUSED, p.stderr, f"blocked: the hook broke, {why}"
+        last = p.stderr.decode("utf-8", "replace").strip().splitlines()[-1:]
+        said = f"; its last words: {last[0].strip()}" if last else ""
+        return kernel.REFUSED, b"", f"blocked: the hook broke, {why}{said}"
     if want_json and p.stdout.strip():
         try:
             json.loads(p.stdout)

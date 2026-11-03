@@ -166,6 +166,18 @@ def test_a_reply_citing_nothing_is_proposed_to_no_one(box, model, monkeypatch, c
     assert "proposal" not in kinds(box)
 
 
+def test_a_reply_that_only_cites_is_proposed_to_no_one(box, model, monkeypatch, capsys):
+    for only in ("[1]", "[1] (notes/biscochitos.md:3)\n", "[1], [1]."):
+        code, out = ask_with(
+            monkeypatch, capsys, StandIn(only), "--box", box, "--model", model, *NOW, Q
+        )
+        assert code == 42, out
+        assert out.endswith(
+            "cited a passage and said nothing else; proposed to no one\n"
+        )
+    assert "proposal" not in kinds(box)
+
+
 def test_a_model_that_fails_or_says_nothing(box, model, monkeypatch, capsys):
     code, out = ask_with(monkeypatch, capsys, StandIn(fail=RuntimeError("boom")),
                          "--box", box, "--model", model, *NOW, Q)  # fmt: skip

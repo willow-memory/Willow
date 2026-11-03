@@ -96,6 +96,20 @@ def test_three_copies_two_kinds_one_away_holds(tmp_path):
     assert "  away  offsite  holds (1 row)" in got.stdout
 
 
+def test_a_copy_that_holds_but_is_behind_the_box_says_how_far(tmp_path):
+    b = box(tmp_path)
+    z = zip_of(tmp_path, b)
+    other = box(tmp_path, "offsite")
+    for _ in range(2):  # the box moves on; the zip and the other box don't
+        bite = k("bite", "--box", str(b), "--now", "2026-10-25T09:30:00Z", "sun")
+        assert bite.returncode in (0, 42)
+    got = run("--box", str(b), "--copy", f"usb:{z}", "--copy", f"away:{other}")
+    assert got.returncode == 0, got.stdout + got.stderr
+    assert "  disk  the box  holds (3 rows)" in got.stdout
+    assert f"  usb   {z.name}  holds (1 row, 2 rows behind the box)" in got.stdout
+    assert "  away  offsite  holds (1 row, 2 rows behind the box)" in got.stdout
+
+
 def test_a_broken_copy_is_said_and_not_counted(tmp_path):
     b = box(tmp_path)
     z = zip_of(tmp_path, b)
