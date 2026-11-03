@@ -113,3 +113,14 @@ def test_one_questions_words_take_no_json(tmp_path):
     b = box(tmp_path)
     got = run(str(HERE / "again.py"), "--box", str(b), "--json", "frost")
     assert got.returncode == 2 and "again.py" in got.stderr
+
+
+def test_one_question_by_its_words_is_42_only_at_the_offer(tmp_path):
+    """Asked by its words, a question at the offer rung (every third ask)
+    waits on you; asked twice, it doesn't yet."""
+    b = box(tmp_path)
+    q = "how much sun do tomatoes want"
+    ask(b, q, 2)
+    assert run(str(HERE / "again.py"), "--box", str(b), q).returncode == 0
+    ask(b, q, 1)
+    assert run(str(HERE / "again.py"), "--box", str(b), q).returncode == 42
