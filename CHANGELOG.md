@@ -1808,6 +1808,10 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- The UI's Start it runs the sealed flow over every folder of the pick, each
+  its own record with its page beside it, where it ran over the first only;
+  two folders of one name get a record each (`files-2`), where the second
+  was told "already set up". (#205)
 - The UI's kernel baseline offers a reader for a kind of file its card
   names, not for an English word: a kind counts with its dot (`.so`), in
   capitals (PDF), or bare when three letters or more, so `.so` files are no
