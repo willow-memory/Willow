@@ -9,7 +9,8 @@ llama-cpp-python, and given them, numbered, under the rule to answer only
 from them, at temperature 0 with a fixed seed. Nothing listens on a port and
 nothing leaves this process. A reply is proposed through `kernel.py propose`
 citing the passages its brackets name, and waits for your seal; a reply that
-cites nothing is printed and proposed to no one. When nothing is served, the
+cites nothing is printed and proposed to no one, and so is one that cites and
+says nothing else (a bare `[1]`, or a path in brackets). When nothing is served, the
 model is never loaded.
 
     Lard, not butter, and a spoonful of anise seed [1].
@@ -31,6 +32,7 @@ import hashlib
 import importlib.util
 import io
 import json
+import re
 import sys
 import tempfile
 from pathlib import Path
@@ -89,6 +91,14 @@ def answer(model, chat: list[dict]) -> str:
         messages=chat, temperature=0, seed=oc.SEED, max_tokens=MOST
     )
     return got["choices"][0]["message"]["content"] or ""
+
+
+def says_something(reply: str) -> bool:
+    """Whether the reply holds a content word once its citations are taken
+    off: a bare `[1]`, or a path in brackets, points at a passage and answers
+    nothing, and a suggestion with no words in it waits on nobody."""
+    bare = re.sub(r"\[(?:\d+(?:\s*,\s*\d+)*)\]|\([^()]*:\d+\)", " ", reply)
+    return any(w not in kernel.FUNCTION for w in kernel.words(bare))
 
 
 def sha256_file(path: Path) -> str:
@@ -152,6 +162,9 @@ def main(argv: list[str]) -> int:
     cites = oc.cited(reply, served)
     if not cites:
         print("cited no passage; proposed to no one")
+        return kernel.ESCALATE
+    if not says_something(reply):
+        print("cited a passage and said nothing else; proposed to no one")
         return kernel.ESCALATE
     row = {
         "path": f"answers/{oc.slug(question)}.md",
