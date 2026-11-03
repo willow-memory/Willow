@@ -10,6 +10,19 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `stack`: an eighth example stack, `adapters/stdlib/stack/examples/repos.md`,
+  for a folder of repositories cloned side by side: the audits over all of
+  them at once (todo, risky-code, xref, pins, install-scripts, secrets-audit,
+  pii-audit, a11y-check), one question each repo answers in turn through
+  fair-merge, and what they say twice and whom they name. Made by running
+  Willow's stacks over five repositories, this one among them.
+- `git-history`: `mirror --from FOLDER --to MIRROR --messages` writes each
+  commit without its diff, the day, subject and body only. A diff carries
+  other people's dates and the kernel dates a line by the nearest date
+  above it, so a commit pile with diffs was dated by what the diffs said:
+  on this repository's own history, "privacy" was first mentioned in 1958,
+  a demo character's birthday inside a diff. Messages alone are dated by
+  the commit.
 - `ports/rust`, a fifth port of `kernel.py`: Rust, the standard library
   only and no crates, following the Go port function for function. What
   Rust's library lacks is written in and held by the vectors: SHA-256 and
@@ -1593,6 +1606,23 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- `three-two-one`: a copy that holds but has fewer rows than the box says
+  how many it is behind (`holds (14 rows, 2 rows behind the box)`). A record
+  cut short still verifies, so a truncated or stale copy counted as a copy
+  and looked current; it still counts, and now says so.
+- `in-process`: a reply that cites a passage and says nothing else, a bare
+  `[1]` or a file and line in brackets, is printed and proposed to no one,
+  as a reply citing nothing already was. Qwen2.5 0.5B on a folder of
+  repositories cited every time and answered nothing, and three empty
+  suggestions waited on a seal.
+- `hook-fail-closed`: when the hook breaks, the reason is one line, how it
+  exited and its last words, and its traceback stays out of stderr. With
+  the traceback passed through, hook-fuzz read the wrapped hook as broken
+  (a traceback under any exit) while the wrapper had blocked the tool as
+  it should; now the two agree.
+- `hosts`: `show claude-code` still refuses, since Claude Code takes no MCP
+  server from this table, and the refusal now says where its way in is:
+  the prompt hook in `adapters/stdlib/claude-code`.
 - `restack` settles test_contract.py when two reader branches meet in
   `READERS`: git splits their new entries around one shared closing line, so
   neither side of the conflict holds a whole entry and the rule on lines
