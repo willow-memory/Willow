@@ -1740,6 +1740,10 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- The UI's Start it runs the sealed flow over every folder of the pick, each
+  its own record with its page beside it, where it ran over the first only;
+  two folders of one name get a record each (`files-2`), where the second
+  was told "already set up". (#205)
 - The Java, TypeScript and C# ports exit 42 from a `propose` whose every
   line is refused, as `kernel.py` has since bug #96's fix; they exited 0,
   which looked like an approved answer. The vectors' session now proposes a
