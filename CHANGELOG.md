@@ -1612,6 +1612,12 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- `ci`: the heavy CI jobs wait on the fast ones. tests, strip, ports, demo,
+  deps, tools and the mutants jobs `need` lint, first, against and changelog
+  in `.github/workflows/ci.yml`, so on a pull request the checks that take
+  seconds take the runners first, and one that fails stops the rest from
+  queueing: a red lint or a duplicate add-on costs four jobs, not fourteen.
+  A push to main, where three of the four don't run, goes on past them. (#208)
 - `ci`: `--shard K/N` cuts the gates by the seconds each is expected to take
   (`gate_weight`: an add-on chunk's or a mutants gate's from
   `adapters/stdlib/ci/test-times.json`, six runs of the add-on's tests for the mutants, a small

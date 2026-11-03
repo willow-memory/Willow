@@ -22,6 +22,14 @@ concurrency:
 permissions:
   contents: read
 
+# The fast checks go first. lint, first, against and changelog take seconds
+# to a minute or two; every heavier job `needs` them, so on a pull request
+# they take the runners first and a failure among them stops the rest from
+# queueing at all: a red lint or a duplicate add-on costs four jobs, not
+# fourteen. On a push to main three of the four don't run, so the heavy jobs
+# say `!failure() && !cancelled()`: they wait for what ran and go on past
+# what was skipped. mutants runs on pushes only and waits on lint alone.
+#
 # bash's own pipefail: each check below is piped through tee, for ci-why to
 # read when it fails, and the step must still fail with it
 defaults:
@@ -192,6 +200,8 @@ jobs:
     # 20-job limit. tests:alone starts a pool of its own, a thread for each
     # core, so under four shards the cores are oversubscribed; that is slower
     # than it could be, not wrong, and alone.py is left as it is.
+    needs: [lint, first, against, changelog]
+    if: ${{ !failure() && !cancelled() }}
     runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
@@ -225,6 +235,8 @@ jobs:
     # add-on, each still passing. Four gates, tests:strip-1 to -4, each a
     # share of the add-ons' tests in the stripped copy. One job on each
     # Python, the four run at once by cores.py, as the tests job does.
+    needs: [lint, first, against, changelog]
+    if: ${{ !failure() && !cancelled() }}
     runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
@@ -251,6 +263,8 @@ jobs:
           path: ${{ runner.temp }}/ci-record/*/record.jsonl
 
   ports:
+    needs: [lint, first, against, changelog]
+    if: ${{ !failure() && !cancelled() }}
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
@@ -283,6 +297,8 @@ jobs:
           path: ${{ runner.temp }}/ci-record/record.jsonl
 
   demo:
+    needs: [lint, first, against, changelog]
+    if: ${{ !failure() && !cancelled() }}
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
@@ -313,6 +329,7 @@ jobs:
     # is the record mutants-reach below stands a pull request's gates on; a
     # pull request runs mutants-reach instead (github.py check holds the two
     # to the whole part).
+    needs: [lint]
     if: github.event_name == 'push'
     runs-on: ubuntu-24.04
     strategy:
@@ -351,6 +368,9 @@ jobs:
     # Never silent, never short: with no green run of main, no artifact to
     # download, or a pin ci-memo refuses (the records are of another tree),
     # this job runs the whole part, and says why in the summary.
+    # not changelog: it skips Dependabot's pull requests, and a skipped need
+    # would skip this job with it
+    needs: [lint, first, against]
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-24.04
     permissions:
@@ -434,6 +454,8 @@ jobs:
     # deps:floors checks each floor against PyPI. mcp needs Python 3.10+.
     # The programs a deps add-on runs and PyPI doesn't carry come from the
     # runner's Ubuntu: tesseract for ocr (gpg, for pgp, comes with the image).
+    needs: [lint, first, against, changelog]
+    if: ${{ !failure() && !cancelled() }}
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
@@ -457,6 +479,8 @@ jobs:
     # add-on prints (adapters/stdlib/live/live.py). Pinned, so a run says
     # which version read them; one that didn't install is unreachable, and
     # an unreachable gate fails this job: nothing here passes unchecked.
+    needs: [lint, first, against, changelog]
+    if: ${{ !failure() && !cancelled() }}
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
