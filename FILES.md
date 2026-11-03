@@ -75,6 +75,10 @@ willow/
 │   │   │   ├── again.py      the questions you keep asking, counted from the record
 │   │   │   ├── test_again.py
 │   │   │   └── README.md
+│   │   ├── against/
+│   │   │   ├── against.py    a pull request held to the other open ones: the names both add, the files both change
+│   │   │   ├── test_against.py
+│   │   │   └── README.md
 │   │   ├── agent-transcript/
 │   │   │   ├── agent_transcript.py  Claude Code, Cursor and other session files as numbered spoken turns
 │   │   │   ├── test_agent_transcript.py
@@ -221,6 +225,8 @@ willow/
 │   │   │   ├── test_whose.py whose.py's tests: commits, merges, squashes, another host, places refused
 │   │   │   ├── test_cores.py cores.py's tests: every gate once across the shards, refusals that run nothing
 │   │   │   ├── test_alone.py alone.py's tests: what a card uses comes along, and leaning on what it doesn't name fails
+│   │   │   ├── reports.py    bringing add-ons onto the report contract in batches: survey, scaffold, check
+│   │   │   ├── test_reports.py  reports.py's tests: --json taken off first, stack's rendering word for word, never twice
 │   │   │   └── README.md     its card: gates, states, the guard and exit codes
 │   │   ├── ci-cache/
 │   │   │   ├── ci_cache.py    a cache key per ecosystem from a repo's lockfiles, so CI skips the reinstall

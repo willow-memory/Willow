@@ -5,6 +5,7 @@ source: bot
 added: 2026-10-24
 writes: record
 network: none
+output: report
 -->
 # session-seal
 
@@ -17,9 +18,17 @@ step: yes, these were my actions.
       seal it:  python kernel.py seal --box DIR proposal:1e65daef…
       or leave it unsealed: the rows stay on the record either way
 
-    python adapters/stdlib/session-seal/session_seal.py --box DIR check
-    sealed   rows 0 to 2
-    1 sessions: 1 sealed, 0 waiting, 0 broken; 1 rows since, not yet bundled
+    python adapters/stdlib/session-seal/session_seal.py --box DIR check [--json]
+    session-seal: populated, 1 sessions: 1 sealed, 0 waiting, 0 broken; 1 rows since, not yet bundled
+    ## sealed
+      rows 0 to 2  proposal:1e65daef…
+
+`check` prints [a report](../ci/README.md#the-report-contract), the shape
+every report add-on shares: a line counting the sessions, then a group per
+state (broken, waiting on your seal, sealed), each row the session's rows and
+its subject, a waiting one with the command that seals it. `--json` gives
+the same report as one JSON object. No session yet is `empty`. Bundling a
+session, the form without `check`, prints its own lines, not a report.
 
 **A session** is the record's rows since the last one was bundled, from
 row 0 the first time. Its bundle holds every row by number, kind and hash,
@@ -44,9 +53,10 @@ bundle's file no longer hashes to its subject or its rows no longer match
 the record's, row for row. A seal row whose proof doesn't hold under your
 key counts for nothing, as in `kernel.py verify`.
 
-Exit codes, the kernel's: 0 nothing waits; 42 a session waits on your seal;
-2 refused (a record that doesn't verify, a broken bundle, a bad command
-line).
+Exit codes, the kernel's: 0 nothing waits (for `check`, every session
+sealed, or none yet); 42 a session waits on your seal, or (for `check`) a
+bundle is broken: something found, for you to look at, so a report; 2
+refused (a record that doesn't verify, a bad command line).
 
 **Where it comes from:** [willow-bot's one script](https://github.com/willow-memory/willow-bot/blob/main/one-script/onescript/session.py),
 where checkout bundles the session from its check-in and proposes it to

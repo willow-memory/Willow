@@ -1,17 +1,21 @@
 """risky_code.py: lines in your code that match a known-dangerous pattern,
 by file and line -- a lead to read, never proof of a bug. Python 3.9+.
 
-    python adapters/stdlib/risky-code/risky_code.py --box DIR
-    python adapters/stdlib/risky-code/risky_code.py --from ANY-FOLDER
+    python adapters/stdlib/risky-code/risky_code.py --box DIR [--json]
+    python adapters/stdlib/risky-code/risky_code.py --from ANY-FOLDER [--json]
 
 Every line of your files (the box's, or any folder's) that matches a curated
 pattern for a common vulnerability class, grouped by class, each cited by
 file and line:
 
-    command injection
-        app/views.py:4   subprocess.run("ping -c1 " + host, shell=True)
-    broken tls
-        app/client.js:6  fetch(url, {rejectUnauthorized: false})
+    risky-code: populated, 2 lines in 2 places match a risky-code pattern; each is a lead to read, not proof
+    ## command injection
+      app/views.py:4   subprocess.run("ping -c1 " + host, shell=True)
+    ## broken tls
+      app/client.js:6  fetch(url, {rejectUnauthorized: false})
+
+It prints a report, as every report add-on does (adapters/stdlib/ci/README.md,
+the report contract), and `--json` gives the same report as one JSON object.
 
 The classes: command injection, code injection (eval/exec), sql injection,
 insecure deserialization, broken tls, ssrf, path traversal, template
@@ -26,17 +30,21 @@ and never prints their value. This reads code and prints the line, so point
 it at code you own, not at a folder of secrets.
 
 It only reads, and writes nothing. Exit codes, the kernel's: 0 nothing
-matched; 42 something matched, which waits on you to read it; 2 refused.
+matched (empty); 42 something matched (populated), which waits on you to
+read it; 2 refused.
 """
 
 from __future__ import annotations
 
+import json
 import re
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 import kernel  # noqa: E402
+
+NAME = "risky-code"
 
 #: vulnerability class -> line patterns that point at it, idiomatic across
 #: Python, JS/TS, PHP, Java, Go and Ruby. A match is a lead, not a verdict.
@@ -142,7 +150,33 @@ def scan(pile: Path) -> dict:
     return {cls: rows for cls, rows in out.items() if rows}
 
 
+# ── the report: the shape every report add-on prints (ci/README.md) ─────────
+def report(addon: str, state: str, said: str, groups: list) -> dict:
+    """A report: its state, one line said, and each group's rows (where,
+    what); a group named None comes first and has no heading."""
+    return {"addon": addon, "state": state, "said": said,
+            "groups": [{"name": g, "rows": [{"where": w, "what": x} for w, x in rows]}
+                       for g, rows in groups if rows]}  # fmt: skip
+
+
+def report_text(doc: dict) -> str:
+    rows = [r for g in doc["groups"] for r in g["rows"]]
+    w = min(max((len(r["where"]) for r in rows), default=0), 60)
+    out = [f"{doc['addon']}: {doc['state']}, {doc['said']}"]
+    for g in doc["groups"]:
+        if g["name"] is not None:
+            out.append(f"## {g['name']}")
+        out += [f"  {r['where']:<{w}}  {r['what']}".rstrip() for r in g["rows"]]
+    return "\n".join(out)
+
+
+def say(doc: dict, as_json: bool) -> None:
+    print(json.dumps(doc, ensure_ascii=False) if as_json else report_text(doc))
+
+
 def main(argv: list[str]) -> int:
+    as_json = "--json" in argv
+    argv = [a for a in argv if a != "--json"]
     if len(argv) != 2 or argv[0] not in ("--box", "--from"):
         print(__doc__.split("\n\n")[1], file=sys.stderr)
         return kernel.REFUSED
@@ -160,19 +194,16 @@ def main(argv: list[str]) -> int:
 
     found = scan(pile)
     if not found:
-        print("No lines matched a risky-code pattern.")
+        say(report(NAME, "empty", "no line matched a risky-code pattern", []), as_json)
         return kernel.ALIVE
-    total = 0
-    for cls, rows in found.items():
-        print(cls)
-        width = max(len(f"{p}:{n}") for p, n, _ in rows)
-        for path, n, text in rows:
-            print(f"    {f'{path}:{n}':<{width}}  {text[:90]}")
-            total += 1
+    total = sum(len(rows) for rows in found.values())
     where = len({(p, n) for rows in found.values() for p, n, _ in rows})
-    print(f"\n{total} line{'s' if total != 1 else ''} in {where} place"
-          f"{'s' if where != 1 else ''} match a risky-code pattern. Each is a lead to "
-          "read, not proof; verify by hand.")  # fmt: skip
+    said = (f"{total} line{'s' if total != 1 else ''} in {where} place"
+            f"{'s' if where != 1 else ''} match a risky-code pattern; each is a lead"
+            " to read, not proof")  # fmt: skip
+    groups = [(cls, [(f"{p}:{n}", text[:90]) for p, n, text in rows])
+              for cls, rows in found.items()]  # fmt: skip
+    say(report(NAME, "populated", said, groups), as_json)
     return kernel.ESCALATE
 
 

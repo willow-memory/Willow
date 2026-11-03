@@ -6,6 +6,7 @@ added: 2026-10-25
 writes: nothing
 network: none
 tags: security
+output: report
 -->
 # risky-code
 
@@ -13,16 +14,21 @@ The lines in your code that match a known-dangerous pattern, grouped by
 vulnerability class and cited by file and line -- a lead to read, never proof
 of a bug.
 
-    python adapters/stdlib/risky-code/risky_code.py --box DIR
-    python adapters/stdlib/risky-code/risky_code.py --from ANY-FOLDER
+```
+python adapters/stdlib/risky-code/risky_code.py --box DIR [--json]
+python adapters/stdlib/risky-code/risky_code.py --from ANY-FOLDER [--json]
 
-    command injection
-        app/views.py:4   subprocess.run("ping -c1 " + host, shell=True)
-    broken tls
-        app/client.js:6  fetch(url, {rejectUnauthorized: false})
+risky-code: populated, 2 lines in 2 places match a risky-code pattern; each is a lead to read, not proof
+## command injection
+  app/views.py:4   subprocess.run("ping -c1 " + host, shell=True)
+## broken tls
+  app/client.js:6  fetch(url, {rejectUnauthorized: false})
+```
 
-    2 lines in 2 places match a risky-code pattern. Each is a lead to read,
-    not proof; verify by hand.
+It prints [a report](../ci/README.md#the-report-contract), the shape every
+report add-on shares: a line saying what it found, then a group per
+vulnerability class, each row the file and line and then the matching line
+(cut to 90 characters). `--json` gives the same report as one JSON object.
 
 | Class | What it points at |
 |---|---|
@@ -48,8 +54,8 @@ reads as code injection in any language). Read each hit.
 passwords, keys and card numbers, and never prints their value. This one reads
 code and prints the matching line, so point it at code you own.
 
-Exit codes, the kernel's: 0 nothing matched; 42 something matched, which waits
-on you to read it; 2 refused.
+Exit codes, the kernel's: 0 nothing matched (`empty`); 42 something matched
+(`populated`), which waits on you to read it; 2 refused.
 
 **Never:** says a line is a bug (it surfaces leads, a person judges), or writes
 anything.

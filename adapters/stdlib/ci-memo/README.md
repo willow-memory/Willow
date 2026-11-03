@@ -19,7 +19,7 @@ downloads, on verdicts.
 
     python adapters/stdlib/ci-memo/ci_memo.py keys [GATE ...]
     python adapters/stdlib/ci-memo/ci_memo.py pin  --box DIR [--box DIR ...] --to FILE
-    python adapters/stdlib/ci-memo/ci_memo.py plan --pin FILE [--bare]
+    python adapters/stdlib/ci-memo/ci_memo.py plan --pin FILE [--bare] [PART|GATE ...]
 
 After a full run, pin it; after a change, plan:
 
@@ -66,6 +66,18 @@ stands nothing.
 pass: `plan` only says which rows the bytes still cover, prints the line
 that runs the rest, and runs nothing itself. ci.py's record stays the
 receipt, and the full run stays the merge's evidence.
+
+**CI uses it on pull requests, and only there.** A pull request's slowest job
+was mutants, four shards of 5 to 19 minutes, though a change usually reaches
+one add-on's gate. So a push to main still runs every mutants gate, and a
+pull request's `mutants-reach` job pins the records of main's last green run
+against that run's own tree, checked out beside the pull request's, plans
+`mutants` against the pull request's, and runs only the gates that need it.
+The rest stand on main's run, which its step summary names by id and commit;
+the job's record holds only what it ran. With no green run, no records to
+download, or a pin refused, it runs the whole part and says why. `plan` takes
+the names of parts or gates (`plan --pin FILE mutants`) to plan just those;
+`pin` takes a folder holding only `<box>/record.jsonl`, as an artifact does.
 
 `pin` writes only FILE, never inside the tree (a pin in it would change the
 keys) or a box, and replaces only a file that is itself a pin. `--repo DIR`
