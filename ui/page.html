@@ -287,6 +287,7 @@ async function look(){if(!S.folders.length){cur='folders';flow();shelf();say('Ad
   a.installs.length?li('Needs installing first: '+a.installs.join(', ')+'.'):null);
  const parts=el('div');for(const st of STAGES){const ns=S.stages[st.key]||[];if(st.fixed||st.key==='folders'||!ns.length)continue;
   parts.append(el('h3',{text:st.title}),el('ul',{},...ns.map(n=>el('li',{},el('b',{text:n}),' — '+(P[n]?.line||'')))))}
+ if(a.kept?.length)parts.append(el('h3',{text:'Put in, but not run on the morning page'}),el('p',{class:'msg',text:'Each of these runs its own way: a reader over a folder, a hook, a page server, a verb with its own words. Running them with only your record would refuse or never end.'}),el('ul',{},...a.kept.map(n=>el('li',{},el('b',{text:n}),' — '+(P[n]?.line||'')))));
  if(a.pulled_in.length)parts.append(el('h3',{text:'Brought along, because pieces above need them'}),el('ul',{},...a.pulled_in.map(n=>el('li',{},el('b',{text:n}),' — '+(P[n]?.line||'')))));
  const sealB=el('button',{class:'go',text:'Seal it'}),asmB=el('button',{text:'Put it together',disabled:''}),out=el('div',{class:'msg'});
  sealB.onclick=async()=>{const x=await api('seal',{subject});if(x.refused||!x.sealed){out.className='msg err';out.textContent='Not sealed: '+(x.refused||x.said);return}
