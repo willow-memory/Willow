@@ -1,24 +1,31 @@
 """misquote.py: a quote that is almost in your files, and how it differs.
 
-    python adapters/stdlib/misquote/misquote.py --box DIR "the quote"
+    python adapters/stdlib/misquote/misquote.py --box DIR "the quote" [--json]
 
 quote-check says whether a quote is in your files. When it isn't, the
 question is usually whether it is nearly there: a word dropped, a word
 changed, two sentences run together. This finds the passage that holds the
 most of the quote's words in the quote's order, and says what differs:
 
-    closest      policy.txt:203   (24 of 25 words, in order)
-      dropped    Google           your files have it here; the quote doesn't
-      added      now              the quote has it; your files don't
+    misquote: populated, closest passage holds 24 of 25 words, in order
+    ## dropped
+      policy.txt:203  Google: your files have it here; the quote doesn't
+    ## added
+      policy.txt:203  now: the quote has it; your files don't
 
-or `as written   policy.txt:203` when the quote's words are there in order,
-which is quote-check's "verbatim" or "same words". A passage is the closest
+or `misquote: populated, the quote is in your files as written` with the row
+`policy.txt:203  as written` when the quote's words are there in order,
+which is quote-check's "verbatim" or "same words". A `changed` group holds
+the quote's words, then the ones your files have in their place. A passage is the closest
 only when it holds at least half the quote's words in order; else nothing is
 close, and it says so. Words are split the kernel's way (its `WORD`, case
 aside), and each is shown as the file spells it.
 
-It only reads. Exit codes, the kernel's: 0 the quote is in your files as
-written; 42 it isn't (the closest passage, or nothing close); 2 refused.
+It prints a report (ci/README.md, "The report contract"); `--json` gives
+the same as one object. It only reads. States and exit codes: populated, 0,
+the quote is in your files as written; populated, 42, it isn't and the
+closest passage differs (that waits on you); empty, 0, nothing is close;
+2 refused.
 """
 
 from __future__ import annotations
@@ -105,7 +112,7 @@ def closest(pile: list[dict], quote: str) -> tuple[dict, int, list] | None:
 
 
 def main(argv: list[str]) -> int:
-    as_json = "--json" in argv  # noqa: F841  wire: say(report(...), as_json)
+    as_json = "--json" in argv
     argv = [a for a in argv if a != "--json"]
     if len(argv) != 3 or argv[0] != "--box":
         print(__doc__.split("\n\n")[1], file=sys.stderr)
@@ -120,25 +127,26 @@ def main(argv: list[str]) -> int:
         return kernel.REFUSED
     got = closest(kernel.chunks(Path(kernel.config(box)["pile"])), quote)
     if got is None:
-        print("Nothing in your folder holds even half of it, in that order.")
-        return kernel.ESCALATE
+        said = "nothing in your folder holds even half of it, in that order"
+        say(report(NAME, "empty", said, []), as_json)
+        return kernel.ALIVE
     c, kept, diffs = got
     where = f"{c['path']}:{c['line']}"
     if not diffs:
-        print(f"as written   {where}")
+        said = "the quote is in your files as written"
+        say(report(NAME, "populated", said, [(None, [(where, "as written")])]), as_json)
         return kernel.ALIVE
-    print(f"closest      {where}   ({kept} of {len(tokens(quote))} words, in order)")
+    said = f"closest passage holds {kept} of {len(tokens(quote))} words, in order"
+    rows: dict[str, list] = {"dropped": [], "added": [], "changed": []}
     for kind, ws, instead in diffs:
         if kind == "dropped":
-            print(
-                f"  dropped    {' '.join(ws):<16} your files have it here; the quote doesn't"
-            )
+            what = f"{' '.join(ws)}: your files have it here; the quote doesn't"
         elif kind == "added":
-            print(f"  added      {' '.join(ws):<16} the quote has it; your files don't")
+            what = f"{' '.join(ws)}: the quote has it; your files don't"
         else:
-            print(
-                f"  changed    {' '.join(ws)} -> {' '.join(instead)}   the quote's words, then your files'"
-            )
+            what = f"{' '.join(ws)} -> {' '.join(instead)}: the quote's words, then your files'"
+        rows[kind].append((where, what))
+    say(report(NAME, "populated", said, list(rows.items())), as_json)
     return kernel.ESCALATE
 
 
