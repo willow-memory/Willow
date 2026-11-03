@@ -133,8 +133,10 @@ def test_an_approval_whose_proposal_file_changed_is_broken_not_trusted(tmp_path)
     assert got.returncode == 42 and "Never." not in got.stdout
     head, row = got.stdout.splitlines()
     assert head == "stale: populated, 1 approved; 0 stale; 1 broken"
-    assert row.startswith("  proposal:") and row.endswith(
-        "…  broken: its proposal file is not the bytes that were sealed"
+    subject = "proposal:" + f.stem  # its row's place: the subject's first 21, then …
+    assert (
+        row
+        == f"  {subject[:21]}…  broken: its proposal file is not the bytes that were sealed"
     )
     doc = json.loads(stale(b, "--json").stdout)
     assert [g["name"] for g in doc["groups"]] == [None]
