@@ -544,3 +544,106 @@ def test_the_same_box_gives_the_same_report_twice(box):
         run("suggest", EMAIL, "--box", str(box)).stdout
         == run("suggest", EMAIL, "--box", str(box)).stdout
     )
+
+
+# ── build ─────────────────────────────────────────────────────────────────────
+
+
+def sealed_stack(box: Path, sentence: str, *choose: str) -> None:
+    seal_all(box, proposed(box, *choose, sentence=sentence))
+
+
+def test_build_refuses_while_no_stack_is_sealed_for_these_words(box, tmp_path):
+    proposed(box, "due=coming-up", sentence="what is due")
+    got = run("build", "what is due", "--box", str(box), "--to", str(tmp_path / "st"))
+    assert got.returncode == 2 and "no stack is sealed for these words" in got.stderr
+    assert not (tmp_path / "st").exists()
+
+
+def test_build_refuses_a_missing_parent_and_makes_nothing(box, tmp_path):
+    sealed_stack(box, "what is due", "due=coming-up")
+    got = run(
+        "build", "what is due", "--box", str(box), "--to", str(tmp_path / "no" / "st")
+    )
+    assert (
+        got.returncode == 2
+        and "is missing" in got.stderr
+        and not (tmp_path / "no").exists()
+    )
+
+
+def test_build_assembles_the_sealed_steps_runs_the_stack_and_keeps_the_page(
+    box, tmp_path
+):
+    sealed_stack(box, "what is due", "due=coming-up")
+    to = tmp_path / "st"
+    argv = ["build", "what is due", "--box", str(box), "--to", str(to)]
+    data = run(*argv, "--json")
+    assert data.returncode == 0, data.stderr
+    doc = holds_the_shape(json.loads(data.stdout), data.returncode)
+    assert doc["said"].startswith(
+        f"1 of 1 step built into {to}, page at {to / 'page.md'}; 0 flagged, 0 left out"
+    )
+    assert [g["name"] for g in doc["groups"]] == ["built"]
+    row = doc["groups"][0]["rows"][0]
+    assert row["where"] == "adapters/stdlib/coming-up/" and row["what"].startswith(
+        "coming-up: contract held; tests unreachable"
+    )
+    assert row["what"].endswith("; ran: clean")
+    manifest = json.loads((to / "stack" / "STACK.json").read_text(encoding="utf-8"))
+    assert (
+        "coming-up" in manifest["addons"]
+        and (
+            to / "stack" / "adapters" / "stdlib" / "coming-up" / "coming_up.py"
+        ).is_file()
+    )
+    assert (to / "forge-stack.md").read_text(encoding="utf-8").splitlines()[
+        -1
+    ] == "- coming-up -- --box {box}"
+    page = (to / "page.md").read_text(encoding="utf-8")
+    assert page.startswith("# stack over ") and "- `coming-up -- --box " in page
+    again = run(*argv)
+    assert again.returncode == 0 and "coming-up: already in the stack" in again.stdout
+
+
+def test_build_leaves_out_what_assemble_refuses_and_says_so(box, tmp_path):
+    sealed_stack(box, "what is due, and my pdf", "due=coming-up")
+    to = tmp_path / "st"
+    data = run(
+        "build", "what is due, and my pdf", "--box", str(box), "--to", str(to), "--json"
+    )
+    assert data.returncode == 42
+    doc = holds_the_shape(json.loads(data.stdout), data.returncode)
+    assert doc["said"].endswith("1 left out") and [
+        g["name"] for g in doc["groups"]
+    ] == ["built", "left out"]
+    left = doc["groups"][1]["rows"][0]
+    assert left["where"] == "adapters/stdlib/pdf/" and "deps add-on" in left["what"]
+
+
+def test_steps_of_reads_a_stack_file_as_the_stack_add_on_does():
+    text = "# a title\n\n## for it\n- coming-up -- --box {box}\n- pdf -- --box {box}\nprose\n- coming-up -- --box {box}\n"
+    assert suggest.steps_of(text) == ["coming-up", "pdf"]
+
+
+def test_build_flags_a_step_that_runs_and_does_not_come_back_clean(box, tmp_path):
+    """mail is a reader: `- mail -- --box {box}` is not its command line, so it
+    refuses (exit 2) on the page, and build says so rather than hide it."""
+    sealed_stack(box, "what is due, and my email", "due=coming-up", "email=mail")
+    to = tmp_path / "st"
+    data = run(
+        "build",
+        "what is due, and my email",
+        "--box",
+        str(box),
+        "--to",
+        str(to),
+        "--json",
+    )
+    assert data.returncode == 42
+    doc = holds_the_shape(json.loads(data.stdout), data.returncode)
+    assert "; 1 flagged, 0 left out" in doc["said"]
+    rows = {r["where"]: r["what"] for r in doc["groups"][0]["rows"]}
+    assert rows["adapters/stdlib/coming-up/"].endswith("ran: clean")
+    assert rows["adapters/stdlib/mail/"].endswith("ran: exit 2")
+    assert "(exit 2)" in (to / "page.md").read_text(encoding="utf-8")

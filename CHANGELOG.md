@@ -54,6 +54,11 @@ says how). The first was v0.1.0.
   settled is a step here and one settled here is the Forge's auto band. Its
   promise is `writes: record`: every write is the kernel's. Needs forge-play
   0.10, whose card box reads these cards as rows for its keyword scan. (#201)
+  `build` runs the stack the person sealed for a sentence, and nothing
+  else: each step's add-on into a folder through `ui/assemble.py`, the
+  stack file beside it, the stack add-on run over the box and its page
+  kept, as a report of what was built, what ran and what was left out;
+  the promise grows to `writes: record, to`. (#202)
 - `ci-memo`: a pull request runs only the mutants gates a change can reach,
   standing the rest on the record of main's last green run, and a push to
   main runs them all, so the merge's receipt stays whole. Four shards of 5
