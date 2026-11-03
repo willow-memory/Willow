@@ -133,6 +133,17 @@ it: its text is exactly what stack prints from its JSON, its first line
 and rows have the shape, its state agrees with its rows and its exit code,
 and the same box gives the same report twice.
 
+[reports.py](reports.py) brings add-ons onto it in batches: `survey` runs
+every add-on on one box and sorts what each prints by shape, the ones
+printing rows with places being the next to convert; `scaffold NAME...`
+does what is the same every time (the add-on's name, its copy of the three
+functions, `--json` taken off before it reads its arguments); `check
+NAME...` runs the contract on each and says which aren't done.
+
+    python adapters/stdlib/ci/reports.py survey
+    python adapters/stdlib/ci/reports.py scaffold NAME...
+    python adapters/stdlib/ci/reports.py check NAME...
+
 **The guard:** the add-ons' tests, and each deps add-on's, run with
 [guard/sitecustomize.py](guard/sitecustomize.py) on `PYTHONPATH`, so it is
 loaded into every Python process they start. It holds each add-on to its
