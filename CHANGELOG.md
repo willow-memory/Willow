@@ -1625,7 +1625,10 @@ says how). The first was v0.1.0.
 - `ci`: the heavy CI jobs no longer wait on `first`, only on lint, against
   and changelog. `first` runs what a change reaches, and on a pull request
   converting seven add-ons that was 18 minutes, during which no heavy job
-  could start; it runs beside them again, as the early word it is. (#214)
+  could start; it runs beside them again, as the early word it is. The
+  `mutants-reach` job runs its gates through `adapters/stdlib/ci/cores.py`,
+  four at once: a change to the contract tests reaches every mutants gate,
+  and the whole part in one job took most of an hour. (#214)
 - `ci`: the heavy CI jobs wait on the fast ones. tests, strip, ports, demo,
   deps, tools and the mutants jobs `need` lint, first, against and changelog
   in `.github/workflows/ci.yml`, so on a pull request the checks that take

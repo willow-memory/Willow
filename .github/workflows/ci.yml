@@ -357,6 +357,9 @@ jobs:
           path: ${{ runner.temp }}/ci-record/record.jsonl
 
   mutants-reach:
+    # The gates it runs go through cores.py, four at once: a change to the
+    # contract tests reaches every mutants gate, and the whole part in one
+    # job took most of an hour where four shards took a quarter of it.
     # The mutants part on a pull request: four shards of 5 to 19 minutes were
     # its slowest job, though a change usually touches one add-on and only
     # that add-on's gate, plus the repo tools' (whose reach is the whole
@@ -434,22 +437,22 @@ jobs:
         run: |
           gates=$(cat "$RUNNER_TEMP/gates.txt" 2>/dev/null || true)
           if [ -f "$RUNNER_TEMP/whole" ]; then
-            python adapters/stdlib/ci/ci.py run mutants --box ${{ runner.temp }}/ci-record | tee "$RUNNER_TEMP/ci.log"
+            python adapters/stdlib/ci/cores.py --jobs 4 --box ${{ runner.temp }}/ci-record mutants | tee "$RUNNER_TEMP/ci.log"
           elif [ -z "$gates" ]; then
             echo "No mutants gate is reached by this change: every one stands on main's run, so none ran here and no record is written." >> "$GITHUB_STEP_SUMMARY"
             echo "ran=no" >> "$GITHUB_OUTPUT"
           else
-            python adapters/stdlib/ci/ci.py run $gates --box ${{ runner.temp }}/ci-record | tee "$RUNNER_TEMP/ci.log"
+            python adapters/stdlib/ci/cores.py --jobs 4 --box ${{ runner.temp }}/ci-record $gates | tee "$RUNNER_TEMP/ci.log"
           fi
       - if: failure()
-        run: python adapters/stdlib/ci-why/ci_why.py "$RUNNER_TEMP/ci.log" --record "$RUNNER_TEMP/ci-record/record.jsonl" >> "$GITHUB_STEP_SUMMARY" || true
+        run: python adapters/stdlib/ci-why/ci_why.py "$RUNNER_TEMP/ci.log" >> "$GITHUB_STEP_SUMMARY" || true
       - if: always() && steps.run.outputs.ran != 'no'
-        run: python adapters/stdlib/ci/ci.py verify --box ${{ runner.temp }}/ci-record
+        run: for d in "$RUNNER_TEMP"/ci-record/*/; do python adapters/stdlib/ci/ci.py verify --box "$d" || exit 1; done
       - if: always() && steps.run.outputs.ran != 'no'
         uses: actions/upload-artifact@v7
         with:
           name: ci-record-mutants-reach
-          path: ${{ runner.temp }}/ci-record/record.jsonl
+          path: ${{ runner.temp }}/ci-record/*/record.jsonl
 
   deps:
     # Each add-on in adapters/deps gets a fresh virtual environment with only

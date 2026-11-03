@@ -129,6 +129,11 @@ def reach_problems(job: str, gates: set, blocks: dict, cimod) -> list[str]:
             for line in re.findall(r"ci/ci\.py run (.*?) --box", block)
             if "$" not in line
         ]
+        # or through cores.py, which runs every gate select names for it
+        for line in re.findall(r"ci/cores\.py (.*?)(?: \||$)", block, re.M):
+            line = re.sub(r"\$\{\{.*?\}\}", "X", line)
+            if "$" not in line:
+                falls.append(strip_options(line.split()))
         if (
             plans
             and all(picked(names) == gates for names in plans)
