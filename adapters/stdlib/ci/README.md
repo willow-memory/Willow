@@ -3,7 +3,7 @@ section: For maintainers
 line: This repo's checks as verdict rows on a kernel record, the same every run.
 source: box
 added: 2026-10-23
-writes: record, BUGS.md
+writes: record, BUGS.md, adapters/stdlib/*/*.py
 network: PyPI, to read each dependency floor's release date
 uses: live, readme, stack, test-shards
 runs-in: repo
@@ -137,8 +137,10 @@ and the same box gives the same report twice.
 every add-on on one box and sorts what each prints by shape, the ones
 printing rows with places being the next to convert; `scaffold NAME...`
 does what is the same every time (the add-on's name, its copy of the three
-functions, `--json` taken off before it reads its arguments); `check
-NAME...` runs the contract on each and says which aren't done.
+functions, `--json` taken off before it reads its arguments), writing the
+add-on's script in place, the one write to the add-ons' folders this card's
+`writes` names; `check NAME...` runs the contract on each and says which
+aren't done.
 
     python adapters/stdlib/ci/reports.py survey
     python adapters/stdlib/ci/reports.py scaffold NAME...
