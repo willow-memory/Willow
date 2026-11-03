@@ -1740,6 +1740,10 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- contradictions leaves a word that's everywhere (on more than one dated
+  line in 500, and more than 10) out of what two lines share: over 14
+  repositories it found 371,125 "disagreements" in 133 seconds, and now
+  1,404 in 18. (#212)
 - `pii-audit` reads a run holding a written date, year first, as dates, not
   a card number: two dates side by side (`2027-01-09  2027-01-09`, as
   milestones prints a row) are sixteen digits that pass Luhn one time in
