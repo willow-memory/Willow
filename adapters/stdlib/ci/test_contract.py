@@ -20,6 +20,8 @@ tests and its share of these, and nothing else.
 
 from __future__ import annotations
 
+import importlib.util
+import json
 import os
 import plistlib
 import re
@@ -1010,3 +1012,84 @@ def test_every_assistant_hosts_lists_has_its_add_on():
     hosts = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(hosts)
     assert hosts.HOSTS and [n for n in hosts.HOSTS if not (STDLIB / n).is_dir()] == []
+
+
+# ── the report contract (ci/README.md) ───────────────────────────────────────
+#: the stack add-on prints every report from its JSON: the one rendering
+_spec = importlib.util.spec_from_file_location(
+    "stack_for_reports", STDLIB / "stack" / "stack.py"
+)
+STACK = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(STACK)
+REPORTS = sorted(
+    n
+    for n, p in ADDONS.items()
+    if p.parent.name == "stdlib" and re.search(
+        r"^output:\s*report\s*$", (p / "README.md").read_text(encoding="utf-8"), re.M
+    )
+)  # fmt: skip
+#: a pile with something for most reports to find: a dated to-do, a card
+#: number, a shell built from input, a locked dependency
+FINDINGS = {
+    "notes.md": b"TODO 2026-10-01 ring the vet\n\npaid with 4242 4242 4242 4242\n",
+    "app.py": b"import subprocess\nsubprocess.run(cmd, shell=True)\n",
+    "requirements.txt": b"Pillow==13.0.0\n",
+}
+#: the command a report comes from, where it isn't the one COMMANDS runs: an
+#: add-on with verbs reports from one of them (score, check)
+REPORT_COMMANDS: dict[str, tuple[str, list[str]]] = {
+    "forecasts": ("forecasts.py", ["score", "--box", "{box}"]),
+    "predict": ("predict.py", ["score", "--box", "{box}"]),
+    "session-seal": ("session_seal.py", ["--box", "{box}", "check"]),
+}
+HEAD = re.compile(
+    r"(?P<addon>[a-z0-9-]+): (?P<state>populated|empty|unreachable), \S.*"
+)
+ROW = re.compile(r"  \S.*?  \S.*|  \S.*")
+
+
+def test_every_report_add_on_is_one_a_person_runs():
+    assert REPORTS and set(REPORTS) <= set(COMMANDS), set(REPORTS) - set(COMMANDS)
+
+
+@pytest.mark.parametrize("files", ["plain", "findings"])
+@pytest.mark.parametrize("name", only(REPORTS))
+def test_every_report_keeps_the_report_contract(name, files, tmp_path):
+    """Its text is what stack prints from its JSON; the first line, the
+    groups and the rows have the shape; the state agrees with the rows and
+    the exit code; the same box gives the same report twice."""
+    script_name, argv = REPORT_COMMANDS.get(name, COMMANDS[name])
+    script = STDLIB / name / script_name
+    pile = tmp_path / "pile"
+    pile.mkdir()
+    sample = {"garden.md": b"Tomatoes want sun.\n"}
+    if files == "findings":
+        sample.update(FINDINGS)
+    for rel, data in {**sample, **PILE_EXTRA.get(name, {})}.items():
+        (pile / rel).write_bytes(data)
+    box = tmp_path / "box"
+    subprocess.run([sys.executable, str(KERNEL), "init", "--box", str(box), "--pile",
+                    str(pile), "--key", str(tmp_path / "key"), *NOW], check=True,
+                   capture_output=True)  # fmt: skip
+    good = [a.format(box=box, pile=pile, tmp=tmp_path) for a in argv]
+    text, data = run(script, *good), run(script, *good, "--json")
+    assert text.returncode == data.returncode, "--json changes nothing but the form"
+    doc = json.loads(data.stdout)
+    assert text.stdout.rstrip("\n") == STACK.report_text(doc), (
+        "stack prints it the same"
+    )
+    assert set(doc) == {"addon", "state", "said", "groups"} and doc["addon"] == name
+    head, *body = text.stdout.rstrip("\n").splitlines()
+    assert HEAD.fullmatch(head) and "\n" not in doc["said"], head
+    rows = [r for g in doc["groups"] for r in g["rows"]]
+    names = [g["name"] for g in doc["groups"]]
+    assert None not in names[1:], "rows of no group come first"
+    assert all(g["rows"] for g in doc["groups"]), "an empty group isn't printed"
+    assert all(set(r) == {"where", "what"} and r["where"].strip() and "\n" not in
+               r["where"] + r["what"] for r in rows)  # fmt: skip
+    assert all(ROW.fullmatch(ln) or ln.startswith("## ") for ln in body), body
+    state, code = doc["state"], text.returncode
+    assert (state == "populated") == bool(rows), "populated is having rows"
+    assert {"empty": code == 0, "unreachable": code == 42,
+            "populated": code in (0, 42)}[state], (state, code)  # fmt: skip
+    assert run(script, *good).stdout == text.stdout, "the same box, the same report"

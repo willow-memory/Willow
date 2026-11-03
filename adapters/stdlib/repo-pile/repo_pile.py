@@ -337,8 +337,8 @@ def check(base: Path) -> int:
     marked to do (todo), secrets in plain text (secrets-audit)."""
     box = base / "box"
     say("xref", first(py(addon("xref"), "--box", box), last=True))
-    todo = py(addon("todo"), "--box", box)  # 42: nothing marked, said in a line
-    marked = 0 if todo.returncode == kernel.ESCALATE else len(todo.stdout.splitlines())
+    todo = py(addon("todo"), "--box", box, "--json")  # its report: a row a line
+    marked = sum(len(g["rows"]) for g in json.loads(todo.stdout)["groups"])
     say("todo", f"{marked} lines marked to do")
     secrets = py(addon("secrets-audit"), "--box", box)
     say(

@@ -29,6 +29,16 @@ says how). The first was v0.1.0.
   pull requests near yours. CI's `against` job runs it on every pull request
   against the others that are open, and CONTRIBUTING.md's rule is now to
   stack only when it names a reason. (#208)
+- The report contract (`adapters/stdlib/ci/README.md`): an add-on that
+  reports what it found prints one shape, `NAME: STATE, SAID` then rows of
+  where and what by group, and the same as JSON with `--json`; `empty` exits
+  0, so 42 never means found nothing. A card says `output: report`; `stack`
+  asks such a step for its JSON and weighs it by its rows;
+  `adapters/stdlib/ci/test_contract.py` holds each to it; `adapters/stdlib/ci/reports.py` surveys, scaffolds
+  and checks add-ons in batches. pii-audit, risky-code, todo, advisories,
+  install-scripts, package-contents, stale, again, session-seal check,
+  predict score, forecasts score and digest print reports; hook-start hands
+  the assistant digest's. (#197)
 - `ports/rust`, a fifth port of `kernel.py`: Rust, the standard library
   only and no crates, following the Go port function for function. What
   Rust's library lacks is written in and held by the vectors: SHA-256 and
@@ -1793,6 +1803,10 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- `pii-audit` reads a run holding a written date, year first, as dates, not
+  a card number: two dates side by side (`2027-01-09  2027-01-09`, as
+  milestones prints a row) are sixteen digits that pass Luhn one time in
+  ten, and listed milestones' own card and tests. (#196)
 - `jeles mirror` writes a store too big for one kernel file in parts under
   the kernel's `MAX_FILE` (store.db.1.txt and on), cut only between
   nuggets; a real store (2,277 nuggets, 2.5 MB) mirrored as one file was

@@ -3,9 +3,9 @@ section: For maintainers
 line: This repo's checks as verdict rows on a kernel record, the same every run.
 source: box
 added: 2026-10-23
-writes: record, BUGS.md
+writes: record, BUGS.md, adapters/stdlib/*/*.py
 network: PyPI, to read each dependency floor's release date
-uses: live, readme, test-shards
+uses: live, readme, stack, test-shards
 runs-in: repo
 -->
 # ci
@@ -98,6 +98,57 @@ against a real box, an add-on refuses (exit 2) and names itself; every reader
 keeps the readers' contract (the summary line, the same bytes twice,
 originals untouched, hidden files unread, 42 for nothing to read, refusals
 that write nothing). A new add-on with a command line has to be listed there.
+
+### The report contract
+
+An add-on that tells you what it found in your files (a check, an audit, a
+list of what's waiting) prints a report, and every report has the same
+shape, so one add-on's output reads like the next and a stack can line
+them up. Its card says `output: report`.
+
+    pii-audit: populated, 3 personal numbers in 3 of 254 files
+    ## a card number
+      money/orders.csv:17  ···· 4242
+    ## a National Insurance number, by shape
+      work/p60.txt:9       ···· 45C
+
+- **The first line** is the add-on's name, its state and one thing said:
+  `NAME: STATE, SAID`. The state is the kernel's own word: `populated`
+  (rows found), `empty` (none), or `unreachable` (it couldn't look, and
+  SAID says why). A refusal is no report: it is exit 2, on stderr.
+- **Rows** are where, then what, one line each, indented two spaces, the
+  where column as wide as its longest (up to 60). Where is a place, a
+  `path:line` or another name for where the thing is; what is the thing.
+- **Groups** are `## name` above their rows, in the add-on's own order;
+  rows that belong to no group come first, with no heading. A group with
+  no rows isn't printed.
+- **`--json`** prints the same report as one JSON object: `addon`,
+  `state`, `said`, and `groups`, each `{"name": ..., "rows": [{"where":
+  ..., "what": ...}]}`, the group of no group named `null`.
+- **Exit codes:** `empty` is 0 and `unreachable` 42; `populated` is 0, or
+  42 when what was found waits on you, as the card says. So 42 never means
+  "found nothing".
+
+Each report add-on keeps its own copy of the twenty lines that print it
+(`report`, `report_text`, `say`: an add-on holds alone and shares only the
+kernel). [stack](../stack/) runs a report add-on with `--json` and prints the
+report itself, and [test_contract.py](test_contract.py) holds each one to
+it: its text is exactly what stack prints from its JSON, its first line
+and rows have the shape, its state agrees with its rows and its exit code,
+and the same box gives the same report twice.
+
+[reports.py](reports.py) brings add-ons onto it in batches: `survey` runs
+every add-on on one box and sorts what each prints by shape, the ones
+printing rows with places being the next to convert; `scaffold NAME...`
+does what is the same every time (the add-on's name, its copy of the three
+functions, `--json` taken off before it reads its arguments), writing the
+add-on's script in place, the one write to the add-ons' folders this card's
+`writes` names; `check NAME...` runs the contract on each and says which
+aren't done.
+
+    python adapters/stdlib/ci/reports.py survey
+    python adapters/stdlib/ci/reports.py scaffold NAME...
+    python adapters/stdlib/ci/reports.py check NAME...
 
 **The guard:** the add-ons' tests, and each deps add-on's, run with
 [guard/sitecustomize.py](guard/sitecustomize.py) on `PYTHONPATH`, so it is
