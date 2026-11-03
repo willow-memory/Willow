@@ -5,16 +5,24 @@ source: box
 added: 2026-10-23
 writes: nothing
 network: none
+output: report
 -->
 # stale
 
 Approved answers whose cited passage has changed or gone.
 
-    python adapters/stdlib/stale/stale.py --box DIR
+    python adapters/stdlib/stale/stale.py --box DIR [--json]
 
-    stale   proposal:eb63d0addbe2…  'Six hours.'
-            cited 63d9b600aca4, was at garden.md:1: no longer in your folder
-    1 approved; 1 stale
+    stale: populated, 1 approved; 1 stale
+    ## proposal:eb63d0addbe2…  'Six hours.'
+      garden.md:1  cited 63d9b600aca4: no longer in your folder
+
+It prints [a report](../ci/README.md#the-report-contract), the shape every
+report add-on shares: a line counting the approvals and the stale ones, then
+a group per approval that doesn't hold, each row where a cited passage was
+and then its id. `--json` gives the same report as one JSON object. When
+every approval holds, or there are none, it is empty: `stale: empty, 2
+approved; 0 stale`.
 
 A passage's id is the SHA-256 of its text, so when the cited words change or
 their file goes, the id is nowhere in your folder, and this says so exactly.
@@ -23,14 +31,15 @@ how you find out the ground moved under one.
 
 An approval's cited passages are read from its proposal file, so the file has
 to be what you approved. When it isn't (missing, or no longer the bytes the
-key signed) the approval is shown as `broken` with why, never read for its
-cites, and counted:
+key signed) the approval is a row of its own, first, marked `broken` with
+why, never read for its cites, and counted:
 
-    broken  proposal:0a6fde95…  its proposal file is not the bytes that were sealed
-    1 approved; 0 stale; 1 broken
+    stale: populated, 1 approved; 0 stale; 1 broken
+      proposal:0a6fde95fa41…  broken: its proposal file is not the bytes that were sealed
 
-**Exit codes:** 0 every approval holds; 42 one has gone stale or broken and
-waits on you; 2 refused (a record that doesn't verify).
+**Exit codes:** 0 every approval holds, or there are none (empty); 42 one has
+gone stale or broken and waits on you (populated); 2 refused (a record that
+doesn't verify).
 
 **Uses:** the kernel's `read`, `sealed`, `standing`, `config` and `chunks`.
 
