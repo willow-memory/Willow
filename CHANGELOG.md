@@ -10,6 +10,16 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- The report contract (`adapters/stdlib/ci/README.md`): an add-on that
+  reports what it found prints one shape, `NAME: STATE, SAID` then rows of
+  where and what by group, and the same as JSON with `--json`; `empty` exits
+  0, so 42 never means found nothing. A card says `output: report`; `stack`
+  asks such a step for its JSON and weighs it by its rows;
+  `test_contract.py` holds each to it; `ci/reports.py` surveys, scaffolds
+  and checks add-ons in batches. pii-audit, risky-code, todo, advisories,
+  install-scripts, package-contents, stale, again, session-seal check,
+  predict score, forecasts score and digest print reports; hook-start hands
+  the assistant digest's. (#197)
 - `ports/rust`, a fifth port of `kernel.py`: Rust, the standard library
   only and no crates, following the Go port function for function. What
   Rust's library lacks is written in and held by the vectors: SHA-256 and
@@ -1593,6 +1603,11 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- secrets-audit, symptoms, first-mention, misquote, why-not, minutes and
+  thesis print a report (the report contract); "found nothing" exits 0 where
+  minutes, symptoms, first-mention and misquote said 42. A card says
+  `output: report` in its header, or it isn't one. stewart-crossover's
+  freeze 4: `run.py` reads misquote's report. (#198)
 - `restack` settles test_contract.py when two reader branches meet in
   `READERS`: git splits their new entries around one shared closing line, so
   neither side of the conflict holds a whole entry and the rule on lines
