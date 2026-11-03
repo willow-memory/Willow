@@ -50,6 +50,12 @@ what a meaning search or a local model can suggest a place for, through the
 kernel's propose, and a person seals; the seal is the correction a learning
 sorter keeps, and it's on your record.
 
+**What you sealed comes first.** A file whose category you sealed (a
+suggestion [sort-ask](../sort-ask/) made, kept on your record under your
+key) goes where your seal says, "sealed by you", before any phrase; a
+suggestion still waiting, or one whose bytes changed since you sealed it,
+places nothing. That seal is the correction a learning sorter keeps.
+
 It prints [a report](../ci/README.md#the-report-contract), and `--json`
 gives the same report as one JSON object.
 
