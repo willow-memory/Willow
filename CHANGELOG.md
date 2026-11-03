@@ -1812,6 +1812,9 @@ says how). The first was v0.1.0.
   line in 500, and more than 10) out of what two lines share: over 14
   repositories it found 371,125 "disagreements" in 133 seconds, and now
   1,404 in 18. (#212)
+- todo lists a line whose date no calendar has (1984-06-31) under its own
+  heading and exits 42, where it was ordered as the oldest thing to do; the
+  oldest is said of the real dates only. known-gaps' freeze 9. (#207)
 - The UI's Start it runs the sealed flow over every folder of the pick, each
   its own record with its page beside it, where it ran over the first only;
   two folders of one name get a record each (`files-2`), where the second
