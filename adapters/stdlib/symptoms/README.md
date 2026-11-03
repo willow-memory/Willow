@@ -5,7 +5,8 @@ source: new
 added: 2026-10-27
 writes: nothing
 network: none
--->
+output: report
+
 # symptoms
 
 One symptom's diary from your files, oldest first, each line dated, its turn
@@ -13,13 +14,20 @@ marked where the line says one, and cited, so a doctor can see the course of
 it and check any line against your files.
 
 ```
-python adapters/stdlib/symptoms/symptoms.py --box DIR "knee"
+python adapters/stdlib/symptoms/symptoms.py --box DIR "knee" [--json]
 
-2026-03-01  worse    Knee bad on the stairs. Voltaren and a hot pack.  Daily/2026-03-01.md:4
-2026-03-04  better   Walked the lake loop, 6.2km, knee held up.        Daily/2026-03-04.md:2
-2026-03-09  5/10     Physio: knee pain 5/10 after the stairs test.     Health/physio.md:7
-3 lines name "knee", 2026-03-01 to 2026-03-09: 1 worse, 1 better, 1 scored
+symptoms: populated, 3 lines name "knee", 2026-03-01 to 2026-03-09: 1 worse, 1 better, 1 scored
+## 2026-03
+  Daily/2026-03-01.md:4  2026-03-01  worse   Knee bad on the stairs. Voltaren and a hot pack.
+  Daily/2026-03-04.md:2  2026-03-04  better  Walked the lake loop, 6.2km, knee held up.
+  Health/physio.md:7     2026-03-09  5/10    Physio: knee pain 5/10 after the stairs test.
 ```
+
+It prints [a report](../ci/README.md#the-report-contract), the shape every
+report add-on shares: a line saying what it found, then the diary's lines as
+rows, each its place and then its date, turn and words, grouped by month in
+the diary's order, the undated last. `--json` gives the same report as one
+JSON object.
 
 **You name the symptom with words**, as a question is asked: "knee", "lower
 back", "migraine". A line counts when it itself holds every one of your
@@ -49,8 +57,9 @@ to 2026-10-06, 8 worse and 10 better, her daily notes' "Knee bad on the
 stairs" and "knee held up" carrying the course of it.
 
 It only reads, and the same folder gives the same bytes. Exit codes, the
-kernel's: 0 the symptom is named somewhere; 42 never, or only common words;
-2 refused.
+kernel's: 0 the symptom is named somewhere (populated) or nowhere (empty);
+42 only common words were asked, which it can't look for (unreachable); 2
+refused.
 
 **Uses:** the kernel's `chunks`, `newest`, `words`, `forms`, `held_by`,
 `FUNCTION`, `read_words` and `config`.

@@ -1,15 +1,20 @@
 """symptoms.py: one symptom's diary from your files, ready to show a doctor.
 
-    python adapters/stdlib/symptoms/symptoms.py --box DIR "knee"
+    python adapters/stdlib/symptoms/symptoms.py --box DIR "knee" [--json]
 
 Every line of your folder that names the symptom, oldest first, each dated,
 its turn marked where the line says one, and cited, so a doctor can see the
 course of it and check any line against your files:
 
-    2026-03-01  worse    Knee bad on the stairs. Voltaren and a hot pack.  Daily/2026-03-01.md:4
-    2026-03-04  better   Walked the lake loop, 6.2km, knee held up.        Daily/2026-03-04.md:2
-    2026-03-09  5/10     Physio: knee pain 5/10 after the stairs test.     Health/physio.md:7
-    41 lines name "knee", 2024-04-30 to 2026-10-24: 9 worse, 14 better, 3 scored
+    symptoms: populated, 3 lines name "knee", 2026-03-01 to 2026-03-09: 1 worse, 1 better, 1 scored
+    ## 2026-03
+      Daily/2026-03-01.md:4  2026-03-01  worse   Knee bad on the stairs. Voltaren and a hot pack.
+      Daily/2026-03-04.md:2  2026-03-04  better  Walked the lake loop, 6.2km, knee held up.
+      Health/physio.md:7     2026-03-09  5/10    Physio: knee pain 5/10 after the stairs test.
+
+It prints a report (ci/README.md, "The report contract"): each line is a row,
+its place and then its date, turn and words, in groups by month, the undated
+last; `--json` prints the same report as one JSON object.
 
 You name the symptom with words, as a question is asked: "knee", "lower
 back", "migraine". A line counts when it itself holds every one of your
@@ -31,8 +36,9 @@ The whole story of a matter, passages and all, written to a file to hand
 over, is the timeline add-on's job; this is the quick dated diary of one
 symptom's own lines.
 
-It only reads. Exit codes, the kernel's: 0 the symptom is named somewhere;
-42 never, or only common words; 2 refused.
+It only reads. Exit codes, the kernel's: 0 the symptom is named somewhere (populated) or
+nowhere (empty); 42 only common words were asked, which it can't look for
+(unreachable); 2 refused.
 """
 
 from __future__ import annotations
@@ -160,8 +166,21 @@ def show(asked: str, rows: list[dict]) -> list[str]:
     return out
 
 
+def groups_of(rows: list[dict]) -> list[tuple]:
+    """The diary's rows (where, what) grouped by the month they are dated,
+    in the diary's order, the undated last."""
+    wt = max(len(r["turn"]) for r in rows)
+    out: dict = {}
+    for r in rows:
+        month = f"{r['when'][:4]}-{r['when'][4:6]}" if r["when"] else "undated"
+        note = f"  ({r['note']})" if r["note"] else ""
+        what = f"{day(r['when']):<10}  {r['turn']:<{wt}}  {r['text'][:90]}{note}"
+        out.setdefault(month, []).append((f"{r['path']}:{r['line']}", what))
+    return list(out.items())
+
+
 def main(argv: list[str]) -> int:
-    as_json = "--json" in argv  # noqa: F841  wire: say(report(...), as_json)
+    as_json = "--json" in argv
     argv = [a for a in argv if a != "--json"]
     opts, args, it = {}, [], iter(argv)
     for a in it:
@@ -185,14 +204,17 @@ def main(argv: list[str]) -> int:
             return kernel.REFUSED
     want = set(kernel.words(args[0])) - kernel.FUNCTION
     if not want:
-        print(f'"{args[0]}" is only common words, held by everything; say more.')
+        said = f'"{args[0]}" is only common words, held by everything; say more'
+        say(report(NAME, "unreachable", said, []), as_json)
         return kernel.ESCALATE
     rows = diary(kernel.chunks(Path(cfg["pile"])), want, alias)
     if not rows:
-        print(f'No line of your folder names "{args[0]}".')
-        return kernel.ESCALATE
-    for line in show(args[0], rows):
-        print(line)
+        say(
+            report(NAME, "empty", f'no line of your folder names "{args[0]}"', []),
+            as_json,
+        )
+        return kernel.ALIVE
+    say(report(NAME, "populated", show(args[0], rows)[-1], groups_of(rows)), as_json)
     return kernel.ALIVE
 
 
