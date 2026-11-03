@@ -16,7 +16,7 @@ says how). The first was v0.1.0.
   for the Forge's checkpoint to put to the person once and remember; it
   recommends nothing, scores nothing, proposes nothing and writes nothing.
   Needs forge-play 0.10, whose card box reads these cards as rows for its
-  keyword scan.
+  keyword scan. (#192)
 - `ports/rust`, a fifth port of `kernel.py`: Rust, the standard library
   only and no crates, following the Go port function for function. What
   Rust's library lacks is written in and held by the vectors: SHA-256 and
