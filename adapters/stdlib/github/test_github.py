@@ -180,30 +180,31 @@ def test_the_repos_github_folder_holds():
             "group: ci",
             "doesn't cancel",
         ),
-        # ci.py's gates cut between jobs, each run by exactly one of them
+        # ci.py's gates cut between jobs, each run by exactly one of them; a
+        # cores.py line runs every gate select names for it, uncut
         (
             ".github/workflows/ci.yml",
-            "run tests --without tests:strip --shard",
-            "run tests --shard",
+            "tests --without tests:strip | tee",
+            "tests | tee",
             "tests:strip-1 more than once",
         ),  # fmt: skip
         (
             ".github/workflows/ci.yml",
-            "run tests:strip --shard",
-            "run tests:kernel --shard",
+            "tests --without tests:strip | tee",
+            "tests --without tests:strip --without tests:kernel | tee",
+            "tests:kernel in no job",
+        ),  # fmt: skip
+        (
+            ".github/workflows/ci.yml",
+            "ci-record tests:strip | tee",
+            "ci-record tests:kernel | tee",
             "tests:kernel more than once",
         ),  # fmt: skip
         (
             ".github/workflows/ci.yml",
-            "run tests:strip --shard",
-            "run tests:strpi --shard",
+            "ci-record tests:strip | tee",
+            "ci-record tests:strpi | tee",
             "what it refuses",
-        ),  # fmt: skip
-        (
-            ".github/workflows/ci.yml",
-            "        shard: [1, 2, 3, 4]\n",
-            "        shard: [1, 2, 3]\n",
-            "in no job",
         ),  # fmt: skip
         (
             ".github/workflows/ci.yml",
@@ -219,26 +220,14 @@ def test_the_repos_github_folder_holds():
         ),  # fmt: skip
         (
             ".github/workflows/ci.yml",
-            "--shard ${{ matrix.shard }}/8",
-            "--shard ${{ matrix.shard }}/5",
-            "what it refuses",
-        ),  # fmt: skip
-        (
-            ".github/workflows/ci.yml",
-            "        shard: [1, 2, 3, 4, 5, 6, 7, 8]\n",
-            "        shard: [1, 2, 3, 4, 5, 6, 7]\n",
+            "        shard: [1, 2, 3, 4]\n",
+            "        shard: [1, 2, 3]\n",
             "in no job",
         ),  # fmt: skip
         (
             ".github/workflows/ci.yml",
-            '"3.14"]\n        shard: [1, 2, 3, 4]\n',
-            '"3.13"]\n        shard: [1, 2, 3, 4]\n',
-            "Python matrices differ",
-        ),
-        (
-            ".github/workflows/ci.yml",
-            '{"python-version":"3.13"}]\') || fromJSON(\'[]\') }}\n    steps:\n      - uses: actions/checkout@v7\n      - uses: actions/setup-python@v7\n        with:\n          python-version: ${{ matrix.python-version }}\n      - run: pip install pytest\n      - run: python adapters/stdlib/ci/ci.py run tests:strip',  # fmt: skip
-            '{"python-version":"3.12"}]\') || fromJSON(\'[]\') }}\n    steps:\n      - uses: actions/checkout@v7\n      - uses: actions/setup-python@v7\n        with:\n          python-version: ${{ matrix.python-version }}\n      - run: pip install pytest\n      - run: python adapters/stdlib/ci/ci.py run tests:strip',  # fmt: skip
+            '{"python-version":"3.13"}]\') || fromJSON(\'[]\') }}\n    steps:\n      - uses: actions/checkout@v7\n      - uses: actions/setup-python@v7\n        with:\n          python-version: ${{ matrix.python-version }}\n      - run: pip install pytest\n      - run: python adapters/stdlib/ci/cores.py --jobs 4 --box ${{ runner.temp }}/ci-record tests:strip',  # fmt: skip
+            '{"python-version":"3.12"}]\') || fromJSON(\'[]\') }}\n    steps:\n      - uses: actions/checkout@v7\n      - uses: actions/setup-python@v7\n        with:\n          python-version: ${{ matrix.python-version }}\n      - run: pip install pytest\n      - run: python adapters/stdlib/ci/cores.py --jobs 4 --box ${{ runner.temp }}/ci-record tests:strip',  # fmt: skip
             "Python matrices differ",
         ),
         # CONST-VIII-2: the weekly run that reaches a person when an

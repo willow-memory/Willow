@@ -2,7 +2,8 @@ name: ci
 
 # Every check is in adapters/stdlib/ci/ci.py, which writes each one as a verdict row
 # on a kernel record. This file only installs the tools, runs one part per
-# job, verifies the record, and keeps it as the run's artifact. The record
+# job (tests and strip run four shards at once with cores.py), verifies the
+# record, and keeps it as the run's artifact. The record
 # lives in the runner's temp folder: never in the checkout it hashes.
 on:
   push:
@@ -136,15 +137,19 @@ jobs:
     # the same Pythons: it runs the add-ons' tests again in a copy without
     # GitHub, so in one job it doubled the time. github.py check holds the two
     # to the whole part, and to the same matrix.
-    # Cut in eight by ci.py's --shard, on every Python: the add-ons' tests are
-    # tests:adapters-1 to -8, each a share of their files, so no job runs
-    # them all (together they took eight minutes).
+    # One job on each Python, not a matrix of shards: the runner has four
+    # cores and a job used one, and the job's wall time was its slowest gate
+    # (about nine minutes) whatever the cut. cores.py runs ci.py's --shard
+    # parts at once, four to a runner, so they end about together. A pull
+    # request is 14 jobs, not 36, and a push to main 30, not 84, behind the
+    # 20-job limit. tests:alone starts a pool of its own, a thread for each
+    # core, so under four shards the cores are oversubscribed; that is slower
+    # than it could be, not wrong, and alone.py is left as it is.
     runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
         python-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
-        shard: [1, 2, 3, 4, 5, 6, 7, 8]
         # A pull request runs the oldest and newest Python; a push to main
         # runs all six.
         exclude: ${{ github.event_name == 'pull_request' && fromJSON('[{"python-version":"3.10"},{"python-version":"3.11"},{"python-version":"3.12"},{"python-version":"3.13"}]') || fromJSON('[]') }}
@@ -154,27 +159,30 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - run: pip install pytest
-      - run: python adapters/stdlib/ci/ci.py run tests --without tests:strip --shard ${{ matrix.shard }}/8 --box ${{ runner.temp }}/ci-record | tee "$RUNNER_TEMP/ci.log"
+      # cores.py verifies each record itself and refuses when one doesn't;
+      # its records are ci-record/1 to ci-record/4, and its log has every
+      # gate's verdict, which ci-why reads
+      - run: python adapters/stdlib/ci/cores.py --jobs 4 --box ${{ runner.temp }}/ci-record tests --without tests:strip | tee "$RUNNER_TEMP/ci.log"
       - if: failure()
-        run: python adapters/stdlib/ci-why/ci_why.py "$RUNNER_TEMP/ci.log" --record "$RUNNER_TEMP/ci-record/record.jsonl" >> "$GITHUB_STEP_SUMMARY" || true
+        run: python adapters/stdlib/ci-why/ci_why.py "$RUNNER_TEMP/ci.log" >> "$GITHUB_STEP_SUMMARY" || true
       - if: always()
-        run: python adapters/stdlib/ci/ci.py verify --box ${{ runner.temp }}/ci-record
+        run: for d in "$RUNNER_TEMP"/ci-record/*/; do python adapters/stdlib/ci/ci.py verify --box "$d" || exit 1; done
       - if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: ci-record-tests-${{ matrix.python-version }}-${{ matrix.shard }}
-          path: ${{ runner.temp }}/ci-record/record.jsonl
+          name: ci-record-tests-${{ matrix.python-version }}
+          path: ${{ runner.temp }}/ci-record/*/record.jsonl
 
   strip:
     # tests:strip, test_strip.py: the repo without GitHub, then without any
     # add-on, each still passing. Four gates, tests:strip-1 to -4, each a
-    # share of the add-ons' tests in the stripped copy; one job each.
+    # share of the add-ons' tests in the stripped copy. One job on each
+    # Python, the four run at once by cores.py, as the tests job does.
     runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
         python-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
-        shard: [1, 2, 3, 4]
         # A pull request runs the oldest and newest Python; a push to main
         # runs all six.
         exclude: ${{ github.event_name == 'pull_request' && fromJSON('[{"python-version":"3.10"},{"python-version":"3.11"},{"python-version":"3.12"},{"python-version":"3.13"}]') || fromJSON('[]') }}
@@ -184,16 +192,16 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - run: pip install pytest
-      - run: python adapters/stdlib/ci/ci.py run tests:strip --shard ${{ matrix.shard }}/4 --box ${{ runner.temp }}/ci-record | tee "$RUNNER_TEMP/ci.log"
+      - run: python adapters/stdlib/ci/cores.py --jobs 4 --box ${{ runner.temp }}/ci-record tests:strip | tee "$RUNNER_TEMP/ci.log"
       - if: failure()
-        run: python adapters/stdlib/ci-why/ci_why.py "$RUNNER_TEMP/ci.log" --record "$RUNNER_TEMP/ci-record/record.jsonl" >> "$GITHUB_STEP_SUMMARY" || true
+        run: python adapters/stdlib/ci-why/ci_why.py "$RUNNER_TEMP/ci.log" >> "$GITHUB_STEP_SUMMARY" || true
       - if: always()
-        run: python adapters/stdlib/ci/ci.py verify --box ${{ runner.temp }}/ci-record
+        run: for d in "$RUNNER_TEMP"/ci-record/*/; do python adapters/stdlib/ci/ci.py verify --box "$d" || exit 1; done
       - if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: ci-record-strip-${{ matrix.python-version }}-${{ matrix.shard }}
-          path: ${{ runner.temp }}/ci-record/record.jsonl
+          name: ci-record-strip-${{ matrix.python-version }}
+          path: ${{ runner.temp }}/ci-record/*/record.jsonl
 
   ports:
     runs-on: ubuntu-24.04

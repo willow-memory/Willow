@@ -103,21 +103,41 @@ def matrix(ci: str) -> list[str]:
 CI_PY = Path(__file__).resolve().parents[1] / "ci" / "ci.py"
 
 
+def strip_options(argv: list[str]) -> list[str]:
+    """A cores.py line less its options (--box, --jobs, --now and their
+    values): the parts and gates it names and its --without."""
+    out, it = [], iter(argv)
+    for a in it:
+        if a in ("--box", "--jobs", "--now"):
+            next(it, None)
+        else:
+            out.append(a)
+    return out
+
+
 def split_problems(ci: str) -> list[str]:
     """ci.yml's jobs cut ci.py's gates between them (tests:strip in a job of
     its own, mutants in shards): each gate run by exactly one job, so a cut
     never drops one, and every Python matrix the same, its Pythons and what
     it excludes from them, so tests:strip runs
     on each Python the other tests do. Each job's `ci.py run` is read with
-    ci.py's own `select`, once for each value of its matrix's `shard`."""
+    ci.py's own `select`, once for each value of its matrix's `shard`; a
+    `cores.py` line runs every gate `select` names for what it is given, as
+    its shards together do."""
     spec = importlib.util.spec_from_file_location("willow_ci_for_github", CI_PY)
     cimod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(cimod)
     out, ran = [], {}
     for job, block in re.findall(r"^  ([\w-]+):\n(.*?)(?=^  \S|\Z)", ci, re.M | re.S):
         shards = re.search(r"^        shard: \[(.*?)\]$", block, re.M)
-        for line in re.findall(r"ci/ci\.py run (.*?) --box", block):
-            values = [v.strip() for v in shards.group(1).split(",")] if shards else [""]
+        values = [v.strip() for v in shards.group(1).split(",")] if shards else [""]
+        lines = [(x, values) for x in re.findall(r"ci/ci\.py run (.*?) --box", block)]
+        for line in re.findall(r"ci/cores\.py (.*?)(?: \||$)", block, re.M):
+            # cores.py cuts the gates into shards of its own and runs every
+            # one, so the line runs what ci.py's select names, uncut
+            argv = re.sub(r"\$\{\{.*?\}\}", "X", line).split()
+            lines.append((" ".join(strip_options(argv)), [""]))
+        for line, values in lines:
             for v in values:
                 argv = line.replace("${{ matrix.shard }}", v).split()
                 names, without, shard, it = [], [], None, iter(argv)

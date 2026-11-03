@@ -115,10 +115,15 @@ merging it.
 In CI (`.github/workflows/ci.yml`) each part is its own job with its own
 record, verified and uploaded as that run's artifact, but three: `tests:strip`
 has jobs of its own on each Python (it runs the add-ons' tests again, in a
-stripped copy, so beside the rest it doubled the job), and the tests (eight
-shards on each Python), strip (four) and mutants (four) runs are cut with
-`--shard`. All the add-ons' tests in one gate took eight minutes, and strip
-ran them again: the chunk gates are what lets a job run a few of them.
+stripped copy, so beside the rest it doubled the job), the tests and strip
+jobs are one job on each Python that runs four `--shard`s at once with
+[cores.py](cores.py) (records `<DIR>/1` to `<DIR>/4`, all uploaded under one
+artifact), and mutants is four jobs cut with `--shard`. Cut into one job
+each, a pull request is 14 jobs and a push to main 30, not 36 and 84: a job
+had used one of the runner's four cores, and the tests job ended with its
+slowest gate (about nine minutes) however it was cut. All the add-ons' tests
+in one gate took eight minutes, and strip ran them again: the chunk gates are
+what lets a job run a few of them.
 `test-times.json` is each test file's seconds in one run
 (`pytest adapters/stdlib --junitxml=RUN.xml`, summed by file); it only sets
 the balance, so a stale one runs every test all the same. `adapters/stdlib/github/github.py check` holds the cut: every gate run by exactly

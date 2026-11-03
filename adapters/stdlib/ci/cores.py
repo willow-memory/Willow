@@ -14,6 +14,9 @@ gates. Shards are cut by gate count, as `--shard` cuts them, not by time.
 PART, GATE, --without and --now mean what they mean to ci.py, and a name it
 doesn't know is refused before anything runs.
 
+CI's tests and strip jobs run it, one job a Python, in place of a matrix of
+shards (.github/workflows/ci.yml).
+
 The records are ci.py's, one a shard, in DIR/1 to DIR/N; DIR must be outside
 the repo, or under .ci-record, as ci.py asks of a record. This writes
 nothing of its own, and never a seal.
