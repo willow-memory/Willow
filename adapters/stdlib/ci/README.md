@@ -5,7 +5,7 @@ source: box
 added: 2026-10-23
 writes: record, BUGS.md
 network: PyPI, to read each dependency floor's release date
-uses: live, readme, test-shards
+uses: live, readme, stack, test-shards
 runs-in: repo
 -->
 # ci
