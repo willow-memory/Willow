@@ -160,6 +160,17 @@ class Adds:
             at(base, "FILES.md")
         )
 
+    def without(self, shared: "Adds") -> "Adds":
+        """These additions less the ones `shared` holds too: what the two pull
+        requests brought in together, before they parted, is nobody's
+        duplicate."""
+        out = Adds.__new__(Adds)
+        out.addons = {n: v for n, v in self.addons.items() if n not in shared.addons}
+        out.ideas = {n: v for n, v in self.ideas.items() if n not in shared.ideas}
+        out.commands = self.commands - shared.commands
+        out.paths = self.paths - shared.paths
+        return out
+
     def names(self) -> dict[str, tuple[str, str]]:
         """name -> (what it is, its line); an add-on beats an idea of its name."""
         out = {n: ("idea", line) for n, line in self.ideas.items()}
@@ -244,8 +255,12 @@ def check(base: str, head: str, others: list[str]) -> tuple[int, list[str]]:
             if not sha:
                 raise Unchecked("not a ref")
             there = Adds(sha, left(ref, sha))
-            found = (duplicates(mine_adds, there, who) + collisions(mine, sha, who)
-                     + nears(mine_adds, there, who))  # fmt: skip
+            # one stacked on the other: what they share from before they
+            # parted (the base's additions, carried by both) is no duplicate
+            parted = left(mine, sha)
+            shared = Adds(parted, left(ref, parted))
+            found = (duplicates(mine_adds.without(shared), there.without(shared), who)
+                     + collisions(mine, sha, who) + nears(mine_adds, there, who))  # fmt: skip
         except Unchecked as why:
             skipped.append(f"not checked: {who}: {why}")
             continue

@@ -60,3 +60,8 @@ writes its objects to a scratch folder, not to `.git`.
 **Uses:** the kernel's exit codes, and `adapters/stdlib/similar/similar.py`
 for `near:`. The list of files restack settles is held again here, and a test
 holds it to restack's own.
+
+**A pull request stacked on another** carries the other's additions, so
+against main both add them. What the two share from before they parted (their
+merge base's additions) is taken off both sides first: a stack is nobody's
+duplicate, and a third branch adding the same name on its own still is.

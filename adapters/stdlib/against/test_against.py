@@ -117,6 +117,28 @@ def test_two_branches_adding_the_same_addon_folder_fail(repo):
     assert got.stdout.splitlines()[-1] == "1 checked, 1 duplicated, 0 collided, 0 near, 0 not checked"  # fmt: skip
 
 
+def test_a_pull_request_stacked_on_another_shares_its_additions_not_duplicates_them(
+    repo,
+):
+    """#201 stacked on #200 carries #200's add-on: both "add" it against main,
+    and neither is the other's duplicate, either way round."""
+    branch(repo, "pr/200", addon("forge"))
+    other = branch(repo, "pr/201", {**addon("forge"), **addon("steps")}, start="pr/200")
+    got = check(repo, "pr/200", "pr/201")
+    assert got.returncode == 0, got.stdout
+    assert not [x for x in got.stdout.splitlines() if x.startswith("duplicate:")]
+    assert f"checked: #201 {other}" in got.stdout.splitlines()
+    got = check(repo, "pr/201", "pr/200")
+    assert got.returncode == 0, got.stdout
+    assert not [x for x in got.stdout.splitlines() if x.startswith("duplicate:")]
+    # a third branch adding forge on its own is still the duplicate it is
+    branch(repo, "pr/300", addon("forge"))
+    got = check(repo, "pr/201", "pr/300")
+    assert (
+        got.returncode == 2 and "duplicate: both add add-on forge (#300)" in got.stdout
+    )
+
+
 def test_the_same_name_in_stdlib_and_deps_is_the_same_add_on(repo):
     branch(repo, "mine", addon("sort"))
     branch(repo, "pr/12", {"adapters/deps/sort/README.md": CARD.format(name="sort", line="x")})  # fmt: skip
