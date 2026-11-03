@@ -99,6 +99,16 @@ def test_the_audit_never_repeats_the_number(tmp_path):
                               "rows": [{"where": "money/orders.csv:1", "what": "···· 4242"}]}]  # fmt: skip
 
 
+def test_two_dates_side_by_side_are_dates_not_a_card():
+    # sixteen digits that pass Luhn by luck, as milestones' own card prints them
+    line = "0y 10m 13d 2027-01-09  2027-01-09 first steps"
+    run_ = pa.RUN.search(line).group()
+    assert pa.luhn(run_.replace("-", "").replace(" ", ""))  # the coin came up
+    assert pa.kinds_of(run_, line) == []
+    assert pa.kinds_of(CARD) == ["a card number"]  # a card grouped 4-4-4-4 still is
+    assert pa.kinds_of("4242-4242-4242-4242") == ["a card number"]
+
+
 def test_plain_numbers_dates_and_phones_are_nobodys(tmp_path):
     root = folder(tmp_path, {"a.md": (
         "ring 0412 345 678 about invoice 20261027\n"

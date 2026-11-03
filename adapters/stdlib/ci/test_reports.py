@@ -7,7 +7,10 @@ from __future__ import annotations
 import importlib.util
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
+
+import pytest
 
 HERE = Path(__file__).resolve().parent
 spec = importlib.util.spec_from_file_location("reports", HERE / "reports.py")
@@ -39,6 +42,14 @@ if __name__ == "__main__":
 '''
 
 
+@pytest.fixture
+def scratch():
+    """Scratch made with tempfile, which the guard counts as the add-on's own:
+    scaffold writes an add-on's script, and here the add-on is a stand-in."""
+    with tempfile.TemporaryDirectory() as tmp:
+        yield Path(tmp)
+
+
 def stand_in(tmp_path: Path) -> Path:
     stdlib = tmp_path / "adapters" / "stdlib"
     (stdlib / "strict").mkdir(parents=True)
@@ -46,8 +57,8 @@ def stand_in(tmp_path: Path) -> Path:
     return stdlib
 
 
-def test_scaffold_takes_json_off_before_the_add_on_reads_its_arguments(tmp_path):
-    stdlib = stand_in(tmp_path)
+def test_scaffold_takes_json_off_before_the_add_on_reads_its_arguments(scratch):
+    stdlib = stand_in(scratch)
     assert rp.scaffold_one("strict", stdlib) == (
         True,
         "adapters/stdlib/strict/strict.py",
@@ -63,15 +74,15 @@ def test_scaffold_takes_json_off_before_the_add_on_reads_its_arguments(tmp_path)
     assert src.index('"""Its docstring stays first."""') < src.index("as_json =")
 
 
-def test_the_report_text_it_copies_is_stacks_word_for_word(tmp_path):
-    stdlib = stand_in(tmp_path)
+def test_the_report_text_it_copies_is_stacks_word_for_word(scratch):
+    stdlib = stand_in(scratch)
     rp.scaffold_one("strict", stdlib)
     assert rp.report_text_source() in (stdlib / "strict" / "strict.py").read_text()
     assert rp.report_text_source() in (rp.STDLIB / "stack" / "stack.py").read_text()
 
 
-def test_it_never_scaffolds_twice_and_names_what_it_left(tmp_path):
-    stdlib = stand_in(tmp_path)
+def test_it_never_scaffolds_twice_and_names_what_it_left(scratch):
+    stdlib = stand_in(scratch)
     rp.scaffold_one("strict", stdlib)
     before = (stdlib / "strict" / "strict.py").read_text()
     assert rp.scaffold_one("strict", stdlib) == (

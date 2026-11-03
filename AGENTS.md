@@ -208,13 +208,16 @@ A result tested against what anyone can rerun, as in
 - **Several sessions can share a branch.** Fetch before you push, merge
   what's new, and never force-push.
 - **Merging makes a merge commit**; squash isn't allowed on this repo.
-- **Open it, then write its number** in CHANGELOG.md. Another pull request
-  may take the number you guessed.
-- **Stack on the open pull requests.** Before opening one, list what's
-  open; one that touches a file yours does (CHANGELOG.md, the generated
-  lists, `adapters/planned.json`) is merged into your branch and named as
-  its base, so the two meet in your branch, not on `main` after one lands.
-  The steps are in CONTRIBUTING.md's Pull requests.
+- **Branch from `main`; open it, add its number to CHANGELOG.md, and push
+  once.** Another pull request may take the number you guessed, so write the
+  real one, and do it in that one push: each push starts every check, and the
+  first run should not be thrown away.
+- **Don't stack on the open pull requests by habit.** CI's `against` job
+  holds yours to them: a duplicate (a name both add) fails it; a collision
+  names the pull request to merge first. Stack only on one it names, merge
+  its branch into yours and make it your base. Run it yourself before you
+  open: `python adapters/stdlib/against/against.py check --base origin/main
+  HEAD OTHER ...`. The steps are in CONTRIBUTING.md's Pull requests.
 - **Work that needs another unmerged branch stacks on it.** An add-on whose
   idea, or whose card's link, exists only on another branch is built from
   that branch, and its pull request's base is that branch; built from

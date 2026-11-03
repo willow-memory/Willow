@@ -86,6 +86,30 @@ def test_a_store_becomes_passages_without_deleted_rows_or_gaps(tmp_path):
                     "sources: https://science.example.gov/black-holes\nverified: human, by ada, 2026-10-01\n\n")  # fmt: skip
 
 
+def test_a_store_too_big_for_one_kernel_file_is_mirrored_in_parts_it_reads(tmp_path):
+    folder, to = tmp_path / "f", tmp_path / "m"
+    folder.mkdir()
+    con = sqlite3.connect(folder / "store.db")
+    con.execute("CREATE TABLE records (id TEXT PRIMARY KEY, data TEXT NOT NULL)")
+    answer = "Long answer. " * 400  # about 5 kB a nugget
+    n = jeles.kernel.MAX_FILE // 5_000 * 3  # three files' worth
+    for i in range(n):
+        con.execute("INSERT INTO records VALUES (?, ?)", (f"n{i}", json.dumps(
+            {"question": f"Question {i}?", "answer": answer, "verification_kind": "human"})))  # fmt: skip
+    con.commit()
+    con.close()
+    got = run(str(SCRIPT), "mirror", "--from", str(folder), "--to", str(to))
+    assert got.returncode == 0, got.stderr
+    parts = sorted(to.iterdir())
+    assert len(parts) >= 3 and not (to / "store.db.txt").exists()
+    assert all(p.stat().st_size <= jeles.kernel.MAX_FILE for p in parts)
+    said = "".join(p.read_text() for p in parts)
+    assert said.startswith(f"jeles store, {n} nuggets\n\n")
+    assert all(f"Question {i}?\n" in said for i in range(n))  # none lost at a cut
+    read = {c["text"].split("\n")[0] for c in jeles.kernel.chunks(to)}
+    assert {f"Question {i}?" for i in range(n)} <= read  # and the kernel reads them all
+
+
 def test_other_files_are_skipped_and_counted(tmp_path):
     folder, to = tmp_path / "f", tmp_path / "m"
     folder.mkdir()
