@@ -1076,12 +1076,13 @@ willow/
 │   │   │   ├── stack.py       one document from a stack of add-on steps over a box, pooled and peaks-first
 │   │   │   ├── test_stack.py
 │   │   │   ├── example.md
-│   │   │   ├── examples/      stacks to start from, one kind of folder each: a choir, a smallholding, a code library, a class, a story, foster dogs, a knee
+│   │   │   ├── examples/      stacks to start from, one kind of folder each: a choir, a smallholding, a code library, a class, a story, foster dogs, a knee, a folder of repositories
 │   │   │   │   ├── choir.md
 │   │   │   │   ├── comeback.md
 │   │   │   │   ├── foster.md
 │   │   │   │   ├── maintainer.md
 │   │   │   │   ├── reporter.md
+│   │   │   │   ├── repos.md
 │   │   │   │   ├── smallholding.md
 │   │   │   │   └── teacher.md
 │   │   │   └── README.md
