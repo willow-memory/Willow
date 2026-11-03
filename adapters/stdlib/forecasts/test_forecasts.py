@@ -70,15 +70,25 @@ def test_a_wager_keeps_its_p_and_the_claims_hash_never_its_words(tmp_path):
 def test_an_outcome_counts_only_once_the_person_seals_it(tmp_path):
     box = make(tmp_path)
     got = run("score", "--box", str(box))
-    assert got.returncode == 42 and "no wagers yet" in got.stdout
+    assert got.returncode == 0
+    assert got.stdout == "forecasts: empty, no wagers yet: wager first, settle after\n"
     n = wager(box, "0.8", "the bees swarm before June")
     got = run("score", "--box", str(box))
-    assert got.returncode == 42 and "1 open of 1 wagers" in got.stdout
+    assert got.returncode == 0, "an open wager waits on the world, not on you"
+    assert got.stdout.splitlines() == [
+        "forecasts: populated, 1 open of 1 wagers; nothing settled yet: an outcome "
+        "counts once you seal it",
+        "## open",
+        f"  row {n}  p 0.8",
+    ]
     settle(box, n, "yes", seal=False)
     assert fc.outcomes(box, rows(box))[n]["state"] == "waiting"
-    got = run("score", "--box", str(box))
-    assert got.returncode == 42 and f"row {n}: waiting" in got.stdout
-    assert "nothing settled yet" in got.stdout
+    got = run("score", "--box", str(box), "--json")
+    assert got.returncode == 42
+    doc = json.loads(got.stdout)
+    assert doc["said"].startswith("1 waiting of 1 wagers; nothing settled yet")
+    assert doc["groups"] == [{"name": "waiting on your seal",
+                              "rows": [{"where": f"row {n}", "what": "p 0.8"}]}]  # fmt: skip
     assert not any(r["kind"] == "seal" for r in rows(box)), "code never seals"
 
 
@@ -95,11 +105,23 @@ def test_the_scores_over_what_is_settled(tmp_path):
     got = run("score", "--box", str(box))
     assert got.returncode == 0, got.stderr
     assert got.stdout.splitlines() == [
-        "2 settled, 1 open of 3 wagers",
-        "Brier 0.065  log score 0.290  over 2 settled",
-        "  said 0.7-0.8: right 100% of 1",
-        "  said 0.8-0.9: right 100% of 1",
+        "forecasts: populated, 2 settled, 1 open of 3 wagers; Brier 0.065, "
+        "log score 0.290 over 2 settled",
+        "## open",
+        "  row 3         p 0.6",
+        "## settled",
+        f"  row {a}         p 0.8, it happened",
+        f"  row {b}         p 0.3, it didn't",
+        "## by confidence, over the settled",
+        "  said 0.7-0.8  right 100% of 1",
+        "  said 0.8-0.9  right 100% of 1",
     ]
+    doc = json.loads(run("score", "--box", str(box), "--json").stdout)
+    assert doc["addon"] == "forecasts" and doc["state"] == "populated"
+    assert doc["groups"][-1]["rows"][0] == {
+        "where": "said 0.7-0.8",
+        "what": "right 100% of 1",
+    }
     got = run("settle", "--box", str(box), *NOW, str(a), "no")
     assert got.returncode == 2 and "settled already" in got.stderr
 
@@ -112,7 +134,8 @@ def test_both_outcomes_sealed_is_said_and_not_scored(tmp_path):
     assert run("seal", "--box", str(box), first, *NOW, script=KERNEL).returncode == 0
     assert fc.outcomes(box, rows(box))[n]["state"] == "conflicting"
     got = run("score", "--box", str(box))
-    assert got.returncode == 42 and f"row {n}: conflicting" in got.stdout
+    assert got.returncode == 42
+    assert f"\n## conflicting: you sealed both outcomes\n  row {n}  p 0.7" in got.stdout
 
 
 def test_a_sealed_outcome_whose_file_changed_is_broken(tmp_path):
@@ -125,7 +148,9 @@ def test_a_sealed_outcome_whose_file_changed_is_broken(tmp_path):
     f.write_text(json.dumps(prop))
     assert fc.outcomes(box, rows(box))[n]["state"] == "broken"
     got = run("score", "--box", str(box))
-    assert got.returncode == 2 and f"row {n}: broken" in got.stdout
+    assert got.returncode == 42, "a broken outcome is found, not a refusal"
+    assert "\n## broken: a sealed outcome's file is no longer" in got.stdout
+    assert got.stdout.endswith(f"\n  row {n}  p 0.7\n")
 
 
 def test_the_scores_are_the_one_scripts():
@@ -154,7 +179,8 @@ def test_a_bad_command_line_or_box_is_refused(tmp_path):
                  ["settle", "--box", b, "--p", "0.5", str(n), "yes"],
                  ["settle", "--box", b, str(n), "maybe"],
                  ["score", "--box", b, "x"], ["score", "--box", b, *NOW],
-                 ["score", "--box", ""]):  # fmt: skip
+                 ["score", "--box", ""], ["wager", "--box", b, "--p", "0.5", "--json", "c"],
+                 ["settle", "--box", b, "--json", str(n), "yes"]):  # fmt: skip
         got = run(*argv)
         assert got.returncode == 2 and "forecasts.py" in got.stderr, argv
     got = run("settle", "--box", b, "0", "yes")

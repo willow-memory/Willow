@@ -5,6 +5,7 @@ source: bot
 added: 2026-11-01
 writes: record
 network: none
+output: report
 -->
 # predict
 
@@ -12,9 +13,9 @@ Before a question is asked, what it will come to, written on the record;
 after, whether that held.
 
     python adapters/stdlib/predict/predict.py ask   --box DIR "bees swarm"
-    python adapters/stdlib/predict/predict.py score --box DIR
+    python adapters/stdlib/predict/predict.py score --box DIR [--json]
 
-    3 of 4 predictions right
+    predict: populated, 3 of 4 predictions right
       said empty      1 of 1 held
       said populated  2 of 3 held
 
@@ -33,14 +34,18 @@ no prediction, and not graded right or wrong.
 `score` reads the record back: how many predictions were graded, how many
 right, and for each answer it said, how often that held. It writes nothing.
 It also reads the one script's own `predict` rows, which carry their grade
-in the same row.
+in the same row. `score` prints [a report](../ci/README.md#the-report-contract),
+the shape every report add-on shares: a line saying how many were right,
+then a row for each answer it said, how often it held. `--json` gives the
+same report as one JSON object. Nothing graded yet is `empty`. `ask` prints
+the bite's JSON, not a report.
 
 The record keeps no words, so neither does this: a prediction is one of
 three states and the counts behind it.
 
 Exit codes, the kernel's: for `ask`, the bite's own (0 served or sealed, 42
-nothing found, 2 refused); for `score`, 0, or 42 when nothing is graded yet;
-2 refused (a record that doesn't verify, a folder that isn't a box, a bad
+nothing found, 2 refused); for `score`, 0, graded or nothing graded yet,
+since a grade waits on no one; 2 refused (a record that doesn't verify, a folder that isn't a box, a bad
 command line).
 
 **Uses:** the kernel's `read`, `append`, `bite` and its exit codes.

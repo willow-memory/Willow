@@ -4,6 +4,7 @@ writes nothing."""
 
 from __future__ import annotations
 
+import json
 import subprocess
 import sys
 from pathlib import Path
@@ -18,14 +19,14 @@ def run(*argv: str) -> subprocess.CompletedProcess:
     return subprocess.run([sys.executable, *argv], capture_output=True, text=True)
 
 
-def on(tmp: Path, files: dict[str, str]) -> subprocess.CompletedProcess:
+def on(tmp: Path, files: dict[str, str], *more: str) -> subprocess.CompletedProcess:
     pile = tmp / "pile"
     pile.mkdir(exist_ok=True)
     for name, text in files.items():
         p = pile / name
         p.parent.mkdir(parents=True, exist_ok=True)
         p.write_text(text)
-    return run(str(RC), "--from", str(pile))
+    return run(str(RC), "--from", str(pile), *more)
 
 
 def test_sinks_across_languages_are_found_by_file_and_line(tmp_path):
@@ -41,7 +42,7 @@ def test_sinks_across_languages_are_found_by_file_and_line(tmp_path):
     assert "insecure deserialization" in out and "a.py:3" in out
     assert "code injection" in out and "c.js:1" in out
     assert "broken tls" in out and "c.js:2" in out and "d.go:1" in out
-    assert "match a risky-code pattern" in out
+    assert out.splitlines()[0].startswith("risky-code: populated, ")
 
 
 def test_sql_injection_is_grouped(tmp_path):
@@ -57,7 +58,8 @@ def test_clean_code_matches_nothing(tmp_path):
         "ok.py": "def add(a, b):\n    return a + b\n",
         "notes.md": "The tomatoes want sun and the frost comes in October.\n",
     })  # fmt: skip
-    assert got.returncode == 0 and "No lines matched" in got.stdout
+    assert got.returncode == 0
+    assert got.stdout == "risky-code: empty, no line matched a risky-code pattern\n"
 
 
 def test_the_class_label_is_a_hint_bare_exec_reads_as_code_injection(tmp_path):
@@ -76,7 +78,8 @@ def test_the_class_label_is_a_hint_bare_exec_reads_as_code_injection(tmp_path):
 def test_a_long_line_is_cut_to_exactly_ninety(tmp_path):
     got = on(tmp_path, {"l.py": "x = eval(" + "a" * 200 + ")\n"})
     row = [ln for ln in got.stdout.splitlines() if "l.py:1" in ln][0]
-    # one file, so no padding: "    l.py:1  " then the text, trimmed to 90 chars
+    # one file, so no padding: "  l.py:1  " then the text, trimmed to 90 chars
+    assert row.startswith("  l.py:1  ")
     shown = row.split("l.py:1", 1)[1][2:]
     assert len(shown) == 90
 
@@ -87,13 +90,45 @@ def test_the_counts_are_exact(tmp_path):
         "b.py": "pickle.loads(z)\n",          # insecure deserialization
     })  # fmt: skip
     assert got.returncode == 42, got.stdout
-    # three matching lines, each a distinct place; the summary says so exactly
-    assert "3 lines in 3 places match a risky-code pattern" in got.stdout
+    # three matching lines, each a distinct place; the report says so exactly
+    assert got.stdout.splitlines() == [
+        "risky-code: populated, 3 lines in 3 places match a risky-code pattern;"
+        " each is a lead to read, not proof",
+        "## command injection",
+        "  a.py:2  os.system(y)",
+        "## code injection",
+        "  a.py:1  eval(x)",
+        "## insecure deserialization",
+        "  b.py:1  pickle.loads(z)",
+    ]
 
 
 def test_one_match_is_singular(tmp_path):
     got = on(tmp_path, {"a.py": "eval(x)\n"})
-    assert "1 line in 1 place match" in got.stdout
+    assert got.stdout.startswith("risky-code: populated, 1 line in 1 place match")
+
+
+def test_json_is_the_same_report(tmp_path):
+    got = on(tmp_path, {"a.py": "eval(x)\nos.system(y)\n"}, "--json")
+    assert got.returncode == 42, got.stderr
+    assert json.loads(got.stdout) == {
+        "addon": "risky-code",
+        "state": "populated",
+        "said": "2 lines in 2 places match a risky-code pattern;"
+        " each is a lead to read, not proof",
+        "groups": [
+            {"name": "command injection",
+             "rows": [{"where": "a.py:2", "what": "os.system(y)"}]},
+            {"name": "code injection",
+             "rows": [{"where": "a.py:1", "what": "eval(x)"}]},
+        ],
+    }  # fmt: skip
+    empty = on(tmp_path, {"a.py": "x = 1\n"}, "--json")  # the same file, now clean
+    assert empty.returncode == 0
+    assert json.loads(empty.stdout) == {
+        "addon": "risky-code", "state": "empty",
+        "said": "no line matched a risky-code pattern", "groups": [],
+    }  # fmt: skip
 
 
 def test_it_writes_nothing(tmp_path):
@@ -133,3 +168,13 @@ def test_not_a_kernel_box_is_refused(tmp_path):
     (tmp_path / "b").mkdir()
     got = run(str(RC), "--box", str(tmp_path / "b"))
     assert got.returncode == 2 and got.stderr.startswith("refused")
+
+
+def test_the_where_column_is_as_wide_as_its_longest_up_to_sixty(tmp_path):
+    """The report contract: a place longer than 60 runs past the column, and
+    every shorter place is padded to 60 exactly, no wider."""
+    deep = "a" * 30 + "/" + "b" * 30 + "/x.py"  # its place is 69 characters
+    got = on(tmp_path, {deep: "os.system(y)\n", "s.py": "os.system(z)\n"})
+    rows = [ln for ln in got.stdout.splitlines() if ln.startswith("  ")]
+    assert f"  {deep}:1  os.system(y)" in rows
+    assert "  " + "s.py:1".ljust(60) + "  os.system(z)" in rows

@@ -3,7 +3,8 @@
     python adapters/stdlib/model-shelf/model_shelf.py list [--home DIR] [--hash]
 
 It looks where each runtime keeps its models, under your home folder (or
-DIR): Ollama (`~/.ollama/models`, or OLLAMA_MODELS), LM Studio, Jan,
+DIR): Ollama (`~/.ollama/models`, or OLLAMA_MODELS, and its Linux
+service's folder when no --home is given), LM Studio, Jan,
 GPT4All, and the Hugging Face cache (`~/.cache/huggingface/hub`, or
 HF_HUB_CACHE, or HF_HOME). Each GGUF or safetensors file found is one line:
 its runtime, its name there, its size, its quantization (read from its own
@@ -151,12 +152,28 @@ def plain(runtime: str, root: Path) -> list[Model]:
     ]
 
 
-def places(home: Path, env: dict[str, str]) -> list[tuple[str, list[Path]]]:
+#: where Ollama's Linux installer keeps the models of its system service,
+#: which runs as its own user, not in the person's home
+OLLAMA_SERVICE = "usr/share/ollama/.ollama/models"
+
+
+def places(
+    home: Path, env: dict[str, str], system: Path | None = None
+) -> list[tuple[str, list[Path]]]:
+    """Each runtime's folders. `system` is the machine's root, looked in only
+    when no --home narrowed the search: then the Ollama service's folder too."""
     hf = env.get("HF_HUB_CACHE") or (
         str(Path(env["HF_HOME"]) / "hub") if env.get("HF_HOME") else ""
     )
+    ollama_at = (
+        [Path(env["OLLAMA_MODELS"])]
+        if env.get("OLLAMA_MODELS")
+        else [home / ".ollama/models"]
+    )
+    if system is not None and not env.get("OLLAMA_MODELS"):
+        ollama_at.append(system / OLLAMA_SERVICE)
     return [
-        ("ollama", [Path(env["OLLAMA_MODELS"])] if env.get("OLLAMA_MODELS") else [home / ".ollama/models"]),
+        ("ollama", ollama_at),
         *((rt, [home / f for f in fs]) for rt, fs in FOLDERS.items()),
         ("hugging-face", [Path(hf)] if hf else [home / ".cache/huggingface/hub"]),
     ]  # fmt: skip
@@ -196,7 +213,8 @@ def main(argv: list[str]) -> int:
         print(f"refused: not a folder: {home}", file=sys.stderr)
         return kernel.REFUSED
     models, absent = [], []
-    for runtime, roots in places(home, dict(os.environ)):
+    system = None if "--home" in opts else Path("/")
+    for runtime, roots in places(home, dict(os.environ), system):
         there = [r for r in roots if r.is_dir()]
         if not there:
             absent.append(f"{runtime:<13} not on this machine "

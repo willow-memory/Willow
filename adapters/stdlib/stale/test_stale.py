@@ -1,5 +1,6 @@
 """stale: an approval whose cited passage changed or went is found exactly,
-by the passage's content hash; an edit elsewhere is not a false alarm."""
+by the passage's content hash, and said as a report (and --json the same);
+an edit elsewhere is not a false alarm."""
 
 from __future__ import annotations
 
@@ -19,8 +20,8 @@ def k(*argv: str) -> subprocess.CompletedProcess:
     )
 
 
-def stale(b: Path) -> subprocess.CompletedProcess:
-    return subprocess.run([sys.executable, str(HERE / "stale.py"), "--box", str(b)],
+def stale(b: Path, *more: str) -> subprocess.CompletedProcess:
+    return subprocess.run([sys.executable, str(HERE / "stale.py"), "--box", str(b), *more],
                           capture_output=True, text=True)  # fmt: skip
 
 
@@ -51,7 +52,13 @@ def approved(tmp_path: Path, data: str = "Six hours.") -> tuple[Path, Path]:
 def test_an_approval_holds_while_its_cited_passage_is_there(tmp_path):
     b, pile = approved(tmp_path)
     got = stale(b)
-    assert got.returncode == 0 and "holds" in got.stdout and "0 stale" in got.stdout
+    assert got.returncode == 0 and got.stdout == "stale: empty, 1 approved; 0 stale\n"
+    assert json.loads(stale(b, "--json").stdout) == {
+        "addon": "stale",
+        "state": "empty",
+        "said": "1 approved; 0 stale",
+        "groups": [],
+    }
     (pile / "other.md").write_text("The shed is green now.\n")  # an edit it didn't cite
     assert stale(b).returncode == 0
 
@@ -62,8 +69,19 @@ def test_a_changed_or_deleted_cited_passage_makes_it_stale(tmp_path):
         "Tomatoes want eight hours of sun.\n\nWater at the root.\n"
     )
     got = stale(b)
-    assert got.returncode == 42 and "stale" in got.stdout
-    assert "was at garden.md:1" in got.stdout
+    assert got.returncode == 42
+    head, group, row = got.stdout.splitlines()
+    assert head == "stale: populated, 1 approved; 1 stale"
+    assert group.startswith("## proposal:") and group.endswith("…  'Six hours.'")
+    cited = json.loads((next((b / "proposals").glob("*.json"))).read_text())["cites"][0]
+    assert row == f"  garden.md:1  cited {cited[:12]}: no longer in your folder"
+    data = stale(b, "--json")
+    assert data.returncode == 42 and json.loads(data.stdout) == {
+        "addon": "stale", "state": "populated", "said": "1 approved; 1 stale",
+        "groups": [{"name": group[3:], "rows": [{
+            "where": "garden.md:1",
+            "what": f"cited {cited[:12]}: no longer in your folder"}]}],
+    }  # fmt: skip
     (pile / "garden.md").write_text(
         "Tomatoes want six hours of sun.\n\nWater at the root.\n"
     )
@@ -96,13 +114,12 @@ def test_a_record_that_doesnt_verify_is_refused(tmp_path):
 
 def test_a_long_answer_is_shown_cut_and_its_subject_shortened(tmp_path):
     long = "Six hours of direct sun, more in a cool summer, and never less than four."
-    b, _ = approved(tmp_path, long)
-    line = stale(b).stdout.splitlines()[0]
-    assert line.startswith("holds   proposal:") and line.split("…")[0].endswith(
-        line.split()[1][:21]
-    )
+    b, pile = approved(tmp_path, long)
+    (pile / "garden.md").unlink()
+    line = stale(b).stdout.splitlines()[1]
+    assert line.startswith("## proposal:")
     assert len(line.split()[1].rstrip("…")) == 21
-    assert line.endswith(repr(long[:57] + "..."))
+    assert line.endswith("…  " + repr(long[:57] + "..."))
 
 
 def test_an_approval_whose_proposal_file_changed_is_broken_not_trusted(tmp_path):
@@ -114,9 +131,15 @@ def test_an_approval_whose_proposal_file_changed_is_broken_not_trusted(tmp_path)
     f.write_text(json.dumps({**json.loads(held), "data": "Never.", "cites": []}))
     got = stale(b)
     assert got.returncode == 42 and "Never." not in got.stdout
-    assert got.stdout.startswith("broken  proposal:")
-    assert "proposal file is not the bytes that were sealed" in got.stdout
-    assert "1 approved; 0 stale; 1 broken" in got.stdout
+    head, row = got.stdout.splitlines()
+    assert head == "stale: populated, 1 approved; 0 stale; 1 broken"
+    subject = "proposal:" + f.stem  # its row's place: the subject's first 21, then …
+    assert (
+        row
+        == f"  {subject[:21]}…  broken: its proposal file is not the bytes that were sealed"
+    )
+    doc = json.loads(stale(b, "--json").stdout)
+    assert [g["name"] for g in doc["groups"]] == [None]
     f.unlink()
     got = stale(b)
     assert got.returncode == 42 and "missing or can't be read" in got.stdout

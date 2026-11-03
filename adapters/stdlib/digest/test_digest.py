@@ -88,7 +88,8 @@ def test_it_writes_nothing_not_even_an_out_row(tmp_path, capsys):
     before = {p: p.read_bytes() for p in b.rglob("*") if p.is_file()}
     assert dg.main(["--box", str(b), *NOW]) == 42
     assert {p: p.read_bytes() for p in b.rglob("*") if p.is_file()} == before
-    out = capsys.readouterr().out
+    capsys.readouterr()
+    out = dg.render(dg.digest(b, TODAY), 14)
     for title in (
         "Waiting for you",
         "Gone stale",
@@ -98,6 +99,35 @@ def test_it_writes_nothing_not_even_an_out_row(tmp_path, capsys):
         assert title in out
     assert "2 questions" not in out and "1 question asked more than once" in out
     assert "approve: python kernel.py seal --box BOX proposal:" in out
+
+
+def test_the_command_line_prints_a_report_of_each_section(tmp_path, capsys):
+    b = life(tmp_path)
+    doc = dg.digest(b, TODAY)
+    assert dg.main(["--box", str(b), *NOW]) == 42
+    head, *body = capsys.readouterr().out.splitlines()
+    said = ["1 waiting"]
+    said += ["1 gone stale"] if BESIDE["stale"] else []
+    said += ["1 coming up"] if BESIDE["coming-up"] else []
+    blind = [f"couldn't look at {c}: the {n} add-on isn't here"
+             for c, n in (("gone stale", "stale"), ("coming up", "coming-up"))
+             if not BESIDE[n]]  # fmt: skip
+    assert head == "digest: populated, " + "; ".join(
+        [", ".join([*said, "1 asked again"]), *blind]
+    )
+    subj = doc["waiting"]["items"][0]["subject"]
+    assert "## Waiting for you" in body and any(
+        ln.startswith(f"  {subj}  30 October (why: the note)") for ln in body
+    )
+    assert body[-2] == "## Asked again" and body[-1].split() == (
+        "record.jsonl a question asked 2 times, never answered".split()
+    )
+    if BESIDE["coming-up"]:
+        assert "## Coming up (next 14 days)" in body
+    assert dg.main(["--box", str(b), *NOW, "--json"]) == 42
+    got = json.loads(capsys.readouterr().out)
+    assert got == dg.report_of(doc, 14) and got["addon"] == "digest"
+    assert [g["name"] for g in got["groups"]][0] == "Waiting for you"
 
 
 def test_nothing_is_said_as_nothing(tmp_path, capsys):
@@ -115,8 +145,14 @@ def test_nothing_is_said_as_nothing(tmp_path, capsys):
         str(tmp_path / "key"),
         *NOW,
     )
-    assert dg.main(["--box", str(b), *NOW]) == 0
-    out = capsys.readouterr().out
+    everything = BESIDE["stale"] and BESIDE["coming-up"]
+    assert dg.main(["--box", str(b), *NOW]) == (0 if everything else 42)
+    head = capsys.readouterr().out
+    if everything:
+        assert head == "digest: empty, nothing waits on you\n"
+    else:
+        assert head.startswith("digest: unreachable, couldn't look at ")
+    out = dg.render(dg.digest(b, TODAY), 14)
     assert "Nothing is waiting for your approval." in out
     assert ("Every approved answer's sources still hold." in out) == BESIDE["stale"]
     assert ("Nothing dated in that window." in out) == BESIDE["coming-up"]
@@ -124,6 +160,20 @@ def test_nothing_is_said_as_nothing(tmp_path, capsys):
         "coming-up"
     ]
     assert "No question has gone unanswered twice." in out
+
+
+def test_couldnt_look_and_nothing_found_is_unreachable_not_empty():
+    nothing = {"state": "empty", "items": []}
+    doc = {"waiting": nothing, "stale": gone("stale"), "coming": nothing,
+           "again": nothing}  # fmt: skip
+    rep = dg.report_of(doc, 14)
+    assert rep == {"addon": "digest", "state": "unreachable", "groups": [],
+                   "said": "couldn't look at gone stale: the stale add-on isn't here"}  # fmt: skip
+    assert dg.code_of(doc) == 0  # the page's code holds; the report's is 42
+    rep = dg.report_of({**doc, "again": {"state": "populated", "items": [3]}}, 14)
+    assert rep["state"] == "populated" and rep["said"] == (
+        "1 asked again; couldn't look at gone stale: the stale add-on isn't here"
+    )
 
 
 def test_a_deleted_add_on_is_couldnt_look_and_the_rest_still_show(
