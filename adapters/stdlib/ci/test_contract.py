@@ -1036,6 +1036,7 @@ FINDINGS = {
 #: the command a report comes from, where it isn't the one COMMANDS runs: an
 #: add-on with verbs reports from one of them (score, check)
 REPORT_COMMANDS: dict[str, tuple[str, list[str]]] = {
+    "forecasts": ("forecasts.py", ["score", "--box", "{box}"]),
     "predict": ("predict.py", ["score", "--box", "{box}"]),
     "session-seal": ("session_seal.py", ["--box", "{box}", "check"]),
 }
