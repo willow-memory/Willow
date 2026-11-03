@@ -195,3 +195,20 @@ def test_a_bad_command_line_is_refused(tmp_path):
     assert got.returncode == 2 and "model_shelf.py" in got.stderr
     got = run("list", "--home", tmp_path / "missing")
     assert got.returncode == 2 and "not a folder" in got.stderr
+
+
+def test_the_ollama_service_folder_is_looked_in_unless_home_narrows_it(tmp_path):
+    """Ollama's Linux installer runs a service that keeps its models in its
+    own folder, not the person's home: looked in too, on the real machine,
+    never when --home says where to look."""
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location("model_shelf", SCRIPT)
+    ms = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(ms)
+    home, root = tmp_path / "home", tmp_path / "root"
+    ollama = dict(ms.places(home, {}, root))["ollama"]
+    assert ollama == [home / ".ollama/models", root / "usr/share/ollama/.ollama/models"]
+    assert dict(ms.places(home, {}))["ollama"] == [home / ".ollama/models"]
+    moved = dict(ms.places(home, {"OLLAMA_MODELS": "/data/models"}, root))["ollama"]
+    assert moved == [Path("/data/models")]  # its own place, where the person moved it
