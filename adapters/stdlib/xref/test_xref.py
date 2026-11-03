@@ -5,6 +5,7 @@ folder counted, never followed; nothing written."""
 from __future__ import annotations
 
 import importlib.util
+import json
 import subprocess
 import sys
 from pathlib import Path
@@ -57,22 +58,44 @@ def test_what_doesnt_hold_is_listed_where_it_is_written(tmp_path):
     assert got["held"] == 4 and got["outside"] == 1
 
 
-def test_the_command_line_prints_each_and_a_count_and_exits_42(tmp_path):
+def test_the_command_line_prints_a_report_and_exits_42(tmp_path):
     pile = make(tmp_path)
     before = {p: p.read_bytes() for p in pile.rglob("*") if p.is_file()}
     got = run("--from", str(pile))
     assert got.returncode == 42
-    assert (
-        "notes/index.md:2" in got.stdout and "../trips/2019.md: not there" in got.stdout
-    )
-    assert (
-        "7 references checked, 3 don't hold; 1 leading out of your folder, not checked."
-        in got.stdout
-    )
+    assert got.stdout.splitlines() == [
+        "xref: populated, 7 references checked, 3 don't hold; 1 leading out of your folder, not checked",
+        "## link",
+        "  notes/index.md:2     ../trips/2019.md: not there",
+        "  web/page.html:1      photo.jpg: not there",
+        "## file:line",
+        "  letters/reply.txt:1  care/log.txt:40: past the end (31 lines)",
+    ]
     assert {p: p.read_bytes() for p in pile.rglob("*") if p.is_file()} == before
 
 
-def test_every_reference_holding_exits_0_and_a_box_reads_its_own_files(tmp_path):
+def test_json_gives_the_same_report_as_one_object(tmp_path):
+    got = run("--from", str(make(tmp_path)), "--json")
+    assert got.returncode == 42
+    assert json.loads(got.stdout) == {
+        "addon": "xref",
+        "state": "populated",
+        "said": "7 references checked, 3 don't hold; 1 leading out of your folder, not checked",
+        "groups": [
+            {"name": "link", "rows": [
+                {"where": "notes/index.md:2", "what": "../trips/2019.md: not there"},
+                {"where": "web/page.html:1", "what": "photo.jpg: not there"},
+            ]},
+            {"name": "file:line", "rows": [
+                {"where": "letters/reply.txt:1", "what": "care/log.txt:40: past the end (31 lines)"},
+            ]},
+        ],
+    }  # fmt: skip
+
+
+def test_every_reference_holding_is_empty_and_exits_0_and_a_box_reads_its_own_files(
+    tmp_path,
+):
     pile = tmp_path / "pile"
     pile.mkdir()
     (pile / "a.md").write_text("[b](b.md), and b.md:1\n")
@@ -81,10 +104,24 @@ def test_every_reference_holding_exits_0_and_a_box_reads_its_own_files(tmp_path)
     subprocess.run([sys.executable, str(KERNEL), "init", "--box", str(b), "--pile", str(pile), "--key", str(tmp_path / "k")],
                    check=True, capture_output=True)  # fmt: skip
     got = run("--box", str(b))
-    assert got.returncode == 0 and "2 references checked, 0 don't hold." in got.stdout
+    assert got.returncode == 0
+    assert got.stdout.splitlines() == [
+        "xref: empty, 2 references checked, 0 don't hold"
+    ]
+    assert json.loads(run("--box", str(b), "--json").stdout) == {
+        "addon": "xref",
+        "state": "empty",
+        "said": "2 references checked, 0 don't hold",
+        "groups": [],
+    }
     (pile / "b.md").unlink()
     got = run("--box", str(b))
-    assert got.returncode == 42 and "1 reference checked, 1 doesn't hold." in got.stdout
+    assert got.returncode == 42
+    assert got.stdout.splitlines() == [
+        "xref: populated, 1 reference checked, 1 doesn't hold",
+        "## link",
+        "  a.md:1  b.md: not there",
+    ]
 
 
 def test_a_file_line_is_found_from_its_folder_first_then_the_top(tmp_path):

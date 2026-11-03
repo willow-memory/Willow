@@ -4,6 +4,7 @@ reads dates, with a calendar's bare start line given its summary."""
 from __future__ import annotations
 
 import importlib.util
+import json
 import subprocess
 import sys
 from datetime import date
@@ -47,14 +48,29 @@ def test_the_window_soonest_first_and_dates_as_the_kernel_reads_them(tmp_path):
         "Last year: 2025-10-30.\n\nFar off: 2027-01-01.\n\nAmbiguous: 11/03/2026.\n"
     )})  # fmt: skip
     got = run(str(HERE / "coming_up.py"), "--box", str(b), *NOW)
-    lines = got.stdout.splitlines()
-    assert got.returncode == 0 and len(lines) == 2
-    assert lines[0].startswith("2026-10-30") and "Dentist" in lines[0]
-    assert (
-        lines[1].startswith("2026-10-31") and "Insurance" in lines[1]
-    )  # 03 > 12? no: 03/11 is day 3, month 11
+    assert got.returncode == 0
+    assert got.stdout.splitlines() == [
+        "coming-up: populated, 2 dated lines between 2026-10-23 and 2026-11-06, the next on 2026-10-30",
+        "## 2026-10-30",
+        "  notes.md:1  Dentist 2026-10-30.",
+        "## 2026-10-31",
+        "  notes.md:3  Insurance ends 31/10/2026 unless renewed.",
+    ]
+    doc = json.loads(
+        run(str(HERE / "coming_up.py"), "--box", str(b), "--json", *NOW).stdout
+    )
+    assert doc["state"] == "populated" and doc["addon"] == "coming-up"
+    assert doc["groups"] == [
+        {"name": "2026-10-30", "rows": [{"where": "notes.md:1", "what": "Dentist 2026-10-30."}]},
+        {"name": "2026-10-31", "rows": [{"where": "notes.md:3", "what": "Insurance ends 31/10/2026 unless renewed."}]},
+    ]  # fmt: skip
     wide = run(str(HERE / "coming_up.py"), "--box", str(b), "--days", "90", *NOW).stdout
     assert "2027-01-01" in wide and "11/03/2026" not in wide  # never guessed
+
+
+def test_a_refusal_is_exit_2_on_stderr_and_no_report(tmp_path):
+    got = run(str(HERE / "coming_up.py"), "--box", str(tmp_path / "none"), *NOW)
+    assert got.returncode == 2 and got.stdout == "" and "refused" in got.stderr
 
 
 def test_a_calendars_start_line_is_given_its_summary_across_a_passage_cut(tmp_path):
@@ -69,7 +85,15 @@ def test_a_calendars_start_line_is_given_its_summary_across_a_passage_cut(tmp_pa
 def test_nothing_in_the_window_and_an_impossible_date(tmp_path):
     b = box(tmp_path, {"a.md": "Next year 2027-05-01. Not a day: 2026-02-31.\n"})
     got = run(str(HERE / "coming_up.py"), "--box", str(b), *NOW)
-    assert got.returncode == 42
+    assert got.returncode == 0  # nothing found is not a thing waiting on you
+    assert got.stdout.splitlines() == [
+        "coming-up: empty, nothing dated between 2026-10-23 and 2026-11-06"
+    ]
+    doc = json.loads(
+        run(str(HERE / "coming_up.py"), "--box", str(b), "--json", *NOW).stdout
+    )
+    assert doc == {"addon": "coming-up", "state": "empty", "groups": [],
+                   "said": "nothing dated between 2026-10-23 and 2026-11-06"}  # fmt: skip
     pile = [
         {"path": "a.md", "line": 1, "text": "2026-10-31 then 2026-02-31", "id": "x"}
     ]

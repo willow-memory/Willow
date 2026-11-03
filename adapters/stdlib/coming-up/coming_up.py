@@ -1,6 +1,6 @@
 """coming_up.py: dates written in your files that fall in the next few days.
 
-    python adapters/stdlib/coming-up/coming_up.py --box DIR [--days N] [--now TS]
+    python adapters/stdlib/coming-up/coming_up.py --box DIR [--days N] [--now TS] [--json]
 
 Every line of your folder that holds a date between today and N days from
 now (14 by default), soonest first: appointments, renewals, deadlines, the
@@ -29,12 +29,23 @@ still shows as written. A rule belongs to its event's start: a raw file's
 DTSTART line, else the first line of its paragraph, as the calendar reader
 writes it.
 
-It only reads. Exit codes, the kernel's: 0 something is coming up; 42 nothing
-in that window; 2 refused.
+It only reads. It prints a report (ci/README.md, "The report contract"), the
+dates as groups, soonest first, each row a place and its line; `--json` gives
+the same as one object:
+
+    coming-up: populated, 2 dated lines between 2026-10-23 and 2026-11-06, the next on 2026-10-30
+    ## 2026-10-30
+      notes.md:1  Dentist 2026-10-30.
+    ## 2026-10-31
+      notes.md:3  Insurance ends 31/10/2026 unless renewed.
+
+Exit codes: 0 something is coming up (`populated`) or nothing is in that
+window (`empty`); 2 refused. Nothing here waits on you, so it is never 42.
 """
 
 from __future__ import annotations
 
+import json
 import calendar
 import re
 import sys
@@ -43,6 +54,35 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 import kernel  # noqa: E402
+
+
+NAME = "coming-up"
+
+
+# ── the report: the shape every report add-on prints (ci/README.md) ─────────
+def report(addon: str, state: str, said: str, groups: list) -> dict:
+    """A report: its state, one line said, and each group's rows (where,
+    what); a group named None comes first and has no heading."""
+    return {"addon": addon, "state": state, "said": said,
+            "groups": [{"name": g, "rows": [{"where": w, "what": x} for w, x in rows]}
+                       for g, rows in groups if rows]}  # fmt: skip
+
+
+def report_text(doc: dict) -> str:
+    """A report as every report add-on prints it: the same twenty lines each
+    keeps, held to this one by test_contract.py."""
+    rows = [r for g in doc["groups"] for r in g["rows"]]
+    w = min(max((len(r["where"]) for r in rows), default=0), 60)
+    out = [f"{doc['addon']}: {doc['state']}, {doc['said']}"]
+    for g in doc["groups"]:
+        if g["name"] is not None:
+            out.append(f"## {g['name']}")
+        out += [f"  {r['where']:<{w}}  {r['what']}".rstrip() for r in g["rows"]]
+    return "\n".join(out)
+
+
+def say(doc: dict, as_json: bool) -> None:
+    print(json.dumps(doc, ensure_ascii=False) if as_json else report_text(doc))
 
 
 def ymd(d: str) -> date:
@@ -186,6 +226,8 @@ def coming(pile: list[dict], today: date, days: int) -> list[tuple]:
 
 
 def main(argv: list[str]) -> int:
+    as_json = "--json" in argv
+    argv = [a for a in argv if a != "--json"]
     opts, args, it = {}, [], iter(argv)
     for a in it:
         if a in ("--box", "--days", "--now"):
@@ -202,12 +244,23 @@ def main(argv: list[str]) -> int:
         return kernel.REFUSED
     today = ymd((opts.get("--now") or kernel.now())[:10].replace("-", ""))
     hits = coming(kernel.chunks(Path(kernel.config(box)["pile"])), today, int(days))
+    end = today + timedelta(days=int(days))
     if not hits:
-        print(f"Nothing dated between {today} and {today + timedelta(days=int(days))}.")
-        return kernel.ESCALATE
-    width = max(len(p) for _, p, _ in hits)
+        say(
+            report(NAME, "empty", f"nothing dated between {today} and {end}", []),
+            as_json,
+        )
+        return kernel.ALIVE
+    by_day: dict[date, list] = {}
     for d, place, line in hits:
-        print(f"{d}  {place:<{width}}  {line[:120]}")
+        by_day.setdefault(d, []).append((place, line[:120]))
+    n = len(hits)
+    said = (f"{n} dated line{'s' if n != 1 else ''} between {today} and {end}, "
+            f"the next on {hits[0][0]}")  # fmt: skip
+    say(
+        report(NAME, "populated", said, [(str(d), rows) for d, rows in by_day.items()]),
+        as_json,
+    )
     return kernel.ALIVE
 
 

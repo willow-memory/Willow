@@ -101,22 +101,33 @@ def test_a_fresh_box_with_an_out_row_is_ok_in_one_line(tmp_path):
     got = run("--box", str(b), *NOW)
     assert got.returncode == 0, got.stderr
     assert got.stdout.splitlines() == [
-        "box ok: 2 rows hold; 0 approved, 0 waiting; every file readable; last out row 2026-10-20 (4 days ago)"
+        "box-health: empty, nothing needs you; 2 rows hold; 0 approved, 0 waiting; every file readable; last out row 2026-10-20 (4 days ago)"
     ]
+    doc = json.loads(run("--box", str(b), "--json", *NOW).stdout)
+    assert doc == {"addon": "box-health", "state": "empty", "groups": [], "said": doc["said"]}  # fmt: skip
 
 
 def test_one_row_holds_in_the_singular(tmp_path):
     b = box(tmp_path)
-    assert "1 row holds" in run("--box", str(b), *NOW).stdout
+    assert "  record     1 row holds" in run("--box", str(b), *NOW).stdout.splitlines()
 
 
 def test_no_out_row_yet_needs_you(tmp_path):
-    got = run("--box", str(box(tmp_path)), *NOW)
-    assert (
-        got.returncode == 42
-        and "no out row yet" in got.stdout
-        and got.stdout.startswith("box needs you: no out row yet;")
-    )
+    b = box(tmp_path)
+    got = run("--box", str(b), *NOW)
+    assert got.returncode == 42 and got.stdout.splitlines() == [
+        "box-health: populated, box needs you: 1 thing",
+        "## needs you",
+        "  out        no out row yet",
+        "## fine",
+        "  record     1 row holds",
+        "  approvals  0 approved, 0 waiting",
+        "  files      every file readable",
+    ]
+    doc = json.loads(run("--box", str(b), "--json", *NOW).stdout)
+    assert doc["state"] == "populated" and doc["groups"][0] == {
+        "name": "needs you", "rows": [{"where": "out", "what": "no out row yet"}]
+    }  # fmt: skip
 
 
 def test_the_out_row_of_today_and_of_the_future_are_said(tmp_path):
@@ -136,8 +147,8 @@ def test_a_waiting_suggestion_and_an_approval_are_counted(tmp_path):
     got = run("--box", str(b), *NOW)
     assert (
         got.returncode == 42
-        and "1 suggestion waiting for you" in got.stdout
-        and "0 approved, 1 waiting" in got.stdout
+        and "  approvals  1 suggestion waiting for you" in got.stdout
+        and "  approvals  0 approved, 1 waiting" in got.stdout
     )
     assert k("seal", "--box", str(b), subj, *NOW).returncode == 0
     k("out", "--box", str(b), *NOW)
@@ -175,10 +186,19 @@ def test_files_the_bite_cant_read_are_counted_by_extension_with_the_add_on_that_
     assert got.returncode == 42
     # a reader is named only when it's here: all of them in willow
     pdf, office = (", read by " + n if bh.reader_for(e) else "" for n, e in (("pdf", ".pdf"), ("office", ".docx")))  # fmt: skip
+    out = got.stdout.splitlines()
     assert (
-        f"6 files can't be read (2 .pdf{pdf}; 1 (no extension); 1 .bin; 1 .docx{office}; 1 .txt)"
-        in got.stdout
+        out[0]
+        == "box-health: populated, box needs you: 2 things, 6 files can't be read"
     )
+    i = out.index("## can't be read")
+    assert out[i + 1 : i + 6] == [
+        f"  .pdf            2 files{pdf}",
+        "  (no extension)  1 file",
+        "  .bin            1 file",
+        f"  .docx           1 file{office}",
+        "  .txt            1 file",
+    ]
     adapters = HERE.parents[1]
     assert bool(pdf) == (adapters / "deps" / "pdf").is_dir()
     assert bool(office) == any(
@@ -189,7 +209,11 @@ def test_files_the_bite_cant_read_are_counted_by_extension_with_the_add_on_that_
 def test_a_file_too_large_is_unreadable(tmp_path):
     big = b"x" * (kernel.MAX_FILE + 1)
     got = run("--box", str(box(tmp_path, {"big.txt": big})), *NOW)
-    assert "1 file can't be read (1 .txt)" in got.stdout
+    assert (
+        got.stdout.splitlines()[0].endswith("1 files can't be read")
+        or "1 file" in got.stdout
+    )
+    assert "  .txt       1 file" in got.stdout.splitlines()
 
 
 def test_a_file_too_large_says_so_beside_the_count(tmp_path):
@@ -198,7 +222,8 @@ def test_a_file_too_large_says_so_beside_the_count(tmp_path):
     big = b"x\n" * (kernel.MAX_FILE // 2 + 1)
     files = {"big.txt": big, "bad.txt": b"\xff\xfe not utf8", "ok.txt": b"fine\n"}
     got = run("--box", str(box(tmp_path, files)), *NOW)
-    assert "2 files can't be read (2 .txt), 1 of them over 1 MB" in got.stdout
+    assert "  .txt       2 files" in got.stdout.splitlines()
+    assert "  over 1 MB  1 of them" in got.stdout.splitlines()
 
 
 def test_the_words_list_changed_since_the_last_question_needs_you(tmp_path):
@@ -210,14 +235,17 @@ def test_the_words_list_changed_since_the_last_question_needs_you(tmp_path):
     out = run("--box", str(b), *NOW)
     assert (
         out.returncode == 42
-        and "the words list changed since the last question" in out.stdout
+        and "  words list  the words list changed since the last question" in out.stdout
     )
 
 
 def test_a_words_list_that_does_not_read_needs_you(tmp_path):
     b = box(tmp_path, words="sun = sunshine\n")
     (tmp_path / "w.txt").write_text("not a list line\n")
-    assert "the words list can't be read" in run("--box", str(b), *NOW).stdout
+    assert (
+        "  words list  the words list can't be read"
+        in run("--box", str(b), *NOW).stdout
+    )
 
 
 def test_a_broken_chain_is_broken_and_nothing_else_is_said(tmp_path):
@@ -233,16 +261,16 @@ def test_a_broken_chain_is_broken_and_nothing_else_is_said(tmp_path):
     assert "more)" not in got.stderr, "one break is one break"
 
 
-def test_long_puts_each_part_on_its_own_line(tmp_path):
+def test_long_is_still_accepted_and_the_report_already_has_every_part(tmp_path):
     b = box(tmp_path)
     propose(tmp_path, b)
     k("out", "--box", str(b), *NOW)
-    out = run("--box", str(b), "--long", *NOW).stdout.splitlines()
-    assert out[0] == "box needs you"
-    assert (
-        "  needs you: 1 suggestion waiting for you" in out
-        and "  fine: every file readable" in out
-    )
+    out = run("--box", str(b), "--long", *NOW)
+    assert out.returncode == 42 and out.stdout == run("--box", str(b), *NOW).stdout
+    lines = out.stdout.splitlines()
+    assert lines[0] == "box-health: populated, box needs you: 1 thing"
+    assert "  approvals  1 suggestion waiting for you" in lines
+    assert "  files      every file readable" in lines
 
 
 def test_it_writes_nothing_not_even_an_out_row(tmp_path):

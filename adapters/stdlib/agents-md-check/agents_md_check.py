@@ -1,16 +1,22 @@
 """agents_md_check.py: the commands and paths AGENTS.md or CLAUDE.md name that
 the repo no longer has. Python 3.9+.
 
-    python adapters/stdlib/agents-md-check/agents_md_check.py --from REPO
-    python adapters/stdlib/agents-md-check/agents_md_check.py --box DIR
+    python adapters/stdlib/agents-md-check/agents_md_check.py --from REPO [--json]
+    python adapters/stdlib/agents-md-check/agents_md_check.py --box DIR [--json]
 
 Every AGENTS.md and CLAUDE.md in the folder (at any depth; not inside a
 node_modules, vendor or .git folder) is read, and four kinds of thing in it
-are checked against what is there:
+are checked against what is there. What is gone is listed as a report
+(adapters/stdlib/ci/README.md, the report contract), a group per kind of
+thing, each row the line of the instruction file, then what it names:
 
-    AGENTS.md:57   adapters/old/old.py   path: no such file
-    AGENTS.md:60   make lint             make target: not in the Makefile
-    CLAUDE.md:3    @RULES.md             import: no such file
+    agents-md-check: populated, 3 things named in 2 instruction files not found; each is a lead: a path a build makes shows here too
+    ## path
+      AGENTS.md:57  adapters/old/old.py: no such file
+    ## import
+      CLAUDE.md:3   RULES.md: no such file
+    ## make target
+      AGENTS.md:60  make lint: not in the Makefile
 
 - a path in backticks (or in a code block): it has a slash or ends in a file
   extension, and is looked for from the repo's top, then from the file's own
@@ -28,9 +34,10 @@ a CAPITALISED placeholder (`DIR/x`, `VENV/bin/python`), and a command line
 inside a block that starts with `$ `-less prose. What it lists is a lead: a
 path made by a build, or created by the command itself, will show here too.
 
-It only reads, and writes nothing. Exit codes, the kernel's: 0 everything
-named is there (or no instruction file); 42 something named is gone, and
-waits on you; 2 refused.
+`--json` gives the same report as one JSON object. It only reads, and writes
+nothing. Exit codes, the kernel's: 0 everything named is there, or no
+instruction file (empty); 42 something named is gone (populated), and waits on
+you; 2 refused.
 """
 
 from __future__ import annotations
@@ -73,6 +80,35 @@ EXT = re.compile(
 NOT_THIS_REPO = re.compile(r"[<>{}*$|\;&=]|\.\.\.|^(?:[A-Za-z][\w+.-]*:|~|/|#)")
 PLACEHOLDER = re.compile(r"^[A-Z][A-Z0-9_-]*(?:/|$)")
 REPO_WORD = re.compile(r"\brepo(?:sitory|s)?\b", re.I)
+
+
+NAME = "agents-md-check"
+
+
+# ── the report: the shape every report add-on prints (ci/README.md) ─────────
+def report(addon: str, state: str, said: str, groups: list) -> dict:
+    """A report: its state, one line said, and each group's rows (where,
+    what); a group named None comes first and has no heading."""
+    return {"addon": addon, "state": state, "said": said,
+            "groups": [{"name": g, "rows": [{"where": w, "what": x} for w, x in rows]}
+                       for g, rows in groups if rows]}  # fmt: skip
+
+
+def report_text(doc: dict) -> str:
+    """A report as every report add-on prints it: the same twenty lines each
+    keeps, held to this one by test_contract.py."""
+    rows = [r for g in doc["groups"] for r in g["rows"]]
+    w = min(max((len(r["where"]) for r in rows), default=0), 60)
+    out = [f"{doc['addon']}: {doc['state']}, {doc['said']}"]
+    for g in doc["groups"]:
+        if g["name"] is not None:
+            out.append(f"## {g['name']}")
+        out += [f"  {r['where']:<{w}}  {r['what']}".rstrip() for r in g["rows"]]
+    return "\n".join(out)
+
+
+def say(doc: dict, as_json: bool) -> None:
+    print(json.dumps(doc, ensure_ascii=False) if as_json else report_text(doc))
 
 
 def candidate(token: str) -> str | None:
@@ -216,6 +252,8 @@ def find(folder: Path):
 
 
 def main(argv: list[str]) -> int:
+    as_json = "--json" in argv
+    argv = [a for a in argv if a != "--json"]
     opts, args, it = {}, [], iter(argv)
     for a in it:
         if a in ("--box", "--from"):
@@ -238,7 +276,8 @@ def main(argv: list[str]) -> int:
             return kernel.REFUSED
     files = list(find(root))
     if not files:
-        print("No AGENTS.md or CLAUDE.md here, so nothing in one has gone missing.")
+        said = "no AGENTS.md or CLAUDE.md here, so nothing in one has gone missing"
+        say(report(NAME, "empty", said, []), as_json)
         return kernel.ALIVE
     rows = []
     for p, rel in files:
@@ -247,17 +286,24 @@ def main(argv: list[str]) -> int:
             (rel.as_posix(), n, thing, why)
             for n, thing, why in check_text(text, root, p.parent)
         ]
+    n_files = f"{len(files)} instruction file{'s' if len(files) != 1 else ''}"
     if not rows:
-        print(
-            f"Everything named in {len(files)} instruction file{'s' if len(files) != 1 else ''} is there."
+        say(
+            report(NAME, "empty", f"everything named in {n_files} is there", []),
+            as_json,
         )
         return kernel.ALIVE
-    w1 = max(len(f"{f}:{n}") for f, n, _, _ in rows)
-    w2 = max(len(t) for _, _, t, _ in rows)
-    for f, n, thing, why in rows:
-        print(f"{f + ':' + str(n):<{w1}}   {thing:<{w2}}   {why}")
-    print(f"\n{len(rows)} thing{'s' if len(rows) != 1 else ''} named in {len(files)} instruction file"
-          f"{'s' if len(files) != 1 else ''} not found. Each is a lead: a path a build makes shows here too.")  # fmt: skip
+    # a group per kind (path, import, make target, script), each row the line
+    # of the instruction file and then the thing it names and why it is dead
+    kinds = ("path", "import", "make target", "script")
+    groups = [
+        (kind, [(f"{f}:{n}", f"{thing}: {why.split(': ', 1)[1]}")
+                for f, n, thing, why in rows if why.split(": ", 1)[0] == kind])
+        for kind in kinds
+    ]  # fmt: skip
+    said = (f"{len(rows)} thing{'s' if len(rows) != 1 else ''} named in {n_files} not found;"
+            " each is a lead: a path a build makes shows here too")  # fmt: skip
+    say(report(NAME, "populated", said, groups), as_json)
     return kernel.ESCALATE
 
 
