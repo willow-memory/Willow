@@ -89,6 +89,14 @@ def test_months_weekdays_and_function_words_are_no_one():
     assert pp.persons(pile_of(a="Then came the rain.\n")) == set()
 
 
+def test_the_values_code_writes_capitalized_are_no_one():
+    """A line of code leaves None, calls True: no one, though code writes
+    them capitalized every time and so a roster of a repository led with
+    them. A name beside them still counts."""
+    code = "self.left None\nok = True\nif x is False:\n    calls True\nKati rang.\n"
+    assert pp.persons(pile_of(a=code)) == {"kati"}
+
+
 def test_every_mention_counts_in_any_case_and_is_dated(tmp_path):
     b = box(tmp_path, {
         "log.md": "2026-01-02 Kati came by.\nthanks kati!\n",

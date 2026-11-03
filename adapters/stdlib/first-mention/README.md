@@ -5,6 +5,7 @@ source: new
 added: 2026-10-27
 writes: nothing
 network: none
+output: report
 -->
 # first-mention
 
@@ -12,11 +13,14 @@ When your files first mention something, and the line that does: the first
 time the knee was trouble, when the mould began, when a name enters the
 story.
 
-    python adapters/stdlib/first-mention/first_mention.py --box DIR "mould"
+    python adapters/stdlib/first-mention/first_mention.py --box DIR "mould" [--json]
 
-    first mention of "mould": 2026-03-01
+    first-mention: populated, first mention of "mould": 2026-03-01; 48 mentions in 5 files, 2026-03-01 to 2026-09-02; 3 undated, which could be earlier
       tenancy/log.md:3  2026-03-01 Reported the mould in the back bedroom.
-    48 mentions in 5 files, 2026-03-01 to 2026-09-02; 3 undated, which could be earlier
+
+It prints [a report](../ci/README.md#the-report-contract): the first line
+says the answer and how many mentions there are, the row is where the first
+one is and its line. `--json` gives the same report as one JSON object.
 
 **What counts as a mention.** A line that itself holds every one of your
 content words, each read the kernel's way: your words list, and a word's
@@ -43,9 +47,10 @@ a line that itself recalls the first appraisal's date, and Teodora's
 "physio" on 2024-05-14, a bank statement's card payment, with one undated
 mention that could be earlier.
 
-It only reads, and the same folder gives the same bytes. Exit codes, the
-kernel's: 0 a first mention found; 42 your files never mention it, or the
-words are only common ones; 2 refused.
+It only reads, and the same folder gives the same bytes. Exit codes and
+states: `populated` (0) a first mention found; `empty` (0) your files never
+mention it; `unreachable` (42) the words are only common ones, so it
+couldn't look, and you say more; 2 refused. 42 never means "found nothing".
 
 **Uses:** the kernel's `chunks`, `newest`, `words`, `forms`, `held_by`,
 `FUNCTION`, `read_words` and `config`.
