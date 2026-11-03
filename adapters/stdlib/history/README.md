@@ -6,14 +6,16 @@ added: 2026-10-24
 writes: nothing
 network: none
 tags: everyday
+output: report
 -->
 # history
 
 Your record, read out in plain sentences.
 
-    python adapters/stdlib/history/history.py --box DIR [--days N]
+    python adapters/stdlib/history/history.py --box DIR [--days N] [--json]
 
-    2026-10-24
+    history: populated, 4 things on your record over 1 day
+    ## 2026-10-24
       08:00  You asked a question. Nothing in your folder held it.
       08:01  You asked a question again (2nd time). Nothing in your folder held it.
       09:20  A suggestion was handed in for dentist.md. It waits for you.
@@ -27,7 +29,9 @@ The record keeps no words, so neither does this:
 A row of a kind it doesn't know is named, not guessed: "A verdict row,
 written by ci."
 
-`--days N` keeps the last N days. A record that doesn't verify is refused,
+`--days N` keeps the last N days. `--json` prints the same report as one
+JSON object. **Exit codes:** 0 told (`populated`) or nothing in the window
+(`empty`); 2 refused. Nothing on the record waits on you, so it never says 42. A record that doesn't verify is refused,
 since a history read past a break could tell you something that didn't
 happen.
 
