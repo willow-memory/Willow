@@ -262,6 +262,11 @@ jobs:
     # adapters/stdlib/mutants/accepted.json gives the reason it's harmless.
     # Cut in four by ci.py's --shard, each add-on in one of them: the gates
     # take seconds each, so a cut by count ends the four about together.
+    # A push to main runs all of them, so the merge's receipt is whole and
+    # is the record mutants-reach below stands a pull request's gates on; a
+    # pull request runs mutants-reach instead (github.py check holds the two
+    # to the whole part).
+    if: github.event_name == 'push'
     runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
@@ -282,6 +287,98 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: ci-record-mutants-${{ matrix.shard }}
+          path: ${{ runner.temp }}/ci-record/record.jsonl
+
+  mutants-reach:
+    # The mutants part on a pull request: four shards of 5 to 19 minutes were
+    # its slowest job, though a change usually touches one add-on and only
+    # that add-on's gate, plus the repo tools' (whose reach is the whole
+    # tree), can see it. So this runs only the gates adapters/stdlib/ci-memo
+    # says the change reaches, and the rest stand on main's last green run:
+    # that run's mutants records are pinned against its own tree, checked out
+    # beside this one, and planned against this tree. A gate whose reach
+    # holds the same bytes as main's keeps main's verdict; this job's record
+    # holds only what it ran, never main's verdicts, and the summary names
+    # the run they are from. The merge's evidence stays whole, since a push
+    # to main runs every gate (the mutants job).
+    # Never silent, never short: with no green run of main, no artifact to
+    # download, or a pin ci-memo refuses (the records are of another tree),
+    # this job runs the whole part, and says why in the summary.
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    permissions:
+      actions: read
+      contents: read
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      # 3.13, the Python main's mutants run on: a pin made under another
+      # Python stands nothing.
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - run: pip install pytest
+      - id: plan
+        # Writes the gates to run, one line, to gates.txt, and touches whole
+        # when it fell back to the whole part. ci-memo's plan exits 42 when
+        # gates need running and 0 when none do; both go on, anything else
+        # falls back.
+        run: |
+          fallback() {
+            {
+              echo "### mutants: the whole part runs here"
+              echo "Nothing stands on main's run, because $1"
+            } >> "$GITHUB_STEP_SUMMARY"
+            touch "$RUNNER_TEMP/whole"
+            exit 0
+          }
+          found=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow ci.yml --branch main --event push --status success --limit 1 --json databaseId,headSha --jq '.[] | "\(.databaseId) \(.headSha)"') || fallback "gh couldn't list main's runs."
+          read -r id sha <<< "$found"
+          [ -n "${sha:-}" ] || fallback "main has no successful ci run."
+          gh run download "$id" --repo "$GITHUB_REPOSITORY" -p 'ci-record-mutants-*' -D "$RUNNER_TEMP/main-records" || fallback "main's run $id has no mutants records to download (expired, say)."
+          boxes=()
+          for d in "$RUNNER_TEMP"/main-records/*/; do boxes+=(--box "$d"); done
+          [ "${#boxes[@]}" -gt 0 ] || fallback "main's run $id held no mutants records."
+          # the tree main's records were made from, beside this one
+          git worktree add --detach "$RUNNER_TEMP/main-tree" "$sha" || fallback "main's commit $sha isn't in this checkout."
+          python adapters/stdlib/ci-memo/ci_memo.py pin --repo "$RUNNER_TEMP/main-tree" "${boxes[@]}" --to "$RUNNER_TEMP/ci.pin" 2> "$RUNNER_TEMP/pin.err" || fallback "ci-memo refused the pin: $(cat "$RUNNER_TEMP/pin.err")"
+          set +e
+          python adapters/stdlib/ci-memo/ci_memo.py plan --pin "$RUNNER_TEMP/ci.pin" mutants > "$RUNNER_TEMP/plan.txt" 2> "$RUNNER_TEMP/plan.err"
+          code=$?
+          set -e
+          if [ "$code" != 0 ] && [ "$code" != 42 ]; then
+            fallback "ci-memo refused the plan: $(cat "$RUNNER_TEMP/plan.err")"
+          fi
+          python adapters/stdlib/ci-memo/ci_memo.py plan --pin "$RUNNER_TEMP/ci.pin" --bare mutants > "$RUNNER_TEMP/gates.txt" || [ $? = 42 ]
+          {
+            echo "### mutants: what this change reaches"
+            echo "A \`stand\` row is the verdict of main's run $id, at $sha (adapters/stdlib/ci-memo); a \`run\` row runs in this job."
+            echo '```'
+            cat "$RUNNER_TEMP/plan.txt"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+      - id: run
+        run: |
+          gates=$(cat "$RUNNER_TEMP/gates.txt" 2>/dev/null || true)
+          if [ -f "$RUNNER_TEMP/whole" ]; then
+            python adapters/stdlib/ci/ci.py run mutants --box ${{ runner.temp }}/ci-record | tee "$RUNNER_TEMP/ci.log"
+          elif [ -z "$gates" ]; then
+            echo "No mutants gate is reached by this change: every one stands on main's run, so none ran here and no record is written." >> "$GITHUB_STEP_SUMMARY"
+            echo "ran=no" >> "$GITHUB_OUTPUT"
+          else
+            python adapters/stdlib/ci/ci.py run $gates --box ${{ runner.temp }}/ci-record | tee "$RUNNER_TEMP/ci.log"
+          fi
+      - if: failure()
+        run: python adapters/stdlib/ci-why/ci_why.py "$RUNNER_TEMP/ci.log" --record "$RUNNER_TEMP/ci-record/record.jsonl" >> "$GITHUB_STEP_SUMMARY" || true
+      - if: always() && steps.run.outputs.ran != 'no'
+        run: python adapters/stdlib/ci/ci.py verify --box ${{ runner.temp }}/ci-record
+      - if: always() && steps.run.outputs.ran != 'no'
+        uses: actions/upload-artifact@v7
+        with:
+          name: ci-record-mutants-reach
           path: ${{ runner.temp }}/ci-record/record.jsonl
 
   deps:

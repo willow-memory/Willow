@@ -118,7 +118,10 @@ has jobs of its own on each Python (it runs the add-ons' tests again, in a
 stripped copy, so beside the rest it doubled the job), the tests and strip
 jobs are one job on each Python that runs four `--shard`s at once with
 [cores.py](cores.py) (records `<DIR>/1` to `<DIR>/4`, all uploaded under one
-artifact), and mutants is four jobs cut with `--shard`. Cut into one job
+artifact), and mutants is four jobs cut with `--shard` on a push to main
+only: a pull request's `mutants-reach` job runs just the gates
+[ci-memo](../ci-memo/) says its change reaches, standing the rest on
+main's last green run. Cut into one job
 each, a pull request is 14 jobs and a push to main 30, not 36 and 84: a job
 had used one of the runner's four cores, and the tests job ended with its
 slowest gate (about nine minutes) however it was cut. All the add-ons' tests
@@ -127,5 +130,6 @@ what lets a job run a few of them.
 `test-times.json` is each test file's seconds in one run
 (`pytest adapters/stdlib --junitxml=RUN.xml`, summed by file); it only sets
 the balance, so a stale one runs every test all the same. `adapters/stdlib/github/github.py check` holds the cut: every gate run by exactly
-one job. A job that fails writes [ci-why](../ci-why/)'s reading of its log
+one job on a push, and a job skipped on pull requests backed by one that plans
+its gates with ci-memo and falls back to running them all. A job that fails writes [ci-why](../ci-why/)'s reading of its log
 to the run's summary.

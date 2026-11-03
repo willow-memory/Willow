@@ -10,6 +10,16 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `ci-memo`: a pull request runs only the mutants gates a change can reach,
+  standing the rest on the record of main's last green run, and a push to
+  main runs them all, so the merge's receipt stays whole. Four shards of 5
+  to 19 minutes were a pull request's slowest job, though a change usually
+  reaches one add-on's gate. The new `mutants-reach` job pins main's records
+  against main's own tree, plans `mutants` (`plan` now takes part or gate
+  names, and `pin` a folder of just `<box>/record.jsonl`, as an artifact is) and
+  runs what needs it; with no green run to stand on it runs the whole part
+  and says why in the summary. `github.py check` holds that a job skipped on
+  pull requests has one that plans its gates.
 - `ports/rust`, a fifth port of `kernel.py`: Rust, the standard library
   only and no crates, following the Go port function for function. What
   Rust's library lacks is written in and held by the vectors: SHA-256 and
