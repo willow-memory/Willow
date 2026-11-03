@@ -1622,6 +1622,13 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- `ci`: the heavy CI jobs no longer wait on `first`, only on lint, against
+  and changelog. `first` runs what a change reaches, and on a pull request
+  converting seven add-ons that was 18 minutes, during which no heavy job
+  could start; it runs beside them again, as the early word it is. The
+  `mutants-reach` job runs its gates through `adapters/stdlib/ci/cores.py`,
+  four at once: a change to the contract tests reaches every mutants gate,
+  and the whole part in one job took most of an hour. (#214)
 - secrets-audit, symptoms, first-mention, misquote, why-not, minutes and
   thesis print a report (the report contract); "found nothing" exits 0 where
   minutes, symptoms, first-mention and misquote said 42. A card says
