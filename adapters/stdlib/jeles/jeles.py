@@ -21,7 +21,9 @@ A seed pair with no signature says so: `verified: unsigned seed pair (Jeles sets
 its rung when it installs the seed)`. Jeles installs most such pairs at its
 `asserted` rung, but cited commons pairs at `human`, so the rung is Jeles' to say. A signature is never copied; a deleted record
 and a logged gap (a question with no answer) are left out. Each file is written
-to MIRROR at the same relative path with .txt added; FOLDER is only read.
+to MIRROR at the same relative path with .txt added, in parts (`.1.txt`, `.2.txt`)
+when it is more than the kernel's MAX_FILE, cut only between nuggets, so the
+kernel reads it all; FOLDER is only read.
 
 **export** writes your approved answers as a Jeles seed file. willow's record
 never holds a question's words, only their hash, so you give the questions,
@@ -190,6 +192,22 @@ def _within(inner: Path, outer: Path) -> bool:
     return inner == outer or outer in inner.parents
 
 
+def split(text: str, most: int) -> list[bytes]:
+    """The mirror of one file, as parts the kernel reads whole: each at most
+    `most` bytes (the kernel leaves out a file bigger than its MAX_FILE, so a
+    real store mirrored as one file is never read), cut only between nuggets."""
+    parts, cur = [], b""
+    for para in text.encode("utf-8").split(b"\n\n"):
+        if not para:
+            continue
+        para += b"\n\n"
+        if cur and len(cur) + len(para) > most:
+            parts.append(cur)
+            cur = b""
+        cur += para
+    return parts + [cur] if cur else parts
+
+
 def mirror(src: Path, dst: Path) -> tuple[int, int]:
     wrote = skipped = 0
     for path in _sources(src):
@@ -203,9 +221,12 @@ def mirror(src: Path, dst: Path) -> tuple[int, int]:
                 skipped += 1
                 continue
             rel = path.relative_to(src)
-            target = dst.joinpath(rel.parent, rel.name + ".txt")
-            target.parent.mkdir(parents=True, exist_ok=True)
-            target.write_bytes(text.encode("utf-8"))
+            parts = split(text, kernel.MAX_FILE)
+            for i, part in enumerate(parts, 1):
+                name = rel.name + (f".{i}" if len(parts) > 1 else "") + ".txt"
+                target = dst.joinpath(rel.parent, name)
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_bytes(part)
         except OSError:
             skipped += 1
             continue
