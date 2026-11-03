@@ -738,3 +738,23 @@ def test_packages_of_another_record_witness_nothing(three):
     assert got.returncode == 42 and got.stdout.startswith("no witness")
     got = witness(a.box, out / "none")
     assert got.returncode == 2 and "could not read" in got.stderr
+
+
+def test_one_key_signing_for_two_chains_is_said(three):
+    """The same identity used with a second box: its packages hold, but the
+    receiver is told the key spoke for another chain before."""
+    a, b, c, out, subs = three
+    a.send(subs, b, out / "p")
+    first = b.receive(out / "p")
+    assert "another chain" not in first.stdout
+    d = Person(out.parent, "d", NOTES)
+    other = d.seal("how much is the quote", "$2,140.")
+    got = share("send", "--box", d.box, "--id", a.id, "--answer", other,
+                "--for", b.pub, "--to", out / "q", *NOW)  # fmt: skip
+    assert got.returncode == 0, got.stderr
+    got = b.receive(out / "q")
+    row = [r for r in b.rows() if r["kind"] == "received"][0]["n"]
+    assert (
+        f"known since row {row}; but it signed for another chain at row {row}"
+        in got.stdout
+    )
