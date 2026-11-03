@@ -2,7 +2,7 @@
 graded after. Python 3.9+.
 
     python adapters/stdlib/predict/predict.py ask   --box DIR [--now TS] QUESTION...
-    python adapters/stdlib/predict/predict.py score --box DIR
+    python adapters/stdlib/predict/predict.py score --box DIR [--json]
 
 `ask` counts what the box's earlier bites came to (an answer you sealed,
 passages served, or nothing found) and writes the likeliest down as a
@@ -12,14 +12,21 @@ was right. Counted, never guessed: a tie goes to `empty`, the answer that asks
 the person, and the first bite has nothing to count, so it is not graded.
 
 `score` reads the record back: how many were predicted, how many right, and
-for each likeliest answer how often it held. It writes nothing.
+for each likeliest answer how often it held. It writes nothing. It prints a
+report, as every report add-on does (adapters/stdlib/ci/README.md, the
+report contract), and `--json` gives the same report as one JSON object:
+
+    predict: populated, 3 of 4 predictions right
+      said empty      1 of 1 held
+      said populated  2 of 3 held
 
 The record keeps no words, so neither does this: a prediction is one of the
 three states, and the counts behind it.
 
 Exit codes, the kernel's: for `ask`, the bite's own (0 served or sealed, 42
-nothing found, 2 refused); for `score`, 0, or 42 when nothing is graded yet;
-2 refused (a record that doesn't verify, a bad command line).
+nothing found, 2 refused); for `score`, 0, graded or nothing graded yet
+(empty), since a grade waits on no one; 2 refused (a record that doesn't
+verify, a bad command line).
 """
 
 from __future__ import annotations
@@ -33,6 +40,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 import kernel  # noqa: E402
 
+NAME = "predict"
 SEALED, POPULATED, EMPTY = "sealed", "populated", "empty"
 
 
@@ -111,19 +119,51 @@ def ask(box: Path, question: str, ts: str) -> int:
     return code
 
 
-def score(box: Path) -> int:
+# ── the report: the shape every report add-on prints (ci/README.md) ─────────
+def report(addon: str, state: str, said: str, groups: list) -> dict:
+    """A report: its state, one line said, and each group's rows (where,
+    what); a group named None comes first and has no heading."""
+    return {"addon": addon, "state": state, "said": said,
+            "groups": [{"name": g, "rows": [{"where": w, "what": x} for w, x in rows]}
+                       for g, rows in groups if rows]}  # fmt: skip
+
+
+def report_text(doc: dict) -> str:
+    rows = [r for g in doc["groups"] for r in g["rows"]]
+    w = min(max((len(r["where"]) for r in rows), default=0), 60)
+    out = [f"{doc['addon']}: {doc['state']}, {doc['said']}"]
+    for g in doc["groups"]:
+        if g["name"] is not None:
+            out.append(f"## {g['name']}")
+        out += [f"  {r['where']:<{w}}  {r['what']}".rstrip() for r in g["rows"]]
+    return "\n".join(out)
+
+
+def say(doc: dict, as_json: bool) -> None:
+    print(json.dumps(doc, ensure_ascii=False) if as_json else report_text(doc))
+
+
+def scored(rows: list[dict]) -> dict:
+    """The graded predictions as a report: how many right, and a row for each
+    likeliest answer, how often it held."""
+    gs = grades(rows)
+    if not gs:
+        said = "nothing graded yet: ask through predict, and it counts from there"
+        return report(NAME, EMPTY, said, [])
+    right = sum(g["right"] for g in gs)
+    held = []
+    for likely in sorted({g["likely"] for g in gs}):
+        mine = [g["right"] for g in gs if g["likely"] == likely]
+        held.append((f"said {likely}", f"{sum(mine)} of {len(mine)} held"))
+    said = f"{right} of {len(gs)} prediction{'s' * (len(gs) != 1)} right"
+    return report(NAME, POPULATED, said, [(None, held)])
+
+
+def score(box: Path, as_json: bool = False) -> int:
     rows, why = checked(box)
     if why:
         return refuse(why)
-    gs = grades(rows)
-    if not gs:
-        print("nothing graded yet: ask through predict, and it counts from there")
-        return kernel.ESCALATE
-    right = sum(g["right"] for g in gs)
-    print(f"{right} of {len(gs)} predictions right")
-    for likely in sorted({g["likely"] for g in gs}):
-        mine = [g["right"] for g in gs if g["likely"] == likely]
-        print(f"  said {likely:<10} {sum(mine)} of {len(mine)} held")
+    say(scored(rows), as_json)
     return kernel.ALIVE
 
 
@@ -140,6 +180,8 @@ def main(argv: list[str]) -> int:
     for a in it:
         if a in ("--box", "--now"):
             opts[a] = next(it, "")
+        elif a == "--json" and verb == "score":
+            opts[a] = "yes"
         elif a.startswith("--"):
             return usage()
         else:
@@ -148,7 +190,9 @@ def main(argv: list[str]) -> int:
         return usage()
     box = Path(opts["--box"])
     if verb == "score":
-        return usage() if words or "--now" in opts else score(box)
+        if words or "--now" in opts:
+            return usage()
+        return score(box, "--json" in opts)
     question = " ".join(words)
     if not question.strip():
         return usage()
