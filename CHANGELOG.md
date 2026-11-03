@@ -18,6 +18,9 @@ says how). The first was v0.1.0.
   reach). A `ran` row records how it ended and its output's SHA-256, never
   the output, and the output waits on your seal before `share` can send it
   back. A job asking for the network is refused before it is even taken.
+  `--shape numbers`, set by whoever runs a job, lets only whole numbers be
+  proposed, so only aggregates leave; `gather` adds the numbers people sent
+  back, one job, one result a chain, and proposes the totals.
   Its tests probe the sandbox from inside, through `run` itself.
   `demo/johnson/jobs.py` sends one job from Ines to Walt and Aurelie and
   brings back their sealed answers; CI's deps job installs bubblewrap and

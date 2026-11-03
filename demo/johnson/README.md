@@ -92,6 +92,15 @@ answers about two folders she has never seen. A job that asks for the
 network is refused before it is even a proposal. The computation went to
 the files; the files went nowhere.
 
+Then only aggregates leave. Ines asks all four the same thing as two counts
+(lines naming Johnson, lines dated March or April 2026). Each runs it with
+`--shape numbers`, so whatever the job says, nothing but whole numbers can
+be proposed; each seals the two numbers and sends them back; `kart gather`
+adds them and Ines seals the totals, **4** and **5**, from four folders she
+has never seen. Tamsin is also sent `cat {pile}/*`: held to numbers, it
+proposes nothing, and the 152 characters it printed stay on Tamsin's
+machine.
+
 ## What it found
 
 - **A sealed answer stands for its question.** Asked the same words again,

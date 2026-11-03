@@ -2,7 +2,8 @@
 
     python adapters/deps/kart/kart.py policy --box DIR
     python adapters/deps/kart/kart.py take   --box DIR --package FILE --words "your words" [--now TS]
-    python adapters/deps/kart/kart.py run    --box DIR --job proposal:<sha256> --to FILE [--timeout SECONDS] [--now TS]
+    python adapters/deps/kart/kart.py run    --box DIR --job proposal:<sha256> --to FILE [--shape numbers] [--timeout SECONDS] [--now TS]
+    python adapters/deps/kart/kart.py gather --box DIR --package FILE[,...] --words "your words" [--now TS]
 
 A job is a shell task, as Kartikeya runs them, that came to you in a share
 package. It never runs because it arrived. `take` puts it at the kernel's
@@ -24,8 +25,17 @@ never the output. A job that ended well is proposed as an answer of yours,
 citing nothing and waiting on your seal: what it found came from your
 files, so nothing of it goes anywhere but by your seal and share.
 
-Exit codes, the kernel's: 0 the policy printed; 42 a job taken or a result
-proposed, waiting on your seal, or a job that failed; 2 refused (no
+`--shape numbers` is yours to set when you run a job: its output must be
+whole numbers, one a line, at most 100, or nothing is proposed and the
+`ran` row says the shape didn't hold. Only aggregates leave; no word of your
+folder can. `gather` takes the results others sent you back, each a package
+that held and that your record received, of numbers, all naming the same
+job text by its SHA-256 and each from its own chain, adds them line by
+line, and proposes the totals as your answer, waiting on your seal.
+
+Exit codes, the kernel's: 0 the policy printed; 42 a job taken, a result or
+a total proposed, waiting on your seal, or a job that failed or broke its
+shape; 2 refused (no
 bubblewrap or Kartikeya, a job not sealed, one asking for the network).
 """
 
@@ -55,8 +65,24 @@ OUTPUT = 20_000  # characters of a job's output proposed as an answer
 FLAGS = {
     "policy": ({"--box"}, set()),
     "take": ({"--box", "--package", "--words"}, {"--now"}),
-    "run": ({"--box", "--job", "--to"}, {"--timeout", "--now"}),
+    "run": ({"--box", "--job", "--to"}, {"--timeout", "--now", "--shape"}),
+    "gather": ({"--box", "--package", "--words"}, {"--now"}),
 }
+SHAPES = ("numbers",)  # what --shape may hold a job's output to
+MOST = 100  # lines a numbers-shaped output may have
+
+
+def shaped(out: str, shape: str | None) -> bool:
+    """Whether the output keeps the shape the person asked for: `numbers` is
+    whole numbers, one a line, nothing else, so no word of the folder leaves."""
+    if shape is None:
+        return True
+    lines = out.strip().splitlines()
+    return 0 < len(lines) <= MOST and all(_whole(x.strip()) for x in lines)
+
+
+def _whole(s: str) -> bool:
+    return s.lstrip("-").isdigit() and len(s) <= 18
 
 
 def refuse(why: str) -> int:
@@ -195,6 +221,9 @@ def do_run(opts: dict, ts: str) -> int:
         timeout = int(opts.get("--timeout", "120"))
     except ValueError:
         return refuse("--timeout is whole seconds")
+    shape = opts.get("--shape")
+    if shape is not None and shape not in SHAPES:
+        return refuse(f"--shape is one of: {', '.join(SHAPES)}")
     to = Path(opts["--to"])
     why = share.new_file(to, "", 0o600, box)  # new, outside the box and folder
     if why:
@@ -210,6 +239,7 @@ def do_run(opts: dict, ts: str) -> int:
         engine=manifest.get("engine"), network=manifest.get("network_mode"),
         bound_ro=manifest.get("bound_ro"), bound_rw=len(manifest.get("bound_rw") or []),
         refused=(result.get("error") or None) if status != "completed" else None,
+        shape=shape, held_shape=shaped(out, shape) if status == "completed" else None,
     )  # fmt: skip
     print(f"ran    {subj}  {status}, exit {result.get('returncode')}, row {row['n']}")
     print(f"output written to {to} ({len(out)} characters)")
@@ -218,10 +248,16 @@ def do_run(opts: dict, ts: str) -> int:
             f"  {str(result.get('error') or result.get('stderr') or '').strip()[:300]}"
         )
         return kernel.ESCALATE
+    if not shaped(out, shape):
+        print(
+            f"  its output isn't {shape}, the shape you asked for: nothing is proposed"
+        )
+        return kernel.ESCALATE
     now = ["--now", opts["--now"]] if opts.get("--now") else []
     res = {"path": f"kart/results/{subj[9:21]}.txt", "data": out[:OUTPUT], "cites": [],
            "claim": f"what job {subj} printed, run at row {row['n']} over this folder "
-                    "read-only, with no network"}  # fmt: skip
+                    f"read-only, with no network{', held to ' + shape if shape else ''}; "
+                    f"job text {kernel.h256(prop['data'])}"}  # fmt: skip
     rsubj, said = propose(box, f"kart result {subj}", res, now)
     if rsubj is None:
         print(said, end="")
@@ -229,6 +265,69 @@ def do_run(opts: dict, ts: str) -> int:
     print(
         f"result {rsubj}  waiting on your seal; nothing of it leaves until you seal and share it"
     )
+    return kernel.ESCALATE
+
+
+# ── gather: everyone's numbers, added up ────────────────────────────────────
+def result_of(rows: list[dict], path: Path) -> tuple[dict | None, str | None]:
+    """(what one package says, why not): a kart result that holds, that your
+    record says you received, of numbers, naming the job text it ran."""
+    pkg, why = share.read_package(path)
+    if why:
+        return None, why
+    if share.problems(pkg):
+        return None, f"{path} doesn't hold (share.py check says why)"
+    pid = share.package_id(pkg)
+    got = share.mine(rows, "received", pid)
+    if got is None or got.get("verdict") != "good":
+        return None, f"{pid} is not a package your record says you received and it held"
+    core = share.layers(pkg)[-1]
+    ans = core["answers"]
+    if len(ans) != 1 or not str(ans[0]["path"]).startswith("kart/results/"):
+        return None, f"{path} isn't one kart result"
+    job = ans[0]["claim"].rpartition("job text ")[2]
+    if not share.is_hex(job, 64):
+        return None, f"{path} doesn't name the job it ran"
+    if not shaped(ans[0]["data"], "numbers"):
+        return None, f"{path} isn't numbers"
+    lines = [int(x) for x in ans[0]["data"].strip().splitlines()]
+    return {"package": pid, "from": core["from"], "chain": core["chain"]["start"],
+            "job": job, "numbers": lines}, None  # fmt: skip
+
+
+def do_gather(opts: dict) -> int:
+    box = Path(opts["--box"])
+    rows, why = box_rows(box)
+    if why:
+        return refuse(why)
+    got = []
+    for path in opts["--package"].split(","):
+        r, why = result_of(rows, Path(path))
+        if why:
+            return refuse(why)
+        got.append(r)
+    if len({r["job"] for r in got}) != 1:
+        return refuse("these results ran different jobs")
+    if len({len(r["numbers"]) for r in got}) != 1:
+        return refuse("these results don't have the same number of lines")
+    if len({r["chain"] for r in got}) != len(got):
+        return refuse("two results come from one chain; each is counted once")
+    total = [sum(col) for col in zip(*(r["numbers"] for r in got))]
+    for r in got:
+        print(
+            f"  {share.short(r['from'])}  {' '.join(map(str, r['numbers']))}  {r['package']}"
+        )
+    print(f"  total          {' '.join(map(str, total))}  from {len(got)} folders")
+    now = ["--now", opts["--now"]] if opts.get("--now") else []
+    prop = {"path": f"kart/gathered/{got[0]['job'][:12]}.txt",
+            "data": "\n".join(map(str, total)) + "\n", "cites": [],
+            "claim": f"the sum of {len(got)} results of job text {got[0]['job']}, from "
+                     + ", ".join(r["package"] for r in got)}  # fmt: skip
+    subj, said = propose(box, opts["--words"], prop, now)
+    if subj is None:
+        print(said, end="")
+        return refuse("the kernel didn't take the total as a proposal")
+    print(f"total  {subj}  waiting on your seal")
     return kernel.ESCALATE
 
 
@@ -276,6 +375,8 @@ def main(argv: list[str]) -> int:
         return do_policy(opts)
     if cmd == "take":
         return do_take(opts)
+    if cmd == "gather":
+        return do_gather(opts)
     return do_run(opts, opts.get("--now") or kernel.now())
 
 

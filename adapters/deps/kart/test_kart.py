@@ -328,6 +328,170 @@ def test_one_job_runs_over_two_peoples_folders_and_comes_back_sealed(tmp_path):
     assert doc["network_refused"]
     for who in ("walt", "aurelie"):
         kinds = doc[who]["kinds"]
-        assert kinds.count("ran") == 1 and kinds.count("seal") == 2 and "sent" in kinds
+        assert kinds.count("ran") == 2 and kinds.count("seal") == 4 and "sent" in kinds
         assert doc[who]["verify"].startswith("the chain holds")
-    assert doc["ines"]["kinds"].count("received") == 2
+    assert doc["ines"]["kinds"].count("received") == 6
+    assert doc["aggregates"] == {"total": ["4", "5"], "sneak_held": True, "each": 4}
+
+
+# ── only aggregates leave: --shape and gather ───────────────────────────────
+def test_a_shape_held_lets_the_numbers_through(walt, tmp_path):
+    subj = walt.job(
+        "grep -rhi johnson {pile} | wc -l\ngrep -rhi kessler {pile} | wc -l"
+    )
+    got = walt.kart(
+        "run", "--job", subj, "--to", tmp_path / "o", "--shape", "numbers", *NOW
+    )
+    assert got.returncode == 42 and "waiting on your seal" in got.stdout
+    [ran] = [r for r in walt.rows() if r["kind"] == "ran"]
+    assert (ran["shape"], ran["held_shape"]) == ("numbers", True)
+    result = got.stdout.splitlines()[-1].split()[1]
+    prop = json.loads((walt.box / "proposals" / f"{result[9:]}.json").read_text())
+    assert prop["data"].split() == ["2", "1"] and "held to numbers" in prop["claim"]
+
+
+@pytest.mark.parametrize("job", [
+    "cat {pile}/cases.md",                       # the folder's own words
+    "ls {pile}",                                 # its file names
+    "grep -rhi johnson {pile} | wc -l; echo ok",  # a number and a word
+    "seq 1 101",                                 # too many lines
+    "true",                                      # nothing at all
+])  # fmt: skip
+def test_output_that_breaks_the_shape_is_never_proposed(walt, tmp_path, job):
+    subj = walt.job(job)
+    before = [r["n"] for r in walt.rows() if r["kind"] == "proposal"]
+    got = walt.kart(
+        "run", "--job", subj, "--to", tmp_path / "o", "--shape", "numbers", *NOW
+    )
+    assert (
+        got.returncode == 42 and "isn't numbers, the shape you asked for" in got.stdout
+    )
+    [ran] = [r for r in walt.rows() if r["kind"] == "ran"]
+    assert (ran["shape"], ran["held_shape"]) == ("numbers", False)
+    assert [r["n"] for r in walt.rows() if r["kind"] == "proposal"] == before
+
+
+def test_a_shape_kart_doesnt_know_is_refused(walt, tmp_path):
+    subj = walt.job("echo 1")
+    got = walt.kart(
+        "run", "--job", subj, "--to", tmp_path / "o", "--shape", "words", *NOW
+    )
+    assert got.returncode == 2 and "--shape is one of: numbers" in got.stderr
+
+
+class Ask:
+    """Ines asks several people one job; each runs it held to numbers,
+    seals what it printed and sends it back; Ines receives each."""
+
+    def __init__(self, tmp_path: Path, folders: dict[str, dict[str, str]]):
+        self.tmp = tmp_path
+        self.ines = Person(tmp_path, "ines", {"a.md": "Nothing here.\n"})
+        self.people = {n: Person(tmp_path, n, f) for n, f in folders.items()}
+        self.results: dict[str, str] = {}
+
+    def job(self, text: str, words: str) -> str:
+        subj = self.ines.propose(words, {"path": "jobs/j.sh", "data": text, "cites": [],
+                                         "claim": "a count"})  # fmt: skip
+        self.ines.seal(subj)
+        return subj
+
+    def send(self, frm: Person, subj: str, to: Person, name: str) -> Path:
+        pkg = self.tmp / f"{name}.pkg"
+        got = run(SHARE, "send", "--box", frm.box, "--id", frm.id, "--answer", subj,
+                  "--for", to.pub, "--to", pkg, *NOW)  # fmt: skip
+        assert got.returncode == 0, got.stderr
+        return pkg
+
+    def receive(self, p: Person, pkg: Path) -> None:
+        got = run(
+            SHARE, "receive", "--box", p.box, "--id", p.id, "--package", pkg, *NOW
+        )
+        assert got.returncode == 0, got.stdout + got.stderr
+
+    def answer(self, name: str, job: str) -> Path:
+        p = self.people[name]
+        pkg = self.send(self.ines, job, p, f"job-{name}-{job[9:15]}")
+        self.receive(p, pkg)
+        taken = p.kart(
+            "take", "--package", pkg, "--words", f"ines asked {job[9:15]}", *NOW
+        )
+        subj = taken.stdout.split()[1]
+        p.seal(subj)
+        got = p.kart("run", "--job", subj, "--to", self.tmp / f"{name}-{job[9:15]}.txt",
+                     "--shape", "numbers", *NOW)  # fmt: skip
+        result = got.stdout.splitlines()[-1].split()[1]
+        p.seal(result)
+        self.results[name] = result
+        back = self.send(p, result, self.ines, f"result-{name}-{job[9:15]}")
+        self.receive(self.ines, back)
+        return back
+
+    def gather(self, *pkgs: Path) -> subprocess.CompletedProcess:
+        return self.ines.kart("gather", "--package", ",".join(map(str, pkgs)),
+                              "--words", "johnson across the firm", *NOW)  # fmt: skip
+
+
+COUNT = "grep -rhi johnson {pile} | wc -l\ngrep -rhi kessler {pile} | wc -l"
+
+
+@pytest.fixture
+def ask(tmp_path):
+    return Ask(tmp_path, {
+        "walt": NOTES,
+        "aurelie": {"claims.md": "Johnson claim open.\nJohnson roof, storm.\n"},
+        "tamsin": {"files.md": "Kessler v Mill Lane.\n"},
+    })  # fmt: skip
+
+
+def test_gather_adds_everyones_numbers_and_waits_on_your_seal(ask):
+    job = ask.job(COUNT, "count johnson and kessler")
+    pkgs = [ask.answer(n, job) for n in ("walt", "aurelie", "tamsin")]
+    got = ask.gather(*pkgs)
+    assert got.returncode == 42, got.stdout + got.stderr
+    assert "total          4 2  from 3 folders" in got.stdout
+    subj = got.stdout.splitlines()[-1].split()[1]
+    prop = json.loads((ask.ines.box / "proposals" / f"{subj[9:]}.json").read_text())
+    assert prop["data"] == "4\n2\n" and prop["cites"] == []
+    assert sum(r["kind"] == "seal" for r in ask.ines.rows()) == 1, (
+        "only Ines's job so far"
+    )
+    ask.ines.seal(subj)
+
+
+def test_gather_refuses_what_doesnt_add_up(ask, tmp_path):
+    a = ask.job(COUNT, "count both")
+    b = ask.job("grep -rhi johnson {pile} | wc -l", "count johnson")
+    w, au = ask.answer("walt", a), ask.answer("aurelie", a)
+    t = ask.answer("tamsin", b)
+    got = ask.gather(w, t)
+    assert got.returncode == 2 and "ran different jobs" in got.stderr
+    got = ask.gather(w, w)
+    assert got.returncode == 2 and "two results come from one chain" in got.stderr
+    # Walt's sealed result again, in a package Ines never received
+    stray = ask.send(ask.people["walt"], ask.results["walt"], ask.ines, "stray")
+    got = ask.gather(au, stray)
+    assert (
+        got.returncode == 2
+        and "not a package your record says you received" in got.stderr
+    )
+    bad = json.loads(au.read_text())
+    bad["note"] = "edited"
+    (tmp_path / "bad.pkg").write_text(json.dumps(bad))
+    got = ask.gather(w, tmp_path / "bad.pkg")
+    assert got.returncode == 2 and "doesn't hold" in got.stderr
+
+
+def test_gather_refuses_lines_that_dont_line_up_and_what_isnt_a_result(ask, tmp_path):
+    per_file = ask.job("grep -rhic johnson {pile}/*", "johnson per file")
+    ask.people["aurelie"].dir.joinpath("pile", "more.md").write_text("Johnson again.\n")
+    w, au = ask.answer("walt", per_file), ask.answer("aurelie", per_file)
+    got = ask.gather(w, au)
+    assert got.returncode == 2 and "don't have the same number of lines" in got.stderr
+    walt = ask.people["walt"]
+    note = walt.propose("a note", {"path": "notes/n.md", "data": "4", "cites": [],
+                                   "claim": "a note, not a result"})  # fmt: skip
+    walt.seal(note)
+    pkg = ask.send(walt, note, ask.ines, "note")
+    ask.receive(ask.ines, pkg)
+    got = ask.gather(w, pkg)
+    assert got.returncode == 2 and "isn't one kart result" in got.stderr

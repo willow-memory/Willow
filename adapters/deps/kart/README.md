@@ -18,9 +18,10 @@ once you seal it; what it found waits on your seal before it goes anywhere.
     pip install -r adapters/deps/kart/requirements.txt    # and: apt install bubblewrap
     python adapters/deps/kart/kart.py policy --box DIR
     python adapters/deps/kart/kart.py take   --box DIR --package FILE --words "your words"
-    python adapters/deps/kart/kart.py run    --box DIR --job proposal:<sha256> --to FILE [--timeout SECONDS]
+    python adapters/deps/kart/kart.py run    --box DIR --job proposal:<sha256> --to FILE [--shape numbers] [--timeout SECONDS]
+    python adapters/deps/kart/kart.py gather --box DIR --package FILE[,...] --words "your words"
 
-`take` and `run` take `--now TS` as the kernel does.
+`take`, `run` and `gather` take `--now TS` as the kernel does.
 
 **The computation goes to the folder, never the folder to it.** A job is a
 shell task that came to you in a [share](../../stdlib/share/) package:
@@ -61,17 +62,37 @@ citing nothing, waiting on your seal: it came from your files, so nothing
 of it leaves but by your seal and `share send`. A job that failed, or that
 Kartikeya's scan refused, proposes nothing.
 
+**Only aggregates leave.** `--shape numbers` is yours to set when you run
+a job, whatever the job says: its output must be whole numbers, one a line,
+at most 100, or nothing is proposed and the `ran` row records that the shape
+didn't hold. What it printed stays in FILE, on your machine. A job written
+to bring back your files (`cat {pile}/*`), your file names, or a count with
+a word beside it proposes nothing. That is federated analytics' rule, kept
+by the person whose folder it is.
+
+**Gathering.** `gather` takes the results the people you asked sent back:
+each a package that held and that your record received, one kart result of
+numbers, naming the job it ran by its text's SHA-256. It refuses results of
+different jobs, results whose lines don't line up, and two from one chain
+(so a forwarded copy is never counted twice), adds the rest line by line,
+and proposes the totals as your answer, citing nothing and naming every
+package, waiting on your seal.
+
 **What it can't do.** It can't tell you a job is harmless: the sandbox
 holds what it can reach, and your two seals hold what goes in and out. The
 output is what your files say through someone else's question, so read it
-before you seal it; `pii-audit` and `secrets-audit` are worth a run first.
+before you seal it, or hold it to `--shape numbers`; `pii-audit` and
+`secrets-audit` are worth a run first on anything else. A count still says
+something: that your folder holds a name at all is a fact, and small counts
+from one person can be telling.
 Resource limits are Kartikeya's (a delegated cgroup if you set one up,
 `prlimit` otherwise). And it needs a machine that can make an unprivileged
 user namespace, which bubblewrap does; Ubuntu 24.04 keeps that behind
 AppArmor unless allowed.
 
-**Exit codes:** 0 the policy printed; 42 a job taken or a result proposed,
-waiting on your seal, or a job that failed; 2 refused (no Kartikeya or
+**Exit codes:** 0 the policy printed; 42 a job taken, a result or a total
+proposed, waiting on your seal, or a job that failed or broke its shape; 2
+refused (no Kartikeya or
 bubblewrap, named; a job not sealed; one asking for the network).
 
 **Uses:** [share](../../stdlib/share/) to read packages; the kernel's
