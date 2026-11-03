@@ -27,7 +27,7 @@ and Windows:
 
 | Runtime | Folders |
 |---|---|
-| Ollama | `~/.ollama/models`, or `OLLAMA_MODELS` when set |
+| Ollama | `~/.ollama/models`, or `OLLAMA_MODELS` when set; and, with no `--home`, the Linux service's /usr/share/ollama/.ollama/models |
 | LM Studio | `~/.lmstudio/models`, `~/.cache/lm-studio/models` |
 | Jan | `~/jan/models`, `~/.local/share/Jan/data`, `~/Library/Application Support/Jan/data`, `~/AppData/Roaming/Jan/data` |
 | GPT4All | `~/.local/share/nomic.ai/GPT4All`, `~/Library/Application Support/nomic.ai/GPT4All`, `~/AppData/Local/nomic.ai/GPT4All` |

@@ -75,10 +75,11 @@ def test_each_row_is_said_as_what_happened_by_day(tmp_path, capsys):
     assert hs.main(["--box", str(b)]) == 0
     out = capsys.readouterr().out
     assert out == (
-        "2026-10-23\n"
+        "history: populated, 10 things on your record over 2 days\n"
+        "## 2026-10-23\n"
         "  09:12  You started your record.\n"
         "  09:13  You asked a question. Your files held it: dentist.txt:1.\n"
-        "\n2026-10-24\n"
+        "## 2026-10-24\n"
         "  08:00  You asked a question. Nothing in your folder held it.\n"
         "  08:01  You asked a question again (2nd time). Nothing in your folder held it.\n"
         "  08:02  You asked a question again (2nd time). Your files held it: dentist.txt:1.\n"
@@ -87,6 +88,38 @@ def test_each_row_is_said_as_what_happened_by_day(tmp_path, capsys):
         "  09:20  You looked at what was waiting: 1 suggestion.\n"
         "  09:21  You approved the suggestion for dentist.md.\n"
         "  09:22  You asked a question again (3rd time). Your approved answer for dentist.md answered it.\n"
+    )
+
+
+def test_json_is_the_same_report(tmp_path, capsys):
+    b = life(tmp_path)
+    assert (
+        hs.main(
+            ["--box", str(b), "--json", "--days", "1", "--now", "2026-10-24T12:00:00Z"]
+        )
+        == 0
+    )
+    doc = json.loads(capsys.readouterr().out)
+    assert doc["addon"] == "history" and doc["state"] == "populated"
+    assert doc["said"] == "8 things on your record over 1 day"
+    assert [g["name"] for g in doc["groups"]] == ["2026-10-24"]
+    assert doc["groups"][0]["rows"][0] == {
+        "where": "08:00",
+        "what": "You asked a question. Nothing in your folder held it.",
+    }
+
+
+def test_one_thing_on_one_day_is_said_in_the_singular(tmp_path, capsys):
+    pile = tmp_path / "pile"
+    pile.mkdir()
+    b = tmp_path / "box"
+    k("init", "--box", str(b), "--pile", str(pile), "--key", str(tmp_path / "key"),
+      "--now", "2026-10-23T09:12:00Z")  # fmt: skip
+    assert hs.main(["--box", str(b)]) == 0
+    assert capsys.readouterr().out == (
+        "history: populated, 1 thing on your record over 1 day\n"
+        "## 2026-10-23\n"
+        "  09:12  You started your record.\n"
     )
 
 
@@ -112,10 +145,25 @@ def test_the_last_n_days_only(tmp_path, capsys):
     )
     out = capsys.readouterr().out
     assert "2026-10-23" not in out and "2026-10-24" in out
+    capsys.readouterr()
     assert (
-        hs.main(["--box", str(b), "--days", "1", "--now", "2026-11-30T00:00:00Z"]) == 42
+        hs.main(["--box", str(b), "--days", "1", "--now", "2026-11-30T00:00:00Z"]) == 0
     )
-    assert "Nothing on the record in that window." in capsys.readouterr().out
+    assert capsys.readouterr().out == (
+        "history: empty, nothing on your record in that window\n"
+    )
+    assert (
+        hs.main(
+            ["--box", str(b), "--days", "1", "--now", "2026-11-30T00:00:00Z", "--json"]
+        )
+        == 0
+    )
+    assert json.loads(capsys.readouterr().out) == {
+        "addon": "history",
+        "state": "empty",
+        "said": "nothing on your record in that window",
+        "groups": [],
+    }
 
 
 def test_a_row_of_another_kind_is_named_not_guessed(tmp_path):
