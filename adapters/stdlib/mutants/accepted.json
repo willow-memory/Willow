@@ -9,6 +9,9 @@
     "1b9ac0201051": "Only bite rows carry a bite_key, so choosing rows by kind or by key picks the same rows.",
     "0cc8444c7793": "The width a report's where column falls back to when it has no rows: with no rows nothing is padded to it, so any number there prints the same report."
   },
+  "agents-md-check": {
+    "00b8e1df6074": "The width a report's where column falls back to when it has no rows: with no rows nothing is padded to it, so any number there prints the same report."
+  },
   "all": {
     "7ec175d12b0a": "EVERY is a cap no folder reaches; 10**9 and 10**10 serve the same passages."
   },
@@ -45,10 +48,6 @@
   },
   "office": {
     "04697c92e4ab": "The promise is that a part is bounded, not its exact size: 64 or 65 MiB refuses the same zip bombs."
-  },
-  "on-this-day": {
-    "38b9c5553e24": "A year is four digits: comparing d[:5] with this year orders earlier, same and later years the same way.",
-    "3f174bd01a95": "today is eight characters, so today[4:9] is today[4:8]."
   },
   "pins": {
     "1eb781c3ac07": "pins.py's own repo-root insert on sys.path is redundant: importing advisories inserts the same root and imports kernel, so changing this index only adds a directory that never supplies kernel."

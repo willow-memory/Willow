@@ -305,6 +305,7 @@ def test_report_check_and_backup(tmp_path, source):
         "[each",
     ]
     assert "[todo] 0 lines marked to do" in got.stdout
+    assert " checked, 0 don't hold" in got.stdout.splitlines()[0]
     (base / "pile" / "NEXT.md").write_text("TODO: read the blend spec again\n")
     assert "[todo] 1 lines marked to do" in run("check", "--base", base).stdout
     backups = tmp_path / "backups"

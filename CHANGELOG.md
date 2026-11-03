@@ -10,6 +10,14 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `forge`, a deps add-on: a sentence in, the add-ons it names or means
+  out, as a report in the one shape. A word that reaches several add-ons
+  ("email": mail, apple-mail) is a fork with the cards as options, for the
+  Forge's checkpoint to put to the person once and remember; `--plan`
+  prints the same as a plan the Forge's `plan_shape` validates and its
+  `build_loop` resolves. It recommends nothing, scores nothing, proposes
+  nothing and writes nothing. Needs forge-play 0.10, whose card box reads
+  these cards as rows for its keyword scan. (#200)
 - `ci-memo`: a pull request runs only the mutants gates a change can reach,
   standing the rest on the record of main's last green run, and a push to
   main runs them all, so the merge's receipt stays whole. Four shards of 5
@@ -1626,6 +1634,11 @@ says how). The first was v0.1.0.
   list, not first in it. Which gate a shard plant reports "in no job" first
   depends on the cut, and the weights move it: a pull request adding an add-on
   (sort, #206) failed the test with its own gate's weight in the cut. (#217)
+- history and on-this-day print a report (the report contract), a group a
+  day and a group a year; empty exits 0 in each, where it said 42. (#210)
+- coming-up, box-health, agents-md-check, xref and pins print a report (the
+  report contract); coming-up with nothing in its window exits 0 where it
+  said 42; repo-pile reads xref's report. (#199)
 - `ci`: the heavy CI jobs no longer wait on `first`, only on lint, against
   and changelog. `first` runs what a change reaches, and on a pull request
   converting seven add-ons that was 18 minutes, during which no heavy job

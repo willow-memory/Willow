@@ -6,6 +6,7 @@ added: 2026-10-24
 writes: nothing
 network: none
 uses: advisories
+output: report
 -->
 # pins
 
@@ -13,14 +14,18 @@ The dependencies your project declares as a version range that no lockfile
 pins to one exact version, so the next install can resolve them to something
 else. Offline and read-only.
 
-    python adapters/stdlib/pins/pins.py --box DIR
-    python adapters/stdlib/pins/pins.py --from ANY-FOLDER
+    python adapters/stdlib/pins/pins.py --box DIR [--json]
+    python adapters/stdlib/pins/pins.py --from ANY-FOLDER [--json]
 
-    PyPI  requests  >=2.19   no lockfile pins it
-    npm  jest  ~29.0.0   no lockfile pins it
-    npm  lodash  ^4.17.0   no lockfile pins it
+    pins: populated, 3 of 3 declared ranges have no lockfile pin
+    ## no lockfile pins it
+      PyPI  requests  >=2.19
+      npm   jest      ~29.0.0
+      npm   lodash    ^4.17.0
 
-    3 of 3 declared ranges have no lockfile pin.
+It prints [a report](../ci/README.md#the-report-contract): a line saying what
+it found, then the ranges, each row its ecosystem and then the package and
+its range. `--json` gives the same report as one JSON object.
 
 **What this first version reads.** Two manifests only: the package.json file
 (its dependencies and devDependencies) and the requirements.txt file. The
@@ -41,13 +46,14 @@ at any version, and the PyPI names are matched with case and -_. folded. A
 range no lockfile names is listed, with its ecosystem, name and range.
 
 Manifests inside a node_modules, vendor or .git folder are skipped. A manifest
-that can't be read is named apart as "couldn't read -- check by hand"; it is
-never dropped quietly.
+that can't be read is named apart, in a group `couldn't read -- check by hand`
+of its own; it is never dropped quietly.
 
-With nothing to check it says so and stops. It only reads, and writes nothing.
-Exit codes, the kernel's: 0 every declared range is pinned, or there is no range
-to check, or there is no manifest; 42 a range no lockfile pins, or a manifest
-that can't be read, and waits on you; 2 refused.
+With nothing to check it says so (empty) and stops. It only reads, and writes
+nothing. Exit codes, the kernel's: 0 every declared range is pinned, or there
+is no range to check, or there is no manifest (empty); 42 a range no lockfile
+pins, or a manifest that can't be read (populated), and waits on you; 2
+refused.
 
 **Never:** fetches anything, or writes anything. The lockfiles are yours to keep
 current.

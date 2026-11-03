@@ -126,11 +126,11 @@ says how to pick one up:
 <!-- willow:front show=pick week=2026-W45 -->
 **Add-on of the week**
 
-**[words-pt](adapters/stdlib/words-pt/)** — Portuguese common words ("o", "e").
+**[pair-drift](adapters/stdlib/pair-drift/)** — Figures a summary says that its full text doesn't: a draft and its packet side by side, ranges and billions read as written.
 
-*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 325 built add-ons in name order.*
+*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 326 built add-ons in name order.*
 
-[Every add-on, 325 built of 517, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 326 built of 518, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 
