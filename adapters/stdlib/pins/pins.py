@@ -1,8 +1,8 @@
 """pins.py: the dependencies your manifests declare as a version range that no
 lockfile pins, offline. Python 3.9+.
 
-    python adapters/stdlib/pins/pins.py --box DIR
-    python adapters/stdlib/pins/pins.py --from FOLDER
+    python adapters/stdlib/pins/pins.py --box DIR [--json]
+    python adapters/stdlib/pins/pins.py --from FOLDER [--json]
 
 Two manifests are read: package.json (its `dependencies` and `devDependencies`)
 and requirements.txt. A declared value that is not one exact version -- `^1.2.0`,
@@ -12,22 +12,25 @@ tag) or `name==1.2.3` is already pinned, so it is not listed.
 
 The lockfiles say what was actually resolved. They are read by the same reader
 the [advisories](../advisories/) add-on uses, so a range is pinned when a lockfile
-holds its package at any version. A range no lockfile names is listed:
+holds its package at any version. A range no lockfile names is listed, as a report (adapters/stdlib/ci/README.md,
+the report contract), each row its ecosystem, then the package and its range:
 
-    PyPI  requests  >=2.19   no lockfile pins it
-    npm  jest  ~29.0.0   no lockfile pins it
-    npm  lodash  ^4.17.0   no lockfile pins it
-
-    3 of 3 declared ranges have no lockfile pin.
+    pins: populated, 3 of 3 declared ranges have no lockfile pin
+    ## no lockfile pins it
+      PyPI  requests  >=2.19
+      npm   jest      ~29.0.0
+      npm   lodash    ^4.17.0
 
 Manifests inside a `node_modules`, `vendor` or `.git` folder are skipped. A
 manifest that can't be read is named apart, as "couldn't read -- check by
-hand", never silently dropped.
+hand", never silently dropped (it is a group of its own, `couldn't read --
+check by hand`, its rows the manifest paths).
 
-With nothing to check it says so and stops. It only reads, and writes nothing.
-Exit codes, the kernel's: 0 every declared range is pinned, or there is no
-range to check (or no manifest); 42 a range no lockfile pins, or a manifest
-that can't be read, and waits on you; 2 refused.
+With nothing to check it says so (empty) and stops. `--json` gives the same
+report as one JSON object. It only reads, and writes nothing. Exit codes, the
+kernel's: 0 every declared range is pinned, or there is no range to check (or
+no manifest) (empty); 42 a range no lockfile pins, or a manifest that can't be
+read (populated), and waits on you; 2 refused.
 """
 
 from __future__ import annotations
@@ -169,7 +172,7 @@ def check(folder: Path):
 
 
 def main(argv: list[str]) -> int:
-    as_json = "--json" in argv  # noqa: F841  wire: say(report(...), as_json)
+    as_json = "--json" in argv
     argv = [a for a in argv if a != "--json"]
     opts, it = {}, iter(argv)
     for a in it:
@@ -195,21 +198,24 @@ def main(argv: list[str]) -> int:
 
     found, ranges, locked, unread = check(folder)
     if not found:
-        print("No package.json or requirements.txt in your folder.")
+        said = "no package.json or requirements.txt in your folder"
+        say(report(NAME, "empty", said, []), as_json)
         return kernel.ALIVE
     unpinned = [r for r in ranges if advisories.norm(r[0], r[1]) not in locked]
-    for eco, name, spec in unpinned:
-        print(f"{eco}  {name}  {spec}   no lockfile pins it")
-    for rel in unread:
-        print(f"couldn't read {rel} -- check by hand")
     if not unpinned and not unread:
         if not ranges:
-            print("Every declared dependency is an exact version; no ranges to check.")
+            said = "every declared dependency is an exact version; no ranges to check"
         else:
-            print(f"All {len(ranges)} declared ranges are pinned by a lockfile.")
+            said = f"all {len(ranges)} declared ranges are pinned by a lockfile"
+        say(report(NAME, "empty", said, []), as_json)
         return kernel.ALIVE
-    print(f"\n{len(unpinned)} of {len(ranges)} declared ranges have no lockfile pin"
-          + (f"; {len(unread)} couldn't be read" if unread else "") + ".")  # fmt: skip
+    said = (f"{len(unpinned)} of {len(ranges)} declared ranges have no lockfile pin"
+            + (f"; {len(unread)} couldn't be read" if unread else ""))  # fmt: skip
+    groups = [
+        ("no lockfile pins it", [(eco, f"{name}  {spec}") for eco, name, spec in unpinned]),
+        ("couldn't read -- check by hand", [(rel, "") for rel in unread]),
+    ]  # fmt: skip
+    say(report(NAME, "populated", said, groups), as_json)
     return kernel.ESCALATE
 
 
