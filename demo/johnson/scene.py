@@ -80,7 +80,7 @@ KEPT = {"walt": ["report", "report-v2"],
         "aurelie": ["walt-to-aurelie", "walt-to-aurelie-v2"],
         "tamsin": ["aurelie-to-tamsin", "aurelie-to-tamsin-v2"],
         "harold": ["tamsin-to-harold", "tamsin-to-harold-v2"]}  # fmt: skip
-STACK = ROOT / "adapters" / "stdlib" / "stack" / "stack.py"
+STACK = ROOT / "adapters/stdlib/stack/stack.py"
 LATER = "2026-03-12T15:30:00Z"  # the clock the stacks' coming-up steps read
 #: each person's stacks: (name, maker, the words it is sealed under, why,
 #: [(pool heading, step add-on, its arguments)])
