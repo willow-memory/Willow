@@ -1808,6 +1808,10 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- contradictions leaves a word that's everywhere (on more than one dated
+  line in 500, and more than 10) out of what two lines share: over 14
+  repositories it found 371,125 "disagreements" in 133 seconds, and now
+  1,404 in 18. (#212)
 - people counts the values code writes capitalized (None, True, False) as no
   one, beside the months and weekdays: a repository's roster led with None,
   24,048 mentions, from one `self.left None`. (#209)
