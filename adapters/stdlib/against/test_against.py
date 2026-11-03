@@ -398,5 +398,9 @@ def test_this_repos_files_md_and_contract_are_read_the_way_the_checks_read_them(
 
 def test_a_card_line_is_read_from_the_header_only():
     assert against.card_line("<!-- willow-addon\nline: Sorts.\n-->\n# x\nline: no\n") == "Sorts."  # fmt: skip
+    assert (
+        against.card_line("<!-- willow-addon\nline: Sorts: a pile.\n-->\n")
+        == "Sorts: a pile."
+    )
     assert against.card_line("# no header\nline: no\n") == ""
     assert re.fullmatch(r"#\d+", against.label("refs/pull/12/head")) and against.label("main") == "main"  # fmt: skip
