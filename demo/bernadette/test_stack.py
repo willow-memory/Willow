@@ -102,7 +102,7 @@ def test_after_the_seal_the_trust_layer_holds(ran):
     assert got.returncode == 0, got.stdout + got.stderr
     after = {s["piece"]: s for s in json.loads(
         (ran["to"] / "stack.json").read_text())["after"]}  # fmt: skip
-    assert after["stale"]["said"] == "1 approved; 0 stale"
+    assert after["stale"]["said"] == "stale: empty, 1 approved; 0 stale"
     assert after["diverge"]["said"].startswith("The same")
     assert after["kernel"]["said"].startswith("the chain holds")
     assert after["session-seal"]["state"] == "for you", "one seal, still theirs"

@@ -1,19 +1,23 @@
 """package_contents.py: what's inside a wheel, sdist, npm tarball or .crate
 before you install it. Python 3.9+.
 
-    python adapters/stdlib/package-contents/package_contents.py --from FILE-OR-FOLDER
-    python adapters/stdlib/package-contents/package_contents.py --box DIR
+    python adapters/stdlib/package-contents/package_contents.py --from FILE-OR-FOLDER [--json]
+    python adapters/stdlib/package-contents/package_contents.py --box DIR [--json]
 
 Each package file is opened and its members listed, every one, with its size:
 nothing is unpacked, run, fetched or written. Then the code that would run
 because you installed it, each cited by the file and line that makes it run:
 
-    evil-1.0-py3-none-any.whl   wheel, 3 files
-        evil/__init__.py                  12 B
-        evil-1.0.dist-info/METADATA      204 B
-        evil.pth                          38 B
-      runs on install:
-        evil.pth:1   import: the line runs at every Python start
+    package-contents: populated, 1 of 1 package would run code on install or write outside its folder; none was run here
+    ## evil-1.0-py3-none-any.whl: wheel, 3 files
+      evil/__init__.py             12 B
+      evil-1.0.dist-info/METADATA  204 B
+      evil.pth                     38 B
+    ## evil-1.0-py3-none-any.whl runs on install
+      evil.pth:1                   import: the line runs at every Python start
+
+It prints a report, as every report add-on does (adapters/stdlib/ci/README.md,
+the report contract), and `--json` gives the same report as one JSON object.
 
 A wheel runs nothing while it is installed, but a `.pth` line that starts
 with `import` runs every time Python starts. An sdist is built first: its
@@ -23,8 +27,10 @@ no install script makes npm run node-gyp. A crate's build.rs runs when it is
 compiled, and so does a procedural macro. A path that is absolute or climbs out
 with `..` is flagged too: an unpacker that trusts it writes outside its folder.
 
-Exit codes, the kernel's: 0 nothing would run (or no package file); 42 code
-would run, or a path escapes, and waits on you; 2 refused.
+Exit codes, the kernel's: 0 packages listed and nothing would run
+(populated), or no package file (empty); 42 code would run, or a path
+escapes, and waits on you (populated), or no package file here could be
+opened (unreachable); 2 refused.
 """
 
 from __future__ import annotations
@@ -41,6 +47,7 @@ STDLIB = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(STDLIB.parents[1]))
 import kernel  # noqa: E402
 
+NAME = "package-contents"
 SUFFIXES = (".whl", ".zip", ".tar.gz", ".tgz", ".tar", ".crate")
 READ_CAP = 1 << 20  # a file is read for the checks up to this many bytes
 HOOKS = ("preinstall", "install", "postinstall")
@@ -219,13 +226,59 @@ def find(folder: Path) -> list[Path]:
     )
 
 
+# ── the report: the shape every report add-on prints (ci/README.md) ─────────
+def report(addon: str, state: str, said: str, groups: list) -> dict:
+    """A report: its state, one line said, and each group's rows (where,
+    what); a group named None comes first and has no heading."""
+    return {"addon": addon, "state": state, "said": said,
+            "groups": [{"name": g, "rows": [{"where": w, "what": x} for w, x in rows]}
+                       for g, rows in groups if rows]}  # fmt: skip
+
+
+def report_text(doc: dict) -> str:
+    rows = [r for g in doc["groups"] for r in g["rows"]]
+    w = min(max((len(r["where"]) for r in rows), default=0), 60)
+    out = [f"{doc['addon']}: {doc['state']}, {doc['said']}"]
+    for g in doc["groups"]:
+        if g["name"] is not None:
+            out.append(f"## {g['name']}")
+        out += [f"  {r['where']:<{w}}  {r['what']}".rstrip() for r in g["rows"]]
+    return "\n".join(out)
+
+
+def say(doc: dict, as_json: bool) -> None:
+    print(json.dumps(doc, ensure_ascii=False) if as_json else report_text(doc))
+
+
+def groups_of(path: Path, pkg: Package) -> tuple[list[tuple[str, list]], bool]:
+    """A package's groups: its files, each with its size; the code that runs
+    on install, by file and line; and the paths that escape. And whether it
+    was flagged (code runs, or a path escapes)."""
+    kind = kind_of(pkg)
+    files = [e for e in pkg.entries if e[2] != "dir"]
+    listed = [
+        (name, size_of(size) if k == "file" else "link") for name, size, k in files
+    ]
+    code, bad = runs(pkg, kind), escapes(pkg)
+    head = f"{path.name}: {kind}, {len(files)} file{'s' if len(files) != 1 else ''}"
+    return [
+        (head, listed),
+        (f"{path.name} runs on install", [(f"{n}:{i}", why) for n, i, why in code]),
+        (f"{path.name} has paths that escape",
+         [(n, "absolute or climbs out with ..") for n in bad]),
+    ], bool(code or bad)  # fmt: skip
+
+
 def main(argv: list[str]) -> int:
     opts, args, it = {}, [], iter(argv)
     for a in it:
         if a in ("--box", "--from"):
             opts[a] = next(it, "")
+        elif a == "--json":
+            opts[a] = "yes"
         else:
             args.append(a)
+    as_json = opts.pop("--json", None) is not None
     if args or len([v for v in opts.values() if v]) != 1 or len(opts) != 1:
         print(__doc__.split("\n\n")[1], file=sys.stderr)
         return kernel.REFUSED
@@ -241,7 +294,7 @@ def main(argv: list[str]) -> int:
             print(f"refused: {source} doesn't exist", file=sys.stderr)
             return kernel.REFUSED
     paths = find(source)
-    shown, flagged = 0, 0
+    groups, shown, flagged, unopened = [], 0, 0, 0
     for path in paths:
         try:
             pkg = Package(path)
@@ -250,38 +303,33 @@ def main(argv: list[str]) -> int:
                 f"note: {path.name} couldn't be opened as a package, so it was not checked",
                 file=sys.stderr,
             )
+            unopened += 1
             continue
         shown += 1
-        kind = kind_of(pkg)
-        files = [e for e in pkg.entries if e[2] != "dir"]
-        print(
-            f"{path.name}   {kind}, {len(files)} file{'s' if len(files) != 1 else ''}"
-        )
-        width = max((len(n) for n, _, _ in files), default=0)
-        for name, size, k in files:
-            print(f"    {name:<{width}}   {size_of(size) if k == 'file' else 'link'}")
-        code, bad = runs(pkg, kind), escapes(pkg)
-        if code or bad:
-            flagged += 1
-            print("  runs on install:" if code else "  paths that escape:")
-            for name, n, why in code:
-                print(f"    {name}:{n}   {why}")
-            if code and bad:
-                print("  paths that escape:")
-            for name in bad:
-                print(f"    {name}   absolute or climbs out with ..")
-        print()
+        these, hit = groups_of(path, pkg)
+        groups += these
+        flagged += hit
+    unread = (f"; {unopened} couldn't be opened as {'a package' if unopened == 1 else 'packages'}"
+              if unopened else "")  # fmt: skip
+    if not paths:
+        said = "no package file here (a wheel, sdist, npm tarball or .crate)"
+        say(report(NAME, "empty", said, []), as_json)
+        return kernel.ALIVE
     if not shown:
-        print("No package file here (a wheel, sdist, npm tarball or .crate).")
-        return kernel.ALIVE
+        said = f"no package file here could be opened{unread}"
+        say(report(NAME, "unreachable", said, []), as_json)
+        return kernel.ESCALATE
+    pkgs = f"package{'s' if shown != 1 else ''}"
     if not flagged:
-        print(
-            f"{shown} package{'s' if shown != 1 else ''} listed; none would run code on install."
-        )
-        return kernel.ALIVE
-    print(f"{flagged} of {shown} package{'s' if shown != 1 else ''} would run code on install or "
-          "write outside its folder. Read each before you install it; none was run here.")  # fmt: skip
-    return kernel.ESCALATE
+        said = f"{shown} {pkgs} listed; none would run code on install{unread}"
+    else:
+        said = (f"{flagged} of {shown} {pkgs} would run code on install or write outside"
+                f" its folder; none was run here{unread}")  # fmt: skip
+    doc = report(NAME, "populated", said, groups)
+    if not doc["groups"]:  # every package holds nothing: no rows to show
+        doc["state"] = "empty"
+    say(doc, as_json)
+    return kernel.ESCALATE if flagged else kernel.ALIVE
 
 
 if __name__ == "__main__":

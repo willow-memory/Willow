@@ -61,6 +61,10 @@ What an add-on leans on is on its card, never found by reading its code:
                 either way
     runs-in:    repo, for a tool that works on willow's own repository (CI,
                 the list, the branches); it isn't copied out of it
+    output:     report, for one that prints a report: a line saying what it
+                found, then its rows by group, each where and what, the
+                same shape as every other report and the same as JSON with
+                --json (adapters/stdlib/ci/README.md, the report contract)
 
 Each is optional, a list of add-on names with commas between. `check`
 refuses a name that isn't an add-on (built, for a built one), the add-on
@@ -149,6 +153,8 @@ FIELDS = {"section", "line", "source", "writes", "network"}
 #: what an add-on leans on, by name: optional, and checked against the list
 LEANS = ("uses", "looks-for")
 RUNS_IN = {"repo"}
+#: what an add-on prints, when it keeps a shared shape: ci/README.md
+OUTPUTS = {"report"}
 #: the tags the similar add-on works out, which a card's own tag is never one of
 FACT_TAGS = {"no-install", "needs-install", "offline", "this-machine", "online"}
 #: what an add-on may write: the guard in adapters/stdlib/ci/guard holds it
@@ -241,6 +247,8 @@ def addons() -> list[dict]:
             raise Refused(f"{where}: added is the date it was built, YYYY-MM-DD")
         if a.get("runs-in", "repo") not in RUNS_IN:
             raise Refused(f"{where}: runs-in is repo, or left out")
+        if a.get("output", "report") not in OUTPUTS:
+            raise Refused(f"{where}: output is report, or left out")
     names = {a["name"]: a["built"] for a in out}
     for a in out:
         where = a.get("path") or f"planned.json: {a['name']}"

@@ -73,9 +73,15 @@ def test_it_counts_what_bites_came_to_and_grades_against_it(tmp_path):
     got = run("score", "--box", str(box))
     assert got.returncode == 0
     assert got.stdout.splitlines() == [
-        "1 of 2 predictions right",
+        "predict: populated, 1 of 2 predictions right",
         "  said populated  1 of 2 held",
     ]
+    got = run("score", "--box", str(box), "--json")
+    assert got.returncode == 0 and json.loads(got.stdout) == {
+        "addon": "predict", "state": "populated",
+        "said": "1 of 2 predictions right",
+        "groups": [{"name": None, "rows": [
+            {"where": "said populated", "what": "1 of 2 held"}]}]}  # fmt: skip
 
 
 def test_a_tie_goes_to_empty_the_answer_that_asks_the_person():
@@ -105,12 +111,17 @@ def test_it_reads_the_one_scripts_own_predict_rows():
     ]
 
 
-def test_nothing_graded_waits_and_a_broken_record_is_refused(tmp_path):
+def test_nothing_graded_is_empty_and_a_broken_record_is_refused(tmp_path):
     box = make(tmp_path)
     got = run("score", "--box", str(box))
-    assert got.returncode == 42 and "nothing graded yet" in got.stdout
+    assert got.returncode == 0 and got.stdout.startswith(
+        "predict: empty, nothing graded yet"
+    )
     ask(box, "bees")
-    assert run("score", "--box", str(box)).returncode == 42, "the first isn't graded"
+    got = run("score", "--box", str(box), "--json")
+    assert got.returncode == 0 and json.loads(got.stdout)["state"] == "empty", (
+        "the first isn't graded"
+    )
     rec = box / "record.jsonl"
     rec.write_text(rec.read_text().replace('"graded"', '"gradeq"', 1))
     for argv in (["score", "--box", str(box)], ["ask", "--box", str(box), "bees"]):
@@ -125,7 +136,8 @@ def test_a_bad_command_line_is_refused(tmp_path):
     for argv in ([], ["fly"], ["ask", "--box", box], ["ask", "bees"],
                  ["ask", "--box", box, "--now", "", "bees"],
                  ["ask", "--box", box, "--top", "3", "bees"],
-                 ["score", "--box", box, "bees"], ["score", "--box", box, *NOW]):  # fmt: skip
+                 ["score", "--box", box, "bees"], ["score", "--box", box, *NOW],
+                 ["ask", "--box", box, "--json", "bees"]):  # fmt: skip
         got = run(*argv)
         assert got.returncode == 2 and "predict.py" in got.stderr, argv
     assert len(rows(Path(box))) == 1, "nothing written by a refusal"
