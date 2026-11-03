@@ -1743,7 +1743,7 @@ says how). The first was v0.1.0.
 - `ui/assemble.py add` adds a piece once when it is both asked for and
   leaned on by another piece asked for in the same call (`digest` and
   `hook-start`), where it crashed with `FileExistsError` and left copies
-  `STACK.json` didn't hold; a refusal partway now removes that call's
+  STACK.json didn't hold; a refusal partway now removes that call's
   copies, and a folder an older crash left is named, not a traceback. (#193)
 - The Java, TypeScript and C# ports exit 42 from a `propose` whose every
   line is refused, as `kernel.py` has since bug #96's fix; they exited 0,
