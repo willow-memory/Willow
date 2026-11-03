@@ -6,7 +6,7 @@ added: 2026-10-27
 writes: nothing
 network: none
 output: report
-
+-->
 # symptoms
 
 One symptom's diary from your files, oldest first, each line dated, its turn
