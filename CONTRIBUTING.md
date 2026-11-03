@@ -217,8 +217,10 @@ beside the GitHub one: a host.json for `adapters/stdlib/ci/whose.py`, and that s
 - CI's `against` job holds your pull request to the other open ones, and its
   summary says what it found. **A duplicate fails it:** a name both pull
   requests add (an add-on folder, an idea on `adapters/planned.json`, a key
-  of `COMMANDS`, a path in FILES.md); settle it on the pull requests, with
-  the maintainer, before more is built. **A collision is a warning:**
+  of `COMMANDS`, a path in FILES.md). The two of you settle it between
+  yourselves on the pull requests first, one withdrawing or the two joining,
+  before more is built; it comes to the maintainer only when you can't.
+  **A collision is a warning:**
   a file you both change that git cannot merge, named with the pull request
   to merge first (CHANGELOG.md, the generated lists, FILES.md,
   `adapters/planned.json` and the `COMMANDS` table are settled by
