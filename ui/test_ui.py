@@ -219,6 +219,28 @@ def test_no_stack_is_made_inside_this_repository(tmp_path, capsys):
     assert not (canvas.WILLOW / "a-stack").exists()
 
 
+def test_a_piece_both_asked_for_and_leaned_on_is_added_once(tmp_path, capsys):
+    to = tmp_path / "willow-stack"
+    assert assemble.main(["init", "--to", str(to)]) == assemble.ALIVE
+    # hook-start leans on digest, asked for first; and todo asked for twice
+    assert (
+        assemble.add(["digest", "hook-start", "todo", "todo"], to, None)
+        != assemble.REFUSED
+    )
+    assert {"digest", "hook-start", "todo"} <= set(
+        assemble.manifest(to / "stack")["addons"]
+    )
+    # a refusal partway leaves nothing half-added
+    stdlib = to / "stack" / "adapters" / "stdlib"
+    before = sorted(p.name for p in stdlib.iterdir())
+    assert assemble.add(["coming-up", "not-an-add-on"], to, None) == assemble.REFUSED
+    assert sorted(p.name for p in stdlib.iterdir()) == before
+    # a folder left by an older crash is named, not a traceback
+    (stdlib / "stale").mkdir()
+    assert assemble.add(["stale"], to, None) == assemble.REFUSED
+    assert "not on STACK.json" in capsys.readouterr().err
+
+
 def test_a_tool_for_willows_own_repository_isnt_put_in_a_stack(stack_dir, capsys):
     assert assemble.add(["ci"], stack_dir, None) == assemble.REFUSED
     assert "willow's own repository" in capsys.readouterr().err
