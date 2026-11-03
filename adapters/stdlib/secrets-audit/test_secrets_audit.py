@@ -5,6 +5,7 @@ everyday addresses left alone; nothing written."""
 from __future__ import annotations
 
 import importlib.util
+import json
 import subprocess
 import sys
 from pathlib import Path
@@ -53,9 +54,12 @@ def test_a_file_of_passwords_is_read_as_one(tmp_path):
     )
     (pile / "family.txt").write_text("ancestry: Considine1911 was the census name\n")
     got = run("--from", str(pile))
-    assert got.returncode == 42 and "Desktop/passwords.txt:3  password" in got.stdout
+    assert (
+        got.returncode == 42
+        and "  Desktop/passwords.txt:3  value not shown" in got.stdout
+    )
     assert "family.txt" not in got.stdout, "the same words in another file aren't one"
-    assert "Considine1911" not in got.stdout and "1 place hold" in got.stdout
+    assert "Considine1911" not in got.stdout and "1 place holds" in got.stdout
 
 
 def make(tmp_path: Path) -> Path:
@@ -77,14 +81,36 @@ def run(*argv: str) -> subprocess.CompletedProcess:
     )
 
 
-def test_a_folder_is_listed_by_file_line_and_kind_never_the_value(tmp_path):
+def test_a_folder_is_reported_by_place_grouped_by_kind_never_the_value(tmp_path):
     pile = make(tmp_path)
     got = run("--from", str(pile))
     assert got.returncode == 42
-    assert "wifi.txt:2" in got.stdout and "password" in got.stdout
-    assert "work/deploy.md:3" in got.stdout and "  key" in got.stdout
+    assert got.stdout.splitlines() == [
+        "secrets-audit: populated, 2 places hold a secret in plain text; values are never shown",
+        "## a password typed with its label",
+        "  wifi.txt:2        value not shown",
+        "## a key or token",
+        "  work/deploy.md:3  value not shown",
+    ]
     assert "hunter2" not in got.stdout and "sk-ant" not in got.stdout
-    assert "2 places hold a secret" in got.stdout and "shopping" not in got.stdout
+
+
+def test_json_is_the_same_report_as_one_object(tmp_path):
+    pile = make(tmp_path)
+    got = run("--from", str(pile), "--json")
+    assert got.returncode == 42
+    assert json.loads(got.stdout) == {
+        "addon": "secrets-audit",
+        "state": "populated",
+        "said": "2 places hold a secret in plain text; values are never shown",
+        "groups": [
+            {"name": "a password typed with its label",
+             "rows": [{"where": "wifi.txt:2", "what": "value not shown"}]},
+            {"name": "a key or token",
+             "rows": [{"where": "work/deploy.md:3", "what": "value not shown"}]},
+        ],
+    }  # fmt: skip
+    assert "hunter2" not in got.stdout and "sk-ant" not in got.stdout
 
 
 def test_a_box_audits_its_own_files_and_writes_nothing(tmp_path):
@@ -98,11 +124,24 @@ def test_a_box_audits_its_own_files_and_writes_nothing(tmp_path):
     assert {p: p.read_bytes() for p in tmp_path.rglob("*") if p.is_file()} == before
 
 
-def test_nothing_found_says_so(tmp_path):
+def test_nothing_found_is_empty_and_exits_0(tmp_path):
     (tmp_path / "pile").mkdir()
     (tmp_path / "pile" / "a.txt").write_text("Nothing secret here.\n")
     got = run("--from", str(tmp_path / "pile"))
-    assert got.returncode == 0 and "No passwords, keys or card numbers" in got.stdout
+    assert got.returncode == 0
+    assert (
+        got.stdout
+        == "secrets-audit: empty, no password, key or card number in 1 file\n"
+    )
+    doc = json.loads(run("--from", str(tmp_path / "pile"), "--json").stdout)
+    assert doc["state"] == "empty" and doc["groups"] == []
+
+
+def test_a_folder_with_nothing_to_read_is_unreachable_not_clean(tmp_path):
+    (tmp_path / "pile").mkdir()
+    got = run("--from", str(tmp_path / "pile"))
+    assert got.returncode == 42
+    assert got.stdout == "secrets-audit: unreachable, nothing there to check\n"
 
 
 def test_without_the_privacy_add_on_typed_passwords_are_still_found(
@@ -116,7 +155,7 @@ def test_without_the_privacy_add_on_typed_passwords_are_still_found(
     assert (
         "only typed passwords" in out.err
         and "wifi.txt:2" in out.out
-        and "key" not in out.out
+        and "a key or token" not in out.out
     )
 
 
