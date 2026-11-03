@@ -242,8 +242,8 @@ def test_the_repos_github_folder_holds():
         ),  # fmt: skip
         (
             ".github/workflows/ci.yml",
-            "ci.py run mutants --box ${{ runner.temp }}/ci-record | tee",
-            "ci.py run mutants:accents --box ${{ runner.temp }}/ci-record | tee",
+            "cores.py --jobs 4 --box ${{ runner.temp }}/ci-record mutants | tee",
+            "cores.py --jobs 4 --box ${{ runner.temp }}/ci-record mutants:accents | tee",
             "mutants job is skipped on pull requests",
         ),  # fmt: skip
         (
