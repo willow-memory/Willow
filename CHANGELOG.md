@@ -1622,6 +1622,10 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- `ci`: the heavy CI jobs no longer wait on `first`, only on lint, against
+  and changelog. `first` runs what a change reaches, and on a pull request
+  converting seven add-ons that was 18 minutes, during which no heavy job
+  could start; it runs beside them again, as the early word it is.
 - `ci`: the heavy CI jobs wait on the fast ones. tests, strip, ports, demo,
   deps, tools and the mutants jobs `need` lint, first, against and changelog
   in `.github/workflows/ci.yml`, so on a pull request the checks that take

@@ -169,7 +169,7 @@ merging it.
 
 In CI (`.github/workflows/ci.yml`) each part is its own job with its own
 record, every heavy job waiting on the fast ones (lint, and a pull request's
-first, against and changelog) so a quick failure stops the rest from queueing, verified and uploaded as that run's artifact, but three: `tests:strip`
+against and changelog) so a quick failure stops the rest from queueing, verified and uploaded as that run's artifact, but three: `tests:strip`
 has jobs of its own on each Python (it runs the add-ons' tests again, in a
 stripped copy, so beside the rest it doubled the job), the tests and strip
 jobs are one job on each Python that runs four `--shard`s at once with
