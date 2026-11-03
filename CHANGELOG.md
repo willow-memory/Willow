@@ -1753,6 +1753,16 @@ says how). The first was v0.1.0.
 - todo lists a line whose date no calendar has (1984-06-31) under its own
   heading and exits 42, where it was ordered as the oldest thing to do; the
   oldest is said of the real dates only. known-gaps' freeze 9. (#207)
+- The UI's page puts a ticked piece into the sealed flow only when it makes
+  a page (a card usage of `--box DIR` and optional flags, and no network); a
+  page server, a reader, a hook's setup, a verb or `stack` itself is put in
+  the stack and listed as not run on the page. Run as a step, `browse` never
+  ended and Start it timed out after 900 seconds. (#194)
+- `ui/assemble.py add` adds a piece once when it is both asked for and
+  leaned on by another piece asked for in the same call (`digest` and
+  `hook-start`), where it crashed with `FileExistsError` and left copies
+  STACK.json didn't hold; a refusal partway now removes that call's
+  copies, and a folder an older crash left is named, not a traceback. (#193)
 - The Java, TypeScript and C# ports exit 42 from a `propose` whose every
   line is refused, as `kernel.py` has since bug #96's fix; they exited 0,
   which looked like an approved answer. The vectors' session now proposes a
