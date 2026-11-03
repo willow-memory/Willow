@@ -3,6 +3,14 @@
     public(seed)            the 32-byte public key of a 32-byte secret seed
     sign(seed, message)     a 64-byte signature
     check(public, message, signature)   True only for a good one
+    pem(public)             the key as a PEM public key (SubjectPublicKeyInfo)
+    from_pem(text)          the 32 bytes of an Ed25519 PEM public key, or None
+
+PEM is how willow-gate and most tools keep a public key; for Ed25519 it is
+the 32 bytes behind a fixed 12-byte header, so the same identity can be
+registered there (willow-gate's MessageVerifier.register_agent) and checked
+here. test_share.py holds both directions to messages willow-gate's own code
+signed and verified.
 
 Written from RFC 8032's section 5.1 and held to its test vectors and to
 random keys and messages against an audited library (test_share.py). It is
@@ -13,12 +21,16 @@ saying who sent a package, on your own machine, not for a server under load.
 
 from __future__ import annotations
 
+import base64
+import binascii
 import hashlib
 
 P = 2**255 - 19
 L = 2**252 + 27742317777372353535851937790883648493
 D = -121665 * pow(121666, P - 2, P) % P
 SQRT_M1 = pow(2, (P - 1) // 4, P)
+#: the DER header of an Ed25519 SubjectPublicKeyInfo (RFC 8410), before its 32 bytes
+SPKI = bytes.fromhex("302a300506032b6570032100")
 
 
 def _add(a: tuple, b: tuple) -> tuple:
@@ -121,3 +133,25 @@ def check(pub: bytes, message: bytes, signature: bytes) -> bool:
         return False
     k = _h(signature[:32] + pub + message) % L
     return _same(_times(s, BASE), _add(r, _times(k, a)))
+
+
+def pem(pub: bytes) -> str:
+    if not isinstance(pub, bytes) or len(pub) != 32:
+        raise ValueError("a public key is 32 bytes")
+    body = base64.b64encode(SPKI + pub).decode()
+    return f"-----BEGIN PUBLIC KEY-----\n{body}\n-----END PUBLIC KEY-----\n"
+
+
+def from_pem(text: str) -> bytes | None:
+    lines = text.strip().splitlines()
+    if len(lines) < 3 or lines[0] != "-----BEGIN PUBLIC KEY-----":
+        return None
+    if lines[-1] != "-----END PUBLIC KEY-----":
+        return None
+    try:
+        der = base64.b64decode("".join(lines[1:-1]), validate=True)
+    except (binascii.Error, ValueError):
+        return None
+    if len(der) != 44 or der[:12] != SPKI or _unpacked(der[12:]) is None:
+        return None
+    return der[12:]

@@ -112,6 +112,17 @@ with an audited library, and checked against that library on random keys
 and messages while it was written. It is not constant-time: fine on your
 own machine, not for a server signing for strangers.
 
+**The same keys as willow-gate.** willow-gate's agents sign their bus
+messages with Ed25519 too (`message_integrity`), keeping keys as PEM.
+`ed25519.pem` and `from_pem` turn a key into that form and back, so a
+person's identity here can be registered with willow-gate's verifier, and
+an agent's key checked here. Both directions were run against willow-gate's
+own code at 6f91cec and frozen into `test_share.py`: a message its
+`sign_message` signed verifies under `ed25519.check`, and one signed with
+`ed25519.sign` in its form passed its `MessageVerifier.verify`. The two
+sign different bytes for the same text, which each side must rebuild: its
+digest escapes non-ASCII, the kernel's `canon` keeps it.
+
 **Exit codes:** 0 done (a rotation written), a package that holds, or a record every witness
 holds to; 42 a package that doesn't hold or isn't for you, or a record a
 witness doesn't hold to, and waits on you; 2 refused.

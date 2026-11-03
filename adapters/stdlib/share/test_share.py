@@ -978,3 +978,71 @@ def test_row_zero_is_inside_the_record_and_said_only_for_what_it_is(three):
     assert sh.problems(resign(pkg, a.id)) == [
         "layer 0, answer 0: its rows aren't the proposal and the person's seal of this answer"
     ]
+
+
+# ── the same keys as willow-gate ────────────────────────────────────────────
+#: Made 2026-11-03 with willow-gate at 6f91cec (willow-memory/willow-gate),
+#: its own code, and frozen. GATE_MSG: signed by message_integrity's
+#: sign_message, with its key's PEM. SHARE_MSG: signed here with ed25519.sign
+#: in willow-gate's form, from SHARE_SEED, and passed by willow-gate's own
+#: MessageVerifier.verify against ed25519.pem of its key, the same day.
+GATE_PEM = ("-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAPG3czxUPvkHds3kP1esGjLanbb4/jwpTub6hiER8iF8=\n"
+            "-----END PUBLIC KEY-----\n")  # fmt: skip
+GATE_MSG = {
+    "sender": "ines", "channel": "johnson", "content": "Le toit fuit depuis l’orage — $2,140",
+    "nonce": "40fb567a7deb468cace35e4e9891b8c0", "signed_at": 1793689478,
+    "sig": "bdd4e72ea27342e7a16627ddf19151f966ff25ac7853be65d92b92a9ebee423133207f278440046ed9fac3c7e691eeaa0210a969299bf646b696196dec973c08",
+}  # fmt: skip
+SHARE_SEED = "3b4345b07ec9676647b91d8e5e5756900d9424a4b3e79e7fef19faacc8334ac6"
+SHARE_PEM = ("-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAKBWpNhCbC2CDvXKM3LFSGDsuYi9vXW8EvLNerX3LXQQ=\n"
+             "-----END PUBLIC KEY-----\n")  # fmt: skip
+SHARE_MSG = {
+    "sender": "walt", "channel": "johnson", "content": "Reviewed, approved — ✓",
+    "nonce": "c" * 32, "signed_at": 1793689493,
+    "sig": "f1ae6c9f698e382005afa5e9e172ee2890cc79dd625f701c8ff418909c86a9f473e2af5ba7f119922ff9fca1e539ee9808efb4c8d7e7ca96883f20b95912f709",
+}  # fmt: skip
+
+
+def gate_digest(msg: dict) -> bytes:
+    """willow-gate's signed bytes: five fields, sorted, ASCII-escaped, as its
+    message_integrity._canonical_digest makes them; not the kernel's canon,
+    which keeps non-ASCII as it is."""
+    fields = ("sender", "channel", "content", "nonce", "signed_at")
+    return json.dumps(
+        {k: msg[k] for k in fields}, sort_keys=True, separators=(",", ":")
+    ).encode()
+
+
+def test_a_message_willow_gate_signed_is_checked_here():
+    pub = ed25519.from_pem(GATE_PEM)
+    assert pub is not None and ed25519.pem(pub) == GATE_PEM
+    assert b"\\u2019" in gate_digest(GATE_MSG), "its bytes escape what canon keeps"
+    assert ed25519.check(pub, gate_digest(GATE_MSG), bytes.fromhex(GATE_MSG["sig"]))
+    for edit in ({"content": "Le toit fuit depuis l’orage — $21,400"}, {"sender": "walt"},
+                 {"nonce": "0" * 32}, {"signed_at": 1793689479}):  # fmt: skip
+        assert not ed25519.check(pub, gate_digest({**GATE_MSG, **edit}),
+                                 bytes.fromhex(GATE_MSG["sig"])), edit  # fmt: skip
+
+
+def test_a_message_signed_here_is_the_one_willow_gate_verified():
+    seed = bytes.fromhex(SHARE_SEED)
+    assert ed25519.pem(ed25519.public(seed)) == SHARE_PEM
+    assert ed25519.sign(seed, gate_digest(SHARE_MSG)).hex() == SHARE_MSG["sig"]
+    assert ed25519.check(ed25519.from_pem(SHARE_PEM), gate_digest(SHARE_MSG),
+                         bytes.fromhex(SHARE_MSG["sig"]))  # fmt: skip
+
+
+@pytest.mark.parametrize("text", [
+    "", "-----BEGIN PUBLIC KEY-----\n-----END PUBLIC KEY-----\n",
+    GATE_PEM.replace("PUBLIC", "PRIVATE"), GATE_PEM.replace("MCow", "MCo!"),
+    GATE_PEM.replace("BEGIN", "BEGAN"), GATE_PEM.replace("-----END PUBLIC KEY-----", "-----END-----"),
+    GATE_PEM.replace("MCowBQYDK2VwAyEA", "MCowBQYDK2VxAyEA"),  # another algorithm's header
+    ed25519.pem((2).to_bytes(32, "little")),  # 32 bytes, not a point on the curve
+])  # fmt: skip
+def test_what_isnt_an_ed25519_pem_key_is_none(text):
+    assert ed25519.from_pem(text) is None
+
+
+def test_pem_takes_only_a_key():
+    with pytest.raises(ValueError):
+        ed25519.pem(b"\x00" * 31)

@@ -26,7 +26,11 @@ says how). The first was v0.1.0.
   completeness); `rotate` changes a key loudly, signed by the old key and
   the new and carried in every later package, while any other key is
   refused; and `receive` names a key's rung (rookie, steady, veteran)
-  earned from its packages that held on your own chain. Ed25519 is written in
+  earned from its packages that held on your own chain. Its keys are
+  willow-gate's: `ed25519.pem` and `from_pem` carry an identity to and from
+  PEM, and a message willow-gate's `message_integrity` signed, and one
+  signed here that its `MessageVerifier` passed, are frozen in the tests.
+  Ed25519 is written in
   the standard library (`adapters/stdlib/share/ed25519.py`), held to RFC 8032's vectors and to
   ones from an audited library. Its card promises `writes: record, to`
   where the idea said `to`: the `sent` and `received` rows are the point.
