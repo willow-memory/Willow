@@ -107,6 +107,8 @@ def test_refusals(tmp_path):
         ).returncode
         == 2
     )
-    (tmp_path / "none.txt").write_text("# a note: with a colon, still a note\nno colon here\nempty:\n")
+    (tmp_path / "none.txt").write_text(
+        "# a note: with a colon, still a note\nno colon here\nempty:\n"
+    )
     got = run(script, "--box", str(b), "--categories", str(tmp_path / "none.txt"))
     assert got.returncode == 2 and "no category" in got.stderr
