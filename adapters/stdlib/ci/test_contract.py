@@ -691,6 +691,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
                   "tomatoes"]),  # fmt: skip
     "predict": ("predict.py", ["ask", "--box", "{box}", *NOW, "tomatoes"]),
     "serve": ("serve.py", ["scope", "--box", "{box}"]),
+    "share": ("share.py", ["log", "--box", "{box}"]),
     "browse": ("browse.py", ["launcher", "--box", "{box}"]),
     "digest": ("digest.py", ["--box", "{box}", *NOW]),
     # every language pack, from its folder: a new one is run here without a line of its own

@@ -126,11 +126,11 @@ says how to pick one up:
 <!-- willow:front show=pick week=2026-W45 -->
 **Add-on of the week**
 
-**[stack](adapters/stdlib/stack/)** — One page made from several add-ons run in the order you list them, their results grouped so the biggest come first.
+**[words-pt](adapters/stdlib/words-pt/)** — Portuguese common words ("o", "e").
 
-*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 324 built add-ons in name order.*
+*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 325 built add-ons in name order.*
 
-[Every add-on, 324 built of 516, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 325 built of 516, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 

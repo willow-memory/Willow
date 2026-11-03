@@ -1385,15 +1385,6 @@
   "network": "none"
  },
  {
-  "name": "share",
-  "kind": "stdlib",
-  "section": "Ways to use it",
-  "line": "One sealed answer to send someone, checkable by them, without giving them the folder.",
-  "source": "new",
-  "writes": "to",
-  "network": "none"
- },
- {
   "name": "sigmap",
   "kind": "stdlib",
   "section": "Reading more kinds of files",

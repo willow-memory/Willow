@@ -1044,6 +1044,11 @@ willow/
 │   │   │   ├── session_seal.py one seal over a session's rows, proposed through the kernel
 │   │   │   ├── test_session_seal.py
 │   │   │   └── README.md
+│   │   ├── share/
+│   │   │   ├── share.py         sealed answers packed for someone, signed, received, forwarded in layers and corrected
+│   │   │   ├── ed25519.py       Ed25519 signatures (RFC 8032) in the standard library
+│   │   │   ├── test_share.py
+│   │   │   └── README.md
 │   │   ├── shell/
 │   │   │   ├── shell.py          a willow command and tab completion for bash, zsh, fish, PowerShell and cmd
 │   │   │   ├── test_shell.py
@@ -1450,7 +1455,7 @@ willow/
 │   └── design/
 │       ├── repo-index.md     proposal: the repo as one deterministic-snapshot box, indexed by a custom serve-style stack
 │       └── serve.md          proposal: a sealed stack of piles served to a model, on markdown (the grove's serve, in willow)
-├── demo/                     four made-up people, a real bug, a real policy change and programs taken apart, to try it on
+├── demo/                     four made-up people, a case passed between five more, a real bug, a real policy change and programs taken apart, to try it on
 │   ├── odile/                piano tuner and beekeeper, caring for her father
 │   │   ├── make_life.py      writes her files into life/, the same bytes every run
 │   │   ├── CHARACTER.md      who she is and how her life is written down
@@ -1478,6 +1483,11 @@ willow/
 │   │   ├── STRIP.md          what each need came to, and what each layer of the stack did
 │   │   ├── stack.py          her files through every reader, start, the finders, privacy, an MCP assistant, and the trust add-ons
 │   │   └── test_stack.py     holds the stack to the states STRIP.md scores
+│   ├── johnson/              one report passed between five people's willows, a forged copy and a correction
+│   │   ├── README.md         the scene, what each step shows, and what it found
+│   │   ├── make_life.py      the five people's files, the same bytes every run
+│   │   ├── scene.py          the report sealed, sent, forwarded hop by hop, forged once, and corrected
+│   │   └── test_scene.py     holds the scene to what README.md says it shows
 │   ├── novelty.py           the reusable novelty check: have these pieces been put together before?
 │   ├── test_novelty.py      a novel description reads as novel, one an existing demo holds as prior art
 │   ├── redteam/             a frozen recon composition over a planted target, scanned for novelty
