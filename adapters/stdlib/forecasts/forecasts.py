@@ -3,7 +3,7 @@ seal, and scored. Python 3.9+.
 
     python adapters/stdlib/forecasts/forecasts.py wager  --box DIR --p P [--now TS] CLAIM...
     python adapters/stdlib/forecasts/forecasts.py settle --box DIR [--now TS] ROW yes|no
-    python adapters/stdlib/forecasts/forecasts.py score  --box DIR
+    python adapters/stdlib/forecasts/forecasts.py score  --box DIR [--json]
 
 `wager` writes a `wager` row: how likely you think the claim is (P, between
 0.01 and 0.99) and the claim's SHA-256. The record keeps no words, so keep the
@@ -18,12 +18,25 @@ settled, and over the settled ones the Brier score (0 is prophecy, 0.25 is a
 coin at 50%), the log score, and for each band of confidence how often you
 were right. A wager with both outcomes sealed (`conflicting`), or a sealed outcome
 whose file is no longer the bytes you sealed (`broken`), is said and not
-scored.
+scored. `score` prints a report, as every report add-on does
+(adapters/stdlib/ci/README.md, the report contract), a group per state and
+one for the bands, and `--json` gives the same report as one JSON object:
+
+    forecasts: populated, 2 settled, 1 open of 3 wagers; Brier 0.065, log score 0.290 over 2 settled
+    ## open
+      row 3         p 0.6
+    ## settled
+      row 1         p 0.8, it happened
+      row 2         p 0.3, it didn't
+    ## by confidence, over the settled
+      said 0.7-0.8  right 100% of 1
+      said 0.8-0.9  right 100% of 1
 
 Exit codes, the kernel's: `wager` 0; `settle` 42, waiting on your seal;
-`score` 0, or 42 when an outcome waits on your seal or nothing is settled
-yet; 2 refused (a broken outcome, a record that doesn't verify, a row that isn't a wager, one
-already settled, a bad command line).
+`score` 0 (no wagers, empty; or nothing waits on you), or 42 when an
+outcome waits on your seal, or one is conflicting or broken; 2 refused (a
+record that doesn't verify, a row that isn't a wager, one already settled,
+a bad command line).
 """
 
 from __future__ import annotations
@@ -39,6 +52,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 import kernel  # noqa: E402
 
 WHO = "forecasts"
+NAME = "forecasts"
 LOW, HIGH = 0.01, 0.99
 _EPS = 1e-9
 #: confidence bands, stated in the direction believed (a p below 0.5 is folded)
@@ -165,36 +179,81 @@ def settle(box: Path, rows: list[dict], n: int, happened: bool, ts: str) -> int:
     return kernel.ESCALATE
 
 
-def score(box: Path, rows: list[dict]) -> int:
+# ── the report: the shape every report add-on prints (ci/README.md) ─────────
+def report(addon: str, state: str, said: str, groups: list) -> dict:
+    """A report: its state, one line said, and each group's rows (where,
+    what); a group named None comes first and has no heading."""
+    return {"addon": addon, "state": state, "said": said,
+            "groups": [{"name": g, "rows": [{"where": w, "what": x} for w, x in rows]}
+                       for g, rows in groups if rows]}  # fmt: skip
+
+
+def report_text(doc: dict) -> str:
+    rows = [r for g in doc["groups"] for r in g["rows"]]
+    w = min(max((len(r["where"]) for r in rows), default=0), 60)
+    out = [f"{doc['addon']}: {doc['state']}, {doc['said']}"]
+    for g in doc["groups"]:
+        if g["name"] is not None:
+            out.append(f"## {g['name']}")
+        out += [f"  {r['where']:<{w}}  {r['what']}".rstrip() for r in g["rows"]]
+    return "\n".join(out)
+
+
+def say(doc: dict, as_json: bool) -> None:
+    print(json.dumps(doc, ensure_ascii=False) if as_json else report_text(doc))
+
+
+#: the report's groups, by a wager's state, in its order: what waits on you first
+GROUPS = {
+    "broken": "broken: a sealed outcome's file is no longer the bytes you sealed",
+    "conflicting": "conflicting: you sealed both outcomes",
+    "waiting": "waiting on your seal",
+    "open": "open",
+    "settled": "settled",
+}
+WAITS = ("waiting", "conflicting", "broken")
+
+
+def wagered(w: dict) -> str:
+    """A wager's p, and for a settled one what happened."""
+    if w["state"] != "settled":
+        return f"p {w['p']:g}"
+    return f"p {w['p']:g}, it " + ("happened" if w["happened"] else "didn't")
+
+
+def scored(box: Path, rows: list[dict]) -> tuple[dict, int]:
+    """Each wager by its state, the Brier and log scores over the settled ones
+    and the bands, as a report; and its exit code: 42 when one waits on you."""
     told = outcomes(box, rows)
     if not told:
-        print("no wagers yet: wager first, settle after")
-        return kernel.ESCALATE
+        said = "no wagers yet: wager first, settle after"
+        return report(NAME, "empty", said, []), kernel.ALIVE
     pairs = [(w["p"], w["happened"]) for w in told.values() if w["state"] == "settled"]
     counts = {s: sum(1 for w in told.values() if w["state"] == s)
               for s in ("settled", "waiting", "open", "conflicting", "broken")}  # fmt: skip
-    print(
-        ", ".join(f"{c} {s}" for s, c in counts.items() if c)
-        + f" of {len(told)} wagers"
-    )
-    for n, w in told.items():
-        if w["state"] in ("waiting", "conflicting", "broken"):
-            print(f"  row {n}: {w['state']}")
-    if not pairs:
-        if counts["broken"]:
-            return kernel.REFUSED
-        print("nothing settled yet: an outcome counts once you seal it")
-        return kernel.ESCALATE
-    b = sum(brier(p, o) for p, o in pairs) / len(pairs)
-    ls = sum(log_score(p, o) for p, o in pairs) / len(pairs)
-    print(f"Brier {b:.3f}  log score {ls:.3f}  over {len(pairs)} settled")
-    for band in bins([fold(x) for x in pairs]):
-        if band["n"]:
-            print(f"  said {band['lo']:.1f}-{band['hi']:.1f}: right "
-                  f"{band['hit_rate']:.0%} of {band['n']}")  # fmt: skip
-    if counts["broken"]:
-        return kernel.REFUSED
-    return kernel.ESCALATE if counts["waiting"] else kernel.ALIVE
+    said = ", ".join(f"{c} {s}" for s, c in counts.items() if c)
+    said += f" of {len(told)} wagers; "
+    if pairs:
+        b = sum(brier(p, o) for p, o in pairs) / len(pairs)
+        ls = sum(log_score(p, o) for p, o in pairs) / len(pairs)
+        said += f"Brier {b:.3f}, log score {ls:.3f} over {len(pairs)} settled"
+    else:
+        said += "nothing settled yet: an outcome counts once you seal it"
+    groups = [(name, [(f"row {n}", wagered(w)) for n, w in told.items()
+                      if w["state"] == state])
+              for state, name in GROUPS.items()]  # fmt: skip
+    bands = [(f"said {b['lo']:.1f}-{b['hi']:.1f}",
+              f"right {b['hit_rate']:.0%} of {b['n']}")
+             for b in bins([fold(x) for x in pairs]) if b["n"]]  # fmt: skip
+    groups.append(("by confidence, over the settled", bands))
+    code = kernel.ESCALATE if any(counts[s] for s in WAITS) else kernel.ALIVE
+    return report(NAME, "populated", said, groups), code
+
+
+def score(box: Path, rows: list[dict], as_json: bool = False) -> int:
+    doc, code = scored(box, rows)
+    say(doc, as_json)
+    return code
 
 
 def usage() -> int:
@@ -210,6 +269,8 @@ def main(argv: list[str]) -> int:
     for a in it:
         if a in ("--box", "--now", "--p"):
             opts[a] = next(it, "")
+        elif a == "--json" and verb == "score":
+            opts[a] = "yes"
         elif a.startswith("--"):
             return usage()
         else:
@@ -230,7 +291,7 @@ def main(argv: list[str]) -> int:
         return refuse(f"the record doesn't verify ({breaks[0]}); a person looks first")
     ts = opts.get("--now") or kernel.now()
     if verb == "score":
-        return score(box, rows)
+        return score(box, rows, "--json" in opts)
     if verb == "settle":
         if (
             len(words) != 2

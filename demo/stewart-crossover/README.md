@@ -59,9 +59,14 @@ box's own, made for the run, is made or read.
 
 [FROZEN.json](FROZEN.json) holds each frozen file's SHA-256, and the tools'
 from all five repositories with each one's commit, for the freeze in force
-(freeze 3), with each earlier freeze's file hashes kept beside its reason;
+(freeze 4), with each earlier freeze's file hashes kept beside its reason;
 `test_stewart_crossover.py` fails if a frozen file changes. A change is a
-new freeze, in its own commit, with its reason.
+new freeze, in its own commit, with its reason. Freeze 4 (2026-11-02, with
+no run between it and freeze 3) changes only how `run.py` reads misquote,
+which now prints a report
+([the report contract](../../adapters/stdlib/ci/README.md)): T2's closest
+passage is the place of the report's rows, as `closest` was before. Rules,
+sources and questions are as at freeze 3.
 
 - [sources.json](sources.json): eight sources by address, time and SHA-256,
   never their text. A wiki page is pinned at a revision and a data file at a

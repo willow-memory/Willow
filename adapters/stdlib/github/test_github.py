@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import importlib.util
 import os
+import re
 import shutil
 from pathlib import Path
 
@@ -180,30 +181,31 @@ def test_the_repos_github_folder_holds():
             "group: ci",
             "doesn't cancel",
         ),
-        # ci.py's gates cut between jobs, each run by exactly one of them
+        # ci.py's gates cut between jobs, each run by exactly one of them; a
+        # cores.py line runs every gate select names for it, uncut
         (
             ".github/workflows/ci.yml",
-            "run tests --without tests:strip --shard",
-            "run tests --shard",
+            "tests --without tests:strip | tee",
+            "tests | tee",
             "tests:strip-1 more than once",
         ),  # fmt: skip
         (
             ".github/workflows/ci.yml",
-            "run tests:strip --shard",
-            "run tests:kernel --shard",
+            "tests --without tests:strip | tee",
+            "tests --without tests:strip --without tests:kernel | tee",
+            "tests:kernel in no job",
+        ),  # fmt: skip
+        (
+            ".github/workflows/ci.yml",
+            "ci-record tests:strip | tee",
+            "ci-record tests:kernel | tee",
             "tests:kernel more than once",
         ),  # fmt: skip
         (
             ".github/workflows/ci.yml",
-            "run tests:strip --shard",
-            "run tests:strpi --shard",
+            "ci-record tests:strip | tee",
+            "ci-record tests:strpi | tee",
             "what it refuses",
-        ),  # fmt: skip
-        (
-            ".github/workflows/ci.yml",
-            "        shard: [1, 2, 3, 4]\n",
-            "        shard: [1, 2, 3]\n",
-            "in no job",
         ),  # fmt: skip
         (
             ".github/workflows/ci.yml",
@@ -219,28 +221,37 @@ def test_the_repos_github_folder_holds():
         ),  # fmt: skip
         (
             ".github/workflows/ci.yml",
-            "--shard ${{ matrix.shard }}/8",
-            "--shard ${{ matrix.shard }}/5",
-            "what it refuses",
-        ),  # fmt: skip
-        (
-            ".github/workflows/ci.yml",
-            "        shard: [1, 2, 3, 4, 5, 6, 7, 8]\n",
-            "        shard: [1, 2, 3, 4, 5, 6, 7]\n",
+            "        shard: [1, 2, 3, 4]\n",
+            "        shard: [1, 2, 3]\n",
             "in no job",
         ),  # fmt: skip
         (
             ".github/workflows/ci.yml",
-            '"3.14"]\n        shard: [1, 2, 3, 4]\n',
-            '"3.13"]\n        shard: [1, 2, 3, 4]\n',
+            '{"python-version":"3.13"}]\') || fromJSON(\'[]\') }}\n    steps:\n      - uses: actions/checkout@v7\n      - uses: actions/setup-python@v7\n        with:\n          python-version: ${{ matrix.python-version }}\n      - run: pip install pytest\n      - run: python adapters/stdlib/ci/cores.py --jobs 4 --box ${{ runner.temp }}/ci-record tests:strip',  # fmt: skip
+            '{"python-version":"3.12"}]\') || fromJSON(\'[]\') }}\n    steps:\n      - uses: actions/checkout@v7\n      - uses: actions/setup-python@v7\n        with:\n          python-version: ${{ matrix.python-version }}\n      - run: pip install pytest\n      - run: python adapters/stdlib/ci/cores.py --jobs 4 --box ${{ runner.temp }}/ci-record tests:strip',  # fmt: skip
             "Python matrices differ",
         ),
+        # mutants run in full on a push and, on a pull request, by what
+        # ci-memo says a change reaches: its plan names the same gates, and
+        # it falls back to all of them
         (
             ".github/workflows/ci.yml",
-            '{"python-version":"3.13"}]\') || fromJSON(\'[]\') }}\n    steps:\n      - uses: actions/checkout@v7\n      - uses: actions/setup-python@v7\n        with:\n          python-version: ${{ matrix.python-version }}\n      - run: pip install pytest\n      - run: python adapters/stdlib/ci/ci.py run tests:strip',  # fmt: skip
-            '{"python-version":"3.12"}]\') || fromJSON(\'[]\') }}\n    steps:\n      - uses: actions/checkout@v7\n      - uses: actions/setup-python@v7\n        with:\n          python-version: ${{ matrix.python-version }}\n      - run: pip install pytest\n      - run: python adapters/stdlib/ci/ci.py run tests:strip',  # fmt: skip
-            "Python matrices differ",
-        ),
+            'plan --pin "$RUNNER_TEMP/ci.pin" mutants > "$RUNNER_TEMP/plan.txt"',
+            'plan --pin "$RUNNER_TEMP/ci.pin" mutants:accents > "$RUNNER_TEMP/plan.txt"',
+            "mutants job is skipped on pull requests",
+        ),  # fmt: skip
+        (
+            ".github/workflows/ci.yml",
+            "ci.py run mutants --box ${{ runner.temp }}/ci-record | tee",
+            "ci.py run mutants:accents --box ${{ runner.temp }}/ci-record | tee",
+            "mutants job is skipped on pull requests",
+        ),  # fmt: skip
+        (
+            ".github/workflows/ci.yml",
+            "    if: github.event_name == 'pull_request'\n    runs-on: ubuntu-24.04\n    permissions:",
+            "    if: github.event_name != 'push'\n    runs-on: ubuntu-24.04\n    permissions:",
+            "what it refuses",
+        ),  # fmt: skip
         # CONST-VIII-2: the weekly run that reaches a person when an
         # emergency amendment expires in a quiet repo
         (".github/workflows/law.yml", "  schedule:\n", "  scheduled:\n", "law.yml"),
@@ -293,3 +304,24 @@ def test_host_json_reads_githubs_two_merge_titles_and_nothing_else():
     assert number("Merge branch 'main' into feature") is None
     assert number("Fix (#2) in the middle") is None
     assert h["label"].format(n=7) == "#7"
+
+
+def ci_text() -> str:
+    return (ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8")
+
+
+def test_a_push_only_job_needs_a_pull_request_job_that_plans_its_gates():
+    ci = ci_text()
+    assert "    if: github.event_name == 'push'\n    runs-on" in ci
+    assert gh.split_problems(ci) == []
+    # no reach job at all: the mutants gates are dropped from pull requests
+    whole = re.sub(r"^  mutants-reach:\n.*?(?=^  \S)", "", ci, flags=re.M | re.S)
+    assert "\n  mutants-reach:\n" not in whole
+    got = gh.split_problems(whole)
+    assert len(got) == 1 and "mutants job is skipped on pull requests" in got[0]
+    # a job on pull requests only, with no push side, runs its gates on no push
+    only = ci.replace("    if: github.event_name == 'push'\n    runs-on", "    if: github.event_name == 'pull_request'\n    runs-on", 1)  # fmt: skip
+    assert any("mutants:again in no job" in p for p in gh.split_problems(only))
+    # a job with no condition runs on both pushes and pull requests
+    both = ci.replace("    if: github.event_name == 'push'\n    runs-on", "    runs-on", 1)  # fmt: skip
+    assert gh.split_problems(both) == []

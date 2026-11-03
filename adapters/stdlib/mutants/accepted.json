@@ -6,7 +6,8 @@
     "0c47318788a2": "split(sep, 1)[0] takes the text before the first separator; the maxsplit changes only how many pieces follow it, never that first piece, so any value of at least 1 gives the same result."
   },
   "again": {
-    "1b9ac0201051": "Only bite rows carry a bite_key, so choosing rows by kind or by key picks the same rows."
+    "1b9ac0201051": "Only bite rows carry a bite_key, so choosing rows by kind or by key picks the same rows.",
+    "0cc8444c7793": "The width a report's where column falls back to when it has no rows: with no rows nothing is padded to it, so any number there prints the same report."
   },
   "all": {
     "7ec175d12b0a": "EVERY is a cap no folder reaches; 10**9 and 10**10 serve the same passages."
@@ -39,6 +40,9 @@
   "mcp-lite": {
     "0422b2185389": "A propose refusal's reason after its first colon; a maxsplit of 2 differs only when the reason holds a second colon."
   },
+  "misquote": {
+    "101d4093cf32": "The where column's cap: every row of misquote's report has the same place, the closest passage, so the column is that place's width whatever the cap, and no row is padded."
+  },
   "office": {
     "04697c92e4ab": "The promise is that a part is bounded, not its exact size: 64 or 65 MiB refuses the same zip bombs."
   },
@@ -51,6 +55,15 @@
   },
   "scan": {
     "09336b67f2ff": "Only narrows candidates: the kernel's own rank re-checks each one, so an or here adds passages it drops, never one it serves."
+  },
+  "secrets-audit": {
+    "245feee800fc": "The width a report's where column falls back to when it has no rows: with no rows nothing is padded to it, so any number there prints the same report."
+  },
+  "stack": {
+    "145eb60f33d8": "The width a report's where column falls back to when it has no rows: with no rows nothing is padded to it, so any number there prints the same report."
+  },
+  "todo": {
+    "08807890b7cc": "The width a report's where column falls back to when it has no rows: with no rows nothing is padded to it, so any number there prints the same report."
   },
   "transcript-redact": {
     "2f8474d895a6": "split(\"@\", 1)[1] takes the text after an email's one @; the email shape allows a single @, so any maxsplit of at least 1 gives the same domain."

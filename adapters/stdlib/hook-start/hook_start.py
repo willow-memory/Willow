@@ -8,16 +8,27 @@ the way [digest](../digest/) reads it: the suggestions that passed the door
 and wait for the person's approval, the approved answers whose source went
 stale, and the dates coming up in the next N days (14 unless --days says).
 What it prints is the JSON an assistant's SessionStart hook reads, and its
-`additionalContext` is plain sentences:
+`additionalContext` is digest's report under this add-on's name (the report
+contract, adapters/stdlib/ci/README.md), then whose it is, and who approves
+when a suggestion waits:
 
-    The person's willow box has 2 suggestions waiting for their approval. Say
-    so when it fits; only the person approves, and an assistant never does.
-      - Six hours of sun. (why: the garden notes)
-    1 approved answer is stale: its source changed or went.
-    Coming up: 2026-11-02 garden.md:4  Frost warning
+    hook-start: populated, 1 waiting, 1 gone stale, 1 coming up
+    ## Waiting for you
+      proposal:f391…a7ff  30 October (why: the note)
+    ## Gone stale
+      bins.txt:1          Thursday night
+    ## Coming up (next 14 days)
+      car.txt:1           2026-10-30  The car insurance renews on 2026-10-30.
 
-Nothing to say prints nothing at all, so a quiet box adds nothing to the
-session. A section the digest couldn't look at is left out, not guessed at.
+    That is what the person's willow box is waiting on. Say so when it fits;
+    only the person approves, and an assistant never does.
+
+Its standard output is the hook's JSON, not a report: a quiet box (an empty
+or unreachable report) prints nothing at all, so it adds nothing to the
+session, and it exits 0 whatever it found, since a SessionStart hook that
+exits 42 has its output dropped. A section the digest couldn't look at is
+said on the first line, not guessed at. Up to five rows of a group are
+listed and the rest counted; questions asked again are left to the digest.
 The record keeps no question's words, so neither does this; a suggestion is
 shown by its answer and its reason, as `digest` shows it.
 
@@ -43,42 +54,29 @@ sys.path.insert(0, str(STDLIB / "digest"))
 import digest  # noqa: E402
 import kernel  # noqa: E402
 
-SHOWN = 5  # items listed per section; the count says the rest
-
-
-def plural(n: int, one: str, many: str) -> str:
-    return f"{n} {one if n == 1 else many}"
+NAME = "hook-start"
+SHOWN = 5  # rows listed per group; the last row counts the rest
+#: said after the report: whose it is, and, when a suggestion waits, who approves
+WHOSE = "That is what the person's willow box is waiting on."
+APPROVES = (
+    " Say so when it fits; only the person approves, and an assistant never does."
+)
 
 
 def context(doc: dict, days: int) -> str:
-    """The sentences for the assistant, or "" when nothing needs the person."""
-    lines = []
-    waiting = doc["waiting"]
-    if waiting["state"] == digest.POPULATED:
-        items = waiting["items"]
-        lines.append(
-            f"The person's willow box has {plural(len(items), 'suggestion', 'suggestions')} waiting "
-            "for their approval. Say so when it fits; only the person approves, and an assistant never does."
-        )
-        for w in items[:SHOWN]:
-            lines.append(
-                f"  - {digest.short(w['answer'], 80)} (why: {digest.short(w['why'], 60)})"
-            )
-        if len(items) > SHOWN:
-            lines.append(f"  - and {len(items) - SHOWN} more")
-    stale = doc["stale"]
-    if stale["state"] == digest.POPULATED:
-        n = len(stale["items"])
-        lines.append(
-            f"{plural(n, 'approved answer is', 'approved answers are')} stale: its source changed or went."
-        )
-    coming = doc["coming"]
-    if coming["state"] == digest.POPULATED:
-        for c in coming["items"][:SHOWN]:
-            lines.append(
-                f"Coming up (next {days} days): {c['date']} {c['where']}  {digest.short(c['line'], 80)}"
-            )
-    return "\n".join(lines)
+    """digest's report under this add-on's name, for the assistant, or ""
+    when nothing needs the person."""
+    rep = digest.report_of(
+        {**doc, "again": {"state": digest.EMPTY, "items": []}}, days, NAME
+    )
+    if rep["state"] != digest.POPULATED:
+        return ""
+    for g in rep["groups"]:
+        if len(g["rows"]) > SHOWN:
+            more = len(g["rows"]) - SHOWN
+            g["rows"] = g["rows"][:SHOWN] + [{"where": "…", "what": f"and {more} more"}]
+    text = digest.report_text(rep)
+    return f"{text}\n\n{WHOSE}{APPROVES if doc['waiting']['items'] else ''}"
 
 
 def main(argv: list[str]) -> int:

@@ -388,6 +388,56 @@ def chunks(files: list[str], n: int, base: Path = ROOT) -> list[list[str]]:
     )
 
 
+#: what a gate costs, in seconds on a CI runner, for the ones TIMES can't
+#: price: from the last green main run (tests:alone ran with tests:adapters-1
+#: in about 540 s, tests:docs with tests:adapters-5 in about 430). A gate it
+#: doesn't list weighs DEFAULT_COST. Only the balance of the shards depends on
+#: these, never which gate runs.
+GATE_COST = {
+    "tests:alone": 310,
+    "tests:docs": 340,
+    "tests:kernel": 30,
+    "tests:beats": 20,
+    "tests:ui": 60,
+    "tests:vectors": 30,
+    "tests:constitution": 30,
+    "tests:coverage": 30,
+    "lint:check": 10,
+    "lint:format": 10,
+}
+DEFAULT_COST = 30
+#: TIMES was taken on a busier box than a CI runner: about this much of a
+#: second there is a second of a runner's
+TIMES_TO_RUNNER = 0.5
+#: a mutants gate copies the add-on, then runs its tests once per break, and
+#: CI makes six breaks
+MUTANT_BREAKS = 6
+MUTANT_COPY = 10
+
+
+def gate_weight(gate: str) -> int:
+    """How long `gate` is expected to take, in whole seconds of at least one,
+    for cutting gates into shards that end together. From committed data only
+    (TIMES and GATE_COST), so the same gate weighs the same on every machine:
+    tests:adapters-K is its chunk's test times; mutants:NAME is six runs of
+    NAME's tests and a copy; a file TIMES doesn't list counts as the median,
+    and a gate nothing prices as DEFAULT_COST."""
+    times = json.loads(TIMES.read_text(encoding="utf-8"))
+    known = sorted(times.values())
+    median = known[len(known) // 2] if known else 1.0
+    got = re.fullmatch(r"tests:adapters-(\d+)", gate)
+    if got and 1 <= int(got.group(1)) <= ADAPTER_CHUNKS:
+        part = chunks(adapter_tests(), ADAPTER_CHUNKS)[int(got.group(1)) - 1]
+        seconds = TIMES_TO_RUNNER * sum(times.get(f, median) for f in part)
+    elif gate.startswith("mutants:"):
+        folder = f"adapters/stdlib/{gate[len('mutants:') :]}/"
+        own = [t for f, t in times.items() if f.startswith(folder)]
+        seconds = MUTANT_COPY + MUTANT_BREAKS * TIMES_TO_RUNNER * (sum(own) or median)
+    else:
+        seconds = GATE_COST.get(gate, DEFAULT_COST)
+    return max(1, round(seconds))
+
+
 def adapter_tests(base: Path = ROOT) -> list[str]:
     """Every add-on test file under `base`, as pytest collects them."""
     return sorted(
@@ -520,8 +570,10 @@ def select(names: list[str], without: list[str], shard: str | None) -> list[str]
     """The gates `run` runs, in GATES' order: each named one and each of a
     named part's (all of them when none is named), less the ones `without`
     names; with `shard` K/N, the Kth of N parts of those, cut by test-shards'
-    own split. Every gate is in exactly one of the N. Anything it doesn't
-    know is refused, so a name spelled wrong never runs nothing."""
+    own split with each gate weighing what `gate_weight` expects it to take,
+    so the N parts end about together. Every gate is in exactly one of the N.
+    Anything it doesn't know is refused, so a name spelled wrong never runs
+    nothing."""
     every = [(part, gate) for part, gate, _ in gates()]
     known = set(PARTS) | {g for _, g in every}
 
@@ -551,8 +603,10 @@ def select(names: list[str], without: list[str], shard: str | None) -> list[str]
     if not got or int(got.group(1)) > int(got.group(2)):
         raise ValueError(f"--shard {shard} isn't K/N with K from 1 to N")
     shards = load_shards()
-    # every gate weighs the same: the record keeps no times to weigh them by
-    part = shards.split(dict.fromkeys(picked, 1), int(got.group(2)))[
+    # each gate weighs its expected seconds, from data committed with the
+    # code: the record keeps no times, and the clock would cut differently
+    # on every machine
+    part = shards.split({g: gate_weight(g) for g in picked}, int(got.group(2)))[
         int(got.group(1)) - 1
     ]
     return [g for g in picked if g in part]

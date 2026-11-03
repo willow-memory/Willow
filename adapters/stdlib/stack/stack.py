@@ -14,6 +14,10 @@ stack runs every step and composes one markdown document: a `##` section per
 pool, each step's output under it in a fenced block. The order is the stacking
 order -- peaks first: pools, and the steps within them, run tallest first, by
 how many lines of output stack up, because that is what a reader meets first.
+A step whose card says `output: report` is asked for its report as JSON and
+printed in the report's one shape (ci/README.md, the report contract); its
+height is its rows, not its lines, and it is flagged by its exit code alone,
+since a report's 42 never means "found nothing".
 
 It only reads and composes. It runs add-ons, and each is held to its own card
 by the guard, so stack writes no box, reads no key and approves nothing -- the
@@ -28,6 +32,8 @@ shown but not flagged.
 
 from __future__ import annotations
 
+import json
+import re
 import shlex
 import subprocess
 import sys
@@ -101,6 +107,42 @@ def run_step(script: Path, args: list[str], box: str) -> tuple[int, str]:
         text=True,
     )
     return got.returncode, (got.stdout or got.stderr).rstrip()
+
+
+def prints_a_report(script: Path) -> bool:
+    """Whether the step's card says `output: report` (ci/README.md, the
+    report contract): then stack asks it for --json and prints the report."""
+    try:
+        card = (script.parent / "README.md").read_text(encoding="utf-8")
+    except OSError:  # no card: no promise of a report
+        return False
+    head = re.search(r"<!--\s*willow-addon\s*\n(.*?)-->", card, re.S)
+    return bool(head and re.search(r"^output:\s*report\s*$", head.group(1), re.M))
+
+
+def report_text(doc: dict) -> str:
+    """A report as every report add-on prints it: the same twenty lines each
+    keeps, held to this one by test_contract.py."""
+    rows = [r for g in doc["groups"] for r in g["rows"]]
+    w = min(max((len(r["where"]) for r in rows), default=0), 60)
+    out = [f"{doc['addon']}: {doc['state']}, {doc['said']}"]
+    for g in doc["groups"]:
+        if g["name"] is not None:
+            out.append(f"## {g['name']}")
+        out += [f"  {r['where']:<{w}}  {r['what']}".rstrip() for r in g["rows"]]
+    return "\n".join(out)
+
+
+def as_report(code: int, out: str) -> tuple[dict | None, str]:
+    """(the report, its text) from a --json run; (None, what it said) for a
+    refusal or output that isn't one report."""
+    if code == kernel.REFUSED:
+        return None, out
+    try:
+        doc = json.loads(out)
+        return doc, report_text(doc)
+    except (ValueError, KeyError, TypeError):
+        return None, f"not a report: {out[:200]}"
 
 
 def mass(text: str) -> int:
@@ -183,9 +225,20 @@ def main(argv: list[str]) -> int:
         done: list = []
         for idx, (name, args) in enumerate(steps):
             nsteps += 1
-            code, out = run_step(scripts[name], args, str(box))
-            is_flagged, note = step_result(name, code)
-            done.append((mass(out), idx, name, args, code, out, note))
+            if prints_a_report(scripts[name]):  # its rows decide its mass
+                code, out = run_step(scripts[name], [*args, "--json"], str(box))
+                doc, out = as_report(code, out)
+                if doc is None:
+                    is_flagged, note, size = True, f"exit {code}", mass(out)
+                else:
+                    is_flagged = code != kernel.ALIVE
+                    note = doc["state"] if is_flagged else ""
+                    size = 1 + sum(len(g["rows"]) for g in doc["groups"])
+            else:
+                code, out = run_step(scripts[name], args, str(box))
+                is_flagged, note = step_result(name, code)
+                size = mass(out)
+            done.append((size, idx, name, args, code, out, note))
             if is_flagged:
                 flagged += 1
                 worst = kernel.ESCALATE

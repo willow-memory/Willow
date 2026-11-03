@@ -10,6 +10,7 @@ own chain.
 from __future__ import annotations
 
 import importlib.util
+import json
 import os
 import subprocess
 import sys
@@ -23,6 +24,10 @@ ci = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(ci)
 k = ci.kernel
 NOW = "2026-10-23T00:00:00Z"
+# The gates the runs below drive: two, so their order is tested, and the
+# cheapest that a machine with only pytest satisfies (about a second, where
+# the demo part took 50 s a run). Nothing here asks what a gate does.
+PART = ["tests:beats", "tests:coverage"]
 
 
 def cli(*argv: str, env: dict | None = None) -> subprocess.CompletedProcess:
@@ -41,21 +46,10 @@ def rows(box: Path) -> list[dict]:
 def test_the_same_files_give_the_same_record_byte_for_byte(tmp_path):
     a, b = tmp_path / "a", tmp_path / "b"
     for box in (a, b):
-        assert cli("run", "demo", "--box", str(box), "--now", NOW).returncode == 0
+        assert cli("run", *PART, "--box", str(box), "--now", NOW).returncode == 0
     assert (a / "record.jsonl").read_bytes() == (b / "record.jsonl").read_bytes()
     made = rows(a)
-    assert [r["gate"] for r in made[1:]] == [
-        *(f"demo:{p}" for p in ci.people()),
-        "demo:php2shell",
-        "demo:google-privacy-2026-10-16",
-        "demo:stack",
-        "demo:share",
-        "demo:teodora-words",
-        "demo:craft-assembly",
-        "demo:redteam",
-        "demo:known-gaps",
-        "demo:novelty",
-    ]
+    assert [r["gate"] for r in made[1:]] == PART
     assert {r["state"] for r in made[1:]} == {ci.SATISFIED}
 
 
@@ -96,7 +90,7 @@ def test_a_failing_command_is_failing_and_a_judge_can_fail_a_zero_exit():
 
 def test_verify_holds_the_chain_and_refuses_anything_but_ci_verdicts(tmp_path):
     box = tmp_path / "box"
-    assert cli("run", "demo", "--box", str(box), "--now", NOW).returncode == 0
+    assert cli("run", *PART, "--box", str(box), "--now", NOW).returncode == 0
     assert cli("verify", "--box", str(box)).returncode == k.ALIVE
     made = rows(box)
     assert all(
@@ -147,8 +141,42 @@ def test_shards_run_every_gate_of_what_was_named_once_in_its_order():
         parts = [ci.select(["mutants"], [], f"{k}/{n}") for k in range(1, n + 1)]
         assert sorted(g for p in parts for g in p) == sorted(every), n
         assert all(p == [g for g in every if g in p] for p in parts)
-        assert max(map(len, parts)) - min(map(len, parts)) <= 1, "cut by count"
     assert ci.select(["mutants"], [], "1/1") == every
+
+
+def test_every_gate_weighs_a_whole_number_of_seconds_of_at_least_one():
+    for _, gate, _ in ci.gates():
+        weight = ci.gate_weight(gate)
+        assert isinstance(weight, int) and weight >= 1, gate
+
+
+def test_a_gate_weighs_what_its_tests_took():
+    times = json.loads(ci.TIMES.read_text(encoding="utf-8"))
+    own = sum(t for f, t in times.items() if f.startswith("adapters/stdlib/ci/"))
+    mine = ci.gate_weight("mutants:ci")
+    assert mine == round(ci.MUTANT_COPY + ci.MUTANT_BREAKS * ci.TIMES_TO_RUNNER * own)
+    assert mine > 10 * ci.gate_weight("mutants:accents"), "ci's tests are the slow ones"
+    chunk = ci.chunks(ci.adapter_tests(), ci.ADAPTER_CHUNKS)[2]
+    median = sorted(times.values())[len(times) // 2]
+    want = ci.TIMES_TO_RUNNER * sum(times.get(f, median) for f in chunk)
+    assert ci.gate_weight("tests:adapters-3") == round(want)
+    assert ci.gate_weight("tests:alone") == ci.GATE_COST["tests:alone"]
+    assert ci.gate_weight("tests:strip-1") == ci.DEFAULT_COST, "nothing prices it"
+
+
+def test_the_mutants_shards_end_closer_together_than_a_cut_by_count():
+    split = ci.load_shards().split
+    every = ci.select(["mutants"], [], None)
+
+    def seconds(cut):
+        return [sum(ci.gate_weight(g) for g in part) for part in cut]
+
+    by_count = seconds(split(dict.fromkeys(every, 1), 4))
+    by_time = seconds(split({g: ci.gate_weight(g) for g in every}, 4))
+    parts = [ci.select(["mutants"], [], f"{k}/4") for k in range(1, 5)]
+    assert seconds(parts) == by_time, "select cuts by time"
+    assert max(by_time) - min(by_time) < (max(by_count) - min(by_count)) / 4
+    assert max(by_time) < max(by_count)
 
 
 def test_a_gate_is_named_or_left_out_by_name():
@@ -180,7 +208,7 @@ def test_the_add_on_tests_are_cut_with_none_dropped_twice_or_left_empty():
                                   ["--shard", "x"], ["--shard"], ["--without"], ["--stray"]])  # fmt: skip
 def test_what_it_doesnt_know_is_refused_and_runs_nothing(tmp_path, argv):
     box = tmp_path / "box"
-    got = cli("run", "demo", *argv, "--box", str(box), "--now", NOW)
+    got = cli("run", *PART, *argv, "--box", str(box), "--now", NOW)
     assert got.returncode == 2
     assert not box.exists(), "refused before the record is made"
     assert got.stderr.startswith(
@@ -198,8 +226,8 @@ def test_leaving_out_a_part_is_refused_by_name():
 
 def test_a_shard_on_the_command_line_writes_only_its_gates(tmp_path):
     box = tmp_path / "box"
-    assert cli("run", "demo", "--shard", "2/2", "--box", str(box), "--now", NOW).returncode == 0  # fmt: skip
-    assert [r["gate"] for r in rows(box)[1:]] == ci.select(["demo"], [], "2/2")
+    assert cli("run", *PART, "--shard", "2/2", "--box", str(box), "--now", NOW).returncode == 0  # fmt: skip
+    assert [r["gate"] for r in rows(box)[1:]] == ci.select(PART, [], "2/2")
 
 
 def test_a_record_inside_the_repo_where_git_would_count_it_is_refused(tmp_path):
@@ -207,7 +235,7 @@ def test_a_record_inside_the_repo_where_git_would_count_it_is_refused(tmp_path):
     exactly this, and the docs test caught the files it left)."""
     inside = ci.ROOT / "ci-record-test-only"
     try:
-        got = cli("run", "demo", "--box", str(inside), "--now", NOW)
+        got = cli("run", *PART, "--box", str(inside), "--now", NOW)
         assert got.returncode != 0 and "not ignored by git" in got.stderr
         assert not inside.exists()
         assert not inside.with_name(inside.name + ".key").exists()
@@ -217,7 +245,7 @@ def test_a_record_inside_the_repo_where_git_would_count_it_is_refused(tmp_path):
 
             shutil.rmtree(inside)
         inside.with_name(inside.name + ".key").unlink(missing_ok=True)
-    ok = cli("run", "demo", "--box", str(tmp_path / "out"), "--now", NOW)
+    ok = cli("run", *PART, "--box", str(tmp_path / "out"), "--now", NOW)
     assert ok.returncode == 0  # outside the repo is fine
 
 

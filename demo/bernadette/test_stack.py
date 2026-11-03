@@ -79,7 +79,9 @@ def test_the_questions_come_to_what_strip_scores(ran):
 
 def test_the_look_ahead_finds_what_her_files_hold(ran):
     said = {s["piece"]: s["said"] for s in ran["doc"]["steps"] if s["part"] == "look"}
-    assert said["secrets-audit"].startswith("5 places hold a secret")
+    assert said["secrets-audit"].startswith(
+        "secrets-audit: populated, 5 places hold a secret"
+    )
     hide = next(s for s in ran["doc"]["steps"] if s["piece"] == "privacy")
     assert hide["said"] == "hid 4 email, 3 password"
 
@@ -102,7 +104,7 @@ def test_after_the_seal_the_trust_layer_holds(ran):
     assert got.returncode == 0, got.stdout + got.stderr
     after = {s["piece"]: s for s in json.loads(
         (ran["to"] / "stack.json").read_text())["after"]}  # fmt: skip
-    assert after["stale"]["said"] == "1 approved; 0 stale"
+    assert after["stale"]["said"] == "stale: empty, 1 approved; 0 stale"
     assert after["diverge"]["said"].startswith("The same")
     assert after["kernel"]["said"].startswith("the chain holds")
     assert after["session-seal"]["state"] == "for you", "one seal, still theirs"

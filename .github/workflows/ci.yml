@@ -2,7 +2,8 @@ name: ci
 
 # Every check is in adapters/stdlib/ci/ci.py, which writes each one as a verdict row
 # on a kernel record. This file only installs the tools, runs one part per
-# job, verifies the record, and keeps it as the run's artifact. The record
+# job (tests and strip run four shards at once with cores.py), verifies the
+# record, and keeps it as the run's artifact. The record
 # lives in the runner's temp folder: never in the checkout it hashes.
 on:
   push:
@@ -21,6 +22,14 @@ concurrency:
 permissions:
   contents: read
 
+# The fast checks go first. lint, first, against and changelog take seconds
+# to a minute or two; every heavier job `needs` them, so on a pull request
+# they take the runners first and a failure among them stops the rest from
+# queueing at all: a red lint or a duplicate add-on costs four jobs, not
+# fourteen. On a push to main three of the four don't run, so the heavy jobs
+# say `!failure() && !cancelled()`: they wait for what ran and go on past
+# what was skipped. mutants runs on pushes only and waits on lint alone.
+#
 # bash's own pipefail: each check below is piped through tee, for ci-why to
 # read when it fails, and the step must still fail with it
 defaults:
@@ -72,6 +81,53 @@ jobs:
           BASE: origin/${{ github.base_ref }}
           PR: ${{ github.event.number }}
         run: python adapters/stdlib/ci/changelog.py --base "$BASE" --pr "$PR"
+
+  against:
+    # This pull request held to the other open ones (adapters/stdlib/against):
+    # a name both add (an add-on, an idea, a COMMANDS key, a path in FILES.md)
+    # fails it, a file both change that cannot be merged is named in the
+    # summary with the pull request to merge first, and an idea near another's
+    # is suggested. Only a duplicate fails, and a pull request stacks on
+    # another only when this names one (CONTRIBUTING.md). Each open pull
+    # request's head is fetched as refs/pull/N/head, which a fork's has too.
+    # 42 is nothing to check, no other open or a head that couldn't be fetched:
+    # the summary says which, and it passes. Anything but 0, 42 or a duplicate's
+    # 2 is the check itself broken, and fails too.
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    env:
+      GH_TOKEN: ${{ github.token }}
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - env:
+          BASE: origin/${{ github.base_ref }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          others=$(gh pr list --repo "$GITHUB_REPOSITORY" --state open --limit 200 --json number --jq ".[].number | select(. != $PR)")
+          if [ -z "$others" ]; then
+            echo "No other pull request is open: nothing to hold this one to." | tee -a "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          refs=()
+          for n in $others; do
+            git fetch -q origin "+refs/pull/$n/head:refs/remotes/pr/$n" || echo "could not fetch #$n"
+            refs+=("refs/remotes/pr/$n")
+          done
+          set +e
+          python adapters/stdlib/against/against.py check --base "$BASE" "$HEAD" "${refs[@]}" > "$RUNNER_TEMP/against.txt"
+          code=$?
+          { echo '### Against the open pull requests'; echo; echo '```'; cat "$RUNNER_TEMP/against.txt"; echo '```'; } | tee -a "$GITHUB_STEP_SUMMARY"
+          # exit 2 is a duplicate: the job fails on it, and on a broken check
+          [ "$code" = 0 ] || [ "$code" = 42 ]
 
   first:
     # The checks this pull request's change can reach, cheapest first,
@@ -137,15 +193,21 @@ jobs:
     # the same Pythons: it runs the add-ons' tests again in a copy without
     # GitHub, so in one job it doubled the time. github.py check holds the two
     # to the whole part, and to the same matrix.
-    # Cut in eight by ci.py's --shard, on every Python: the add-ons' tests are
-    # tests:adapters-1 to -8, each a share of their files, so no job runs
-    # them all (together they took eight minutes).
+    # One job on each Python, not a matrix of shards: the runner has four
+    # cores and a job used one, and the job's wall time was its slowest gate
+    # (about nine minutes) whatever the cut. cores.py runs ci.py's --shard
+    # parts at once, four to a runner, so they end about together. A pull
+    # request is 14 jobs, not 36, and a push to main 30, not 84, behind the
+    # 20-job limit. tests:alone starts a pool of its own, a thread for each
+    # core, so under four shards the cores are oversubscribed; that is slower
+    # than it could be, not wrong, and alone.py is left as it is.
+    needs: [lint, first, against, changelog]
+    if: ${{ !failure() && !cancelled() }}
     runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
         python-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
-        shard: [1, 2, 3, 4, 5, 6, 7, 8]
         # A pull request runs the oldest and newest Python; a push to main
         # runs all six.
         exclude: ${{ github.event_name == 'pull_request' && fromJSON('[{"python-version":"3.10"},{"python-version":"3.11"},{"python-version":"3.12"},{"python-version":"3.13"}]') || fromJSON('[]') }}
@@ -155,27 +217,32 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - run: pip install pytest
-      - run: python adapters/stdlib/ci/ci.py run tests --without tests:strip --shard ${{ matrix.shard }}/8 --box ${{ runner.temp }}/ci-record | tee "$RUNNER_TEMP/ci.log"
+      # cores.py verifies each record itself and refuses when one doesn't;
+      # its records are ci-record/1 to ci-record/4, and its log has every
+      # gate's verdict, which ci-why reads
+      - run: python adapters/stdlib/ci/cores.py --jobs 4 --box ${{ runner.temp }}/ci-record tests --without tests:strip | tee "$RUNNER_TEMP/ci.log"
       - if: failure()
-        run: python adapters/stdlib/ci-why/ci_why.py "$RUNNER_TEMP/ci.log" --record "$RUNNER_TEMP/ci-record/record.jsonl" >> "$GITHUB_STEP_SUMMARY" || true
+        run: python adapters/stdlib/ci-why/ci_why.py "$RUNNER_TEMP/ci.log" >> "$GITHUB_STEP_SUMMARY" || true
       - if: always()
-        run: python adapters/stdlib/ci/ci.py verify --box ${{ runner.temp }}/ci-record
+        run: for d in "$RUNNER_TEMP"/ci-record/*/; do python adapters/stdlib/ci/ci.py verify --box "$d" || exit 1; done
       - if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: ci-record-tests-${{ matrix.python-version }}-${{ matrix.shard }}
-          path: ${{ runner.temp }}/ci-record/record.jsonl
+          name: ci-record-tests-${{ matrix.python-version }}
+          path: ${{ runner.temp }}/ci-record/*/record.jsonl
 
   strip:
     # tests:strip, test_strip.py: the repo without GitHub, then without any
     # add-on, each still passing. Four gates, tests:strip-1 to -4, each a
-    # share of the add-ons' tests in the stripped copy; one job each.
+    # share of the add-ons' tests in the stripped copy. One job on each
+    # Python, the four run at once by cores.py, as the tests job does.
+    needs: [lint, first, against, changelog]
+    if: ${{ !failure() && !cancelled() }}
     runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
         python-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
-        shard: [1, 2, 3, 4]
         # A pull request runs the oldest and newest Python; a push to main
         # runs all six.
         exclude: ${{ github.event_name == 'pull_request' && fromJSON('[{"python-version":"3.10"},{"python-version":"3.11"},{"python-version":"3.12"},{"python-version":"3.13"}]') || fromJSON('[]') }}
@@ -185,18 +252,20 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - run: pip install pytest
-      - run: python adapters/stdlib/ci/ci.py run tests:strip --shard ${{ matrix.shard }}/4 --box ${{ runner.temp }}/ci-record | tee "$RUNNER_TEMP/ci.log"
+      - run: python adapters/stdlib/ci/cores.py --jobs 4 --box ${{ runner.temp }}/ci-record tests:strip | tee "$RUNNER_TEMP/ci.log"
       - if: failure()
-        run: python adapters/stdlib/ci-why/ci_why.py "$RUNNER_TEMP/ci.log" --record "$RUNNER_TEMP/ci-record/record.jsonl" >> "$GITHUB_STEP_SUMMARY" || true
+        run: python adapters/stdlib/ci-why/ci_why.py "$RUNNER_TEMP/ci.log" >> "$GITHUB_STEP_SUMMARY" || true
       - if: always()
-        run: python adapters/stdlib/ci/ci.py verify --box ${{ runner.temp }}/ci-record
+        run: for d in "$RUNNER_TEMP"/ci-record/*/; do python adapters/stdlib/ci/ci.py verify --box "$d" || exit 1; done
       - if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: ci-record-strip-${{ matrix.python-version }}-${{ matrix.shard }}
-          path: ${{ runner.temp }}/ci-record/record.jsonl
+          name: ci-record-strip-${{ matrix.python-version }}
+          path: ${{ runner.temp }}/ci-record/*/record.jsonl
 
   ports:
+    needs: [lint, first, against, changelog]
+    if: ${{ !failure() && !cancelled() }}
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
@@ -229,6 +298,8 @@ jobs:
           path: ${{ runner.temp }}/ci-record/record.jsonl
 
   demo:
+    needs: [lint, first, against, changelog]
+    if: ${{ !failure() && !cancelled() }}
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
@@ -255,6 +326,12 @@ jobs:
     # adapters/stdlib/mutants/accepted.json gives the reason it's harmless.
     # Cut in four by ci.py's --shard, each add-on in one of them: the gates
     # take seconds each, so a cut by count ends the four about together.
+    # A push to main runs all of them, so the merge's receipt is whole and
+    # is the record mutants-reach below stands a pull request's gates on; a
+    # pull request runs mutants-reach instead (github.py check holds the two
+    # to the whole part).
+    needs: [lint]
+    if: github.event_name == 'push'
     runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
@@ -277,6 +354,101 @@ jobs:
           name: ci-record-mutants-${{ matrix.shard }}
           path: ${{ runner.temp }}/ci-record/record.jsonl
 
+  mutants-reach:
+    # The mutants part on a pull request: four shards of 5 to 19 minutes were
+    # its slowest job, though a change usually touches one add-on and only
+    # that add-on's gate, plus the repo tools' (whose reach is the whole
+    # tree), can see it. So this runs only the gates adapters/stdlib/ci-memo
+    # says the change reaches, and the rest stand on main's last green run:
+    # that run's mutants records are pinned against its own tree, checked out
+    # beside this one, and planned against this tree. A gate whose reach
+    # holds the same bytes as main's keeps main's verdict; this job's record
+    # holds only what it ran, never main's verdicts, and the summary names
+    # the run they are from. The merge's evidence stays whole, since a push
+    # to main runs every gate (the mutants job).
+    # Never silent, never short: with no green run of main, no artifact to
+    # download, or a pin ci-memo refuses (the records are of another tree),
+    # this job runs the whole part, and says why in the summary.
+    # not changelog: it skips Dependabot's pull requests, and a skipped need
+    # would skip this job with it
+    needs: [lint, first, against]
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    permissions:
+      actions: read
+      contents: read
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      # 3.13, the Python main's mutants run on: a pin made under another
+      # Python stands nothing.
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - run: pip install pytest
+      - id: plan
+        # Writes the gates to run, one line, to gates.txt, and touches whole
+        # when it fell back to the whole part. ci-memo's plan exits 42 when
+        # gates need running and 0 when none do; both go on, anything else
+        # falls back.
+        run: |
+          fallback() {
+            {
+              echo "### mutants: the whole part runs here"
+              echo "Nothing stands on main's run, because $1"
+            } >> "$GITHUB_STEP_SUMMARY"
+            touch "$RUNNER_TEMP/whole"
+            exit 0
+          }
+          found=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow ci.yml --branch main --event push --status success --limit 1 --json databaseId,headSha --jq '.[] | "\(.databaseId) \(.headSha)"') || fallback "gh couldn't list main's runs."
+          read -r id sha <<< "$found"
+          [ -n "${sha:-}" ] || fallback "main has no successful ci run."
+          gh run download "$id" --repo "$GITHUB_REPOSITORY" -p 'ci-record-mutants-*' -D "$RUNNER_TEMP/main-records" || fallback "main's run $id has no mutants records to download (expired, say)."
+          boxes=()
+          for d in "$RUNNER_TEMP"/main-records/*/; do boxes+=(--box "$d"); done
+          [ "${#boxes[@]}" -gt 0 ] || fallback "main's run $id held no mutants records."
+          # the tree main's records were made from, beside this one
+          git worktree add --detach "$RUNNER_TEMP/main-tree" "$sha" || fallback "main's commit $sha isn't in this checkout."
+          python adapters/stdlib/ci-memo/ci_memo.py pin --repo "$RUNNER_TEMP/main-tree" "${boxes[@]}" --to "$RUNNER_TEMP/ci.pin" 2> "$RUNNER_TEMP/pin.err" || fallback "ci-memo refused the pin: $(cat "$RUNNER_TEMP/pin.err")"
+          set +e
+          python adapters/stdlib/ci-memo/ci_memo.py plan --pin "$RUNNER_TEMP/ci.pin" mutants > "$RUNNER_TEMP/plan.txt" 2> "$RUNNER_TEMP/plan.err"
+          code=$?
+          set -e
+          if [ "$code" != 0 ] && [ "$code" != 42 ]; then
+            fallback "ci-memo refused the plan: $(cat "$RUNNER_TEMP/plan.err")"
+          fi
+          python adapters/stdlib/ci-memo/ci_memo.py plan --pin "$RUNNER_TEMP/ci.pin" --bare mutants > "$RUNNER_TEMP/gates.txt" || [ $? = 42 ]
+          {
+            echo "### mutants: what this change reaches"
+            echo "A \`stand\` row is the verdict of main's run $id, at $sha (adapters/stdlib/ci-memo); a \`run\` row runs in this job."
+            echo '```'
+            cat "$RUNNER_TEMP/plan.txt"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+      - id: run
+        run: |
+          gates=$(cat "$RUNNER_TEMP/gates.txt" 2>/dev/null || true)
+          if [ -f "$RUNNER_TEMP/whole" ]; then
+            python adapters/stdlib/ci/ci.py run mutants --box ${{ runner.temp }}/ci-record | tee "$RUNNER_TEMP/ci.log"
+          elif [ -z "$gates" ]; then
+            echo "No mutants gate is reached by this change: every one stands on main's run, so none ran here and no record is written." >> "$GITHUB_STEP_SUMMARY"
+            echo "ran=no" >> "$GITHUB_OUTPUT"
+          else
+            python adapters/stdlib/ci/ci.py run $gates --box ${{ runner.temp }}/ci-record | tee "$RUNNER_TEMP/ci.log"
+          fi
+      - if: failure()
+        run: python adapters/stdlib/ci-why/ci_why.py "$RUNNER_TEMP/ci.log" --record "$RUNNER_TEMP/ci-record/record.jsonl" >> "$GITHUB_STEP_SUMMARY" || true
+      - if: always() && steps.run.outputs.ran != 'no'
+        run: python adapters/stdlib/ci/ci.py verify --box ${{ runner.temp }}/ci-record
+      - if: always() && steps.run.outputs.ran != 'no'
+        uses: actions/upload-artifact@v7
+        with:
+          name: ci-record-mutants-reach
+          path: ${{ runner.temp }}/ci-record/record.jsonl
+
   deps:
     # Each add-on in adapters/deps gets a fresh virtual environment with only
     # its own pinned requirements, made by ci.py, then another at its floor;
@@ -285,6 +457,8 @@ jobs:
     # runner's Ubuntu: tesseract for ocr, bubblewrap for kart (gpg, for pgp,
     # comes with the image). Ubuntu 24.04 keeps unprivileged user namespaces
     # behind AppArmor, and bwrap needs one, so this runner lets them be made.
+    needs: [lint, first, against, changelog]
+    if: ${{ !failure() && !cancelled() }}
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
@@ -309,6 +483,8 @@ jobs:
     # add-on prints (adapters/stdlib/live/live.py). Pinned, so a run says
     # which version read them; one that didn't install is unreachable, and
     # an unreachable gate fails this job: nothing here passes unchecked.
+    needs: [lint, first, against, changelog]
+    if: ${{ !failure() && !cancelled() }}
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7

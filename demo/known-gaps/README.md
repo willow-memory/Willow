@@ -121,6 +121,16 @@ dates in file paths still count.
 one rule: `propose` exits 42 when every suggestion is refused, instead of
 exiting 0. No result changes: known-gaps does not use `propose`.
 
+**Freeze 8** (2026-11-02, after every run) changes one tool, `todo.py`: its
+command line prints a report, the shape every report add-on shares
+([adapters/stdlib/ci/README.md](../../adapters/stdlib/ci/README.md), the
+report contract). No result changes: scan reads only its `MARK` and
+`todos()`, and neither changed.
+
+**Freeze 9** (2026-11-02, after every run) changes `todo.py` again: a line
+whose date no calendar has (1984-06-31) is listed apart and the report exits
+42. No result changes, for the same reason.
+
 ### The questions and the flagged-line rule
 
 The writers were told to write without identifiers. A question line is

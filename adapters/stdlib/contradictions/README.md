@@ -35,6 +35,13 @@ MOT for the van is due on 2026-11-03" and "Rang the garage. Van MOT is due
 "Rent is"), not a subject, so "Rent is $900" and "Rent is $950" are left
 alone.
 
+**A word that's everywhere is no subject.** A word on more than one dated
+line in 500, and on more than 10, is left out of what two lines share: in a
+folder of repositories, "willow" or "kernel" is on thousands of lines, and
+two lines holding it are about nothing in particular. A small folder keeps
+every word. Over 14 repositories this turned 371,125 "disagreements" found
+in two minutes into 1,404 found in a second.
+
 **Records of one kind are left alone, and counted.** Most dates and amounts
 that differ in a folder are not a disagreement: they are invoices, tax years
 and receipts, each with its own. So these are never compared:

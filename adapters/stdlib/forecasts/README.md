@@ -5,6 +5,7 @@ source: bot
 added: 2026-11-01
 writes: record
 network: none
+output: report
 -->
 # forecasts
 
@@ -13,12 +14,17 @@ scored.
 
     python adapters/stdlib/forecasts/forecasts.py wager  --box DIR --p 0.8 "the bees swarm before June"
     python adapters/stdlib/forecasts/forecasts.py settle --box DIR 1 yes
-    python adapters/stdlib/forecasts/forecasts.py score  --box DIR
+    python adapters/stdlib/forecasts/forecasts.py score  --box DIR [--json]
 
-    2 settled, 1 open of 3 wagers
-    Brier 0.065  log score 0.290  over 2 settled
-      said 0.7-0.8: right 100% of 1
-      said 0.8-0.9: right 100% of 1
+    forecasts: populated, 2 settled, 1 open of 3 wagers; Brier 0.065, log score 0.290 over 2 settled
+    ## open
+      row 3         p 0.6
+    ## settled
+      row 1         p 0.8, it happened
+      row 2         p 0.3, it didn't
+    ## by confidence, over the settled
+      said 0.7-0.8  right 100% of 1
+      said 0.8-0.9  right 100% of 1
 
 **`wager`** writes a `wager` row: how likely you think the claim is (`--p`,
 from 0.01 to 0.99) and the claim's SHA-256. The record keeps no words, so
@@ -40,10 +46,18 @@ and for each band of confidence how often you were right. A wager you
 thought unlikely is counted in its band as the opposite claim: 0.3 that it
 rains is 0.7 that it doesn't. It writes nothing.
 
+`score` prints [a report](../ci/README.md#the-report-contract), the shape
+every report add-on shares: a line counting the wagers by state with the
+scores, then a group per state (broken, conflicting, waiting on your seal,
+open, settled), each row the wager's row and its p, and a group of the
+bands. `--json` gives the same report as one JSON object. No wagers yet is
+`empty`. `wager` and `settle` print their own lines, not a report.
+
 Exit codes, the kernel's: `wager` 0; `settle` 42, waiting on your seal;
-`score` 0, or 42 when an outcome waits on your seal or nothing is settled
-yet; 2 refused (a broken outcome, a record that doesn't verify, a row that
-isn't a wager, one already settled, a bad command line).
+`score` 0 (no wagers, or nothing waits on you), or 42 when an outcome waits
+on your seal, or one is conflicting or broken; 2 refused (a record that
+doesn't verify, a row that isn't a wager, one already settled, a bad
+command line).
 
 **Uses:** the kernel's `read`, `append`, `bite`, `propose`, `sealed`,
 `standing`, `subject_of` and its exit codes.
