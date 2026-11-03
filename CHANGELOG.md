@@ -1811,6 +1811,9 @@ says how). The first was v0.1.0.
 - people counts the values code writes capitalized (None, True, False) as no
   one, beside the months and weekdays: a repository's roster led with None,
   24,048 mentions, from one `self.left None`. (#209)
+- todo lists a line whose date no calendar has (1984-06-31) under its own
+  heading and exits 42, where it was ordered as the oldest thing to do; the
+  oldest is said of the real dates only. known-gaps' freeze 9. (#207)
 - The UI's Start it runs the sealed flow over every folder of the pick, each
   its own record with its page beside it, where it ran over the first only;
   two folders of one name get a record each (`files-2`), where the second
