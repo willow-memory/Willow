@@ -174,8 +174,11 @@ def judge(boxes: dict[str, Path], wren: Path, nonsense: bool) -> dict[str, dict]
     }
 
     code, out = tool("quote_check.py", "--box", src, say(t["T2"]["quote"]))
-    _, near = tool("misquote.py", "--box", src, say(t["T2"]["quote"]))
-    closest = rows(near, "closest")
+    # misquote prints a report (ci/README.md): every row's where is its closest
+    # passage, and a quote nothing holds has no rows (freeze 4)
+    _, near = tool("misquote.py", "--box", src, say(t["T2"]["quote"]), "--json")
+    near = json.loads(near)
+    closest = list(dict.fromkeys(r["where"] for g in near["groups"] for r in g["rows"]))
     holds_q2 = {w.rsplit(":", 1)[0] for w in quotes["quote2"]["verbatim"]}
     res["T2"] = {"ok": code == 42 and bool(closest) and closest[0].rsplit(":", 1)[0] in holds_q2,
                  "quote_exit": code, "closest": closest, "misquote": near}  # fmt: skip

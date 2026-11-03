@@ -1,6 +1,6 @@
 """first_mention.py: when your files first mention something, and the line.
 
-    python adapters/stdlib/first-mention/first_mention.py --box DIR "your words"
+    python adapters/stdlib/first-mention/first_mention.py --box DIR "your words" [--json]
 
 The thing is named by words, as a question is: "mould", "knee physio",
 "solar quote". A line mentions it when the line itself holds every one of
@@ -8,9 +8,8 @@ your content words, each read the kernel's way (your words list, and a
 word's plain form, so "owes" is "owe"). The line has to say it: a folder
 named dad/ holds the word for asking, but writes no mention.
 
-    first mention of "mould": 2026-03-01
+    first-mention: populated, first mention of "mould": 2026-03-01; 48 mentions in 5 files, 2026-03-01 to 2026-09-02; 3 undated, which could be earlier
       tenancy/log.md:3  2026-03-01 Reported the mould in the back bedroom.
-    48 mentions in 5 files, 2026-03-01 to 2026-09-02; 3 undated, which could be earlier
 
 A line's date is the latest it says, read as the kernel reads one (its
 `newest`; 11/03/2026, either way round, is never guessed); a line that says
@@ -22,17 +21,51 @@ your files don't say when those were, and one of them could be earlier.
 When no mention is dated at all, the first by file and line is shown, and
 says that.
 
-It only reads. Exit codes, the kernel's: 0 a first mention found; 42 your
-files never mention it, or the words are only common ones; 2 refused.
+It prints a report (ci/README.md, "The report contract"): the first line
+says the answer and the count, the row is the first mention's place and
+line; `--json` gives the same as one object. It only reads. States and exit
+codes: populated, 0, a first mention found; empty, 0, your files never
+mention it; unreachable, 42, the words are only common ones and it couldn't
+look (say more); 2 refused.
 """
 
 from __future__ import annotations
 
+import json
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 import kernel  # noqa: E402
+
+
+NAME = "first-mention"
+
+
+# ── the report: the shape every report add-on prints (ci/README.md) ─────────
+def report(addon: str, state: str, said: str, groups: list) -> dict:
+    """A report: its state, one line said, and each group's rows (where,
+    what); a group named None comes first and has no heading."""
+    return {"addon": addon, "state": state, "said": said,
+            "groups": [{"name": g, "rows": [{"where": w, "what": x} for w, x in rows]}
+                       for g, rows in groups if rows]}  # fmt: skip
+
+
+def report_text(doc: dict) -> str:
+    """A report as every report add-on prints it: the same twenty lines each
+    keeps, held to this one by test_contract.py."""
+    rows = [r for g in doc["groups"] for r in g["rows"]]
+    w = min(max((len(r["where"]) for r in rows), default=0), 60)
+    out = [f"{doc['addon']}: {doc['state']}, {doc['said']}"]
+    for g in doc["groups"]:
+        if g["name"] is not None:
+            out.append(f"## {g['name']}")
+        out += [f"  {r['where']:<{w}}  {r['what']}".rstrip() for r in g["rows"]]
+    return "\n".join(out)
+
+
+def say(doc: dict, as_json: bool) -> None:
+    print(json.dumps(doc, ensure_ascii=False) if as_json else report_text(doc))
 
 
 def day(d: str) -> str:
@@ -109,6 +142,8 @@ def answer(asked: str, found: list[dict]) -> str:
 
 
 def main(argv: list[str]) -> int:
+    as_json = "--json" in argv
+    argv = [a for a in argv if a != "--json"]
     opts, args, it = {}, [], iter(argv)
     for a in it:
         if a == "--box":
@@ -131,13 +166,21 @@ def main(argv: list[str]) -> int:
             return kernel.REFUSED
     want = set(kernel.words(args[0])) - kernel.FUNCTION
     if not want:
-        print(f'"{args[0]}" is only common words, held by everything; say more.')
+        said = f'"{args[0]}" is only common words, held by everything; say more'
+        say(report(NAME, "unreachable", said, []), as_json)
         return kernel.ESCALATE
     found = mentions(kernel.chunks(Path(cfg["pile"])), want, alias)
     if not found:
-        print(f'Your files never mention "{args[0]}".')
-        return kernel.ESCALATE
-    print(answer(args[0], found))
+        say(report(NAME, "empty", f'your files never mention "{args[0]}"', []), as_json)
+        return kernel.ALIVE
+    first = found[0]
+    when = day(first["when"])
+    if not first["when"]:
+        when = "undated; your files don't say when"
+    note = f" ({first['note']})" if first["note"] else ""
+    said = f'first mention of "{args[0]}": {when}{note}; {tally(found)}'
+    row = (f"{first['path']}:{first['line']}", first["text"][:120])
+    say(report(NAME, "populated", said, [(None, [row])]), as_json)
     return kernel.ALIVE
 
 

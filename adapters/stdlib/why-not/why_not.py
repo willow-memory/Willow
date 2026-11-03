@@ -1,19 +1,20 @@
 """why_not.py: why a question got "not enough to say". Python 3.9+.
 
-    python adapters/stdlib/why-not/why_not.py --box DIR "when does the frost come"
+    python adapters/stdlib/why-not/why_not.py --box DIR "when does the frost come" [--json]
 
 A bite that finds nothing says only that. This asks the same question of the
 same folder, the kernel's own way, and says why, without asking it for real:
 nothing is written, so the record does not hold one more question.
 
-    when does the frost come in autumn
-      frost   held by 1 passage: diary.txt:3
-      come    no passage holds it
-      autumn  no passage holds it
-    A passage has to hold 2 of the 3 words at once.
-    The nearest it came:
-      diary.txt:3  holds 1 (frost); lacks come, autumn
-    What would have answered it: a dated note, an event or a deadline, with the date on the line.
+    why-not: populated, "when does the frost come in autumn": a passage has to hold 2 of the 3 words at once
+    ## words
+      frost         held by 1 passage: diary.txt:3
+      come          no passage holds it
+      autumn        no passage holds it
+    ## the nearest it came
+      diary.txt:3   holds 1 (frost); lacks come, autumn
+    ## what would have answered it
+      kind of file  a dated note, an event or a deadline, with the date on the line
 
 It lists, for each word that counts (the kernel leaves "when", "does" and the
 like out), how many passages hold it and the first few, or that none does.
@@ -28,17 +29,24 @@ And last, by the question's first word, what kind of file would have
 answered: for "when", a dated note or a deadline; for "how much", a line with
 the number and what it counts; for "who", a line naming the person.
 
-If your files do hold the question, it says so and where, and stops. A words
+If your files do hold the question, it says so and where in the first line
+(an empty report: nothing to explain), and stops. A words
 list (the box's own, if it has one) is read as the bite reads it.
 
-Exit codes, the kernel's: 0 your files do hold it; 42 they don't, and this
-says why; 2 refused (a bad command line, a words list that doesn't read).
+It prints a report (ci/README.md, "The report contract"); `--json` gives the
+same as one object. States and exit codes: empty, 0, your files do hold the
+question, so there is nothing to explain; populated, 42, they don't, and the
+rows say why (that waits on you); unreachable, 42, every word is a common
+one, so it couldn't look; 2 refused (a bad command line, a words list that
+doesn't read).
 """
 
 from __future__ import annotations
 
+import json
 import difflib
 import math
+import re
 import sys
 from pathlib import Path
 
@@ -56,6 +64,35 @@ KIND = (  # (the question's opening words, what would have answered)
     (("how",), "a note of the steps, in order"),
     (("what", "which"), "a note that states it plainly"),
 )  # fmt: skip
+
+
+NAME = "why-not"
+
+
+# ── the report: the shape every report add-on prints (ci/README.md) ─────────
+def report(addon: str, state: str, said: str, groups: list) -> dict:
+    """A report: its state, one line said, and each group's rows (where,
+    what); a group named None comes first and has no heading."""
+    return {"addon": addon, "state": state, "said": said,
+            "groups": [{"name": g, "rows": [{"where": w, "what": x} for w, x in rows]}
+                       for g, rows in groups if rows]}  # fmt: skip
+
+
+def report_text(doc: dict) -> str:
+    """A report as every report add-on prints it: the same twenty lines each
+    keeps, held to this one by test_contract.py."""
+    rows = [r for g in doc["groups"] for r in g["rows"]]
+    w = min(max((len(r["where"]) for r in rows), default=0), 60)
+    out = [f"{doc['addon']}: {doc['state']}, {doc['said']}"]
+    for g in doc["groups"]:
+        if g["name"] is not None:
+            out.append(f"## {g['name']}")
+        out += [f"  {r['where']:<{w}}  {r['what']}".rstrip() for r in g["rows"]]
+    return "\n".join(out)
+
+
+def say(doc: dict, as_json: bool) -> None:
+    print(json.dumps(doc, ensure_ascii=False) if as_json else report_text(doc))
 
 
 def kind_of(question: str) -> str | None:
@@ -137,6 +174,8 @@ def explain(pile: list[dict], question: str, alias: dict) -> tuple[bool, list[st
 
 
 def main(argv: list[str]) -> int:
+    as_json = "--json" in argv
+    argv = [a for a in argv if a != "--json"]
     opts, args, it = {}, [], iter(argv)
     for a in it:
         if a == "--box":
@@ -158,9 +197,34 @@ def main(argv: list[str]) -> int:
             print(f"refused: {why}", file=sys.stderr)
             return kernel.REFUSED
     held, lines = explain(kernel.chunks(Path(cfg["pile"])), args[0], alias or {})
-    print(" ".join(args[0].split()))
-    print("\n".join(lines))
-    return kernel.ALIVE if held else kernel.ESCALATE
+    asked = " ".join(args[0].split())
+    if held:
+        said = f'"{asked}": {lines[0][0].lower()}{lines[0][1:].rstrip(".")}'
+        say(report(NAME, "empty", said, []), as_json)
+        return kernel.ALIVE
+    if not want_of(args[0]):
+        said = f'"{asked}": {lines[0][0].lower()}{lines[0][1:].rstrip(".")}'
+        say(report(NAME, "unreachable", said, []), as_json)
+        return kernel.ESCALATE
+    # the lines explain gave, sorted into the report's groups
+    said, words, nearest, kind = f'"{asked}": ', [], [], []
+    in_nearest = False
+    for ln in lines:
+        if ln.startswith("A passage has to hold"):
+            said += ln.rstrip(".").replace("A passage", "a passage", 1)
+        elif ln == "The nearest it came:":
+            in_nearest = True
+        elif ln == "No passage holds any of them.":
+            said += "; no passage holds any of them"
+        elif ln.startswith("What would have answered it: "):
+            kind.append(("kind of file", ln.split(": ", 1)[1].rstrip(".")))
+        else:
+            where, what = re.split(r"\s{2,}", ln.strip(), maxsplit=1)
+            (nearest if in_nearest else words).append((where, what))
+    groups = [("words", words), ("the nearest it came", nearest),
+              ("what would have answered it", kind)]  # fmt: skip
+    say(report(NAME, "populated", said, groups), as_json)
+    return kernel.ESCALATE
 
 
 if __name__ == "__main__":

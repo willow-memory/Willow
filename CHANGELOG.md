@@ -1622,6 +1622,11 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- secrets-audit, symptoms, first-mention, misquote, why-not, minutes and
+  thesis print a report (the report contract); "found nothing" exits 0 where
+  minutes, symptoms, first-mention and misquote said 42. A card says
+  `output: report` in its header, or it isn't one. stewart-crossover's
+  freeze 4: `demo/stewart-crossover/run.py` reads misquote's report. (#198)
 - `ci`: the heavy CI jobs wait on the fast ones. tests, strip, ports, demo,
   deps, tools and the mutants jobs `need` lint, first, against and changelog
   in `.github/workflows/ci.yml`, so on a pull request the checks that take
