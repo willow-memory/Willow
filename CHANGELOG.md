@@ -10,6 +10,33 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `demo/five-repos`, five repositories through the stacks: the seven
+  stacks a session built and rebuilt with each prompt over a folder of
+  five repositories (this one among them), the 24-line words list that
+  read one repo's words as the others', thirteen reports of what each
+  stack found and got wrong, and two records copied without their keys,
+  one holding ten suggestions that wait on a seal. Its test holds the
+  stacks to add-ons that exist, the words list to the kernel's parser and
+  the records' chains with nothing sealed; CI runs it as `demo:five-repos`.
+  The session proposed and never sealed. (#211)
+- `stack`: a ninth example, `adapters/stdlib/stack/examples/export.md`, a
+  box handed to someone else: what the record says of itself, the hashes
+  a stranger can check (the Merkle root, a pin, fixity), the envelopes the
+  world reads (PROV, in-toto, an RO-Crate) and a backup that checks
+  itself, each written under a folder beside the box. (#211)
+- `stack`: an eighth example stack, `adapters/stdlib/stack/examples/repos.md`,
+  for a folder of repositories cloned side by side: the audits over all of
+  them at once (todo, risky-code, xref, pins, install-scripts, secrets-audit,
+  pii-audit, a11y-check), one question each repo answers in turn through
+  fair-merge, and what they say twice and whom they name. Made by running
+  Willow's stacks over five repositories, this one among them. (#211)
+- `git-history`: `mirror --from FOLDER --to MIRROR --messages` writes each
+  commit without its diff, the day, subject and body only. A diff carries
+  other people's dates and the kernel dates a line by the nearest date
+  above it, so a commit pile with diffs was dated by what the diffs said:
+  on this repository's own history, "privacy" was first mentioned in 1958,
+  a demo character's birthday inside a diff. Messages alone are dated by
+  the commit. (#211)
 - `forge`, a deps add-on: a sentence in, the add-ons it names or means
   out, as a report in the one shape. A word that reaches several add-ons
   ("email": mail, apple-mail) is a fork with the cards as options, for the
@@ -1645,9 +1672,39 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- `github`: the drift test looks for the planted problem anywhere in `check`'s
+  list, not first in it. Which gate a shard plant reports "in no job" first
+  depends on the cut, and the weights move it: a pull request adding an add-on
+  (sort, #206) failed the test with its own gate's weight in the cut. (#217)
+- `three-two-one`: a copy that holds but has fewer rows than the box says
+  how many it is behind (`holds (14 rows, 2 rows behind the box)`). A record
+  cut short still verifies, so a truncated or stale copy counted as a copy
+  and looked current; it still counts, and now says so. (#211)
+- `in-process`: a reply that cites a passage and says nothing else, a bare
+  `[1]` or a file and line in brackets, is printed and proposed to no one,
+  as a reply citing nothing already was. Qwen2.5 0.5B on a folder of
+  repositories cited every time and answered nothing, and three empty
+  suggestions waited on a seal. (#211)
+- `hook-fail-closed`: when the hook breaks, the reason is one line, how it
+  exited and its last words, and its traceback stays out of stderr. With
+  the traceback passed through, hook-fuzz read the wrapped hook as broken
+  (a traceback under any exit) while the wrapper had blocked the tool as
+  it should; now the two agree. (#211)
+- `hosts`: `show claude-code` still refuses, since Claude Code takes no MCP
+  server from this table, and the refusal now says where its way in is:
+  the prompt hook in `adapters/stdlib/claude-code`. (#211)
+- history and on-this-day print a report (the report contract), a group a
+  day and a group a year; empty exits 0 in each, where it said 42. (#210)
 - coming-up, box-health, agents-md-check, xref and pins print a report (the
   report contract); coming-up with nothing in its window exits 0 where it
   said 42; repo-pile reads xref's report. (#199)
+- `ci`: the heavy CI jobs no longer wait on `first`, only on lint, against
+  and changelog. `first` runs what a change reaches, and on a pull request
+  converting seven add-ons that was 18 minutes, during which no heavy job
+  could start; it runs beside them again, as the early word it is. The
+  `mutants-reach` job runs its gates through `adapters/stdlib/ci/cores.py`,
+  four at once: a change to the contract tests reaches every mutants gate,
+  and the whole part in one job took most of an hour. (#214)
 - secrets-audit, symptoms, first-mention, misquote, why-not, minutes and
   thesis print a report (the report contract); "found nothing" exits 0 where
   minutes, symptoms, first-mention and misquote said 42. A card says
@@ -1834,6 +1891,34 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- `against` reads a pull request stacked on another from where the two
+  left each other, not from where each left the base, so the one below is
+  not failed for the names the one above took from it. The forge stack
+  (#200, with #201 to #203 built on it) showed it: #200's `against` job said
+  its own add-on was a duplicate, once per pull request above it. What the
+  one above adds past the one below is still held to the others. (#215)
+- contradictions leaves a word that's everywhere (on more than one dated
+  line in 500, and more than 10) out of what two lines share: over 14
+  repositories it found 371,125 "disagreements" in 133 seconds, and now
+  1,404 in 18. (#212)
+- people counts the values code writes capitalized (None, True, False) as no
+  one, beside the months and weekdays: a repository's roster led with None,
+  24,048 mentions, from one `self.left None`. (#209)
+- todo lists a line whose date no calendar has (1984-06-31) under its own
+  heading and exits 42, where it was ordered as the oldest thing to do; the
+  oldest is said of the real dates only. known-gaps' freeze 9. (#207)
+- The UI's Start it runs the sealed flow over every folder of the pick, each
+  its own record with its page beside it, where it ran over the first only;
+  two folders of one name get a record each (`files-2`), where the second
+  was told "already set up". (#205)
+- The UI's kernel baseline offers a reader for a kind of file its card
+  names, not for an English word: a kind counts with its dot (`.so`), in
+  capitals (PDF), or bare when three letters or more, so `.so` files are no
+  longer offered agent-transcript, bibtex, chordpro and clauses. (#204)
+- model-shelf looks in the Ollama service's folder
+  (/usr/share/ollama/.ollama/models, where Ollama's Linux installer keeps
+  its models) when no --home is given, where it said Ollama was "not on this
+  machine" while it served 14 models. (#213)
 - `pii-audit` reads a run holding a written date, year first, as dates, not
   a card number: two dates side by side (`2027-01-09  2027-01-09`, as
   milestones prints a row) are sixteen digits that pass Luhn one time in

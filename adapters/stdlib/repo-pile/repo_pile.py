@@ -326,8 +326,13 @@ def report(o: dict, base: Path) -> int:
     ]
     code = kernel.ALIVE
     for title, script, argv in steps:
-        r = py(script, *argv)
-        print(f"## {title}\n\n{(r.stdout or r.stderr).strip()}\n")
+        r = py(script, *argv, *(["--json"] if title == "history" else []))
+        text = (r.stdout or r.stderr).strip()
+        if title == "history" and r.returncode == 0:  # its report: a day a group
+            doc = json.loads(r.stdout)
+            text = "\n".join([doc["said"]] + [x for g in doc["groups"] for x in
+                [g["name"]] + [f"  {w['where']}  {w['what']}" for w in g["rows"]]])  # fmt: skip
+        print(f"## {title}\n\n{text}\n")
         code = kernel.REFUSED if r.returncode == kernel.REFUSED else code
     return code
 

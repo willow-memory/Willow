@@ -25,7 +25,8 @@ named, any one of them with every place they're mentioned:
   goes, calls, rings, visits, meets, asks, tells, thanks, pays, helps or is
   rung, met, told or thanked by name ("rang Kati", "met Priya at the
   market");
-- and it isn't a month's or a weekday's name, which also come and go.
+- and it isn't a month's or a weekday's name, which also come and go, or
+  a value code writes capitalized (None, True, False).
 
 Every word that passes is a person, and every time the files write it, in
 any case, is a mention. What slips past the shapes is still shown, for you
@@ -65,7 +66,10 @@ SPEAKER = re.compile(
 NEVER = frozenset(
     "january february march april may june july august september october "
     "november december monday tuesday wednesday thursday friday saturday "
-    "sunday".split()
+    "sunday "
+    # the values code writes capitalized, which a line of code may leave or
+    # call ("left None"): no one, though they outnumber every name there is
+    "none true false".split()
 )
 
 

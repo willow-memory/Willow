@@ -27,7 +27,10 @@ away from home.
 
 The rule is three copies, on two kinds of storage, one away from home. A
 copy that isn't a box, or whose chain doesn't hold, is said and not
-counted. It writes nothing.
+counted. It writes nothing. A copy that holds but has fewer rows than the
+box counts, and says how far behind it is (`holds (14 rows, 2 rows behind
+the box)`): a chain cut short still verifies, so this is where an old or
+truncated copy shows.
 
 Exit codes, the kernel's: 0 the rule holds; 42 it doesn't, or a copy
 failed; 2 refused.

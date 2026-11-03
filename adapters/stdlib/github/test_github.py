@@ -242,8 +242,8 @@ def test_the_repos_github_folder_holds():
         ),  # fmt: skip
         (
             ".github/workflows/ci.yml",
-            "ci.py run mutants --box ${{ runner.temp }}/ci-record | tee",
-            "ci.py run mutants:accents --box ${{ runner.temp }}/ci-record | tee",
+            "cores.py --jobs 4 --box ${{ runner.temp }}/ci-record mutants | tee",
+            "cores.py --jobs 4 --box ${{ runner.temp }}/ci-record mutants:accents | tee",
             "mutants job is skipped on pull requests",
         ),  # fmt: skip
         (
@@ -275,7 +275,7 @@ def test_each_way_github_can_drift_is_caught(
     monkeypatch.setattr(gh, "ROOT", tmp_path)
     monkeypatch.setattr(gh, "DOT", tmp_path / ".github")
     got = gh.problems()
-    assert got and says in got[0], got
+    assert got and any(says in g for g in got), got
 
 
 @pytest.mark.parametrize("argv", [[], ["reports"], ["check", "x"]])
