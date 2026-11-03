@@ -95,6 +95,44 @@ keeps the readers' contract (the summary line, the same bytes twice,
 originals untouched, hidden files unread, 42 for nothing to read, refusals
 that write nothing). A new add-on with a command line has to be listed there.
 
+### The report contract
+
+An add-on that tells you what it found in your files (a check, an audit, a
+list of what's waiting) prints a report, and every report has the same
+shape, so one add-on's output reads like the next and a stack can line
+them up. Its card says `output: report`.
+
+    pii-audit: populated, 3 personal numbers in 3 of 254 files
+    ## a card number
+      money/orders.csv:17  ···· 4242
+    ## a National Insurance number, by shape
+      work/p60.txt:9       ···· 45C
+
+- **The first line** is the add-on's name, its state and one thing said:
+  `NAME: STATE, SAID`. The state is the kernel's own word: `populated`
+  (rows found), `empty` (none), or `unreachable` (it couldn't look, and
+  SAID says why). A refusal is no report: it is exit 2, on stderr.
+- **Rows** are where, then what, one line each, indented two spaces, the
+  where column as wide as its longest (up to 60). Where is a place, a
+  `path:line` or another name for where the thing is; what is the thing.
+- **Groups** are `## name` above their rows, in the add-on's own order;
+  rows that belong to no group come first, with no heading. A group with
+  no rows isn't printed.
+- **`--json`** prints the same report as one JSON object: `addon`,
+  `state`, `said`, and `groups`, each `{"name": ..., "rows": [{"where":
+  ..., "what": ...}]}`, the group of no group named `null`.
+- **Exit codes:** `empty` is 0 and `unreachable` 42; `populated` is 0, or
+  42 when what was found waits on you, as the card says. So 42 never means
+  "found nothing".
+
+Each report add-on keeps its own copy of the twenty lines that print it
+(`report`, `report_text`, `say`: an add-on holds alone and shares only the
+kernel). [stack](../stack/) runs a report add-on with `--json` and prints the
+report itself, and [test_contract.py](test_contract.py) holds each one to
+it: its text is exactly what stack prints from its JSON, its first line
+and rows have the shape, its state agrees with its rows and its exit code,
+and the same box gives the same report twice.
+
 **The guard:** the add-ons' tests, and each deps add-on's, run with
 [guard/sitecustomize.py](guard/sitecustomize.py) on `PYTHONPATH`, so it is
 loaded into every Python process they start. It holds each add-on to its
