@@ -126,11 +126,11 @@ says how to pick one up:
 <!-- willow:front show=pick week=2026-W45 -->
 **Add-on of the week**
 
-**[pipe](adapters/stdlib/pipe/)** — Questions in on standard input, answers out one per line: JSON lines, or file:line: text for grep and fzf.
+**[predict](adapters/stdlib/predict/)** — Write down what a question will come to before you ask it, and grade it after; the record counts how often it was right.
 
-*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 327 built add-ons in name order.*
+*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 329 built add-ons in name order.*
 
-[Every add-on, 327 built of 519, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 329 built of 520, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 

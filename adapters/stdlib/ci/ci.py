@@ -530,6 +530,9 @@ def gates() -> list[tuple[str, str, object]]:
     # Bernadette's files through every layer: readers to the trust add-ons
     out.append(("demo", "demo:stack", command(*PYTEST, "demo/bernadette",
                 needs=lambda: missing_module("pytest"))))  # fmt: skip
+    # the Johnson report passed between five people's willows, with share
+    out.append(("demo", "demo:share", command(*PYTEST, "demo/johnson",
+                needs=lambda: missing_module("pytest"))))  # fmt: skip
     # Teodora's whole folder against the starter words list
     out.append(("demo", "demo:teodora-words", command(*PYTEST, "demo/teodora",
                 needs=lambda: missing_module("pytest"))))  # fmt: skip
