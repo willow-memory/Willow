@@ -19,12 +19,12 @@ is written: `no-install` or `needs-install`; `offline`, `this-machine` or
 tag its author chose, if any. *near* names the three add-ons closest to it.
 
 <!-- willow:pools -->
-`█████████████░░░░░░░` **326 of 518 built** · 467 need no install · 51 need one
+`█████████████░░░░░░░` **327 of 519 built** · 468 need no install · 51 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
 | Reading more kinds of files | 92 | 28 | 112 | 8 |
-| Finding things | 32 | 14 | 36 | 10 |
+| Finding things | 33 | 14 | 37 | 10 |
 | Your own words | 19 | 7 | 23 | 3 |
 | Keeping track | 40 | 16 | 56 | 0 |
 | Trust and proof | 32 | 22 | 45 | 9 |
@@ -68,19 +68,19 @@ its list: someone who speaks the language can add one without much Python.
 ## Newest
 
 <!-- willow:newest -->
+- 2026-11-03 · [**sort**](adapters/stdlib/sort/) — Your files sorted into your own categories, by the phrases you gave each: what's where, and what nothing of yours reached.
 - 2026-11-03 · [**forge**](adapters/deps/forge/) — A sentence in, the add-ons it names or means out, as a plan with its forks for the Forge's checkpoint to resolve and the person to seal before anything runs.
 - 2026-11-03 · [**against**](adapters/stdlib/against/) — A pull request held to the other open ones: a name both add fails, a file both change is said.
 - 2026-11-02 · [**zotero**](adapters/stdlib/zotero/) — Your Zotero library, from a copy of zotero.sqlite: items, notes and PDF annotations, each with its citation.
 - 2026-11-02 · [**weights-pin**](adapters/stdlib/weights-pin/) — A local model's weights file hashed before each run and refused when it differs from the hash on its model card.
-- 2026-11-02 · [**weights-card**](adapters/stdlib/weights-card/) — A model card filled in from the weights file's own header, GGUF or safetensors (architecture, quantization, context length, licence), so the card says what the file says.
 <!-- /willow:newest -->
 
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W45 -->
-**[pair-drift](adapters/stdlib/pair-drift/)** — Figures a summary says that its full text doesn't: a draft and its packet side by side, ranges and billions read as written.
+**[pipe](adapters/stdlib/pipe/)** — Questions in on standard input, answers out one per line: JSON lines, or file:line: text for grep and fzf.
 
-*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 326 built add-ons in name order.*
+*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 327 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -213,7 +213,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 
 ## Finding things
 
-- [**all**](adapters/stdlib/all/) — Every matching passage, ranked, not just the top three. *box* `no-install` `offline` `ranked` `matched` · near: latent, claim-check, thesis
+- [**all**](adapters/stdlib/all/) — Every matching passage, ranked, not just the top three. *box* `no-install` `offline` `ranked` `matched` · near: claim-check, latent, thesis
 - [**amounts**](adapters/stdlib/amounts/) — Every sum of money in your files, with its date and the line it's on. *new* `no-install` `offline` `amount` · near: debts, said, chats
 - **bm25** (idea) — BM25 over a box in one go, with no index to build first: the rank scan --rank bm25 gives, for a folder you ask once. *new* `no-install` `offline` `index` `scan` · near: scan, index-cache, latent
 - **by-function** (idea) — Code read by function and class instead of by line, so a hit names the function it's in. Needs tree-sitter and its language pack; MIT. *new* `needs-install` `offline` `function` `instead` · near: codebase-memory, claude-code, risky-code
@@ -224,11 +224,11 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - [**duplicates**](adapters/stdlib/duplicates/) — Passages that say the same thing in two files, and which one is newer. *new* `no-install` `offline` · near: contradictions, xref, three-two-one
 - [**fair-merge**](adapters/stdlib/fair-merge/) — Each folder or repo ranked on its own and the lists merged in turns, so a large corpus can't push a small one out on volume alone, and a source that found nothing says so. *bot* `no-install` `offline` `sources` `pile` · near: scan, parallel, ripgrep
 - [**first-mention**](adapters/stdlib/first-mention/) — When your files first mention something, and the line that does. *new* `no-install` `offline` `mention` · near: people, pipe, timeline
-- [**fuzzy-dates**](adapters/stdlib/fuzzy-dates/) — Dates that admit doubt ('about 1880', 'sometime in March') read and kept with their doubt, in EDTF. *new* `no-install` `offline` · near: family-tree, syllabus, minutes
+- [**fuzzy-dates**](adapters/stdlib/fuzzy-dates/) — Dates that admit doubt ('about 1880', 'sometime in March') read and kept with their doubt, in EDTF. *new* `no-install` `offline` · near: family-tree, syllabus, sort
 - [**index-cache**](adapters/stdlib/index-cache/) — Keeps scan's index between runs and rebuilds it only when a file in your folder actually changed. Uses scan. *new* `no-install` `offline` `between` `scan` `index` · near: scan, parallel, policy-watch
 - **kiwix** (idea) — An offline Wikipedia (or Stack Exchange, or Gutenberg) as a source after your own files, cited by article. Needs libzim, and a ZIM file you download; GPL-3.0. *new* `needs-install` `offline` `stack` `wikipedia` · near: pageviews, codeowners, stack
 - [**latent**](adapters/deps/latent/) — Finds code by meaning, not just matching words, using scan's index: a question reaches code that says the same thing another way. Needs numpy; BSD-3-Clause. Uses scan. *new* `needs-install` `offline` `matched` `ranked` · near: scan, all, pile-rank
-- **meaning** (idea) — Search by meaning: "who owes me money" finds "invoice outstanding". Needs sentence-transformers; Apache-2.0. Goes online: the model, downloaded once from Hugging Face. *new* `needs-install` `online` `invoice` `owes` · near: starter-words, amounts, debts
+- **meaning** (idea) — Search by meaning: "who owes me money" finds "invoice outstanding". Needs sentence-transformers; Apache-2.0. Goes online: the model, downloaded once from Hugging Face. *new* `needs-install` `online` `invoice` `owes` · near: sort, starter-words, amounts
 - [**misquote**](adapters/stdlib/misquote/) — A quote that is almost in your files: the closest passage, and the words it adds, drops or changes, so a misquote shows as one. *new* `no-install` `offline` `quote` `drops` · near: quotes, quote-check, stale
 - [**month-first**](adapters/stdlib/month-first/) — For a folder you know writes dates month first: each one's ISO form written beside it, so it can be placed. *new* `no-install` `offline` `month` `form` · near: abbreviations, coming-up, chats
 - **my-lessons** (idea) — Your own lesson plans by grade, subject and standard: what did I teach on fractions last year? *new* `no-install` `offline` `lesson` `plan` · near: lessons, lesson-time, standards
@@ -246,11 +246,12 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - [**quotes**](adapters/stdlib/quotes/) — Every quote in a document checked against your files: as written, almost (and what it adds, drops or changes), or not there. Uses misquote, quote-check. *new* `no-install` `offline` `quote` `drops` · near: misquote, quote-check, claim-check
 - [**reading-level**](adapters/stdlib/reading-level/) — How hard a passage reads (sentence length, word length, Flesch), so a teacher can find texts for a class. *new* `no-install` `offline` `length` `sentence` · near: plain, pile-sweep, browse
 - [**record-sql**](adapters/deps/record-sql/) — SQL straight over your record, in place: 'how many answers did I approve in March?' Needs DuckDB; MIT. *box* `needs-install` `offline` · near: mcp, static-search, dialect
-- **rerank** (idea) — A small model on the CPU that reorders the top passages by reading the question and each passage together. Needs FlashRank; Apache-2.0. Goes online: the model, downloaded once. *new* `needs-install` `online` `top` · near: model-fit, claude-code, pile-gold
+- **rerank** (idea) — A small model on the CPU that reorders the top passages by reading the question and each passage together. Needs FlashRank; Apache-2.0. Goes online: the model, downloaded once. *new* `needs-install` `online` `top` · near: model-fit, pile-gold, claude-code
 - [**ripgrep**](adapters/deps/ripgrep/) — Exact search through ripgrep, much faster on a big folder, its hits checked against the kernel's hashes. Needs the ripgrep program, from the ripgrep wheel on PyPI or your own rg; MIT or Unlicense. *new* `needs-install` `offline` `search` · near: pdf, manifests, ocr
 - [**rules**](adapters/stdlib/rules/) — A game's or a house's rules, approved one section at a time, so asking what a rule says gives back that exact section, word for word. *bot* `no-install` `offline` `game` · near: session-seal, game-master, night-batch
 - [**said**](adapters/stdlib/said/) — Your own quotes, gathered: every 'so-and-so, on this date: "..."' in your files, as a dated timeline of what was decided. *new* `no-install` `offline` `timeline` `quote` · near: amounts, timeline, debts
 - [**scan**](adapters/stdlib/scan/) — Index a big folder once, then ask it a list of questions in seconds, with the kernel's own answers: of everything, or only what changed since another index. Uses todo. *box* `no-install` `offline` `scan` `ranked` `index` · near: latent, index-cache, bm25
+- [**sort**](adapters/stdlib/sort/) — Your files sorted into your own categories, by the phrases you gave each: what's where, and what nothing of yours reached. *new* `no-install` `offline` `phrases` `categories` · near: pile-rungs, debts, month-first
 - **standards** (idea) — Curriculum standards beside your lessons: which standard each lesson meets, each cited. *new* `no-install` `offline` `lesson` `standard` · near: my-lessons, lesson-time, grant-report
 - [**surprise**](adapters/stdlib/surprise/) — One passage from your folder at random, seeded so it can be replayed. *bot* `no-install` `offline` `seeded` `replayed` · near: serve, on-this-day, tarot
 - **symbols** (idea) — Exact definitions and references for Python code: where a name is defined, and every place it's used. Needs scip-python; MIT. *new* `needs-install` `offline` `reference` · near: hook-impact, people, code-shape
@@ -344,8 +345,8 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - **support-plan** (idea) — An IEP or support plan's goals, accommodations and review dates, each cited, for a parent or teacher. *new* `no-install` `offline` `parent` `plan` · near: contracts, lessons, standards
 - [**syllabus**](adapters/stdlib/syllabus/) — A course syllabus as dates: readings, assignments and exams due, each cited. Uses habits. *new* `no-install` `offline` `assignments` `due` · near: gradebook, minutes, symptoms
 - [**symptoms**](adapters/stdlib/symptoms/) — A symptom diary over time, ready to show a doctor: what, when, how bad, each line cited. *new* `no-install` `offline` · near: syllabus, hours, minutes
-- **tax-year** (idea) — One tax year's receipts and statements gathered in one place, each with the file it came from. *new* `no-install` `offline` `tax` `statements` · near: mileage, todays-place, upstream-desk
-- [**todo**](adapters/stdlib/todo/) — TODO, FIXME and "need to" lines across the folder, oldest first. *box* `no-install` `offline` · near: debts, budget, symptoms
+- **tax-year** (idea) — One tax year's receipts and statements gathered in one place, each with the file it came from. *new* `no-install` `offline` `tax` `year` · near: mileage, todays-place, upstream-desk
+- [**todo**](adapters/stdlib/todo/) — TODO, FIXME and "need to" lines across the folder, oldest first. *box* `no-install` `offline` · near: debts, sort, budget
 - **trips** (idea) — Your trips from booking emails and tickets: where you went, when, and where you stayed. *new* `no-install` `offline` `trips` `emails` · near: school, mileage, books
 - **upstream-desk** (idea) — Your work in other people's projects, in one place: notifications sorted into what needs you, and your open pull requests there. Goes online: GitHub, through gh, with your own login. *bot* `no-install` `online` `pull` `requests` · near: contribute, against, pr-context
 - [**warranties**](adapters/stdlib/warranties/) — Receipts and warranties: when the dishwasher's cover ends, and where its receipt is. Uses car. *new* `no-install` `offline` `receipts` · near: job-hunt, renewals, baby-log
@@ -410,15 +411,15 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 ## Privacy and safety
 
 - [**a11y-check**](adapters/stdlib/a11y-check/) — Your documents checked for screen-reader problems: images without descriptions, headings out of order. *new* `no-install` `offline` `problems` `share` · near: digest, scrub, todo
-- [**advisories**](adapters/stdlib/advisories/) — Security advisories from a downloaded OSV or GitHub advisory database, matched to your lockfiles: which dependency each names, and since when. *new* `no-install` `offline` `dependency` `lock` · near: typosquat, outdated, risky-code
+- [**advisories**](adapters/stdlib/advisories/) — Security advisories from a downloaded OSV or GitHub advisory database, matched to your lockfiles: which dependency each names, and since when. *new* `no-install` `offline` `dependency` `lock` · near: typosquat, outdated, lockfiles
 - **forget** (idea) — Stops a file being searched, recorded on the chain, so what was taken out is known and nothing else is touched. *new* `no-install` `offline` `stop` `known` · near: ro-crate, merkle, transcript-redact
 - [**install-scripts**](adapters/stdlib/install-scripts/) — The install scripts the packages in node_modules would run (preinstall, install, postinstall), each cited by file and line. *new* `no-install` `offline` `package` `install` · near: package-contents, package-docs, aider
 - **kids** (idea) — A box for a child: answers only from the folder you choose for them, and nothing they can approve. *new* `no-install` `offline` · near: student-records, export, browse
 - [**outdated**](adapters/stdlib/outdated/) — How old each locked dependency is, and which are yanked, deprecated or two years without a release, from a registry index you downloaded. Uses advisories. *new* `no-install` `offline` `dependency` · near: typosquat, pins, jrnl
 - [**package-contents**](adapters/stdlib/package-contents/) — What's inside a wheel, sdist, npm tarball or .crate before you install it: every file, and any code it runs on install. *new* `no-install` `offline` `install` `package` · near: install-scripts, ci-cache, instruction-files
-- [**pii-audit**](adapters/stdlib/pii-audit/) — Personal data sitting in your files (ID numbers, health details, card numbers), listed by file and line. *new* `no-install` `offline` `numbers` `audit` · near: secrets-audit, privacy, debts
+- [**pii-audit**](adapters/stdlib/pii-audit/) — Personal data sitting in your files (ID numbers, health details, card numbers), listed by file and line. *new* `no-install` `offline` `numbers` `audit` · near: secrets-audit, privacy, sort
 - [**privacy**](adapters/stdlib/privacy/) — Hides phone numbers, emails, card, bank and ID numbers, and API keys in what a question prints, and says what it hid. *bot* `no-install` `offline` `numbers` · near: plain, readings, pii-audit
-- [**risky-code**](adapters/stdlib/risky-code/) — Lines of code matching a known-dangerous pattern (command injection, eval, sql concatenation, broken tls and more), by file and line, as leads to read. *new* `no-install` `offline` `matched` `command` `security` · near: code-shape, install-scripts, code-comments
+- [**risky-code**](adapters/stdlib/risky-code/) — Lines of code matching a known-dangerous pattern (command injection, eval, sql concatenation, broken tls and more), by file and line, as leads to read. *new* `no-install` `offline` `matched` `command` `security` · near: code-shape, install-scripts, sort
 - [**scrub**](adapters/stdlib/scrub/) — Strips the hidden details (EXIF, author, edit history) from a file before you share it. *new* `no-install` `offline` `history` `share` · near: photos, transcript-redact, bookmarks
 - [**secrets-audit**](adapters/stdlib/secrets-audit/) — Finds passwords, keys and card numbers sitting in plain files, by file and line, never showing the value. Uses privacy. *bot* `no-install` `offline` `numbers` `key` `everyday` · near: pii-audit, xref, hook-leaks
 - [**sent-log**](adapters/stdlib/sent-log/) — Which of your passages went to which online model, read from the record by model card: what left this machine and where to. Uses openai-compatible. *new* `no-install` `offline` `left` `log` · near: cite-honesty, gaps, model-card
@@ -556,7 +557,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - [**catgrid**](adapters/stdlib/catgrid/) — A seeded logic grid with one cat in every row, column and colour region and a unique answer, replayed from its moves. *new* `no-install` `offline` `rows` `seeded` · near: life, game-master, hook-replay
 - **chess-puzzle** (idea) — A Lichess puzzle a day, drawn by a seed: predict whether you'll solve it, then solve it. Goes online: lichess.org, to read the puzzle. *new* `no-install` `online` `drawn` `chess` · near: predict, art-of-the-day, daily-word
 - **connect-four** (idea) — Connect Four as rows on the record, held to the solved result: the first player wins. *new* `no-install` `offline` `result` `held` · near: schema-check, cloudevents, crates
-- [**daily-word**](adapters/stdlib/daily-word/) — A five-letter word game drawn from your own files' words: a new word each day, the same for anyone asking the same folder. *new* `no-install` `offline` `daily` · near: quiz, surprise, serve
+- [**daily-word**](adapters/stdlib/daily-word/) — A five-letter word game drawn from your own files' words: a new word each day, the same for anyone asking the same folder. *new* `no-install` `offline` `daily` · near: quiz, surprise, on-this-day
 - [**dice**](adapters/stdlib/dice/) — Seeded dice rolls as rows: every roll replayable and checkable. *bot* `no-install` `offline` `seeded` `dice` · near: dice5e, game-master, tarot
 - [**dice5e**](adapters/stdlib/dice5e/) — Full tabletop dice notation (4d6kh3, advantage), rolled on the record and checkable like dice. Uses dice. *bot* `no-install` `offline` `rolls` `tabletop` · near: dice, game-master, fight5e
 - **fight5e** (idea) — Tabletop combat run from stat blocks on dice5e's rolls, every attack on the record and replayable. *new* `no-install` `offline` `rolls` `replayable` · near: dice5e, dice, roll-for-merge
@@ -586,7 +587,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - **reversi** (idea) — Reversi as rows: every move, each flip following from the board. *new* `no-install` `offline` `move` `rows` · near: tic-tac-toe, catgrid, same-way
 - **roll-for-merge** (idea) — A d20 for every pull request, green runs added and red streaks taken away, against a DC the bot calls. *new* `no-install` `offline` `pull` `requests` · near: ci-bets, against, ci-baseline
 - **sokoban** (idea) — Sokoban levels and moves on the record, a solution checked by replaying it. *new* `no-install` `offline` `replayed` `level` · near: hook-replay, catgrid, reading-level
-- **spurious** (idea) — Everything joined on time and place (CI reds, earthquakes, rain, front pages) to hunt correlations that mean nothing. *new* `no-install` `offline` `front` `red` · near: front-page, ci-why, readme
+- **spurious** (idea) — Everything joined on time and place (CI reds, earthquakes, rain, front pages) to hunt correlations that mean nothing. *new* `no-install` `offline` `front` `joins` · near: front-page, ci-why, readme
 - [**tarot**](adapters/stdlib/tarot/) — A seeded tarot draw on the record, replayable by anyone with the seed. *new* `no-install` `offline` `seeded` `replayable` · near: catgrid, dice, life
 - **tic-tac-toe** (idea) — Tic-tac-toe as rows: every move, and the solver's value of each position; perfect play draws. *new* `no-install` `offline` `rows` `move` · near: reversi, catgrid, nim
 - **tides** (idea) — Tide predictions as a control: if your Brier score on tides isn't near zero, the forecasting plumbing is broken. Goes online: NOAA's tides API, to read predictions and what happened. *new* `no-install` `online` `score` `forecast` · near: predictions, forecasts, horoscope-grades

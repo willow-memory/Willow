@@ -1078,6 +1078,10 @@ willow/
 │   │   │   ├── snapshot.py   a page or file fetched once, with its address, time and SHA-256
 │   │   │   ├── test_snapshot.py
 │   │   │   └── README.md
+│   │   ├── sort/
+│   │   │   ├── sort.py       your files sorted into your own categories, by the phrases you gave each
+│   │   │   ├── test_sort.py
+│   │   │   └── README.md
 │   │   ├── stack/
 │   │   │   ├── stack.py       one document from a stack of add-on steps over a box, pooled and peaks-first
 │   │   │   ├── test_stack.py

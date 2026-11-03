@@ -10,6 +10,10 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `sort`: your files sorted into your own categories by the phrases you gave
+  each, in a file of your own (`name: phrase, phrase`); a tie is listed for
+  you to choose and a file no phrase reaches is unsorted, never guessed. It
+  prints a report, 42 when a file waits on you. (#206)
 - `demo/five-repos`, five repositories through the stacks: the seven
   stacks a session built and rebuilt with each prompt over a folder of
   five repositories (this one among them), the 24-line words list that
