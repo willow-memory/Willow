@@ -86,14 +86,25 @@ def test_check_says_waiting_then_sealed_once_the_person_seals(tmp_path):
     box = make(tmp_path)
     kernel("bite", "--box", str(box), "tomatoes sun", *NOW)
     run("--box", str(box), *NOW)
+    subj = waiting_subject(box)
     got = run("--box", str(box), "check")
-    assert got.returncode == 42 and got.stdout.startswith("waiting  rows 0 to 1")
-    assert "1 waiting, 0 broken; 0 rows since, not yet bundled" in got.stdout
-    sealed = kernel("seal", "--box", str(box), waiting_subject(box), *NOW)
+    assert got.returncode == 42
+    assert got.stdout.splitlines() == [
+        "session-seal: populated, 1 sessions: 0 sealed, 1 waiting, 0 broken; "
+        "0 rows since, not yet bundled",
+        "## waiting on your seal",
+        f"  rows 0 to 1  python kernel.py seal --box {box} {subj}",
+    ]
+    sealed = kernel("seal", "--box", str(box), subj, *NOW)
     assert sealed.returncode == 0, sealed.stderr
     got = run("--box", str(box), "check")
-    assert got.returncode == 0 and got.stdout.startswith("sealed   rows 0 to 1")
-    assert "1 sessions: 1 sealed, 0 waiting, 0 broken; 1 rows since" in got.stdout
+    assert got.returncode == 0
+    assert got.stdout.splitlines() == [
+        "session-seal: populated, 1 sessions: 1 sealed, 0 waiting, 0 broken; "
+        "1 rows since, not yet bundled",
+        "## sealed",
+        f"  rows 0 to 1  {subj}",
+    ]
     assert (box / "written" / "sessions" / "0-1.json").exists()
 
 
@@ -128,8 +139,16 @@ def test_a_bundle_edited_in_the_box_is_broken_not_sealed(tmp_path):
     prop["data"] = prop["data"].replace('"from":0', '"from":1')
     f.write_text(json.dumps(prop))
     got = run("--box", str(box), "check")
-    assert got.returncode == 2 and got.stdout.startswith("broken   rows 0 to 1")
-    assert "1 sessions: 0 sealed, 0 waiting, 1 broken" in got.stdout
+    assert got.returncode == 42, "a broken bundle is found, not a refusal"
+    head, group, row = got.stdout.splitlines()
+    assert head.startswith(
+        "session-seal: populated, 1 sessions: 0 sealed, 0 waiting, 1 broken"
+    )
+    assert group == "## broken" and row.startswith(
+        "  rows 0 to 1  its bundle no longer"
+    )
+    code, said = ss.quiet(ss.check, box, rows(box))  # the function, as one.py calls it
+    assert code == 2 and said.startswith("broken   rows 0 to 1")
 
 
 def test_a_seal_this_code_could_forge_never_counts(tmp_path):
@@ -140,7 +159,7 @@ def test_a_seal_this_code_could_forge_never_counts(tmp_path):
     ss.kernel.append(box, "2026-10-24T09:00:00Z", "seal", who="human",
                      subject=subj, proof="0" * 64)  # fmt: skip
     got = run("--box", str(box), "check")
-    assert got.returncode == 42 and got.stdout.startswith("waiting")
+    assert got.returncode == 42 and "\n## waiting on your seal\n" in got.stdout
 
 
 def test_a_record_that_doesnt_verify_is_refused_and_nothing_is_written(tmp_path):
@@ -171,3 +190,33 @@ def test_came_of_says_what_each_row_came_to():
     )
     assert ss.came_of({"kind": "proposal", "verdict": "pass"}) == "proposal: pass"
     assert ss.came_of({"kind": "out", "waiting": 1}) == "out"
+
+
+def test_check_as_json_is_the_same_report_and_none_yet_is_empty(tmp_path):
+    box = make(tmp_path)
+    got = run("--box", str(box), "check", "--json")
+    assert got.returncode == 0
+    assert json.loads(got.stdout) == {
+        "addon": "session-seal", "state": "empty", "groups": [],
+        "said": "no session bundled yet; 1 rows since, not yet bundled",
+    }  # fmt: skip
+    kernel("bite", "--box", str(box), "tomatoes sun", *NOW)
+    run("--box", str(box), *NOW)
+    got = run("--box", str(box), "check", "--json")
+    doc = json.loads(got.stdout)
+    assert got.returncode == 42 and doc["state"] == "populated"
+    assert doc["groups"] == [{"name": "waiting on your seal", "rows": [
+        {"where": "rows 0 to 1",
+         "what": f"python kernel.py seal --box {box} {waiting_subject(box)}"}]}]  # fmt: skip
+    assert run("--box", str(box), "--json", *NOW).returncode == 2, "check alone"
+
+
+def test_check_as_a_function_prints_its_own_lines(tmp_path):
+    box = make(tmp_path)
+    kernel("bite", "--box", str(box), "tomatoes sun", *NOW)
+    run("--box", str(box), *NOW)
+    code, said = ss.quiet(ss.check, box, rows(box))
+    assert code == 42 and said.splitlines() == [
+        f"waiting  rows 0 to 1: {waiting_subject(box)}",
+        "1 sessions: 0 sealed, 1 waiting, 0 broken; 0 rows since, not yet bundled",
+    ]
