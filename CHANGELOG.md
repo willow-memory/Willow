@@ -1811,6 +1811,14 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- The UI's kernel baseline offers a reader for a kind of file its card
+  names, not for an English word: a kind counts with its dot (`.so`), in
+  capitals (PDF), or bare when three letters or more, so `.so` files are no
+  longer offered agent-transcript, bibtex, chordpro and clauses. (#204)
+- model-shelf looks in the Ollama service's folder
+  (/usr/share/ollama/.ollama/models, where Ollama's Linux installer keeps
+  its models) when no --home is given, where it said Ollama was "not on this
+  machine" while it served 14 models. (#213)
 - `pii-audit` reads a run holding a written date, year first, as dates, not
   a card number: two dates side by side (`2027-01-09  2027-01-09`, as
   milestones prints a row) are sixteen digits that pass Luhn one time in
