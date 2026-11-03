@@ -1808,6 +1808,12 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- `against` reads a pull request stacked on another from where the two
+  left each other, not from where each left the base, so the one below is
+  not failed for the names the one above took from it. The forge stack
+  (#200, with #201 to #203 built on it) showed it: #200's `against` job said
+  its own add-on was a duplicate, once per pull request above it. What the
+  one above adds past the one below is still held to the others. (#215)
 - contradictions leaves a word that's everywhere (on more than one dated
   line in 500, and more than 10) out of what two lines share: over 14
   repositories it found 371,125 "disagreements" in 133 seconds, and now

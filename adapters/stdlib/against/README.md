@@ -28,7 +28,9 @@ Run it in the repository. HEAD is this pull request's head, each OTHER another
 open pull request's, and REF what they branch from; all are any git refs, so
 CI fetches `refs/pull/<N>/head` and a person can name local branches. Each pair
 is read from where the two left REF (`git merge-base`), so main's later
-commits are nobody's.
+commits are nobody's. A pull request stacked on another, or one that merged
+the other, is read from where the two left each other instead, so what they
+share is neither's: the one below sees only what the one above adds past it.
 
 **What it says, for each other pull request:**
 
