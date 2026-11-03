@@ -23,6 +23,11 @@ says how). The first was v0.1.0.
   settled is a step here and one settled here is the Forge's auto band. Its
   promise is `writes: record`: every write is the kernel's. Needs forge-play
   0.10, whose card box reads these cards as rows for its keyword scan. (#201)
+  `build` runs the stack the person sealed for a sentence, and nothing
+  else: each step's add-on into a folder through `ui/assemble.py`, the
+  stack file beside it, the stack add-on run over the box and its page
+  kept, as a report of what was built, what ran and what was left out;
+  the promise grows to `writes: record, to`.
 - The report contract (`adapters/stdlib/ci/README.md`): an add-on that
   reports what it found prints one shape, `NAME: STATE, SAID` then rows of
   where and what by group, and the same as JSON with `--json`; `empty` exits
