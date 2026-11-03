@@ -19,7 +19,7 @@ RECORDS = sorted((HERE / "results").glob("*/record.jsonl"))
 
 def stack_module():
     spec = importlib.util.spec_from_file_location(
-        "stack", ROOT / "adapters" / "stdlib" / "stack" / "stack.py"
+        "stack", ROOT / "adapters/stdlib/stack/stack.py"
     )
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
