@@ -1,18 +1,23 @@
 """on_this_day.py: what your files say happened on this date in earlier years.
 
-    python adapters/stdlib/on-this-day/on_this_day.py --box DIR [--now TS]
+    python adapters/stdlib/on-this-day/on_this_day.py --box DIR [--now TS] [--json]
 
-Every line dated today's month and day in an earlier year, newest year first:
+Every line dated today's month and day in an earlier year, newest year first,
+as a report (output: report; see adapters/stdlib/ci/README.md): a group a year,
+each row the place and the line:
 
-    2023  tuning/2023.txt:205   2023-10-23  Wendell Ashby - Yamaha U1 (1988)
-    2022  memos/2022-10-23_0815.txt:1   ...
+    on-this-day: populated, 2 lines written on 10-23 in 2 earlier years
+    ## 2023
+      tuning/2023.txt:205  2023-10-23  Wendell Ashby - Yamaha U1 (1988)
+    ## 2022
+      memos/2022-10-23_0815.txt:1  ...
 
 A line counts when it holds the date itself, read the way the kernel reads
 one (its `newest`), or when it is the first line of a file named by that day.
 A passage's other dates never stand in for a line's own.
 
-It only reads. Exit codes, the kernel's: 0 something was written on this day;
-42 nothing; 2 refused.
+It only reads. Exit codes, the kernel's: 0 something was written on this day
+(`populated`) or nothing was (`empty`); 2 refused.
 """
 
 from __future__ import annotations
@@ -74,7 +79,7 @@ def on_this_day(pile: list[dict], today: str) -> list[tuple[str, str, str]]:
 
 
 def main(argv: list[str]) -> int:
-    as_json = "--json" in argv  # noqa: F841  wire: say(report(...), as_json)
+    as_json = "--json" in argv
     argv = [a for a in argv if a != "--json"]
     opts, args, it = {}, [], iter(argv)
     for a in it:
@@ -92,13 +97,16 @@ def main(argv: list[str]) -> int:
     today = (opts.get("--now") or kernel.now())[:10].replace("-", "")
     hits = on_this_day(kernel.chunks(Path(kernel.config(box)["pile"])), today)
     if not hits:
-        print(
-            f"Nothing in your folder is dated {today[4:6]}-{today[6:]} in an earlier year."
-        )
-        return kernel.ESCALATE
-    width = max(len(p) for _, p, _ in hits)
+        said = f"nothing dated {today[4:6]}-{today[6:]} in an earlier year"
+        say(report(NAME, "empty", said, []), as_json)
+        return kernel.ALIVE
+    by_year: dict[str, list] = {}
     for year, place, line in hits:
-        print(f"{year}  {place:<{width}}  {line[:120]}")
+        by_year.setdefault(year, []).append((place, line[:120]))
+    n, y = len(hits), len(by_year)
+    said = (f"{n} line{'s' if n != 1 else ''} written on {today[4:6]}-{today[6:]} "
+            f"in {y} earlier year{'s' if y != 1 else ''}")  # fmt: skip
+    say(report(NAME, "populated", said, list(by_year.items())), as_json)
     return kernel.ALIVE
 
 
