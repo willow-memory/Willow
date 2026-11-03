@@ -1,0 +1,1 @@
+{"path": "findings/casebook.md", "data": "CONSTITUTION.md links [Casebook](CASEBOOK.md) five times, and no CASEBOOK.md exists anywhere in the Willow repo.", "cites": [], "claim": "xref found the link broken at CONSTITUTION.md:13, 368, 547, 557 and 590; find found no file", "bite_key": "bbf09d8985b90fecbe33d5b63f5c63224605fda0dcb0a0f204df500ad620712e"}
