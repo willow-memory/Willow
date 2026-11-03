@@ -5,7 +5,8 @@
 
 The box is the first copy, kind `disk`. Each `--copy` names another: a
 folder that is a box, or a zip `backup` wrote. A copy counts when its
-record's chain holds, read by the kernel. Kinds of storage are the words
+record's chain holds, read by the kernel, and a copy that holds but has
+fewer rows than the box says how many it is behind. Kinds of storage are the words
 you give (`disk`, `usb`, `away`); `away`, `offsite` and `remote` count as
 the one away from home.
 
@@ -43,32 +44,33 @@ def record_of(path: Path) -> Path | None:
     return None
 
 
-def check_folder(record: Path) -> tuple[bool, str]:
+def check_folder(record: Path) -> tuple[bool, str, int]:
     rows, breaks = kernel.read(record)
     if breaks:
-        return False, "the record doesn't verify: " + "; ".join(breaks)
+        return False, "the record doesn't verify: " + "; ".join(breaks), 0
     n = len(rows)
-    return True, f"holds ({n} row{'' if n == 1 else 's'})"
+    return True, f"holds ({n} row{'' if n == 1 else 's'})", n
 
 
-def check_zip(path: Path) -> tuple[bool, str]:
+def check_zip(path: Path) -> tuple[bool, str, int]:
     try:
         with zipfile.ZipFile(path) as z:
             if "record.jsonl" not in z.namelist():
-                return False, "nothing there: not a willow backup"
+                return False, "nothing there: not a willow backup", 0
             raw = z.read("record.jsonl")
     except (OSError, zipfile.BadZipFile) as e:
-        return False, f"couldn't read it: {type(e).__name__}"
+        return False, f"couldn't read it: {type(e).__name__}", 0
     with tempfile.TemporaryDirectory() as tmp:
         copy = Path(tmp) / "record.jsonl"
         copy.write_bytes(raw)
         return check_folder(copy)
 
 
-def check(path: Path) -> tuple[bool, str]:
+def check(path: Path) -> tuple[bool, str, int]:
+    """(holds, what to say, how many rows it holds)."""
     where = record_of(path)
     if where is None:
-        return False, "nothing there: not a box or a backup zip"
+        return False, "nothing there: not a box or a backup zip", 0
     if where == path:
         return check_zip(path)
     return check_folder(where)
@@ -128,9 +130,17 @@ def main(argv: list[str]) -> int:
     if isinstance(parsed, str):
         print(parsed, file=sys.stderr)
         return kernel.REFUSED
-    lines, held = [], []
+    lines, held, box_rows = [], [], 0
     for kind, label, path in parsed:
-        ok, said = check(path)
+        ok, said, n = check(path)
+        if path == box:
+            box_rows = n
+        elif ok and n < box_rows:  # a copy that holds, from before the box's last rows
+            behind = box_rows - n
+            said = (
+                said[:-1]
+                + f", {behind} row{'' if behind == 1 else 's'} behind the box)"
+            )
         lines.append((kind, label, said))
         if ok:
             held.append((kind, label, said))

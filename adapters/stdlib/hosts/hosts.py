@@ -172,7 +172,12 @@ def main(argv: list[str]) -> int:
         return kernel.ALIVE
     if len(argv) == 4 and argv[0] == "show" and argv[2] == "--box":
         if argv[1] not in HOSTS:
-            print(f"refused: no host called {argv[1]}; try list", file=sys.stderr)
+            way = (
+                "; Claude Code's way in is a prompt hook, adapters/stdlib/claude-code"
+                if argv[1] == "claude-code"
+                else ""
+            )
+            print(f"refused: no host called {argv[1]}{way}; try list", file=sys.stderr)
             return kernel.REFUSED
         return cli(__doc__, lambda box: render(argv[1], box), argv[2:])
     print(__doc__.split("\n\n")[1], file=sys.stderr)

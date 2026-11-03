@@ -31,7 +31,9 @@ only the passages served, numbered, under the rule to answer only from
 them and cite each used as [1], at temperature 0 with a fixed seed, for a
 reply of at most 512 tokens. A reply whose brackets name a served passage
 is proposed through `kernel.py propose`; one that cites nothing is printed
-and proposed to no one. `--system FILE` puts a voice before the rule.
+and proposed to no one, and so is one that cites and says nothing else: a
+bare `[1]`, or a file and line in brackets, points at a passage and answers
+nothing, and a suggestion with no words in it would wait on nobody. `--system FILE` puts a voice before the rule.
 
 **Its claim** names the model file by its name and SHA-256, never by
 where it lives: `qwen.gguf (sha256 9c1e…) in this process answered from 1

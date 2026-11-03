@@ -544,6 +544,10 @@ def gates() -> list[tuple[str, str, object]]:
     # runs read the fleet's repositories, CI holds only what they froze
     out.append(("demo", "demo:known-gaps", command(*PYTEST, "demo/known-gaps",
                 needs=lambda: missing_module("pytest"))))  # fmt: skip
+    # five repositories through the stacks: the stacks, the words list and the
+    # records are committed; the runs read the repositories, CI holds the rest
+    out.append(("demo", "demo:five-repos", command(*PYTEST, "demo/five-repos",
+                needs=lambda: missing_module("pytest"))))  # fmt: skip
     # the reusable novelty check every demo can run, over the idea pile and demos
     out.append(("demo", "demo:novelty", command(*PYTEST, "demo/test_novelty.py",
                 needs=lambda: missing_module("pytest"))))  # fmt: skip

@@ -1,0 +1,22 @@
+# what the other four repos say they need or do, asked of Willow
+redential:vault-chain	vault receipt chain verify head hash backdated segment
+redential:anchor	append-only record anchored by a hash so a splice is detected
+redential:buckets	coarse time buckets without exposing gaps
+redential:secret-scan	scan the payload for secrets before any output: keys, tokens, private keys, env values
+redential:token-0600	token stored in a config file with 0600 permissions, never in the scanned repo
+redential:signatures	detect which libraries a repository uses from imports and config files against a signature database
+redential:proof-graph	a graph of which function calls which, anchored by file and line
+redential:byte-for-byte	print the exact bytes of what will be uploaded before asking to confirm
+redential:closed-vocab	a closed vocabulary: only slugs on a public list are allowed in the bundle
+socratic:question-bank	a bank of questions by engineering domain an agent asks itself before building
+socratic:decision-cards	decision cards distilled from books on how experienced engineers resolve a question
+socratic:stopping-rule	stop asking when the next question would not change the design, risk or verification plan
+socratic:authority	ask the person only the decisions that need human authority
+socratic:grades	a grade: would an on-call engineer accept ownership of this at 3am
+glapagos:dashboard	a dashboard with a language toggle between English, Spanish and Portuguese
+glapagos:scores	scores by domain and region with a trend, as a json file
+glapagos:data-governance	a manifest, provenance record, open licence and SHA-256 checksums for every dataset
+glapagos:consent	free prior and informed consent and benefit sharing for community data
+glapagos:decision-log	all decisions and rationales published within 72 hours in a decision log
+naturalconv:download	download the grounding documents from a list of urls into an output folder
+naturalconv:dataset	a Chinese multi-turn dialogue dataset grounded on documents, for non-commercial research
