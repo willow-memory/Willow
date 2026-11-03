@@ -21,7 +21,7 @@ says how). The first was v0.1.0.
   Its tests probe the sandbox from inside, through `run` itself.
   `demo/johnson/jobs.py` sends one job from Ines to Walt and Aurelie and
   brings back their sealed answers; CI's deps job installs bubblewrap and
-  lets the runner make the user namespace it needs.
+  lets the runner make the user namespace it needs. (#216)
 - `share`, sealed answers sent from one person's willow to another's:
   `id` makes an Ed25519 identity that is not the seal key, `send` packs
   answers you sealed for one person's public key, signed, with their cites'
@@ -51,7 +51,7 @@ says how). The first was v0.1.0.
   rotated on the way, a rewritten record that four other people's
   packages catch, and three stacks sent to three people, two taken on under
   their own seal and run over their own folders and one declined, and CI
-  runs it as `demo:share`.
+  runs it as `demo:share`. (#216)
 - `ci-memo`: a pull request runs only the mutants gates a change can reach,
   standing the rest on the record of main's last green run, and a push to
   main runs them all, so the merge's receipt stays whole. Four shards of 5
