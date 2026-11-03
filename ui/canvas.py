@@ -73,6 +73,24 @@ TEXT_KINDS = {
     ".xml",
 }
 WORD = re.compile(r"[a-z0-9][a-z0-9-]*")
+#: the plain form of a page step: `--box DIR`, then only optional flags
+PAGE_STEP = re.compile(r"--box DIR(\s+\[[^\]]*\])*")
+DEFAULT_ARGS = "--box {box}"
+
+
+def page_step(folder: Path, card: dict) -> bool:
+    """Whether the flow may run this piece with no more than `--box {box}`:
+    a usage line on its card is that plain form, and it reaches no network.
+    A reader (mirror --from --to), a server (browse), a hook's setup, a verb
+    (score, ask) or stack itself isn't one: run so, it refuses or never ends."""
+    if card.get("network", "").strip() != "none":
+        return False
+    use = re.compile(
+        rf"^\s*\$?\s*python adapters/\w+/{re.escape(folder.name)}/\S+\.py\s*(.*?)\s*$",
+        re.M,
+    )
+    text = (folder / "README.md").read_text(encoding="utf-8")
+    return any(PAGE_STEP.fullmatch(a) for a in use.findall(text))
 
 
 def plural(n: int, word: str) -> str:
@@ -226,6 +244,7 @@ class Canvas:
                     "writes": c.get("writes", ""), "network": c.get("network", ""),
                     "needs": c.get("needs", ""), "hard": hard, "soft": soft,
                     "in_stack": d.name in have, "runs_in": c.get("runs-in", ""),
+                    "page": page_step(d, c),
                 }  # fmt: skip
         planned = json.loads((self.willow / "adapters" / "planned.json").read_text())
         for p in planned:
@@ -462,7 +481,7 @@ class Canvas:
     def arrangement(self, doc: dict) -> tuple[dict | None, str]:
         ps = self.pieces()
         name = str(doc.get("name", "")).strip() or "my stack"
-        lanes = []
+        lanes, kept = [], []
         for lane in doc.get("lanes", []):
             steps = []
             for s in lane.get("steps", []):
@@ -474,17 +493,23 @@ class Canvas:
                         None,
                         f"{n} is still an idea on willow's list; it can't run yet",
                     )
-                steps.append({"name": n, "args": str(s.get("args", "--box {box}"))})
-            lanes.append({"title": str(lane.get("title", "")).strip() or "steps",
-                          "steps": steps})  # fmt: skip
+                args = str(s.get("args") or DEFAULT_ARGS)
+                if args == DEFAULT_ARGS and not ps[n].get("page"):
+                    kept.append(n)  # in the stack, run its own way, not on the page
+                    continue
+                steps.append({"name": n, "args": args})
+            if steps:
+                lanes.append({"title": str(lane.get("title", "")).strip() or "steps",
+                              "steps": steps})  # fmt: skip
         named = [s["name"] for ln in lanes for s in ln["steps"]]
+        kept = [n for n in dict.fromkeys(kept) if n not in named]
         if not named:
-            return None, "the stack has no steps"
+            return None, "the stack has no steps: none of its pieces makes a page"
         folders = [
             f for f in (self.folder(p) for p in doc.get("folders", [])) if f["ok"]
         ]
-        pulled = self.closure(named)
-        every = list(dict.fromkeys(named + pulled))
+        pulled = [n for n in self.closure(named + kept) if n not in kept]
+        every = list(dict.fromkeys(named + kept + pulled))
         reach = sorted(
             {ps[n]["network"] for n in every if ps[n]["network"] not in ("", "none")}
         )
@@ -492,7 +517,10 @@ class Canvas:
                          if w.strip() and w.strip() != "nothing"})  # fmt: skip
         installs = sorted(n for n in every if ps[n]["kind"] == "deps")
         md = [f"# stack: {name}", ""]
-        md += [f"<!-- reads: {f['path']} -->" for f in folders] + [""]
+        md += [f"<!-- reads: {f['path']} -->" for f in folders]
+        if kept:  # put together with the rest; each runs its own way, not here
+            md.append(f"<!-- in the stack, not run on the page: {', '.join(kept)} -->")
+        md.append("")
         for ln in lanes:
             md += [f"## {ln['title']}"] + [
                 f"- {s['name']} -- {s['args']}" for s in ln["steps"]
@@ -500,7 +528,7 @@ class Canvas:
             md.append("")
         return {
             "name": name, "lanes": lanes, "folders": [f["path"] for f in folders],
-            "pulled_in": pulled, "pieces": every, "reach": reach, "writes": writes,
+            "kept": kept, "pulled_in": pulled, "pieces": every, "reach": reach, "writes": writes,
             "installs": installs, "stack_md": "\n".join(md),
         }, ""  # fmt: skip
 

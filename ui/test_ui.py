@@ -210,6 +210,29 @@ def test_only_a_sealed_pick_is_put_together_and_the_seal_is_the_kernels(site, tm
     assert not breaks and subject in k.sealed(cv.box, rows)
 
 
+def test_only_a_piece_that_makes_a_page_runs_as_a_step(site, tmp_path):
+    """Ticked with no words of their own, a page server, a hook's setup, a
+    reader and stack itself are put in, not run: run with only --box, browse
+    never ends and the others refuse."""
+    cv, call = site
+    pick = {"name": "ticked", "folders": [str(a_folder(tmp_path))], "lanes": [
+        {"title": "watch", "steps": [{"name": "digest"}, {"name": "browse"}]},
+        {"title": "assistants", "steps": [{"name": "claude-code"}, {"name": "stack"}]},
+        {"title": "read", "steps": [{"name": "office"}]},
+        {"title": "scores", "steps": [{"name": "predict", "args": "score --box {box}"}]},
+    ]}  # fmt: skip
+    arr, why = cv.arrangement(pick)
+    assert why == ""
+    steps = {s["name"]: s["args"] for ln in arr["lanes"] for s in ln["steps"]}
+    assert steps == {"digest": "--box {box}", "predict": "score --box {box}"}
+    assert arr["kept"] == ["browse", "claude-code", "stack", "office"]
+    assert {"browse", "claude-code", "stack", "office"} <= set(arr["pieces"])
+    assert "## read" not in arr["stack_md"]  # a lane left empty isn't there
+    assert "not run on the page: browse, claude-code, stack, office" in arr["stack_md"]
+    only = {"lanes": [{"steps": [{"name": "browse"}]}]}
+    assert "none of its pieces makes a page" in cv.arrangement(only)[1]
+
+
 def test_no_stack_is_made_inside_this_repository(tmp_path, capsys):
     assert canvas.ready(canvas.WILLOW / "a-stack") == assemble.REFUSED
     assert (
@@ -217,6 +240,28 @@ def test_no_stack_is_made_inside_this_repository(tmp_path, capsys):
         == assemble.REFUSED
     )
     assert not (canvas.WILLOW / "a-stack").exists()
+
+
+def test_a_piece_both_asked_for_and_leaned_on_is_added_once(tmp_path, capsys):
+    to = tmp_path / "willow-stack"
+    assert assemble.main(["init", "--to", str(to)]) == assemble.ALIVE
+    # hook-start leans on digest, asked for first; and todo asked for twice
+    assert (
+        assemble.add(["digest", "hook-start", "todo", "todo"], to, None)
+        != assemble.REFUSED
+    )
+    assert {"digest", "hook-start", "todo"} <= set(
+        assemble.manifest(to / "stack")["addons"]
+    )
+    # a refusal partway leaves nothing half-added
+    stdlib = to / "stack" / "adapters" / "stdlib"
+    before = sorted(p.name for p in stdlib.iterdir())
+    assert assemble.add(["coming-up", "not-an-add-on"], to, None) == assemble.REFUSED
+    assert sorted(p.name for p in stdlib.iterdir()) == before
+    # a folder left by an older crash is named, not a traceback
+    (stdlib / "stale").mkdir()
+    assert assemble.add(["stale"], to, None) == assemble.REFUSED
+    assert "not on STACK.json" in capsys.readouterr().err
 
 
 def test_a_tool_for_willows_own_repository_isnt_put_in_a_stack(stack_dir, capsys):
