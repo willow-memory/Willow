@@ -1087,12 +1087,14 @@ willow/
 │   │   │   ├── stack.py       one document from a stack of add-on steps over a box, pooled and peaks-first
 │   │   │   ├── test_stack.py
 │   │   │   ├── example.md
-│   │   │   ├── examples/      stacks to start from, one kind of folder each: a choir, a smallholding, a code library, a class, a story, foster dogs, a knee
+│   │   │   ├── examples/      stacks to start from, one kind of folder each: a choir, a smallholding, a code library, a class, a story, foster dogs, a knee, a folder of repositories, a box handed on
 │   │   │   │   ├── choir.md
 │   │   │   │   ├── comeback.md
+│   │   │   │   ├── export.md
 │   │   │   │   ├── foster.md
 │   │   │   │   ├── maintainer.md
 │   │   │   │   ├── reporter.md
+│   │   │   │   ├── repos.md
 │   │   │   │   ├── smallholding.md
 │   │   │   │   └── teacher.md
 │   │   │   └── README.md
@@ -1336,6 +1338,12 @@ willow/
 │       │   ├── requirements.txt  pytest-xdist, pinned
 │       │   ├── requirements-floor.txt  pytest-xdist at its floor, also tested
 │       │   ├── test_fast_tests.py
+│       │   └── README.md
+│       ├── forge/
+│       │   ├── requirements.txt  forge-play, pinned
+│       │   ├── requirements-floor.txt  forge-play at its floor, also tested
+│       │   ├── suggest.py    a sentence in, the add-ons it names or means out, as a report and as a plan the Forge resolves
+│       │   ├── test_suggest.py
 │       │   └── README.md
 │       ├── in-process/
 │       │   ├── conftest.py   a llama-shaped GGUF of a few kilobytes from seeded weights, for the tests
@@ -1720,7 +1728,7 @@ willow/
 │   │       ├── weeknote-gemma-teodora.json  a this-week note the model wrote
 │   │       ├── weeknote-qwen-teodora.json  a this-week note the model wrote
 │   │       └── weeknote2-qwen-teodora.json  the same, five lines kept a chunk
-│   └── stewart-crossover/    a fictional fan's files beside a real life: every word about him from a source
+│   ├── stewart-crossover/    a fictional fan's files beside a real life: every word about him from a source
 │       ├── README.md         the claim, the five repositories' parts, what is frozen, the dry run, the results
 │       ├── FROZEN.json       the SHA-256 of each frozen file, and of the tools in five repositories when frozen
 │       ├── sources.json      eight sources by address, time and SHA-256, a news page by its article's lines
@@ -1737,6 +1745,51 @@ willow/
 │           ├── record-2.jsonl  a copy of run 2's record, without its key
 │           ├── run-3.json    the third run's, from freeze 3: every rule held
 │           └── record-3.jsonl  a copy of run 3's record, without its key
+│   └── five-repos/           five repositories through the stacks: the stacks, the words list, the reports, two records without their keys
+│       ├── README.md         what was run, what held, what failed and became #211, and the rule: proposed, never sealed
+│       ├── exam.txt          the twelve questions the model was asked
+│       ├── needs.txt         what the other four repositories say they need, asked of this one
+│       ├── rebuild.sh        a fresh box over the folder, the words list on it, the stack, the verify
+│       ├── test_five_repos.py  holds the stacks to add-ons that are here, the words list to the kernel's parser, and the records' chains with nothing sealed
+│       ├── words.txt         one repo's words read as the others', 24 lines, the survivor of 89
+│       ├── reports/          thirteen reports in the order written, each what one stack found and got wrong
+│       │   ├── 00-audit.md
+│       │   ├── 01-compare.md
+│       │   ├── 02-words-list.md
+│       │   ├── 03-words-list-pruned.md
+│       │   ├── 04-history.md
+│       │   ├── 05-on-pr-199.md
+│       │   ├── 06-proof.md
+│       │   ├── 07-exam.md
+│       │   ├── 08-guards.md
+│       │   ├── 09-play.md
+│       │   ├── 10-timeline.md
+│       │   ├── 11-ways-in.md
+│       │   └── 12-landed.md
+│       ├── results/
+│       │   ├── play-record/
+│       │   │   └── record.jsonl  five games as rows, without its key
+│       │   └── proof-record/
+│       │       ├── record.jsonl  ten suggestions waiting on a seal, without its key
+│       │       └── proposals/    the ten suggestion files the record names
+│       │           ├── 06cd2232e3eba2630181aadf65782176f743a08271923fe78bcdd855cd0107f2.json
+│       │           ├── 09f83f2e0afd5b2df265a2514deddfe39b6377b3e3e321094befdfe8d11c7825.json
+│       │           ├── 163c2b4eb4d51d6e1ae65c91215b84ed3285d439881f2911be53f03a077a7288.json
+│       │           ├── 579de5fcb725865e77f898213b531e08dbe8dd5f4c9e7e857525e0195f453b61.json
+│       │           ├── b0e7dc7eac2f793a5b116031c8faa60aecde7d384b8bf72a7882feaf574c1178.json
+│       │           ├── bdb260cc817cdfd545f0f4b1b01a0df24f635c209e989fd64fd139d2b5976e70.json
+│       │           ├── cc6e44979abff0e57eb17d14224fa2acf11f02a3a2de66b76806e79d1a5e153a.json
+│       │           ├── de36b91cde4e3756a2b6840b35ad85e31248494925f7a93451b7727ce2f17a86.json
+│       │           ├── f40895d0cd60e2bc0aa30c2fb3b1fb62c0e076d09706bf63eb486494c3e086bb.json
+│       │           └── fafd739ffd8bd18d9691fc2361ed502d85ff7e19d8d4ba0b39d376346cb74a88.json
+│       └── stacks/           the seven stacks run, machine paths as <scratch> and <repos>
+│           ├── commits.md
+│           ├── compare.md
+│           ├── five-repos.md
+│           ├── history.md
+│           ├── proof.md
+│           ├── voice.md
+│           └── ways-in.md
 ├── .github/
 │   ├── workflows/
 │   │   ├── ci.yml            runs adapters/stdlib/ci/ci.py a part or a cut of one a job, tests on Python 3.9 to 3.14 (3.9 and 3.14 on a pull request)

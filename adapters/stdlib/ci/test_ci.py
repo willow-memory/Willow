@@ -124,7 +124,7 @@ def test_the_gates_run_in_one_fixed_order_and_cover_every_part():
         "tests:constitution", "tests:coverage",
         *(f"ports:{p}" for p in ci.PORTS),
         *(f"demo:{p}" for p in ci.people()), "demo:php2shell", "demo:google-privacy-2026-10-16",
-        "demo:stack", "demo:share", "demo:teodora-words", "demo:craft-assembly", "demo:redteam", "demo:known-gaps", "demo:novelty",
+        "demo:stack", "demo:share", "demo:teodora-words", "demo:craft-assembly", "demo:redteam", "demo:known-gaps", "demo:five-repos", "demo:novelty",
         *(g for d in ci.deps_add_ons() for g in (f"deps:{d}", f"deps:{d}@floor")),
         "deps:floors",
         *(f"mutants:{n}" for n in ci.mutant_targets()),
@@ -276,7 +276,8 @@ def test_a_floor_above_the_rule_needs_a_reason_on_its_card(monkeypatch):
                 "pagefind-bin": {"1.2.0a5": "2024-10-02T00:00:00Z", "1.3.0": "2024-12-18T00:00:00Z"},
                 "python-gnupg": {"0.4.6": "2020-04-17T00:00:00Z", "0.5.7": "2026-09-29T00:00:00Z"},
                 "llama-cpp-python": {"0.1.1": "2023-03-23T00:00:00Z", "0.2.29": "2024-01-15T00:00:00Z"},
-                "kartikeya": {"0.0.1": "2026-07-08T23:13:11Z", "0.5.2": "2026-09-29T00:12:05Z"}}  # fmt: skip
+                "kartikeya": {"0.0.1": "2026-07-08T23:13:11Z", "0.5.2": "2026-09-29T00:12:05Z"},
+                "forge-play": {"0.1.0": "2026-09-03T00:00:00Z", "0.10.0": "2026-11-03T00:00:00Z"}}  # fmt: skip
     monkeypatch.setattr(ci, "releases", lambda package: uploaded[package])
     assert ci.floors()[0] == ci.SATISFIED
     monkeypatch.setattr(ci, "floor_line", lambda name: "")

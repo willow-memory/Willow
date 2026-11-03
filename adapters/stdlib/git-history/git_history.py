@@ -1,11 +1,14 @@
 """git_history.py: commit messages and diffs as a dated pile. Python 3.9+.
 
     python adapters/stdlib/git-history/git_history.py \\
-        mirror --from FOLDER --to MIRROR
+        mirror --from FOLDER --to MIRROR [--messages]
 
 Calls the git program (never linked) for each commit in FOLDER: its day,
 its subject, its body, and its diff. Each commit is written to MIRROR as
-<hash>.txt. Hidden folders are left to git; this add-on does not walk them.
+<hash>.txt. With --messages the diff is left out: a diff carries other
+people's dates, and the kernel dates a line by the nearest date above it,
+so a commit pile with diffs is dated by what the diffs say. Messages alone
+are dated by the commit. Hidden folders are left to git; this add-on does not walk them.
 
     wrote 2 files to MIRROR; skipped 0
 
@@ -26,7 +29,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 import kernel  # noqa: E402
 
-USAGE = "usage: git_history.py mirror --from FOLDER --to MIRROR"
+USAGE = "usage: git_history.py mirror --from FOLDER --to MIRROR [--messages]"
 
 GIT_ENV = {"LC_ALL": "C", "GIT_OPTIONAL_LOCKS": "0"}
 
@@ -63,10 +66,11 @@ def hashes_of(folder: Path) -> list[str] | None:
     return [h for h in got.stdout.splitlines() if h]
 
 
-def commit_text(folder: Path, hexhash: str) -> str | None:
+def commit_text(folder: Path, hexhash: str, diff: bool = True) -> str | None:
     got = _git(
         folder,
         "show",
+        *([] if diff else ["--no-patch"]),
         "--no-color",
         "--date=format:%Y-%m-%d",
         "--pretty=format:commit %H%ndate: %ad%nsubject: %s%n%n%b",
@@ -83,13 +87,13 @@ def _within(inner: Path, outer: Path) -> bool:
     return inner == outer or outer in inner.parents
 
 
-def mirror(src: Path, dst: Path) -> tuple[int, int]:
+def mirror(src: Path, dst: Path, diff: bool = True) -> tuple[int, int]:
     hashes = hashes_of(src)
     if hashes is None:
         return 0, 0
     wrote = skipped = 0
     for hexhash in hashes:
-        text = commit_text(src, hexhash)
+        text = commit_text(src, hexhash, diff)
         if text is None:
             skipped += 1
             continue
@@ -101,6 +105,8 @@ def mirror(src: Path, dst: Path) -> tuple[int, int]:
 
 
 def main(argv: list[str]) -> int:
+    diff = "--messages" not in argv
+    argv = [a for a in argv if a != "--messages"]
     opts = dict(zip(argv[1::2], argv[2::2])) if argv[:1] == ["mirror"] else {}
     if len(argv) != 5 or sorted(opts) != ["--from", "--to"]:
         print(USAGE, file=sys.stderr)
@@ -118,7 +124,7 @@ def main(argv: list[str]) -> int:
             file=sys.stderr,
         )
         return kernel.REFUSED
-    wrote, skipped = mirror(src, dst)
+    wrote, skipped = mirror(src, dst, diff)
     print(f"wrote {wrote} files to {opts['--to']}; skipped {skipped}")
     return kernel.ALIVE if wrote else kernel.ESCALATE
 
