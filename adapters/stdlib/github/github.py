@@ -101,6 +101,56 @@ def matrix(ci: str) -> list[str]:
 
 
 CI_PY = Path(__file__).resolve().parents[1] / "ci" / "ci.py"
+PUSH_IF = "github.event_name == 'push'"
+PULL_IF = "github.event_name == 'pull_request'"
+
+
+def reach_problems(job: str, gates: set, blocks: dict, cimod) -> list[str]:
+    """A job that runs only on pushes needs a stand-in on pull requests: a
+    job of theirs that plans exactly its gates with `ci_memo.py plan` and
+    falls back to `ci.py run` of them all. Names are read with ci.py's own
+    `select`."""
+
+    def picked(names: list[str]) -> set:
+        try:
+            return set(cimod.select(names, [], None))
+        except ValueError:
+            return set()
+
+    for block in blocks.values():
+        if not re.search(rf"^    if: {re.escape(PULL_IF)}$", block, re.M):
+            continue
+        plans = [
+            re.sub(r"--pin \S+|--bare", "", p).split()
+            for p in re.findall(r"ci_memo\.py plan ([^>|\n]*)", block)
+        ]
+        falls = [
+            line.split()
+            for line in re.findall(r"ci/ci\.py run (.*?) --box", block)
+            if "$" not in line
+        ]
+        if (
+            plans
+            and all(picked(names) == gates for names in plans)
+            and any(picked(names) == gates for names in falls)
+        ):
+            return []
+    return [
+        f"ci.yml's {job} job is skipped on pull requests, and no job there plans"
+        " its gates with ci_memo.py plan and falls back to ci.py run of them all"
+    ]
+
+
+def strip_options(argv: list[str]) -> list[str]:
+    """A cores.py line less its options (--box, --jobs, --now and their
+    values): the parts and gates it names and its --without."""
+    out, it = [], iter(argv)
+    for a in it:
+        if a in ("--box", "--jobs", "--now"):
+            next(it, None)
+        else:
+            out.append(a)
+    return out
 
 
 def split_problems(ci: str) -> list[str]:
@@ -109,15 +159,28 @@ def split_problems(ci: str) -> list[str]:
     never drops one, and every Python matrix the same, its Pythons and what
     it excludes from them, so tests:strip runs
     on each Python the other tests do. Each job's `ci.py run` is read with
-    ci.py's own `select`, once for each value of its matrix's `shard`."""
+    ci.py's own `select`, once for each value of its matrix's `shard`; a
+    `cores.py` line runs every gate `select` names for what it is given, as
+    its shards together do."""
     spec = importlib.util.spec_from_file_location("willow_ci_for_github", CI_PY)
     cimod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(cimod)
-    out, ran = [], {}
+    out, ran, blocks, pushed = [], {}, {}, []
     for job, block in re.findall(r"^  ([\w-]+):\n(.*?)(?=^  \S|\Z)", ci, re.M | re.S):
+        blocks[job] = block
+        if re.search(rf"^    if: {re.escape(PULL_IF)}$", block, re.M):
+            continue  # runs no gate on a push; reach_problems reads it below
+        if re.search(rf"^    if: {re.escape(PUSH_IF)}$", block, re.M):
+            pushed.append(job)
         shards = re.search(r"^        shard: \[(.*?)\]$", block, re.M)
-        for line in re.findall(r"ci/ci\.py run (.*?) --box", block):
-            values = [v.strip() for v in shards.group(1).split(",")] if shards else [""]
+        values = [v.strip() for v in shards.group(1).split(",")] if shards else [""]
+        lines = [(x, values) for x in re.findall(r"ci/ci\.py run (.*?) --box", block)]
+        for line in re.findall(r"ci/cores\.py (.*?)(?: \||$)", block, re.M):
+            # cores.py cuts the gates into shards of its own and runs every
+            # one, so the line runs what ci.py's select names, uncut
+            argv = re.sub(r"\$\{\{.*?\}\}", "X", line).split()
+            lines.append((" ".join(strip_options(argv)), [""]))
+        for line, values in lines:
             for v in values:
                 argv = line.replace("${{ matrix.shard }}", v).split()
                 names, without, shard, it = [], [], None, iter(argv)
@@ -143,6 +206,9 @@ def split_problems(ci: str) -> list[str]:
             out.append(f"ci.yml runs {gate} in no job")
         elif len(jobs) > 1:
             out.append(f"ci.yml runs {gate} more than once, in {', '.join(jobs)}")
+    for job in pushed:
+        gates = {g for g, js in ran.items() if job in js}
+        out += reach_problems(job, gates, blocks, cimod) if gates else []
     if (
         len(set(re.findall(r"python-version: \[(.*?)\]", ci))) > 1
         or len(set(re.findall(r"^        exclude: (.*)$", ci, re.M))) > 1

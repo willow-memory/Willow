@@ -200,3 +200,16 @@ def test_a_step_that_found_nothing_is_not_flagged(tmp_path):
     assert "(none found)" in got.stdout
     assert "1 of 1 steps flagged" not in got.stdout
     assert "0 of 1 steps flagged" in got.stdout
+
+
+def test_within_a_pool_the_tallest_step_comes_first(tmp_path):
+    """Written light, heavy, amounts (one line, five, none): printed heavy,
+    light, amounts, which is neither the order written nor its reverse."""
+    box = a_box(tmp_path)
+    stack = a_stack(tmp_path, "## p\n- light -- --box {box}\n- heavy -- --box {box}\n"
+                    "- amounts -- --box {box}\n")  # fmt: skip
+    page = run("--box", str(box), "--stack", str(stack)).stdout
+    at = [
+        page.index(f"- `{n} -- --box {{box}}`") for n in ("heavy", "light", "amounts")
+    ]
+    assert at == sorted(at), page

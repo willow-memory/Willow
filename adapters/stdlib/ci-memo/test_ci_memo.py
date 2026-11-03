@@ -5,6 +5,7 @@ and a plan stands a gate only on unchanged bytes."""
 from __future__ import annotations
 
 import importlib.util
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -217,3 +218,55 @@ def test_a_bad_command_line_is_refused_and_says_how_to_run_it(tmp_path):
     assert got.returncode == 2 and "ci_memo.py" in got.stderr
     got = memo("plan", "--pin", str(tmp_path / "gone"))
     assert got.returncode == 2 and "isn't a pin" in got.stderr
+
+
+def test_plan_named_a_part_or_gates_plans_only_those(tmp_path):
+    root = tree(tmp_path)
+    b = pinned_box(tmp_path, root, GATES)
+    pin = tmp_path / "ci.pin"
+    memo("pin", "--box", str(b), "--to", str(pin), "--repo", str(root))
+    (root / "adapters/stdlib/accents/accents.py").write_text("a2\n")
+    got = memo("plan", "--pin", str(pin), "--repo", str(root), "mutants")
+    assert got.returncode == 42
+    assert "run    mutants:accents" in got.stdout
+    assert "stand  mutants:zed" in got.stdout
+    assert "lint:check" not in got.stdout and "deps:mcp" not in got.stdout
+    got = memo("plan", "--pin", str(pin), "--repo", str(root), "--bare", "mutants")
+    assert got.returncode == 42 and "mutants:accents" in got.stdout.split()
+    assert all(g.startswith("mutants:") for g in got.stdout.split())
+    assert "mutants:zed" not in got.stdout.split(), "it stands"
+    # a part with nothing to run exits 0 and prints nothing to run
+    (root / "adapters/stdlib/accents/accents.py").write_text("a\n")
+    got = memo("plan", "--pin", str(pin), "--repo", str(root), "--bare",
+               "mutants:accents", "mutants:zed")  # fmt: skip
+    assert got.returncode == 0 and got.stdout.strip() == ""
+    got = memo("plan", "--pin", str(pin), "--repo", str(root), "mutants:acents")
+    assert got.returncode == 2 and "isn't a part or a gate" in got.stderr
+
+
+def test_a_record_alone_pins_as_ci_uploads_it_and_each_tree_is_its_own(tmp_path):
+    # CI's artifact is record.jsonl only, no kernel.json beside it
+    main = tree(tmp_path)
+    b = pinned_box(tmp_path, main, GATES)
+    alone = tmp_path / "artifact"
+    alone.mkdir()
+    (alone / "record.jsonl").write_bytes((b / "record.jsonl").read_bytes())
+    pin = tmp_path / "ci.pin"
+    got = memo("pin", "--box", str(alone), "--to", str(pin), "--repo", str(main))
+    assert got.returncode == 0 and "pinned 5 gates" in got.stdout
+    # the pull request's tree: pin reads main's (--repo), plan reads its own
+    pr = tmp_path / "pr"
+    shutil.copytree(main, pr)
+    (pr / "adapters/stdlib/accents/accents.py").write_text("a2\n")
+    got = memo("plan", "--pin", str(pin), "--repo", str(pr), "mutants").stdout
+    assert "run    mutants:accents" in got and "stand  mutants:zed" in got
+    # a record of the pull request's tree is no pin of main's
+    got = memo("pin", "--box", str(alone), "--to", str(tmp_path / "p2"), "--repo", str(pr))  # fmt: skip
+    assert got.returncode == 2 and "no run of this tree" in got.stderr
+    # no --repo: the repo this file is in, which is neither tree
+    got = memo("plan", "--pin", str(pin), "mutants:accents").stdout
+    assert "run    mutants:accents" in got and "inputs changed" in got
+    empty = tmp_path / "empty"
+    empty.mkdir()
+    got = memo("pin", "--box", str(empty), "--to", str(tmp_path / "p3"), "--repo", str(main))  # fmt: skip
+    assert got.returncode == 2 and "is not a kernel box" in got.stderr

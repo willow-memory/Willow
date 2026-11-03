@@ -3,9 +3,9 @@ section: For maintainers
 line: This repo's checks as verdict rows on a kernel record, the same every run.
 source: box
 added: 2026-10-23
-writes: record, BUGS.md
+writes: record, BUGS.md, adapters/stdlib/*/*.py
 network: PyPI, to read each dependency floor's release date
-uses: live, readme, test-shards
+uses: live, readme, stack, test-shards
 runs-in: repo
 -->
 # ci
@@ -23,8 +23,12 @@ record is hash-chained like any other and the kernel's `verify` checks it.
 `run` with no part runs all seven. A gate's own name (`tests:strip-2`) runs
 just that gate, and the name of a numbered group (`tests:strip`, `tests:adapters`) all of its gates, `--without GATE` leaves one out of what was named, and
 `--shard K/N` runs the Kth of N parts of it, cut by
-[test-shards](../test-shards/)' own split: the N parts hold every gate once
-between them, in the table's order. A name it doesn't know, or `--without`
+[test-shards](../test-shards/)' own split with each gate weighing the seconds
+it is expected to take (`gate_weight`: a chunk's or an add-on's test times
+from `test-times.json`, six times that for a mutants gate, a small table for
+the rest), so the parts end about together: the N parts hold every gate once
+between them, in the table's order. The cut comes from committed data alone,
+the same on every machine. A name it doesn't know, or `--without`
 given a part, is refused before anything runs. The record goes in `.ci-record/` by default
 (git ignores it), and the key `init` makes goes beside it in
 `.ci-record.key`. A record or key inside the repo where git would count it is
@@ -95,6 +99,57 @@ keeps the readers' contract (the summary line, the same bytes twice,
 originals untouched, hidden files unread, 42 for nothing to read, refusals
 that write nothing). A new add-on with a command line has to be listed there.
 
+### The report contract
+
+An add-on that tells you what it found in your files (a check, an audit, a
+list of what's waiting) prints a report, and every report has the same
+shape, so one add-on's output reads like the next and a stack can line
+them up. Its card says `output: report`.
+
+    pii-audit: populated, 3 personal numbers in 3 of 254 files
+    ## a card number
+      money/orders.csv:17  ···· 4242
+    ## a National Insurance number, by shape
+      work/p60.txt:9       ···· 45C
+
+- **The first line** is the add-on's name, its state and one thing said:
+  `NAME: STATE, SAID`. The state is the kernel's own word: `populated`
+  (rows found), `empty` (none), or `unreachable` (it couldn't look, and
+  SAID says why). A refusal is no report: it is exit 2, on stderr.
+- **Rows** are where, then what, one line each, indented two spaces, the
+  where column as wide as its longest (up to 60). Where is a place, a
+  `path:line` or another name for where the thing is; what is the thing.
+- **Groups** are `## name` above their rows, in the add-on's own order;
+  rows that belong to no group come first, with no heading. A group with
+  no rows isn't printed.
+- **`--json`** prints the same report as one JSON object: `addon`,
+  `state`, `said`, and `groups`, each `{"name": ..., "rows": [{"where":
+  ..., "what": ...}]}`, the group of no group named `null`.
+- **Exit codes:** `empty` is 0 and `unreachable` 42; `populated` is 0, or
+  42 when what was found waits on you, as the card says. So 42 never means
+  "found nothing".
+
+Each report add-on keeps its own copy of the twenty lines that print it
+(`report`, `report_text`, `say`: an add-on holds alone and shares only the
+kernel). [stack](../stack/) runs a report add-on with `--json` and prints the
+report itself, and [test_contract.py](test_contract.py) holds each one to
+it: its text is exactly what stack prints from its JSON, its first line
+and rows have the shape, its state agrees with its rows and its exit code,
+and the same box gives the same report twice.
+
+[reports.py](reports.py) brings add-ons onto it in batches: `survey` runs
+every add-on on one box and sorts what each prints by shape, the ones
+printing rows with places being the next to convert; `scaffold NAME...`
+does what is the same every time (the add-on's name, its copy of the three
+functions, `--json` taken off before it reads its arguments), writing the
+add-on's script in place, the one write to the add-ons' folders this card's
+`writes` names; `check NAME...` runs the contract on each and says which
+aren't done.
+
+    python adapters/stdlib/ci/reports.py survey
+    python adapters/stdlib/ci/reports.py scaffold NAME...
+    python adapters/stdlib/ci/reports.py check NAME...
+
 **The guard:** the add-ons' tests, and each deps add-on's, run with
 [guard/sitecustomize.py](guard/sitecustomize.py) on `PYTHONPATH`, so it is
 loaded into every Python process they start. It holds each add-on to its
@@ -113,14 +168,24 @@ codes.
 merging it.
 
 In CI (`.github/workflows/ci.yml`) each part is its own job with its own
-record, verified and uploaded as that run's artifact, but three: `tests:strip`
+record, every heavy job waiting on the fast ones (lint, and a pull request's
+first, against and changelog) so a quick failure stops the rest from queueing, verified and uploaded as that run's artifact, but three: `tests:strip`
 has jobs of its own on each Python (it runs the add-ons' tests again, in a
-stripped copy, so beside the rest it doubled the job), and the tests (eight
-shards on each Python), strip (four) and mutants (four) runs are cut with
-`--shard`. All the add-ons' tests in one gate took eight minutes, and strip
-ran them again: the chunk gates are what lets a job run a few of them.
+stripped copy, so beside the rest it doubled the job), the tests and strip
+jobs are one job on each Python that runs four `--shard`s at once with
+[cores.py](cores.py) (records `<DIR>/1` to `<DIR>/4`, all uploaded under one
+artifact), and mutants is four jobs cut with `--shard` on a push to main
+only: a pull request's `mutants-reach` job runs just the gates
+[ci-memo](../ci-memo/) says its change reaches, standing the rest on
+main's last green run. Cut into one job
+each, a pull request is 14 jobs and a push to main 30, not 36 and 84: a job
+had used one of the runner's four cores, and the tests job ended with its
+slowest gate (about nine minutes) however it was cut. All the add-ons' tests
+in one gate took eight minutes, and strip ran them again: the chunk gates are
+what lets a job run a few of them.
 `test-times.json` is each test file's seconds in one run
 (`pytest adapters/stdlib --junitxml=RUN.xml`, summed by file); it only sets
 the balance, so a stale one runs every test all the same. `adapters/stdlib/github/github.py check` holds the cut: every gate run by exactly
-one job. A job that fails writes [ci-why](../ci-why/)'s reading of its log
+one job on a push, and a job skipped on pull requests backed by one that plans
+its gates with ci-memo and falls back to running them all. A job that fails writes [ci-why](../ci-why/)'s reading of its log
 to the run's summary.
