@@ -320,3 +320,17 @@ def test_a_bad_target_is_refused(tmp_path):
             argv,
             got.stderr,
         )
+
+
+def test_a_shorter_version_is_padded_with_zeros_to_compare():
+    """1.2 is 1.2.0: the shorter is padded with zeros, so neither is newer."""
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location(
+        "advisories_cmp", HERE / "advisories.py"
+    )
+    adv = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(adv)
+    assert adv.cmp_plain("1.2", "1.2.0") == 0
+    assert adv.cmp_plain("1.2.0", "1.2") == 0
+    assert adv.cmp_plain("1.2.1", "1.2") == 1

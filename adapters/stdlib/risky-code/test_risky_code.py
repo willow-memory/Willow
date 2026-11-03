@@ -168,3 +168,13 @@ def test_not_a_kernel_box_is_refused(tmp_path):
     (tmp_path / "b").mkdir()
     got = run(str(RC), "--box", str(tmp_path / "b"))
     assert got.returncode == 2 and got.stderr.startswith("refused")
+
+
+def test_the_where_column_is_as_wide_as_its_longest_up_to_sixty(tmp_path):
+    """The report contract: a place longer than 60 runs past the column, and
+    every shorter place is padded to 60 exactly, no wider."""
+    deep = "a" * 30 + "/" + "b" * 30 + "/x.py"  # its place is 69 characters
+    got = on(tmp_path, {deep: "os.system(y)\n", "s.py": "os.system(z)\n"})
+    rows = [ln for ln in got.stdout.splitlines() if ln.startswith("  ")]
+    assert f"  {deep}:1  os.system(y)" in rows
+    assert "  " + "s.py:1".ljust(60) + "  os.system(z)" in rows
