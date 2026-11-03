@@ -326,8 +326,13 @@ def report(o: dict, base: Path) -> int:
     ]
     code = kernel.ALIVE
     for title, script, argv in steps:
-        r = py(script, *argv)
-        print(f"## {title}\n\n{(r.stdout or r.stderr).strip()}\n")
+        r = py(script, *argv, *(["--json"] if title == "history" else []))
+        text = (r.stdout or r.stderr).strip()
+        if title == "history" and r.returncode == 0:  # its report: a day a group
+            doc = json.loads(r.stdout)
+            text = "\n".join([doc["said"]] + [x for g in doc["groups"] for x in
+                [g["name"]] + [f"  {w['where']}  {w['what']}" for w in g["rows"]]])  # fmt: skip
+        print(f"## {title}\n\n{text}\n")
         code = kernel.REFUSED if r.returncode == kernel.REFUSED else code
     return code
 
@@ -336,7 +341,8 @@ def check(base: Path) -> int:
     """The pile's health as counts: references that don't hold (xref), lines
     marked to do (todo), secrets in plain text (secrets-audit)."""
     box = base / "box"
-    say("xref", first(py(addon("xref"), "--box", box), last=True))
+    refs = py(addon("xref"), "--box", box, "--json")  # its report: what it said
+    say("xref", json.loads(refs.stdout)["said"] if refs.stdout.strip() else first(refs))
     todo = py(addon("todo"), "--box", box, "--json")  # its report: a row a line
     marked = sum(len(g["rows"]) for g in json.loads(todo.stdout)["groups"])
     say("todo", f"{marked} lines marked to do")

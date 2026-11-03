@@ -1,8 +1,21 @@
-"""box_health.py: a box's health in one line. Python 3.9+.
+"""box_health.py: a box's health, as a report. Python 3.9+.
 
-    python adapters/stdlib/box-health/box_health.py --box DIR [--now TS] [--long]
+    python adapters/stdlib/box-health/box_health.py --box DIR [--now TS] [--json]
 
-    box ok: 214 rows hold; 3 approved, 2 waiting; every file readable; words list as last used; last out row 2026-10-20 (4 days ago)
+    box-health: empty, nothing needs you; 214 rows hold; 3 approved, 2 waiting; every file readable; words list as last used; last out row 2026-10-20 (4 days ago)
+
+A box that needs you is `populated`, with a row for each concern:
+
+    box-health: populated, box needs you: 2 things, 19 files can't be read
+    ## needs you
+      out            no out row yet
+    ## can't be read
+      .png           18 files
+      .json          1 file
+      over 1 MB      2 of them
+    ## fine
+      record         3 rows hold
+      approvals      0 approved, 0 waiting
 
 What it looks at, each in a few words, in this order:
 
@@ -19,17 +32,19 @@ What it looks at, each in a few words, in this order:
   waits on you, and how long ago that was.
 
 Hidden files and folders are not counted, the bite doesn't read them either.
-`--long` puts each part on its own line. The line begins `box ok` when
-nothing needs you, `box needs you` when something does, and `box broken` for a
-chain that doesn't hold.
+It prints a report (ci/README.md, "The report contract"); `--json` gives it as
+one object. `--long` is still accepted and changes nothing: every part has its
+row. A chain that doesn't hold prints `box broken: ...` on stderr, no report.
 
 It only reads, and writes nothing, not even the `out` row it reports on.
-Exit codes, the kernel's: 0 ok; 42 something needs you; 2 refused (a chain
-that doesn't hold, a bad command line).
+Exit codes: 0 `empty` (nothing needs you); 42 `populated` (something needs
+you); 2 refused (a chain that doesn't hold, a bad command line).
 """
 
 from __future__ import annotations
 
+import json
+import re
 import sys
 from datetime import date
 from pathlib import Path
@@ -43,6 +58,35 @@ READERS = {
     ".pdf": "pdf", ".docx": "office", ".xlsx": "office", ".pptx": "office", ".odt": "office",
     ".ods": "office", ".eml": "mail", ".mbox": "mail", ".epub": "books",
 }  # fmt: skip
+
+
+NAME = "box-health"
+
+
+# ── the report: the shape every report add-on prints (ci/README.md) ─────────
+def report(addon: str, state: str, said: str, groups: list) -> dict:
+    """A report: its state, one line said, and each group's rows (where,
+    what); a group named None comes first and has no heading."""
+    return {"addon": addon, "state": state, "said": said,
+            "groups": [{"name": g, "rows": [{"where": w, "what": x} for w, x in rows]}
+                       for g, rows in groups if rows]}  # fmt: skip
+
+
+def report_text(doc: dict) -> str:
+    """A report as every report add-on prints it: the same twenty lines each
+    keeps, held to this one by test_contract.py."""
+    rows = [r for g in doc["groups"] for r in g["rows"]]
+    w = min(max((len(r["where"]) for r in rows), default=0), 60)
+    out = [f"{doc['addon']}: {doc['state']}, {doc['said']}"]
+    for g in doc["groups"]:
+        if g["name"] is not None:
+            out.append(f"## {g['name']}")
+        out += [f"  {r['where']:<{w}}  {r['what']}".rstrip() for r in g["rows"]]
+    return "\n".join(out)
+
+
+def say(doc: dict, as_json: bool) -> None:
+    print(json.dumps(doc, ensure_ascii=False) if as_json else report_text(doc))
 
 
 def reader_for(ext: str) -> str | None:
@@ -188,14 +232,57 @@ def health(box: Path, today: date) -> tuple[str, list[str], list[str]]:
     return ("needs you" if needs else "ok"), fine, needs
 
 
+#: which part of the box a line of `health` is about, by how it reads
+PLACES = (
+    (r"\d+ files? can't be read", "files"), (r"every file", "files"),
+    (r"\d+ rows? hold", "record"), (r"the chain", "record"),
+    (r"seal row|\d+ approved|\d+ suggestion", "approvals"),
+    (r"the words list|words list", "words list"), (r"no out row|last out row", "out"),
+)  # fmt: skip
+
+
+def place(line: str) -> str:
+    """Which part of the box a line of `health` is about."""
+    return next((w for pat, w in PLACES if re.match(pat, line)), "box")
+
+
+def box_report(box: Path, state: str, fine: list[str], needs: list[str]) -> dict:
+    """The report: a box that needs you is `populated`, one row for each
+    concern (a file kind that can't be read gets a row of its own) and one
+    for each thing that is fine; a box that is ok is `empty`, saying so."""
+    if not needs:
+        return report(NAME, "empty", f"nothing needs you; {'; '.join(fine)}", [])
+    skipped = unreadable(Path(kernel.config(box)["pile"]))
+    pile = Path(kernel.config(box)["pile"])
+    unread = [
+        (ext, f"{n} file{'s' if n != 1 else ''}" + (f", read by {r}" if (r := reader_for(ext)) else ""))
+        for ext, n in sorted(skipped.items(), key=lambda x: (-x[1], x[0]))
+    ]  # fmt: skip
+    if skipped and (big := too_large(pile)):
+        unread.append((f"over {kernel.MAX_FILE // 1_000_000} MB", f"{big} of them"))
+    asks = [(place(x), x) for x in needs if place(x) != "files"]
+    ok = [(place(x), x) for x in fine]
+    n = len(asks) + (1 if unread else 0)
+    said = f"box needs you: {n} thing{'s' if n != 1 else ''}"
+    if unread:
+        said += f", {sum(skipped.values())} files can't be read"
+    return report(
+        NAME,
+        "populated",
+        said,
+        [("needs you", asks), ("can't be read", unread), ("fine", ok)],
+    )
+
+
 def main(argv: list[str]) -> int:
+    as_json = "--json" in argv
+    argv = [a for a in argv if a != "--json"]
     opts, args, it = {}, [], iter(argv)
     for a in it:
         if a in ("--box", "--now"):
             opts[a] = next(it, "")
         else:
             args.append(a)
-    long = "--long" in args
     args = [a for a in args if a != "--long"]
     if not opts.get("--box") or args:
         print(__doc__.split("\n\n")[1].splitlines()[0], file=sys.stderr)
@@ -214,14 +301,7 @@ def main(argv: list[str]) -> int:
     if state == "broken":
         print(f"box broken: {needs[0]}", file=sys.stderr)
         return kernel.REFUSED
-    if long:
-        print(f"box {state}")
-        for line in needs:
-            print(f"  needs you: {line}")
-        for line in fine:
-            print(f"  fine: {line}")
-    else:
-        print(f"box {state}: " + "; ".join(needs + fine))
+    say(box_report(box, state, fine, needs), as_json)
     return kernel.ESCALATE if needs else kernel.ALIVE
 
 

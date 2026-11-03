@@ -5,16 +5,24 @@ source: box
 added: 2026-10-23
 writes: nothing
 network: none
+output: report
 -->
 # coming-up
 
 Dates written in your files that fall in the next few days: appointments,
 renewals, deadlines, a log's next visit, a calendar's events.
 
-    python adapters/stdlib/coming-up/coming_up.py --box DIR [--days N] [--now TS]
+    python adapters/stdlib/coming-up/coming_up.py --box DIR [--days N] [--now TS] [--json]
 
-    2026-10-28  calendar.ics:1968  DTSTART;VALUE=DATE:20261028  SUMMARY:Tune - Benedikt Ybarra
-    2026-11-01  calendar.ics:1974  DTSTART;VALUE=DATE:20261101  SUMMARY:Dad - pharmacy refills
+    coming-up: populated, 2 dated lines between 2026-10-23 and 2026-11-06, the next on 2026-10-28
+    ## 2026-10-28
+      calendar.ics:1968  DTSTART;VALUE=DATE:20261028  SUMMARY:Tune - Benedikt Ybarra
+    ## 2026-11-01
+      calendar.ics:1974  DTSTART;VALUE=DATE:20261101  SUMMARY:Dad - pharmacy refills
+
+It prints [a report](../ci/README.md#the-report-contract), the shape every
+report add-on shares: the dates as groups, each row a place and its line.
+`--json` gives the same report as one JSON object.
 
 Soonest first, 14 days by default. A date is read the way the kernel reads one
 for "newest first": 2026-10-28, 20261028, and 28/10/2026 only when it can't be
@@ -28,8 +36,10 @@ calendar event with a rule (the [calendar](../calendar/) reader's `repeats:`
 line, or a raw file's `RRULE:`), and a birthday (`birthday:`, or a card's
 `BDAY:`):
 
-    2026-10-30  Contacts/contacts.vcf.txt:73  birthday: 1957-10-30  (every year)
-    2026-11-03  Calendar/Home.ics.txt:44      2022-11-03  Car rego due  (yearly, from this date)
+    ## 2026-10-30
+      Contacts/contacts.vcf.txt:73  birthday: 1957-10-30  (every year)
+    ## 2026-11-03
+      Calendar/Home.ics.txt:44      2022-11-03  Car rego due  (yearly, from this date)
 
 A rule's FREQ (yearly, monthly, weekly, daily), INTERVAL, UNTIL and COUNT
 are kept to, and a 31st or a 29 February comes up only in a month that has
@@ -42,7 +52,7 @@ Before this, a yearly event or a birthday came up only in the year it began:
 in Bernadette's demo, her car's registration on 3 November and her friend's
 birthday on 30 October were both missing from her next thirty days.
 
-**Exit codes:** 0 something is coming up; 42 nothing in the window; 2 refused.
+**Exit codes:** 0 something is coming up (`populated`) or nothing is in the window (`empty`); 2 refused.
 
 **Uses:** the kernel's `chunks`, `newest`, `words`, `config` and `now`.
 

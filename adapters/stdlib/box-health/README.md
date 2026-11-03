@@ -6,16 +6,30 @@ added: 2026-10-29
 writes: nothing
 network: none
 looks-for: books, mail, office, pdf
+output: report
 -->
 # box-health
 
-Is the box all right? One line.
+Is the box all right? A report: one line to say, a row for each concern.
 
-    python adapters/stdlib/box-health/box_health.py --box DIR [--long]
+    python adapters/stdlib/box-health/box_health.py --box DIR [--json]
 
-    box ok: 214 rows hold; 3 approved, 2 waiting; every file readable; words list as last used; last out row 2026-10-20 (4 days ago)
+    box-health: empty, nothing needs you; 214 rows hold; 3 approved, 2 waiting; every file readable; words list as last used; last out row 2026-10-20 (4 days ago)
 
-    box needs you: 9 files can't be read (3 .docx, read by office; 2 .pdf, read by pdf); 3 rows hold; 0 approved, 0 waiting; no out row yet
+    box-health: populated, box needs you: 3 things, 9 files can't be read
+    ## needs you
+      approvals  1 suggestion waiting for you
+      out        no out row yet
+    ## can't be read
+      .docx      3 files, read by office
+      .pdf       2 files, read by pdf
+      over 1 MB  2 of them
+    ## fine
+      record     3 rows hold
+      approvals  0 approved, 1 waiting
+
+It prints [a report](../ci/README.md#the-report-contract), the shape every
+report add-on shares. `--json` gives the same report as one JSON object.
 
 What it looks at, in this order:
 
@@ -29,15 +43,15 @@ What it looks at, in this order:
 
 Hidden files and folders are not counted: the bite doesn't read them either.
 A waiting suggestion, an unreadable file, a changed words list or a box that
-has never had an out row each says "needs you", since each is something you
-can act on. `--long` puts every part on its own line, what needs you first.
+has never had an out row each makes the box `populated`, since each is something you
+can act on. `--long` is still accepted and changes nothing: every part has its row.
 
 The approvals are checked through the kernel's `sealed`, which reads your key
 there and nowhere here. It writes nothing, not even an out row, so asking
 how the box is doesn't move the record's tip.
 
-Exit codes, the kernel's: 0 ok; 42 something needs you; 2 refused (a chain
-that doesn't hold, or a bad command line).
+Exit codes: 0 `empty` (nothing needs you); 42 `populated` (something needs
+you); 2 refused (a chain that doesn't hold, or a bad command line).
 
 **What it doesn't do:** run the readers or say what is inside an unreadable
 file. It points at the add-on; running it is yours.

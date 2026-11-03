@@ -1667,6 +1667,18 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- history and on-this-day print a report (the report contract), a group a
+  day and a group a year; empty exits 0 in each, where it said 42. (#210)
+- coming-up, box-health, agents-md-check, xref and pins print a report (the
+  report contract); coming-up with nothing in its window exits 0 where it
+  said 42; repo-pile reads xref's report. (#199)
+- `ci`: the heavy CI jobs no longer wait on `first`, only on lint, against
+  and changelog. `first` runs what a change reaches, and on a pull request
+  converting seven add-ons that was 18 minutes, during which no heavy job
+  could start; it runs beside them again, as the early word it is. The
+  `mutants-reach` job runs its gates through `adapters/stdlib/ci/cores.py`,
+  four at once: a change to the contract tests reaches every mutants gate,
+  and the whole part in one job took most of an hour. (#214)
 - secrets-audit, symptoms, first-mention, misquote, why-not, minutes and
   thesis print a report (the report contract); "found nothing" exits 0 where
   minutes, symptoms, first-mention and misquote said 42. A card says
@@ -1853,6 +1865,12 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- `against` reads a pull request stacked on another from where the two
+  left each other, not from where each left the base, so the one below is
+  not failed for the names the one above took from it. The forge stack
+  (#200, with #201 to #203 built on it) showed it: #200's `against` job said
+  its own add-on was a duplicate, once per pull request above it. What the
+  one above adds past the one below is still held to the others. (#215)
 - contradictions leaves a word that's everywhere (on more than one dated
   line in 500, and more than 10) out of what two lines share: over 14
   repositories it found 371,125 "disagreements" in 133 seconds, and now
