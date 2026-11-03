@@ -1744,6 +1744,10 @@ says how). The first was v0.1.0.
   its own record with its page beside it, where it ran over the first only;
   two folders of one name get a record each (`files-2`), where the second
   was told "already set up". (#205)
+- `jeles mirror` writes a store too big for one kernel file in parts under
+  the kernel's `MAX_FILE` (store.db.1.txt and on), cut only between
+  nuggets; a real store (2,277 nuggets, 2.5 MB) mirrored as one file was
+  never read, 0 passages, and is now 6,476. (#195)
 - The UI's page puts a ticked piece into the sealed flow only when it makes
   a page (a card usage of `--box DIR` and optional flags, and no network); a
   page server, a reader, a hook's setup, a verb or `stack` itself is put in
