@@ -275,7 +275,7 @@ def test_each_way_github_can_drift_is_caught(
     monkeypatch.setattr(gh, "ROOT", tmp_path)
     monkeypatch.setattr(gh, "DOT", tmp_path / ".github")
     got = gh.problems()
-    assert got and says in got[0], got
+    assert got and any(says in g for g in got), got
 
 
 @pytest.mark.parametrize("argv", [[], ["reports"], ["check", "x"]])

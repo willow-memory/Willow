@@ -1667,6 +1667,10 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- `github`: the drift test looks for the planted problem anywhere in `check`'s
+  list, not first in it. Which gate a shard plant reports "in no job" first
+  depends on the cut, and the weights move it: a pull request adding an add-on
+  (sort, #206) failed the test with its own gate's weight in the cut. (#217)
 - `three-two-one`: a copy that holds but has fewer rows than the box says
   how many it is behind (`holds (14 rows, 2 rows behind the box)`). A record
   cut short still verifies, so a truncated or stale copy counted as a copy
