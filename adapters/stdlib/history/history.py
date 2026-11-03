@@ -1,10 +1,13 @@
 """history.py: your record, in plain sentences. Python 3.9+.
 
-    python adapters/stdlib/history/history.py --box DIR [--days N] [--now TS]
+    python adapters/stdlib/history/history.py --box DIR [--days N] [--now TS] [--json]
 
-Each row of the record, oldest first, said as what happened, by day:
+Each row of the record, oldest first, said as what happened, by day, as a
+report (output: report; see adapters/stdlib/ci/README.md): a group a day,
+each row the time and the sentence:
 
-    2026-10-24
+    history: populated, 5 things on your record over 1 day
+    ## 2026-10-24
       09:12  You started your record.
       09:13  You asked a question. Your files held it: dentist.txt:1.
       09:14  You asked a question again (2nd time). Nothing in your folder held it.
@@ -21,7 +24,8 @@ It reads the record and nothing else of yours, and writes nothing. A record
 that doesn't verify is refused: a history read past a break could tell you
 something that didn't happen.
 
-Exit codes, the kernel's: 0 told; 42 nothing in the window; 2 refused.
+Exit codes, the kernel's: 0 told (`populated`) or nothing in the window
+(`empty`); 2 refused. Nothing on the record waits on you, so it never says 42.
 """
 
 from __future__ import annotations
@@ -33,6 +37,35 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 import kernel  # noqa: E402
+
+
+NAME = "history"
+
+
+# ── the report: the shape every report add-on prints (ci/README.md) ─────────
+def report(addon: str, state: str, said: str, groups: list) -> dict:
+    """A report: its state, one line said, and each group's rows (where,
+    what); a group named None comes first and has no heading."""
+    return {"addon": addon, "state": state, "said": said,
+            "groups": [{"name": g, "rows": [{"where": w, "what": x} for w, x in rows]}
+                       for g, rows in groups if rows]}  # fmt: skip
+
+
+def report_text(doc: dict) -> str:
+    """A report as every report add-on prints it: the same twenty lines each
+    keeps, held to this one by test_contract.py."""
+    rows = [r for g in doc["groups"] for r in g["rows"]]
+    w = min(max((len(r["where"]) for r in rows), default=0), 60)
+    out = [f"{doc['addon']}: {doc['state']}, {doc['said']}"]
+    for g in doc["groups"]:
+        if g["name"] is not None:
+            out.append(f"## {g['name']}")
+        out += [f"  {r['where']:<{w}}  {r['what']}".rstrip() for r in g["rows"]]
+    return "\n".join(out)
+
+
+def say(doc: dict, as_json: bool) -> None:
+    print(json.dumps(doc, ensure_ascii=False) if as_json else report_text(doc))
 
 
 def nth(n: int) -> str:
@@ -108,17 +141,9 @@ def sentences(box: Path, rows: list[dict]) -> list[tuple[str, str]]:
     return out
 
 
-def tell(lines: list[tuple[str, str]]) -> str:
-    out, day = [], None
-    for ts, said in lines:
-        if ts[:10] != day:
-            day = ts[:10]
-            out.append(("" if not out else "\n") + (day or "undated"))
-        out.append(f"  {ts[11:16] or '--:--'}  {said}")
-    return "\n".join(out) + "\n"
-
-
 def main(argv: list[str]) -> int:
+    as_json = "--json" in argv
+    argv = [a for a in argv if a != "--json"]
     opts, args, it = {}, [], iter(argv)
     for a in it:
         if a in ("--box", "--days", "--now"):
@@ -150,9 +175,15 @@ def main(argv: list[str]) -> int:
         since = (today - timedelta(days=int(days))).isoformat()
         lines = [(t, s) for t, s in lines if t[:10] > since]
     if not lines:
-        print("Nothing on the record in that window.")
-        return kernel.ESCALATE
-    print(tell(lines), end="")
+        say(report(NAME, "empty", "nothing on your record in that window", []), as_json)
+        return kernel.ALIVE
+    by_day: dict[str, list] = {}
+    for ts, said in lines:
+        by_day.setdefault(ts[:10] or "undated", []).append((ts[11:16] or "--:--", said))
+    n, d = len(lines), len(by_day)
+    said = (f"{n} thing{'s' if n != 1 else ''} on your record "
+            f"over {d} day{'s' if d != 1 else ''}")  # fmt: skip
+    say(report(NAME, "populated", said, list(by_day.items())), as_json)
     return kernel.ALIVE
 
 

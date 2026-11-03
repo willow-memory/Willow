@@ -14,6 +14,14 @@ says how). The first was v0.1.0.
   each, in a file of your own (`name: phrase, phrase`); a tie is listed for
   you to choose and a file no phrase reaches is unsorted, never guessed. It
   prints a report, 42 when a file waits on you. (#206)
+- `forge`, a deps add-on: a sentence in, the add-ons it names or means
+  out, as a report in the one shape. A word that reaches several add-ons
+  ("email": mail, apple-mail) is a fork with the cards as options, for the
+  Forge's checkpoint to put to the person once and remember; `--plan`
+  prints the same as a plan the Forge's `plan_shape` validates and its
+  `build_loop` resolves. It recommends nothing, scores nothing, proposes
+  nothing and writes nothing. Needs forge-play 0.10, whose card box reads
+  these cards as rows for its keyword scan. (#200)
 - `ci-memo`: a pull request runs only the mutants gates a change can reach,
   standing the rest on the record of main's last green run, and a push to
   main runs them all, so the merge's receipt stays whole. Four shards of 5
@@ -1626,9 +1634,18 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- history and on-this-day print a report (the report contract), a group a
+  day and a group a year; empty exits 0 in each, where it said 42. (#210)
 - coming-up, box-health, agents-md-check, xref and pins print a report (the
   report contract); coming-up with nothing in its window exits 0 where it
   said 42; repo-pile reads xref's report. (#199)
+- `ci`: the heavy CI jobs no longer wait on `first`, only on lint, against
+  and changelog. `first` runs what a change reaches, and on a pull request
+  converting seven add-ons that was 18 minutes, during which no heavy job
+  could start; it runs beside them again, as the early word it is. The
+  `mutants-reach` job runs its gates through `adapters/stdlib/ci/cores.py`,
+  four at once: a change to the contract tests reaches every mutants gate,
+  and the whole part in one job took most of an hour. (#214)
 - secrets-audit, symptoms, first-mention, misquote, why-not, minutes and
   thesis print a report (the report contract); "found nothing" exits 0 where
   minutes, symptoms, first-mention and misquote said 42. A card says
