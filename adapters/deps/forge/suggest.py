@@ -1,50 +1,77 @@
 """suggest.py: the Forge's matchmaker over this willow's add-on cards.
 Python 3.11+ (forge-play's floor), forge-play 0.10 or newer.
 
-    python adapters/deps/forge/suggest.py --box DIR "what you want done" [--json | --plan]
+    python adapters/deps/forge/suggest.py suggest --box DIR "what you want done" [--json | --plan]
+    python adapters/deps/forge/suggest.py propose --box DIR "what you want done"
+                                                  --choose WORD=NAME ... [--why WORD=REASON ...] [--json]
 
 A sentence in, the add-ons it names or means out. The Forge's card box reads
 every card beside this script (built, and the ideas in adapters/planned.json)
 as rows for its keyword scan: a card's name, and the lines of
-ui/search-words.txt that point at it, are what a sentence can hit. What comes
-out is a report (adapters/stdlib/ci/README.md, the report contract), a group
-per kind of thing:
+ui/search-words.txt that point at it, are what a sentence can hit. `suggest`
+says what comes out as a report (adapters/stdlib/ci/README.md, the report
+contract), a group per kind of thing:
 
     forge: populated, 2 forks wait on you
     ## fork “email”
       adapters/stdlib/apple-mail/README.md  apple-mail: Apple Mail's .emlx ...
       adapters/stdlib/mail/README.md        mail: Email in .eml and mbox ...
-    ## fork “due”
-      ...
 
-    steps   an add-on the sentence reaches and nothing else does: one line
-            for a stack file, `- NAME -- --box {box}`
+    steps   an add-on the sentence reaches and nothing else does, one line
+            for a stack file; or a fork you settled before, read from your
+            record: the kernel serves it only while its seal proves under
+            your key, so it is a step, not a question, and you are not asked
+            twice
     fork    one word that reaches several add-ons ("email": mail, apple-mail):
-            a decision with the cards as options and their lines as tradeoffs,
-            for the Forge's checkpoint to put to the person, once, and
-            remember
+            a decision with the cards as options and their lines as tradeoffs
+    stale   a seal whose card no longer does that word here; said, and the
+            fork asked again
     ideas   an add-on the sentence names that isn't built yet
 
---json prints the same report as one JSON object. --plan prints the whole as
-the Forge reads it: the cards counted, the steps, the forks, the ideas, and
-`plan`, a document forge.plan_shape validates, forge.decision_extract turns
-into decisions and forge.build_loop resolves. No model, no ranking: a card is
-here because it was named or an alias line names it, and the report says
-which.
+A stack you sealed for these very words is served first, as the kernel
+serves any sealed answer, and nothing else is asked.
 
-It only reads: the cards, the alias file, and the box's record to see it is
-one. Nothing is proposed and nothing is written; that is the next add-on's
-job, once the person has settled the forks. Exit codes, the report's: 0
-steps found and nothing waits on you, or nothing named (`empty`); 42 a fork
-waits on you (`populated`), or forge-play missing or older than 0.10
-(`unreachable`, said); 2 refused (a bad command line, a folder that isn't a
-box or whose record doesn't verify, a card beside this script that won't
-read).
+`propose` settles the open forks with `--choose WORD=NAME` (and a reason with
+`--why WORD=...`) and hands the result to the kernel's door, nothing more:
+one proposal per settled fork, under the words `forge decision willow-WORD`,
+and one for the stack, under your sentence. Each waits on your seal
+(`python kernel.py seal --box DIR proposal:...`); nothing is an answer before
+that, and nothing runs. It carries the card's name, line, path and SHA-256,
+so what you sealed is what you were shown. Its report is one row per
+proposal: where it will be written, and what waits.
+
+--json prints the same report as one JSON object. --plan prints the whole as
+the Forge reads it: the cards counted, the steps, the forks, what is sealed,
+the ideas, and `plan`, a document forge.plan_shape validates,
+forge.decision_extract turns into decisions and forge.build_loop resolves.
+No model, no ranking: a card is here because it was named or an alias line
+names it, and the report says which.
+
+What is sealed is read through the kernel's own `sealed` and `standing`: a
+seal counts only while its proof holds under the key and the proposal still
+hashes to what was sealed; the key is the kernel's to read, never this
+script's. The first standing seal for a decision is the one kept, as the
+kernel's bite serves the first for a question, so the Forge (which asks the
+kernel) and this read the same answer; a later seal waits its turn until the
+first no longer stands. Decisions are keyed by decision type, `willow-WORD`,
+the words the Forge asks for, so one it proposed is read the same as one this
+script proposed.
+
+Exit codes, the report's: 0 steps found and nothing waits on you, a stack
+sealed for these words, or nothing named (`empty`); 42 a fork waits on you,
+your seal is waited on (`populated`), or forge-play missing or older than
+0.10 (`unreachable`, said); 2 refused (a bad command line, a folder that
+isn't a box or whose record doesn't verify, a fork left unsettled or settled
+with an option not on offer, a stack sealed for these words already, a card
+beside this script that won't read).
 """
 
 from __future__ import annotations
 
 import argparse
+import contextlib
+import hashlib
+import io
 import json
 import sys
 from pathlib import Path
@@ -56,6 +83,7 @@ import kernel  # noqa: E402
 
 NAME = "forge"
 APP = "willow-stack"
+STACK_PATH = "forge/stack.md"
 NEEDS = "forge-play 0.10 or newer is not installed: pip install -r adapters/deps/forge/requirements.txt"
 
 
@@ -86,14 +114,22 @@ def say(doc: dict, as_json: bool) -> None:
 
 
 def forge():
-    """The Forge's card box and plan shape, or None when forge-play is
-    missing or too old to have them. Imported here, not at the top, so a
-    bad command line is refused the same with or without it."""
+    """The Forge's card box, plan shape and record naming, or None when
+    forge-play is missing or too old to have them. Imported here, not at the
+    top, so a bad command line is refused the same with or without it."""
     try:
         from forge import card_box, card_table, plan_shape, willow_record
     except ImportError:
         return None
     return card_box, card_table, plan_shape, willow_record
+
+
+def quiet(fn, *args) -> tuple[int, str]:
+    """A kernel verb run with its printing caught: (exit code, what it said)."""
+    out = io.StringIO()
+    with contextlib.redirect_stdout(out), contextlib.redirect_stderr(out):
+        code = fn(*args)
+    return code, out.getvalue()
 
 
 def is_box(box: Path) -> str | None:
@@ -105,6 +141,38 @@ def is_box(box: Path) -> str | None:
     if breaks:
         return "the record doesn't verify: " + "; ".join(breaks)
     return None
+
+
+def on_record(box: Path, rec) -> tuple[dict, dict]:
+    """What the person sealed, through the kernel: ({decision_type: {chose,
+    word, row, subject}}, {bite_key: {row, subject, text}}). The first
+    standing seal for a decision is the one kept, as the kernel keeps it."""
+    rows, _ = kernel.read(box / "record.jsonl")
+    decisions, stacks = {}, {}
+    for subj, row in kernel.sealed(box, rows).items():
+        prop, asked, why = kernel.standing(box, rows, subj, row)
+        if why is not None:
+            continue
+        if prop["path"] == STACK_PATH:
+            stacks.setdefault(
+                asked, {"row": row["n"], "subject": subj, "text": prop["data"]}
+            )
+        elif prop["path"].startswith(rec.DECISION_PATH.split("{")[0]):
+            try:
+                data = json.loads(prop["data"])
+            except ValueError:
+                continue
+            if isinstance(data, dict) and isinstance(data.get("chose"), str):
+                dt = data.get("decision_type")
+                if not isinstance(dt, str) and isinstance(data.get("word"), str):
+                    dt = rec.decision_type(data["word"])
+                if isinstance(dt, str):
+                    decisions.setdefault(
+                        dt,
+                        {"chose": data["chose"], "word": data.get("word", ""),
+                         "row": row["n"], "subject": subj},
+                    )  # fmt: skip
+    return decisions, stacks
 
 
 def promises(card) -> str:
@@ -124,29 +192,44 @@ def step_line(name: str) -> str:
     return f"- {name} -- --box {{box}}\n"
 
 
-def plan(box, hits, shape, rec) -> dict:
-    """{cards, steps, forks, ideas, plan}: what the sentence reaches, and the
-    Forge's plan document (or None when there is nothing to run)."""
+def plan(box, hits, shape, rec, sealed: dict) -> dict:
+    """{cards, steps, forks, sealed, ideas, plan}: what the sentence reaches,
+    what the record settled, and the Forge's plan document (or None when
+    there is nothing to run)."""
     found = box.lookup(hits)
     forks = box.forks(hits)
     by_name = {c.name: c for c in box.cards}
-    in_fork = {n for names in forks.values() for n in names}
+    settled, open_forks = {}, {}
+    for word, names in forks.items():
+        got = sealed.get(rec.decision_type(word))
+        if got and got["chose"] in names:
+            settled[word] = {**got, "decision_type": rec.decision_type(word)}
+        else:
+            open_forks[word] = names
+            if got:
+                settled[word] = {**got, "decision_type": rec.decision_type(word),
+                                 "stale": f"{got['chose']} no longer does “{word}” here"}  # fmt: skip
+    in_fork = {n for names in open_forks.values() for n in names}
+    chosen = {got["chose"]: word for word, got in settled.items() if "stale" not in got}
+    in_any_fork = {n for names in forks.values() for n in names}
     steps, ideas, entries = [], [], []
     for cand in found:
         card = by_name[cand.name]
         if cand.name in in_fork:
             continue
+        if cand.name in chosen:
+            word = chosen[cand.name]
+            why = f"you sealed it for “{word}” (row {settled[word]['row']})"
+        elif card.name in in_any_fork:
+            continue  # the other option of a settled fork
+        else:
+            why = cand.why
         if not card.built:
             ideas.append(
-                {
-                    "name": cand.name,
-                    "line": card.line,
-                    "why": cand.why,
-                    "where": card.where,
-                }
+                {"name": cand.name, "line": card.line, "why": why, "where": card.where}
             )
             continue
-        steps.append({"name": cand.name, "line": card.line, "why": cand.why, "where": card.where,
+        steps.append({"name": cand.name, "line": card.line, "why": why, "where": card.where,
                       "promises": promises(card)})  # fmt: skip
         entries.append(
             shape.FileWrite(
@@ -154,7 +237,7 @@ def plan(box, hits, shape, rec) -> dict:
             )
         )
     fork_docs = {}
-    for word, names in forks.items():
+    for word, names in open_forks.items():
         options, resolves = [], {}
         for n in names:
             card = by_name[n]
@@ -190,23 +273,32 @@ def plan(box, hits, shape, rec) -> dict:
         "cards": {"built": built, "ideas": len(box.cards) - built},
         "steps": steps,
         "forks": fork_docs,
+        "sealed": settled,
         "ideas": ideas,
         "plan": doc,
     }
 
 
-def to_report(out: dict) -> tuple[dict, int]:
+def to_report(out: dict, rec) -> tuple[dict, int]:
     """The plan as a report, and the exit code: a fork waits on you (42), or
     nothing does (0)."""
-    groups = [
-        (
-            "steps",
-            [
-                (s["where"], f"{s['name']}: {s['line']} ({s['promises']})")
-                for s in out["steps"]
-            ],
-        )
-    ]
+    if "stack" in out:
+        s = out["stack"]
+        rows = [
+            (f"{STACK_PATH}:{i}", ln)
+            for i, ln in enumerate(s["text"].splitlines(), 1)
+            if ln.strip()
+        ]
+        said = f"a stack is sealed for these words (row {s['row']}); nothing to ask"
+        return report(
+            NAME,
+            "populated",
+            said,
+            [(f"stack sealed for these words ({s['subject']})", rows)],
+        ), kernel.ALIVE
+    groups = [("steps", [(s["where"], f"{s['name']}: {s['line']} ({s['promises']})"
+                          + (f"; {s['why']}" if s["why"].startswith("you sealed") else ""))
+                         for s in out["steps"]])]  # fmt: skip
     for word, options in out["forks"].items():
         groups.append(
             (
@@ -214,6 +306,9 @@ def to_report(out: dict) -> tuple[dict, int]:
                 [(o["where"], f"{o['name']}: {o['tradeoff']}") for o in options],
             )
         )
+    groups.append(("stale seals, asked again", [
+        (rec.DECISION_PATH.format(got["decision_type"]), f"{got['stale']} (row {got['row']})")
+        for got in out["sealed"].values() if "stale" in got]))  # fmt: skip
     groups.append(
         (
             "ideas",
@@ -238,19 +333,130 @@ def to_report(out: dict) -> tuple[dict, int]:
     return report(NAME, "empty", said, []), kernel.ALIVE
 
 
+def pairs(items: list[str], what: str) -> tuple[dict[str, str], str | None]:
+    """`WORD=VALUE` arguments as a dict, or why one isn't."""
+    out = {}
+    for it in items or []:
+        word, sep, value = it.partition("=")
+        if not sep or not word.strip() or not value.strip():
+            return {}, f"{what} takes WORD=VALUE, not {it!r}"
+        out[word.strip()] = value.strip()
+    return out, None
+
+
+def propose(
+    box: Path, sentence: str, out: dict, cards, choose: dict, why: dict, rec
+) -> tuple[dict | None, int]:
+    """Each settled fork, and the stack, to the kernel's door: (the report,
+    exit 42), or (None, 2) refused before writing anything, when a fork is
+    left open or settled with an option not on offer. After the refusals,
+    every write is the kernel's."""
+    for word, options in out["forks"].items():
+        names = [o["name"] for o in options]
+        if word not in choose:
+            print(
+                f"refused: “{word}” is not settled: --choose {word}={'|'.join(names)}",
+                file=sys.stderr,
+            )
+            return None, kernel.REFUSED
+        if choose[word] not in names:
+            print(f"refused: {choose[word]} is not an option for “{word}”: {', '.join(names)}", file=sys.stderr)  # fmt: skip
+            return None, kernel.REFUSED
+    for word in choose:
+        if word not in out["forks"]:
+            print(f"refused: nothing to choose for “{word}”", file=sys.stderr)
+            return None, kernel.REFUSED
+    by_name = {c.name: c for c in cards}
+    run = [s["name"] for s in out["steps"]] + [
+        n for n in choose.values() if by_name[n].built
+    ]
+    if not run:
+        print(
+            "refused: nothing to propose: no step and no settled fork", file=sys.stderr
+        )
+        return None, kernel.REFUSED
+    ts = kernel.now()
+    rows = []
+    for word, name in choose.items():
+        card = by_name[name]
+        others = [o["name"] for o in out["forks"][word] if o["name"] != name]
+        dt = rec.decision_type(word)
+        pinned = hashlib.sha256((ROOT / card.where).read_bytes()).hexdigest()
+        data = {
+            "word": word,
+            "decision_type": dt,
+            "chose": name,
+            "over": others,
+            "why": why.get(word, ""),
+            "card": {
+                "name": card.name,
+                "line": card.line,
+                "where": card.where,
+                "sha256": pinned,
+            },
+        }
+        prop = {
+            "path": rec.DECISION_PATH.format(dt),
+            "data": json.dumps(data, sort_keys=True, ensure_ascii=False),
+            "cites": [],
+            "claim": f"for “{word}”: {name} over {', '.join(others)}; {why.get(word) or 'no reason given'}",
+        }
+        code, said = quiet(kernel.bite, box, rec.question(dt), ts)
+        if code == kernel.REFUSED:
+            print("refused:", said.strip(), file=sys.stderr)
+            return None, kernel.REFUSED
+        code, said = quiet(
+            kernel.propose, box, [json.dumps(prop, ensure_ascii=False)], ts
+        )
+        if not said.startswith("pass "):
+            print("refused:", said.strip(), file=sys.stderr)
+            return None, kernel.REFUSED
+        rows.append((prop["path"], f"{said.split()[1]}  {name} for “{word}”"))
+    text = f"# {sentence}\n\n## for “{sentence}”\n" + "".join(step_line(n) for n in run)
+    prop = {
+        "path": STACK_PATH,
+        "data": text,
+        "cites": [],
+        "claim": f"a stack for “{sentence}”: {', '.join(run)}",
+    }
+    code, said = quiet(kernel.bite, box, sentence, ts)
+    if code == kernel.REFUSED:
+        print("refused:", said.strip(), file=sys.stderr)
+        return None, kernel.REFUSED
+    code, said = quiet(kernel.propose, box, [json.dumps(prop, ensure_ascii=False)], ts)
+    if not said.startswith("pass "):
+        print("refused:", said.strip(), file=sys.stderr)
+        return None, kernel.REFUSED
+    rows.append((STACK_PATH, f"{said.split()[1]}  a stack: {', '.join(run)}"))
+    said = f"{len(rows)} waiting on your seal: python kernel.py seal --box DIR proposal:..."
+    return report(NAME, "populated", said, [(None, rows)]), kernel.ESCALATE
+
+
 def main(argv: list[str]) -> int:
     as_json = "--json" in argv
     argv = [a for a in argv if a != "--json"]
     p = argparse.ArgumentParser(prog="suggest.py", description=__doc__.splitlines()[0])
-    p.add_argument("sentence", help="what you want done, in your own words")
-    p.add_argument(
-        "--box", required=True, help="your record; only read, to see it is one"
-    )
-    p.add_argument(
-        "--plan", action="store_true", help="the plan as the Forge reads it, as JSON"
-    )
+    sub = p.add_subparsers(dest="verb", required=True)
+    for verb in ("suggest", "propose"):
+        s = sub.add_parser(verb)
+        s.add_argument("sentence", help="what you want done, in your own words")
+        s.add_argument("--box", required=True, help="your record")
+        if verb == "suggest":
+            s.add_argument(
+                "--plan",
+                action="store_true",
+                help="the plan as the Forge reads it, as JSON",
+            )
+        else:
+            s.add_argument(
+                "--choose", action="append", metavar="WORD=NAME", help="settle a fork"
+            )
+            s.add_argument(
+                "--why", action="append", metavar="WORD=REASON", help="your reason"
+            )
     a = p.parse_args(argv)
-    why = is_box(Path(a.box))
+    box = Path(a.box)
+    why = is_box(box)
     if why:
         print("refused:", why, file=sys.stderr)
         return kernel.REFUSED
@@ -264,8 +470,24 @@ def main(argv: list[str]) -> int:
     except card_table.CardTableError as e:  # a card beside this script that won't read
         print("refused:", e, file=sys.stderr)
         return kernel.REFUSED
-    out = plan(cards, cards.scan(a.sentence), shape, rec)
-    doc, code = to_report(out)
+    sealed, stacks = on_record(box, rec)
+    out = plan(cards, cards.scan(a.sentence), shape, rec, sealed)
+    if (k := kernel.bite_key(a.sentence)) in stacks:
+        out["stack"] = stacks[k]
+    if a.verb == "propose":
+        if "stack" in out:
+            print(f"refused: a stack is sealed for these words already (row {out['stack']['row']})", file=sys.stderr)  # fmt: skip
+            return kernel.REFUSED
+        choose, bad = pairs(a.choose, "--choose")
+        reasons, worse = pairs(a.why, "--why")
+        if bad or worse:
+            print("refused:", bad or worse, file=sys.stderr)
+            return kernel.REFUSED
+        doc, code = propose(box, a.sentence, out, cards.cards, choose, reasons, rec)
+        if doc is not None:
+            say(doc, as_json)
+        return code
+    doc, code = to_report(out, rec)
     if a.plan:
         print(json.dumps(out, indent=2, ensure_ascii=False))
     else:
