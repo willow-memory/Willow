@@ -1622,6 +1622,10 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- `github`: the drift test looks for the planted problem anywhere in `check`'s
+  list, not first in it. Which gate a shard plant reports "in no job" first
+  depends on the cut, and the weights move it: a pull request adding an add-on
+  (sort, #206) failed the test with its own gate's weight in the cut.
 - `ci`: the heavy CI jobs no longer wait on `first`, only on lint, against
   and changelog. `first` runs what a change reaches, and on a pull request
   converting seven add-ons that was 18 minutes, during which no heavy job
