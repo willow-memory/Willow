@@ -1603,6 +1603,8 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- history and on-this-day print a report (the report contract), a group a
+  day and a group a year; empty exits 0 in each, where it said 42. (#210)
 - coming-up, box-health, agents-md-check, xref and pins print a report (the
   report contract); coming-up with nothing in its window exits 0 where it
   said 42; repo-pile reads xref's report. (#199)
