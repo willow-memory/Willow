@@ -1326,6 +1326,12 @@ willow/
 │       │   ├── requirements-floor.txt  pytest-xdist at its floor, also tested
 │       │   ├── test_fast_tests.py
 │       │   └── README.md
+│       ├── forge/
+│       │   ├── requirements.txt  forge-play, pinned
+│       │   ├── requirements-floor.txt  forge-play at its floor, also tested
+│       │   ├── suggest.py    a sentence in, the add-ons it names or means out, as a plan with forks the Forge's checkpoint resolves
+│       │   ├── test_suggest.py
+│       │   └── README.md
 │       ├── in-process/
 │       │   ├── conftest.py   a llama-shaped GGUF of a few kilobytes from seeded weights, for the tests
 │       │   ├── in_process.py  suggestions from a GGUF model loaded in this process through llama-cpp-python, nothing listening

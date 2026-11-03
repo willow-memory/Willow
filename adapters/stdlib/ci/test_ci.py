@@ -246,7 +246,8 @@ def test_a_floor_above_the_rule_needs_a_reason_on_its_card(monkeypatch):
                 "pagefind": {"1.2.0a4": "2024-10-02T00:00:00Z", "1.3.0": "2024-12-18T00:00:00Z"},
                 "pagefind-bin": {"1.2.0a5": "2024-10-02T00:00:00Z", "1.3.0": "2024-12-18T00:00:00Z"},
                 "python-gnupg": {"0.4.6": "2020-04-17T00:00:00Z", "0.5.7": "2026-09-29T00:00:00Z"},
-                "llama-cpp-python": {"0.1.1": "2023-03-23T00:00:00Z", "0.2.29": "2024-01-15T00:00:00Z"}}  # fmt: skip
+                "llama-cpp-python": {"0.1.1": "2023-03-23T00:00:00Z", "0.2.29": "2024-01-15T00:00:00Z"},
+                "forge-play": {"0.1.0": "2026-09-03T00:00:00Z", "0.10.0": "2026-11-03T00:00:00Z"}}  # fmt: skip
     monkeypatch.setattr(ci, "releases", lambda package: uploaded[package])
     assert ci.floors()[0] == ci.SATISFIED
     monkeypatch.setattr(ci, "floor_line", lambda name: "")
