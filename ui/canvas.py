@@ -104,6 +104,20 @@ def quiet(fn, *args):
     return code, out.getvalue().strip()
 
 
+def names_kind(word: str, line: str) -> bool:
+    """Whether a card's line names a kind of file: `.so` with its dot, or the
+    word as a format is written (SO, ZIP), or, three letters or more, the bare
+    word (zip, json). A two-letter word bare is English too: so, it, in, go."""
+    w = re.escape(word)
+    return bool(
+        re.search(rf"(?<![a-z0-9])\.{w}(?![a-z0-9])", line.lower())
+        or re.search(rf"(?<![A-Za-z0-9]){w.upper()}(?![A-Za-z0-9])", line)
+        or (
+            len(word) >= 3 and re.search(rf"(?<![a-z0-9]){w}(?![a-z0-9])", line.lower())
+        )
+    )
+
+
 class Canvas:
     def __init__(self, to: Path, willow: Path, box: Path, folders: list[str]):
         # every path whole: steps run from other folders
@@ -459,9 +473,7 @@ class Canvas:
         for n, p in sorted(self.pieces().items()):
             if p["section"] != "Reading more kinds of files" or n in out:
                 continue
-            if n == word or re.search(
-                rf"(?<![a-z0-9])\.?{re.escape(word)}(?![a-z0-9])", p["line"].lower()
-            ):
+            if n == word or names_kind(word, p["line"]):
                 out.append(n)
         return out[:4]
 
