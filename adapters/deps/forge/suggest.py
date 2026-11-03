@@ -375,7 +375,7 @@ def assemble(to: Path, name: str) -> tuple[str, str]:
     got = subprocess.run(
         [
             sys.executable,
-            str(ROOT / "ui" / "assemble.py"),
+            str(ROOT / "ui/assemble.py"),
             "add",
             name,
             "--to",
@@ -414,7 +414,7 @@ def build(box: Path, sentence: str, to: Path, stacks: dict) -> tuple[dict | None
     sealed = stacks[k]
     if not (to / "stack" / "STACK.json").is_file():
         got = subprocess.run(
-            [sys.executable, str(ROOT / "ui" / "assemble.py"), "init", "--to", str(to)],
+            [sys.executable, str(ROOT / "ui/assemble.py"), "init", "--to", str(to)],
             capture_output=True,
             text=True,
         )
@@ -438,7 +438,9 @@ def build(box: Path, sentence: str, to: Path, stacks: dict) -> tuple[dict | None
         )
     stack_file = to / "forge-stack.md"
     stack_file.write_text(sealed["text"], encoding="utf-8")
-    runner = to / "stack" / "adapters" / "stdlib" / "stack" / "stack.py"
+    runner = (
+        to / "stack/adapters/stdlib/stack/stack.py"
+    )  # the built copy, not the repo's
     got = subprocess.run(
         [sys.executable, str(runner), "--box", str(box), "--stack", str(stack_file)],
         capture_output=True,
