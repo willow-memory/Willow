@@ -43,6 +43,8 @@ crying wolf and Odile's six real card numbers in her invoices and books.
 
 **A run that passes nothing is nobody's number** and is never listed; one
 that passes two checks says both, since the digits can't say which it is;
+a run holding a written date (2027-01-09) is dates, since no number is
+grouped that way and two dates side by side pass Luhn one time in ten;
 and one sixteen-digit order number in ten will pass Luhn, so a card row is
 a place to look, not a verdict. What has no checkable shape at all — a
 diagnosis, an address, a name — this cannot find, and that silence is said
