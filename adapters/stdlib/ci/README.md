@@ -23,8 +23,12 @@ record is hash-chained like any other and the kernel's `verify` checks it.
 `run` with no part runs all seven. A gate's own name (`tests:strip-2`) runs
 just that gate, and the name of a numbered group (`tests:strip`, `tests:adapters`) all of its gates, `--without GATE` leaves one out of what was named, and
 `--shard K/N` runs the Kth of N parts of it, cut by
-[test-shards](../test-shards/)' own split: the N parts hold every gate once
-between them, in the table's order. A name it doesn't know, or `--without`
+[test-shards](../test-shards/)' own split with each gate weighing the seconds
+it is expected to take (`gate_weight`: a chunk's or an add-on's test times
+from `test-times.json`, six times that for a mutants gate, a small table for
+the rest), so the parts end about together: the N parts hold every gate once
+between them, in the table's order. The cut comes from committed data alone,
+the same on every machine. A name it doesn't know, or `--without`
 given a part, is refused before anything runs. The record goes in `.ci-record/` by default
 (git ignores it), and the key `init` makes goes beside it in
 `.ci-record.key`. A record or key inside the repo where git would count it is

@@ -10,6 +10,7 @@ own chain.
 from __future__ import annotations
 
 import importlib.util
+import json
 import os
 import subprocess
 import sys
@@ -140,8 +141,42 @@ def test_shards_run_every_gate_of_what_was_named_once_in_its_order():
         parts = [ci.select(["mutants"], [], f"{k}/{n}") for k in range(1, n + 1)]
         assert sorted(g for p in parts for g in p) == sorted(every), n
         assert all(p == [g for g in every if g in p] for p in parts)
-        assert max(map(len, parts)) - min(map(len, parts)) <= 1, "cut by count"
     assert ci.select(["mutants"], [], "1/1") == every
+
+
+def test_every_gate_weighs_a_whole_number_of_seconds_of_at_least_one():
+    for _, gate, _ in ci.gates():
+        weight = ci.gate_weight(gate)
+        assert isinstance(weight, int) and weight >= 1, gate
+
+
+def test_a_gate_weighs_what_its_tests_took():
+    times = json.loads(ci.TIMES.read_text(encoding="utf-8"))
+    own = sum(t for f, t in times.items() if f.startswith("adapters/stdlib/ci/"))
+    mine = ci.gate_weight("mutants:ci")
+    assert mine == round(ci.MUTANT_COPY + ci.MUTANT_BREAKS * ci.TIMES_TO_RUNNER * own)
+    assert mine > 10 * ci.gate_weight("mutants:accents"), "ci's tests are the slow ones"
+    chunk = ci.chunks(ci.adapter_tests(), ci.ADAPTER_CHUNKS)[2]
+    median = sorted(times.values())[len(times) // 2]
+    want = ci.TIMES_TO_RUNNER * sum(times.get(f, median) for f in chunk)
+    assert ci.gate_weight("tests:adapters-3") == round(want)
+    assert ci.gate_weight("tests:alone") == ci.GATE_COST["tests:alone"]
+    assert ci.gate_weight("tests:strip-1") == ci.DEFAULT_COST, "nothing prices it"
+
+
+def test_the_mutants_shards_end_closer_together_than_a_cut_by_count():
+    split = ci.load_shards().split
+    every = ci.select(["mutants"], [], None)
+
+    def seconds(cut):
+        return [sum(ci.gate_weight(g) for g in part) for part in cut]
+
+    by_count = seconds(split(dict.fromkeys(every, 1), 4))
+    by_time = seconds(split({g: ci.gate_weight(g) for g in every}, 4))
+    parts = [ci.select(["mutants"], [], f"{k}/4") for k in range(1, 5)]
+    assert seconds(parts) == by_time, "select cuts by time"
+    assert max(by_time) - min(by_time) < (max(by_count) - min(by_count)) / 4
+    assert max(by_time) < max(by_count)
 
 
 def test_a_gate_is_named_or_left_out_by_name():

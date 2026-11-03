@@ -1612,6 +1612,14 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- `ci`: `--shard K/N` cuts the gates by the seconds each is expected to take
+  (`gate_weight`: an add-on chunk's or a mutants gate's from
+  `adapters/stdlib/ci/test-times.json`, six runs of the add-on's tests for the mutants, a small
+  table for the rest) instead of one apiece, so the shards end about
+  together. The four mutants shards' expected time was 21, 25, 21 and 62
+  minutes by count and is 32, 32, 32 and 32 now; `adapters/stdlib/ci/test-times.json` is
+  refreshed from a run of every add-on's tests, 314 files timed where 106 were.
+  (#208)
 - `ci`'s own tests drive `tests:beats` and `tests:coverage` where they drove
   the whole `demo` part. Eight tests ran `ci.py run demo`, 14 gates and
   about 50 s a call, to prove things about the record (the same bytes twice,
