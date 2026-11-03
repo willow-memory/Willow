@@ -1803,6 +1803,12 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- `against` reads a pull request stacked on another from where the two
+  left each other, not from where each left the base, so the one below is
+  not failed for the names the one above took from it. The forge stack
+  (#200, with #201 to #203 built on it) showed it: #200's `against` job said
+  its own add-on was a duplicate, once per pull request above it. What the
+  one above adds past the one below is still held to the others. (#215)
 - model-shelf looks in the Ollama service's folder
   (/usr/share/ollama/.ollama/models, where Ollama's Linux installer keeps
   its models) when no --home is given, where it said Ollama was "not on this
