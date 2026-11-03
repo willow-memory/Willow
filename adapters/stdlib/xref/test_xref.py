@@ -105,7 +105,9 @@ def test_every_reference_holding_is_empty_and_exits_0_and_a_box_reads_its_own_fi
                    check=True, capture_output=True)  # fmt: skip
     got = run("--box", str(b))
     assert got.returncode == 0
-    assert got.stdout.splitlines() == ["xref: empty, 2 references checked, 0 don't hold"]
+    assert got.stdout.splitlines() == [
+        "xref: empty, 2 references checked, 0 don't hold"
+    ]
     assert json.loads(run("--box", str(b), "--json").stdout) == {
         "addon": "xref",
         "state": "empty",
