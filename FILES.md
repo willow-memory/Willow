@@ -75,6 +75,10 @@ willow/
 │   │   │   ├── again.py      the questions you keep asking, counted from the record
 │   │   │   ├── test_again.py
 │   │   │   └── README.md
+│   │   ├── against/
+│   │   │   ├── against.py    a pull request held to the other open ones: the names both add, the files both change
+│   │   │   ├── test_against.py
+│   │   │   └── README.md
 │   │   ├── agent-transcript/
 │   │   │   ├── agent_transcript.py  Claude Code, Cursor and other session files as numbered spoken turns
 │   │   │   ├── test_agent_transcript.py

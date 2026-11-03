@@ -20,6 +20,15 @@ says how). The first was v0.1.0.
   runs what needs it; with no green run to stand on it runs the whole part
   and says why in the summary. `github.py check` holds that a job skipped on
   pull requests has one that plans its gates.
+- `against`, a pull request held to the other open ones: `against.py check
+  --base REF HEAD OTHER ...` fails (exit 2) on a name both add, whether an
+  add-on folder, an idea on `adapters/planned.json`, a `COMMANDS` key or a path
+  in FILES.md. A file both change that cannot be merged is only said:
+  `collides:` naming the pull request to merge first, or `settled:` for the
+  files restack settles by rule. It also suggests the ideas of the other
+  pull requests near yours. CI's `against` job runs it on every pull request
+  against the others that are open, and CONTRIBUTING.md's rule is now to
+  stack only when it names a reason.
 - `ports/rust`, a fifth port of `kernel.py`: Rust, the standard library
   only and no crates, following the Go port function for function. What
   Rust's library lacks is written in and held by the vectors: SHA-256 and
