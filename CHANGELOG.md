@@ -1666,6 +1666,11 @@ says how). The first was v0.1.0.
 - `hosts`: `show claude-code` still refuses, since Claude Code takes no MCP
   server from this table, and the refusal now says where its way in is:
   the prompt hook in `adapters/stdlib/claude-code`. (#211)
+- secrets-audit, symptoms, first-mention, misquote, why-not, minutes and
+  thesis print a report (the report contract); "found nothing" exits 0 where
+  minutes, symptoms, first-mention and misquote said 42. A card says
+  `output: report` in its header, or it isn't one. stewart-crossover's
+  freeze 4: `demo/stewart-crossover/run.py` reads misquote's report. (#198)
 - `ci`: the heavy CI jobs wait on the fast ones. tests, strip, ports, demo,
   deps, tools and the mutants jobs `need` lint, first, against and changelog
   in `.github/workflows/ci.yml`, so on a pull request the checks that take
@@ -1847,6 +1852,30 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- `against` reads a pull request stacked on another from where the two
+  left each other, not from where each left the base, so the one below is
+  not failed for the names the one above took from it. The forge stack
+  (#200, with #201 to #203 built on it) showed it: #200's `against` job said
+  its own add-on was a duplicate, once per pull request above it. What the
+  one above adds past the one below is still held to the others. (#215)
+- contradictions leaves a word that's everywhere (on more than one dated
+  line in 500, and more than 10) out of what two lines share: over 14
+  repositories it found 371,125 "disagreements" in 133 seconds, and now
+  1,404 in 18. (#212)
+- people counts the values code writes capitalized (None, True, False) as no
+  one, beside the months and weekdays: a repository's roster led with None,
+  24,048 mentions, from one `self.left None`. (#209)
+- todo lists a line whose date no calendar has (1984-06-31) under its own
+  heading and exits 42, where it was ordered as the oldest thing to do; the
+  oldest is said of the real dates only. known-gaps' freeze 9. (#207)
+- The UI's Start it runs the sealed flow over every folder of the pick, each
+  its own record with its page beside it, where it ran over the first only;
+  two folders of one name get a record each (`files-2`), where the second
+  was told "already set up". (#205)
+- The UI's kernel baseline offers a reader for a kind of file its card
+  names, not for an English word: a kind counts with its dot (`.so`), in
+  capitals (PDF), or bare when three letters or more, so `.so` files are no
+  longer offered agent-transcript, bibtex, chordpro and clauses. (#204)
 - model-shelf looks in the Ollama service's folder
   (/usr/share/ollama/.ollama/models, where Ollama's Linux installer keeps
   its models) when no --home is given, where it said Ollama was "not on this

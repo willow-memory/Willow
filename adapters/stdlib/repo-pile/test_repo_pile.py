@@ -110,7 +110,9 @@ def test_build_keeps_permissive_repos_and_makes_their_docs_the_pile(tmp_path, so
     ]
     assert "[licence] ada/paint: kept (MIT)" in got.stdout
     assert "[licence] ada/copyleft: left out (copyleft: GPL)" in got.stdout
-    assert "[secrets] No passwords, keys or card numbers found" in got.stdout
+    assert (
+        "[secrets] secrets-audit: empty, no password, key or card number" in got.stdout
+    )
     cfg = json.loads((base / "box" / "kernel.json").read_text())
     assert cfg["pile"] == str((base / "pile").resolve())
     for index in ("index-pile", "index-code"):
@@ -139,7 +141,10 @@ def test_a_secret_in_the_docs_is_found_by_place_never_shown(tmp_path, source):
     assert "[secrets] repos/ada-leaky/README.md:1" in got.stdout
     assert "hunter2" not in got.stdout
     check = run("check", "--base", base)
-    assert "[secrets] 1 place hold" in check.stdout and "hunter2" not in check.stdout
+    assert (
+        "[secrets] secrets-audit: populated, 1 place holds" in check.stdout
+        and "hunter2" not in check.stdout
+    )
 
 
 @pytest.mark.parametrize("name", ["COPYING.md", "apache-2.0.LICENSE", "UNLICENSE"])
