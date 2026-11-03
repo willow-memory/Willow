@@ -274,6 +274,36 @@ def test_main_moving_on_is_nobodys_duplicate(repo):
     assert "duplicate:" not in got.stdout and f"checked: #12 {other}" in got.stdout
 
 
+def test_a_pull_request_stacked_on_mine_took_my_names_and_duplicates_none(repo):
+    # pr/12 is built on mine (CONTRIBUTING.md's stack), so its history adds
+    # sort too; read from where it left main, it would duplicate mine's sort
+    mine = branch(repo, "mine", addon("sort"))
+    branch(repo, "pr/12", addon("zip"), start="mine")
+    other = branch(repo, "pr/13", addon("zip"))
+    got = check(repo, "mine", "pr/12", "pr/13")
+    assert got.returncode == 0, got.stdout
+    assert "duplicate:" not in got.stdout
+    # what it adds past mine is still held to the others
+    got = check(repo, "pr/12", "mine", "pr/13", base="mine")
+    assert got.returncode == 2
+    assert got.stdout.splitlines()[:1] == ["duplicate: both add add-on zip (#13)"]
+    assert (
+        f"checked: #13 {other}" in got.stdout and f"checked: mine {mine}" in got.stdout
+    )
+
+
+def test_mine_stacked_on_another_is_read_from_where_it_left_that_one(repo):
+    # run from main as the base, as a person does, mine still adds only zip
+    branch(repo, "pr/12", addon("sort"))
+    branch(repo, "mine", addon("zip"), start="pr/12")
+    branch(repo, "pr/13", addon("zip"))
+    got = check(repo, "mine", "pr/12", "pr/13")
+    assert got.returncode == 2
+    assert [ln for ln in got.stdout.splitlines() if ln.startswith("duplicate:")] == [
+        "duplicate: both add add-on zip (#13)"
+    ]
+
+
 # ── near ideas ───────────────────────────────────────────────────────────────
 def test_an_idea_near_one_the_other_adds_is_suggested(repo):
     line = "Rain and frost for each garden bed, by day, from your own notes."
