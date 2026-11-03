@@ -6,6 +6,7 @@ added: 2026-10-24
 writes: nothing
 network: none
 tags: everyday
+output: report
 uses: privacy
 -->
 # secrets-audit
@@ -13,14 +14,19 @@ uses: privacy
 The passwords and keys sitting in plain files in your folder, so you can
 move them somewhere safer.
 
-    python adapters/stdlib/secrets-audit/secrets_audit.py --box DIR
-    python adapters/stdlib/secrets-audit/secrets_audit.py --from ANY-FOLDER
+    python adapters/stdlib/secrets-audit/secrets_audit.py --box DIR [--json]
+    python adapters/stdlib/secrets-audit/secrets_audit.py --from ANY-FOLDER [--json]
 
-    wifi.txt:2          password
-    work/deploy.md:3    key
+    secrets-audit: populated, 2 places hold a secret in plain text; values are never shown
+    ## a password typed with its label
+      wifi.txt:2        value not shown
+    ## a key or token
+      work/deploy.md:3  value not shown
 
-    2 places hold a secret in plain text. A password manager is a safer home
-    for them; the value was not shown here.
+It prints [a report](../ci/README.md#the-report-contract), the shape every
+report add-on shares: a line saying what it found, then a group per kind,
+each row a place. `--json` gives the same report as one JSON object. A
+password manager is a safer home for what it lists.
 
 | Kind | What counts |
 |---|---|
@@ -41,6 +47,7 @@ rule. A file is read the way the kernel reads it, so what's listed is what
 an answer could have shown. If the privacy add-on was deleted, it says so
 and looks for typed passwords alone.
 
-Exit codes, the kernel's: 0 nothing found; 42 something found; 2 refused.
+Exit codes, the kernel's: 0 nothing found (empty); 42 something found, which
+waits on you (populated), or no files to look in (unreachable); 2 refused.
 
 **Never:** prints a value it found, or writes anything.

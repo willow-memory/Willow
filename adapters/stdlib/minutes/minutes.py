@@ -1,18 +1,20 @@
 """minutes.py: meeting minutes: who decided what and when, and which actions
 are still open.
 
-    python adapters/stdlib/minutes/minutes.py --box DIR [--open]
+    python adapters/stdlib/minutes/minutes.py --box DIR [--open] [--json]
 
 The lines of your minutes that record a decision or an action, in the order
-they were made:
+they were made, as a report (ci/README.md, the report contract):
 
-    decisions
-      2026-03-02  board/march.md:4  Move the AGM to May.
-    actions open
-      2026-03-02  board/march.md:6  Ana  Send the figures  (due 2026-03-09)
-    actions closed
-      2026-03-02  board/march.md:7  (no owner)  Book the hall
-    1 decision, 1 open action, 1 closed
+    minutes: populated, 1 decision, 1 open action, 1 closed
+    ## decisions
+      board/march.md:4  2026-03-02  Move the AGM to May.
+    ## actions open
+      board/march.md:6  2026-03-02  Ana  Send the figures  (due 2026-03-09)
+    ## actions closed
+      board/march.md:7  2026-03-02  (no owner)  Book the hall
+
+`--json` prints the same report as one JSON object.
 
 **A decision** is a line that opens with Decision, Decided, Agreed or
 Resolved. **An action** opens with Action (or Action item), AI or Todo.
@@ -32,12 +34,14 @@ A line that shouts throughout, such as a calendar's ACTION:DISPLAY, is a
 machine's and is never read. A line's day is the latest date it says before any "by", "due", "before" or
 "until" (a due date is not the day of the meeting), else the nearest date
 written above it in its file, else the date its file is named for; a line no
-day reaches is left out. `--open` shows only the open actions. It only reads. Exit codes,
-the kernel's: 0 something found; 42 no decision or action; 2 refused.
+day reaches is left out. `--open` shows only the open actions. It only reads. Exit codes:
+0 `populated`, or `empty` (no decision or action, or with `--open` no open
+one); 2 refused. Nothing here is 42: an open action is listed, not escalated.
 """
 
 from __future__ import annotations
 
+import json
 import re
 import sys
 from pathlib import Path
@@ -65,6 +69,35 @@ NO_OWNER = "(no owner)"
 DUE = re.compile(
     r"\b(?:by|due|before|until)\b.*", re.I
 )  # a due date is not the meeting's day
+
+
+NAME = "minutes"
+
+
+# ── the report: the shape every report add-on prints (ci/README.md) ─────────
+def report(addon: str, state: str, said: str, groups: list) -> dict:
+    """A report: its state, one line said, and each group's rows (where,
+    what); a group named None comes first and has no heading."""
+    return {"addon": addon, "state": state, "said": said,
+            "groups": [{"name": g, "rows": [{"where": w, "what": x} for w, x in rows]}
+                       for g, rows in groups if rows]}  # fmt: skip
+
+
+def report_text(doc: dict) -> str:
+    """A report as every report add-on prints it: the same twenty lines each
+    keeps, held to this one by test_contract.py."""
+    rows = [r for g in doc["groups"] for r in g["rows"]]
+    w = min(max((len(r["where"]) for r in rows), default=0), 60)
+    out = [f"{doc['addon']}: {doc['state']}, {doc['said']}"]
+    for g in doc["groups"]:
+        if g["name"] is not None:
+            out.append(f"## {g['name']}")
+        out += [f"  {r['where']:<{w}}  {r['what']}".rstrip() for r in g["rows"]]
+    return "\n".join(out)
+
+
+def say(doc: dict, as_json: bool) -> None:
+    print(json.dumps(doc, ensure_ascii=False) if as_json else report_text(doc))
 
 
 def entries(pile: list[dict]) -> list[tuple[str, str, int, str]]:
@@ -144,31 +177,32 @@ def dash(d: str) -> str:
     return f"{d[:4]}-{d[4:6]}-{d[6:]}"
 
 
-def action_line(a: dict) -> str:
+def action_row(a: dict) -> tuple[str, str]:
     due = f"  (due {dash(a['due'])})" if a["due"] else ""
-    return f"  {dash(a['day'])}  {a['where']}  {a['who']}  {a['what']}{due}"
+    return a["where"], f"{dash(a['day'])}  {a['who']}  {a['what']}{due}"
 
 
-def show(got: dict, only_open: bool) -> list[str]:
-    out = []
-    if not only_open:
-        out.append("decisions")
-        out += [
-            f"  {dash(d['day'])}  {d['where']}  {d['what']}" for d in got["decisions"]
-        ]
-    out.append("actions open")
-    out += [action_line(a) for a in got["open"]]
-    if not only_open:
-        out.append("actions closed")
-        out += [action_line(a) for a in got["closed"]]
+def tally(got: dict) -> str:
     d, o, c = len(got["decisions"]), len(got["open"]), len(got["closed"])
-    out.append(
-        f"{d} decision{'s' if d != 1 else ''}, {o} open action{'s' if o != 1 else ''}, {c} closed"
-    )
-    return out
+    return f"{d} decision{'s' if d != 1 else ''}, {o} open action{'s' if o != 1 else ''}, {c} closed"
+
+
+def groups_of(got: dict, only_open: bool) -> list:
+    """The report's groups: decisions, actions open, actions closed; just the
+    open actions for --open."""
+    open_ = ("actions open", [action_row(a) for a in got["open"]])
+    if only_open:
+        return [open_]
+    return [
+        ("decisions", [(d["where"], f"{dash(d['day'])}  {d['what']}") for d in got["decisions"]]),
+        open_,
+        ("actions closed", [action_row(a) for a in got["closed"]]),
+    ]  # fmt: skip
 
 
 def main(argv: list[str]) -> int:
+    as_json = "--json" in argv
+    argv = [a for a in argv if a != "--json"]
     opts, args, it = {}, [], iter(argv)
     for a in it:
         if a == "--box":
@@ -186,9 +220,14 @@ def main(argv: list[str]) -> int:
         return kernel.REFUSED
     got = read(kernel.chunks(Path(kernel.config(box)["pile"])))
     if not (got["decisions"] or got["open"] or got["closed"]):
-        print("No line of your folder records a decision or an action.")
-        return kernel.ESCALATE
-    print("\n".join(show(got, "--open" in opts)))
+        said = "no line of your folder records a decision or an action"
+        say(report(NAME, "empty", said, []), as_json)
+        return kernel.ALIVE
+    groups = groups_of(got, "--open" in opts)
+    if not any(rows for _, rows in groups):
+        say(report(NAME, "empty", f"no open action ({tally(got)})", []), as_json)
+        return kernel.ALIVE
+    say(report(NAME, "populated", tally(got), groups), as_json)
     return kernel.ALIVE
 
 

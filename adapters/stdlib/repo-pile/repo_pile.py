@@ -340,10 +340,7 @@ def check(base: Path) -> int:
     todo = py(addon("todo"), "--box", box, "--json")  # its report: a row a line
     marked = sum(len(g["rows"]) for g in json.loads(todo.stdout)["groups"])
     say("todo", f"{marked} lines marked to do")
-    secrets = py(addon("secrets-audit"), "--box", box)
-    say(
-        "secrets", first(secrets, last=True) if secrets.stdout.strip() else "none found"
-    )
+    say("secrets", first(py(addon("secrets-audit"), "--box", box)))
     say("each", "the add-on itself, with --box, lists every place by file and line")
     return kernel.ALIVE
 
