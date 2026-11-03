@@ -1,8 +1,8 @@
 """advisories.py: your locked dependencies matched to a downloaded advisory
 database, offline. Python 3.9+.
 
-    python adapters/stdlib/advisories/advisories.py --box DIR  [--db OSV_DIR]
-    python adapters/stdlib/advisories/advisories.py --from FOLDER [--db OSV_DIR]
+    python adapters/stdlib/advisories/advisories.py --box DIR  [--db OSV_DIR] [--json]
+    python adapters/stdlib/advisories/advisories.py --from FOLDER [--db OSV_DIR] [--json]
 
 The lockfiles in your folder (the box's pile, or any folder) name a version
 of each dependency. A downloaded OSV database -- the one osv.dev exports per
@@ -11,10 +11,15 @@ names which versions of a package an advisory covers. This reads both and
 says which of your locked dependencies a known advisory names, and since
 when:
 
-    npm       lodash 4.17.4
-        GHSA-jf85-cpcp-j695  CVE-2020-8203  since 2020-07-15  Prototype Pollution
-    PyPI      requests 2.19.1
-        GHSA-x84v-xcm2-53pg  CVE-2018-18074  since 2018-10-09  Credentials leak
+    advisories: populated, 2 of 2 dependencies named by a known advisory
+    ## named by a known advisory
+      PyPI  requests 2.19.1  GHSA-x84v-xcm2-53pg  CVE-2018-18074  since 2018-10-09  Credentials leak
+      npm   lodash 4.17.4  GHSA-jf85-cpcp-j695  CVE-2020-8203  since 2020-07-15  Prototype Pollution
+
+It prints a report, as every report add-on does (adapters/stdlib/ci/README.md,
+the report contract), and `--json` gives the same report as one JSON object:
+a row per dependency and advisory, the ecosystem and then the package, its
+version and the advisory.
 
 Lockfiles read: `package-lock.json` (npm), `requirements.txt` (PyPI, the
 `name==version` pins), `poetry.lock` (PyPI) and `Cargo.lock` (crates.io).
@@ -25,13 +30,15 @@ A version is matched to an advisory by the advisory's own `versions` list
 when it has one, else by its ranges: a plain numeric version (`1`, `2.4`,
 `3.1.6`) is compared to the range's bounds. A version or a bound that is not
 plain numeric (a prerelease, an epoch, a local tag) is not guessed at: that
-pair is listed apart as "couldn't compare -- check by hand", never silently
-dropped and never silently matched.
+pair is listed apart, under "couldn't compare -- check by hand", never
+silently dropped and never silently matched.
 
 With no `--db`, it lists the dependencies it found and stops: an inventory,
-nothing to match against. It only reads, and writes nothing. Exit codes, the
-kernel's: 0 no advisory names your dependencies (or nothing to check); 42 one
-does, or one couldn't be compared, and waits on you; 2 refused.
+nothing to match against, its first line saying no database was given. It
+only reads, and writes nothing. Exit codes, the kernel's: 0 no advisory
+names your dependencies, or there are none to check (empty), or the
+inventory with no `--db` (populated); 42 one does, or one couldn't be
+compared, and waits on you (populated); 2 refused.
 """
 
 from __future__ import annotations
@@ -43,6 +50,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 import kernel  # noqa: E402
+
+NAME = "advisories"
 
 SKIP = {"node_modules", "vendor", ".git"}
 LOCKS = ("package-lock.json", "requirements.txt", "poetry.lock", "Cargo.lock")
@@ -233,11 +242,39 @@ def audit(folder: Path, db):
     return deps, named, unsure
 
 
-def show(eco, name, ver, hits) -> None:
-    print(f"{eco:9} {name} {ver}")
+def hit_rows(eco, name, ver, hits) -> list[tuple[str, str]]:
+    """A report row per advisory a dependency is named by: where is its
+    ecosystem, what the package, its version and the advisory."""
+    out = []
     for h in hits:
-        tail = f"  {h['summary'][:48]}" if h["summary"] else ""
-        print(f"    {h['id']:22} {h['cve']:16} since {h['since'] or '?':10}{tail}")
+        what = [f"{name} {ver}", h["id"], h["cve"], f"since {h['since'] or '?'}",
+                h["summary"][:48]]  # fmt: skip
+        out.append((eco, "  ".join(x for x in what if x)))
+    return out
+
+
+# ── the report: the shape every report add-on prints (ci/README.md) ─────────
+def report(addon: str, state: str, said: str, groups: list) -> dict:
+    """A report: its state, one line said, and each group's rows (where,
+    what); a group named None comes first and has no heading."""
+    return {"addon": addon, "state": state, "said": said,
+            "groups": [{"name": g, "rows": [{"where": w, "what": x} for w, x in rows]}
+                       for g, rows in groups if rows]}  # fmt: skip
+
+
+def report_text(doc: dict) -> str:
+    rows = [r for g in doc["groups"] for r in g["rows"]]
+    w = min(max((len(r["where"]) for r in rows), default=0), 60)
+    out = [f"{doc['addon']}: {doc['state']}, {doc['said']}"]
+    for g in doc["groups"]:
+        if g["name"] is not None:
+            out.append(f"## {g['name']}")
+        out += [f"  {r['where']:<{w}}  {r['what']}".rstrip() for r in g["rows"]]
+    return "\n".join(out)
+
+
+def say(doc: dict, as_json: bool) -> None:
+    print(json.dumps(doc, ensure_ascii=False) if as_json else report_text(doc))
 
 
 def main(argv: list[str]) -> int:
@@ -245,12 +282,15 @@ def main(argv: list[str]) -> int:
     for a in it:
         if a in ("--box", "--from", "--db"):
             opts[a] = next(it, "")
+        elif a == "--json":
+            opts[a] = "yes"
         else:
             opts["bad"] = a
     src = [o for o in ("--box", "--from") if o in opts]
     if "bad" in opts or len(src) != 1 or not all(opts.get(o) for o in opts):
         print(__doc__.split("\n\n")[1], file=sys.stderr)
         return kernel.REFUSED
+    as_json = "--json" in opts
     if "--box" in opts:
         box = Path(opts["--box"])
         if not (box / "kernel.json").exists():
@@ -270,30 +310,30 @@ def main(argv: list[str]) -> int:
             return kernel.REFUSED
 
     deps, named, unsure = audit(folder, db)
-    if db is None:
-        if not deps:
-            print("No lockfiles found in your folder.")
-            return kernel.ALIVE
-        for eco, name, ver in deps:
-            print(f"{eco:9} {name} {ver}")
-        print(f"\n{len(deps)} locked dependencies. Point --db at a downloaded OSV "
-              "or GitHub advisory database to match them against advisories.")  # fmt: skip
-        return kernel.ALIVE
-
     if not deps:
-        print("No lockfiles found in your folder.")
+        say(report(NAME, "empty", "no locked dependency in your folder's lockfiles", []),
+            as_json)  # fmt: skip
         return kernel.ALIVE
-    for eco, name, ver, hits in named:
-        show(eco, name, ver, hits)
-    if unsure:
-        print("\ncouldn't compare -- check by hand:")
-        for eco, name, ver, hits in unsure:
-            show(eco, name, ver, hits)
+    n = f"{len(deps)} locked dependenc{'y' if len(deps) == 1 else 'ies'}"
+    if db is None:
+        said = f"{n}; no advisory database given (--db), so none was matched"
+        say(report(NAME, "populated", said,
+                   [(None, [(eco, f"{name} {ver}") for eco, name, ver in deps])]),
+            as_json)  # fmt: skip
+        return kernel.ALIVE
     if not named and not unsure:
-        print(f"No known advisory names your {len(deps)} locked dependencies.")
+        say(report(NAME, "empty", f"no known advisory names your {n}", []), as_json)
         return kernel.ALIVE
-    print(f"\n{len(named)} of {len(deps)} dependencies named by a known advisory"
-          + (f"; {len(unsure)} couldn't be compared" if unsure else "") + ".")  # fmt: skip
+    said = (f"{len(named)} of {len(deps)} dependencies named by a known advisory"
+            + (f"; {len(unsure)} couldn't be compared" if unsure else ""))  # fmt: skip
+    groups = [
+        ("named by a known advisory", [r for d in named for r in hit_rows(*d)]),
+        (
+            "couldn't compare -- check by hand",
+            [r for d in unsure for r in hit_rows(*d)],
+        ),
+    ]
+    say(report(NAME, "populated", said, groups), as_json)
     return kernel.ESCALATE
 
 

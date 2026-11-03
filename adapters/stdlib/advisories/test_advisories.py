@@ -55,8 +55,11 @@ def test_an_ecosystem_range_without_a_versions_list(tmp_path):
     write(src, {"requirements.txt": "requests==2.19.1\ncertifi==2024.2.2\n"})
     got = run("--from", str(src), "--db", str(db))
     assert got.returncode == 42, got.stderr
-    assert "requests 2.19.1" in got.stdout and "certifi" not in got.stdout
-    assert "1 of 2" in got.stdout
+    assert got.stdout.splitlines() == [
+        "advisories: populated, 1 of 2 dependencies named by a known advisory",
+        "## named by a known advisory",
+        "  PyPI  requests 2.19.1  GHSA-x84v-xcm2-53pg  CVE-2018-18074  since 2020-07-15",
+    ]
 
 
 def write(folder: Path, files: dict[str, str]) -> None:
@@ -86,7 +89,25 @@ def test_a_named_dependency_by_versions_and_by_range(tmp_path):
     assert "lodash 4.17.4" in got.stdout and "GHSA-jf85-cpcp-j695" in got.stdout
     assert "CVE-2020-8203" in got.stdout and "since 2018-10-09" in got.stdout
     assert "2018-10-09T" not in got.stdout  # the date is cut to the day, no time
-    assert "requests 2.19.1" in got.stdout and "2 of 2" in got.stdout
+    assert got.stdout.splitlines() == [
+        "advisories: populated, 2 of 2 dependencies named by a known advisory",
+        "## named by a known advisory",
+        "  PyPI  requests 2.19.1  GHSA-x84v-xcm2-53pg  CVE-2018-18074  since 2018-10-09",
+        "  npm   lodash 4.17.4  GHSA-jf85-cpcp-j695  CVE-2020-8203  since 2020-07-15"
+        "  Prototype Pollution",
+    ]
+    doc = json.loads(run("--from", str(src), "--db", str(db), "--json").stdout)
+    assert doc == {
+        "addon": "advisories",
+        "state": "populated",
+        "said": "2 of 2 dependencies named by a known advisory",
+        "groups": [{"name": "named by a known advisory", "rows": [
+            {"where": "PyPI", "what": "requests 2.19.1  GHSA-x84v-xcm2-53pg"
+                                      "  CVE-2018-18074  since 2018-10-09"},
+            {"where": "npm", "what": "lodash 4.17.4  GHSA-jf85-cpcp-j695"
+                                     "  CVE-2020-8203  since 2020-07-15  Prototype Pollution"},
+        ]}],
+    }  # fmt: skip
 
 
 def test_range_bounds_are_compared_not_just_touched(tmp_path):
@@ -110,6 +131,9 @@ def test_range_bounds_are_compared_not_just_touched(tmp_path):
     )
     got = run("--from", str(src), "--db", str(db))
     assert got.returncode == 0, got.stdout + got.stderr  # both outside the range
+    assert got.stdout == (
+        "advisories: empty, no known advisory names your 2 locked dependencies\n"
+    )
     # and the versions that ARE inside are caught
     write(
         src,
@@ -125,7 +149,8 @@ def test_range_bounds_are_compared_not_just_touched(tmp_path):
         },
     )
     got = run("--from", str(src), "--db", str(db))
-    assert got.returncode == 42 and "2 of 2" in got.stdout, got.stdout
+    assert got.returncode == 42, got.stdout
+    assert got.stdout.startswith("advisories: populated, 2 of 2 dependencies named")
 
 
 def test_requirements_comments_and_markers_are_stripped(tmp_path):
@@ -157,7 +182,9 @@ def test_a_fixed_version_is_not_named(tmp_path):
     )
     got = run("--from", str(src), "--db", str(db))
     assert got.returncode == 0, got.stderr
-    assert "No known advisory" in got.stdout
+    assert got.stdout == (
+        "advisories: empty, no known advisory names your 1 locked dependency\n"
+    )
 
 
 def test_a_version_it_cannot_compare_is_listed_apart_not_guessed(tmp_path):
@@ -174,7 +201,12 @@ def test_a_version_it_cannot_compare_is_listed_apart_not_guessed(tmp_path):
     )
     got = run("--from", str(src), "--db", str(db))
     assert got.returncode == 42, got.stderr
-    assert "couldn't compare" in got.stdout and "left-pad 1.3.0-beta.1" in got.stdout
+    assert got.stdout.splitlines() == [
+        "advisories: populated, 0 of 1 dependencies named by a known advisory;"
+        " 1 couldn't be compared",
+        "## couldn't compare -- check by hand",
+        "  npm  left-pad 1.3.0-beta.1  GHSA-aaaa-bbbb-cccc  since 2020-07-15",
+    ]
 
 
 def test_three_ecosystems_and_pypi_name_normalisation(tmp_path):
@@ -194,7 +226,10 @@ def test_three_ecosystems_and_pypi_name_normalisation(tmp_path):
     got = run("--from", str(src), "--db", str(db))
     assert got.returncode == 42, got.stderr
     # the name is shown as the lockfile wrote it; normalisation is only for matching
-    assert "My_Pkg 1.0.0" in got.stdout and "openssl 0.10.48" in got.stdout
+    assert got.stdout.splitlines()[2:] == [
+        "  PyPI       My_Pkg 1.0.0  GHSA-pypi-0000-0000  since 2020-07-15",
+        "  crates.io  openssl 0.10.48  GHSA-crat-0000-0000  since 2020-07-15",
+    ]
 
 
 def test_nested_lockfiles_in_node_modules_are_skipped(tmp_path):
@@ -211,21 +246,41 @@ def test_nested_lockfiles_in_node_modules_are_skipped(tmp_path):
     )
     got = run("--from", str(src), "--db", str(db))
     assert got.returncode == 0, got.stderr  # the vendored lockfile was not read
+    assert got.stdout.startswith("advisories: empty, ")
 
 
 def test_without_a_db_it_lists_the_dependencies(tmp_path):
     src = tmp_path / "src"
     write(src, {"requirements.txt": "flask==2.0.1\nrequests==2.19.1\n"})
     got = run("--from", str(src))
-    assert got.returncode == 0, got.stderr
-    assert "flask 2.0.1" in got.stdout and "2 locked dependencies" in got.stdout
+    assert got.returncode == 0, got.stderr  # an inventory: nothing waits on you
+    assert got.stdout.splitlines() == [
+        "advisories: populated, 2 locked dependencies; no advisory database given"
+        " (--db), so none was matched",
+        "  PyPI  flask 2.0.1",
+        "  PyPI  requests 2.19.1",
+    ]
+    doc = json.loads(run("--from", str(src), "--json").stdout)
+    assert doc["state"] == "populated" and doc["groups"] == [{"name": None, "rows": [
+        {"where": "PyPI", "what": "flask 2.0.1"},
+        {"where": "PyPI", "what": "requests 2.19.1"},
+    ]}]  # fmt: skip
 
 
 def test_no_lockfiles_is_clean(tmp_path):
     src = tmp_path / "src"
     write(src, {"notes.md": "tomatoes want sun\n"})
     got = run("--from", str(src))
-    assert got.returncode == 0 and "No lockfiles found" in got.stdout
+    assert got.returncode == 0
+    assert got.stdout == (
+        "advisories: empty, no locked dependency in your folder's lockfiles\n"
+    )
+    assert json.loads(run("--from", str(src), "--json").stdout) == {
+        "addon": "advisories",
+        "state": "empty",
+        "said": "no locked dependency in your folder's lockfiles",
+        "groups": [],
+    }
 
 
 def test_it_writes_nothing(tmp_path):
