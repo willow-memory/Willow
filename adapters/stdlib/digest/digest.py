@@ -1,6 +1,6 @@
 """digest.py: one page of what your folder needs from you. Python 3.9+.
 
-    python adapters/stdlib/digest/digest.py --box DIR [--days N] [--now TS]
+    python adapters/stdlib/digest/digest.py --box DIR [--days N] [--now TS] [--json]
 
 Four sections, each in one of three states, never collapsed: something to
 show, nothing (said as nothing), or couldn't look (said with why):
@@ -19,8 +19,30 @@ tip doesn't move while you read it (willow-bot's `peek`, the morning screen's
 NEEDS YOU, read-only). A section whose add-on was deleted says so and the
 rest still show.
 
+On the command line it prints a report, as every report add-on does
+(adapters/stdlib/ci/README.md, the report contract): a group for each section
+with something in it, each row where, then what; `--json` gives the same
+report as one JSON object.
+
+    digest: populated, 1 waiting, 1 gone stale, 1 coming up, 1 asked again
+    ## Waiting for you
+      proposal:f391…a7ff  30 October (why: the note)
+    ## Gone stale
+      bins.txt:1          Thursday night
+    ## Coming up (next 14 days)
+      car.txt:1           2026-10-30  The car insurance renews on 2026-10-30.
+    ## Asked again
+      record.jsonl        a question asked 2 times, never answered
+
+A suggestion's where is its whole subject (cut short here), what approves
+it: python kernel.py seal --box BOX <where>. A section it couldn't look at is
+said on the first line, and when nothing else was found the report is
+unreachable, not empty. `render` is the page other add-ons and willow-bot's
+`needs` print, each section said in words.
+
 Exit codes, the kernel's: 0 nothing waits on you; 42 a suggestion waits, or
-an approval went stale; 2 refused (a record that doesn't verify, a bad
+an approval went stale, or a section couldn't be looked at and nothing else
+was found (unreachable); 2 refused (a record that doesn't verify, a bad
 command line).
 """
 
@@ -36,6 +58,7 @@ STDLIB = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(STDLIB.parents[1]))
 import kernel  # noqa: E402
 
+NAME = "digest"
 POPULATED, EMPTY, UNREACHABLE = "populated", "empty", "unreachable"
 
 
@@ -162,11 +185,80 @@ def render(doc: dict, days: int) -> str:
     return "\n".join(out)
 
 
+#: each section's title in a report, and what it's called on the first line
+TITLES = (("waiting", "Waiting for you", "waiting"),
+          ("stale", "Gone stale", "gone stale"),
+          ("coming", "Coming up (next {days} days)", "coming up"),
+          ("again", "Asked again", "asked again"))  # fmt: skip
+
+
+def rows_of(key: str, items: list) -> list[tuple[str, str]]:
+    """One section's items as rows: where, then what."""
+    if key == "waiting":
+        return [(w["subject"], f"{short(w['answer'])} (why: {short(w['why'])})")
+                for w in items]  # fmt: skip
+    if key == "stale":
+        return [(", ".join(g["was"] for g in e["gone"]), short(e["data"]))
+                for e in items]  # fmt: skip
+    if key == "coming":
+        return [(c["where"], f"{c['date']}  {short(c['line'])}") for c in items]
+    return [("record.jsonl", f"a question asked {n} times, never answered")
+            for n in items]  # fmt: skip
+
+
+def report_of(doc: dict, days: int, addon: str = NAME) -> dict:
+    """The digest's sections as a report (ci/README.md, the report contract):
+    a group per section with something in it; a section it couldn't look at
+    said on the first line, and unreachable when nothing else was found."""
+    groups, found, blind = [], [], []
+    for key, title, called in TITLES:
+        s = doc[key]
+        if s["state"] == UNREACHABLE:
+            blind.append(f"couldn't look at {called}: {s['why']}")
+        elif s["items"]:
+            groups.append((title.format(days=days), rows_of(key, s["items"])))
+            found.append(f"{len(s['items'])} {called}")
+    if found:
+        said = "; ".join([", ".join(found), *blind])
+        state = POPULATED
+    elif blind:
+        said, state = "; ".join(blind), UNREACHABLE
+    else:
+        said, state = "nothing waits on you", EMPTY
+    return report(addon, state, said, groups)
+
+
+# ── the report: the shape every report add-on prints (ci/README.md) ─────────
+def report(addon: str, state: str, said: str, groups: list) -> dict:
+    """A report: its state, one line said, and each group's rows (where,
+    what); a group named None comes first and has no heading."""
+    return {"addon": addon, "state": state, "said": said,
+            "groups": [{"name": g, "rows": [{"where": w, "what": x} for w, x in rows]}
+                       for g, rows in groups if rows]}  # fmt: skip
+
+
+def report_text(doc: dict) -> str:
+    rows = [r for g in doc["groups"] for r in g["rows"]]
+    w = min(max((len(r["where"]) for r in rows), default=0), 60)
+    out = [f"{doc['addon']}: {doc['state']}, {doc['said']}"]
+    for g in doc["groups"]:
+        if g["name"] is not None:
+            out.append(f"## {g['name']}")
+        out += [f"  {r['where']:<{w}}  {r['what']}".rstrip() for r in g["rows"]]
+    return "\n".join(out)
+
+
+def say(doc: dict, as_json: bool) -> None:
+    print(json.dumps(doc, ensure_ascii=False) if as_json else report_text(doc))
+
+
 def main(argv: list[str]) -> int:
     opts, args, it = {}, [], iter(argv)
     for a in it:
         if a in ("--box", "--days", "--now"):
             opts[a] = next(it, "")
+        elif a == "--json":
+            opts[a] = "yes"
         else:
             args.append(a)
     days = opts.get("--days", "14")
@@ -187,8 +279,9 @@ def main(argv: list[str]) -> int:
     if "refused" in doc:
         print(f"refused: {doc['refused']}", file=sys.stderr)
         return kernel.REFUSED
-    print(render(doc, int(days)), end="")
-    return code_of(doc)
+    rep = report_of(doc, int(days))
+    say(rep, "--json" in opts)
+    return kernel.ESCALATE if rep["state"] == UNREACHABLE else code_of(doc)
 
 
 if __name__ == "__main__":
