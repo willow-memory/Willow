@@ -391,6 +391,47 @@ def test_a_changed_proposal_is_no_longer_sealed_for_either_side(box):
     assert got.returncode == 42 and d["sealed"] == {} and "email" in d["forks"]
 
 
+def test_the_first_standing_seal_for_a_word_is_the_one_kept_as_the_kernel_keeps_it(box):
+    """Two sealed decisions for “email”: the first stands, as the kernel's
+    bite would serve the first for its question, so the Forge reading through
+    the kernel and this reading through kernel.sealed agree. When the first's
+    bytes no longer hash to its seal, the second is the one kept."""
+    first = proposed(box, "email=mail", "due=renewals")
+    seal_all(box, {p: s for p, s in first.items() if "email" in p})
+    got = run("propose", "my email", "--box", str(box), "--choose", "email=apple-mail")
+    assert got.returncode == 2 and "is not settled" not in got.stderr, (
+        "settled: nothing to propose"
+    )
+    data = json.dumps(
+        {
+            "word": "email",
+            "decision_type": "willow-email",
+            "chose": "apple-mail",
+            "over": [],
+            "why": "",
+        }
+    )
+    prop = {
+        "path": "forge/decisions/willow-email.json",
+        "data": data,
+        "cites": [],
+        "claim": "second",
+    }
+    assert (
+        k("bite", "--box", str(box), "forge decision willow-email").returncode == 0
+    ), "the first is served"
+    f = box / "p.jsonl"
+    f.write_text(json.dumps(prop) + "\n")
+    second = k("propose", "--box", str(box), "--file", str(f)).stdout.split()[1]
+    assert k("seal", "--box", str(box), second).returncode == 0
+    d = json.loads(run("suggest", "my email", "--box", str(box), "--json").stdout)
+    assert d["sealed"]["email"]["chose"] == "mail"
+    pf = box / "proposals" / f"{first['forge/decisions/willow-email.json'][9:]}.json"
+    pf.write_text(pf.read_text().replace("no reason given", "a reason given"))
+    d = json.loads(run("suggest", "my email", "--box", str(box), "--json").stdout)
+    assert d["sealed"]["email"]["chose"] == "apple-mail"
+
+
 def test_a_seal_for_a_card_that_no_longer_does_the_word_is_said_and_asked_again(box):
     """The person sealed a decision whose option isn't among the word's cards
     now (the alias file changed, say): stale, said, and the fork stays open."""

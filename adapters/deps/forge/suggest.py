@@ -99,7 +99,10 @@ def on_record(box: Path, rec) -> tuple[dict, dict]:
     subject}}, {bite_key: {row, subject, text}}). A seal counts only while
     its proof holds under the key and the proposal still hashes to what was
     sealed (kernel.sealed, kernel.standing); the key is the kernel's to read,
-    never this script's. A later seal for the same word is the one kept."""
+    never this script's. The FIRST standing seal for a word is the one kept:
+    that is what the kernel's bite serves for a question, so the Forge, which
+    asks the kernel, reads the same answer as this does. A later seal for the
+    same word waits its turn until the first no longer stands."""
     rows, _ = kernel.read(box / "record.jsonl")
     decisions, stacks = {}, {}
     for subj, row in kernel.sealed(box, rows).items():
@@ -107,7 +110,9 @@ def on_record(box: Path, rec) -> tuple[dict, dict]:
         if why is not None:
             continue
         if prop["path"] == STACK_PATH:
-            stacks[asked] = {"row": row["n"], "subject": subj, "text": prop["data"]}
+            stacks.setdefault(
+                asked, {"row": row["n"], "subject": subj, "text": prop["data"]}
+            )
         elif prop["path"].startswith(rec.DECISION_PATH.split("{")[0]):
             try:
                 data = json.loads(prop["data"])
@@ -115,11 +120,10 @@ def on_record(box: Path, rec) -> tuple[dict, dict]:
                 continue
             if isinstance(data, dict) and isinstance(data.get("word"), str):
                 if isinstance(data.get("chose"), str):
-                    decisions[data["word"]] = {
-                        "chose": data["chose"],
-                        "row": row["n"],
-                        "subject": subj,
-                    }
+                    decisions.setdefault(
+                        data["word"],
+                        {"chose": data["chose"], "row": row["n"], "subject": subj},
+                    )
     return decisions, stacks
 
 
