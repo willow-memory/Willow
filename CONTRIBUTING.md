@@ -209,14 +209,28 @@ beside the GitHub one: a host.json for `adapters/stdlib/ci/whose.py`, and that s
 - Regenerate the add-on list (ADDONS.md, and the README's one feature) with
   `python adapters/stdlib/readme/readme.py write`, never by hand;
   `test_docs.py` fails if it's stale.
-- Stack on the open pull requests before you open yours. List them first;
-  one that changes a file yours changes (almost any does: CHANGELOG.md and
-  the generated lists are in nearly every one) is merged into your branch,
-  and your pull request's base is its branch, not `main`. With several, merge
-  each into your branch and name the newest as its base. Regenerate what's
-  generated after the merge, and merge CHANGELOG.md by hand, newest first.
-  When the one below merges and its branch is deleted, GitHub moves yours
-  onto `main`; if its branch stays, change your base to `main` yourself.
+- Branch from `main`, and put the changelog number in with the first push:
+  open the pull request, add its number to your CHANGELOG.md entry, and push
+  once, so the first run is not thrown away. Every push after the first
+  starts a run of every check, and a stack of branches re-runs them all
+  whenever one of them moves.
+- CI's `against` job holds your pull request to the other open ones, and its
+  summary says what it found. **A duplicate fails it:** a name both pull
+  requests add (an add-on folder, an idea on `adapters/planned.json`, a key
+  of `COMMANDS`, a path in FILES.md); settle it on the pull requests, with
+  the maintainer, before more is built. **A collision is a warning:**
+  a file you both change that git cannot merge, named with the pull request
+  to merge first (CHANGELOG.md, the generated lists, FILES.md,
+  `adapters/planned.json` and the `COMMANDS` table are settled by
+  `adapters/stdlib/restack/restack.py`, and it only says so). Run it yourself
+  with `python adapters/stdlib/against/against.py check --base origin/main HEAD OTHER ...`.
+- **Stack only when the check names a pull request to merge first.** Then
+  merge that pull request's branch into yours and make its branch your
+  pull request's base, not `main`. With several named, merge each and name
+  the newest as the base. Regenerate what's generated after the merge, and
+  merge CHANGELOG.md by hand, newest first. When the one below merges and
+  its branch is deleted, GitHub moves yours onto `main`; if its branch
+  stays, change your base to `main` yourself.
 
 ## Bugs
 

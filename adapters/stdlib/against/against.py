@@ -66,6 +66,17 @@ def commit(ref: str) -> str | None:
     return got.stdout.strip() if got.returncode == 0 else None
 
 
+def left(ref: str, rev: str) -> str:
+    """Where `rev` left `ref`: their merge base."""
+    got = subprocess.run(
+        ["git", "merge-base", ref, rev], capture_output=True, text=True
+    )
+    if got.returncode != 0:
+        why = got.stderr.strip().splitlines()
+        raise Unchecked(why[-1] if why else "shares no history with the base")
+    return got.stdout.strip()
+
+
 def label(ref: str) -> str:
     """`#12` for a pull request's ref (`pr/12`, `refs/pull/12/head`), else the ref."""
     m = PULL.search(ref)
@@ -223,7 +234,7 @@ def check(base: str, head: str, others: list[str]) -> tuple[int, list[str]]:
     ref, mine = commit(base), commit(head)
     if not ref or not mine:
         raise Unchecked(f"{base if not ref else head} is not a ref")
-    mine_adds = Adds(mine, git("merge-base", ref, mine).strip())
+    mine_adds = Adds(mine, left(ref, mine))
     lines, done, skipped = [], [], []
     tally = {"duplicate": 0, "collides": 0, "near": 0}
     for other in others:
@@ -232,7 +243,7 @@ def check(base: str, head: str, others: list[str]) -> tuple[int, list[str]]:
         try:
             if not sha:
                 raise Unchecked("not a ref")
-            there = Adds(sha, git("merge-base", ref, sha).strip())
+            there = Adds(sha, left(ref, sha))
             found = (duplicates(mine_adds, there, who) + collisions(mine, sha, who)
                      + nears(mine_adds, there, who))  # fmt: skip
         except Unchecked as why:

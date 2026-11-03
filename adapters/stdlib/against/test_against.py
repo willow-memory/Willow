@@ -344,7 +344,7 @@ def test_a_branch_with_no_history_in_common_is_said_not_checked(repo):
     git(repo, "checkout", "-q", "-f", "main")
     got = check(repo, "mine", "island")
     assert got.returncode == 42
-    assert got.stdout.startswith("not checked: island: ")
+    assert got.stdout.startswith("not checked: island: shares no history with the base")
 
 
 def test_a_head_or_base_that_is_not_a_ref_is_refused(repo):

@@ -74,6 +74,53 @@ jobs:
           PR: ${{ github.event.number }}
         run: python adapters/stdlib/ci/changelog.py --base "$BASE" --pr "$PR"
 
+  against:
+    # This pull request held to the other open ones (adapters/stdlib/against):
+    # a name both add (an add-on, an idea, a COMMANDS key, a path in FILES.md)
+    # fails it, a file both change that cannot be merged is named in the
+    # summary with the pull request to merge first, and an idea near another's
+    # is suggested. Only a duplicate fails, and a pull request stacks on
+    # another only when this names one (CONTRIBUTING.md). Each open pull
+    # request's head is fetched as refs/pull/N/head, which a fork's has too.
+    # 42 is nothing to check, no other open or a head that couldn't be fetched:
+    # the summary says which, and it passes. Anything but 0, 42 or a duplicate's
+    # 2 is the check itself broken, and fails too.
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    env:
+      GH_TOKEN: ${{ github.token }}
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - env:
+          BASE: origin/${{ github.base_ref }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          others=$(gh pr list --repo "$GITHUB_REPOSITORY" --state open --limit 200 --json number --jq ".[].number | select(. != $PR)")
+          if [ -z "$others" ]; then
+            echo "No other pull request is open: nothing to hold this one to." | tee -a "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          refs=()
+          for n in $others; do
+            git fetch -q origin "+refs/pull/$n/head:refs/remotes/pr/$n" || echo "could not fetch #$n"
+            refs+=("refs/remotes/pr/$n")
+          done
+          set +e
+          python adapters/stdlib/against/against.py check --base "$BASE" "$HEAD" "${refs[@]}" > "$RUNNER_TEMP/against.txt"
+          code=$?
+          { echo '### Against the open pull requests'; echo; echo '```'; cat "$RUNNER_TEMP/against.txt"; echo '```'; } | tee -a "$GITHUB_STEP_SUMMARY"
+          # exit 2 is a duplicate: the job fails on it, and on a broken check
+          [ "$code" = 0 ] || [ "$code" = 42 ]
+
   first:
     # The checks this pull request's change can reach, cheapest first,
     # stopping at the first that fails (adapters/stdlib/test-impact): a
