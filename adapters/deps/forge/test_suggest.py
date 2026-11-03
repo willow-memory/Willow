@@ -624,3 +624,26 @@ def test_build_leaves_out_what_assemble_refuses_and_says_so(box, tmp_path):
 def test_steps_of_reads_a_stack_file_as_the_stack_add_on_does():
     text = "# a title\n\n## for it\n- coming-up -- --box {box}\n- pdf -- --box {box}\nprose\n- coming-up -- --box {box}\n"
     assert suggest.steps_of(text) == ["coming-up", "pdf"]
+
+
+def test_build_flags_a_step_that_runs_and_does_not_come_back_clean(box, tmp_path):
+    """mail is a reader: `- mail -- --box {box}` is not its command line, so it
+    refuses (exit 2) on the page, and build says so rather than hide it."""
+    sealed_stack(box, "what is due, and my email", "due=coming-up", "email=mail")
+    to = tmp_path / "st"
+    data = run(
+        "build",
+        "what is due, and my email",
+        "--box",
+        str(box),
+        "--to",
+        str(to),
+        "--json",
+    )
+    assert data.returncode == 42
+    doc = holds_the_shape(json.loads(data.stdout), data.returncode)
+    assert "; 1 flagged, 0 left out" in doc["said"]
+    rows = {r["where"]: r["what"] for r in doc["groups"][0]["rows"]}
+    assert rows["adapters/stdlib/coming-up/"].endswith("ran: clean")
+    assert rows["adapters/stdlib/mail/"].endswith("ran: exit 2")
+    assert "(exit 2)" in (to / "page.md").read_text(encoding="utf-8")
