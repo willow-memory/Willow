@@ -1740,6 +1740,10 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- `pii-audit` reads a run holding a written date, year first, as dates, not
+  a card number: two dates side by side (`2027-01-09  2027-01-09`, as
+  milestones prints a row) are sixteen digits that pass Luhn one time in
+  ten, and listed milestones' own card and tests. (#196)
 - `jeles mirror` writes a store too big for one kernel file in parts under
   the kernel's `MAX_FILE` (store.db.1.txt and on), cut only between
   nuggets; a real store (2,277 nuggets, 2.5 MB) mirrored as one file was

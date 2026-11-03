@@ -45,6 +45,10 @@ import kernel  # noqa: E402
 
 #: digit runs with optional group separators, 8 to 23 characters about
 RUN = re.compile(r"(?<![\d.\w-])\d(?:[\d -]{6,21})\d(?![\d.\w-])")
+#: a written calendar date, year first: a group no card, NHS or tax number has
+DATE = re.compile(
+    r"(?<!\d)(?:19|20)\d\d-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01])(?!\d)"
+)
 SSN = re.compile(r"\b(?!000|666|9\d\d)\d{3}-(?!00)\d{2}-(?!0000)\d{4}\b")
 NI = re.compile(
     r"\b(?![DFIQUV])[A-Z](?![DFIQUVO])[A-Z]\s?\d{2}\s?\d{2}\s?\d{2}\s?[A-D]\b"
@@ -71,7 +75,12 @@ NAMED = {"an NHS number": ("nhs",), "a Medicare number": ("medicare",),
 def kinds_of(run: str, line: str = "") -> list[str]:
     """What the digit run checks out as; [] for a run that passes nothing.
     The separators are set aside, the checks are run on the digits, and a
-    kind whose check is a one-in-ten coin needs its name on the line."""
+    kind whose check is a one-in-ten coin needs its name on the line. A run
+    holding a written date (2027-01-09) is dates: no number is grouped 4-2-2,
+    and two dates side by side are sixteen digits that pass Luhn one time in
+    ten."""
+    if DATE.search(run):
+        return []
     digits = re.sub(r"[ -]", "", run)
     said = line.lower()
     out = []
