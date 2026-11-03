@@ -42,6 +42,10 @@ def test_a_hook_that_breaks_blocks_and_says_how():
     assert got.stderr.endswith(b"blocked: the hook broke, it exited 1\n")
     traceback = run("--hook", hook("1/0"))
     assert traceback.returncode == 2 and b"ZeroDivisionError" in traceback.stderr
+    assert b"Traceback" not in traceback.stderr, "one line, never the traceback"
+    assert traceback.stderr.startswith(
+        b"blocked: the hook broke, it exited 1; its last words: "
+    )
     killed = run(
         "--hook", hook("import os, signal; os.kill(os.getpid(), signal.SIGKILL)")
     )

@@ -13,7 +13,9 @@ rewritten: which one is right is yours to say.
 
 Two lines say the same thing when they share at least half the shorter
 one's words, and at least two: words here leaving out small words (the
-kernel's), the date or amount itself, units, months and weekdays. One shared
+kernel's), the date or amount itself, units, months and weekdays, and any
+word that's everywhere (on more than one dated line in 500, and more than
+10), which is about nothing in particular. One shared
 word is a label ("Date:"), not a subject. Records of one kind are left alone
 and counted: files named alike but numbered differently (two invoices, two
 tax years), a subject said in the same words on three lines or more (a
@@ -80,6 +82,12 @@ DIGITS = re.compile(r"\d+")
 #: a subject said in the same words on this many lines is a form's field
 #: ("Total due:" on every invoice) or a table's rows, not a claim made twice
 FIELD = 3
+#: a word on more than one dated line in COMMON, and on more than FLOOR lines,
+#: is no subject: in a folder of repositories "willow" or "kernel" is on
+#: thousands, and two lines sharing it are about nothing in particular. Left
+#: in, every such pair was a candidate (9.5 million over 14 repositories,
+#: 371,125 "disagreements", over two minutes); a small folder keeps every word
+COMMON, FLOOR = 500, 10
 
 
 def kin(a: str, b: str) -> bool:
@@ -158,6 +166,17 @@ def same(a: dict, b: dict) -> bool:
     return both >= MIN_WORDS and both >= kernel.HOLD * len(short)
 
 
+def everywhere(found: list[dict]) -> set[str]:
+    """The words on more than one line in COMMON, and on more than FLOOR
+    lines: no subject, since two lines holding one are about nothing in
+    particular."""
+    seen: dict[str, int] = {}
+    for a in found:
+        for w in a["stems"]:
+            seen[w] = seen.get(w, 0) + 1
+    return {w for w, n in seen.items() if n > max(len(found) / COMMON, FLOOR)}
+
+
 def disagreements(found: list[dict]) -> tuple[list[dict], int, int]:
     """Each pair that says the same thing and states a different date, or a
     different amount of one unit, and how many pairs saying the same thing
@@ -167,6 +186,8 @@ def disagreements(found: list[dict]) -> tuple[list[dict], int, int]:
     subject said in the same words on `FIELD` lines or more, or two items one
     after the other in a list (the nearside tyre and the offside). Neither
     side is picked."""
+    common = everywhere(found)
+    found = [{**a, "stems": a["stems"] - common} for a in found]
     has: dict[str, set[int]] = {}
     for i, a in enumerate(found):
         for w in a["stems"]:
