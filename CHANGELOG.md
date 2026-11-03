@@ -1740,6 +1740,10 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- `jeles mirror` writes a store too big for one kernel file in parts under
+  the kernel's `MAX_FILE` (`store.db.1.txt` and on), cut only between
+  nuggets; a real store (2,277 nuggets, 2.5 MB) mirrored as one file was
+  never read, 0 passages, and is now 6,476. (#195)
 - The Java, TypeScript and C# ports exit 42 from a `propose` whose every
   line is refused, as `kernel.py` has since bug #96's fix; they exited 0,
   which looked like an approved answer. The vectors' session now proposes a
