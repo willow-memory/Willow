@@ -36,8 +36,9 @@ says how). The first was v0.1.0.
   where the idea said `to`: the `sent` and `received` rows are the point.
   The `share` idea comes off the list. `demo/johnson` passes one report
   between five people's willows, through a forged copy a correction, a key
-  rotated on the way and a rewritten record that four other people's
-  packages catch, and CI runs it
+  rotated on the way, a rewritten record that four other people's
+  packages catch, and three stacks sent to three people, two taken on under
+  their own seal and run over their own folders and one declined, and CI runs it
   as `demo:share`.
 - `ports/rust`, a fifth port of `kernel.py`: Rust, the standard library
   only and no crates, following the Go port function for function. What

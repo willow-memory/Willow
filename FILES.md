@@ -1486,7 +1486,7 @@ willow/
 │   ├── johnson/              one report passed between five people's willows, a forged copy, a correction and a rewrite caught
 │   │   ├── README.md         the scene, what each step shows, and what it found
 │   │   ├── make_life.py      the five people's files, the same bytes every run
-│   │   ├── scene.py          the report sealed, sent, forwarded hop by hop, forged once, corrected, and witnessed
+│   │   ├── scene.py          the report sealed, sent, forwarded hop by hop, forged once, corrected and witnessed; stacks shared, taken and declined
 │   │   └── test_scene.py     holds the scene to what README.md says it shows
 │   ├── novelty.py           the reusable novelty check: have these pieces been put together before?
 │   ├── test_novelty.py      a novel description reads as novel, one an existing demo holds as prior art

@@ -50,8 +50,28 @@ afterwards. The people are made up, and so is everything they write down.
    them: the real one holds, the rewritten one is `rewritten` for Walt,
    Aurelie, Tamsin and Harold alike. Harold never had a package from Ines;
    her layer inside Tamsin's is enough.
-7. **Every chain verifies**, and only Ines's holds seals: nobody along the
-   way approved anything, they only received and passed on.
+7. **Different stacks for different people.** A stack (the
+   [stack](../../adapters/stdlib/stack/) add-on's file of steps) is sealed
+   like an answer that cites nothing, so it travels the same way. Ines seals
+   two: a **case file** (coming up, where the notes disagree, who is in it,
+   what is signed off) and a lighter **client view**; Tamsin seals an
+   **exhibit check**. Each pins every step's add-on by SHA-256 on a comment
+   line, which `stack.py` skips.
+
+   | Stack | From | To | What they do |
+   |---|---|---|---|
+   | case file | Ines | Walt | checks every pin, seals it, runs it over their own box |
+   | client view | Ines | Aurelie, directly | the same |
+   | exhibit check | Tamsin | Harold | declines it through the kernel: a mediator runs no party's tools |
+
+   The stack travels and the files don't: run over Walt's box, the case
+   file's "what's coming up" is the 15:00 call and the Kessler case from
+   Walt's own notes; over Ines's, her diary line. "Who is in it" finds
+   Johnson in five of Ines's files and no one in Walt's.
+8. **Every chain verifies**, and each record holds only its own seals: Ines
+   seven (her answers and stacks), Walt and Aurelie one each (the stack
+   they took), Tamsin one, Harold none. Nobody approved anything for anyone
+   else; receiving is never sealing.
 
 `test_scene.py` holds the scene to each of those, and to one more: no
 package holds a line of anyone's files.
@@ -81,6 +101,20 @@ package holds a line of anyone's files.
   as "for someone else". A forward is now good when what it wraps was for
   its signer's key or one its signed rotations leave, and a package for a
   key you rotated from is still yours at `receive`.
+- **Taking a stack on is sealing it yourself.** The kernel seals only
+  what you propose, and a proposal that cites nothing passes its door, so
+  Walt proposes the stack's text under Walt's own words, with a claim that
+  names the package, and seals it. The received package stays a receipt;
+  Walt's seal is Walt's. Declining is the same door, and Harold's record
+  says so.
+- **A stack you sealed is one of your answers.** `export` lists every
+  sealed answer, so Walt's "what is signed off" opens with the case-file
+  stack Walt just sealed. True, and worth knowing before a stack exports
+  itself to someone else.
+- **A rung is about who sent to you, not whose layers you checked.**
+  Aurelie checked Ines's signed layer inside two of Walt's packages, but
+  the client view is the first package *from* Ines, so Aurelie's `receive`
+  says `rookie`. Walt, who had two from Ines, says `steady`.
 - **A received answer can't become yours.** The kernel seals only answers
   made from your own files' passages. Walt can pass Ines's report on and
   everyone can check it, but it never becomes Walt's own sealed answer.

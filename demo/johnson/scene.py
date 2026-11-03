@@ -24,7 +24,15 @@ there yet. Then the scene:
    and every row after it re-hashed, so her own `verify` still says it
    holds. Each of the others holds her record to the packages they kept
    (share witness): the real one holds, the rewritten one doesn't.
-7. Every box is verified, and nobody's record holds a seal but their own.
+7. Different stacks for different people. Ines seals two stacks of her
+   own, a case file and a client view, and Tamsin one, an exhibit check,
+   each pinning its steps' add-ons by SHA-256. Ines sends the case file to
+   Walt and the client view straight to Aurelie; Tamsin sends hers to
+   Harold. Walt and Aurelie check every pin against their own add-ons, seal
+   the stack themselves (its claim names the package) and run it over their
+   own box; Harold declines his through the kernel. The stack travels; the
+   files it reads never do.
+8. Every box is verified, and each record holds only its own seals.
 
 It writes a transcript to standard output and scene.json under --to: each
 person's public key, rows and what they sent and received, and the packages.
@@ -72,6 +80,62 @@ KEPT = {"walt": ["report", "report-v2"],
         "aurelie": ["walt-to-aurelie", "walt-to-aurelie-v2"],
         "tamsin": ["aurelie-to-tamsin", "aurelie-to-tamsin-v2"],
         "harold": ["tamsin-to-harold", "tamsin-to-harold-v2"]}  # fmt: skip
+STACK = ROOT / "adapters" / "stdlib" / "stack" / "stack.py"
+LATER = "2026-03-12T15:30:00Z"  # the clock the stacks' coming-up steps read
+#: each person's stacks: (name, maker, the words it is sealed under, why,
+#: [(pool heading, step add-on, its arguments)])
+STACKS = {
+    "case-file": ("ines", "stack adjuster case file", "what a case holds before it goes out", [
+        ("what's coming up", "coming-up", f"--box {{box}} --now {LATER}"),
+        ("where the notes disagree", "contradictions", "--box {box}"),
+        ("who is in it", "people", "--box {box}"),
+        ("what is signed off", "export", "--box {box}")]),
+    "client-view": ("ines", "stack client view", "what a client needs from the adjuster", [
+        ("what is signed off", "export", "--box {box}"),
+        ("what's coming up", "coming-up", f"--box {{box}} --now {LATER}")]),
+    "exhibit-check": ("tamsin", "stack exhibit check", "what counsel checks before an exhibit is filed", [
+        ("where the papers disagree", "contradictions", "--box {box}"),
+        ("what's coming up", "coming-up", f"--box {{box}} --now {LATER}")]),
+}  # fmt: skip
+#: the seals each record ends with: Ines's answers and stacks, a stack each
+#: for Walt and Aurelie, who took one, Tamsin's own, and none for Harold
+SEALS = {"ines": 7, "walt": 1, "aurelie": 1, "tamsin": 1, "harold": 0}
+#: who each stack goes to, and what they do with it
+SHARED = [("case-file", "walt", "take"), ("client-view", "aurelie", "take"),
+          ("exhibit-check", "harold", "decline")]  # fmt: skip
+
+
+def script(name: str) -> Path:
+    return ROOT / "adapters" / "stdlib" / name / (name.replace("-", "_") + ".py")
+
+
+def stack_text(name: str) -> str:
+    """The stack file, with each step's add-on pinned by its SHA-256 on a
+    comment line, which stack.py skips and a receiver checks."""
+    maker, _, why, steps = STACKS[name]
+    out = [f"# {NAMES[maker]}'s {name.replace('-', ' ')}: {why}"]
+    for step in sorted({s for _, s, _ in steps}):
+        out.append(f"# pin {step} {h256(script(step).read_text(encoding='utf-8'))}")
+    for pool, step, args in steps:
+        out += ["", f"## {pool}", f"- {step} -- {args}"]
+    return "\n".join(out) + "\n"
+
+
+def pools(page: str) -> list[tuple[str, str]]:
+    """(pool, the first line its step printed), from a stack's page."""
+    out, lines = [], page.splitlines()
+    for i, line in enumerate(lines):
+        if line.startswith("## "):
+            body = [x.strip() for x in lines[i + 1 :] if x.strip()][2:3]
+            out.append((line[3:].split(" (")[0], body[0][:70] if body else ""))
+    return out
+
+
+def pins(text: str) -> dict[str, str]:
+    return {w[2]: w[3] for w in (line.split() for line in text.splitlines())
+            if w[:2] == ["#", "pin"] and len(w) == 4}  # fmt: skip
+
+
 #: what the call log says, which her first report got wrong, and how she asks
 #: again: the first question's words would serve her sealed answer
 AGAIN = "what day did Della Johnson call to report the leak"
@@ -239,8 +303,85 @@ class Scene:
         self.say("\n── 6. the people as witnesses")
         self.witnesses()
 
-        self.say("\n── 7. every chain")
+        self.say("\n── 7. different stacks for different people")
+        self.stacks()
+
+        self.say("\n── 8. every chain")
         return self.summary()
+
+    def propose(self, who: str, words: str, prop: dict) -> str:
+        """The person's own words, an empty bite, and a proposal citing
+        nothing: a stack is made of add-ons, not of the folder's lines."""
+        self.run(KERNEL, "bite", "--box", self.box(who), words, "--now", self.ts(),
+                 want=(0, 42))  # fmt: skip
+        sug = self.to / who / "suggestion.jsonl"
+        sug.write_text(json.dumps(prop) + "\n")
+        out = self.run(KERNEL, "propose", "--box", self.box(who), "--file", sug,
+                       "--now", self.ts(), want=(42,))  # fmt: skip
+        sug.unlink()
+        return out.split()[1] if out.startswith("pass") else ""
+
+    def keep(self, who: str, name: str, text: str, claim: str) -> str:
+        words = STACKS[name][1]
+        subj = self.propose(who, words, {"path": f"stacks/{name}.md", "data": text,
+                                         "cites": [], "claim": claim})  # fmt: skip
+        self.run(KERNEL, "seal", "--box", self.box(who), subj, "--now", self.ts())
+        return subj
+
+    def stacks(self) -> None:
+        self.stacked = {}
+        made = {}
+        for name, (maker, _, why, _) in STACKS.items():
+            made[name] = self.keep(maker, name, stack_text(name), why)
+            self.say(f"{NAMES[maker]} seals the {name.replace('-', ' ')} stack")
+        for name, to_whom, choice in SHARED:
+            maker = STACKS[name][0]
+            out = self.share("send", maker, "--answer", made[name], "--for", self.pub[to_whom],
+                             "--to", self.to / f"stack-{name}.pkg", "--note",
+                             f"my {name.replace('-', ' ')} stack")  # fmt: skip
+            pid = self.packed(f"stack-{name}", out)
+            got = self.share(
+                "receive", to_whom, "--package", self.to / f"stack-{name}.pkg"
+            )
+            rung = (
+                got.splitlines()[1].split("(")[1].split(")")[0] if "(" in got else "?"
+            )
+            text = json.loads((self.to / f"stack-{name}.pkg").read_text())["answers"][
+                0
+            ]["data"]
+            same = all(h256(script(s).read_text(encoding="utf-8")) == h
+                       for s, h in pins(text).items())  # fmt: skip
+            self.say(f"{NAMES[to_whom]} receives it ({rung}); every step's add-on "
+                     f"{'is the same code here' if same else 'is NOT the same code here'}")  # fmt: skip
+            if choice == "decline" or not same:
+                subj = self.propose(to_whom, STACKS[name][1], {
+                    "path": f"stacks/{name}.md", "data": text, "cites": [],
+                    "claim": f"offered as {pid}; a mediator runs no party's tools"})  # fmt: skip
+                said = self.run(KERNEL, "decline", "--box", self.box(to_whom), subj,
+                                "--now", self.ts()).strip()  # fmt: skip
+                self.say(f"{NAMES[to_whom]} declines it: {said.split(';')[1].strip()}")
+                self.stacked[name] = {"to": to_whom, "taken": False}
+                continue
+            self.keep(to_whom, name, text, f"taken from {pid}, every pin checked")
+            kept = self.box(to_whom) / "written" / "stacks" / f"{name}.md"
+            ran = subprocess.run([sys.executable, str(STACK), "--box", str(self.box(to_whom)),
+                                  "--stack", str(kept)], capture_output=True, text=True)  # fmt: skip
+            self.say(f"{NAMES[to_whom]} seals it and runs it over their own box"
+                     f" (exit {ran.returncode}):")  # fmt: skip
+            mine = subprocess.run([sys.executable, str(STACK), "--box", str(self.box(maker)),
+                                   "--stack", str(self.box(maker) / "written" / "stacks" / f"{name}.md")],
+                                  capture_output=True, text=True)  # fmt: skip
+            theirs = dict(pools(mine.stdout))
+            for pool, first in pools(ran.stdout):
+                self.say(f"  ## {pool:26} {first}")
+                if theirs.get(pool) != first:
+                    label = f"(over {NAMES[maker]}'s own box:"
+                    self.say(f"     {label:27} {theirs.get(pool)})")
+            self.stacked[name] = {"to": to_whom, "taken": True, "exit": ran.returncode,
+                                  "same_text": kept.read_text() == text,
+                                  "pools": pools(ran.stdout), "maker_pools": pools(mine.stdout)}  # fmt: skip
+            if ran.returncode not in (0, 42) or not ran.stdout.strip():
+                self.wrong.append(f"{NAMES[to_whom]}'s run of {name} printed nothing")
 
     def rotate(self, who: str, why: str) -> None:
         """A new identity, signed by the old one: never a silent swap."""
@@ -296,8 +437,10 @@ class Scene:
             rows = [json.loads(line) for line in
                     (self.box(who) / "record.jsonl").read_text().splitlines()]  # fmt: skip
             seals = [r["n"] for r in rows if r["kind"] == "seal"]
-            if who != "ines" and seals:
-                self.wrong.append(f"{NAMES[who]}'s record holds a seal")
+            if len(seals) != SEALS[who]:
+                self.wrong.append(
+                    f"{NAMES[who]}'s record holds {len(seals)} seals, not {SEALS[who]}"
+                )
             people[who] = {
                 "key": self.pub[who], "verify": said, "rows": len(rows), "seals": len(seals),
                 "sent": [r["package"] for r in rows if r["kind"] == "sent"],
@@ -306,7 +449,8 @@ class Scene:
             }  # fmt: skip
             self.say(f"{NAMES[who]:8} {said}")
         doc = {"people": people, "packages": self.packages,
-               "witness": getattr(self, "witness", {}), "wrong": self.wrong}  # fmt: skip
+               "witness": getattr(self, "witness", {}),
+               "stacks": getattr(self, "stacked", {}), "wrong": self.wrong}  # fmt: skip
         (self.to / "scene.json").write_text(json.dumps(doc, indent=1) + "\n")
         return doc
 

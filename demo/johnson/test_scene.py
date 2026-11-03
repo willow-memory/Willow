@@ -42,12 +42,16 @@ def test_every_chain_holds_and_only_ines_sealed(played):
     assert list(people) == ["ines", "walt", "aurelie", "tamsin", "harold"]
     for who, p in people.items():
         assert p["verify"].startswith("the chain holds"), (who, p["verify"])
-        assert p["seals"] == (5 if who == "ines" else 0), who
+        assert (
+            p["seals"]
+            == {"ines": 7, "walt": 1, "aurelie": 1, "tamsin": 1, "harold": 0}[who]
+        ), who
 
 
 def test_each_hop_is_on_both_chains(played):
     people, pk = played["doc"]["people"], played["doc"]["packages"]
-    assert people["ines"]["sent"] == [pk["report"], pk["report-v2"]]
+    assert people["ines"]["sent"] == [pk["report"], pk["report-v2"],
+                                      pk["stack-case-file"], pk["stack-client-view"]]  # fmt: skip
     for who, got, sent in (("walt", "report", "walt-to-aurelie"),
                            ("aurelie", "walt-to-aurelie", "aurelie-to-tamsin"),
                            ("tamsin", "aurelie-to-tamsin", "tamsin-to-harold")):  # fmt: skip
@@ -55,9 +59,11 @@ def test_each_hop_is_on_both_chains(played):
         assert [pk[got + "-v2" if got != "report" else "report-v2"], "good"] in people[
             who
         ]["received"]
-        assert people[who]["sent"] == [pk[sent], pk[sent + "-v2"]]
+        stacks = [pk["stack-exhibit-check"]] if who == "tamsin" else []
+        assert people[who]["sent"] == [pk[sent], pk[sent + "-v2"], *stacks]
     assert people["harold"]["received"] == [[pk["tamsin-to-harold"], "good"],
-                                            [pk["tamsin-to-harold-v2"], "good"]]  # fmt: skip
+                                            [pk["tamsin-to-harold-v2"], "good"],
+                                            [pk["stack-exhibit-check"], "good"]]  # fmt: skip
     assert people["harold"]["sent"] == []
 
 
@@ -109,6 +115,46 @@ def test_every_layer_says_what_it_proves(played):
         while pkg:
             assert "never that the record holds nothing else" in pkg["proves"], p.name
             pkg = pkg["wraps"]
+
+
+def test_each_stack_goes_to_its_own_person_and_is_theirs_only_by_their_seal(played):
+    stacks = played["doc"]["stacks"]
+    assert {n: (s["to"], s["taken"]) for n, s in stacks.items()} == {
+        "case-file": ("walt", True), "client-view": ("aurelie", True),
+        "exhibit-check": ("harold", False)}  # fmt: skip
+    for name in ("case-file", "client-view"):
+        s = stacks[name]
+        assert s["same_text"] and s["exit"] in (0, 42)
+        kept = played["to"] / s["to"] / "box" / "written" / "stacks" / f"{name}.md"
+        assert kept.is_file(), "sealed through the kernel, written where it writes"
+    rows = [json.loads(x) for x in
+            (played["to"] / "harold" / "box" / "record.jsonl").read_text().splitlines()]  # fmt: skip
+    assert [r["kind"] for r in rows if r["kind"] in ("seal", "decline")] == ["decline"]
+
+
+def test_the_same_stack_shows_each_person_their_own_folder(played):
+    s = played["doc"]["stacks"]["case-file"]
+    walt, ines = dict(s["pools"]), dict(s["maker_pools"])
+    assert list(walt) == ["what is signed off", "what's coming up",
+                          "where the notes disagree", "who is in it"]  # fmt: skip
+    assert "cases.md:" in walt["what's coming up"]
+    assert "admin/diary.md:" in ines["what's coming up"]
+    assert "Johnson" in ines["who is in it"] and "Johnson" not in walt["who is in it"]
+
+
+def test_a_stack_pins_its_steps_and_a_changed_one_is_seen(played):
+    sys.path.insert(0, str(HERE))
+    import scene  # noqa: PLC0415
+
+    text = scene.stack_text("case-file")
+    pinned = scene.pins(text)
+    assert sorted(pinned) == ["coming-up", "contradictions", "export", "people"]
+    for name, sha in pinned.items():
+        assert sha == scene.h256(scene.script(name).read_text(encoding="utf-8"))
+    assert (
+        scene.pins(text.replace(pinned["people"], "0" * 64))["people"]
+        != pinned["people"]
+    )
 
 
 def test_no_package_holds_a_line_of_anyones_files(played):
