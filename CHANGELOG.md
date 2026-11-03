@@ -1603,6 +1603,9 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- coming-up, box-health, agents-md-check, xref and pins print a report (the
+  report contract); coming-up with nothing in its window exits 0 where it
+  said 42; repo-pile reads xref's report. (#199)
 - secrets-audit, symptoms, first-mention, misquote, why-not, minutes and
   thesis print a report (the report contract); "found nothing" exits 0 where
   minutes, symptoms, first-mention and misquote said 42. A card says
