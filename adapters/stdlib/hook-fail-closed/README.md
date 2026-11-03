@@ -21,7 +21,7 @@ hook's command was, with the hook's command in `--hook`:
 |---|---|
 | exits 0 | its output passes through: allowed |
 | exits 2 | its reason passes through: blocked |
-| exits anything else, crashes, runs past `--timeout` (30 s unless said), or won't start | blocked, and why is said |
+| exits anything else, crashes, runs past `--timeout` (30 s unless said), or won't start | blocked, and why is said in one line: how it broke and its last words, never its traceback |
 | prints output that isn't JSON, with `--json` | blocked (empty output is fine) |
 
 Exit 2 is how all four assistants spell "block". Use `--json` for a hook

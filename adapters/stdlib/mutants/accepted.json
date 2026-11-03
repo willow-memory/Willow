@@ -61,6 +61,9 @@
   "stack": {
     "145eb60f33d8": "The width a report's where column falls back to when it has no rows: with no rows nothing is padded to it, so any number there prints the same report."
   },
+  "three-two-one": {
+    "1857a4e63913": "box_rows starts at 0 only to exist before the loop; the box is always the first copy parsed and sets it before any other copy is compared, so the starting number never reaches a comparison."
+  },
   "todo": {
     "08807890b7cc": "The width a report's where column falls back to when it has no rows: with no rows nothing is padded to it, so any number there prints the same report."
   },
