@@ -95,8 +95,11 @@ def is_box(box: Path) -> str | None:
 
 
 def on_record(box: Path, rec) -> tuple[dict, dict]:
-    """What the person sealed, through the kernel: ({word: {chose, row,
-    subject}}, {bite_key: {row, subject, text}}). A seal counts only while
+    """What the person sealed, through the kernel: ({decision_type: {chose,
+    word, row, subject}}, {bite_key: {row, subject, text}}). The key is the
+    decision type, `willow-<word>`, the same words the Forge asks the kernel
+    for, so a decision the Forge's build loop proposed here is read the same
+    as one this script proposed. A seal counts only while
     its proof holds under the key and the proposal still hashes to what was
     sealed (kernel.sealed, kernel.standing); the key is the kernel's to read,
     never this script's. The FIRST standing seal for a word is the one kept:
@@ -118,12 +121,16 @@ def on_record(box: Path, rec) -> tuple[dict, dict]:
                 data = json.loads(prop["data"])
             except ValueError:
                 continue
-            if isinstance(data, dict) and isinstance(data.get("word"), str):
-                if isinstance(data.get("chose"), str):
+            if isinstance(data, dict) and isinstance(data.get("chose"), str):
+                dt = data.get("decision_type")
+                if not isinstance(dt, str) and isinstance(data.get("word"), str):
+                    dt = rec.decision_type(data["word"])
+                if isinstance(dt, str):
                     decisions.setdefault(
-                        data["word"],
-                        {"chose": data["chose"], "row": row["n"], "subject": subj},
-                    )
+                        dt,
+                        {"chose": data["chose"], "word": data.get("word", ""),
+                         "row": row["n"], "subject": subj},
+                    )  # fmt: skip
     return decisions, stacks
 
 
@@ -154,7 +161,7 @@ def plan(box, hits, shape, rec, sealed: dict) -> dict:
     by_name = {c.name: c for c in box.cards}
     settled, open_forks = {}, {}
     for word, names in forks.items():
-        got = sealed.get(word)
+        got = sealed.get(rec.decision_type(word))
         if got and got["chose"] in names:
             settled[word] = {**got, "decision_type": rec.decision_type(word)}
         else:
