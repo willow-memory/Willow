@@ -1,20 +1,22 @@
 """thesis.py: a document's claims, each against your sources, and the ones
 no passage holds.
 
-    python adapters/stdlib/thesis/thesis.py --box DIR FILE [--top N]
+    python adapters/stdlib/thesis/thesis.py --box DIR FILE [--top N] [--json]
 
 Every sentence of FILE is a claim. Each is put to claim-check, part by part,
-against the folder the box points at:
+against the folder the box points at. It prints a report (ci/README.md, the
+report contract), the claims with no passage holding every part first:
 
-    line 4    held   policy.txt:12 (+1)   Google scans Gmail for ads.
-    line 9    short  policy.txt:203 lacks scans   Gmail is read by people.
-    3 claims; 1 held, 1 short; 1 skipped
+    thesis: populated, 3 claims; 1 held, 1 short; 1 skipped
+    ## short
+      thesis.md:9     Gmail is read by people.  nearest: policy.txt:203 lacks scans  no file has: scans, people
+    ## held
+      policy.txt:12   line 4 (+1)  Google scans Gmail for ads.
 
-and the ones with no passage holding every part are listed last, with the
-parts no file has:
-
-    without a passage holding every part:
-      line 9   no file has: scans, people
+A short claim is placed at its own line in FILE, with the nearest passage
+(`--top`) and the parts no file has; a held one at the first passage holding
+every part, with the claim's line in FILE. `--json` prints the same report as
+one JSON object.
 
 **Held is where to read, not a verdict.** A passage holding every part may
 deny the claim; one holding only some may back it in other words. Only
@@ -24,8 +26,9 @@ A sentence with fewer than two parts (its words less the common ones) is not
 put to the sources, only counted as skipped. Headings and code fences are
 not claims. Lines are the document's own.
 
-It only reads. Exit codes, the kernel's: 0 every claim has a passage holding
-all its parts; 42 some has none; 2 refused.
+It only reads. Exit codes: 0 `empty` (no claim to check) or every claim has a
+passage holding all its parts; 42 `populated` with some claim short, waiting
+for you; 2 refused.
 """
 
 from __future__ import annotations
@@ -137,7 +140,7 @@ def short(s: str) -> str:
 
 
 def main(argv: list[str]) -> int:
-    as_json = "--json" in argv  # noqa: F841  wire: say(report(...), as_json)
+    as_json = "--json" in argv
     argv = [a for a in argv if a != "--json"]
     top = TOP
     if len(argv) == 5 and argv[3] == "--top" and argv[4].isdigit() and int(argv[4]) > 0:
@@ -167,7 +170,7 @@ def main(argv: list[str]) -> int:
             print(f"refused: {why}", file=sys.stderr)
             return kernel.REFUSED
     pile = kernel.chunks(Path(cfg["pile"]))
-    held, unheld, skipped = 0, [], 0
+    held, unheld, skipped = [], [], 0
     for line, sentence in claims(text):
         want = claim_check.parts(sentence)
         if len(want) < 2:
@@ -175,11 +178,10 @@ def main(argv: list[str]) -> int:
             continue
         got = claim_check.check(pile, want, alias, top)
         if got["all"]:
-            held += 1
             c = got["all"][0][0]
             more = f" (+{len(got['all']) - 1})" if len(got["all"]) > 1 else ""
-            print(
-                f"line {line:<4} held   {c['path']}:{c['line']}{more}   {short(sentence)}"
+            held.append(
+                (f"{c['path']}:{c['line']}", f"line {line}{more}  {short(sentence)}")
             )
         else:
             near = "; ".join(
@@ -187,19 +189,18 @@ def main(argv: list[str]) -> int:
                 + lacking([w for w in want if w not in h])
                 for c, h in got["some"]
             )
-            print(f"line {line:<4} short  {near or 'no part held'}   {short(sentence)}")
-            unheld.append((line, got["absent"]))
-    total = held + len(unheld)
-    print(
-        f"{total} claims; {held} held, {len(unheld)} short; {skipped} skipped"
-        if total
-        else f"No claims to check; {skipped} skipped."
-    )
-    if unheld:
-        print("without a passage holding every part:")
-        for line, absent in unheld:
-            print(f"  line {line:<4} " + (f"no file has: {', '.join(absent)}"
-                  if absent else "every part is somewhere, none in one place"))  # fmt: skip
+            what = f"{short(sentence)}  nearest: {near or 'no part held'}"
+            what += (f"  no file has: {', '.join(got['absent'])}" if got["absent"]
+                     else "  every part is somewhere, none in one place")  # fmt: skip
+            unheld.append((f"{doc}:{line}", what))
+    total = len(held) + len(unheld)
+    if not total:
+        say(
+            report(NAME, "empty", f"no claims to check; {skipped} skipped", []), as_json
+        )
+        return kernel.ALIVE
+    said = f"{total} claims; {len(held)} held, {len(unheld)} short; {skipped} skipped"
+    say(report(NAME, "populated", said, [("short", unheld), ("held", held)]), as_json)
     return kernel.ESCALATE if unheld else kernel.ALIVE
 
 
