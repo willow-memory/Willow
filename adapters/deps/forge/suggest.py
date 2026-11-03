@@ -85,9 +85,11 @@ from __future__ import annotations
 import argparse
 import contextlib
 import hashlib
+import importlib.util
 import io
 import json
 import re
+import shlex
 import subprocess
 import sys
 from pathlib import Path
@@ -204,8 +206,50 @@ def tradeoff(card) -> str:
     return f"{card.line} ({promises(card)})"
 
 
+#: each add-on's step line, `NAME -- ARGS`, filled by `commands`; the default
+#: when the contract's rows can't be read is the one every page add-on takes
+STEPS: dict[str, str] = {}
+CONTRACT = ROOT / "adapters/stdlib/ci/test_contract.py"
+
+
+def commands(pile: str) -> tuple[dict[str, str], str]:
+    """Each add-on's own good command line, from the ci add-on's contract
+    (test_contract.py's COMMANDS: the argv its contract test runs against a
+    fresh box), as a step's args: `{box}` kept for the stack add-on to fill,
+    `{pile}` filled with this box's folder, `{tmp}` kept for `build` to fill
+    with a folder of its own, and the test's pinned `--now` taken off so the
+    add-on runs at the real now. ({name: args}, where they came from); the
+    ci add-on absent, or pytest (which its test file imports) missing, is
+    said, and every step then takes the default `--box {box}`."""
+    if not CONTRACT.is_file():
+        return {}, "the ci add-on isn't here; steps take --box {box}"
+    try:
+        spec = importlib.util.spec_from_file_location("willow_contract", CONTRACT)
+        tc = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(tc)
+    except Exception as e:  # noqa: BLE001  the reason is the message (pytest, say)
+        return (
+            {},
+            f"the ci add-on's contract couldn't be read ({type(e).__name__}: {e}); steps take --box {{box}}",
+        )
+    out = {}
+    for name, (_, argv) in tc.COMMANDS.items():
+        args, skip = [], False
+        for a in argv:
+            if skip:
+                skip = False
+                continue
+            if a == "--now":
+                skip = True
+                continue
+            a = a.replace("{pile}", pile)
+            args.append(shlex.quote(a) if re.search(r"[\s'\"]", a) else a)
+        out[name] = " ".join(args)
+    return out, "from the ci add-on's contract, each add-on's own good command line"
+
+
 def step_line(name: str) -> str:
-    return f"- {name} -- --box {{box}}\n"
+    return f"- {name} -- {STEPS.get(name, '--box {box}')}\n"
 
 
 def plan(box, hits, shape, rec, sealed: dict) -> dict:
@@ -437,7 +481,11 @@ def build(box: Path, sentence: str, to: Path, stacks: dict) -> tuple[dict | None
             (f"adapters/stdlib/{name}/", f"{name}: {said}")
         )
     stack_file = to / "forge-stack.md"
-    stack_file.write_text(sealed["text"], encoding="utf-8")
+    scratch = to / "out"  # what the contract calls {tmp}: a folder of the build's own
+    scratch.mkdir(exist_ok=True)
+    stack_file.write_text(
+        sealed["text"].replace("{tmp}", str(scratch)), encoding="utf-8"
+    )
     runner = to / "stack" / "adapters" / "stdlib" / "stack" / "stack.py"
     got = subprocess.run(
         [sys.executable, str(runner), "--box", str(box), "--stack", str(stack_file)],
@@ -608,7 +656,10 @@ def main(argv: list[str]) -> int:
         print("refused:", e, file=sys.stderr)
         return kernel.REFUSED
     sealed, stacks = on_record(box, rec)
+    lines, where_from = commands(str(kernel.config(box)["pile"]))
+    STEPS.update(lines)
     out = plan(cards, cards.scan(a.sentence), shape, rec, sealed)
+    out["cards"]["commands"] = where_from
     if (k := kernel.bite_key(a.sentence)) in stacks:
         out["stack"] = stacks[k]
     if a.verb == "build":

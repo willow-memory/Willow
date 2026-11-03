@@ -28,6 +28,11 @@ says how). The first was v0.1.0.
   stack file beside it, the stack add-on run over the box and its page
   kept, as a report of what was built, what ran and what was left out;
   the promise grows to `writes: record, to`. (#202)
+  A step's line is the add-on's own good command line, read from the ci
+  add-on's contract (`{box}` kept, the folder filled in, `{tmp}` a folder
+  `build` makes, the pinned `--now` taken off), so a reader mirrors and an
+  add-on with verbs runs its verb; without the contract every step takes
+  `--box {box}` and the plan says so.
 - The report contract (`adapters/stdlib/ci/README.md`): an add-on that
   reports what it found prints one shape, `NAME: STATE, SAID` then rows of
   where and what by group, and the same as JSON with `--json`; `empty` exits
