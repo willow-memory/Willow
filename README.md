@@ -126,11 +126,11 @@ says how to pick one up:
 <!-- willow:front show=pick week=2026-W45 -->
 **Add-on of the week**
 
-**[same-way](adapters/stdlib/same-way/)** — A local model asked each of your box's questions three times, and how often its answer flips, since a model that answers the same way every time is one you can build on.
+**[predict](adapters/stdlib/predict/)** — Write down what a question will come to before you ask it, and grade it after; the record counts how often it was right.
 
-*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 328 built add-ons in name order.*
+*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 329 built add-ons in name order.*
 
-[Every add-on, 328 built of 519, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 329 built of 520, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 

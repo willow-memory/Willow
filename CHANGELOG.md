@@ -55,6 +55,10 @@ says how). The first was v0.1.0.
   packages catch, and three stacks sent to three people, two taken on under
   their own seal and run over their own folders and one declined, and CI
   runs it as `demo:share`. (#216)
+- `sort`: your files sorted into your own categories by the phrases you gave
+  each, in a file of your own (`name: phrase, phrase`); a tie is listed for
+  you to choose and a file no phrase reaches is unsorted, never guessed. It
+  prints a report, 42 when a file waits on you. (#206)
 - `demo/five-repos`, five repositories through the stacks: the seven
   stacks a session built and rebuilt with each prompt over a folder of
   five repositories (this one among them), the 24-line words list that
@@ -95,6 +99,16 @@ says how). The first was v0.1.0.
   settled is a step here and one settled here is the Forge's auto band. Its
   promise is `writes: record`: every write is the kernel's. Needs forge-play
   0.10, whose card box reads these cards as rows for its keyword scan. (#201)
+  `build` runs the stack the person sealed for a sentence, and nothing
+  else: each step's add-on into a folder through `ui/assemble.py`, the
+  stack file beside it, the stack add-on run over the box and its page
+  kept, as a report of what was built, what ran and what was left out;
+  the promise grows to `writes: record, to`. (#202)
+  A step's line is the add-on's own good command line, read from the ci
+  add-on's contract (`{box}` kept, the folder filled in, `{tmp}` a folder
+  `build` makes, the pinned `--now` taken off), so a reader mirrors and an
+  add-on with verbs runs its verb; without the contract every step takes
+  `--box {box}` and the plan says so. (#203)
 - `ci-memo`: a pull request runs only the mutants gates a change can reach,
   standing the rest on the record of main's last green run, and a push to
   main runs them all, so the merge's receipt stays whole. Four shards of 5

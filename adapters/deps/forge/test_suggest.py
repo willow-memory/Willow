@@ -339,10 +339,8 @@ def test_propose_puts_each_settled_fork_and_the_stack_at_the_door_as_a_report(bo
     stack = json.loads(
         (box / "proposals" / f"{waiting['forge/stack.md'][9:]}.json").read_text()
     )
-    assert stack["data"].splitlines()[-2:] == [
-        "- mail -- --box {box}",
-        "- coming-up -- --box {box}",
-    ]
+    assert stack["data"].splitlines()[-1] == "- coming-up -- --box {box}"
+    assert stack["data"].splitlines()[-2].startswith("- mail -- mirror --from ")
 
 
 def test_propose_prints_its_report_as_text_too(box):
@@ -544,3 +542,211 @@ def test_the_same_box_gives_the_same_report_twice(box):
         run("suggest", EMAIL, "--box", str(box)).stdout
         == run("suggest", EMAIL, "--box", str(box)).stdout
     )
+
+
+# ── build ─────────────────────────────────────────────────────────────────────
+
+
+def sealed_stack(box: Path, sentence: str, *choose: str) -> None:
+    seal_all(box, proposed(box, *choose, sentence=sentence))
+
+
+def test_build_refuses_while_no_stack_is_sealed_for_these_words(box, tmp_path):
+    proposed(box, "due=coming-up", sentence="what is due")
+    got = run("build", "what is due", "--box", str(box), "--to", str(tmp_path / "st"))
+    assert got.returncode == 2 and "no stack is sealed for these words" in got.stderr
+    assert not (tmp_path / "st").exists()
+
+
+def test_build_refuses_a_missing_parent_and_makes_nothing(box, tmp_path):
+    sealed_stack(box, "what is due", "due=coming-up")
+    got = run(
+        "build", "what is due", "--box", str(box), "--to", str(tmp_path / "no" / "st")
+    )
+    assert (
+        got.returncode == 2
+        and "is missing" in got.stderr
+        and not (tmp_path / "no").exists()
+    )
+
+
+def test_build_assembles_the_sealed_steps_runs_the_stack_and_keeps_the_page(
+    box, tmp_path
+):
+    sealed_stack(box, "what is due", "due=coming-up")
+    to = tmp_path / "st"
+    argv = ["build", "what is due", "--box", str(box), "--to", str(to)]
+    data = run(*argv, "--json")
+    assert data.returncode == 0, data.stderr
+    doc = holds_the_shape(json.loads(data.stdout), data.returncode)
+    assert doc["said"].startswith(
+        f"1 of 1 step built into {to}, page at {to / 'page.md'}; 0 flagged, 0 left out"
+    )
+    assert [g["name"] for g in doc["groups"]] == ["built"]
+    row = doc["groups"][0]["rows"][0]
+    assert row["where"] == "adapters/stdlib/coming-up/" and row["what"].startswith(
+        "coming-up: contract held; tests unreachable"
+    )
+    assert row["what"].endswith("; ran: clean")
+    manifest = json.loads((to / "stack" / "STACK.json").read_text(encoding="utf-8"))
+    assert (
+        "coming-up" in manifest["addons"]
+        and (
+            to / "stack" / "adapters" / "stdlib" / "coming-up" / "coming_up.py"
+        ).is_file()
+    )
+    assert (to / "forge-stack.md").read_text(encoding="utf-8").splitlines()[
+        -1
+    ] == "- coming-up -- --box {box}"
+    page = (to / "page.md").read_text(encoding="utf-8")
+    assert page.startswith("# stack over ") and "- `coming-up -- --box " in page
+    again = run(*argv)
+    assert again.returncode == 0 and "coming-up: already in the stack" in again.stdout
+
+
+def test_build_leaves_out_what_assemble_refuses_and_says_so(box, tmp_path):
+    sealed_stack(box, "what is due, and my pdf", "due=coming-up")
+    to = tmp_path / "st"
+    data = run(
+        "build", "what is due, and my pdf", "--box", str(box), "--to", str(to), "--json"
+    )
+    assert data.returncode == 42
+    doc = holds_the_shape(json.loads(data.stdout), data.returncode)
+    assert doc["said"].endswith("1 left out") and [
+        g["name"] for g in doc["groups"]
+    ] == ["built", "left out"]
+    left = doc["groups"][1]["rows"][0]
+    assert left["where"] == "adapters/stdlib/pdf/" and "deps add-on" in left["what"]
+
+
+def test_steps_of_reads_a_stack_file_as_the_stack_add_on_does():
+    text = "# a title\n\n## for it\n- coming-up -- --box {box}\n- pdf -- --box {box}\nprose\n- coming-up -- --box {box}\n"
+    assert suggest.steps_of(text) == ["coming-up", "pdf"]
+
+
+def test_build_flags_a_step_that_runs_and_does_not_come_back_clean(box, tmp_path):
+    """box-health on a fresh box needs you (no out row yet): exit 42 on the
+    page, and build says so rather than hide it."""
+    sealed_stack(box, "what is due, and my box health", "due=coming-up")
+    to = tmp_path / "st"
+    data = run(
+        "build",
+        "what is due, and my box health",
+        "--box",
+        str(box),
+        "--to",
+        str(to),
+        "--json",
+    )
+    assert data.returncode == 42
+    doc = holds_the_shape(json.loads(data.stdout), data.returncode)
+    assert "0 flagged" not in doc["said"] and doc["said"].endswith("0 left out")
+    rows = {r["where"]: r["what"] for r in doc["groups"][0]["rows"]}
+    assert rows["adapters/stdlib/coming-up/"].endswith("ran: clean")
+    # a report step's note on the page is its state; flagged, since it exited 42
+    assert rows["adapters/stdlib/box-health/"].endswith("ran: populated")
+    assert "`  (populated)" in (to / "page.md").read_text(encoding="utf-8")
+
+
+# ── steps from each add-on's own command line ─────────────────────────────────
+
+
+def contract_rows() -> dict:
+    spec = importlib.util.spec_from_file_location(
+        "willow_contract_t", ROOT / "adapters/stdlib/ci/test_contract.py"
+    )
+    tc = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(tc)
+    return tc.COMMANDS
+
+
+def step_of(box: Path, sentence: str, name: str) -> str:
+    d = json.loads(run("suggest", sentence, "--box", str(box), "--plan").stdout)
+    assert d["cards"]["commands"].startswith("from the ci add-on's contract")
+    for e in d["plan"]["entries"]:
+        if e["kind"] == "file_write" and e["dest_path"] == f"steps/{name}.md":
+            return e["content"]
+        if e["kind"] == "fork":
+            for writes in e["resolves"].values():
+                for w in writes:
+                    if w["dest_path"] == f"steps/{name}.md":
+                        return w["content"]
+    raise AssertionError(f"no step for {name}")
+
+
+def test_a_step_is_the_add_ons_own_good_command_line_not_one_shape_for_all(box):
+    assert (
+        step_of(box, "a merkle proof of one row", "merkle")
+        == "- merkle -- root --box {box}\n"
+    )
+    assert step_of(box, "my email", "mail").startswith("- mail -- mirror --from ")
+    rows = contract_rows()
+    assert rows["merkle"][1] == ["root", "--box", "{box}"], (
+        "the line is the contract's row"
+    )
+
+
+def test_the_contracts_pinned_now_is_taken_off_and_the_pile_is_filled_in(box):
+    rows = contract_rows()
+    assert "--now" in rows["coming-up"][1], (
+        "the contract pins a now for its own determinism"
+    )
+    assert step_of(box, "what is due", "coming-up") == "- coming-up -- --box {box}\n"
+    pile = json.loads((box / "kernel.json").read_text())["pile"]
+    assert any("{pile}" in a for a in rows["mail"][1])
+    line = step_of(box, "my email", "mail")
+    assert pile in line and "{pile}" not in line and "{tmp}" in line
+
+
+def test_a_path_with_a_space_in_it_is_quoted_for_the_stack_add_on(tmp_path):
+    pile = tmp_path / "my pile"
+    pile.mkdir()
+    (pile / "a.txt").write_text("hello\n")
+    box = tmp_path / "box"
+    assert (
+        k(
+            "init",
+            "--box",
+            str(box),
+            "--pile",
+            str(pile),
+            "--key",
+            str(tmp_path / "k.key"),
+        ).returncode
+        == 0
+    )
+    line = step_of(box, "my email", "mail")
+    assert f"'{pile}'" in line
+
+
+def test_build_fills_tmp_with_a_folder_of_its_own_and_a_reader_step_runs_clean(
+    box, tmp_path
+):
+    pile = Path(json.loads((box / "kernel.json").read_text())["pile"])
+    (pile / "roof.eml").write_text(
+        "From: ada@example.org\nTo: me@example.org\nSubject: the roof\nDate: Mon, 3 Nov 2026 09:00:00 +0000\n\nThe roofer comes Tuesday.\n"
+    )
+    sealed_stack(box, "my email", "email=mail")
+    to = tmp_path / "st"
+    data = run("build", "my email", "--box", str(box), "--to", str(to), "--json")
+    assert data.returncode == 0, data.stdout + data.stderr
+    doc = json.loads(data.stdout)
+    assert doc["groups"][0]["rows"][0]["what"].endswith("ran: clean")
+    written = (to / "forge-stack.md").read_text(encoding="utf-8")
+    assert "{tmp}" not in written and str(to / "out") in written
+    assert (to / "out").is_dir() and any((to / "out").iterdir()), (
+        "the mirror landed under the build's own folder"
+    )
+
+
+def test_without_the_contract_every_step_takes_the_default_and_says_so(
+    box, monkeypatch, capsys
+):
+    monkeypatch.setattr(suggest, "CONTRACT", Path("/nonesuch/test_contract.py"))
+    suggest.STEPS.clear()
+    code = suggest.main(
+        ["suggest", "a merkle proof of one row", "--box", str(box), "--plan"]
+    )
+    d = json.loads(capsys.readouterr().out)
+    assert code == 0 and d["cards"]["commands"].startswith("the ci add-on isn't here")
+    assert d["plan"]["entries"][0]["content"] == "- merkle -- --box {box}\n"

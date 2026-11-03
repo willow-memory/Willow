@@ -4,6 +4,7 @@ Python 3.11+ (forge-play's floor), forge-play 0.10 or newer.
     python adapters/deps/forge/suggest.py suggest --box DIR "what you want done" [--json | --plan]
     python adapters/deps/forge/suggest.py propose --box DIR "what you want done"
                                                   --choose WORD=NAME ... [--why WORD=REASON ...] [--json]
+    python adapters/deps/forge/suggest.py build   --box DIR "what you want done" --to STACK [--json]
 
 A sentence in, the add-ons it names or means out. The Forge's card box reads
 every card beside this script (built, and the ideas in adapters/planned.json)
@@ -40,6 +41,17 @@ that, and nothing runs. It carries the card's name, line, path and SHA-256,
 so what you sealed is what you were shown. Its report is one row per
 proposal: where it will be written, and what waits.
 
+`build` runs the stack you sealed for these words, and nothing else: it
+reads the sealed stack from the record (never a file you could edit), puts
+each step's add-on into STACK with ui/assemble.py (every file hashed onto the
+stack's own record, each contract checked), writes the stack file beside it,
+and runs the stack add-on over your box, keeping the page at STACK/page.md.
+Its report is one row per step: copied or not, its contract, and how it ran.
+A step that can't be copied (a deps add-on, one that works only in this
+repository) is said and left out, never guessed at. It refuses while no
+stack is sealed for these words: the seal is the one gate between a
+suggestion and a run. STACK's parent must exist; it never makes one.
+
 --json prints the same report as one JSON object. --plan prints the whole as
 the Forge reads it: the cards counted, the steps, the forks, what is sealed,
 the ideas, and `plan`, a document forge.plan_shape validates,
@@ -58,12 +70,14 @@ the words the Forge asks for, so one it proposed is read the same as one this
 script proposed.
 
 Exit codes, the report's: 0 steps found and nothing waits on you, a stack
-sealed for these words, or nothing named (`empty`); 42 a fork waits on you,
-your seal is waited on (`populated`), or forge-play missing or older than
-0.10 (`unreachable`, said); 2 refused (a bad command line, a folder that
-isn't a box or whose record doesn't verify, a fork left unsettled or settled
-with an option not on offer, a stack sealed for these words already, a card
-beside this script that won't read).
+sealed for these words, nothing named (`empty`), or a stack built with every
+step run clean; 42 a fork waits on you, your seal is waited on, a built
+stack with a step flagged or left out (`populated`), or forge-play missing
+or older than 0.10 (`unreachable`, said); 2 refused (a bad command line, a
+folder that isn't a box or whose record doesn't verify, a fork left
+unsettled or settled with an option not on offer, a stack sealed for these
+words already, no stack sealed for these words to build, a STACK whose
+parent is missing, a card beside this script that won't read).
 """
 
 from __future__ import annotations
@@ -71,8 +85,12 @@ from __future__ import annotations
 import argparse
 import contextlib
 import hashlib
+import importlib.util
 import io
 import json
+import re
+import shlex
+import subprocess
 import sys
 from pathlib import Path
 
@@ -188,8 +206,50 @@ def tradeoff(card) -> str:
     return f"{card.line} ({promises(card)})"
 
 
+#: each add-on's step line, `NAME -- ARGS`, filled by `commands`; the default
+#: when the contract's rows can't be read is the one every page add-on takes
+STEPS: dict[str, str] = {}
+CONTRACT = ROOT / "adapters/stdlib/ci/test_contract.py"
+
+
+def commands(pile: str) -> tuple[dict[str, str], str]:
+    """Each add-on's own good command line, from the ci add-on's contract
+    (test_contract.py's COMMANDS: the argv its contract test runs against a
+    fresh box), as a step's args: `{box}` kept for the stack add-on to fill,
+    `{pile}` filled with this box's folder, `{tmp}` kept for `build` to fill
+    with a folder of its own, and the test's pinned `--now` taken off so the
+    add-on runs at the real now. ({name: args}, where they came from); the
+    ci add-on absent, or pytest (which its test file imports) missing, is
+    said, and every step then takes the default `--box {box}`."""
+    if not CONTRACT.is_file():
+        return {}, "the ci add-on isn't here; steps take --box {box}"
+    try:
+        spec = importlib.util.spec_from_file_location("willow_contract", CONTRACT)
+        tc = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(tc)
+    except Exception as e:  # noqa: BLE001  the reason is the message (pytest, say)
+        return (
+            {},
+            f"the ci add-on's contract couldn't be read ({type(e).__name__}: {e}); steps take --box {{box}}",
+        )
+    out = {}
+    for name, (_, argv) in tc.COMMANDS.items():
+        args, skip = [], False
+        for a in argv:
+            if skip:
+                skip = False
+                continue
+            if a == "--now":
+                skip = True
+                continue
+            a = a.replace("{pile}", pile)
+            args.append(shlex.quote(a) if re.search(r"[\s'\"]", a) else a)
+        out[name] = " ".join(args)
+    return out, "from the ci add-on's contract, each add-on's own good command line"
+
+
 def step_line(name: str) -> str:
-    return f"- {name} -- --box {{box}}\n"
+    return f"- {name} -- {STEPS.get(name, '--box {box}')}\n"
 
 
 def plan(box, hits, shape, rec, sealed: dict) -> dict:
@@ -333,6 +393,127 @@ def to_report(out: dict, rec) -> tuple[dict, int]:
     return report(NAME, "empty", said, []), kernel.ALIVE
 
 
+def steps_of(stack_text: str) -> list[str]:
+    """The add-ons a sealed stack file names, in order: each `- NAME -- ARGS`
+    line's NAME, as the stack add-on reads them."""
+    out = []
+    for raw in stack_text.splitlines():
+        line = raw.strip()
+        if line.startswith("- "):
+            name = line[2:].partition(" -- ")[0].strip()
+            if name and name not in out:
+                out.append(name)
+    return out
+
+
+ASSEMBLED = re.compile(r"^\+ (\S+)\s+.*?contract (\S+)\s+tests (\S+)(?::\s*(.*))?$")
+
+
+def assemble(to: Path, name: str) -> tuple[str, str]:
+    """One add-on into the stack at `to` through ui/assemble.py, one at a
+    time: ("copied", what assemble said of its contract and tests) or
+    ("left out", why). A piece already there is left as it is."""
+    stack = to / "stack"
+    if (stack / "adapters" / "stdlib" / name).is_dir():
+        return "copied", "already in the stack"
+    got = subprocess.run(
+        [
+            sys.executable,
+            str(ROOT / "ui/assemble.py"),
+            "add",
+            name,
+            "--to",
+            str(to),
+        ],
+        capture_output=True,
+        text=True,
+    )
+    if got.returncode == kernel.REFUSED:
+        why = (got.stderr or got.stdout).strip().splitlines()[-1:] or ["refused"]
+        return "left out", why[0].removeprefix("refused: ")
+    for line in got.stdout.splitlines():
+        m = ASSEMBLED.match(line.strip())
+        if m and m.group(1) == name:
+            tests = m.group(3) + (f" ({m.group(4)})" if m.group(4) else "")
+            return "copied", f"contract {m.group(2)}; tests {tests}"
+    return "copied", "assemble said nothing of it"
+
+
+def build(box: Path, sentence: str, to: Path, stacks: dict) -> tuple[dict | None, int]:
+    """The stack sealed for these words, assembled into `to` and run over
+    the box: (the report, 0 clean or 42 flagged), or (None, 2) refused."""
+    k = kernel.bite_key(sentence)
+    if k not in stacks:
+        print(
+            "refused: no stack is sealed for these words; suggest, propose, then seal",
+            file=sys.stderr,
+        )
+        return None, kernel.REFUSED
+    if not to.parent.is_dir():
+        print(
+            f"refused: {to.parent} is missing; a folder to build in is yours to make",
+            file=sys.stderr,
+        )
+        return None, kernel.REFUSED
+    sealed = stacks[k]
+    if not (to / "stack" / "STACK.json").is_file():
+        got = subprocess.run(
+            [sys.executable, str(ROOT / "ui/assemble.py"), "init", "--to", str(to)],
+            capture_output=True,
+            text=True,
+        )
+        if got.returncode != kernel.ALIVE:
+            print(
+                "refused:",
+                (got.stderr or got.stdout).strip().splitlines()[-1],
+                file=sys.stderr,
+            )
+            return None, kernel.REFUSED
+    state, said = assemble(to, "stack")  # the runner, the one piece every stack has
+    if state != "copied":
+        print(f"refused: the stack add-on could not be put in: {said}", file=sys.stderr)
+        return None, kernel.REFUSED
+    names = steps_of(sealed["text"])
+    rows, left = [], []
+    for name in names:
+        state, said = assemble(to, name)
+        (rows if state == "copied" else left).append(
+            (f"adapters/stdlib/{name}/", f"{name}: {said}")
+        )
+    stack_file = to / "forge-stack.md"
+    scratch = to / "out"  # what the contract calls {tmp}: a folder of the build's own
+    scratch.mkdir(exist_ok=True)
+    stack_file.write_text(
+        sealed["text"].replace("{tmp}", str(scratch)), encoding="utf-8"
+    )
+    runner = (
+        to / "stack/adapters/stdlib/stack/stack.py"
+    )  # the built copy, not the repo's
+    got = subprocess.run(
+        [sys.executable, str(runner), "--box", str(box), "--stack", str(stack_file)],
+        capture_output=True,
+        text=True,
+    )
+    page = to / "page.md"
+    page.write_text(got.stdout, encoding="utf-8")
+    ran = {}
+    for line in got.stdout.splitlines():
+        m = re.match(r"^- `(\S+)(?: --.*?)?`(?:\s+\((.*)\))?$", line)
+        if m:
+            ran[m.group(1)] = m.group(2) or "clean"
+    rows = [(w, f"{x}; ran: {ran.get(x.split(':')[0], 'not run')}") for w, x in rows]
+    flagged = sum(1 for n in names if ran.get(n, "") not in ("clean", "none found"))
+    said = (f"{len(rows)} of {len(names)} step{'s' if len(names) != 1 else ''} built into {to}, "
+            f"page at {page}; {flagged} flagged, {len(left)} left out")  # fmt: skip
+    doc = report(NAME, "populated", said, [("built", rows), ("left out", left)])
+    code = (
+        kernel.ESCALATE
+        if flagged or left or got.returncode == kernel.REFUSED
+        else kernel.ALIVE
+    )
+    return doc, code
+
+
 def pairs(items: list[str], what: str) -> tuple[dict[str, str], str | None]:
     """`WORD=VALUE` arguments as a dict, or why one isn't."""
     out = {}
@@ -437,7 +618,7 @@ def main(argv: list[str]) -> int:
     argv = [a for a in argv if a != "--json"]
     p = argparse.ArgumentParser(prog="suggest.py", description=__doc__.splitlines()[0])
     sub = p.add_subparsers(dest="verb", required=True)
-    for verb in ("suggest", "propose"):
+    for verb in ("suggest", "propose", "build"):
         s = sub.add_parser(verb)
         s.add_argument("sentence", help="what you want done, in your own words")
         s.add_argument("--box", required=True, help="your record")
@@ -446,6 +627,12 @@ def main(argv: list[str]) -> int:
                 "--plan",
                 action="store_true",
                 help="the plan as the Forge reads it, as JSON",
+            )
+        elif verb == "build":
+            s.add_argument(
+                "--to",
+                required=True,
+                help="the folder to build in; its parent must exist",
             )
         else:
             s.add_argument(
@@ -471,9 +658,17 @@ def main(argv: list[str]) -> int:
         print("refused:", e, file=sys.stderr)
         return kernel.REFUSED
     sealed, stacks = on_record(box, rec)
+    lines, where_from = commands(str(kernel.config(box)["pile"]))
+    STEPS.update(lines)
     out = plan(cards, cards.scan(a.sentence), shape, rec, sealed)
+    out["cards"]["commands"] = where_from
     if (k := kernel.bite_key(a.sentence)) in stacks:
         out["stack"] = stacks[k]
+    if a.verb == "build":
+        doc, code = build(box, a.sentence, Path(a.to), stacks)
+        if doc is not None:
+            say(doc, as_json)
+        return code
     if a.verb == "propose":
         if "stack" in out:
             print(f"refused: a stack is sealed for these words already (row {out['stack']['row']})", file=sys.stderr)  # fmt: skip

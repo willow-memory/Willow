@@ -5,9 +5,11 @@ source: new
 added: 2026-11-03
 needs: forge-play; Apache-2.0
 floor: forge-play 0.10.0; the rule names 0.1.0, its first release, but the card box this reads the cards with arrived in 0.10.0
-writes: record
+writes: record, to
 network: none
 output: report
+uses: stack
+looks-for: ci
 -->
 # forge
 
@@ -40,7 +42,12 @@ report (the report contract, in the ci add-on's card) has a group per kind
 of thing, each row the card and what it says:
 
 - **steps**: an add-on the sentence reaches and nothing else does, one
-  line for a [stack](../../stdlib/stack/) file; or a fork you settled
+  line for a [stack](../../stdlib/stack/) file, `NAME -- ARGS`, where ARGS
+  is the add-on's own good command line as the [ci](../../stdlib/ci/)
+  add-on's contract holds it (`{box}` for your record, your folder filled
+  in, `{tmp}` for a folder `build` makes, the contract's pinned `--now`
+  taken off); with the ci add-on absent, every step takes `--box {box}` and
+  the plan says so; or a fork you settled
   before, read from your record through the kernel, which serves it only
   while its seal proves under your key and the proposal still hashes to
   what you sealed. It is a step now, and you are not asked twice;
@@ -68,6 +75,24 @@ and a fork you settled here is the Forge's auto band. The first standing
 seal for a decision is the one kept, as the kernel keeps it; a later one
 waits its turn until the first no longer stands.
 
+    python adapters/deps/forge/suggest.py build --box DIR "read my email and tell me when the boiler is due" --to ~/my-stack
+
+    forge: populated, 2 of 2 steps built into ~/my-stack, page at ~/my-stack/page.md; 0 flagged, 0 left out
+    ## built
+      adapters/stdlib/mail/       mail: contract held; tests unreachable (no --python with pytest given); ran: clean
+      adapters/stdlib/coming-up/  coming-up: contract held; tests unreachable (no --python with pytest given); ran: clean
+
+`build` runs the stack you sealed for these words, and nothing else. It
+reads the sealed stack from your record, never from a file you could edit;
+puts each step's add-on into the folder named with `ui/assemble.py`, which
+hashes every file onto the stack's own record and checks each contract;
+writes the stack file beside it; and runs the [stack](../../stdlib/stack/)
+add-on over your box, keeping the page at `<STACK>/page.md`. A step it can't
+copy (a deps add-on, one that works only in this repository) is said under
+`left out`, never guessed at. It refuses while no stack is sealed for these
+words: the seal is the one gate between a suggestion and a run. The folder's
+parent must exist; it makes no folder but the one you named.
+
 `--json` prints the same report as one JSON object. `suggest --plan` prints
 the whole as the Forge reads it: the cards counted, the steps, the forks,
 what is sealed, the ideas, and `plan`, a document the Forge's `plan_shape`
@@ -88,8 +113,10 @@ words already, a card beside this script that won't read).
 
 **Uses:** the kernel's `bite` and `propose`, so every question and every
 suggestion is a row; its `sealed` and `standing`, so a seal is believed only
-on the kernel's word; its exit codes.
+on the kernel's word; its exit codes; `ui/assemble.py` and the stack add-on,
+to build and run what you sealed.
 
 **Never:** seals, reads the key (the kernel reads it, to check a proof),
-writes anything but through the kernel, ranks, or asks a model. `suggest`
-writes nothing at all. The forks are yours to settle, and the seal is yours.
+writes anything but through the kernel or under the folder you name, runs a
+stack you didn't seal, ranks, or asks a model. `suggest` writes nothing at
+all. The forks are yours to settle, and the seal is yours.
