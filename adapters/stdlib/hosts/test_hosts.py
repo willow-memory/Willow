@@ -140,4 +140,6 @@ def test_a_bad_command_line_host_or_box_is_refused(tmp_path, capsys):
     )
     assert mod.main(["show", "emacs-nope", "--box", str(b)]) == 2
     assert "no host called emacs-nope" in capsys.readouterr().err
+    assert mod.main(["show", "claude-code", "--box", str(b)]) == 2
+    assert "adapters/stdlib/claude-code" in capsys.readouterr().err, "the hook, not MCP"
     assert mod.main(["show", "zed", "--box", str(tmp_path)]) == 2

@@ -1,0 +1,33 @@
+# five-words.txt: one repo's words read as the others'. A question's word on
+# the left is read as any of the folder's words after the =. Both directions
+# are listed, since the kernel expands only the question's side.
+
+# redential-cli's words, read as Willow's and the others'
+vault = record, box, ledger, chain, store, receipts
+receipt = row, entry, record, seal, bundle
+receipts = rows, entries, records, seals
+backdated = stale, rewritten, cut, spliced, tip, forged
+anchor = pin, tip, seal, hash, head, opentimestamps
+head = tip, newest, last, end
+segment = row, rows, range, chain
+bundle = export, record, snapshot, crate, payload, json
+submit = seal, approve, upload, send, propose
+upload = submit, send, seal, serve, sent
+vocabulary = taxonomy, slugs, list, words, tags, names
+slug = tag, name, slugs, names
+slugs = tags, names, list
+taxonomy = list, names, planned, catalogue, sections
+# socratic-fork's words
+# glapagos's words
+manifest = crate, metadata, card, index, kernel
+provenance = prov, record, history, source, cited, citation
+checksum = sha256, hash, digest, fixity, sha
+checksums = hashes, sha256, fixity, ids, hash
+# NaturalConv's words
+download = fetch, snapshot, mirror, wayback, clone, fetched
+# Willow's words, read as the others'
+seal = approve, sign, confirm, attest, submit
+sealed = approved, signed, confirmed, attested
+approved = attested, verified, confirmed, accepted, reviewed
+hash = sha256, checksum, digest, hashes
+chain = chained, ledger, receipts, log

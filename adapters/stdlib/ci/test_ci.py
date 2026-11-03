@@ -124,7 +124,7 @@ def test_the_gates_run_in_one_fixed_order_and_cover_every_part():
         "tests:constitution", "tests:coverage",
         *(f"ports:{p}" for p in ci.PORTS),
         *(f"demo:{p}" for p in ci.people()), "demo:php2shell", "demo:google-privacy-2026-10-16",
-        "demo:stack", "demo:teodora-words", "demo:craft-assembly", "demo:redteam", "demo:known-gaps", "demo:novelty",
+        "demo:stack", "demo:teodora-words", "demo:craft-assembly", "demo:redteam", "demo:known-gaps", "demo:five-repos", "demo:novelty",
         *(g for d in ci.deps_add_ons() for g in (f"deps:{d}", f"deps:{d}@floor")),
         "deps:floors",
         *(f"mutants:{n}" for n in ci.mutant_targets()),

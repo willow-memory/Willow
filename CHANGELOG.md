@@ -10,6 +10,33 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `demo/five-repos`, five repositories through the stacks: the seven
+  stacks a session built and rebuilt with each prompt over a folder of
+  five repositories (this one among them), the 24-line words list that
+  read one repo's words as the others', thirteen reports of what each
+  stack found and got wrong, and two records copied without their keys,
+  one holding ten suggestions that wait on a seal. Its test holds the
+  stacks to add-ons that exist, the words list to the kernel's parser and
+  the records' chains with nothing sealed; CI runs it as `demo:five-repos`.
+  The session proposed and never sealed. (#211)
+- `stack`: a ninth example, `adapters/stdlib/stack/examples/export.md`, a
+  box handed to someone else: what the record says of itself, the hashes
+  a stranger can check (the Merkle root, a pin, fixity), the envelopes the
+  world reads (PROV, in-toto, an RO-Crate) and a backup that checks
+  itself, each written under a folder beside the box. (#211)
+- `stack`: an eighth example stack, `adapters/stdlib/stack/examples/repos.md`,
+  for a folder of repositories cloned side by side: the audits over all of
+  them at once (todo, risky-code, xref, pins, install-scripts, secrets-audit,
+  pii-audit, a11y-check), one question each repo answers in turn through
+  fair-merge, and what they say twice and whom they name. Made by running
+  Willow's stacks over five repositories, this one among them. (#211)
+- `git-history`: `mirror --from FOLDER --to MIRROR --messages` writes each
+  commit without its diff, the day, subject and body only. A diff carries
+  other people's dates and the kernel dates a line by the nearest date
+  above it, so a commit pile with diffs was dated by what the diffs said:
+  on this repository's own history, "privacy" was first mentioned in 1958,
+  a demo character's birthday inside a diff. Messages alone are dated by
+  the commit. (#211)
 - `forge`, a deps add-on: a sentence in, the add-ons it names or means
   out, as a report in the one shape. A word that reaches several add-ons
   ("email": mail, apple-mail) is a fork with the cards as options, for the
@@ -1635,6 +1662,23 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- `three-two-one`: a copy that holds but has fewer rows than the box says
+  how many it is behind (`holds (14 rows, 2 rows behind the box)`). A record
+  cut short still verifies, so a truncated or stale copy counted as a copy
+  and looked current; it still counts, and now says so. (#211)
+- `in-process`: a reply that cites a passage and says nothing else, a bare
+  `[1]` or a file and line in brackets, is printed and proposed to no one,
+  as a reply citing nothing already was. Qwen2.5 0.5B on a folder of
+  repositories cited every time and answered nothing, and three empty
+  suggestions waited on a seal. (#211)
+- `hook-fail-closed`: when the hook breaks, the reason is one line, how it
+  exited and its last words, and its traceback stays out of stderr. With
+  the traceback passed through, hook-fuzz read the wrapped hook as broken
+  (a traceback under any exit) while the wrapper had blocked the tool as
+  it should; now the two agree. (#211)
+- `hosts`: `show claude-code` still refuses, since Claude Code takes no MCP
+  server from this table, and the refusal now says where its way in is:
+  the prompt hook in `adapters/stdlib/claude-code`. (#211)
 - history and on-this-day print a report (the report contract), a group a
   day and a group a year; empty exits 0 in each, where it said 42. (#210)
 - coming-up, box-health, agents-md-check, xref and pins print a report (the
