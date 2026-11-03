@@ -1629,10 +1629,6 @@ says how). The first was v0.1.0.
   `mutants-reach` job runs its gates through `adapters/stdlib/ci/cores.py`,
   four at once: a change to the contract tests reaches every mutants gate,
   and the whole part in one job took most of an hour. (#214)
-- `against` no longer calls a pull request stacked on another its duplicate:
-  what the two share from before they parted is taken off both sides before
-  the names are compared, so the forge chain's four, each carrying the one
-  below, pass where the first run failed all three above the bottom. (#214)
 - secrets-audit, symptoms, first-mention, misquote, why-not, minutes and
   thesis print a report (the report contract); "found nothing" exits 0 where
   minutes, symptoms, first-mention and misquote said 42. A card says
