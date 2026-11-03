@@ -23,6 +23,10 @@ ci = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(ci)
 k = ci.kernel
 NOW = "2026-10-23T00:00:00Z"
+# The gates the runs below drive: two, so their order is tested, and the
+# cheapest that a machine with only pytest satisfies (about a second, where
+# the demo part took 50 s a run). Nothing here asks what a gate does.
+PART = ["tests:beats", "tests:coverage"]
 
 
 def cli(*argv: str, env: dict | None = None) -> subprocess.CompletedProcess:
@@ -41,20 +45,10 @@ def rows(box: Path) -> list[dict]:
 def test_the_same_files_give_the_same_record_byte_for_byte(tmp_path):
     a, b = tmp_path / "a", tmp_path / "b"
     for box in (a, b):
-        assert cli("run", "demo", "--box", str(box), "--now", NOW).returncode == 0
+        assert cli("run", *PART, "--box", str(box), "--now", NOW).returncode == 0
     assert (a / "record.jsonl").read_bytes() == (b / "record.jsonl").read_bytes()
     made = rows(a)
-    assert [r["gate"] for r in made[1:]] == [
-        *(f"demo:{p}" for p in ci.people()),
-        "demo:php2shell",
-        "demo:google-privacy-2026-10-16",
-        "demo:stack",
-        "demo:teodora-words",
-        "demo:craft-assembly",
-        "demo:redteam",
-        "demo:known-gaps",
-        "demo:novelty",
-    ]
+    assert [r["gate"] for r in made[1:]] == PART
     assert {r["state"] for r in made[1:]} == {ci.SATISFIED}
 
 
@@ -95,7 +89,7 @@ def test_a_failing_command_is_failing_and_a_judge_can_fail_a_zero_exit():
 
 def test_verify_holds_the_chain_and_refuses_anything_but_ci_verdicts(tmp_path):
     box = tmp_path / "box"
-    assert cli("run", "demo", "--box", str(box), "--now", NOW).returncode == 0
+    assert cli("run", *PART, "--box", str(box), "--now", NOW).returncode == 0
     assert cli("verify", "--box", str(box)).returncode == k.ALIVE
     made = rows(box)
     assert all(
@@ -179,7 +173,7 @@ def test_the_add_on_tests_are_cut_with_none_dropped_twice_or_left_empty():
                                   ["--shard", "x"], ["--shard"], ["--without"], ["--stray"]])  # fmt: skip
 def test_what_it_doesnt_know_is_refused_and_runs_nothing(tmp_path, argv):
     box = tmp_path / "box"
-    got = cli("run", "demo", *argv, "--box", str(box), "--now", NOW)
+    got = cli("run", *PART, *argv, "--box", str(box), "--now", NOW)
     assert got.returncode == 2
     assert not box.exists(), "refused before the record is made"
     assert got.stderr.startswith(
@@ -197,8 +191,8 @@ def test_leaving_out_a_part_is_refused_by_name():
 
 def test_a_shard_on_the_command_line_writes_only_its_gates(tmp_path):
     box = tmp_path / "box"
-    assert cli("run", "demo", "--shard", "2/2", "--box", str(box), "--now", NOW).returncode == 0  # fmt: skip
-    assert [r["gate"] for r in rows(box)[1:]] == ci.select(["demo"], [], "2/2")
+    assert cli("run", *PART, "--shard", "2/2", "--box", str(box), "--now", NOW).returncode == 0  # fmt: skip
+    assert [r["gate"] for r in rows(box)[1:]] == ci.select(PART, [], "2/2")
 
 
 def test_a_record_inside_the_repo_where_git_would_count_it_is_refused(tmp_path):
@@ -206,7 +200,7 @@ def test_a_record_inside_the_repo_where_git_would_count_it_is_refused(tmp_path):
     exactly this, and the docs test caught the files it left)."""
     inside = ci.ROOT / "ci-record-test-only"
     try:
-        got = cli("run", "demo", "--box", str(inside), "--now", NOW)
+        got = cli("run", *PART, "--box", str(inside), "--now", NOW)
         assert got.returncode != 0 and "not ignored by git" in got.stderr
         assert not inside.exists()
         assert not inside.with_name(inside.name + ".key").exists()
@@ -216,7 +210,7 @@ def test_a_record_inside_the_repo_where_git_would_count_it_is_refused(tmp_path):
 
             shutil.rmtree(inside)
         inside.with_name(inside.name + ".key").unlink(missing_ok=True)
-    ok = cli("run", "demo", "--box", str(tmp_path / "out"), "--now", NOW)
+    ok = cli("run", *PART, "--box", str(tmp_path / "out"), "--now", NOW)
     assert ok.returncode == 0  # outside the repo is fine
 
 

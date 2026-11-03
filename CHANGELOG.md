@@ -1593,6 +1593,16 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- `ci`'s own tests drive `tests:beats` and `tests:coverage` where they drove
+  the whole `demo` part. Eight tests ran `ci.py run demo`, 14 gates and
+  about 50 s a call, to prove things about the record (the same bytes twice,
+  the gates in order, a shard's rows, verify, a refusal before any gate
+  runs), none of which depends on which gates ran. Two gates are still more
+  than one, so their order is still tested, and both are satisfied with
+  only pytest installed. test_ci.py went from 147 s to 17 s. The 147 s
+  showed in three places: it was `tests:adapters-1` by itself (about 40 s
+  for the other chunks), the heavy end of `tests:strip-3`, and `mutants:ci`,
+  which runs the file six times.
 - `ci`: the tests and strip jobs are one job on each Python, running their
   four shards at once with `adapters/stdlib/ci/cores.py`, in place of eight
   and four jobs a Python. A pull request ran 36 jobs and a push to main 84,
