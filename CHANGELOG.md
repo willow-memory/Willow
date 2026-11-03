@@ -10,6 +10,10 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `sort`: your files sorted into your own categories by the phrases you gave
+  each, in a file of your own (`name: phrase, phrase`); a tie is listed for
+  you to choose and a file no phrase reaches is unsorted, never guessed. It
+  prints a report, 42 when a file waits on you. (#206)
 - The report contract (`adapters/stdlib/ci/README.md`): an add-on that
   reports what it found prints one shape, `NAME: STATE, SAID` then rows of
   where and what by group, and the same as JSON with `--json`; `empty` exits
