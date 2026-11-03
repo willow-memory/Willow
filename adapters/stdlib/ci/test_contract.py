@@ -1033,6 +1033,9 @@ FINDINGS = {
     "app.py": b"import subprocess\nsubprocess.run(cmd, shell=True)\n",
     "requirements.txt": b"Pillow==13.0.0\n",
 }
+#: the command a report comes from, where it isn't the one COMMANDS runs: an
+#: add-on with verbs reports from one of them (score, check)
+REPORT_COMMANDS: dict[str, tuple[str, list[str]]] = {}
 HEAD = re.compile(
     r"(?P<addon>[a-z0-9-]+): (?P<state>populated|empty|unreachable), \S.*"
 )
@@ -1049,7 +1052,7 @@ def test_every_report_keeps_the_report_contract(name, files, tmp_path):
     """Its text is what stack prints from its JSON; the first line, the
     groups and the rows have the shape; the state agrees with the rows and
     the exit code; the same box gives the same report twice."""
-    script_name, argv = COMMANDS[name]
+    script_name, argv = REPORT_COMMANDS.get(name, COMMANDS[name])
     script = STDLIB / name / script_name
     pile = tmp_path / "pile"
     pile.mkdir()
