@@ -1740,6 +1740,10 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- The UI's kernel baseline offers a reader for a kind of file its card
+  names, not for an English word: a kind counts with its dot (`.so`), in
+  capitals (PDF), or bare when three letters or more, so `.so` files are no
+  longer offered agent-transcript, bibtex, chordpro and clauses. (#204)
 - The Java, TypeScript and C# ports exit 42 from a `propose` whose every
   line is refused, as `kernel.py` has since bug #96's fix; they exited 0,
   which looked like an approved answer. The vectors' session now proposes a
