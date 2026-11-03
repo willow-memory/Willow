@@ -18,12 +18,31 @@ says how). The first was v0.1.0.
   `build_loop` resolves. It recommends nothing, scores nothing, proposes
   nothing and writes nothing. Needs forge-play 0.10, whose card box reads
   these cards as rows for its keyword scan. (#200)
+- `ci-memo`: a pull request runs only the mutants gates a change can reach,
+  standing the rest on the record of main's last green run, and a push to
+  main runs them all, so the merge's receipt stays whole. Four shards of 5
+  to 19 minutes were a pull request's slowest job, though a change usually
+  reaches one add-on's gate. The new `mutants-reach` job pins main's records
+  against main's own tree, plans `mutants` (`plan` now takes part or gate
+  names, and `pin` a folder of just `<box>/record.jsonl`, as an artifact is) and
+  runs what needs it; with no green run to stand on it runs the whole part
+  and says why in the summary. `github.py check` holds that a job skipped on
+  pull requests has one that plans its gates. (#208)
+- `against`, a pull request held to the other open ones: `against.py check
+  --base REF HEAD OTHER ...` fails (exit 2) on a name both add, whether an
+  add-on folder, an idea on `adapters/planned.json`, a `COMMANDS` key or a path
+  in FILES.md. A file both change that cannot be merged is only said:
+  `collides:` naming the pull request to merge first, or `settled:` for the
+  files restack settles by rule. It also suggests the ideas of the other
+  pull requests near yours. CI's `against` job runs it on every pull request
+  against the others that are open, and CONTRIBUTING.md's rule is now to
+  stack only when it names a reason. (#208)
 - The report contract (`adapters/stdlib/ci/README.md`): an add-on that
   reports what it found prints one shape, `NAME: STATE, SAID` then rows of
   where and what by group, and the same as JSON with `--json`; `empty` exits
   0, so 42 never means found nothing. A card says `output: report`; `stack`
   asks such a step for its JSON and weighs it by its rows;
-  `test_contract.py` holds each to it; `ci/reports.py` surveys, scaffolds
+  `adapters/stdlib/ci/test_contract.py` holds each to it; `adapters/stdlib/ci/reports.py` surveys, scaffolds
   and checks add-ons in batches. pii-audit, risky-code, todo, advisories,
   install-scripts, package-contents, stale, again, session-seal check,
   predict score, forecasts score and digest print reports; hook-start hands
@@ -1618,7 +1637,41 @@ says how). The first was v0.1.0.
   thesis print a report (the report contract); "found nothing" exits 0 where
   minutes, symptoms, first-mention and misquote said 42. A card says
   `output: report` in its header, or it isn't one. stewart-crossover's
-  freeze 4: `run.py` reads misquote's report. (#198)
+  freeze 4: `demo/stewart-crossover/run.py` reads misquote's report. (#198)
+- `ci`: the heavy CI jobs wait on the fast ones. tests, strip, ports, demo,
+  deps, tools and the mutants jobs `need` lint, first, against and changelog
+  in `.github/workflows/ci.yml`, so on a pull request the checks that take
+  seconds take the runners first, and one that fails stops the rest from
+  queueing: a red lint or a duplicate add-on costs four jobs, not fourteen.
+  A push to main, where three of the four don't run, goes on past them. (#208)
+- `ci`: `--shard K/N` cuts the gates by the seconds each is expected to take
+  (`gate_weight`: an add-on chunk's or a mutants gate's from
+  `adapters/stdlib/ci/test-times.json`, six runs of the add-on's tests for the mutants, a small
+  table for the rest) instead of one apiece, so the shards end about
+  together. The four mutants shards' expected time was 21, 25, 21 and 62
+  minutes by count and is 32, 32, 32 and 32 now; `adapters/stdlib/ci/test-times.json` is
+  refreshed from a run of every add-on's tests, 314 files timed where 106 were.
+  (#208)
+- `ci`'s own tests drive `tests:beats` and `tests:coverage` where they drove
+  the whole `demo` part. Eight tests ran `ci.py run demo`, 14 gates and
+  about 50 s a call, to prove things about the record (the same bytes twice,
+  the gates in order, a shard's rows, verify, a refusal before any gate
+  runs), none of which depends on which gates ran. Two gates are still more
+  than one, so their order is still tested, and both are satisfied with
+  only pytest installed. test_ci.py went from 147 s to 17 s. The 147 s
+  showed in three places: it was `tests:adapters-1` by itself (about 40 s
+  for the other chunks), the heavy end of `tests:strip-3`, and `mutants:ci`,
+  which runs the file six times. (#208)
+- `ci`: the tests and strip jobs are one job on each Python, running their
+  four shards at once with `adapters/stdlib/ci/cores.py`, in place of eight
+  and four jobs a Python. A pull request ran 36 jobs and a push to main 84,
+  behind GitHub's 20-job limit; it is now 14 and 30. The tests job's wall
+  time was its slowest gate (about nine minutes, the other shards ending in
+  ninety seconds) and each job left three of the runner's four cores idle, so
+  the four-core job ends about when that gate did. Each Python's records are
+  uploaded as one artifact, and `adapters/stdlib/github/github.py check` reads
+  a cores command as running every gate it selects, so a cut that drops a
+  gate still fails. (#208)
 - `restack` settles test_contract.py when two reader branches meet in
   `READERS`: git splits their new entries around one shared closing line, so
   neither side of the conflict holds a whole entry and the rule on lines
@@ -1766,6 +1819,24 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- `pii-audit` reads a run holding a written date, year first, as dates, not
+  a card number: two dates side by side (`2027-01-09  2027-01-09`, as
+  milestones prints a row) are sixteen digits that pass Luhn one time in
+  ten, and listed milestones' own card and tests. (#196)
+- `jeles mirror` writes a store too big for one kernel file in parts under
+  the kernel's `MAX_FILE` (store.db.1.txt and on), cut only between
+  nuggets; a real store (2,277 nuggets, 2.5 MB) mirrored as one file was
+  never read, 0 passages, and is now 6,476. (#195)
+- The UI's page puts a ticked piece into the sealed flow only when it makes
+  a page (a card usage of `--box DIR` and optional flags, and no network); a
+  page server, a reader, a hook's setup, a verb or `stack` itself is put in
+  the stack and listed as not run on the page. Run as a step, `browse` never
+  ended and Start it timed out after 900 seconds. (#194)
+- `ui/assemble.py add` adds a piece once when it is both asked for and
+  leaned on by another piece asked for in the same call (`digest` and
+  `hook-start`), where it crashed with `FileExistsError` and left copies
+  STACK.json didn't hold; a refusal partway now removes that call's
+  copies, and a folder an older crash left is named, not a traceback. (#193)
 - The Java, TypeScript and C# ports exit 42 from a `propose` whose every
   line is refused, as `kernel.py` has since bug #96's fix; they exited 0,
   which looked like an approved answer. The vectors' session now proposes a
