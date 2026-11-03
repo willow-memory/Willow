@@ -37,6 +37,7 @@ It only reads. Exit codes, the kernel's: 0 the symptom is named somewhere;
 
 from __future__ import annotations
 
+import json
 import re
 import sys
 from pathlib import Path
@@ -53,6 +54,35 @@ BETTER = re.compile(
     re.IGNORECASE,
 )
 SCORE = re.compile(r"\b(\d{1,2})\s*/\s*10\b")
+
+
+NAME = "symptoms"
+
+
+# ── the report: the shape every report add-on prints (ci/README.md) ─────────
+def report(addon: str, state: str, said: str, groups: list) -> dict:
+    """A report: its state, one line said, and each group's rows (where,
+    what); a group named None comes first and has no heading."""
+    return {"addon": addon, "state": state, "said": said,
+            "groups": [{"name": g, "rows": [{"where": w, "what": x} for w, x in rows]}
+                       for g, rows in groups if rows]}  # fmt: skip
+
+
+def report_text(doc: dict) -> str:
+    """A report as every report add-on prints it: the same twenty lines each
+    keeps, held to this one by test_contract.py."""
+    rows = [r for g in doc["groups"] for r in g["rows"]]
+    w = min(max((len(r["where"]) for r in rows), default=0), 60)
+    out = [f"{doc['addon']}: {doc['state']}, {doc['said']}"]
+    for g in doc["groups"]:
+        if g["name"] is not None:
+            out.append(f"## {g['name']}")
+        out += [f"  {r['where']:<{w}}  {r['what']}".rstrip() for r in g["rows"]]
+    return "\n".join(out)
+
+
+def say(doc: dict, as_json: bool) -> None:
+    print(json.dumps(doc, ensure_ascii=False) if as_json else report_text(doc))
 
 
 def turn_of(line: str) -> str:
@@ -131,6 +161,8 @@ def show(asked: str, rows: list[dict]) -> list[str]:
 
 
 def main(argv: list[str]) -> int:
+    as_json = "--json" in argv  # noqa: F841  wire: say(report(...), as_json)
+    argv = [a for a in argv if a != "--json"]
     opts, args, it = {}, [], iter(argv)
     for a in it:
         if a == "--box":

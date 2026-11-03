@@ -31,6 +31,7 @@ all its parts; 42 some has none; 2 refused.
 from __future__ import annotations
 
 import importlib.util
+import json
 import re
 import sys
 from pathlib import Path
@@ -51,6 +52,35 @@ ABBREVIATIONS = frozenset(
 )  # a full stop after these ends no sentence
 LACKS = 8  # missing parts named for one short claim
 LEAD = re.compile(r"^\s*(?:[-*+>]\s+|\d+[.)]\s+)+")
+
+
+NAME = "thesis"
+
+
+# ── the report: the shape every report add-on prints (ci/README.md) ─────────
+def report(addon: str, state: str, said: str, groups: list) -> dict:
+    """A report: its state, one line said, and each group's rows (where,
+    what); a group named None comes first and has no heading."""
+    return {"addon": addon, "state": state, "said": said,
+            "groups": [{"name": g, "rows": [{"where": w, "what": x} for w, x in rows]}
+                       for g, rows in groups if rows]}  # fmt: skip
+
+
+def report_text(doc: dict) -> str:
+    """A report as every report add-on prints it: the same twenty lines each
+    keeps, held to this one by test_contract.py."""
+    rows = [r for g in doc["groups"] for r in g["rows"]]
+    w = min(max((len(r["where"]) for r in rows), default=0), 60)
+    out = [f"{doc['addon']}: {doc['state']}, {doc['said']}"]
+    for g in doc["groups"]:
+        if g["name"] is not None:
+            out.append(f"## {g['name']}")
+        out += [f"  {r['where']:<{w}}  {r['what']}".rstrip() for r in g["rows"]]
+    return "\n".join(out)
+
+
+def say(doc: dict, as_json: bool) -> None:
+    print(json.dumps(doc, ensure_ascii=False) if as_json else report_text(doc))
 
 
 def claims(text: str) -> list[tuple[int, str]]:
@@ -107,6 +137,8 @@ def short(s: str) -> str:
 
 
 def main(argv: list[str]) -> int:
+    as_json = "--json" in argv  # noqa: F841  wire: say(report(...), as_json)
+    argv = [a for a in argv if a != "--json"]
     top = TOP
     if len(argv) == 5 and argv[3] == "--top" and argv[4].isdigit() and int(argv[4]) > 0:
         top, argv = int(argv[4]), argv[:3]

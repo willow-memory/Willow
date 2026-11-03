@@ -37,6 +37,7 @@ says why; 2 refused (a bad command line, a words list that doesn't read).
 
 from __future__ import annotations
 
+import json
 import difflib
 import math
 import sys
@@ -56,6 +57,35 @@ KIND = (  # (the question's opening words, what would have answered)
     (("how",), "a note of the steps, in order"),
     (("what", "which"), "a note that states it plainly"),
 )  # fmt: skip
+
+
+NAME = "why-not"
+
+
+# ── the report: the shape every report add-on prints (ci/README.md) ─────────
+def report(addon: str, state: str, said: str, groups: list) -> dict:
+    """A report: its state, one line said, and each group's rows (where,
+    what); a group named None comes first and has no heading."""
+    return {"addon": addon, "state": state, "said": said,
+            "groups": [{"name": g, "rows": [{"where": w, "what": x} for w, x in rows]}
+                       for g, rows in groups if rows]}  # fmt: skip
+
+
+def report_text(doc: dict) -> str:
+    """A report as every report add-on prints it: the same twenty lines each
+    keeps, held to this one by test_contract.py."""
+    rows = [r for g in doc["groups"] for r in g["rows"]]
+    w = min(max((len(r["where"]) for r in rows), default=0), 60)
+    out = [f"{doc['addon']}: {doc['state']}, {doc['said']}"]
+    for g in doc["groups"]:
+        if g["name"] is not None:
+            out.append(f"## {g['name']}")
+        out += [f"  {r['where']:<{w}}  {r['what']}".rstrip() for r in g["rows"]]
+    return "\n".join(out)
+
+
+def say(doc: dict, as_json: bool) -> None:
+    print(json.dumps(doc, ensure_ascii=False) if as_json else report_text(doc))
 
 
 def kind_of(question: str) -> str | None:
@@ -137,6 +167,8 @@ def explain(pile: list[dict], question: str, alias: dict) -> tuple[bool, list[st
 
 
 def main(argv: list[str]) -> int:
+    as_json = "--json" in argv  # noqa: F841  wire: say(report(...), as_json)
+    argv = [a for a in argv if a != "--json"]
     opts, args, it = {}, [], iter(argv)
     for a in it:
         if a == "--box":
