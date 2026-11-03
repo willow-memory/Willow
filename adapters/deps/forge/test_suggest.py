@@ -161,7 +161,9 @@ def test_the_twenty_lines_are_the_stack_add_ons_word_for_word():
     one's is the stack add-on's, so the two can't drift."""
     mine = ast.parse(SCRIPT.read_text())
     theirs = ast.parse(
-        (ROOT / "adapters" / "stdlib" / "stack" / "stack.py").read_text()
+        # the path in one string: test-impact reads a bare "stack.py" as every
+        # file so named, and demo/bernadette has one that imports changed.py
+        (ROOT / "adapters/stdlib/stack/stack.py").read_text(encoding="utf-8")
     )
 
     def source(tree, name):
