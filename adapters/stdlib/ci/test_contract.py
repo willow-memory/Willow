@@ -104,6 +104,8 @@ def _tar(files: dict[str, str]) -> bytes:
 
 #: files an add-on needs in the pile besides the default, by add-on
 PILE_EXTRA: dict[str, dict[str, bytes]] = {
+    # a category of the person's own, which the default pile's garden.md holds
+    "sort": {"categories.txt": b"garden: tomatoes, sun\n"},
     "scrub": {"photo.png": _png()},
     # a GGUF header with no keys and no tensors: a card that says so
     "weights-card": {"m.gguf": b"GGUF\x03" + b"\0" * 16},
@@ -679,6 +681,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "symptoms": ("symptoms.py", ["--box", "{box}", "tomatoes"]),
     "thesis": ("thesis.py", ["--box", "{box}", "{pile}/garden.md"]),
     "todo": ("todo.py", ["--box", "{box}"]),
+    "sort": ("sort.py", ["--box", "{box}", "--categories", "{pile}/categories.txt"]),
     "contradictions": ("contradictions.py", ["--box", "{box}"]),
     "lending": ("lending.py", ["--box", "{box}"]),
     "timeline": ("timeline.py", ["--box", "{box}", "--to", "{tmp}/timeline.txt", "tomatoes"]),
