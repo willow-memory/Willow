@@ -1,6 +1,6 @@
 """coming_up.py: dates written in your files that fall in the next few days.
 
-    python adapters/stdlib/coming-up/coming_up.py --box DIR [--days N] [--now TS]
+    python adapters/stdlib/coming-up/coming_up.py --box DIR [--days N] [--now TS] [--json]
 
 Every line of your folder that holds a date between today and N days from
 now (14 by default), soonest first: appointments, renewals, deadlines, the
@@ -29,8 +29,18 @@ still shows as written. A rule belongs to its event's start: a raw file's
 DTSTART line, else the first line of its paragraph, as the calendar reader
 writes it.
 
-It only reads. Exit codes, the kernel's: 0 something is coming up; 42 nothing
-in that window; 2 refused.
+It only reads. It prints a report (ci/README.md, "The report contract"), the
+dates as groups, soonest first, each row a place and its line; `--json` gives
+the same as one object:
+
+    coming-up: populated, 2 dated lines between 2026-10-23 and 2026-11-06, the next on 2026-10-30
+    ## 2026-10-30
+      notes.md:1  Dentist 2026-10-30.
+    ## 2026-10-31
+      notes.md:3  Insurance ends 31/10/2026 unless renewed.
+
+Exit codes: 0 something is coming up (`populated`) or nothing is in that
+window (`empty`); 2 refused. Nothing here waits on you, so it is never 42.
 """
 
 from __future__ import annotations
@@ -216,7 +226,7 @@ def coming(pile: list[dict], today: date, days: int) -> list[tuple]:
 
 
 def main(argv: list[str]) -> int:
-    as_json = "--json" in argv  # noqa: F841  wire: say(report(...), as_json)
+    as_json = "--json" in argv
     argv = [a for a in argv if a != "--json"]
     opts, args, it = {}, [], iter(argv)
     for a in it:
@@ -234,12 +244,23 @@ def main(argv: list[str]) -> int:
         return kernel.REFUSED
     today = ymd((opts.get("--now") or kernel.now())[:10].replace("-", ""))
     hits = coming(kernel.chunks(Path(kernel.config(box)["pile"])), today, int(days))
+    end = today + timedelta(days=int(days))
     if not hits:
-        print(f"Nothing dated between {today} and {today + timedelta(days=int(days))}.")
-        return kernel.ESCALATE
-    width = max(len(p) for _, p, _ in hits)
+        say(
+            report(NAME, "empty", f"nothing dated between {today} and {end}", []),
+            as_json,
+        )
+        return kernel.ALIVE
+    by_day: dict[date, list] = {}
     for d, place, line in hits:
-        print(f"{d}  {place:<{width}}  {line[:120]}")
+        by_day.setdefault(d, []).append((place, line[:120]))
+    n = len(hits)
+    said = (f"{n} dated line{'s' if n != 1 else ''} between {today} and {end}, "
+            f"the next on {hits[0][0]}")  # fmt: skip
+    say(
+        report(NAME, "populated", said, [(str(d), rows) for d, rows in by_day.items()]),
+        as_json,
+    )
     return kernel.ALIVE
 
 
