@@ -120,7 +120,7 @@ def write() -> None:
     for rel, text in FILES.items():
         p = LIFE / rel
         p.parent.mkdir(parents=True, exist_ok=True)
-        p.write_text(text, encoding="utf-8", newline="\n")
+        p.write_bytes(text.encode("utf-8"))
     people = sorted({rel.split("/")[0] for rel in FILES})
     print(f"wrote {len(FILES)} files for {len(people)} people: {', '.join(people)}")
 
