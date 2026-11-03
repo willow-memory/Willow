@@ -790,6 +790,8 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "test-shards": ("shards.py", ["--shards", "2", "--tests", "{pile}/garden.md"]),
     "bot-venv": ("bot_venv.py", ["--venv", "{pile}"]),
     "restack": ("restack.py", ["--onto", "HEAD", "HEAD"]),
+    # no other pull request given: it stops before anything is read, nothing to check
+    "against": ("against.py", ["check", "--base", "HEAD", "HEAD"]),
     "weights-card": ("weights_card.py", ["--from", "{pile}/m.gguf", "--to", "{tmp}/card.md"]),
     "weights-pin": ("weights_pin.py", ["--card", "{pile}/m.md", "--from", "{pile}/m.bin"]),
     "model-shelf": ("model_shelf.py", ["list", "--home", "{tmp}"]),
