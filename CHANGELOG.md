@@ -15,7 +15,7 @@ says how). The first was v0.1.0.
   where and what by group, and the same as JSON with `--json`; `empty` exits
   0, so 42 never means found nothing. A card says `output: report`; `stack`
   asks such a step for its JSON and weighs it by its rows;
-  `test_contract.py` holds each to it; `ci/reports.py` surveys, scaffolds
+  `adapters/stdlib/ci/test_contract.py` holds each to it; `adapters/stdlib/ci/reports.py` surveys, scaffolds
   and checks add-ons in batches. pii-audit, risky-code, todo, advisories,
   install-scripts, package-contents, stale, again, session-seal check,
   predict score, forecasts score and digest print reports; hook-start hands
