@@ -964,3 +964,17 @@ def test_receiving_with_another_key_than_the_records_is_refused(three):
     a.send(subs, c, out / "q")
     got = share("receive", "--box", b.box, "--id", c.id, "--package", out / "q", *NOW)
     assert got.returncode == 2 and "never swap it silently" in got.stderr
+
+
+def test_row_zero_is_inside_the_record_and_said_only_for_what_it_is(three):
+    """The record's first row is in it: a package carrying it (its boot row
+    for a proposal) is wrong for being the wrong row, not for its place."""
+    import share as sh  # noqa: PLC0415
+
+    a, b, _, out, subs = three
+    a.send(subs, b, out / "p")
+    pkg = load(out / "p")
+    pkg["answers"][0]["rows"][0] = a.rows()[0]
+    assert sh.problems(resign(pkg, a.id)) == [
+        "layer 0, answer 0: its rows aren't the proposal and the person's seal of this answer"
+    ]
