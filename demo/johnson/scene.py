@@ -122,12 +122,18 @@ def stack_text(name: str) -> str:
 
 
 def pools(page: str) -> list[tuple[str, str]]:
-    """(pool, the first line its step printed), from a stack's page."""
+    """(pool, what its step printed), from a stack's page: the step's lines
+    after its two heading lines, up to the next pool. A report puts the file
+    and line on its rows, under its first line, so one line is not enough."""
     out, lines = [], page.splitlines()
     for i, line in enumerate(lines):
         if line.startswith("## "):
-            body = [x.strip() for x in lines[i + 1 :] if x.strip()][2:3]
-            out.append((line[3:].split(" (")[0], body[0][:70] if body else ""))
+            rest = lines[i + 1 :]
+            end = next(
+                (j for j, x in enumerate(rest) if x.startswith("## ")), len(rest)
+            )
+            body = [x.strip() for x in rest[:end] if x.strip()][2:]
+            out.append((line[3:].split(" (")[0], "\n".join(body)[:700]))
     return out
 
 
