@@ -10,6 +10,18 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `kart`, a job someone sent you, run over your own folder in Kartikeya's
+  sandbox: `take` puts a job that came in a share package at the kernel's
+  door as a proposal of yours, and `run` runs only a job you sealed, under
+  willow's own policy for Kartikeya's bubblewrap (your folder read-only,
+  one scratch folder, no network, no environment, the box and key out of
+  reach). A `ran` row records how it ended and its output's SHA-256, never
+  the output, and the output waits on your seal before `share` can send it
+  back. A job asking for the network is refused before it is even taken.
+  Its tests probe the sandbox from inside, through `run` itself.
+  `demo/johnson/jobs.py` sends one job from Ines to Walt and Aurelie and
+  brings back their sealed answers; CI's deps job installs bubblewrap and
+  lets the runner make the user namespace it needs.
 - `share`, sealed answers sent from one person's willow to another's:
   `id` makes an Ed25519 identity that is not the seal key, `send` packs
   answers you sealed for one person's public key, signed, with their cites'

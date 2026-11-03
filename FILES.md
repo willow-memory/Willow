@@ -1338,6 +1338,12 @@ willow/
 │       │   ├── requirements-floor.txt  llama-cpp-python at its floor, also tested
 │       │   ├── test_in_process.py
 │       │   └── README.md
+│       ├── kart/
+│       │   ├── kart.py       a job someone sent you, run in Kartikeya's sandbox over your folder read-only, once you seal it
+│       │   ├── requirements.txt  kartikeya, pinned
+│       │   ├── requirements-floor.txt  kartikeya at its floor, also tested
+│       │   ├── test_kart.py  the sandbox probed from inside, the seals at both doors, and the Johnson folders
+│       │   └── README.md
 │       ├── latent/
 │       │   ├── latent.py     ranks a scan index by meaning (TF-IDF + SVD), offline
 │       │   ├── requirements.txt  numpy, pinned
@@ -1485,6 +1491,7 @@ willow/
 │   │   └── test_stack.py     holds the stack to the states STRIP.md scores
 │   ├── johnson/              one report passed between five people's willows, a forged copy, a correction and a rewrite caught
 │   │   ├── README.md         the scene, what each step shows, and what it found
+│   │   ├── jobs.py           one question run by kart over Walt's and Aurelie's folders, sealed by each, back to Ines
 │   │   ├── make_life.py      the five people's files, the same bytes every run
 │   │   ├── scene.py          the report sealed, sent, forwarded hop by hop, forged once, corrected and witnessed; stacks shared, taken and declined
 │   │   └── test_scene.py     holds the scene to what README.md says it shows

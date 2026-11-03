@@ -76,6 +76,22 @@ afterwards. The people are made up, and so is everything they write down.
 `test_scene.py` holds the scene to each of those, and to one more: no
 package holds a line of anyone's files.
 
+## The same question, run where the files are
+
+`jobs.py` takes the scene one step further with [kart](../../adapters/deps/kart/)
+(it needs Kartikeya and bubblewrap installed):
+
+    python demo/johnson/jobs.py run --life demo/johnson/life --to /tmp/johnson-jobs
+
+Ines writes a job, "which of your files name Johnson, and in how many
+lines", and sends it to Walt and Aurelie. Each takes it to their own door
+and seals it; `kart run` runs it in the sandbox over their own folder,
+read-only, with no network; each reads what it printed (`cases.md`, `1`;
+`claims.md`, `1`), seals it and sends it back. Ines ends with two signed
+answers about two folders she has never seen. A job that asks for the
+network is refused before it is even a proposal. The computation went to
+the files; the files went nowhere.
+
 ## What it found
 
 - **A sealed answer stands for its question.** Asked the same words again,
