@@ -104,6 +104,20 @@ def quiet(fn, *args):
     return code, out.getvalue().strip()
 
 
+def names_kind(word: str, line: str) -> bool:
+    """Whether a card's line names a kind of file: `.so` with its dot, or the
+    word as a format is written (SO, ZIP), or, three letters or more, the bare
+    word (zip, json). A two-letter word bare is English too: so, it, in, go."""
+    w = re.escape(word)
+    return bool(
+        re.search(rf"(?<![a-z0-9])\.{w}(?![a-z0-9])", line.lower())
+        or re.search(rf"(?<![A-Za-z0-9]){w.upper()}(?![A-Za-z0-9])", line)
+        or (
+            len(word) >= 3 and re.search(rf"(?<![a-z0-9]){w}(?![a-z0-9])", line.lower())
+        )
+    )
+
+
 class Canvas:
     def __init__(self, to: Path, willow: Path, box: Path, folders: list[str]):
         # every path whole: steps run from other folders
@@ -459,9 +473,7 @@ class Canvas:
         for n, p in sorted(self.pieces().items()):
             if p["section"] != "Reading more kinds of files" or n in out:
                 continue
-            if n == word or re.search(
-                rf"(?<![a-z0-9])\.?{re.escape(word)}(?![a-z0-9])", p["line"].lower()
-            ):
+            if n == word or names_kind(word, p["line"]):
                 out.append(n)
         return out[:4]
 
@@ -651,12 +663,16 @@ class Canvas:
                         starter.read_text(encoding="utf-8"), encoding="utf-8"
                     )
                     words.chmod(0o600)
-            boxes = []
+            boxes, taken = [], set()
             for folder in arr["folders"]:
                 slug = (
                     re.sub(r"[^a-z0-9]+", "-", Path(folder).name.lower()).strip("-")
                     or "folder"
                 )
+                n, base = 2, slug
+                while slug in taken:  # two folders of one name: two records
+                    slug, n = f"{base}-{n}", n + 1
+                taken.add(slug)
                 box = mine / slug / "box"
                 if (box / "record.jsonl").exists():
                     self._step(
@@ -729,7 +745,6 @@ class Canvas:
                     "done" if runner.is_file() else "refused",
                     said,
                 )
-            folder, box = boxes[0]
             here = set(assemble.manifest(self.stack)["addons"])
             lines, skipped = [], []
             for ln in arr["stack_md"].splitlines():
@@ -738,18 +753,25 @@ class Canvas:
                     skipped.append(m.group(1))
                     continue
                 lines.append(ln)
-            flow = box.parent / "stack.md"
-            flow.write_text("\n".join(lines) + "\n", encoding="utf-8")
-            if runner.is_file():
+            pages = []
+            for folder, box in boxes:  # each folder its own record, so its own page
+                flow = box.parent / "stack.md"
+                flow.write_text("\n".join(lines) + "\n", encoding="utf-8")
+                if not runner.is_file():
+                    continue
                 r = subprocess.run([sys.executable, str(runner), "--box", str(box), "--stack", str(flow)],
                                    cwd=self.stack, capture_output=True, text=True, timeout=900,
                                    env={**os.environ, "PYTHONDONTWRITEBYTECODE": "1"})  # fmt: skip
                 state = {0: "done", 42: "needs you"}.get(r.returncode, "refused")
-                job["flow"] = (r.stdout or r.stderr)[:60000]
+                text = r.stdout or r.stderr
+                (box.parent / "page.md").write_text(text, encoding="utf-8")
+                pages.append(text if len(boxes) == 1 else f"## over {folder}\n\n{text}")
                 note = f"over {folder}, exit {r.returncode}" + (
                     f"; not here, so left out: {', '.join(skipped)}" if skipped else ""
                 )
                 self._step("your flow, run once", state, note)
+            job["flow"] = "\n".join(pages)[:60000] if pages else None
+            folder, box = boxes[0]  # browse opens on the first folder's record
             # 4. browse, on your record
             b = self.stack / "adapters" / "stdlib" / "browse" / "browse.py"
             if not b.is_file():

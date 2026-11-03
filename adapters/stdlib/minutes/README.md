@@ -6,6 +6,7 @@ added: 2026-10-29
 writes: nothing
 network: none
 uses: habits
+output: report
 -->
 # minutes
 
@@ -13,15 +14,15 @@ Meeting minutes read for what was decided and what is still to do: who decided
 what and when, and which actions are still open.
 
 ```
-python adapters/stdlib/minutes/minutes.py --box DIR [--open]
+python adapters/stdlib/minutes/minutes.py --box DIR [--open] [--json]
 
-decisions
-  2026-03-02  board/march.md:4  Move the AGM to May.
-actions open
-  2026-03-02  board/march.md:6  Ana  send the figures by 2026-03-09  (due 2026-03-09)
-actions closed
-  2026-03-02  board/march.md:7  (no owner)  Book the hall - done
-1 decision, 1 open action, 1 closed
+minutes: populated, 1 decision, 1 open action, 1 closed
+## decisions
+  board/march.md:4  2026-03-02  Move the AGM to May.
+## actions open
+  board/march.md:6  2026-03-02  Ana  send the figures by 2026-03-09  (due 2026-03-09)
+## actions closed
+  board/march.md:7  2026-03-02  (no owner)  Book the hall - done
 ```
 
 **A decision** is a line that opens with Decision, Decided, Agreed or
@@ -45,8 +46,15 @@ machine's and is never read. A line's day is the latest date it says before any 
 written above it in its file, else the date its file is named for; a line no
 day reaches is left out. `--open` shows only the open actions.
 
-It only reads. Exit codes, the kernel's: 0 something found; 42 no decision
-or action; 2 refused.
+It prints [a report](../ci/README.md#the-report-contract), the shape every
+report add-on shares: a line with the counts, then a row per decision or
+action, its file and line and then its day, owner, words and due date,
+under `decisions`, `actions open` and `actions closed`. `--json` gives the
+same report as one JSON object.
+
+It only reads. **Exit codes:** 0 found some (`populated`) or none (`empty`:
+no decision or action, or with `--open` no open one); 2 refused. An open
+action is listed, not escalated, so there is no 42.
 
 **Uses:** the kernel's `chunks`, `newest`, `words` and `config`, and
 [habits](../habits/)' `file_lines`.

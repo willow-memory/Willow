@@ -3,6 +3,7 @@ and the ones no passage holds listed last."""
 
 from __future__ import annotations
 
+import json
 import os
 import subprocess
 import sys
@@ -78,25 +79,42 @@ def test_a_sentence_runs_over_lines_and_starts_where_it_starts():
 
 
 def test_held_short_and_the_part_no_file_has(tmp_path):
-    got = run(box(tmp_path), doc_of(tmp_path))
-    assert got.returncode == 42
-    out = got.stdout
-    assert "line 3    held   garden.md:1   Tomatoes want six hours of sun." in out
-    assert "Water goes at the root" in out and "lacks goes, never, leaves" in out
-    assert "line 5    short  garden.md:5 lacks cold" in out
-    assert "line 12   short  no part held" in out
-    assert "5 claims" not in out and "4 claims; 1 held, 3 short; 1 skipped" in out
-    tail = out.split("without a passage holding every part:")[1]
-    assert "line 3    no file has: goes, never, leaves" in tail  # the second sentence
-    assert "line 5    no file has: cold" in tail
-    assert "line 12   no file has: slugs, eat, lettuce, overnight" in tail
+    d, b = doc_of(tmp_path), box(tmp_path)
+    got = run(b, d)
+    assert got.returncode == 42  # populated, and some claim is short: it waits
+    w = min(len(f"{d}:12"), 60)  # the where column is as wide as its longest
+    assert got.stdout.splitlines() == [
+        "thesis: populated, 4 claims; 1 held, 3 short; 1 skipped",
+        "## short",
+        f"  {d}:3".ljust(w + 2) + "  Water goes at the root, never the leaves.  nearest: garden.md:3 lacks goes, never, leaves  no file has: goes, never, leaves",
+        f"  {d}:5".ljust(w + 2) + "  Basil likes shade and cold.  nearest: garden.md:5 lacks cold  no file has: cold",
+        f"  {d}:12".ljust(w + 2) + "  Slugs eat the lettuce overnight.  nearest: no part held  no file has: slugs, eat, lettuce, overnight",
+        "## held",
+        "  garden.md:1".ljust(w + 2) + "  line 3  Tomatoes want six hours of sun.",
+    ]  # fmt: skip
+    doc = json.loads(run(b, d, "--json").stdout)
+    assert doc["state"] == "populated" and doc["addon"] == "thesis"
+    assert doc["said"] == "4 claims; 1 held, 3 short; 1 skipped"
+    assert [g["name"] for g in doc["groups"]] == ["short", "held"]
+    assert doc["groups"][1]["rows"] == [
+        {"where": "garden.md:1", "what": "line 3  Tomatoes want six hours of sun."}
+    ]
+    assert doc["groups"][0]["rows"][1] == {
+        "where": f"{d}:5",
+        "what": "Basil likes shade and cold.  nearest: garden.md:5 lacks cold  no file has: cold",
+    }
 
 
 def test_every_claim_held_exits_zero(tmp_path):
     d = doc_of(tmp_path, "Tomatoes want six hours of sun.\n\nBasil likes shade.\n")
     got = run(box(tmp_path), d)
-    assert got.returncode == 0 and "2 claims; 2 held, 0 short" in got.stdout
-    assert "without" not in got.stdout
+    assert got.returncode == 0
+    assert got.stdout.splitlines() == [
+        "thesis: populated, 2 claims; 2 held, 0 short; 0 skipped",
+        "## held",
+        "  garden.md:1  line 1  Tomatoes want six hours of sun.",
+        "  garden.md:5  line 3  Basil likes shade.",
+    ]
 
 
 def test_a_one_part_sentence_is_skipped_not_judged(tmp_path):
@@ -130,7 +148,11 @@ def test_top_sets_how_many_near_passages_a_short_claim_shows(tmp_path):
 def test_the_empty_document_and_the_refusals(tmp_path):
     b = box(tmp_path)
     got = run(b, doc_of(tmp_path, "# Only a heading\n"))
-    assert got.returncode == 0 and "No claims to check" in got.stdout
+    assert got.returncode == 0  # empty is 0: 42 never means found nothing
+    assert got.stdout == "thesis: empty, no claims to check; 0 skipped\n"
+    assert json.loads(run(b, doc_of(tmp_path, "# Only a heading\n"), "--json").stdout) == {
+        "addon": "thesis", "state": "empty", "said": "no claims to check; 0 skipped", "groups": [],
+    }  # fmt: skip
     for argv in ([str(tmp_path / "nope.md")], [str(tmp_path)]):
         assert run(b, Path(argv[0])).returncode == 2
     bin_doc = tmp_path / "x.bin"
