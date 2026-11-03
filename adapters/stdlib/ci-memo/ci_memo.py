@@ -2,7 +2,7 @@
 
     python adapters/stdlib/ci-memo/ci_memo.py keys [GATE ...] [--repo DIR]
     python adapters/stdlib/ci-memo/ci_memo.py pin  --box DIR [--box DIR ...] --to FILE [--repo DIR]
-    python adapters/stdlib/ci-memo/ci_memo.py plan --pin FILE [--repo DIR] [--bare]
+    python adapters/stdlib/ci-memo/ci_memo.py plan --pin FILE [--repo DIR] [--bare] [PART|GATE ...]
 
 A full `ci.py run` re-checks every add-on on every change, though most gates
 read none of what changed. Each gate's verdict is a function of the bytes it
@@ -20,6 +20,8 @@ SHA-256, sorted, as ci.py hashes the whole tree), and memoizes:
   unchanged stands, with the pinned verdict; one whose key changed, or that
   the pin doesn't hold, runs, and the line that runs just those is printed,
   for you to run. `--bare` prints only their names, for `ci.py run $(...)`.
+  Parts or gates named after it, as ci.py names them, narrow the plan to
+  those (`plan --pin FILE mutants`); a name ci.py doesn't know is refused.
 
 A verdict that stands is the old run's, not a new pass: the same bytes gave
 it, and the pin says which bytes. Three parts are never memoized, because
@@ -180,7 +182,9 @@ def do_pin(boxes: list[Path], to: Path, root: Path) -> int:
     tree = key_of(sorted(seen), seen)
     held = {}
     for box in boxes:
-        if not (box / "kernel.json").exists():
+        # a box, or just its record.jsonl: CI's artifact holds nothing more,
+        # and the chain is checked below either way
+        if not (box / "record.jsonl").is_file():
             raise Refused(f"{box} is not a kernel box; run ci.py first")
         rows, breaks = kernel.read(box / "record.jsonl")
         if breaks:
@@ -225,15 +229,21 @@ def do_pin(boxes: list[Path], to: Path, root: Path) -> int:
     return kernel.ALIVE
 
 
-def do_plan(pin: Path, root: Path, bare: bool) -> int:
+def do_plan(pin: Path, root: Path, bare: bool, names: list[str]) -> int:
     try:
         page = json.loads(pin.read_text(encoding="utf-8"))
         held, pinned_py = page["gates"], page["python"]
     except (OSError, ValueError, KeyError) as e:
         raise Refused(f"{pin} isn't a pin: {type(e).__name__}")
     py = "{}.{}".format(*sys.version_info[:2])
+    try:
+        wanted = set(ci.select(names, [], None)) if names else None
+    except ValueError as e:
+        raise Refused(str(e))
     stand, run = [], []
     for part, gate, key, _ in keyed([], root):
+        if wanted is not None and gate not in wanted:
+            continue
         if part in NEVER:
             run.append((gate, f"never memoized: {NEVER[part]}"))
         elif pinned_py != py:
@@ -282,7 +292,7 @@ def main(argv: list[str]) -> int:
             verb == "pin"
             and (args or not all(boxes) or not boxes or not opts.get("--to"))
         )
-        or (verb == "plan" and (args or not opts.get("--pin")))
+        or (verb == "plan" and not opts.get("--pin"))
         or verb not in ("keys", "pin", "plan")
     )
     if bad:
@@ -293,7 +303,7 @@ def main(argv: list[str]) -> int:
             return do_keys(args, root)
         if verb == "pin":
             return do_pin([Path(b) for b in boxes], Path(opts["--to"]), root)
-        return do_plan(Path(opts["--pin"]), root, "--bare" in opts)
+        return do_plan(Path(opts["--pin"]), root, "--bare" in opts, args)
     except Refused as e:
         print(f"refused: {e}", file=sys.stderr)
         return kernel.REFUSED

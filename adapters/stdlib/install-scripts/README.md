@@ -5,6 +5,7 @@ source: new
 added: 2026-10-24
 writes: nothing
 network: none
+output: report
 -->
 # install-scripts
 
@@ -16,14 +17,18 @@ arbitrary code on your machine. This lists every one the packages in a
 node_modules folder would run, by package, and by the file and line where
 each is written, so you can read the code first.
 
-    python adapters/stdlib/install-scripts/install_scripts.py --box DIR
-    python adapters/stdlib/install-scripts/install_scripts.py --from ANY-FOLDER
+    python adapters/stdlib/install-scripts/install_scripts.py --box DIR [--json]
+    python adapters/stdlib/install-scripts/install_scripts.py --from ANY-FOLDER [--json]
 
-    esbuild
-        web/node_modules/esbuild/package.json:5   postinstall   node install.js
+    install-scripts: populated, 1 install script in 1 package would run on npm install; none was run here
+    ## esbuild
+      web/node_modules/esbuild/package.json:5  postinstall  node install.js
 
-    1 install script in 1 package would run on npm install. Read each before
-    you trust its package; none was run here.
+It prints [a report](../ci/README.md#the-report-contract), the shape every
+report add-on shares: a line saying what it found, then a group per package,
+each row the file and line a hook is written on and then the hook and its
+command. `--json` gives the same report as one JSON object. Read each script
+before you trust its package; none was run here.
 
 | Hook | When npm runs it |
 |---|---|
@@ -37,10 +42,11 @@ package.json outside node_modules, such as your own project's, is not read:
 this is about what the packages you installed would run. The command is shown
 as it is written, on one line (a newline shows as `\n`). A key written with
 escapes can't be placed, so it is cited at line 1. A package.json that isn't
-valid JSON is noted and not checked. A name is the package's own `name`, or
-else its folder's.
+valid JSON is noted on stderr, counted in the report's first line, and not
+checked. A name is the package's own `name`, or else its folder's.
 
-Exit codes, the kernel's: 0 nothing would run (or no node_modules folder); 42
-an install script is there, and waits on you; 2 refused.
+Exit codes, the kernel's: 0 nothing would run, or no node_modules folder
+(empty); 42 an install script is there, and waits on you (populated), or no
+package.json in node_modules could be read (unreachable); 2 refused.
 
 **Never:** runs, fetches or writes anything. The commands are shown, never run.

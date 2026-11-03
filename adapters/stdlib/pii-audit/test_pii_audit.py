@@ -4,6 +4,7 @@ nobody's; the audit never repeats a number; and silence names its limits."""
 from __future__ import annotations
 
 import importlib.util
+import json
 import subprocess
 import sys
 from pathlib import Path
@@ -84,8 +85,18 @@ def test_the_audit_never_repeats_the_number(tmp_path):
     assert got.returncode == 42
     assert "4242424242424242" not in got.stdout and CARD not in got.stdout
     assert "···· 4242" in got.stdout and "money/orders.csv:1" in got.stdout
-    assert got.stdout.splitlines()[-1] == "1 personal number in 1 of 1 files"
+    assert got.stdout.splitlines() == [
+        "pii-audit: populated, 1 personal number in 1 of 1 files",
+        "## a card number",
+        "  money/orders.csv:1  ···· 4242",
+    ]
     assert got.stdout == run(str(HERE / "pii_audit.py"), "--from", str(root)).stdout
+    doc = json.loads(
+        run(str(HERE / "pii_audit.py"), "--from", str(root), "--json").stdout
+    )
+    assert doc["state"] == "populated" and CARD not in json.dumps(doc)
+    assert doc["groups"] == [{"name": "a card number",
+                              "rows": [{"where": "money/orders.csv:1", "what": "···· 4242"}]}]  # fmt: skip
 
 
 def test_two_dates_side_by_side_are_dates_not_a_card():

@@ -1,5 +1,6 @@
 """hook-start: a SessionStart hook that tells the assistant what waits on the
-person (suggestions, stale answers, dates coming up) as the JSON a hook reads;
+person (suggestions, stale answers, dates coming up) as digest's report inside
+the JSON a hook reads;
 a quiet box adds nothing; nothing is written, not even an out row; a record
 that doesn't verify or a bad command line is refused."""
 
@@ -104,20 +105,31 @@ def test_what_waits_is_told_as_the_json_a_session_start_hook_reads(tmp_path):
     got = run("--box", str(life(tmp_path)), *NOW)
     assert got.returncode == 0, got.stderr
     text = context(got)
-    assert "1 suggestion waiting for their approval" in text
-    assert "only the person approves, and an assistant never does" in text
-    assert "30 October (why: the note)" in text
-    assert ("1 approved answer is stale" in text) == BESIDE["stale"]
-    assert ("Coming up (next 14 days): 2026-10-30 car.txt:1" in text) == BESIDE[
-        "coming-up"
-    ]
+    head, *body = text.splitlines()
+    said = ["1 waiting"]
+    said += ["1 gone stale"] if BESIDE["stale"] else []
+    said += ["1 coming up"] if BESIDE["coming-up"] else []
+    assert head.startswith("hook-start: populated, " + ", ".join(said))
+    assert "## Waiting for you" in body
+    assert any(ln.startswith("  proposal:") and ln.endswith("  30 October (why: the note)")
+               for ln in body)  # fmt: skip
+    assert ("## Gone stale" in body) == BESIDE["stale"]
+    assert ("## Coming up (next 14 days)" in body) == BESIDE["coming-up"]
+    assert any(ln.startswith("  car.txt:1 ") and "2026-10-30  The car" in ln
+               for ln in body) == BESIDE["coming-up"]  # fmt: skip
+    assert body[-1] == (
+        "That is what the person's willow box is waiting on. Say so when it "
+        "fits; only the person approves, and an assistant never does."
+    )
 
 
 def test_the_days_window_decides_what_is_coming_up(tmp_path):
     b = life(tmp_path)
-    six = "Coming up" in context(run("--box", str(b), "--days", "6", *NOW))
+    six = "## Coming up (next 6 days)" in context(
+        run("--box", str(b), "--days", "6", *NOW)
+    )
     assert six == BESIDE["coming-up"]
-    assert "Coming up" not in context(run("--box", str(b), "--days", "5", *NOW))
+    assert "## Coming up" not in context(run("--box", str(b), "--days", "5", *NOW))
 
 
 def test_a_quiet_box_prints_nothing_at_all(tmp_path):
@@ -136,11 +148,10 @@ def test_many_waiting_are_counted_and_only_the_first_few_shown(tmp_path):
             tmp_path, b, f"fact number {i} about topic{i}", f"a{i}.md", f"answer {i}"
         )
     text = context(run("--box", str(b), *NOW))
-    assert (
-        "7 suggestions waiting" in text
-        and text.count("\n  - answer") == 5
-        and "and 2 more" in text
-    )
+    assert text.startswith("hook-start: populated, 7 waiting")
+    assert text.count("  answer ") == 5 and ["…", "and", "2", "more"] in [
+        ln.split() for ln in text.splitlines()
+    ]
 
 
 def test_it_writes_nothing_not_even_an_out_row(tmp_path):
@@ -178,6 +189,6 @@ def test_a_long_answer_and_a_long_reason_are_cut_short(tmp_path):
         claim="because " + "reason " * 30,
     )
     text = context(run("--box", str(b), *NOW))
-    assert "A" * 79 + "…" in text and "A" * 80 not in text
+    assert "A" * 99 + "…" in text and "A" * 100 not in text
     why = ("because " + "reason " * 30).split()
-    assert f"(why: {' '.join(why)[:59]}…)" in text
+    assert f"(why: {' '.join(why)[:99]}…)" in text
