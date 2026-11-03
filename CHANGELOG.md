@@ -1602,7 +1602,7 @@ says how). The first was v0.1.0.
   only pytest installed. test_ci.py went from 147 s to 17 s. The 147 s
   showed in three places: it was `tests:adapters-1` by itself (about 40 s
   for the other chunks), the heavy end of `tests:strip-3`, and `mutants:ci`,
-  which runs the file six times.
+  which runs the file six times. (#208)
 - `ci`: the tests and strip jobs are one job on each Python, running their
   four shards at once with `adapters/stdlib/ci/cores.py`, in place of eight
   and four jobs a Python. A pull request ran 36 jobs and a push to main 84,
@@ -1612,7 +1612,7 @@ says how). The first was v0.1.0.
   the four-core job ends about when that gate did. Each Python's records are
   uploaded as one artifact, and `adapters/stdlib/github/github.py check` reads
   a cores command as running every gate it selects, so a cut that drops a
-  gate still fails.
+  gate still fails. (#208)
 - `restack` settles test_contract.py when two reader branches meet in
   `READERS`: git splits their new entries around one shared closing line, so
   neither side of the conflict holds a whole entry and the rule on lines
