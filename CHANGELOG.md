@@ -1819,6 +1819,24 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- people counts the values code writes capitalized (None, True, False) as no
+  one, beside the months and weekdays: a repository's roster led with None,
+  24,048 mentions, from one `self.left None`. (#209)
+- todo lists a line whose date no calendar has (1984-06-31) under its own
+  heading and exits 42, where it was ordered as the oldest thing to do; the
+  oldest is said of the real dates only. known-gaps' freeze 9. (#207)
+- The UI's Start it runs the sealed flow over every folder of the pick, each
+  its own record with its page beside it, where it ran over the first only;
+  two folders of one name get a record each (`files-2`), where the second
+  was told "already set up". (#205)
+- The UI's kernel baseline offers a reader for a kind of file its card
+  names, not for an English word: a kind counts with its dot (`.so`), in
+  capitals (PDF), or bare when three letters or more, so `.so` files are no
+  longer offered agent-transcript, bibtex, chordpro and clauses. (#204)
+- model-shelf looks in the Ollama service's folder
+  (/usr/share/ollama/.ollama/models, where Ollama's Linux installer keeps
+  its models) when no --home is given, where it said Ollama was "not on this
+  machine" while it served 14 models. (#213)
 - `pii-audit` reads a run holding a written date, year first, as dates, not
   a card number: two dates side by side (`2027-01-09  2027-01-09`, as
   milestones prints a row) are sixteen digits that pass Luhn one time in
