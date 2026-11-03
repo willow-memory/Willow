@@ -237,3 +237,36 @@ def test_a_bad_command_line_is_refused():
     assert canvas.main(["--port", "x"]) == assemble.REFUSED
     assert assemble.main([]) == assemble.REFUSED
     assert assemble.main(["init", "--willow", "/elsewhere"]) == assemble.REFUSED
+
+
+def test_start_runs_the_page_over_every_folder_of_the_pick(site, tmp_path):
+    """Two folders are two records, so two pages: the sealed flow runs over
+    each, and each page is written beside its own record."""
+    import time
+
+    cv, call = site
+    one, two = a_folder(tmp_path / "one"), a_folder(tmp_path / "two")
+    pick = {"name": "two folders", "folders": [str(one), str(two)], "lanes": [
+        {"title": "watch", "steps": [{"name": "coming-up", "args": "--box {box} --days 30"}]}]}  # fmt: skip
+    subject = call("POST", "/tok/api/propose", pick)[1]["subject"]
+    assert call("POST", "/tok/api/seal", {"subject": subject})[1]["sealed"] is True
+    call("POST", "/tok/api/assemble", {"subject": subject})
+    try:
+        assert cv.start(subject) == {"started": True}
+        for _ in range(600):
+            if cv.job["state"] != "running":
+                break
+            time.sleep(0.5)
+        flows = [s for s in cv.job["steps"] if s["step"] == "your flow, run once"]
+        assert [s["said"].split(",")[0] for s in flows] == [
+            f"over {one}",
+            f"over {two}",
+        ]
+        assert all(s["state"] in ("done", "needs you") for s in flows), flows
+        # both are named "files": each its own record, the second "files-2"
+        for slug in ("files", "files-2"):
+            assert (cv.to / "mine" / slug / "page.md").is_file()
+        assert f"## over {one}" in cv.job["flow"] and f"## over {two}" in cv.job["flow"]
+    finally:
+        for proc in cv.browsers:
+            proc.terminate()
