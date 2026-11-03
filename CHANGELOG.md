@@ -1740,6 +1740,10 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- `pii-audit` reads a run holding a written date, year first, as dates, not
+  a card number: two dates side by side (`2027-01-09  2027-01-09`, as
+  milestones prints a row) are sixteen digits that pass Luhn one time in
+  ten, and listed milestones' own card and tests. (#196)
 - The Java, TypeScript and C# ports exit 42 from a `propose` whose every
   line is refused, as `kernel.py` has since bug #96's fix; they exited 0,
   which looked like an approved answer. The vectors' session now proposes a
