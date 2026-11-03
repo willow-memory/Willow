@@ -1607,7 +1607,7 @@ says how). The first was v0.1.0.
   thesis print a report (the report contract); "found nothing" exits 0 where
   minutes, symptoms, first-mention and misquote said 42. A card says
   `output: report` in its header, or it isn't one. stewart-crossover's
-  freeze 4: `run.py` reads misquote's report. (#198)
+  freeze 4: `demo/stewart-crossover/run.py` reads misquote's report. (#198)
 - `restack` settles test_contract.py when two reader branches meet in
   `READERS`: git splits their new entries around one shared closing line, so
   neither side of the conflict holds a whole entry and the rule on lines
