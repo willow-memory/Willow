@@ -213,7 +213,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 
 ## Finding things
 
-- [**all**](adapters/stdlib/all/) — Every matching passage, ranked, not just the top three. *box* `no-install` `offline` `ranked` `matched` · near: latent, claim-check, thesis
+- [**all**](adapters/stdlib/all/) — Every matching passage, ranked, not just the top three. *box* `no-install` `offline` `ranked` `matched` · near: claim-check, latent, thesis
 - [**amounts**](adapters/stdlib/amounts/) — Every sum of money in your files, with its date and the line it's on. *new* `no-install` `offline` `amount` · near: debts, said, chats
 - **bm25** (idea) — BM25 over a box in one go, with no index to build first: the rank scan --rank bm25 gives, for a folder you ask once. *new* `no-install` `offline` `index` `scan` · near: scan, index-cache, latent
 - **by-function** (idea) — Code read by function and class instead of by line, so a hit names the function it's in. Needs tree-sitter and its language pack; MIT. *new* `needs-install` `offline` `function` `instead` · near: codebase-memory, claude-code, risky-code
@@ -360,7 +360,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**contradictions**](adapters/stdlib/contradictions/) — Two passages that disagree about the same date or amount, side by side. *new* `no-install` `offline` `amount` · near: duplicates, joins, amounts
 - [**decisions**](adapters/stdlib/decisions/) — A recorded no with its reason and the condition that would reopen it, so a rejection is kept, not forgotten. *new* `no-install` `offline` · near: pile-sweep, predict, again
 - [**diverge**](adapters/stdlib/diverge/) — Where two copies part, your record and its backup zip or two copies of a folder, down to the first row, file and line that differ. *bot* `no-install` `offline` `backup` `zip` `everyday` · near: backup, three-two-one, restore-drill
-- **encrypt** (idea) — Keeps the record folder encrypted at rest. Needs cryptography; Apache-2.0 or BSD. *new* `needs-install` `offline` `rest` · near: make-it-so, ci-memo, almanac-keep
+- **encrypt** (idea) — Keeps the record folder encrypted at rest. Needs cryptography; Apache-2.0 or BSD. *new* `needs-install` `offline` `rest` · near: make-it-so, almanac-keep, ci-memo
 - [**export**](adapters/stdlib/export/) — Approved answers, and the question log (counts only, never words), as Markdown or CSV. *box* `no-install` `offline` `counts` · near: again, history, pgp
 - **family-box** (idea) — One box for a household: each person's own seal, and every answer showing whose it is. *new* `no-install` `offline` `person` `family` · near: second-opinion, dialect, family-tree
 - [**fixity**](adapters/stdlib/fixity/) — Your folder's files hashed again now and then, the hashes kept on the record, and a file that changed with no edit of yours flagged as rot. *new* `no-install` `offline` `rot` `flagged` · near: hook-replay, hook-pin, changed
@@ -405,7 +405,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**wayback**](adapters/stdlib/wayback/) — The Wayback Machine's copy of a page from a window of days, saved beside your own snapshot and compared with it byte for byte. Uses snapshot. Goes online: archive.org, to find the archived copy and fetch it. *new* `no-install` `online` `snapshot` `saved` `sources` · near: snapshot, policy-watch, archivebox
 - [**weakest-link**](adapters/stdlib/weakest-link/) — Each answer's inputs marked measured, fitted or assumed, and the result worth its weakest input, never an average. *new* `no-install` `offline` `links` · near: stale, export, jetbrains
 - [**weights-pin**](adapters/stdlib/weights-pin/) — A local model's weights file hashed before each run and refused when it differs from the hash on its model card. Uses weights-card. *new* `no-install` `offline` `local` `weights` · near: weights-card, model-card, model-fit
-- **witness** (idea) — A second person's seal beside yours, for answers that need two people to agree. *new* `no-install` `offline` `second` `person` · near: second-opinion, forge, translate
+- **witness** (idea) — A second person's seal beside yours, for answers that need two people to agree. *new* `no-install` `offline` `second` `person` · near: second-opinion, translate, model-recall
 - [**xref**](adapters/stdlib/xref/) — Every reference in your files checked: each link to another file, and each quoted line, still there and still saying it. *bot* `no-install` `offline` `quote` `everyday` · near: quote-review, secrets-audit, quotes
 
 ## Privacy and safety
@@ -444,7 +444,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - [**copilot**](adapters/stdlib/copilot/) — GitHub Copilot, in VS Code and in its own CLI, asks your folder through the mcp add-on. Uses hosts. *new* `no-install` `offline` `mcp` `cli` · near: codex-cli, gemini-cli, cursor
 - [**cursor**](adapters/stdlib/cursor/) — Cursor asks your folder and hands in suggestions, through the mcp add-on. Uses hosts. *new* `no-install` `offline` `mcp` · near: opencode, windsurf, zed
 - [**folder-card**](adapters/stdlib/folder-card/) — A card for your folder itself (what the files are, their dates, the gaps you know of), made from your files and your notes and handed to a model as context. Uses gaps. *new* `no-install` `offline` `gaps` · near: serve, persona-card, gaps
-- [**forge**](adapters/deps/forge/) — A sentence in, the add-ons it names or means out, as a plan with its forks for the Forge's checkpoint to resolve and the person to seal before anything runs. Needs forge-play; Apache-2.0. *new* `needs-install` `offline` `sentence` · near: plain, jeles, stack
+- [**forge**](adapters/deps/forge/) — A sentence in, the add-ons it names or means out, as a plan with its forks for the Forge's checkpoint to resolve and the person to seal before anything runs. Needs forge-play; Apache-2.0. *new* `needs-install` `offline` `sentence` · near: plain, jeles, history
 - [**gemini-cli**](adapters/stdlib/gemini-cli/) — Google's Gemini CLI asks your folder and hands in suggestions, through the mcp add-on. Uses hosts. *new* `no-install` `offline` `mcp` `cli` · near: codex-cli, cursor, opencode
 - **hermes** (idea) — Hermes Agent asking your folder as a plugin, and its memories, and what its dreaming plugin consolidates, handed in through propose. *new* `no-install` `offline` `handed` `propose` · near: basic-memory, memory-import, hook-feedback
 - **hook-checks** (idea) — A PostToolUse hook that runs the repo's own fast checks on the file just edited and hands back only what failed, the same output for the same file. *new* `no-install` `offline` `fails` `output` `hooks` · near: hook-pin, hook-fail-closed, hook-impact
@@ -573,7 +573,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - **lore** (idea) — For a world you're writing: each fact about it sealed one at a time, so a story can be checked against its canon. *bot* `no-install` `offline` `world` · near: mutants, llms-txt, claim-check
 - **lunatic** (idea) — The moon's real phase sets how far typos are forgiven: everything at full moon, nothing at new. Needs Skyfield; MIT. *new* `needs-install` `offline` `real` `far` · near: typos, real-sky, dialect
 - **mastermind** (idea) — Mastermind with the secret's hash at the open: each guess and score on the record. *new* `no-install` `offline` `score` `hash` · near: assistant-scores, secrets-audit, weather-bet
-- **movie** (idea) — Your record as a Gource film: every question, approval and miss growing like a tree. Needs the gource program; GPL-3.0, called not linked. *new* `needs-install` `offline` `tree` `miss` · near: bench, family-tree, vectors
+- **movie** (idea) — Your record as a Gource film: every question, approval and miss growing like a tree. Needs the gource program; GPL-3.0, called not linked. *new* `needs-install` `offline` `tree` `film` · near: bench, family-tree, vectors
 - **nim** (idea) — Nim as rows: the heaps and each take, a position lost exactly when the heaps' XOR is 0. *new* `no-install` `offline` `rows` `lost` · near: tic-tac-toe, cloudevents, hosts
 - **ninety-percent** (idea) — The calibration drill: give a range you're 90% sure of for a real number, and see how many hold. Goes online: Our World in Data, its numbers downloaded once. *new* `no-install` `online` `ranges` `drill` · near: oakenscroll, restore-drill, pins
 - [**odds**](adapters/stdlib/odds/) — Exact odds, as fractions, for a game's dice and tables: what each outcome's chance really is. *bot* `no-install` `offline` `game` `dice` · near: game-master, dice, dice5e

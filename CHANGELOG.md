@@ -46,9 +46,14 @@ says how). The first was v0.1.0.
   ("email": mail, apple-mail) is a fork with the cards as options, for the
   Forge's checkpoint to put to the person once and remember; `--plan`
   prints the same as a plan the Forge's `plan_shape` validates and its
-  `build_loop` resolves. It recommends nothing, scores nothing, proposes
-  nothing and writes nothing. Needs forge-play 0.10, whose card box reads
-  these cards as rows for its keyword scan. (#200)
+  `build_loop` resolves. It recommends nothing and scores nothing. (#200)
+  `propose` settles the forks and hands each, and the stack, to the kernel's
+  door as a report of what waits, under the person's seal; `suggest` reads a
+  sealed decision back through the kernel and asks nothing twice, keyed by
+  decision type as the Forge asks for it, so a fork the Forge's build loop
+  settled is a step here and one settled here is the Forge's auto band. Its
+  promise is `writes: record`: every write is the kernel's. Needs forge-play
+  0.10, whose card box reads these cards as rows for its keyword scan. (#201)
 - `ci-memo`: a pull request runs only the mutants gates a change can reach,
   standing the rest on the record of main's last green run, and a push to
   main runs them all, so the merge's receipt stays whole. Four shards of 5
@@ -1661,6 +1666,10 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- `github`: the drift test looks for the planted problem anywhere in `check`'s
+  list, not first in it. Which gate a shard plant reports "in no job" first
+  depends on the cut, and the weights move it: a pull request adding an add-on
+  (sort, #206) failed the test with its own gate's weight in the cut. (#217)
 - `three-two-one`: a copy that holds but has fewer rows than the box says
   how many it is behind (`holds (14 rows, 2 rows behind the box)`). A record
   cut short still verifies, so a truncated or stale copy counted as a copy
