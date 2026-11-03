@@ -77,6 +77,17 @@ def left(ref: str, rev: str) -> str:
     return got.stdout.strip()
 
 
+def read_from(ref: str, rev: str, fork: str) -> str:
+    """Where `rev` is read from against the other of a pair: where it left REF,
+    unless the two left each other (`fork`) after that, as when one is stacked
+    on the other, or merged it. Then the commits the two share are neither's,
+    and `rev` is read from where it left the other."""
+    base = left(ref, rev)
+    got = subprocess.run(["git", "merge-base", "--is-ancestor", base, fork],
+                         capture_output=True)  # fmt: skip
+    return fork if got.returncode == 0 else base
+
+
 def label(ref: str) -> str:
     """`#12` for a pull request's ref (`pr/12`, `refs/pull/12/head`), else the ref."""
     m = PULL.search(ref)
@@ -234,7 +245,7 @@ def check(base: str, head: str, others: list[str]) -> tuple[int, list[str]]:
     ref, mine = commit(base), commit(head)
     if not ref or not mine:
         raise Unchecked(f"{base if not ref else head} is not a ref")
-    mine_adds = Adds(mine, left(ref, mine))
+    left(ref, mine)  # HEAD shares history with REF, or nothing is checked
     lines, done, skipped = [], [], []
     tally = {"duplicate": 0, "collides": 0, "near": 0}
     for other in others:
@@ -243,7 +254,10 @@ def check(base: str, head: str, others: list[str]) -> tuple[int, list[str]]:
         try:
             if not sha:
                 raise Unchecked("not a ref")
-            there = Adds(sha, left(ref, sha))
+            left(ref, sha)  # shares history with REF, or is said not checked
+            fork = left(mine, sha)
+            mine_adds = Adds(mine, read_from(ref, mine, fork))
+            there = Adds(sha, read_from(ref, sha, fork))
             found = (duplicates(mine_adds, there, who) + collisions(mine, sha, who)
                      + nears(mine_adds, there, who))  # fmt: skip
         except Unchecked as why:
