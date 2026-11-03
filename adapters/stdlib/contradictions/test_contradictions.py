@@ -290,3 +290,43 @@ def test_refused_without_a_box_or_with_a_bad_command_line(tmp_path):
     assert run(script, "--box", str(tmp_path)).returncode == 2
     got = run(script, "--bx", str(tmp_path))
     assert got.returncode == 2 and "contradictions.py --box DIR" in got.stderr
+
+
+def test_a_word_thats_everywhere_is_no_subject(tmp_path):
+    """Thirty lines sharing "willow kernel ledger entry closes", each with its
+    own date, are about thirty things: those words are on every line, so they
+    are no subject, and the one real disagreement is all that's found."""
+    names = ("alder ash beech birch cedar cherry elm fir hazel holly juniper larch "
+             "linden maple oak pine plane poplar rowan spruce sycamore walnut willowherb "
+             "yew aspen hornbeam laurel olive myrtle teak").split()  # fmt: skip
+    ledger = "\n\n".join(f"Willow kernel ledger entry {n} closes on 2026-02-{d:02d}."
+                         for d, n in enumerate(names, 1))  # fmt: skip
+    got = contradictions(tmp_path, {
+        "ledger.md": ledger + "\n",
+        "plans.md": "The wedding dinner is on 2026-06-12.\n",
+        "mail/ana.txt": "Reminder: the wedding dinner is on 19/06/2026.\n",
+    })  # fmt: skip
+    assert got.returncode == 0
+    assert [ln for ln in lines(got) if ln.startswith(("DATE", "AMOUNT"))] == [
+        "DATE    wedding, dinner"
+    ]
+
+
+def test_everywhere_is_over_one_line_in_500_and_over_ten():
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location("contra", HERE / "contradictions.py")
+    co = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(co)
+
+    def lines_with(counts: dict[str, int], total: int) -> list[dict]:
+        out = [{"stems": set()} for _ in range(total)]
+        for w, n in counts.items():
+            for i in range(n):
+                out[i]["stems"].add(w)
+        return out
+
+    # 5,500 lines: one in 500 is 11 lines, so 12 is everywhere and 11 isn't
+    assert co.everywhere(lines_with({"twelve": 12, "eleven": 11}, 5500)) == {"twelve"}
+    # 100 lines: one in 500 is under one, so the floor says: over 10 lines
+    assert co.everywhere(lines_with({"eleven": 11, "ten": 10}, 100)) == {"eleven"}

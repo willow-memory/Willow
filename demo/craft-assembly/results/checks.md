@@ -14,7 +14,7 @@ Written by [report.py](../report.py) `write`, after [REPORT.md](../REPORT.md), t
 
     python adapters/stdlib/xref/xref.py --from demo/craft-assembly
 
-    71 references checked, 0 don't hold; 10 leading out of your folder, not checked.
+    xref: empty, 71 references checked, 0 don't hold; 10 leading out of your folder, not checked
 
 ## The counts, looked for in the README by claim-check
 

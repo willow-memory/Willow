@@ -117,3 +117,33 @@ def test_a_long_marked_line_is_cut_at_120(tmp_path):
         str(tmp_path / "k"), *NOW)  # fmt: skip
     line = run(str(HERE / "todo.py"), "--box", str(b)).stdout.splitlines()[-1]
     assert line.endswith("TODO: " + "y" * 114)
+
+
+def test_a_day_no_calendar_has_is_reported_and_is_42(tmp_path):
+    """The kernel reads any day 01 to 31 as a date; June has 30. Such a line is
+    never the oldest: it's listed apart and the report waits on you."""
+    pile = tmp_path / "pile"
+    pile.mkdir()
+    (pile / "old.md").write_text("1984-06-31\nTODO: file the claim\n")
+    (pile / "real.md").write_text("2021-05-14\nNeed to call the insurer.\n")
+    b = tmp_path / "box"
+    run(str(KERNEL), "init", "--box", str(b), "--pile", str(pile), "--key",
+        str(tmp_path / "k"), *NOW)  # fmt: skip
+    got = run(str(HERE / "todo.py"), "--box", str(b))
+    assert got.returncode == 42
+    assert got.stdout.splitlines() == [
+        "todo: populated, 2 lines marked to do, the oldest from 2021-05-14;"
+        " 1 dated on a day no calendar has",
+        "  real.md:2  2021-05-14  Need to call the insurer.",
+        "## impossible date",
+        "  old.md:2   1984-06-31  TODO: file the claim",
+    ]
+    doc = json.loads(run(str(HERE / "todo.py"), "--box", str(b), "--json").stdout)
+    assert [g["name"] for g in doc["groups"]] == [None, "impossible date"]
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location("todo_mod", HERE / "todo.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    assert not mod.possible("1984-06-31") and not mod.possible("2023-02-29")
+    assert mod.possible("2024-02-29") and mod.possible("1984-06-30")

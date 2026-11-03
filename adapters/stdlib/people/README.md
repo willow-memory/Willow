@@ -31,7 +31,8 @@ quickly in a chat doesn't cost Kati her name); at least once it does a
 person's thing — it speaks (a chat's stamped speaker line, "Kati said" and
 the other speech verbs), or it comes, calls, rings, visits, meets, asks,
 tells, thanks, pays or helps, or is rung, met, told or thanked by name — and
-it isn't a month's or a weekday's name, which also come and go. Every word
+it isn't a month's or a weekday's name, which also come and go, or a value code
+writes capitalized (None, True, False). Every word
 that passes is a person, and the roster says what it counted, never who
 matters: a town someone "left" can stand in it (Odile's roster seats a
 Creek), and reading the roster is how you'd notice.
