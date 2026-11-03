@@ -244,23 +244,27 @@ def add(names: list[str], to: Path, python: str | None) -> int:
     todo, why = list(names), {n: "asked" for n in names}
     worst = ALIVE
     copied: list[tuple[str, Path, list[str], list[str]]] = []
+
+    def refused(said: str) -> int:  # nothing half-added: this call's copies go
+        print(f"refused: {said}", file=sys.stderr)
+        for _, dst, _, _ in copied:
+            shutil.rmtree(dst)
+        return REFUSED
+
     while todo:  # first every copy, so a check never runs short of a hard sibling
         name = todo.pop(0)
-        if name in m["addons"]:
-            continue
+        if name in m["addons"] or any(c[0] == name for c in copied):
+            continue  # asked twice, or both asked and leaned on
         src = willow / "adapters" / "stdlib" / name
         if src.is_dir() and card(src).get("runs-in") == "repo":
-            print(f"refused: {name} works on willow's own repository; it isn't copied out of it",
-                  file=sys.stderr)  # fmt: skip
-            return REFUSED
+            return refused(f"{name} works on willow's own repository; it isn't copied out of it")  # fmt: skip
         if not src.is_dir():
             if (willow / "adapters" / "deps" / name).is_dir():
-                print(f"refused: {name} is a deps add-on; this base stack is stdlib only",
-                      file=sys.stderr)  # fmt: skip
-            else:
-                print(f"refused: willow has no add-on {name}", file=sys.stderr)
-            return REFUSED
+                return refused(f"{name} is a deps add-on; this base stack is stdlib only")  # fmt: skip
+            return refused(f"willow has no add-on {name}")
         dst = stack / "adapters" / "stdlib" / name
+        if dst.exists():
+            return refused(f"{dst} is there but not on STACK.json; remove it to add {name} again")  # fmt: skip
         shutil.copytree(src, dst, ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
         hard, soft = deps(dst)
         for h in hard:
