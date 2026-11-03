@@ -1740,6 +1740,9 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- people counts the values code writes capitalized (None, True, False) as no
+  one, beside the months and weekdays: a repository's roster led with None,
+  24,048 mentions, from one `self.left None`. (#209)
 - `pii-audit` reads a run holding a written date, year first, as dates, not
   a card number: two dates side by side (`2027-01-09  2027-01-09`, as
   milestones prints a row) are sixteen digits that pass Luhn one time in
