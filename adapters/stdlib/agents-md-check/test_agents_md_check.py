@@ -5,6 +5,7 @@ is clean; a bad command line is refused; and nothing is written."""
 
 from __future__ import annotations
 
+import json
 import subprocess
 import sys
 from pathlib import Path
@@ -29,9 +30,9 @@ def repo(tmp_path: Path, files: dict[str, str]) -> Path:
 
 
 def lines(got: subprocess.CompletedProcess) -> list[str]:
-    return [" ".join(row.split()) for row in got.stdout.splitlines() if row.strip()][
-        :-1
-    ]
+    """The rows of the report, 'where what', spaces made one."""
+    return [" ".join(row.split()) for row in got.stdout.splitlines()[1:]
+            if row.startswith("  ")]  # fmt: skip
 
 
 def test_a_missing_path_in_backticks_is_cited_by_file_and_line(tmp_path):
@@ -44,8 +45,10 @@ def test_a_missing_path_in_backticks_is_cited_by_file_and_line(tmp_path):
     )
     got = run("--from", str(r))
     assert got.returncode == 42, got.stderr
-    assert lines(got) == ["AGENTS.md:3 src/gone.py path: no such file"]
-    assert "1 thing named in 1 instruction file not found." in got.stdout
+    assert lines(got) == ["AGENTS.md:3 src/gone.py: no such file"]
+    assert got.stdout.splitlines()[0].startswith(
+        "agents-md-check: populated, 1 thing named in 1 instruction file not found;"
+    )
 
 
 def test_a_path_is_looked_for_from_the_top_and_from_the_files_own_folder(tmp_path):
@@ -66,14 +69,14 @@ def test_a_missing_script_a_command_runs_is_listed(tmp_path):
     got = run("--from", str(r))
     assert got.returncode == 42
     assert lines(got) == [
-        "AGENTS.md:2 tools/gone.py path: no such file",
-        "AGENTS.md:4 ./run.sh path: no such file",
+        "AGENTS.md:2 tools/gone.py: no such file",
+        "AGENTS.md:4 ./run.sh: no such file",
     ]
 
 
 def test_an_environment_prefix_and_a_dollar_prompt_are_read_through(tmp_path):
     r = repo(tmp_path, {"AGENTS.md": "```\n$ CI=1 python gone.py\n```\n"})
-    assert lines(run("--from", str(r))) == ["AGENTS.md:2 gone.py path: no such file"]
+    assert lines(run("--from", str(r))) == ["AGENTS.md:2 gone.py: no such file"]
 
 
 def test_a_make_target_and_an_npm_script_are_checked_against_their_files(tmp_path):
@@ -84,8 +87,8 @@ def test_a_make_target_and_an_npm_script_are_checked_against_their_files(tmp_pat
     })  # fmt: skip
     got = run("--from", str(r))
     assert lines(got) == [
-        "AGENTS.md:1 make nope make target: not in the Makefile",
-        "AGENTS.md:1 npm run nope script: not in package.json",
+        "AGENTS.md:1 make nope: not in the Makefile",
+        "AGENTS.md:1 npm run nope: not in package.json",
     ]
 
 
@@ -98,8 +101,8 @@ def test_a_relative_link_and_an_import_are_checked_and_a_fragment_is_dropped(tmp
     text = "@RULES.md\n[a](docs/a.md#top) [b](docs/b.md) [c](https://x.org/y.md)\n"
     r = repo(tmp_path, {"CLAUDE.md": text, "docs/a.md": ""})
     assert lines(run("--from", str(r))) == [
-        "CLAUDE.md:1 RULES.md import: no such file",
-        "CLAUDE.md:2 docs/b.md path: no such file",
+        "CLAUDE.md:2 docs/b.md: no such file",  # the path group, then the import
+        "CLAUDE.md:1 RULES.md: no such file",
     ]
 
 
@@ -114,7 +117,7 @@ def test_a_path_inside_a_code_block_prose_is_not_a_command_but_a_fence_still_tog
 ):
     text = "```\nsome prose words here\n```\nthen `gone/x.py` after\n"
     assert lines(run("--from", str(repo(tmp_path, {"AGENTS.md": text})))) == [
-        "AGENTS.md:4 gone/x.py path: no such file"
+        "AGENTS.md:4 gone/x.py: no such file"
     ]
 
 
@@ -123,12 +126,16 @@ def test_instruction_files_under_node_modules_are_not_read(tmp_path):
         tmp_path, {"node_modules/p/AGENTS.md": "`gone/x.py`\n", "AGENTS.md": "ok\n"}
     )
     got = run("--from", str(r))
-    assert got.returncode == 0 and "1 instruction file is there" in got.stdout
+    assert got.returncode == 0 and got.stdout.splitlines() == [
+        "agents-md-check: empty, everything named in 1 instruction file is there"
+    ]
 
 
 def test_no_instruction_file_is_clean(tmp_path):
     got = run("--from", str(repo(tmp_path, {"README.md": "`gone/x.py`"})))
-    assert got.returncode == 0 and "No AGENTS.md or CLAUDE.md" in got.stdout
+    assert got.returncode == 0 and got.stdout.splitlines() == [
+        "agents-md-check: empty, no AGENTS.md or CLAUDE.md here, so nothing in one has gone missing"
+    ]
 
 
 def test_a_box_is_read_through_its_pile_and_nothing_is_written(tmp_path):
@@ -156,8 +163,8 @@ def test_a_runner_given_by_its_path_is_still_a_runner(tmp_path):
     text = "```\n.venv/bin/python gone1.py\n/usr/bin/python3 gone2.py\n```\n"
     got = run("--from", str(repo(tmp_path, {"AGENTS.md": text})))
     assert lines(got) == [
-        "AGENTS.md:2 gone1.py path: no such file",
-        "AGENTS.md:3 gone2.py path: no such file",
+        "AGENTS.md:2 gone1.py: no such file",
+        "AGENTS.md:3 gone2.py: no such file",
     ]
 
 
@@ -174,4 +181,46 @@ def test_a_real_missing_path_is_still_reported_when_the_line_says_repo(tmp_path)
     r = repo(tmp_path, {"AGENTS.md": "This repo still needs `src/gone.py`.\n"})
     got = run("--from", str(r))
     assert got.returncode == 42
-    assert lines(got) == ["AGENTS.md:1 src/gone.py path: no such file"]
+    assert lines(got) == ["AGENTS.md:1 src/gone.py: no such file"]
+
+
+def test_the_report_has_a_group_per_kind_and_json_says_the_same(tmp_path):
+    r = repo(tmp_path, {
+        "AGENTS.md": "Run `make nope`, `npm run nope`, see `src/gone.py`.\n",
+        "CLAUDE.md": "@RULES.md\n",
+        "Makefile": "lint:\n\tx\n",
+        "package.json": '{"scripts": {}}',
+    })  # fmt: skip
+    got = run("--from", str(r))
+    assert got.returncode == 42
+    assert got.stdout.splitlines() == [
+        "agents-md-check: populated, 4 things named in 2 instruction files not found;"
+        " each is a lead: a path a build makes shows here too",
+        "## path",
+        "  AGENTS.md:1  src/gone.py: no such file",
+        "## import",
+        "  CLAUDE.md:1  RULES.md: no such file",
+        "## make target",
+        "  AGENTS.md:1  make nope: not in the Makefile",
+        "## script",
+        "  AGENTS.md:1  npm run nope: not in package.json",
+    ]
+    asked = run("--from", str(r), "--json")
+    assert asked.returncode == 42
+    doc = json.loads(asked.stdout)
+    assert doc["addon"] == "agents-md-check" and doc["state"] == "populated"
+    assert [(g["name"], g["rows"]) for g in doc["groups"]][1] == (
+        "import",
+        [{"where": "CLAUDE.md:1", "what": "RULES.md: no such file"}],
+    )
+
+
+def test_a_clean_repo_is_empty_in_json_and_exits_0(tmp_path):
+    got = run("--from", str(repo(tmp_path, {"AGENTS.md": "ok\n"})), "--json")
+    assert got.returncode == 0
+    assert json.loads(got.stdout) == {
+        "addon": "agents-md-check",
+        "state": "empty",
+        "said": "everything named in 1 instruction file is there",
+        "groups": [],
+    }
