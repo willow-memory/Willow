@@ -621,3 +621,120 @@ def test_check_says_a_broken_package_and_refuses_no_package(three, tmp_path):
 def test_a_bad_command_line_says_how_to_run_it(argv):
     got = share(*argv)
     assert got.returncode == 2 and "share.py id" in got.stderr
+
+
+# ── the people as witnesses ─────────────────────────────────────────────────
+def witness(box: Path, *pkgs: Path) -> subprocess.CompletedProcess:
+    return share("witness", "--box", box, "--package", ",".join(map(str, pkgs)))
+
+
+def rewrite(box: Path, n: int, **edit) -> None:
+    """Row n edited and every row from it re-hashed: what verify can't see."""
+    import share as sh  # noqa: PLC0415
+
+    rec = box / "record.jsonl"
+    rows = [json.loads(x) for x in rec.read_text().splitlines()]
+    rows[n].update(edit)
+    for i in range(n, len(rows)):
+        rows[i]["prev"] = rows[i - 1]["hash"]
+        body = {k: v for k, v in rows[i].items() if k != "hash"}
+        rows[i]["hash"] = sh.kernel.h256(sh.kernel.canon(body))
+    rec.write_text("".join(sh.kernel.canon(r) + "\n" for r in rows))
+
+
+def test_a_sent_row_names_the_key_that_signed(three):
+    a, b, _, out, subs = three
+    a.send(subs, b, out / "p")
+    [sent] = [r for r in a.rows() if r["kind"] == "sent"]
+    assert sent["key"] == a.pub
+
+
+def test_every_package_kept_witnesses_the_record_that_sent_it(three):
+    a, b, c, out, subs = three
+    p1 = a.send(subs[:1], b, out / "p1").stdout.split()[1]
+    a.send(subs[1:], b, out / "p2")
+    b.receive(out / "p1")
+    f = b.forward(out / "p1", c, out / "f").stdout.split()[1]
+    got = witness(a.box, out / "p1", out / "p2", out / "f")
+    assert got.returncode == 0, got.stdout + got.stderr
+    lines = got.stdout.splitlines()
+    n = load(out / "p1")["chain"]["rows"]
+    assert (
+        lines[0]
+        == f"holds        {p1[:20]}… at row {n}: sent to {b.pub[:12]}…, 2026-10-23T00:00:00Z"
+    )
+    assert len(lines) == 3 and all(x.startswith("holds ") for x in lines)
+    got = witness(b.box, out / "f")  # the forward witnesses its own sender too
+    assert got.returncode == 0 and got.stdout.startswith(f"holds        {f[:20]}…")
+
+
+def test_a_record_rewritten_from_some_row_on_is_caught_by_a_kept_package(three):
+    a, b, _, out, subs = three
+    a.send(subs, b, out / "p")
+    rewrite(a.box, 2, ts="1999-01-01T00:00:00Z")
+    assert a.verify().startswith("the chain holds"), "verify alone can't see it"
+    got = witness(a.box, out / "p")
+    n = load(out / "p")["chain"]["rows"]
+    assert got.returncode == 42
+    assert (
+        "rewritten    " in got.stdout
+        and f"row {n - 1} is not the row it was signed after" in got.stdout
+    )
+    assert "never sent with" not in got.stdout, "the key is still in the record"
+
+
+def test_a_sent_row_rewritten_away_is_caught(three):
+    a, b, _, out, subs = three
+    a.send(subs, b, out / "p")
+    n = load(out / "p")["chain"]["rows"]
+    rewrite(a.box, n, package="package:" + "0" * 64)
+    got = witness(a.box, out / "p")
+    assert (
+        got.returncode == 42
+        and f"row {n} is not the record of sending it" in got.stdout
+    )
+
+
+def test_a_record_cut_short_is_caught_and_its_lost_key_said(three):
+    a, b, _, out, subs = three
+    a.send(subs, b, out / "p")
+    rec = a.box / "record.jsonl"
+    keep = rec.read_text().splitlines()[:3]
+    rec.write_text("\n".join(keep) + "\n")
+    got = witness(a.box, out / "p")
+    assert got.returncode == 42
+    assert "cut short" in got.stdout and "the record has 3" in got.stdout
+    assert f"its key, {a.pub[:12]}…, is one this record never sent with" in got.stdout
+
+
+def test_someone_elses_key_signing_for_a_chain_accuses_no_one(three):
+    """c signs a layer naming a's chain: it holds as a package, but a's
+    record never sent with c's key, so the line says so instead of a verdict
+    anyone could take as a's."""
+    a, b, c, out, subs = three
+    a.send(subs, b, out / "p")
+    pkg = load(out / "p")
+    pkg["from"] = c.pub
+    forged = dump(out / "e", resign(pkg, c.id))
+    assert share("check", "--package", forged).returncode == 0
+    got = witness(a.box, forged)
+    assert got.returncode == 42
+    assert f"its key, {c.pub[:12]}…, is one this record never sent with" in got.stdout
+
+
+def test_a_package_that_doesnt_hold_proves_nothing(three):
+    a, b, _, out, subs = three
+    a.send(subs, b, out / "p")
+    pkg = load(out / "p")
+    pkg["note"] = "edited"
+    got = witness(a.box, dump(out / "e", pkg))
+    assert got.returncode == 42 and got.stdout.startswith("proves nothing")
+
+
+def test_packages_of_another_record_witness_nothing(three):
+    a, b, _, out, subs = three
+    a.send(subs, b, out / "p")
+    got = witness(b.box, out / "p")
+    assert got.returncode == 42 and got.stdout.startswith("no witness")
+    got = witness(a.box, out / "none")
+    assert got.returncode == 2 and "could not read" in got.stderr

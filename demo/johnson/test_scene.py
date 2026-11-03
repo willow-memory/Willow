@@ -79,6 +79,18 @@ def test_harold_holds_four_layers_and_the_correction(played):
     assert "reported the leak on 2026-03-04" in json.dumps(v1["answers"])
 
 
+def test_every_kept_package_tells_her_real_record_from_a_rewritten_one(played):
+    """Her own verify can't see the rewrite; each person's packages can."""
+    assert "her own verify: the chain holds" in played["got"].stdout
+    witness = played["doc"]["witness"]
+    assert list(witness) == ["walt", "aurelie", "tamsin", "harold"]
+    for who, said in witness.items():
+        assert said == {
+            "real": ["holds", "holds"],
+            "rewritten": ["rewritten", "rewritten"],
+        }, who
+
+
 def test_no_package_holds_a_line_of_anyones_files(played):
     lines = {line.strip() for p in played["life"].rglob("*.md")
              for line in p.read_text().splitlines() if len(line.strip()) > 30}  # fmt: skip

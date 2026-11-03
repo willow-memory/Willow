@@ -6,6 +6,7 @@
     python adapters/stdlib/share/share.py receive --box DIR --id IDFILE --package FILE [--now TS]
     python adapters/stdlib/share/share.py check   --package FILE
     python adapters/stdlib/share/share.py log     --box DIR
+    python adapters/stdlib/share/share.py witness --box DIR --package FILE[,...]
 
 A seal is an HMAC under your key: only that key can check it, so it can't
 travel. A package can. `id` makes you an identity of your own, an Ed25519
@@ -29,8 +30,17 @@ passed the old one on to, so the correction can follow it.
 `check` reads a package alone, every layer, and `log` lists what your record
 says you sent and received.
 
-Exit codes, the kernel's: 0 done or a package that holds; 42 a package that
-doesn't hold, or isn't for you, and waits on you; 2 refused.
+`witness` holds a box's record to the packages other people kept. Each layer
+of a package is signed over where its sender's record stood when it was
+packed, so whoever holds one holds a signed pin of that record, out of its
+writer's reach. For each layer signed for this box's chain it says `holds`
+(the row is the one signed, and the next is its `sent` row), `rewritten`,
+`cut short`, or `another key` (signed for this chain by a key the record
+never sent with). It reads, and writes nothing.
+
+Exit codes, the kernel's: 0 done or a package that holds, or a record every
+witness holds to; 42 a package that doesn't hold, or isn't for you, or a
+record a witness doesn't hold to, and waits on you; 2 refused.
 
 It never reads your seal key, and refuses an IDFILE that is it. It writes
 only FILE or IDFILE, new, in a folder that exists, never in the box or your
@@ -66,6 +76,7 @@ FLAGS = {
     "receive": ({"--box", "--id", "--package"}, {"--now"}),
     "check": ({"--package"}, set()),
     "log": ({"--box"}, set()),
+    "witness": ({"--box", "--package"}, set()),
 }  # fmt: skip
 
 
@@ -325,7 +336,7 @@ def written(box: Path, opts: dict, pkg: dict, ts: str, **fields) -> int:
     if why:
         return refuse(why)
     row = kernel.append(box, ts, "sent", who="share", package=pid, to=pkg["for"],
-                        replaces=pkg["replaces"], **fields)  # fmt: skip
+                        key=pkg["from"], replaces=pkg["replaces"], **fields)  # fmt: skip
     print(f"packed {pid} for {short(pkg['for'])}, row {row['n']}")
     print(f"written to {opts['--to']}; send it any way you like")
     return kernel.ALIVE
@@ -495,6 +506,55 @@ def do_log(opts: dict) -> int:
     return kernel.ALIVE
 
 
+def witnessed(rows: list[dict], layer: dict) -> tuple[bool, str]:
+    """(holds, the line to say) for one signed layer against a record. A
+    layer signed by a key the record never sent with is said as such: either
+    the record lost those rows, or someone else signed for this chain."""
+    pid, chain = package_id(layer), layer["chain"]
+    n, at = chain["rows"], f"{short(pid)} at row {chain['rows']}"
+    if len(rows) <= n:
+        line = f"cut short    {at}: signed at {n} rows; the record has {len(rows)}"
+    elif rows[n - 1]["hash"] != chain["tip"]:
+        line = f"rewritten    {at}: row {n - 1} is not the row it was signed after"
+    elif (
+        rows[n]["kind"] != "sent"
+        or rows[n].get("package") != pid
+        or rows[n].get("key") != layer["from"]
+    ):
+        line = f"rewritten    {at}: row {n} is not the record of sending it"
+    else:
+        return True, f"holds        {at}: sent to {short(layer['for'])}, {layer['ts']}"
+    if layer["from"] not in {r.get("key") for r in rows if r["kind"] == "sent"}:
+        line += (
+            f"; and its key, {short(layer['from'])}, is one this record never sent with"
+        )
+    return False, line
+
+
+def do_witness(opts: dict) -> int:
+    rows, why = chain_of(Path(opts["--box"]))
+    if why:
+        return refuse(why)
+    start, held, said = rows[0]["hash"], True, 0
+    for path in opts["--package"].split(","):
+        pkg, why = read_package(Path(path))
+        if why:
+            return refuse(why)
+        if problems(pkg):
+            print(f"proves nothing  {path}: the package doesn't hold (check says why)")
+            held = False
+            continue
+        for layer in layers(pkg):
+            if layer["chain"]["start"] == start:
+                ok, line = witnessed(rows, layer)
+                print(line)
+                held, said = held and ok, said + 1
+    if not said:
+        print("no witness: none of these packages was signed for this record")
+        return kernel.ESCALATE
+    return kernel.ALIVE if held else kernel.ESCALATE
+
+
 def main(argv: list[str]) -> int:
     cmd, rest = (argv[0], argv[1:]) if argv else ("", [])
     need, may = FLAGS.get(cmd, (None, set()))
@@ -511,7 +571,7 @@ def main(argv: list[str]) -> int:
         return do_id(Path(opts["--to"]))
     return {"send": lambda: do_send(opts, ts), "forward": lambda: do_forward(opts, ts),
             "receive": lambda: do_receive(opts, ts), "check": lambda: do_check(opts),
-            "log": lambda: do_log(opts)}[cmd]()  # fmt: skip
+            "log": lambda: do_log(opts), "witness": lambda: do_witness(opts)}[cmd]()  # fmt: skip
 
 
 if __name__ == "__main__":

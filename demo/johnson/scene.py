@@ -18,7 +18,11 @@ there yet. Then the scene:
 5. Ines finds her report gave the wrong day for the call. She seals the
    right answer and sends a new report that replaces the first. At each hop
    `receive` says who the old one went to next, and the correction follows.
-6. Every box is verified, and nobody's record holds a seal but their own.
+6. Ines rewrites a copy of her record: her wrong answer's seal backdated
+   and every row after it re-hashed, so her own `verify` still says it
+   holds. Each of the others holds her record to the packages they kept
+   (share witness): the real one holds, the rewritten one doesn't.
+7. Every box is verified, and nobody's record holds a seal but their own.
 
 It writes a transcript to standard output and scene.json under --to: each
 person's public key, rows and what they sent and received, and the packages.
@@ -28,10 +32,14 @@ Exit 0 when the scene plays as told, 1 when a step went otherwise.
 from __future__ import annotations
 
 import json
+import shutil
 import subprocess
 import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from kernel import canon, h256  # noqa: E402
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
@@ -57,6 +65,11 @@ ASKED = [
      "Hartwell Roofing quotes $2,140, of which $380 is the ceiling.",
      "the quote itself"),
 ]  # fmt: skip
+#: the packages each person kept, by name: each one holds Ines's signed layer
+KEPT = {"walt": ["report", "report-v2"],
+        "aurelie": ["walt-to-aurelie", "walt-to-aurelie-v2"],
+        "tamsin": ["aurelie-to-tamsin", "aurelie-to-tamsin-v2"],
+        "harold": ["tamsin-to-harold", "tamsin-to-harold-v2"]}  # fmt: skip
 #: what the call log says, which her first report got wrong, and how she asks
 #: again: the first question's words would serve her sealed answer
 AGAIN = "what day did Della Johnson call to report the leak"
@@ -212,8 +225,48 @@ class Scene:
         if "you received at row" not in final or RIGHT not in final:
             self.wrong.append("Harold doesn't hold the correction against the old one")
 
-        self.say("\n── 6. every chain")
+        self.say("\n── 6. the people as witnesses")
+        self.witnesses()
+
+        self.say("\n── 7. every chain")
         return self.summary()
+
+    def witnesses(self) -> None:
+        """Each person holds Ines's record to the packages they kept, then to
+        a copy of it she rewrote: her first wrong answer's seal backdated and
+        every row after it re-hashed, which her own verify can't see."""
+        real = self.box("ines")
+        fake = self.to / "ines-rewritten"
+        shutil.copytree(real, fake)
+        rows = [json.loads(x) for x in (fake / "record.jsonl").read_text().splitlines()]
+        n = [r["n"] for r in rows if r["kind"] == "seal"][1]  # the 2026-03-04 answer
+        rows[n]["ts"] = "2026-03-06T11:00:00Z"
+        for i in range(n, len(rows)):
+            rows[i]["prev"] = rows[i - 1]["hash"]
+            body = {k: v for k, v in rows[i].items() if k != "hash"}
+            rows[i]["hash"] = h256(canon(body))
+        (fake / "record.jsonl").write_text("".join(canon(r) + "\n" for r in rows))
+        said = self.run(KERNEL, "verify", "--box", fake).strip()
+        self.say(f"Ines's rewritten copy, by her own verify: {said}")
+        if not said.startswith("the chain holds"):
+            self.wrong.append("the rewritten copy didn't fool verify")
+        self.witness = {}
+        for who, kept in KEPT.items():
+            pkgs = ",".join(str(self.to / f"{k}.pkg") for k in kept)
+            out = {}
+            for name, box, want in (("real", real, 0), ("rewritten", fake, 42)):
+                got = self.run(
+                    SHARE, "witness", "--box", box, "--package", pkgs, want=(want,)
+                )
+                out[name] = [line.split()[0] for line in got.splitlines()]
+                self.say(f"{NAMES[who]:8} on the {name} record:")
+                for line in got.splitlines():
+                    self.say(f"  {line}")
+            if set(out["real"]) != {"holds"} or set(out["rewritten"]) != {"rewritten"}:
+                self.wrong.append(
+                    f"{NAMES[who]}'s packages didn't tell the two records apart"
+                )
+            self.witness[who] = out
 
     def summary(self) -> dict:
         people = {}
@@ -231,7 +284,8 @@ class Scene:
                              if r["kind"] == "received"],
             }  # fmt: skip
             self.say(f"{NAMES[who]:8} {said}")
-        doc = {"people": people, "packages": self.packages, "wrong": self.wrong}
+        doc = {"people": people, "packages": self.packages,
+               "witness": getattr(self, "witness", {}), "wrong": self.wrong}  # fmt: skip
         (self.to / "scene.json").write_text(json.dumps(doc, indent=1) + "\n")
         return doc
 

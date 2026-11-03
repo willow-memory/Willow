@@ -45,7 +45,9 @@ where it falls short today, and a fix is welcome.
   Seals still can't be forged without the key, so an approval can't be
   invented this way, but the bites, suggestions and declines around it can be
   dropped. [tip-pin](adapters/stdlib/tip-pin/) keeps the last row's hash and
-  the row count somewhere the box's writer can't reach, and checks them later.
+  the row count somewhere the box's writer can't reach, and checks them later;
+  [share](adapters/stdlib/share/)'s packages do the same in the hands of the
+  people you sent them to, for the rows before each one.
 - **A date is read only when it is written in full.** A passage takes the
   latest full date in it, above it in its file, or in its file's name
   (2026-10-14, 20261014, 21/10/2026). A name with only a year and month

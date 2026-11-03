@@ -17,13 +17,18 @@ says how). The first was v0.1.0.
   every layer and writes what came in, good or not, on the receiver's
   chain. `forward` passes a package on inside a signed layer of your own
   that nobody can change, and `--replaces` sends a correction that each
-  hop's `receive` routes to whoever got the old one. Ed25519 is written in
+  hop's `receive` routes to whoever got the old one. `witness` holds a
+  record to the packages other people kept: each layer is signed over where
+  its sender's record stood, so a record rewritten and re-hashed, which
+  `verify` can't see, or cut short, is caught by anyone holding a package
+  sent after the change. Ed25519 is written in
   the standard library (`adapters/stdlib/share/ed25519.py`), held to RFC 8032's vectors and to
   ones from an audited library. Its card promises `writes: record, to`
   where the idea said `to`: the `sent` and `received` rows are the point.
   The `share` idea comes off the list. `demo/johnson` passes one report
-  between five people's willows, through a forged copy and a correction,
-  and CI runs it as `demo:share`.
+  between five people's willows, through a forged copy a correction and a
+  rewritten record that four other people's packages catch, and CI runs it
+  as `demo:share`.
 - `ports/rust`, a fifth port of `kernel.py`: Rust, the standard library
   only and no crates, following the Go port function for function. What
   Rust's library lacks is written in and held by the vectors: SHA-256 and

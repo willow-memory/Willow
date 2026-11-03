@@ -1045,7 +1045,7 @@ willow/
 │   │   │   ├── test_session_seal.py
 │   │   │   └── README.md
 │   │   ├── share/
-│   │   │   ├── share.py         sealed answers packed for someone, signed, received, forwarded in layers and corrected
+│   │   │   ├── share.py         sealed answers packed for someone, signed, received, forwarded in layers, corrected, and witnessed
 │   │   │   ├── ed25519.py       Ed25519 signatures (RFC 8032) in the standard library
 │   │   │   ├── test_share.py
 │   │   │   └── README.md
@@ -1483,10 +1483,10 @@ willow/
 │   │   ├── STRIP.md          what each need came to, and what each layer of the stack did
 │   │   ├── stack.py          her files through every reader, start, the finders, privacy, an MCP assistant, and the trust add-ons
 │   │   └── test_stack.py     holds the stack to the states STRIP.md scores
-│   ├── johnson/              one report passed between five people's willows, a forged copy and a correction
+│   ├── johnson/              one report passed between five people's willows, a forged copy, a correction and a rewrite caught
 │   │   ├── README.md         the scene, what each step shows, and what it found
 │   │   ├── make_life.py      the five people's files, the same bytes every run
-│   │   ├── scene.py          the report sealed, sent, forwarded hop by hop, forged once, and corrected
+│   │   ├── scene.py          the report sealed, sent, forwarded hop by hop, forged once, corrected, and witnessed
 │   │   └── test_scene.py     holds the scene to what README.md says it shows
 │   ├── novelty.py           the reusable novelty check: have these pieces been put together before?
 │   ├── test_novelty.py      a novel description reads as novel, one an existing demo holds as prior art

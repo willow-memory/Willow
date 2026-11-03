@@ -38,7 +38,16 @@ afterwards. The people are made up, and so is everything they write down.
    sends a new report that `--replaces` the first. At each hop `receive`
    says who the old report went to next and which package to name, so the
    correction walks the same path out to Harold.
-6. **Every chain verifies**, and only Ines's holds seals: nobody along the
+6. **The people are the witnesses.** Ines rewrites a copy of her record:
+   the seal on her wrong answer backdated, every row after it re-hashed.
+   Her own `verify` still says the chain holds; that is the limit
+   LIMITS.md names. But every layer of every package is signed over where
+   its sender's record stood, so each person who kept one holds a pin of
+   her record that she can't reach. `share witness` holds her record to
+   them: the real one holds, the rewritten one is `rewritten` for Walt,
+   Aurelie, Tamsin and Harold alike. Harold never had a package from Ines;
+   her layer inside Tamsin's is enough.
+7. **Every chain verifies**, and only Ines's holds seals: nobody along the
    way approved anything, they only received and passed on.
 
 `test_scene.py` holds the scene to each of those, and to one more: no
@@ -60,6 +69,10 @@ package holds a line of anyone's files.
   a package from Ines, only from Tamsin; he can check Ines's signature but
   not that her key is Ines. Who a key belongs to is still learned the old
   way: in person, or from someone you already trust.
+- **Witnesses only for what was sent.** A package pins its sender's record
+  up to the row it was signed at. A rewrite of rows after the last package
+  anyone holds is unseen until the next one goes out; and a record nobody
+  was ever sent anything from has no witness but `tip-pin`.
 - **A received answer can't become yours.** The kernel seals only answers
   made from your own files' passages. Walt can pass Ines's report on and
   everyone can check it, but it never becomes Walt's own sealed answer.

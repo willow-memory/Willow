@@ -18,6 +18,7 @@ along the way can change. Each hop is a row on both people's chains.
     python adapters/stdlib/share/share.py forward --box DIR --id IDFILE --package FILE --for KEY --to FILE [--note TEXT] [--replaces PACKAGE]
     python adapters/stdlib/share/share.py check   --package FILE
     python adapters/stdlib/share/share.py log     --box DIR
+    python adapters/stdlib/share/share.py witness --box DIR --package FILE[,...]
 
 `send`, `forward` and `receive` take `--now TS` as the kernel does.
 
@@ -56,6 +57,25 @@ one on, to whom, and the package to name in your own `--replaces`: a
 correction follows the same path the first one took, a hop at a time, and
 everyone's first seal and first receipt stay on their chains.
 
+**The people as witnesses.** Every layer is signed over where its sender's
+record stood, and its `sent` row, with the key that signed, is the next row
+on that record. So everyone who keeps a package holds a signed pin of the
+sender's record that the sender can't reach: what `tip-pin` asks for, in
+the hands of the people you sent to. `witness` holds a box's record to the
+packages others kept, every layer signed for that chain, inner ones too:
+
+    holds        package:395adab752a3… at row 13: sent to 8f81cbe42a8d…, 2026-03-12T14:48:00Z
+    rewritten    package:395adab752a3… at row 13: row 12 is not the row it was signed after
+    cut short    package:9a04ad57e06f… at row 17: signed at 17 rows; the record has 12
+
+A record rewritten from some row on and re-hashed, which `verify` can't
+see, is `rewritten` for anyone holding a package sent after that row; one
+cut short is `cut short`. A layer signed by a key the record never sent
+with is said as such, beside its verdict: either the record lost those rows,
+or someone else signed for this chain, and it accuses no one by itself. A
+package that doesn't hold proves nothing. It covers only what was sent: rows
+after the last package anyone kept have no witness yet.
+
 **What it can't tell you.** That KEY is the person you think it is: a key is
 first met somewhere (in person, on a card, from someone you trust), and
 `receive` only says whether you have had it before. And it can't stop a
@@ -68,8 +88,9 @@ with an audited library, and checked against that library on random keys
 and messages while it was written. It is not constant-time: fine on your
 own machine, not for a server signing for strangers.
 
-**Exit codes:** 0 done, or a package that holds; 42 a package that doesn't
-hold or isn't for you, and waits on you; 2 refused.
+**Exit codes:** 0 done, a package that holds, or a record every witness
+holds to; 42 a package that doesn't hold or isn't for you, or a record a
+witness doesn't hold to, and waits on you; 2 refused.
 
 **Uses:** the kernel's `read`, `append`, `sealed`, `standing`,
 `subject_of`, `canon`, `h256`, `config` and its exit codes.
