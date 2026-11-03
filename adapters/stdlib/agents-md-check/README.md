@@ -5,6 +5,7 @@ source: new
 added: 2026-10-29
 writes: nothing
 network: none
+output: report
 -->
 # agents-md-check
 
@@ -15,12 +16,21 @@ files matter. When a script is renamed or a make target dropped, the file
 keeps saying the old thing and the agent follows it. This lists what the
 file names that the repo no longer has, by file and line.
 
-    python adapters/stdlib/agents-md-check/agents_md_check.py --box DIR
-    python adapters/stdlib/agents-md-check/agents_md_check.py --from REPO
+    python adapters/stdlib/agents-md-check/agents_md_check.py --box DIR [--json]
+    python adapters/stdlib/agents-md-check/agents_md_check.py --from REPO [--json]
 
-    AGENTS.md:57   adapters/old/old.py   path: no such file
-    AGENTS.md:60   make lint             make target: not in the Makefile
-    CLAUDE.md:3    RULES.md              import: no such file
+    agents-md-check: populated, 3 things named in 2 instruction files not found; each is a lead: a path a build makes shows here too
+    ## path
+      AGENTS.md:57  adapters/old/old.py: no such file
+    ## import
+      CLAUDE.md:3   RULES.md: no such file
+    ## make target
+      AGENTS.md:60  make lint: not in the Makefile
+
+It prints [a report](../ci/README.md#the-report-contract): a group per kind
+of thing named (path, import, make target, script), each row the line of the
+instruction file and then what it names and why it is dead. `--json` gives
+the same report as one JSON object.
 
 | Named as | Checked against |
 |---|---|
@@ -41,8 +51,9 @@ known file extension, so `sys.argv` is not one.
 What it lists is a lead, not proof: a file a build makes, or one the command
 itself creates, shows up here too.
 
-Exit codes, the kernel's: 0 everything named is there (or no instruction
-file); 42 something named is gone, which waits on you; 2 refused.
+Exit codes, the kernel's: 0 everything named is there, or no instruction
+file (empty); 42 something named is gone (populated), which waits on you; 2
+refused.
 
 **Uses:** the kernel's box, to find the pile.
 

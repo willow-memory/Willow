@@ -1,7 +1,7 @@
 """xref.py: every reference in your files, checked. Python 3.9+.
 
-    python adapters/stdlib/xref/xref.py --box DIR
-    python adapters/stdlib/xref/xref.py --from FOLDER
+    python adapters/stdlib/xref/xref.py --box DIR [--json]
+    python adapters/stdlib/xref/xref.py --from FOLDER [--json]
 
 Two kinds of reference, found in the text files of your folder:
 
@@ -12,10 +12,14 @@ Two kinds of reference, found in the text files of your folder:
 and each is checked: the linked file is there; the file named is there and
 has that line. A link is followed from the folder its file is in; a
 file:line from there, then from the top of your folder. What doesn't hold is
-listed with where it's written:
+listed with where it's written, as a report (adapters/stdlib/ci/README.md,
+the report contract), a group per kind of reference:
 
-    notes/index.md:4      link       trips/2019.md: not there
-    letters/reply.txt:9   file:line  care/log.txt:40: past the end (31 lines)
+    xref: populated, 7 references checked, 2 don't hold; 1 leading out of your folder, not checked
+    ## link
+      notes/index.md:4     trips/2019.md: not there
+    ## file:line
+      letters/reply.txt:9  care/log.txt:40: past the end (31 lines)
 
 A link to the web, an e-mail address or a place in the same page isn't a
 file of yours and isn't checked; one that leads out of your folder is
@@ -24,8 +28,9 @@ folder may be somewhere else entirely and is left alone. The patterns are
 willow-bot's own xref (onescript/xref.py), for one person's folder instead
 of a set of repositories.
 
-It only reads, and writes nothing. Exit codes, the kernel's: 0 every
-reference holds; 42 one doesn't; 2 refused.
+`--json` gives the same report as one JSON object. It only reads, and writes
+nothing. Exit codes, the kernel's: 0 every reference holds (empty); 42 one
+doesn't (populated), and waits on you; 2 refused.
 """
 
 from __future__ import annotations
@@ -146,7 +151,7 @@ def check(pile: Path) -> dict:
 
 
 def main(argv: list[str]) -> int:
-    as_json = "--json" in argv  # noqa: F841  wire: say(report(...), as_json)
+    as_json = "--json" in argv
     argv = [a for a in argv if a != "--json"]
     opts, args, it = {}, [], iter(argv)
     for a in it:
@@ -170,19 +175,18 @@ def main(argv: list[str]) -> int:
             return kernel.REFUSED
     got = check(pile)
     broken = got["broken"]
-    if broken:
-        width = max(len(w) for w, *_ in broken)
-        for where, kind, what, why in broken:
-            print(f"{where:<{width}}  {kind:<9}  {what}: {why}")
-        print()
     total = got["held"] + len(broken)
     outside = (
         f"; {got['outside']} leading out of your folder, not checked"
         if got["outside"]
         else ""
     )
-    print(f"{total} reference{'s' if total != 1 else ''} checked, "
-          f"{len(broken)} {'don' if len(broken) != 1 else 'doesn'}'t hold{outside}.")  # fmt: skip
+    said = (f"{total} reference{'s' if total != 1 else ''} checked, "
+            f"{len(broken)} {'don' if len(broken) != 1 else 'doesn'}'t hold{outside}")  # fmt: skip
+    groups = [(kind, [(where, f"{what}: {why}") for where, k, what, why in broken if k == kind])
+              for kind in ("link", "file:line")]  # fmt: skip
+    state = "populated" if broken else "empty"
+    say(report(NAME, state, said, groups), as_json)
     return kernel.ESCALATE if broken else kernel.ALIVE
 
 

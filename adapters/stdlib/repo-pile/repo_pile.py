@@ -336,7 +336,8 @@ def check(base: Path) -> int:
     """The pile's health as counts: references that don't hold (xref), lines
     marked to do (todo), secrets in plain text (secrets-audit)."""
     box = base / "box"
-    say("xref", first(py(addon("xref"), "--box", box), last=True))
+    refs = py(addon("xref"), "--box", box, "--json")  # its report: what it said
+    say("xref", json.loads(refs.stdout)["said"] if refs.stdout.strip() else first(refs))
     todo = py(addon("todo"), "--box", box, "--json")  # its report: a row a line
     marked = sum(len(g["rows"]) for g in json.loads(todo.stdout)["groups"])
     say("todo", f"{marked} lines marked to do")
