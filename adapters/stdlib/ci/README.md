@@ -3,7 +3,7 @@ section: For maintainers
 line: This repo's checks as verdict rows on a kernel record, the same every run.
 source: box
 added: 2026-10-23
-writes: record, BUGS.md
+writes: record, BUGS.md, adapters/stdlib/*/*.py
 network: PyPI, to read each dependency floor's release date
 uses: live, readme, stack, test-shards
 runs-in: repo
@@ -23,8 +23,12 @@ record is hash-chained like any other and the kernel's `verify` checks it.
 `run` with no part runs all seven. A gate's own name (`tests:strip-2`) runs
 just that gate, and the name of a numbered group (`tests:strip`, `tests:adapters`) all of its gates, `--without GATE` leaves one out of what was named, and
 `--shard K/N` runs the Kth of N parts of it, cut by
-[test-shards](../test-shards/)' own split: the N parts hold every gate once
-between them, in the table's order. A name it doesn't know, or `--without`
+[test-shards](../test-shards/)' own split with each gate weighing the seconds
+it is expected to take (`gate_weight`: a chunk's or an add-on's test times
+from `test-times.json`, six times that for a mutants gate, a small table for
+the rest), so the parts end about together: the N parts hold every gate once
+between them, in the table's order. The cut comes from committed data alone,
+the same on every machine. A name it doesn't know, or `--without`
 given a part, is refused before anything runs. The record goes in `.ci-record/` by default
 (git ignores it), and the key `init` makes goes beside it in
 `.ci-record.key`. A record or key inside the repo where git would count it is
@@ -137,8 +141,10 @@ and the same box gives the same report twice.
 every add-on on one box and sorts what each prints by shape, the ones
 printing rows with places being the next to convert; `scaffold NAME...`
 does what is the same every time (the add-on's name, its copy of the three
-functions, `--json` taken off before it reads its arguments); `check
-NAME...` runs the contract on each and says which aren't done.
+functions, `--json` taken off before it reads its arguments), writing the
+add-on's script in place, the one write to the add-ons' folders this card's
+`writes` names; `check NAME...` runs the contract on each and says which
+aren't done.
 
     python adapters/stdlib/ci/reports.py survey
     python adapters/stdlib/ci/reports.py scaffold NAME...
@@ -162,14 +168,24 @@ codes.
 merging it.
 
 In CI (`.github/workflows/ci.yml`) each part is its own job with its own
-record, verified and uploaded as that run's artifact, but three: `tests:strip`
+record, every heavy job waiting on the fast ones (lint, and a pull request's
+first, against and changelog) so a quick failure stops the rest from queueing, verified and uploaded as that run's artifact, but three: `tests:strip`
 has jobs of its own on each Python (it runs the add-ons' tests again, in a
-stripped copy, so beside the rest it doubled the job), and the tests (eight
-shards on each Python), strip (four) and mutants (four) runs are cut with
-`--shard`. All the add-ons' tests in one gate took eight minutes, and strip
-ran them again: the chunk gates are what lets a job run a few of them.
+stripped copy, so beside the rest it doubled the job), the tests and strip
+jobs are one job on each Python that runs four `--shard`s at once with
+[cores.py](cores.py) (records `<DIR>/1` to `<DIR>/4`, all uploaded under one
+artifact), and mutants is four jobs cut with `--shard` on a push to main
+only: a pull request's `mutants-reach` job runs just the gates
+[ci-memo](../ci-memo/) says its change reaches, standing the rest on
+main's last green run. Cut into one job
+each, a pull request is 14 jobs and a push to main 30, not 36 and 84: a job
+had used one of the runner's four cores, and the tests job ended with its
+slowest gate (about nine minutes) however it was cut. All the add-ons' tests
+in one gate took eight minutes, and strip ran them again: the chunk gates are
+what lets a job run a few of them.
 `test-times.json` is each test file's seconds in one run
 (`pytest adapters/stdlib --junitxml=RUN.xml`, summed by file); it only sets
 the balance, so a stale one runs every test all the same. `adapters/stdlib/github/github.py check` holds the cut: every gate run by exactly
-one job. A job that fails writes [ci-why](../ci-why/)'s reading of its log
+one job on a push, and a job skipped on pull requests backed by one that plans
+its gates with ci-memo and falls back to running them all. A job that fails writes [ci-why](../ci-why/)'s reading of its log
 to the run's summary.
