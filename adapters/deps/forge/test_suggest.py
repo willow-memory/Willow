@@ -339,10 +339,8 @@ def test_propose_puts_each_settled_fork_and_the_stack_at_the_door_as_a_report(bo
     stack = json.loads(
         (box / "proposals" / f"{waiting['forge/stack.md'][9:]}.json").read_text()
     )
-    assert stack["data"].splitlines()[-2:] == [
-        "- mail -- --box {box}",
-        "- coming-up -- --box {box}",
-    ]
+    assert stack["data"].splitlines()[-1] == "- coming-up -- --box {box}"
+    assert stack["data"].splitlines()[-2].startswith("- mail -- mirror --from ")
 
 
 def test_propose_prints_its_report_as_text_too(box):
@@ -627,13 +625,13 @@ def test_steps_of_reads_a_stack_file_as_the_stack_add_on_does():
 
 
 def test_build_flags_a_step_that_runs_and_does_not_come_back_clean(box, tmp_path):
-    """mail is a reader: `- mail -- --box {box}` is not its command line, so it
-    refuses (exit 2) on the page, and build says so rather than hide it."""
-    sealed_stack(box, "what is due, and my email", "due=coming-up", "email=mail")
+    """box-health on a fresh box needs you (no out row yet): exit 42 on the
+    page, and build says so rather than hide it."""
+    sealed_stack(box, "what is due, and my box health", "due=coming-up")
     to = tmp_path / "st"
     data = run(
         "build",
-        "what is due, and my email",
+        "what is due, and my box health",
         "--box",
         str(box),
         "--to",
@@ -642,8 +640,113 @@ def test_build_flags_a_step_that_runs_and_does_not_come_back_clean(box, tmp_path
     )
     assert data.returncode == 42
     doc = holds_the_shape(json.loads(data.stdout), data.returncode)
-    assert "; 1 flagged, 0 left out" in doc["said"]
+    assert "0 flagged" not in doc["said"] and doc["said"].endswith("0 left out")
     rows = {r["where"]: r["what"] for r in doc["groups"][0]["rows"]}
     assert rows["adapters/stdlib/coming-up/"].endswith("ran: clean")
-    assert rows["adapters/stdlib/mail/"].endswith("ran: exit 2")
-    assert "(exit 2)" in (to / "page.md").read_text(encoding="utf-8")
+    # a report step's note on the page is its state; flagged, since it exited 42
+    assert rows["adapters/stdlib/box-health/"].endswith("ran: populated")
+    assert "`  (populated)" in (to / "page.md").read_text(encoding="utf-8")
+
+
+# ── steps from each add-on's own command line ─────────────────────────────────
+
+
+def contract_rows() -> dict:
+    spec = importlib.util.spec_from_file_location(
+        "willow_contract_t", ROOT / "adapters/stdlib/ci/test_contract.py"
+    )
+    tc = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(tc)
+    return tc.COMMANDS
+
+
+def step_of(box: Path, sentence: str, name: str) -> str:
+    d = json.loads(run("suggest", sentence, "--box", str(box), "--plan").stdout)
+    assert d["cards"]["commands"].startswith("from the ci add-on's contract")
+    for e in d["plan"]["entries"]:
+        if e["kind"] == "file_write" and e["dest_path"] == f"steps/{name}.md":
+            return e["content"]
+        if e["kind"] == "fork":
+            for writes in e["resolves"].values():
+                for w in writes:
+                    if w["dest_path"] == f"steps/{name}.md":
+                        return w["content"]
+    raise AssertionError(f"no step for {name}")
+
+
+def test_a_step_is_the_add_ons_own_good_command_line_not_one_shape_for_all(box):
+    assert (
+        step_of(box, "a merkle proof of one row", "merkle")
+        == "- merkle -- root --box {box}\n"
+    )
+    assert step_of(box, "my email", "mail").startswith("- mail -- mirror --from ")
+    rows = contract_rows()
+    assert rows["merkle"][1] == ["root", "--box", "{box}"], (
+        "the line is the contract's row"
+    )
+
+
+def test_the_contracts_pinned_now_is_taken_off_and_the_pile_is_filled_in(box):
+    rows = contract_rows()
+    assert "--now" in rows["coming-up"][1], (
+        "the contract pins a now for its own determinism"
+    )
+    assert step_of(box, "what is due", "coming-up") == "- coming-up -- --box {box}\n"
+    pile = json.loads((box / "kernel.json").read_text())["pile"]
+    assert any("{pile}" in a for a in rows["mail"][1])
+    line = step_of(box, "my email", "mail")
+    assert pile in line and "{pile}" not in line and "{tmp}" in line
+
+
+def test_a_path_with_a_space_in_it_is_quoted_for_the_stack_add_on(tmp_path):
+    pile = tmp_path / "my pile"
+    pile.mkdir()
+    (pile / "a.txt").write_text("hello\n")
+    box = tmp_path / "box"
+    assert (
+        k(
+            "init",
+            "--box",
+            str(box),
+            "--pile",
+            str(pile),
+            "--key",
+            str(tmp_path / "k.key"),
+        ).returncode
+        == 0
+    )
+    line = step_of(box, "my email", "mail")
+    assert f"'{pile}'" in line
+
+
+def test_build_fills_tmp_with_a_folder_of_its_own_and_a_reader_step_runs_clean(
+    box, tmp_path
+):
+    pile = Path(json.loads((box / "kernel.json").read_text())["pile"])
+    (pile / "roof.eml").write_text(
+        "From: ada@example.org\nTo: me@example.org\nSubject: the roof\nDate: Mon, 3 Nov 2026 09:00:00 +0000\n\nThe roofer comes Tuesday.\n"
+    )
+    sealed_stack(box, "my email", "email=mail")
+    to = tmp_path / "st"
+    data = run("build", "my email", "--box", str(box), "--to", str(to), "--json")
+    assert data.returncode == 0, data.stdout + data.stderr
+    doc = json.loads(data.stdout)
+    assert doc["groups"][0]["rows"][0]["what"].endswith("ran: clean")
+    written = (to / "forge-stack.md").read_text(encoding="utf-8")
+    assert "{tmp}" not in written and str(to / "out") in written
+    assert (to / "out").is_dir() and any((to / "out").iterdir()), (
+        "the mirror landed under the build's own folder"
+    )
+
+
+def test_without_the_contract_every_step_takes_the_default_and_says_so(
+    box, monkeypatch, capsys
+):
+    monkeypatch.setattr(suggest, "CONTRACT", Path("/nonesuch/test_contract.py"))
+    suggest.STEPS.clear()
+    code = suggest.main(
+        ["suggest", "a merkle proof of one row", "--box", str(box), "--plan"]
+    )
+    d = json.loads(capsys.readouterr().out)
+    assert code == 0 and d["cards"]["commands"].startswith("the ci add-on isn't here")
+    assert d["plan"]["entries"][0]["content"] == "- merkle -- --box {box}\n"

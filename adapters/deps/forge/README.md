@@ -9,6 +9,7 @@ writes: record, to
 network: none
 output: report
 uses: stack
+looks-for: ci
 -->
 # forge
 
@@ -41,7 +42,12 @@ report (the report contract, in the ci add-on's card) has a group per kind
 of thing, each row the card and what it says:
 
 - **steps**: an add-on the sentence reaches and nothing else does, one
-  line for a [stack](../../stdlib/stack/) file; or a fork you settled
+  line for a [stack](../../stdlib/stack/) file, `NAME -- ARGS`, where ARGS
+  is the add-on's own good command line as the [ci](../../stdlib/ci/)
+  add-on's contract holds it (`{box}` for your record, your folder filled
+  in, `{tmp}` for a folder `build` makes, the contract's pinned `--now`
+  taken off); with the ci add-on absent, every step takes `--box {box}` and
+  the plan says so; or a fork you settled
   before, read from your record through the kernel, which serves it only
   while its seal proves under your key and the proposal still hashes to
   what you sealed. It is a step now, and you are not asked twice;

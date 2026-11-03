@@ -59,6 +59,11 @@ says how). The first was v0.1.0.
   stack file beside it, the stack add-on run over the box and its page
   kept, as a report of what was built, what ran and what was left out;
   the promise grows to `writes: record, to`. (#202)
+  A step's line is the add-on's own good command line, read from the ci
+  add-on's contract (`{box}` kept, the folder filled in, `{tmp}` a folder
+  `build` makes, the pinned `--now` taken off), so a reader mirrors and an
+  add-on with verbs runs its verb; without the contract every step takes
+  `--box {box}` and the plan says so. (#203)
 - `ci-memo`: a pull request runs only the mutants gates a change can reach,
   standing the rest on the record of main's last green run, and a push to
   main runs them all, so the merge's receipt stays whole. Four shards of 5
