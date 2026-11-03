@@ -1622,6 +1622,9 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- coming-up, box-health, agents-md-check, xref and pins print a report (the
+  report contract); coming-up with nothing in its window exits 0 where it
+  said 42; repo-pile reads xref's report. (#199)
 - `ci`: the heavy CI jobs no longer wait on `first`, only on lint, against
   and changelog. `first` runs what a change reaches, and on a pull request
   converting seven add-ons that was 18 minutes, during which no heavy job
