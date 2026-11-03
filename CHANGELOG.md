@@ -1740,6 +1740,10 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- model-shelf looks in the Ollama service's folder
+  (/usr/share/ollama/.ollama/models, where Ollama's Linux installer keeps
+  its models) when no --home is given, where it said Ollama was "not on this
+  machine" while it served 14 models. (#213)
 - `pii-audit` reads a run holding a written date, year first, as dates, not
   a card number: two dates side by side (`2027-01-09  2027-01-09`, as
   milestones prints a row) are sixteen digits that pass Luhn one time in
