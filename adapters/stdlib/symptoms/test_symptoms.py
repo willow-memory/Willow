@@ -4,6 +4,7 @@ where the line says one, and nothing is averaged, trended or diagnosed."""
 from __future__ import annotations
 
 import importlib.util
+import json
 import subprocess
 import sys
 from pathlib import Path
@@ -67,17 +68,30 @@ def test_the_diary_is_dated_as_the_files_say_oldest_first(tmp_path):
         "old.md": "knee twinged at the market\n",
     })  # fmt: skip
     got = run(str(HERE / "symptoms.py"), "--box", str(b), "knee")
-    lines = got.stdout.splitlines()
     assert got.returncode == 0
-    assert lines[0].startswith("2026-02-01  5/10") and "(date from line 1)" in lines[0]
-    assert (
-        lines[1].startswith("2026-03-01  worse") and "(date from file name)" in lines[1]
-    )
-    assert lines[2].startswith("2026-03-04  better")
-    assert lines[3].startswith("undated") and "old.md:1" in lines[3]
-    assert lines[4] == ('4 lines name "knee", 2026-02-01 to 2026-03-04:'
-                        " 1 worse, 1 better, 1 scored")  # fmt: skip
+    assert got.stdout.splitlines() == [
+        'symptoms: populated, 4 lines name "knee", 2026-02-01 to 2026-03-04:'
+        " 1 worse, 1 better, 1 scored",
+        "## 2026-02",
+        "  health.md:2            2026-02-01  5/10    knee pain 5/10 after the stairs test"
+        "  (date from line 1)",
+        "## 2026-03",
+        "  Daily/2026-03-01.md:1  2026-03-01  worse   Knee bad on the stairs."
+        "  (date from file name)",
+        "  Daily/2026-03-04.md:1  2026-03-04  better  Walked the loop, knee held up."
+        "  (date from file name)",
+        "## undated",
+        "  old.md:1               undated             knee twinged at the market",
+    ]
     assert got.stdout == run(str(HERE / "symptoms.py"), "--box", str(b), "knee").stdout
+    doc = json.loads(
+        run(str(HERE / "symptoms.py"), "--box", str(b), "knee", "--json").stdout
+    )
+    assert [g["name"] for g in doc["groups"]] == ["2026-02", "2026-03", "undated"]
+    assert doc["groups"][0]["rows"] == [{
+        "where": "health.md:2",
+        "what": "2026-02-01  5/10    knee pain 5/10 after the stairs test  (date from line 1)",
+    }]  # fmt: skip
 
 
 def test_one_line_and_no_dated_lines_read_right():
@@ -86,12 +100,21 @@ def test_one_line_and_no_dated_lines_read_right():
     assert shown[-1] == '1 line names "knee": 0 worse, 0 better, 0 scored'
 
 
-def test_never_named_and_only_common_words_escalate(tmp_path):
+def test_never_named_is_empty_and_only_common_words_is_unreachable(tmp_path):
     b = box(tmp_path, {"garden.md": "Tomatoes want sun.\n"})
     got = run(str(HERE / "symptoms.py"), "--box", str(b), "knee")
-    assert got.returncode == 42 and 'names "knee"' in got.stdout
+    assert got.returncode == 0
+    assert got.stdout == 'symptoms: empty, no line of your folder names "knee"\n'
     got = run(str(HERE / "symptoms.py"), "--box", str(b), "the of")
-    assert got.returncode == 42 and "only common words" in got.stdout
+    assert got.returncode == 42
+    assert got.stdout == (
+        'symptoms: unreachable, "the of" is only common words, held by everything;'
+        " say more\n"
+    )
+    doc = json.loads(
+        run(str(HERE / "symptoms.py"), "--box", str(b), "the of", "--json").stdout
+    )
+    assert doc["state"] == "unreachable" and doc["groups"] == []
 
 
 def test_a_bad_command_line_and_a_folder_that_is_no_box_are_refused(tmp_path):

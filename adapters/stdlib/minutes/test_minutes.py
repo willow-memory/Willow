@@ -5,6 +5,7 @@ when the line names one, and an action closed by its own words or a later
 from __future__ import annotations
 
 import importlib.util
+import json
 import subprocess
 import sys
 from pathlib import Path
@@ -122,21 +123,42 @@ def test_the_listing_and_open_only(tmp_path):
     got = run(SCRIPT, "--box", str(b))
     assert got.returncode == 0, got.stderr
     assert got.stdout.splitlines() == [
-        "decisions",
-        "  2026-03-02  board/2026-03-02.md:1  Move the AGM to May.",
-        "actions open",
-        "  2026-03-02  board/2026-03-02.md:2  Ana  send the figures by 2026-03-09  (due 2026-03-09)",
-        "actions closed",
-        "  2026-03-02  board/2026-03-02.md:3  (no owner)  Book the hall - done",
-        "1 decision, 1 open action, 1 closed",
+        "minutes: populated, 1 decision, 1 open action, 1 closed",
+        "## decisions",
+        "  board/2026-03-02.md:1  2026-03-02  Move the AGM to May.",
+        "## actions open",
+        "  board/2026-03-02.md:2  2026-03-02  Ana  send the figures by 2026-03-09  (due 2026-03-09)",
+        "## actions closed",
+        "  board/2026-03-02.md:3  2026-03-02  (no owner)  Book the hall - done",
     ]
     only = run(SCRIPT, "--box", str(b), "--open").stdout.splitlines()
     assert only == [
-        "actions open",
-        "  2026-03-02  board/2026-03-02.md:2  Ana  send the figures by 2026-03-09  (due 2026-03-09)",
-        "1 decision, 1 open action, 1 closed",
+        "minutes: populated, 1 decision, 1 open action, 1 closed",
+        "## actions open",
+        "  board/2026-03-02.md:2  2026-03-02  Ana  send the figures by 2026-03-09  (due 2026-03-09)",
     ]
     assert run(SCRIPT, "--box", str(b)).stdout == got.stdout
+    doc = json.loads(run(SCRIPT, "--box", str(b), "--json").stdout)
+    assert doc["addon"] == "minutes" and doc["state"] == "populated"
+    assert doc["said"] == "1 decision, 1 open action, 1 closed"
+    assert [g["name"] for g in doc["groups"]] == [
+        "decisions",
+        "actions open",
+        "actions closed",
+    ]
+    assert doc["groups"][0]["rows"] == [
+        {"where": "board/2026-03-02.md:1", "what": "2026-03-02  Move the AGM to May."}
+    ]
+
+
+def test_open_with_nothing_open_is_empty_and_exit_zero(tmp_path):
+    b = box(tmp_path, {"2026-03-02.md": "Decision: a\nAction: Book the hall - done\n"})
+    got = run(SCRIPT, "--box", str(b), "--open")
+    assert got.returncode == 0
+    assert (
+        got.stdout
+        == "minutes: empty, no open action (1 decision, 0 open actions, 1 closed)\n"
+    )
 
 
 def test_a_machines_shouting_line_is_not_an_action():
@@ -152,15 +174,22 @@ def test_plurals(tmp_path):
         tmp_path, {"2026-03-02.md": "Decision: a\nDecision: b\nAction: x\nAction: y\n"}
     )
     assert (
-        run(SCRIPT, "--box", str(b)).stdout.splitlines()[-1]
-        == "2 decisions, 2 open actions, 0 closed"
+        run(SCRIPT, "--box", str(b)).stdout.splitlines()[0]
+        == "minutes: populated, 2 decisions, 2 open actions, 0 closed"
     )
 
 
-def test_nothing_is_42_and_refusals(tmp_path):
+def test_nothing_is_empty_exit_zero_and_refusals(tmp_path):
     b = box(tmp_path, {"garden.md": "Tomatoes want sun.\n"})
     got = run(SCRIPT, "--box", str(b))
-    assert got.returncode == 42 and "decision or an action" in got.stdout
+    assert got.returncode == 0  # empty is 0: 42 never means found nothing
+    assert got.stdout == (
+        "minutes: empty, no line of your folder records a decision or an action\n"
+    )
+    assert json.loads(run(SCRIPT, "--box", str(b), "--json").stdout) == {
+        "addon": "minutes", "state": "empty", "groups": [],
+        "said": "no line of your folder records a decision or an action",
+    }  # fmt: skip
     for argv in ([], ["--box", str(tmp_path)], ["--box", str(b), "stray"]):
         assert run(SCRIPT, *argv).returncode == 2, argv
     assert "minutes.py" in run(SCRIPT).stderr

@@ -1,7 +1,7 @@
 """secrets_audit.py: passwords and keys sitting in plain files. Python 3.9+.
 
-    python adapters/stdlib/secrets-audit/secrets_audit.py --box DIR
-    python adapters/stdlib/secrets-audit/secrets_audit.py --from FOLDER
+    python adapters/stdlib/secrets-audit/secrets_audit.py --box DIR [--json]
+    python adapters/stdlib/secrets-audit/secrets_audit.py --from FOLDER [--json]
 
 Every line of your files (the box's, or any folder's) that holds one of:
 
@@ -18,10 +18,16 @@ Every line of your files (the box's, or any folder's) that holds one of:
     iban       an IBAN whose mod-97 check holds
     ssn        a US social security number
 
-is listed by file, line and kind, never with the value:
+is listed by file and line, grouped by kind, never with the value:
 
-    notes/wifi.txt:3        password
-    work/deploy.md:41       key
+    secrets-audit: populated, 2 places hold a secret in plain text; values are never shown
+    ## a password typed with its label
+      notes/wifi.txt:3   value not shown
+    ## a key or token
+      work/deploy.md:41  value not shown
+
+It prints a report (ci/README.md, "The report contract"); `--json` prints the
+same report as one JSON object.
 
 The shapes are the privacy add-on's (willow-bot's scrub, rebuilt there),
 passwords included, so what this lists is what privacy hides from an answer.
@@ -31,11 +37,13 @@ Email addresses and phone numbers aren't listed: they're in every file and
 aren't secrets.
 
 It only reads, and writes nothing. Exit codes, the kernel's: 0 nothing
-found; 42 something found, which waits on you; 2 refused.
+found (empty); 42 something found, which waits on you (populated), or there
+were no files to look in (unreachable); 2 refused.
 """
 
 from __future__ import annotations
 
+import json
 import re
 import sys
 import types
@@ -46,6 +54,9 @@ sys.path.insert(0, str(STDLIB.parents[1]))
 import kernel  # noqa: E402
 
 KINDS = ("password", "key", "card", "iban", "ssn")
+#: each kind as its report group is headed
+HEADS = {"password": "a password typed with its label", "key": "a key or token",
+         "card": "a card number", "iban": "an IBAN", "ssn": "a US social security number"}  # fmt: skip
 #: willow-bot's onescript/scrub.py typed_password: a label, a : or =, a value;
 #: never a comparison, a label alone, or a value that names a source
 _SKIP = r'(?:""|"?(?:None|null|NULL)"?(?![\w-])|"?env:|\$)'
@@ -58,6 +69,35 @@ TYPED_PASSWORD = re.compile(
 PLACEHOLDER = re.compile(
     r"(?i)(your|example|xxxx+|placeholder|none|null|true|false|changeme|redacted|\*\*\*)"
 )
+
+
+NAME = "secrets-audit"
+
+
+# ── the report: the shape every report add-on prints (ci/README.md) ─────────
+def report(addon: str, state: str, said: str, groups: list) -> dict:
+    """A report: its state, one line said, and each group's rows (where,
+    what); a group named None comes first and has no heading."""
+    return {"addon": addon, "state": state, "said": said,
+            "groups": [{"name": g, "rows": [{"where": w, "what": x} for w, x in rows]}
+                       for g, rows in groups if rows]}  # fmt: skip
+
+
+def report_text(doc: dict) -> str:
+    """A report as every report add-on prints it: the same twenty lines each
+    keeps, held to this one by test_contract.py."""
+    rows = [r for g in doc["groups"] for r in g["rows"]]
+    w = min(max((len(r["where"]) for r in rows), default=0), 60)
+    out = [f"{doc['addon']}: {doc['state']}, {doc['said']}"]
+    for g in doc["groups"]:
+        if g["name"] is not None:
+            out.append(f"## {g['name']}")
+        out += [f"  {r['where']:<{w}}  {r['what']}".rstrip() for r in g["rows"]]
+    return "\n".join(out)
+
+
+def say(doc: dict, as_json: bool) -> None:
+    print(json.dumps(doc, ensure_ascii=False) if as_json else report_text(doc))
 
 
 def privacy():
@@ -100,6 +140,8 @@ def audit(pile: Path, pv) -> list[tuple[str, int, str]]:
 
 
 def main(argv: list[str]) -> int:
+    as_json = "--json" in argv
+    argv = [a for a in argv if a != "--json"]
     opts, args, it = {}, [], iter(argv)
     for a in it:
         if a in ("--box", "--from"):
@@ -124,16 +166,21 @@ def main(argv: list[str]) -> int:
     if pv is None:
         print("note: the privacy add-on isn't here, so only typed passwords are looked for",
               file=sys.stderr)  # fmt: skip
+    files = len({c["path"] for c in kernel.chunks(pile)})
+    if not files:
+        say(report(NAME, "unreachable", "nothing there to check", []), as_json)
+        return kernel.ESCALATE
     found = audit(pile, pv)
     if not found:
-        print("No passwords, keys or card numbers found sitting in your files.")
+        said = f"no password, key or card number in {files} file{'s' if files != 1 else ''}"
+        say(report(NAME, "empty", said, []), as_json)
         return kernel.ALIVE
-    width = max(len(f"{p}:{n}") for p, n, _ in found)
-    for path, n, kind in found:
-        print(f"{f'{path}:{n}':<{width}}  {kind}")
     places = len({(p, n) for p, n, _ in found})
-    print(f"\n{places} place{'s' if places != 1 else ''} hold a secret in plain text. "
-          "A password manager is a safer home for them; the value was not shown here.")  # fmt: skip
+    said = (f"{places} place{'s' if places != 1 else ''} hold{'' if places != 1 else 's'}"
+            " a secret in plain text; values are never shown")  # fmt: skip
+    groups = [(HEADS[k], [(f"{p}:{n}", "value not shown") for p, n, kd in found if kd == k])
+              for k in KINDS]  # fmt: skip
+    say(report(NAME, "populated", said, groups), as_json)
     return kernel.ESCALATE
 
 

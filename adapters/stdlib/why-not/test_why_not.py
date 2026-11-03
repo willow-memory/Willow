@@ -6,6 +6,7 @@ question it does hold said so; nothing written, not even a record row."""
 from __future__ import annotations
 
 import importlib.util
+import json
 import subprocess
 import sys
 from pathlib import Path
@@ -56,20 +57,45 @@ def run(*argv: str) -> subprocess.CompletedProcess:
 
 
 def test_a_question_the_files_hold_says_so_and_where(tmp_path):
-    got = run("--box", str(box(tmp_path)), "how much sun do tomatoes want")
+    b = box(tmp_path)
+    got = run("--box", str(b), "how much sun do tomatoes want")
     assert got.returncode == 0, got.stderr
-    assert got.stdout.splitlines()[1] == "Your files do hold it: diary.txt:1."
+    assert got.stdout == (
+        'why-not: empty, "how much sun do tomatoes want": '
+        "your files do hold it: diary.txt:1\n"
+    )
+    doc = json.loads(
+        run("--box", str(b), "how much sun do tomatoes want", "--json").stdout
+    )
+    assert doc == {
+        "addon": "why-not", "state": "empty", "groups": [],
+        "said": '"how much sun do tomatoes want": your files do hold it: diary.txt:1',
+    }  # fmt: skip
 
 
 def test_each_word_is_counted_and_a_word_nothing_holds_is_named(tmp_path):
-    got = run("--box", str(box(tmp_path)), "when does the frost come in autumn")
+    b = box(tmp_path)
+    q = "when does the frost come in autumn"
+    got = run("--box", str(b), q)
     assert got.returncode == 42
-    out = got.stdout.splitlines()
-    assert out[0] == "when does the frost come in autumn"
-    assert out[1].split() == ["frost", "held", "by", "1", "passage:", "diary.txt:3"]
-    assert out[2].split() == ["come", "no", "passage", "holds", "it"]
-    assert "A passage has to hold 2 of the 3 words at once." in out
-    assert "  diary.txt:3  holds 1 (frost); lacks come, autumn" in out
+    assert got.stdout.splitlines() == [
+        'why-not: populated, "when does the frost come in autumn": '
+        "a passage has to hold 2 of the 3 words at once",
+        "## words",
+        "  frost         held by 1 passage: diary.txt:3",
+        "  come          no passage holds it",
+        "  autumn        no passage holds it",
+        "## the nearest it came",
+        "  diary.txt:3   holds 1 (frost); lacks come, autumn",
+        "## what would have answered it",
+        "  kind of file  a dated note, an event or a deadline, with the date on the line",
+    ]
+    doc = json.loads(run("--box", str(b), q, "--json").stdout)
+    assert doc["state"] == "populated"
+    assert [g["name"] for g in doc["groups"]] == [
+        "words", "the nearest it came", "what would have answered it"]  # fmt: skip
+    assert doc["groups"][0]["rows"][0] == {
+        "where": "frost", "what": "held by 1 passage: diary.txt:3"}  # fmt: skip
 
 
 def test_the_words_the_kernel_leaves_out_are_not_counted():
@@ -78,8 +104,15 @@ def test_the_words_the_kernel_leaves_out_are_not_counted():
 
 
 def test_a_question_of_only_common_words_says_to_name_the_thing(tmp_path):
-    got = run("--box", str(box(tmp_path)), "how do I")
-    assert got.returncode == 42 and "name the thing you mean" in got.stdout
+    b = box(tmp_path)
+    got = run("--box", str(b), "how do I")
+    assert got.returncode == 42
+    assert got.stdout == (
+        'why-not: unreachable, "how do I": '
+        "every word is a common one; name the thing you mean\n"
+    )
+    doc = json.loads(run("--box", str(b), "how do I", "--json").stdout)
+    assert doc["state"] == "unreachable" and doc["groups"] == []
 
 
 def test_a_word_held_by_its_plain_form_counts_as_held(tmp_path):
@@ -87,7 +120,7 @@ def test_a_word_held_by_its_plain_form_counts_as_held(tmp_path):
     got = run("--box", str(b), "where is the invoice paperwork cabinet")
     assert got.returncode == 42, got.stdout
     assert "invoice" in got.stdout and "held by 1 passage: bills.txt:1" in got.stdout
-    assert "paperwork  no passage holds it" in got.stdout
+    assert "  paperwork     no passage holds it" in got.stdout
 
 
 def test_a_spelling_nothing_holds_but_a_close_one_does(tmp_path):
@@ -100,6 +133,8 @@ def test_a_spelling_nothing_holds_but_a_close_one_does(tmp_path):
     got = run("--box", str(b), "when is the radiater serviced again")
     assert got.returncode == 42
     assert "(your files say 'radiator': radiater = radiator)" in got.stdout
+    assert json.loads(run("--box", str(b), "when is the radiater serviced again", "--json").stdout)[
+        "groups"][0]["rows"][0]["what"].endswith("(your files say 'radiator': radiater = radiator)")  # fmt: skip
 
 
 def test_the_kind_of_file_follows_the_questions_opening():
@@ -131,7 +166,12 @@ def test_it_writes_nothing_not_even_a_record_row(tmp_path):
 
 def test_a_passage_holding_none_of_the_words_is_said_so(tmp_path):
     got = run("--box", str(box(tmp_path)), "zebra giraffe")
-    assert got.returncode == 42 and "No passage holds any of them." in got.stdout
+    assert got.returncode == 42
+    assert got.stdout.splitlines()[0] == (
+        'why-not: populated, "zebra giraffe": a passage has to hold 1 of the 2 words '
+        "at once; no passage holds any of them"
+    )
+    assert "## the nearest it came" not in got.stdout
 
 
 def test_a_bad_command_line_says_how_to_run_it(tmp_path):
@@ -151,4 +191,4 @@ def test_a_bad_command_line_says_how_to_run_it(tmp_path):
 
 def test_one_word_is_not_pluralised(tmp_path):
     got = run("--box", str(box(tmp_path)), "zebra")
-    assert "A passage has to hold 1 of the 1 word at once." in got.stdout
+    assert "a passage has to hold 1 of the 1 word at once" in got.stdout
