@@ -395,16 +395,6 @@
   "network": "none"
  },
  {
-  "name": "forge",
-  "kind": "deps",
-  "section": "Assistants",
-  "line": "A sentence in, the add-ons it names or means out, as a plan with its forks for the Forge's checkpoint to resolve and the person to seal before anything runs.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "needs": "forge-play; Apache-2.0"
- },
- {
   "name": "forgejo",
   "kind": "stdlib",
   "section": "For maintainers",

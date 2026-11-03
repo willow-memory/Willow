@@ -10,6 +10,14 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `forge`, a deps add-on: a sentence in, the add-ons it names or means
+  out, as a report in the one shape. A word that reaches several add-ons
+  ("email": mail, apple-mail) is a fork with the cards as options, for the
+  Forge's checkpoint to put to the person once and remember; `--plan`
+  prints the same as a plan the Forge's `plan_shape` validates and its
+  `build_loop` resolves. It recommends nothing, scores nothing, proposes
+  nothing and writes nothing. Needs forge-play 0.10, whose card box reads
+  these cards as rows for its keyword scan.
 - The report contract (`adapters/stdlib/ci/README.md`): an add-on that
   reports what it found prints one shape, `NAME: STATE, SAID` then rows of
   where and what by group, and the same as JSON with `--json`; `empty` exits
