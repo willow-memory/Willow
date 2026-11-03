@@ -315,3 +315,14 @@ def test_start_runs_the_page_over_every_folder_of_the_pick(site, tmp_path):
     finally:
         for proc in cv.browsers:
             proc.terminate()
+
+
+def test_a_reader_is_offered_for_a_kind_its_card_names_not_for_an_english_word():
+    """`.so` files (compiled libraries) were offered readers whose card lines
+    say "so" in a sentence; a two-letter word counts with its dot or in
+    capitals, never bare."""
+    assert not canvas.names_kind("so", "It reads them, so you can ask.")
+    assert canvas.names_kind("so", "A shared library (.so) as its symbols.")
+    assert canvas.names_kind("zip", "A Notion export zip, page by page.")
+    assert canvas.names_kind("pdf", "Your PDF files as passages.")
+    assert not canvas.names_kind("go", "Notes you go back to.")

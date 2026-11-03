@@ -1024,9 +1024,7 @@ _spec.loader.exec_module(STACK)
 REPORTS = sorted(
     n
     for n, p in ADDONS.items()
-    if p.parent.name == "stdlib" and re.search(
-        r"^output:\s*report\s*$", (p / "README.md").read_text(encoding="utf-8"), re.M
-    )
+    if p.parent.name == "stdlib" and STACK.prints_a_report(p / "README.md")  # the card beside the script
 )  # fmt: skip
 #: a pile with something for most reports to find: a dated to-do, a card
 #: number, a shell built from input, a locked dependency
