@@ -90,6 +90,16 @@ nav.side h3{margin:16px 6px 8px}
 .t-leaf::before{content:"";position:absolute;left:-12px;top:.8em;width:9px;border-top:1px solid var(--line)}
 .t-leaf .path{overflow-wrap:anywhere;min-width:0;flex:1 1 100%}.t-leaf .t-sum{margin-left:0;color:var(--faint)}
 .t-leaf .arg{color:var(--blue)}.t-leaf .need{flex-basis:100%;color:var(--mute);font-size:11.5px;padding-left:10px}
+.tracetip{font:12px/1.4 var(--sans);color:var(--mute);background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:6px 8px;margin:0 0 10px}
+.stacktree.tracing .t-leaf{opacity:.35}.stacktree.tracing .t-leaf.lit{opacity:1}
+.t-leaf.lit{border-radius:2px;background:var(--accl)}.t-leaf.main{background:var(--acc);color:var(--onacc)}.t-leaf.main .arg,.t-leaf.main .need{color:var(--onacc)}
+.t-leaf.needed::after{content:"needed";font-size:10px;color:var(--acc);margin-left:auto;padding-right:4px}.t-leaf.needs::after{content:"needs it";font-size:10px;color:var(--blue);margin-left:auto;padding-right:4px}
+.t-leaf.ghost{color:var(--acc);opacity:.85;font-style:italic}.t-leaf.ghost::before{border-top-style:dashed}
+.t-preview{font:12.5px/1.45 var(--sans);background:var(--catkinl);border:1px solid var(--catkin);border-radius:var(--r);padding:6px 8px}
+.ex.pv{border-color:var(--catkin);box-shadow:0 0 0 1px var(--catkin)}
+.mini.review{margin-top:6px;border-color:var(--acc);border-style:dashed;background:transparent}.mini.review .no{color:var(--acc)}.mini.review.sel{border-style:solid;background:var(--card)}.mini.review.sel .no{color:var(--onacc)}
+#review[hidden]{display:none}#review .review{margin:0}
+footer #undo{order:0}
 .t-skip{font:12px/1.6 var(--sans);color:var(--faint);padding:2px 6px 2px 26px;border-left:2px dotted var(--line);margin-left:12px}
 .t-skip button.link{color:var(--mute);font-size:12px;text-decoration-color:var(--line)}.t-skip button.link:hover{color:var(--acc)}
 h1{font-size:27px;line-height:1.15;letter-spacing:-.02em;font-weight:700;margin:0 0 8px;text-wrap:balance}
@@ -203,15 +213,14 @@ details.more{margin-top:18px}details.more summary{cursor:pointer;color:var(--mut
 <p class="lede">Willow answers questions from your own folders, in their own words, with the file and line for each answer. It never makes an answer up: when your files don't say it, it says so. Here you choose what it reads and what else it does. Nothing runs until you look it over and seal it.</p>
 <div class="steps"><div><b>1</b>Choose your folders</div><div><b>2</b>Add what you want it to do</div><div><b>3</b>Look it over, and seal it</div></div></header>
 <div id="started"></div>
-<div id="review"></div>
 <div class="find"><input type="text" id="find" placeholder="What do you want willow to do?"><button class="x" id="findx" title="clear" hidden>×</button></div>
 <div id="ask"></div>
-<div id="flow"><section class="stage" id="stage"></section><div id="startview" hidden><section class="batches" id="batches"></section><div id="railex"></div></div></div>
+<div id="flow"><section class="stage" id="stage"></section><div id="review" hidden></div><div id="startview" hidden><section class="batches" id="batches"></section><div id="railex"></div></div></div>
 <div class="shelf-head" id="shelfhead"></div>
 <div id="shelf"></div>
 </main>
-<aside class="rail" aria-label="Your stack"><h3>Your stack</h3><p class="rail-note">What runs, top to bottom. Click a step to work on it.</p><div class="stacktree" id="stacktree"></div></aside>
-<footer><div class="sum" id="sum"></div><span class="msg" id="msg"></span><button class="go" id="look">Look it over</button></footer>
+<aside class="rail" aria-label="Your stack"><h3>Your stack</h3><p class="rail-note">What runs, top to bottom. Click a step to work on it.</p><div class="tracetip" id="tracetip" hidden></div><div class="stacktree" id="stacktree"></div></aside>
+<footer><div class="sum" id="sum"></div><span class="msg" id="msg"></span><button id="undo" hidden title="undo the last change (Ctrl+Z)">Undo</button><button class="go" id="look">Look it over</button></footer>
 <script>
 const T=location.pathname.replace(/\/$/,'');
 const api=(p,b)=>fetch(T+'/api/'+p,b?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)}:{}).then(r=>r.json());
@@ -232,7 +241,7 @@ const STAGES=[
 ];
 const SUGGEST={read:['pdf','mail','office'],words:['starter-words','nicknames'],find:['all','pile-rungs','on-this-day'],watch:['coming-up','todo'],hide:['privacy'],suggest:['claude-code','mcp-lite'],honest:['stale','backup','tip-pin'],use:['browse','shell']};
 const KEY='willow-canvas-2';
-let P={},S=JSON.parse(localStorage.getItem(KEY)||'null'),cur='folders',subject=null,drag=null,here='';
+let P={},S=JSON.parse(localStorage.getItem(KEY)||'null'),cur='folders',subject=null,drag=null,here='',SEALED=false,back='folders';
 const stageOf=p=>{for(const s of STAGES)if(s.sec&&[].concat(s.sec).includes(p.section))return s.key;return'extra'};
 const save=()=>localStorage.setItem(KEY,JSON.stringify(S));
 function say(t,err){const m=document.getElementById('msg');m.textContent=t||'';m.className='msg'+(err?' err':'')}
@@ -245,7 +254,7 @@ const FACT=new Set(['no-install','needs-install','offline','this-machine','onlin
 function topics(p){return(p.tags||[]).filter(t=>!FACT.has(t)).map(t=>el('button',{class:'topic',text:'#'+t,title:'every piece tagged '+t,onclick:e=>{e.stopPropagation();find('#'+t)}}))}
 function stageTitle(p){const k=stageOf(p);return STAGES.find(s=>s.key===k).title}
 // an add-on card you can drag into the step's pieces, at the place you drop it
-function addable(n,e){if(all().includes(n)||cantAdd(n))return e;e.draggable=true;e.classList.add('grab');if(!e.title)e.title='drag into the step, or tick it';
+function addable(n,e){e.dataset.n=n;if(all().includes(n)||cantAdd(n))return e;e.draggable=true;e.classList.add('grab');if(!e.title)e.title='drag into the step, or tick it';
  e.addEventListener('dragstart',ev=>{if(ev.target.tagName==='INPUT'){ev.preventDefault();return}drag={add:n};ev.dataTransfer.effectAllowed='copy';ev.dataTransfer.setData('text/plain',n);document.body.classList.add('adding')});
  e.addEventListener('dragend',()=>{drag=null;document.body.classList.remove('adding')});return e}
 function pieceCard(p,why){const used=all().includes(p.name),idea=!!cantAdd(p.name);
@@ -313,18 +322,22 @@ function examplesCard(){const st=el('section',{class:'stage examples-stage'}),n=
  for(const e of EX.found){const names=[...new Set(e.steps.map(x=>x.name))],key='ex:'+e.file,o=isOpen(key);
   const steps=el('div',{class:'steps'},...names.map(n=>{const x=e.steps.find(y=>y.name===n),opt=x.args.replace('--box {box}','').trim(),no=cantAdd(n);
    return el('span',{class:no?'no':'',title:no||P[n]?.line||''},n,o&&opt?el('span',{class:'opt',text:' '+opt}):null,o&&no?' ('+no+')':'')}));
-  const card=el('div',{class:'ex'+(o?'':' folded')});
+  const card=el('div',{class:'ex'+(o?'':' folded')+(PV===e.file?' pv':''),'data-ex':e.file});
   card.append(el('div',{class:'exhead',onclick:ev=>{if(ev.target.tagName!=='BUTTON'){toggle(key)}}},el('span',{class:'caret',text:o?'▾':'▸'}),el('h3',{text:e.title.charAt(0).toUpperCase()+e.title.slice(1)}),el('button',{text:'Use this',onclick:()=>useExample(e)})),steps);
   if(o)card.insertBefore(el('p',{text:e.about}),steps);
   st.append(card)}
  return st}
+// an example shown in the tree before it's used: what it would add, faded
+let PV=null,PIN=false;
+function exAdds(e){const out=[],args={};for(const st of e.steps){const x=st.name;if(cantAdd(x))continue;args[x]??=st.args;for(const y of[...needs(x),x])if(!all().includes(y)&&!out.includes(y))out.push(y)}return{out,args}}
+function preview(file){PV=file;if(!file)PIN=false;document.querySelectorAll('.ex[data-ex]').forEach(x=>x.classList.toggle('pv',x.dataset.ex===file));stacktree()}
 function useExample(e){const n=all().length,them=n===1?'it':'them';
- const go=(replace)=>{if(replace){S.stages={};S.args={}}S.args??={};const skipped=[];
+ const go=(replace)=>{preview(null);if(replace){S.stages={};S.args={}}S.args??={};const skipped=[];
   for(const st of e.steps){const x=st.name;if(cantAdd(x)){if(!skipped.includes(x))skipped.push(x+' ('+cantAdd(x)+')');continue}
    if(!S.args[x])S.args[x]=st.args;for(const y of[...needs(x),x])if(!all().includes(y))(S.stages[stageOf(P[y])]??=[]).push(y)}
   changed();say('Started from “'+e.title+'”'+(skipped.length?'; left out: '+skipped.join(', '):'')+'.',!!skipped.length);document.getElementById('flow').scrollIntoView({behavior:'smooth'})};
  if(!n){go(true);return}
- ask('You have '+n+' piece'+(n===1?'':'s')+' picked. Replace '+them+' with the example “'+e.title+'”, or add the example to '+them+'?',[['Replace '+them,()=>go(true),1],['Add to '+them,()=>go(false)],['Cancel']],'exask')}
+ preview(e.file);PIN=true;ask('You have '+n+' piece'+(n===1?'':'s')+' picked. Replace '+them+' with the example “'+e.title+'”, or add the example to '+them+'? The tree on the right shows what it would add.',[['Replace '+them,()=>{preview(null);go(true)},1],['Add to '+them,()=>{preview(null);go(false)}],['Cancel',()=>preview(null)]],'exask')}
 // ── folding: a card is its title and a line until you open it ──────────────
 const FOLDKEY='willow-canvas-open';const OPEN=new Set(JSON.parse(localStorage.getItem(FOLDKEY)||'["folders","kernel","examples"]'));
 const isOpen=k=>OPEN.has(k);
@@ -343,7 +356,14 @@ async function found(){const q=document.getElementById('find').value.trim(),head
 function pulled(){const have=new Set(all()),out=[],todo=[...have];while(todo.length){const n=todo.shift();for(const h of(P[n]?.hard||[]))if(!have.has(h)&&!out.includes(h)){out.push(h);todo.push(h)}}return out}
 function freshState(){const st={};const deps=new Set(Object.values(P).filter(p=>p.in_stack).flatMap(p=>p.hard));
  for(const p of Object.values(P))if(p.in_stack&&!deps.has(p.name))(st[stageOf(p)]??=[]).push(p.name);return{stages:st,folders:[]}}
-function changed(){save();subject=null;document.getElementById('review').innerHTML='';flow();document.getElementById('find').value.trim()?found():shelf();summary()}
+// undo: every change is one step back
+const UNDO=[];let was=null;
+function remember(){const now=JSON.stringify(S);if(was!==null&&was!==now){UNDO.push(was);if(UNDO.length>50)UNDO.shift()}was=now;undoBtn()}
+function undoBtn(){document.getElementById('undo').hidden=!UNDO.length}
+function undo(){if(!UNDO.length)return;was=UNDO.pop();S=JSON.parse(was);save();subject=null;SEALED=false;stale();preview(null);flow();document.getElementById('find').value.trim()?found():shelf();summary();undoBtn();say('Undone.')}
+document.getElementById('undo').onclick=undo;
+document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&!e.shiftKey&&e.key.toLowerCase()==='z'&&!['INPUT','TEXTAREA'].includes(document.activeElement?.tagName)){e.preventDefault();undo()}});
+function changed(){remember();save();subject=null;SEALED=false;stale();flow();document.getElementById('find').value.trim()?found():shelf();summary()}
 // ── a piece needs its parents: what its card uses, and theirs ───────────────
 function needs(n){const out=[],todo=[...(P[n]?.hard||[])];while(todo.length){const h=todo.shift();if(out.includes(h)||!P[h])continue;out.push(h);todo.push(...(P[h].hard||[]))}return out}
 function needing(n){return all().filter(m=>m!==n&&needs(m).includes(n))}
@@ -363,7 +383,7 @@ function mark(box,i){const cs=box.querySelectorAll('.chip');cs.forEach((c,k)=>{c
 function chips(s){const box=el('div',{class:'chips'}),list=S.stages[s.key]??=[];
  list.forEach((n,i)=>{const p=P[n]||{name:n,line:''};const pulls=(p.hard||[]).length?el('small',{text:'needs '+p.hard.map(h=>h+(all().includes(h)?' ✓':' (not in your flow)')).join(', ')}):null,looks=(p.soft||[]).filter(x=>!all().includes(x)&&P[x]).length?el('small',{text:'uses if you add it: '+(p.soft||[]).filter(x=>!all().includes(x)&&P[x]).join(', ')}):null;
   const near=(p.near||[]).filter(m=>P[m]?.state==='built'&&!all().includes(m)),goes=near.length?el('div',{class:'goes'},'goes well with ',...near.flatMap((m,k)=>[k?', ':'',el('button',{text:m,title:P[m].line+' (click to add)',onclick:()=>addPiece(m)})])):null;
-  const c=el('div',{class:'chip',draggable:'true',title:'drag to reorder'},el('button',{class:'x',text:'×',title:'take it out',onclick:()=>removePiece(n)}),el('b',{text:n}),(S.args||{})[n]&&S.args[n]!=='--box {box}'?el('span',{class:'runs',title:'the options it runs with',text:S.args[n].replace('--box {box}','').trim()}):null,el('small',{text:p.line}),...plainTags(p),...topics(p),pulls,looks,goes);
+  const c=el('div',{class:'chip',draggable:'true',title:'drag to reorder','data-n':n},el('button',{class:'x',text:'×',title:'take it out',onclick:()=>removePiece(n)}),el('b',{text:n}),(S.args||{})[n]&&S.args[n]!=='--box {box}'?el('span',{class:'runs',title:'the options it runs with',text:S.args[n].replace('--box {box}','').trim()}):null,el('small',{text:p.line}),...plainTags(p),...topics(p),pulls,looks,goes);
   c.addEventListener('dragstart',e=>{drag={stage:s.key,i};e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain',n)});c.addEventListener('dragend',()=>{drag=null});box.append(c)});
  box.addEventListener('dragover',e=>{if(!drag||(!drag.add&&drag.stage!==s.key))return;e.preventDefault();if(drag.add)e.dataTransfer.dropEffect='copy';box.classList.add('on');mark(box,slot(box,e))});
  box.addEventListener('dragleave',e=>{if(!box.contains(e.relatedTarget)){box.classList.remove('on');mark(box,-1)}});
@@ -373,8 +393,8 @@ function stageSummary(s){if(s.key==='folders')return S.folders.length?S.folders.
  if(s.key==='kernel'){const bs=S.folders.map(f=>BASE[f.path]).filter(b=>b&&b.ok);return bs.length?bs.reduce((t,b)=>t+b.read,0).toLocaleString()+' files it can read, '+bs.reduce((t,b)=>t+b.cant.reduce((u,c)=>u+c.files,0),0).toLocaleString()+' it can’t':'always there'}
  if(s.key==='you')return'your seal';const ns=S.stages[s.key]||[];return ns.length?ns.length+' piece'+(ns.length===1?'':'s')+': '+ns.slice(0,4).join(', ')+(ns.length>4?', …':''):'nothing here'}
 function go(k){cur=k;const f=document.getElementById('find');if(f.value){f.value='';document.getElementById('findx').hidden=true}flow();shelf();document.getElementById('flow').scrollIntoView({block:'nearest',behavior:'smooth'})}
-function flow(){const start=cur==='start',st=document.getElementById('stage');document.getElementById('startview').hidden=!start;st.hidden=start;st.innerHTML='';
- if(!start){const s=STAGES.find(x=>x.key===cur),i=STAGES.indexOf(s);st.className='stage'+(s.fixed?' fixed':'');
+function flow(){const view=cur==='start'||cur==='review'?cur:'stage',st=document.getElementById('stage');document.getElementById('startview').hidden=view!=='start';document.getElementById('review').hidden=view!=='review';st.hidden=view!=='stage';st.innerHTML='';
+ if(view==='stage'){const s=STAGES.find(x=>x.key===cur),i=STAGES.indexOf(s);st.className='stage'+(s.fixed?' fixed':'');
   st.append(el('header',{},el('span',{class:'no',text:String(i+1)}),el('h2',{text:s.title}),el('span',{class:'sum',text:stageSummary(s)})),el('div',{class:'say',text:s.say}));
   if(s.key==='folders'){if(!S.folders.length)st.append(el('div',{class:'none',text:'No folders yet. Add at least one: it’s what willow answers from.'}));
    S.folders.forEach((fo,k)=>st.append(el('div',{class:'folder'},el('span',{text:fo.path}),el('small',{text:fo.files+' files'}),el('button',{class:'link',text:'remove',onclick:()=>{S.folders.splice(k,1);changed()}}))))}
@@ -387,20 +407,36 @@ function steplist(){if(!S)return;const box=document.getElementById('steplist');b
  box.append(el('h3',{text:'Your flow, in order'}));const list=el('div',{class:'minis'});
  STAGES.forEach((s,i)=>{const n=s.key==='folders'?S.folders.length:(S.stages[s.key]||[]).length,empty=!s.fixed&&!n;
   list.append(el('button',{class:'mini'+(empty?' empty':'')+(s.fixed?' fixed':'')+(cur===s.key?' sel':''),title:s.say,onclick:()=>go(s.key)},el('span',{class:'no',text:String(i+1)}),el('b',{text:s.title}),empty?null:el('small',{text:stageSummary(s)})))});
+ list.append(el('button',{class:'mini review'+(cur==='review'?' sel':''),title:'everything you picked, in one place, to seal',onclick:()=>subject?go('review'):look()},el('span',{class:'no',text:String(STAGES.length+1)}),el('b',{text:'Look it over, and seal it'}),el('small',{text:SEALED?'sealed':subject?'looked over, not sealed yet':'nothing runs until you seal'})));
  box.append(list)}
+// hover a piece anywhere: its line in the tree lights, with what it needs and what needs it
+let TR=null;
+function trace(n){const rel=new Set(n?[n,...needs(n),...needing(n)]:[]),tree=document.getElementById('stacktree');let hit=false;
+ tree.querySelectorAll('.t-leaf[data-n]').forEach(x=>{const on=rel.has(x.dataset.n);if(on)hit=true;x.classList.toggle('lit',on);x.classList.toggle('main',on&&x.dataset.n===n);
+  x.classList.toggle('needed',on&&x.dataset.n!==n&&needs(n).includes(x.dataset.n));x.classList.toggle('needs',on&&x.dataset.n!==n&&needing(n).includes(x.dataset.n))});
+ tree.classList.toggle('tracing',hit);const tip=document.getElementById('tracetip');
+ if(tip){const brings=n?needs(n).filter(x=>!all().includes(x)):[];
+  tip.textContent=!n?'':!all().includes(n)?n+' isn’t in your stack'+(brings.length?'; adding it brings '+brings.join(', '):''):
+  [needs(n).length?'needs '+needs(n).join(', '):'needs nothing else',needing(n).length?'needed by '+needing(n).join(', '):''].filter(Boolean).join(' · ');tip.hidden=!n}}
+const hov=e=>{const x=e.target.closest?.('[data-n]'),n=x?.dataset.n||null;if(n!==TR){TR=n;trace(n)}
+ const ex=e.target.closest?.('.ex[data-ex]')?.dataset.ex||null;if(!PIN&&ex!==PV)preview(ex)};
+document.addEventListener('mouseover',hov);document.addEventListener('focusin',hov);
 // the stack, as a tree: what runs, in order, and what each piece needs
 function stacktree(){const t=document.getElementById('stacktree');t.innerHTML='';const skipped=[];
+ const ex=PV&&EX?.found?.find(x=>x.file===PV),pv=ex?exAdds(ex):{out:[],args:{}},ghosts=k=>pv.out.filter(y=>stageOf(P[y])===k);
+ if(ex)t.append(el('div',{class:'t-preview'},el('b',{text:'Previewing “'+ex.title+'”'}),el('span',{text:pv.out.length?' · it would add '+pv.out.length+' piece'+(pv.out.length===1?'':'s')+', shown with +':' · everything in it is already here'})));
  const flush=()=>{if(!skipped.length)return;t.append(el('div',{class:'t-skip'},el('span',{text:'skipped '}),...skipped.flatMap((s,k)=>[k?' · ':'',el('button',{class:'link',text:s.title,onclick:()=>go(s.key)})])));skipped.length=0};
- for(const s of STAGES){const ns=s.key==='folders'?S.folders:(S.stages[s.key]||[]);if(!s.fixed&&s.key!=='folders'&&!ns.length){skipped.push(s);continue}flush();
+ for(const s of STAGES){const ns=s.key==='folders'?S.folders:(S.stages[s.key]||[]),gs=s.fixed||s.key==='folders'?[]:ghosts(s.key);if(!s.fixed&&s.key!=='folders'&&!ns.length&&!gs.length){skipped.push(s);continue}flush();
   const bs=S.folders.map(f=>BASE[f.path]).filter(b=>b&&b.ok),sum=s.key==='kernel'?(bs.length?bs.reduce((t,b)=>t+b.passages,0).toLocaleString()+' passages':'always there'):s.key==='you'?'your seal':s.key==='folders'&&!ns.length?'none yet':'';
   const row=el('div',{class:'t-stage'+(cur===s.key?' sel':'')+(s.fixed?' fixed':''),onclick:()=>go(s.key)},el('span',{class:'t-name',text:s.title}),sum?el('span',{class:'t-sum',text:sum}):null);
   const kids=el('div',{class:'t-kids'});
   if(s.key==='folders')for(const f of S.folders)kids.append(el('div',{class:'t-leaf'},el('span',{class:'path',text:f.path}),el('span',{class:'t-sum',text:f.files+' files'})));
-  else if(!s.fixed)for(const n of ns){const p=P[n]||{},a=((S.args||{})[n]||'').replace('--box {box}','').trim(),leaf=el('div',{class:'t-leaf'},el('span',{text:n}));
+  else if(!s.fixed)for(const n of ns){const p=P[n]||{},a=((S.args||{})[n]||'').replace('--box {box}','').trim(),leaf=el('div',{class:'t-leaf','data-n':n},el('span',{text:n}));
    if(a)leaf.append(el('span',{class:'arg',text:' '+a}));if((p.hard||[]).length)leaf.append(el('div',{class:'need',text:'needs '+p.hard.join(', ')}));kids.append(leaf)}
+  for(const g of gs){const a=(pv.args[g]||'').replace('--box {box}','').trim();kids.append(el('div',{class:'t-leaf ghost'},el('span',{text:'+ '+g}),a?el('span',{class:'arg',text:' '+a}):null))}
   t.append(el('div',{class:'t-group'},row,kids.childNodes.length?kids:null))}
  flush();const pl=pulled();
- if(pl.length)t.append(el('div',{class:'t-group'},el('div',{class:'t-stage brought'},el('span',{class:'t-name',text:'Brought along'}),el('span',{class:'t-sum',text:'needed by the pieces above'})),el('div',{class:'t-kids'},...pl.map(n=>el('div',{class:'t-leaf',text:n})))))}
+ if(pl.length)t.append(el('div',{class:'t-group'},el('div',{class:'t-stage brought'},el('span',{class:'t-name',text:'Brought along'}),el('span',{class:'t-sum',text:'needed by the pieces above'})),el('div',{class:'t-kids'},...pl.map(n=>el('div',{class:'t-leaf','data-n':n,text:n})))))}
 // ── the shelf: what can go in the chosen stage ──────────────────────────────
 async function browse(path){const r=await api('dirs?path='+encodeURIComponent(path));if(!r.ok){say(r.path+': '+r.why,1);return}here=r.path;
  document.getElementById('ppath').textContent=r.path;const l=document.getElementById('plist');l.innerHTML='';
@@ -436,10 +472,10 @@ function shelf(){const s=STAGES.find(x=>x.key===cur),head=document.getElementByI
 // ── the summary, the look-over, the seal ────────────────────────────────────
 function summary(){const n=all().length,b=pulled().length,net=[...new Set([...all(),...pulled()].map(x=>P[x]?.network).filter(x=>x&&x!=='none'))];
  const s=document.getElementById('sum');s.innerHTML='';s.append(el('b',{text:`${S.folders.length} folder${S.folders.length===1?'':'s'}, ${n} piece${n===1?'':'s'}`}),b?` (and ${b} they bring along)`:'',' · ',net.length?el('span',{style:'color:var(--warn)',text:'goes online: '+net.join('; ')}):'never goes online')}
-async function look(){if(!S.folders.length){cur='folders';flow();shelf();say('Add a folder first: it’s what willow answers from.',1);return}
+async function look(){if(!S.folders.length){cur='folders';flow();shelf();say('Add a folder first: it’s what willow answers from.',1);return}if(cur!=='review')back=cur;
  const lanes=STAGES.filter(s=>!s.fixed&&s.key!=='folders').map(s=>({title:s.title,steps:(S.stages[s.key]||[]).map(n=>({name:n,args:(S.args||{})[n]||'--box {box}'}))})).filter(l=>l.steps.length);
  const r=await api('propose',{name:'my willow',folders:S.folders.map(f=>f.path),lanes});if(r.refused){say(r.refused,1);return}subject=r.subject;const a=r.arrangement;
- const named=k=>(S.stages[k]||[]).join(', ');const li=(t)=>el('li',{text:t});const rv=document.getElementById('review');rv.innerHTML='';
+ const named=k=>(S.stages[k]||[]).join(', ');const li=(t)=>el('li',{text:t});const rv=document.getElementById('review');rv.innerHTML='';cur='review';const f0=document.getElementById('find');if(f0.value){f0.value='';document.getElementById('findx').hidden=true}SEALED=false;
  const one=a.folders.length===1;
  const ul=el('ul',{},li('It reads '+a.folders.join(', ')+', and never changes '+(one?'it':'them')+'.'),
   named('read')?null:li('It reads plain text, markdown and web pages; nothing else.'),
@@ -453,14 +489,17 @@ async function look(){if(!S.folders.length){cur='folders';flow();shelf();say('Ad
  if(a.pulled_in.length)parts.append(el('h3',{text:'Brought along, because pieces above need them'}),el('ul',{},...a.pulled_in.map(n=>el('li',{},el('b',{text:n}),' — '+(P[n]?.line||'')))));
  const sealB=el('button',{class:'go',text:'Seal it'}),asmB=el('button',{text:'Put it together',disabled:''}),out=el('div',{class:'msg'});
  sealB.onclick=async()=>{const x=await api('seal',{subject});if(x.refused||!x.sealed){out.className='msg err';out.textContent='Not sealed: '+(x.refused||x.said);return}
-  sealB.disabled=true;asmB.disabled=false;out.className='msg';out.textContent='Sealed. This is yours now. “Put it together” copies in the pieces that aren’t here yet, each one written on the record.'};
+  sealB.disabled=true;asmB.disabled=false;SEALED=true;steplist();out.className='msg';out.textContent='Sealed. This is yours now. “Put it together” copies in the pieces that aren’t here yet, each one written on the record.'};
  asmB.onclick=async()=>{const x=await api('assemble',{subject});if(x.refused){out.className='msg err';out.textContent=x.refused;return}asmB.disabled=true;
   out.textContent=(x.added.length?'Put together: '+x.added.join(', ')+'.':'Every piece was already here.')+(x.skipped?.length?' Not added, they need installing: '+x.skipped.join(', ')+'.':'');P=await api('pieces');flow();shelf();offerStart(subject,'my willow')};
  rv.append(el('section',{class:'review'},el('h2',{text:'Here’s what you’re putting together'}),ul,parts,
   el('div',{class:'why'},el('b',{text:'What sealing means. '}),'Sealing is you saying “yes, this is mine, run it this way.” Until you do, nothing above runs. Your seal is made with your key, a file only you should be able to read; after that, any change to this arrangement needs a new seal. ',
    el('i',{text:'Today that key is a file on this computer, so a program running as you could seal too. That’s the next thing to fix.'})),
-  el('div',{style:'display:flex;gap:10px;align-items:center'},sealB,asmB,el('button',{class:'link',text:'change something',onclick:()=>{rv.innerHTML='';subject=null}})),out,el('div',{class:'subj',text:'what you’d be sealing: '+subject})));
- rv.scrollIntoView({behavior:'smooth'})}
+  el('div',{style:'display:flex;gap:10px;align-items:center'},sealB,asmB,el('button',{class:'link',text:'change something',onclick:()=>{rv.innerHTML='';subject=null;go(back)}})),out,el('div',{class:'subj',text:'what you’d be sealing: '+subject})));
+ flow();shelf();document.getElementById('flow').scrollIntoView({block:'nearest',behavior:'smooth'})}
+// a change after looking it over: the look-over is out of date, and says so
+function stale(){const rv=document.getElementById('review');if(!rv.firstChild)return;rv.innerHTML='';
+ rv.append(el('section',{class:'review'},el('h2',{text:'You’ve changed something since you looked it over'}),el('p',{class:'lede',text:'Look it over again to see it as it is now. Nothing has been sealed.'}),el('button',{class:'go',text:'Look it over again',onclick:look})))}
 document.getElementById('look').onclick=look;
 // ── start it ────────────────────────────────────────────────────────────────
 function offerStart(subj,name){const box=document.getElementById('started');box.innerHTML='';
@@ -479,5 +518,5 @@ async function watch(){const pr=document.getElementById('progress');const j=awai
 document.getElementById('find').addEventListener('input',e=>find(e.target.value));document.getElementById('findx').onclick=()=>find('');
 (async()=>{P=await api('pieces');loadBatches();if(!S)S=freshState();loadExamples();
  const st=await api('state');const last=(st.stacks||[]).filter(x=>x.sealed).at(-1);if(last){offerStart(last.subject,last.name||'my willow');const j=await api('start');if(j.state&&j.state!=='none')watch()}
- for(const f of st.folders||[])if(!S.folders.some(x=>x.path===f))await addFolder(f);flow();shelf();summary()})();
+ for(const f of st.folders||[])if(!S.folders.some(x=>x.path===f))await addFolder(f);UNDO.length=0;was=JSON.stringify(S);undoBtn();flow();shelf();summary()})();
 </script></body></html>
