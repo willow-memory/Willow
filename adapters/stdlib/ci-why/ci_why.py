@@ -56,7 +56,12 @@ USAGE = "usage: ci_why.py LOG [--record RECORD.JSONL] | ci_why.py --record RECOR
 ANSI = re.compile(r"\x1b\[[0-9;?]*[A-Za-z]")
 STAMP = re.compile(r"^﻿?\d{4}-\d\d-\d\dT[\d:.]+Z ?")  # GitHub's, on every line
 HEAD = re.compile(r"^── (\S+)\s*$")
-VERDICT = re.compile(r"^(\S+)\s+(satisfied|failing|unreachable)\b(?:\s+\((.*)\))?")
+#: a summary line: gate, state, (why), and [the tests it skipped], which
+#: ci.py adds last; why stops at its own ")", never inside the skips
+VERDICT = re.compile(
+    r"^(\S+)\s+(satisfied|failing|unreachable)\b"
+    r"(?:\s+\((.*?)\))?(?:\s+\[.*\])?\s*$"
+)
 PASSED = re.compile(r"^(?:=+ )?(\d+) passed\b(?!.*\b(?:failed|error))")
 #: the most `E` lines one failure shows; the rest are counted, never hidden
 CAP = 25
