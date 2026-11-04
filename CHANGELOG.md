@@ -10,6 +10,10 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `ui/` offers a reader for a kind of file the kernel can't read by the
+  reader cards' `reads`, the ones reading the fewest kinds first, where it
+  went by a table and words in a card's line (which offered zotero for a
+  PDF)
 - `reads` on every reader's card: the kinds of file it reads, by extension
   or by name (`.eml, .mbox`; `zotero.sqlite`), or `none`. `readme.py
   check` requires it of a built reader and of no other card, and
