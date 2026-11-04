@@ -37,6 +37,12 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
 
 AFTER = 1
 '''
+DEMOS = """DEMO_TESTS = (
+    # b's comment
+    ("demo:b", "demo/b", ()),
+    ("demo:a", "demo/a", ("git",)),
+)
+"""
 SORTED = '''"""a module"""
 
 NOW = ["--now", "x"]
@@ -83,7 +89,8 @@ def test_a_sorted_table_is_the_same_dict_and_the_same_lines():
         ('T = {\n    "b": 1,\n    "a": 2,\n    "b": 3,\n}\n', "twice"),
         ('T = {\n    "b": 1,\n    2: 2,\n}\n', "isn't a string"),
         ('T = {\n    "b": 1\n    ,\n    "a": 2,\n}\n', "comma on a line"),
-        ("T = [1]\n", "isn't a table"),
+        ("T = 1\n", "isn't a table"),
+        ("T = [1]\n", "a row that isn't a tuple"),
     ],
 )
 def test_what_cant_be_taken_apart_line_by_line_is_refused(src, why):
@@ -103,10 +110,16 @@ def repo():
             TABLE.replace("COMMANDS", "READERS")
             + "PILE_EXTRA = {}\nCOMMANDS = {}\nREPORT_COMMANDS = {}\n"
         )
+        (r / "adapters/stdlib/ci/ci.py").write_text(DEMOS)
         ideas = [{"name": "b", "kind": "stdlib"}, {"name": "a", "line": "é"}]
         (r / order.PLANNED).write_text(json.dumps(ideas, indent=1) + "\n")
         folders = ["alpha", "beta", "delta", "charlie", *(f"m{k}" for k in range(7))]
-        tree = "# Every file\n\n```\nwillow/\n├── b.md\n├── a.md\n└── stdlib/\n"
+        tree = (
+            "# Every file\n\n```\nwillow/\n├── b.md\n├── a.md\n├── demo/\n"
+            "│   ├── odile/        her life\n│   │   └── make_life.py\n"
+            "│   ├── hollis/\n│   │   └── make_life.py\n│   └── novelty.py\n"
+            "└── stdlib/\n"
+        )
         for k, n in enumerate(folders):
             corner, bar = ("└", " ") if k == len(folders) - 1 else ("├", "│")
             tree += f"    {corner}── {n}/\n    {bar}   └── {n}.py   {n}'s\n"
@@ -117,8 +130,10 @@ def repo():
 def test_check_names_each_list_and_write_puts_each_in_order(repo):
     tree = (repo / "FILES.md").read_text()
     assert order.run(repo, write=False) == [
+        "adapters/stdlib/ci/ci.py: DEMO_TESTS",
         f"{order.CONTRACT}: READERS",
         order.PLANNED,
+        "FILES.md: demo/",
         "FILES.md: stdlib/",
     ]
     assert (repo / "FILES.md").read_text() == tree, "check writes nothing"
@@ -131,6 +146,16 @@ def test_check_names_each_list_and_write_puts_each_in_order(repo):
     ) + "\n"
     lines = (repo / "FILES.md").read_text().splitlines()
     assert lines[4:6] == ["├── b.md", "├── a.md"], "an order of its own stays"
+    assert lines[6:12] == [
+        "├── demo/",
+        "│   ├── hollis/",
+        "│   │   └── make_life.py",
+        "│   ├── novelty.py",
+        "│   └── odile/        her life",
+        "│       └── make_life.py",
+    ], "demo/ A to Z, always"
+    src = (repo / "adapters/stdlib/ci/ci.py").read_text()
+    assert src.index('"demo:a"') < src.index("# b's") < src.index('"demo:b"')
     at = lines.index("    ├── charlie/")
     assert lines[at - 2 : at + 4] == [
         "    ├── beta/",

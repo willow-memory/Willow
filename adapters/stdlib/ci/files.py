@@ -81,8 +81,13 @@ def a_to_z(body: list[str]):
     hand (deep-links/ before decisions/ in stdlib, static-search/ before
     star-system/ in deps), and kept in an order of its own past that: no
     folder of fewer than ten is A to Z with a pair out of turn."""
-    best = min((tests_after, plain), key=lambda k: slips(k, body))
+    best = closest(body)
     return best if slips(best, body) * 10 <= len(body) else None
+
+
+def closest(body: list[str]):
+    """The A-to-Z order a folder's entries come nearest to."""
+    return min((tests_after, plain), key=lambda k: slips(k, body))
 
 
 # ── the tree ─────────────────────────────────────────────────────────────────
@@ -209,15 +214,15 @@ class Tree:
             self._set_corner(end, depth, last=True)
         return own_order and name != "README.md"
 
-    def sort(self, folder: str) -> bool:
+    def sort(self, folder: str, always: bool = False) -> bool:
         """Put a folder kept A to Z, with a slip or two by hand, back in that
         order, each entry with its notes and everything under it; README.md
         stays where it is. False when there was nothing to move, or the
-        folder keeps an order of its own."""
+        folder keeps an order of its own and isn't to be sorted `always`."""
         depth, kids = self.children(folder)
         names = [self.lines[i][4 * depth + 4 :].split()[0] for i, *_ in kids]
         body = [n for n in names if n != "README.md"]
-        key = a_to_z(body)
+        key = closest(body) if always else a_to_z(body)
         if key is None or not slips(key, body):
             return False
         blocks = [self.lines[i : self.span(i, d)] for i, d, *_ in kids]

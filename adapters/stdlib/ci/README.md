@@ -95,8 +95,10 @@ opens.
 
 **A to Z:** [order.py](order.py) keeps the lists people add to in order:
 the tables in test_contract.py (COMMANDS, READERS, PILE_EXTRA,
-REPORT_COMMANDS), each entry with the comments above it; planned.json by
-name; and FILES.md's folders kept A to Z, a slip by hand put back. A new
+REPORT_COMMANDS) and ci.py's DEMO_TESTS, each entry with the comments
+above it; planned.json by name; FILES.md's folders kept A to Z, a slip by
+hand put back; and demo/, always. The demo rows run A to Z too, a person's
+folder among the rest. A new
 line then goes in its own place, not at the end where every pull request
 adds one and two collide. `check` names a list out of order, and its test
 holds the repo's lists to it; `write` sorts them, moving nothing else, and

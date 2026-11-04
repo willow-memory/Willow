@@ -10,12 +10,13 @@ collide on the same line. Kept A to Z, each goes in its own place.
 The lists:
 
 - the tables in test_contract.py that people add an add-on to (COMMANDS,
-  READERS, PILE_EXTRA, REPORT_COMMANDS), by name, each entry with the
-  comment lines above it, a `**` spread kept at the end;
+  READERS, PILE_EXTRA, REPORT_COMMANDS), by name, and ci.py's DEMO_TESTS,
+  by gate: each entry with the comment lines above it, a `**` spread kept
+  at the end;
 - adapters/planned.json, by name, written as it always is;
 - FILES.md's folders kept A to Z, with a slip or two by hand
-  (files.py's rule), each entry with its notes and what's under it; a
-  folder in an order of its own is left as it is.
+  (files.py's rule), and demo/ always, each entry with its notes and
+  what's under it; a folder in an order of its own is left as it is.
 
 `check` names each list out of order; `write` puts it in order and moves
 nothing else. A table it can't take apart line by line (two entries on one
@@ -39,8 +40,13 @@ import kernel  # noqa: E402
 
 USAGE = "usage: order.py check | order.py write"
 CONTRACT = "adapters/stdlib/ci/test_contract.py"
-TABLES = {CONTRACT: ("PILE_EXTRA", "READERS", "COMMANDS", "REPORT_COMMANDS")}
+TABLES = {
+    "adapters/stdlib/ci/ci.py": ("DEMO_TESTS",),
+    CONTRACT: ("PILE_EXTRA", "READERS", "COMMANDS", "REPORT_COMMANDS"),
+}
 PLANNED = "adapters/planned.json"
+#: FILES.md's folders sorted even when they look kept in an order of their own
+ALWAYS = ("demo",)
 
 
 class Refused(Exception):
@@ -57,15 +63,40 @@ def _files_mod(root: Path):
 
 
 # ── a Python table ───────────────────────────────────────────────────────────
-def _table(tree: ast.Module, name: str) -> ast.Dict:
+def _table(tree: ast.Module, name: str) -> ast.expr:
     for node in tree.body:
         target = (
             node.targets[0] if isinstance(node, ast.Assign) else
             node.target if isinstance(node, ast.AnnAssign) else None
         )  # fmt: skip
-        if getattr(target, "id", None) == name and isinstance(node.value, ast.Dict):
+        if getattr(target, "id", None) == name and isinstance(
+            node.value, (ast.Dict, ast.Tuple, ast.List)
+        ):
             return node.value
     raise Refused(f"{name} isn't a table at the top of the file")
+
+
+def _entries(table: ast.expr, name: str) -> list[tuple[object, ast.AST, ast.AST]]:
+    """(name, its first node, its last node) for each entry: a dict's key
+    and value, or a row of a tuple or list named by its first item. A dict's
+    ** spreads, at its end, aren't entries."""
+    if isinstance(table, ast.Dict):
+        pairs = list(zip(table.keys, table.values))
+        named = [(k, v) for k, v in pairs if k is not None]
+        if any(k is not None for k, _ in pairs[len(named) :]):
+            raise Refused(f"{name}: a ** spread in the middle")
+        return [(getattr(k, "value", None), k, v) for k, v in named]
+    rows = []
+    for row in table.elts:
+        if not isinstance(row, (ast.Tuple, ast.List)) or not row.elts:
+            raise Refused(f"{name}: a row that isn't a tuple named by its first item")
+        rows.append((getattr(row.elts[0], "value", None), row, row))
+    return rows
+
+
+def _col(line: str, offset: int) -> int:
+    """ast's column, counted in UTF-8 bytes, as a column in the line."""
+    return len(line.encode("utf-8")[:offset].decode("utf-8"))
 
 
 def sort_table(src: str, name: str) -> str:
@@ -73,34 +104,29 @@ def sort_table(src: str, name: str) -> str:
     they are already."""
     table = _table(ast.parse(src), name)
     lines = src.splitlines(keepends=True)
-    entries = list(zip(table.keys, table.values))
-    named = [(k, v) for k, v in entries if k is not None]
-    if any(k is not None for k, _ in entries[len(named) :]):
-        raise Refused(f"{name}: a ** spread in the middle")
-    if not all(
-        isinstance(k, ast.Constant) and isinstance(k.value, str) for k, _ in named
-    ):
+    entries = _entries(table, name)
+    if not all(isinstance(key, str) for key, _, _ in entries):
         raise Refused(f"{name}: a key that isn't a string")
-    keys = [k.value for k, _ in named]
+    keys = [key for key, _, _ in entries]
     if len(set(keys)) < len(keys):
         raise Refused(f"{name}: a name twice, where the order says which one counts")
-    blocks, start = [], table.lineno  # 0-based: the line after the {
-    for k, v in named:
-        if k.lineno <= start:
-            raise Refused(f"{name}: {k.value!r} shares a line with the entry before it")
-        block = lines[start : v.end_lineno]
+    blocks, start = [], table.lineno  # 0-based: the line after the opening one
+    for key, first, last_node in entries:
+        if first.lineno <= start:
+            raise Refused(f"{name}: {key!r} shares a line with the entry before it")
+        end = last_node.end_lineno
+        block = lines[start:end]
         last = block[-1]
-        at = v.end_col_offset - (len(lines[v.end_lineno - 1]) - len(last))
+        at = _col(last, last_node.end_col_offset)
         after = last[at:].lstrip()
         if not after.startswith(","):
             if after.strip() and not after.startswith("#"):
-                raise Refused(f"{name}: {k.value!r} is followed on its line by more")
-            ahead = "".join(lines[v.end_lineno :]).lstrip()
-            if ahead.startswith(","):
-                raise Refused(f"{name}: {k.value!r} has its comma on a line of its own")
+                raise Refused(f"{name}: {key!r} is followed on its line by more")
+            if "".join(lines[end:]).lstrip().startswith(","):
+                raise Refused(f"{name}: {key!r} has its comma on a line of its own")
             block[-1] = last[:at] + "," + last[at:]
-        blocks.append((k.value, block))
-        start = v.end_lineno
+        blocks.append((key, block))
+        start = end
     if keys == sorted(keys, key=str.lower):
         return src
     ordered = sorted(blocks, key=lambda b: b[0].lower())
@@ -135,7 +161,8 @@ def run(root: Path, write: bool) -> list[str]:
     files = _files_mod(root)
     doc = root / "FILES.md"
     tree = files.Tree(doc.read_text(encoding="utf-8"))
-    moved = [f for f in ["", *sorted(tree.folders())] if tree.sort(f)]
+    folders = ["", *sorted(tree.folders())]
+    moved = [f for f in folders if tree.sort(f, always=f in ALWAYS)]
     out += [f"FILES.md: {f or 'willow'}/" for f in moved]
     if write and moved:
         doc.write_text(tree.text(), encoding="utf-8")

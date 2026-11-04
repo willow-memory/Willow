@@ -11,12 +11,13 @@ says how). The first was v0.1.0.
 ### Added
 
 - `ci`'s `adapters/stdlib/ci/order.py` keeps the lists people add to A to Z:
-  COMMANDS, READERS, PILE_EXTRA and REPORT_COMMANDS in test_contract.py,
-  each entry with its comments, adapters/planned.json, and FILES.md's
-  folders kept A to Z; `write` sorts them, `check` and its test hold the
-  repo to it, and create_pr.py runs `write`. The tables and FILES.md's
-  stdlib and deps folders are sorted, and a folder of ten or more with one
-  pair in ten out of turn now counts as A to Z
+  COMMANDS, READERS, PILE_EXTRA and REPORT_COMMANDS in test_contract.py
+  and ci.py's DEMO_TESTS, each entry with its comments, adapters/planned.json,
+  FILES.md's folders kept A to Z, and demo/ always; `write` sorts them,
+  `check` and its test hold the repo to it, and create_pr.py runs `write`.
+  The tables and FILES.md's stdlib, deps and demo folders are sorted, CI's
+  demo rows run A to Z, and a folder of ten or more with one pair in ten out
+  of turn now counts as A to Z
 - `ci`'s `adapters/stdlib/ci/new.py NAME` starts an add-on from its idea on
   adapters/planned.json: its folder, its card with the idea's entry as its
   header, a script that refuses every command line until it's built and a
