@@ -43,7 +43,7 @@ code, *words = sys.argv[1:]
 for w in words:
     if w.startswith("make="):
         Path(w[5:]).write_text("made\\n", encoding="utf-8")
-print(" ".join(words) or "(nothing)")
+print(" ".join(words).replace(" / ", "\\n") or "(nothing)")
 sys.exit(int(code))
 """
 #: gh, answering `api` from gh.json: the open pull requests, and a new one
@@ -263,6 +263,16 @@ def test_a_42_that_owes_nothing_is_said_in_the_pull_request_and_it_goes_on(repo)
     assert got.returncode == 0, got.stdout + got.stderr
     sent = gh_state(repo)["prs"][0]["sent"]
     assert "`against` came back 42: nothing to check" in sent["body"]
+
+
+def test_a_42_is_said_by_the_line_that_says_why_not_its_last(repo):
+    steps(repo, GREEN.replace("- against -- 0 {open}",
+                              "- against -- 42 ports:java  unreachable  (no java) / run it in CI"))  # fmt: skip
+    got = run(repo)
+    assert got.returncode == 0, got.stdout + got.stderr
+    body = gh_state(repo)["prs"][0]["sent"]["body"]
+    assert "`against` came back 42: ports:java unreachable (no java)" in body
+    assert "run it in CI" not in body.split("## What you didn't check")[1]
 
 
 def test_a_collision_stops_it_though_against_exits_0(repo):

@@ -91,6 +91,22 @@ def test_run_narrow_runs_nothing_for_a_change_that_reaches_everything(
     assert ran == [False, True]
 
 
+def test_a_group_the_plan_names_runs_as_its_gates_never_as_no_such_gate():
+    """github's code plans tests:strip, which ci.py runs as tests:strip-1 to
+    -4; each is a step, and none is said to be missing from ci.py."""
+    plan = imp.place(
+        ["adapters/stdlib/github/github.py"], imp.Graph(imp.repo_pythons())
+    )
+    todo = imp.steps(plan, ci.gates())
+    names = [g for g, *_ in todo]
+    assert "tests:strip" in plan.gates
+    assert [g for g in names if g.startswith("tests:strip")] == ci.select(
+        ["tests:strip"], [], None
+    )
+    assert not [w for _, w, *_ in todo if w == "no such gate in ci.py"]
+    assert imp.group_of("tests:docs") == [] and imp.group_of("no-such") == []
+
+
 def test_a_ref_git_does_not_know_is_refused():
     got = cli("plan", "--base", "no-such-ref-anywhere")
     assert got.returncode == 2 and got.stderr.startswith("refused: git ")

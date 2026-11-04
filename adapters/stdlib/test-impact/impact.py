@@ -503,12 +503,24 @@ def steps(plan: Plan, gates: list):
     for gate in sorted(plan.gates, key=lambda g: order.index(g) if g in order else 99):
         if gate in every:
             out.append((gate, "whole gate, as ci.py runs it", f"ci.py run: {gate}", every[gate]))  # fmt: skip
+        elif group := group_of(gate):  # tests:strip is tests:strip-1 to -4
+            out += [(g, f"part of {gate}, as ci.py runs it", f"ci.py run: {g}", every[g]) for g in group]  # fmt: skip
         else:
             out.append((gate, "no such gate in ci.py", "", unreachable_gate(gate)))
     for name in plan.mutants:
         out.append((f"mutants:{name}", "break its code a few ways; its tests must notice",
                     f"mutants.py run {name}", every[f"mutants:{name}"]))  # fmt: skip
     return out
+
+
+def group_of(name: str) -> list[str]:
+    """The gates ci.py runs for a group's name (tests:strip, its chunks), in
+    its order; [] when the name is no group."""
+    try:
+        got = ci.select([name], [], None)
+    except ValueError:
+        return []
+    return got if got != [name] else []
 
 
 def unreachable_gate(gate: str):

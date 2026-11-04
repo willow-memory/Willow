@@ -159,7 +159,9 @@ def run_step(name: str, args: list[str], said: list, notes: list) -> None:
     said.append((name, args, got.returncode, out))
     last = out.splitlines()[-1] if out else "(it printed nothing)"
     if got.returncode == kernel.ESCALATE and name in FINE_42:
-        notes.append(f"`{name}` came back 42: {last}")
+        # the line that says why (a gate's verdict), not a closing line
+        why = [x.strip() for x in out.splitlines() if " unreachable " in f" {x} "]
+        notes.append(f"`{name}` came back 42: {'; '.join(why) or last}")
     elif got.returncode != kernel.ALIVE:
         raise Stop(f"{name} exited {got.returncode}: {last}")
     stop = STOP_ON.get(name)
