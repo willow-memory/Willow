@@ -587,3 +587,13 @@ def test_sealed_or_changed_is_the_records_word_wherever_it_was_sealed(site, tmp_
     assert call("POST", "/tok/api/sealed", moved)[1]["state"] == "changed"
     assert call("POST", "/tok/api/sealed", {"lanes": []})[1]["state"] == "changed"
     assert (cv.box / "record.jsonl").read_bytes() == before
+
+
+def test_a_start_is_what_the_examples_run_not_a_list_by_hand(site):
+    cv, call = site
+    _, ps = call("GET", "/tok/api/pieces")
+    ran = {s["name"] for e in cv.examples()["found"] for s in e["steps"]}
+    assert ran and all(ps[n]["in_examples"] >= 1 for n in ran if n in ps)
+    assert all(p["in_examples"] == 0 for n, p in ps.items() if n not in ran)
+    page = (canvas.HERE / "page.html").read_text(encoding="utf-8")
+    assert "SUGGEST" not in page

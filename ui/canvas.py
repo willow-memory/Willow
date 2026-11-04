@@ -374,8 +374,13 @@ class Canvas:
             for n, w in worked.items():
                 if n in out:
                     out[n]["tags"], out[n]["near"] = w["tags"], w["near"]
+        used = {}  # how many of the stack add-on's examples run it: a start that's been tried
+        for e in self.examples()["found"]:
+            for n in {s["name"] for s in e["steps"]}:
+                used[n] = used.get(n, 0) + 1
         for p in out.values():
             p.update(role(p))
+            p["in_examples"] = used.get(p["name"], 0)
         self._pieces = out
         return out
 

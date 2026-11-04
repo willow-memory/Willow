@@ -253,7 +253,6 @@ const STAGES=[
  {key:'tools',title:'Tools you run yourself',group:'section',say:'Things you run when you want, with your own words or options: flashcards, a forecast, a check of a claim. They’re put in your stack, but not run on your page.'},
  {key:'you',title:'You',fixed:true,say:'A suggested answer counts only once you seal it. Sealing is you saying “yes, this is mine”. The same goes for this whole arrangement.'},
 ];
-const SUGGEST={reads:['pdf','mail','office'],words:['starter-words','nicknames','stems'],page:['coming-up','todo','digest'],ways:['shell','vscode','claude-code','browse'],guards:['hook-guard','hook-leaks'],suggests:['local-model','model-exam'],makes:['calendar-out','backup','print'],tools:['flashcards','forecasts']};
 const KEY='willow-canvas-2';
 let HIDE=(()=>{try{return localStorage.getItem('willow-canvas-hide')==='1'}catch(e){return false}})(),P={},S=JSON.parse(localStorage.getItem(KEY)||'null'),cur='folders',subject=null,drag=null,here='',SEALED=false,back='folders';
 // which role a piece plays, and the fact on its card that says so: canvas.py's `role` guesses it
@@ -277,7 +276,7 @@ function pieceCard(p,why){const used=all().includes(p.name),idea=!!cantAdd(p.nam
  return addable(p.name,el('div',{class:'piece'+(idea?' idea':'')+(used?' used':''),title:idea?cantAdd(p.name):used?'already in your flow':'click to add',onclick:()=>{if(!idea&&!used)addPiece(p.name)}},
   el('b',{text:p.name+(used?'  ✓':'')}),el('small',{text:(p.runs_in==='repo'?'works on willow itself · ':'')+p.line}),...plainTags(p),...topics(p),why?el('div',{class:'where',text:'goes in: '+stageTitle(p)+(why?' · '+why:'')}):null))}
 const BASE={};
-async function baseline(path){if(BASE[path])return;BASE[path]={loading:true};flow();BASE[path]=await api('baseline?path='+encodeURIComponent(path));flow()}
+async function baseline(path){if(BASE[path])return;BASE[path]={loading:true};flow();BASE[path]=await api('baseline?path='+encodeURIComponent(path));flow();if(cur==='reads'&&!document.getElementById('find').value.trim())shelf()}
 const n2=(n,w)=>n.toLocaleString()+' '+w+(n===1?'':'s');
 function baselines(){const box=el('div',{class:'base'});
  if(!S.folders.length){box.append(el('div',{class:'none',text:'Choose a folder first: this is where you’ll see what the kernel makes of it on its own.'}));return box}
@@ -491,7 +490,9 @@ function shelf(){const s=STAGES.find(x=>x.key===cur),head=document.getElementByI
  const nIn=mine.filter(p=>all().includes(p.name)).length,nNo=mine.filter(p=>cantAdd(p.name)&&!all().includes(p.name)).length,hidden=n=>HIDE&&!!cantAdd(n)&&!all().includes(n);
  head.append(el('div',{class:'counts'},el('span',{text:mine.length+' add-on'+(mine.length===1?'':'s')}),el('span',{class:'in',text:nIn+' in your stack'}),nNo?el('span',{text:nNo+' can’t be added yet'}):null,
   nNo?el('button',{class:'link',text:HIDE?'show them':'hide them',onclick:()=>{HIDE=!HIDE;try{localStorage.setItem('willow-canvas-hide',HIDE?'1':'0')}catch(e){}shelf()}}):null));
- const rank=p=>(SUGGEST[s.key]||[]).includes(p.name)?0:cantAdd(p.name)?2:1,order=(a,b)=>rank(P[a])-rank(P[b])||a.localeCompare(b);
+ // first: for reading, the readers the kernel's counts name for files in your folders; else what the examples run
+ const want=new Set(S.folders.flatMap(f=>(BASE[f.path]?.cant||[]).flatMap(c=>c.readers))),first=p=>s.key==='reads'?want.has(p.name):p.in_examples>0;
+ const rank=p=>cantAdd(p.name)?2:first(p)?0:1,order=(a,b)=>rank(P[a])-rank(P[b])||a.localeCompare(b);
  const node=(n,depth,trail)=>{const p=P[n],kids=(under[n]||[]).filter(c=>!trail.includes(c)&&!hidden(c)).sort(order),used=all().includes(n),no=cantAdd(n);
   const cb=el('input',{type:'checkbox',title:no||(used?'take it out':'add it')});cb.checked=used;cb.disabled=!!no&&!used;
   if(used&&kids.some(c=>all().includes(c))&&kids.some(c=>!all().includes(c)&&!cantAdd(c)))cb.indeterminate=true;  // some of what's below is in
@@ -510,7 +511,7 @@ function shelf(){const s=STAGES.find(x=>x.key===cur),head=document.getElementByI
   if(grouped){const sec=n=>P[n].section||'Other',by=s.group==='section'?sec:n=>P[n].group||'Other',at=n=>s.group==='section'?0:P[n].group_at??99,groups=[...new Set(roots.map(by))].sort((a,b)=>at(roots.find(n=>by(n)===a))-at(roots.find(n=>by(n)===b))||a.localeCompare(b)).map(h=>({h,n:roots.filter(n=>by(n)===h)}));
    const left=new Set(roots);for(const w of groups){const ns=w.n.filter(n=>left.has(n)).sort(order);if(!ns.length)continue;
    list.append(el('h3',{text:w.h}));for(const n of ns){left.delete(n);node(n,0,[])}}return}
-  let last=-1;for(const n of roots){const r=rank(P[n]);if(r!==last){list.append(el('h3',{text:r===0?'A good start':r===1?'Everything else':'Can’t be added yet'}));last=r}node(n,0,[])}};
+  let last=-1;for(const n of roots){const r=rank(P[n]);if(r!==last){list.append(el('h3',{text:r===0?(s.key==='reads'?'For files in your folders':'In the examples'):r===1?(last===0?'Everything else':'Ready to add'):'Can’t be added yet'}));last=r}node(n,0,[])}};
  q.addEventListener('input',draw);draw()}
 // ── the summary, the look-over, the seal ────────────────────────────────────
 function summary(){const n=all().length,b=pulled().length,net=[...new Set([...all(),...pulled()].map(x=>P[x]?.network).filter(x=>x&&x!=='none'))];
