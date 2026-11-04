@@ -10,6 +10,10 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `assemble.py add` puts a deps add-on (kart, forge, pdf) in a stack's
+  adapters/deps/ when the --python named already has each package its floor
+  names, at that version or newer; nothing is installed, and one missing or
+  too old is refused, saying which (#225)
 - `assemble.py kernel` puts this willow's kernel.py and vectors in a stack
   in place of the ones it was made with, only if the stack's record verifies
   under the new kernel and, with --python, every add-on's tests pass on it;
@@ -1952,6 +1956,9 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- `assemble.py add` runs a piece's own script for its contract (share.py,
+  not the ed25519.py beside it), and keeps a failing piece's exit 2 when a
+  later piece's is 42 (#225)
 - The kernel reads a date only when its month has that day: 1984-06-31 and
   2023-02-29 are no date, 2024-02-29 is; the five ports make the same check,
   and todo's impossible-date group, which only worked around it, is gone
