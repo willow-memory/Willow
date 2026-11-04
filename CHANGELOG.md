@@ -10,6 +10,12 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `ui/canvas.py`'s commands, the page's steps for an agent or a terminal:
+  `make`, `pieces` (by role, each with why; `--role repo` the commands that
+  work on willow's own repository), `needs`, `examples`, `plan` (prints the
+  stack file the page would send), `look` and `propose`, which exits 42,
+  waiting for your seal; there is no `seal`. Look it over shows the same
+  stack file and commands, to copy
 - `ui/` page: three panels, the steps on the left, the one you're on in the
   middle with its add-ons as cards to tick or drag in, and the stack on the
   right as a tree, what runs on your page apart from what's set up

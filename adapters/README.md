@@ -59,7 +59,9 @@ kernel has) or `new`, and `added` is the date it was built. An add-on in
 `deps/` adds `needs` (what to install, and its licence) and `floor` (its
 floor versions, and why when above the rule's).
 
-`role` is the part it plays in a stack, where `section` is what it's about:
+`role` is the part it plays in a stack, where `section` is what it's about;
+[the UI](../ui/)'s steps are made of it, and an agent building a stack reads
+it (`python ui/canvas.py pieces --role ROLE`):
 
 | `role` | It |
 |---|---|
