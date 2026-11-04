@@ -1959,7 +1959,7 @@ says how). The first was v0.1.0.
   `adapters/stdlib/ci/test_ci.py` fails on a test file under demo/ that
   none of them runs.
   `test-impact` places a demo change by that table, so a change to
-  johnson's tests now plans `demo:share`, the gate that runs them
+  johnson's tests now plans `demo:share`, the gate that runs them (#226)
 - The kernel reads a date only when its month has that day: 1984-06-31 and
   2023-02-29 are no date, 2024-02-29 is; the five ports make the same check,
   and todo's impossible-date group, which only worked around it, is gone
