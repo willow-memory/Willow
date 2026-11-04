@@ -2009,6 +2009,11 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- `ci`'s guard no longer counts as a write an `os.mkdir` where something
+  already is: that call can only fail with FileExistsError and changes
+  nothing. wasi-python asks for its cache folder so on every run, which
+  made `run --cache` a breach of `writes: record, to`. A folder that isn't
+  there is still a write
 - `kart run` refuses, exit 2, when bubblewrap is installed but can't make a
   sandbox on this machine (a default Docker container; AppArmor on Ubuntu
   24.04), saying why in bwrap's own words: an empty sandbox is tried first.

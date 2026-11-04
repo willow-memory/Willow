@@ -92,6 +92,28 @@ def test_writing_outside_to_when_the_card_says_to(repo, tmp_path):
     assert code != 0 and "elsewhere.txt" in log
 
 
+def test_making_a_folder_that_is_already_there_is_no_write(repo, tmp_path):
+    """mkdir over something that's there can only fail, FileExistsError, and
+    changes nothing (wasi-python asks for its cache folder each run so). A
+    folder that isn't there is still a write, there or beside it."""
+    root, _, _ = repo
+    there, new = tmp_path / "there", tmp_path / "there" / "new"
+    there.mkdir()
+    (tmp_path / "link").symlink_to(there)
+    script = addon(root, "nothing", "none", f"""\
+        os.makedirs({str(there)!r}, exist_ok=True)
+        try:
+            os.mkdir({str(tmp_path / 'link')!r})
+        except FileExistsError:
+            pass
+    """)  # fmt: skip
+    code, log = run(root, script)
+    assert code == 0 and log == "", log
+    script = addon(root, "nothing", "none", f"os.mkdir({str(new)!r})\n")
+    code, log = run(root, script)
+    assert code != 0 and "wrote" in log and "new" in log and not new.exists()
+
+
 def test_changing_an_original(repo):
     root, _, pile = repo
     script = addon(
