@@ -344,6 +344,58 @@ def test_a_stack_takes_a_new_kernel_only_whole_and_only_if_it_holds(tmp_path, ca
     assert assemble.sha(stack / "kernel.py") == new
 
 
+def test_a_deps_add_on_comes_in_only_with_its_packages_already_there(tmp_path, capsys):
+    """A deps piece goes to adapters/deps/ when --python has every package its
+    floor names, at that version or newer; one missing or too old is refused,
+    nothing half-added and nothing installed; without --python it is put in,
+    its packages unreachable, and the stack waits on you."""
+    to = tmp_path / "willow-stack"
+    assert assemble.main(["init", "--to", str(to)]) == assemble.ALIVE
+    stack = to / "stack"
+    later = tmp_path / "later-willow"  # willow with three deps add-ons of its own
+    (later / "adapters" / "stdlib").mkdir(parents=True)
+
+    def dep(name, floor):
+        d = later / "adapters" / "deps" / name
+        d.mkdir(parents=True)
+        (d / "README.md").write_text(
+            "<!-- willow-addon\nwrites: nothing\nnetwork: none\n-->\n# " + name + "\n"
+        )
+        (d / f"{name.replace('-', '_')}.py").write_text(
+            "import sys\n\nif __name__ == '__main__':\n    raise SystemExit(2)\n"
+        )
+        (d / "requirements-floor.txt").write_text(floor + "\n")
+
+    dep("has-it", "pytest==1.0")
+    # a library sorted ahead of its script (share's ed25519.py): the script is held
+    (later / "adapters" / "deps" / "has-it" / "a_lib.py").write_text("X = 1\n")
+    dep("too-old", "pytest==999.0")
+    dep("not-here", "no-such-willow-package==1.0")
+    m = assemble.manifest(stack)
+    m["willow"] = str(later)
+    assemble.save(stack, m)
+    py = sys.executable
+    assert assemble.add(["has-it"], to, py) == assemble.ESCALATE  # no tests: said
+    assert (stack / "adapters" / "deps" / "has-it").is_dir()
+    entry = assemble.manifest(stack)["addons"]["has-it"]
+    assert (entry["kind"], entry["packages"]["state"]) == ("deps", "met")
+    assert entry["contract"] == "held"
+    assert "packages met" in capsys.readouterr().out
+    for name, said in (("too-old", "pytest 999.0 or newer (has "),
+                       ("not-here", "no-such-willow-package 1.0 or newer (not installed)")):  # fmt: skip
+        assert assemble.add([name], to, py) == assemble.REFUSED
+        assert said in capsys.readouterr().err
+        assert not (stack / "adapters" / "deps" / name).exists()
+    assert assemble.add(["too-old"], to, None) == assemble.ESCALATE
+    entry = assemble.manifest(stack)["addons"]["too-old"]
+    assert entry["packages"]["state"] == "unreachable"
+    assert assemble.check(to) == assemble.ALIVE  # each where it was put
+    assert assemble.refresh(["has-it"], to) == assemble.ALIVE
+    assert assemble.version_key("1.10.0") > assemble.version_key("1.9.2")
+    assert assemble.version_key("0.10.0") > assemble.version_key("0.8.1")
+    assert assemble.version_key("2.0rc1") == (2, 0)
+
+
 def test_a_bad_command_line_is_refused():
     assert canvas.main(["--stray"]) == assemble.REFUSED
     assert canvas.main(["--port", "x"]) == assemble.REFUSED

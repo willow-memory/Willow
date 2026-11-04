@@ -17,6 +17,10 @@ says how). The first was v0.1.0.
   step makes is committed as tidy, and anything that needs a person stops
   it with 42, saying what. `test-impact run --narrow` leaves a change that
   reaches every gate to CI
+- `assemble.py add` puts a deps add-on (kart, forge, pdf) in a stack's
+  adapters/deps/ when the --python named already has each package its floor
+  names, at that version or newer; nothing is installed, and one missing or
+  too old is refused, saying which (#225)
 - `ci.py needs` says which gates this machine can't run, by what each needs,
   without running any, in under a second; AGENTS.md now asks it before a
   change, in place of running every gate as a baseline, and after a change,
@@ -1966,6 +1970,9 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- `assemble.py add` runs a piece's own script for its contract (share.py,
+  not the ed25519.py beside it), and keeps a failing piece's exit 2 when a
+  later piece's is 42 (#225)
 - The kernel reads a date only when its month has that day: 1984-06-31 and
   2023-02-29 are no date, 2024-02-29 is; the five ports make the same check,
   and todo's impossible-date group, which only worked around it, is gone
