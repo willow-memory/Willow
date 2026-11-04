@@ -5,6 +5,7 @@ source: new
 added: 2026-10-29
 writes: nothing
 network: none
+role: page
 looks-for: books, mail, office, pdf
 output: report
 -->

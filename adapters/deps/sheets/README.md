@@ -7,6 +7,7 @@ needs: openpyxl; MIT
 floor: openpyxl 3.0.5
 writes: to
 network: none
+role: reads
 -->
 # sheets
 

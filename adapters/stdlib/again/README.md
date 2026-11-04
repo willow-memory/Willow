@@ -5,6 +5,7 @@ source: bot
 added: 2026-10-23
 writes: nothing
 network: none
+role: page
 output: report
 -->
 # again

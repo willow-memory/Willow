@@ -5,6 +5,7 @@ source: new
 added: 2026-10-31
 writes: to
 network: none
+role: reads
 -->
 # git-history
 

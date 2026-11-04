@@ -5,6 +5,7 @@ source: box
 added: 2026-10-23
 writes: nothing
 network: none
+role: repo
 uses: pile-rank, readme
 runs-in: repo
 -->

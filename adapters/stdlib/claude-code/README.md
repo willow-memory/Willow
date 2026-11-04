@@ -5,6 +5,7 @@ source: bot
 added: 2026-10-24
 writes: record
 network: none
+role: ways
 uses: mcp-lite
 -->
 # claude-code

@@ -5,6 +5,7 @@ source: bot
 added: 2026-10-26
 writes: record, to
 network: none
+role: guards
 -->
 # serve
 

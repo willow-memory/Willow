@@ -5,6 +5,7 @@ source: bot
 added: 2026-10-24
 writes: record
 network: none
+role: tools
 -->
 # dice
 

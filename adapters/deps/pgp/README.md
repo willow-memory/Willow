@@ -8,6 +8,7 @@ programs: gpg
 floor: python-gnupg 0.4.6
 writes: to
 network: none
+role: makes
 -->
 # pgp
 

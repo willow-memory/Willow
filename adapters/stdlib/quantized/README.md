@@ -5,6 +5,7 @@ source: new
 added: 2026-11-02
 writes: nothing
 network: loopback
+role: suggests
 uses: local-model, model-exam
 -->
 # quantized

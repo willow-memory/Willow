@@ -5,6 +5,7 @@ source: box
 added: 2026-10-22
 writes: record
 network: none
+role: tools
 -->
 # readings
 

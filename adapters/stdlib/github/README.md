@@ -5,6 +5,7 @@ source: box
 added: 2026-10-23
 writes: CHANGELOG.md
 network: GitHub, through gh, to read the author of a pull request a security report points to, and for create_pr.py to list the open pull requests and open yours
+role: repo
 uses: ci, readme, stack, restack, test-impact, against
 runs-in: repo
 -->

@@ -5,6 +5,7 @@ source: new
 added: 2026-11-03
 writes: nothing
 network: none
+role: repo
 uses: similar
 runs-in: repo
 -->

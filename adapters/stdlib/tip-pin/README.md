@@ -5,6 +5,7 @@ source: new
 added: 2026-10-26
 writes: to
 network: none
+role: makes
 -->
 # tip-pin
 

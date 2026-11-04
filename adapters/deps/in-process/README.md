@@ -7,6 +7,7 @@ needs: llama-cpp-python; MIT; licence of the model varies
 floor: llama-cpp-python 0.2.29; the rule names 0.1.1, its first release, which reads no GGUF; a seed per chat arrived in 0.2.15, and before 0.2.29 every quiet load opens /dev/null to write, which the guard holds as a write its card doesn't allow
 writes: record
 network: none
+role: suggests
 uses: openai-compatible
 -->
 # in-process

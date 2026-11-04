@@ -5,6 +5,7 @@ source: new
 added: 2026-10-27
 writes: to
 network: none
+role: repo
 uses: ci
 runs-in: repo
 -->
