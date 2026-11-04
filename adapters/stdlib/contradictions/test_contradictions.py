@@ -330,3 +330,36 @@ def test_everywhere_is_over_one_line_in_500_and_over_ten():
     assert co.everywhere(lines_with({"twelve": 12, "eleven": 11}, 5500)) == {"twelve"}
     # 100 lines: one in 500 is under one, so the floor says: over 10 lines
     assert co.everywhere(lines_with({"eleven": 11, "ten": 10}, 100)) == {"eleven"}
+
+
+def test_code_data_and_a_tables_rows_are_values_not_claims(tmp_path):
+    """The same wedding dinner, dated differently in a script, a fenced block,
+    a JSON file and a table's row, disagrees with nothing: only prose is read,
+    and what was left out is counted."""
+    got = contradictions(tmp_path, {
+        "plans.md": (
+            "The wedding dinner is on 2026-06-12.\n\n"
+            "```\nwedding dinner on 2026-06-19\n\nwedding dinner costs $300\n```\n\n"
+            "| wedding dinner | 2026-06-20 | booked |\n"
+            "wedding\tdinner\t2026-06-21\n"
+        ),
+        "seed.py": 'WEDDING_DINNER = "2026-06-22"  # the wedding dinner\n',
+        "events.json": '{"wedding dinner": "2026-06-23"}\n',
+    })  # fmt: skip
+    assert got.returncode == 42
+    assert lines(got) == [
+        "No two lines saying the same thing disagree; 1 line with a date or an amount"
+        " read, 6 of code, data or a table left out."
+    ]
+
+
+def test_prose_after_a_closed_fence_and_in_another_file_is_read(tmp_path):
+    got = contradictions(tmp_path, {
+        "plans.md": "```\nprint(1)\n```\n\nThe wedding dinner is on 2026-06-12.\n",
+        "notes.txt": "The wedding dinner is on 2026-06-19.\n",
+        "a.md": "```\nnever closed\n",  # a fence left open ends with its file
+    })  # fmt: skip
+    assert got.returncode == 0
+    assert [ln for ln in lines(got) if ln.startswith("DATE")] == [
+        "DATE    wedding, dinner"
+    ]

@@ -14,6 +14,10 @@ says how). The first was v0.1.0.
   adapters/deps/ when the --python named already has each package its floor
   names, at that version or newer; nothing is installed, and one missing or
   too old is refused, saying which (#225)
+- `ci.py needs` says which gates this machine can't run, by what each needs,
+  without running any, in under a second; AGENTS.md now asks it before a
+  change, in place of running every gate as a baseline, and after a change,
+  only the gates it can move (#224)
 - `assemble.py kernel` puts this willow's kernel.py and vectors in a stack
   in place of the ones it was made with, only if the stack's record verifies
   under the new kernel and, with --python, every add-on's tests pass on it;
@@ -1734,6 +1738,9 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- contradictions reads only prose: a file of code or data by its name, a
+  fenced code block in Markdown and a table's row are left out and counted;
+  over 14 repositories, 1,404 disagreements became 95 (#223)
 - `sort` places a file by the category you sealed for it under
   `sort/<the file>.txt`, ahead of its phrases, marked "sealed by you"; a
   label still waiting, or for a file changed since, is ignored (#220)

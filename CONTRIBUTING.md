@@ -13,9 +13,13 @@ counts and how. What's settled and why is in
 
 ## Run what CI runs
 
-CI is one script, and you can run all of it on your own machine:
+CI is one script, and you can run any of it on your own machine. CI runs
+all of it on every pull request, so run the parts your change can move
+([AGENTS.md](AGENTS.md) says which), and ask what this machine can't run,
+which takes a second and runs nothing:
 
-    python adapters/stdlib/ci/ci.py run --box /tmp/ci-record
+    python adapters/stdlib/ci/ci.py needs
+    python adapters/stdlib/ci/ci.py run lint --box /tmp/ci-record
     python adapters/stdlib/ci/ci.py show --box /tmp/ci-record
 
 Each check is written down as one row: `satisfied`, `failing` or
@@ -27,7 +31,8 @@ the repo; the script refuses one inside it unless git ignores it.
 **Receipts, not claims.** Paste the `show` output into your pull request's
 Evidence: only what you actually ran, with its result. A green run you can
 show is worth more than a sentence saying it passed, and a part you didn't
-run is said, not left out.
+run is said, not left out; CI's own checks on the pull request are the run
+of everything.
 
 ## The rules
 

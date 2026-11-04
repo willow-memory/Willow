@@ -42,6 +42,21 @@ two lines holding it are about nothing in particular. A small folder keeps
 every word. Over 14 repositories this turned 371,125 "disagreements" found
 in two minutes into 1,404 found in a second.
 
+**Only prose is read.** A line of code or data is a value, not a claim: a
+seed file's date and a design note's are not two accounts of one thing. So
+these are left out, and the lines among them stating a date or an amount
+counted:
+
+- **A file of code or data, by its name:** one ending .py, .js, .go, .rs,
+  .sh, .sql, .json, .yaml, .toml, .csv, .xml and the like (`CODE` in the
+  script lists them all).
+- **A fenced code block in Markdown**, from its opening ``` or ~~~ to its
+  closing one, or to the end of its file.
+- **A table's row:** a line split by two or more `|` or tabs.
+
+Over the same 14 repositories that left 95 of the 1,404; over a folder of
+personal papers, 176 of 811.
+
 **Records of one kind are left alone, and counted.** Most dates and amounts
 that differ in a folder are not a disagreement: they are invoices, tax years
 and receipts, each with its own. So these are never compared:

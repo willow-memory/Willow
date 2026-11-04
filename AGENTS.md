@@ -39,24 +39,44 @@ run it with that environment's Python and nothing else changes:
 Run with a Python that lacks them, every lint, tests and mutants row comes
 back unreachable.
 
-## Before changing anything, take a baseline
+## Know what this machine can't run
 
-    python adapters/stdlib/ci/ci.py run --box /tmp/ci-main
-    python adapters/stdlib/ci/ci.py show --box /tmp/ci-main
+Before a change, the one thing to know is which gates can't run here (no
+Java, no .NET, an editor that isn't installed), so a tool this machine lacks
+isn't taken for your failure. Ask; it runs nothing and takes a second:
 
-Run it on `main` before your change, and again after. Compare the two by
-gate and state, not row number: the only difference should be the rows your
-change adds. Without the baseline, a tool your machine lacks looks like your
-failure. To run one part, name it: `lint`, `tests`, `ports`, `demo`,
-`deps`, `mutants` or `tools`. Keep the record folder outside the repo.
+    python adapters/stdlib/ci/ci.py needs
 
-One after another, every gate takes most of an hour. To run them all at
-once, a shard per CPU, each with its own record under the folder named:
+It reads what each gate needs (a Python module, a program on PATH) and
+names the ones that would come back unreachable, and why. The deps gates
+install from PyPI, so only running them can tell; it says so.
 
-    python adapters/stdlib/ci/cores.py --box /tmp/ci-main
+Don't run every gate to find this out. One after another they take well
+over an hour, and all at once on every core (`adapters/stdlib/ci/cores.py`)
+still most of one: that's CI's job, on every pull request.
 
-It prints every gate's verdict from all the records together, in `show`'s
-order, so the before and after compare the same way.
+## After a change, run what it can move
+
+CI runs every gate on every pull request, on machines that have every
+tool. Running them all here before you push only repeats that, so don't.
+Run the parts your change can move, then push, and let CI's run be the full
+one:
+
+- **Always:** lint (`adapters/stdlib/ci/ci.py run lint`), and once the PR
+  has its number, the changelog check (`adapters/stdlib/ci/changelog.py`).
+- **What you changed:** its own tests (`pytest adapters/stdlib/NAME`) and
+  its mutants (`adapters/stdlib/mutants/mutants.py run NAME`).
+- **What you wrote about it:** `test_docs.py` when prose changed, and
+  `adapters/stdlib/readme/readme.py check` when a card did.
+- **What leans on it, when everything does:** a change to `kernel.py` or
+  the ports adds `tests:kernel`, `tests:vectors` and `ports`; to `ui/`,
+  `tests:ui`; to `adapters/stdlib/ci/`, its own tests. A file a demo freezes
+  (its FROZEN.json says which) adds that demo's tests, since a red PR there
+  waits on someone else's freeze commit.
+
+Name a part or a gate to run just that: `ci.py run lint`, `ci.py run
+tests:kernel`. A gate that fails here and that `needs` names as unreachable
+is the machine, not you; any other is yours.
 
 ## An add-on, step by step
 
