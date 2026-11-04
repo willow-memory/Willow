@@ -76,6 +76,35 @@ def test_a_missing_tool_is_unreachable_not_failing(tmp_path):
     assert all("not on PATH" in r["why"] for r in made)
 
 
+def test_needs_says_what_cant_run_here_without_running_anything(tmp_path):
+    """The same bare PATH: `needs` names every port as unreachable, as `run`
+    would find them, writes no record, and says deps can only be known by
+    running; a gate whose needs are met is said to run here."""
+    bare = tmp_path / "bin"
+    bare.mkdir()
+    env = {**os.environ, "PATH": str(bare)}
+    got = cli("needs", "ports", env=env)
+    assert got.returncode == k.ESCALATE, got.stdout + got.stderr
+    said = got.stdout.splitlines()
+    assert said[0] == (
+        f"needs: {len(ci.PORTS)} gates; 0 can run here, {len(ci.PORTS)} would be"
+        " unreachable, 0 known only by running"
+    )
+    assert all("unreachable:" in s and "not on PATH" in s for s in said[1:])
+    assert len(said) == 1 + len(ci.PORTS)
+    got = cli("needs", "deps:floors")
+    assert got.returncode == k.ESCALATE
+    assert "only a run can tell" in got.stdout
+    got = cli("needs", "tests:docs")
+    assert (got.returncode, got.stdout) == (
+        k.ALIVE,
+        "needs: 1 gate; 1 can run here, 0 would be unreachable, 0 known only by running\n",
+    )
+    assert cli("needs", "tests:strpi").returncode == k.REFUSED
+    # it takes no record to write to
+    assert cli("needs", "--box", str(tmp_path)).returncode == k.REFUSED
+
+
 def test_a_failing_command_is_failing_and_a_judge_can_fail_a_zero_exit():
     state, _, why = ci.command(sys.executable, "-c", "raise SystemExit(3)")()
     assert (state, why) == (ci.FAILING, "exit 3")
