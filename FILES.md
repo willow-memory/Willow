@@ -227,6 +227,8 @@ willow/
 │   │   │   ├── test_alone.py alone.py's tests: what a card uses comes along, and leaning on what it doesn't name fails
 │   │   │   ├── reports.py    bringing add-ons onto the report contract in batches: survey, scaffold, check
 │   │   │   ├── test_reports.py  reports.py's tests: --json taken off first, stack's rendering word for word, never twice
+│   │   │   ├── files.py      FILES.md's tree kept to the repo's files, by a script
+│   │   │   ├── test_files.py files.py's tests: each file in its folder's order, gone ones out, the real tree round-tripped
 │   │   │   └── README.md     its card: gates, states, the guard and exit codes
 │   │   ├── ci-cache/
 │   │   │   ├── ci_cache.py    a cache key per ecosystem from a repo's lockfiles, so CI skips the reinstall

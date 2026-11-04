@@ -23,6 +23,7 @@ Conflicts in the files this repo makes are settled by their own rules.
 
 - readme -- write
 - ci.bugs -- write
+- ci.files -- write
 
 ## checked here
 

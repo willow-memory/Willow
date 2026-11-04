@@ -10,6 +10,12 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `ci`'s `adapters/stdlib/ci/files.py` keeps FILES.md's tree to the repo's
+  files: `write` puts each new file in its folder's own order with what it
+  says of itself (its docstring's first line, its title, `its card`) and
+  takes out what's gone with its notes, its corners and bars kept right;
+  `check` says what's out. github's create_pr.py runs `write` before it opens
+  a pull request
 - `ui/canvas.py`'s commands, the page's steps for an agent or a terminal:
   `make`, `pieces` (by role, each with why; `--role repo` the commands that
   work on willow's own repository), `needs`, `examples`, `plan` (prints the
