@@ -93,6 +93,99 @@ def page_step(folder: Path, card: dict) -> bool:
     return any(PAGE_STEP.fullmatch(a) for a in use.findall(text))
 
 
+# ── roles: the part a piece plays in a stack ───────────────────────────────
+#: what a piece does in your stack, in the order the page lists them. A card
+#: says what it's about (its section); until it says its role too, `role`
+#: guesses it from what the card does say, and says which fact it went by.
+ROLES = (
+    ("reads", "What it reads"),
+    ("words", "What words it knows"),
+    ("page", "What runs on your page"),
+    ("suggests", "What suggests answers"),
+    ("ways", "Where you ask from"),
+    ("guards", "What guards it"),
+    ("makes", "What it makes for elsewhere"),
+    ("tools", "Tools you run yourself"),
+    ("repo", "Works on willow itself"),
+)
+#: the ways in, by where you'd be. The editor and assistant ones are filed
+#: under Assistants on their cards; as a role, they're ways in like the rest.
+WAYS = (
+    ("In your terminal", ("shell", "pipe", "plain", "start", "tui", "warm")),
+    ("In your editor", ("vscode", "vim", "emacs", "jetbrains", "zed", "cursor",
+                        "windsurf", "copilot", "obsidian")),
+    ("With an AI assistant", ("claude-code", "codex-cli", "gemini-cli", "opencode",
+                              "aider", "mcp", "mcp-lite", "hosts")),
+    ("In your browser or on your desktop", ("browse", "launcher", "desktop",
+                                            "static-search", "datasette", "kiosk")),
+    ("From your phone, by voice or by email", ("telegram-bot", "email-ask",
+                                               "home-assistant", "dictate", "speak", "qr")),
+)  # fmt: skip
+WAY = {n: (i, h) for i, (h, ns) in enumerate(WAYS) for n in ns}
+SUGGESTS = re.compile(
+    r"^suggestions? (from|through)\b|\bsuggests?\b|held until you seal"
+    r"|waiting for its own seal|handed in through propose|waiting for suggestions",
+    re.I,
+)
+MODELISH = re.compile(r"\bmodels?\b|\bweights\b|assistant.s suggestions", re.I)
+
+
+def role(p: dict) -> dict:
+    """The role a piece plays, why that one, and the heading it goes under
+    inside it (ways in by where you'd be, and the two kinds of suggesting).
+    A card says its role; `guess_role` is for a willow from before they did."""
+    n, line = p["name"], p.get("line", "")
+    said = p.get("role", "")
+    key, why = (
+        (
+            said,
+            "its card says so"
+            if p.get("state") == "built"
+            else "its entry on the list says so",
+        )  # fmt: skip
+        if said in dict(ROLES)
+        else guess_role(p)
+    )
+    group, at = "", 0
+    if key == "ways":
+        at, group = WAY.get(n, (len(WAYS), "Other ways in"))
+    elif key == "suggests":
+        at, group = (0, "Models that suggest answers") if SUGGESTS.search(line) else (1, "Checking a model before you trust it")  # fmt: skip
+    return {"role": key, "role_why": why, "group": group, "group_at": at}
+
+
+def guess_role(p: dict) -> tuple[str, str]:
+    """A role from what a card without one does say, and which fact it went by."""
+    n, line = p["name"], p.get("line", "")
+    writes = [w.strip() for w in p.get("writes", "").split(",")]
+    if p.get("runs_in") == "repo":
+        return "repo", "its card says it runs in willow's own repository"
+    if p.get("section") == "Reading more kinds of files":
+        return "reads", "its card is filed under reading more kinds of files"
+    if n in WAY:
+        return "ways", "it's an editor, an assistant or a terminal you ask from"
+    if n.startswith("hook") or "hook" in p.get("tags", []):
+        return "guards", "it's a hook"
+    if SUGGESTS.search(line):
+        return "suggests", "its card says it suggests answers, or holds what it makes until you seal it"  # fmt: skip
+    if p.get("section") == "Assistants" and MODELISH.search(f"{line} {n}"):
+        return "suggests", "its card is about checking a model that suggests answers"
+    if p.get("page"):
+        return "page", "it runs with nothing but your record, so it can be a step on your page"  # fmt: skip
+    if p.get("section") == "Your own words":
+        return "words", "its card is filed under your own words"
+    if p.get("section") == "Ways to use it" and "to" not in writes:
+        return "ways", "its card is filed under ways to use it"
+    if "to" in writes:
+        return "makes", "its card says it writes where you point it"
+    if p.get("state") == "idea":
+        return "tools", "it's still an idea, so there's no way yet to tell how it runs"
+    return (
+        "tools",
+        "it needs words or options of its own to run, so you run it yourself",
+    )
+
+
 def plural(n: int, word: str) -> str:
     return f"{n} {word}{'' if n == 1 else 's'}"
 
@@ -244,7 +337,7 @@ class Canvas:
                     "writes": c.get("writes", ""), "network": c.get("network", ""),
                     "needs": c.get("needs", ""), "hard": hard, "soft": soft,
                     "in_stack": d.name in have, "runs_in": c.get("runs-in", ""),
-                    "page": page_step(d, c),
+                    "page": page_step(d, c), "role": c.get("role", ""),
                 }  # fmt: skip
         planned = json.loads((self.willow / "adapters" / "planned.json").read_text())
         for p in planned:
@@ -254,12 +347,20 @@ class Canvas:
                     "section": p.get("section", ""), "line": p.get("line", ""),
                     "writes": p.get("writes", ""), "network": p.get("network", ""),
                     "needs": p.get("needs", ""), "hard": [], "soft": [], "in_stack": False,
+                    "role": p.get("role", ""),
                 }  # fmt: skip
         if self.similar is not None:
             worked = self.similar.worked_out(self.similar.entries())
             for n, w in worked.items():
                 if n in out:
                     out[n]["tags"], out[n]["near"] = w["tags"], w["near"]
+        used = {}  # how many of the stack add-on's examples run it: a start that's been tried
+        for e in self.examples()["found"]:
+            for n in {s["name"] for s in e["steps"]}:
+                used[n] = used.get(n, 0) + 1
+        for p in out.values():
+            p.update(role(p))
+            p["in_examples"] = used.get(p["name"], 0)
         self._pieces = out
         return out
 
@@ -494,8 +595,12 @@ class Canvas:
                         f"{n} is still an idea on willow's list; it can't run yet",
                     )
                 args = str(s.get("args") or DEFAULT_ARGS)
-                if args == DEFAULT_ARGS and not ps[n].get("page"):
-                    kept.append(n)  # in the stack, run its own way, not on the page
+                if args == DEFAULT_ARGS and ps[n]["role"] != "page":
+                    # in the stack, run its own way, not on the page: with no
+                    # options of its own, a piece is a step on the page when
+                    # its role says so (a way in or a hook could run with
+                    # only the record, but would only say how to set itself up)
+                    kept.append(n)
                     continue
                 steps.append({"name": n, "args": args})
             if steps:
@@ -588,6 +693,29 @@ class Canvas:
                         "sealed": r["subject"] in sealed})  # fmt: skip
         return {"breaks": breaks, "rows": len(rows), "stacks": out,
                 "in_stack": sorted(assemble.manifest(self.stack)["addons"])}  # fmt: skip
+
+    def sealed_against(self, doc: dict) -> dict:
+        """Whether this pick is the stack last sealed on this record: "sealed"
+        while it is, "changed" once it isn't, nothing before any seal. It
+        reads the record and the proposal the kernel kept; it writes nothing."""
+        rows, _ = self.kernel.read(self.box / "record.jsonl")
+        sealed = self.kernel.sealed(self.box, rows)
+        last = [r["subject"] for r in rows if r["kind"] == KIND and r.get("subject") in sealed]  # fmt: skip
+        if not last:
+            return {"state": None}
+        try:
+            kept = json.loads((self.box / "proposals" / f"{last[-1][9:]}.json").read_text())  # fmt: skip
+            then = json.loads(kept["data"])
+        except (OSError, ValueError, KeyError):
+            return {"state": None}
+        now, _ = self.arrangement(doc)
+
+        def shape(arr: dict) -> tuple:
+            steps = [(s["name"], s["args"]) for ln in arr["lanes"] for s in ln["steps"]]
+            return arr["folders"], steps, sorted(arr["kept"])
+
+        same = now is not None and shape(now) == shape(then)
+        return {"state": "sealed" if same else "changed", "subject": last[-1]}
 
     def assemble(self, subject: str) -> dict:
         rows, _ = self.kernel.read(self.box / "record.jsonl")
@@ -885,6 +1013,8 @@ def handler(cv: Canvas, token: str, host: str):
                 return self.send(200, cv.propose(doc))
             if r == "/api/seal":
                 return self.send(200, cv.seal(str(doc.get("subject", ""))))
+            if r == "/api/sealed":
+                return self.send(200, cv.sealed_against(doc))
             if r == "/api/assemble":
                 return self.send(200, cv.assemble(str(doc.get("subject", ""))))
             if r == "/api/start":

@@ -10,6 +10,17 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `ui/` page: three panels, the steps on the left, the one you're on in the
+  middle with its add-ons as cards to tick or drag in, and the stack on the
+  right as a tree, what runs on your page apart from what's set up
+  alongside; a willow look with a dark theme; undo; an example previewed in
+  the tree before it's used; a piece traced in the tree on hover; Look it
+  over as the last step. The steps are the cards' roles, and a piece with no
+  options of its own runs on the page exactly when its role is page; what's
+  first in a step is what the examples run, or the readers your folders'
+  files need; it says that the page shows what says most first, so the
+  order of its steps only breaks ties; "sealed" and "changed since you
+  sealed it" come from the record, wherever the seal was made (#232)
 - `role` on every add-on's card and every entry in adapters/planned.json:
   the part it plays in a stack (reads, words, page, suggests, ways, guards,
   makes, tools, repo), each said in adapters/README.md. `readme.py check`

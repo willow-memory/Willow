@@ -445,3 +445,108 @@ def test_a_reader_is_offered_for_a_kind_its_card_names_not_for_an_english_word()
     assert canvas.names_kind("zip", "A Notion export zip, page by page.")
     assert canvas.names_kind("pdf", "Your PDF files as passages.")
     assert not canvas.names_kind("go", "Notes you go back to.")
+
+
+def test_each_piece_says_the_part_it_plays_and_why(site):
+    """A role is a guess from the card, so every piece says which fact it went
+    by; the page and the command line read the same one."""
+    cv, call = site
+    _, ps = call("GET", "/tok/api/pieces")
+    keys = {k for k, _ in canvas.ROLES}
+    assert all(p["role"] in keys and p["role_why"] for p in ps.values())
+    want = {
+        "pdf": "reads",
+        "stems": "words",
+        "privacy": "guards",
+        "coming-up": "page",
+        "local-model": "suggests",
+        "model-exam": "suggests",
+        "vscode": "ways",
+        "claude-code": "ways",  # tagged hook, but a way in first
+        "hook-guard": "guards",
+        "calendar-out": "makes",
+        "ci": "repo",
+    }
+    assert {n: ps[n]["role"] for n in want} == want
+    assert ps["vscode"]["group"] == "In your editor"
+    assert ps["local-model"]["group"] == "Models that suggest answers"
+    assert ps["model-exam"]["group"] == "Checking a model before you trust it"
+
+
+def test_a_role_goes_by_the_first_fact_that_fits():
+    def r(**card):
+        return canvas.role({"name": "x", "section": "", "line": "", **card})["role"]
+
+    assert r(section="Reading more kinds of files", page=True) == "reads"
+    assert r(name="hook-x", page=True) == "guards"
+    assert r(line="Suggestions from a model.", page=True) == "suggests"
+    assert r(page=True, writes="to") == "page"
+    assert r(section="Ways to use it", writes="to") == "makes"
+    assert r(section="Ways to use it", writes="nothing") == "ways"
+    assert r(writes="record") == "tools"
+    assert "idea" in canvas.role({"name": "x", "state": "idea"})["role_why"]
+    assert r(runs_in="repo", section="Reading more kinds of files") == "repo"
+    assert r(section="Your own words") == "words"
+    # what the card says comes first; the guess is for a willow from before
+    said = canvas.role({"name": "hook-x", "state": "built", "role": "tools", "page": True})  # fmt: skip
+    assert said["role"] == "tools" and said["role_why"] == "its card says so"
+    assert canvas.role({"name": "hook-x", "role": "nonsense"})["role"] == "guards"
+
+
+def test_the_page_names_every_role_a_person_can_fill():
+    page = (canvas.HERE / "page.html").read_text(encoding="utf-8")
+    for key, title in canvas.ROLES:
+        if key != "repo":
+            assert f"{{key:'{key}',title:'{title}'" in page
+
+
+def test_sealed_or_changed_is_the_records_word_wherever_it_was_sealed(site, tmp_path):
+    """Sealed with the kernel's own command, not the page: the page's pick is
+    "sealed" while it's what was sealed, "changed" once it isn't, and asking
+    writes nothing."""
+    cv, call = site
+    doc = {
+        "name": "mine",
+        "folders": [str(a_folder(tmp_path))],
+        "lanes": [
+            {
+                "title": "t",
+                "steps": [{"name": "coming-up", "args": "--box {box} --days 9"}],
+            }
+        ],  # fmt: skip
+    }
+    subject = call("POST", "/tok/api/propose", doc)[1]["subject"]
+    k = cv.kernel
+    assert canvas.quiet(k.seal, cv.box, subject, k.now())[0] == k.ALIVE
+    before = (cv.box / "record.jsonl").read_bytes()
+    assert call("POST", "/tok/api/sealed", doc)[1] == {"state": "sealed", "subject": subject}  # fmt: skip
+    moved = json.loads(json.dumps(doc))
+    moved["lanes"][0]["steps"][0]["args"] = "--box {box} --days 10"
+    assert call("POST", "/tok/api/sealed", moved)[1]["state"] == "changed"
+    assert call("POST", "/tok/api/sealed", {"lanes": []})[1]["state"] == "changed"
+    assert (cv.box / "record.jsonl").read_bytes() == before
+
+
+def test_a_start_is_what_the_examples_run_not_a_list_by_hand(site):
+    cv, call = site
+    _, ps = call("GET", "/tok/api/pieces")
+    ran = {s["name"] for e in cv.examples()["found"] for s in e["steps"]}
+    assert ran and all(ps[n]["in_examples"] >= 1 for n in ran if n in ps)
+    assert all(p["in_examples"] == 0 for n, p in ps.items() if n not in ran)
+    page = (canvas.HERE / "page.html").read_text(encoding="utf-8")
+    assert "SUGGEST" not in page
+
+
+def test_a_card_whose_role_is_page_can_run_on_the_page(stack_dir):
+    """role: page is what puts a piece on the page; it holds only for one
+    that runs with nothing but the record and stays offline."""
+    cv = canvas.Canvas(stack_dir, canvas.WILLOW, stack_dir / "box", [])
+    ps = cv.pieces()
+    page = [n for n, p in ps.items() if p["state"] == "built" and p["role"] == "page"]
+    assert page and all(ps[n]["page"] for n in page)
+    arr, _ = cv.arrangement({"lanes": [{"title": "t", "steps": [
+        {"name": "coming-up", "args": canvas.DEFAULT_ARGS},
+        {"name": "session-seal", "args": canvas.DEFAULT_ARGS},  # runs alone, but a tool
+    ]}]})  # fmt: skip
+    assert [s["name"] for ln in arr["lanes"] for s in ln["steps"]] == ["coming-up"]
+    assert "session-seal" in arr["kept"]
