@@ -7,6 +7,7 @@ writes: record
 network: none
 role: ways
 uses: mcp-lite
+looks-for: index-cache, scan
 -->
 # claude-code
 
@@ -29,6 +30,18 @@ answers, with each passage's file and line.
 | your files hold the question | the passages, framed as data from your files, each with its file and line |
 | they don't | nothing |
 | the folder can't be read | one line saying why |
+
+**A big folder:** the kernel reads every file at every prompt, so on tens
+of thousands of files a prompt waits half a minute. Name
+[scan](../scan/)'s index of the folder and the hook answers from it, in a
+few seconds, with the same passages and the same row on the record:
+
+    python adapters/stdlib/claude-code/hook.py setup --box DIR --index INDEX
+
+prints the hook with `--index`, and the [index-cache](../index-cache/) line
+that keeps the index current: run it now, and when your folder changes. An
+index that isn't current (index-cache's manifest says a file moved) is never
+asked; the kernel reads the folder, as without one.
 
 The hook always exits 0. In Claude Code a hook that exits 2 blocks the
 prompt, and your folder being unreadable is no reason to stop you typing.
