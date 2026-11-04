@@ -537,6 +537,43 @@ def live_checks() -> list[str]:
     return [line.split()[0] for line in got.stdout.splitlines() if line.strip()]
 
 
+#: (gate, pytest target, programs it needs) for each demo whose tests CI
+#: runs, in the one fixed order. Every test file under demo/ is under one of
+#: these targets: test_ci.py fails on one that isn't, since a test no gate
+#: runs is a test that never fails.
+DEMO_TESTS = (
+    # PHP2Shell's runs fetch PHP's source; CI holds only what they froze
+    ("demo:php2shell", "demo/php2shell", ()),
+    # the Google privacy study fetched its sources once; CI holds what it froze
+    ("demo:google-privacy-2026-10-16", "demo/google-privacy-2026-10-16", ()),
+    # Bernadette's files through every layer: readers to the trust add-ons
+    ("demo:stack", "demo/bernadette", ()),
+    # the Johnson report passed between five people's willows, with share
+    ("demo:share", "demo/johnson", ()),
+    # Teodora's whole folder against the starter words list
+    ("demo:teodora-words", "demo/teodora", ()),
+    # the Craft apps taken apart and assembled: CI holds what was frozen, and
+    # the tools on sources it makes, which git commits and Cargo builds
+    ("demo:craft-assembly", "demo/craft-assembly", ("git", "cargo")),
+    # a frozen recon composition over a planted target; its intel is committed
+    ("demo:redteam", "demo/redteam", ()),
+    # the fleet's own known gaps asked of the code their fixes changed; the
+    # runs read the fleet's repositories, CI holds only what they froze
+    ("demo:known-gaps", "demo/known-gaps", ()),
+    # five repositories through the stacks: the stacks, the words list and the
+    # records are committed; the runs read the repositories, CI holds the rest
+    ("demo:five-repos", "demo/five-repos", ()),
+    # the reusable novelty check every demo can run, over the idea pile and demos
+    ("demo:novelty", "demo/test_novelty.py", ()),
+    # Marisol's ofrenda: what was frozen is here, her folder made the same way
+    ("demo:ofrenda-frozen", "demo/ofrenda", ()),
+    # the Stewart crossover: its freeze, and the parts that need no network
+    ("demo:stewart-crossover-frozen", "demo/stewart-crossover", ()),
+    # the small local models' runs, read from the box built from what's committed
+    ("demo:small-models", "demo/small-models", ()),
+)
+
+
 def people() -> list[str]:
     return sorted(p.parent.name for p in (ROOT / "demo").glob("*/make_life.py"))
 
@@ -581,40 +618,9 @@ def gates() -> list[tuple[str, str, object]]:
         )  # fmt: skip
         out.append(("ports", f"ports:{port}", how))
     out += [("demo", f"demo:{name}", demo(name)) for name in people()]
-    # PHP2Shell's runs fetch PHP's source; CI holds only what they froze
-    out.append(("demo", "demo:php2shell", command(*PYTEST, "demo/php2shell",
-                needs=lambda: missing_module("pytest"))))  # fmt: skip
-    # the Google privacy study fetched its sources once; CI holds what it froze
-    out.append(("demo", "demo:google-privacy-2026-10-16", command(
-        *PYTEST, "demo/google-privacy-2026-10-16",
-        needs=lambda: missing_module("pytest"))))  # fmt: skip
-    # Bernadette's files through every layer: readers to the trust add-ons
-    out.append(("demo", "demo:stack", command(*PYTEST, "demo/bernadette",
-                needs=lambda: missing_module("pytest"))))  # fmt: skip
-    # the Johnson report passed between five people's willows, with share
-    out.append(("demo", "demo:share", command(*PYTEST, "demo/johnson",
-                needs=lambda: missing_module("pytest"))))  # fmt: skip
-    # Teodora's whole folder against the starter words list
-    out.append(("demo", "demo:teodora-words", command(*PYTEST, "demo/teodora",
-                needs=lambda: missing_module("pytest"))))  # fmt: skip
-    # the Craft apps taken apart and assembled: CI holds what was frozen, and
-    # the tools on sources it makes, which git commits and Cargo builds
-    out.append(("demo", "demo:craft-assembly", command(*PYTEST, "demo/craft-assembly",
-                needs=lambda: missing_module("pytest") or missing_tools("git", "cargo"))))  # fmt: skip
-    # a frozen recon composition over a planted target; its intel is committed
-    out.append(("demo", "demo:redteam", command(*PYTEST, "demo/redteam",
-                needs=lambda: missing_module("pytest"))))  # fmt: skip
-    # the fleet's own known gaps asked of the code their fixes changed; the
-    # runs read the fleet's repositories, CI holds only what they froze
-    out.append(("demo", "demo:known-gaps", command(*PYTEST, "demo/known-gaps",
-                needs=lambda: missing_module("pytest"))))  # fmt: skip
-    # five repositories through the stacks: the stacks, the words list and the
-    # records are committed; the runs read the repositories, CI holds the rest
-    out.append(("demo", "demo:five-repos", command(*PYTEST, "demo/five-repos",
-                needs=lambda: missing_module("pytest"))))  # fmt: skip
-    # the reusable novelty check every demo can run, over the idea pile and demos
-    out.append(("demo", "demo:novelty", command(*PYTEST, "demo/test_novelty.py",
-                needs=lambda: missing_module("pytest"))))  # fmt: skip
+    for gate, target, tools in DEMO_TESTS:
+        out.append(("demo", gate, command(*PYTEST, target, needs=lambda t=tools: (
+            missing_module("pytest") or missing_tools(*t)))))  # fmt: skip
     for name in deps_add_ons():
         out.append(("deps", f"deps:{name}", deps_add_on(name)))
         out.append(("deps", f"deps:{name}@floor",
