@@ -14,6 +14,15 @@ says how). The first was v0.1.0.
   out, its packages, the bot's lock for it (none, holds or drifted), and the
   services running from it, read from /proc; the steward's venv inventory
   and bot-venv are one card (#229)
+- `github`'s `adapters/stdlib/github/create_pr.py` opens this branch's pull
+  request by running `adapters/stdlib/github/create_pr.md`, a stack of the repo's own add-ons (restack, readme,
+  bugs.py, lint, test-impact, against), then pushing, opening it,
+  writing its number into its changelog entry and checking that; what a
+  step makes is committed as tidy, and anything that needs a person stops
+  it with 42, saying what. `test-impact run --narrow` leaves a change that
+  reaches every gate to CI, and `test-impact` runs a group its plan names
+  (`tests:strip`) as the gates ci.py runs for it, where it said "no such
+  gate" and the strip test never ran in CI's first job (#230)
 - `assemble.py add` puts a deps add-on (kart, forge, pdf) in a stack's
   adapters/deps/ when the --python named already has each package its floor
   names, at that version or newer; nothing is installed, and one missing or

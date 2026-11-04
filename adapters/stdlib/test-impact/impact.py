@@ -1,7 +1,7 @@
 """impact.py: which of this repo's checks a change can reach, fast ones first.
 
     python adapters/stdlib/test-impact/impact.py plan [--base REF [--head REF]] [PATH ...]
-    python adapters/stdlib/test-impact/impact.py run  [--base REF [--head REF]] [PATH ...]
+    python adapters/stdlib/test-impact/impact.py run  [--base REF [--head REF]] [--narrow] [PATH ...]
 
 The change is the paths git says differ from REF (`--base`; to `--head` when
 given, else to the files as they are now, edits and new files included), and
@@ -14,7 +14,9 @@ you deleted).
 
 `plan` says what would run, in ci.py's own terms (its gate names), and why.
 `run` says the plan, then runs it in order and stops at the first gate that
-fails. Neither replaces the full run: both end by saying it still runs after,
+fails. With `--narrow`, a plan that would widen to every gate runs nothing
+and says so, exit 0: every gate runs in CI anyway, and here it is most of
+an hour (CI's `first` job does the same). Neither replaces the full run: both end by saying it still runs after,
 and how.
 
 How a path is placed:
@@ -79,7 +81,7 @@ ci = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(ci)
 
 USAGE = (
-    "usage: impact.py plan|run [--base REF [--head REF]] [PATH ...]"
+    "usage: impact.py plan|run [--base REF [--head REF]] [--narrow, run only] [PATH ...]"
     "  (give --base, a PATH, or both)"
 )
 STDLIB = "adapters/stdlib/"
@@ -510,12 +512,24 @@ def steps(plan: Plan, gates: list):
     for gate in sorted(plan.gates, key=lambda g: order.index(g) if g in order else 99):
         if gate in every:
             out.append((gate, "whole gate, as ci.py runs it", f"ci.py run: {gate}", every[gate]))  # fmt: skip
+        elif group := group_of(gate):  # tests:strip is tests:strip-1 to -4
+            out += [(g, f"part of {gate}, as ci.py runs it", f"ci.py run: {g}", every[g]) for g in group]  # fmt: skip
         else:
             out.append((gate, "no such gate in ci.py", "", unreachable_gate(gate)))
     for name in plan.mutants:
         out.append((f"mutants:{name}", "break its code a few ways; its tests must notice",
                     f"mutants.py run {name}", every[f"mutants:{name}"]))  # fmt: skip
     return out
+
+
+def group_of(name: str) -> list[str]:
+    """The gates ci.py runs for a group's name (tests:strip, its chunks), in
+    its order; [] when the name is no group."""
+    try:
+        got = ci.select([name], [], None)
+    except ValueError:
+        return []
+    return got if got != [name] else []
 
 
 def unreachable_gate(gate: str):
@@ -609,10 +623,13 @@ def run_plan(plan: Plan, gates: list) -> int:
 def main(argv: list[str]) -> int:
     verb, rest = (argv[0], argv[1:]) if argv else ("", [])
     base = head = None
+    narrow = False
     paths: list[str] = []
     it = iter(rest)
     for a in it:
-        if a in ("--base", "--head"):
+        if a == "--narrow" and verb == "run":
+            narrow = True
+        elif a in ("--base", "--head"):
             value = next(it, "")
             if not value or value.startswith("-"):
                 print(USAGE, file=sys.stderr)
@@ -647,6 +664,10 @@ def main(argv: list[str]) -> int:
     gates = ci.gates()
     print(*show(plan, source, gates), sep="\n")
     code = kernel.ALIVE
+    if verb == "run" and narrow and plan.widen:
+        print("\n--narrow: this change widens to every gate, so nothing ran here:"
+              " CI runs them all")  # fmt: skip
+        return kernel.ALIVE
     if verb == "run":
         code = run_plan(plan, gates)
     print(*closing(bool(plan.widen) and verb == "run"), sep="\n")

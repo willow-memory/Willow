@@ -64,11 +64,47 @@ def gate_names(out: str) -> list[str]:
 @pytest.mark.parametrize("argv", [
     [], ["plan"], ["run"], ["go", "README.md"], ["plan", "--head", "main", "README.md"],
     ["plan", "--base"], ["plan", "--base", "--head", "x"], ["plan", "--stray", "README.md"],
-    ["plan", "README.md", "--stray", "more"],
+    ["plan", "README.md", "--stray", "more"], ["plan", "--narrow", "README.md"],
 ])  # fmt: skip
 def test_nothing_or_a_stray_argument_is_refused_and_names_the_script(argv):
     got = cli(*argv)
     assert got.returncode == 2 and "impact.py" in got.stderr and got.stdout == ""
+
+
+def test_run_narrow_runs_nothing_for_a_change_that_reaches_everything(
+    capsys, monkeypatch
+):
+    """--narrow: a plan that widens to every gate is left to CI, exit 0; one
+    that doesn't is run as without it. Without --narrow, wide is run whole."""
+    graph = imp.Graph(imp.repo_pythons())
+    monkeypatch.setattr(imp, "Graph", lambda files: graph)
+    monkeypatch.setattr(imp, "by_hand", lambda arg: arg)
+    ran = []
+    monkeypatch.setattr(
+        imp, "run_plan", lambda plan, gates: ran.append(bool(plan.widen)) or 0
+    )
+    wide = ".github/workflows/ci.yml"
+    assert imp.main(["run", "--narrow", wide]) == imp.kernel.ALIVE
+    assert ran == [] and "nothing ran here: CI runs them all" in capsys.readouterr().out
+    assert imp.main(["run", "--narrow", "adapters/stdlib/dice/dice.py"]) == 0
+    assert imp.main(["run", wide]) == 0
+    assert ran == [False, True]
+
+
+def test_a_group_the_plan_names_runs_as_its_gates_never_as_no_such_gate():
+    """github's code plans tests:strip, which ci.py runs as tests:strip-1 to
+    -4; each is a step, and none is said to be missing from ci.py."""
+    plan = imp.place(
+        ["adapters/stdlib/github/github.py"], imp.Graph(imp.repo_pythons())
+    )
+    todo = imp.steps(plan, ci.gates())
+    names = [g for g, *_ in todo]
+    assert "tests:strip" in plan.gates
+    assert [g for g in names if g.startswith("tests:strip")] == ci.select(
+        ["tests:strip"], [], None
+    )
+    assert not [w for _, w, *_ in todo if w == "no such gate in ci.py"]
+    assert imp.group_of("tests:docs") == [] and imp.group_of("no-such") == []
 
 
 def test_a_ref_git_does_not_know_is_refused():
