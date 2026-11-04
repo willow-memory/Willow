@@ -1,10 +1,12 @@
 """private.py: one count over four folders, where the one who asks learns the
 total and nothing else. jobs.py's last scene, stacked: wasm, dp, secure-sum.
 
-    python demo/johnson/private.py run --life DIR --to DIR [--epsilon E] [--now TS]
+    python demo/johnson/private.py run --life DIR --to DIR [--epsilon E] [--engine wasm|wasi-python] [--now TS]
 
 DIR for --life is what make_life.py wrote. Needs wasm's, dp's and
-secure-sum's installs (Wasmtime, OpenDP, shamirs). The scene:
+secure-sum's installs (Wasmtime, OpenDP, shamirs), and wasi-python's for
+`--engine wasi-python`, which sends count/count.py, the same count as a
+Python script, in place of the module. The scene:
 
 1. Ines writes the job once, as WebAssembly: count/count.wasm.b64, built from
    count/src/main.rs, counting what jobs.py's shell job counts (lines naming
@@ -41,6 +43,8 @@ sys.path.insert(0, str(HERE))
 from jobs import NAMES, PEOPLE, ROOT, SHARE, Jobs  # noqa: E402
 
 WASM = ROOT / "adapters" / "deps" / "wasm" / "wasm.py"
+WASI_PY = ROOT / "adapters" / "deps" / "wasi-python" / "wasi_py.py"
+SCRIPT = HERE / "count" / "count.py"  # the same count, for --engine wasi-python
 DP = ROOT / "adapters" / "deps" / "dp" / "dp.py"
 SUM = ROOT / "adapters" / "deps" / "secure-sum" / "secure_sum.py"
 MODULE = HERE / "count" / "count.wasm.b64"  # the module's bytes, as base64 text
@@ -49,9 +53,11 @@ THRESHOLD = 3
 
 
 class Private(Jobs):
-    def __init__(self, life: Path, to: Path, now: datetime, epsilon: float):
+    def __init__(
+        self, life: Path, to: Path, now: datetime, epsilon: float, engine: str
+    ):
         super().__init__(life, to, now)
-        self.epsilon = epsilon
+        self.epsilon, self.engine = epsilon, engine
 
     def tool(self, script: Path, cmd: str, who: str, *argv, ident=True, want=(42,)):
         idf = ["--id", self.to / who / "id"] if ident else []
@@ -75,14 +81,20 @@ class Private(Jobs):
                 0
             ]
         among = ",".join(self.pub[w] for w in ASKED)
-        print("── 1. Ines writes the job once, as WebAssembly")
-        text = "wasm:" + "".join(MODULE.read_text().split())
-        job = self.seal_own("ines", "job count johnson and spring as wasm", {
-            "path": "jobs/count.wasm", "data": text, "cites": [],
+        if self.engine == "wasm":
+            print("── 1. Ines writes the job once, as WebAssembly")
+            text = "wasm:" + "".join(MODULE.read_text().split())
+            what = f"count.wasm, {len(base64.b64decode(text[5:]))} bytes"
+            runner, path = WASM, "jobs/count.wasm"
+        else:
+            print("── 1. Ines writes the job once, as a Python script for wasi-python")
+            text = SCRIPT.read_text()
+            what = f"count.py, {len(text)} characters"
+            runner, path = WASI_PY, "jobs/count.py"
+        job = self.seal_own("ines", f"job count johnson and spring on {self.engine}", {
+            "path": path, "data": text, "cites": [],
             "claim": "two counts a folder, as count/src/main.rs: Johnson lines, spring 2026 lines"})  # fmt: skip
-        print(
-            f"  count.wasm, {len(base64.b64decode(text[5:]))} bytes; the round: {len(ASKED)} keys, threshold {THRESHOLD}"
-        )
+        print(f"  {what}; the round: {len(ASKED)} keys, threshold {THRESHOLD}")
         shares: dict[str, list[str]] = {w: [] for w in ASKED}
         self.doc.update(true={}, noisy={}, tools=set())
         for who in ASKED:
@@ -92,7 +104,7 @@ class Private(Jobs):
             )
             taken = out.split()[1] if out.startswith("taken") else ""
             self.kernel(who, "seal", taken)
-            out = self.tool(WASM, "run", who, "--job", taken, "--to", self.to / f"{who}.txt",
+            out = self.tool(runner, "run", who, "--job", taken, "--to", self.to / f"{who}.txt",
                             "--shape", "numbers", ident=False)  # fmt: skip
             result = next(
                 (x.split()[1] for x in out.splitlines() if x.startswith("result")), ""
@@ -119,7 +131,7 @@ class Private(Jobs):
             for subj, to in zip(subjs, [w for w in ASKED if w != who]):
                 self.kernel(who, "seal", subj)
                 shares[to].append(str(self.sent(who, subj, to, f"share-{who}-{to}")))
-            print(f"  {NAMES[who]:8} ran it (wasm), true {' '.join(self.doc['true'][who])}, "
+            print(f"  {NAMES[who]:8} ran it ({self.engine}), true {' '.join(self.doc['true'][who])}, "
                   f"sealed noisy {' '.join(self.doc['noisy'][who])}, split into {len(subjs) + 1}")  # fmt: skip
         print("\n── 5. each adds the shares they hold, and sends Ines the sum")
         sums = []
@@ -189,7 +201,7 @@ class Private(Jobs):
 
 def main(argv: list[str]) -> int:
     opts = dict(zip(argv[1::2], argv[2::2]))
-    allowed = {"--life", "--to", "--now", "--epsilon"}
+    allowed = {"--life", "--to", "--now", "--epsilon", "--engine"}
     if (argv[:1] != ["run"] or len(argv) % 2 != 1 or len(opts) != len(argv[1:]) // 2
             or not {"--life", "--to"} <= opts.keys() <= allowed):  # fmt: skip
         print(__doc__.split("\n\n")[1], file=sys.stderr)
@@ -204,7 +216,11 @@ def main(argv: list[str]) -> int:
     now = datetime.strptime(
         opts.get("--now", "2026-03-13T09:00:00Z"), "%Y-%m-%dT%H:%M:%SZ"
     )
-    doc = Private(life, to, now, float(opts.get("--epsilon", "1"))).play()
+    engine = opts.get("--engine", "wasm")
+    if engine not in ("wasm", "wasi-python"):
+        print("refused: --engine is wasm or wasi-python", file=sys.stderr)
+        return 2
+    doc = Private(life, to, now, float(opts.get("--epsilon", "1")), engine).play()
     for w in doc["wrong"]:
         print(f"WRONG  {w}")
     return 1 if doc["wrong"] else 0

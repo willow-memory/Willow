@@ -396,6 +396,7 @@ def test_a_floor_above_the_rule_needs_a_reason_on_its_card(monkeypatch):
                 "opendp": {"0.1.0": "2021-08-05T14:51:36Z", "0.8.0": "2023-08-11T18:27:15Z"},
                 "shamirs": {"0.1.0.0": "2018-01-14T18:22:20Z", "2.0.0": "2022-07-14T03:26:48Z"},
                 "wasmtime": {"0.21.0": "2020-11-05T15:57:42Z", "48.0.0": "2026-08-20T19:31:28Z"},
+                "wasi-python": {"0.1.0a3": "2026-10-17T21:20:01Z", "0.1.0a5": "2026-10-18T19:38:48Z"},
                 "forge-play": {"0.1.0": "2026-09-03T00:00:00Z", "0.10.0": "2026-11-03T00:00:00Z"}}  # fmt: skip
     monkeypatch.setattr(ci, "releases", lambda package: uploaded[package])
     assert ci.floors()[0] == ci.SATISFIED

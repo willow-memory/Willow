@@ -10,6 +10,13 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `wasi-python` runs a sealed kart job that is a Python script on
+  wasi-python's CPython 3.15 for WebAssembly, over your folder read-only,
+  with no network, no environment and no path of this machine's but the
+  folder; its tools are the runtime's and its library's SHA-256, and its
+  result goes to `kart gather`, dp and secure-sum as kart's do.
+  demo/johnson/private.py takes `--engine wasi-python`, sending
+  count/count.py in place of the Rust module
 - `dp` adds OpenDP's discrete Laplace noise to a kart result's numbers
   before you seal and send them, `--epsilon` your spend and `--per-item`
   how far one item can move each count; a result is noised once, each spend

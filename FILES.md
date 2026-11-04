@@ -1467,6 +1467,12 @@ willow/
 │       │   ├── requirements-floor.txt  snowballstemmer at its floor, also tested
 │       │   ├── test_stems.py
 │       │   └── README.md
+│       ├── wasi-python/
+│       │   ├── wasi_py.py    a sealed kart job that is a Python script, run on wasi-python's CPython for WebAssembly over your folder read-only
+│       │   ├── requirements.txt  wasi-python, pinned
+│       │   ├── requirements-floor.txt  wasi-python at its floor, also tested
+│       │   ├── test_wasi_py.py  a probe that writes, climbs out and opens a socket, failing and fuel-bound scripts, and gather
+│       │   └── README.md
 │       └── wasm/
 │           ├── wasm.py       a sealed kart job that is WebAssembly, run by Wasmtime over your folder read-only
 │           ├── requirements.txt  wasmtime, pinned
@@ -1537,6 +1543,7 @@ willow/
 │   │   ├── README.md         the scene, what each step shows, and what it found
 │   │   ├── count/            the private scene's job: Rust counting what jobs.py's shell job counts
 │   │   │   ├── Cargo.toml    built for wasm32-wasip1, small and stripped
+│   │   │   ├── count.py      the same count as a Python script, for private.py --engine wasi-python
 │   │   │   ├── count.wasm.b64  what it built, as base64 text, as Ines sends it: SHA-256 4084d741… decoded
 │   │   │   └── src/main.rs   lines naming Johnson and lines dated spring 2026, every file under /pile
 │   │   ├── jobs.py           one question run by kart over others' folders, sealed by each, back to Ines; only aggregates, gathered

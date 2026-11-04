@@ -131,6 +131,11 @@ each person on a machine of their own (four on Debian, Harold on Ubuntu
 24.04, no network, each seeing only their own folder), the module's tools
 were one set across both systems, and no share was ever on Ines's disk.
 
+The same scene runs with `--engine wasi-python`: Ines sends
+[count/count.py](count/count.py), the count as a Python script, and each
+person runs it with [wasi-python](../../adapters/deps/wasi-python/), CPython
+for WebAssembly, in place of the module.
+
 A stack of steps, [asked.md](../../adapters/stdlib/stack/examples/asked.md),
 gives each person one page of what has gone out of their folder: every
 package sent and received (`share log`) and the privacy their counts have
