@@ -67,6 +67,13 @@ an idea into a built one.
     tools     you run it yourself, with words or options of its own
     repo      works on willow's own repository, as runs-in: repo says
 
+A reader (`role: reads`) says what it reads, `reads: .eml, .mbox`: the
+kinds of file, by extension, or a file it looks for by name
+(`zotero.sqlite`), with commas between; `none` for one that reads no kind
+of file (a repository, a page it fetches). The UI offers a reader by it for
+the files a folder holds that the kernel can't read, and
+ci/test_contract.py holds each one to the reader's own code.
+
 What an add-on leans on is on its card, never found by reading its code:
 
     uses:       the add-ons it needs beside it, to run or to be tested; a
@@ -189,6 +196,8 @@ FACT_TAGS = {"no-install", "needs-install", "offline", "this-machine", "online"}
 WRITES = {"nothing", "record", "to"}
 SOURCES = {"bot", "box", "new"}
 HEADER = re.compile(r"\A<!-- willow-addon\n(.*?)\n-->\n", re.S)
+#: a kind of file a reader reads: .ext, or a file name it looks for
+KIND = re.compile(r"\.?[A-Za-z0-9][A-Za-z0-9_.+-]*")
 NAME = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*")
 #: a language pack: words- and the language's ISO 639 code
 LANGUAGE = re.compile(r"words-([a-z]{2,3})")
@@ -286,6 +295,16 @@ def addons() -> list[dict]:
             raise Refused(f"{where}: role is one of {', '.join(sorted(ROLES))}: {a['role']!r}")  # fmt: skip
         if (a["role"] == "repo") != (a.get("runs-in") == "repo"):
             raise Refused(f"{where}: role is repo exactly when runs-in is repo")
+        if a.get("reads") and a["role"] != "reads":
+            raise Refused(f"{where}: reads is for a card whose role is reads")
+        if a["role"] == "reads" and a["built"] and not a.get("reads"):
+            raise Refused(f"{where}: a reader says what it reads: reads: .ext, a file name, or none")  # fmt: skip
+        if (
+            a.get("reads")
+            and a["reads"] != "none"
+            and not all(KIND.fullmatch(k.strip()) for k in a["reads"].split(","))
+        ):
+            raise Refused(f"{where}: reads is .ext or a file name, with commas between, or none: {a['reads']!r}")  # fmt: skip
         if a.get("output", "report") not in OUTPUTS:
             raise Refused(f"{where}: output is report, or left out")
     names = {a["name"]: a["built"] for a in out}

@@ -8,6 +8,7 @@ floor: Pillow 11.0.0; the 2020 rule names 8.0.1, which has no wheel for Python 3
 writes: to
 network: none
 role: reads
+reads: .jpg, .jpeg, .png, .tif, .tiff, .webp
 -->
 # photos
 

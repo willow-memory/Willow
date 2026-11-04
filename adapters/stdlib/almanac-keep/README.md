@@ -6,6 +6,7 @@ added: 2026-11-01
 writes: to
 network: the copy's address, fetched once
 role: reads
+reads: none
 uses: snapshot
 -->
 # almanac-keep

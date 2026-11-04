@@ -6,6 +6,7 @@ added: 2026-10-27
 writes: to
 network: none
 role: reads
+reads: .txt
 -->
 # jrnl
 

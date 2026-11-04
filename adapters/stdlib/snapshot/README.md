@@ -6,6 +6,7 @@ added: 2026-10-24
 writes: to
 network: the address you give, fetched once
 role: reads
+reads: none
 tags: sources
 -->
 # snapshot

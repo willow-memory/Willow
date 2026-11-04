@@ -6,6 +6,7 @@ added: 2026-10-31
 writes: to
 network: none
 role: reads
+reads: .db
 -->
 # codebase-memory
 

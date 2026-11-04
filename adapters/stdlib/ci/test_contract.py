@@ -989,6 +989,45 @@ def test_every_add_on_its_code_reaches_is_on_its_card(name):
     )
 
 
+def kinds(folder: Path) -> list[str]:
+    """What a reader's card says it reads, but none."""
+    head = (folder / "README.md").read_text(encoding="utf-8").split("\n-->\n")[0]
+    m = re.search(r"^reads: (.*)$", head, re.M)
+    got = [k.strip() for k in m.group(1).split(",")] if m else []
+    return [k for k in got if k != "none"]
+
+
+def unread(folder: Path) -> list[str]:
+    """Each kind on the card that no string in the reader's own code names,
+    with its dot or without (a reader may look for `sqlite`, or `.pdf`)."""
+    said = " ".join(
+        s.lower()
+        for f in folder.rglob("*.py")
+        if not f.name.startswith("test_") and "__pycache__" not in f.parts
+        for s in re.findall(r"[\"']([^\"'\n]*)[\"']", f.read_text(encoding="utf-8"))
+    )
+    return [k for k in kinds(folder) if k.lower().lstrip(".") not in said]
+
+
+@pytest.mark.parametrize("name", only(n for n in ADDONS if kinds(ADDONS[n])))
+def test_every_kind_a_reader_says_it_reads_is_in_its_code(name):
+    """The UI offers a reader for a kind of file by its card's `reads`, so a
+    kind the code never looks for is an offer it can't keep."""
+    missing = unread(ADDONS[name])
+    assert not missing, f"{name}'s card says it reads {', '.join(missing)}, which its code never names"  # fmt: skip
+
+
+def test_a_kind_the_code_never_names_is_seen(tmp_path):
+    """The check can fail: a kind on the card and not in the code is caught."""
+    folder = tmp_path / "probe"
+    folder.mkdir()
+    (folder / "README.md").write_text("<!-- willow-addon\nrole: reads\nreads: .pdf, zotero.sqlite\n-->\n")  # fmt: skip
+    (folder / "probe.py").write_text('KINDS = (".pdf",)\n')
+    assert unread(folder) == ["zotero.sqlite"]
+    (folder / "probe.py").write_text('KINDS = (".pdf", "zotero.sqlite")\n')
+    assert unread(folder) == []
+
+
 def test_reaching_is_seen_however_it_is_spelled(tmp_path):
     """The check can fail: each way an add-on names a sibling is caught."""
     folder = tmp_path / "probe"

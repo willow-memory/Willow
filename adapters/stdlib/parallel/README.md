@@ -6,6 +6,7 @@ added: 2026-10-26
 writes: to
 network: none
 role: reads
+reads: none
 -->
 # parallel
 
