@@ -140,8 +140,6 @@ WAYS = (
                                                "home-assistant", "dictate", "speak", "qr")),
 )  # fmt: skip
 WAY = {n: (i, h) for i, (h, ns) in enumerate(WAYS) for n in ns}
-#: roles set up alongside the page, not run on it, even when they could be
-ALONGSIDE = ("ways", "guards")
 SUGGESTS = re.compile(
     r"^suggestions? (from|through)\b|\bsuggests?\b|held until you seal"
     r"|waiting for its own seal|handed in through propose|waiting for suggestions",
@@ -615,12 +613,11 @@ class Canvas:
                         f"{n} is still an idea on willow's list; it can't run yet",
                     )
                 args = str(s.get("args") or DEFAULT_ARGS)
-                if args == DEFAULT_ARGS and (
-                    not ps[n].get("page") or ps[n]["role"] in ALONGSIDE
-                ):
-                    # in the stack, run its own way, not on the page: one that
-                    # can't run with only the record, or a way in or a hook,
-                    # which could but only says how to set itself up
+                if args == DEFAULT_ARGS and ps[n]["role"] != "page":
+                    # in the stack, run its own way, not on the page: with no
+                    # options of its own, a piece is a step on the page when
+                    # its role says so (a way in or a hook could run with
+                    # only the record, but would only say how to set itself up)
                     kept.append(n)
                     continue
                 steps.append({"name": n, "args": args})

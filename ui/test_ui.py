@@ -597,3 +597,18 @@ def test_a_start_is_what_the_examples_run_not_a_list_by_hand(site):
     assert all(p["in_examples"] == 0 for n, p in ps.items() if n not in ran)
     page = (canvas.HERE / "page.html").read_text(encoding="utf-8")
     assert "SUGGEST" not in page
+
+
+def test_a_card_whose_role_is_page_can_run_on_the_page(stack_dir):
+    """role: page is what puts a piece on the page; it holds only for one
+    that runs with nothing but the record and stays offline."""
+    cv = canvas.Canvas(stack_dir, canvas.WILLOW, stack_dir / "box", [])
+    ps = cv.pieces()
+    page = [n for n, p in ps.items() if p["state"] == "built" and p["role"] == "page"]
+    assert page and all(ps[n]["page"] for n in page)
+    arr, _ = cv.arrangement({"lanes": [{"title": "t", "steps": [
+        {"name": "coming-up", "args": canvas.DEFAULT_ARGS},
+        {"name": "session-seal", "args": canvas.DEFAULT_ARGS},  # runs alone, but a tool
+    ]}]})  # fmt: skip
+    assert [s["name"] for ln in arr["lanes"] for s in ln["steps"]] == ["coming-up"]
+    assert "session-seal" in arr["kept"]
