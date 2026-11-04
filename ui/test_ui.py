@@ -612,3 +612,15 @@ def test_a_card_whose_role_is_page_can_run_on_the_page(stack_dir):
     ]}]})  # fmt: skip
     assert [s["name"] for ln in arr["lanes"] for s in ln["steps"]] == ["coming-up"]
     assert "session-seal" in arr["kept"]
+
+
+def test_a_reader_is_offered_for_a_kind_its_card_says_it_reads(site):
+    """By the cards' `reads`, not words in their lines: zotero's line names
+    PDF annotations, but it reads zotero.sqlite, so it isn't offered for one."""
+    cv, _ = site
+    pdf = cv.readers_for(".pdf")
+    assert pdf[0] == "pdf" and "ocr" in pdf and "zotero" not in pdf
+    assert cv.readers_for(".DOCX") == ["office"]
+    assert cv.readers_for(".no-such-kind") == []
+    assert cv.readers_for(".txt") == []  # the kernel reads it anyway
+    assert all(cv.pieces()[n]["role"] == "reads" for n in cv.readers_for(".json"))

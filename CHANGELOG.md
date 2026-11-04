@@ -10,6 +10,10 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `ui/` offers a reader for a kind of file the kernel can't read by the
+  reader cards' `reads`, the ones reading the fewest kinds first, where it
+  went by a table and words in a card's line (which offered zotero for a
+  PDF) (#235)
 - `ci`'s `adapters/stdlib/ci/order.py` keeps the lists people add to A to Z:
   COMMANDS, READERS, PILE_EXTRA and REPORT_COMMANDS in test_contract.py
   and ci.py's DEMO_TESTS, each entry with its comments, adapters/planned.json,

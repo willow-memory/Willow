@@ -75,6 +75,12 @@ it (`python ui/canvas.py pieces --role ROLE`):
 | `tools` | is run by you, with words or options of its own |
 | `repo` | works on willow's own repository; it has `runs-in: repo`, and only it does |
 
+A reader says what it reads, `reads: .eml, .mbox`: kinds of file by
+extension, or a file it looks for by name (`zotero.sqlite`), or `none` for
+one that reads no kind of file (a repository, a page it fetches). The UI
+offers a reader by it for the files in your folders the kernel can't read,
+and `stdlib/ci/test_contract.py` holds each kind to the reader's own code.
+
 What an add-on leans on is on its card too, so whoever copies it knows what
 to copy with it:
 

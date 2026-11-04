@@ -215,6 +215,13 @@ def quiet(fn, *args):
     return code, out.getvalue().strip()
 
 
+def kinds_read(said: str) -> list[str]:
+    """A reader card's `reads`: the kinds of file it reads, lowercased; none
+    for `none` or a card from before cards said."""
+    got = [k.strip().lower() for k in said.split(",") if k.strip()]
+    return [] if got == ["none"] else got
+
+
 def names_kind(word: str, line: str) -> bool:
     """Whether a card's line names a kind of file: `.so` with its dot, or the
     word as a format is written (SO, ZIP), or, three letters or more, the bare
@@ -356,6 +363,7 @@ class Canvas:
                     "needs": c.get("needs", ""), "hard": hard, "soft": soft,
                     "in_stack": d.name in have, "runs_in": c.get("runs-in", ""),
                     "page": page_step(d, c), "role": c.get("role", ""),
+                    "reads": kinds_read(c.get("reads", "")),
                 }  # fmt: skip
         planned = json.loads((self.willow / "adapters" / "planned.json").read_text())
         for p in planned:
@@ -365,7 +373,7 @@ class Canvas:
                     "section": p.get("section", ""), "line": p.get("line", ""),
                     "writes": p.get("writes", ""), "network": p.get("network", ""),
                     "needs": p.get("needs", ""), "hard": [], "soft": [], "in_stack": False,
-                    "role": p.get("role", ""),
+                    "role": p.get("role", ""), "reads": kinds_read(p.get("reads", "")),
                 }  # fmt: skip
         if self.similar is not None:
             worked = self.similar.worked_out(self.similar.entries())
@@ -578,18 +586,23 @@ class Canvas:
                 "hidden": hidden, "cant": cant}  # fmt: skip
 
     def readers_for(self, ext: str) -> list[str]:
-        """Reader add-ons that could read a kind of file: box-health's own
-        table, then a reader whose name or line names the kind. Words matched,
-        so it's offered as could, never as will."""
+        """Reader add-ons that read a kind of file, as their cards' `reads`
+        say, the ones that read the fewest kinds first. A willow from before
+        cards said: a table, then a reader whose name or line names the kind,
+        offered as could, never as will."""
         if not ext.startswith(".") or ext in TEXT_KINDS:
             return []  # text it reads anyway: too big or another encoding, no reader fixes
+        ps = self.pieces()
+        if any(p.get("reads") for p in ps.values()):
+            got = [n for n, p in ps.items() if ext.lower() in p.get("reads", [])]
+            return sorted(got, key=lambda n: (ps[n]["state"] != "built", len(ps[n]["reads"]), n))[:4]  # fmt: skip
         word = ext[1:]
         known = {".pdf": ["pdf"], ".docx": ["office"], ".xlsx": ["office", "sheets"],
                  ".pptx": ["office"], ".odt": ["office"], ".ods": ["office"],
                  ".eml": ["mail"], ".mbox": ["mail"], ".epub": ["books"],
                  ".jpg": ["photos", "ocr"], ".jpeg": ["photos", "ocr"], ".png": ["ocr"]}  # fmt: skip
-        out = [n for n in known.get(ext, []) if n in self.pieces()]
-        for n, p in sorted(self.pieces().items()):
+        out = [n for n in known.get(ext, []) if n in ps]
+        for n, p in sorted(ps.items()):
             if p["section"] != "Reading more kinds of files" or n in out:
                 continue
             if n == word or names_kind(word, p["line"]):
