@@ -16,6 +16,8 @@ whose phrases it holds most; one that holds two categories as much is said
 as both, for you to choose; one that holds none is unsorted. Nothing is
 guessed: what a phrase doesn't reach stays unsorted, for a person, or a
 model's suggestion that a person seals, to place.
+A file whose category you sealed (a sort-ask suggestion, kept on your
+record) goes where your seal says, before any phrase, "sealed by you".
 
     sort: populated, 4 files: 2 sorted into 2 categories, 1 in more than one, 1 unsorted
     ## health
@@ -89,12 +91,33 @@ def sort(pile: list[dict], cats: dict) -> dict[str, dict[str, dict[str, int]]]:
     return found
 
 
-def placed(found: dict, order: list[str]) -> tuple[dict, list, list]:
+def labels(box: Path) -> dict[str, str]:
+    """The category the person sealed for each file, by its place: a sealed
+    suggestion under sort/<the file>.txt (sort-ask's), while its proof and
+    its proposal's bytes still hold. A seal is the correction kept."""
+    rows, breaks = kernel.read(box / "record.jsonl")
+    if breaks:
+        return {}
+    out = {}
+    for subj, row in sorted(kernel.sealed(box, rows).items(), key=lambda x: x[1]["n"]):
+        prop, _, why = kernel.standing(box, rows, subj, row)
+        p = prop.get("path", "") if prop and why is None else ""
+        if p.startswith("sort/") and p.endswith(".txt"):
+            out[p[5:-4]] = prop["data"].strip()
+    return out
+
+
+def placed(
+    found: dict, order: list[str], sealed: dict | None = None
+) -> tuple[dict, list, list]:
     """(category: [(file, its hits)]), files in more than one, files unsorted."""
     by = {n: [] for n in order}
     more, none = [], []
     for path in sorted(found):
         held = found[path]
+        if (sealed or {}).get(path) in by:  # your seal, before any phrase
+            by[sealed[path]].append((path, "sealed by you"))
+            continue
         if not held:
             none.append((path, "no phrase of yours"))
             continue
@@ -170,7 +193,7 @@ def main(argv: list[str]) -> int:
     if not found:
         say(report(NAME, "empty", "no file here the kernel reads", []), as_json)
         return kernel.ALIVE
-    by, more, none = placed(found, list(cats))
+    by, more, none = placed(found, list(cats), labels(box))
     n = sum(len(r) for r in by.values())
     used = sum(1 for r in by.values() if r)
     said = (

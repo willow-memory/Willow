@@ -112,3 +112,62 @@ def test_refusals(tmp_path):
     )
     got = run(script, "--box", str(b), "--categories", str(tmp_path / "none.txt"))
     assert got.returncode == 2 and "no category" in got.stderr
+
+
+def suggest(b: Path, path: str, category: str, tmp: Path, under: str = "") -> str:
+    """A suggestion as sort-ask makes one: bite on the file, propose its
+    category under sort/<file>.txt citing a served passage. Its subject."""
+    words = (b.parent / "pile" / path).read_text().split()[:8]
+    bite = json.loads(
+        run(str(KERNEL), "bite", "--box", str(b), *NOW, " ".join(words)).stdout
+    )
+    cite = next(s["id"] for s in bite["served"] if s["where"].startswith(path + ":"))
+    row = {"path": under or f"sort/{path}.txt", "data": category + "\n", "cites": [cite],
+           "claim": "a model read it so"}  # fmt: skip
+    f = tmp / f"{path}{len(under)}.jsonl"
+    f.write_text(json.dumps(row) + "\n")
+    out = run(str(KERNEL), "propose", "--box", str(b), *NOW, "--file", str(f)).stdout
+    return next(w for w in out.split() if w.startswith("proposal:"))
+
+
+def test_a_category_you_sealed_places_the_file_before_its_phrases(tmp_path):
+    b, cats = box(tmp_path, {
+        "allotment.txt": "Watered the courgettes and picked the runner beans.\n",
+        "clinic.txt": "An invoice from the clinic, for the appointment.\n",
+        "ideas.txt": "Plant beans in the north bed.\n",
+    })  # fmt: skip
+    (tmp_path / "cats2.txt").write_text(CATS + "garden: tomatoes\n")
+    cats = tmp_path / "cats2.txt"
+    sealed = suggest(b, "allotment.txt", "garden", tmp_path)
+    over = suggest(b, "clinic.txt", "money", tmp_path)  # its phrases say health too
+    suggest(b, "ideas.txt", "garden", tmp_path)  # proposed, never sealed
+    for subj in (sealed, over):
+        assert run(str(KERNEL), "seal", "--box", str(b), *NOW, subj).returncode == 0
+    got = run(str(HERE / "sort.py"), "--box", str(b), "--categories", str(cats))
+    out = got.stdout.splitlines()
+    assert "  allotment.txt  sealed by you" in out
+    assert out[out.index("## money") + 1] == "  clinic.txt     sealed by you", out
+    assert "  ideas.txt      no phrase of yours" in out, "waiting isn't sealed"
+    # a sealed suggestion whose bytes changed stands on nothing: no place
+    f = next(
+        p for p in (b / "proposals").glob("*.json") if "allotment" in p.read_text()
+    )
+    f.write_text(f.read_text().replace("garden", "money"))
+    out = run(str(HERE / "sort.py"), "--box", str(b), "--categories", str(cats)).stdout
+    assert "allotment.txt  sealed by you" not in out
+
+
+def test_only_a_sealed_sort_label_places_a_file(tmp_path):
+    """A sealed answer one letter off a label's place (not under sort/, or
+    not ending .txt) says nothing about where a file goes."""
+    b, cats = box(
+        tmp_path, {"allotment.txt": "Watered the courgettes and picked the beans.\n"}
+    )
+    # both proposed before either is sealed: once one is, the same words
+    # bite the sealed answer and serve no passage to cite
+    subjects = [suggest(b, "allotment.txt", "money", tmp_path, under)
+                for under in ("zort/allotment.txt.txt", "sort/allotment.txt.mdx")]  # fmt: skip
+    for subj in subjects:
+        assert run(str(KERNEL), "seal", "--box", str(b), *NOW, subj).returncode == 0
+    out = run(str(HERE / "sort.py"), "--box", str(b), "--categories", str(cats)).stdout
+    assert "sealed by you" not in out and "allotment.txt  no phrase of yours" in out

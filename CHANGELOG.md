@@ -1726,6 +1726,9 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- `sort` places a file by the category you sealed for it under
+  `sort/<the file>.txt`, ahead of its phrases, marked "sealed by you"; a
+  label still waiting, or for a file changed since, is ignored (#220)
 - `github`: the drift test looks for the planted problem anywhere in `check`'s
   list, not first in it. Which gate a shard plant reports "in no job" first
   depends on the cut, and the weights move it: a pull request adding an add-on
