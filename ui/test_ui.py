@@ -500,6 +500,68 @@ def test_the_page_names_every_role_a_person_can_fill():
             assert f"{{key:'{key}',title:'{title}'" in page
 
 
+def run(capsys, *argv):
+    code = canvas.main([str(a) for a in argv])
+    out = capsys.readouterr()
+    return code, out.out, out.err
+
+
+def test_the_commands_list_what_the_page_lists(stack_dir, capsys):
+    code, out, _ = run(capsys, "pieces", "--to", stack_dir)
+    assert code == 0 and all(t in out for _, t in canvas.ROLES)
+    code, out, _ = run(capsys, "pieces", "--role", "repo", "--to", stack_dir)
+    assert code == 0 and "python adapters/stdlib/ci/ci.py run" in out
+    assert run(capsys, "pieces", "--role", "nope", "--to", stack_dir)[0] == 2
+    code, out, _ = run(capsys, "needs", "copilot", "--json", "--to", stack_dir)
+    assert code == 0 and "hosts" in json.loads(out)["copilot"]["brings"]
+    code, out, _ = run(capsys, "examples", "--to", stack_dir)
+    assert code == 0 and "choir.md" in out
+
+
+def test_a_plan_is_the_stack_file_the_page_would_send(stack_dir, tmp_path, capsys):
+    """An example's steps keep their options; a way in is set up alongside,
+    not run on the page; read back, the file is the same arrangement."""
+    code, out, _ = run(capsys, "plan", "--example", "choir.md", "vscode", "--to", stack_dir)  # fmt: skip
+    assert code == 0
+    assert "## What runs on your page" in out and "- coming-up -- --box {box} --days 30" in out  # fmt: skip
+    assert "not run on the page: " in out and "vscode" in out.split("not run on the page: ")[1].split("-->")[0]  # fmt: skip
+    cv = canvas.Canvas(stack_dir, canvas.WILLOW, stack_dir / "box", [])
+    arr, _ = cv.arrangement(canvas.read_stack(out))
+    assert arr["stack_md"].rstrip() == out.rstrip()
+    f = tmp_path / "mine.md"
+    f.write_text(out)
+    code, said, _ = run(capsys, "look", f, "--to", stack_dir)
+    assert code == 0 and "1. habits" in said and "vscode" in said.split("set up alongside")[1]  # fmt: skip
+
+
+def test_a_command_proposes_and_never_seals(stack_dir, tmp_path, capsys):
+    code, out, _ = run(capsys, "plan", "coming-up", "--to", stack_dir)
+    f = tmp_path / "mine.md"
+    f.write_text(out)
+    code, said, _ = run(capsys, "propose", f, "--to", stack_dir)
+    assert code == 42 and "waiting for your seal" in said
+    subject = said.split("subject ")[1].split(",")[0]
+    k = assemble.load_kernel(stack_dir / "stack")
+    rows, _ = k.read(stack_dir / "box" / "record.jsonl")
+    assert any(r.get("subject") == subject for r in rows)
+    assert subject not in k.sealed(stack_dir / "box", rows)
+    assert "seal" not in canvas.VERBS and run(capsys, "seal", subject)[0] == 2
+
+
+def test_the_commands_refuse_what_the_page_refuses(stack_dir, tmp_path, capsys):
+    assert run(capsys, "plan", "ci", "--to", stack_dir)[0] == 2  # willow's own repo
+    assert run(capsys, "plan", "no-such-thing", "--to", stack_dir)[0] == 2
+    assert run(capsys, "plan", "--to", stack_dir)[0] == 2
+    assert run(capsys, "look", tmp_path / "absent.md", "--to", stack_dir)[0] == 2
+    code, _, err = run(capsys, "pieces", "--to", tmp_path / "no-stack")
+    assert code == 2 and "make --to" in err
+
+
+def test_the_page_knows_its_stack_to_say_the_commands_for_it(site, stack_dir):
+    _, call = site
+    assert call("GET", "/tok/api/state")[1]["to"] == str(stack_dir.resolve())
+
+
 def test_sealed_or_changed_is_the_records_word_wherever_it_was_sealed(site, tmp_path):
     """Sealed with the kernel's own command, not the page: the page's pick is
     "sealed" while it's what was sealed, "changed" once it isn't, and asking

@@ -45,6 +45,26 @@ itself up. The steps on your page run in their order, but the page shows
 what says most first, as [stack](../adapters/stdlib/stack/) does, so their
 order only breaks ties, and matters only for a step that writes the record.
 
+## For an agent or a terminal
+
+The page's steps are commands too, over the same stack and from the same
+cards, so an agent builds a stack the way a person does and stops where a
+person seals:
+
+    python ui/canvas.py make     [--to DIR]                  # a stack, as the first run makes it
+    python ui/canvas.py pieces   [--role ROLE] [--json]      # what there is, by role, and why
+    python ui/canvas.py needs    NAME...                     # what a piece brings along
+    python ui/canvas.py examples                             # the stack add-on's examples
+    python ui/canvas.py plan     NAME... [--example FILE] [--folder PATH]...  # prints a stack file
+    python ui/canvas.py look     STACKFILE                   # what Look it over says of it
+    python ui/canvas.py propose  STACKFILE                   # to the kernel; exits 42, waiting for your seal
+
+A stack file is the one [stack](../adapters/stdlib/stack/) runs. Look it over
+shows the same file, and these commands for it, under "For an agent or a
+terminal". There is no `seal`: sealing stays yours, on the page or with your
+key. `pieces --role repo` lists the commands that work on willow's own
+repository rather than a stack, with their command lines from their cards.
+
 ## Your stack
 
 Kept in `--to`, `~/willow-stack` unless you say, and never inside this
