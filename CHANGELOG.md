@@ -10,6 +10,10 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `ui/`'s `assemble.py remove NAME...` takes a piece out of a stack: its
+  folder and its STACK.json entry, and one `remove` row on the record naming
+  the files it held; not one a piece that stays imports, nor one whose files
+  changed since it was put in (#240)
 - `ui/` offers a reader for a kind of file the kernel can't read by the
   reader cards' `reads`, the ones reading the fewest kinds first, where it
   went by a table and words in a card's line (which offered zotero for a
