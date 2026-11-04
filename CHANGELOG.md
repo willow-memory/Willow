@@ -1983,6 +1983,11 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- `kart run` refuses, exit 2, when bubblewrap is installed but can't make a
+  sandbox on this machine (a default Docker container; AppArmor on Ubuntu
+  24.04), saying why in bwrap's own words: an empty sandbox is tried first.
+  It used to run the job, exit 42 as if the job had failed, and leave a
+  `ran` row on the person's chain for a job that never ran
 - `ci`: a deps add-on whose program this machine lacks is unreachable, not
   failing. A card names each program PyPI doesn't install on a `programs:`
   line (ocr's tesseract, kart's bwrap, pgp's gpg), and its deps gates ask

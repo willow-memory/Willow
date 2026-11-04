@@ -214,6 +214,28 @@ def test_without_bubblewrap_it_refuses_and_names_it(walt, tmp_path):
     assert got.returncode == 2 and "bubblewrap isn't installed" in got.stderr
 
 
+def test_a_bubblewrap_that_cant_sandbox_here_refuses_before_anything_runs(
+    walt, tmp_path
+):
+    """Installed but forbidden its namespaces, as in a default Docker container
+    or under Ubuntu 24.04's AppArmor: refused in bwrap's words, and nothing
+    on the record, since nothing ran."""
+    subj = walt.job("echo hi")
+    fake = tmp_path / "bin"
+    fake.mkdir()
+    (fake / "bwrap").write_text(
+        "#!/bin/sh\necho 'bwrap: No permissions to create a new namespace' >&2\nexit 1\n"
+    )
+    (fake / "bwrap").chmod(0o755)
+    env = {**os.environ, "PATH": f"{fake}{os.pathsep}{os.environ['PATH']}"}
+    before = walt.rows()
+    got = walt.kart("run", "--job", subj, "--to", tmp_path / "o", *NOW, env=env)
+    assert got.returncode == 2, got.stdout + got.stderr
+    assert "can't make a sandbox" in got.stderr
+    assert "No permissions to create a new namespace" in got.stderr
+    assert walt.rows() == before and not (tmp_path / "o").exists()
+
+
 def test_the_policy_is_willows_and_says_so(walt):
     got = walt.kart("policy")
     assert got.returncode == 0

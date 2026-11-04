@@ -93,8 +93,9 @@ AppArmor unless allowed.
 
 **Exit codes:** 0 the policy printed; 42 a job taken, a result or a total
 proposed, waiting on your seal, or a job that failed or broke its shape; 2
-refused (no Kartikeya or
-bubblewrap, named; a job not sealed; one asking for the network).
+refused (no Kartikeya or bubblewrap, named; a bubblewrap that can't make a
+sandbox on this machine, in its own words, before anything runs or is
+recorded; a job not sealed; one asking for the network).
 
 **Uses:** [share](../../stdlib/share/) to read packages; the kernel's
 `read`, `append`, `sealed`, `standing`, `config`, `h256` and its command

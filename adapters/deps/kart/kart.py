@@ -36,7 +36,8 @@ line, and proposes the totals as your answer, waiting on your seal.
 Exit codes, the kernel's: 0 the policy printed; 42 a job taken, a result or
 a total proposed, waiting on your seal, or a job that failed or broke its
 shape; 2 refused (no
-bubblewrap or Kartikeya, a job not sealed, one asking for the network).
+bubblewrap or Kartikeya, a bubblewrap that can't make a sandbox here, a job
+not sealed, one asking for the network).
 """
 
 from __future__ import annotations
@@ -48,6 +49,7 @@ import json
 import os
 import shlex
 import shutil
+import subprocess
 import sys
 import tempfile
 from pathlib import Path
@@ -137,12 +139,27 @@ def policy(pile: Path, scratch: Path) -> dict:
     }  # fmt: skip
 
 
+#: an empty sandbox: the namespaces and the fresh /proc every job's needs
+PROBE = ["bwrap", "--unshare-all", "--die-with-parent", "--ro-bind", "/", "/",
+         "--proc", "/proc", "--dev", "/dev", "true"]  # fmt: skip
+
+
 def missing() -> str | None:
-    """Why a job can't run here, or None: Kartikeya and bubblewrap, named."""
+    """Why a job can't run here, or None: Kartikeya and bubblewrap, named, and
+    a bubblewrap that can't make a sandbox on this machine, in its own words."""
     if importlib.util.find_spec("kartikeya") is None:
         return "Kartikeya isn't installed: pip install -r adapters/deps/kart/requirements.txt"
     if shutil.which("bwrap") is None:
         return "bubblewrap isn't installed: the bwrap program (apt install bubblewrap)"
+    try:
+        got = subprocess.run(PROBE, capture_output=True, text=True, timeout=30,
+                             stdin=subprocess.DEVNULL)  # fmt: skip
+    except (OSError, subprocess.TimeoutExpired) as e:
+        got = subprocess.CompletedProcess(PROBE, 1, "", str(e))
+    if got.returncode != 0:
+        said = (got.stderr.strip().splitlines() or ["no reason given"])[0][:300]
+        return (f"bubblewrap can't make a sandbox on this machine ({said}); "
+                "nothing ran. a container's or AppArmor's rules may forbid it")  # fmt: skip
     return None
 
 
