@@ -125,6 +125,7 @@ def test_the_gates_run_in_one_fixed_order_and_cover_every_part():
         *(f"ports:{p}" for p in ci.PORTS),
         *(f"demo:{p}" for p in ci.people()), "demo:php2shell", "demo:google-privacy-2026-10-16",
         "demo:stack", "demo:share", "demo:teodora-words", "demo:craft-assembly", "demo:redteam", "demo:known-gaps", "demo:five-repos", "demo:novelty",
+        "demo:ofrenda-frozen", "demo:stewart-crossover-frozen", "demo:small-models",
         *(g for d in ci.deps_add_ons() for g in (f"deps:{d}", f"deps:{d}@floor")),
         "deps:floors",
         *(f"mutants:{n}" for n in ci.mutant_targets()),
@@ -132,6 +133,20 @@ def test_the_gates_run_in_one_fixed_order_and_cover_every_part():
     ]  # fmt: skip
     assert ci.live_checks()[:2] == ["bash", "zsh"]
     assert {p for p, _, _ in ci.gates()} == set(ci.PARTS)
+
+
+def test_every_test_file_under_demo_is_run_by_a_gate():
+    # a demo's tests that no gate names never fail: ofrenda's, stewart-
+    # crossover's and small-models' went unrun, and one broke unseen
+    targets = [t for _, t, _ in ci.DEMO_TESTS]
+    under = lambda f, t: f == t or f.startswith(t + "/")  # noqa: E731
+    files = sorted(
+        p.relative_to(ci.ROOT).as_posix()
+        for p in (ci.ROOT / "demo").rglob("test_*.py")
+        if "__pycache__" not in p.parts
+    )
+    assert files and [f for f in files if not any(under(f, t) for t in targets)] == []
+    assert all((ci.ROOT / t).exists() for t in targets)
 
 
 def test_shards_run_every_gate_of_what_was_named_once_in_its_order():
