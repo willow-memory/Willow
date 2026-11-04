@@ -131,6 +131,12 @@ report contract). No result changes: scan reads only its `MARK` and
 whose date no calendar has (1984-06-31) is listed apart and the report exits
 42. No result changes, for the same reason.
 
+**Freeze 10** (2026-11-03, after every run) changes two tools. `kernel.py`
+reads a date only when its month has that day, so 1984-06-31 is no date;
+`todo.py` drops freeze 9's group, since such a day no longer reaches it as a
+date. No result changes: no file here reads a different date, and scan reads
+only todo's `MARK` and `todos()`.
+
 ### The questions and the flagged-line rule
 
 The writers were told to write without identifiers. A question line is
