@@ -20,7 +20,7 @@
 --fix:#191e17;--blue:#93b6dc;--bluel:#1f2b38;--violet:#bba6e0;--violetl:#2a2438;--tagbg:#272d23;color-scheme:dark}
 
 *{box-sizing:border-box}html{background:var(--bg)}
-body{user-select:none;-webkit-user-select:none;margin:0;font:15px/1.5 var(--sans);background:var(--bg);color:var(--ink);display:grid;grid-template-columns:300px minmax(0,1fr) 380px;height:100vh;-webkit-font-smoothing:antialiased}
+body{user-select:none;-webkit-user-select:none;margin:0;font:15px/1.5 var(--sans);background:var(--bg);color:var(--ink);display:grid;grid-template-columns:272px minmax(0,1fr) 330px;height:100vh;-webkit-font-smoothing:antialiased}
 ::selection{background:var(--catkinl);color:var(--ink)}
 :focus-visible{outline:2px solid var(--acc);outline-offset:2px}
 a{color:var(--acc)}
@@ -33,10 +33,62 @@ button:disabled{opacity:.4;cursor:default}button:disabled:hover{border-color:var
 button.link{border:0;background:none;color:var(--acc);padding:0;text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px}
 a.go{background:var(--acc)!important;color:var(--onacc)!important;border-radius:var(--r)!important;font-weight:600}
 
-aside{border-right:1px solid var(--line);overflow:auto;padding:18px 16px;background:var(--side)}
-main{overflow:auto;padding:28px 32px 120px;min-width:0}
-.rail{border-right:0;overflow:auto;padding:18px 16px 110px;background:var(--side);border-left:1px solid var(--line);display:flex;flex-direction:column;gap:14px}
-.rail .batches,.rail .examples-stage{margin:0;max-width:none}.rail .ex .steps{margin-left:0}.rail .ex .exhead button{flex:none;font-size:13px;padding:3px 10px}.rail .ex{padding:10px 12px;margin:8px 0}.rail .ex .steps{gap:4px}.rail .ex .steps span{font-size:11px;padding:0 6px}.rail .ex h3{font-size:14px}
+nav.side{border-right:1px solid var(--line);overflow:auto;padding:18px 12px 110px;background:var(--side)}
+main{overflow:auto;padding:26px 32px 120px;min-width:0}
+.rail{overflow:auto;padding:18px 16px 110px;background:var(--side);border-left:1px solid var(--line)}
+.rail>h3{margin:0 0 2px}.rail-note{color:var(--mute);font-size:12.5px;margin:0 0 12px}
+
+/* left: the steps as mini cards on one thread; an empty step is just a line */
+nav.side h3{margin:16px 6px 8px}
+.mini{position:relative;display:grid;grid-template-columns:24px minmax(0,1fr);column-gap:8px;align-items:baseline;width:100%;text-align:left;padding:8px 10px 8px 6px;background:var(--card);border:1px solid var(--line);border-radius:var(--r);font-size:14px;line-height:1.3}
+.mini .no{font:600 11px/18px var(--mono);color:var(--mute);text-align:center;grid-row:span 2;align-self:start;border-radius:9px;height:18px}
+.mini b{font-weight:600}.mini small{grid-column:2;color:var(--mute);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.mini:hover{border-color:var(--mute)}
+.mini.sel{border-color:var(--acc);box-shadow:0 0 0 1px var(--acc)}.mini.sel .no{background:var(--acc);color:var(--onacc)}
+.mini.fixed{background-color:var(--fix);background-image:repeating-linear-gradient(135deg,transparent 0 9px,var(--line2) 9px 10px)}
+.mini.empty{background:transparent;border-color:transparent;padding-top:3px;padding-bottom:3px}
+.mini.empty b{font-weight:400;color:var(--mute);font-size:13.5px}.mini.empty .no{background:var(--side);color:var(--faint)}
+.mini.empty:hover{border-color:transparent}.mini.empty:hover b{color:var(--ink)}
+.mini.empty.sel{background:var(--card);border-color:var(--acc)}.mini.empty.sel b{color:var(--ink);font-weight:600}
+.mini.start{border-style:dashed;background:transparent}.mini.start.sel{border-style:solid;background:var(--card)}
+.minis{position:relative;display:flex;flex-direction:column;gap:5px}
+.minis::before{content:"";position:absolute;left:18px;top:12px;bottom:12px;border-left:2px solid var(--line)}
+
+/* middle: the step you're on, then what can go in it */
+.top .lede{font-size:14.5px;margin-bottom:14px}.top .steps{margin-bottom:20px}
+#flow{max-width:none;scroll-margin-top:18px}
+#stage{margin:0 0 22px}
+#stage header{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+#stage header .no{font:600 12px/22px var(--mono);min-width:22px;height:22px;text-align:center;border-radius:11px;background:var(--acc);color:var(--onacc);align-self:center}
+#stage header h2{flex:none;font-size:20px}#stage header .sum{color:var(--mute);font-size:13.5px}
+#stage.fixed header .no{background:var(--mute)}
+#shelf{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:8px;align-items:start}#shelf>:not(.piece){grid-column:1/-1}
+#shelf>.piece{margin:0}#shelf>input{max-width:420px}
+.shelf-head h3{margin:0 0 8px}
+#shelf .tree{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:8px;align-items:start;margin-top:8px}
+#shelf .tree h3{grid-column:1/-1;margin:10px 0 0}
+#shelf .node{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:8px 10px!important;height:100%}
+#shelf .node.on{border-color:var(--acc);background:var(--accl)}
+#shelf .node.sub{grid-column:1/-1;margin-left:24px;height:auto}
+#shelf .node.off{background:transparent;border-style:dashed}
+#startview{display:flex;flex-direction:column;gap:14px;max-width:880px}#startview[hidden]{display:none}
+#startview .batches,#startview .examples-stage{margin:0;max-width:none}
+#railex .ex{padding:10px 12px;margin:8px 0}#railex .ex .exhead button{flex:none;font-size:13px;padding:3px 10px}
+#railex .ex .steps{gap:4px}#railex .ex .steps span{font-size:11px;padding:0 6px}
+
+/* right: the stack as a tree, in the order it runs */
+.stacktree{font:12.5px/1.5 var(--mono);display:flex;flex-direction:column;gap:6px}
+.t-stage{display:flex;gap:8px;align-items:baseline;padding:2px 6px;border-radius:3px;cursor:pointer;font-family:var(--sans);font-size:13.5px}
+.t-stage:hover{background:var(--accl)}.t-stage.sel{background:var(--accl);box-shadow:inset 2px 0 0 var(--acc)}
+.t-name{font-weight:600}.t-stage.fixed .t-name{color:var(--mute)}.t-stage.brought .t-name{font-weight:500;font-style:italic;color:var(--mute)}
+.t-sum{color:var(--mute);margin-left:auto;font:11.5px var(--mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.t-kids{margin:2px 0 0 12px;padding-left:12px;border-left:1px solid var(--line)}
+.t-leaf{position:relative;padding:1px 0;display:flex;flex-wrap:wrap;gap:0 6px;align-items:baseline}
+.t-leaf::before{content:"";position:absolute;left:-12px;top:.8em;width:9px;border-top:1px solid var(--line)}
+.t-leaf .path{overflow-wrap:anywhere;min-width:0;flex:1 1 100%}.t-leaf .t-sum{margin-left:0;color:var(--faint)}
+.t-leaf .arg{color:var(--blue)}.t-leaf .need{flex-basis:100%;color:var(--mute);font-size:11.5px;padding-left:10px}
+.t-skip{font:12px/1.6 var(--sans);color:var(--faint);padding:2px 6px 2px 26px;border-left:2px dotted var(--line);margin-left:12px}
+.t-skip button.link{color:var(--mute);font-size:12px;text-decoration-color:var(--line)}.t-skip button.link:hover{color:var(--acc)}
 h1{font-size:27px;line-height:1.15;letter-spacing:-.02em;font-weight:700;margin:0 0 8px;text-wrap:balance}
 h2{font-size:16px;font-weight:650;letter-spacing:-.005em;margin:0;text-wrap:balance}
 h3{font:600 11px/1.3 var(--mono);text-transform:uppercase;letter-spacing:.09em;color:var(--mute);margin:18px 0 6px}
@@ -90,7 +142,7 @@ h3{font:600 11px/1.3 var(--mono);text-transform:uppercase;letter-spacing:.09em;c
 .plist{max-height:280px;overflow:auto;border-top:1px solid var(--line)}
 .plist div{padding:5px 6px;cursor:pointer;border-bottom:1px solid var(--line2);font-size:14px}.plist div:hover{background:var(--accl)}.plist .up{color:var(--mute)}
 
-footer{position:fixed;left:300px;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);padding:12px 36px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+footer{position:fixed;left:272px;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);padding:12px 36px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
 footer .sum{flex:1;font-size:14px;font-variant-numeric:tabular-nums}footer button.go{padding:8px 18px}
 
 /* what's waiting on you: catkin */
@@ -133,29 +185,29 @@ header.fold .caret,.exhead .caret{color:var(--faint);width:12px;flex:none;font-s
 header.fold:hover .caret,.exhead:hover .caret{color:var(--acc)}header.fold button.link{margin-left:auto}
 details.more{margin-top:18px}details.more summary{cursor:pointer;color:var(--mute)}
 
-@media (max-width:1180px){body{grid-template-columns:280px minmax(0,1fr) 320px}footer{left:280px}main{padding:24px 22px 120px}.steps div{font-size:13px;padding:5px 10px 5px 9px}.steps b{margin-right:6px}}
-@media (max-width:900px){body{display:block;height:auto}aside{border-right:0;border-bottom:1px solid var(--line)}.rail{border-left:0;border-top:1px solid var(--line);padding-bottom:150px}main{padding-bottom:30px}footer{left:0}}
-@media (max-width:760px){body{display:block;height:auto}aside{border-right:0;border-bottom:1px solid var(--line)}
+@media (max-width:1180px){body{grid-template-columns:236px minmax(0,1fr) 280px}footer{left:236px}main{padding:22px 20px 120px}.steps div{font-size:13px;padding:5px 10px 5px 9px}.steps b{margin-right:6px}}
+@media (max-width:900px){body{display:block;height:auto}footer{left:0;padding:10px 16px}footer .sum{flex:1 1 100%;font-size:13px}footer .msg{flex:1;font-size:12.5px}main{padding:20px 16px 30px}.rail{border-left:0;border-top:1px solid var(--line);padding-bottom:150px}
+ nav.side{border-right:0;border-bottom:1px solid var(--line);padding:12px 16px;overflow:visible}
+ nav.side h3{display:none}.minis{flex-direction:row;overflow-x:auto;padding-bottom:4px}.minis::before{display:none}
+ .mini{flex:none;width:auto;max-width:220px}.mini.start{margin-bottom:8px}.mini.empty{border-color:var(--line2)}
  .steps:not(.ex .steps){flex-direction:column}.steps div{margin:-1px 0 0;border-radius:0}.steps div:first-child{margin:0;border-radius:var(--r) var(--r) 0 0}.steps div:last-child{border-radius:0 0 var(--r) var(--r)}
- main{padding:22px 16px 30px}.rail{padding:18px 16px 150px}footer{left:0;padding:10px 16px}.chip{width:100%}h1{font-size:23px}}
+ .chip{width:100%}h1{font-size:23px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style></head><body>
-<aside>
-<div class="find"><input type="text" id="find" placeholder="What do you want willow to do?"><button class="x" id="findx" title="clear" hidden>×</button></div>
-<div id="ask"></div>
-<div class="shelf-head" id="shelfhead"></div>
-<div id="shelf"></div>
-</aside>
+<nav class="side" id="steplist" aria-label="The steps of your flow"></nav>
 <main>
-<h1>Put your willow together</h1>
+<header class="top"><h1>Put your willow together</h1>
 <p class="lede">Willow answers questions from your own folders, in their own words, with the file and line for each answer. It never makes an answer up: when your files don't say it, it says so. Here you choose what it reads and what else it does. Nothing runs until you look it over and seal it.</p>
-<div class="steps"><div><b>1</b>Choose your folders</div><div><b>2</b>Add what you want it to do</div><div><b>3</b>Look it over, and seal it</div></div>
+<div class="steps"><div><b>1</b>Choose your folders</div><div><b>2</b>Add what you want it to do</div><div><b>3</b>Look it over, and seal it</div></div></header>
 <div id="started"></div>
 <div id="review"></div>
-<div class="flow" id="flow"></div>
-
+<div class="find"><input type="text" id="find" placeholder="What do you want willow to do?"><button class="x" id="findx" title="clear" hidden>×</button></div>
+<div id="ask"></div>
+<div id="flow"><section class="stage" id="stage"></section><div id="startview" hidden><section class="batches" id="batches"></section><div id="railex"></div></div></div>
+<div class="shelf-head" id="shelfhead"></div>
+<div id="shelf"></div>
 </main>
-<aside class="rail" id="rail"><section class="batches" id="batches"></section><div id="railex"></div></aside>
+<aside class="rail" aria-label="Your stack"><h3>Your stack</h3><p class="rail-note">What runs, top to bottom. Click a step to work on it.</p><div class="stacktree" id="stacktree"></div></aside>
 <footer><div class="sum" id="sum"></div><span class="msg" id="msg"></span><button class="go" id="look">Look it over</button></footer>
 <script>
 const T=location.pathname.replace(/\/$/,'');
@@ -213,7 +265,7 @@ function baselines(){const box=el('div',{class:'base'});
  box.append(el('div',{class:'bline mute',text:'Counts only: nothing of what your files say, and none of their names, is shown here.'}));return box}
 // ── saved batches: the add-ons you picked, by name ──────────────────────────
 let BATCHES={};
-async function loadBatches(){const r=await api('batches');BATCHES=r.refused?{}:r;batchPanel(r.refused||'')}
+async function loadBatches(){const r=await api('batches');BATCHES=r.refused?{}:r;batchPanel(r.refused||'');steplist()}
 function ask(text,buttons,where='bask'){const q=document.getElementById(where);q.innerHTML='';q.className='q';q.append(el('span',{text}),el('div',{},...buttons.map(([t,f,go])=>el('button',{class:go?'go':'',text:t,onclick:()=>{q.innerHTML='';q.className='';f&&f()}}))));q.scrollIntoView({behavior:'smooth',block:'nearest'})}
 function picked(){const st={};for(const k of Object.keys(S.stages))if((S.stages[k]||[]).length)st[k]=[...S.stages[k]];return st}
 async function saveBatch(name,replace){const r=await api('batches/save',{name,stages:picked(),replace});
@@ -313,17 +365,35 @@ function chips(s){const box=el('div',{class:'chips'}),list=S.stages[s.key]??=[];
 function stageSummary(s){if(s.key==='folders')return S.folders.length?S.folders.length+' folder'+(S.folders.length===1?'':'s'):'none yet';
  if(s.key==='kernel'){const bs=S.folders.map(f=>BASE[f.path]).filter(b=>b&&b.ok);return bs.length?bs.reduce((t,b)=>t+b.read,0).toLocaleString()+' files it can read, '+bs.reduce((t,b)=>t+b.cant.reduce((u,c)=>u+c.files,0),0).toLocaleString()+' it can’t':'always there'}
  if(s.key==='you')return'your seal';const ns=S.stages[s.key]||[];return ns.length?ns.length+' piece'+(ns.length===1?'':'s')+': '+ns.slice(0,4).join(', ')+(ns.length>4?', …':''):'nothing here'}
-function flow(){const f=document.getElementById('flow');f.innerHTML='';
- STAGES.forEach((s,i)=>{if(i)f.append(el('div',{class:'down',text:'↓'}));const st=el('section',{class:'stage'+(s.fixed?' fixed':'')+(cur===s.key?' sel':'')});
-  const add=s.fixed?null:el('button',{class:'link',text:s.key==='folders'?'+ add a folder':'+ add',onclick:()=>{cur=s.key;find('');if(!isOpen(s.key))OPEN.add(s.key);flow();shelf()}});
-  st.append(foldHead(s.key,el('h2',{text:s.title}),stageSummary(s),add));
-  if(!isOpen(s.key)){f.append(st);return}
-  st.append(el('div',{class:'say',text:s.say}));
+function go(k){cur=k;const f=document.getElementById('find');if(f.value){f.value='';document.getElementById('findx').hidden=true}flow();shelf();document.getElementById('flow').scrollIntoView({block:'nearest',behavior:'smooth'})}
+function flow(){const start=cur==='start',st=document.getElementById('stage');document.getElementById('startview').hidden=!start;st.hidden=start;st.innerHTML='';
+ if(!start){const s=STAGES.find(x=>x.key===cur),i=STAGES.indexOf(s);st.className='stage'+(s.fixed?' fixed':'');
+  st.append(el('header',{},el('span',{class:'no',text:String(i+1)}),el('h2',{text:s.title}),el('span',{class:'sum',text:stageSummary(s)})),el('div',{class:'say',text:s.say}));
   if(s.key==='folders'){if(!S.folders.length)st.append(el('div',{class:'none',text:'No folders yet. Add at least one: it’s what willow answers from.'}));
    S.folders.forEach((fo,k)=>st.append(el('div',{class:'folder'},el('span',{text:fo.path}),el('small',{text:fo.files+' files'}),el('button',{class:'link',text:'remove',onclick:()=>{S.folders.splice(k,1);changed()}}))))}
   else if(s.key==='kernel')st.append(baselines());
-  else if(!s.fixed){if(!(S.stages[s.key]||[]).length)st.append(el('div',{class:'none',text:'Nothing here: this step is skipped.'}));st.append(chips(s))}
-  f.append(st)});document.getElementById('railex').replaceChildren(examplesCard())}
+  else if(!s.fixed){if(!(S.stages[s.key]||[]).length)st.append(el('div',{class:'none',text:'Nothing here: this step is skipped.'}));st.append(chips(s))}}
+ document.getElementById('railex').replaceChildren(examplesCard());steplist();stacktree()}
+// the steps, as mini cards: an empty one is a line
+function steplist(){if(!S)return;const box=document.getElementById('steplist');box.innerHTML='';const nEx=EX?.found?.length||0,nB=Object.keys(BATCHES).length;
+ box.append(el('button',{class:'mini start'+(cur==='start'?' sel':''),onclick:()=>go('start')},el('span',{class:'no',text:'↺'}),el('b',{text:'Start from an example'}),el('small',{text:nEx+' examples · '+(nB?nB+' saved batch'+(nB===1?'':'es'):'no saved batches')})));
+ box.append(el('h3',{text:'Your flow, in order'}));const list=el('div',{class:'minis'});
+ STAGES.forEach((s,i)=>{const n=s.key==='folders'?S.folders.length:(S.stages[s.key]||[]).length,empty=!s.fixed&&!n;
+  list.append(el('button',{class:'mini'+(empty?' empty':'')+(s.fixed?' fixed':'')+(cur===s.key?' sel':''),title:s.say,onclick:()=>go(s.key)},el('span',{class:'no',text:String(i+1)}),el('b',{text:s.title}),empty?null:el('small',{text:stageSummary(s)})))});
+ box.append(list)}
+// the stack, as a tree: what runs, in order, and what each piece needs
+function stacktree(){const t=document.getElementById('stacktree');t.innerHTML='';const skipped=[];
+ const flush=()=>{if(!skipped.length)return;t.append(el('div',{class:'t-skip'},el('span',{text:'skipped '}),...skipped.flatMap((s,k)=>[k?' · ':'',el('button',{class:'link',text:s.title,onclick:()=>go(s.key)})])));skipped.length=0};
+ for(const s of STAGES){const ns=s.key==='folders'?S.folders:(S.stages[s.key]||[]);if(!s.fixed&&s.key!=='folders'&&!ns.length){skipped.push(s);continue}flush();
+  const bs=S.folders.map(f=>BASE[f.path]).filter(b=>b&&b.ok),sum=s.key==='kernel'?(bs.length?bs.reduce((t,b)=>t+b.passages,0).toLocaleString()+' passages':'always there'):s.key==='you'?'your seal':s.key==='folders'&&!ns.length?'none yet':'';
+  const row=el('div',{class:'t-stage'+(cur===s.key?' sel':'')+(s.fixed?' fixed':''),onclick:()=>go(s.key)},el('span',{class:'t-name',text:s.title}),sum?el('span',{class:'t-sum',text:sum}):null);
+  const kids=el('div',{class:'t-kids'});
+  if(s.key==='folders')for(const f of S.folders)kids.append(el('div',{class:'t-leaf'},el('span',{class:'path',text:f.path}),el('span',{class:'t-sum',text:f.files+' files'})));
+  else if(!s.fixed)for(const n of ns){const p=P[n]||{},a=((S.args||{})[n]||'').replace('--box {box}','').trim(),leaf=el('div',{class:'t-leaf'},el('span',{text:n}));
+   if(a)leaf.append(el('span',{class:'arg',text:' '+a}));if((p.hard||[]).length)leaf.append(el('div',{class:'need',text:'needs '+p.hard.join(', ')}));kids.append(leaf)}
+  t.append(el('div',{class:'t-group'},row,kids.childNodes.length?kids:null))}
+ flush();const pl=pulled();
+ if(pl.length)t.append(el('div',{class:'t-group'},el('div',{class:'t-stage brought'},el('span',{class:'t-name',text:'Brought along'}),el('span',{class:'t-sum',text:'needed by the pieces above'})),el('div',{class:'t-kids'},...pl.map(n=>el('div',{class:'t-leaf',text:n})))))}
 // ── the shelf: what can go in the chosen stage ──────────────────────────────
 async function browse(path){const r=await api('dirs?path='+encodeURIComponent(path));if(!r.ok){say(r.path+': '+r.why,1);return}here=r.path;
  document.getElementById('ppath').textContent=r.path;const l=document.getElementById('plist');l.innerHTML='';
@@ -331,7 +401,7 @@ async function browse(path){const r=await api('dirs?path='+encodeURIComponent(pa
  for(const d of r.dirs)l.append(el('div',{text:'📁 '+d,onclick:()=>browse(r.path.replace(/\/$/,'')+'/'+d)}));if(!r.dirs.length)l.append(el('div',{class:'up',text:'no folders inside'}))}
 async function addFolder(path){const r=await api('folder?path='+encodeURIComponent(path));if(!r.ok){say(path+': '+r.why,1);return}if(!S.folders.some(f=>f.path===r.path))S.folders.push({path:r.path,files:r.files});say('');changed();baseline(r.path)}
 function shelf(){const s=STAGES.find(x=>x.key===cur),head=document.getElementById('shelfhead'),box=document.getElementById('shelf');head.innerHTML='';box.innerHTML='';
- head.append(el('h3',{text:'Adding to'}),el('h2',{text:s.title}),el('p',{text:s.say}));
+ if(!s||s.fixed)return;head.append(el('h3',{text:s.key==='folders'?'Add a folder':'Add-ons for this step'}));
  if(s.key==='folders'){const t=el('input',{type:'text',placeholder:'or type a path and press Enter'});t.addEventListener('keydown',e=>{if(e.key==='Enter'&&t.value.trim()){addFolder(t.value.trim());t.value=''}});
   box.append(el('div',{id:'picker'},el('div',{class:'ppath',id:'ppath'}),el('div',{class:'plist',id:'plist'}),el('div',{style:'display:flex;gap:8px;margin-top:8px'},el('button',{class:'go',text:'Add this folder',onclick:()=>here&&addFolder(here)}))),el('div',{style:'margin-top:10px'},t));
   browse(here||S.folders.at(-1)?.path||'');return}
@@ -346,7 +416,7 @@ function shelf(){const s=STAGES.find(x=>x.key===cur),head=document.getElementByI
   const out=(p.hard||[]).filter(h=>!inStage.has(h)),opt=(p.soft||[]).filter(h=>P[h]);
   const open=openRows.has(n),tw=el('span',{class:'tw'+(kids.length?'':' none'),text:kids.length?(open?'▾':'▸'):'',title:kids.length?kids.length+' that need it':''});
   if(kids.length)tw.onclick=()=>{open?openRows.delete(n):openRows.add(n);draw()};
-  list.append(el('div',{class:'node'+(no&&!used?' off':''),style:'padding-left:'+(depth*18)+'px'},tw,cb,el('div',{class:'what'},el('b',{text:n}),kids.length?el('small',{text:kids.length+' below need it'}):null,el('small',{text:p.line}),...plainTags(p),...topics(p),
+  list.append(el('div',{class:'node'+(no&&!used?' off':'')+(depth?' sub':'')+(used?' on':''),style:'padding-left:'+(depth*18)+'px'},tw,cb,el('div',{class:'what'},el('b',{text:n}),kids.length?el('small',{text:kids.length+' below need it'}):null,el('small',{text:p.line}),...plainTags(p),...topics(p),
    out.length?el('div',{class:'note',text:'needs '+out.join(', ')+(out.every(h=>all().includes(h))?' ✓':' (added with it)')}):null,
    opt.length?el('div',{class:'note opt',text:'works with '+opt.join(', ')+', if you add '+(opt.length===1?'it':'them')}):null,
    no&&!used?el('div',{class:'note no',text:no}):null)));
