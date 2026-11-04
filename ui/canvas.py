@@ -93,6 +93,74 @@ def page_step(folder: Path, card: dict) -> bool:
     return any(PAGE_STEP.fullmatch(a) for a in use.findall(text))
 
 
+# ── roles: the part a piece plays in a stack ───────────────────────────────
+#: what a piece does in your stack, in the order the page lists them. A card
+#: says what it's about (its section); until it says its role too, `role`
+#: guesses it from what the card does say, and says which fact it went by.
+ROLES = (
+    ("feeds", "What it reads"),
+    ("page", "What runs on your page"),
+    ("suggests", "What suggests answers"),
+    ("ways", "Where you ask from"),
+    ("guards", "What guards an assistant"),
+    ("makes", "What it makes for elsewhere"),
+    ("tools", "Tools you run yourself"),
+    ("repo", "Works on willow itself"),
+)
+#: the ways in, by where you'd be. The editor and assistant ones are filed
+#: under Assistants on their cards; as a role, they're ways in like the rest.
+WAYS = (
+    ("In your terminal", ("shell", "pipe", "plain", "start", "tui", "warm")),
+    ("In your editor", ("vscode", "vim", "emacs", "jetbrains", "zed", "cursor",
+                        "windsurf", "copilot", "obsidian")),
+    ("With an AI assistant", ("claude-code", "codex-cli", "gemini-cli", "opencode",
+                              "aider", "mcp", "mcp-lite", "hosts")),
+    ("In your browser or on your desktop", ("browse", "launcher", "desktop",
+                                            "static-search", "datasette", "kiosk")),
+    ("From your phone, by voice or by email", ("telegram-bot", "email-ask",
+                                               "home-assistant", "dictate", "speak", "qr")),
+)  # fmt: skip
+WAY = {n: (i, h) for i, (h, ns) in enumerate(WAYS) for n in ns}
+SUGGESTS = re.compile(
+    r"^suggestions? (from|through)\b|\bsuggests?\b|held until you seal"
+    r"|waiting for its own seal|handed in through propose|waiting for suggestions",
+    re.I,
+)
+MODELISH = re.compile(r"\bmodels?\b|\bweights\b|assistant.s suggestions", re.I)
+
+
+def role(p: dict) -> dict:
+    """The role a piece plays, why that one, and the heading it goes under
+    inside it (ways in by where you'd be, and the two kinds of suggesting)."""
+    n, line = p["name"], p.get("line", "")
+    writes = [w.strip() for w in p.get("writes", "").split(",")]
+
+    def r(key: str, why: str, group: str = "", at: int = 0) -> dict:
+        return {"role": key, "role_why": why, "group": group, "group_at": at}
+
+    if p.get("runs_in") == "repo":
+        return r("repo", "its card says it runs in willow's own repository")
+    if p.get("section") == "Reading more kinds of files":
+        return r("feeds", "its card is filed under reading more kinds of files")
+    if n in WAY:
+        return r("ways", "it's an editor, an assistant or a terminal you ask from", WAY[n][1], WAY[n][0])  # fmt: skip
+    if n.startswith("hook") or "hook" in p.get("tags", []):
+        return r("guards", "it's a hook")
+    if SUGGESTS.search(line):
+        return r("suggests", "its card says it suggests answers, or holds what it makes until you seal it", "Models that suggest answers")  # fmt: skip
+    if p.get("section") == "Assistants" and MODELISH.search(f"{line} {n}"):
+        return r("suggests", "its card is about checking a model that suggests answers", "Checking a model before you trust it", 1)  # fmt: skip
+    if p.get("page"):
+        return r("page", "it runs with nothing but your record, so it can be a step on your page")  # fmt: skip
+    if p.get("section") == "Ways to use it" and "to" not in writes:
+        return r("ways", "its card is filed under ways to use it", "Other ways in", len(WAYS))  # fmt: skip
+    if "to" in writes:
+        return r("makes", "its card says it writes where you point it")
+    if p.get("state") == "idea":
+        return r("tools", "it's still an idea, so there's no way yet to tell how it runs")  # fmt: skip
+    return r("tools", "it needs words or options of its own to run, so you run it yourself")  # fmt: skip
+
+
 def plural(n: int, word: str) -> str:
     return f"{n} {word}{'' if n == 1 else 's'}"
 
@@ -260,6 +328,8 @@ class Canvas:
             for n, w in worked.items():
                 if n in out:
                     out[n]["tags"], out[n]["near"] = w["tags"], w["near"]
+        for p in out.values():
+            p.update(role(p))
         self._pieces = out
         return out
 

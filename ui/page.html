@@ -249,30 +249,11 @@ const STAGES=[
  {key:'tools',title:'Tools you run yourself',group:'section',say:'Things you run when you want, with your own words or options: flashcards, a forecast, a check of a claim. They’re put in your stack, but not run on your page.'},
  {key:'you',title:'You',fixed:true,say:'A suggested answer counts only once you seal it. Sealing is you saying “yes, this is mine”. The same goes for this whole arrangement.'},
 ];
-// the ways in, grouped by where you'd be. The editor and assistant ways in are filed under
-// Assistants on their cards; here they're ways in like the rest.
-const WAYS=[
- {h:'In your terminal',n:['shell','pipe','plain','start','tui','warm']},
- {h:'In your editor',n:['vscode','vim','emacs','jetbrains','zed','cursor','windsurf','copilot','obsidian']},
- {h:'With an AI assistant',n:['claude-code','codex-cli','gemini-cli','opencode','aider','mcp','mcp-lite','hosts']},
- {h:'In your browser or on your desktop',n:['browse','launcher','desktop','static-search','datasette','kiosk']},
- {h:'From your phone, by voice or by email',n:['telegram-bot','email-ask','home-assistant','dictate','speak','qr']}];
-const WAYIN=new Set(WAYS.flatMap(w=>w.n));
 const SUGGEST={feeds:['pdf','mail','office'],page:['coming-up','todo','digest'],ways:['shell','vscode','claude-code','browse'],guards:['hook-guard','hook-leaks'],suggests:['local-model','model-exam'],makes:['calendar-out','backup','print'],tools:['flashcards','forecasts']};
 const KEY='willow-canvas-2';
 let HIDE=(()=>{try{return localStorage.getItem('willow-canvas-hide')==='1'}catch(e){return false}})(),P={},S=JSON.parse(localStorage.getItem(KEY)||'null'),cur='folders',subject=null,drag=null,here='',SEALED=false,back='folders';
-// which role a piece plays, and the fact on its card that says so: a guess until cards say it themselves
-const SUGGESTS=/^suggestions? (from|through)\b|\bsuggests?\b|held until you seal|waiting for its own seal|handed in through propose|waiting for suggestions/i,MODELISH=/\bmodels?\b|\bweights\b|assistant.s suggestions/i;
-function roleOf(p){const n=p.name,tags=p.tags||[],w=(p.writes||'').split(',').map(x=>x.trim());
- if(p.section==='Reading more kinds of files')return['feeds','its card is filed under reading more kinds of files'];
- if(WAYIN.has(n))return['ways','it’s an editor, an assistant or a terminal you ask from'];
- if(n.startsWith('hook')||tags.includes('hook'))return['guards','it’s a hook'];
- if(SUGGESTS.test(p.line||''))return['suggests','its card says it suggests answers, or holds what it makes until you seal it'];
- if(p.section==='Assistants'&&MODELISH.test((p.line||'')+' '+n))return['suggests','its card is about checking a model that suggests answers'];
- if(p.page)return['page','it runs with nothing but your record, so it can be a step on your page'];
- if(p.section==='Ways to use it'&&!w.includes('to'))return['ways','its card is filed under ways to use it'];
- if(w.includes('to'))return['makes','its card says it writes where you point it'];
- return['tools',p.state==='idea'?'it’s still an idea, so there’s no way yet to tell how it runs':'it needs words or options of its own to run, so you run it yourself']}
+// which role a piece plays, and the fact on its card that says so: canvas.py's `role` guesses it
+const roleOf=p=>[p.role||'tools',p.role_why||''];
 const stageOf=p=>roleOf(p)[0];
 const save=()=>localStorage.setItem(KEY,JSON.stringify(S));
 function say(t,err){const m=document.getElementById('msg');m.textContent=t||'';m.className='msg'+(err?' err':'')}
@@ -283,7 +264,7 @@ const all=()=>STAGES.flatMap(s=>(S.stages[s.key]||[]));
 const FACT=new Set(['no-install','needs-install','offline','this-machine','online']);
 // a tag you can click: every piece that shares it
 function topics(p){return(p.tags||[]).filter(t=>!FACT.has(t)).map(t=>el('button',{class:'topic',text:'#'+t,title:'every piece tagged '+t,onclick:e=>{e.stopPropagation();find('#'+t)}}))}
-function stageTitle(p){const k=stageOf(p);return STAGES.find(s=>s.key===k).title}
+function stageTitle(p){const k=stageOf(p);return STAGES.find(s=>s.key===k)?.title||'willow’s own repository, not your stack'}
 // an add-on card you can drag into the step's pieces, at the place you drop it
 function addable(n,e){e.dataset.n=n;if(all().includes(n)||cantAdd(n))return e;e.draggable=true;e.classList.add('grab');if(!e.title)e.title='drag into the step, or tick it';
  e.addEventListener('dragstart',ev=>{if(ev.target.tagName==='INPUT'){ev.preventDefault();return}drag={add:n};ev.dataTransfer.effectAllowed='copy';ev.dataTransfer.setData('text/plain',n);document.body.classList.add('adding')});
@@ -518,7 +499,7 @@ function shelf(){const s=STAGES.find(x=>x.key===cur),head=document.getElementByI
  const draw=()=>{list.innerHTML='';const w=q.value.toLowerCase();
   if(w){for(const p of mine.filter(p=>!hidden(p.name)&&(p.name+' '+p.line+' '+(p.tags||[]).join(' ')).toLowerCase().includes(w)).sort((a,b)=>order(a.name,b.name)))node(p.name,0,[]);return}
   const roots=mine.filter(p=>!hidden(p.name)&&!(p.hard||[]).some(h=>inStage.has(h))).map(p=>p.name).sort(order);
-  if(grouped){const sec=n=>P[n].section||'Other',groups=s.group==='ways'?[...WAYS,{h:'Other ways in',n:roots}]:s.group==='suggests'?[{h:'Models that suggest answers',n:roots.filter(n=>SUGGESTS.test(P[n].line||''))},{h:'Checking a model before you trust it',n:roots}]:[...new Set(roots.map(sec))].sort().map(h=>({h,n:roots.filter(n=>sec(n)===h)}));
+  if(grouped){const sec=n=>P[n].section||'Other',by=s.group==='section'?sec:n=>P[n].group||'Other',at=n=>s.group==='section'?0:P[n].group_at??99,groups=[...new Set(roots.map(by))].sort((a,b)=>at(roots.find(n=>by(n)===a))-at(roots.find(n=>by(n)===b))||a.localeCompare(b)).map(h=>({h,n:roots.filter(n=>by(n)===h)}));
    const left=new Set(roots);for(const w of groups){const ns=w.n.filter(n=>left.has(n)).sort(order);if(!ns.length)continue;
    list.append(el('h3',{text:w.h}));for(const n of ns){left.delete(n);node(n,0,[])}}return}
   let last=-1;for(const n of roots){const r=rank(P[n]);if(r!==last){list.append(el('h3',{text:r===0?'A good start':r===1?'Everything else':'Can’t be added yet'}));last=r}node(n,0,[])}};
