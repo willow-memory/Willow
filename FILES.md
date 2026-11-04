@@ -1098,7 +1098,8 @@ willow/
 │   │   │   ├── stack.py       one document from a stack of add-on steps over a box, pooled and peaks-first
 │   │   │   ├── test_stack.py
 │   │   │   ├── example.md
-│   │   │   ├── examples/      stacks to start from, one kind of folder each: a choir, a smallholding, a code library, a class, a story, foster dogs, a knee, a folder of repositories, a box handed on
+│   │   │   ├── examples/      stacks to start from, one kind of folder each: a choir, a smallholding, a code library, a class, a story, foster dogs, a knee, a folder of repositories, a box handed on, someone asked to run jobs over theirs
+│   │   │   │   ├── asked.md
 │   │   │   │   ├── choir.md
 │   │   │   │   ├── comeback.md
 │   │   │   │   ├── export.md
@@ -1344,6 +1345,12 @@ willow/
 │       │   ├── requirements-floor.txt  wordfreq at its floor, also tested
 │       │   ├── test_dialect.py
 │       │   └── README.md
+│       ├── dp/
+│       │   ├── dp.py         a kart result's numbers with OpenDP's noise, proposed before you seal them, and what was spent
+│       │   ├── requirements.txt  opendp, pinned
+│       │   ├── requirements-floor.txt  opendp at its floor, also tested
+│       │   ├── test_dp.py    the noise, its spend, a result noised once, and gather adding noisy results
+│       │   └── README.md
 │       ├── fast-tests/
 │       │   ├── fast_tests.py  the test suite across every core with pytest-xdist, in a fraction of the time
 │       │   ├── requirements.txt  pytest-xdist, pinned
@@ -1423,6 +1430,12 @@ willow/
 │       │   ├── requirements-floor.txt  ripgrep at its floor, also tested
 │       │   ├── test_ripgrep.py
 │       │   └── README.md
+│       ├── secure-sum/
+│       │   ├── secure_sum.py  a total of everyone's counts by Shamir's secret sharing: split, combine, total
+│       │   ├── requirements.txt  shamirs, pinned
+│       │   ├── requirements-floor.txt  shamirs at its floor, also tested
+│       │   ├── test_secure_sum.py  a round of three, no one's count in a package, and shares forwarded, missing or changed
+│       │   └── README.md
 │       ├── sheets/
 │       │   ├── sheets.py     spreadsheets as shown: number formats, formulas and notes kept
 │       │   ├── requirements.txt  openpyxl, pinned
@@ -1448,11 +1461,17 @@ willow/
 │       │               ├── __init__.py
 │       │               ├── core.py    a plain velocity-Verlet stand-in, not the real integrator
 │       │               └── data.py    a tiny stand-in catalog
-│       └── stems/
-│           ├── stems.py      a word's other forms, by Snowball's stemmer for 30 languages
-│           ├── requirements.txt  snowballstemmer, pinned
-│           ├── requirements-floor.txt  snowballstemmer at its floor, also tested
-│           ├── test_stems.py
+│       ├── stems/
+│       │   ├── stems.py      a word's other forms, by Snowball's stemmer for 30 languages
+│       │   ├── requirements.txt  snowballstemmer, pinned
+│       │   ├── requirements-floor.txt  snowballstemmer at its floor, also tested
+│       │   ├── test_stems.py
+│       │   └── README.md
+│       └── wasm/
+│           ├── wasm.py       a sealed kart job that is WebAssembly, run by Wasmtime over your folder read-only
+│           ├── requirements.txt  wasmtime, pinned
+│           ├── requirements-floor.txt  wasmtime at its floor, also tested
+│           ├── test_wasm.py  modules that try to write, climb out and spin, a runtime's script, and gather
 │           └── README.md
 ├── ports/                    kernel.py rewritten in other languages
 │   ├── java/
@@ -1516,8 +1535,13 @@ willow/
 │   │   └── test_stack.py     holds the stack to the states STRIP.md scores
 │   ├── johnson/              one report passed between five people's willows, a forged copy, a correction and a rewrite caught
 │   │   ├── README.md         the scene, what each step shows, and what it found
+│   │   ├── count/            the private scene's job: Rust counting what jobs.py's shell job counts
+│   │   │   ├── Cargo.toml    built for wasm32-wasip1, small and stripped
+│   │   │   ├── count.wasm.b64  what it built, as base64 text, as Ines sends it: SHA-256 4084d741… decoded
+│   │   │   └── src/main.rs   lines naming Johnson and lines dated spring 2026, every file under /pile
 │   │   ├── jobs.py           one question run by kart over others' folders, sealed by each, back to Ines; only aggregates, gathered
 │   │   ├── make_life.py      the five people's files, the same bytes every run
+│   │   ├── private.py        jobs.py's count stacked: wasm runs it, dp noises it, secure-sum totals it; Ines sees only the total
 │   │   ├── scene.py          the report sealed, sent, forwarded hop by hop, forged once, corrected and witnessed; stacks shared, taken and declined
 │   │   └── test_scene.py     holds the scene to what README.md says it shows
 │   ├── novelty.py           the reusable novelty check: have these pieces been put together before?

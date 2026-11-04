@@ -101,6 +101,41 @@ has never seen. Tamsin is also sent `cat {pile}/*`: held to numbers, it
 proposes nothing, and the 152 characters it printed stay on Tamsin's
 machine.
 
+## Only the total
+
+`private.py` stacks three add-ons on that last count, so Ines learns the
+total and nothing else (it needs Wasmtime, OpenDP and shamirs installed):
+
+    python demo/johnson/private.py run --life demo/johnson/life --to /tmp/johnson-private
+
+- **[wasm](../../adapters/deps/wasm/) runs it.** Ines writes the job once, in
+  Rust ([count/src/main.rs](count/src/main.rs)), and sends the 73 KB module
+  it builds, kept as base64 text in [count/count.wasm.b64](count/count.wasm.b64).
+  It counts what the shell
+  job counts, and on these five folders it gives grep's numbers. Each person
+  takes it to their door with kart and runs it with wasm, over their folder
+  read-only. The tools are the module's SHA-256, so they are the same on
+  every machine.
+- **[dp](../../adapters/deps/dp/) noises it.** Each adds OpenDP's noise to
+  their two numbers, epsilon 1, and seals the noisy numbers, not the true
+  ones.
+- **[secure-sum](../../adapters/deps/secure-sum/) totals it.** Each splits
+  the noisy numbers into four shares, any three of which make them, and
+  sends each share straight to its person: twelve packages Ines never
+  carries. Each adds up the shares they hold and sends Ines the sum. She
+  puts the four sums together, the fourth checking the other three, and
+  seals the total.
+
+Ines ends holding four sums, not one person's number, true or noisy. Run with
+each person on a machine of their own (four on Debian, Harold on Ubuntu
+24.04, no network, each seeing only their own folder), the module's tools
+were one set across both systems, and no share was ever on Ines's disk.
+
+A stack of steps, [asked.md](../../adapters/stdlib/stack/examples/asked.md),
+gives each person one page of what has gone out of their folder: every
+package sent and received (`share log`) and the privacy their counts have
+spent (`dp spent`).
+
 ## What it found
 
 - **A sealed answer stands for its question.** Asked the same words again,
@@ -147,6 +182,16 @@ machine.
   `grep -rli`, which both read alike. kart now runs every job on the
   system's PATH and the `C` locale, not the person's, and records each
   program's SHA-256, so `gather` says when results ran on different tools.
+- **Noise on four people's counts swamps them.** The true total is 4 and
+  5. Noised at epsilon 1 by each of four people, it came out 13 and 5 in
+  one run and 3 and 11 in another: each person's noise has a spread of
+  about 3, and four of them about 6, against counts of one or two. Secret
+  sharing already keeps each person's number from Ines, so the noise is
+  there for the total alone, and the total needs only one person's worth of
+  it. Each could add a smaller noise, drawn so that the four together make
+  one person's worth, but only if Ines can't get three people to put their
+  shares together. dp can't split its noise that
+  way yet; that would be the next step.
 - **A received answer can't become yours.** The kernel seals only answers
   made from your own files' passages. Walt can pass Ines's report on and
   everyone can check it, but it never becomes Walt's own sealed answer.

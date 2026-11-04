@@ -10,6 +10,23 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `dp` adds OpenDP's discrete Laplace noise to a kart result's numbers
+  before you seal and send them, `--epsilon` your spend and `--per-item`
+  how far one item can move each count; a result is noised once, each spend
+  is a `noised` row, `spent` adds them up, and `kart gather` adds noisy
+  results as it adds any others
+- `secure-sum` totals several people's kart results by Shamir's secret
+  sharing (shamirs): `split` cuts a sealed result into one share per person
+  in the round, sent straight to each; `combine` adds the shares a person
+  holds; `total` puts the sums together, any T of them, checking the rest.
+  The one who asks learns the total, and no package holds anyone's own
+  count; a forwarded share, a sum from someone not at its place, and sums
+  that disagree are refused
+- `wasm` runs a sealed kart job that is a WebAssembly module, or a script
+  for a WASI runtime you keep, in Wasmtime over your folder read-only, with
+  no network and no environment, bounded by `--fuel`; its tools are the
+  module's SHA-256, so the same job answers alike on every machine, and its
+  result goes to `kart gather` as kart's do
 - `bot-venv --find` lists every venv under a folder: inside willow-bot or
   out, its packages, the bot's lock for it (none, holds or drifted), and the
   services running from it, read from /proc; the steward's venv inventory
