@@ -231,6 +231,8 @@ willow/
 │   │   │   ├── test_files.py files.py's tests: each file in its folder's order, gone ones out, the real tree round-tripped
 │   │   │   ├── new.py        an add-on started from its idea on the list
 │   │   │   ├── test_new.py   new.py's tests: the card is the idea, the script refuses, the list and FILES.md kept
+│   │   │   ├── order.py      the lists people add to by hand, kept A to Z by a script
+│   │   │   ├── test_order.py order.py's tests: entries move with their comments, refusals, the repo's own lists A to Z
 │   │   │   └── README.md     its card: gates, states, the guard and exit codes
 │   │   ├── ci-cache/
 │   │   │   ├── ci_cache.py    a cache key per ecosystem from a repo's lockfiles, so CI skips the reinstall
@@ -316,13 +318,13 @@ willow/
 │   │   │   ├── debts.py      lines speaking of money owed, dated and cited, the sum as written, never netted
 │   │   │   ├── test_debts.py
 │   │   │   └── README.md
-│   │   ├── deep-links/
-│   │   │   ├── deep_links.py   each answer as links that open the file at the line: an RFC 5147 file link and a browser text-fragment web link
-│   │   │   ├── test_deep_links.py
-│   │   │   └── README.md
 │   │   ├── decisions/
 │   │   │   ├── decisions.py  a yes and a no with their reasons, a never told from a not-yet, asked about a new question
 │   │   │   ├── test_decisions.py
+│   │   │   └── README.md
+│   │   ├── deep-links/
+│   │   │   ├── deep_links.py   each answer as links that open the file at the line: an RFC 5147 file link and a browser text-fragment web link
+│   │   │   ├── test_deep_links.py
 │   │   │   └── README.md
 │   │   ├── dice/
 │   │   │   ├── dice.py       dice rolled on the record, seeded by its tip; check throws every roll again
@@ -749,13 +751,13 @@ willow/
 │   │   │   ├── accepted.json the breaks that change nothing a person could notice, each with why
 │   │   │   ├── test_mutants.py
 │   │   │   └── README.md
-│   │   ├── nicknames/
-│   │   │   ├── nicknames.py   the names you call people, found beside a family word in your files, as a words list
-│   │   │   ├── test_nicknames.py
-│   │   │   └── README.md
 │   │   ├── nestor/
 │   │   │   ├── nestor.py     answers a person has checked in Nestor, from a copy of its store
 │   │   │   ├── test_nestor.py
+│   │   │   └── README.md
+│   │   ├── nicknames/
+│   │   │   ├── nicknames.py   the names you call people, found beside a family word in your files, as a words list
+│   │   │   ├── test_nicknames.py
 │   │   │   └── README.md
 │   │   ├── night-batch/
 │   │   │   ├── night_batch.py  waiting questions asked of a local model in one run, stopped once you're back
@@ -773,10 +775,6 @@ willow/
 │   │   │   ├── notion.py   a Notion export as pages and databases with their paths
 │   │   │   ├── test_notion.py
 │   │   │   └── README.md
-│   │   ├── office/
-│   │   │   ├── office.py     .docx, .odt, .pptx, .xlsx and .ods, as text
-│   │   │   ├── test_office.py
-│   │   │   └── README.md
 │   │   ├── oakenscroll/
 │   │   │   ├── oakenscroll.py   an Oakenscroll's Office calibration ledger: each claim, its revisions and grade, as dated passages
 │   │   │   ├── test_oakenscroll.py
@@ -784,6 +782,10 @@ willow/
 │   │   ├── odds/
 │   │   │   ├── odds.py       exact odds for any dice, as fractions
 │   │   │   ├── test_odds.py
+│   │   │   └── README.md
+│   │   ├── office/
+│   │   │   ├── office.py     .docx, .odt, .pptx, .xlsx and .ods, as text
+│   │   │   ├── test_office.py
 │   │   │   └── README.md
 │   │   ├── on-this-day/
 │   │   │   ├── on_this_day.py what your files say happened on this date in other years
@@ -1433,12 +1435,6 @@ willow/
 │       │   ├── requirements-floor.txt  openpyxl at its floor, also tested
 │       │   ├── test_sheets.py
 │       │   └── README.md
-│       ├── static-search/
-│       │   ├── static_search.py  approved answers as a static site, searched by Pagefind
-│       │   ├── requirements.txt  pagefind and pagefind-bin, pinned
-│       │   ├── requirements-floor.txt  pagefind and pagefind-bin at their floors, also tested
-│       │   ├── test_static_search.py
-│       │   └── README.md
 │       ├── star-system/
 │       │   ├── star_system.py  a friend's star-system sim (science_bitch) run deterministically, as cited passages
 │       │   ├── requirements.txt  numpy, pinned
@@ -1452,6 +1448,12 @@ willow/
 │       │               ├── __init__.py
 │       │               ├── core.py    a plain velocity-Verlet stand-in, not the real integrator
 │       │               └── data.py    a tiny stand-in catalog
+│       ├── static-search/
+│       │   ├── static_search.py  approved answers as a static site, searched by Pagefind
+│       │   ├── requirements.txt  pagefind and pagefind-bin, pinned
+│       │   ├── requirements-floor.txt  pagefind and pagefind-bin at their floors, also tested
+│       │   ├── test_static_search.py
+│       │   └── README.md
 │       └── stems/
 │           ├── stems.py      a word's other forms, by Snowball's stemmer for 30 languages
 │           ├── requirements.txt  snowballstemmer, pinned
@@ -1491,25 +1493,6 @@ willow/
 │       ├── repo-index.md     proposal: the repo as one deterministic-snapshot box, indexed by a custom serve-style stack
 │       └── serve.md          proposal: a sealed stack of piles served to a model, on markdown (the grove's serve, in willow)
 ├── demo/                     four made-up people, a case passed between five more, a real bug, a real policy change and programs taken apart, to try it on
-│   ├── odile/                piano tuner and beekeeper, caring for her father
-│   │   ├── make_life.py      writes her files into life/, the same bytes every run
-│   │   ├── CHARACTER.md      who she is and how her life is written down
-│   │   ├── PLANTED.md        the needs hidden in her files, and the traps
-│   │   ├── STRIP.md          her questions, and what kernel.py found and missed
-│   │   └── names.txt         everyone named in her files, written by make_life.py
-│   ├── hollis/               built blind, by an agent that never saw the code
-│   │   ├── make_life.py
-│   │   ├── CHARACTER.md
-│   │   ├── PLANTED.md
-│   │   ├── QUESTIONS.md      the questions he would ask, written before any run
-│   │   └── STRIP.md
-│   ├── teodora/              built blind, from a different line of work
-│   │   ├── make_life.py
-│   │   ├── CHARACTER.md
-│   │   ├── PLANTED.md
-│   │   ├── QUESTIONS.md
-│   │   ├── STRIP.md
-│   │   └── test_words.py     the starter words list against her whole folder: her debt to Dev, served with it and not without
 │   ├── bernadette/           built blind, in her apps' raw formats, and run through the whole stack
 │   │   ├── make_life.py      her mail, calendars, chats, vault, office files, Kindle and PDFs, the same bytes every run
 │   │   ├── CHARACTER.md
@@ -1518,70 +1501,99 @@ willow/
 │   │   ├── STRIP.md          what each need came to, and what each layer of the stack did
 │   │   ├── stack.py          her files through every reader, start, the finders, privacy, an MCP assistant, and the trust add-ons
 │   │   └── test_stack.py     holds the stack to the states STRIP.md scores
+│   ├── craft-assembly/       the Craft apps taken apart into pieces, rebuilt exactly, and five assembled into one
+│   │   ├── README.md         the claim, the threats, what is frozen, what was seen before each freeze, results
+│   │   ├── REPORT.md         the full report, written by report.py from the files here, every number counted
+│   │   ├── BACKGROUND.md     the research it answers: AI agents rebuilding large programs, from search summaries
+│   │   ├── FROZEN.json       the SHA-256 of each frozen file, and of the tools when frozen
+│   │   ├── sources.json      the 24 sources by address, commit and git tree hash
+│   │   ├── composite.json    the five apps the composite assembles, and their library's address
+│   │   ├── sources.py        fetches the sources by their pins, and checks each tree without git
+│   │   ├── pieces.py         takes sources apart into one store of pieces, and rebuilds them from it
+│   │   ├── compose.py        assembles one Cargo workspace from the store, by seven written rules
+│   │   ├── conftest.py       gives the tests tomllib on Python 3.9 and 3.10, from pip's own tomli
+│   │   ├── run.py            the stages and the five pass rules, as kernel verdict rows
+│   │   ├── report.py         writes REPORT.md and results/checks.md from the committed files, the same bytes every run
+│   │   ├── test_craft_assembly.py holds the frozen files to their hashes, and the tools to their word
+│   │   ├── test_report.py    holds the report and its checks to what their files make
+│   │   └── results/
+│   │       ├── run-1.json    the first run's every outcome: the store, each rebuild, each package in both
+│   │       ├── run-2.json    the second run's, from freeze 2: the same, and what the rules left out
+│   │       ├── run-3.json    the third run's, from freeze 3: every rule held
+│   │       ├── record.jsonl  a copy of the record the verdicts are rows on, without its key
+│   │       └── checks.md     what the kernel, xref and claim-check say of the report
+│   ├── five-repos/           five repositories through the stacks: the stacks, the words list, the reports, two records without their keys
+│   │   ├── README.md         what was run, what held, what failed and became #211, and the rule: proposed, never sealed
+│   │   ├── exam.txt          the twelve questions the model was asked
+│   │   ├── needs.txt         what the other four repositories say they need, asked of this one
+│   │   ├── rebuild.sh        a fresh box over the folder, the words list on it, the stack, the verify
+│   │   ├── test_five_repos.py  holds the stacks to add-ons that are here, the words list to the kernel's parser, and the records' chains with nothing sealed
+│   │   ├── words.txt         one repo's words read as the others', 24 lines, the survivor of 89
+│   │   ├── reports/          thirteen reports in the order written, each what one stack found and got wrong
+│   │   │   ├── 00-audit.md
+│   │   │   ├── 01-compare.md
+│   │   │   ├── 02-words-list.md
+│   │   │   ├── 03-words-list-pruned.md
+│   │   │   ├── 04-history.md
+│   │   │   ├── 05-on-pr-199.md
+│   │   │   ├── 06-proof.md
+│   │   │   ├── 07-exam.md
+│   │   │   ├── 08-guards.md
+│   │   │   ├── 09-play.md
+│   │   │   ├── 10-timeline.md
+│   │   │   ├── 11-ways-in.md
+│   │   │   └── 12-landed.md
+│   │   ├── results/
+│   │   │   ├── play-record/
+│   │   │   │   └── record.jsonl  five games as rows, without its key
+│   │   │   └── proof-record/
+│   │   │       ├── record.jsonl  ten suggestions waiting on a seal, without its key
+│   │   │       └── proposals/    the ten suggestion files the record names
+│   │   │           ├── 06cd2232e3eba2630181aadf65782176f743a08271923fe78bcdd855cd0107f2.json
+│   │   │           ├── 09f83f2e0afd5b2df265a2514deddfe39b6377b3e3e321094befdfe8d11c7825.json
+│   │   │           ├── 163c2b4eb4d51d6e1ae65c91215b84ed3285d439881f2911be53f03a077a7288.json
+│   │   │           ├── 579de5fcb725865e77f898213b531e08dbe8dd5f4c9e7e857525e0195f453b61.json
+│   │   │           ├── b0e7dc7eac2f793a5b116031c8faa60aecde7d384b8bf72a7882feaf574c1178.json
+│   │   │           ├── bdb260cc817cdfd545f0f4b1b01a0df24f635c209e989fd64fd139d2b5976e70.json
+│   │   │           ├── cc6e44979abff0e57eb17d14224fa2acf11f02a3a2de66b76806e79d1a5e153a.json
+│   │   │           ├── de36b91cde4e3756a2b6840b35ad85e31248494925f7a93451b7727ce2f17a86.json
+│   │   │           ├── f40895d0cd60e2bc0aa30c2fb3b1fb62c0e076d09706bf63eb486494c3e086bb.json
+│   │   │           └── fafd739ffd8bd18d9691fc2361ed502d85ff7e19d8d4ba0b39d376346cb74a88.json
+│   │   └── stacks/           the seven stacks run, machine paths as <scratch> and <repos>
+│   │       ├── commits.md
+│   │       ├── compare.md
+│   │       ├── five-repos.md
+│   │       ├── history.md
+│   │       ├── proof.md
+│   │       ├── voice.md
+│   │       └── ways-in.md
+│   ├── google-privacy-2026-10-16/  a real policy change: what Google's text says against what the news said
+│   │   ├── README.md         the claim, the threats, what is frozen, how to reproduce, the results
+│   │   ├── FROZEN.json       the SHA-256 of each frozen file, and of the tools when frozen
+│   │   ├── sources.json      each source fetched, with its address, time and SHA-256
+│   │   ├── fetch.py          saves the sources into a pile once, and checks them offline
+│   │   ├── targets.json      the frozen hit rule: the clauses a question lands on, and what supports a claim
+│   │   ├── study.py          every phase and pass rule: the versions, the changes, nulls, blind, absence
+│   │   ├── test_google_privacy.py holds the frozen files to their hashes, and the rules to their word
+│   │   └── questions/
+│   │       ├── reporters.txt   the reporting's claim, in the reporters' own words
+│   │       ├── claims.txt      "Google scans Gmail for ads", as the reporting words it
+│   │       ├── policy-quotes.txt  the policy as each report quotes it
+│   │       ├── blind-reporters.txt  the reporters' lines, reworded three ways, blind
+│   │       ├── blind-claims.txt     the claims, reworded three ways, blind
+│   │       └── null.txt        thirty questions about the policy with nothing to do with ads
+│   ├── hollis/               built blind, by an agent that never saw the code
+│   │   ├── make_life.py
+│   │   ├── CHARACTER.md
+│   │   ├── PLANTED.md
+│   │   ├── QUESTIONS.md      the questions he would ask, written before any run
+│   │   └── STRIP.md
 │   ├── johnson/              one report passed between five people's willows, a forged copy, a correction and a rewrite caught
 │   │   ├── README.md         the scene, what each step shows, and what it found
 │   │   ├── jobs.py           one question run by kart over others' folders, sealed by each, back to Ines; only aggregates, gathered
 │   │   ├── make_life.py      the five people's files, the same bytes every run
 │   │   ├── scene.py          the report sealed, sent, forwarded hop by hop, forged once, corrected and witnessed; stacks shared, taken and declined
 │   │   └── test_scene.py     holds the scene to what README.md says it shows
-│   ├── novelty.py           the reusable novelty check: have these pieces been put together before?
-│   ├── test_novelty.py      a novel description reads as novel, one an existing demo holds as prior art
-│   ├── redteam/             a frozen recon composition over a planted target, scanned for novelty
-│   │   ├── README.md         the composition, what is planted, what is frozen, the novelty check
-│   │   ├── FROZEN.json       the SHA-256 of every source, and the finding expected from each section
-│   │   ├── recon.py          runs seven read-only add-ons over the target in an attacker's order
-│   │   ├── test_redteam.py   holds the sources to their hashes and the pass to its planted findings
-│   │   ├── intel/            the offline intel the pass needs, committed so it reads the same every run
-│   │   │   ├── popular.txt    the popular-names list typosquat checks against
-│   │   │   ├── osv/
-│   │   │   │   ├── PyPI/
-│   │   │   │   │   └── GHSA-x84v-xcm2-53pg.json  the Requests credentials-leak advisory
-│   │   │   │   └── npm/
-│   │   │   │       └── GHSA-35jh-r3h4-6jhm.json  the lodash command-injection advisory
-│   │   │   └── registry/
-│   │   │       └── npm/
-│   │   │           └── minimist.json  registry metadata showing minimist long abandoned
-│   │   └── target/           the planted application, read-only
-│   │       ├── package-lock.json  a vulnerable lodash, a misspelled reqeusts, an abandoned minimist
-│   │       ├── requirements.txt   an unpinned flask and a vulnerable requests
-│   │       ├── app/
-│   │       │   ├── client.js    JS sinks: exec, eval, innerHTML, Math.random, TLS off
-│   │       │   ├── config.py    a hardcoded AWS key and password, debug on
-│   │       │   ├── legacy.php   PHP sinks: shell_exec, unserialize, SQL concat, echo, TLS off
-│   │       │   ├── server.go    Go sinks: exec.Command, InsecureSkipVerify
-│   │       │   ├── settings.py  debug on, wildcard CORS, a connection string, a JWT
-│   │       │   └── views.py     Python sinks: shell, pickle, SQL format, eval, verify=False
-│   │       └── node_modules/
-│   │           └── evil-pkg/
-│   │               └── package.json  a postinstall that pipes a remote script to a shell
-│   ├── php2shell/            a real bug: the PHP2Shell result, tested seven ways
-│   │   ├── README.md         the claim, the threats, what is frozen, each phase's results
-│   │   ├── FROZEN.json       the SHA-256 of each frozen file, and of the tools when frozen
-│   │   ├── releases.json     PHP's releases and the security commits, pinned by hash
-│   │   ├── make_trees.py     fetches them from php-src, and checks them without git
-│   │   ├── score.py          the frozen hit rule: did a passage land on the fix?
-│   │   ├── score2.py         the second hit rule: also an added run's neighbouring lines
-│   │   ├── phase2.py         the null tests: random draws, null questions, wrong pairs, baselines
-│   │   ├── phase1.py         the blind questions, under both rules, ranked by the kernel and BM25
-│   │   ├── phase3.py         out of sample: seven other CVEs, fetched as git stores them, asked blind
-│   │   ├── phase3.json       those CVEs' releases and fix commits, pinned by hash
-│   │   ├── phase4.py         before the fix: the whole release, ranked three ways, recall at k
-│   │   ├── phase5.py         robustness: rewording, top-k, a words list, and leakage
-│   │   ├── phase6.py         reproducibility: every release, five Pythons, four kernels, a second labeller
-│   │   ├── pipeline.py       the whole method in one command: index, changed-from, rank three ways, score
-│   │   ├── hold.py           not frozen: the kernel's hold rule against looser ones, on phase 3's CVEs
-│   │   ├── test_php2shell.py holds the frozen files to their hashes, and the tools to their word
-│   │   ├── results/
-│   │   │   └── phase6-labels.json  the independent labellers' yes or no, item by item
-│   │   └── questions/
-│   │       ├── author.txt    the first look's eight questions, labelled as the author's
-│   │       ├── blind-a.txt   eight written blind, as a security engineer, from the advisories
-│   │       ├── blind-b.txt   eight written blind, as a sysadmin, from one news article
-│   │       ├── blind-c.txt   eight written blind, as terse keywords, from the advisories
-│   │       ├── phase3.txt    eight a CVE for phase 3's seven, written blind
-│   │       ├── reword.txt     the author's eight, rephrased five ways each, blind
-│   │       ├── advisory-words.txt  a words list of acronyms the advisories expand
-│   │       └── null.txt      fifty questions with nothing to do with the bug
 │   ├── known-gaps/           the fleet's own twelve known security gaps, asked of the code their fixes changed
 │   │   ├── README.md         the claim, the threats, what is frozen, how to reproduce, the dry run
 │   │   ├── FROZEN.json       freeze 1: the SHA-256 of every frozen file and tool; a change is a new freeze
@@ -1645,42 +1657,13 @@ willow/
 │   │   │   └── null/
 │   │   │       └── null.txt  fifty questions with nothing to do with security, written with no input
 │   │   └── test_known_gaps.py  holds the frozen files to their hashes, and the tools to their word
-│   ├── craft-assembly/       the Craft apps taken apart into pieces, rebuilt exactly, and five assembled into one
-│   │   ├── README.md         the claim, the threats, what is frozen, what was seen before each freeze, results
-│   │   ├── REPORT.md         the full report, written by report.py from the files here, every number counted
-│   │   ├── BACKGROUND.md     the research it answers: AI agents rebuilding large programs, from search summaries
-│   │   ├── FROZEN.json       the SHA-256 of each frozen file, and of the tools when frozen
-│   │   ├── sources.json      the 24 sources by address, commit and git tree hash
-│   │   ├── composite.json    the five apps the composite assembles, and their library's address
-│   │   ├── sources.py        fetches the sources by their pins, and checks each tree without git
-│   │   ├── pieces.py         takes sources apart into one store of pieces, and rebuilds them from it
-│   │   ├── compose.py        assembles one Cargo workspace from the store, by seven written rules
-│   │   ├── conftest.py       gives the tests tomllib on Python 3.9 and 3.10, from pip's own tomli
-│   │   ├── run.py            the stages and the five pass rules, as kernel verdict rows
-│   │   ├── report.py         writes REPORT.md and results/checks.md from the committed files, the same bytes every run
-│   │   ├── test_craft_assembly.py holds the frozen files to their hashes, and the tools to their word
-│   │   ├── test_report.py    holds the report and its checks to what their files make
-│   │   └── results/
-│   │       ├── run-1.json    the first run's every outcome: the store, each rebuild, each package in both
-│   │       ├── run-2.json    the second run's, from freeze 2: the same, and what the rules left out
-│   │       ├── run-3.json    the third run's, from freeze 3: every rule held
-│   │       ├── record.jsonl  a copy of the record the verdicts are rows on, without its key
-│   │       └── checks.md     what the kernel, xref and claim-check say of the report
-│   ├── google-privacy-2026-10-16/  a real policy change: what Google's text says against what the news said
-│   │   ├── README.md         the claim, the threats, what is frozen, how to reproduce, the results
-│   │   ├── FROZEN.json       the SHA-256 of each frozen file, and of the tools when frozen
-│   │   ├── sources.json      each source fetched, with its address, time and SHA-256
-│   │   ├── fetch.py          saves the sources into a pile once, and checks them offline
-│   │   ├── targets.json      the frozen hit rule: the clauses a question lands on, and what supports a claim
-│   │   ├── study.py          every phase and pass rule: the versions, the changes, nulls, blind, absence
-│   │   ├── test_google_privacy.py holds the frozen files to their hashes, and the rules to their word
-│   │   └── questions/
-│   │       ├── reporters.txt   the reporting's claim, in the reporters' own words
-│   │       ├── claims.txt      "Google scans Gmail for ads", as the reporting words it
-│   │       ├── policy-quotes.txt  the policy as each report quotes it
-│   │       ├── blind-reporters.txt  the reporters' lines, reworded three ways, blind
-│   │       ├── blind-claims.txt     the claims, reworded three ways, blind
-│   │       └── null.txt        thirty questions about the policy with nothing to do with ads
+│   ├── novelty.py           the reusable novelty check: have these pieces been put together before?
+│   ├── odile/                piano tuner and beekeeper, caring for her father
+│   │   ├── make_life.py      writes her files into life/, the same bytes every run
+│   │   ├── CHARACTER.md      who she is and how her life is written down
+│   │   ├── PLANTED.md        the needs hidden in her files, and the traps
+│   │   ├── STRIP.md          her questions, and what kernel.py found and missed
+│   │   └── names.txt         everyone named in her files, written by make_life.py
 │   ├── ofrenda/              a séance with a local Gemma: a made-up abuela's files and two real books, every word cited or silent
 │   │   ├── README.md         the story, the claim, what is frozen, the dry run, how to run it, the results
 │   │   ├── CHARACTER.md      Femia, Marisol and the ofrenda kept up year round
@@ -1717,6 +1700,62 @@ willow/
 │   │       ├── femia.md      the abuela's voice, put before the rule, never in place of it
 │   │       ├── babbage.md    Babbage's
 │   │       └── ada.md        Ada Lovelace's
+│   ├── php2shell/            a real bug: the PHP2Shell result, tested seven ways
+│   │   ├── README.md         the claim, the threats, what is frozen, each phase's results
+│   │   ├── FROZEN.json       the SHA-256 of each frozen file, and of the tools when frozen
+│   │   ├── releases.json     PHP's releases and the security commits, pinned by hash
+│   │   ├── make_trees.py     fetches them from php-src, and checks them without git
+│   │   ├── score.py          the frozen hit rule: did a passage land on the fix?
+│   │   ├── score2.py         the second hit rule: also an added run's neighbouring lines
+│   │   ├── phase2.py         the null tests: random draws, null questions, wrong pairs, baselines
+│   │   ├── phase1.py         the blind questions, under both rules, ranked by the kernel and BM25
+│   │   ├── phase3.py         out of sample: seven other CVEs, fetched as git stores them, asked blind
+│   │   ├── phase3.json       those CVEs' releases and fix commits, pinned by hash
+│   │   ├── phase4.py         before the fix: the whole release, ranked three ways, recall at k
+│   │   ├── phase5.py         robustness: rewording, top-k, a words list, and leakage
+│   │   ├── phase6.py         reproducibility: every release, five Pythons, four kernels, a second labeller
+│   │   ├── pipeline.py       the whole method in one command: index, changed-from, rank three ways, score
+│   │   ├── hold.py           not frozen: the kernel's hold rule against looser ones, on phase 3's CVEs
+│   │   ├── test_php2shell.py holds the frozen files to their hashes, and the tools to their word
+│   │   ├── results/
+│   │   │   └── phase6-labels.json  the independent labellers' yes or no, item by item
+│   │   └── questions/
+│   │       ├── author.txt    the first look's eight questions, labelled as the author's
+│   │       ├── blind-a.txt   eight written blind, as a security engineer, from the advisories
+│   │       ├── blind-b.txt   eight written blind, as a sysadmin, from one news article
+│   │       ├── blind-c.txt   eight written blind, as terse keywords, from the advisories
+│   │       ├── phase3.txt    eight a CVE for phase 3's seven, written blind
+│   │       ├── reword.txt     the author's eight, rephrased five ways each, blind
+│   │       ├── advisory-words.txt  a words list of acronyms the advisories expand
+│   │       └── null.txt      fifty questions with nothing to do with the bug
+│   ├── redteam/             a frozen recon composition over a planted target, scanned for novelty
+│   │   ├── README.md         the composition, what is planted, what is frozen, the novelty check
+│   │   ├── FROZEN.json       the SHA-256 of every source, and the finding expected from each section
+│   │   ├── recon.py          runs seven read-only add-ons over the target in an attacker's order
+│   │   ├── test_redteam.py   holds the sources to their hashes and the pass to its planted findings
+│   │   ├── intel/            the offline intel the pass needs, committed so it reads the same every run
+│   │   │   ├── popular.txt    the popular-names list typosquat checks against
+│   │   │   ├── osv/
+│   │   │   │   ├── PyPI/
+│   │   │   │   │   └── GHSA-x84v-xcm2-53pg.json  the Requests credentials-leak advisory
+│   │   │   │   └── npm/
+│   │   │   │       └── GHSA-35jh-r3h4-6jhm.json  the lodash command-injection advisory
+│   │   │   └── registry/
+│   │   │       └── npm/
+│   │   │           └── minimist.json  registry metadata showing minimist long abandoned
+│   │   └── target/           the planted application, read-only
+│   │       ├── package-lock.json  a vulnerable lodash, a misspelled reqeusts, an abandoned minimist
+│   │       ├── requirements.txt   an unpinned flask and a vulnerable requests
+│   │       ├── app/
+│   │       │   ├── client.js    JS sinks: exec, eval, innerHTML, Math.random, TLS off
+│   │       │   ├── config.py    a hardcoded AWS key and password, debug on
+│   │       │   ├── legacy.php   PHP sinks: shell_exec, unserialize, SQL concat, echo, TLS off
+│   │       │   ├── server.go    Go sinks: exec.Command, InsecureSkipVerify
+│   │       │   ├── settings.py  debug on, wildcard CORS, a connection string, a JWT
+│   │       │   └── views.py     Python sinks: shell, pickle, SQL format, eval, verify=False
+│   │       └── node_modules/
+│   │           └── evil-pkg/
+│   │               └── package.json  a postinstall that pipes a remote script to a shell
 │   ├── small-models/         Gemma 3 and Qwen2.5 on willow's own cards and teodora's files, and one box of it all
 │   │   ├── README.md         what was tried, what came of it, the box, what asking it found
 │   │   ├── SESSION.json      the session that ran it, by its first bytes and their SHA-256, never its text
@@ -1744,67 +1783,30 @@ willow/
 │   │       ├── weeknote-qwen-teodora.json  a this-week note the model wrote
 │   │       └── weeknote2-qwen-teodora.json  the same, five lines kept a chunk
 │   ├── stewart-crossover/    a fictional fan's files beside a real life: every word about him from a source
-│       ├── README.md         the claim, the five repositories' parts, what is frozen, the dry run, the results
-│       ├── FROZEN.json       the SHA-256 of each frozen file, and of the tools in five repositories when frozen
-│       ├── sources.json      eight sources by address, time and SHA-256, a news page by its article's lines
-│       ├── questions.json    the facts, quotes, traps, beats, every line of hers that may name him, the pass rules
-│       ├── fetch.py          fetches the sources again and says of each whether it is held
-│       ├── run.py            judges every pass rule and writes each as a kernel verdict row
-│       ├── make_life.py      Wren's files, seeded: every frozen line in them word for word, each file labelled fiction
-│       ├── test_stewart_crossover.py holds the frozen files to their hashes, and the parts that need no network
-│       ├── test_wren.py      holds Wren's files to the frozen lines, the fiction label and her last day
-│       └── results/
-│           ├── run-1.json    the first run's every outcome, less the words misquote printed from a source
-│           ├── record.jsonl  a copy of run 1's record, the verdicts as rows, without its key
-│           ├── run-2.json    the second run's, from freeze 2
-│           ├── record-2.jsonl  a copy of run 2's record, without its key
-│           ├── run-3.json    the third run's, from freeze 3: every rule held
-│           └── record-3.jsonl  a copy of run 3's record, without its key
-│   └── five-repos/           five repositories through the stacks: the stacks, the words list, the reports, two records without their keys
-│       ├── README.md         what was run, what held, what failed and became #211, and the rule: proposed, never sealed
-│       ├── exam.txt          the twelve questions the model was asked
-│       ├── needs.txt         what the other four repositories say they need, asked of this one
-│       ├── rebuild.sh        a fresh box over the folder, the words list on it, the stack, the verify
-│       ├── test_five_repos.py  holds the stacks to add-ons that are here, the words list to the kernel's parser, and the records' chains with nothing sealed
-│       ├── words.txt         one repo's words read as the others', 24 lines, the survivor of 89
-│       ├── reports/          thirteen reports in the order written, each what one stack found and got wrong
-│       │   ├── 00-audit.md
-│       │   ├── 01-compare.md
-│       │   ├── 02-words-list.md
-│       │   ├── 03-words-list-pruned.md
-│       │   ├── 04-history.md
-│       │   ├── 05-on-pr-199.md
-│       │   ├── 06-proof.md
-│       │   ├── 07-exam.md
-│       │   ├── 08-guards.md
-│       │   ├── 09-play.md
-│       │   ├── 10-timeline.md
-│       │   ├── 11-ways-in.md
-│       │   └── 12-landed.md
-│       ├── results/
-│       │   ├── play-record/
-│       │   │   └── record.jsonl  five games as rows, without its key
-│       │   └── proof-record/
-│       │       ├── record.jsonl  ten suggestions waiting on a seal, without its key
-│       │       └── proposals/    the ten suggestion files the record names
-│       │           ├── 06cd2232e3eba2630181aadf65782176f743a08271923fe78bcdd855cd0107f2.json
-│       │           ├── 09f83f2e0afd5b2df265a2514deddfe39b6377b3e3e321094befdfe8d11c7825.json
-│       │           ├── 163c2b4eb4d51d6e1ae65c91215b84ed3285d439881f2911be53f03a077a7288.json
-│       │           ├── 579de5fcb725865e77f898213b531e08dbe8dd5f4c9e7e857525e0195f453b61.json
-│       │           ├── b0e7dc7eac2f793a5b116031c8faa60aecde7d384b8bf72a7882feaf574c1178.json
-│       │           ├── bdb260cc817cdfd545f0f4b1b01a0df24f635c209e989fd64fd139d2b5976e70.json
-│       │           ├── cc6e44979abff0e57eb17d14224fa2acf11f02a3a2de66b76806e79d1a5e153a.json
-│       │           ├── de36b91cde4e3756a2b6840b35ad85e31248494925f7a93451b7727ce2f17a86.json
-│       │           ├── f40895d0cd60e2bc0aa30c2fb3b1fb62c0e076d09706bf63eb486494c3e086bb.json
-│       │           └── fafd739ffd8bd18d9691fc2361ed502d85ff7e19d8d4ba0b39d376346cb74a88.json
-│       └── stacks/           the seven stacks run, machine paths as <scratch> and <repos>
-│           ├── commits.md
-│           ├── compare.md
-│           ├── five-repos.md
-│           ├── history.md
-│           ├── proof.md
-│           ├── voice.md
-│           └── ways-in.md
+│   │   ├── README.md         the claim, the five repositories' parts, what is frozen, the dry run, the results
+│   │   ├── FROZEN.json       the SHA-256 of each frozen file, and of the tools in five repositories when frozen
+│   │   ├── sources.json      eight sources by address, time and SHA-256, a news page by its article's lines
+│   │   ├── questions.json    the facts, quotes, traps, beats, every line of hers that may name him, the pass rules
+│   │   ├── fetch.py          fetches the sources again and says of each whether it is held
+│   │   ├── run.py            judges every pass rule and writes each as a kernel verdict row
+│   │   ├── make_life.py      Wren's files, seeded: every frozen line in them word for word, each file labelled fiction
+│   │   ├── test_stewart_crossover.py holds the frozen files to their hashes, and the parts that need no network
+│   │   ├── test_wren.py      holds Wren's files to the frozen lines, the fiction label and her last day
+│   │   └── results/
+│   │       ├── run-1.json    the first run's every outcome, less the words misquote printed from a source
+│   │       ├── record.jsonl  a copy of run 1's record, the verdicts as rows, without its key
+│   │       ├── run-2.json    the second run's, from freeze 2
+│   │       ├── record-2.jsonl  a copy of run 2's record, without its key
+│   │       ├── run-3.json    the third run's, from freeze 3: every rule held
+│   │       └── record-3.jsonl  a copy of run 3's record, without its key
+│   ├── teodora/              built blind, from a different line of work
+│   │   ├── make_life.py
+│   │   ├── CHARACTER.md
+│   │   ├── PLANTED.md
+│   │   ├── QUESTIONS.md
+│   │   ├── STRIP.md
+│   │   └── test_words.py     the starter words list against her whole folder: her debt to Dev, served with it and not without
+│   └── test_novelty.py      a novel description reads as novel, one an existing demo holds as prior art
 ├── .github/
 │   ├── workflows/
 │   │   ├── ci.yml            runs adapters/stdlib/ci/ci.py a part or a cut of one a job, tests on Python 3.9 to 3.14 (3.9 and 3.14 on a pull request)

@@ -59,6 +59,37 @@ def repo_files(root: Path = ROOT) -> set[str]:
     return {p for p in out.splitlines() if (root / p).is_file()}
 
 
+def plain(n: str) -> str:
+    return n.rstrip("/").lower()
+
+
+def tests_after(n: str) -> tuple[bool, str]:
+    return (n.startswith("test_"), plain(n))
+
+
+def slips(key, body: list[str]) -> int:
+    """How many neighbouring pairs `key` finds out of turn."""
+    return sum(key(a) > key(b) for a, b in zip(body, body[1:]))
+
+
+def a_to_z(body: list[str]):
+    """The order a folder's entries (less README.md) keep, or None for an
+    order of its own. A folder's name sorts without its slash (almanac/
+    before almanac-keep/). Tests after the code first: every A-to-Z folder
+    in the tree keeps it too, and a folder down to one file fits both. A
+    folder is A to Z with at most one pair in ten out of turn, a slip by
+    hand (deep-links/ before decisions/ in stdlib, static-search/ before
+    star-system/ in deps), and kept in an order of its own past that: no
+    folder of fewer than ten is A to Z with a pair out of turn."""
+    best = closest(body)
+    return best if slips(best, body) * 10 <= len(body) else None
+
+
+def closest(body: list[str]):
+    """The A-to-Z order a folder's entries come nearest to."""
+    return min((tests_after, plain), key=lambda k: slips(k, body))
+
+
 # ── the tree ─────────────────────────────────────────────────────────────────
 class Tree:
     """FILES.md's tree, as lines: entries with their depth and path, and the
@@ -152,24 +183,7 @@ class Tree:
         depth, kids = self.children(folder)
         names = [self.lines[i][4 * depth + 4 :].split()[0] for i, *_ in kids]
         body = [n for n in names if n != "README.md"]
-
-        # A folder's name sorts without its slash (almanac/ before
-        # almanac-keep/). Tests after the code first: every A-to-Z folder in
-        # the tree keeps it too, and a folder down to one file fits both. A
-        # folder is A to Z with at most one pair in twenty out of turn, a
-        # slip by hand (deep-links/ before decisions/ in stdlib), and kept
-        # in an order of its own past that.
-        def plain(n: str) -> str:
-            return n.rstrip("/").lower()
-
-        def tests_after(n: str) -> tuple[bool, str]:
-            return (n.startswith("test_"), plain(n))
-
-        def slips(k) -> int:
-            return sum(k(a) > k(b) for a, b in zip(body, body[1:]))
-
-        best = min((tests_after, plain), key=slips)
-        key = best if slips(best) * 20 <= len(body) else None
+        key = a_to_z(body)
         own_order = key is None and len(body) > 1
         # positions are in `names`, README.md and all: the end is before a
         # README.md that closes the folder, after one that opens it
@@ -199,6 +213,33 @@ class Tree:
             self.lines.insert(end, line.rstrip())
             self._set_corner(end, depth, last=True)
         return own_order and name != "README.md"
+
+    def sort(self, folder: str, always: bool = False) -> bool:
+        """Put a folder kept A to Z, with a slip or two by hand, back in that
+        order, each entry with its notes and everything under it; README.md
+        stays where it is. False when there was nothing to move, or the
+        folder keeps an order of its own and isn't to be sorted `always`."""
+        depth, kids = self.children(folder)
+        names = [self.lines[i][4 * depth + 4 :].split()[0] for i, *_ in kids]
+        body = [n for n in names if n != "README.md"]
+        key = closest(body) if always else a_to_z(body)
+        if key is None or not slips(key, body):
+            return False
+        blocks = [self.lines[i : self.span(i, d)] for i, d, *_ in kids]
+        start, end = kids[0][0], self.span(kids[-1][0], depth)
+        rest = sorted(
+            (b for b, n in zip(blocks, names) if n != "README.md"),
+            key=lambda b: key(b[0][4 * depth + 4 :].split()[0]),
+        )
+        if names[0] == "README.md":
+            rest.insert(0, blocks[0])
+        elif names[-1] == "README.md":
+            rest.append(blocks[-1])
+        self.lines[start:end] = [line for b in rest for line in b]
+        _, kids = self.children(folder)
+        for k, (i, d, *_) in enumerate(kids):
+            self._set_corner(i, d, last=k == len(kids) - 1)
+        return True
 
     def _folder_line(self, folder: str) -> tuple[int, int]:
         for i, d, path, is_folder in self.entries():
