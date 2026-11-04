@@ -3,7 +3,7 @@ section: For maintainers
 line: This repo's checks as verdict rows on a kernel record, the same every run.
 source: box
 added: 2026-10-23
-writes: record, BUGS.md, adapters/stdlib/*/*.py
+writes: record, BUGS.md, FILES.md, adapters/stdlib/*/*.py
 network: PyPI, to read each dependency floor's release date
 role: repo
 uses: live, readme, stack, test-shards
@@ -82,6 +82,16 @@ owed; 42 git couldn't compare with the base; 2 an entry is missing.
 **Known bugs:** [bugs.py](bugs.py) makes BUGS.md from the tests marked as
 expected to fail, `strict=True` with a reason `bug #N: …`, and refuses any
 other such mark. `test_docs.py` fails when BUGS.md and the tests disagree.
+
+**Every file:** [files.py](files.py) keeps FILES.md's tree to git's list of
+files. `check` says what the tree lacks and what it lists that's gone;
+`write` puts each new file in its folder's order (tests after the code,
+README.md last; at the end of a folder kept in an order of its own, which
+it says), with what the file says of itself (a docstring's first line, a
+Markdown title, `its card`), and takes out what's gone with its notes. A
+file it can't describe goes in with nothing, and it says which.
+[create_pr.py](../github/create_pr.py) runs `write` before a pull request
+opens.
 
 **Whose lines:** [whose.py](whose.py) takes `PATH:FIRST-LAST` places and
 prints the commit that wrote each, with git alone. Given a host add-on's
