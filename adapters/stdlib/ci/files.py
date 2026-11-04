@@ -152,13 +152,24 @@ class Tree:
         depth, kids = self.children(folder)
         names = [self.lines[i][4 * depth + 4 :].split()[0] for i, *_ in kids]
         body = [n for n in names if n != "README.md"]
-        key = None
-        # tests after the code first: every A-to-Z folder in the tree keeps it
-        # too, and a folder down to one file fits both
-        for k in (lambda n: (n.startswith("test_"), n.lower()), str.lower):
-            if body == sorted(body, key=k):
-                key = k
-                break
+
+        # A folder's name sorts without its slash (almanac/ before
+        # almanac-keep/). Tests after the code first: every A-to-Z folder in
+        # the tree keeps it too, and a folder down to one file fits both. A
+        # folder is A to Z with at most one pair in twenty out of turn, a
+        # slip by hand (deep-links/ before decisions/ in stdlib), and kept
+        # in an order of its own past that.
+        def plain(n: str) -> str:
+            return n.rstrip("/").lower()
+
+        def tests_after(n: str) -> tuple[bool, str]:
+            return (n.startswith("test_"), plain(n))
+
+        def slips(k) -> int:
+            return sum(k(a) > k(b) for a, b in zip(body, body[1:]))
+
+        best = min((tests_after, plain), key=slips)
+        key = best if slips(best) * 20 <= len(body) else None
         own_order = key is None and len(body) > 1
         # positions are in `names`, README.md and all: the end is before a
         # README.md that closes the folder, after one that opens it
@@ -265,7 +276,10 @@ def write(
         for depth in range(1, len(parts)):
             folder = "/".join(parts[:depth])
             if folder not in tree.folders():
-                tree.insert("/".join(parts[: depth - 1]), parts[depth - 1] + "/", "")
+                if tree.insert(
+                    "/".join(parts[: depth - 1]), parts[depth - 1] + "/", ""
+                ):
+                    ended.append(folder + "/")
         said = describe(root, path)
         if tree.insert("/".join(parts[:-1]), parts[-1], said):
             ended.append(path)
