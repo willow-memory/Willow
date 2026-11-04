@@ -135,9 +135,17 @@ GREEN = """## made
 def run(
     repo: Path, *argv: str, gh: bool = True, **env: str
 ) -> subprocess.CompletedProcess:
-    path = (
-        str(repo.parent / "bin") + os.pathsep + ENV["PATH"] if gh else "/usr/bin:/bin"
-    )
+    """create_pr.py in the repo, with the fake gh first on PATH; with gh=False,
+    a PATH holding git alone, so no gh this machine has (GitHub's runners
+    keep one in /usr/bin) can answer."""
+    if gh:
+        path = str(repo.parent / "bin") + os.pathsep + ENV["PATH"]
+    else:
+        bare = repo.parent / "git-only"
+        bare.mkdir(exist_ok=True)
+        if not (bare / "git").exists():
+            (bare / "git").symlink_to(shutil.which("git"))
+        path = str(bare)
     e = {**ENV, "PATH": path, "FAKE_GH": str(repo.parent / "gh.json"),
          "WILLOW_GUARD_ROOT": str(repo), **env}  # fmt: skip
     script = repo / "adapters/stdlib/github/create_pr.py"
