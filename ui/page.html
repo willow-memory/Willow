@@ -375,7 +375,7 @@ function freshState(){const st={};const deps=new Set(Object.values(P).filter(p=>
 const UNDO=[];let was=null;
 function remember(){const now=JSON.stringify(S);if(was!==null&&was!==now){UNDO.push(was);if(UNDO.length>50)UNDO.shift()}was=now;undoBtn()}
 function undoBtn(){document.getElementById('undo').hidden=!UNDO.length}
-function undo(){if(!UNDO.length)return;was=UNDO.pop();S=JSON.parse(was);save();subject=null;SEALED=false;stale();preview(null);flow();document.getElementById('find').value.trim()?found():shelf();summary();undoBtn();say('Undone.')}
+function undo(){if(!UNDO.length)return;was=UNDO.pop();S=JSON.parse(was);save();refreshSeal();subject=null;SEALED=false;stale();preview(null);flow();document.getElementById('find').value.trim()?found():shelf();summary();undoBtn();say('Undone.')}
 document.getElementById('undo').onclick=undo;
 const ORDER=()=>['start',...STAGES.map(s=>s.key)];
 document.addEventListener('keydown',e=>{const typing=['INPUT','TEXTAREA','SELECT'].includes(document.activeElement?.tagName);
@@ -386,7 +386,7 @@ document.addEventListener('keydown',e=>{const typing=['INPUT','TEXTAREA','SELECT
   const o=ORDER(),i=o.indexOf(cur==='review'?STAGES.at(-1).key:cur),j=Math.max(0,Math.min(o.length-1,i+(e.key==='ArrowDown'?1:-1)));
   e.preventDefault();if(o[j]!==cur){go(o[j]);document.querySelector('#steplist .mini.sel')?.focus({preventScroll:true})}}});
 document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&!e.shiftKey&&e.key.toLowerCase()==='z'&&!['INPUT','TEXTAREA'].includes(document.activeElement?.tagName)){e.preventDefault();undo()}});
-function changed(){remember();save();subject=null;SEALED=false;stale();flow();document.getElementById('find').value.trim()?found():shelf();summary()}
+function changed(){remember();save();refreshSeal();subject=null;SEALED=false;stale();flow();document.getElementById('find').value.trim()?found():shelf();summary()}
 // ── a piece needs its parents: what its card uses, and theirs ───────────────
 function needs(n){const out=[],todo=[...(P[n]?.hard||[])];while(todo.length){const h=todo.shift();if(out.includes(h)||!P[h])continue;out.push(h);todo.push(...(P[h].hard||[]))}return out}
 function needing(n){return all().filter(m=>m!==n&&needs(m).includes(n))}
@@ -437,8 +437,12 @@ function steplist(){if(!S)return;const box=document.getElementById('steplist');b
  list.append(el('button',{class:'mini review'+(cur==='review'?' sel':''),title:'everything you picked, in one place, to seal',onclick:()=>subject?go('review'):look()},el('span',{class:'no',text:String(STAGES.length+1)}),el('b',{text:'Look it over, and seal it'}),el('small',{text:sealState()==='sealed'?'sealed':subject?'looked over, not sealed yet':sealState()==='changed'?'changed since you sealed it':'nothing runs until you seal'})));
  box.append(list);if(shown!==cur){shown=cur;const sel=box.querySelector('.mini.sel');if(sel&&getComputedStyle(list).flexDirection==='row')sel.scrollIntoView({inline:'nearest',block:'nearest'})}}
 // what you sealed on this page, to tell whether the stack has moved since
-const shape=()=>JSON.stringify({f:S.folders.map(f=>f.path),s:picked(),a:Object.fromEntries(Object.entries(S.args||{}).filter(([k])=>all().includes(k)).sort())});
-function sealState(){let was=null;try{was=localStorage.getItem('willow-canvas-sealed')}catch(e){}return !was?null:was===shape()?'sealed':'changed'}
+// what the page would propose now, as look() sends it
+function proposalDoc(){return{name:'my willow',folders:S.folders.map(f=>f.path),lanes:STAGES.filter(s=>!s.fixed&&s.key!=='folders').map(s=>({title:s.title,steps:(S.stages[s.key]||[]).map(n=>({name:n,args:(S.args||{})[n]||'--box {box}'}))})).filter(l=>l.steps.length)}}
+// sealed, or changed since: the record says, wherever the seal was made (canvas.py's sealed_against)
+let SEALST=null,sealT=null;
+function sealState(){return SEALST}
+function refreshSeal(){clearTimeout(sealT);sealT=setTimeout(async()=>{const r=await api('sealed',proposalDoc());if(r.state!==SEALST){SEALST=r.state??null;steplist();stacktree()}},150)}
 // hover a piece anywhere: its line in the tree lights, with what it needs and what needs it
 let TR=null;
 function trace(n){const rel=new Set(n?[n,...needs(n),...needing(n)]:[]),tree=document.getElementById('stacktree');let hit=false;
@@ -511,7 +515,7 @@ function shelf(){const s=STAGES.find(x=>x.key===cur),head=document.getElementByI
 function summary(){const n=all().length,b=pulled().length,net=[...new Set([...all(),...pulled()].map(x=>P[x]?.network).filter(x=>x&&x!=='none'))];
  const s=document.getElementById('sum');s.innerHTML='';s.append(el('b',{text:`${S.folders.length} folder${S.folders.length===1?'':'s'}, ${n} piece${n===1?'':'s'}`}),b?` (and ${b} they bring along)`:'',' · ',net.length?el('span',{style:'color:var(--warn)',text:'goes online: '+net.join('; ')}):'never goes online')}
 async function look(){if(!S.folders.length){cur='folders';flow();shelf();say('Add a folder first: it’s what willow answers from.',1);return}if(cur!=='review')back=cur;
- const lanes=STAGES.filter(s=>!s.fixed&&s.key!=='folders').map(s=>({title:s.title,steps:(S.stages[s.key]||[]).map(n=>({name:n,args:(S.args||{})[n]||'--box {box}'}))})).filter(l=>l.steps.length);
+ const lanes=proposalDoc().lanes;
  const r=await api('propose',{name:'my willow',folders:S.folders.map(f=>f.path),lanes});if(r.refused){say(r.refused,1);return}subject=r.subject;const a=r.arrangement;
  const named=k=>(S.stages[k]||[]).join(', ');const li=(t)=>el('li',{text:t});const rv=document.getElementById('review');rv.innerHTML='';cur='review';const f0=document.getElementById('find');if(f0.value){f0.value='';document.getElementById('findx').hidden=true}SEALED=false;
  const one=a.folders.length===1;
@@ -527,7 +531,7 @@ async function look(){if(!S.folders.length){cur='folders';flow();shelf();say('Ad
  if(a.pulled_in.length)parts.append(el('h3',{text:'Brought along, because pieces above need them'}),el('ul',{},...a.pulled_in.map(n=>el('li',{},el('b',{text:n}),' — '+(P[n]?.line||'')))));
  const sealB=el('button',{class:'go',text:'Seal it'}),asmB=el('button',{text:'Put it together',disabled:''}),out=el('div',{class:'msg'});
  sealB.onclick=async()=>{const x=await api('seal',{subject});if(x.refused||!x.sealed){out.className='msg err';out.textContent='Not sealed: '+(x.refused||x.said);return}
-  sealB.disabled=true;asmB.disabled=false;SEALED=true;try{localStorage.setItem('willow-canvas-sealed',shape())}catch(e){}steplist();stacktree();out.className='msg';out.textContent='Sealed. This is yours now. “Put it together” copies in the pieces that aren’t here yet, each one written on the record.'};
+  sealB.disabled=true;asmB.disabled=false;SEALED=true;refreshSeal();out.className='msg';out.textContent='Sealed. This is yours now. “Put it together” copies in the pieces that aren’t here yet, each one written on the record.'};
  asmB.onclick=async()=>{const x=await api('assemble',{subject});if(x.refused){out.className='msg err';out.textContent=x.refused;return}asmB.disabled=true;
   out.textContent=(x.added.length?'Put together: '+x.added.join(', ')+'.':'Every piece was already here.')+(x.skipped?.length?' Not added: '+x.skipped.join(', ')+(x.said?' ('+x.said.trim().split('\n').pop()+')':'')+'.':'');P=await api('pieces');flow();shelf();offerStart(subject,'my willow')};
  rv.append(el('section',{class:'review'},el('h2',{text:'Here’s what you’re putting together'}),ul,parts,forAgent(a),
@@ -568,5 +572,5 @@ document.getElementById('find').addEventListener('input',e=>find(e.target.value)
  const st=await api('state');TO=st.to||'';const last=(st.stacks||[]).filter(x=>x.sealed).at(-1);if(last){offerStart(last.subject,last.name||'my willow');const j=await api('start');if(j.state&&j.state!=='none')watch()}
  for(const f of st.folders||[])if(!S.folders.some(x=>x.path===f))await addFolder(f);{const old=['read','words','find','watch','hide','suggest','honest','use','extra'],keys=[...STAGES.map(s=>s.key),...old,...Object.keys(S.stages)],names=[...new Set(keys.flatMap(k=>S.stages[k]||[]))];
   S.stages={};for(const n of names)if(P[n])(S.stages[stageOf(P[n])]??=[]).push(n)}save();
- for(const f of S.folders)baseline(f.path);UNDO.length=0;was=JSON.stringify(S);undoBtn();cur=kept()||cur;flow();shelf();summary()})();
+ for(const f of S.folders)baseline(f.path);UNDO.length=0;was=JSON.stringify(S);undoBtn();cur=kept()||cur;refreshSeal();flow();shelf();summary()})();
 </script></body></html>

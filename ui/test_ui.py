@@ -553,3 +553,30 @@ def test_the_commands_refuse_what_the_page_refuses(stack_dir, tmp_path, capsys):
 def test_the_page_knows_its_stack_to_say_the_commands_for_it(site, stack_dir):
     _, call = site
     assert call("GET", "/tok/api/state")[1]["to"] == str(stack_dir.resolve())
+
+
+def test_sealed_or_changed_is_the_records_word_wherever_it_was_sealed(site, tmp_path):
+    """Sealed with the kernel's own command, not the page: the page's pick is
+    "sealed" while it's what was sealed, "changed" once it isn't, and asking
+    writes nothing."""
+    cv, call = site
+    doc = {
+        "name": "mine",
+        "folders": [str(a_folder(tmp_path))],
+        "lanes": [
+            {
+                "title": "t",
+                "steps": [{"name": "coming-up", "args": "--box {box} --days 9"}],
+            }
+        ],  # fmt: skip
+    }
+    subject = call("POST", "/tok/api/propose", doc)[1]["subject"]
+    k = cv.kernel
+    assert canvas.quiet(k.seal, cv.box, subject, k.now())[0] == k.ALIVE
+    before = (cv.box / "record.jsonl").read_bytes()
+    assert call("POST", "/tok/api/sealed", doc)[1] == {"state": "sealed", "subject": subject}  # fmt: skip
+    moved = json.loads(json.dumps(doc))
+    moved["lanes"][0]["steps"][0]["args"] = "--box {box} --days 10"
+    assert call("POST", "/tok/api/sealed", moved)[1]["state"] == "changed"
+    assert call("POST", "/tok/api/sealed", {"lanes": []})[1]["state"] == "changed"
+    assert (cv.box / "record.jsonl").read_bytes() == before

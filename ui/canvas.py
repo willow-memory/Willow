@@ -685,6 +685,29 @@ class Canvas:
                 "in_stack": sorted(assemble.manifest(self.stack)["addons"]),
                 "to": str(self.to)}  # fmt: skip
 
+    def sealed_against(self, doc: dict) -> dict:
+        """Whether this pick is the stack last sealed on this record: "sealed"
+        while it is, "changed" once it isn't, nothing before any seal. It
+        reads the record and the proposal the kernel kept; it writes nothing."""
+        rows, _ = self.kernel.read(self.box / "record.jsonl")
+        sealed = self.kernel.sealed(self.box, rows)
+        last = [r["subject"] for r in rows if r["kind"] == KIND and r.get("subject") in sealed]  # fmt: skip
+        if not last:
+            return {"state": None}
+        try:
+            kept = json.loads((self.box / "proposals" / f"{last[-1][9:]}.json").read_text())  # fmt: skip
+            then = json.loads(kept["data"])
+        except (OSError, ValueError, KeyError):
+            return {"state": None}
+        now, _ = self.arrangement(doc)
+
+        def shape(arr: dict) -> tuple:
+            steps = [(s["name"], s["args"]) for ln in arr["lanes"] for s in ln["steps"]]
+            return arr["folders"], steps, sorted(arr["kept"])
+
+        same = now is not None and shape(now) == shape(then)
+        return {"state": "sealed" if same else "changed", "subject": last[-1]}
+
     def assemble(self, subject: str) -> dict:
         rows, _ = self.kernel.read(self.box / "record.jsonl")
         if subject not in self.kernel.sealed(self.box, rows) or not self.is_canvas(
@@ -981,6 +1004,8 @@ def handler(cv: Canvas, token: str, host: str):
                 return self.send(200, cv.propose(doc))
             if r == "/api/seal":
                 return self.send(200, cv.seal(str(doc.get("subject", ""))))
+            if r == "/api/sealed":
+                return self.send(200, cv.sealed_against(doc))
             if r == "/api/assemble":
                 return self.send(200, cv.assemble(str(doc.get("subject", ""))))
             if r == "/api/start":
