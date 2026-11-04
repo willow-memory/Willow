@@ -10,6 +10,10 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `ci.py needs` says which gates this machine can't run, by what each needs,
+  without running any, in under a second; AGENTS.md now asks it before a
+  change, in place of running every gate as a baseline, and after a change,
+  only the gates it can move (#224)
 - `assemble.py kernel` puts this willow's kernel.py and vectors in a stack
   in place of the ones it was made with, only if the stack's record verifies
   under the new kernel and, with --python, every add-on's tests pass on it;

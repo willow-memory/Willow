@@ -4,6 +4,7 @@
                                             [--box DIR] [--now TS]
     python adapters/stdlib/ci/ci.py verify [--box DIR]
     python adapters/stdlib/ci/ci.py show   [--box DIR]
+    python adapters/stdlib/ci/ci.py needs  [PART|GATE ...]
 
 PART is lint, tests, ports, demo, deps, mutants or tools; none means all seven.
 A GATE (tests:strip) runs that one gate; --without leaves one out of what was
@@ -36,13 +37,21 @@ and nothing the commands print that changes from run to run (how long they
 took) reaches a row, so the same files run the same way give the same record,
 byte for byte. `test_ci.py` holds it to that.
 
-Exit codes, the kernel's: 0 every gate satisfied; 42 a gate unreachable and
-none failing; 2 a gate failing, or a record that doesn't verify.
+`needs` runs nothing: it asks each gate what it needs (a Python module, a
+program on PATH) and says which this machine can run and which would come
+back unreachable, in a second, where running every gate takes over an hour.
+A gate that installs from the network (deps) can only be known by running
+it, and is said so. It writes no record.
+
+Exit codes, the kernel's: 0 every gate satisfied (`needs`: every gate can
+run here); 42 a gate unreachable and none failing (`needs`: one would be, or
+only a run can tell); 2 a gate failing, or a record that doesn't verify.
 """
 
 from __future__ import annotations
 
 import contextlib
+import functools
 import hashlib
 import importlib.util
 import io
@@ -99,6 +108,7 @@ def run(argv: tuple, cwd: Path = ROOT, env: dict | None = None) -> tuple[int, st
     return got.returncode, got.stdout
 
 
+@functools.lru_cache(maxsize=None)  # one look per run: what's installed doesn't move
 def missing_module(name: str) -> str | None:
     found = subprocess.run([PY, "-c", f"import {name}"], capture_output=True)
     return None if found.returncode == 0 else f"{name} is not installed"
@@ -124,6 +134,7 @@ def command(*argv: str, needs=None, judge=None, env: dict | None = None):
         why = judge(said) if judge else None
         return (FAILING, said, why) if why else (SATISFIED, said, None)
 
+    gate.needs = needs or (lambda: None)
     return gate
 
 
@@ -173,6 +184,7 @@ def guarded_tests(*target: str):
             return FAILING, said, f"exit {code}"
         return SATISFIED, said, None
 
+    gate.needs = lambda: missing_module("pytest")
     return gate
 
 
@@ -207,6 +219,7 @@ def demo(name: str):
                 return FAILING, said, f"make_life.py --check: exit {code}"
             return SATISFIED, said, None
 
+    gate.needs = lambda: None  # Python alone
     return gate
 
 
@@ -253,6 +266,7 @@ def deps_add_on(name: str, pins: str = "requirements.txt"):
                 return FAILING, said, f"exit {code}"
             return SATISFIED, said, None
 
+    gate.online = "installs its requirements from PyPI"
     return gate
 
 
@@ -334,6 +348,9 @@ def floors() -> tuple[str, str, str | None]:
     if wrong:
         return FAILING, said, "; ".join(wrong)
     return SATISFIED, said, None
+
+
+floors.online = "reads each pin's release history from PyPI"
 
 
 def deps_add_ons() -> list[str]:
@@ -450,6 +467,18 @@ def adapter_tests(base: Path = ROOT) -> list[str]:
 LIVE = ROOT / "adapters" / "stdlib" / "live" / "live.py"
 
 
+def live_needs() -> dict[str, tuple[str, ...]]:
+    """Each of live.py's checks and the programs it names, as `live.py list`
+    prints them ("vim  needs vim  ...")."""
+    got = subprocess.run([PY, str(LIVE), "list"], capture_output=True, text=True)
+    out = {}
+    for line in got.stdout.splitlines():
+        m = re.match(r"(\S+)\s+needs\s+(.+?)(?:\s{2,}|$)", line)
+        if m:
+            out[m[1]] = tuple(m[2].replace(",", " ").split())
+    return out
+
+
 def live_check(name: str):
     """One of live.py's checks: its program run on the lines its add-on
     prints. A program that isn't installed is unreachable, never a pass."""
@@ -467,6 +496,7 @@ def live_check(name: str):
             )
         return SATISFIED, said, None
 
+    gate.needs = lambda: missing_tools(*live_needs().get(name, ()))
     return gate
 
 
@@ -751,6 +781,37 @@ def do_show(box: Path) -> int:
     return code_of([r["state"] for r in latest.values()])
 
 
+def do_needs(names: list[str]) -> int:
+    """Which of the gates named (all when none is) this machine can run, by
+    what each needs, without running one."""
+    picked = set(select(names, [], None))
+    can, cannot, online = [], [], []
+    for part, gate, how in gates():
+        if gate not in picked:
+            continue
+        # what it needs first: a gate that installs from PyPI can still name
+        # a program this machine lacks (a deps card's programs:), and then a
+        # run would only say so too
+        if (why := getattr(how, "needs", lambda: None)()) is not None:
+            cannot.append((gate, why))
+        elif getattr(how, "online", None):
+            online.append((gate, how.online))
+        else:
+            can.append(gate)
+    n = len(can) + len(cannot) + len(online)
+    print(f"needs: {n} gate{'s' * (n != 1)}; {len(can)} can run here, "
+          f"{len(cannot)} would be unreachable, {len(online)} known only by running")  # fmt: skip
+    w = max((len(g) for g, _ in cannot), default=0)
+    for gate, why in cannot:
+        print(f"  {gate:<{w}}  unreachable: {why}")
+    for why in sorted({y for _, y in online}):
+        these = [g for g, y in online if y == why]
+        print(f"  {len(these)} gate{'s' * (len(these) != 1)} ({these[0]}, ...)"
+              f" only a run can tell: {why}" if len(these) > 1 else
+              f"  {these[0]}  only a run can tell: {why}")  # fmt: skip
+    return kernel.ESCALATE if cannot or online else kernel.ALIVE
+
+
 def main(argv: list[str]) -> int:
     verb, rest = (argv[0], argv[1:]) if argv else ("", [])
     opts, args, without, it = {}, [], [], iter(rest)
@@ -773,6 +834,16 @@ def main(argv: list[str]) -> int:
         return do_verify(box)
     if verb == "show" and not args:
         return do_show(box)
+    if (
+        verb == "needs"
+        and not any(a.startswith("-") for a in args + without)
+        and not opts
+    ):
+        try:
+            return do_needs(args)
+        except ValueError as e:
+            print(f"refused: {e}", file=sys.stderr)
+            return kernel.REFUSED
     print(__doc__.split("\n\n")[1], file=sys.stderr)
     return kernel.REFUSED
 
