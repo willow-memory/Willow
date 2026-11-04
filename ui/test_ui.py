@@ -292,7 +292,9 @@ def test_a_stack_takes_a_new_kernel_only_whole_and_only_if_it_holds(tmp_path, ca
     shutil.copy2(
         canvas.WILLOW / "vectors" / "cases.json", later / "vectors" / "cases.json"
     )
-    (later / "adapters").symlink_to(canvas.WILLOW / "adapters")
+    todo = later / "adapters" / "stdlib" / "todo"  # willow's todo, changed with it
+    shutil.copytree(canvas.WILLOW / "adapters" / "stdlib" / "todo", todo)
+    (todo / "README.md").write_text("# todo, a commit on\n")
     src = (canvas.WILLOW / "kernel.py").read_text(encoding="utf-8")
     m = assemble.manifest(stack)
     m["willow"] = str(later)
@@ -315,7 +317,7 @@ def test_a_stack_takes_a_new_kernel_only_whole_and_only_if_it_holds(tmp_path, ca
     # a kernel the record holds under but todo's tests fail on: refused too
     kernel_is(src + '\n\ndef newest(text):\n    return ""\n')
     assert assemble.swap_kernel(to, None, sys.executable) == assemble.REFUSED
-    assert "todo" in capsys.readouterr().err
+    assert "willow's todo changed since; `refresh` it" in capsys.readouterr().err
     assert (
         assemble.sha(stack / "kernel.py") == was
         and assemble.check(to) == assemble.ALIVE

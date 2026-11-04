@@ -405,7 +405,17 @@ def swap_kernel(to: Path, pin: Path | None, python: str | None) -> int:
             if t["state"] == "failed":
                 failed.append(name)
         if failed:
-            return back(f"on the new kernel, the tests of {', '.join(failed)} fail")
+            # a piece willow changed with its kernel: refreshed, it may hold
+            moved = [n for n in failed if (willow / "adapters" / "stdlib" / n).is_dir()
+                     and {str(p.relative_to(willow / "adapters" / "stdlib" / n)): sha(p)
+                          for p in sorted((willow / "adapters" / "stdlib" / n).rglob("*"))
+                          if p.is_file() and "__pycache__" not in p.parts}
+                     != m["addons"][n]["files"]]  # fmt: skip
+            hint = (f" (willow's {', '.join(moved)} changed since; `refresh` it, then"
+                    " `kernel` again)" if moved else "")  # fmt: skip
+            return back(
+                f"on the new kernel, the tests of {', '.join(failed)} fail{hint}"
+            )
     was = m["kernel"]
     m.update(kernel=new, kernel_source=commit, pinned=True if pin else None)
     if vec.is_file():
