@@ -158,6 +158,13 @@ def test_the_draw_is_the_weeks_and_anyone_can_redo_it(repo):
         ("stdlib/delta", card(added="soon"), "added is the date"),
         ("stdlib/delta", card(needs="x; MIT"), "a stdlib add-on needs nothing"),
         ("deps/delta", card(), "a deps add-on says what it needs"),
+        ("stdlib/delta", card(programs="vim"), "only a deps add-on names programs"),
+        (
+            "deps/delta",
+            card(needs="the gpg program; GPL", programs="gpg, tesseract"),
+            "programs names tesseract, which needs doesn't",
+        ),
+        ("deps/delta", card(needs="the gpg program; GPL", programs="gpg"), None),
         ("stdlib/delta", card(writes="everything"), "writes is nothing, or any of"),
         ("stdlib/delta", card(writes="nothing, to"), "writes is nothing, or any of"),
         ("stdlib/delta", card(writes="README.md, record"), None),

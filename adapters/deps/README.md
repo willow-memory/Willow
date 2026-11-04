@@ -12,6 +12,10 @@ adds. Each add-on in this folder carries:
   program (`tesseract`, `gpg`, `git`) or service (a local model server), with
   its licence. The licence must be one an Apache-2.0 project can depend on;
   a program that is only run, never linked, says so;
+- **`programs:` in the header**, when it runs a program PyPI doesn't
+  install (`programs: tesseract`): each one's name on PATH, as `needs:` names
+  it. Without one, its CI gates are unreachable, never failing: this
+  machine lacks the program, which says nothing of the add-on;
 - **`network:` in the header**, as every add-on has, saying where it goes
   if it goes online at all, even once to download a model, and the same on
   the first line of its card;

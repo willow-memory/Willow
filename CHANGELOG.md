@@ -1959,6 +1959,13 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- `ci`: a deps add-on whose program this machine lacks is unreachable, not
+  failing. A card names each program PyPI doesn't install on a `programs:`
+  line (ocr's tesseract, kart's bwrap, pgp's gpg), and its deps gates ask
+  PATH for it before installing anything; before, a machine without
+  tesseract or bubblewrap showed deps:ocr and deps:kart failing, as if the
+  add-ons were broken. `readme` refuses `programs:` on a stdlib card, or
+  naming a program its `needs:` doesn't
 - `ci` runs every demo's tests: ofrenda's, stewart-crossover's and
   small-models' were in no gate, and one of stewart-crossover's read Wren's
   folder before asking whether it had been made, so it failed on every fresh

@@ -4,6 +4,7 @@ line: Signs exports and reports with your PGP key, verifiable anywhere.
 source: new
 added: 2026-10-30
 needs: the gpg program, run not linked, and python-gnupg; GPL, BSD-3-Clause
+programs: gpg
 floor: python-gnupg 0.4.6
 writes: to
 network: none
