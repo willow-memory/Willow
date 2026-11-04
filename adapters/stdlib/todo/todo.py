@@ -21,13 +21,12 @@ characters); the undated ones under their own heading.
 The oldest open item is often the one that matters: a thing said once and
 never done doesn't get newer.
 
-A date no calendar has (1984-06-31) is never ordered as if it were one: its
-lines go under `## impossible date`, and the report is 42, since a figure
-that can't be is something for you to look at. The oldest is said of the
-real dates only.
+A date no calendar has (1984-06-31) is no date to the kernel, so its line is
+never ordered as if it were one: it's dated by the nearest real date above
+it, or listed as undated.
 
 It only reads. Exit codes, the kernel's: 0 found some (populated) or none
-(empty); 42 a line's date is impossible; 2 refused.
+(empty); 2 refused.
 """
 
 from __future__ import annotations
@@ -35,7 +34,6 @@ from __future__ import annotations
 import json
 import re
 import sys
-from datetime import date
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
@@ -57,16 +55,6 @@ def todos(pile: list[dict]) -> list[tuple[str, str, str]]:
             if MARK.search(line):
                 out.append((when, f"{c['path']}:{c['line'] + i}", line.strip()))
     return sorted(out)  # "undated" sorts after every YYYY-MM-DD, so undated come last
-
-
-def possible(when: str) -> bool:
-    """Whether YYYY-MM-DD is a day the calendar has: the kernel reads any day
-    01 to 31 in any month as a date, so June 31st gets here."""
-    try:
-        date(int(when[:4]), int(when[5:7]), int(when[8:]))
-    except ValueError:
-        return False
-    return True
 
 
 # ── the report: the shape every report add-on prints (ci/README.md) ─────────
@@ -109,19 +97,15 @@ def main(argv: list[str]) -> int:
             report(NAME, "empty", "nothing in your folder is marked to do", []), as_json
         )
         return kernel.ALIVE
-    real = [h for h in hits if h[0] != "undated" and possible(h[0])]
+    real = [h for h in hits if h[0] != "undated"]
     dated = [(place, f"{when}  {line[:120]}") for when, place, line in real]
-    impossible = [(place, f"{when}  {line[:120]}") for when, place, line in hits
-                  if when != "undated" and not possible(when)]  # fmt: skip
     undated = [(place, line[:120]) for when, place, line in hits if when == "undated"]
     said = f"{len(hits)} line{'s' if len(hits) != 1 else ''} marked to do, " + (
         f"the oldest from {real[0][0]}" if real else "none dated"
     )
-    if impossible:
-        said += f"; {len(impossible)} dated on a day no calendar has"
-    groups = [(None, dated), ("impossible date", impossible), ("undated", undated)]
+    groups = [(None, dated), ("undated", undated)]
     say(report(NAME, "populated", said, groups), as_json)
-    return kernel.ESCALATE if impossible else kernel.ALIVE
+    return kernel.ALIVE
 
 
 if __name__ == "__main__":

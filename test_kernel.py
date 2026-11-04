@@ -732,6 +732,16 @@ def test_a_date_inside_a_web_address_dates_nothing():
     )
 
 
+def test_a_day_the_month_does_not_have_dates_nothing():
+    # June has thirty days: the 31st is a typo, not a date, and never the newest
+    assert k.newest("Born 1984-06-31, moved 1990-01-02") == "19900102"
+    for no_day in ("1984-06-31", "2026-04-31", "2023-02-29", "1900-02-29",
+                   "20230229", "29/02/2023", "31/04/2026", "4/31/2026"):  # fmt: skip
+        assert k.newest(no_day) == "", no_day
+    for day in ("1984-06-30", "2026-12-31", "2024-02-29", "2000-02-29", "29/02/2024"):
+        assert k.newest(day) != "", day
+
+
 def test_a_propose_whose_every_suggestion_is_refused_does_not_exit_0(tmp_path):
     pile, box = tmp_path / "pile", tmp_path / "box"
     pile.mkdir()

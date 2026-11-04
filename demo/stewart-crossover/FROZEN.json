@@ -8,7 +8,7 @@
   "run.py": "972c1e4b803eaf2aecbc28e82e25ced3b42fe438c67155f31f5990e7e32a8752"
  },
  "tools_at_freeze": {
-  "kernel.py": "dc1050cfe58eb2dc082ec870406b98eba695ea69989bf1809b1f855f269de0da",
+  "kernel.py": "0f6f34eabdc4f4ec82eaf2ded411bea46da2aee0ea57bbc2b0c6a4e0ecfe4111",
   "adapters/stdlib/claim-check/claim_check.py": "4f0d171909eb536b6b9d9206e49db850d0b76836359711317f880146513f257a",
   "adapters/stdlib/quote-check/quote_check.py": "f8dd5e5591490da8fefb3708ec899f906420d0dc6150a823b46001f079715be1",
   "adapters/stdlib/misquote/misquote.py": "438994a820db3a63c341d1ca0036ac9f8c75655c3f98c03499ac3ff224b0af7e",
@@ -81,6 +81,11 @@
    "n": 4,
    "date": "2026-11-02",
    "why": "misquote prints a report (adapters/stdlib/ci/README.md, the report contract): its closest passage is now the where of each row, and the old 'closest' line is gone, so run.py asks misquote for --json and takes the rows' places. Rules, sources and questions unchanged; nothing was run between freeze 3 and this one. The tools are re-hashed as they stand now (kernel.py, misquote.py changed since freeze 3; the other repositories' files are as at freeze 3, not re-read)"
+  },
+  {
+   "n": 5,
+   "date": "2026-11-03",
+   "why": "kernel.py re-hashed: a date is a day its month has (1984-06-31 and 2023-02-29 are no date). No line in this demo's folder reads a different date; the fetched sources aren't kept here, so a run is what would show one. Rules, sources and questions unchanged; the other repositories' files are as at freeze 4, not re-read."
   }
  ]
 }

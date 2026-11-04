@@ -1948,6 +1948,10 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- The kernel reads a date only when its month has that day: 1984-06-31 and
+  2023-02-29 are no date, 2024-02-29 is; the five ports make the same check,
+  and todo's impossible-date group, which only worked around it, is gone
+  (#221)
 - The report contract's heading in the ci add-on's README is an h2 under the
   page's title, not an h3 that skipped a level; its anchor is unchanged
   (#218)

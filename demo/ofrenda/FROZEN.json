@@ -12,7 +12,7 @@
   "voices/femia.md": "95194070b2ca5564c7ee0760d0642b4ea4cf8c3d4a7396e2a3ca4386060f817d"
  },
  "tools_at_freeze": {
-  "kernel.py": "dc1050cfe58eb2dc082ec870406b98eba695ea69989bf1809b1f855f269de0da",
+  "kernel.py": "0f6f34eabdc4f4ec82eaf2ded411bea46da2aee0ea57bbc2b0c6a4e0ecfe4111",
   "adapters/stdlib/openai-compatible/openai_compatible.py": "d8b5ee2c19cf83d28df1757979293667bfd2f28ff81f9410c00279098529b716",
   "adapters/stdlib/shell-history/shell_history.py": "9f932c6acde57223eaf5a72fbdf8ab1d31c87425d2098143980d89a3cc7f9d78"
  },
@@ -36,6 +36,11 @@
    "n": 1,
    "date": "2026-10-31",
    "why": "the sources, the planted lines, the questions, the voices, the hit rule and every pass rule, after one dry run with nonsense (wiring held: piles, the history mirror, boxes, verdict rows, verify) and before any real question was asked of the kernel or a model. The primary model is gemma-3-4b-it; gemma-3-1b-it is run too and reported beside it, never in its place."
+  },
+  {
+   "n": 2,
+   "date": "2026-11-03",
+   "why": "kernel.py re-hashed: a date is a day its month has (1984-06-31 and 2023-02-29 are no date). No line in this demo's folder reads a different date, so the piles, questions and rules are unchanged; nothing else was re-frozen."
   }
  ]
 }

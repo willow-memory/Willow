@@ -852,7 +852,13 @@ function digits(t: string, i: number): number {
 }
 
 function date(y: string, m: string, d: string): string {
-  const ok = (y.startsWith("19") || y.startsWith("20")) && m >= "01" && m <= "12" && d >= "01" && d <= "31";
+  let ok = (y.startsWith("19") || y.startsWith("20")) && m >= "01" && m <= "12" && d >= "01" && d <= "31";
+  if (ok && m === "02") {
+    const n = parseInt(y, 10);
+    ok = d <= (n % 4 === 0 && (n % 100 !== 0 || n % 400 === 0) ? "29" : "28");
+  } else if (ok && (m === "04" || m === "06" || m === "09" || m === "11")) {
+    ok = d <= "30";
+  }
   return ok ? y + m + d : "";
 }
 

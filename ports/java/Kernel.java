@@ -1085,6 +1085,12 @@ public final class Kernel {
         boolean ok = (y.startsWith("19") || y.startsWith("20"))
                 && m.compareTo("01") >= 0 && m.compareTo("12") <= 0
                 && d.compareTo("01") >= 0 && d.compareTo("31") <= 0;
+        if (ok && m.equals("02")) {
+            int n = Integer.parseInt(y);
+            ok = d.compareTo(n % 4 == 0 && (n % 100 != 0 || n % 400 == 0) ? "29" : "28") <= 0;
+        } else if (ok && (m.equals("04") || m.equals("06") || m.equals("09") || m.equals("11"))) {
+            ok = d.compareTo("30") <= 0;
+        }
         return ok ? y + m + d : "";
     }
 

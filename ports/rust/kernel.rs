@@ -1550,9 +1550,15 @@ fn digits(tx: &[char], i: usize) -> usize {
 }
 
 fn date(y: &str, m: &str, d: &str) -> String {
-    let ok = (y.starts_with("19") || y.starts_with("20"))
+    let mut ok = (y.starts_with("19") || y.starts_with("20"))
         && ("01"..="12").contains(&m)
         && ("01"..="31").contains(&d);
+    if ok && m == "02" {
+        let n: u32 = y.parse().unwrap_or(0);
+        ok = d <= if n % 4 == 0 && (n % 100 != 0 || n % 400 == 0) { "29" } else { "28" };
+    } else if ok && ["04", "06", "09", "11"].contains(&m) {
+        ok = d <= "30";
+    }
     if ok {
         format!("{}{}{}", y, m, d)
     } else {
