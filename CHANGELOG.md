@@ -2032,6 +2032,9 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- `forge`'s card says `role: repo` and `runs-in: repo`, so `ui/assemble.py`
+  refuses it: it reads every card in the repository and runs assemble, and in
+  a stack, which holds neither, 29 of its 40 tests failed (#239)
 - `ci`: a deps add-on whose program this machine lacks is unreachable, not
   failing. A card names each program PyPI doesn't install on a `programs:`
   line (ocr's tesseract, kart's bwrap, pgp's gpg), and its deps gates ask
