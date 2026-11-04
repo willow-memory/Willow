@@ -16,7 +16,7 @@ says how). The first was v0.1.0.
   writing its number into its changelog entry and checking that; what a
   step makes is committed as tidy, and anything that needs a person stops
   it with 42, saying what. `test-impact run --narrow` leaves a change that
-  reaches every gate to CI
+  reaches every gate to CI (#230)
 - `assemble.py add` puts a deps add-on (kart, forge, pdf) in a stack's
   adapters/deps/ when the --python named already has each package its floor
   names, at that version or newer; nothing is installed, and one missing or
