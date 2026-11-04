@@ -1,6 +1,6 @@
 <!-- willow-addon
 section: For maintainers
-line: Which venv has what CI needs, willow-bot's own by its rule or any you name, and the line that runs CI with its Python.
+line: Where your venvs are, inside willow-bot or out, with their locks and the services running them; and which has what CI needs, with the line that runs CI.
 source: bot
 added: 2026-10-26
 writes: nothing
@@ -63,6 +63,43 @@ pins, since a different ruff can format the same file differently.
 The last two are kept apart from "not ready": a folder that isn't a venv and
 a venv without ruff are different answers.
 
+## Where your venvs are: `--find`
+
+The bot's other half of the same question, its `willow-bot-steward venvs`:
+every venv under the folders you name, three levels down (a venv behind a
+symlink counted once, under its real path, the link said).
+
+    $ python adapters/stdlib/bot-venv/bot_venv.py --find ~/github --find $WILLOW_HOME
+    /box/willow-bot/venvs/willow-bot
+      inside the bot
+      67 packages; lock: none
+      runs: willow-bot.service, willow-bot-steward.service
+      python 3.14.4
+    ~/github/org/repo/.venv
+      also ~/github/org/linked/.venv
+      outside the bot
+      81 packages; lock: drifted, 1 missing, 1 changed
+      runs: nothing running
+      python 3.14.4
+    found 2 venvs under ~/github, /box: 1 inside the bot, 1 outside; 1 run by a service
+
+- **Inside or outside the bot:** inside is under the box's willow-bot folder,
+  where the bot keeps its venvs; anywhere else is outside. Said only when
+  there's a box.
+- **Packages** are counted from site-packages' `*.dist-info` folders; nothing
+  is run.
+- **The lock** is the one the bot reads, `<box>/willow-bot/locks/<name>.requirements.lock`
+  (pip-compile's), named for the checkout when the venv is its `.venv`:
+  `none`, `holds`, or `drifted` with how many are missing, changed and extra
+  (pip, setuptools and wheel, and packages installed with `-e`, aren't
+  extra).
+- **Runs** names each service with a process running from the venv's bin folder,
+  from /proc: the process's command line, and the unit its cgroup names,
+  so a child process counts for the service that started it. Your session's
+  own manager isn't a service. With no /proc, it says unknown.
+- **Python** is read from the venv's `pyvenv.cfg`. Add `--needs` and each
+  venv found is asked, as `--venv` asks, whether it's ready.
+
 ## What it uses
 
 Nothing of the kernel's beyond its exit codes. Each venv's own Python is run
@@ -73,10 +110,12 @@ It reads the two box variables and nothing else of the bot's.
 ## What it never does
 
 - **It runs nothing else.** It prints the line that runs CI; it never runs
-  CI, installs a package or changes a venv.
+  CI, installs a package, or moves, changes or removes a venv. Bringing a
+  venv inside the bot is yours to do, as the bot's own plan says.
 - **It writes nothing**, touches no box and no key, and reaches no network.
   It looks for the bot's venv inside the box; it never opens the box's
   record.
 
-Exit codes, the kernel's: 0 some venv is ready; 42 none is; 2 refused (a bad
-command line, no box for `--bot`, or a venv that is not a folder).
+Exit codes, the kernel's: 0 some venv is ready (with only `--find`, some
+venv was found); 42 none is (none was found); 2 refused (a bad command line,
+no box for `--bot`, or a venv or folder that is not a folder).

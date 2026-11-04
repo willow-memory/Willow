@@ -10,6 +10,10 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `bot-venv --find` lists every venv under a folder: inside willow-bot or
+  out, its packages, the bot's lock for it (none, holds or drifted), and the
+  services running from it, read from /proc; the steward's venv inventory
+  and bot-venv are one card (#229)
 - `github`'s `adapters/stdlib/github/create_pr.py` opens this branch's pull
   request by running `adapters/stdlib/github/create_pr.md`, a stack of the repo's own add-ons (restack, readme,
   bugs.py, lint, test-impact, against), then pushing, opening it,
