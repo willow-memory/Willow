@@ -95,6 +95,11 @@ nav.side h3{margin:16px 6px 8px}
 .sealmark.sealed{background:var(--acc);color:var(--onacc)}.sealmark.sealed::before{content:"✓ "}
 .sealmark.changed{background:var(--catkinl);color:var(--ink);border:1px solid var(--catkin)}.sealmark.changed::before{content:"! "}
 .counts{display:flex;flex-wrap:wrap;gap:4px 14px;align-items:baseline;font-size:13px;color:var(--mute);margin:-2px 0 10px;font-variant-numeric:tabular-nums}.counts .in{color:var(--acc)}
+.proto{font-size:12.5px;color:var(--mute);background:var(--catkinl);border:1px solid var(--catkin);border-radius:var(--r);padding:5px 9px;margin:0 0 10px;max-width:72ch}
+.why-here{font-size:11.5px;color:var(--faint);font-style:italic;margin-top:4px}
+.t-divider{font:600 10.5px/1.4 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--mute);border-top:1px dashed var(--line);padding:8px 6px 0;margin-top:4px}
+.t-leaf .ord{color:var(--acc);font-weight:600;min-width:1.6em}
+.mini-div{position:relative;font:600 10.5px/1.4 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--mute);background:var(--side);padding:8px 6px 2px;margin-left:30px}
 .tracetip{font:12px/1.4 var(--sans);color:var(--mute);background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:6px 8px;margin:0 0 10px}
 .stacktree.tracing .t-leaf{opacity:.35}.stacktree.tracing .t-leaf.lit{opacity:1}
 .t-leaf.lit{border-radius:2px;background:var(--accl)}.t-leaf.main{background:var(--acc);color:var(--onacc)}.t-leaf.main .arg,.t-leaf.main .need{color:var(--onacc)}
@@ -224,28 +229,27 @@ details.more{margin-top:18px}details.more summary{cursor:pointer;color:var(--mut
 <div class="shelf-head" id="shelfhead"></div>
 <div id="shelf"></div>
 </main>
-<aside class="rail" aria-label="Your stack"><div class="railhead"><h3>Your stack</h3><span id="sealmark" class="sealmark" hidden></span></div><p class="rail-note">What runs, top to bottom. Click a step to work on it.</p><div class="tracetip" id="tracetip" hidden></div><div class="stacktree" id="stacktree"></div></aside>
+<aside class="rail" aria-label="Your stack"><div class="railhead"><h3>Your stack</h3><span id="sealmark" class="sealmark" hidden></span></div><p class="rail-note">What it reads, what runs on your page and in what order, and what’s set up alongside. Click a step to work on it.</p><div class="tracetip" id="tracetip" hidden></div><div class="stacktree" id="stacktree"></div></aside>
 <footer><div class="sum" id="sum"></div><span class="msg" id="msg"></span><button id="undo" hidden title="undo the last change (Ctrl+Z)">Undo</button><button class="go" id="look">Look it over</button></footer>
 <script>
 const T=location.pathname.replace(/\/$/,'');
 const api=(p,b)=>fetch(T+'/api/'+p,b?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)}:{}).then(r=>r.json());
 const el=(t,a={},...k)=>{const e=document.createElement(t);for(const[x,v]of Object.entries(a)){if(x==='text')e.textContent=v;else if(x.startsWith('on'))e.addEventListener(x.slice(2),v);else e.setAttribute(x,v)}for(const c of k)if(c!=null)e.append(c);return e};
+// PROTOTYPE: the steps are roles, the part a piece plays in your stack, guessed from its card
+// (see roleOf); a card's section is what it's about, and shows as the headings inside a role.
 const STAGES=[
  {key:'folders',title:'Your folders',say:'What willow may read. It only ever reads them: it never changes, moves or uploads a file.'},
+ {key:'feeds',title:'What it reads',group:'rank',say:'Readers turn PDFs, email, chats and office files into plain text beside your folder, so the kernel can search them. They run over your folders before anything else. Without any, it reads plain text, markdown and web pages.'},
  {key:'kernel',title:'Willow’s kernel',fixed:true,say:'What it does on your folders alone, before any add-on, shown below as counts. Every question comes here. It finds the passages of your files that hold the question’s words and gives up to three, each with its file and line. If none do, it says it doesn’t know. Every step goes on a record that can’t be quietly changed.'},
- {key:'read',title:'Reading other kinds of files',sec:'Reading more kinds of files',say:'Turns PDFs, email, chats and office files into text it can search. Without any, it reads plain text, markdown and web pages.'},
- {key:'words',title:'Your own words',sec:'Your own words',say:'Teaches it the words you use, so a question finds what your files call it ("doc" finds "doctor").'},
- {key:'find',title:'More ways to find things',sec:'Finding things',say:'Other ways to look when a plain match misses: every match, phrases, this day in past years, an exact quote.'},
- {key:'watch',title:'Things it keeps watch on',sec:'Keeping track',say:'What it notices without being asked: dates coming up, to-dos, numbers over time.'},
- {key:'hide',title:'What it hides',sec:'Privacy and safety',say:'Blanks out phone numbers, card numbers and keys before anything is shown, and finds secrets sitting in files.'},
- {key:'suggest',title:'Assistants',sec:'Assistants',say:'AI assistants, and what they’re allowed to see. They can ask and suggest answers, but none of them can approve one.'},
+ {key:'page',title:'What runs on your page',ordered:true,group:'section',say:'The steps that run one after another each time your page is made: what’s coming up, what needs you, what changed. This is the one place order matters; drag to change it.'},
+ {key:'ways',title:'Where you ask from',group:'ways',say:'Your terminal, your editor, an AI assistant such as Claude Code, a page in your browser. Each is set up once, then you ask from there. Without one, you type commands.'},
+ {key:'guards',title:'What guards an assistant',group:'section',say:'Hooks that check what an AI assistant does before it does it, and keep what they saw: a key in a write, a command that would change the record, a hook that changed since you approved it.'},
+ {key:'makes',title:'What it makes for elsewhere',group:'section',say:'Files for other programs: a calendar feed, a feed reader’s list, a printable page, a backup. Each writes only where you point it.'},
+ {key:'tools',title:'Tools you run yourself',group:'section',say:'Things you run when you want, with your own words or options: flashcards, a forecast, a check of a claim. They’re put in your stack, but not run on your page.'},
  {key:'you',title:'You',fixed:true,say:'A suggested answer counts only once you seal it. Sealing is you saying “yes, this is mine”. The same goes for this whole arrangement.'},
- {key:'honest',title:'Keeping it honest',sec:'Trust and proof',say:'Checks that stay true later: an approved answer whose source changed is flagged, the record is backed up and pinned.'},
- {key:'use',title:'How you’ll use it',sec:'Ways to use it',say:'Where you ask from: your terminal, your editor, an AI assistant such as Claude Code, a page in your browser. Without one, you type commands.'},
- {key:'extra',title:'Extras',sec:['Play','For maintainers'],say:'Games on the record, and tools for people working on willow itself.'},
 ];
-// how you run it: the ways in, grouped by where you'd be. The editor and assistant ways in are
-// filed under Assistants on their cards; on this page they go here, with the rest of the ways in.
+// the ways in, grouped by where you'd be. The editor and assistant ways in are filed under
+// Assistants on their cards; here they're ways in like the rest.
 const WAYS=[
  {h:'In your terminal',n:['shell','pipe','plain','start','tui','warm']},
  {h:'In your editor',n:['vscode','vim','emacs','jetbrains','zed','cursor','windsurf','copilot','obsidian']},
@@ -253,10 +257,19 @@ const WAYS=[
  {h:'In your browser or on your desktop',n:['browse','launcher','desktop','static-search','datasette','kiosk']},
  {h:'From your phone, by voice or by email',n:['telegram-bot','email-ask','home-assistant','dictate','speak','qr']}];
 const WAYIN=new Set(WAYS.flatMap(w=>w.n));
-const SUGGEST={read:['pdf','mail','office'],words:['starter-words','nicknames'],find:['all','pile-rungs','on-this-day'],watch:['coming-up','todo'],hide:['privacy'],suggest:['local-model'],honest:['stale','backup','tip-pin'],use:['shell','vscode','claude-code','browse']};
+const SUGGEST={feeds:['pdf','mail','office'],page:['coming-up','todo','digest'],ways:['shell','vscode','claude-code','browse'],guards:['hook-guard','hook-leaks'],makes:['calendar-out','backup','print'],tools:['flashcards','forecasts']};
 const KEY='willow-canvas-2';
 let HIDE=(()=>{try{return localStorage.getItem('willow-canvas-hide')==='1'}catch(e){return false}})(),P={},S=JSON.parse(localStorage.getItem(KEY)||'null'),cur='folders',subject=null,drag=null,here='',SEALED=false,back='folders';
-const stageOf=p=>{if(WAYIN.has(p.name))return'use';for(const s of STAGES)if(s.sec&&[].concat(s.sec).includes(p.section))return s.key;return'extra'};
+// which role a piece plays, and the fact on its card that says so: a guess until cards say it themselves
+function roleOf(p){const n=p.name,tags=p.tags||[],w=(p.writes||'').split(',').map(x=>x.trim());
+ if(p.section==='Reading more kinds of files')return['feeds','its card is filed under reading more kinds of files'];
+ if(WAYIN.has(n))return['ways','it’s an editor, an assistant or a terminal you ask from'];
+ if(n.startsWith('hook')||tags.includes('hook'))return['guards','it’s a hook'];
+ if(p.page)return['page','it runs with nothing but your record, so it can be a step on your page'];
+ if(p.section==='Ways to use it'&&!w.includes('to'))return['ways','its card is filed under ways to use it'];
+ if(w.includes('to'))return['makes','its card says it writes where you point it'];
+ return['tools',p.state==='idea'?'it’s still an idea, so there’s no way yet to tell how it runs':'it needs words or options of its own to run, so you run it yourself']}
+const stageOf=p=>roleOf(p)[0];
 const save=()=>localStorage.setItem(KEY,JSON.stringify(S));
 function say(t,err){const m=document.getElementById('msg');m.textContent=t||'';m.className='msg'+(err?' err':'')}
 function plainTags(p){const t=[];if(p.network&&p.network!=='none')t.push(el('span',{class:'tag net',text:p.network==='loopback'?'this machine only':'goes online: '+p.network}));
@@ -430,8 +443,8 @@ let shown=null;
 // the steps, as mini cards: an empty one is a line
 function steplist(){if(!S)return;const box=document.getElementById('steplist');box.innerHTML='';const nEx=EX?.found?.length||0,nB=Object.keys(BATCHES).length;
  box.append(el('button',{class:'mini start'+(cur==='start'?' sel':''),onclick:()=>go('start')},el('span',{class:'no',text:'↺'}),el('b',{text:'Start from an example'}),el('small',{text:nEx+' examples · '+(nB?nB+' saved batch'+(nB===1?'':'es'):'no saved batches')})));
- box.append(el('h3',{text:'Your flow, in order'}));const list=el('div',{class:'minis'});
- STAGES.forEach((s,i)=>{const n=s.key==='folders'?S.folders.length:(S.stages[s.key]||[]).length,empty=!s.fixed&&!n;
+ box.append(el('h3',{text:'Your stack'}));const list=el('div',{class:'minis'});
+ STAGES.forEach((s,i)=>{if(s.key==='ways')list.append(el('div',{class:'mini-div',text:'Set up alongside'}));const n=s.key==='folders'?S.folders.length:(S.stages[s.key]||[]).length,empty=!s.fixed&&!n;
   list.append(el('button',{class:'mini'+(empty?' empty':'')+(s.fixed?' fixed':'')+(cur===s.key?' sel':''),title:s.say,onclick:()=>go(s.key)},el('span',{class:'no',text:String(i+1)}),el('b',{text:s.title}),empty?null:el('small',{text:stageSummary(s)})))});
  list.append(el('button',{class:'mini review'+(cur==='review'?' sel':''),title:'everything you picked, in one place, to seal',onclick:()=>subject?go('review'):look()},el('span',{class:'no',text:String(STAGES.length+1)}),el('b',{text:'Look it over, and seal it'}),el('small',{text:sealState()==='sealed'?'sealed':subject?'looked over, not sealed yet':sealState()==='changed'?'changed since you sealed it':'nothing runs until you seal'})));
  box.append(list);if(shown!==cur){shown=cur;const sel=box.querySelector('.mini.sel');if(sel&&getComputedStyle(list).flexDirection==='row')sel.scrollIntoView({inline:'nearest',block:'nearest'})}}
@@ -456,19 +469,19 @@ function stacktree(){const t=document.getElementById('stacktree');t.innerHTML=''
  const ex=PV&&EX?.found?.find(x=>x.file===PV),pv=ex?exAdds(ex):{out:[],args:{}},ghosts=k=>pv.out.filter(y=>stageOf(P[y])===k);
  if(ex)t.append(el('div',{class:'t-preview'},el('b',{text:'Previewing “'+ex.title+'”'}),el('span',{text:pv.out.length?' · it would add '+pv.out.length+' piece'+(pv.out.length===1?'':'s')+', shown with +':' · everything in it is already here'})));
  const flush=()=>{if(!skipped.length)return;t.append(el('div',{class:'t-skip'},el('span',{text:'skipped '}),...skipped.flatMap((s,k)=>[k?' · ':'',el('button',{class:'link',text:s.title,onclick:()=>go(s.key)})])));skipped.length=0};
- for(const s of STAGES){const ns=s.key==='folders'?S.folders:(S.stages[s.key]||[]),gs=s.fixed||s.key==='folders'?[]:ghosts(s.key);if(!s.fixed&&s.key!=='folders'&&!ns.length&&!gs.length){skipped.push(s);continue}flush();
+ for(const s of STAGES){if(s.key==='ways'){flush();t.append(el('div',{class:'t-divider',text:'Set up alongside, not run in order'}))}const ns=s.key==='folders'?S.folders:(S.stages[s.key]||[]),gs=s.fixed||s.key==='folders'?[]:ghosts(s.key);if(!s.fixed&&s.key!=='folders'&&!ns.length&&!gs.length){skipped.push(s);continue}flush();
   const bs=S.folders.map(f=>BASE[f.path]).filter(b=>b&&b.ok),sum=s.key==='kernel'?(bs.length?bs.reduce((t,b)=>t+b.passages,0).toLocaleString()+' passages':'always there'):s.key==='you'?'your seal':s.key==='folders'&&!ns.length?'none yet':'';
   const row=el('div',{class:'t-stage'+(cur===s.key?' sel':'')+(s.fixed?' fixed':''),onclick:()=>go(s.key)},el('span',{class:'t-name',text:s.title}),sum?el('span',{class:'t-sum',text:sum}):null);
   const kids=el('div',{class:'t-kids'});
   if(s.key==='folders')for(const f of S.folders)kids.append(el('div',{class:'t-leaf'},el('span',{class:'path',text:f.path}),el('span',{class:'t-sum',text:f.files+' files'})));
-  else if(!s.fixed)for(const n of ns){const p=P[n]||{},a=((S.args||{})[n]||'').replace('--box {box}','').trim(),leaf=el('div',{class:'t-leaf','data-n':n},el('span',{text:n}));
+  else if(!s.fixed)for(const n of ns){const p=P[n]||{},a=((S.args||{})[n]||'').replace('--box {box}','').trim(),leaf=el('div',{class:'t-leaf','data-n':n},s.ordered?el('span',{class:'ord',text:(ns.indexOf(n)+1)+'.'}):null,el('span',{text:n}));
    if(a)leaf.append(el('span',{class:'arg',text:' '+a}));if((p.hard||[]).length)leaf.append(el('div',{class:'need',text:'needs '+p.hard.join(', ')}));kids.append(leaf)}
   for(const g of gs){const a=(pv.args[g]||'').replace('--box {box}','').trim();kids.append(el('div',{class:'t-leaf ghost'},el('span',{text:'+ '+g}),a?el('span',{class:'arg',text:' '+a}):null))}
   t.append(el('div',{class:'t-group'},row,kids.childNodes.length?kids:null))}
  flush();const pl=pulled();
  if(pl.length)t.append(el('div',{class:'t-group'},el('div',{class:'t-stage brought'},el('span',{class:'t-name',text:'Brought along'}),el('span',{class:'t-sum',text:'needed by the pieces above'})),el('div',{class:'t-kids'},...pl.map(n=>el('div',{class:'t-leaf','data-n':n,text:n})))))}
 // ── the shelf: what can go in the chosen stage ──────────────────────────────
-async function browse(path){const r=await api('dirs?path='+encodeURIComponent(path));if(!r.ok){say(r.path+': '+r.why,1);return}here=r.path;
+async function browse(path){const r=await api('dirs?path='+encodeURIComponent(path));if(!document.getElementById('ppath'))return;if(!r.ok){say(r.path+': '+r.why,1);return}here=r.path;
  document.getElementById('ppath').textContent=r.path;const l=document.getElementById('plist');l.innerHTML='';
  if(r.parent)l.append(el('div',{class:'up',text:'↑ up to '+r.parent,onclick:()=>browse(r.parent)}));
  for(const d of r.dirs)l.append(el('div',{text:'📁 '+d,onclick:()=>browse(r.path.replace(/\/$/,'')+'/'+d)}));if(!r.dirs.length)l.append(el('div',{class:'up',text:'no folders inside'}))}
@@ -478,8 +491,9 @@ function shelf(){const s=STAGES.find(x=>x.key===cur),head=document.getElementByI
  if(s.key==='folders'){const t=el('input',{type:'text',placeholder:'or type a path and press Enter'});t.addEventListener('keydown',e=>{if(e.key==='Enter'&&t.value.trim()){addFolder(t.value.trim());t.value=''}});
   box.append(el('div',{id:'picker'},el('div',{class:'ppath',id:'ppath'}),el('div',{class:'plist',id:'plist'}),el('div',{style:'display:flex;gap:8px;margin-top:8px'},el('button',{class:'go',text:'Add this folder',onclick:()=>here&&addFolder(here)}))),el('div',{style:'margin-top:10px'},t));
   browse(here||S.folders.at(-1)?.path||'');return}
- const secs=[].concat(s.sec),q=el('input',{type:'text',placeholder:'filter these'}),list=el('div',{class:'tree'});box.append(q,list);
- const ways=s.key==='use',mine=Object.values(P).filter(p=>ways?(secs.includes(p.section)||WAYIN.has(p.name)):(secs.includes(p.section)&&!WAYIN.has(p.name))),inStage=new Set(ways?[]:mine.map(p=>p.name));
+ const q=el('input',{type:'text',placeholder:'filter these'}),list=el('div',{class:'tree'});box.append(q,list);
+ const grouped=s.group!=='rank',mine=Object.values(P).filter(p=>stageOf(p)===s.key),inStage=new Set(grouped?[]:mine.map(p=>p.name));
+ head.append(el('p',{class:'proto',text:'Prototype: which step a piece is in is a guess from its card. Each card says why it’s here.'}));
  const under={};for(const p of mine)for(const h of(p.hard||[]))if(inStage.has(h))(under[h]??=[]).push(p.name);
  const nIn=mine.filter(p=>all().includes(p.name)).length,nNo=mine.filter(p=>cantAdd(p.name)&&!all().includes(p.name)).length,hidden=n=>HIDE&&!!cantAdd(n)&&!all().includes(n);
  head.append(el('div',{class:'counts'},el('span',{text:mine.length+' add-on'+(mine.length===1?'':'s')}),el('span',{class:'in',text:nIn+' in your stack'}),nNo?el('span',{text:nNo+' can’t be added yet'}):null,
@@ -492,7 +506,7 @@ function shelf(){const s=STAGES.find(x=>x.key===cur),head=document.getElementByI
   const out=(p.hard||[]).filter(h=>!inStage.has(h)),opt=(p.soft||[]).filter(h=>P[h]);
   const open=openRows.has(n),tw=el('span',{class:'tw'+(kids.length?'':' none'),text:kids.length?(open?'▾':'▸'):'',title:kids.length?kids.length+' that need it':''});
   if(kids.length)tw.onclick=()=>{open?openRows.delete(n):openRows.add(n);draw()};
-  list.append(addable(n,el('div',{class:'node'+(no&&!used?' off':'')+(depth?' sub':'')+(used?' on':''),style:'padding-left:'+(depth*18)+'px'},tw,cb,el('div',{class:'what'},el('b',{text:n}),kids.length?el('small',{text:kids.length+' below need it'}):null,el('small',{text:p.line}),...plainTags(p),...topics(p),
+  list.append(addable(n,el('div',{class:'node'+(no&&!used?' off':'')+(depth?' sub':'')+(used?' on':''),style:'padding-left:'+(depth*18)+'px'},tw,cb,el('div',{class:'what'},el('b',{text:n}),kids.length?el('small',{text:kids.length+' below need it'}):null,el('small',{text:p.line}),...plainTags(p),...topics(p),el('div',{class:'why-here',text:'here because '+roleOf(p)[1]}),
    out.length?el('div',{class:'note',text:'needs '+out.join(', ')+(out.every(h=>all().includes(h))?' ✓':' (added with it)')}):null,
    opt.length?el('div',{class:'note opt',text:'works with '+opt.join(', ')+', if you add '+(opt.length===1?'it':'them')}):null,
    no&&!used?el('div',{class:'note no',text:no}):null))));
@@ -500,7 +514,8 @@ function shelf(){const s=STAGES.find(x=>x.key===cur),head=document.getElementByI
  const draw=()=>{list.innerHTML='';const w=q.value.toLowerCase();
   if(w){for(const p of mine.filter(p=>!hidden(p.name)&&(p.name+' '+p.line+' '+(p.tags||[]).join(' ')).toLowerCase().includes(w)).sort((a,b)=>order(a.name,b.name)))node(p.name,0,[]);return}
   const roots=mine.filter(p=>!hidden(p.name)&&!(p.hard||[]).some(h=>inStage.has(h))).map(p=>p.name).sort(order);
-  if(ways){const left=new Set(roots);for(const w of[...WAYS,{h:'Other ways to use what it finds',n:roots}]){const ns=w.n.filter(n=>left.has(n)).sort(order);if(!ns.length)continue;
+  if(grouped){const sec=n=>P[n].section||'Other',groups=s.group==='ways'?[...WAYS,{h:'Other ways in',n:roots}]:[...new Set(roots.map(sec))].sort().map(h=>({h,n:roots.filter(n=>sec(n)===h)}));
+   const left=new Set(roots);for(const w of groups){const ns=w.n.filter(n=>left.has(n)).sort(order);if(!ns.length)continue;
    list.append(el('h3',{text:w.h}));for(const n of ns){left.delete(n);node(n,0,[])}}return}
   let last=-1;for(const n of roots){const r=rank(P[n]);if(r!==last){list.append(el('h3',{text:r===0?'A good start':r===1?'Everything else':'Can’t be added yet'}));last=r}node(n,0,[])}};
  q.addEventListener('input',draw);draw()}
@@ -513,7 +528,7 @@ async function look(){if(!S.folders.length){cur='folders';flow();shelf();say('Ad
  const named=k=>(S.stages[k]||[]).join(', ');const li=(t)=>el('li',{text:t});const rv=document.getElementById('review');rv.innerHTML='';cur='review';const f0=document.getElementById('find');if(f0.value){f0.value='';document.getElementById('findx').hidden=true}SEALED=false;
  const one=a.folders.length===1;
  const ul=el('ul',{},li('It reads '+a.folders.join(', ')+', and never changes '+(one?'it':'them')+'.'),
-  named('read')?null:li('It reads plain text, markdown and web pages; nothing else.'),
+  named('feeds')?null:li('It reads plain text, markdown and web pages; nothing else.'),
   li('It answers only from what it reads, with the file and line, and says so when nothing there holds an answer.'),
   li(a.reach.length?'It goes online: '+a.reach.join('; ')+'.':'It never goes online.'),
   li('It writes its own record'+(a.writes.includes('to')?', and files only where you point it':'')+'.'),
@@ -553,6 +568,7 @@ async function watch(){const pr=document.getElementById('progress');const j=awai
 document.getElementById('find').addEventListener('input',e=>find(e.target.value));document.getElementById('findx').onclick=()=>find('');
 (async()=>{P=await api('pieces');loadBatches();if(!S)S=freshState();loadExamples();
  const st=await api('state');const last=(st.stacks||[]).filter(x=>x.sealed).at(-1);if(last){offerStart(last.subject,last.name||'my willow');const j=await api('start');if(j.state&&j.state!=='none')watch()}
- for(const f of st.folders||[])if(!S.folders.some(x=>x.path===f))await addFolder(f);for(const k of Object.keys(S.stages))if(k!=='use'){const mv=S.stages[k].filter(n=>WAYIN.has(n));if(mv.length){S.stages[k]=S.stages[k].filter(n=>!WAYIN.has(n));(S.stages.use??=[]).push(...mv.filter(n=>!S.stages.use.includes(n)))}}save();
+ for(const f of st.folders||[])if(!S.folders.some(x=>x.path===f))await addFolder(f);{const old=['read','words','find','watch','hide','suggest','honest','use','extra'],keys=[...STAGES.map(s=>s.key),...old,...Object.keys(S.stages)],names=[...new Set(keys.flatMap(k=>S.stages[k]||[]))];
+  S.stages={};for(const n of names)if(P[n])(S.stages[stageOf(P[n])]??=[]).push(n)}save();
  for(const f of S.folders)baseline(f.path);UNDO.length=0;was=JSON.stringify(S);undoBtn();cur=kept()||cur;flow();shelf();summary()})();
 </script></body></html>
