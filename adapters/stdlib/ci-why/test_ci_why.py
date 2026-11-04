@@ -437,3 +437,24 @@ def test_a_one_frame_traceback_keeps_its_frame(tmp_path):
     )
     assert 'File "make.py", line 3, in <module>' in got.stdout
     assert "NameError: name 'boom' is not defined" in got.stdout
+
+
+def test_a_gates_skipped_tests_after_its_verdict_never_join_its_why():
+    """ci.py prints a gate's skips last, in brackets: the why is still only
+    what is in its own parentheses, a ")" in a skip's reason or not."""
+    lines = [
+        "── tests:x",
+        "E   boom",
+        "── tests:y",
+        "── tests:z",
+        "",
+        "tests:x            failing  (exit 1)  [1 skipped: no vim (here)]",
+        "tests:y            satisfied  [2 skipped: not Linux]",
+        "tests:z            failing  (broke: a (b))",
+    ]
+    _, said = ci_why.sections(lines)
+    assert said == {
+        "tests:x": ("failing", "exit 1"),
+        "tests:y": ("satisfied", None),
+        "tests:z": ("failing", "broke: a (b)"),
+    }

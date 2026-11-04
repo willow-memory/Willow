@@ -305,6 +305,16 @@ def under(path: str, folder: str) -> str | None:
     return None
 
 
+def demo_gates(path: str, person: str) -> list[str]:
+    """The demo gates a path under demo/PERSON/ reaches: PERSON's make_life
+    check when there is one, and each of ci.DEMO_TESTS whose target holds the
+    path (demo/johnson's tests are demo:share, not demo:johnson). A folder with
+    neither is still named demo:PERSON, which the plan says is no gate."""
+    got = [f"demo:{person}"] if person in ci.people() else []
+    got += [g for g, t, _ in ci.DEMO_TESTS if path == t or path.startswith(t + "/")]
+    return got or [f"demo:{person}"]
+
+
 class Plan:
     """What to run, by ci.py gate, and why. `steps` is built by `make`."""
 
@@ -394,10 +404,8 @@ def place(changed: list[str], graph: Graph) -> Plan:
         elif p.startswith("ui/") and not p.endswith(".md"):
             plan.gate("tests:ui", p, "ui/, willow's own UI")
         elif person := under(p, "demo/"):
-            if person == "php2shell":
-                plan.gate("demo:php2shell", p, "demo/php2shell")
-            else:
-                plan.gate(f"demo:{person}", p, f"demo/{person}")
+            for name in demo_gates(p, person):
+                plan.gate(name, p, f"demo/{person}")
             if p == TEODORA_WORDS:
                 plan.gate("demo:teodora-words", p, "its own test")
             if p.startswith(STACK.rsplit("/", 1)[0] + "/"):
@@ -446,7 +454,8 @@ def place(changed: list[str], graph: Graph) -> Plan:
         elif t == TEODORA_WORDS:
             plan.gate("demo:teodora-words", t, "reached by import")
         elif person := under(t, "demo/"):
-            plan.gate(f"demo:{person}", t, "reached by import")
+            for name in demo_gates(t, person):
+                plan.gate(name, t, "reached by import")
         elif t.startswith("adapters/deps/"):
             dep = deps_of(t)
             plan.gate(f"deps:{dep}", t, "reached by import")

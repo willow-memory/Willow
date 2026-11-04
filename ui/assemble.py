@@ -14,7 +14,8 @@ A stack lives in --to, ~/willow-stack unless you say, and never inside this
 repository:
 
     stack/            kernel.py, CONSTITUTION.md, vectors/cases.json and
-                      adapters/stdlib/<name>/, laid out as in willow, so
+                      adapters/stdlib/<name>/ and adapters/deps/<name>/,
+                      laid out as in willow, so
                       every add-on finds the kernel where it looks
     stack/STACK.json  what is here: willow's commit, each file's SHA-256,
                       each add-on's card promises and what it leans on
@@ -23,7 +24,11 @@ repository:
 
 `init` makes one from this willow (`--pin` refuses a kernel.py the pin file
 doesn't name). `add` copies an add-on and every add-on its card `uses`, and
-theirs; one it only `looks-for` is listed as absent, with who wants it. An
+theirs: a stdlib one to adapters/stdlib/, a deps one to adapters/deps/, as in
+willow. A deps add-on is taken only when --python has each package its
+requirements-floor.txt names, at that version or newer; it is never
+installed for it, so nothing is fetched and no environment is changed, and
+without --python it is put in with its packages unreachable, said; one it only `looks-for` is listed as absent, with who wants it. An
 add-on that `runs-in: repo` is refused: it works on willow's own repository.
 Each one added gets its contract check (no arguments: refused, exit 2) and
 its own tests, if --python names an interpreter with pytest; else its tests
@@ -78,6 +83,80 @@ def paths(to: Path):
         to / "keys" / "stack.key",
         to / "stack" / "STACK.json",
     )
+
+
+def kind_of(willow: Path, name: str) -> str | None:
+    """Which of willow's adapter folders holds `name`: stdlib, deps or none."""
+    for kind in ("stdlib", "deps"):
+        if (willow / "adapters" / kind / name).is_dir():
+            return kind
+    return None
+
+
+def piece(stack: Path, name: str, m: dict) -> Path:
+    """Where a piece in the stack lives, by the kind it was put in as (a
+    stack from before deps came in holds stdlib only)."""
+    return stack / "adapters" / m["addons"][name].get("kind", "stdlib") / name
+
+
+def floors(folder: Path) -> dict[str, str]:
+    """Each package a deps add-on needs and the oldest version it takes:
+    requirements-floor.txt's `name==version` lines, else requirements.txt's."""
+    for f in ("requirements-floor.txt", "requirements.txt"):
+        if (folder / f).is_file():
+            out = {}
+            for line in (folder / f).read_text(encoding="utf-8").splitlines():
+                name, sep, ver = line.split("#")[0].strip().partition("==")
+                if sep:
+                    out[name.strip()] = ver.strip()
+            return out
+    return {}
+
+
+def version_key(v: str) -> tuple:
+    """1.10.0 after 1.9.2: each dotted part as a number, as far as it is one."""
+    out = []
+    for part in v.split("."):
+        digits = re.match(r"\d*", part).group()
+        out.append(int(digits or 0))
+        if digits != part:
+            break
+    return tuple(out)
+
+
+def packages(folder: Path, python: str | None) -> dict:
+    """Whether `python` has what a deps add-on needs, read, never installed:
+    {"state": "met"|"unmet"|"unreachable", "have": {package: version}, ...}."""
+    want = floors(folder)
+    if python is None:
+        return {"state": "unreachable", "why": "no --python to look in", "want": want}
+    probe = ("import json, sys, importlib.metadata as md\n"
+             "out = {}\n"
+             "for n in sys.argv[1:]:\n"
+             "    try: out[n] = md.version(n)\n"
+             "    except md.PackageNotFoundError: out[n] = None\n"
+             "print(json.dumps(out))")  # fmt: skip
+    r = subprocess.run([python, "-c", probe, *want], capture_output=True, text=True,
+                       timeout=60, env=ENV)  # fmt: skip
+    try:
+        have = json.loads(r.stdout)
+    except ValueError:
+        return {
+            "state": "unreachable",
+            "why": f"{python} couldn't be asked",
+            "want": want,
+        }
+    short = [f"{n} {v} or newer ({'not installed' if have.get(n) is None else 'has ' + have[n]})"
+             for n, v in want.items()
+             if have.get(n) is None or version_key(have[n]) < version_key(v)]  # fmt: skip
+    if short:
+        return {
+            "state": "unmet",
+            "why": "needs " + "; ".join(short),
+            "want": want,
+            "have": have,
+        }
+    return {"state": "met", "want": want, "have": have}
 
 
 def load_kernel(stack: Path):
@@ -224,7 +303,14 @@ def kernel_contract(stack: Path, willow: Path, box: Path, commit: str) -> str:
 
 
 def contract(stack: Path, folder: Path) -> str:
-    mains = [p for p in sorted(folder.glob("*.py")) if not p.name.startswith("test_")]
+    """Run with no arguments, the add-on's script refuses: exit 2. Its script
+    is the one named for it (share.py, not the ed25519.py beside it)."""
+    own = folder / (folder.name.replace("-", "_") + ".py")
+    mains = (
+        [own]
+        if own.is_file()
+        else [p for p in sorted(folder.glob("*.py")) if not p.name.startswith("test_")]
+    )
     if not mains:
         return "unreachable: no script"
     r = subprocess.run([sys.executable, str(mains[0])], cwd=stack, capture_output=True,
@@ -256,32 +342,35 @@ def add(names: list[str], to: Path, python: str | None) -> int:
 
     def refused(said: str) -> int:  # nothing half-added: this call's copies go
         print(f"refused: {said}", file=sys.stderr)
-        for _, dst, _, _ in copied:
-            shutil.rmtree(dst)
+        for c in copied:
+            shutil.rmtree(c[1])
         return REFUSED
 
     while todo:  # first every copy, so a check never runs short of a hard sibling
         name = todo.pop(0)
         if name in m["addons"] or any(c[0] == name for c in copied):
             continue  # asked twice, or both asked and leaned on
-        src = willow / "adapters" / "stdlib" / name
-        if src.is_dir() and card(src).get("runs-in") == "repo":
-            return refused(f"{name} works on willow's own repository; it isn't copied out of it")  # fmt: skip
-        if not src.is_dir():
-            if (willow / "adapters" / "deps" / name).is_dir():
-                return refused(f"{name} is a deps add-on; this base stack is stdlib only")  # fmt: skip
+        kind = kind_of(willow, name)
+        if kind is None:
             return refused(f"willow has no add-on {name}")
-        dst = stack / "adapters" / "stdlib" / name
+        src = willow / "adapters" / kind / name
+        if card(src).get("runs-in") == "repo":
+            return refused(f"{name} works on willow's own repository; it isn't copied out of it")  # fmt: skip
+        need = packages(src, python) if kind == "deps" else None
+        if need and need["state"] == "unmet":
+            return refused(f"{name}: {need['why']}; it installs nothing, so install them in {python} first")  # fmt: skip
+        dst = stack / "adapters" / kind / name
         if dst.exists():
             return refused(f"{dst} is there but not on STACK.json; remove it to add {name} again")  # fmt: skip
+        dst.parent.mkdir(parents=True, exist_ok=True)
         shutil.copytree(src, dst, ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
         hard, soft = deps(dst)
         for h in hard:
             if h not in m["addons"] and h not in todo:
                 todo.append(h)
                 why[h] = f"imported by {name}"
-        copied.append((name, dst, hard, soft))
-    for name, dst, hard, soft in copied:
+        copied.append((name, dst, hard, soft, kind, need))
+    for name, dst, hard, soft, kind, need in copied:
         files = {
             str(p.relative_to(dst)): sha(p)
             for p in sorted(dst.rglob("*"))
@@ -292,20 +381,26 @@ def add(names: list[str], to: Path, python: str | None) -> int:
                  "card": {k: c.get(k) for k in ("section", "line", "source", "writes",
                                                 "network")},
                  "contract": contract(stack, dst), "tests": tests(stack, dst, python)}  # fmt: skip
+        if kind == "deps":
+            entry.update(kind="deps", packages=need)
         m["addons"][name] = entry
         save(stack, m)
         kernel.append(box, kernel.now(), "assemble", who="assembler", piece=name,
                       source=m["commit"], why=entry["why"], hard=hard, soft=soft,
                       files=hashlib.sha256(json.dumps(files, sort_keys=True).encode()).hexdigest(),
                       writes=entry["card"]["writes"], network=entry["card"]["network"],
-                      contract=entry["contract"], tests=entry["tests"]["state"])  # fmt: skip
+                      contract=entry["contract"], tests=entry["tests"]["state"],
+                      **({"folder": "deps", "packages": need["state"]} if kind == "deps" else {}))  # fmt: skip
         t = entry["tests"]
         print(f"+ {name:<14} {entry['why']:<24} contract {entry['contract']:<8} "
-              f"tests {t['state']}{': ' + t.get('tail', t.get('why', '')) if t['state'] != 'passed' else ''}")  # fmt: skip
-        if entry["contract"] != "held" or t["state"] == "failed":
-            worst = REFUSED if t["state"] == "failed" else max(worst, ESCALATE)
-        elif t["state"] == "unreachable":
-            worst = max(worst, ESCALATE) if worst != REFUSED else worst
+              f"tests {t['state']}{': ' + t.get('tail', t.get('why', '')) if t['state'] != 'passed' else ''}"
+              + (f"; packages {need['state']}" + (f": {need['why']}" if need.get("why") else "")
+                 if kind == "deps" else ""))  # fmt: skip
+        if t["state"] == "failed" or worst == REFUSED:
+            worst = REFUSED  # a failing piece is refused, and stays the word
+        elif (entry["contract"] != "held" or t["state"] == "unreachable"
+              or (need and need["state"] != "met")):  # fmt: skip
+            worst = ESCALATE
     return worst
 
 
@@ -323,9 +418,9 @@ def refresh(names: list[str], to: Path) -> int:
             print(f"refused: {name} isn't in this stack; add it", file=sys.stderr)
             return REFUSED
     for name in names:
-        dst = stack / "adapters" / "stdlib" / name
+        dst = piece(stack, name, m)
         shutil.rmtree(dst)
-        shutil.copytree(willow / "adapters" / "stdlib" / name, dst,
+        shutil.copytree(willow / "adapters" / m["addons"][name].get("kind", "stdlib") / name, dst,
                         ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))  # fmt: skip
         files = {str(p.relative_to(dst)): sha(p) for p in sorted(dst.rglob("*"))
                  if p.is_file() and "__pycache__" not in p.parts}  # fmt: skip
@@ -400,17 +495,20 @@ def swap_kernel(to: Path, pin: Path | None, python: str | None) -> int:
     failed, ran = [], 0
     if python is not None:
         for name in sorted(m["addons"]):
-            t = tests(stack, stack / "adapters" / "stdlib" / name, python)
+            t = tests(stack, piece(stack, name, m), python)
             ran += t["state"] != "unreachable"
             if t["state"] == "failed":
                 failed.append(name)
         if failed:
             # a piece willow changed with its kernel: refreshed, it may hold
-            moved = [n for n in failed if (willow / "adapters" / "stdlib" / n).is_dir()
-                     and {str(p.relative_to(willow / "adapters" / "stdlib" / n)): sha(p)
-                          for p in sorted((willow / "adapters" / "stdlib" / n).rglob("*"))
-                          if p.is_file() and "__pycache__" not in p.parts}
-                     != m["addons"][n]["files"]]  # fmt: skip
+            def theirs(n):  # willow's copy of a piece, by its files' hashes
+                d = willow / "adapters" / m["addons"][n].get("kind", "stdlib") / n
+                return d.is_dir() and {str(p.relative_to(d)): sha(p) for p in sorted(d.rglob("*"))
+                                       if p.is_file() and "__pycache__" not in p.parts}  # fmt: skip
+
+            moved = [
+                n for n in failed if theirs(n) and theirs(n) != m["addons"][n]["files"]
+            ]
             hint = (f" (willow's {', '.join(moved)} changed since; `refresh` it, then"
                     " `kernel` again)" if moved else "")  # fmt: skip
             return back(
@@ -462,7 +560,7 @@ def check(to: Path) -> int:
     if m.get("vectors") and sha(stack / "vectors" / "cases.json") != m["vectors"]:
         moved.append("vectors/cases.json")
     for name, e in m["addons"].items():
-        d = stack / "adapters" / "stdlib" / name
+        d = piece(stack, name, m)
         now = {str(p.relative_to(d)): sha(p) for p in sorted(d.rglob("*"))
                if p.is_file() and "__pycache__" not in p.parts}  # fmt: skip
         if now != e["files"]:

@@ -103,7 +103,7 @@ def main(argv: list[str]) -> int:
         if r is None:
             continue
         states.append(r["state"])
-        print(f"{gate:<18} {r['state']}" + (f"  ({r['why']})" if "why" in r else ""))
+        print(ci.verdict_line(gate, r["state"], r.get("why"), r.get("skipped")))
     for b in broken:
         print(f"doesn't verify: {b}")
     missing = [g for g in chosen if g not in latest]

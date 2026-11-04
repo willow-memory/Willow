@@ -19,8 +19,12 @@ record is hash-chained like any other and the kernel's `verify` checks it.
     python adapters/stdlib/ci/ci.py run    mutants --shard 2/4
     python adapters/stdlib/ci/ci.py verify [--box DIR]
     python adapters/stdlib/ci/ci.py show   [--box DIR]
+    python adapters/stdlib/ci/ci.py needs  [PART|GATE ...]
 
-`run` with no part runs all seven. A gate's own name (`tests:strip-2`) runs
+`needs` runs nothing: it reads what each gate needs (a module, a program on
+PATH) and names the gates this machine would find unreachable, in a second;
+the deps gates install from PyPI, so only a run can tell for them, and it
+says so. `run` with no part runs all seven. A gate's own name (`tests:strip-2`) runs
 just that gate, and the name of a numbered group (`tests:strip`, `tests:adapters`) all of its gates, `--without GATE` leaves one out of what was named, and
 `--shard K/N` runs the Kth of N parts of it, cut by
 [test-shards](../test-shards/)' own split with each gate weighing the seconds
@@ -47,7 +51,12 @@ record in the runner's temp folder.
 
 Each verdict row holds the gate, its state, a hash of every file in the repo
 it ran on, a hash of what the command printed, the Python version, and a
-reason when it didn't pass.
+reason when it didn't pass. When pytest skipped tests, the row also says
+how many and why (`skipped`), and `run`, `show` and cores.py print it after
+the state: `satisfied  [1 skipped: ...]`. A skip changes no state, and is no
+pass of that test: the row keeps it in sight. Only what pytest is asked to
+report is said, so `tests:alone` and the mutants, which run pytest inside
+another program, never say a skip.
 
 **States, never collapsed:** `satisfied`; `failing` (the command failed, or
 its output didn't show what it must, such as a port that `vectors/compare.py`

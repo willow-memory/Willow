@@ -598,22 +598,31 @@ class Canvas:
         prop = json.loads((self.box / "proposals" / f"{subject[9:]}.json").read_text())
         arr = json.loads(prop["data"])
         have = assemble.manifest(self.stack)["addons"]
-        want = [
-            n
-            for n in arr["pieces"]
-            if n not in have and self.pieces()[n]["kind"] == "stdlib"
-        ]
-        skipped = [n for n in arr["pieces"] if self.pieces()[n]["kind"] == "deps"]
+        want = [n for n in arr["pieces"] if n not in have]
         if not want:
             return {
                 "added": [],
-                "skipped": skipped,
+                "skipped": [],
                 "said": "every piece is already here",
             }
+        py = self.python()
         with self.lock:
-            code, said = quiet(assemble.add, want, self.to, None)
+            code, said = quiet(assemble.add, want, self.to, str(py) if py else None)
         self._pieces = None
-        return {"added": want, "skipped": skipped, "exit": code, "said": said}
+        now = assemble.manifest(self.stack)["addons"]
+        added = [n for n in want if n in now]  # a refusal adds nothing of its call
+        skipped = [n for n in want if n not in now]
+        return {"added": added, "skipped": skipped, "exit": code, "said": said}
+
+    def python(self) -> Path | None:
+        """The Python the pieces run and are checked in: one at venv/ beside
+        the stack, else this one when it has pytest, else none."""
+        import importlib.util
+
+        py = self.to / "venv" / "bin" / "python"
+        if py.is_file():
+            return py
+        return Path(sys.executable) if importlib.util.find_spec("pytest") else None
 
     # ── start it: your willow over your folders, after the seal ─────────────
     def start(self, subject: str) -> dict:
@@ -703,22 +712,15 @@ class Canvas:
                 job["state"] = "stopped"
                 return
             # 2. each piece's own tests, in a Python that has pytest
-            import importlib.util
-
-            py = (
-                self.to / "venv" / "bin" / "python"
-            )  # one beside the stack, else this one
-            if not py.is_file():
-                py = (
-                    Path(sys.executable) if importlib.util.find_spec("pytest") else None
-                )
+            py = self.python()
             if py is None:
                 self._step("each piece's own tests", "unreachable",
                            "no Python with pytest here: pip install pytest, or make one at venv/ beside your stack")  # fmt: skip
             else:
                 passed, failed = [], []
+                m = assemble.manifest(self.stack)
                 for name in sorted(have):
-                    d = self.stack / "adapters" / "stdlib" / name
+                    d = assemble.piece(self.stack, name, m)
                     if not list(d.glob("test_*.py")):
                         continue
                     r = subprocess.run([str(py), "-m", "pytest", "-q", "-p", "no:cacheprovider", str(d)],

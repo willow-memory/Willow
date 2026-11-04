@@ -10,6 +10,14 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `assemble.py add` puts a deps add-on (kart, forge, pdf) in a stack's
+  adapters/deps/ when the --python named already has each package its floor
+  names, at that version or newer; nothing is installed, and one missing or
+  too old is refused, saying which (#225)
+- `ci.py needs` says which gates this machine can't run, by what each needs,
+  without running any, in under a second; AGENTS.md now asks it before a
+  change, in place of running every gate as a baseline, and after a change,
+  only the gates it can move (#224)
 - `assemble.py kernel` puts this willow's kernel.py and vectors in a stack
   in place of the ones it was made with, only if the stack's record verifies
   under the new kernel and, with --python, every add-on's tests pass on it;
@@ -1730,6 +1738,13 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- `ci` says what pytest skipped: a gate whose tests skipped some keeps its
+  state, and its row says how many and why (`skipped`), printed after the
+  state by `run`, `show` and cores.py, as `satisfied  [1 skipped: ...]`.
+  Before, a gate whose check never ran read the same as one that held: on
+  GitHub, `demo:known-gaps` skips its advisory check on every run, since
+  the advisory text is private. `ci-why` reads a failing gate's reason up
+  to its own parenthesis, never into the skips after it (#227)
 - contradictions reads only prose: a file of code or data by its name, a
   fenced code block in Markdown and a table's row are left out and counted;
   over 14 repositories, 1,404 disagreements became 95 (#223)
@@ -1955,6 +1970,17 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- `ci` runs every demo's tests: ofrenda's, stewart-crossover's and
+  small-models' were in no gate, and one of stewart-crossover's read Wren's
+  folder before asking whether it had been made, so it failed on every fresh
+  checkout unseen. The demo gates are one table, `DEMO_TESTS`, and
+  `adapters/stdlib/ci/test_ci.py` fails on a test file under demo/ that
+  none of them runs.
+  `test-impact` places a demo change by that table, so a change to
+  johnson's tests now plans `demo:share`, the gate that runs them (#226)
+- `assemble.py add` runs a piece's own script for its contract (share.py,
+  not the ed25519.py beside it), and keeps a failing piece's exit 2 when a
+  later piece's is 42 (#225)
 - The kernel reads a date only when its month has that day: 1984-06-31 and
   2023-02-29 are no date, 2024-02-29 is; the five ports make the same check,
   and todo's impossible-date group, which only worked around it, is gone

@@ -76,6 +76,72 @@ def test_a_missing_tool_is_unreachable_not_failing(tmp_path):
     assert all("not on PATH" in r["why"] for r in made)
 
 
+def test_needs_says_what_cant_run_here_without_running_anything(tmp_path):
+    """The same bare PATH: `needs` names every port as unreachable, as `run`
+    would find them, writes no record, and says deps can only be known by
+    running; a gate whose needs are met is said to run here."""
+    bare = tmp_path / "bin"
+    bare.mkdir()
+    env = {**os.environ, "PATH": str(bare)}
+    got = cli("needs", "ports", env=env)
+    assert got.returncode == k.ESCALATE, got.stdout + got.stderr
+    said = got.stdout.splitlines()
+    assert said[0] == (
+        f"needs: {len(ci.PORTS)} gates; 0 can run here, {len(ci.PORTS)} would be"
+        " unreachable, 0 known only by running"
+    )
+    assert all("unreachable:" in s and "not on PATH" in s for s in said[1:])
+    assert len(said) == 1 + len(ci.PORTS)
+    got = cli("needs", "deps:floors")
+    assert got.returncode == k.ESCALATE
+    assert "only a run can tell" in got.stdout
+    got = cli("needs", "tests:docs")
+    assert (got.returncode, got.stdout) == (
+        k.ALIVE,
+        "needs: 1 gate; 1 can run here, 0 would be unreachable, 0 known only by running\n",
+    )
+    assert cli("needs", "tests:strpi").returncode == k.REFUSED
+    # it takes no record to write to
+    assert cli("needs", "--box", str(tmp_path)).returncode == k.REFUSED
+
+
+def test_needs_asks_what_a_gate_needs_before_saying_only_a_run_can_tell(
+    monkeypatch, capsys
+):
+    """A gate that installs from PyPI and runs a program this machine lacks
+    is unreachable here, known now; one whose needs are met is still known
+    only by running."""
+
+    def gate(needs=None, online=None):
+        def how():
+            raise AssertionError("needs runs no gate")
+
+        how.needs = lambda: needs
+        if online:
+            how.online = online
+        return how
+
+    fake = [("deps", "deps:a", gate("tesseract not on PATH", "installs")),
+            ("deps", "deps:b", gate(None, "installs")),
+            ("demo", "demo:c", gate())]  # fmt: skip
+    monkeypatch.setattr(ci, "gates", lambda: fake)
+    assert ci.do_needs([]) == k.ESCALATE
+    said = capsys.readouterr().out.splitlines()
+    assert said[0] == (
+        "needs: 3 gates; 1 can run here, 1 would be unreachable,"
+        " 1 known only by running"
+    )
+    assert said[1].split() == [
+        "deps:a",
+        "unreachable:",
+        "tesseract",
+        "not",
+        "on",
+        "PATH",
+    ]
+    assert said[2].split()[:2] == ["deps:b", "only"]
+
+
 def test_a_failing_command_is_failing_and_a_judge_can_fail_a_zero_exit():
     state, _, why = ci.command(sys.executable, "-c", "raise SystemExit(3)")()
     assert (state, why) == (ci.FAILING, "exit 3")
@@ -86,6 +152,41 @@ def test_a_failing_command_is_failing_and_a_judge_can_fail_a_zero_exit():
     assert ci.code_of([ci.SATISFIED, ci.UNREACHABLE]) == k.ESCALATE
     assert ci.code_of([ci.SATISFIED]) == k.ALIVE
     assert ci.code_of([]) == k.ESCALATE  # nothing checked is not a pass
+
+
+def test_a_skipped_test_is_said_on_its_row_and_never_changes_its_state(
+    tmp_path, monkeypatch, capsys
+):
+    """A skip is no pass of that test: its gate's row says how many and why,
+    with no machine's path in it, and the gate's state is what it was."""
+    skips, clean = tmp_path / "skips", tmp_path / "clean"
+    for d in (skips, clean):
+        d.mkdir()
+    (skips / "test_s.py").write_text(
+        "import pytest\n"
+        "def test_ran(): pass\n"
+        "def test_gone(): pytest.skip('no vim (here)')\n"
+        "def test_also_gone(): pytest.skip('not Linux')\n"
+    )
+    (clean / "test_c.py").write_text("def test_ran(): pass\n")
+    fake = [("tests", "tests:skips", ci.command(*ci.PYTEST, str(skips))),
+            ("tests", "tests:clean", ci.command(*ci.PYTEST, str(clean)))]  # fmt: skip
+    monkeypatch.setattr(ci, "gates", lambda: fake)
+    box = tmp_path / "box"
+    assert ci.do_run(box, ["tests:skips", "tests:clean"], NOW) == k.ALIVE
+    made = rows(box)[1:]
+    assert [r["state"] for r in made] == [ci.SATISFIED, ci.SATISFIED]
+    said = made[0]["skipped"]
+    assert said.startswith("2 skipped: ") and "no vim (here)" in said
+    assert "not Linux" in said and str(tmp_path) not in said
+    assert "skipped" not in made[1]
+    assert ci.do_verify(box) == k.ALIVE
+    printed = capsys.readouterr().out
+    assert "tests:skips        satisfied  [2 skipped: " in printed
+    assert "tests:clean        satisfied\n" in printed
+    assert ci.do_show(box) == k.ALIVE
+    assert "row 1  [2 skipped: " in capsys.readouterr().out
+    assert ci.skipped("3 passed in 0.1s") is None
 
 
 def test_verify_holds_the_chain_and_refuses_anything_but_ci_verdicts(tmp_path):
@@ -125,6 +226,7 @@ def test_the_gates_run_in_one_fixed_order_and_cover_every_part():
         *(f"ports:{p}" for p in ci.PORTS),
         *(f"demo:{p}" for p in ci.people()), "demo:php2shell", "demo:google-privacy-2026-10-16",
         "demo:stack", "demo:share", "demo:teodora-words", "demo:craft-assembly", "demo:redteam", "demo:known-gaps", "demo:five-repos", "demo:novelty",
+        "demo:ofrenda-frozen", "demo:stewart-crossover-frozen", "demo:small-models",
         *(g for d in ci.deps_add_ons() for g in (f"deps:{d}", f"deps:{d}@floor")),
         "deps:floors",
         *(f"mutants:{n}" for n in ci.mutant_targets()),
@@ -132,6 +234,20 @@ def test_the_gates_run_in_one_fixed_order_and_cover_every_part():
     ]  # fmt: skip
     assert ci.live_checks()[:2] == ["bash", "zsh"]
     assert {p for p, _, _ in ci.gates()} == set(ci.PARTS)
+
+
+def test_every_test_file_under_demo_is_run_by_a_gate():
+    # a demo's tests that no gate names never fail: ofrenda's, stewart-
+    # crossover's and small-models' went unrun, and one broke unseen
+    targets = [t for _, t, _ in ci.DEMO_TESTS]
+    under = lambda f, t: f == t or f.startswith(t + "/")  # noqa: E731
+    files = sorted(
+        p.relative_to(ci.ROOT).as_posix()
+        for p in (ci.ROOT / "demo").rglob("test_*.py")
+        if "__pycache__" not in p.parts
+    )
+    assert files and [f for f in files if not any(under(f, t) for t in targets)] == []
+    assert all((ci.ROOT / t).exists() for t in targets)
 
 
 def test_shards_run_every_gate_of_what_was_named_once_in_its_order():
