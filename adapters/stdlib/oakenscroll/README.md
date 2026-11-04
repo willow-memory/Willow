@@ -6,6 +6,7 @@ added: 2026-11-01
 writes: to
 network: none
 role: reads
+reads: office.db
 -->
 # oakenscroll
 

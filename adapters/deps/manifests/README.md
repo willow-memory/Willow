@@ -8,6 +8,7 @@ floor: PyYAML 5.3.1
 writes: to
 network: none
 role: reads
+reads: .yaml, .yml
 -->
 # manifests
 
