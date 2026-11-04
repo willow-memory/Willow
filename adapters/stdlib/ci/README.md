@@ -19,8 +19,12 @@ record is hash-chained like any other and the kernel's `verify` checks it.
     python adapters/stdlib/ci/ci.py run    mutants --shard 2/4
     python adapters/stdlib/ci/ci.py verify [--box DIR]
     python adapters/stdlib/ci/ci.py show   [--box DIR]
+    python adapters/stdlib/ci/ci.py needs  [PART|GATE ...]
 
-`run` with no part runs all seven. A gate's own name (`tests:strip-2`) runs
+`needs` runs nothing: it reads what each gate needs (a module, a program on
+PATH) and names the gates this machine would find unreachable, in a second;
+the deps gates install from PyPI, so only a run can tell for them, and it
+says so. `run` with no part runs all seven. A gate's own name (`tests:strip-2`) runs
 just that gate, and the name of a numbered group (`tests:strip`, `tests:adapters`) all of its gates, `--without GATE` leaves one out of what was named, and
 `--shard K/N` runs the Kth of N parts of it, cut by
 [test-shards](../test-shards/)' own split with each gate weighing the seconds

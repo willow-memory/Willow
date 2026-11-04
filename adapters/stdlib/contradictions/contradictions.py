@@ -27,6 +27,11 @@ amounts of one unit, isn't read for them. Two lines written on different
 days (a stamp, a date heading above, a file named for the day) are a log's
 entries, or a plan changed: they are counted, and left alone.
 
+Only prose is read: a line of code or data is a value, not a claim, so a
+file by its name a program's or a data file's (.py, .json, .csv and
+the like), a fenced code block in Markdown, and a table's row (a line split
+by two or more `|` or tabs) are left out, and counted.
+
 It only reads. Exit codes, the kernel's: 0 found some; 42 none; 2 refused.
 """
 
@@ -77,6 +82,14 @@ NAMES = set(
 )
 ITEM = re.compile(r"^\s*(?:[-*+]|\d+[.)])\s")  # a list's item: "- ", "* ", "2. "
 LEAD = re.compile(r"^\s*(?:[-*+>#]+\s*|\d+[.)]\s+|\[[ xX]\]\s*)*")
+#: a file of code or data, by its name: its lines are values, not claims
+CODE = set(
+    ".py .pyi .js .mjs .cjs .ts .tsx .jsx .go .rs .java .kt .kts .scala .c .h .cc"
+    " .cpp .hpp .cs .rb .php .pl .swift .m .lua .r .jl .sh .bash .zsh .fish .ps1"
+    " .bat .cmd .sql .json .jsonl .ndjson .yaml .yml .toml .ini .cfg .conf .lock"
+    " .csv .tsv .xml .svg .drawio .css .scss .gradle .mk .cmake .tf .proto .ipynb".split()
+)
+FENCE = re.compile(r"^\s*(```|~~~)")
 MIN_WORDS = 2  # "Date: ..." or "Rent is $900": one word is a label, not a subject
 DIGITS = re.compile(r"\d+")
 #: a subject said in the same words on this many lines is a form's field
@@ -138,24 +151,42 @@ def subject(text: str) -> list[str]:
     return out
 
 
-def passages(pile: list[dict]) -> list[dict]:
-    """Every line stating a date or an amount, with what it's about."""
-    out, path, on = [], None, ""
+def tabled(text: str) -> bool:
+    """A table's row: split by two or more pipes or tabs, not a sentence."""
+    return text.count("|") >= 2 or text.count("\t") >= 2
+
+
+def passages(pile: list[dict]) -> tuple[list[dict], int]:
+    """Every line of prose stating a date or an amount, with what it's
+    about; and how many such lines were left out as code, data or a table's
+    row."""
+    out, path, on, fenced, code, skipped = [], None, "", False, False, 0
     for c in pile:
         if c["path"] != path:  # a file named for a day was written that day
             path, on = c["path"], kernel.newest(c["path"])
+            fenced, code = False, Path(path).suffix.lower() in CODE
         for i, text in enumerate(c["text"].splitlines()):
+            if FENCE.match(text):
+                fenced = not fenced
+                continue
+            if code or fenced:
+                if stated(text)[1] or amounts(text):
+                    skipped += 1
+                continue
             (stamp, said), amt, ws = stated(text), amounts(text), subject(text)
             if stamp and not ws and not said and not amt:
                 on = stamp  # a log's date heading covers the lines under it
                 continue
             if not said and not amt:
                 continue
+            if tabled(text):
+                skipped += 1
+                continue
             out.append({"path": c["path"], "line": c["line"] + i, "text": text.strip(),
                         "item": bool(ITEM.match(text)),
                         "date": said, "amounts": amt, "words": ws, "on": stamp or on,
                         "stems": {kernel.stem(w) for w in ws}})  # fmt: skip
-    return out
+    return out, skipped
 
 
 def same(a: dict, b: dict) -> bool:
@@ -251,12 +282,14 @@ def main(argv: list[str]) -> int:
     if not (box / "kernel.json").exists():
         print("refused: not a kernel box; init first", file=sys.stderr)
         return kernel.REFUSED
-    found = passages(kernel.chunks(Path(kernel.config(box)["pile"])))
+    found, skipped = passages(kernel.chunks(Path(kernel.config(box)["pile"])))
     if not found:
         print("Nothing in your folder states a date or an amount this can read.")
         return kernel.ESCALATE
     pairs, apart, kinds = disagreements(found)
     read = f"{len(found)} line{'s' * (len(found) != 1)} with a date or an amount read"
+    if skipped:
+        read += f", {skipped} of code, data or a table left out"
     if kinds:
         read += f", {kinds} pair{'s' * (kinds != 1)} in records of one kind left alone"
     if apart:
