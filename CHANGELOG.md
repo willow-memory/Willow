@@ -13,7 +13,7 @@ says how). The first was v0.1.0.
 - `reads` on every reader's card: the kinds of file it reads, by extension
   or by name (`.eml, .mbox`; `zotero.sqlite`), or `none`. `readme.py
   check` requires it of a built reader and of no other card, and
-  ci/test_contract.py holds each kind to the reader's own code
+  ci/test_contract.py holds each kind to the reader's own code (#234)
 - `role` on every add-on's card and every entry in adapters/planned.json:
   the part it plays in a stack (reads, words, page, suggests, ways, guards,
   makes, tools, repo), each said in adapters/README.md. `readme.py check`
