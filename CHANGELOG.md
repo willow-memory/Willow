@@ -10,6 +10,10 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `claude-code`'s prompt hook answers from scan's index with `--index`,
+  while index-cache says the folder hasn't changed: the same passages and
+  the same row on the record, in 2 s, not the 30 s the kernel takes to read
+  the bot's 22,873 files at every prompt (#241)
 - `ui/`'s `assemble.py remove NAME...` takes a piece out of a stack: its
   folder and its STACK.json entry, and one `remove` row on the record naming
   the files it held; not one a piece that stays imports, nor one whose files
