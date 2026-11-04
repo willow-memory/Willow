@@ -47,7 +47,12 @@ record in the runner's temp folder.
 
 Each verdict row holds the gate, its state, a hash of every file in the repo
 it ran on, a hash of what the command printed, the Python version, and a
-reason when it didn't pass.
+reason when it didn't pass. When pytest skipped tests, the row also says
+how many and why (`skipped`), and `run`, `show` and cores.py print it after
+the state: `satisfied  [1 skipped: ...]`. A skip changes no state, and is no
+pass of that test: the row keeps it in sight. Only what pytest is asked to
+report is said, so `tests:alone` and the mutants, which run pytest inside
+another program, never say a skip.
 
 **States, never collapsed:** `satisfied`; `failing` (the command failed, or
 its output didn't show what it must, such as a port that `vectors/compare.py`

@@ -88,6 +88,41 @@ def test_a_failing_command_is_failing_and_a_judge_can_fail_a_zero_exit():
     assert ci.code_of([]) == k.ESCALATE  # nothing checked is not a pass
 
 
+def test_a_skipped_test_is_said_on_its_row_and_never_changes_its_state(
+    tmp_path, monkeypatch, capsys
+):
+    """A skip is no pass of that test: its gate's row says how many and why,
+    with no machine's path in it, and the gate's state is what it was."""
+    skips, clean = tmp_path / "skips", tmp_path / "clean"
+    for d in (skips, clean):
+        d.mkdir()
+    (skips / "test_s.py").write_text(
+        "import pytest\n"
+        "def test_ran(): pass\n"
+        "def test_gone(): pytest.skip('no vim (here)')\n"
+        "def test_also_gone(): pytest.skip('not Linux')\n"
+    )
+    (clean / "test_c.py").write_text("def test_ran(): pass\n")
+    fake = [("tests", "tests:skips", ci.command(*ci.PYTEST, str(skips))),
+            ("tests", "tests:clean", ci.command(*ci.PYTEST, str(clean)))]  # fmt: skip
+    monkeypatch.setattr(ci, "gates", lambda: fake)
+    box = tmp_path / "box"
+    assert ci.do_run(box, ["tests:skips", "tests:clean"], NOW) == k.ALIVE
+    made = rows(box)[1:]
+    assert [r["state"] for r in made] == [ci.SATISFIED, ci.SATISFIED]
+    said = made[0]["skipped"]
+    assert said.startswith("2 skipped: ") and "no vim (here)" in said
+    assert "not Linux" in said and str(tmp_path) not in said
+    assert "skipped" not in made[1]
+    assert ci.do_verify(box) == k.ALIVE
+    printed = capsys.readouterr().out
+    assert "tests:skips        satisfied  [2 skipped: " in printed
+    assert "tests:clean        satisfied\n" in printed
+    assert ci.do_show(box) == k.ALIVE
+    assert "row 1  [2 skipped: " in capsys.readouterr().out
+    assert ci.skipped("3 passed in 0.1s") is None
+
+
 def test_verify_holds_the_chain_and_refuses_anything_but_ci_verdicts(tmp_path):
     box = tmp_path / "box"
     assert cli("run", *PART, "--box", str(box), "--now", NOW).returncode == 0

@@ -71,7 +71,8 @@ TOOLS = {
     "rust": ("cargo",),
 }
 PY = sys.executable
-PYTEST = (PY, "-m", "pytest", "-q", "-p", "no:cacheprovider")
+#: -rs: each skipped test's reason is printed, for `skipped` to read
+PYTEST = (PY, "-m", "pytest", "-q", "-rs", "-p", "no:cacheprovider")
 #: what changes between two runs of the same command on the same files
 TIMING = re.compile(r"\b\d+(?:\.\d+)?\s*(?:s|ms|sec|seconds)\b")
 
@@ -87,6 +88,33 @@ def steady(said: str) -> str:
     said = said.replace(str(ROOT), "<repo>").replace(sys.prefix, "<python>")
     said = said.replace(TEMP, "<tmp>")
     return re.sub(r"pytest-\d+", "pytest-N", TIMING.sub("", said))
+
+
+#: pytest -rs's line for skipped tests: how many, and where and why
+SKIPPED = re.compile(r"^SKIPPED \[(\d+)\] (.+)$", re.M)
+
+
+def skipped(said: str) -> str | None:
+    """How many tests a gate's pytest skipped, and why, from -rs's lines;
+    None when it skipped none. A skip is no failure, and no pass of that
+    test either: the gate's state stays what it was, and its row says this
+    beside it, so a check that never ran is never mistaken for one that
+    held. Only what pytest was asked to report: a gate that runs pytest
+    inside another program (alone, mutants) says none."""
+    got = SKIPPED.findall(steady(said))
+    if not got:
+        return None
+    reasons = "; ".join(dict.fromkeys(why.strip() for _, why in got))
+    return f"{sum(int(k) for k, _ in got)} skipped: {reasons}"[:300]
+
+
+def verdict_line(gate: str, state: str, why: str | None, skips: str | None) -> str:
+    """One gate's verdict as `run`, `show` and cores.py print it."""
+    return (
+        f"{gate:<18} {state}"
+        + (f"  ({why})" if why else "")
+        + (f"  [{skips}]" if skips else "")
+    )
 
 
 # ── gates ────────────────────────────────────────────────────────────────────
@@ -242,7 +270,7 @@ def deps_add_on(name: str, pins: str = "requirements.txt"):
                 )
             log = Path(tmp) / "guard.log"
             code, said = run(
-                (py, "-m", "pytest", "-q", "-p", "no:cacheprovider", str(here)),
+                (py, "-m", "pytest", "-q", "-rs", "-p", "no:cacheprovider", str(here)),
                 env=guarded(log),
             )
             said = said.replace(tmp, "<tmp>")
@@ -706,12 +734,15 @@ def do_run(box: Path, chosen: list[str], ts: str) -> int:
         }
         if why:
             row["why"] = why
+        skips = skipped(said)
+        if skips:
+            row["skipped"] = skips
         kernel.append(box, ts, "verdict", who=WHO, **row)
-        states.append((gate, state, why))
+        states.append((gate, state, why, skips))
     print()
-    for gate, state, why in states:
-        print(f"{gate:<18} {state}" + (f"  ({why})" if why else ""))
-    return code_of([s for _, s, _ in states])
+    for gate, state, why, skips in states:
+        print(verdict_line(gate, state, why, skips))
+    return code_of([s for _, s, _, _ in states])
 
 
 def code_of(states: list[str]) -> int:
@@ -753,7 +784,10 @@ def do_show(box: Path) -> int:
         return kernel.REFUSED
     latest = {r["gate"]: r for r in rows if r["kind"] == "verdict"}
     for gate, r in latest.items():
-        print(f"{gate:<18} {r['state']:<12} python {r['python']}  row {r['n']}")
+        print(
+            f"{gate:<18} {r['state']:<12} python {r['python']}  row {r['n']}"
+            + (f"  [{r['skipped']}]" if "skipped" in r else "")
+        )
     return code_of([r["state"] for r in latest.values()])
 
 
