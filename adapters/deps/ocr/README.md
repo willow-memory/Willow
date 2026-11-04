@@ -9,6 +9,7 @@ floor: Pillow 11.0.0, pypdf 3.1.0; the rule names Pillow 8.0.1, which won't buil
 writes: to
 network: none
 role: reads
+reads: .pdf, .png, .jpg, .jpeg, .tif, .tiff, .webp, .bmp, .gif
 -->
 # ocr
 

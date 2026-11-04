@@ -6,6 +6,7 @@ added: 2026-10-29
 writes: to
 network: none
 role: reads
+reads: .cho, .chopro, .chordpro, .crd, .pro
 -->
 # chordpro
 

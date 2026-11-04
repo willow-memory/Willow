@@ -149,6 +149,10 @@ that adds one entry to [adapters/planned.json](adapters/planned.json):
 - `role` is the part it plays in a stack (what it reads, what runs on your
   page, where you ask from...), one of those in
   [adapters/README.md](adapters/README.md#what-a-folder-holds).
+- `reads`, on a reader's card (`role: reads`), is what it reads: kinds of
+  file by extension, or a file it looks for by name, `reads: .eml, .mbox`,
+  or `none`. The UI offers a reader by it, and the contract test holds each
+  kind to the reader's own code.
 - `writes` and `network` are its promises, set out in
   [adapters/README.md](adapters/README.md#its-promises-checked). Whoever
   builds it is held to them.

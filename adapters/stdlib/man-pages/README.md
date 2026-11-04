@@ -6,6 +6,7 @@ added: 2026-10-29
 writes: to
 network: none
 role: reads
+reads: .1, .2, .3, .4, .5, .6, .7, .8
 -->
 # man-pages
 

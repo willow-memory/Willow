@@ -6,6 +6,7 @@ added: 2026-11-02
 writes: to
 network: none
 role: reads
+reads: .txt, .text
 -->
 # text
 

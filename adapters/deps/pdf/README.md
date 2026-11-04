@@ -8,6 +8,7 @@ floor: pypdf 3.1.0; the 2020 rule names 1.9 from 2014, a Python 2 release under 
 writes: to
 network: none
 role: reads
+reads: .pdf
 -->
 # pdf
 
