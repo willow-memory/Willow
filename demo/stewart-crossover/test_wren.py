@@ -35,9 +35,10 @@ def test_the_same_bytes_every_run_and_no_date_after_her_today():
     one = make_life.files()
     make_life.R.seed(2020)
     assert make_life.files() == one
-    assert (
-        one == {p: (make_life.LIFE / p).read_text(encoding="utf-8") for p in one}
-        or not make_life.LIFE.exists()
-    )
+    # her folder on disk, when it's been made, is these bytes: asked of a
+    # fresh checkout, where make_life.py hasn't run, there is nothing to read
+    assert not make_life.LIFE.exists() or one == {
+        p: (make_life.LIFE / p).read_text(encoding="utf-8") for p in one
+    }
     dates = re.findall(r"\d{4}-\d{2}-\d{2}", "\n".join(one.values()))
     assert dates and max(dates) <= make_life.Q["wren_today"]

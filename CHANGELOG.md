@@ -1963,6 +1963,14 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- `ci` runs every demo's tests: ofrenda's, stewart-crossover's and
+  small-models' were in no gate, and one of stewart-crossover's read Wren's
+  folder before asking whether it had been made, so it failed on every fresh
+  checkout unseen. The demo gates are one table, `DEMO_TESTS`, and
+  `adapters/stdlib/ci/test_ci.py` fails on a test file under demo/ that
+  none of them runs.
+  `test-impact` places a demo change by that table, so a change to
+  johnson's tests now plans `demo:share`, the gate that runs them (#226)
 - `assemble.py add` runs a piece's own script for its contract (share.py,
   not the ed25519.py beside it), and keeps a failing piece's exit 2 when a
   later piece's is 42 (#225)

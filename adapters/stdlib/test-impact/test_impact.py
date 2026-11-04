@@ -205,6 +205,23 @@ def test_a_demo_test_that_imports_the_change_is_its_demos_gate(plan_of):
     assert "demo:google-privacy-2026-10-16:" in got and "couldn't place" not in got
 
 
+def test_a_demo_folders_tests_are_the_gate_that_runs_them(plan_of):
+    """A demo's tests are the gate ci.DEMO_TESTS names for them, whatever its
+    name: johnson's are demo:share, ofrenda's demo:ofrenda-frozen."""
+    for path, gates in (
+        ("demo/johnson/test_scene.py", {"demo:johnson", "demo:share"}),
+        ("demo/ofrenda/test_ofrenda.py", {"demo:ofrenda", "demo:ofrenda-frozen"}),
+        ("demo/stewart-crossover/test_wren.py", {"demo:stewart-crossover-frozen"}),
+        ("demo/small-models/test_small_models.py", {"demo:small-models"}),
+        ("demo/teodora/make_life.py", {"demo:teodora", "demo:teodora-words"}),
+    ):
+        assert gates <= set(gate_names(plan_of(path).stdout)), path
+    have = {g for _, g, _ in ci.gates()}
+    for f in sorted((ci.ROOT / "demo").glob("*/**/test_*.py")):
+        rel = f.relative_to(ci.ROOT).as_posix()
+        assert set(imp.demo_gates(rel, rel.split("/")[1])) <= have, rel
+
+
 def test_every_gate_a_plan_names_is_a_gate_ci_has(plan_of):
     have = {g for _, g, _ in ci.gates()}
     for path in ("vectors/gen.py", "demo/php2shell/README.md", "constitution/coverage.py",
