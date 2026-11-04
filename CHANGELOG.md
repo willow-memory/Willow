@@ -10,6 +10,13 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `github`'s `adapters/stdlib/github/create_pr.py` opens this branch's pull
+  request by running `adapters/stdlib/github/create_pr.md`, a stack of the repo's own add-ons (restack, readme,
+  bugs.py, lint, test-impact, against), then pushing, opening it,
+  writing its number into its changelog entry and checking that; what a
+  step makes is committed as tidy, and anything that needs a person stops
+  it with 42, saying what. `test-impact run --narrow` leaves a change that
+  reaches every gate to CI
 - `ci.py needs` says which gates this machine can't run, by what each needs,
   without running any, in under a second; AGENTS.md now asks it before a
   change, in place of running every gate as a baseline, and after a change,
