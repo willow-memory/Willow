@@ -99,7 +99,7 @@ keeps the readers' contract (the summary line, the same bytes twice,
 originals untouched, hidden files unread, 42 for nothing to read, refusals
 that write nothing). A new add-on with a command line has to be listed there.
 
-### The report contract
+## The report contract
 
 An add-on that tells you what it found in your files (a check, an audit, a
 list of what's waiting) prints a report, and every report has the same
