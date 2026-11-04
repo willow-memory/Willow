@@ -1737,6 +1737,9 @@ says how). The first was v0.1.0.
   GitHub, `demo:known-gaps` skips its advisory check on every run, since
   the advisory text is private. `ci-why` reads a failing gate's reason up
   to its own parenthesis, never into the skips after it (#227)
+- contradictions reads only prose: a file of code or data by its name, a
+  fenced code block in Markdown and a table's row are left out and counted;
+  over 14 repositories, 1,404 disagreements became 95 (#223)
 - `sort` places a file by the category you sealed for it under
   `sort/<the file>.txt`, ahead of its phrases, marked "sealed by you"; a
   label still waiting, or for a file changed since, is ignored (#220)
