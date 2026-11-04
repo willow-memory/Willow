@@ -234,3 +234,64 @@ def test_a_bad_command_line_says_how_to_run_it(walt):
     for argv in ([], ["run"], ["run", "--box", walt.box], ["go", "--box", walt.box]):
         got = run(PY, *argv)
         assert got.returncode == 2 and "wasi_py.py run" in got.stderr
+
+
+def snapshot(folder: Path) -> dict[str, tuple[int, int]]:
+    return {
+        p.name: (p.stat().st_size, p.stat().st_mtime_ns)
+        for p in sorted(folder.iterdir())
+    }
+
+
+def test_warm_keeps_the_runtime_compiled_and_run_only_reads_it(walt, tmp_path):
+    """index-cache's way: made once in a folder you name, left alone while it
+    is current, and read by run, which then starts in a moment."""
+    cache = tmp_path / "cache"
+    cache.mkdir(mode=0o700)
+    got = run(PY, "warm", "--to", cache)
+    assert got.returncode == 0 and got.stdout.startswith("compiled"), (
+        got.stdout + got.stderr
+    )
+    assert (cache / "wasi-py.json").is_file() and list(cache.glob("*.cwasm"))
+    made = snapshot(cache)
+    got = run(PY, "warm", "--to", cache)
+    assert got.returncode == 0 and got.stdout.startswith("current")
+    got = run(PY, "run", "--box", walt.box, "--job", walt.job(COUNT), "--to",
+              tmp_path / "o", "--shape", "numbers", "--cache", cache, *NOW)  # fmt: skip
+    assert got.returncode == 42, got.stdout + got.stderr
+    assert (tmp_path / "o").read_text() == "2\n" and walt.ran()["cache"] == "used"
+    assert snapshot(cache) == made, "a run never writes the cache"
+
+
+def test_a_cache_made_for_another_runtime_is_left_alone(
+    walt, tmp_path, monkeypatch, capsys
+):
+    cache = tmp_path / "cache"
+    cache.mkdir(mode=0o700)
+    (cache / "wasi-py.json").write_text(
+        json.dumps({"tools": {}, "wasi-python": "0.0.1"})
+    )
+    before = snapshot(cache)
+    code, out = walt.py(monkeypatch, capsys, "--job", walt.job(COUNT), "--to", tmp_path / "o",
+                        "--cache", cache)  # fmt: skip
+    assert code == 42 and "is stale for this runtime" in out
+    assert walt.ran()["cache"] == "stale" and snapshot(cache) == before
+
+
+def test_warm_refuses_a_folder_that_isnt_a_cache(tmp_path):
+    (tmp_path / "notes").mkdir()
+    (tmp_path / "notes" / "a.md").write_text("mine\n")
+    got = run(PY, "warm", "--to", tmp_path / "notes")
+    assert got.returncode == 2 and "holds other things" in got.stderr
+    got = run(PY, "warm", "--to", tmp_path / "cache")
+    assert got.returncode == 2 and "make it first" in got.stderr
+    assert not (tmp_path / "cache").exists(), "making a folder is a write"
+    (tmp_path / "f").write_text("x")
+    got = run(PY, "warm", "--to", tmp_path / "f")
+    assert got.returncode == 2 and "is not a folder" in got.stderr
+    open_ = tmp_path / "open"
+    open_.mkdir()
+    (open_ / "wasi-py.json").write_text("{}")
+    open_.chmod(0o777)
+    got = run(PY, "warm", "--to", open_)
+    assert got.returncode == 2 and "written by others" in got.stderr

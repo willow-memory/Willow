@@ -16,7 +16,9 @@ says how). The first was v0.1.0.
   folder; its tools are the runtime's and its library's SHA-256, and its
   result goes to `kart gather`, dp and secure-sum as kart's do.
   demo/johnson/private.py takes `--engine wasi-python`, sending
-  count/count.py in place of the Rust module
+  count/count.py in place of the Rust module. `warm --to CACHE` keeps the
+  compiled runtime in a folder you name, as index-cache keeps scan's index,
+  and `run --cache` only reads it: 2 seconds a run in place of 52
 - `dp` adds OpenDP's discrete Laplace noise to a kart result's numbers
   before you seal and send them, `--epsilon` your spend and `--per-item`
   how far one item can move each count; a result is noised once, each spend

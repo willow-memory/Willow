@@ -1471,7 +1471,7 @@ willow/
 │       │   ├── wasi_py.py    a sealed kart job that is a Python script, run on wasi-python's CPython for WebAssembly over your folder read-only
 │       │   ├── requirements.txt  wasi-python, pinned
 │       │   ├── requirements-floor.txt  wasi-python at its floor, also tested
-│       │   ├── test_wasi_py.py  a probe that writes, climbs out and opens a socket, failing and fuel-bound scripts, and gather
+│       │   ├── test_wasi_py.py  a probe that writes, climbs out and opens a socket, failing and fuel-bound scripts, gather, and the cache warm keeps
 │       │   └── README.md
 │       └── wasm/
 │           ├── wasm.py       a sealed kart job that is WebAssembly, run by Wasmtime over your folder read-only

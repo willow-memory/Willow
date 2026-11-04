@@ -17,7 +17,8 @@ WebAssembly over your own folder, read-only.
 
     pip install -r adapters/deps/wasi-python/requirements.txt
     python adapters/deps/kart/kart.py take --box DIR --package FILE --words "your words"
-    python adapters/deps/wasi-python/wasi_py.py run --box DIR --job proposal:<sha256> --to FILE [--shape numbers] [--fuel N]
+    python adapters/deps/wasi-python/wasi_py.py warm --to CACHE
+    python adapters/deps/wasi-python/wasi_py.py run  --box DIR --job proposal:<sha256> --to FILE [--shape numbers] [--fuel N] [--cache CACHE]
 
 `run` takes `--now TS` as the kernel does.
 
@@ -54,10 +55,20 @@ the output. What it printed goes to FILE, new, outside the box and your
 folder. A script that failed or ran out of fuel, or whose output broke
 `--shape numbers`, proposes nothing.
 
-**The first run of each is slow.** wasi-python keeps the runtime, compiled,
-in a cache under your home folder; `run` turns that off, since it would be a
-write its card doesn't name. So each `run` compiles the runtime first: most
-of a minute here, then the script runs in a moment. wasi-python also
+**The runtime, compiled once.** Compiling the runtime takes most of a
+minute. wasi-python would keep it compiled under your home folder; that is a
+write this card doesn't name, so it's off. Instead, the way
+[index-cache](../../stdlib/index-cache/) keeps scan's index: `warm --to
+CACHE` compiles it into a folder you make and name (`mkdir -m 700`: native
+code, so a folder only you can write), with what it was
+compiled from beside it (the runtime's and library's SHA-256, wasi-python's
+and Wasmtime's versions), and does nothing while that is still current; a
+new release is compiled again, in place of the old. `run --cache CACHE` only
+reads it. Here a run took 52 seconds without it and 2 with it; the cache is
+about 330 MB. A cache made for another runtime, one others can write, or
+none, is left alone, and the runtime is compiled in memory, as the `ran`
+row's `cache` says (`used`, `stale`, `open`, `none`). `warm` refuses a
+folder that holds anything else. wasi-python also
 unpacks its library and keeps lock files in the temporary folder, under
 names of its own; `run` points it at one scratch folder of its own, made by
 `tempfile` and removed when it ends, so nothing is left in /tmp.
@@ -69,10 +80,11 @@ runtime is code its maintainer built: you trust that build as you'd trust a
 Python you installed. Everyone asked should run the same release, or
 `gather` says the tools differ.
 
-**Exit codes:** 42 a result proposed, waiting on your seal, or a script
+**Exit codes:** 0 a cache compiled, or current already; 42 a result proposed, waiting on your seal, or a script
 that failed, ran out of fuel or broke its shape; 2 refused (no wasi-python;
 a job not sealed, not taken, or asking for the network; FILE already there
-or inside the box or folder).
+or inside the box or folder; a cache folder that isn't there, holds other
+things, or others can write).
 
 **Uses:** [kart](../kart/) for its door and its results' shape, and
 [share](../../stdlib/share/) for FILE's rules; the kernel's `read`,
