@@ -232,7 +232,7 @@ details.more{margin-top:18px}details.more summary{cursor:pointer;color:var(--mut
 <div class="shelf-head" id="shelfhead"></div>
 <div id="shelf"></div>
 </main>
-<aside class="rail" aria-label="Your stack"><div class="railhead"><h3>Your stack</h3><span id="sealmark" class="sealmark" hidden></span></div><p class="rail-note">What it reads, what runs on your page and in what order, and what’s set up alongside. Click a step to work on it.</p><div class="tracetip" id="tracetip" hidden></div><div class="stacktree" id="stacktree"></div></aside>
+<aside class="rail" aria-label="Your stack"><div class="railhead"><h3>Your stack</h3><span id="sealmark" class="sealmark" hidden></span></div><p class="rail-note">What it reads, what runs on your page (numbered in the order it runs; the page shows what says most first), and what’s set up alongside. Click a step to work on it.</p><div class="tracetip" id="tracetip" hidden></div><div class="stacktree" id="stacktree"></div></aside>
 <footer><div class="sum" id="sum"></div><span class="msg" id="msg"></span><button id="undo" hidden title="undo the last change (Ctrl+Z)">Undo</button><button class="go" id="look">Look it over</button></footer>
 <script>
 const T=location.pathname.replace(/\/$/,'');
@@ -245,7 +245,7 @@ const STAGES=[
  {key:'reads',title:'What it reads',group:'rank',say:'Readers turn PDFs, email, chats and office files into plain text beside your folder, so the kernel can search them. They run over your folders before anything else. Without any, it reads plain text, markdown and web pages.'},
  {key:'words',title:'What words it knows',group:'rank',say:'Words lists: a language’s common words, its word forms, and your own (the names you call people, your shorthand), so a question finds what your files call it. The kernel uses them on every question.'},
  {key:'kernel',title:'Willow’s kernel',fixed:true,say:'What it does on your folders alone, before any add-on, shown below as counts. Every question comes here. It finds the passages of your files that hold the question’s words and gives up to three, each with its file and line. If none do, it says it doesn’t know. Every step goes on a record that can’t be quietly changed.'},
- {key:'page',title:'What runs on your page',ordered:true,group:'section',say:'The steps that run one after another each time your page is made: what’s coming up, what needs you, what changed. This is the one place order matters; drag to change it.'},
+ {key:'page',title:'What runs on your page',ordered:true,group:'section',say:'The steps that run each time your page is made: what’s coming up, what needs you, what changed. Your page shows what says the most first, whatever their order here; the order only breaks ties, and matters only for a step that writes your record, which runs before the ones after it.'},
  {key:'suggests',title:'What suggests answers',group:'suggests',say:'Models that suggest an answer from your passages, each citing what it read and held until you seal it, and the checks that tell you whether to trust a model first. None of them can approve anything.'},
  {key:'ways',title:'Where you ask from',group:'ways',say:'Your terminal, your editor, an AI assistant such as Claude Code, a page in your browser. Each is set up once, then you ask from there. Without one, you type commands.'},
  {key:'guards',title:'What guards it',group:'section',say:'What keeps something from being shown or done: a hook that checks what an AI assistant does before it does it, a filter that blanks out numbers and keys before an answer is shown, the one file a model may read.'},
@@ -262,7 +262,7 @@ const stageOf=p=>roleOf(p)[0];
 const save=()=>localStorage.setItem(KEY,JSON.stringify(S));
 function say(t,err){const m=document.getElementById('msg');m.textContent=t||'';m.className='msg'+(err?' err':'')}
 function plainTags(p){const t=[];if(p.network&&p.network!=='none')t.push(el('span',{class:'tag net',text:p.network==='loopback'?'this machine only':'goes online: '+p.network}));
- if(p.kind==='deps')t.push(el('span',{class:'tag inst',text:'needs installing'}));if((p.writes||'').includes('to'))t.push(el('span',{class:'tag',text:'writes only where you point it'}));
+ if(p.kind==='deps')t.push(el('span',{class:'tag inst',text:'needs installing'}));if((p.writes||'').includes('to'))t.push(el('span',{class:'tag',text:'writes only where you point it'}));if((p.writes||'').includes('record'))t.push(el('span',{class:'tag',text:'writes your record'}));
  if(p.in_stack)t.push(el('span',{class:'tag have',text:'already here'}));return t}
 const all=()=>STAGES.flatMap(s=>(S.stages[s.key]||[]));
 const FACT=new Set(['no-install','needs-install','offline','this-machine','online']);
@@ -407,7 +407,7 @@ function mark(box,i){const cs=box.querySelectorAll('.chip');cs.forEach((c,k)=>{c
 function chips(s){const box=el('div',{class:'chips'}),list=S.stages[s.key]??=[];
  list.forEach((n,i)=>{const p=P[n]||{name:n,line:''};const pulls=(p.hard||[]).length?el('small',{text:'needs '+p.hard.map(h=>h+(all().includes(h)?' ✓':' (not in your flow)')).join(', ')}):null,looks=(p.soft||[]).filter(x=>!all().includes(x)&&P[x]).length?el('small',{text:'uses if you add it: '+(p.soft||[]).filter(x=>!all().includes(x)&&P[x]).join(', ')}):null;
   const near=(p.near||[]).filter(m=>P[m]?.state==='built'&&!all().includes(m)),goes=near.length?el('div',{class:'goes'},'goes well with ',...near.flatMap((m,k)=>[k?', ':'',el('button',{text:m,title:P[m].line+' (click to add)',onclick:()=>addPiece(m)})])):null;
-  const c=el('div',{class:'chip',draggable:'true',title:'drag to reorder','data-n':n},el('button',{class:'x',text:'×',title:'take it out',onclick:()=>removePiece(n)}),el('b',{text:n}),(S.args||{})[n]&&S.args[n]!=='--box {box}'?el('span',{class:'runs',title:'the options it runs with',text:S.args[n].replace('--box {box}','').trim()}):null,el('small',{text:p.line}),...plainTags(p),...topics(p),pulls,looks,goes);
+  const c=el('div',{class:'chip',draggable:'true',title:'drag to change the order they run in','data-n':n},el('button',{class:'x',text:'×',title:'take it out',onclick:()=>removePiece(n)}),el('b',{text:n}),(S.args||{})[n]&&S.args[n]!=='--box {box}'?el('span',{class:'runs',title:'the options it runs with',text:S.args[n].replace('--box {box}','').trim()}):null,el('small',{text:p.line}),...plainTags(p),...topics(p),pulls,looks,goes);
   c.addEventListener('dragstart',e=>{drag={stage:s.key,i};e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain',n)});c.addEventListener('dragend',()=>{drag=null});box.append(c)});
  box.addEventListener('dragover',e=>{if(!drag||(!drag.add&&drag.stage!==s.key))return;e.preventDefault();if(drag.add)e.dataTransfer.dropEffect='copy';box.classList.add('on');mark(box,slot(box,e))});
  box.addEventListener('dragleave',e=>{if(!box.contains(e.relatedTarget)){box.classList.remove('on');mark(box,-1)}});
@@ -462,7 +462,7 @@ function stacktree(){const t=document.getElementById('stacktree');t.innerHTML=''
  const ex=PV&&EX?.found?.find(x=>x.file===PV),pv=ex?exAdds(ex):{out:[],args:{}},ghosts=k=>pv.out.filter(y=>stageOf(P[y])===k);
  if(ex)t.append(el('div',{class:'t-preview'},el('b',{text:'Previewing “'+ex.title+'”'}),el('span',{text:pv.out.length?' · it would add '+pv.out.length+' piece'+(pv.out.length===1?'':'s')+', shown with +':' · everything in it is already here'})));
  const flush=()=>{if(!skipped.length)return;t.append(el('div',{class:'t-skip'},el('span',{text:'skipped '}),...skipped.flatMap((s,k)=>[k?' · ':'',el('button',{class:'link',text:s.title,onclick:()=>go(s.key)})])));skipped.length=0};
- for(const s of STAGES){if(s.key==='suggests'){flush();t.append(el('div',{class:'t-divider',text:'Set up alongside, not run in order'}))}const ns=s.key==='folders'?S.folders:(S.stages[s.key]||[]),gs=s.fixed||s.key==='folders'?[]:ghosts(s.key);if(!s.fixed&&s.key!=='folders'&&!ns.length&&!gs.length){skipped.push(s);continue}flush();
+ for(const s of STAGES){if(s.key==='suggests'){flush();t.append(el('div',{class:'t-divider',text:'Set up alongside, not run on the page'}))}const ns=s.key==='folders'?S.folders:(S.stages[s.key]||[]),gs=s.fixed||s.key==='folders'?[]:ghosts(s.key);if(!s.fixed&&s.key!=='folders'&&!ns.length&&!gs.length){skipped.push(s);continue}flush();
   const bs=S.folders.map(f=>BASE[f.path]).filter(b=>b&&b.ok),sum=s.key==='kernel'?(bs.length?bs.reduce((t,b)=>t+b.passages,0).toLocaleString()+' passages':'always there'):s.key==='you'?'your seal':s.key==='folders'&&!ns.length?'none yet':'';
   const row=el('div',{class:'t-stage'+(cur===s.key?' sel':'')+(s.fixed?' fixed':''),onclick:()=>go(s.key)},el('span',{class:'t-name',text:s.title}),sum?el('span',{class:'t-sum',text:sum}):null);
   const kids=el('div',{class:'t-kids'});

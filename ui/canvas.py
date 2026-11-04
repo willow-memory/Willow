@@ -1125,7 +1125,9 @@ def plan(cv: Canvas, names: list[str], args: dict, folders: list[str], name: str
 def said_arrangement(arr: dict) -> str:
     out = [f"{arr['name']}: reads {', '.join(arr['folders']) or 'no folder yet'}"]
     if arr["lanes"]:
-        out.append("runs on your page, in this order:")
+        out.append(
+            "runs on your page, in this order (the page shows what says most first):"
+        )
         k = 0
         for ln in arr["lanes"]:
             for s in ln["steps"]:

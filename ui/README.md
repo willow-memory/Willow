@@ -34,14 +34,16 @@ way a person does:
    since you sealed it" once it isn't.
 
 The steps are **roles**, the part a piece plays: what it reads, what runs on
-your page (the one part whose order matters), what suggests answers, where
+your page, what suggests answers, where
 you ask from, what guards an assistant, what it makes for elsewhere, and
 tools you run yourself. A card says what a piece is about, its `section`,
 not its role, so `role` in [canvas.py](canvas.py) guesses it from what the
 card does say, and every card on the page says which fact it went by. A way
 in or a hook, run with no options of its own, is set up alongside and not
 run on the page, even when it could be: run so, it only says how to set
-itself up.
+itself up. The steps on your page run in their order, but the page shows
+what says most first, as [stack](../adapters/stdlib/stack/) does, so their
+order only breaks ties, and matters only for a step that writes the record.
 
 ## For an agent or a terminal
 
