@@ -5,8 +5,11 @@ No install beyond Python, the same as the kernel.
 
     python ui/canvas.py [--to DIR] [--folder PATH]... [--port N] [--no-open]
 
-It prints a link on `127.0.0.1` and opens it. The page goes the way a person
-does:
+It prints a link on `127.0.0.1` and opens it. The page is three panels:
+the steps of your stack on the left, the one you're on in the middle with the
+add-ons that can go in it, and your stack on the right as a tree, what runs
+on your page in its order apart from what's set up alongside. It goes the
+way a person does:
 
 1. **Your folders.** Choose the ones willow may read, from a folder list. It
    only ever reads them.
@@ -15,18 +18,32 @@ does:
    that makes, and how many it can't, by kind, with the readers that could
    read them, one click to add. Never a passage, never a file's name.
 3. **Start from an example**, the folders the stack add-on ships, each step
-   with the options it runs with, or **pick add-ons** by what you want done,
-   in your own words, by tag, or from each part of the flow. A piece comes
-   with what its card `uses`, as a language pack comes with its program, and
-   taking out a piece another needs asks first.
+   with the options it runs with (hover one to see in the tree what it
+   would add), or **pick add-ons** by what you want done, in your own words,
+   by tag, or step by step, ticked or dragged into place. A piece comes with
+   what its card `uses`, as a language pack comes with its program, and
+   taking out a piece another needs asks first. Undo takes back each change.
 4. **Save what you picked as a batch**, to bring back on any folder. Your
    folders aren't part of it, and a deleted batch is gone.
-5. **Look it over, and seal it.** Nothing runs until you do. Then **Put it
-   together** copies the add-ons into your stack, and **Start it** sets up
-   your record over your folders, runs each add-on's own tests and your flow
-   once, and opens [browse](../adapters/stdlib/browse/) on your record.
+5. **Look it over, and seal it**, the last step. Nothing runs until you do.
+   Then **Put it together** copies the add-ons into your stack, and **Start
+   it** sets up your record over your folders, runs each add-on's own tests
+   and your flow once, and opens [browse](../adapters/stdlib/browse/) on your
+   record. The stack's header says "sealed" while your pick is the stack
+   last sealed on its record, wherever that seal was made, and "changed
+   since you sealed it" once it isn't.
 
-Every card on the page folds to a line; it remembers which you opened.
+The steps are **roles**, the part a piece plays: what it reads, what runs on
+your page, what suggests answers, where
+you ask from, what guards an assistant, what it makes for elsewhere, and
+tools you run yourself. A card says what a piece is about, its `section`,
+not its role, so `role` in [canvas.py](canvas.py) guesses it from what the
+card does say, and every card on the page says which fact it went by. A way
+in or a hook, run with no options of its own, is set up alongside and not
+run on the page, even when it could be: run so, it only says how to set
+itself up. The steps on your page run in their order, but the page shows
+what says most first, as [stack](../adapters/stdlib/stack/) does, so their
+order only breaks ties, and matters only for a step that writes the record.
 
 ## Your stack
 
