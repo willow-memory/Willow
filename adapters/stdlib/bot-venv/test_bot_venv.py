@@ -180,3 +180,69 @@ def test_a_box_without_the_bots_venv_is_refused_by_name(tmp_path):
     got = run("--bot", box={"WILLOW_VAULT_BOX": str(tmp_path)})
     want = tmp_path / "willow-bot" / "venvs" / "willow-bot"
     assert got.returncode == 2 and got.stderr == f"refused: {want} is not a folder\n"
+
+
+# ── the inventory: --find ───────────────────────────────────────────────────
+def test_find_lists_every_venv_once_inside_or_out_with_its_lock(tmp_path):
+    """Under a box, the bot's own venv is inside and a checkout's is outside;
+    one behind a symlink is counted once, the link named; node_modules and
+    deeper than three folders are never looked in; the lock is read."""
+    box = tmp_path / "box"
+    inside = a_venv(box / "willow-bot" / "venvs" / "willow-bot", pytest="9.1.1")
+    clones = tmp_path / "clones"
+    outside = a_venv(clones / "org" / "repo" / ".venv", Requests="2.32.3", pip="25.0")
+    (clones / "org" / "linked").mkdir()
+    (clones / "org" / "linked" / ".venv").symlink_to(outside)
+    a_venv(clones / "org" / "repo" / "node_modules" / "x" / ".venv")  # skipped
+    a_venv(clones / "a" / "b" / "c" / "d" / ".venv")  # too deep
+    locks = box / "willow-bot" / "locks"
+    locks.mkdir(parents=True)
+    (locks / "willow-bot.requirements.lock").write_text(
+        "pytest==9.1.1 \\\n    --hash=sha256:00\n"
+    )
+    (locks / "repo.requirements.lock").write_text("requests==2.31.0\nidna==3.7\n")
+    got = run("--find", str(clones), "--find", str(box), box={"WILLOW_HOME": str(box)})
+    assert got.returncode == 0, got.stdout + got.stderr
+    out = got.stdout
+    assert (
+        out.count(f"{outside}\n") == 1 and f"  also {clones}/org/linked/.venv\n" in out
+    )
+    assert "node_modules" not in out and "/d/.venv" not in out
+    assert (
+        f"{outside}\n  also {clones}/org/linked/.venv\n  outside the bot\n"
+        "  2 packages; lock: drifted, 1 missing, 1 changed\n" in out
+    )
+    assert f"{inside}\n  inside the bot\n  1 packages; lock: holds\n" in out
+    assert out.splitlines()[-1].startswith(
+        f"found 2 venvs under {clones}, {box}: 1 inside the bot, 1 outside"
+    )
+
+
+def test_without_a_box_inside_and_lock_are_not_said(tmp_path):
+    v = a_venv(tmp_path / "proj" / ".venv", pytest="9.1.1")
+    got = run("--find", str(tmp_path))
+    assert got.returncode == 0, got.stdout + got.stderr
+    assert f"{v}\n  1 packages\n" in got.stdout
+    assert "the bot" not in got.stdout and "lock:" not in got.stdout
+    assert "  python " in got.stdout  # from pyvenv.cfg, nothing asked
+
+
+def test_find_with_needs_asks_each_venv_and_none_found_is_42(tmp_path):
+    a_venv(tmp_path / "p" / ".venv", pytest="9.1.1", ruff="0.16.7")
+    got = run("--find", str(tmp_path), "--needs", "ruff==0.16.7")
+    assert got.returncode == 0 and "  ruff 0.16.7\n  ready: " in got.stdout
+    empty = tmp_path / "empty"
+    empty.mkdir()
+    got = run("--find", str(empty))
+    assert got.returncode == 42
+    assert got.stdout.startswith(f"found 0 venvs under {empty}")
+    got = run("--find", str(tmp_path / "missing"))
+    assert got.returncode == 2 and got.stderr.startswith("refused: ")
+
+
+def test_a_venv_is_run_by_the_services_whose_process_runs_from_it(tmp_path):
+    v = a_venv(tmp_path / "v")
+    running = {str(v.resolve()): ["b.service", "a.service"]}
+    assert addon.where(v, None, running)[-1] == "runs: a.service, b.service"
+    assert addon.where(v, None, {})[-1] == "runs: nothing running"
+    assert addon.where(v, None, None)[-1] == "runs: unknown here (no /proc)"

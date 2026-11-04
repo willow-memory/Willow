@@ -226,6 +226,11 @@ A result tested against what anyone can rerun, as in
 
 ## Pull requests
 
+- **Open it with create_pr.py.** Commit the change and its changelog
+  entry, then run `python adapters/stdlib/github/create_pr.py`: it runs the
+  steps below for you, opens the pull request and numbers its entry, and
+  exits 42 only on what needs you, saying what. The rest of this section is
+  what it does, for when it stops.
 - **Several sessions can share a branch.** Fetch before you push, merge
   what's new, and never force-push.
 - **Merging makes a merge commit**; squash isn't allowed on this repo.

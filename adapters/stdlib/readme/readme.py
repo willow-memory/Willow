@@ -270,6 +270,14 @@ def addons() -> list[dict]:
             raise Refused(f"{where}: a deps add-on says what it needs")
         if a["kind"] == "stdlib" and a.get("needs"):
             raise Refused(f"{where}: a stdlib add-on needs nothing")
+        # programs: what ci.py asks PATH for before a deps add-on's tests, so a
+        # machine without one is unreachable there, never failing
+        programs = a.get("programs", "").replace(",", " ").split()
+        if programs and a["kind"] != "deps":
+            raise Refused(f"{where}: only a deps add-on names programs")
+        unsaid = [p for p in programs if p not in a.get("needs", "")]
+        if unsaid:
+            raise Refused(f"{where}: programs names {', '.join(unsaid)}, which needs doesn't")  # fmt: skip
         if a["built"] and not re.fullmatch(r"\d{4}-\d{2}-\d{2}", a.get("added", "")):
             raise Refused(f"{where}: added is the date it was built, YYYY-MM-DD")
         if a.get("runs-in", "repo") not in RUNS_IN:

@@ -251,16 +251,39 @@ def demo(name: str):
     return gate
 
 
+def needing(needs):
+    """The gate it decorates answers `needs()` with what this machine
+    lacks for it, or None: what `ci.py needs` asks, with no run."""
+
+    def put(gate):
+        gate.needs = needs
+        return gate
+
+    return put
+
+
 def deps_add_on(name: str, pins: str = "requirements.txt"):
     """A deps add-on's tests in a fresh virtual environment of its own, with
     `pins` and pytest installed there, so one add-on's packages never decide
     whether another's tests pass. Run once at its pins and once at its floor
     (requirements-floor.txt). An install that can't be done (no network, a
-    pin that won't resolve) is unreachable, not a pass; only the tests' own
-    output is hashed, never the installer's."""
+    pin that won't resolve) is unreachable, not a pass, and so is a program
+    its card's `programs:` names that this machine lacks, asked before
+    anything is installed; only the tests' own output is hashed, never the
+    installer's."""
 
+    def needs() -> str | None:
+        """A program its card's programs: names that this machine lacks;
+        also what `ci.py needs` asks, so it can say so without a run."""
+        lacks = missing_tools(*programs_of(name))
+        return f"{lacks}, which its card's programs: names" if lacks else None
+
+    @needing(needs)
     def gate() -> tuple[str, str, str | None]:
         here = ROOT / "adapters" / "deps" / name
+        lacks = needs()
+        if lacks:
+            return UNREACHABLE, "", lacks
         with tempfile.TemporaryDirectory() as tmp:
             env = Path(tmp) / "env"
             got = subprocess.run(
@@ -341,6 +364,14 @@ def floor_line(name: str) -> str:
     card = (ROOT / "adapters" / "deps" / name / "README.md").read_text(encoding="utf-8")
     got = re.search(r"^floor: (.*)$", card.split("-->")[0], re.M)
     return got.group(1).strip() if got else ""
+
+
+def programs_of(name: str) -> tuple[str, ...]:
+    """The programs a deps add-on's card says it runs and PyPI doesn't
+    install (`programs: tesseract`), each by its name on PATH."""
+    card = (ROOT / "adapters" / "deps" / name / "README.md").read_text(encoding="utf-8")
+    got = re.search(r"^programs: (.*)$", card.split("-->")[0], re.M)
+    return tuple(got.group(1).replace(",", " ").split()) if got else ()
 
 
 def floors() -> tuple[str, str, str | None]:

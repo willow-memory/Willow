@@ -32,6 +32,19 @@ says how). The first was v0.1.0.
   it says that the page shows what says most first, so the order of its
   steps only breaks ties; "sealed" and "changed since you sealed it" come
   from the record, wherever the seal was made
+- `bot-venv --find` lists every venv under a folder: inside willow-bot or
+  out, its packages, the bot's lock for it (none, holds or drifted), and the
+  services running from it, read from /proc; the steward's venv inventory
+  and bot-venv are one card (#229)
+- `github`'s `adapters/stdlib/github/create_pr.py` opens this branch's pull
+  request by running `adapters/stdlib/github/create_pr.md`, a stack of the repo's own add-ons (restack, readme,
+  bugs.py, lint, test-impact, against), then pushing, opening it,
+  writing its number into its changelog entry and checking that; what a
+  step makes is committed as tidy, and anything that needs a person stops
+  it with 42, saying what. `test-impact run --narrow` leaves a change that
+  reaches every gate to CI, and `test-impact` runs a group its plan names
+  (`tests:strip`) as the gates ci.py runs for it, where it said "no such
+  gate" and the strip test never ran in CI's first job (#230)
 - `assemble.py add` puts a deps add-on (kart, forge, pdf) in a stack's
   adapters/deps/ when the --python named already has each package its floor
   names, at that version or newer; nothing is installed, and one missing or
@@ -1992,6 +2005,13 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- `ci`: a deps add-on whose program this machine lacks is unreachable, not
+  failing. A card names each program PyPI doesn't install on a `programs:`
+  line (ocr's tesseract, kart's bwrap, pgp's gpg), and its deps gates ask
+  PATH for it before installing anything; before, a machine without
+  tesseract or bubblewrap showed deps:ocr and deps:kart failing, as if the
+  add-ons were broken. `readme` refuses `programs:` on a stdlib card, or
+  naming a program its `needs:` doesn't (#228)
 - `ci` runs every demo's tests: ofrenda's, stewart-crossover's and
   small-models' were in no gate, and one of stewart-crossover's read Wren's
   folder before asking whether it had been made, so it failed on every fresh
