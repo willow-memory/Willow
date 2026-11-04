@@ -325,6 +325,14 @@ def test_github_out_of_reach_stops_it_before_anything_is_pushed(repo):
     assert git(repo, "ls-remote", "origin", "work") == ""
 
 
+def test_a_git_that_fails_is_stopped_on_with_what_git_said(repo):
+    steps(repo, GREEN)
+    git(repo, "remote", "set-url", "origin", str(repo.parent / "nowhere.git"))
+    got = run(repo)
+    assert got.returncode == 42 and "stopped: git fetch" in got.stderr
+    assert "nowhere.git" in got.stderr, "git's own reason, not an empty one"
+
+
 def test_a_failed_open_keeps_the_body_and_says_the_command(repo):
     steps(repo, GREEN)
     gh = repo.parent / "bin" / "gh"
