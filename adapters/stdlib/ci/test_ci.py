@@ -105,6 +105,43 @@ def test_needs_says_what_cant_run_here_without_running_anything(tmp_path):
     assert cli("needs", "--box", str(tmp_path)).returncode == k.REFUSED
 
 
+def test_needs_asks_what_a_gate_needs_before_saying_only_a_run_can_tell(
+    monkeypatch, capsys
+):
+    """A gate that installs from PyPI and runs a program this machine lacks
+    is unreachable here, known now; one whose needs are met is still known
+    only by running."""
+
+    def gate(needs=None, online=None):
+        def how():
+            raise AssertionError("needs runs no gate")
+
+        how.needs = lambda: needs
+        if online:
+            how.online = online
+        return how
+
+    fake = [("deps", "deps:a", gate("tesseract not on PATH", "installs")),
+            ("deps", "deps:b", gate(None, "installs")),
+            ("demo", "demo:c", gate())]  # fmt: skip
+    monkeypatch.setattr(ci, "gates", lambda: fake)
+    assert ci.do_needs([]) == k.ESCALATE
+    said = capsys.readouterr().out.splitlines()
+    assert said[0] == (
+        "needs: 3 gates; 1 can run here, 1 would be unreachable,"
+        " 1 known only by running"
+    )
+    assert said[1].split() == [
+        "deps:a",
+        "unreachable:",
+        "tesseract",
+        "not",
+        "on",
+        "PATH",
+    ]
+    assert said[2].split()[:2] == ["deps:b", "only"]
+
+
 def test_a_failing_command_is_failing_and_a_judge_can_fail_a_zero_exit():
     state, _, why = ci.command(sys.executable, "-c", "raise SystemExit(3)")()
     assert (state, why) == (ci.FAILING, "exit 3")

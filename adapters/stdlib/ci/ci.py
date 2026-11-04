@@ -789,10 +789,13 @@ def do_needs(names: list[str]) -> int:
     for part, gate, how in gates():
         if gate not in picked:
             continue
-        if getattr(how, "online", None):
-            online.append((gate, how.online))
-        elif (why := getattr(how, "needs", lambda: None)()) is not None:
+        # what it needs first: a gate that installs from PyPI can still name
+        # a program this machine lacks (a deps card's programs:), and then a
+        # run would only say so too
+        if (why := getattr(how, "needs", lambda: None)()) is not None:
             cannot.append((gate, why))
+        elif getattr(how, "online", None):
+            online.append((gate, how.online))
         else:
             can.append(gate)
     n = len(can) + len(cannot) + len(online)
