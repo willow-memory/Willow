@@ -76,32 +76,6 @@ def test_a_missing_tool_is_unreachable_not_failing(tmp_path):
     assert all("not on PATH" in r["why"] for r in made)
 
 
-def test_a_program_a_deps_card_names_and_this_machine_lacks_is_unreachable(
-    monkeypatch,
-):
-    """ocr runs tesseract, which PyPI doesn't install: without it on PATH
-    deps:ocr is unreachable, asked before any install, never failing. A deps
-    add-on whose card names no program is left to its install and tests."""
-    assert ci.programs_of("ocr") == ("tesseract",)
-    assert ci.programs_of("kart") == ("bwrap",)
-    assert ci.programs_of("pdf") == ()
-    monkeypatch.setenv("PATH", "")
-
-    class Made(Exception):
-        """ci.py went on to make a virtual environment"""
-
-    def made(*a, **kw):
-        raise Made
-
-    monkeypatch.setattr(ci.subprocess, "run", made)
-    for pins in ("requirements.txt", "requirements-floor.txt"):
-        state, said, why = ci.deps_add_on("ocr", pins)()  # Made, were it run
-        assert (state, said) == (ci.UNREACHABLE, "")
-        assert why == "tesseract not on PATH, which its card's programs: names"
-    with pytest.raises(Made):  # pdf names no program: on to its install
-        ci.deps_add_on("pdf")()
-
-
 def test_a_failing_command_is_failing_and_a_judge_can_fail_a_zero_exit():
     state, _, why = ci.command(sys.executable, "-c", "raise SystemExit(3)")()
     assert (state, why) == (ci.FAILING, "exit 3")
@@ -315,3 +289,29 @@ def test_a_floor_above_the_rule_needs_a_reason_on_its_card(monkeypatch):
 
     monkeypatch.setattr(ci, "releases", offline)
     assert ci.floors()[0] == ci.UNREACHABLE
+
+
+def test_a_program_a_deps_card_names_and_this_machine_lacks_is_unreachable(
+    monkeypatch,
+):
+    """ocr runs tesseract, which PyPI doesn't install: without it on PATH
+    deps:ocr is unreachable, asked before any install, never failing. A deps
+    add-on whose card names no program is left to its install and tests."""
+    assert ci.programs_of("ocr") == ("tesseract",)
+    assert ci.programs_of("kart") == ("bwrap",)
+    assert ci.programs_of("pdf") == ()
+    monkeypatch.setenv("PATH", "")
+
+    class Made(Exception):
+        """ci.py went on to make a virtual environment"""
+
+    def made(*a, **kw):
+        raise Made
+
+    monkeypatch.setattr(ci.subprocess, "run", made)
+    for pins in ("requirements.txt", "requirements-floor.txt"):
+        state, said, why = ci.deps_add_on("ocr", pins)()  # Made, were it run
+        assert (state, said) == (ci.UNREACHABLE, "")
+        assert why == "tesseract not on PATH, which its card's programs: names"
+    with pytest.raises(Made):  # pdf names no program: on to its install
+        ci.deps_add_on("pdf")()
