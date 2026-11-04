@@ -682,7 +682,8 @@ class Canvas:
             out.append({"subject": r["subject"], "name": r.get("name"), "row": r["n"],
                         "sealed": r["subject"] in sealed})  # fmt: skip
         return {"breaks": breaks, "rows": len(rows), "stacks": out,
-                "in_stack": sorted(assemble.manifest(self.stack)["addons"])}  # fmt: skip
+                "in_stack": sorted(assemble.manifest(self.stack)["addons"]),
+                "to": str(self.to)}  # fmt: skip
 
     def assemble(self, subject: str) -> dict:
         rows, _ = self.kernel.read(self.box / "record.jsonl")

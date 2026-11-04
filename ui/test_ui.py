@@ -548,3 +548,8 @@ def test_the_commands_refuse_what_the_page_refuses(stack_dir, tmp_path, capsys):
     assert run(capsys, "look", tmp_path / "absent.md", "--to", stack_dir)[0] == 2
     code, _, err = run(capsys, "pieces", "--to", tmp_path / "no-stack")
     assert code == 2 and "make --to" in err
+
+
+def test_the_page_knows_its_stack_to_say_the_commands_for_it(site, stack_dir):
+    _, call = site
+    assert call("GET", "/tok/api/state")[1]["to"] == str(stack_dir.resolve())

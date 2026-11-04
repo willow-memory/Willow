@@ -108,6 +108,9 @@ nav.side h3{margin:16px 6px 8px}
 .t-preview{font:12.5px/1.45 var(--sans);background:var(--catkinl);border:1px solid var(--catkin);border-radius:var(--r);padding:6px 8px}
 .ex.pv{border-color:var(--catkin);box-shadow:0 0 0 1px var(--catkin)}
 .mini.review{margin-top:6px;border-color:var(--acc);border-style:dashed;background:transparent}.mini.review .no{color:var(--acc)}.mini.review.sel{border-style:solid;background:var(--card)}.mini.review.sel .no{color:var(--onacc)}
+.agent{margin:14px 0;border:1px solid var(--line);border-radius:var(--r);padding:8px 12px;background:var(--bg)}.agent summary{cursor:pointer;font-weight:600}.agent p{font-size:13.5px;color:var(--mute);margin:8px 0 6px}
+.copybox{position:relative}.copybox pre{margin:0;max-height:260px;overflow:auto;background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px;font:12px/1.5 var(--mono);font-variant-ligatures:none;white-space:pre;user-select:text;-webkit-user-select:text}
+.copybox button{position:absolute;top:6px;right:6px;font-size:12px;padding:2px 8px}
 #review[hidden]{display:none}#review .review{margin:0}
 footer #undo{order:0}
 .t-skip{font:12px/1.6 var(--sans);color:var(--faint);padding:2px 6px 2px 26px;border-left:2px dotted var(--line);margin-left:12px}
@@ -518,7 +521,7 @@ async function look(){if(!S.folders.length){cur='folders';flow();shelf();say('Ad
   li(a.reach.length?'It goes online: '+a.reach.join('; ')+'.':'It never goes online.'),
   li('It writes its own record'+(a.writes.includes('to')?', and files only where you point it':'')+'.'),
   a.installs.length?li('Needs installing first: '+a.installs.join(', ')+'.'):null);
- const parts=el('div');for(const st of STAGES){const ns=S.stages[st.key]||[];if(st.fixed||st.key==='folders'||!ns.length)continue;
+ const parts=el('div');for(const st of STAGES){const ns=(S.stages[st.key]||[]).filter(n=>!(a.kept||[]).includes(n)&&!a.pulled_in.includes(n));if(st.fixed||st.key==='folders'||!ns.length)continue;
   parts.append(el('h3',{text:st.title}),el('ul',{},...ns.map(n=>el('li',{},el('b',{text:n}),' — '+(P[n]?.line||'')))))}
  if(a.kept?.length)parts.append(el('h3',{text:'Put in, but not run on the morning page'}),el('p',{class:'msg',text:'Each of these runs its own way: a reader over a folder, a hook, a page server, a verb with its own words. Running them with only your record would refuse or never end.'}),el('ul',{},...a.kept.map(n=>el('li',{},el('b',{text:n}),' — '+(P[n]?.line||'')))));
  if(a.pulled_in.length)parts.append(el('h3',{text:'Brought along, because pieces above need them'}),el('ul',{},...a.pulled_in.map(n=>el('li',{},el('b',{text:n}),' — '+(P[n]?.line||'')))));
@@ -527,12 +530,22 @@ async function look(){if(!S.folders.length){cur='folders';flow();shelf();say('Ad
   sealB.disabled=true;asmB.disabled=false;SEALED=true;try{localStorage.setItem('willow-canvas-sealed',shape())}catch(e){}steplist();stacktree();out.className='msg';out.textContent='Sealed. This is yours now. “Put it together” copies in the pieces that aren’t here yet, each one written on the record.'};
  asmB.onclick=async()=>{const x=await api('assemble',{subject});if(x.refused){out.className='msg err';out.textContent=x.refused;return}asmB.disabled=true;
   out.textContent=(x.added.length?'Put together: '+x.added.join(', ')+'.':'Every piece was already here.')+(x.skipped?.length?' Not added: '+x.skipped.join(', ')+(x.said?' ('+x.said.trim().split('\n').pop()+')':'')+'.':'');P=await api('pieces');flow();shelf();offerStart(subject,'my willow')};
- rv.append(el('section',{class:'review'},el('h2',{text:'Here’s what you’re putting together'}),ul,parts,
+ rv.append(el('section',{class:'review'},el('h2',{text:'Here’s what you’re putting together'}),ul,parts,forAgent(a),
   el('div',{class:'why'},el('b',{text:'What sealing means. '}),'Sealing is you saying “yes, this is mine, run it this way.” Until you do, nothing above runs. Your seal is made with your key, a file only you should be able to read; after that, any change to this arrangement needs a new seal. ',
    el('i',{text:'Today that key is a file on this computer, so a program running as you could seal too. That’s the next thing to fix.'})),
   el('div',{style:'display:flex;gap:10px;align-items:center'},sealB,asmB,el('button',{class:'link',text:'change something',onclick:()=>{rv.innerHTML='';subject=null;go(back)}})),out,el('div',{class:'subj',text:'what you’d be sealing: '+subject})));
  flow();shelf();document.getElementById('flow').scrollIntoView({block:'nearest',behavior:'smooth'})}
 // a change after looking it over: the look-over is out of date, and says so
+// the same stack for an agent or a terminal: the stack file the page just sent,
+// and the commands that look it over and propose it. None of them seals.
+let TO='';
+function copyBox(text){const pre=el('pre',{text});const b=el('button',{text:'Copy',onclick:async()=>{try{await navigator.clipboard.writeText(text);b.textContent='Copied'}catch(e){const r=document.createRange();r.selectNodeContents(pre);const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent='Selected: copy it'}setTimeout(()=>b.textContent='Copy',2000)}});
+ return el('div',{class:'copybox'},b,pre)}
+function forAgent(a){const to=TO?' --to '+(/\s/.test(TO)?JSON.stringify(TO):TO):'',missing=a.pieces.filter(n=>P[n]&&!P[n].in_stack);
+ const cmds=[...(missing.length?['python ui/assemble.py add '+missing.join(' ')+to]:[]),'python ui/canvas.py look my-willow.md'+to,'python ui/canvas.py propose my-willow.md'+to];
+ return el('details',{class:'agent'},el('summary',{text:'For an agent or a terminal'}),
+  el('p',{text:'This stack as a file, the one the stack add-on runs. Save it as my-willow.md; the commands below look it over and propose it, as this page does. None of them seals it: that stays yours.'}),
+  copyBox(a.stack_md.trimEnd()),el('p',{text:missing.length?'Then, from this willow’s folder (the first line copies in what isn’t in your stack yet):':'Then, from this willow’s folder:'}),copyBox(cmds.join('\n')))}
 function stale(){const rv=document.getElementById('review');if(!rv.firstChild)return;rv.innerHTML='';
  rv.append(el('section',{class:'review'},el('h2',{text:'You’ve changed something since you looked it over'}),el('p',{class:'lede',text:'Look it over again to see it as it is now. Nothing has been sealed.'}),el('button',{class:'go',text:'Look it over again',onclick:look})))}
 document.getElementById('look').onclick=look;
@@ -552,7 +565,7 @@ async function watch(){const pr=document.getElementById('progress');const j=awai
  if(j.state==='running')setTimeout(watch,1500)}
 document.getElementById('find').addEventListener('input',e=>find(e.target.value));document.getElementById('findx').onclick=()=>find('');
 (async()=>{P=await api('pieces');loadBatches();if(!S)S=freshState();loadExamples();
- const st=await api('state');const last=(st.stacks||[]).filter(x=>x.sealed).at(-1);if(last){offerStart(last.subject,last.name||'my willow');const j=await api('start');if(j.state&&j.state!=='none')watch()}
+ const st=await api('state');TO=st.to||'';const last=(st.stacks||[]).filter(x=>x.sealed).at(-1);if(last){offerStart(last.subject,last.name||'my willow');const j=await api('start');if(j.state&&j.state!=='none')watch()}
  for(const f of st.folders||[])if(!S.folders.some(x=>x.path===f))await addFolder(f);{const old=['read','words','find','watch','hide','suggest','honest','use','extra'],keys=[...STAGES.map(s=>s.key),...old,...Object.keys(S.stages)],names=[...new Set(keys.flatMap(k=>S.stages[k]||[]))];
   S.stages={};for(const n of names)if(P[n])(S.stages[stageOf(P[n])]??=[]).push(n)}save();
  for(const f of S.folders)baseline(f.path);UNDO.length=0;was=JSON.stringify(S);undoBtn();cur=kept()||cur;flow();shelf();summary()})();
