@@ -22,13 +22,13 @@ says how). The first was v0.1.0.
   adapters/planned.json: its folder, its card with the idea's entry as its
   header, a script that refuses every command line until it's built and a
   test holding that, the idea off the list, FILES.md and the add-on list
-  written; it exits 42 with what's left for a person
+  written; it exits 42 with what's left for a person (#237)
 - `ci`'s `adapters/stdlib/ci/files.py` keeps FILES.md's tree to the repo's
   files: `write` puts each new file in its folder's own order with what it
   says of itself (its docstring's first line, its title, `its card`) and
   takes out what's gone with its notes, its corners and bars kept right;
   `check` says what's out. github's create_pr.py runs `write` before it opens
-  a pull request
+  a pull request (#236)
 - `reads` on every reader's card: the kinds of file it reads, by extension
   or by name (`.eml, .mbox`; `zotero.sqlite`), or `none`. `readme.py
   check` requires it of a built reader and of no other card, and
