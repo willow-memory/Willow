@@ -2,6 +2,13 @@
 machine only. Python 3.9+, stdlib only.
 
     python ui/canvas.py [--to DIR] [--folder PATH]... [--port N] [--no-open]
+    python ui/canvas.py make     [--to DIR]
+    python ui/canvas.py pieces   [--role ROLE] [--json] [--to DIR]
+    python ui/canvas.py needs    NAME... [--json] [--to DIR]
+    python ui/canvas.py examples [--json] [--to DIR]
+    python ui/canvas.py plan     NAME... [--example FILE] [--folder PATH]... [--name N] [--to DIR]
+    python ui/canvas.py look     STACKFILE [--json] [--to DIR]
+    python ui/canvas.py propose  STACKFILE [--to DIR]
 
 It opens a page that goes the way a person does: choose your folders; see
 what the kernel alone makes of them, as counts (never a passage, never a
@@ -30,7 +37,18 @@ What it can't stop: a program running as you can read that link, or run
 is today; `seal_step` is the one place a better one (a passkey, a key on
 your phone that this machine can only verify) would go.
 
-Exit codes, the kernel's: 0 stopped; 2 refused.
+The same, for an agent or a terminal: the verbs after the first line are
+what the page does, over the same stack and from the same cards. `pieces`
+lists what there is by role, with why each is where it is (`--role repo`:
+the commands that work on willow's own repository, with their command
+lines); `needs` what a piece brings along; `plan` prints a stack file, the
+one the stack add-on runs, from the pieces you name or an example's; `look`
+says of a stack file what the page's "Look it over" says; `propose` puts it
+to the kernel and stops there. There is no `seal`: sealing is yours, on the
+page or with your key, never a command's.
+
+Exit codes, the kernel's: 0 stopped; 2 refused; 42 (`propose`) waiting for
+your seal.
 """
 
 from __future__ import annotations
@@ -91,6 +109,99 @@ def page_step(folder: Path, card: dict) -> bool:
     )
     text = (folder / "README.md").read_text(encoding="utf-8")
     return any(PAGE_STEP.fullmatch(a) for a in use.findall(text))
+
+
+# ── roles: the part a piece plays in a stack ───────────────────────────────
+#: what a piece does in your stack, in the order the page lists them. A card
+#: says what it's about (its section); until it says its role too, `role`
+#: guesses it from what the card does say, and says which fact it went by.
+ROLES = (
+    ("reads", "What it reads"),
+    ("words", "What words it knows"),
+    ("page", "What runs on your page"),
+    ("suggests", "What suggests answers"),
+    ("ways", "Where you ask from"),
+    ("guards", "What guards it"),
+    ("makes", "What it makes for elsewhere"),
+    ("tools", "Tools you run yourself"),
+    ("repo", "Works on willow itself"),
+)
+#: the ways in, by where you'd be. The editor and assistant ones are filed
+#: under Assistants on their cards; as a role, they're ways in like the rest.
+WAYS = (
+    ("In your terminal", ("shell", "pipe", "plain", "start", "tui", "warm")),
+    ("In your editor", ("vscode", "vim", "emacs", "jetbrains", "zed", "cursor",
+                        "windsurf", "copilot", "obsidian")),
+    ("With an AI assistant", ("claude-code", "codex-cli", "gemini-cli", "opencode",
+                              "aider", "mcp", "mcp-lite", "hosts")),
+    ("In your browser or on your desktop", ("browse", "launcher", "desktop",
+                                            "static-search", "datasette", "kiosk")),
+    ("From your phone, by voice or by email", ("telegram-bot", "email-ask",
+                                               "home-assistant", "dictate", "speak", "qr")),
+)  # fmt: skip
+WAY = {n: (i, h) for i, (h, ns) in enumerate(WAYS) for n in ns}
+SUGGESTS = re.compile(
+    r"^suggestions? (from|through)\b|\bsuggests?\b|held until you seal"
+    r"|waiting for its own seal|handed in through propose|waiting for suggestions",
+    re.I,
+)
+MODELISH = re.compile(r"\bmodels?\b|\bweights\b|assistant.s suggestions", re.I)
+
+
+def role(p: dict) -> dict:
+    """The role a piece plays, why that one, and the heading it goes under
+    inside it (ways in by where you'd be, and the two kinds of suggesting).
+    A card says its role; `guess_role` is for a willow from before they did."""
+    n, line = p["name"], p.get("line", "")
+    said = p.get("role", "")
+    key, why = (
+        (
+            said,
+            "its card says so"
+            if p.get("state") == "built"
+            else "its entry on the list says so",
+        )  # fmt: skip
+        if said in dict(ROLES)
+        else guess_role(p)
+    )
+    group, at = "", 0
+    if key == "ways":
+        at, group = WAY.get(n, (len(WAYS), "Other ways in"))
+    elif key == "suggests":
+        at, group = (0, "Models that suggest answers") if SUGGESTS.search(line) else (1, "Checking a model before you trust it")  # fmt: skip
+    return {"role": key, "role_why": why, "group": group, "group_at": at}
+
+
+def guess_role(p: dict) -> tuple[str, str]:
+    """A role from what a card without one does say, and which fact it went by."""
+    n, line = p["name"], p.get("line", "")
+    writes = [w.strip() for w in p.get("writes", "").split(",")]
+    if p.get("runs_in") == "repo":
+        return "repo", "its card says it runs in willow's own repository"
+    if p.get("section") == "Reading more kinds of files":
+        return "reads", "its card is filed under reading more kinds of files"
+    if n in WAY:
+        return "ways", "it's an editor, an assistant or a terminal you ask from"
+    if n.startswith("hook") or "hook" in p.get("tags", []):
+        return "guards", "it's a hook"
+    if SUGGESTS.search(line):
+        return "suggests", "its card says it suggests answers, or holds what it makes until you seal it"  # fmt: skip
+    if p.get("section") == "Assistants" and MODELISH.search(f"{line} {n}"):
+        return "suggests", "its card is about checking a model that suggests answers"
+    if p.get("page"):
+        return "page", "it runs with nothing but your record, so it can be a step on your page"  # fmt: skip
+    if p.get("section") == "Your own words":
+        return "words", "its card is filed under your own words"
+    if p.get("section") == "Ways to use it" and "to" not in writes:
+        return "ways", "its card is filed under ways to use it"
+    if "to" in writes:
+        return "makes", "its card says it writes where you point it"
+    if p.get("state") == "idea":
+        return "tools", "it's still an idea, so there's no way yet to tell how it runs"
+    return (
+        "tools",
+        "it needs words or options of its own to run, so you run it yourself",
+    )
 
 
 def plural(n: int, word: str) -> str:
@@ -244,7 +355,7 @@ class Canvas:
                     "writes": c.get("writes", ""), "network": c.get("network", ""),
                     "needs": c.get("needs", ""), "hard": hard, "soft": soft,
                     "in_stack": d.name in have, "runs_in": c.get("runs-in", ""),
-                    "page": page_step(d, c),
+                    "page": page_step(d, c), "role": c.get("role", ""),
                 }  # fmt: skip
         planned = json.loads((self.willow / "adapters" / "planned.json").read_text())
         for p in planned:
@@ -254,12 +365,20 @@ class Canvas:
                     "section": p.get("section", ""), "line": p.get("line", ""),
                     "writes": p.get("writes", ""), "network": p.get("network", ""),
                     "needs": p.get("needs", ""), "hard": [], "soft": [], "in_stack": False,
+                    "role": p.get("role", ""),
                 }  # fmt: skip
         if self.similar is not None:
             worked = self.similar.worked_out(self.similar.entries())
             for n, w in worked.items():
                 if n in out:
                     out[n]["tags"], out[n]["near"] = w["tags"], w["near"]
+        used = {}  # how many of the stack add-on's examples run it: a start that's been tried
+        for e in self.examples()["found"]:
+            for n in {s["name"] for s in e["steps"]}:
+                used[n] = used.get(n, 0) + 1
+        for p in out.values():
+            p.update(role(p))
+            p["in_examples"] = used.get(p["name"], 0)
         self._pieces = out
         return out
 
@@ -494,8 +613,12 @@ class Canvas:
                         f"{n} is still an idea on willow's list; it can't run yet",
                     )
                 args = str(s.get("args") or DEFAULT_ARGS)
-                if args == DEFAULT_ARGS and not ps[n].get("page"):
-                    kept.append(n)  # in the stack, run its own way, not on the page
+                if args == DEFAULT_ARGS and ps[n]["role"] != "page":
+                    # in the stack, run its own way, not on the page: with no
+                    # options of its own, a piece is a step on the page when
+                    # its role says so (a way in or a hook could run with
+                    # only the record, but would only say how to set itself up)
+                    kept.append(n)
                     continue
                 steps.append({"name": n, "args": args})
             if steps:
@@ -587,7 +710,31 @@ class Canvas:
             out.append({"subject": r["subject"], "name": r.get("name"), "row": r["n"],
                         "sealed": r["subject"] in sealed})  # fmt: skip
         return {"breaks": breaks, "rows": len(rows), "stacks": out,
-                "in_stack": sorted(assemble.manifest(self.stack)["addons"])}  # fmt: skip
+                "in_stack": sorted(assemble.manifest(self.stack)["addons"]),
+                "to": str(self.to)}  # fmt: skip
+
+    def sealed_against(self, doc: dict) -> dict:
+        """Whether this pick is the stack last sealed on this record: "sealed"
+        while it is, "changed" once it isn't, nothing before any seal. It
+        reads the record and the proposal the kernel kept; it writes nothing."""
+        rows, _ = self.kernel.read(self.box / "record.jsonl")
+        sealed = self.kernel.sealed(self.box, rows)
+        last = [r["subject"] for r in rows if r["kind"] == KIND and r.get("subject") in sealed]  # fmt: skip
+        if not last:
+            return {"state": None}
+        try:
+            kept = json.loads((self.box / "proposals" / f"{last[-1][9:]}.json").read_text())  # fmt: skip
+            then = json.loads(kept["data"])
+        except (OSError, ValueError, KeyError):
+            return {"state": None}
+        now, _ = self.arrangement(doc)
+
+        def shape(arr: dict) -> tuple:
+            steps = [(s["name"], s["args"]) for ln in arr["lanes"] for s in ln["steps"]]
+            return arr["folders"], steps, sorted(arr["kept"])
+
+        same = now is not None and shape(now) == shape(then)
+        return {"state": "sealed" if same else "changed", "subject": last[-1]}
 
     def assemble(self, subject: str) -> dict:
         rows, _ = self.kernel.read(self.box / "record.jsonl")
@@ -885,6 +1032,8 @@ def handler(cv: Canvas, token: str, host: str):
                 return self.send(200, cv.propose(doc))
             if r == "/api/seal":
                 return self.send(200, cv.seal(str(doc.get("subject", ""))))
+            if r == "/api/sealed":
+                return self.send(200, cv.sealed_against(doc))
             if r == "/api/assemble":
                 return self.send(200, cv.assemble(str(doc.get("subject", ""))))
             if r == "/api/start":
@@ -920,7 +1069,210 @@ def ready(to: Path) -> int:
     return assemble.ALIVE if code in (assemble.ALIVE, assemble.ESCALATE) else code
 
 
+# ── the same, as commands: for an agent or a terminal ───────────────────────
+VERBS = ("make", "pieces", "needs", "examples", "plan", "look", "propose")
+
+
+def read_stack(text: str) -> dict:
+    """A stack file back into what the page sends: its name, the folders it
+    reads, its pools as lanes, and what's put in but not run on the page."""
+    doc: dict = {"name": "", "folders": [], "lanes": []}
+    for ln in text.splitlines():
+        if m := re.match(r"# stack: (.+)$", ln):
+            doc["name"] = m.group(1).strip()
+        elif m := re.match(r"<!-- reads: (.+) -->$", ln):
+            doc["folders"].append(m.group(1).strip())
+        elif m := re.match(r"<!-- in the stack, not run on the page: (.+) -->$", ln):
+            steps = [{"name": n.strip(), "args": DEFAULT_ARGS} for n in m.group(1).split(",")]  # fmt: skip
+            doc["lanes"].append({"title": "set up alongside", "steps": steps})
+        elif ln.startswith("## "):
+            doc["lanes"].append({"title": ln[3:].strip(), "steps": []})
+        elif (m := re.match(r"- ([a-z0-9-]+) -- (.*)$", ln)) and doc["lanes"]:
+            doc["lanes"][-1]["steps"].append({"name": m.group(1), "args": m.group(2).strip()})  # fmt: skip
+    return doc
+
+
+def usage_lines(willow: Path, p: dict) -> list[str]:
+    """The command lines a piece's card shows, as it shows them."""
+    f = willow / "adapters" / (p["kind"] or "stdlib") / p["name"] / "README.md"
+    if not f.is_file():
+        return []
+    text = f.read_text(encoding="utf-8")
+    return [m.strip() for m in re.findall(r"^ {4}(\$? ?python adapters/\S+.*)$", text, re.M)]  # fmt: skip
+
+
+def plan(cv: Canvas, names: list[str], args: dict, folders: list[str], name: str) -> tuple[dict | None, str]:  # fmt: skip
+    """What the page sends for these pieces: each with what it needs, in its
+    role's lane, the lanes in the page's order, a page step's order kept."""
+    ps = cv.pieces()
+    for n in names:
+        if n not in ps:
+            return None, f"no card named {n!r}"
+        if ps[n]["role"] == "repo":
+            return None, f"{n} works on willow's own repository, not in a stack"
+    picked: list[str] = []
+    for n in names:
+        for x in [*reversed(cv.closure([n])), n]:
+            if x not in picked:
+                picked.append(x)
+    lanes = [
+        {"title": title, "steps": [{"name": n, "args": args.get(n, DEFAULT_ARGS)}
+                                   for n in picked if ps[n]["role"] == key]}
+        for key, title in ROLES
+    ]  # fmt: skip
+    doc = {"name": name, "folders": folders, "lanes": [ln for ln in lanes if ln["steps"]]}  # fmt: skip
+    return cv.arrangement(doc)
+
+
+def said_arrangement(arr: dict) -> str:
+    out = [f"{arr['name']}: reads {', '.join(arr['folders']) or 'no folder yet'}"]
+    if arr["lanes"]:
+        out.append(
+            "runs on your page, in this order (the page shows what says most first):"
+        )
+        k = 0
+        for ln in arr["lanes"]:
+            for s in ln["steps"]:
+                k += 1
+                extra = s["args"].replace(DEFAULT_ARGS, "").strip()
+                out.append(f"  {k}. {s['name']}" + (f"  {extra}" if extra else ""))
+    if arr["kept"]:
+        out.append("set up alongside, not run on the page: " + ", ".join(arr["kept"]))
+    if arr["pulled_in"]:
+        out.append("brought along, because pieces above need them: " + ", ".join(arr["pulled_in"]))  # fmt: skip
+    out.append("goes online: " + "; ".join(arr["reach"]) if arr["reach"] else "never goes online")  # fmt: skip
+    out.append("writes: " + ", ".join(arr["writes"]) if arr["writes"] else "writes nothing but its record")  # fmt: skip
+    if arr["installs"]:
+        out.append("needs installing first: " + ", ".join(arr["installs"]))
+    return "\n".join(out)
+
+
+def verb(cmd: str, argv: list[str]) -> int:
+    opts: dict[str, list[str]] = {"--folder": []}
+    rest: list[str] = []
+    it = iter(argv)
+    for a in it:
+        if a in ("--to", "--role", "--example", "--name"):
+            opts[a] = [next(it, "")]
+        elif a == "--folder":
+            opts[a].append(next(it, ""))
+        elif a == "--json":
+            opts[a] = ["1"]
+        elif a.startswith("--"):
+            print(f"refused: {cmd} doesn't take {a}", file=sys.stderr)
+            return assemble.REFUSED
+        else:
+            rest.append(a)
+    to = Path(
+        (opts.get("--to") or [""])[0] or Path.home() / "willow-stack"
+    ).expanduser()
+    if cmd == "make":
+        return ready(to)
+    if not (to / "stack" / "STACK.json").is_file():
+        print(f"refused: no stack at {to}; `python ui/canvas.py make --to {to}` makes one", file=sys.stderr)  # fmt: skip
+        return assemble.REFUSED
+    cv = Canvas(to, WILLOW, to / "box", [])
+    js = "--json" in opts
+
+    def show(data, text: str) -> int:
+        print(json.dumps(data, indent=1, ensure_ascii=False) if js else text)
+        return assemble.ALIVE
+
+    ps = cv.pieces()
+    if cmd == "pieces":
+        want = (opts.get("--role") or [""])[0]
+        keys = [k for k, _ in ROLES]
+        if want and want not in keys:
+            print(f"refused: no role {want!r}; the roles are {', '.join(keys)}", file=sys.stderr)  # fmt: skip
+            return assemble.REFUSED
+        if not want:
+            counts = {k: sum(p["role"] == k for p in ps.values()) for k in keys}
+            text = "\n".join(f"  {k:9} {counts[k]:4}  {t}" for k, t in ROLES)
+            return show({k: [n for n, p in ps.items() if p["role"] == k] for k in keys},
+                        f"{text}\n--role ROLE lists one, each with why it's there")  # fmt: skip
+        mine = sorted((p for p in ps.values() if p["role"] == want),
+                      key=lambda p: (p["group_at"], p["group"], p["state"] != "built", p["name"]))  # fmt: skip
+        if want == "repo":
+            for p in mine:
+                p["usage"] = usage_lines(cv.willow, p)
+        lines, last = [], None
+        for p in mine:
+            head = p["group"] or p["section"]
+            if head != last:
+                lines.append(f"## {head}")
+                last = head
+            mark = "" if p["state"] == "built" else "  (an idea, not built yet)"
+            lines.append(f"  {p['name']}{mark}: {p['line']}")
+            lines += [f"      {u}" for u in p.get("usage", [])]
+            lines.append(f"      here because {p['role_why']}")
+        runner = cv.willow / "adapters" / "stdlib" / "github" / "create_pr.md"
+        if want == "repo" and runner.is_file():
+            lines.append("\nIn order, before a pull request opens: python adapters/stdlib/github/create_pr.py (its steps: adapters/stdlib/github/create_pr.md)")  # fmt: skip
+        return show(mine, "\n".join(lines))
+    if cmd == "needs":
+        if not rest or (bad := [n for n in rest if n not in ps]):
+            print(f"refused: no card named {', '.join(bad) if rest else '(none given)'}", file=sys.stderr)  # fmt: skip
+            return assemble.REFUSED
+        data = {n: {"brings": cv.closure([n]), "uses_if_there": [s for s in ps[n]["soft"] if s in ps]} for n in rest}  # fmt: skip
+        text = "\n".join(
+            f"{n}: brings {', '.join(d['brings']) or 'nothing else'}"
+            + (f"; uses if you add it: {', '.join(d['uses_if_there'])}" if d["uses_if_there"] else "")
+            for n, d in data.items()
+        )  # fmt: skip
+        return show(data, text)
+    if cmd == "examples":
+        ex = cv.examples()
+        text = "\n".join(f"  {e['file']:28} {e['title']}: {', '.join(dict.fromkeys(s['name'] for s in e['steps']))}" for e in ex["found"])  # fmt: skip
+        return show(ex, text or ex.get("why", "none"))
+    if cmd == "plan":
+        args: dict[str, str] = {}
+        names = list(rest)
+        if ex_name := (opts.get("--example") or [""])[0]:
+            ex = next((e for e in cv.examples()["found"] if e["file"] == ex_name), None)
+            if ex is None:
+                print(f"refused: no example {ex_name!r}; `examples` lists them", file=sys.stderr)  # fmt: skip
+                return assemble.REFUSED
+            for s in ex["steps"]:
+                args.setdefault(s["name"], s["args"])
+                if s["name"] not in names:
+                    names.append(s["name"])
+        if not names:
+            print("refused: name the pieces, or --example FILE", file=sys.stderr)
+            return assemble.REFUSED
+        arr, why = plan(cv, names, args, opts["--folder"], (opts.get("--name") or ["my willow"])[0])  # fmt: skip
+        if arr is None:
+            print(f"refused: {why}", file=sys.stderr)
+            return assemble.REFUSED
+        print(arr["stack_md"].rstrip())
+        return assemble.ALIVE
+    # look, propose: a stack file, as the page would send it
+    if len(rest) != 1 or not Path(rest[0]).is_file():
+        print(f"refused: {cmd} reads one stack file, as `plan` prints it", file=sys.stderr)  # fmt: skip
+        return assemble.REFUSED
+    doc = read_stack(Path(rest[0]).read_text(encoding="utf-8"))
+    if cmd == "look":
+        arr, why = cv.arrangement(doc)
+        if arr is None:
+            print(f"refused: {why}", file=sys.stderr)
+            return assemble.REFUSED
+        return show(arr, said_arrangement(arr))
+    r = cv.propose(doc)
+    if "refused" in r:
+        print(f"refused: {r['refused']}", file=sys.stderr)
+        return assemble.REFUSED
+    print(said_arrangement(r["arrangement"]))
+    print(f"\nproposed: {r['claim']}\n  subject {r['subject']}, on the record at {cv.box}")  # fmt: skip
+    print("waiting for your seal: on the page (python ui/canvas.py), or with your key. A command never seals it.")  # fmt: skip
+    return assemble.ESCALATE
+
+
 def main(argv: list[str]) -> int:
+    if argv and argv[0] in VERBS:
+        try:
+            return verb(argv[0], argv[1:])
+        except BrokenPipeError:  # `| head`: the reader had enough
+            sys.stderr.close()
+            return assemble.ALIVE
     opts: dict[str, str] = {}
     folders: list[str] = []
     it = iter(argv)
