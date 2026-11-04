@@ -10,6 +10,11 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `sort-ask`, the rung after `sort`: a model on this machine, at a loopback
+  address only, is asked which of your categories a file `sort` didn't place
+  belongs in, given the passages the kernel served from it; only an answer
+  naming one of your categories and citing a served passage is handed in, as
+  a suggestion for your seal (#219)
 - `kart`, a job someone sent you, run over your own folder in Kartikeya's
   sandbox: `take` puts a job that came in a share package at the kernel's
   door as a proposal of yours, and `run` runs only a job you sealed, under
@@ -1944,6 +1949,9 @@ says how). The first was v0.1.0.
   2023-02-29 are no date, 2024-02-29 is; the five ports make the same check,
   and todo's impossible-date group, which only worked around it, is gone
   (#221)
+- The report contract's heading in the ci add-on's README is an h2 under the
+  page's title, not an h3 that skipped a level; its anchor is unchanged
+  (#218)
 - `against` reads a pull request stacked on another from where the two
   left each other, not from where each left the base, so the one below is
   not failed for the names the one above took from it. The forge stack

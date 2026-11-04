@@ -1087,6 +1087,10 @@ willow/
 │   │   │   ├── sort.py       your files sorted into your own categories, by the phrases you gave each
 │   │   │   ├── test_sort.py
 │   │   │   └── README.md
+│   │   ├── sort-ask/
+│   │   │   ├── sort_ask.py   a model on this machine suggests a category for each file sort didn't place, for your seal
+│   │   │   ├── test_sort_ask.py
+│   │   │   └── README.md
 │   │   ├── stack/
 │   │   │   ├── stack.py       one document from a stack of add-on steps over a box, pooled and peaks-first
 │   │   │   ├── test_stack.py
