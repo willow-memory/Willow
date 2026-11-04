@@ -47,8 +47,10 @@ each step's add-on into STACK with ui/assemble.py (every file hashed onto the
 stack's own record, each contract checked), writes the stack file beside it,
 and runs the stack add-on over your box, keeping the page at STACK/page.md.
 Its report is one row per step: copied or not, its contract, and how it ran.
-A step that can't be copied (a deps add-on, one that works only in this
-repository) is said and left out, never guessed at. It refuses while no
+A step that can't be copied (one that works only in this repository) is
+said and left out, never guessed at; a deps add-on goes in under
+adapters/deps/ with its packages unchecked, and its step is flagged. It
+refuses while no
 stack is sealed for these words: the seal is the one gate between a
 suggestion and a run. STACK's parent must exist; it never makes one.
 
@@ -409,12 +411,20 @@ def steps_of(stack_text: str) -> list[str]:
 ASSEMBLED = re.compile(r"^\+ (\S+)\s+.*?contract (\S+)\s+tests (\S+)(?::\s*(.*))?$")
 
 
+def folder_of(name: str) -> str:
+    """Where an add-on sits, in willow and in a stack alike: adapters/deps/
+    for a deps add-on, adapters/stdlib/ for the rest (and a name willow
+    hasn't, which assemble refuses by name)."""
+    kind = "deps" if (ROOT / "adapters" / "deps" / name).is_dir() else "stdlib"
+    return f"adapters/{kind}/{name}/"
+
+
 def assemble(to: Path, name: str) -> tuple[str, str]:
     """One add-on into the stack at `to` through ui/assemble.py, one at a
     time: ("copied", what assemble said of its contract and tests) or
     ("left out", why). A piece already there is left as it is."""
     stack = to / "stack"
-    if (stack / "adapters" / "stdlib" / name).is_dir():
+    if (stack / folder_of(name)).is_dir():
         return "copied", "already in the stack"
     got = subprocess.run(
         [
@@ -478,7 +488,7 @@ def build(box: Path, sentence: str, to: Path, stacks: dict) -> tuple[dict | None
     for name in names:
         state, said = assemble(to, name)
         (rows if state == "copied" else left).append(
-            (f"adapters/stdlib/{name}/", f"{name}: {said}")
+            (folder_of(name), f"{name}: {said}")
         )
     stack_file = to / "forge-stack.md"
     scratch = to / "out"  # what the contract calls {tmp}: a folder of the build's own

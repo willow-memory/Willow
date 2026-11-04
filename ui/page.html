@@ -293,7 +293,7 @@ async function look(){if(!S.folders.length){cur='folders';flow();shelf();say('Ad
  sealB.onclick=async()=>{const x=await api('seal',{subject});if(x.refused||!x.sealed){out.className='msg err';out.textContent='Not sealed: '+(x.refused||x.said);return}
   sealB.disabled=true;asmB.disabled=false;out.className='msg';out.textContent='Sealed. This is yours now. “Put it together” copies in the pieces that aren’t here yet, each one written on the record.'};
  asmB.onclick=async()=>{const x=await api('assemble',{subject});if(x.refused){out.className='msg err';out.textContent=x.refused;return}asmB.disabled=true;
-  out.textContent=(x.added.length?'Put together: '+x.added.join(', ')+'.':'Every piece was already here.')+(x.skipped?.length?' Not added, they need installing: '+x.skipped.join(', ')+'.':'');P=await api('pieces');flow();shelf();offerStart(subject,'my willow')};
+  out.textContent=(x.added.length?'Put together: '+x.added.join(', ')+'.':'Every piece was already here.')+(x.skipped?.length?' Not added: '+x.skipped.join(', ')+(x.said?' ('+x.said.trim().split('\n').pop()+')':'')+'.':'');P=await api('pieces');flow();shelf();offerStart(subject,'my willow')};
  rv.append(el('section',{class:'review'},el('h2',{text:'Here’s what you’re putting together'}),ul,parts,
   el('div',{class:'why'},el('b',{text:'What sealing means. '}),'Sealing is you saying “yes, this is mine, run it this way.” Until you do, nothing above runs. Your seal is made with your key, a file only you should be able to read; after that, any change to this arrangement needs a new seal. ',
    el('i',{text:'Today that key is a file on this computer, so a program running as you could seal too. That’s the next thing to fix.'})),
