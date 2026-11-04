@@ -10,6 +10,12 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `role` on every add-on's card and every entry in adapters/planned.json:
+  the part it plays in a stack (reads, words, page, suggests, ways, guards,
+  makes, tools, repo), each said in adapters/README.md. `readme.py check`
+  requires it and holds `role: repo` to exactly the cards with `runs-in:
+  repo`; the UI's steps are made of it, and a piece with no options of its
+  own runs on the page exactly when its role is page
 - `ui/canvas.py`'s commands, the page's steps for an agent or a terminal:
   `make`, `pieces` (by role, each with why; `--role repo` the commands that
   work on willow's own repository), `needs`, `examples`, `plan` (prints the
@@ -21,10 +27,11 @@ says how). The first was v0.1.0.
   right as a tree, what runs on your page in order apart from what's set up
   alongside; a willow look with a dark theme; undo; an example previewed in
   the tree before it's used; a piece traced in the tree on hover; Look it
-  over as the last step. The steps are roles, guessed by `role` in canvas.py
-  from what each card says, with the fact each went by; "sealed" and
-  "changed since you sealed it" come from the record, wherever the seal was
-  made
+  over as the last step. The steps are the cards' roles; what's first in a
+  step is what the examples run, or the readers your folders' files need;
+  it says that the page shows what says most first, so the order of its
+  steps only breaks ties; "sealed" and "changed since you sealed it" come
+  from the record, wherever the seal was made
 - `assemble.py add` puts a deps add-on (kart, forge, pdf) in a stack's
   adapters/deps/ when the --python named already has each package its floor
   names, at that version or newer; nothing is installed, and one missing or
