@@ -1736,7 +1736,7 @@ says how). The first was v0.1.0.
   Before, a gate whose check never ran read the same as one that held: on
   GitHub, `demo:known-gaps` skips its advisory check on every run, since
   the advisory text is private. `ci-why` reads a failing gate's reason up
-  to its own parenthesis, never into the skips after it
+  to its own parenthesis, never into the skips after it (#227)
 - `sort` places a file by the category you sealed for it under
   `sort/<the file>.txt`, ahead of its phrases, marked "sealed by you"; a
   label still waiting, or for a file changed since, is ignored (#220)
