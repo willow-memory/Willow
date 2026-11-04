@@ -3,7 +3,7 @@ section: For maintainers
 line: This repo's checks as verdict rows on a kernel record, the same every run.
 source: box
 added: 2026-10-23
-writes: record, BUGS.md, FILES.md, adapters/stdlib/*/*.py
+writes: record, BUGS.md, FILES.md, adapters/planned.json, adapters/*/*, adapters/*/*/*
 network: PyPI, to read each dependency floor's release date
 role: repo
 uses: live, readme, stack, test-shards
@@ -92,6 +92,14 @@ Markdown title, `its card`), and takes out what's gone with its notes. A
 file it can't describe goes in with nothing, and it says which.
 [create_pr.py](../github/create_pr.py) runs `write` before a pull request
 opens.
+
+**A new add-on:** [new.py](new.py) `NAME` starts an idea from
+adapters/planned.json: its folder, its card (the idea's entry as its
+header, `added` today), a script that refuses every command line until it's
+built, a test holding that, the idea off the list, FILES.md and the add-on
+list written. It exits 42 with what's left for a person: the add-on itself,
+its tests, its line in COMMANDS, a CHANGELOG.md entry, its mutants, and for a
+deps idea its requirements and `floor:` line.
 
 **Whose lines:** [whose.py](whose.py) takes `PATH:FIRST-LAST` places and
 prints the commit that wrote each, with git alone. Given a host add-on's

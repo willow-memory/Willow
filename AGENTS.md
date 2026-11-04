@@ -81,6 +81,8 @@ is the machine, not you; any other is yours.
 ## An add-on, step by step
 
 Each of these has been missed at least once, and each is a check that fails.
+`python adapters/stdlib/ci/new.py NAME` does 1, 3, 4 and 5 from the idea's
+entry, and says what's left.
 
 1. **Its folder** in `adapters/stdlib/` or `adapters/deps/`: the code, its
    tests, and its card, `README.md`, whose header is the idea's entry from

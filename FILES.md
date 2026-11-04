@@ -229,6 +229,8 @@ willow/
 │   │   │   ├── test_reports.py  reports.py's tests: --json taken off first, stack's rendering word for word, never twice
 │   │   │   ├── files.py      FILES.md's tree kept to the repo's files, by a script
 │   │   │   ├── test_files.py files.py's tests: each file in its folder's order, gone ones out, the real tree round-tripped
+│   │   │   ├── new.py        an add-on started from its idea on the list
+│   │   │   ├── test_new.py   new.py's tests: the card is the idea, the script refuses, the list and FILES.md kept
 │   │   │   └── README.md     its card: gates, states, the guard and exit codes
 │   │   ├── ci-cache/
 │   │   │   ├── ci_cache.py    a cache key per ecosystem from a repo's lockfiles, so CI skips the reinstall
