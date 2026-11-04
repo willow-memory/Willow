@@ -140,6 +140,13 @@ machine.
   Aurelie checked Ines's signed layer inside two of Walt's packages, but
   the client view is the first package *from* Ines, so Aurelie's `receive`
   says `rookie`. Walt, who had two from Ines, says `steady`.
+- **One job, two machines' tools.** Run with each person in a container
+  of their own, and one on Alpine, the first job named a file on Ines's
+  folder that doesn't hold Johnson (`notes.md:0`): busybox's grep reads
+  `-lic` as count, GNU's as list. The job was `grep -rlic`; it is now
+  `grep -rli`, which both read alike. kart now runs every job on the
+  system's PATH and the `C` locale, not the person's, and records each
+  program's SHA-256, so `gather` says when results ran on different tools.
 - **A received answer can't become yours.** The kernel seals only answers
   made from your own files' passages. Walt can pass Ines's report on and
   everyone can check it, but it never becomes Walt's own sealed answer.

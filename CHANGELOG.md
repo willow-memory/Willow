@@ -1988,6 +1988,14 @@ says how). The first was v0.1.0.
   24.04), saying why in bwrap's own words: an empty sandbox is tried first.
   It used to run the job, exit 42 as if the job had failed, and leave a
   `ran` row on the person's chain for a job that never ran
+- `kart` runs a job on the system's PATH (`/usr/bin:/bin`) and the `C`
+  locale, not the person's own, which reached the sandbox despite its card's
+  "no environment variable of yours" and could change what `sort` and
+  `grep -i` say. The `ran` row records the SHA-256 of bash and each program
+  the job names, a result's claim carries their hash, and `gather` says when
+  results ran on different tools. demo/johnson's first job is `grep -rli`,
+  not `-rlic`, which busybox's grep read as a count and listed a file with
+  no Johnson in it
 - `ci`: a deps add-on whose program this machine lacks is unreachable, not
   failing. A card names each program PyPI doesn't install on a `programs:`
   line (ocr's tesseract, kart's bwrap, pgp's gpg), and its deps gates ask

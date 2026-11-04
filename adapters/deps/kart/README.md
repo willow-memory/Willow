@@ -45,7 +45,10 @@ stranger's job should see, so `run` hands it willow's instead, which
 
 - your folder, read-only, and the system's /usr, read-only;
 - one scratch folder made for this run and removed after;
-- a private /tmp, no home, and no environment variable of yours;
+- a private /tmp, no home, and no environment variable of yours: its
+  programs are found on the system's `/usr/bin:/bin`, not your PATH, and
+  its locale is `C`, not your LANG, which would change what `sort` and
+  `grep -i` say;
 - no network: a job naming Kartikeya's `# allow_net`, `# allow_db` or
   `# allow_localhost` is refused before anything runs, and is not even
   taken.
@@ -57,10 +60,12 @@ look up a name and read a planted variable, and holds it to finding none.
 
 **What it records.** A `ran` row: the job, how it ended, its exit code, its
 output's SHA-256, the sandbox engine, the network mode and what was bound,
-never the output. What it printed is written to FILE, new, outside the box
+and `tools`, the SHA-256 of bash and of each program the job names, as found
+on that PATH; never the output. What it printed is written to FILE, new, outside the box
 and your folder. A job that ended well is proposed as an answer of yours,
 citing nothing, waiting on your seal: it came from your files, so nothing
-of it leaves but by your seal and `share send`. A job that failed, or that
+of it leaves but by your seal and `share send`. Its claim names the tools'
+hash, so whoever gets it knows what ran it. A job that failed, or that
 Kartikeya's scan refused, proposes nothing.
 
 **Only aggregates leave.** `--shape numbers` is yours to set when you run
@@ -77,7 +82,11 @@ numbers, naming the job it ran by its text's SHA-256. It refuses results of
 different jobs, results whose lines don't line up, and two from one chain
 (so a forwarded copy is never counted twice), adds the rest line by line,
 and proposes the totals as your answer, citing nothing and naming every
-package, waiting on your seal.
+package, waiting on your seal. **One job, two machines' tools:** busybox's
+grep and GNU's read `grep -lic` apart, so results that ran on different
+tools are still added, but `gather` says how many sets there were, and so
+does the totals' claim; read them before you seal. A job written to POSIX's
+flags alone counts alike on both.
 
 **What it can't do.** It can't tell you a job is harmless: the sandbox
 holds what it can reach, and your two seals hold what goes in and out. The
