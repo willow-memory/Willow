@@ -40,6 +40,11 @@ its own:
     python ui/assemble.py status            # what's in it, what's looked for and absent
     python ui/assemble.py add NAME...       # an add-on, and what its card uses
     python ui/assemble.py check             # every file still the one put in
+    python ui/assemble.py kernel --python EXE  # this willow's kernel and vectors in place of the stack's
+
+A stack keeps the kernel it was made with until you swap it. `kernel` does,
+and keeps the new one only if the stack's record verifies under it and every
+add-on's tests pass on it; else the old one is back and nothing is written.
 
 Batches are kept beside it, in `batches.json`, not on the record, so a
 deleted one is gone. The words people use for what they want, and the words

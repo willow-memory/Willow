@@ -277,6 +277,71 @@ def test_a_changed_file_in_a_stack_is_found(stack_dir, tmp_path):
     assert assemble.check(copy) == assemble.REFUSED
 
 
+def test_a_stack_takes_a_new_kernel_only_whole_and_only_if_it_holds(tmp_path, capsys):
+    """`kernel` swaps the stack's kernel.py and vectors for willow's, one row
+    naming both hashes; a drifted stack, a wrong pin, a kernel that can't
+    verify the record or one an add-on's tests fail on is refused, and the
+    old kernel is back."""
+    to = tmp_path / "willow-stack"
+    assert assemble.main(["init", "--to", str(to)]) == assemble.ALIVE
+    assert assemble.add(["todo"], to, None) != assemble.REFUSED
+    stack = to / "stack"
+    # willow a commit on: its own kernel.py and vectors, the same add-ons
+    later = tmp_path / "later-willow"
+    (later / "vectors").mkdir(parents=True)
+    shutil.copy2(
+        canvas.WILLOW / "vectors" / "cases.json", later / "vectors" / "cases.json"
+    )
+    (later / "adapters").symlink_to(canvas.WILLOW / "adapters")
+    src = (canvas.WILLOW / "kernel.py").read_text(encoding="utf-8")
+    m = assemble.manifest(stack)
+    m["willow"] = str(later)
+    assemble.save(stack, m)
+    rows = lambda: sum(  # noqa: E731
+        json.loads(r)["kind"] == "kernel"
+        for r in (to / "box" / "record.jsonl").read_text().splitlines()
+    )
+
+    def kernel_is(text):
+        (later / "kernel.py").write_text(text, encoding="utf-8")
+        return assemble.sha(later / "kernel.py")
+
+    was, before = assemble.sha(stack / "kernel.py"), rows()
+    # a kernel that can't verify the record: refused, the old one back
+    kernel_is("import sys\nsys.exit(3)\n")
+    assert assemble.swap_kernel(to, None, None) == assemble.REFUSED
+    assert "doesn't verify" in capsys.readouterr().err
+    assert assemble.sha(stack / "kernel.py") == was and rows() == before
+    # a kernel the record holds under but todo's tests fail on: refused too
+    kernel_is(src + '\n\ndef newest(text):\n    return ""\n')
+    assert assemble.swap_kernel(to, None, sys.executable) == assemble.REFUSED
+    assert "todo" in capsys.readouterr().err
+    assert (
+        assemble.sha(stack / "kernel.py") == was
+        and assemble.check(to) == assemble.ALIVE
+    )
+    # a pin that names another kernel
+    new = kernel_is(src + "\n# a later kernel\n")
+    pin = tmp_path / "pin.json"
+    pin.write_text(json.dumps({"sha256": "0" * 64}))
+    assert assemble.swap_kernel(to, pin, None) == assemble.REFUSED
+    # a good one: swapped, one row, every file the one put in
+    assert assemble.swap_kernel(to, None, sys.executable) == assemble.ALIVE
+    assert (
+        assemble.sha(stack / "kernel.py") == new == assemble.manifest(stack)["kernel"]
+    )
+    assert rows() == before + 1 and assemble.check(to) == assemble.ALIVE
+    last = json.loads((to / "box" / "record.jsonl").read_text().splitlines()[-1])
+    assert (last["was"], last["sha256"]) == (was, new)
+    assert assemble.swap_kernel(to, None, None) == assemble.ALIVE  # already: nothing
+    assert rows() == before + 1
+    # a stack whose files moved isn't given a kernel under them
+    kernel_is(src + "\n# later still\n")
+    (stack / "adapters" / "stdlib" / "todo" / "todo.py").write_text("# changed\n")
+    assert assemble.swap_kernel(to, None, None) == assemble.REFUSED
+    assert assemble.sha(stack / "kernel.py") == new
+
+
 def test_a_bad_command_line_is_refused():
     assert canvas.main(["--stray"]) == assemble.REFUSED
     assert canvas.main(["--port", "x"]) == assemble.REFUSED
