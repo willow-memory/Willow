@@ -241,13 +241,22 @@ const STAGES=[
  {key:'suggest',title:'Assistants',sec:'Assistants',say:'AI assistants, and what they’re allowed to see. They can ask and suggest answers, but none of them can approve one.'},
  {key:'you',title:'You',fixed:true,say:'A suggested answer counts only once you seal it. Sealing is you saying “yes, this is mine”. The same goes for this whole arrangement.'},
  {key:'honest',title:'Keeping it honest',sec:'Trust and proof',say:'Checks that stay true later: an approved answer whose source changed is flagged, the record is backed up and pinned.'},
- {key:'use',title:'How you’ll use it',sec:'Ways to use it',say:'Where you ask from: a page in your browser, your shell, your editor. Without one, you type commands.'},
+ {key:'use',title:'How you’ll use it',sec:'Ways to use it',say:'Where you ask from: your terminal, your editor, an AI assistant such as Claude Code, a page in your browser. Without one, you type commands.'},
  {key:'extra',title:'Extras',sec:['Play','For maintainers'],say:'Games on the record, and tools for people working on willow itself.'},
 ];
-const SUGGEST={read:['pdf','mail','office'],words:['starter-words','nicknames'],find:['all','pile-rungs','on-this-day'],watch:['coming-up','todo'],hide:['privacy'],suggest:['claude-code','mcp-lite'],honest:['stale','backup','tip-pin'],use:['browse','shell']};
+// how you run it: the ways in, grouped by where you'd be. The editor and assistant ways in are
+// filed under Assistants on their cards; on this page they go here, with the rest of the ways in.
+const WAYS=[
+ {h:'In your terminal',n:['shell','pipe','plain','start','tui','warm']},
+ {h:'In your editor',n:['vscode','vim','emacs','jetbrains','zed','cursor','windsurf','copilot','obsidian']},
+ {h:'With an AI assistant',n:['claude-code','codex-cli','gemini-cli','opencode','aider','mcp','mcp-lite','hosts']},
+ {h:'In your browser or on your desktop',n:['browse','launcher','desktop','static-search','datasette','kiosk']},
+ {h:'From your phone, by voice or by email',n:['telegram-bot','email-ask','home-assistant','dictate','speak','qr']}];
+const WAYIN=new Set(WAYS.flatMap(w=>w.n));
+const SUGGEST={read:['pdf','mail','office'],words:['starter-words','nicknames'],find:['all','pile-rungs','on-this-day'],watch:['coming-up','todo'],hide:['privacy'],suggest:['local-model'],honest:['stale','backup','tip-pin'],use:['shell','vscode','claude-code','browse']};
 const KEY='willow-canvas-2';
 let HIDE=(()=>{try{return localStorage.getItem('willow-canvas-hide')==='1'}catch(e){return false}})(),P={},S=JSON.parse(localStorage.getItem(KEY)||'null'),cur='folders',subject=null,drag=null,here='',SEALED=false,back='folders';
-const stageOf=p=>{for(const s of STAGES)if(s.sec&&[].concat(s.sec).includes(p.section))return s.key;return'extra'};
+const stageOf=p=>{if(WAYIN.has(p.name))return'use';for(const s of STAGES)if(s.sec&&[].concat(s.sec).includes(p.section))return s.key;return'extra'};
 const save=()=>localStorage.setItem(KEY,JSON.stringify(S));
 function say(t,err){const m=document.getElementById('msg');m.textContent=t||'';m.className='msg'+(err?' err':'')}
 function plainTags(p){const t=[];if(p.network&&p.network!=='none')t.push(el('span',{class:'tag net',text:p.network==='loopback'?'this machine only':'goes online: '+p.network}));
@@ -470,7 +479,7 @@ function shelf(){const s=STAGES.find(x=>x.key===cur),head=document.getElementByI
   box.append(el('div',{id:'picker'},el('div',{class:'ppath',id:'ppath'}),el('div',{class:'plist',id:'plist'}),el('div',{style:'display:flex;gap:8px;margin-top:8px'},el('button',{class:'go',text:'Add this folder',onclick:()=>here&&addFolder(here)}))),el('div',{style:'margin-top:10px'},t));
   browse(here||S.folders.at(-1)?.path||'');return}
  const secs=[].concat(s.sec),q=el('input',{type:'text',placeholder:'filter these'}),list=el('div',{class:'tree'});box.append(q,list);
- const mine=Object.values(P).filter(p=>secs.includes(p.section)),inStage=new Set(mine.map(p=>p.name));
+ const ways=s.key==='use',mine=Object.values(P).filter(p=>ways?(secs.includes(p.section)||WAYIN.has(p.name)):(secs.includes(p.section)&&!WAYIN.has(p.name))),inStage=new Set(ways?[]:mine.map(p=>p.name));
  const under={};for(const p of mine)for(const h of(p.hard||[]))if(inStage.has(h))(under[h]??=[]).push(p.name);
  const nIn=mine.filter(p=>all().includes(p.name)).length,nNo=mine.filter(p=>cantAdd(p.name)&&!all().includes(p.name)).length,hidden=n=>HIDE&&!!cantAdd(n)&&!all().includes(n);
  head.append(el('div',{class:'counts'},el('span',{text:mine.length+' add-on'+(mine.length===1?'':'s')}),el('span',{class:'in',text:nIn+' in your stack'}),nNo?el('span',{text:nNo+' can’t be added yet'}):null,
@@ -491,6 +500,8 @@ function shelf(){const s=STAGES.find(x=>x.key===cur),head=document.getElementByI
  const draw=()=>{list.innerHTML='';const w=q.value.toLowerCase();
   if(w){for(const p of mine.filter(p=>!hidden(p.name)&&(p.name+' '+p.line+' '+(p.tags||[]).join(' ')).toLowerCase().includes(w)).sort((a,b)=>order(a.name,b.name)))node(p.name,0,[]);return}
   const roots=mine.filter(p=>!hidden(p.name)&&!(p.hard||[]).some(h=>inStage.has(h))).map(p=>p.name).sort(order);
+  if(ways){const left=new Set(roots);for(const w of[...WAYS,{h:'Other ways to use what it finds',n:roots}]){const ns=w.n.filter(n=>left.has(n)).sort(order);if(!ns.length)continue;
+   list.append(el('h3',{text:w.h}));for(const n of ns){left.delete(n);node(n,0,[])}}return}
   let last=-1;for(const n of roots){const r=rank(P[n]);if(r!==last){list.append(el('h3',{text:r===0?'A good start':r===1?'Everything else':'Can’t be added yet'}));last=r}node(n,0,[])}};
  q.addEventListener('input',draw);draw()}
 // ── the summary, the look-over, the seal ────────────────────────────────────
@@ -542,5 +553,6 @@ async function watch(){const pr=document.getElementById('progress');const j=awai
 document.getElementById('find').addEventListener('input',e=>find(e.target.value));document.getElementById('findx').onclick=()=>find('');
 (async()=>{P=await api('pieces');loadBatches();if(!S)S=freshState();loadExamples();
  const st=await api('state');const last=(st.stacks||[]).filter(x=>x.sealed).at(-1);if(last){offerStart(last.subject,last.name||'my willow');const j=await api('start');if(j.state&&j.state!=='none')watch()}
- for(const f of st.folders||[])if(!S.folders.some(x=>x.path===f))await addFolder(f);for(const f of S.folders)baseline(f.path);UNDO.length=0;was=JSON.stringify(S);undoBtn();cur=kept()||cur;flow();shelf();summary()})();
+ for(const f of st.folders||[])if(!S.folders.some(x=>x.path===f))await addFolder(f);for(const k of Object.keys(S.stages))if(k!=='use'){const mv=S.stages[k].filter(n=>WAYIN.has(n));if(mv.length){S.stages[k]=S.stages[k].filter(n=>!WAYIN.has(n));(S.stages.use??=[]).push(...mv.filter(n=>!S.stages.use.includes(n)))}}save();
+ for(const f of S.folders)baseline(f.path);UNDO.length=0;was=JSON.stringify(S);undoBtn();cur=kept()||cur;flow();shelf();summary()})();
 </script></body></html>
