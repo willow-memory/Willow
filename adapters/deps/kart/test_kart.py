@@ -315,6 +315,8 @@ def test_one_job_runs_over_two_peoples_folders_and_comes_back_sealed(tmp_path):
     import shutil  # noqa: PLC0415
 
     demo = ROOT / "demo" / "johnson"
+    if not demo.is_dir():  # a stack carries the add-on, not willow's demos
+        pytest.skip("demo/johnson isn't here: kart outside willow's repository")
     shutil.copy(demo / "make_life.py", tmp_path / "make_life.py")
     got = subprocess.run([sys.executable, str(tmp_path / "make_life.py")], cwd=tmp_path,
                          capture_output=True, text=True)  # fmt: skip
