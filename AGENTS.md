@@ -89,8 +89,10 @@ entry, and says what's left.
    `adapters/planned.json` with the same `writes` and `network` promises,
    and its `role`.
 2. **Its command line in `COMMANDS`**, in `adapters/stdlib/ci/test_contract.py`,
-   if a person runs it. Missing, it fails the contract test, and every other
-   add-on's mutants then report their accepted breaks as stale.
+   if a person runs it, in its place A to Z
+   (`python adapters/stdlib/ci/order.py write` puts it there). Missing, it
+   fails the contract test, and every other add-on's mutants then report
+   their accepted breaks as stale.
 3. **Its idea out of `adapters/planned.json`**, deletions only.
 4. **Its place in FILES.md's tree**, alphabetically:
    `python adapters/stdlib/ci/files.py write` puts it there.

@@ -259,7 +259,7 @@ def test_folders_sort_without_their_slash_and_one_slip_by_hand_keeps_a_folder_a_
         "decisions",
         *(
             f"m{k:02}" for k in range(16)
-        ),  # 20 folders, one slip: as stdlib has 4 in 311
+        ),  # 20 folders, one slip: a slip by hand, as stdlib had 3 in 311
         "nestor",
         "pdf",
         "zotero",

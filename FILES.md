@@ -231,6 +231,8 @@ willow/
 │   │   │   ├── test_files.py files.py's tests: each file in its folder's order, gone ones out, the real tree round-tripped
 │   │   │   ├── new.py        an add-on started from its idea on the list
 │   │   │   ├── test_new.py   new.py's tests: the card is the idea, the script refuses, the list and FILES.md kept
+│   │   │   ├── order.py      the lists people add to by hand, kept A to Z by a script
+│   │   │   ├── test_order.py order.py's tests: entries move with their comments, refusals, the repo's own lists A to Z
 │   │   │   └── README.md     its card: gates, states, the guard and exit codes
 │   │   ├── ci-cache/
 │   │   │   ├── ci_cache.py    a cache key per ecosystem from a repo's lockfiles, so CI skips the reinstall
@@ -316,13 +318,13 @@ willow/
 │   │   │   ├── debts.py      lines speaking of money owed, dated and cited, the sum as written, never netted
 │   │   │   ├── test_debts.py
 │   │   │   └── README.md
-│   │   ├── deep-links/
-│   │   │   ├── deep_links.py   each answer as links that open the file at the line: an RFC 5147 file link and a browser text-fragment web link
-│   │   │   ├── test_deep_links.py
-│   │   │   └── README.md
 │   │   ├── decisions/
 │   │   │   ├── decisions.py  a yes and a no with their reasons, a never told from a not-yet, asked about a new question
 │   │   │   ├── test_decisions.py
+│   │   │   └── README.md
+│   │   ├── deep-links/
+│   │   │   ├── deep_links.py   each answer as links that open the file at the line: an RFC 5147 file link and a browser text-fragment web link
+│   │   │   ├── test_deep_links.py
 │   │   │   └── README.md
 │   │   ├── dice/
 │   │   │   ├── dice.py       dice rolled on the record, seeded by its tip; check throws every roll again
@@ -749,13 +751,13 @@ willow/
 │   │   │   ├── accepted.json the breaks that change nothing a person could notice, each with why
 │   │   │   ├── test_mutants.py
 │   │   │   └── README.md
-│   │   ├── nicknames/
-│   │   │   ├── nicknames.py   the names you call people, found beside a family word in your files, as a words list
-│   │   │   ├── test_nicknames.py
-│   │   │   └── README.md
 │   │   ├── nestor/
 │   │   │   ├── nestor.py     answers a person has checked in Nestor, from a copy of its store
 │   │   │   ├── test_nestor.py
+│   │   │   └── README.md
+│   │   ├── nicknames/
+│   │   │   ├── nicknames.py   the names you call people, found beside a family word in your files, as a words list
+│   │   │   ├── test_nicknames.py
 │   │   │   └── README.md
 │   │   ├── night-batch/
 │   │   │   ├── night_batch.py  waiting questions asked of a local model in one run, stopped once you're back
@@ -773,10 +775,6 @@ willow/
 │   │   │   ├── notion.py   a Notion export as pages and databases with their paths
 │   │   │   ├── test_notion.py
 │   │   │   └── README.md
-│   │   ├── office/
-│   │   │   ├── office.py     .docx, .odt, .pptx, .xlsx and .ods, as text
-│   │   │   ├── test_office.py
-│   │   │   └── README.md
 │   │   ├── oakenscroll/
 │   │   │   ├── oakenscroll.py   an Oakenscroll's Office calibration ledger: each claim, its revisions and grade, as dated passages
 │   │   │   ├── test_oakenscroll.py
@@ -784,6 +782,10 @@ willow/
 │   │   ├── odds/
 │   │   │   ├── odds.py       exact odds for any dice, as fractions
 │   │   │   ├── test_odds.py
+│   │   │   └── README.md
+│   │   ├── office/
+│   │   │   ├── office.py     .docx, .odt, .pptx, .xlsx and .ods, as text
+│   │   │   ├── test_office.py
 │   │   │   └── README.md
 │   │   ├── on-this-day/
 │   │   │   ├── on_this_day.py what your files say happened on this date in other years
@@ -1433,12 +1435,6 @@ willow/
 │       │   ├── requirements-floor.txt  openpyxl at its floor, also tested
 │       │   ├── test_sheets.py
 │       │   └── README.md
-│       ├── static-search/
-│       │   ├── static_search.py  approved answers as a static site, searched by Pagefind
-│       │   ├── requirements.txt  pagefind and pagefind-bin, pinned
-│       │   ├── requirements-floor.txt  pagefind and pagefind-bin at their floors, also tested
-│       │   ├── test_static_search.py
-│       │   └── README.md
 │       ├── star-system/
 │       │   ├── star_system.py  a friend's star-system sim (science_bitch) run deterministically, as cited passages
 │       │   ├── requirements.txt  numpy, pinned
@@ -1452,6 +1448,12 @@ willow/
 │       │               ├── __init__.py
 │       │               ├── core.py    a plain velocity-Verlet stand-in, not the real integrator
 │       │               └── data.py    a tiny stand-in catalog
+│       ├── static-search/
+│       │   ├── static_search.py  approved answers as a static site, searched by Pagefind
+│       │   ├── requirements.txt  pagefind and pagefind-bin, pinned
+│       │   ├── requirements-floor.txt  pagefind and pagefind-bin at their floors, also tested
+│       │   ├── test_static_search.py
+│       │   └── README.md
 │       └── stems/
 │           ├── stems.py      a word's other forms, by Snowball's stemmer for 30 languages
 │           ├── requirements.txt  snowballstemmer, pinned
