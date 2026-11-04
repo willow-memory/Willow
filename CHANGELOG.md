@@ -17,7 +17,7 @@ says how). The first was v0.1.0.
   `check` and its test hold the repo to it, and create_pr.py runs `write`.
   The tables and FILES.md's stdlib, deps and demo folders are sorted, CI's
   demo rows run A to Z, and a folder of ten or more with one pair in ten out
-  of turn now counts as A to Z
+  of turn now counts as A to Z (#238)
 - `ci`'s `adapters/stdlib/ci/new.py NAME` starts an add-on from its idea on
   adapters/planned.json: its folder, its card with the idea's entry as its
   header, a script that refuses every command line until it's built and a
