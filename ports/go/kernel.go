@@ -1416,6 +1416,16 @@ func digits(t []rune, i int) int {
 func date(y, m, d string) string {
 	ok := (strings.HasPrefix(y, "19") || strings.HasPrefix(y, "20")) &&
 		m >= "01" && m <= "12" && d >= "01" && d <= "31"
+	if ok && m == "02" {
+		n, _ := strconv.Atoi(y)
+		last := "28"
+		if n%4 == 0 && (n%100 != 0 || n%400 == 0) {
+			last = "29"
+		}
+		ok = d <= last
+	} else if ok && (m == "04" || m == "06" || m == "09" || m == "11") {
+		ok = d <= "30"
+	}
 	if ok {
 		return y + m + d
 	}

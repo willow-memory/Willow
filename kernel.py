@@ -421,8 +421,15 @@ def _digits(text: str, i: int) -> int:
 
 
 def _date(y: str, m: str, d: str) -> str:
-    """YYYYMMDD when it reads as a date (years 1900-2099), else ""."""
+    """YYYYMMDD when it reads as a date (years 1900-2099), else "": a day
+    the month has, so 1984-06-31 and 2023-02-29 are no date and 2024-02-29
+    is (a year divisible by 4 leaps, a century only when divisible by 400)."""
     ok = y[:2] in ("19", "20") and "01" <= m <= "12" and "01" <= d <= "31"
+    if ok and m == "02":
+        n = int(y)
+        ok = d <= ("29" if n % 4 == 0 and (n % 100 != 0 or n % 400 == 0) else "28")
+    elif ok and m in ("04", "06", "09", "11"):
+        ok = d <= "30"
     return y + m + d if ok else ""
 
 

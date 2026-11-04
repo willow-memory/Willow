@@ -938,6 +938,15 @@ public static class Kernel
         bool ok = (y.StartsWith("19", StringComparison.Ordinal) || y.StartsWith("20", StringComparison.Ordinal))
             && string.CompareOrdinal(m, "01") >= 0 && string.CompareOrdinal(m, "12") <= 0
             && string.CompareOrdinal(d, "01") >= 0 && string.CompareOrdinal(d, "31") <= 0;
+        if (ok && m == "02")
+        {
+            int n = int.Parse(y, System.Globalization.CultureInfo.InvariantCulture);
+            ok = string.CompareOrdinal(d, n % 4 == 0 && (n % 100 != 0 || n % 400 == 0) ? "29" : "28") <= 0;
+        }
+        else if (ok && (m == "04" || m == "06" || m == "09" || m == "11"))
+        {
+            ok = string.CompareOrdinal(d, "30") <= 0;
+        }
         return ok ? y + m + d : "";
     }
 
