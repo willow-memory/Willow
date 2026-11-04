@@ -1942,7 +1942,7 @@ says how). The first was v0.1.0.
 
 - The report contract's heading in the ci add-on's README is an h2 under the
   page's title, not an h3 that skipped a level; its anchor is unchanged
-  (#218).
+  (#218)
 - `against` reads a pull request stacked on another from where the two
   left each other, not from where each left the base, so the one below is
   not failed for the names the one above took from it. The forge stack
