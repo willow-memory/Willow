@@ -10,6 +10,10 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `bot-venv --find` lists every venv under a folder: inside willow-bot or
+  out, its packages, the bot's lock for it (none, holds or drifted), and the
+  services running from it, read from /proc; the steward's venv inventory
+  and bot-venv are one card (#229)
 - `assemble.py kernel` puts this willow's kernel.py and vectors in a stack
   in place of the ones it was made with, only if the stack's record verifies
   under the new kernel and, with --python, every add-on's tests pass on it;
