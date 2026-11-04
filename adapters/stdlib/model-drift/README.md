@@ -5,6 +5,7 @@ source: new
 added: 2026-11-02
 writes: nothing
 network: the endpoint you configure, to ask your questions again
+role: suggests
 uses: openai-compatible
 -->
 # model-drift

@@ -5,6 +5,7 @@ source: new
 added: 2026-10-24
 writes: to
 network: none
+role: reads
 uses: clauses
 -->
 # web-pages

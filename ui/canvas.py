@@ -116,11 +116,12 @@ def page_step(folder: Path, card: dict) -> bool:
 #: says what it's about (its section); until it says its role too, `role`
 #: guesses it from what the card does say, and says which fact it went by.
 ROLES = (
-    ("feeds", "What it reads"),
+    ("reads", "What it reads"),
+    ("words", "What words it knows"),
     ("page", "What runs on your page"),
     ("suggests", "What suggests answers"),
     ("ways", "Where you ask from"),
-    ("guards", "What guards an assistant"),
+    ("guards", "What guards it"),
     ("makes", "What it makes for elsewhere"),
     ("tools", "Tools you run yourself"),
     ("repo", "Works on willow itself"),
@@ -151,34 +152,58 @@ MODELISH = re.compile(r"\bmodels?\b|\bweights\b|assistant.s suggestions", re.I)
 
 def role(p: dict) -> dict:
     """The role a piece plays, why that one, and the heading it goes under
-    inside it (ways in by where you'd be, and the two kinds of suggesting)."""
+    inside it (ways in by where you'd be, and the two kinds of suggesting).
+    A card says its role; `guess_role` is for a willow from before they did."""
+    n, line = p["name"], p.get("line", "")
+    said = p.get("role", "")
+    key, why = (
+        (
+            said,
+            "its card says so"
+            if p.get("state") == "built"
+            else "its entry on the list says so",
+        )  # fmt: skip
+        if said in dict(ROLES)
+        else guess_role(p)
+    )
+    group, at = "", 0
+    if key == "ways":
+        at, group = WAY.get(n, (len(WAYS), "Other ways in"))
+    elif key == "suggests":
+        at, group = (0, "Models that suggest answers") if SUGGESTS.search(line) else (1, "Checking a model before you trust it")  # fmt: skip
+    return {"role": key, "role_why": why, "group": group, "group_at": at}
+
+
+def guess_role(p: dict) -> tuple[str, str]:
+    """A role from what a card without one does say, and which fact it went by."""
     n, line = p["name"], p.get("line", "")
     writes = [w.strip() for w in p.get("writes", "").split(",")]
-
-    def r(key: str, why: str, group: str = "", at: int = 0) -> dict:
-        return {"role": key, "role_why": why, "group": group, "group_at": at}
-
     if p.get("runs_in") == "repo":
-        return r("repo", "its card says it runs in willow's own repository")
+        return "repo", "its card says it runs in willow's own repository"
     if p.get("section") == "Reading more kinds of files":
-        return r("feeds", "its card is filed under reading more kinds of files")
+        return "reads", "its card is filed under reading more kinds of files"
     if n in WAY:
-        return r("ways", "it's an editor, an assistant or a terminal you ask from", WAY[n][1], WAY[n][0])  # fmt: skip
+        return "ways", "it's an editor, an assistant or a terminal you ask from"
     if n.startswith("hook") or "hook" in p.get("tags", []):
-        return r("guards", "it's a hook")
+        return "guards", "it's a hook"
     if SUGGESTS.search(line):
-        return r("suggests", "its card says it suggests answers, or holds what it makes until you seal it", "Models that suggest answers")  # fmt: skip
+        return "suggests", "its card says it suggests answers, or holds what it makes until you seal it"  # fmt: skip
     if p.get("section") == "Assistants" and MODELISH.search(f"{line} {n}"):
-        return r("suggests", "its card is about checking a model that suggests answers", "Checking a model before you trust it", 1)  # fmt: skip
+        return "suggests", "its card is about checking a model that suggests answers"
     if p.get("page"):
-        return r("page", "it runs with nothing but your record, so it can be a step on your page")  # fmt: skip
+        return "page", "it runs with nothing but your record, so it can be a step on your page"  # fmt: skip
+    if p.get("section") == "Your own words":
+        return "words", "its card is filed under your own words"
     if p.get("section") == "Ways to use it" and "to" not in writes:
-        return r("ways", "its card is filed under ways to use it", "Other ways in", len(WAYS))  # fmt: skip
+        return "ways", "its card is filed under ways to use it"
     if "to" in writes:
-        return r("makes", "its card says it writes where you point it")
+        return "makes", "its card says it writes where you point it"
     if p.get("state") == "idea":
-        return r("tools", "it's still an idea, so there's no way yet to tell how it runs")  # fmt: skip
-    return r("tools", "it needs words or options of its own to run, so you run it yourself")  # fmt: skip
+        return "tools", "it's still an idea, so there's no way yet to tell how it runs"
+    return (
+        "tools",
+        "it needs words or options of its own to run, so you run it yourself",
+    )
 
 
 def plural(n: int, word: str) -> str:
@@ -332,7 +357,7 @@ class Canvas:
                     "writes": c.get("writes", ""), "network": c.get("network", ""),
                     "needs": c.get("needs", ""), "hard": hard, "soft": soft,
                     "in_stack": d.name in have, "runs_in": c.get("runs-in", ""),
-                    "page": page_step(d, c),
+                    "page": page_step(d, c), "role": c.get("role", ""),
                 }  # fmt: skip
         planned = json.loads((self.willow / "adapters" / "planned.json").read_text())
         for p in planned:
@@ -342,6 +367,7 @@ class Canvas:
                     "section": p.get("section", ""), "line": p.get("line", ""),
                     "writes": p.get("writes", ""), "network": p.get("network", ""),
                     "needs": p.get("needs", ""), "hard": [], "soft": [], "in_stack": False,
+                    "role": p.get("role", ""),
                 }  # fmt: skip
         if self.similar is not None:
             worked = self.similar.worked_out(self.similar.entries())

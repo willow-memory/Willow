@@ -242,17 +242,18 @@ const el=(t,a={},...k)=>{const e=document.createElement(t);for(const[x,v]of Obje
 // (see roleOf); a card's section is what it's about, and shows as the headings inside a role.
 const STAGES=[
  {key:'folders',title:'Your folders',say:'What willow may read. It only ever reads them: it never changes, moves or uploads a file.'},
- {key:'feeds',title:'What it reads',group:'rank',say:'Readers turn PDFs, email, chats and office files into plain text beside your folder, so the kernel can search them. They run over your folders before anything else. Without any, it reads plain text, markdown and web pages.'},
+ {key:'reads',title:'What it reads',group:'rank',say:'Readers turn PDFs, email, chats and office files into plain text beside your folder, so the kernel can search them. They run over your folders before anything else. Without any, it reads plain text, markdown and web pages.'},
+ {key:'words',title:'What words it knows',group:'rank',say:'Words lists: a language’s common words, its word forms, and your own (the names you call people, your shorthand), so a question finds what your files call it. The kernel uses them on every question.'},
  {key:'kernel',title:'Willow’s kernel',fixed:true,say:'What it does on your folders alone, before any add-on, shown below as counts. Every question comes here. It finds the passages of your files that hold the question’s words and gives up to three, each with its file and line. If none do, it says it doesn’t know. Every step goes on a record that can’t be quietly changed.'},
  {key:'page',title:'What runs on your page',ordered:true,group:'section',say:'The steps that run one after another each time your page is made: what’s coming up, what needs you, what changed. This is the one place order matters; drag to change it.'},
  {key:'suggests',title:'What suggests answers',group:'suggests',say:'Models that suggest an answer from your passages, each citing what it read and held until you seal it, and the checks that tell you whether to trust a model first. None of them can approve anything.'},
  {key:'ways',title:'Where you ask from',group:'ways',say:'Your terminal, your editor, an AI assistant such as Claude Code, a page in your browser. Each is set up once, then you ask from there. Without one, you type commands.'},
- {key:'guards',title:'What guards an assistant',group:'section',say:'Hooks that check what an AI assistant does before it does it, and keep what they saw: a key in a write, a command that would change the record, a hook that changed since you approved it.'},
+ {key:'guards',title:'What guards it',group:'section',say:'What keeps something from being shown or done: a hook that checks what an AI assistant does before it does it, a filter that blanks out numbers and keys before an answer is shown, the one file a model may read.'},
  {key:'makes',title:'What it makes for elsewhere',group:'section',say:'Files for other programs: a calendar feed, a feed reader’s list, a printable page, a backup. Each writes only where you point it.'},
  {key:'tools',title:'Tools you run yourself',group:'section',say:'Things you run when you want, with your own words or options: flashcards, a forecast, a check of a claim. They’re put in your stack, but not run on your page.'},
  {key:'you',title:'You',fixed:true,say:'A suggested answer counts only once you seal it. Sealing is you saying “yes, this is mine”. The same goes for this whole arrangement.'},
 ];
-const SUGGEST={feeds:['pdf','mail','office'],page:['coming-up','todo','digest'],ways:['shell','vscode','claude-code','browse'],guards:['hook-guard','hook-leaks'],suggests:['local-model','model-exam'],makes:['calendar-out','backup','print'],tools:['flashcards','forecasts']};
+const SUGGEST={reads:['pdf','mail','office'],words:['starter-words','nicknames','stems'],page:['coming-up','todo','digest'],ways:['shell','vscode','claude-code','browse'],guards:['hook-guard','hook-leaks'],suggests:['local-model','model-exam'],makes:['calendar-out','backup','print'],tools:['flashcards','forecasts']};
 const KEY='willow-canvas-2';
 let HIDE=(()=>{try{return localStorage.getItem('willow-canvas-hide')==='1'}catch(e){return false}})(),P={},S=JSON.parse(localStorage.getItem(KEY)||'null'),cur='folders',subject=null,drag=null,here='',SEALED=false,back='folders';
 // which role a piece plays, and the fact on its card that says so: canvas.py's `role` guesses it
@@ -520,7 +521,7 @@ async function look(){if(!S.folders.length){cur='folders';flow();shelf();say('Ad
  const named=k=>(S.stages[k]||[]).join(', ');const li=(t)=>el('li',{text:t});const rv=document.getElementById('review');rv.innerHTML='';cur='review';const f0=document.getElementById('find');if(f0.value){f0.value='';document.getElementById('findx').hidden=true}SEALED=false;
  const one=a.folders.length===1;
  const ul=el('ul',{},li('It reads '+a.folders.join(', ')+', and never changes '+(one?'it':'them')+'.'),
-  named('feeds')?null:li('It reads plain text, markdown and web pages; nothing else.'),
+  named('reads')?null:li('It reads plain text, markdown and web pages; nothing else.'),
   li('It answers only from what it reads, with the file and line, and says so when nothing there holds an answer.'),
   li(a.reach.length?'It goes online: '+a.reach.join('; ')+'.':'It never goes online.'),
   li('It writes its own record'+(a.writes.includes('to')?', and files only where you point it':'')+'.'),

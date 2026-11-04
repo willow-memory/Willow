@@ -5,6 +5,7 @@ source: new
 added: 2026-10-24
 writes: record, to
 network: github.com (or the --source you give), to clone the repositories you list
+role: makes
 tags: research
 uses: again, backup, changed, digest, export, history, privacy, quote-check, scan, secrets-audit, stale, todo, xref
 -->

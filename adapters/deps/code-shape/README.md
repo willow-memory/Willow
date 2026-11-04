@@ -7,6 +7,7 @@ needs: the ast-grep program, from ast-grep-cli on PyPI or your own ast-grep; MIT
 floor: ast-grep-cli 0.14.1
 writes: nothing
 network: none
+role: tools
 -->
 # code-shape
 

@@ -5,6 +5,7 @@ source: new
 added: 2026-10-27
 writes: record
 network: none
+role: tools
 -->
 # tarot
 

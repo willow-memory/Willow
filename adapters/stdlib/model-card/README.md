@@ -5,6 +5,7 @@ source: new
 added: 2026-11-02
 writes: record
 network: none
+role: suggests
 uses: weights-card
 -->
 # model-card

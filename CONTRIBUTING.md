@@ -146,6 +146,9 @@ that adds one entry to [adapters/planned.json](adapters/planned.json):
   and what it uses only when it's there (it says so when it isn't). CI runs
   its tests in a copy holding only it and what it `uses`
   ([adapters/README.md](adapters/README.md#what-a-folder-holds)).
+- `role` is the part it plays in a stack (what it reads, what runs on your
+  page, where you ask from...), one of those in
+  [adapters/README.md](adapters/README.md#what-a-folder-holds).
 - `writes` and `network` are its promises, set out in
   [adapters/README.md](adapters/README.md#its-promises-checked). Whoever
   builds it is held to them.

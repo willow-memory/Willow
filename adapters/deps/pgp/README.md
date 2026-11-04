@@ -7,6 +7,7 @@ needs: the gpg program, run not linked, and python-gnupg; GPL, BSD-3-Clause
 floor: python-gnupg 0.4.6
 writes: to
 network: none
+role: makes
 -->
 # pgp
 

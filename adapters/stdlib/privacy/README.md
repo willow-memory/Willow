@@ -5,6 +5,7 @@ source: bot
 added: 2026-10-23
 writes: record
 network: none
+role: guards
 -->
 # privacy
 

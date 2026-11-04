@@ -49,6 +49,7 @@ The card opens with a header that the add-on list in ADDONS.md is generated from
     added: 2026-10-22
     writes: nothing
     network: none
+    role: page
     tags: health
     -->
 
@@ -57,6 +58,22 @@ The card opens with a header that the add-on list in ADDONS.md is generated from
 kernel has) or `new`, and `added` is the date it was built. An add-on in
 `deps/` adds `needs` (what to install, and its licence) and `floor` (its
 floor versions, and why when above the rule's).
+
+`role` is the part it plays in a stack, where `section` is what it's about;
+[the UI](../ui/)'s steps are made of it, and an agent building a stack reads
+it (`python ui/canvas.py pieces --role ROLE`):
+
+| `role` | It |
+|---|---|
+| `reads` | turns a kind of file into text the kernel can search |
+| `words` | is a words list, a language's or your own, that changes what a question finds |
+| `page` | runs with nothing but your record, as a step on your page |
+| `suggests` | suggests an answer, held until you seal it, or checks a model that does |
+| `ways` | is where you ask from: a terminal, an editor, an assistant, a page |
+| `guards` | keeps something from being shown or done: a hook, a filter |
+| `makes` | makes a file for another program, where you point it |
+| `tools` | is run by you, with words or options of its own |
+| `repo` | works on willow's own repository; it has `runs-in: repo`, and only it does |
 
 What an add-on leans on is on its card too, so whoever copies it knows what
 to copy with it:

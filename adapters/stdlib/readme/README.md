@@ -5,6 +5,7 @@ source: new
 added: 2026-10-23
 writes: README.md, ADDONS.md
 network: none
+role: repo
 uses: similar
 runs-in: repo
 -->

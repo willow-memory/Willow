@@ -5,6 +5,7 @@ source: new
 added: 2026-10-31
 writes: record
 network: the endpoint you configure, to ask for suggestions
+role: suggests
 -->
 # openai-compatible
 

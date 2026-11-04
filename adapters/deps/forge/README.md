@@ -7,6 +7,7 @@ needs: forge-play; Apache-2.0
 floor: forge-play 0.10.0; the rule names 0.1.0, its first release, but the card box this reads the cards with arrived in 0.10.0
 writes: record, to
 network: none
+role: suggests
 output: report
 uses: stack
 looks-for: ci

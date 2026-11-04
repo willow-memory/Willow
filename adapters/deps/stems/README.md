@@ -7,6 +7,7 @@ needs: snowballstemmer; BSD-3-Clause
 floor: snowballstemmer 2.0.0
 writes: nothing
 network: none
+role: words
 -->
 # stems
 

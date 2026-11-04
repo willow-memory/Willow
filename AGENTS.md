@@ -84,7 +84,8 @@ Each of these has been missed at least once, and each is a check that fails.
 
 1. **Its folder** in `adapters/stdlib/` or `adapters/deps/`: the code, its
    tests, and its card, `README.md`, whose header is the idea's entry from
-   `adapters/planned.json` with the same `writes` and `network` promises.
+   `adapters/planned.json` with the same `writes` and `network` promises,
+   and its `role`.
 2. **Its command line in `COMMANDS`**, in `adapters/stdlib/ci/test_contract.py`,
    if a person runs it. Missing, it fails the contract test, and every other
    add-on's mutants then report their accepted breaks as stale.

@@ -5,6 +5,7 @@ source: box
 added: 2026-10-23
 writes: nothing
 network: GitHub, through gh, to read the author of a pull request a security report points to
+role: repo
 uses: ci, readme
 runs-in: repo
 -->

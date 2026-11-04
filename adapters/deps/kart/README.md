@@ -7,6 +7,7 @@ needs: kartikeya, and the bwrap program (bubblewrap), run not linked; Apache-2.0
 floor: kartikeya 0.0.1
 writes: record, to
 network: none
+role: tools
 uses: share
 -->
 # kart

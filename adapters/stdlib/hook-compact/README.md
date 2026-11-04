@@ -5,6 +5,7 @@ source: box
 added: 2026-10-29
 writes: nothing
 network: none
+role: guards
 tags: hooks
 uses: digest
 -->

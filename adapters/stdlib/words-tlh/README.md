@@ -5,6 +5,7 @@ source: new
 added: 2026-10-30
 writes: record
 network: none
+role: words
 tags: klingon
 -->
 # words-tlh

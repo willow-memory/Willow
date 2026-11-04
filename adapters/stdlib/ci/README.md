@@ -5,6 +5,7 @@ source: box
 added: 2026-10-23
 writes: record, BUGS.md, adapters/stdlib/*/*.py
 network: PyPI, to read each dependency floor's release date
+role: repo
 uses: live, readme, stack, test-shards
 runs-in: repo
 -->

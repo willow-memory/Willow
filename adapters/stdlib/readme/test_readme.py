@@ -60,7 +60,7 @@ FRONT = """# the front page
 
 def card(section="Play", line="A thing.", source="new", added="2026-10-23", **more):
     head = {"section": section, "line": line, "source": source, "added": added,
-            "writes": "nothing", "network": "none", **more}  # fmt: skip
+            "writes": "nothing", "network": "none", "role": "tools", **more}  # fmt: skip
     body = "".join(f"{k}: {v}\n" for k, v in head.items())
     return f"<!-- willow-addon\n{body}-->\n# card\n"
 
@@ -81,7 +81,7 @@ def repo(tmp_path, monkeypatch):
         )
     planned = [{"name": "gamma", "kind": "stdlib", "section": "Play", "line": "Later.",
                 "source": "box", "writes": "to", "network": "loopback",
-                "tags": "later"}]  # fmt: skip
+                "role": "makes", "tags": "later"}]  # fmt: skip
     (tmp_path / "adapters" / "planned.json").write_text(json.dumps(planned))
     (tmp_path / "ADDONS.md").write_text(PAGE)
     (tmp_path / "README.md").write_text(FRONT)
@@ -167,6 +167,11 @@ def test_the_draw_is_the_weeks_and_anyone_can_redo_it(repo):
             "writes is nothing, or any of",
         ),
         ("stdlib/delta", card().replace("network: none\n", ""), "needs network"),
+        ("stdlib/delta", card().replace("role: tools\n", ""), "needs role"),
+        ("stdlib/delta", card(role="everything"), "role is one of"),
+        ("stdlib/delta", card(**{"runs-in": "repo"}), "role is repo exactly when"),
+        ("stdlib/delta", card(role="repo"), "role is repo exactly when"),
+        ("stdlib/delta", card(role="repo", **{"runs-in": "repo"}), None),
         ("stdlib/Delta", card(), "lowercase words joined by -"),
         ("stdlib/delta", card(tags="a, b"), "tags is your one tag"),
         ("stdlib/delta", card(tags="Has Caps"), "tags is your one tag"),
@@ -303,7 +308,7 @@ def test_the_languages_are_the_words_packs_built_and_planned(repo):
     planned = json.loads((repo / "adapters" / "planned.json").read_text())
     planned.append({"name": "words-zh", "kind": "stdlib", "section": "Your own words",
                     "line": "Chinese.", "source": "new", "writes": "record",
-                    "network": "none", "tags": "words"})  # fmt: skip
+                    "network": "none", "role": "words", "tags": "words"})  # fmt: skip
     (repo / "adapters" / "planned.json").write_text(json.dumps(planned))
     got = rd.section_languages(rd.addons())
     assert got.startswith("**2 built, 1 planned**")

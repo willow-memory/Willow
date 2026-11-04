@@ -5,6 +5,7 @@ source: new
 added: 2026-10-23
 writes: record
 network: none
+role: ways
 -->
 # plain
 

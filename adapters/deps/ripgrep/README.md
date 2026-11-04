@@ -7,6 +7,7 @@ needs: the ripgrep program, from the ripgrep wheel on PyPI or your own rg; MIT o
 floor: ripgrep 14.1.0
 writes: nothing
 network: none
+role: tools
 -->
 # ripgrep
 

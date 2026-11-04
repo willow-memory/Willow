@@ -5,6 +5,7 @@ source: new
 added: 2026-10-25
 writes: nothing
 network: none
+role: words
 -->
 # accents
 
