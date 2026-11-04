@@ -245,3 +245,46 @@ def test_on_the_real_tree_a_file_taken_out_and_put_back_gets_its_line_back():
         assert t.lines[i].split() == base.lines[i].split(), path
         tried += 1
     assert tried > 50
+
+
+def test_folders_sort_without_their_slash_and_one_slip_by_hand_keeps_a_folder_a_to_z(
+    scratch,
+):
+    """almanac/ before almanac-keep/, as the tree has them; and a folder with
+    one pair out of turn among many is still A to Z, not an order of its own."""
+    names = [
+        "almanac",
+        "almanac-keep",
+        "deep-links",
+        "decisions",
+        *(
+            f"m{k:02}" for k in range(16)
+        ),  # 20 folders, one slip: as stdlib has 4 in 311
+        "nestor",
+        "pdf",
+        "zotero",
+    ]
+    tree = "# Every file\n\n```\nwillow/\n└── stdlib/\n"
+    for k, n in enumerate(names):
+        tree += f"    {'└' if k == len(names) - 1 else '├'}── {n}/\n"
+        tree += f"    {' ' if k == len(names) - 1 else '│'}   └── {n}.py\n"
+    (scratch / "FILES.md").write_text(tree + "```\n", encoding="utf-8")
+    listed = {f"stdlib/{n}/{n}.py" for n in names}
+    _, _, ended, _ = files.write(
+        scratch / "FILES.md", scratch, listed | {"stdlib/anki/anki.py"}
+    )
+    lines = tree_of(scratch)
+    assert ended == []
+    assert (
+        lines.index("    ├── anki/") == lines.index("    │   └── almanac-keep.py") + 1
+    )
+    # a folder in an order of its own: the new folder at its end, and said
+    small = (
+        "# Every file\n\n```\nwillow/\n└── stdlib/\n    ├── b/\n    │   └── b.py\n"
+        "    └── a/\n        └── a.py\n```\n"
+    )
+    (scratch / "FILES.md").write_text(small, encoding="utf-8")
+    listed = {"stdlib/a/a.py", "stdlib/b/b.py", "stdlib/c/c.py"}
+    _, _, ended, _ = files.write(scratch / "FILES.md", scratch, listed)
+    assert ended == ["stdlib/c/"]
+    assert tree_of(scratch)[-2:] == ["    └── c/", "        └── c.py"]

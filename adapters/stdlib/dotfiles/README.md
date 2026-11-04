@@ -6,6 +6,7 @@ added: 2026-11-02
 writes: to
 network: none
 role: reads
+reads: .bash, .cfg, .conf, .fish, .gitconfig, .ini, .lua, .properties, .sh, .toml, .vim, .zsh
 -->
 # dotfiles
 

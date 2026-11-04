@@ -6,6 +6,7 @@ added: 2026-10-24
 writes: to
 network: none
 role: reads
+reads: .html, .htm, .md, .txt
 tags: policies
 -->
 # clauses

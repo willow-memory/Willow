@@ -8,6 +8,7 @@ floor: numpy 2.1.0; the 2020 rule names 1.19, which has no wheel for Python 3.13
 writes: to
 network: none
 role: reads
+reads: none
 -->
 # star-system
 

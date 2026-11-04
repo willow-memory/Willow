@@ -21,6 +21,10 @@ says how). The first was v0.1.0.
   takes out what's gone with its notes, its corners and bars kept right;
   `check` says what's out. github's create_pr.py runs `write` before it opens
   a pull request
+- `reads` on every reader's card: the kinds of file it reads, by extension
+  or by name (`.eml, .mbox`; `zotero.sqlite`), or `none`. `readme.py
+  check` requires it of a built reader and of no other card, and
+  ci/test_contract.py holds each kind to the reader's own code (#234)
 - `ui/canvas.py`'s commands, the page's steps for an agent or a terminal:
   `make`, `pieces` (by role, each with why; `--role repo` the commands that
   work on willow's own repository), `needs`, `examples`, `plan` (prints the
