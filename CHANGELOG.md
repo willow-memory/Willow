@@ -14,7 +14,7 @@ says how). The first was v0.1.0.
   address only, is asked which of your categories a file `sort` didn't place
   belongs in, given the passages the kernel served from it; only an answer
   naming one of your categories and citing a served passage is handed in, as
-  a suggestion for your seal (#219).
+  a suggestion for your seal (#219)
 - `kart`, a job someone sent you, run over your own folder in Kartikeya's
   sandbox: `take` puts a job that came in a share package at the kernel's
   door as a proposal of yours, and `run` runs only a job you sealed, under
