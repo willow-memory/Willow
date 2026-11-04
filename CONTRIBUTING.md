@@ -112,7 +112,8 @@ checks fail.
 [FILES.md](FILES.md) lists every file in the repo and nothing else, that the
 README's short tree is the repo's top level, that every path a document names
 exists, and that the numbers the README quotes are the repo's. If you add a
-file, add it to FILES.md's tree. If you change a number, the test will tell
+file, add it to FILES.md's tree (`python adapters/stdlib/ci/files.py write`
+does it). If you change a number, the test will tell
 you which document still has the old one.
 
 **Plain words.** Write the README, the cards and the error messages for

@@ -3,7 +3,7 @@ section: For maintainers
 line: This repo's checks as verdict rows on a kernel record, the same every run.
 source: box
 added: 2026-10-23
-writes: record, BUGS.md, adapters/stdlib/*/*.py
+writes: record, BUGS.md, FILES.md, adapters/planned.json, adapters/*/*, adapters/*/*/*
 network: PyPI, to read each dependency floor's release date
 role: repo
 uses: live, readme, stack, test-shards
@@ -82,6 +82,35 @@ owed; 42 git couldn't compare with the base; 2 an entry is missing.
 **Known bugs:** [bugs.py](bugs.py) makes BUGS.md from the tests marked as
 expected to fail, `strict=True` with a reason `bug #N: …`, and refuses any
 other such mark. `test_docs.py` fails when BUGS.md and the tests disagree.
+
+**Every file:** [files.py](files.py) keeps FILES.md's tree to git's list of
+files. `check` says what the tree lacks and what it lists that's gone;
+`write` puts each new file in its folder's order (tests after the code,
+README.md last; at the end of a folder kept in an order of its own, which
+it says), with what the file says of itself (a docstring's first line, a
+Markdown title, `its card`), and takes out what's gone with its notes. A
+file it can't describe goes in with nothing, and it says which.
+[create_pr.py](../github/create_pr.py) runs `write` before a pull request
+opens.
+
+**A to Z:** [order.py](order.py) keeps the lists people add to in order:
+the tables in test_contract.py (COMMANDS, READERS, PILE_EXTRA,
+REPORT_COMMANDS) and ci.py's DEMO_TESTS, each entry with the comments
+above it; planned.json by name; FILES.md's folders kept A to Z, a slip by
+hand put back; and demo/, always. The demo rows run A to Z too, a person's
+folder among the rest. A new
+line then goes in its own place, not at the end where every pull request
+adds one and two collide. `check` names a list out of order, and its test
+holds the repo's lists to it; `write` sorts them, moving nothing else, and
+refuses a table it can't take apart line by line. create_pr.py runs `write`.
+
+**A new add-on:** [new.py](new.py) `NAME` starts an idea from
+adapters/planned.json: its folder, its card (the idea's entry as its
+header, `added` today), a script that refuses every command line until it's
+built, a test holding that, the idea off the list, FILES.md and the add-on
+list written. It exits 42 with what's left for a person: the add-on itself,
+its tests, its line in COMMANDS, a CHANGELOG.md entry, its mutants, and for a
+deps idea its requirements and `floor:` line.
 
 **Whose lines:** [whose.py](whose.py) takes `PATH:FIRST-LAST` places and
 prints the commit that wrote each, with git alone. Given a host add-on's

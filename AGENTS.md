@@ -81,16 +81,21 @@ is the machine, not you; any other is yours.
 ## An add-on, step by step
 
 Each of these has been missed at least once, and each is a check that fails.
+`python adapters/stdlib/ci/new.py NAME` does 1, 3, 4 and 5 from the idea's
+entry, and says what's left.
 
 1. **Its folder** in `adapters/stdlib/` or `adapters/deps/`: the code, its
    tests, and its card, `README.md`, whose header is the idea's entry from
    `adapters/planned.json` with the same `writes` and `network` promises,
    and its `role`.
 2. **Its command line in `COMMANDS`**, in `adapters/stdlib/ci/test_contract.py`,
-   if a person runs it. Missing, it fails the contract test, and every other
-   add-on's mutants then report their accepted breaks as stale.
+   if a person runs it, in its place A to Z
+   (`python adapters/stdlib/ci/order.py write` puts it there). Missing, it
+   fails the contract test, and every other add-on's mutants then report
+   their accepted breaks as stale.
 3. **Its idea out of `adapters/planned.json`**, deletions only.
-4. **Its place in FILES.md's tree**, alphabetically.
+4. **Its place in FILES.md's tree**, alphabetically:
+   `python adapters/stdlib/ci/files.py write` puts it there.
 5. **The add-on list regenerated**, never edited:
    `python adapters/stdlib/readme/readme.py write`.
 6. **A CHANGELOG.md entry** under `## Unreleased`, opening with the name in
@@ -262,4 +267,5 @@ A result tested against what anyone can rerun, as in
 Merge or rebase, then regenerate rather than hand-merge what is generated:
 ADDONS.md and the README's add-on sections come from `readme.py write`, and
 BUGS.md from `python adapters/stdlib/ci/bugs.py write`. CHANGELOG.md and
-FILES.md are merged by hand: both sides' lines, in their order.
+FILES.md are merged by hand: both sides' lines, in their order (or
+`files.py write` after the merge, for FILES.md).
