@@ -68,6 +68,9 @@ nav.side h3{margin:16px 6px 8px}
 #shelf .tree{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:8px;align-items:start;margin-top:8px}
 #shelf .tree h3{grid-column:1/-1;margin:10px 0 0}
 #shelf .node{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:8px 10px!important;height:100%}
+#shelf .grab{cursor:grab}#shelf .grab:active{cursor:grabbing}
+.adding #stage .chips{min-height:64px;outline:1px dashed var(--acc);outline-offset:3px;background:var(--accl);align-content:flex-start}
+.adding #stage .chips:empty{align-items:center;justify-content:center}.adding #stage .chips:empty::after{content:"Drop it here";color:var(--acc);font-size:13.5px}
 #shelf .node.on{border-color:var(--acc);background:var(--accl)}
 #shelf .node.sub{grid-column:1/-1;margin-left:24px;height:auto}
 #shelf .node.off{background:transparent;border-style:dashed}
@@ -241,9 +244,13 @@ const FACT=new Set(['no-install','needs-install','offline','this-machine','onlin
 // a tag you can click: every piece that shares it
 function topics(p){return(p.tags||[]).filter(t=>!FACT.has(t)).map(t=>el('button',{class:'topic',text:'#'+t,title:'every piece tagged '+t,onclick:e=>{e.stopPropagation();find('#'+t)}}))}
 function stageTitle(p){const k=stageOf(p);return STAGES.find(s=>s.key===k).title}
+// an add-on card you can drag into the step's pieces, at the place you drop it
+function addable(n,e){if(all().includes(n)||cantAdd(n))return e;e.draggable=true;e.classList.add('grab');if(!e.title)e.title='drag into the step, or tick it';
+ e.addEventListener('dragstart',ev=>{if(ev.target.tagName==='INPUT'){ev.preventDefault();return}drag={add:n};ev.dataTransfer.effectAllowed='copy';ev.dataTransfer.setData('text/plain',n);document.body.classList.add('adding')});
+ e.addEventListener('dragend',()=>{drag=null;document.body.classList.remove('adding')});return e}
 function pieceCard(p,why){const used=all().includes(p.name),idea=!!cantAdd(p.name);
- return el('div',{class:'piece'+(idea?' idea':'')+(used?' used':''),title:idea?cantAdd(p.name):used?'already in your flow':'click to add',onclick:()=>{if(!idea&&!used)addPiece(p.name)}},
-  el('b',{text:p.name+(used?'  ✓':'')}),el('small',{text:(p.runs_in==='repo'?'works on willow itself · ':'')+p.line}),...plainTags(p),...topics(p),why?el('div',{class:'where',text:'goes in: '+stageTitle(p)+(why?' · '+why:'')}):null)}
+ return addable(p.name,el('div',{class:'piece'+(idea?' idea':'')+(used?' used':''),title:idea?cantAdd(p.name):used?'already in your flow':'click to add',onclick:()=>{if(!idea&&!used)addPiece(p.name)}},
+  el('b',{text:p.name+(used?'  ✓':'')}),el('small',{text:(p.runs_in==='repo'?'works on willow itself · ':'')+p.line}),...plainTags(p),...topics(p),why?el('div',{class:'where',text:'goes in: '+stageTitle(p)+(why?' · '+why:'')}):null))}
 const BASE={};
 async function baseline(path){if(BASE[path])return;BASE[path]={loading:true};flow();BASE[path]=await api('baseline?path='+encodeURIComponent(path));flow()}
 const n2=(n,w)=>n.toLocaleString()+' '+w+(n===1?'':'s');
@@ -358,9 +365,9 @@ function chips(s){const box=el('div',{class:'chips'}),list=S.stages[s.key]??=[];
   const near=(p.near||[]).filter(m=>P[m]?.state==='built'&&!all().includes(m)),goes=near.length?el('div',{class:'goes'},'goes well with ',...near.flatMap((m,k)=>[k?', ':'',el('button',{text:m,title:P[m].line+' (click to add)',onclick:()=>addPiece(m)})])):null;
   const c=el('div',{class:'chip',draggable:'true',title:'drag to reorder'},el('button',{class:'x',text:'×',title:'take it out',onclick:()=>removePiece(n)}),el('b',{text:n}),(S.args||{})[n]&&S.args[n]!=='--box {box}'?el('span',{class:'runs',title:'the options it runs with',text:S.args[n].replace('--box {box}','').trim()}):null,el('small',{text:p.line}),...plainTags(p),...topics(p),pulls,looks,goes);
   c.addEventListener('dragstart',e=>{drag={stage:s.key,i};e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain',n)});c.addEventListener('dragend',()=>{drag=null});box.append(c)});
- box.addEventListener('dragover',e=>{if(!drag||drag.stage!==s.key)return;e.preventDefault();box.classList.add('on');mark(box,slot(box,e))});
+ box.addEventListener('dragover',e=>{if(!drag||(!drag.add&&drag.stage!==s.key))return;e.preventDefault();if(drag.add)e.dataTransfer.dropEffect='copy';box.classList.add('on');mark(box,slot(box,e))});
  box.addEventListener('dragleave',e=>{if(!box.contains(e.relatedTarget)){box.classList.remove('on');mark(box,-1)}});
- box.addEventListener('drop',e=>{e.preventDefault();box.classList.remove('on');if(!drag||drag.stage!==s.key)return;let j=slot(box,e);const[n]=list.splice(drag.i,1);if(drag.i<j)j--;list.splice(j,0,n);drag=null;changed()});
+ box.addEventListener('drop',e=>{e.preventDefault();box.classList.remove('on');document.body.classList.remove('adding');if(drag?.add){const n=drag.add,j=slot(box,e);drag=null;addPiece(n);const L=S.stages[s.key]||[],k=L.indexOf(n);if(k>=0&&k!==j){L.splice(k,1);L.splice(Math.min(j,L.length),0,n);changed()}return}if(!drag||drag.stage!==s.key)return;let j=slot(box,e);const[n]=list.splice(drag.i,1);if(drag.i<j)j--;list.splice(j,0,n);drag=null;changed()});
  return box}
 function stageSummary(s){if(s.key==='folders')return S.folders.length?S.folders.length+' folder'+(S.folders.length===1?'':'s'):'none yet';
  if(s.key==='kernel'){const bs=S.folders.map(f=>BASE[f.path]).filter(b=>b&&b.ok);return bs.length?bs.reduce((t,b)=>t+b.read,0).toLocaleString()+' files it can read, '+bs.reduce((t,b)=>t+b.cant.reduce((u,c)=>u+c.files,0),0).toLocaleString()+' it can’t':'always there'}
@@ -416,10 +423,10 @@ function shelf(){const s=STAGES.find(x=>x.key===cur),head=document.getElementByI
   const out=(p.hard||[]).filter(h=>!inStage.has(h)),opt=(p.soft||[]).filter(h=>P[h]);
   const open=openRows.has(n),tw=el('span',{class:'tw'+(kids.length?'':' none'),text:kids.length?(open?'▾':'▸'):'',title:kids.length?kids.length+' that need it':''});
   if(kids.length)tw.onclick=()=>{open?openRows.delete(n):openRows.add(n);draw()};
-  list.append(el('div',{class:'node'+(no&&!used?' off':'')+(depth?' sub':'')+(used?' on':''),style:'padding-left:'+(depth*18)+'px'},tw,cb,el('div',{class:'what'},el('b',{text:n}),kids.length?el('small',{text:kids.length+' below need it'}):null,el('small',{text:p.line}),...plainTags(p),...topics(p),
+  list.append(addable(n,el('div',{class:'node'+(no&&!used?' off':'')+(depth?' sub':'')+(used?' on':''),style:'padding-left:'+(depth*18)+'px'},tw,cb,el('div',{class:'what'},el('b',{text:n}),kids.length?el('small',{text:kids.length+' below need it'}):null,el('small',{text:p.line}),...plainTags(p),...topics(p),
    out.length?el('div',{class:'note',text:'needs '+out.join(', ')+(out.every(h=>all().includes(h))?' ✓':' (added with it)')}):null,
    opt.length?el('div',{class:'note opt',text:'works with '+opt.join(', ')+', if you add '+(opt.length===1?'it':'them')}):null,
-   no&&!used?el('div',{class:'note no',text:no}):null)));
+   no&&!used?el('div',{class:'note no',text:no}):null))));
   if(open)for(const c of kids)node(c,depth+1,[...trail,n])};
  const draw=()=>{list.innerHTML='';const w=q.value.toLowerCase();
   if(w){for(const p of mine.filter(p=>(p.name+' '+p.line+' '+(p.tags||[]).join(' ')).toLowerCase().includes(w)).sort((a,b)=>order(a.name,b.name)))node(p.name,0,[]);return}
