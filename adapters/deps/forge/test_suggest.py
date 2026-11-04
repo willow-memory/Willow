@@ -605,10 +605,17 @@ def test_build_assembles_the_sealed_steps_runs_the_stack_and_keeps_the_page(
 
 
 def test_build_leaves_out_what_assemble_refuses_and_says_so(box, tmp_path):
-    sealed_stack(box, "what is due, and my pdf", "due=coming-up")
+    """readme works on willow's own repository, so assemble won't copy it."""
+    sealed_stack(box, "what is due, and my readme", "due=coming-up")
     to = tmp_path / "st"
     data = run(
-        "build", "what is due, and my pdf", "--box", str(box), "--to", str(to), "--json"
+        "build",
+        "what is due, and my readme",
+        "--box",
+        str(box),
+        "--to",
+        str(to),
+        "--json",
     )
     assert data.returncode == 42
     doc = holds_the_shape(json.loads(data.stdout), data.returncode)
@@ -616,7 +623,30 @@ def test_build_leaves_out_what_assemble_refuses_and_says_so(box, tmp_path):
         g["name"] for g in doc["groups"]
     ] == ["built", "left out"]
     left = doc["groups"][1]["rows"][0]
-    assert left["where"] == "adapters/stdlib/pdf/" and "deps add-on" in left["what"]
+    assert left["where"] == "adapters/stdlib/readme/"
+    assert "works on willow's own repository" in left["what"]
+    assert not (to / "stack/adapters/stdlib/readme").exists()
+
+
+def test_build_puts_a_deps_step_in_its_own_folder_and_finds_it_there_again(
+    box, tmp_path
+):
+    """pdf comes in under adapters/deps/, as in willow, with its packages
+    unchecked (build names no Python), so it is flagged, not left out; built
+    again, it is already there."""
+    sealed_stack(box, "what is due, and my pdf", "due=coming-up")
+    to = tmp_path / "st"
+    argv = ("build", "what is due, and my pdf", "--box", str(box), "--to", str(to))
+    data = run(*argv, "--json")
+    assert data.returncode == 42
+    doc = holds_the_shape(json.loads(data.stdout), data.returncode)
+    assert doc["said"].endswith("0 left out")
+    built = {r["where"]: r["what"] for r in doc["groups"][0]["rows"]}
+    assert "packages unreachable" in built["adapters/deps/pdf/"]
+    assert (to / "stack/adapters/deps/pdf").is_dir()
+    assert not (to / "stack/adapters/stdlib/pdf").exists()
+    again = run(*argv)
+    assert "pdf: already in the stack" in again.stdout
 
 
 def test_steps_of_reads_a_stack_file_as_the_stack_add_on_does():

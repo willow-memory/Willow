@@ -88,8 +88,10 @@ puts each step's add-on into the folder named with `ui/assemble.py`, which
 hashes every file onto the stack's own record and checks each contract;
 writes the stack file beside it; and runs the [stack](../../stdlib/stack/)
 add-on over your box, keeping the page at `<STACK>/page.md`. A step it can't
-copy (a deps add-on, one that works only in this repository) is said under
-`left out`, never guessed at. It refuses while no stack is sealed for these
+copy (one that works only in this repository) is said under `left out`,
+never guessed at. A deps add-on goes in under `adapters/deps/`, with its
+packages unchecked, since build names no Python: its step is flagged until
+you add them. It refuses while no stack is sealed for these
 words: the seal is the one gate between a suggestion and a run. The folder's
 parent must exist; it makes no folder but the one you named.
 
