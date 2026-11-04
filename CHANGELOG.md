@@ -10,6 +10,11 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `ci`'s `adapters/stdlib/ci/new.py NAME` starts an add-on from its idea on
+  adapters/planned.json: its folder, its card with the idea's entry as its
+  header, a script that refuses every command line until it's built and a
+  test holding that, the idea off the list, FILES.md and the add-on list
+  written; it exits 42 with what's left for a person (#237)
 - `ci`'s `adapters/stdlib/ci/files.py` keeps FILES.md's tree to the repo's
   files: `write` puts each new file in its folder's own order with what it
   says of itself (its docstring's first line, its title, `its card`) and
