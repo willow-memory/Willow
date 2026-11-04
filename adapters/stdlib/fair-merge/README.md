@@ -5,6 +5,7 @@ source: bot
 added: 2026-10-29
 writes: nothing
 network: none
+role: tools
 tags: pile
 -->
 # fair-merge

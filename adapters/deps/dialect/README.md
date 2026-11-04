@@ -7,6 +7,7 @@ needs: wordfreq; Apache-2.0, its data CC BY-SA 4.0
 floor: wordfreq 3.1.0; the 2020 rule names 2.3.2, and every release before 3.1.0 imports pkg_resources, which a Python 3.13 environment doesn't have
 writes: nothing
 network: none
+role: page
 -->
 # dialect
 

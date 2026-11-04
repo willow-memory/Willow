@@ -5,6 +5,7 @@ source: box
 added: 2026-10-28
 writes: record
 network: none
+role: tools
 tags: pile
 uses: pile-rank, scan
 -->

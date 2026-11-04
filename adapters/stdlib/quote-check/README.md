@@ -5,6 +5,7 @@ source: box
 added: 2026-10-23
 writes: nothing
 network: none
+role: tools
 -->
 # quote-check
 

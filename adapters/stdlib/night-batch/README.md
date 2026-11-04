@@ -5,6 +5,7 @@ source: new
 added: 2026-11-02
 writes: record
 network: loopback
+role: suggests
 uses: local-model
 -->
 # night-batch

@@ -10,6 +10,11 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `role` on every add-on's card and every entry in adapters/planned.json:
+  the part it plays in a stack (reads, words, page, suggests, ways, guards,
+  makes, tools, repo), each said in adapters/README.md. `readme.py check`
+  requires it, one of those, and holds `role: repo` to exactly the cards
+  with `runs-in: repo` (#231)
 - `bot-venv --find` lists every venv under a folder: inside willow-bot or
   out, its packages, the bot's lock for it (none, holds or drifted), and the
   services running from it, read from /proc; the steward's venv inventory

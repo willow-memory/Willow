@@ -5,6 +5,7 @@ source: new
 added: 2026-11-03
 writes: record
 network: loopback
+role: suggests
 uses: sort
 output: report
 -->

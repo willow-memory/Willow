@@ -41,6 +41,7 @@ What it reads:
       added: 2026-10-22
       writes: nothing
       network: none
+      role: page
       tags: health
       -->
 
@@ -51,6 +52,20 @@ What it reads:
 A name is built when its folder exists, and then it must not also be planned.
 Nothing is decided by hand in the list: building an add-on is what turns its
 an idea into a built one.
+
+`role` is the part it plays in a stack, which the UI's steps are made of:
+
+    reads     turns a kind of file into text the kernel can search
+    words     a words list, a language's or your own, that changes what a
+              question finds
+    page      runs with nothing but your record, as a step on your page
+    suggests  suggests an answer, held until you seal it, or checks a model
+              that does
+    ways      where you ask from: a terminal, an editor, an assistant, a page
+    guards    keeps something from being shown or done: a hook, a filter
+    makes     makes a file for another program, where you point it
+    tools     you run it yourself, with words or options of its own
+    repo      works on willow's own repository, as runs-in: repo says
 
 What an add-on leans on is on its card, never found by reading its code:
 
@@ -149,7 +164,19 @@ EXAMPLES = {
     "Play": ["quiz", "life"],
     "For maintainers": ["mutants", "ci"],
 }  # fmt: skip
-FIELDS = {"section", "line", "source", "writes", "network"}
+FIELDS = {"section", "line", "source", "writes", "network", "role"}
+#: the part an add-on plays in a stack (the docstring says each); ui/ builds on it
+ROLES = {
+    "reads",
+    "words",
+    "page",
+    "suggests",
+    "ways",
+    "guards",
+    "makes",
+    "tools",
+    "repo",
+}
 #: what an add-on leans on, by name: optional, and checked against the list
 LEANS = ("uses", "looks-for")
 RUNS_IN = {"repo"}
@@ -255,6 +282,10 @@ def addons() -> list[dict]:
             raise Refused(f"{where}: added is the date it was built, YYYY-MM-DD")
         if a.get("runs-in", "repo") not in RUNS_IN:
             raise Refused(f"{where}: runs-in is repo, or left out")
+        if a["role"] not in ROLES:
+            raise Refused(f"{where}: role is one of {', '.join(sorted(ROLES))}: {a['role']!r}")  # fmt: skip
+        if (a["role"] == "repo") != (a.get("runs-in") == "repo"):
+            raise Refused(f"{where}: role is repo exactly when runs-in is repo")
         if a.get("output", "report") not in OUTPUTS:
             raise Refused(f"{where}: output is report, or left out")
     names = {a["name"]: a["built"] for a in out}

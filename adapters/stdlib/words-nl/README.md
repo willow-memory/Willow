@@ -5,6 +5,7 @@ source: new
 added: 2026-10-24
 writes: record
 network: none
+role: words
 tags: dutch
 -->
 # words-nl

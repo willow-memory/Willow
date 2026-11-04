@@ -5,6 +5,7 @@ source: new
 added: 2026-10-30
 writes: to
 network: none
+role: makes
 -->
 # make-it-so
 

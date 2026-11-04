@@ -5,6 +5,7 @@ source: new
 added: 2026-11-02
 writes: to
 network: none
+role: reads
 -->
 # csv-rows
 

@@ -5,6 +5,7 @@ source: new
 added: 2026-10-24
 writes: record
 network: loopback
+role: ways
 tags: everyday
 looks-for: digest, words-de, words-es, words-fr, words-pt
 -->

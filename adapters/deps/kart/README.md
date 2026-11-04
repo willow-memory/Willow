@@ -8,6 +8,7 @@ programs: bwrap
 floor: kartikeya 0.0.1
 writes: record, to
 network: none
+role: tools
 uses: share
 -->
 # kart

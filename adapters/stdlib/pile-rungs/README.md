@@ -5,6 +5,7 @@ source: bot
 added: 2026-10-28
 writes: nothing
 network: none
+role: tools
 tags: pile
 uses: pile-rank
 -->
