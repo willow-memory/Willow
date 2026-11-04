@@ -10,6 +10,10 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `assemble.py kernel` puts this willow's kernel.py and vectors in a stack
+  in place of the ones it was made with, only if the stack's record verifies
+  under the new kernel and, with --python, every add-on's tests pass on it;
+  else the old ones are back and nothing is written (#222)
 - `sort-ask`, the rung after `sort`: a model on this machine, at a loopback
   address only, is asked which of your categories a file `sort` didn't place
   belongs in, given the passages the kernel served from it; only an answer
