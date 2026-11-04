@@ -210,6 +210,17 @@ def demo(name: str):
     return gate
 
 
+def needing(needs):
+    """The gate it decorates answers `needs()` with what this machine
+    lacks for it, or None: what `ci.py needs` asks, with no run."""
+
+    def put(gate):
+        gate.needs = needs
+        return gate
+
+    return put
+
+
 def deps_add_on(name: str, pins: str = "requirements.txt"):
     """A deps add-on's tests in a fresh virtual environment of its own, with
     `pins` and pytest installed there, so one add-on's packages never decide
@@ -220,11 +231,18 @@ def deps_add_on(name: str, pins: str = "requirements.txt"):
     anything is installed; only the tests' own output is hashed, never the
     installer's."""
 
+    def needs() -> str | None:
+        """A program its card's programs: names that this machine lacks;
+        also what `ci.py needs` asks, so it can say so without a run."""
+        lacks = missing_tools(*programs_of(name))
+        return f"{lacks}, which its card's programs: names" if lacks else None
+
+    @needing(needs)
     def gate() -> tuple[str, str, str | None]:
         here = ROOT / "adapters" / "deps" / name
-        lacks = missing_tools(*programs_of(name))
+        lacks = needs()
         if lacks:
-            return UNREACHABLE, "", f"{lacks}, which its card's programs: names"
+            return UNREACHABLE, "", lacks
         with tempfile.TemporaryDirectory() as tmp:
             env = Path(tmp) / "env"
             got = subprocess.run(

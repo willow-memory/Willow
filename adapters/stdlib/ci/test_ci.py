@@ -313,5 +313,8 @@ def test_a_program_a_deps_card_names_and_this_machine_lacks_is_unreachable(
         state, said, why = ci.deps_add_on("ocr", pins)()  # Made, were it run
         assert (state, said) == (ci.UNREACHABLE, "")
         assert why == "tesseract not on PATH, which its card's programs: names"
+        # the same, asked without a run, for `ci.py needs`
+        assert ci.deps_add_on("ocr", pins).needs() == why
+    assert ci.deps_add_on("pdf").needs() is None
     with pytest.raises(Made):  # pdf names no program: on to its install
         ci.deps_add_on("pdf")()
