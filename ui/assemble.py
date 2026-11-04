@@ -8,6 +8,7 @@ a time, each addition a row on the stack's own kernel record. The UI's
     python ui/assemble.py status  [--to DIR]
     python ui/assemble.py check   [--to DIR]
     python ui/assemble.py vectors [--to DIR]
+    python ui/assemble.py kernel  [--pin FILE] [--to DIR] [--python EXE]
 
 A stack lives in --to, ~/willow-stack unless you say, and never inside this
 repository:
@@ -29,6 +30,13 @@ its own tests, if --python names an interpreter with pytest; else its tests
 are `unreachable`, said. `refresh` copies a piece again from this willow as
 it is now. `vectors` puts the kernel's vectors into a stack made before they
 were carried. `check` re-hashes every file against STACK.json.
+
+`kernel` puts this willow's kernel.py in place of the stack's, with its
+vectors, since a kernel and its contract change together (`--pin` as for
+`init`). Only a stack whose files are the ones put in; the new kernel must
+verify the stack's record as it stands, and with --python every add-on's
+tests run again on it. Any of that failing puts the old kernel and vectors
+back and writes nothing; done, it is one `kernel` row, both hashes named.
 
 Exit codes, the kernel's: 0 done; 42 something absent or unreachable; 2
 refused, or a file changed since it was put in.
@@ -74,6 +82,7 @@ def paths(to: Path):
 
 def load_kernel(stack: Path):
     sys.path.insert(0, str(stack))
+    sys.modules.pop("kernel", None)  # the stack's own, as it is now: `kernel` swaps it
     import kernel  # noqa: E402
 
     return kernel
@@ -333,6 +342,95 @@ def refresh(names: list[str], to: Path) -> int:
     return ALIVE
 
 
+def swap_kernel(to: Path, pin: Path | None, python: str | None) -> int:
+    """This willow's kernel.py and vectors in place of the stack's, kept only
+    when the record still verifies and, with --python, every add-on's tests
+    pass on it; else the old ones go back and nothing is written."""
+    stack, box, _, _ = paths(to)
+    m = manifest(stack)
+    willow = Path(m["willow"])
+    src, cases = willow / "kernel.py", willow / "vectors" / "cases.json"
+    if not src.is_file():
+        print(f"refused: no kernel.py in {willow}", file=sys.stderr)
+        return REFUSED
+    new = sha(src)
+    if pin is not None and json.loads(pin.read_text(encoding="utf-8"))["sha256"] != new:
+        print(f"refused: willow's kernel.py isn't the one {pin} pins", file=sys.stderr)
+        return REFUSED
+    if new == m["kernel"]:
+        print(f"kernel.py is already willow's ({new[:12]}); nothing to do")
+        return ALIVE
+    with open(os.devnull, "w") as quiet:  # check() says each drift; said once below
+        out, sys.stdout = sys.stdout, quiet
+        try:
+            drifted = check(to) != ALIVE
+        finally:
+            sys.stdout = out
+    if drifted:
+        print("refused: a file here isn't the one put in (see check); the kernel"
+              " isn't swapped under it", file=sys.stderr)  # fmt: skip
+        return REFUSED
+    commit = subprocess.run(["git", "-C", str(willow), "rev-parse", "HEAD"],
+                            capture_output=True, text=True).stdout.strip()  # fmt: skip
+    vec = stack / "vectors" / "cases.json"
+    old_k, old_v = (
+        (stack / "kernel.py").read_bytes(),
+        vec.read_bytes() if vec.is_file() else None,
+    )
+    shutil.copy2(src, stack / "kernel.py")
+    if cases.is_file():
+        vec.parent.mkdir(exist_ok=True)
+        shutil.copy2(cases, vec)
+
+    def back(said: str) -> int:
+        (stack / "kernel.py").write_bytes(old_k)
+        if old_v is None:
+            vec.unlink(missing_ok=True)
+        else:
+            vec.write_bytes(old_v)
+        print(f"refused: {said}; the old kernel and vectors are back", file=sys.stderr)
+        return REFUSED
+
+    r = subprocess.run([sys.executable, str(stack / "kernel.py"), "verify", "--box", str(box)],
+                       cwd=stack, capture_output=True, text=True, timeout=300, env=ENV)  # fmt: skip
+    if r.returncode != ALIVE:
+        return back(
+            f"the new kernel doesn't verify this stack's record (exit {r.returncode})"
+        )
+    failed, ran = [], 0
+    if python is not None:
+        for name in sorted(m["addons"]):
+            t = tests(stack, stack / "adapters" / "stdlib" / name, python)
+            ran += t["state"] != "unreachable"
+            if t["state"] == "failed":
+                failed.append(name)
+        if failed:
+            # a piece willow changed with its kernel: refreshed, it may hold
+            moved = [n for n in failed if (willow / "adapters" / "stdlib" / n).is_dir()
+                     and {str(p.relative_to(willow / "adapters" / "stdlib" / n)): sha(p)
+                          for p in sorted((willow / "adapters" / "stdlib" / n).rglob("*"))
+                          if p.is_file() and "__pycache__" not in p.parts}
+                     != m["addons"][n]["files"]]  # fmt: skip
+            hint = (f" (willow's {', '.join(moved)} changed since; `refresh` it, then"
+                    " `kernel` again)" if moved else "")  # fmt: skip
+            return back(
+                f"on the new kernel, the tests of {', '.join(failed)} fail{hint}"
+            )
+    was = m["kernel"]
+    m.update(kernel=new, kernel_source=commit, pinned=True if pin else None)
+    if vec.is_file():
+        m["vectors"] = sha(vec)
+    save(stack, m)
+    kernel = load_kernel(stack)
+    kernel.append(box, kernel.now(), "kernel", who="assembler", piece="kernel",
+                  source=commit, was=was, sha256=new, vectors=m.get("vectors"),
+                  tests=f"{ran} passed" if python else "unreachable")  # fmt: skip
+    print(f"kernel.py {was[:12]} -> {new[:12]}, from willow {commit[:7]}; the record verifies"
+          + (f"; {ran} add-ons' tests pass on it" if python else
+             "; add-ons' tests not run (no --python)"))  # fmt: skip
+    return ALIVE if python else ESCALATE
+
+
 def status(to: Path) -> int:
     stack, box, _, _ = paths(to)
     m = manifest(stack)
@@ -410,6 +508,9 @@ def main(argv: list[str]) -> int:
         return status(to)
     if verb == "check" and not names:
         return check(to)
+    if verb == "kernel" and not names:
+        pin = Path(opts["--pin"]) if opts.get("--pin") else None
+        return swap_kernel(to, pin, opts.get("--python"))
     if verb == "vectors" and not names:
         stack, box, _, _ = paths(to)
         m = manifest(stack)
