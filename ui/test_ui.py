@@ -396,6 +396,50 @@ def test_a_deps_add_on_comes_in_only_with_its_packages_already_there(tmp_path, c
     assert assemble.version_key("2.0rc1") == (2, 0)
 
 
+def test_a_piece_is_taken_out_whole_and_said_on_the_record(tmp_path, capsys):
+    """`remove` takes a piece's folder and its STACK.json entry, one `remove`
+    row each; not a piece one staying imports, one whose files changed, or
+    one that isn't here, and then nothing is taken out."""
+    to = tmp_path / "willow-stack"
+    assert assemble.main(["init", "--to", str(to)]) == assemble.ALIVE
+    assert assemble.add(["hook-start", "todo"], to, None) != assemble.REFUSED
+    stack = to / "stack"
+    stdlib = stack / "adapters" / "stdlib"
+    m = assemble.manifest(stack)
+    assert "digest" in m["addons"]["hook-start"]["hard"]
+    rows = lambda: [  # noqa: E731
+        json.loads(r) for r in (to / "box" / "record.jsonl").read_text().splitlines()
+    ]
+    before = len(rows())
+    # hook-start imports digest: digest alone is refused
+    assert assemble.main(["remove", "digest", "--to", str(to)]) == assemble.REFUSED
+    assert "hook-start import digest" in capsys.readouterr().err
+    assert assemble.remove(["not-here"], to) == assemble.REFUSED
+    (stdlib / "todo" / "todo.py").write_text("# yours now\n")
+    assert assemble.remove(["todo"], to) == assemble.REFUSED
+    assert "isn't deleted" in capsys.readouterr().err
+    assert len(rows()) == before and (stdlib / "todo" / "todo.py").is_file()
+    # both together go, one row each, and every file left is the one put in
+    assert assemble.remove(["hook-start", "digest"], to) == assemble.ALIVE
+    assert not (stdlib / "hook-start").exists() and not (stdlib / "digest").exists()
+    assert {"hook-start", "digest"}.isdisjoint(assemble.manifest(stack)["addons"])
+    gone = [r for r in rows()[before:] if r["kind"] == "remove"]
+    assert [r["piece"] for r in gone] == ["hook-start", "digest"]
+    assert (
+        gone[0]["files"]
+        == assemble.hashlib.sha256(
+            json.dumps(m["addons"]["hook-start"]["files"], sort_keys=True).encode()
+        ).hexdigest()
+    )
+    (stdlib / "todo" / "todo.py").write_bytes(
+        (canvas.WILLOW / "adapters" / "stdlib" / "todo" / "todo.py").read_bytes()
+    )
+    assert assemble.check(to) == assemble.ALIVE
+    assert assemble.load_kernel(stack).main(["verify", "--box", str(to / "box")]) == 0
+    # and a piece taken out can be added again
+    assert assemble.add(["digest"], to, None) != assemble.REFUSED
+
+
 def test_a_bad_command_line_is_refused():
     assert canvas.main(["--stray"]) == assemble.REFUSED
     assert canvas.main(["--port", "x"]) == assemble.REFUSED

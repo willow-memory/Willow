@@ -76,6 +76,7 @@ its own:
 
     python ui/assemble.py status            # what's in it, what's looked for and absent
     python ui/assemble.py add NAME...       # an add-on, and what its card uses
+    python ui/assemble.py remove NAME...    # an add-on out again, said on the record
     python ui/assemble.py check             # every file still the one put in
     python ui/assemble.py kernel --python EXE  # this willow's kernel and vectors in place of the stack's
 
@@ -83,6 +84,12 @@ A deps add-on (kart, forge, pdf) comes in too, to `adapters/deps/`, but only
 when the Python you name with `--python` already has each package it needs, at
 its floor or newer. Nothing is installed for it: one missing is refused, and
 says which, so you install it where you choose.
+
+`remove` takes an add-on out: its folder and its line in `STACK.json`, and
+one row on the stack's record naming the files it held, so the record still
+says it was there. Not one an add-on that stays imports (take them out
+together), and not one whose files changed since it was put in, so nothing
+of yours is deleted.
 
 A stack keeps the kernel it was made with until you swap it. `kernel` does,
 and keeps the new one only if the stack's record verifies under it and every

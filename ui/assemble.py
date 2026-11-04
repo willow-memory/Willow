@@ -5,6 +5,7 @@ a time, each addition a row on the stack's own kernel record. The UI's
     python ui/assemble.py init    [--pin FILE] [--to DIR]
     python ui/assemble.py add     NAME... [--to DIR] [--python EXE]
     python ui/assemble.py refresh NAME... [--to DIR]
+    python ui/assemble.py remove  NAME... [--to DIR]
     python ui/assemble.py status  [--to DIR]
     python ui/assemble.py check   [--to DIR]
     python ui/assemble.py vectors [--to DIR]
@@ -33,7 +34,8 @@ add-on that `runs-in: repo` is refused: it works on willow's own repository.
 Each one added gets its contract check (no arguments: refused, exit 2) and
 its own tests, if --python names an interpreter with pytest; else its tests
 are `unreachable`, said. `refresh` copies a piece again from this willow as
-it is now. `vectors` puts the kernel's vectors into a stack made before they
+it is now. `remove` takes a piece out, one `remove` row on the record; not
+one a piece staying imports, nor one whose files changed. `vectors` puts the kernel's vectors into a stack made before they
 were carried. `check` re-hashes every file against STACK.json.
 
 `kernel` puts this willow's kernel.py in place of the stack's, with its
@@ -437,6 +439,48 @@ def refresh(names: list[str], to: Path) -> int:
     return ALIVE
 
 
+def remove(names: list[str], to: Path) -> int:
+    """A piece taken out of the stack: its folder gone, off STACK.json, one
+    `remove` row naming the files it held, so the record says it was here and
+    went. Refused, with nothing taken out, for a piece that isn't here, one a
+    piece staying imports, or one whose files aren't the ones put in."""
+    stack, box, _, _ = paths(to)
+    m = manifest(stack)
+    kernel = load_kernel(stack)
+    going = set(names)
+    for name in names:
+        if name not in m["addons"]:
+            print(f"refused: {name} isn't in this stack", file=sys.stderr)
+            return REFUSED
+        leaning = sorted(n for n, e in m["addons"].items()
+                         if n not in going and name in e["hard"])  # fmt: skip
+        if leaning:
+            print(f"refused: {', '.join(leaning)} import {name}; take them out with it",
+                  file=sys.stderr)  # fmt: skip
+            return REFUSED
+        d = piece(stack, name, m)
+        now = {str(p.relative_to(d)): sha(p) for p in sorted(d.rglob("*"))
+               if p.is_file() and "__pycache__" not in p.parts}  # fmt: skip
+        if now != m["addons"][name]["files"]:
+            print(f"refused: {name}'s files aren't the ones put in (see check); a"
+                  " change of yours isn't deleted", file=sys.stderr)  # fmt: skip
+            return REFUSED
+    for name in dict.fromkeys(names):
+        e = m["addons"][name]
+        shutil.rmtree(piece(stack, name, m))
+        del m["addons"][name]
+        save(stack, m)
+        files = hashlib.sha256(
+            json.dumps(e["files"], sort_keys=True).encode()
+        ).hexdigest()
+        kernel.append(box, kernel.now(), "remove", who="assembler", piece=name,
+                      files=files, **({"folder": "deps"} if e.get("kind") == "deps" else {}))  # fmt: skip
+        wanted = sorted(n for n, o in m["addons"].items() if name in o["soft"])
+        print(f"- {name:<14} taken out" + (f"; looked for by {', '.join(wanted)}, who do without it"
+                                            if wanted else ""))  # fmt: skip
+    return ALIVE
+
+
 def swap_kernel(to: Path, pin: Path | None, python: str | None) -> int:
     """This willow's kernel.py and vectors in place of the stack's, kept only
     when the record still verifies and, with --python, every add-on's tests
@@ -602,6 +646,8 @@ def main(argv: list[str]) -> int:
         return add(names, to, opts.get("--python"))
     if verb == "refresh" and names:
         return refresh(names, to)
+    if verb == "remove" and names:
+        return remove(names, to)
     if verb == "status" and not names:
         return status(to)
     if verb == "check" and not names:
