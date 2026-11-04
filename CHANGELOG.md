@@ -20,7 +20,7 @@ says how). The first was v0.1.0.
   first in a step is what the examples run, or the readers your folders'
   files need; it says that the page shows what says most first, so the
   order of its steps only breaks ties; "sealed" and "changed since you
-  sealed it" come from the record, wherever the seal was made
+  sealed it" come from the record, wherever the seal was made (#232)
 - `role` on every add-on's card and every entry in adapters/planned.json:
   the part it plays in a stack (reads, words, page, suggests, ways, guards,
   makes, tools, repo), each said in adapters/README.md. `readme.py check`
