@@ -1723,20 +1723,26 @@ willow/
 │   │       ├── babbage.md    Babbage's
 │   │       └── ada.md        Ada Lovelace's
 │   ├── percus-yevick/        a study, in draft: can a physics derivation be found rather than generated
+│   │   ├── arms.py           the study's reported arms, beside the pass rules. None is scored
+│   │   ├── expectations.json  what the author expects each step to come to, graded after
 │   │   ├── fetch.py          the stack's sources, fetched again and held to their hashes
 │   │   ├── models/
 │   │   │   ├── gemma3-4b.md  Gemma 3 4B's card, read from its weights file
-│   │   │   └── qwen3-8b.md   Qwen3 8B's card, read from its weights file
+│   │   │   ├── qwen3-8b.md   Qwen3 8B's card, read from its weights file
+│   │   │   └── qwen3.8-flash-next-iq3_s.md Qwen3.8 Flash Next, IQ3_S
 │   │   ├── pipeline.py       the finding half of the study, in one command
 │   │   ├── prompt.md         The problem
 │   │   ├── questions/
 │   │   │   ├── author.txt    the author's questions, one or more a step
 │   │   │   └── null.txt      physics off the chain, asked of the same stack
+│   │   ├── references/
+│   │   │   └── primaries.bib  the paywalled originals, by reference only
 │   │   ├── rubric.md         How clear the path is
 │   │   ├── score.py          the hit rule. Whether a served passage holds a step of the chain
 │   │   ├── sources.json      the stack: each source by address, version and SHA-256
 │   │   ├── steps.json        the chain's steps, and what a passage must hold to count
 │   │   ├── tally.py          the pass rules in the README, counted from the pipeline's rows
+│   │   ├── words.txt         notation a question may use, read as the sources' words
 │   │   ├── test_percus_yevick.py  the draft hangs together, and its hit rule does what it says
 │   │   └── README.md         Percus–Yevick: found, not generated
 │   ├── php2shell/            a real bug: the PHP2Shell result, tested seven ways

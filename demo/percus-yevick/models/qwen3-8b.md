@@ -9,7 +9,10 @@ quantization: Q4_K_M
 context length: 40960
 parameters: 8190735360
 licence: apache-2.0
+runs: http://127.0.0.1:11434/v1 (Ollama 0.40.14, on the study machine)
 -->
 # Qwen3 8B
 
 Read from the weights file's own header by weights-card. A value the header doesn't hold is written as "not in the header".
+
+Added by hand, 2026-11-05: `runs`. The rest is as the header gave it.

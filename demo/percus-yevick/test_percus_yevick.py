@@ -240,3 +240,41 @@ def test_r6_is_left_to_the_rubric_and_no_overall_verdict_is_made():
     v = tally.tally(rows, text_of, None)
     assert v["R6"]["state"] == "judged by hand"
     assert set(v) == {"R1", "R2", "R3", "R4", "R5", "R6"}
+
+
+import arms  # noqa: E402
+
+
+def test_arms_summary_counts_steps_per_set_and_null_hits_per_question():
+    qs = [
+        {"set": "author", "id": "s7.1", "step": "s7", "asked": "q"},
+        {"set": "author", "id": "s6.1", "step": "s6", "asked": "q"},
+        {"set": "null", "id": "n.1", "step": "n", "asked": "q"},
+        {"set": "null", "id": "n.2", "step": "n", "asked": "q"},
+    ]
+    rows = [arms.found_by(qs[0], [HAND["s7"]]), arms.found_by(qs[1], ["nothing"]),
+            arms.found_by(qs[2], [HAND["s2"]]), arms.found_by(qs[3], ["the Debye length"])]  # fmt: skip
+    got = arms.summary(qs, {"kernel": rows})["kernel"]
+    assert got["author"] == "1 of 11 steps found: s7"
+    assert got["null"] == "1 of 2 served a chain step"
+    unrun = [{"hit": False, "steps": [], "not run": "numpy"}] * 4
+    assert arms.summary(qs, {"latent": unrun}) == {
+        "latent": {"not run": "latent needs numpy"}
+    }
+
+
+def test_arms_grades_the_expectations_against_the_kernels_finds():
+    exp = json.loads((HERE / "expectations.json").read_text(encoding="utf-8"))["steps"]
+    assert set(exp) == set(score.BY_ID)
+    qs = [
+        {"set": "author", "id": f"{s}.1", "step": s, "asked": "q"} for s in score.BY_ID
+    ]
+    rows = [{"hit": exp[q["step"]]["found"], "steps": []} for q in qs]
+    assert arms.expectations(qs, {"kernel": rows}) == {"held": "11 of 11", "missed": []}
+    rows[0] = {"hit": not rows[0]["hit"], "steps": []}
+    assert arms.expectations(qs, {"kernel": rows})["missed"] == [qs[0]["step"]]
+
+
+def test_arms_refuses_a_bad_command_line_and_a_work_folder_without_an_index(tmp_path):
+    assert arms.main([]) == 2 and arms.main(["--work", "x"]) == 2
+    assert arms.main(["--work", str(tmp_path), "--out", str(tmp_path / "o.json")]) == 2

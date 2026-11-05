@@ -5,8 +5,9 @@
 
 Builds the pile from fetch.py's --to (DIR/<slug>/src/ and export.xml) with
 the repo's own readers: latex for each paper's prose, equations for its
-math, mediawiki for each Wikipedia revision, and pdf (which needs pypdf) for
-a scanned paper's text. Indexes it once with scan, asks
+math, mediawiki for each Wikipedia revision, pdf (which needs pypdf) for
+a scanned paper's text, and bibtex for references/, the paywalled originals
+by reference only. Indexes it once with scan, asks
 each question set in questions/ (author and null unless named), takes the
 kernel's top three passages, and scores each against steps.json with
 score.py. Writes every question's served passages, the steps they hold, the
@@ -74,6 +75,14 @@ def build(stack: Path, work: Path) -> Path:
                                  capture_output=True, text=True)  # fmt: skip
             line = (got.stdout.strip().splitlines() or [got.stderr.strip()])[-1]
             print(f"{part:<6} {s['id']}: {line}")
+    refs = pile / "refs"  # the paywalled originals, by reference only
+    if not refs.exists():
+        got = subprocess.run([sys.executable, str(STDLIB / "bibtex" / "bibtex.py"), "mirror",
+                              "--from", str(HERE / "references"), "--to", str(refs)],
+                             capture_output=True, text=True)  # fmt: skip
+        print(
+            f"refs   references/: {(got.stdout.strip().splitlines() or [got.stderr.strip()])[-1]}"
+        )
     index = work / "index"
     if not (index / "index.json").exists():
         index.mkdir(parents=True, exist_ok=True)
@@ -174,7 +183,7 @@ def main(argv: list[str]) -> int:
         "tools": {rel: sha_file(ROOT / rel) for rel in (
             "kernel.py", "adapters/stdlib/scan/scan.py", "adapters/stdlib/latex/latex.py",
             "adapters/stdlib/equations/equations.py", "adapters/stdlib/mediawiki/mediawiki.py",
-            "adapters/deps/pdf/pdf.py",
+            "adapters/deps/pdf/pdf.py", "adapters/stdlib/bibtex/bibtex.py",
             "demo/percus-yevick/score.py", "demo/percus-yevick/steps.json",
             "demo/percus-yevick/tally.py", "demo/percus-yevick/pipeline.py")},
         "rows": rows,

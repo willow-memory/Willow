@@ -1,0 +1,17 @@
+{
+ "about": "What the author expects each step to come to with the author's questions, written before any real question was asked, graded after. Reported, not a pass rule. The author had seen the source search's grep evidence for each step, which is what these rest on.",
+ "written": "2026-11-05",
+ "steps": {
+  "s0": {"found": false, "why": "the low-density series may be written out (1 + 4 eta + ...) in no source that also says 'low density' and 'second order'"},
+  "s1a": {"found": false, "why": "the thinnest step: scattering sources say amplitude and electron density, but the anchor's words may not meet in one passage"},
+  "s1b": {"found": false, "why": "the uniform-sphere form factor may be only in a figure or written with a Bessel function"},
+  "s1c": {"found": true, "why": "Wikipedia's 'Structure factor' writes the intensity of identical particles as f squared times S"},
+  "s2": {"found": true, "why": "several sources write S(q) = 1 + rho times the transform of g - 1"},
+  "s3": {"found": true, "why": "Wikipedia's Ornstein-Zernike page and the reviews state OZ and S = 1/(1 - rho c)"},
+  "s4": {"found": true, "why": "the closure for hard spheres, c = 0 outside, is in most PY sources"},
+  "s5a": {"found": true, "why": "Wu's thesis and Coquand and Sperl write the factorization"},
+  "s5b": {"found": true, "why": "Coquand and Sperl give a_b = (1+2 varphi)/(1-varphi)^2"},
+  "s6": {"found": true, "why": "S(0) = (1-eta)^4/(1+2 eta)^2 is in the thesis and the reviews"},
+  "s7": {"found": true, "why": "the compressibility equation of state is in nearly every source"}
+ }
+}
