@@ -10,6 +10,10 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `ci`'s `adapters/stdlib/ci/pypi_dates.py` keeps PyPI's upload dates for
+  each deps floor pin and the floor rule's release in pypi-dates.json, which
+  the floor test reads in place of a table typed into test_ci.py; `write`
+  asks PyPI only for a pin the file lacks, and made.py runs it
 - `ci`'s `adapters/stdlib/ci/made.py` makes again, or checks, every file a
   script makes: the add-on lists, BUGS.md, FILES.md, the lists kept A to Z
   and craft-assembly's report, which a change elsewhere left stale five

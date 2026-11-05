@@ -95,9 +95,15 @@ opens.
 
 **Made again:** [made.py](made.py) runs every script that makes a file
 from the repo's others, in order: readme's add-on lists, BUGS.md, FILES.md,
-the lists kept A to Z, and craft-assembly's report. `write` makes each
+the lists kept A to Z, the PyPI dates, and craft-assembly's report. `write` makes each
 again; `check` names what's stale. A new generator goes in its MADE table,
 and create_pr.py, which runs `write`, then makes it in every pull request.
+
+**PyPI's dates:** [pypi_dates.py](pypi_dates.py) keeps
+[pypi-dates.json](pypi-dates.json), the upload dates of each deps floor pin
+and of the release the floor rule names, which the `deps:floors` test reads
+in place of PyPI. `write` asks PyPI only for a pin the file lacks, so in
+most pull requests it goes nowhere; `check` names what it lacks.
 
 **A to Z:** [order.py](order.py) keeps the lists people add to in order:
 the tables in test_contract.py (COMMANDS, READERS, PILE_EXTRA,

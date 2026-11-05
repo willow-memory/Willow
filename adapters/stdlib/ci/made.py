@@ -8,7 +8,8 @@ it reads, and a test fails when one is out of date. A change elsewhere
 (an add-on's card, a new file, a changelog entry a report quotes) leaves
 one stale, and CI says so after the push. MADE lists those scripts, each
 with its `write` and `check`: the add-on lists, BUGS.md, FILES.md, the
-lists kept A to Z, and a demo's report. `write` runs each one's write in
+lists kept A to Z, the PyPI dates the deps floor test reads, and a demo's
+report. `write` runs each one's write in
 that order (FILES.md before its folders are sorted); `check` runs each
 one's check and names what's stale. create_pr.py runs `write`.
 
@@ -38,6 +39,7 @@ MADE = (
     ("BUGS.md", "adapters/stdlib/ci/bugs.py"),
     ("FILES.md's tree", "adapters/stdlib/ci/files.py"),
     ("the lists kept A to Z", "adapters/stdlib/ci/order.py"),
+    ("PyPI's dates for each deps floor pin", "adapters/stdlib/ci/pypi_dates.py"),
     ("craft-assembly's REPORT.md and checks.md", "demo/craft-assembly/report.py"),
 )
 

@@ -235,6 +235,9 @@ willow/
 │   │   │   ├── test_order.py order.py's tests: entries move with their comments, refusals, the repo's own lists A to Z
 │   │   │   ├── made.py       every file the repo makes from its others, made again, or checked
 │   │   │   ├── test_made.py  made.py's tests: each made again in order, what's stale named, the repo's current
+│   │   │   ├── pypi-dates.json  PyPI's dates for each deps floor pin and the rule's release, read by test_ci
+│   │   │   ├── pypi_dates.py PyPI's upload dates for every deps floor pin, kept for the tests
+│   │   │   ├── test_pypi_dates.py  pypi_dates.py's tests: PyPI asked only for what's new, what's missing named
 │   │   │   └── README.md     its card: gates, states, the guard and exit codes
 │   │   ├── ci-cache/
 │   │   │   ├── ci_cache.py    a cache key per ecosystem from a repo's lockfiles, so CI skips the reinstall
