@@ -167,16 +167,24 @@ def clone(tmp_path):
     return repo
 
 
+_DOCS_PASS: list[bool] = []
+
+
 def docs_pass(repo: Path) -> bool:
     """Whether the copy's own test_docs.py passes at main. It doesn't in the
     copy test_strip.py makes, its FILES.md naming what was stripped: there
-    nothing can move, and the tests hold restack to saying so."""
+    nothing can move, and the tests hold restack to saying so. Every clone's
+    main is the same files, so it is asked once a run, not once a test (50 s
+    each; three tests asked it, and restack's mutants timed out at 600 s)."""
+    if _DOCS_PASS:
+        return _DOCS_PASS[0]
     work = repo.parent / "main-docs"
     git(repo, "worktree", "add", "-q", "--detach", str(work), "main")
     got = subprocess.run([sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider",
                           "test_docs.py"], cwd=work, capture_output=True)  # fmt: skip
     git(repo, "worktree", "remove", "--force", str(work))
-    return got.returncode == 0
+    _DOCS_PASS.append(got.returncode == 0)
+    return _DOCS_PASS[0]
 
 
 def run(repo: Path, *argv: str) -> subprocess.CompletedProcess:
