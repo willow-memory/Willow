@@ -23,7 +23,9 @@ lines and is not part of CI. Exit 0 always; it reports, it does not judge.
 
 from __future__ import annotations
 
+import contextlib
 import hashlib
+import io
 import json
 import subprocess
 import sys
@@ -36,8 +38,10 @@ sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(STDLIB / "scan"))
 sys.path.insert(0, str(HERE))
 import fetch  # noqa: E402
+import kernel  # noqa: E402
 import scan  # noqa: E402
 import score  # noqa: E402
+import tally  # noqa: E402
 
 TOP = 3
 #: each kind of source, the readers that make its text, under adapters/
@@ -77,8 +81,7 @@ def build(stack: Path, work: Path) -> Path:
     return index
 
 
-def ask(index: Path, sets: list[str], dry: bool) -> list[dict]:
-    idx = scan.Index(index)
+def ask(idx: "scan.Index", sets: list[str], dry: bool) -> list[dict]:
     rows = []
     for name in sets:
         qs = scan.questions(
@@ -112,6 +115,25 @@ def table(rows: list[dict]) -> str:
     return "\n".join(out)
 
 
+def verdicts(
+    box: Path, ts: str, result: dict, dry: bool, answers: str, tools: dict
+) -> None:
+    """Each rule's verdict, one kernel row each, on a box outside the repo; a
+    dry run's are named dry so they are never read as the study's."""
+    if not (box / "record.jsonl").exists():
+        with contextlib.redirect_stdout(io.StringIO()):  # its own "ready" line
+            if (
+                kernel.init(box, HERE, box.parent / (box.name + ".key"), ts)
+                != kernel.ALIVE
+            ):
+                raise SystemExit(f"refused: couldn't start a record at {box}")
+    for rule, v in result.items():
+        kernel.append(box, ts, "verdict", who="percus-yevick",
+                      gate=f"percus-yevick:{'dry:' if dry else ''}{rule}", state=v["state"],
+                      number=v["number"], needed=v["needed"],
+                      answers_sha256=answers, tools=tools)  # fmt: skip
+
+
 def main(argv: list[str]) -> int:
     opts, sets, dry, i = {}, [], False, 0
     while i < len(argv):
@@ -120,29 +142,61 @@ def main(argv: list[str]) -> int:
         elif argv[i] == "--questions" and i + 1 < len(argv):
             sets.append(argv[i + 1])
             i += 2
-        elif argv[i] in ("--stack", "--work", "--out") and i + 1 < len(argv):
+        elif argv[i] in (
+            "--stack",
+            "--work",
+            "--out",
+            "--seed",
+            "--box",
+        ) and i + 1 < len(argv):
             opts[argv[i]], i = argv[i + 1], i + 2
         else:
             break
-    if i != len(argv) or sorted(opts) != ["--out", "--stack", "--work"]:
-        print("usage: pipeline.py --stack DIR --work DIR --out FILE [--questions NAME ...] [--dry]",
-              file=sys.stderr)  # fmt: skip
+    need = {"--out", "--stack", "--work"}
+    if i != len(argv) or not need <= set(opts) or not opts.get("--seed", "0").isdigit():
+        print("usage: pipeline.py --stack DIR --work DIR --out FILE [--questions NAME ...]"
+              " [--seed N] [--box DIR] [--dry]", file=sys.stderr)  # fmt: skip
         return 2
-    index = build(Path(opts["--stack"]), Path(opts["--work"]))
-    rows = ask(index, sets or ["author", "null"], dry)
+    idx = scan.Index(build(Path(opts["--stack"]), Path(opts["--work"])))
+    rows = ask(idx, sets or ["author", "null"], dry)
+    text_of = {c["id"]: c["text"] for c in idx.pile}
+    authors = sum(r["set"] == "author" for r in rows)
+    if "--seed" not in opts:
+        drawn = None
+    else:  # a dry run draws, but its passages hold nothing: the wiring, not the count
+        hit = (lambda s, t: False) if dry else score.hit
+        drawn = tally.draw(idx.pile, authors, int(opts["--seed"]), hit)
+    result = tally.tally(rows, text_of, drawn)
     record = {
         "dry": dry,
+        "seed": int(opts["--seed"]) if "--seed" in opts else None,
+        "verdicts": result,
         "tools": {rel: sha_file(ROOT / rel) for rel in (
             "kernel.py", "adapters/stdlib/scan/scan.py", "adapters/stdlib/latex/latex.py",
             "adapters/stdlib/equations/equations.py", "adapters/stdlib/mediawiki/mediawiki.py",
             "adapters/deps/pdf/pdf.py",
-            "demo/percus-yevick/score.py", "demo/percus-yevick/steps.json")},
+            "demo/percus-yevick/score.py", "demo/percus-yevick/steps.json",
+            "demo/percus-yevick/tally.py", "demo/percus-yevick/pipeline.py")},
         "rows": rows,
     }  # fmt: skip
     Path(opts["--out"]).write_text(
         json.dumps(record, indent=1) + "\n", encoding="utf-8"
     )
     print(table(rows))
+    print()
+    for rule, v in result.items():
+        print(
+            f"{rule}  {v['state']:<15} {v['number']}"
+            + (f"  (needed: {v['needed']})" if v["needed"] else "")
+        )
+    if "--box" in opts:
+        answers = sha_file(Path(opts["--out"]))
+        verdicts(
+            Path(opts["--box"]), kernel.now(), result, dry, answers, record["tools"]
+        )
+        print(
+            f"verdicts appended to {opts['--box']}: kernel.py verify --box {opts['--box']}"
+        )
     return 0
 
 

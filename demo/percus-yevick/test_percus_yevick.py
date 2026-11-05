@@ -158,3 +158,85 @@ def test_unpack_reads_a_tar_a_gzipped_file_and_a_pdf(tmp_path):
 def test_a_bad_command_line_is_refused():
     assert fetch.main([]) == 2 and fetch.main(["--to", "x", "--both"]) == 2
     assert pipeline.main(["--stack", "x"]) == 2
+
+
+import tally  # noqa: E402
+
+
+def rows_for(
+    found: dict[str, str], set_name: str = "author"
+) -> tuple[list[dict], dict]:
+    """A question per step; one served passage, holding `found[step]` when given."""
+    rows, text_of = [], {}
+    for step in score.BY_ID:
+        pid = f"{set_name}-{step}"
+        text_of[pid] = found.get(step, "nothing here")
+        rows.append({"set": set_name, "id": f"{step}.1", "served": [{"id": pid}]})
+    return rows, text_of
+
+
+def test_r1_needs_nine_steps_with_baxter_and_the_answer():
+    nine = {s: HAND[s] for s in list(HAND) if s not in ("s1a", "s1b")}
+    rows, text_of = rows_for(nine)
+    v = tally.tally(rows, text_of, None)
+    assert v["R1"]["state"] == "satisfied" and v["R1"]["number"].startswith("9 of 11")
+    assert "missing s1a, s1b" in v["R1"]["number"]
+    no_baxter = {
+        s: HAND[s] for s in HAND if s != "s5b"
+    }  # ten found, one of them a must
+    rows, text_of = rows_for(no_baxter)
+    assert tally.tally(rows, text_of, None)["R1"]["state"] == "failing"
+    eight = {s: HAND[s] for s in list(HAND) if s not in ("s0", "s1a", "s1b")}
+    rows, text_of = rows_for(eight)
+    assert tally.tally(rows, text_of, None)["R1"]["state"] == "failing"
+
+
+def test_r2_is_not_asked_until_there_are_blind_questions_then_needs_seven():
+    rows, text_of = rows_for(HAND)
+    assert tally.tally(rows, text_of, None)["R2"]["state"] == "not asked"
+    seven = {s: HAND[s] for s in ("s0", "s2", "s3", "s4", "s5b", "s6", "s7")}
+    rows, text_of = rows_for(seven, "blind-a")
+    v = tally.tally(rows, text_of, None)
+    assert v["R2"]["state"] == "satisfied" and v["R1"]["state"] == "not asked"
+    six = {s: HAND[s] for s in ("s0", "s2", "s3", "s4", "s5b", "s7")}
+    rows, text_of = rows_for(six, "blind-a")
+    assert tally.tally(rows, text_of, None)["R2"]["state"] == "failing"
+
+
+def test_r3_counts_null_questions_served_any_chain_step():
+    def nulls(k: int):
+        rows, text_of = [], {}
+        for n in range(10):
+            text_of[f"n{n}"] = HAND["s7"] if n < k else "the Debye length"
+            rows.append({"set": "null", "id": f"n.{n}", "served": [{"id": f"n{n}"}]})
+        return tally.tally(rows, text_of, None)["R3"]
+
+    assert nulls(2)["state"] == "satisfied" and nulls(2)["number"].startswith("2 of 10")
+    assert nulls(3)["state"] == "failing"
+
+
+def test_r4_draws_the_same_passages_from_the_same_seed_and_counts_steps():
+    pile = [{"text": HAND[s]} for s in ("s0", "s2", "s7")] + [{"text": "x"}] * 97
+    a = tally.draw(pile, 14, seed=7)
+    assert a == tally.draw(pile, 14, seed=7)
+    assert tally.draw(pile, 14, seed=7, hit=lambda s, t: False) == 0
+    assert tally.draw(pile, 200, seed=1) == 3  # enough draws find every planted step
+    assert tally.tally([], {}, 2)["R4"]["state"] == "satisfied"
+    assert tally.tally([], {}, 3)["R4"]["state"] == "failing"
+    assert tally.tally([], {}, None)["R4"]["state"] == "not asked"
+
+
+def test_r5_fails_a_step_found_only_through_wertheim():
+    laplace = dict(HAND, s6=HAND["s6"] + " from the Laplace transform of r g(r)")
+    rows, text_of = rows_for(laplace)
+    v = tally.tally(rows, text_of, None)
+    assert v["R5"]["state"] == "failing" and v["R5"]["number"].endswith(": s6")
+    rows, text_of = rows_for(HAND)
+    assert tally.tally(rows, text_of, None)["R5"]["state"] == "satisfied"
+
+
+def test_r6_is_left_to_the_rubric_and_no_overall_verdict_is_made():
+    rows, text_of = rows_for(HAND)
+    v = tally.tally(rows, text_of, None)
+    assert v["R6"]["state"] == "judged by hand"
+    assert set(v) == {"R1", "R2", "R3", "R4", "R5", "R6"}

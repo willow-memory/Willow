@@ -232,9 +232,17 @@ How they are reported:
 - **Traps are reported, not scored.** Carnahan–Starling or the virial route
   served beside the s7 anchor is no fault; served without it, s7 is not found,
   which R1 and R2 already count.
-- **Not yet built:** pipeline.py prints each question's hits; adding up R1 to
-  R5 and drawing R4's random passages is still to be written, before the
-  freeze, and tested on the dry run.
+- **Counted by [tally.py](tally.py)**, which pipeline.py calls: R1 to R5 from
+  the rows, R4's random passages drawn by `--seed`, R6 left to the rubric.
+  With `--box`, each verdict is a kernel row on a box outside the repo; a dry
+  run's are named `percus-yevick:dry:R1` and so on, so they are never read as
+  the study's. Its tests use rows and formulas made by hand.
+- **Dry run of the tallies** (`--dry --seed 0 --box`): every question served
+  nothing, so R1 failing at 0 of 11 and R3 satisfied at 0 of 10; R2 not asked,
+  with no blind questions yet; R4's draw ran with its passages made to hold
+  nothing, since its true count is a result; R5 satisfied; R6 judged by hand.
+  Seven rows, and `kernel.py verify` on the box: "the chain holds: 7 rows, 0
+  sealed". R4's seed for the study is fixed at the freeze.
 
 ## Open, before the freeze
 
@@ -259,7 +267,9 @@ How they are reported:
 
     python demo/percus-yevick/fetch.py --to STACK            # online
     python demo/percus-yevick/fetch.py --to STACK --check    # offline
-    python demo/percus-yevick/pipeline.py --stack STACK --work WORK --out OUT.json --dry
+    python demo/percus-yevick/pipeline.py --stack STACK --work WORK --out OUT.json \
+        --seed N --box BOX [--dry]
+    python kernel.py verify --box BOX
 
 STACK, WORK and OUT.json are outside the repo. The pipeline records the
 SHA-256 of the kernel, scan, the three readers, score.py and steps.json with
