@@ -1405,6 +1405,8 @@ willow/
 │       │   └── README.md
 │       ├── llm-cli/
 │       │   ├── llm_cli.py    Suggestions through the llm command, so any model its plugins reach (local or hosted) can hand one in, with llm's own log naming the model
+│       │   ├── requirements-floor.txt
+│       │   ├── requirements.txt
 │       │   ├── test_llm_cli.py
 │       │   └── README.md     its card
 │       ├── manifests/
