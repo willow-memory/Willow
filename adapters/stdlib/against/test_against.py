@@ -432,6 +432,14 @@ def test_a_markdown_conflict_where_both_only_added_is_settled_and_one_that_chang
     assert not against.only_added(base, base, base), "no conflict is not 'only added'"
 
 
+def test_a_file_at_a_commit_is_its_text_and_a_path_it_lacks_is_empty():
+    """A Markdown file one branch added has no base: read as empty, its
+    every line is one that branch added."""
+    agents = against.blob("HEAD", "AGENTS.md")
+    assert agents.startswith("# For agents")
+    assert against.blob("HEAD", "no/such/file.md") == ""
+
+
 # ── read on this repo's own files ────────────────────────────────────────────
 def test_this_repos_files_md_and_contract_are_read_the_way_the_checks_read_them():
     text = (ROOT / "FILES.md").read_text(encoding="utf-8")
