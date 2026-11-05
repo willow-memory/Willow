@@ -1,7 +1,7 @@
 """same_way.py: a local model asked each question three times, and how often it flips.
 
     python adapters/stdlib/same-way/same_way.py --box DIR --url URL --model NAME \\
-        --questions FILE [--times N]
+        --questions FILE [--times N] [--system FILE] [--reasoning EFFORT]
 
 FILE holds your questions, one a line. For each, the kernel ranks your
 folder's passages as a bite would (nothing goes on the record), and when it
@@ -9,6 +9,9 @@ serves any, the model at URL is asked N times (three unless said), with the
 same chat openai-compatible sends: the passages, numbered, under the rule to
 answer only from them, at temperature 0 with a fixed seed. A server that
 honours those says the same thing every time; one that doesn't, flips.
+`--system FILE` and `--reasoning none|low|medium|high` mean what they mean to
+openai-compatible's ask (a voice put before the rule; the request's
+`reasoning_effort`), so this asks exactly the chat that ask would.
 
     same     3 of 3  what goes in biscochitos  (cites [1])
     flipped  2 ways in 3  when does the gate stick  (cites [2] / [1, 2])
@@ -23,7 +26,8 @@ passages go nowhere else.
 Exit codes, the kernel's: 0 every question asked answered the same way
 every time; 42 one flipped, none could be asked, or the endpoint didn't
 answer; 2 refused (a bad command line, not a box, a record that doesn't
-verify, a URL not on this machine, a questions file that can't be read).
+verify, a URL not on this machine, a questions or system file that can't be
+read).
 """
 
 from __future__ import annotations
@@ -48,8 +52,17 @@ _spec.loader.exec_module(oc)
 
 USAGE = (
     "usage: same_way.py --box DIR --url URL --model NAME --questions FILE [--times N]"
+    " [--system FILE] [--reasoning none|low|medium|high]"
 )
-OPTS = ("--box", "--url", "--model", "--questions", "--times")
+OPTS = (
+    "--box",
+    "--url",
+    "--model",
+    "--questions",
+    "--times",
+    "--system",
+    "--reasoning",
+)
 TIMES = 3
 
 
@@ -105,6 +118,8 @@ def main(argv: list[str]) -> int:
         or not all(opts.get(k) for k in need)
         or not times.isdigit()
         or int(times) < 2
+        or opts.get("--reasoning", "none") not in oc.REASONING
+        or opts.get("--system") == ""
     ):
         print(USAGE, file=sys.stderr)
         return kernel.REFUSED
@@ -128,6 +143,15 @@ def main(argv: list[str]) -> int:
     except (OSError, UnicodeDecodeError) as e:
         print(f"refused: can't read the questions: {type(e).__name__}", file=sys.stderr)
         return kernel.REFUSED
+    voice = ""
+    if opts.get("--system"):
+        try:
+            voice = Path(opts["--system"]).read_text(encoding="utf-8")
+        except (OSError, UnicodeDecodeError) as e:
+            print(f"refused: can't read the system file: {type(e).__name__}",
+                  file=sys.stderr)  # fmt: skip
+            return kernel.REFUSED
+    reasoning = opts.get("--reasoning", "")
     questions = list(dict.fromkeys(q.strip() for q in text.splitlines() if q.strip()))
     asked = same = 0
     for q in questions:
@@ -144,11 +168,13 @@ def main(argv: list[str]) -> int:
             )
             print(f"not asked  {q}: {why}")
             continue
-        chat = oc.messages(q, served)
+        chat = oc.messages(q, served, voice)
         replies = []
         for _ in range(times):
             try:
-                replies.append(oc.ask_model(opts["--url"], opts["--model"], chat))
+                replies.append(
+                    oc.ask_model(opts["--url"], opts["--model"], chat, reasoning)
+                )
             except (OSError, ValueError, KeyError, IndexError, TypeError) as e:
                 print(f"unreachable: {opts['--url']} ({e.__class__.__name__}), at {q}")
                 return kernel.ESCALATE

@@ -39,6 +39,15 @@ minutes for a reply, since a model on a laptop's CPU can be slow.
 place of it. An API key, when the endpoint wants one, comes from
 `OPENAI_API_KEY`; on your own machine it needs none.
 
+`--reasoning none|low|medium|high` asks a model that thinks before it
+answers (qwen3, say) to think that much, by putting `reasoning_effort` in
+the request; any other value is refused. Without it the request is the one
+it always was, naming no effort. It is a request setting, and a server may
+ignore it. On Ollama 0.40.14's OpenAI endpoint, `none` stopped qwen3:8b's
+thinking (10 tokens, not 233); `/no_think` written in a `--system` file
+didn't, and neither did Ollama's own `think: false`, which that endpoint
+ignores.
+
 Exit codes, the kernel's: 0 a suggestion is waiting on your seal; 42
 nothing served, the endpoint unreachable, or a reply citing nothing; 2
 refused (a bad command line, a `--system` file that can't be read).

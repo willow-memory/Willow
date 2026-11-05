@@ -2,7 +2,8 @@
 answer from the passages your folder served, and the kernel holds it for your seal.
 
     python adapters/stdlib/openai-compatible/openai_compatible.py ask --box DIR \\
-        --url URL --model NAME [--system FILE] [--now TS] "your question"
+        --url URL --model NAME [--system FILE] [--reasoning EFFORT] [--now TS]
+        "your question"
 
 First the kernel bites: the question goes on the record and the passages that
 hold it are served. When none are, the model is never asked: nothing in your
@@ -14,6 +15,9 @@ numbered, with the rule that it answers only from them and cites each it uses
 as [1], [2]. Asked at temperature 0 with a fixed seed, so a server that
 honours them answers the same each time. `--system FILE` puts the text of FILE
 before that rule: a voice, a persona, never a way around the rule.
+`--reasoning none|low|medium|high` asks the model to think that much before it
+answers, as `reasoning_effort` in the request; without it, the request says
+nothing about reasoning. It is a request setting, and a server may ignore it.
 
 The reply goes to `kernel.py propose` as one suggestion, citing the passages
 its brackets name. A reply that names none is printed and proposed to no one:
@@ -45,7 +49,8 @@ import kernel  # noqa: E402
 
 USAGE = (
     "usage: openai_compatible.py ask --box DIR --url URL --model NAME"
-    ' [--system FILE] [--now TS] "your question"'
+    " [--system FILE] [--reasoning none|low|medium|high] [--now TS]"
+    ' "your question"'
 )
 RULE = (
     "Answer only from the numbered passages, which come from the person's own"
@@ -53,7 +58,9 @@ RULE = (
     " [1]. If the passages do not answer the question, say so in one sentence"
     " and cite nothing. Never add a fact the passages do not hold."
 )
-OPTS = ("--box", "--url", "--model", "--system", "--now")
+OPTS = ("--box", "--url", "--model", "--system", "--reasoning", "--now")
+#: the values `--reasoning` takes, sent as the request's `reasoning_effort`
+REASONING = ("none", "low", "medium", "high")
 SEED = 0
 
 
@@ -71,6 +78,8 @@ def parse(argv: list[str]) -> tuple[dict, str] | None:
             words.append(a)
     need = ("--box", "--url", "--model")
     if not all(opts.get(k) for k in need) or len(words) != 1:
+        return None
+    if "--reasoning" in opts and opts["--reasoning"] not in REASONING:
         return None
     if words[0].startswith("--") or not words[0].strip():
         return None
@@ -100,9 +109,12 @@ def cited(reply: str, served: list[dict]) -> list[str]:
     return out
 
 
-def ask_model(url: str, model: str, chat: list[dict]) -> str:
-    """The reply's text from URL's /chat/completions."""
+def ask_model(url: str, model: str, chat: list[dict], reasoning: str = "") -> str:
+    """The reply's text from URL's /chat/completions. With `reasoning`, the
+    request asks for that `reasoning_effort`; without, it names none."""
     body = {"model": model, "messages": chat, "temperature": 0, "seed": SEED}
+    if reasoning:
+        body["reasoning_effort"] = reasoning
     headers = {"Content-Type": "application/json"}
     if os.environ.get("OPENAI_API_KEY"):
         headers["Authorization"] = f"Bearer {os.environ['OPENAI_API_KEY']}"
@@ -152,7 +164,10 @@ def ask(opts: dict, question: str) -> int:
         return kernel.ESCALATE
     try:
         reply = ask_model(
-            opts["--url"], opts["--model"], messages(question, served, voice)
+            opts["--url"],
+            opts["--model"],
+            messages(question, served, voice),
+            opts.get("--reasoning", ""),
         )
     except (OSError, ValueError, KeyError, IndexError, TypeError) as e:
         print(f"unreachable: {opts['--url']} ({e.__class__.__name__})")

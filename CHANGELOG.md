@@ -10,6 +10,13 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `openai-compatible`, `local-model`, `same-way`: `--reasoning
+  none|low|medium|high` sets the request's `reasoning_effort`, so a thinking
+  model (qwen3) can be asked not to think; without it the request is byte for
+  byte the one sent before. Measured on Ollama 0.40.14's OpenAI endpoint,
+  `none` stopped qwen3:8b's thinking where `/no_think` in a system file and
+  `think: false` didn't. `same-way` also takes `--system FILE`, as
+  openai-compatible's ask does, so it asks exactly the chat local-model asks
 - `equations`: each displayed equation in LaTeX sources as a passage of its
   own, the math as its source writes it, with its labels, its .tex line and
   the sentences around it, so a question finds an equation by what its paper

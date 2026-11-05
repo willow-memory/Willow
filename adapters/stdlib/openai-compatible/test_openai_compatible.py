@@ -247,3 +247,35 @@ def test_it_waits_fifteen_minutes_for_a_slow_model(monkeypatch):
     monkeypatch.setattr(oc.urllib.request, "urlopen", urlopen)
     assert oc.ask_model("http://127.0.0.1:9/v1", "m", []) == "ok"
     assert seen == {"timeout": 900}
+
+
+def test_without_reasoning_the_request_is_the_one_it_always_was(box, model):
+    model.reply = "[1]"
+    assert ask(box, model, "biscochitos").returncode == 0
+    body = model.sent[0][1]
+    assert list(body) == ["model", "messages", "temperature", "seed"]
+    assert "reasoning" not in json.dumps(body)
+
+
+@pytest.mark.parametrize("effort", ["none", "low", "medium", "high"])
+def test_reasoning_goes_as_the_requests_reasoning_effort(box, model, effort):
+    model.reply = "[1]"
+    got = ask(box, model, "biscochitos", "--reasoning", effort)
+    assert got.returncode == 0, got.stderr
+    body = model.sent[0][1]
+    assert body["reasoning_effort"] == effort
+    assert list(body) == ["model", "messages", "temperature", "seed",
+                          "reasoning_effort"]  # fmt: skip
+    assert body["messages"][0] == {"role": "system", "content": oc.RULE}
+
+
+def test_a_reasoning_effort_not_on_the_list_is_refused(box, model):
+    for more in (["--reasoning", "think"], ["--reasoning", "NONE"],
+                 ["--reasoning", ""], ["--reasoning", "low", "--reasoning", "low"]):  # fmt: skip
+        got = ask(box, model, "biscochitos", *more)
+        assert got.returncode == 2 and "openai_compatible.py" in got.stderr, more
+    got = run("ask", "--box", str(box), "--url", model.url, "--model", "m",
+              "biscochitos", "--reasoning")  # fmt: skip
+    assert got.returncode == 2
+    assert model.sent == []
+    assert [r["kind"] for r in rows(box)] == ["boot"], "refused before the bite"

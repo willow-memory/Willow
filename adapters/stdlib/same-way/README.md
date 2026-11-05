@@ -16,7 +16,8 @@ same way every time is one you can build on.
 
 ```
 python adapters/stdlib/same-way/same_way.py --box DIR --url http://127.0.0.1:8080/v1 \
-    --model gemma-3-4b-it --questions questions.txt [--times N]
+    --model gemma-3-4b-it --questions questions.txt [--times N] \
+    [--system FILE] [--reasoning none|low|medium|high]
 
 same     3 of 3  what goes in biscochitos  (cites [1])
 flipped  2 ways in 3  when does the gate stick  (cites [2] / [1, 2])
@@ -38,6 +39,15 @@ batches, or ignores the seed, flips. Answers are compared with their spaces
 closed up, and a change in which passages an answer cites is a flip even
 when its words hold.
 
+**The same chat local-model asks.** `--system FILE` puts a voice before
+the rule, and `--reasoning none|low|medium|high` sets the request's
+`reasoning_effort`, each as [openai-compatible](../openai-compatible/)'s
+ask does, so the chat asked N times here is the one `local-model ask`
+sends with the same options. Without them, nothing changes. The effort is
+a request setting a server may ignore; on Ollama 0.40.14, `none` stopped
+qwen3:8b's thinking, where `/no_think` in a system file and `think: false`
+didn't.
+
 **Only this machine.** The URL must be 127.0.0.1 (or any loopback
 address), `::1` or `localhost`: the idea is a local model, and your
 passages go nowhere else. The idea said `this-machine`; the card promises
@@ -46,7 +56,8 @@ passages go nowhere else. The idea said `this-machine`; the card promises
 Exit codes, the kernel's: 0 every question asked was answered the same way
 every time; 42 one flipped, none could be asked, or the endpoint didn't
 answer; 2 refused (a bad command line, not a box, a record that doesn't
-verify, a URL off this machine, a questions file that can't be read).
+verify, a URL off this machine, a questions or `--system` file that
+can't be read).
 
 **Uses:** the kernel's `read`, `config`, `read_words`, `chunks`, `rank` and
 `echo`; [openai-compatible](../openai-compatible/)'s chat, its asking and
