@@ -241,9 +241,8 @@ def main(argv: list[str]) -> int:
         )
         return kernel.REFUSED
     wrote, count, skipped = mirror(src, dst)
-    print(
-        f"wrote {count} equations from {wrote} files to {opts['--to']}; skipped {skipped}"
-    )
+    print(f"found {count} equations")
+    print(f"wrote {wrote} files to {opts['--to']}; skipped {skipped}")
     return kernel.ALIVE if wrote else kernel.ESCALATE
 
 

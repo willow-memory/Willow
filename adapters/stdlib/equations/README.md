@@ -57,7 +57,8 @@ with .txt added (`MIRROR/<same path>.tex.txt`). FOLDER is only read: hidden
 folders and files are skipped, and nothing is written inside it. A file with
 no displayed equation, or that can't be read as UTF-8, is skipped and counted:
 
-    wrote 212 equations from 9 files to MIRROR; skipped 3
+    found 212 equations
+    wrote 9 files to MIRROR; skipped 3
 
 Point the kernel at MIRROR, or at a folder holding it and latex's mirror, to
 ask questions of both the prose and the math: `kernel.py init --pile MIRROR`,

@@ -243,7 +243,10 @@ def test_mirror_writes_each_file_beside_its_path_and_counts(tmp_path):
     }
     res, out = mirror_of(tmp_path, files)
     assert res.returncode == 0, res.stderr
-    assert res.stdout.strip() == f"wrote 4 equations from 1 files to {out}; skipped 2"
+    assert res.stdout.splitlines() == [
+        "found 4 equations",
+        f"wrote 1 files to {out}; skipped 2",
+    ]
     assert sorted(
         p.relative_to(out).as_posix() for p in out.rglob("*") if p.is_file()
     ) == ["paper/py.tex.txt"]
@@ -258,7 +261,7 @@ def test_mirror_writes_each_file_beside_its_path_and_counts(tmp_path):
 def test_nothing_readable_escalates(tmp_path):
     res, out = mirror_of(tmp_path, {"a.tex": b"just prose\n"})
     assert res.returncode == kernel.ESCALATE
-    assert "wrote 0 equations from 0 files" in res.stdout
+    assert res.stdout.splitlines()[-1] == f"wrote 0 files to {out}; skipped 1"
     assert not out.exists()
 
 
