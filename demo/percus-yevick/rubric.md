@@ -1,8 +1,8 @@
 # How clear the path is
 
 The second score, beside the hit rule in [score.py](score.py): not whether a
-step was reached, but whether what reached it explains it. The physicist's
-measure of a good answer is one that "holds my hand through the complex
+step was reached, but whether what reached it explains it. The physics
+student's measure of a good answer is one that "holds my hand through the complex
 analysis". DRAFT: not frozen; who judges is not yet settled.
 
 ## Each step, scored 0 to 3
@@ -24,8 +24,8 @@ and its two coefficients.
   found chain's passages and the model's derivation, in an order set by a
   seed frozen in advance. Neither the labels nor the order say which is
   which.
-- **By someone who knows the field.** The physicist says this is beyond
-  them; their advisor is the obvious candidate. To be settled before the
+- **By someone who knows the field.** The physics student says this is
+  beyond them; their advisor is the obvious candidate. To be settled before the
   freeze.
 - **Recorded as kernel rows**, one per step and text, appended to a box
   outside the repo, as php2shell's verdicts are.

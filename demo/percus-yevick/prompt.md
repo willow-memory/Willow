@@ -11,9 +11,11 @@ found chain answers. DRAFT: not frozen.
 > from the electronic density. In your derivation, you *must* avoid
 > Wertheim's method.
 
-## What the physicist added
+## What the physics student added
 
-From the physicist who set the problem (Discord, 2026-11-05), folded in:
+The ML specialist gives the local model the prompt above. A physics student
+learning this derivation read it and added these (Discord, 2026-11-05),
+folded in:
 
 - **The spheres are all the same radius and have uniform electronic
   density.** Anything else is too hard to start with, and can't be compared

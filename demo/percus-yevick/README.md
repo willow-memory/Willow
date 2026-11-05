@@ -5,10 +5,11 @@ model except nonsense (the dry run below). The freeze is a later commit of
 its own, made before any real question is asked; until then every file may
 change.
 
-A physicist learning liquid theory asked a local model for a derivation of
-the hard-sphere equation of state in the Percus–Yevick approximation,
-starting from scattering and avoiding Wertheim's method
-([prompt.md](prompt.md)). A model asked that must recall a field 120 years
+An ML specialist is asking a local model for a derivation of the
+hard-sphere equation of state in the Percus–Yevick approximation, starting
+from scattering and avoiding Wertheim's method ([prompt.md](prompt.md)). A
+physics student who is learning this derivation themselves read the problem
+and said what a good answer needs. A model asked that must recall a field 120 years
 deep all at once. This study asks whether the derivation can instead be
 *found*: each step served by the kernel from a stack of open sources, with
 the place it came from, and a step the stack doesn't hold said to be
@@ -51,9 +52,9 @@ PY, and PY's virial route, which is right for its own route but not the one
 a scattering start leads to. A step counts as reached through Wertheim when
 every passage holding it says "Laplace".
 
-## The physicist's notes, folded in
+## The physics student's notes, folded in
 
-From the physicist who set the problem:
+From the physics student:
 
 - **One radius, uniform electronic density, in vacuum.** In the prompt, and
   as step s1b: the uniform sphere's form factor.
@@ -86,11 +87,11 @@ hashes offline (`--check`). Each source has a role:
   Library's scan. Its text is the scan's OCR: readable as prose, with
   errors ("deviatiuns"), and its math not to be relied on.
 
-Left out: further sticky-sphere papers, at the physicist's warning that
+Left out: further sticky-sphere papers, at the physics student's warning that
 Baxter's attractive shell is a complication of its own; Henderson 2009
 (Condensed Matter Physics), which holds the factorization but has a sign
 slip in a; and a scanned 1993 Rev. Mex. Fís. paper whose text can't be read
-reliably. The books the physicist recommends are under copyright and are not in the
+reliably. The books the physics student recommends are under copyright and are not in the
 stack: Hansen and McDonald, *Theory of Simple Liquids*; McQuarrie,
 *Statistical Mechanics*; Goodstein, *States of Matter*; Guinier and Fournet,
 *Small-Angle Scattering of X-Rays* (1955; HathiTrust gives it as search-only,
@@ -111,7 +112,7 @@ Two local models, run by Ollama 0.40.14 on this machine (127.0.0.1 only),
 are given the prompt for the side that generates: [gemma3-4b](models/gemma3-4b.md)
 and [qwen3-8b](models/qwen3-8b.md), each card read from the weights file's own
 header by weights-card, with its SHA-256. weights-pin holds the file to its
-card before each run. The physicist's friend's own model is not one of
+card before each run. The ML specialist's own model is not one of
 these; which model that is, and whether to add it, is open.
 
 ## The dry run
@@ -147,18 +148,19 @@ What it can't see: whether any real question is held, which is the result.
 - **Pass rules**: what share of steps must be held, and what null hit rate
   makes a hit mean nothing. To be written down here, with numbers.
 - **Who judges the rubric**: someone who knows the field, blind; the
-  physicist suggests it's beyond them.
+  physics student says it's beyond them, and suggests their advisor.
 - **Blind questions**: from whom.
-- **For the physicist**: which four books he meant, and whether his
-  friend's own model should be one of the models.
+- **For the physics student**: which four books they meant.
+- **For the ML specialist**: which model, at which quantization, they run,
+  and whether it should be one of the models here.
 - **Baxter, which paper.** Baxter published two papers in 1968. "Ornstein–Zernike
   Relation for a Disordered Fluid" (Aust. J. Phys. 21, 563) is the
   factorization, and its abstract says the PY hard-sphere solution follows
   from it, with no attraction. "Percus–Yevick Equation for Hard Spheres with
   Surface Adhesion" (J. Chem. Phys. 49, 2770) is the one with the
   infinitesimal attractive shell. This study's step s5 is the first. Whether
-  the physicist's warning was about the second, or about the method, is still
-  his to say.
+  the physics student's warning was about the second, or about the method, is
+  still theirs to say.
 
 ## Running it
 

@@ -1,5 +1,5 @@
 # The author's questions: one or more per step, in the words of the prompt and of
-# the physicist's notes. Written by someone who has seen the source list and
+# the physics student's notes. Written by someone who has seen the source list and
 # grep evidence for each step (see README, "Said plainly"). DRAFT: not frozen.
 # name<TAB>question; the name before the first dot is the step in steps.json.
 s0.1	What is the equation of state of a hard sphere fluid at low density, to second order in the packing fraction?
