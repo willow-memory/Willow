@@ -233,6 +233,8 @@ willow/
 │   │   │   ├── test_new.py   new.py's tests: the card is the idea, the script refuses, the list and FILES.md kept
 │   │   │   ├── order.py      the lists people add to by hand, kept A to Z by a script
 │   │   │   ├── test_order.py order.py's tests: entries move with their comments, refusals, the repo's own lists A to Z
+│   │   │   ├── commands.py   an add-on's line in COMMANDS, found from its own usage lines
+│   │   │   ├── test_commands.py  commands.py's tests: placeholders filled, the contract held, the line placed A to Z
 │   │   │   └── README.md     its card: gates, states, the guard and exit codes
 │   │   ├── ci-cache/
 │   │   │   ├── ci_cache.py    a cache key per ecosystem from a repo's lockfiles, so CI skips the reinstall

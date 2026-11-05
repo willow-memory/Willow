@@ -89,8 +89,10 @@ entry, and says what's left.
    `adapters/planned.json` with the same `writes` and `network` promises,
    and its `role`.
 2. **Its command line in `COMMANDS`**, in `adapters/stdlib/ci/test_contract.py`,
-   if a person runs it, in its place A to Z
-   (`python adapters/stdlib/ci/order.py write` puts it there). Missing, it
+   if a person runs it, in its place A to Z. Once it's built,
+   `python adapters/stdlib/ci/commands.py suggest NAME --write` finds one
+   from its usage lines and writes it there; when none of them keeps the
+   contract, it says what each did, and the line is yours. Missing, it
    fails the contract test, and every other add-on's mutants then report
    their accepted breaks as stale.
 3. **Its idea out of `adapters/planned.json`**, deletions only.
@@ -173,8 +175,11 @@ never invented, and the eight beats in `test_kernel.py` test it.
 
 ## A new CI row
 
-A gate added to `gates()` in `adapters/stdlib/ci/ci.py` (a demo, say) is
-also named in the two lists of gates in `adapters/stdlib/ci/test_ci.py`.
+A gate added to `gates()` in `adapters/stdlib/ci/ci.py` is also named in
+the two lists of gates in `adapters/stdlib/ci/test_ci.py`. A demo's tests
+need no row: a demo folder with tests that no `DEMO_TESTS` row runs gets
+`demo:FOLDER` from `demo_tests()`. Write a row only to give it another name
+or a program it needs (craft-assembly's git and cargo).
 Missed, `tests:adapters-*` fails, and `tests:strip-*` with it, since it runs
 the same tests. A new test file needs nothing: the chunks are cut from the
 files there are, and one not in `adapters/stdlib/ci/test-times.json` counts

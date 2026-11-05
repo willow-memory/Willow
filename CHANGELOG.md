@@ -10,6 +10,12 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `ci`: a demo folder with tests that no DEMO_TESTS row runs gets its own
+  gate, `demo:FOLDER`, so a new demo's tests run in CI with no row written
+- `ci`'s `adapters/stdlib/ci/commands.py suggest NAME` finds an add-on's
+  line in test_contract.py's COMMANDS from its own usage lines, run as the
+  contract test runs them, and `--write` puts it there A to Z; new.py's list
+  of what's left names it
 - `claude-code`'s prompt hook answers from scan's index with `--index`,
   while index-cache says the folder hasn't changed: the same passages and
   the same row on the record, in 2 s, not the 30 s the kernel takes to read

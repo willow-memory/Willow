@@ -93,6 +93,22 @@ file it can't describe goes in with nothing, and it says which.
 [create_pr.py](../github/create_pr.py) runs `write` before a pull request
 opens.
 
+**Its line in COMMANDS:** [commands.py](commands.py) `suggest NAME`
+reads the add-on's usage lines, fills each in as the contract test would
+(`--box DIR` is `{box}`, a question is "tomatoes", a file it reads is the
+pile's garden.md, an option left out first), and runs it as the test does.
+The first that keeps the contract is its line; `--write` puts it in
+COMMANDS, A to Z. Run on the 208 add-ons whose lines were written by hand,
+it found one that keeps the contract for 174; the other 34 need what only a
+person knows (a git ref, dice notation, a model's name, a catalog), and it
+says what each of their lines did.
+
+**A demo's tests:** a demo folder with tests that no `DEMO_TESTS` row
+runs gets a gate anyway, `demo:FOLDER` (`demo:FOLDER-tests` beside a
+person's own gate), from `demo_tests()`, so a new demo's tests run in CI
+with no row written. A row is for another name, or a program its tests
+need.
+
 **A to Z:** [order.py](order.py) keeps the lists people add to in order:
 the tables in test_contract.py (COMMANDS, READERS, PILE_EXTRA,
 REPORT_COMMANDS) and ci.py's DEMO_TESTS, each entry with the comments

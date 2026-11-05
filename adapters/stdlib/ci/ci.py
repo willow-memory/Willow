@@ -566,9 +566,9 @@ def live_checks() -> list[str]:
 
 
 #: (gate, pytest target, programs it needs) for each demo whose tests CI
-#: runs, in the one fixed order. Every test file under demo/ is under one of
-#: these targets: test_ci.py fails on one that isn't, since a test no gate
-#: runs is a test that never fails.
+#: runs, written for the ones whose gate has a name of its own or needs a
+#: program. A demo with tests and no row here gets one anyway, from
+#: demo_tests(): a test no gate runs is a test that never fails.
 DEMO_TESTS = (
     # the Craft apps taken apart and assembled: CI holds what was frozen, and
     # the tools on sources it makes, which git commits and Cargo builds
@@ -604,6 +604,29 @@ DEMO_TESTS = (
 
 def people() -> list[str]:
     return sorted(p.parent.name for p in (ROOT / "demo").glob("*/make_life.py"))
+
+
+def demo_tests() -> list[tuple[str, str, tuple[str, ...]]]:
+    """DEMO_TESTS, and a row for each demo whose tests no row runs: a folder
+    is `demo:NAME`, or `demo:NAME-tests` beside a person's own gate; a test
+    file at demo/'s top is `demo:` and its name. Written by no one."""
+    rows = list(DEMO_TESTS)
+    targets = [t for _, t, _ in rows]
+
+    def run_by_none(path: Path) -> bool:
+        rel = path.relative_to(ROOT).as_posix()
+        return not any(rel == t or rel.startswith(t + "/") for t in targets)
+
+    demo_dir = ROOT / "demo"
+    for folder in sorted(p for p in demo_dir.iterdir() if p.is_dir()):
+        tests = [p for p in folder.rglob("test_*.py") if "__pycache__" not in p.parts]
+        if any(run_by_none(p) for p in tests):
+            name = folder.name + ("-tests" if folder.name in people() else "")
+            rows.append((f"demo:{name}", f"demo/{folder.name}", ()))
+    for file in sorted(demo_dir.glob("test_*.py")):
+        if run_by_none(file):
+            rows.append((f"demo:{file.stem[5:]}", f"demo/{file.name}", ()))
+    return rows
 
 
 def gates() -> list[tuple[str, str, object]]:
@@ -647,7 +670,7 @@ def gates() -> list[tuple[str, str, object]]:
         out.append(("ports", f"ports:{port}", how))
     # the demos A to Z, a person's folder among the rest
     demos = [("demo", f"demo:{name}", demo(name)) for name in people()]
-    for gate, target, tools in DEMO_TESTS:
+    for gate, target, tools in demo_tests():
         demos.append(("demo", gate, command(*PYTEST, target, needs=lambda t=tools: (
             missing_module("pytest") or missing_tools(*t)))))  # fmt: skip
     out += sorted(demos, key=lambda g: g[1])

@@ -309,11 +309,11 @@ def under(path: str, folder: str) -> str | None:
 
 def demo_gates(path: str, person: str) -> list[str]:
     """The demo gates a path under demo/PERSON/ reaches: PERSON's make_life
-    check when there is one, and each of ci.DEMO_TESTS whose target holds the
+    check when there is one, and each of ci.demo_tests() whose target holds the
     path (demo/johnson's tests are demo:share, not demo:johnson). A folder with
     neither is still named demo:PERSON, which the plan says is no gate."""
     got = [f"demo:{person}"] if person in ci.people() else []
-    got += [g for g, t, _ in ci.DEMO_TESTS if path == t or path.startswith(t + "/")]
+    got += [g for g, t, _ in ci.demo_tests() if path == t or path.startswith(t + "/")]
     return got or [f"demo:{person}"]
 
 
