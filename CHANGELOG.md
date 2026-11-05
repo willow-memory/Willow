@@ -1838,7 +1838,7 @@ says how). The first was v0.1.0.
 - `test-impact`: the add-on test files a change reaches run as up to four
   steps, one a minute of their past times, and `--jobs` starts the longest
   steps first; restack and ci together, 22 reached files and two add-ons'
-  mutants, run in 10 minutes, not 21
+  mutants, run in 10 minutes, not 21 (#246)
 - `restack` settles a conflict in any other Markdown file when both sides
   only added lines where the base had none: REF's lines, then the branch's,
   as #243 and #244 each added paragraphs to ci's card; a side that changed
