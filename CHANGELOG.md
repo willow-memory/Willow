@@ -13,7 +13,7 @@ says how). The first was v0.1.0.
 - `hooks-elsewhere` `setup --host opencode` prints a native OpenCode plugin
   (save as `<.opencode/plugins/willow-passages.js>`) that injects Claude's
   framed passages as synthetic text, and still offers the Claude-compatible
-  hook JSON for runners that take it
+  hook JSON for runners that take it (#251)
 
 - `equations`: each displayed equation in LaTeX sources as a passage of its
   own, the math as its source writes it, with its labels, its .tex line and
