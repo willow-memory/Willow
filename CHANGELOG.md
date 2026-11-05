@@ -1846,6 +1846,9 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- `ci`'s test-times.json made from main's own CI run by `times.py write --run
+  latest`: 17 test files it lacked are in, share's at 175 s, and 20 others
+  moved by half or more, so the tests:adapters chunks are even again
 - `test-impact`: the add-on test files a change reaches run as up to four
   steps, one a minute of their past times, and `--jobs` starts the longest
   steps first; restack and ci together, 22 reached files and two add-ons'
