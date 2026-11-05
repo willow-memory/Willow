@@ -1817,6 +1817,10 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- `restack` settles a conflict in any other Markdown file when both sides
+  only added lines where the base had none: REF's lines, then the branch's,
+  as #243 and #244 each added paragraphs to ci's card; a side that changed
+  a line the base had still stops
 - `test-impact`'s `run --narrow` on a change that widens to every gate leaves
   them to CI and still runs the docs' checks and what the rest of the change
   reaches, under the guard: #244 changed ruff.toml beside commands.py, nothing

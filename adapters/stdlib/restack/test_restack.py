@@ -84,6 +84,30 @@ def test_a_conflict_it_cant_read_stops():
         rs.hunks("no markers here\n", lambda *a: "")
 
 
+CARD = "# ci\n\n**Every file:** files.py.\n\n**A to Z:** order.py.\n"
+
+
+def test_a_card_both_sides_added_a_paragraph_to_keeps_both_refs_first():
+    """#243 and #244 each added paragraphs to ci's card at the same place."""
+    ref = CARD.replace("\n\n**A to Z", "\n\n**Made again:** made.py.\n\n**A to Z")
+    mine = CARD.replace("\n\n**A to Z", "\n\n**Its line:** commands.py.\n\n**A to Z")
+    assert rs.added_both("README.md", CARD, ref, mine) == (
+        "# ci\n\n**Every file:** files.py.\n\n**Made again:** made.py.\n\n"
+        "**Its line:** commands.py.\n\n**A to Z:** order.py.\n"
+    )
+
+
+def test_a_list_both_sides_added_to_keeps_both_with_no_gap():
+    base = "- a\n- z\n"
+    got = rs.added_both("x.md", base, "- a\n- b\n- z\n", "- a\n- c\n- z\n")
+    assert got == "- a\n- b\n- c\n- z\n"
+
+
+def test_a_side_that_changed_a_line_the_base_had_stops():
+    with pytest.raises(rs.Stop, match="changed lines the base had"):
+        rs.added_both("x.md", "one\n", "one, said again\n", "one, said otherwise\n")
+
+
 def entry(name: str) -> dict:
     return {"name": name, "kind": "stdlib", "line": f"{name}."}
 
@@ -196,7 +220,7 @@ def test_a_conflict_with_no_rule_stops_it_and_leaves_the_branch_as_it_was(clone)
     got = run(clone, "--onto", "main", "work")
     assert got.returncode == 2
     assert (
-        "work: stopped, left as it was: a conflict with no rule, in LIMITS.md"
+        "work: stopped, left as it was: LIMITS.md: a side changed lines the base had"
         in got.stdout
     )
     assert git(clone, "rev-parse", "work") == old
