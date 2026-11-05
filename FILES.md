@@ -1511,9 +1511,14 @@ willow/
 ├── docs/
 │   ├── tour.md               the first five minutes, in full: a question, a gap, her words, an approval
 │   ├── how-it-works.md       what it reads, how it ranks, the key, the record, approvals
-│   └── design/
-│       ├── repo-index.md     proposal: the repo as one deterministic-snapshot box, indexed by a custom serve-style stack
-│       └── serve.md          proposal: a sealed stack of piles served to a model, on markdown (the grove's serve, in willow)
+│   ├── design/
+│   │   ├── repo-index.md     proposal: the repo as one deterministic-snapshot box, indexed by a custom serve-style stack
+│   │   └── serve.md          proposal: a sealed stack of piles served to a model, on markdown (the grove's serve, in willow)
+│   └── agents/               AGENTS.md's longer how-tos, one page a job
+│       ├── add-ons.md        an add-on's ten steps, the guard, ideas and a deps floor
+│       ├── pull-requests.md  opening one, main moving under a branch, a new CI row
+│       ├── searching.md      the kernel's rank, and the jobs that need another search
+│       └── studies.md        freezing a study, its dry run, and what a dry run misses
 ├── demo/                     four made-up people, a case passed between five more, a real bug, a real policy change and programs taken apart, to try it on
 │   ├── bernadette/           built blind, in her apps' raw formats, and run through the whole stack
 │   │   ├── make_life.py      her mail, calendars, chats, vault, office files, Kindle and PDFs, the same bytes every run
