@@ -135,15 +135,6 @@ def _after(prose: str, room: int) -> str:
     return para[:cut] if cut > 0 else ""
 
 
-def _said_after(prose: str) -> int:
-    """How much of the prose after an equation `_after` serves with it: up to
-    its first paragraph's first sentence end, so the next equation's lead-in
-    doesn't serve it again. 0 when that paragraph has no sentence end."""
-    para = _first_para(prose)
-    m = SENTENCE_END.search(para)
-    return len(prose) - len(prose.lstrip()) + m.end() if m else 0
-
-
 def passages(data: bytes, name: str) -> list[str]:
     """One passage per displayed equation in a .tex file's bytes; `name` is
     the file's relative path, for the citation line."""
@@ -174,7 +165,6 @@ def passages(data: bytes, name: str) -> list[str]:
             ", label " + ", ".join(x.strip() for x in labels) if labels else ""
         )
         prev_end = found[i - 1].end() if i else begin
-        prev_end += _said_after(text[prev_end : m.start()]) if i else 0
         next_start = found[i + 1].start() if i + 1 < len(found) else len(text)
         room = kernel.MAX_CHUNK - len(head) - len(eq) - 4  # the newlines between
         after = _after(text[m.end() : next_start], min(AFTER, max(room // 2, 0)))

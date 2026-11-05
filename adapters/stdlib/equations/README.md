@@ -40,8 +40,9 @@ own: `\eta` holds "eta", `\frac{1+2\eta}` holds "frac", "1", "2" and "eta".
 **A passage fits one of the kernel's chunks** (500 characters): the prose
 around it is trimmed to make room, the prose after first. An equation longer
 than that on its own is kept whole, and the kernel cuts it. Prose between two
-equations is served with the first up to its first sentence's end, and with
-the second after that.
+equations goes with both: its first sentence with the first, and the end of
+its paragraph with the second, since a lead-in such as "where the three
+coefficients are:" belongs to what follows it.
 
 **Displayed** means the equation, align, gather, multline, eqnarray,
 displaymath, flalign and alignat environments, starred or not, `\[ ... \]`

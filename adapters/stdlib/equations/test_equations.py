@@ -195,10 +195,20 @@ def test_context_stays_in_its_paragraph_and_its_first_sentence_after():
     ]
 
 
-def test_context_between_two_equations_is_not_served_twice_past_its_sentence():
-    body = b"\\[ a = 1 \\]\nso that. Then\n\\[ b = 2 \\]\n"
-    ps = mod.passages(body, "a.tex")
-    assert ps == ["a.tex line 1\na = 1\nso that.", "a.tex line 3\nThen\nb = 2"]
+def test_prose_between_two_equations_goes_with_both_a_lead_in_with_the_next():
+    # Coquand and Sperl's lead-in to Baxter's coefficients ends in a colon:
+    # it is the first sentence after one equation and all that leads to the next
+    body = b"\\[ a = 1 \\]\nwhere the coefficients are, in terms of the packing fraction:\n\\[ b = 2 \\]\n"
+    lead = "where the coefficients are, in terms of the packing fraction:"
+    assert mod.passages(body, "a.tex") == [
+        "a.tex line 1\na = 1\n" + lead,
+        "a.tex line 3\n" + lead + "\nb = 2",
+    ]
+    two = b"\\[ a = 1 \\]\nso that. Then\n\\[ b = 2 \\]\n"
+    assert mod.passages(two, "a.tex") == [
+        "a.tex line 1\na = 1\nso that.",
+        "a.tex line 3\nso that. Then\nb = 2",
+    ]
 
 
 def test_long_context_is_cut_at_a_sentence_so_a_passage_is_one_chunk():
