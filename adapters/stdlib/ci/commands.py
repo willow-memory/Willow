@@ -159,7 +159,7 @@ def candidates(lines: list[list[str]]) -> list[list[str]]:
 
 def _run(script: Path, *argv: str) -> subprocess.CompletedProcess | None:
     try:
-        return subprocess.run([sys.executable, str(script), *argv], stdin=subprocess.DEVNULL,
+        return subprocess.run([sys.executable, str(script), *argv], input="",
                               capture_output=True, text=True, timeout=WAIT)  # fmt: skip
     except subprocess.TimeoutExpired:
         return None
