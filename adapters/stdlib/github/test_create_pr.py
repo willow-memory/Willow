@@ -370,7 +370,7 @@ def test_the_real_steps_are_a_stack_of_add_ons_that_are_here():
     names = [n for _, ss in pools for n, _ in ss]
     assert names[0] == "restack" and names[-1] == "ci.changelog"
     assert pools[-1][0] == cp.AFTER and all(h != cp.AFTER for h, _ in pools[:-1])
-    assert {"readme", "ci.bugs", "test-impact.impact", "against"} <= set(names)
+    assert {"ci.made", "test-impact.impact", "against"} <= set(names)
     assert set(cp.FINE_42) <= set(names) and set(cp.STOP_ON) <= set(names)
 
 

@@ -10,6 +10,11 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `ci`'s `adapters/stdlib/ci/made.py` makes again, or checks, every file a
+  script makes: the add-on lists, BUGS.md, FILES.md, the lists kept A to Z
+  and craft-assembly's report, which a change elsewhere left stale five
+  times in CI. create_pr.py runs `write` as one step in place of four, so a
+  generator added to its table is made in every pull request
 - `claude-code`'s prompt hook answers from scan's index with `--index`,
   while index-cache says the folder hasn't changed: the same passages and
   the same row on the record, in 2 s, not the 30 s the kernel takes to read

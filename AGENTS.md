@@ -265,7 +265,7 @@ A result tested against what anyone can rerun, as in
 ## When main moves under a branch
 
 Merge or rebase, then regenerate rather than hand-merge what is generated:
-ADDONS.md and the README's add-on sections come from `readme.py write`, and
-BUGS.md from `python adapters/stdlib/ci/bugs.py write`. CHANGELOG.md and
-FILES.md are merged by hand: both sides' lines, in their order (or
-`files.py write` after the merge, for FILES.md).
+`python adapters/stdlib/ci/made.py write` makes every made file again
+(ADDONS.md and the README's add-on sections, BUGS.md, FILES.md, the lists
+kept A to Z, craft-assembly's report). CHANGELOG.md is merged by hand: both
+sides' lines, in their order.

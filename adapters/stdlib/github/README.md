@@ -29,7 +29,7 @@ kernel and every other add-on run and test the same without it.
 **Opening a pull request.** Commit the change, its CHANGELOG.md entry with
 it, then run `create_pr.py`. It runs [create_pr.md](create_pr.md), a
 [stack](../stack/) of the repo's own add-ons, in order: `restack` brings
-main in, `readme` and [bugs.py](../ci/bugs.py) make again what is made, `ci` lints,
+main in, [made.py](../ci/made.py) makes again every file a script makes, `ci` lints,
 `test-impact` runs the gates the change reaches (none, when it reaches
 everything: CI runs them all), and `against` holds it to the open pull
 requests. Then it pushes, opens the pull request (or finds the one open for

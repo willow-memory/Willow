@@ -233,6 +233,8 @@ willow/
 │   │   │   ├── test_new.py   new.py's tests: the card is the idea, the script refuses, the list and FILES.md kept
 │   │   │   ├── order.py      the lists people add to by hand, kept A to Z by a script
 │   │   │   ├── test_order.py order.py's tests: entries move with their comments, refusals, the repo's own lists A to Z
+│   │   │   ├── made.py       every file the repo makes from its others, made again, or checked
+│   │   │   ├── test_made.py  made.py's tests: each made again in order, what's stale named, the repo's current
 │   │   │   └── README.md     its card: gates, states, the guard and exit codes
 │   │   ├── ci-cache/
 │   │   │   ├── ci_cache.py    a cache key per ecosystem from a repo's lockfiles, so CI skips the reinstall
