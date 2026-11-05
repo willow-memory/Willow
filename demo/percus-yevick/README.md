@@ -183,10 +183,17 @@ local-model and same-way use, qwen3:8b reasons before it answers; gemma3:4b
 doesn't reason at all. Measured here on 2026-11-05 (Ollama 0.40.14): `/no_think`
 at the top of the system message and `"think": false` in the request both
 left it reasoning (233 and 237 tokens for a one-sentence answer);
-`"reasoning_effort": "none"` stopped it (10 tokens). The add-ons can't send
-that yet, and this study runs them as they are: qwen3:8b answers here with
-its reasoning, which makes it slow on this machine, not different in kind. An
-option to send it is a separate change, on its own branch.
+`"reasoning_effort": "none"` stopped it (10 tokens). **Both, side by side** (decided 2026-11-05): the found-then-arranged arm asks
+qwen3:8b twice, once with its reasoning and once with `reasoning_effort` set
+to none, and gemma3:4b once, having none. The add-ons can't send that setting
+yet; an option to send it is a separate change, on its own branch, and it
+joins this study before the freeze or this arm runs with reasoning only and
+says so.
+
+**Expected, before anything is run:** reasoning isn't needed to arrange found
+passages. The person running this study found so in other studies, and this
+arm is more data on it. Whether it held is reported, with each version's
+claim-check and misquote counts and the rubric's scores, not argued.
 
 ## The dry run
 
