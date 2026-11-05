@@ -147,6 +147,11 @@ What it can't see: whether any real question is held, which is the result.
 - **The author's questions** ([questions/author.txt](questions/author.txt))
   were written by someone who has seen the source list and that report.
   Blind questions are still to be written by someone who hasn't.
+- **A model's interim report was read before the freeze.** On 2026-11-05 the
+  ML specialist shared an interim report from an opencode session (a PDF,
+  SHA-256 `befd4060…63f9ac`, kept outside the repo). steps.json, score.py and
+  the questions were not changed after reading it; a later change to them
+  will say whether it was.
 - **The rule is strict.** A formula in another form (expanded, or with the
   diameter set to 1) is not held. That makes misses likelier, not hits.
 
