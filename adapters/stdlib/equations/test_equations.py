@@ -300,8 +300,8 @@ def test_a_cut_on_a_space_keeps_the_word_after_it():
 
 
 def test_prose_with_no_sentence_end_between_two_equations_goes_with_both():
-    body = b"\\[ a = 1 \\]\nso then\n\\[ b = 2 \\]\n"
+    body = b"\\[ a = 1 \\], so then\n\\[ b = 2 \\]\n"
     assert mod.passages(body, "a.tex") == [
-        "a.tex line 1\na = 1\nso then",
-        "a.tex line 3\nso then\nb = 2",
+        "a.tex line 1\na = 1\n, so then",
+        "a.tex line 2\n, so then\nb = 2",
     ]
