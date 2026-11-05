@@ -39,7 +39,7 @@ share is neither's: the one below sees only what the one above adds past it.
 |---|---|---|
 | `duplicate:` | both add an add-on folder in `adapters/stdlib/` or `adapters/deps/` (a `words-<code>` pack too), an idea of the same name to `adapters/planned.json`, the same key to `COMMANDS` in `adapters/stdlib/ci/test_contract.py`, or the same path to FILES.md. An idea built by one and added by the other is the same name. | 2 |
 | `collides:` | a trial merge of the two heads (`git merge-tree`) conflicts in a file other than the ones below; the line names it and says to merge that branch first and base on it | 0 |
-| `settled:` | the trial merge conflicts only in a file [restack](../restack/) settles by rule: ADDONS.md, README.md, BUGS.md, CHANGELOG.md, FILES.md, `adapters/stdlib/ci/test_contract.py`, `adapters/planned.json` | 0 |
+| `settled:` | the trial merge conflicts only in a file [restack](../restack/) settles by rule: ADDONS.md, README.md, BUGS.md, CHANGELOG.md, FILES.md, `adapters/stdlib/ci/test_contract.py`, `adapters/planned.json`; or any other Markdown file where both sides only added lines, which restack keeps both of | 0 |
 | `near:` | an idea or add-on yours adds is near one theirs adds, by [similar](../similar/)'s search | 0 |
 
 Both pulling the same idea *off* `adapters/planned.json` is not a duplicate: it

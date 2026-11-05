@@ -413,7 +413,23 @@ def test_restacks_card_names_each_of_them_in_its_table():
     cells = [row.split("|")[1].strip() for row in table.splitlines()[2:]]
     names = {n.strip().strip("`") for cell in cells for n in cell.split(",")}
     short = {Path(p).name: p for p in against.SETTLED}
+    # restack's rule for any other Markdown file is against.only_added's
+    assert "any other Markdown file" in names
+    names.discard("any other Markdown file")
     assert {short.get(n, n) for n in names} == set(against.SETTLED)
+
+
+def test_a_markdown_conflict_where_both_only_added_is_settled_and_one_that_changed_isnt():
+    """#243 and #244 each added a paragraph to ci's card: restack keeps both,
+    so against says settled, not collides."""
+    base = "# ci\n\n**A:** a.\n\n**Z:** z.\n"
+    mine = base.replace("\n\n**Z", "\n\n**B:** b.\n\n**Z")
+    other = base.replace("\n\n**Z", "\n\n**C:** c.\n\n**Z")
+    assert against.only_added(base, mine, other)
+    assert not against.only_added(
+        base, base.replace("a.", "aa."), base.replace("a.", "ab.")
+    )
+    assert not against.only_added(base, base, base), "no conflict is not 'only added'"
 
 
 # ── read on this repo's own files ────────────────────────────────────────────
