@@ -95,6 +95,9 @@ def check(base: str, pr: str) -> int:
             f"## Unreleased ending (#{pr})",
             file=sys.stderr,
         )
+        print("write the entry and commit it with the change; then"
+              " python adapters/stdlib/github/create_pr.py numbers it, in the push"
+              " that opens the pull request", file=sys.stderr)  # fmt: skip
     for n in unnamed:
         print(f"refused: BUGS.md no longer lists bug #{n}, and no entry of this pull "
               f"request's under ### Fixed names it as bug #{n}", file=sys.stderr)  # fmt: skip

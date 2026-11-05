@@ -30,8 +30,8 @@ kernel and every other add-on run and test the same without it.
 it, then run `create_pr.py`. It runs [create_pr.md](create_pr.md), a
 [stack](../stack/) of the repo's own add-ons, in order: `restack` brings
 main in, [made.py](../ci/made.py) makes again every file a script makes, `ci` lints,
-`test-impact` runs the gates the change reaches (none, when it reaches
-everything: CI runs them all), and `against` holds it to the open pull
+`test-impact` runs the gates the change reaches (when it reaches
+everything, only what the rest of it reaches: CI runs them all), and `against` holds it to the open pull
 requests. Then it pushes, opens the pull request (or finds the one open for
 this branch), writes its number into the entry, runs
 [changelog.py](../ci/changelog.py) with it, and pushes again.
@@ -44,7 +44,7 @@ this branch), writes its number into the entry, runs
   moved on, and GitHub out of reach. It says which, and what to do; run it
   again after. A push or an open GitHub answers with an error (a 502) is
   tried again first, after 2, 4, 8 and 16 seconds, and before each new open
-  it looks for the pull request, which an error answer can still have made. A 42 that owes nothing (no other pull request to hold it to,
+  it looks for the pull request, which an error answer can still have made. A 42 that owes nothing (no other pull request to hold it to, no add-on a person runs to try on real data,
   a gate whose tool isn't here) is said in the pull request instead.
 - **Never:** rebase, amend or force-push, approve or merge, or write a file
   but CHANGELOG.md's number.

@@ -242,6 +242,10 @@ willow/
 │   │   │   ├── test_commands.py  commands.py's tests: placeholders filled, the contract held, the line placed A to Z
 │   │   │   ├── py39.py       what Python 3.10 and later added, found before CI's 3.9 run does
 │   │   │   ├── test_py39.py  py39.py's tests: what 3.9 lacks named, guarded imports pass, the repo clean
+│   │   │   ├── realdata.py   an add-on run on every demo person's real folder, by a script
+│   │   │   ├── test_realdata.py  realdata.py's tests: a run per person, a traceback fails, a refusal holds
+│   │   │   ├── test_times.py  times.py's tests: JUnit summed by file, unseen kept, gone dropped
+│   │   │   ├── times.py      test-times.json kept to what CI's own run took, by a script
 │   │   │   └── README.md     its card: gates, states, the guard and exit codes
 │   │   ├── ci-cache/
 │   │   │   ├── ci_cache.py    a cache key per ecosystem from a repo's lockfiles, so CI skips the reinstall

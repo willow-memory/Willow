@@ -36,13 +36,14 @@ merge conflicts:
 | FILES.md | both sides' folders, A to Z |
 | test_contract.py | both sides' `COMMANDS` lines, and entries either side added to `COMMANDS`, `READERS` or `PILE_EXTRA`, with imports, whole |
 | adapters/planned.json | REF's ideas, less the ones the branch built, plus any it added |
+| any other Markdown file | both sides' lines, REF's first, when each side only added lines where the base had none (two paragraphs on one add-on's card), a blank line between paragraphs |
 
 These are the files every add-on's pull request touches and that main's
 own changes touch too. **Any other conflict stops that branch** and leaves it
 exactly as it was, saying which file: two sides changing the same code is a
 person's call. A conflict in one of these files that doesn't fit its rule
-(a changelog conflict outside Unreleased, a tree entry both sides changed)
-stops it too.
+(a changelog conflict outside Unreleased, a tree entry both sides changed,
+a Markdown line the base had that either side changed) stops it too.
 
 **test_contract.py by what was added.** Two readers each add a sample to
 `READERS`, and git lines the two new entries up against one shared closing

@@ -194,17 +194,21 @@ def breaches(log: Path) -> str | None:
     return "; ".join(lines)[:400] if lines else None
 
 
-def guarded_tests(*target: str):
+def guarded_tests(*target: str, junit: str = ""):
     """pytest over `target` under the guard: failing on a failed test, or on
-    any breach of a card's promises."""
+    any breach of a card's promises. With WILLOW_JUNIT_DIR set (CI, on main)
+    and a `junit` name, pytest's times are written there as NAME.xml, which
+    times.py makes test-times.json from."""
 
     def gate() -> tuple[str, str, str | None]:
         why = missing_module("pytest")
         if why:
             return UNREACHABLE, "", why
+        where = os.environ.get("WILLOW_JUNIT_DIR", "")
+        xml = (f"--junitxml={Path(where) / junit}.xml",) if where and junit else ()
         with tempfile.TemporaryDirectory() as tmp:
             log = Path(tmp) / "guard.log"
-            code, said = run((*PYTEST, *target), env=guarded(log))
+            code, said = run((*PYTEST, *target, *xml), env=guarded(log))
             broke = breaches(log)
         if broke:  # first: a breach is why the tests failed, if they did
             return FAILING, said, f"broke its card's promises: {broke}"
@@ -649,7 +653,13 @@ def gates() -> list[tuple[str, str, object]]:
         ("tests", "tests:docs", pytest("test_docs.py", "test_docs_fires.py")),
     ]
     for k, part in enumerate(chunks(adapter_tests(), ADAPTER_CHUNKS), 1):
-        out.append(("tests", f"tests:adapters-{k}", guarded_tests(*part)))
+        out.append(
+            (
+                "tests",
+                f"tests:adapters-{k}",
+                guarded_tests(*part, junit=f"adapters-{k}"),
+            )
+        )
     # each add-on's tests again, in a copy holding only what its card uses
     out.append(("tests", "tests:alone", command(PY, "adapters/stdlib/ci/alone.py",
                 needs=lambda: missing_module("pytest"))))  # fmt: skip

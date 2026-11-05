@@ -71,7 +71,7 @@ WAITS = tuple(
 #: the pool whose steps need the pull request's number
 AFTER = "after it opens"
 #: a step's 42 that owes nothing: said in the pull request, not stopped on
-FINE_42 = {"restack", "test-impact.impact", "against"}
+FINE_42 = {"restack", "test-impact.impact", "against", "ci.realdata"}
 #: a line that stops a step which exited 0: (step, the line's start, why)
 STOP_ON = {
     "against": (

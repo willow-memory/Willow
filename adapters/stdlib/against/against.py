@@ -216,11 +216,40 @@ def merge_conflicts(mine: str, other: str) -> list[str]:
     return sorted({p for p in got.stdout.split("\0")[1:] if p})
 
 
+def only_added(base: str, mine: str, other: str) -> bool:
+    """Every conflict of the two is lines each side added where the base had
+    none: what restack keeps both of, in a Markdown file outside SETTLED."""
+    with tempfile.TemporaryDirectory() as tmp:
+        paths = []
+        for side, text in (("mine", mine), ("base", base), ("other", other)):
+            (Path(tmp) / side).write_text(text, encoding="utf-8")
+            paths.append(str(Path(tmp) / side))
+        merged = subprocess.run(["git", "merge-file", "-p", "--diff3", *paths],
+                                capture_output=True, text=True).stdout  # fmt: skip
+    hunks = re.findall(r"^\|{7} [^\n]*\n(.*?)^={7}\n", merged, re.S | re.M)
+    return bool(hunks) and not any(h.strip() for h in hunks)
+
+
+def blob(ref: str, path: str) -> str:
+    got = subprocess.run(
+        ["git", "show", f"{ref}:{path}"], capture_output=True, text=True
+    )
+    return got.stdout if got.returncode == 0 else ""
+
+
 def collisions(mine: str, other: str, who: str) -> list[str]:
     out = []
     for path in merge_conflicts(mine, other):
         if path in SETTLED:
             out.append(f"settled: {path} with {who}; restack settles it")
+        elif path.endswith(".md") and only_added(
+            blob(git("merge-base", mine, other).strip(), path),
+            blob(mine, path),
+            blob(other, path),
+        ):
+            out.append(
+                f"settled: {path} with {who}; both only added lines, restack keeps both"
+            )
         else:
             out.append(
                 f"collides: {path} with {who}; merge its branch first and base on it"

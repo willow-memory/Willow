@@ -24,6 +24,10 @@ branch, and it is left exactly as it was:
                              stops)
     adapters/planned.json    REF's list, less the ideas the branch built, plus
                              any it added
+    any other .md file       both sides' lines, REF's first, when each side
+                             only added lines where the base had none (a
+                             paragraph each on an add-on's card); a side
+                             that changed a line the base had stops
 
 Once REF is merged in, test_docs.py runs in the scratch worktree: it is
 the check that catches a merge settled wrong (a tree missing a file, a
@@ -287,6 +291,39 @@ def planned(base: str, ref: str, mine: str) -> str:
     return json.dumps(out, indent=1, ensure_ascii=False) + "\n"
 
 
+DIFF3 = re.compile(
+    r"<<<<<<< [^\n]*\n(.*?)\|\|\|\|\|\|\| [^\n]*\n(.*?)=======\n(.*?)>>>>>>> [^\n]*\n",
+    re.S,
+)
+
+
+def added_both(name: str, base: str, ref: str, mine: str) -> str:
+    """A Markdown file where both sides only added lines at the same place:
+    REF's lines, then the branch's, a blank line between them when what
+    follows is a blank line (paragraphs, not a list). Stops on any conflict
+    where the base had lines there."""
+    with tempfile.TemporaryDirectory() as tmp:
+        paths = []
+        for side, text in (("ref", ref), ("base", base), ("mine", mine)):
+            path = Path(tmp) / side
+            path.write_text(text, encoding="utf-8")
+            paths.append(str(path))
+        merged = subprocess.run(["git", "merge-file", "-p", "--diff3", *paths],
+                                capture_output=True, text=True).stdout  # fmt: skip
+    out, at = [], 0
+    for m in DIFF3.finditer(merged):
+        theirs, was, ours = m.group(1), m.group(2), m.group(3)
+        if was.strip():
+            raise Stop(f"{name}: a side changed lines the base had; settle it by hand")
+        rest = merged[m.end() :]
+        gap = "\n" if rest.startswith("\n") and not theirs.endswith("\n\n") else ""
+        out += [merged[at : m.start()], theirs + gap + ours]
+        at = m.end()
+    if not out:
+        raise Stop(f"{name}: a conflict this can't read")
+    return "".join(out) + merged[at:]
+
+
 SETTLE = {
     "CHANGELOG.md": changelog,
     "FILES.md": files_tree,
@@ -335,7 +372,10 @@ def settle(work: Path) -> list[str]:
     unknown = [
         n
         for n in names
-        if n not in MADE and n not in SETTLE and n != "adapters/planned.json"
+        if n not in MADE
+        and n not in SETTLE
+        and n != "adapters/planned.json"
+        and not n.endswith(".md")
     ]
     if unknown:
         raise Stop(
@@ -355,9 +395,11 @@ def settle(work: Path) -> list[str]:
             except Stop:  # else what each side added, each entry read whole
                 text = contract_entries(*stages(work, n))
             p.write_text(text, encoding="utf-8")
-        else:
+        elif n in SETTLE:
             text = swap(p.read_text(encoding="utf-8"))
             p.write_text(SETTLE[n](text), encoding="utf-8")
+        else:
+            p.write_text(added_both(n, *stages(work, n)), encoding="utf-8")
     return names
 
 

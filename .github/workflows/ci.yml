@@ -223,7 +223,11 @@ jobs:
       # cores.py verifies each record itself and refuses when one doesn't;
       # its records are ci-record/1 to ci-record/4, and its log has every
       # gate's verdict, which ci-why reads
+      # on main, one Python writes each tests:adapters gate's times, for
+      # adapters/stdlib/ci/times.py to keep test-times.json to
       - run: python adapters/stdlib/ci/cores.py --jobs 4 --box ${{ runner.temp }}/ci-record tests --without tests:strip | tee "$RUNNER_TEMP/ci.log"
+        env:
+          WILLOW_JUNIT_DIR: ${{ github.event_name == 'push' && matrix.python-version == '3.13' && format('{0}/junit', runner.temp) || '' }}
       - if: failure()
         run: python adapters/stdlib/ci-why/ci_why.py "$RUNNER_TEMP/ci.log" >> "$GITHUB_STEP_SUMMARY" || true
       - if: always()
@@ -233,6 +237,11 @@ jobs:
         with:
           name: ci-record-tests-${{ matrix.python-version }}
           path: ${{ runner.temp }}/ci-record/*/record.jsonl
+      - if: github.event_name == 'push' && matrix.python-version == '3.13'
+        uses: actions/upload-artifact@v7
+        with:
+          name: test-times
+          path: ${{ runner.temp }}/junit/*.xml
 
   strip:
     # tests:strip, test_strip.py: the repo without GitHub, then without any

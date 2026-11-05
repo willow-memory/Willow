@@ -129,6 +129,19 @@ add-ons, run on 3.13 alone, are left out; a newer module tried with
 ImportError caught, or given by a conftest.py, passes. It is the lint:py39
 gate, so create_pr.py runs it on every pull request.
 
+**Real data:** [realdata.py](realdata.py) `run NAME` (or `--base REF`,
+each stdlib add-on the branch changed) makes every demo person's files and a
+box over them, and runs the add-on's COMMANDS line on each, a reader its
+`mirror`, under the guard and held to a minute. A traceback, a breach, a
+hang or an odd exit fails it; a refusal is said. create_pr.py runs it.
+
+**Test times:** [times.py](times.py) keeps [test-times.json](test-times.json)
+to CI's own run: on a push to main the tests job writes each
+tests:adapters gate's JUnit XML (`WILLOW_JUNIT_DIR`) as the `test-times`
+artifact, and `write --run latest` reads the last green run's, by gh;
+`write --from DIR` reads files already here. `check` says what the json
+lacks, and never fails: only the balance of the chunks depends on it.
+
 **A to Z:** [order.py](order.py) keeps the lists people add to in order:
 the tables in test_contract.py (COMMANDS, READERS, PILE_EXTRA,
 REPORT_COMMANDS) and ci.py's DEMO_TESTS, each entry with the comments
