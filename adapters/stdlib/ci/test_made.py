@@ -1,5 +1,5 @@
 """made.py: every made file made again, or checked, in MADE's order; what's
-stale or failed is named; and the repo's own made files are current."""
+stale or failed is named; and every script in its table answers."""
 
 from __future__ import annotations
 
@@ -65,10 +65,13 @@ def test_a_script_that_fails_is_said_by_what_it_makes(repo):
     assert got[0][1] == 0 and got[1] == ("two's file", 3, "no")
 
 
-def test_every_script_in_made_is_here_and_the_repos_made_files_are_current():
+def test_every_script_in_made_is_here_and_answers_check():
+    """Each one's own test holds what it makes to the repo (FILES.md's is
+    test_docs.py's); this holds the table to scripts that answer. Taken out
+    with an add-on, as test_strip.py does, FILES.md is stale and says so."""
     assert all((made.ROOT / s).is_file() for _, s in made.MADE)
-    stale = [(w, said) for w, c, said in made.run(made.ROOT, "check") if c]
-    assert stale == [], "python adapters/stdlib/ci/made.py write"
+    for what, code, said in made.run(made.ROOT, "check"):
+        assert code in (0, 1, 2) and "Traceback" not in said, (what, said)
 
 
 @pytest.mark.parametrize("argv", [[], ["writ"], ["check", "more"]])
