@@ -1847,7 +1847,7 @@ says how). The first was v0.1.0.
 ### Fixed
 
 - `mcp-lite`: parse a propose refusal with `partition` instead of a maxsplit
-  `split`, so the accepted inert mutant is gone (same as `mcp-sampling`)
+  `split`, so the accepted inert mutant is gone (same as `mcp-sampling`) (#257)
 
 ### Changed
 
