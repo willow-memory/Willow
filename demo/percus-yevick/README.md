@@ -128,8 +128,9 @@ is set, so the run can't be repeated token for token. The weights files' SHA-256
 as they sent them: `4c1eb2ce…7d2aca3` (00001-of-00002) and `316b46f3…c161e113`
 (00002-of-00002), in full:
 `4c1eb2ceb4915e1192f4f386021897bde56a97f40a0bb78bb86465e0f7d2aca3` and
-`316b46f3a2dbd68c900f43136ab9449f9dcc3725dfd8c794847c204bc161e113`. Still
-missing: the temperature as opencode sets it.
+`316b46f3a2dbd68c900f43136ab9449f9dcc3725dfd8c794847c204bc161e113`. The temperature
+is not known: they took opencode's default to be 0.8 and did not confirm it.
+That is as far as the record of this run goes; it is closed as it stands.
 
 They also sent the solver the session wrote (`alt3.py`, 69 lines, SHA-256
 `b7ac94de…7122d6`, kept outside the repo). It is numerics only (numpy and
@@ -199,9 +200,10 @@ What it can't see: whether any real question is held, which is the result.
   physics student says it's beyond them, and suggests their advisor.
 - **Blind questions**: from whom.
 - **For the physics student**: which four books they meant.
-- **For the ML specialist**: whether they will send their model's
-  derivations, verbatim, with the weights file's SHA-256, Strata's version and
-  the sampling settings, to be scored beside the found chain.
+- **The ML specialist's run is in, as far as it goes**: the interim report,
+  the full transcript, the solver, the weights' hashes and Strata's settings.
+  Its final long-form derivation, if one comes, is the text to score; until
+  then the interim report is.
 - **Baxter, which paper.** Baxter published two papers in 1968. "Ornstein–Zernike
   Relation for a Disordered Fluid" (Aust. J. Phys. 21, 563) is the
   factorization, and its abstract says the PY hard-sphere solution follows
