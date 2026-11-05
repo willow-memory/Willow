@@ -28,7 +28,10 @@ named):
 - **expectations:** expectations.json graded against the kernel's finds.
 
 --dry asks every question as nonsense and passes nonsense for each model
-text, as pipeline.py's --dry does: the wiring, not the results. A runner,
+text, as pipeline.py's --dry does: the wiring, not the results. Since
+nonsense finds nothing, no model would be asked; a dry run's arranged arm
+asks two of its questions of a box holding one nonsense passage instead, so
+the models are really called, about nothing. A runner,
 not an add-on: it calls the add-ons' own command lines, writes only under
 WORK and to --out, and is not part of CI. Exit 0 always; it reports.
 """
@@ -268,6 +271,24 @@ def arranged(
     return out
 
 
+def plumbing_box(work: Path) -> Path:
+    """The dry run's box for the models: one passage holding the nonsense the
+    dry run asks, so the kernel serves it and the model is really called."""
+    pile, box = work / "plumbing-pile", work / "plumbing-box"
+    if not (box / "kernel.json").exists():
+        pile.mkdir(parents=True, exist_ok=True)
+        (pile / "nonsense.txt").write_text(
+            "qqqq zzzz 1 and qqqq zzzz 2 are the dry run's words, and this passage holds them.\n",
+            encoding="utf-8")  # fmt: skip
+        with contextlib.redirect_stdout(io.StringIO()):
+            if (
+                kernel.init(box, pile, work / "plumbing-box.key", kernel.now())
+                != kernel.ALIVE
+            ):
+                raise SystemExit(f"refused: couldn't make a box at {box}")
+    return box
+
+
 def cards(box: Path) -> list[str]:
     out = []
     for card in sorted((HERE / "models").glob("*.md")):
@@ -333,11 +354,19 @@ def main(argv: list[str]) -> int:
     report["claims"] = {}
     for t in texts:
         body = (
-            "qqqq zzzz. vvvv = wwww.\n" if dry else Path(t).read_text(encoding="utf-8")
+            "qqqq zzzz yyyy xxxx. vvvv = wwww.\n"
+            if dry
+            else Path(t).read_text(encoding="utf-8")
         )
         report["claims"][Path(t).name] = claims(box, body)
     say("arranged")
-    if "--url" in opts and "--models" in opts:
+    if "--url" in opts and "--models" in opts and dry:
+        # nonsense finds nothing in the stack, so no model would be asked: two
+        # of its questions, asked of a box holding one nonsense passage
+        first = [q for q in qs if q["set"] != "null"][:2]
+        report["arranged"] = arranged(plumbing_box(work), first, opts["--url"],
+                                      opts["--models"].split(","), work)  # fmt: skip
+    elif "--url" in opts and "--models" in opts:
         report["arranged"] = arranged(
             box, qs, opts["--url"], opts["--models"].split(","), work
         )
