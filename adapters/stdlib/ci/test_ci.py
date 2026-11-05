@@ -215,7 +215,7 @@ def test_verify_holds_the_chain_and_refuses_anything_but_ci_verdicts(tmp_path):
 def test_the_gates_run_in_one_fixed_order_and_cover_every_part():
     names = [g for _, g, _ in ci.gates()]
     assert names == [
-        "lint:check", "lint:format",
+        "lint:check", "lint:format", "lint:py39",
         "tests:beats", "tests:kernel", "tests:docs",
         *(f"tests:adapters-{k}" for k in range(1, ci.ADAPTER_CHUNKS + 1)),
         "tests:alone",
@@ -321,7 +321,7 @@ def test_a_gate_is_named_or_left_out_by_name():
     assert ci.select(["tests:strip-2"], [], None) == ["tests:strip-2"]
     assert ci.select(["tests:strip"], [], None) == strip  # a group is its chunks
     assert ci.select(["tests"], ["tests:strip"], None) == [g for g in tests if g not in strip]  # fmt: skip
-    assert ci.select(["lint", "tests:strip-1"], [], None) == ["lint:check", "lint:format", "tests:strip-1"]  # fmt: skip
+    assert ci.select(["lint", "tests:strip-1"], [], None) == ["lint:check", "lint:format", "lint:py39", "tests:strip-1"]  # fmt: skip
     assert ci.select([], [], None) == [g for _, g, _ in ci.gates()]
 
 

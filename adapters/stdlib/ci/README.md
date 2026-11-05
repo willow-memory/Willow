@@ -42,7 +42,7 @@ record in the runner's temp folder.
 
 | Part | Gates, in this order |
 |---|---|
-| lint | `lint:check`, `lint:format` (ruff) |
+| lint | `lint:check`, `lint:format` (ruff), `lint:py39` (what 3.10 and later added, [py39.py](py39.py)) |
 | tests | `tests:beats` (`kernel.py test`), `tests:kernel`, `tests:docs` (`test_docs.py`, and `test_docs_fires.py`, which shows each docs check fails on a planted violation), `tests:adapters-1` to `-8` (the add-ons in `adapters/stdlib/`, under the guard, each a share of their test files, cut by the times in [test-times.json](test-times.json)), `tests:alone` ([alone.py](alone.py): each add-on's tests again, in a copy holding only the kernel, the add-on and what its card `uses`), `tests:ui` ([ui/](../../../ui/): willow's own UI, its server run over a stack made in a scratch folder), `tests:vectors` (pytest), `tests:strip-1` to `-4` (`test_strip.py`: the repo without GitHub, then without any add-on; the first the kernel-alone work and the kernel's tests, the others a share of the add-ons' test files in the stripped copy), `tests:constitution` (the eternity clause, attacked), `tests:coverage` (`constitution/coverage.py`: which clauses are cited where; failing only on a clause declared failing) |
 | ports | `ports:java`, `ports:ts`, `ports:csharp`: `vectors/compare.py`, one port at a time |
 | demo | `demo:hollis`, `demo:odile`, `demo:teodora`: each person's files made in a temporary folder and held to their `demo/*/PLANTED.md` |
@@ -108,6 +108,14 @@ runs gets a gate anyway, `demo:FOLDER` (`demo:FOLDER-tests` beside a
 person's own gate), from `demo_tests()`, so a new demo's tests run in CI
 with no row written. A row is for another name, or a program its tests
 need.
+
+**Newer than 3.9:** [py39.py](py39.py) `check` names each use of what
+Python 3.10 and later added that ruff can't see, by file and line: a
+keyword 3.9 doesn't take (`write_text(newline=)`), a newer name
+(`itertools.pairwise`, `datetime.UTC`), `isinstance(x, A | B)`. The deps
+add-ons, run on 3.13 alone, are left out; a newer module tried with
+ImportError caught, or given by a conftest.py, passes. It is the lint:py39
+gate, so create_pr.py runs it on every pull request.
 
 **A to Z:** [order.py](order.py) keeps the lists people add to in order:
 the tables in test_contract.py (COMMANDS, READERS, PILE_EXTRA,

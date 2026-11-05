@@ -493,6 +493,9 @@ def steps(plan: Plan, gates: list):
             )
             out.append((gate, f"ruff on {len(files)} changed .py file(s)",
                         " ".join(("ruff", *argv)), how))  # fmt: skip
+        out.append(("lint:py39", f"py39.py on {len(files)} changed .py file(s)",
+                    " ".join(("py39.py check", *files)),
+                    ci.command(ci.PY, "adapters/stdlib/ci/py39.py", "check", *files)))  # fmt: skip
     for name in plan.narrow:
         out.append(("tests:adapters", f"test_contract.py narrowed to {name}",
                     f"WILLOW_ONLY={name} pytest {CONTRACT}", pytest_under_guard([CONTRACT], name)))  # fmt: skip

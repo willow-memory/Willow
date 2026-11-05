@@ -10,6 +10,11 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `ci`'s lint:py39 gate, `adapters/stdlib/ci/py39.py check`, names each use of
+  what Python 3.10 and later added that ruff can't see (`write_text(newline=)`,
+  `zip(strict=)`, `itertools.pairwise`, `isinstance(x, A | B)`), which failed
+  CI's 3.9 run three times; ruff now also refuses an `int | None` annotation
+  without `from __future__ import annotations` (FA102)
 - `ci`: a demo folder with tests that no DEMO_TESTS row runs gets its own
   gate, `demo:FOLDER`, so a new demo's tests run in CI with no row written
 - `ci`'s `adapters/stdlib/ci/commands.py suggest NAME` finds an add-on's

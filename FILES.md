@@ -235,6 +235,8 @@ willow/
 │   │   │   ├── test_order.py order.py's tests: entries move with their comments, refusals, the repo's own lists A to Z
 │   │   │   ├── commands.py   an add-on's line in COMMANDS, found from its own usage lines
 │   │   │   ├── test_commands.py  commands.py's tests: placeholders filled, the contract held, the line placed A to Z
+│   │   │   ├── py39.py       what Python 3.10 and later added, found before CI's 3.9 run does
+│   │   │   ├── test_py39.py  py39.py's tests: what 3.9 lacks named, guarded imports pass, the repo clean
 │   │   │   └── README.md     its card: gates, states, the guard and exit codes
 │   │   ├── ci-cache/
 │   │   │   ├── ci_cache.py    a cache key per ecosystem from a repo's lockfiles, so CI skips the reinstall

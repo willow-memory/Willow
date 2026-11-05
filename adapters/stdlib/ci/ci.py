@@ -480,6 +480,7 @@ GATE_COST = {
     "tests:coverage": 30,
     "lint:check": 10,
     "lint:format": 10,
+    "lint:py39": 10,
 }
 DEFAULT_COST = 30
 #: TIMES was taken on a busier box than a CI runner: about this much of a
@@ -636,6 +637,8 @@ def gates() -> list[tuple[str, str, object]]:
                                        needs=lambda: missing_module("ruff"))),
         ("lint", "lint:format", command(PY, "-m", "ruff", "format", "--check", ".",
                                         needs=lambda: missing_module("ruff"))),
+        # what 3.10 and later added, which ruff can't see: py39.py
+        ("lint", "lint:py39", command(PY, "adapters/stdlib/ci/py39.py", "check")),
         ("tests", "tests:beats", command(PY, "kernel.py", "test")),
     ]  # fmt: skip
     pytest = lambda *target, **kw: command(  # noqa: E731
