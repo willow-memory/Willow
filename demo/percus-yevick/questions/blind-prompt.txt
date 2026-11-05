@@ -1,0 +1,25 @@
+You are a physics student learning the theory of simple liquids. For each topic below, write one question you would ask a textbook's index or a professor to find where that topic is explained. Write it in plain English, the way someone learning it would ask. Do not answer the questions.
+
+The topics, about a fluid of hard spheres that all have the same radius and a uniform electron density, in a vacuum:
+
+s0: the equation of state at low density
+s1a: the amplitude of a wave scattered from the electron density
+s1b: the form factor of a sphere with uniform electron density
+s1c: the scattered intensity as a form factor times a structure factor
+s2: the structure factor from the radial distribution function
+s3: the Ornstein-Zernike equation, and the structure factor from the direct correlation function
+s4: the Percus-Yevick closure for hard spheres
+s5a: Baxter's factorization
+s5b: the coefficients of Baxter's function Q(r)
+s6: the structure factor at zero wavevector, and the compressibility
+s7: the Percus-Yevick equation of state
+e1: the direct correlation function inside the hard core
+e2: the contact value of the radial distribution function
+e3: the total correlation function
+e4: the cavity function
+e5: the form factor P(q)
+e6: the scattered intensity I(q) from P(q) and S(q)
+e7: a graph of the structure factor or radial distribution function at a given packing fraction
+
+Answer with one line per topic, starting with its label, like this:
+s0: your question

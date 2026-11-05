@@ -1,5 +1,5 @@
 {
- "about": "The chain a found derivation must reach, step by step, and what a served passage must hold to count for a step. DRAFT: not frozen. score.py reads it: a passage's math is normalized (normalize()) and each anchor is a regular expression on that; a step's words must all be in the passage's text. A step is hit when any one of its anchors holds.",
+ "about": "The chain a found derivation must reach, step by step, and what a served passage must hold to count for a step. DRAFT: not frozen. score.py reads it: a passage's math is normalized (normalize()) and each anchor is a regular expression on that; a step's words must all be in the passage's text. A step is hit when any one of its anchors holds. The extended steps (e1 and on) are the physics student's further asks: reported beside the pass rules, never counted in them.",
  "packing_fraction": "eta, phi, varphi and xi are read as eta; the diameter may be sigma, d, R, a or 2R",
  "steps": [
   {
@@ -7,8 +7,22 @@
    "phase": "warm-up",
    "what": "The low-density limit every route must reproduce: beta P / rho = 1 + 4 eta + 10 eta^2 + ..., from the second virial coefficient B2 = 2 pi sigma^3 / 3.",
    "anchors": [
-    {"regex": ["1\\+4\\\\eta\\+10\\\\eta\\^\\{?2\\}?"]},
-    {"words": ["second", "virial", "coefficient"], "regex": ["\\\\frac\\{2\\\\pi\\}\\{3\\}", "2\\\\pi(?:\\\\sigma|d|R|a)\\^\\{?3\\}?/3"]}
+    {
+     "regex": [
+      "1\\+4\\\\eta\\+10\\\\eta\\^\\{?2\\}?"
+     ]
+    },
+    {
+     "words": [
+      "second",
+      "virial",
+      "coefficient"
+     ],
+     "regex": [
+      "\\\\frac\\{2\\\\pi\\}\\{3\\}",
+      "2\\\\pi(?:\\\\sigma|d|R|a)\\^\\{?3\\}?/3"
+     ]
+    }
    ]
   },
   {
@@ -16,8 +30,29 @@
    "phase": "scattering",
    "what": "The amplitude scattered from the electronic density is its Fourier transform: A(q) proportional to the integral of rho_e(r) exp(i q.r).",
    "anchors": [
-    {"words": ["amplitude", "electron", "density"], "regex": ["e\\^\\{-?i", "\\\\exp"]},
-    {"words": ["scattering", "factor", "electron", "density"], "regex": ["\\\\int", "\\\\sum"]}
+    {
+     "words": [
+      "amplitude",
+      "electron",
+      "density"
+     ],
+     "regex": [
+      "e\\^\\{-?i",
+      "\\\\exp"
+     ]
+    },
+    {
+     "words": [
+      "scattering",
+      "factor",
+      "electron",
+      "density"
+     ],
+     "regex": [
+      "\\\\int",
+      "\\\\sum"
+     ]
+    }
    ]
   },
   {
@@ -25,7 +60,11 @@
    "phase": "scattering",
    "what": "Spheres of one radius and uniform electronic density, in vacuum: the form factor 3[sin(qR) - qR cos(qR)]/(qR)^3.",
    "anchors": [
-    {"regex": ["\\\\sin\\(?([A-Za-z]+)\\)?-\\(?\\1\\)?\\\\cos\\(?\\1\\)?"]}
+    {
+     "regex": [
+      "\\\\sin\\(?([A-Za-z]+)\\)?-\\(?\\1\\)?\\\\cos\\(?\\1\\)?"
+     ]
+    }
    ]
   },
   {
@@ -33,8 +72,20 @@
    "phase": "scattering",
    "what": "For N identical particles the intensity is N f(q)^2 S(q): a form factor times a structure factor.",
    "anchors": [
-    {"words": ["intensity", "form", "factor", "structure", "identical"]},
-    {"regex": ["I\\([^)]*\\)=[^=]*(?:P|F|f)\\([^)]*\\)\\^?\\{?2?\\}?S\\("]}
+    {
+     "words": [
+      "intensity",
+      "form",
+      "factor",
+      "structure",
+      "identical"
+     ]
+    },
+    {
+     "regex": [
+      "I\\([^)]*\\)=[^=]*(?:P|F|f)\\([^)]*\\)\\^?\\{?2?\\}?S\\("
+     ]
+    }
    ]
   },
   {
@@ -42,7 +93,11 @@
    "phase": "liquid",
    "what": "S(q) = 1 + rho times the Fourier transform of h(r) = g(r) - 1.",
    "anchors": [
-    {"regex": ["S\\([^)]*\\)=1\\+.{0,80}\\\\int.{0,120}(?:g\\(r\\)-1|h\\(r\\))"]}
+    {
+     "regex": [
+      "S\\([^)]*\\)=1\\+.{0,80}\\\\int.{0,120}(?:g\\(r\\)-1|h\\(r\\))"
+     ]
+    }
    ]
   },
   {
@@ -50,8 +105,17 @@
    "phase": "liquid",
    "what": "Ornstein-Zernike: h = c + rho c*h, so S(q) = 1/(1 - rho c(q)).",
    "anchors": [
-    {"regex": ["h\\((?:r|r_\\{?12\\}?|\\\\mathbf\\{r\\})\\)=c\\((?:r|r_\\{?12\\}?|\\\\mathbf\\{r\\})\\)\\+"]},
-    {"regex": ["S\\([^)]*\\)=\\\\frac\\{1\\}\\{1-(?:\\\\rho|n)", "S\\([^)]*\\)=\\[1-(?:\\\\rho|n)[^\\]]*\\]\\^\\{-1\\}"]}
+    {
+     "regex": [
+      "h\\((?:r|r_\\{?12\\}?|\\\\mathbf\\{r\\})\\)=c\\((?:r|r_\\{?12\\}?|\\\\mathbf\\{r\\})\\)\\+"
+     ]
+    },
+    {
+     "regex": [
+      "S\\([^)]*\\)=\\\\frac\\{1\\}\\{1-(?:\\\\rho|n)",
+      "S\\([^)]*\\)=\\[1-(?:\\\\rho|n)[^\\]]*\\]\\^\\{-1\\}"
+     ]
+    }
    ]
   },
   {
@@ -59,7 +123,18 @@
    "phase": "closure",
    "what": "The Percus-Yevick closure for hard spheres: g(r) = 0 inside the core, c(r) = 0 outside it.",
    "anchors": [
-    {"words": ["Percus", "Yevick", "hard"], "regex": ["c\\(r\\)=0", "g\\(r\\)=0", "h\\(r\\)=-1"]}
+    {
+     "words": [
+      "Percus",
+      "Yevick",
+      "hard"
+     ],
+     "regex": [
+      "c\\(r\\)=0",
+      "g\\(r\\)=0",
+      "h\\(r\\)=-1"
+     ]
+    }
    ]
   },
   {
@@ -67,7 +142,12 @@
    "phase": "Baxter",
    "what": "Baxter's factorization: 1 - rho c(k) = Q(k) Q(-k).",
    "anchors": [
-    {"regex": ["Q\\}?\\(([kq])\\)\\}?.{0,30}Q\\}?\\(-\\1\\)", "Q\\}?\\(-([kq])\\)\\}?.{0,30}Q\\}?\\(\\1\\)"]}
+    {
+     "regex": [
+      "Q\\}?\\(([kq])\\)\\}?.{0,30}Q\\}?\\(-\\1\\)",
+      "Q\\}?\\(-([kq])\\)\\}?.{0,30}Q\\}?\\(\\1\\)"
+     ]
+    }
    ]
   },
   {
@@ -75,7 +155,11 @@
    "phase": "Baxter",
    "what": "Baxter's Q(r) for hard spheres: a = (1+2 eta)/(1-eta)^2, b = -3 eta sigma / (2(1-eta)^2).",
    "anchors": [
-    {"regex": ["\\\\frac\\{1\\+2\\\\eta\\}\\{\\(1-\\\\eta\\)\\^\\{?2\\}?\\}"]}
+    {
+     "regex": [
+      "\\\\frac\\{1\\+2\\\\eta\\}\\{\\(1-\\\\eta\\)\\^\\{?2\\}?\\}"
+     ]
+    }
    ]
   },
   {
@@ -83,7 +167,12 @@
    "phase": "compressibility",
    "what": "S(0) = (1-eta)^4/(1+2 eta)^2, which is kT times the isothermal compressibility derivative d rho / d P.",
    "anchors": [
-    {"regex": ["\\\\frac\\{\\(1-\\\\eta\\)\\^\\{?4\\}?\\}\\{\\(1\\+2\\\\eta\\)\\^\\{?2\\}?\\}", "\\\\frac\\{\\(1\\+2\\\\eta\\)\\^\\{?2\\}?\\}\\{\\(1-\\\\eta\\)\\^\\{?4\\}?\\}"]}
+    {
+     "regex": [
+      "\\\\frac\\{\\(1-\\\\eta\\)\\^\\{?4\\}?\\}\\{\\(1\\+2\\\\eta\\)\\^\\{?2\\}?\\}",
+      "\\\\frac\\{\\(1\\+2\\\\eta\\)\\^\\{?2\\}?\\}\\{\\(1-\\\\eta\\)\\^\\{?4\\}?\\}"
+     ]
+    }
    ]
   },
   {
@@ -91,7 +180,11 @@
    "phase": "compressibility",
    "what": "The compressibility equation of state: beta P / rho = (1 + eta + eta^2)/(1 - eta)^3.",
    "anchors": [
-    {"regex": ["\\\\frac\\{1\\+\\\\eta\\+\\\\eta\\^\\{?2\\}?\\}\\{\\(1-\\\\eta\\)\\^\\{?3\\}?\\}"]}
+    {
+     "regex": [
+      "\\\\frac\\{1\\+\\\\eta\\+\\\\eta\\^\\{?2\\}?\\}\\{\\(1-\\\\eta\\)\\^\\{?3\\}?\\}"
+     ]
+    }
    ]
   }
  ],
@@ -99,17 +192,141 @@
   {
    "id": "carnahan-starling",
    "what": "Carnahan-Starling, (1 + eta + eta^2 - eta^3)/(1 - eta)^3, is not PY: served alone for s7 it is a wrong answer.",
-   "regex": ["\\\\frac\\{1\\+\\\\eta\\+\\\\eta\\^\\{?2\\}?-\\\\eta\\^\\{?3\\}?\\}\\{\\(1-\\\\eta\\)\\^\\{?3\\}?\\}"]
+   "regex": [
+    "\\\\frac\\{1\\+\\\\eta\\+\\\\eta\\^\\{?2\\}?-\\\\eta\\^\\{?3\\}?\\}\\{\\(1-\\\\eta\\)\\^\\{?3\\}?\\}"
+   ]
   },
   {
    "id": "virial-route",
    "what": "The PY virial route, (1 + 2 eta + 3 eta^2)/(1 - eta)^2: right for its route, not the compressibility route a scattering start leads to.",
-   "regex": ["\\\\frac\\{1\\+2\\\\eta\\+3\\\\eta\\^\\{?2\\}?\\}\\{\\(1-\\\\eta\\)\\^\\{?2\\}?\\}"]
+   "regex": [
+    "\\\\frac\\{1\\+2\\\\eta\\+3\\\\eta\\^\\{?2\\}?\\}\\{\\(1-\\\\eta\\)\\^\\{?2\\}?\\}"
+   ]
   }
  ],
  "forbidden": {
   "id": "wertheim",
   "what": "Wertheim's method: the Laplace transform of r g(r). A step counts as reached through it when every passage that hits it also says Laplace.",
-  "words": ["Laplace"]
+  "words": [
+   "Laplace"
+  ]
+ },
+ "extended": [
+  {
+   "id": "e1",
+   "phase": "functions",
+   "what": "The direct correlation function inside the core: c(r) is a cubic in r for r < sigma, with coefficients holding (1+2 eta)^2 and (1+eta/2)^2 over (1-eta)^4.",
+   "anchors": [
+    {
+     "words": [
+      "direct",
+      "correlation"
+     ],
+     "regex": [
+      "\\(1\\+\\\\eta/2\\)\\^\\{?2\\}?",
+      "\\(1\\+\\\\frac\\{\\\\eta\\}\\{2\\}\\)\\^\\{?2\\}?",
+      "\\(2\\+\\\\eta\\)\\^\\{?2\\}?"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "e2",
+   "phase": "functions",
+   "what": "The contact value of the radial distribution function: g(sigma+) = (1 + eta/2)/(1 - eta)^2.",
+   "anchors": [
+    {
+     "regex": [
+      "\\\\frac\\{1\\+\\\\eta/2\\}\\{\\(1-\\\\eta\\)\\^\\{?2\\}?\\}",
+      "\\\\frac\\{1\\+\\\\frac\\{\\\\eta\\}\\{2\\}\\}\\{\\(1-\\\\eta\\)\\^\\{?2\\}?\\}",
+      "\\\\frac\\{2\\+\\\\eta\\}\\{2\\(1-\\\\eta\\)\\^\\{?2\\}?\\}"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "e3",
+   "phase": "functions",
+   "what": "The total correlation function: h(r) = g(r) - 1.",
+   "anchors": [
+    {
+     "regex": [
+      "h\\((?:r|\\\\mathbf\\{r\\}|r_\\{?12\\}?)\\)=g\\((?:r|\\\\mathbf\\{r\\}|r_\\{?12\\}?)\\)-1",
+      "g\\((?:r|\\\\mathbf\\{r\\})\\)-1=h\\((?:r|\\\\mathbf\\{r\\})\\)"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "e4",
+   "phase": "functions",
+   "what": "The cavity function, an auxiliary PY function: y(r) = exp(beta u(r)) g(r), continuous at contact.",
+   "anchors": [
+    {
+     "words": [
+      "cavity"
+     ],
+     "regex": [
+      "y\\(r\\)=e\\^\\{\\\\beta[^}]*\\}g\\(r\\)",
+      "y\\(r\\)=\\\\exp",
+      "y\\(r\\)\\\\equiv"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "e5",
+   "phase": "scattering",
+   "what": "The form factor P(q), the single sphere's normalized scattered intensity.",
+   "anchors": [
+    {
+     "words": [
+      "form",
+      "factor"
+     ],
+     "regex": [
+      "P\\([qQk]\\)=",
+      "P\\([qQk]\\)\\\\equiv"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "e6",
+   "phase": "scattering",
+   "what": "The measured intensity as the product: I(q) proportional to P(q) S(q) at a given concentration.",
+   "anchors": [
+    {
+     "regex": [
+      "I\\([qQk]\\)(?:=|\\\\propto|\\\\sim)[^=]{0,60}(?:P\\([qQk]\\)S\\([qQk]\\)|S\\([qQk]\\)P\\([qQk]\\))"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "e7",
+   "phase": "graphs",
+   "what": "A graph of g(r) or S(q) for hard spheres at a stated packing fraction, found by its caption: the kernel serves text, so a figure is found only through what its caption says.",
+   "anchors": [
+    {
+     "words": [
+      "hard"
+     ],
+     "regex": [
+      "(?:g\\(r\\)|S\\([qQk]\\)).{0,120}\\\\eta=0\\.\\d",
+      "\\\\eta=0\\.\\d.{0,120}(?:g\\(r\\)|S\\([qQk]\\))"
+     ]
+    }
+   ]
+  }
+ ],
+ "sticky": {
+  "id": "sticky",
+  "what": "Baxter's sticky (adhesive) hard spheres, of which plain hard spheres are the limit of no attraction. A step counts as reached through them when every passage that hits it also names them; the physics student asked to see hard spheres done directly.",
+  "any_words": [
+   "sticky",
+   "adhesive",
+   "adhesion"
+  ]
  }
 }

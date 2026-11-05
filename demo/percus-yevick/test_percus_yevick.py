@@ -34,7 +34,7 @@ def test_frozen_files_are_as_frozen_or_the_study_says_it_is_a_draft():
 
 
 def test_every_question_names_a_step_and_every_step_is_asked():
-    steps = {s["id"] for s in score.STEPS["steps"]}
+    steps = set(score.BY_ID)  # the chain and the extended steps
     asked = set()
     for name, _ in pipeline.scan.questions(
         (HERE / "questions" / "author.txt").read_text(encoding="utf-8")
@@ -71,10 +71,25 @@ HAND = {
 }
 
 
+EXT = {
+    "e1": r"For r < \sigma the direct correlation function is $c(r) = -\lambda_1 - 6\eta\lambda_2 r$ with $\lambda_2 = -(1+\eta/2)^2/(1-\eta)^4$",
+    "e2": r"g(\sigma^+) = \frac{1+\eta/2}{(1-\eta)^2}",
+    "e3": r"h(r) = g(r) - 1",
+    "e4": r"the cavity function y(r) = e^{\beta u(r)} g(r) is continuous",
+    "e5": r"the form factor P(q) = |F(q)|^2 / V^2",
+    "e6": r"I(q) \propto n P(q) S(q)",
+    "e7": r"hard spheres: S(q) at \eta = 0.3, from the PY solution",
+}
+
+
 def test_each_step_is_held_by_its_own_formula_and_by_no_other():
-    assert set(HAND) == set(score.BY_ID)
+    assert set(HAND) == set(score.CHAIN) and set(EXT) == set(score.EXTENDED)
     for step, text in HAND.items():
         assert score.steps_held(text) == [step], (step, score.steps_held(text))
+        assert score.extended_held(text) == [], (step, score.extended_held(text))
+    for step, text in EXT.items():
+        assert score.extended_held(text) == [step], (step, score.extended_held(text))
+        assert score.steps_held(text) == [], (step, score.steps_held(text))
 
 
 def test_near_misses_hold_nothing():
@@ -230,16 +245,41 @@ def test_r5_fails_a_step_found_only_through_wertheim():
     laplace = dict(HAND, s6=HAND["s6"] + " from the Laplace transform of r g(r)")
     rows, text_of = rows_for(laplace)
     v = tally.tally(rows, text_of, None)
-    assert v["R5"]["state"] == "failing" and v["R5"]["number"].endswith(": s6")
+    assert v["R5"]["state"] == "failing" and v["R5"]["number"].endswith(
+        "(Wertheim: s6)"
+    )
     rows, text_of = rows_for(HAND)
     assert tally.tally(rows, text_of, None)["R5"]["state"] == "satisfied"
+
+
+def test_r5_fails_a_step_found_only_through_sticky_spheres():
+    sticky = dict(
+        HAND,
+        s5b=HAND["s5b"] + " for Baxter's adhesive spheres as the stickiness vanishes",
+    )
+    rows, text_of = rows_for(sticky)
+    v = tally.tally(rows, text_of, None)
+    assert v["R5"]["state"] == "failing" and v["R5"]["number"].endswith(
+        "(sticky spheres: s5b)"
+    )
+    assert not score.through_sticky(
+        [HAND["s5b"], "sticky"]
+    ) and not score.through_sticky([])
+
+
+def test_extended_steps_are_reported_and_never_counted_in_r1():
+    rows, text_of = rows_for({**{s: HAND[s] for s in ("s5a", "s5b", "s7")}, **EXT})
+    v = tally.tally(rows, text_of, None)
+    assert v["R1"]["number"].startswith("3 of 11") and v["R1"]["state"] == "failing"
+    assert v["extended"]["number"].startswith("7 of 7")
 
 
 def test_r6_is_left_to_the_rubric_and_no_overall_verdict_is_made():
     rows, text_of = rows_for(HAND)
     v = tally.tally(rows, text_of, None)
     assert v["R6"]["state"] == "judged by hand"
-    assert set(v) == {"R1", "R2", "R3", "R4", "R5", "R6"}
+    assert set(v) == {"R1", "R2", "R3", "R4", "R5", "R6", "extended"}
+    assert v["extended"]["state"] == "reported"
 
 
 import arms  # noqa: E402
@@ -265,9 +305,9 @@ def test_arms_summary_counts_steps_per_set_and_null_hits_per_question():
 
 def test_arms_grades_the_expectations_against_the_kernels_finds():
     exp = json.loads((HERE / "expectations.json").read_text(encoding="utf-8"))["steps"]
-    assert set(exp) == set(score.BY_ID)
+    assert set(exp) == set(score.CHAIN)
     qs = [
-        {"set": "author", "id": f"{s}.1", "step": s, "asked": "q"} for s in score.BY_ID
+        {"set": "author", "id": f"{s}.1", "step": s, "asked": "q"} for s in score.CHAIN
     ]
     rows = [{"hit": exp[q["step"]]["found"], "steps": []} for q in qs]
     assert arms.expectations(qs, {"kernel": rows}) == {"held": "11 of 11", "missed": []}

@@ -16,3 +16,10 @@ s5b.1	What are the coefficients of the Baxter function Q(r) for hard spheres?
 s6.1	What is the structure factor at zero wavevector for hard spheres in the Percus-Yevick approximation?
 s6.2	How is the isothermal compressibility related to the structure factor at zero wavevector?
 s7.1	What is the compressibility equation of state of hard spheres in the Percus-Yevick approximation?
+e1.1	What is the direct correlation function of hard spheres inside the core in the Percus-Yevick approximation?
+e2.1	What is the contact value of the radial distribution function of hard spheres in the Percus-Yevick approximation?
+e3.1	How is the total correlation function related to the radial distribution function?
+e4.1	What is the cavity function, and why is it continuous at contact for hard spheres?
+e5.1	What is the form factor P(q) of a sphere?
+e6.1	How is the scattered intensity I(q) written as the product of the form factor P(q) and the structure factor S(q)?
+e7.1	What does the structure factor or radial distribution function of hard spheres look like at a given packing fraction?

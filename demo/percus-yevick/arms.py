@@ -160,10 +160,16 @@ def summary(qs: list[dict], ranked: dict) -> dict:
                     f"{sum(bool(r['steps']) for _, r in pairs)} of {len(pairs)} served a chain step"
                 )
             else:
-                found = sorted({q["step"] for q, r in pairs if r["hit"]})
+                hit = {q["step"] for q, r in pairs if r["hit"]}
+                chain = sorted(hit & set(score.CHAIN))
+                ext = sorted(hit & set(score.EXTENDED))
                 per[set_name] = (
-                    f"{len(found)} of {len(score.BY_ID)} steps found: {', '.join(found) or 'none'}"
+                    f"{len(chain)} of {len(score.CHAIN)} steps found: {', '.join(chain) or 'none'}"
                 )
+                if any(q["step"] in score.EXTENDED for q, _ in pairs):
+                    per[set_name + " extended"] = (
+                        f"{len(ext)} of {len(score.EXTENDED)} found: {', '.join(ext) or 'none'}"
+                    )
         if any("not run" in r for r in rows):
             per = {"not run": "latent needs numpy"}
         out[name] = per

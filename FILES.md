@@ -1724,6 +1724,7 @@ willow/
 │   │       └── ada.md        Ada Lovelace's
 │   ├── percus-yevick/        a study, in draft: can a physics derivation be found rather than generated
 │   │   ├── arms.py           the study's reported arms, beside the pass rules. None is scored
+│   │   ├── blind.py          the blind questions, written by a local model that has seen no
 │   │   ├── expectations.json  what the author expects each step to come to, graded after
 │   │   ├── fetch.py          the stack's sources, fetched again and held to their hashes
 │   │   ├── models/
@@ -1734,6 +1735,7 @@ willow/
 │   │   ├── prompt.md         The problem
 │   │   ├── questions/
 │   │   │   ├── author.txt    the author's questions, one or more a step
+│   │   │   ├── blind-prompt.txt  all the blind questions' writer was shown
 │   │   │   └── null.txt      physics off the chain, asked of the same stack
 │   │   ├── references/
 │   │   │   └── primaries.bib  the paywalled originals, by reference only

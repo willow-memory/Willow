@@ -30,7 +30,9 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 STEPS = json.loads((HERE / "steps.json").read_text(encoding="utf-8"))
-BY_ID = {s["id"]: s for s in STEPS["steps"]}
+CHAIN = [s["id"] for s in STEPS["steps"]]
+EXTENDED = [s["id"] for s in STEPS.get("extended", [])]
+BY_ID = {s["id"]: s for s in STEPS["steps"] + STEPS.get("extended", [])}
 
 _DROP = re.compile(
     r"\\(?:left|right|[Bb]igg?[lr]?|displaystyle|textstyle|quad|qquad)(?![A-Za-z])"
@@ -74,7 +76,12 @@ def hit(step: str, text: str) -> bool:
 
 
 def steps_held(text: str) -> list[str]:
-    return [s["id"] for s in STEPS["steps"] if hit(s["id"], text)]
+    """The chain's steps a passage holds; the extended steps are asked for by name."""
+    return [s for s in CHAIN if hit(s, text)]
+
+
+def extended_held(text: str) -> list[str]:
+    return [s for s in EXTENDED if hit(s, text)]
 
 
 def traps(text: str) -> list[str]:
@@ -89,3 +96,10 @@ def through_wertheim(passages: list[str]) -> bool:
     holding it, and every one of them says the forbidden words."""
     words = STEPS["forbidden"]["words"]
     return bool(passages) and all(all(_has_word(w, p) for w in words) for p in passages)
+
+
+def through_sticky(passages: list[str]) -> bool:
+    """A step reached only through Baxter's sticky spheres: there were
+    passages holding it, and every one of them names them."""
+    words = STEPS["sticky"]["any_words"]
+    return bool(passages) and all(any(_has_word(w, p) for w in words) for p in passages)

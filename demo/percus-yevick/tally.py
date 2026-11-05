@@ -22,7 +22,7 @@ import random
 
 import score
 
-STEPS = [s["id"] for s in score.STEPS["steps"]]
+STEPS = score.CHAIN
 R1_AT_LEAST, R1_MUST = 9, {"s5a", "s5b", "s7"}
 R2_AT_LEAST, R2_MUST = 7, {"s5b", "s7"}
 R3_AT_MOST = 2
@@ -50,6 +50,7 @@ def hits(rows: list[dict], text_of: dict) -> dict[str, list[str]]:
 
 
 def _found_rule(found: set[str], at_least: int, must: set[str]) -> dict:
+    found = found & set(STEPS)  # the extended steps are reported, never counted
     ok = len(found) >= at_least and must <= found
     missing = sorted(set(STEPS) - found)
     return {
@@ -105,11 +106,21 @@ def tally(rows: list[dict], text_of: dict, random_found: int | None) -> dict:
     for found in (a, b):
         for step, texts in found.items():
             both.setdefault(step, []).extend(texts)
-    through = sorted(s for s, texts in both.items() if score.through_wertheim(texts))
-    out["R5"] = {"state": "satisfied" if not through else "failing",
-                 "number": f"{len(through)} found steps only through Wertheim"
-                           + (f": {', '.join(through)}" if through else ""),
+    chain = {s: t for s, t in both.items() if s in STEPS}
+    wert = sorted(s for s, texts in chain.items() if score.through_wertheim(texts))
+    sticky = sorted(s for s, texts in chain.items() if score.through_sticky(texts))
+    said = [
+        f"{name}: {', '.join(ss)}"
+        for name, ss in (("Wertheim", wert), ("sticky spheres", sticky))
+        if ss
+    ]
+    out["R5"] = {"state": "satisfied" if not wert and not sticky else "failing",
+                 "number": f"{len(set(wert) | set(sticky))} found steps only through Wertheim or sticky spheres"
+                           + (f" ({'; '.join(said)})" if said else ""),
                  "needed": "none"}  # fmt: skip
+    ext = {s for s in both if s in score.EXTENDED}
+    out["extended"] = {"state": "reported", "number": f"{len(ext)} of {len(score.EXTENDED)} extended steps found"
+                       + (f": {', '.join(sorted(ext))}" if ext else ""), "needed": ""}  # fmt: skip
 
     out["R6"] = {"state": "judged by hand", "number": "scored with rubric.md, blind",
                  "needed": "found mean at least the model's, and s5 at least 2"}  # fmt: skip

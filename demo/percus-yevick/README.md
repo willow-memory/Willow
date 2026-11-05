@@ -50,7 +50,29 @@ missing rather than made up.
 Two traps are scored apart from the chain: Carnahan–Starling, which is not
 PY, and PY's virial route, which is right for its own route but not the one
 a scattering start leads to. A step counts as reached through Wertheim when
-every passage holding it says "Laplace".
+every passage holding it says "Laplace", and through Baxter's sticky spheres
+when every passage holding it names them (sticky, adhesive, adhesion).
+
+**The extended chain.** The physics student asked for more than the equation
+of state: the functions along the way, and the scattering quantities a
+measurement gives. These are steps too, each with its anchor in
+[steps.json](steps.json), asked and reported beside the pass rules but
+never counted in them:
+
+| Step | What it is |
+|---|---|
+| e1 | The direct correlation function inside the core, a cubic |
+| e2 | The contact value of g(r), (1 + η/2)/(1 − η)² |
+| e3 | The total correlation function, h = g − 1 |
+| e4 | The cavity function y(r), an auxiliary PY function |
+| e5 | The form factor P(q) |
+| e6 | The intensity I(q) as P(q) times S(q), at a given concentration |
+| e7 | A graph of g(r) or S(q) at a stated packing fraction, found by its caption |
+
+They also asked for graphs and for how the functions relate. The kernel
+serves text, so a graph is found only through what its caption says (e7),
+and how the functions relate is for the found chain's reader, and the
+rubric, to judge.
 
 ## The physics student's notes, folded in
 
@@ -92,13 +114,19 @@ Baxter's attractive shell is a complication of its own; Henderson 2009
 (Condensed Matter Physics), which holds the factorization but has a sign
 slip in a; and a scanned 1993 Rev. Mex. Fís. paper whose text can't be read
 reliably. The books the physics student recommends are under copyright and are not in the
-stack: Hansen and McDonald, *Theory of Simple Liquids*; McQuarrie,
-*Statistical Mechanics*; Goodstein, *States of Matter*; Guinier and Fournet,
+stack. In their words (2026-11-05): Hansen and McDonald, *Theory of Simple
+Liquids*, "the bible for liquid theory"; four general statistical-mechanics
+books for background: McQuarrie, *Statistical Mechanics*; Hill's two
+(presumably *Statistical Mechanics: Principles and Selected Applications* and
+*An Introduction to Statistical Thermodynamics*); and Goodstein, *States of
+Matter*; Guinier and Fournet, "the OG for SAXS" though its nomenclature is
+dated,
 *Small-Angle Scattering of X-Rays* (1955; HathiTrust gives it as search-only,
 so in copyright); and the monograph he names as Oberdisse and Lindner's,
 which is *Neutrons, X-rays, and Light: Scattering Methods Applied to Soft
 Condensed Matter*, edited by Lindner and Oberdisse (Elsevier, second edition
-2024; the first, 2002, was edited by Lindner and Zemb).
+2024; the first, 2002, was edited by Lindner and Zemb): "much more
+experimental and modern, good for comparison with experiment".
 
 The pile is built by the repo's own readers: [latex](../../adapters/stdlib/latex/)
 for each paper's prose, [equations](../../adapters/stdlib/equations/) for its
@@ -205,7 +233,7 @@ in [steps.json](steps.json). There are 11 steps.
 | R2 | Found, with the blind questions | at least 7 of 11 steps found, and s5b and s7 among them |
 | R3 | Off-topic questions | at most 2 of the 10 null questions are served a passage holding any chain step |
 | R4 | Random baseline | three passages drawn at random from the index for each author question, by a seed fixed at the freeze, find at most 2 of 11 steps |
-| R5 | Avoiding Wertheim | no found step is reached only through passages that say "Laplace" |
+| R5 | Avoiding Wertheim, and hard spheres done directly | no found step is reached only through passages that say "Laplace", or only through passages that name sticky spheres |
 | R6 | A clear path, judged blind ([rubric.md](rubric.md)) | the found chain's mean score is at least the model's, and the found chain scores at least 2 on s5 (Baxter) |
 
 Why these numbers:
@@ -218,8 +246,12 @@ Why these numbers:
   spherical closures) are close cousins of the chain by design.
 - **R4** rules out a stack so full of these formulas that anything lands.
 - **R5** has no tolerance: avoiding Wertheim is a hard constraint of the
-  prompt.
-- **R6** is the physics student's own measure. The model's text is the ML
+  prompt. The sticky-sphere half was added on 2026-11-05, before any real
+  question was asked, at the physics student's wish to see hard spheres
+  done directly, not as the limit of no attraction.
+- **R6** is the physics student's own measure, and the physics student
+  scores it, blind, once they have worked through the derivation with their
+  advisor's help (their advisor won't judge, but will help them learn it). The model's text is the ML
   specialist's final derivation if one comes, else their interim report; the
   local models' derivations are scored the same way, each beside the found
   chain.
@@ -246,10 +278,15 @@ How they are reported:
 
 ## Open, before the freeze
 
-- **Who judges the rubric**: someone who knows the field, blind; the
-  physics student says it's beyond them, and suggests their advisor.
-- **Blind questions**: from whom.
-- **For the physics student**: which four books they meant.
+- **Who judges the rubric**: settled: the physics student, blind, after
+  working through the derivation with their advisor.
+- **Blind questions**: settled: written by qwen3:8b through
+  [blind.py](blind.py), from [questions/blind-prompt.txt](questions/blind-prompt.txt)
+  alone (the steps by name, no formula, no source, none of the author's
+  questions), at temperature 0 and seed 0. The physics student couldn't
+  write them. A model has seen none of this stack, but its physics
+  vocabulary was learned from the same literature, so its questions may
+  share the sources' words more than a student's would.
 - **The ML specialist's run is in, as far as it goes**: the interim report,
   the full transcript, the solver, the weights' hashes and Strata's settings.
   Its final long-form derivation, if one comes, is the text to score; until
@@ -259,9 +296,12 @@ How they are reported:
   factorization, and its abstract says the PY hard-sphere solution follows
   from it, with no attraction. "Percus–Yevick Equation for Hard Spheres with
   Surface Adhesion" (J. Chem. Phys. 49, 2770) is the one with the
-  infinitesimal attractive shell. This study's step s5 is the first. Whether
-  the physics student's warning was about the second, or about the method, is
-  still theirs to say.
+  infinitesimal attractive shell. This study's step s5 is the first. The
+  physics student's answer (2026-11-05): the warning was about the second,
+  the sticky-sphere model, and they would like to see the method applied to
+  hard spheres directly, "without it just being the limit that the
+  attractive potential goes to 0". The factorization on plain hard spheres,
+  as Wu and as Coquand and Sperl give it, is that.
 
 ## Running it
 

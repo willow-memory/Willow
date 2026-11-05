@@ -24,9 +24,10 @@ and its two coefficients.
   found chain's passages and the model's derivation, in an order set by a
   seed frozen in advance. Neither the labels nor the order say which is
   which.
-- **By someone who knows the field.** The physics student says this is
-  beyond them; their advisor is the obvious candidate. To be settled before the
-  freeze.
+- **By the reader it is for.** The physics student scores it, once they
+  have worked through the derivation with their advisor's help. Their advisor
+  won't judge, but will help them learn it; the student is the reader the
+  rubric's "hold my hand" is about.
 - **Recorded as kernel rows**, one per step and text, appended to a box
   outside the repo, as php2shell's verdicts are.
 
