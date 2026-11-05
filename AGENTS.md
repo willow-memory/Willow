@@ -5,7 +5,8 @@ are [CONTRIBUTING.md](CONTRIBUTING.md) and [adapters/README.md](adapters/README.
 read both. This page is the part of them that is easy to miss, and what CI
 catches when it is missed. It adds no rule of its own.
 
-[CLAUDE.md](CLAUDE.md) only points here, so there is one copy to keep.
+[CLAUDE.md](CLAUDE.md) imports this with `@AGENTS.md`; [GEMINI.md](GEMINI.md)
+tells Gemini CLI to read this file (it has no `@` import). One copy to keep.
 
 ## Never
 

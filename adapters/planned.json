@@ -707,17 +707,6 @@
   "tags": "hooks"
  },
  {
-  "name": "hooks-elsewhere",
-  "kind": "stdlib",
-  "section": "Assistants",
-  "line": "The prompt hook for Gemini CLI, Codex and opencode, wherever they take hooks, held to Claude Code's answer byte for byte.",
-  "source": "box",
-  "writes": "record",
-  "network": "none",
-  "role": "guards",
-  "tags": "hooks"
- },
- {
   "name": "horoscope-grades",
   "kind": "stdlib",
   "section": "Play",

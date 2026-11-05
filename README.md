@@ -126,11 +126,11 @@ says how to pick one up:
 <!-- willow:front show=pick week=2026-W45 -->
 **Add-on of the week**
 
-**[stack](adapters/stdlib/stack/)** — One page made from several add-ons run in the order you list them, their results grouped so the biggest come first.
+**[tarot](adapters/stdlib/tarot/)** — A seeded tarot draw on the record, replayable by anyone with the seed.
 
-*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 330 built add-ons in name order.*
+*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 331 built add-ons in name order.*
 
-[Every add-on, 330 built of 521, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 331 built of 521, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 
@@ -301,6 +301,7 @@ willow/
 ├── CONTRIBUTING.md           the rules every change follows, and how to show it does
 ├── AGENTS.md                 for AI agents: what CI catches when CONTRIBUTING is missed
 ├── CLAUDE.md                 one line: read AGENTS.md
+├── GEMINI.md                 points Gemini CLI at AGENTS.md (no @ import there)
 ├── CODE_OF_CONDUCT.md        how we treat each other
 ├── SECURITY.md               what counts as a security problem, and how to report it in public
 ├── CHANGELOG.md              what changed, by pull request, and each release
