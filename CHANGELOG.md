@@ -2102,7 +2102,7 @@ says how). The first was v0.1.0.
 - `local-model`: the test that no server on the usual ports means 42 no
   longer sends a real question to whatever model runs on this machine; it
   points the usual ports at ones just bound and closed, and asserts 42
-  every time, not only when nothing happened to answer
+  every time, not only when nothing happened to answer (#255)
 - `github`'s create_pr.py tries a push or an open GitHub answers with an
   error again, after 2, 4, 8 and 16 seconds, and looks for the pull request
   before each new open: GitHub answered #236's with a 502 and opened it,
