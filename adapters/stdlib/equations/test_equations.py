@@ -307,6 +307,7 @@ def test_the_prose_after_stops_at_its_cap_on_a_word():
 
 def test_a_cut_on_a_space_keeps_the_word_after_it():
     assert mod._before("abc def", 4) == "def"
+    assert mod._after("a bcdefgh", 3) == "a"
 
 
 def test_prose_with_no_sentence_end_between_two_equations_goes_with_both():
