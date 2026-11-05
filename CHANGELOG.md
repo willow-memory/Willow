@@ -13,10 +13,10 @@ says how). The first was v0.1.0.
 - `ci`'s `adapters/stdlib/ci/realdata.py run NAME` runs an add-on's COMMANDS
   line on every demo person's real folder, under the guard, failing on a
   traceback, a breach, a hang or an odd exit; create_pr.py runs it for each
-  add-on a change touches, so AGENTS.md's real-data step is a command
+  add-on a change touches, so AGENTS.md's real-data step is a command (#245)
 - `ci`'s `adapters/stdlib/ci/times.py` keeps test-times.json to CI's own run:
   the tests job writes each tests:adapters gate's JUnit XML on a push to main,
-  and `write --run latest` reads the last green run's
+  and `write --run latest` reads the last green run's (#245)
 - `ci`'s `adapters/stdlib/ci/pypi_dates.py` keeps PyPI's upload dates for
   each deps floor pin and the floor rule's release in pypi-dates.json, which
   the floor test reads in place of a table typed into test_ci.py; `write`
@@ -1839,19 +1839,19 @@ says how). The first was v0.1.0.
   only added lines where the base had none: REF's lines, then the branch's,
   as #243 and #244 each added paragraphs to ci's card; a side that changed
   a line the base had still stops. `against` says such a conflict is settled,
-  not a collision, so create_pr.py no longer stops on it
+  not a collision, so create_pr.py no longer stops on it (#245)
 - `test-impact`'s `run --narrow` on a change that widens to every gate leaves
   them to CI and still runs the docs' checks and what the rest of the change
   reaches, under the guard: #244 changed ruff.toml beside commands.py, nothing
-  ran, and a guard breach in commands.py's tests was CI's to find
+  ran, and a guard breach in commands.py's tests was CI's to find (#245)
 - `test-impact`: a change that reaches test_strip.py by import, as any change
   to ci/ does, runs only its own reached tests in the copy without GitHub
   (WILLOW_STRIP_ONLY), in seconds, not every add-on's tests four times: 17 to
   19 of the 20 to 25 minutes of a create_pr.py run on ci/ today; GitHub's own
-  files still run it whole
+  files still run it whole (#245)
 - `ci`: the changelog check's refusal says what does the rest: commit the
   entry with the change, and create_pr.py numbers it in the push that opens
-  the pull request
+  the pull request (#245)
 - `ci` says what pytest skipped: a gate whose tests skipped some keeps its
   state, and its row says how many and why (`skipped`), printed after the
   state by `run`, `show` and cores.py, as `satisfied  [1 skipped: ...]`.
