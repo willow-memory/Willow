@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `hooks-elsewhere` refuses `--host cursor`: Cursor's `beforeSubmitPrompt`
+  can only continue or block a prompt, never inject passages; the card and
+  `hosts` point at the `cursor` MCP add-on instead
 - `equations`: each displayed equation in LaTeX sources as a passage of its
   own, the math as its source writes it, with its labels, its .tex line and
   the sentences around it, so a question finds an equation by what its paper

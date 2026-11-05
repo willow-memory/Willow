@@ -55,6 +55,15 @@ HOSTS = {
     ),
 }
 
+#: hosts whose prompt hook can only continue or block — never inject passages.
+NO_PROMPT = {
+    "cursor": (
+        "Cursor's beforeSubmitPrompt hook can only continue or block a prompt; "
+        "it cannot inject passages. Use MCP instead: "
+        "python adapters/stdlib/cursor/cursor.py --box DIR"
+    ),
+}
+
 
 def claude():
     """claude-code's hook module, or None when that add-on isn't beside this."""
@@ -195,6 +204,9 @@ def main(argv: list[str], stdin=None) -> int:
         print(__doc__.split("\n\n")[1], file=sys.stderr)
         return kernel.REFUSED
     host, box = argv[2], Path(argv[4])
+    if host in NO_PROMPT:
+        print(f"refused: {NO_PROMPT[host]}", file=sys.stderr)
+        return kernel.REFUSED
     if host not in HOSTS:
         way = (
             "; Claude Code's way in is adapters/stdlib/claude-code"
