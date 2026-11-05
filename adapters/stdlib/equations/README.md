@@ -55,8 +55,11 @@ an equation.
 
 Each file with an equation is written to MIRROR at the same relative path
 with .txt added (`MIRROR/<same path>.tex.txt`). FOLDER is only read: hidden
-folders and files are skipped, and nothing is written inside it. A file with
-no displayed equation, or that can't be read as UTF-8, is skipped and counted:
+folders and files are skipped, and nothing is written inside it. A file is
+read as UTF-8, else as Windows-1252, else as Latin-1, so a paper holding one
+stray byte of another encoding (an en dash pasted from a word processor, as
+in some arXiv sources) is still read. A file with no displayed equation, or
+that can't be read at all, is skipped and counted:
 
     found 212 equations
     wrote 9 files to MIRROR; skipped 3

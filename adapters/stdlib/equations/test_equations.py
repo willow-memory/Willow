@@ -246,7 +246,7 @@ def test_mirror_writes_each_file_beside_its_path_and_counts(tmp_path):
     files = {
         "paper/py.tex": SAMPLE,
         "notes/none.tex": b"No display here, only $x$.\n",
-        "bad.tex": b"\xff\xfe not utf-8 \\[ x \\]",
+        "utf16.tex": "\\[ x = 1 \\]\n".encode("utf-16"),
         ".hidden.tex": b"\\[ h = 1 \\]\n",
         ".dot/in.tex": b"\\[ h = 1 \\]\n",
         "readme.txt": b"\\[ t = 1 \\]\n",
@@ -316,3 +316,13 @@ def test_prose_with_no_sentence_end_between_two_equations_goes_with_both():
         "a.tex line 1\na = 1\n, so then",
         "a.tex line 2\n, so then\nb = 2",
     ]
+
+
+def test_a_stray_byte_of_another_encoding_does_not_lose_the_paper():
+    dash = b'Debye\x96H\\"uckel leads in\n\\[ x = 1 \\]\n'
+    assert mod.passages(dash, "a.tex") == [
+        'a.tex line 2\nDebye\u2013H\\"uckel leads in\nx = 1'
+    ]
+    odd = b"caf\x81 leads in\n\\[ y = 2 \\]\n"  # undefined in Windows-1252
+    assert mod.passages(odd, "a.tex") == ["a.tex line 2\ncaf\x81 leads in\ny = 2"]
+    assert mod.decode(b"\xef\xbb\xbfx") == "x"

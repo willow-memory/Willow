@@ -29,8 +29,10 @@ file defines without arguments as one of those openings or closings
 as what it stands for. Inline math stays in the prose around it.
 
 Each file is written to MIRROR at the same relative path with `.txt` added.
-FOLDER is only read. A file with no displayed equation, or that cannot be
-read, is skipped and counted.
+FOLDER is only read. A file is read as UTF-8, else as Windows-1252, else
+as Latin-1: older papers often hold one byte of another encoding (a dash
+pasted from a word processor), and a whole paper is not lost to it. A file
+with no displayed equation, or that cannot be read, is skipped and counted.
 
 Exit codes, the kernel's: 0 wrote some; 42 nothing readable; 2 refused
 (FOLDER is not a folder, or MIRROR and FOLDER are inside one another).
@@ -135,10 +137,21 @@ def _after(prose: str, room: int) -> str:
     return para[:cut] if cut > 0 else ""
 
 
+def decode(data: bytes) -> str:
+    """A .tex file's text: UTF-8 (a byte-order mark dropped), else
+    Windows-1252, else Latin-1, which reads any byte."""
+    for codec in ("utf-8-sig", "cp1252"):
+        try:
+            return data.decode(codec)
+        except UnicodeDecodeError:
+            pass
+    return data.decode("latin-1")
+
+
 def passages(data: bytes, name: str) -> list[str]:
     """One passage per displayed equation in a .tex file's bytes; `name` is
     the file's relative path, for the citation line."""
-    text = data.decode("utf-8-sig").replace("\r\n", "\n")
+    text = decode(data).replace("\r\n", "\n")
     text = COMMENT.sub("", text)
     text = SKIP_ENVS.sub(_blank, text)
     text = expand(text)
