@@ -85,7 +85,7 @@ willow/
 │   │   │   ├── test_agent_transcript.py
 │   │   │   └── README.md
 │   │   ├── agents-md-check/
-│   │   │   ├── agents_md_check.py   the commands and paths AGENTS.md, CLAUDE.md or GEMINI.md name that the repo no longer has
+│   │   │   ├── agents_md_check.py   the commands and paths AGENTS.md, CLAUDE.md, GEMINI.md or copilot-instructions.md name that the repo no longer has
 │   │   │   ├── test_agents_md_check.py
 │   │   │   └── README.md
 │   │   ├── aider/
@@ -1848,7 +1848,8 @@ willow/
 │   │   └── config.yml        links to the contributing rules, the languages and the add-on ideas
 │   ├── pull_request_template.md  what a pull request says, and what to check before opening one
 │   ├── dependabot.yml        weekly updates for the workflow's actions, never the add-ons' pins
-│   └── secret_scanning.yml   keeps the redteam demo's planted, fake credentials out of secret scanning
+│   ├── secret_scanning.yml   keeps the redteam demo's planted, fake credentials out of secret scanning
+│   └── copilot-instructions.md  points Copilot at AGENTS.md (no @ import there)
 ├── .gitignore                generated files and build output
 ├── .gitattributes            every file checked out with LF line endings, on every system
 ├── .editorconfig             the same line endings and indents, for editors
