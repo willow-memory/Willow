@@ -159,7 +159,7 @@ def make(
     left = [
         f"the add-on itself, in {rel}/{script}, and the card's body in {rel}/README.md",
         f"its tests, in {rel}/test_{script}, beyond the refusal it holds",
-        "its line in COMMANDS, adapters/stdlib/ci/test_contract.py: a command that works",
+        f"its line in COMMANDS, once it's built: python adapters/stdlib/ci/commands.py suggest {name} --write",
         f"a CHANGELOG.md entry under ## Unreleased, opening `{name}`",
         f"its mutants: python adapters/stdlib/mutants/mutants.py run {name}",
     ]

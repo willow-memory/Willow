@@ -215,7 +215,7 @@ def test_verify_holds_the_chain_and_refuses_anything_but_ci_verdicts(tmp_path):
 def test_the_gates_run_in_one_fixed_order_and_cover_every_part():
     names = [g for _, g, _ in ci.gates()]
     assert names == [
-        "lint:check", "lint:format",
+        "lint:check", "lint:format", "lint:py39",
         "tests:beats", "tests:kernel", "tests:docs",
         *(f"tests:adapters-{k}" for k in range(1, ci.ADAPTER_CHUNKS + 1)),
         "tests:alone",
@@ -227,7 +227,8 @@ def test_the_gates_run_in_one_fixed_order_and_cover_every_part():
         *sorted([*(f"demo:{p}" for p in ci.people()), "demo:craft-assembly", "demo:five-repos",
                  "demo:google-privacy-2026-10-16", "demo:known-gaps", "demo:novelty", "demo:ofrenda-frozen",
                  "demo:php2shell", "demo:redteam", "demo:share", "demo:small-models", "demo:stack",
-                 "demo:stewart-crossover-frozen", "demo:teodora-words"]),
+                 "demo:stewart-crossover-frozen", "demo:teodora-words",
+                 *(g for g, _, _ in ci.demo_tests()[len(ci.DEMO_TESTS):])]),
         *(g for d in ci.deps_add_ons() for g in (f"deps:{d}", f"deps:{d}@floor")),
         "deps:floors",
         *(f"mutants:{n}" for n in ci.mutant_targets()),
@@ -240,7 +241,7 @@ def test_the_gates_run_in_one_fixed_order_and_cover_every_part():
 def test_every_test_file_under_demo_is_run_by_a_gate():
     # a demo's tests that no gate names never fail: ofrenda's, stewart-
     # crossover's and small-models' went unrun, and one broke unseen
-    targets = [t for _, t, _ in ci.DEMO_TESTS]
+    targets = [t for _, t, _ in ci.demo_tests()]
     under = lambda f, t: f == t or f.startswith(t + "/")  # noqa: E731
     files = sorted(
         p.relative_to(ci.ROOT).as_posix()
@@ -249,6 +250,24 @@ def test_every_test_file_under_demo_is_run_by_a_gate():
     )
     assert files and [f for f in files if not any(under(f, t) for t in targets)] == []
     assert all((ci.ROOT / t).exists() for t in targets)
+
+
+def test_a_demo_with_tests_and_no_row_gets_a_gate_of_its_own(monkeypatch, tmp_path):
+    """No row to write for a new demo's tests: its folder's name is its gate,
+    beside a person's own gate when it has one; a file at demo/'s top too."""
+    for rel in ("demo/fresh/test_fresh.py", "demo/odile/make_life.py",
+                "demo/odile/test_words.py", "demo/test_loose.py",
+                "demo/php2shell/test_php2shell.py", "demo/plain/README.md"):  # fmt: skip
+        (tmp_path / rel).parent.mkdir(parents=True, exist_ok=True)
+        (tmp_path / rel).write_text("")
+    monkeypatch.setattr(ci, "ROOT", tmp_path)
+    monkeypatch.setattr(ci, "DEMO_TESTS", (("demo:php2shell", "demo/php2shell", ()),))
+    assert ci.demo_tests() == [
+        ("demo:php2shell", "demo/php2shell", ()),
+        ("demo:fresh", "demo/fresh", ()),
+        ("demo:odile-tests", "demo/odile", ()),
+        ("demo:loose", "demo/test_loose.py", ()),
+    ]
 
 
 def test_shards_run_every_gate_of_what_was_named_once_in_its_order():
@@ -302,7 +321,7 @@ def test_a_gate_is_named_or_left_out_by_name():
     assert ci.select(["tests:strip-2"], [], None) == ["tests:strip-2"]
     assert ci.select(["tests:strip"], [], None) == strip  # a group is its chunks
     assert ci.select(["tests"], ["tests:strip"], None) == [g for g in tests if g not in strip]  # fmt: skip
-    assert ci.select(["lint", "tests:strip-1"], [], None) == ["lint:check", "lint:format", "tests:strip-1"]  # fmt: skip
+    assert ci.select(["lint", "tests:strip-1"], [], None) == ["lint:check", "lint:format", "lint:py39", "tests:strip-1"]  # fmt: skip
     assert ci.select([], [], None) == [g for _, g, _ in ci.gates()]
 
 
