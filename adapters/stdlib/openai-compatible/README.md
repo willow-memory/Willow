@@ -44,7 +44,7 @@ answers (qwen3, say) to think that much, by putting `reasoning_effort` in
 the request; any other value is refused. Without it the request is the one
 it always was, naming no effort. It is a request setting, and a server may
 ignore it. On Ollama 0.40.14's OpenAI endpoint, `none` stopped qwen3:8b's
-thinking (10 tokens, not 233); `/no_think` written in a `--system` file
+thinking (10 tokens, not 233); "/no_think" written in a `--system` file
 didn't, and neither did Ollama's own `think: false`, which that endpoint
 ignores.
 

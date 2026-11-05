@@ -45,7 +45,7 @@ the rule, and `--reasoning none|low|medium|high` sets the request's
 ask does, so the chat asked N times here is the one `local-model ask`
 sends with the same options. Without them, nothing changes. The effort is
 a request setting a server may ignore; on Ollama 0.40.14, `none` stopped
-qwen3:8b's thinking, where `/no_think` in a system file and `think: false`
+qwen3:8b's thinking, where "/no_think" in a system file and `think: false`
 didn't.
 
 **Only this machine.** The URL must be 127.0.0.1 (or any loopback
