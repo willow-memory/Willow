@@ -1844,6 +1844,11 @@ says how). The first was v0.1.0.
   kernel's no-network test III.1 and III.5, the guard and the add-on cards
   II.1, and the generated pages VI.6. Their answers in `constitution/reach.json` go. (#4)
 
+### Fixed
+
+- `mcp-lite`: parse a propose refusal with `partition` instead of a maxsplit
+  `split`, so the accepted inert mutant is gone (same as `mcp-sampling`)
+
 ### Changed
 
 - `test-impact`: the add-on test files a change reaches run as up to four
