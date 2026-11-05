@@ -676,6 +676,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "hook-shell": ("hook_shell.py", ["split", "ls -la"]),
     "hook-start": ("hook_start.py", ["--box", "{box}", *NOW]),
     "hook-stop": ("hook_stop.py", ["check", "--box", "{box}", "--repo", "{tmp}"]),
+    "hooks-elsewhere": ("hooks_elsewhere.py", ["list"]),
     "horoscope": ("horoscope.py", ["Ana", "--date", "2026-10-24"]),
     "hosts": ("hosts.py", ["list"]),
     "hours": ("hours.py", ["--box", "{box}"]),
