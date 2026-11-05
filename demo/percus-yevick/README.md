@@ -112,8 +112,15 @@ Two local models, run by Ollama 0.40.14 on this machine (127.0.0.1 only),
 are given the prompt for the side that generates: [gemma3-4b](models/gemma3-4b.md)
 and [qwen3-8b](models/qwen3-8b.md), each card read from the weights file's own
 header by weights-card, with its SHA-256. weights-pin holds the file to its
-card before each run. The ML specialist's own model is not one of
-these; which model that is, and whether to add it, is open.
+card before each run. The ML specialist's own model can't be one of these. They report
+Qwen3.8-Flash-Next at IQ3_S, run by Strata. Strata is said to be an MIT-licensed
+local runtime, and the model has 125 billion parameters with a download of about
+70 GB, too large for a 15 GB machine with no GPU. So its derivations would come
+from the ML specialist's machine. For them to count, each needs the exact text,
+the SHA-256 of the weights file, Strata's version and the sampling settings
+(temperature, seed). Whether they will send those is open. Unverified here: an
+IQ3_S file of this model; the quantization lists found online name IQ3_XXS and
+others.
 
 ## The dry run
 
@@ -151,8 +158,9 @@ What it can't see: whether any real question is held, which is the result.
   physics student says it's beyond them, and suggests their advisor.
 - **Blind questions**: from whom.
 - **For the physics student**: which four books they meant.
-- **For the ML specialist**: which model, at which quantization, they run,
-  and whether it should be one of the models here.
+- **For the ML specialist**: whether they will send their model's
+  derivations, verbatim, with the weights file's SHA-256, Strata's version and
+  the sampling settings, to be scored beside the found chain.
 - **Baxter, which paper.** Baxter published two papers in 1968. "Ornstein–Zernike
   Relation for a Disordered Fluid" (Aust. J. Phys. 21, 563) is the
   factorization, and its abstract says the PY hard-sphere solution follows

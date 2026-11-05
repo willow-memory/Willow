@@ -11,6 +11,9 @@ found chain answers. DRAFT: not frozen.
 > from the electronic density. In your derivation, you *must* avoid
 > Wertheim's method.
 
+This is the prompt the ML specialist gives their model (Qwen3.8-Flash-Next,
+IQ3_S, on Strata), as they sent it on 2026-11-05.
+
 ## What the physics student added
 
 The ML specialist gives the local model the prompt above. A physics student
@@ -32,7 +35,10 @@ folded in:
   derivation that reaches the answer without explaining its steps is
   scored lower than one that does; see [rubric.md](rubric.md).
 
-## The prompt as asked of the models
+## The prompt with the additions
+
+The local models here are asked both: the prompt as asked, to compare with
+the ML specialist's model like for like, and this one.
 
 > Give a derivation in great gory detail of the equation of state for a
 > monodisperse hard sphere fluid using the Percus-Yevick approximation.
