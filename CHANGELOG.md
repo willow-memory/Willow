@@ -13,7 +13,7 @@ says how). The first was v0.1.0.
 - `equations`: each displayed equation in LaTeX sources as a passage of its
   own, the math as its source writes it, with its labels, its .tex line and
   the sentences around it, so a question finds an equation by what its paper
-  says about it; the latex add-on keeps the prose and drops the math.
+  says about it; the latex add-on keeps the prose and drops the math. (#248)
 - `ci`'s `adapters/stdlib/ci/realdata.py run NAME` runs an add-on's COMMANDS
   line on every demo person's real folder, under the guard, failing on a
   traceback, a breach, a hang or an odd exit; create_pr.py runs it for each
