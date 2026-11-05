@@ -1717,6 +1717,22 @@ willow/
 │   │       ├── femia.md      the abuela's voice, put before the rule, never in place of it
 │   │       ├── babbage.md    Babbage's
 │   │       └── ada.md        Ada Lovelace's
+│   ├── percus-yevick/        a study, in draft: can a physics derivation be found rather than generated
+│   │   ├── fetch.py          the stack's sources, fetched again and held to their hashes
+│   │   ├── models/
+│   │   │   ├── gemma3-4b.md  Gemma 3 4B's card, read from its weights file
+│   │   │   └── qwen3-8b.md   Qwen3 8B's card, read from its weights file
+│   │   ├── pipeline.py       the finding half of the study, in one command
+│   │   ├── prompt.md         The problem
+│   │   ├── questions/
+│   │   │   ├── author.txt    the author's questions, one or more a step
+│   │   │   └── null.txt      physics off the chain, asked of the same stack
+│   │   ├── rubric.md         How clear the path is
+│   │   ├── score.py          the hit rule. Whether a served passage holds a step of the chain
+│   │   ├── sources.json      the stack: each source by address, version and SHA-256
+│   │   ├── steps.json        the chain's steps, and what a passage must hold to count
+│   │   ├── test_percus_yevick.py  the draft hangs together, and its hit rule does what it says
+│   │   └── README.md         Percus–Yevick: found, not generated
 │   ├── php2shell/            a real bug: the PHP2Shell result, tested seven ways
 │   │   ├── README.md         the claim, the threats, what is frozen, each phase's results
 │   │   ├── FROZEN.json       the SHA-256 of each frozen file, and of the tools when frozen

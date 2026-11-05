@@ -1,0 +1,18 @@
+# The author's questions: one or more per step, in the words of the prompt and of
+# the physicist's notes. Written by someone who has seen the source list and
+# grep evidence for each step (see README, "Said plainly"). DRAFT: not frozen.
+# name<TAB>question; the name before the first dot is the step in steps.json.
+s0.1	What is the equation of state of a hard sphere fluid at low density, to second order in the packing fraction?
+s0.2	What is the second virial coefficient of hard spheres?
+s1a.1	What is the general expression for the amplitude of a wave scattered from the electronic density?
+s1b.1	What is the form factor of a sphere of uniform electronic density?
+s1c.1	How does the scattered intensity of identical spheres factor into a form factor and a structure factor?
+s2.1	How is the structure factor related to the radial distribution function?
+s3.1	What is the Ornstein-Zernike equation relating the total and direct correlation functions?
+s3.2	How is the structure factor written in terms of the direct correlation function?
+s4.1	What is the Percus-Yevick closure for hard spheres?
+s5a.1	How does the Baxter factorization solve the Percus-Yevick equation for hard spheres?
+s5b.1	What are the coefficients of the Baxter function Q(r) for hard spheres?
+s6.1	What is the structure factor at zero wavevector for hard spheres in the Percus-Yevick approximation?
+s6.2	How is the isothermal compressibility related to the structure factor at zero wavevector?
+s7.1	What is the compressibility equation of state of hard spheres in the Percus-Yevick approximation?
