@@ -180,7 +180,7 @@ def test_the_steps_are_ordered_cheapest_first(plan_of):
     # tests:ui: ui/canvas.py names stack.py, the runner it runs, and a file
     # named so is the stack demo's, which runs changed: by name, never less
     assert order == ["lint:check", "lint:format", "lint:py39", "tests:adapters", "tests:adapters",
-                     "tests:docs", "tests:ui", "demo:stack", "mutants:changed"]  # fmt: skip
+                     "tests:adapters", "tests:docs", "tests:ui", "demo:stack", "mutants:changed"]  # fmt: skip
     narrow, own = (
         "WILLOW_ONLY=changed pytest",
         "pytest adapters/stdlib/changed/test_changed.py",
@@ -567,10 +567,26 @@ def test_steps_run_at_once_keep_each_ones_output_together_and_a_failure_stops_th
         ln.split()[0] for ln in out.splitlines() if ln[:1] in "ab" and "satisfied" in ln
     ]
     assert summary == ["a", "b"], "the summary in the plan's order"
-    states = imp._run_at_once([("f", "", "", step("f", ci.FAILING, 0.0)),
-                               ("g", "", "", step("g", ci.SATISFIED, 0.0)),
-                               ("h", "", "", step("h", ci.SATISFIED, 0.0))], 1)  # fmt: skip
-    assert [s for _, s, _ in states] == [ci.FAILING, "not run", "not run"]
+    # the longest, last in the plan, starts first: a failure there stops the rest
+    states = imp._run_at_once([("g", "", "", step("g", ci.SATISFIED, 0.0)),
+                               ("h", "", "", step("h", ci.SATISFIED, 0.0)),
+                               ("f", "", "", step("f", ci.FAILING, 0.0))], 1)  # fmt: skip
+    assert [s for _, s, _ in states] == ["not run", "not run", ci.FAILING]
+
+
+def test_the_reached_test_files_are_cut_into_parts_each_file_in_one():
+    """One step of 23 files was 11 minutes of a create_pr.py run, the one
+    --jobs couldn't spread: now one part a past minute, up to four."""
+    plan = imp.place(["adapters/stdlib/restack/restack.py", "adapters/stdlib/ci/ci.py"],
+                     imp.Graph(imp.repo_pythons()))  # fmt: skip
+    parts = [cmd.split()[1:] for g, what, cmd, _ in imp.steps(plan, ci.gates())
+             if g == "tests:adapters" and what.startswith("part ")]  # fmt: skip
+    assert len(parts) == imp.PARTS
+    files = [f for part in parts for f in part]
+    assert sorted(files) == sorted(plan.own) and len(files) == len(set(files))
+    assert imp.parts_for(["adapters/stdlib/dice/test_dice.py"]) == 1, (
+        "a quick file, one step"
+    )
 
 
 def run_of(plan_widen: bool, states: list[str], capsys):

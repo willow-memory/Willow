@@ -14,8 +14,11 @@ you deleted).
 
 `plan` says what would run, in ci.py's own terms (its gate names), and why.
 `run` says the plan, then runs it in order and stops at the first gate that
-fails; with `--jobs N`, N steps at a time, each step's output kept together,
-the first failure stopping the steps not yet started (create_pr.py runs 4). With `--narrow`, a plan that would widen to every gate leaves every
+fails; with `--jobs N`, N steps at a time, the longest first, each step's
+output kept together, the first failure stopping the steps not yet started
+(create_pr.py runs 4). The add-on test files a change reaches are cut into
+up to four steps by their past times, so they run side by side too. With
+`--narrow`, a plan that would widen to every gate leaves every
 gate to CI, which runs them anyway (here it is most of an hour; CI's
 `first` job does the same), and runs the docs' checks and what the rest
 of the change reaches, as it would without the path that widened it:
@@ -71,6 +74,7 @@ from __future__ import annotations
 import ast
 import concurrent.futures
 import importlib.util
+import json
 import os
 import re
 import subprocess
@@ -95,6 +99,20 @@ USAGE = (
 )
 STDLIB = "adapters/stdlib/"
 CONTRACT = "adapters/stdlib/ci/test_contract.py"
+#: at most how many steps the add-on test files a change reaches are cut into
+PARTS = 4
+
+
+def parts_for(files: list[str]) -> int:
+    """One part a minute of their past times (test-times.json), at most
+    PARTS: a few quick files are one step, not four pytest startups."""
+    times = json.loads(ci.TIMES.read_text(encoding="utf-8"))
+    known = sorted(times.values())
+    median = known[len(known) // 2] if known else 1.0
+    seconds = sum(times.get(f, median) for f in files)
+    return max(1, min(PARTS, len(files), int(seconds // 60) + 1))
+
+
 #: the tests of the one gate that has several files and one narrow form
 DOCS = ("test_docs.py", "test_docs_fires.py")
 #: The demo that runs add-ons as a person would, each its own process, so the
@@ -512,9 +530,14 @@ def steps(plan: Plan, gates: list):
         out.append(("tests:adapters", f"test_contract.py narrowed to {name}",
                     f"WILLOW_ONLY={name} pytest {CONTRACT}", pytest_under_guard([CONTRACT], name)))  # fmt: skip
     own = sorted(plan.own)
-    if own:
-        out.append(("tests:adapters", f"{len(own)} test file(s) of the add-ons reached",
-                    "pytest " + " ".join(own), pytest_under_guard(own, None)))  # fmt: skip
+    # cut by their past times, as ci.py cuts tests:adapters, so --jobs runs
+    # them side by side: one step of 23 files was the 11 minutes of a run
+    parts = [p for p in ci.chunks(own, parts_for(own)) if p] if own else []
+    for k, part in enumerate(parts, 1):
+        what = (f"{len(own)} test file(s) of the add-ons reached" if len(parts) == 1 else
+                f"part {k} of {len(parts)} of the {len(own)} reached test files ({len(part)})")  # fmt: skip
+        out.append(("tests:adapters", what, "pytest " + " ".join(part),
+                    pytest_under_guard(part, None)))  # fmt: skip
     if plan.contract_whole:
         out.append(("tests:adapters", "test_contract.py, whole (it changed)",
                     f"pytest {CONTRACT}", pytest_under_guard([CONTRACT], None)))  # fmt: skip
@@ -686,9 +709,10 @@ def _run_at_once(todo: list, jobs: int) -> list[tuple[str, str, str | None]]:
 
     try:
         with concurrent.futures.ThreadPoolExecutor(jobs) as pool:
-            futures = [
-                pool.submit(one, i, g, w, h) for i, (g, w, _c, h) in enumerate(todo)
-            ]
+            # the plan is cheapest first, for one at a time; at once, the
+            # longest (mutants, the strip) start first, so none starts last
+            order = list(enumerate(todo))[::-1]
+            futures = [pool.submit(one, i, g, w, h) for i, (g, w, _c, h) in order]
             for f in concurrent.futures.as_completed(futures):
                 i, state, text = f.result()
                 done[i] = state
