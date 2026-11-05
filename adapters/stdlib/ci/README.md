@@ -3,7 +3,7 @@ section: For maintainers
 line: This repo's checks as verdict rows on a kernel record, the same every run.
 source: box
 added: 2026-10-23
-writes: record, BUGS.md, FILES.md, adapters/planned.json, adapters/*/*, adapters/*/*/*
+writes: record, BUGS.md, FILES.md, README.md, ADDONS.md, adapters/planned.json, adapters/*/*, adapters/*/*/*, demo/*/*, demo/*/*/*
 network: PyPI, to read each dependency floor's release date
 role: repo
 uses: live, readme, stack, test-shards
@@ -92,6 +92,18 @@ Markdown title, `its card`), and takes out what's gone with its notes. A
 file it can't describe goes in with nothing, and it says which.
 [create_pr.py](../github/create_pr.py) runs `write` before a pull request
 opens.
+
+**Made again:** [made.py](made.py) runs every script that makes a file
+from the repo's others, in order: readme's add-on lists, BUGS.md, FILES.md,
+the lists kept A to Z, the PyPI dates, and craft-assembly's report. `write` makes each
+again; `check` names what's stale. A new generator goes in its MADE table,
+and create_pr.py, which runs `write`, then makes it in every pull request.
+
+**PyPI's dates:** [pypi_dates.py](pypi_dates.py) keeps
+[pypi-dates.json](pypi-dates.json), the upload dates of each deps floor pin
+and of the release the floor rule names, which the `deps:floors` test reads
+in place of PyPI. `write` asks PyPI only for a pin the file lacks, so in
+most pull requests it goes nowhere; `check` names what it lacks.
 
 **Its line in COMMANDS:** [commands.py](commands.py) `suggest NAME`
 reads the add-on's usage lines, fills each in as the contract test would

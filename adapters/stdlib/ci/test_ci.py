@@ -396,24 +396,9 @@ def test_the_floor_rule_takes_the_last_release_of_2020_else_the_first():
 
 
 def test_a_floor_above_the_rule_needs_a_reason_on_its_card(monkeypatch):
-    uploaded = {"pypdf": {"1.9": "2014-05-17T00:00:00Z", "3.1.0": "2022-12-23T00:00:00Z"},
-                "mcp": {"0.9.1": "2024-11-20T00:00:00Z", "2.0.0": "2026-07-28T00:00:00Z"},
-                "numpy": {"1.19.4": "2020-11-02T00:00:00Z", "2.1.0": "2024-08-18T00:00:00Z"},
-                "pytest-xdist": {"2.2.0": "2020-12-14T00:00:00Z", "3.0.2": "2022-10-25T00:00:00Z"},
-                "snowballstemmer": {"2.0.0": "2019-10-03T00:00:00Z", "3.1.1": "2026-06-03T00:00:00Z"},
-                "pillow": {"8.0.1": "2020-10-22T00:00:00Z", "11.0.0": "2024-10-15T00:00:00Z"},
-                "openpyxl": {"3.0.5": "2020-08-21T00:00:00Z", "3.1.5": "2024-06-28T00:00:00Z"},
-                "pyyaml": {"5.3.1": "2020-03-18T00:00:00Z", "6.0.3": "2025-09-25T00:00:00Z"},
-                "duckdb": {"0.2.3": "2020-12-03T00:00:00Z", "1.1.1": "2024-09-24T00:00:00Z"},
-                "wordfreq": {"2.3.2": "2020-05-01T00:00:00Z", "3.1.0": "2023-11-21T00:00:00Z"},
-                "ripgrep": {"14.1.0": "2024-08-10T00:00:00Z", "15.1.0": "2026-05-24T00:00:00Z"},
-                "ast-grep-cli": {"0.14.1": "2023-12-01T00:00:00Z", "0.50.0": "2026-10-09T00:00:00Z"},
-                "pagefind": {"1.2.0a4": "2024-10-02T00:00:00Z", "1.3.0": "2024-12-18T00:00:00Z"},
-                "pagefind-bin": {"1.2.0a5": "2024-10-02T00:00:00Z", "1.3.0": "2024-12-18T00:00:00Z"},
-                "python-gnupg": {"0.4.6": "2020-04-17T00:00:00Z", "0.5.7": "2026-09-29T00:00:00Z"},
-                "llama-cpp-python": {"0.1.1": "2023-03-23T00:00:00Z", "0.2.29": "2024-01-15T00:00:00Z"},
-                "kartikeya": {"0.0.1": "2026-07-08T23:13:11Z", "0.5.2": "2026-09-29T00:12:05Z"},
-                "forge-play": {"0.1.0": "2026-09-03T00:00:00Z", "0.10.0": "2026-11-03T00:00:00Z"}}  # fmt: skip
+    # PyPI's own dates for each floor pin and the rule's release, kept by
+    # pypi_dates.py write: no package is typed here by hand
+    uploaded = json.loads((ci.ROOT / "adapters/stdlib/ci/pypi-dates.json").read_text())
     monkeypatch.setattr(ci, "releases", lambda package: uploaded[package])
     assert ci.floors()[0] == ci.SATISFIED
     monkeypatch.setattr(ci, "floor_line", lambda name: "")

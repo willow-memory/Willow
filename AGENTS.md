@@ -195,13 +195,11 @@ floor to the first version that does and say why on the card's `floor:` line
 (twenty characters or more once the version is struck out, or `deps:floors`
 fails). mcp's floor is raised this way.
 
-A new deps package is also named by hand in one test fixture: the `uploaded`
-dict in `test_a_floor_above_the_rule_needs_a_reason_on_its_card`
-(`adapters/stdlib/ci/test_ci.py`). It stands in for PyPI, and `floors()` reads
-it for every add-on's floor pins, so a package it doesn't list is a `KeyError`,
-not a clean failure. Give it a release dated before 2021 and your floor's
-version with its own date, so the rule picks the old one and your raised floor
-still has to carry its reason.
+The floor test can't ask PyPI, so it reads PyPI's dates from
+`adapters/stdlib/ci/pypi-dates.json`: each floor pin's upload time and the
+rule's release's. `python adapters/stdlib/ci/pypi_dates.py write` asks PyPI
+for a new pin's, and only those; made.py and create_pr.py run it, so a new
+deps package is never typed in by hand.
 
 ## Edits that miss say nothing
 
@@ -270,7 +268,7 @@ A result tested against what anyone can rerun, as in
 ## When main moves under a branch
 
 Merge or rebase, then regenerate rather than hand-merge what is generated:
-ADDONS.md and the README's add-on sections come from `readme.py write`, and
-BUGS.md from `python adapters/stdlib/ci/bugs.py write`. CHANGELOG.md and
-FILES.md are merged by hand: both sides' lines, in their order (or
-`files.py write` after the merge, for FILES.md).
+`python adapters/stdlib/ci/made.py write` makes every made file again
+(ADDONS.md and the README's add-on sections, BUGS.md, FILES.md, the lists
+kept A to Z, craft-assembly's report). CHANGELOG.md is merged by hand: both
+sides' lines, in their order.

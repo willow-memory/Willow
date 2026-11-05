@@ -21,10 +21,11 @@ Conflicts in the files this repo makes are settled by their own rules.
 
 ## made, never written by hand
 
-- readme -- write
-- ci.bugs -- write
-- ci.files -- write
-- ci.order -- write
+Each file a script makes, in the order adapters/stdlib/ci/made.py keeps:
+the add-on lists, BUGS.md, FILES.md, the lists kept A to Z, a demo's
+report.
+
+- ci.made -- write
 
 ## checked here
 
