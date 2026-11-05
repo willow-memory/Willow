@@ -528,6 +528,10 @@ willow/
 │   │   │   ├── hook_stop.py   a Stop hook: the record verifies and the work is committed
 │   │   │   ├── test_hook_stop.py
 │   │   │   └── README.md
+│   │   ├── hooks-elsewhere/
+│   │   │   ├── hooks_elsewhere.py The prompt hook for Gemini CLI, Codex and opencode, wherever they take hooks, held to Claude Code's answer byte for byte
+│   │   │   ├── test_hooks_elsewhere.py
+│   │   │   └── README.md     its card
 │   │   ├── horoscope/
 │   │   │   ├── horoscope.py  a daily reading picked by the SHA-256 of name and date
 │   │   │   ├── test_horoscope.py

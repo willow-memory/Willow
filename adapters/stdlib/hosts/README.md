@@ -15,7 +15,7 @@ Assistants reach willow two ways:
 | Way | What the host gets | Where |
 |---|---|---|
 | **MCP** | tools it calls when it asks: `ask`, `suggest`, `waiting` | this add-on, and each thin wrapper over it |
-| **Prompt hook** | cited passages from your folder with each prompt, framed as data | [claude-code](../claude-code/) today; [hooks-elsewhere](../../../ADDONS.md#assistants) for Gemini CLI, Codex and OpenCode when they take hooks |
+| **Prompt hook** | cited passages from your folder with each prompt, framed as data | [claude-code](../claude-code/); [hooks-elsewhere](../hooks-elsewhere/) for Gemini CLI, Codex and OpenCode |
 
 Neither way can approve: every suggestion waits for your seal
 (`python kernel.py seal`). Instruction files stay one copy in

@@ -19,7 +19,7 @@ is written: `no-install` or `needs-install`; `offline`, `this-machine` or
 tag its author chose, if any. *near* names the three add-ons closest to it.
 
 <!-- willow:pools -->
-`█████████████░░░░░░░` **330 of 521 built** · 469 need no install · 52 need one
+`█████████████░░░░░░░` **331 of 521 built** · 469 need no install · 52 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
@@ -29,7 +29,7 @@ tag its author chose, if any. *near* names the three add-ons closest to it.
 | Keeping track | 40 | 16 | 56 | 0 |
 | Trust and proof | 32 | 22 | 45 | 9 |
 | Privacy and safety | 13 | 3 | 16 | 0 |
-| Assistants | 41 | 31 | 64 | 8 |
+| Assistants | 42 | 30 | 64 | 8 |
 | Ways to use it | 27 | 17 | 39 | 5 |
 | Play | 12 | 29 | 37 | 4 |
 | For maintainers | 20 | 24 | 39 | 5 |
@@ -68,19 +68,19 @@ its list: someone who speaks the language can add one without much Python.
 ## Newest
 
 <!-- willow:newest -->
+- 2026-11-05 · [**hooks-elsewhere**](adapters/stdlib/hooks-elsewhere/) — The prompt hook for Gemini CLI, Codex and opencode, wherever they take hooks, held to Claude Code's answer byte for byte.
 - 2026-11-03 · [**sort-ask**](adapters/stdlib/sort-ask/) — A model on this machine suggests a category for each file your phrases didn't place, citing a passage, for your seal.
 - 2026-11-03 · [**sort**](adapters/stdlib/sort/) — Your files sorted into your own categories, by the phrases you gave each: what's where, and what nothing of yours reached.
 - 2026-11-03 · [**share**](adapters/stdlib/share/) — Sealed answers sent to someone, checkable by them and by whoever they pass them on to, without giving anyone the folder.
 - 2026-11-03 · [**kart**](adapters/deps/kart/) — A job someone sent you, run in a sandbox over your own folder only once you seal it, its result yours to seal before it goes back.
-- 2026-11-03 · [**forge**](adapters/deps/forge/) — A sentence in, the add-ons it names or means out, as a plan with its forks for the Forge's checkpoint to resolve and the person to seal before anything runs.
 <!-- /willow:newest -->
 
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W45 -->
-**[stack](adapters/stdlib/stack/)** — One page made from several add-ons run in the order you list them, their results grouped so the biggest come first.
+**[tarot](adapters/stdlib/tarot/)** — A seeded tarot draw on the record, replayable by anyone with the seed.
 
-*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 330 built add-ons in name order.*
+*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 331 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -90,7 +90,7 @@ its list: someone who speaks the language can add one without much Python.
 
 Each writes plain text into a mirror folder the kernel searches, so your originals are never touched.
 
-- [**agent-transcript**](adapters/stdlib/agent-transcript/) — Claude Code, Codex, Gemini CLI, Cursor and Copilot session files as plain text, each turn numbered, so you can ask what an agent was told. *new* `no-install` `offline` `gemini` `claude` · near: gemini-cli, instruction-files, hooks-elsewhere
+- [**agent-transcript**](adapters/stdlib/agent-transcript/) — Claude Code, Codex, Gemini CLI, Cursor and Copilot session files as plain text, each turn numbered, so you can ask what an agent was told. *new* `no-install` `offline` `gemini` `claude` · near: instruction-files, hooks-elsewhere, gemini-cli
 - [**almanac**](adapters/stdlib/almanac/) — An Almanac's catalog.json (climate, health, civic and the rest): each public dataset's description and source as passages, with when its link was last checked. *new* `no-install` `offline` `almanac` `links` · near: oakenscroll, almanac-keep, books
 - [**almanac-keep**](adapters/stdlib/almanac-keep/) — An Almanac entry's best permitted copy, from the publisher or its ranked recovery list, fetched into your folder with its SHA-256. Uses snapshot. Goes online: the copy's address, fetched once. *new* `no-install` `online` `sha` `copy` · near: almanac, snapshot, index-cache
 - [**apple-mail**](adapters/stdlib/apple-mail/) — Apple Mail's .emlx messages, read as the mail add-on reads an .eml. Uses mail. *new* `no-install` `offline` `eml` `mail` · near: mail, text, calendar
@@ -213,7 +213,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 
 ## Finding things
 
-- [**all**](adapters/stdlib/all/) — Every matching passage, ranked, not just the top three. *box* `no-install` `offline` `ranked` `matched` · near: claim-check, latent, thesis
+- [**all**](adapters/stdlib/all/) — Every matching passage, ranked, not just the top three. *box* `no-install` `offline` `ranked` `matched` · near: latent, claim-check, thesis
 - [**amounts**](adapters/stdlib/amounts/) — Every sum of money in your files, with its date and the line it's on. *new* `no-install` `offline` `amount` · near: debts, said, chats
 - **bm25** (idea) — BM25 over a box in one go, with no index to build first: the rank scan --rank bm25 gives, for a folder you ask once. *new* `no-install` `offline` `index` `scan` · near: scan, index-cache, latent
 - **by-function** (idea) — Code read by function and class instead of by line, so a hit names the function it's in. Needs tree-sitter and its language pack; MIT. *new* `needs-install` `offline` `function` `instead` · near: codebase-memory, risky-code, sigmap
@@ -248,7 +248,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - [**record-sql**](adapters/deps/record-sql/) — SQL straight over your record, in place: 'how many answers did I approve in March?' Needs DuckDB; MIT. *box* `needs-install` `offline` · near: mcp, static-search, dialect
 - **rerank** (idea) — A small model on the CPU that reorders the top passages by reading the question and each passage together. Needs FlashRank; Apache-2.0. Goes online: the model, downloaded once. *new* `needs-install` `online` `top` · near: model-fit, pile-gold, all
 - [**ripgrep**](adapters/deps/ripgrep/) — Exact search through ripgrep, much faster on a big folder, its hits checked against the kernel's hashes. Needs the ripgrep program, from the ripgrep wheel on PyPI or your own rg; MIT or Unlicense. *new* `needs-install` `offline` `search` · near: manifests, pdf, ocr
-- [**rules**](adapters/stdlib/rules/) — A game's or a house's rules, approved one section at a time, so asking what a rule says gives back that exact section, word for word. *bot* `no-install` `offline` `game` · near: session-seal, game-master, hosts
+- [**rules**](adapters/stdlib/rules/) — A game's or a house's rules, approved one section at a time, so asking what a rule says gives back that exact section, word for word. *bot* `no-install` `offline` `game` · near: session-seal, hosts, game-master
 - [**said**](adapters/stdlib/said/) — Your own quotes, gathered: every 'so-and-so, on this date: "..."' in your files, as a dated timeline of what was decided. *new* `no-install` `offline` `timeline` `quote` · near: amounts, timeline, debts
 - [**scan**](adapters/stdlib/scan/) — Index a big folder once, then ask it a list of questions in seconds, with the kernel's own answers: of everything, or only what changed since another index. Uses todo. *box* `no-install` `offline` `scan` `ranked` `index` · near: latent, index-cache, pile-serve
 - [**sort**](adapters/stdlib/sort/) — Your files sorted into your own categories, by the phrases you gave each: what's where, and what nothing of yours reached. *new* `no-install` `offline` `phrases` `sorted` `categories` · near: sort-ask, pile-rungs, debts
@@ -325,7 +325,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**job-hunt**](adapters/stdlib/job-hunt/) — Applications sent, replies and interviews, by date: who you're still waiting on. Uses habits. *new* `no-install` `offline` · near: mood, warranties, foia
 - **lab-notebook** (idea) — A lab notebook's dated entries, by sample and experiment: what was done to what, and when. *new* `no-install` `offline` `entry` `sampling` · near: joplin, mcp-sampling, journiv
 - [**lending**](adapters/stdlib/lending/) — Things you lent, to whom and when, and which are still out. *new* `no-install` `offline` · near: on-this-day, xref, licenses
-- [**lesson-time**](adapters/stdlib/lesson-time/) — Lesson plans whose timed parts don't add up to the time the plan says it takes, each part's minutes shown beside the total. *new* `no-install` `offline` `lesson` `plan` `teaching` · near: test-impact, make-it-so, my-lessons
+- [**lesson-time**](adapters/stdlib/lesson-time/) — Lesson plans whose timed parts don't add up to the time the plan says it takes, each part's minutes shown beside the total. *new* `no-install` `offline` `lesson` `plan` `teaching` · near: make-it-so, test-impact, my-lessons
 - [**livestock**](adapters/stdlib/livestock/) — Each animal's births, treatments and sales, from your farm records. Uses habits. *new* `no-install` `offline` `paths` · near: calendar-out, hook-impact, habits
 - [**market-calls**](adapters/stdlib/market-calls/) — Market calls kept as wagers on the record ('SPY closes up on Friday'), settled later by your seal, with the losers kept. Uses forecasts. *bot* `no-install` `offline` `settled` `calls` · near: forecasts, predict, car
 - [**mileage**](adapters/stdlib/mileage/) — Miles driven for work, from your trips and notes, totalled for a tax year. Uses habits. *new* `no-install` `offline` `tax` `work` · near: garden, home-upkeep, subscriptions
@@ -366,7 +366,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - **family-box** (idea) — One box for a household: each person's own seal, and every answer showing whose it is. *new* `no-install` `offline` `person` `family` · near: second-opinion, dialect, family-tree
 - [**fixity**](adapters/stdlib/fixity/) — Your folder's files hashed again now and then, the hashes kept on the record, and a file that changed with no edit of yours flagged as rot. *new* `no-install` `offline` `rot` `flagged` · near: hook-replay, hook-pin, changed
 - [**format-rot**](adapters/stdlib/format-rot/) — Files in formats that may stop opening (old office files, proprietary ones, those no reader handles) flagged while you can still convert them. *new* `no-install` `offline` `office` `rot` · near: office, fixity, sheets
-- **git-notes** (idea) — Approved answers kept as git notes on the commits they cite, so they travel with the repo to any forge. Needs the git program; GPL, called not linked. *new* `needs-install` `offline` `commit` `forge` · near: mirror, stale, git-history
+- **git-notes** (idea) — Approved answers kept as git notes on the commits they cite, so they travel with the repo to any forge. Needs the git program; GPL, called not linked. *new* `needs-install` `offline` `commit` `forge` · near: mirror, stale, annotations
 - **handoff** (idea) — A box handed to the person you name (an executor, a carer): read only, your seals kept, theirs their own. *new* `no-install` `offline` `person` · near: family-box, serve, datasette
 - [**history**](adapters/stdlib/history/) — Your record in plain sentences: what was asked when, what found nothing, what you approved; places and counts, never the words. *new* `no-install` `offline` `counts` `sentence` `everyday` · near: again, export, plain
 - [**ids**](adapters/stdlib/ids/) — Every file and passage given its Software Heritage ID and IPFS CID, names the rest of the world already uses. *new* `no-install` `offline` `world` `ids` · near: dialect, a11y-check, sort-ask
@@ -430,7 +430,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 
 ## Assistants
 
-Each hands in suggestions through propose. None can approve: every suggestion waits for your seal. Two ways in: MCP tools the host calls when it asks ([hosts](adapters/stdlib/hosts/), [mcp-lite](adapters/stdlib/mcp-lite/)), and a prompt hook that cites your passages at each prompt where the host allows it ([claude-code](adapters/stdlib/claude-code/) today; the `hooks-elsewhere` idea for the rest).
+Each hands in suggestions through propose. None can approve: every suggestion waits for your seal. Two ways in: MCP tools the host calls when it asks ([hosts](adapters/stdlib/hosts/), [mcp-lite](adapters/stdlib/mcp-lite/)), and a prompt hook that cites your passages at each prompt where the host allows it ([claude-code](adapters/stdlib/claude-code/); [hooks-elsewhere](adapters/stdlib/hooks-elsewhere/) for the rest).
 
 - [**aider**](adapters/stdlib/aider/) — Aider reads answers from your folder with its /run command, file and line included. Uses hosts. *new* `no-install` `offline` · near: launcher, emacs, browse
 - **assistant-scores** (idea) — How often each assistant's suggestions were sealed or set aside, from the record. *new* `no-install` `offline` `assistant` `aside` · near: retire, second-opinion, cite-honesty
@@ -440,7 +440,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - **cassettes** (idea) — Each exchange with a model kept as a row (what was asked, what came back, the model and its seed), replayed later as a test, and drift between models found by plain diff. *bot* `no-install` `offline` `rows` `drift` · near: hook-replay, lending, hook-errors
 - **cite-honesty** (idea) — How often each model's suggestions were refused at propose for citing a passage the last bite never returned, read from the record by model card. *new* `no-install` `offline` `refuses` `citing` · near: sent-log, model-card, hook-cite
 - **claude** (idea) — Suggestions from Claude through the Anthropic API, citing your passages. Needs anthropic; MIT. Goes online: api.anthropic.com, to ask for suggestions. *new* `needs-install` `online` `citing` `claude` · near: claude-code, bedrock, cite-honesty
-- [**claude-code**](adapters/stdlib/claude-code/) — Claude Code sees cited passages from your folder with each prompt, through its prompt hook. Uses mcp-lite. *bot* `no-install` `offline` `hook` `prompt` · near: gemini-cli, hook-impact, hooks-elsewhere
+- [**claude-code**](adapters/stdlib/claude-code/) — Claude Code sees cited passages from your folder with each prompt, through its prompt hook. Uses mcp-lite. *bot* `no-install` `offline` `hook` `prompt` · near: hooks-elsewhere, gemini-cli, hook-impact
 - [**codex-cli**](adapters/stdlib/codex-cli/) — OpenAI's Codex CLI asks your folder and hands in suggestions, through the mcp add-on. Uses hosts. *new* `no-install` `offline` `mcp` `cli` · near: cursor, opencode, windsurf
 - [**copilot**](adapters/stdlib/copilot/) — GitHub Copilot, in VS Code and in its own CLI, asks your folder through the mcp add-on. Uses hosts. *new* `no-install` `offline` `mcp` `cli` · near: codex-cli, cursor, opencode
 - [**cursor**](adapters/stdlib/cursor/) — Cursor asks your folder and hands in suggestions, through the mcp add-on. Uses hosts. *new* `no-install` `offline` `mcp` · near: opencode, windsurf, zed
@@ -452,12 +452,12 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - **hook-cite** (idea) — A hook that refuses an assistant's claim citing a passage the box never served it, checked against the record by id. *new* `no-install` `offline` `refuses` `assistant` `hooks` · near: claim-check, cite-honesty, hook-read-first
 - [**hook-compact**](adapters/stdlib/hook-compact/) — A PreCompact hook that prints what the record still holds open, seals waiting and questions unanswered, so it survives the assistant's summary. Uses digest. *box* `no-install` `offline` `assistant` `waiting` `hooks` · near: digest, sort-ask, hook-start
 - **hook-errors** (idea) — Each failed command an assistant runs kept as a row of its hash and exit code, so the same failure the third time is named, not retried blind. *new* `no-install` `offline` `fails` `hash` `hooks` · near: hook-replay, hook-fail-closed, hook-fuzz
-- [**hook-fail-closed**](adapters/stdlib/hook-fail-closed/) — Wraps any hook so a crash, a timeout or output it can't read blocks the tool, since Claude Code, Gemini CLI, Codex and Cursor all let the tool run by default. *new* `no-install` `offline` `gemini` `claude` `hooks` · near: hook-fuzz, gemini-cli, hooks-elsewhere
+- [**hook-fail-closed**](adapters/stdlib/hook-fail-closed/) — Wraps any hook so a crash, a timeout or output it can't read blocks the tool, since Claude Code, Gemini CLI, Codex and Cursor all let the tool run by default. *new* `no-install` `offline` `gemini` `claude` `hooks` · near: hook-fuzz, hooks-elsewhere, agent-transcript
 - **hook-feedback** (idea) — Your corrections to an assistant (no, wrong, I said) caught by fixed patterns at each prompt and handed in through propose, for you to keep or drop. *new* `no-install` `offline` `handed` `propose` `hooks` · near: memory-import, basic-memory, hermes
 - [**hook-fuzz**](adapters/stdlib/hook-fuzz/) — Throws empty, malformed, oversized and non-UTF-8 input at a hook and fails it if any of them crash it, since a crashed hook lets the tool run. *new* `no-install` `offline` `crash` `fuzz` `hooks` · near: hook-fail-closed, fuzz, hook-replay
 - [**hook-guard**](adapters/stdlib/hook-guard/) — A PreToolUse hook that blocks, by fixed rule and never by judgment, a tool call that would read your key or write willow's record behind its back, naming the rule. *box* `no-install` `offline` `assistant` `pretooluse` `hooks` · near: hook-impact, hook-leaks, hook-read-first
 - **hook-handoff** (idea) — A Stop hook that writes where the session ended, and the next session's first prompt gets it back, so nothing rides on the assistant's memory. *new* `no-install` `offline` `assistant` `session` `hooks` · near: hook-stop, memory-import, hook-read-first
-- [**hook-impact**](adapters/stdlib/hook-impact/) — Before an edit, a hook hands the assistant every place in your files that names what it's about to change, by file and line. Uses habits. *box* `no-install` `offline` `assistant` `pretooluse` `hooks` · near: gemini-cli, hook-read-first, hook-start
+- [**hook-impact**](adapters/stdlib/hook-impact/) — Before an edit, a hook hands the assistant every place in your files that names what it's about to change, by file and line. Uses habits. *box* `no-install` `offline` `assistant` `pretooluse` `hooks` · near: hook-read-first, hook-start, hook-stop
 - [**hook-leaks**](adapters/stdlib/hook-leaks/) — A PreToolUse hook that refuses a write or a command holding a key, password or card number, by the privacy add-on's shapes, naming only the kind. Uses privacy. *box* `no-install` `offline` `numbers` `key` `hooks` · near: hook-read-first, hook-impact, hook-guard
 - [**hook-pin**](adapters/stdlib/hook-pin/) — Each hook's SHA-256 kept on the record when you approve it, so a hook that changed since is named before it runs, never silently trusted or skipped. *new* `no-install` `offline` `byte` `pin` `hooks` · near: hook-replay, ci-memo, backup
 - **hook-read-first** (idea) — A PreToolUse hook that refuses an edit to a file the assistant hasn't read this session, or whose bytes changed since it did, each read kept as a hash. *new* `no-install` `offline` `assistant` `refuses` `hooks` · near: hook-impact, hook-leaks, hook-start
@@ -467,10 +467,10 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - [**hook-start**](adapters/stdlib/hook-start/) — A SessionStart hook that hands the assistant what needs you, read the way digest reads it, so opening a session writes nothing. Uses digest. *bot* `no-install` `offline` `coming` `assistant` `hooks` · near: digest, hook-impact, browse
 - [**hook-stop**](adapters/stdlib/hook-stop/) — A Stop hook that won't let an assistant's turn end while the record doesn't verify or its changes aren't committed, and says which. *box* `no-install` `offline` `assistant` `end` `hooks` · near: hook-impact, hook-handoff, hook-replay
 - **hook-tiers** (idea) — Edits sorted into tiers by the paths they touch, and the top tier held as a proposal until you seal it, by a rule you can read. *new* `no-install` `offline` `rule` `held` `hooks` · near: translate, plain-language, hook-sequence
-- **hooks-elsewhere** (idea) — The prompt hook for Gemini CLI, Codex and opencode, wherever they take hooks, held to Claude Code's answer byte for byte. *box* `no-install` `offline` `gemini` `claude` `hooks` · near: gemini-cli, claude-code, hook-fail-closed
+- [**hooks-elsewhere**](adapters/stdlib/hooks-elsewhere/) — The prompt hook for Gemini CLI, Codex and opencode, wherever they take hooks, held to Claude Code's answer byte for byte. Uses claude-code. *box* `no-install` `offline` `gemini` `claude` `hooks` · near: claude-code, gemini-cli, hook-fail-closed
 - [**hosts**](adapters/stdlib/hosts/) — One table of the assistants that take an MCP server, printing the lines that register willow with any of them. Uses mcp-lite, pipe. *new* `no-install` `offline` `gemini` `mcp` · near: gemini-cli, instruction-files, agents-md-check
 - [**in-process**](adapters/deps/in-process/) — Suggestions from a GGUF model loaded inside the add-on itself through llama-cpp-python: no server, no port, nothing listening. Needs llama-cpp-python; MIT; licence of the model varies. Uses openai-compatible. *new* `needs-install` `offline` `cpp` `llama` · near: openai-compatible, night-batch, local-model
-- [**instruction-files**](adapters/stdlib/instruction-files/) — For a folder, which instruction files each coding agent would load (AGENTS.md, CLAUDE.md, GEMINI.md, rules folders), in what order, with each file's size and hash. *box* `no-install` `offline` `gemini` `claude` · near: agent-transcript, agents-md-check, gemini-cli
+- [**instruction-files**](adapters/stdlib/instruction-files/) — For a folder, which instruction files each coding agent would load (AGENTS.md, CLAUDE.md, GEMINI.md, rules folders), in what order, with each file's size and hash. *box* `no-install` `offline` `claude` `gemini` · near: agent-transcript, agents-md-check, claude-code
 - **issue-answer** (idea) — A workflow that drafts an answer to a new issue from the repo's own docs, each line cited, posted only once a maintainer seals it. Goes online: the forge, through the workflow's token, to post an answer once it is sealed. *new* `no-install` `online` `repo` `docs` · near: hook-checks, repo-index, pr-context
 - **ladder** (idea) — Your files first, then sources you trust such as Jeles and Nestor, then a model, stopping at the first that answers, each answer kept for next time. *bot* `no-install` `offline` `jeles` `nestor` · near: jeles, first-mention, nestor
 - **llm-cli** (idea) — Suggestions through the llm command, so any model its plugins reach (local or hosted) can hand one in, with llm's own log naming the model. Needs llm and the plugin for your model; Apache-2.0. Goes online: the model its plugin reaches, to ask for suggestions. *new* `needs-install` `online` `cli` `plugin` · near: gemini-cli, codex-cli, hosts
@@ -486,7 +486,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - [**model-drift**](adapters/stdlib/model-drift/) — Your frozen questions asked again of a model now and then, flagging when its answers change while its name and card stay the same. Uses openai-compatible. Goes online: the endpoint you configure, to ask your questions again. *new* `no-install` `online` · near: same-way, model-card, model-exam
 - [**model-exam**](adapters/stdlib/model-exam/) — Any model scored against the answers you sealed, your own questions as its exam, before you trust its suggestions. Uses openai-compatible. Goes online: the endpoint you configure, to ask your sealed questions. *new* `no-install` `online` `score` · near: same-way, model-drift, night-batch
 - [**model-fit**](adapters/stdlib/model-fit/) — Whether this machine's GPU, NPU or Apple silicon can run a local model, and about how fast, before you download one. *new* `no-install` `offline` `local` `weights` · near: model-shelf, weights-card, quantized
-- [**model-shelf**](adapters/stdlib/model-shelf/) — Every model already on this machine, read from Ollama's, LM Studio's, Jan's and GPT4All's folders and the Hugging Face cache: its runtime, size, quantization and hash, before you download another. Uses weights-card. *new* `no-install` `offline` `hash` `jan` · near: quantized, weights-card, model-fit
+- [**model-shelf**](adapters/stdlib/model-shelf/) — Every model already on this machine, read from Ollama's, LM Studio's, Jan's and GPT4All's folders and the Hugging Face cache: its runtime, size, quantization and hash, before you download another. Uses weights-card. *new* `no-install` `offline` `jan` `ollama` · near: quantized, weights-card, model-fit
 - [**night-batch**](adapters/stdlib/night-batch/) — Questions waiting for suggestions batched into one local-model run overnight, stopped the moment you're back. Uses local-model. Reaches this machine only. *new* `no-install` `this-machine` `local` · near: in-process, openai-compatible, model-drift
 - [**openai-compatible**](adapters/stdlib/openai-compatible/) — Suggestions from any OpenAI-compatible endpoint you choose (LM Studio, vLLM, LocalAI, SGLang, Docker Model Runner, OpenRouter, Groq, Mistral), citing your passages. Goes online: the endpoint you configure, to ask for suggestions. *new* `no-install` `online` `cpp` `llama` · near: in-process, local-model, night-batch
 - [**opencode**](adapters/stdlib/opencode/) — OpenCode asks your folder and hands in suggestions, through the mcp add-on. Uses hosts. *new* `no-install` `offline` `mcp` · near: cursor, windsurf, zed
@@ -599,7 +599,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 ## For maintainers
 
 - [**against**](adapters/stdlib/against/) — A pull request held to the other open ones: a name both add fails, a file both change is said. Uses similar. *new* `no-install` `offline` `pull` `requests` · near: test-impact, pr-context, upstream-desk
-- [**agents-md-check**](adapters/stdlib/agents-md-check/) — Commands and paths named in AGENTS.md, CLAUDE.md or GEMINI.md that no longer exist in the repo. *new* `no-install` `offline` `gemini` `agent` · near: instruction-files, hosts, gemini-cli
+- [**agents-md-check**](adapters/stdlib/agents-md-check/) — Commands and paths named in AGENTS.md, CLAUDE.md or GEMINI.md that no longer exist in the repo. *new* `no-install` `offline` `gemini` `agent` · near: instruction-files, hosts, hook-impact
 - [**bench**](adapters/stdlib/bench/) — How fast the kernel answers on boxes of set sizes, per release, so a slowdown is seen. *new* `no-install` `offline` `release` `build` · near: profile, pile-store, pile-build
 - [**bot-venv**](adapters/stdlib/bot-venv/) — Where your venvs are, inside willow-bot or out, with their locks and the services running them; and which has what CI needs, with the line that runs CI. *bot* `no-install` `offline` `test` `repo` · near: ci, fast-tests, ci-why
 - [**ci**](adapters/stdlib/ci/) — This repo's checks as verdict rows on a kernel record, the same every run. Uses live, readme, stack, test-shards. Goes online: PyPI, to read each dependency floor's release date. *box* `no-install` `online` `rows` `verdict` · near: ci-memo, bot-venv, ci-why

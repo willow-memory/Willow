@@ -10,6 +10,7 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `hooks-elsewhere`: Gemini CLI, Codex and OpenCode get cited passages at each prompt, held to `claude-code`'s framed answer byte for byte (`setup --host` / `prompt --host`); MCP stays `hosts`
 - `GEMINI.md` points Gemini CLI at `AGENTS.md` (prose, since Gemini has no
   `@` import like Claude Code's `CLAUDE.md`); `agents-md-check` reads it too
 - Assistants' two ways in, named on `hosts`, `claude-code`, `gemini-cli` and

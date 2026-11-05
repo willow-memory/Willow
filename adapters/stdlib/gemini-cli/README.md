@@ -15,8 +15,8 @@ own folder and hands in suggestions for you to approve, through
 [mcp-lite](../mcp-lite/). Nothing to install. At the repo root,
 [GEMINI.md](../../../GEMINI.md) tells Gemini CLI to read
 [AGENTS.md](../../../AGENTS.md) (Gemini has no `@` import), so the agent
-rules stay one copy. A prompt hook that matches [claude-code](../claude-code/)
-byte for byte is the planned `hooks-elsewhere` idea.
+rules stay one copy. The prompt-hook way in is
+[hooks-elsewhere](../hooks-elsewhere/) (`setup --host gemini-cli`).
 
     python adapters/stdlib/gemini-cli/gemini_cli.py --box DIR
 

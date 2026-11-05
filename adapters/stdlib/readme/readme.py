@@ -142,8 +142,8 @@ SECTIONS = [
      " tools the host calls when it asks ([hosts](adapters/stdlib/hosts/),"
      " [mcp-lite](adapters/stdlib/mcp-lite/)), and a prompt hook that cites"
      " your passages at each prompt where the host allows it"
-     " ([claude-code](adapters/stdlib/claude-code/) today; the"
-     " `hooks-elsewhere` idea for the rest)."),
+     " ([claude-code](adapters/stdlib/claude-code/);"
+     " [hooks-elsewhere](adapters/stdlib/hooks-elsewhere/) for the rest)."),
     ("Ways to use it", ""),
     ("Play", ""),
     ("For maintainers", ""),
