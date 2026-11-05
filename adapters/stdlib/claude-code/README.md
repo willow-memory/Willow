@@ -11,8 +11,9 @@ looks-for: index-cache, scan
 -->
 # claude-code
 
-Claude Code reads what your own files say about each prompt, before it
-answers, with each passage's file and line.
+The **prompt-hook** way in (see [hosts](../hosts/)): Claude Code reads what
+your own files say about each prompt, before it answers, with each passage's
+file and line. MCP tools are the other way; `setup` prints both.
 
     python adapters/stdlib/claude-code/hook.py setup --box DIR
 

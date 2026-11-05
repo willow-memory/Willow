@@ -10,6 +10,18 @@ uses: mcp-lite, pipe
 -->
 # hosts
 
+Assistants reach willow two ways:
+
+| Way | What the host gets | Where |
+|---|---|---|
+| **MCP** | tools it calls when it asks: `ask`, `suggest`, `waiting` | this add-on, and each thin wrapper over it |
+| **Prompt hook** | cited passages from your folder with each prompt, framed as data | [claude-code](../claude-code/); [hooks-elsewhere](../hooks-elsewhere/) for Gemini CLI, Codex and OpenCode |
+
+Neither way can approve: every suggestion waits for your seal
+(`python kernel.py seal`). Instruction files stay one copy in
+[AGENTS.md](../../../AGENTS.md); [CLAUDE.md](../../../CLAUDE.md) imports
+it, and [GEMINI.md](../../../GEMINI.md) tells Gemini CLI to read it.
+
 Every assistant that takes an MCP server is one row in a table: where its
 settings live, and the shape it wants. This prints the lines for any row,
 starting [mcp-lite](../mcp-lite/) over your box. Nothing to install.
