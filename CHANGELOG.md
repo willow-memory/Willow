@@ -10,6 +10,10 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `equations`: each displayed equation in LaTeX sources as a passage of its
+  own, the math as its source writes it, with its labels, its .tex line and
+  the sentences around it, so a question finds an equation by what its paper
+  says about it; the latex add-on keeps the prose and drops the math. (#248)
 - `hooks-elsewhere`: Gemini CLI, Codex and OpenCode get cited passages at each prompt, held to `claude-code`'s framed answer byte for byte (`setup --host` / `prompt --host`); MCP stays `hosts` (#247)
 - `GEMINI.md` points Gemini CLI at `AGENTS.md` (prose, since Gemini has no
   `@` import like Claude Code's `CLAUDE.md`); `agents-md-check` reads it too (#247)
