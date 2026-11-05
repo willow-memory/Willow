@@ -284,3 +284,24 @@ def test_a_missing_folder_and_nested_folders_are_refused(tmp_path):
     for to in (tmp_path / "src", tmp_path / "src" / "out", tmp_path):
         res = run("mirror", "--from", str(tmp_path / "src"), "--to", str(to))
         assert res.returncode == kernel.REFUSED and "inside one another" in res.stderr
+
+
+def test_the_prose_after_stops_at_its_cap_on_a_word():
+    def after(prose: str) -> str:
+        (p,) = mod.passages(b"\\[ x = 1 \\]\n" + prose.encode() + b"\n", "a.tex")
+        return p.split("\n")[-1]
+
+    assert after("a" * 158 + " b " + "c" * 50) == "a" * 158 + " b"
+    assert after("a" * 159 + " b " + "c" * 50) == "a" * 159
+
+
+def test_a_cut_on_a_space_keeps_the_word_after_it():
+    assert mod._before("abc def", 4) == "def"
+
+
+def test_prose_with_no_sentence_end_between_two_equations_goes_with_both():
+    body = b"\\[ a = 1 \\]\nso then\n\\[ b = 2 \\]\n"
+    assert mod.passages(body, "a.tex") == [
+        "a.tex line 1\na = 1\nso then",
+        "a.tex line 3\nso then\nb = 2",
+    ]
