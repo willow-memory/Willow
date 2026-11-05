@@ -152,6 +152,15 @@ What it can't see: whether any real question is held, which is the result.
   SHA-256 `befd4060…63f9ac`, kept outside the repo). steps.json, score.py and
   the questions were not changed after reading it; a later change to them
   will say whether it was.
+- **The same session's full transcript was read too** (Markdown, SHA-256
+  `bb472654…41dea1`, kept outside the repo). It fetched three of this
+  stack's Wikipedia revisions itself (Ornstein–Zernike, Percus–Yevick, Hard
+  spheres), so its answer was partly found as well. It judged the C code on
+  the Percus–Yevick page wrong; run here, that code matches a structure
+  factor computed from the PY c(r) to six digits at every q tried, and fails
+  only for qr below about 10⁻², where its last term loses its digits to
+  cancellation. The page stays in the stack. Nothing frozen-to-be was changed
+  after reading it.
 - **The rule is strict.** A formula in another form (expanded, or with the
   diameter set to 1) is not held. That makes misses likelier, not hits.
 
