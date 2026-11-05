@@ -124,8 +124,12 @@ pack of their own naming (so an IQ3_S build does exist, as Strata's; the
 public lists name IQ3_XXS); speculative decoding with DFlash2 drafts and MTP;
 a 256k context, int8 KV cache, a 157.5k reasoning budget, compaction keeping
 30k; and opencode's default temperature, which they took to be 0.8. No seed
-is set, so the run can't be repeated token for token. Still missing: the two
-weights files' SHA-256 and the temperature as opencode sets it.
+is set, so the run can't be repeated token for token. The weights files' SHA-256,
+as they sent them: `4c1eb2ce…7d2aca3` (00001-of-00002) and `316b46f3…c161e113`
+(00002-of-00002), in full:
+`4c1eb2ceb4915e1192f4f386021897bde56a97f40a0bb78bb86465e0f7d2aca3` and
+`316b46f3a2dbd68c900f43136ab9449f9dcc3725dfd8c794847c204bc161e113`. Still
+missing: the temperature as opencode sets it.
 
 They also sent the solver the session wrote (`alt3.py`, 69 lines, SHA-256
 `b7ac94de…7122d6`, kept outside the repo). It is numerics only (numpy and
@@ -135,10 +139,12 @@ it saves its arrays under /tmp. Read, it matches the report's description, and o
 13's value is overwritten on line 14). Run here with the person's leave
 (numpy 2.5.4, scipy 1.18.1), on the report's finer grid (`alt3.py ETA 321
 0.025`), it gives the report's S(0) column to every digit: 0.6731437,
-0.1406129, 0.0253955 at η = 0.05, 0.25, 0.45. Two things it doesn't give:
-the contact values the report lists (1.135747, 2.00035, 4.0493) come from an
+0.1406129, 0.0253955 at η = 0.05, 0.25, 0.45. The contact values the report lists (1.135747, 2.00035, 4.0493) come from an
 extrapolation to r = 1 that this script doesn't do; it prints g at the first
-node (3.83 at η = 0.45, on this grid); and its own residual, the largest
+node (3.83 at η = 0.45). The transcript logs that step's output but not its
+code; done here as it describes, a quadratic through the six nodes of
+(1, 1.15] evaluated at r = 1, it gives 1.135742, 2.00030 and 4.04994, within
+5×10⁻⁴ of the report. Its own residual, the largest
 miss in the equations it solves, is 6×10⁻⁶, 7×10⁻⁴ and 0.034 at the three
 η, so at η = 0.45 the solve is not converged tightly, which fits its S(0)
 being 0.2% off the closed form there.
