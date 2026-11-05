@@ -932,16 +932,6 @@
   "role": "tools"
  },
  {
-  "name": "mcp-sampling",
-  "kind": "stdlib",
-  "section": "Assistants",
-  "line": "Suggestions from whatever model your MCP client already runs, asked through MCP sampling, so willow needs no model or key of its own.",
-  "source": "new",
-  "writes": "record",
-  "network": "none",
-  "role": "suggests"
- },
- {
   "name": "meaning",
   "kind": "deps",
   "section": "Finding things",

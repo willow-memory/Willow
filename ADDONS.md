@@ -19,7 +19,7 @@ is written: `no-install` or `needs-install`; `offline`, `this-machine` or
 tag its author chose, if any. *near* names the three add-ons closest to it.
 
 <!-- willow:pools -->
-`█████████████░░░░░░░` **332 of 522 built** · 470 need no install · 52 need one
+`█████████████░░░░░░░` **333 of 522 built** · 470 need no install · 52 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
@@ -29,7 +29,7 @@ tag its author chose, if any. *near* names the three add-ons closest to it.
 | Keeping track | 40 | 16 | 56 | 0 |
 | Trust and proof | 32 | 22 | 45 | 9 |
 | Privacy and safety | 13 | 3 | 16 | 0 |
-| Assistants | 42 | 30 | 64 | 8 |
+| Assistants | 43 | 29 | 64 | 8 |
 | Ways to use it | 27 | 17 | 39 | 5 |
 | Play | 12 | 29 | 37 | 4 |
 | For maintainers | 20 | 24 | 39 | 5 |
@@ -68,19 +68,19 @@ its list: someone who speaks the language can add one without much Python.
 ## Newest
 
 <!-- willow:newest -->
+- 2026-11-05 · [**mcp-sampling**](adapters/stdlib/mcp-sampling/) — Suggestions from whatever model your MCP client already runs, asked through MCP sampling, so willow needs no model or key of its own.
 - 2026-11-05 · [**hooks-elsewhere**](adapters/stdlib/hooks-elsewhere/) — The prompt hook for Gemini CLI, Codex and opencode, wherever they take hooks, held to Claude Code's answer byte for byte.
 - 2026-11-05 · [**equations**](adapters/stdlib/equations/) — Each displayed equation in LaTeX sources as a passage of its own, with the sentences around it and its label, cited by the .tex file's line.
 - 2026-11-03 · [**sort-ask**](adapters/stdlib/sort-ask/) — A model on this machine suggests a category for each file your phrases didn't place, citing a passage, for your seal.
 - 2026-11-03 · [**sort**](adapters/stdlib/sort/) — Your files sorted into your own categories, by the phrases you gave each: what's where, and what nothing of yours reached.
-- 2026-11-03 · [**share**](adapters/stdlib/share/) — Sealed answers sent to someone, checkable by them and by whoever they pass them on to, without giving anyone the folder.
 <!-- /willow:newest -->
 
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W45 -->
-**[mcp](adapters/deps/mcp/)** — Lets any MCP client, such as an AI assistant or editor, ask your folder and hand in suggestions.
+**[joplin](adapters/stdlib/joplin/)** — Joplin's .jex export, read without unpacking it: each note as plain text with its title and dates.
 
-*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 332 built add-ons in name order.*
+*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 333 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -326,7 +326,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**job-hunt**](adapters/stdlib/job-hunt/) — Applications sent, replies and interviews, by date: who you're still waiting on. Uses habits. *new* `no-install` `offline` · near: mood, warranties, foia
 - **lab-notebook** (idea) — A lab notebook's dated entries, by sample and experiment: what was done to what, and when. *new* `no-install` `offline` `entry` `sampling` · near: joplin, mcp-sampling, journiv
 - [**lending**](adapters/stdlib/lending/) — Things you lent, to whom and when, and which are still out. *new* `no-install` `offline` · near: on-this-day, xref, licenses
-- [**lesson-time**](adapters/stdlib/lesson-time/) — Lesson plans whose timed parts don't add up to the time the plan says it takes, each part's minutes shown beside the total. *new* `no-install` `offline` `lesson` `plan` `teaching` · near: make-it-so, test-impact, my-lessons
+- [**lesson-time**](adapters/stdlib/lesson-time/) — Lesson plans whose timed parts don't add up to the time the plan says it takes, each part's minutes shown beside the total. *new* `no-install` `offline` `lesson` `plan` `teaching` · near: test-impact, make-it-so, my-lessons
 - [**livestock**](adapters/stdlib/livestock/) — Each animal's births, treatments and sales, from your farm records. Uses habits. *new* `no-install` `offline` `paths` · near: calendar-out, hook-impact, habits
 - [**market-calls**](adapters/stdlib/market-calls/) — Market calls kept as wagers on the record ('SPY closes up on Friday'), settled later by your seal, with the losers kept. Uses forecasts. *bot* `no-install` `offline` `settled` `calls` · near: forecasts, predict, car
 - [**mileage**](adapters/stdlib/mileage/) — Miles driven for work, from your trips and notes, totalled for a tax year. Uses habits. *new* `no-install` `offline` `tax` `work` · near: garden, home-upkeep, subscriptions
@@ -383,7 +383,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**nestor**](adapters/stdlib/nestor/) — Answers Nestor records a person has checked, read from a copy of its SQLite store, each citing who checked it and when. *new* `no-install` `offline` `sqlite` `copy` · near: bookmarks, codebase-memory, zotero
 - **notary** (idea) — The record's newest hash timestamped by an outside time server, so anyone can see it existed by then. Goes online: an RFC 3161 time server you choose, sent only the hash. *new* `no-install` `online` `hash` `existed` · near: opentimestamps, persona-card, three-two-one
 - **opentimestamps** (idea) — The record's newest hash anchored by OpenTimestamps, proof that it existed by a given block. Goes online: the OpenTimestamps calendars, sent only the hash. *new* `no-install` `online` `hash` `existed` · near: notary, merkle, fight5e
-- [**pair-drift**](adapters/stdlib/pair-drift/) — Figures a summary says that its full text doesn't: a draft and its packet side by side, ranges and billions read as written. *new* `no-install` `offline` `ranges` `pairs` `writing` · near: contradictions, pins, nightstand
+- [**pair-drift**](adapters/stdlib/pair-drift/) — Figures a summary says that its full text doesn't: a draft and its packet side by side, ranges and billions read as written. *new* `no-install` `offline` `ranges` `pairs` `writing` · near: contradictions, pins, pile-poetry
 - **paper-key** (idea) — Your key printed as words on paper, to keep somewhere safe, and typed back in to restore it. *new* `no-install` `offline` `prints` `key` · near: print, start, ci-cache
 - [**pgp**](adapters/deps/pgp/) — Signs exports and reports with your PGP key, verifiable anywhere. Needs the gpg program, run not linked, and python-gnupg; GPL, BSD-3-Clause. *new* `needs-install` `offline` · near: pdf, mcp, photos
 - [**prov**](adapters/stdlib/prov/) — The record exported as W3C PROV: what came from what, by which step, sealed by whom. *new* `no-install` `offline` `prov` `tool` · near: cloudevents, annotations, in-toto
@@ -453,7 +453,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - **hook-cite** (idea) — A hook that refuses an assistant's claim citing a passage the box never served it, checked against the record by id. *new* `no-install` `offline` `refuses` `assistant` `hooks` · near: claim-check, cite-honesty, hook-read-first
 - [**hook-compact**](adapters/stdlib/hook-compact/) — A PreCompact hook that prints what the record still holds open, seals waiting and questions unanswered, so it survives the assistant's summary. Uses digest. *box* `no-install` `offline` `assistant` `waiting` `hooks` · near: digest, sort-ask, hook-start
 - **hook-errors** (idea) — Each failed command an assistant runs kept as a row of its hash and exit code, so the same failure the third time is named, not retried blind. *new* `no-install` `offline` `fails` `hash` `hooks` · near: hook-replay, hook-fail-closed, hook-fuzz
-- [**hook-fail-closed**](adapters/stdlib/hook-fail-closed/) — Wraps any hook so a crash, a timeout or output it can't read blocks the tool, since Claude Code, Gemini CLI, Codex and Cursor all let the tool run by default. *new* `no-install` `offline` `gemini` `claude` `hooks` · near: hook-fuzz, hooks-elsewhere, agent-transcript
+- [**hook-fail-closed**](adapters/stdlib/hook-fail-closed/) — Wraps any hook so a crash, a timeout or output it can't read blocks the tool, since Claude Code, Gemini CLI, Codex and Cursor all let the tool run by default. *new* `no-install` `offline` `claude` `gemini` `hooks` · near: hook-fuzz, hooks-elsewhere, agent-transcript
 - **hook-feedback** (idea) — Your corrections to an assistant (no, wrong, I said) caught by fixed patterns at each prompt and handed in through propose, for you to keep or drop. *new* `no-install` `offline` `handed` `propose` `hooks` · near: memory-import, basic-memory, hermes
 - [**hook-fuzz**](adapters/stdlib/hook-fuzz/) — Throws empty, malformed, oversized and non-UTF-8 input at a hook and fails it if any of them crash it, since a crashed hook lets the tool run. *new* `no-install` `offline` `crash` `fuzz` `hooks` · near: hook-fail-closed, fuzz, hook-replay
 - [**hook-guard**](adapters/stdlib/hook-guard/) — A PreToolUse hook that blocks, by fixed rule and never by judgment, a tool call that would read your key or write willow's record behind its back, naming the rule. *box* `no-install` `offline` `assistant` `pretooluse` `hooks` · near: hook-impact, hook-leaks, hook-read-first
@@ -479,7 +479,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - [**mcp**](adapters/deps/mcp/) — Lets any MCP client, such as an AI assistant or editor, ask your folder and hand in suggestions. Needs mcp; MIT. *new* `needs-install` `offline` `mcp` `assistant` · near: mcp-lite, zed, cursor
 - **mcp-by-hash** (idea) — Your passages served as MCP resources named by their SHA-256, so an assistant cites exactly the bytes it read and a changed passage gets a new name. *bot* `no-install` `offline` `assistant` `sha` · near: model-card, snapshot, hook-read-first
 - [**mcp-lite**](adapters/stdlib/mcp-lite/) — The mcp add-on's three tools with nothing to install: the protocol by hand, standard library only. *box* `no-install` `offline` `mcp` · near: mcp, cursor, opencode
-- **mcp-sampling** (idea) — Suggestions from whatever model your MCP client already runs, asked through MCP sampling, so willow needs no model or key of its own. *new* `no-install` `offline` `mcp` `client` · near: mcp, cursor, opencode
+- [**mcp-sampling**](adapters/stdlib/mcp-sampling/) — Suggestions from whatever model your MCP client already runs, asked through MCP sampling, so willow needs no model or key of its own. Uses openai-compatible. *new* `no-install` `offline` `mcp` `client` · near: cursor, opencode, windsurf
 - **memory-import** (idea) — An AI assistant's memory store, SQLite or Markdown, handed in through propose: one suggestion per memory, none trusted until you seal it. *new* `no-install` `offline` `handed` `propose` · near: basic-memory, hermes, hook-feedback
 - **mex** (idea) — mex's project memory for coding agents: its scaffold read as cited passages, and what an agent writes back held for your seal. *new* `no-install` `offline` `agent` `memory` · near: instruction-files, codebase-memory, corpus-lens
 - **mlx** (idea) — Suggestions from a model run on Apple silicon through MLX, on this Mac alone. Needs mlx-lm, on Apple silicon only; MIT; licence of the model varies. *new* `needs-install` `offline` `apple` `silicon` · near: browser-model, os-model, model-fit
