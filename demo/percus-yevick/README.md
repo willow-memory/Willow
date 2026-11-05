@@ -65,9 +65,9 @@ From the physicist who set the problem:
 
 ## The stack
 
-[sources.json](sources.json): 13 arXiv papers (their LaTeX source) and 11
-Wikipedia revisions, each by address, version, time fetched and SHA-256,
-never their text. [fetch.py](fetch.py) fetches them again and checks the
+[sources.json](sources.json): 13 arXiv papers (their LaTeX source), 11
+Wikipedia revisions and one scanned paper, each by address, version, time
+fetched and SHA-256, never their text. [fetch.py](fetch.py) fetches them again and checks the
 hashes offline (`--check`). Each source has a role:
 
 - **chain:** where a step is expected, such as Wu's thesis (2604.03963,
@@ -79,20 +79,31 @@ hashes offline (`--check`). Each source has a role:
 - **trap present:** Wikipedia's "Hard spheres", which gives only
   Carnahan–Starling;
 - **distractor:** Baxter's sticky spheres (cond-mat/0406603), the
-  hypernetted-chain closure.
+  hypernetted-chain closure;
+- **motivation:** Ornstein and Zernike's own 1914 paper, "Accidental
+  deviations of density and opalescence at the critical point of a single
+  substance" (KNAW Proceedings 17 II, 793–806), from the KNAW Digital
+  Library's scan. Its text is the scan's OCR: readable as prose, with
+  errors ("deviatiuns"), and its math not to be relied on.
 
 Left out: further sticky-sphere papers, at the physicist's warning that
 Baxter's attractive shell is a complication of its own; Henderson 2009
 (Condensed Matter Physics), which holds the factorization but has a sign
 slip in a; and a scanned 1993 Rev. Mex. Fís. paper whose text can't be read
-reliably. The books the physicist recommends (Hansen and McDonald, McQuarrie,
-Goodstein, Guinier and Fournet, Oberdisse and Lindner) are under copyright
-and are not in the stack.
+reliably. The books the physicist recommends are under copyright and are not in the
+stack: Hansen and McDonald, *Theory of Simple Liquids*; McQuarrie,
+*Statistical Mechanics*; Goodstein, *States of Matter*; Guinier and Fournet,
+*Small-Angle Scattering of X-Rays* (1955; HathiTrust gives it as search-only,
+so in copyright); and the monograph he names as Oberdisse and Lindner's,
+which is *Neutrons, X-rays, and Light: Scattering Methods Applied to Soft
+Condensed Matter*, edited by Lindner and Oberdisse (Elsevier, second edition
+2024; the first, 2002, was edited by Lindner and Zemb).
 
 The pile is built by the repo's own readers: [latex](../../adapters/stdlib/latex/)
 for each paper's prose, [equations](../../adapters/stdlib/equations/) for its
 math, [mediawiki](../../adapters/stdlib/mediawiki/) for each Wikipedia
-revision. It holds 36 files and 4,368 passages.
+revision. [pdf](../../adapters/deps/pdf/), which needs pypdf, reads the scanned paper.
+The pile holds 37 files and 4,431 passages.
 
 ## The models
 
@@ -138,12 +149,16 @@ What it can't see: whether any real question is held, which is the result.
 - **Who judges the rubric**: someone who knows the field, blind; the
   physicist suggests it's beyond them.
 - **Blind questions**: from whom.
-- **For the physicist**: whether "Baxter includes the infinitesimal
-  attractive region" means the method itself, or Baxter's other 1968 paper
-  on sticky spheres; which four books he meant; and the exact title of the
-  Oberdisse and Lindner monograph.
-- **Ornstein and Zernike's 1914 paper**, likely open in the Dutch academy's
-  (KNAW) digital library, to be checked and perhaps added.
+- **For the physicist**: which four books he meant, and whether his
+  friend's own model should be one of the models.
+- **Baxter, which paper.** Baxter published two papers in 1968. "Ornstein–Zernike
+  Relation for a Disordered Fluid" (Aust. J. Phys. 21, 563) is the
+  factorization, and its abstract says the PY hard-sphere solution follows
+  from it, with no attraction. "Percus–Yevick Equation for Hard Spheres with
+  Surface Adhesion" (J. Chem. Phys. 49, 2770) is the one with the
+  infinitesimal attractive shell. This study's step s5 is the first. Whether
+  the physicist's warning was about the second, or about the method, is still
+  his to say.
 
 ## Running it
 

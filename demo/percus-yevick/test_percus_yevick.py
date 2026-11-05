@@ -147,6 +147,9 @@ def test_unpack_reads_a_tar_a_gzipped_file_and_a_pdf(tmp_path):
         (tmp_path / name).mkdir()
         fetch.unpack("arxiv", data, tmp_path / name)
         assert (tmp_path / name / "src" / want).is_file(), name
+    (tmp_path / "p").mkdir()
+    fetch.unpack("pdf", b"%PDF-1.3 scan", tmp_path / "p")
+    assert (tmp_path / "p" / "src" / "paper.pdf").read_bytes() == b"%PDF-1.3 scan"
     (tmp_path / "w").mkdir()
     fetch.unpack("wikipedia", b"<mediawiki/>", tmp_path / "w")
     assert (tmp_path / "w" / "export.xml").read_bytes() == b"<mediawiki/>"

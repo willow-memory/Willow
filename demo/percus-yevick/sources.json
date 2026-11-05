@@ -389,6 +389,20 @@
    "bytes": 1545454,
    "sha256": "d6e3c372f4fe3499667d546f0e3492802309dd34ea065ac44357d3e8ea4fa0ac",
    "search_sha256": "d6e3c372f4fe3499667d546f0e3492802309dd34ea065ac44357d3e8ea4fa0ac"
+  },
+  {
+   "id": "knaw:PU00012727",
+   "kind": "pdf",
+   "title": "Accidental deviations of density and opalescence at the critical point of a single substance",
+   "authors": "L. S. Ornstein, F. Zernike",
+   "version": "KNAW Proceedings 17 II (1914) 793-806, scanned 2010-09-24",
+   "url": "https://dwc.knaw.nl/DL/publications/PU00012727.pdf",
+   "license": "1914 paper, public domain; scan from the KNAW Digital Library (Huygens Institute)",
+   "role": "motivation: the original Ornstein-Zernike paper; its text is the scan's OCR, readable as prose, its math not to be relied on",
+   "fetched": "2026-11-05T21:14:51Z",
+   "bytes": 911203,
+   "sha256": "382eb4b8eb6b40d0dd48dea73e133e7bdf901ca776b44080a295537738f97857",
+   "search_sha256": "382eb4b8eb6b40d0dd48dea73e133e7bdf901ca776b44080a295537738f97857"
   }
  ]
 }

@@ -5,7 +5,8 @@
 
 Builds the pile from fetch.py's --to (DIR/<slug>/src/ and export.xml) with
 the repo's own readers: latex for each paper's prose, equations for its
-math, mediawiki for each Wikipedia revision. Indexes it once with scan, asks
+math, mediawiki for each Wikipedia revision, and pdf (which needs pypdf) for
+a scanned paper's text. Indexes it once with scan, asks
 each question set in questions/ (author and null unless named), takes the
 kernel's top three passages, and scores each against steps.json with
 score.py. Writes every question's served passages, the steps they hold, the
@@ -39,9 +40,14 @@ import scan  # noqa: E402
 import score  # noqa: E402
 
 TOP = 3
+#: each kind of source, the readers that make its text, under adapters/
 READERS = {
-    "arxiv": [("prose", "latex/latex.py"), ("math", "equations/equations.py")],
-    "wikipedia": [("wiki", "mediawiki/mediawiki.py")],
+    "arxiv": [
+        ("prose", "stdlib/latex/latex.py"),
+        ("math", "stdlib/equations/equations.py"),
+    ],
+    "wikipedia": [("wiki", "stdlib/mediawiki/mediawiki.py")],
+    "pdf": [("scan", "deps/pdf/pdf.py")],
 }
 
 
@@ -54,12 +60,12 @@ def build(stack: Path, work: Path) -> Path:
     pile = work / "pile"
     for s in json.loads(fetch.LIST.read_text(encoding="utf-8"))["sources"]:
         here = stack / fetch.slug(s["id"])
-        src = here / "src" if s["kind"] == "arxiv" else here
+        src = here if s["kind"] == "wikipedia" else here / "src"
         for part, script in READERS[s["kind"]]:
             to = pile / part / fetch.slug(s["id"])
             if to.exists():
                 continue
-            got = subprocess.run([sys.executable, str(STDLIB / script), "mirror",
+            got = subprocess.run([sys.executable, str(ROOT / "adapters" / script), "mirror",
                                   "--from", str(src), "--to", str(to)],
                                  capture_output=True, text=True)  # fmt: skip
             line = (got.stdout.strip().splitlines() or [got.stderr.strip()])[-1]
@@ -129,6 +135,7 @@ def main(argv: list[str]) -> int:
         "tools": {rel: sha_file(ROOT / rel) for rel in (
             "kernel.py", "adapters/stdlib/scan/scan.py", "adapters/stdlib/latex/latex.py",
             "adapters/stdlib/equations/equations.py", "adapters/stdlib/mediawiki/mediawiki.py",
+            "adapters/deps/pdf/pdf.py",
             "demo/percus-yevick/score.py", "demo/percus-yevick/steps.json")},
         "rows": rows,
     }  # fmt: skip

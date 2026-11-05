@@ -68,12 +68,16 @@ def get(url: str) -> bytes:
 
 def unpack(kind: str, data: bytes, to: Path) -> None:
     """An e-print to src/: a tar (gzipped or not), else one gzipped file as
-    main.tex, else a PDF left as it is. A Wikipedia export as export.xml."""
+    main.tex, else a PDF left as it is. A scanned paper to src/paper.pdf. A
+    Wikipedia export as export.xml."""
     if kind == "wikipedia":
         (to / "export.xml").write_bytes(data)
         return
     src = to / "src"
     src.mkdir(exist_ok=True)
+    if kind == "pdf":
+        (src / "paper.pdf").write_bytes(data)
+        return
     try:
         with tarfile.open(fileobj=io.BytesIO(data), mode="r:*") as t:
             if hasattr(tarfile, "data_filter"):
