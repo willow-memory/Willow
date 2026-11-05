@@ -19,7 +19,7 @@ is written: `no-install` or `needs-install`; `offline`, `this-machine` or
 tag its author chose, if any. *near* names the three add-ons closest to it.
 
 <!-- willow:pools -->
-`█████████████░░░░░░░` **332 of 522 built** · 470 need no install · 52 need one
+`█████████████░░░░░░░` **333 of 522 built** · 470 need no install · 52 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
@@ -29,7 +29,7 @@ tag its author chose, if any. *near* names the three add-ons closest to it.
 | Keeping track | 40 | 16 | 56 | 0 |
 | Trust and proof | 32 | 22 | 45 | 9 |
 | Privacy and safety | 13 | 3 | 16 | 0 |
-| Assistants | 42 | 30 | 64 | 8 |
+| Assistants | 43 | 29 | 64 | 8 |
 | Ways to use it | 27 | 17 | 39 | 5 |
 | Play | 12 | 29 | 37 | 4 |
 | For maintainers | 20 | 24 | 39 | 5 |
@@ -68,19 +68,19 @@ its list: someone who speaks the language can add one without much Python.
 ## Newest
 
 <!-- willow:newest -->
+- 2026-11-05 · [**llm-cli**](adapters/deps/llm-cli/) — Suggestions through the llm command, so any model its plugins reach (local or hosted) can hand one in, with llm's own log naming the model.
 - 2026-11-05 · [**hooks-elsewhere**](adapters/stdlib/hooks-elsewhere/) — The prompt hook for Gemini CLI, Codex and opencode, wherever they take hooks, held to Claude Code's answer byte for byte.
 - 2026-11-05 · [**equations**](adapters/stdlib/equations/) — Each displayed equation in LaTeX sources as a passage of its own, with the sentences around it and its label, cited by the .tex file's line.
 - 2026-11-03 · [**sort-ask**](adapters/stdlib/sort-ask/) — A model on this machine suggests a category for each file your phrases didn't place, citing a passage, for your seal.
 - 2026-11-03 · [**sort**](adapters/stdlib/sort/) — Your files sorted into your own categories, by the phrases you gave each: what's where, and what nothing of yours reached.
-- 2026-11-03 · [**share**](adapters/stdlib/share/) — Sealed answers sent to someone, checkable by them and by whoever they pass them on to, without giving anyone the folder.
 <!-- /willow:newest -->
 
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W45 -->
-**[mcp](adapters/deps/mcp/)** — Lets any MCP client, such as an AI assistant or editor, ask your folder and hand in suggestions.
+**[joplin](adapters/stdlib/joplin/)** — Joplin's .jex export, read without unpacking it: each note as plain text with its title and dates.
 
-*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 332 built add-ons in name order.*
+*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 333 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -218,7 +218,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - [**amounts**](adapters/stdlib/amounts/) — Every sum of money in your files, with its date and the line it's on. *new* `no-install` `offline` `amount` · near: debts, said, chats
 - **bm25** (idea) — BM25 over a box in one go, with no index to build first: the rank scan --rank bm25 gives, for a folder you ask once. *new* `no-install` `offline` `index` `scan` · near: scan, index-cache, latent
 - **by-function** (idea) — Code read by function and class instead of by line, so a hit names the function it's in. Needs tree-sitter and its language pack; MIT. *new* `needs-install` `offline` `function` `instead` · near: codebase-memory, risky-code, sigmap
-- **code-first** (idea) — Questions code can answer exactly (counts, dates, ids) answered by code before any model, with a wrong answer counted as a defect. *bot* `no-install` `offline` · near: model-exam, llm-cli, sigmap
+- **code-first** (idea) — Questions code can answer exactly (counts, dates, ids) answered by code before any model, with a wrong answer counted as a defect. *bot* `no-install` `offline` · near: model-exam, sigmap, install-scripts
 - [**code-shape**](adapters/deps/code-shape/) — Search code by its shape, not its words: every call of a kind, whatever it's named. Needs the ast-grep program, from ast-grep-cli on PyPI or your own ast-grep; MIT. *new* `needs-install` `offline` `search` · near: risky-code, dialect, stems
 - [**codeowners**](adapters/stdlib/codeowners/) — Who owns this file: the CODEOWNERS rule that matches it, cited by line, on GitHub, GitLab and Forgejo alike. *new* `no-install` `offline` `gitlab` `github` · near: gitlab, across, rules
 - **crosswalk** (idea) — The outside IDs a passage points to (Wikidata, DOI, ORCID, GeoNames) kept beside it, so your notes join the world's. *new* `no-install` `offline` `beside` `joins` · near: ids, translate, joins
@@ -249,7 +249,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - [**record-sql**](adapters/deps/record-sql/) — SQL straight over your record, in place: 'how many answers did I approve in March?' Needs DuckDB; MIT. *box* `needs-install` `offline` · near: mcp, static-search, dialect
 - **rerank** (idea) — A small model on the CPU that reorders the top passages by reading the question and each passage together. Needs FlashRank; Apache-2.0. Goes online: the model, downloaded once. *new* `needs-install` `online` `top` · near: model-fit, pile-gold, all
 - [**ripgrep**](adapters/deps/ripgrep/) — Exact search through ripgrep, much faster on a big folder, its hits checked against the kernel's hashes. Needs the ripgrep program, from the ripgrep wheel on PyPI or your own rg; MIT or Unlicense. *new* `needs-install` `offline` `search` · near: manifests, pdf, ocr
-- [**rules**](adapters/stdlib/rules/) — A game's or a house's rules, approved one section at a time, so asking what a rule says gives back that exact section, word for word. *bot* `no-install` `offline` `game` · near: session-seal, hosts, game-master
+- [**rules**](adapters/stdlib/rules/) — A game's or a house's rules, approved one section at a time, so asking what a rule says gives back that exact section, word for word. *bot* `no-install` `offline` `game` · near: session-seal, game-master, hosts
 - [**said**](adapters/stdlib/said/) — Your own quotes, gathered: every 'so-and-so, on this date: "..."' in your files, as a dated timeline of what was decided. *new* `no-install` `offline` `timeline` `quote` · near: amounts, timeline, debts
 - [**scan**](adapters/stdlib/scan/) — Index a big folder once, then ask it a list of questions in seconds, with the kernel's own answers: of everything, or only what changed since another index. Uses todo. *box* `no-install` `offline` `scan` `ranked` `index` · near: latent, index-cache, pile-serve
 - [**sort**](adapters/stdlib/sort/) — Your files sorted into your own categories, by the phrases you gave each: what's where, and what nothing of yours reached. *new* `no-install` `offline` `phrases` `sorted` `categories` · near: sort-ask, pile-rungs, debts
@@ -376,7 +376,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**jeles**](adapters/stdlib/jeles/) — Your approved answers as Jeles nuggets, with question, answer, sources and who sealed it, and Jeles' own verified nuggets read back as passages. *new* `no-install` `offline` `sources` · near: oakenscroll, pile-gold, almanac
 - [**licenses**](adapters/stdlib/licenses/) — The licence of every installed dependency, read from its own metadata on this machine: which are copyleft, and which file says so. *new* `no-install` `offline` `dependency` · near: lending, on-this-day, pins
 - **line-origin** (idea) — Which agent session wrote this line of code: git blame to the commit, then the transcript turn that made it. Needs the git program; GPL, called not linked. *new* `needs-install` `offline` `agent` `git` · near: agent-transcript, session-cost, transcript-redact
-- **losc** (idea) — Does a project pass the Local Only Servers Club's test: no accounts, no cloud, and your data your own? *bot* `no-install` `offline` `server` `data` · near: quantized, github-archive, local-model
+- **losc** (idea) — Does a project pass the Local Only Servers Club's test: no accounts, no cloud, and your data your own? *bot* `no-install` `offline` `server` `local` · near: quantized, github-archive, local-model
 - [**merkle**](adapters/stdlib/merkle/) — A Merkle tree over the record, so one row can be proven with a handful of hashes, not the whole file. *new* `no-install` `offline` `hash` `rows` · near: ci, hook-replay, claim-check
 - **mirror** (idea) — Checks each mirror of a repo on another forge holds the same commits as the original, so losing a host loses nothing. Needs the git program; GPL, called not linked. Goes online: each mirror's git URL, to read its refs. *new* `needs-install` `online` `commit` `repo` · near: repro, git-notes, provenance
 - **model-recall** (idea) — Every sealed answer a model suggested, listed for a second look once you mark its card as flawed; nothing is unsealed for you. *new* `no-install` `offline` `suggests` `second` · near: openai-compatible, model-exam, sort-ask
@@ -469,12 +469,12 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - [**hook-stop**](adapters/stdlib/hook-stop/) — A Stop hook that won't let an assistant's turn end while the record doesn't verify or its changes aren't committed, and says which. *box* `no-install` `offline` `assistant` `end` `hooks` · near: hook-impact, hook-handoff, hook-replay
 - **hook-tiers** (idea) — Edits sorted into tiers by the paths they touch, and the top tier held as a proposal until you seal it, by a rule you can read. *new* `no-install` `offline` `rule` `held` `hooks` · near: translate, plain-language, hook-sequence
 - [**hooks-elsewhere**](adapters/stdlib/hooks-elsewhere/) — The prompt hook for Gemini CLI, Codex and opencode, wherever they take hooks, held to Claude Code's answer byte for byte. Uses claude-code. *box* `no-install` `offline` `gemini` `claude` `hooks` · near: claude-code, gemini-cli, hook-fail-closed
-- [**hosts**](adapters/stdlib/hosts/) — One table of the assistants that take an MCP server, printing the lines that register willow with any of them. Uses mcp-lite, pipe. *new* `no-install` `offline` `gemini` `mcp` · near: gemini-cli, instruction-files, agents-md-check
-- [**in-process**](adapters/deps/in-process/) — Suggestions from a GGUF model loaded inside the add-on itself through llama-cpp-python: no server, no port, nothing listening. Needs llama-cpp-python; MIT; licence of the model varies. Uses openai-compatible. *new* `needs-install` `offline` `cpp` `llama` · near: openai-compatible, night-batch, local-model
+- [**hosts**](adapters/stdlib/hosts/) — One table of the assistants that take an MCP server, printing the lines that register willow with any of them. Uses mcp-lite, pipe. *new* `no-install` `offline` `gemini` `claude` · near: gemini-cli, instruction-files, llm-cli
+- [**in-process**](adapters/deps/in-process/) — Suggestions from a GGUF model loaded inside the add-on itself through llama-cpp-python: no server, no port, nothing listening. Needs llama-cpp-python; MIT; licence of the model varies. Uses openai-compatible. *new* `needs-install` `offline` `cpp` `llama` · near: openai-compatible, llm-cli, night-batch
 - [**instruction-files**](adapters/stdlib/instruction-files/) — For a folder, which instruction files each coding agent would load (AGENTS.md, CLAUDE.md, GEMINI.md, rules folders), in what order, with each file's size and hash. *box* `no-install` `offline` `claude` `gemini` · near: agent-transcript, agents-md-check, claude-code
 - **issue-answer** (idea) — A workflow that drafts an answer to a new issue from the repo's own docs, each line cited, posted only once a maintainer seals it. Goes online: the forge, through the workflow's token, to post an answer once it is sealed. *new* `no-install` `online` `repo` `docs` · near: hook-checks, repo-index, pr-context
 - **ladder** (idea) — Your files first, then sources you trust such as Jeles and Nestor, then a model, stopping at the first that answers, each answer kept for next time. *bot* `no-install` `offline` `jeles` `nestor` · near: jeles, first-mention, nestor
-- **llm-cli** (idea) — Suggestions through the llm command, so any model its plugins reach (local or hosted) can hand one in, with llm's own log naming the model. Needs llm and the plugin for your model; Apache-2.0. Goes online: the model its plugin reaches, to ask for suggestions. *new* `needs-install` `online` `cli` `plugin` · near: gemini-cli, codex-cli, hosts
+- [**llm-cli**](adapters/deps/llm-cli/) — Suggestions through the llm command, so any model its plugins reach (local or hosted) can hand one in, with llm's own log naming the model. Needs llm and the plugin for your model; Apache-2.0. Uses openai-compatible. Goes online: the model its plugin reaches, to ask for suggestions. *new* `needs-install` `online` `local` `host` · near: in-process, openai-compatible, night-batch
 - [**local-model**](adapters/stdlib/local-model/) — Suggestions from a model on this machine only, such as Ollama, llama.cpp's server, llamafile, KoboldCpp or Jan. Uses openai-compatible. Reaches this machine only. *new* `no-install` `this-machine` `cpp` `jan` · near: openai-compatible, in-process, model-shelf
 - [**mcp**](adapters/deps/mcp/) — Lets any MCP client, such as an AI assistant or editor, ask your folder and hand in suggestions. Needs mcp; MIT. *new* `needs-install` `offline` `mcp` `assistant` · near: mcp-lite, zed, cursor
 - **mcp-by-hash** (idea) — Your passages served as MCP resources named by their SHA-256, so an assistant cites exactly the bytes it read and a changed passage gets a new name. *bot* `no-install` `offline` `assistant` `sha` · near: model-card, snapshot, hook-read-first
@@ -488,8 +488,8 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - [**model-exam**](adapters/stdlib/model-exam/) — Any model scored against the answers you sealed, your own questions as its exam, before you trust its suggestions. Uses openai-compatible. Goes online: the endpoint you configure, to ask your sealed questions. *new* `no-install` `online` `score` · near: same-way, model-drift, night-batch
 - [**model-fit**](adapters/stdlib/model-fit/) — Whether this machine's GPU, NPU or Apple silicon can run a local model, and about how fast, before you download one. *new* `no-install` `offline` `local` `weights` · near: model-shelf, weights-card, quantized
 - [**model-shelf**](adapters/stdlib/model-shelf/) — Every model already on this machine, read from Ollama's, LM Studio's, Jan's and GPT4All's folders and the Hugging Face cache: its runtime, size, quantization and hash, before you download another. Uses weights-card. *new* `no-install` `offline` `hash` `jan` · near: quantized, weights-card, model-fit
-- [**night-batch**](adapters/stdlib/night-batch/) — Questions waiting for suggestions batched into one local-model run overnight, stopped the moment you're back. Uses local-model. Reaches this machine only. *new* `no-install` `this-machine` `local` · near: in-process, openai-compatible, model-drift
-- [**openai-compatible**](adapters/stdlib/openai-compatible/) — Suggestions from any OpenAI-compatible endpoint you choose (LM Studio, vLLM, LocalAI, SGLang, Docker Model Runner, OpenRouter, Groq, Mistral), citing your passages. Goes online: the endpoint you configure, to ask for suggestions. *new* `no-install` `online` `cpp` `llama` · near: in-process, local-model, night-batch
+- [**night-batch**](adapters/stdlib/night-batch/) — Questions waiting for suggestions batched into one local-model run overnight, stopped the moment you're back. Uses local-model. Reaches this machine only. *new* `no-install` `this-machine` `local` · near: llm-cli, in-process, openai-compatible
+- [**openai-compatible**](adapters/stdlib/openai-compatible/) — Suggestions from any OpenAI-compatible endpoint you choose (LM Studio, vLLM, LocalAI, SGLang, Docker Model Runner, OpenRouter, Groq, Mistral), citing your passages. Goes online: the endpoint you configure, to ask for suggestions. *new* `no-install` `online` `cpp` `llama` · near: in-process, llm-cli, local-model
 - [**opencode**](adapters/stdlib/opencode/) — OpenCode asks your folder and hands in suggestions, through the mcp add-on. Uses hosts. *new* `no-install` `offline` `mcp` · near: cursor, windsurf, zed
 - **os-model** (idea) — Suggestions from the model built into the operating system, such as Apple's Foundation Models on a Mac: nothing to download, nothing leaving the device. Needs macOS 26 with Apple Intelligence on, and a small Swift helper; Apple's terms. *new* `needs-install` `offline` `apple` `mac` · near: mlx, browser-model, local-model
 - [**persona-card**](adapters/stdlib/persona-card/) — A persona written as a card and compiled into the same system-prompt bytes every time, with the prompt's hash on the record. *box* `no-install` `offline` · near: folder-card, tip-pin, serve
@@ -501,7 +501,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - [**serve**](adapters/stdlib/serve/) — The one file an AI model may read: only the passages you approved, under ids it can't guess, and nothing else. *bot* `no-install` `offline` · near: stack, decisions, export
 - **serve-piles** (idea) — serve's piles grouped on all four W's -- who, when, what and where -- not where alone, so a model meets a question from every box that touched it. *new* `no-install` `offline` `serve` · near: pile-serve, pile-rungs, words-pl
 - **silence-log** (idea) — A model that ran and said nothing kept as its own row, so silence is told apart from a model that never ran. *bot* `no-install` `offline` `log` `rows` · near: said, cassettes, csv-rows
-- [**translate**](adapters/stdlib/translate/) — An answer translated by a local model, the original kept beside it, the translation held until you seal it. Uses local-model, openai-compatible. Reaches this machine only. *new* `no-install` `this-machine` `local` `held` · near: night-batch, in-process, local-model
+- [**translate**](adapters/stdlib/translate/) — An answer translated by a local model, the original kept beside it, the translation held until you seal it. Uses local-model, openai-compatible. Reaches this machine only. *new* `no-install` `this-machine` `local` `held` · near: night-batch, in-process, llm-cli
 - [**weights-card**](adapters/stdlib/weights-card/) — A model card filled in from the weights file's own header, GGUF or safetensors (architecture, quantization, context length, licence), so the card says what the file says. *new* `no-install` `offline` `weights` `quantization` · near: model-shelf, weights-pin, model-fit
 - [**windsurf**](adapters/stdlib/windsurf/) — Windsurf asks your folder and hands in suggestions, through the mcp add-on. Uses hosts. *new* `no-install` `offline` `mcp` · near: cursor, opencode, zed
 - [**zed**](adapters/stdlib/zed/) — Zed's assistant asks your folder and hands in suggestions, through the mcp add-on. Uses hosts. *new* `no-install` `offline` `mcp` · near: cursor, opencode, windsurf
@@ -529,7 +529,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - [**kart**](adapters/deps/kart/) — A job someone sent you, run in a sandbox over your own folder only once you seal it, its result yours to seal before it goes back. Needs kartikeya, and the bwrap program (bubblewrap), run not linked; Apache-2.0, LGPL-2.0-or-later. Uses share. *new* `needs-install` `offline` · near: ocr, pdf, dialect
 - **kiosk** (idea) — A shared machine in a library or classroom: one box, ask only, nobody's key on it. Reaches this machine only. *new* `no-install` `this-machine` `share` `key` · near: share, family-box, transcript-redact
 - [**launcher**](adapters/stdlib/launcher/) — Ask from Alfred, Raycast, KRunner or PowerToys Run, answers with file and line. *new* `no-install` `offline` · near: aider, browse, same-way
-- [**llms-txt**](adapters/stdlib/llms-txt/) — An llms.txt for your folder, written from what's actually in it to the spec's version 2, and any llms.txt you saved checked against that spec. *new* `no-install` `offline` · near: typosquat, markdown, serve
+- [**llms-txt**](adapters/stdlib/llms-txt/) — An llms.txt for your folder, written from what's actually in it to the spec's version 2, and any llms.txt you saved checked against that spec. *new* `no-install` `offline` `llm` · near: typosquat, markdown, serve
 - [**make-it-so**](adapters/stdlib/make-it-so/) — Write down what you want done and the passages it rests on; it checks they still hold, and never does it for you. *new* `no-install` `offline` `down` · near: decisions, predict, xref
 - **obsidian** (idea) — Ask from inside Obsidian, answers as links to the note and line. Reaches this machine only. *new* `no-install` `this-machine` `links` `obsidian` · near: jetbrains, notes, deep-links
 - [**pipe**](adapters/stdlib/pipe/) — Questions in on standard input, answers out one per line: JSON lines, or file:line: text for grep and fzf. *box* `no-install` `offline` `json` · near: vim, shell, emacs
@@ -537,7 +537,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - **pr-context** (idea) — On a pull request, the passages in the repo's docs that name the files it changes, posted as one comment. Goes online: the forge, through the workflow's token, to post the comment. *new* `no-install` `online` `pull` `requests` · near: against, quote-review, github-archive
 - [**print**](adapters/stdlib/print/) — An answer as a printable page with its sources, to take to an appointment; --large for big, high-contrast type. *new* `no-install` `offline` `prints` `everyday` · near: web-pages, pipe, across
 - **qr** (idea) — An answer as a QR code on screen, to carry it to your phone without the network. *new* `no-install` `offline` `screen` `phone` · near: scrub, a11y-check, code-first
-- [**repo-pile**](adapters/stdlib/repo-pile/) — Public repositories you list, cloned and made askable, keeping only those under a licence an Apache-2.0 project can use. Uses again, backup, changed, digest, export, history, privacy, quote-check, scan, secrets-audit, stale, todo, xref. Goes online: github.com (or the --source you give), to clone the repositories you list. *new* `no-install` `online` `project` `repo` `research` · near: upstream-desk, pile-build, pile-serve
+- [**repo-pile**](adapters/stdlib/repo-pile/) — Public repositories you list, cloned and made askable, keeping only those under a licence an Apache-2.0 project can use. Uses again, backup, changed, digest, export, history, privacy, quote-check, scan, secrets-audit, stale, todo, xref. Goes online: github.com (or the --source you give), to clone the repositories you list. *new* `no-install` `online` `project` `repo` `research` · near: upstream-desk, pile-serve, pile-build
 - [**rss-out**](adapters/stdlib/rss-out/) — New approved answers as an RSS feed file, for any feed reader. *new* `no-install` `offline` `feed` · near: annotations, opml, in-toto
 - **safe-app** (idea) — willow as a SAFE app: installed from the SAFE App Store, authorized per session, and deleted clean. *new* `no-install` `offline` `store` `session` · near: vectors, memory-import, session-cost
 - [**share**](adapters/stdlib/share/) — Sealed answers sent to someone, checkable by them and by whoever they pass them on to, without giving anyone the folder. *new* `no-install` `offline` `sent` · near: kart, invoices, pgp

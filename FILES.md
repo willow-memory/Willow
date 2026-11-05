@@ -1403,6 +1403,10 @@ willow/
 │       │   ├── requirements-floor.txt  numpy at its floor, also tested
 │       │   ├── test_latent.py
 │       │   └── README.md
+│       ├── llm-cli/
+│       │   ├── llm_cli.py    Suggestions through the llm command, so any model its plugins reach (local or hosted) can hand one in, with llm's own log naming the model
+│       │   ├── test_llm_cli.py
+│       │   └── README.md     its card
 │       ├── manifests/
 │       │   ├── manifests.py  Compose services and Kubernetes objects, a passage each; secrets by name only
 │       │   ├── requirements.txt  PyYAML, pinned

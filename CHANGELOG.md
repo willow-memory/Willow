@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `llm-cli`: suggestions through Simon Willison's `llm` command — bite first,
+  only served passages go to the model any of its plugins reach, propose a
+  cited reply; llm's log names the model
 - `equations`: each displayed equation in LaTeX sources as a passage of its
   own, the math as its source writes it, with its labels, its .tex line and
   the sentences around it, so a question finds an equation by what its paper
