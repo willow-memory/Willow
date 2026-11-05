@@ -10,6 +10,12 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `GEMINI.md` points Gemini CLI at `AGENTS.md` (prose, since Gemini has no
+  `@` import like Claude Code's `CLAUDE.md`); `agents-md-check` reads it too
+- Assistants' two ways in, named on `hosts`, `claude-code`, `gemini-cli` and
+  the Assistants section of ADDONS.md: MCP tools any host can call, and a
+  prompt hook that cites passages where the host allows it (`claude-code`
+  today; `hooks-elsewhere` for the rest)
 - `ci`'s `adapters/stdlib/ci/realdata.py run NAME` runs an add-on's COMMANDS
   line on every demo person's real folder, under the guard, failing on a
   traceback, a breach, a hang or an odd exit; create_pr.py runs it for each

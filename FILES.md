@@ -16,6 +16,7 @@ willow/
 ├── CONTRIBUTING.md           the rules every change follows, and how to show it does
 ├── AGENTS.md                 for AI agents: what CI catches when CONTRIBUTING is missed
 ├── CLAUDE.md                 one line: read AGENTS.md
+├── GEMINI.md                 points Gemini CLI at AGENTS.md (no @ import there)
 ├── CODE_OF_CONDUCT.md        how we treat each other
 ├── SECURITY.md               what counts as a security problem, and how to report it in public
 ├── CHANGELOG.md              what changed, by pull request, and each release
@@ -84,7 +85,7 @@ willow/
 │   │   │   ├── test_agent_transcript.py
 │   │   │   └── README.md
 │   │   ├── agents-md-check/
-│   │   │   ├── agents_md_check.py   the commands and paths AGENTS.md or CLAUDE.md name that the repo no longer has
+│   │   │   ├── agents_md_check.py   the commands and paths AGENTS.md, CLAUDE.md or GEMINI.md name that the repo no longer has
 │   │   │   ├── test_agents_md_check.py
 │   │   │   └── README.md
 │   │   ├── aider/

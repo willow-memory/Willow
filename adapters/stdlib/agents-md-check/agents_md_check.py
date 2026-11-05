@@ -1,14 +1,14 @@
-"""agents_md_check.py: the commands and paths AGENTS.md or CLAUDE.md name that
-the repo no longer has. Python 3.9+.
+"""agents_md_check.py: the commands and paths AGENTS.md, CLAUDE.md or
+GEMINI.md name that the repo no longer has. Python 3.9+.
 
     python adapters/stdlib/agents-md-check/agents_md_check.py --from REPO [--json]
     python adapters/stdlib/agents-md-check/agents_md_check.py --box DIR [--json]
 
-Every AGENTS.md and CLAUDE.md in the folder (at any depth; not inside a
-node_modules, vendor or .git folder) is read, and four kinds of thing in it
-are checked against what is there. What is gone is listed as a report
-(adapters/stdlib/ci/README.md, the report contract), a group per kind of
-thing, each row the line of the instruction file, then what it names:
+Every AGENTS.md, CLAUDE.md and GEMINI.md in the folder (at any depth; not
+inside a node_modules, vendor or .git folder) is read, and four kinds of
+thing in it are checked against what is there. What is gone is listed as a
+report (adapters/stdlib/ci/README.md, the report contract), a group per kind
+of thing, each row the line of the instruction file, then what it names:
 
     agents-md-check: populated, 3 things named in 2 instruction files not found; each is a lead: a path a build makes shows here too
     ## path
@@ -51,7 +51,7 @@ STDLIB = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(STDLIB.parents[1]))
 import kernel  # noqa: E402
 
-NAMES = ("AGENTS.md", "CLAUDE.md")
+NAMES = ("AGENTS.md", "CLAUDE.md", "GEMINI.md")
 SKIP = {"node_modules", "vendor", ".git"}
 TICKS = re.compile(r"`([^`\n]+)`")
 LINK = re.compile(r"\[[^\]\n]*\]\(([^)\s]+)(?:\s+\"[^\"]*\")?\)")
@@ -276,7 +276,7 @@ def main(argv: list[str]) -> int:
             return kernel.REFUSED
     files = list(find(root))
     if not files:
-        said = "no AGENTS.md or CLAUDE.md here, so nothing in one has gone missing"
+        said = "no AGENTS.md, CLAUDE.md or GEMINI.md here, so nothing in one has gone missing"
         say(report(NAME, "empty", said, []), as_json)
         return kernel.ALIVE
     rows = []

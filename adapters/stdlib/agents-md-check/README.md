@@ -1,6 +1,6 @@
 <!-- willow-addon
 section: For maintainers
-line: Commands and paths named in AGENTS.md or CLAUDE.md that no longer exist in the repo.
+line: Commands and paths named in AGENTS.md, CLAUDE.md or GEMINI.md that no longer exist in the repo.
 source: new
 added: 2026-10-29
 writes: nothing
@@ -12,10 +12,10 @@ output: report
 
 The instructions you wrote for coding agents, checked against the repo.
 
-An AGENTS.md or CLAUDE.md tells an agent which commands to run and which
-files matter. When a script is renamed or a make target dropped, the file
-keeps saying the old thing and the agent follows it. This lists what the
-file names that the repo no longer has, by file and line.
+An AGENTS.md, CLAUDE.md or GEMINI.md tells an agent which commands to run
+and which files matter. When a script is renamed or a make target dropped,
+the file keeps saying the old thing and the agent follows it. This lists
+what the file names that the repo no longer has, by file and line.
 
     python adapters/stdlib/agents-md-check/agents_md_check.py --box DIR [--json]
     python adapters/stdlib/agents-md-check/agents_md_check.py --from REPO [--json]
