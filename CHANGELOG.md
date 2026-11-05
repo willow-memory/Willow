@@ -12,7 +12,7 @@ says how). The first was v0.1.0.
 
 - `mcp-sampling`: suggestions through MCP sampling — `draft(question)` bites,
   asks the host's model over only the passages served (MCP sampling on stdio),
-  and proposes a cited reply; willow holds no model or key
+  and proposes a cited reply; willow holds no model or key (#254)
 - `equations`: each displayed equation in LaTeX sources as a passage of its
   own, the math as its source writes it, with its labels, its .tex line and
   the sentences around it, so a question finds an equation by what its paper
