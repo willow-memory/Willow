@@ -14,9 +14,12 @@ you deleted).
 
 `plan` says what would run, in ci.py's own terms (its gate names), and why.
 `run` says the plan, then runs it in order and stops at the first gate that
-fails. With `--narrow`, a plan that would widen to every gate runs nothing
-and says so, exit 0: every gate runs in CI anyway, and here it is most of
-an hour (CI's `first` job does the same). Neither replaces the full run: both end by saying it still runs after,
+fails. With `--narrow`, a plan that would widen to every gate leaves every
+gate to CI, which runs them anyway (here it is most of an hour; CI's
+`first` job does the same), and runs the docs' checks and what the rest
+of the change reaches, as it would without the path that widened it:
+ruff.toml changed with an add-on still runs that add-on's tests under the
+guard. Neither replaces the full run: both end by saying it still runs after,
 and how.
 
 How a path is placed:
@@ -601,8 +604,10 @@ def closing(whole: bool) -> list[str]:
 
 
 # ── running it ───────────────────────────────────────────────────────────────
-def run_plan(plan: Plan, gates: list) -> int:
-    if plan.widen:
+def run_plan(plan: Plan, gates: list, narrow: bool = False) -> int:
+    """Every gate for a wide plan, or its steps; with `narrow`, a wide plan's
+    steps too: what the rest of the change reaches."""
+    if plan.widen and not narrow:
         todo = [(g, "", "", how) for _, g, how in gates]
     else:
         todo = steps(plan, gates)
@@ -665,9 +670,9 @@ def main(argv: list[str]) -> int:
     print(*show(plan, source, gates), sep="\n")
     code = kernel.ALIVE
     if verb == "run" and narrow and plan.widen:
-        print("\n--narrow: this change widens to every gate, so nothing ran here:"
-              " CI runs them all")  # fmt: skip
-        return kernel.ALIVE
+        print("\n--narrow: this change widens to every gate, which CI runs;"
+              " here, the docs and what the rest of it reaches")  # fmt: skip
+        return run_plan(plan, gates, narrow=True)
     if verb == "run":
         code = run_plan(plan, gates)
     print(*closing(bool(plan.widen) and verb == "run"), sep="\n")

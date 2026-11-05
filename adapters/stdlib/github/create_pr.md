@@ -30,7 +30,8 @@ report.
 ## checked here
 
 The gates the change can reach, fast ones first; a change that reaches
-everything is left to CI, which runs every gate anyway.
+everything leaves every gate to CI, which runs them anyway, and still runs
+what the rest of it reaches.
 
 - ci.ci -- run lint --box {scratch}/lint
 - test-impact.impact -- run --base {base} --narrow

@@ -71,24 +71,28 @@ def test_nothing_or_a_stray_argument_is_refused_and_names_the_script(argv):
     assert got.returncode == 2 and "impact.py" in got.stderr and got.stdout == ""
 
 
-def test_run_narrow_runs_nothing_for_a_change_that_reaches_everything(
+def test_run_narrow_leaves_everything_to_ci_and_still_runs_what_the_rest_reaches(
     capsys, monkeypatch
 ):
-    """--narrow: a plan that widens to every gate is left to CI, exit 0; one
-    that doesn't is run as without it. Without --narrow, wide is run whole."""
+    """--narrow: a plan that widens to every gate leaves every gate to CI,
+    and still runs what the rest of the change reaches (#244 changed
+    ruff.toml and commands.py; nothing ran, and commands.py's guard breach
+    was CI's to find). Without --narrow, wide is run whole."""
     graph = imp.Graph(imp.repo_pythons())
     monkeypatch.setattr(imp, "Graph", lambda files: graph)
     monkeypatch.setattr(imp, "by_hand", lambda arg: arg)
     ran = []
-    monkeypatch.setattr(
-        imp, "run_plan", lambda plan, gates: ran.append(bool(plan.widen)) or 0
-    )
-    wide = ".github/workflows/ci.yml"
+    monkeypatch.setattr(imp, "run_plan", lambda plan, gates, narrow=False: ran.append(
+        (bool(plan.widen), narrow, [g for g, *_ in imp.steps(plan, gates)][:4])) or 0)  # fmt: skip
+    wide = "ruff.toml"
     assert imp.main(["run", "--narrow", wide]) == imp.kernel.ALIVE
-    assert ran == [] and "nothing ran here: CI runs them all" in capsys.readouterr().out
+    assert ran == [(True, True, ["tests:docs"])], "the docs' checks, always"
+    assert imp.main(["run", "--narrow", wide, "adapters/stdlib/dice/dice.py"]) == 0
+    assert ran[-1][:2] == (True, True) and "tests:adapters" in ran[-1][2]
     assert imp.main(["run", "--narrow", "adapters/stdlib/dice/dice.py"]) == 0
+    assert ran[-1][:2] == (False, False)
     assert imp.main(["run", wide]) == 0
-    assert ran == [False, True]
+    assert ran[-1][:2] == (True, False)
 
 
 def test_a_group_the_plan_names_runs_as_its_gates_never_as_no_such_gate():

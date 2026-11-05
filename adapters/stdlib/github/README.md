@@ -30,8 +30,8 @@ kernel and every other add-on run and test the same without it.
 it, then run `create_pr.py`. It runs [create_pr.md](create_pr.md), a
 [stack](../stack/) of the repo's own add-ons, in order: `restack` brings
 main in, [made.py](../ci/made.py) makes again every file a script makes, `ci` lints,
-`test-impact` runs the gates the change reaches (none, when it reaches
-everything: CI runs them all), and `against` holds it to the open pull
+`test-impact` runs the gates the change reaches (when it reaches
+everything, only what the rest of it reaches: CI runs them all), and `against` holds it to the open pull
 requests. Then it pushes, opens the pull request (or finds the one open for
 this branch), writes its number into the entry, runs
 [changelog.py](../ci/changelog.py) with it, and pushes again.

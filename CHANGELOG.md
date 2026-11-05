@@ -1817,6 +1817,10 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- `test-impact`'s `run --narrow` on a change that widens to every gate leaves
+  them to CI and still runs the docs' checks and what the rest of the change
+  reaches, under the guard: #244 changed ruff.toml beside commands.py, nothing
+  ran, and a guard breach in commands.py's tests was CI's to find
 - `ci` says what pytest skipped: a gate whose tests skipped some keeps its
   state, and its row says how many and why (`skipped`), printed after the
   state by `run`, `show` and cores.py, as `satisfied  [1 skipped: ...]`.
