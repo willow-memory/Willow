@@ -54,7 +54,8 @@ def test_docs_alone_owe_nothing(repo):
 def test_a_code_change_without_its_line_is_refused(repo, capsys):
     commit(repo, {"code.py": "x = 2\n"})
     assert cl.check("main", "7") == 2
-    assert "ending (#7)" in capsys.readouterr().err
+    err = capsys.readouterr().err
+    assert "ending (#7)" in err and "create_pr.py" in err, "it says what does it"
 
 
 def test_its_line_under_unreleased_ending_with_its_number(repo):

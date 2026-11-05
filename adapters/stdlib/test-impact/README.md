@@ -78,7 +78,9 @@ of the change reaches: ruff.toml changed beside an add-on runs that
 add-on's tests under the guard. [create_pr.py](../github/create_pr.py) runs
 it that way.
 
-**What it leaves to the full run, always:** the strip test (minutes), the other
+**What it leaves to the full run, always:** the strip test whole (minutes; a
+change that reaches it by import, as any change to ci/ does, runs only its
+own reached tests in the copy without GitHub, in seconds), the other
 add-ons' mutants, and any test that only a change somewhere else could break
 without importing it. Run the full thing before you say it's done.
 

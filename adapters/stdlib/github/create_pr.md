@@ -34,7 +34,11 @@ everything leaves every gate to CI, which runs them anyway, and still runs
 what the rest of it reaches.
 
 - ci.ci -- run lint --box {scratch}/lint
-- test-impact.impact -- run --base {base} --narrow
+- test-impact.impact -- run --base {base} --narrow --jobs 4
+
+Each add-on the change touches, run on every demo person's real folder.
+
+- ci.realdata -- run --base {base}
 
 ## held to the open pull requests
 

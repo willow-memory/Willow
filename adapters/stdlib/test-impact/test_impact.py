@@ -82,7 +82,7 @@ def test_run_narrow_leaves_everything_to_ci_and_still_runs_what_the_rest_reaches
     monkeypatch.setattr(imp, "Graph", lambda files: graph)
     monkeypatch.setattr(imp, "by_hand", lambda arg: arg)
     ran = []
-    monkeypatch.setattr(imp, "run_plan", lambda plan, gates, narrow=False: ran.append(
+    monkeypatch.setattr(imp, "run_plan", lambda plan, gates, narrow=False, jobs=1: ran.append(
         (bool(plan.widen), narrow, [g for g, *_ in imp.steps(plan, gates)][:4])) or 0)  # fmt: skip
     wide = "ruff.toml"
     assert imp.main(["run", "--narrow", wide]) == imp.kernel.ALIVE
@@ -93,6 +93,22 @@ def test_run_narrow_leaves_everything_to_ci_and_still_runs_what_the_rest_reaches
     assert ran[-1][:2] == (False, False)
     assert imp.main(["run", wide]) == 0
     assert ran[-1][:2] == (True, False)
+
+
+def test_a_change_that_reaches_the_strip_test_by_import_runs_its_own_tests_there():
+    """ci.py reaches test_strip.py by import: its own reached tests run in the
+    copy without GitHub (seconds), not every add-on's four times (17 minutes,
+    in every create_pr run that touched ci/); GitHub's own code still runs it
+    whole."""
+    graph = imp.Graph(imp.repo_pythons())
+    plan = imp.place(["adapters/stdlib/ci/ci.py"], graph)
+    assert plan.strip_reached and "tests:strip" not in plan.gates
+    got = [(g, what) for g, what, *_ in imp.steps(plan, ci.gates())]
+    strip = [what for g, what in got if g.startswith("tests:strip")]
+    assert len(strip) == 1 and "in a copy without GitHub" in strip[0]
+    assert "adapters/stdlib/ci/test_ci.py" in plan.own
+    github = imp.place(["adapters/stdlib/github/github.py"], graph)
+    assert "tests:strip" in github.gates
 
 
 def test_a_group_the_plan_names_runs_as_its_gates_never_as_no_such_gate():
@@ -516,6 +532,45 @@ def fake(state: str, said: list, name: str):
         return state, "", ("why" if state != ci.SATISFIED else None)
 
     return how
+
+
+def test_steps_run_at_once_keep_each_ones_output_together_and_a_failure_stops_the_rest(
+    capsys,
+):
+    """--jobs: the steps of a create_pr.py run side by side, each one's
+    header and what it printed together, in the summary in plan order."""
+    import time
+
+    def step(name, state, wait):
+        def how():
+            time.sleep(wait)
+            print(f"{name} line 1")
+            print(f"{name} line 2")
+            return state, "", None if state == ci.SATISFIED else "why"
+
+        return how
+
+    plan = imp.Plan(["x.py"])
+    todo = [("a", "A", "", step("a", ci.SATISFIED, 0.2)),
+            ("b", "B", "", step("b", ci.SATISFIED, 0.0))]  # fmt: skip
+    monkey = imp.steps
+    try:
+        imp.steps = lambda plan, gates: todo
+        assert imp.run_plan(plan, [], jobs=2) == 0
+    finally:
+        imp.steps = monkey
+    out = capsys.readouterr().out
+    assert out.index("── b: B\nb line 1\nb line 2") < out.index(
+        "── a: A\na line 1\na line 2"
+    )
+    summary = [
+        ln.split()[0] for ln in out.splitlines() if ln[:1] in "ab" and "satisfied" in ln
+    ]
+    assert summary == ["a", "b"], "the summary in the plan's order"
+    states = imp._run_at_once([("f", "", "", step("f", ci.FAILING, 0.0)),
+                               ("g", "", "", step("g", ci.SATISFIED, 0.0)),
+                               ("h", "", "", step("h", ci.SATISFIED, 0.0))], 1)  # fmt: skip
+    assert [s for _, s, _ in states] == [ci.FAILING, "not run", "not run"]
 
 
 def run_of(plan_widen: bool, states: list[str], capsys):

@@ -1,7 +1,7 @@
 """impact.py: which of this repo's checks a change can reach, fast ones first.
 
     python adapters/stdlib/test-impact/impact.py plan [--base REF [--head REF]] [PATH ...]
-    python adapters/stdlib/test-impact/impact.py run  [--base REF [--head REF]] [--narrow] [PATH ...]
+    python adapters/stdlib/test-impact/impact.py run  [--base REF [--head REF]] [--narrow] [--jobs N] [PATH ...]
 
 The change is the paths git says differ from REF (`--base`; to `--head` when
 given, else to the files as they are now, edits and new files included), and
@@ -14,7 +14,8 @@ you deleted).
 
 `plan` says what would run, in ci.py's own terms (its gate names), and why.
 `run` says the plan, then runs it in order and stops at the first gate that
-fails. With `--narrow`, a plan that would widen to every gate leaves every
+fails; with `--jobs N`, N steps at a time, each step's output kept together,
+the first failure stopping the steps not yet started (create_pr.py runs 4). With `--narrow`, a plan that would widen to every gate leaves every
 gate to CI, which runs them anyway (here it is most of an hour; CI's
 `first` job does the same), and runs the docs' checks and what the rest
 of the change reaches, as it would without the path that widened it:
@@ -53,8 +54,10 @@ How a path is placed:
     "couldn't place PATH: running everything", and everything is every gate
     of ci.py, in memory, with no record written. It never shrinks silently.
 
-What it leaves to the full run, always: test_strip.py (minutes; named only when
-GitHub's files or the strip test changed), the other add-ons' mutants, and
+What it leaves to the full run, always: test_strip.py whole (minutes; named
+only when GitHub's files or the strip test changed; a change that reaches it
+by import runs only its own reached tests in the stripped copy, in seconds),
+the other add-ons' mutants, and
 tests that only a change somewhere else could break and no import shows.
 
 Exit codes, the kernel's: 0 a plan printed, or every gate it ran satisfied;
@@ -66,12 +69,14 @@ know, a path outside the repo), or a gate failed.
 from __future__ import annotations
 
 import ast
+import concurrent.futures
 import importlib.util
 import os
 import re
 import subprocess
 import sys
 import tempfile
+import threading
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -84,7 +89,8 @@ ci = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(ci)
 
 USAGE = (
-    "usage: impact.py plan|run [--base REF [--head REF]] [--narrow, run only] [PATH ...]"
+    "usage: impact.py plan|run [--base REF [--head REF]] [--narrow] [--jobs N] [PATH ...]"
+    " (--narrow and --jobs: run only)"
     "  (give --base, a PATH, or both)"
 )
 STDLIB = "adapters/stdlib/"
@@ -330,6 +336,7 @@ class Plan:
         self.lint: list[str] = []
         self.own: set[str] = set()  # test files for tests:adapters
         self.narrow: list[str] = []  # add-ons, for test_contract.py narrowed
+        self.strip_reached = False  # test_strip.py reached by import only
         self.contract_whole = False
         self.docs_fire = False
         self.gates: list[str] = []  # whole ci gates, by name
@@ -447,7 +454,9 @@ def place(changed: list[str], graph: Graph) -> Plan:
         elif t in DOCS:
             plan.docs_fire = plan.docs_fire or t == "test_docs_fires.py"
         elif t == "test_strip.py":
-            plan.gate("tests:strip", t, "reached by import")
+            # what it reaches is ci.py's, not GitHub's: the change's own tests
+            # in the stripped copy, not every add-on's again (17 minutes)
+            plan.strip_reached = True
         elif t.startswith("constitution/"):
             plan.gate("tests:constitution", t, "reached by import")
         elif t.startswith("vectors/"):
@@ -514,6 +523,12 @@ def steps(plan: Plan, gates: list):
                 + ("; each check shown to fail" if plan.docs_fire else ""),
                 "pytest " + " ".join(docs),
                 ci.command(*ci.PYTEST, *docs, needs=lambda: ci.missing_module("pytest"))))  # fmt: skip
+    if plan.strip_reached and "tests:strip" not in plan.gates and own:
+        out.append(("tests:strip", f"{len(own)} reached test file(s), in a copy without GitHub",
+                    "WILLOW_STRIP_ONLY=... pytest test_strip.py -k without_github",
+                    ci.command(*ci.PYTEST, "test_strip.py", "-k", "without_github",
+                               env={"WILLOW_STRIP_ONLY": " ".join(own)},
+                               needs=lambda: ci.missing_module("pytest"))))  # fmt: skip
     order = [g for _, g, _ in gates]
     for gate in sorted(plan.gates, key=lambda g: order.index(g) if g in order else 99):
         if gate in every:
@@ -607,15 +622,37 @@ def closing(whole: bool) -> list[str]:
 
 
 # ── running it ───────────────────────────────────────────────────────────────
-def run_plan(plan: Plan, gates: list, narrow: bool = False) -> int:
+class _ByThread:
+    """stdout for steps run at once: each thread's prints kept apart, so a
+    step's header and what it printed come out together when it ends."""
+
+    def __init__(self, real):
+        self.real, self.kept = real, {}
+
+    def write(self, text):
+        buf = self.kept.get(threading.get_ident())
+        return buf.append(text) if buf is not None else self.real.write(text)
+
+    def flush(self):
+        self.real.flush()
+
+
+def run_plan(plan: Plan, gates: list, narrow: bool = False, jobs: int = 1) -> int:
     """Every gate for a wide plan, or its steps; with `narrow`, a wide plan's
-    steps too: what the rest of the change reaches."""
+    steps too: what the rest of the change reaches. With `jobs` over 1, that
+    many steps run at once (each gate runs its own processes, the mutants
+    and the strip test in copies of their own), each step's output kept
+    together; the first that fails stops the ones not yet started."""
     if plan.widen and not narrow:
         todo = [(g, "", "", how) for _, g, how in gates]
     else:
         todo = steps(plan, gates)
     states: list[tuple[str, str, str | None]] = []
-    for i, (gate, what, _cmd, how) in enumerate(todo):
+    if jobs > 1 and len(todo) > 1:
+        states = _run_at_once(todo, jobs)
+    for i, (gate, what, _cmd, how) in enumerate(
+        todo if jobs <= 1 or len(todo) <= 1 else []
+    ):
         print(f"\n── {gate}" + (f": {what}" if what else ""), flush=True)
         state, _said, why = how()
         states.append((gate, state, why))
@@ -628,15 +665,57 @@ def run_plan(plan: Plan, gates: list, narrow: bool = False) -> int:
     return ci.code_of([s for _, s, _ in states if s != "not run"])
 
 
+def _run_at_once(todo: list, jobs: int) -> list[tuple[str, str, str | None]]:
+    out = sys.stdout
+    sys.stdout = shared = _ByThread(out)
+    done: dict[int, tuple[str, str, str | None]] = {}
+    failed = threading.Event()
+
+    def one(i: int, gate: str, what: str, how):
+        if failed.is_set():
+            return i, (gate, "not run", None), ""
+        shared.kept[threading.get_ident()] = buf = []
+        try:
+            state, _said, why = how()
+        finally:
+            del shared.kept[threading.get_ident()]
+        if state == ci.FAILING:
+            failed.set()
+        head = f"\n── {gate}" + (f": {what}" if what else "") + "\n"
+        return i, (gate, state, why), head + "".join(buf)
+
+    try:
+        with concurrent.futures.ThreadPoolExecutor(jobs) as pool:
+            futures = [
+                pool.submit(one, i, g, w, h) for i, (g, w, _c, h) in enumerate(todo)
+            ]
+            for f in concurrent.futures.as_completed(futures):
+                i, state, text = f.result()
+                done[i] = state
+                if text:
+                    out.write(text)
+                    out.flush()
+    finally:
+        sys.stdout = out
+    return [done[i] for i in range(len(todo))]
+
+
 def main(argv: list[str]) -> int:
     verb, rest = (argv[0], argv[1:]) if argv else ("", [])
     base = head = None
     narrow = False
+    jobs = 1
     paths: list[str] = []
     it = iter(rest)
     for a in it:
         if a == "--narrow" and verb == "run":
             narrow = True
+        elif a == "--jobs" and verb == "run":
+            value = next(it, "")
+            if not value.isdigit() or int(value) < 1:
+                print(USAGE, file=sys.stderr)
+                return kernel.REFUSED
+            jobs = int(value)
         elif a in ("--base", "--head"):
             value = next(it, "")
             if not value or value.startswith("-"):
@@ -675,9 +754,9 @@ def main(argv: list[str]) -> int:
     if verb == "run" and narrow and plan.widen:
         print("\n--narrow: this change widens to every gate, which CI runs;"
               " here, the docs and what the rest of it reaches")  # fmt: skip
-        return run_plan(plan, gates, narrow=True)
+        return run_plan(plan, gates, narrow=True, jobs=jobs)
     if verb == "run":
-        code = run_plan(plan, gates)
+        code = run_plan(plan, gates, jobs=jobs)
     print(*closing(bool(plan.widen) and verb == "run"), sep="\n")
     return code
 

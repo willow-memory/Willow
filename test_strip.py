@@ -70,9 +70,19 @@ def chunk() -> tuple[int, int]:
     return int(k), int(n)
 
 
+def only() -> list[str]:
+    """WILLOW_STRIP_ONLY: test files, by spaces, to run in the stripped copy in
+    place of every add-on's, as test-impact asks for a change that reaches
+    this file by import: a change's own tests, without GitHub, in seconds."""
+    return os.environ.get("WILLOW_STRIP_ONLY", "").split()
+
+
 def adapter_args(copy: Path) -> list[str]:
     """What pytest runs of the add-ons in `copy`: all of adapters/stdlib, or
-    this chunk's test files of it, cut as ci.py cuts them, none for the first."""
+    this chunk's test files of it, cut as ci.py cuts them, none for the first;
+    or, with WILLOW_STRIP_ONLY, the files it names that the copy still has."""
+    if only():
+        return [f for f in only() if (copy / f).is_file()]
     k, n = chunk()
     if n == 1:
         return ["adapters/stdlib"]
@@ -92,10 +102,13 @@ def test_without_github_everything_else_passes(tmp_path):
     passes(
         copy, "adapters/stdlib/readme/readme.py", "write"
     )  # as anyone removing an add-on would
-    first = chunk()[0] == 1
+    first = chunk()[0] == 1 and not only()
     if first:
         passes(copy, "kernel.py", "test")
-    passes(copy, *PYTEST, *(["test_kernel.py"] if first else []), *adapter_args(copy))
+    args = adapter_args(copy)
+    if only() and not args:
+        return  # every file it named was GitHub's, gone from the copy
+    passes(copy, *PYTEST, *(["test_kernel.py"] if first else []), *args)
     if first:
         passes(copy, *PYTEST, "vectors/test_vectors.py", "-k", "as_it_is_now")
 
