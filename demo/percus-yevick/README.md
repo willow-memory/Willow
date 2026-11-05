@@ -192,10 +192,52 @@ What it can't see: whether any real question is held, which is the result.
 - **The rule is strict.** A formula in another form (expanded, or with the
   diameter set to 1) is not held. That makes misses likelier, not hits.
 
+## Pass rules
+
+Approved 2026-11-05, before any real question was asked; they go into
+FROZEN.json with the freeze. A step is **found** when, for any of its
+questions, one of the kernel's top three passages holds that step's anchor
+in [steps.json](steps.json). There are 11 steps.
+
+| # | Rule | Passes when |
+|---|---|---|
+| R1 | Found, with the author's questions | at least 9 of 11 steps found, and s5a, s5b and s7 among them |
+| R2 | Found, with the blind questions | at least 7 of 11 steps found, and s5b and s7 among them |
+| R3 | Off-topic questions | at most 2 of the 10 null questions are served a passage holding any chain step |
+| R4 | Random baseline | three passages drawn at random from the index for each author question, by a seed fixed at the freeze, find at most 2 of 11 steps |
+| R5 | Avoiding Wertheim | no found step is reached only through passages that say "Laplace" |
+| R6 | A clear path, judged blind ([rubric.md](rubric.md)) | the found chain's mean score is at least the model's, and the found chain scores at least 2 on s5 (Baxter) |
+
+Why these numbers:
+
+- **R1** allows two misses where the stack is thinnest (the scattering
+  start), but none on Baxter's step or the answer, which are the point.
+- **R2** is lower because blind questions won't share the sources' words;
+  it is the stronger test.
+- **R3** isn't 0 because two null questions (the hypernetted-chain and mean
+  spherical closures) are close cousins of the chain by design.
+- **R4** rules out a stack so full of these formulas that anything lands.
+- **R5** has no tolerance: avoiding Wertheim is a hard constraint of the
+  prompt.
+- **R6** is the physics student's own measure. The model's text is the ML
+  specialist's final derivation if one comes, else their interim report; the
+  local models' derivations are scored the same way, each beside the found
+  chain.
+
+How they are reported:
+
+- **Each rule gets its own verdict**, a kernel row, with its number. There is
+  no overall verdict that could hide a failure: R1 can hold while R2 fails,
+  and both are written down.
+- **Traps are reported, not scored.** Carnahan–Starling or the virial route
+  served beside the s7 anchor is no fault; served without it, s7 is not found,
+  which R1 and R2 already count.
+- **Not yet built:** pipeline.py prints each question's hits; adding up R1 to
+  R5 and drawing R4's random passages is still to be written, before the
+  freeze, and tested on the dry run.
+
 ## Open, before the freeze
 
-- **Pass rules**: what share of steps must be held, and what null hit rate
-  makes a hit mean nothing. To be written down here, with numbers.
 - **Who judges the rubric**: someone who knows the field, blind; the
   physics student says it's beyond them, and suggests their advisor.
 - **Blind questions**: from whom.
