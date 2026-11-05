@@ -163,7 +163,7 @@ def test_the_steps_are_ordered_cheapest_first(plan_of):
     order = [g for g in gate_names(got)]
     # tests:ui: ui/canvas.py names stack.py, the runner it runs, and a file
     # named so is the stack demo's, which runs changed: by name, never less
-    assert order == ["lint:check", "lint:format", "tests:adapters", "tests:adapters",
+    assert order == ["lint:check", "lint:format", "lint:py39", "tests:adapters", "tests:adapters",
                      "tests:docs", "tests:ui", "demo:stack", "mutants:changed"]  # fmt: skip
     narrow, own = (
         "WILLOW_ONLY=changed pytest",
