@@ -23,7 +23,10 @@ or force-push; write anything a step didn't make; approve or merge.
 
 GitHub is asked through `gh api` (REST): the open pull requests, and a new
 one. Without gh, the body is left in a file and it says the one command to
-run, then run this again.
+run, then run this again. A push or an open GitHub answers with an error (a
+502) is tried again, after 2, 4, 8 and 16 seconds, and before each new try
+at opening it looks for the pull request, which an error answer can still
+have made.
 
 Exit codes, the kernel's: 0 the pull request is open and has everything
 pushed; 42 something needs you (a step that failed or stopped, a missing
@@ -36,11 +39,13 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import os
 import re
 import shutil
 import subprocess
 import sys
 import tempfile
+import time
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -53,6 +58,15 @@ STEPS = HERE / "create_pr.md"
 USAGE = (
     "usage: create_pr.py [--base BRANCH] [--title TEXT] [--footer TEXT]"
     " [--repo OWNER/NAME] [--steps FILE]"
+)
+#: seconds between tries when GitHub answers a push or an open with an error
+#: (a 502, "fatal error in commit_refs"): the push may yet go through, and the
+#: pull request may be open though the answer said not. WILLOW_CREATE_PR_WAITS
+#: (seconds, by commas) sets them; its tests set none.
+WAITS = tuple(
+    float(w)
+    for w in os.environ.get("WILLOW_CREATE_PR_WAITS", "2,4,8,16").split(",")
+    if w.strip()
 )
 #: the pool whose steps need the pull request's number
 AFTER = "after it opens"
@@ -348,7 +362,38 @@ def push(branch: str) -> None:
     if theirs and behind:
         raise Stop(f"origin's {branch} has commits this branch doesn't: merge"
                    f" origin/{branch} in, then run this again (never force-push)")  # fmt: skip
+    for wait in WAITS:
+        try:
+            git("push", "-q", "origin", f"HEAD:refs/heads/{branch}")
+            return
+        except Stop as why:
+            print(f"push failed ({why}); again in {wait:g}s", file=sys.stderr)
+            time.sleep(wait)
     git("push", "-q", "origin", f"HEAD:refs/heads/{branch}")
+
+
+def open_pr(slug: str, branch: str, payload: Path) -> tuple[dict | None, str]:
+    """(the pull request opened for `branch`, or None when GitHub won't; its
+    last answer). An error answer can come for a pull request that was made
+    (a 502): it is looked for before trying again, so none is opened twice."""
+    for wait in (*WAITS, None):
+        code, out = gh("api", f"repos/{slug}/pulls", "--method", "POST",
+                       "--input", str(payload))  # fmt: skip
+        if code == 0:
+            return json.loads(out), out
+        if wait is None:
+            return None, out
+        print(f"opening it failed ({out}); looking again in {wait:g}s", file=sys.stderr)
+        time.sleep(wait)
+        try:
+            prs = open_prs(slug)
+        except Stop:
+            continue
+        found = next((p for p in prs if p["head"]["ref"] == branch and p["head"]["repo"]["full_name"] == slug), None)  # fmt: skip
+        if found is not None:
+            print(f"#{found['number']} is open after all", file=sys.stderr)
+            return found, out
+    return None, out
 
 
 def create(opts: dict) -> int:
@@ -412,21 +457,13 @@ def create(opts: dict) -> int:
                 "head": branch, "base": base_name,
                 "body": body(base, said, notes, opts["--footer"]),
             }), encoding="utf-8")  # fmt: skip
-            code, out = gh(
-                "api",
-                f"repos/{slug}/pulls",
-                "--method",
-                "POST",
-                "--input",
-                str(payload),
-            )
-            if code != 0:
+            mine, out = open_pr(slug, branch, payload)
+            if mine is None:
                 kept = Path(tempfile.mkdtemp(prefix="create_pr-")) / "pull.json"
                 kept.write_text(payload.read_text(encoding="utf-8"), encoding="utf-8")
-                raise Stop(f"couldn't open it ({out}). Pushed; the pull request is in {kept}:"
+                raise Stop(f"couldn't open it ({out}, after {len(WAITS) + 1} tries). Pushed; the pull request is in {kept}:"
                            f" open it with `gh api repos/{slug}/pulls --method POST --input"
                            f" {kept}` (or by hand), then run this again")  # fmt: skip
-            mine = json.loads(out)
             print(f"\nopened #{mine['number']}: {mine.get('html_url', '')}")
         else:
             print(

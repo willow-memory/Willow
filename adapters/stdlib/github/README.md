@@ -42,7 +42,9 @@ this branch), writes its number into the entry, runs
 - **Stopped on, exit 42:** a step that fails or needs you, a collision
   `against` names, a change with no changelog entry, a branch origin has
   moved on, and GitHub out of reach. It says which, and what to do; run it
-  again after. A 42 that owes nothing (no other pull request to hold it to,
+  again after. A push or an open GitHub answers with an error (a 502) is
+  tried again first, after 2, 4, 8 and 16 seconds, and before each new open
+  it looks for the pull request, which an error answer can still have made. A 42 that owes nothing (no other pull request to hold it to,
   a gate whose tool isn't here) is said in the pull request instead.
 - **Never:** rebase, amend or force-push, approve or merge, or write a file
   but CHANGELOG.md's number.

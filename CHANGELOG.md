@@ -2040,6 +2040,10 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- `github`'s create_pr.py tries a push or an open GitHub answers with an
+  error again, after 2, 4, 8 and 16 seconds, and looks for the pull request
+  before each new open: GitHub answered #236's with a 502 and opened it,
+  and the run stopped, so a second run did every gate again to find it (#242)
 - `forge`'s card says `role: repo` and `runs-in: repo`, so `ui/assemble.py`
   refuses it: it reads every card in the repository and runs assemble, and in
   a stack, which holds neither, 29 of its 40 tests failed (#239)
