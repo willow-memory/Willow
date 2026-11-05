@@ -278,8 +278,11 @@ def plumbing_box(work: Path) -> Path:
     if not (box / "kernel.json").exists():
         pile.mkdir(parents=True, exist_ok=True)
         (pile / "nonsense.txt").write_text(
-            "qqqq zzzz 1 and qqqq zzzz 2 are the dry run's words, and this passage holds them.\n",
-            encoding="utf-8")  # fmt: skip
+            # the words, not in the question's order: a passage that repeats
+            # the question back is an echo, and the kernel serves no echo
+            "Here zzzz comes before qqqq, numbered 2 and then 1, as nonsense.\n",
+            encoding="utf-8",
+        )  # fmt: skip
         with contextlib.redirect_stdout(io.StringIO()):
             if (
                 kernel.init(box, pile, work / "plumbing-box.key", kernel.now())
