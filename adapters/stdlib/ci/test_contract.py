@@ -641,6 +641,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "diverge": ("diverge.py", ["{pile}", "{pile}"]),
     "duplicates": ("duplicates.py", ["--box", "{box}"]),
     "emacs": ("emacs.py", ["--box", "{box}"]),
+    "equations": ("equations.py", ["mirror", "--from", "{pile}", "--to", "{tmp}"]),
     "export": ("export.py", ["--box", "{box}"]),
     "fair-merge": ("fair_merge.py", ["--box", "{box}", "tomatoes"]),
     "first-mention": ("first_mention.py", ["--box", "{box}", "tomatoes"]),

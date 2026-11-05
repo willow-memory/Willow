@@ -371,6 +371,10 @@ willow/
 │   │   │   ├── emacs.py          an M-x willow command: answers in a grep-mode buffer
 │   │   │   ├── test_emacs.py
 │   │   │   └── README.md
+│   │   ├── equations/
+│   │   │   ├── equations.py  Each displayed equation in LaTeX sources as a passage of its own, with the sentences around it and its label, cited by the .tex file's line
+│   │   │   ├── test_equations.py
+│   │   │   └── README.md     its card
 │   │   ├── evernote/
 │   │   │   ├── evernote.py   an Evernote .enex export as its notes: title, notebook, dates, tags, source, attachments and text
 │   │   │   ├── test_evernote.py
