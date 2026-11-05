@@ -21,8 +21,10 @@ spec = importlib.util.spec_from_file_location("create_pr", HERE / "create_pr.py"
 cp = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(cp)
 
+#: no waits between tries: a test isn't GitHub, and doesn't need a second
 ENV = {**os.environ, "GIT_AUTHOR_NAME": "t", "GIT_AUTHOR_EMAIL": "t@t",
-       "GIT_COMMITTER_NAME": "t", "GIT_COMMITTER_EMAIL": "t@t"}  # fmt: skip
+       "GIT_COMMITTER_NAME": "t", "GIT_COMMITTER_EMAIL": "t@t",
+       "WILLOW_CREATE_PR_WAITS": "0,0,0"}  # fmt: skip
 CHANGELOG = """# Changelog
 
 ## Unreleased
@@ -56,12 +58,20 @@ state.write_text(json.dumps(s))
 if os.environ.get("FAKE_GH_FAIL"):
     print("HTTP 403: Resource not accessible", file=sys.stderr)
     sys.exit(1)
+# a 502 on the first open: made (FAKE_GH_502=made, as GitHub did for #236) or not
+bad = os.environ.get("FAKE_GH_502") and not [c for c in s["calls"][:-1] if "POST" in c]
+if "POST" in sys.argv and bad and os.environ["FAKE_GH_502"] != "made":
+    print("gh: Server Error (HTTP 502)", file=sys.stderr)
+    sys.exit(1)
 if "POST" in sys.argv:
     sent = json.loads(Path(sys.argv[sys.argv.index("--input") + 1]).read_text())
     pr = {"number": 7, "html_url": "https://example.test/o/r/pull/7",
           "head": {"ref": sent["head"], "repo": {"full_name": "o/r"}}, "sent": sent}
     s["prs"].append(pr)
     state.write_text(json.dumps(s))
+    if bad:
+        print("gh: Server Error (HTTP 502)", file=sys.stderr)
+        sys.exit(1)
     print(json.dumps(pr))
 else:
     print(json.dumps(s["prs"]))
@@ -351,6 +361,36 @@ def test_a_git_that_fails_is_stopped_on_with_what_git_said(repo):
     assert "nowhere.git" in got.stderr, "git's own reason, not an empty one"
 
 
+@pytest.mark.parametrize("made", ["made", "not made"])
+def test_a_502_on_opening_is_looked_past_and_never_opens_a_second(repo, made):
+    """GitHub answered #236's open with a 502 and opened it anyway: the
+    run stopped, and a rerun did every gate again to find it."""
+    steps(repo, GREEN)
+    got = run(repo, FAKE_GH_502=made)
+    assert got.returncode == 0, got.stdout + got.stderr
+    assert "HTTP 502" in got.stderr and "numbered 7" in got.stdout
+    posts = [c for c in gh_state(repo)["calls"] if "POST" in c]
+    assert len(gh_state(repo)["prs"]) == 1
+    assert len(posts) == (1 if made == "made" else 2)
+    assert ("#7 is open after all" in got.stderr) == (made == "made")
+    assert "(#7)" in at_origin(repo, "CHANGELOG.md")
+
+
+def test_a_push_github_turns_away_once_is_tried_again(repo):
+    """'fatal error in commit_refs': a push GitHub failed, that went through
+    on the next try."""
+    steps(repo, GREEN)
+    hook = repo.parent / "origin.git" / "hooks" / "pre-receive"
+    once = repo.parent / "turned-away"
+    hook.write_text(f"#!/bin/sh\n[ -e '{once}' ] && exit 0\ntouch '{once}'\n"
+                    "echo 'fatal error in commit_refs' >&2\nexit 1\n")  # fmt: skip
+    hook.chmod(0o755)
+    got = run(repo)
+    assert got.returncode == 0, got.stdout + got.stderr
+    assert "push failed" in got.stderr and "commit_refs" in got.stderr
+    assert "(#7)" in at_origin(repo, "CHANGELOG.md")
+
+
 def test_a_failed_open_keeps_the_body_and_says_the_command(repo):
     steps(repo, GREEN)
     gh = repo.parent / "bin" / "gh"
@@ -358,6 +398,7 @@ def test_a_failed_open_keeps_the_body_and_says_the_command(repo):
                   'if "POST" in sys.argv:\n    print("HTTP 422", file=sys.stderr); sys.exit(1)\nif False:'))  # fmt: skip
     got = run(repo)
     assert got.returncode == 42 and "--method POST --input" in got.stderr
+    assert "HTTP 422, after 4 tries" in got.stderr, "GitHub's own reason, kept"
     kept = Path(re.search(r"the pull request is in (\S+):", got.stderr).group(1))
     assert json.loads(kept.read_text())["head"] == "work"
     shutil.rmtree(kept.parent)
