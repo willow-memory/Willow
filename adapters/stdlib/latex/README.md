@@ -33,8 +33,11 @@ make. A line that held only dropped material is blank, so the numbering holds.
 
 Each file is written to MIRROR at the same relative path with .txt added.
 FOLDER is only read: hidden folders and files are skipped, and nothing is
-written inside it. A file that can't be read is skipped and counted, never a
-crash:
+written inside it. A file is read as UTF-8, else as Windows-1252, else as
+Latin-1, so a paper holding one stray byte of another encoding (an en dash
+pasted from a word processor, as in some arXiv sources) is still read, as the
+[equations](../equations/) reader reads it. A file holding a NUL byte (UTF-16,
+or a binary) or that can't be read is skipped and counted, never a crash:
 
     wrote 2 files to MIRROR; skipped 1
 

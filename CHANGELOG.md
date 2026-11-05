@@ -14,6 +14,9 @@ says how). The first was v0.1.0.
   (save as `<.opencode/plugins/willow-passages.js>`) that injects Claude's
   framed passages as synthetic text, and still offers the Claude-compatible
   hook JSON for runners that take it (#251)
+- `.github/copilot-instructions.md` points Copilot at `AGENTS.md` (prose, like
+  `GEMINI.md`); `agents-md-check` reads it too, and AGENTS.md tips that need
+  REST for `gh pr create` are framed by capability, not by product (#250)
 
 - `equations`: each displayed equation in LaTeX sources as a passage of its
   own, the math as its source writes it, with its labels, its .tex line and
@@ -2104,6 +2107,10 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- `latex` reads a file holding a stray byte of another encoding as
+  Windows-1252, else Latin-1, rather than skipping it whole: Santos's lecture
+  notes on arXiv (1310.5578), ASCII but for one en dash, gave no prose. A
+  file holding a NUL byte (UTF-16, or a binary) is still skipped and counted. (#249)
 - `github`'s create_pr.py tries a push or an open GitHub answers with an
   error again, after 2, 4, 8 and 16 seconds, and looks for the pull request
   before each new open: GitHub answered #236's with a 502 and opened it,
