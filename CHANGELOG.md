@@ -12,7 +12,7 @@ says how). The first was v0.1.0.
 
 - `.github/copilot-instructions.md` points Copilot at `AGENTS.md` (prose, like
   `GEMINI.md`); `agents-md-check` reads it too, and AGENTS.md tips that need
-  REST for `gh pr create` are framed by capability, not by product
+  REST for `gh pr create` are framed by capability, not by product (#250)
 
 - `equations`: each displayed equation in LaTeX sources as a passage of its
   own, the math as its source writes it, with its labels, its .tex line and
