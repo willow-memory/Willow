@@ -115,12 +115,26 @@ header by weights-card, with its SHA-256. weights-pin holds the file to its
 card before each run. The ML specialist's own model can't be one of these. They report
 Qwen3.8-Flash-Next at IQ3_S, run by Strata. Strata is said to be an MIT-licensed
 local runtime, and the model has 125 billion parameters with a download of about
-70 GB, too large for a 15 GB machine with no GPU. So its derivations would come
-from the ML specialist's machine. For them to count, each needs the exact text,
-the SHA-256 of the weights file, Strata's version and the sampling settings
-(temperature, seed). Whether they will send those is open. Unverified here: an
-IQ3_S file of this model; the quantization lists found online name IQ3_XXS and
-others.
+70 GB, too large for a 15 GB machine with no GPU. So its derivations come from the ML specialist's machine.
+
+What they reported (2026-11-05) for the run behind their interim report and
+transcript: Strata 0.1.56 (from its install path), the weights in two GGUF
+files, `Qwen3.8-Flash-Next-GSQ-RCO-IQ3_S-0000{1,2}-of-00002.gguf`, a Strata
+pack of their own naming (so an IQ3_S build does exist, as Strata's; the
+public lists name IQ3_XXS); speculative decoding with DFlash2 drafts and MTP;
+a 256k context, int8 KV cache, a 157.5k reasoning budget, compaction keeping
+30k; and opencode's default temperature, which they took to be 0.8. No seed
+is set, so the run can't be repeated token for token. Still missing: the two
+weights files' SHA-256 and the temperature as opencode sets it.
+
+They also sent the solver the session wrote (`alt3.py`, 69 lines, SHA-256
+`b7ac94de…7122d6`, kept outside the repo). It is numerics only (numpy and
+scipy): the bilinear real-space system solved by alternating linear solves,
+c given h then h given c, with an Aitken-style step and η stepped up by 0.02;
+it saves its arrays under /tmp. It has not been run here: code from outside
+the repo is not run in this session without the person's say. Read, it
+matches the report's description, and one line of it is dead (line 13's
+value is overwritten on line 14).
 
 ## The dry run
 
