@@ -36,7 +36,7 @@ merge conflicts:
 | FILES.md | both sides' folders, A to Z |
 | test_contract.py | both sides' `COMMANDS` lines, and entries either side added to `COMMANDS`, `READERS` or `PILE_EXTRA`, with imports, whole |
 | adapters/planned.json | REF's ideas, less the ones the branch built, plus any it added |
-| any other `.md` file | both sides' lines, REF's first, when each side only added lines where the base had none (two paragraphs on one add-on's card), a blank line between paragraphs |
+| any other Markdown file | both sides' lines, REF's first, when each side only added lines where the base had none (two paragraphs on one add-on's card), a blank line between paragraphs |
 
 These are the files every add-on's pull request touches and that main's
 own changes touch too. **Any other conflict stops that branch** and leaves it
