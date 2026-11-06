@@ -453,6 +453,41 @@ never counted.
     found passages declined where they were silent more often than the
     other did, and was wrong less: on these 21 questions, qwen3:8b.
 
+## Freeze 4: the equations given their words
+
+The question freezes 1 and 2 left: the stack holds 9 of the 11 steps, mostly
+as equations with a line or two around them, and no ranker served them to a
+question asked in words. The guess, made after freeze 1's result: an
+equation is symbols, and a question is words, so the kernel's rule (a
+passage must hold half a question's content words) never lets them meet.
+
+[notation](../../adapters/stdlib/notation/) was built to test it (pull
+request on its own branch, stacked here): each equation as the equations
+add-on writes it, plus a line of the words its paper gives for the symbols
+it uses ("symbols: S structure factor; c direct correlation function").
+Freeze 4 builds the pile again with notation reading each paper's math in
+place of equations, and changes nothing else: the same stack, questions,
+steps, hit rule, seeds, rankers and bars.
+
+- **The rules**: R1 to R5 by pipeline.py and R7 to R10 by union.py, as
+  frozen, with `--math notation`; their verdicts are named
+  `percus-yevick:notation:R1` and on, apart from freezes 1 and 2's.
+- **The guess, read before the run**: it holds if, on the notation pile,
+  the kernel's author questions (R1's count) find at least 3 of 11 steps,
+  two more than freeze 1's one, with R3 and R4 still satisfied. If they find
+  one or none, the guess is wrong: the equations had their words and were
+  still not served. Two is too close to call, and is said so.
+- **What the symbols line can change in scoring**: a step's hit needs its
+  anchor (math) and its words; the symbols line can supply words. That is
+  the claim under test, not a loophole: the words are the paper's own.
+- **What was known when it was frozen**: freezes 1 and 2's results and the
+  ceiling; notation's glossaries on these papers (its card quotes some);
+  that on these 13 arXiv sources 1,303 of 1,394 equations get a symbols
+  line. Not known: anything any ranker serves from the notation pile.
+- **Dry run** (2026-11-06): all 49 questions as nonsense, pipeline then
+  union, on the notation pile: every rule tallied at 0, R3, R4, R9 and R10
+  satisfied, twelve rows named `percus-yevick:dry:notation:`, which verify.
+
 ## Said plainly
 
 - **The anchors were written after the source search had grepped each

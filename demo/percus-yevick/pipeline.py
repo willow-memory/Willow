@@ -14,6 +14,11 @@ kernel's top three passages, and scores each against steps.json with
 score.py. Writes every question's served passages, the steps they hold, the
 traps and the Wertheim flag to --out, and prints the table.
 
+`--math notation` reads each paper's equations with the notation add-on
+in place of equations (freeze 4): each equation with the words its paper
+gives for its symbols. Its verdicts are named percus-yevick:notation:R1
+and on, apart from freeze 1's.
+
 R4's random passages are drawn by tally.SEED, frozen; `--seed` takes
 another only with `--dry`. `--box` appends each pass rule's verdict to a
 box outside the repo as a kernel row.
@@ -65,19 +70,27 @@ READERS = {
     "wikipedia": [("wiki", "stdlib/mediawiki/mediawiki.py")],
     "pdf": [("scan", "deps/pdf/pdf.py")],
 }
+#: freeze 4: the math read by notation, each equation with the words its
+#: paper gives for its symbols, in place of equations
+MATH = {
+    "equations": "stdlib/equations/equations.py",
+    "notation": "stdlib/notation/notation.py",
+}
 
 
 def sha_file(p: Path) -> str:
     return hashlib.sha256(p.read_bytes()).hexdigest()
 
 
-def build(stack: Path, work: Path) -> Path:
-    """The pile, one folder per reader and source, and its index."""
+def build(stack: Path, work: Path, math: str = "equations") -> Path:
+    """The pile, one folder per reader and source, and its index; `math` is
+    the reader of each paper's equations."""
     pile = work / "pile"
     for s in json.loads(fetch.LIST.read_text(encoding="utf-8"))["sources"]:
         here = stack / fetch.slug(s["id"])
         src = here if s["kind"] == "wikipedia" else here / "src"
         for part, script in READERS[s["kind"]]:
+            script = MATH[math] if part == "math" else script
             to = pile / part / fetch.slug(s["id"])
             if to.exists():
                 continue
@@ -136,8 +149,9 @@ def table(rows: list[dict]) -> str:
 
 
 def verdicts(
-    box: Path, ts: str, result: dict, dry: bool, answers: str, tools: dict
-) -> None:
+    box: Path, ts: str, result: dict, dry: bool, answers: str, tools: dict,
+    math: str = "equations",
+) -> None:  # fmt: skip
     """Each rule's verdict, one kernel row each, on a box outside the repo; a
     dry run's are named dry so they are never read as the study's."""
     if not (box / "record.jsonl").exists():
@@ -149,7 +163,9 @@ def verdicts(
                 raise SystemExit(f"refused: couldn't start a record at {box}")
     for rule, v in result.items():
         kernel.append(box, ts, "verdict", who="percus-yevick",
-                      gate=f"percus-yevick:{'dry:' if dry else ''}{rule}", state=v["state"],
+                      gate=f"percus-yevick:{'dry:' if dry else ''}"
+                           f"{'' if math == 'equations' else math + ':'}{rule}",
+                      state=v["state"],
                       number=v["number"], needed=v["needed"],
                       answers_sha256=answers, tools=tools)  # fmt: skip
 
@@ -168,6 +184,7 @@ def main(argv: list[str]) -> int:
             "--out",
             "--seed",
             "--box",
+            "--math",
         ) and i + 1 < len(argv):
             opts[argv[i]], i = argv[i + 1], i + 2
         else:
@@ -178,11 +195,18 @@ def main(argv: list[str]) -> int:
         print(f"pipeline.py: R4's seed is frozen at {tally.SEED}; another is for a dry run",
               file=sys.stderr)  # fmt: skip
         return 2
-    if i != len(argv) or not need <= set(opts) or not seed.isdigit():
+    math = opts.get("--math", "equations")
+    if (
+        i != len(argv)
+        or not need <= set(opts)
+        or not seed.isdigit()
+        or math not in MATH
+    ):
         print("usage: pipeline.py --stack DIR --work DIR --out FILE [--questions NAME ...]"
-              " [--seed N] [--box DIR] [--dry]", file=sys.stderr)  # fmt: skip
+              " [--math equations|notation] [--seed N] [--box DIR] [--dry]",
+              file=sys.stderr)  # fmt: skip
         return 2
-    idx = scan.Index(build(Path(opts["--stack"]), Path(opts["--work"])))
+    idx = scan.Index(build(Path(opts["--stack"]), Path(opts["--work"]), math))
     rows = ask(idx, sets or SETS, dry)
     text_of = {c["id"]: c["text"] for c in idx.pile}
     authors = sum(r["set"] == "author" for r in rows)
@@ -193,10 +217,11 @@ def main(argv: list[str]) -> int:
     record = {
         "dry": dry,
         "seed": int(seed),
+        "math": math,
         "verdicts": result,
         "tools": {rel: sha_file(ROOT / rel) for rel in (
             "kernel.py", "adapters/stdlib/scan/scan.py", "adapters/stdlib/latex/latex.py",
-            "adapters/stdlib/equations/equations.py", "adapters/stdlib/mediawiki/mediawiki.py",
+            "adapters/" + MATH[math], "adapters/stdlib/mediawiki/mediawiki.py",
             "adapters/deps/pdf/pdf.py", "adapters/stdlib/bibtex/bibtex.py",
             "demo/percus-yevick/score.py", "demo/percus-yevick/steps.json",
             "demo/percus-yevick/tally.py", "demo/percus-yevick/pipeline.py")},
@@ -215,8 +240,9 @@ def main(argv: list[str]) -> int:
     if "--box" in opts:
         answers = sha_file(Path(opts["--out"]))
         verdicts(
-            Path(opts["--box"]), kernel.now(), result, dry, answers, record["tools"]
-        )
+            Path(opts["--box"]), kernel.now(), result, dry, answers, record["tools"],
+            math,
+        )  # fmt: skip
         print(
             f"verdicts appended to {opts['--box']}: kernel.py verify --box {opts['--box']}"
         )

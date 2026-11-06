@@ -437,3 +437,23 @@ def test_same_way_gets_time_for_every_ask_and_each_model_is_saved(
     assert ("same-way", arms.ASK_LIMIT * 3 * 4) in limits
     assert ("local-model", arms.ASK_LIMIT) in limits
     assert saved == [["a"], ["a", "b@none"]] and set(out) == {"a", "b@none"}
+
+
+def test_freeze_4_reads_the_math_with_notation_and_names_its_verdicts_apart(tmp_path):
+    assert pipeline.MATH == {
+        "equations": "stdlib/equations/equations.py",
+        "notation": "stdlib/notation/notation.py",
+    }
+    for rel in pipeline.MATH.values():
+        assert (pipeline.ROOT / "adapters" / rel).is_file()
+    args = ["--stack", "s", "--work", "w", "--out", str(tmp_path / "o.json")]
+    assert pipeline.main([*args, "--math", "latex"]) == 2
+    assert union.main(["--work", "w", "--out", "o", "--math", "latex"]) == 2
+    result = {"R1": {"state": "failing", "number": "1 of 11", "needed": "9"}}
+    for math, dry, gate in (("notation", False, "percus-yevick:notation:R1"),
+                            ("notation", True, "percus-yevick:dry:notation:R1"),
+                            ("equations", False, "percus-yevick:R1")):  # fmt: skip
+        box = tmp_path / f"box-{math}-{dry}"
+        pipeline.verdicts(box, "2026-11-06T00:00:00Z", result, dry, "a" * 64, {}, math)
+        rows = [json.loads(x) for x in (box / "record.jsonl").read_text().splitlines()]
+        assert rows[-1]["gate"] == gate

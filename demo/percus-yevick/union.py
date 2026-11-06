@@ -21,7 +21,9 @@ Wertheim's Laplace method or only through sticky spheres, and each ranker's
 own count. WORK is pipeline.py's --work, after it has built the pile and
 the index. `--dry` asks nonsense, and its random passages hold nothing.
 With --box, each verdict is a kernel row, named percus-yevick:R7 and on
-(percus-yevick:dry:R7 for a dry run). Exit 0, or 2 on a bad command line.
+(percus-yevick:dry:R7 for a dry run). `--math notation` names them
+percus-yevick:notation:R7 and on, for a WORK whose pile pipeline.py built
+with `--math notation` (freeze 4). Exit 0, or 2 on a bad command line.
 """
 
 from __future__ import annotations
@@ -47,7 +49,7 @@ R7_AT_LEAST, R7_MUST = 9, {"s5a", "s5b", "s7"}
 R8_AT_LEAST, R8_MUST = 7, {"s5b", "s7"}
 R9_AT_MOST = 2
 R10_AT_MOST = 2
-USAGE = "usage: union.py --work WORK --out FILE [--box DIR] [--dry]"
+USAGE = "usage: union.py --work WORK --out FILE [--math equations|notation] [--box DIR] [--dry]"
 
 
 def found(qs: list[dict], ranked: dict, set_test) -> dict[str, list[str]]:
@@ -154,11 +156,16 @@ def main(argv: list[str]) -> int:
     while i < len(argv):
         if argv[i] == "--dry":
             dry, i = True, i + 1
-        elif argv[i] in ("--work", "--out", "--box") and i + 1 < len(argv):
+        elif argv[i] in ("--work", "--out", "--box", "--math") and i + 1 < len(argv):
             opts[argv[i]], i = argv[i + 1], i + 2
         else:
             break
-    if i != len(argv) or not {"--work", "--out"} <= set(opts):
+    math = opts.get("--math", "equations")
+    if (
+        i != len(argv)
+        or not {"--work", "--out"} <= set(opts)
+        or math not in pipeline.MATH
+    ):
         print(USAGE, file=sys.stderr)
         return 2
     work = Path(opts["--work"])
@@ -175,6 +182,7 @@ def main(argv: list[str]) -> int:
     record = {
         "dry": dry,
         "seed": SEED,
+        "math": math,
         "verdicts": result,
         "questions": qs,
         "ranked": ranked,
@@ -192,7 +200,7 @@ def main(argv: list[str]) -> int:
         }
         pipeline.verdicts(Path(opts["--box"]), pipeline.kernel.now(), counted, dry,
                           hashlib.sha256(text.encode("utf-8")).hexdigest(),
-                          record["tools"])  # fmt: skip
+                          record["tools"], math)  # fmt: skip
     for name, v in result.items():
         print(f"{name}  {v['state']:<10} {v['number']}"
               + (f"  (needed: {v['needed']})" if v["needed"] else ""))  # fmt: skip
