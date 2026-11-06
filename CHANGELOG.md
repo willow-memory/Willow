@@ -2088,6 +2088,13 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- `clauses` keeps a sentence longer than one of the kernel's chunks on its
+  source's own lines, a line longer than that cut at a space: a chat export
+  holds no full stops, so its "sentence" ran for pages on one line and the
+  kernel read only its first 500 characters. On the demo people's folders
+  that was 74 passages and 19,047 words never read; now none. A sentence of
+  500 characters or fewer is written as before, and google-privacy's mirrors
+  are the same bytes
 - `github`'s create_pr.py tries a push or an open GitHub answers with an
   error again, after 2, 4, 8 and 16 seconds, and looks for the pull request
   before each new open: GitHub answered #236's with a 502 and opened it,
