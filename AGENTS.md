@@ -6,7 +6,9 @@ read both. This page is the part of them that is easy to miss, and what CI
 catches when it is missed. It adds no rule of its own.
 
 [CLAUDE.md](CLAUDE.md) imports this with `@AGENTS.md`; [GEMINI.md](GEMINI.md)
-tells Gemini CLI to read this file (it has no `@` import). One copy to keep.
+and [.github/copilot-instructions.md](.github/copilot-instructions.md) tell
+Gemini CLI and Copilot to read this file (they have no `@` import). One copy
+to keep.
 The longer how-tos are in [docs/agents/](docs/agents/), one page a job.
 
 ## Never

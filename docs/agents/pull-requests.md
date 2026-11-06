@@ -32,8 +32,8 @@ Opening one, keeping it current, and what CI's rows need. Part of
   idea, or whose card's link, exists only on another branch is built from
   that branch, and its pull request's base is that branch; built from
   `main`, it fails `test_docs.py` and clashes on `adapters/planned.json`.
-- **In a Claude Code cloud session**, `gh pr create` is refused (GitHub's
-  GraphQL isn't reachable); open it through the REST API instead:
+- **When GraphQL isn't reachable** (some cloud agent sessions), `gh pr create`
+  is refused; open it through the REST API instead:
 
       gh api repos/willow-memory/Willow/pulls --method POST \
           -f title=... -f head=BRANCH -f base=main -f body=...
