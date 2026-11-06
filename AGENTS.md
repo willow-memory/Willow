@@ -52,6 +52,14 @@ Don't run every gate to find out: one after another they take well over an
 hour, and all at once on every core (`adapters/stdlib/ci/cores.py`) most of
 one. That's CI's job, on every pull request.
 
+**Look at the open pull requests before you start**, whatever you branch
+from. Branching from `main` says where your work starts, not that nothing
+else is in flight: another session may be building the same idea, or
+changing the same file, on a branch main doesn't have yet. List them
+(`gh pr list`, or your GitHub tools), read the ones near yours, and hold
+your branch to them once it has a commit
+([pull requests](docs/agents/pull-requests.md#opening-one)).
+
 ## After a change, run what it can move
 
 Then push, and let CI's run be the full one:

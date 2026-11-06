@@ -89,6 +89,9 @@ What an add-on leans on is on its card, never found by reading its code:
                 --json (adapters/stdlib/ci/README.md, the report contract);
                 mirror, for a reader whose mirror says where each passage
                 came from, in a hidden map beside it (the mirror
+                contract); suggestions, for one that proposes a model's
+                reply for your seal: its claim says who answered, where, at
+                what settings and what it did, in one form (the suggestions
                 contract); more than one, with commas between
 
 Each is optional, a list of add-on names with commas between. `check`
@@ -196,7 +199,7 @@ ROLES = {
 LEANS = ("uses", "looks-for")
 RUNS_IN = {"repo"}
 #: what an add-on prints, when it keeps a shared shape: ci/README.md
-OUTPUTS = {"report", "mirror"}
+OUTPUTS = {"report", "mirror", "suggestions"}
 #: the tags the similar add-on works out, which a card's own tag is never one of
 FACT_TAGS = {"no-install", "needs-install", "offline", "this-machine", "online"}
 #: what an add-on may write: the guard in adapters/stdlib/ci/guard holds it

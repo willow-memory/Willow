@@ -83,7 +83,10 @@ def is_report(name: str) -> bool:
     """Whether its card's header says `output: report`, as stack reads it."""
     card = (STDLIB / name / "README.md").read_text(encoding="utf-8")
     head = re.search(r"<!--\s*willow-addon\s*\n(.*?)-->", card, re.S)
-    return bool(head and re.search(r"^output:\s*report\s*$", head.group(1), re.M))
+    return bool(
+        head
+        and re.search(r"^output:(?:.*,)?\s*report\s*(?:,.*)?$", head.group(1), re.M)
+    )
 
 
 def shape(out: str) -> str:
