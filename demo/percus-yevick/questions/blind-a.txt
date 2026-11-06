@@ -1,0 +1,22 @@
+# Blind questions, written by qwen3:8b through Ollama at temperature 0,
+# seed 0, thinking off, from questions/blind-prompt.txt alone
+# (SHA-256 32c2df404a2f2f4af6d0728ad180cc815b3b74446d97cba6a829b0f4f77b318c). Its reply's SHA-256:
+# 3fb51d7b7354bfe7071851159b1a5520f50c58f690b7da79b002010c120a5ac0. Parsed by blind.py; nothing edited by hand.
+s0.1	Where can I find the equation of state for hard spheres at low density?
+s1a.1	How do I calculate the amplitude of a wave scattered from the electron density in a fluid of hard spheres?
+s1b.1	Where is the form factor of a sphere with uniform electron density explained?
+s1c.1	How is the scattered intensity related to the form factor and structure factor?
+s2.1	Where can I find the relationship between the structure factor and the radial distribution function?
+s3.1	How is the Ornstein-Zernike equation used to find the structure factor from the direct correlation function?
+s4.1	Where is the Percus-Yevick closure approximation for hard spheres explained?
+s5a.1	What is Baxter's factorization and how is it used in the theory of hard spheres?
+s5b.1	Where can I find the coefficients of Baxter's function Q(r) for hard spheres?
+s6.1	How is the structure factor at zero wavevector related to the compressibility of the fluid?
+s7.1	Where can I find the Percus-Yevick equation of state for hard spheres?
+e1.1	How do I find the direct correlation function inside the hard core of a hard sphere fluid?
+e2.1	Where is the contact value of the radial distribution function explained for hard spheres?
+e3.1	How is the total correlation function related to the direct and indirect correlation functions?
+e4.1	Where can I find the definition and properties of the cavity function for hard spheres?
+e5.1	How is the form factor P(q) derived for a fluid of hard spheres?
+e6.1	Where is the relationship between the scattered intensity I(q), P(q), and S(q) explained?
+e7.1	How do I interpret a graph of the structure factor or radial distribution function at a given packing fraction?

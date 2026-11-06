@@ -303,7 +303,12 @@ How they are reported:
   questions), at temperature 0 and seed 0. The physics student couldn't
   write them. A model has seen none of this stack, but its physics
   vocabulary was learned from the same literature, so its questions may
-  share the sources' words more than a student's would.
+  share the sources' words more than a student's would. Written 2026-11-05,
+  18 questions, one a step, in [questions/blind-a.txt](questions/blind-a.txt)
+  with the reply word for word beside it. They stay close to the prompt's
+  names for the steps, and those names were written by the author, who had
+  seen the source search: blind to the sources and to the author's
+  questions, not to the author's names for the steps.
 - **The ML specialist's run is in, as far as it goes**: the interim report,
   the full transcript, the solver, the weights' hashes and Strata's settings.
   Its final long-form derivation, if one comes, is the text to score; until

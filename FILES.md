@@ -1735,6 +1735,8 @@ willow/
 │   │   ├── prompt.md         The problem
 │   │   ├── questions/
 │   │   │   ├── author.txt    the author's questions, one or more a step
+│   │   │   ├── blind-a.txt   the blind questions, as qwen3:8b wrote them
+│   │   │   ├── blind-a.txt.raw  qwen3:8b's reply, word for word
 │   │   │   ├── blind-prompt.txt  all the blind questions' writer was shown
 │   │   │   └── null.txt      physics off the chain, asked of the same stack
 │   │   ├── references/
