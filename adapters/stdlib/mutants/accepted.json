@@ -40,9 +40,6 @@
   "markdown": {
     "04ddd02130a6": "FENCE matches a run of one repeated character (`{3,} or ~{3,}), so a fence's first and second characters are always the same; comparing either gives the same result."
   },
-  "mcp-lite": {
-    "0422b2185389": "A propose refusal's reason after its first colon; a maxsplit of 2 differs only when the reason holds a second colon."
-  },
   "misquote": {
     "101d4093cf32": "The where column's cap: every row of misquote's report has the same place, the closest passage, so the column is that place's width whatever the cap, and no row is padded."
   },
