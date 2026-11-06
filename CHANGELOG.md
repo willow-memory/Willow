@@ -1856,7 +1856,7 @@ says how). The first was v0.1.0.
   searching. Every rule moved, none changed; four lessons added where they
   belong (leave the checkout alone while create_pr.py runs; a dry run that
   serves nothing tests nothing after the kernel; the kernel's echo rule,
-  exactly; a box's words list is its owner's alone).
+  exactly; a box's words list is its owner's alone). (#258)
 - `test-impact`: the add-on test files a change reaches run as up to four
   steps, one a minute of their past times, and `--jobs` starts the longest
   steps first; restack and ci together, 22 reached files and two add-ons'
