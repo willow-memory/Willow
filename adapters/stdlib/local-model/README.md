@@ -44,6 +44,13 @@ without `--model`, the first model that server lists. A server whose list
 doesn't answer is asked only when it is the one `--url` and you name the
 model too.
 
+`--system FILE` (a voice before the rule) and `--reasoning
+none|low|medium|high` (how much a thinking model thinks first) go to
+openai-compatible's ask as they are, and mean what its card says. The
+second is `reasoning_effort` in the request, a setting a server may
+ignore; on Ollama 0.40.14, `none` stopped qwen3:8b's thinking, where
+"/no_think" in a system file and `think: false` didn't.
+
 **Built in stdlib.** The idea was filed as needing an install: a local
 model server. That server is a program you run, not a package this
 imports, and it is reached over HTTP with Python's own library, as

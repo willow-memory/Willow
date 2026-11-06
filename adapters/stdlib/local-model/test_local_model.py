@@ -283,3 +283,26 @@ def test_a_bad_command_line_is_refused(box, server):
         got = run(*argv)
         assert got.returncode == 2 and "local_model.py" in got.stderr, argv
     assert server.sent == []
+
+
+def test_system_and_reasoning_go_to_openai_compatibles_ask(box, server, tmp_path):
+    voice = tmp_path / "voice.txt"
+    voice.write_text("Speak softly.\n")
+    got = run("ask", "--box", box, "--url", server.url, "--system", voice,
+              "--reasoning", "none", *NOW, "what goes in biscochitos")  # fmt: skip
+    assert got.returncode == 0, got.stdout + got.stderr
+    (body,) = server.sent
+    assert body["reasoning_effort"] == "none"
+    assert body["messages"][0]["content"].startswith("Speak softly.\n\nAnswer only")
+    got = run(
+        "ask", "--box", box, "--url", server.url, *NOW, "what goes in biscochitos"
+    )
+    assert got.returncode == 0
+    assert "reasoning_effort" not in server.sent[1]
+
+
+def test_a_reasoning_effort_not_on_the_list_is_refused_before_any_server(box, server):
+    got = run("ask", "--box", box, "--url", server.url, "--reasoning", "max", *NOW,
+              "what goes in biscochitos")  # fmt: skip
+    assert got.returncode == 2 and "local_model.py" in got.stderr
+    assert server.sent == [] and kinds(box) == ["boot"]
