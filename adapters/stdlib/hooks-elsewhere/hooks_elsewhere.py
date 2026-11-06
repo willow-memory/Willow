@@ -14,7 +14,7 @@ the host needs. The framed passages themselves are Claude Code's bytes.
 |---|---|---|
 | gemini-cli | BeforeAgent | JSON; Claude's block in additionalContext |
 | codex-cli | UserPromptSubmit | Claude's block as plain stdout |
-| opencode | UserPromptSubmit | same as Codex (Claude-compatible hooks) |
+| opencode | chat.message plugin (native), or UserPromptSubmit | Claude's block injected / as plain stdout |
 
 `--index` is passed through to Claude Code's hook (scan + index-cache). Exit
 codes, the kernel's: 0 answered (or nothing to say); 2 refused. `prompt`
@@ -49,9 +49,18 @@ HOSTS = {
     ),
     "opencode": (
         "OpenCode",
-        "~/.claude/settings.json or .claude/settings.json (Claude-compatible hooks), "
-        "or a plugin that runs this prompt command and injects its stdout",
+        ".opencode/plugins/willow-passages.js (native), or "
+        "~/.claude/settings.json for Claude-compatible hooks",
         "UserPromptSubmit",
+    ),
+}
+
+#: hosts whose prompt hook can only continue or block — never inject passages.
+NO_PROMPT = {
+    "cursor": (
+        "Cursor's beforeSubmitPrompt hook can only continue or block a prompt; "
+        "it cannot inject passages. Use MCP instead: "
+        "python adapters/stdlib/cursor/cursor.py --box DIR"
     ),
 }
 
@@ -108,14 +117,53 @@ def prompt(host: str, box: Path, stdin, index: Path | None = None) -> str:
     return wrap(host, body)
 
 
-def command_line(host: str, box: Path, index: Path | None = None) -> str:
-    """The shell command the host runs at each prompt."""
-    hk = claude()
+def argv(host: str, box: Path, index: Path | None = None) -> list[str]:
+    """The argv the host's hook or plugin runs at each prompt."""
     py = sys.executable or "python3"
     run = [py, str(HERE), "prompt", "--host", host, "--box", str(box.resolve())]
     if index is not None:
         run += ["--index", str(index.resolve())]
+    return run
+
+
+def command_line(host: str, box: Path, index: Path | None = None) -> str:
+    """The shell command the host runs at each prompt."""
+    hk = claude()
+    run = argv(host, box, index)
     return hk.command_line(run) if hk else " ".join(run)
+
+
+def opencode_plugin(box: Path, index: Path | None = None) -> str:
+    """A JS plugin for .opencode/plugins/ that injects Claude's framed answer."""
+    args = json.dumps(argv("opencode", box, index), ensure_ascii=False)
+    return (
+        "// willow-passages.js — save as .opencode/plugins/willow-passages.js\n"
+        "export const WillowPassages = async () => ({\n"
+        '  "chat.message": async (_input, output) => {\n'
+        "    const text = (output.parts || [])\n"
+        '      .filter((p) => p.type === "text" && !p.synthetic)\n'
+        "      .map((p) => p.text)\n"
+        '      .join("\\n")\n'
+        "      .trim();\n"
+        "    if (!text) return;\n"
+        '    const { spawn } = await import("node:child_process");\n'
+        f"    const args = {args};\n"
+        "    const body = await new Promise((resolve, reject) => {\n"
+        '      const child = spawn(args[0], args.slice(1), { stdio: ["pipe", "pipe", "pipe"] });\n'
+        '      let out = "";\n'
+        '      child.stdout.on("data", (d) => {\n'
+        "        out += d;\n"
+        "      });\n"
+        '      child.on("error", reject);\n'
+        '      child.on("close", () => resolve(out));\n'
+        "      child.stdin.write(JSON.stringify({ prompt: text }));\n"
+        "      child.stdin.end();\n"
+        "    });\n"
+        "    if (!String(body).trim()) return;\n"
+        '    output.parts.push({ type: "text", text: body, synthetic: true });\n'
+        "  },\n"
+        "});\n"
+    )
 
 
 def settings(host: str, box: Path, index: Path | None = None) -> dict:
@@ -135,17 +183,21 @@ def settings(host: str, box: Path, index: Path | None = None) -> dict:
 def setup(host: str, box: Path, index: Path | None = None) -> str:
     """What to paste, and where; with an index, the index-cache line too."""
     title, where, _ = HOSTS[host]
-    said = (
-        f"Add this to {where}:\n\n"
-        + json.dumps(settings(host, box, index), indent=2)
-        + "\n"
-    )
     if host == "opencode":
-        said += (
-            "\nOpenCode's native plugins are JavaScript; a plugin that runs the "
-            "`prompt` command above and injects its stdout (Claude's framed "
-            "passages) as synthetic text gets the same answer. Claude-compatible "
-            "hook runners paste the JSON as written.\n"
+        said = (
+            "Save this as .opencode/plugins/willow-passages.js "
+            "(native plugin; Claude's framed passages as synthetic text):\n\n"
+            + opencode_plugin(box, index)
+            + "\nOr, for Claude-compatible hook runners, add this to "
+            "~/.claude/settings.json (or .claude/settings.json):\n\n"
+            + json.dumps(settings(host, box, index), indent=2)
+            + "\n"
+        )
+    else:
+        said = (
+            f"Add this to {where}:\n\n"
+            + json.dumps(settings(host, box, index), indent=2)
+            + "\n"
         )
     if index is not None:
         hk = claude()
@@ -195,6 +247,9 @@ def main(argv: list[str], stdin=None) -> int:
         print(__doc__.split("\n\n")[1], file=sys.stderr)
         return kernel.REFUSED
     host, box = argv[2], Path(argv[4])
+    if host in NO_PROMPT:
+        print(f"refused: {NO_PROMPT[host]}", file=sys.stderr)
+        return kernel.REFUSED
     if host not in HOSTS:
         way = (
             "; Claude Code's way in is adapters/stdlib/claude-code"

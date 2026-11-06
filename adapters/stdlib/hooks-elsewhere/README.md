@@ -27,7 +27,12 @@ envelope the host needs. The framed passages inside are Claude's bytes.
 |---|---|---|
 | gemini-cli | BeforeAgent | JSON; Claude's block in `additionalContext` |
 | codex-cli | UserPromptSubmit | Claude's block as plain stdout |
-| opencode | UserPromptSubmit | the same (Claude-compatible hooks), or a plugin that injects that stdout |
+| opencode | `chat.message` plugin | Claude's block as synthetic text (native); Claude-compatible hooks get the same bytes as plain stdout |
+
+**Not Cursor.** Cursor's `beforeSubmitPrompt` hook can only continue or block
+a prompt; it has no field for injected context. `setup --host cursor` and
+`prompt --host cursor` refuse and point at [cursor](../cursor/) (MCP). Copilot
+and Windsurf stay MCP-only the same way, through [hosts](../hosts/).
 
 Empty when your files don't hold the question; one line when the folder
 couldn't be read. Always exits 0 once the command line is good, as Claude
