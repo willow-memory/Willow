@@ -10,6 +10,10 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `hooks-elsewhere` `setup --host opencode` prints a native OpenCode plugin
+  (save as `<.opencode/plugins/willow-passages.js>`) that injects Claude's
+  framed passages as synthetic text, and still offers the Claude-compatible
+  hook JSON for runners that take it (#251)
 - `.github/copilot-instructions.md` points Copilot at `AGENTS.md` (prose, like
   `GEMINI.md`); `agents-md-check` reads it too, and AGENTS.md tips that need
   REST for `gh pr create` are framed by capability, not by product (#250)
