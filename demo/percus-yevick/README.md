@@ -396,6 +396,8 @@ The fix, in arms.py and nothing else:
 - **Each arm written as it ends**, so a later failure can't lose the
   earlier ones.
 
+Frozen in [FROZEN-3.json](FROZEN-3.json), in commit 88958f6, alone.
+
 **Run without reasoning**, by the decision of the person running this study
 (2026-11-06): the arranged arm asks qwen3:8b with `reasoning_effort` none,
 and gemma3:4b, which has none. The side-by-side with reasoning on is
