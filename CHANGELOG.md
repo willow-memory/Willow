@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `hooks-elsewhere` refuses `--host cursor`: Cursor's `beforeSubmitPrompt`
+  can only continue or block a prompt, never inject passages; the card and
+  `hosts` point at the `cursor` MCP add-on instead (#252)
 - `hooks-elsewhere` `setup --host opencode` prints a native OpenCode plugin
   (save as `<.opencode/plugins/willow-passages.js>`) that injects Claude's
   framed passages as synthetic text, and still offers the Claude-compatible
