@@ -10,6 +10,11 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `jupyter`, `csv-rows`, `chats`, `mail` keep the mirror contract: a
+  notebook's passages at their cell, a table's rows on their lines (a quoted
+  cell's row over all of them), a WhatsApp message on its lines with its
+  continuations and a Telegram one by its id, an email's passages at their
+  message
 - `equations`, `subtitles` keep the mirror contract. An equation's passage is
   placed on the .tex file's lines from the paragraph before it to the end of
   the one after, and its citation line is held to cite a line among them; a

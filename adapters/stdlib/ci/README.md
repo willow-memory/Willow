@@ -231,7 +231,9 @@ each passage on its own line (markdown, latex, org, rst, asciidoc,
 code-comments, dotfiles); one that moves a line says both (a table's header
 moved onto its rule is `lines 8-9`); one that gathers a passage from several
 says them all (equations, from the paragraph before to the one after;
-subtitles, a cue from its timing line to its text).
+subtitles, a cue from its timing line to its text). One whose lines aren't
+the file's names its places: jupyter's `cell 4`, mail's `message 3`, a
+Telegram export's `message 4417`, and the `whole file` for a note about it.
 
 ## The report contract
 
