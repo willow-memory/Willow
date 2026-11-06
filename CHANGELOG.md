@@ -14,6 +14,11 @@ says how). The first was v0.1.0.
   this process`, for a program that asks the model and names no address (llm,
   MCP sampling), read only with its settings after it; sent-log says such a
   claim's place is not said, never this machine
+- `model-drift` freezes the settings it asked at, as the suggestions contract
+  says them, and `again` asks at the frozen ones: `freeze --reasoning` asks a
+  thinking model at a level, and a level is never read as drift. A file frozen
+  before is read as temperature 0, seed 0 and no reasoning, which it was asked
+  at; settings it can't ask at flag nothing (42)
 - `night-batch` keeps the suggestions contract (its card says `output:
   suggestions`, and test_contract.py asks it of a stand-in model), and takes
   `--reasoning` for each ask, refused before the first when it isn't one of
