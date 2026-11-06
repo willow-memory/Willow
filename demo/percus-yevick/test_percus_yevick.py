@@ -318,3 +318,12 @@ def test_arms_grades_the_expectations_against_the_kernels_finds():
 def test_arms_refuses_a_bad_command_line_and_a_work_folder_without_an_index(tmp_path):
     assert arms.main([]) == 2 and arms.main(["--work", "x"]) == 2
     assert arms.main(["--work", str(tmp_path), "--out", str(tmp_path / "o.json")]) == 2
+
+
+def test_arms_reads_a_model_and_its_reasoning():
+    import pytest
+
+    assert arms.variant("qwen3:8b") == ("qwen3:8b", "")
+    assert arms.variant("qwen3:8b@none") == ("qwen3:8b", "none")
+    with pytest.raises(SystemExit):
+        arms.variant("qwen3:8b@off")

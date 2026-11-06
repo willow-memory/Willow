@@ -23,7 +23,9 @@ named):
   what the stack backs, almost backs, or has no part of;
 - **found, then arranged:** each author question through local-model, a
   model on this machine answering only from the passages the kernel served,
-  for each of --models at --url; and same-way, each asked three times;
+  for each of --models at --url; and same-way, each asked three times. An
+  entry MODEL@none (or @low, @medium, @high) asks that model with that
+  reasoning, so qwen3:8b,qwen3:8b@none sets its reasoning beside none;
 - **model cards:** every card in models/ added to the box's record;
 - **expectations:** expectations.json graded against the kernel's finds.
 
@@ -254,6 +256,16 @@ def claims(box: Path, text: str) -> dict:
     }
 
 
+def variant(entry: str) -> tuple[str, str]:
+    """A --models entry: a model, or a model and its reasoning, MODEL@none.
+    The reasoning goes to the server as reasoning_effort; none given, none is
+    sent, and the model reasons as it does by default."""
+    model, _, reasoning = entry.partition("@")
+    if reasoning not in ("", "none", "low", "medium", "high"):
+        raise SystemExit(f"refused: {entry}: reasoning is none, low, medium or high")
+    return model, reasoning
+
+
 def arranged(
     box: Path, qs: list[dict], url: str, models: list[str], work: Path
 ) -> dict:
@@ -261,16 +273,18 @@ def arranged(
     asked = [q for q in qs if q["set"] != "null"]
     qfile = work / "arranged-questions.txt"
     qfile.write_text("".join(q["asked"] + "\n" for q in asked), encoding="utf-8")
-    for m in models:
+    for entry in models:
+        m, reasoning = variant(entry)
+        extra = ["--reasoning", reasoning] if reasoning else []
         rows = []
         for q in asked:
             got = tool("local-model/local_model.py", "ask", "--box", str(box), "--url", url, "--model", m,
-                       q["asked"], timeout=1800)  # fmt: skip
+                       *extra, q["asked"], timeout=1800)  # fmt: skip
             rows.append({"id": q["id"], "exit": got.returncode,
                          "said": (got.stdout or got.stderr).strip()[-400:]})  # fmt: skip
         same = tool("same-way/same_way.py", "--box", str(box), "--url", url, "--model", m,
-                    "--questions", str(qfile), timeout=3600)  # fmt: skip
-        out[m] = {
+                    *extra, "--questions", str(qfile), timeout=3600)  # fmt: skip
+        out[entry] = {
             "local-model": rows,
             "same-way": (same.stdout or same.stderr).strip().splitlines()[-1:],
         }
