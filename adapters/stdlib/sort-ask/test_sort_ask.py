@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import re
 import subprocess
 import sys
 import threading
@@ -101,7 +102,12 @@ def test_a_suggestion_cites_a_served_passage_and_waits_for_a_seal(tmp_path):
             ("sort/note.txt.txt", "health\n"),
         ]
         assert all(
-            len(r["cites"]) == 1 and "m on this machine reads" in r["claim"]
+            len(r["cites"]) == 1
+            and re.fullmatch(
+                rf"m at {re.escape(url)} \(temperature 0, seed 7\) read"
+                r" \S+ as (garden|health), from the passage it cited",
+                r["claim"],
+            )  # fmt: skip
             for r in rows
         )
         again = run(str(SCRIPT), "--box", str(b), "--categories", str(cats), "--model", "m",

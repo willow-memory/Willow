@@ -160,7 +160,9 @@ def main(argv: list[str]) -> int:
         "path": f"answers/{oc.slug(question)}.{oc.slug(into)}.md",
         "data": f"{reply}{SPLIT}{original['data'].strip()}\n",
         "cites": [c for c in original.get("cites", []) if c in served],
-        "claim": f"{model} at {url} translated {subj} into {into}",
+        "claim": oc.claim(
+            model, f"at {url}", oc.settings(oc.SEED), f"translated {subj} into {into}"
+        ),
     }
     with tempfile.TemporaryDirectory() as tmp:
         f = Path(tmp) / "translation.jsonl"

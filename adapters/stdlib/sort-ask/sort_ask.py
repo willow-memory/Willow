@@ -37,6 +37,7 @@ were asked and none fitted (populated), or the model wasn't reachable
 from __future__ import annotations
 
 import contextlib
+import importlib.util
 import io
 import ipaddress
 import json
@@ -54,6 +55,13 @@ import kernel  # noqa: E402
 
 sys.path.insert(0, str(HERE.parent / "sort"))
 import sort  # noqa: E402
+
+_spec = importlib.util.spec_from_file_location(
+    "willow_openai_compatible_for_sort_ask",
+    HERE.parent / "openai-compatible" / "openai_compatible.py",
+)
+oc = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(oc)  # its claim, the suggestions contract's one form
 
 NAME = "sort-ask"
 URL = "http://127.0.0.1:11434/v1"
@@ -262,7 +270,8 @@ def main(argv: list[str]) -> int:
             continue
         name, cite = got
         row = {"path": where_for(path), "data": name + "\n", "cites": [cite],
-               "claim": f"{opts['--model']} on this machine reads {path} as {name}, from the passage it cited"}  # fmt: skip
+               "claim": oc.claim(opts["--model"], f"at {url}", oc.settings(SEED),
+                                 f"read {path} as {name}, from the passage it cited")}  # fmt: skip
         with tempfile.TemporaryDirectory() as tmp:
             f = Path(tmp) / "suggestion.jsonl"
             f.write_text(json.dumps(row, ensure_ascii=False) + "\n", encoding="utf-8")

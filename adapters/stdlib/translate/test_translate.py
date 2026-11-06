@@ -128,7 +128,10 @@ def test_a_sealed_answer_is_translated_and_held_for_your_seal(box, server, tmp_p
     assert (
         prop["data"] == f"Manteca, no mantequilla, y anís [1].\n\nOriginal:\n\n{ANSWER}"
     )
-    assert prop["claim"] == f"gemma3:4b at {server.url} translated {subj} into Spanish"
+    assert prop["claim"] == (
+        f"gemma3:4b at {server.url} (temperature 0, seed 0) translated {subj} into"
+        " Spanish"
+    )
     original = json.loads((box / "proposals" / f"{subj[9:]}.json").read_text())
     assert prop["cites"] == original["cites"], "the original's passage, served again"
     assert rows(box)[-2]["kind"] == "bite" and rows(box)[-1]["verdict"] == "pass"

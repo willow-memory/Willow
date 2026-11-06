@@ -213,3 +213,10 @@ def test_within_a_pool_the_tallest_step_comes_first(tmp_path):
         page.index(f"- `{n} -- --box {{box}}`") for n in ("heavy", "light", "amounts")
     ]
     assert at == sorted(at), page
+
+
+def test_a_card_saying_report_among_its_outputs_prints_a_report(tmp_path):
+    for said, prints in (("report", True), ("report, suggestions", True),
+                         ("suggestions, report", True), ("suggestions", False)):  # fmt: skip
+        (tmp_path / "README.md").write_text(f"<!-- willow-addon\noutput: {said}\n-->\n")
+        assert st.prints_a_report(tmp_path / "x.py") is prints, said

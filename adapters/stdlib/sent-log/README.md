@@ -24,12 +24,17 @@ Which of your passages went to which model, and where to, read from the record.
 assistant names that hash in what it proposes, and nothing the kernel
 writes names a model: a `proposal` row holds its subject, verdict and the bite
 it answered, and its `who` is the kernel's, whoever made the suggestion. So
-this reads the one place a model is named, the proposal's `claim`. For
-[openai-compatible](../openai-compatible/) that is "MODEL at URL answered from
-N of the M passages served". It is read from the proposal file only when that
+this reads the one place a model is named, the proposal's `claim`, in the
+suggestions contract's one form, read by
+[openai-compatible](../openai-compatible/)'s `read_claim`: "MODEL at URL
+(temperature 0, seed 0) answered from N of the M passages served", or
+"FILE in this process (...)". Every proposer that keeps the contract is
+named (openai-compatible, local-model, translate, sort-ask, in-process),
+with the settings it was asked at, and a claim from before the settings
+were said still reads. It is read from the proposal file only when that
 file is the bytes the subject hashes (otherwise it's `broken`, not read), and
 the passages are the ones the proposal's bite served, minus any marked echo,
-which that add-on never sends. `went` is said only when the claim's M equals
+which that add-on never sends. `went` is said only when the claim counts its passages and its M equals
 that count; otherwise the passages are `served, may have gone`. A loopback
 address is `this machine`; any other host is `online: HOST`.
 

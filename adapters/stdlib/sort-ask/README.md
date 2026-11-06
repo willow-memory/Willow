@@ -6,8 +6,8 @@ added: 2026-11-03
 writes: record
 network: loopback
 role: suggests
-uses: sort
-output: report
+uses: openai-compatible, sort
+output: report, suggestions
 -->
 # sort-ask
 
@@ -41,7 +41,9 @@ example's name.
 **Only a model here.** URL is Ollama's http://127.0.0.1:11434/v1 unless you
 give another, and one off this machine (anything but a loopback address or
 localhost) is refused before anything is sent. Asked at temperature 0 with
-a fixed seed.
+a fixed seed, and its claim says so, in the suggestions contract's one form:
+`MODEL at URL (temperature 0, seed 7) read FILE as CATEGORY, from the
+passage it cited`.
 
 **What goes to the door.** An answer naming one of your categories (case
 aside) and citing a passage the bite served is proposed: the file, the

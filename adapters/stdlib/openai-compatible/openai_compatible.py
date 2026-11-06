@@ -62,6 +62,17 @@ OPTS = ("--box", "--url", "--model", "--system", "--reasoning", "--now")
 #: the values `--reasoning` takes, sent as the request's `reasoning_effort`
 REASONING = ("none", "low", "medium", "high")
 SEED = 0
+#: the suggestions contract (adapters/stdlib/ci/README.md): every add-on that
+#: proposes a model's reply for your seal says in its claim who answered,
+#: where, at what settings and what it did, in this one form, so a person
+#: reading the record, and sent-log, read each proposer's the same way:
+#: "gemma at http://127.0.0.1:8080/v1 (temperature 0, seed 0) answered from
+#: 1 of the 2 passages served". A claim from before the settings were said
+#: reads too, with none.
+CLAIM = re.compile(
+    r"(?P<who>\S.*?) (?P<where>at (?P<url>\S+)|in this process)"
+    r"(?: \((?P<settings>[a-z]+ [^,()]+(?:, [a-z]+ [^,()]+)*)\))? (?P<did>\S.*)"
+)
 
 
 def parse(argv: list[str]) -> tuple[dict, str] | None:
@@ -84,6 +95,35 @@ def parse(argv: list[str]) -> tuple[dict, str] | None:
     if words[0].startswith("--") or not words[0].strip():
         return None
     return opts, words[0]
+
+
+def settings(seed: int, reasoning: str = "", voice: str = "") -> list[tuple[str, str]]:
+    """What a reply was asked at, as a claim says it: the temperature and seed
+    always, the reasoning when one was asked for, and the voice's SHA-256 when
+    one was sent, since each can change what the model says."""
+    out = [("temperature", "0"), ("seed", str(seed))]
+    if reasoning:
+        out.append(("reasoning", reasoning))
+    if voice.strip():
+        out.append(("system", f"sha256 {kernel.h256(voice)}"))
+    return out
+
+
+def claim(who: str, where: str, asked_at: list[tuple[str, str]], did: str) -> str:
+    """A suggestion's claim in the contract's one form."""
+    said = ", ".join(f"{k} {v}" for k, v in asked_at)
+    return f"{who} {where} ({said}) {did}"
+
+
+def read_claim(text: str) -> dict | None:
+    """A claim in the contract's form as its parts (`settings` a dict, empty
+    for a claim from before they were said), or None for any other claim."""
+    m = CLAIM.fullmatch(text)
+    if not m:
+        return None
+    pairs = (s.split(" ", 1) for s in (m["settings"] or "").split(", ") if s)
+    return {"who": m["who"], "where": m["where"], "url": m["url"],
+            "settings": dict(pairs), "did": m["did"]}  # fmt: skip
 
 
 def messages(question: str, served: list[dict], voice: str = "") -> list[dict]:
@@ -182,8 +222,12 @@ def ask(opts: dict, question: str) -> int:
         "path": f"answers/{slug(question)}.md",
         "data": reply.strip() + "\n",
         "cites": cites,
-        "claim": f"{opts['--model']} at {opts['--url']} answered from"
-        f" {len(cites)} of the {len(served)} passages served",
+        "claim": claim(
+            opts["--model"],
+            f"at {opts['--url']}",
+            settings(SEED, opts.get("--reasoning", ""), voice),
+            f"answered from {len(cites)} of the {len(served)} passages served",
+        ),
     }
     with tempfile.TemporaryDirectory() as tmp:
         f = Path(tmp) / "suggestion.jsonl"

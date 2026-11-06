@@ -238,6 +238,34 @@ aren't done.
     python adapters/stdlib/ci/reports.py scaffold NAME...
     python adapters/stdlib/ci/reports.py check NAME...
 
+## The suggestions contract
+
+An add-on that asks a model and proposes its reply for your seal says, in
+the proposal's `claim`, who answered, where, at what settings and what it
+did, in one form, so the record reads the same whichever add-on asked. Its
+card says `output: suggestions` (`output: report, suggestions` for one that
+prints a report too).
+
+    gemma at http://127.0.0.1:8080/v1 (temperature 0, seed 0, reasoning low) answered from 1 of the 2 passages served
+    qwen.gguf in this process (weights sha256 9c1e…, temperature 0, seed 0) answered from 1 of the 2 passages served
+
+- **who**: the model's name as asked for, or the weights file's name;
+- **where**: `at URL`, or `in this process`;
+- **settings**, in brackets, each a name and its value with commas
+  between: the temperature and the seed always; the reasoning when one was
+  asked for; a `--system` voice by its SHA-256; the weights by theirs;
+- **what it did**: `answered from N of the M passages served`, `translated
+  proposal:… into LANGUAGE`, `read FILE as CATEGORY, from the passage it
+  cited`.
+
+[openai-compatible](../openai-compatible/)'s `claim()` writes it and
+`read_claim()` reads it, a claim from before the settings were said too
+(with none); [sent-log](../sent-log/) reads every proposer's through it.
+`adapters/stdlib/ci/test_contract.py` asks each stdlib add-on whose card
+says it of a stand-in model on 127.0.0.1 and holds each proposal's claim to
+the form; in-process, a deps add-on, is held by its own tests. A claim is the
+proposer's own words, never an attested card.
+
 **The guard:** the add-ons' tests, and each deps add-on's, run with
 [guard/sitecustomize.py](guard/sitecustomize.py) on `PYTHONPATH`, so it is
 loaded into every Python process they start. It holds each add-on to its
