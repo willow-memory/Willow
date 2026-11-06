@@ -340,3 +340,8 @@ def test_each_passage_is_placed_from_its_lead_in_to_its_sentence_after():
         "1": "lines 4-10",
         "6": "line 12",
     }
+
+
+def test_a_lead_in_with_no_blank_line_is_placed_from_its_first_line():
+    ((p, a, b),) = mod.placed(b"A\nlead in\n\\[ k = 1 \\]\n", "a.tex")
+    assert p == "a.tex line 3\nA lead in\nk = 1" and (a, b) == (1, 3)
