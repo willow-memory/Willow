@@ -1880,6 +1880,12 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- `sort-ask` asks through openai-compatible's `ask_model`, which takes a
+  `seed`, rather than a copy of its own: one request to change, as #259's
+  `--reasoning` had to be put into both. Its seed is still 7, so its answers
+  are the ones it gave; it now waits up to fifteen minutes, as
+  openai-compatible does, rather than ten, and sends `OPENAI_API_KEY` when
+  it's set, to the server on this machine it already only asks
 - `test-impact`: the add-on test files a change reaches run as up to four
   steps, one a minute of their past times, and `--jobs` starts the longest
   steps first; restack and ci together, 22 reached files and two add-ons'

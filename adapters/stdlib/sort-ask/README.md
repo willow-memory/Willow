@@ -40,8 +40,9 @@ example's name.
 
 **Only a model here.** URL is Ollama's http://127.0.0.1:11434/v1 unless you
 give another, and one off this machine (anything but a loopback address or
-localhost) is refused before anything is sent. Asked at temperature 0 with
-a fixed seed, and its claim says so, in the suggestions contract's one form:
+localhost) is refused before anything is sent. Asked through
+[openai-compatible](../openai-compatible/)'s ask, at temperature 0 with its
+own fixed seed (7), and its claim says so, in the suggestions contract's one form:
 `MODEL at URL (temperature 0, seed 7) read FILE as CATEGORY, from the
 passage it cited`.
 

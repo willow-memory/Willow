@@ -149,10 +149,14 @@ def cited(reply: str, served: list[dict]) -> list[str]:
     return out
 
 
-def ask_model(url: str, model: str, chat: list[dict], reasoning: str = "") -> str:
-    """The reply's text from URL's /chat/completions. With `reasoning`, the
-    request asks for that `reasoning_effort`; without, it names none."""
-    body = {"model": model, "messages": chat, "temperature": 0, "seed": SEED}
+def ask_model(
+    url: str, model: str, chat: list[dict], reasoning: str = "", *, seed: int = SEED
+) -> str:
+    """The reply's text from URL's /chat/completions, at temperature 0 and
+    `seed` (this add-on's own unless another's is given: sort-ask's). With
+    `reasoning`, the request asks for that `reasoning_effort`; without, it
+    names none."""
+    body = {"model": model, "messages": chat, "temperature": 0, "seed": seed}
     if reasoning:
         body["reasoning_effort"] = reasoning
     headers = {"Content-Type": "application/json"}

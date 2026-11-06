@@ -37,6 +37,7 @@ def model(replies: dict[str, str]):
         def do_POST(self):  # noqa: N802
             body = json.loads(self.rfile.read(int(self.headers["Content-Length"])))
             user = body["messages"][-1]["content"]
+            assert (body["temperature"], body["seed"]) == (0, 7), "sort-ask's own seed"
             asked.append(user)
             text = next((r for k, r in replies.items() if f"File: {k}" in user), "NONE")
             out = json.dumps({"choices": [{"message": {"content": text}}]}).encode()

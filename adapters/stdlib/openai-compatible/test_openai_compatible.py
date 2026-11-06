@@ -312,3 +312,17 @@ def test_a_claim_from_before_the_settings_were_said_still_reads():
     assert there["where"] == "in this process" and there["url"] is None
     assert oc.read_claim("the garden notes") is None and oc.read_claim("") is None
     assert oc.read_claim("gemma at x (temperature) did")["settings"] == {}
+
+
+def test_another_add_ons_seed_goes_in_its_place(box, model):
+    model.reply = "ok"
+    assert oc.ask_model(model.url, "m", [], seed=7) == "ok"
+    assert oc.ask_model(model.url, "m", [], "low", seed=7) == "ok"
+    first, second = (body for _, body in model.sent)
+    assert first["seed"] == 7 and list(first) == [
+        "model",
+        "messages",
+        "temperature",
+        "seed",
+    ]
+    assert second["seed"] == 7 and second["reasoning_effort"] == "low"

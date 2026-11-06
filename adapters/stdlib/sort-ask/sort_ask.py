@@ -23,7 +23,8 @@ suggestion standing for it yet:
    passage. Anything else is said and proposed to no one.
 
 Nothing is placed here: a suggestion waits for your seal, and a seal is the
-correction your record keeps. Asked at temperature 0 with a fixed seed.
+correction your record keeps. Asked through openai-compatible's ask, at
+temperature 0 with its own fixed seed.
 `--limit N` asks about the first N such files (in sort's order), since a
 small model on a laptop takes seconds a file.
 
@@ -44,9 +45,7 @@ import json
 import re
 import sys
 import tempfile
-import urllib.error
 import urllib.parse
-import urllib.request
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -61,7 +60,7 @@ _spec = importlib.util.spec_from_file_location(
     HERE.parent / "openai-compatible" / "openai_compatible.py",
 )
 oc = importlib.util.module_from_spec(_spec)
-_spec.loader.exec_module(oc)  # its claim, the suggestions contract's one form
+_spec.loader.exec_module(oc)  # its ask and its claim, the suggestions contract's
 
 NAME = "sort-ask"
 URL = "http://127.0.0.1:11434/v1"
@@ -125,16 +124,6 @@ def answer(reply: str, cats: dict, served: list[dict]) -> tuple[str, str] | None
     if name is None or not 1 <= i <= len(served):
         return None
     return name, served[i - 1]["id"]
-
-
-def ask_model(url: str, model: str, chat: list[dict]) -> str:
-    body = {"model": model, "messages": chat, "temperature": 0, "seed": SEED}
-    req = urllib.request.Request(url.rstrip("/") + "/chat/completions",
-                                 data=json.dumps(body).encode("utf-8"),
-                                 headers={"Content-Type": "application/json"})  # fmt: skip
-    with urllib.request.urlopen(req, timeout=600) as r:
-        doc = json.loads(r.read().decode("utf-8"))
-    return doc["choices"][0]["message"]["content"]
 
 
 def asked(box: Path) -> set[str]:
@@ -258,7 +247,9 @@ def main(argv: list[str]) -> int:
             skipped.append((path, "none of its passages was served"))
             continue
         try:
-            reply = ask_model(url, opts["--model"], messages(cats, path, served))
+            reply = oc.ask_model(
+                url, opts["--model"], messages(cats, path, served), seed=SEED
+            )
         except (OSError, ValueError, KeyError, IndexError, TypeError) as e:
             say(report(NAME, "unreachable", f"{url} didn't answer ({e.__class__.__name__}); "
                        f"{len(made)} suggested before it stopped", [("suggested", made)]), as_json)  # fmt: skip
