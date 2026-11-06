@@ -16,6 +16,7 @@ willow/
 ├── CONTRIBUTING.md           the rules every change follows, and how to show it does
 ├── AGENTS.md                 for AI agents: what CI catches when CONTRIBUTING is missed
 ├── CLAUDE.md                 one line: read AGENTS.md
+├── GEMINI.md                 points Gemini CLI at AGENTS.md (no @ import there)
 ├── CODE_OF_CONDUCT.md        how we treat each other
 ├── SECURITY.md               what counts as a security problem, and how to report it in public
 ├── CHANGELOG.md              what changed, by pull request, and each release
@@ -84,7 +85,7 @@ willow/
 │   │   │   ├── test_agent_transcript.py
 │   │   │   └── README.md
 │   │   ├── agents-md-check/
-│   │   │   ├── agents_md_check.py   the commands and paths AGENTS.md or CLAUDE.md name that the repo no longer has
+│   │   │   ├── agents_md_check.py   the commands and paths AGENTS.md, CLAUDE.md, GEMINI.md or copilot-instructions.md name that the repo no longer has
 │   │   │   ├── test_agents_md_check.py
 │   │   │   └── README.md
 │   │   ├── aider/
@@ -371,6 +372,10 @@ willow/
 │   │   │   ├── emacs.py          an M-x willow command: answers in a grep-mode buffer
 │   │   │   ├── test_emacs.py
 │   │   │   └── README.md
+│   │   ├── equations/
+│   │   │   ├── equations.py  Each displayed equation in LaTeX sources as a passage of its own, with the sentences around it and its label, cited by the .tex file's line
+│   │   │   ├── test_equations.py
+│   │   │   └── README.md     its card
 │   │   ├── evernote/
 │   │   │   ├── evernote.py   an Evernote .enex export as its notes: title, notebook, dates, tags, source, attachments and text
 │   │   │   ├── test_evernote.py
@@ -527,6 +532,10 @@ willow/
 │   │   │   ├── hook_stop.py   a Stop hook: the record verifies and the work is committed
 │   │   │   ├── test_hook_stop.py
 │   │   │   └── README.md
+│   │   ├── hooks-elsewhere/
+│   │   │   ├── hooks_elsewhere.py The prompt hook for Gemini CLI, Codex and opencode, wherever they take hooks, held to Claude Code's answer byte for byte
+│   │   │   ├── test_hooks_elsewhere.py
+│   │   │   └── README.md     its card
 │   │   ├── horoscope/
 │   │   │   ├── horoscope.py  a daily reading picked by the SHA-256 of name and date
 │   │   │   ├── test_horoscope.py
@@ -1833,7 +1842,8 @@ willow/
 │   │   └── config.yml        links to the contributing rules, the languages and the add-on ideas
 │   ├── pull_request_template.md  what a pull request says, and what to check before opening one
 │   ├── dependabot.yml        weekly updates for the workflow's actions, never the add-ons' pins
-│   └── secret_scanning.yml   keeps the redteam demo's planted, fake credentials out of secret scanning
+│   ├── secret_scanning.yml   keeps the redteam demo's planted, fake credentials out of secret scanning
+│   └── copilot-instructions.md  points Copilot at AGENTS.md (no @ import there)
 ├── .gitignore                generated files and build output
 ├── .gitattributes            every file checked out with LF line endings, on every system
 ├── .editorconfig             the same line endings and indents, for editors

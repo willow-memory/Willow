@@ -10,6 +10,25 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `hooks-elsewhere` `setup --host opencode` prints a native OpenCode plugin
+  (save as `<.opencode/plugins/willow-passages.js>`) that injects Claude's
+  framed passages as synthetic text, and still offers the Claude-compatible
+  hook JSON for runners that take it (#251)
+- `.github/copilot-instructions.md` points Copilot at `AGENTS.md` (prose, like
+  `GEMINI.md`); `agents-md-check` reads it too, and AGENTS.md tips that need
+  REST for `gh pr create` are framed by capability, not by product (#250)
+
+- `equations`: each displayed equation in LaTeX sources as a passage of its
+  own, the math as its source writes it, with its labels, its .tex line and
+  the sentences around it, so a question finds an equation by what its paper
+  says about it; the latex add-on keeps the prose and drops the math. (#248)
+- `hooks-elsewhere`: Gemini CLI, Codex and OpenCode get cited passages at each prompt, held to `claude-code`'s framed answer byte for byte (`setup --host` / `prompt --host`); MCP stays `hosts` (#247)
+- `GEMINI.md` points Gemini CLI at `AGENTS.md` (prose, since Gemini has no
+  `@` import like Claude Code's `CLAUDE.md`); `agents-md-check` reads it too (#247)
+- Assistants' two ways in, named on `hosts`, `claude-code`, `gemini-cli` and
+  the Assistants section of ADDONS.md: MCP tools any host can call, and a
+  prompt hook that cites passages where the host allows it (`claude-code`
+  today; `hooks-elsewhere` for the rest) (#247)
 - `ci`'s `adapters/stdlib/ci/realdata.py run NAME` runs an add-on's COMMANDS
   line on every demo person's real folder, under the guard, failing on a
   traceback, a breach, a hang or an odd exit; create_pr.py runs it for each
@@ -1833,6 +1852,11 @@ says how). The first was v0.1.0.
   kernel's no-network test III.1 and III.5, the guard and the add-on cards
   II.1, and the generated pages VI.6. Their answers in `constitution/reach.json` go. (#4)
 
+### Fixed
+
+- `mcp-lite`: parse a propose refusal with `partition` instead of a maxsplit
+  `split`, so the accepted inert mutant is gone (same as `mcp-sampling`) (#257)
+
 ### Changed
 
 - `test-impact`: the add-on test files a change reaches run as up to four
@@ -2095,6 +2119,14 @@ says how). The first was v0.1.0.
   that was 74 passages and 19,047 words never read; now none. A sentence of
   500 characters or fewer is written as before, and google-privacy's mirrors
   are the same bytes
+- `local-model`: the test that no server on the usual ports means 42 no
+  longer sends a real question to whatever model runs on this machine; it
+  points the usual ports at ones just bound and closed, and asserts 42
+  every time, not only when nothing happened to answer (#255)
+- `latex` reads a file holding a stray byte of another encoding as
+  Windows-1252, else Latin-1, rather than skipping it whole: Santos's lecture
+  notes on arXiv (1310.5578), ASCII but for one en dash, gave no prose. A
+  file holding a NUL byte (UTF-16, or a binary) is still skipped and counted. (#249)
 - `github`'s create_pr.py tries a push or an open GitHub answers with an
   error again, after 2, 4, 8 and 16 seconds, and looks for the pull request
   before each new open: GitHub answered #236's with a 502 and opened it,

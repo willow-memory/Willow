@@ -10,8 +10,13 @@ uses: hosts
 -->
 # gemini-cli
 
-Google's Gemini CLI, asking your own folder and handing in suggestions for you to
-approve, through [mcp-lite](../mcp-lite/): nothing to install.
+The **MCP** way in for Gemini CLI (see [hosts](../hosts/)): it asks your
+own folder and hands in suggestions for you to approve, through
+[mcp-lite](../mcp-lite/). Nothing to install. At the repo root,
+[GEMINI.md](../../../GEMINI.md) tells Gemini CLI to read
+[AGENTS.md](../../../AGENTS.md) (Gemini has no `@` import), so the agent
+rules stay one copy. The prompt-hook way in is
+[hooks-elsewhere](../hooks-elsewhere/) (`setup --host gemini-cli`).
 
     python adapters/stdlib/gemini-cli/gemini_cli.py --box DIR
 

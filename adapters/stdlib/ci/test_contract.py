@@ -209,6 +209,10 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         })
     )}),
     "dotfiles": ("dotfiles.py", {"bashrc": b"export EDITOR=nvim\nalias ll='ls -la'\n"}),
+    "equations": ("equations.py", {"main.tex": (
+        b"\\documentclass{article}\n\\begin{document}\nThe tide obeys\n\\begin{equation}\ny = mx + b \\label{eq:tide}\n\\end{equation}\n"
+        b"at every harbour.\n\\end{document}\n"
+    )}),
     "evernote": ("evernote.py", {"Garden.enex": (
         b'<?xml version="1.0" encoding="UTF-8"?><en-export export-date="20240306T000000Z"><note><title>Allotment plan</title>'
         b'<content><![CDATA[<?xml version="1.0" encoding="UTF-8"?><en-note><div>Plot 14 gets the beans.</div><div><en-todo checked="true"/>Order seed</div><div><en-todo/>Fix the gate</div></en-note>]]></content>'
@@ -672,6 +676,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "hook-shell": ("hook_shell.py", ["split", "ls -la"]),
     "hook-start": ("hook_start.py", ["--box", "{box}", *NOW]),
     "hook-stop": ("hook_stop.py", ["check", "--box", "{box}", "--repo", "{tmp}"]),
+    "hooks-elsewhere": ("hooks_elsewhere.py", ["list"]),
     "horoscope": ("horoscope.py", ["Ana", "--date", "2026-10-24"]),
     "hosts": ("hosts.py", ["list"]),
     "hours": ("hours.py", ["--box", "{box}"]),
