@@ -190,6 +190,27 @@ keeps the readers' contract (the summary line, the same bytes twice,
 originals untouched, hidden files unread, 42 for nothing to read, refusals
 that write nothing). A new add-on with a command line has to be listed there.
 
+## The copies
+
+An add-on holds alone and shares only the kernel, so the same function
+lives in many of them: a reader's `_sources`, a report's `report_text`, a
+language pack's `kept`. [copies.py](copies.py) finds the copies that drifted
+from the rest, which is where a fix made in one place and not the others
+hides:
+
+    python adapters/stdlib/ci/copies.py survey [--json]
+    python adapters/stdlib/ci/copies.py diff NAME
+
+`survey` groups every add-on's top-level functions by name and finds each
+group's common version, the one most copies hold, read as Python reads it
+(formatting, comments and the docstring aside). A copy that still holds most
+of its lines and isn't it has drifted, and is a row of the report; one that
+holds less is another function sharing the name, and is counted, not
+reported. `diff NAME` prints each drifted copy's lines against the common
+version, as a unified diff. Which is right is a person's call: almanac's
+`_sources` reads only `catalog.json` on purpose, and a drift can be the fix
+the others lack.
+
 ## The report contract
 
 An add-on that tells you what it found in your files (a check, an audit, a

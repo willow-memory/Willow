@@ -13,6 +13,12 @@ too. The first release was v0.1.0.
 
 ### Added
 
+- `ci`'s `adapters/stdlib/ci/copies.py`: the functions add-ons keep their own
+  copy of, grouped by name, each group's common version, and the copies that
+  drifted from it, as a report (`survey`) and as unified diffs (`diff NAME`).
+  On main it finds 7 functions with a drifted copy, 58 copies in all, among
+  them sort-ask's `kernel_says`, which alone of four also captures stderr;
+  most are on purpose, a reader's `_sources` that reads one kind of file
 - `llm-cli`: suggestions through Simon Willison's `llm` command — bite first,
   only served passages go to the model any of its plugins reach, propose a
   cited reply; llm's log names the model (#253)
