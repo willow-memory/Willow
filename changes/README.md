@@ -35,6 +35,10 @@ two files, each its own name after the branch's:
 ## What holds it
 
 `adapters/stdlib/ci/changelog.py` refuses a pull request that changed more
-than the docs and has no entry, and CI runs it on every pull request.
+than the docs and has no entry, and one that adds an entry to CHANGELOG.md
+itself, saying which fragment to write instead; CI runs it on every pull
+request. A branch written the old way is fixed by
+`adapters/stdlib/restack/restack.py`, which moves its new entries here when
+it merges main in.
 FILES.md lists this folder and this README, not the entries, which come and
 go with every pull request.
