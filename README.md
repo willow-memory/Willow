@@ -126,11 +126,11 @@ says how to pick one up:
 <!-- willow:front show=pick week=2026-W45 -->
 **Add-on of the week**
 
-**[mcp](adapters/deps/mcp/)** — Lets any MCP client, such as an AI assistant or editor, ask your folder and hand in suggestions.
+**[joplin](adapters/stdlib/joplin/)** — Joplin's .jex export, read without unpacking it: each note as plain text with its title and dates.
 
-*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 332 built add-ons in name order.*
+*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 333 built add-ons in name order.*
 
-[Every add-on, 332 built of 522, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 333 built of 522, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 
@@ -316,7 +316,7 @@ willow/
 ├── ports/                    kernel.py rewritten in other languages
 ├── vectors/                  what keeps the six implementations identical
 ├── demo/                     four made-up people, and one real bug, to try it on
-├── docs/                     the full first five minutes, and how it works in full
+├── docs/                     the full first five minutes, how it works in full, and agents' how-tos
 ├── .github/                  CI, the issue forms, the pull request template: the GitHub add-on's
 ├── .gitignore                generated files and build output
 ├── .gitattributes            every file checked out with LF line endings, on every system

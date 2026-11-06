@@ -17,6 +17,11 @@ Assistants reach willow two ways:
 | **MCP** | tools it calls when it asks: `ask`, `suggest`, `waiting` | this add-on, and each thin wrapper over it |
 | **Prompt hook** | cited passages from your folder with each prompt, framed as data | [claude-code](../claude-code/); [hooks-elsewhere](../hooks-elsewhere/) for Gemini CLI, Codex and OpenCode |
 
+Cursor, Copilot and Windsurf are MCP-only for cited context: Cursor's
+`beforeSubmitPrompt` can continue or block a prompt, never inject passages
+([hooks-elsewhere](../hooks-elsewhere/) refuses `--host cursor` and names
+this).
+
 Neither way can approve: every suggestion waits for your seal
 (`python kernel.py seal`). Instruction files stay one copy in
 [AGENTS.md](../../../AGENTS.md); [CLAUDE.md](../../../CLAUDE.md) imports

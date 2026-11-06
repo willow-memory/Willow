@@ -10,6 +10,12 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `llm-cli`: suggestions through Simon Willison's `llm` command — bite first,
+  only served passages go to the model any of its plugins reach, propose a
+  cited reply; llm's log names the model (#253)
+- `hooks-elsewhere` refuses `--host cursor`: Cursor's `beforeSubmitPrompt`
+  can only continue or block a prompt, never inject passages; the card and
+  `hosts` point at the `cursor` MCP add-on instead (#252)
 - `hooks-elsewhere` `setup --host opencode` prints a native OpenCode plugin
   (save as `<.opencode/plugins/willow-passages.js>`) that injects Claude's
   framed passages as synthetic text, and still offers the Claude-compatible
@@ -1854,11 +1860,22 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- test_docs.py asks git for the repo's files once a run, not once a doc: 61 s
+  to 5 s, the same answers for every doc; restack's tests, which run it three
+  times in a scratch copy, 4:17 to 1:05, so restack's mutants no longer time
+  out at 600 s in CI's mutants-reach (#261)
 - `mcp-lite`: parse a propose refusal with `partition` instead of a maxsplit
   `split`, so the accepted inert mutant is gone (same as `mcp-sampling`) (#257)
 
 ### Changed
 
+- `AGENTS.md` is a third as long: what every agent needs before a change (the
+  Never list, set up, what to run after a change), and a paragraph a job
+  pointing at its page in `docs/agents/`: add-ons, studies, pull requests,
+  searching. Every rule moved, none changed; four lessons added where they
+  belong (leave the checkout alone while create_pr.py runs; a dry run that
+  serves nothing tests nothing after the kernel; the kernel's echo rule,
+  exactly; a box's words list is its owner's alone). (#258)
 - `test-impact`: the add-on test files a change reaches run as up to four
   steps, one a minute of their past times, and `--jobs` starts the longest
   steps first; restack and ci together, 22 reached files and two add-ons'

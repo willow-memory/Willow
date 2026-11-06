@@ -4,7 +4,7 @@
     python adapters/stdlib/ci/realdata.py run --base REF
 
 An add-on can pass every test on hand-made files and still be wrong on a
-real folder (AGENTS.md, an add-on step by step, 8). That step was done by
+real folder (docs/agents/add-ons.md, step 8). That step was done by
 hand in each session, and said in the pull request as "Real data: ...".
 
 `run` makes each demo person's files (demo/PERSON/make_life.py writes
