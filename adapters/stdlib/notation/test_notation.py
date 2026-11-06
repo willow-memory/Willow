@@ -237,10 +237,12 @@ def test_each_passage_is_placed_as_the_mirror_contract_says(tmp_path):
     eqs = mod.equations.places(mod.equations.placed(PAPER, "p/main.tex"))
     assert list(doc["places"].values()) == list(eqs.values())
     assert list(doc["places"].values()) == ["lines 2-12", "lines 14-17"]
-    sys.path.insert(0, str(HERE.parent / "ci"))
-    import mirrors
-
-    assert mirrors.check(tmp_path / "src", out) == []
+    # each key is a line a passage starts on, as the kernel cuts paragraphs
+    # (ci/mirrors.py checks the whole contract, from test_contract.py; this
+    # add-on's tests run without it, as tests:alone holds them)
+    lines = (out / "p/main.tex.txt").read_text().split("\n")
+    starts = [i for i, x in enumerate(lines, 1) if x and (i == 1 or not lines[i - 2])]
+    assert list(doc["places"]) == [str(i) for i in starts]
     assert mod.places([("a\nb", 3, 3), ("c", 5, 9)]) == {
         "1": "line 3",
         "4": "lines 5-9",
