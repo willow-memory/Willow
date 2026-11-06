@@ -798,6 +798,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "sort-ask": ("sort_ask.py", ["--box", "{box}", "--categories", "{pile}/categories.txt",
                  "--model", "m", "--url", "http://127.0.0.1:9/v1"]),
     "stack": ("stack.py", ["--box", "{box}", "--stack", "adapters/stdlib/stack/example.md"]),
+    "stack-share": ("stack_share.py", ["--box", "{box}"]),
     "stale": ("stale.py", ["--box", "{box}"]),
     "start": ("start.py", ["--pile", "{pile}", "--to", "{tmp}/willow"]),
     "starter-words": ("starter.py", ["copy", "--to", "{tmp}/words.txt"]),

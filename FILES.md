@@ -1161,6 +1161,10 @@ willow/
 │   │   │   │   ├── smallholding.md
 │   │   │   │   └── teacher.md
 │   │   │   └── README.md
+│   │   ├── stack-share/
+│   │   │   ├── stack_share.py A stack you sealed with the Forge, written out to share: your sentence, each choice and why, each step's promises, and the stack to run
+│   │   │   ├── test_stack_share.py
+│   │   │   └── README.md     its card
 │   │   ├── stale/
 │   │   │   ├── stale.py      approved answers whose cited passage changed or went
 │   │   │   ├── test_stale.py

@@ -84,6 +84,9 @@ waits its turn until the first no longer stands.
       adapters/stdlib/mail/       mail: contract held; tests unreachable (no --python with pytest given); ran: clean
       adapters/stdlib/coming-up/  coming-up: contract held; tests unreachable (no --python with pytest given); ran: clean
 
+To share a stack you sealed, with your reasons, see
+[stack-share](../../stdlib/stack-share/).
+
 `build` runs the stack you sealed for these words, and nothing else. It
 reads the sealed stack from your record, never from a file you could edit;
 puts each step's add-on into the folder named with `ui/assemble.py`, which
