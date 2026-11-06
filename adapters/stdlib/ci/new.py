@@ -18,7 +18,7 @@ and this does that part (docs/agents/add-ons.md's steps 1, 3, 4 and 5):
 What it can't do is the add-on itself, and it says what's left for a
 person, which is why it exits 42 when it has made everything: the code, its
 tests, the card's body, its line in test_contract.py's COMMANDS (a command
-that works, which only the built add-on has), a CHANGELOG.md entry, and its
+that works, which only the built add-on has), a changelog fragment, and its
 mutants run. A deps idea also needs its two requirements files and its
 card's `floor:` line, said too.
 
@@ -160,7 +160,7 @@ def make(
         f"the add-on itself, in {rel}/{script}, and the card's body in {rel}/README.md",
         f"its tests, in {rel}/test_{script}, beyond the refusal it holds",
         f"its line in COMMANDS, once it's built: python adapters/stdlib/ci/commands.py suggest {name} --write",
-        f"a CHANGELOG.md entry under ## Unreleased, opening `{name}`",
+        f"its changelog fragment, changes/+<branch>.added.md, opening `{name}`",
         f"its mutants: python adapters/stdlib/mutants/mutants.py run {name}",
     ]
     if kind == "deps":

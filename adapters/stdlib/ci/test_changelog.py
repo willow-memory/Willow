@@ -41,6 +41,7 @@ def repo(tmp_path, monkeypatch):
 
 def commit(root: Path, files: dict[str, str]) -> None:
     for name, text in files.items():
+        (root / name).parent.mkdir(parents=True, exist_ok=True)
         (root / name).write_text(text)
     git(root, "add", "-A")
     git(root, "commit", "-q", "-m", "change")
@@ -56,6 +57,34 @@ def test_a_code_change_without_its_line_is_refused(repo, capsys):
     assert cl.check("main", "7") == 2
     err = capsys.readouterr().err
     assert "ending (#7)" in err and "create_pr.py" in err, "it says what does it"
+
+
+def test_its_entry_in_a_fragment_named_for_it_counts(repo, capsys):
+    """changes/7.added.md, towncrier's shape: a file no other pull request
+    writes, so none conflicts with it over the changelog."""
+    commit(repo, {"code.py": "x = 2\n", "changes/7.added.md": "the change,\nwrapped\n"})
+    assert cl.check("main", "7") == 0
+    assert "changes/" in capsys.readouterr().out
+
+
+@pytest.mark.parametrize("name", ["changes/+feat-x.added.md", "changes/8.added.md",
+                                  "changes/7.feature.md", "changes/7.added.md"])  # fmt: skip
+def test_a_fragment_not_yet_named_for_it_another_kind_or_empty_doesnt_count(repo, name):
+    commit(
+        repo,
+        {"code.py": "x = 2\n", name: "" if name == "changes/7.added.md" else "it\n"},
+    )
+    assert cl.check("main", "7") == 2
+
+
+def test_a_fixed_fragment_names_the_bug_it_fixed(repo):
+    git(repo, "checkout", "-q", "main")
+    commit(repo, {"BUGS.md": "| #12 | a bug |\n"})
+    git(repo, "checkout", "-q", "-B", "work")
+    commit(repo, {"code.py": "x = 3\n", "BUGS.md": "", "changes/7.fixed.md": "it\n"})
+    assert cl.check("main", "7") == 2
+    commit(repo, {"changes/7.fixed.md": "it no longer happens: bug #12\n"})
+    assert cl.check("main", "7") == 0
 
 
 def test_its_line_under_unreleased_ending_with_its_number(repo):

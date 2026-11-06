@@ -126,11 +126,11 @@ says how to pick one up:
 <!-- willow:front show=pick week=2026-W45 -->
 **Add-on of the week**
 
-**[why-not](adapters/stdlib/why-not/)** — When the answer is 'not enough to say', which words found nothing, and what kind of file would have answered.
+**[stack](adapters/stdlib/stack/)** — One page made from several add-ons run in the order you list them, their results grouped so the biggest come first.
 
-*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 334 built add-ons in name order.*
+*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 324 built add-ons in name order.*
 
-[Every add-on, 334 built of 522, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 324 built of 522, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 
@@ -322,7 +322,9 @@ willow/
 ├── .gitattributes            every file checked out with LF line endings, on every system
 ├── .editorconfig             the same line endings and indents, for editors
 ├── ruff.toml                 lint settings
-└── LICENSE                   Apache-2.0
+├── LICENSE                   Apache-2.0
+├── changes/                  each pull request's changelog entry, until a release folds it in
+└── towncrier.toml            how a release folds them into CHANGELOG.md
 ```
 
 ## Licence
