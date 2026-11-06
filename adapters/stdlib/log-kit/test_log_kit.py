@@ -151,5 +151,6 @@ def test_a_bad_command_line_is_refused_and_names_the_script(tmp_path):
 
 
 def test_the_change_is_of_the_averages_as_shown_to_a_tenth():
-    got = lk.averages({"20260301": 6.04, "20260401": 6.06}, "month")
-    assert got[1].endswith("  up 0.1"), "6.0 then 6.1, as shown"
+    for before, now in ((6.05, 6.1), (6.0, 6.149)):  # each rounded to a tenth first
+        got = lk.averages({"20260301": before, "20260401": now}, "month")
+        assert got[1].endswith("  up 0.1"), (before, now, got[1])
