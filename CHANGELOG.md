@@ -1853,7 +1853,7 @@ says how). The first was v0.1.0.
 - test_docs.py asks git for the repo's files once a run, not once a doc: 61 s
   to 5 s, the same answers for every doc; restack's tests, which run it three
   times in a scratch copy, 4:17 to 1:05, so restack's mutants no longer time
-  out at 600 s in CI's mutants-reach
+  out at 600 s in CI's mutants-reach (#261)
 - `mcp-lite`: parse a propose refusal with `partition` instead of a maxsplit
   `split`, so the accepted inert mutant is gone (same as `mcp-sampling`) (#257)
 
