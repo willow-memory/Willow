@@ -9,6 +9,7 @@ catches when it is missed. It adds no rule of its own.
 and [.github/copilot-instructions.md](.github/copilot-instructions.md) tell
 Gemini CLI and Copilot to read this file (they have no `@` import). One copy
 to keep.
+The longer how-tos are in [docs/agents/](docs/agents/), one page a job.
 
 ## Never
 
@@ -20,6 +21,9 @@ to keep.
 - **Loosen a check to get green.** No skipped test, no loosened card, no
   entry in `adapters/stdlib/mutants/accepted.json` to quiet a failure, and no
   code rewritten only so a harmless mutant stops surviving.
+- **Loosen the kernel's rank for recall.** It serves a passage only when it
+  holds half the question's content words, so an answer the folder doesn't
+  have is never invented ([searching](docs/agents/searching.md)).
 - **Edit two files by hand:** the verdicts in `constitution/declarations.json`
   and the answers in `constitution/reach.json` are the maintainer's.
 
@@ -32,38 +36,25 @@ counts as a pass:
     pip install pytest ruff==0.16.7
 
 The ruff version is the one `.github/workflows/ci.yml` pins.
-
-`adapters/stdlib/ci/ci.py` calls them through the Python that runs it,
-not whichever is first on the path. If they live in a virtual environment,
-run it with that environment's Python and nothing else changes:
+`adapters/stdlib/ci/ci.py` calls them through the Python that runs it, not
+whichever is first on the path; if they live in a virtual environment, run
+it with that environment's Python:
 
     VENV/bin/python adapters/stdlib/ci/ci.py run --box /tmp/ci-main
 
-Run with a Python that lacks them, every lint, tests and mutants row comes
-back unreachable.
-
-## Know what this machine can't run
-
-Before a change, the one thing to know is which gates can't run here (no
-Java, no .NET, an editor that isn't installed), so a tool this machine lacks
-isn't taken for your failure. Ask; it runs nothing and takes a second:
+**Know what this machine can't run** (no Java, no .NET, an editor that isn't
+installed) before a change, so a missing tool isn't taken for your failure.
+It runs nothing and takes a second:
 
     python adapters/stdlib/ci/ci.py needs
 
-It reads what each gate needs (a Python module, a program on PATH) and
-names the ones that would come back unreachable, and why. The deps gates
-install from PyPI, so only running them can tell; it says so.
-
-Don't run every gate to find this out. One after another they take well
-over an hour, and all at once on every core (`adapters/stdlib/ci/cores.py`)
-still most of one: that's CI's job, on every pull request.
+Don't run every gate to find out: one after another they take well over an
+hour, and all at once on every core (`adapters/stdlib/ci/cores.py`) most of
+one. That's CI's job, on every pull request.
 
 ## After a change, run what it can move
 
-CI runs every gate on every pull request, on machines that have every
-tool. Running them all here before you push only repeats that, so don't.
-Run the parts your change can move, then push, and let CI's run be the full
-one:
+Then push, and let CI's run be the full one:
 
 - **Always:** lint (`adapters/stdlib/ci/ci.py run lint`), and once the PR
   has its number, the changelog check (`adapters/stdlib/ci/changelog.py`).
@@ -71,8 +62,8 @@ one:
   its mutants (`adapters/stdlib/mutants/mutants.py run NAME`).
 - **What you wrote about it:** `test_docs.py` when prose changed, and
   `adapters/stdlib/readme/readme.py check` when a card did.
-- **What leans on it, when everything does:** a change to `kernel.py` or
-  the ports adds `tests:kernel`, `tests:vectors` and `ports`; to `ui/`,
+- **What leans on it, when everything does:** a change to `kernel.py` or the
+  ports adds `tests:kernel`, `tests:vectors` and `ports`; to `ui/`,
   `tests:ui`; to `adapters/stdlib/ci/`, its own tests. A file a demo freezes
   (its FROZEN.json says which) adds that demo's tests, since a red PR there
   waits on someone else's freeze commit.
@@ -81,199 +72,29 @@ Name a part or a gate to run just that: `ci.py run lint`, `ci.py run
 tests:kernel`. A gate that fails here and that `needs` names as unreachable
 is the machine, not you; any other is yours.
 
-## An add-on, step by step
+**Edits that miss say nothing.** `ruff format` reflows lines, so a scripted
+find-and-replace written against the text before formatting matches nothing,
+silently. Check each one matched (assert the old text occurs once), never
+replace a string that could be empty, and read the result or run the test
+that should now pass.
 
-Each of these has been missed at least once, and each is a check that fails.
-`python adapters/stdlib/ci/new.py NAME` does 1, 3, 4 and 5 from the idea's
-entry, and says what's left.
+## The job you're doing
 
-1. **Its folder** in `adapters/stdlib/` or `adapters/deps/`: the code, its
-   tests, and its card, `README.md`, whose header is the idea's entry from
-   `adapters/planned.json` with the same `writes` and `network` promises,
-   and its `role`.
-2. **Its command line in `COMMANDS`**, in `adapters/stdlib/ci/test_contract.py`,
-   if a person runs it, in its place A to Z. Once it's built,
-   `python adapters/stdlib/ci/commands.py suggest NAME --write` finds one
-   from its usage lines and writes it there; when none of them keeps the
-   contract, it says what each did, and the line is yours. Missing, it
-   fails the contract test, and every other add-on's mutants then report
-   their accepted breaks as stale.
-3. **Its idea out of `adapters/planned.json`**, deletions only.
-4. **Its place in FILES.md's tree**, alphabetically:
-   `python adapters/stdlib/ci/files.py write` puts it there.
-5. **The add-on list regenerated**, never edited:
-   `python adapters/stdlib/readme/readme.py write`.
-6. **A CHANGELOG.md entry** under `## Unreleased`, opening with the name in
-   backticks, and ending with the pull request's number once it has one.
-7. **Mutants**: `python adapters/stdlib/mutants/mutants.py run NAME` must
-   kill every break. CI makes the six lowest-id breaks, and an entry in
-   `adapters/stdlib/mutants/accepted.json` for a break those six don't
-   include fails as stale: list only what CI's own run shows surviving.
-   Run this **after** step 2 (its line in `COMMANDS`) and on a clean tree:
-   a mutant is killed when the run's tests exit non-zero, so an add-on not
-   yet in `COMMANDS`, or a stray uncommitted add-on folder, fails the
-   contract test and marks every mutant killed — a false pass that CI, on
-   the committed tree, then shows as the real survivors.
-8. **Real data, not only fixtures.** `python adapters/stdlib/ci/realdata.py
-   run NAME` runs its COMMANDS line on every demo person's folder, under
-   the guard, and create_pr.py runs it for each add-on a change touches. An
-   add-on can pass every test on hand-made files and still be wrong on a
-   real folder; a test written from what the code does checks only that.
-   What it prints is what the pull request's "Real data" says; a question
-   only you can ask of a folder is still yours to ask.
-9. **If it goes online**, its tests use a server it starts on 127.0.0.1:
-   the guard narrows only `none` and `loopback`, so a card naming a site
-   lets the tests use this machine. Its `COMMANDS` row must still answer
-   without the network, by an argument that settles the question before any
-   fetch (an empty window of days, a closed local port); a row that reaches
-   the real site is a test that goes online.
-10. **Placeholders on its card.** `test_docs.py` reads a backticked name with
-    a slash or a file extension as a path that must exist. Write a
-    placeholder with angle brackets, as the pdf card writes
-    `MIRROR/<same path>.txt`.
-
-## The guard
-
-An add-on's tests run under `adapters/stdlib/ci/guard/sitecustomize.py`,
-which holds every write the add-on's own code makes to its card's `writes`,
-and raises the moment it breaks one:
-
-- **`to` means under the path in `--to` on the command line.** It reads
-  `sys.argv`, so a test that calls `main()` in-process passes `--to` there
-  too, or the write is judged as outside it.
-- **Making a missing folder is a write.** An add-on that creates the parent
-  of its `--to` file has written outside `to`; refuse a missing folder
-  instead.
-- **A box is written only through the kernel**, and any folder holding a
-  kernel.json counts as one.
-- **Scratch made with `tempfile` is the add-on's own**; a folder it names
-  itself, even under /tmp, is not.
-- **Never the key.** No add-on reads it, not even to copy it.
-
-## An idea, not yet built
-
-- **Ask the list first:**
-  `python adapters/stdlib/similar/similar.py near "your idea in a sentence"`.
-  It asks both ways: entries that hold half of your sentence's words, and
-  entries half of whose words your sentence holds, so a long line still
-  finds a short entry it contains. It shows, never refuses: you decide.
-- **`adapters/planned.json` is sorted by name and written as
-  `json.dumps(entries, indent=1, ensure_ascii=False)` plus a newline.**
-  Rewritten any other way, every line of it changes.
-
-## The kernel's rank is for answering
-
-`kernel.rank` serves a passage only when it holds half the question's
-content words. That is the promise that an answer the folder doesn't have is
-never invented, and the eight beats in `test_kernel.py` test it.
-
-- **Don't loosen it for recall.** A third of the words, or any two, finds a
-  few more on code, but answers questions about something else several
-  times as often, and breaks the beat where a folder holding only the
-  question says so.
-- **Pointing at where to look** is another job: `scan --rank bm25`, which
-  always serves its top passages.
-- **Comparing two texts** is another job again: count against the shorter
-  one, so a long line doesn't hide a short one it contains.
-- **Use the kernel's public names.** A page's text is `kernel.html_text`,
-  not `_TAG` and `_lines_kept`.
-
-## A new CI row
-
-A gate added to `gates()` in `adapters/stdlib/ci/ci.py` is also named in
-the two lists of gates in `adapters/stdlib/ci/test_ci.py`. A demo's tests
-need no row: a demo folder with tests that no `DEMO_TESTS` row runs gets
-`demo:FOLDER` from `demo_tests()`. Write a row only to give it another name
-or a program it needs (craft-assembly's git and cargo).
-Missed, `tests:adapters-*` fails, and `tests:strip-*` with it, since it runs
-the same tests. A new test file needs nothing: the chunks are cut from the
-files there are, and one not in `adapters/stdlib/ci/test-times.json` counts
-as the median.
-
-## A deps add-on's floor
-
-The deps gate installs each add-on's pins, then its floor pins
-(`adapters/deps/mcp/requirements-floor.txt`, say), again on the one Python the
-deps job runs (`3.13` in `.github/workflows/ci.yml`). The floor rule names a
-2020-era release, but such a pin often won't install on that Python: raise the
-floor to the first version that does and say why on the card's `floor:` line
-(twenty characters or more once the version is struck out, or `deps:floors`
-fails). mcp's floor is raised this way.
-
-The floor test can't ask PyPI, so it reads PyPI's dates from
-`adapters/stdlib/ci/pypi-dates.json`: each floor pin's upload time and the
-rule's release's. `python adapters/stdlib/ci/pypi_dates.py write` asks PyPI
-for a new pin's, and only those; made.py and create_pr.py run it, so a new
-deps package is never typed in by hand.
-
-## Edits that miss say nothing
-
-`ruff format` reflows lines. A scripted find-and-replace written against
-the text before formatting then matches nothing, and says nothing: the edit
-just isn't there. Check each one matched (assert the old text occurs once),
-and never replace a string that could be empty, which inserts the new text
-between every character. Read the result, or run the test that should now
-pass.
-
-## A study, like demo/php2shell
-
-A result tested against what anyone can rerun, as in
-[demo/php2shell/README.md](demo/php2shell/README.md):
-
-- **Freeze first.** The source hashes, the questions, the hit rule and every
-  pass rule go in a FROZEN.json held by a test, as
-  `demo/php2shell/FROZEN.json` is, committed alone before any question is
-  asked. That commit is the pre-registration; a later change is a new
-  freeze, with its reason.
-- **Find the bugs without the results.** Run the pipeline once with every
-  question replaced by nonsense ("qqqq zzzz"), so wiring breaks show up
-  before the freeze, and say in the README what that dry run could see.
-- **Verdicts are kernel rows**, one per pass rule, appended to a box outside
-  the repo with the answers' and tools' SHA-256; `kernel.py verify` on it
-  goes in the README.
-- **Sources that aren't the repo's** (news, a company's pages) are kept by
-  address, time and SHA-256, never their text, with a script that fetches
-  them again and checks the hashes offline.
-- **Write down what failed** with its frozen numbers, beside what held, and
-  what was written after reading the sources.
-
-## Pull requests
-
-- **Open it with create_pr.py.** Commit the change and its changelog
-  entry, then run `python adapters/stdlib/github/create_pr.py`: it runs the
-  steps below for you, opens the pull request and numbers its entry, and
-  exits 42 only on what needs you, saying what. The rest of this section is
-  what it does, for when it stops.
-- **Several sessions can share a branch.** Fetch before you push, merge
-  what's new, and never force-push.
-- **Merging makes a merge commit**; squash isn't allowed on this repo.
-- **Branch from `main`; open it, add its number to CHANGELOG.md, and push
-  once.** Another pull request may take the number you guessed, so write the
-  real one, and do it in that one push: each push starts every check, and the
-  first run should not be thrown away.
-- **Don't stack on the open pull requests by habit.** CI's `against` job
-  holds yours to them: a duplicate (a name both add) fails it; a collision
-  names the pull request to merge first. Stack only on one it names, merge
-  its branch into yours and make it your base. Run it yourself before you
-  open: `python adapters/stdlib/against/against.py check --base origin/main
-  HEAD OTHER ...`. The steps are in CONTRIBUTING.md's Pull requests.
-- **Work that needs another unmerged branch stacks on it.** An add-on whose
-  idea, or whose card's link, exists only on another branch is built from
-  that branch, and its pull request's base is that branch; built from
-  `main`, it fails `test_docs.py` and clashes on `adapters/planned.json`.
-- **When GraphQL isn't reachable** (some cloud agent sessions), `gh pr create`
-  is refused; open it through the REST API instead:
-
-      gh api repos/willow-memory/Willow/pulls --method POST \
-          -f title=... -f head=BRANCH -f base=main -f body=...
-
-  A shallow clone fetches only `main`, so a pushed branch shows as never
-  pushed until its own fetch refspec is added.
-
-## When main moves under a branch
-
-Merge or rebase, then regenerate rather than hand-merge what is generated:
-`python adapters/stdlib/ci/made.py write` makes every made file again
-(ADDONS.md and the README's add-on sections, BUGS.md, FILES.md, the lists
-kept A to Z, craft-assembly's report). CHANGELOG.md is merged by hand: both
-sides' lines, in their order.
+- **An add-on.** Ten steps, each a check that fails when missed;
+  `python adapters/stdlib/ci/new.py NAME` does four of them. Its tests run
+  under a guard that holds every write to its card's promises. Read
+  [docs/agents/add-ons.md](docs/agents/add-ons.md) before the first file.
+- **A study**, like demo/php2shell: freeze the sources, questions, hit rule
+  and pass rules in one commit before any question is asked, and dry-run it
+  first with every question replaced by nonsense.
+  [docs/agents/studies.md](docs/agents/studies.md) has the rest, and what a
+  dry run misses.
+- **A pull request.** Open it with
+  `python adapters/stdlib/github/create_pr.py`, and leave the checkout alone
+  while it runs. When main moves under a branch, regenerate what is made
+  (`python adapters/stdlib/ci/made.py write`) and merge CHANGELOG.md by hand.
+  [docs/agents/pull-requests.md](docs/agents/pull-requests.md), with a new CI
+  row.
+- **Search.** The kernel's rank is for answering; pointing at where to look
+  and comparing texts are other jobs, with other tools.
+  [docs/agents/searching.md](docs/agents/searching.md).
