@@ -13,6 +13,9 @@ too. The first release was v0.1.0.
 
 ### Added
 
+- `hooks-elsewhere` refuses `--host cursor`: Cursor's `beforeSubmitPrompt`
+  can only continue or block a prompt, never inject passages; the card and
+  `hosts` point at the `cursor` MCP add-on instead (#252)
 - `hooks-elsewhere` `setup --host opencode` prints a native OpenCode plugin
   (save as `<.opencode/plugins/willow-passages.js>`) that injects Claude's
   framed passages as synthetic text, and still offers the Claude-compatible
@@ -1857,6 +1860,10 @@ too. The first release was v0.1.0.
 
 ### Fixed
 
+- test_docs.py asks git for the repo's files once a run, not once a doc: 61 s
+  to 5 s, the same answers for every doc; restack's tests, which run it three
+  times in a scratch copy, 4:17 to 1:05, so restack's mutants no longer time
+  out at 600 s in CI's mutants-reach (#261)
 - `mcp-lite`: parse a propose refusal with `partition` instead of a maxsplit
   `split`, so the accepted inert mutant is gone (same as `mcp-sampling`) (#257)
 

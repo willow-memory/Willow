@@ -170,6 +170,11 @@ def test_a_bad_command_line_host_or_box_is_refused(tmp_path, capsys):
         he.main(["setup", "--host", "claude-code", "--box", str(tmp_path / "x")]) == 2
     )
     assert "adapters/stdlib/claude-code" in capsys.readouterr().err
+    assert he.main(["setup", "--host", "cursor", "--box", str(tmp_path / "x")]) == 2
+    err = capsys.readouterr().err
+    assert "beforeSubmitPrompt" in err and "cursor.py" in err
+    assert he.main(["prompt", "--host", "cursor", "--box", str(tmp_path / "x")]) == 2
+    assert "beforeSubmitPrompt" in capsys.readouterr().err
 
 
 def test_a_folder_with_a_space_in_its_name_stays_one_piece(tmp_path, capsys):
