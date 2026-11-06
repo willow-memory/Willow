@@ -220,3 +220,35 @@ def test_a_card_saying_report_among_its_outputs_prints_a_report(tmp_path):
                          ("suggestions, report", True), ("suggestions", False)):  # fmt: skip
         (tmp_path / "README.md").write_text(f"<!-- willow-addon\noutput: {said}\n-->\n")
         assert st.prints_a_report(tmp_path / "x.py") is prints, said
+
+
+TWO_VERBS = """import json, sys
+argv = sys.argv[1:]
+if argv[:1] == ["ask"] and "--json" in argv:
+    print("usage: twoverbs.py ask --box DIR QUESTION | score --box DIR [--json]", file=sys.stderr)
+    sys.exit(2)
+if argv[:1] == ["ask"]:
+    print("asked")
+    sys.exit(0)
+print(json.dumps({"addon": "twoverbs", "state": "empty", "said": "nothing yet", "groups": []}))
+"""
+
+
+@pytest.mark.xfail(
+    strict=True,
+    reason="bug #285: stack adds --json to every step of a report add-on, so predict ask refuses inside a stack",
+)
+def test_a_report_add_ons_step_that_prints_no_report_runs_as_written(tmp_path):
+    # predict's shape: its card says output: report, but only score prints one
+    folder = STACK.parents[1] / "twoverbs"
+    folder.mkdir()
+    (folder / "twoverbs.py").write_text(TWO_VERBS)
+    (folder / "README.md").write_text("<!-- willow-addon\noutput: report\n-->\n")
+    box = a_box(tmp_path)
+    got = run(
+        "--box",
+        str(box),
+        "--stack",
+        str(a_stack(tmp_path, '## p\n- twoverbs -- ask --box {box} "q"\n')),
+    )
+    assert "(exit 2)" not in got.stdout and "asked" in got.stdout, got.stdout
