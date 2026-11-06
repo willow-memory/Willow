@@ -18,7 +18,7 @@ suggestion for your seal. Nothing is placed here.
 
 ```
 python adapters/stdlib/sort-ask/sort_ask.py --box DIR --categories FILE \
-    --model NAME [--url URL] [--limit N] [--now TS] [--json]
+    --model NAME [--url URL] [--reasoning EFFORT] [--limit N] [--now TS] [--json]
 
 sort-ask: populated, 2 suggestions of 3 files asked about, by llama3.1:8b
 ## suggested
@@ -42,7 +42,8 @@ example's name.
 give another, and one off this machine (anything but a loopback address or
 localhost) is refused before anything is sent. Asked through
 [openai-compatible](../openai-compatible/)'s ask, at temperature 0 with its
-own fixed seed (7), and its claim says so, in the suggestions contract's one form:
+own fixed seed (7); `--reasoning none|low|medium|high` asks a thinking
+model to think that much. Its claim says each, in the suggestions contract's one form:
 `MODEL at URL (temperature 0, seed 7) read FILE as CATEGORY, from the
 passage it cited`.
 

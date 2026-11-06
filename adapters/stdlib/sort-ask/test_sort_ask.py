@@ -29,6 +29,10 @@ def run(*argv: str) -> subprocess.CompletedProcess:
     return subprocess.run([sys.executable, *argv], capture_output=True, text=True)
 
 
+#: every request a stand-in model was sent, in order
+SENT: list[dict] = []
+
+
 def model(replies: dict[str, str]):
     """A stand-in model: the first reply whose key is in the file's place."""
     asked: list[str] = []
@@ -38,6 +42,7 @@ def model(replies: dict[str, str]):
             body = json.loads(self.rfile.read(int(self.headers["Content-Length"])))
             user = body["messages"][-1]["content"]
             assert (body["temperature"], body["seed"]) == (0, 7), "sort-ask's own seed"
+            SENT.append(body)
             asked.append(user)
             text = next((r for k, r in replies.items() if f"File: {k}" in user), "NONE")
             out = json.dumps({"choices": [{"message": {"content": text}}]}).encode()
@@ -179,3 +184,25 @@ def test_refusals(tmp_path):
     )  # no model
     assert run(str(SCRIPT), "--box", str(b), "--categories", str(cats), "--model", "m",
                "--limit", "x").returncode == 2  # fmt: skip
+
+
+def test_reasoning_goes_in_the_request_and_the_claim_only_when_asked(tmp_path):
+    b, cats = box(tmp_path, {"allotment.txt": FILES["allotment.txt"]})
+    srv, url, _ = model({"allotment.txt": "garden [1]"})
+    SENT.clear()
+    try:
+        argv = [str(SCRIPT), "--box", str(b), "--categories", str(cats), "--model", "m",
+                "--url", url, *NOW]  # fmt: skip
+        for bad in ("think", "", "High"):
+            assert run(*argv, "--reasoning", bad).returncode == 2, bad
+        assert SENT == [], "a refused effort asks nothing"
+        assert run(*argv, "--reasoning", "high").returncode == 42
+    finally:
+        srv.shutdown()
+    assert SENT[0]["reasoning_effort"] == "high"
+    (prop,) = (b / "proposals").glob("*.json")
+    assert (
+        "(temperature 0, seed 7, reasoning high) read"
+        in json.loads(prop.read_text())["claim"]
+    )
+    assert all("reasoning_effort" not in s for s in SENT[1:])

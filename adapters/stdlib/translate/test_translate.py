@@ -266,3 +266,23 @@ def test_a_bad_command_line_is_refused(box, tmp_path):
         f.write('{"n": 99}\n')
     got = run("--box", box, "--into", "Spanish", Q)
     assert got.returncode == 2 and "doesn't verify" in got.stderr
+
+
+def test_reasoning_goes_in_the_request_and_the_claim_only_when_asked(
+    box, server, tmp_path
+):
+    seal_one(box, tmp_path, Q, ANSWER)
+    got = run("--box", box, "--into", "Spanish", "--url", server.url,
+              "--reasoning", "low", *NOW, Q)  # fmt: skip
+    assert got.returncode == 0, got.stdout + got.stderr
+    assert server.sent[0]["reasoning_effort"] == "low"
+    new = got.stdout.splitlines()[1].split()[1]
+    claim = json.loads((box / "proposals" / f"{new[9:]}.json").read_text())["claim"]
+    assert f"{server.url} (temperature 0, seed 0, reasoning low) translated" in claim
+    run("--box", box, "--into", "French", "--url", server.url, *NOW, Q)
+    assert "reasoning_effort" not in server.sent[1]
+    for bad in ("think", "", "LOW"):
+        got = run("--box", box, "--into", "Spanish", "--url", server.url,
+                  "--reasoning", bad, *NOW, Q)  # fmt: skip
+        assert got.returncode == 2 and "--reasoning" in got.stderr, bad
+    assert len(server.sent) == 2, "a refused effort asks nothing"

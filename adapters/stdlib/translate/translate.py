@@ -1,7 +1,7 @@
 """translate.py: an answer you sealed, translated by a local model, held for your seal.
 
     python adapters/stdlib/translate/translate.py --box DIR --into LANGUAGE
-        [--url URL ...] [--model NAME] [--now TS] "your question"
+        [--url URL ...] [--model NAME] [--reasoning EFFORT] [--now TS] "your question"
 
 The answer is the one you sealed for the question's words. A model on this
 machine (the first local server answering, found as local-model finds one)
@@ -15,7 +15,9 @@ you seal it, that question is answered by it.
 
 The proposal keeps the original beside the translation, cites the
 original's passages that the new question's bite serves, and names the
-original's proposal in its claim. A translation whose citations aren't the
+original's proposal in its claim. `--reasoning none|low|medium|high` asks
+a thinking model to think that much, as openai-compatible does, and the
+claim says so. A translation whose citations aren't the
 original's ([1] dropped, a [3] made up) is printed and proposed to no one.
 
 Exit codes, the kernel's: 0 a translation waits on your seal, or one is
@@ -53,7 +55,7 @@ lm = _load(
 
 USAGE = (
     "usage: translate.py --box DIR --into LANGUAGE [--url URL ...] [--model NAME]"
-    ' [--now TS] "your question"'
+    ' [--reasoning none|low|medium|high] [--now TS] "your question"'
 )
 #: between the translation and the original it keeps beside it
 SPLIT = "\n\nOriginal:\n\n"
@@ -88,12 +90,16 @@ def main(argv: list[str]) -> int:
     for a in it:
         if a == "--url":
             urls.append(next(it, ""))
-        elif a in ("--box", "--into", "--model", "--now") and a not in opts:
+        elif (
+            a in ("--box", "--into", "--model", "--reasoning", "--now")
+            and a not in opts
+        ):
             opts[a] = next(it, "")
         else:
             words.append(a)
     if (not opts.get("--box") or not opts.get("--into") or "" in urls or "" in opts.values()
-            or len(words) != 1 or words[0].startswith("--") or not kernel.bite_key(words[0])):  # fmt: skip
+            or len(words) != 1 or words[0].startswith("--") or not kernel.bite_key(words[0])
+            or opts.get("--reasoning", "none") not in oc.REASONING):  # fmt: skip
         print(USAGE, file=sys.stderr)
         return kernel.REFUSED
     question, into = words[0], opts["--into"].strip()
@@ -139,7 +145,12 @@ def main(argv: list[str]) -> int:
     chat = [{"role": "system", "content": RULE.format(into=into)},
             {"role": "user", "content": original["data"]}]  # fmt: skip
     try:
-        reply = oc.ask_model(url, model, chat).strip()
+        reasoning = opts.get("--reasoning", "")
+        # only when asked for, so a call without it is the call it always was
+        if reasoning:
+            reply = oc.ask_model(url, model, chat, reasoning).strip()
+        else:
+            reply = oc.ask_model(url, model, chat).strip()
     except (OSError, ValueError, KeyError, IndexError, TypeError) as e:
         print(f"unreachable: {url} ({e.__class__.__name__})")
         return kernel.ESCALATE
@@ -161,7 +172,10 @@ def main(argv: list[str]) -> int:
         "data": f"{reply}{SPLIT}{original['data'].strip()}\n",
         "cites": [c for c in original.get("cites", []) if c in served],
         "claim": oc.claim(
-            model, f"at {url}", oc.settings(oc.SEED), f"translated {subj} into {into}"
+            model,
+            f"at {url}",
+            oc.settings(oc.SEED, opts.get("--reasoning", "")),
+            f"translated {subj} into {into}",
         ),
     }
     with tempfile.TemporaryDirectory() as tmp:

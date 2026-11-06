@@ -27,7 +27,9 @@ model is the first local server answering among those `--url` names, or
 on the usual ports, as [local-model](../local-model/) finds one, and its
 first model unless `--model` names another. It is told to translate into
 the language and keep each citation, `[1]`, beside the words it belongs to,
-at temperature 0 with a fixed seed.
+at temperature 0 with a fixed seed. `--reasoning none|low|medium|high` asks a
+thinking model to think that much, as [openai-compatible](../openai-compatible/)
+does; without it the request names no reasoning.
 
 **Its own question.** The translation is proposed through `kernel.py
 propose` as the answer to "your question in Spanish", never to the
