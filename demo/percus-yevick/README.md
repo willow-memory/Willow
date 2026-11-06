@@ -305,6 +305,14 @@ report, and the models arranging what was found) were still running when this
 was written; they are reported below when done, and none of them changes a
 verdict.
 
+**R6 can't be judged blind.** rubric.md sets two unlabelled texts a step, in
+an order fixed by `random.Random(0)`, so the judge can't tell found from
+generated. With two steps found, nine steps have one side empty, and the
+model's side is one document, the ML specialist's interim report, for every
+step: the judge will know which is which. The sheet sent to the physics
+student (2026-11-06) keeps the frozen A/B labels, says this, and asks for
+the scores anyway; the found chain's mean can be at most 6 of 33.
+
 ## Freeze 2: the stack and the add-ons
 
 Freeze 1 was written as "the kernel serves", and R1 to R4 count the kernel
