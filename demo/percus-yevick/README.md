@@ -376,6 +376,35 @@ four more verdict rows on the same box, its last row's hash
 `cb087318a6056a01bd429f5aa066d21c28831f6e7f084fc786671dc91b3ec785`;
 `kernel.py verify` on it: "the chain holds: 12 rows, 0 sealed".
 
+## Freeze 3: the arms, again, without reasoning
+
+The arms' first real run (01:53 to 03:47 UTC) failed and wrote nothing.
+arms.py gave same-way an hour for each model; qwen3:8b with its reasoning
+needed 63 asks of up to ten minutes each, ran out at 03:47, and the timeout
+crashed arms.py, which wrote its report only at the end. The dry runs asked
+two questions, and same-way took minutes. Lost with it: the rankers,
+why-not, predict and claim-check, all finished, and qwen3:8b's 21 answers
+with its reasoning, which are on that run's box as proposals but in no
+report. No verdict was touched: R1 to R4 and R7 to R10 are counted by
+pipeline.py and union.py, and the arms count nothing.
+
+The fix, in arms.py and nothing else:
+
+- **Time for the work.** Same-way gets 30 minutes an ask (the limit one
+  local-model answer already had) times its asks; an add-on that runs out
+  of time is said in the report, never raised.
+- **Each arm written as it ends**, so a later failure can't lose the
+  earlier ones.
+
+**Run without reasoning**, by the decision of the person running this study
+(2026-11-06): the arranged arm asks qwen3:8b with `reasoning_effort` none,
+and gemma3:4b, which has none. The side-by-side with reasoning on is
+dropped; the expectation it was to test (reasoning isn't needed to arrange
+found passages) is left untested here. Dry-run on nonsense (03:52 to 03:58
+UTC): every arm written, both models asked, the box verifies. The rerun
+uses a fresh box over the same pile and index, so the failed run's rows
+aren't counted twice.
+
 ## Said plainly
 
 - **The anchors were written after the source search had grepped each

@@ -67,9 +67,21 @@ USAGE = ("usage: arms.py --work WORK --out FILE [--questions NAME ...] [--model-
          " [--url URL] [--models NAME,NAME] [--dry]")  # fmt: skip
 
 
+ASK_LIMIT = 1800  # seconds a model gets for one answer
+SAME_WAY_TIMES = 3  # same-way's own default: each question asked three times
+
+
 def tool(script: str, *args: str, timeout: int = 900) -> subprocess.CompletedProcess:
-    return subprocess.run([sys.executable, str(STDLIB / script), *args],
-                          capture_output=True, text=True, timeout=timeout)  # fmt: skip
+    """An add-on's command line. Run out of time, it is said in the result,
+    never raised: one arm's stall must not lose the others (the first real
+    run lost all of them to same-way's timeout)."""
+    try:
+        return subprocess.run([sys.executable, str(STDLIB / script), *args],
+                              capture_output=True, text=True, timeout=timeout)  # fmt: skip
+    except subprocess.TimeoutExpired:
+        return subprocess.CompletedProcess(
+            [script, *args], 124, "", f"timed out after {timeout} seconds"
+        )
 
 
 def questions(sets: list[str], dry: bool) -> list[dict]:
@@ -258,7 +270,7 @@ def variant(entry: str) -> tuple[str, str]:
 
 
 def arranged(
-    box: Path, qs: list[dict], url: str, models: list[str], work: Path
+    box: Path, qs: list[dict], url: str, models: list[str], work: Path, save=None
 ) -> dict:
     out: dict = {}
     asked = [q for q in qs if q["set"] != "null"]
@@ -270,16 +282,19 @@ def arranged(
         rows = []
         for q in asked:
             got = tool("local-model/local_model.py", "ask", "--box", str(box), "--url", url, "--model", m,
-                       *extra, q["asked"], timeout=1800)  # fmt: skip
+                       *extra, q["asked"], timeout=ASK_LIMIT)  # fmt: skip
             rows.append({"id": q["id"], "exit": got.returncode,
                          # the whole answer: a tail cut its opening off in the dry run
                          "said": (got.stdout or got.stderr).strip()})  # fmt: skip
         same = tool("same-way/same_way.py", "--box", str(box), "--url", url, "--model", m,
-                    *extra, "--questions", str(qfile), timeout=3600)  # fmt: skip
+                    *extra, "--questions", str(qfile),
+                    timeout=ASK_LIMIT * SAME_WAY_TIMES * len(asked))  # fmt: skip
         out[entry] = {
             "local-model": rows,
             "same-way": (same.stdout or same.stderr).strip().splitlines()[-1:],
         }
+        if save:
+            save(out)
     return out
 
 
@@ -354,15 +369,24 @@ def main(argv: list[str]) -> int:
     qs = questions(sets or ["author", "null"], dry)
     idx = scan.Index(work / "index")
     box = box_for(work)
+    report: dict = {"dry": dry}
+
+    def save(key: str, value) -> None:
+        """Each arm written to --out as it ends, so a later one can't lose it."""
+        report[key] = value
+        Path(opts["--out"]).write_text(
+            json.dumps(report, indent=1) + "\n", encoding="utf-8"
+        )
+
     say("cards")
-    report: dict = {"dry": dry, "cards": cards(box)}
+    save("cards", cards(box))
     say("rankers")
     ranked = rankers(idx, qs, work / "pile")
-    report["rankers"] = summary(qs, ranked)
+    save("rankers", summary(qs, ranked))
     say("why-not")
-    report["why-not"] = why_not(box, qs, ranked)
+    save("why-not", why_not(box, qs, ranked))
     say("predict")
-    report["predict"] = predict(box, qs)
+    save("predict", predict(box, qs))
     say("claims")
     report["claims"] = {}
     for t in texts:
@@ -372,6 +396,7 @@ def main(argv: list[str]) -> int:
             else Path(t).read_text(encoding="utf-8")
         )
         report["claims"][Path(t).name] = claims(box, body)
+    save("claims", report["claims"])
     say("arranged")
     if "--url" in opts and "--models" in opts and dry:
         # nonsense finds nothing in the stack, so no model would be asked: two
@@ -381,8 +406,9 @@ def main(argv: list[str]) -> int:
                                       opts["--models"].split(","), work)  # fmt: skip
     elif "--url" in opts and "--models" in opts:
         report["arranged"] = arranged(
-            box, qs, opts["--url"], opts["--models"].split(","), work
-        )
+            box, qs, opts["--url"], opts["--models"].split(","), work,
+            lambda done: save("arranged", done),
+        )  # fmt: skip
     else:
         report["arranged"] = "not run: no --url and --models"
     report["expectations"] = expectations(qs, ranked)

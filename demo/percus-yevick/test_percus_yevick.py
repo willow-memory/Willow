@@ -26,23 +26,27 @@ def test_frozen_files_are_as_frozen_or_the_study_says_it_is_a_draft():
     if not frozen.exists():
         assert "DRAFT" in (HERE / "README.md").read_text(encoding="utf-8")
         return
-    files = json.loads(frozen.read_text(encoding="utf-8"))["files"]
-    for rel, sha in files.items():
+    # FROZEN.json, then FROZEN-2.json and on, each in its own commit and never
+    # edited after: a file is held to the hash of the latest freeze naming it
+    freezes = [frozen] + sorted(
+        HERE.glob("FROZEN-*.json"), key=lambda p: int(p.stem.split("-")[1])
+    )
+    held: dict[str, tuple[str, str]] = {}
+    for f in freezes:
+        for rel, sha in json.loads(f.read_text(encoding="utf-8"))["files"].items():
+            held[rel] = (sha, f.name)
+    for rel, (sha, name) in held.items():
         got = hashlib.sha256((HERE / rel).read_bytes()).hexdigest()
-        assert got == sha, (
-            f"{rel} changed after it was frozen; a change is a new freeze"
-        )
+        assert got == sha, f"{rel} changed after {name}; a change is a new freeze"
+    first = json.loads(frozen.read_text(encoding="utf-8"))["files"]
     must = {"sources.json", "steps.json", "score.py", "tally.py", "pipeline.py",
             "arms.py", "rubric.md", "prompt.md", "words.txt", "expectations.json"}  # fmt: skip
     must |= {f"questions/{p.name}" for p in (HERE / "questions").iterdir()}
     must |= {f"models/{p.name}" for p in (HERE / "models").iterdir()}
-    assert must <= set(files), sorted(must - set(files))
+    assert must <= set(first), sorted(must - set(first))
     second = HERE / "FROZEN-2.json"
-    if second.exists():  # freeze 2: union.py's rules, over freeze 1, unchanged
+    if second.exists():  # freeze 2: union.py's rules, over freeze 1
         files2 = json.loads(second.read_text(encoding="utf-8"))["files"]
-        for rel, sha in files2.items():
-            got = hashlib.sha256((HERE / rel).read_bytes()).hexdigest()
-            assert got == sha, f"{rel} changed after freeze 2; a change is a new freeze"
         assert {"union.py", "arms.py", "score.py", "steps.json", "pipeline.py"} <= set(
             files2
         )
@@ -405,3 +409,31 @@ def test_r9_counts_null_questions_served_a_step_by_any_ranker_and_r10_the_draw()
 def test_union_refuses_a_bad_command_line_and_a_work_folder_without_an_index(tmp_path):
     assert union.main([]) == 2
     assert union.main(["--work", str(tmp_path), "--out", str(tmp_path / "o")]) == 2
+
+
+def test_an_add_on_out_of_time_is_said_not_raised(monkeypatch):
+    def slow(*a, **k):
+        raise arms.subprocess.TimeoutExpired(a[0], k["timeout"])
+
+    monkeypatch.setattr(arms.subprocess, "run", slow)
+    got = arms.tool("same-way/same_way.py", "--box", "b", timeout=5)
+    assert got.returncode == 124 and "timed out after 5 seconds" in got.stderr
+
+
+def test_same_way_gets_time_for_every_ask_and_each_model_is_saved(
+    monkeypatch, tmp_path
+):
+    limits, saved = [], []
+
+    def fake(script, *args, timeout=900):
+        limits.append((script.split("/")[0], timeout))
+        return arms.subprocess.CompletedProcess(script, 0, "2 asked, 0 flipped\n", "")
+
+    monkeypatch.setattr(arms, "tool", fake)
+    qs = [{"set": "author", "id": f"s{n}.1", "asked": f"q {n}"} for n in range(4)]
+    qs.append({"set": "null", "id": "n.1", "asked": "off"})
+    out = arms.arranged(tmp_path, qs, "u", ["a", "b@none"], tmp_path,
+                        lambda done: saved.append(sorted(done)))  # fmt: skip
+    assert ("same-way", arms.ASK_LIMIT * 3 * 4) in limits
+    assert ("local-model", arms.ASK_LIMIT) in limits
+    assert saved == [["a"], ["a", "b@none"]] and set(out) == {"a", "b@none"}
