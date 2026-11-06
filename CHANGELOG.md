@@ -16,7 +16,7 @@ says how). The first was v0.1.0.
   byte the one sent before. Measured on Ollama 0.40.14's OpenAI endpoint,
   `none` stopped qwen3:8b's thinking where "/no_think" in a system file and
   `think: false` didn't. `same-way` also takes `--system FILE`, as
-  openai-compatible's ask does, so it asks exactly the chat local-model asks
+  openai-compatible's ask does, so it asks exactly the chat local-model asks (#259)
 - `.github/copilot-instructions.md` points Copilot at `AGENTS.md` (prose, like
   `GEMINI.md`); `agents-md-check` reads it too, and AGENTS.md tips that need
   REST for `gh pr create` are framed by capability, not by product (#250)
