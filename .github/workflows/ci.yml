@@ -69,6 +69,32 @@ jobs:
           path: ${{ runner.temp }}/similar.md
           retention-days: 7
 
+  copies:
+    # The functions add-ons keep their own copy of that this pull request
+    # leaves drifted from the rest without saying why, each with its diff
+    # (adapters/stdlib/ci/copies.py), written to the run's summary and kept
+    # as the `copies` artifact. A suggestion, never a gate: copies.py's own
+    # tests run in the tests, and `copies.py survey` says every drift.
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - env:
+          BASE: origin/${{ github.base_ref }}
+        run: |
+          python adapters/stdlib/ci/copies.py new --base "$BASE" > "$RUNNER_TEMP/copies.md"
+          cat "$RUNNER_TEMP/copies.md" >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v7
+        with:
+          name: copies
+          path: ${{ runner.temp }}/copies.md
+          retention-days: 7
+
   changelog:
     # A pull request that changes more than the docs adds a line under
     # CHANGELOG.md's Unreleased ending with its number (CONTRIBUTING.md).

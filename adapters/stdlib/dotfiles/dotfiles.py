@@ -465,6 +465,7 @@ def convert(rel: PurePosixPath, data: bytes) -> str | None:
     return "\n".join(lines) + "\n"
 
 
+# differs on purpose: a dotfile is known by its name and folder (kind_of), not an extension
 def _sources(folder: Path) -> list[Path]:
     """Files under `folder` this reads, sorted by relative path. Hidden folders
     and files are skipped; symlinked folders are not followed."""
@@ -521,6 +522,7 @@ def mirror(src: Path, dst: Path) -> tuple[int, int]:
     return wrote, skipped
 
 
+# differs on purpose: it says the .toml files it can't read before Python 3.11
 def main(argv: list[str]) -> int:
     opts = dict(zip(argv[1::2], argv[2::2])) if argv[:1] == ["mirror"] else {}
     if len(argv) != 5 or sorted(opts) != ["--from", "--to"]:

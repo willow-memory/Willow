@@ -120,6 +120,7 @@ def write_places(dst: Path, rel: str, found: dict[str, str]) -> None:
     out.write_bytes((json.dumps(doc, ensure_ascii=False) + "\n").encode("utf-8"))
 
 
+# differs on purpose: it reads .srt and .vtt, written out
 def _sources(folder: Path) -> list[Path]:
     """The .srt and .vtt files under `folder`, sorted by relative path.
     Hidden folders and files are skipped; symlinked folders not followed."""
@@ -142,6 +143,7 @@ def _within(inner: Path, outer: Path) -> bool:
     return inner == outer or outer in inner.parents
 
 
+# differs on purpose: cues needs to know a .vtt
 def mirror(src: Path, dst: Path) -> tuple[int, int]:
     """Write the mirror of `src` into `dst`. Returns (written, skipped)."""
     wrote = skipped = 0

@@ -368,6 +368,7 @@ def library_of(path: Path) -> str | None:
         con.close()
 
 
+# differs on purpose: it reads only Zotero's .sqlite
 def _sources(folder: Path) -> list[Path]:
     """Files under `folder` this reads, sorted by relative path. Hidden folders
     and files are skipped; symlinked folders are not followed."""
@@ -389,6 +390,7 @@ def _within(inner: Path, outer: Path) -> bool:
     return inner == outer or outer in inner.parents
 
 
+# differs on purpose: library_of skips what isn't a library, so only OSError is left to catch
 def mirror(src: Path, dst: Path) -> tuple[int, int]:
     """Write the mirror of `src` into `dst`. Returns (written, skipped)."""
     wrote = skipped = 0

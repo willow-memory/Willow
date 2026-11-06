@@ -238,6 +238,35 @@ subtitles, a cue from its timing line to its text). One whose lines aren't
 the file's names its places: jupyter's `cell 4`, mail's `message 3`, a
 Telegram export's `message 4417`, and the `whole file` for a note about it.
 
+## The copies
+
+An add-on holds alone and shares only the kernel, so the same function
+lives in many of them: a reader's `_sources`, a report's `report_text`, a
+language pack's `kept`. [copies.py](copies.py) finds the copies that drifted
+from the rest, which is where a fix made in one place and not the others
+hides:
+
+    python adapters/stdlib/ci/copies.py survey [--json]
+    python adapters/stdlib/ci/copies.py diff NAME
+
+`survey` groups every add-on's top-level functions by name and finds each
+group's common version, the one most copies hold, read as Python reads it
+(formatting, comments and the docstring aside). A copy that still holds most
+of its lines and isn't it has drifted, and is a row of the report; one that
+holds less is another function sharing the name, and is counted, not
+reported. `diff NAME` prints each drifted copy's lines against the common
+version, as a unified diff. Which is right is a person's call: almanac's
+`_sources` reads only an Almanac's catalog on purpose, and a drift can be the fix
+the others lack.
+
+A copy that differs on purpose says why in a comment on the line above its
+`def`, `# differs on purpose: ...`, as sort-ask's `kernel_says` does (it
+captures stderr too, so a refusal's reason reaches its report's row); its
+row says so, and a survey whose every drift says why exits 0. On a pull
+request, CI's `copies` job runs `copies.py new --base`: the copies the pull
+request leaves drifted that weren't before and don't say why, each with its
+diff, in the run's summary. A suggestion, never a gate.
+
 ## The report contract
 
 An add-on that tells you what it found in your files (a check, an audit, a
