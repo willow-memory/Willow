@@ -159,6 +159,11 @@ def run_one(
         return "a traceback", said
     if got.returncode not in (0, 2, 42):
         return f"exit {got.returncode}", said
+    cut = long_lines(tmp / "mirror")
+    if cut:
+        where, line, size = cut[0]
+        return (f"{len(cut)} mirror line(s) longer than the kernel's {kernel.MAX_CHUNK}"
+                f" characters, which it cuts unread (first: {where}:{line}, {size})"), said  # fmt: skip
     if (tmp / "mirror").is_dir() and MIRRORS.keeps(script.parent / "README.md"):
         broke = MIRRORS.check(life, tmp / "mirror")
         if broke:
@@ -166,11 +171,6 @@ def run_one(
                 f"{len(broke)} break(s) of the mirror contract (first: {broke[0]})",
                 said,
             )
-    cut = long_lines(tmp / "mirror")
-    if cut:
-        where, line, size = cut[0]
-        return (f"{len(cut)} mirror line(s) longer than the kernel's {kernel.MAX_CHUNK}"
-                f" characters, which it cuts unread (first: {where}:{line}, {size})"), said  # fmt: skip
     return "", said
 
 

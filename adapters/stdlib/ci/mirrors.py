@@ -139,7 +139,10 @@ def check(folder: Path, mirror: Path) -> list[str]:
 
 
 def keeps(card: Path) -> bool:
-    """Whether a reader's card says `output: mirror`, among its outputs."""
+    """Whether a reader's card says `output: mirror`, among its outputs; with
+    no card, it promised nothing."""
+    if not card.is_file():
+        return False
     head = re.search(
         r"<!--\s*willow-addon\s*\n(.*?)-->", card.read_text(encoding="utf-8"), re.S
     )
