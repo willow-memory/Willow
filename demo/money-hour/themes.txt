@@ -1,0 +1,7 @@
+# Hollis's themes for the 10-Ks: what the table kept asking about at the money hour.
+# One category a line, its phrases after the colon. Singular forms: the kernel matches plurals.
+tariffs: tariff, trade restrictions, export controls
+ai: artificial intelligence, generative ai, machine learning, data center
+rates: interest rates, higher interest rates
+climate: climate change, extreme weather, greenhouse gas
+cyber: cybersecurity, ransomware, data breach

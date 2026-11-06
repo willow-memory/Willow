@@ -1,0 +1,177 @@
+{
+ "R1": {
+  "held": true,
+  "where": [
+   "fed-fomc/statements/20260916.html.txt:555"
+  ],
+  "who": "marisol"
+ },
+ "R2": {
+  "held": true,
+  "where": [
+   "fed-fomc/statements/20261028.html.txt:561"
+  ],
+  "who": "teodora"
+ },
+ "R3": {
+  "held": true,
+  "where": [
+   "treasury/daily_treasury_yield_curve_2026.csv.txt:11",
+   "treasury/daily_treasury_yield_curve_2026.csv.txt:47",
+   "treasury/daily_treasury_yield_curve_2026.csv.txt:167"
+  ],
+  "who": "marisol"
+ },
+ "R4": {
+  "held": true,
+  "where": [
+   "fred/labor/UNRATE.csv.txt:1891"
+  ],
+  "who": "bernadette"
+ },
+ "R5": {
+  "held": true,
+  "where": [
+   "ecb/deposit-rate.csv.txt.part4.txt:2651"
+  ],
+  "who": "teodora"
+ },
+ "R6": {
+  "held": true,
+  "where": [
+   "sec/10-k/AAPL-2026-11-03.htm.txt:1994",
+   "sec/10-k/AAPL-2026-11-03.htm.txt:5416"
+  ],
+  "who": "hollis"
+ },
+ "R7": {
+  "held": true,
+  "where": [
+   "treasury/daily_treasury_yield_curve_2026.csv.txt:11",
+   "treasury/daily_treasury_yield_curve_2026.csv.txt:167"
+  ],
+  "who": "hollis"
+ },
+ "T1": {
+  "held": true,
+  "right_whole_in": [
+   "fed-fomc/statements/20260916.html.txt:555"
+  ],
+  "wrong_whole_in": []
+ },
+ "T2": {
+  "held": true,
+  "named": [
+   "always -> before",
+   "only -> just"
+  ]
+ },
+ "T3": {
+  "held": true,
+  "right_whole_in": [
+   "fred/labor/UNRATE.csv.txt:1891"
+  ],
+  "wrong_whole_in": []
+ },
+ "T4": {
+  "held": true,
+  "right_whole_in": [
+   "fed-fomc/presconf-transcripts/20260729.pdf.txt:1",
+   "fed-fomc/presconf-transcripts/20260729.pdf.txt:29",
+   "fed-fomc/presconf-transcripts/20260729.pdf.txt:55"
+  ],
+  "wrong_whole_in": []
+ },
+ "T5": {
+  "expected": [
+   "$95.8B"
+  ],
+  "held": false,
+  "only_in_summary": [
+   "$95.8B",
+   "$0.27"
+  ]
+ },
+ "V1": {
+  "held": true,
+  "where": [
+   "fed-fomc/presconf-transcripts/20260729.pdf.txt:17"
+  ]
+ },
+ "after": {
+  "held": true
+ },
+ "calls": [
+  {
+   "before": "7720.39",
+   "call": "SP500 up 2026-10-30 p 0.7",
+   "close": "7580.07",
+   "happened": false,
+   "made": true,
+   "once_sealed": "wrong",
+   "waiting": true,
+   "who": "hollis"
+  },
+  {
+   "before": "7722.60",
+   "call": "SP500 up 2026-10-28 p 0.5",
+   "close": "7743.98",
+   "happened": true,
+   "made": true,
+   "once_sealed": "even",
+   "waiting": true,
+   "who": "marisol"
+  },
+  {
+   "before": "7568.92",
+   "call": "SP500 above:7700 2026-11-04 p 0.35",
+   "close": "7688.62",
+   "happened": false,
+   "made": true,
+   "once_sealed": "right",
+   "waiting": true,
+   "who": "bernadette"
+  },
+  {
+   "before": "7568.92",
+   "call": "SP500 up 2026-11-04 p 0.55",
+   "close": "7688.62",
+   "happened": true,
+   "made": true,
+   "once_sealed": "right",
+   "waiting": true,
+   "who": "teodora"
+  }
+ ],
+ "calls-closed": {
+  "held": true
+ },
+ "calls-made": {
+  "held": true
+ },
+ "lines": {
+  "held": true
+ },
+ "slice": {
+  "files": 17
+ },
+ "stack": {
+  "exit": 0,
+  "held": true,
+  "said_speakers": [
+   "Bernie",
+   "Hollis",
+   "Marisol"
+  ]
+ },
+ "verify": {
+  "boxes": {
+   "bernadette": "the chain holds: 6 rows, 0 sealed",
+   "hollis": "the chain holds: 6 rows, 0 sealed",
+   "marisol": "the chain holds: 6 rows, 0 sealed",
+   "sources": "the chain holds: 1 rows, 0 sealed",
+   "teodora": "the chain holds: 6 rows, 0 sealed"
+  },
+  "held": true
+ }
+}

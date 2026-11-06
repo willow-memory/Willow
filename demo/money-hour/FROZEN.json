@@ -1,0 +1,42 @@
+{
+ "freeze": 3,
+ "date": "2026-11-05",
+ "why": "run 2 failed T5 for a reason in pair-drift, not in Hollis's newsletter: it read \"from $0.26 to $0.27\" as one range, so the summary's correct $0.27 looked like drift. pair-drift now reads \"from A to B\" as a change, two figures, with tests. run.py now numbers its results by the next free run-N.json, so earlier runs are never rewritten. Rules, lines, stacks and themes are as at freeze 2. Formatted by ruff before its commit, which changes no rule; run 3 ran on the formatted bytes.",
+ "files": {
+  "questions.json": "5f19c91f5024b587f5f316f1fe22b0bad11f7d52465db13ade790878941e31cf",
+  "make_life.py": "6d45929fc22f26371d2d71db3596ad6c9d677fc111036691daffbe4f4620d097",
+  "run.py": "0ce61a7799a8d895a46a63a5182c3e00cddd114be2af0712bc3c6603dfa6a229",
+  "money-hour.md": "edb5ff18c5d41f1980bf41a48510f30a529804778a0fe1d3a851807db9e5c22a",
+  "fed.md": "d027050645c6b97ae9b81811ba4cef5fd1ca838dbad28e3d942037ea9f218b14",
+  "filings.md": "5fea74a132aa6eef6fa9a30b11ba16d4add8fe4a8e340699c4e9c2c73c69ac48",
+  "themes.txt": "b05dfa82346ec96e03c3f87016747336edd71ffb1c88107e7564881a5ea500a6"
+ },
+ "tools": {
+  "adapters/stdlib/pair-drift/pair_drift.py": "3bbc0991b926858a48af41f965063addcee884adec761e119b77a16846c2f0e1"
+ },
+ "earlier": [
+  {
+   "freeze": 2,
+   "why": "the table asks across years and companies: two folded desk boxes (the Fed's 2023 to 2026 statements and minutes, the 55 10-Ks), Teo's letter in two drafts with her own slip (T6), Hollis's themes, the fed and filings stacks, and two pools added to Teo's (digest, history). Run 1's rules, lines and slice are unchanged; its results are kept as run-1.json.",
+   "files": {
+    "questions.json": "5f19c91f5024b587f5f316f1fe22b0bad11f7d52465db13ade790878941e31cf",
+    "make_life.py": "8f2c9cc81f0ba18a11a0de40635aa1f22c121070573eb22b052ae7a9a2911175",
+    "run.py": "65e12434cbfafad961a21e12250268ffe96286b36135a2d6de2c037dee3efe1c",
+    "money-hour.md": "edb5ff18c5d41f1980bf41a48510f30a529804778a0fe1d3a851807db9e5c22a",
+    "fed.md": "d027050645c6b97ae9b81811ba4cef5fd1ca838dbad28e3d942037ea9f218b14",
+    "filings.md": "5fea74a132aa6eef6fa9a30b11ba16d4add8fe4a8e340699c4e9c2c73c69ac48",
+    "themes.txt": "b05dfa82346ec96e03c3f87016747336edd71ffb1c88107e7564881a5ea500a6"
+   }
+  },
+  {
+   "freeze": 1,
+   "why": "the rules, the frozen lines, the people's files and the runner, as run 1 ran them. Before this freeze one pass of run.py read pair-drift's figures by the wrong shape ($95.8 billion where it prints $95.8B); run.py was fixed to read its own form, and nothing else changed. Facts and the quote are numbered R and V, since F and Q numbers belong to the willow system. A change to any of these is a new freeze, with its reason.",
+   "files": {
+    "questions.json": "4d16705a046830e163b889b0359ed5796cf1ff7ad341b165220bbce07d477221",
+    "make_life.py": "481067c5a7a5ff77ab28ba5a178f84226a6cc7db3f3bc0c891f2d62d1eed1fd4",
+    "run.py": "295f3079874a937d3e379a643054bb04454fc9c7beaf1a2655c0736e6d7a64ba",
+    "money-hour.md": "1cbfab79ccb87cefa5c312095ba948a45046465deeb06f521e3fe08fa43165b1"
+   }
+  }
+ ]
+}

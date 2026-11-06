@@ -14,7 +14,7 @@ tags: sources
 A web page or file fetched once into a folder, with where it came from,
 when, and its SHA-256.
 
-    python adapters/stdlib/snapshot/snapshot.py fetch --url URL --to FOLDER [--name NAME]
+    python adapters/stdlib/snapshot/snapshot.py fetch --url URL --to FOLDER [--name NAME] [--contact EMAIL]
     python adapters/stdlib/snapshot/snapshot.py check --in FOLDER
     python kernel.py init --box BOX --pile FOLDER --key KEY
 
