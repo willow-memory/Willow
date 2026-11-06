@@ -40,6 +40,7 @@ Exit codes, the kernel's: 0 wrote some; 42 nothing readable; 2 refused
 
 from __future__ import annotations
 
+import json
 import os
 import re
 import sys
@@ -151,6 +152,12 @@ def decode(data: bytes) -> str:
 def passages(data: bytes, name: str) -> list[str]:
     """One passage per displayed equation in a .tex file's bytes; `name` is
     the file's relative path, for the citation line."""
+    return [p for p, _, _ in placed(data, name)]
+
+
+def placed(data: bytes, name: str) -> list[tuple[str, int, int]]:
+    """Each passage, with the first and last of the file's lines it was drawn
+    from: the paragraph before it, the equation, and the one after."""
     text = decode(data).replace("\r\n", "\n")
     text = COMMENT.sub("", text)
     text = SKIP_ENVS.sub(_blank, text)
@@ -160,7 +167,7 @@ def passages(data: bytes, name: str) -> list[str]:
     end = text.find("\\end{document}", begin)
     text = text[: end if end >= 0 else len(text)]
     found = list(DISPLAY.finditer(text, begin))
-    out = []
+    out: list[tuple[str, int, int]] = []
     for i, m in enumerate(found):
         body = (
             m.group("a")
@@ -185,8 +192,40 @@ def passages(data: bytes, name: str) -> list[str]:
         before = _before(
             text[prev_end : m.start()].replace("\\begin{document}", ""), max(room, 0)
         )
-        out.append("\n".join(x for x in (head, before, eq, after) if x))
+        first = line
+        if before:  # from the start of the paragraph it ends
+            seg = text[prev_end : m.start()]
+            gaps = list(re.finditer(r"\n\s*\n", seg))
+            at = gaps[-1].end() if gaps else 0
+            at += len(seg[at:]) - len(seg[at:].lstrip())
+            first = text.count("\n", 0, prev_end + at) + 1
+        last = text.count("\n", 0, m.end()) + 1
+        if after:  # to the end of the paragraph it starts
+            seg = text[m.end() : next_start]
+            lead = len(seg) - len(seg.lstrip())
+            last = text.count("\n", 0, m.end() + lead + len(_first_para(seg))) + 1
+        out.append(("\n".join(x for x in (head, before, eq, after) if x), first, last))
     return out
+
+
+def places(found: list[tuple[str, int, int]]) -> dict[str, str]:
+    """The mirror contract's places (adapters/stdlib/ci/README.md): each
+    passage's mirror line, a blank line between passages, to the lines of
+    the .tex file it was drawn from. Its first line cites the equation's own
+    line, inside them."""
+    out, line = {}, 1
+    for text, first, last in found:
+        out[str(line)] = f"line {first}" if first == last else f"lines {first}-{last}"
+        line += text.count("\n") + 2
+    return out
+
+
+def write_places(dst: Path, rel: str, found: dict[str, str]) -> None:
+    """The map, hidden beside the mirror, where the kernel never reads."""
+    out = dst / ".places" / (rel + ".txt.json")
+    out.parent.mkdir(parents=True, exist_ok=True)
+    doc = {"source": rel, "places": found}
+    out.write_bytes((json.dumps(doc, ensure_ascii=False) + "\n").encode("utf-8"))
 
 
 def _sources(folder: Path) -> list[Path]:
@@ -213,13 +252,16 @@ def mirror(src: Path, dst: Path) -> tuple[int, int, int]:
     for path in _sources(src):
         rel = path.relative_to(src)
         try:
-            found = passages(path.read_bytes(), rel.as_posix())
+            found = placed(path.read_bytes(), rel.as_posix())
             if not found:
                 skipped += 1
                 continue
             target = dst.joinpath(rel.parent, rel.name + ".txt")
             target.parent.mkdir(parents=True, exist_ok=True)
-            target.write_bytes(("\n\n".join(found) + "\n").encode("utf-8"))
+            target.write_bytes(
+                ("\n\n".join(p for p, _, _ in found) + "\n").encode("utf-8")
+            )
+            write_places(dst, rel.as_posix(), places(found))
         except ERRORS:
             skipped += 1
             continue

@@ -38,6 +38,8 @@ def test_a_mirror_that_keeps_it_has_no_break(tmp_path):
     assert mm.check(*world(tmp_path)) == []
     folder, out = world(tmp_path / "b", {**GOOD, "3": "lines 3-4", "6": "page 2"})
     assert mm.check(folder, out) == [], "a range and a named place are places"
+    folder, out = world(tmp_path / "c", {**GOOD, "4": "line 4"})
+    assert mm.check(folder, out) == [], "a line inside a passage may be placed too"
 
 
 def test_passages_start_after_a_blank_line_or_on_the_first():
@@ -49,7 +51,10 @@ def test_passages_start_after_a_blank_line_or_on_the_first():
 def test_each_break_is_said(tmp_path):
     cases = [
         ({"1": "line 1", "3": "line 3"}, "line 6 starts a passage the map doesn't place"),
-        ({**GOOD, "4": "line 4"}, "the map places '4', which starts no passage"),
+        ({**GOOD, "5": "line 5"}, "the map places '5', which is no line with words"),
+        ({**GOOD, "9": "line 6"}, "the map places '9', which is no line with words"),
+        ({**GOOD, "x": "line 6"}, "the map places 'x', which is no line with words"),
+        ({**GOOD, "4": "line 9"}, "line 4: line 9 is outside the source's 6 lines"),
         ({**GOOD, "6": "line 9"}, "line 6: line 9 is outside the source's 6 lines"),
         ({**GOOD, "6": "lines 0-1"}, "line 6: lines 0-1 is outside the source's 6 lines"),
         ({**GOOD, "6": "lines 6-5"}, "line 6: lines 6-5 is outside the source's 6 lines"),
@@ -124,3 +129,21 @@ def test_its_command_line_says_each_break_and_exits_42(tmp_path):
         assert got.returncode == 2 and "mirrors.py" in got.stderr, argv
     got = run("check", "--from", tmp_path / "none", "--mirror", out)
     assert got.returncode == 2 and got.stderr.startswith("refused: ")
+
+
+def test_a_citation_line_cites_inside_its_place_and_the_next_line_is_held():
+    source = ["Lead in.", "\\begin{equation}", "E = mc^2", "\\end{equation}"]
+    good = "p.tex line 2, label eq:e\nLead in.\nE = mc^2"
+    assert mm.check_file(good, {"1": "lines 1-4"}, source, "p.tex") == []
+    assert (
+        mm.cited("p.tex line 2", "p.tex") == 2
+        and mm.cited("q.tex line 2", "p.tex") is None
+    )
+    assert mm.check_file(good, {"1": "line 3"}, source, "p.tex") == [
+        "line 1: it cites line 2, outside its place, line 3"
+    ]
+    wrong = "p.tex line 2\nUnrelated words."
+    assert mm.check_file(wrong, {"1": "lines 1-4"}, source, "p.tex") == [
+        "line 1: no word of 'Unrelated words.' is on the source's lines 1-4"
+    ]
+    assert mm.check_file("p.tex line 2", {"1": "lines 1-4"}, source, "p.tex") == []
