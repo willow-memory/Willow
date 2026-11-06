@@ -38,7 +38,7 @@ def test_the_hand_listed_sources_need_no_network_to_list():
     listed = fetch.static_sources()
     assert len(listed) == len({(f, n) for f, n, _ in listed})
     assert all(u.startswith("https://") for _, _, u in listed)
-    assert not any("sec.gov" in u for _, _, u in listed)  # EDGAR only with --contact
+    assert not any(fetch.is_sec(u) for _, _, u in listed)  # EDGAR only with --contact
 
 
 def test_an_error_page_or_a_bls_limit_is_not_data(tmp_path):
@@ -64,3 +64,17 @@ def test_a_successor_without_a_10k_reads_its_predecessors():
         if r["folder"] == "sec/10-k" and r["file"].startswith("XOM")
     ]
     assert tenk and "/data/34088/" in tenk[0]["url"]
+
+
+def test_the_contact_goes_to_sec_gov_by_host_alone():
+    assert fetch.is_sec("https://data.sec.gov/submissions/CIK0000320193.json")
+    assert fetch.is_sec("https://www.sec.gov/files/company_tickers.json")
+    assert fetch.is_sec("https://sec.gov/")
+    for not_sec in (
+        "https://evil.example/x.sec.gov/",
+        "https://sec.gov.evil.example/",
+        "https://notsec.gov/",
+        "http://www.sec.gov/",
+        "https://evil.example/?u=https://www.sec.gov/",
+    ):
+        assert not fetch.is_sec(not_sec), not_sec

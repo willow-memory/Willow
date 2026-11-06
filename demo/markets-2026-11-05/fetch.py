@@ -38,6 +38,7 @@ import re
 import subprocess
 import sys
 import time
+import urllib.parse
 import zipfile
 from pathlib import Path
 
@@ -349,6 +350,14 @@ def latest_10k(pile: Path) -> list[tuple[str, str, str]]:
     return out
 
 
+def is_sec(url: str) -> bool:
+    """True only for an https address on sec.gov or a subdomain of it: the one
+    publisher the person's contact goes to, judged by host, never by substring."""
+    parts = urllib.parse.urlsplit(url)
+    host = (parts.hostname or "").lower()
+    return parts.scheme == "https" and (host == "sec.gov" or host.endswith(".sec.gov"))
+
+
 def snap(
     pile: Path, folder: str, name: str, url: str, contact: str | None = None
 ) -> int:
@@ -375,7 +384,7 @@ def snap(
             "--name",
             name,
         ]  # fmt: skip
-        + (["--contact", contact] if contact and ".sec.gov/" in url else []),
+        + (["--contact", contact] if contact and is_sec(url) else []),
         capture_output=True,
         text=True,
     )
