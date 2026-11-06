@@ -1850,6 +1850,14 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- `mutants`: every accepted survivor is killed — inert starting `0`s,
+  unused report-width defaults, equivalent compares and maxsplits rewritten
+  or named and asserted — so `adapters/stdlib/mutants/accepted.json` is
+  empty again (across, advisories, again, agents-md-check, all, books,
+  clauses, coming-up, dice5e, flashcards, lesson-time, live, markdown,
+  mcp-lite, misquote, office, pins, scan, secrets-audit, stack,
+  three-two-one, todo, transcript-redact, typosquat)
+
 - `test-impact`: the add-on test files a change reaches run as up to four
   steps, one a minute of their past times, and `--jobs` starts the longest
   steps first; restack and ci together, 22 reached files and two add-ons'

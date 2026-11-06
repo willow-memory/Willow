@@ -13,6 +13,15 @@ KERNEL = HERE.parents[2] / "kernel.py"
 NOW = ["--now", "2026-10-23T00:00:00Z"]
 
 
+def test_every_is_a_billion_not_ten_billion():
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location("all_mod", HERE / "all.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    assert mod.EVERY == 10**9
+
+
 def run(*argv: str) -> subprocess.CompletedProcess:
     return subprocess.run([sys.executable, *argv], capture_output=True, text=True)
 

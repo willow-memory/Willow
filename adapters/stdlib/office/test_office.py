@@ -57,6 +57,17 @@ def snapshot(root: Path) -> dict[str, bytes]:
     }
 
 
+def test_a_part_is_capped_at_sixty_four_mib():
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location(
+        "office", Path(__file__).resolve().parent / "office.py"
+    )
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    assert mod.MAX_PART_MIB == 64 and mod.MAX_PART == 64 * 1024 * 1024
+
+
 def test_docx_paragraphs_become_blank_line_separated_lines(tmp_path):
     folder = tmp_path / "in"
     xml = (

@@ -41,8 +41,8 @@ import sys
 from pathlib import Path
 
 STDLIB = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(STDLIB.parents[1]))
 sys.path.insert(0, str(STDLIB / "advisories"))
+# advisories inserts the repo root for kernel; one path is enough.
 import advisories  # noqa: E402
 import kernel  # noqa: E402
 

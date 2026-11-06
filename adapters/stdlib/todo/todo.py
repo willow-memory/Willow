@@ -68,8 +68,10 @@ def report(addon: str, state: str, said: str, groups: list) -> dict:
 
 def report_text(doc: dict) -> str:
     rows = [r for g in doc["groups"] for r in g["rows"]]
-    w = min(max((len(r["where"]) for r in rows), default=0), 60)
     out = [f"{doc['addon']}: {doc['state']}, {doc['said']}"]
+    if not rows:
+        return out[0]
+    w = min(max(len(r["where"]) for r in rows), 60)
     for g in doc["groups"]:
         if g["name"] is not None:
             out.append(f"## {g['name']}")

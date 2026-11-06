@@ -70,8 +70,8 @@ def parse(argv: list[str]) -> dict | None:
                 if i >= n or box_list is not None:
                     return None
                 box_list = argv[i]
-            elif a.startswith("--") or not a:
-                return None  # an unknown flag, or an empty DOC
+            elif a.startswith("-"):
+                return None  # an unknown flag (DOC names never start with -)
             else:
                 doc = a
         elif a == "--":
@@ -80,7 +80,7 @@ def parse(argv: list[str]) -> dict | None:
         else:
             return None  # junk after DOC that isn't the `--` passthrough
         i += 1
-    if doc not in DOCS:
+    if not doc or doc not in DOCS:
         return None
     if (box_list is None) == (not boxes):  # neither, or both
         return None

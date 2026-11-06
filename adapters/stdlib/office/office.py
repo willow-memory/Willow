@@ -37,7 +37,8 @@ USAGE = "usage: office.py mirror --from FOLDER --to MIRROR"
 FORMATS = (".docx", ".odt", ".pptx", ".xlsx", ".ods")
 
 # A zip bomb is bounded here: a part is read at most this far, then refused.
-MAX_PART = 64 * 1024 * 1024
+MAX_PART_MIB = 64
+MAX_PART = MAX_PART_MIB * 1024 * 1024
 
 W = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
 A = "{http://schemas.openxmlformats.org/drawingml/2006/main}"

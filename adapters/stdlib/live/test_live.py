@@ -77,6 +77,18 @@ def fakes(tmp_path, monkeypatch):
     return bin_
 
 
+def test_said_tail_quotes_two_hundred_characters():
+    import importlib.util
+    from pathlib import Path
+
+    spec = importlib.util.spec_from_file_location(
+        "live", Path(__file__).resolve().parent / "live.py"
+    )
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    assert mod.SAID_TAIL == 200
+
+
 def test_a_program_that_isnt_here_is_not_here_not_a_pass(tmp_path, monkeypatch, capsys):
     monkeypatch.setenv("PATH", str(tmp_path))
     assert live.one("gemini") == (live.ABSENT, "gemini not on PATH")

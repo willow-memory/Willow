@@ -23,6 +23,7 @@ fails; 2 one fails, or a bad command line.
 
 from __future__ import annotations
 
+import itertools
 import json
 import os
 import select
@@ -43,6 +44,8 @@ STDLIB = ROOT / "adapters" / "stdlib"
 WORKS, FAILS, ABSENT = "works", "fails", "not here"
 #: how long one program gets before it counts as failing
 TIMEOUT = 120
+#: how much of a program's stdout is quoted when a check fails
+SAID_TAIL = 200
 QUESTION = "when is the dentist"
 NOTES = {
     "dentist.txt": "The dentist is on Tuesday at 3pm.\nBring the insurance card.\n",
@@ -111,7 +114,7 @@ class Place:
         )  # fmt: skip
         said = got.stdout + got.stderr
         if got.returncode == NOT_FOUND and argv[0] == self.needs:
-            raise StandIn(" ".join(said.split())[:200])
+            raise StandIn(" ".join(said.split())[:SAID_TAIL])
         return said
 
     def expect(self, name: str = "dentist.txt", line: int = 1) -> str:
@@ -127,7 +130,7 @@ def config(folder: str, module: str, place: Place, index: int = 0) -> str:
 def has(said: str, *words: str) -> str | None:
     """None when every word is in what the program said, else why not."""
     gone = [w for w in words if w not in said]
-    tail = " ".join(said.split())[-200:]
+    tail = " ".join(said.split())[-SAID_TAIL:]
     return f"didn't say {gone[0]!r}: {tail}" if gone else None
 
 
@@ -136,7 +139,7 @@ def lines(said: str, *wanted: str) -> str | None:
     file and line misread as a longer one still holds the right text."""
     got = set(said.splitlines())
     gone = [w for w in wanted if w not in got]
-    tail = " ".join(said.split())[-200:]
+    tail = " ".join(said.split())[-SAID_TAIL:]
     return f"no line {gone[0]!r}: {tail}" if gone else None
 
 
@@ -383,7 +386,7 @@ class Chrome:
         )  # fmt: skip
         os.close(self.to_r)
         os.close(self.from_w)
-        self.n, self.buf = 0, b""
+        self._ids, self.buf = itertools.count(1), b""
 
     def _fds(self) -> None:
         """In the child: its ends on fds 3 and 4, inheritable. Moved through
@@ -394,8 +397,8 @@ class Chrome:
         os.dup2(w, 4)
 
     def send(self, method: str, params: dict = None, session: str = None) -> dict:
-        self.n += 1
-        msg = {"id": self.n, "method": method, "params": params or {}}
+        mid = next(self._ids)
+        msg = {"id": mid, "method": method, "params": params or {}}
         if session:
             msg["sessionId"] = session
         os.write(self.to_w, json.dumps(msg).encode() + b"\0")
@@ -404,7 +407,7 @@ class Chrome:
             while b"\0" in self.buf:
                 raw, self.buf = self.buf.split(b"\0", 1)
                 got = json.loads(raw)
-                if got.get("id") == self.n:
+                if got.get("id") == mid:
                     if "error" in got:
                         raise RuntimeError(f"{method}: {got['error'].get('message')}")
                     return got.get("result", {})

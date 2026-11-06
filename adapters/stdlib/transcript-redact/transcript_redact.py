@@ -111,7 +111,7 @@ def redact(line: str) -> tuple[str, list[tuple[str, str, str]]]:
         return kept
 
     def email(m: re.Match) -> str:
-        at = m.group().split("@", 1)[1]
+        at = m.group().partition("@")[2]
         out.append(("an email", "[redacted:email]", "…" + m.group()[0] + "@" + at))
         return "[redacted:email]"
 
