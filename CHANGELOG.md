@@ -10,6 +10,9 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `llm-cli`: suggestions through Simon Willison's `llm` command — bite first,
+  only served passages go to the model any of its plugins reach, propose a
+  cited reply; llm's log names the model (#253)
 - `hooks-elsewhere` refuses `--host cursor`: Cursor's `beforeSubmitPrompt`
   can only continue or block a prompt, never inject passages; the card and
   `hosts` point at the `cursor` MCP add-on instead (#252)
