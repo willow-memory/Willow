@@ -2118,7 +2118,7 @@ says how). The first was v0.1.0.
   kernel read only its first 500 characters. On the demo people's folders
   that was 74 passages and 19,047 words never read; now none. A sentence of
   500 characters or fewer is written as before, and google-privacy's mirrors
-  are the same bytes
+  are the same bytes (#262)
 - `local-model`: the test that no server on the usual ports means 42 no
   longer sends a real question to whatever model runs on this machine; it
   points the usual ports at ones just bound and closed, and asserts 42
