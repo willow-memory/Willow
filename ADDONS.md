@@ -600,7 +600,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 ## For maintainers
 
 - [**against**](adapters/stdlib/against/) — A pull request held to the other open ones: a name both add fails, a file both change is said. Uses similar. *new* `no-install` `offline` `pull` `requests` · near: test-impact, pr-context, upstream-desk
-- [**agents-md-check**](adapters/stdlib/agents-md-check/) — Commands and paths named in AGENTS.md, CLAUDE.md or GEMINI.md that no longer exist in the repo. *new* `no-install` `offline` `gemini` `agent` · near: instruction-files, hosts, hook-impact
+- [**agents-md-check**](adapters/stdlib/agents-md-check/) — Commands and paths named in AGENTS.md, CLAUDE.md, GEMINI.md or copilot-instructions.md that no longer exist in the repo. *new* `no-install` `offline` `agent` `gemini` · near: instruction-files, hosts, hook-impact
 - [**bench**](adapters/stdlib/bench/) — How fast the kernel answers on boxes of set sizes, per release, so a slowdown is seen. *new* `no-install` `offline` `release` `build` · near: profile, pile-store, pile-build
 - [**bot-venv**](adapters/stdlib/bot-venv/) — Where your venvs are, inside willow-bot or out, with their locks and the services running them; and which has what CI needs, with the line that runs CI. *bot* `no-install` `offline` `test` `repo` · near: ci, fast-tests, ci-why
 - [**ci**](adapters/stdlib/ci/) — This repo's checks as verdict rows on a kernel record, the same every run. Uses live, readme, stack, test-shards. Goes online: PyPI, to read each dependency floor's release date. *box* `no-install` `online` `rows` `verdict` · near: ci-memo, bot-venv, ci-why

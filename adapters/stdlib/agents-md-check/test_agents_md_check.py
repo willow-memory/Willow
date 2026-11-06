@@ -134,7 +134,8 @@ def test_instruction_files_under_node_modules_are_not_read(tmp_path):
 def test_no_instruction_file_is_clean(tmp_path):
     got = run("--from", str(repo(tmp_path, {"README.md": "`gone/x.py`"})))
     assert got.returncode == 0 and got.stdout.splitlines() == [
-        "agents-md-check: empty, no AGENTS.md, CLAUDE.md or GEMINI.md here, so nothing in one has gone missing"
+        "agents-md-check: empty, no AGENTS.md, CLAUDE.md, GEMINI.md or"
+        " copilot-instructions.md here, so nothing in one has gone missing"
     ]
 
 
