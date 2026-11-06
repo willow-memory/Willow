@@ -115,6 +115,11 @@ def test_long_lines_names_each_line_over_a_chunk(tmp_path):
     )
     assert rd.long_lines(tmp_path) == [("a/x.txt", 2, 501)]
     assert rd.long_lines(tmp_path / "missing") == []
+    # the mirror contract's maps are hidden, one line of JSON the kernel
+    # never reads, so a long one is not a cut passage
+    (tmp_path / ".places" / "a").mkdir(parents=True)
+    (tmp_path / ".places" / "a" / "x.txt.json").write_text("{" + "q" * 900 + "}")
+    assert rd.long_lines(tmp_path) == [("a/x.txt", 2, 501)]
 
 
 def test_a_reader_runs_mirror_over_the_folder():
