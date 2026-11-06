@@ -73,5 +73,10 @@ folder, or MIRROR and FOLDER are inside one another).
 **Uses:** the kernel's exit codes (`ALIVE`, `ESCALATE`, `REFUSED`); Python's
 standard library for the format.
 
+**Where each passage came from** is in a hidden map beside its mirror,
+`MIRROR/.places/<same path>.txt.json`, which the kernel never reads: each
+passage's line, which is the source's own, as
+[the mirror contract](../ci/README.md#the-mirror-contract) says.
+
 **Never:** writes inside FOLDER, modifies an original, follows an include,
 writes anything outside MIRROR, or goes online.

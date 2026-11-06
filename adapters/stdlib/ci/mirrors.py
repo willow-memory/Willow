@@ -21,8 +21,9 @@ reader that says it to it, on its sample and on the demo people's folders:
   left without a mirror file;
 - every passage (a run of lines after a blank one) starts on a line the map
   names, and the map names no line that starts none;
-- a line place is inside the source file, and a word of the passage's first
-  line is on the source's line or lines there, so an off-by-one shows;
+- a line place is inside the source file, and a content word of the
+  passage's first line (not "the" or "in") is on the source's line or lines
+  there, so an off-by-one shows;
 - no mirror line is longer than one of the kernel's chunks, which it would
   cut unread.
 
@@ -55,7 +56,9 @@ def starts(text: str) -> list[int]:
 
 
 def words(line: str) -> set[str]:
-    return {w.lower() for w in kernel.words(line)}
+    """A line's content words, as the kernel's rank counts them: "in" and
+    "the" are on every other line, and would hide an off-by-one."""
+    return {w.lower() for w in kernel.words(line)} - kernel.FUNCTION
 
 
 def check_file(text: str, places: dict, source: list[str]) -> list[str]:
