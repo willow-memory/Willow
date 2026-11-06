@@ -6,6 +6,7 @@ added: 2026-11-02
 writes: to
 network: none
 role: reads
+output: mirror
 reads: .csv, .tsv
 -->
 # csv-rows
@@ -84,6 +85,12 @@ folder, or MIRROR and FOLDER are inside one another).
 
 **Uses:** the kernel's exit codes (`ALIVE`, `ESCALATE`, `REFUSED`) and its
 `MAX_CHUNK`; Python's standard library (`csv`) for the format.
+
+**Where each passage came from** is in a hidden map beside its mirror,
+`MIRROR/.places/<same path>.txt.json`, which the kernel never reads, as
+[the mirror contract](../ci/README.md#the-mirror-contract) says: each
+row on its lines in the file, `line 3`, or `lines 4-5` for a row a quoted cell
+carries over two.
 
 **Never:** writes inside FOLDER, modifies an original, writes anything outside
 MIRROR, or goes online.

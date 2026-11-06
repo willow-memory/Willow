@@ -494,6 +494,7 @@ def _part_name(name: str, n: int) -> str:
     return f"{name}.txt" if n == 1 else f"{name}.part{n}.txt"
 
 
+# differs on purpose: it knows a file by what it holds: Chrome's Bookmarks and History have no extension
 def _sources(folder: Path) -> list[Path]:
     """Every file under `folder`, sorted by relative path. Hidden folders and
     files are skipped; symlinked folders are not followed."""

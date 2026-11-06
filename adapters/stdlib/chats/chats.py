@@ -108,45 +108,57 @@ def iso(a: str, b: str, y: str, order: str) -> str | None:
         return None
 
 
-def render(rows: list[tuple[str, str, str, str]], note: bool) -> str:
-    """`rows` are (day, HH:MM, who, text) in order; one paragraph per day."""
-    days: list[list[str]] = []
+def render(rows: list[tuple[str, str, str, str, str]], note: bool) -> tuple[str, dict]:
+    """`rows` are (day, HH:MM, who, text, place) in order; one paragraph per
+    day. With the mirror contract's places (adapters/stdlib/ci/README.md):
+    each message's line to its place in the export, the note on the whole
+    file, whose dates it is about."""
+    days: list[list[tuple[str, str]]] = []
     last = None
-    for day, hhmm, who, text in rows:
+    for day, hhmm, who, text, place in rows:
         if day != last:
             days.append([])
             last = day
-        days[-1].append(f"{day} {hhmm}  {who}: {text}".rstrip())
-    body = "\n\n".join("\n".join(d) for d in days) + "\n"
-    return f"{NOTE}\n\n{body}" if note else body
+        days[-1].append((f"{day} {hhmm}  {who}: {text}".rstrip(), place))
+    out, places = ([NOTE, ""], {"1": "whole file"}) if note else ([], {})
+    for d in days:
+        for line, place in d:
+            out.append(line)
+            places[str(len(out))] = place
+        out.append("")
+    return "\n".join(out[:-1]) + "\n", places
 
 
-def whatsapp(text: str, flag: str | None) -> str | None:
+def whatsapp(text: str, flag: str | None) -> tuple[str, dict] | None:
     """The mirror text of a WhatsApp export, or None when `text` isn't one."""
     if not looks_whatsapp(text):
         return None
-    lines = [ln.rstrip("\r") for ln in text.split("\n") if ln.strip()]
+    lines = [
+        (n, ln.rstrip("\r")) for n, ln in enumerate(text.split("\n"), 1) if ln.strip()
+    ]
     order = order_of(
-        [(m[1], m[2]) for m in (START.match(ln) for ln in lines) if m], flag
+        [(m[1], m[2]) for m in (START.match(ln) for _, ln in lines) if m], flag
     )
     messages: list[list] = []
     cur: list | None = None
-    for ln in lines:
+    for n, ln in lines:
         m = START.match(ln)
         if m is None:  # no date prefix: continues the message above it
             if cur is not None:
                 cur[5].append(ln.strip())
+                cur[7] = n
             continue
         said = SENDER.match(m[5])  # a dated line with no "Name: " is a system line
-        cur = [m[1], m[2], m[3], m[4], said[1], [said[2]]] if said else None
+        cur = [m[1], m[2], m[3], m[4], said[1], [said[2]], n, n] if said else None
         if cur is not None:
             messages.append(cur)
     rows = []
-    for a, b, y, raw_time, who, parts in messages:
+    for a, b, y, raw_time, who, parts, first, last in messages:
         hhmm = clock(raw_time)
         day = iso(a, b, y, order) if order else f"{a}/{b}/{y}"
+        place = f"line {first}" if first == last else f"lines {first}-{last}"
         if hhmm is not None and day is not None:
-            rows.append((day, hhmm, one_line(who), one_line(" ".join(parts))))
+            rows.append((day, hhmm, one_line(who), one_line(" ".join(parts)), place))
     if not rows:
         raise Unreadable("no message it could date")
     return render(rows, note=order is None)
@@ -167,9 +179,9 @@ def flatten(text: object) -> str:
     return "".join(out)
 
 
-def telegram(data: dict) -> str:
+def telegram(data: dict) -> tuple[str, dict]:
     rows = []
-    for m in data["messages"]:
+    for i, m in enumerate(data["messages"], 1):
         if not isinstance(m, dict) or not isinstance(m.get("from"), str):
             continue  # service messages have no "from"
         stamp = m.get("date")
@@ -182,8 +194,20 @@ def telegram(data: dict) -> str:
             continue
         hhmm = clock(f"{got[4]}:{got[5]}")
         if hhmm is not None and one_line(m["from"]):
+            mid = m.get("id")  # Telegram's own id; else its place in the list
+            place = (
+                f"message {mid}"
+                if isinstance(mid, (int, str)) and str(mid).strip()
+                else f"message {i}"
+            )
             rows.append(
-                (day, hhmm, one_line(m["from"]), one_line(flatten(m.get("text"))))
+                (
+                    day,
+                    hhmm,
+                    one_line(m["from"]),
+                    one_line(flatten(m.get("text"))),
+                    place,
+                )
             )
     if not rows:
         raise Unreadable("no message it could date")
@@ -196,8 +220,9 @@ def telegram_shaped(data: object) -> bool:
     return any(isinstance(m, dict) and "date" in m for m in data["messages"])
 
 
-def convert(raw: bytes, suffix: str, flag: str | None) -> str | None:
-    """The mirror text for one file. None: not a chat export, so not counted."""
+def convert(raw: bytes, suffix: str, flag: str | None) -> tuple[str, dict] | None:
+    """The mirror text for one file, and its places. None: not a chat export,
+    so not counted."""
     try:
         text = raw.decode("utf-8-sig")
     except UnicodeDecodeError:  # not UTF-8: say so only for a chat it can see
@@ -216,6 +241,14 @@ def convert(raw: bytes, suffix: str, flag: str | None) -> str | None:
             return None
         return telegram(data) if telegram_shaped(data) else None
     return whatsapp(text, flag)
+
+
+def write_places(dst: Path, rel: str, found: dict[str, str]) -> None:
+    """The map, hidden beside the mirror, where the kernel never reads."""
+    out = dst / ".places" / (rel + ".txt.json")
+    out.parent.mkdir(parents=True, exist_ok=True)
+    doc = {"source": rel, "places": found}
+    out.write_bytes((json.dumps(doc, ensure_ascii=False) + "\n").encode("utf-8"))
 
 
 def sources(root: Path) -> list[Path]:
@@ -256,10 +289,12 @@ def mirror(folder: Path, to: Path, flag: str | None) -> int:
             continue
         if text is None:
             continue
+        text, places = text
         out = to / rel
         out = out.with_name(out.name + ".txt")
         out.parent.mkdir(parents=True, exist_ok=True)
         out.write_bytes(text.encode("utf-8"))
+        write_places(to, rel.as_posix(), places)
         written += 1
     print(f"wrote {written} files to {to}; skipped {skipped}")
     return kernel.ALIVE if written else kernel.ESCALATE

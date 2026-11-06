@@ -3,7 +3,7 @@ unsorted or in more than one, and the kernel holds each for your seal.
 Python 3.9+, stdlib only.
 
     python adapters/stdlib/sort-ask/sort_ask.py --box DIR --categories FILE \\
-        --model NAME [--url URL] [--limit N] [--now TS] [--json]
+        --model NAME [--url URL] [--reasoning EFFORT] [--limit N] [--now TS] [--json]
 
 sort places what your own phrases reach; this is the rung after it. For each
 file sort left unsorted, or in more than one category, and with no
@@ -23,7 +23,9 @@ suggestion standing for it yet:
    passage. Anything else is said and proposed to no one.
 
 Nothing is placed here: a suggestion waits for your seal, and a seal is the
-correction your record keeps. Asked at temperature 0 with a fixed seed.
+correction your record keeps. Asked through openai-compatible's ask, at
+temperature 0 with its own fixed seed; `--reasoning none|low|medium|high`
+asks a thinking model to think that much, and its claim says so.
 `--limit N` asks about the first N such files (in sort's order), since a
 small model on a laptop takes seconds a file.
 
@@ -37,15 +39,14 @@ were asked and none fitted (populated), or the model wasn't reachable
 from __future__ import annotations
 
 import contextlib
+import importlib.util
 import io
 import ipaddress
 import json
 import re
 import sys
 import tempfile
-import urllib.error
 import urllib.parse
-import urllib.request
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -54,6 +55,13 @@ import kernel  # noqa: E402
 
 sys.path.insert(0, str(HERE.parent / "sort"))
 import sort  # noqa: E402
+
+_spec = importlib.util.spec_from_file_location(
+    "willow_openai_compatible_for_sort_ask",
+    HERE.parent / "openai-compatible" / "openai_compatible.py",
+)
+oc = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(oc)  # its ask and its claim, the suggestions contract's
 
 NAME = "sort-ask"
 URL = "http://127.0.0.1:11434/v1"
@@ -76,6 +84,7 @@ def on_this_machine(url: str) -> bool:
         return False
 
 
+# differs on purpose: stderr too, so a refusal's reason reaches the report's row
 def kernel_says(argv: list[str]) -> tuple[int, str]:
     got = io.StringIO()
     with contextlib.redirect_stdout(got), contextlib.redirect_stderr(got):
@@ -117,16 +126,6 @@ def answer(reply: str, cats: dict, served: list[dict]) -> tuple[str, str] | None
     if name is None or not 1 <= i <= len(served):
         return None
     return name, served[i - 1]["id"]
-
-
-def ask_model(url: str, model: str, chat: list[dict]) -> str:
-    body = {"model": model, "messages": chat, "temperature": 0, "seed": SEED}
-    req = urllib.request.Request(url.rstrip("/") + "/chat/completions",
-                                 data=json.dumps(body).encode("utf-8"),
-                                 headers={"Content-Type": "application/json"})  # fmt: skip
-    with urllib.request.urlopen(req, timeout=600) as r:
-        doc = json.loads(r.read().decode("utf-8"))
-    return doc["choices"][0]["message"]["content"]
 
 
 def asked(box: Path) -> set[str]:
@@ -175,9 +174,17 @@ def main(argv: list[str]) -> int:
     as_json = "--json" in argv
     argv = [a for a in argv if a != "--json"]
     opts = dict(zip(argv[::2], argv[1::2]))
-    known = {"--box", "--categories", "--model", "--url", "--limit", "--now"}
+    known = {
+        "--box",
+        "--categories",
+        "--model",
+        "--url",
+        "--reasoning",
+        "--limit",
+        "--now",
+    }
     if (len(argv) % 2 or set(opts) - known or not {"--box", "--categories", "--model"} <= set(opts)
-            or "" in opts.values()):  # fmt: skip
+            or "" in opts.values() or opts.get("--reasoning", "none") not in oc.REASONING):  # fmt: skip
         print(__doc__.split("\n\n")[1], file=sys.stderr)
         return kernel.REFUSED
     url, now = (
@@ -250,7 +257,8 @@ def main(argv: list[str]) -> int:
             skipped.append((path, "none of its passages was served"))
             continue
         try:
-            reply = ask_model(url, opts["--model"], messages(cats, path, served))
+            reply = oc.ask_model(url, opts["--model"], messages(cats, path, served),
+                                 opts.get("--reasoning", ""), seed=SEED)  # fmt: skip
         except (OSError, ValueError, KeyError, IndexError, TypeError) as e:
             say(report(NAME, "unreachable", f"{url} didn't answer ({e.__class__.__name__}); "
                        f"{len(made)} suggested before it stopped", [("suggested", made)]), as_json)  # fmt: skip
@@ -262,7 +270,8 @@ def main(argv: list[str]) -> int:
             continue
         name, cite = got
         row = {"path": where_for(path), "data": name + "\n", "cites": [cite],
-               "claim": f"{opts['--model']} on this machine reads {path} as {name}, from the passage it cited"}  # fmt: skip
+               "claim": oc.claim(opts["--model"], f"at {url}", oc.settings(SEED, opts.get("--reasoning", "")),
+                                 f"read {path} as {name}, from the passage it cited")}  # fmt: skip
         with tempfile.TemporaryDirectory() as tmp:
             f = Path(tmp) / "suggestion.jsonl"
             f.write_text(json.dumps(row, ensure_ascii=False) + "\n", encoding="utf-8")

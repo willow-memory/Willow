@@ -47,6 +47,7 @@ COMMON = frozenset(
 )
 
 
+# differs on purpose: Turkish's dotted capital I is read as i first
 def kept(question: str) -> list[str]:
     """The question's words, in order, less Turkish's common ones."""
     text = unicodedata.normalize("NFC", question).replace("İ", "i")

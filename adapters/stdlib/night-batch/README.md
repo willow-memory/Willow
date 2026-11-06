@@ -7,6 +7,7 @@ writes: record
 network: loopback
 role: suggests
 uses: local-model
+output: suggestions
 -->
 # night-batch
 
@@ -16,7 +17,7 @@ machine is yours again.
 
 ```
 python adapters/stdlib/night-batch/night_batch.py run --box DIR --questions waiting.txt \
-    [--url URL ...] [--model NAME] [--until 2026-11-03T07:00:00Z]
+    [--url URL ...] [--model NAME] [--reasoning EFFORT] [--until 2026-11-03T07:00:00Z]
 
 asked    what goes in biscochitos
          Lard, not butter, and a spoonful of anise seed [1].
@@ -29,7 +30,10 @@ stopped  you're back: row 9 (seal) isn't this run's
 **Each question** in the file (one a line) is asked as
 [local-model](../local-model/) asks: the kernel bites, only the passages
 served go to the first local server answering, and a reply citing them is
-proposed through `kernel.py propose`, to wait for your seal in the morning.
+proposed through `kernel.py propose`, to wait for your seal in the morning,
+its claim in [the suggestions contract](../ci/README.md#the-suggestions-contract)'s
+one form. `--reasoning none|low|medium|high` goes to each ask as local-model
+takes it; any other value is refused before the first.
 A question already answered by a seal of yours, or with a suggestion
 already waiting on your seal, is skipped; one you declined is asked again.
 

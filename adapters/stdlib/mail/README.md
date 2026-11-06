@@ -6,6 +6,7 @@ added: 2026-10-23
 writes: to
 network: none
 role: reads
+output: mirror
 reads: .eml, .mbox
 -->
 # mail
@@ -45,6 +46,12 @@ folder, or MIRROR and FOLDER are inside each other).
 
 **Uses:** the kernel's exit codes (`kernel.ALIVE`, `kernel.ESCALATE`,
 `kernel.REFUSED`). The tests run the kernel's `init` and `bite` on a mirror.
+
+**Where each passage came from** is in a hidden map beside its mirror,
+`MIRROR/.places/<same path>.txt.json`, which the kernel never reads, as
+[the mirror contract](../ci/README.md#the-mirror-contract) says: each
+passage at its message (`message 3`), numbered as its heading numbers it: a
+message's lines are decoded, so they are not the file's.
 
 **Never:** writes in your folder, modifies originals, reads attachments'
 content, goes online.
