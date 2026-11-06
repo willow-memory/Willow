@@ -71,6 +71,8 @@ def test_ask_suggest_and_waiting_go_through_the_kernel(tmp_path):
     sug, wait = talk(b, call(2, "suggest", path="bus.md", answer="Seven.", cites=[cite],
                              reason="the timetable says so"), call(3, "waiting"))  # fmt: skip
     pid = sug["result"]["structuredContent"]["waiting"]
+    assert pid.startswith("proposal:")
+    assert sug["result"]["structuredContent"]["for"] == "the person's approval"
     assert wait["result"]["structuredContent"]["waiting"] == [pid]
     kinds = [
         json.loads(ln)["kind"] for ln in (b / "record.jsonl").read_text().splitlines()
@@ -84,7 +86,11 @@ def test_a_cite_the_last_ask_didnt_serve_is_a_tool_error(tmp_path):
     (got,) = talk(
         b, call(2, "suggest", path="x.md", answer="y", cites=["f" * 64], reason="z")
     )
-    assert got["result"]["isError"] is True and got["result"]["content"][0]["text"]
+    assert got["result"]["isError"] is True
+    why = got["result"]["content"][0]["text"]
+    assert why and "refused" not in why.lower().split(":", 1)[0]
+    # reason after the first colon of the kernel's line (may itself hold colons)
+    assert not why.startswith("refused")
 
 
 def test_an_unknown_tool_is_a_tool_error(tmp_path):

@@ -10,6 +10,17 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `hooks-elsewhere` refuses `--host cursor`: Cursor's `beforeSubmitPrompt`
+  can only continue or block a prompt, never inject passages; the card and
+  `hosts` point at the `cursor` MCP add-on instead (#252)
+- `hooks-elsewhere` `setup --host opencode` prints a native OpenCode plugin
+  (save as `<.opencode/plugins/willow-passages.js>`) that injects Claude's
+  framed passages as synthetic text, and still offers the Claude-compatible
+  hook JSON for runners that take it (#251)
+- `.github/copilot-instructions.md` points Copilot at `AGENTS.md` (prose, like
+  `GEMINI.md`); `agents-md-check` reads it too, and AGENTS.md tips that need
+  REST for `gh pr create` are framed by capability, not by product (#250)
+
 - `equations`: each displayed equation in LaTeX sources as a passage of its
   own, the math as its source writes it, with its labels, its .tex line and
   the sentences around it, so a question finds an equation by what its paper
@@ -1844,6 +1855,15 @@ says how). The first was v0.1.0.
   kernel's no-network test III.1 and III.5, the guard and the add-on cards
   II.1, and the generated pages VI.6. Their answers in `constitution/reach.json` go. (#4)
 
+### Fixed
+
+- test_docs.py asks git for the repo's files once a run, not once a doc: 61 s
+  to 5 s, the same answers for every doc; restack's tests, which run it three
+  times in a scratch copy, 4:17 to 1:05, so restack's mutants no longer time
+  out at 600 s in CI's mutants-reach (#261)
+- `mcp-lite`: parse a propose refusal with `partition` instead of a maxsplit
+  `split`, so the accepted inert mutant is gone (same as `mcp-sampling`) (#257)
+
 ### Changed
 
 - `ci`'s test-times.json made from main's own CI run by `times.py write --run
@@ -2102,6 +2122,14 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- `local-model`: the test that no server on the usual ports means 42 no
+  longer sends a real question to whatever model runs on this machine; it
+  points the usual ports at ones just bound and closed, and asserts 42
+  every time, not only when nothing happened to answer (#255)
+- `latex` reads a file holding a stray byte of another encoding as
+  Windows-1252, else Latin-1, rather than skipping it whole: Santos's lecture
+  notes on arXiv (1310.5578), ASCII but for one en dash, gave no prose. A
+  file holding a NUL byte (UTF-16, or a binary) is still skipped and counted. (#249)
 - `github`'s create_pr.py tries a push or an open GitHub answers with an
   error again, after 2, 4, 8 and 16 seconds, and looks for the pull request
   before each new open: GitHub answered #236's with a 502 and opened it,
