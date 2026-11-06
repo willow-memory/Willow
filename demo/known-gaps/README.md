@@ -137,6 +137,12 @@ reads a date only when its month has that day, so 1984-06-31 is no date;
 date. No result changes: no file here reads a different date, and scan reads
 only todo's `MARK` and `todos()`.
 
+**Freeze 11** (2026-11-05, after every run) changes `scan.py` and `todo.py`
+only to kill accepted mutants: scan's digit-prefix widen is nested `if`s
+instead of `and`, and todo's empty report returns before the unused width
+default. No result changes: candidate narrowing still yields to the kernel's
+rank, and scan still reads only todo's `MARK` and `todos()`.
+
 ### The questions and the flagged-line rule
 
 The writers were told to write without identifiers. A question line is
