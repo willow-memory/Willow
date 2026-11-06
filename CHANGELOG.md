@@ -13,13 +13,6 @@ too. The first release was v0.1.0.
 
 ### Added
 
-- `openai-compatible`, `local-model`, `same-way`: `--reasoning
-  none|low|medium|high` sets the request's `reasoning_effort`, so a thinking
-  model (qwen3) can be asked not to think; without it the request is byte for
-  byte the one sent before. Measured on Ollama 0.40.14's OpenAI endpoint,
-  `none` stopped qwen3:8b's thinking where "/no_think" in a system file and
-  `think: false` didn't. `same-way` also takes `--system FILE`, as
-  openai-compatible's ask does, so it asks exactly the chat local-model asks (#259)
 - `llm-cli`: suggestions through Simon Willison's `llm` command — bite first,
   only served passages go to the model any of its plugins reach, propose a
   cited reply; llm's log names the model (#253)
