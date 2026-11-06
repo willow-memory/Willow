@@ -99,13 +99,25 @@ refuses a name that isn't an add-on (built, for a built one), the add-on
 itself, or a name in both lists.
 
 Tags: each entry in the list shows up to five, worked out by the similar
-add-on every time the list is written and never stored, so they can't go
-stale when a card changes: whether it needs an install, whether it goes
-online, two topic words it shares with its nearest entries, and the one tag
-its author chose, if any. That one is a card's `tags:` line (or an idea's
+add-on: whether it needs an install, whether it goes online, two topic words
+it shares with its nearest entries, and the one tag its author chose, if
+any. That one is a card's `tags:` line (or an idea's
 `tags`), optional: a lowercase word or words joined by -, and never one of
 the worked-out ones. `similar.py tags NAME` shows what an entry gets. Each
 entry also names the three entries nearest it.
+
+**The tags and the nearest entries stand for the week**, as the counts do.
+They're worked out over every card's whole text, so any pull request that
+adds an entry, or edits any card, would move other entries' lines too, and
+each such pull request made every other one's list stale. So the first
+`write` of a week works them out for every entry and keeps them in
+`adapters/stdlib/readme/week.json`; for the rest of that week each entry the
+file names keeps its line's tags and nearest entries, and only an entry it
+doesn't name (new this week) is worked out, its own line alone, against
+the week's entries and itself; the counts, too, are the week's entries, and a
+new one counts from the next week. A card's
+changed tags show from the next week's first write. `check` holds the file
+too: a week it doesn't match is stale.
 
 The week of `pick` is part of the section (`<!-- willow:pick week=2026-W43
 -->`). `write` sets it to this week, or to `--week`; `check` rebuilds with the
@@ -129,6 +141,8 @@ import kernel  # noqa: E402
 
 README = ROOT / "README.md"
 ADDONS_MD = ROOT / "ADDONS.md"
+#: each entry's tags and nearest entries, as the week's first write found them
+WEEK_FILE = ROOT / "adapters" / "stdlib" / "readme" / "week.json"
 ADAPTERS = ROOT / "adapters"
 PLANNED = ADAPTERS / "planned.json"
 KINDS = ("stdlib", "deps")
@@ -365,8 +379,7 @@ def entry(a: dict, worked: dict) -> str:
     return f"- {name} — {a['line']}{facts(a)} *{a['source']}* {tags}{near}"
 
 
-def worked_out(every: list[dict]) -> dict[str, dict]:
-    """Each entry's tags and nearest entries, from the similar add-on."""
+def similar_add_on():
     import importlib.util
 
     spec = importlib.util.spec_from_file_location(
@@ -374,14 +387,55 @@ def worked_out(every: list[dict]) -> dict[str, dict]:
     )
     similar = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(similar)
-    return similar.worked_out(every, ROOT)
+    return similar
 
 
-def section_list(every: list[dict]) -> str:
+def worked_out(every: list[dict]) -> dict[str, dict]:
+    """Each entry's tags and nearest entries, from the similar add-on."""
+    return similar_add_on().worked_out(every, ROOT)
+
+
+def week_worked(listed: list[dict], week: str) -> tuple[dict[str, dict], dict]:
+    """(each listed entry's tags and nearest entries, the week file as it
+    should be). Only what the whole list decides is kept for the week, each
+    entry's two topic words and its nearest entries; its install and online
+    facts and its author's own tag are always read from its card now. A file
+    for another week, or none, is made again from every entry; one for this
+    week keeps each entry it names, and only an entry it doesn't name is
+    worked out, its own line alone."""
+    try:
+        kept = json.loads(WEEK_FILE.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        kept = {}
+    if (not isinstance(kept, dict) or kept.get("week") != week
+            or not isinstance(kept.get("worked"), dict)):  # fmt: skip
+        fresh = worked_out(listed)
+        kept = {"week": week, "worked": {n: {"topics": w["topics"], "near": w["near"]}
+                                         for n, w in fresh.items()}}  # fmt: skip
+    frozen = kept["worked"]
+    # a new entry against the week's entries and itself: what another pull
+    # request adds this week never reaches its line
+    base = [a for a in listed if a["name"] in frozen]
+    fresh = {a["name"]: worked_out(base + [a])[a["name"]]
+             for a in listed if a["name"] not in frozen}  # fmt: skip
+    similar = similar_add_on()
+    worked = {}
+    for a in listed:
+        w = frozen.get(a["name"]) or fresh[a["name"]]
+        tags = similar.facts_tags(a) + list(w["topics"]) + split_tags(a.get("tags", ""))
+        worked[a["name"]] = {"tags": tags, "near": list(w["near"])}
+    return worked, kept
+
+
+def week_text(snapshot: dict) -> str:
+    return json.dumps(snapshot, indent=1, sort_keys=True, ensure_ascii=False) + "\n"
+
+
+def section_list(every: list[dict], worked: dict[str, dict] | None = None) -> str:
     lines = ["**Contents:** " + " · ".join(
         f"[{s}](#{re.sub(r'[^a-z0-9 -]', '', s.lower()).replace(' ', '-')})" for s in NAMES
     )]  # fmt: skip
-    worked = worked_out(every)
+    worked = worked if worked is not None else worked_out(every)
     for title, intro in SECTIONS:
         lines += ["", f"## {title}", ""]
         if intro:
@@ -512,9 +566,14 @@ def this_week() -> str:
     return f"{y}-W{w:02d}"
 
 
-def rebuild(text: str, week: str | None, needs: tuple = ORDER, page: str = "ADDONS.md") -> str:  # fmt: skip
+def rebuild(text: str, week: str | None, needs: tuple = ORDER, page: str = "ADDONS.md",
+            worked: dict | None = None, known: set | None = None) -> str:  # fmt: skip
     listed = addons()
     every = as_of(listed, week_of(text, week))
+    if (
+        known is not None
+    ):  # the counts are the week's entries; a new one counts next week
+        every = [a for a in every if a["name"] in known]
     found = [m.group(1) for m in BLOCK.finditer(text)]
     if sorted(found) != sorted(needs):
         raise Refused(
@@ -531,7 +590,7 @@ def rebuild(text: str, week: str | None, needs: tuple = ORDER, page: str = "ADDO
         if name == "pick":
             return drawn(attrs)
         if name == "list":  # each add-on as it is, its own line
-            return section_list(listed)
+            return section_list(listed, worked)
         return {"pools": section_pools, "languages": section_languages,
                 "newest": section_newest, "summary": section_summary}[name](every)  # fmt: skip
 
@@ -570,10 +629,22 @@ def main(argv: list[str]) -> int:
         return kernel.REFUSED
     week = this_week() if verb == "write" and not week else week
     stale = []
+    page = ADDONS_MD.read_text(encoding="utf-8") if ADDONS_MD.is_file() else ""
+    try:
+        worked, snapshot = week_worked(addons(), week_of(page, week))
+    except Refused as e:
+        print(f"refused: {e}", file=sys.stderr)
+        return kernel.REFUSED
+    kept = WEEK_FILE.read_text(encoding="utf-8") if WEEK_FILE.is_file() else ""
+    if verb == "write" and kept != week_text(snapshot):
+        WEEK_FILE.write_text(week_text(snapshot), encoding="utf-8")
+        print(f"{WEEK_FILE.name}: the week's tags and nearest entries written")
+    elif kept != week_text(snapshot):
+        stale.append(WEEK_FILE.name)
     for path, needs in pages():
         text = path.read_text(encoding="utf-8") if path.is_file() else ""
         try:
-            new = rebuild(text, week, needs, path.name)
+            new = rebuild(text, week, needs, path.name, worked, set(snapshot["worked"]))
         except Refused as e:
             print(f"refused: {e}", file=sys.stderr)
             return kernel.REFUSED

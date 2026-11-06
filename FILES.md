@@ -1003,6 +1003,7 @@ willow/
 │   │   │   └── README.md     its card: what it adds, uses and never does
 │   │   ├── readme/
 │   │   │   ├── readme.py     builds this README's generated sections from the cards
+│   │   │   ├── week.json
 │   │   │   ├── test_readme.py
 │   │   │   └── README.md     its card: sections, the draw, what it reads
 │   │   ├── readwise/

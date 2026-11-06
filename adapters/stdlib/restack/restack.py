@@ -11,7 +11,8 @@ the push is a plain one. When the merge conflicts, the files this repo makes
 or only adds lines to are settled by a rule; any other conflict stops that
 branch, and it is left exactly as it was:
 
-    ADDONS.md, README.md     REF's, then made again: readme.py write
+    ADDONS.md, README.md     REF's, then made again: readme.py write; so
+    readme/week.json         is the week's tags and nearest entries
     BUGS.md                  REF's, then made again: ci/bugs.py write
     CHANGELOG.md             REF's, and each entry the branch added under
                              ## Unreleased moved to a fragment of its own
@@ -73,6 +74,7 @@ HUNK = re.compile(
 MADE = {
     "ADDONS.md": "adapters/stdlib/readme/readme.py",
     "README.md": "adapters/stdlib/readme/readme.py",
+    "adapters/stdlib/readme/week.json": "adapters/stdlib/readme/readme.py",
     "BUGS.md": "adapters/stdlib/ci/bugs.py",
 }
 ENTRY = re.compile(r'^\s+(?:"[\w-]+": \(|\*\*\{)')  # a COMMANDS line
