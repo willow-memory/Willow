@@ -86,15 +86,16 @@ def tool(box: Path, name: str, args: dict) -> dict:
                "cites": args.get("cites"), "claim": args.get("reason")}  # fmt: skip
         line = call(kernel.propose, box, [json.dumps(row)], kernel.now()).strip()
         if line.startswith("refused"):
-            raise Refused(line.split(":", 1)[-1].strip())
-        return {"waiting": line.split()[1], "for": "the person's approval"}
+            _, _, rest = line.partition(":")
+            raise Refused(rest.strip())
+        waiting = line.split()[1] if line.startswith("pass") else ""
+        if not waiting.startswith("proposal:"):
+            raise Refused("propose refused")
+        return {"waiting": waiting, "for": "the person's approval"}
     if name == "waiting":
         lines = call(kernel.out, box, kernel.now()).splitlines()
-        return {
-            "waiting": [
-                ln.split(": ", 1)[1] for ln in lines if ln.startswith("waiting")
-            ]
-        }
+        prefix = "waiting on your seal: "
+        return {"waiting": [ln[len(prefix) :] for ln in lines if ln.startswith(prefix)]}
     raise Refused(f"no tool {name!r}")
 
 

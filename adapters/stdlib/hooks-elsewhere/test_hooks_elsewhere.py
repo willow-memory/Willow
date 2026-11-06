@@ -146,7 +146,10 @@ def test_setup_prints_the_host_hook_and_writes_nothing(tmp_path, capsys):
     codex = json.loads(capsys.readouterr().out.split("\n\n")[1])
     assert "UserPromptSubmit" in codex["hooks"]
     assert he.main(["setup", "--host", "opencode", "--box", str(b)]) == 0
-    assert "Claude-compatible" in capsys.readouterr().out
+    oc = capsys.readouterr().out
+    assert "willow-passages.js" in oc and "synthetic: true" in oc
+    assert f'"--box", "{b.resolve()}"' in oc or str(b.resolve()) in oc
+    assert "Claude-compatible" in oc and "UserPromptSubmit" in oc
 
 
 def test_list_names_each_host(capsys):
