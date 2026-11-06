@@ -85,7 +85,7 @@ def test_an_idea_becomes_a_folder_whose_card_is_its_entry(repo):
         "source: new\nadded: 2026-11-04\nwrites: to\nnetwork: none\nrole: makes\ntags: cards\n-->\n# anki-deck\n"
     )
     assert any("COMMANDS" in item for item in left) and any(
-        "CHANGELOG" in item for item in left
+        "changelog fragment" in item for item in left
     )
     assert not any("requirements" in item for item in left), (
         "a stdlib idea installs nothing"

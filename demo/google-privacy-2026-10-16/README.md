@@ -97,6 +97,11 @@ before any question was asked of either version, is the pre-registration.
 - `wayback.py` was changed after the freeze (an empty window of days now
   asks the archive nothing). The study's run doesn't use it; fetch.py did,
   before the change.
+- `clauses.py` was changed after the freeze: a sentence longer than one of
+  the kernel's chunks (500 characters) now keeps its source's lines, where
+  it was one line the kernel cut at 500. A sentence of 500 characters or
+  fewer is written byte for byte as before, and the study's own mirrors of
+  both versions, the news and Google's pages came out the same bytes.
 
 FROZEN.json also records the SHA-256 of the tools at the freeze, and each
 verdict row holds the tools it ran with.

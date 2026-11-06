@@ -4,7 +4,7 @@ line: Docker Compose and Kubernetes YAML: each service, image, port and volume a
 source: new
 added: 2026-10-29
 needs: PyYAML; MIT
-floor: PyYAML 5.3.1
+floor: PyYAML 6.0.1; the rule names 5.3.1, but it has a known advisory (PYSEC-2021-142, code run by full_load), and 5.4 to 6.0 don't build on the deps job's 3.13, so 6.0.1 is the first safe one that installs
 writes: to
 network: none
 role: reads
