@@ -143,6 +143,29 @@ five ports should be unmoved; that is checked, not assumed.
   a question's words written into the record, a rank that follows the hash
   seed, an add-on import, a declined proposal offered again.
 
+## What landed on main before it, checked
+
+On 2026-11-06, nineteen pull requests merged on main, #251 to #272. Read
+for what this amendment rests on:
+
+- **None touches the law or the kernel.** No change to `CONSTITUTION.md`,
+  `constitution/`, `kernel.py`, `test_kernel.py`, `DECISIONS.md`,
+  `LIMITS.md`, the vectors or the ports. The only Trace ID added anywhere
+  is VI.7's, in #271. The clauses above, their places in the articles and
+  the eight beats they build on are as they were.
+- **How the pull request is opened changed.** #263: the changelog entry is
+  a fragment, `changes/+BRANCH.KIND.md`, renamed for the number by
+  `adapters/stdlib/github/create_pr.py`; #271: CHANGELOG.md refuses a new entry. #264: the open
+  pull requests are read before starting. This branch already keeps all
+  three.
+- **The open pull requests don't meet it.** Of the seven open, two touch
+  `README.md`, both only the add-on count on one line; none touches the
+  guarantees table, the beat count or the law.
+- **The suggestions contract (#265)** gives every model proposer one claim
+  form. It is an add-on contract, held by
+  `adapters/stdlib/ci/test_contract.py`; it doesn't
+  change what a seal or a decline is, so V.10 stands on the kernel as it is.
+
 ## The order of work
 
 1. This note: the clauses, for the operator to correct.
