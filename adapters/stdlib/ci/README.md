@@ -211,6 +211,14 @@ version, as a unified diff. Which is right is a person's call: almanac's
 `_sources` reads only an Almanac's catalog on purpose, and a drift can be the fix
 the others lack.
 
+A copy that differs on purpose says why in a comment on the line above its
+`def`, `# differs on purpose: ...`, as sort-ask's `kernel_says` does (it
+captures stderr too, so a refusal's reason reaches its report's row); its
+row says so, and a survey whose every drift says why exits 0. On a pull
+request, CI's `copies` job runs `copies.py new --base`: the copies the pull
+request leaves drifted that weren't before and don't say why, each with its
+diff, in the run's summary. A suggestion, never a gate.
+
 ## The report contract
 
 An add-on that tells you what it found in your files (a check, an audit, a

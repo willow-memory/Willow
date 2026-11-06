@@ -124,3 +124,59 @@ def test_its_command_line(tmp_path):
         assert got.returncode == 2 and "copies.py" in got.stderr, argv
     got = run("diff", "no_add_on_keeps_this")
     assert got.returncode == 2 and got.stderr.startswith("refused: ")
+
+
+def test_a_copy_that_says_why_is_on_purpose_and_a_survey_of_only_those_is_0(tmp_path):
+    said = "# differs on purpose: its report shows the refusal\n" + DRIFTED
+    root = repo(
+        tmp_path,
+        {"stdlib/a/a.py": COMMON, "stdlib/b/b.py": COMMON, "stdlib/c/c.py": said},
+    )
+    (c,) = cp.drift(cp.functions(root)["helper"])["drifted"]
+    assert c[3] == "its report shows the refusal" and c[1] == 2
+    doc, code = cp.survey(root)
+    assert code == 0 and doc["said"].endswith("1 copy in all, 1 of them on purpose")
+    assert (
+        doc["groups"][0]["rows"][0]["what"]
+        == "2 lines differ; on purpose: its report shows the refusal"
+    )
+    far = repo(tmp_path / "far", {"stdlib/a/a.py": COMMON, "stdlib/b/b.py": COMMON,
+                                  "stdlib/c/c.py": "# differs on purpose: x\n\n" + DRIFTED})  # fmt: skip
+    assert cp.drift(cp.functions(far)["helper"])["drifted"][0][3] == "", (
+        "only the line just above"
+    )
+
+
+def git(root: Path, *argv: str) -> None:
+    subprocess.run(["git", "-c", "user.name=t", "-c", "user.email=t@t", *argv], cwd=root,
+                   check=True, capture_output=True)  # fmt: skip
+
+
+def test_new_names_only_the_drift_a_branch_adds_and_doesnt_say_why(tmp_path, capsys):
+    root = repo(tmp_path, {"stdlib/a/a.py": COMMON, "stdlib/b/b.py": COMMON, "stdlib/c/c.py": COMMON,
+                           "stdlib/d/d.py": DRIFTED})  # fmt: skip
+    git(root, "init", "-q")
+    git(root, "add", "-A")
+    git(root, "commit", "-qm", "base")
+    assert cp.new("HEAD", root) == 0
+    assert capsys.readouterr().out.endswith("None: every copy this pull request leaves drifted was drifted already, or says why.\n")  # fmt: skip
+    (root / "adapters/stdlib/c/c.py").write_text(DRIFTED.replace("3", "4"))
+    (root / "adapters/stdlib/b/b.py").write_text(
+        "# differs on purpose: b's own\n" + DRIFTED.replace("3", "5")
+    )
+    assert cp.new("HEAD", root) == 0
+    out = capsys.readouterr().out
+    assert "- `helper` in `c/c.py:1` differs from the 1 copies" not in out, (
+        "a, alone, is no common version"
+    )
+    (root / "adapters/stdlib/e/e.py").parent.mkdir(parents=True)
+    (root / "adapters/stdlib/e/e.py").write_text(COMMON)
+    assert cp.new("HEAD", root) == 0
+    out = capsys.readouterr().out
+    assert (
+        "- `helper` in `c/c.py:1` differs from the 2 copies the others keep, as `a/a.py` has it:"
+        in out
+    )
+    assert "+    return y * 4" in out and "b/b.py" not in out and "d/d.py" not in out
+    assert cp.new("no-such-ref", root) == 2
+    assert cp.sources_at("no-such-ref", root) is None
