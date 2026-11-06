@@ -211,3 +211,13 @@ def test_diff_prints_a_long_sentence_on_one_line(tmp_path):
     got = run("diff", "--old", str(a), "--new", str(b))
     added = [s for s in got.stdout.splitlines() if s.startswith("added")]
     assert got.returncode == 42 and len(added) == 1 and added[0].endswith("number 39")
+
+
+def test_a_two_letter_word_ends_a_sentence_and_an_initial_does_not():
+    got = [s for _, s in clauses.clauses("We met Al. Then J. Smith left.\n", "a.txt")]
+    assert got == ["We met Al.", "Then J. Smith left."]
+
+
+def test_removed_sentences_come_in_the_old_versions_order():
+    old = clauses.clauses("B one.\n\nA two.\n\nB one.\n", "old.txt")
+    assert [n for n, _ in clauses.compare(old, [])["removed"]] == [1, 3, 5]
