@@ -1858,7 +1858,7 @@ says how). The first was v0.1.0.
   mcp-lite, misquote, office, pins, scan, secrets-audit, stack,
   three-two-one, todo, transcript-redact, typosquat); `forge`'s
   `report_text` matches `stack`'s again; known-gaps freeze 11 re-hashes
-  `scan.py` and `todo.py` (no result changed)
+  `scan` and `todo` (no result changed)
 
 - `test-impact`: the add-on test files a change reaches run as up to four
   steps, one a minute of their past times, and `--jobs` starts the longest
