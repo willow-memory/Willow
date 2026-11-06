@@ -49,6 +49,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -168,7 +169,21 @@ def skipped(folder: str, names: list[str]) -> set[str]:
     return out
 
 
-def run(names: list[str], per: int) -> int:
+#: seconds one break's tests may run, in CI as here
+LIMIT = 600
+#: how much slower CI's runners are than a machine this is run on: restack's
+#: tests took 257 s on one and 549 s in CI (2.1 times), and every pull
+#: request's mutants-reach timed out on them. A break whose tests would pass
+#: LIMIT at that pace fails here, before it's CI's to find.
+CI_SLOWER = 2.5
+
+
+def too_slow(took: float, limit: int = LIMIT) -> bool:
+    """Whether tests that took `took` seconds here would pass `limit` in CI."""
+    return took * CI_SLOWER > limit
+
+
+def run(names: list[str], per: int, limit: int = LIMIT) -> int:
     if subprocess.run([sys.executable, "-c", "import pytest"],
                       capture_output=True).returncode != 0:  # fmt: skip
         print("unreachable: pytest isn't installed")
@@ -180,11 +195,12 @@ def run(names: list[str], per: int) -> int:
         shutil.copytree(ROOT, copy, ignore=skipped)
         for name in names:
             chosen = mutants(name)[:per]
-            survived, couldnt = [], []
+            survived, couldnt, slow = [], [], []
             for m in chosen:
                 target = copy / m["file"]
                 original = target.read_text(encoding="utf-8")
                 target.write_text(broken(original, m["point"]), encoding="utf-8")
+                started = time.monotonic()
                 try:
                     targets = [copy / "adapters" / "stdlib" / name]
                     if (copy / CONTRACT).is_file():
@@ -192,7 +208,7 @@ def run(names: list[str], per: int) -> int:
                     got = subprocess.run(
                         [sys.executable, "-m", "pytest", "-q", "-x", "-p",
                          "no:cacheprovider", *map(str, targets)],
-                        capture_output=True, text=True, timeout=600,
+                        capture_output=True, text=True, timeout=limit,
                         # no bytecode cache: a mutant the same size as the last
                         # one, written in the same second, would otherwise run
                         # the last one's cached code, and pass as a survivor
@@ -205,8 +221,17 @@ def run(names: list[str], per: int) -> int:
                         survived.append(m)
                     elif got.returncode != 1:
                         couldnt.append(f"{m['id']}: pytest exited {got.returncode}")
+                except subprocess.TimeoutExpired:
+                    couldnt.append(f"{m['id']}: its tests ran past {limit} s")
                 finally:
                     target.write_text(original, encoding="utf-8")
+                took = time.monotonic() - started
+                if too_slow(took, limit) and not any(
+                    c.startswith(m["id"]) for c in couldnt
+                ):
+                    slow.append(f"{m['id']}: its tests took {took:.0f} s here, about"
+                                f" {took * CI_SLOWER:.0f} s in CI, past the {limit} s a break"
+                                " may run: make them faster")  # fmt: skip
             mine = accepted.get(name, {})
             wrong = [m for m in survived if m["id"] not in mine]
             stale = sorted(set(mine) - {m["id"] for m in survived})
@@ -219,9 +244,11 @@ def run(names: list[str], per: int) -> int:
                 )
             for why in couldnt:
                 print(f"  couldn't run {why}")
+            for why in slow:
+                print(f"  too slow {why}")
             for mid in stale:
                 print(f"  stale {mid}: accepted, but no longer made or no longer surviving; take it out of accepted.json")  # fmt: skip
-            bad += len(wrong) + len(stale) + len(couldnt)
+            bad += len(wrong) + len(stale) + len(couldnt) + len(slow)
     return kernel.REFUSED if bad else kernel.ALIVE
 
 

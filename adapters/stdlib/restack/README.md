@@ -18,7 +18,7 @@ anything else.
 
     python adapters/stdlib/restack/restack.py --onto REF BRANCH [BRANCH ...]
 
-    claude/addon-timeline: deb56e83 -> cf502d3c, origin/main merged in; settled CHANGELOG.md
+    claude/addon-timeline: deb56e83 -> cf502d3c, origin/main merged in; settled CHANGELOG.md, 1 new entry moved to changes/
       push: git push origin claude/addon-timeline
 
 Fetch first (`git fetch origin main`, then `--onto origin/main`): it never
@@ -32,7 +32,7 @@ merge conflicts:
 |---|---|
 | ADDONS.md, README.md | REF's, then made again by `adapters/stdlib/readme/readme.py write` |
 | BUGS.md | REF's, then made again by `adapters/stdlib/ci/bugs.py write` |
-| CHANGELOG.md | under `## Unreleased`, the branch's entries above REF's |
+| CHANGELOG.md | REF's, with each entry the branch added under `## Unreleased` moved to a fragment of its own: `changes/<N>.<kind>.md` when it ends `(#N)`, else `changes/+<branch>.<kind>.md`; one REF already holds (a branch stacked on another pull request) only leaves. This one runs whether the merge conflicted there or not; a branch that changed the file any other way stops |
 | FILES.md | both sides' folders, A to Z |
 | test_contract.py | both sides' `COMMANDS` lines, and entries either side added to `COMMANDS`, `READERS` or `PILE_EXTRA`, with imports, whole |
 | adapters/planned.json | REF's ideas, less the ones the branch built, plus any it added |

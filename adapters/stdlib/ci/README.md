@@ -46,7 +46,7 @@ record in the runner's temp folder.
 | tests | `tests:beats` (`kernel.py test`), `tests:kernel`, `tests:docs` (`test_docs.py`, and `test_docs_fires.py`, which shows each docs check fails on a planted violation), `tests:adapters-1` to `-8` (the add-ons in `adapters/stdlib/`, under the guard, each a share of their test files, cut by the times in [test-times.json](test-times.json)), `tests:alone` ([alone.py](alone.py): each add-on's tests again, in a copy holding only the kernel, the add-on and what its card `uses`), `tests:ui` ([ui/](../../../ui/): willow's own UI, its server run over a stack made in a scratch folder), `tests:vectors` (pytest), `tests:strip-1` to `-4` (`test_strip.py`: the repo without GitHub, then without any add-on; the first the kernel-alone work and the kernel's tests, the others a share of the add-ons' test files in the stripped copy), `tests:constitution` (the eternity clause, attacked), `tests:coverage` (`constitution/coverage.py`: which clauses are cited where; failing only on a clause declared failing) |
 | ports | `ports:java`, `ports:ts`, `ports:csharp`: `vectors/compare.py`, one port at a time |
 | demo | `demo:hollis`, `demo:odile`, `demo:teodora`: each person's files made in a temporary folder and held to their `demo/*/PLANTED.md` |
-| deps | `deps:mcp`, `deps:mcp@floor`, `deps:pdf`, `deps:pdf@floor`, two per add-on in `adapters/deps/`: its tests, under the guard, in a fresh virtual environment with only its own pinned requirements (then its floor's) and pytest; an install that can't be done is unreachable. Then `deps:floors`: each floor against the floor rule, by PyPI's upload dates; PyPI out of reach is unreachable |
+| deps | `deps:mcp`, `deps:mcp@floor`, `deps:pdf`, `deps:pdf@floor`, two per add-on in `adapters/deps/`: its tests, under the guard, in a fresh virtual environment with only its own pinned requirements (then its floor's) and pytest; an install that can't be done is unreachable. Then `deps:advisories`: every pin against PyPI's advisories, by pip-audit; one on a pin a person installs fails, one on a floor is said, since nobody is told to install a floor. Then `deps:floors`: each floor against the floor rule, by PyPI's upload dates; PyPI out of reach is unreachable for both |
 | mutants | `mutants:again`, `mutants:all`, … one per stdlib add-on: [mutants.py](../mutants/) breaks its code a few ways and runs its tests against each break; a break they miss fails, unless [accepted.json](../mutants/accepted.json) gives the reason it's harmless |
 | tools | `tools:bash`, `tools:zsh`, … one per check in [live.py](../live/): the real program a way-in add-on is for (a shell, an editor, an AI tool), run on the lines that add-on prints; a program that isn't installed is unreachable |
 
@@ -73,11 +73,14 @@ the output is hashed. The same files give the same record, byte for byte.
 
 **The changelog:** [changelog.py](changelog.py) runs as its own CI job on
 every pull request, outside the record (it needs the pull request's number
-and its base branch). When anything but Markdown changed, CHANGELOG.md's
-`## Unreleased` section must gain an entry ending with that number, `(#N)`,
-and a bug [BUGS.md](../../../BUGS.md) stopped listing must be named in one
-under `### Fixed`, `bug #12`. Exit 0 every entry owed is there, or nothing is
-owed; 42 git couldn't compare with the base; 2 an entry is missing.
+and its base branch). When anything but Markdown changed, the pull request
+owes an entry: a changelog fragment named for it,
+`changes/<number>.<kind>.md` ([changes/README.md](../../../changes/README.md)
+says how), or, from before the fragments, an entry in CHANGELOG.md's
+`## Unreleased` ending `(#N)`. A bug [BUGS.md](../../../BUGS.md) stopped
+listing must be named in a `fixed` one, `bug #12`. Exit 0 every entry owed
+is there, or nothing is owed; 42 git couldn't compare with the base; 2 an
+entry is missing.
 
 **Known bugs:** [bugs.py](bugs.py) makes BUGS.md from the tests marked as
 expected to fail, `strict=True` with a reason `bug #N: …`, and refuses any
@@ -158,7 +161,7 @@ adapters/planned.json: its folder, its card (the idea's entry as its
 header, `added` today), a script that refuses every command line until it's
 built, a test holding that, the idea off the list, FILES.md and the add-on
 list written. It exits 42 with what's left for a person: the add-on itself,
-its tests, its line in COMMANDS, a CHANGELOG.md entry, its mutants, and for a
+its tests, its line in COMMANDS, a changelog fragment, its mutants, and for a
 deps idea its requirements and `floor:` line.
 
 **Whose lines:** [whose.py](whose.py) takes `PATH:FIRST-LAST` places and

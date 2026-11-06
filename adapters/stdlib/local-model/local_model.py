@@ -2,7 +2,8 @@
 
     python adapters/stdlib/local-model/local_model.py servers [--url URL ...]
     python adapters/stdlib/local-model/local_model.py ask --box DIR [--url URL ...]
-        [--model NAME] [--system FILE] [--now TS] "your question"
+        [--model NAME] [--system FILE] [--reasoning EFFORT] [--now TS]
+        "your question"
 
 `servers` says which local model servers are running, and the models each
 offers, by asking each one's `/v1/models` on the port it listens on unless
@@ -18,7 +19,8 @@ first, only the passages served go to the model, and its reply is proposed
 for your seal citing the passages its brackets name. The first server
 answering among those `--url` names, or else in the order above, is asked;
 without `--model`, the first model it lists. A URL off this machine (anything but a loopback
-address or localhost) is refused before anything is sent.
+address or localhost) is refused before anything is sent. `--system FILE` and
+`--reasoning none|low|medium|high` go to openai-compatible's ask as they are.
 
 Exit codes, the kernel's: for `servers`, 0 one is running, 42 none; for
 `ask`, openai-compatible's (0 a suggestion waits on your seal; 42 nothing
@@ -50,7 +52,8 @@ _spec.loader.exec_module(oc)
 USAGE = (
     "usage: local_model.py servers [--url URL ...]\n"
     "       local_model.py ask --box DIR [--url URL ...] [--model NAME]"
-    ' [--system FILE] [--now TS] "your question"'
+    " [--system FILE] [--reasoning none|low|medium|high] [--now TS]"
+    ' "your question"'
 )
 #: where each runtime listens unless told otherwise, in the order they are tried
 KNOWN = (

@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import types
 import os
 import subprocess
 import sys
@@ -230,6 +231,7 @@ def test_the_gates_run_in_one_fixed_order_and_cover_every_part():
                  "demo:stewart-crossover-frozen", "demo:teodora-words",
                  *(g for g, _, _ in ci.demo_tests()[len(ci.DEMO_TESTS):])]),
         *(g for d in ci.deps_add_ons() for g in (f"deps:{d}", f"deps:{d}@floor")),
+        "deps:advisories",
         "deps:floors",
         *(f"mutants:{n}" for n in ci.mutant_targets()),
         *(f"tools:{n}" for n in ci.live_checks()),
@@ -410,6 +412,52 @@ def test_a_floor_above_the_rule_needs_a_reason_on_its_card(monkeypatch):
 
     monkeypatch.setattr(ci, "releases", offline)
     assert ci.floors()[0] == ci.UNREACHABLE
+
+
+def test_an_advisory_on_a_pin_fails_and_on_a_floor_is_only_said(monkeypatch):
+    def found(path):
+        if path.name == "requirements.txt" and path.parent.name == "pdf":
+            return [("pypdf", "1.0", "PYSEC-1", "2.0")]
+        if path.name == "requirements-floor.txt" and path.parent.name == "mcp":
+            return [("mcp", "0.1", "GHSA-x", "")]
+        return []
+
+    monkeypatch.setattr(ci, "audit", found)
+    state, said, why = ci.advisories()
+    assert state == ci.FAILING
+    assert why == "pdf: pypdf==1.0 in requirements.txt has PYSEC-1, fixed in 2.0"
+    assert "mcp: mcp==0.1 floor has 1 advisory, said, not failed" in said
+    monkeypatch.setattr(ci, "audit", lambda path: [] if path.parent.name == "pdf"
+                        else found(path))  # fmt: skip
+    assert ci.advisories()[0] == ci.SATISFIED
+
+    def offline(path):
+        raise OSError("no network")
+
+    monkeypatch.setattr(ci, "audit", offline)
+    assert ci.advisories()[0] == ci.UNREACHABLE
+
+
+def test_audit_reads_pip_audits_json(monkeypatch):
+    answer = json.dumps({"dependencies": [
+        {"name": "llm", "version": "0.27", "vulns": [{"id": "PYSEC-2026-400", "fix_versions": []}]},
+        {"name": "pyyaml", "version": "5.3.1", "vulns": [{"id": "PYSEC-2021-142", "fix_versions": ["5.4"]}]},
+        {"name": "ok", "version": "1", "vulns": []},
+    ]})  # fmt: skip
+    monkeypatch.setattr(ci.subprocess, "run", lambda *a, **k: types.SimpleNamespace(
+        stdout=answer, stderr="", returncode=1))  # fmt: skip
+    assert ci.audit(ci.ROOT / "requirements.txt") == [
+        ("llm", "0.27", "PYSEC-2026-400", ""),
+        ("pyyaml", "5.3.1", "PYSEC-2021-142", "5.4"),
+    ]
+    monkeypatch.setattr(ci.subprocess, "run", lambda *a, **k: types.SimpleNamespace(
+        stdout="", stderr="ConnectionError: no route\n", returncode=1))  # fmt: skip
+    try:
+        ci.audit(ci.ROOT / "requirements.txt")
+    except OSError as exc:
+        assert "no route" in str(exc)
+    else:
+        raise AssertionError("an unreadable answer is unreachable, not clean")
 
 
 def test_a_program_a_deps_card_names_and_this_machine_lacks_is_unreachable(

@@ -480,13 +480,32 @@ FRONT = {
 }
 
 
+def as_of(every: list[dict], week: str) -> list[dict]:
+    """The add-ons as they stood on the week's Monday: one built after it
+    counts as the idea it was. The counts, the newest and the week's draw are
+    made from this, so a pull request adding an add-on changes its own line
+    of the list and nothing every other one's also changes: they conflicted
+    in these lines, every merge, until the counts moved only with the week."""
+    y, w = (int(x) for x in week.split("-W"))
+    monday = date.fromisocalendar(y, w, 1).isoformat()
+    return [dict(a, built=False) if a["built"] and a.get("added", "") > monday else a
+            for a in every]  # fmt: skip
+
+
+def week_of(text: str, week: str | None) -> str:
+    """The week the page is drawn for: given, else the one it says, else now."""
+    m = re.search(r"<!-- willow:\w+[^>]*\bweek=(\d{4}-W\d{2})", text)
+    return week or (m.group(1) if m else this_week())
+
+
 def this_week() -> str:
     y, w, _ = date.today().isocalendar()
     return f"{y}-W{w:02d}"
 
 
 def rebuild(text: str, week: str | None, needs: tuple = ORDER, page: str = "ADDONS.md") -> str:  # fmt: skip
-    every = addons()
+    listed = addons()
+    every = as_of(listed, week_of(text, week))
     found = [m.group(1) for m in BLOCK.finditer(text)]
     if sorted(found) != sorted(needs):
         raise Refused(
@@ -502,9 +521,10 @@ def rebuild(text: str, week: str | None, needs: tuple = ORDER, page: str = "ADDO
     def made(name: str, attrs: dict) -> str:
         if name == "pick":
             return drawn(attrs)
+        if name == "list":  # each add-on as it is, its own line
+            return section_list(listed)
         return {"pools": section_pools, "languages": section_languages,
-                "newest": section_newest, "list": section_list,
-                "summary": section_summary}[name](every)  # fmt: skip
+                "newest": section_newest, "summary": section_summary}[name](every)  # fmt: skip
 
     def fill(m: re.Match) -> str:
         name, attrs = m.group(1), dict(a.split("=") for a in m.group(2).split())

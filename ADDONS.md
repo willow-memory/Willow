@@ -19,20 +19,20 @@ is written: `no-install` or `needs-install`; `offline`, `this-machine` or
 tag its author chose, if any. *near* names the three add-ons closest to it.
 
 <!-- willow:pools -->
-`█████████████░░░░░░░` **335 of 523 built** · 471 need no install · 52 need one
+`████████████░░░░░░░░` **324 of 523 built** · 471 need no install · 52 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
-| Reading more kinds of files | 93 | 28 | 113 | 8 |
-| Finding things | 34 | 14 | 38 | 10 |
+| Reading more kinds of files | 92 | 29 | 113 | 8 |
+| Finding things | 32 | 16 | 38 | 10 |
 | Your own words | 19 | 7 | 23 | 3 |
-| Keeping track | 42 | 15 | 57 | 0 |
+| Keeping track | 40 | 17 | 57 | 0 |
 | Trust and proof | 32 | 22 | 45 | 9 |
 | Privacy and safety | 13 | 3 | 16 | 0 |
-| Assistants | 43 | 29 | 64 | 8 |
-| Ways to use it | 27 | 17 | 39 | 5 |
+| Assistants | 40 | 32 | 64 | 8 |
+| Ways to use it | 25 | 19 | 39 | 5 |
 | Play | 12 | 29 | 37 | 4 |
-| For maintainers | 20 | 24 | 39 | 5 |
+| For maintainers | 19 | 25 | 39 | 5 |
 <!-- /willow:pools -->
 
 ## Languages
@@ -68,19 +68,19 @@ its list: someone who speaks the language can add one without much Python.
 ## Newest
 
 <!-- willow:newest -->
-- 2026-11-06 · [**log-kit**](adapters/stdlib/log-kit/) — The engine the logs share: your notes' dated lines, read by a short spec of words, numbers and a period, so a new log is a spec, not a program.
-- 2026-11-06 · [**food-log**](adapters/stdlib/food-log/) — What you ate, from your notes, by day.
-- 2026-11-05 · [**llm-cli**](adapters/deps/llm-cli/) — Suggestions through the llm command, so any model its plugins reach (local or hosted) can hand one in, with llm's own log naming the model.
-- 2026-11-05 · [**hooks-elsewhere**](adapters/stdlib/hooks-elsewhere/) — The prompt hook for Gemini CLI, Codex and opencode, wherever they take hooks, held to Claude Code's answer byte for byte.
-- 2026-11-05 · [**equations**](adapters/stdlib/equations/) — Each displayed equation in LaTeX sources as a passage of its own, with the sentences around it and its label, cited by the .tex file's line.
+- 2026-11-02 · [**zotero**](adapters/stdlib/zotero/) — Your Zotero library, from a copy of zotero.sqlite: items, notes and PDF annotations, each with its citation.
+- 2026-11-02 · [**weights-pin**](adapters/stdlib/weights-pin/) — A local model's weights file hashed before each run and refused when it differs from the hash on its model card.
+- 2026-11-02 · [**weights-card**](adapters/stdlib/weights-card/) — A model card filled in from the weights file's own header, GGUF or safetensors (architecture, quantization, context length, licence), so the card says what the file says.
+- 2026-11-02 · [**webarchive**](adapters/stdlib/webarchive/) — Pages Safari saved as .webarchive, as their readable text with the address they came from, and their frames' text after them.
+- 2026-11-02 · [**warc**](adapters/stdlib/warc/) — WARC web archives, from Webrecorder, Heritrix or the Internet Archive, read without unpacking: each captured page's text with its address and the time it was captured.
 <!-- /willow:newest -->
 
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W45 -->
-**[kart](adapters/deps/kart/)** — A job someone sent you, run in a sandbox over your own folder only once you seal it, its result yours to seal before it goes back.
+**[stack](adapters/stdlib/stack/)** — One page made from several add-ons run in the order you list them, their results grouped so the biggest come first.
 
-*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 335 built add-ons in name order.*
+*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 324 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -313,7 +313,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**foia**](adapters/stdlib/foia/) — Freedom-of-information requests: what you asked, when, and when the answer is due by law. Uses habits. *new* `no-install` `offline` `due` · near: home-upkeep, subscriptions, mood
 - [**food-log**](adapters/stdlib/food-log/) — What you ate, from your notes, by day. Uses habits, log-kit. *new* `no-install` `offline` `log` · near: log-kit, gaps, sent-log
 - [**forecasts**](adapters/stdlib/forecasts/) — Write a prediction before the outcome, settle it later with your seal, see your Brier score. *bot* `no-install` `offline` `brier` `forecast` · near: market-calls, predict, weather-bet
-- [**gaps**](adapters/stdlib/gaps/) — Where a log you keep stops: the days a daily note, reading or diary skipped, said as gaps, not left out. *new* `no-install` `offline` `gaps` `daily` `journal` · near: on-this-day, folder-card, serve
+- [**gaps**](adapters/stdlib/gaps/) — Where a log you keep stops: the days a daily note, reading or diary skipped, said as gaps, not left out. *new* `no-install` `offline` `gaps` `daily` `journal` · near: folder-card, on-this-day, serve
 - [**garden**](adapters/stdlib/garden/) — What you planted, where and when, and how it did, season by season. Uses habits. *new* `no-install` `offline` · near: home-upkeep, pets, mileage
 - **gifts** (idea) — Gifts given and received, and who likes what, so nobody gets the same scarf twice. *new* `no-install` `offline` `twice` · near: hook-replay, repro, daily-word
 - [**gradebook**](adapters/stdlib/gradebook/) — A teacher's gradebook, kept on this machine: each student's marks by assignment, and who is falling behind. Uses habits. *new* `no-install` `offline` `assignments` · near: syllabus, attendance, reading-log
@@ -368,7 +368,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - **family-box** (idea) — One box for a household: each person's own seal, and every answer showing whose it is. *new* `no-install` `offline` `person` `family` · near: second-opinion, dialect, family-tree
 - [**fixity**](adapters/stdlib/fixity/) — Your folder's files hashed again now and then, the hashes kept on the record, and a file that changed with no edit of yours flagged as rot. *new* `no-install` `offline` `rot` `flagged` · near: hook-replay, hook-pin, changed
 - [**format-rot**](adapters/stdlib/format-rot/) — Files in formats that may stop opening (old office files, proprietary ones, those no reader handles) flagged while you can still convert them. *new* `no-install` `offline` `office` `rot` · near: office, fixity, sheets
-- **git-notes** (idea) — Approved answers kept as git notes on the commits they cite, so they travel with the repo to any forge. Needs the git program; GPL, called not linked. *new* `needs-install` `offline` `commit` `forge` · near: mirror, stale, git-history
+- **git-notes** (idea) — Approved answers kept as git notes on the commits they cite, so they travel with the repo to any forge. Needs the git program; GPL, called not linked. *new* `needs-install` `offline` `commit` `forge` · near: mirror, stale, annotations
 - **handoff** (idea) — A box handed to the person you name (an executor, a carer): read only, your seals kept, theirs their own. *new* `no-install` `offline` `person` · near: family-box, serve, datasette
 - [**history**](adapters/stdlib/history/) — Your record in plain sentences: what was asked when, what found nothing, what you approved; places and counts, never the words. *new* `no-install` `offline` `counts` `sentence` `everyday` · near: again, export, plain
 - [**ids**](adapters/stdlib/ids/) — Every file and passage given its Software Heritage ID and IPFS CID, names the rest of the world already uses. *new* `no-install` `offline` `world` `ids` · near: dialect, a11y-check, sort-ask
@@ -480,7 +480,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - [**mcp**](adapters/deps/mcp/) — Lets any MCP client, such as an AI assistant or editor, ask your folder and hand in suggestions. Needs mcp; MIT. *new* `needs-install` `offline` `mcp` `assistant` · near: mcp-lite, zed, cursor
 - **mcp-by-hash** (idea) — Your passages served as MCP resources named by their SHA-256, so an assistant cites exactly the bytes it read and a changed passage gets a new name. *bot* `no-install` `offline` `assistant` `sha` · near: model-card, snapshot, hook-read-first
 - [**mcp-lite**](adapters/stdlib/mcp-lite/) — The mcp add-on's three tools with nothing to install: the protocol by hand, standard library only. *box* `no-install` `offline` `mcp` · near: mcp, cursor, opencode
-- **mcp-sampling** (idea) — Suggestions from whatever model your MCP client already runs, asked through MCP sampling, so willow needs no model or key of its own. *new* `no-install` `offline` `mcp` `client` · near: mcp, cursor, opencode
+- [**mcp-sampling**](adapters/stdlib/mcp-sampling/) — Suggestions from whatever model your MCP client already runs, asked through MCP sampling, so willow needs no model or key of its own. Uses openai-compatible. *new* `no-install` `offline` `mcp` `client` · near: cursor, opencode, windsurf
 - **memory-import** (idea) — An AI assistant's memory store, SQLite or Markdown, handed in through propose: one suggestion per memory, none trusted until you seal it. *new* `no-install` `offline` `handed` `propose` · near: basic-memory, hermes, hook-feedback
 - **mex** (idea) — mex's project memory for coding agents: its scaffold read as cited passages, and what an agent writes back held for your seal. *new* `no-install` `offline` `agent` `memory` · near: instruction-files, codebase-memory, corpus-lens
 - **mlx** (idea) — Suggestions from a model run on Apple silicon through MLX, on this Mac alone. Needs mlx-lm, on Apple silicon only; MIT; licence of the model varies. *new* `needs-install` `offline` `apple` `silicon` · near: browser-model, os-model, model-fit

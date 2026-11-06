@@ -716,6 +716,10 @@ willow/
 │   │   │   ├── server.py         the mcp add-on's three tools, the protocol by hand, nothing to install
 │   │   │   ├── test_server.py
 │   │   │   └── README.md
+│   │   ├── mcp-sampling/
+│   │   │   ├── mcp_sampling.py Suggestions from whatever model your MCP client already runs, asked through MCP sampling, so willow needs no model or key of its own
+│   │   │   ├── test_mcp_sampling.py
+│   │   │   └── README.md     its card
 │   │   ├── mediawiki/
 │   │   │   ├── mediawiki.py   a MediaWiki dump as plain text, page by page
 │   │   │   ├── test_mediawiki.py
@@ -1867,5 +1871,8 @@ willow/
 ├── .gitattributes            every file checked out with LF line endings, on every system
 ├── .editorconfig             the same line endings and indents, for editors
 ├── ruff.toml                 lint settings
-└── LICENSE                   Apache-2.0
+├── LICENSE                   Apache-2.0
+├── changes/
+│   └── README.md             Changes not yet released
+└── towncrier.toml            each pull request's changelog fragment in changes/, folded into CHANGELOG.md at a release
 ```

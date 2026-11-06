@@ -111,8 +111,14 @@ def tree(doc: Path = FILES, heading: str = "# Every file") -> tuple[set[str], se
 
 
 def test_the_tree_lists_every_file_and_nothing_else():
+    """Every file but the changelog fragments under changes/, which come and
+    go with each pull request: the tree lists that folder and its README."""
     listed, _ = tree()
-    actual = repo_files()
+    actual = {
+        p
+        for p in repo_files()
+        if not p.startswith("changes/") or p == "changes/README.md"
+    }
     missing, extra = sorted(actual - listed), sorted(listed - actual)
     assert not missing and not extra, (
         f"FILES.md's tree is out of date.\n  in the repo, not the tree: {missing}"
