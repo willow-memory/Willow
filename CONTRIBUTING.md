@@ -214,6 +214,11 @@ beside the GitHub one: a host.json for `adapters/stdlib/ci/whose.py`, and that s
 ## Pull requests
 
 - One idea per pull request.
+- Look at the open pull requests before you start, whatever you branch
+  from: one may already be building your idea, or changing the files
+  you'll change. Branching from `main` is where your work starts, not a
+  sign that nothing else is in flight. The check below holds your branch to
+  them once it has a commit.
 - A change to anything but the docs adds its changelog entry in a file of
   its own, `changes/+<branch>.<kind>.md`, towncrier's shape
   ([changes/README.md](changes/README.md)): <kind> is `added`, `changed`,

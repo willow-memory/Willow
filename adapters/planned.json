@@ -50,16 +50,6 @@
   "role": "page"
  },
  {
-  "name": "assistant-scores",
-  "kind": "stdlib",
-  "section": "Assistants",
-  "line": "How often each assistant's suggestions were sealed or set aside, from the record.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "role": "suggests"
- },
- {
   "name": "basic-memory",
   "kind": "stdlib",
   "section": "Assistants",

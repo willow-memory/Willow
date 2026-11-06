@@ -2,11 +2,14 @@
 one run overnight, stopped the moment you're back.
 
     python adapters/stdlib/night-batch/night_batch.py run --box DIR --questions FILE
-        [--url URL ...] [--model NAME] [--until TS]
+        [--url URL ...] [--model NAME] [--reasoning EFFORT] [--until TS]
 
 FILE holds the questions, one a line. Each is asked as local-model asks: the
 kernel bites, only the passages served go to the first local server
-answering, and its reply is proposed for your seal. A question already
+answering, and its reply is proposed for your seal, its claim in the
+suggestions contract's one form. `--reasoning none|low|medium|high` goes to
+each ask as local-model takes it; any other value is refused before the
+first. A question already
 answered by a seal of yours, or with a suggestion already waiting on your
 seal, is skipped.
 
@@ -49,7 +52,7 @@ _spec.loader.exec_module(lm)
 
 USAGE = (
     "usage: night_batch.py run --box DIR --questions FILE [--url URL ...]"
-    " [--model NAME] [--until TS]"
+    " [--model NAME] [--reasoning none|low|medium|high] [--until TS]"
 )
 TS = "%Y-%m-%dT%H:%M:%SZ"
 
@@ -106,12 +109,16 @@ def main(argv: list[str]) -> int:
     for a in it:
         if a == "--url":
             urls.append(next(it, ""))
-        elif a in ("--box", "--questions", "--model", "--until") and a not in opts:
+        elif (
+            a in ("--box", "--questions", "--model", "--reasoning", "--until")
+            and a not in opts
+        ):
             opts[a] = next(it, "")
         else:
             rest.append(a)
     if (argv[:1] != ["run"] or rest or not opts.get("--box") or not opts.get("--questions")
-            or "" in urls or "" in opts.values()):  # fmt: skip
+            or "" in urls or "" in opts.values()
+            or opts.get("--reasoning", "none") not in lm.oc.REASONING):  # fmt: skip
         print(USAGE, file=sys.stderr)
         return kernel.REFUSED
     until = when(opts["--until"]) if "--until" in opts else None
@@ -168,7 +175,9 @@ def main(argv: list[str]) -> int:
         said = io.StringIO()
         with contextlib.redirect_stdout(said):
             code = lm.main(["ask", "--box", str(box), *(a for u in urls for a in ("--url", u)),
-                            *(["--model", opts["--model"]] if "--model" in opts else []), q])  # fmt: skip
+                            *(["--model", opts["--model"]] if "--model" in opts else []),
+                            *(["--reasoning", opts["--reasoning"]] if "--reasoning" in opts else []),
+                            q])  # fmt: skip
         out = said.getvalue()
         if out.startswith("no local model server is running"):
             print(out, end="")
