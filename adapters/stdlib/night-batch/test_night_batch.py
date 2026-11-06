@@ -333,3 +333,40 @@ def test_a_refused_suggestion_on_the_record_leaves_its_question_waiting(
     )
     assert got.returncode == 0, got.stdout + got.stderr
     assert got.stdout.startswith(f"asked    {Q1}\n")
+
+
+def test_reasoning_goes_to_each_ask_and_a_bad_one_asks_nothing(box, server, tmp_path):
+    qs = questions(tmp_path, Q1, Q2)
+    for bad in ("think", "", "Low"):
+        got = run(
+            "run",
+            "--box",
+            box,
+            "--url",
+            server.url,
+            "--questions",
+            qs,
+            "--reasoning",
+            bad,
+        )
+        assert got.returncode == 2 and "--reasoning" in got.stderr, bad
+    assert server.sent == [] and kinds(box) == ["boot"], "refused before the first"
+    got = run(
+        "run",
+        "--box",
+        box,
+        "--url",
+        server.url,
+        "--questions",
+        qs,
+        "--reasoning",
+        "low",
+    )
+    assert got.returncode == 0, got.stdout + got.stderr
+    assert [s["reasoning_effort"] for s in server.sent] == ["low", "low"]
+    claims = [
+        json.loads(p.read_text())["claim"] for p in (box / "proposals").glob("*.json")
+    ]
+    assert len(claims) == 2 and all(
+        "(temperature 0, seed 0, reasoning low) answered" in c for c in claims
+    )

@@ -123,10 +123,13 @@ def row_of(contract, name: str) -> tuple[str, list[str]]:
 
 def long_lines(mirror: Path) -> list[tuple[str, int, int]]:
     """(file, line, length) for each line of a reader's mirror longer than one
-    of the kernel's chunks, which the kernel cuts without a word."""
+    of the kernel's chunks, which the kernel cuts without a word. A hidden
+    file (the mirror contract's .places maps) is skipped, as the kernel
+    skips it."""
     out = []
     for p in sorted(mirror.rglob("*")) if mirror.is_dir() else []:
-        if p.is_file():
+        hidden = any(s.startswith(".") for s in p.relative_to(mirror).parts)
+        if p.is_file() and not hidden:
             text = p.read_bytes().decode("utf-8", "replace")
             for i, line in enumerate(text.splitlines(), 1):
                 if len(line) > kernel.MAX_CHUNK:
