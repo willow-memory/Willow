@@ -1528,6 +1528,7 @@ willow/
 │   ├── tour.md               the first five minutes, in full: a question, a gap, her words, an approval
 │   ├── how-it-works.md       what it reads, how it ranks, the key, the record, approvals
 │   ├── design/
+│   │   ├── draft-0.16.md     proposal: four of willow's own promises made law, and four new beats
 │   │   ├── repo-index.md     proposal: the repo as one deterministic-snapshot box, indexed by a custom serve-style stack
 │   │   └── serve.md          proposal: a sealed stack of piles served to a model, on markdown (the grove's serve, in willow)
 │   └── agents/               AGENTS.md's longer how-tos, one page a job

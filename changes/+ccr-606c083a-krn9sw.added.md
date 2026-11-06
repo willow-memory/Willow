@@ -1,0 +1,1 @@
+`constitution`: a design note for Draft 0.16, four of willow's own promises (the record keeps acts, not words; the same question, the same answer; the core reaches nothing that extends it; a no is final) drafted as clauses, each to be held by a new beat of `kernel.py test`
