@@ -896,6 +896,13 @@ def test_a_bad_command_line_is_refused_and_says_how_to_run_it(name, tmp_path):
     )
 
 
+_spec = importlib.util.spec_from_file_location(
+    "mirrors_for_contract", STDLIB / "ci" / "mirrors.py"
+)
+MIRRORS = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(MIRRORS)
+
+
 def check_reader(script: Path, sample: dict[str, bytes], tmp: Path) -> None:
     """The contract every reader keeps, run on one folder of its own files."""
     folder, mirror = tmp / "folder", tmp / "mirror"
@@ -910,7 +917,14 @@ def check_reader(script: Path, sample: dict[str, bytes], tmp: Path) -> None:
     assert got.returncode == 0, got.stderr
     line = got.stdout.strip().splitlines()[-1]
     assert re.fullmatch(rf"wrote {len(sample)} files? to .+; skipped 0", line), line
-    assert sorted(snapshot(mirror)) == sorted(f"{rel}.txt" for rel in sample)
+    shown = [p for p in snapshot(mirror) if not p.startswith(MIRRORS.PLACES + "/")]
+    assert sorted(shown) == sorted(f"{rel}.txt" for rel in sample)
+    if MIRRORS.keeps(script.parent / "README.md"):  # the mirror contract
+        assert MIRRORS.check(folder, mirror) == []
+    else:
+        assert not (mirror / MIRRORS.PLACES).exists(), (
+            "a map, so its card says output: mirror"
+        )
     again = tmp / "again"
     run(script, "mirror", "--from", str(folder), "--to", str(again))
     assert snapshot(again) == snapshot(mirror), "the same folder, the same bytes"

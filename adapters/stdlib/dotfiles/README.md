@@ -6,6 +6,7 @@ added: 2026-11-02
 writes: to
 network: none
 role: reads
+output: mirror
 reads: .bash, .cfg, .conf, .fish, .gitconfig, .ini, .lua, .properties, .sh, .toml, .vim, .zsh
 -->
 # dotfiles
@@ -77,6 +78,11 @@ folder, or MIRROR and FOLDER are inside one another).
 
 **Uses:** the kernel's exit codes (`ALIVE`, `ESCALATE`, `REFUSED`); Python's
 standard library for the formats (tomllib for TOML, shlex for a shell line).
+
+**Where each passage came from** is in a hidden map beside its mirror,
+`MIRROR/.places/<same path>.txt.json`, which the kernel never reads: each
+passage's line, which is the source's own, as
+[the mirror contract](../ci/README.md#the-mirror-contract) says.
 
 **Never:** copies a secret it recognises, writes inside FOLDER, modifies an
 original, writes anything outside MIRROR, or goes online.

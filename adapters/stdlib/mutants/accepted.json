@@ -40,9 +40,6 @@
     "099e4afa6871": "How much of what a program said is quoted in a failure's reason: one character more is the same message, and the state, the part a person and CI act on, is unchanged.",
     "03f95b5e44db": "Where the DevTools message counter starts: replies are matched to requests by id, so starting at 1 instead of 0 matches the same replies."
   },
-  "markdown": {
-    "04ddd02130a6": "FENCE matches a run of one repeated character (`{3,} or ~{3,}), so a fence's first and second characters are always the same; comparing either gives the same result."
-  },
   "misquote": {
     "101d4093cf32": "The where column's cap: every row of misquote's report has the same place, the closest passage, so the column is that place's width whatever the cap, and no row is padded."
   },

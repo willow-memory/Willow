@@ -190,6 +190,46 @@ keeps the readers' contract (the summary line, the same bytes twice,
 originals untouched, hidden files unread, 42 for nothing to read, refusals
 that write nothing). A new add-on with a command line has to be listed there.
 
+## The mirror contract
+
+A reader writes each file it reads as `MIRROR/<same path>.txt`, and the
+kernel cites a passage by that mirror file's line. A reader that keeps the
+mirror contract also says where in the original each passage came from, so
+an answer can point at the file you wrote, not at its mirror. Its card says
+`output: mirror`.
+
+Beside each mirror file it writes a hidden map, where the kernel never
+reads, so the passages still hold only the file's words:
+
+    MIRROR/notes/garden.md.txt
+    MIRROR/.places/notes/garden.md.txt.json
+      {"source": "notes/garden.md", "places": {"1": "line 1", "9": "lines 8-9"}}
+
+- **Each key** is the mirror line a passage starts on: a line with words
+  after a blank one, or the first, as the kernel cuts paragraphs.
+- **Each value** is the place in the source: `line N`, `lines N-M`, or
+  another named place, a word and what it names (`page 2`, `cell 4`,
+  `row 17`), for a source whose places aren't lines.
+- **A chunk the kernel cuts** from a longer passage is at the last place at
+  or before its line.
+
+[mirrors.py](mirrors.py)'s `check` holds a mirror to it: every mirror file
+has its map, naming its source; every passage is placed, and nothing else
+is; a line place is inside the source, with a content word of the passage's
+first line on it, so an off-by-one shows; and no mirror line is longer than
+one of the kernel's chunks, which it would cut unread.
+[test_contract.py](test_contract.py) runs it on each such reader's sample,
+and [realdata.py](realdata.py) on the demo people's folders.
+
+    python adapters/stdlib/ci/mirrors.py check --from FOLDER --mirror MIRROR
+
+Each reader keeps its own copy of the dozen lines that write the map, as a
+report add-on keeps its copy of the report's: an add-on holds alone and
+shares only the kernel. A reader that writes its source line for line places
+each passage on its own line (markdown, latex, org, rst, asciidoc,
+code-comments, dotfiles); one that moves a line says both (a table's header
+moved onto its rule is `lines 8-9`).
+
 ## The report contract
 
 An add-on that tells you what it found in your files (a check, an audit, a
