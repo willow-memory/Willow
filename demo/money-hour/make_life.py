@@ -1,4 +1,4 @@
-"""The money hour's four folders, as the files they leave: python make_life.py --mirror MIRROR [--check]
+"""The money hour's four folders, as the files they leave: python make_life.py [--mirror MIRROR] [--check]
 
 Four people from willow's other demos at one table: Teo Marinescu (teodora)
 hosts a video call about money on a Sunday each month, and Bernie Halloran
@@ -11,8 +11,10 @@ the world.
 One file is not theirs: Hollis's copy of the 10-K paragraph his newsletter
 summarised, read from MIRROR (the markets demo's mirror) word for word, and
 labelled as a copy. It is how pair-drift has a full text to hold the summary
-to. Written to `life/`, the same bytes every run; `--check` reads them back
-and holds them to questions.json.
+to, and it is written only with --mirror: without it (as CI runs every
+demo's make_life.py, offline) every other file is written and checked.
+Written to `life/`, the same bytes every run; `--check` reads them back and
+holds them to questions.json, and the copy to the mirror when one is named.
 """
 
 from __future__ import annotations
@@ -63,7 +65,7 @@ def fiction(who: str) -> str:
             "lines, checked against the markets pile.\n\n")  # fmt: skip
 
 
-def files(mirror: Path) -> dict[str, str]:
+def files(mirror: Path | None) -> dict[str, str]:
     t = "Teo Marinescu"
     f: dict[str, str] = {}
 
@@ -246,12 +248,16 @@ Ruth next door says he's eating. Bring the good bread Sunday.
 He asked again about Mom's Weiler upright in the garage. Tell him: soundboard next.
 """
     )
-    # the copied source, word for word from the mirror
-    text = (mirror / TENK).read_text(encoding="utf-8")
-    para = next(ln for ln in text.splitlines() if ln.startswith(TENK_START))
-    f[COPY] = ("Copied word for word from the issuer's annual report on SEC EDGAR, filed "
-               "2026-11-03, so the summary beside it can be held to it. Not Hollis's words.\n\n"
-               + para + "\n")  # fmt: skip
+    # the copied source, word for word from the mirror, when there is one
+    if mirror is not None:
+        text = (mirror / TENK).read_text(encoding="utf-8")
+        para = next(ln for ln in text.splitlines() if ln.startswith(TENK_START))
+        f[COPY] = (
+            "Copied word for word from the issuer's annual report on SEC EDGAR, filed "
+            "2026-11-03, so the summary beside it can be held to it. Not Hollis's words.\n\n"
+            + para
+            + "\n"
+        )  # fmt: skip
 
     # --- Marisol: Española. Her grandmother's savings ---------------------------------
     m = "Marisol Archuleta"
@@ -294,7 +300,7 @@ Biscochitos for Día de los Muertos, Rosa's recipe this time, don't tell anyone.
     return f
 
 
-def write(mirror: Path) -> int:
+def write(mirror: Path | None) -> int:
     for rel, text in files(mirror).items():
         p = LIFE / rel
         p.parent.mkdir(parents=True, exist_ok=True)
@@ -304,7 +310,7 @@ def write(mirror: Path) -> int:
     return check(mirror)
 
 
-def check(mirror: Path) -> int:
+def check(mirror: Path | None) -> int:
     """Every real-world line is frozen; every frozen line is there; none is dated after today."""
     want, bad = frozen(), []
     for who, lines in want.items():
@@ -324,9 +330,10 @@ def check(mirror: Path) -> int:
             for d in re.findall(r"\b20\d\d-\d\d-\d\d\b", ln) if ln in every else []:
                 if d > TODAY:  # plans may be ahead of today; what the world did may not
                     bad.append(f"after today {rel}:{n}: {d}")
-    copy = (LIFE / COPY).read_text(encoding="utf-8").splitlines()[2]
-    if copy not in (mirror / TENK).read_text(encoding="utf-8").splitlines():
-        bad.append("the copied paragraph is not the mirror's, word for word")
+    if mirror is not None:
+        copy = (LIFE / COPY).read_text(encoding="utf-8").splitlines()[2]
+        if copy not in (mirror / TENK).read_text(encoding="utf-8").splitlines():
+            bad.append("the copied paragraph is not the mirror's, word for word")
     for b in bad:
         print(b)
     print("holds" if not bad else f"{len(bad)} problems")
@@ -334,9 +341,13 @@ def check(mirror: Path) -> int:
 
 
 def main(argv: list[str]) -> int:
-    if len(argv) in (2, 3) and argv[0] == "--mirror":
-        mirror = Path(argv[1])
-        return check(mirror) if argv[2:] == ["--check"] else write(mirror)
+    mirror = None
+    if argv[:1] == ["--mirror"] and len(argv) >= 2:
+        mirror, argv = Path(argv[1]), argv[2:]
+    if argv == ["--check"]:
+        return check(mirror)
+    if argv == []:
+        return write(mirror)
     print(__doc__.split("\n\n")[0], file=sys.stderr)
     return 2
 

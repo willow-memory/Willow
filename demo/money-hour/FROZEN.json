@@ -1,10 +1,10 @@
 {
  "freeze": 3,
  "date": "2026-11-05",
- "why": "run 2 failed T5 for a reason in pair-drift, not in Hollis's newsletter: it read \"from $0.26 to $0.27\" as one range, so the summary's correct $0.27 looked like drift. pair-drift now reads \"from A to B\" as a change, two figures, with tests. run.py now numbers its results by the next free run-N.json, so earlier runs are never rewritten. Rules, lines, stacks and themes are as at freeze 2. Formatted by ruff before its commit, and make_life.py writes its files the way Python 3.9 can, which changes no byte it writes and no rule; run 3 ran on the formatted bytes.",
+ "why": "run 2 failed T5 for a reason in pair-drift, not in Hollis's newsletter: it read \"from $0.26 to $0.27\" as one range, so the summary's correct $0.27 looked like drift. pair-drift now reads \"from A to B\" as a change, two figures, with tests. run.py now numbers its results by the next free run-N.json, so earlier runs are never rewritten. Rules, lines, stacks and themes are as at freeze 2. Formatted by ruff before its commit, and make_life.py writes its files the way Python 3.9 can, and runs without --mirror as CI runs every demo's (every file but Hollis's copy), which changes no byte it writes and no rule; run 3 ran on the formatted bytes.",
  "files": {
   "questions.json": "5f19c91f5024b587f5f316f1fe22b0bad11f7d52465db13ade790878941e31cf",
-  "make_life.py": "e1e6dc6e8fbb6af20db9ed405f07da61a887ee11ed94fd166c35fe7f98f0dd86",
+  "make_life.py": "6861a848ad9ea30f9c2f69161d9656a83612450fba5ed501beff54ddca1f5d3d",
   "run.py": "0ce61a7799a8d895a46a63a5182c3e00cddd114be2af0712bc3c6603dfa6a229",
   "money-hour.md": "edb5ff18c5d41f1980bf41a48510f30a529804778a0fe1d3a851807db9e5c22a",
   "fed.md": "d027050645c6b97ae9b81811ba4cef5fd1ca838dbad28e3d942037ea9f218b14",
