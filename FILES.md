@@ -1698,7 +1698,8 @@ willow/
 │   │   ├── README.md         what's in the pile, what isn't and why, and how it's kept honest
 │   │   ├── fetch.py          saves 944 sources into a pile once (SEC EDGAR only with --contact), sets error bodies aside, and checks them offline
 │   │   ├── mirror.py         the pile as text the kernel searches, each reader's part, over-long files cut into parts
-│   │   └── sources.json      each source fetched, with its address, size and SHA-256, and what failed
+│   │   ├── sources.json      each source fetched, with its address, size and SHA-256, and what failed
+│   │   └── test_markets.py   holds what fetch.py froze, and the parts that need no network, to the README
 │   ├── money-hour/           four people from the other demos at one table, every market figure they repeat held to the real record
 │   │   ├── README.md         the claim, what the record says, how it runs, run 1's results and its one failure
 │   │   ├── CHARACTER.md      Teo, Bernie, Hollis and Marisol, where each comes from, and what each keeps
