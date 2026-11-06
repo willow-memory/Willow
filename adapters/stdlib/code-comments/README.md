@@ -6,6 +6,7 @@ added: 2026-10-29
 writes: to
 network: none
 role: reads
+output: mirror
 reads: .c, .cc, .cpp, .cs, .go, .h, .hpp, .java, .js, .jsx, .kt, .mjs, .php, .py, .rb, .rs, .sh, .swift, .ts, .tsx
 -->
 # code-comments

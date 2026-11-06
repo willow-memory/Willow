@@ -417,7 +417,8 @@ def test_a_mirror_is_written_at_the_same_path_with_txt_added(tmp_path):
     assert got.stdout.strip().endswith("; skipped 0")
     assert sorted(
         p.relative_to(out).as_posix() for p in out.rglob("*") if p.is_file()
-    ) == ["notes/todo.org.txt", "old.org_archive.txt"]
+    ) == [".places/notes/todo.org.txt.json", ".places/old.org_archive.txt.json",
+          "notes/todo.org.txt", "old.org_archive.txt"]  # fmt: skip
 
 
 def test_hidden_files_and_folders_are_not_read(tmp_path):
@@ -426,7 +427,10 @@ def test_hidden_files_and_folders_are_not_read(tmp_path):
         {"a.org": b"* A\n", ".hidden/b.org": b"* B\n", ".c.org": b"* C\n"},
     )
     assert "wrote 1 files" in got.stdout
-    assert [p.name for p in out.rglob("*") if p.is_file()] == ["a.org.txt"]
+    assert sorted(p.name for p in out.rglob("*") if p.is_file()) == [
+        "a.org.txt",
+        "a.org.txt.json",
+    ]
 
 
 def test_the_same_folder_gives_the_same_bytes_and_originals_are_unchanged(tmp_path):
