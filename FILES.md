@@ -1376,6 +1376,12 @@ willow/
 │       │   ├── requirements-floor.txt  wordfreq at its floor, also tested
 │       │   ├── test_dialect.py
 │       │   └── README.md
+│       ├── dialect-dates/
+│       │   ├── dialect_dates.py The words your folder uses far more than the world does, each dated by its first and last appearance, with the passage that first says it
+│       │   ├── requirements-floor.txt
+│       │   ├── requirements.txt
+│       │   ├── test_dialect_dates.py
+│       │   └── README.md     its card
 │       ├── fast-tests/
 │       │   ├── fast_tests.py  the test suite across every core with pytest-xdist, in a fraction of the time
 │       │   ├── requirements.txt  pytest-xdist, pinned
@@ -1521,6 +1527,7 @@ willow/
 ├── docs/
 │   ├── tour.md               the first five minutes, in full: a question, a gap, her words, an approval
 │   ├── how-it-works.md       what it reads, how it ranks, the key, the record, approvals
+│   ├── stone-soup.md         one real pile and add-on after add-on: what each found, what each misread, and the chain that dates a pile's words
 │   ├── design/
 │   │   ├── repo-index.md     proposal: the repo as one deterministic-snapshot box, indexed by a custom serve-style stack
 │   │   └── serve.md          proposal: a sealed stack of piles served to a model, on markdown (the grove's serve, in willow)
