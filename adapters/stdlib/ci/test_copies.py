@@ -180,3 +180,17 @@ def test_new_names_only_the_drift_a_branch_adds_and_doesnt_say_why(tmp_path, cap
     assert "+    return y * 4" in out and "b/b.py" not in out and "d/d.py" not in out
     assert cp.new("no-such-ref", root) == 2
     assert cp.sources_at("no-such-ref", root) is None
+
+
+def test_a_line_separator_in_a_string_doesnt_move_the_line_above_a_def(tmp_path):
+    odd = (
+        'SEP = "\u2028\\f"\n'.replace("\\f", "\f")
+        + "# differs on purpose: its own\n"
+        + DRIFTED
+    )
+    root = repo(
+        tmp_path,
+        {"stdlib/a/a.py": COMMON, "stdlib/b/b.py": COMMON, "stdlib/c/c.py": odd},
+    )
+    (c,) = cp.drift(cp.functions(root)["helper"])["drifted"]
+    assert c[1] == 3 and c[3] == "its own"

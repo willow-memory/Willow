@@ -554,6 +554,7 @@ def _armor(path: Path) -> bool:
     return head.lstrip(b"\xef\xbb\xbf \t\r\n").startswith(b"-----BEGIN PGP")
 
 
+# differs on purpose: it leaves out a .asc that is PGP armour, not AsciiDoc
 def _sources(folder: Path) -> list[Path]:
     """Files under `folder` this reads, sorted by relative path. Hidden folders
     and files are skipped; symlinked folders are not followed; an .asc file

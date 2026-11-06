@@ -206,6 +206,7 @@ def _within(inner: Path, outer: Path) -> bool:
     return inner == outer or outer in inner.parents
 
 
+# differs on purpose: a file is its equations' passages, counted
 def mirror(src: Path, dst: Path) -> tuple[int, int, int]:
     """Write the passages of `src` into `dst`. Returns (files written,
     equations, files skipped)."""
@@ -228,6 +229,7 @@ def mirror(src: Path, dst: Path) -> tuple[int, int, int]:
     return wrote, count, skipped
 
 
+# differs on purpose: it says how many equations it found
 def main(argv: list[str]) -> int:
     opts = dict(zip(argv[1::2], argv[2::2])) if argv[:1] == ["mirror"] else {}
     if len(argv) != 5 or sorted(opts) != ["--from", "--to"]:

@@ -168,7 +168,10 @@ def functions(
             tree = ast.parse(text)
         except SyntaxError:
             continue
-        lines, seen = text.splitlines(), set()
+        lines, seen = (
+            text.split("\n"),
+            set(),
+        )  # as ast counts: \u2028 or \f is no line's end
         for node in tree.body:
             if isinstance(node, ast.FunctionDef) and node.name not in seen:
                 seen.add(node.name)
