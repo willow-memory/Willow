@@ -60,6 +60,7 @@ YEAR = (355, 375)
 MONTHLY_MIN, YEARLY_MIN = 3, 2
 
 
+# differs on purpose: a statement's line is dated by its own date only, never one above it
 def entries(pile: list[dict]) -> list[tuple[str, str, int, str]]:
     """(day, path, line number, text) for each line that says its own date, the
     latest it says: a statement's row has one; a sentence under a dated email

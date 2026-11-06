@@ -304,6 +304,31 @@ def test_mine_stacked_on_another_is_read_from_where_it_left_that_one(repo):
     ]
 
 
+def test_a_stack_that_each_merged_main_since_shares_its_names_still(repo):
+    # #265 and #267 tonight: pr/12 took mine, main moved on, pr/12 merged it,
+    # then mine merged main too. Neither holds the other's head now, and
+    # pr/12 left main later than they left each other, yet sort is still
+    # mine's, carried by pr/12, and no duplicate
+    branch(repo, "mine", addon("sort"))
+    branch(repo, "pr/12", addon("zip"), start="mine")
+    git(repo, "checkout", "-q", "main")
+    write(repo, {"NOTES.md": "main moved on\n"})
+    git(repo, "add", "-A")
+    git(repo, "commit", "-qm", "main moves")
+    for name in ("pr/12", "mine"):
+        git(repo, "checkout", "-q", name)
+        git(repo, "merge", "-q", "--no-edit", "main")
+    git(repo, "checkout", "-q", "main")
+    for head, other in (("mine", "pr/12"), ("pr/12", "mine")):
+        got = check(repo, head, other)
+        assert got.returncode == 0, got.stdout
+        assert "duplicate:" not in got.stdout
+    # what pr/12 adds past mine is still its own
+    branch(repo, "pr/13", addon("zip"))
+    got = check(repo, "pr/12", "pr/13")
+    assert got.returncode == 2 and "duplicate: both add add-on zip (#13)" in got.stdout
+
+
 # ── near ideas ───────────────────────────────────────────────────────────────
 def test_an_idea_near_one_the_other_adds_is_suggested(repo):
     line = "Rain and frost for each garden bed, by day, from your own notes."

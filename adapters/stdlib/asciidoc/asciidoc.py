@@ -41,6 +41,7 @@ from __future__ import annotations
 
 import csv
 import html
+import json
 import os
 import re
 import sys
@@ -554,6 +555,7 @@ def _armor(path: Path) -> bool:
     return head.lstrip(b"\xef\xbb\xbf \t\r\n").startswith(b"-----BEGIN PGP")
 
 
+# differs on purpose: it leaves out a .asc that is PGP armour, not AsciiDoc
 def _sources(folder: Path) -> list[Path]:
     """Files under `folder` this reads, sorted by relative path. Hidden folders
     and files are skipped; symlinked folders are not followed; an .asc file
@@ -577,6 +579,23 @@ def _within(inner: Path, outer: Path) -> bool:
     return inner == outer or outer in inner.parents
 
 
+def places(text: str) -> dict[str, str]:
+    """The mirror contract's places (adapters/stdlib/ci/README.md): the
+    mirror is line for line, so the line each passage starts on is the
+    source's same line."""
+    lines = text.splitlines()
+    return {str(i): f"line {i}" for i, s in enumerate(lines, 1)
+            if s.strip() and (i == 1 or not lines[i - 2].strip())}  # fmt: skip
+
+
+def write_places(dst: Path, rel: str, found: dict[str, str]) -> None:
+    """The map, hidden beside the mirror, where the kernel never reads."""
+    out = dst / ".places" / (rel + ".txt.json")
+    out.parent.mkdir(parents=True, exist_ok=True)
+    doc = {"source": rel, "places": found}
+    out.write_bytes((json.dumps(doc, ensure_ascii=False) + "\n").encode("utf-8"))
+
+
 def mirror(src: Path, dst: Path) -> tuple[int, int]:
     """Write the mirror of `src` into `dst`. Returns (written, skipped)."""
     wrote = skipped = 0
@@ -590,6 +609,7 @@ def mirror(src: Path, dst: Path) -> tuple[int, int]:
             target = dst.joinpath(rel.parent, rel.name + ".txt")
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_bytes(text.encode("utf-8"))
+            write_places(dst, rel.as_posix(), places(text))
         except ERRORS:
             skipped += 1
             continue

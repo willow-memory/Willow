@@ -187,7 +187,10 @@ def test_the_checkpoint_folders_jupyter_keeps_are_not_read(tmp_path):
     got, out = mirror_of(
         tmp_path, {"a.ipynb": SAMPLE, ".ipynb_checkpoints/a-checkpoint.ipynb": SAMPLE}
     )
-    assert sorted(p.name for p in out.rglob("*") if p.is_file()) == ["a.ipynb.txt"]
+    assert sorted(p.name for p in out.rglob("*") if p.is_file()) == [
+        "a.ipynb.txt",
+        "a.ipynb.txt.json",
+    ]
 
 
 def test_a_mirror_is_written_at_the_same_path_with_txt_added(tmp_path):
@@ -211,7 +214,7 @@ def test_hidden_files_and_folders_are_not_read(tmp_path):
     )
     assert sorted(
         p.relative_to(out).as_posix() for p in out.rglob("*") if p.is_file()
-    ) == ["nbs/tides.ipynb.txt"]
+    ) == [".places/nbs/tides.ipynb.txt.json", "nbs/tides.ipynb.txt"]
 
 
 def test_the_same_folder_gives_the_same_bytes_and_originals_are_unchanged(tmp_path):
@@ -259,3 +262,22 @@ def test_a_bad_command_line_says_how_to_run_it():
     ):
         got = run(*argv)
         assert got.returncode == 2 and "jupyter.py" in got.stderr
+
+
+def test_each_passage_is_placed_at_its_cell_and_the_title_at_the_metadata():
+    nb = {"metadata": {"title": "Tides"}, "cells": [
+        {"cell_type": "markdown", "source": ["# Tides\n", "\n", "At the estuary."]},
+        {"cell_type": "code", "source": ""},
+        {"cell_type": "code", "source": "print(1)", "outputs": [{"text": "1"}]},
+    ]}  # fmt: skip
+    found = mod.blocks(json.dumps(nb).encode())
+    assert [p for _, p in found] == ["notebook metadata", "cell 1", "cell 3"]
+    text = "".join(b for b, _ in found).splitlines()
+    assert text[0] == "notebook: Tides" and text[2] == "cell 1 (markdown)"
+    assert mod.places(found) == {
+        "1": "notebook metadata",
+        "3": "cell 1",
+        "6": "cell 1",
+        "8": "cell 3",
+    }
+    assert mod.blocks(b'{"cells": []}') == [] and mod.convert(b'{"cells": []}') is None

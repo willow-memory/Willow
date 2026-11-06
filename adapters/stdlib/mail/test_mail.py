@@ -229,7 +229,8 @@ def test_mirror_path_is_the_same_path_with_txt_added(tmp_path):
     got = mirror(folder, dest)
     assert got.returncode == 0, got.stderr
     assert got.stdout == f"wrote 2 files to {dest}; skipped 0\n"
-    assert sorted(tree(dest)) == ["Old Mail/Box.MBOX.txt", "inbox/a.eml.txt"]
+    assert sorted(tree(dest)) == [".places/Old Mail/Box.MBOX.txt.json", ".places/inbox/a.eml.txt.json",
+                                  "Old Mail/Box.MBOX.txt", "inbox/a.eml.txt"]  # fmt: skip
 
 
 def test_file_that_is_not_a_message_is_skipped_and_counted(tmp_path):
@@ -240,7 +241,7 @@ def test_file_that_is_not_a_message_is_skipped_and_counted(tmp_path):
     got = mirror(folder, dest)
     assert got.returncode == 0, got.stderr
     assert got.stdout == f"wrote 1 files to {dest}; skipped 2\n"
-    assert sorted(tree(dest)) == ["a.eml.txt"]
+    assert sorted(tree(dest)) == [".places/a.eml.txt.json", "a.eml.txt"]
 
 
 def test_nothing_readable_exits_42(tmp_path):
@@ -337,3 +338,15 @@ def test_kernel_bite_finds_a_word_only_inside_a_base64_body(tmp_path):
         s["where"].startswith("inbox/order.eml.txt:") and "marmalade" in s["text"]
         for s in doc["served"]
     )
+
+
+def test_each_passage_is_placed_at_its_message():
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location("mail_addon", MAIL)
+    mail = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mail)
+    found = [("== message 1\n\nFrom: a\nDate: x\n\nHello.\n", "message 1"),
+             ("== message 2\n\nFrom: b\n", "message 2")]  # fmt: skip
+    assert mail.places(found) == {"1": "message 1", "3": "message 1", "6": "message 1",
+                                  "8": "message 2", "10": "message 2"}  # fmt: skip

@@ -99,6 +99,7 @@ def _within(inner: Path, outer: Path) -> bool:
     return inner == outer or outer in inner.parents
 
 
+# differs on purpose: store_text skips what isn't a store, so only OSError is left to catch
 def mirror(src: Path, dst: Path) -> tuple[int, int]:
     wrote = skipped = 0
     for path in _sources(src):

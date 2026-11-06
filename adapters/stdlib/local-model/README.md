@@ -7,6 +7,7 @@ writes: record
 network: loopback
 role: suggests
 uses: openai-compatible
+output: suggestions
 -->
 # local-model
 

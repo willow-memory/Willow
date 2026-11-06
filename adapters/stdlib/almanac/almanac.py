@@ -137,6 +137,7 @@ def catalog_text(raw: bytes) -> str | None:
     return head + "".join(entry_text(e) for e in entries)
 
 
+# differs on purpose: it reads only an Almanac's catalog.json
 def _sources(folder: Path) -> list[Path]:
     """catalog.json files under `folder`, sorted by relative path. Hidden
     folders and files are skipped; symlinked folders are not followed."""
@@ -158,6 +159,7 @@ def _within(inner: Path, outer: Path) -> bool:
     return inner == outer or outer in inner.parents
 
 
+# differs on purpose: catalog_text skips what isn't a catalog, so only OSError is left to catch
 def mirror(src: Path, dst: Path) -> tuple[int, int]:
     """Write the mirror of `src` into `dst`. Returns (written, skipped)."""
     wrote = skipped = 0

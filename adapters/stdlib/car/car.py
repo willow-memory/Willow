@@ -78,6 +78,7 @@ NAMED = (
 )
 
 
+# differs on purpose: a due date is when something is due, not the day the line happened
 def entries(pile: list[dict]) -> list[tuple[str, str, int, str]]:
     """(day, path, line number, text) for each line a day reaches: the latest
     date it says before any "due", else the nearest above it in its file, else

@@ -77,6 +77,7 @@ def test_mirror_writes_both_kinds_skips_the_rest_never_touches_from(tmp_path):
     assert got.returncode == 0
     assert got.stdout.strip() == f"wrote 2 files to {dst}; skipped 1"
     assert sorted(p.relative_to(dst).as_posix() for p in dst.rglob("*") if p.is_file()) == [
+        ".places/pod.vtt.txt.json", ".places/talks/ep1.srt.txt.json",
         "pod.vtt.txt", "talks/ep1.srt.txt"]  # fmt: skip
     assert before == {p: p.read_bytes() for p in src.rglob("*") if p.is_file()}
     again = tmp_path / "again"
@@ -95,3 +96,15 @@ def test_nothing_readable_is_42_and_bad_places_are_refused(tmp_path):
     assert got.returncode == 2 and got.stderr.startswith("refused")
     got = run("mirror", "--from", str(empty), "--to", str(empty / "in"))
     assert got.returncode == 2 and "inside one another" in got.stderr
+
+
+def test_each_cue_is_placed_on_its_timing_line_to_its_last_line_of_text():
+    assert st.places(st.placed(SRT.encode(), vtt=False)) == {
+        "1": "lines 2-4",
+        "2": "lines 7-8",
+    }
+    assert st.places(st.placed(VTT.encode(), vtt=True)) == {
+        "1": "lines 6-7",
+        "2": "lines 12-13",
+    }
+    assert st.placed(b"no cue here\n", vtt=False) == []

@@ -6,6 +6,7 @@ added: 2026-11-05
 writes: to
 network: none
 role: reads
+output: mirror
 reads: .tex
 -->
 # equations
@@ -73,6 +74,12 @@ folder, or MIRROR and FOLDER are inside one another).
 
 **Uses:** the kernel's exit codes (`ALIVE`, `ESCALATE`, `REFUSED`) and its
 chunk size (`MAX_CHUNK`); Python's standard library for the format.
+
+**Where each passage came from** is in a hidden map beside its mirror,
+`MIRROR/.places/<same path>.txt.json`, which the kernel never reads, as
+[the mirror contract](../ci/README.md#the-mirror-contract) says: the .tex
+file's lines from the paragraph before the equation to the end of the one
+after it, the line its first line cites among them.
 
 **Never:** writes inside FOLDER, modifies an original, rewrites an equation,
 writes anything outside MIRROR, or goes online.
