@@ -144,7 +144,38 @@ def test_the_claim_openai_compatible_writes_is_the_claim_this_reads(
     r = run(b)
     assert r.returncode == 0
     assert f"qwen at {url} (online: models.example.org)" in r.stdout
+    assert "asked at: temperature 0, seed 0\n" in r.stdout
     assert "went: garden.md:1" in r.stdout
+
+
+def test_every_proposer_in_the_contracts_form_is_named(tmp_path):
+    b = box(tmp_path)
+    claims = [
+        "gemma at http://127.0.0.1:1/v1 (temperature 0, seed 0, reasoning low)"
+        " answered from 1 of the 1 passages served",
+        "tiny.gguf in this process (weights sha256 ab, temperature 0, seed 0)"
+        " answered from 1 of the 1 passages served",
+        "gemma at http://127.0.0.1:1/v1 (temperature 0, seed 0) translated"
+        " proposal:ab into Spanish",
+        "gpt-4o via MCP sampling (temperature 0, seed 0) answered from 1 of the 1"
+        " passages served",
+    ]
+    for n, claim in enumerate(claims):
+        propose(b, tmp_path, bite(b, Q if n == 0 else f"{Q} {n}"), claim, n)
+    r = run(b)
+    assert r.returncode == 0, r.stdout
+    assert r.stdout.count("gemma at http://127.0.0.1:1/v1 (this machine)") == 2
+    assert "asked at: temperature 0, seed 0, reasoning low\n" in r.stdout
+    assert "tiny.gguf in this process (this machine)" in r.stdout
+    assert "asked at: weights sha256 ab, temperature 0, seed 0" in r.stdout
+    assert (
+        "gpt-4o via MCP sampling (not said: via MCP sampling names no address)"
+        in r.stdout
+    )
+    assert r.stdout.count("went: ") == 3, "three claims count what they were served"
+    assert (
+        "served, may have gone (the claim counts another number, or none)" in r.stdout
+    )
 
 
 def test_a_broken_chain_is_refused_and_nothing_is_written(tmp_path):

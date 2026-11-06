@@ -120,6 +120,10 @@ willow/
 │   │   │   ├── asciidoc.py   an AsciiDoc document as the text it shows, line for line, markup taken off
 │   │   │   ├── test_asciidoc.py
 │   │   │   └── README.md
+│   │   ├── assistant-scores/
+│   │   │   ├── assistant_scores.py How often each assistant's suggestions were sealed or set aside, from the record
+│   │   │   ├── test_assistant_scores.py
+│   │   │   └── README.md     its card
 │   │   ├── attendance/
 │   │   │   ├── attendance.py   who was there, by person or by week
 │   │   │   ├── test_attendance.py
