@@ -73,11 +73,14 @@ the output is hashed. The same files give the same record, byte for byte.
 
 **The changelog:** [changelog.py](changelog.py) runs as its own CI job on
 every pull request, outside the record (it needs the pull request's number
-and its base branch). When anything but Markdown changed, CHANGELOG.md's
-`## Unreleased` section must gain an entry ending with that number, `(#N)`,
-and a bug [BUGS.md](../../../BUGS.md) stopped listing must be named in one
-under `### Fixed`, `bug #12`. Exit 0 every entry owed is there, or nothing is
-owed; 42 git couldn't compare with the base; 2 an entry is missing.
+and its base branch). When anything but Markdown changed, the pull request
+owes an entry: a changelog fragment named for it,
+`changes/<number>.<kind>.md` ([changes/README.md](../../../changes/README.md)
+says how), or, from before the fragments, an entry in CHANGELOG.md's
+`## Unreleased` ending `(#N)`. A bug [BUGS.md](../../../BUGS.md) stopped
+listing must be named in a `fixed` one, `bug #12`. Exit 0 every entry owed
+is there, or nothing is owed; 42 git couldn't compare with the base; 2 an
+entry is missing.
 
 **Known bugs:** [bugs.py](bugs.py) makes BUGS.md from the tests marked as
 expected to fail, `strict=True` with a reason `bug #N: …`, and refuses any
@@ -158,7 +161,7 @@ adapters/planned.json: its folder, its card (the idea's entry as its
 header, `added` today), a script that refuses every command line until it's
 built, a test holding that, the idea off the list, FILES.md and the add-on
 list written. It exits 42 with what's left for a person: the add-on itself,
-its tests, its line in COMMANDS, a CHANGELOG.md entry, its mutants, and for a
+its tests, its line in COMMANDS, a changelog fragment, its mutants, and for a
 deps idea its requirements and `floor:` line.
 
 **Whose lines:** [whose.py](whose.py) takes `PATH:FIRST-LAST` places and
