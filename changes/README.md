@@ -1,23 +1,40 @@
 # Changes not yet released
 
-Each pull request's changelog entry, in a file of its own, the shape
-[towncrier](https://towncrier.readthedocs.io/) reads. No two pull requests
-write the same file, so none conflicts with another over the changelog; a
-release folds them all into [CHANGELOG.md](../CHANGELOG.md) and deletes them.
+Each pull request writes its changelog entry here, in a file of its own,
+never in [CHANGELOG.md](../CHANGELOG.md). No two pull requests write the
+same file, so none conflicts with another over the changelog. A release
+folds every file here into CHANGELOG.md with
+[towncrier](https://towncrier.readthedocs.io/) and deletes them.
 
-A file's name is the pull request's number and the entry's kind:
-`<number>.<kind>.md` (253.added.md for #253). Before the pull request has a number, it is
-`+BRANCH.KIND.md` (`+feat-llm-cli.added.md`), and
-`adapters/stdlib/github/create_pr.py` renames it to the number in the push
-that opens the pull request. The kinds are the changelog's headings:
-`added`, `changed`, `deprecated`, `removed`, `fixed`, `security`.
+## The file's name
 
-The file holds the entry's text, as it would read after `- ` in the
-changelog, with no number: towncrier adds `(#253)` from the name. A fix
-names what it fixes, `bug #12`, as always.
+`+<branch>.<kind>.md` while you work: your branch's name with any `/` as a
+`-`, then the kind of change. A branch named feat/llm-cli adding something
+writes `+feat-llm-cli.added.md`.
+
+The kind is one of the changelog's headings, in lower case: `added`,
+`changed`, `deprecated`, `removed`, `fixed`, `security`.
+
+When the pull request opens, `adapters/stdlib/github/create_pr.py` renames
+the file for its number, `<number>.<kind>.md` (253.added.md for #253), in the
+same push. You don't rename it yourself.
+
+## What goes in it
+
+The entry's text as it will read in the changelog after `- `, opening with
+the add-on's name in backticks, and no number: towncrier adds `(#253)` from
+the file's name. A fix names what it fixes, `bug #12`.
 
     `llm-cli`: suggestions through the llm command, run on a model a person
     already set up for it
 
-`adapters/stdlib/ci/changelog.py` holds a pull request to having one, CI
-runs it, and FILES.md lists this folder, not its files.
+One entry a file. A pull request with two entries of the same kind writes
+two files, each its own name after the branch's:
+`+feat-llm-cli-docs.changed.md` beside `+feat-llm-cli.changed.md`.
+
+## What holds it
+
+`adapters/stdlib/ci/changelog.py` refuses a pull request that changed more
+than the docs and has no entry, and CI runs it on every pull request.
+FILES.md lists this folder and this README, not the entries, which come and
+go with every pull request.

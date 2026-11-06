@@ -74,12 +74,13 @@ the output is hashed. The same files give the same record, byte for byte.
 **The changelog:** [changelog.py](changelog.py) runs as its own CI job on
 every pull request, outside the record (it needs the pull request's number
 and its base branch). When anything but Markdown changed, the pull request
-owes an entry: a changelog fragment named for it, `changes/<N>.<KIND>.md`
-(towncrier's shape, [changes/README.md](../../../changes/README.md)), or,
-from before the fragments, an entry in CHANGELOG.md's `## Unreleased`
-ending `(#N)`; and a bug [BUGS.md](../../../BUGS.md) stopped listing must
-be named in a fixed one, `bug #12`. Exit 0 every entry owed is there, or nothing is
-owed; 42 git couldn't compare with the base; 2 an entry is missing.
+owes an entry: a changelog fragment named for it,
+`changes/<number>.<kind>.md` ([changes/README.md](../../../changes/README.md)
+says how), or, from before the fragments, an entry in CHANGELOG.md's
+`## Unreleased` ending `(#N)`. A bug [BUGS.md](../../../BUGS.md) stopped
+listing must be named in a `fixed` one, `bug #12`. Exit 0 every entry owed
+is there, or nothing is owed; 42 git couldn't compare with the base; 2 an
+entry is missing.
 
 **Known bugs:** [bugs.py](bugs.py) makes BUGS.md from the tests marked as
 expected to fail, `strict=True` with a reason `bug #N: …`, and refuses any

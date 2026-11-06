@@ -160,7 +160,7 @@ def make(
         f"the add-on itself, in {rel}/{script}, and the card's body in {rel}/README.md",
         f"its tests, in {rel}/test_{script}, beyond the refusal it holds",
         f"its line in COMMANDS, once it's built: python adapters/stdlib/ci/commands.py suggest {name} --write",
-        f"its changelog fragment, changes/+BRANCH.added.md, opening `{name}`",
+        f"its changelog fragment, changes/+<branch>.added.md, opening `{name}`",
         f"its mutants: python adapters/stdlib/mutants/mutants.py run {name}",
     ]
     if kind == "deps":

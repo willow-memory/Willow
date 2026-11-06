@@ -268,7 +268,7 @@ def test_no_entry_anywhere_stops_it_saying_where_one_goes(repo):
     git(repo, "commit", "-q", "-am", "no entry")
     steps(repo, GREEN)
     got = run(repo)
-    assert got.returncode == 42 and "changes/+BRANCH.KIND.md" in got.stderr
+    assert got.returncode == 42 and "changes/+<branch>.<kind>.md" in got.stderr
 
 
 def test_run_again_it_finds_its_pull_request_and_opens_no_second(repo):

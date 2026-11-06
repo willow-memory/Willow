@@ -7,7 +7,7 @@ Compares the checkout with REF (the branch the pull request goes into). When
 every changed file is Markdown, or CITATION.cff, nothing is owed: a release
 moves entries and sets the citation's version, and changes nothing else.
 Otherwise the pull request owes an entry: a file of its own under changes/,
-towncrier's shape, `changes/N.KIND.md` (changes/README.md), which no other
+towncrier's shape, `changes/<number>.<kind>.md` (changes/README.md), which no other
 pull request writes, so none conflicts with another; or, as before the
 fragments, an entry it added to CHANGELOG.md's `## Unreleased` ending with
 its number, `(#N)`. An entry is a `- ` line and the indented lines
@@ -77,7 +77,7 @@ def kinds(root: Path | None = None) -> dict[str, str]:
 
 def fragment_entries(files: list[str], pr: str) -> list[tuple[str, str]]:
     """(heading, entry) for each fragment this pull request added, named for
-    its number (create_pr.py renames a +BRANCH one to it): the entry is the
+    its number (create_pr.py renames a +<branch> one to it): the entry is the
     file's text, with (#N) as towncrier will write it."""
     known, out = kinds(), []
     for rel in files:
@@ -131,11 +131,11 @@ def check(base: str, pr: str) -> int:
     if not mine:
         print(
             f"refused: {len(code)} files beyond the docs changed ({', '.join(code[:3])}"
-            f"{', …' if len(code) > 3 else ''}), and changes/ holds no {pr}.KIND.md"
+            f"{', …' if len(code) > 3 else ''}), and changes/ holds no {pr}.<kind>.md"
             f" (nor CHANGELOG.md's ## Unreleased a new entry ending (#{pr}))",
             file=sys.stderr,
         )
-        print("write the entry in changes/+BRANCH.KIND.md (changes/README.md says how)"
+        print("write the entry in changes/+<branch>.<kind>.md (changes/README.md says how)"
               " and commit it with the change; then"
               " python adapters/stdlib/github/create_pr.py names it for the pull"
               " request, in the push that opens it", file=sys.stderr)  # fmt: skip

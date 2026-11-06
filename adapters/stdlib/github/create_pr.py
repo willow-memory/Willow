@@ -5,13 +5,13 @@ own add-ons, stopping only where a person is needed. Python 3.9+.
                                                [--footer TEXT] [--repo OWNER/NAME]
                                                [--steps FILE]
 
-Commit your change, with its changelog entry (changes/+BRANCH.KIND.md,
+Commit your change, with its changelog entry (changes/+<branch>.<kind>.md,
 changes/README.md says how), then run it. The steps are
 create_pr.md beside it (`--steps` names another): a stack, the same file
 the stack add-on reads, run in order rather than composed, stopping at the
 first step that doesn't come back clean. Then it pushes the branch, opens
 the pull request (or finds the one already open for it), names its
-changelog fragment for it (changes/+BRANCH.KIND.md to changes/N.KIND.md; or
+changelog fragment for it (changes/+<branch>.<kind>.md to changes/<number>.<kind>.md; or
 writes the number into an entry in CHANGELOG.md, the older way), pushes
 again, and runs the steps that need the number.
 
@@ -208,8 +208,8 @@ def new_fragments(base: str) -> list[str]:
 
 
 def name_fragments(base: str, number: int) -> list[str]:
-    """Each `+BRANCH.KIND.md` fragment this branch added, renamed for the pull
-    request, `N.KIND.md` (`.1`, `.2` when a kind is there already): towncrier
+    """Each `+<branch>.<kind>.md` fragment this branch added, renamed for the pull
+    request, `<number>.<kind>.md` (`.1`, `.2` when a kind is there already): towncrier
     writes `(#N)` from the name. The new names."""
     log = load("willow_changelog_for_create_pr", STDLIB / "ci" / "changelog.py")
     out = []
@@ -449,8 +449,8 @@ def create(opts: dict) -> int:
     if git("rev-list", "--count", f"{base}..HEAD") == "0":
         raise Refused(f"{branch} holds nothing {base} doesn't: nothing to open")
     if owes_an_entry(base) and not new_fragments(base) and not new_entries(base):
-        raise Stop("no changelog entry: write it in changes/+BRANCH.KIND.md"
-                   " (changes/README.md says how; KIND added, changed, fixed or"
+        raise Stop("no changelog entry: write it in changes/+<branch>.<kind>.md"
+                   " (changes/README.md says how; <kind> added, changed, fixed or"
                    " removed), commit it, run this again")  # fmt: skip
 
     prs = open_prs(slug)

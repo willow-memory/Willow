@@ -103,7 +103,7 @@ entry, and says what's left.
    `python adapters/stdlib/ci/files.py write` puts it there.
 5. **The add-on list regenerated**, never edited:
    `python adapters/stdlib/readme/readme.py write`.
-6. **Its changelog entry, in a file of its own:** `changes/+BRANCH.KIND.md`
+6. **Its changelog entry, in a file of its own:** `changes/+<branch>.<kind>.md`
    (towncrier's shape, [changes/README.md](changes/README.md)), opening with
    the name in backticks. Never in CHANGELOG.md itself: every pull request
    editing the same lines there is what left each merge conflicting with

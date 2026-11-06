@@ -215,8 +215,8 @@ beside the GitHub one: a host.json for `adapters/stdlib/ci/whose.py`, and that s
 
 - One idea per pull request.
 - A change to anything but the docs adds its changelog entry in a file of
-  its own, `changes/+BRANCH.KIND.md`, towncrier's shape
-  ([changes/README.md](changes/README.md)): KIND is `added`, `changed`,
+  its own, `changes/+<branch>.<kind>.md`, towncrier's shape
+  ([changes/README.md](changes/README.md)): <kind> is `added`, `changed`,
   `fixed` or `removed`, and the file holds the entry's text. Not in
   CHANGELOG.md: no two pull requests write the same fragment, so none
   conflicts with another, and a release folds them in. CI checks it on
@@ -225,12 +225,12 @@ beside the GitHub one: a host.json for `adapters/stdlib/ci/whose.py`, and that s
 - Regenerate the add-on list (ADDONS.md, and the README's one feature) with
   `python adapters/stdlib/readme/readme.py write`, never by hand;
   `test_docs.py` fails if it's stale.
-- Branch from `main`, and name the changelog fragment with the first push:
-  open the pull request, rename `changes/+BRANCH.KIND.md` to
-  `changes/<N>.<KIND>.md` for its number, and push once, so the first run is
-  not thrown away (`adapters/stdlib/github/create_pr.py` does all of it). Every push after the first
-  starts a run of every check, and a stack of branches re-runs them all
-  whenever one of them moves.
+- Branch from `main`, and name the changelog fragment in the first push:
+  open the pull request, rename `changes/+<branch>.<kind>.md` to
+  `changes/<number>.<kind>.md`, and push once, so the first run is not
+  thrown away. `adapters/stdlib/github/create_pr.py` does all of it. Every
+  push after the first starts a run of every check, and a stack of
+  branches re-runs them all whenever one of them moves.
 - CI's `against` job holds your pull request to the other open ones, and its
   summary says what it found. **A duplicate fails it:** a name both pull
   requests add (an add-on folder, an idea on `adapters/planned.json`, a key
@@ -272,7 +272,7 @@ unnoticed.
 
 **Fixing one.** Once the bug is fixed its test passes, and because the
 mark is strict, that fails the run until you take the mark off. Regenerate
-BUGS.md, and write a `fixed` fragment (`changes/+BRANCH.fixed.md`) that
+BUGS.md, and write a `fixed` fragment (`changes/+<branch>.fixed.md`) that
 names it, `bug #12`; CI refuses the pull request without it.
 
 ## Releases

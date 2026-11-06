@@ -27,7 +27,7 @@ kernel and every other add-on run and test the same without it.
 | `.github/` | GitHub reads it only at the repo's root, so it lives there, but it belongs to this folder and `check` holds it |
 
 **Opening a pull request.** Commit the change, its changelog fragment with
-it (`changes/+BRANCH.KIND.md`, [changes/README.md](../../../changes/README.md)),
+it (`changes/+<branch>.<kind>.md`, [changes/README.md](../../../changes/README.md)),
 then run `create_pr.py`. It runs [create_pr.md](create_pr.md), a
 [stack](../stack/) of the repo's own add-ons, in order: `restack` brings
 main in, [made.py](../ci/made.py) makes again every file a script makes, `ci` lints,
