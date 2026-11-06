@@ -211,7 +211,11 @@ reads, so the passages still hold only the file's words:
   another named place, a word and what it names (`page 2`, `cell 4`,
   `row 17`), for a source whose places aren't lines.
 - **A chunk the kernel cuts** from a longer passage is at the last place at
-  or before its line.
+  or before its line. A map may place lines inside a passage too, as
+  subtitles places each cue of a transcript's one passage.
+- **A passage may open with its own citation line**, the source's path then
+  `line N` (equations' `paper/main.tex line 120, label eq:oz`): the line it
+  cites must be inside its place, and the next line is held to the word rule.
 
 [mirrors.py](mirrors.py)'s `check` holds a mirror to it: every mirror file
 has its map, naming its source; every passage is placed, and nothing else
@@ -228,7 +232,9 @@ report add-on keeps its copy of the report's: an add-on holds alone and
 shares only the kernel. A reader that writes its source line for line places
 each passage on its own line (markdown, latex, org, rst, asciidoc,
 code-comments, dotfiles); one that moves a line says both (a table's header
-moved onto its rule is `lines 8-9`).
+moved onto its rule is `lines 8-9`); one that gathers a passage from several
+says them all (equations, from the paragraph before to the one after;
+subtitles, a cue from its timing line to its text).
 
 ## The report contract
 
