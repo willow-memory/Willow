@@ -502,9 +502,17 @@ jobs:
     # runner's Ubuntu: tesseract for ocr, bubblewrap for kart (gpg, for pgp,
     # comes with the image). Ubuntu 24.04 keeps unprivileged user namespaces
     # behind AppArmor, and bwrap needs one, so this runner lets them be made.
+    # On a pull request, main's last deps record is fetched first: a gate
+    # whose key (its folder, kernel.py, ci.py, the guard, its pins, the
+    # Python) has a satisfied verdict there is held, not reinstalled. A push
+    # to main fetches nothing and runs every gate, so a bad hold is caught on
+    # the next merge; a record that can't be fetched holds nothing.
     needs: [lint, against, changelog]
     if: ${{ !failure() && !cancelled() }}
     runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      actions: read
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
@@ -513,6 +521,16 @@ jobs:
       - run: sudo apt-get update -q && sudo apt-get install -y -q tesseract-ocr bubblewrap
       - run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - run: pip install pip-audit==2.10.1
+      - if: github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          id=$(gh run list -R "$GITHUB_REPOSITORY" --workflow ci.yml --branch main --event push --status completed -L 1 --json databaseId -q '.[0].databaseId' || true)
+          if [ -n "$id" ] && gh run download "$id" -R "$GITHUB_REPOSITORY" -n ci-record-deps -D "$RUNNER_TEMP/held"; then
+            echo "WILLOW_HELD_RECORD=$RUNNER_TEMP/held/record.jsonl" >> "$GITHUB_ENV"
+          else
+            echo "no deps record from main to hold by: every deps gate runs"
+          fi
       - run: python adapters/stdlib/ci/ci.py run deps --box ${{ runner.temp }}/ci-record | tee "$RUNNER_TEMP/ci.log"
       - if: failure()
         run: python adapters/stdlib/ci-why/ci_why.py "$RUNNER_TEMP/ci.log" --record "$RUNNER_TEMP/ci-record/record.jsonl" >> "$GITHUB_STEP_SUMMARY" || true
