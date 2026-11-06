@@ -3,7 +3,7 @@
 The second score, beside the hit rule in [score.py](score.py): not whether a
 step was reached, but whether what reached it explains it. The physics
 student's measure of a good answer is one that "holds my hand through the complex
-analysis". DRAFT: not frozen; who judges is not yet settled.
+analysis". DRAFT: not frozen. The physics student judges it (below).
 
 ## Each step, scored 0 to 3
 
