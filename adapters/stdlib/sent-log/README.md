@@ -28,7 +28,8 @@ this reads the one place a model is named, the proposal's `claim`, in the
 suggestions contract's one form, read by
 [openai-compatible](../openai-compatible/)'s `read_claim`: "MODEL at URL
 (temperature 0, seed 0) answered from N of the M passages served", or
-"FILE in this process (...)". Every proposer that keeps the contract is
+"FILE in this process (...)", or "MODEL via NAME (...)" for a program
+that names no address, which is said as `not said`, never as this machine. Every proposer that keeps the contract is
 named (openai-compatible, local-model, translate, sort-ask, in-process),
 with the settings it was asked at, and a claim from before the settings
 were said still reads. It is read from the proposal file only when that

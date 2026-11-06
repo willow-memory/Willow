@@ -326,3 +326,13 @@ def test_another_add_ons_seed_goes_in_its_place(box, model):
         "seed",
     ]
     assert second["seed"] == 7 and second["reasoning_effort"] == "low"
+
+
+def test_a_claim_via_another_program_reads_only_before_its_settings():
+    got = oc.read_claim("gpt-4o via MCP sampling (temperature 0, seed 0) answered from 1 of the 1 passages served")  # fmt: skip
+    assert (got["who"], got["where"], got["via"], got["url"]) == (
+        "gpt-4o", "via MCP sampling", "MCP sampling", None)  # fmt: skip
+    assert got["settings"] == {"temperature": "0", "seed": "0"}
+    assert oc.read_claim("m via llm (temperature 0, seed 0) did")["via"] == "llm"
+    assert oc.read_claim("m via llm answered from 1 of the 1 passages served") is None
+    assert oc.read_claim(f"m at {'http://x'} answered from 1")["via"] is None

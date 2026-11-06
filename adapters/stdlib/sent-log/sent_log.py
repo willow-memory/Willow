@@ -109,7 +109,13 @@ def check(box: Path) -> tuple[int, list[dict]]:
             e["unnamed"] = prop["claim"]
         else:
             e["model"], e["where"], e["settings"] = c["who"], c["where"], c["settings"]
-            e["to"] = where_to(c["url"]) if c["url"] else "this machine"
+            e["to"] = (
+                where_to(c["url"])
+                if c["url"]
+                else f"not said: {c['where']} names no address"
+                if c["via"]
+                else "this machine"
+            )
             n = COUNTED.fullmatch(c["did"])
             e["counted"] = bool(n) and int(n.group(1)) == len(passages)
         out.append(e)

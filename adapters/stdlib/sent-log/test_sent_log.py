@@ -157,6 +157,8 @@ def test_every_proposer_in_the_contracts_form_is_named(tmp_path):
         " answered from 1 of the 1 passages served",
         "gemma at http://127.0.0.1:1/v1 (temperature 0, seed 0) translated"
         " proposal:ab into Spanish",
+        "gpt-4o via MCP sampling (temperature 0, seed 0) answered from 1 of the 1"
+        " passages served",
     ]
     for n, claim in enumerate(claims):
         propose(b, tmp_path, bite(b, Q if n == 0 else f"{Q} {n}"), claim, n)
@@ -166,7 +168,11 @@ def test_every_proposer_in_the_contracts_form_is_named(tmp_path):
     assert "asked at: temperature 0, seed 0, reasoning low\n" in r.stdout
     assert "tiny.gguf in this process (this machine)" in r.stdout
     assert "asked at: weights sha256 ab, temperature 0, seed 0" in r.stdout
-    assert r.stdout.count("went: ") == 2, "two claims count what they were served"
+    assert (
+        "gpt-4o via MCP sampling (not said: via MCP sampling names no address)"
+        in r.stdout
+    )
+    assert r.stdout.count("went: ") == 3, "three claims count what they were served"
     assert (
         "served, may have gone (the claim counts another number, or none)" in r.stdout
     )

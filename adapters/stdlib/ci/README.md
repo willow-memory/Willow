@@ -250,7 +250,9 @@ prints a report too).
     qwen.gguf in this process (weights sha256 9c1e…, temperature 0, seed 0) answered from 1 of the 2 passages served
 
 - **who**: the model's name as asked for, or the weights file's name;
-- **where**: `at URL`, or `in this process`;
+- **where**: `at URL`, `in this process`, or `via NAME` for another program
+  that asks the model and names no address (llm, MCP sampling), which reads
+  only with its settings after it;
 - **settings**, in brackets, each a name and its value with commas
   between: the temperature and the seed always; the reasoning when one was
   asked for; a `--system` voice by its SHA-256; the weights by theirs;

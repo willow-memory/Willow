@@ -10,6 +10,10 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- The suggestions contract's where takes `via NAME` beside `at URL` and `in
+  this process`, for a program that asks the model and names no address (llm,
+  MCP sampling), read only with its settings after it; sent-log says such a
+  claim's place is not said, never this machine
 - `translate`, `sort-ask`: `--reasoning none|low|medium|high`, as
   openai-compatible takes it: the request's `reasoning_effort`, and the claim
   says it; without it the request names no reasoning, and any other value is

@@ -67,10 +67,13 @@ SEED = 0
 #: where, at what settings and what it did, in this one form, so a person
 #: reading the record, and sent-log, read each proposer's the same way:
 #: "gemma at http://127.0.0.1:8080/v1 (temperature 0, seed 0) answered from
-#: 1 of the 2 passages served". A claim from before the settings were said
-#: reads too, with none.
+#: 1 of the 2 passages served". Where is `at URL`, `in this process`, or
+#: `via NAME` (another program's, as llm or MCP sampling, which names no
+#: address), the last only before its settings. A claim from before the
+#: settings were said reads too, with none.
 CLAIM = re.compile(
-    r"(?P<who>\S.*?) (?P<where>at (?P<url>\S+)|in this process)"
+    r"(?P<who>\S.*?) (?P<where>at (?P<url>\S+)|in this process"
+    r"|via (?P<via>[^()]+?)(?= \())"
     r"(?: \((?P<settings>[a-z]+ [^,()]+(?:, [a-z]+ [^,()]+)*)\))? (?P<did>\S.*)"
 )
 
@@ -122,7 +125,7 @@ def read_claim(text: str) -> dict | None:
     if not m:
         return None
     pairs = (s.split(" ", 1) for s in (m["settings"] or "").split(", ") if s)
-    return {"who": m["who"], "where": m["where"], "url": m["url"],
+    return {"who": m["who"], "where": m["where"], "url": m["url"], "via": m["via"],
             "settings": dict(pairs), "did": m["did"]}  # fmt: skip
 
 
