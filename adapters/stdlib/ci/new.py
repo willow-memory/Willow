@@ -3,7 +3,7 @@
     python adapters/stdlib/ci/new.py NAME [--added YYYY-MM-DD]
 
 Building an idea from adapters/planned.json starts the same way every time,
-and this does that part (AGENTS.md's add-on steps 1, 3, 4 and 5):
+and this does that part (docs/agents/add-ons.md's steps 1, 3, 4 and 5):
 
 - its folder, adapters/KIND/NAME/, with its card, README.md, whose header
   is the idea's entry as it stands (every field, in its order, `added`

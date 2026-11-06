@@ -13,6 +13,9 @@ says how). The first was v0.1.0.
 - `mcp-sampling`: suggestions through MCP sampling — `draft(question)` bites,
   asks the host's model over only the passages served (MCP sampling on stdio),
   and proposes a cited reply; willow holds no model or key (#254)
+- `llm-cli`: suggestions through Simon Willison's `llm` command — bite first,
+  only served passages go to the model any of its plugins reach, propose a
+  cited reply; llm's log names the model (#253)
 - `hooks-elsewhere` refuses `--host cursor`: Cursor's `beforeSubmitPrompt`
   can only continue or block a prompt, never inject passages; the card and
   `hosts` point at the `cursor` MCP add-on instead (#252)
@@ -1869,6 +1872,13 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- `AGENTS.md` is a third as long: what every agent needs before a change (the
+  Never list, set up, what to run after a change), and a paragraph a job
+  pointing at its page in `docs/agents/`: add-ons, studies, pull requests,
+  searching. Every rule moved, none changed; four lessons added where they
+  belong (leave the checkout alone while create_pr.py runs; a dry run that
+  serves nothing tests nothing after the kernel; the kernel's echo rule,
+  exactly; a box's words list is its owner's alone). (#258)
 - `test-impact`: the add-on test files a change reaches run as up to four
   steps, one a minute of their past times, and `--jobs` starts the longest
   steps first; restack and ci together, 22 reached files and two add-ons'
