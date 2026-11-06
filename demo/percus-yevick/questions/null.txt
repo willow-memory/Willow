@@ -1,6 +1,6 @@
 # Null questions: physics off the chain, asked of the same stack. A served
 # passage that holds a chain step here is the rate at which anything would
-# have hit. DRAFT: not frozen.
+# have hit. Frozen in FROZEN.json.
 n.1	What is the Debye screening length of an electrolyte?
 n.2	What are the van der Waals constants of a real gas?
 n.3	What is the critical temperature of the two dimensional Ising model?

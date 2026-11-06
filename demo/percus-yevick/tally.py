@@ -60,6 +60,9 @@ def _found_rule(found: set[str], at_least: int, must: set[str]) -> dict:
     }
 
 
+SEED = 0  # R4's draw, fixed at the freeze: the seed both dry runs used
+
+
 def draw(pile: list[dict], questions: int, seed: int, hit=score.hit) -> int:
     """R4: for each of `questions` author questions, `DRAWN` passages drawn
     from the pile by `seed`; the steps any of them hold, counted."""

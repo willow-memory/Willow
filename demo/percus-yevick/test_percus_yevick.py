@@ -26,11 +26,17 @@ def test_frozen_files_are_as_frozen_or_the_study_says_it_is_a_draft():
     if not frozen.exists():
         assert "DRAFT" in (HERE / "README.md").read_text(encoding="utf-8")
         return
-    for rel, sha in json.loads(frozen.read_text(encoding="utf-8"))["files"].items():
+    files = json.loads(frozen.read_text(encoding="utf-8"))["files"]
+    for rel, sha in files.items():
         got = hashlib.sha256((HERE / rel).read_bytes()).hexdigest()
         assert got == sha, (
             f"{rel} changed after it was frozen; a change is a new freeze"
         )
+    must = {"sources.json", "steps.json", "score.py", "tally.py", "pipeline.py",
+            "arms.py", "rubric.md", "prompt.md", "words.txt", "expectations.json"}  # fmt: skip
+    must |= {f"questions/{p.name}" for p in (HERE / "questions").iterdir()}
+    must |= {f"models/{p.name}" for p in (HERE / "models").iterdir()}
+    assert must <= set(files), sorted(must - set(files))
 
 
 def test_every_question_names_a_step_and_every_step_is_asked():
@@ -173,6 +179,17 @@ def test_unpack_reads_a_tar_a_gzipped_file_and_a_pdf(tmp_path):
 def test_a_bad_command_line_is_refused():
     assert fetch.main([]) == 2 and fetch.main(["--to", "x", "--both"]) == 2
     assert pipeline.main(["--stack", "x"]) == 2
+
+
+def test_r4s_seed_is_frozen_and_another_is_only_for_a_dry_run(tmp_path, capsys):
+    args = ["--stack", "s", "--work", "w", "--out", str(tmp_path / "o.json")]
+    assert tally.SEED == 0
+    assert pipeline.main([*args, "--seed", "7"]) == 2
+    assert "frozen at 0" in capsys.readouterr().err
+
+
+def test_every_blind_set_is_asked_and_the_prompt_is_not():
+    assert pipeline.SETS == ["author", "null", "blind-a"]
 
 
 import tally  # noqa: E402

@@ -1,17 +1,22 @@
 """pipeline.py: the finding half of the study, in one command.
 
     python demo/percus-yevick/pipeline.py --stack DIR --work DIR --out FILE
-        [--questions NAME ...] [--dry]
+        [--questions NAME ...] [--box DIR] [--dry [--seed N]]
 
 Builds the pile from fetch.py's --to (DIR/<slug>/src/ and export.xml) with
 the repo's own readers: latex for each paper's prose, equations for its
 math, mediawiki for each Wikipedia revision, pdf (which needs pypdf) for
 a scanned paper's text, and bibtex for references/, the paywalled originals
 by reference only. Indexes it once with scan, asks
-each question set in questions/ (author and null unless named), takes the
+each question set in questions/ (author, null and every blind set unless
+named), takes the
 kernel's top three passages, and scores each against steps.json with
 score.py. Writes every question's served passages, the steps they hold, the
 traps and the Wertheim flag to --out, and prints the table.
+
+R4's random passages are drawn by tally.SEED, frozen; `--seed` takes
+another only with `--dry`. `--box` appends each pass rule's verdict to a
+box outside the repo as a kernel row.
 
 `--dry` asks every question as nonsense ("qqqq zzzz" and its number) in its
 place: the dry run, which shows wiring breaks before anything is frozen and
@@ -19,7 +24,8 @@ sees no result. A dry run that serves anything is itself a finding.
 
 --work holds the pile and the index; --out is a JSON file. Neither belongs
 in the repo. A runner, not an add-on: it calls the add-ons' own command
-lines and is not part of CI. Exit 0 always; it reports, it does not judge.
+lines and is not part of CI. Exit 0, or 2 on a bad command line; it
+reports, it does not judge.
 """
 
 from __future__ import annotations
@@ -45,6 +51,11 @@ import score  # noqa: E402
 import tally  # noqa: E402
 
 TOP = 3
+#: the question sets asked unless --questions names others: blind-prompt.txt
+#: is the prompt the blind set was written from, not a set
+SETS = ["author", "null"] + sorted(
+    p.stem for p in (HERE / "questions").glob("blind-*.txt") if p.stem != "blind-prompt"
+)
 #: each kind of source, the readers that make its text, under adapters/
 READERS = {
     "arxiv": [
@@ -162,23 +173,26 @@ def main(argv: list[str]) -> int:
         else:
             break
     need = {"--out", "--stack", "--work"}
-    if i != len(argv) or not need <= set(opts) or not opts.get("--seed", "0").isdigit():
+    seed = opts.get("--seed", str(tally.SEED))
+    if seed != str(tally.SEED) and not dry:
+        print(f"pipeline.py: R4's seed is frozen at {tally.SEED}; another is for a dry run",
+              file=sys.stderr)  # fmt: skip
+        return 2
+    if i != len(argv) or not need <= set(opts) or not seed.isdigit():
         print("usage: pipeline.py --stack DIR --work DIR --out FILE [--questions NAME ...]"
               " [--seed N] [--box DIR] [--dry]", file=sys.stderr)  # fmt: skip
         return 2
     idx = scan.Index(build(Path(opts["--stack"]), Path(opts["--work"])))
-    rows = ask(idx, sets or ["author", "null"], dry)
+    rows = ask(idx, sets or SETS, dry)
     text_of = {c["id"]: c["text"] for c in idx.pile}
     authors = sum(r["set"] == "author" for r in rows)
-    if "--seed" not in opts:
-        drawn = None
-    else:  # a dry run draws, but its passages hold nothing: the wiring, not the count
-        hit = (lambda s, t: False) if dry else score.hit
-        drawn = tally.draw(idx.pile, authors, int(opts["--seed"]), hit)
+    # a dry run draws, but its passages hold nothing: the wiring, not the count
+    hit = (lambda s, t: False) if dry else score.hit
+    drawn = tally.draw(idx.pile, authors, int(seed), hit)
     result = tally.tally(rows, text_of, drawn)
     record = {
         "dry": dry,
-        "seed": int(opts["--seed"]) if "--seed" in opts else None,
+        "seed": int(seed),
         "verdicts": result,
         "tools": {rel: sha_file(ROOT / rel) for rel in (
             "kernel.py", "adapters/stdlib/scan/scan.py", "adapters/stdlib/latex/latex.py",

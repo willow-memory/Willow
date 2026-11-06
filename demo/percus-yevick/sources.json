@@ -1,5 +1,5 @@
 {
- "about": "The stack: every source by address, with the SHA-256 of the bytes fetched. Kept by address and hash, never their text. fetch.py fetches them again and checks the hashes offline. DRAFT: not frozen; `fetch.py --pin` fills fetched, bytes and sha256, and refuses once FROZEN.json exists. search_sha256 is the hash when the source search first downloaded it, for the record.",
+ "about": "The stack: every source by address, with the SHA-256 of the bytes fetched. Kept by address and hash, never their text. fetch.py fetches them again and checks the hashes offline. Frozen in FROZEN.json; `fetch.py --pin` filled fetched, bytes and sha256, and refuses now that FROZEN.json exists. search_sha256 is the hash when the source search first downloaded it, for the record.",
  "sources": [
   {
    "id": "arXiv:2604.03963",

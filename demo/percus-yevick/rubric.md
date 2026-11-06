@@ -3,7 +3,8 @@
 The second score, beside the hit rule in [score.py](score.py): not whether a
 step was reached, but whether what reached it explains it. The physics
 student's measure of a good answer is one that "holds my hand through the complex
-analysis". DRAFT: not frozen. The physics student judges it (below).
+analysis". Frozen in FROZEN.json. The physics student
+judges it (below).
 
 ## Each step, scored 0 to 3
 
@@ -22,8 +23,11 @@ and its two coefficients.
 
 - **Blind.** The judge sees, for each step, two texts labelled A and B: the
   found chain's passages and the model's derivation, in an order set by a
-  seed frozen in advance. Neither the labels nor the order say which is
-  which.
+  seed frozen in advance: `r = random.Random(0)`, then for each step in
+  steps.json's chain order, the found chain is A when `r.random() < 0.5`
+  and B otherwise. Whoever lays the texts out for the judge does this, and
+  keeps which was which until the scores are in. Neither the labels nor the
+  order say which is which.
 - **By the reader it is for.** The physics student scores it, once they
   have worked through the derivation with their advisor's help. Their advisor
   won't judge, but will help them learn it; the student is the reader the

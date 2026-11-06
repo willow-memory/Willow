@@ -178,17 +178,16 @@ miss in the equations it solves, is 6×10⁻⁶, 7×10⁻⁴ and 0.034 at the th
 η, so at η = 0.45 the solve is not converged tightly, which fits its S(0)
 being 0.2% off the closed form there.
 
-**Reasoning stays on.** Through Ollama's OpenAI-compatible endpoint, which
+**Reasoning, on and off.** Through Ollama's OpenAI-compatible endpoint, which
 local-model and same-way use, qwen3:8b reasons before it answers; gemma3:4b
 doesn't reason at all. Measured here on 2026-11-05 (Ollama 0.40.14): `/no_think`
 at the top of the system message and `"think": false` in the request both
 left it reasoning (233 and 237 tokens for a one-sentence answer);
 `"reasoning_effort": "none"` stopped it (10 tokens). **Both, side by side** (decided 2026-11-05): the found-then-arranged arm asks
 qwen3:8b twice, once with its reasoning and once with `reasoning_effort` set
-to none, and gemma3:4b once, having none. The add-ons can't send that setting
-yet; an option to send it is a separate change, on its own branch, and it
-joins this study before the freeze or this arm runs with reasoning only and
-says so.
+to none, and gemma3:4b once, having none. The option that sends it,
+`--reasoning` on local-model and same-way, is pull request #259; this study
+is built on that branch, and its tools are hashed as they are there.
 
 **Expected, before anything is run:** reasoning isn't needed to arrange found
 passages. The person running this study found so in other studies, and this
@@ -223,7 +222,7 @@ the pipeline (`--seed 0`, verdicts to a scratch box) and every arm in
   should on nonsense.
 - **contradictions found only LaTeX**: five "disagreements", every one
   between macro names read as words (`frac`, `left`, `right`, `boxed`). On
-  this pile it measures nothing.
+  this pile it measures nothing, so it was dropped before the freeze.
 - **The arranged arm asked each model on a plumbing box** that holds one
   nonsense passage, so a model has something to answer. Reasoning off
   really was asked differently: qwen3:8b with its reasoning declined one of
@@ -236,6 +235,12 @@ the pipeline (`--seed 0`, verdicts to a scratch box) and every arm in
 - **Time**: the pipeline 7 seconds; the arms 42 minutes, 39 of them the
   three model variants on this machine's CPU, for two questions each. The
   real run asks many more, so it is a run of hours, not minutes.
+
+- **A gap neither dry run showed**: the pipeline asked the author and null
+  sets unless told otherwise, so the blind questions were never asked and R2
+  came out "not asked". It now asks every blind set too. A pipeline-only dry
+  run after the fix asked all 49 (21 author, 18 blind, 10 null): R2 failing
+  at 0 of 11, as nonsense should, and eight rows on the box, which verify.
 
 What it can't see: whether any real question is held, which is the result.
 
@@ -278,7 +283,7 @@ in [steps.json](steps.json). There are 11 steps.
 | R1 | Found, with the author's questions | at least 9 of 11 steps found, and s5a, s5b and s7 among them |
 | R2 | Found, with the blind questions | at least 7 of 11 steps found, and s5b and s7 among them |
 | R3 | Off-topic questions | at most 2 of the 10 null questions are served a passage holding any chain step |
-| R4 | Random baseline | three passages drawn at random from the index for each author question, by a seed fixed at the freeze, find at most 2 of 11 steps |
+| R4 | Random baseline | three passages drawn at random from the index for each author question, by seed 0 (`tally.SEED`), fixed at the freeze, find at most 2 of 11 steps |
 | R5 | Avoiding Wertheim, and hard spheres done directly | no found step is reached only through passages that say "Laplace", or only through passages that name sticky spheres |
 | R6 | A clear path, judged blind ([rubric.md](rubric.md)) | the found chain's mean score is at least the model's, and the found chain scores at least 2 on s5 (Baxter) |
 
@@ -311,7 +316,8 @@ How they are reported:
   served beside the s7 anchor is no fault; served without it, s7 is not found,
   which R1 and R2 already count.
 - **Counted by [tally.py](tally.py)**, which pipeline.py calls: R1 to R5 from
-  the rows, R4's random passages drawn by `--seed`, R6 left to the rubric.
+  the rows, R4's random passages drawn by `tally.SEED` (0; `--seed` takes
+  another only with `--dry`), R6 left to the rubric.
   With `--box`, each verdict is a kernel row on a box outside the repo; a dry
   run's are named `percus-yevick:dry:R1` and so on, so they are never read as
   the study's. Its tests use rows and formulas made by hand.
@@ -320,9 +326,15 @@ How they are reported:
   with no blind questions yet; R4's draw ran with its passages made to hold
   nothing, since its true count is a result; R5 satisfied; R6 judged by hand.
   Seven rows, and `kernel.py verify` on the box: "the chain holds: 7 rows, 0
-  sealed". R4's seed for the study is fixed at the freeze.
+  sealed". R4's seed is 0, the one both dry runs used.
 
-## Open, before the freeze
+## Settled before the freeze
+
+- **R4's seed**: 0, `tally.SEED`, the one both dry runs used.
+- **The rubric's A/B order**: by `random.Random(0)`, step by step, as
+  [rubric.md](rubric.md) says.
+- **The contradictions arm**: dropped. On this pile it compares LaTeX macro
+  names, not physics (the second dry run).
 
 - **Who judges the rubric**: settled: the physics student, blind, after
   working through the derivation with their advisor.
@@ -359,7 +371,7 @@ How they are reported:
     python demo/percus-yevick/fetch.py --to STACK            # online
     python demo/percus-yevick/fetch.py --to STACK --check    # offline
     python demo/percus-yevick/pipeline.py --stack STACK --work WORK --out OUT.json \
-        --seed N --box BOX [--dry]
+        --box BOX [--dry]
     python kernel.py verify --box BOX
 
 STACK, WORK and OUT.json are outside the repo. The pipeline records the

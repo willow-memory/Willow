@@ -1,7 +1,7 @@
 # The problem
 
 The prompt the local models are given, word for word, and the one the
-found chain answers. DRAFT: not frozen.
+found chain answers. Frozen in FROZEN.json.
 
 ## As asked
 

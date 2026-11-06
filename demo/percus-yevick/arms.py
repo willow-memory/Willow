@@ -16,8 +16,6 @@ named):
   words found nothing and what kind of file would have answered;
 - **predict:** before each author question's bite on the box, what the box's
   record says it will come to, graded after;
-- **contradictions:** once over the box, two passages giving a different
-  date or amount for the same thing;
 - **claims:** for each --model-text (a model's derivation, as text), each
   sentence through claim-check and each line holding "=" through misquote:
   what the stack backs, almost backs, or has no part of;
@@ -204,13 +202,6 @@ def predict(box: Path, qs: list[dict]) -> dict:
         return {"error": (got.stderr or got.stdout).strip()[-200:]}
 
 
-def contradictions(box: Path) -> dict:
-    got = tool("contradictions/contradictions.py", "--box", str(box))
-    lines = got.stdout.strip().splitlines()
-    return {"exit": got.returncode, "last": lines[-1] if lines else got.stderr.strip()[-200:],
-            "disagreements": [x for x in lines if x.startswith(("AMOUNT", "DATE"))]}  # fmt: skip
-
-
 def claims(box: Path, text: str) -> dict:
     """A model text, sentence by sentence through claim-check, and its lines
     holding "=" through misquote."""
@@ -372,8 +363,6 @@ def main(argv: list[str]) -> int:
     report["why-not"] = why_not(box, qs, ranked)
     say("predict")
     report["predict"] = predict(box, qs)
-    say("contradictions")
-    report["contradictions"] = contradictions(box)
     say("claims")
     report["claims"] = {}
     for t in texts:

@@ -1,6 +1,6 @@
 # The author's questions: one or more per step, in the words of the prompt and of
 # the physics student's notes. Written by someone who has seen the source list and
-# grep evidence for each step (see README, "Said plainly"). DRAFT: not frozen.
+# grep evidence for each step (see README, "Said plainly"). Frozen in FROZEN.json.
 # name<TAB>question; the name before the first dot is the step in steps.json.
 s0.1	What is the equation of state of a hard sphere fluid at low density, to second order in the packing fraction?
 s0.2	What is the second virial coefficient of hard spheres?

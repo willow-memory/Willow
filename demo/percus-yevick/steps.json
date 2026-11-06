@@ -1,5 +1,5 @@
 {
- "about": "The chain a found derivation must reach, step by step, and what a served passage must hold to count for a step. DRAFT: not frozen. score.py reads it: a passage's math is normalized (normalize()) and each anchor is a regular expression on that; a step's words must all be in the passage's text. A step is hit when any one of its anchors holds. The extended steps (e1 and on) are the physics student's further asks: reported beside the pass rules, never counted in them.",
+ "about": "The chain a found derivation must reach, step by step, and what a served passage must hold to count for a step. Frozen in FROZEN.json. score.py reads it: a passage's math is normalized (normalize()) and each anchor is a regular expression on that; a step's words must all be in the passage's text. A step is hit when any one of its anchors holds. The extended steps (e1 and on) are the physics student's further asks: reported beside the pass rules, never counted in them.",
  "packing_fraction": "eta, phi, varphi and xi are read as eta; the diameter may be sigma, d, R, a or 2R",
  "steps": [
   {
