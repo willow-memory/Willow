@@ -16,10 +16,10 @@ equations add-on does, with one more line naming the words for the symbols
 it uses:
 
     main.tex line 120, label eq:oz
-    symbols: S structure factor; \rho number density; c direct correlation function
     so the Ornstein-Zernike equation also gives
     S(q) = \frac{1}{1 - \rho \hat{c}(q)}
     where $c(r)$ is the direct correlation function.
+    symbols: S structure factor; \rho number density; c direct correlation function
 
 A definition is read in two shapes, in the prose and never inside math:
 
@@ -46,7 +46,13 @@ longer than a chunk on its own is kept whole, as the equations add-on keeps
 it, with no symbols line. The math is never
 rewritten.
 
-Each file is written to MIRROR at the same relative path with `.txt` added.
+Each file is written to MIRROR at the same relative path with `.txt` added,
+with the mirror contract's hidden map beside it (`MIRROR/.places/<same
+path>.txt.json`, adapters/stdlib/ci/README.md): each passage placed at the
+.tex file's lines from the paragraph before its equation to the end of the
+one after, as the equations add-on places them. The symbols line comes last
+in its passage: its words are the glossary's, from wherever the paper
+defines its symbols, not from those lines.
 FOLDER is only read. A file is read as the equations add-on reads it
 (UTF-8, else Windows-1252, else Latin-1). A file with no displayed equation,
 or that cannot be read, is skipped and counted.
@@ -57,6 +63,7 @@ Exit codes, the kernel's: 0 wrote some; 42 nothing readable; 2 refused
 
 from __future__ import annotations
 
+import json
 import re
 import sys
 from pathlib import Path
@@ -210,7 +217,17 @@ def line_for(eq: str, words: dict[str, list[str]], at_most: int = LINE_AT_MOST) 
 
 def passages(data: bytes, name: str, words: dict[str, list[str]]) -> list[str]:
     """One passage per displayed equation, as the equations add-on makes them,
-    with a line naming the words for the symbols it uses."""
+    with a last line naming the words for the symbols it uses."""
+    return [p for p, _, _ in placed(data, name, words)]
+
+
+def placed(
+    data: bytes, name: str, words: dict[str, list[str]]
+) -> list[tuple[str, int, int]]:
+    """Each passage, with the first and last of the file's lines it was drawn
+    from: the paragraph before it, the equation, and the one after. The
+    symbols line is the glossary's, from wherever the paper defines them, so
+    it is placed nowhere of its own."""
     text = equations.decode(data).replace("\r\n", "\n")
     text = equations.COMMENT.sub("", text)
     text = equations.SKIP_ENVS.sub(equations._blank, text)
@@ -220,7 +237,7 @@ def passages(data: bytes, name: str, words: dict[str, list[str]]) -> list[str]:
     end = text.find("\\end{document}", begin)
     text = text[: end if end >= 0 else len(text)]
     found = list(equations.DISPLAY.finditer(text, begin))
-    out = []
+    out: list[tuple[str, int, int]] = []
     for i, m in enumerate(found):
         body = next(m.group(g) for g in "abc" if m.group(g) is not None)
         labels = equations.LABEL.findall(body)
@@ -246,8 +263,47 @@ def passages(data: bytes, name: str, words: dict[str, list[str]]) -> list[str]:
         before = equations._before(
             text[prev_end : m.start()].replace("\\begin{document}", ""), max(room, 0)
         )
-        out.append("\n".join(x for x in (head, names, before, eq, after) if x))
+        first = line
+        if before:  # from the start of the paragraph it ends
+            seg = text[prev_end : m.start()]
+            gaps = list(re.finditer(r"\n\s*\n", seg))
+            at = gaps[-1].end() if gaps else 0
+            at += len(seg[at:]) - len(seg[at:].lstrip())
+            first = text.count("\n", 0, prev_end + at) + 1
+        last = text.count("\n", 0, m.end()) + 1
+        if after:  # to the end of the paragraph it starts
+            seg = text[m.end() : next_start]
+            lead = len(seg) - len(seg.lstrip())
+            last = (
+                text.count("\n", 0, m.end() + lead + len(equations._first_para(seg)))
+                + 1
+            )
+        # the symbols line last: the line after the citation is the paper's own
+        # words, which the mirror contract holds to the source's lines
+        out.append(
+            ("\n".join(x for x in (head, before, eq, after, names) if x), first, last)
+        )
     return out
+
+
+def places(found: list[tuple[str, int, int]]) -> dict[str, str]:
+    """The mirror contract's places (adapters/stdlib/ci/README.md): each
+    passage's mirror line, a blank line between passages, to the lines of
+    the .tex file it was drawn from. Its first line cites the equation's own
+    line, inside them."""
+    out, line = {}, 1
+    for text, first, last in found:
+        out[str(line)] = f"line {first}" if first == last else f"lines {first}-{last}"
+        line += text.count("\n") + 2
+    return out
+
+
+def write_places(dst: Path, rel: str, found: dict[str, str]) -> None:
+    """The map, hidden beside the mirror, where the kernel never reads."""
+    out = dst / ".places" / (rel + ".txt.json")
+    out.parent.mkdir(parents=True, exist_ok=True)
+    doc = {"source": rel, "places": found}
+    out.write_bytes((json.dumps(doc, ensure_ascii=False) + "\n").encode("utf-8"))
 
 
 def _within(inner: Path, outer: Path) -> bool:
@@ -275,19 +331,22 @@ def mirror(src: Path, dst: Path) -> tuple[int, int, int, int]:
             try:
                 if path not in held:
                     raise OSError(path)
-                found = passages(held[path], rel.as_posix(), words)
+                found = placed(held[path], rel.as_posix(), words)
                 if not found:
                     skipped += 1
                     continue
                 target = dst.joinpath(rel.parent, rel.name + ".txt")
                 target.parent.mkdir(parents=True, exist_ok=True)
-                target.write_bytes(("\n\n".join(found) + "\n").encode("utf-8"))
+                target.write_bytes(
+                    ("\n\n".join(p for p, _, _ in found) + "\n").encode("utf-8")
+                )
+                write_places(dst, rel.as_posix(), places(found))
             except equations.ERRORS:
                 skipped += 1
                 continue
             wrote += 1
             count += len(found)
-            named += sum("\nsymbols: " in p for p in found)
+            named += sum("\nsymbols: " in p for p, _, _ in found)
     return wrote, count, named, skipped
 
 

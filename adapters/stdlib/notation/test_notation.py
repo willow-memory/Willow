@@ -10,6 +10,7 @@ refusals and exit codes, and originals unchanged."""
 from __future__ import annotations
 
 import importlib.util
+import json
 import subprocess
 import sys
 from pathlib import Path
@@ -118,12 +119,13 @@ def test_the_symbols_line_is_capped_and_drops_the_last_symbols():
     assert "; f " not in line and line.count(";") == 4
 
 
-def test_each_equation_carries_its_symbols_line_after_its_citation():
+def test_each_equation_carries_its_symbols_line_last():
     got = mod.passages(PAPER, "p/main.tex", mod.glossary([PAPER]))
     first, second = got
     lines = first.split("\n")
     assert lines[0] == "p/main.tex line 9, label eq:oz"
-    assert lines[1] == (
+    assert lines[1].endswith("The Ornstein-Zernike relation then gives")  # the paper's
+    assert lines[-1] == (
         "symbols: S structure factor; \\rho number density; "
         "c direct correlation function"
     )
@@ -224,3 +226,24 @@ def test_a_long_equation_shortens_its_symbols_line_to_stay_one_chunk():
     huge = rb"\begin{document} \[ a = " + b" + 1" * 200 + rb" \] \end{document}"
     (p,) = mod.passages(huge, "x.tex", words)
     assert "symbols:" not in p  # an equation longer than a chunk: no room at all
+
+
+def test_each_passage_is_placed_as_the_mirror_contract_says(tmp_path):
+    res, out = mirror_of(tmp_path, {"p/main.tex": PAPER})
+    assert res.returncode == kernel.ALIVE
+    doc = json.loads((out / ".places/p/main.tex.txt.json").read_text())
+    # placed as the equations add-on places the same equations
+    assert doc["source"] == "p/main.tex"
+    eqs = mod.equations.places(mod.equations.placed(PAPER, "p/main.tex"))
+    assert list(doc["places"].values()) == list(eqs.values())
+    assert list(doc["places"].values()) == ["lines 2-12", "lines 14-17"]
+    # each key is a line a passage starts on, as the kernel cuts paragraphs
+    # (ci/mirrors.py checks the whole contract, from test_contract.py; this
+    # add-on's tests run without it, as tests:alone holds them)
+    lines = (out / "p/main.tex.txt").read_text().split("\n")
+    starts = [i for i, x in enumerate(lines, 1) if x and (i == 1 or not lines[i - 2])]
+    assert list(doc["places"]) == [str(i) for i in starts]
+    assert mod.places([("a\nb", 3, 3), ("c", 5, 9)]) == {
+        "1": "line 3",
+        "4": "lines 5-9",
+    }
