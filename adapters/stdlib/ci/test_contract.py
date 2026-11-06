@@ -1163,6 +1163,8 @@ SUGGESTS = sorted(
 ASK_ONE: dict[str, tuple[str, list[str]]] = {
     "local-model": ("local_model.py", ["ask", "--box", "{box}", "--url", "{url}",
                                        "--model", "m", "how much sun do tomatoes want"]),
+    "night-batch": ("night_batch.py", ["run", "--box", "{box}", "--questions",
+                                       "{tmp}/questions.txt", "--url", "{url}", "--model", "m"]),
     "openai-compatible": ("openai_compatible.py", ["ask", "--box", "{box}", "--url", "{url}",
                                                    "--model", "m", "how much sun do tomatoes want"]),
     "sort-ask": ("sort_ask.py", ["--box", "{box}", "--categories", "{tmp}/categories.txt",
@@ -1170,6 +1172,10 @@ ASK_ONE: dict[str, tuple[str, list[str]]] = {
     "translate": ("translate.py", ["--box", "{box}", "--into", "Spanish", "--url", "{url}",
                                    "--model", "m", "how much sun do tomatoes want"]),
 }  # fmt: skip
+
+
+#: rows that take no --now: night-batch is bounded by --until, and asks now
+NO_NOW = {"night-batch"}
 
 
 def stand_in_model():
@@ -1212,6 +1218,7 @@ def test_every_suggestion_keeps_the_suggestions_contract(name, tmp_path):
     pile.mkdir()
     (pile / "beds.txt").write_text("Tomatoes want six hours of sun.\n")
     (tmp_path / "categories.txt").write_text("garden: courgettes\n")
+    (tmp_path / "questions.txt").write_text("how much sun do tomatoes want\n")
     box = tmp_path / "box"
     kernel = [sys.executable, str(KERNEL)]
     subprocess.run([*kernel, "init", "--box", str(box), "--pile", str(pile), "--key",
@@ -1239,7 +1246,7 @@ def test_every_suggestion_keeps_the_suggestions_contract(name, tmp_path):
     try:
         script, argv = ASK_ONE[name]
         good = [a.format(box=box, url=url, tmp=tmp_path) for a in argv]
-        got = run(STDLIB / name / script, *good, *NOW)
+        got = run(STDLIB / name / script, *good, *([] if name in NO_NOW else NOW))
     finally:
         srv.shutdown()
     made = [p for p in (box / "proposals").glob("*.json") if p.name not in before]
