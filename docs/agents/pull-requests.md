@@ -60,7 +60,9 @@ Merge or rebase, then regenerate rather than hand-merge what is generated:
 `python adapters/stdlib/ci/made.py write` makes every made file again
 (ADDONS.md and the README's add-on sections, BUGS.md, FILES.md, the lists
 kept A to Z, craft-assembly's report). A changelog fragment is a file no
-other branch writes, so it never conflicts.
+other branch writes, so it never conflicts. An entry written in CHANGELOG.md
+the old way is refused by CI; `restack.py --onto origin/main BRANCH` moves
+it to a fragment as it merges main in.
 
 ## A new CI row
 

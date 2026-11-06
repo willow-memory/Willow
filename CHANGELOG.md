@@ -4,7 +4,7 @@ What changed, newest first, by the pull request that changed it, under
 Added, Changed, Fixed and Removed. A fix names what it fixes: a known bug
 from [BUGS.md](BUGS.md) as `bug #N`, or a security report. A pull request
 writes its entry in a file of its own under [changes/](changes/README.md),
-never here, so no two conflict; a release folds them in with towncrier as
+never here (CI refuses a new entry here), so no two conflict; a release folds them in with towncrier as
 `vX.Y.Z · YYYY-MM-DD` ([CONTRIBUTING.md](CONTRIBUTING.md) says how). The
 entries under Unreleased came before that, and the next release takes them
 too. The first release was v0.1.0.
