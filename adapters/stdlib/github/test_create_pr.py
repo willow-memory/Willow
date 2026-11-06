@@ -461,3 +461,14 @@ def test_fill_spreads_the_open_branches_and_fills_the_rest():
     assert cp.fill(["--base", "{base}", "{open}", "#{pr}"], fields) == [
         "--base", "origin/main", "origin/a", "origin/b", "#7"]  # fmt: skip
     assert cp.fill(["{open}"], {**fields, "open": []}) == []
+
+
+def test_an_add_on_the_change_touches_has_its_cards_promises_in_the_body(repo):
+    """Its writes and network, read from the card's header, not its body."""
+    say = repo / "adapters/stdlib/say/say.py"
+    say.write_text(say.read_text(encoding="utf-8") + "# touched\n", encoding="utf-8")
+    git(repo, "commit", "-q", "-am", "say: touched")
+    steps(repo, GREEN)
+    assert run(repo).returncode == 0
+    body = gh_state(repo)["prs"][0]["sent"]["body"]
+    assert "- `say`: writes made.txt;" in body and "network none" in body

@@ -189,3 +189,9 @@ def test_list_takes_one_add_on_and_nothing_else_is_listed(argv):
     got = subprocess.run([sys.executable, str(HERE / "mutants.py"), *argv],
                          capture_output=True, text=True)  # fmt: skip
     assert got.returncode == 2 and "usage" in got.stderr
+
+
+def test_list_from_the_command_line_names_each_break():
+    got = subprocess.run([sys.executable, str(HERE / "mutants.py"), "list", "mutants"],
+                         capture_output=True, text=True)  # fmt: skip
+    assert got.returncode == 0 and "adapters/stdlib/mutants/mutants.py:" in got.stdout
