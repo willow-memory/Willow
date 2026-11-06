@@ -2,9 +2,6 @@
   "across": {
     "041037f2efda": "`a.startswith(\"--\") or not a` only refuses a token the later `doc not in DOCS` check refuses anyway (no DOC name starts with -- or is empty), so and/or here changes no result."
   },
-  "advisories": {
-    "0c47318788a2": "split(sep, 1)[0] takes the text before the first separator; the maxsplit changes only how many pieces follow it, never that first piece, so any value of at least 1 gives the same result."
-  },
   "again": {
     "1b9ac0201051": "Only bite rows carry a bite_key, so choosing rows by kind or by key picks the same rows.",
     "0cc8444c7793": "The width a report's where column falls back to when it has no rows: with no rows nothing is padded to it, so any number there prints the same report."
