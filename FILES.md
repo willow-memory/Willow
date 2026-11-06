@@ -1559,6 +1559,7 @@ willow/
 │       ├── add-ons.md        an add-on's ten steps, the guard, ideas and a deps floor
 │       ├── pull-requests.md  opening one, main moving under a branch, a new CI row
 │       ├── searching.md      the kernel's rank, and the jobs that need another search
+│       ├── stacks.md         A stack, for agents
 │       └── studies.md        freezing a study, its dry run, and what a dry run misses
 ├── demo/                     four made-up people, a case passed between five more, a real bug, a real policy change and programs taken apart, to try it on
 │   ├── bernadette/           built blind, in her apps' raw formats, and run through the whole stack
