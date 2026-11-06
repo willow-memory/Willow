@@ -6,6 +6,7 @@ added: 2026-11-06
 writes: to
 network: none
 role: reads
+output: mirror
 reads: .tex
 uses: equations
 -->
@@ -27,10 +28,10 @@ for each folder of .tex files, and writes each equation as the equations
 add-on does, with one more line:
 
     paper/main.tex line 120, label eq:oz
-    symbols: S structure factor; \rho number density; c direct correlation function
     so the Ornstein-Zernike equation also gives
     S(q) = \frac{1}{1 - \rho \hat{c}(q)}
     where $c(r)$ is the direct correlation function.
+    symbols: S structure factor; \rho number density; c direct correlation function
 
 **A definition** is read in two shapes, from the prose and never from inside
 math:
@@ -53,7 +54,7 @@ subscript, superscript or argument: `\hat{c}(k)` is c, `S(q)` is S,
 mostly so and sometimes not: a paper using S for both entropy and the
 structure factor gives S both names.
 
-**The symbols line** names each symbol the equation uses once, in the order it
+**The symbols line** comes last in its passage and names each symbol the equation uses once, in the order it
 first uses them, and leaves out a symbol the paper never defines. An equation
 using none it defines gets no line. The line holds at most 200 characters,
 and takes its room from the prose before the equation, so a passage still
@@ -92,6 +93,15 @@ folder, or MIRROR and FOLDER are inside one another).
 **Uses:** the [equations](../equations/) add-on's reading of a .tex file
 (its displays, macros, encodings and context); the kernel's exit codes and
 its chunk size; Python's standard library.
+
+**Where each passage came from** is in a hidden map beside its mirror,
+`MIRROR/.places/<same path>.txt.json`, which the kernel never reads, as
+[the mirror contract](../ci/README.md#the-mirror-contract) says: the .tex
+file's lines from the paragraph before the equation to the end of the one
+after it, as the [equations](../equations/) add-on places the same
+equation. The symbols line is placed nowhere of its own: its words are the
+glossary's, from wherever the paper defines its symbols. That is why it
+comes last, after the paper's own words.
 
 **Never:** writes inside FOLDER, modifies an original, rewrites an equation,
 writes anything outside MIRROR, or goes online.
