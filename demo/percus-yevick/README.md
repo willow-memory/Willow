@@ -489,6 +489,54 @@ steps, hit rule, seeds, rankers and bars.
   union, on the notation pile: every rule tallied at 0, R3, R4, R9 and R10
   satisfied, twelve rows named `percus-yevick:dry:notation:`, which verify.
 
+### Freeze 4's run
+
+Run once, 2026-11-06 from 05:40 UTC, at commit e0d2919, the stack as
+`fetch.py --check` found it (all 25 the same), on a pile built again with
+notation reading the math; the pipeline 6 seconds, the union 151.
+
+| Rule | Verdict | Frozen number | Freezes 1 and 2 |
+|---|---|---|---|
+| R1 | **failing** | 2 of 11 (s3, s5b) | 1 (s3) |
+| R2 | **failing** | 0 of 11 | 1 (s5a) |
+| R3 | satisfied | 0 of 10 null questions served a step | 0 |
+| R4 | satisfied | 0 of 11 by random passages | 1 |
+| R5 | satisfied | none through Wertheim or sticky spheres | none |
+| R7 | **failing** | 2 of 11 (s3, s5b) | 1 (s3) |
+| R8 | **failing** | 1 of 11 (s4) | 2 (s4, s5a) |
+| R9 | satisfied | 0 of 10 | 0 |
+| R10 | satisfied | 1 of 11 by fifteen random passages a question | 2 |
+| extended | reported | 2 of 7 (e3, e6) | 3 (e2, e3, e6) |
+
+By ranker, reported: the kernel, the kernel with words.txt and pile-rungs
+each found s3 and s5b with the author's questions and nothing with the blind
+ones; BM25 found s4 with a blind one; latent found nothing.
+
+**The guess, by its frozen reading: too close to call.** R1 found two steps,
+one more than freeze 1; the reading set before the run needed three to say
+the guess held, and calls two too close. Read beside the rest, it didn't
+help: the author's questions gained Baxter's coefficients (s5b) and the
+blind questions lost Baxter's factorization (s5a), so across both sets the
+same three steps were found as in freeze 2, by other questions. Giving the
+equations their words moved which passages came first; it didn't open the
+nine the stack holds.
+
+**Looked at after, not part of the result.** The s5b find is Coquand and
+Sperl's coefficients, served to "What are the coefficients of the Baxter
+function Q(r) for hard spheres?" on its prose ("coefficients", "Baxter's",
+"hard-spheres") and on "function", which its symbols line supplied from a
+wrong glossary entry (c, "direct correlation function", where this
+equation's c is a third coefficient). The blind s5a question was now
+served three prose passages instead of freeze 1's equation passage. So the
+one gain came partly from a misread symbol, and the loss from passages
+that grew more words competing for the top three.
+
+The rows: `found-n.json`, SHA-256 `575c349a53b8311d5943aeee77715ea643c6f2a077ab3d8c85b24f0d814b2a74`;
+`union-n.json`, SHA-256 `5e2d93093b06e6207c1ddd7e0fd970b530209854dd6f6984bb68cd81be3f5ab9`;
+eleven more verdict rows on the same box, its last row's hash
+`d285144e83d9c76860c89de47ec277005acecbff22a28eb7de87b9f7669cc23f`;
+`kernel.py verify` on it: "the chain holds: 23 rows, 0 sealed".
+
 ## Said plainly
 
 - **The anchors were written after the source search had grepped each
