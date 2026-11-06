@@ -2112,6 +2112,10 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- `local-model`: the test that no server on the usual ports means 42 no
+  longer sends a real question to whatever model runs on this machine; it
+  points the usual ports at ones just bound and closed, and asserts 42
+  every time, not only when nothing happened to answer (#255)
 - `latex` reads a file holding a stray byte of another encoding as
   Windows-1252, else Latin-1, rather than skipping it whole: Santos's lecture
   notes on arXiv (1310.5578), ASCII but for one en dash, gave no prose. A
