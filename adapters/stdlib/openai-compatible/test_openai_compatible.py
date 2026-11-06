@@ -106,7 +106,8 @@ def test_a_cited_reply_is_proposed_and_waits_for_a_seal(box, model):
     assert kept["data"] == "Lard, not butter, and anise seed [1].\n"
     assert kept["path"] == "answers/what-goes-in-biscochitos.md"
     assert kept["claim"] == (
-        f"gemma at {model.url} answered from 1 of the 1 passages served"
+        f"gemma at {model.url} (temperature 0, seed 0) answered from 1 of the 1"
+        " passages served"
     )
 
 
@@ -139,6 +140,9 @@ def test_a_voice_comes_before_the_rule_never_instead_of_it(box, model, tmp_path)
     got = ask(box, model, "biscochitos", "--system", str(tmp_path / "gone"))
     assert got.returncode == 2 and got.stderr.startswith("refused")
     assert oc.messages("q", [], "  \n")[0]["content"] == oc.RULE
+    (prop,) = (box / "proposals").glob("*.json")
+    said = oc.read_claim(json.loads(prop.read_text())["claim"])["settings"]
+    assert said["system"] == "sha256 " + oc.kernel.h256(voice.read_text())
 
 
 def test_nothing_served_means_no_model_is_asked(box, model):
@@ -247,3 +251,88 @@ def test_it_waits_fifteen_minutes_for_a_slow_model(monkeypatch):
     monkeypatch.setattr(oc.urllib.request, "urlopen", urlopen)
     assert oc.ask_model("http://127.0.0.1:9/v1", "m", []) == "ok"
     assert seen == {"timeout": 900}
+
+
+def test_without_reasoning_the_request_is_the_one_it_always_was(box, model):
+    model.reply = "[1]"
+    assert ask(box, model, "biscochitos").returncode == 0
+    body = model.sent[0][1]
+    assert list(body) == ["model", "messages", "temperature", "seed"]
+    assert "reasoning" not in json.dumps(body)
+
+
+@pytest.mark.parametrize("effort", ["none", "low", "medium", "high"])
+def test_reasoning_goes_as_the_requests_reasoning_effort(box, model, effort):
+    model.reply = "[1]"
+    got = ask(box, model, "biscochitos", "--reasoning", effort)
+    assert got.returncode == 0, got.stderr
+    body = model.sent[0][1]
+    assert body["reasoning_effort"] == effort
+    assert list(body) == ["model", "messages", "temperature", "seed",
+                          "reasoning_effort"]  # fmt: skip
+    assert body["messages"][0] == {"role": "system", "content": oc.RULE}
+    (prop,) = (box / "proposals").glob("*.json")
+    said = oc.read_claim(json.loads(prop.read_text())["claim"])
+    assert said["settings"] == {"temperature": "0", "seed": "0", "reasoning": effort}
+
+
+def test_a_reasoning_effort_not_on_the_list_is_refused(box, model):
+    for more in (["--reasoning", "think"], ["--reasoning", "NONE"],
+                 ["--reasoning", ""], ["--reasoning", "low", "--reasoning", "low"]):  # fmt: skip
+        got = ask(box, model, "biscochitos", *more)
+        assert got.returncode == 2 and "openai_compatible.py" in got.stderr, more
+    got = run("ask", "--box", str(box), "--url", model.url, "--model", "m",
+              "biscochitos", "--reasoning")  # fmt: skip
+    assert got.returncode == 2
+    assert model.sent == []
+    assert [r["kind"] for r in rows(box)] == ["boot"], "refused before the bite"
+
+
+def test_a_claim_says_who_where_at_what_and_what_it_did():
+    made = oc.claim("gemma", "at http://127.0.0.1:1/v1", oc.settings(0, "low", "Be brief."),
+                    "answered from 1 of the 2 passages served")  # fmt: skip
+    assert made == (
+        "gemma at http://127.0.0.1:1/v1 (temperature 0, seed 0, reasoning low,"
+        f" system sha256 {oc.kernel.h256('Be brief.')}) answered from 1 of the 2"
+        " passages served"
+    )
+    got = oc.read_claim(made)
+    assert (got["who"], got["url"], got["did"]) == (
+        "gemma", "http://127.0.0.1:1/v1", "answered from 1 of the 2 passages served")  # fmt: skip
+    assert list(got["settings"]) == ["temperature", "seed", "reasoning", "system"]
+    assert oc.settings(7) == [("temperature", "0"), ("seed", "7")]
+    assert oc.settings(0, "", "  \n") == oc.settings(0)
+
+
+def test_a_claim_from_before_the_settings_were_said_still_reads():
+    old = oc.read_claim("llama at https://api.example.com/v1 answered from 1 of the 3 passages served")  # fmt: skip
+    assert old["who"] == "llama" and old["url"] == "https://api.example.com/v1"
+    assert old["settings"] == {} and old["did"].startswith("answered from 1 of the 3")
+    there = oc.read_claim("m.gguf (sha256 ab) in this process answered from 1 of the 1 passages served")  # fmt: skip
+    assert there["where"] == "in this process" and there["url"] is None
+    assert oc.read_claim("the garden notes") is None and oc.read_claim("") is None
+    assert oc.read_claim("gemma at x (temperature) did")["settings"] == {}
+
+
+def test_another_add_ons_seed_goes_in_its_place(box, model):
+    model.reply = "ok"
+    assert oc.ask_model(model.url, "m", [], seed=7) == "ok"
+    assert oc.ask_model(model.url, "m", [], "low", seed=7) == "ok"
+    first, second = (body for _, body in model.sent)
+    assert first["seed"] == 7 and list(first) == [
+        "model",
+        "messages",
+        "temperature",
+        "seed",
+    ]
+    assert second["seed"] == 7 and second["reasoning_effort"] == "low"
+
+
+def test_a_claim_via_another_program_reads_only_before_its_settings():
+    got = oc.read_claim("gpt-4o via MCP sampling (temperature 0, seed 0) answered from 1 of the 1 passages served")  # fmt: skip
+    assert (got["who"], got["where"], got["via"], got["url"]) == (
+        "gpt-4o", "via MCP sampling", "MCP sampling", None)  # fmt: skip
+    assert got["settings"] == {"temperature": "0", "seed": "0"}
+    assert oc.read_claim("m via llm (temperature 0, seed 0) did")["via"] == "llm"
+    assert oc.read_claim("m via llm answered from 1 of the 1 passages served") is None
+    assert oc.read_claim(f"m at {'http://x'} answered from 1")["via"] is None

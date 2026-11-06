@@ -139,8 +139,9 @@ def test_a_reply_citing_a_served_passage_waits_on_your_seal(
     subj = lines[1].split()[1]
     prop = json.loads((box / "proposals" / f"{subj[9:]}.json").read_text())
     digest = hashlib.sha256(model.read_bytes()).hexdigest()
-    assert prop["claim"] == (f"tiny.gguf (sha256 {digest}) in this process answered"
-                             " from 1 of the 1 passages served")  # fmt: skip
+    assert prop["claim"] == (f"tiny.gguf in this process (weights sha256 {digest},"
+                             " temperature 0, seed 0) answered from 1 of the 1"
+                             " passages served")  # fmt: skip
     assert str(model.parent) not in prop["claim"], (
         "the file's name, never where it lives"
     )
