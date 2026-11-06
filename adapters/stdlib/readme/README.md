@@ -45,12 +45,23 @@ must not also be planned. Building an add-on is what turns an idea into a
 built one.
 
 **Tags:** up to five per add-on, worked out by
-[similar](../similar/) each time the list is written and never stored, so
-they can't go stale when a card changes: `no-install` or `needs-install`;
-`offline`, `this-machine` or `online`; two topic words the add-on shares
-with its nearest neighbours on the list; and the one tag its author chose,
-the card's `tags:` line, if it has one. Each entry also names its three
-nearest neighbours. It never writes a card or `adapters/planned.json`.
+[similar](../similar/): `no-install` or `needs-install`; `offline`,
+`this-machine` or `online`; two topic words the add-on shares with its
+nearest neighbours on the list; and the one tag its author chose, the card's
+`tags:` line, if it has one. Each entry also names its three nearest
+neighbours. It never writes a card or `adapters/planned.json`.
+
+**The topic words and the neighbours stand for the week.** They're worked
+out over every card's whole text, so a pull request that added an entry, or
+edited any card, moved other entries' lines, and made every other open pull
+request's list stale. The week's first `write` keeps them for every entry in
+`adapters/stdlib/readme/week.json`; until the next week, an entry it names
+keeps them, and a new one is worked out against the week's entries and
+itself alone, so its line is its own whatever else lands. The counts are the
+week's entries too: a new one counts from the next week. An entry's install
+and online facts and its author's tag are read from its card every time, so
+a card that starts going online says so the same day. `check` holds the file
+to the page's week.
 
 **Deterministic:** the same repo gives the same README. The week of the pick is
 written into its section, `write` sets it, and `check` rebuilds with it, so the

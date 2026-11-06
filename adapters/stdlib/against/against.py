@@ -42,7 +42,7 @@ USAGE = "usage: against.py check --base REF HEAD OTHER [OTHER ...]"
 CONTRACT = "adapters/stdlib/ci/test_contract.py"
 PLANNED = "adapters/planned.json"
 #: the files restack settles by rule when two branches both change them
-SETTLED = frozenset({"ADDONS.md", "README.md", "BUGS.md", "CHANGELOG.md", "FILES.md", CONTRACT, PLANNED})  # fmt: skip
+SETTLED = frozenset({"ADDONS.md", "README.md", "adapters/stdlib/readme/week.json", "BUGS.md", "CHANGELOG.md", "FILES.md", CONTRACT, PLANNED})  # fmt: skip
 CARD = re.compile(r"^adapters/(?:stdlib|deps)/([^/]+)/README\.md$")
 BRANCH = re.compile(r"^(?P<lead>(?:│   |    )*)[├└]── (?P<name>\S+)")
 PULL = re.compile(r"(?:^|/)(?:pr|pull)/(\d+)(?:/head)?$")

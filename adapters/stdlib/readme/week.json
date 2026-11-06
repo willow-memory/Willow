@@ -1,0 +1,5526 @@
+{
+ "week": "2026-W45",
+ "worked": {
+  "a11y-check": {
+   "near": [
+    "digest",
+    "scrub",
+    "todo"
+   ],
+   "topics": [
+    "problems",
+    "share"
+   ]
+  },
+  "abbreviations": {
+   "near": [
+    "accents",
+    "stems",
+    "month-first"
+   ],
+   "topics": [
+    "form",
+    "down"
+   ]
+  },
+  "accents": {
+   "near": [
+    "abbreviations",
+    "stems",
+    "typos"
+   ],
+   "topics": []
+  },
+  "across": {
+   "near": [
+    "stack",
+    "timeline",
+    "readme"
+   ],
+   "topics": [
+    "timeline",
+    "several"
+   ]
+  },
+  "advisories": {
+   "near": [
+    "typosquat",
+    "outdated",
+    "risky-code"
+   ],
+   "topics": [
+    "dependency",
+    "lock"
+   ]
+  },
+  "again": {
+   "near": [
+    "export",
+    "pile-gold",
+    "history"
+   ],
+   "topics": [
+    "counts"
+   ]
+  },
+  "against": {
+   "near": [
+    "test-impact",
+    "pr-context",
+    "upstream-desk"
+   ],
+   "topics": [
+    "pull",
+    "requests"
+   ]
+  },
+  "agent-transcript": {
+   "near": [
+    "instruction-files",
+    "hooks-elsewhere",
+    "gemini-cli"
+   ],
+   "topics": [
+    "gemini",
+    "claude"
+   ]
+  },
+  "agents-md-check": {
+   "near": [
+    "instruction-files",
+    "hook-impact",
+    "agent-transcript"
+   ],
+   "topics": [
+    "gemini",
+    "agent"
+   ]
+  },
+  "aider": {
+   "near": [
+    "launcher",
+    "emacs",
+    "browse"
+   ],
+   "topics": []
+  },
+  "all": {
+   "near": [
+    "latent",
+    "claim-check",
+    "thesis"
+   ],
+   "topics": [
+    "ranked",
+    "matched"
+   ]
+  },
+  "almanac": {
+   "near": [
+    "oakenscroll",
+    "almanac-keep",
+    "books"
+   ],
+   "topics": [
+    "almanac",
+    "links"
+   ]
+  },
+  "almanac-keep": {
+   "near": [
+    "almanac",
+    "snapshot",
+    "index-cache"
+   ],
+   "topics": [
+    "sha",
+    "copy"
+   ]
+  },
+  "amounts": {
+   "near": [
+    "debts",
+    "said",
+    "chats"
+   ],
+   "topics": [
+    "amount"
+   ]
+  },
+  "anki": {
+   "near": [
+    "static-search",
+    "stale",
+    "export"
+   ],
+   "topics": []
+  },
+  "annotations": {
+   "near": [
+    "rss-out",
+    "in-toto",
+    "prov"
+   ],
+   "topics": [
+    "web"
+   ]
+  },
+  "apple-mail": {
+   "near": [
+    "mail",
+    "text",
+    "calendar"
+   ],
+   "topics": [
+    "eml",
+    "mail"
+   ]
+  },
+  "apple-notes": {
+   "near": [
+    "joplin",
+    "evernote",
+    "apple-mail"
+   ],
+   "topics": [
+    "database",
+    "apple"
+   ]
+  },
+  "archivebox": {
+   "near": [
+    "warc",
+    "wayback",
+    "snapshot"
+   ],
+   "topics": [
+    "snapshot",
+    "saved"
+   ]
+  },
+  "art-of-the-day": {
+   "near": [
+    "todays-place",
+    "gutenberg",
+    "session-seal"
+   ],
+   "topics": [
+    "domain",
+    "drawn"
+   ]
+  },
+  "asciidoc": {
+   "near": [
+    "org",
+    "markdown",
+    "latex"
+   ],
+   "topics": [
+    "markup",
+    "documents"
+   ]
+  },
+  "ask-later": {
+   "near": [
+    "pile-gold",
+    "flashcards",
+    "digest"
+   ],
+   "topics": []
+  },
+  "assistant-scores": {
+   "near": [
+    "retire",
+    "predict",
+    "forecasts"
+   ],
+   "topics": [
+    "aside",
+    "score"
+   ]
+  },
+  "attendance": {
+   "near": [
+    "gradebook",
+    "symptoms",
+    "syllabus"
+   ],
+   "topics": [
+    "week"
+   ]
+  },
+  "baby-log": {
+   "near": [
+    "milestones",
+    "mood",
+    "reading-log"
+   ],
+   "topics": [
+    "log"
+   ]
+  },
+  "backup": {
+   "near": [
+    "diverge",
+    "three-two-one",
+    "restore-drill"
+   ],
+   "topics": [
+    "chain",
+    "backup"
+   ]
+  },
+  "badge": {
+   "near": [
+    "in-toto",
+    "annotations",
+    "deep-links"
+   ],
+   "topics": [
+    "links"
+   ]
+  },
+  "bank": {
+   "near": [
+    "mastodon",
+    "discord",
+    "linkedin"
+   ],
+   "topics": []
+  },
+  "basic-memory": {
+   "near": [
+    "memory-import",
+    "hermes",
+    "hook-feedback"
+   ],
+   "topics": [
+    "handed",
+    "propose"
+   ]
+  },
+  "beacon": {
+   "near": [
+    "tarot",
+    "oracle-text",
+    "dice"
+   ],
+   "topics": [
+    "seeded",
+    "draws"
+   ]
+  },
+  "bedrock": {
+   "near": [
+    "cite-honesty",
+    "claude",
+    "sort-ask"
+   ],
+   "topics": [
+    "citing"
+   ]
+  },
+  "bench": {
+   "near": [
+    "profile",
+    "pile-store",
+    "pile-build"
+   ],
+   "topics": [
+    "release",
+    "build"
+   ]
+  },
+  "bibtex": {
+   "near": [
+    "ris",
+    "equations",
+    "pgn"
+   ],
+   "topics": [
+    "reference"
+   ]
+  },
+  "bluesky": {
+   "near": [
+    "mastodon",
+    "linkedin",
+    "reddit"
+   ],
+   "topics": [
+    "posts",
+    "repo"
+   ]
+  },
+  "bm25": {
+   "near": [
+    "scan",
+    "index-cache",
+    "latent"
+   ],
+   "topics": [
+    "index",
+    "scan"
+   ]
+  },
+  "bookmarks": {
+   "near": [
+    "codebase-memory",
+    "nestor",
+    "wallabag"
+   ],
+   "topics": [
+    "json",
+    "sqlite"
+   ]
+  },
+  "books": {
+   "near": [
+    "oakenscroll",
+    "almanac",
+    "text"
+   ],
+   "topics": [
+    "highlights",
+    "book"
+   ]
+  },
+  "bot-venv": {
+   "near": [
+    "ci",
+    "fast-tests",
+    "ci-why"
+   ],
+   "topics": [
+    "test",
+    "repo"
+   ]
+  },
+  "box-health": {
+   "near": [
+    "tip-pin",
+    "changed",
+    "pipe"
+   ],
+   "topics": [
+    "rows"
+   ]
+  },
+  "braille": {
+   "near": [
+    "text",
+    "annotations",
+    "rss-out"
+   ],
+   "topics": []
+  },
+  "browse": {
+   "near": [
+    "launcher",
+    "digest",
+    "hook-start"
+   ],
+   "topics": [
+    "web"
+   ]
+  },
+  "browser-model": {
+   "near": [
+    "mlx",
+    "night-batch",
+    "os-model"
+   ],
+   "topics": [
+    "browser"
+   ]
+  },
+  "budget": {
+   "near": [
+    "mood",
+    "reading-log",
+    "baby-log"
+   ],
+   "topics": [
+    "month",
+    "statements"
+   ]
+  },
+  "by-function": {
+   "near": [
+    "codebase-memory",
+    "risky-code",
+    "sigmap"
+   ],
+   "topics": [
+    "function",
+    "instead"
+   ]
+  },
+  "calendar": {
+   "near": [
+    "texts",
+    "chats",
+    "office"
+   ],
+   "topics": []
+  },
+  "calendar-out": {
+   "near": [
+    "coming-up",
+    "digest",
+    "calendar"
+   ],
+   "topics": [
+    "coming",
+    "calendar"
+   ]
+  },
+  "canvas": {
+   "near": [
+    "moodle",
+    "syllabus",
+    "google-classroom"
+   ],
+   "topics": [
+    "assignments",
+    "course"
+   ]
+  },
+  "capture": {
+   "near": [
+    "coming-up",
+    "serve",
+    "plain"
+   ],
+   "topics": [
+    "tags"
+   ]
+  },
+  "car": {
+   "near": [
+    "home-upkeep",
+    "pets",
+    "subscriptions"
+   ],
+   "topics": [
+    "due",
+    "receipts"
+   ]
+  },
+  "care": {
+   "near": [
+    "car",
+    "coming-up",
+    "bluesky"
+   ],
+   "topics": [
+    "due",
+    "car"
+   ]
+  },
+  "cassettes": {
+   "near": [
+    "hook-replay",
+    "lending",
+    "hook-errors"
+   ],
+   "topics": [
+    "rows",
+    "drift"
+   ]
+  },
+  "catgrid": {
+   "near": [
+    "life",
+    "game-master",
+    "hook-replay"
+   ],
+   "topics": [
+    "rows",
+    "seeded"
+   ]
+  },
+  "changed": {
+   "near": [
+    "box-health",
+    "policy-watch",
+    "stale"
+   ],
+   "topics": [
+    "edit",
+    "rows"
+   ]
+  },
+  "chats": {
+   "near": [
+    "texts",
+    "matrix",
+    "slack"
+   ],
+   "topics": [
+    "message",
+    "chats"
+   ]
+  },
+  "chess-puzzle": {
+   "near": [
+    "predict",
+    "daily-word",
+    "art-of-the-day"
+   ],
+   "topics": [
+    "drawn",
+    "chess"
+   ]
+  },
+  "chordpro": {
+   "near": [
+    "musicxml",
+    "letterboxd",
+    "mediawiki"
+   ],
+   "topics": [
+    "title",
+    "lyrics"
+   ]
+  },
+  "ci": {
+   "near": [
+    "ci-memo",
+    "bot-venv",
+    "ci-why"
+   ],
+   "topics": [
+    "rows",
+    "verdict"
+   ]
+  },
+  "ci-baseline": {
+   "near": [
+    "ci-bets",
+    "welcome",
+    "github-archive"
+   ],
+   "topics": [
+    "pull",
+    "requests"
+   ]
+  },
+  "ci-bets": {
+   "near": [
+    "ci-baseline",
+    "roll-for-merge",
+    "weather-bet"
+   ],
+   "topics": [
+    "pull",
+    "requests"
+   ]
+  },
+  "ci-cache": {
+   "near": [
+    "ci-memo",
+    "ci",
+    "ci-logs"
+   ],
+   "topics": [
+    "npm",
+    "cache"
+   ]
+  },
+  "ci-logs": {
+   "near": [
+    "ci-why",
+    "ci-cache",
+    "logs"
+   ],
+   "topics": [
+    "log",
+    "fails"
+   ]
+  },
+  "ci-memo": {
+   "near": [
+    "ci-cache",
+    "ci",
+    "test-impact"
+   ],
+   "topics": [
+    "pin",
+    "reach"
+   ]
+  },
+  "ci-why": {
+   "near": [
+    "ci",
+    "ci-logs",
+    "ci-memo"
+   ],
+   "topics": [
+    "job",
+    "fails"
+   ]
+  },
+  "cite-honesty": {
+   "near": [
+    "sent-log",
+    "model-card",
+    "hook-cite"
+   ],
+   "topics": [
+    "refuses",
+    "citing"
+   ]
+  },
+  "claim-check": {
+   "near": [
+    "thesis",
+    "all",
+    "typosquat"
+   ],
+   "topics": [
+    "claim",
+    "top"
+   ]
+  },
+  "claude": {
+   "near": [
+    "claude-code",
+    "bedrock",
+    "cite-honesty"
+   ],
+   "topics": [
+    "citing",
+    "claude"
+   ]
+  },
+  "claude-code": {
+   "near": [
+    "hooks-elsewhere",
+    "gemini-cli",
+    "hook-impact"
+   ],
+   "topics": [
+    "hook",
+    "prompt"
+   ]
+  },
+  "clauses": {
+   "near": [
+    "web-pages",
+    "photos",
+    "pdf"
+   ],
+   "topics": []
+  },
+  "cloudevents": {
+   "near": [
+    "prov",
+    "ro-crate",
+    "in-toto"
+   ],
+   "topics": [
+    "envelope",
+    "tool"
+   ]
+  },
+  "code-comments": {
+   "near": [
+    "codebase-memory",
+    "asciidoc",
+    "latex"
+   ],
+   "topics": [
+    "codebase",
+    "sources"
+   ]
+  },
+  "code-first": {
+   "near": [
+    "model-exam",
+    "sigmap",
+    "install-scripts"
+   ],
+   "topics": []
+  },
+  "code-shape": {
+   "near": [
+    "risky-code",
+    "dialect",
+    "stems"
+   ],
+   "topics": [
+    "search"
+   ]
+  },
+  "code-stats": {
+   "near": [
+    "profile",
+    "bench",
+    "csv-rows"
+   ],
+   "topics": [
+    "release",
+    "language"
+   ]
+  },
+  "codebase-memory": {
+   "near": [
+    "bookmarks",
+    "nestor",
+    "code-comments"
+   ],
+   "topics": [
+    "sqlite",
+    "copy"
+   ]
+  },
+  "codeowners": {
+   "near": [
+    "gitlab",
+    "across",
+    "rules"
+   ],
+   "topics": [
+    "gitlab",
+    "github"
+   ]
+  },
+  "codex-cli": {
+   "near": [
+    "cursor",
+    "opencode",
+    "windsurf"
+   ],
+   "topics": [
+    "mcp",
+    "cli"
+   ]
+  },
+  "coming-up": {
+   "near": [
+    "calendar-out",
+    "on-this-day",
+    "gaps"
+   ],
+   "topics": [
+    "coming",
+    "days"
+   ]
+  },
+  "compiled": {
+   "near": [
+    "swift",
+    "crates",
+    "repro"
+   ],
+   "topics": [
+    "byte",
+    "held"
+   ]
+  },
+  "confluence": {
+   "near": [
+    "wallabag",
+    "recipes",
+    "mediawiki"
+   ],
+   "topics": [
+    "html"
+   ]
+  },
+  "connect-four": {
+   "near": [
+    "schema-check",
+    "cloudevents",
+    "crates"
+   ],
+   "topics": [
+    "result",
+    "held"
+   ]
+  },
+  "contracts": {
+   "near": [
+    "clauses",
+    "mutants",
+    "support-plan"
+   ],
+   "topics": [
+    "break",
+    "contracts"
+   ]
+  },
+  "contradictions": {
+   "near": [
+    "duplicates",
+    "joins",
+    "amounts"
+   ],
+   "topics": [
+    "amount"
+   ]
+  },
+  "contribute": {
+   "near": [
+    "upstream-desk",
+    "github-archive",
+    "quote-review"
+   ],
+   "topics": [
+    "pull",
+    "requests"
+   ]
+  },
+  "contributions": {
+   "near": [
+    "bot-venv",
+    "hook-guard",
+    "welcome"
+   ],
+   "topics": [
+    "bot",
+    "calls"
+   ]
+  },
+  "copilot": {
+   "near": [
+    "codex-cli",
+    "cursor",
+    "opencode"
+   ],
+   "topics": [
+    "mcp",
+    "cli"
+   ]
+  },
+  "corpus-lens": {
+   "near": [
+    "agent-transcript",
+    "session-cost",
+    "sarif"
+   ],
+   "topics": [
+    "agent",
+    "session"
+   ]
+  },
+  "crates": {
+   "near": [
+    "swift",
+    "compiled",
+    "connect-four"
+   ],
+   "topics": [
+    "vectors",
+    "held"
+   ]
+  },
+  "crosswalk": {
+   "near": [
+    "ids",
+    "translate",
+    "joins"
+   ],
+   "topics": [
+    "beside",
+    "joins"
+   ]
+  },
+  "crowd": {
+   "near": [
+    "predictions",
+    "oakenscroll",
+    "market-calls"
+   ],
+   "topics": [
+    "prediction",
+    "score"
+   ]
+  },
+  "csv-rows": {
+   "near": [
+    "json-paths",
+    "google-keep",
+    "irc"
+   ],
+   "topics": [
+    "csv",
+    "log"
+   ]
+  },
+  "cursor": {
+   "near": [
+    "opencode",
+    "windsurf",
+    "zed"
+   ],
+   "topics": [
+    "mcp"
+   ]
+  },
+  "cycle": {
+   "near": [
+    "coming-up",
+    "silence-log",
+    "sent-log"
+   ],
+   "topics": [
+    "log"
+   ]
+  },
+  "daily-word": {
+   "near": [
+    "quiz",
+    "surprise",
+    "serve"
+   ],
+   "topics": [
+    "daily"
+   ]
+  },
+  "datasette": {
+   "near": [
+    "record-sql",
+    "report",
+    "ro-crate"
+   ],
+   "topics": [
+    "sql"
+   ]
+  },
+  "day-one": {
+   "near": [
+    "gh-json",
+    "chats",
+    "karakeep"
+   ],
+   "topics": [
+    "json"
+   ]
+  },
+  "debts": {
+   "near": [
+    "amounts",
+    "todo",
+    "symptoms"
+   ],
+   "topics": []
+  },
+  "decisions": {
+   "near": [
+    "pile-sweep",
+    "predict",
+    "again"
+   ],
+   "topics": []
+  },
+  "deep-links": {
+   "near": [
+    "jetbrains",
+    "browse",
+    "vscode"
+   ],
+   "topics": [
+    "links",
+    "browser"
+   ]
+  },
+  "desktop": {
+   "near": [
+    "copilot",
+    "cursor",
+    "opencode"
+   ],
+   "topics": []
+  },
+  "dialect": {
+   "near": [
+    "dialect-dates",
+    "code-shape",
+    "stems"
+   ],
+   "topics": [
+    "dialect",
+    "far"
+   ]
+  },
+  "dialect-dates": {
+   "near": [
+    "dialect",
+    "code-shape",
+    "pdf"
+   ],
+   "topics": [
+    "dialect",
+    "far"
+   ]
+  },
+  "dice": {
+   "near": [
+    "dice5e",
+    "game-master",
+    "tarot"
+   ],
+   "topics": [
+    "seeded",
+    "dice"
+   ]
+  },
+  "dice5e": {
+   "near": [
+    "dice",
+    "game-master",
+    "fight5e"
+   ],
+   "topics": [
+    "rolls",
+    "tabletop"
+   ]
+  },
+  "dictate": {
+   "near": [
+    "oakenscroll",
+    "agent-transcript",
+    "man-pages"
+   ],
+   "topics": [
+    "turned"
+   ]
+  },
+  "digest": {
+   "near": [
+    "hook-start",
+    "hook-compact",
+    "renewals"
+   ],
+   "topics": [
+    "waiting",
+    "coming"
+   ]
+  },
+  "discord": {
+   "near": [
+    "slack",
+    "irc",
+    "matrix"
+   ],
+   "topics": [
+    "message",
+    "channel"
+   ]
+  },
+  "diverge": {
+   "near": [
+    "backup",
+    "three-two-one",
+    "restore-drill"
+   ],
+   "topics": [
+    "backup",
+    "zip"
+   ]
+  },
+  "docs-i18n": {
+   "near": [
+    "readme",
+    "against",
+    "llms-txt"
+   ],
+   "topics": [
+    "readme",
+    "drift"
+   ]
+  },
+  "dotfiles": {
+   "near": [
+    "org",
+    "json-paths",
+    "latex"
+   ],
+   "topics": []
+  },
+  "duplicates": {
+   "near": [
+    "contradictions",
+    "xref",
+    "three-two-one"
+   ],
+   "topics": []
+  },
+  "emacs": {
+   "near": [
+    "vim",
+    "vscode",
+    "pipe"
+   ],
+   "topics": [
+    "jump",
+    "command"
+   ]
+  },
+  "email-ask": {
+   "near": [
+    "jeles",
+    "bot-venv",
+    "thesis"
+   ],
+   "topics": [
+    "sources",
+    "replies"
+   ]
+  },
+  "emergency-card": {
+   "near": [
+    "privacy",
+    "digest",
+    "calendar"
+   ],
+   "topics": [
+    "prints",
+    "contacts"
+   ]
+  },
+  "encrypt": {
+   "near": [
+    "make-it-so",
+    "ci-memo",
+    "almanac-keep"
+   ],
+   "topics": [
+    "rest"
+   ]
+  },
+  "equations": {
+   "near": [
+    "notation",
+    "latex",
+    "code-comments"
+   ],
+   "topics": [
+    "latex",
+    "sources"
+   ]
+  },
+  "evernote": {
+   "near": [
+    "joplin",
+    "karakeep",
+    "wallabag"
+   ],
+   "topics": [
+    "tags"
+   ]
+  },
+  "export": {
+   "near": [
+    "again",
+    "history",
+    "pgp"
+   ],
+   "topics": [
+    "counts"
+   ]
+  },
+  "fair-merge": {
+   "near": [
+    "scan",
+    "parallel",
+    "ripgrep"
+   ],
+   "topics": [
+    "sources"
+   ]
+  },
+  "family-box": {
+   "near": [
+    "second-opinion",
+    "dialect",
+    "family-tree"
+   ],
+   "topics": [
+    "person",
+    "family"
+   ]
+  },
+  "family-tree": {
+   "near": [
+    "places",
+    "bibtex",
+    "code-comments"
+   ],
+   "topics": []
+  },
+  "fast-tests": {
+   "near": [
+    "parallel",
+    "pdf",
+    "kart"
+   ],
+   "topics": [
+    "core",
+    "fraction"
+   ]
+  },
+  "fight5e": {
+   "near": [
+    "dice5e",
+    "dice",
+    "roll-for-merge"
+   ],
+   "topics": [
+    "rolls",
+    "replayable"
+   ]
+  },
+  "first-mention": {
+   "near": [
+    "dialect-dates",
+    "people",
+    "timeline"
+   ],
+   "topics": [
+    "mention"
+   ]
+  },
+  "fixity": {
+   "near": [
+    "hook-replay",
+    "hook-pin",
+    "changed"
+   ],
+   "topics": [
+    "rot",
+    "flagged"
+   ]
+  },
+  "flashcards": {
+   "near": [
+    "jeles",
+    "ask-later",
+    "hook-compact"
+   ],
+   "topics": []
+  },
+  "foia": {
+   "near": [
+    "home-upkeep",
+    "subscriptions",
+    "mood"
+   ],
+   "topics": [
+    "due"
+   ]
+  },
+  "folder-card": {
+   "near": [
+    "serve",
+    "persona-card",
+    "gaps"
+   ],
+   "topics": [
+    "gaps"
+   ]
+  },
+  "food-log": {
+   "near": [
+    "log-kit",
+    "gaps",
+    "sent-log"
+   ],
+   "topics": [
+    "log"
+   ]
+  },
+  "forecasts": {
+   "near": [
+    "market-calls",
+    "predict",
+    "weather-bet"
+   ],
+   "topics": [
+    "brier",
+    "forecast"
+   ]
+  },
+  "forge": {
+   "near": [
+    "stack-share",
+    "kart",
+    "plain"
+   ],
+   "topics": [
+    "sentence",
+    "forge"
+   ]
+  },
+  "forgejo": {
+   "near": [
+    "gitlab",
+    "sourcehut",
+    "github"
+   ],
+   "topics": [
+    "repo",
+    "actions"
+   ]
+  },
+  "forgejo-dump": {
+   "near": [
+    "github-archive",
+    "forgejo",
+    "gh-json"
+   ],
+   "topics": [
+    "requests",
+    "issues"
+   ]
+  },
+  "forget": {
+   "near": [
+    "ro-crate",
+    "merkle",
+    "transcript-redact"
+   ],
+   "topics": [
+    "known",
+    "stop"
+   ]
+  },
+  "format-rot": {
+   "near": [
+    "office",
+    "fixity",
+    "sheets"
+   ],
+   "topics": [
+    "office",
+    "rot"
+   ]
+  },
+  "front-page": {
+   "near": [
+    "spurious",
+    "quake-bets",
+    "readme"
+   ],
+   "topics": [
+    "settled",
+    "front"
+   ]
+  },
+  "fuzz": {
+   "near": [
+    "hook-fuzz",
+    "property-tests",
+    "hook-replay"
+   ],
+   "topics": [
+    "test",
+    "fuzz"
+   ]
+  },
+  "fuzzy-dates": {
+   "near": [
+    "family-tree",
+    "syllabus",
+    "sort"
+   ],
+   "topics": []
+  },
+  "game-master": {
+   "near": [
+    "life",
+    "dice5e",
+    "dice"
+   ],
+   "topics": [
+    "rows",
+    "dice"
+   ]
+  },
+  "gaps": {
+   "near": [
+    "folder-card",
+    "on-this-day",
+    "serve"
+   ],
+   "topics": [
+    "gaps",
+    "daily"
+   ]
+  },
+  "garden": {
+   "near": [
+    "home-upkeep",
+    "pets",
+    "mileage"
+   ],
+   "topics": []
+  },
+  "gemini-cli": {
+   "near": [
+    "codex-cli",
+    "cursor",
+    "opencode"
+   ],
+   "topics": [
+    "mcp",
+    "cli"
+   ]
+  },
+  "gh-json": {
+   "near": [
+    "goodreads",
+    "day-one",
+    "jira"
+   ],
+   "topics": [
+    "issues",
+    "pull"
+   ]
+  },
+  "gifts": {
+   "near": [
+    "hook-replay",
+    "repro",
+    "daily-word"
+   ],
+   "topics": [
+    "twice"
+   ]
+  },
+  "git-history": {
+   "near": [
+    "clauses",
+    "discord",
+    "linkedin"
+   ],
+   "topics": [
+    "history",
+    "message"
+   ]
+  },
+  "git-notes": {
+   "near": [
+    "mirror",
+    "stale",
+    "annotations"
+   ],
+   "topics": [
+    "commit",
+    "forge"
+   ]
+  },
+  "github": {
+   "near": [
+    "gitlab",
+    "restack",
+    "ci"
+   ],
+   "topics": [
+    "repo",
+    "github"
+   ]
+  },
+  "github-archive": {
+   "near": [
+    "quote-review",
+    "contribute",
+    "forgejo-dump"
+   ],
+   "topics": [
+    "issues",
+    "requests"
+   ]
+  },
+  "gitlab": {
+   "near": [
+    "forgejo",
+    "github",
+    "sourcehut"
+   ],
+   "topics": [
+    "github",
+    "repo"
+   ]
+  },
+  "gitlab-export": {
+   "near": [
+    "github-archive",
+    "joplin",
+    "google-classroom"
+   ],
+   "topics": [
+    "issues",
+    "comments"
+   ]
+  },
+  "goodreads": {
+   "near": [
+    "letterboxd",
+    "slack",
+    "musicxml"
+   ],
+   "topics": [
+    "title",
+    "book"
+   ]
+  },
+  "google-classroom": {
+   "near": [
+    "gitlab-export",
+    "google-keep",
+    "takeout"
+   ],
+   "topics": [
+    "comments",
+    "takeout"
+   ]
+  },
+  "google-keep": {
+   "near": [
+    "takeout",
+    "location-history",
+    "day-one"
+   ],
+   "topics": [
+    "google",
+    "takeout"
+   ]
+  },
+  "gradebook": {
+   "near": [
+    "syllabus",
+    "attendance",
+    "reading-log"
+   ],
+   "topics": [
+    "assignments"
+   ]
+  },
+  "grant-report": {
+   "near": [
+    "second-opinion",
+    "contradictions",
+    "standards"
+   ],
+   "topics": []
+  },
+  "gutenberg": {
+   "near": [
+    "todays-place",
+    "art-of-the-day",
+    "scripture"
+   ],
+   "topics": [
+    "book",
+    "domain"
+   ]
+  },
+  "habits": {
+   "near": [
+    "pets",
+    "renewals",
+    "car"
+   ],
+   "topics": []
+  },
+  "handoff": {
+   "near": [
+    "family-box",
+    "serve",
+    "datasette"
+   ],
+   "topics": [
+    "person"
+   ]
+  },
+  "hanoi": {
+   "near": [
+    "reversi",
+    "tic-tac-toe",
+    "session-seal"
+   ],
+   "topics": [
+    "rows",
+    "move"
+   ]
+  },
+  "health": {
+   "near": [
+    "home-sensors",
+    "apple-mail",
+    "sheets"
+   ],
+   "topics": [
+    "google",
+    "trend"
+   ]
+  },
+  "hermes": {
+   "near": [
+    "basic-memory",
+    "memory-import",
+    "hook-feedback"
+   ],
+   "topics": [
+    "handed",
+    "propose"
+   ]
+  },
+  "history": {
+   "near": [
+    "again",
+    "export",
+    "plain"
+   ],
+   "topics": [
+    "counts",
+    "sentence"
+   ]
+  },
+  "home-assistant": {
+   "near": [
+    "home-sensors",
+    "mcp-sampling",
+    "launcher"
+   ],
+   "topics": [
+    "assistant",
+    "voice"
+   ]
+  },
+  "home-sensors": {
+   "near": [
+    "health",
+    "location-history",
+    "sheets"
+   ],
+   "topics": [
+    "history",
+    "trend"
+   ]
+  },
+  "home-upkeep": {
+   "near": [
+    "car",
+    "pets",
+    "garden"
+   ],
+   "topics": [
+    "due",
+    "service"
+   ]
+  },
+  "homestead": {
+   "near": [
+    "gitlab-export",
+    "oakenscroll",
+    "github-archive"
+   ],
+   "topics": [
+    "health",
+    "ledger"
+   ]
+  },
+  "hook-checks": {
+   "near": [
+    "hook-pin",
+    "hook-fail-closed",
+    "hook-impact"
+   ],
+   "topics": [
+    "fails",
+    "output"
+   ]
+  },
+  "hook-cite": {
+   "near": [
+    "claim-check",
+    "cite-honesty",
+    "hook-read-first"
+   ],
+   "topics": [
+    "refuses",
+    "assistant"
+   ]
+  },
+  "hook-compact": {
+   "near": [
+    "digest",
+    "sort-ask",
+    "hook-start"
+   ],
+   "topics": [
+    "waiting",
+    "open"
+   ]
+  },
+  "hook-errors": {
+   "near": [
+    "hook-replay",
+    "hook-fail-closed",
+    "hook-fuzz"
+   ],
+   "topics": [
+    "fails",
+    "hash"
+   ]
+  },
+  "hook-fail-closed": {
+   "near": [
+    "hook-fuzz",
+    "hooks-elsewhere",
+    "agent-transcript"
+   ],
+   "topics": [
+    "gemini",
+    "claude"
+   ]
+  },
+  "hook-feedback": {
+   "near": [
+    "memory-import",
+    "basic-memory",
+    "hermes"
+   ],
+   "topics": [
+    "handed",
+    "propose"
+   ]
+  },
+  "hook-fuzz": {
+   "near": [
+    "hook-fail-closed",
+    "fuzz",
+    "hook-replay"
+   ],
+   "topics": [
+    "crash",
+    "fuzz"
+   ]
+  },
+  "hook-guard": {
+   "near": [
+    "hook-impact",
+    "hook-leaks",
+    "hook-read-first"
+   ],
+   "topics": [
+    "assistant",
+    "pretooluse"
+   ]
+  },
+  "hook-handoff": {
+   "near": [
+    "hook-stop",
+    "memory-import",
+    "hook-read-first"
+   ],
+   "topics": [
+    "assistant",
+    "session"
+   ]
+  },
+  "hook-impact": {
+   "near": [
+    "hook-read-first",
+    "hook-start",
+    "hook-stop"
+   ],
+   "topics": [
+    "assistant",
+    "pretooluse"
+   ]
+  },
+  "hook-leaks": {
+   "near": [
+    "hook-read-first",
+    "hook-impact",
+    "hook-guard"
+   ],
+   "topics": [
+    "numbers",
+    "key"
+   ]
+  },
+  "hook-pin": {
+   "near": [
+    "hook-replay",
+    "ci-memo",
+    "backup"
+   ],
+   "topics": [
+    "byte",
+    "pin"
+   ]
+  },
+  "hook-read-first": {
+   "near": [
+    "hook-impact",
+    "hook-leaks",
+    "hook-start"
+   ],
+   "topics": [
+    "assistant",
+    "refuses"
+   ]
+  },
+  "hook-replay": {
+   "near": [
+    "hook-errors",
+    "hook-pin",
+    "ci"
+   ],
+   "topics": [
+    "hash",
+    "rows"
+   ]
+  },
+  "hook-sequence": {
+   "near": [
+    "hook-stop",
+    "hook-guard",
+    "hook-start"
+   ],
+   "topics": [
+    "assistant",
+    "rule"
+   ]
+  },
+  "hook-shell": {
+   "near": [
+    "shell",
+    "hook-impact",
+    "hook-leaks"
+   ],
+   "topics": [
+    "command",
+    "shell"
+   ]
+  },
+  "hook-start": {
+   "near": [
+    "digest",
+    "hook-impact",
+    "browse"
+   ],
+   "topics": [
+    "coming",
+    "assistant"
+   ]
+  },
+  "hook-stop": {
+   "near": [
+    "hook-impact",
+    "hook-handoff",
+    "hook-replay"
+   ],
+   "topics": [
+    "assistant",
+    "end"
+   ]
+  },
+  "hook-tiers": {
+   "near": [
+    "translate",
+    "plain-language",
+    "hook-sequence"
+   ],
+   "topics": [
+    "rule",
+    "held"
+   ]
+  },
+  "hooks-elsewhere": {
+   "near": [
+    "claude-code",
+    "gemini-cli",
+    "hook-fail-closed"
+   ],
+   "topics": [
+    "gemini",
+    "claude"
+   ]
+  },
+  "horoscope": {
+   "near": [
+    "daily-word",
+    "goodreads",
+    "gaps"
+   ],
+   "topics": [
+    "daily"
+   ]
+  },
+  "horoscope-grades": {
+   "near": [
+    "forecasts",
+    "weather-bet",
+    "predictions"
+   ],
+   "topics": [
+    "forecast",
+    "score"
+   ]
+  },
+  "hosts": {
+   "near": [
+    "hooks-elsewhere",
+    "gemini-cli",
+    "claude-code"
+   ],
+   "topics": [
+    "hook",
+    "mcp"
+   ]
+  },
+  "hours": {
+   "near": [
+    "symptoms",
+    "mood",
+    "home-upkeep"
+   ],
+   "topics": [
+    "group"
+   ]
+  },
+  "ids": {
+   "near": [
+    "dialect",
+    "a11y-check",
+    "sort-ask"
+   ],
+   "topics": [
+    "world",
+    "ids"
+   ]
+  },
+  "in-case": {
+   "near": [
+    "witness",
+    "people",
+    "nicknames"
+   ],
+   "topics": [
+    "people",
+    "trust"
+   ]
+  },
+  "in-process": {
+   "near": [
+    "openai-compatible",
+    "llm-cli",
+    "night-batch"
+   ],
+   "topics": [
+    "cpp",
+    "llama"
+   ]
+  },
+  "in-toto": {
+   "near": [
+    "annotations",
+    "ro-crate",
+    "prov"
+   ],
+   "topics": [
+    "envelope",
+    "tool"
+   ]
+  },
+  "index-cache": {
+   "near": [
+    "scan",
+    "parallel",
+    "policy-watch"
+   ],
+   "topics": [
+    "between",
+    "scan"
+   ]
+  },
+  "ink-story": {
+   "near": [
+    "oracle-text",
+    "restack",
+    "timeline"
+   ],
+   "topics": [
+    "branch",
+    "choice"
+   ]
+  },
+  "install-scripts": {
+   "near": [
+    "package-contents",
+    "package-docs",
+    "aider"
+   ],
+   "topics": [
+    "package",
+    "install"
+   ]
+  },
+  "instapaper": {
+   "near": [
+    "pocket",
+    "wallabag",
+    "readwise"
+   ],
+   "topics": [
+    "html",
+    "article"
+   ]
+  },
+  "instruction-files": {
+   "near": [
+    "agent-transcript",
+    "agents-md-check",
+    "claude-code"
+   ],
+   "topics": [
+    "gemini",
+    "claude"
+   ]
+  },
+  "inventory": {
+   "near": [
+    "renewals",
+    "paper-key",
+    "past-papers"
+   ],
+   "topics": [
+    "paper",
+    "insurance"
+   ]
+  },
+  "invoices": {
+   "near": [
+    "serve",
+    "share",
+    "privacy"
+   ],
+   "topics": [
+    "numbers"
+   ]
+  },
+  "irc": {
+   "near": [
+    "slack",
+    "matrix",
+    "discord"
+   ],
+   "topics": [
+    "message",
+    "channel"
+   ]
+  },
+  "issue-answer": {
+   "near": [
+    "hook-checks",
+    "repo-index",
+    "pr-context"
+   ],
+   "topics": [
+    "repo",
+    "docs"
+   ]
+  },
+  "jeles": {
+   "near": [
+    "oakenscroll",
+    "pile-gold",
+    "almanac"
+   ],
+   "topics": [
+    "sources"
+   ]
+  },
+  "jetbrains": {
+   "near": [
+    "vscode",
+    "privacy",
+    "aider"
+   ],
+   "topics": [
+    "links"
+   ]
+  },
+  "jira": {
+   "near": [
+    "mediawiki",
+    "linkedin",
+    "day-one"
+   ],
+   "topics": [
+    "comments",
+    "xml"
+   ]
+  },
+  "job-hunt": {
+   "near": [
+    "mood",
+    "warranties",
+    "foia"
+   ],
+   "topics": []
+  },
+  "joins": {
+   "near": [
+    "contradictions",
+    "pageviews",
+    "crosswalk"
+   ],
+   "topics": [
+    "joins",
+    "drawn"
+   ]
+  },
+  "joplin": {
+   "near": [
+    "evernote",
+    "warc",
+    "apple-notes"
+   ],
+   "topics": [
+    "unpacking",
+    "title"
+   ]
+  },
+  "journiv": {
+   "near": [
+    "day-one",
+    "mood",
+    "jrnl"
+   ],
+   "topics": [
+    "journal",
+    "entry"
+   ]
+  },
+  "jrnl": {
+   "near": [
+    "shell-history",
+    "outdated",
+    "day-one"
+   ],
+   "topics": [
+    "journal",
+    "entry"
+   ]
+  },
+  "json-paths": {
+   "near": [
+    "org",
+    "csv-rows",
+    "rst"
+   ],
+   "topics": [
+    "value",
+    "key"
+   ]
+  },
+  "jupyter": {
+   "near": [
+    "code-comments",
+    "markdown",
+    "evernote"
+   ],
+   "topics": [
+    "markdown",
+    "notebook"
+   ]
+  },
+  "karakeep": {
+   "near": [
+    "wallabag",
+    "evernote",
+    "notes"
+   ],
+   "topics": [
+    "tags",
+    "json"
+   ]
+  },
+  "kart": {
+   "near": [
+    "ocr",
+    "pdf",
+    "dialect"
+   ],
+   "topics": []
+  },
+  "kids": {
+   "near": [
+    "student-records",
+    "export",
+    "browse"
+   ],
+   "topics": []
+  },
+  "kiosk": {
+   "near": [
+    "share",
+    "family-box",
+    "transcript-redact"
+   ],
+   "topics": [
+    "share",
+    "key"
+   ]
+  },
+  "kiwix": {
+   "near": [
+    "pageviews",
+    "codeowners",
+    "stack-share"
+   ],
+   "topics": [
+    "stack",
+    "wikipedia"
+   ]
+  },
+  "lab-notebook": {
+   "near": [
+    "joplin",
+    "mcp-sampling",
+    "journiv"
+   ],
+   "topics": [
+    "entry",
+    "sampling"
+   ]
+  },
+  "ladder": {
+   "near": [
+    "jeles",
+    "first-mention",
+    "nestor"
+   ],
+   "topics": [
+    "jeles",
+    "nestor"
+   ]
+  },
+  "latent": {
+   "near": [
+    "scan",
+    "all",
+    "pile-rank"
+   ],
+   "topics": [
+    "ranked",
+    "index"
+   ]
+  },
+  "latex": {
+   "near": [
+    "equations",
+    "org",
+    "asciidoc"
+   ],
+   "topics": [
+    "latex",
+    "sources"
+   ]
+  },
+  "launcher": {
+   "near": [
+    "aider",
+    "browse",
+    "same-way"
+   ],
+   "topics": []
+  },
+  "lending": {
+   "near": [
+    "on-this-day",
+    "xref",
+    "licenses"
+   ],
+   "topics": []
+  },
+  "lesson-time": {
+   "near": [
+    "test-impact",
+    "make-it-so",
+    "my-lessons"
+   ],
+   "topics": [
+    "lesson",
+    "plan"
+   ]
+  },
+  "lessons": {
+   "near": [
+    "my-lessons",
+    "lesson-time",
+    "support-plan"
+   ],
+   "topics": [
+    "plan",
+    "lesson"
+   ]
+  },
+  "letterboxd": {
+   "near": [
+    "goodreads",
+    "takeout",
+    "matrix"
+   ],
+   "topics": []
+  },
+  "licenses": {
+   "near": [
+    "lending",
+    "on-this-day",
+    "pins"
+   ],
+   "topics": [
+    "dependency"
+   ]
+  },
+  "life": {
+   "near": [
+    "catgrid",
+    "game-master",
+    "tarot"
+   ],
+   "topics": [
+    "rows",
+    "game"
+   ]
+  },
+  "line-origin": {
+   "near": [
+    "agent-transcript",
+    "session-cost",
+    "transcript-redact"
+   ],
+   "topics": [
+    "agent",
+    "git"
+   ]
+  },
+  "linkedin": {
+   "near": [
+    "reddit",
+    "meta-archive",
+    "x-archive"
+   ],
+   "topics": [
+    "posts",
+    "message"
+   ]
+  },
+  "listening": {
+   "near": [
+    "discord",
+    "linkedin",
+    "reddit"
+   ],
+   "topics": [
+    "data",
+    "download"
+   ]
+  },
+  "live": {
+   "near": [
+    "mutants",
+    "ci",
+    "github"
+   ],
+   "topics": []
+  },
+  "livestock": {
+   "near": [
+    "calendar-out",
+    "hook-impact",
+    "habits"
+   ],
+   "topics": [
+    "paths"
+   ]
+  },
+  "llm-cli": {
+   "near": [
+    "in-process",
+    "openai-compatible",
+    "night-batch"
+   ],
+   "topics": [
+    "local",
+    "openai"
+   ]
+  },
+  "llms-txt": {
+   "near": [
+    "typosquat",
+    "markdown",
+    "serve"
+   ],
+   "topics": [
+    "llm"
+   ]
+  },
+  "local-model": {
+   "near": [
+    "openai-compatible",
+    "in-process",
+    "model-shelf"
+   ],
+   "topics": [
+    "cpp",
+    "jan"
+   ]
+  },
+  "location-history": {
+   "near": [
+    "google-keep",
+    "orders",
+    "day-one"
+   ],
+   "topics": [
+    "google",
+    "history"
+   ]
+  },
+  "lockfiles": {
+   "near": [
+    "pins",
+    "sbom",
+    "discord"
+   ],
+   "topics": [
+    "json",
+    "version"
+   ]
+  },
+  "log-kit": {
+   "near": [
+    "food-log",
+    "logs",
+    "on-this-day"
+   ],
+   "topics": [
+    "log",
+    "share"
+   ]
+  },
+  "logs": {
+   "near": [
+    "discord",
+    "irc",
+    "linkedin"
+   ],
+   "topics": [
+    "message",
+    "log"
+   ]
+  },
+  "lore": {
+   "near": [
+    "mutants",
+    "llms-txt",
+    "claim-check"
+   ],
+   "topics": [
+    "world"
+   ]
+  },
+  "losc": {
+   "near": [
+    "quantized",
+    "robinhood",
+    "github-archive"
+   ],
+   "topics": [
+    "server",
+    "local"
+   ]
+  },
+  "lunatic": {
+   "near": [
+    "typos",
+    "real-sky",
+    "dialect"
+   ],
+   "topics": [
+    "far",
+    "typos"
+   ]
+  },
+  "mail": {
+   "near": [
+    "apple-mail",
+    "text",
+    "office"
+   ],
+   "topics": [
+    "eml",
+    "mail"
+   ]
+  },
+  "make-it-so": {
+   "near": [
+    "decisions",
+    "predict",
+    "xref"
+   ],
+   "topics": [
+    "down"
+   ]
+  },
+  "man-pages": {
+   "near": [
+    "rtf",
+    "notion",
+    "books"
+   ],
+   "topics": []
+  },
+  "manifests": {
+   "near": [
+    "photos",
+    "pdf",
+    "ocr"
+   ],
+   "topics": []
+  },
+  "markdown": {
+   "near": [
+    "asciidoc",
+    "rtf",
+    "rst"
+   ],
+   "topics": [
+    "markdown",
+    "documents"
+   ]
+  },
+  "market-calls": {
+   "near": [
+    "forecasts",
+    "predict",
+    "car"
+   ],
+   "topics": [
+    "settled",
+    "calls"
+   ]
+  },
+  "mastermind": {
+   "near": [
+    "assistant-scores",
+    "secrets-audit",
+    "weather-bet"
+   ],
+   "topics": [
+    "score",
+    "hash"
+   ]
+  },
+  "mastodon": {
+   "near": [
+    "x-archive",
+    "meta-archive",
+    "linkedin"
+   ],
+   "topics": [
+    "posts",
+    "archive"
+   ]
+  },
+  "matrix": {
+   "near": [
+    "slack",
+    "chats",
+    "irc"
+   ],
+   "topics": [
+    "message",
+    "html"
+   ]
+  },
+  "maven": {
+   "near": [
+    "nuget",
+    "npm",
+    "pypi"
+   ],
+   "topics": [
+    "repo",
+    "vectors"
+   ]
+  },
+  "mcp": {
+   "near": [
+    "mcp-lite",
+    "zed",
+    "cursor"
+   ],
+   "topics": [
+    "mcp",
+    "assistant"
+   ]
+  },
+  "mcp-by-hash": {
+   "near": [
+    "model-card",
+    "snapshot",
+    "hook-read-first"
+   ],
+   "topics": [
+    "assistant",
+    "sha"
+   ]
+  },
+  "mcp-lite": {
+   "near": [
+    "mcp",
+    "cursor",
+    "opencode"
+   ],
+   "topics": [
+    "mcp"
+   ]
+  },
+  "mcp-sampling": {
+   "near": [
+    "cursor",
+    "opencode",
+    "windsurf"
+   ],
+   "topics": [
+    "mcp",
+    "client"
+   ]
+  },
+  "meaning": {
+   "near": [
+    "starter-words",
+    "sort",
+    "amounts"
+   ],
+   "topics": [
+    "invoice",
+    "owes"
+   ]
+  },
+  "mediawiki": {
+   "near": [
+    "notion",
+    "jira",
+    "joplin"
+   ],
+   "topics": [
+    "title",
+    "xml"
+   ]
+  },
+  "medical-records": {
+   "near": [
+    "box-health",
+    "takeout",
+    "schema-check"
+   ],
+   "topics": [
+    "json",
+    "health"
+   ]
+  },
+  "memoir": {
+   "near": [
+    "quiz",
+    "why-not",
+    "browse"
+   ],
+   "topics": [
+    "life"
+   ]
+  },
+  "memory-import": {
+   "near": [
+    "basic-memory",
+    "hermes",
+    "hook-feedback"
+   ],
+   "topics": [
+    "handed",
+    "propose"
+   ]
+  },
+  "merkle": {
+   "near": [
+    "ci",
+    "hook-replay",
+    "claim-check"
+   ],
+   "topics": [
+    "hash",
+    "rows"
+   ]
+  },
+  "meta-archive": {
+   "near": [
+    "x-archive",
+    "linkedin",
+    "mastodon"
+   ],
+   "topics": [
+    "posts",
+    "message"
+   ]
+  },
+  "mex": {
+   "near": [
+    "instruction-files",
+    "codebase-memory",
+    "corpus-lens"
+   ],
+   "topics": [
+    "agent",
+    "memory"
+   ]
+  },
+  "mileage": {
+   "near": [
+    "garden",
+    "home-upkeep",
+    "subscriptions"
+   ],
+   "topics": [
+    "tax",
+    "work"
+   ]
+  },
+  "milestones": {
+   "near": [
+    "baby-log",
+    "syllabus",
+    "reading-log"
+   ],
+   "topics": [
+    "child"
+   ]
+  },
+  "minutes": {
+   "near": [
+    "syllabus",
+    "foia",
+    "symptoms"
+   ],
+   "topics": [
+    "minutes",
+    "due"
+   ]
+  },
+  "mirror": {
+   "near": [
+    "repro",
+    "git-notes",
+    "provenance"
+   ],
+   "topics": [
+    "commit",
+    "repo"
+   ]
+  },
+  "misquote": {
+   "near": [
+    "quotes",
+    "stale",
+    "xref"
+   ],
+   "topics": [
+    "quote",
+    "drops"
+   ]
+  },
+  "mlx": {
+   "near": [
+    "browser-model",
+    "os-model",
+    "model-fit"
+   ],
+   "topics": [
+    "apple",
+    "silicon"
+   ]
+  },
+  "model-card": {
+   "near": [
+    "local-model",
+    "weights-card",
+    "weights-pin"
+   ],
+   "topics": [
+    "hash",
+    "weights"
+   ]
+  },
+  "model-drift": {
+   "near": [
+    "same-way",
+    "model-card",
+    "model-exam"
+   ],
+   "topics": []
+  },
+  "model-exam": {
+   "near": [
+    "same-way",
+    "model-drift",
+    "night-batch"
+   ],
+   "topics": [
+    "score"
+   ]
+  },
+  "model-fit": {
+   "near": [
+    "model-shelf",
+    "weights-card",
+    "quantized"
+   ],
+   "topics": [
+    "local",
+    "weights"
+   ]
+  },
+  "model-recall": {
+   "near": [
+    "openai-compatible",
+    "model-exam",
+    "sort-ask"
+   ],
+   "topics": [
+    "suggests",
+    "second"
+   ]
+  },
+  "model-shelf": {
+   "near": [
+    "quantized",
+    "weights-card",
+    "model-fit"
+   ],
+   "topics": [
+    "jan",
+    "ollama"
+   ]
+  },
+  "month-first": {
+   "near": [
+    "abbreviations",
+    "coming-up",
+    "chats"
+   ],
+   "topics": [
+    "month",
+    "form"
+   ]
+  },
+  "mood": {
+   "near": [
+    "job-hunt",
+    "symptoms",
+    "foia"
+   ],
+   "topics": [
+    "week"
+   ]
+  },
+  "moodle": {
+   "near": [
+    "canvas",
+    "syllabus",
+    "front-page"
+   ],
+   "topics": [
+    "assignments",
+    "course"
+   ]
+  },
+  "movie": {
+   "near": [
+    "bench",
+    "family-tree",
+    "vectors"
+   ],
+   "topics": [
+    "tree",
+    "miss"
+   ]
+  },
+  "music-library": {
+   "near": [
+    "listening",
+    "livestock",
+    "tax-year"
+   ],
+   "topics": [
+    "year",
+    "library"
+   ]
+  },
+  "musicxml": {
+   "near": [
+    "chordpro",
+    "goodreads",
+    "letterboxd"
+   ],
+   "topics": [
+    "title",
+    "lyrics"
+   ]
+  },
+  "mutants": {
+   "near": [
+    "live",
+    "slow-tests",
+    "ci"
+   ],
+   "topics": [
+    "test",
+    "fails"
+   ]
+  },
+  "my-lessons": {
+   "near": [
+    "lessons",
+    "lesson-time",
+    "standards"
+   ],
+   "topics": [
+    "lesson",
+    "plan"
+   ]
+  },
+  "nestor": {
+   "near": [
+    "bookmarks",
+    "codebase-memory",
+    "zotero"
+   ],
+   "topics": [
+    "sqlite",
+    "copy"
+   ]
+  },
+  "nicknames": {
+   "near": [
+    "starter-words",
+    "abbreviations",
+    "notes"
+   ],
+   "topics": [
+    "starter"
+   ]
+  },
+  "night-batch": {
+   "near": [
+    "llm-cli",
+    "in-process",
+    "openai-compatible"
+   ],
+   "topics": [
+    "local"
+   ]
+  },
+  "nightstand": {
+   "near": [
+    "start",
+    "all",
+    "game-master"
+   ],
+   "topics": [
+    "step"
+   ]
+  },
+  "nim": {
+   "near": [
+    "tic-tac-toe",
+    "cloudevents",
+    "model-card"
+   ],
+   "topics": [
+    "rows",
+    "lost"
+   ]
+  },
+  "ninety-percent": {
+   "near": [
+    "oakenscroll",
+    "restore-drill",
+    "pins"
+   ],
+   "topics": [
+    "ranges",
+    "drill"
+   ]
+  },
+  "notary": {
+   "near": [
+    "opentimestamps",
+    "persona-card",
+    "three-two-one"
+   ],
+   "topics": [
+    "hash",
+    "existed"
+   ]
+  },
+  "notation": {
+   "near": [
+    "equations",
+    "latex",
+    "bibtex"
+   ],
+   "topics": [
+    "sources",
+    "latex"
+   ]
+  },
+  "notes": {
+   "near": [
+    "calendar",
+    "karakeep",
+    "evernote"
+   ],
+   "topics": [
+    "tags"
+   ]
+  },
+  "notion": {
+   "near": [
+    "mediawiki",
+    "slack",
+    "joplin"
+   ],
+   "topics": [
+    "title",
+    "zip"
+   ]
+  },
+  "novelty": {
+   "near": [
+    "similar",
+    "redential",
+    "restack"
+   ],
+   "topics": [
+    "merge",
+    "scan"
+   ]
+  },
+  "npm": {
+   "near": [
+    "nuget",
+    "maven",
+    "pypi"
+   ],
+   "topics": [
+    "repo",
+    "vectors"
+   ]
+  },
+  "nuget": {
+   "near": [
+    "maven",
+    "npm",
+    "pypi"
+   ],
+   "topics": [
+    "repo",
+    "vectors"
+   ]
+  },
+  "oakenscroll": {
+   "near": [
+    "almanac",
+    "jeles",
+    "books"
+   ],
+   "topics": [
+    "office"
+   ]
+  },
+  "obsidian": {
+   "near": [
+    "jetbrains",
+    "notes",
+    "deep-links"
+   ],
+   "topics": [
+    "links",
+    "obsidian"
+   ]
+  },
+  "ocr": {
+   "near": [
+    "pdf",
+    "photos",
+    "sheets"
+   ],
+   "topics": [
+    "photos",
+    "pdf"
+   ]
+  },
+  "odds": {
+   "near": [
+    "game-master",
+    "dice",
+    "dice5e"
+   ],
+   "topics": [
+    "game",
+    "dice"
+   ]
+  },
+  "office": {
+   "near": [
+    "calendar",
+    "mail",
+    "text"
+   ],
+   "topics": [
+    "office"
+   ]
+  },
+  "on-this-day": {
+   "near": [
+    "coming-up",
+    "surprise",
+    "plain"
+   ],
+   "topics": []
+  },
+  "openai-compatible": {
+   "near": [
+    "in-process",
+    "llm-cli",
+    "local-model"
+   ],
+   "topics": [
+    "cpp",
+    "llama"
+   ]
+  },
+  "opencode": {
+   "near": [
+    "cursor",
+    "windsurf",
+    "zed"
+   ],
+   "topics": [
+    "mcp"
+   ]
+  },
+  "opentimestamps": {
+   "near": [
+    "notary",
+    "merkle",
+    "three-two-one"
+   ],
+   "topics": [
+    "hash",
+    "existed"
+   ]
+  },
+  "opml": {
+   "near": [
+    "rss-out",
+    "notes",
+    "slack"
+   ],
+   "topics": [
+    "feed",
+    "listed"
+   ]
+  },
+  "oracle-text": {
+   "near": [
+    "hook-replay",
+    "restack",
+    "ink-story"
+   ],
+   "topics": [
+    "branch",
+    "replayed"
+   ]
+  },
+  "orders": {
+   "near": [
+    "location-history",
+    "reddit",
+    "bank"
+   ],
+   "topics": [
+    "csv",
+    "history"
+   ]
+  },
+  "org": {
+   "near": [
+    "asciidoc",
+    "latex",
+    "json-paths"
+   ],
+   "topics": [
+    "markup",
+    "entry"
+   ]
+  },
+  "os-model": {
+   "near": [
+    "mlx",
+    "browser-model",
+    "local-model"
+   ],
+   "topics": [
+    "apple",
+    "mac"
+   ]
+  },
+  "outdated": {
+   "near": [
+    "typosquat",
+    "pins",
+    "jrnl"
+   ],
+   "topics": [
+    "dependency"
+   ]
+  },
+  "package-contents": {
+   "near": [
+    "install-scripts",
+    "ci-cache",
+    "instruction-files"
+   ],
+   "topics": [
+    "install",
+    "npm"
+   ]
+  },
+  "package-docs": {
+   "near": [
+    "install-scripts",
+    "pins",
+    "package-contents"
+   ],
+   "topics": [
+    "install",
+    "package"
+   ]
+  },
+  "pageviews": {
+   "near": [
+    "surprise",
+    "kiwix",
+    "joins"
+   ],
+   "topics": [
+    "article",
+    "drawn"
+   ]
+  },
+  "pair-drift": {
+   "near": [
+    "contradictions",
+    "pins",
+    "pile-poetry"
+   ],
+   "topics": [
+    "ranges",
+    "pairs"
+   ]
+  },
+  "paper-key": {
+   "near": [
+    "notation",
+    "print",
+    "start"
+   ],
+   "topics": [
+    "prints",
+    "key"
+   ]
+  },
+  "parallel": {
+   "near": [
+    "fast-tests",
+    "index-cache",
+    "test-shards"
+   ],
+   "topics": [
+    "core",
+    "mail"
+   ]
+  },
+  "past-papers": {
+   "near": [
+    "model-exam",
+    "bibtex",
+    "equations"
+   ],
+   "topics": [
+    "exam",
+    "paper"
+   ]
+  },
+  "pdf": {
+   "near": [
+    "ocr",
+    "photos",
+    "sheets"
+   ],
+   "topics": [
+    "pdf"
+   ]
+  },
+  "people": {
+   "near": [
+    "first-mention",
+    "life",
+    "catgrid"
+   ],
+   "topics": [
+    "mention"
+   ]
+  },
+  "persona-card": {
+   "near": [
+    "folder-card",
+    "tip-pin",
+    "serve"
+   ],
+   "topics": []
+  },
+  "pets": {
+   "near": [
+    "home-upkeep",
+    "car",
+    "garden"
+   ],
+   "topics": [
+    "due"
+   ]
+  },
+  "pgn": {
+   "near": [
+    "bibtex",
+    "letterboxd",
+    "matrix"
+   ],
+   "topics": [
+    "annotations"
+   ]
+  },
+  "pgp": {
+   "near": [
+    "pdf",
+    "mcp",
+    "static-search"
+   ],
+   "topics": []
+  },
+  "photos": {
+   "near": [
+    "pdf",
+    "ocr",
+    "sheets"
+   ],
+   "topics": [
+    "photos"
+   ]
+  },
+  "pii-audit": {
+   "near": [
+    "secrets-audit",
+    "privacy",
+    "sort"
+   ],
+   "topics": [
+    "numbers",
+    "audit"
+   ]
+  },
+  "pile-build": {
+   "near": [
+    "pile-store",
+    "pile-serve",
+    "predict"
+   ],
+   "topics": [
+    "store"
+   ]
+  },
+  "pile-gold": {
+   "near": [
+    "again",
+    "pile-store",
+    "pile-sweep"
+   ],
+   "topics": [
+    "search"
+   ]
+  },
+  "pile-poetry": {
+   "near": [
+    "dialect",
+    "pair-drift",
+    "second-opinion"
+   ],
+   "topics": [
+    "dialect",
+    "pairs"
+   ]
+  },
+  "pile-rank": {
+   "near": [
+    "pile-rungs",
+    "pile-serve",
+    "all"
+   ],
+   "topics": [
+    "phrases",
+    "ranked"
+   ]
+  },
+  "pile-rungs": {
+   "near": [
+    "pile-rank",
+    "pile-serve",
+    "pile-store"
+   ],
+   "topics": [
+    "matched",
+    "phrases"
+   ]
+  },
+  "pile-serve": {
+   "near": [
+    "pile-rank",
+    "pile-rungs",
+    "pile-store"
+   ],
+   "topics": [
+    "second",
+    "store"
+   ]
+  },
+  "pile-store": {
+   "near": [
+    "pile-serve",
+    "pile-build",
+    "pile-sweep"
+   ],
+   "topics": [
+    "store"
+   ]
+  },
+  "pile-sweep": {
+   "near": [
+    "pile-store",
+    "pile-gold",
+    "pile-rank"
+   ],
+   "topics": []
+  },
+  "pins": {
+   "near": [
+    "lockfiles",
+    "typosquat",
+    "outdated"
+   ],
+   "topics": [
+    "package",
+    "cargo"
+   ]
+  },
+  "pipe": {
+   "near": [
+    "vim",
+    "shell",
+    "emacs"
+   ],
+   "topics": [
+    "json"
+   ]
+  },
+  "places": {
+   "near": [
+    "sarif",
+    "readwise",
+    "day-one"
+   ],
+   "topics": []
+  },
+  "plain": {
+   "near": [
+    "readings",
+    "privacy",
+    "on-this-day"
+   ],
+   "topics": [
+    "sentence"
+   ]
+  },
+  "plain-language": {
+   "near": [
+    "translate",
+    "hook-tiers",
+    "memory-import"
+   ],
+   "topics": [
+    "held"
+   ]
+  },
+  "pocket": {
+   "near": [
+    "slack",
+    "matrix",
+    "instapaper"
+   ],
+   "topics": [
+    "html",
+    "article"
+   ]
+  },
+  "policy-watch": {
+   "near": [
+    "snapshot",
+    "clauses",
+    "wayback"
+   ],
+   "topics": [
+    "snapshot",
+    "clauses"
+   ]
+  },
+  "pr-context": {
+   "near": [
+    "against",
+    "quote-review",
+    "github-archive"
+   ],
+   "topics": [
+    "pull",
+    "requests"
+   ]
+  },
+  "predict": {
+   "near": [
+    "forecasts",
+    "pile-gold",
+    "assistant-scores"
+   ],
+   "topics": [
+    "score",
+    "down"
+   ]
+  },
+  "predictions": {
+   "near": [
+    "forecasts",
+    "tides",
+    "horoscope-grades"
+   ],
+   "topics": [
+    "score",
+    "brier"
+   ]
+  },
+  "print": {
+   "near": [
+    "web-pages",
+    "pipe",
+    "across"
+   ],
+   "topics": [
+    "prints"
+   ]
+  },
+  "privacy": {
+   "near": [
+    "plain",
+    "readings",
+    "pii-audit"
+   ],
+   "topics": [
+    "numbers"
+   ]
+  },
+  "profile": {
+   "near": [
+    "bench",
+    "test-shards",
+    "calendar"
+   ],
+   "topics": [
+    "release"
+   ]
+  },
+  "promises": {
+   "near": [
+    "said",
+    "thesis",
+    "timeline"
+   ],
+   "topics": [
+    "saved",
+    "council"
+   ]
+  },
+  "property-tests": {
+   "near": [
+    "fuzz",
+    "hook-fuzz",
+    "weakest-link"
+   ],
+   "topics": [
+    "inputs",
+    "empty"
+   ]
+  },
+  "prov": {
+   "near": [
+    "cloudevents",
+    "annotations",
+    "in-toto"
+   ],
+   "topics": [
+    "prov",
+    "tool"
+   ]
+  },
+  "provenance": {
+   "near": [
+    "pypi",
+    "in-toto",
+    "sync"
+   ],
+   "topics": [
+    "trust",
+    "package"
+   ]
+  },
+  "pypi": {
+   "near": [
+    "npm",
+    "nuget",
+    "maven"
+   ],
+   "topics": [
+    "repo",
+    "vectors"
+   ]
+  },
+  "pypy": {
+   "near": [
+    "slow-tests",
+    "test-shards",
+    "mutants"
+   ],
+   "topics": [
+    "test"
+   ]
+  },
+  "qr": {
+   "near": [
+    "scrub",
+    "a11y-check",
+    "code-first"
+   ],
+   "topics": [
+    "screen",
+    "phone"
+   ]
+  },
+  "quake-bets": {
+   "near": [
+    "horoscope-grades",
+    "ci-bets",
+    "weather-bet"
+   ],
+   "topics": [
+    "bet",
+    "settled"
+   ]
+  },
+  "quantized": {
+   "near": [
+    "model-shelf",
+    "model-fit",
+    "local-model"
+   ],
+   "topics": [
+    "local"
+   ]
+  },
+  "quiet-corner": {
+   "near": [
+    "google-classroom",
+    "repo-index",
+    "homestead"
+   ],
+   "topics": [
+    "classroom"
+   ]
+  },
+  "quiz": {
+   "near": [
+    "daily-word",
+    "serve",
+    "plain"
+   ],
+   "topics": []
+  },
+  "quote-check": {
+   "near": [
+    "quotes",
+    "claim-check",
+    "xref"
+   ],
+   "topics": [
+    "quote"
+   ]
+  },
+  "quote-review": {
+   "near": [
+    "github-archive",
+    "xref",
+    "against"
+   ],
+   "topics": [
+    "pull",
+    "requests"
+   ]
+  },
+  "quotes": {
+   "near": [
+    "misquote",
+    "quote-check",
+    "claim-check"
+   ],
+   "topics": [
+    "quote",
+    "drops"
+   ]
+  },
+  "reading-level": {
+   "near": [
+    "plain",
+    "pile-sweep",
+    "browse"
+   ],
+   "topics": [
+    "length",
+    "sentence"
+   ]
+  },
+  "reading-log": {
+   "near": [
+    "foia",
+    "baby-log",
+    "attendance"
+   ],
+   "topics": [
+    "week",
+    "minutes"
+   ]
+  },
+  "readings": {
+   "near": [
+    "plain",
+    "privacy",
+    "coming-up"
+   ],
+   "topics": [
+    "numbers"
+   ]
+  },
+  "readme": {
+   "near": [
+    "similar",
+    "against",
+    "live"
+   ],
+   "topics": []
+  },
+  "readwise": {
+   "near": [
+    "wallabag",
+    "books",
+    "goodreads"
+   ],
+   "topics": [
+    "book",
+    "highlights"
+   ]
+  },
+  "real-sky": {
+   "near": [
+    "horoscope",
+    "horoscope-grades",
+    "odds"
+   ],
+   "topics": [
+    "horoscope",
+    "computed"
+   ]
+  },
+  "recipes": {
+   "near": [
+    "web-pages",
+    "webarchive",
+    "confluence"
+   ],
+   "topics": [
+    "saved",
+    "web"
+   ]
+  },
+  "reconciler": {
+   "near": [
+    "git-history",
+    "hook-checks",
+    "git-notes"
+   ],
+   "topics": [
+    "git",
+    "history"
+   ]
+  },
+  "record-sql": {
+   "near": [
+    "mcp",
+    "static-search",
+    "dialect"
+   ],
+   "topics": []
+  },
+  "reddit": {
+   "near": [
+    "linkedin",
+    "meta-archive",
+    "mastodon"
+   ],
+   "topics": [
+    "posts",
+    "data"
+   ]
+  },
+  "redential": {
+   "near": [
+    "report",
+    "sent-log",
+    "predict"
+   ],
+   "topics": [
+    "bundle",
+    "left"
+   ]
+  },
+  "renewals": {
+   "near": [
+    "warranties",
+    "symptoms",
+    "attendance"
+   ],
+   "topics": []
+  },
+  "repo-index": {
+   "near": [
+    "same-way",
+    "persona-card",
+    "latent"
+   ],
+   "topics": [
+    "repositories",
+    "index"
+   ]
+  },
+  "repo-pile": {
+   "near": [
+    "upstream-desk",
+    "pile-build",
+    "pile-serve"
+   ],
+   "topics": [
+    "project",
+    "repo"
+   ]
+  },
+  "report": {
+   "near": [
+    "datasette",
+    "redential",
+    "jeles"
+   ],
+   "topics": [
+    "bundle",
+    "verified"
+   ]
+  },
+  "repro": {
+   "near": [
+    "compiled",
+    "mirror",
+    "gifts"
+   ],
+   "topics": [
+    "byte",
+    "twice"
+   ]
+  },
+  "rerank": {
+   "near": [
+    "model-fit",
+    "pile-gold",
+    "all"
+   ],
+   "topics": [
+    "top"
+   ]
+  },
+  "restack": {
+   "near": [
+    "github",
+    "similar",
+    "oracle-text"
+   ],
+   "topics": [
+    "branch",
+    "repo"
+   ]
+  },
+  "restore-drill": {
+   "near": [
+    "backup",
+    "diverge",
+    "three-two-one"
+   ],
+   "topics": [
+    "zip",
+    "backup"
+   ]
+  },
+  "retire": {
+   "near": [
+    "assistant-scores",
+    "stale",
+    "datasette"
+   ],
+   "topics": [
+    "aside"
+   ]
+  },
+  "reversi": {
+   "near": [
+    "tic-tac-toe",
+    "catgrid",
+    "same-way"
+   ],
+   "topics": [
+    "move",
+    "rows"
+   ]
+  },
+  "ripgrep": {
+   "near": [
+    "manifests",
+    "pdf",
+    "ocr"
+   ],
+   "topics": [
+    "search"
+   ]
+  },
+  "ris": {
+   "near": [
+    "zotero",
+    "bibtex",
+    "day-one"
+   ],
+   "topics": [
+    "zotero",
+    "citation"
+   ]
+  },
+  "risky-code": {
+   "near": [
+    "code-shape",
+    "install-scripts",
+    "sort"
+   ],
+   "topics": [
+    "command"
+   ]
+  },
+  "ro-crate": {
+   "near": [
+    "in-toto",
+    "annotations",
+    "cloudevents"
+   ],
+   "topics": [
+    "tool"
+   ]
+  },
+  "robinhood": {
+   "near": [
+    "photos",
+    "mcp",
+    "pdf"
+   ],
+   "topics": [
+    "mcp"
+   ]
+  },
+  "roll-for-merge": {
+   "near": [
+    "ci-bets",
+    "against",
+    "ci-baseline"
+   ],
+   "topics": [
+    "pull",
+    "requests"
+   ]
+  },
+  "rss-out": {
+   "near": [
+    "annotations",
+    "opml",
+    "in-toto"
+   ],
+   "topics": [
+    "feed"
+   ]
+  },
+  "rst": {
+   "near": [
+    "markdown",
+    "asciidoc",
+    "latex"
+   ],
+   "topics": [
+    "prose",
+    "links"
+   ]
+  },
+  "rtf": {
+   "near": [
+    "markdown",
+    "asciidoc",
+    "rst"
+   ],
+   "topics": [
+    "documents"
+   ]
+  },
+  "rubric": {
+   "near": [
+    "model-exam",
+    "gradebook",
+    "symptoms"
+   ],
+   "topics": [
+    "mark",
+    "citing"
+   ]
+  },
+  "rules": {
+   "near": [
+    "session-seal",
+    "game-master",
+    "night-batch"
+   ],
+   "topics": [
+    "game"
+   ]
+  },
+  "safe-app": {
+   "near": [
+    "vectors",
+    "memory-import",
+    "session-cost"
+   ],
+   "topics": [
+    "store",
+    "session"
+   ]
+  },
+  "said": {
+   "near": [
+    "amounts",
+    "timeline",
+    "debts"
+   ],
+   "topics": [
+    "timeline",
+    "quote"
+   ]
+  },
+  "same-way": {
+   "near": [
+    "model-exam",
+    "model-drift",
+    "night-batch"
+   ],
+   "topics": [
+    "local"
+   ]
+  },
+  "sap-gate": {
+   "near": [
+    "mcp-lite",
+    "cursor",
+    "opencode"
+   ],
+   "topics": [
+    "mcp",
+    "tool"
+   ]
+  },
+  "sarif": {
+   "near": [
+    "code-comments",
+    "places",
+    "codebase-memory"
+   ],
+   "topics": [
+    "reports"
+   ]
+  },
+  "sbom": {
+   "near": [
+    "lockfiles",
+    "gh-json",
+    "day-one"
+   ],
+   "topics": [
+    "json",
+    "version"
+   ]
+  },
+  "scan": {
+   "near": [
+    "latent",
+    "index-cache",
+    "bm25"
+   ],
+   "topics": [
+    "scan",
+    "ranked"
+   ]
+  },
+  "schema-check": {
+   "near": [
+    "weights-pin",
+    "model-fit",
+    "connect-four"
+   ],
+   "topics": [
+    "result",
+    "fit"
+   ]
+  },
+  "school": {
+   "near": [
+    "trips",
+    "month-first",
+    "support-plan"
+   ],
+   "topics": [
+    "trips",
+    "parent"
+   ]
+  },
+  "screenplay": {
+   "near": [
+    "code-comments",
+    "bibtex",
+    "jupyter"
+   ],
+   "topics": [
+    "characters"
+   ]
+  },
+  "scripture": {
+   "near": [
+    "readwise",
+    "books",
+    "gutenberg"
+   ],
+   "topics": [
+    "book",
+    "beside"
+   ]
+  },
+  "scrivener": {
+   "near": [
+    "rtf",
+    "apple-notes",
+    "sigmap"
+   ],
+   "topics": [
+    "documents"
+   ]
+  },
+  "scrub": {
+   "near": [
+    "photos",
+    "transcript-redact",
+    "bookmarks"
+   ],
+   "topics": [
+    "history",
+    "share"
+   ]
+  },
+  "second-opinion": {
+   "near": [
+    "assistant-scores",
+    "contradictions",
+    "pile-poetry"
+   ],
+   "topics": [
+    "assistant",
+    "waiting"
+   ]
+  },
+  "secrets-audit": {
+   "near": [
+    "pii-audit",
+    "xref",
+    "hook-leaks"
+   ],
+   "topics": [
+    "numbers",
+    "key"
+   ]
+  },
+  "sent-log": {
+   "near": [
+    "cite-honesty",
+    "gaps",
+    "model-card"
+   ],
+   "topics": [
+    "left",
+    "log"
+   ]
+  },
+  "serve": {
+   "near": [
+    "stack",
+    "decisions",
+    "folder-card"
+   ],
+   "topics": []
+  },
+  "serve-piles": {
+   "near": [
+    "pile-serve",
+    "pile-rungs",
+    "words-pl"
+   ],
+   "topics": [
+    "serve"
+   ]
+  },
+  "session-cost": {
+   "near": [
+    "agent-transcript",
+    "corpus-lens",
+    "csv-rows"
+   ],
+   "topics": [
+    "agent",
+    "session"
+   ]
+  },
+  "session-seal": {
+   "near": [
+    "rules",
+    "abbreviations",
+    "tip-pin"
+   ],
+   "topics": [
+    "end"
+   ]
+  },
+  "share": {
+   "near": [
+    "kart",
+    "invoices",
+    "pgp"
+   ],
+   "topics": [
+    "sent"
+   ]
+  },
+  "sheets": {
+   "near": [
+    "pdf",
+    "photos",
+    "ocr"
+   ],
+   "topics": [
+    "address"
+   ]
+  },
+  "shell": {
+   "near": [
+    "pipe",
+    "shell-history",
+    "hook-shell"
+   ],
+   "topics": [
+    "shell",
+    "bash"
+   ]
+  },
+  "shell-history": {
+   "near": [
+    "jrnl",
+    "subtitles",
+    "shell"
+   ],
+   "topics": [
+    "bash",
+    "fish"
+   ]
+  },
+  "shortcuts": {
+   "near": [
+    "bookmarks",
+    "notes",
+    "musicxml"
+   ],
+   "topics": [
+    "title",
+    "address"
+   ]
+  },
+  "sigmap": {
+   "near": [
+    "codebase-memory",
+    "code-comments",
+    "text"
+   ],
+   "topics": [
+    "codebase",
+    "function"
+   ]
+  },
+  "signal": {
+   "near": [
+    "texts",
+    "teams",
+    "chats"
+   ],
+   "topics": [
+    "message",
+    "backup"
+   ]
+  },
+  "signed-commits": {
+   "near": [
+    "provenance",
+    "pgp",
+    "mirror"
+   ],
+   "topics": [
+    "trust",
+    "commit"
+   ]
+  },
+  "silence-log": {
+   "near": [
+    "said",
+    "cassettes",
+    "csv-rows"
+   ],
+   "topics": [
+    "log",
+    "rows"
+   ]
+  },
+  "similar": {
+   "near": [
+    "readme",
+    "restack",
+    "against"
+   ],
+   "topics": []
+  },
+  "slack": {
+   "near": [
+    "irc",
+    "matrix",
+    "chats"
+   ],
+   "topics": [
+    "message",
+    "channel"
+   ]
+  },
+  "slow-tests": {
+   "near": [
+    "test-shards",
+    "mutants",
+    "profile"
+   ],
+   "topics": [
+    "test"
+   ]
+  },
+  "snapshot": {
+   "near": [
+    "web-pages",
+    "webarchive",
+    "wayback"
+   ],
+   "topics": [
+    "snapshot",
+    "address"
+   ]
+  },
+  "socratic": {
+   "near": [
+    "equations",
+    "oakenscroll",
+    "sort-ask"
+   ],
+   "topics": [
+    "citing"
+   ]
+  },
+  "sokoban": {
+   "near": [
+    "hook-replay",
+    "catgrid",
+    "reading-level"
+   ],
+   "topics": [
+    "replayed",
+    "level"
+   ]
+  },
+  "sort": {
+   "near": [
+    "sort-ask",
+    "pile-rungs",
+    "debts"
+   ],
+   "topics": [
+    "phrases",
+    "sorted"
+   ]
+  },
+  "sort-ask": {
+   "near": [
+    "sort",
+    "local-model",
+    "in-process"
+   ],
+   "topics": [
+    "categories",
+    "phrases"
+   ]
+  },
+  "sourcehut": {
+   "near": [
+    "forgejo",
+    "gitlab",
+    "github"
+   ],
+   "topics": [
+    "host",
+    "repo"
+   ]
+  },
+  "speak": {
+   "near": [
+    "aider",
+    "debts",
+    "openai-compatible"
+   ],
+   "topics": []
+  },
+  "spurious": {
+   "near": [
+    "front-page",
+    "ci-why",
+    "readme"
+   ],
+   "topics": [
+    "front",
+    "joins"
+   ]
+  },
+  "stack": {
+   "near": [
+    "across",
+    "serve",
+    "stack-share"
+   ],
+   "topics": [
+    "stack",
+    "several"
+   ]
+  },
+  "stack-share": {
+   "near": [
+    "forge",
+    "stack",
+    "kart"
+   ],
+   "topics": [
+    "stack",
+    "forge"
+   ]
+  },
+  "stale": {
+   "near": [
+    "again",
+    "export",
+    "weakest-link"
+   ],
+   "topics": []
+  },
+  "standards": {
+   "near": [
+    "my-lessons",
+    "lesson-time",
+    "grant-report"
+   ],
+   "topics": [
+    "lesson",
+    "standard"
+   ]
+  },
+  "star-system": {
+   "near": [
+    "kart",
+    "static-search",
+    "manifests"
+   ],
+   "topics": []
+  },
+  "start": {
+   "near": [
+    "starter-words",
+    "launcher",
+    "nicknames"
+   ],
+   "topics": [
+    "launcher",
+    "starter"
+   ]
+  },
+  "starter-words": {
+   "near": [
+    "start",
+    "snapshot",
+    "pdf"
+   ],
+   "topics": [
+    "copy",
+    "starter"
+   ]
+  },
+  "static-search": {
+   "near": [
+    "mcp",
+    "record-sql",
+    "pgp"
+   ],
+   "topics": [
+    "search"
+   ]
+  },
+  "steam": {
+   "near": [
+    "life",
+    "game-master",
+    "music-library"
+   ],
+   "topics": [
+    "game",
+    "library"
+   ]
+  },
+  "stems": {
+   "near": [
+    "accents",
+    "abbreviations",
+    "ocr"
+   ],
+   "topics": [
+    "form"
+   ]
+  },
+  "strava": {
+   "near": [
+    "takeout",
+    "chats",
+    "slack"
+   ],
+   "topics": []
+  },
+  "student-records": {
+   "near": [
+    "kids",
+    "ci-why",
+    "export"
+   ],
+   "topics": [
+    "student",
+    "log"
+   ]
+  },
+  "subscriptions": {
+   "near": [
+    "foia",
+    "pets",
+    "home-upkeep"
+   ],
+   "topics": [
+    "month",
+    "statements"
+   ]
+  },
+  "subtitles": {
+   "near": [
+    "shell-history",
+    "calendar",
+    "text"
+   ],
+   "topics": [
+    "transcript"
+   ]
+  },
+  "support-plan": {
+   "near": [
+    "contracts",
+    "lessons",
+    "standards"
+   ],
+   "topics": [
+    "parent",
+    "plan"
+   ]
+  },
+  "surprise": {
+   "near": [
+    "serve",
+    "on-this-day",
+    "tarot"
+   ],
+   "topics": [
+    "seeded",
+    "replayed"
+   ]
+  },
+  "swift": {
+   "near": [
+    "crates",
+    "compiled",
+    "nuget"
+   ],
+   "topics": [
+    "vectors",
+    "port"
+   ]
+  },
+  "syllabus": {
+   "near": [
+    "gradebook",
+    "minutes",
+    "symptoms"
+   ],
+   "topics": [
+    "assignments",
+    "due"
+   ]
+  },
+  "symbols": {
+   "near": [
+    "hook-impact",
+    "people",
+    "code-shape"
+   ],
+   "topics": [
+    "reference"
+   ]
+  },
+  "symptoms": {
+   "near": [
+    "syllabus",
+    "hours",
+    "minutes"
+   ],
+   "topics": []
+  },
+  "sync": {
+   "near": [
+    "backup",
+    "provenance",
+    "model-exam"
+   ],
+   "topics": [
+    "trust",
+    "chain"
+   ]
+  },
+  "synonyms": {
+   "near": [
+    "accents",
+    "abbreviations",
+    "starter-words"
+   ],
+   "topics": []
+  },
+  "takeout": {
+   "near": [
+    "matrix",
+    "chats",
+    "pocket"
+   ],
+   "topics": [
+    "html",
+    "json"
+   ]
+  },
+  "tarot": {
+   "near": [
+    "catgrid",
+    "dice",
+    "life"
+   ],
+   "topics": [
+    "seeded",
+    "replayable"
+   ]
+  },
+  "tatoeba": {
+   "near": [
+    "why-not",
+    "stems",
+    "latent"
+   ],
+   "topics": [
+    "pairs",
+    "language"
+   ]
+  },
+  "tax-year": {
+   "near": [
+    "mileage",
+    "todays-place",
+    "upstream-desk"
+   ],
+   "topics": [
+    "tax",
+    "year"
+   ]
+  },
+  "teams": {
+   "near": [
+    "chats",
+    "signal",
+    "texts"
+   ],
+   "topics": [
+    "message",
+    "chats"
+   ]
+  },
+  "telegram-bot": {
+   "near": [
+    "bot-venv",
+    "chats",
+    "cursor"
+   ],
+   "topics": [
+    "telegram",
+    "bot"
+   ]
+  },
+  "test-impact": {
+   "near": [
+    "against",
+    "ci-memo",
+    "lesson-time"
+   ],
+   "topics": [
+    "suite",
+    "reach"
+   ]
+  },
+  "test-shards": {
+   "near": [
+    "slow-tests",
+    "profile",
+    "ci"
+   ],
+   "topics": [
+    "test"
+   ]
+  },
+  "text": {
+   "near": [
+    "mail",
+    "calendar",
+    "texts"
+   ],
+   "topics": []
+  },
+  "texts": {
+   "near": [
+    "chats",
+    "slack",
+    "irc"
+   ],
+   "topics": [
+    "message",
+    "backup"
+   ]
+  },
+  "thesis": {
+   "near": [
+    "claim-check",
+    "all",
+    "surprise"
+   ],
+   "topics": [
+    "claim",
+    "top"
+   ]
+  },
+  "three-two-one": {
+   "near": [
+    "diverge",
+    "backup",
+    "duplicates"
+   ],
+   "topics": [
+    "zip",
+    "copy"
+   ]
+  },
+  "tic-tac-toe": {
+   "near": [
+    "reversi",
+    "catgrid",
+    "nim"
+   ],
+   "topics": [
+    "rows",
+    "move"
+   ]
+  },
+  "tides": {
+   "near": [
+    "predictions",
+    "forecasts",
+    "horoscope-grades"
+   ],
+   "topics": [
+    "score",
+    "forecast"
+   ]
+  },
+  "time-capsule": {
+   "near": [
+    "prov",
+    "hook-compact",
+    "fixity"
+   ],
+   "topics": [
+    "prov",
+    "open"
+   ]
+  },
+  "timeline": {
+   "near": [
+    "said",
+    "across",
+    "first-mention"
+   ],
+   "topics": [
+    "timeline"
+   ]
+  },
+  "tip-pin": {
+   "near": [
+    "ci-memo",
+    "box-health",
+    "ci"
+   ],
+   "topics": [
+    "rows",
+    "pin"
+   ]
+  },
+  "todays-place": {
+   "near": [
+    "art-of-the-day",
+    "gutenberg",
+    "tax-year"
+   ],
+   "topics": [
+    "public",
+    "domain"
+   ]
+  },
+  "todo": {
+   "near": [
+    "debts",
+    "budget",
+    "sort"
+   ],
+   "topics": []
+  },
+  "transcript-redact": {
+   "near": [
+    "scrub",
+    "agent-transcript",
+    "agents-md-check"
+   ],
+   "topics": [
+    "agent",
+    "transcript"
+   ]
+  },
+  "translate": {
+   "near": [
+    "night-batch",
+    "in-process",
+    "llm-cli"
+   ],
+   "topics": [
+    "local",
+    "held"
+   ]
+  },
+  "trello": {
+   "near": [
+    "karakeep",
+    "day-one",
+    "reddit"
+   ],
+   "topics": [
+    "comments",
+    "json"
+   ]
+  },
+  "trips": {
+   "near": [
+    "school",
+    "mileage",
+    "books"
+   ],
+   "topics": [
+    "trips",
+    "emails"
+   ]
+  },
+  "tui": {
+   "near": [
+    "browse",
+    "jeles",
+    "serve"
+   ],
+   "topics": [
+    "screen",
+    "full"
+   ]
+  },
+  "typos": {
+   "near": [
+    "accents",
+    "abbreviations",
+    "again"
+   ],
+   "topics": []
+  },
+  "typosquat": {
+   "near": [
+    "outdated",
+    "advisories",
+    "claim-check"
+   ],
+   "topics": [
+    "dependency",
+    "package"
+   ]
+  },
+  "upgrade-notes": {
+   "near": [
+    "lockfiles",
+    "package-contents",
+    "install-scripts"
+   ],
+   "topics": [
+    "package",
+    "version"
+   ]
+  },
+  "upstream-desk": {
+   "near": [
+    "contribute",
+    "against",
+    "pr-context"
+   ],
+   "topics": [
+    "pull",
+    "requests"
+   ]
+  },
+  "vectors": {
+   "near": [
+    "pile-store",
+    "codebase-memory",
+    "welcome"
+   ],
+   "topics": [
+    "store",
+    "sqlite"
+   ]
+  },
+  "vim": {
+   "near": [
+    "emacs",
+    "pipe",
+    "vscode"
+   ],
+   "topics": [
+    "jump"
+   ]
+  },
+  "vocab": {
+   "near": [
+    "apple-notes",
+    "equations",
+    "oracle-text"
+   ],
+   "topics": []
+  },
+  "voice": {
+   "near": [
+    "writefreely",
+    "calendar",
+    "texts"
+   ],
+   "topics": [
+    "transcribed",
+    "voice"
+   ]
+  },
+  "vscode": {
+   "near": [
+    "emacs",
+    "vim",
+    "jetbrains"
+   ],
+   "topics": [
+    "jump"
+   ]
+  },
+  "wallabag": {
+   "near": [
+    "karakeep",
+    "readwise",
+    "evernote"
+   ],
+   "topics": [
+    "html",
+    "article"
+   ]
+  },
+  "warc": {
+   "near": [
+    "joplin",
+    "web-pages",
+    "webarchive"
+   ],
+   "topics": [
+    "unpacking",
+    "address"
+   ]
+  },
+  "warm": {
+   "near": [
+    "start",
+    "pile-store",
+    "night-batch"
+   ],
+   "topics": [
+    "start",
+    "between"
+   ]
+  },
+  "warranties": {
+   "near": [
+    "job-hunt",
+    "renewals",
+    "baby-log"
+   ],
+   "topics": [
+    "receipts"
+   ]
+  },
+  "watch": {
+   "near": [
+    "index-cache",
+    "scan",
+    "pile-store"
+   ],
+   "topics": [
+    "index",
+    "moment"
+   ]
+  },
+  "wayback": {
+   "near": [
+    "snapshot",
+    "policy-watch",
+    "archivebox"
+   ],
+   "topics": [
+    "snapshot",
+    "saved"
+   ]
+  },
+  "weakest-link": {
+   "near": [
+    "stale",
+    "export",
+    "jetbrains"
+   ],
+   "topics": [
+    "links"
+   ]
+  },
+  "weather-bet": {
+   "near": [
+    "forecasts",
+    "horoscope-grades",
+    "ci-bets"
+   ],
+   "topics": [
+    "forecast",
+    "score"
+   ]
+  },
+  "web-pages": {
+   "near": [
+    "webarchive",
+    "snapshot",
+    "pdf"
+   ],
+   "topics": [
+    "address",
+    "readable"
+   ]
+  },
+  "webarchive": {
+   "near": [
+    "web-pages",
+    "snapshot",
+    "photos"
+   ],
+   "topics": [
+    "address",
+    "readable"
+   ]
+  },
+  "weights-card": {
+   "near": [
+    "model-shelf",
+    "weights-pin",
+    "model-fit"
+   ],
+   "topics": [
+    "weights",
+    "quantization"
+   ]
+  },
+  "weights-pin": {
+   "near": [
+    "weights-card",
+    "model-card",
+    "model-fit"
+   ],
+   "topics": [
+    "local",
+    "weights"
+   ]
+  },
+  "welcome": {
+   "near": [
+    "ci-baseline",
+    "against",
+    "pr-context"
+   ],
+   "topics": [
+    "pull",
+    "requests"
+   ]
+  },
+  "why-not": {
+   "near": [
+    "nicknames",
+    "scan",
+    "latent"
+   ],
+   "topics": []
+  },
+  "windsurf": {
+   "near": [
+    "cursor",
+    "opencode",
+    "zed"
+   ],
+   "topics": [
+    "mcp"
+   ]
+  },
+  "witness": {
+   "near": [
+    "second-opinion",
+    "translate",
+    "model-recall"
+   ],
+   "topics": [
+    "second",
+    "person"
+   ]
+  },
+  "words-ar": {
+   "near": [
+    "words-it",
+    "words-pl",
+    "words-pt"
+   ],
+   "topics": [
+    "common"
+   ]
+  },
+  "words-cy": {
+   "near": [
+    "words-it",
+    "words-es",
+    "words-pl"
+   ],
+   "topics": [
+    "common"
+   ]
+  },
+  "words-de": {
+   "near": [
+    "words-nl",
+    "words-pl",
+    "words-it"
+   ],
+   "topics": [
+    "common"
+   ]
+  },
+  "words-es": {
+   "near": [
+    "words-it",
+    "words-pt",
+    "words-cy"
+   ],
+   "topics": [
+    "common"
+   ]
+  },
+  "words-fr": {
+   "near": [
+    "words-it",
+    "words-pl",
+    "words-pt"
+   ],
+   "topics": [
+    "common"
+   ]
+  },
+  "words-hi": {
+   "near": [
+    "words-ja",
+    "words-zh",
+    "words-it"
+   ],
+   "topics": [
+    "common"
+   ]
+  },
+  "words-it": {
+   "near": [
+    "words-pt",
+    "words-tlh",
+    "words-es"
+   ],
+   "topics": [
+    "common"
+   ]
+  },
+  "words-ja": {
+   "near": [
+    "words-zh",
+    "words-hi",
+    "synonyms"
+   ],
+   "topics": [
+    "common",
+    "segmenter"
+   ]
+  },
+  "words-nl": {
+   "near": [
+    "words-de",
+    "words-it",
+    "words-pl"
+   ],
+   "topics": [
+    "common"
+   ]
+  },
+  "words-pl": {
+   "near": [
+    "words-it",
+    "words-de",
+    "words-pt"
+   ],
+   "topics": [
+    "common"
+   ]
+  },
+  "words-pt": {
+   "near": [
+    "words-it",
+    "words-tlh",
+    "words-es"
+   ],
+   "topics": [
+    "common"
+   ]
+  },
+  "words-ru": {
+   "near": [
+    "words-it",
+    "words-pl",
+    "words-pt"
+   ],
+   "topics": [
+    "common"
+   ]
+  },
+  "words-sv": {
+   "near": [
+    "words-it",
+    "words-pl",
+    "words-pt"
+   ],
+   "topics": [
+    "common"
+   ]
+  },
+  "words-tlh": {
+   "near": [
+    "words-it",
+    "words-pt",
+    "words-pl"
+   ],
+   "topics": [
+    "common"
+   ]
+  },
+  "words-tr": {
+   "near": [
+    "words-it",
+    "words-pl",
+    "words-pt"
+   ],
+   "topics": [
+    "common"
+   ]
+  },
+  "words-zh": {
+   "near": [
+    "words-ja",
+    "words-hi",
+    "synonyms"
+   ],
+   "topics": [
+    "common",
+    "segmenter"
+   ]
+  },
+  "writefreely": {
+   "near": [
+    "apple-notes",
+    "bookmarks",
+    "nestor"
+   ],
+   "topics": [
+    "copy",
+    "sqlite"
+   ]
+  },
+  "x-archive": {
+   "near": [
+    "meta-archive",
+    "mastodon",
+    "linkedin"
+   ],
+   "topics": [
+    "posts",
+    "message"
+   ]
+  },
+  "xref": {
+   "near": [
+    "quote-review",
+    "secrets-audit",
+    "quotes"
+   ],
+   "topics": [
+    "quote"
+   ]
+  },
+  "zed": {
+   "near": [
+    "cursor",
+    "opencode",
+    "windsurf"
+   ],
+   "topics": [
+    "mcp"
+   ]
+  },
+  "zotero": {
+   "near": [
+    "ris",
+    "readwise",
+    "evernote"
+   ],
+   "topics": [
+    "zotero",
+    "annotations"
+   ]
+  }
+ }
+}

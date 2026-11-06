@@ -30,7 +30,7 @@ merge conflicts:
 
 | File | Settled as |
 |---|---|
-| ADDONS.md, README.md | REF's, then made again by `adapters/stdlib/readme/readme.py write` |
+| ADDONS.md, README.md, `adapters/stdlib/readme/week.json` | REF's, then made again by `adapters/stdlib/readme/readme.py write`: in the same week REF's tags and nearest entries stand, and only the branch's new entries are worked out |
 | BUGS.md | REF's, then made again by `adapters/stdlib/ci/bugs.py write` |
 | CHANGELOG.md | REF's, with each entry the branch added under `## Unreleased` moved to a fragment of its own: `changes/<N>.<kind>.md` when it ends `(#N)`, else `changes/+<branch>.<kind>.md`; one REF already holds (a branch stacked on another pull request) only leaves. This one runs whether the merge conflicted there or not; a branch that changed the file any other way stops |
 | FILES.md | both sides' folders, A to Z |

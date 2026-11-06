@@ -90,6 +90,7 @@ def repo(tmp_path, monkeypatch):
     monkeypatch.setattr(rd, "ADDONS_MD", tmp_path / "ADDONS.md")
     monkeypatch.setattr(rd, "ADAPTERS", tmp_path / "adapters")
     monkeypatch.setattr(rd, "PLANNED", tmp_path / "adapters" / "planned.json")
+    monkeypatch.setattr(rd, "WEEK_FILE", tmp_path / "week.json")
     return tmp_path
 
 
@@ -372,3 +373,92 @@ def test_the_counts_stand_as_of_the_weeks_monday_and_its_own_line_is_now():
         and rd.week_of(page, "2026-W47") == "2026-W47"
     )
     assert rd.week_of("no week here", None) == rd.this_week()
+
+
+# ── the week's tags and nearest entries ──────────────────────────────────────
+def idea(name: str, line: str) -> dict:
+    return {"name": name, "kind": "stdlib", "section": "Play", "line": line,
+            "source": "new", "writes": "nothing", "network": "none", "role": "tools"}  # fmt: skip
+
+
+def add_ideas(repo: Path, *more: dict) -> None:
+    path = repo / "adapters" / "planned.json"
+    path.write_text(json.dumps(json.loads(path.read_text()) + list(more)))
+
+
+def line_of(repo: Path, name: str) -> str:
+    """The entry's line in the list section (not the newest or the pick)."""
+    return next(x for x in (repo / "ADDONS.md").read_text().splitlines()
+                if x.startswith((f"- [**{name}**]", f"- **{name}** (idea)")))  # fmt: skip
+
+
+def test_the_weeks_first_write_keeps_each_entrys_topics_and_nearest(repo):
+    assert rd.main(["write", "--week", "2026-W45"]) == 0
+    kept = json.loads((repo / "week.json").read_text())
+    assert kept["week"] == "2026-W45"
+    assert set(kept["worked"]) == {"alpha", "beta", "gamma"}
+    assert set(kept["worked"]["alpha"]) == {"topics", "near"}  # never its facts
+    assert rd.main(["check"]) == 0
+
+
+def test_another_entry_or_card_this_week_moves_no_other_line(repo):
+    """What made every add-on pull request stale against every other: a new
+    entry, or an edit to any card, moved other entries' tags and nearest
+    entries, since they're worked out over the whole list."""
+    assert rd.main(["write", "--week", "2026-W45"]) == 0
+    before = {n: line_of(repo, n) for n in ("alpha", "beta", "gamma")}
+    alpha = repo / "adapters" / "stdlib" / "alpha" / "README.md"
+    alpha.write_text(alpha.read_text() + "\nbeta gamma later later somepkg words.\n")
+    add_ideas(repo, idea("delta", "Gamma and beta, later, with somepkg."))
+    assert rd.main(["write"]) == 0  # the page's week, still W45
+    assert {n: line_of(repo, n) for n in ("beta", "gamma")} == {
+        n: before[n] for n in ("beta", "gamma")
+    }
+    assert "**delta** (idea)" in line_of(repo, "delta")
+    assert "delta" not in json.loads((repo / "week.json").read_text())["worked"]
+    assert rd.main(["check"]) == 0
+
+
+def test_a_new_entrys_line_is_its_own_whatever_else_is_new(repo):
+    """Two pull requests each adding an entry: each one's line is worked out
+    against the week's entries and itself, so merging both needs no write."""
+    assert rd.main(["write", "--week", "2026-W45"]) == 0
+    add_ideas(repo, idea("delta", "Later things, gamma-like."))
+    assert rd.main(["write"]) == 0
+    alone = line_of(repo, "delta")
+    add_ideas(repo, idea("epsilon", "Later things, delta-like, gamma-like."))
+    assert rd.main(["write"]) == 0
+    assert line_of(repo, "delta") == alone
+
+
+def test_the_counts_are_the_weeks_entries_and_a_new_one_counts_next_week(repo):
+    assert rd.main(["write", "--week", "2026-W45"]) == 0
+    pools = (repo / "ADDONS.md").read_text()
+    add_ideas(repo, idea("delta", "Later."))
+    assert rd.main(["write"]) == 0
+    page = (repo / "ADDONS.md").read_text()
+    assert "of 3 built" in pools and "of 3 built" in page, "delta counts from next week"
+    assert rd.main(["write", "--week", "2026-W46"]) == 0
+    assert "of 4 built" in (repo / "ADDONS.md").read_text()
+    assert "delta" in json.loads((repo / "week.json").read_text())["worked"]
+
+
+def test_a_cards_facts_and_own_tag_are_never_frozen(repo):
+    """Install and online facts, and the author's own tag, are read from the
+    card every time: a card going online is said the same day."""
+    assert rd.main(["write", "--week", "2026-W45"]) == 0
+    alpha = repo / "adapters" / "stdlib" / "alpha" / "README.md"
+    alpha.write_text(alpha.read_text().replace("network: none", "network: loopback"))
+    assert rd.main(["write"]) == 0
+    assert "`this-machine`" in line_of(repo, "alpha")
+
+
+def test_a_week_file_for_another_week_or_none_is_stale_to_check(repo, capsys):
+    assert rd.main(["write", "--week", "2026-W45"]) == 0
+    (repo / "week.json").unlink()
+    assert rd.main(["check"]) == 2
+    assert "week.json" in capsys.readouterr().out
+    assert rd.main(["write"]) == 0 and rd.main(["check"]) == 0
+    kept = json.loads((repo / "week.json").read_text())
+    (repo / "week.json").write_text(json.dumps({**kept, "week": "2026-W44"}))
+    assert rd.main(["check"]) == 2
