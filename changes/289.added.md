@@ -1,0 +1,1 @@
+Known bugs #284 (the kernel's `html_text` splits a word at an inline tag) and #285 (`stack` adds `--json` to a report add-on's step that prints no report), and a second test for #112 (a ligature given as its Unicode character), each a strict expected-to-fail test on BUGS.md; found building DispatchesFromReality's research/soil-phys-001 willow stack
