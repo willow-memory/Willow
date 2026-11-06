@@ -208,7 +208,7 @@ of its lines and isn't it has drifted, and is a row of the report; one that
 holds less is another function sharing the name, and is counted, not
 reported. `diff NAME` prints each drifted copy's lines against the common
 version, as a unified diff. Which is right is a person's call: almanac's
-`_sources` reads only `catalog.json` on purpose, and a drift can be the fix
+`_sources` reads only an Almanac's catalog on purpose, and a drift can be the fix
 the others lack.
 
 ## The report contract
