@@ -608,6 +608,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "almanac-keep": ("keep.py", ["--catalog", "{pile}/catalog.json", "--id", "tides", "--to", "{tmp}/kept"]),
     "amounts": ("amounts.py", ["--box", "{box}"]),
     "annotations": ("annotations.py", ["--box", "{box}", "--to", "{tmp}/annotations.json"]),
+    "assistant-scores": ("assistant_scores.py", ["--box", "{box}"]),
     "attendance": ("attendance.py", ["--box", "{box}"]),
     "baby-log": ("baby_log.py", ["--box", "{box}"]),
     "backup": ("backup.py", ["--box", "{box}", "--to", "{tmp}/backups", *NOW]),
