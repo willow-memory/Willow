@@ -120,6 +120,10 @@ willow/
 │   │   │   ├── asciidoc.py   an AsciiDoc document as the text it shows, line for line, markup taken off
 │   │   │   ├── test_asciidoc.py
 │   │   │   └── README.md
+│   │   ├── assistant-scores/
+│   │   │   ├── assistant_scores.py How often each assistant's suggestions were sealed or set aside, from the record
+│   │   │   ├── test_assistant_scores.py
+│   │   │   └── README.md     its card
 │   │   ├── attendance/
 │   │   │   ├── attendance.py   who was there, by person or by week
 │   │   │   ├── test_attendance.py
@@ -247,6 +251,8 @@ willow/
 │   │   │   ├── test_realdata.py  realdata.py's tests: a run per person, a traceback fails, a refusal holds
 │   │   │   ├── test_times.py  times.py's tests: JUnit summed by file, unseen kept, gone dropped
 │   │   │   ├── times.py      test-times.json kept to what CI's own run took, by a script
+│   │   │   ├── mirrors.py    the mirror contract, checked
+│   │   │   ├── test_mirrors.py
 │   │   │   └── README.md     its card: gates, states, the guard and exit codes
 │   │   ├── ci-cache/
 │   │   │   ├── ci_cache.py    a cache key per ecosystem from a repo's lockfiles, so CI skips the reinstall

@@ -390,7 +390,7 @@ def test_hidden_files_and_folders_are_not_read(tmp_path):
     )
     assert sorted(
         p.relative_to(out).as_posix() for p in out.rglob("*") if p.is_file()
-    ) == ["docs/a.rst.txt"]
+    ) == [".places/docs/a.rst.txt.json", "docs/a.rst.txt"]
 
 
 def test_the_same_folder_gives_the_same_bytes_and_originals_are_unchanged(tmp_path):

@@ -170,8 +170,15 @@ def main(argv: list[str]) -> int:
         "path": f"answers/{oc.slug(question)}.md",
         "data": reply.strip() + "\n",
         "cites": cites,
-        "claim": f"{path.name} (sha256 {sha256_file(path)}) in this process answered"
-        f" from {len(cites)} of the {len(served)} passages served",
+        "claim": oc.claim(
+            path.name,
+            "in this process",
+            [
+                ("weights", f"sha256 {sha256_file(path)}"),
+                *oc.settings(oc.SEED, "", voice),
+            ],
+            f"answered from {len(cites)} of the {len(served)} passages served",
+        ),
     }
     with tempfile.TemporaryDirectory() as tmp:
         f = Path(tmp) / "suggestion.jsonl"
