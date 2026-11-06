@@ -1578,6 +1578,13 @@ willow/
 │   │   ├── STRIP.md          what each need came to, and what each layer of the stack did
 │   │   ├── stack.py          her files through every reader, start, the finders, privacy, an MCP assistant, and the trust add-ons
 │   │   └── test_stack.py     holds the stack to the states STRIP.md scores
+│   ├── corwin/
+│   │   ├── CHARACTER.md      Corwin Tamsett
+│   │   ├── fetch.py          the papers in Corwin's catalogue, fetched again and held to their hashes
+│   │   ├── make_life.py      Write the files Corwin Tamsett's life has left on his computer into ./life/
+│   │   ├── PLANTED.md        PLANTED: answer key (testers: do not read until after scoring)
+│   │   ├── QUESTIONS.md      Questions Corwin might type
+│   │   └── STRIP.md          Corwin, blind: the strip-down
 │   ├── craft-assembly/       the Craft apps taken apart into pieces, rebuilt exactly, and five assembled into one
 │   │   ├── README.md         the claim, the threats, what is frozen, what was seen before each freeze, results
 │   │   ├── REPORT.md         the full report, written by report.py from the files here, every number counted
