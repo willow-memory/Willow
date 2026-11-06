@@ -1491,6 +1491,14 @@ willow/
 │       │   ├── requirements-floor.txt  ripgrep at its floor, also tested
 │       │   ├── test_ripgrep.py
 │       │   └── README.md
+│       ├── robinhood/
+│       │   ├── fake_robinhood.py A stand-in for Robinhood's MCP server, on this machine, for the tests
+│       │   ├── requirements-floor.txt
+│       │   ├── requirements.txt
+│       │   ├── robinhood.py  Your Robinhood account as dated files: positions, orders, portfolio and watchlists, read through Robinhood's own MCP server and never traded on
+│       │   ├── stack.md      your Robinhood account, read back
+│       │   ├── test_robinhood.py
+│       │   └── README.md     its card
 │       ├── sheets/
 │       │   ├── sheets.py     spreadsheets as shown: number formats, formulas and notes kept
 │       │   ├── requirements.txt  openpyxl, pinned
