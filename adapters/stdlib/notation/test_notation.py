@@ -212,3 +212,15 @@ def test_a_tight_passage_gives_the_prose_after_half_the_room_left():
     room = kernel.MAX_CHUNK - len(head) - len(eq) - 5
     assert last.startswith("word") and room // 2 - 5 < len(last) <= room // 2
     assert len(p) <= kernel.MAX_CHUNK
+
+
+def test_a_long_equation_shortens_its_symbols_line_to_stay_one_chunk():
+    words = {c: [f"the name of {c} in words"] for c in "abcdefgh"}
+    eq = "a + b + c + d + e + f + g + h = " + " + ".join(["1"] * 95)
+    paper = rb"\begin{document} \[ " + eq.encode() + rb" \] \end{document}"
+    (p,) = mod.passages(paper, "x.tex", words)
+    assert len(p) <= kernel.MAX_CHUNK and "symbols: a the name of a" in p
+    assert "h the name" not in p  # the last symbols left out to fit
+    huge = rb"\begin{document} \[ a = " + b" + 1" * 200 + rb" \] \end{document}"
+    (p,) = mod.passages(huge, "x.tex", words)
+    assert "symbols:" not in p  # an equation longer than a chunk: no room at all

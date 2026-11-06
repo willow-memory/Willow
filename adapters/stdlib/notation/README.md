@@ -57,7 +57,9 @@ structure factor gives S both names.
 first uses them, and leaves out a symbol the paper never defines. An equation
 using none it defines gets no line. The line holds at most 200 characters,
 and takes its room from the prose before the equation, so a passage still
-fits in one of the kernel's chunks (500 characters). The math is never
+fits in one of the kernel's chunks (500 characters). When the equation
+itself leaves less room than that, the line is shortened to fit, or left
+out: a passage is never pushed past a chunk by its symbols. The math is never
 rewritten.
 
 **One paper, one glossary:** the .tex files in one folder share it, since a

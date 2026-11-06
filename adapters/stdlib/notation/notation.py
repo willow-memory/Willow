@@ -40,7 +40,10 @@ no symbols line.
 
 The passage keeps the equations add-on's shape and its limit: the symbols
 line takes its room from the prose before the equation, so a passage still
-fits in one of the kernel's chunks (`kernel.MAX_CHUNK`). The math is never
+fits in one of the kernel's chunks (`kernel.MAX_CHUNK`), and is shortened,
+or left out, when the equation leaves less room than it needs. An equation
+longer than a chunk on its own is kept whole, as the equations add-on keeps
+it, with no symbols line. The math is never
 rewritten.
 
 Each file is written to MIRROR at the same relative path with `.txt` added.
@@ -192,13 +195,14 @@ def used(eq: str) -> list[str]:
     return seen
 
 
-def line_for(eq: str, words: dict[str, list[str]]) -> str:
-    """The symbols line for an equation, or "" when it uses none defined."""
+def line_for(eq: str, words: dict[str, list[str]], at_most: int = LINE_AT_MOST) -> str:
+    """The symbols line for an equation, at most `at_most` characters, or ""
+    when it uses none defined."""
     line = ""
     for s in used(eq):
         if s in words:
             more = f"{'; ' if line else 'symbols: '}{s} {' / '.join(words[s])}"
-            if len(line) + len(more) > LINE_AT_MOST:
+            if len(line) + len(more) > at_most:
                 break
             line += more
     return line
@@ -227,7 +231,11 @@ def passages(data: bytes, name: str, words: dict[str, list[str]]) -> list[str]:
         head = f"{name} line {line}" + (
             ", label " + ", ".join(x.strip() for x in labels) if labels else ""
         )
-        names = line_for(eq, words)
+        # the line fits what the equation leaves under a chunk, so a long
+        # equation's passage is no longer for it
+        names = line_for(
+            eq, words, min(LINE_AT_MOST, kernel.MAX_CHUNK - len(head) - len(eq) - 3)
+        )
         prev_end = found[i - 1].end() if i else begin
         next_start = found[i + 1].start() if i + 1 < len(found) else len(text)
         room = kernel.MAX_CHUNK - len(head) - len(names) - len(eq) - 5
