@@ -346,6 +346,36 @@ found only through Wertheim's Laplace method or sticky spheres.
   union.py, its rules, and every file and tool it uses. Freeze 1 is
   unchanged and its verdicts stand.
 
+### Freeze 2's run
+
+Run once, on 2026-11-06 from 02:18 UTC, at commit 2bd8e45, on the pile and
+index freeze 1's run built; 306 seconds, sharing the machine with the
+arms' model arm.
+
+| Rule | Verdict | Frozen number |
+|---|---|---|
+| R7 | **failing** | 1 of 11 steps found (s3); needed 9, with s5a, s5b and s7 |
+| R8 | **failing** | 2 of 11 found (s4, s5a); needed 7, with s5b and s7 |
+| R9 | satisfied | 0 of 10 null questions served a chain step by any ranker; at most 2 |
+| R10 | satisfied | 2 of 11 found by fifteen random passages a question; at most 2 |
+| through Wertheim or sticky spheres | reported | none |
+
+By ranker, reported: the kernel, the kernel with words.txt and pile-rungs
+each found s3 with the author's questions and s5a with the blind ones;
+BM25 found s4 and s5a with the blind ones and nothing with the author's;
+latent found nothing.
+
+**The stack and the add-ons didn't find the chain either.** Five rankers
+together found what the kernel found, and one step more (s4, the
+Percus–Yevick closure, by BM25 on a blind question). Fifteen random passages
+a question found as many steps as the five rankers did. The final step, s7,
+was found by none.
+
+The rows: `union.json`, SHA-256 `43598cdb08bc5e3501c47a900611a4da1a4b4c8a263005827c45a45c8efcaf4f`;
+four more verdict rows on the same box, its last row's hash
+`cb087318a6056a01bd429f5aa066d21c28831f6e7f084fc786671dc91b3ec785`;
+`kernel.py verify` on it: "the chain holds: 12 rows, 0 sealed".
+
 ## Said plainly
 
 - **The anchors were written after the source search had grepped each
