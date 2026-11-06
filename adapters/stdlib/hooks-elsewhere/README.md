@@ -27,7 +27,7 @@ envelope the host needs. The framed passages inside are Claude's bytes.
 |---|---|---|
 | gemini-cli | BeforeAgent | JSON; Claude's block in `additionalContext` |
 | codex-cli | UserPromptSubmit | Claude's block as plain stdout |
-| opencode | UserPromptSubmit | the same (Claude-compatible hooks), or a plugin that injects that stdout |
+| opencode | `chat.message` plugin | Claude's block as synthetic text (native); Claude-compatible hooks get the same bytes as plain stdout |
 
 Empty when your files don't hold the question; one line when the folder
 couldn't be read. Always exits 0 once the command line is good, as Claude
