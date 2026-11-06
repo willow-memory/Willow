@@ -78,6 +78,45 @@ def test_a_traceback_on_a_real_folder_fails_it(world):
     assert not held and rows[-1][1:3] == ("cy", "a traceback")
 
 
+#: a reader: writes each file to MIRROR, its words on one line when
+#: `--join` is in the file, as clauses wrote a chat with no full stops
+READER = """import sys
+from pathlib import Path
+args = dict(zip(sys.argv[2::2], sys.argv[3::2]))
+for p in Path(args["--from"]).iterdir():
+    text = p.read_text()
+    out = Path(args["--to"]) / (p.name + ".txt")
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(" ".join(text.split()) + "\\n" if "--join" in text else text)
+print("wrote")
+"""
+
+
+def test_a_mirror_line_the_kernel_would_cut_fails_the_reader(world):
+    root, lives, _ = world
+    (root / "stdlib" / "plain").mkdir()
+    (root / "stdlib" / "plain" / "plain.py").write_text(READER)
+    contract = types.SimpleNamespace(COMMANDS={}, READERS={"plain": ("plain.py", {})})
+    lines = "".join(f"message {i} with a few words in it\n" for i in range(40))
+    (lives["ann"] / "chat.txt").write_text(lines)
+    rows, held = rd.run(["plain"], lives, contract, root / "stdlib")
+    assert held, "40 short lines: the kernel reads every one"
+    (lives["cy"] / "chat.txt").write_text(lines + "--join\n")
+    rows, held = rd.run(["plain"], lives, contract, root / "stdlib")
+    assert not held and rows[-1][1] == "cy"
+    assert rows[-1][2].startswith("1 mirror line(s) longer than the kernel's 500")
+    assert "(first: chat.txt.txt:1, " in rows[-1][2]
+
+
+def test_long_lines_names_each_line_over_a_chunk(tmp_path):
+    (tmp_path / "a").mkdir()
+    (tmp_path / "a" / "x.txt").write_text(
+        "short\n" + "y" * 501 + "\n" + "z" * 500 + "\n"
+    )
+    assert rd.long_lines(tmp_path) == [("a/x.txt", 2, 501)]
+    assert rd.long_lines(tmp_path / "missing") == []
+
+
 def test_a_reader_runs_mirror_over_the_folder():
     contract = types.SimpleNamespace(COMMANDS={}, READERS={"plain": ("plain.py", {})})
     assert rd.row_of(contract, "plain") == (

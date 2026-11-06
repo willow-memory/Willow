@@ -2,30 +2,20 @@
 
 What changed, newest first, by the pull request that changed it, under
 Added, Changed, Fixed and Removed. A fix names what it fixes: a known bug
-from [BUGS.md](BUGS.md) as `bug #N`, or a security report. A release turns
-`Unreleased` into `vX.Y.Z · YYYY-MM-DD` ([CONTRIBUTING.md](CONTRIBUTING.md)
-says how). The first was v0.1.0.
+from [BUGS.md](BUGS.md) as `bug #N`, or a security report. A pull request
+writes its entry in a file of its own under [changes/](changes/README.md),
+never here, so no two conflict; a release folds them in with towncrier as
+`vX.Y.Z · YYYY-MM-DD` ([CONTRIBUTING.md](CONTRIBUTING.md) says how). The
+entries under Unreleased came before that, and the next release takes them
+too. The first release was v0.1.0.
 
 ## Unreleased
 
 ### Added
 
-- `deep-links` follows the mirror contract's map back to the original: a
-  passage of a reader's mirror is tagged with its place in the source, and
-  with `--from FOLDER`, the folder the mirror was made from, its links open
-  the original at its lines (a named place, such as a notebook's cell, at the
-  file); a mirror file with no map is linked as before
-- The mirror contract (`adapters/stdlib/ci/README.md`): a reader whose card
-  says `output: mirror` writes, beside each mirror file, a hidden map of
-  where each passage came from in the source
-  (`MIRROR/.places/<path>.txt.json`: `line N`, `lines N-M`, or a named place
-  such as `page 2`), which the kernel never reads, so the passages keep only
-  the file's words. `adapters/stdlib/ci/mirrors.py check` holds a mirror to it,
-  an off-by-one included; test_contract.py and realdata.py hold each such
-  reader to it on its sample and the demo people's folders. markdown, latex,
-  org, rst, asciidoc, code-comments and dotfiles keep it, line for line, a
-  table's header moved onto its rule placed on both lines. `readme` takes
-  `output` as a list, and `mirror` only on a reader's card
+- `llm-cli`: suggestions through Simon Willison's `llm` command — bite first,
+  only served passages go to the model any of its plugins reach, propose a
+  cited reply; llm's log names the model (#253)
 - `hooks-elsewhere` refuses `--host cursor`: Cursor's `beforeSubmitPrompt`
   can only continue or block a prompt, never inject passages; the card and
   `hosts` point at the `cursor` MCP add-on instead (#252)
@@ -1882,6 +1872,16 @@ says how). The first was v0.1.0.
 
 ### Changed
 
+- `ci`'s test-times.json made from main's own CI run by `times.py write --run
+  latest`: 17 test files it lacked are in, share's at 175 s, and 20 others
+  moved by half or more, so the tests:adapters chunks are even again (#256)
+- `AGENTS.md` is a third as long: what every agent needs before a change (the
+  Never list, set up, what to run after a change), and a paragraph a job
+  pointing at its page in `docs/agents/`: add-ons, studies, pull requests,
+  searching. Every rule moved, none changed; four lessons added where they
+  belong (leave the checkout alone while create_pr.py runs; a dry run that
+  serves nothing tests nothing after the kernel; the kernel's echo rule,
+  exactly; a box's words list is its owner's alone). (#258)
 - `test-impact`: the add-on test files a change reaches run as up to four
   steps, one a minute of their past times, and `--jobs` starts the longest
   steps first; restack and ci together, 22 reached files and two add-ons'
@@ -2135,6 +2135,18 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- `ci`'s realdata.py fails a reader whose mirror holds a line longer than one
+  of the kernel's chunks (500 characters), naming the first: the kernel keeps
+  only a line's first 500, and says nothing of the rest. Run on every reader
+  over the demo people's folders, it found clauses before its fix (3 lines on
+  bernadette, 37 on hollis) and no other (#262)
+- `clauses` keeps a sentence longer than one of the kernel's chunks on its
+  source's own lines, a line longer than that cut at a space: a chat export
+  holds no full stops, so its "sentence" ran for pages on one line and the
+  kernel read only its first 500 characters. On the demo people's folders
+  that was 74 passages and 19,047 words never read; now none. A sentence of
+  500 characters or fewer is written as before, and google-privacy's mirrors
+  are the same bytes (#262)
 - `local-model`: the test that no server on the usual ports means 42 no
   longer sends a real question to whatever model runs on this machine; it
   points the usual ports at ones just bound and closed, and asserts 42
@@ -2344,6 +2356,8 @@ says how). The first was v0.1.0.
   tests exit non-zero, so an add-on not yet in `COMMANDS` (or a stray
   uncommitted add-on folder) fails the contract test and marks every mutant
   killed — a false pass CI later exposes as the real survivors. (#50)
+
+<!-- towncrier release notes start -->
 
 ## v0.1.0 · 2026-10-23
 

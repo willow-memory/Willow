@@ -56,7 +56,13 @@ def repo_files(root: Path = ROOT) -> set[str]:
         [git, "ls-files", "--cached", "--others", "--exclude-standard"],
         cwd=root, capture_output=True, text=True, check=True,
     ).stdout  # fmt: skip
-    return {p for p in out.splitlines() if (root / p).is_file()}
+    return {p for p in out.splitlines() if (root / p).is_file() and not fragment(p)}
+
+
+def fragment(p: str) -> bool:
+    """A changelog fragment under changes/: they come and go with every pull
+    request, so the tree lists the folder and its README, not them."""
+    return p.startswith("changes/") and p != "changes/README.md"
 
 
 def plain(n: str) -> str:
