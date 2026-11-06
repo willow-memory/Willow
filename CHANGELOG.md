@@ -2132,6 +2132,18 @@ too. The first release was v0.1.0.
 
 ### Fixed
 
+- `ci`'s realdata.py fails a reader whose mirror holds a line longer than one
+  of the kernel's chunks (500 characters), naming the first: the kernel keeps
+  only a line's first 500, and says nothing of the rest. Run on every reader
+  over the demo people's folders, it found clauses before its fix (3 lines on
+  bernadette, 37 on hollis) and no other (#262)
+- `clauses` keeps a sentence longer than one of the kernel's chunks on its
+  source's own lines, a line longer than that cut at a space: a chat export
+  holds no full stops, so its "sentence" ran for pages on one line and the
+  kernel read only its first 500 characters. On the demo people's folders
+  that was 74 passages and 19,047 words never read; now none. A sentence of
+  500 characters or fewer is written as before, and google-privacy's mirrors
+  are the same bytes (#262)
 - `local-model`: the test that no server on the usual ports means 42 no
   longer sends a real question to whatever model runs on this machine; it
   points the usual ports at ones just bound and closed, and asserts 42
