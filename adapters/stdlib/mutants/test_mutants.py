@@ -7,6 +7,8 @@ from __future__ import annotations
 import importlib.util
 import json
 import shutil
+import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -165,3 +167,31 @@ def test_the_path_insert_index_is_never_broken_and_other_ids_keep_theirs(repo):
     assert {m["id"] for m in mu.mutants("toy")} == {m["id"] for m in got} | {
         m["id"] for m in mu.mutants("toy") if m["line"] == 3
     }  # fmt: skip
+
+
+def test_tests_that_would_pass_the_limit_in_ci_are_too_slow_here():
+    """restack's took 257 s here and 549 s in CI, and every pull request's
+    mutants-reach timed out on them: that pace is caught here."""
+    assert mu.too_slow(257) and not mu.too_slow(65)
+    assert mu.too_slow(241) and not mu.too_slow(240)
+
+
+def test_the_path_insert_index_is_inert_as_scripts_write_it():
+    """sys.path.insert(0, str(ROOT)), its second argument no constant: the 0
+    is the one left unbroken, read from the call's first argument."""
+    tree = mu.ast.parse("import sys\nsys.path.insert(0, str(ROOT))\n")
+    (zero,) = mu.inert(tree)
+    assert zero.value == 0 and zero.col_offset == 16
+
+
+@pytest.mark.parametrize("argv", [["list"], ["list", "a", "b"], ["lst", "a"]])
+def test_list_takes_one_add_on_and_nothing_else_is_listed(argv):
+    got = subprocess.run([sys.executable, str(HERE / "mutants.py"), *argv],
+                         capture_output=True, text=True)  # fmt: skip
+    assert got.returncode == 2 and "usage" in got.stderr
+
+
+def test_list_from_the_command_line_names_each_break():
+    got = subprocess.run([sys.executable, str(HERE / "mutants.py"), "list", "mutants"],
+                         capture_output=True, text=True)  # fmt: skip
+    assert got.returncode == 0 and "adapters/stdlib/mutants/mutants.py:" in got.stdout

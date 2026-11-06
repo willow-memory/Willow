@@ -29,8 +29,12 @@ entry, and says what's left.
    `python adapters/stdlib/ci/files.py write` puts it there.
 5. **The add-on list regenerated**, never edited:
    `python adapters/stdlib/readme/readme.py write`.
-6. **A CHANGELOG.md entry** under `## Unreleased`, opening with the name in
-   backticks, and ending with the pull request's number once it has one.
+6. **Its changelog entry, in a file of its own:**
+   `changes/+<branch>.<kind>.md`, opening with the name in backticks
+   ([changes/README.md](../../changes/README.md) says how). Never in
+   CHANGELOG.md itself: every pull request editing the same lines there is
+   what left each merge conflicting with all the others. create_pr.py
+   names the file for the pull request.
 7. **Mutants**: `python adapters/stdlib/mutants/mutants.py run NAME` must
    kill every break. CI makes the six lowest-id breaks, and an entry in
    `adapters/stdlib/mutants/accepted.json` for a break those six don't

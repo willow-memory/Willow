@@ -92,7 +92,8 @@ that should now pass.
 - **A pull request.** Open it with
   `python adapters/stdlib/github/create_pr.py`, and leave the checkout alone
   while it runs. When main moves under a branch, regenerate what is made
-  (`python adapters/stdlib/ci/made.py write`) and merge CHANGELOG.md by hand.
+  (`python adapters/stdlib/ci/made.py write`); a changelog fragment never
+  conflicts.
   [docs/agents/pull-requests.md](docs/agents/pull-requests.md), with a new CI
   row.
 - **Search.** The kernel's rank is for answering; pointing at where to look

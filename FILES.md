@@ -1859,5 +1859,8 @@ willow/
 ├── .gitattributes            every file checked out with LF line endings, on every system
 ├── .editorconfig             the same line endings and indents, for editors
 ├── ruff.toml                 lint settings
-└── LICENSE                   Apache-2.0
+├── LICENSE                   Apache-2.0
+├── changes/
+│   └── README.md             Changes not yet released
+└── towncrier.toml            each pull request's changelog fragment in changes/, folded into CHANGELOG.md at a release
 ```
