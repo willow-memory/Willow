@@ -198,3 +198,17 @@ def test_a_missing_folder_and_nested_folders_are_refused(tmp_path):
     for to in (tmp_path / "src" / "out", tmp_path / "src", tmp_path):
         got = run("mirror", "--from", str(tmp_path / "src"), "--to", str(to))
         assert got.returncode == kernel.REFUSED and "inside one another" in got.stderr
+
+
+def test_a_tight_passage_gives_the_prose_after_half_the_room_left():
+    eq = "q = " + " + ".join(["x"] * 90)  # long math, no symbol the paper defines
+    after = " ".join(["word"] * 60)  # no sentence end: cut on a word
+    paper = (
+        rb"\begin{document} Before it comes a sentence. \[ " + eq.encode()
+        + rb" \] " + after.encode() + rb" \end{document}"
+    )  # fmt: skip
+    (p,) = mod.passages(paper, "x.tex", {})
+    head, *_, last = p.split("\n")
+    room = kernel.MAX_CHUNK - len(head) - len(eq) - 5
+    assert last.startswith("word") and room // 2 - 5 < len(last) <= room // 2
+    assert len(p) <= kernel.MAX_CHUNK
