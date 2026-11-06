@@ -35,7 +35,18 @@ README = ROOT / "README.md"
 FILES = ROOT / "FILES.md"
 
 
+_FILES: dict[Path, frozenset[str]] = {}
+
+
 def repo_files() -> set[str]:
+    """git's list of the repo's files, asked once a run (it was asked once a
+    doc, and the path check took 56 of test_docs.py's 61 seconds)."""
+    if ROOT not in _FILES:
+        _FILES[ROOT] = frozenset(_ask_git())
+    return set(_FILES[ROOT])
+
+
+def _ask_git() -> set[str]:
     git = shutil.which("git")
     if git is None or not (ROOT / ".git").exists():
         pytest.fail(
@@ -100,8 +111,14 @@ def tree(doc: Path = FILES, heading: str = "# Every file") -> tuple[set[str], se
 
 
 def test_the_tree_lists_every_file_and_nothing_else():
+    """Every file but the changelog fragments under changes/, which come and
+    go with each pull request: the tree lists that folder and its README."""
     listed, _ = tree()
-    actual = repo_files()
+    actual = {
+        p
+        for p in repo_files()
+        if not p.startswith("changes/") or p == "changes/README.md"
+    }
     missing, extra = sorted(actual - listed), sorted(listed - actual)
     assert not missing and not extra, (
         f"FILES.md's tree is out of date.\n  in the repo, not the tree: {missing}"
@@ -206,11 +223,9 @@ def named_paths(doc: Path) -> list[tuple[str, Path]]:
     files = repo_files()
     here = doc.parent.relative_to(ROOT)
     top = {p.split("/")[0] for p in files}
-    local = {
-        Path(p).relative_to(here).parts[0]
-        for p in files
-        if here == Path(".") or Path(p).is_relative_to(here)
-    }
+    # by string, as Path(p).relative_to(here) read it: every file under here
+    under = "" if here == Path(".") else here.as_posix() + "/"
+    local = {p[len(under) :].split("/")[0] for p in files if p.startswith(under)}
     in_demo = here.parts[:1] == ("demo",)
     out = []
     for target in LINK.findall(text):
@@ -225,10 +240,17 @@ def named_paths(doc: Path) -> list[tuple[str, Path]]:
     return out
 
 
+_KNOWN: dict[frozenset, set[str]] = {}
+
+
 def exists(name: str, base: Path, files: set[str]) -> bool:
     """The name, from the doc's folder or from the repo root, is a file or
-    folder of the repo (a glob matches at least one)."""
-    known = files | dirs_of(files) | {"."}
+    folder of the repo (a glob matches at least one). The files and folders
+    are gathered once for a set of files, not once a name."""
+    key = frozenset(files)
+    if key not in _KNOWN:
+        _KNOWN[key] = files | dirs_of(files) | {"."}
+    known = _KNOWN[key]
     for start in (base, ROOT):
         rel = (start / name.rstrip("/")).resolve()
         if not rel.is_relative_to(ROOT):

@@ -2,59 +2,23 @@
 
 What changed, newest first, by the pull request that changed it, under
 Added, Changed, Fixed and Removed. A fix names what it fixes: a known bug
-from [BUGS.md](BUGS.md) as `bug #N`, or a security report. A release turns
-`Unreleased` into `vX.Y.Z · YYYY-MM-DD` ([CONTRIBUTING.md](CONTRIBUTING.md)
-says how). The first was v0.1.0.
+from [BUGS.md](BUGS.md) as `bug #N`, or a security report. A pull request
+writes its entry in a file of its own under [changes/](changes/README.md),
+never here, so no two conflict; a release folds them in with towncrier as
+`vX.Y.Z · YYYY-MM-DD` ([CONTRIBUTING.md](CONTRIBUTING.md) says how). The
+entries under Unreleased came before that, and the next release takes them
+too. The first release was v0.1.0.
 
 ## Unreleased
 
 ### Added
 
-- The suggestions contract's where takes `via NAME` beside `at URL` and `in
-  this process`, for a program that asks the model and names no address (llm,
-  MCP sampling), read only with its settings after it; sent-log says such a
-  claim's place is not said, never this machine
-- `model-drift` freezes the settings it asked at, as the suggestions contract
-  says them, and `again` asks at the frozen ones: `freeze --reasoning` asks a
-  thinking model at a level, and a level is never read as drift. A file frozen
-  before is read as temperature 0, seed 0 and no reasoning, which it was asked
-  at; settings it can't ask at flag nothing (42)
-- `night-batch` keeps the suggestions contract (its card says `output:
-  suggestions`, and test_contract.py asks it of a stand-in model), and takes
-  `--reasoning` for each ask, refused before the first when it isn't one of
-  local-model's
-- `translate`, `sort-ask`: `--reasoning none|low|medium|high`, as
-  openai-compatible takes it: the request's `reasoning_effort`, and the claim
-  says it; without it the request names no reasoning, and any other value is
-  refused before anything is asked
-- `assistant-scores`: how often each assistant's suggestions were sealed,
-  declined or still wait, from the record. An assistant is who, where and
-  its settings together, read by the suggestions contract's `read_claim`, so
-  one model at two reasoning levels is two rows; a claim naming no
-  assistant, or a proposal file that isn't the bytes proposed, is said, never
-  guessed at. A seal or a No counts only while the kernel's proof of it holds.
-  It prints a report and writes nothing
-- The suggestions contract (`adapters/stdlib/ci/README.md`): an add-on that
-  proposes a model's reply for your seal says in its claim who answered,
-  where, at what settings and what it did, in one form: `gemma at URL
-  (temperature 0, seed 0, reasoning low) answered from 1 of the 2 passages
-  served`. A card says `output: suggestions` (`readme` takes `report,
-  suggestions` too, and `stack` still finds a report among them);
-  openai-compatible's `claim()` writes it and `read_claim()` reads it, a claim
-  from before the settings were said too. openai-compatible, local-model,
-  translate, sort-ask and in-process keep it, saying the reasoning when asked
-  for and a `--system` voice and in-process's weights by SHA-256; before, two
-  suggestions asked at different reasoning read the same on the record.
-  sent-log reads every proposer's claim through it and says what each was
-  asked at, where it named only openai-compatible's; test_contract.py asks
-  each stdlib one of a stand-in model and holds its claim to the form
-- `openai-compatible`, `local-model`, `same-way`: `--reasoning
-  none|low|medium|high` sets the request's `reasoning_effort`, so a thinking
-  model (qwen3) can be asked not to think; without it the request is byte for
-  byte the one sent before. Measured on Ollama 0.40.14's OpenAI endpoint,
-  `none` stopped qwen3:8b's thinking where "/no_think" in a system file and
-  `think: false` didn't. `same-way` also takes `--system FILE`, as
-  openai-compatible's ask does, so it asks exactly the chat local-model asks (#259)
+- `llm-cli`: suggestions through Simon Willison's `llm` command — bite first,
+  only served passages go to the model any of its plugins reach, propose a
+  cited reply; llm's log names the model (#253)
+- `hooks-elsewhere` refuses `--host cursor`: Cursor's `beforeSubmitPrompt`
+  can only continue or block a prompt, never inject passages; the card and
+  `hosts` point at the `cursor` MCP add-on instead (#252)
 - `hooks-elsewhere` `setup --host opencode` prints a native OpenCode plugin
   (save as `<.opencode/plugins/willow-passages.js>`) that injects Claude's
   framed passages as synthetic text, and still offers the Claude-compatible
@@ -1899,17 +1863,25 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- test_docs.py asks git for the repo's files once a run, not once a doc: 61 s
+  to 5 s, the same answers for every doc; restack's tests, which run it three
+  times in a scratch copy, 4:17 to 1:05, so restack's mutants no longer time
+  out at 600 s in CI's mutants-reach (#261)
 - `mcp-lite`: parse a propose refusal with `partition` instead of a maxsplit
   `split`, so the accepted inert mutant is gone (same as `mcp-sampling`) (#257)
 
 ### Changed
 
-- `sort-ask` asks through openai-compatible's `ask_model`, which takes a
-  `seed`, rather than a copy of its own: one request to change, as #259's
-  `--reasoning` had to be put into both. Its seed is still 7, so its answers
-  are the ones it gave; it now waits up to fifteen minutes, as
-  openai-compatible does, rather than ten, and sends `OPENAI_API_KEY` when
-  it's set, to the server on this machine it already only asks
+- `ci`'s test-times.json made from main's own CI run by `times.py write --run
+  latest`: 17 test files it lacked are in, share's at 175 s, and 20 others
+  moved by half or more, so the tests:adapters chunks are even again (#256)
+- `AGENTS.md` is a third as long: what every agent needs before a change (the
+  Never list, set up, what to run after a change), and a paragraph a job
+  pointing at its page in `docs/agents/`: add-ons, studies, pull requests,
+  searching. Every rule moved, none changed; four lessons added where they
+  belong (leave the checkout alone while create_pr.py runs; a dry run that
+  serves nothing tests nothing after the kernel; the kernel's echo rule,
+  exactly; a box's words list is its owner's alone). (#258)
 - `test-impact`: the add-on test files a change reaches run as up to four
   steps, one a minute of their past times, and `--jobs` starts the longest
   steps first; restack and ci together, 22 reached files and two add-ons'
@@ -2163,6 +2135,18 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- `ci`'s realdata.py fails a reader whose mirror holds a line longer than one
+  of the kernel's chunks (500 characters), naming the first: the kernel keeps
+  only a line's first 500, and says nothing of the rest. Run on every reader
+  over the demo people's folders, it found clauses before its fix (3 lines on
+  bernadette, 37 on hollis) and no other (#262)
+- `clauses` keeps a sentence longer than one of the kernel's chunks on its
+  source's own lines, a line longer than that cut at a space: a chat export
+  holds no full stops, so its "sentence" ran for pages on one line and the
+  kernel read only its first 500 characters. On the demo people's folders
+  that was 74 passages and 19,047 words never read; now none. A sentence of
+  500 characters or fewer is written as before, and google-privacy's mirrors
+  are the same bytes (#262)
 - `local-model`: the test that no server on the usual ports means 42 no
   longer sends a real question to whatever model runs on this machine; it
   points the usual ports at ones just bound and closed, and asserts 42
@@ -2372,6 +2356,8 @@ says how). The first was v0.1.0.
   tests exit non-zero, so an add-on not yet in `COMMANDS` (or a stray
   uncommitted add-on folder) fails the contract test and marks every mutant
   killed — a false pass CI later exposes as the real survivors. (#50)
+
+<!-- towncrier release notes start -->
 
 ## v0.1.0 · 2026-10-23
 
