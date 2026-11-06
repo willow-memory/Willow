@@ -1714,6 +1714,29 @@ willow/
 │   │   │   └── null/
 │   │   │       └── null.txt  fifty questions with nothing to do with security, written with no input
 │   │   └── test_known_gaps.py  holds the frozen files to their hashes, and the tools to their word
+│   ├── markets-2026-11-05/   a broad equities and macro pile from public sources: SEC EDGAR, FRED, Treasury, the Fed, CBOE, Fama-French, IMF, World Bank, ECB, OECD
+│   │   ├── README.md         what's in the pile, what isn't and why, and how it's kept honest
+│   │   ├── fetch.py          saves 944 sources into a pile once (SEC EDGAR only with --contact), sets error bodies aside, and checks them offline
+│   │   ├── mirror.py         the pile as text the kernel searches, each reader's part, over-long files cut into parts
+│   │   ├── sources.json      each source fetched, with its address, size and SHA-256, and what failed
+│   │   └── test_markets.py   holds what fetch.py froze, and the parts that need no network, to the README
+│   ├── money-hour/           four people from the other demos at one table, every market figure they repeat held to the real record
+│   │   ├── README.md         the claim, what the record says, how it runs, run 1's results and its one failure
+│   │   ├── CHARACTER.md      Teo, Bernie, Hollis and Marisol, where each comes from, and what each keeps
+│   │   ├── PLANTED.md        every fact, trap and wager in their files, with the source each is held to
+│   │   ├── FROZEN.json       the SHA-256 of the rules, the lines, the runner, the stacks and the themes, freeze by freeze
+│   │   ├── questions.json    the frozen lines, the slice of the markets mirror, and every rule
+│   │   ├── make_life.py      the four folders, real-world lines only from questions.json; --check holds them to it
+│   │   ├── money-hour.md     Teo's stack for her own box: said, people, amounts, coming-up, todo, digest, history
+│   │   ├── fed.md            the Fed desk's stack: first-mention, who voted against, every decision ranked
+│   │   ├── filings.md        the filings desk's stack: sort by Hollis's themes, buybacks, the funds rate in the 10-Ks
+│   │   ├── themes.txt        Hollis's themes for the 10-Ks, as sort reads them
+│   │   ├── run.py            the slice, five boxes, every rule judged by its own add-on; stops at each person's seal
+│   │   ├── test_money_hour.py holds the frozen files, and the parts that need no mirror, to their word
+│   │   └── results/
+│   │       ├── run-1.json    every outcome of run 1, places and verdicts, never a source's words
+│   │       ├── run-2.json    every outcome of run 2, freeze 2's desks, letter, themes and stacks added
+│   │       └── run-3.json    every outcome of run 3, after pair-drift's fix: every rule held
 │   ├── novelty.py           the reusable novelty check: have these pieces been put together before?
 │   ├── odile/                piano tuner and beekeeper, caring for her father
 │   │   ├── make_life.py      writes her files into life/, the same bytes every run
