@@ -484,6 +484,7 @@ steps, hit rule, seeds, rankers and bars.
   ceiling; notation's glossaries on these papers (its card quotes some);
   that on these 13 arXiv sources 1,303 of 1,394 equations get a symbols
   line. Not known: anything any ranker serves from the notation pile.
+- **Frozen in [FROZEN-4.json](FROZEN-4.json)**, in commit 8722825, alone.
 - **Dry run** (2026-11-06): all 49 questions as nonsense, pipeline then
   union, on the notation pile: every rule tallied at 0, R3, R4, R9 and R10
   satisfied, twelve rows named `percus-yevick:dry:notation:`, which verify.
