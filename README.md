@@ -316,7 +316,7 @@ willow/
 ├── ports/                    kernel.py rewritten in other languages
 ├── vectors/                  what keeps the six implementations identical
 ├── demo/                     four made-up people, and one real bug, to try it on
-├── docs/                     the full first five minutes, and how it works in full
+├── docs/                     the full first five minutes, how it works in full, and agents' how-tos
 ├── .github/                  CI, the issue forms, the pull request template: the GitHub add-on's
 ├── .gitignore                generated files and build output
 ├── .gitattributes            every file checked out with LF line endings, on every system
