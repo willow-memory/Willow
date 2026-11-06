@@ -710,6 +710,10 @@ willow/
 │   │   │   ├── server.py         the mcp add-on's three tools, the protocol by hand, nothing to install
 │   │   │   ├── test_server.py
 │   │   │   └── README.md
+│   │   ├── mcp-sampling/
+│   │   │   ├── mcp_sampling.py Suggestions from whatever model your MCP client already runs, asked through MCP sampling, so willow needs no model or key of its own
+│   │   │   ├── test_mcp_sampling.py
+│   │   │   └── README.md     its card
 │   │   ├── mediawiki/
 │   │   │   ├── mediawiki.py   a MediaWiki dump as plain text, page by page
 │   │   │   ├── test_mediawiki.py
