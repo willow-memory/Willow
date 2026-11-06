@@ -141,3 +141,8 @@ def test_nothing_is_42_and_refusals(tmp_path):
         assert run(SCRIPT, *argv).returncode == 2, argv
     assert "mood.py" in run(SCRIPT).stderr
     assert "not a kernel box" in run(SCRIPT, "--box", str(tmp_path)).stderr
+
+
+def test_a_score_out_of_one_is_read_and_out_of_nothing_is_not():
+    assert md.score_of("mood 1/1") == 10 and md.score_of("mood 0.5 out of 1") == 5
+    assert md.score_of("mood 0/0") is None

@@ -19,14 +19,14 @@ is written: `no-install` or `needs-install`; `offline`, `this-machine` or
 tag its author chose, if any. *near* names the three add-ons closest to it.
 
 <!-- willow:pools -->
-`████████████░░░░░░░░` **324 of 522 built** · 470 need no install · 52 need one
+`████████████░░░░░░░░` **324 of 523 built** · 471 need no install · 52 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
 | Reading more kinds of files | 92 | 29 | 113 | 8 |
 | Finding things | 32 | 16 | 38 | 10 |
 | Your own words | 19 | 7 | 23 | 3 |
-| Keeping track | 40 | 16 | 56 | 0 |
+| Keeping track | 40 | 17 | 57 | 0 |
 | Trust and proof | 32 | 22 | 45 | 9 |
 | Privacy and safety | 13 | 3 | 16 | 0 |
 | Assistants | 40 | 32 | 64 | 8 |
@@ -311,9 +311,9 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**digest**](adapters/stdlib/digest/) — One page of what your folder needs from you: suggestions waiting, approvals gone stale, dates coming up, questions that keep finding nothing. *bot* `no-install` `offline` `waiting` `coming` `everyday` · near: hook-start, hook-compact, renewals
 - [**flashcards**](adapters/stdlib/flashcards/) — Approved question-and-answer pairs become cards, scheduled by spaced repetition. *box* `no-install` `offline` · near: jeles, ask-later, hook-compact
 - [**foia**](adapters/stdlib/foia/) — Freedom-of-information requests: what you asked, when, and when the answer is due by law. Uses habits. *new* `no-install` `offline` `due` · near: home-upkeep, subscriptions, mood
-- **food-log** (idea) — What you ate, from your notes, by day. *new* `no-install` `offline` `log` · near: gaps, baby-log, reading-log
+- [**food-log**](adapters/stdlib/food-log/) — What you ate, from your notes, by day. Uses habits, log-kit. *new* `no-install` `offline` `log` · near: log-kit, gaps, sent-log
 - [**forecasts**](adapters/stdlib/forecasts/) — Write a prediction before the outcome, settle it later with your seal, see your Brier score. *bot* `no-install` `offline` `brier` `forecast` · near: market-calls, predict, weather-bet
-- [**gaps**](adapters/stdlib/gaps/) — Where a log you keep stops: the days a daily note, reading or diary skipped, said as gaps, not left out. *new* `no-install` `offline` `gaps` `daily` `journal` · near: on-this-day, folder-card, serve
+- [**gaps**](adapters/stdlib/gaps/) — Where a log you keep stops: the days a daily note, reading or diary skipped, said as gaps, not left out. *new* `no-install` `offline` `gaps` `daily` `journal` · near: folder-card, on-this-day, serve
 - [**garden**](adapters/stdlib/garden/) — What you planted, where and when, and how it did, season by season. Uses habits. *new* `no-install` `offline` · near: home-upkeep, pets, mileage
 - **gifts** (idea) — Gifts given and received, and who likes what, so nobody gets the same scarf twice. *new* `no-install` `offline` `twice` · near: hook-replay, repro, daily-word
 - [**gradebook**](adapters/stdlib/gradebook/) — A teacher's gradebook, kept on this machine: each student's marks by assignment, and who is falling behind. Uses habits. *new* `no-install` `offline` `assignments` · near: syllabus, attendance, reading-log
@@ -328,11 +328,12 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**lending**](adapters/stdlib/lending/) — Things you lent, to whom and when, and which are still out. *new* `no-install` `offline` · near: on-this-day, xref, licenses
 - [**lesson-time**](adapters/stdlib/lesson-time/) — Lesson plans whose timed parts don't add up to the time the plan says it takes, each part's minutes shown beside the total. *new* `no-install` `offline` `lesson` `plan` `teaching` · near: test-impact, make-it-so, my-lessons
 - [**livestock**](adapters/stdlib/livestock/) — Each animal's births, treatments and sales, from your farm records. Uses habits. *new* `no-install` `offline` `paths` · near: calendar-out, hook-impact, habits
+- [**log-kit**](adapters/stdlib/log-kit/) — The engine the logs share: your notes' dated lines, read by a short spec of words, numbers and a period, so a new log is a spec, not a program. Uses habits. *new* `no-install` `offline` `log` `share` · near: food-log, logs, on-this-day
 - [**market-calls**](adapters/stdlib/market-calls/) — Market calls kept as wagers on the record ('SPY closes up on Friday'), settled later by your seal, with the losers kept. Uses forecasts. *bot* `no-install` `offline` `settled` `calls` · near: forecasts, predict, car
 - [**mileage**](adapters/stdlib/mileage/) — Miles driven for work, from your trips and notes, totalled for a tax year. Uses habits. *new* `no-install` `offline` `tax` `work` · near: garden, home-upkeep, subscriptions
 - [**milestones**](adapters/stdlib/milestones/) — Your child's firsts, words and heights, from your notes, by age. Uses habits. *new* `no-install` `offline` `child` · near: baby-log, syllabus, reading-log
 - [**minutes**](adapters/stdlib/minutes/) — Meeting minutes: who decided what and when, and which actions are still open. Uses habits. *new* `no-install` `offline` `minutes` `due` · near: syllabus, foia, symptoms
-- [**mood**](adapters/stdlib/mood/) — Mood scores you write in a journal, over weeks and months. Uses habits. *new* `no-install` `offline` `week` · near: job-hunt, symptoms, foia
+- [**mood**](adapters/stdlib/mood/) — Mood scores you write in a journal, over weeks and months. Uses habits, log-kit. *new* `no-install` `offline` `week` · near: job-hunt, symptoms, foia
 - [**nightstand**](adapters/stdlib/nightstand/) — Set heavy things down at night and pick up just one small next step in the morning: at most one thing in hand, and nothing ever deleted. *new* `no-install` `offline` `step` · near: start, all, game-master
 - [**pets**](adapters/stdlib/pets/) — Each pet's vet visits, vaccines and medicines, from your records: what's due next. Uses car. *new* `no-install` `offline` `due` · near: home-upkeep, car, garden
 - [**policy-watch**](adapters/stdlib/policy-watch/) — A terms or policy page fetched each time you run it, by snapshot, and what changed since last time, sentence by sentence, by clauses. Uses clauses, snapshot. Goes online: the page you name, fetched each time you run it. *new* `no-install` `online` `snapshot` `clauses` `policies` · near: snapshot, clauses, wayback
@@ -426,7 +427,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - [**secrets-audit**](adapters/stdlib/secrets-audit/) — Finds passwords, keys and card numbers sitting in plain files, by file and line, never showing the value. Uses privacy. *bot* `no-install` `offline` `numbers` `key` `everyday` · near: pii-audit, xref, hook-leaks
 - [**sent-log**](adapters/stdlib/sent-log/) — Which of your passages went to which online model, read from the record by model card: what left this machine and where to. Uses openai-compatible. *new* `no-install` `offline` `left` `log` · near: cite-honesty, gaps, model-card
 - **student-records** (idea) — A box of student records that answers only the teacher who owns it, and logs every look. *new* `no-install` `offline` `student` `log` · near: kids, ci-why, export
-- [**transcript-redact**](adapters/stdlib/transcript-redact/) — An agent transcript with keys, home paths and emails taken out before you share it, each removal listed by line. Uses privacy. *new* `no-install` `offline` `agent` `share` · near: scrub, agent-transcript, agents-md-check
+- [**transcript-redact**](adapters/stdlib/transcript-redact/) — An agent transcript with keys, home paths and emails taken out before you share it, each removal listed by line. Uses privacy. *new* `no-install` `offline` `agent` `transcript` · near: scrub, agent-transcript, agents-md-check
 - [**typosquat**](adapters/stdlib/typosquat/) — Dependency names a letter off from a popular one (reqeusts, lodahs), checked against a list of top packages you downloaded. Uses advisories. *new* `no-install` `offline` `dependency` `package` · near: outdated, claim-check, advisories
 
 ## Assistants
@@ -538,7 +539,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - [**print**](adapters/stdlib/print/) — An answer as a printable page with its sources, to take to an appointment; --large for big, high-contrast type. *new* `no-install` `offline` `prints` `everyday` · near: web-pages, pipe, across
 - **qr** (idea) — An answer as a QR code on screen, to carry it to your phone without the network. *new* `no-install` `offline` `screen` `phone` · near: scrub, a11y-check, code-first
 - [**repo-pile**](adapters/stdlib/repo-pile/) — Public repositories you list, cloned and made askable, keeping only those under a licence an Apache-2.0 project can use. Uses again, backup, changed, digest, export, history, privacy, quote-check, scan, secrets-audit, stale, todo, xref. Goes online: github.com (or the --source you give), to clone the repositories you list. *new* `no-install` `online` `project` `repo` `research` · near: upstream-desk, pile-build, pile-serve
-- [**rss-out**](adapters/stdlib/rss-out/) — New approved answers as an RSS feed file, for any feed reader. *new* `no-install` `offline` `feed` · near: annotations, opml, in-toto
+- [**rss-out**](adapters/stdlib/rss-out/) — New approved answers as an RSS feed file, for any feed reader. *new* `no-install` `offline` `feed` · near: annotations, in-toto, opml
 - **safe-app** (idea) — willow as a SAFE app: installed from the SAFE App Store, authorized per session, and deleted clean. *new* `no-install` `offline` `store` `session` · near: vectors, memory-import, session-cost
 - [**share**](adapters/stdlib/share/) — Sealed answers sent to someone, checkable by them and by whoever they pass them on to, without giving anyone the folder. *new* `no-install` `offline` `sent` · near: kart, invoices, pgp
 - [**shell**](adapters/stdlib/shell/) — A willow command and tab completion for bash, zsh, fish and PowerShell, on Linux, macOS and Windows. *new* `no-install` `offline` `shell` `bash` · near: pipe, shell-history, hook-shell
