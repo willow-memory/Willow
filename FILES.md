@@ -247,6 +247,8 @@ willow/
 │   │   │   ├── test_realdata.py  realdata.py's tests: a run per person, a traceback fails, a refusal holds
 │   │   │   ├── test_times.py  times.py's tests: JUnit summed by file, unseen kept, gone dropped
 │   │   │   ├── times.py      test-times.json kept to what CI's own run took, by a script
+│   │   │   ├── mirrors.py    the mirror contract, checked
+│   │   │   ├── test_mirrors.py
 │   │   │   └── README.md     its card: gates, states, the guard and exit codes
 │   │   ├── ci-cache/
 │   │   │   ├── ci_cache.py    a cache key per ecosystem from a repo's lockfiles, so CI skips the reinstall
