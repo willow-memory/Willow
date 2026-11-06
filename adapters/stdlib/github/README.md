@@ -3,7 +3,7 @@ section: For maintainers
 line: What willow's repo needs from GitHub, kept in one folder so it can be taken away.
 source: box
 added: 2026-10-23
-writes: CHANGELOG.md
+writes: CHANGELOG.md, changes/*
 network: GitHub, through gh, to read the author of a pull request a security report points to, and for create_pr.py to list the open pull requests and open yours
 role: repo
 uses: ci, readme, stack, restack, test-impact, against
@@ -26,8 +26,9 @@ kernel and every other add-on run and test the same without it.
 | [create_pr.py](create_pr.py) | this branch's pull request, opened by the steps in [create_pr.md](create_pr.md); see below |
 | `.github/` | GitHub reads it only at the repo's root, so it lives there, but it belongs to this folder and `check` holds it |
 
-**Opening a pull request.** Commit the change, its CHANGELOG.md entry with
-it, then run `create_pr.py`. It runs [create_pr.md](create_pr.md), a
+**Opening a pull request.** Commit the change, its changelog fragment with
+it (`changes/+BRANCH.KIND.md`, [changes/README.md](../../../changes/README.md)),
+then run `create_pr.py`. It runs [create_pr.md](create_pr.md), a
 [stack](../stack/) of the repo's own add-ons, in order: `restack` brings
 main in, [made.py](../ci/made.py) makes again every file a script makes, `ci` lints,
 `test-impact` runs the gates the change reaches (when it reaches
@@ -47,7 +48,8 @@ this branch), writes its number into the entry, runs
   it looks for the pull request, which an error answer can still have made. A 42 that owes nothing (no other pull request to hold it to, no add-on a person runs to try on real data,
   a gate whose tool isn't here) is said in the pull request instead.
 - **Never:** rebase, amend or force-push, approve or merge, or write a file
-  but CHANGELOG.md's number.
+  but the changelog fragment's name (or an older entry's number in
+  CHANGELOG.md).
 
 **Taking it away.** Delete this folder and `.github/`. `test_strip.py`, at
 the repo's root, shows that what's left still passes every test that

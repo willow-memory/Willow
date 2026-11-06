@@ -103,8 +103,11 @@ entry, and says what's left.
    `python adapters/stdlib/ci/files.py write` puts it there.
 5. **The add-on list regenerated**, never edited:
    `python adapters/stdlib/readme/readme.py write`.
-6. **A CHANGELOG.md entry** under `## Unreleased`, opening with the name in
-   backticks, and ending with the pull request's number once it has one.
+6. **Its changelog entry, in a file of its own:** `changes/+BRANCH.KIND.md`
+   (towncrier's shape, [changes/README.md](changes/README.md)), opening with
+   the name in backticks. Never in CHANGELOG.md itself: every pull request
+   editing the same lines there is what left each merge conflicting with
+   all the others. create_pr.py names the file for the pull request.
 7. **Mutants**: `python adapters/stdlib/mutants/mutants.py run NAME` must
    kill every break. CI makes the six lowest-id breaks, and an entry in
    `adapters/stdlib/mutants/accepted.json` for a break those six don't
@@ -247,10 +250,10 @@ A result tested against what anyone can rerun, as in
 - **Several sessions can share a branch.** Fetch before you push, merge
   what's new, and never force-push.
 - **Merging makes a merge commit**; squash isn't allowed on this repo.
-- **Branch from `main`; open it, add its number to CHANGELOG.md, and push
-  once.** Another pull request may take the number you guessed, so write the
-  real one, and do it in that one push: each push starts every check, and the
-  first run should not be thrown away.
+- **Branch from `main`; open it, name its changelog fragment for it, and
+  push once.** Another pull request may take the number you guessed, so
+  use the real one, and do it in that one push: each push starts every
+  check, and the first run should not be thrown away. create_pr.py does it.
 - **Don't stack on the open pull requests by habit.** CI's `against` job
   holds yours to them: a duplicate (a name both add) fails it; a collision
   names the pull request to merge first. Stack only on one it names, merge
@@ -275,5 +278,5 @@ A result tested against what anyone can rerun, as in
 Merge or rebase, then regenerate rather than hand-merge what is generated:
 `python adapters/stdlib/ci/made.py write` makes every made file again
 (ADDONS.md and the README's add-on sections, BUGS.md, FILES.md, the lists
-kept A to Z, craft-assembly's report). CHANGELOG.md is merged by hand: both
-sides' lines, in their order.
+kept A to Z, craft-assembly's report). A changelog fragment is a file no
+other branch writes, so it never conflicts.

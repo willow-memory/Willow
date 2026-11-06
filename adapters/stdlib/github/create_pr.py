@@ -5,12 +5,15 @@ own add-ons, stopping only where a person is needed. Python 3.9+.
                                                [--footer TEXT] [--repo OWNER/NAME]
                                                [--steps FILE]
 
-Commit your change, with its CHANGELOG.md entry, then run it. The steps are
+Commit your change, with its changelog entry (changes/+BRANCH.KIND.md,
+changes/README.md says how), then run it. The steps are
 create_pr.md beside it (`--steps` names another): a stack, the same file
 the stack add-on reads, run in order rather than composed, stopping at the
 first step that doesn't come back clean. Then it pushes the branch, opens
-the pull request (or finds the one already open for it), writes its number
-into the entry, pushes again, and runs the steps that need the number.
+the pull request (or finds the one already open for it), names its
+changelog fragment for it (changes/+BRANCH.KIND.md to changes/N.KIND.md; or
+writes the number into an entry in CHANGELOG.md, the older way), pushes
+again, and runs the steps that need the number.
 
 The pull request's body is the template's four sections, made from what is
 here: the commits' messages; each add-on touched and its card's promises;
@@ -195,6 +198,33 @@ def changed(base: str) -> list[str]:
 def owes_an_entry(base: str) -> bool:
     """Anything beyond Markdown and CITATION.cff owes one, as changelog.py says."""
     return any(not f.endswith(".md") and f != "CITATION.cff" for f in changed(base))
+
+
+def new_fragments(base: str) -> list[str]:
+    """The changelog fragments this branch added under changes/, towncrier's
+    shape (changes/README.md), that are there now."""
+    log = load("willow_changelog_for_create_pr", STDLIB / "ci" / "changelog.py")
+    return [f for f in changed(base) if log.FRAGMENT.match(f) and (ROOT / f).is_file()]
+
+
+def name_fragments(base: str, number: int) -> list[str]:
+    """Each `+BRANCH.KIND.md` fragment this branch added, renamed for the pull
+    request, `N.KIND.md` (`.1`, `.2` when a kind is there already): towncrier
+    writes `(#N)` from the name. The new names."""
+    log = load("willow_changelog_for_create_pr", STDLIB / "ci" / "changelog.py")
+    out = []
+    for rel in new_fragments(base):
+        m = log.FRAGMENT.match(rel)
+        if not m.group(1).startswith("+"):
+            continue
+        kind, k = m.group(2), 0
+        new = f"changes/{number}.{kind}.md"
+        while (ROOT / new).exists():
+            k += 1
+            new = f"changes/{number}.{kind}.{k}.md"
+        git("mv", rel, new)
+        out.append(new)
+    return out
 
 
 def new_entries(base: str) -> list[tuple[int, int]]:
@@ -418,9 +448,10 @@ def create(opts: dict) -> int:
     base = f"origin/{base_name}"
     if git("rev-list", "--count", f"{base}..HEAD") == "0":
         raise Refused(f"{branch} holds nothing {base} doesn't: nothing to open")
-    if owes_an_entry(base) and not new_entries(base):
-        raise Stop("CHANGELOG.md has no new entry under ## Unreleased: write one"
-                   " (Added, Changed, Fixed or Removed), commit it, run this again")  # fmt: skip
+    if owes_an_entry(base) and not new_fragments(base) and not new_entries(base):
+        raise Stop("no changelog entry: write it in changes/+BRANCH.KIND.md"
+                   " (changes/README.md says how; KIND added, changed, fixed or"
+                   " removed), commit it, run this again")  # fmt: skip
 
     prs = open_prs(slug)
     mine = next((p for p in prs if p["head"]["ref"] == branch and p["head"]["repo"]["full_name"] == slug), None)  # fmt: skip
@@ -471,10 +502,20 @@ def create(opts: dict) -> int:
             )
         number = int(mine["number"])
 
-        if write_number(base, number):
-            git("add", "CHANGELOG.md")
+        named = name_fragments(base, number)
+        wrote = write_number(base, number)
+        if named or wrote:
+            git(
+                "add",
+                "-A",
+                *(["changes"] if named else []),
+                *(["CHANGELOG.md"] if wrote else []),
+            )
             git("commit", "-q", "-m", f"changelog: its number (#{number})")
-            print(f"wrote #{number} into its changelog entry")
+            for new in named:
+                print(f"named its changelog fragment {new}")
+            if wrote:
+                print(f"wrote #{number} into its changelog entry")
         fields["pr"] = number
         for heading, ss in pools:
             if heading == AFTER:

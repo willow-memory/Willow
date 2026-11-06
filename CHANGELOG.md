@@ -2,9 +2,12 @@
 
 What changed, newest first, by the pull request that changed it, under
 Added, Changed, Fixed and Removed. A fix names what it fixes: a known bug
-from [BUGS.md](BUGS.md) as `bug #N`, or a security report. A release turns
-`Unreleased` into `vX.Y.Z · YYYY-MM-DD` ([CONTRIBUTING.md](CONTRIBUTING.md)
-says how). The first was v0.1.0.
+from [BUGS.md](BUGS.md) as `bug #N`, or a security report. A pull request
+writes its entry in a file of its own under [changes/](changes/README.md),
+never here, so no two conflict; a release folds them in with towncrier as
+`vX.Y.Z · YYYY-MM-DD` ([CONTRIBUTING.md](CONTRIBUTING.md) says how). The
+entries under Unreleased came before that, and the next release takes them
+too. The first release was v0.1.0.
 
 ## Unreleased
 
@@ -2321,6 +2324,8 @@ says how). The first was v0.1.0.
   tests exit non-zero, so an add-on not yet in `COMMANDS` (or a stray
   uncommitted add-on folder) fails the contract test and marks every mutant
   killed — a false pass CI later exposes as the real survivors. (#50)
+
+<!-- towncrier release notes start -->
 
 ## v0.1.0 · 2026-10-23
 

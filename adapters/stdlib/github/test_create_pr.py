@@ -238,6 +238,39 @@ def test_green_steps_open_it_with_its_body_and_number_and_push_it_all(repo):
     assert at_origin(repo, "made.txt") == "made"
 
 
+def test_a_fragment_not_yet_named_is_named_for_its_pull_request(repo):
+    """changes/+work.added.md, towncrier's orphan: renamed changes/7.added.md
+    in the push that opens it, with no edit to CHANGELOG.md, which no other
+    pull request then conflicts with."""
+    git(repo, "checkout", "-q", "main", "--", "CHANGELOG.md")
+    (repo / "changes").mkdir()
+    (repo / "changes/+work.added.md").write_text(
+        "`thing`, a new thing\n", encoding="utf-8"
+    )
+    (repo / "changes/7.added.md").write_text("an older one\n", encoding="utf-8")
+    git(repo, "add", "-A")
+    git(repo, "commit", "-q", "-m", "thing: its entry, in a file of its own")
+    steps(repo, GREEN)
+    got = run(repo)
+    assert got.returncode == 0, got.stdout + got.stderr
+    assert "named its changelog fragment changes/7.added.1.md" in got.stdout
+    assert at_origin(repo, "changes/7.added.1.md") == "`thing`, a new thing"
+    assert at_origin(repo, "CHANGELOG.md") == CHANGELOG.strip(), (
+        "CHANGELOG.md untouched"
+    )
+    assert "+work.added.md" not in git(
+        repo, "ls-tree", "--name-only", "origin/work", "changes/"
+    )
+
+
+def test_no_entry_anywhere_stops_it_saying_where_one_goes(repo):
+    git(repo, "checkout", "-q", "main", "--", "CHANGELOG.md")
+    git(repo, "commit", "-q", "-am", "no entry")
+    steps(repo, GREEN)
+    got = run(repo)
+    assert got.returncode == 42 and "changes/+BRANCH.KIND.md" in got.stderr
+
+
 def test_run_again_it_finds_its_pull_request_and_opens_no_second(repo):
     steps(repo, GREEN)
     assert run(repo).returncode == 0
@@ -311,7 +344,7 @@ def test_a_change_with_no_changelog_entry_stops_and_docs_alone_owe_none(repo):
     git(repo, "add", "-A")
     git(repo, "commit", "-q", "-m", "other: no entry")
     got = run(repo)
-    assert got.returncode == 42 and "no new entry under ## Unreleased" in got.stderr
+    assert got.returncode == 42 and "no changelog entry" in got.stderr
     git(repo, "checkout", "-q", "-b", "docs", "main")
     (repo / "NOTES.md").write_text("words\n")
     git(repo, "add", "-A")
