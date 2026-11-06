@@ -190,6 +190,46 @@ keeps the readers' contract (the summary line, the same bytes twice,
 originals untouched, hidden files unread, 42 for nothing to read, refusals
 that write nothing). A new add-on with a command line has to be listed there.
 
+## The mirror contract
+
+A reader writes each file it reads as `MIRROR/<same path>.txt`, and the
+kernel cites a passage by that mirror file's line. A reader that keeps the
+mirror contract also says where in the original each passage came from, so
+an answer can point at the file you wrote, not at its mirror. Its card says
+`output: mirror`.
+
+Beside each mirror file it writes a hidden map, where the kernel never
+reads, so the passages still hold only the file's words:
+
+    MIRROR/notes/garden.md.txt
+    MIRROR/.places/notes/garden.md.txt.json
+      {"source": "notes/garden.md", "places": {"1": "line 1", "9": "lines 8-9"}}
+
+- **Each key** is the mirror line a passage starts on: a line with words
+  after a blank one, or the first, as the kernel cuts paragraphs.
+- **Each value** is the place in the source: `line N`, `lines N-M`, or
+  another named place, a word and what it names (`page 2`, `cell 4`,
+  `row 17`), for a source whose places aren't lines.
+- **A chunk the kernel cuts** from a longer passage is at the last place at
+  or before its line.
+
+[mirrors.py](mirrors.py)'s `check` holds a mirror to it: every mirror file
+has its map, naming its source; every passage is placed, and nothing else
+is; a line place is inside the source, with a content word of the passage's
+first line on it, so an off-by-one shows; and no mirror line is longer than
+one of the kernel's chunks, which it would cut unread.
+[test_contract.py](test_contract.py) runs it on each such reader's sample,
+and [realdata.py](realdata.py) on the demo people's folders.
+
+    python adapters/stdlib/ci/mirrors.py check --from FOLDER --mirror MIRROR
+
+Each reader keeps its own copy of the dozen lines that write the map, as a
+report add-on keeps its copy of the report's: an add-on holds alone and
+shares only the kernel. A reader that writes its source line for line places
+each passage on its own line (markdown, latex, org, rst, asciidoc,
+code-comments, dotfiles); one that moves a line says both (a table's header
+moved onto its rule is `lines 8-9`).
+
 ## The copies
 
 An add-on holds alone and shares only the kernel, so the same function
@@ -269,6 +309,36 @@ aren't done.
     python adapters/stdlib/ci/reports.py survey
     python adapters/stdlib/ci/reports.py scaffold NAME...
     python adapters/stdlib/ci/reports.py check NAME...
+
+## The suggestions contract
+
+An add-on that asks a model and proposes its reply for your seal says, in
+the proposal's `claim`, who answered, where, at what settings and what it
+did, in one form, so the record reads the same whichever add-on asked. Its
+card says `output: suggestions` (`output: report, suggestions` for one that
+prints a report too).
+
+    gemma at http://127.0.0.1:8080/v1 (temperature 0, seed 0, reasoning low) answered from 1 of the 2 passages served
+    qwen.gguf in this process (weights sha256 9c1e…, temperature 0, seed 0) answered from 1 of the 2 passages served
+
+- **who**: the model's name as asked for, or the weights file's name;
+- **where**: `at URL`, `in this process`, or `via NAME` for another program
+  that asks the model and names no address (llm, MCP sampling), which reads
+  only with its settings after it;
+- **settings**, in brackets, each a name and its value with commas
+  between: the temperature and the seed always; the reasoning when one was
+  asked for; a `--system` voice by its SHA-256; the weights by theirs;
+- **what it did**: `answered from N of the M passages served`, `translated
+  proposal:… into LANGUAGE`, `read FILE as CATEGORY, from the passage it
+  cited`.
+
+[openai-compatible](../openai-compatible/)'s `claim()` writes it and
+`read_claim()` reads it, a claim from before the settings were said too
+(with none); [sent-log](../sent-log/) reads every proposer's through it.
+`adapters/stdlib/ci/test_contract.py` asks each stdlib add-on whose card
+says it of a stand-in model on 127.0.0.1 and holds each proposal's claim to
+the form; in-process, a deps add-on, is held by its own tests. A claim is the
+proposer's own words, never an attested card.
 
 **The guard:** the add-ons' tests, and each deps add-on's, run with
 [guard/sitecustomize.py](guard/sitecustomize.py) on `PYTHONPATH`, so it is

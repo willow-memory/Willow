@@ -19,7 +19,9 @@ A run fails on a traceback, a breach of its card's promises, a hang, an
 exit other than 0, 2 and 42, or, for a reader, a mirror line longer than one
 of the kernel's chunks: the kernel keeps only a line's first `MAX_CHUNK`
 characters, so the rest of it is never read, and nothing says so (clauses
-lost a chat's every message after the first few this way). A refusal (2) is said, not failed: some lines
+lost a chat's every message after the first few this way). A reader whose
+card says `output: mirror` fails on a break of the mirror contract too
+(mirrors.py). A refusal (2) is said, not failed: some lines
 name a file only the contract's pile has. What each run printed is shown,
 for the pull request to say.
 
@@ -44,6 +46,16 @@ STDLIB = ROOT / "adapters" / "stdlib"
 USAGE = "usage: realdata.py run NAME [NAME ...] | realdata.py run --base REF"
 NOW = ["--now", "2026-10-23T00:00:00Z"]
 WAIT = 60
+
+
+def _load_mirrors():
+    spec = importlib.util.spec_from_file_location("willow_mirrors", HERE / "mirrors.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+MIRRORS = _load_mirrors()  # the mirror contract's check
 
 
 class Refused(Exception):
@@ -111,10 +123,13 @@ def row_of(contract, name: str) -> tuple[str, list[str]]:
 
 def long_lines(mirror: Path) -> list[tuple[str, int, int]]:
     """(file, line, length) for each line of a reader's mirror longer than one
-    of the kernel's chunks, which the kernel cuts without a word."""
+    of the kernel's chunks, which the kernel cuts without a word. A hidden
+    file (the mirror contract's .places maps) is skipped, as the kernel
+    skips it."""
     out = []
     for p in sorted(mirror.rglob("*")) if mirror.is_dir() else []:
-        if p.is_file():
+        hidden = any(s.startswith(".") for s in p.relative_to(mirror).parts)
+        if p.is_file() and not hidden:
             text = p.read_bytes().decode("utf-8", "replace")
             for i, line in enumerate(text.splitlines(), 1):
                 if len(line) > kernel.MAX_CHUNK:
@@ -152,6 +167,13 @@ def run_one(
         where, line, size = cut[0]
         return (f"{len(cut)} mirror line(s) longer than the kernel's {kernel.MAX_CHUNK}"
                 f" characters, which it cuts unread (first: {where}:{line}, {size})"), said  # fmt: skip
+    if (tmp / "mirror").is_dir() and MIRRORS.keeps(script.parent / "README.md"):
+        broke = MIRRORS.check(life, tmp / "mirror")
+        if broke:
+            return (
+                f"{len(broke)} break(s) of the mirror contract (first: {broke[0]})",
+                said,
+            )
     return "", said
 
 
