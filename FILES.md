@@ -1727,6 +1727,7 @@ willow/
 │   │   ├── blind.py          the blind questions, written by a local model that has seen no
 │   │   ├── expectations.json  what the author expects each step to come to, graded after
 │   │   ├── fetch.py          the stack's sources, fetched again and held to their hashes
+│   │   ├── FROZEN.json       the pre-registration: the SHA-256 of every pin, step, question, rule, card and tool
 │   │   ├── models/
 │   │   │   ├── gemma3-4b.md  Gemma 3 4B's card, read from its weights file
 │   │   │   ├── qwen3-8b.md   Qwen3 8B's card, read from its weights file

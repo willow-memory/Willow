@@ -1,9 +1,10 @@
 # Percus–Yevick: found, not generated
 
-**DRAFT: not frozen.** Nothing here has been asked of the stack or of a
-model except nonsense (the dry run below). The freeze is a later commit of
-its own, made before any real question is asked; until then every file may
-change.
+**Frozen 2026-11-06**, in commit d9d46e9, alone: [FROZEN.json](FROZEN.json)
+holds the SHA-256 of every source pin, step, question, rule, model card and
+tool, and the tests fail if one changes. Nothing had been asked of the stack
+or of a model before it but nonsense (the dry runs below). A change is a new
+freeze, with its reason.
 
 An ML specialist is asking a local model for a derivation of the
 hard-sphere equation of state in the Percus–Yevick approximation, starting
