@@ -1,7 +1,7 @@
 """snapshot.py: a web page or file fetched once into a folder, with where it
 came from, when, and its SHA-256, so later answers cite the copy.
 
-    python adapters/stdlib/snapshot/snapshot.py fetch --url URL --to FOLDER [--name NAME] [--now ISO]
+    python adapters/stdlib/snapshot/snapshot.py fetch --url URL --to FOLDER [--name NAME] [--now ISO] [--contact EMAIL]
     python adapters/stdlib/snapshot/snapshot.py check --in FOLDER
 
 A page online changes, and an answer that cites it should say what it said
@@ -17,6 +17,10 @@ Fetched once: a name already in FOLDER is refused, never overwritten. An
 address that can't be reached, or answers with an error, writes no file but
 still gets its line, with `"status"` and `"why"`, so a missing source is
 written down, not left out.
+
+`--contact` adds an email to the request's User-Agent, for a publisher
+that refuses a client naming none (SEC EDGAR is one). It goes to that
+address only, and is never written into the line.
 
 `check` goes nowhere: it hashes each file again and says, for each,
 `holds`, `CHANGED` or `missing`, and `unlisted` for a file in FOLDER no line
@@ -84,10 +88,16 @@ def note(folder: Path, row: dict) -> None:
         f.write(json.dumps(row, sort_keys=True, ensure_ascii=False) + "\n")
 
 
-def get(url: str) -> tuple[int, str, bytes, str]:
+def agent(contact: str | None = None) -> str:
+    """The User-Agent sent: willow's own, or, with a contact, the short "name
+    email" form SEC documents (it refuses one that also holds a link)."""
+    return f"{AGENT.split()[0]} {contact}" if contact else AGENT
+
+
+def get(url: str, contact: str | None = None) -> tuple[int, str, bytes, str]:
     """(status, content type, body, final address); raises URLError when it
     can't be reached at all."""
-    req = urllib.request.Request(url, headers={"User-Agent": AGENT})
+    req = urllib.request.Request(url, headers={"User-Agent": agent(contact)})
     try:
         with urllib.request.urlopen(req, timeout=TIMEOUT) as r:
             return r.status, r.headers.get("Content-Type", ""), r.read(), r.geturl()
@@ -96,7 +106,13 @@ def get(url: str) -> tuple[int, str, bytes, str]:
 
 
 def save(
-    url: str, folder: Path, name: str, now: str, infer_type: bool = False, **extra
+    url: str,
+    folder: Path,
+    name: str,
+    now: str,
+    infer_type: bool = False,
+    contact: str | None = None,
+    **extra,
 ) -> int:
     """Fetch `url` once into folder/name, and its line; also used by wayback."""
     if "/" in name or "\\" in name or name.startswith(".") or not name:
@@ -109,7 +125,7 @@ def save(
     folder.mkdir(parents=True, exist_ok=True)
     row = {"file": name, "url": url, "fetched": now, **extra}
     try:
-        status, kind, body, final = get(url)
+        status, kind, body, final = get(url, contact)
     except (urllib.error.URLError, OSError, ValueError) as e:
         why = getattr(e, "reason", e)
         note(
@@ -182,6 +198,7 @@ def main(argv: list[str]) -> int:
         "--to",
         "--name",
         "--now",
+        "--contact",
     }:
         now = args.get("--now") or datetime.now(timezone.utc).strftime(
             "%Y-%m-%dT%H:%M:%SZ"
@@ -196,6 +213,7 @@ def main(argv: list[str]) -> int:
             args.get("--name") or name_for(url),
             now,
             infer_type="--name" not in args,
+            contact=args.get("--contact"),
         )
     if argv[:1] == ["check"] and set(args) == {"--in"}:
         return check(Path(args["--in"]))

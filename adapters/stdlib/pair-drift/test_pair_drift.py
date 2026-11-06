@@ -112,3 +112,23 @@ def test_a_long_summary_line_is_cut_to_a_hundred_characters(tmp_path):
     b = box(tmp_path, {"t/DRAFT.md": "it cost $10\n", "t/README.md": line + "\n"})
     row = ask(b).stdout.splitlines()[1]
     assert row.endswith(line[:100]) and not row.endswith(line[:101])
+
+
+def test_from_one_figure_to_another_is_a_change_not_a_range():
+    assert pd.figures("raised its dividend from $0.26 to $0.27 per share") == [
+        "$0.26",
+        "$0.27",
+    ]
+    assert pd.figures("from $5 to $6 billion") == ["$5B", "$6B"]
+    assert pd.figures("from 2.25 to 2.5 percent") == ["2.25%", "2.5%"]
+    assert pd.figures("from 1990 to 2010") == []
+    assert pd.figures("$180 to $190 billion") == ["$180-190B"]
+
+
+def test_a_summary_naming_where_a_change_ended_agrees_with_it(tmp_path):
+    b = box(tmp_path, {
+        "apple/DRAFT.md": "It raised its quarterly dividend from $0.26 to $0.27.\n",
+        "apple/README.md": "It raised the quarterly dividend to $0.27.\n",
+    })  # fmt: skip
+    got = ask(b)
+    assert got.returncode == 42 and "0 only in the summary" in got.stdout, got.stdout

@@ -1,0 +1,1 @@
+`notation`: each displayed equation in LaTeX sources with the words its paper gives for its symbols ("where $\eta$ is the packing fraction"), so a question in words finds the equation; built after the Percus–Yevick study found that the stack held 9 of 11 steps as equations no worded question reached

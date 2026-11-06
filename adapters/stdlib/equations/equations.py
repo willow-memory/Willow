@@ -19,7 +19,10 @@ writes it (whitespace collapsed, `\label`, `\nonumber` and `\notag` taken
 out), and the start of the prose after it. The math is never rewritten, so
 a passage can be quoted back against the paper. Context is trimmed so a
 passage fits in one of the kernel's chunks (`kernel.MAX_CHUNK`); an
-equation longer than that alone is kept whole, and the kernel cuts it.
+equation longer than that alone is written over several lines, each cut at a
+space and none longer than a chunk, since the kernel reads only a line's
+first MAX_CHUNK characters: joined with a space, they are the equation as it
+was.
 
 Displayed means the equation, align, gather, multline, eqnarray,
 displaymath, flalign and alignat environments (starred or not), `\[ ... \]`
@@ -84,6 +87,19 @@ def _blank(m: re.Match) -> str:
 
 def _flat(text: str) -> str:
     return " ".join(text.split())
+
+
+def _fit(eq: str) -> str:
+    """An equation on lines of at most one chunk each, cut at a space (or, a
+    run with none, at the chunk's end): the kernel keeps only a line's first
+    MAX_CHUNK characters, and cuts a longer passage between its lines."""
+    out = []
+    while len(eq) > kernel.MAX_CHUNK:
+        cut = eq.rfind(" ", 1, kernel.MAX_CHUNK + 1)
+        cut = cut if cut > 0 else kernel.MAX_CHUNK
+        out.append(eq[:cut])
+        eq = eq[cut:].lstrip()
+    return "\n".join(out + [eq]) if eq else "\n".join(out)
 
 
 def expand(text: str) -> str:
@@ -204,7 +220,9 @@ def placed(data: bytes, name: str) -> list[tuple[str, int, int]]:
             seg = text[m.end() : next_start]
             lead = len(seg) - len(seg.lstrip())
             last = text.count("\n", 0, m.end() + lead + len(_first_para(seg))) + 1
-        out.append(("\n".join(x for x in (head, before, eq, after) if x), first, last))
+        out.append(
+            ("\n".join(x for x in (head, before, _fit(eq), after) if x), first, last)
+        )
     return out
 
 
