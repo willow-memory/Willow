@@ -1529,6 +1529,7 @@ willow/
 │   ├── how-it-works.md       what it reads, how it ranks, the key, the record, approvals
 │   ├── design/
 │   │   ├── draft-0.16.md     proposal: four of willow's own promises made law, and four new beats
+│   │   ├── pieces.md         proposal: every pull request a piece of the pile: cite, draft, check, accept or 42
 │   │   ├── repo-index.md     proposal: the repo as one deterministic-snapshot box, indexed by a custom serve-style stack
 │   │   └── serve.md          proposal: a sealed stack of piles served to a model, on markdown (the grove's serve, in willow)
 │   └── agents/               AGENTS.md's longer how-tos, one page a job
