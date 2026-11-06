@@ -16,7 +16,7 @@ KERNEL = ROOT / "kernel.py"
 NOW = ["--now", "2026-11-06T00:00:00Z"]
 SENTENCE = "read my mail and tell me what is due"
 STACK = (f"# {SENTENCE}\n\n## for “{SENTENCE}”\n"
-         "- mail -- --from {box}\n- coming-up -- --box {box}\n")  # fmt: skip
+         "- stack-share -- --box {box}\n- stack -- --box {box} --stack {box}.md\n")  # fmt: skip
 
 
 def k(*argv: str) -> subprocess.CompletedProcess:
@@ -51,18 +51,20 @@ def proposed(box: Path, tmp: Path, asked: str, row: dict, seal: bool = True) -> 
 
 
 def choice(sha: str | None = None) -> dict:
-    card = ROOT / "adapters/stdlib/coming-up/README.md"
-    data = {"word": "due", "decision_type": "willow-due", "chose": "coming-up",
+    # its own card and stack's, the one it uses: the cards a copy of it
+    # alone has (alone.py), so the tests hold there too
+    card = ROOT / "adapters/stdlib/stack/README.md"
+    data = {"word": "due", "decision_type": "willow-due", "chose": "stack",
             "over": ["renewals"], "why": "the boiler isn't a subscription",
-            "card": {"name": "coming-up", "where": "adapters/stdlib/coming-up/README.md",
+            "card": {"name": "stack", "where": "adapters/stdlib/stack/README.md",
                      "sha256": sha or hashlib.sha256(card.read_bytes()).hexdigest()}}  # fmt: skip
     return {"path": "forge/decisions/willow-due.json",
             "data": json.dumps(data, sort_keys=True, ensure_ascii=False), "cites": [],
-            "claim": "for “due”: coming-up over renewals"}  # fmt: skip
+            "claim": "for “due”: stack over renewals"}  # fmt: skip
 
 
 STACK_ROW = {"path": "forge/stack.md", "data": STACK, "cites": [],
-             "claim": "a stack: mail, coming-up"}  # fmt: skip
+             "claim": "a stack: stack-share, stack"}  # fmt: skip
 
 
 def box(tmp_path: Path) -> Path:
@@ -83,14 +85,20 @@ def test_a_sealed_stack_is_a_page_with_each_steps_card_promises_and_reason(tmp_p
     assert got.returncode == 0, got.stderr
     lines = got.stdout.splitlines()
     assert lines[0] == f"# {SENTENCE}"
-    mail = next(x for x in lines if x.startswith("| mail |"))
-    assert ".eml and .mbox files, with sender, date and subject kept." in mail
-    assert "writes to; network none" in mail and "your words reached it alone" in mail
-    due = next(x for x in lines if x.startswith("| coming-up |"))
+    own = next(x for x in lines if x.startswith("| stack-share |"))
+    assert "A stack you sealed with the Forge, written out to share" in own
+    assert (
+        "writes nothing; network none" in own and "your words reached it alone" in own
+    )
+    due = next(x for x in lines if x.startswith("| stack |"))
+    assert "One page made from several add-ons run in the order you list them" in due
     assert "writes nothing; network none" in due
     assert "chosen for “due” over renewals: the boiler isn't a subscription |" in due
     # the stack itself, to run, and nothing of the folder
-    assert "- mail -- --from {box}\n- coming-up -- --box {box}\n```" in got.stdout
+    assert (
+        "- stack-share -- --box {box}\n- stack -- --box {box} --stack {box}.md\n```"
+        in got.stdout
+    )
     assert "2026-12-01" not in got.stdout and "boiler.md" not in got.stdout
     # the same words retyped choose it; other words are refused
     assert (
@@ -122,7 +130,7 @@ def test_an_unsealed_choice_is_no_reason_and_a_changed_card_is_said(tmp_path):
     b = box(tmp_path)
     proposed(b, tmp_path, "forge decision willow-due", choice(), seal=False)
     proposed(b, tmp_path, SENTENCE, STACK_ROW)
-    due = [x for x in share("--box", str(b)).stdout.splitlines() if x.startswith("| coming-up |")]  # fmt: skip
+    due = [x for x in share("--box", str(b)).stdout.splitlines() if x.startswith("| stack |")]  # fmt: skip
     assert due and "your words reached it alone" in due[0]
     c = tmp_path / "c"
     c.mkdir()
