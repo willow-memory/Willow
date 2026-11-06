@@ -13,8 +13,12 @@ branch, and it is left exactly as it was:
 
     ADDONS.md, README.md     REF's, then made again: readme.py write
     BUGS.md                  REF's, then made again: ci/bugs.py write
-    CHANGELOG.md             under ## Unreleased, the branch's entries above
-                             REF's, newest first
+    CHANGELOG.md             REF's, and each entry the branch added under
+                             ## Unreleased moved to a fragment of its own
+                             (changes/README.md): changes/<N>.<kind>.md
+                             when it ends (#N), else
+                             changes/+<branch>.<kind>.md; a branch that
+                             changed the file any other way stops
     FILES.md                 both sides' folders, A to Z
     test_contract.py         both sides' COMMANDS lines; or, when a conflict
                              is more than those, the entries either side
@@ -28,6 +32,10 @@ branch, and it is left exactly as it was:
                              only added lines where the base had none (a
                              paragraph each on an add-on's card); a side
                              that changed a line the base had stops
+
+The changelog's entries move whether the merge conflicted there or not:
+CHANGELOG.md only takes a release's now, and an entry written there the old
+way is the one conflict every branch had with every other.
 
 Once REF is merged in, test_docs.py runs in the scratch worktree: it is
 the check that catches a merge settled wrong (a tree missing a file, a
@@ -103,6 +111,76 @@ def changelog(text: str) -> str:
         return mine + ref
 
     return hunks(text, combine)
+
+
+#: towncrier's kinds, as changes/README.md and towncrier.toml name them
+KINDS = {"Added": "added", "Changed": "changed", "Deprecated": "deprecated",
+         "Removed": "removed", "Fixed": "fixed", "Security": "security"}  # fmt: skip
+
+
+def entries(text: str) -> list[tuple[str, str]]:
+    """(heading, block) for each entry under ## Unreleased: its `- ` line and
+    the indented lines that wrap it, exactly as written."""
+    m = re.search(r"^## Unreleased\n(.*?)(?=^## |\Z)", text, re.M | re.S)
+    out, heading = [], ""
+    for line in m.group(1).splitlines(keepends=True) if m else []:
+        if line.startswith("### "):
+            heading = line[4:].strip()
+        elif line.startswith("- "):
+            out.append((heading, line))
+        elif line.startswith("  ") and line.strip() and out:
+            out[-1] = (out[-1][0], out[-1][1] + line)
+    return out
+
+
+def bare(entry: str) -> str:
+    """An entry's words, without its `- `, its wrapping or its (#N)."""
+    return re.sub(r"\s*\(#\d+\)$", "", " ".join(entry.removeprefix("- ").split()))
+
+
+def kept(text: str) -> list[str]:
+    """The changelog's lines but headings and blank ones: a heading a branch
+    added for its entries, and the blank lines around, are adding too."""
+    return [x for x in text.splitlines() if x.strip() and not x.startswith("### ")]
+
+
+def fragments(
+    base: str, ref: str, mine: str, branch: str, held: dict[str, str]
+) -> dict[str, str] | None:
+    """{path: text} for each entry the branch added under ## Unreleased since
+    `base`, as a fragment; `held` is changes/ as merged, {path: text}. An
+    entry REF already holds, under Unreleased or as a fragment (a branch
+    stacked on another pull request carries its entry), only leaves. Stops
+    when the branch changed CHANGELOG.md any other way, or used a heading
+    towncrier has no kind for. None when it added none: then CHANGELOG.md is
+    left to the merge."""
+    then = {b for _, b in entries(base)}
+    new = [(h, b) for h, b in entries(mine) if b not in then]
+    if not new:
+        return None
+    known = {bare(b) for _, b in entries(ref)} | {bare(t) for t in held.values()}
+    rest = mine
+    for _, block in new:
+        rest = rest.replace(block, "", 1)
+    if kept(rest) != kept(base):
+        raise Stop("CHANGELOG.md: the branch changed more than adding entries under ## Unreleased")  # fmt: skip
+    stem = "+" + branch.replace("/", "-")
+    out: dict[str, str] = {}
+    for heading, block in new:
+        if bare(block) in known:
+            continue
+        if heading not in KINDS:
+            raise Stop(f"CHANGELOG.md: an entry under {heading or 'no heading'!r}, which towncrier has no kind for")  # fmt: skip
+        text = " ".join(block[2:].split())
+        number = re.search(r"\s*\(#(\d+)\)$", text)
+        text = text[: number.start()] if number else text
+        name = number.group(1) if number else stem
+        path, n = f"changes/{name}.{KINDS[heading]}.md", 0
+        while path in held or path in out:
+            n += 1
+            path = f"changes/{name}.{KINDS[heading]}.{n}.md"
+        out[path] = text + "\n"
+    return out
 
 
 def groups(side: str, lead: str) -> list[tuple[str, list[str]]]:
@@ -459,6 +537,25 @@ def restack(branch: str, onto: str) -> tuple[int, list[str]]:
             remake(work)
             git("add", "-A", cwd=work)
             git("commit", "-q", "--no-edit", cwd=work)
+        fork = git("merge-base", old, base).stdout.strip()
+        log = "CHANGELOG.md"
+        moved = fragments(
+            *(
+                git("show", f"{rev}:{log}", ok=(0, 128)).stdout
+                for rev in (fork, base, old)
+            ),
+            branch,
+            {
+                p: (work / p).read_text(encoding="utf-8")
+                for p in git("ls-files", "changes", cwd=work).stdout.split()
+            },
+        )
+        if moved is not None:
+            git("checkout", base, "--", log, cwd=work)
+            for path, text in moved.items():
+                (work / path).parent.mkdir(exist_ok=True)
+                (work / path).write_text(text, encoding="utf-8")
+            settled.append(f"CHANGELOG.md, {len(moved)} new entr{'y' if len(moved) == 1 else 'ies'} moved to changes/")  # fmt: skip
         remake(work)
         if git("status", "--porcelain", cwd=work).stdout.strip():
             git("add", "-A", cwd=work)
