@@ -6,6 +6,7 @@ same bytes twice, originals unchanged, and MIRROR and FOLDER kept apart."""
 from __future__ import annotations
 
 import importlib.util
+import json
 import subprocess
 from collections import Counter
 import sys
@@ -479,3 +480,12 @@ def test_a_bad_command_line_says_how_to_run_it():
     ):
         got = run(*argv)
         assert got.returncode == 2 and "org.py" in got.stderr
+
+
+def test_a_table_at_the_top_is_placed_on_its_header_and_rule(tmp_path):
+    got, out = mirror_of(
+        tmp_path, {"t.org": b"| crop | bed |\n|------+-----|\n| leek | 3 |\n"}
+    )
+    assert got.returncode == 0, got.stderr
+    doc = json.loads((out / ".places" / "t.org.txt.json").read_text())
+    assert doc == {"source": "t.org", "places": {"2": "lines 1-2"}}
