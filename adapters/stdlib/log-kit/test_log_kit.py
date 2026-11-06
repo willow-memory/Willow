@@ -148,3 +148,8 @@ def test_a_bad_command_line_is_refused_and_names_the_script(tmp_path):
         assert got.returncode == 2 and "log_kit.py" in got.stderr, argv
     got = run("--box", tmp_path, "--words", "ran")
     assert got.returncode == 2 and got.stderr.startswith("refused: not a kernel box")
+
+
+def test_the_change_is_of_the_averages_as_shown_to_a_tenth():
+    got = lk.averages({"20260301": 6.04, "20260401": 6.06}, "month")
+    assert got[1].endswith("  up 0.1"), "6.0 then 6.1, as shown"

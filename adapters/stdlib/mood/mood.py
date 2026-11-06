@@ -31,7 +31,6 @@ import sys
 from pathlib import Path
 
 STDLIB = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(STDLIB.parents[1]))
 sys.path.insert(0, str(STDLIB / "log-kit"))
 import log_kit  # noqa: E402
 
