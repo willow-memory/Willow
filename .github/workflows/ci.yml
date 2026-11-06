@@ -524,13 +524,18 @@ jobs:
       - if: github.event_name == 'pull_request'
         env:
           GH_TOKEN: ${{ github.token }}
+        # main's push runs only, newest first, until one kept a deps record (a
+        # cancelled or unfinished one didn't): never an artifact found by name,
+        # which a pull request from a fork's own main could have uploaded
         run: |
-          id=$(gh run list -R "$GITHUB_REPOSITORY" --workflow ci.yml --branch main --event push --status completed -L 1 --json databaseId -q '.[0].databaseId' || true)
-          if [ -n "$id" ] && gh run download "$id" -R "$GITHUB_REPOSITORY" -n ci-record-deps -D "$RUNNER_TEMP/held"; then
-            echo "WILLOW_HELD_RECORD=$RUNNER_TEMP/held/record.jsonl" >> "$GITHUB_ENV"
-          else
-            echo "no deps record from main to hold by: every deps gate runs"
-          fi
+          for id in $(gh run list -R "$GITHUB_REPOSITORY" --workflow ci.yml --branch main --event push -L 10 --json databaseId -q '.[].databaseId' || true); do
+            if gh run download "$id" -R "$GITHUB_REPOSITORY" -n ci-record-deps -D "$RUNNER_TEMP/held" 2>/dev/null; then
+              echo "held by main's deps record, run $id"
+              echo "WILLOW_HELD_RECORD=$RUNNER_TEMP/held/record.jsonl" >> "$GITHUB_ENV"
+              break
+            fi
+          done
+          [ -f "$RUNNER_TEMP/held/record.jsonl" ] || echo "no deps record from main to hold by: every deps gate runs"
       - run: python adapters/stdlib/ci/ci.py run deps --box ${{ runner.temp }}/ci-record | tee "$RUNNER_TEMP/ci.log"
       - if: failure()
         run: python adapters/stdlib/ci-why/ci_why.py "$RUNNER_TEMP/ci.log" --record "$RUNNER_TEMP/ci-record/record.jsonl" >> "$GITHUB_STEP_SUMMARY" || true
