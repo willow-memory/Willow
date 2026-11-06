@@ -128,6 +128,17 @@ of a line; the quote sits past that. The other Leibniz quote, early in its
 paragraph, was found. A break in this runner's TEI conversion, not in
 `misquote`, and one the dry run's short nonsense passage couldn't show. A
 rerun with the paragraphs cut at sentence ends would be a new freeze.
+DispatchesFromReality's stack for the same packet
+(`research/soil-phys-001/willow`) builds its pile with the text add-on,
+which breaks every line over 500 characters, and there `misquote` finds the
+quote as written: the diagnosis, confirmed after the run.
+
+**Rerunning it.** The two HTML sources (Einstein's Wikisource page and
+Mach's Internet Archive page) are rebuilt on every request, so their bytes
+never match the frozen hash twice, and `run.py` refuses them; their text, as
+the kernel reads it, was the same when fetched again the same day. A rerun
+needs the kept copies, or a new freeze that holds a web page to its text.
+The other 26 sources are PDFs and transcriptions whose bytes do match again.
 
 ## Running it
 
