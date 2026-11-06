@@ -218,7 +218,10 @@ def test_what_cannot_be_read_as_a_table_is_skipped_and_counted_not_a_crash(tmp_p
     )
     assert got.returncode == 0, got.stderr
     assert "wrote 1 files" in got.stdout and "skipped 4" in got.stdout
-    assert sorted(p.name for p in out.rglob("*") if p.is_file()) == ["good.csv.txt"]
+    assert sorted(p.name for p in out.rglob("*") if p.is_file()) == [
+        "good.csv.txt",
+        "good.csv.txt.json",
+    ]
 
 
 def test_hidden_files_and_folders_are_not_read(tmp_path):
@@ -227,7 +230,7 @@ def test_hidden_files_and_folders_are_not_read(tmp_path):
     )
     assert sorted(
         p.relative_to(out).as_posix() for p in out.rglob("*") if p.is_file()
-    ) == ["a/t.csv.txt"]
+    ) == [".places/a/t.csv.txt.json", "a/t.csv.txt"]
 
 
 def test_the_same_folder_gives_the_same_bytes_and_originals_are_unchanged(tmp_path):
@@ -321,3 +324,16 @@ def test_real_questions_land_on_their_row(tmp_path):
     ):
         found = kernel.rank(pile, question)
         assert found and holds in found[0]["text"], question
+
+
+def test_each_row_is_placed_on_its_lines_a_quoted_cell_over_several():
+    data = b'# a note\nname,town,age\nAda,Ennis,17\n"Ben\nOg",Clare,30\n'
+    found = mod.placed(data)
+    assert [(a, b) for _, a, b in found] == [(1, 1), (2, 2), (3, 3), (4, 5)]
+    assert mod.places(found) == {
+        "1": "line 1",
+        "3": "line 2",
+        "5": "line 3",
+        "7": "lines 4-5",
+    }
+    assert mod.placed(b"name,town\n") == [] and mod.convert(b"name,town\n") is None

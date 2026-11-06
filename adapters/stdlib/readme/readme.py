@@ -86,7 +86,13 @@ What an add-on leans on is on its card, never found by reading its code:
     output:     report, for one that prints a report: a line saying what it
                 found, then its rows by group, each where and what, the
                 same shape as every other report and the same as JSON with
-                --json (adapters/stdlib/ci/README.md, the report contract)
+                --json (adapters/stdlib/ci/README.md, the report contract);
+                mirror, for a reader whose mirror says where each passage
+                came from, in a hidden map beside it (the mirror
+                contract); suggestions, for one that proposes a model's
+                reply for your seal: its claim says who answered, where, at
+                what settings and what it did, in one form (the suggestions
+                contract); more than one, with commas between
 
 Each is optional, a list of add-on names with commas between. `check`
 refuses a name that isn't an add-on (built, for a built one), the add-on
@@ -193,7 +199,7 @@ ROLES = {
 LEANS = ("uses", "looks-for")
 RUNS_IN = {"repo"}
 #: what an add-on prints, when it keeps a shared shape: ci/README.md
-OUTPUTS = {"report"}
+OUTPUTS = {"report", "mirror", "suggestions"}
 #: the tags the similar add-on works out, which a card's own tag is never one of
 FACT_TAGS = {"no-install", "needs-install", "offline", "this-machine", "online"}
 #: what an add-on may write: the guard in adapters/stdlib/ci/guard holds it
@@ -310,8 +316,11 @@ def addons() -> list[dict]:
             and not all(KIND.fullmatch(k.strip()) for k in a["reads"].split(","))
         ):
             raise Refused(f"{where}: reads is .ext or a file name, with commas between, or none: {a['reads']!r}")  # fmt: skip
-        if a.get("output", "report") not in OUTPUTS:
-            raise Refused(f"{where}: output is report, or left out")
+        said = [o.strip() for o in a.get("output", "report").split(",")]
+        if not set(said) <= OUTPUTS or len(set(said)) != len(said):
+            raise Refused(f"{where}: output is one of {', '.join(sorted(OUTPUTS))}, with commas between, or left out")  # fmt: skip
+        if "mirror" in said and a["role"] != "reads":
+            raise Refused(f"{where}: output mirror is for a card whose role is reads")
     names = {a["name"]: a["built"] for a in out}
     for a in out:
         where = a.get("path") or f"planned.json: {a['name']}"

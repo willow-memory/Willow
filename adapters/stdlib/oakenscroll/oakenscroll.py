@@ -217,6 +217,7 @@ def ledger_text(path: Path) -> str | None:
     return head + "\n\n" + "".join(body)
 
 
+# differs on purpose: it reads only office.db
 def _sources(folder: Path) -> list[Path]:
     """office.db files under `folder`, sorted by relative path. Hidden folders
     and files are skipped; symlinked folders are not followed."""
@@ -234,6 +235,7 @@ def _within(inner: Path, outer: Path) -> bool:
     return inner == outer or outer in inner.parents
 
 
+# differs on purpose: ledger_text skips what isn't a ledger, so only OSError is left to catch
 def mirror(src: Path, dst: Path) -> tuple[int, int]:
     """Write the mirror of `src` into `dst`. Returns (written, skipped)."""
     wrote = skipped = 0

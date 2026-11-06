@@ -23,8 +23,11 @@ text it shows. A task keeps its [ ] or [x]. A fenced code block is
 kept as written. Fence lines, table separators, rules, setext underlines and
 reference definitions are blank, so the numbering holds.
 
-Each file is written to MIRROR at the same relative path with `.txt` added.
-FOLDER is only read. A file with no text after reading, or that cannot be
+Each file is written to MIRROR at the same relative path with `.txt` added,
+and its map of places beside it, hidden, as the mirror contract says
+(adapters/stdlib/ci/README.md): `MIRROR/.places/<path>.txt.json`, each
+passage's line, which is the source's own, or the header's and the
+separator's for a table's first passage. FOLDER is only read. A file with no text after reading, or that cannot be
 read, is skipped and counted.
 
 Exit codes, the kernel's: 0 wrote some; 42 nothing readable; 2 refused (FOLDER
@@ -34,6 +37,7 @@ is not a folder, or MIRROR and FOLDER are inside one another).
 from __future__ import annotations
 
 import html
+import json
 import os
 import re
 import sys
@@ -368,19 +372,43 @@ def _within(inner: Path, outer: Path) -> bool:
     return inner == outer or outer in inner.parents
 
 
+def places(text: str, source: list[str]) -> dict[str, str]:
+    """The mirror contract's places: the line each passage starts on is the
+    source's same line, but a table's header, moved onto its separator's
+    line, came from the line above it too."""
+    lines = text.splitlines()
+    out = {}
+    for i, s in enumerate(lines, 1):
+        if s.strip() and (i == 1 or not lines[i - 2].strip()):
+            moved = i >= 2 and _is_table_start(source, i - 2)
+            out[str(i)] = f"lines {i - 1}-{i}" if moved else f"line {i}"
+    return out
+
+
+def write_places(dst: Path, rel: str, found: dict[str, str]) -> None:
+    """The map, hidden beside the mirror, where the kernel never reads."""
+    out = dst / ".places" / (rel + ".txt.json")
+    out.parent.mkdir(parents=True, exist_ok=True)
+    doc = {"source": rel, "places": found}
+    out.write_bytes((json.dumps(doc, ensure_ascii=False) + "\n").encode("utf-8"))
+
+
 def mirror(src: Path, dst: Path) -> tuple[int, int]:
     """Write the mirror of `src` into `dst`. Returns (written, skipped)."""
     wrote = skipped = 0
     for path in _sources(src):
         rel = path.relative_to(src)
         try:
-            text = convert(path.read_bytes())
+            data = path.read_bytes()
+            text = convert(data)
             if text is None:
                 skipped += 1
                 continue
             target = dst.joinpath(rel.parent, rel.name + ".txt")
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_bytes(text.encode("utf-8"))
+            source = data.decode("utf-8-sig").replace("\r\n", "\n").replace("\r", "\n")
+            write_places(dst, rel.as_posix(), places(text, source.split("\n")))
         except ERRORS:
             skipped += 1
             continue

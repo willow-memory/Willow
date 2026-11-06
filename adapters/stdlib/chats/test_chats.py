@@ -332,3 +332,39 @@ def test_a_telegram_export_not_in_utf8_is_skipped_and_counted(tmp_path):
     got = mirror(src, dst)
     assert got.stdout.strip().endswith("; skipped 1")
     assert "result.json: not UTF-8" in got.stderr
+
+
+def places_of(to: Path, rel: str) -> dict:
+    return json.loads(
+        (to / ".places" / (rel + ".txt.json")).read_text(encoding="utf-8")
+    )
+
+
+def test_each_message_is_placed_on_its_lines_and_a_telegram_one_by_its_id(tmp_path):
+    put(tmp_path / "in", "wa.txt",
+        "03/12/2024, 08:10 - Dev: I can do 600\n\nmore of it\n"
+        "04/12/2024, 09:00 - Ana: ok\n")  # fmt: skip
+    put(tmp_path / "in", "tg.json", json.dumps({"messages": [
+        {"id": 41, "date": "2024-12-03T08:10:00", "from": "Dev", "text": "hi"},
+        {"date": "2024-12-03T08:11:00", "text": "service"},
+        {"date": "2024-12-03T08:12:00", "from": "Ana", "text": "yo"},
+    ]}))  # fmt: skip
+    assert mirror(tmp_path / "in", tmp_path / "out", "--day-first").returncode == 0
+    assert places_of(tmp_path / "out", "wa.txt")["places"] == {
+        "1": "lines 1-3",
+        "3": "line 4",
+    }
+    assert places_of(tmp_path / "out", "tg.json")["places"] == {
+        "1": "message 41",
+        "2": "message 3",
+    }
+    put(
+        tmp_path / "two",
+        "wa.txt",
+        "03/12/2024, 08:10 - Dev: a\n04/12/2024, 09:00 - Ana: b\n",
+    )
+    assert mirror(tmp_path / "two", tmp_path / "o2").returncode == 0
+    got = places_of(tmp_path / "o2", "wa.txt")["places"]
+    assert got["1"] == "whole file" and out_of(tmp_path / "o2", "wa.txt").startswith(
+        "(date order unknown)\n\n"
+    )

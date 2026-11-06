@@ -6,6 +6,7 @@ added: 2026-10-27
 writes: to
 network: none
 role: reads
+output: mirror
 reads: .vtt, .srt
 -->
 # subtitles
@@ -45,6 +46,12 @@ questions of what was said; [said](../said/) then reads a voice-tagged line
 as its speaker's quote.
 
 **Uses:** the kernel's exit codes; the mirror is for `chunks` to read.
+
+**Where each cue came from** is in a hidden map beside its mirror,
+`MIRROR/.places/<same path>.txt.json`, which the kernel never reads, as
+[the mirror contract](../ci/README.md#the-mirror-contract) says: each cue's
+line, to the file's lines from its timing line to its last line of text, so
+a chunk the kernel cuts from a long transcript is at its own cue.
 
 **Never:** changes your files; writes outside MIRROR; reads a hidden file;
 guesses at a file that isn't what its name says.

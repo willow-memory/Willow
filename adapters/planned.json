@@ -50,16 +50,6 @@
   "role": "page"
  },
  {
-  "name": "assistant-scores",
-  "kind": "stdlib",
-  "section": "Assistants",
-  "line": "How often each assistant's suggestions were sealed or set aside, from the record.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "role": "suggests"
- },
- {
   "name": "basic-memory",
   "kind": "stdlib",
   "section": "Assistants",
@@ -426,16 +416,6 @@
   "writes": "record",
   "network": "none",
   "role": "tools"
- },
- {
-  "name": "food-log",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "What you ate, from your notes, by day.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "role": "page"
  },
  {
   "name": "forgejo",

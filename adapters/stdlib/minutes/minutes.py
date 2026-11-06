@@ -100,6 +100,7 @@ def say(doc: dict, as_json: bool) -> None:
     print(json.dumps(doc, ensure_ascii=False) if as_json else report_text(doc))
 
 
+# differs on purpose: a due date is when an action is due, not the day of the meeting
 def entries(pile: list[dict]) -> list[tuple[str, str, int, str]]:
     """(day, path, line number, text) for each line a day reaches: the latest
     date it says, else the nearest above it in its file, else its file's name."""
