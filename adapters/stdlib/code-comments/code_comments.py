@@ -245,6 +245,7 @@ def write_places(dst: Path, rel: str, found: dict[str, str]) -> None:
     out.write_bytes((json.dumps(doc, ensure_ascii=False) + "\n").encode("utf-8"))
 
 
+# differs on purpose: convert needs the file's name, for its language
 def mirror(src: Path, dst: Path) -> tuple[int, int]:
     """Write the mirror of `src` into `dst`. Returns (written, skipped)."""
     wrote = skipped = 0
