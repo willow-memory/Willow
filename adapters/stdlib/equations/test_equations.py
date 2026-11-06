@@ -363,3 +363,9 @@ def test_an_equation_longer_than_a_chunk_is_cut_at_spaces_over_lines(tmp_path):
     assert run("mirror", "--from", str(src), "--to", str(out)).returncode == 0
     words = " ".join(c["text"] for c in mod.kernel.chunks(out)).split()
     assert words[-3:] == long.split()[-3:], "the kernel reads the equation to its end"
+
+
+def test_an_equation_too_long_for_its_lead_in_takes_none_of_it():
+    long = " + ".join(f"a_{{{i}}} x^{{{i}}}" for i in range(80))
+    (p,) = mod.passages(f"the sum is S\n\\[ {long} \\]\n".encode(), "a.tex")
+    assert p.split("\n")[0] == "a.tex line 2" and p.split("\n")[1].startswith("a_{0}")
