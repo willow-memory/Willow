@@ -657,6 +657,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "flashcards": ("flashcards.py", ["--box", "{box}", "due", *NOW]),
     "foia": ("foia.py", ["--box", "{box}"]),
     "folder-card": ("folder_card.py", ["--box", "{box}", "--to", "{tmp}/card.md"]),
+    "food-log": ("food_log.py", ["--box", "{box}"]),
     "forecasts": ("forecasts.py", ["wager", "--box", "{box}", "--p", "0.7", *NOW,
                   "tomatoes"]),  # fmt: skip
     "format-rot": ("format_rot.py", ["--from", "{pile}"]),
@@ -703,6 +704,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "llms-txt": ("llms_txt.py", ["write", "--from", "{pile}", "--to", "{tmp}/llms.txt"]),
     "local-model": ("local_model.py", ["ask", "--box", "{box}", "--url", "http://127.0.0.1:9/v1",
                     "--model", "m", "tomatoes"]),
+    "log-kit": ("log_kit.py", ["--box", "{box}", "--words", "tomatoes"]),
     "make-it-so": ("make_it_so.py", ["plan", "--box", "{box}", "--to", "{tmp}/plan.json", "--cmd", "echo hi", "tomatoes"]),
     "market-calls": ("market_calls.py", ["score", "--box", "{box}"]),
     "mcp-lite": ("server.py", ["--box", "{box}"]),

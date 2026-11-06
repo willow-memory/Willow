@@ -345,3 +345,27 @@ def test_each_passage_is_placed_from_its_lead_in_to_its_sentence_after():
 def test_a_lead_in_with_no_blank_line_is_placed_from_its_first_line():
     ((p, a, b),) = mod.placed(b"A\nlead in\n\\[ k = 1 \\]\n", "a.tex")
     assert p == "a.tex line 3\nA lead in\nk = 1" and (a, b) == (1, 3)
+
+
+def test_an_equation_longer_than_a_chunk_is_cut_at_spaces_over_lines(tmp_path):
+    long = " + ".join(f"a_{{{i}}} x^{{{i}}}" for i in range(80))  # over 500 characters
+    body = f"Lead in.\n\\begin{{equation}}\n{long}\n\\end{{equation}}\n".encode()
+    (p,) = mod.passages(body, "a.tex")
+    lines = p.split("\n")
+    assert all(len(s) <= mod.kernel.MAX_CHUNK for s in lines)
+    assert lines[0] == "a.tex line 2", "too long for its lead-in: no room for the prose"
+    assert " ".join(lines[1:]) == long, "joined with a space, the equation as it was"
+    assert mod._fit("x" * 1100).split("\n") == ["x" * 500, "x" * 500, "x" * 100]
+    assert mod._fit("k = 1") == "k = 1"
+    src, out = tmp_path / "src", tmp_path / "out"
+    src.mkdir()
+    (src / "a.tex").write_bytes(body)
+    assert run("mirror", "--from", str(src), "--to", str(out)).returncode == 0
+    words = " ".join(c["text"] for c in mod.kernel.chunks(out)).split()
+    assert words[-3:] == long.split()[-3:], "the kernel reads the equation to its end"
+
+
+def test_an_equation_too_long_for_its_lead_in_takes_none_of_it():
+    long = " + ".join(f"a_{{{i}}} x^{{{i}}}" for i in range(80))
+    (p,) = mod.passages(f"the sum is S\n\\[ {long} \\]\n".encode(), "a.tex")
+    assert p.split("\n")[0] == "a.tex line 2" and p.split("\n")[1].startswith("a_{0}")

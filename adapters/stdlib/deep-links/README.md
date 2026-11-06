@@ -14,8 +14,8 @@ An answer you can click, not a line number to hunt for.
 An answer that says "garden.md, line 3" leaves you to find the file. This gives
 a link to click, in the two forms a file can be pointed at.
 
-    python adapters/stdlib/deep-links/deep_links.py --box DIR [--base URL]
-    python adapters/stdlib/deep-links/deep_links.py --box DIR [--base URL] "your question"
+    python adapters/stdlib/deep-links/deep_links.py --box DIR [--base URL] [--from FOLDER]
+    python adapters/stdlib/deep-links/deep_links.py --box DIR [--base URL] [--from FOLDER] "your question"
 
     Six hours of sun.
       garden.md:3   file:///home/ana/notes/garden.md#line=2,4
@@ -29,6 +29,15 @@ a link to click, in the two forms a file can be pointed at.
 In a text fragment the words are percent-encoded as the standard asks, which
 includes the comma, the hyphen and the ampersand. A path with a space is made
 safe as a link too.
+
+**A mirror's passage goes back to the original.** When the box's pile is a
+reader's mirror that keeps [the mirror contract](../ci/README.md#the-mirror-contract),
+the map beside each mirror file says where its passages came from, and the
+tag says so: `walt/cases.md.txt:3 (walt/cases.md, line 3)`. With `--from
+FOLDER`, the folder the mirror was made from, the links go to the original:
+a line place at its lines (`walt/cases.md#line=2,5`), a named place such as
+`cell 4` to the file itself, and a web link to the original's path under
+`--base`. A mirror file with no map is linked as before.
 
 With no question it is each answer you approved, then a link for every passage
 it cites. With a question it is the passages your folder holds for it, ranked

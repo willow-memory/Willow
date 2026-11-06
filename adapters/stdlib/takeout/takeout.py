@@ -312,6 +312,7 @@ def _part_name(name: str, n: int) -> str:
     return f"{name}.txt" if n == 1 else f"{name}.part{n}.txt"
 
 
+# differs on purpose: convert needs the file's name, for which export it is
 def mirror(src: Path, dst: Path) -> tuple[int, int]:
     """Write the mirror of `src` into `dst`. Returns (written, skipped)."""
     wrote = skipped = 0

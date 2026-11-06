@@ -84,6 +84,7 @@ def on_this_machine(url: str) -> bool:
         return False
 
 
+# differs on purpose: stderr too, so a refusal's reason reaches the report's row
 def kernel_says(argv: list[str]) -> tuple[int, str]:
     got = io.StringIO()
     with contextlib.redirect_stdout(got), contextlib.redirect_stderr(got):

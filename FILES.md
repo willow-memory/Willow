@@ -251,7 +251,9 @@ willow/
 │   │   │   ├── test_realdata.py  realdata.py's tests: a run per person, a traceback fails, a refusal holds
 │   │   │   ├── test_times.py  times.py's tests: JUnit summed by file, unseen kept, gone dropped
 │   │   │   ├── times.py      test-times.json kept to what CI's own run took, by a script
+│   │   │   ├── copies.py     the functions add-ons keep their own copy of, and the copies that drifted
 │   │   │   ├── mirrors.py    the mirror contract, checked
+│   │   │   ├── test_copies.py
 │   │   │   ├── test_mirrors.py
 │   │   │   └── README.md     its card: gates, states, the guard and exit codes
 │   │   ├── ci-cache/
@@ -418,6 +420,10 @@ willow/
 │   │   │   ├── folder_card.py  a card for your folder: its files, dates and gaps, with your notes, written to a file
 │   │   │   ├── test_folder_card.py
 │   │   │   └── README.md
+│   │   ├── food-log/
+│   │   │   ├── food_log.py   What you ate, from your notes, by day
+│   │   │   ├── test_food_log.py
+│   │   │   └── README.md     its card
 │   │   ├── forecasts/
 │   │   │   ├── forecasts.py  a wager before the outcome, settled by your seal, scored by Brier
 │   │   │   ├── test_forecasts.py
@@ -678,6 +684,10 @@ willow/
 │   │   │   ├── lockfiles.py   lockfiles as a line for each locked package
 │   │   │   ├── test_lockfiles.py
 │   │   │   └── README.md
+│   │   ├── log-kit/
+│   │   │   ├── log_kit.py    The engine the logs share: your notes' dated lines, read by a short spec of words, numbers and a period, so a new log is a spec, not a program
+│   │   │   ├── test_log_kit.py
+│   │   │   └── README.md     its card
 │   │   ├── logs/
 │   │   │   ├── logs.py   system and web server logs as dated lines
 │   │   │   ├── test_logs.py

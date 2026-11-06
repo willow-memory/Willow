@@ -183,6 +183,7 @@ def history_text(raw: bytes, shell: str) -> str | None:
     return "".join("\n".join(p) + "\n\n" for p in paras)
 
 
+# differs on purpose: a history file is known by its shell's name for it
 def _sources(folder: Path) -> list[Path]:
     """History files under `folder`, sorted by relative path. Hidden folders
     and files are skipped; symlinked folders are not followed."""
@@ -200,6 +201,7 @@ def _within(inner: Path, outer: Path) -> bool:
     return inner == outer or outer in inner.parents
 
 
+# differs on purpose: a file is read as its shell's history
 def mirror(src: Path, dst: Path) -> tuple[int, int]:
     """Write the mirror of `src` into `dst`. Returns (written, skipped)."""
     wrote = skipped = 0

@@ -6,7 +6,7 @@ added: 2026-10-29
 writes: nothing
 network: none
 role: page
-uses: habits
+uses: habits, log-kit
 -->
 # mood
 
@@ -36,8 +36,10 @@ the numbers you wrote, added up. Oldest first.
 
 It only reads. Exit codes, the kernel's: 0 scores found; 42 none; 2 refused.
 
-**Uses:** the kernel's `chunks`, `newest` and `config`, and
-[habits](../habits/)' `file_lines`.
+**Uses:** [log-kit](../log-kit/), the engine the logs share: mood is its
+score and its summary, a spec, and log-kit reads the dated lines (the
+kernel's `chunks`, `newest` and `config`, and [habits](../habits/)'
+`file_lines`).
 
 **Never:** changes your files; writes anything, even the record; sends a
 number anywhere.
