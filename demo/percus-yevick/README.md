@@ -262,7 +262,10 @@ seconds.
 | extended | reported | 3 of 7: e2, e3, e6 |
 | R6 | not yet judged | the physics student, with [rubric.md](rubric.md) |
 
-**The claim failed.** The author's questions found one step of eleven,
+**Freeze 1's claim failed: the kernel alone did not find the chain.** That
+is narrower than the claim of the person running this study, which is that
+the stack *and the add-ons* find it; freeze 2, below, tests that. The
+author's questions found one step of eleven,
 Ornstein–Zernike (s3, from Wikipedia's article); the blind questions found
 one, a different one, Baxter's factorization (s5a, from Coquand and
 Sperl's square-shoulder paper). The
@@ -301,6 +304,47 @@ The arms (rankers, why-not, predict, claims on the ML specialist's interim
 report, and the models arranging what was found) were still running when this
 was written; they are reported below when done, and none of them changes a
 verdict.
+
+## Freeze 2: the stack and the add-ons
+
+Freeze 1 was written as "the kernel serves", and R1 to R4 count the kernel
+alone; every other add-on was an arm, reported and never counted. After the
+run, the person running this study said that was never the claim: "my claim
+isn't that the kernel alone could find it." It is that a stack of data and a
+pile of add-ons can find the derivation, and the frozen rules didn't test
+that. So a second freeze, before anyone read the arms' output, tests it
+with the same questions, steps, hit rule and stack:
+
+| Rule | What | Needed |
+|---|---|---|
+| R7 | The author's questions, asked of all five rankers (the kernel, the kernel with words.txt, scan's BM25, pile-rungs, latent), three passages each; a step counts when any ranker serves its own question a passage holding it | at least 9 of 11, with s5a, s5b and s7 |
+| R8 | The blind questions, the same way | at least 7 of 11, with s5b and s7 |
+| R9 | The null questions: served a chain step by any of the five | at most 2 of 10 |
+| R10 | Random baseline: fifteen passages a question (five rankers, three each), seed 0 | at most 2 of 11 |
+
+Reported beside them, never counted: each ranker's own finds, and the steps
+found only through Wertheim's Laplace method or sticky spheres.
+
+- **Why R9 and R10 matter here.** BM25 and latent always serve their top
+  passages, whatever is asked, and five rankers serve fifteen passages to a
+  question where the kernel serves three. Without them, volume could pass
+  for finding.
+- **What was known when it was written**: freeze 1's result, including
+  which steps the stack holds at all (above). Not known: anything any other
+  ranker served. The arms were running, and their output wasn't read until
+  freeze 2 was committed. The ceiling is the same: no ranker can find s0 or
+  s1a, so R7 needs every other step.
+- **Counted by [union.py](union.py)**, which uses arms.py's rankers unchanged
+  and every question set. Its verdicts are kernel rows named
+  `percus-yevick:R7` and on. Its tests use rows made by hand.
+- **Dry run** (2026-11-06, 02:09 to 02:14 UTC): all 49 questions asked as
+  nonsense, of all five rankers: R7 and R8 failing at 0, R9 and R10
+  satisfied at 0, nothing found through Wertheim; five rows on the box,
+  which verify. It shared the machine with the arms' model arm for those
+  minutes.
+- **Frozen in FROZEN-2.json**, in a commit of its own: the hashes of
+  union.py, its rules, and every file and tool it uses. Freeze 1 is
+  unchanged and its verdicts stand.
 
 ## Said plainly
 

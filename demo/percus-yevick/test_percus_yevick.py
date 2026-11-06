@@ -37,6 +37,15 @@ def test_frozen_files_are_as_frozen_or_the_study_says_it_is_a_draft():
     must |= {f"questions/{p.name}" for p in (HERE / "questions").iterdir()}
     must |= {f"models/{p.name}" for p in (HERE / "models").iterdir()}
     assert must <= set(files), sorted(must - set(files))
+    second = HERE / "FROZEN-2.json"
+    if second.exists():  # freeze 2: union.py's rules, over freeze 1, unchanged
+        files2 = json.loads(second.read_text(encoding="utf-8"))["files"]
+        for rel, sha in files2.items():
+            got = hashlib.sha256((HERE / rel).read_bytes()).hexdigest()
+            assert got == sha, f"{rel} changed after freeze 2; a change is a new freeze"
+        assert {"union.py", "arms.py", "score.py", "steps.json", "pipeline.py"} <= set(
+            files2
+        )
 
 
 def test_every_question_names_a_step_and_every_step_is_asked():
@@ -344,3 +353,55 @@ def test_arms_reads_a_model_and_its_reasoning():
     assert arms.variant("qwen3:8b@none") == ("qwen3:8b", "none")
     with pytest.raises(SystemExit):
         arms.variant("qwen3:8b@off")
+
+
+import union  # noqa: E402
+
+
+def union_rows(hits: dict[str, dict[str, set[str]]]) -> tuple[list[dict], dict]:
+    """A question per chain step in each set; hits[set][ranker] the steps it finds."""
+    qs, ranked = [], {n: [] for n in union.RANKERS}
+    for set_name in ("author", "blind-a", "null"):
+        steps = score.CHAIN if set_name != "null" else ["n"] * 10
+        for k, step in enumerate(steps):
+            qs.append({"set": set_name, "id": f"{step}.{k}", "step": step})
+            for n in union.RANKERS:
+                got = step in hits.get(set_name, {}).get(n, set())
+                held = [step] if got else []
+                if set_name == "null" and k < hits.get("null-served", {}).get(n, 0):
+                    held = ["s3"]
+                ranked[n].append({"hit": got, "steps": held})
+    return qs, ranked
+
+
+def test_r7_and_r8_count_a_step_found_by_any_ranker():
+    chain = set(score.CHAIN)
+    qs, ranked = union_rows({"author": {"kernel": {"s3"}, "bm25": chain - {"s0", "s1a", "s3"}},
+                             "blind-a": {"latent": {"s5b", "s7", "s2"}}})  # fmt: skip
+    got = union.judge(qs, ranked, 0)
+    assert got["R7"]["state"] == "satisfied" and got["R7"]["number"].startswith(
+        "9 of 11"
+    )
+    assert got["R8"]["state"] == "failing" and got["R8"]["number"].startswith("3 of 11")
+    assert "kernel: author 1 (s3)" in got["by ranker"]["number"]
+    qs, ranked = union_rows({"author": {"bm25": chain - {"s0", "s1a", "s7"}}})
+    assert (
+        union.judge(qs, ranked, 0)["R7"]["state"] == "failing"
+    )  # s7 must be among them
+
+
+def test_r9_counts_null_questions_served_a_step_by_any_ranker_and_r10_the_draw():
+    qs, ranked = union_rows({"null-served": {"bm25": 2, "latent": 3}})
+    got = union.judge(qs, ranked, 3)
+    assert got["R9"]["state"] == "failing" and got["R9"]["number"].startswith("3 of 10")
+    assert got["R10"]["state"] == "failing" and union.DRAWN == 15
+    qs, ranked = union_rows({"null-served": {"bm25": 2}})
+    got = union.judge(qs, ranked, 2)
+    assert got["R9"]["state"] == "satisfied" and got["R10"]["state"] == "satisfied"
+    pile = [{"text": "nothing"}] * 40
+    assert union.draw(pile, 21, seed=0) == 0
+
+
+def test_union_refuses_a_bad_command_line_and_a_work_folder_without_an_index(tmp_path):
+    assert union.main([]) == 2
+    assert union.main(["--work", str(tmp_path), "--out", str(tmp_path / "o")]) == 2

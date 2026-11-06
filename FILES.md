@@ -1747,6 +1747,7 @@ willow/
 │   │   ├── sources.json      the stack: each source by address, version and SHA-256
 │   │   ├── steps.json        the chain's steps, and what a passage must hold to count
 │   │   ├── tally.py          the pass rules in the README, counted from the pipeline's rows
+│   │   ├── union.py          freeze 2: every ranker together, R7 to R10
 │   │   ├── words.txt         notation a question may use, read as the sources' words
 │   │   ├── test_percus_yevick.py  the draft hangs together, and its hit rule does what it says
 │   │   └── README.md         Percus–Yevick: found, not generated
