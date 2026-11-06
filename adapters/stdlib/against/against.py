@@ -66,6 +66,11 @@ def commit(ref: str) -> str | None:
     return got.stdout.strip() if got.returncode == 0 else None
 
 
+def git_ok(*argv: str) -> int:
+    """git's exit code alone, for a question it answers yes or no."""
+    return subprocess.run(["git", *argv], capture_output=True).returncode
+
+
 def left(ref: str, rev: str) -> str:
     """Where `rev` left `ref`: their merge base."""
     got = subprocess.run(
@@ -170,6 +175,17 @@ class Adds:
         self.paths = tree_paths_of(at(ref, "FILES.md")) - tree_paths_of(
             at(base, "FILES.md")
         )
+
+    def less(self, shared: Adds) -> Adds:
+        """These adds without what `shared` adds: the commits two pull
+        requests share are neither's."""
+        for name in shared.addons:
+            self.addons.pop(name, None)
+        for name in shared.ideas:
+            self.ideas.pop(name, None)
+        self.commands -= shared.commands
+        self.paths -= shared.paths
+        return self
 
     def names(self) -> dict[str, tuple[str, str]]:
         """name -> (what it is, its line); an add-on beats an idea of its name."""
@@ -287,6 +303,14 @@ def check(base: str, head: str, others: list[str]) -> tuple[int, list[str]]:
             fork = left(mine, sha)
             mine_adds = Adds(mine, read_from(ref, mine, fork))
             there = Adds(sha, read_from(ref, sha, fork))
+            # commits the two share that REF lacks (one stacked on the
+            # other, or merged it) add for neither, even once each has
+            # merged REF since: then git finds REF's tip as one merge base
+            # of the two and their shared commit as another, so each is read
+            for shared in git("merge-base", "--all", mine, sha).split():
+                if git_ok("merge-base", "--is-ancestor", shared, ref) != 0:
+                    gone = Adds(shared, left(ref, shared))
+                    mine_adds, there = mine_adds.less(gone), there.less(gone)
             found = (duplicates(mine_adds, there, who) + collisions(mine, sha, who)
                      + nears(mine_adds, there, who))  # fmt: skip
         except Unchecked as why:
