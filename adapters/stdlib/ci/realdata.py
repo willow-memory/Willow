@@ -16,7 +16,8 @@ its card, and to 60 seconds. `--base REF` runs every stdlib add-on whose
 files the branch changed since it left REF.
 
 A run fails on a traceback, a breach of its card's promises, a hang, or an
-exit other than 0, 2 and 42. A refusal (2) is said, not failed: some lines
+exit other than 0, 2 and 42; a reader whose card says `output: mirror` fails
+on a break of the mirror contract too (mirrors.py). A refusal (2) is said, not failed: some lines
 name a file only the contract's pile has. What each run printed is shown,
 for the pull request to say.
 
@@ -41,6 +42,16 @@ STDLIB = ROOT / "adapters" / "stdlib"
 USAGE = "usage: realdata.py run NAME [NAME ...] | realdata.py run --base REF"
 NOW = ["--now", "2026-10-23T00:00:00Z"]
 WAIT = 60
+
+
+def _load_mirrors():
+    spec = importlib.util.spec_from_file_location("willow_mirrors", HERE / "mirrors.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+MIRRORS = _load_mirrors()  # the mirror contract's check
 
 
 class Refused(Exception):
@@ -131,6 +142,13 @@ def run_one(
         return "a traceback", said
     if got.returncode not in (0, 2, 42):
         return f"exit {got.returncode}", said
+    if (tmp / "mirror").is_dir() and MIRRORS.keeps(script.parent / "README.md"):
+        broke = MIRRORS.check(life, tmp / "mirror")
+        if broke:
+            return (
+                f"{len(broke)} break(s) of the mirror contract (first: {broke[0]})",
+                said,
+            )
     return "", said
 
 
