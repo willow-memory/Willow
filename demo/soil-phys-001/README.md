@@ -124,9 +124,10 @@ nearly anything. Some of the 17 may be that, and this run can't tell which.
 missed, Leibniz's "those two States ... would not at all differ from one
 another", is in the pile word for word. The runner wrote each of Leibniz's
 paragraphs as one line, and the kernel reads only the first 500 characters
-of a line; the quote sits past that. The other Leibniz quote, early in its
-paragraph, was found. A break in this runner's TEI conversion, not in
-`misquote`, and one the dry run's short nonsense passage couldn't show. A
+of a line, which is willow's known bug #89 (BUGS.md); the quote sits past
+that. The other Leibniz quote, early in its paragraph, was found. So not
+`misquote`'s miss: the runner's long lines met #89, and the dry run's short
+nonsense passage couldn't show it. A
 rerun with the paragraphs cut at sentence ends would be a new freeze.
 DispatchesFromReality's stack for the same packet
 (`research/soil-phys-001/willow`) builds its pile with the text add-on,
