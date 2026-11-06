@@ -96,12 +96,13 @@ def blocks_of_text(text: str, wrapped: bool) -> list[tuple[int, str]]:
     """Paragraphs (and, for wrapped lines, short-line breaks), each with the
     line it starts on; a `== page N` line is a block of its own."""
     lines = text.splitlines()
-    wide = 0
+    wide = None
     if wrapped:
         sizes = sorted(
             len(s.strip()) for s in lines if s.strip() and not PAGE.fullmatch(s.strip())
         )
-        wide = sizes[int(WIDE * (len(sizes) - 1))] if sizes else 0
+        if sizes:
+            wide = sizes[int(WIDE * (len(sizes) - 1))]
     out: list[tuple[int, str]] = []
     para: list[str] = []
     start = 0
@@ -131,7 +132,7 @@ def blocks_of_text(text: str, wrapped: bool) -> list[tuple[int, str]]:
         if not para:
             start = i
         para.append(line)
-        if wrapped and len(line) < SHORT * wide:
+        if wrapped and wide is not None and len(line) < SHORT * wide:
             nxt = next(
                 (
                     s.strip()

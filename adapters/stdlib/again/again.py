@@ -45,9 +45,12 @@ def repeats(rows: list[dict]) -> dict[str, dict]:
     """Per bite key: how often asked, when last, and the last thing served."""
     out: dict[str, dict] = {}
     for r in rows:
-        if r["kind"] != "bite" or not r.get("bite_key"):
+        if r["kind"] != "bite":
             continue
-        e = out.setdefault(r["bite_key"], {"times": 0})
+        key = r.get("bite_key")
+        if not key:
+            continue
+        e = out.setdefault(key, {"times": 0})
         e["times"] += 1
         e["last"] = r["ts"]
         e["by"] = r.get("answered_by")
@@ -101,8 +104,10 @@ def report(addon: str, state: str, said: str, groups: list) -> dict:
 
 def report_text(doc: dict) -> str:
     rows = [r for g in doc["groups"] for r in g["rows"]]
-    w = min(max((len(r["where"]) for r in rows), default=0), 60)
     out = [f"{doc['addon']}: {doc['state']}, {doc['said']}"]
+    if not rows:
+        return out[0]
+    w = min(max(len(r["where"]) for r in rows), 60)
     for g in doc["groups"]:
         if g["name"] is not None:
             out.append(f"## {g['name']}")

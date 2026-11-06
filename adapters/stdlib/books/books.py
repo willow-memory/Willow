@@ -120,7 +120,10 @@ def _entry(block: list[str]) -> dict | None:
     added = ADDED.search(meta_line)
     page = PAGE.search(meta_line)
     location = LOCATION.search(meta_line)
-    text = "\n".join(ln for ln in lines[nonblank[1] + 1 :] if ln)
+    # text starts at the next non-blank after the meta line (Kindle often
+    # leaves one blank between; without it, the next non-blank is the quote)
+    after = next((i for i in nonblank if i > nonblank[1]), len(lines))
+    text = "\n".join(ln for ln in lines[after:] if ln)
     return {
         "kind": meta.group(1),
         "book": lines[nonblank[0]],

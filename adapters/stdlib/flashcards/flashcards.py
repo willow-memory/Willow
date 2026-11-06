@@ -72,15 +72,19 @@ def next_difficulty(d: float, g: int) -> float:
     return min(max(W[7] * initial_difficulty(4) + (1 - W[7]) * damped, 1), 10)
 
 
-def step(card: tuple[float, float] | None, g: int, days: int) -> tuple[float, float]:
-    """(stability, difficulty) after grade g, `days` whole days since the last."""
+def step(
+    card: tuple[float, float] | None, g: int, days: int | None = None
+) -> tuple[float, float]:
+    """(stability, difficulty) after grade g, `days` whole days since the last.
+    On a card's first review (`card` is None), `days` is not used."""
     if card is None:
         return max(W[g - 1], MIN_STABILITY), initial_difficulty(g)
     s, d = card
-    if days < 1:  # the same day: the short-term formula
+    elapsed = 0 if days is None else days
+    if elapsed < 1:  # the same day: the short-term formula
         new = s * math.exp(W[17] * (g - 3 + W[18]))
     else:
-        r = (1 + FACTOR * days / s) ** DECAY
+        r = (1 + FACTOR * elapsed / s) ** DECAY
         if g == 1:
             new = min(
                 W[11]
@@ -120,7 +124,10 @@ def replay(rs: list[dict]) -> list[tuple[int, str, tuple[float, float]]]:
             raise ValueError(f"row {r['n']}: grade {g!r} is not 1 to 4")
         if last is not None and at < last:
             raise ValueError(f"row {r['n']}: reviewed before the review row before it")
-        card = step(card, g, 0 if last is None else (at - last).days)
+        if last is None:
+            card = step(None, g)
+        else:
+            card = step(card, g, (at - last).days)
         days = interval(card[0])
         out.append((days, (at + timedelta(days=days)).strftime(FMT), card))
         last = at

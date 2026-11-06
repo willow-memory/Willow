@@ -155,10 +155,11 @@ class Index:
             got: set[int] = set()
             for x in [w, *alias.get(w, [])]:
                 got |= self.holding(x) | self.holding(kernel.stem(x))
-                if len(x) >= 4 and any(ch.isdigit() for ch in x):
-                    for t in self.words:
-                        if t.startswith(x) or t.endswith(x):
-                            got |= self.holding(t)
+                if len(x) >= 4:
+                    if any(ch.isdigit() for ch in x):
+                        for t in self.words:
+                            if t.startswith(x) or t.endswith(x):
+                                got |= self.holding(t)
             for i in got:
                 count[i] = count.get(i, 0) + 1
         kept = [i for i, n in count.items() if n >= kernel.HOLD * len(want)]

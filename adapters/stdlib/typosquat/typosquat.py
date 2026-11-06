@@ -108,8 +108,10 @@ def main(argv: list[str]) -> int:
             opts[a] = next(it, "")
         else:
             opts["bad"] = a
-    src = [o for o in ("--box", "--from") if o in opts]
-    if "bad" in opts or len(src) != 1 or not all(opts.get(o) for o in opts):
+    if "bad" in opts or ("--box" in opts) == ("--from" in opts):
+        print(__doc__.split("\n\n")[1], file=sys.stderr)
+        return kernel.REFUSED
+    if not all(opts.get(o) for o in opts):
         print(__doc__.split("\n\n")[1], file=sys.stderr)
         return kernel.REFUSED
     if "--box" in opts:

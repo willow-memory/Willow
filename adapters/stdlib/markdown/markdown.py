@@ -263,7 +263,7 @@ def convert(data: bytes) -> str | None:
         if fence:
             if (
                 m
-                and m.group(2)[0] == fence[0]
+                and next(iter(m.group(2))) == next(iter(fence))
                 and len(m.group(2)) >= len(fence)
                 and not raw[m.end() :].strip()
             ):

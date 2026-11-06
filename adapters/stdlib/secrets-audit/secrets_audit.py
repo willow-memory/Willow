@@ -87,8 +87,10 @@ def report_text(doc: dict) -> str:
     """A report as every report add-on prints it: the same twenty lines each
     keeps, held to this one by test_contract.py."""
     rows = [r for g in doc["groups"] for r in g["rows"]]
-    w = min(max((len(r["where"]) for r in rows), default=0), 60)
     out = [f"{doc['addon']}: {doc['state']}, {doc['said']}"]
+    if not rows:
+        return out[0]
+    w = min(max(len(r["where"]) for r in rows), 60)
     for g in doc["groups"]:
         if g["name"] is not None:
             out.append(f"## {g['name']}")
@@ -124,7 +126,7 @@ def kinds_in(line: str, pv, listed: bool = False) -> list[str]:
         pv.scrub(line, found, listed)
     got = [k for k in KINDS if k in found]
     if pv is None and typed_password(line):
-        got.insert(0, "password")
+        got = ["password", *got]
     return got
 
 

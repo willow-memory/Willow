@@ -44,33 +44,33 @@ def record_of(path: Path) -> Path | None:
     return None
 
 
-def check_folder(record: Path) -> tuple[bool, str, int]:
+def check_folder(record: Path) -> tuple[bool, str, int | None]:
     rows, breaks = kernel.read(record)
     if breaks:
-        return False, "the record doesn't verify: " + "; ".join(breaks), 0
+        return False, "the record doesn't verify: " + "; ".join(breaks), None
     n = len(rows)
     return True, f"holds ({n} row{'' if n == 1 else 's'})", n
 
 
-def check_zip(path: Path) -> tuple[bool, str, int]:
+def check_zip(path: Path) -> tuple[bool, str, int | None]:
     try:
         with zipfile.ZipFile(path) as z:
             if "record.jsonl" not in z.namelist():
-                return False, "nothing there: not a willow backup", 0
+                return False, "nothing there: not a willow backup", None
             raw = z.read("record.jsonl")
     except (OSError, zipfile.BadZipFile) as e:
-        return False, f"couldn't read it: {type(e).__name__}", 0
+        return False, f"couldn't read it: {type(e).__name__}", None
     with tempfile.TemporaryDirectory() as tmp:
         copy = Path(tmp) / "record.jsonl"
         copy.write_bytes(raw)
         return check_folder(copy)
 
 
-def check(path: Path) -> tuple[bool, str, int]:
+def check(path: Path) -> tuple[bool, str, int | None]:
     """(holds, what to say, how many rows it holds)."""
     where = record_of(path)
     if where is None:
-        return False, "nothing there: not a box or a backup zip", 0
+        return False, "nothing there: not a box or a backup zip", None
     if where == path:
         return check_zip(path)
     return check_folder(where)
@@ -130,12 +130,13 @@ def main(argv: list[str]) -> int:
     if isinstance(parsed, str):
         print(parsed, file=sys.stderr)
         return kernel.REFUSED
-    lines, held, box_rows = [], [], 0
+    lines, held, box_rows = [], [], None
     for kind, label, path in parsed:
         ok, said, n = check(path)
         if path == box:
             box_rows = n
-        elif ok and n < box_rows:  # a copy that holds, from before the box's last rows
+        elif ok and box_rows is not None and n < box_rows:
+            # a copy that holds, from before the box's last rows
             behind = box_rows - n
             said = (
                 said[:-1]

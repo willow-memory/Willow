@@ -123,10 +123,12 @@ def test_one_timed_heading_is_not_a_plan(tmp_path):
 
 
 def test_refusals(tmp_path):
+    assert lt.PERIOD_MIN == 1 and lt.PERIOD_MAX == 999
     assert ask(tmp_path / "nobox").returncode == 2
     b = box(tmp_path, {"p.md": SHORT})
     assert ask(b, "--period", "lots").returncode == 2
     assert ask(b, "--period", "0").returncode == 2
+    assert ask(b, "--period", "1000").returncode == 2
     assert ask(b, "stray").returncode == 2
     assert run(str(HERE / "lesson_time.py")).returncode == 2
 

@@ -42,6 +42,8 @@ SAID = re.compile(
     r"(\d{1,3})(?:\s*[-–to]+\s*(\d{1,3}))?\s*min",
     re.I,
 )
+#: --period accepts whole minutes in this closed range
+PERIOD_MIN, PERIOD_MAX = 1, 999
 
 
 def file_lines(pile: list[dict]) -> dict[str, list[tuple[int, str]]]:
@@ -55,7 +57,7 @@ def file_lines(pile: list[dict]) -> dict[str, list[tuple[int, str]]]:
 def read_plan(rows: list[tuple[int, str]]) -> dict | None:
     """A file's timed parts and its stated time, or None when it times fewer
     than two parts. The stated time is the first line that says one."""
-    parts, said, said_at = [], None, 0
+    parts, said, said_at = [], None, None
     for n, line in rows:
         m = PART.match(line.strip())
         if m:
@@ -87,8 +89,9 @@ def verdicts(pile: list[dict], period: int | None) -> list[dict]:
             said, note = (period, period), "from --period"
         lo = sum(a for a, _ in plan["parts"])
         hi = sum(b for _, b in plan["parts"])
-        ok = lo <= said[1] and hi >= said[0]
-        span = str(said[0]) if said[0] == said[1] else f"{said[0]}-{said[1]}"
+        said_lo, said_hi = said
+        ok = lo <= said_hi and hi >= said_lo
+        span = str(said_lo) if said_lo == said_hi else f"{said_lo}-{said_hi}"
         total = str(lo) if lo == hi else f"{lo}-{hi}"
         parts = "+".join(str(a) if a == b else f"{a}-{b}" for a, b in plan["parts"])
         out.append({"ok": ok, "total": total, "span": span, "path": path,
@@ -121,10 +124,13 @@ def main(argv: list[str]) -> int:
         return kernel.REFUSED
     period = None
     if "--period" in opts:
-        if not opts["--period"].isdigit() or not 0 < int(opts["--period"]) < 1000:
+        if not opts["--period"].isdigit():
             print("refused: --period takes whole minutes, 1 to 999", file=sys.stderr)
             return kernel.REFUSED
         period = int(opts["--period"])
+        if period < PERIOD_MIN or period > PERIOD_MAX:
+            print("refused: --period takes whole minutes, 1 to 999", file=sys.stderr)
+            return kernel.REFUSED
     box = Path(opts["--box"])
     if not (box / "kernel.json").exists():
         print("refused: not a kernel box; init first", file=sys.stderr)

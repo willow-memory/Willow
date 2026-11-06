@@ -105,33 +105,36 @@ def said(row: dict) -> str:
         part = " + ".join(str(got[i]) for i in mine)
         if keep:
             part = f"{got} keep {part}"
-        if sign < 0:
+        if sign == -1:
             out += f" - ({part})" if n else f"-({part})"
         else:
             out += f" + {part}" if n else part
     if row["add"]:
-        out += f" + {row['add']}" if row["add"] > 0 else f" - {-row['add']}"
+        add = row["add"]
+        out += f" + {add}" if add >= 1 else f" - {-add}"
     return f"{row['dice']}: {out} = {row['total']}"
 
 
 def check(rows: list[dict]) -> tuple[int, str | None]:
     """(how many rolls hold, why the first that doesn't fails, or None)."""
-    held = 0
+    held: list[dict] = []
     for r in rows:
         if r["kind"] != KIND:
             continue
         before = rows[r["n"] - 1]["hash"] if r["n"] else kernel.GENESIS
         if r.get("seed") != before:
-            return held, f"row {r['n']}: its seed isn't the hash of the row before it"
+            return len(
+                held
+            ), f"row {r['n']}: its seed isn't the hash of the row before it"
         try:
             again = throw(r["dice"], r["seed"])
         except (ValueError, KeyError) as e:
-            return held, f"row {r['n']}: {e}"
+            return len(held), f"row {r['n']}: {e}"
         mine = (r.get("faces"), r.get("kept"), r.get("total"))
         if (again["faces"], again["kept"], again["total"]) != mine:
-            return held, f"row {r['n']}: its faces aren't what its seed gives"
-        held += 1
-    return held, None
+            return len(held), f"row {r['n']}: its faces aren't what its seed gives"
+        held.append(r)
+    return len(held), None
 
 
 def usage() -> int:

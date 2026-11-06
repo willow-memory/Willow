@@ -242,6 +242,11 @@ def test_nested_lockfiles_in_node_modules_are_skipped(tmp_path):
             "node_modules/x/package-lock.json": json.dumps(
                 {"packages": {"node_modules/lodash": {"version": "1.0.0"}}}
             ),
+            # a lockfile sitting in node_modules/ itself (no deeper folder):
+            # parents[:-1] still sees node_modules; parents[:-2] would not
+            "node_modules/package-lock.json": json.dumps(
+                {"packages": {"node_modules/lodash": {"version": "1.0.0"}}}
+            ),
         },
     )
     got = run("--from", str(src), "--db", str(db))

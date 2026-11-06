@@ -39,6 +39,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 import kernel  # noqa: E402
 
 CLOSE = 0.5  # the share of the quote's words, in order, that makes a passage close
+WHERE_CAP = 60  # where-column width, characters
 
 
 NAME = "misquote"
@@ -57,8 +58,10 @@ def report_text(doc: dict) -> str:
     """A report as every report add-on prints it: the same twenty lines each
     keeps, held to this one by test_contract.py."""
     rows = [r for g in doc["groups"] for r in g["rows"]]
-    w = min(max((len(r["where"]) for r in rows), default=0), 60)
     out = [f"{doc['addon']}: {doc['state']}, {doc['said']}"]
+    if not rows:
+        return out[0]
+    w = min(max(len(r["where"]) for r in rows), WHERE_CAP)
     for g in doc["groups"]:
         if g["name"] is not None:
             out.append(f"## {g['name']}")

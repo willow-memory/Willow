@@ -38,6 +38,18 @@ def run(b: Path, quote: str, *more: str) -> subprocess.CompletedProcess:
                           capture_output=True, text=True)  # fmt: skip
 
 
+def test_where_column_caps_at_sixty():
+    import importlib.util
+    from pathlib import Path
+
+    spec = importlib.util.spec_from_file_location(
+        "misquote", Path(__file__).resolve().parent / "misquote.py"
+    )
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    assert mod.WHERE_CAP == 60
+
+
 def test_a_dropped_word_is_named_as_the_file_spells_it(tmp_path):
     b = box(tmp_path)
     quote = ("We don't show you personalized ads based on your content "
