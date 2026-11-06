@@ -281,7 +281,8 @@ def arranged(
             got = tool("local-model/local_model.py", "ask", "--box", str(box), "--url", url, "--model", m,
                        *extra, q["asked"], timeout=1800)  # fmt: skip
             rows.append({"id": q["id"], "exit": got.returncode,
-                         "said": (got.stdout or got.stderr).strip()[-400:]})  # fmt: skip
+                         # the whole answer: a tail cut its opening off in the dry run
+                         "said": (got.stdout or got.stderr).strip()})  # fmt: skip
         same = tool("same-way/same_way.py", "--box", str(box), "--url", url, "--model", m,
                     *extra, "--questions", str(qfile), timeout=3600)  # fmt: skip
         out[entry] = {

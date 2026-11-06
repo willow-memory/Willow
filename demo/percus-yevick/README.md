@@ -204,9 +204,38 @@ number). What it could see, and what it found:
 - **A wiring break.** Santos's lecture notes came out empty: their 196 KB
   main file is ASCII but for one Windows-1252 en dash, and both readers
   skipped any file that wasn't UTF-8. The equations reader now falls back
-  to Windows-1252, then Latin-1 (pull request #248). The latex reader still
-  skips the file, so the notes' math is in the pile and their prose is not
-  until it gets the same fix.
+  to Windows-1252, then Latin-1 (pull request #248), and the latex reader
+  now does the same (#249).
+
+A second dry run, on 2026-11-06, rebuilt the pile with both fixes and ran
+the pipeline (`--seed 0`, verdicts to a scratch box) and every arm in
+[arms.py](arms.py), with qwen3:8b, qwen3:8b with no reasoning, and gemma3:4b:
+
+- **Santos's notes are in**: 114 KB of prose and 132 KB of math. The one
+  file still skipped, `diagrams_LN.tex`, is picture macros and no text.
+- **Every rule tallied and every verdict was written**: 0 of 11 steps, 0 of
+  7 extended, 0 of 10 nulls serving a step, R4's draw at 0, R5 satisfied,
+  R6 left to the judge; `kernel.py verify` held on the box.
+- **Every ranker served nothing a step counts**, bm25 included, which
+  always serves its top passages: the hit rule, not the ranker, is what
+  keeps nonsense from counting.
+- **why-not, predict, claim-check and misquote ran** and said what each
+  should on nonsense.
+- **contradictions found only LaTeX**: five "disagreements", every one
+  between macro names read as words (`frac`, `left`, `right`, `boxed`). On
+  this pile it measures nothing.
+- **The arranged arm asked each model on a plumbing box** that holds one
+  nonsense passage, so a model has something to answer. Reasoning off
+  really was asked differently: qwen3:8b with its reasoning declined one of
+  the two questions and answered the other; with none it answered both.
+  gemma3:4b declined both. same-way: 0 flipped for all three, with Ollama
+  alone on the machine. (The first dry run, sharing the machine, flipped
+  gemma at temperature 0: the real run gets the machine to itself.)
+- **A wiring break**: the arm kept only the last 400 characters of an
+  answer, so a long one lost its start. It now keeps the whole answer.
+- **Time**: the pipeline 7 seconds; the arms 42 minutes, 39 of them the
+  three model variants on this machine's CPU, for two questions each. The
+  real run asks many more, so it is a run of hours, not minutes.
 
 What it can't see: whether any real question is held, which is the result.
 
