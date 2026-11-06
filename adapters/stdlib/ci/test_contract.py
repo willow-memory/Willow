@@ -397,6 +397,10 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         "INSERT INTO tm_pairs VALUES ('tomatoes want sun','ada','sealed',"
         "'2026-10-01');\n"
     )}),
+    "notation": ("notation.py", {"main.tex": (
+        b"\\documentclass{article}\n\\begin{document}\nThe tide height $h$ obeys\n"
+        b"\\begin{equation}\nh = mt + b \\label{eq:tide}\n\\end{equation}\nat every harbour.\n\\end{document}\n"
+    )}),
     "notes": ("notes.py", {"garden.md": b"Tomatoes want [[sun]].\n"}),
     "notion": ("notion.py", {"notion.zip": (
         _zip({

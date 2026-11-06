@@ -789,6 +789,10 @@ willow/
 │   │   │   ├── nightstand.py  things set down, one bite picked up: one in hand, a bite every time, nothing deleted
 │   │   │   ├── test_nightstand.py
 │   │   │   └── README.md
+│   │   ├── notation/
+│   │   │   ├── notation.py   Each displayed equation in LaTeX sources with the words its paper gives for its symbols ("where η is the packing fraction"), so a question in words finds the equation
+│   │   │   ├── test_notation.py
+│   │   │   └── README.md     its card
 │   │   ├── notes/
 │   │   │   ├── notes.py      Obsidian and Logseq vaults, links and backlinks kept
 │   │   │   ├── test_notes.py
