@@ -1,8 +1,10 @@
 # SOIL-PHYS-001: can willow's tools stand in for reading?
 
-**DRAFT: not frozen.** Nothing has been asked of the sources but nonsense
-(the dry run below). The freeze is a commit of its own, made before any
-real quote, claim or question is asked.
+**Frozen 2026-11-06**, in commit a5cfde4, alone: [FROZEN.json](FROZEN.json)
+holds the SHA-256 of the answer key, the sources list, the runner and the
+fetcher, every pass rule and prediction, and the tools; the tests fail if
+one changes. Nothing had been asked of the sources before it but nonsense
+(the dry run below).
 
 SOIL-PHYS-001 is a speculative ledger on zero, symmetry breaking and
 holography, written in DispatchesFromReality

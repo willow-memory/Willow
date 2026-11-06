@@ -1837,6 +1837,7 @@ willow/
 │   │       └── weeknote2-qwen-teodora.json  the same, five lines kept a chunk
 │   ├── soil-phys-001/
 │   │   ├── fetch.py          the study's sources, fetched again and held to their hashes
+│   │   ├── FROZEN.json       the pre-registration: the key, sources, runner, rules and tools by SHA-256
 │   │   ├── key.json          the answer key: 35 lines checked by reading, with claims and questions
 │   │   ├── run.py            can willow's tools stand in for reading? One run of the study
 │   │   ├── sources.json      the 28 sources by address and SHA-256, and which have a text layer
