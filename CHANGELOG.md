@@ -1872,6 +1872,9 @@ too. The first release was v0.1.0.
 
 ### Changed
 
+- `ci`'s test-times.json made from main's own CI run by `times.py write --run
+  latest`: 17 test files it lacked are in, share's at 175 s, and 20 others
+  moved by half or more, so the tests:adapters chunks are even again (#256)
 - `AGENTS.md` is a third as long: what every agent needs before a change (the
   Never list, set up, what to run after a change), and a paragraph a job
   pointing at its page in `docs/agents/`: add-ons, studies, pull requests,
