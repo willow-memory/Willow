@@ -2112,6 +2112,11 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- `ci`'s realdata.py fails a reader whose mirror holds a line longer than one
+  of the kernel's chunks (500 characters), naming the first: the kernel keeps
+  only a line's first 500, and says nothing of the rest. Run on every reader
+  over the demo people's folders, it found clauses before its fix (3 lines on
+  bernadette, 37 on hollis) and no other (#262)
 - `clauses` keeps a sentence longer than one of the kernel's chunks on its
   source's own lines, a line longer than that cut at a space: a chat export
   holds no full stops, so its "sentence" ran for pages on one line and the
