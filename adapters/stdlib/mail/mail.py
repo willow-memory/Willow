@@ -42,6 +42,7 @@ import email
 import email.header
 import email.utils
 import io
+import json
 import mailbox
 import os
 import sys
@@ -231,20 +232,48 @@ def _split_mbox(raw: bytes) -> list[bytes]:
 
 def read_file(path: Path) -> str | None:
     """The text a file mirrors to, or None when it holds no message."""
+    found = blocks(path)
+    return "\n".join(b for b, _ in found) if found else None
+
+
+def blocks(path: Path) -> list[tuple[str, str]]:
+    """Each message's block of the mirror, with its place in the file:
+    `message N`, the Nth message, as its `== message N` heading says. Its
+    lines are decoded, so they are not the file's; none when no message."""
     try:
         raw = path.read_bytes()
         if b"\0" in raw:
-            return None
+            return []
         if path.name.lower().endswith(".eml"):
             msg = email.message_from_bytes(raw)
-            return render(msg) if is_message(msg) else None
+            return [(render(msg), "message 1")] if is_message(msg) else []
         msgs = [mailbox.mboxMessage(c) for c in _split_mbox(raw)]
         texts = [render(m) for m in msgs if is_message(m)]
     except Exception:  # any file that won't parse is skipped and counted
-        return None
-    if not texts:
-        return None
-    return "\n".join(f"== message {n}\n\n{t}" for n, t in enumerate(texts, 1))
+        return []
+    return [(f"== message {n}\n\n{t}", f"message {n}") for n, t in enumerate(texts, 1)]
+
+
+def places(found: list[tuple[str, str]]) -> dict[str, str]:
+    """The mirror contract's places (adapters/stdlib/ci/README.md): every
+    passage of a message's block, its heading's and its body's, at that
+    message."""
+    out, at = {}, 1
+    for block, place in found:
+        lines = block.split("\n")[:-1] + [""]  # a blank line between blocks
+        for i, s in enumerate(lines):
+            if s.strip() and (i == 0 or not lines[i - 1].strip()):
+                out[str(at + i)] = place
+        at += len(lines)
+    return out
+
+
+def write_places(dst: Path, rel: str, found: dict[str, str]) -> None:
+    """The map, hidden beside the mirror, where the kernel never reads."""
+    out = dst / ".places" / (rel + ".txt.json")
+    out.parent.mkdir(parents=True, exist_ok=True)
+    doc = {"source": rel, "places": found}
+    out.write_bytes((json.dumps(doc, ensure_ascii=False) + "\n").encode("utf-8"))
 
 
 def sources(folder: Path):
@@ -273,14 +302,17 @@ def mirror(folder: Path, dest: Path) -> int:
         return kernel.REFUSED
     wrote = skipped = 0
     for path, rel in sources(src):
-        text = read_file(path)
-        if text is None:
+        found = blocks(path)
+        if not found:
             skipped += 1
             continue
         target = out / rel.parent / (rel.name + ".txt")
         try:
             target.parent.mkdir(parents=True, exist_ok=True)
-            target.write_bytes(text.encode("utf-8", "replace"))
+            target.write_bytes(
+                "\n".join(b for b, _ in found).encode("utf-8", "replace")
+            )
+            write_places(out, rel.as_posix(), places(found))
         except OSError as err:
             print(f"refused: cannot write {target}: {err}", file=sys.stderr)
             return kernel.REFUSED
