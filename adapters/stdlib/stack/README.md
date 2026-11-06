@@ -36,6 +36,8 @@ it out. Blank lines, lines beginning `#` (but not `##`), and any other prose
 are skipped, so a stack file reads as markdown; a step before any pool is
 refused. A worked example is `adapters/stdlib/stack/example.md`; nine more,
 each for a different kind of folder, are in `adapters/stdlib/stack/examples/`.
+A stack you sealed with the forge add-on, with why each step is there, is
+written out to share by [stack-share](../stack-share/).
 
 ## pools and peaks
 
