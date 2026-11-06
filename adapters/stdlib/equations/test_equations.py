@@ -259,7 +259,7 @@ def test_mirror_writes_each_file_beside_its_path_and_counts(tmp_path):
     ]
     assert sorted(
         p.relative_to(out).as_posix() for p in out.rglob("*") if p.is_file()
-    ) == ["paper/py.tex.txt"]
+    ) == [".places/paper/py.tex.txt.json", "paper/py.tex.txt"]
     assert (out / "paper/py.tex.txt").read_text() == "\n\n".join(got()) + "\n"
     for rel, data in files.items():
         assert (tmp_path / "src" / rel).read_bytes() == data
@@ -326,3 +326,17 @@ def test_a_stray_byte_of_another_encoding_does_not_lose_the_paper():
     odd = b"caf\x81 leads in\n\\[ y = 2 \\]\n"  # undefined in Windows-1252
     assert mod.passages(odd, "a.tex") == ["a.tex line 2\ncaf\x81 leads in\ny = 2"]
     assert mod.decode(b"\xef\xbb\xbfx") == "x"
+
+
+def test_each_passage_is_placed_from_its_lead_in_to_its_sentence_after():
+    body = (b"\\begin{document}\nOpening words.\n\nThe relation\nreads\n"
+            b"\\begin{equation}\nh = c \\label{eq:oz}\n\\end{equation}\n"
+            b"where c is direct.\nAnd more.\n\n\\[ k = 1 \\]\n\\end{document}\n")  # fmt: skip
+    ((p1, a1, b1), (p2, a2, b2)) = mod.placed(body, "p.tex")
+    assert p1.split("\n")[0] == "p.tex line 6, label eq:oz"
+    assert (a1, b1) == (4, 10), "the lead-in's paragraph to the end of the one after"
+    assert (p2, a2, b2) == ("p.tex line 12\nk = 1", 12, 12)
+    assert mod.places([(p1, a1, b1), (p2, a2, b2)]) == {
+        "1": "lines 4-10",
+        "6": "line 12",
+    }
