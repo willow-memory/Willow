@@ -126,11 +126,11 @@ says how to pick one up:
 <!-- willow:front show=pick week=2026-W45 -->
 **Add-on of the week**
 
-**[joplin](adapters/stdlib/joplin/)** — Joplin's .jex export, read without unpacking it: each note as plain text with its title and dates.
+**[kart](adapters/deps/kart/)** — A job someone sent you, run in a sandbox over your own folder only once you seal it, its result yours to seal before it goes back.
 
-*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 333 built add-ons in name order.*
+*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 335 built add-ons in name order.*
 
-[Every add-on, 333 built of 522, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 335 built of 523, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 

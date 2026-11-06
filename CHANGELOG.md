@@ -10,6 +10,15 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `log-kit`, the engine the logs share: your notes' dated lines, read by a
+  short spec of words, kinds, a value and a period, summed up as lines, a
+  total or an average, so a new log is a spec, not a program. Each log kept
+  its own copy of `entries`; mood is the first moved onto it, its output the
+  same bytes on a folder of 66 scored days by month and by week. Run on its
+  own, `--words` makes a log of any words
+- `food-log`: what you ate, from your notes, by day: each line naming a meal
+  or saying you ate, under its day, with its meal and where it is. The first
+  log that is only a spec for log-kit
 - `llm-cli`: suggestions through Simon Willison's `llm` command — bite first,
   only served passages go to the model any of its plugins reach, propose a
   cited reply; llm's log names the model (#253)

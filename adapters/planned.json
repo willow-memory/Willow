@@ -428,16 +428,6 @@
   "role": "tools"
  },
  {
-  "name": "food-log",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "What you ate, from your notes, by day.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "role": "page"
- },
- {
   "name": "forgejo",
   "kind": "stdlib",
   "section": "For maintainers",
