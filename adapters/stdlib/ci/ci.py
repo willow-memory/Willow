@@ -416,6 +416,75 @@ def floors() -> tuple[str, str, str | None]:
 floors.online = "reads each pin's release history from PyPI"
 
 
+def audit(path: Path) -> list[tuple[str, str, str, str]]:
+    """[(package, version, advisory, first fixed or "")] that pip-audit finds
+    for the pins in `path`, read as they are (--no-deps --disable-pip): the
+    pins themselves, never what they would pull in. OSError when PyPI's
+    advisory data is out of reach."""
+    got = subprocess.run(
+        [PY, "-m", "pip_audit", "-r", str(path), "--no-deps", "--disable-pip",
+         "--progress-spinner", "off", "--format", "json"],
+        capture_output=True, text=True,
+    )  # fmt: skip
+    try:
+        found = json.loads(got.stdout)
+    except ValueError:
+        raise OSError((got.stderr.strip().splitlines() or ["no answer"])[-1]) from None
+    return [
+        (dep["name"], dep.get("version", ""), vuln["id"], ", ".join(vuln.get("fix_versions") or []))
+        for dep in found.get("dependencies", [])
+        for vuln in dep.get("vulns", [])
+    ]  # fmt: skip
+
+
+@needing(lambda: missing_module("pip_audit"))
+def advisories() -> tuple[str, str, str | None]:
+    """Each deps add-on's pins against PyPI's advisories, by pip-audit: a pin
+    with one fails, since requirements.txt is what a person installs. A floor
+    with one is said, not failed: requirements-floor.txt is the oldest
+    version CI holds the add-on to, not one anyone is told to install, and
+    raising it is a change to its card's `floor:` line, with its reason.
+    PyPI out of reach is unreachable."""
+    said, wrong = [], []
+    for name in deps_add_ons():
+        here = ROOT / "adapters" / "deps" / name
+        for pins, fails in (
+            ("requirements.txt", True),
+            ("requirements-floor.txt", False),
+        ):
+            if not (here / pins).is_file():
+                continue
+            try:
+                found = audit(here / pins)
+            except OSError as exc:
+                return (
+                    UNREACHABLE,
+                    "",
+                    f"couldn't read advisories for {name}: {exc}"[:200],
+                )
+            if fails:
+                for package, version, vuln, fixed in found:
+                    line = (f"{name}: {package}=={version} in {pins} has {vuln}"
+                            + (f", fixed in {fixed}" if fixed else ", no fixed release named"))  # fmt: skip
+                    said.append(line)
+                    wrong.append(line)
+                continue
+            # a floor's are counted, one line a package: an old floor can
+            # have a hundred, and the line to change is its card's floor:
+            for package in sorted({f[0] for f in found}):
+                these = [f for f in found if f[0] == package]
+                said.append(f"{name}: {package}=={these[0][1]} floor has {len(these)} "
+                            f"advisor{'y' if len(these) == 1 else 'ies'}, said, not failed")  # fmt: skip
+    said = "\n".join(said) + "\n" if said else "no pin has a known advisory\n"
+    print(said, end="")
+    if wrong:
+        return FAILING, said, "; ".join(sorted(set(wrong)))[:400]
+    return SATISFIED, said, None
+
+
+advisories.online = "asks PyPI's advisories for each pin"
+
+
 def deps_add_ons() -> list[str]:
     return sorted(
         p.name
@@ -691,6 +760,7 @@ def gates() -> list[tuple[str, str, object]]:
         out.append(("deps", f"deps:{name}", deps_add_on(name)))
         out.append(("deps", f"deps:{name}@floor",
                     deps_add_on(name, "requirements-floor.txt")))  # fmt: skip
+    out.append(("deps", "deps:advisories", advisories))
     out.append(("deps", "deps:floors", floors))
     for name in mutant_targets():
         how = command(PY, "adapters/stdlib/mutants/mutants.py", "run", name,

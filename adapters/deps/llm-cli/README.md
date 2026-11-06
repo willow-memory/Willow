@@ -4,7 +4,7 @@ line: Suggestions through the llm command, so any model its plugins reach (local
 source: new
 added: 2026-11-05
 needs: llm and the plugin for your model; Apache-2.0
-floor: llm 0.19; the rule names 0.1, its first release (2023), but 0.19 is the first that declares Python 3.9+ the way this repo's deps job expects, and still installs on the job's 3.13
+floor: llm 0.28; the rule names 0.1, its first release (2023), but llm up to 0.27.1 has a known advisory (PYSEC-2026-400, code run by --functions, which willow never passes), so 0.28 is the first safe one
 writes: record
 network: the model its plugin reaches, to ask for suggestions
 role: suggests
