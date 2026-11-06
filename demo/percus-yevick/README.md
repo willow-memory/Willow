@@ -342,7 +342,7 @@ found only through Wertheim's Laplace method or sticky spheres.
   satisfied at 0, nothing found through Wertheim; five rows on the box,
   which verify. It shared the machine with the arms' model arm for those
   minutes.
-- **Frozen in FROZEN-2.json**, in a commit of its own: the hashes of
+- **Frozen in [FROZEN-2.json](FROZEN-2.json)**, in commit 2a53628, alone: the hashes of
   union.py, its rules, and every file and tool it uses. Freeze 1 is
   unchanged and its verdicts stand.
 
