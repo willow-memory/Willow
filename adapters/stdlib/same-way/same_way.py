@@ -172,8 +172,9 @@ def main(argv: list[str]) -> int:
         replies = []
         for _ in range(times):
             try:
+                args = (opts["--url"], opts["--model"], chat)
                 replies.append(
-                    oc.ask_model(opts["--url"], opts["--model"], chat, reasoning)
+                    oc.ask_model(*args, reasoning) if reasoning else oc.ask_model(*args)
                 )
             except (OSError, ValueError, KeyError, IndexError, TypeError) as e:
                 print(f"unreachable: {opts['--url']} ({e.__class__.__name__}), at {q}")

@@ -163,12 +163,13 @@ def ask(opts: dict, question: str) -> int:
         print("nothing in your folder holds that; no model was asked")
         return kernel.ESCALATE
     try:
-        reply = ask_model(
-            opts["--url"],
-            opts["--model"],
-            messages(question, served, voice),
-            opts.get("--reasoning", ""),
-        )
+        chat = messages(question, served, voice)
+        # the reasoning is passed only when asked for, so a call without
+        # --reasoning is the call it always was, down to ask_model's arguments
+        if opts.get("--reasoning"):
+            reply = ask_model(opts["--url"], opts["--model"], chat, opts["--reasoning"])
+        else:
+            reply = ask_model(opts["--url"], opts["--model"], chat)
     except (OSError, ValueError, KeyError, IndexError, TypeError) as e:
         print(f"unreachable: {opts['--url']} ({e.__class__.__name__})")
         return kernel.ESCALATE
