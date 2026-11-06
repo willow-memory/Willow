@@ -13,9 +13,6 @@ too. The first release was v0.1.0.
 
 ### Added
 
-- `mcp-sampling`: suggestions through MCP sampling — `draft(question)` bites,
-  asks the host's model over only the passages served (MCP sampling on stdio),
-  and proposes a cited reply; willow holds no model or key (#254)
 - `llm-cli`: suggestions through Simon Willison's `llm` command — bite first,
   only served passages go to the model any of its plugins reach, propose a
   cited reply; llm's log names the model (#253)
