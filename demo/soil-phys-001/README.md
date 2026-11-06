@@ -80,6 +80,55 @@ readable quotes, 25 readable lines that hold); seven verdict rows named
 mattered, in a test: the TEI transcriptions' first paragraph kept the end of
 the opening tag; now cut after it.
 
+## The run
+
+Run once, 2026-11-06, at commit 29c14a8 (the freeze is a5cfde4), on the 28
+kept files as `fetch.py --check` found them (all the same); 168 seconds.
+
+| Rule | Verdict | Frozen number |
+|---|---|---|
+| R1 | satisfied | `misquote` found 29 of the 30 readable quotes in the right source |
+| R2 | **failing** | `claim-check` gave "all parts" in the right source to 6 of the 25 readable lines that hold; needed 15 |
+| R3 | satisfied | the kernel served the right source among its top 3 for 17 of the 25 |
+| R4 | **failing** | `claim-check` backed 0 of 10 off-topic claims, but the kernel served something to 8 of 10 off-topic questions |
+| P1 | reported, **predicted wrong** | `claim-check` gave "all parts" to 0 of the 3 false claims |
+| P2 | reported, as predicted | `misquote` found 0 of the 5 quotes from sources with no text layer |
+
+The rows: `OUT.json`, SHA-256 `8e2182064f4b2925b09ec02f5a20102d5be27a8ed169236836aa323df231b3bd`;
+seven verdict rows on a box outside the repo; `kernel.py verify` on it: "the
+chain holds: 7 rows, 0 sealed".
+
+**`misquote` can stand in for finding a quote.** 29 of 30, across PDFs of
+arXiv papers, scanned journals with noisy text (Nernst's German, Julia's
+French) and HTML. It needs the quote, though: it says where words are, not
+what they decide.
+
+**`claim-check` can't stand in for reading, and not for the reason
+predicted.** P1 expected it to back a false claim whose words a passage
+holds. It backed none, because it backed almost nothing: a claim of eight
+to fifteen content words rarely has every one in one passage, and six of
+the sources aren't in English (Einstein and Nernst in German, Julia and
+Fatou in French), so an English claim can't be all there. Where it said
+"all parts" (Verlinde, the CDT dimension, Rule 110, Tegmark, Mach, Leibniz)
+it was right each time, and in the right source.
+
+**The kernel's 17 of 25 has to be read beside R4.** It served the right
+source for 17 of the plain questions, but it also served something to 8 of
+10 off-topic ones: "How fast do continents move?" holds two content words,
+so a passage needs one, and Mach's 158,000 words of mechanics hold "move"
+many times over. The rule is the kernel's own (a passage holding half a
+question's content words); on short questions over a large pile it serves
+nearly anything. Some of the 17 may be that, and this run can't tell which.
+
+**Looked at after the run, not part of it.** The one quote `misquote`
+missed, Leibniz's "those two States ... would not at all differ from one
+another", is in the pile word for word. The runner wrote each of Leibniz's
+paragraphs as one line, and the kernel reads only the first 500 characters
+of a line; the quote sits past that. The other Leibniz quote, early in its
+paragraph, was found. A break in this runner's TEI conversion, not in
+`misquote`, and one the dry run's short nonsense passage couldn't show. A
+rerun with the paragraphs cut at sentence ends would be a new freeze.
+
 ## Running it
 
     python demo/soil-phys-001/fetch.py --to KEEP            # the open sources
