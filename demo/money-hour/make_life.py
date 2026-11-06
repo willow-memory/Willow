@@ -298,7 +298,8 @@ def write(mirror: Path) -> int:
     for rel, text in files(mirror).items():
         p = LIFE / rel
         p.parent.mkdir(parents=True, exist_ok=True)
-        p.write_text(text, encoding="utf-8", newline="\n")
+        with open(p, "w", encoding="utf-8", newline="\n") as out:
+            out.write(text)
     print(f"wrote {len(files(mirror))} files to {LIFE}")
     return check(mirror)
 
