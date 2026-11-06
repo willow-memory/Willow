@@ -2,7 +2,7 @@
 
 **Status: proposal, drafted 2026-11-06. Nothing here is built.** It came
 from the operator, and is written down here before the kernel half of
-[Draft 0.16](draft-0.16.md) is built, because 0.16 is the first change
+[Drafts 0.16 to 0.19](draft-0.16.md) is built, because they are the first change
 meant to enter this way.
 
 ## The idea, in one line
@@ -75,8 +75,8 @@ rule it is judged by would be widening its own reach (§0.3).
 A piece that changes the law's own text is a full amendment, as now: a file
 in `constitution/amendments/`, a new draft, `constitution/amend.py check`.
 Every other piece cites the law and leaves its text alone. So nineteen
-pull requests in a day are nineteen pieces, not nineteen drafts; Draft 0.16
-is both a piece and an amendment.
+pull requests in a day are nineteen pieces, not nineteen drafts. Drafts
+0.16 to 0.19 come in one pull request: one piece, and four amendments.
 
 ## What is new, and what is already there
 
@@ -104,7 +104,7 @@ and the stack ended at 42, as it should have.
 ## The order of work
 
 1. This note.
-2. The kernel half of Draft 0.16, entered as the first piece made this way:
+2. The kernel half of Drafts 0.16 to 0.19, entered as the first piece made this way:
    its account cites its clauses.
 3. Where a piece's citations are written in its account, and the check that
    reads them.

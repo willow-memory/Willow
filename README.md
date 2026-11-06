@@ -58,7 +58,7 @@ made-up beekeeper's six years of notes:
 ```
 $ git clone https://github.com/willow-memory/Willow && cd Willow
 $ python kernel.py test
-kernel: the eight beats held
+kernel: the twelve beats held
 $ python demo/odile/make_life.py
 $ python kernel.py init --box odile-record --pile demo/odile/life --key odile.key
 $ python kernel.py bite --box odile-record "how are the bees"
@@ -179,7 +179,7 @@ python kernel.py test
 | `decline` | turns one down, with your key: it isn't offered again |
 | `verify` | checks every line of the log, every approval and every No |
 | `out` | lists what is waiting for your approval |
-| `test` | runs the whole cycle in a temporary folder and checks eight properties |
+| `test` | runs the whole cycle in a temporary folder and checks twelve properties |
 
 The commands that write to the log also take `--now TIMESTAMP`, to fix the
 time recorded (for scripts and tests).
@@ -201,17 +201,18 @@ willow's own.
 
 | Guarantee | Clause | Enforced by |
 |---|---|---|
-| Uses only Python's own library, and never an add-on | none | `test_kernel.py` fails on any other import, `adapters` included |
-| Never goes online | none | `test_kernel.py` parses the file and fails on any network module, `eval`, `exec`, `compile` or `__import__` |
-| Never stores your words | none | the log is checked for the question's and answer's words after a full cycle |
+| Uses only Python's own library, and never an add-on | `CONST-III-6` | `kernel.py test` reads its own imports; `test_kernel.py` fails on any other, `adapters` included; `test_strip.py` runs it with `adapters/` deleted |
+| Never goes online | `CONST-III-1`, `CONST-III-5` | `test_kernel.py` parses the file and fails on any network module, `eval`, `exec`, `compile` or `__import__` |
+| Never stores your words | `CONST-VI-8` | `kernel.py test`: after the whole cycle, the log holds no word a question or a suggestion said |
 | Never gives a suggestion as an answer until it's approved | `CONST-0-1`, `CONST-0-2` | `kernel.py test`: a suggestion without a seal is listed as waiting, not given |
 | Never accepts a forged approval | `CONST-0-4` | `kernel.py test`: a seal with the right shape and a re-hashed chain is still rejected |
+| Never offers again what you declined, or approves over it | `CONST-V-10` | `kernel.py test`: a decline that doesn't prove changes nothing; one that does ends the offer, and a seal after it is refused |
 | Never serves an approval for a question you didn't seal it for | `CONST-0-4` | `test_kernel.py`: a record rewritten and re-hashed can't change, strip or re-point the question a seal names |
 | Never writes past a change | `CONST-0-5` | `kernel.py test`: one edited field in one past line, and every command refuses |
 | What no one decided is yours: nothing matched, or something waits on you, is exit 42 | `CONST-0-6` | `constitution/test_eternity.py`: nothing found, an answer waiting and a seal that doesn't prove each end at 42, never 0 |
-| Same answer every run | none | the ranking is checked under different hash seeds |
+| Same answer every run | `CONST-IV-10` | `kernel.py test`: the same question under three hash seeds serves the same passages in the same order |
 | Every add-on keeps its card's promises: what it writes, where it goes online | `CONST-0-3` | the guard watches every process an add-on's tests start, and fails a breach even one the add-on catches and hides |
-| Every add-on's tests can fail | none | each add-on's code is broken on purpose a few ways (`mutants`); a break its tests miss fails CI, unless it's listed as harmless with the reason |
+| Every add-on's tests can fail | `CONST-IV-9` | each add-on's code is broken on purpose a few ways (`mutants`); a break its tests miss fails CI, unless it's listed as harmless with the reason |
 | Every add-on refuses a bad command line, and every reader keeps the same contract | none | one test holds them all to it (`adapters/stdlib/ci/test_contract.py`) |
 
 
@@ -290,7 +291,7 @@ The top of it. [FILES.md](FILES.md) lists every file and what it is, and
 
 ```
 willow/
-├── kernel.py                 the whole program (about 1,100 lines)
+├── kernel.py                 the whole program (about 1,200 lines)
 ├── test_kernel.py            its tests
 ├── test_docs.py              holds every doc to the files that exist, and the trees to the repo
 ├── test_docs_fires.py        plants a violation for each docs check and makes sure it fails

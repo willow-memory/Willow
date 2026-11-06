@@ -53,6 +53,8 @@ Exit codes:
 
 from __future__ import annotations
 
+# Python's own library and nothing else, never an add-on: the core reaches
+# nothing that extends it, and runs the same with every add-on gone (CONST-III-6)
 import hashlib
 import hmac
 import html
@@ -547,7 +549,7 @@ def rank(
         return []
     held = _held(pile, want, alias or {}, (dated or dates)(pile))
     df = {w: sum(w in h for *_, h in held) for w in want}
-    # exact, not float: a float sum's last bit depends on the order the set is
+    # the same question, the same answer (CONST-IV-10). Exact, not float: a float sum's last bit depends on the order the set is
     # walked in, which is the process's hash seed, so on Python 3.9-3.11 the
     # same folder and bite ranked differently from run to run (13 runs in 400
     # on one pile); 3.12's compensated sum hides it, and a port can't copy that
@@ -766,6 +768,7 @@ def bite(box: Path, text: str, ts: str) -> int:
         }
         for c in served
     ]
+    # hashes and places, never the words asked or served (CONST-VI-8)
     append(box, ts, "bite", bite_key=k, served=refs, **listed)
     answers = [r for r in refs if not r["echo"]]
     state = "populated" if answers else "echo" if refs else "empty"
@@ -841,7 +844,7 @@ def seal(box: Path, subj: str, ts: str) -> int:
     if not any(r["kind"] == "proposal" and r.get("subject") == subj for r in rows):
         print(f"refused: {subj} is not a proposal in this box", file=sys.stderr)
         return REFUSED
-    if subj in (no := declined(box, rows)):
+    if subj in (no := declined(box, rows)):  # a no is final (CONST-V-10)
         print(f"refused: you declined {subj} at row {no[subj]['n']}", file=sys.stderr)
         return REFUSED
     key, why = read_key(Path(config(box)["key"]), box)
@@ -939,6 +942,7 @@ def out(box: Path, ts: str) -> int:
         print("refused:", *breaks, sep="\n  ", file=sys.stderr)
         return REFUSED
     good, no = sealed(box, rows), declined(box, rows)
+    # what they declined is not offered again (CONST-V-10)
     waiting = [
         r["subject"] for r in rows
         if r["kind"] == "proposal" and r.get("verdict") == "pass"
@@ -953,16 +957,63 @@ def out(box: Path, ts: str) -> int:
     return ESCALATE if waiting else ALIVE
 
 
-# ── the eight beats, as the test ────────────────────────────────────────────
+# ── the twelve beats, as the test ───────────────────────────────────────────
 def test() -> None:
     """Runs in a temporary directory, never in a box of yours."""
+    import ast
     import contextlib
+    import importlib.util
     import io
+    import subprocess
+    import sysconfig
 
     def quiet(fn, *a):
         with contextlib.redirect_stdout(io.StringIO()) as o:
             with contextlib.redirect_stderr(io.StringIO()):
                 return fn(*a), o.getvalue()
+
+    def foreign(source: str) -> set[str]:
+        """What a source imports that isn't Python's own: built in, frozen,
+        or under its lib folder. fcntl and msvcrt are each the other
+        system's; a relative import is never the standard library's."""
+        lib = Path(sysconfig.get_paths()["stdlib"]).resolve()
+        found = set()
+        for node in ast.walk(ast.parse(source)):
+            if isinstance(node, ast.Import):
+                found |= {a.name.split(".")[0] for a in node.names}
+            elif isinstance(node, ast.ImportFrom):
+                found.add("." * node.level + (node.module or "").split(".")[0])
+        out = set()
+        for name in found - {"__future__", "fcntl", "msvcrt"}:
+            if name in sys.builtin_module_names:
+                continue
+            spec = None if name.startswith(".") else importlib.util.find_spec(name)
+            origin = spec.origin if spec else None
+            if origin in ("built-in", "frozen"):
+                continue
+            if not origin or lib not in Path(origin).resolve().parents:
+                out.add(name)
+            elif "site-packages" in origin:
+                out.add(name)
+        return out
+
+    def kept(v) -> list[str]:
+        """Every string a row holds but its places (`where`)."""
+        if isinstance(v, dict):
+            return [s for k, x in v.items() if k != "where" for s in kept(x)]
+        if isinstance(v, list):
+            return [s for x in v for s in kept(x)]
+        return [] if v is None else [str(v)]
+
+    #: the record's own labels: the kernel's words, never a person's
+    LABELS = ("kind", "who", "family", "standing", "loop", "verdict")
+    #: a pile where a float sum's last bit, and so the order of two chunks,
+    #: followed the hash seed on Python 3.11 (found by search, 2026-10-21)
+    SEED_PILE = (
+        "w1 w6|w3 w1 w0 w2|w4 w2 w0 w5 w3|w2 w3 w0 w4 w1|w4 w1 w3 w5|"
+        "w2 w6 w1 w3 w0|w5 w0 w2 w1|w5 w1 w0|w2 w4 w1|w3 w6 w1 w4 w5 w2|"
+        "w5 w3 w6|w1 w2 w3 w6 w0 w4|w5 w2 w4"
+    )
 
     with tempfile.TemporaryDirectory() as tmp:
         t, ts = Path(tmp), "2026-10-22T00:00:00Z"
@@ -1045,17 +1096,66 @@ def test() -> None:
         append(box, ts, "seal", who="human", subject=fake, proof="0" * 64)
         assert fake not in sealed(box, read(box / "record.jsonl")[0])
         assert quiet(verify, box)[0] == ESCALATE
-        # 7. the chain verifies, every step on it
+        # 7. a no is final (CONST-V-10): a No that doesn't prove counts for
+        #    nothing, and one that does ends the offer and bars the seal
+        append(box, ts, "decline", who="human", subject=fake, proof="0" * 64)
+        assert fake in quiet(out, box, ts)[1]
+        assert quiet(decline, box, fake, ts)[0] == ALIVE
+        code, said = quiet(out, box, ts)
+        assert code == ALIVE and fake not in said
+        assert quiet(seal, box, fake, ts)[0] == REFUSED
+        # 8. the same question, the same answer, under every hash seed
+        #    (CONST-IV-10): a pile where a float sum once followed the seed
+        (pile / "seed").mkdir()
+        for i, text in enumerate(SEED_PILE.split("|")):
+            (pile / "seed" / f"f{i:02d}.md").write_text(text + "\n")
+        runs = {
+            subprocess.run(
+                [sys.executable, __file__, "bite", "--box", str(box), "--now", ts]
+                + ["w4 w2 w6 w1 w3 w0"],
+                capture_output=True,
+                text=True,
+                env={**os.environ, "PYTHONHASHSEED": seed},
+            ).stdout
+            for seed in ("0", "101", "156")
+        }
+        assert len(runs) == 1
+        got = [s["where"] for s in json.loads(runs.pop())["served"]]
+        assert got == ["seed/f11.md:1", "seed/f05.md:1", "seed/f09.md:1"]
+        # 9. the core reaches nothing that extends it (CONST-III-6): every
+        #    module this file imports is Python's own, and none is an add-on
+        assert foreign("import json\nfrom adapters.stdlib import todo\n") == {
+            "adapters"
+        }
+        assert foreign(Path(__file__).read_text(encoding="utf-8")) == set()
+        # 10. the record keeps acts, not words (CONST-VI-8): after the whole
+        #     cycle, no word it holds is one a question or a suggestion said
+        asked = [
+            "when does the frost come",
+            "how do I bake sourdough bread",
+            "the one ending 672841",
+            "has the shed been painted this year",
+            long,
+            "how much sun do tomatoes want",
+            "water them at the root?",
+            "Six hours. At the root.",
+        ]
+        said = {w for q in asked for w in words(q)} - FUNCTION
+        held = set()
+        for r in read(box / "record.jsonl")[0]:
+            held |= set(words(" ".join(kept({**r, **dict.fromkeys(LABELS)}))))
+        assert "tomatoes" in said and not said & held, said & held
+        # 11. the chain verifies, every step on it
         rows, breaks = read(box / "record.jsonl")
         assert not breaks and [r["n"] for r in rows] == list(range(len(rows)))
-        # 8. one field of one past row edited: the chain refuses, and so does the next bite
+        # 12. one field of one past row edited: the chain refuses, and so does the next bite
         path = box / "record.jsonl"
         path.write_bytes(
             path.read_bytes().replace(b'"verdict":"pass"', b'"verdict":"fail"', 1)
         )
         assert quiet(verify, box)[0] == REFUSED
         assert quiet(bite, box, "how much sun do tomatoes want", ts)[0] == REFUSED
-    print("kernel: the eight beats held")
+    print("kernel: the twelve beats held")
 
 
 # ── the command line ────────────────────────────────────────────────────────

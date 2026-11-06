@@ -5,7 +5,7 @@ the repo ever disagree. [README.md](README.md) shows the top of it.
 
 ```
 willow/
-├── kernel.py                 the whole program (about 1,100 lines)
+├── kernel.py                 the whole program (about 1,200 lines)
 ├── test_kernel.py            its tests
 ├── test_docs.py              holds every doc to the files that exist, and the trees to the repo
 ├── test_docs_fires.py        plants a violation for each docs check and makes sure it fails
@@ -39,7 +39,11 @@ willow/
 │   │   ├── 0003.md           VIII.3, Article 0 strengthened only by clauses that cite it: made 0.12
 │   │   ├── 0004.md           IV.9, a check that cannot fail is no check: made 0.13
 │   │   ├── 0005.md           VI.7, every change carries its account: made 0.14
-│   │   └── 0006.md           VIII.2, the emergency door on a timer: made 0.15
+│   │   ├── 0006.md           VIII.2, the emergency door on a timer: made 0.15
+│   │   ├── 0007.md           III.6, the core reaches nothing that extends it: made 0.16
+│   │   ├── 0008.md           IV.10, the same question, the same answer: made 0.17
+│   │   ├── 0009.md           V.10, a no is final: made 0.18
+│   │   └── 0010.md           VI.8, the record keeps acts, not words: made 0.19
 │   └── README.md             what the kernel answers for, and what it doesn't claim
 ├── ui/                       willow's own UI: put your willow together on a page, on this machine only
 │   ├── canvas.py             the page and its server: folders, the kernel's baseline, add-ons, batches, the seal

@@ -64,7 +64,7 @@ own lines enforce, at those lines.
 | [declarations.json](declarations.json) | The verdicts, kept by hand: `satisfied`, `differently`, `not applicable` or `failing`, one per clause, each with a sentence saying why |
 | [amend.py](amend.py) | How an amendment enters the law: `write` fills in what the amendment files make, `check` refuses a law that doesn't hold together with them |
 | [test_amend.py](test_amend.py) | Each way the law and its amendments could drift apart, attempted on a copy and refused; one amendment superseding another keeps both |
-| [amendments/](amendments/) | Every amendment made here, numbered in turn: 0001 VIII.4 *Always a draft*, 0002 VIII.1 *Propose, check, accept*, 0003 VIII.3 on strengthening Article 0, 0004 IV.9 *A check that cannot fail is no check*, 0005 VI.7 *Every change carries its account*, 0006 VIII.2 *the emergency door on a timer* |
+| [amendments/](amendments/) | Every amendment made here, numbered in turn: 0001 VIII.4 *Always a draft*, 0002 VIII.1 *Propose, check, accept*, 0003 VIII.3 on strengthening Article 0, 0004 IV.9 *A check that cannot fail is no check*, 0005 VI.7 *Every change carries its account*, 0006 VIII.2 *the emergency door on a timer*, 0007 III.6 *the core reaches nothing that extends it*, 0008 IV.10 *the same question, the same answer*, 0009 V.10 *a no is final*, 0010 VI.8 *the record keeps acts, not words* |
 | [reach.json](reach.json) | Every clause no code or test cites, answered: *out of reach*, or *open*, and why. An article's answer stands for each of its clauses with none of its own |
 
     python constitution/coverage.py

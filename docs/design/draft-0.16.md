@@ -1,10 +1,10 @@
-# Design note: Draft 0.16, four of willow's own promises made law
+# Design note: Drafts 0.16 to 0.19, four of willow's own promises made law
 
-**Status: proposal, drafted 2026-11-06. Nothing here is in the law, and
-nothing is built.** The operator chose the four clauses and one amendment
-for all of them; the clause text below is a draft for the operator to
-correct before it goes into the constitution. Entering it is the merge, and
-the verdicts in `constitution/declarations.json` are the operator's to write.
+**Status: built on its branch, 2026-11-06; nothing is in force.** The
+operator chose the four clauses; the clause text is written into its
+articles and the four beats into `kernel.py test`, for the operator to
+correct before the pull request. Entering it is the merge. It is carried
+by four amendments, not the one first chosen (below).
 
 ## The idea, in one line
 
@@ -38,14 +38,17 @@ is not new either.
 
 The corrections to the brief's process:
 
-- **One amendment, one draft.** `constitution/amend.py` takes several
-  clauses in one amendment's `clauses:` header, so the four enter as one
-  amendment, the seventh in `constitution/amendments/`, and make Draft 0.16. Five amendments would have made
-  0.16 to 0.20.
+- **Four amendments, not one.** `constitution/amend.py` takes several
+  clauses in one amendment's `clauses:` header, but checks the amendment's
+  text as one block, word for word in the law. These four clauses go in four
+  articles, so one amendment holding them is refused. They are built as four
+  amendments, 0007 to 0010, one a clause, making Drafts 0.16 to 0.19. One
+  amendment would need the check to hold each clause's paragraph on its
+  own: a change to a check, and the operator's call.
 - **Twelve beats, not thirteen.** Four clauses, four beats; no candidate
   was padded in to make five.
-- **The verdicts are the operator's.** Each new clause needs a verdict in
-  `constitution/declarations.json`, kept by hand.
+- **No verdict is owed.** `constitution/declarations.json` records none
+  yet for any clause; a verdict, when one is recorded, is the operator's.
 
 ## The four clauses, drafted
 
@@ -66,8 +69,10 @@ VI.6 says the record keeps every event raw. VI.8 has to say why a hash
 does not break that: the event is the act of asking, not the words asked.
 The operator should check that this reading of VI.6 is the one they mean.
 
-*Beat 9.* After the whole cycle, the record's bytes hold none of the
-questions' content words, and none of the proposals' data.
+*Beat 10.* After the whole cycle, no word the record holds, outside its
+labels and its places, is a content word of a question asked or a
+suggestion made. Until now no kernel test held this; a few add-ons checked
+their own rows.
 
 ### IV.10, the same question, the same answer
 
@@ -77,8 +82,9 @@ questions' content words, and none of the proposals' data.
 > and the question do not hold — the hour, the process, the platform's
 > chance — is no order, and a ranking that varies is refused as one.
 
-*Beat 10.* The same bite, run in two processes under two different hash
-seeds, serves the same passages in the same order, byte for byte.
+*Beat 8.* The same bite, run in three processes under three hash seeds,
+over the pile where a float sum once followed the seed, prints the same
+answer, byte for byte, in the order exact scores give.
 
 ### III.6, the core reaches nothing that extends it
 
@@ -88,14 +94,12 @@ seeds, serves the same passages in the same order, byte for byte.
 > every extension removed it does the same work, the same way. A core that
 > leans on an extension has widened its reach by the extension's (§0.3).
 
-*Beat 11.* The kernel reads its own source and finds no import outside
+*Beat 9.* The kernel reads its own source and finds no import outside
 the standard library and none of `adapters`. `test_strip.py` already holds
-the other half: the kernel alone, with `adapters/` deleted, passes.
-
-One risk to settle when it is built: the obvious test of "outside the
-standard library" is `sys.stdlib_module_names`, which Python 3.9 doesn't
-have, and the vectors record the beats passing on 3.9.0. The beat needs a
-test that runs there too.
+the other half: the kernel alone, with `adapters/` deleted, passes. It
+tells the standard library by where a module is found, under Python's own
+lib folder, as `test_kernel.py` does, so it runs on 3.9, which has no
+`sys.stdlib_module_names`.
 
 ### V.10, a no is final
 
@@ -106,17 +110,19 @@ test that runs there too.
 > the person's key counts for nothing (§0.4), and what no one refused or
 > approved is still the person's (§0.6).
 
-*Beat 12.* In the cycle, the person declines one proposal: `out` stops
-listing it, `seal` refuses it, and a decline whose proof is forged leaves
-it waiting.
+*Beat 7.* In the cycle, a decline whose proof is forged leaves the
+proposal waiting; the person's own decline ends the offer, and `seal`
+refuses it.
+
+The new beats run as 7 to 10, before the chain's two, which move to 11 and
+12: the last beat edits the record, and nothing runs after it.
 
 ## What changes when it is built
 
 | File | Change |
 |---|---|
 | `CONSTITUTION.md` | the four clauses, in Articles III, IV, V and VI; `amend.py write` fills in the draft number, the history row and the lineage step |
-| the seventh file in `constitution/amendments/` | the same four texts under the amendment header: draft 0.16, the four clauses, a one-line summary |
-| `constitution/declarations.json` | a verdict for each: **the operator's** |
+| `constitution/amendments/` | four files, 0007 to 0010, each one clause's text under the amendment header: Drafts 0.16 to 0.19 |
 | `kernel.py` | four beats in `test()`, each citing its clause at its line; "the twelve beats held" |
 | `test_kernel.py` | the beat-count test renamed; tests that already hold these promises cite the new clauses |
 | `constitution/test_eternity.py` | unchanged; it must still pass |
@@ -169,8 +175,10 @@ for what this amendment rests on:
 ## The order of work
 
 1. This note: the clauses, for the operator to correct.
-2. The amendment: the four clauses in the law and in the seventh amendment
-   file, `amend.py write`, and the verdicts from the operator.
-3. The four beats in `kernel.py`, each shown to fail on its planted break.
-4. The docs, the README's table and the beat count.
+2. The amendments: the four clauses in the law and in amendments 0007 to
+   0010, `amend.py write` (done). Each says `pr: 0` until the pull request
+   has its number; then the number goes in and `amend.py write` runs again.
+3. The four beats in `kernel.py`, each shown to fail on its planted break
+   by `test_kernel.py` (done).
+4. The docs, the README's table and the beat count (done).
 5. The full run, then the pull request; the merge is the operator's.
