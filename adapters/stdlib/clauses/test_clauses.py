@@ -170,3 +170,54 @@ def test_splitting_its_own_output_changes_nothing():
     once = clauses.as_text(clauses.clauses(WRAPPED, "p.txt"))
     assert clauses.as_text(clauses.clauses(once, "p.txt")) == once
     assert clauses.as_text([]) == ""
+
+
+#: a chat export: a message a line, no full stop, no blank line
+CHAT = "".join(
+    f"07/02/2023, 8:{i:02d} pm - Gerry: bought the wrong bread again number {i}\n"
+    for i in range(40)
+)
+
+
+def test_a_sentence_longer_than_a_chunk_keeps_its_own_lines(tmp_path):
+    (got,) = clauses.clauses(CHAT, "chat.txt")
+    assert got[0] == 1 and got[1].splitlines() == CHAT.splitlines()
+    src, m = tmp_path / "src", tmp_path / "m"
+    src.mkdir()
+    (src / "chat.txt").write_text(CHAT)
+    assert run("mirror", "--from", str(src), "--to", str(m)).returncode == 0
+    read = clauses.kernel.chunks(m)
+    assert len(read) > 1 and all(len(c["text"]) <= 600 for c in read)
+    assert " ".join(c["text"] for c in read).split() == CHAT.split()  # every word
+
+
+def test_a_line_longer_than_a_chunk_is_cut_at_a_space():
+    words = " ".join(f"word{i}" for i in range(300))  # 2000 characters, one line
+    lines = clauses.fit(words).splitlines()
+    assert len(lines) > 1 and all(len(s) <= clauses.kernel.MAX_CHUNK for s in lines)
+    assert " ".join(lines) == words
+    assert clauses.fit("x" * 1200).splitlines() == ["x" * 500, "x" * 500, "x" * 200]
+    assert clauses.fit("Short\nand  wrapped.") == "Short and wrapped."
+    once = clauses.as_text(clauses.clauses(CHAT + "\n" + words + "\n", "c.txt"))
+    assert clauses.as_text(clauses.clauses(once, "c.txt")) == once
+
+
+def test_diff_prints_a_long_sentence_on_one_line(tmp_path):
+    a, b = tmp_path / "a" / "old.txt", tmp_path / "b" / "new.txt"
+    a.parent.mkdir()
+    b.parent.mkdir()
+    a.write_text("One.\n")
+    b.write_text("One.\n\n" + CHAT)
+    got = run("diff", "--old", str(a), "--new", str(b))
+    added = [s for s in got.stdout.splitlines() if s.startswith("added")]
+    assert got.returncode == 42 and len(added) == 1 and added[0].endswith("number 39")
+
+
+def test_a_two_letter_word_ends_a_sentence_and_an_initial_does_not():
+    got = [s for _, s in clauses.clauses("We met Al. Then J. Smith left.\n", "a.txt")]
+    assert got == ["We met Al.", "Then J. Smith left."]
+
+
+def test_removed_sentences_come_in_the_old_versions_order():
+    old = clauses.clauses("B one.\n\nA two.\n\nB one.\n", "old.txt")
+    assert [n for n, _ in clauses.compare(old, [])["removed"]] == [1, 3, 5]

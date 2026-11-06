@@ -860,17 +860,6 @@
   "role": "tools"
  },
  {
-  "name": "llm-cli",
-  "kind": "deps",
-  "section": "Assistants",
-  "line": "Suggestions through the llm command, so any model its plugins reach (local or hosted) can hand one in, with llm's own log naming the model.",
-  "source": "new",
-  "needs": "llm and the plugin for your model; Apache-2.0",
-  "writes": "record",
-  "network": "the model its plugin reaches, to ask for suggestions",
-  "role": "suggests"
- },
- {
   "name": "lore",
   "kind": "stdlib",
   "section": "Play",

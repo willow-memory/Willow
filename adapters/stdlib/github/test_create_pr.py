@@ -238,6 +238,39 @@ def test_green_steps_open_it_with_its_body_and_number_and_push_it_all(repo):
     assert at_origin(repo, "made.txt") == "made"
 
 
+def test_a_fragment_not_yet_named_is_named_for_its_pull_request(repo):
+    """changes/+work.added.md, towncrier's orphan: renamed changes/7.added.md
+    in the push that opens it, with no edit to CHANGELOG.md, which no other
+    pull request then conflicts with."""
+    git(repo, "checkout", "-q", "main", "--", "CHANGELOG.md")
+    (repo / "changes").mkdir()
+    (repo / "changes/+work.added.md").write_text(
+        "`thing`, a new thing\n", encoding="utf-8"
+    )
+    (repo / "changes/7.added.md").write_text("an older one\n", encoding="utf-8")
+    git(repo, "add", "-A")
+    git(repo, "commit", "-q", "-m", "thing: its entry, in a file of its own")
+    steps(repo, GREEN)
+    got = run(repo)
+    assert got.returncode == 0, got.stdout + got.stderr
+    assert "named its changelog fragment changes/7.added.1.md" in got.stdout
+    assert at_origin(repo, "changes/7.added.1.md") == "`thing`, a new thing"
+    assert at_origin(repo, "CHANGELOG.md") == CHANGELOG.strip(), (
+        "CHANGELOG.md untouched"
+    )
+    assert "+work.added.md" not in git(
+        repo, "ls-tree", "--name-only", "origin/work", "changes/"
+    )
+
+
+def test_no_entry_anywhere_stops_it_saying_where_one_goes(repo):
+    git(repo, "checkout", "-q", "main", "--", "CHANGELOG.md")
+    git(repo, "commit", "-q", "-am", "no entry")
+    steps(repo, GREEN)
+    got = run(repo)
+    assert got.returncode == 42 and "changes/+<branch>.<kind>.md" in got.stderr
+
+
 def test_run_again_it_finds_its_pull_request_and_opens_no_second(repo):
     steps(repo, GREEN)
     assert run(repo).returncode == 0
@@ -311,7 +344,7 @@ def test_a_change_with_no_changelog_entry_stops_and_docs_alone_owe_none(repo):
     git(repo, "add", "-A")
     git(repo, "commit", "-q", "-m", "other: no entry")
     got = run(repo)
-    assert got.returncode == 42 and "no new entry under ## Unreleased" in got.stderr
+    assert got.returncode == 42 and "no changelog entry" in got.stderr
     git(repo, "checkout", "-q", "-b", "docs", "main")
     (repo / "NOTES.md").write_text("words\n")
     git(repo, "add", "-A")
@@ -428,3 +461,14 @@ def test_fill_spreads_the_open_branches_and_fills_the_rest():
     assert cp.fill(["--base", "{base}", "{open}", "#{pr}"], fields) == [
         "--base", "origin/main", "origin/a", "origin/b", "#7"]  # fmt: skip
     assert cp.fill(["{open}"], {**fields, "open": []}) == []
+
+
+def test_an_add_on_the_change_touches_has_its_cards_promises_in_the_body(repo):
+    """Its writes and network, read from the card's header, not its body."""
+    say = repo / "adapters/stdlib/say/say.py"
+    say.write_text(say.read_text(encoding="utf-8") + "# touched\n", encoding="utf-8")
+    git(repo, "commit", "-q", "-am", "say: touched")
+    steps(repo, GREEN)
+    assert run(repo).returncode == 0
+    body = gh_state(repo)["prs"][0]["sent"]["body"]
+    assert "- `say`: writes made.txt;" in body and "network none" in body
