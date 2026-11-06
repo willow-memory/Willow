@@ -407,6 +407,44 @@ UTC): every arm written, both models asked, the box verifies. The rerun
 uses a fresh box over the same pile and index, so the failed run's rows
 aren't counted twice.
 
+### The arms, under freeze 3
+
+Run once, 04:00 to 04:36 UTC, at commit 7eb74e4, on a fresh box over freeze
+1's pile and index. `arms.json`, SHA-256
+`794d54a1f2e65d13fb4edefc478f43be5639a943696bef9bac3984f405afa177`; on its
+box, `kernel.py verify`: "the chain holds: 147 rows, 0 sealed". Reported,
+never counted.
+
+- **Rankers, author questions**: the kernel, the kernel with words.txt and
+  pile-rungs 1 of 11 (s3); BM25 and latent 0. Extended: 3, 3, 3, 2 and 1
+  of 7. No ranker served a null question a chain step.
+- **Expectations**: 4 of 11 of the author's guesses about which steps the
+  kernel would find held; s1c, s2, s4, s5a, s5b, s6 and s7, expected
+  found, were not.
+- **predict**: 20 of 20 of its predictions of what the box would serve held.
+- **why-not**: 17 author questions the kernel found nothing for, each with
+  the words that held it back (in arms.json).
+- **The ML specialist's interim report**, through claim-check: of 20
+  sentences, every one has some part the stack backs, none has all, none
+  none. Through misquote, 22 lines with "=": 5 found in the stack (the
+  hard-sphere conditions, the radial convolution, the start of c(x), S(0)'s
+  numerator, and the contact value with the virial pressure), 17 not.
+- **Arranged, without reasoning.** Each model answered each author question
+  from only the passages the kernel served it:
+  - qwen3:8b: 18 answers, 3 declined (s5b, s6.1, e5); same-way 21 of 21
+    the same every time.
+  - gemma3:4b: 20 answers, 1 declined (e5); same-way 20 of 21 the same, 1
+    flipped.
+  - **Read after, not scored** (the rubric is the physics student's): on
+    s7, qwen3:8b said the passages didn't give the compressibility equation
+    of state, which is so; gemma3:4b gave the Carnahan–Starling
+    interpolation as that equation, the trap steps.json names. gemma3:4b
+    also gave a charged, polydisperse system's Baxter coefficient for s5b,
+    and said S(0) is "assumed to be infinite". Both gave the contact value,
+    (2+φ)/(2(1−φ)²), which is (1+η/2)/(1−η)², right. A model arranging
+    found passages declined where they were silent more often than the
+    other did, and was wrong less: on these 21 questions, qwen3:8b.
+
 ## Said plainly
 
 - **The anchors were written after the source search had grepped each
