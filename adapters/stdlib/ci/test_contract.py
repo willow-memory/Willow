@@ -702,6 +702,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "make-it-so": ("make_it_so.py", ["plan", "--box", "{box}", "--to", "{tmp}/plan.json", "--cmd", "echo hi", "tomatoes"]),
     "market-calls": ("market_calls.py", ["score", "--box", "{box}"]),
     "mcp-lite": ("server.py", ["--box", "{box}"]),
+    "mcp-sampling": ("mcp_sampling.py", ["--box", "{box}"]),
     "merkle": ("merkle.py", ["root", "--box", "{box}"]),
     "mileage": ("mileage.py", ["--box", "{box}"]),
     "milestones": ("milestones.py", ["--box", "{box}", "--born", "2020-01-01"]),
