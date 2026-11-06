@@ -184,6 +184,25 @@ def test_the_draw_is_the_weeks_and_anyone_can_redo_it(repo):
         ("stdlib/delta", card(role="reads", reads="none"), None),
         ("stdlib/delta", card(role="reads", reads="pdf files!"), "reads is .ext"),
         ("stdlib/delta", card(reads=".pdf"), "reads is for a card whose role is reads"),
+        ("stdlib/delta", card(output="report"), None),
+        ("stdlib/delta", card(role="reads", reads=".md", output="mirror"), None),
+        (
+            "stdlib/delta",
+            card(output="mirror"),
+            "output mirror is for a card whose role is reads",
+        ),
+        ("stdlib/delta", card(output="suggestions"), None),
+        ("stdlib/delta", card(output="report, suggestions"), None),
+        (
+            "stdlib/delta",
+            card(output="prose"),
+            "output is one of mirror, report, suggestions",
+        ),
+        (
+            "stdlib/delta",
+            card(output="report, report"),
+            "output is one of mirror, report, suggestions",
+        ),
         ("stdlib/Delta", card(), "lowercase words joined by -"),
         ("stdlib/delta", card(tags="a, b"), "tags is your one tag"),
         ("stdlib/delta", card(tags="Has Caps"), "tags is your one tag"),
@@ -330,3 +349,26 @@ def test_the_languages_are_the_words_packs_built_and_planned(repo):
         "| `tlh` | [words-tlh](adapters/stdlib/words-tlh/) | Klingon \\| words. |",
         "| `zh` | words-zh *(idea)* | Chinese. |",
     ]  # words-list isn't a language: only words- and a two- or three-letter code
+
+
+def test_the_counts_stand_as_of_the_weeks_monday_and_its_own_line_is_now():
+    """Every add-on pull request rewrote the counts, the newest and the
+    week's draw, so any two conflicted: they stand as of the page's week now,
+    and an add-on built since changes only its own line of the list."""
+    every = [
+        {"name": "old", "built": True, "added": "2026-11-02"},
+        {"name": "new", "built": True, "added": "2026-11-04"},
+        {"name": "idea", "built": False},
+    ]
+    got = {a["name"]: a["built"] for a in rd.as_of(every, "2026-W45")}
+    assert got == {"old": True, "new": False, "idea": False}, (
+        "Monday counts, Wednesday not yet"
+    )
+    assert {a["name"]: a["built"] for a in rd.as_of(every, "2026-W46")}["new"] is True
+    assert every[1]["built"] is True, "as_of copies, never changes the list"
+    page = "<!-- willow:pick week=2026-W45 -->x<!-- /willow:pick -->"
+    assert (
+        rd.week_of(page, None) == "2026-W45"
+        and rd.week_of(page, "2026-W47") == "2026-W47"
+    )
+    assert rd.week_of("no week here", None) == rd.this_week()

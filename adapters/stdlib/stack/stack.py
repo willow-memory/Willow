@@ -117,7 +117,10 @@ def prints_a_report(script: Path) -> bool:
     except OSError:  # no card: no promise of a report
         return False
     head = re.search(r"<!--\s*willow-addon\s*\n(.*?)-->", card, re.S)
-    return bool(head and re.search(r"^output:\s*report\s*$", head.group(1), re.M))
+    return bool(
+        head
+        and re.search(r"^output:(?:.*,)?\s*report\s*(?:,.*)?$", head.group(1), re.M)
+    )
 
 
 def report_text(doc: dict) -> str:

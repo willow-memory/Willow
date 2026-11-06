@@ -47,6 +47,7 @@ COMMON = frozenset(
 MARKS = re.compile("[\u064b-\u065f\u0670\u0640]")
 
 
+# differs on purpose: Arabic's marks come off first, as a reader writes without them
 def kept(question: str) -> list[str]:
     """The question's words, in order, less Arabic's common ones."""
     text = MARKS.sub("", unicodedata.normalize("NFC", question))

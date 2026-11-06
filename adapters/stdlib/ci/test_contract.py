@@ -397,6 +397,10 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         "INSERT INTO tm_pairs VALUES ('tomatoes want sun','ada','sealed',"
         "'2026-10-01');\n"
     )}),
+    "notation": ("notation.py", {"main.tex": (
+        b"\\documentclass{article}\n\\begin{document}\nThe tide height $h$ obeys\n"
+        b"\\begin{equation}\nh = mt + b \\label{eq:tide}\n\\end{equation}\nat every harbour.\n\\end{document}\n"
+    )}),
     "notes": ("notes.py", {"garden.md": b"Tomatoes want [[sun]].\n"}),
     "notion": ("notion.py", {"notion.zip": (
         _zip({
@@ -608,6 +612,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "almanac-keep": ("keep.py", ["--catalog", "{pile}/catalog.json", "--id", "tides", "--to", "{tmp}/kept"]),
     "amounts": ("amounts.py", ["--box", "{box}"]),
     "annotations": ("annotations.py", ["--box", "{box}", "--to", "{tmp}/annotations.json"]),
+    "assistant-scores": ("assistant_scores.py", ["--box", "{box}"]),
     "attendance": ("attendance.py", ["--box", "{box}"]),
     "baby-log": ("baby_log.py", ["--box", "{box}"]),
     "backup": ("backup.py", ["--box", "{box}", "--to", "{tmp}/backups", *NOW]),
@@ -652,6 +657,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "flashcards": ("flashcards.py", ["--box", "{box}", "due", *NOW]),
     "foia": ("foia.py", ["--box", "{box}"]),
     "folder-card": ("folder_card.py", ["--box", "{box}", "--to", "{tmp}/card.md"]),
+    "food-log": ("food_log.py", ["--box", "{box}"]),
     "forecasts": ("forecasts.py", ["wager", "--box", "{box}", "--p", "0.7", *NOW,
                   "tomatoes"]),  # fmt: skip
     "format-rot": ("format_rot.py", ["--from", "{pile}"]),
@@ -698,9 +704,11 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "llms-txt": ("llms_txt.py", ["write", "--from", "{pile}", "--to", "{tmp}/llms.txt"]),
     "local-model": ("local_model.py", ["ask", "--box", "{box}", "--url", "http://127.0.0.1:9/v1",
                     "--model", "m", "tomatoes"]),
+    "log-kit": ("log_kit.py", ["--box", "{box}", "--words", "tomatoes"]),
     "make-it-so": ("make_it_so.py", ["plan", "--box", "{box}", "--to", "{tmp}/plan.json", "--cmd", "echo hi", "tomatoes"]),
     "market-calls": ("market_calls.py", ["score", "--box", "{box}"]),
     "mcp-lite": ("server.py", ["--box", "{box}"]),
+    "mcp-sampling": ("mcp_sampling.py", ["--box", "{box}"]),
     "merkle": ("merkle.py", ["root", "--box", "{box}"]),
     "mileage": ("mileage.py", ["--box", "{box}"]),
     "milestones": ("milestones.py", ["--box", "{box}", "--born", "2020-01-01"]),
@@ -790,6 +798,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "sort-ask": ("sort_ask.py", ["--box", "{box}", "--categories", "{pile}/categories.txt",
                  "--model", "m", "--url", "http://127.0.0.1:9/v1"]),
     "stack": ("stack.py", ["--box", "{box}", "--stack", "adapters/stdlib/stack/example.md"]),
+    "stack-share": ("stack_share.py", ["--box", "{box}"]),
     "stale": ("stale.py", ["--box", "{box}"]),
     "start": ("start.py", ["--pile", "{pile}", "--to", "{tmp}/willow"]),
     "starter-words": ("starter.py", ["copy", "--to", "{tmp}/words.txt"]),
@@ -894,6 +903,13 @@ def test_a_bad_command_line_is_refused_and_says_how_to_run_it(name, tmp_path):
     )
 
 
+_spec = importlib.util.spec_from_file_location(
+    "mirrors_for_contract", STDLIB / "ci" / "mirrors.py"
+)
+MIRRORS = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(MIRRORS)
+
+
 def check_reader(script: Path, sample: dict[str, bytes], tmp: Path) -> None:
     """The contract every reader keeps, run on one folder of its own files."""
     folder, mirror = tmp / "folder", tmp / "mirror"
@@ -908,7 +924,14 @@ def check_reader(script: Path, sample: dict[str, bytes], tmp: Path) -> None:
     assert got.returncode == 0, got.stderr
     line = got.stdout.strip().splitlines()[-1]
     assert re.fullmatch(rf"wrote {len(sample)} files? to .+; skipped 0", line), line
-    assert sorted(snapshot(mirror)) == sorted(f"{rel}.txt" for rel in sample)
+    shown = [p for p in snapshot(mirror) if not p.startswith(MIRRORS.PLACES + "/")]
+    assert sorted(shown) == sorted(f"{rel}.txt" for rel in sample)
+    if MIRRORS.keeps(script.parent / "README.md"):  # the mirror contract
+        assert MIRRORS.check(folder, mirror) == []
+    else:
+        assert not (mirror / MIRRORS.PLACES).exists(), (
+            "a map, so its card says output: mirror"
+        )
     again = tmp / "again"
     run(script, "mirror", "--from", str(folder), "--to", str(again))
     assert snapshot(again) == snapshot(mirror), "the same folder, the same bytes"
@@ -1143,3 +1166,115 @@ def test_every_report_keeps_the_report_contract(name, files, tmp_path):
     assert {"empty": code == 0, "unreachable": code == 42,
             "populated": code in (0, 42)}[state], (state, code)  # fmt: skip
     assert run(script, *good).stdout == text.stdout, "the same box, the same report"
+
+
+# ── the suggestions contract (adapters/stdlib/ci/README.md) ─────────────────
+_spec = importlib.util.spec_from_file_location(
+    "oc_for_suggestions", STDLIB / "openai-compatible" / "openai_compatible.py"
+)
+OC = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(OC)
+SUGGESTS = sorted(
+    n
+    for n, p in ADDONS.items()
+    if p.parent.name == "stdlib" and re.search(r"^output:(?:.*,)?\s*suggestions\s*(?:,.*)?$",
+                                               (p / "README.md").read_text(encoding="utf-8"), re.M)
+)  # fmt: skip
+#: how each is asked for one suggestion of a stand-in model at {url}; a
+#: `seal` first is a person's sealed answer for it to work from (translate)
+ASK_ONE: dict[str, tuple[str, list[str]]] = {
+    "local-model": ("local_model.py", ["ask", "--box", "{box}", "--url", "{url}",
+                                       "--model", "m", "how much sun do tomatoes want"]),
+    "night-batch": ("night_batch.py", ["run", "--box", "{box}", "--questions",
+                                       "{tmp}/questions.txt", "--url", "{url}", "--model", "m"]),
+    "openai-compatible": ("openai_compatible.py", ["ask", "--box", "{box}", "--url", "{url}",
+                                                   "--model", "m", "how much sun do tomatoes want"]),
+    "sort-ask": ("sort_ask.py", ["--box", "{box}", "--categories", "{tmp}/categories.txt",
+                                 "--model", "m", "--url", "{url}"]),
+    "translate": ("translate.py", ["--box", "{box}", "--into", "Spanish", "--url", "{url}",
+                                   "--model", "m", "how much sun do tomatoes want"]),
+}  # fmt: skip
+
+
+#: rows that take no --now: night-batch is bounded by --until, and asks now
+NO_NOW = {"night-batch"}
+
+
+def stand_in_model():
+    """A chat server on 127.0.0.1 that offers model m and answers every chat
+    with a garden reply citing [1]."""
+    import threading
+    from http.server import BaseHTTPRequestHandler, HTTPServer
+
+    class Handler(BaseHTTPRequestHandler):
+        def reply(self, doc: dict) -> None:
+            body = json.dumps(doc).encode()
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+
+        def do_GET(self):  # noqa: N802
+            self.reply({"data": [{"id": "m"}]})
+
+        def do_POST(self):  # noqa: N802
+            self.rfile.read(int(self.headers["Content-Length"]))
+            self.reply({"choices": [{"message": {"content": "garden [1]"}}]})
+
+        def log_message(self, *a):
+            pass
+
+    srv = HTTPServer(("127.0.0.1", 0), Handler)
+    threading.Thread(target=srv.serve_forever, daemon=True).start()
+    return srv, f"http://127.0.0.1:{srv.server_address[1]}/v1"
+
+
+def test_every_add_on_that_proposes_a_models_reply_is_asked_here():
+    assert SUGGESTS == sorted(ASK_ONE), "a card saying output: suggestions gets a row"
+
+
+@pytest.mark.parametrize("name", only(SUGGESTS))
+def test_every_suggestion_keeps_the_suggestions_contract(name, tmp_path):
+    pile = tmp_path / "pile"
+    pile.mkdir()
+    (pile / "beds.txt").write_text("Tomatoes want six hours of sun.\n")
+    (tmp_path / "categories.txt").write_text("garden: courgettes\n")
+    (tmp_path / "questions.txt").write_text("how much sun do tomatoes want\n")
+    box = tmp_path / "box"
+    kernel = [sys.executable, str(KERNEL)]
+    subprocess.run([*kernel, "init", "--box", str(box), "--pile", str(pile), "--key",
+                    str(tmp_path / "key"), *NOW], check=True, capture_output=True)  # fmt: skip
+    if name == "translate":  # a person's sealed answer to translate
+        bite = run(
+            KERNEL, "bite", "--box", str(box), *NOW, "how much sun do tomatoes want"
+        )
+        row = {"path": "answers/a.md", "data": "Six hours [1].\n", "claim": "mine",
+               "cites": [json.loads(bite.stdout)["served"][0]["id"]]}  # fmt: skip
+        (tmp_path / "s.jsonl").write_text(json.dumps(row) + "\n")
+        got = run(
+            KERNEL,
+            "propose",
+            "--box",
+            str(box),
+            *NOW,
+            "--file",
+            str(tmp_path / "s.jsonl"),
+        )
+        subprocess.run([*kernel, "seal", "--box", str(box), "--key", str(tmp_path / "key"),
+                        *NOW, got.stdout.split()[1]], check=True, capture_output=True)  # fmt: skip
+    before = {p.name for p in (box / "proposals").glob("*.json")}
+    srv, url = stand_in_model()
+    try:
+        script, argv = ASK_ONE[name]
+        good = [a.format(box=box, url=url, tmp=tmp_path) for a in argv]
+        got = run(STDLIB / name / script, *good, *([] if name in NO_NOW else NOW))
+    finally:
+        srv.shutdown()
+    made = [p for p in (box / "proposals").glob("*.json") if p.name not in before]
+    assert len(made) == 1, (got.stdout, got.stderr)
+    said = json.loads(made[0].read_text())["claim"]
+    c = OC.read_claim(said)
+    assert c and c["url"] == url and c["who"] == "m", said
+    assert list(c["settings"])[:2] == ["temperature", "seed"], said
+    assert said == OC.claim(c["who"], c["where"], list(c["settings"].items()), c["did"])

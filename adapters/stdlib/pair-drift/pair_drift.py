@@ -17,7 +17,9 @@ A figure is a number with what makes it one: a currency sign, a percent, a
 scale word (thousand, million, billion, trillion, or k, M, B, T after a
 number), a unit of power (MW, GW), or three or more digits. A range is one
 figure, its two ends kept, so "$180 to $190 billion" and "$180-190B" are the
-same figure and "$195-205B" is a different one. Bare numbers under 100,
+same figure and "$195-205B" is a different one. "From $0.26 to $0.27" is not a
+range but a change, two figures, each with the sign, scale and unit they
+share, so a summary's "to $0.27" is found in it. Bare numbers under 100,
 years from 1900 to 2099, and a year with its month (2026-03) are left out: a count of chapters and a date are not
 the figures a reader checks. "$5 billion" is never read as "$5".
 
@@ -40,20 +42,26 @@ NUM = r"\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d+(?:\.\d+)?"
 FIG = re.compile(
     rf"(?<![\w.])(?P<cur>[$€£])?(?P<a>{NUM})"
     rf"(?:\s*(?P<sa>thousand|million|billion|trillion|bn|mn|[kmbt])\b)?"
-    rf"(?:\s*(?:-|–|—|to)\s*(?P<cur2>[$€£])?(?P<b>{NUM}))?"
+    rf"(?:\s*(?P<sep>-|–|—|to)\s*(?P<cur2>[$€£])?(?P<b>{NUM}))?"
     rf"(?:\s*(?P<sb>thousand|million|billion|trillion|bn|mn|[kmbt])\b)?"
     rf"(?:\s*(?P<unit>%|percent\b|MW\b|GW\b))?",
     re.I,
 )
 
 
-def figure(m: re.Match) -> str | None:
+FROM = re.compile(r"\bfrom\s*$", re.I)
+
+
+def figure(m: re.Match, half: str = "") -> str | None:
     """One figure's plain form, or None when the number isn't one by the
-    card's reading (a bare small number, or a year)."""
+    card's reading (a bare small number, or a year). `half` is "a" or "b"
+    for one end of a change ("from A to B"), read as a figure of its own."""
     a, b = m["a"].replace(",", ""), (m["b"] or "").replace(",", "")
     scale = SCALE.get((m["sb"] or m["sa"] or "").lower(), "")
     unit = (m["unit"] or "").replace("percent", "%").upper().replace("PERCENT", "%")
     cur = m["cur"] or m["cur2"] or ""
+    if half:
+        a, b = (a if half == "a" else b), ""
     if b and re.fullmatch(r"(19|20)\d\d", a) and re.fullmatch(r"(0?[1-9]|1[0-2])", b):
         return None  # a year and month, as 2026-03
     marked = bool(cur or scale or unit)
@@ -69,7 +77,13 @@ def figure(m: re.Match) -> str | None:
 
 
 def figures(text: str) -> list[str]:
-    return [f for m in FIG.finditer(text) if (f := figure(m))]
+    out = []
+    for m in FIG.finditer(text):
+        change = m["b"] and m["sep"].lower() == "to" and FROM.search(text[: m.start()])
+        for half in ("a", "b") if change else ("",):
+            if f := figure(m, half):
+                out.append(f)
+    return out
 
 
 def file_lines(pile: list[dict]) -> dict[str, list[tuple[int, str]]]:

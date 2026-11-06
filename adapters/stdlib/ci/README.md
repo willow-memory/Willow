@@ -46,7 +46,7 @@ record in the runner's temp folder.
 | tests | `tests:beats` (`kernel.py test`), `tests:kernel`, `tests:docs` (`test_docs.py`, and `test_docs_fires.py`, which shows each docs check fails on a planted violation), `tests:adapters-1` to `-8` (the add-ons in `adapters/stdlib/`, under the guard, each a share of their test files, cut by the times in [test-times.json](test-times.json)), `tests:alone` ([alone.py](alone.py): each add-on's tests again, in a copy holding only the kernel, the add-on and what its card `uses`), `tests:ui` ([ui/](../../../ui/): willow's own UI, its server run over a stack made in a scratch folder), `tests:vectors` (pytest), `tests:strip-1` to `-4` (`test_strip.py`: the repo without GitHub, then without any add-on; the first the kernel-alone work and the kernel's tests, the others a share of the add-ons' test files in the stripped copy), `tests:constitution` (the eternity clause, attacked), `tests:coverage` (`constitution/coverage.py`: which clauses are cited where; failing only on a clause declared failing) |
 | ports | `ports:java`, `ports:ts`, `ports:csharp`: `vectors/compare.py`, one port at a time |
 | demo | `demo:hollis`, `demo:odile`, `demo:teodora`: each person's files made in a temporary folder and held to their `demo/*/PLANTED.md` |
-| deps | `deps:mcp`, `deps:mcp@floor`, `deps:pdf`, `deps:pdf@floor`, two per add-on in `adapters/deps/`: its tests, under the guard, in a fresh virtual environment with only its own pinned requirements (then its floor's) and pytest; an install that can't be done is unreachable. Then `deps:floors`: each floor against the floor rule, by PyPI's upload dates; PyPI out of reach is unreachable |
+| deps | `deps:mcp`, `deps:mcp@floor`, `deps:pdf`, `deps:pdf@floor`, two per add-on in `adapters/deps/`: its tests, under the guard, in a fresh virtual environment with only its own pinned requirements (then its floor's) and pytest; an install that can't be done is unreachable. Each deps verdict carries its `key`, the SHA-256 of its folder, kernel.py, ci.py, the guard, its pins and the Python; with `WILLOW_HELD_RECORD` naming an earlier record (main's, which a pull request's deps job fetches), a gate whose key has a satisfied verdict there is held, said and not reinstalled, and a push to main holds nothing. Then `deps:advisories`: every pin against PyPI's advisories, by pip-audit; one on a pin a person installs fails, one on a floor is said, since nobody is told to install a floor. Then `deps:floors`: each floor against the floor rule, by PyPI's upload dates; PyPI out of reach is unreachable for both |
 | mutants | `mutants:again`, `mutants:all`, … one per stdlib add-on: [mutants.py](../mutants/) breaks its code a few ways and runs its tests against each break; a break they miss fails, unless [accepted.json](../mutants/accepted.json) gives the reason it's harmless |
 | tools | `tools:bash`, `tools:zsh`, … one per check in [live.py](../live/): the real program a way-in add-on is for (a shell, an editor, an AI tool), run on the lines that add-on prints; a program that isn't installed is unreachable |
 
@@ -73,11 +73,14 @@ the output is hashed. The same files give the same record, byte for byte.
 
 **The changelog:** [changelog.py](changelog.py) runs as its own CI job on
 every pull request, outside the record (it needs the pull request's number
-and its base branch). When anything but Markdown changed, CHANGELOG.md's
-`## Unreleased` section must gain an entry ending with that number, `(#N)`,
-and a bug [BUGS.md](../../../BUGS.md) stopped listing must be named in one
-under `### Fixed`, `bug #12`. Exit 0 every entry owed is there, or nothing is
-owed; 42 git couldn't compare with the base; 2 an entry is missing.
+and its base branch). When anything but Markdown changed, the pull request
+owes an entry: a changelog fragment named for it,
+`changes/<number>.<kind>.md` ([changes/README.md](../../../changes/README.md)
+says how), or, from before the fragments, an entry in CHANGELOG.md's
+`## Unreleased` ending `(#N)`. A bug [BUGS.md](../../../BUGS.md) stopped
+listing must be named in a `fixed` one, `bug #12`. Exit 0 every entry owed
+is there, or nothing is owed; 42 git couldn't compare with the base; 2 an
+entry is missing.
 
 **Known bugs:** [bugs.py](bugs.py) makes BUGS.md from the tests marked as
 expected to fail, `strict=True` with a reason `bug #N: …`, and refuses any
@@ -158,7 +161,7 @@ adapters/planned.json: its folder, its card (the idea's entry as its
 header, `added` today), a script that refuses every command line until it's
 built, a test holding that, the idea off the list, FILES.md and the add-on
 list written. It exits 42 with what's left for a person: the add-on itself,
-its tests, its line in COMMANDS, a CHANGELOG.md entry, its mutants, and for a
+its tests, its line in COMMANDS, a changelog fragment, its mutants, and for a
 deps idea its requirements and `floor:` line.
 
 **Whose lines:** [whose.py](whose.py) takes `PATH:FIRST-LAST` places and
@@ -186,6 +189,83 @@ against a real box, an add-on refuses (exit 2) and names itself; every reader
 keeps the readers' contract (the summary line, the same bytes twice,
 originals untouched, hidden files unread, 42 for nothing to read, refusals
 that write nothing). A new add-on with a command line has to be listed there.
+
+## The mirror contract
+
+A reader writes each file it reads as `MIRROR/<same path>.txt`, and the
+kernel cites a passage by that mirror file's line. A reader that keeps the
+mirror contract also says where in the original each passage came from, so
+an answer can point at the file you wrote, not at its mirror. Its card says
+`output: mirror`.
+
+Beside each mirror file it writes a hidden map, where the kernel never
+reads, so the passages still hold only the file's words:
+
+    MIRROR/notes/garden.md.txt
+    MIRROR/.places/notes/garden.md.txt.json
+      {"source": "notes/garden.md", "places": {"1": "line 1", "9": "lines 8-9"}}
+
+- **Each key** is the mirror line a passage starts on: a line with words
+  after a blank one, or the first, as the kernel cuts paragraphs.
+- **Each value** is the place in the source: `line N`, `lines N-M`, or
+  another named place, a word and what it names (`page 2`, `cell 4`,
+  `row 17`), for a source whose places aren't lines.
+- **A chunk the kernel cuts** from a longer passage is at the last place at
+  or before its line. A map may place lines inside a passage too, as
+  subtitles places each cue of a transcript's one passage.
+- **A passage may open with its own citation line**, the source's path then
+  `line N` (equations' `paper/main.tex line 120, label eq:oz`): the line it
+  cites must be inside its place, and the next line is held to the word rule.
+
+[mirrors.py](mirrors.py)'s `check` holds a mirror to it: every mirror file
+has its map, naming its source; every passage is placed, and nothing else
+is; a line place is inside the source, with a content word of the passage's
+first line on it, so an off-by-one shows; and no mirror line is longer than
+one of the kernel's chunks, which it would cut unread.
+[test_contract.py](test_contract.py) runs it on each such reader's sample,
+and [realdata.py](realdata.py) on the demo people's folders.
+
+    python adapters/stdlib/ci/mirrors.py check --from FOLDER --mirror MIRROR
+
+Each reader keeps its own copy of the dozen lines that write the map, as a
+report add-on keeps its copy of the report's: an add-on holds alone and
+shares only the kernel. A reader that writes its source line for line places
+each passage on its own line (markdown, latex, org, rst, asciidoc,
+code-comments, dotfiles); one that moves a line says both (a table's header
+moved onto its rule is `lines 8-9`); one that gathers a passage from several
+says them all (equations, from the paragraph before to the one after;
+subtitles, a cue from its timing line to its text). One whose lines aren't
+the file's names its places: jupyter's `cell 4`, mail's `message 3`, a
+Telegram export's `message 4417`, and the `whole file` for a note about it.
+
+## The copies
+
+An add-on holds alone and shares only the kernel, so the same function
+lives in many of them: a reader's `_sources`, a report's `report_text`, a
+language pack's `kept`. [copies.py](copies.py) finds the copies that drifted
+from the rest, which is where a fix made in one place and not the others
+hides:
+
+    python adapters/stdlib/ci/copies.py survey [--json]
+    python adapters/stdlib/ci/copies.py diff NAME
+
+`survey` groups every add-on's top-level functions by name and finds each
+group's common version, the one most copies hold, read as Python reads it
+(formatting, comments and the docstring aside). A copy that still holds most
+of its lines and isn't it has drifted, and is a row of the report; one that
+holds less is another function sharing the name, and is counted, not
+reported. `diff NAME` prints each drifted copy's lines against the common
+version, as a unified diff. Which is right is a person's call: almanac's
+`_sources` reads only an Almanac's catalog on purpose, and a drift can be the fix
+the others lack.
+
+A copy that differs on purpose says why in a comment on the line above its
+`def`, `# differs on purpose: ...`, as sort-ask's `kernel_says` does (it
+captures stderr too, so a refusal's reason reaches its report's row); its
+row says so, and a survey whose every drift says why exits 0. On a pull
+request, CI's `copies` job runs `copies.py new --base`: the copies the pull
+request leaves drifted that weren't before and don't say why, each with its
+diff, in the run's summary. A suggestion, never a gate.
 
 ## The report contract
 
@@ -237,6 +317,36 @@ aren't done.
     python adapters/stdlib/ci/reports.py survey
     python adapters/stdlib/ci/reports.py scaffold NAME...
     python adapters/stdlib/ci/reports.py check NAME...
+
+## The suggestions contract
+
+An add-on that asks a model and proposes its reply for your seal says, in
+the proposal's `claim`, who answered, where, at what settings and what it
+did, in one form, so the record reads the same whichever add-on asked. Its
+card says `output: suggestions` (`output: report, suggestions` for one that
+prints a report too).
+
+    gemma at http://127.0.0.1:8080/v1 (temperature 0, seed 0, reasoning low) answered from 1 of the 2 passages served
+    qwen.gguf in this process (weights sha256 9c1e…, temperature 0, seed 0) answered from 1 of the 2 passages served
+
+- **who**: the model's name as asked for, or the weights file's name;
+- **where**: `at URL`, `in this process`, or `via NAME` for another program
+  that asks the model and names no address (llm, MCP sampling), which reads
+  only with its settings after it;
+- **settings**, in brackets, each a name and its value with commas
+  between: the temperature and the seed always; the reasoning when one was
+  asked for; a `--system` voice by its SHA-256; the weights by theirs;
+- **what it did**: `answered from N of the M passages served`, `translated
+  proposal:… into LANGUAGE`, `read FILE as CATEGORY, from the passage it
+  cited`.
+
+[openai-compatible](../openai-compatible/)'s `claim()` writes it and
+`read_claim()` reads it, a claim from before the settings were said too
+(with none); [sent-log](../sent-log/) reads every proposer's through it.
+`adapters/stdlib/ci/test_contract.py` asks each stdlib add-on whose card
+says it of a stand-in model on 127.0.0.1 and holds each proposal's claim to
+the form; in-process, a deps add-on, is held by its own tests. A claim is the
+proposer's own words, never an attested card.
 
 **The guard:** the add-ons' tests, and each deps add-on's, run with
 [guard/sitecustomize.py](guard/sitecustomize.py) on `PYTHONPATH`, so it is

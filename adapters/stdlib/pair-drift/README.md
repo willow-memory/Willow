@@ -30,7 +30,9 @@ knowing too.
 **A figure is a number with what makes it one**: a currency sign, a
 percent, a scale word (thousand, million, billion, trillion, or k, M, B, T),
 MW or GW, or three or more digits. A range is one figure with both ends kept,
-so "$180 to $190 billion" and "$180-190B" agree and "$195-205B" doesn't.
+so "$180 to $190 billion" and "$180-190B" agree and "$195-205B" doesn't. A
+change is not a range: "from $0.26 to $0.27" is two figures, each with the
+sign, scale and unit they share, so a summary's "to $0.27" is found in it.
 "$5 billion" is never read as "$5". Bare numbers under 100, years from 1900
 to 2099 and a year with its month (2026-03) are left out.
 

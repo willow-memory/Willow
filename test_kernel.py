@@ -722,6 +722,17 @@ def test_every_word_of_a_long_line_is_read(tmp_path):
     assert "airlock" in read
 
 
+@pytest.mark.xfail(
+    strict=True,
+    reason="bug #284: html_text splits a word at an inline tag, so re<span>s</span>t reads as re s t",
+)
+def test_an_inline_tag_inside_a_word_leaves_the_word_whole():
+    # Wikisource marks each long s of an old book this way
+    page = '<p>remains always <span class="typographic-long-s">s</span>imilar</p>'
+    assert k.html_text(page).split() == ["remains", "always", "similar"]
+    assert k.html_text("<p>wo<b>rd</b>s</p><p>apart</p>").split() == ["words", "apart"]
+
+
 def test_a_date_inside_a_web_address_dates_nothing():
     assert (
         k.newest("Nvidia rose 3% (https://example.com/snap/2026-10-24-nvda.html)") == ""

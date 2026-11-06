@@ -344,6 +344,7 @@ def _is_activities_csv(p: Path) -> bool:
     return all(h in header for h in NEEDED)
 
 
+# differs on purpose: it takes .fit files too, to say they aren't read, and only an activities .csv
 def _sources(folder: Path) -> list[Path]:
     """Files under `folder` this reads (and the .fit files it counts), sorted
     by relative path. Hidden folders and files are skipped; symlinked folders
@@ -367,6 +368,7 @@ def _within(inner: Path, outer: Path) -> bool:
     return inner == outer or outer in inner.parents
 
 
+# differs on purpose: it sets the .fit files aside, to say they aren't read
 def mirror(src: Path, dst: Path) -> tuple[int, int, list[str]]:
     """Write the mirror of `src` into `dst`. Returns (written, skipped, the
     .fit files skipped)."""
@@ -393,6 +395,7 @@ def mirror(src: Path, dst: Path) -> tuple[int, int, list[str]]:
     return wrote, skipped, fits
 
 
+# differs on purpose: it says the .fit files it doesn't read
 def main(argv: list[str]) -> int:
     opts = dict(zip(argv[1::2], argv[2::2])) if argv[:1] == ["mirror"] else {}
     if len(argv) != 5 or sorted(opts) != ["--from", "--to"]:

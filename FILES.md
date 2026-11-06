@@ -120,6 +120,10 @@ willow/
 │   │   │   ├── asciidoc.py   an AsciiDoc document as the text it shows, line for line, markup taken off
 │   │   │   ├── test_asciidoc.py
 │   │   │   └── README.md
+│   │   ├── assistant-scores/
+│   │   │   ├── assistant_scores.py How often each assistant's suggestions were sealed or set aside, from the record
+│   │   │   ├── test_assistant_scores.py
+│   │   │   └── README.md     its card
 │   │   ├── attendance/
 │   │   │   ├── attendance.py   who was there, by person or by week
 │   │   │   ├── test_attendance.py
@@ -247,6 +251,10 @@ willow/
 │   │   │   ├── test_realdata.py  realdata.py's tests: a run per person, a traceback fails, a refusal holds
 │   │   │   ├── test_times.py  times.py's tests: JUnit summed by file, unseen kept, gone dropped
 │   │   │   ├── times.py      test-times.json kept to what CI's own run took, by a script
+│   │   │   ├── copies.py     the functions add-ons keep their own copy of, and the copies that drifted
+│   │   │   ├── mirrors.py    the mirror contract, checked
+│   │   │   ├── test_copies.py
+│   │   │   ├── test_mirrors.py
 │   │   │   └── README.md     its card: gates, states, the guard and exit codes
 │   │   ├── ci-cache/
 │   │   │   ├── ci_cache.py    a cache key per ecosystem from a repo's lockfiles, so CI skips the reinstall
@@ -412,6 +420,10 @@ willow/
 │   │   │   ├── folder_card.py  a card for your folder: its files, dates and gaps, with your notes, written to a file
 │   │   │   ├── test_folder_card.py
 │   │   │   └── README.md
+│   │   ├── food-log/
+│   │   │   ├── food_log.py   What you ate, from your notes, by day
+│   │   │   ├── test_food_log.py
+│   │   │   └── README.md     its card
 │   │   ├── forecasts/
 │   │   │   ├── forecasts.py  a wager before the outcome, settled by your seal, scored by Brier
 │   │   │   ├── test_forecasts.py
@@ -672,6 +684,10 @@ willow/
 │   │   │   ├── lockfiles.py   lockfiles as a line for each locked package
 │   │   │   ├── test_lockfiles.py
 │   │   │   └── README.md
+│   │   ├── log-kit/
+│   │   │   ├── log_kit.py    The engine the logs share: your notes' dated lines, read by a short spec of words, numbers and a period, so a new log is a spec, not a program
+│   │   │   ├── test_log_kit.py
+│   │   │   └── README.md     its card
 │   │   ├── logs/
 │   │   │   ├── logs.py   system and web server logs as dated lines
 │   │   │   ├── test_logs.py
@@ -708,6 +724,10 @@ willow/
 │   │   │   ├── server.py         the mcp add-on's three tools, the protocol by hand, nothing to install
 │   │   │   ├── test_server.py
 │   │   │   └── README.md
+│   │   ├── mcp-sampling/
+│   │   │   ├── mcp_sampling.py Suggestions from whatever model your MCP client already runs, asked through MCP sampling, so willow needs no model or key of its own
+│   │   │   ├── test_mcp_sampling.py
+│   │   │   └── README.md     its card
 │   │   ├── mediawiki/
 │   │   │   ├── mediawiki.py   a MediaWiki dump as plain text, page by page
 │   │   │   ├── test_mediawiki.py
@@ -789,6 +809,10 @@ willow/
 │   │   │   ├── nightstand.py  things set down, one bite picked up: one in hand, a bite every time, nothing deleted
 │   │   │   ├── test_nightstand.py
 │   │   │   └── README.md
+│   │   ├── notation/
+│   │   │   ├── notation.py   Each displayed equation in LaTeX sources with the words its paper gives for its symbols ("where η is the packing fraction"), so a question in words finds the equation
+│   │   │   ├── test_notation.py
+│   │   │   └── README.md     its card
 │   │   ├── notes/
 │   │   │   ├── notes.py      Obsidian and Logseq vaults, links and backlinks kept
 │   │   │   ├── test_notes.py
@@ -1137,6 +1161,10 @@ willow/
 │   │   │   │   ├── smallholding.md
 │   │   │   │   └── teacher.md
 │   │   │   └── README.md
+│   │   ├── stack-share/
+│   │   │   ├── stack_share.py A stack you sealed with the Forge, written out to share: your sentence, each choice and why, each step's promises, and the stack to run
+│   │   │   ├── test_stack_share.py
+│   │   │   └── README.md     its card
 │   │   ├── stale/
 │   │   │   ├── stale.py      approved answers whose cited passage changed or went
 │   │   │   ├── test_stale.py
@@ -1372,6 +1400,12 @@ willow/
 │       │   ├── requirements-floor.txt  wordfreq at its floor, also tested
 │       │   ├── test_dialect.py
 │       │   └── README.md
+│       ├── dialect-dates/
+│       │   ├── dialect_dates.py The words your folder uses far more than the world does, each dated by its first and last appearance, with the passage that first says it
+│       │   ├── requirements-floor.txt
+│       │   ├── requirements.txt
+│       │   ├── test_dialect_dates.py
+│       │   └── README.md     its card
 │       ├── fast-tests/
 │       │   ├── fast_tests.py  the test suite across every core with pytest-xdist, in a fraction of the time
 │       │   ├── requirements.txt  pytest-xdist, pinned
@@ -1403,6 +1437,12 @@ willow/
 │       │   ├── requirements-floor.txt  numpy at its floor, also tested
 │       │   ├── test_latent.py
 │       │   └── README.md
+│       ├── llm-cli/
+│       │   ├── llm_cli.py    Suggestions through the llm command, so any model its plugins reach (local or hosted) can hand one in, with llm's own log naming the model
+│       │   ├── requirements.txt  llm, pinned
+│       │   ├── requirements-floor.txt  llm at its floor, also tested
+│       │   ├── test_llm_cli.py
+│       │   └── README.md     its card
 │       ├── manifests/
 │       │   ├── manifests.py  Compose services and Kubernetes objects, a passage each; secrets by name only
 │       │   ├── requirements.txt  PyYAML, pinned
@@ -1451,6 +1491,14 @@ willow/
 │       │   ├── requirements-floor.txt  ripgrep at its floor, also tested
 │       │   ├── test_ripgrep.py
 │       │   └── README.md
+│       ├── robinhood/
+│       │   ├── fake_robinhood.py A stand-in for Robinhood's MCP server, on this machine, for the tests
+│       │   ├── requirements-floor.txt
+│       │   ├── requirements.txt
+│       │   ├── robinhood.py  Your Robinhood account as dated files: positions, orders, portfolio and watchlists, read through Robinhood's own MCP server and never traded on
+│       │   ├── stack.md      your Robinhood account, read back
+│       │   ├── test_robinhood.py
+│       │   └── README.md     its card
 │       ├── sheets/
 │       │   ├── sheets.py     spreadsheets as shown: number formats, formulas and notes kept
 │       │   ├── requirements.txt  openpyxl, pinned
@@ -1511,9 +1559,16 @@ willow/
 ├── docs/
 │   ├── tour.md               the first five minutes, in full: a question, a gap, her words, an approval
 │   ├── how-it-works.md       what it reads, how it ranks, the key, the record, approvals
-│   └── design/
-│       ├── repo-index.md     proposal: the repo as one deterministic-snapshot box, indexed by a custom serve-style stack
-│       └── serve.md          proposal: a sealed stack of piles served to a model, on markdown (the grove's serve, in willow)
+│   ├── stone-soup.md         one real pile and add-on after add-on: what each found, what each misread, and the chain that dates a pile's words
+│   ├── design/
+│   │   ├── repo-index.md     proposal: the repo as one deterministic-snapshot box, indexed by a custom serve-style stack
+│   │   └── serve.md          proposal: a sealed stack of piles served to a model, on markdown (the grove's serve, in willow)
+│   └── agents/               AGENTS.md's longer how-tos, one page a job
+│       ├── add-ons.md        an add-on's ten steps, the guard, ideas and a deps floor
+│       ├── pull-requests.md  opening one, main moving under a branch, a new CI row
+│       ├── searching.md      the kernel's rank, and the jobs that need another search
+│       ├── stacks.md         A stack, for agents
+│       └── studies.md        freezing a study, its dry run, and what a dry run misses
 ├── demo/                     four made-up people, a case passed between five more, a real bug, a real policy change and programs taken apart, to try it on
 │   ├── bernadette/           built blind, in her apps' raw formats, and run through the whole stack
 │   │   ├── make_life.py      her mail, calendars, chats, vault, office files, Kindle and PDFs, the same bytes every run
@@ -1679,6 +1734,29 @@ willow/
 │   │   │   └── null/
 │   │   │       └── null.txt  fifty questions with nothing to do with security, written with no input
 │   │   └── test_known_gaps.py  holds the frozen files to their hashes, and the tools to their word
+│   ├── markets-2026-11-05/   a broad equities and macro pile from public sources: SEC EDGAR, FRED, Treasury, the Fed, CBOE, Fama-French, IMF, World Bank, ECB, OECD
+│   │   ├── README.md         what's in the pile, what isn't and why, and how it's kept honest
+│   │   ├── fetch.py          saves 944 sources into a pile once (SEC EDGAR only with --contact), sets error bodies aside, and checks them offline
+│   │   ├── mirror.py         the pile as text the kernel searches, each reader's part, over-long files cut into parts
+│   │   ├── sources.json      each source fetched, with its address, size and SHA-256, and what failed
+│   │   └── test_markets.py   holds what fetch.py froze, and the parts that need no network, to the README
+│   ├── money-hour/           four people from the other demos at one table, every market figure they repeat held to the real record
+│   │   ├── README.md         the claim, what the record says, how it runs, run 1's results and its one failure
+│   │   ├── CHARACTER.md      Teo, Bernie, Hollis and Marisol, where each comes from, and what each keeps
+│   │   ├── PLANTED.md        every fact, trap and wager in their files, with the source each is held to
+│   │   ├── FROZEN.json       the SHA-256 of the rules, the lines, the runner, the stacks and the themes, freeze by freeze
+│   │   ├── questions.json    the frozen lines, the slice of the markets mirror, and every rule
+│   │   ├── make_life.py      the four folders, real-world lines only from questions.json; --check holds them to it
+│   │   ├── money-hour.md     Teo's stack for her own box: said, people, amounts, coming-up, todo, digest, history
+│   │   ├── fed.md            the Fed desk's stack: first-mention, who voted against, every decision ranked
+│   │   ├── filings.md        the filings desk's stack: sort by Hollis's themes, buybacks, the funds rate in the 10-Ks
+│   │   ├── themes.txt        Hollis's themes for the 10-Ks, as sort reads them
+│   │   ├── run.py            the slice, five boxes, every rule judged by its own add-on; stops at each person's seal
+│   │   ├── test_money_hour.py holds the frozen files, and the parts that need no mirror, to their word
+│   │   └── results/
+│   │       ├── run-1.json    every outcome of run 1, places and verdicts, never a source's words
+│   │       ├── run-2.json    every outcome of run 2, freeze 2's desks, letter, themes and stacks added
+│   │       └── run-3.json    every outcome of run 3, after pair-drift's fix: every rule held
 │   ├── novelty.py           the reusable novelty check: have these pieces been put together before?
 │   ├── odile/                piano tuner and beekeeper, caring for her father
 │   │   ├── make_life.py      writes her files into life/, the same bytes every run
@@ -1848,5 +1926,8 @@ willow/
 ├── .gitattributes            every file checked out with LF line endings, on every system
 ├── .editorconfig             the same line endings and indents, for editors
 ├── ruff.toml                 lint settings
-└── LICENSE                   Apache-2.0
+├── LICENSE                   Apache-2.0
+├── changes/
+│   └── README.md             Changes not yet released
+└── towncrier.toml            each pull request's changelog fragment in changes/, folded into CHANGELOG.md at a release
 ```

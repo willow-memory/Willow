@@ -244,6 +244,7 @@ def test_nothing_to_freeze_and_an_endpoint_that_doesnt_answer(box, model, tmp_pa
         '{"format": "willow model-drift 1", "model": "m", "asked": [{"question": 1, "answer": "a", "served": []}]}',
         '{"format": "willow model-drift 1", "model": "m", "asked": [{"question": "q", "answer": 2, "served": []}]}',
         '{"format": "willow model-drift 1", "model": "m", "asked": ["q"]}',
+        '{"format": "willow model-drift 1", "model": "m", "asked": [], "settings": "low"}',
     ],
 )
 def test_a_frozen_file_that_isnt_one_is_refused(text, box, tmp_path):
@@ -286,6 +287,8 @@ def test_a_bad_command_line_is_refused(box, tmp_path):
         q,
     ]
     for argv in ([], ["check"], good + ["stray"], good[:-2], good + ["--box", box],
+                 good + ["--reasoning", "think"], good + ["--reasoning", ""],
+                 ["again", "--box", box, "--url", "u", "--frozen", q, "--reasoning", "low"],
                  good + ["--frozen", q], ["again", "--box", box, "--url", "u"],
                  good[:-1] + [""]):  # fmt: skip
         got = run(*argv)
@@ -300,3 +303,55 @@ def test_a_bad_command_line_is_refused(box, tmp_path):
         f.write('{"n": 99}\n')
     got = run(*good)
     assert got.returncode == 2 and "doesn't verify" in got.stderr
+
+
+def test_the_settings_are_frozen_and_asked_again_so_reasoning_is_never_drift(
+    box, model, tmp_path
+):
+    f = frozen(box, model, tmp_path, "--reasoning", "low")
+    doc = json.loads(f.read_text())
+    assert doc["settings"] == {"temperature": "0", "seed": "0", "reasoning": "low"}
+    assert all(s["reasoning_effort"] == "low" for s in model.sent)
+    got = run("again", "--box", box, "--url", model.url, "--frozen", f)
+    assert got.returncode == 0, got.stdout + got.stderr
+    assert [s.get("reasoning_effort") for s in model.sent] == ["low"] * 4
+    plain = frozen(box, model, tmp_path)
+    assert json.loads(plain.read_text())["settings"] == {
+        "temperature": "0",
+        "seed": "0",
+    }
+    assert "reasoning_effort" not in model.sent[-1]
+
+
+def test_a_file_frozen_before_settings_were_kept_is_asked_as_it_was(
+    box, model, tmp_path
+):
+    f = frozen(box, model, tmp_path)
+    doc = json.loads(f.read_text())
+    del doc["settings"]
+    f.write_text(json.dumps(doc))
+    got = run("again", "--box", box, "--url", model.url, "--frozen", f)
+    assert got.returncode == 0
+    assert got.stdout.endswith(
+        "0 of 2 held drifted, with the name gemma the same, no card named\n"
+    )
+    assert "reasoning_effort" not in model.sent[-1] and model.sent[-1]["seed"] == 0
+
+
+@pytest.mark.parametrize("settings", [
+    {"temperature": "0", "seed": "3"},
+    {"temperature": "0.7", "seed": "0"},
+    {"temperature": "0", "seed": "0", "reasoning": "think"},
+    {"temperature": "0", "seed": "0", "system": "sha256 ab"},
+])  # fmt: skip
+def test_settings_it_cant_ask_at_flag_nothing_and_ask_nothing(
+    settings, box, model, tmp_path
+):
+    f = frozen(box, model, tmp_path)
+    doc = json.loads(f.read_text())
+    doc["settings"] = settings
+    f.write_text(json.dumps(doc))
+    sent = len(model.sent)
+    got = run("again", "--box", box, "--url", model.url, "--frozen", f)
+    assert got.returncode == 42 and got.stdout.startswith("nothing asked: frozen at ")
+    assert len(model.sent) == sent

@@ -26,6 +26,11 @@ the kernel's own `append`, so the record is a kernel record and the kernel's
                   machine's paths
     python        the major.minor it ran under
     why           for a gate that didn't pass: the reason, in one line
+    key           for a deps gate: the SHA-256 of what its run rests on (its
+                  folder, kernel.py, ci.py, the guard, its pins, the Python)
+    held          true when that gate wasn't run because the record that
+                  WILLOW_HELD_RECORD names (main's, on a pull request) has a
+                  satisfied verdict for it with the same key
 
 A verdict is code's record of what happened, never a seal: its kind is always
 `verdict`, it is written as `ci`, and nothing here writes a `seal` row. CI's
@@ -266,6 +271,49 @@ def needing(needs):
     return put
 
 
+#: a record of an earlier run (main's deps record, which ci.yml downloads on a
+#: pull request) whose satisfied deps verdicts a gate with the same key holds
+HELD = "WILLOW_HELD_RECORD"
+#: what a deps gate's run rests on beside its own folder
+DEPS_RESTS_ON = ("kernel.py", "adapters/stdlib/ci/ci.py", "adapters/stdlib/ci/guard")
+
+
+def deps_key(name: str, pins: str) -> str:
+    """The SHA-256 of what a deps gate's run rests on: every file git tracks
+    in its folder, kernel.py, ci.py and the guard, by path and bytes; which
+    pins it installs; and the Python running it. The same key is the same
+    run, but for what PyPI serves for a pin's own dependencies."""
+    listed = subprocess.run(
+        ["git", "ls-files", "-z", "--", f"adapters/deps/{name}", *DEPS_RESTS_ON],
+        cwd=ROOT, capture_output=True, text=True,
+    ).stdout  # fmt: skip
+    h = hashlib.sha256()
+    for rel in sorted(p for p in listed.split("\0") if p):
+        path = ROOT / rel
+        h.update(rel.encode() + b"\0")
+        h.update((path.read_bytes() if path.is_file() else b"") + b"\0")
+    h.update(f"{pins}\0{sys.version_info[0]}.{sys.version_info[1]}".encode())
+    return h.hexdigest()
+
+
+def held(gate: str, key: str) -> dict | None:
+    """The last satisfied verdict for `gate` with this key in the record
+    HELD names, or None: no record named, one that won't read or verify its
+    chain, or no such row. Then the gate runs."""
+    named = os.environ.get(HELD)
+    if not named or not Path(named).is_file():
+        return None
+    rows, breaks = kernel.read(Path(named))
+    if breaks:
+        return None
+    found = None
+    for r in rows:
+        if (r.get("kind") == "verdict" and r.get("who") == WHO and r.get("gate") == gate
+                and r.get("key") == key):  # fmt: skip
+            found = r if r.get("state") == SATISFIED else None
+    return found
+
+
 def deps_add_on(name: str, pins: str = "requirements.txt"):
     """A deps add-on's tests in a fresh virtual environment of its own, with
     `pins` and pytest installed there, so one add-on's packages never decide
@@ -285,6 +333,10 @@ def deps_add_on(name: str, pins: str = "requirements.txt"):
     @needing(needs)
     def gate() -> tuple[str, str, str | None]:
         here = ROOT / "adapters" / "deps" / name
+        gate_name = f"deps:{name}" + ("" if pins == "requirements.txt" else "@floor")
+        if os.environ.get(HELD) and held(gate_name, gate.key()) is not None:
+            # the same files, pins and Python passed before: said, not rerun
+            return SATISFIED, f"held: unchanged since its satisfied verdict, key {gate.key()[:12]}\n", None  # fmt: skip
         lacks = needs()
         if lacks:
             return UNREACHABLE, "", lacks
@@ -322,6 +374,7 @@ def deps_add_on(name: str, pins: str = "requirements.txt"):
             return SATISFIED, said, None
 
     gate.online = "installs its requirements from PyPI"
+    gate.key = functools.lru_cache(maxsize=None)(lambda: deps_key(name, pins))
     return gate
 
 
@@ -414,6 +467,75 @@ def floors() -> tuple[str, str, str | None]:
 
 
 floors.online = "reads each pin's release history from PyPI"
+
+
+def audit(path: Path) -> list[tuple[str, str, str, str]]:
+    """[(package, version, advisory, first fixed or "")] that pip-audit finds
+    for the pins in `path`, read as they are (--no-deps --disable-pip): the
+    pins themselves, never what they would pull in. OSError when PyPI's
+    advisory data is out of reach."""
+    got = subprocess.run(
+        [PY, "-m", "pip_audit", "-r", str(path), "--no-deps", "--disable-pip",
+         "--progress-spinner", "off", "--format", "json"],
+        capture_output=True, text=True,
+    )  # fmt: skip
+    try:
+        found = json.loads(got.stdout)
+    except ValueError:
+        raise OSError((got.stderr.strip().splitlines() or ["no answer"])[-1]) from None
+    return [
+        (dep["name"], dep.get("version", ""), vuln["id"], ", ".join(vuln.get("fix_versions") or []))
+        for dep in found.get("dependencies", [])
+        for vuln in dep.get("vulns", [])
+    ]  # fmt: skip
+
+
+@needing(lambda: missing_module("pip_audit"))
+def advisories() -> tuple[str, str, str | None]:
+    """Each deps add-on's pins against PyPI's advisories, by pip-audit: a pin
+    with one fails, since requirements.txt is what a person installs. A floor
+    with one is said, not failed: requirements-floor.txt is the oldest
+    version CI holds the add-on to, not one anyone is told to install, and
+    raising it is a change to its card's `floor:` line, with its reason.
+    PyPI out of reach is unreachable."""
+    said, wrong = [], []
+    for name in deps_add_ons():
+        here = ROOT / "adapters" / "deps" / name
+        for pins, fails in (
+            ("requirements.txt", True),
+            ("requirements-floor.txt", False),
+        ):
+            if not (here / pins).is_file():
+                continue
+            try:
+                found = audit(here / pins)
+            except OSError as exc:
+                return (
+                    UNREACHABLE,
+                    "",
+                    f"couldn't read advisories for {name}: {exc}"[:200],
+                )
+            if fails:
+                for package, version, vuln, fixed in found:
+                    line = (f"{name}: {package}=={version} in {pins} has {vuln}"
+                            + (f", fixed in {fixed}" if fixed else ", no fixed release named"))  # fmt: skip
+                    said.append(line)
+                    wrong.append(line)
+                continue
+            # a floor's are counted, one line a package: an old floor can
+            # have a hundred, and the line to change is its card's floor:
+            for package in sorted({f[0] for f in found}):
+                these = [f for f in found if f[0] == package]
+                said.append(f"{name}: {package}=={these[0][1]} floor has {len(these)} "
+                            f"advisor{'y' if len(these) == 1 else 'ies'}, said, not failed")  # fmt: skip
+    said = "\n".join(said) + "\n" if said else "no pin has a known advisory\n"
+    print(said, end="")
+    if wrong:
+        return FAILING, said, "; ".join(sorted(set(wrong)))[:400]
+    return SATISFIED, said, None
+
+
+advisories.online = "asks PyPI's advisories for each pin"
 
 
 def deps_add_ons() -> list[str]:
@@ -691,6 +813,7 @@ def gates() -> list[tuple[str, str, object]]:
         out.append(("deps", f"deps:{name}", deps_add_on(name)))
         out.append(("deps", f"deps:{name}@floor",
                     deps_add_on(name, "requirements-floor.txt")))  # fmt: skip
+    out.append(("deps", "deps:advisories", advisories))
     out.append(("deps", "deps:floors", floors))
     for name in mutant_targets():
         how = command(PY, "adapters/stdlib/mutants/mutants.py", "run", name,
@@ -833,6 +956,10 @@ def do_run(box: Path, chosen: list[str], ts: str) -> int:
         }
         if why:
             row["why"] = why
+        if getattr(how, "key", None):  # what its run rested on, for a later run to hold
+            row["key"] = how.key()
+            if said.startswith("held: "):
+                row["held"] = True
         skips = skipped(said)
         if skips:
             row["skipped"] = skips

@@ -16,7 +16,8 @@ answer still says which page. A heading or a paragraph's last line is a
 short line, and ends its block, unless the next line goes on in lower case.
 A sentence ends at . ! or ? (a closing quote or bracket may follow) before
 a capital, a digit or an opening quote, but not after a short abbreviation
-(e.g., Inc., U.S.) or a single initial.
+(e.g., Inc., U.S.) or a single initial. A sentence longer than one of
+the kernel's chunks keeps its source's lines, so the kernel reads all of it.
 
 `diff` reads two versions, splits each the same way, and says what changed,
 sentence by sentence:
@@ -80,14 +81,14 @@ def blocks_of_html(text: str) -> list[tuple[int, str]]:
         for k, part in enumerate(line.split(SEP)):
             if k:  # a block's edge
                 if para:
-                    out.append((start, " ".join(para)))
+                    out.append((start, "\n".join(para)))
                 para = []
             if part := " ".join(part.split()):
                 if not para:
                     start = i
                 para.append(part)
         if not line.strip() and para:  # a blank line ends a block too
-            out.append((start, " ".join(para)))
+            out.append((start, "\n".join(para)))
             para = []
     return out
 
@@ -111,7 +112,7 @@ def blocks_of_text(text: str, wrapped: bool) -> list[tuple[int, str]]:
     def close() -> None:
         nonlocal para
         if para:
-            out.append((start, " ".join(para)))
+            out.append((start, "\n".join(para)))
             para = []
         out.extend(held)
         held.clear()
@@ -161,6 +162,28 @@ def sentences(block: str) -> list[str]:
     return out + ([tail] if tail else [])
 
 
+def fit(sentence: str) -> str:
+    """A sentence on one line; or, longer than one of the kernel's chunks, on
+    its source's own lines, a line longer than that cut at a space. The kernel
+    keeps only a line's first MAX_CHUNK characters, and cuts a longer
+    paragraph between its lines, so every word of it is still read. A chat
+    export holds no full stops, and its sentence can run for pages."""
+    one = " ".join(sentence.split())
+    if len(one) <= kernel.MAX_CHUNK:
+        return one
+    out = []
+    for line in sentence.splitlines():
+        line = " ".join(line.split())
+        while len(line) > kernel.MAX_CHUNK:
+            cut = line.rfind(" ", 1, kernel.MAX_CHUNK + 1)
+            cut = cut if cut > 0 else kernel.MAX_CHUNK
+            out.append(line[:cut])
+            line = line[cut:].lstrip()
+        if line:
+            out.append(line)
+    return "\n".join(out)
+
+
 def clauses(text: str, name: str) -> list[tuple[int, str]]:
     """Every sentence of a document, each with the line its block starts on."""
     if Path(name).suffix.lower() in (".html", ".htm"):
@@ -168,7 +191,7 @@ def clauses(text: str, name: str) -> list[tuple[int, str]]:
     else:
         wrapped = any(PAGE.fullmatch(s.strip()) for s in text.splitlines())
         blocks = blocks_of_text(text, wrapped)
-    return [(n, s) for n, b in blocks for s in sentences(b)]
+    return [(n, fit(s)) for n, b in blocks for s in sentences(b)]
 
 
 def as_text(found: list[tuple[int, str]]) -> str:
@@ -262,6 +285,11 @@ def compare(old: list[tuple[int, str]], new: list[tuple[int, str]]) -> dict:
     }
 
 
+def one(sentence: str) -> str:
+    """A sentence as one line, as diff prints it."""
+    return " ".join(sentence.split())
+
+
 def diff(old: Path, new: Path, to: Path | None) -> int:
     texts = []
     for p in (old, new):
@@ -278,11 +306,11 @@ def diff(old: Path, new: Path, to: Path | None) -> int:
         print(
             f"reworded  {old.name}:{o[0]} -> {new.name}:{a[0]}   ({kept} of {of} words kept)"
         )
-        print(f"  - {o[1]}\n  + {a[1]}")
+        print(f"  - {one(o[1])}\n  + {one(a[1])}")
     for a in got["added"]:
-        print(f"added     {new.name}:{a[0]}   {a[1]}")
+        print(f"added     {new.name}:{a[0]}   {one(a[1])}")
     for o in got["removed"]:
-        print(f"removed   {old.name}:{o[0]}   {o[1]}")
+        print(f"removed   {old.name}:{o[0]}   {one(o[1])}")
     print(f"same      {got['same']} sentences ({got['spacing']} differ only in "
           "spacing or punctuation)")  # fmt: skip
     changed = [a for _, a, _, _ in got["reworded"]] + got["added"]

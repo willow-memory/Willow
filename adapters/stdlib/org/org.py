@@ -36,6 +36,7 @@ is not a folder, or MIRROR and FOLDER are inside one another).
 
 from __future__ import annotations
 
+import json
 import os
 import re
 import sys
@@ -272,6 +273,28 @@ def _within(inner: Path, outer: Path) -> bool:
     return inner == outer or outer in inner.parents
 
 
+def places(text: str, source: list[str]) -> dict[str, str]:
+    """The mirror contract's places (adapters/stdlib/ci/README.md): the
+    mirror is line for line, so the line each passage starts on is the
+    source's same line, but a table's header, moved down onto the rule under
+    it, came from the line above it too."""
+    lines, out = text.splitlines(), {}
+    for i, s in enumerate(lines, 1):
+        if s.strip() and (i == 1 or not lines[i - 2].strip()):
+            moved = (2 <= i <= len(source) and source[i - 1].strip().startswith("|-")
+                     and source[i - 2].strip().startswith("|"))  # fmt: skip
+            out[str(i)] = f"lines {i - 1}-{i}" if moved else f"line {i}"
+    return out
+
+
+def write_places(dst: Path, rel: str, found: dict[str, str]) -> None:
+    """The map, hidden beside the mirror, where the kernel never reads."""
+    out = dst / ".places" / (rel + ".txt.json")
+    out.parent.mkdir(parents=True, exist_ok=True)
+    doc = {"source": rel, "places": found}
+    out.write_bytes((json.dumps(doc, ensure_ascii=False) + "\n").encode("utf-8"))
+
+
 def mirror(src: Path, dst: Path) -> tuple[int, int]:
     """Write the mirror of `src` into `dst`. Returns (written, skipped)."""
     wrote = skipped = 0
@@ -285,6 +308,10 @@ def mirror(src: Path, dst: Path) -> tuple[int, int]:
             target = dst.joinpath(rel.parent, rel.name + ".txt")
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_bytes(text.encode("utf-8"))
+            source = (
+                path.read_bytes().decode("utf-8-sig").replace("\r\n", "\n").split("\n")
+            )
+            write_places(dst, rel.as_posix(), places(text, source))
         except ERRORS:
             skipped += 1
             continue

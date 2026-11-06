@@ -25,7 +25,10 @@ PAGES = {"/policy.pdf": (200, b"%PDF-1.4 old policy\n"), "/news/": (200, b"<p>Hi
 
 
 class Handler(http.server.BaseHTTPRequestHandler):
+    agents: list[str] = []  # each request's User-Agent, for the --contact test
+
     def do_GET(self):  # noqa: N802
+        Handler.agents.append(self.headers.get("User-Agent", ""))
         status, body = PAGES.get(self.path, (404, b""))
         self.send_response(status)
         if status == 302:
@@ -170,3 +173,16 @@ def test_a_page_fetched_under_its_default_name_is_one_the_kernel_reads(site, tmp
     assert got.returncode == 0, got.stderr
     assert (named / "saved").is_file()
     assert logged(named)[0]["file"] == "saved"
+
+
+def test_a_contact_goes_in_the_user_agent_and_never_in_the_line(site, tmp_path):
+    pile = tmp_path / "pile"
+    Handler.agents.clear()
+    got = run("fetch", "--url", f"{site}/policy.pdf", "--to", str(pile), *NOW,
+              "--contact", "someone@example.org")  # fmt: skip
+    assert got.returncode == 0, got.stderr
+    assert Handler.agents == ["willow-snapshot/1 someone@example.org"]
+    assert "example.org" not in (pile / ".snapshots.jsonl").read_text()
+    Handler.agents.clear()
+    run("fetch", "--url", f"{site}/news/", "--to", str(pile), *NOW)
+    assert Handler.agents == [snapshot.AGENT]

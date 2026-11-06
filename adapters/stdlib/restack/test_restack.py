@@ -43,6 +43,47 @@ def test_changelog_never_settles_a_conflict_outside_unreleased():
         rs.changelog(text)
 
 
+BASE_LOG = (
+    "# Changelog\n\n## Unreleased\n\n### Added\n\n- old. (#1)\n\n## v0.1.0\n\n- first\n"
+)
+
+
+def test_fragments_moves_each_new_entry_named_for_its_number_or_branch():
+    mine = BASE_LOG.replace(
+        "- old. (#1)\n",
+        "- `a`, wrapped\n  over two. (#12)\n- `b`, unnumbered.\n- old. (#1)\n### Fixed\n\n- `c`, bug #3.\n",
+    )
+    got = rs.fragments(
+        BASE_LOG, BASE_LOG, mine, "feat/x", {"changes/12.added.md": "taken\n"}
+    )
+    assert got == {
+        "changes/12.added.1.md": "`a`, wrapped over two.\n",
+        "changes/+feat-x.added.md": "`b`, unnumbered.\n",
+        "changes/+feat-x.fixed.md": "`c`, bug #3.\n",
+    }
+
+
+def test_fragments_is_none_with_nothing_new_and_skips_what_ref_holds():
+    assert rs.fragments(BASE_LOG, BASE_LOG, BASE_LOG, "x", {}) is None
+    mine = BASE_LOG.replace("- old. (#1)\n", "- `held`, below. (#9)\n- old. (#1)\n")
+    # stacked on #9: its entry is REF's fragment already, so it only leaves
+    assert (
+        rs.fragments(
+            BASE_LOG, BASE_LOG, mine, "x", {"changes/9.added.md": "`held`, below.\n"}
+        )
+        == {}
+    )
+
+
+@pytest.mark.parametrize("mine", [
+    BASE_LOG.replace("- old. (#1)\n", "- new.\n- old, edited. (#1)\n"),
+    BASE_LOG.replace("### Added", "### Notes").replace("- old. (#1)\n", "- new.\n- old. (#1)\n"),
+])  # fmt: skip
+def test_fragments_stops_on_any_other_change_or_a_heading_with_no_kind(mine):
+    with pytest.raises(rs.Stop, match="CHANGELOG.md"):
+        rs.fragments(BASE_LOG, BASE_LOG, mine, "x", {})
+
+
 TREE = "│   │   ├── {n}/\n│   │   │   ├── {n}.py    it\n│   │   │   ├── test_{n}.py\n"
 CLOSE = "│   │   │   └── README.md\n"
 
@@ -203,14 +244,19 @@ def test_a_branch_is_put_on_top_with_its_changelog_settled_and_nothing_else_touc
         assert git(clone, "rev-parse", "work") == old, "nothing moves unchecked"
         return
     assert got.returncode == 0, got.stdout + got.stderr
-    assert "settled CHANGELOG.md" in got.stdout
+    assert "CHANGELOG.md, 1 new entry moved to changes/" in got.stdout
     assert "  push: git push origin work" in got.stdout
     assert git(clone, "merge-base", "--is-ancestor", "main", "work") == ""
     # merged, not rewritten: the branch's old commit is still under it
     assert git(clone, "log", "-1", "--format=%s", "work") == "Merge main into work"
     assert git(clone, "merge-base", "--is-ancestor", old, "work") == ""
-    text = git(clone, "show", "work:CHANGELOG.md")
-    assert "- `work`, from the branch.\n- `mainline`, from main. (#99)\n" in text + "\n"
+    # the branch's entry is a fragment now, and CHANGELOG.md is main's
+    assert git(clone, "show", "work:CHANGELOG.md") == git(
+        clone, "show", "main:CHANGELOG.md"
+    )
+    assert (
+        git(clone, "show", "work:changes/+work.added.md") == "`work`, from the branch."
+    )
     assert git(clone, "worktree", "list").count("\n") == 0, (
         "its scratch worktree is gone"
     )

@@ -2,14 +2,27 @@
 
 What changed, newest first, by the pull request that changed it, under
 Added, Changed, Fixed and Removed. A fix names what it fixes: a known bug
-from [BUGS.md](BUGS.md) as `bug #N`, or a security report. A release turns
-`Unreleased` into `vX.Y.Z · YYYY-MM-DD` ([CONTRIBUTING.md](CONTRIBUTING.md)
-says how). The first was v0.1.0.
+from [BUGS.md](BUGS.md) as `bug #N`, or a security report. A pull request
+writes its entry in a file of its own under [changes/](changes/README.md),
+never here (CI refuses a new entry here), so no two conflict; a release folds them in with towncrier as
+`vX.Y.Z · YYYY-MM-DD` ([CONTRIBUTING.md](CONTRIBUTING.md) says how). The
+entries under Unreleased came before that, and the next release takes them
+too. The first release was v0.1.0.
 
 ## Unreleased
 
 ### Added
 
+- `llm-cli`: suggestions through Simon Willison's `llm` command — bite first,
+  only served passages go to the model any of its plugins reach, propose a
+  cited reply; llm's log names the model (#253)
+- `hooks-elsewhere` refuses `--host cursor`: Cursor's `beforeSubmitPrompt`
+  can only continue or block a prompt, never inject passages; the card and
+  `hosts` point at the `cursor` MCP add-on instead (#252)
+- `hooks-elsewhere` `setup --host opencode` prints a native OpenCode plugin
+  (save as `<.opencode/plugins/willow-passages.js>`) that injects Claude's
+  framed passages as synthetic text, and still offers the Claude-compatible
+  hook JSON for runners that take it (#251)
 - `.github/copilot-instructions.md` points Copilot at `AGENTS.md` (prose, like
   `GEMINI.md`); `agents-md-check` reads it too, and AGENTS.md tips that need
   REST for `gh pr create` are framed by capability, not by product (#250)
@@ -1848,18 +1861,37 @@ says how). The first was v0.1.0.
   kernel's no-network test III.1 and III.5, the guard and the add-on cards
   II.1, and the generated pages VI.6. Their answers in `constitution/reach.json` go. (#4)
 
+### Fixed
+
+- test_docs.py asks git for the repo's files once a run, not once a doc: 61 s
+  to 5 s, the same answers for every doc; restack's tests, which run it three
+  times in a scratch copy, 4:17 to 1:05, so restack's mutants no longer time
+  out at 600 s in CI's mutants-reach (#261)
+- `mcp-lite`: parse a propose refusal with `partition` instead of a maxsplit
+  `split`, so the accepted inert mutant is gone (same as `mcp-sampling`) (#257)
+
 ### Changed
 
 - `mutants`: every accepted survivor is killed — inert starting `0`s,
   unused report-width defaults, equivalent compares and maxsplits rewritten
   or named and asserted — so `adapters/stdlib/mutants/accepted.json` is
-  empty again (across, advisories, again, agents-md-check, all, books,
-  clauses, coming-up, dice5e, flashcards, lesson-time, live, markdown,
-  mcp-lite, misquote, office, pins, scan, secrets-audit, stack,
-  three-two-one, todo, transcript-redact, typosquat); `forge`'s
-  `report_text` matches `stack`'s again; known-gaps freeze 11 re-hashes
-  `scan` and `todo` (no result changed)
+  empty again (across, advisories, again, agents-md-check, all,
+  assistant-scores, books, clauses, coming-up, dice5e, flashcards,
+  lesson-time, live, markdown, mcp-lite, misquote, office, pins, scan,
+  secrets-audit, stack, three-two-one, todo, transcript-redact, typosquat);
+  `forge`'s `report_text` matches `stack`'s again; known-gaps freeze 11
+  re-hashes `scan` and `todo` (no result changed)
 
+- `ci`'s test-times.json made from main's own CI run by `times.py write --run
+  latest`: 17 test files it lacked are in, share's at 175 s, and 20 others
+  moved by half or more, so the tests:adapters chunks are even again (#256)
+- `AGENTS.md` is a third as long: what every agent needs before a change (the
+  Never list, set up, what to run after a change), and a paragraph a job
+  pointing at its page in `docs/agents/`: add-ons, studies, pull requests,
+  searching. Every rule moved, none changed; four lessons added where they
+  belong (leave the checkout alone while create_pr.py runs; a dry run that
+  serves nothing tests nothing after the kernel; the kernel's echo rule,
+  exactly; a box's words list is its owner's alone). (#258)
 - `test-impact`: the add-on test files a change reaches run as up to four
   steps, one a minute of their past times, and `--jobs` starts the longest
   steps first; restack and ci together, 22 reached files and two add-ons'
@@ -2113,6 +2145,22 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- `ci`'s realdata.py fails a reader whose mirror holds a line longer than one
+  of the kernel's chunks (500 characters), naming the first: the kernel keeps
+  only a line's first 500, and says nothing of the rest. Run on every reader
+  over the demo people's folders, it found clauses before its fix (3 lines on
+  bernadette, 37 on hollis) and no other (#262)
+- `clauses` keeps a sentence longer than one of the kernel's chunks on its
+  source's own lines, a line longer than that cut at a space: a chat export
+  holds no full stops, so its "sentence" ran for pages on one line and the
+  kernel read only its first 500 characters. On the demo people's folders
+  that was 74 passages and 19,047 words never read; now none. A sentence of
+  500 characters or fewer is written as before, and google-privacy's mirrors
+  are the same bytes (#262)
+- `local-model`: the test that no server on the usual ports means 42 no
+  longer sends a real question to whatever model runs on this machine; it
+  points the usual ports at ones just bound and closed, and asserts 42
+  every time, not only when nothing happened to answer (#255)
 - `latex` reads a file holding a stray byte of another encoding as
   Windows-1252, else Latin-1, rather than skipping it whole: Santos's lecture
   notes on arXiv (1310.5578), ASCII but for one en dash, gave no prose. A
@@ -2318,6 +2366,8 @@ says how). The first was v0.1.0.
   tests exit non-zero, so an add-on not yet in `COMMANDS` (or a stray
   uncommitted add-on folder) fails the contract test and marks every mutant
   killed — a false pass CI later exposes as the real survivors. (#50)
+
+<!-- towncrier release notes start -->
 
 ## v0.1.0 · 2026-10-23
 

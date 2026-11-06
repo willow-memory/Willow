@@ -1,0 +1,241 @@
+{
+ "today": "2026-11-05",
+ "slice": {
+  "why": "the parts of the markets pile the table talks about, and nothing else: each box is built in seconds, and every passage an answer can cite is one a person here named",
+  "from_mirror": [
+   "web/fed-fomc/statements/20260128.html.txt",
+   "web/fed-fomc/statements/20260318.html.txt",
+   "web/fed-fomc/statements/20260429.html.txt",
+   "web/fed-fomc/statements/20260617.html.txt",
+   "web/fed-fomc/statements/20260729.html.txt",
+   "web/fed-fomc/statements/20260916.html.txt",
+   "web/fed-fomc/statements/20261028.html.txt",
+   "pdf/fed-fomc/presconf-transcripts/20260429.pdf.txt",
+   "pdf/fed-fomc/presconf-transcripts/20260729.pdf.txt",
+   "csv/fred/labor/UNRATE.csv.txt",
+   "csv/fred/markets/SP500.csv.txt",
+   "csv/treasury/daily_treasury_yield_curve_2026.csv.txt",
+   "parts/csv/ecb/deposit-rate.csv.txt*",
+   "web/sec/10-k/AAPL-2026-11-03.htm.txt"
+  ]
+ },
+ "facts": [
+  {
+   "id": "R1",
+   "who": "marisol",
+   "file": "fed-fomc/statements/20260916.html.txt",
+   "claim": "decided to raise the target range 3-3/4 to 4 percent",
+   "line": "Teo was right: on 2026-09-16 the Fed decided to raise the target range to 3-3/4 to 4 percent. Not a cut."
+  },
+  {
+   "id": "R2",
+   "who": "teodora",
+   "file": "fed-fomc/statements/20261028.html.txt",
+   "claim": "Voting against Cook Hammack preferred to raise the target range",
+   "line": "28 Oct: held at 3-3/4 to 4. Voting against were Cook and Hammack, who preferred to raise the target range again."
+  },
+  {
+   "id": "R3",
+   "who": "marisol",
+   "file": "treasury/daily_treasury_yield_curve_2026.csv.txt",
+   "claim": "10/30/2026 4.06",
+   "line": "One-month Treasury on 10/30/2026: 4.06. Grandma's bonds paid less than that."
+  },
+  {
+   "id": "R4",
+   "who": "bernadette",
+   "file": "fred/labor/UNRATE.csv.txt",
+   "claim": "2026-09-01 4.2",
+   "line": "Teo looked it up: US unemployment for 2026-09-01 was 4.2, not what Gerry said."
+  },
+  {
+   "id": "R5",
+   "who": "teodora",
+   "file": "ecb/deposit-rate.csv.txt",
+   "claim": "Deposit facility 2026-09-16 2.5",
+   "line": "For Kirsty's euro invoices: ECB deposit facility went to 2.5 on 2026-09-16, the same day the Fed moved."
+  },
+  {
+   "id": "R6",
+   "who": "hollis",
+   "file": "sec/10-k/AAPL-2026-11-03.htm.txt",
+   "claim": "During 2026 the Company repurchased $85.8 billion of its common stock",
+   "line": "From the 10-K itself: during 2026 the Company repurchased $85.8 billion of its common stock."
+  },
+  {
+   "id": "R7",
+   "who": "hollis",
+   "file": "treasury/daily_treasury_yield_curve_2026.csv.txt",
+   "claim": "10/30/2026 4.94",
+   "line": "Ten-year Treasury on 10/30/2026: 4.94. Dana says that's why the van loan quote went up."
+  }
+ ],
+ "quote": {
+  "id": "V1",
+  "who": "teodora",
+  "file": "fed-fomc/presconf-transcripts/20260729.pdf.txt",
+  "text": "As before, the policy statement conveys just the facts.",
+  "line": "Warsh, at the July press conference: \"As before, the policy statement conveys just the facts.\""
+ },
+ "traps": [
+  {
+   "id": "T1",
+   "who": "marisol",
+   "kind": "a cousin's wrong fact",
+   "line": "Lupe says the Fed decided to lower the target range in September, so the bank will pay less on savings.",
+   "wrong": "decided to lower the target range 3-3/4 to 4 percent",
+   "right": "decided to raise the target range 3-3/4 to 4 percent",
+   "file": "fed-fomc/statements/20260916.html.txt",
+   "check": "claim-check: the wrong claim is whole in no statement of 2026; the right one is whole in 16 September's"
+  },
+  {
+   "id": "T2",
+   "who": "hollis",
+   "kind": "a misquote heard on the radio",
+   "line": "Heard on the van radio, the new Fed chair: \"As always, the policy statement conveys only the facts.\"",
+   "quote": "As always, the policy statement conveys only the facts.",
+   "changed": [
+    [
+     "always",
+     "before"
+    ],
+    [
+     "only",
+     "just"
+    ]
+   ],
+   "file": "fed-fomc/presconf-transcripts/20260729.pdf.txt",
+   "check": "misquote: the closest passage is the July transcript's, and it names both changed words"
+  },
+  {
+   "id": "T3",
+   "who": "bernadette",
+   "kind": "a husband's wrong figure",
+   "line": "Gerry swears US unemployment for 2026-09-01 was 3.9, he read it at the Men's Shed.",
+   "wrong": "2026-09-01 3.9",
+   "right": "2026-09-01 4.2",
+   "file": "fred/labor/UNRATE.csv.txt",
+   "check": "claim-check, in UNRATE alone: the wrong figure is whole in no row; the right one is whole in one"
+  },
+  {
+   "id": "T4",
+   "who": "hollis",
+   "kind": "the wrong speaker",
+   "line": "Chair Powell said it at the press conference, July 29, 2026, I'm nearly sure.",
+   "wrong": "Chair Powell Press Conference July 29, 2026",
+   "right": "Chairman Warsh Press Conference July 29, 2026",
+   "file": "fed-fomc/presconf-transcripts/20260729.pdf.txt",
+   "check": "claim-check: the July transcript holds the right speaker whole and lacks powell; Powell's last is April's"
+  },
+  {
+   "id": "T5",
+   "who": "hollis",
+   "kind": "a newsletter's summary that drifted",
+   "summary": "Apple had a big year for shareholders. During 2026 it repurchased $95.8 billion of its common stock and raised the quarterly dividend to $0.27 per share.",
+   "drifted": "$95.8 billion",
+   "check": "pair-drift: Hollis keeps the newsletter's summary beside the 10-K paragraph it summarises, copied from the pile; the summary's $95.8 billion is in the summary only"
+  },
+  {
+   "id": "T6",
+   "who": "teodora",
+   "kind": "the host's own slip",
+   "line": "The Committee decided to lower the target range for the federal funds rate by 1/4 percentage point to 3-3/4 to 4 percent.",
+   "check": "thesis on her letter, in the sources' own words: every sentence held but this one, which lacks lower"
+  }
+ ],
+ "calls": [
+  {
+   "who": "hollis",
+   "p": 0.7,
+   "symbol": "SP500",
+   "kind": "up",
+   "date": "2026-10-30",
+   "made": "2026-10-29T22:00:00Z",
+   "closed": "2026-10-30T21:30:00Z",
+   "line": "Wager: SP500 up on 2026-10-30, p 0.7. It's been climbing all week."
+  },
+  {
+   "who": "marisol",
+   "p": 0.5,
+   "symbol": "SP500",
+   "kind": "up",
+   "date": "2026-10-28",
+   "made": "2026-10-27T23:00:00Z",
+   "closed": "2026-10-28T21:30:00Z",
+   "line": "Teo said to write one down even if I don't know. SP500 up on 2026-10-28, p 0.5, a coin."
+  },
+  {
+   "who": "bernadette",
+   "p": 0.35,
+   "symbol": "SP500",
+   "kind": "above:7700",
+   "date": "2026-11-04",
+   "made": "2026-11-03T20:00:00Z",
+   "closed": "2026-11-04T21:30:00Z",
+   "line": "My wager: SP500 above 7700 on 2026-11-04, p 0.35. I don't think it gets back there that fast."
+  },
+  {
+   "who": "teodora",
+   "p": 0.55,
+   "symbol": "SP500",
+   "kind": "up",
+   "date": "2026-11-04",
+   "made": "2026-11-03T21:00:00Z",
+   "closed": "2026-11-04T21:30:00Z",
+   "line": "My own, to be fair to everyone: SP500 up on 2026-11-04, p 0.55."
+  }
+ ],
+ "rules": {
+  "facts": "each R line's claim is whole (all parts) in a passage of its named source file in the slice",
+  "quote": "V1 is verbatim in the July 2026 transcript",
+  "T1": "the wrong claim is whole in no passage of the slice; the right one is whole in its file",
+  "T2": "misquote finds the July transcript and names each changed pair",
+  "T3": "within UNRATE, the wrong figure is whole in no passage and the right one is",
+  "T4": "the wrong speaker is whole in no passage of its file and the right one is",
+  "T5": "pair-drift on Hollis's box lists $95.8 billion as in the summary only, and nothing else",
+  "calls-made": "each call is on its person's record, made before 13:00 UTC on its day",
+  "calls-closed": "each close comes from the slice's SP500 rows, its day and the trading day before, and its outcome waits on that person's seal",
+  "lines": "every line in the four folders that names a real figure, rate or official is one of the frozen lines above, word for word",
+  "after": "no frozen line is dated after today; their own plans may be",
+  "stack": "Teo's money-hour stack runs on her box, and said finds every quote her minutes keep, with its date",
+  "verify": "every box's record verifies, and nothing on any of them is sealed",
+  "fold": "first-mention of tariffs on the folded Fed box is the earliest minutes that say tariff, read directly; the unfolded box's answer is recorded beside it",
+  "timeline": "Marisol's timeline of the Fed's decisions has each 2023 to 2026 statement's decision line, its raise, lower or maintain the same as the statement's own, and one raise in 2026, on 2026-09-16",
+  "sort": "every one of the 55 10-Ks is placed by Hollis's themes or named unsorted; none is dropped",
+  "thesis": "Teo's final letter: every sentence held but T6, which lacks lower; line 2 is held with the 28 October statement among its passages, and the first it names is recorded; her draft is recorded, held or short, sentence by sentence",
+  "across": "one page across the four people's records: each flagged, with its wager's outcome waiting on its seal",
+  "stacks": "fed.md on the Fed box and filings.md on the filings box run, and money-hour.md, with its new pools, on Teo's"
+ },
+ "desk": {
+  "why": "freeze 2: two wider boxes, every line folded, for what the table asks across years and across companies",
+  "fed": [
+   "web/fed-fomc/statements/202[3-6]*.html.txt",
+   "web/fed-fomc/minutes/202[3-6]*.html.txt"
+  ],
+  "filings": [
+   "web/sec/10-k/*.txt",
+   "parts/web/sec/10-k/*.txt"
+  ]
+ },
+ "letter": {
+  "draft": [
+   "On 2026-09-16 the Committee decided to raise the target range to 3-3/4 to 4 percent.",
+   "On 28 October it decided to maintain the target range at 3-3/4 to 4 percent.",
+   "Voting against were Cook and Hammack, who preferred to raise the target range.",
+   "The ECB deposit facility rate went to 2.5 on 2026-09-16."
+  ],
+  "final": [
+   "The Committee decided to raise the target range for the federal funds rate by 1/4 percentage point to 3-3/4 to 4 percent.",
+   "The Committee decided to maintain the target range for the federal funds rate at 3-3/4 to 4 percent.",
+   "Voting against were Cook and Hammack, who preferred to raise the target range.",
+   "As before, the policy statement conveys just the facts.",
+   "During 2026, the Company repurchased $85.8 billion of its common stock.",
+   "The Committee decided to lower the target range for the federal funds rate by 1/4 percentage point to 3-3/4 to 4 percent."
+  ],
+  "slip": 6,
+  "blur": {
+   "line": 2,
+   "file": "fed-fomc/statements/20261028.html.txt"
+  }
+ }
+}

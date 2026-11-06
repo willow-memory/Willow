@@ -2,7 +2,7 @@
 change while the model's name and card stay the same.
 
     python adapters/stdlib/model-drift/model_drift.py freeze --box DIR --url URL \\
-        --model NAME --questions FILE [--card CARD] > frozen.json
+        --model NAME --questions FILE [--card CARD] [--reasoning EFFORT] > frozen.json
     python adapters/stdlib/model-drift/model_drift.py again --box DIR --url URL \\
         --frozen frozen.json [--card CARD]
 
@@ -29,7 +29,15 @@ same ones, the model's name is the frozen one, and its card (given to both
 or to neither) hashes the same. When the card differs, or one run names a
 card and the other doesn't, nothing is flagged: a new card says a new model.
 
-Exit codes, the kernel's: 0 frozen, or no held answer drifted; 42 one
+The settings it asked at are frozen too, as the suggestions contract says
+them (temperature, seed, and the reasoning when `freeze --reasoning
+none|low|medium|high` asked for one), and `again` asks at the frozen ones, so
+a reasoning level never reads as drift. A file frozen before settings were
+kept was asked at temperature 0 and seed 0, with no reasoning, and is read
+so; settings `again` can't ask at flag nothing, as a new card doesn't.
+
+Exit codes, the kernel's: 0 frozen, or no held answer drifted; 42 frozen
+settings it can't ask at, or one
 drifted, nothing could be asked or held, or the endpoint didn't answer;
 2 refused (a bad command line, not a box, a record that doesn't verify, a
 file that can't be read or a frozen file that isn't one).
@@ -56,11 +64,12 @@ oc = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(oc)
 
 USAGE = (
-    "usage: model_drift.py freeze --box DIR --url URL --model NAME --questions FILE [--card CARD]\n"
+    "usage: model_drift.py freeze --box DIR --url URL --model NAME --questions FILE [--card CARD]"
+    " [--reasoning none|low|medium|high]\n"
     "       model_drift.py again --box DIR --url URL --frozen FILE [--card CARD]"
 )
 NEEDS = {
-    "freeze": ({"--box", "--url", "--model", "--questions"}, {"--card"}),
+    "freeze": ({"--box", "--url", "--model", "--questions"}, {"--card", "--reasoning"}),
     "again": ({"--box", "--url", "--frozen"}, {"--card"}),
 }
 FORMAT = "willow model-drift 1"
@@ -102,7 +111,22 @@ def parse(argv: list[str]) -> tuple[str, dict] | None:
         opts[a] = next(it, "")
     if not need <= set(opts) or "" in opts.values():
         return None
+    if opts.get("--reasoning", "none") not in oc.REASONING:
+        return None
     return verb, opts
+
+
+def ask(url: str, model: str, chat: list[dict], reasoning: str) -> str:
+    """openai-compatible's ask, the reasoning passed only when there is one, so
+    an ask without it is the ask it always was."""
+    if reasoning:
+        return oc.ask_model(url, model, chat, reasoning)
+    return oc.ask_model(url, model, chat)
+
+
+def asked_at(reasoning: str) -> dict[str, str]:
+    """The settings an ask is made at, as the suggestions contract says them."""
+    return dict(oc.settings(oc.SEED, reasoning))
 
 
 def freeze(box: Path, opts: dict, card: str | None) -> int:
@@ -111,13 +135,13 @@ def freeze(box: Path, opts: dict, card: str | None) -> int:
     except (OSError, UnicodeDecodeError) as e:
         print(f"refused: can't read the questions: {type(e).__name__}", file=sys.stderr)
         return kernel.REFUSED
-    asked = []
+    asked, reasoning = [], opts.get("--reasoning", "")
     for q in dict.fromkeys(q.strip() for q in text.splitlines() if q.strip()):
         served = served_for(box, q)
         if not served:
             print(f"not asked  {q}: nothing in your folder holds that", file=sys.stderr)
             continue
-        reply = oc.ask_model(opts["--url"], opts["--model"], oc.messages(q, served))
+        reply = ask(opts["--url"], opts["--model"], oc.messages(q, served), reasoning)
         asked.append(
             {"question": q, "served": [s["id"] for s in served], "answer": reply}
         )
@@ -127,7 +151,8 @@ def freeze(box: Path, opts: dict, card: str | None) -> int:
             file=sys.stderr,
         )
         return kernel.ESCALATE
-    doc = {"format": FORMAT, "model": opts["--model"], "card": card, "asked": asked}
+    doc = {"format": FORMAT, "model": opts["--model"], "card": card, "asked": asked,
+           "settings": asked_at(reasoning)}  # fmt: skip
     print(json.dumps(doc, indent=1, ensure_ascii=False, sort_keys=True))
     return kernel.ALIVE
 
@@ -141,6 +166,7 @@ def frozen_from(path: Path) -> dict | None:
         not isinstance(doc, dict)
         or doc.get("format") != FORMAT
         or not isinstance(doc.get("model"), str)
+        or not isinstance(doc.get("settings", {}), dict)
     ):
         return None
     asked = doc.get("asked")
@@ -162,6 +188,12 @@ def again(box: Path, opts: dict, card: str | None) -> int:
         )
         return kernel.REFUSED
     model = doc["model"]
+    then = doc.get("settings") or asked_at("")  # frozen before settings were kept
+    reasoning = then.get("reasoning", "")
+    if then != asked_at(reasoning) or reasoning not in ("", *oc.REASONING):
+        said = ", ".join(f"{k} {v}" for k, v in then.items())
+        print(f"nothing asked: frozen at {said}, which this can't ask at")
+        return kernel.ESCALATE
     held = drifted = 0
     for a in doc["asked"]:
         q = a["question"]
@@ -169,7 +201,7 @@ def again(box: Path, opts: dict, card: str | None) -> int:
         if [s["id"] for s in served] != a["served"]:
             print(f"not held   {q}: your folder serves other passages now")
             continue
-        reply = oc.ask_model(opts["--url"], model, oc.messages(q, served))
+        reply = ask(opts["--url"], model, oc.messages(q, served), reasoning)
         held += 1
         if closed(reply) == closed(a["answer"]):
             print(f"same       {q}")

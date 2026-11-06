@@ -4,7 +4,7 @@
     python adapters/stdlib/ci/realdata.py run --base REF
 
 An add-on can pass every test on hand-made files and still be wrong on a
-real folder (AGENTS.md, an add-on step by step, 8). That step was done by
+real folder (docs/agents/add-ons.md, step 8). That step was done by
 hand in each session, and said in the pull request as "Real data: ...".
 
 `run` makes each demo person's files (demo/PERSON/make_life.py writes
@@ -15,8 +15,13 @@ reader runs `mirror` over the folder. Every run is under the guard, held to
 its card, and to 60 seconds. `--base REF` runs every stdlib add-on whose
 files the branch changed since it left REF.
 
-A run fails on a traceback, a breach of its card's promises, a hang, or an
-exit other than 0, 2 and 42. A refusal (2) is said, not failed: some lines
+A run fails on a traceback, a breach of its card's promises, a hang, an
+exit other than 0, 2 and 42, or, for a reader, a mirror line longer than one
+of the kernel's chunks: the kernel keeps only a line's first `MAX_CHUNK`
+characters, so the rest of it is never read, and nothing says so (clauses
+lost a chat's every message after the first few this way). A reader whose
+card says `output: mirror` fails on a break of the mirror contract too
+(mirrors.py). A refusal (2) is said, not failed: some lines
 name a file only the contract's pile has. What each run printed is shown,
 for the pull request to say.
 
@@ -41,6 +46,16 @@ STDLIB = ROOT / "adapters" / "stdlib"
 USAGE = "usage: realdata.py run NAME [NAME ...] | realdata.py run --base REF"
 NOW = ["--now", "2026-10-23T00:00:00Z"]
 WAIT = 60
+
+
+def _load_mirrors():
+    spec = importlib.util.spec_from_file_location("willow_mirrors", HERE / "mirrors.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+MIRRORS = _load_mirrors()  # the mirror contract's check
 
 
 class Refused(Exception):
@@ -106,6 +121,22 @@ def row_of(contract, name: str) -> tuple[str, list[str]]:
     return contract.COMMANDS[name]
 
 
+def long_lines(mirror: Path) -> list[tuple[str, int, int]]:
+    """(file, line, length) for each line of a reader's mirror longer than one
+    of the kernel's chunks, which the kernel cuts without a word. A hidden
+    file (the mirror contract's .places maps) is skipped, as the kernel
+    skips it."""
+    out = []
+    for p in sorted(mirror.rglob("*")) if mirror.is_dir() else []:
+        hidden = any(s.startswith(".") for s in p.relative_to(mirror).parts)
+        if p.is_file() and not hidden:
+            text = p.read_bytes().decode("utf-8", "replace")
+            for i, line in enumerate(text.splitlines(), 1):
+                if len(line) > kernel.MAX_CHUNK:
+                    out.append((p.relative_to(mirror).as_posix(), i, len(line)))
+    return out
+
+
 def run_one(
     ci, name: str, script: Path, argv: list[str], life: Path, tmp: Path
 ) -> tuple[str, str]:
@@ -131,6 +162,18 @@ def run_one(
         return "a traceback", said
     if got.returncode not in (0, 2, 42):
         return f"exit {got.returncode}", said
+    cut = long_lines(tmp / "mirror")
+    if cut:
+        where, line, size = cut[0]
+        return (f"{len(cut)} mirror line(s) longer than the kernel's {kernel.MAX_CHUNK}"
+                f" characters, which it cuts unread (first: {where}:{line}, {size})"), said  # fmt: skip
+    if (tmp / "mirror").is_dir() and MIRRORS.keeps(script.parent / "README.md"):
+        broke = MIRRORS.check(life, tmp / "mirror")
+        if broke:
+            return (
+                f"{len(broke)} break(s) of the mirror contract (first: {broke[0]})",
+                said,
+            )
     return "", said
 
 

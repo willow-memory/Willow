@@ -50,16 +50,6 @@
   "role": "page"
  },
  {
-  "name": "assistant-scores",
-  "kind": "stdlib",
-  "section": "Assistants",
-  "line": "How often each assistant's suggestions were sealed or set aside, from the record.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "role": "suggests"
- },
- {
   "name": "basic-memory",
   "kind": "stdlib",
   "section": "Assistants",
@@ -426,16 +416,6 @@
   "writes": "record",
   "network": "none",
   "role": "tools"
- },
- {
-  "name": "food-log",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "What you ate, from your notes, by day.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "role": "page"
  },
  {
   "name": "forgejo",
@@ -860,17 +840,6 @@
   "role": "tools"
  },
  {
-  "name": "llm-cli",
-  "kind": "deps",
-  "section": "Assistants",
-  "line": "Suggestions through the llm command, so any model its plugins reach (local or hosted) can hand one in, with llm's own log naming the model.",
-  "source": "new",
-  "needs": "llm and the plugin for your model; Apache-2.0",
-  "writes": "record",
-  "network": "the model its plugin reaches, to ask for suggestions",
-  "role": "suggests"
- },
- {
   "name": "lore",
   "kind": "stdlib",
   "section": "Play",
@@ -930,16 +899,6 @@
   "writes": "nothing",
   "network": "none",
   "role": "tools"
- },
- {
-  "name": "mcp-sampling",
-  "kind": "stdlib",
-  "section": "Assistants",
-  "line": "Suggestions from whatever model your MCP client already runs, asked through MCP sampling, so willow needs no model or key of its own.",
-  "source": "new",
-  "writes": "record",
-  "network": "none",
-  "role": "suggests"
  },
  {
   "name": "meaning",

@@ -46,6 +46,20 @@ writes an approval (a `seal`), and it never reads the person's key. An add-on
 writes to the record only through the kernel's own commands, so `verify`
 still holds afterwards.
 
+**A chain of add-ons starts at the Forge, and the person seals it.** When
+you put add-ons together for someone (a demo's stack, a study, a page that
+walks a pile through add-on after add-on), ask the forge add-on with their
+words first (`python adapters/deps/forge/suggest.py suggest --box DIR
+"their sentence"`), settle each fork it names with `propose --choose
+WORD=NAME --why WORD=...`, and leave the seal to them: the chain they keep
+is the one they sealed, with a reason for each choice, not one picked by
+hand and written up after. When their words miss an add-on they meant, add
+the line to `ui/search-words.txt`, so the next person's words reach it too.
+A sealed stack is shared with `adapters/stdlib/stack-share`, on
+[Show your stack](https://github.com/willow-memory/Willow/issues/87).
+Where the Forge can't run (it needs forge-play and Python 3.11), say so,
+and write the stack file by hand with each step's reason beside it.
+
 **A check has to be able to fail.** Before you say a test covers something,
 break that thing on purpose and watch the test go red. A test that can't
 fail, or that skips quietly when something is missing, looks like a pass and
@@ -214,19 +228,28 @@ beside the GitHub one: a host.json for `adapters/stdlib/ci/whose.py`, and that s
 ## Pull requests
 
 - One idea per pull request.
-- A change to anything but the docs adds an entry under `## Unreleased` in
-  [CHANGELOG.md](CHANGELOG.md), ending with its pull request's number, such
-  as `(#7)`, under `### Added`, `### Changed`, `### Fixed` or `### Removed`.
-  CI checks it on every pull request but Dependabot's: a bot's dependency
-  update can't write an entry, and those updates aren't listed.
+- Look at the open pull requests before you start, whatever you branch
+  from: one may already be building your idea, or changing the files
+  you'll change. Branching from `main` is where your work starts, not a
+  sign that nothing else is in flight. The check below holds your branch to
+  them once it has a commit.
+- A change to anything but the docs adds its changelog entry in a file of
+  its own, `changes/+<branch>.<kind>.md`, towncrier's shape
+  ([changes/README.md](changes/README.md)): <kind> is `added`, `changed`,
+  `fixed` or `removed`, and the file holds the entry's text. Not in
+  CHANGELOG.md: no two pull requests write the same fragment, so none
+  conflicts with another, and a release folds them in. CI checks it on
+  every pull request but Dependabot's: a bot's dependency update can't
+  write an entry, and those updates aren't listed.
 - Regenerate the add-on list (ADDONS.md, and the README's one feature) with
   `python adapters/stdlib/readme/readme.py write`, never by hand;
   `test_docs.py` fails if it's stale.
-- Branch from `main`, and put the changelog number in with the first push:
-  open the pull request, add its number to your CHANGELOG.md entry, and push
-  once, so the first run is not thrown away. Every push after the first
-  starts a run of every check, and a stack of branches re-runs them all
-  whenever one of them moves.
+- Branch from `main`, and name the changelog fragment in the first push:
+  open the pull request, rename `changes/+<branch>.<kind>.md` to
+  `changes/<number>.<kind>.md`, and push once, so the first run is not
+  thrown away. `adapters/stdlib/github/create_pr.py` does all of it. Every
+  push after the first starts a run of every check, and a stack of
+  branches re-runs them all whenever one of them moves.
 - CI's `against` job holds your pull request to the other open ones, and its
   summary says what it found. **A duplicate fails it:** a name both pull
   requests add (an add-on folder, an idea on `adapters/planned.json`, a key
@@ -268,8 +291,8 @@ unnoticed.
 
 **Fixing one.** Once the bug is fixed its test passes, and because the
 mark is strict, that fails the run until you take the mark off. Regenerate
-BUGS.md, and add an entry under `### Fixed` in CHANGELOG.md that names it,
-`bug #12`; CI refuses the pull request without it.
+BUGS.md, and write a `fixed` fragment (`changes/+<branch>.fixed.md`) that
+names it, `bug #12`; CI refuses the pull request without it.
 
 ## Releases
 
@@ -283,8 +306,12 @@ one, `vMAJOR.MINOR.PATCH`:
 
 To make one, open a pull request that changes only the docs:
 
-1. In [CHANGELOG.md](CHANGELOG.md), rename `## Unreleased` to
-   `## vX.Y.Z · YYYY-MM-DD` and put a new, empty `## Unreleased` above it.
+1. Fold the fragments in: `pipx run towncrier build --version X.Y.Z --date
+   YYYY-MM-DD --yes` writes `## vX.Y.Z · YYYY-MM-DD` into
+   [CHANGELOG.md](CHANGELOG.md) from changes/ and deletes them
+   ([towncrier.toml](towncrier.toml) holds its settings). Entries still
+   under `## Unreleased`, from before the fragments, move into that
+   section by hand, leaving `## Unreleased` empty above it.
 2. In [CITATION.cff](CITATION.cff), set `version: X.Y.Z` and
    `date-released: YYYY-MM-DD` to match.
 

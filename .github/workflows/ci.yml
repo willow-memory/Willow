@@ -9,6 +9,9 @@ on:
   push:
     branches: [main]
   pull_request:
+  # GitHub's merge queue: each queued pull request is tested once more, on
+  # main with every pull request ahead of it, before it merges
+  merge_group:
 
 # One run per change. A pull request's runs are its pull_request ones, not
 # its branch's pushes as well, and a newer commit on it cancels the run it
@@ -64,6 +67,32 @@ jobs:
         with:
           name: similar
           path: ${{ runner.temp }}/similar.md
+          retention-days: 7
+
+  copies:
+    # The functions add-ons keep their own copy of that this pull request
+    # leaves drifted from the rest without saying why, each with its diff
+    # (adapters/stdlib/ci/copies.py), written to the run's summary and kept
+    # as the `copies` artifact. A suggestion, never a gate: copies.py's own
+    # tests run in the tests, and `copies.py survey` says every drift.
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - env:
+          BASE: origin/${{ github.base_ref }}
+        run: |
+          python adapters/stdlib/ci/copies.py new --base "$BASE" > "$RUNNER_TEMP/copies.md"
+          cat "$RUNNER_TEMP/copies.md" >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v7
+        with:
+          name: copies
+          path: ${{ runner.temp }}/copies.md
           retention-days: 7
 
   changelog:
@@ -467,14 +496,23 @@ jobs:
   deps:
     # Each add-on in adapters/deps gets a fresh virtual environment with only
     # its own pinned requirements, made by ci.py, then another at its floor;
-    # deps:floors checks each floor against PyPI. mcp needs Python 3.10+.
+    # deps:floors checks each floor against PyPI, and deps:advisories every
+    # pin against its advisories, by pip-audit. mcp needs Python 3.10+.
     # The programs a deps add-on runs and PyPI doesn't carry come from the
     # runner's Ubuntu: tesseract for ocr, bubblewrap for kart (gpg, for pgp,
     # comes with the image). Ubuntu 24.04 keeps unprivileged user namespaces
     # behind AppArmor, and bwrap needs one, so this runner lets them be made.
+    # On a pull request, main's last deps record is fetched first: a gate
+    # whose key (its folder, kernel.py, ci.py, the guard, its pins, the
+    # Python) has a satisfied verdict there is held, not reinstalled. A push
+    # to main fetches nothing and runs every gate, so a bad hold is caught on
+    # the next merge; a record that can't be fetched holds nothing.
     needs: [lint, against, changelog]
     if: ${{ !failure() && !cancelled() }}
     runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      actions: read
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
@@ -482,6 +520,22 @@ jobs:
           python-version: "3.13"
       - run: sudo apt-get update -q && sudo apt-get install -y -q tesseract-ocr bubblewrap
       - run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+      - run: pip install pip-audit==2.10.1
+      - if: github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        # main's push runs only, newest first, until one kept a deps record (a
+        # cancelled or unfinished one didn't): never an artifact found by name,
+        # which a pull request from a fork's own main could have uploaded
+        run: |
+          for id in $(gh run list -R "$GITHUB_REPOSITORY" --workflow ci.yml --branch main --event push -L 10 --json databaseId -q '.[].databaseId' || true); do
+            if gh run download "$id" -R "$GITHUB_REPOSITORY" -n ci-record-deps -D "$RUNNER_TEMP/held" 2>/dev/null; then
+              echo "held by main's deps record, run $id"
+              echo "WILLOW_HELD_RECORD=$RUNNER_TEMP/held/record.jsonl" >> "$GITHUB_ENV"
+              break
+            fi
+          done
+          [ -f "$RUNNER_TEMP/held/record.jsonl" ] || echo "no deps record from main to hold by: every deps gate runs"
       - run: python adapters/stdlib/ci/ci.py run deps --box ${{ runner.temp }}/ci-record | tee "$RUNNER_TEMP/ci.log"
       - if: failure()
         run: python adapters/stdlib/ci-why/ci_why.py "$RUNNER_TEMP/ci.log" --record "$RUNNER_TEMP/ci-record/record.jsonl" >> "$GITHUB_STEP_SUMMARY" || true
