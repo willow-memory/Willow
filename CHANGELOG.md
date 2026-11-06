@@ -10,6 +10,17 @@ says how). The first was v0.1.0.
 
 ### Added
 
+- `openai-compatible`, `local-model`, `same-way`: `--reasoning
+  none|low|medium|high` sets the request's `reasoning_effort`, so a thinking
+  model (qwen3) can be asked not to think; without it the request is byte for
+  byte the one sent before. Measured on Ollama 0.40.14's OpenAI endpoint,
+  `none` stopped qwen3:8b's thinking where "/no_think" in a system file and
+  `think: false` didn't. `same-way` also takes `--system FILE`, as
+  openai-compatible's ask does, so it asks exactly the chat local-model asks (#259)
+- `.github/copilot-instructions.md` points Copilot at `AGENTS.md` (prose, like
+  `GEMINI.md`); `agents-md-check` reads it too, and AGENTS.md tips that need
+  REST for `gh pr create` are framed by capability, not by product (#250)
+
 - `equations`: each displayed equation in LaTeX sources as a passage of its
   own, the math as its source writes it, with its labels, its .tex line and
   the sentences around it, so a question finds an equation by what its paper
@@ -2099,6 +2110,10 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
+- `latex` reads a file holding a stray byte of another encoding as
+  Windows-1252, else Latin-1, rather than skipping it whole: Santos's lecture
+  notes on arXiv (1310.5578), ASCII but for one en dash, gave no prose. A
+  file holding a NUL byte (UTF-16, or a binary) is still skipped and counted. (#249)
 - `github`'s create_pr.py tries a push or an open GitHub answers with an
   error again, after 2, 4, 8 and 16 seconds, and looks for the pull request
   before each new open: GitHub answered #236's with a 502 and opened it,
