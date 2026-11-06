@@ -245,6 +245,63 @@ the pipeline (`--seed 0`, verdicts to a scratch box) and every arm in
 
 What it can't see: whether any real question is held, which is the result.
 
+## The run
+
+Run once, on 2026-11-06 from 01:53 UTC, at commit d758030 (the freeze is
+d9d46e9), on the stack as `fetch.py --check` found it: all 25 sources the
+same as their pins. Every question asked as written; the pipeline took 7
+seconds.
+
+| Rule | Verdict | Frozen number |
+|---|---|---|
+| R1 | **failing** | 1 of 11 steps found (s3); needed 9, with s5a, s5b and s7 |
+| R2 | **failing** | 1 of 11 found (s5a); needed 7, with s5b and s7 |
+| R3 | satisfied | 0 of 10 null questions served a chain step; at most 2 |
+| R4 | satisfied | 1 of 11 steps found by random passages, seed 0; at most 2 |
+| R5 | satisfied | no found step only through Wertheim or sticky spheres |
+| extended | reported | 3 of 7: e2, e3, e6 |
+| R6 | not yet judged | the physics student, with [rubric.md](rubric.md) |
+
+**The claim failed.** The author's questions found one step of eleven,
+Ornstein–Zernike (s3, from Wikipedia's article); the blind questions found
+one, a different one, Baxter's factorization (s5a, from Coquand and
+Sperl's square-shoulder paper). The
+random baseline found as many as either. The answer itself, s7, was found by
+no question. R6 is still to be judged, but with one step found there is
+little chain for it to judge.
+
+The rows: `found.json`, SHA-256 `db31eb39d0df8908609f996c17961d58c9316f246a28c0a73025e4888a752d3e`,
+and eight verdict rows on a box outside the repo, the last row's hash
+`c4fe510d18b3ea858ae25b5d01bd3ff14cbe6cf575d72c47670d580c6aec5ecc`;
+`kernel.py verify` on it: "the chain holds: 8 rows, 0 sealed".
+
+**Looked at after the result, not part of it.** How many of the pile's
+5,533 passages meet the hit rule, step by step, whatever any question asked:
+
+| Step | Passages that hold it | Step | Passages that hold it |
+|---|---|---|---|
+| s0 | 0 | s5a | 10 (all math) |
+| s1a | 0 | s5b | 12 (all math) |
+| s1b | 8 (all math) | s6 | 2 (math) |
+| s1c | 2 | s7 | 4 (all math) |
+| s2 | 3 | e1, e5, e7 | 0 |
+| s3 | 6 | e2, e3, e4, e6 | 4, 5, 3, 1 |
+| s4 | 2 | | |
+
+So the stack holds 9 of the 11 steps, which is exactly R1's bar and no
+more, and it lacks s0 and s1a under their anchors outright. The other eight
+the kernel didn't find. Most of the passages that hold a step are from
+the equations reader: an equation and a line or two around it, few of the
+words a question asks in. A passage must hold half a question's content
+words to be served, and these mostly don't. This reading is a guess at the
+cause, made after seeing the result; testing it is a new study with a new
+freeze, not a change to this one.
+
+The arms (rankers, why-not, predict, claims on the ML specialist's interim
+report, and the models arranging what was found) were still running when this
+was written; they are reported below when done, and none of them changes a
+verdict.
+
 ## Said plainly
 
 - **The anchors were written after the source search had grepped each
