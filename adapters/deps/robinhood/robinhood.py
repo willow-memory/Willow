@@ -301,7 +301,10 @@ def write(to: Path, day: str, now: str, got: dict[str, list]) -> list[str]:
             ).encode()
             (raw / f"{name}.json").write_bytes(body)
             text = json_paths.convert(body, f"{name}.json") or body.decode()
-            (folder / f"{name}.txt").write_text(text, encoding="utf-8", newline="\n")
+            with open(
+                folder / f"{name}.txt", "w", encoding="utf-8", newline="\n"
+            ) as out:
+                out.write(text)
             log.write(json.dumps({"at": now, "tool": name, "file": f"{day}/{name}.txt",
                                   "bytes": len(body), "sha256": hashlib.sha256(body).hexdigest()},
                                  sort_keys=True) + "\n")  # fmt: skip
