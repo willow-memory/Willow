@@ -632,17 +632,6 @@
   "tags": "hooks"
  },
  {
-  "name": "hook-handoff",
-  "kind": "stdlib",
-  "section": "Assistants",
-  "line": "A Stop hook that writes where the session ended, and the next session's first prompt gets it back, so nothing rides on the assistant's memory.",
-  "source": "new",
-  "writes": "record",
-  "network": "none",
-  "role": "guards",
-  "tags": "hooks"
- },
- {
   "name": "hook-sequence",
   "kind": "stdlib",
   "section": "Assistants",

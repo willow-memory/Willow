@@ -520,6 +520,10 @@ willow/
 │   │   │   ├── hook_guard.py   refuses a call that reads the key or writes the box
 │   │   │   ├── test_hook_guard.py
 │   │   │   └── README.md
+│   │   ├── hook-handoff/
+│   │   │   ├── hook_handoff.py A Stop hook that writes where the session ended, and the next session's first prompt gets it back, so nothing rides on the assistant's memory
+│   │   │   ├── test_hook_handoff.py
+│   │   │   └── README.md     its card
 │   │   ├── hook-impact/
 │   │   │   ├── hook_impact.py   hands over the places that name a file before it is edited
 │   │   │   ├── test_hook_impact.py
