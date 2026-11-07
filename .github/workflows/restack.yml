@@ -1,0 +1,51 @@
+name: restack
+
+# When main moves, every open pull request from this repository's own
+# branches that now conflicts with its base is merged up to it by restack's
+# rules, and the merge pushed (adapters/stdlib/restack-open): the files the
+# repo makes, the changelog, FILES.md, COMMANDS, planned.json and Markdown
+# both sides only added to. Any other conflict is named in the run's summary
+# for a person, and that branch is left as it was. Nothing is forced.
+#
+# A push made with GitHub Actions' own token starts no CI on the pull
+# request, so the push is made only with RESTACK_TOKEN, a token of the
+# maintainer's choosing kept in the repository's secrets; without it this
+# says what it would push and pushes nothing.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: restack
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  open:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.RESTACK_TOKEN || github.token }}
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - run: pip install pytest
+      - run: |
+          git config user.name "willow restack"
+          git config user.email "restack@willow-memory.invalid"
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          PUSH: ${{ secrets.RESTACK_TOKEN != '' && '--push' || '' }}
+        run: |
+          set +e
+          python adapters/stdlib/restack-open/restack_open.py --repo "$GITHUB_REPOSITORY" $PUSH > "$RUNNER_TEMP/restack.txt"
+          code=$?
+          { echo '### Open pull requests against main'; echo; echo '```'; cat "$RUNNER_TEMP/restack.txt"; echo '```'; } | tee -a "$GITHUB_STEP_SUMMARY"
+          # 42 is a pull request for a person, said above: not a failure of main's
+          [ "$code" = 0 ] || [ "$code" = 42 ]
