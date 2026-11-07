@@ -674,6 +674,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "history": ("history.py", ["--box", "{box}"]),
     "home-upkeep": ("home_upkeep.py", ["--box", "{box}"]),
     "hook-compact": ("hook_compact.py", ["--box", "{box}"]),
+    "hook-errors": ("hook_errors.py", ["check", "--box", "{box}"]),
     "hook-fail-closed": ("hook_fail_closed.py", ["--hook", "true"]),
     "hook-fuzz": ("hook_fuzz.py", ["--hook", "true"]),
     "hook-guard": ("hook_guard.py", ["rules"]),

@@ -504,6 +504,10 @@ willow/
 │   │   │   ├── hook_compact.py   what the record holds open, before a summary
 │   │   │   ├── test_hook_compact.py
 │   │   │   └── README.md
+│   │   ├── hook-errors/
+│   │   │   ├── hook_errors.py Each failed command an assistant runs kept as a row of its hash and exit code, so the same failure the third time is named, not retried blind
+│   │   │   ├── test_hook_errors.py
+│   │   │   └── README.md     its card
 │   │   ├── hook-fail-closed/
 │   │   │   ├── hook_fail_closed.py a hook that crashes, hangs or says what can't be read blocks the tool
 │   │   │   ├── test_hook_fail_closed.py
