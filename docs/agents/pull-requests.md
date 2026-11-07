@@ -58,6 +58,11 @@ Opening one, keeping it current, and what CI's rows need. Part of
 
 ## When main moves under a branch
 
+On every push to main, `.github/workflows/restack.yml` does this for each
+open pull request whose conflicts restack settles by its rules
+(`adapters/stdlib/restack-open`), and names the rest in its run's summary;
+what follows is for those, and for a branch with no pull request yet.
+
 Merge or rebase, then regenerate rather than hand-merge what is generated:
 `python adapters/stdlib/ci/made.py write` makes every made file again
 (ADDONS.md and the README's add-on sections, BUGS.md, FILES.md, the lists

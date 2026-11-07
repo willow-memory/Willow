@@ -109,6 +109,8 @@ PILE_EXTRA: dict[str, dict[str, bytes]] = {
         "catalog.json": b'{"entries": [{"id": "tides", "status": "dark", '
         b'"recovery": [{"url": "https://x.example/", "permission": "excluded"}]}]}'
     },
+    # no pull request open: restack-open answers before any fetch or push
+    "restack-open": {"open-prs.json": b"[]"},
     "scrub": {"photo.png": _png()},
     # a category of the person's own, which the default pile's garden.md holds
     "sort": {"categories.txt": b"garden: tomatoes, sun\n"},
@@ -772,11 +774,13 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "reading-level": ("reading_level.py", ["--box", "{box}"]),
     "reading-log": ("reading_log.py", ["--box", "{box}"]),
     "readings": ("readings.py", ["bite", "--box", "{box}", *NOW, "tomatoes"]),
+    "red-on-main": ("red_on_main.py", ["--pr", "{box}", "--main", "{box}"]),
     "renewals": ("renewals.py", ["--box", "{box}", *NOW]),
     # a list naming no owner/repo builds nothing, before any clone: no network
     "repo-pile": ("repo_pile.py", ["build", "--to", "{tmp}/base", "--repos",
                                    "{pile}/garden.md", "--key", "{tmp}/base.key"]),
     "restack": ("restack.py", ["--onto", "HEAD", "HEAD"]),
+    "restack-open": ("restack_open.py", ["--prs", "{pile}/open-prs.json"]),
     "restore-drill": ("restore_drill.py", ["--from", "{pile}/garden.md"]),
     "risky-code": ("risky_code.py", ["--box", "{box}"]),
     "ro-crate": ("ro_crate.py", ["--box", "{box}", "--to", "{tmp}/crate"]),

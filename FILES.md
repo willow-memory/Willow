@@ -1014,6 +1014,10 @@ willow/
 │   │   │   ├── readwise.py   highlights with their book and your note
 │   │   │   ├── test_readwise.py
 │   │   │   └── README.md
+│   │   ├── red-on-main/
+│   │   │   ├── red_on_main.py A pull request's failing checks held to main's last run: red there too is not the pull request's, green there is
+│   │   │   ├── test_red_on_main.py
+│   │   │   └── README.md     its card
 │   │   ├── reddit/
 │   │   │   ├── reddit.py   Reddit posts, comments and saved items as dated lines
 │   │   │   ├── test_reddit.py
@@ -1030,6 +1034,10 @@ willow/
 │   │   │   ├── restack.py    your branches back on top of main, the repo's own conflicts settled
 │   │   │   ├── test_restack.py
 │   │   │   └── README.md
+│   │   ├── restack-open/
+│   │   │   ├── restack_open.py Every open pull request that conflicts with its base, merged up to it by restack's rules and pushed, or named for a person
+│   │   │   ├── test_restack_open.py
+│   │   │   └── README.md     its card
 │   │   ├── restore-drill/
 │   │   │   ├── restore_drill.py  a backup zip restored into scratch; the chain and every file checked there
 │   │   │   ├── test_restore_drill.py
@@ -1923,6 +1931,7 @@ willow/
 │   ├── workflows/
 │   │   ├── ci.yml            runs adapters/stdlib/ci/ci.py a part or a cut of one a job, tests on Python 3.9 to 3.14 (3.9 and 3.14 on a pull request)
 │   │   ├── law.yml           every Monday, the law's check: an expired emergency amendment fails it
+│   │   ├── restack.yml
 │   │   └── security.yml      posts the github add-on's comment on a security report
 │   ├── ISSUE_TEMPLATE/
 │   │   ├── bug.yml           the form for something wrong

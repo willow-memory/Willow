@@ -581,3 +581,42 @@ jobs:
         with:
           name: ci-record-tools
           path: ${{ runner.temp }}/ci-record/record.jsonl
+
+  red-on-main:
+    # A red pull request's failing checks held to main's last push run that
+    # kept its records: one red on main too is said not to be this change's,
+    # one green there is, in the run's summary, so nobody chases main's own
+    # failure as theirs (adapters/stdlib/red-on-main). It runs only on a red
+    # pull request, and says nothing when main's records can't be fetched.
+    needs: [lint, tests, strip, ports, demo, mutants-reach, deps, tools]
+    if: ${{ failure() && github.event_name == 'pull_request' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - uses: actions/download-artifact@v7
+        with:
+          pattern: ci-record-*
+          path: ${{ runner.temp }}/pr
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          sha=""
+          for id in $(gh run list -R "$GITHUB_REPOSITORY" --workflow ci.yml --branch main --event push -L 10 --json databaseId -q '.[].databaseId' || true); do
+            if gh run download "$id" -R "$GITHUB_REPOSITORY" -p 'ci-record-*' -D "$RUNNER_TEMP/main" 2>/dev/null; then
+              sha=$(gh run view "$id" -R "$GITHUB_REPOSITORY" --json headSha -q .headSha)
+              break
+            fi
+          done
+          if [ -n "$sha" ]; then
+            { echo '### Red on main too?'; echo; echo '```'
+              python adapters/stdlib/red-on-main/red_on_main.py --pr "$RUNNER_TEMP/pr" --main "$RUNNER_TEMP/main" --main-sha "$sha" || true
+              echo '```'; } | tee -a "$GITHUB_STEP_SUMMARY"
+          else
+            echo "no record of main's to hold the failing checks to" | tee -a "$GITHUB_STEP_SUMMARY"
+          fi
