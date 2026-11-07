@@ -76,6 +76,15 @@ Then push, and let CI's run be the full one:
   (its FROZEN.json says which) adds that demo's tests, since a red PR there
   waits on someone else's freeze commit.
 
+**The long ones run in the background**, each in a `git worktree` of its
+own: `adapters/stdlib/github/create_pr.py`, `mutants.py run`,
+`realdata.py run`, a `ci.py run` of more than lint, and `test-impact`. They
+take minutes, and two of them write while they run (create_pr.py commits
+what its steps tidy; mutants.py breaks a file and puts it back), so the
+checkout you go on working in is never theirs. Start one, carry on, and read what it printed when it ends. Lint,
+`made.py check`, `against.py check` and one add-on's tests take seconds: run
+those where you are.
+
 Name a part or a gate to run just that: `ci.py run lint`, `ci.py run
 tests:kernel`. A gate that fails here and that `needs` names as unreachable
 is the machine, not you; any other is yours.
@@ -98,8 +107,8 @@ that should now pass.
   [docs/agents/studies.md](docs/agents/studies.md) has the rest, and what a
   dry run misses.
 - **A pull request.** Open it with
-  `python adapters/stdlib/github/create_pr.py`, and leave the checkout alone
-  while it runs. When main moves under a branch, regenerate what is made
+  `python adapters/stdlib/github/create_pr.py`, in the background, in a
+  worktree of its own. When main moves under a branch, regenerate what is made
   (`python adapters/stdlib/ci/made.py write`); a changelog fragment never
   conflicts.
   [docs/agents/pull-requests.md](docs/agents/pull-requests.md), with a new CI
