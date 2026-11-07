@@ -654,17 +654,6 @@
   "tags": "hooks"
  },
  {
-  "name": "hook-read-first",
-  "kind": "stdlib",
-  "section": "Assistants",
-  "line": "A PreToolUse hook that refuses an edit to a file the assistant hasn't read this session, or whose bytes changed since it did, each read kept as a hash.",
-  "source": "new",
-  "writes": "record",
-  "network": "none",
-  "role": "guards",
-  "tags": "hooks"
- },
- {
   "name": "hook-sequence",
   "kind": "stdlib",
   "section": "Assistants",

@@ -528,6 +528,10 @@ willow/
 │   │   │   ├── hook_pin.py       a hook runs only as the bytes you approved, pinned on the record
 │   │   │   ├── test_hook_pin.py
 │   │   │   └── README.md
+│   │   ├── hook-read-first/
+│   │   │   ├── hook_read_first.py A PreToolUse hook that refuses an edit to a file the assistant hasn't read this session, or whose bytes changed since it did, each read kept as a hash
+│   │   │   ├── test_hook_read_first.py
+│   │   │   └── README.md     its card
 │   │   ├── hook-replay/
 │   │   │   ├── hook_replay.py    every hook answer a row of hashes, and each one run again
 │   │   │   ├── test_hook_replay.py

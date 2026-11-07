@@ -678,6 +678,10 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "hook-impact": ("hook_impact.py", ["check", "--box", "{box}", "{pile}/garden.md"]),
     "hook-leaks": ("hook_leaks.py", ["check", "--from", "{pile}/garden.md"]),
     "hook-pin": ("hook_pin.py", ["--box", "{box}", "approve", "{pile}/garden.md", *NOW]),
+    "hook-read-first": (
+        "hook_read_first.py",
+        ["check", "--box", "{box}", "{pile}/garden.md"],
+    ),
     "hook-replay": ("hook_replay.py", ["--box", "{box}", "--to", "{tmp}", "run", "--hook", "true", *NOW]),
     "hook-shell": ("hook_shell.py", ["split", "ls -la"]),
     "hook-start": ("hook_start.py", ["--box", "{box}", *NOW]),
