@@ -150,6 +150,9 @@ def main(argv: list[str]) -> int:
     for a in it:
         if a in ("--box", "--now"):
             opts[a] = next(it, "")
+        elif a.startswith("--"):
+            args = []
+            break
         else:
             args.append(a)
     verb = args[0] if args else ""
