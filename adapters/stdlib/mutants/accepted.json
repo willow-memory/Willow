@@ -3,7 +3,6 @@
     "041037f2efda": "`a.startswith(\"--\") or not a` only refuses a token the later `doc not in DOCS` check refuses anyway (no DOC name starts with -- or is empty), so and/or here changes no result."
   },
   "again": {
-    "1b9ac0201051": "Only bite rows carry a bite_key, so choosing rows by kind or by key picks the same rows.",
     "0cc8444c7793": "The width a report's where column falls back to when it has no rows: with no rows nothing is padded to it, so any number there prints the same report."
   },
   "agents-md-check": {
