@@ -678,6 +678,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "hook-fail-closed": ("hook_fail_closed.py", ["--hook", "true"]),
     "hook-fuzz": ("hook_fuzz.py", ["--hook", "true"]),
     "hook-guard": ("hook_guard.py", ["rules"]),
+    "hook-handoff": ("hook_handoff.py", ["check", "--box", "{box}"]),
     "hook-impact": ("hook_impact.py", ["check", "--box", "{box}", "{pile}/garden.md"]),
     "hook-leaks": ("hook_leaks.py", ["check", "--from", "{pile}/garden.md"]),
     "hook-pin": ("hook_pin.py", ["--box", "{box}", "approve", "{pile}/garden.md", *NOW]),
