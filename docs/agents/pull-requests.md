@@ -23,11 +23,13 @@ Opening one, keeping it current, and what CI's rows need. Part of
   below for you, opens the pull request and numbers its entry, and exits 42
   only on what needs you, saying what. The rest of this page is what it does,
   for when it stops.
-- **Leave the checkout alone while it runs.** It can take many minutes, and
-  it commits what its steps change (`tidy:`) on whatever branch is checked
-  out when they finish: switch branches meanwhile and that commit lands on
-  the other branch, and its last checks read the wrong one. Do other work in
-  a `git worktree` of its own.
+- **Run it in the background, in a worktree of its own.** It can take many
+  minutes, and it commits what its steps change (`tidy:`) on whatever branch
+  is checked out when they finish: switch branches in its checkout meanwhile
+  and that commit lands on the other branch, and its last checks read the
+  wrong one. So give it a `git worktree` of its own, start it in the
+  background, go on working in yours, and read what it printed when it ends:
+  the pull request's number, or what it stopped on.
 - **Several sessions can share a branch.** Fetch before you push, merge
   what's new, and never force-push.
 - **Merging makes a merge commit**; squash isn't allowed on this repo.
