@@ -15,9 +15,6 @@
   "assistant-scores": {
     "37337c7fbb46": "The width a report's where column falls back to when it has no rows: with no rows nothing is padded to it, so any number there prints the same report."
   },
-  "books": {
-    "059f5e759b3b": "Kindle always writes a blank line after a clipping's meta line; starting one line later skips only that blank."
-  },
   "clauses": {
     "0df2e008ca77": "The width a file of page headings and no text lines falls back to: with no lines, it is never compared to one."
   },
@@ -39,9 +36,6 @@
   },
   "misquote": {
     "101d4093cf32": "The where column's cap: every row of misquote's report has the same place, the closest passage, so the column is that place's width whatever the cap, and no row is padded."
-  },
-  "office": {
-    "04697c92e4ab": "The promise is that a part is bounded, not its exact size: 64 or 65 MiB refuses the same zip bombs."
   },
   "pins": {
     "1eb781c3ac07": "pins.py's own repo-root insert on sys.path is redundant: importing advisories inserts the same root and imports kernel, so changing this index only adds a directory that never supplies kernel."
