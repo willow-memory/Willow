@@ -103,6 +103,26 @@ add-on to them twice: `stdlib/ci/test_contract.py` fails one whose code reaches 
 add-on its card doesn't name, and `tests:alone` runs each add-on's tests in a
 copy holding only the kernel, the add-on and what it `uses`.
 
+Where its idea or its code came from, when it came from another project, is
+on its card too, idea or built, beside `source`:
+
+    from: shape, https://github.com/wagtail/Willow, BSD-3-Clause
+    from: code, https://github.com/willow-memory/willow-mcp, Apache-2.0
+
+Each part is how it was taken, the address, and that project's licence as
+SPDX writes it (`none` when it has none), with `;` between parts. `shape`
+is the idea rebuilt here, no code taken; `code` is code ported here; `dep`
+is the project installed and used, by a deps add-on that names it in
+`needs`. A project with no licence gives only a shape, and a copyleft one
+gives no code: an add-on is Apache-2.0, and its code can't be GPL's.
+Code taken keeps its notice: a built add-on whose `from` says `code` is
+refused until a NOTICE, LICENSE or COPYING file of the source's is in its
+folder. The list shows it in words, linked. `source: bot` stays the word
+for willow-bot's one script, whose code was rebuilt, not copied.
+
+A header or an idea with a field no card has (`form:` for `from:`) is
+refused, so a field spelt wrong is never read as one left out.
+
 `tags` is optional: one tag of your own, lowercase words joined by -, for
 finding it. The rest are worked out every time the list is written, never
 stored, so they follow the card when it changes: whether it needs an

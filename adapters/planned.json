@@ -418,6 +418,17 @@
   "role": "tools"
  },
  {
+  "name": "file-kind",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Each file the kernel leaves out, named by what its first bytes say it is (a PDF, a PNG, a zip), whatever its name or extension says.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "role": "tools",
+  "from": "shape, https://github.com/wagtail/Willow, BSD-3-Clause"
+ },
+ {
   "name": "forgejo",
   "kind": "stdlib",
   "section": "For maintainers",
@@ -1479,17 +1490,6 @@
   "writes": "record",
   "network": "none",
   "role": "suggests"
- },
- {
-  "name": "skim",
-  "kind": "stdlib",
-  "section": "For maintainers",
-  "line": "The lists this repo makes held to how a person reads them: a heading every screen, no line too long to read, and every add-on and folder a name to jump to.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "role": "repo",
-  "runs-in": "repo"
  },
  {
   "name": "socratic",

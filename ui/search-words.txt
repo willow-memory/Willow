@@ -15,6 +15,9 @@ notes = obsidian, logseq, joplin, evernote, keep
 journal = diary, jrnl, entries
 bookmarks = karakeep, wallabag, readwise, links
 
+# comparing things
+compare = sort, duplicates, diverge, contradictions
+
 # keeping track
 remind = coming, due, dates, deadline, renewals
 reminders = coming, due, dates, deadline
