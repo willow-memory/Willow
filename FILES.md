@@ -463,8 +463,7 @@ willow/
 │   │   │   ├── test_git_history.py
 │   │   │   └── README.md
 │   │   ├── github/
-│   │   │   ├── create_pr.md  the steps create_pr.py runs before it opens a pull request, as a stack
-│   │   │   ├── create_pr.py  this branch's pull request: its steps run, pushed, opened and numbered, or 42 for what needs you
+│   │   │   ├── create_pr.py  this branch's pull request: GitHub's part around ready's steps, pushed, opened and numbered, or 42 for what needs you
 │   │   │   ├── github.py     what the repo needs from GitHub: a security report's comment, .github/ held to the repo
 │   │   │   ├── host.json     how GitHub titles the merge of a pull request, for whose.py --host
 │   │   │   ├── test_create_pr.py
@@ -1028,6 +1027,11 @@ willow/
 │   │   │   ├── readwise.py   highlights with their book and your note
 │   │   │   ├── test_readwise.py
 │   │   │   └── README.md
+│   │   ├── ready/
+│   │   │   ├── ready.py      a pull request's steps run in order, their tidy committed, its body written and its fragment named, on no host
+│   │   │   ├── steps.md      the steps ready runs before a pull request opens and after, as a stack
+│   │   │   ├── test_ready.py
+│   │   │   └── README.md     its card
 │   │   ├── red-on-main/
 │   │   │   ├── red_on_main.py A pull request's failing checks held to main's last run: red there too is not the pull request's, green there is
 │   │   │   ├── test_red_on_main.py

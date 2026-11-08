@@ -22,7 +22,10 @@ Opening one, keeping it current, and what CI's rows need. Part of
   then run `python adapters/stdlib/github/create_pr.py`: it runs the steps
   below for you, opens the pull request and numbers its entry, and exits 42
   only on what needs you, saying what. The rest of this page is what it does,
-  for when it stops.
+  for when it stops. The steps and the body are
+  [ready](../../adapters/stdlib/ready/)'s, which needs no host: without gh,
+  create_pr.py says the ready commands that do the same by hand, around a
+  push and an open of your own.
 - **Run it in the background, in a worktree of its own.** It can take many
   minutes, and it commits what its steps change (`tidy:`) on whatever branch
   is checked out when they finish: switch branches in its checkout meanwhile
