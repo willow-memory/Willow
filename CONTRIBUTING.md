@@ -164,6 +164,10 @@ that adds one entry to [adapters/planned.json](adapters/planned.json):
 - `role` is the part it plays in a stack (what it reads, what runs on your
   page, where you ask from...), one of those in
   [adapters/README.md](adapters/README.md#what-a-folder-holds).
+- `from` is optional: where the idea or its code came from, when another
+  project's, as `how, address, licence` (`shape, https://github.com/wagtail/Willow, BSD-3-Clause`).
+  How is `shape`, `code` or `dep`; [adapters/README.md](adapters/README.md#what-a-folder-holds)
+  says what each may take.
 - `reads`, on a reader's card (`role: reads`), is what it reads: kinds of
   file by extension, or a file it looks for by name, `reads: .eml, .mbox`,
   or `none`. The UI offers a reader by it, and the contract test holds each

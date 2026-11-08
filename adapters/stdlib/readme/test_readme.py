@@ -209,6 +209,68 @@ def test_the_draw_is_the_weeks_and_anyone_can_redo_it(repo):
             card(output="report, report"),
             "output is one of mirror, report, suggestions",
         ),
+        (
+            "stdlib/delta",
+            card(form="shape, https://x.example/y, MIT"),
+            "form is not a card's field",
+        ),
+        ("stdlib/delta", card(**{"from": "shape, https://github.com/a/b, MIT"}), None),
+        ("stdlib/delta", card(**{"from": "shape, https://a.example/b, none"}), None),
+        (
+            "stdlib/delta",
+            card(
+                **{
+                    "from": "shape, https://a.example/b, MIT; shape, https://c.example/d, BSD-3-Clause"
+                }
+            ),
+            None,
+        ),
+        (
+            "stdlib/delta",
+            card(**{"from": "copied, https://a.example/b, MIT"}),
+            "from is how",
+        ),
+        ("stdlib/delta", card(**{"from": "shape, https://a.example/b"}), "from is how"),
+        (
+            "stdlib/delta",
+            card(**{"from": "shape, github.com/a/b, MIT"}),
+            "an https:// link",
+        ),
+        (
+            "stdlib/delta",
+            card(**{"from": "shape, https://a.example/b, the MIT one"}),
+            "from's licence",
+        ),
+        (
+            "stdlib/delta",
+            card(**{"from": "code, https://a.example/b, none"}),
+            "only under a licence",
+        ),
+        (
+            "stdlib/delta",
+            card(**{"from": "code, https://a.example/b, GPL-3.0-only"}),
+            "can't: take its shape",
+        ),
+        (
+            "stdlib/delta",
+            card(**{"from": "code, https://a.example/b, LGPL-3.0"}),
+            "can't: take its shape",
+        ),
+        (
+            "stdlib/delta",
+            card(**{"from": "code, https://a.example/b, MIT"}),
+            "keeps its notice",
+        ),
+        (
+            "stdlib/delta",
+            card(**{"from": "dep, https://a.example/b, MIT"}),
+            "for a deps add-on",
+        ),
+        (
+            "deps/delta",
+            card(needs="b; MIT", **{"from": "dep, https://a.example/b, MIT"}),
+            None,
+        ),
         ("stdlib/Delta", card(), "lowercase words joined by -"),
         ("stdlib/delta", card(tags="a, b"), "tags is your one tag"),
         ("stdlib/delta", card(tags="Has Caps"), "tags is your one tag"),
@@ -230,6 +292,40 @@ def test_an_add_on_that_doesnt_hold_together_is_refused(repo, folder, text, why)
         rd.rebuild(PAGE, None)
         return
     with pytest.raises(rd.Refused, match=why):
+        rd.rebuild(PAGE, None)
+
+
+def test_code_taken_keeps_the_notice_of_where_it_came_from(repo):
+    """Code ported from another project is held to its licence's notice: the
+    card that says so is refused until the notice is in the add-on's folder."""
+    where = repo / "adapters" / "stdlib" / "delta"
+    where.mkdir(parents=True)
+    (where / "README.md").write_text(
+        card(**{"from": "code, https://github.com/a/b, MIT"})
+    )
+    with pytest.raises(rd.Refused, match="keeps its notice"):
+        rd.rebuild(PAGE, None)
+    (where / "LICENSE-b").write_text("MIT License, Copyright (c) A\n")
+    assert "From: code of [a/b](https://github.com/a/b), MIT." in rd.rebuild(PAGE, None)
+
+
+def test_an_ideas_from_is_said_and_an_unknown_field_refused(repo):
+    """An idea says where its shape comes from as a built card does, and a
+    field no card has is refused, never read as one left out."""
+    planned = json.loads((repo / "adapters" / "planned.json").read_text())
+    planned[0]["from"] = (
+        "shape, https://github.com/a/b, BSD-3-Clause; shape, https://c.example/d/, none"
+    )
+    (repo / "adapters" / "planned.json").write_text(json.dumps(planned))
+    text = rd.rebuild(PAGE, None)
+    assert (
+        '- <a id="gamma"></a>**gamma** (idea) \\\n  Later. \\\n  Reaches this machine only. From: shape of '
+        "[a/b](https://github.com/a/b), BSD-3-Clause; shape of [c.example/d](https://c.example/d/), none."
+        " *box*" in text
+    )
+    planned[0]["added"] = "2026-10-01"  # a built card's field, not an idea's
+    (repo / "adapters" / "planned.json").write_text(json.dumps(planned))
+    with pytest.raises(rd.Refused, match="added is not a card's field"):
         rd.rebuild(PAGE, None)
 
 

@@ -47,8 +47,14 @@ and run `write`; anything else there is refused.
 
 **What it reads:** each built add-on's card header (the comment at the top of
 its README.md: `section`, `line`, `source`, `added`, `writes`, `network`,
-`tags`, and for one in `adapters/deps/`, `needs`), and `adapters/planned.json`
-for the ones not built yet. A name is built when its folder exists; then it
+`tags`, `from`, and for one in `adapters/deps/`, `needs`), and `adapters/planned.json`
+for the ones not built yet. A field no card has is refused. `from` is
+checked as [adapters/README.md](../../README.md#what-a-folder-holds) says:
+how (`shape`, `code`, `dep`), an https:// address and a licence, no code
+from a copyleft or unlicensed project, `dep` only from a deps add-on, and
+code taken refused until the source's notice is in the folder. The list
+says it after the facts, "From: shape of wagtail/Willow, BSD-3-Clause.", the
+name linked to its address. A name is built when its folder exists; then it
 must not also be planned. Building an add-on is what turns an idea into a
 built one.
 

@@ -492,6 +492,15 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
   WriteFreely posts, from its export or a copy of its SQLite database, as dated text. \
   *new* `no-install` `offline` `copy` `sqlite` · near: apple-notes, bookmarks, nestor
 
+### Tools you run yourself
+
+
+#### Tools you run yourself: ideas, not built yet
+
+- <a id="file-kind"></a>**file-kind** (idea) \
+  Each file the kernel leaves out, named by what its first bytes say it is (a PDF, a PNG, a zip), whatever its name or extension says. \
+  From: shape of [wagtail/Willow](https://github.com/wagtail/Willow), BSD-3-Clause. *new* `no-install` `offline` `whatever` `pdf` · near: text, pdf, why-not
+
 ## Finding things
 
 ### What runs on your page

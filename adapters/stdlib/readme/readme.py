@@ -221,6 +221,23 @@ FACT_TAGS = {"no-install", "needs-install", "offline", "this-machine", "online"}
 #: to this while its tests run; a file of the repo may also be named
 WRITES = {"nothing", "record", "to"}
 SOURCES = {"bot", "box", "new"}
+#: where an add-on's idea or code was taken from, beside `source`: how it was
+#: taken (its shape rebuilt, its code ported, or the project depended on), the
+#: address, and that project's licence; several joined with ;
+FROM_HOW = {"shape", "code", "dep"}
+FROM_URL = re.compile(r"https://[^\s,;]+")
+#: a licence as SPDX writes one (MIT, BSD-3-Clause, MIT OR Apache-2.0), or none
+LICENCE = re.compile(r"none|[A-Za-z0-9.+-]+(?: (?:OR|AND|WITH) [A-Za-z0-9.+-]+)*")
+#: a licence Apache-2.0 code can't take code from: copyleft, or source-available
+COPYLEFT = re.compile(r"\b(?:A?GPL|LGPL|SSPL|BUSL|EUPL|OSL|CC-BY-(?:NC|SA|ND))", re.I)
+#: the source's own notice, kept beside code taken from it
+NOTICE_FILE = re.compile(r"(?:NOTICE|LICEN[CS]E|COPYING)(?:[-._].*)?", re.I)
+#: every key a card's header or an idea may carry; any other is refused, so a
+#: field spelt wrong is never read as one left out
+KEYS = {"section", "line", "source", "writes", "network", "role", "added", "tags",
+        "uses", "looks-for", "reads", "output", "needs", "floor", "programs",
+        "runs-in", "from"}  # fmt: skip
+IDEA_KEYS = (KEYS - {"added"}) | {"name", "kind"}
 HEADER = re.compile(r"\A<!-- willow-addon\n(.*?)\n-->\n", re.S)
 #: a kind of file a reader reads: .ext, or a file name it looks for
 KIND = re.compile(r"\.?[A-Za-z0-9][A-Za-z0-9_.+-]*")
@@ -293,6 +310,14 @@ def addons() -> list[dict]:
             raise Refused(f"{where}: no section {a['section']!r}")
         if a["source"] not in SOURCES:
             raise Refused(f"{where}: source is bot, box or new")
+        unknown = sorted(
+            set(a)
+            - (KEYS if a["built"] else IDEA_KEYS)
+            - {"name", "kind", "built", "path"}
+        )
+        if unknown:
+            raise Refused(f"{where}: {', '.join(unknown)} is not a card's field: {', '.join(sorted(KEYS))}")  # fmt: skip
+        origins(a, where)
         # CONST-II-1: what an add-on writes and where it goes online is listed
         # on its card, idea or built, never inferred from its code
         writes = [w.strip() for w in a["writes"].split(",")]
@@ -351,6 +376,46 @@ def addons() -> list[dict]:
     return out
 
 
+def origins(a: dict, where: str) -> list[tuple[str, str, str]]:
+    """Its `from`, each part (how, address, licence), checked: refused when a
+    part doesn't hold together, or takes what an Apache-2.0 add-on can't."""
+    out = []
+    for part in [p.strip() for p in a.get("from", "").split(";") if p.strip()]:
+        bits = [b.strip() for b in part.split(",")]
+        if len(bits) != 3 or bits[0] not in FROM_HOW:
+            raise Refused(f"{where}: from is how (shape, code or dep), the address, and its licence, ; between each: {part!r}")  # fmt: skip
+        how, url, licence = bits
+        if not FROM_URL.fullmatch(url):
+            raise Refused(f"{where}: from's address is an https:// link: {url!r}")
+        if not LICENCE.fullmatch(licence):
+            raise Refused(f"{where}: from's licence is one SPDX writes (MIT, BSD-3-Clause) or none: {licence!r}")  # fmt: skip
+        if how != "shape" and licence == "none":
+            raise Refused(f"{where}: from takes {how} only under a licence: a project with none gives only a shape")  # fmt: skip
+        if how == "code" and COPYLEFT.search(licence):
+            raise Refused(f"{where}: from takes code under {licence}, which an Apache-2.0 add-on can't: take its shape")  # fmt: skip
+        if how == "dep" and a["kind"] != "deps":
+            raise Refused(
+                f"{where}: from dep is for a deps add-on, which says it in needs"
+            )
+        if how == "code" and a["built"]:
+            folder = ROOT / a["path"]
+            if not any(
+                NOTICE_FILE.fullmatch(f.name) for f in folder.iterdir() if f.is_file()
+            ):
+                raise Refused(f"{where}: code taken from {url} keeps its notice: a NOTICE, LICENSE or COPYING file beside it")  # fmt: skip
+        out.append((how, url, licence))
+    return out
+
+
+def origin_words(a: dict) -> str:
+    """Its `from`, in words for the list: how, a link to where, and the licence."""
+    said = []
+    for how, url, licence in origins(a, ""):
+        short = re.sub(r"^https://(?:www\.)?(?:github\.com/)?", "", url).rstrip("/")
+        said.append(f"{how} of [{short}]({url}), {licence}")
+    return f" From: {'; '.join(said)}." if said else ""
+
+
 # ── the sections ─────────────────────────────────────────────────────────────
 def split_tags(text: str) -> list[str]:
     return [t.strip() for t in str(text).split(",") if t.strip()]
@@ -385,7 +450,8 @@ def entry(a: dict, worked: dict) -> str:
     )
     tags = " ".join(f"`{t}`" for t in worked["tags"])
     near = f" · near: {', '.join(worked['near'])}" if worked["near"] else ""
-    said = " ".join(said_facts(a))
+    # what it needs, where it goes online, and where it came from (its `from`)
+    said = (" ".join(said_facts(a)) + origin_words(a)).strip()
     return (f'- <a id="{a["name"]}"></a>{name} \\\n'
             f"  {a['line']} \\\n"
             f"  {said + ' ' if said else ''}*{a['source']}* {tags}{near}")  # fmt: skip
