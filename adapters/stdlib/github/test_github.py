@@ -88,7 +88,7 @@ def test_an_author_login_that_isnt_one_is_left_out(stand_ins, tmp_path):
 FILES = ["kernel.py", "README.md", "FILES.md", ".github/workflows/ci.yml",
          ".github/workflows/law.yml",
          ".github/ISSUE_TEMPLATE/idea.yml", ".github/ISSUE_TEMPLATE/security.yml",
-         "adapters/stdlib/readme/readme.py"]  # fmt: skip
+         "adapters/stdlib/readme/readme.py", "adapters/stdlib/readme/groups.py"]  # fmt: skip
 
 
 def test_the_repos_github_folder_holds():

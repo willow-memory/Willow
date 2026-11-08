@@ -75,6 +75,13 @@ it (`python ui/canvas.py pieces --role ROLE`):
 | `tools` | is run by you, with words or options of its own |
 | `repo` | works on willow's own repository; it has `runs-in: repo`, and only it does |
 
+Two roles have a second level: readers by what their files come from
+(documents, mail and chat, notes and saved pages, exports from apps, code
+and data, media), and the ways in by where you'd be. The UI and the add-on
+list read both from one place, [readme/groups.py](stdlib/readme/groups.py),
+so an add-on sits in the same place on the page and in ADDONS.md; a built
+reader or way in that groups.py doesn't place fails its test.
+
 A reader says what it reads, `reads: .eml, .mbox`: kinds of file by
 extension, or a file it looks for by name (`zotero.sqlite`), or `none` for
 one that reads no kind of file (a repository, a page it fetches). The UI

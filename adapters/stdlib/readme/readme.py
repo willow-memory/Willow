@@ -129,6 +129,7 @@ current.
 
 from __future__ import annotations
 
+import importlib.util
 import json
 import re
 import sys
@@ -197,18 +198,14 @@ EXAMPLES = {
     "For maintainers": ["mutants", "ci"],
 }  # fmt: skip
 FIELDS = {"section", "line", "source", "writes", "network", "role"}
-#: the part an add-on plays in a stack (the docstring says each); ui/ builds on it
-ROLES = {
-    "reads",
-    "words",
-    "page",
-    "suggests",
-    "ways",
-    "guards",
-    "makes",
-    "tools",
-    "repo",
-}
+#: the part an add-on plays in a stack (the docstring says each), from the
+#: one grouping the UI and the lists share (groups.py, beside this)
+_groups_spec = importlib.util.spec_from_file_location(
+    "willow_groups_for_readme", Path(__file__).resolve().parent / "groups.py"
+)
+groups = importlib.util.module_from_spec(_groups_spec)
+_groups_spec.loader.exec_module(groups)
+ROLES = {key for key, _ in groups.ROLES}
 #: what an add-on leans on, by name: optional, and checked against the list
 LEANS = ("uses", "looks-for")
 RUNS_IN = {"repo"}
