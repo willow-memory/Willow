@@ -251,6 +251,8 @@ willow/
 │   │   │   ├── test_realdata.py  realdata.py's tests: a run per person, a traceback fails, a refusal holds
 │   │   │   ├── test_times.py  times.py's tests: JUnit summed by file, unseen kept, gone dropped
 │   │   │   ├── times.py      test-times.json kept to what CI's own run took, by a script
+│   │   │   ├── test_main_run.py main_run.py's tests: a push's own records, the queue's run of its commit, none, gh unreachable
+│   │   │   ├── main_run.py   the green run that holds main's records: its push run, or the queue's run it stood on
 │   │   │   ├── copies.py     the functions add-ons keep their own copy of, and the copies that drifted
 │   │   │   ├── mirrors.py    the mirror contract, checked
 │   │   │   ├── test_copies.py
