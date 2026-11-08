@@ -621,17 +621,6 @@
   "tags": "hooks"
  },
  {
-  "name": "hook-feedback",
-  "kind": "stdlib",
-  "section": "Assistants",
-  "line": "Your corrections to an assistant (no, wrong, I said) caught by fixed patterns at each prompt and handed in through propose, for you to keep or drop.",
-  "source": "new",
-  "writes": "record",
-  "network": "none",
-  "role": "guards",
-  "tags": "hooks"
- },
- {
   "name": "hook-sequence",
   "kind": "stdlib",
   "section": "Assistants",

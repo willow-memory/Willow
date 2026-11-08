@@ -512,6 +512,10 @@ willow/
 │   │   │   ├── hook_fail_closed.py a hook that crashes, hangs or says what can't be read blocks the tool
 │   │   │   ├── test_hook_fail_closed.py
 │   │   │   └── README.md
+│   │   ├── hook-feedback/
+│   │   │   ├── hook_feedback.py Your corrections to an assistant (no, wrong, I said) caught by fixed patterns at each prompt and handed in through propose, for you to keep or drop
+│   │   │   ├── test_hook_feedback.py
+│   │   │   └── README.md     its card
 │   │   ├── hook-fuzz/
 │   │   │   ├── hook_fuzz.py      bad input thrown at a hook, and each one that breaks it named
 │   │   │   ├── test_hook_fuzz.py

@@ -676,6 +676,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "hook-compact": ("hook_compact.py", ["--box", "{box}"]),
     "hook-errors": ("hook_errors.py", ["check", "--box", "{box}"]),
     "hook-fail-closed": ("hook_fail_closed.py", ["--hook", "true"]),
+    "hook-feedback": ("hook_feedback.py", ["check", "--box", "{box}"]),
     "hook-fuzz": ("hook_fuzz.py", ["--hook", "true"]),
     "hook-guard": ("hook_guard.py", ["rules"]),
     "hook-handoff": ("hook_handoff.py", ["check", "--box", "{box}"]),
