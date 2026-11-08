@@ -68,6 +68,15 @@ def test_an_add_on_entry_needs_an_anchor_its_own_or_a_headings():
     assert got == [(2, "jump", "`pdf` has no anchor to jump to")]
 
 
+def test_an_anchor_by_the_name_as_written_counts_where_its_slug_differs():
+    """`my.tool`'s heading slug is `mytool`; an anchor spelled as the name is
+    one to jump to all the same."""
+    assert sk.slug("my.tool") == "mytool"
+    assert checks('# a\n- **my.tool** x\n<a id="my.tool"></a>\n', 99, 99) == []
+    assert checks('# a\n- **my.tool** x\n<a id="mytool"></a>\n', 99, 99) == []
+    assert checks("# a\n- **my.tool** x\n", 99, 99) == [(2, "jump")]
+
+
 def test_a_bold_lead_in_sentence_is_emphasis_not_a_name():
     assert checks("# a\n- **Never the key.** No add-on reads it.\n", width=99) == []
     assert checks("# a\n- **Ask** first.\n", width=99) == [], "a capital: not a name"
