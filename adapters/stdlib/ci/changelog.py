@@ -96,6 +96,12 @@ def fragment_entries(files: list[str], pr: str) -> list[tuple[str, str]]:
     return out
 
 
+def owed(files: list[str]) -> list[str]:
+    """The changed files that owe an entry: all but Markdown and CITATION.cff,
+    which a release moves and sets and nothing else changes."""
+    return [f for f in files if not f.endswith(".md") and f != "CITATION.cff"]
+
+
 def bugs_listed(text: str) -> set[int]:
     return {int(n) for n in re.findall(r"^\| #(\d+) \|", text, re.M)}
 
@@ -121,7 +127,7 @@ def check(base: str, pr: str) -> int:
               " CHANGELOG.md; restack.py --onto origin/main <branch> does it for you"
               " (changes/README.md)", file=sys.stderr)  # fmt: skip
         return kernel.REFUSED
-    code = [f for f in files if not f.endswith(".md") and f != "CITATION.cff"]
+    code = owed(files)
     if not code:
         print(f"docs only ({len(files)} files): no changelog line owed")
         return kernel.ALIVE
