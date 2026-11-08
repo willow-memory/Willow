@@ -1588,12 +1588,17 @@ willow/
 │   ├── design/
 │   │   ├── repo-index.md     proposal: the repo as one deterministic-snapshot box, indexed by a custom serve-style stack
 │   │   └── serve.md          proposal: a sealed stack of piles served to a model, on markdown (the grove's serve, in willow)
-│   └── agents/               AGENTS.md's longer how-tos, one page a job
-│       ├── add-ons.md        an add-on's ten steps, the guard, ideas and a deps floor
-│       ├── pull-requests.md  opening one, main moving under a branch, a new CI row
-│       ├── searching.md      the kernel's rank, and the jobs that need another search
-│       ├── stacks.md         A stack, for agents
-│       └── studies.md        freezing a study, its dry run, and what a dry run misses
+│   ├── agents/               AGENTS.md's longer how-tos, one page a job
+│   │   ├── add-ons.md        an add-on's ten steps, the guard, ideas and a deps floor
+│   │   ├── pull-requests.md  opening one, main moving under a branch, a new CI row
+│   │   ├── searching.md      the kernel's rank, and the jobs that need another search
+│   │   ├── stacks.md         A stack, for agents
+│   │   └── studies.md        freezing a study, its dry run, and what a dry run misses
+│   └── use/                  using it on your own files, after the tour
+│       ├── asking.md         why a question found nothing: words not meanings, half its words, dates
+│       ├── kernel.md         the kernel alone on your files: verify, a words list, suggestions and seals
+│       ├── stack.md          a stack of add-ons, on the page or from a terminal, sealed by you
+│       └── README.md         which page for which job
 ├── demo/                     four made-up people, a case passed between five more, a real bug, a real policy change and programs taken apart, to try it on
 │   ├── bernadette/           built blind, in her apps' raw formats, and run through the whole stack
 │   │   ├── make_life.py      her mail, calendars, chats, vault, office files, Kindle and PDFs, the same bytes every run

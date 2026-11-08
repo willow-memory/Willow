@@ -11,6 +11,14 @@ Gemini CLI and Copilot to read this file (they have no `@` import). One copy
 to keep.
 The longer how-tos are in [docs/agents/](docs/agents/), one page a job.
 
+**Where you are** decides where you start:
+
+| You are… | Start at |
+|---|---|
+| New here: you've never run it | the [five-minute tour](docs/tour.md) |
+| Running willow on someone's files, or putting a stack together | [docs/use/](docs/use/) and [ui/README.md](ui/README.md); a stack for someone, [stacks](docs/agents/stacks.md) |
+| Changing code, an add-on, the law or the process | the rest of this page, then [your job's page](#the-job-youre-doing) |
+
 ## Never
 
 - **Approve anything.** Code may search, suggest and record. It never writes
