@@ -1802,18 +1802,6 @@
   "role": "reads"
  },
  {
-  "name": "wake-gate",
-  "kind": "deps",
-  "section": "Ways to use it",
-  "line": "Ask out loud only after a wake word you chose: audio before it is never transcribed, kept or sent, by a state machine with one gated step to the transcriber.",
-  "source": "new",
-  "needs": "openWakeWord, silero-vad, faster-whisper and sounddevice; Apache-2.0, MIT, MIT, MIT. openWakeWord's own pre-trained models are CC BY-NC-SA 4.0, non-commercial: train your own wake word, as willow-mcp's hey_willow is",
-  "writes": "nothing",
-  "network": "the models, downloaded once",
-  "role": "ways",
-  "from": "code, https://github.com/willow-memory/willow-mcp, Apache-2.0"
- },
- {
   "name": "warm",
   "kind": "stdlib",
   "section": "Ways to use it",
