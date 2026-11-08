@@ -487,3 +487,11 @@ def test_a_reader_branch_that_changed_more_than_it_added_stops_untouched(clone, 
     assert "work: stopped, left as it was: test_contract.py: the branch changes" in got.stdout  # fmt: skip
     assert git(clone, "rev-parse", "work") == old
     assert git(clone, "worktree", "list").count("\n") == 0
+
+
+def test_files_tree_settles_past_the_cuts_files_py_makes_again():
+    """A side's entries may carry one of FILES.md's cuts (a fence, a blank
+    line, a heading): the entries are settled, and files.py cuts it again."""
+    cut = "```\n\n### adapters/stdlib/: Keeping track: Tools you run yourself\n\n```\n"
+    text = conflict(cut + TREE.format(n="zed") + CLOSE, TREE.format(n="again") + CLOSE)
+    assert rs.files_tree(text) == TREE.format(n="again") + CLOSE + TREE.format(n="zed") + CLOSE  # fmt: skip

@@ -82,6 +82,12 @@ now working, or changes it in the same pull request.
    line), so a name found is a path known.
 4. An entry with no words says what it is by rule, not left blank: a
    `test_*.py` is "its tests", every card "its card".
+5. **Done (2, by groups.py):** the tree cut at each top-level folder, and
+   `adapters/stdlib/` by the add-ons' sections and groups, their folders in
+   that order, with a heading wherever a block would pass a screen; files.py
+   makes the cuts, test_docs.py reads every block as one tree, and restack
+   settles a conflict past them. skim on FILES.md: screen 0, jump 0.
+   Still open: 1, 3 and 4.
 
 **ADDONS.md**
 

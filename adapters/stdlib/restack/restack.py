@@ -20,7 +20,9 @@ branch, and it is left exactly as it was:
                              when it ends (#N), else
                              changes/+<branch>.<kind>.md; a branch that
                              changed the file any other way stops
-    FILES.md                 both sides' folders, A to Z
+    FILES.md                 both sides' folders, A to Z, then cut again
+                             and its add-ons put in groups.py's order:
+                             ci/files.py write
     test_contract.py         both sides' COMMANDS lines; or, when a conflict
                              is more than those, the entries either side
                              added to COMMANDS, READERS or PILE_EXTRA, with
@@ -199,11 +201,20 @@ def groups(side: str, lead: str) -> list[tuple[str, list[str]]]:
     return out
 
 
+def uncut(side: str) -> str:
+    """A side of FILES.md's tree less the lines its cuts are made of."""
+    return "".join(x for x in side.splitlines(keepends=True)
+                   if not re.match(r"(?:```|#{1,6} |[ \t]*$)", x))  # fmt: skip
+
+
 def files_tree(text: str) -> str:
     """Both sides' entries, A to Z. Each side's last entry may be open: its
     closing lines are shared, after the conflict, and go to the last one."""
 
     def combine(ref, mine, rest):
+        # the tree's cuts (a fence, a blank line, a heading) are files.py's to
+        # make again, after (remake): each side's entries are what's settled
+        ref, mine, rest = (uncut(s) for s in (ref, mine, rest))
         first = BRANCH.match((ref or mine).splitlines()[0]) if (ref or mine) else None
         if first is None:
             raise Stop("FILES.md conflicts in a way that isn't two sets of entries")
@@ -485,7 +496,8 @@ def settle(work: Path) -> list[str]:
 
 def remake(work: Path) -> None:
     """The files the repo makes, made again from the cards and the tests."""
-    for script in dict.fromkeys(MADE.values()):
+    # FILES.md is settled by its entries, then cut again by files.py
+    for script in dict.fromkeys([*MADE.values(), "adapters/stdlib/ci/files.py"]):
         got = subprocess.run([sys.executable, script, "write"], cwd=work,
                              capture_output=True, text=True)  # fmt: skip
         if got.returncode != 0:
