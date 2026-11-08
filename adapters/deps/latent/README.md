@@ -43,13 +43,34 @@ keeps up to 200 SVD dimensions (fewer when there are fewer passages or
 terms), and ranks by cosine to the question in that reduced space. The same
 index and question give the same order every run.
 
+**How big:** the matrix is dense, passages × terms × 8 bytes, and it is
+rebuilt for every question, so a big index costs minutes and gigabytes each
+time. latent refuses (exit 2), before allocating anything, an index whose
+matrix would pass **512 MiB**, saying how many passages and terms it holds
+and the memory it would need. On a 4-core, 15 GiB machine, over a scan index
+of willow's own repo, one question took:
+
+| passages | terms | matrix | time | peak memory |
+|---:|---:|---:|---:|---:|
+| 2,000 | 5,546 | 0.08 GiB | 4 s | 0.6 GiB |
+| 4,000 | 6,661 | 0.20 GiB | 17 s | 1.4 GiB |
+| 6,000 | 7,778 | 0.35 GiB | 42 s | 2.5 GiB |
+| 8,000 | 8,745 | 0.52 GiB | 86 s | 3.8 GiB |
+
+Peak memory runs about seven times the matrix, and time grows with the
+square of the passages. Past the bound it only got worse: on scan indexes
+repo-pile built over public repositories, 21,897 passages ran one question
+past 22 minutes at 9.7 GB without printing, and 60,031 (47,257 terms, a
+21.1 GiB matrix) failed to allocate. To ask a big index, rank only what
+changed with `--changed-from`, which the bound counts after, or index less.
+
 **Needs:** numpy, pinned in `requirements.txt` and floored in
 `requirements-floor.txt`; tested at both.
 
 **Uses:** scan's `Index` and `passages`, and the kernel's `words` and `echo`.
 
 **Exit codes:** 0 something ranked; 42 nothing shared a sense, or the index
-held too little; 2 refused (a bad command line, not an index, or numpy
-missing — never a quiet skip).
+held too little; 2 refused (a bad command line, not an index, numpy
+missing, or a matrix past 512 MiB — never a quiet skip).
 
 **Never:** writes anything, reads a folder, reads the key, or goes online.

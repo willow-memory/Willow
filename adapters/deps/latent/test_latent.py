@@ -131,3 +131,40 @@ def test_without_numpy_it_refuses_naming_numpy(tmp_path):
     got = subprocess.run([sys.executable, str(LATENT), "rank", "--index", str(ix), "money"],
                          capture_output=True, text=True, env=env)  # fmt: skip
     assert got.returncode == 2 and "numpy" in got.stderr, got.stderr
+
+
+def test_past_the_bound_it_refuses_before_allocating(tmp_path, monkeypatch, capsys):
+    import latent  # puts the repo root, and so the kernel, on the path
+    import scan
+
+    import kernel
+
+    ix = index(tmp_path, "big", CORPUS)
+    texts = [c["text"] for c in scan.passages(ix)]
+    n, m = len(texts), len({w for t in texts for w in kernel.words(t)})
+    argv = ["rank", "--index", str(ix), "outstanding invoice payment"]
+    # exactly at the bound it still ranks
+    monkeypatch.setattr(latent, "LIMIT", n * m * 8)
+    assert latent.main(argv) == 0
+    capsys.readouterr()
+    # one byte under, it refuses, naming the passages and the memory; gib()
+    # is made exact here, since this small a matrix rounds to 0.0 GiB
+    monkeypatch.setattr(latent, "LIMIT", n * m * 8 - 1)
+    monkeypatch.setattr(latent, "gib", lambda b: f"<{b} bytes>")
+    assert latent.main(argv) == 2
+    err = capsys.readouterr().err
+    assert err.startswith("refused") and f"{n} passages and {m} terms" in err
+    assert f"need a <{n * m * 8} bytes> matrix" in err
+    assert f"bound is <{n * m * 8 - 1} bytes>" in err
+
+
+def test_the_bound_is_the_cards():
+    import latent
+
+    assert latent.LIMIT == 2**29  # 512 MiB, as the card says
+
+
+def test_gib_says_gibibytes():
+    import latent
+
+    assert latent.gib(21 * 2**30 + 2**29) == "21.5 GiB"

@@ -27,7 +27,8 @@ no model had seen.
 
 Needs numpy. Exit codes, the kernel's: 0 something ranked, 42 nothing did
 (no shared sense, or the index held nothing), 2 refused (a bad command line,
-not an index, or numpy missing).
+not an index, numpy missing, or an index past LIMIT's matrix: it says the
+passage count and the memory it would need).
 """
 
 from __future__ import annotations
@@ -43,6 +44,14 @@ import kernel  # noqa: E402
 import scan  # noqa: E402
 
 COMPONENTS = 200  # SVD dimensions kept; capped by the passages and terms there are
+#: The most the dense TF-IDF matrix may take (passages x terms x 8 bytes). Past
+#: it a question is refused before anything is allocated: the SVD's time grows
+#: past minutes and its memory to several times the matrix (the card's numbers).
+LIMIT = 2**29  # 512 MiB: about 8,000 passages of code, 85 s and 3.8 GiB a question
+
+
+def gib(b: int) -> str:
+    return f"{b / 2**30:.1f} GiB"
 
 
 def space(ix: "scan.Index", lacked: set | None):
@@ -62,6 +71,12 @@ def space(ix: "scan.Index", lacked: set | None):
     n, m = len(idxs), len(terms)
     if n < 2 or m < 2:
         return idxs, col, None, None, None
+    if n * m * 8 > LIMIT:
+        raise ValueError(
+            f"{n} passages and {m} terms need a {gib(n * m * 8)} matrix, and its "
+            f"SVD several times that; latent's bound is {gib(LIMIT)}. Rank fewer "
+            "passages: --changed-from, or an index of less"
+        )
     idf = np.array([np.log((n + 1) / (df[w] + 1)) + 1.0 for w in terms])
     tfidf = np.zeros((n, m), dtype=np.float64)
     for r, t in enumerate(toks):
