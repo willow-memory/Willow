@@ -375,6 +375,8 @@ def places(root: Path) -> dict[str, tuple]:
     """Each stdlib add-on's (order, heading) by groups.py, from its card: the
     same section, role and group ADDONS.md and the UI put it under."""
     here = Path(__file__).resolve().parents[1] / "readme"
+    if not (here / "readme.py").is_file():
+        return {}  # no grouping beside it: adapters/stdlib/ keeps its own order
     spec = importlib.util.spec_from_file_location(
         "willow_readme_for_files", here / "readme.py"
     )

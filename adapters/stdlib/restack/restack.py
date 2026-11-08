@@ -395,6 +395,8 @@ SETTLE = {
     "CHANGELOG.md": changelog,
     CONTRACT: contract,
 }
+#: made again, and what the branch wrote of its own files put back (settle)
+FILES = "FILES.md"
 #: per worktree, the words the branch wrote of the files only it added to
 #: FILES.md, put back once files.py has made the tree again (remake)
 KEEP: dict[Path, dict[str, str]] = {}
@@ -454,7 +456,7 @@ def settle(work: Path) -> list[str]:
         p = work / n
         if n in MADE:
             git("checkout", "--theirs", "--", n, cwd=work)
-        elif n == "FILES.md":
+        elif n == FILES:
             # REF's tree, made again by files.py (remake), with what the branch
             # wrote of the files it added: a tree in groups.py's order isn't
             # merged line by line, since the two sides' order differs

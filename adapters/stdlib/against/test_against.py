@@ -428,7 +428,10 @@ def test_the_files_it_calls_settled_are_the_ones_restack_settles():
     import restack
 
     ours = set(against.SETTLED)
-    assert ours == set(restack.MADE) | set(restack.SETTLE) | {"adapters/planned.json"}
+    assert ours == set(restack.MADE) | set(restack.SETTLE) | {
+        "adapters/planned.json",
+        restack.FILES,
+    }
     assert against.CONTRACT == restack.CONTRACT
 
 
