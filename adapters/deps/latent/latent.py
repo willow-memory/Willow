@@ -79,7 +79,7 @@ def ids_in(text: str) -> tuple[int, list[str]]:
         if s.startswith("{"):
             row = json.loads(s)
             if not isinstance(row, dict) or "served" not in row:
-                raise ValueError(f"a JSON line with no served passages: {s[:80]}")
+                raise ValueError("a JSON line in it names no served passages")
             rows += 1
             ids += [x["id"] for x in row["served"]]
             continue

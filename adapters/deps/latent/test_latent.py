@@ -197,6 +197,10 @@ def test_questions_file_builds_the_space_once_and_answers_each(
     alone = run("rank", "--index", str(ix), "--top", "4", "outstanding invoice payment")
     assert got[0]["served"] == json.loads(alone.stdout)["served"]
     assert "question" not in json.loads(alone.stdout)
+    one = run("rank", "--index", str(ix), "--top", "1", "outstanding invoice payment")
+    assert (
+        one.returncode == 0 and json.loads(one.stdout)["served"] == got[0]["served"][:1]
+    )
 
 
 def test_questions_that_all_find_nothing_are_42(tmp_path):
@@ -272,6 +276,7 @@ def test_ids_in_reads_each_shape():
             f"x.md:1  {b}  some text\n{b}\n"
             f"{a} is not an id line\n\nsummary words here\n")  # fmt: skip
     assert latent.ids_in(text) == (3, [a, b, b])
+    assert latent.ids_in(f"x.md:1 {b}\n") == (1, [b])  # a line of two fields
     assert latent.ids_in("x.md:1  short  text\n" + "c" * 11) == (0, [])
     assert latent.ids_in("d" * 65) == (0, [])
 
@@ -310,6 +315,9 @@ def test_only_a_file_naming_nothing_is_refused_and_an_empty_answer_is_42(tmp_pat
     f.write_text('{"state": "empty", "served": []}\n')
     got = run("rank", "--index", str(ix), "--only", str(f), "money")
     assert got.returncode == 42, got.stderr
+    f.write_text('{"state": "empty"}\n')
+    got = run("rank", "--index", str(ix), "--only", str(f), "money")
+    assert "names no served passages" in got.stderr, got.stderr
     for bad in ("{not json\n", '{"state": "empty"}\n', "[1]\n"):
         f.write_text(bad)
         got = run("rank", "--index", str(ix), "--only", str(f), "money")
