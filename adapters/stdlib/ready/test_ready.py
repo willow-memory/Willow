@@ -209,6 +209,16 @@ def test_a_collision_stops_it_though_against_exits_0(repo):
     )
 
 
+def test_a_git_that_fails_is_stopped_on_with_what_git_said(repo):
+    """A hook that turns the tidy commit away: the stop says git's own reason."""
+    hook = repo / ".git" / "hooks" / "pre-commit"
+    hook.write_text("#!/bin/sh\necho 'no tidy today' >&2\nexit 1\n")
+    hook.chmod(0o755)
+    got = go(repo, "run")
+    assert got.returncode == 42 and "stopped: git commit" in got.stderr
+    assert "no tidy today" in got.stderr, "git's own reason, not an empty one"
+
+
 def test_run_refuses_a_to_whose_folder_isnt_there(repo, tmp_path):
     got = go(repo, "run", "--to", str(tmp_path / "missing" / "record.json"))
     assert got.returncode == 2 and "no folder" in got.stderr
