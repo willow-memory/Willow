@@ -1158,7 +1158,7 @@ willow/
 │   │   │   ├── test_similar.py
 │   │   │   └── README.md
 │   │   ├── skim/
-│   │   │   ├── skim.py       The lists this repo makes held to how a person reads them: a heading every screen, no line too long to read, and every add-on and folder a name to jump to
+│   │   │   ├── skim.py       a made list held to how a person reads it: a heading a screen, a line a look, a name to jump to
 │   │   │   ├── test_skim.py
 │   │   │   └── README.md     its card
 │   │   ├── slack/
