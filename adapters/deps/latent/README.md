@@ -56,6 +56,7 @@ of willow's own repo, one question took:
 | 4,000 | 6,661 | 0.20 GiB | 17 s | 1.4 GiB |
 | 6,000 | 7,778 | 0.35 GiB | 42 s | 2.5 GiB |
 | 8,000 | 8,745 | 0.52 GiB | 86 s | 3.8 GiB |
+| 12,000 | 9,918 | 0.89 GiB | 224 s | 6.0 GiB (now refused) |
 
 Peak memory runs about seven times the matrix, and time grows with the
 square of the passages. Before the bound, on the same size of machine and
