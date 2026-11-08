@@ -181,6 +181,10 @@ ELSEWHERE = {
         "requirements.txt": "each deps add-on's own file, in its folder",
         "requirements-floor.txt": "each deps add-on's own file, in its folder",
     },
+    "CHANGELOG.md": {
+        "adapters/stdlib/github/create_pr.md": "where create_pr's steps were, in an entry"
+        " changelog.py won't let change; they're adapters/stdlib/ready/steps.md now",
+    },
     "CONSTITUTION.md": {
         "CASEBOOK.md": "willows-grove's: its cases name people and files, so not here",
     },

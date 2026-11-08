@@ -1,46 +1,38 @@
-"""create_pr.py: this branch's pull request, opened by a stack of the repo's
-own add-ons, stopping only where a person is needed. Python 3.9+.
+"""create_pr.py: this branch's pull request on GitHub, made ready by the
+repo's own add-ons, stopping only where a person is needed. Python 3.9+.
 
     python adapters/stdlib/github/create_pr.py [--base BRANCH] [--title TEXT]
                                                [--footer TEXT] [--repo OWNER/NAME]
                                                [--steps FILE]
 
 Commit your change, with its changelog entry (changes/+<branch>.<kind>.md,
-changes/README.md says how), then run it. The steps are
-create_pr.md beside it (`--steps` names another): a stack, the same file
-the stack add-on reads, run in order rather than composed, stopping at the
-first step that doesn't come back clean. Then it pushes the branch, opens
-the pull request (or finds the one already open for it), names its
-changelog fragment for it (changes/+<branch>.<kind>.md to
-changes/<number>.<kind>.md), pushes again, and runs the steps that need the
-number.
+changes/README.md says how), then run it. Everything that needs no host is
+ready's (adapters/stdlib/ready): its `check`, then its `run` of the steps
+(ready/steps.md, or `--steps`), held to the other open pull requests, then
+its `body`. This adds GitHub's part around them: the open pull requests to
+hold the branch to, the push, the pull request opened (or the one already
+open for it found), then ready's `opened` with its number, and the push
+again.
 
-The pull request's body is the template's four sections, made from what is
-here: the commits' messages; each add-on touched and its card's promises;
-what each step printed; and what wasn't checked here, which CI runs.
-
-What it does by itself: a step that leaves files changed (`readme.py
-write`, say) is committed as `tidy:`; a branch main moved under is merged
-by restack; the number is written in. What it never does: rebase, amend,
-or force-push; write anything a step didn't make; approve or merge.
+What it never does: rebase, amend, or force-push; write a file; approve or
+merge.
 
 GitHub is asked through `gh api` (REST): the open pull requests, and a new
-one. Without gh, the body is left in a file and it says the one command to
-run, then run this again. A push or an open GitHub answers with an error (a
-502) is tried again, after 2, 4, 8 and 16 seconds, and before each new try
-at opening it looks for the pull request, which an error answer can still
-have made.
+one. Without gh it stops before anything runs, and says the commands that
+do the same by hand. A push or an open GitHub answers with an error (a 502)
+is tried again, after 2, 4, 8 and 16 seconds, and before each new try at
+opening it looks for the pull request, which an error answer can still have
+made.
 
 Exit codes, the kernel's: 0 the pull request is open and has everything
 pushed; 42 something needs you (a step that failed or stopped, a missing
 changelog entry, a branch origin has moved, gh not here): it says what;
-2 refused (a bad command line, not on a branch, the base branch itself,
-uncommitted changes, nothing to open).
+2 refused (a bad command line, or ready's check refused it: not on a
+branch, the base branch itself, uncommitted changes, nothing to open).
 """
 
 from __future__ import annotations
 
-import importlib.util
 import json
 import os
 import re
@@ -57,7 +49,7 @@ STDLIB = ROOT / "adapters" / "stdlib"
 sys.path.insert(0, str(ROOT))
 import kernel  # noqa: E402
 
-STEPS = HERE / "create_pr.md"
+READY = STDLIB / "ready" / "ready.py"
 USAGE = (
     "usage: create_pr.py [--base BRANCH] [--title TEXT] [--footer TEXT]"
     " [--repo OWNER/NAME] [--steps FILE]"
@@ -71,29 +63,6 @@ WAITS = tuple(
     for w in os.environ.get("WILLOW_CREATE_PR_WAITS", "2,4,8,16").split(",")
     if w.strip()
 )
-#: the pool whose steps need the pull request's number
-AFTER = "after it opens"
-#: a step's 42 that owes nothing: said in the pull request, not stopped on
-FINE_42 = {"restack", "test-impact.impact", "against", "ci.realdata"}
-#: a line that stops a step which exited 0: (step, the line's start, why)
-STOP_ON = {
-    "against": (
-        "collides:",
-        "it collides with another open pull request: merge that one's branch"
-        " in and base on it (CONTRIBUTING.md, Pull requests)",
-    )
-}
-#: the template's sections, in its order
-SECTIONS = (
-    "What this changes, and why",
-    "Its promises",
-    "Evidence",
-    "What you didn't check",
-)
-#: a commit made here is the run's own, not the change's
-MINE = re.compile(r"^(tidy: |changelog: its number )")
-TRAILER = re.compile(r"^(Co-Authored-By|Claude-Session|Signed-off-by): ", re.I)
-TAIL = 15
 
 
 class Stop(Exception):
@@ -104,11 +73,8 @@ class Refused(Exception):
     """The command line, or where it was run: exit 2."""
 
 
-def load(name: str, path: Path):
-    spec = importlib.util.spec_from_file_location(name, path)
-    mod = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(mod)
-    return mod
+class Passed(Exception):
+    """ready said no and already said why: its exit code, as it gave it."""
 
 
 def git(*args: str, check: bool = True) -> str:
@@ -118,114 +84,16 @@ def git(*args: str, check: bool = True) -> str:
     return got.stdout.strip() if got.returncode == 0 else ""
 
 
-def clean() -> bool:
-    return git("status", "--porcelain") == ""
-
-
-# ── the steps ────────────────────────────────────────────────────────────────
-def script_of(name: str) -> Path:
-    """`ci.bugs` is adapters/stdlib/ci/bugs.py; `readme` is readme/readme.py
-    (a dash in the folder's name is an underscore in the script's)."""
-    folder, _, file = name.partition(".")
-    path = STDLIB / folder / f"{file or folder.replace('-', '_')}.py"
-    if not path.is_file():
-        raise Refused(f"a step names {name}, and there is no {path.relative_to(ROOT)}")
-    return path
-
-
-def steps(path: Path) -> list[tuple[str, list[tuple[str, list[str]]]]]:
-    stack = load("willow_stack_for_create_pr", STDLIB / "stack" / "stack.py")
-    try:
-        text = path.read_text(encoding="utf-8")
-    except OSError as e:
-        raise Refused(f"can't read {path}: {e}") from e
-    pools, error = stack.parse_stack(text)
-    if error:
-        raise Refused(f"{path.name}: {error}")
-    for _, ss in pools:
-        for name, _ in ss:
-            script_of(name)
-    return pools
-
-
-def fill(args: list[str], fields: dict) -> list[str]:
-    out = []
-    for a in args:
-        if a == "{open}":
-            out += fields["open"]
-            continue
-        for k, v in fields.items():
-            if k != "open":
-                a = a.replace("{" + k + "}", str(v))
-        out.append(a)
-    return out
-
-
-def run_step(name: str, args: list[str], said: list, notes: list) -> None:
-    """One step: done, said in `notes`, or Stop. A change it leaves is
-    committed as tidy."""
-    print(f"\n── {name} {' '.join(args)}", flush=True)
-    got = subprocess.run(
-        [sys.executable, str(script_of(name)), *args],
-        cwd=ROOT,
-        capture_output=True,
-        text=True,
-    )
-    out = (got.stdout + got.stderr).rstrip()
-    print(out, flush=True)
-    said.append((name, args, got.returncode, out))
-    last = out.splitlines()[-1] if out else "(it printed nothing)"
-    if got.returncode == kernel.ESCALATE and name in FINE_42:
-        # the line that says why (a gate's verdict), not a closing line
-        why = [x.strip() for x in out.splitlines() if " unreachable " in f" {x} "]
-        notes.append(f"`{name}` came back 42: {'; '.join(why) or last}")
-    elif got.returncode != kernel.ALIVE:
-        raise Stop(f"{name} exited {got.returncode}: {last}")
-    stop = STOP_ON.get(name)
-    if stop and any(line.startswith(stop[0]) for line in out.splitlines()):
-        raise Stop(f"{name}: {stop[1]}")
-    if not clean():
-        git("add", "-A")
-        git("commit", "-q", "-m", f"tidy: made again by {name} {' '.join(args)}")
-        print(f"(committed what {name} made, as tidy)")
-
-
-# ── the changelog ────────────────────────────────────────────────────────────
-def changed(base: str) -> list[str]:
-    return [f for f in git("diff", "--name-only", f"{base}...HEAD").split("\n") if f]
-
-
-def owes_an_entry(base: str) -> bool:
-    """changelog.py's own rule: anything beyond Markdown and CITATION.cff."""
-    log = load("willow_changelog_for_create_pr", STDLIB / "ci" / "changelog.py")
-    return bool(log.owed(changed(base)))
-
-
-def new_fragments(base: str) -> list[str]:
-    """The changelog fragments this branch added under changes/, towncrier's
-    shape (changes/README.md), that are there now."""
-    log = load("willow_changelog_for_create_pr", STDLIB / "ci" / "changelog.py")
-    return [f for f in changed(base) if log.FRAGMENT.match(f) and (ROOT / f).is_file()]
-
-
-def name_fragments(base: str, number: int) -> list[str]:
-    """Each `+<branch>.<kind>.md` fragment this branch added, renamed for the pull
-    request, `<number>.<kind>.md` (`.1`, `.2` when a kind is there already): towncrier
-    writes `(#N)` from the name. The new names."""
-    log = load("willow_changelog_for_create_pr", STDLIB / "ci" / "changelog.py")
-    out = []
-    for rel in new_fragments(base):
-        m = log.FRAGMENT.match(rel)
-        if not m.group(1).startswith("+"):
-            continue
-        kind, k = m.group(2), 0
-        new = f"changes/{number}.{kind}.md"
-        while (ROOT / new).exists():
-            k += 1
-            new = f"changes/{number}.{kind}.{k}.md"
-        git("mv", rel, new)
-        out.append(new)
-    return out
+def ready(*args: str, capture: bool = False) -> str:
+    """ready.py with these args, its output passed through (or kept, with
+    `capture`); a refusal or a stop is passed on with ready's own exit code."""
+    got = subprocess.run([sys.executable, str(READY), *args], cwd=ROOT,
+                         capture_output=capture, text=True)  # fmt: skip
+    if got.returncode != kernel.ALIVE:
+        if capture:
+            print(got.stderr, end="", file=sys.stderr)
+        raise Passed(got.returncode)
+    return got.stdout if capture else ""
 
 
 # ── GitHub ───────────────────────────────────────────────────────────────────
@@ -245,81 +113,27 @@ def slug_of(remote: str) -> str:
     return "/".join(parts[-2:])
 
 
-def open_prs(slug: str) -> list[dict]:
+def by_hand(base: str) -> str:
+    return ("by hand: python adapters/stdlib/ready/ready.py run --base"
+            f" {base} --open <each open branch> --to FILE; ready.py body --base {base}"
+            " --from FILE; push and open it; ready.py opened --base"
+            f" {base} --pr <its number>; push again")  # fmt: skip
+
+
+def open_prs(slug: str, base: str) -> list[dict]:
     code, out = gh("api", f"repos/{slug}/pulls?state=open&per_page=100")
     if code != 0:
-        raise Stop(f"couldn't list {slug}'s open pull requests: {out}")
+        raise Stop(f"couldn't list {slug}'s open pull requests: {out}. {by_hand(base)}")
     return [p for p in json.loads(out) if (p.get("head") or {}).get("repo")]
 
 
-# ── the body ─────────────────────────────────────────────────────────────────
-def commits(base: str) -> list[tuple[str, str]]:
-    """(subject, body) of the change's own commits, oldest first, trailers
-    and the run's own tidy and number commits left out."""
-    raw = git(
-        "log", "--reverse", "--no-merges", "--format=%s%x00%b%x1e", f"{base}..HEAD"
-    )
-    out = []
-    for rec in raw.split("\x1e"):
-        if not rec.strip():
-            continue
-        subject, _, body = rec.strip("\n").partition("\x00")
-        if MINE.match(subject):
-            continue
-        body = "\n".join(x for x in body.strip().split("\n") if not TRAILER.match(x))
-        out.append((subject, body.strip()))
-    return out
-
-
-def promises(base: str) -> list[str]:
-    seen, out = set(), []
-    for f in changed(base):
-        m = re.match(r"adapters/(stdlib|deps)/([^/]+)/", f)
-        if not m or m.group(2) in seen:
-            continue
-        seen.add(m.group(2))
-        card = ROOT / m.group(0) / "README.md"
-        head = (
-            card.read_text(encoding="utf-8").split("-->")[0] if card.is_file() else ""
-        )
-        field = {
-            k: v.strip() for k, v in re.findall(r"^(writes|network): (.*)$", head, re.M)
-        }
-        out.append(f"- `{m.group(2)}`: writes {field.get('writes', '(no card)')};"
-                   f" network {field.get('network', '(no card)')}")  # fmt: skip
-    return out
-
-
-def body(base: str, said: list, notes: list, footer: str) -> str:
-    what = "\n\n".join(f"**{s}**" + (f"\n\n{b}" if b else "") for s, b in commits(base))
-    kept = promises(base)
-    evidence = "\n\n".join(
-        f"`{name} {' '.join(args)}`: exit {code}\n\n```\n"
-        + "\n".join(out.splitlines()[-TAIL:])
-        + "\n```"
-        for name, args, code, out in said
-    )
-    left = notes + [
-        "Every gate this change doesn't reach here runs in CI on this pull request."
-    ]
-    parts = [
-        (SECTIONS[0], what or "(no commit message says)"),
-        (SECTIONS[1], "\n".join(kept) or "It touches no add-on."),
-        (SECTIONS[2], f"Made by create_pr.py, on {git('rev-parse', '--short', 'HEAD')}:\n\n{evidence}"),
-        (SECTIONS[3], "\n".join(f"- {n}" for n in left)),
-    ]  # fmt: skip
-    text = "\n\n".join(f"## {h}\n\n{t}" for h, t in parts)
-    return text + (f"\n\n{footer}" if footer else "") + "\n"
-
-
-# ── the run ──────────────────────────────────────────────────────────────────
 def args_of(argv: list[str]) -> dict:
     opts = {
         "--base": "main",
         "--title": "",
         "--footer": "",
         "--repo": "",
-        "--steps": str(STEPS),
+        "--steps": "",
     }
     it = iter(argv)
     for a in it:
@@ -373,7 +187,7 @@ def open_pr(slug: str, branch: str, payload: Path) -> tuple[dict | None, str]:
         print(f"opening it failed ({out}); looking again in {wait:g}s", file=sys.stderr)
         time.sleep(wait)
         try:
-            prs = open_prs(slug)
+            prs = open_prs(slug, "")
         except Stop:
             continue
         found = next((p for p in prs if p["head"]["ref"] == branch and p["head"]["repo"]["full_name"] == slug), None)  # fmt: skip
@@ -383,18 +197,18 @@ def open_pr(slug: str, branch: str, payload: Path) -> tuple[dict | None, str]:
     return None, out
 
 
+def title_of(base: str, branch: str) -> str:
+    """The change's first own commit's subject, as ready's body reads them."""
+    for subject in git("log", "--reverse", "--no-merges", "--format=%s", f"{base}..HEAD").split("\n"):  # fmt: skip
+        if subject and not re.match(r"^(tidy: |changelog: its number )", subject):
+            return subject
+    return branch
+
+
 def create(opts: dict) -> int:
     base_name = opts["--base"]
-    pools = steps(Path(opts["--steps"]))
-    branch = git("symbolic-ref", "-q", "--short", "HEAD", check=False)
-    if not branch:
-        raise Refused("not on a branch: check out the one to open")
-    if branch == base_name:
-        raise Refused(
-            f"on {base_name} itself: a pull request comes from a branch of its own"
-        )
-    if not clean():
-        raise Refused("uncommitted changes: commit the change, entry and all, first")
+    steps = ["--steps", opts["--steps"]] if opts["--steps"] else []
+    ready("steps", *steps, capture=True)  # a step naming no add-on here: refused
     slug = opts["--repo"] or slug_of(git("remote", "get-url", "origin"))
     git(
         "fetch",
@@ -403,14 +217,10 @@ def create(opts: dict) -> int:
         f"+refs/heads/{base_name}:refs/remotes/origin/{base_name}",
     )
     base = f"origin/{base_name}"
-    if git("rev-list", "--count", f"{base}..HEAD") == "0":
-        raise Refused(f"{branch} holds nothing {base} doesn't: nothing to open")
-    if owes_an_entry(base) and not new_fragments(base):
-        raise Stop("no changelog entry: write it in changes/+<branch>.<kind>.md"
-                   " (changes/README.md says how; <kind> added, changed, fixed or"
-                   " removed), commit it, run this again")  # fmt: skip
+    ready("check", "--base", base, capture=True)
+    branch = git("symbolic-ref", "-q", "--short", "HEAD")
 
-    prs = open_prs(slug)
+    prs = open_prs(slug, base)
     mine = next((p for p in prs if p["head"]["ref"] == branch and p["head"]["repo"]["full_name"] == slug), None)  # fmt: skip
     others = []
     for p in prs:
@@ -427,23 +237,20 @@ def create(opts: dict) -> int:
         if git(
             "rev-parse", "-q", "--verify", f"refs/remotes/origin/{ref}", check=False
         ):
-            others.append(f"origin/{ref}")
-    said, notes = [], []
+            others += ["--open", f"origin/{ref}"]
     with tempfile.TemporaryDirectory() as scratch:
-        fields = {"base": base, "branch": branch, "scratch": scratch, "open": others}
-        for heading, ss in pools:
-            if heading == AFTER:
-                continue
-            for name, args in ss:
-                run_step(name, fill(args, fields), said, notes)
+        record = str(Path(scratch) / "record.json")
+        ready("run", "--base", base, *others, *steps, "--to", record)
 
         push(branch)
         if mine is None:
             payload = Path(scratch) / "pull.json"
+            text = ready("body", "--base", base, "--from", record,
+                         *(["--footer", opts["--footer"]] if opts["--footer"] else []),
+                         capture=True)  # fmt: skip
             payload.write_text(json.dumps({
-                "title": opts["--title"] or (commits(base) or [(branch, "")])[0][0],
-                "head": branch, "base": base_name,
-                "body": body(base, said, notes, opts["--footer"]),
+                "title": opts["--title"] or title_of(base, branch),
+                "head": branch, "base": base_name, "body": text,
             }), encoding="utf-8")  # fmt: skip
             mine, out = open_pr(slug, branch, payload)
             if mine is None:
@@ -458,18 +265,7 @@ def create(opts: dict) -> int:
                 f"\n#{mine['number']} is already open for {branch}: {mine.get('html_url', '')}"
             )
         number = int(mine["number"])
-
-        named = name_fragments(base, number)
-        if named:
-            git("add", "-A", "changes")
-            git("commit", "-q", "-m", f"changelog: its number (#{number})")
-            for new in named:
-                print(f"named its changelog fragment {new}")
-        fields["pr"] = number
-        for heading, ss in pools:
-            if heading == AFTER:
-                for name, args in ss:
-                    run_step(name, fill(args, fields), said, notes)
+        ready("opened", "--base", base, "--pr", str(number), *steps, "--to", record)
         push(branch)
     print(f"\n#{number} is open, everything pushed: {mine.get('html_url', '')}")
     return kernel.ALIVE
@@ -478,6 +274,8 @@ def create(opts: dict) -> int:
 def main(argv: list[str]) -> int:
     try:
         return create(args_of(argv))
+    except Passed as code:
+        return code.args[0]
     except Refused as why:
         print(f"refused: {why}" if str(why) != USAGE else USAGE, file=sys.stderr)
         return kernel.REFUSED
