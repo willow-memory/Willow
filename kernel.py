@@ -321,8 +321,8 @@ def stem(w: str) -> str:
     """An English word's plain form, by a few suffix rules, so owe, owes, owed
     and owing are one word (Hollis's "who still owes me money", Teodora's "how
     much do I still owe dev"). Only words of ASCII letters: another language,
-    or a serial, is left as written. Irregular forms (paid) are her words
-    list's job."""
+    or a serial, is left as written; "eed" stays, so feed is never fee (bug
+    #308). Irregular forms (paid) are her words list's job."""
     if len(w) < 3 or not (w.isascii() and w.isalpha()):
         return w
     s = w
@@ -330,7 +330,7 @@ def stem(w: str) -> str:
         s = s[:-3] + "y"
     elif len(s) > 4 and s.endswith("ing"):
         s = s[:-3]
-    elif len(s) > 3 and s.endswith("ed"):
+    elif len(s) > 3 and s.endswith("ed") and not s.endswith("eed"):
         s = s[:-2]
     elif len(s) > 3 and s.endswith("s") and not s.endswith("ss"):
         s = s[:-1]

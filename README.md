@@ -45,7 +45,7 @@ add-on, so it runs the same if you delete every one.
   and re-hashed from the edit onward is not detected on its own; see
   [LIMITS.md](LIMITS.md).
 - **Portable:** reimplemented in Java, TypeScript, C#, Go and Rust, and all
-  six are held to the same 4,686 test cases.
+  six are held to the same 4,694 test cases.
 
 **Contents:** [Your first five minutes](#your-first-five-minutes) · [Which path am I on?](#which-path-am-i-on) · [What it is not](#what-it-is-not) · [Building on it](#building-on-it) · [What you can build on it](#what-you-can-build-on-it) · [How it works](#how-it-works) · [Commands](#commands) · [Guarantees, and the tests behind them](#guarantees-and-the-tests-behind-them) · [Where it falls short](#where-it-falls-short) · [How it's verified](#how-its-verified) · [What's in this repo](#whats-in-this-repo) · [Licence](#licence)
 
@@ -287,7 +287,7 @@ in `demo/*/STRIP.md`.
   3.14 (a pull request on 3.9 and 3.14 only, main's commit on all six: once, in the merge queue, or on its push when
   the queue didn't run it), and keeps each job's record as an artifact. The verdicts are draft;
   merging is the person's call. See [adapters/stdlib/ci](adapters/stdlib/ci/).
-- **Six implementations, one behaviour.** `vectors/gen.py` reads 4,686 cases
+- **Six implementations, one behaviour.** `vectors/gen.py` reads 4,694 cases
   out of `kernel.py`, covering canonical JSON, word splitting, HTML text,
   ranking, dates, word forms and every refusal. The Java, TypeScript, C#, Go
   and Rust ports must give byte-identical answers. Then the same session runs
