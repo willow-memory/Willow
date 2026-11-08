@@ -52,6 +52,39 @@ def test_an_idea_not_yet_placed_still_has_a_heading():
     assert got["group"] == g.OTHER_READERS and got["group_at"] == len(g.READERS)
 
 
+def test_a_role_goes_by_the_first_fact_that_fits():
+    """A card from before cards said their role: the first fact that fits."""
+
+    def r(**card):
+        return g.role({"name": "x", "section": "", "line": "", **card})["role"]
+
+    assert r(section="Reading more kinds of files", page=True) == "reads"
+    assert r(name="hook-x", page=True) == "guards"
+    assert r(tags=["hook"], page=True) == "guards"
+    assert r(name="vscode", page=True) == "ways", "a way in by its name"
+    assert r(line="Suggestions from a model.", page=True) == "suggests"
+    assert (
+        r(section="Assistants", line="Which models hold up.", page=False) == "suggests"
+    )
+    assert r(section="Assistants", line="A care log.") == "tools", (
+        "no model: not suggesting"
+    )
+    assert r(page=True, writes="to") == "page"
+    assert r(section="Ways to use it", writes="to") == "makes"
+    assert r(section="Ways to use it", writes="nothing") == "ways"
+    assert r(section="Keeping track", writes="nothing") == "tools", (
+        "ways is that section's alone"
+    )
+    assert r(writes="record") == "tools"
+    assert "idea" in g.role({"name": "x", "state": "idea"})["role_why"]
+    assert r(runs_in="repo", section="Reading more kinds of files") == "repo"
+    assert r(section="Your own words") == "words"
+    # what the card says comes first; the guess is for a willow from before
+    said = g.role({"name": "hook-x", "state": "built", "role": "tools", "page": True})  # fmt: skip
+    assert said["role"] == "tools" and said["role_why"] == "its card says so"
+    assert g.role({"name": "hook-x", "role": "nonsense"})["role"] == "guards"
+
+
 def test_the_ui_and_the_list_share_the_one_grouping():
     canvas = load("willow_canvas_for_groups", ROOT / "ui" / "canvas.py")
     assert canvas.ROLES is canvas.groups.ROLES and canvas.role is canvas.groups.role

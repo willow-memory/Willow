@@ -517,26 +517,6 @@ def test_each_piece_says_the_part_it_plays_and_why(site):
     assert ps["model-exam"]["group"] == "Checking a model before you trust it"
 
 
-def test_a_role_goes_by_the_first_fact_that_fits():
-    def r(**card):
-        return canvas.role({"name": "x", "section": "", "line": "", **card})["role"]
-
-    assert r(section="Reading more kinds of files", page=True) == "reads"
-    assert r(name="hook-x", page=True) == "guards"
-    assert r(line="Suggestions from a model.", page=True) == "suggests"
-    assert r(page=True, writes="to") == "page"
-    assert r(section="Ways to use it", writes="to") == "makes"
-    assert r(section="Ways to use it", writes="nothing") == "ways"
-    assert r(writes="record") == "tools"
-    assert "idea" in canvas.role({"name": "x", "state": "idea"})["role_why"]
-    assert r(runs_in="repo", section="Reading more kinds of files") == "repo"
-    assert r(section="Your own words") == "words"
-    # what the card says comes first; the guess is for a willow from before
-    said = canvas.role({"name": "hook-x", "state": "built", "role": "tools", "page": True})  # fmt: skip
-    assert said["role"] == "tools" and said["role_why"] == "its card says so"
-    assert canvas.role({"name": "hook-x", "role": "nonsense"})["role"] == "guards"
-
-
 def test_the_page_names_every_role_a_person_can_fill():
     page = (canvas.HERE / "page.html").read_text(encoding="utf-8")
     for key, title in canvas.ROLES:
