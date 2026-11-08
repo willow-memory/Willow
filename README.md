@@ -283,8 +283,9 @@ in `demo/*/STRIP.md`.
   verdict row on a kernel record, which `verify` then checks like any other.
   A tool that isn't installed is recorded as unreachable, never as a pass.
   It is deterministic: the same files give the same record, byte for byte.
-  CI runs the same script on every pull request and every push to main, with the tests on Python 3.9 through
-  3.14 (a pull request on 3.9 and 3.14 only, every push to main on all six), and keeps each job's record as an artifact. The verdicts are draft;
+  CI runs the same script on every pull request and on every commit main takes, with the tests on Python 3.9 through
+  3.14 (a pull request on 3.9 and 3.14 only, main's commit on all six: once, in the merge queue, or on its push when
+  the queue didn't run it), and keeps each job's record as an artifact. The verdicts are draft;
   merging is the person's call. See [adapters/stdlib/ci](adapters/stdlib/ci/).
 - **Six implementations, one behaviour.** `vectors/gen.py` reads 4,686 cases
   out of `kernel.py`, covering canonical JSON, word splitting, HTML text,

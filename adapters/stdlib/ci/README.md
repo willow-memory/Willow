@@ -4,7 +4,7 @@ line: This repo's checks as verdict rows on a kernel record, the same every run.
 source: box
 added: 2026-10-23
 writes: record, BUGS.md, FILES.md, README.md, ADDONS.md, adapters/planned.json, adapters/*/*, adapters/*/*/*, demo/*/*, demo/*/*/*
-network: PyPI, to read each dependency floor's release date
+network: PyPI, to read each dependency floor's release date; GitHub, through gh, to find main's last records (main_run.py, times.py)
 role: repo
 uses: live, readme, stack, test-shards
 runs-in: repo
@@ -139,11 +139,18 @@ box over them, and runs the add-on's COMMANDS line on each, a reader its
 hang or an odd exit fails it; a refusal is said. create_pr.py runs it.
 
 **Test times:** [times.py](times.py) keeps [test-times.json](test-times.json)
-to CI's own run: on a push to main the tests job writes each
-tests:adapters gate's JUnit XML (`WILLOW_JUNIT_DIR`) as the `test-times`
-artifact, and `write --run latest` reads the last green run's, by gh;
+to CI's own run: on main's commit (in the merge queue, or on its push when
+the queue didn't run it) the tests job writes each tests:adapters gate's
+JUnit XML (`WILLOW_JUNIT_DIR`) as the `test-times` artifact, and `write
+--run latest` reads the run [main_run.py](main_run.py) finds, by gh;
 `write --from DIR` reads files already here. `check` says what the json
 lacks, and never fails: only the balance of the chunks depends on it.
+
+**Main's records:** [main_run.py](main_run.py) finds the green run that
+holds them, for what a pull request reads of main (mutants-reach's pin,
+deps' held record, red-on-main, times.py): main's push run, or, when the
+push stood on the merge queue's run of the same commit and ran nothing
+again, that run. It reads main's own runs only, never an artifact by name.
 
 **A to Z:** [order.py](order.py) keeps the lists people add to in order:
 the tables in test_contract.py (COMMANDS, READERS, PILE_EXTRA,
