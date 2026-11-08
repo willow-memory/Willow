@@ -592,6 +592,16 @@ def test_word_forms_are_one_word(tmp_path):
     assert k.rank(k.chunks(tmp_path), "how much do I still owe dev")
 
 
+def test_a_root_ending_in_eed_keeps_its_d():
+    """Bug #308: feed lost its "ed" and became fee, so a sort phrase "feed"
+    took every Apache-2.0 licence ("charge a fee"), and feed missed feeds."""
+    for w in ("feed", "need", "seed", "speed", "breed", "bleed", "proceed"):
+        assert k.stem(w) == k.stem(w + "s") == k.stem(w + "ing"), w
+        assert k.stem(w) != k.stem(w[:-1]), w
+    assert k.stem("needed") == k.stem("need")
+    assert k.stem("fee") == k.stem("fees")
+
+
 def test_an_accent_typed_one_way_holds_where_it_was_saved_the_other(tmp_path):
     """é is one code point as typed, and often e plus a combining accent as
     macOS saves it. Unmixed, the saved é split into "cafe" and a stray mark,

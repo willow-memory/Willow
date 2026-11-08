@@ -663,7 +663,7 @@ function stem(w: string): string {
   let n = s.length;
   if (n > 4 && (s.endsWith("ies") || s.endsWith("ied"))) s = s.slice(0, n - 3) + "y";
   else if (n > 4 && s.endsWith("ing")) s = s.slice(0, n - 3);
-  else if (n > 3 && s.endsWith("ed")) s = s.slice(0, n - 2);
+  else if (n > 3 && s.endsWith("ed") && !s.endsWith("eed")) s = s.slice(0, n - 2);
   else if (n > 3 && s.endsWith("s") && !s.endsWith("ss")) s = s.slice(0, n - 1);
   n = s.length;
   if (n > 3 && s[n - 1] === s[n - 2] && !"aeiouls".includes(s[n - 1])) s = s.slice(0, --n);
