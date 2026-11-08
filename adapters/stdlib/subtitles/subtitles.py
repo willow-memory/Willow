@@ -34,6 +34,7 @@ questions of what was said.
 
 from __future__ import annotations
 
+import json
 import os
 import re
 import sys
@@ -73,14 +74,21 @@ def cues(raw: bytes, vtt: bool) -> str | None:
     """The mirror text: one line per cue, its start first. None when the file
     is not what its name says (a .vtt without WEBVTT first, a .srt with no
     readable cue)."""
+    found = placed(raw, vtt)
+    return "\n".join(c for c, _, _ in found) + "\n" if found else None
+
+
+def placed(raw: bytes, vtt: bool) -> list[tuple[str, int, int]]:
+    """Each cue's line, with the file's lines it came from: its timing line
+    to its last line of text."""
     lines = raw.decode("utf-8-sig", errors="strict").splitlines()
     if vtt and not (lines and lines[0].strip().split()[:1] == ["WEBVTT"]):
-        return None
-    out, text, when, skip = [], [], None, False
-    for line in lines + [""]:
+        return []
+    out, text, when, skip, at = [], [], None, False, 0
+    for n, line in enumerate(lines + [""], 1):
         if not line.strip():
             if when is not None and text:
-                out.append(f"{when}  {said(text)}")
+                out.append((f"{when}  {said(text)}", at, n - 1))
             text, when, skip = [], None, False
             continue
         if skip:
@@ -90,14 +98,29 @@ def cues(raw: bytes, vtt: bool) -> str | None:
             continue
         got = start_of(line)
         if got:
-            when, text = got, []
+            when, text, at = got, [], n
         elif when is not None:
             text.append(line)
-    if not out:
-        return None
-    return "\n".join(out) + "\n"
+    return out
 
 
+def places(found: list[tuple[str, int, int]]) -> dict[str, str]:
+    """The mirror contract's places (adapters/stdlib/ci/README.md): each cue's
+    mirror line to its lines in the file, so a chunk the kernel cuts from the
+    file's one passage is at its own cue."""
+    return {str(i): f"lines {a}-{b}" if a != b else f"line {a}"
+            for i, (_, a, b) in enumerate(found, 1)}  # fmt: skip
+
+
+def write_places(dst: Path, rel: str, found: dict[str, str]) -> None:
+    """The map, hidden beside the mirror, where the kernel never reads."""
+    out = dst / ".places" / (rel + ".txt.json")
+    out.parent.mkdir(parents=True, exist_ok=True)
+    doc = {"source": rel, "places": found}
+    out.write_bytes((json.dumps(doc, ensure_ascii=False) + "\n").encode("utf-8"))
+
+
+# differs on purpose: it reads .srt and .vtt, written out
 def _sources(folder: Path) -> list[Path]:
     """The .srt and .vtt files under `folder`, sorted by relative path.
     Hidden folders and files are skipped; symlinked folders not followed."""
@@ -120,19 +143,23 @@ def _within(inner: Path, outer: Path) -> bool:
     return inner == outer or outer in inner.parents
 
 
+# differs on purpose: cues needs to know a .vtt
 def mirror(src: Path, dst: Path) -> tuple[int, int]:
     """Write the mirror of `src` into `dst`. Returns (written, skipped)."""
     wrote = skipped = 0
     for path in _sources(src):
         rel = path.relative_to(src)
         try:
-            text = cues(path.read_bytes(), path.name.lower().endswith(".vtt"))
-            if text is None:
+            found = placed(path.read_bytes(), path.name.lower().endswith(".vtt"))
+            if not found:
                 skipped += 1
                 continue
             target = dst.joinpath(rel.parent, rel.name + ".txt")
             target.parent.mkdir(parents=True, exist_ok=True)
-            target.write_bytes(text.encode("utf-8"))
+            target.write_bytes(
+                ("\n".join(c for c, _, _ in found) + "\n").encode("utf-8")
+            )
+            write_places(dst, rel.as_posix(), places(found))
         except (OSError, UnicodeDecodeError):
             skipped += 1
             continue

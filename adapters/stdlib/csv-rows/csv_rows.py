@@ -47,6 +47,7 @@ from __future__ import annotations
 
 import csv
 import io
+import json
 import os
 import re
 import sys
@@ -106,12 +107,21 @@ def _lines(n: int, cells: list[str]) -> list[str]:
 
 def convert(data: bytes, tsv: bool = False) -> str | None:
     """The passages of one table, or None when it has no data row."""
+    found = placed(data, tsv)
+    return "\n\n".join(p for p, _, _ in found) + "\n" if found else None
+
+
+def placed(data: bytes, tsv: bool = False) -> list[tuple[str, int, int]]:
+    """Each passage, with the first and last of the file's lines it holds: a
+    row with a quoted cell can run over several. None when no data row."""
     lines = io.StringIO(data.decode("utf-8-sig"), newline="").readlines()
     first = next((i for i, x in enumerate(lines) if x.strip() and not _note(x)), None)
     if first is None:
-        return None
+        return []
     passages = [
-        f"[{i + 1}] {_clean(x)}" for i, x in enumerate(lines[:first]) if x.strip()
+        (f"[{i + 1}] {_clean(x)}", i + 1, i + 1)
+        for i, x in enumerate(lines[:first])
+        if x.strip()
     ]
     sep = delimiter(lines[first], tsv)
     table = io.StringIO("".join(lines[first:]), newline="")
@@ -127,15 +137,32 @@ def convert(data: bytes, tsv: bool = False) -> str | None:
             cells.pop()
         if not cells:
             continue
-        passages.append("\n".join(_lines(n, cells)))
+        passages.append(("\n".join(_lines(n, cells)), n, first + rows))
         if not header:
             header = True
             if not any(NUMBER.fullmatch(c) for c in cells):
                 continue
         found = True
-    if not found:
-        return None
-    return "\n\n".join(passages) + "\n"
+    return passages if found else []
+
+
+def places(found: list[tuple[str, int, int]]) -> dict[str, str]:
+    """The mirror contract's places (adapters/stdlib/ci/README.md): each
+    passage's mirror line, a blank line between passages, to its row's
+    lines in the file."""
+    out, line = {}, 1
+    for text, a, b in found:
+        out[str(line)] = f"line {a}" if a == b else f"lines {a}-{b}"
+        line += text.count("\n") + 2
+    return out
+
+
+def write_places(dst: Path, rel: str, found: dict[str, str]) -> None:
+    """The map, hidden beside the mirror, where the kernel never reads."""
+    out = dst / ".places" / (rel + ".txt.json")
+    out.parent.mkdir(parents=True, exist_ok=True)
+    doc = {"source": rel, "places": found}
+    out.write_bytes((json.dumps(doc, ensure_ascii=False) + "\n").encode("utf-8"))
 
 
 EXTS = (".csv", ".tsv")
@@ -161,19 +188,23 @@ def _within(inner: Path, outer: Path) -> bool:
     return inner == outer or outer in inner.parents
 
 
+# differs on purpose: convert needs to know a .tsv
 def mirror(src: Path, dst: Path) -> tuple[int, int]:
     """Write the mirror of `src` into `dst`. Returns (written, skipped)."""
     wrote = skipped = 0
     for path in _sources(src):
         rel = path.relative_to(src)
         try:
-            text = convert(path.read_bytes(), path.name.lower().endswith(".tsv"))
-            if text is None:
+            found = placed(path.read_bytes(), path.name.lower().endswith(".tsv"))
+            if not found:
                 skipped += 1
                 continue
             target = dst.joinpath(rel.parent, rel.name + ".txt")
             target.parent.mkdir(parents=True, exist_ok=True)
-            target.write_bytes(text.encode("utf-8"))
+            target.write_bytes(
+                ("\n\n".join(p for p, _, _ in found) + "\n").encode("utf-8")
+            )
+            write_places(dst, rel.as_posix(), places(found))
         except ERRORS:
             skipped += 1
             continue

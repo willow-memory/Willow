@@ -81,8 +81,16 @@ ENTRY = re.compile(r"^((?:│   |    )*)(├── |└── )(\S+)")
 def tree(doc: Path = FILES, heading: str = "# Every file") -> tuple[set[str], set[str]]:
     """(files, folders) a doc's tree lists, as paths from the repo root:
     FILES.md's, every file, unless the README's top level is asked for."""
-    block = section(doc.read_text(encoding="utf-8"), heading)
-    lines = block.split("```")[1].strip("\n").splitlines()
+    text = doc.read_text(encoding="utf-8")
+    # FILES.md's tree is cut into blocks under headings of its own
+    # (adapters/stdlib/ci/files.py): one tree, read as one, to its last block
+    block = text[text.index(heading) :] if heading.startswith("# ") else section(text, heading)  # fmt: skip
+    parts = block.split("```")
+    lines = parts[1].strip("\n").splitlines()
+    for gap, more in zip(parts[2::2], parts[3::2]):
+        if not re.fullmatch(r"\n(?:[ \t]*\n|#{1,6} [^\n]*\n)*", gap):
+            break  # prose after the tree: it has ended
+        lines += more.strip("\n").splitlines()
     assert lines[0] == "willow/", "the tree starts at willow/"
     files: set[str] = set()
     folders: set[str] = set()
@@ -100,6 +108,7 @@ def tree(doc: Path = FILES, heading: str = "# Every file") -> tuple[set[str], se
             assert depth <= last_file_depth, f"tree line {n} sits under a file"
         stack = stack[:depth]
         path = "/".join([*stack, name.rstrip("/")])
+        assert path not in files | folders, f"tree line {n} lists {path} again"
         if name.endswith("/"):
             folders.add(path)
             stack.append(name.rstrip("/"))
@@ -180,6 +189,10 @@ ELSEWHERE = {
     "adapters/README.md": {
         "requirements.txt": "each deps add-on's own file, in its folder",
         "requirements-floor.txt": "each deps add-on's own file, in its folder",
+    },
+    "CHANGELOG.md": {
+        "adapters/stdlib/github/create_pr.md": "where create_pr's steps were, in an entry"
+        " changelog.py won't let change; they're adapters/stdlib/ready/steps.md now",
     },
     "CONSTITUTION.md": {
         "CASEBOOK.md": "willows-grove's: its cases name people and files, so not here",

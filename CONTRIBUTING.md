@@ -46,6 +46,20 @@ writes an approval (a `seal`), and it never reads the person's key. An add-on
 writes to the record only through the kernel's own commands, so `verify`
 still holds afterwards.
 
+**A chain of add-ons starts at the Forge, and the person seals it.** When
+you put add-ons together for someone (a demo's stack, a study, a page that
+walks a pile through add-on after add-on), ask the forge add-on with their
+words first (`python adapters/deps/forge/suggest.py suggest --box DIR
+"their sentence"`), settle each fork it names with `propose --choose
+WORD=NAME --why WORD=...`, and leave the seal to them: the chain they keep
+is the one they sealed, with a reason for each choice, not one picked by
+hand and written up after. When their words miss an add-on they meant, add
+the line to `ui/search-words.txt`, so the next person's words reach it too.
+A sealed stack is shared with `adapters/stdlib/stack-share`, on
+[Show your stack](https://github.com/willow-memory/Willow/issues/87).
+Where the Forge can't run (it needs forge-play and Python 3.11), say so,
+and write the stack file by hand with each step's reason beside it.
+
 **A check has to be able to fail.** Before you say a test covers something,
 break that thing on purpose and watch the test go red. A test that can't
 fail, or that skips quietly when something is missing, looks like a pass and
@@ -150,6 +164,10 @@ that adds one entry to [adapters/planned.json](adapters/planned.json):
 - `role` is the part it plays in a stack (what it reads, what runs on your
   page, where you ask from...), one of those in
   [adapters/README.md](adapters/README.md#what-a-folder-holds).
+- `from` is optional: where the idea or its code came from, when another
+  project's, as `how, address, licence` (`shape, https://github.com/wagtail/Willow, BSD-3-Clause`).
+  How is `shape`, `code` or `dep`; [adapters/README.md](adapters/README.md#what-a-folder-holds)
+  says what each may take.
 - `reads`, on a reader's card (`role: reads`), is what it reads: kinds of
   file by extension, or a file it looks for by name, `reads: .eml, .mbox`,
   or `none`. The UI offers a reader by it, and the contract test holds each

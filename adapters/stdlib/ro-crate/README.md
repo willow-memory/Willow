@@ -1,6 +1,6 @@
 <!-- willow-addon
 section: Trust and proof
-line: Your willow (the files it reads, its record and your approved answers) as an RO-Crate research object that Zenodo and similar archives can read.
+line: Your willow (the files it reads, its record, your approved answers) as an RO-Crate research object that Zenodo and other archives can read.
 source: new
 added: 2026-10-29
 writes: to

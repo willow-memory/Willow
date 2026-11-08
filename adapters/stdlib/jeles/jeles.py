@@ -173,6 +173,7 @@ def store_text(path: Path) -> str | None:
     return f"jeles store, {k} nugget{'s' if k != 1 else ''}\n\n" + "".join(out)
 
 
+# differs on purpose: it reads .json and .db, written out
 def _sources(folder: Path) -> list[Path]:
     found = []
     for dirpath, dirnames, filenames in os.walk(folder):

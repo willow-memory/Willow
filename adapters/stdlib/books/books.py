@@ -224,6 +224,7 @@ def epub_text(path: Path) -> str:
     return f"book: {title}{by}\n\n" + "".join(p + "\n\n" for p in paras)
 
 
+# differs on purpose: it reads Kindle's My Clippings.txt and .epub books, by name
 def _sources(folder: Path) -> list[Path]:
     """Clippings files and epubs under `folder`, sorted by relative path.
     Hidden folders and files are skipped; symlinked folders are not followed."""
@@ -244,6 +245,7 @@ def _within(inner: Path, outer: Path) -> bool:
     return inner == outer or outer in inner.parents
 
 
+# differs on purpose: an .epub and My Clippings.txt are read their own ways, each failure caught
 def mirror(src: Path, dst: Path) -> tuple[int, int]:
     """Write the mirror of `src` into `dst`. Returns (written, skipped)."""
     wrote = skipped = 0

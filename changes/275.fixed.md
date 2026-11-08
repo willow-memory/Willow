@@ -1,0 +1,1 @@
+pair-drift reads "from $0.26 to $0.27" as a change, two figures each with the sign, scale and unit they share, not as one range, so a summary saying where the change ended ("to $0.27") is no longer reported as drift. "$180 to $190 billion" is still one range.

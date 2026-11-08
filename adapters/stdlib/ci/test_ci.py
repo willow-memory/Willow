@@ -487,3 +487,118 @@ def test_a_program_a_deps_card_names_and_this_machine_lacks_is_unreachable(
     assert ci.deps_add_on("pdf").needs() is None
     with pytest.raises(Made):  # pdf names no program: on to its install
         ci.deps_add_on("pdf")()
+
+
+# ── a deps gate held by an earlier satisfied verdict with its key ────────────
+def earlier(tmp_path: Path, *rows: tuple[str, str, str]) -> Path:
+    """A ci record holding a verdict per (gate, state, key): what main's
+    deps run uploads, as a pull request's deps job downloads it."""
+    box = tmp_path / "main-record"
+    ts = "2026-11-06T00:00:00Z"
+    ci.open_box(box, ts)
+    for gate, state, key in rows:
+        ci.kernel.append(box, ts, "verdict", who=ci.WHO, gate=gate, state=state,
+                         files_sha256="0" * 64, said_sha256="0" * 64, python="3.13",
+                         key=key)  # fmt: skip
+    return box / "record.jsonl"
+
+
+def test_a_deps_key_is_what_its_run_rests_on():
+    pdf = ci.deps_key("pdf", "requirements.txt")
+    assert pdf == ci.deps_key("pdf", "requirements.txt"), "the same files, the same key"
+    assert pdf != ci.deps_key("pdf", "requirements-floor.txt")
+    assert pdf != ci.deps_key("ocr", "requirements.txt")
+    listed = subprocess.run(["git", "ls-files", "--", "adapters/deps/pdf", *ci.DEPS_RESTS_ON],
+                            cwd=ci.ROOT, capture_output=True, text=True).stdout.split()  # fmt: skip
+    assert "adapters/deps/pdf/requirements.txt" in listed and "kernel.py" in listed
+    assert any(p.startswith("adapters/stdlib/ci/guard/") for p in listed)
+
+
+def test_a_deps_key_changes_with_any_file_it_rests_on(monkeypatch, tmp_path):
+    """The key hashes bytes, so a change to the add-on, the kernel or the guard
+    is a new key, and the gate runs."""
+    real = ci.Path.read_bytes
+    before = ci.deps_key("pdf", "requirements.txt")
+    for changed in ("adapters/deps/pdf/requirements.txt", "kernel.py",
+                    "adapters/stdlib/ci/guard/sitecustomize.py"):  # fmt: skip
+        target = ci.ROOT / changed
+
+        def read(self, target=target):
+            return real(self) + (b"\n# changed" if self == target else b"")
+
+        monkeypatch.setattr(ci.Path, "read_bytes", read)
+        assert ci.deps_key("pdf", "requirements.txt") != before, changed
+        monkeypatch.setattr(ci.Path, "read_bytes", real)
+
+
+def test_a_deps_gate_with_a_satisfied_verdict_for_its_key_is_held_not_run(
+    monkeypatch, tmp_path
+):
+    gate = ci.deps_add_on("pdf")
+    key = gate.key()
+    record = earlier(tmp_path, ("deps:pdf", ci.SATISFIED, key))
+    monkeypatch.setenv(ci.HELD, str(record))
+
+    def ran(*a, **kw):
+        raise AssertionError("a held gate installs nothing")
+
+    real_run = ci.subprocess.run
+    monkeypatch.setattr(ci.subprocess, "run", lambda argv, *a, **kw: (
+        real_run(argv, *a, **kw) if argv[:2] == ["git", "ls-files"] else ran()))  # fmt: skip
+    state, said, why = gate()
+    assert (state, why) == (ci.SATISFIED, None)
+    assert said == f"held: unchanged since its satisfied verdict, key {key[:12]}\n"
+
+
+@pytest.mark.parametrize(
+    "which", ["other key", "failing", "floor gate", "no record", "broken"]
+)
+def test_a_deps_gate_runs_unless_that_verdict_is_there(monkeypatch, tmp_path, which):
+    """Another key, a verdict that wasn't satisfied (even after a satisfied
+    one), the other pins' gate, a record that isn't there or won't read: it
+    runs, which here stops at making its environment."""
+    gate = ci.deps_add_on("pdf")
+    key = gate.key()
+    rows = {
+        "other key": [("deps:pdf", ci.SATISFIED, "f" * 64)],
+        "failing": [("deps:pdf", ci.SATISFIED, key), ("deps:pdf", ci.FAILING, key)],
+        "floor gate": [("deps:pdf@floor", ci.SATISFIED, key)],
+        "no record": [],
+        "broken": [("deps:pdf", ci.SATISFIED, key)],
+    }[which]
+    record = earlier(tmp_path, *rows)
+    if which == "no record":
+        record = tmp_path / "missing.jsonl"
+    if which == "broken":
+        lines = record.read_text().splitlines()
+        lines[-1] = lines[-1].replace(ci.SATISFIED, "satisfied ", 1)
+        record.write_text("\n".join(lines) + "\n")
+    monkeypatch.setenv(ci.HELD, str(record))
+
+    class Made(Exception):
+        """it went on to make a virtual environment"""
+
+    real_run = ci.subprocess.run
+
+    def run(argv, *a, **kw):
+        if argv[:2] == ["git", "ls-files"]:
+            return real_run(argv, *a, **kw)
+        raise Made
+
+    monkeypatch.setattr(ci.subprocess, "run", run)
+    with pytest.raises(Made):
+        gate()
+
+
+def test_a_deps_verdict_row_carries_its_key_and_says_when_it_was_held(
+    monkeypatch, tmp_path
+):
+    gate = ci.deps_add_on("pdf")
+    record = earlier(tmp_path, ("deps:pdf", ci.SATISFIED, gate.key()))
+    monkeypatch.setenv(ci.HELD, str(record))
+    monkeypatch.setattr(ci, "gates", lambda: [("deps", "deps:pdf", gate)])
+    box = tmp_path / "this-run"
+    assert ci.do_run(box, ["deps:pdf"], "2026-11-06T01:00:00Z") == 0
+    rows, _ = ci.kernel.read(box / "record.jsonl")
+    assert rows[-1]["gate"] == "deps:pdf" and rows[-1]["key"] == gate.key()
+    assert rows[-1]["held"] is True and rows[-1]["state"] == ci.SATISFIED

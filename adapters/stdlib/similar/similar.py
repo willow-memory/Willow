@@ -185,7 +185,11 @@ def worked_out(every: list[dict], root: Path = ROOT) -> dict[str, dict]:
                 topics.append(word)
             if len(topics) == 2:
                 break
-        out[n] = {"tags": facts_tags(a) + topics + own, "near": nb[:3]}
+        out[n] = {
+            "tags": facts_tags(a) + topics + own,
+            "near": nb[:3],
+            "topics": topics,
+        }
     return out
 
 

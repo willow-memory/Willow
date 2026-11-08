@@ -104,6 +104,7 @@ def mirror(src: Path, dst: Path, diff: bool = True) -> tuple[int, int]:
     return wrote, skipped
 
 
+# differs on purpose: it takes --messages, and needs the git program
 def main(argv: list[str]) -> int:
     diff = "--messages" not in argv
     argv = [a for a in argv if a != "--messages"]

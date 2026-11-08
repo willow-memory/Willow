@@ -845,7 +845,7 @@ public final class Kernel {
         int n = s.length();
         if (n > 4 && (s.endsWith("ies") || s.endsWith("ied"))) s = s.substring(0, n - 3) + "y";
         else if (n > 4 && s.endsWith("ing")) s = s.substring(0, n - 3);
-        else if (n > 3 && s.endsWith("ed")) s = s.substring(0, n - 2);
+        else if (n > 3 && s.endsWith("ed") && !s.endsWith("eed")) s = s.substring(0, n - 2);
         else if (n > 3 && s.endsWith("s") && !s.endsWith("ss")) s = s.substring(0, n - 1);
         n = s.length();
         if (n > 3 && s.charAt(n - 1) == s.charAt(n - 2) && "aeiouls".indexOf(s.charAt(n - 1)) < 0) s = s.substring(0, --n);

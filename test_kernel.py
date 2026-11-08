@@ -641,6 +641,16 @@ def test_word_forms_are_one_word(tmp_path):
     assert k.rank(k.chunks(tmp_path), "how much do I still owe dev")
 
 
+def test_a_root_ending_in_eed_keeps_its_d():
+    """Bug #308: feed lost its "ed" and became fee, so a sort phrase "feed"
+    took every Apache-2.0 licence ("charge a fee"), and feed missed feeds."""
+    for w in ("feed", "need", "seed", "speed", "breed", "bleed", "proceed"):
+        assert k.stem(w) == k.stem(w + "s") == k.stem(w + "ing"), w
+        assert k.stem(w) != k.stem(w[:-1]), w
+    assert k.stem("needed") == k.stem("need")
+    assert k.stem("fee") == k.stem("fees")
+
+
 def test_an_accent_typed_one_way_holds_where_it_was_saved_the_other(tmp_path):
     """é is one code point as typed, and often e plus a combining accent as
     macOS saves it. Unmixed, the saved é split into "cafe" and a stray mark,
@@ -769,6 +779,17 @@ def test_every_word_of_a_long_line_is_read(tmp_path):
     )
     read = " ".join(c["text"] for c in k.chunks(tmp_path))
     assert "airlock" in read
+
+
+@pytest.mark.xfail(
+    strict=True,
+    reason="bug #284: html_text splits a word at an inline tag, so re<span>s</span>t reads as re s t",
+)
+def test_an_inline_tag_inside_a_word_leaves_the_word_whole():
+    # Wikisource marks each long s of an old book this way
+    page = '<p>remains always <span class="typographic-long-s">s</span>imilar</p>'
+    assert k.html_text(page).split() == ["remains", "always", "similar"]
+    assert k.html_text("<p>wo<b>rd</b>s</p><p>apart</p>").split() == ["words", "apart"]
 
 
 def test_a_date_inside_a_web_address_dates_nothing():

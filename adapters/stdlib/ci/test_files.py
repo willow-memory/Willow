@@ -28,6 +28,11 @@ Words before.
 willow/
 ├── kernel.py                 the whole program
 ├── README.md                 the front page
+```
+
+## adapters/
+
+```
 └── adapters/
     ├── stdlib/
     │   ├── alpha/
@@ -167,6 +172,17 @@ def test_a_gone_file_goes_with_its_notes_and_a_folder_left_empty_goes_too(scratc
     )
 
 
+def test_a_whole_folder_gone_at_once_goes_with_every_file_in_it(scratch):
+    """A folder's files all gone in one write (an add-on taken away, as
+    test_strip.py's copy takes GitHub's): the first takes the emptied folder,
+    and the rest, gone with it, are not looked for again."""
+    alpha = {p for p in LISTED if p.startswith("adapters/stdlib/alpha/")}
+    assert len(alpha) == 3
+    got = files.write(scratch / "FILES.md", scratch, LISTED - alpha)
+    assert sorted(got[1]) == sorted(alpha)
+    assert not any("alpha" in line for line in tree_of(scratch))
+
+
 def test_a_folder_in_an_order_of_its_own_gets_it_at_its_end_and_says_so(scratch):
     put(scratch, "zz.md", "# Zed\n")
     added, _, ended, blank = files.write(
@@ -288,3 +304,95 @@ def test_folders_sort_without_their_slash_and_one_slip_by_hand_keeps_a_folder_a_
     _, _, ended, _ = files.write(scratch / "FILES.md", scratch, listed)
     assert ended == ["stdlib/c/"]
     assert tree_of(scratch)[-2:] == ["    └── c/", "        └── c.py"]
+
+
+# ── one tree, cut for reading ────────────────────────────────────────────────
+def kids(n: int, name: str = "x") -> str:
+    return "".join(f"    │   ├── {name}{k:02}/\n    │   │   └── {name}{k:02}.py\n" for k in range(n))  # fmt: skip
+
+
+def test_the_blocks_are_one_tree_and_its_cuts_are_made_again_as_they_were():
+    tree = files.Tree(DOC)
+    assert "adapters/stdlib/gamma/gamma.py" in tree.files()
+    assert tree.text() == DOC, "the cut form, read and written, comes back the same"
+    plain = DOC.replace("```\n\n## adapters/\n\n```\n", "")
+    assert files.Tree(plain).text() == DOC, "a tree with no cuts gets them"
+    assert files.Tree(plain).files() == tree.files()
+
+
+def test_prose_after_the_last_block_ends_the_tree():
+    tree = files.Tree(DOC)
+    assert tree.tail.startswith("```\n\n## After\n\nWords after.")
+
+
+def test_stdlib_s_add_ons_go_in_groups_order_under_its_headings_corners_right():
+    places = {"gamma": ((0, 0, 0), "Reading more kinds of files: Media"),
+              "alpha": ((1, 0, 0), "Keeping track: Tools you run yourself")}  # fmt: skip
+    text = files.Tree(DOC, places).text()
+    assert text.index("gamma/") < text.index("alpha/"), "groups.py's order, not A to Z"
+    heads = [x for x in text.splitlines() if x.startswith("#")]
+    assert heads == ["# Files", "# Every file", "## adapters/",
+                     "### adapters/stdlib/: Reading more kinds of files: Media",
+                     "### adapters/stdlib/: Keeping track: Tools you run yourself", "## After"]  # fmt: skip
+    assert "    │   ├── gamma/" in text and "    │   └── alpha/" in text, (
+        "the last one's corner"
+    )
+    assert "    │       └── README.md     its card" in text, (
+        "alpha's lines take the last bar"
+    )
+    again = files.Tree(text, places)
+    assert again.text() == text and again.files() == files.Tree(DOC).files()
+
+
+def test_past_a_screen_a_block_is_cut_between_folders_saying_whose_go_on():
+    many = DOC.replace("    │   ├── alpha/\n", kids(40) + "    │   ├── alpha/\n")
+    text = files.Tree(many).text()
+    goes_on = [x for x in text.splitlines() if x.startswith("#### ")]
+    assert goes_on and all(x.startswith("#### adapters/stdlib/, from x") and x.endswith("/") for x in goes_on)  # fmt: skip
+    blocks = text.split("```")[1::2]
+    assert max(len(b.strip("\n").splitlines()) for b in blocks) <= files.SCREEN
+    assert files.Tree(text).files() == files.Tree(many).files()
+
+
+def test_places_come_from_each_cards_section_role_and_group(scratch):
+    for name, section, role in (("pdf", "Reading more kinds of files", "reads"),
+                                ("tally", "Keeping track", "tools")):  # fmt: skip
+        folder = scratch / "adapters" / "stdlib" / name
+        folder.mkdir(parents=True)
+        (folder / "README.md").write_text(
+            f"<!-- willow-addon\nsection: {section}\nline: A thing.\nsource: new\n"
+            f"added: 2026-11-08\nwrites: nothing\nnetwork: none\nrole: {role}\n-->\n# {name}\n",
+            encoding="utf-8",
+        )
+    got = files.places(scratch)
+    assert got["pdf"][1] == "Reading more kinds of files: Documents and office files"
+    assert got["tally"][1] == "Keeping track: Tools you run yourself"
+    assert got["pdf"][0] < got["tally"][0], "Reading comes before Keeping track"
+
+
+def test_a_path_listed_twice_is_said_and_write_keeps_the_first(scratch):
+    """A tree lists a path once: a folder listed again, with all under it, is
+    named by twice() and taken out by write, the first one kept."""
+    doc = scratch / "FILES.md"
+    gamma = "    │   └── gamma/\n    │       ├── gamma.py      gamma's script\n"
+    again = doc.read_text(encoding="utf-8").replace(
+        "    └── planned.json",
+        "    │   ├── gamma/\n    │   │   └── gamma.py\n    └── planned.json",
+    )
+    assert gamma in again
+    doc.write_text(again, encoding="utf-8")
+    twice = [p for _, _, p in files.Tree(again).twice()]
+    assert twice == ["adapters/stdlib/gamma", "adapters/stdlib/gamma/gamma.py"]
+    files.write(doc, scratch, LISTED)
+    text = doc.read_text(encoding="utf-8")
+    assert files.Tree(text).twice() == [] and text.count("── gamma/") == 1
+    assert "gamma's script" in text, "the first one, with its words, stays"
+
+
+def test_the_real_tree_reads_within_skims_bounds():
+    """FILES.md held to how a person reads it: a heading every screen, no
+    line past a look, every top folder a heading (adapters/stdlib/skim)."""
+    skim = files.ROOT / "adapters" / "stdlib" / "skim" / "skim.py"
+    got = subprocess.run([sys.executable, str(skim), "check", str(files.ROOT / "FILES.md")],
+                         capture_output=True, text=True)  # fmt: skip
+    assert got.returncode == 0, got.stdout + got.stderr

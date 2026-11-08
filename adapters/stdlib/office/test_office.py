@@ -3,16 +3,22 @@ minimal XML parts; there are no binary fixtures."""
 
 from __future__ import annotations
 
+import importlib.util
 import json
 import subprocess
 import sys
 import zipfile
 from pathlib import Path
 
+import pytest
+
 HERE = Path(__file__).resolve().parent
 OFFICE = HERE / "office.py"
 KERNEL = HERE.parents[2] / "kernel.py"
 NOW = ["--now", "2026-10-23T00:00:00Z"]
+spec = importlib.util.spec_from_file_location("office", OFFICE)
+office = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(office)
 
 W_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 A_NS = "http://schemas.openxmlformats.org/drawingml/2006/main"
@@ -235,6 +241,18 @@ def test_corrupt_files_are_skipped_and_counted(tmp_path):
     assert "Traceback" not in got.stderr
     assert got.stdout.strip() == f"wrote 1 files to {out.resolve()}; skipped 3"
     assert sorted(snapshot(out)) == ["good.docx.txt"]
+
+
+def test_a_part_larger_than_64_mb_is_refused(tmp_path):
+    """The card's bound: a part just over 64 MB is refused as too large, not
+    parsed as XML. The card names 64 MB; one byte past it must hit that path."""
+    over = 64 * 1024 * 1024 + 1
+    path = tmp_path / "fat.docx"
+    with zipfile.ZipFile(path, "w", compression=zipfile.ZIP_STORED) as zf:
+        zf.writestr("word/document.xml", b"x" * over)
+    with zipfile.ZipFile(path) as zf:
+        with pytest.raises(office.Corrupt, match="larger than"):
+            office._part(zf, "word/document.xml")
 
 
 def test_nothing_readable_exits_42(tmp_path):

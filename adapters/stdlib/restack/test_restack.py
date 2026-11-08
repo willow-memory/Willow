@@ -88,26 +88,22 @@ TREE = "│   │   ├── {n}/\n│   │   │   ├── {n}.py    it\n�
 CLOSE = "│   │   │   └── README.md\n"
 
 
-def test_files_tree_is_both_sides_entries_a_to_z_each_one_closed():
-    text = (TREE.format(n="gaps") + CLOSE
-            + conflict(TREE.format(n="life"), TREE.format(n="lending"))
-            + CLOSE + TREE.format(n="mail") + CLOSE)  # fmt: skip
-    got = rs.files_tree(text)
-    assert got == (TREE.format(n="gaps") + CLOSE + TREE.format(n="lending") + CLOSE
-                   + TREE.format(n="life") + CLOSE + TREE.format(n="mail") + CLOSE)  # fmt: skip
+def test_described_reads_each_path_and_its_words_from_the_nesting():
+    text = ("willow/\n├── adapters/\n│   ├── stdlib/\n" + TREE.format(n="gaps") + CLOSE
+            + "```\n\n### adapters/stdlib/: a group\n\n```\n" + TREE.format(n="mail") + CLOSE)  # fmt: skip
+    got = rs.described(text)
+    assert got["adapters/stdlib/gaps/gaps.py"] == "it"
+    assert got["adapters/stdlib/mail/test_mail.py"] == "", "a test says nothing"
+    assert "adapters/stdlib/mail/README.md" in got, "read past a cut"
 
 
-def test_files_tree_with_closed_entries_needs_no_tail():
-    text = conflict(TREE.format(n="zed") + CLOSE, TREE.format(n="again") + CLOSE)
-    assert rs.files_tree(text) == TREE.format(n="again") + CLOSE + TREE.format(n="zed") + CLOSE  # fmt: skip
-
-
-def test_files_tree_stops_when_both_sides_changed_one_entry_or_it_isnt_a_tree():
-    a = TREE.format(n="todo")
-    with pytest.raises(rs.Stop, match="both sides changed todo/"):
-        rs.files_tree(conflict(a, a.replace("it", "something else")))
-    with pytest.raises(rs.Stop, match="isn't two sets of entries"):
-        rs.files_tree(conflict("plain words\n", TREE.format(n="x")))
+def test_keep_words_puts_back_what_the_branch_wrote_at_files_pys_column():
+    text = "willow/\n├── adapters/\n│   ├── stdlib/\n" + TREE.format(n="gaps") + CLOSE
+    made = text.replace("gaps.py    it", "gaps.py")
+    got = rs.keep_words(made, {"adapters/stdlib/gaps/gaps.py": "the gaps, by hand"})
+    line = next(x for x in got.splitlines() if "gaps.py" in x and "test_" not in x)
+    assert line == "│   │   │   ├── gaps.py".ljust(30) + "the gaps, by hand"
+    assert rs.keep_words(text, {}) == text, "nothing to keep, nothing moves"
 
 
 def test_contract_keeps_both_sides_commands_lines_refs_first():

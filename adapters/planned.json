@@ -145,7 +145,7 @@
   "name": "cassettes",
   "kind": "stdlib",
   "section": "Assistants",
-  "line": "Each exchange with a model kept as a row (what was asked, what came back, the model and its seed), replayed later as a test, and drift between models found by plain diff.",
+  "line": "Each exchange with a model kept as a row (what was asked and came back, the model, its seed), replayed later as a test, drift found by diff.",
   "source": "bot",
   "writes": "record",
   "network": "none",
@@ -185,7 +185,7 @@
   "name": "cite-honesty",
   "kind": "stdlib",
   "section": "Assistants",
-  "line": "How often each model's suggestions were refused at propose for citing a passage the last bite never returned, read from the record by model card.",
+  "line": "How often each model's suggestions were refused at propose for citing a passage the last bite never returned, read from the record.",
   "source": "new",
   "writes": "nothing",
   "network": "none",
@@ -395,7 +395,8 @@
   "needs": "cryptography; Apache-2.0 or BSD",
   "writes": "record",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "from": "shape, https://github.com/willow-memory/willow-data-vault, Apache-2.0"
  },
  {
   "name": "family-box",
@@ -418,14 +419,15 @@
   "role": "tools"
  },
  {
-  "name": "food-log",
+  "name": "file-kind",
   "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "What you ate, from your notes, by day.",
+  "section": "Reading more kinds of files",
+  "line": "Each file the kernel leaves out, named by what its first bytes say it is (a PDF, a PNG, a zip), whatever its name or extension says.",
   "source": "new",
   "writes": "nothing",
   "network": "none",
-  "role": "page"
+  "role": "tools",
+  "from": "shape, https://github.com/wagtail/Willow, BSD-3-Clause"
  },
  {
   "name": "forgejo",
@@ -539,6 +541,18 @@
   "role": "reads"
  },
  {
+  "name": "grant",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "Someone else allowed to ask part of your folder: a grant to their key for a path and a time, passed on only narrower, never your seal key.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "role": "tools",
+  "uses": "share",
+  "from": "shape, https://willowprotocol.org/specs/meadowcap/, none; shape, https://github.com/Deln0r/willow-go, MIT"
+ },
+ {
   "name": "grant-report",
   "kind": "stdlib",
   "section": "Keeping track",
@@ -612,7 +626,7 @@
   "name": "hook-checks",
   "kind": "stdlib",
   "section": "Assistants",
-  "line": "A PostToolUse hook that runs the repo's own fast checks on the file just edited and hands back only what failed, the same output for the same file.",
+  "line": "A PostToolUse hook that runs the repo's fast checks on the file just edited and hands back only what failed, the same for the same file.",
   "source": "new",
   "writes": "nothing",
   "network": "none",
@@ -631,54 +645,10 @@
   "tags": "hooks"
  },
  {
-  "name": "hook-errors",
-  "kind": "stdlib",
-  "section": "Assistants",
-  "line": "Each failed command an assistant runs kept as a row of its hash and exit code, so the same failure the third time is named, not retried blind.",
-  "source": "new",
-  "writes": "record",
-  "network": "none",
-  "role": "guards",
-  "tags": "hooks"
- },
- {
-  "name": "hook-feedback",
-  "kind": "stdlib",
-  "section": "Assistants",
-  "line": "Your corrections to an assistant (no, wrong, I said) caught by fixed patterns at each prompt and handed in through propose, for you to keep or drop.",
-  "source": "new",
-  "writes": "record",
-  "network": "none",
-  "role": "guards",
-  "tags": "hooks"
- },
- {
-  "name": "hook-handoff",
-  "kind": "stdlib",
-  "section": "Assistants",
-  "line": "A Stop hook that writes where the session ended, and the next session's first prompt gets it back, so nothing rides on the assistant's memory.",
-  "source": "new",
-  "writes": "record",
-  "network": "none",
-  "role": "guards",
-  "tags": "hooks"
- },
- {
-  "name": "hook-read-first",
-  "kind": "stdlib",
-  "section": "Assistants",
-  "line": "A PreToolUse hook that refuses an edit to a file the assistant hasn't read this session, or whose bytes changed since it did, each read kept as a hash.",
-  "source": "new",
-  "writes": "record",
-  "network": "none",
-  "role": "guards",
-  "tags": "hooks"
- },
- {
   "name": "hook-sequence",
   "kind": "stdlib",
   "section": "Assistants",
-  "line": "Rules over what an assistant did before, not just this call: no push until the tests ran on this commit, at most so many deletions a session, read from the record.",
+  "line": "Rules over what an assistant did before, not just this call: no push until the tests ran on this commit, so many deletions a session.",
   "source": "new",
   "writes": "nothing",
   "network": "none",
@@ -822,7 +792,7 @@
   "name": "ladder",
   "kind": "stdlib",
   "section": "Assistants",
-  "line": "Your files first, then sources you trust such as Jeles and Nestor, then a model, stopping at the first that answers, each answer kept for next time.",
+  "line": "Your files first, then sources you trust such as Jeles and Nestor, then a model, stopping at the first that answers, kept for next time.",
   "source": "bot",
   "writes": "record",
   "network": "none",
@@ -904,7 +874,7 @@
   "name": "mcp-by-hash",
   "kind": "stdlib",
   "section": "Assistants",
-  "line": "Your passages served as MCP resources named by their SHA-256, so an assistant cites exactly the bytes it read and a changed passage gets a new name.",
+  "line": "Your passages served as MCP resources named by their SHA-256, so an assistant cites the bytes it read; a changed one gets a new name.",
   "source": "bot",
   "writes": "nothing",
   "network": "none",
@@ -971,6 +941,17 @@
   "writes": "nothing",
   "network": "each mirror's git URL, to read its refs",
   "role": "tools"
+ },
+ {
+  "name": "misheard",
+  "kind": "stdlib",
+  "section": "Your own words",
+  "line": "A spoken question's misheard words corrected against your own folder's words before it is asked, each change shown.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "role": "tools",
+  "from": "shape, https://github.com/toverainc/willow-autocorrect, Apache-2.0"
  },
  {
   "name": "mlx",
@@ -1118,7 +1099,7 @@
   "name": "os-model",
   "kind": "deps",
   "section": "Assistants",
-  "line": "Suggestions from the model built into the operating system, such as Apple's Foundation Models on a Mac: nothing to download, nothing leaving the device.",
+  "line": "Suggestions from the model built into the operating system, such as Apple's Foundation Models: nothing to download, nothing leaving it.",
   "source": "new",
   "needs": "macOS 26 with Apple Intelligence on, and a small Swift helper; Apple's terms",
   "writes": "record",
@@ -1129,7 +1110,7 @@
   "name": "package-docs",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
-  "line": "The READMEs and docs inside packages you've already installed (site-packages, node_modules, Cargo's registry cache), so you can ask your dependencies offline.",
+  "line": "The READMEs and docs in packages you've installed (site-packages, node_modules, Cargo's cache), so you can ask your dependencies offline.",
   "source": "new",
   "writes": "to",
   "network": "none",
@@ -1231,7 +1212,7 @@
   "name": "pypi",
   "kind": "stdlib",
   "section": "For maintainers",
-  "line": "kernel.py on PyPI as a package with no dependencies, built from this repo, checked against the vectors, and attested on upload; uvx and pipx run it.",
+  "line": "kernel.py on PyPI as a package with no dependencies, built from this repo, checked against the vectors and attested; uvx and pipx run it.",
   "source": "new",
   "writes": "to",
   "network": "upload.pypi.org, to publish a release a maintainer tags",
@@ -1317,7 +1298,8 @@
   "needs": "willow-reconciler; Apache-2.0",
   "writes": "nothing",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "from": "dep, https://github.com/willow-memory/willow-reconciler, Apache-2.0"
  },
  {
   "name": "redential",
@@ -1334,7 +1316,7 @@
   "name": "repo-index",
   "kind": "stdlib",
   "section": "For maintainers",
-  "line": "This repository as its own deterministic box: its cards, docs and code as dated passages, rebuilt the same bytes each time, so willow can answer questions about itself.",
+  "line": "This repository as its own deterministic box: its cards, docs and code as dated passages, the same each build, so willow can answer of it.",
   "source": "new",
   "writes": "to",
   "network": "none",
@@ -1486,7 +1468,7 @@
   "name": "serve-piles",
   "kind": "stdlib",
   "section": "Assistants",
-  "line": "serve's piles grouped on all four W's -- who, when, what and where -- not where alone, so a model meets a question from every box that touched it.",
+  "line": "serve's piles grouped on all four W's (who, when, what, where), not where alone, so a model meets a question from every box that touched it.",
   "source": "new",
   "writes": "record, to",
   "network": "none",
@@ -1859,6 +1841,29 @@
   "writes": "nothing",
   "network": "the forge, through the workflow's token, to post the thank-you",
   "role": "tools"
+ },
+ {
+  "name": "willow-box",
+  "kind": "stdlib",
+  "section": "Ways to use it",
+  "line": "Ask from a Willow voice box on your counter: its application server sends your words here and reads the answer back.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "your Willow Application Server, on your own network, to answer what the box heard",
+  "role": "ways",
+  "from": "shape, https://github.com/HeyWillow/willow-application-server, Apache-2.0"
+ },
+ {
+  "name": "wis",
+  "kind": "deps",
+  "section": "Reading more kinds of files",
+  "line": "Audio files transcribed by a Willow Inference Server you run on your own network, kept as dated text.",
+  "source": "new",
+  "needs": "a Willow Inference Server you run; Apache-2.0, called over HTTP, not linked",
+  "writes": "to",
+  "network": "your own Willow Inference Server, to transcribe the audio you point it at",
+  "role": "reads",
+  "from": "dep, https://github.com/toverainc/willow-inference-server, Apache-2.0"
  },
  {
   "name": "witness",

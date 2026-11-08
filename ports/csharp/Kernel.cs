@@ -744,7 +744,7 @@ public static class Kernel
         int n = s.Length;
         if (n > 4 && (s.EndsWith("ies", StringComparison.Ordinal) || s.EndsWith("ied", StringComparison.Ordinal))) s = s.Substring(0, n - 3) + "y";
         else if (n > 4 && s.EndsWith("ing", StringComparison.Ordinal)) s = s.Substring(0, n - 3);
-        else if (n > 3 && s.EndsWith("ed", StringComparison.Ordinal)) s = s.Substring(0, n - 2);
+        else if (n > 3 && s.EndsWith("ed", StringComparison.Ordinal) && !s.EndsWith("eed", StringComparison.Ordinal)) s = s.Substring(0, n - 2);
         else if (n > 3 && s.EndsWith("s", StringComparison.Ordinal) && !s.EndsWith("ss", StringComparison.Ordinal)) s = s.Substring(0, n - 1);
         n = s.Length;
         if (n > 3 && s[n - 1] == s[n - 2] && !"aeiouls".Contains(s[n - 1])) s = s.Substring(0, --n);

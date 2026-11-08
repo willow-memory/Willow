@@ -109,6 +109,8 @@ PILE_EXTRA: dict[str, dict[str, bytes]] = {
         "catalog.json": b'{"entries": [{"id": "tides", "status": "dark", '
         b'"recovery": [{"url": "https://x.example/", "permission": "excluded"}]}]}'
     },
+    # no pull request open: restack-open answers before any fetch or push
+    "restack-open": {"open-prs.json": b"[]"},
     "scrub": {"photo.png": _png()},
     # a category of the person's own, which the default pile's garden.md holds
     "sort": {"categories.txt": b"garden: tomatoes, sun\n"},
@@ -397,6 +399,10 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         "INSERT INTO tm_pairs VALUES ('tomatoes want sun','ada','sealed',"
         "'2026-10-01');\n"
     )}),
+    "notation": ("notation.py", {"main.tex": (
+        b"\\documentclass{article}\n\\begin{document}\nThe tide height $h$ obeys\n"
+        b"\\begin{equation}\nh = mt + b \\label{eq:tide}\n\\end{equation}\nat every harbour.\n\\end{document}\n"
+    )}),
     "notes": ("notes.py", {"garden.md": b"Tomatoes want [[sun]].\n"}),
     "notion": ("notion.py", {"notion.zip": (
         _zip({
@@ -653,6 +659,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "flashcards": ("flashcards.py", ["--box", "{box}", "due", *NOW]),
     "foia": ("foia.py", ["--box", "{box}"]),
     "folder-card": ("folder_card.py", ["--box", "{box}", "--to", "{tmp}/card.md"]),
+    "food-log": ("food_log.py", ["--box", "{box}"]),
     "forecasts": ("forecasts.py", ["wager", "--box", "{box}", "--p", "0.7", *NOW,
                   "tomatoes"]),  # fmt: skip
     "format-rot": ("format_rot.py", ["--from", "{pile}"]),
@@ -667,12 +674,19 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "history": ("history.py", ["--box", "{box}"]),
     "home-upkeep": ("home_upkeep.py", ["--box", "{box}"]),
     "hook-compact": ("hook_compact.py", ["--box", "{box}"]),
+    "hook-errors": ("hook_errors.py", ["check", "--box", "{box}"]),
     "hook-fail-closed": ("hook_fail_closed.py", ["--hook", "true"]),
+    "hook-feedback": ("hook_feedback.py", ["check", "--box", "{box}"]),
     "hook-fuzz": ("hook_fuzz.py", ["--hook", "true"]),
     "hook-guard": ("hook_guard.py", ["rules"]),
+    "hook-handoff": ("hook_handoff.py", ["check", "--box", "{box}"]),
     "hook-impact": ("hook_impact.py", ["check", "--box", "{box}", "{pile}/garden.md"]),
     "hook-leaks": ("hook_leaks.py", ["check", "--from", "{pile}/garden.md"]),
     "hook-pin": ("hook_pin.py", ["--box", "{box}", "approve", "{pile}/garden.md", *NOW]),
+    "hook-read-first": (
+        "hook_read_first.py",
+        ["check", "--box", "{box}", "{pile}/garden.md"],
+    ),
     "hook-replay": ("hook_replay.py", ["--box", "{box}", "--to", "{tmp}", "run", "--hook", "true", *NOW]),
     "hook-shell": ("hook_shell.py", ["split", "ls -la"]),
     "hook-start": ("hook_start.py", ["--box", "{box}", *NOW]),
@@ -699,6 +713,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "llms-txt": ("llms_txt.py", ["write", "--from", "{pile}", "--to", "{tmp}/llms.txt"]),
     "local-model": ("local_model.py", ["ask", "--box", "{box}", "--url", "http://127.0.0.1:9/v1",
                     "--model", "m", "tomatoes"]),
+    "log-kit": ("log_kit.py", ["--box", "{box}", "--words", "tomatoes"]),
     "make-it-so": ("make_it_so.py", ["plan", "--box", "{box}", "--to", "{tmp}/plan.json", "--cmd", "echo hi", "tomatoes"]),
     "market-calls": ("market_calls.py", ["score", "--box", "{box}"]),
     "mcp-lite": ("server.py", ["--box", "{box}"]),
@@ -762,11 +777,15 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "reading-level": ("reading_level.py", ["--box", "{box}"]),
     "reading-log": ("reading_log.py", ["--box", "{box}"]),
     "readings": ("readings.py", ["bite", "--box", "{box}", *NOW, "tomatoes"]),
+    # the steps it would run, read and listed: nothing of the repo's touched
+    "ready": ("ready.py", ["steps"]),
+    "red-on-main": ("red_on_main.py", ["--pr", "{box}", "--main", "{box}"]),
     "renewals": ("renewals.py", ["--box", "{box}", *NOW]),
     # a list naming no owner/repo builds nothing, before any clone: no network
     "repo-pile": ("repo_pile.py", ["build", "--to", "{tmp}/base", "--repos",
                                    "{pile}/garden.md", "--key", "{tmp}/base.key"]),
     "restack": ("restack.py", ["--onto", "HEAD", "HEAD"]),
+    "restack-open": ("restack_open.py", ["--prs", "{pile}/open-prs.json"]),
     "restore-drill": ("restore_drill.py", ["--from", "{pile}/garden.md"]),
     "risky-code": ("risky_code.py", ["--box", "{box}"]),
     "ro-crate": ("ro_crate.py", ["--box", "{box}", "--to", "{tmp}/crate"]),
@@ -785,6 +804,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "session-seal": ("session_seal.py", ["--box", "{box}", *NOW]),
     "share": ("share.py", ["log", "--box", "{box}"]),
     "shell": ("shell.py", ["script", "bash"]),
+    "skim": ("skim.py", ["check"]),
     "slow-tests": ("slow_tests.py", ["--runs", "{pile}"]),
     "snapshot": ("snapshot.py", ["check", "--in", "{pile}"]),
     "sort": ("sort.py", ["--box", "{box}", "--categories", "{pile}/categories.txt"]),
@@ -792,6 +812,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "sort-ask": ("sort_ask.py", ["--box", "{box}", "--categories", "{pile}/categories.txt",
                  "--model", "m", "--url", "http://127.0.0.1:9/v1"]),
     "stack": ("stack.py", ["--box", "{box}", "--stack", "adapters/stdlib/stack/example.md"]),
+    "stack-share": ("stack_share.py", ["--box", "{box}"]),
     "stale": ("stale.py", ["--box", "{box}"]),
     "start": ("start.py", ["--pile", "{pile}", "--to", "{tmp}/willow"]),
     "starter-words": ("starter.py", ["copy", "--to", "{tmp}/words.txt"]),

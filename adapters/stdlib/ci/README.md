@@ -4,9 +4,9 @@ line: This repo's checks as verdict rows on a kernel record, the same every run.
 source: box
 added: 2026-10-23
 writes: record, BUGS.md, FILES.md, README.md, ADDONS.md, adapters/planned.json, adapters/*/*, adapters/*/*/*, demo/*/*, demo/*/*/*
-network: PyPI, to read each dependency floor's release date
+network: PyPI, to read each dependency floor's release date; GitHub, through gh, to find main's last records (main_run.py, times.py)
 role: repo
-uses: live, readme, stack, test-shards
+uses: live, readme, skim, stack, test-shards
 runs-in: repo
 -->
 # ci
@@ -46,7 +46,7 @@ record in the runner's temp folder.
 | tests | `tests:beats` (`kernel.py test`), `tests:kernel`, `tests:docs` (`test_docs.py`, and `test_docs_fires.py`, which shows each docs check fails on a planted violation), `tests:adapters-1` to `-8` (the add-ons in `adapters/stdlib/`, under the guard, each a share of their test files, cut by the times in [test-times.json](test-times.json)), `tests:alone` ([alone.py](alone.py): each add-on's tests again, in a copy holding only the kernel, the add-on and what its card `uses`), `tests:ui` ([ui/](../../../ui/): willow's own UI, its server run over a stack made in a scratch folder), `tests:vectors` (pytest), `tests:strip-1` to `-4` (`test_strip.py`: the repo without GitHub, then without any add-on; the first the kernel-alone work and the kernel's tests, the others a share of the add-ons' test files in the stripped copy), `tests:constitution` (the eternity clause, attacked), `tests:coverage` (`constitution/coverage.py`: which clauses are cited where; failing only on a clause declared failing) |
 | ports | `ports:java`, `ports:ts`, `ports:csharp`: `vectors/compare.py`, one port at a time |
 | demo | `demo:hollis`, `demo:odile`, `demo:teodora`: each person's files made in a temporary folder and held to their `demo/*/PLANTED.md` |
-| deps | `deps:mcp`, `deps:mcp@floor`, `deps:pdf`, `deps:pdf@floor`, two per add-on in `adapters/deps/`: its tests, under the guard, in a fresh virtual environment with only its own pinned requirements (then its floor's) and pytest; an install that can't be done is unreachable. Then `deps:advisories`: every pin against PyPI's advisories, by pip-audit; one on a pin a person installs fails, one on a floor is said, since nobody is told to install a floor. Then `deps:floors`: each floor against the floor rule, by PyPI's upload dates; PyPI out of reach is unreachable for both |
+| deps | `deps:mcp`, `deps:mcp@floor`, `deps:pdf`, `deps:pdf@floor`, two per add-on in `adapters/deps/`: its tests, under the guard, in a fresh virtual environment with only its own pinned requirements (then its floor's) and pytest; an install that can't be done is unreachable. Each deps verdict carries its `key`, the SHA-256 of its folder, kernel.py, ci.py, the guard, its pins and the Python; with `WILLOW_HELD_RECORD` naming an earlier record (main's, which a pull request's deps job fetches), a gate whose key has a satisfied verdict there is held, said and not reinstalled, and a push to main holds nothing. Then `deps:advisories`: every pin against PyPI's advisories, by pip-audit; one on a pin a person installs fails, one on a floor is said, since nobody is told to install a floor. Then `deps:floors`: each floor against the floor rule, by PyPI's upload dates; PyPI out of reach is unreachable for both |
 | mutants | `mutants:again`, `mutants:all`, … one per stdlib add-on: [mutants.py](../mutants/) breaks its code a few ways and runs its tests against each break; a break they miss fails, unless [accepted.json](../mutants/accepted.json) gives the reason it's harmless |
 | tools | `tools:bash`, `tools:zsh`, … one per check in [live.py](../live/): the real program a way-in add-on is for (a shell, an editor, an AI tool), run on the lines that add-on prints; a program that isn't installed is unreachable |
 
@@ -92,7 +92,10 @@ files. `check` says what the tree lacks and what it lists that's gone;
 README.md last; at the end of a folder kept in an order of its own, which
 it says), with what the file says of itself (a docstring's first line, a
 Markdown title, `its card`), and takes out what's gone with its notes. A
-file it can't describe goes in with nothing, and it says which.
+file it can't describe goes in with nothing, and it says which. It also
+cuts the tree for reading, under a heading for each top-level folder and
+each group of add-ons (readme/groups.py's, in its order), and past a
+screen; `check` fails a tree whose cuts or add-on order aren't those.
 [create_pr.py](../github/create_pr.py) runs `write` before a pull request
 opens.
 
@@ -139,11 +142,18 @@ box over them, and runs the add-on's COMMANDS line on each, a reader its
 hang or an odd exit fails it; a refusal is said. create_pr.py runs it.
 
 **Test times:** [times.py](times.py) keeps [test-times.json](test-times.json)
-to CI's own run: on a push to main the tests job writes each
-tests:adapters gate's JUnit XML (`WILLOW_JUNIT_DIR`) as the `test-times`
-artifact, and `write --run latest` reads the last green run's, by gh;
+to CI's own run: on main's commit (in the merge queue, or on its push when
+the queue didn't run it) the tests job writes each tests:adapters gate's
+JUnit XML (`WILLOW_JUNIT_DIR`) as the `test-times` artifact, and `write
+--run latest` reads the run [main_run.py](main_run.py) finds, by gh;
 `write --from DIR` reads files already here. `check` says what the json
 lacks, and never fails: only the balance of the chunks depends on it.
+
+**Main's records:** [main_run.py](main_run.py) finds the green run that
+holds them, for what a pull request reads of main (mutants-reach's pin,
+deps' held record, red-on-main, times.py): main's push run, or, when the
+push stood on the merge queue's run of the same commit and ran nothing
+again, that run. It reads main's own runs only, never an artifact by name.
 
 **A to Z:** [order.py](order.py) keeps the lists people add to in order:
 the tables in test_contract.py (COMMANDS, READERS, PILE_EXTRA,
@@ -211,7 +221,11 @@ reads, so the passages still hold only the file's words:
   another named place, a word and what it names (`page 2`, `cell 4`,
   `row 17`), for a source whose places aren't lines.
 - **A chunk the kernel cuts** from a longer passage is at the last place at
-  or before its line.
+  or before its line. A map may place lines inside a passage too, as
+  subtitles places each cue of a transcript's one passage.
+- **A passage may open with its own citation line**, the source's path then
+  `line N` (equations' `paper/main.tex line 120, label eq:oz`): the line it
+  cites must be inside its place, and the next line is held to the word rule.
 
 [mirrors.py](mirrors.py)'s `check` holds a mirror to it: every mirror file
 has its map, naming its source; every passage is placed, and nothing else
@@ -228,7 +242,40 @@ report add-on keeps its copy of the report's: an add-on holds alone and
 shares only the kernel. A reader that writes its source line for line places
 each passage on its own line (markdown, latex, org, rst, asciidoc,
 code-comments, dotfiles); one that moves a line says both (a table's header
-moved onto its rule is `lines 8-9`).
+moved onto its rule is `lines 8-9`); one that gathers a passage from several
+says them all (equations, from the paragraph before to the one after;
+subtitles, a cue from its timing line to its text). One whose lines aren't
+the file's names its places: jupyter's `cell 4`, mail's `message 3`, a
+Telegram export's `message 4417`, and the `whole file` for a note about it.
+
+## The copies
+
+An add-on holds alone and shares only the kernel, so the same function
+lives in many of them: a reader's `_sources`, a report's `report_text`, a
+language pack's `kept`. [copies.py](copies.py) finds the copies that drifted
+from the rest, which is where a fix made in one place and not the others
+hides:
+
+    python adapters/stdlib/ci/copies.py survey [--json]
+    python adapters/stdlib/ci/copies.py diff NAME
+
+`survey` groups every add-on's top-level functions by name and finds each
+group's common version, the one most copies hold, read as Python reads it
+(formatting, comments and the docstring aside). A copy that still holds most
+of its lines and isn't it has drifted, and is a row of the report; one that
+holds less is another function sharing the name, and is counted, not
+reported. `diff NAME` prints each drifted copy's lines against the common
+version, as a unified diff. Which is right is a person's call: almanac's
+`_sources` reads only an Almanac's catalog on purpose, and a drift can be the fix
+the others lack.
+
+A copy that differs on purpose says why in a comment on the line above its
+`def`, `# differs on purpose: ...`, as sort-ask's `kernel_says` does (it
+captures stderr too, so a refusal's reason reaches its report's row); its
+row says so, and a survey whose every drift says why exits 0. On a pull
+request, CI's `copies` job runs `copies.py new --base`: the copies the pull
+request leaves drifted that weren't before and don't say why, each with its
+diff, in the run's summary. A suggestion, never a gate.
 
 ## The report contract
 
