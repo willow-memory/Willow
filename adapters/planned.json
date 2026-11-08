@@ -1481,17 +1481,6 @@
   "role": "suggests"
  },
  {
-  "name": "skim",
-  "kind": "stdlib",
-  "section": "For maintainers",
-  "line": "The lists this repo makes held to how a person reads them: a heading every screen, no line too long to read, and every add-on and folder a name to jump to.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "role": "repo",
-  "runs-in": "repo"
- },
- {
   "name": "socratic",
   "kind": "stdlib",
   "section": "Ways to use it",

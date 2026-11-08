@@ -1157,6 +1157,10 @@ willow/
 │   │   │   ├── similar.py    what's already on the list near a new idea
 │   │   │   ├── test_similar.py
 │   │   │   └── README.md
+│   │   ├── skim/
+│   │   │   ├── skim.py       The lists this repo makes held to how a person reads them: a heading every screen, no line too long to read, and every add-on and folder a name to jump to
+│   │   │   ├── test_skim.py
+│   │   │   └── README.md     its card
 │   │   ├── slack/
 │   │   │   ├── slack.py   a Slack export as dated lines of messages
 │   │   │   ├── test_slack.py
