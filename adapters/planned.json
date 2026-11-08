@@ -395,7 +395,8 @@
   "needs": "cryptography; Apache-2.0 or BSD",
   "writes": "record",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "from": "shape, https://github.com/willow-memory/willow-data-vault, Apache-2.0"
  },
  {
   "name": "family-box",
@@ -538,6 +539,18 @@
   "writes": "to",
   "network": "none",
   "role": "reads"
+ },
+ {
+  "name": "grant",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "Someone else allowed to ask part of your folder: a grant to their key, scoped to a path and a span of time, passed on only narrower, each link signed and checked, never your seal key.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "role": "tools",
+  "uses": "share",
+  "from": "shape, https://willowprotocol.org/specs/meadowcap/, none; shape, https://github.com/Deln0r/willow-go, MIT"
  },
  {
   "name": "grant-report",
