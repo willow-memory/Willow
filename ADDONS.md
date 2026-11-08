@@ -1950,15 +1950,12 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - <a id="similar"></a>[**similar**](adapters/stdlib/similar/) \
   What's already on the add-on list near a new idea, by the kernel's own search. \
   Uses pile-rank, readme. *box* `no-install` `offline` · near: readme, restack, against
+- <a id="skim"></a>[**skim**](adapters/stdlib/skim/) \
+  The lists this repo makes held to how a person reads them: a heading every screen, no line too long to read, and every add-on and folder a name to jump to. \
+  *new* `no-install` `offline` `screen` `held` · near: against, agents-md-check, readme
 - <a id="test-impact"></a>[**test-impact**](adapters/stdlib/test-impact/) \
   Only the tests a change can reach run first, from the import graph; the full suite still runs after. \
   Uses ci. *new* `no-install` `offline` `suite` `reach` · near: against, ci-memo, lesson-time
-
-#### Works on willow itself: ideas, not built yet
-
-- <a id="skim"></a>**skim** (idea) \
-  The lists this repo makes held to how a person reads them: a heading every screen, no line too long to read, and every add-on and folder a name to jump to. \
-  *new* `no-install` `offline` `screen` `held` · near: restack, a11y-check, against
 <!-- /willow:list -->
 
 Back to the [README](README.md).
