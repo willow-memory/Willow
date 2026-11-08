@@ -1,6 +1,6 @@
 <!-- willow-addon
 section: Finding things
-line: Each folder or repo ranked on its own and the lists merged in turns, so a large corpus can't push a small one out on volume alone, and a source that found nothing says so.
+line: Each folder ranked on its own and the lists merged in turns, so a big corpus can't crowd out a small one; one that found nothing says so.
 source: bot
 added: 2026-10-29
 writes: nothing

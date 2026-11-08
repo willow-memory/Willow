@@ -1,6 +1,6 @@
 <!-- willow-addon
 section: Assistants
-line: A Stop hook that writes where the session ended, and the next session's first prompt gets it back, so nothing rides on the assistant's memory.
+line: A Stop hook that writes where the session ended, and the next session's first prompt gets it back, so nothing rides on memory.
 source: new
 added: 2026-11-07
 writes: record

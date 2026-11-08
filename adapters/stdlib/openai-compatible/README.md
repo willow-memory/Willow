@@ -1,6 +1,6 @@
 <!-- willow-addon
 section: Assistants
-line: Suggestions from any OpenAI-compatible endpoint you choose (LM Studio, vLLM, LocalAI, SGLang, Docker Model Runner, OpenRouter, Groq, Mistral), citing your passages.
+line: Suggestions from any OpenAI-compatible endpoint you choose (LM Studio, vLLM, LocalAI, OpenRouter, Groq, Mistral...), citing your passages.
 source: new
 added: 2026-10-31
 writes: record

@@ -6,7 +6,7 @@ added: 2026-10-23
 writes: record, BUGS.md, FILES.md, README.md, ADDONS.md, adapters/planned.json, adapters/*/*, adapters/*/*/*, demo/*/*, demo/*/*/*
 network: PyPI, to read each dependency floor's release date; GitHub, through gh, to find main's last records (main_run.py, times.py)
 role: repo
-uses: live, readme, stack, test-shards
+uses: live, readme, skim, stack, test-shards
 runs-in: repo
 -->
 # ci

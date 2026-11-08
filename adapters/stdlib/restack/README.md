@@ -1,6 +1,6 @@
 <!-- willow-addon
 section: For maintainers
-line: Main merged into your branches, with the conflicts in the files the repo makes or only adds to settled by its own tools, and every other one left to you.
+line: Main merged into your branches, conflicts in the files the repo makes or only adds to settled by its own tools, and any other left to you.
 source: new
 added: 2026-10-24
 writes: nothing

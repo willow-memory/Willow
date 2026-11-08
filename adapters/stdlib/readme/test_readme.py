@@ -306,7 +306,9 @@ def test_code_taken_keeps_the_notice_of_where_it_came_from(repo):
     with pytest.raises(rd.Refused, match="keeps its notice"):
         rd.rebuild(PAGE, None)
     (where / "LICENSE-b").write_text("MIT License, Copyright (c) A\n")
-    assert "From: code of [a/b](https://github.com/a/b), MIT." in rd.rebuild(PAGE, None)
+    assert "From: code of [a/b](https://github.com/a/b), MIT." in flat(
+        rd.rebuild(PAGE, None)
+    )
 
 
 def test_an_ideas_from_is_said_and_an_unknown_field_refused(repo):
@@ -319,10 +321,10 @@ def test_an_ideas_from_is_said_and_an_unknown_field_refused(repo):
     (repo / "adapters" / "planned.json").write_text(json.dumps(planned))
     text = rd.rebuild(PAGE, None)
     assert (
-        '- <a id="gamma"></a>**gamma** (idea) \\\n  Later. \\\n  Reaches this machine only. From: shape of '
+        '- <a id="gamma"></a>**gamma** (idea) \\ Later. \\ Reaches this machine only. From: shape of '
         "[a/b](https://github.com/a/b), BSD-3-Clause; shape of [c.example/d](https://c.example/d/), none."
-        " *box*" in text
-    )
+        " *box*" in flat(text)
+    ), "its facts, wrapped to the width, read as one paragraph"
     planned[0]["added"] = "2026-10-01"  # a built card's field, not an idea's
     (repo / "adapters" / "planned.json").write_text(json.dumps(planned))
     with pytest.raises(rd.Refused, match="added is not a card's field"):
@@ -567,6 +569,11 @@ def test_a_week_file_for_another_week_or_none_is_stale_to_check(repo, capsys):
     assert rd.main(["check"]) == 2
 
 
+def flat(text: str) -> str:
+    """Text with its line breaks and wrapping indents as single spaces."""
+    return " ".join(text.split())
+
+
 def one(name, section, role, built=True):
     return {"name": name, "section": section, "line": f"{name} things.", "role": role,
             "built": built, "path": f"adapters/stdlib/{name}/", "kind": "stdlib",
@@ -612,11 +619,44 @@ def test_a_heading_with_more_than_a_screen_is_cut_a_to_z_and_says_where():
     text = rd.section_list(every, worked).split("## Keeping track", 1)[1].split("\n## ", 1)[0]  # fmt: skip
     heads = re.findall(r"^#{3,4} (.+)$", text, re.M)
     assert heads == ["Tools you run yourself, a to d", "Tools you run yourself, d to g",
-                     "Tools you run yourself, h to j"]  # fmt: skip
+                     "Tools you run yourself, g to j"]  # fmt: skip
     runs = re.split(r"^#{3,4} .+$", text, flags=re.M)[1:]
-    assert [r.count('<a id="') for r in runs] == [14, 14, 12]
-    assert all(r.count('<a id="') <= rd.RUN for r in runs)
+    assert [r.count('<a id="') for r in runs] == [13, 13, 14], "as even as they go"
+    assert all(len(r.strip().splitlines()) <= rd.ROOM for r in runs)
     few = rd.section_list(every[: rd.RUN], worked)
     assert "### Tools you run yourself\n" in few and ", a to" not in few, (
         "not cut at RUN"
     )
+
+
+def test_a_line_past_its_length_is_refused_and_one_at_it_kept(repo):
+    """A card's or an idea's line is at most LINE, so the list reads in one look."""
+    add_ideas(repo, idea("long", "x" * rd.LINE))
+    assert "x" * rd.LINE in rd.rebuild(PAGE, None)
+    add_ideas(repo, idea("longer", "y" * (rd.LINE + 1)))
+    with pytest.raises(
+        rd.Refused, match=f"141 characters, and a line is at most {rd.LINE}"
+    ):
+        rd.rebuild(PAGE, None)
+
+
+def test_wrap_breaks_between_words_and_never_inside_a_link():
+    link = "[a name with spaces](https://example.test/a/b)"
+    assert rd.words_of(f"see {link}, then (and [x](y)) end") == [
+        "see", f"{link},", "then", "(and", "[x](y))", "end"]  # fmt: skip
+    text = " ".join(["word"] * 60) + f" {link}."
+    lines = rd.wrap(text, "  ").splitlines()
+    assert (
+        all(len(x) <= rd.WIDTH and x.startswith("  ") for x in lines) and len(lines) > 1
+    )
+    assert lines[-1].endswith(f"{link}.") and flat(rd.wrap(text)) == text
+    assert rd.wrap("short") == "short"
+
+
+def test_the_real_add_on_list_reads_within_skims_bounds():
+    """ADDONS.md held to how a person reads it: a heading every screen, no
+    line past a look, every add-on an anchor (adapters/stdlib/skim)."""
+    skim = rd.ROOT / "adapters" / "stdlib" / "skim" / "skim.py"
+    got = subprocess.run([sys.executable, str(skim), "check", str(rd.ROOT / "ADDONS.md")],
+                         capture_output=True, text=True)  # fmt: skip
+    assert got.returncode == 0, got.stdout + got.stderr
