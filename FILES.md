@@ -1019,8 +1019,10 @@ willow/
 │   │   │   ├── test_readings.py
 │   │   │   └── README.md     its card: what it adds, uses and never does
 │   │   ├── readme/
+│   │   │   ├── groups.py     every add-on's place, the one grouping the UI and the lists share
 │   │   │   ├── readme.py     builds this README's generated sections from the cards
 │   │   │   ├── week.json
+│   │   │   ├── test_groups.py
 │   │   │   ├── test_readme.py
 │   │   │   └── README.md     its card: sections, the draw, what it reads
 │   │   ├── readwise/

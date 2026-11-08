@@ -25,6 +25,14 @@ the repo.
 | pick | the add-on of the week, drawn by a hash of the week |
 | list | every add-on, built (linked) and ideas, by section, A to Z: its line, what it needs and where it goes online in words, and its tags |
 
+**Where each add-on goes:** [groups.py](groups.py), beside readme.py, is
+the one grouping: the roles, their titles and order, and each role's second
+level (readers by what their files come from, ways in by where you'd be,
+suggesting in two). [ui/canvas.py](../../../ui/canvas.py) reads it for the
+page, and the list for ADDONS.md; [test_groups.py](test_groups.py) fails a
+built add-on it doesn't place, a name it places twice, and a UI that keeps a
+copy of its own.
+
 ADDONS.md holds all four, each between `<!-- willow:NAME -->` and
 `<!-- /willow:NAME -->`. Everything outside the markers is written by hand
 and never touched.
