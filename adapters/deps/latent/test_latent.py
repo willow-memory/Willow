@@ -168,3 +168,169 @@ def test_gib_says_gibibytes():
     import latent
 
     assert latent.gib(21 * 2**30 + 2**29) == "21.5 GiB"
+
+
+def lines(out: str) -> list[dict]:
+    return [json.loads(x) for x in out.splitlines()]
+
+
+def test_questions_file_builds_the_space_once_and_answers_each(
+    tmp_path, monkeypatch, capsys
+):
+    import latent
+
+    ix = index(tmp_path, "q", CORPUS)
+    qf = tmp_path / "q.txt"
+    qf.write_text("# a comment\nbill\toutstanding invoice payment\n\nzxqw nonsense\n")
+    built = []
+    real = latent.space
+    monkeypatch.setattr(latent, "space", lambda *a: built.append(a) or real(*a))
+    assert (
+        latent.main(["rank", "--index", str(ix), "--top", "4", "--questions", str(qf)])
+        == 0
+    )
+    got = lines(capsys.readouterr().out)
+    assert len(built) == 1  # one space for every question
+    assert [r["question"] for r in got] == ["bill", "4"]
+    assert [r["state"] for r in got] == ["populated", "empty"]
+    # each answer is the one that question gets asked alone
+    alone = run("rank", "--index", str(ix), "--top", "4", "outstanding invoice payment")
+    assert got[0]["served"] == json.loads(alone.stdout)["served"]
+    assert "question" not in json.loads(alone.stdout)
+
+
+def test_questions_that_all_find_nothing_are_42(tmp_path):
+    ix = index(tmp_path, "q0", CORPUS)
+    qf = tmp_path / "q.txt"
+    qf.write_text("zxqw\nqqqv nonsense\n")
+    got = run("rank", "--index", str(ix), "--questions", str(qf))
+    assert (
+        got.returncode == 42
+        and [r["state"] for r in lines(got.stdout)] == ["empty"] * 2
+    )
+
+
+def test_a_question_and_a_questions_file_together_or_neither_is_refused(tmp_path):
+    ix = index(tmp_path, "qb", CORPUS)
+    qf = tmp_path / "q.txt"
+    qf.write_text("money\n")
+    for argv in (["--questions", str(qf), "money"], ["--only"]):
+        got = run("rank", "--index", str(ix), *argv)
+        assert got.returncode == 2 and "latent.py" in got.stderr, argv
+    got = run("rank", "--index", str(ix), "--questions", str(tmp_path / "none.txt"))
+    assert got.returncode == 2 and got.stderr.startswith("refused"), got.stderr
+
+
+def ids_of(ix: Path) -> dict[str, str]:
+    import scan
+
+    return {c["text"].strip(): c["id"] for c in scan.passages(ix)}
+
+
+def test_only_ranks_just_the_passages_scans_output_names(tmp_path):
+    ix = index(tmp_path, "o", CORPUS)
+    qf = tmp_path / "q.txt"
+    qf.write_text("client\n")
+    words = subprocess.run([sys.executable, str(SCAN), "scan", "--index", str(ix),
+                            "--questions", str(qf), "--rank", "bm25", "--top", "9"],
+                           capture_output=True, text=True, check=True)  # fmt: skip
+    picked = {s["id"] for r in lines(words.stdout) for s in r["served"]}
+    assert 2 <= len(picked) < len(ids_of(ix))
+    out = tmp_path / "bm25.jsonl"
+    out.write_text(words.stdout)
+    got = run(
+        "rank", "--index", str(ix), "--only", str(out), "--top", "9", "money owed"
+    )
+    assert got.returncode == 0, got.stderr
+    served = json.loads(got.stdout)["served"]
+    assert served and {s["id"] for s in served} <= picked
+
+
+def test_only_reads_ripgreps_lines_and_bare_ids_and_skips_a_summary(tmp_path):
+    ix = index(tmp_path, "r", CORPUS)
+    ids = ids_of(ix)
+    a, b = (
+        ids["an invoice was owed by the client"],
+        ids["a payment cleared from the client"],
+    )
+    f = tmp_path / "rg.txt"
+    f.write_text(f"a.md:3  {a[:12]}  an invoice was owed by the client\n{b}\n"
+                 "2 hits in 2 passages\n")  # fmt: skip
+    got = run(
+        "rank", "--index", str(ix), "--only", str(f), "--top", "9", "client invoice"
+    )
+    assert got.returncode == 0, got.stderr
+    assert {s["id"] for s in json.loads(got.stdout)["served"]} == {a, b}
+    assert got.stderr == ""
+
+
+def test_ids_in_reads_each_shape():
+    import latent
+
+    a, b = "a" * 64, "b" * 12
+    text = (f'{{"served": [{{"id": "{a}"}}]}}\n'
+            f"x.md:1  {b}  some text\n{b}\n"
+            f"{a} is not an id line\n\nsummary words here\n")  # fmt: skip
+    assert latent.ids_in(text) == (3, [a, b, b])
+    assert latent.ids_in("x.md:1  short  text\n" + "c" * 11) == (0, [])
+    assert latent.ids_in("d" * 65) == (0, [])
+
+
+def test_resolve_names_whole_ids_from_their_prefixes():
+    import latent
+
+    class Ix:
+        pile = [{"id": "ab" * 32}, {"id": "ab" * 6 + "cd" * 26}, {"id": "ef" * 32}]
+
+    got, missed = latent.resolve(Ix, ["ab" * 6, "ab" * 32, "ef" * 7, "0" * 12])
+    assert got == {"ab" * 32, "ab" * 6 + "cd" * 26, "ef" * 32} and missed == 1
+    assert latent.resolve(Ix, ["ab" * 6 + "ce"]) == (set(), 1)
+
+
+def test_only_with_ids_of_another_folder_is_refused_and_some_missing_said(tmp_path):
+    ix = index(tmp_path, "x", CORPUS)
+    a = ids_of(ix)["an invoice was owed by the client"]
+    b = ids_of(ix)["a payment cleared from the client"]
+    f = tmp_path / "ids.txt"
+    f.write_text("0" * 64 + "\n" + "1" * 12 + "\n")
+    got = run("rank", "--index", str(ix), "--only", str(f), "money")
+    assert got.returncode == 2 and "none of the 2 ids" in got.stderr, got.stderr
+    f.write_text(f"{'0' * 64}\n{a}\n{b}\n")
+    got = run("rank", "--index", str(ix), "--only", str(f), "--top", "9", "client")
+    assert got.returncode == 0 and "1 of the 3 ids" in got.stderr, got.stderr
+    assert {s["id"] for s in json.loads(got.stdout)["served"]} <= {a, b}
+
+
+def test_only_a_file_naming_nothing_is_refused_and_an_empty_answer_is_42(tmp_path):
+    ix = index(tmp_path, "e", CORPUS)
+    f = tmp_path / "junk.txt"
+    f.write_text("nothing here names a passage\n")
+    got = run("rank", "--index", str(ix), "--only", str(f), "money")
+    assert got.returncode == 2 and "names no passage" in got.stderr, got.stderr
+    f.write_text('{"state": "empty", "served": []}\n')
+    got = run("rank", "--index", str(ix), "--only", str(f), "money")
+    assert got.returncode == 42, got.stderr
+    for bad in ("{not json\n", '{"state": "empty"}\n', "[1]\n"):
+        f.write_text(bad)
+        got = run("rank", "--index", str(ix), "--only", str(f), "money")
+        assert got.returncode == 2 and got.stderr.startswith("refused"), (
+            bad,
+            got.stderr,
+        )
+
+
+def test_the_bound_counts_only_what_only_kept(tmp_path, monkeypatch, capsys):
+    import latent
+
+    ix = index(tmp_path, "b", CORPUS)
+    ids = ids_of(ix)
+    f = tmp_path / "two.txt"
+    f.write_text(
+        ids["the client owed money"] + "\n" + ids["the client paid money"] + "\n"
+    )
+    monkeypatch.setattr(latent, "LIMIT", 2 * 5 * 8)  # two passages, five terms
+    assert latent.main(["rank", "--index", str(ix), "client money"]) == 2
+    assert "--only" in capsys.readouterr().err
+    assert (
+        latent.main(["rank", "--index", str(ix), "--only", str(f), "client money"]) == 0
+    )

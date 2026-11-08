@@ -16,7 +16,8 @@ Rank a [scan](../../stdlib/scan/) index's passages by meaning instead of by
 words.
 
     python adapters/deps/latent/latent.py rank --index INDEX \
-        [--changed-from INDEX] [--top N] "your question"
+        [--changed-from INDEX] [--only FILE] [--top N] \
+        ("your question" | --questions FILE)
 
 The kernel, and scan's BM25, match words: ask "memory exhausted" and they
 miss code that says "out of memory". This ranks by latent semantic analysis
@@ -31,6 +32,31 @@ only the passages that index lacks, as scan's own does, so a release can be
 asked about only what its fix changed. Each answer is a JSON line like
 scan's, each passage with its rank, file and line.
 
+**Many questions, one build.** `--questions FILE` asks every question in
+FILE, in scan's format (one a line, or `name<TAB>question`; `#` starts a
+comment), and builds the space once for them all. A line each, with its
+`question` name. Ten questions cost one build, not ten.
+
+**After a word search.** `--only FILE` ranks only the passages FILE names,
+so another add-on picks a few hundred and latent orders them by meaning.
+It reads:
+
+- scan's JSON lines (`scan.py scan --rank bm25 --top 300 ...`), or latent's
+  own, taking every served passage's id;
+- [ripgrep](../ripgrep/)'s and [code-shape](../code-shape/)'s `path:line
+  id  text` lines, whose 12-character ids it matches to the index's whole
+  ones;
+- one id a line.
+
+It skips any other line, such as a summary. A FILE that names no passage of
+the index is refused, since it was likely made from another folder. If only
+some of its ids are missing, it says how many and ranks the rest. The
+trade: ranked only among what the words found, a passage that shares none
+of the question's words is reached only if the word search picked it, so
+ask the search for its synonyms too (several `--questions`, or ripgrep
+more than once into one FILE). With `--questions`, every question ranks
+within the same FILE.
+
 **Not the kernel's answer.** Ranked by meaning, it serves passages a `bite`
 would not, so nothing it prints can be cited into an approval; it is a way to
 find where to look, read then against the files. On willow's PHP2Shell demo
@@ -44,11 +70,11 @@ terms), and ranks by cosine to the question in that reduced space. The same
 index and question give the same order every run.
 
 **How big:** the matrix is dense, passages × terms × 8 bytes, and it is
-rebuilt for every question, so a big index costs minutes and gigabytes each
-time. latent refuses (exit 2), before allocating anything, an index whose
+built for every run (once for all of `--questions`), so a big index costs
+minutes and gigabytes each time. latent refuses (exit 2), before allocating anything, an index whose
 matrix would pass **512 MiB**, saying how many passages and terms it holds
 and the memory it would need. On a 4-core, 15 GiB machine, over a scan index
-of willow's own repo, one question took:
+of willow's own repo, the build took (each question after it took well under a second):
 
 | passages | terms | matrix | time | peak memory |
 |---:|---:|---:|---:|---:|
@@ -63,7 +89,8 @@ square of the passages. Before the bound, on the same size of machine and
 scan indexes repo-pile built over public repositories' code, 21,897 passages
 took 34 minutes and 9.7 GB for one question, and 60,031 (47,257 terms, a
 21.1 GiB matrix) stopped on numpy's allocation error. To ask a big index, rank only what
-changed with `--changed-from`, which the bound counts after, or index less.
+changed with `--changed-from`, or only what a word search found with
+`--only`; the bound counts what both leave. Or index less.
 
 **Needs:** numpy, pinned in `requirements.txt` and floored in
 `requirements-floor.txt`; tested at both.
@@ -72,6 +99,8 @@ changed with `--changed-from`, which the bound counts after, or index less.
 
 **Exit codes:** 0 something ranked; 42 nothing shared a sense, or the index
 held too little; 2 refused (a bad command line, not an index, numpy
-missing, or a matrix past 512 MiB — never a quiet skip).
+missing, an `--only` FILE that names no passage of the index, or a matrix
+past 512 MiB — never a quiet skip). With `--questions`, 0 when any
+question ranked something.
 
 **Never:** writes anything, reads a folder, reads the key, or goes online.
