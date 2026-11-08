@@ -1225,7 +1225,7 @@ func stem(w string) string {
 		s = s[:n-3] + "y"
 	} else if n > 4 && strings.HasSuffix(s, "ing") {
 		s = s[:n-3]
-	} else if n > 3 && strings.HasSuffix(s, "ed") {
+	} else if n > 3 && strings.HasSuffix(s, "ed") && !strings.HasSuffix(s, "eed") {
 		s = s[:n-2]
 	} else if n > 3 && strings.HasSuffix(s, "s") && !strings.HasSuffix(s, "ss") {
 		s = s[:n-1]
