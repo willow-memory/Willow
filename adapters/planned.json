@@ -930,6 +930,17 @@
   "role": "tools"
  },
  {
+  "name": "misheard",
+  "kind": "stdlib",
+  "section": "Your own words",
+  "line": "A spoken question's misheard words corrected against your own folder's words before it is asked, each change shown.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "role": "tools",
+  "from": "shape, https://github.com/toverainc/willow-autocorrect, Apache-2.0"
+ },
+ {
   "name": "mlx",
   "kind": "deps",
   "section": "Assistants",
@@ -1789,6 +1800,18 @@
   "role": "reads"
  },
  {
+  "name": "wake-gate",
+  "kind": "deps",
+  "section": "Ways to use it",
+  "line": "Ask out loud only after a wake word you chose: audio before it is never transcribed, kept or sent, by a state machine with one gated step to the transcriber.",
+  "source": "new",
+  "needs": "openWakeWord, silero-vad, faster-whisper and sounddevice; Apache-2.0, MIT, MIT, MIT. openWakeWord's own pre-trained models are CC BY-NC-SA 4.0, non-commercial: train your own wake word, as willow-mcp's hey_willow is",
+  "writes": "nothing",
+  "network": "the models, downloaded once",
+  "role": "ways",
+  "from": "code, https://github.com/willow-memory/willow-mcp, Apache-2.0"
+ },
+ {
   "name": "warm",
   "kind": "stdlib",
   "section": "Ways to use it",
@@ -1827,6 +1850,29 @@
   "writes": "nothing",
   "network": "the forge, through the workflow's token, to post the thank-you",
   "role": "tools"
+ },
+ {
+  "name": "willow-box",
+  "kind": "stdlib",
+  "section": "Ways to use it",
+  "line": "Ask from a Willow voice box on your counter: its application server sends your words here and reads the answer back.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "your Willow Application Server, on your own network, to answer what the box heard",
+  "role": "ways",
+  "from": "shape, https://github.com/HeyWillow/willow-application-server, Apache-2.0"
+ },
+ {
+  "name": "wis",
+  "kind": "deps",
+  "section": "Reading more kinds of files",
+  "line": "Audio files transcribed by a Willow Inference Server you run on your own network, kept as dated text.",
+  "source": "new",
+  "needs": "a Willow Inference Server you run; Apache-2.0, called over HTTP, not linked",
+  "writes": "to",
+  "network": "your own Willow Inference Server, to transcribe the audio you point it at",
+  "role": "reads",
+  "from": "dep, https://github.com/toverainc/willow-inference-server, Apache-2.0"
  },
  {
   "name": "witness",
