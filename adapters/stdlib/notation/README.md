@@ -1,6 +1,6 @@
 <!-- willow-addon
 section: Reading more kinds of files
-line: Each displayed equation in LaTeX sources with the words its paper gives for its symbols ("where η is the packing fraction"), so a question in words finds the equation.
+line: Each displayed LaTeX equation with the words its paper gives its symbols ("where η is the packing fraction"), so words find the equation.
 source: new
 added: 2026-11-06
 writes: to

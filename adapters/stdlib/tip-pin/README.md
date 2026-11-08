@@ -1,6 +1,6 @@
 <!-- willow-addon
 section: Trust and proof
-line: Where your record ends, written down somewhere willow can't reach, so rows cut off the end or rewritten from some point on are caught where verify can't.
+line: Where your record ends, written somewhere willow can't reach, so rows cut off the end or rewritten are caught where verify can't.
 source: new
 added: 2026-10-26
 writes: to

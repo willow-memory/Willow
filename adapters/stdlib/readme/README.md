@@ -6,7 +6,7 @@ added: 2026-10-23
 writes: README.md, ADDONS.md
 network: none
 role: repo
-uses: similar
+uses: similar, skim
 runs-in: repo
 -->
 # readme

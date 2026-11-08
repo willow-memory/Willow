@@ -387,3 +387,12 @@ def test_a_path_listed_twice_is_said_and_write_keeps_the_first(scratch):
     text = doc.read_text(encoding="utf-8")
     assert files.Tree(text).twice() == [] and text.count("── gamma/") == 1
     assert "gamma's script" in text, "the first one, with its words, stays"
+
+
+def test_the_real_tree_reads_within_skims_bounds():
+    """FILES.md held to how a person reads it: a heading every screen, no
+    line past a look, every top folder a heading (adapters/stdlib/skim)."""
+    skim = files.ROOT / "adapters" / "stdlib" / "skim" / "skim.py"
+    got = subprocess.run([sys.executable, str(skim), "check", str(files.ROOT / "FILES.md")],
+                         capture_output=True, text=True)  # fmt: skip
+    assert got.returncode == 0, got.stdout + got.stderr

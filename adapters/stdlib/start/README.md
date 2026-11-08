@@ -1,6 +1,6 @@
 <!-- willow-addon
 section: Ways to use it
-line: First run in one step: asks where your files are, sets up willow's record and your key, copies in a starter words list, and prints a double-click launcher.
+line: First run in one step: asks where your files are, sets up willow's record and your key, copies in a starter words list, prints a launcher.
 source: new
 added: 2026-10-24
 writes: record, to
