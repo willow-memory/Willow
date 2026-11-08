@@ -418,6 +418,16 @@
   "role": "tools"
  },
  {
+  "name": "file-kind",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Each file the kernel leaves out, named by what its first bytes say it is (a PDF, a PNG, a zip), whatever its name or extension says.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "role": "tools"
+ },
+ {
   "name": "forgejo",
   "kind": "stdlib",
   "section": "For maintainers",
