@@ -95,7 +95,8 @@ def repo(tmp_path):
     r = tmp_path / "repo"
     for rel in ("kernel.py", "adapters/stdlib/stack/stack.py", "adapters/stdlib/ci/changelog.py",
                 "adapters/stdlib/github/create_pr.py", "adapters/stdlib/github/README.md",
-                "adapters/stdlib/ready/ready.py", "adapters/stdlib/ready/steps.md"):  # fmt: skip
+                "adapters/stdlib/ready/ready.py", "adapters/stdlib/ready/steps.md",
+                "adapters/stdlib/ready/README.md"):  # fmt: skip
         (r / rel).parent.mkdir(parents=True, exist_ok=True)
         shutil.copy(ROOT / rel, r / rel)
     for name, writes in (("say", "made.txt"), ("against", "nothing")):

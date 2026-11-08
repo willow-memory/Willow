@@ -62,7 +62,8 @@ def repo(tmp_path):
     file and its fragment, changes/+work.added.md."""
     r = tmp_path / "repo"
     for rel in ("kernel.py", "adapters/stdlib/stack/stack.py",
-                "adapters/stdlib/ci/changelog.py", "adapters/stdlib/ready/ready.py"):  # fmt: skip
+                "adapters/stdlib/ci/changelog.py", "adapters/stdlib/ready/ready.py",
+                "adapters/stdlib/ready/README.md"):  # fmt: skip
         (r / rel).parent.mkdir(parents=True, exist_ok=True)
         shutil.copy(ROOT / rel, r / rel)
     for name, writes in (("say", "made.txt"), ("against", "nothing")):
