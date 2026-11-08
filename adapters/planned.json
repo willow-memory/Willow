@@ -395,7 +395,8 @@
   "needs": "cryptography; Apache-2.0 or BSD",
   "writes": "record",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "from": "shape, https://github.com/willow-memory/willow-data-vault, Apache-2.0"
  },
  {
   "name": "family-box",
