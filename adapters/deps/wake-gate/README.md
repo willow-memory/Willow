@@ -4,7 +4,7 @@ line: Ask out loud after a wake word you chose: audio before it is never transcr
 source: new
 added: 2026-11-08
 needs: onnxruntime, numpy and faster-whisper; MIT, BSD-3-Clause, MIT. A wake word model you give it, trained the openWakeWord way; openWakeWord's own are CC BY-NC-SA 4.0
-floor: faster-whisper 1.1.0, numpy 2.1.0, onnxruntime 1.20.0; the 2020 rule names numpy 1.19.4 and onnxruntime 1.6.0, which have no wheel for Python 3.13, and faster-whisper's first, 0.2.0, which pins av below 13, the first av with one; each floor is the first that installs
+floor: faster-whisper 1.2.1, numpy 2.1.0, onnxruntime 1.20.0; the 2020 rule names numpy 1.19.4 and onnxruntime 1.6.0, which have no wheel for Python 3.13, and faster-whisper's first, 0.2.0; every faster-whisper before 1.2.1 pins av below 13, the first av with one, or imports requests without declaring it, which today's huggingface-hub no longer brings
 writes: nothing
 network: none
 role: ways
