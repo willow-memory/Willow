@@ -236,8 +236,9 @@ def test_the_body_is_the_templates_sections_from_the_commits_cards_and_steps(rep
     got = go(repo, "body", "--from", str(to), "--footer", "made by a test")
     assert got.returncode == 0, got.stderr
     text = got.stdout
-    template = (ROOT / ".github/pull_request_template.md").read_text(encoding="utf-8")
-    assert re.findall(r"^## (.+)$", text, re.M) == re.findall(r"^## (.+)$", template, re.M)  # fmt: skip
+    # ready's own sections, in order: that they are the host's template's is
+    # github's test to hold (test_create_pr.py), which goes when GitHub does
+    assert re.findall(r"^## (.+)$", text, re.M) == list(rd.SECTIONS)
     assert "**thing: a new thing**\n\nBecause it was missing." in text
     assert "Co-Authored-By" not in text and "tidy:" not in text.split("## Its promises")[0]  # fmt: skip
     assert "- `say`: writes made.txt; network none" in text
