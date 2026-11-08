@@ -58,10 +58,10 @@ of willow's own repo, one question took:
 | 8,000 | 8,745 | 0.52 GiB | 86 s | 3.8 GiB |
 
 Peak memory runs about seven times the matrix, and time grows with the
-square of the passages. Past the bound it only got worse: on scan indexes
-repo-pile built over public repositories, 21,897 passages ran one question
-past 22 minutes at 9.7 GB without printing, and 60,031 (47,257 terms, a
-21.1 GiB matrix) failed to allocate. To ask a big index, rank only what
+square of the passages. Before the bound, on the same size of machine and
+scan indexes repo-pile built over public repositories' code, 21,897 passages
+took 34 minutes and 9.7 GB for one question, and 60,031 (47,257 terms, a
+21.1 GiB matrix) stopped on numpy's allocation error. To ask a big index, rank only what
 changed with `--changed-from`, which the bound counts after, or index less.
 
 **Needs:** numpy, pinned in `requirements.txt` and floored in
