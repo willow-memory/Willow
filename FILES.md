@@ -1586,6 +1586,7 @@ willow/
 │   ├── how-it-works.md       what it reads, how it ranks, the key, the record, approvals
 │   ├── stone-soup.md         one real pile and add-on after add-on: what each found, what each misread, and the chain that dates a pile's words
 │   ├── design/
+│   │   ├── lists.md          notes: FILES.md and ADDONS.md, what makes them hard to read and search, and the skim idea
 │   │   ├── repo-index.md     proposal: the repo as one deterministic-snapshot box, indexed by a custom serve-style stack
 │   │   └── serve.md          proposal: a sealed stack of piles served to a model, on markdown (the grove's serve, in willow)
 │   ├── agents/               AGENTS.md's longer how-tos, one page a job
