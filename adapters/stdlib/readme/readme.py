@@ -300,6 +300,9 @@ def addons() -> list[dict]:
         if not FIELDS <= a.keys():
             missing = ", ".join(sorted(FIELDS - a.keys()))
             raise Refused(f"{where}: needs {missing}")
+        if len(a["line"]) > LINE:
+            raise Refused(f"{where}: its line is {len(a['line'])} characters, and a"
+                          f" line is at most {LINE}, so the list reads in one look")  # fmt: skip
         a.setdefault("tags", "")
         tags = split_tags(a["tags"])
         if len(tags) > 1 or any(not NAME.fullmatch(t) for t in tags):
@@ -440,6 +443,50 @@ def said_facts(a: dict) -> list[str]:
     return out
 
 
+#: a card's or an idea's line at most, so with its entry's indent it reads in
+#: one look (skim's width); a generated line past WIDTH is wrapped (wrap)
+LINE = 140
+WIDTH = 158
+
+
+def words_of(text: str) -> list[str]:
+    """Text cut at the spaces a line may break at: not inside a link's [text]
+    or its (address), so a link and what's stuck to it stay one word. A
+    plain parenthesis in prose breaks like any other words."""
+    out, word, text_depth, in_address, prev = [], "", 0, False, ""
+    for ch in text:
+        if ch == "[":
+            text_depth += 1
+        elif ch == "]" and text_depth:
+            text_depth -= 1
+        elif ch == "(" and prev == "]" and not text_depth:
+            in_address = True
+        elif ch == ")" and in_address:
+            in_address = False
+        if ch == " " and not text_depth and not in_address:
+            if word:
+                out.append(word)
+            word = ""
+        else:
+            word += ch
+        prev = ch
+    return out + ([word] if word else [])
+
+
+def wrap(text: str, indent: str = "") -> str:
+    """Text as lines of WIDTH or fewer, after `indent`, broken only between
+    words and never inside a link: Markdown reads it as the same paragraph."""
+    out, line = [], ""
+    for word in words_of(text):
+        if line and len(indent) + len(line) + 1 + len(word) > WIDTH:
+            out.append(line)
+            line = word
+        else:
+            line = f"{line} {word}" if line else word
+    out.append(line)
+    return "\n".join(indent + x for x in out)
+
+
 def entry(a: dict, worked: dict) -> str:
     """One add-on, three short lines: its anchor and name; its line; then
     what it needs and where it goes online, in words, and its tags and
@@ -452,9 +499,8 @@ def entry(a: dict, worked: dict) -> str:
     near = f" · near: {', '.join(worked['near'])}" if worked["near"] else ""
     # what it needs, where it goes online, and where it came from (its `from`)
     said = (" ".join(said_facts(a)) + origin_words(a)).strip()
-    return (f'- <a id="{a["name"]}"></a>{name} \\\n'
-            f"  {a['line']} \\\n"
-            f"  {said + ' ' if said else ''}*{a['source']}* {tags}{near}")  # fmt: skip
+    rest = wrap(f"{said + ' ' if said else ''}*{a['source']}* {tags}{near}", "  ")
+    return f'- <a id="{a["name"]}"></a>{name} \\\n  {a["line"]} \\\n{rest}'
 
 
 def placed(a: dict) -> tuple[int, int, str]:
@@ -521,14 +567,14 @@ def week_text(snapshot: dict) -> str:
 
 
 def section_list(every: list[dict], worked: dict[str, dict] | None = None) -> str:
-    lines = ["**Contents:** " + " · ".join(
+    lines = [wrap("**Contents:** " + " · ".join(
         f"[{s}](#{re.sub(r'[^a-z0-9 -]', '', s.lower()).replace(' ', '-')})" for s in NAMES
-    )]  # fmt: skip
+    ))]  # fmt: skip
     worked = worked if worked is not None else worked_out(every)
     for title, intro in SECTIONS:
         lines += ["", f"## {title}", ""]
         if intro:
-            lines += [intro, ""]
+            lines += [wrap(intro), ""]
         # by groups.py's place, the built ones first and the ideas after them
         here = sorted((placed(a), not a["built"], a["name"], a) for a in every if a["section"] == title)  # fmt: skip
         runs: dict[tuple[str, bool], list[dict]] = {}
@@ -540,25 +586,38 @@ def section_list(every: list[dict], worked: dict[str, dict] | None = None) -> st
                 lines += ([""] if last is not None else []) + [f"### {head}", ""]
                 last = head
             title_of = f"{head}: ideas, not built yet" if idea else head
-            for i, part in enumerate(cut(run)):
+            shown = {a["name"]: entry(a, worked[a["name"]]) for a in run}
+            for i, part in enumerate(
+                cut(run, lambda a: shown[a["name"]].count("\n") + 1)
+            ):
                 if idea or i:
                     lines += ["", f"#### {title_of}{letters(part, len(run))}", ""]
                 elif len(part) < len(run):
                     lines[-2] = f"### {head}{letters(part, len(run))}"
-                lines += [entry(a, worked[a["name"]]) for a in part]
+                lines += [shown[a["name"]] for a in part]
     return "\n".join(lines)
 
 
 #: the most entries under one heading: three lines each, a screen of skim's 60
 RUN = 18
+ROOM = 3 * RUN
 
 
-def cut(run: list[dict]) -> list[list[dict]]:
-    """A heading's entries, A to Z, cut into runs of RUN or fewer, as even as
-    they go, so no heading holds more than a screen."""
-    k = -(-len(run) // RUN)
-    size = -(-len(run) // k)
-    return [run[i : i + size] for i in range(0, len(run), size)]
+def cut(run: list[dict], height=lambda a: 3) -> list[list[dict]]:
+    """A heading's entries, A to Z, cut into runs as even as they go, each of
+    ROOM lines or fewer (RUN entries of three), so no heading holds more than
+    a screen; `height` is an entry's lines, more than three when it wraps."""
+    total = sum(height(a) for a in run)
+    k = -(-total // ROOM)
+    out, room = [[]], 0
+    for a in run:
+        h = height(a)
+        if out[-1] and (room + h > ROOM or (room + h > total / k and len(out) < k)):
+            out.append([])
+            room = 0
+        out[-1].append(a)
+        room += h
+    return out
 
 
 def letters(part: list[dict], whole: int) -> str:
@@ -631,7 +690,7 @@ def section_newest(every: list[dict]) -> str:
         (a for a in every if a["built"]), key=lambda a: (a["added"], a["name"])
     )
     return "\n".join(
-        f"- {a['added']} · [**{a['name']}**]({a['path']}) — {a['line']}"
+        f"- {a['added']} · [**{a['name']}**]({a['path']}) \\\n  {a['line']}"
         for a in reversed(built[-5:])
     )
 

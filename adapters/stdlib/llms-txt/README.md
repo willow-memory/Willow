@@ -1,6 +1,6 @@
 <!-- willow-addon
 section: Ways to use it
-line: An llms.txt for your folder, written from what's actually in it to the spec's version 2, and any llms.txt you saved checked against that spec.
+line: An llms.txt for your folder, written to the spec's version 2 from what's in it, and any llms.txt you saved checked against that spec.
 source: new
 added: 2026-10-29
 writes: to
