@@ -172,6 +172,17 @@ def test_a_gone_file_goes_with_its_notes_and_a_folder_left_empty_goes_too(scratc
     )
 
 
+def test_a_whole_folder_gone_at_once_goes_with_every_file_in_it(scratch):
+    """A folder's files all gone in one write (an add-on taken away, as
+    test_strip.py's copy takes GitHub's): the first takes the emptied folder,
+    and the rest, gone with it, are not looked for again."""
+    alpha = {p for p in LISTED if p.startswith("adapters/stdlib/alpha/")}
+    assert len(alpha) == 3
+    got = files.write(scratch / "FILES.md", scratch, LISTED - alpha)
+    assert sorted(got[1]) == sorted(alpha)
+    assert not any("alpha" in line for line in tree_of(scratch))
+
+
 def test_a_folder_in_an_order_of_its_own_gets_it_at_its_end_and_says_so(scratch):
     put(scratch, "zz.md", "# Zed\n")
     added, _, ended, blank = files.write(
@@ -357,3 +368,22 @@ def test_places_come_from_each_cards_section_role_and_group(scratch):
     assert got["pdf"][1] == "Reading more kinds of files: Documents and office files"
     assert got["tally"][1] == "Keeping track: Tools you run yourself"
     assert got["pdf"][0] < got["tally"][0], "Reading comes before Keeping track"
+
+
+def test_a_path_listed_twice_is_said_and_write_keeps_the_first(scratch):
+    """A tree lists a path once: a folder listed again, with all under it, is
+    named by twice() and taken out by write, the first one kept."""
+    doc = scratch / "FILES.md"
+    gamma = "    │   └── gamma/\n    │       ├── gamma.py      gamma's script\n"
+    again = doc.read_text(encoding="utf-8").replace(
+        "    └── planned.json",
+        "    │   ├── gamma/\n    │   │   └── gamma.py\n    └── planned.json",
+    )
+    assert gamma in again
+    doc.write_text(again, encoding="utf-8")
+    twice = [p for _, _, p in files.Tree(again).twice()]
+    assert twice == ["adapters/stdlib/gamma", "adapters/stdlib/gamma/gamma.py"]
+    files.write(doc, scratch, LISTED)
+    text = doc.read_text(encoding="utf-8")
+    assert files.Tree(text).twice() == [] and text.count("── gamma/") == 1
+    assert "gamma's script" in text, "the first one, with its words, stays"

@@ -201,19 +201,10 @@ willow/
 │   │   │   ├── slack.py   a Slack export as dated lines of messages
 │   │   │   ├── test_slack.py
 │   │   │   └── README.md
-│   │   ├── slack/
-│   │   │   ├── slack.py   a Slack export as dated lines of messages
-│   │   │   ├── test_slack.py
-│   │   │   └── README.md
 │   │   ├── texts/
 │   │   │   ├── texts.py      Android and iPhone text backups and call logs, a dated line a message
 │   │   │   ├── test_texts.py
 │   │   │   └── README.md
-```
-
-#### adapters/stdlib/, from x-archive/
-
-```
 │   │   ├── x-archive/
 │   │   │   ├── x_archive.py   your X posts and messages as dated lines
 │   │   │   ├── test_x_archive.py

@@ -108,6 +108,7 @@ def tree(doc: Path = FILES, heading: str = "# Every file") -> tuple[set[str], se
             assert depth <= last_file_depth, f"tree line {n} sits under a file"
         stack = stack[:depth]
         path = "/".join([*stack, name.rstrip("/")])
+        assert path not in files | folders, f"tree line {n} lists {path} again"
         if name.endswith("/"):
             folders.add(path)
             stack.append(name.rstrip("/"))

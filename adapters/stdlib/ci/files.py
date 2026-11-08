@@ -219,6 +219,16 @@ class Tree:
                 stack.append(name.rstrip("/"))
         return out
 
+    def twice(self) -> list[tuple[int, int, str]]:
+        """(line index, depth, path) of each entry after the first that names
+        a path an earlier one did: a tree lists a path once."""
+        seen, out = set(), []
+        for i, depth, path, _ in self.entries():
+            if path in seen:
+                out.append((i, depth, path))
+            seen.add(path)
+        return out
+
     def files(self) -> set[str]:
         return {p for _, _, p, folder in self.entries() if not folder}
 
@@ -431,9 +441,14 @@ def write(
     """(added, removed, put at a folder's end, added with no description)."""
     before = doc.read_text(encoding="utf-8")
     tree = Tree(before, places(root))
+    while twice := tree.twice():  # a path listed twice: the first stays
+        i, depth, _ = twice[0]  # a folder goes with all under it
+        del tree.lines[i : tree.span(i, depth)]
     missing, gone = differ(tree, files)
     ended, blank = [], []
     for path in gone:
+        if path not in tree.files():
+            continue  # gone already, with a folder an earlier one emptied
         tree.remove(path)
         folder = path.rsplit("/", 1)[0] if "/" in path else ""
         while folder and not any(f.startswith(folder + "/") for f in files):
@@ -473,11 +488,13 @@ def main(argv: list[str]) -> int:
         text = DOC.read_text(encoding="utf-8")
         tree = Tree(text, places(ROOT))
         missing, gone = differ(tree, files)
+        for _, _, p in tree.twice():
+            print(f"in the tree twice: {p}")
         for p in missing:
             print(f"not in the tree: {p}")
         for p in gone:
             print(f"in the tree, not the repo: {p}")
-        if missing or gone:
+        if missing or gone or tree.twice():
             print("FILES.md is out of date: python adapters/stdlib/ci/files.py write")
             return kernel.REFUSED
         if tree.text() != text:
