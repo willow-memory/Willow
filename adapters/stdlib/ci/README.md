@@ -92,7 +92,10 @@ files. `check` says what the tree lacks and what it lists that's gone;
 README.md last; at the end of a folder kept in an order of its own, which
 it says), with what the file says of itself (a docstring's first line, a
 Markdown title, `its card`), and takes out what's gone with its notes. A
-file it can't describe goes in with nothing, and it says which.
+file it can't describe goes in with nothing, and it says which. It also
+cuts the tree for reading, under a heading for each top-level folder and
+each group of add-ons (readme/groups.py's, in its order), and past a
+screen; `check` fails a tree whose cuts or add-on order aren't those.
 [create_pr.py](../github/create_pr.py) runs `write` before a pull request
 opens.
 
