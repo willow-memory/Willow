@@ -92,6 +92,13 @@ now working, or changes it in the same pull request.
 3. Headings under the long sections, by role (`reads`, `page`, `ways`...),
    which every card already says.
 4. Tags a search can tell from words: `tag:offline`, not `offline`.
+5. **Done first (1 to 3), by groups.py:** each add-on three lines (its
+   anchor and name, its line, then its facts and tags), under the UI's own
+   headings, a heading cut A to Z past 18 entries. What's left of `width`
+   is the cards' own lines: 66 run past 160 characters by themselves.
+   **Next, the cards:** shorten those lines, then have readme.py refuse a
+   card line over a length (say 140), so a new one can't bring it back;
+   then `width` holds for ADDONS.md and skim can be a gate on it.
 
 ## The idea: skim
 

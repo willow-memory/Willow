@@ -376,16 +376,18 @@ def said_facts(a: dict) -> list[str]:
 
 
 def entry(a: dict, worked: dict) -> str:
-    """One add-on, two lines: its anchor, name and line first; what it needs
-    and where it goes online, in words, then its tags and nearest, next (a
-    `\\` breaks the line, so it stays one entry)."""
+    """One add-on, three short lines: its anchor and name; its line; then
+    what it needs and where it goes online, in words, and its tags and
+    nearest (a `\\` breaks each line, so it stays one entry). The line is
+    the card's own, so a long one is the card's to shorten."""
     name = (
         f"[**{a['name']}**]({a['path']})" if a["built"] else f"**{a['name']}** (idea)"
     )
     tags = " ".join(f"`{t}`" for t in worked["tags"])
     near = f" · near: {', '.join(worked['near'])}" if worked["near"] else ""
     said = " ".join(said_facts(a))
-    return (f'- <a id="{a["name"]}"></a>{name} — {a["line"]} \\\n'
+    return (f'- <a id="{a["name"]}"></a>{name} \\\n'
+            f"  {a['line']} \\\n"
             f"  {said + ' ' if said else ''}*{a['source']}* {tags}{near}")  # fmt: skip
 
 
@@ -463,16 +465,42 @@ def section_list(every: list[dict], worked: dict[str, dict] | None = None) -> st
             lines += [intro, ""]
         # by groups.py's place, the built ones first and the ideas after them
         here = sorted((placed(a), not a["built"], a["name"], a) for a in every if a["section"] == title)  # fmt: skip
-        heading = None
+        runs: dict[tuple[str, bool], list[dict]] = {}
         for (_, _, head), idea, _, a in here:
-            if (head, idea) != heading:
-                if heading is None or head != heading[0]:
-                    lines += ([""] if heading is not None else []) + [f"### {head}", ""]
-                if idea:
-                    lines += ["", f"#### {head}: ideas, not built yet", ""]
-                heading = (head, idea)
-            lines.append(entry(a, worked[a["name"]]))
+            runs.setdefault((head, idea), []).append(a)
+        last = None
+        for (head, idea), run in runs.items():
+            if head != last:
+                lines += ([""] if last is not None else []) + [f"### {head}", ""]
+                last = head
+            title_of = f"{head}: ideas, not built yet" if idea else head
+            for i, part in enumerate(cut(run)):
+                if idea or i:
+                    lines += ["", f"#### {title_of}{letters(part, len(run))}", ""]
+                elif len(part) < len(run):
+                    lines[-2] = f"### {head}{letters(part, len(run))}"
+                lines += [entry(a, worked[a["name"]]) for a in part]
     return "\n".join(lines)
+
+
+#: the most entries under one heading: three lines each, a screen of skim's 60
+RUN = 18
+
+
+def cut(run: list[dict]) -> list[list[dict]]:
+    """A heading's entries, A to Z, cut into runs of RUN or fewer, as even as
+    they go, so no heading holds more than a screen."""
+    k = -(-len(run) // RUN)
+    size = -(-len(run) // k)
+    return [run[i : i + size] for i in range(0, len(run), size)]
+
+
+def letters(part: list[dict], whole: int) -> str:
+    """`, a to l`: where a cut run starts and ends, by first letter; nothing
+    for a heading that wasn't cut."""
+    if len(part) == whole:
+        return ""
+    return f", {part[0]['name'][0]} to {part[-1]['name'][0]}"
 
 
 def section_summary(every: list[dict]) -> str:

@@ -107,15 +107,15 @@ def test_the_real_readme_is_current():
 
 def test_building_an_add_on_is_what_turns_planned_into_built(repo):
     text = rd.rebuild(PAGE, None)
-    # an entry is two lines: its anchor, name and line; then, after a hard
-    # break, what it needs and where it goes, and its source and tags
-    assert '- <a id="alpha"></a>[**alpha**](adapters/stdlib/alpha/) — A thing. \\\n  *new* `no-install` `offline`' in text  # fmt: skip
+    # an entry is three lines: its anchor and name; its line; then, after a
+    # hard break, what it needs and where it goes, and its source and tags
+    assert '- <a id="alpha"></a>[**alpha**](adapters/stdlib/alpha/) \\\n  A thing. \\\n  *new* `no-install` `offline`' in text  # fmt: skip
     assert (
-        '- <a id="beta"></a>[**beta**](adapters/deps/beta/) — A thing. \\\n  Needs somepkg; MIT. *new* `needs-install` `offline`'
+        '- <a id="beta"></a>[**beta**](adapters/deps/beta/) \\\n  A thing. \\\n  Needs somepkg; MIT. *new* `needs-install` `offline`'
         in text
     )
     assert (
-        '- <a id="gamma"></a>**gamma** (idea) — Later. \\\n  Reaches this machine only. *box* `no-install` `this-machine` `later`'
+        '- <a id="gamma"></a>**gamma** (idea) \\\n  Later. \\\n  Reaches this machine only. *box* `no-install` `this-machine` `later`'
         in text
     )
     assert "**2 of 3 built**" in text
@@ -392,11 +392,11 @@ def add_ideas(repo: Path, *more: dict) -> None:
 
 
 def line_of(repo: Path, name: str) -> str:
-    """The entry in the list section (not the newest or the pick): its two
+    """The entry in the list section (not the newest or the pick): its three
     lines, as one."""
     lines = (repo / "ADDONS.md").read_text().splitlines()
     at = next(i for i, x in enumerate(lines) if x.startswith(f'- <a id="{name}"></a>'))
-    return lines[at] + "\n" + lines[at + 1]
+    return "\n".join(lines[at : at + 3])
 
 
 def test_the_weeks_first_write_keeps_each_entrys_topics_and_nearest(repo):
@@ -505,3 +505,22 @@ def test_the_real_list_is_every_add_on_once_under_a_heading():
     page = (rd.ROOT / "ADDONS.md").read_text(encoding="utf-8")
     listed = re.findall(r'^- <a id="([^"]+)"></a>', page.split("<!-- willow:list -->")[1], re.M)  # fmt: skip
     assert sorted(listed) == sorted(a["name"] for a in every)
+
+
+def test_a_heading_with_more_than_a_screen_is_cut_a_to_z_and_says_where():
+    """Three lines an entry: more than RUN under one heading would run past
+    a screen, so it's cut into even runs, each heading saying its letters."""
+    names = [f"{c}{i}" for c in "abcdefghij" for i in range(4)]  # 40, a to j
+    every = [one(n, "Keeping track", "tools") for n in names]
+    worked = {n: {"tags": [], "near": []} for n in names}
+    text = rd.section_list(every, worked).split("## Keeping track", 1)[1].split("\n## ", 1)[0]  # fmt: skip
+    heads = re.findall(r"^#{3,4} (.+)$", text, re.M)
+    assert heads == ["Tools you run yourself, a to d", "Tools you run yourself, d to g",
+                     "Tools you run yourself, h to j"]  # fmt: skip
+    runs = re.split(r"^#{3,4} .+$", text, flags=re.M)[1:]
+    assert [r.count('<a id="') for r in runs] == [14, 14, 12]
+    assert all(r.count('<a id="') <= rd.RUN for r in runs)
+    few = rd.section_list(every[: rd.RUN], worked)
+    assert "### Tools you run yourself\n" in few and ", a to" not in few, (
+        "not cut at RUN"
+    )
