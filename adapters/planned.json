@@ -1298,7 +1298,8 @@
   "needs": "willow-reconciler; Apache-2.0",
   "writes": "nothing",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "from": "dep, https://github.com/willow-memory/willow-reconciler, Apache-2.0"
  },
  {
   "name": "redential",

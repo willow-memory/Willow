@@ -6,6 +6,7 @@ added: 2026-11-03
 writes: record, to
 network: none
 role: makes
+from: shape, https://github.com/willow-memory/willow-gate, Apache-2.0
 -->
 # share
 

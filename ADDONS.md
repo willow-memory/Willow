@@ -1654,7 +1654,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
   *new* `no-install` `offline` `feed` · near: annotations, opml, in-toto
 - <a id="share"></a>[**share**](adapters/stdlib/share/) \
   Sealed answers sent to someone, checkable by them and by whoever they pass them on to, without giving anyone the folder. \
-  *new* `no-install` `offline` `sent` · near: kart, invoices, pgp
+  From: shape of [willow-memory/willow-gate](https://github.com/willow-memory/willow-gate), Apache-2.0. *new* `no-install` `offline` `sent` · near: kart, invoices, pgp
 
 #### What it makes for elsewhere: ideas, not built yet
 
@@ -1922,7 +1922,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
   *new* `no-install` `offline` `test` · near: slow-tests, test-shards, mutants
 - <a id="reconciler"></a>**reconciler** (idea) \
   willow-reconciler run on this repo's idea list and git history: how much of what was proposed has landed. \
-  Needs willow-reconciler; Apache-2.0. *new* `needs-install` `offline` `git` `history` · near: git-history, hook-checks, git-notes
+  Needs willow-reconciler; Apache-2.0. From: dep of [willow-memory/willow-reconciler](https://github.com/willow-memory/willow-reconciler), Apache-2.0. *new* `needs-install` `offline` `git` `history` · near: git-history, hook-checks, git-notes
 - <a id="repro"></a>**repro** (idea) \
   A release built twice from the same commit, byte for byte the same. \
   *new* `no-install` `offline` `byte` `twice` · near: compiled, mirror, gifts
