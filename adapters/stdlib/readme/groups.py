@@ -41,7 +41,8 @@ WAYS = (
     ("In your browser or on your desktop", ("browse", "launcher", "desktop",
                                             "static-search", "datasette", "kiosk")),
     ("From your phone, by voice or by email", ("telegram-bot", "email-ask",
-                                               "home-assistant", "dictate", "speak", "qr")),
+                                               "home-assistant", "dictate", "wake-gate", "speak",
+                                               "qr")),
     ("Several add-ons at once", ("stack", "stack-share", "across")),
 )  # fmt: skip
 WAY = {n: (i, h) for i, (h, ns) in enumerate(WAYS) for n in ns}

@@ -1843,12 +1843,22 @@ willow/
 │       │   ├── requirements-floor.txt  pagefind and pagefind-bin at their floors, also tested
 │       │   ├── test_static_search.py
 │       │   └── README.md
-│       └── stems/
-│           ├── stems.py      a word's other forms, by Snowball's stemmer for 30 languages
-│           ├── requirements.txt  snowballstemmer, pinned
-│           ├── requirements-floor.txt  snowballstemmer at its floor, also tested
-│           ├── test_stems.py
-│           └── README.md
+│       ├── stems/
+│       │   ├── stems.py      a word's other forms, by Snowball's stemmer for 30 languages
+│       │   ├── requirements.txt  snowballstemmer, pinned
+│       │   ├── requirements-floor.txt  snowballstemmer at its floor, also tested
+│       │   ├── test_stems.py
+│       │   └── README.md
+│       └── wake-gate/
+│           ├── LICENSE-openWakeWord
+│           ├── LICENSE-willow-mcp
+│           ├── NOTICE
+│           ├── NOTICE-willow-mcp
+│           ├── requirements-floor.txt
+│           ├── requirements.txt
+│           ├── wake_gate.py  ask out loud only after a wake word you chose
+│           ├── test_wake_gate.py
+│           └── README.md     its card
 ```
 
 ## ports/

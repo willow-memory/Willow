@@ -1603,6 +1603,11 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 
 ### From your phone, by voice or by email
 
+- <a id="wake-gate"></a>[**wake-gate**](adapters/deps/wake-gate/) \
+  Ask out loud after a wake word you chose: audio before it is never transcribed, kept or sent. \
+  Needs onnxruntime, numpy and faster-whisper; MIT, BSD-3-Clause, MIT. A wake word model you give it, trained the openWakeWord way; openWakeWord's own are CC
+  BY-NC-SA 4.0. From: code of [willow-memory/willow-mcp](https://github.com/willow-memory/willow-mcp), Apache-2.0; code of
+  [dscripka/openWakeWord](https://github.com/dscripka/openWakeWord), Apache-2.0. *new* `needs-install` `offline` `loud` · near: dictate, pdf, ocr
 
 #### From your phone, by voice or by email: ideas, not built yet
 
@@ -1654,12 +1659,6 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - <a id="socratic"></a>**socratic** (idea) \
   Asks you questions about your own notes instead of answering, each citing the passage it asked from. \
   *new* `no-install` `offline` `citing` · near: equations, oakenscroll, sort-ask
-- <a id="wake-gate"></a>**wake-gate** (idea) \
-  Ask aloud only after a wake word you chose: audio before it is never transcribed, kept or sent, by a state machine with one gated step. \
-  Needs openWakeWord, silero-vad, faster-whisper and sounddevice; Apache-2.0, MIT, MIT, MIT. openWakeWord's own pre-trained models are CC BY-NC-SA 4.0,
-  non-commercial: train your own wake word, as willow-mcp's hey_willow is. Goes online: the models, downloaded once. From: code of
-  [willow-memory/willow-mcp](https://github.com/willow-memory/willow-mcp), Apache-2.0. *new* `needs-install` `online` `gate` `sent` · near: local-model,
-  kiosk, ci-memo
 - <a id="willow-box"></a>**willow-box** (idea) \
   Ask from a Willow voice box on your counter: its application server sends your words here and reads the answer back. \
   Goes online: your Willow Application Server, on your own network, to answer what the box heard. From: shape of
