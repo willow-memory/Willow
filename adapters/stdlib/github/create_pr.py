@@ -11,9 +11,9 @@ create_pr.md beside it (`--steps` names another): a stack, the same file
 the stack add-on reads, run in order rather than composed, stopping at the
 first step that doesn't come back clean. Then it pushes the branch, opens
 the pull request (or finds the one already open for it), names its
-changelog fragment for it (changes/+<branch>.<kind>.md to changes/<number>.<kind>.md; or
-writes the number into an entry in CHANGELOG.md, the older way), pushes
-again, and runs the steps that need the number.
+changelog fragment for it (changes/+<branch>.<kind>.md to
+changes/<number>.<kind>.md), pushes again, and runs the steps that need the
+number.
 
 The pull request's body is the template's four sections, made from what is
 here: the commits' messages; each add-on touched and its card's promises;
@@ -196,8 +196,9 @@ def changed(base: str) -> list[str]:
 
 
 def owes_an_entry(base: str) -> bool:
-    """Anything beyond Markdown and CITATION.cff owes one, as changelog.py says."""
-    return any(not f.endswith(".md") and f != "CITATION.cff" for f in changed(base))
+    """changelog.py's own rule: anything beyond Markdown and CITATION.cff."""
+    log = load("willow_changelog_for_create_pr", STDLIB / "ci" / "changelog.py")
+    return bool(log.owed(changed(base)))
 
 
 def new_fragments(base: str) -> list[str]:
@@ -225,50 +226,6 @@ def name_fragments(base: str, number: int) -> list[str]:
         git("mv", rel, new)
         out.append(new)
     return out
-
-
-def new_entries(base: str) -> list[tuple[int, int]]:
-    """(first line, last line) of each `## Unreleased` entry this branch
-    added, 0-based, in CHANGELOG.md as it is now. An entry is a `- ` line and
-    the indented lines that wrap it, as changelog.py reads them."""
-    log = load("willow_changelog_for_create_pr", STDLIB / "ci" / "changelog.py")
-    old = set(log.unreleased(git("show", f"{base}:CHANGELOG.md", check=False)))
-    lines = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8").split("\n")
-    spans, heading, inside, start = [], "", False, None
-    for i, line in enumerate(lines + ["## end"]):
-        wraps = start is not None and line.startswith("  ") and bool(line.strip())
-        if start is not None and not wraps:
-            text = " ".join(x.strip() for x in lines[start:i])[2:]
-            if (heading, text) not in old:
-                spans.append((start, i - 1))
-            start = None
-        if line.startswith("## "):
-            inside = line.strip() == "## Unreleased"
-        elif inside and line.startswith("### "):
-            heading = line[4:].strip()
-        elif inside and line.startswith("- "):
-            start = i
-    return spans
-
-
-def write_number(base: str, number: int) -> bool:
-    """`(#N)` at the end of each entry this branch added that has no number;
-    True when the file changed. One that names another number is Stop."""
-    path = ROOT / "CHANGELOG.md"
-    lines = path.read_text(encoding="utf-8").split("\n")
-    moved = False
-    for _, end in new_entries(base):
-        m = re.search(r"\(#(\d+)\)\s*$", lines[end])
-        if m and int(m.group(1)) != number:
-            raise Stop(
-                f"CHANGELOG.md line {end + 1} names #{m.group(1)}, not #{number}"
-            )
-        if not m:
-            lines[end] = f"{lines[end].rstrip()} (#{number})"
-            moved = True
-    if moved:
-        path.write_text("\n".join(lines), encoding="utf-8")
-    return moved
 
 
 # ── GitHub ───────────────────────────────────────────────────────────────────
@@ -448,7 +405,7 @@ def create(opts: dict) -> int:
     base = f"origin/{base_name}"
     if git("rev-list", "--count", f"{base}..HEAD") == "0":
         raise Refused(f"{branch} holds nothing {base} doesn't: nothing to open")
-    if owes_an_entry(base) and not new_fragments(base) and not new_entries(base):
+    if owes_an_entry(base) and not new_fragments(base):
         raise Stop("no changelog entry: write it in changes/+<branch>.<kind>.md"
                    " (changes/README.md says how; <kind> added, changed, fixed or"
                    " removed), commit it, run this again")  # fmt: skip
@@ -503,19 +460,11 @@ def create(opts: dict) -> int:
         number = int(mine["number"])
 
         named = name_fragments(base, number)
-        wrote = write_number(base, number)
-        if named or wrote:
-            git(
-                "add",
-                "-A",
-                *(["changes"] if named else []),
-                *(["CHANGELOG.md"] if wrote else []),
-            )
+        if named:
+            git("add", "-A", "changes")
             git("commit", "-q", "-m", f"changelog: its number (#{number})")
             for new in named:
                 print(f"named its changelog fragment {new}")
-            if wrote:
-                print(f"wrote #{number} into its changelog entry")
         fields["pr"] = number
         for heading, ss in pools:
             if heading == AFTER:

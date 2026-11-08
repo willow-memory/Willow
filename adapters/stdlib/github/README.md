@@ -3,7 +3,7 @@ section: For maintainers
 line: What willow's repo needs from GitHub, kept in one folder so it can be taken away.
 source: box
 added: 2026-10-23
-writes: CHANGELOG.md, changes/*
+writes: changes/*
 network: GitHub, through gh, to read the author of a pull request a security report points to, and for create_pr.py to list the open pull requests and open yours
 role: repo
 uses: ci, readme, stack, restack, test-impact, against
@@ -34,7 +34,7 @@ main in, [made.py](../ci/made.py) makes again every file a script makes, `ci` li
 `test-impact` runs the gates the change reaches (when it reaches
 everything, only what the rest of it reaches: CI runs them all), and `against` holds it to the open pull
 requests. Then it pushes, opens the pull request (or finds the one open for
-this branch), writes its number into the entry, runs
+this branch), names its changelog fragment for its number, runs
 [changelog.py](../ci/changelog.py) with it, and pushes again.
 
 - **Done by itself:** what a step makes is committed as `tidy:`; the
@@ -48,8 +48,7 @@ this branch), writes its number into the entry, runs
   it looks for the pull request, which an error answer can still have made. A 42 that owes nothing (no other pull request to hold it to, no add-on a person runs to try on real data,
   a gate whose tool isn't here) is said in the pull request instead.
 - **Never:** rebase, amend or force-push, approve or merge, or write a file
-  but the changelog fragment's name (or an older entry's number in
-  CHANGELOG.md).
+  but the changelog fragment's name.
 
 **Taking it away.** Delete this folder and `.github/`. `test_strip.py`, at
 the repo's root, shows that what's left still passes every test that
@@ -62,7 +61,7 @@ its own CI file. [whose.py](../ci/whose.py) needs nothing else.
 **Never:** `github.py` never posts anything itself; the workflow posts what
 `report` prints. It never writes a file, and it never sends the report's own
 text anywhere. `create_pr.py` posts one thing, your pull request, and writes
-one, the number in your changelog entry.
+one thing, your changelog fragment's name.
 
 Exit codes, the kernel's: 0 the comment printed, or `.github/` holds, or the
 pull request is open with everything pushed; 42 `create_pr.py` stopped on
