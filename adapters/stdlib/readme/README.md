@@ -23,7 +23,7 @@ the repo.
 | pools | how the add-ons spread: by section, built and ideas, how many need an install, with a progress bar |
 | newest | the five most recently built add-ons, by the date on their card |
 | pick | the add-on of the week, drawn by a hash of the week |
-| list | every add-on, built (linked) and ideas, by section, A to Z: its line, what it needs and where it goes online in words, and its tags |
+| list | every add-on, built (linked) and ideas, by section, then by [groups.py](groups.py)'s role and group (the UI's headings), the built ones first and the ideas under a heading of their own, A to Z. Each has an anchor (`ADDONS.md#pdf`) and two lines: its line; then what it needs and where it goes online in words, and its tags |
 
 **Where each add-on goes:** [groups.py](groups.py), beside readme.py, is
 the one grouping: the roles, their titles and order, and each role's second

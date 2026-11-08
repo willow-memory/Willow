@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import re
 import subprocess
 import sys
 import tempfile
@@ -106,13 +107,15 @@ def test_the_real_readme_is_current():
 
 def test_building_an_add_on_is_what_turns_planned_into_built(repo):
     text = rd.rebuild(PAGE, None)
-    assert "- [**alpha**](adapters/stdlib/alpha/) — A thing. *new* `no-install` `offline`" in text  # fmt: skip
+    # an entry is three lines: its anchor and name; its line; then, after a
+    # hard break, what it needs and where it goes, and its source and tags
+    assert '- <a id="alpha"></a>[**alpha**](adapters/stdlib/alpha/) \\\n  A thing. \\\n  *new* `no-install` `offline`' in text  # fmt: skip
     assert (
-        "- [**beta**](adapters/deps/beta/) — A thing. Needs somepkg; MIT. *new* `needs-install` `offline`"
+        '- <a id="beta"></a>[**beta**](adapters/deps/beta/) \\\n  A thing. \\\n  Needs somepkg; MIT. *new* `needs-install` `offline`'
         in text
     )
     assert (
-        "- **gamma** (idea) — Later. Reaches this machine only. *box* `no-install` `this-machine` `later`"
+        '- <a id="gamma"></a>**gamma** (idea) \\\n  Later. \\\n  Reaches this machine only. *box* `no-install` `this-machine` `later`'
         in text
     )
     assert "**2 of 3 built**" in text
@@ -121,7 +124,9 @@ def test_building_an_add_on_is_what_turns_planned_into_built(repo):
     with pytest.raises(rd.Refused, match="still in planned.json"):
         rd.rebuild(PAGE, None)
     (repo / "adapters" / "planned.json").write_text("[]")
-    assert "- [**gamma**](adapters/stdlib/gamma/)" in rd.rebuild(PAGE, None)
+    assert '- <a id="gamma"></a>[**gamma**](adapters/stdlib/gamma/)' in rd.rebuild(
+        PAGE, None
+    )
 
 
 def test_only_the_marked_sections_are_written(repo):
@@ -314,7 +319,7 @@ def test_an_ideas_from_is_said_and_an_unknown_field_refused(repo):
     (repo / "adapters" / "planned.json").write_text(json.dumps(planned))
     text = rd.rebuild(PAGE, None)
     assert (
-        "- **gamma** (idea) — Later. Reaches this machine only. From: shape of "
+        '- <a id="gamma"></a>**gamma** (idea) \\\n  Later. \\\n  Reaches this machine only. From: shape of '
         "[a/b](https://github.com/a/b), BSD-3-Clause; shape of [c.example/d](https://c.example/d/), none."
         " *box*" in text
     )
@@ -483,9 +488,11 @@ def add_ideas(repo: Path, *more: dict) -> None:
 
 
 def line_of(repo: Path, name: str) -> str:
-    """The entry's line in the list section (not the newest or the pick)."""
-    return next(x for x in (repo / "ADDONS.md").read_text().splitlines()
-                if x.startswith((f"- [**{name}**]", f"- **{name}** (idea)")))  # fmt: skip
+    """The entry in the list section (not the newest or the pick): its three
+    lines, as one."""
+    lines = (repo / "ADDONS.md").read_text().splitlines()
+    at = next(i for i, x in enumerate(lines) if x.startswith(f'- <a id="{name}"></a>'))
+    return "\n".join(lines[at : at + 3])
 
 
 def test_the_weeks_first_write_keeps_each_entrys_topics_and_nearest(repo):
@@ -558,3 +565,58 @@ def test_a_week_file_for_another_week_or_none_is_stale_to_check(repo, capsys):
     kept = json.loads((repo / "week.json").read_text())
     (repo / "week.json").write_text(json.dumps({**kept, "week": "2026-W44"}))
     assert rd.main(["check"]) == 2
+
+
+def one(name, section, role, built=True):
+    return {"name": name, "section": section, "line": f"{name} things.", "role": role,
+            "built": built, "path": f"adapters/stdlib/{name}/", "kind": "stdlib",
+            "network": "none", "source": "new"}  # fmt: skip
+
+
+def test_a_section_is_cut_by_groups_py_built_first_and_each_entry_has_an_anchor():
+    """Inside a section: a heading per role, in groups.py's order, or per
+    group where the role has groups (readers by what they read); the built
+    ones first, then the ideas under a heading of their own."""
+    every = [
+        one("zz-tool", "Reading more kinds of files", "tools"),
+        one("mail", "Reading more kinds of files", "reads"),
+        one("pdf", "Reading more kinds of files", "reads"),
+        one("bank", "Reading more kinds of files", "reads"),
+        one("aa-plan", "Reading more kinds of files", "reads", built=False),
+    ]
+    worked = {a["name"]: {"tags": [], "near": []} for a in every}
+    text = rd.section_list(every, worked).split("## Reading more kinds of files", 1)[1]
+    text = text.split("\n## ", 1)[0]
+    heads = re.findall(r"^#{3,4} (.+)$", text, re.M)
+    assert heads == ["Documents and office files", "Mail and chat",
+                     "Exports from apps and services", "Other readers",
+                     "Other readers: ideas, not built yet", "Tools you run yourself"]  # fmt: skip
+    for n in ("pdf", "mail", "bank", "aa-plan", "zz-tool"):
+        assert f'<a id="{n}"></a>' in text, n
+    assert text.index('id="pdf"') < text.index('id="mail"') < text.index('id="bank"')
+
+
+def test_the_real_list_is_every_add_on_once_under_a_heading():
+    every = rd.addons()
+    page = (rd.ROOT / "ADDONS.md").read_text(encoding="utf-8")
+    listed = re.findall(r'^- <a id="([^"]+)"></a>', page.split("<!-- willow:list -->")[1], re.M)  # fmt: skip
+    assert sorted(listed) == sorted(a["name"] for a in every)
+
+
+def test_a_heading_with_more_than_a_screen_is_cut_a_to_z_and_says_where():
+    """Three lines an entry: more than RUN under one heading would run past
+    a screen, so it's cut into even runs, each heading saying its letters."""
+    names = [f"{c}{i}" for c in "abcdefghij" for i in range(4)]  # 40, a to j
+    every = [one(n, "Keeping track", "tools") for n in names]
+    worked = {n: {"tags": [], "near": []} for n in names}
+    text = rd.section_list(every, worked).split("## Keeping track", 1)[1].split("\n## ", 1)[0]  # fmt: skip
+    heads = re.findall(r"^#{3,4} (.+)$", text, re.M)
+    assert heads == ["Tools you run yourself, a to d", "Tools you run yourself, d to g",
+                     "Tools you run yourself, h to j"]  # fmt: skip
+    runs = re.split(r"^#{3,4} .+$", text, flags=re.M)[1:]
+    assert [r.count('<a id="') for r in runs] == [14, 14, 12]
+    assert all(r.count('<a id="') <= rd.RUN for r in runs)
+    few = rd.section_list(every[: rd.RUN], worked)
+    assert "### Tools you run yourself\n" in few and ", a to" not in few, (
+        "not cut at RUN"
+    )
