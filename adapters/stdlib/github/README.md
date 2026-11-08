@@ -22,7 +22,7 @@ kernel and every other add-on run and test the same without it.
 |---|---|
 | [host.json](host.json) | how GitHub titles the merge of a pull request, for `adapters/stdlib/ci/whose.py --host` |
 | `report` | a security report's comment: the pull request behind each line the report names, and its author, tagged |
-| `check` | `.github/` held to the repo: one CI run per change (pushes run on main only, and a pull request's newer commit cancels the run it replaces), the CI matrix, each of ci.py's gates run by exactly one job and every job on the same Pythons, the idea form, the security form, and the changelog job skipping Dependabot's pull requests and no one else's |
+| `check` | `.github/` held to the repo: one CI run per change (pushes run on main only, a pull request's newer commit cancels the run it replaces, and a push the merge queue already ran stands on that run: every job that runs a gate needs `queued` and stands down), the CI matrix, each of ci.py's gates run by exactly one job and every job on the same Pythons, the idea form, the security form, and the changelog job skipping Dependabot's pull requests and no one else's |
 | [create_pr.py](create_pr.py) | this branch's pull request, opened by the steps in [create_pr.md](create_pr.md); see below |
 | `.github/` | GitHub reads it only at the repo's root, so it lives there, but it belongs to this folder and `check` holds it |
 

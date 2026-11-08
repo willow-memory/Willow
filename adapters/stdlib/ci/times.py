@@ -10,10 +10,11 @@ went stale: a file it doesn't list counts as the median, so new files, and
 files that grew, unbalance the chunks (CI's slowest shard sets every pull
 request's wait).
 
-CI writes pytest's JUnit XML for each tests:adapters gate on a push to main
-(WILLOW_JUNIT_DIR, one file per gate) and keeps them as the run's
-`test-times` artifact. `write --run latest` fetches that artifact from the
-last green run on main with gh (`--run ID` names one); `--from DIR` reads
+CI writes pytest's JUnit XML for each tests:adapters gate on main's commit
+(WILLOW_JUNIT_DIR, one file per gate; in the merge queue's run, or the push's
+when the queue didn't test it) and keeps them as the run's `test-times`
+artifact. `write --run latest` fetches that artifact from the run main_run.py
+finds, with gh (`--run ID` names one); `--from DIR` reads
 XML files already here. Each file seen gets its seconds, summed over its
 tests; a file not seen keeps what it had; a file that's gone comes out.
 `check` says which test files the json lacks and which it lists that are
@@ -97,12 +98,14 @@ def from_run(run: str) -> list[str]:
     if gh is None:
         raise Refused("gh isn't installed: fetch the artifact by hand and use --from")
     if run == "latest":
-        got = subprocess.run([gh, "run", "list", "--workflow", "ci.yml", "--branch", "main",
-                              "--status", "success", "--event", "push", "--limit", "1",
-                              "--json", "databaseId", "--jq", ".[0].databaseId"],
+        # main's push run, or the merge queue's run of its commit when the
+        # push stood on it (main_run.py says which)
+        got = subprocess.run([sys.executable, str(HERE / "main_run.py"), "--artifact", ARTIFACT],
                              capture_output=True, text=True)  # fmt: skip
-        run = got.stdout.strip()
-        if got.returncode != 0 or not run:
+        run = (
+            got.stdout.split()[0] if got.returncode == 0 and got.stdout.split() else ""
+        )
+        if not run:
             raise Refused(f"no green run on main to read: {got.stderr.strip()[:200]}")
     with tempfile.TemporaryDirectory() as tmp:
         got = subprocess.run([gh, "run", "download", run, "--name", ARTIFACT, "--dir", tmp],
