@@ -446,12 +446,12 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - <a id="medical-records"></a>**medical-records** (idea) \
   Your health records as FHIR JSON or C-CDA XML: visits, results and prescriptions as dated lines. \
   *new* `no-install` `offline` `json` `health` · near: box-health, takeout, schema-check
-
-#### Other readers: ideas, not built yet, m to w
-
 - <a id="moodle"></a>**moodle** (idea) \
   Moodle course backups: pages, assignments, quizzes and forum posts as passages. \
   *new* `no-install` `offline` `assignments` `course` · near: canvas, syllabus, front-page
+
+#### Other readers: ideas, not built yet, m to w
+
 - <a id="music-library"></a>**music-library** (idea) \
   Your music files' tags (MP3, FLAC, M4A): artist, album, year and track, as lines. \
   *new* `no-install` `offline` `year` `library` · near: listening, livestock, tax-year
@@ -488,6 +488,9 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - <a id="voice"></a>**voice** (idea) \
   Dictation, calls and lectures transcribed into dated text. \
   Needs faster-whisper; MIT. Goes online: the model, downloaded once. *new* `needs-install` `online` `transcribed` `voice` · near: writefreely, calendar, texts
+- <a id="wis"></a>**wis** (idea) \
+  Audio files transcribed by a Willow Inference Server you run on your own network, kept as dated text. \
+  Needs a Willow Inference Server you run; Apache-2.0, called over HTTP, not linked. Goes online: your own Willow Inference Server, to transcribe the audio you point it at. From: dep of [toverainc/willow-inference-server](https://github.com/toverainc/willow-inference-server), Apache-2.0. *new* `needs-install` `online` `transcribed` `server` · near: voice, writefreely, calendar
 - <a id="writefreely"></a>**writefreely** (idea) \
   WriteFreely posts, from its export or a copy of its SQLite database, as dated text. \
   *new* `no-install` `offline` `copy` `sqlite` · near: apple-notes, bookmarks, nestor
@@ -761,6 +764,15 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - <a id="dialect-dates"></a>[**dialect-dates**](adapters/deps/dialect-dates/) \
   The words your folder uses far more than the world does, each dated by its first and last appearance, with the passage that first says it. \
   Needs wordfreq; Apache-2.0, its data CC BY-SA 4.0. Uses dialect, first-mention. *new* `needs-install` `offline` `dialect` `far` · near: dialect, code-shape, pdf
+
+### Tools you run yourself
+
+
+#### Tools you run yourself: ideas, not built yet
+
+- <a id="misheard"></a>**misheard** (idea) \
+  A spoken question's misheard words corrected against your own folder's words before it is asked, each change shown. \
+  From: shape of [toverainc/willow-autocorrect](https://github.com/toverainc/willow-autocorrect), Apache-2.0. *new* `no-install` `offline` `spoken` · near: pile-build, predict, dictate
 
 ## Keeping track
 
@@ -1094,10 +1106,13 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 
 - <a id="encrypt"></a>**encrypt** (idea) \
   Keeps the record folder encrypted at rest. \
-  Needs cryptography; Apache-2.0 or BSD. *new* `needs-install` `offline` `rest` · near: make-it-so, ci-memo, almanac-keep
+  Needs cryptography; Apache-2.0 or BSD. From: shape of [willow-memory/willow-data-vault](https://github.com/willow-memory/willow-data-vault), Apache-2.0. *new* `needs-install` `offline` `rest` · near: make-it-so, ci-memo, almanac-keep
 - <a id="family-box"></a>**family-box** (idea) \
   One box for a household: each person's own seal, and every answer showing whose it is. \
   *new* `no-install` `offline` `person` `family` · near: second-opinion, dialect, family-tree
+- <a id="grant"></a>**grant** (idea) \
+  Someone else allowed to ask part of your folder: a grant to their key, scoped to a path and a span of time, passed on only narrower, each link signed and checked, never your seal key. \
+  Uses share. From: shape of [willowprotocol.org/specs/meadowcap](https://willowprotocol.org/specs/meadowcap/), none; shape of [Deln0r/willow-go](https://github.com/Deln0r/willow-go), MIT. *new* `no-install` `offline` `signed` `key` · near: signed-commits, serve, xref
 - <a id="handoff"></a>**handoff** (idea) \
   A box handed to the person you name (an executor, a carer): read only, your seals kept, theirs their own. \
   *new* `no-install` `offline` `person` · near: family-box, serve, datasette
@@ -1595,6 +1610,12 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - <a id="socratic"></a>**socratic** (idea) \
   Asks you questions about your own notes instead of answering, each citing the passage it asked from. \
   *new* `no-install` `offline` `citing` · near: equations, oakenscroll, sort-ask
+- <a id="wake-gate"></a>**wake-gate** (idea) \
+  Ask out loud only after a wake word you chose: audio before it is never transcribed, kept or sent, by a state machine with one gated step to the transcriber. \
+  Needs openWakeWord, silero-vad, faster-whisper and sounddevice; Apache-2.0, MIT, MIT, MIT. openWakeWord's own pre-trained models are CC BY-NC-SA 4.0, non-commercial: train your own wake word, as willow-mcp's hey_willow is. Goes online: the models, downloaded once. From: code of [willow-memory/willow-mcp](https://github.com/willow-memory/willow-mcp), Apache-2.0. *new* `needs-install` `online` `loud` `gate` · near: dictate, local-model, kiosk
+- <a id="willow-box"></a>**willow-box** (idea) \
+  Ask from a Willow voice box on your counter: its application server sends your words here and reads the answer back. \
+  Goes online: your Willow Application Server, on your own network, to answer what the box heard. From: shape of [HeyWillow/willow-application-server](https://github.com/HeyWillow/willow-application-server), Apache-2.0. *new* `no-install` `online` `voice` · near: aider, speak, shell
 
 ### What it makes for elsewhere
 
