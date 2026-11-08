@@ -47,7 +47,7 @@ add-on, so it runs the same if you delete every one.
 - **Portable:** reimplemented in Java, TypeScript, C#, Go and Rust, and all
   six are held to the same 4,686 test cases.
 
-**Contents:** [Your first five minutes](#your-first-five-minutes) · [What it is not](#what-it-is-not) · [Building on it](#building-on-it) · [What you can build on it](#what-you-can-build-on-it) · [How it works](#how-it-works) · [Commands](#commands) · [Guarantees, and the tests behind them](#guarantees-and-the-tests-behind-them) · [Where it falls short](#where-it-falls-short) · [How it's verified](#how-its-verified) · [What's in this repo](#whats-in-this-repo) · [Licence](#licence)
+**Contents:** [Your first five minutes](#your-first-five-minutes) · [Which path am I on?](#which-path-am-i-on) · [What it is not](#what-it-is-not) · [Building on it](#building-on-it) · [What you can build on it](#what-you-can-build-on-it) · [How it works](#how-it-works) · [Commands](#commands) · [Guarantees, and the tests behind them](#guarantees-and-the-tests-behind-them) · [Where it falls short](#where-it-falls-short) · [How it's verified](#how-its-verified) · [What's in this repo](#whats-in-this-repo) · [Licence](#licence)
 
 
 ## Your first five minutes
@@ -67,6 +67,32 @@ $ python kernel.py bite --box odile-record "how are the bees"
 The answer is up to three passages from her files, each with its file and
 line. [The full five minutes](docs/tour.md) goes on: a question her files
 don't answer, teaching it her words, and approving an answer with the key.
+
+
+## Which path am I on?
+
+| I want to… | Start here |
+|---|---|
+| See that it works, in five minutes | [docs/tour.md](docs/tour.md) (the commands above) |
+| Ask questions of my own files, with the kernel alone | [docs/use/kernel.md](docs/use/kernel.md) |
+| Put a stack of add-ons together on this machine | `python ui/canvas.py`: [docs/use/stack.md](docs/use/stack.md) and [ui/README.md](ui/README.md) |
+| Know why a question found nothing | [docs/use/asking.md](docs/use/asking.md) and [docs/how-it-works.md](docs/how-it-works.md) |
+| Read the guarantees and the law, or change willow | [Govern and contribute](#govern-and-contribute), below |
+
+### Govern and contribute
+
+The rules the code is written to enforce, and how to change it:
+
+- [CONSTITUTION.md](CONSTITUTION.md): the law, always a draft; its first
+  article can never be loosened
+- [DECISIONS.md](DECISIONS.md): what's settled, and why
+- [LIMITS.md](LIMITS.md): what it doesn't do, on purpose or not yet
+- [CONTRIBUTING.md](CONTRIBUTING.md): the rules every change follows
+- [AGENTS.md](AGENTS.md): for AI agents changing willow
+- [SECURITY.md](SECURITY.md), [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) and
+  [BUGS.md](BUGS.md)
+
+None of them is needed to ask your first question of your own files.
 
 
 ## What it is not
@@ -316,7 +342,7 @@ willow/
 ├── ports/                    kernel.py rewritten in other languages
 ├── vectors/                  what keeps the six implementations identical
 ├── demo/                     four made-up people, and one real bug, to try it on
-├── docs/                     the full first five minutes, how it works in full, and agents' how-tos
+├── docs/                     the full first five minutes, using it on your own files, how it works in full, and agents' how-tos
 ├── .github/                  CI, the issue forms, the pull request template: the GitHub add-on's
 ├── .gitignore                generated files and build output
 ├── .gitattributes            every file checked out with LF line endings, on every system
