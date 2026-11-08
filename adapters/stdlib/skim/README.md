@@ -1,6 +1,6 @@
 <!-- willow-addon
 section: For maintainers
-line: The lists this repo makes held to how a person reads them: a heading every screen, no line too long to read, and every add-on and folder a name to jump to.
+line: The lists this repo makes held to how a person reads them: a heading each screen, no line too long, each add-on and folder a name to find.
 source: new
 added: 2026-11-08
 writes: nothing
@@ -33,8 +33,12 @@ its counts, or `reads within the bounds`. On main today FILES.md is one
 run of 1,981 lines; ADDONS.md has 529 lines over 160 characters and 531
 add-ons with no anchor.
 
-**It reports; it refuses nothing.** A list that fails is one to make easier
-to read, not a broken build, and no gate runs it until the lists pass.
+**It reports; the lists' makers refuse.** skim itself refuses nothing: a
+list that fails is one to make easier to read. Both lists pass it, and each
+one's maker holds it there: readme's tests fail an ADDONS.md that doesn't
+read within the bounds, and ci's files.py tests a FILES.md that doesn't. A
+card's or an idea's line is at most 140 characters (readme.py refuses a
+longer one), and readme.py wraps every line it writes past 158.
 
 **Never:** writes anything, goes online, or reads more than the files it's
 given.

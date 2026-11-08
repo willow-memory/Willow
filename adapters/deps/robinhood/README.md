@@ -1,6 +1,6 @@
 <!-- willow-addon
 section: Keeping track
-line: Your Robinhood account as dated files: positions, orders, portfolio and watchlists, read through Robinhood's own MCP server and never traded on.
+line: Your Robinhood account as dated files (positions, orders, portfolio, watchlists), read through Robinhood's own MCP server, never traded on.
 source: new
 added: 2026-11-06
 needs: mcp (Python SDK); MIT

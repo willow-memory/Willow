@@ -1,6 +1,6 @@
 <!-- willow-addon
 section: Trust and proof
-line: Your approved answers as Jeles nuggets, with question, answer, sources and who sealed it, and Jeles' own verified nuggets read back as passages.
+line: Your approved answers as Jeles nuggets (question, answer, sources, who sealed it), and Jeles' own verified nuggets read back as passages.
 source: new
 added: 2026-11-01
 writes: to

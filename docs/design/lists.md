@@ -102,9 +102,11 @@ now working, or changes it in the same pull request.
    anchor and name, its line, then its facts and tags), under the UI's own
    headings, a heading cut A to Z past 18 entries. What's left of `width`
    is the cards' own lines: 66 run past 160 characters by themselves.
-   **Next, the cards:** shorten those lines, then have readme.py refuse a
-   card line over a length (say 140), so a new one can't bring it back;
-   then `width` holds for ADDONS.md and skim can be a gate on it.
+   **Then, the cards (done):** the 58 lines past 140 characters were
+   shortened, readme.py refuses a longer one and wraps what it writes past
+   158, and FILES.md's long notes were cut down. Both lists read within
+   skim's bounds, and a test in each one's maker (readme, ci/files.py)
+   holds them there.
 
 ## The idea: skim
 

@@ -1,6 +1,6 @@
 <!-- willow-addon
 section: Assistants
-line: Each failed command an assistant runs kept as a row of its hash and exit code, so the same failure the third time is named, not retried blind.
+line: Each failed command an assistant runs kept as a row of its hash and exit code, so the third time it fails it's named, not retried blind.
 source: new
 added: 2026-11-07
 writes: record

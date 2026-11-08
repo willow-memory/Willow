@@ -1,6 +1,6 @@
 <!-- willow-addon
 section: Assistants
-line: Every hook's answer kept as a row with the hashes of what it was given and what it said, and check runs it again to prove the same input still gets the same answer.
+line: Every hook's answer kept as a row of the hashes of what it got and said; check runs it again to prove the same input gets the same answer.
 source: new
 added: 2026-10-24
 writes: record, to

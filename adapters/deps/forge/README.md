@@ -1,6 +1,6 @@
 <!-- willow-addon
 section: Assistants
-line: A sentence in, the add-ons it names or means out, as a plan with its forks for the Forge's checkpoint to resolve and the person to seal before anything runs.
+line: A sentence in, the add-ons it means out: a plan with its forks, for the Forge's checkpoint to settle and the person to seal before it runs.
 source: new
 added: 2026-11-03
 needs: forge-play; Apache-2.0

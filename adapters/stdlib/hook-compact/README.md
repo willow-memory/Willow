@@ -1,6 +1,6 @@
 <!-- willow-addon
 section: Assistants
-line: A PreCompact hook that prints what the record still holds open, seals waiting and questions unanswered, so it survives the assistant's summary.
+line: A PreCompact hook that prints what the record holds open (seals waiting, questions unanswered), so it survives the assistant's summary.
 source: box
 added: 2026-10-29
 writes: nothing

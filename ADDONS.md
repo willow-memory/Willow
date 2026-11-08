@@ -68,11 +68,16 @@ its list: someone who speaks the language can add one without much Python.
 ## Newest
 
 <!-- willow:newest -->
-- 2026-11-02 · [**zotero**](adapters/stdlib/zotero/) — Your Zotero library, from a copy of zotero.sqlite: items, notes and PDF annotations, each with its citation.
-- 2026-11-02 · [**weights-pin**](adapters/stdlib/weights-pin/) — A local model's weights file hashed before each run and refused when it differs from the hash on its model card.
-- 2026-11-02 · [**weights-card**](adapters/stdlib/weights-card/) — A model card filled in from the weights file's own header, GGUF or safetensors (architecture, quantization, context length, licence), so the card says what the file says.
-- 2026-11-02 · [**webarchive**](adapters/stdlib/webarchive/) — Pages Safari saved as .webarchive, as their readable text with the address they came from, and their frames' text after them.
-- 2026-11-02 · [**warc**](adapters/stdlib/warc/) — WARC web archives, from Webrecorder, Heritrix or the Internet Archive, read without unpacking: each captured page's text with its address and the time it was captured.
+- 2026-11-02 · [**zotero**](adapters/stdlib/zotero/) \
+  Your Zotero library, from a copy of zotero.sqlite: items, notes and PDF annotations, each with its citation.
+- 2026-11-02 · [**weights-pin**](adapters/stdlib/weights-pin/) \
+  A local model's weights file hashed before each run and refused when it differs from the hash on its model card.
+- 2026-11-02 · [**weights-card**](adapters/stdlib/weights-card/) \
+  A model card filled in from the weights file's own GGUF or safetensors header: architecture, quantization, context length, licence.
+- 2026-11-02 · [**webarchive**](adapters/stdlib/webarchive/) \
+  Pages Safari saved as .webarchive, as their readable text with the address they came from, and their frames' text after them.
+- 2026-11-02 · [**warc**](adapters/stdlib/warc/) \
+  WARC web archives (Webrecorder, Heritrix, the Internet Archive) read without unpacking: each page's text with its address and capture time.
 <!-- /willow:newest -->
 
 ## Add-on of the week
@@ -84,7 +89,9 @@ its list: someone who speaks the language can add one without much Python.
 <!-- /willow:pick -->
 
 <!-- willow:list -->
-**Contents:** [Reading more kinds of files](#reading-more-kinds-of-files) · [Finding things](#finding-things) · [Your own words](#your-own-words) · [Keeping track](#keeping-track) · [Trust and proof](#trust-and-proof) · [Privacy and safety](#privacy-and-safety) · [Assistants](#assistants) · [Ways to use it](#ways-to-use-it) · [Play](#play) · [For maintainers](#for-maintainers)
+**Contents:** [Reading more kinds of files](#reading-more-kinds-of-files) · [Finding things](#finding-things) · [Your own words](#your-own-words) ·
+[Keeping track](#keeping-track) · [Trust and proof](#trust-and-proof) · [Privacy and safety](#privacy-and-safety) · [Assistants](#assistants) ·
+[Ways to use it](#ways-to-use-it) · [Play](#play) · [For maintainers](#for-maintainers)
 
 ## Reading more kinds of files
 
@@ -102,7 +109,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
   Kindle "My Clippings.txt" highlights and .epub text. \
   *new* `no-install` `offline` `highlights` `book` · near: oakenscroll, almanac, text
 - <a id="clauses"></a>[**clauses**](adapters/stdlib/clauses/) \
-  A policy, contract or set of terms as one sentence a passage, so an answer lands on the clause, and what changed between two versions, sentence by sentence. \
+  A policy, contract or terms as one sentence a passage, so an answer lands on its clause; and what changed between two versions, by sentence. \
   *new* `no-install` `offline` `policies` · near: web-pages, photos, pdf
 - <a id="equations"></a>[**equations**](adapters/stdlib/equations/) \
   Each displayed equation in LaTeX sources as a passage of its own, with the sentences around it and its label, cited by the .tex file's line. \
@@ -120,14 +127,15 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
   A MediaWiki XML dump: each page's latest text, with its title and when it changed. \
   *new* `no-install` `offline` `title` `xml` · near: notion, jira, joplin
 - <a id="notation"></a>[**notation**](adapters/stdlib/notation/) \
-  Each displayed equation in LaTeX sources with the words its paper gives for its symbols ("where η is the packing fraction"), so a question in words finds the equation. \
+  Each displayed LaTeX equation with the words its paper gives its symbols ("where η is the packing fraction"), so words find the equation. \
   Uses equations. *new* `no-install` `offline` `sources` `latex` · near: equations, latex, bibtex
 
 #### Documents and office files, o to z
 
 - <a id="ocr"></a>[**ocr**](adapters/deps/ocr/) \
   Text out of photos of letters and scanned PDFs. \
-  Needs Pillow and pypdf, and the tesseract program, run not linked; MIT-CMU, BSD-3-Clause, Apache-2.0. *new* `needs-install` `offline` `photos` `pdf` · near: pdf, photos, sheets
+  Needs Pillow and pypdf, and the tesseract program, run not linked; MIT-CMU, BSD-3-Clause, Apache-2.0. *new* `needs-install` `offline` `photos` `pdf` · near:
+  pdf, photos, sheets
 - <a id="office"></a>[**office**](adapters/stdlib/office/) \
   .docx, .odt, .pptx, .xlsx and .ods, which are all zipped XML. \
   *new* `no-install` `offline` `office` · near: calendar, mail, text
@@ -255,7 +263,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
   wallabag's JSON or HTML export: saved entries as plain text, with their tags. \
   *new* `no-install` `offline` `html` `article` · near: karakeep, readwise, evernote
 - <a id="warc"></a>[**warc**](adapters/stdlib/warc/) \
-  WARC web archives, from Webrecorder, Heritrix or the Internet Archive, read without unpacking: each captured page's text with its address and the time it was captured. \
+  WARC web archives (Webrecorder, Heritrix, the Internet Archive) read without unpacking: each page's text with its address and capture time. \
   *new* `no-install` `offline` `unpacking` `address` · near: joplin, web-pages, webarchive
 - <a id="web-pages"></a>[**web-pages**](adapters/stdlib/web-pages/) \
   Saved web pages, .html and .mhtml, as their readable text, with the address they came from. \
@@ -267,7 +275,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 ### Exports from apps and services
 
 - <a id="almanac"></a>[**almanac**](adapters/stdlib/almanac/) \
-  An Almanac's catalog.json (climate, health, civic and the rest): each public dataset's description and source as passages, with when its link was last checked. \
+  An Almanac's catalog.json: each public dataset's description and source as passages, with when its link was last checked. \
   *new* `no-install` `offline` `almanac` `links` · near: oakenscroll, almanac-keep, books
 - <a id="almanac-keep"></a>[**almanac-keep**](adapters/stdlib/almanac-keep/) \
   An Almanac entry's best permitted copy, from the publisher or its ranked recovery list, fetched into your folder with its SHA-256. \
@@ -381,7 +389,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
   Your bash, zsh and fish history: what you ran, and when the shell recorded it. \
   *new* `no-install` `offline` `bash` `fish` · near: jrnl, subtitles, shell
 - <a id="star-system"></a>[**star-system**](adapters/deps/star-system/) \
-  A friend's star-system simulation (science_bitch) run deterministically and written as cited passages: each body's Kepler period and how well the run conserves energy, angular momentum and linear momentum. \
+  A friend's star-system simulation (science_bitch) run deterministically: each body's Kepler period, and how well the run conserves momentum. \
   Needs numpy; BSD-3-Clause. *bot* `needs-install` `offline` · near: kart, static-search, manifests
 
 ### Media
@@ -456,7 +464,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
   Your music files' tags (MP3, FLAC, M4A): artist, album, year and track, as lines. \
   *new* `no-install` `offline` `year` `library` · near: listening, livestock, tax-year
 - <a id="package-docs"></a>**package-docs** (idea) \
-  The READMEs and docs inside packages you've already installed (site-packages, node_modules, Cargo's registry cache), so you can ask your dependencies offline. \
+  The READMEs and docs in packages you've installed (site-packages, node_modules, Cargo's cache), so you can ask your dependencies offline. \
   *new* `no-install` `offline` `install` `package` · near: install-scripts, pins, package-contents
 - <a id="past-papers"></a>**past-papers** (idea) \
   Past exam papers and their mark schemes as passages: which year asked this, and what earned the marks. \
@@ -487,10 +495,13 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
   *new* `no-install` `offline` `message` `chats` · near: chats, signal, texts
 - <a id="voice"></a>**voice** (idea) \
   Dictation, calls and lectures transcribed into dated text. \
-  Needs faster-whisper; MIT. Goes online: the model, downloaded once. *new* `needs-install` `online` `transcribed` `voice` · near: writefreely, calendar, texts
+  Needs faster-whisper; MIT. Goes online: the model, downloaded once. *new* `needs-install` `online` `transcribed` `voice` · near: writefreely, calendar,
+  texts
 - <a id="wis"></a>**wis** (idea) \
   Audio files transcribed by a Willow Inference Server you run on your own network, kept as dated text. \
-  Needs a Willow Inference Server you run; Apache-2.0, called over HTTP, not linked. Goes online: your own Willow Inference Server, to transcribe the audio you point it at. From: dep of [toverainc/willow-inference-server](https://github.com/toverainc/willow-inference-server), Apache-2.0. *new* `needs-install` `online` `transcribed` `server` · near: voice, writefreely, calendar
+  Needs a Willow Inference Server you run; Apache-2.0, called over HTTP, not linked. Goes online: your own Willow Inference Server, to transcribe the audio
+  you point it at. From: dep of [toverainc/willow-inference-server](https://github.com/toverainc/willow-inference-server), Apache-2.0. *new* `needs-install`
+  `online` `transcribed` `server` · near: voice, writefreely, calendar
 - <a id="writefreely"></a>**writefreely** (idea) \
   WriteFreely posts, from its export or a copy of its SQLite database, as dated text. \
   *new* `no-install` `offline` `copy` `sqlite` · near: apple-notes, bookmarks, nestor
@@ -502,7 +513,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 
 - <a id="file-kind"></a>**file-kind** (idea) \
   Each file the kernel leaves out, named by what its first bytes say it is (a PDF, a PNG, a zip), whatever its name or extension says. \
-  From: shape of [wagtail/Willow](https://github.com/wagtail/Willow), BSD-3-Clause. *new* `no-install` `offline` `whatever` `pdf` · near: text, pdf, why-not
+  From: shape of [wagtail/Willow](https://github.com/wagtail/Willow), BSD-3-Clause. *new* `no-install` `offline` `pdf` `whatever` · near: text, pdf, why-not
 
 ## Finding things
 
@@ -554,10 +565,10 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
   Keeps your folder's search ready in one background process on this machine, so a hook's lookup answers in milliseconds instead of seconds. \
   Uses pile-rank, pile-rungs. *bot* `no-install` `offline` `second` `store` `pile` · near: pile-rank, pile-rungs, pile-store
 - <a id="pile-store"></a>[**pile-store**](adapters/stdlib/pile-store/) \
-  Your folder's passages kept in one file between questions, used only while the folder hasn't changed, so other add-ons don't re-read it every time. \
+  Your folder's passages kept in one file between questions, used only while the folder is unchanged, so add-ons don't re-read it each time. \
   Uses index-cache. *bot* `no-install` `offline` `store` `pile` · near: pile-serve, pile-build, pile-sweep
 - <a id="scan"></a>[**scan**](adapters/stdlib/scan/) \
-  Index a big folder once, then ask it a list of questions in seconds, with the kernel's own answers: of everything, or only what changed since another index. \
+  Index a big folder once, then ask it a list of questions in seconds with the kernel's own answers, of everything or only what's changed. \
   Uses todo. *box* `no-install` `offline` `scan` `ranked` `index` · near: latent, index-cache, bm25
 
 #### What it makes for elsewhere: ideas, not built yet
@@ -570,7 +581,8 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
   *new* `no-install` `offline` `beside` `joins` · near: ids, translate, joins
 - <a id="meaning"></a>**meaning** (idea) \
   Search by meaning: "who owes me money" finds "invoice outstanding". \
-  Needs sentence-transformers; Apache-2.0. Goes online: the model, downloaded once from Hugging Face. *new* `needs-install` `online` `invoice` `owes` · near: starter-words, sort, amounts
+  Needs sentence-transformers; Apache-2.0. Goes online: the model, downloaded once from Hugging Face. *new* `needs-install` `online` `invoice` `owes` · near:
+  starter-words, sort, amounts
 - <a id="vectors"></a>**vectors** (idea) \
   The meaning add-on's vectors kept in the store's own SQLite file, so they're computed once per passage, not at every question. \
   Needs sqlite-vec and model2vec; MIT or Apache-2.0. *bot* `needs-install` `offline` `store` `sqlite` `pile` · near: pile-store, codebase-memory, welcome
@@ -590,7 +602,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
   Who owns this file: the CODEOWNERS rule that matches it, cited by line, on GitHub, GitLab and Forgejo alike. \
   *new* `no-install` `offline` `gitlab` `github` · near: gitlab, across, rules
 - <a id="fair-merge"></a>[**fair-merge**](adapters/stdlib/fair-merge/) \
-  Each folder or repo ranked on its own and the lists merged in turns, so a large corpus can't push a small one out on volume alone, and a source that found nothing says so. \
+  Each folder ranked on its own and the lists merged in turns, so a big corpus can't crowd out a small one; one that found nothing says so. \
   *bot* `no-install` `offline` `sources` `pile` · near: scan, parallel, ripgrep
 - <a id="first-mention"></a>[**first-mention**](adapters/stdlib/first-mention/) \
   When your files first mention something, and the line that does. \
@@ -602,19 +614,19 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
   A quote that is almost in your files: the closest passage, and the words it adds, drops or changes, so a misquote shows as one. \
   *new* `no-install` `offline` `quote` `drops` · near: quotes, stale, xref
 - <a id="pile-gold"></a>[**pile-gold**](adapters/stdlib/pile-gold/) \
-  Your approved answers used as a test: each question asked again, scored by how often the search puts the passage that held it in its top five. \
+  Your approved answers used as a test: each question asked again, scored by how often search puts its passage in the top five. \
   Uses pile-rank, scan. *box* `no-install` `offline` `search` `pile` · near: again, pile-store, pile-sweep
 - <a id="pile-rank"></a>[**pile-rank**](adapters/stdlib/pile-rank/) \
   Finds passages that use your folder's own phrases ("sourdough bread"), not just the separate words, ranked without any AI model. \
   Uses pile-store. *bot* `no-install` `offline` `phrases` `ranked` `pile` · near: pile-rungs, pile-serve, all
-- <a id="pile-rungs"></a>[**pile-rungs**](adapters/stdlib/pile-rungs/) \
-  Tries the strict word match first, then your folder's phrases, and says which one found the answer and why the others didn't. \
-  Uses pile-rank. *bot* `no-install` `offline` `matched` `phrases` `pile` · near: pile-rank, pile-serve, pile-store
 
 #### Tools you run yourself, p to w
 
+- <a id="pile-rungs"></a>[**pile-rungs**](adapters/stdlib/pile-rungs/) \
+  Tries the strict word match first, then your folder's phrases, and says which one found the answer and why the others didn't. \
+  Uses pile-rank. *bot* `no-install` `offline` `matched` `phrases` `pile` · near: pile-rank, pile-serve, pile-store
 - <a id="pile-sweep"></a>[**pile-sweep**](adapters/stdlib/pile-sweep/) \
-  Finds the passage length that suits your folder, by asking your own answered questions at several lengths and naming the one that finds the most. \
+  Finds the passage length that suits your folder, by asking your answered questions at several lengths and naming the one finding the most. \
   Uses pile-gold, pile-rank, scan. *bot* `no-install` `offline` `pile` · near: pile-store, pile-gold, pile-rank
 - <a id="quote-check"></a>[**quote-check**](adapters/stdlib/quote-check/) \
   Is this exact quote in my files, and where? For writers, journalists and students. \
@@ -627,7 +639,8 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
   Needs DuckDB; MIT. *box* `needs-install` `offline` · near: mcp, static-search, dialect
 - <a id="ripgrep"></a>[**ripgrep**](adapters/deps/ripgrep/) \
   Exact search through ripgrep, much faster on a big folder, its hits checked against the kernel's hashes. \
-  Needs the ripgrep program, from the ripgrep wheel on PyPI or your own rg; MIT or Unlicense. *new* `needs-install` `offline` `search` · near: manifests, pdf, ocr
+  Needs the ripgrep program, from the ripgrep wheel on PyPI or your own rg; MIT or Unlicense. *new* `needs-install` `offline` `search` · near: manifests, pdf,
+  ocr
 - <a id="rules"></a>[**rules**](adapters/stdlib/rules/) \
   A game's or a house's rules, approved one section at a time, so asking what a rule says gives back that exact section, word for word. \
   *bot* `no-install` `offline` `game` · near: session-seal, game-master, night-batch
@@ -669,7 +682,8 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
   Needs scip-python; MIT. *new* `needs-install` `offline` `reference` · near: hook-impact, people, code-shape
 - <a id="upgrade-notes"></a>**upgrade-notes** (idea) \
   Before an upgrade: the changelog lines between the version you lock and the one you'd move to, from the package's own files. \
-  Goes online: the registry (PyPI, npm or crates.io), to fetch the newer version's changelog. *new* `no-install` `online` `package` `version` · near: lockfiles, package-contents, install-scripts
+  Goes online: the registry (PyPI, npm or crates.io), to fetch the newer version's changelog. *new* `no-install` `online` `package` `version` · near:
+  lockfiles, package-contents, install-scripts
 
 ## Your own words
 
@@ -739,7 +753,8 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
   *new* `no-install` `offline` `life` · near: quiz, why-not, browse
 - <a id="synonyms"></a>**synonyms** (idea) \
   Suggests words-list lines for a word no file has. \
-  Needs nltk and WordNet; Apache-2.0. Goes online: the WordNet data, downloaded once. *new* `needs-install` `online` · near: accents, abbreviations, starter-words
+  Needs nltk and WordNet; Apache-2.0. Goes online: the WordNet data, downloaded once. *new* `needs-install` `online` · near: accents, abbreviations,
+  starter-words
 - <a id="tatoeba"></a>**tatoeba** (idea) \
   A question in one language finds the same idea in another, through Tatoeba's sentence pairs, downloaded once. \
   *new* `no-install` `offline` `pairs` `language` · near: why-not, stems, latent
@@ -763,7 +778,8 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
   Needs wordfreq; Apache-2.0, its data CC BY-SA 4.0. *new* `needs-install` `offline` `dialect` `far` · near: dialect-dates, code-shape, stems
 - <a id="dialect-dates"></a>[**dialect-dates**](adapters/deps/dialect-dates/) \
   The words your folder uses far more than the world does, each dated by its first and last appearance, with the passage that first says it. \
-  Needs wordfreq; Apache-2.0, its data CC BY-SA 4.0. Uses dialect, first-mention. *new* `needs-install` `offline` `dialect` `far` · near: dialect, code-shape, pdf
+  Needs wordfreq; Apache-2.0, its data CC BY-SA 4.0. Uses dialect, first-mention. *new* `needs-install` `offline` `dialect` `far` · near: dialect, code-shape,
+  pdf
 
 ### Tools you run yourself
 
@@ -772,15 +788,17 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 
 - <a id="misheard"></a>**misheard** (idea) \
   A spoken question's misheard words corrected against your own folder's words before it is asked, each change shown. \
-  From: shape of [toverainc/willow-autocorrect](https://github.com/toverainc/willow-autocorrect), Apache-2.0. *new* `no-install` `offline` `spoken` · near: pile-build, predict, dictate
+  From: shape of [toverainc/willow-autocorrect](https://github.com/toverainc/willow-autocorrect), Apache-2.0. *new* `no-install` `offline` `spoken` · near:
+  pile-build, predict, dictate
 
 ## Keeping track
 
 ### Exports from apps and services
 
 - <a id="robinhood"></a>[**robinhood**](adapters/deps/robinhood/) \
-  Your Robinhood account as dated files: positions, orders, portfolio and watchlists, read through Robinhood's own MCP server and never traded on. \
-  Needs mcp (Python SDK); MIT. Goes online: agent.robinhood.com and Robinhood's sign-in, to read your account; this machine, for the sign-in's return. *new* `needs-install` `online` `mcp` · near: photos, mcp, pdf
+  Your Robinhood account as dated files (positions, orders, portfolio, watchlists), read through Robinhood's own MCP server, never traded on. \
+  Needs mcp (Python SDK); MIT. Goes online: agent.robinhood.com and Robinhood's sign-in, to read your account; this machine, for the sign-in's return. *new*
+  `needs-install` `online` `mcp` · near: photos, mcp, pdf
 
 ### What runs on your page, a to h
 
@@ -806,7 +824,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
   Who owes whom, from the IOUs in your notes and messages, each cited. \
   Uses amounts. *new* `no-install` `offline` · near: amounts, todo, symptoms
 - <a id="digest"></a>[**digest**](adapters/stdlib/digest/) \
-  One page of what your folder needs from you: suggestions waiting, approvals gone stale, dates coming up, questions that keep finding nothing. \
+  One page of what your folder needs from you: suggestions waiting, approvals gone stale, dates coming up, questions that find nothing. \
   *bot* `no-install` `offline` `waiting` `coming` `everyday` · near: hook-start, hook-compact, renewals
 - <a id="foia"></a>[**foia**](adapters/stdlib/foia/) \
   Freedom-of-information requests: what you asked, when, and when the answer is due by law. \
@@ -924,7 +942,8 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 
 - <a id="policy-watch"></a>[**policy-watch**](adapters/stdlib/policy-watch/) \
   A terms or policy page fetched each time you run it, by snapshot, and what changed since last time, sentence by sentence, by clauses. \
-  Uses clauses, snapshot. Goes online: the page you name, fetched each time you run it. *new* `no-install` `online` `snapshot` `clauses` `policies` · near: snapshot, clauses, wayback
+  Uses clauses, snapshot. Goes online: the page you name, fetched each time you run it. *new* `no-install` `online` `snapshot` `clauses` `policies` · near:
+  snapshot, clauses, wayback
 
 ### Tools you run yourself
 
@@ -938,7 +957,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
   For freelancers: invoices and payments matched by the id pattern you give, never guessed. \
   Uses amounts, bank. *new* `no-install` `offline` `numbers` · near: serve, share, privacy
 - <a id="log-kit"></a>[**log-kit**](adapters/stdlib/log-kit/) \
-  The engine the logs share: your notes' dated lines, read by a short spec of words, numbers and a period, so a new log is a spec, not a program. \
+  The engine the logs share: your notes' dated lines read by a short spec of words, numbers and a period, so a new log is a spec, not code. \
   Uses habits. *new* `no-install` `offline` `log` `share` · near: food-log, logs, on-this-day
 - <a id="market-calls"></a>[**market-calls**](adapters/stdlib/market-calls/) \
   Market calls kept as wagers on the record ('SPY closes up on Friday'), settled later by your seal, with the losers kept. \
@@ -966,7 +985,8 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 
 - <a id="crowd"></a>**crowd** (idea) \
   You against the crowd: a prediction market's question copied into your ledger, your probability beside theirs, both scored. \
-  Goes online: the market's public API, to read the question and its resolution. *new* `no-install` `online` `prediction` `score` · near: predictions, oakenscroll, market-calls
+  Goes online: the market's public API, to read the question and its resolution. *new* `no-install` `online` `prediction` `score` · near: predictions,
+  oakenscroll, market-calls
 - <a id="upstream-desk"></a>**upstream-desk** (idea) \
   Your work in other people's projects, in one place: notifications sorted into what needs you, and your open pull requests there. \
   Goes online: GitHub, through gh, with your own login. *bot* `no-install` `online` `pull` `requests` · near: contribute, against, pr-context
@@ -1030,7 +1050,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
   A sealed answer exported as an in-toto Statement, the envelope SLSA uses, so others can check it. \
   *new* `no-install` `offline` `envelope` `tool` · near: annotations, ro-crate, prov
 - <a id="jeles"></a>[**jeles**](adapters/stdlib/jeles/) \
-  Your approved answers as Jeles nuggets, with question, answer, sources and who sealed it, and Jeles' own verified nuggets read back as passages. \
+  Your approved answers as Jeles nuggets (question, answer, sources, who sealed it), and Jeles' own verified nuggets read back as passages. \
   *new* `no-install` `offline` `sources` · near: oakenscroll, pile-gold, almanac
 - <a id="merkle"></a>[**merkle**](adapters/stdlib/merkle/) \
   A Merkle tree over the record, so one row can be proven with a handful of hashes, not the whole file. \
@@ -1045,17 +1065,18 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
   The record exported as W3C PROV: what came from what, by which step, sealed by whom. \
   *new* `no-install` `offline` `prov` `tool` · near: cloudevents, annotations, in-toto
 - <a id="ro-crate"></a>[**ro-crate**](adapters/stdlib/ro-crate/) \
-  Your willow (the files it reads, its record and your approved answers) as an RO-Crate research object that Zenodo and similar archives can read. \
+  Your willow (the files it reads, its record, your approved answers) as an RO-Crate research object that Zenodo and other archives can read. \
   *new* `no-install` `offline` `tool` · near: in-toto, annotations, cloudevents
 - <a id="timeline"></a>[**timeline**](adapters/stdlib/timeline/) \
   A dated timeline of one matter (a dispute, an illness, a tenancy), every line cited, to hand to a lawyer, doctor or council. \
   *new* `no-install` `offline` `timeline` · near: said, across, first-mention
 - <a id="tip-pin"></a>[**tip-pin**](adapters/stdlib/tip-pin/) \
-  Where your record ends, written down somewhere willow can't reach, so rows cut off the end or rewritten from some point on are caught where verify can't. \
+  Where your record ends, written somewhere willow can't reach, so rows cut off the end or rewritten are caught where verify can't. \
   *new* `no-install` `offline` `rows` `pin` · near: ci-memo, box-health, ci
 - <a id="wayback"></a>[**wayback**](adapters/stdlib/wayback/) \
   The Wayback Machine's copy of a page from a window of days, saved beside your own snapshot and compared with it byte for byte. \
-  Uses snapshot. Goes online: archive.org, to find the archived copy and fetch it. *new* `no-install` `online` `snapshot` `saved` `sources` · near: snapshot, policy-watch, archivebox
+  Uses snapshot. Goes online: archive.org, to find the archived copy and fetch it. *new* `no-install` `online` `snapshot` `saved` `sources` · near: snapshot,
+  policy-watch, archivebox
 
 #### What it makes for elsewhere: ideas, not built yet
 
@@ -1084,7 +1105,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
   Where two copies part, your record and its backup zip or two copies of a folder, down to the first row, file and line that differ. \
   *bot* `no-install` `offline` `backup` `zip` `everyday` · near: backup, three-two-one, restore-drill
 - <a id="format-rot"></a>[**format-rot**](adapters/stdlib/format-rot/) \
-  Files in formats that may stop opening (old office files, proprietary ones, those no reader handles) flagged while you can still convert them. \
+  Files in formats that may stop opening (old office files, proprietary ones, ones no reader handles), flagged while you can convert them. \
   *new* `no-install` `offline` `office` `rot` · near: office, fixity, sheets
 - <a id="restore-drill"></a>[**restore-drill**](adapters/stdlib/restore-drill/) \
   A backup zip restored into scratch and verified there, chain and every file, so you know it restores before the day you need it. \
@@ -1102,17 +1123,19 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
   A local model's weights file hashed before each run and refused when it differs from the hash on its model card. \
   Uses weights-card. *new* `no-install` `offline` `local` `weights` · near: weights-card, model-card, model-fit
 
-#### Tools you run yourself: ideas, not built yet
+#### Tools you run yourself: ideas, not built yet, e to m
 
 - <a id="encrypt"></a>**encrypt** (idea) \
   Keeps the record folder encrypted at rest. \
-  Needs cryptography; Apache-2.0 or BSD. From: shape of [willow-memory/willow-data-vault](https://github.com/willow-memory/willow-data-vault), Apache-2.0. *new* `needs-install` `offline` `rest` · near: make-it-so, ci-memo, almanac-keep
+  Needs cryptography; Apache-2.0 or BSD. From: shape of [willow-memory/willow-data-vault](https://github.com/willow-memory/willow-data-vault), Apache-2.0.
+  *new* `needs-install` `offline` `rest` · near: make-it-so, ci-memo, almanac-keep
 - <a id="family-box"></a>**family-box** (idea) \
   One box for a household: each person's own seal, and every answer showing whose it is. \
   *new* `no-install` `offline` `person` `family` · near: second-opinion, dialect, family-tree
 - <a id="grant"></a>**grant** (idea) \
-  Someone else allowed to ask part of your folder: a grant to their key, scoped to a path and a span of time, passed on only narrower, each link signed and checked, never your seal key. \
-  Uses share. From: shape of [willowprotocol.org/specs/meadowcap](https://willowprotocol.org/specs/meadowcap/), none; shape of [Deln0r/willow-go](https://github.com/Deln0r/willow-go), MIT. *new* `no-install` `offline` `signed` `key` · near: signed-commits, serve, xref
+  Someone else allowed to ask part of your folder: a grant to their key for a path and a time, passed on only narrower, never your seal key. \
+  Uses share. From: shape of [willowprotocol.org/specs/meadowcap](https://willowprotocol.org/specs/meadowcap/), none; shape of
+  [Deln0r/willow-go](https://github.com/Deln0r/willow-go), MIT. *new* `no-install` `offline` `key` `paths` · near: hook-compact, lesson-time, rules
 - <a id="handoff"></a>**handoff** (idea) \
   A box handed to the person you name (an executor, a carer): read only, your seals kept, theirs their own. \
   *new* `no-install` `offline` `person` · near: family-box, serve, datasette
@@ -1124,22 +1147,29 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
   *bot* `no-install` `offline` `server` `local` · near: quantized, robinhood, github-archive
 - <a id="mirror"></a>**mirror** (idea) \
   Checks each mirror of a repo on another forge holds the same commits as the original, so losing a host loses nothing. \
-  Needs the git program; GPL, called not linked. Goes online: each mirror's git URL, to read its refs. *new* `needs-install` `online` `commit` `repo` · near: repro, git-notes, provenance
+  Needs the git program; GPL, called not linked. Goes online: each mirror's git URL, to read its refs. *new* `needs-install` `online` `commit` `repo` · near:
+  repro, git-notes, provenance
 - <a id="model-recall"></a>**model-recall** (idea) \
   Every sealed answer a model suggested, listed for a second look once you mark its card as flawed; nothing is unsealed for you. \
   *new* `no-install` `offline` `suggests` `second` · near: openai-compatible, model-exam, sort-ask
+
+#### Tools you run yourself: ideas, not built yet, n to w
+
 - <a id="notary"></a>**notary** (idea) \
   The record's newest hash timestamped by an outside time server, so anyone can see it existed by then. \
-  Goes online: an RFC 3161 time server you choose, sent only the hash. *new* `no-install` `online` `hash` `existed` · near: opentimestamps, persona-card, three-two-one
+  Goes online: an RFC 3161 time server you choose, sent only the hash. *new* `no-install` `online` `hash` `existed` · near: opentimestamps, persona-card,
+  three-two-one
 - <a id="opentimestamps"></a>**opentimestamps** (idea) \
   The record's newest hash anchored by OpenTimestamps, proof that it existed by a given block. \
   Goes online: the OpenTimestamps calendars, sent only the hash. *new* `no-install` `online` `hash` `existed` · near: notary, merkle, three-two-one
 - <a id="provenance"></a>**provenance** (idea) \
   Checks a package's Sigstore provenance or PyPI attestation names the repo and commit it claims, before you trust it. \
-  Needs sigstore; Apache-2.0. Goes online: the registry and Sigstore's log, to fetch the attestation. *new* `needs-install` `online` `trust` `package` · near: pypi, in-toto, sync
+  Needs sigstore; Apache-2.0. Goes online: the registry and Sigstore's log, to fetch the attestation. *new* `needs-install` `online` `trust` `package` · near:
+  pypi, in-toto, sync
 - <a id="quote-review"></a>**quote-review** (idea) \
   A review comment that quotes the repo, checked: does the quoted line still say that at the pull request's head? \
-  Goes online: the forge, through the workflow's token, to read the review comments. *new* `no-install` `online` `pull` `requests` · near: github-archive, xref, against
+  Goes online: the forge, through the workflow's token, to read the review comments. *new* `no-install` `online` `pull` `requests` · near: github-archive,
+  xref, against
 - <a id="redential"></a>**redential** (idea) \
   The bundle redential-cli's scan makes, written to the record before you submit it, so what left your machine can be checked later. \
   Needs the redential program, run through npx; Apache-2.0. *new* `needs-install` `offline` `bundle` `left` · near: report, sent-log, predict
@@ -1167,7 +1197,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
   Your documents checked for screen-reader problems: images without descriptions, headings out of order. \
   *new* `no-install` `offline` `problems` `share` · near: digest, scrub, todo
 - <a id="advisories"></a>[**advisories**](adapters/stdlib/advisories/) \
-  Security advisories from a downloaded OSV or GitHub advisory database, matched to your lockfiles: which dependency each names, and since when. \
+  Security advisories from a downloaded OSV or GitHub database, matched to your lockfiles: which dependency each names, and since when. \
   *new* `no-install` `offline` `dependency` `lock` · near: typosquat, outdated, risky-code
 - <a id="install-scripts"></a>[**install-scripts**](adapters/stdlib/install-scripts/) \
   The install scripts the packages in node_modules would run (preinstall, install, postinstall), each cited by file and line. \
@@ -1182,7 +1212,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
   Personal data sitting in your files (ID numbers, health details, card numbers), listed by file and line. \
   *new* `no-install` `offline` `numbers` `audit` · near: secrets-audit, privacy, sort
 - <a id="risky-code"></a>[**risky-code**](adapters/stdlib/risky-code/) \
-  Lines of code matching a known-dangerous pattern (command injection, eval, sql concatenation, broken tls and more), by file and line, as leads to read. \
+  Code lines matching a known-dangerous pattern (command injection, eval, SQL concatenation, broken TLS and more), by file and line, as leads. \
   *new* `no-install` `offline` `command` `security` · near: code-shape, install-scripts, sort
 - <a id="secrets-audit"></a>[**secrets-audit**](adapters/stdlib/secrets-audit/) \
   Finds passwords, keys and card numbers sitting in plain files, by file and line, never showing the value. \
@@ -1226,22 +1256,26 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 
 ## Assistants
 
-Each hands in suggestions through propose. None can approve: every suggestion waits for your seal. Two ways in: MCP tools the host calls when it asks ([hosts](adapters/stdlib/hosts/), [mcp-lite](adapters/stdlib/mcp-lite/)), and a prompt hook that cites your passages at each prompt where the host allows it ([claude-code](adapters/stdlib/claude-code/); [hooks-elsewhere](adapters/stdlib/hooks-elsewhere/) for the rest).
+Each hands in suggestions through propose. None can approve: every suggestion waits for your seal. Two ways in: MCP tools the host calls when it asks
+([hosts](adapters/stdlib/hosts/), [mcp-lite](adapters/stdlib/mcp-lite/)), and a prompt hook that cites your passages at each prompt where the host allows it
+([claude-code](adapters/stdlib/claude-code/); [hooks-elsewhere](adapters/stdlib/hooks-elsewhere/) for the rest).
 
 ### What runs on your page
 
 - <a id="instruction-files"></a>[**instruction-files**](adapters/stdlib/instruction-files/) \
-  For a folder, which instruction files each coding agent would load (AGENTS.md, CLAUDE.md, GEMINI.md, rules folders), in what order, with each file's size and hash. \
+  For a folder, which instruction files each coding agent loads (AGENTS.md, CLAUDE.md, GEMINI.md, rules), in what order, with size and hash. \
   *box* `no-install` `offline` `gemini` `claude` · near: agent-transcript, agents-md-check, claude-code
 
 ### Models that suggest answers
 
 - <a id="in-process"></a>[**in-process**](adapters/deps/in-process/) \
   Suggestions from a GGUF model loaded inside the add-on itself through llama-cpp-python: no server, no port, nothing listening. \
-  Needs llama-cpp-python; MIT; licence of the model varies. Uses openai-compatible. *new* `needs-install` `offline` `cpp` `llama` · near: openai-compatible, llm-cli, night-batch
+  Needs llama-cpp-python; MIT; licence of the model varies. Uses openai-compatible. *new* `needs-install` `offline` `cpp` `llama` · near: openai-compatible,
+  llm-cli, night-batch
 - <a id="llm-cli"></a>[**llm-cli**](adapters/deps/llm-cli/) \
   Suggestions through the llm command, so any model its plugins reach (local or hosted) can hand one in, with llm's own log naming the model. \
-  Needs llm and the plugin for your model; Apache-2.0. Uses openai-compatible. Goes online: the model its plugin reaches, to ask for suggestions. *new* `needs-install` `online` `local` `openai` · near: in-process, openai-compatible, night-batch
+  Needs llm and the plugin for your model; Apache-2.0. Uses openai-compatible. Goes online: the model its plugin reaches, to ask for suggestions. *new*
+  `needs-install` `online` `local` `openai` · near: in-process, openai-compatible, night-batch
 - <a id="local-model"></a>[**local-model**](adapters/stdlib/local-model/) \
   Suggestions from a model on this machine only, such as Ollama, llama.cpp's server, llamafile, KoboldCpp or Jan. \
   Uses openai-compatible. Reaches this machine only. *new* `no-install` `this-machine` `cpp` `jan` · near: openai-compatible, in-process, model-shelf
@@ -1252,7 +1286,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
   Questions waiting for suggestions batched into one local-model run overnight, stopped the moment you're back. \
   Uses local-model. Reaches this machine only. *new* `no-install` `this-machine` `local` · near: llm-cli, in-process, openai-compatible
 - <a id="openai-compatible"></a>[**openai-compatible**](adapters/stdlib/openai-compatible/) \
-  Suggestions from any OpenAI-compatible endpoint you choose (LM Studio, vLLM, LocalAI, SGLang, Docker Model Runner, OpenRouter, Groq, Mistral), citing your passages. \
+  Suggestions from any OpenAI-compatible endpoint you choose (LM Studio, vLLM, LocalAI, OpenRouter, Groq, Mistral...), citing your passages. \
   Goes online: the endpoint you configure, to ask for suggestions. *new* `no-install` `online` `cpp` `llama` · near: in-process, llm-cli, local-model
 - <a id="translate"></a>[**translate**](adapters/stdlib/translate/) \
   An answer translated by a local model, the original kept beside it, the translation held until you seal it. \
@@ -1265,13 +1299,15 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
   *new* `no-install` `offline` `handed` `propose` · near: memory-import, hermes, hook-feedback
 - <a id="bedrock"></a>**bedrock** (idea) \
   Suggestions from a model on Amazon Bedrock, under your own AWS account and region, citing your passages. \
-  Needs boto3; Apache-2.0. Goes online: Amazon Bedrock's endpoint in your region, to ask for suggestions. *new* `needs-install` `online` `citing` · near: cite-honesty, claude, sort-ask
+  Needs boto3; Apache-2.0. Goes online: Amazon Bedrock's endpoint in your region, to ask for suggestions. *new* `needs-install` `online` `citing` · near:
+  cite-honesty, claude, sort-ask
 - <a id="browser-model"></a>**browser-model** (idea) \
   Suggestions from a model running in your browser, Chrome's built-in model or one run on WebGPU, through a page served on this machine. \
   Reaches this machine only. *new* `no-install` `this-machine` `browser` · near: mlx, night-batch, os-model
 - <a id="claude"></a>**claude** (idea) \
   Suggestions from Claude through the Anthropic API, citing your passages. \
-  Needs anthropic; MIT. Goes online: api.anthropic.com, to ask for suggestions. *new* `needs-install` `online` `citing` `claude` · near: claude-code, bedrock, cite-honesty
+  Needs anthropic; MIT. Goes online: api.anthropic.com, to ask for suggestions. *new* `needs-install` `online` `citing` `claude` · near: claude-code, bedrock,
+  cite-honesty
 - <a id="hermes"></a>**hermes** (idea) \
   Hermes Agent asking your folder as a plugin, and its memories, and what its dreaming plugin consolidates, handed in through propose. \
   *new* `no-install` `offline` `handed` `propose` · near: basic-memory, memory-import, hook-feedback
@@ -1280,10 +1316,12 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
   *new* `no-install` `offline` `handed` `propose` · near: basic-memory, hermes, hook-feedback
 - <a id="mlx"></a>**mlx** (idea) \
   Suggestions from a model run on Apple silicon through MLX, on this Mac alone. \
-  Needs mlx-lm, on Apple silicon only; MIT; licence of the model varies. *new* `needs-install` `offline` `apple` `silicon` · near: browser-model, os-model, model-fit
+  Needs mlx-lm, on Apple silicon only; MIT; licence of the model varies. *new* `needs-install` `offline` `apple` `silicon` · near: browser-model, os-model,
+  model-fit
 - <a id="os-model"></a>**os-model** (idea) \
-  Suggestions from the model built into the operating system, such as Apple's Foundation Models on a Mac: nothing to download, nothing leaving the device. \
-  Needs macOS 26 with Apple Intelligence on, and a small Swift helper; Apple's terms. *new* `needs-install` `offline` `apple` `mac` · near: mlx, browser-model, local-model
+  Suggestions from the model built into the operating system, such as Apple's Foundation Models: nothing to download, nothing leaving it. \
+  Needs macOS 26 with Apple Intelligence on, and a small Swift helper; Apple's terms. *new* `needs-install` `offline` `apple` `mac` · near: mlx,
+  browser-model, local-model
 - <a id="plain-language"></a>**plain-language** (idea) \
   An approved answer rewritten in plain language by a model, the rewrite held until you seal it. \
   *new* `no-install` `offline` `held` · near: translate, hook-tiers, memory-import
@@ -1297,40 +1335,42 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
   How often each assistant's suggestions were sealed or set aside, from the record. \
   Uses openai-compatible. *new* `no-install` `offline` `aside` `score` · near: retire, predict, forecasts
 - <a id="model-card"></a>[**model-card**](adapters/stdlib/model-card/) \
-  A card naming the model behind an assistant (version or weights hash, where it runs, licence, known limits), with the card's hash on the record so each suggestion can say which model made it. \
+  A card naming the model behind an assistant (version or weights hash, where it runs, licence, limits), on the record for each suggestion. \
   Uses weights-card. *new* `no-install` `offline` `hash` `weights` · near: local-model, weights-card, weights-pin
 - <a id="model-drift"></a>[**model-drift**](adapters/stdlib/model-drift/) \
   Your frozen questions asked again of a model now and then, flagging when its answers change while its name and card stay the same. \
-  Uses openai-compatible. Goes online: the endpoint you configure, to ask your questions again. *new* `no-install` `online` · near: same-way, model-card, model-exam
+  Uses openai-compatible. Goes online: the endpoint you configure, to ask your questions again. *new* `no-install` `online` · near: same-way, model-card,
+  model-exam
 - <a id="model-exam"></a>[**model-exam**](adapters/stdlib/model-exam/) \
   Any model scored against the answers you sealed, your own questions as its exam, before you trust its suggestions. \
-  Uses openai-compatible. Goes online: the endpoint you configure, to ask your sealed questions. *new* `no-install` `online` `score` · near: same-way, model-drift, night-batch
+  Uses openai-compatible. Goes online: the endpoint you configure, to ask your sealed questions. *new* `no-install` `online` `score` · near: same-way,
+  model-drift, night-batch
 - <a id="model-fit"></a>[**model-fit**](adapters/stdlib/model-fit/) \
   Whether this machine's GPU, NPU or Apple silicon can run a local model, and about how fast, before you download one. \
   *new* `no-install` `offline` `local` `weights` · near: model-shelf, weights-card, quantized
 - <a id="model-shelf"></a>[**model-shelf**](adapters/stdlib/model-shelf/) \
-  Every model already on this machine, read from Ollama's, LM Studio's, Jan's and GPT4All's folders and the Hugging Face cache: its runtime, size, quantization and hash, before you download another. \
+  Every model already on this machine (Ollama, LM Studio, Jan, GPT4All, the Hugging Face cache): its runtime, size, quantization and hash. \
   Uses weights-card. *new* `no-install` `offline` `jan` `ollama` · near: quantized, weights-card, model-fit
 - <a id="quantized"></a>[**quantized**](adapters/stdlib/quantized/) \
   Finds the smallest quantized local model that still gets your box's own questions right, so suggestions come faster. \
   Uses local-model, model-exam. Reaches this machine only. *new* `no-install` `this-machine` `local` · near: model-shelf, model-fit, local-model
 - <a id="same-way"></a>[**same-way**](adapters/stdlib/same-way/) \
-  A local model asked each of your box's questions three times, and how often its answer flips, since a model that answers the same way every time is one you can build on. \
+  A local model asked each of your box's questions three times, and how often its answer flips: one that answers the same way can be built on. \
   Uses openai-compatible. Reaches this machine only. *new* `no-install` `this-machine` `local` · near: model-exam, model-drift, night-batch
 - <a id="weights-card"></a>[**weights-card**](adapters/stdlib/weights-card/) \
-  A model card filled in from the weights file's own header, GGUF or safetensors (architecture, quantization, context length, licence), so the card says what the file says. \
+  A model card filled in from the weights file's own GGUF or safetensors header: architecture, quantization, context length, licence. \
   *new* `no-install` `offline` `weights` `quantization` · near: model-shelf, weights-pin, model-fit
 
 #### Checking a model before you trust it: ideas, not built yet
 
 - <a id="cassettes"></a>**cassettes** (idea) \
-  Each exchange with a model kept as a row (what was asked, what came back, the model and its seed), replayed later as a test, and drift between models found by plain diff. \
+  Each exchange with a model kept as a row (what was asked and came back, the model, its seed), replayed later as a test, drift found by diff. \
   *bot* `no-install` `offline` `rows` `drift` · near: hook-replay, lending, hook-errors
 - <a id="cite-honesty"></a>**cite-honesty** (idea) \
-  How often each model's suggestions were refused at propose for citing a passage the last bite never returned, read from the record by model card. \
+  How often each model's suggestions were refused at propose for citing a passage the last bite never returned, read from the record. \
   *new* `no-install` `offline` `refuses` `citing` · near: sent-log, model-card, hook-cite
 - <a id="ladder"></a>**ladder** (idea) \
-  Your files first, then sources you trust such as Jeles and Nestor, then a model, stopping at the first that answers, each answer kept for next time. \
+  Your files first, then sources you trust such as Jeles and Nestor, then a model, stopping at the first that answers, kept for next time. \
   *bot* `no-install` `offline` `jeles` `nestor` · near: jeles, first-mention, nestor
 - <a id="schema-check"></a>**schema-check** (idea) \
   A model's answer held to a JSON schema before anything reads it, and a reply that doesn't fit recorded as a result, not lost as an error. \
@@ -1384,43 +1424,43 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 ### What guards it
 
 - <a id="hook-compact"></a>[**hook-compact**](adapters/stdlib/hook-compact/) \
-  A PreCompact hook that prints what the record still holds open, seals waiting and questions unanswered, so it survives the assistant's summary. \
+  A PreCompact hook that prints what the record holds open (seals waiting, questions unanswered), so it survives the assistant's summary. \
   Uses digest. *box* `no-install` `offline` `waiting` `open` `hooks` · near: digest, sort-ask, hook-start
 - <a id="hook-errors"></a>[**hook-errors**](adapters/stdlib/hook-errors/) \
-  Each failed command an assistant runs kept as a row of its hash and exit code, so the same failure the third time is named, not retried blind. \
+  Each failed command an assistant runs kept as a row of its hash and exit code, so the third time it fails it's named, not retried blind. \
   *new* `no-install` `offline` `fails` `hash` `hooks` · near: hook-replay, hook-fail-closed, hook-fuzz
 - <a id="hook-fail-closed"></a>[**hook-fail-closed**](adapters/stdlib/hook-fail-closed/) \
-  Wraps any hook so a crash, a timeout or output it can't read blocks the tool, since Claude Code, Gemini CLI, Codex and Cursor all let the tool run by default. \
+  Wraps any hook so a crash, a timeout or output it can't read blocks the tool, where Claude Code, Gemini CLI, Codex and Cursor let it run. \
   *new* `no-install` `offline` `gemini` `claude` `hooks` · near: hook-fuzz, hooks-elsewhere, agent-transcript
 - <a id="hook-feedback"></a>[**hook-feedback**](adapters/stdlib/hook-feedback/) \
-  Your corrections to an assistant (no, wrong, I said) caught by fixed patterns at each prompt and handed in through propose, for you to keep or drop. \
+  Your corrections to an assistant (no, wrong, I said) caught by fixed patterns at each prompt and handed in through propose, to keep or drop. \
   *new* `no-install` `offline` `handed` `propose` `hooks` · near: memory-import, basic-memory, hermes
 - <a id="hook-fuzz"></a>[**hook-fuzz**](adapters/stdlib/hook-fuzz/) \
-  Throws empty, malformed, oversized and non-UTF-8 input at a hook and fails it if any of them crash it, since a crashed hook lets the tool run. \
+  Throws empty, malformed, oversized and non-UTF-8 input at a hook and fails it if any crash it, since a crashed hook lets the tool run. \
   *new* `no-install` `offline` `crash` `fuzz` `hooks` · near: hook-fail-closed, fuzz, hook-replay
 - <a id="hook-guard"></a>[**hook-guard**](adapters/stdlib/hook-guard/) \
-  A PreToolUse hook that blocks, by fixed rule and never by judgment, a tool call that would read your key or write willow's record behind its back, naming the rule. \
+  A PreToolUse hook that blocks, by fixed rule and never by judgment, a call that would read your key or write the record behind its back. \
   *box* `no-install` `offline` `assistant` `pretooluse` `hooks` · near: hook-impact, hook-leaks, hook-read-first
 - <a id="hook-handoff"></a>[**hook-handoff**](adapters/stdlib/hook-handoff/) \
-  A Stop hook that writes where the session ended, and the next session's first prompt gets it back, so nothing rides on the assistant's memory. \
+  A Stop hook that writes where the session ended, and the next session's first prompt gets it back, so nothing rides on memory. \
   *new* `no-install` `offline` `assistant` `session` `hooks` · near: hook-stop, memory-import, hook-read-first
 - <a id="hook-impact"></a>[**hook-impact**](adapters/stdlib/hook-impact/) \
   Before an edit, a hook hands the assistant every place in your files that names what it's about to change, by file and line. \
   Uses habits. *box* `no-install` `offline` `assistant` `pretooluse` `hooks` · near: hook-read-first, hook-start, hook-stop
 - <a id="hook-leaks"></a>[**hook-leaks**](adapters/stdlib/hook-leaks/) \
-  A PreToolUse hook that refuses a write or a command holding a key, password or card number, by the privacy add-on's shapes, naming only the kind. \
+  A PreToolUse hook that refuses a write or command holding a key, password or card number, by the privacy add-on's shapes, naming the kind. \
   Uses privacy. *box* `no-install` `offline` `numbers` `key` `hooks` · near: hook-read-first, hook-impact, hook-guard
 - <a id="hook-pin"></a>[**hook-pin**](adapters/stdlib/hook-pin/) \
-  Each hook's SHA-256 kept on the record when you approve it, so a hook that changed since is named before it runs, never silently trusted or skipped. \
+  Each hook's SHA-256 kept on the record when you approve it, so a hook that changed since is named before it runs, never trusted silently. \
   *new* `no-install` `offline` `byte` `pin` `hooks` · near: hook-replay, ci-memo, backup
 - <a id="hook-read-first"></a>[**hook-read-first**](adapters/stdlib/hook-read-first/) \
-  A PreToolUse hook that refuses an edit to a file the assistant hasn't read this session, or whose bytes changed since it did, each read kept as a hash. \
+  A PreToolUse hook that refuses an edit to a file the assistant hasn't read this session, or that changed since, each read kept as a hash. \
   *new* `no-install` `offline` `assistant` `refuses` `hooks` · near: hook-impact, hook-leaks, hook-start
 - <a id="hook-replay"></a>[**hook-replay**](adapters/stdlib/hook-replay/) \
-  Every hook's answer kept as a row with the hashes of what it was given and what it said, and check runs it again to prove the same input still gets the same answer. \
+  Every hook's answer kept as a row of the hashes of what it got and said; check runs it again to prove the same input gets the same answer. \
   *new* `no-install` `offline` `hash` `rows` `hooks` · near: hook-errors, hook-pin, ci
 - <a id="hook-shell"></a>[**hook-shell**](adapters/stdlib/hook-shell/) \
-  A command split the way the shell will split it, quotes, variables and chained commands included, before any rule judges it, so a rule can't be dodged by spelling. \
+  A command split as the shell will split it (quotes, variables, chained commands) before any rule judges it, so spelling can't dodge a rule. \
   *new* `no-install` `offline` `command` `shell` `hooks` · near: shell, hook-impact, hook-leaks
 - <a id="hook-start"></a>[**hook-start**](adapters/stdlib/hook-start/) \
   A SessionStart hook that hands the assistant what needs you, read the way digest reads it, so opening a session writes nothing. \
@@ -1438,25 +1478,25 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 #### What guards it: ideas, not built yet
 
 - <a id="hook-checks"></a>**hook-checks** (idea) \
-  A PostToolUse hook that runs the repo's own fast checks on the file just edited and hands back only what failed, the same output for the same file. \
+  A PostToolUse hook that runs the repo's fast checks on the file just edited and hands back only what failed, the same for the same file. \
   *new* `no-install` `offline` `fails` `output` `hooks` · near: hook-pin, hook-fail-closed, hook-impact
 - <a id="hook-cite"></a>**hook-cite** (idea) \
   A hook that refuses an assistant's claim citing a passage the box never served it, checked against the record by id. \
   *new* `no-install` `offline` `refuses` `assistant` `hooks` · near: claim-check, cite-honesty, hook-read-first
 - <a id="hook-sequence"></a>**hook-sequence** (idea) \
-  Rules over what an assistant did before, not just this call: no push until the tests ran on this commit, at most so many deletions a session, read from the record. \
+  Rules over what an assistant did before, not just this call: no push until the tests ran on this commit, so many deletions a session. \
   *new* `no-install` `offline` `assistant` `rule` `hooks` · near: hook-stop, hook-guard, hook-start
 - <a id="hook-tiers"></a>**hook-tiers** (idea) \
   Edits sorted into tiers by the paths they touch, and the top tier held as a proposal until you seal it, by a rule you can read. \
   *new* `no-install` `offline` `rule` `held` `hooks` · near: translate, plain-language, hook-sequence
 - <a id="serve-piles"></a>**serve-piles** (idea) \
-  serve's piles grouped on all four W's -- who, when, what and where -- not where alone, so a model meets a question from every box that touched it. \
+  serve's piles grouped on all four W's (who, when, what, where), not where alone, so a model meets a question from every box that touched it. \
   *new* `no-install` `offline` `serve` · near: pile-serve, pile-rungs, words-pl
 
 ### What it makes for elsewhere
 
 - <a id="folder-card"></a>[**folder-card**](adapters/stdlib/folder-card/) \
-  A card for your folder itself (what the files are, their dates, the gaps you know of), made from your files and your notes and handed to a model as context. \
+  A card for your folder itself (what the files are, their dates, the gaps you know of), made from your files and notes, as a model's context. \
   Uses gaps. *new* `no-install` `offline` `gaps` · near: serve, persona-card, gaps
 
 ### Tools you run yourself
@@ -1469,9 +1509,10 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 
 - <a id="issue-answer"></a>**issue-answer** (idea) \
   A workflow that drafts an answer to a new issue from the repo's own docs, each line cited, posted only once a maintainer seals it. \
-  Goes online: the forge, through the workflow's token, to post an answer once it is sealed. *new* `no-install` `online` `repo` `docs` · near: hook-checks, repo-index, pr-context
+  Goes online: the forge, through the workflow's token, to post an answer once it is sealed. *new* `no-install` `online` `repo` `docs` · near: hook-checks,
+  repo-index, pr-context
 - <a id="mcp-by-hash"></a>**mcp-by-hash** (idea) \
-  Your passages served as MCP resources named by their SHA-256, so an assistant cites exactly the bytes it read and a changed passage gets a new name. \
+  Your passages served as MCP resources named by their SHA-256, so an assistant cites the bytes it read; a changed one gets a new name. \
   *bot* `no-install` `offline` `assistant` `sha` · near: model-card, snapshot, hook-read-first
 - <a id="mex"></a>**mex** (idea) \
   mex's project memory for coding agents: its scaffold read as cited passages, and what an agent writes back held for your seal. \
@@ -1480,7 +1521,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 ### Works on willow itself
 
 - <a id="forge"></a>[**forge**](adapters/deps/forge/) \
-  A sentence in, the add-ons it names or means out, as a plan with its forks for the Forge's checkpoint to resolve and the person to seal before anything runs. \
+  A sentence in, the add-ons it means out: a plan with its forks, for the Forge's checkpoint to settle and the person to seal before it runs. \
   Needs forge-play; Apache-2.0. Uses stack. *new* `needs-install` `offline` `sentence` `forge` · near: stack-share, kart, plain
 
 ## Ways to use it
@@ -1503,7 +1544,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
   A willow command and tab completion for bash, zsh, fish and PowerShell, on Linux, macOS and Windows. \
   *new* `no-install` `offline` `shell` `bash` · near: pipe, shell-history, hook-shell
 - <a id="start"></a>[**start**](adapters/stdlib/start/) \
-  First run in one step: asks where your files are, sets up willow's record and your key, copies in a starter words list, and prints a double-click launcher. \
+  First run in one step: asks where your files are, sets up willow's record and your key, copies in a starter words list, prints a launcher. \
   *new* `no-install` `offline` `launcher` `starter` `everyday` · near: starter-words, launcher, nicknames
 
 #### In your terminal: ideas, not built yet
@@ -1564,7 +1605,9 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 
 - <a id="wake-gate"></a>[**wake-gate**](adapters/deps/wake-gate/) \
   Ask out loud after a wake word you chose: audio before it is never transcribed, kept or sent. \
-  Needs onnxruntime, numpy and faster-whisper; MIT, BSD-3-Clause, MIT. A wake word model you give it, trained the openWakeWord way; openWakeWord's own are CC BY-NC-SA 4.0. From: code of [willow-memory/willow-mcp](https://github.com/willow-memory/willow-mcp), Apache-2.0; code of [dscripka/openWakeWord](https://github.com/dscripka/openWakeWord), Apache-2.0. *new* `needs-install` `offline` `loud` · near: dictate, pdf, ocr
+  Needs onnxruntime, numpy and faster-whisper; MIT, BSD-3-Clause, MIT. A wake word model you give it, trained the openWakeWord way; openWakeWord's own are CC
+  BY-NC-SA 4.0. From: code of [willow-memory/willow-mcp](https://github.com/willow-memory/willow-mcp), Apache-2.0; code of
+  [dscripka/openWakeWord](https://github.com/dscripka/openWakeWord), Apache-2.0. *new* `needs-install` `offline` `loud` · near: dictate, pdf, ocr
 
 #### From your phone, by voice or by email: ideas, not built yet
 
@@ -1573,10 +1616,12 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
   Needs faster-whisper; MIT. Goes online: the model, downloaded once. *new* `needs-install` `online` `turned` · near: oakenscroll, agent-transcript, man-pages
 - <a id="email-ask"></a>**email-ask** (idea) \
   Ask by emailing yourself; the answer comes back as a reply with its sources. \
-  Goes online: your own mail server, over IMAP and SMTP, to read questions and reply. *new* `no-install` `online` `sources` `replies` · near: jeles, bot-venv, thesis
+  Goes online: your own mail server, over IMAP and SMTP, to read questions and reply. *new* `no-install` `online` `sources` `replies` · near: jeles, bot-venv,
+  thesis
 - <a id="home-assistant"></a>**home-assistant** (idea) \
   Ask through Home Assistant's voice assistant, answered from your files. \
-  Goes online: your Home Assistant, on your own network, to answer its voice assistant. *new* `no-install` `online` `assistant` `voice` · near: home-sensors, mcp-sampling, launcher
+  Goes online: your Home Assistant, on your own network, to answer its voice assistant. *new* `no-install` `online` `assistant` `voice` · near: home-sensors,
+  mcp-sampling, launcher
 - <a id="qr"></a>**qr** (idea) \
   An answer as a QR code on screen, to carry it to your phone without the network. \
   *new* `no-install` `offline` `screen` `phone` · near: scrub, a11y-check, code-first
@@ -1590,7 +1635,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 ### Several add-ons at once
 
 - <a id="across"></a>[**across**](adapters/stdlib/across/) \
-  One page made from several willow records at once (each one's digest, export, timeline or readings), every line still cited by where it came from. \
+  One page from several willow records at once (each one's digest, export, timeline or readings), every line still cited where it came from. \
   *new* `no-install` `offline` `timeline` `several` `everyday` · near: stack, timeline, readme
 - <a id="stack"></a>[**stack**](adapters/stdlib/stack/) \
   One page made from several add-ons run in the order you list them, their results grouped so the biggest come first. \
@@ -1606,7 +1651,8 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 
 - <a id="pr-context"></a>**pr-context** (idea) \
   On a pull request, the passages in the repo's docs that name the files it changes, posted as one comment. \
-  Goes online: the forge, through the workflow's token, to post the comment. *new* `no-install` `online` `pull` `requests` · near: against, quote-review, github-archive
+  Goes online: the forge, through the workflow's token, to post the comment. *new* `no-install` `online` `pull` `requests` · near: against, quote-review,
+  github-archive
 - <a id="safe-app"></a>**safe-app** (idea) \
   willow as a SAFE app: installed from the SAFE App Store, authorized per session, and deleted clean. \
   *new* `no-install` `offline` `store` `session` · near: vectors, memory-import, session-cost
@@ -1615,7 +1661,9 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
   *new* `no-install` `offline` `citing` · near: equations, oakenscroll, sort-ask
 - <a id="willow-box"></a>**willow-box** (idea) \
   Ask from a Willow voice box on your counter: its application server sends your words here and reads the answer back. \
-  Goes online: your Willow Application Server, on your own network, to answer what the box heard. From: shape of [HeyWillow/willow-application-server](https://github.com/HeyWillow/willow-application-server), Apache-2.0. *new* `no-install` `online` `voice` · near: aider, speak, shell
+  Goes online: your Willow Application Server, on your own network, to answer what the box heard. From: shape of
+  [HeyWillow/willow-application-server](https://github.com/HeyWillow/willow-application-server), Apache-2.0. *new* `no-install` `online` `voice` · near:
+  aider, speak, shell
 
 ### What it makes for elsewhere
 
@@ -1638,7 +1686,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
   Record rows in the CloudEvents envelope, for any tool that already reads them. \
   *new* `no-install` `offline` `envelope` `tool` · near: prov, ro-crate, in-toto
 - <a id="llms-txt"></a>[**llms-txt**](adapters/stdlib/llms-txt/) \
-  An llms.txt for your folder, written from what's actually in it to the spec's version 2, and any llms.txt you saved checked against that spec. \
+  An llms.txt for your folder, written to the spec's version 2 from what's in it, and any llms.txt you saved checked against that spec. \
   *new* `no-install` `offline` `llm` · near: typosquat, markdown, serve
 - <a id="make-it-so"></a>[**make-it-so**](adapters/stdlib/make-it-so/) \
   Write down what you want done and the passages it rests on; it checks they still hold, and never does it for you. \
@@ -1648,7 +1696,8 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
   *new* `no-install` `offline` `prints` `everyday` · near: web-pages, pipe, across
 - <a id="repo-pile"></a>[**repo-pile**](adapters/stdlib/repo-pile/) \
   Public repositories you list, cloned and made askable, keeping only those under a licence an Apache-2.0 project can use. \
-  Uses again, backup, changed, digest, export, history, privacy, quote-check, scan, secrets-audit, stale, todo, xref. Goes online: github.com (or the --source you give), to clone the repositories you list. *new* `no-install` `online` `project` `repo` `research` · near: upstream-desk, pile-build, pile-serve
+  Uses again, backup, changed, digest, export, history, privacy, quote-check, scan, secrets-audit, stale, todo, xref. Goes online: github.com (or the --source
+  you give), to clone the repositories you list. *new* `no-install` `online` `project` `repo` `research` · near: upstream-desk, pile-build, pile-serve
 - <a id="rss-out"></a>[**rss-out**](adapters/stdlib/rss-out/) \
   New approved answers as an RSS feed file, for any feed reader. \
   *new* `no-install` `offline` `feed` · near: annotations, opml, in-toto
@@ -1669,7 +1718,8 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 
 - <a id="kart"></a>[**kart**](adapters/deps/kart/) \
   A job someone sent you, run in a sandbox over your own folder only once you seal it, its result yours to seal before it goes back. \
-  Needs kartikeya, and the bwrap program (bubblewrap), run not linked; Apache-2.0, LGPL-2.0-or-later. Uses share. *new* `needs-install` `offline` · near: ocr, pdf, dialect
+  Needs kartikeya, and the bwrap program (bubblewrap), run not linked; Apache-2.0, LGPL-2.0-or-later. Uses share. *new* `needs-install` `offline` · near: ocr,
+  pdf, dialect
 
 ## Play
 
@@ -1788,7 +1838,8 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
   Goes online: earthquake.usgs.gov, to read the week's earthquakes. *new* `no-install` `online` `bet` `settled` · near: horoscope-grades, ci-bets, weather-bet
 - <a id="real-sky"></a>**real-sky** (idea) \
   A horoscope from where the planets really are, computed offline from a JPL ephemeris. \
-  Needs Skyfield; MIT. Goes online: the ephemeris file, downloaded once. *new* `needs-install` `online` `horoscope` `computed` · near: horoscope, horoscope-grades, odds
+  Needs Skyfield; MIT. Goes online: the ephemeris file, downloaded once. *new* `needs-install` `online` `horoscope` `computed` · near: horoscope,
+  horoscope-grades, odds
 - <a id="reversi"></a>**reversi** (idea) \
   Reversi as rows: every move, each flip following from the board. \
   *new* `no-install` `offline` `move` `rows` · near: tic-tac-toe, catgrid, same-way
@@ -1806,13 +1857,15 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
   *new* `no-install` `offline` `rows` `move` · near: reversi, catgrid, nim
 - <a id="tides"></a>**tides** (idea) \
   Tide predictions as a control: if your Brier score on tides isn't near zero, the forecasting plumbing is broken. \
-  Goes online: NOAA's tides API, to read predictions and what happened. *new* `no-install` `online` `score` `forecast` · near: predictions, forecasts, horoscope-grades
+  Goes online: NOAA's tides API, to read predictions and what happened. *new* `no-install` `online` `score` `forecast` · near: predictions, forecasts,
+  horoscope-grades
 - <a id="todays-place"></a>**todays-place** (idea) \
   One place a day drawn from Natural Earth's public-domain list, for the day's questions and bets. \
   *new* `no-install` `offline` `public` `domain` · near: art-of-the-day, gutenberg, tax-year
 - <a id="weather-bet"></a>**weather-bet** (idea) \
   Wager on rain tomorrow before you look, against Open-Meteo's own forecast, and see whose Brier score wins. \
-  Goes online: api.open-meteo.com, to read the forecast and the outcome. *new* `no-install` `online` `forecast` `score` · near: forecasts, horoscope-grades, ci-bets
+  Goes online: api.open-meteo.com, to read the forecast and the outcome. *new* `no-install` `online` `forecast` `score` · near: forecasts, horoscope-grades,
+  ci-bets
 
 ## For maintainers
 
@@ -1843,10 +1896,10 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
   The C# port on NuGet, built from this repo and checked against the vectors. \
   Goes online: nuget.org, to publish a release a maintainer tags. *new* `no-install` `online` `repo` `vectors` · near: maven, npm, pypi
 - <a id="pypi"></a>**pypi** (idea) \
-  kernel.py on PyPI as a package with no dependencies, built from this repo, checked against the vectors, and attested on upload; uvx and pipx run it. \
+  kernel.py on PyPI as a package with no dependencies, built from this repo, checked against the vectors and attested; uvx and pipx run it. \
   Goes online: upload.pypi.org, to publish a release a maintainer tags. *new* `no-install` `online` `repo` `vectors` · near: npm, nuget, maven
 - <a id="repo-index"></a>**repo-index** (idea) \
-  This repository as its own deterministic box: its cards, docs and code as dated passages, rebuilt the same bytes each time, so willow can answer questions about itself. \
+  This repository as its own deterministic box: its cards, docs and code as dated passages, the same each build, so willow can answer of it. \
   *new* `no-install` `offline` `repositories` `index` · near: same-way, persona-card, latent
 
 ### Tools you run yourself
@@ -1855,7 +1908,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
   How fast the kernel answers on boxes of set sizes, per release, so a slowdown is seen. \
   *new* `no-install` `offline` `release` `build` · near: profile, pile-store, pile-build
 - <a id="bot-venv"></a>[**bot-venv**](adapters/stdlib/bot-venv/) \
-  Where your venvs are, inside willow-bot or out, with their locks and the services running them; and which has what CI needs, with the line that runs CI. \
+  Where your venvs are, in willow-bot or out, their locks and the services running them; and which one has what CI needs, and how to run it. \
   *bot* `no-install` `offline` `test` `repo` · near: ci, fast-tests, ci-why
 - <a id="ci-cache"></a>[**ci-cache**](adapters/stdlib/ci-cache/) \
   CI caches pip, npm, .NET and Maven downloads keyed on their lockfiles, so a run skips the installs. \
@@ -1879,7 +1932,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
   The CI test jobs split by each test's past time, so every job finishes about together. \
   *new* `no-install` `offline` `test` · near: slow-tests, profile, ci
 
-#### Tools you run yourself: ideas, not built yet
+#### Tools you run yourself: ideas, not built yet, c to f
 
 - <a id="ci-baseline"></a>**ci-baseline** (idea) \
   Is your CI normal? How often pull requests everywhere go green first time, from GH Archive. \
@@ -1904,13 +1957,18 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
   *new* `no-install` `offline` `readme` `drift` · near: readme, against, llms-txt
 - <a id="forgejo"></a>**forgejo** (idea) \
   What willow's repo needs from Forgejo, Gitea or Codeberg: its host.json and an Actions file, so the repo can move there. \
-  Goes online: the Forgejo instance's API, to read the author of a pull request a security report points to. *new* `no-install` `online` `repo` `actions` · near: gitlab, sourcehut, github
+  Goes online: the Forgejo instance's API, to read the author of a pull request a security report points to. *new* `no-install` `online` `repo` `actions` ·
+  near: gitlab, sourcehut, github
 - <a id="fuzz"></a>**fuzz** (idea) \
   Random and broken inputs thrown at the kernel's commands, every crash kept as a test. \
   *new* `no-install` `offline` `test` `fuzz` · near: hook-fuzz, property-tests, hook-replay
+
+#### Tools you run yourself: ideas, not built yet, g to w
+
 - <a id="gitlab"></a>**gitlab** (idea) \
   What willow's repo needs from GitLab, as github does for GitHub: its host.json and CI file, so the repo can move there. \
-  Goes online: GitLab, through glab, to read the author of a merge request a security report points to. *new* `no-install` `online` `github` `repo` · near: forgejo, github, sourcehut
+  Goes online: GitLab, through glab, to read the author of a merge request a security report points to. *new* `no-install` `online` `github` `repo` · near:
+  forgejo, github, sourcehut
 - <a id="novelty"></a>**novelty** (idea) \
   Before a new add-on merges, whether its combination of pieces has been assembled before, scanned the way a study checks its own novelty. \
   *new* `no-install` `offline` `merge` `scan` · near: similar, redential, restack
@@ -1928,13 +1986,15 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
   *new* `no-install` `offline` `byte` `twice` · near: compiled, mirror, gifts
 - <a id="sourcehut"></a>**sourcehut** (idea) \
   What willow's repo needs from SourceHut: its host.json for patches by email and a builds.sr.ht manifest. \
-  Goes online: sr.ht, through hut, to read the author of a patch a security report points to. *new* `no-install` `online` `host` `repo` · near: forgejo, gitlab, github
+  Goes online: sr.ht, through hut, to read the author of a patch a security report points to. *new* `no-install` `online` `host` `repo` · near: forgejo,
+  gitlab, github
 - <a id="swift"></a>**swift** (idea) \
   A Swift port of kernel.py for iPhone and Mac apps, held to the same vectors. \
   *new* `no-install` `offline` `vectors` `port` · near: crates, compiled, nuget
 - <a id="welcome"></a>**welcome** (idea) \
   One plain thank-you on a first-time contributor's first pull request, once per person, and only where it's turned on. \
-  Goes online: the forge, through the workflow's token, to post the thank-you. *bot* `no-install` `online` `pull` `requests` · near: ci-baseline, against, pr-context
+  Goes online: the forge, through the workflow's token, to post the thank-you. *bot* `no-install` `online` `pull` `requests` · near: ci-baseline, against,
+  pr-context
 
 ### Works on willow itself
 
@@ -1943,37 +2003,41 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
   Uses similar. *new* `no-install` `offline` `pull` `requests` · near: test-impact, pr-context, upstream-desk
 - <a id="ci"></a>[**ci**](adapters/stdlib/ci/) \
   This repo's checks as verdict rows on a kernel record, the same every run. \
-  Uses live, readme, stack, test-shards. Goes online: PyPI, to read each dependency floor's release date; GitHub, through gh, to find main's last records (main_run.py, times.py). *box* `no-install` `online` `rows` `verdict` · near: ci-memo, bot-venv, ci-why
+  Uses live, readme, skim, stack, test-shards. Goes online: PyPI, to read each dependency floor's release date; GitHub, through gh, to find main's last
+  records (main_run.py, times.py). *box* `no-install` `online` `rows` `verdict` · near: ci-memo, bot-venv, ci-why
 - <a id="ci-memo"></a>[**ci-memo**](adapters/stdlib/ci-memo/) \
   A CI gate whose inputs' bytes are unchanged keeps its recorded verdict: pin a run's per-gate keys, and run only what a change can reach. \
   Uses ci. *new* `no-install` `offline` `pin` `reach` · near: ci-cache, ci, test-impact
 - <a id="github"></a>[**github**](adapters/stdlib/github/) \
   What willow's repo needs from GitHub, kept in one folder so it can be taken away. \
-  Uses ci, readme, ready, stack. Goes online: GitHub, through gh, to read the author of a pull request a security report points to, and for create_pr.py to list the open pull requests and open yours. *box* `no-install` `online` `repo` `github` · near: gitlab, restack, ci
+  Uses ci, readme, ready, stack. Goes online: GitHub, through gh, to read the author of a pull request a security report points to, and for create_pr.py to
+  list the open pull requests and open yours. *box* `no-install` `online` `repo` `github` · near: gitlab, restack, ci
 - <a id="live"></a>[**live**](adapters/stdlib/live/) \
   Each way-in add-on run through the real program it's for, a shell, an editor or an AI tool: works, fails, or not here. \
-  Uses mcp-lite, pipe. Goes online: only what the programs it starts reach on their own; it reaches nothing itself. *new* `no-install` `online` `tests` · near: mutants, ci, github
+  Uses mcp-lite, pipe. Goes online: only what the programs it starts reach on their own; it reaches nothing itself. *new* `no-install` `online` `tests` ·
+  near: mutants, ci, github
 - <a id="readme"></a>[**readme**](adapters/stdlib/readme/) \
   Builds ADDONS.md, and the README's one feature, from the add-ons' own cards. \
-  Uses similar. *new* `no-install` `offline` · near: similar, against, live
+  Uses similar, skim. *new* `no-install` `offline` · near: similar, against, live
 - <a id="ready"></a>[**ready**](adapters/stdlib/ready/) \
   A branch made ready for its pull request, on no host: the repo's own steps run in order, what they make committed, and the body written. \
-  Uses ci, stack, restack, test-impact, against. *new* `no-install` `offline` `branch` `order` · near: github, against, stack
+  Uses ci, stack, restack, test-impact, against. *new* `no-install` `offline` `repo` `branch` · near: github, against, stack
 - <a id="red-on-main"></a>[**red-on-main**](adapters/stdlib/red-on-main/) \
   A pull request's failing checks held to main's last run: red there too is not the pull request's, green there is. \
   *new* `no-install` `offline` `pull` `request` · near: against, ci-bets, ci-baseline
 - <a id="restack"></a>[**restack**](adapters/stdlib/restack/) \
-  Main merged into your branches, with the conflicts in the files the repo makes or only adds to settled by its own tools, and every other one left to you. \
+  Main merged into your branches, conflicts in the files the repo makes or only adds to settled by its own tools, and any other left to you. \
   *new* `no-install` `offline` `branch` `repo` `git` · near: github, similar, oracle-text
 - <a id="restack-open"></a>[**restack-open**](adapters/stdlib/restack-open/) \
   Every open pull request that conflicts with its base, merged up to it by restack's rules and pushed, or named for a person. \
-  Uses restack. Goes online: github.com, to fetch and push the open pull requests' branches. *new* `no-install` `online` `pull` `requests` · near: restack, against, contribute
+  Uses restack. Goes online: github.com, to fetch and push the open pull requests' branches. *new* `no-install` `online` `pull` `requests` · near: restack,
+  against, contribute
 - <a id="similar"></a>[**similar**](adapters/stdlib/similar/) \
   What's already on the add-on list near a new idea, by the kernel's own search. \
   Uses pile-rank, readme. *box* `no-install` `offline` · near: readme, restack, against
 - <a id="skim"></a>[**skim**](adapters/stdlib/skim/) \
-  The lists this repo makes held to how a person reads them: a heading every screen, no line too long to read, and every add-on and folder a name to jump to. \
-  *new* `no-install` `offline` `screen` `held` · near: against, agents-md-check, readme
+  The lists this repo makes held to how a person reads them: a heading each screen, no line too long, each add-on and folder a name to find. \
+  *new* `no-install` `offline` `screen` `held` · near: against, agents-md-check, mutants
 - <a id="test-impact"></a>[**test-impact**](adapters/stdlib/test-impact/) \
   Only the tests a change can reach run first, from the import graph; the full suite still runs after. \
   Uses ci. *new* `no-install` `offline` `suite` `reach` · near: against, ci-memo, lesson-time

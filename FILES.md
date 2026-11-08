@@ -96,7 +96,7 @@ willow/
 │   │   │   ├── test_clauses.py
 │   │   │   └── README.md
 │   │   ├── equations/
-│   │   │   ├── equations.py  Each displayed equation in LaTeX sources as a passage of its own, with the sentences around it and its label, cited by the .tex file's line
+│   │   │   ├── equations.py  each displayed LaTeX equation as a passage, with the sentences around it and its label, cited by line
 │   │   │   ├── test_equations.py
 │   │   │   └── README.md     its card
 │   │   ├── latex/
@@ -116,7 +116,7 @@ willow/
 │   │   │   ├── test_mediawiki.py
 │   │   │   └── README.md
 │   │   ├── notation/
-│   │   │   ├── notation.py   Each displayed equation in LaTeX sources with the words its paper gives for its symbols ("where η is the packing fraction"), so a question in words finds the equation
+│   │   │   ├── notation.py   each displayed LaTeX equation with the words its paper gives its symbols, so words find the equation
 │   │   │   ├── test_notation.py
 │   │   │   └── README.md     its card
 │   │   ├── office/
@@ -862,7 +862,7 @@ willow/
 │   │   │   ├── test_invoices.py
 │   │   │   └── README.md
 │   │   ├── log-kit/
-│   │   │   ├── log_kit.py    The engine the logs share: your notes' dated lines, read by a short spec of words, numbers and a period, so a new log is a spec, not a program
+│   │   │   ├── log_kit.py    the engine the logs share: dated lines read by a short spec, so a new log is a spec, not code
 │   │   │   ├── test_log_kit.py
 │   │   │   └── README.md     its card
 │   │   ├── market-calls/
@@ -1118,7 +1118,7 @@ willow/
 │   │   │   ├── test_local_model.py
 │   │   │   └── README.md
 │   │   ├── mcp-sampling/
-│   │   │   ├── mcp_sampling.py Suggestions from whatever model your MCP client already runs, asked through MCP sampling, so willow needs no model or key of its own
+│   │   │   ├── mcp_sampling.py suggestions from the model your MCP client already runs, through MCP sampling: no model or key of willow's
 │   │   │   ├── test_mcp_sampling.py
 │   │   │   └── README.md     its card
 │   │   ├── night-batch/
@@ -1238,7 +1238,7 @@ willow/
 │   │   │   ├── test_hook_compact.py
 │   │   │   └── README.md
 │   │   ├── hook-errors/
-│   │   │   ├── hook_errors.py Each failed command an assistant runs kept as a row of its hash and exit code, so the same failure the third time is named, not retried blind
+│   │   │   ├── hook_errors.py each failed command kept as a row, so the third time it fails it's named, not retried blind
 │   │   │   ├── test_hook_errors.py
 │   │   │   └── README.md     its card
 │   │   ├── hook-fail-closed/
@@ -1246,7 +1246,7 @@ willow/
 │   │   │   ├── test_hook_fail_closed.py
 │   │   │   └── README.md
 │   │   ├── hook-feedback/
-│   │   │   ├── hook_feedback.py Your corrections to an assistant (no, wrong, I said) caught by fixed patterns at each prompt and handed in through propose, for you to keep or drop
+│   │   │   ├── hook_feedback.py your corrections to an assistant caught at each prompt and handed in through propose, to keep or drop
 │   │   │   ├── test_hook_feedback.py
 │   │   │   └── README.md     its card
 │   │   ├── hook-fuzz/
@@ -1258,7 +1258,7 @@ willow/
 │   │   │   ├── test_hook_guard.py
 │   │   │   └── README.md
 │   │   ├── hook-handoff/
-│   │   │   ├── hook_handoff.py A Stop hook that writes where the session ended, and the next session's first prompt gets it back, so nothing rides on the assistant's memory
+│   │   │   ├── hook_handoff.py a Stop hook that writes where the session ended, for the next session's first prompt
 │   │   │   ├── test_hook_handoff.py
 │   │   │   └── README.md     its card
 │   │   ├── hook-impact/
@@ -1274,7 +1274,7 @@ willow/
 │   │   │   ├── test_hook_pin.py
 │   │   │   └── README.md
 │   │   ├── hook-read-first/
-│   │   │   ├── hook_read_first.py A PreToolUse hook that refuses an edit to a file the assistant hasn't read this session, or whose bytes changed since it did, each read kept as a hash
+│   │   │   ├── hook_read_first.py refuses an edit to a file the assistant hasn't read this session, or that changed since
 │   │   │   ├── test_hook_read_first.py
 │   │   │   └── README.md     its card
 │   │   ├── hook-replay/
@@ -1401,7 +1401,7 @@ willow/
 │   │   │   ├── stack.py       one document from a stack of add-on steps over a box, pooled and peaks-first
 │   │   │   ├── test_stack.py
 │   │   │   ├── example.md
-│   │   │   ├── examples/      stacks to start from, one kind of folder each: a choir, a smallholding, a code library, a class, a story, foster dogs, a knee, a folder of repositories, a box handed on
+│   │   │   ├── examples/      stacks to start from, one kind of folder each: a choir, a smallholding, a code library, a class, a story...
 │   │   │   │   ├── choir.md
 │   │   │   │   ├── comeback.md
 │   │   │   │   ├── export.md
@@ -1413,7 +1413,7 @@ willow/
 │   │   │   │   └── teacher.md
 │   │   │   └── README.md
 │   │   ├── stack-share/
-│   │   │   ├── stack_share.py A stack you sealed with the Forge, written out to share: your sentence, each choice and why, each step's promises, and the stack to run
+│   │   │   ├── stack_share.py a stack you sealed with the Forge, written out to share: your sentence, each choice and why, the stack
 │   │   │   ├── test_stack_share.py
 │   │   │   └── README.md     its card
 ```
@@ -1710,7 +1710,7 @@ willow/
 │       │   ├── test_dialect.py
 │       │   └── README.md
 │       ├── dialect-dates/
-│       │   ├── dialect_dates.py The words your folder uses far more than the world does, each dated by its first and last appearance, with the passage that first says it
+│       │   ├── dialect_dates.py the words your folder uses far more than the world does, dated by first and last appearance
 │       │   ├── requirements-floor.txt
 │       │   ├── requirements.txt
 │       │   ├── test_dialect_dates.py
@@ -1752,7 +1752,7 @@ willow/
 
 ```
 │       ├── llm-cli/
-│       │   ├── llm_cli.py    Suggestions through the llm command, so any model its plugins reach (local or hosted) can hand one in, with llm's own log naming the model
+│       │   ├── llm_cli.py    suggestions through the llm command, from any model its plugins reach, its log naming the model
 │       │   ├── requirements.txt  llm, pinned
 │       │   ├── requirements-floor.txt  llm at its floor, also tested
 │       │   ├── test_llm_cli.py
@@ -1814,7 +1814,7 @@ willow/
 │       │   ├── fake_robinhood.py A stand-in for Robinhood's MCP server, on this machine, for the tests
 │       │   ├── requirements-floor.txt
 │       │   ├── requirements.txt
-│       │   ├── robinhood.py  Your Robinhood account as dated files: positions, orders, portfolio and watchlists, read through Robinhood's own MCP server and never traded on
+│       │   ├── robinhood.py  your Robinhood account as dated files, read through Robinhood's own MCP server, never traded on
 │       │   ├── stack.md      your Robinhood account, read back
 │       │   ├── test_robinhood.py
 │       │   └── README.md     its card
@@ -2116,7 +2116,7 @@ willow/
 │   │   │   └── null/
 │   │   │       └── null.txt  fifty questions with nothing to do with security, written with no input
 │   │   └── test_known_gaps.py  holds the frozen files to their hashes, and the tools to their word
-│   ├── markets-2026-11-05/   a broad equities and macro pile from public sources: SEC EDGAR, FRED, Treasury, the Fed, CBOE, Fama-French, IMF, World Bank, ECB, OECD
+│   ├── markets-2026-11-05/   a broad equities and macro pile from public sources: SEC EDGAR, FRED, Treasury, the Fed, CBOE and more
 │   │   ├── README.md         what's in the pile, what isn't and why, and how it's kept honest
 │   │   ├── fetch.py          saves 944 sources into a pile once (SEC EDGAR only with --contact), sets error bodies aside, and checks them offline
 │   │   ├── mirror.py         the pile as text the kernel searches, each reader's part, over-long files cut into parts

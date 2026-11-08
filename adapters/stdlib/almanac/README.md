@@ -1,6 +1,6 @@
 <!-- willow-addon
 section: Reading more kinds of files
-line: An Almanac's catalog.json (climate, health, civic and the rest): each public dataset's description and source as passages, with when its link was last checked.
+line: An Almanac's catalog.json: each public dataset's description and source as passages, with when its link was last checked.
 source: new
 added: 2026-10-31
 writes: to

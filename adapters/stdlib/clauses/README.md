@@ -1,6 +1,6 @@
 <!-- willow-addon
 section: Reading more kinds of files
-line: A policy, contract or set of terms as one sentence a passage, so an answer lands on the clause, and what changed between two versions, sentence by sentence.
+line: A policy, contract or terms as one sentence a passage, so an answer lands on its clause; and what changed between two versions, by sentence.
 source: new
 added: 2026-10-24
 writes: to
