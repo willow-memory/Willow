@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import re
 import subprocess
 import sys
 import tempfile
@@ -106,13 +107,15 @@ def test_the_real_readme_is_current():
 
 def test_building_an_add_on_is_what_turns_planned_into_built(repo):
     text = rd.rebuild(PAGE, None)
-    assert "- [**alpha**](adapters/stdlib/alpha/) — A thing. *new* `no-install` `offline`" in text  # fmt: skip
+    # an entry is two lines: its anchor, name and line; then, after a hard
+    # break, what it needs and where it goes, and its source and tags
+    assert '- <a id="alpha"></a>[**alpha**](adapters/stdlib/alpha/) — A thing. \\\n  *new* `no-install` `offline`' in text  # fmt: skip
     assert (
-        "- [**beta**](adapters/deps/beta/) — A thing. Needs somepkg; MIT. *new* `needs-install` `offline`"
+        '- <a id="beta"></a>[**beta**](adapters/deps/beta/) — A thing. \\\n  Needs somepkg; MIT. *new* `needs-install` `offline`'
         in text
     )
     assert (
-        "- **gamma** (idea) — Later. Reaches this machine only. *box* `no-install` `this-machine` `later`"
+        '- <a id="gamma"></a>**gamma** (idea) — Later. \\\n  Reaches this machine only. *box* `no-install` `this-machine` `later`'
         in text
     )
     assert "**2 of 3 built**" in text
@@ -121,7 +124,9 @@ def test_building_an_add_on_is_what_turns_planned_into_built(repo):
     with pytest.raises(rd.Refused, match="still in planned.json"):
         rd.rebuild(PAGE, None)
     (repo / "adapters" / "planned.json").write_text("[]")
-    assert "- [**gamma**](adapters/stdlib/gamma/)" in rd.rebuild(PAGE, None)
+    assert '- <a id="gamma"></a>[**gamma**](adapters/stdlib/gamma/)' in rd.rebuild(
+        PAGE, None
+    )
 
 
 def test_only_the_marked_sections_are_written(repo):
@@ -387,9 +392,11 @@ def add_ideas(repo: Path, *more: dict) -> None:
 
 
 def line_of(repo: Path, name: str) -> str:
-    """The entry's line in the list section (not the newest or the pick)."""
-    return next(x for x in (repo / "ADDONS.md").read_text().splitlines()
-                if x.startswith((f"- [**{name}**]", f"- **{name}** (idea)")))  # fmt: skip
+    """The entry in the list section (not the newest or the pick): its two
+    lines, as one."""
+    lines = (repo / "ADDONS.md").read_text().splitlines()
+    at = next(i for i, x in enumerate(lines) if x.startswith(f'- <a id="{name}"></a>'))
+    return lines[at] + "\n" + lines[at + 1]
 
 
 def test_the_weeks_first_write_keeps_each_entrys_topics_and_nearest(repo):
@@ -462,3 +469,39 @@ def test_a_week_file_for_another_week_or_none_is_stale_to_check(repo, capsys):
     kept = json.loads((repo / "week.json").read_text())
     (repo / "week.json").write_text(json.dumps({**kept, "week": "2026-W44"}))
     assert rd.main(["check"]) == 2
+
+
+def one(name, section, role, built=True):
+    return {"name": name, "section": section, "line": f"{name} things.", "role": role,
+            "built": built, "path": f"adapters/stdlib/{name}/", "kind": "stdlib",
+            "network": "none", "source": "new"}  # fmt: skip
+
+
+def test_a_section_is_cut_by_groups_py_built_first_and_each_entry_has_an_anchor():
+    """Inside a section: a heading per role, in groups.py's order, or per
+    group where the role has groups (readers by what they read); the built
+    ones first, then the ideas under a heading of their own."""
+    every = [
+        one("zz-tool", "Reading more kinds of files", "tools"),
+        one("mail", "Reading more kinds of files", "reads"),
+        one("pdf", "Reading more kinds of files", "reads"),
+        one("bank", "Reading more kinds of files", "reads"),
+        one("aa-plan", "Reading more kinds of files", "reads", built=False),
+    ]
+    worked = {a["name"]: {"tags": [], "near": []} for a in every}
+    text = rd.section_list(every, worked).split("## Reading more kinds of files", 1)[1]
+    text = text.split("\n## ", 1)[0]
+    heads = re.findall(r"^#{3,4} (.+)$", text, re.M)
+    assert heads == ["Documents and office files", "Mail and chat",
+                     "Exports from apps and services", "Other readers",
+                     "Other readers: ideas, not built yet", "Tools you run yourself"]  # fmt: skip
+    for n in ("pdf", "mail", "bank", "aa-plan", "zz-tool"):
+        assert f'<a id="{n}"></a>' in text, n
+    assert text.index('id="pdf"') < text.index('id="mail"') < text.index('id="bank"')
+
+
+def test_the_real_list_is_every_add_on_once_under_a_heading():
+    every = rd.addons()
+    page = (rd.ROOT / "ADDONS.md").read_text(encoding="utf-8")
+    listed = re.findall(r'^- <a id="([^"]+)"></a>', page.split("<!-- willow:list -->")[1], re.M)  # fmt: skip
+    assert sorted(listed) == sorted(a["name"] for a in every)

@@ -21,7 +21,11 @@ ADDONS.md holds these sections, in this order:
     newest   the five most recently added add-ons that are built
     pick     the add-on of the week, drawn from the built ones by a hash of
              the week, so anyone can recompute the draw
-    list     every add-on, built and planned, by section, A to Z
+    list     every add-on, built and planned, by section, then by the
+             role and group groups.py gives it (the UI's own), the built
+             ones first and the ideas after, A to Z; each an anchor,
+             `#name`, and two lines: its line, then what it needs, where
+             it goes online and its tags
 
 README.md holds two: `summary`, one line per section saying what it's for,
 with a built example or two; and `front`, one of pools, newest or
@@ -355,6 +359,10 @@ def split_tags(text: str) -> list[str]:
 def facts(a: dict) -> str:
     """What a card promises that a reader must see, in words, whatever its
     tags say: what it needs installed, and where it goes."""
+    return "".join(f" {f}" for f in said_facts(a))
+
+
+def said_facts(a: dict) -> list[str]:
     out = []
     if a["kind"] == "deps":
         out.append(f"Needs {a['needs']}.")
@@ -364,16 +372,32 @@ def facts(a: dict) -> str:
         out.append("Reaches this machine only.")
     elif a["network"] != "none":
         out.append(f"Goes online: {a['network']}.")
-    return "".join(f" {f}" for f in out)
+    return out
 
 
 def entry(a: dict, worked: dict) -> str:
+    """One add-on, two lines: its anchor, name and line first; what it needs
+    and where it goes online, in words, then its tags and nearest, next (a
+    `\\` breaks the line, so it stays one entry)."""
     name = (
         f"[**{a['name']}**]({a['path']})" if a["built"] else f"**{a['name']}** (idea)"
     )
     tags = " ".join(f"`{t}`" for t in worked["tags"])
     near = f" · near: {', '.join(worked['near'])}" if worked["near"] else ""
-    return f"- {name} — {a['line']}{facts(a)} *{a['source']}* {tags}{near}"
+    said = " ".join(said_facts(a))
+    return (f'- <a id="{a["name"]}"></a>{name} — {a["line"]} \\\n'
+            f"  {said + ' ' if said else ''}*{a['source']}* {tags}{near}")  # fmt: skip
+
+
+def placed(a: dict) -> tuple[int, int, str]:
+    """Where an entry goes inside its section, by groups.py, the grouping the
+    UI shares: its role's place, its group's, and the heading over it (the
+    group's title, or the role's when it has no groups)."""
+    got = groups.role({"name": a["name"], "section": a["section"], "line": a["line"],
+                       "role": a.get("role", ""), "state": "built" if a["built"] else "idea"})  # fmt: skip
+    keys = [k for k, _ in groups.ROLES]
+    at = keys.index(got["role"]) if got["role"] in keys else len(keys)
+    return at, got["group_at"], got["group"] or dict(groups.ROLES).get(got["role"], "Other")  # fmt: skip
 
 
 def similar_add_on():
@@ -437,11 +461,17 @@ def section_list(every: list[dict], worked: dict[str, dict] | None = None) -> st
         lines += ["", f"## {title}", ""]
         if intro:
             lines += [intro, ""]
-        lines += [
-            entry(a, worked[a["name"]])
-            for a in sorted(every, key=lambda a: a["name"])
-            if a["section"] == title
-        ]
+        # by groups.py's place, the built ones first and the ideas after them
+        here = sorted((placed(a), not a["built"], a["name"], a) for a in every if a["section"] == title)  # fmt: skip
+        heading = None
+        for (_, _, head), idea, _, a in here:
+            if (head, idea) != heading:
+                if heading is None or head != heading[0]:
+                    lines += ([""] if heading is not None else []) + [f"### {head}", ""]
+                if idea:
+                    lines += ["", f"#### {head}: ideas, not built yet", ""]
+                heading = (head, idea)
+            lines.append(entry(a, worked[a["name"]]))
     return "\n".join(lines)
 
 
