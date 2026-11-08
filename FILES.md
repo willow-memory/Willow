@@ -1157,6 +1157,10 @@ willow/
 │   │   │   ├── similar.py    what's already on the list near a new idea
 │   │   │   ├── test_similar.py
 │   │   │   └── README.md
+│   │   ├── skim/
+│   │   │   ├── skim.py       a made list held to how a person reads it: a heading a screen, a line a look, a name to jump to
+│   │   │   ├── test_skim.py
+│   │   │   └── README.md     its card
 │   │   ├── slack/
 │   │   │   ├── slack.py   a Slack export as dated lines of messages
 │   │   │   ├── test_slack.py

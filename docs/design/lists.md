@@ -3,8 +3,8 @@
 **Status: notes, taken 2026-11-08, to come back to. Nothing here is built.**
 FILES.md and ADDONS.md are made by scripts and held by tests; this writes
 down what makes them hard to read and to search, what already leans on
-their shape, and what a change could be. The idea it ends in is on
-`adapters/planned.json` as `skim`.
+their shape, and what a change could be. The idea it ends in is built:
+[skim](../../adapters/stdlib/skim/).
 
 ## What they are now
 
@@ -101,4 +101,5 @@ given: a heading at least every screen (say 60 lines), no line longer than
 it can be read in (say 160 characters, a table row aside), and every
 add-on or folder a name that can be jumped to. It says each place one
 fails, and it starts out reporting, not refusing, until the two lists
-pass. On `adapters/planned.json`; whoever builds it settles the numbers.
+pass. Built as [skim](../../adapters/stdlib/skim/), with a screen of 60
+lines and a width of 160.

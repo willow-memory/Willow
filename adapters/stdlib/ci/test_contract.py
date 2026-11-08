@@ -804,6 +804,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "session-seal": ("session_seal.py", ["--box", "{box}", *NOW]),
     "share": ("share.py", ["log", "--box", "{box}"]),
     "shell": ("shell.py", ["script", "bash"]),
+    "skim": ("skim.py", ["check"]),
     "slow-tests": ("slow_tests.py", ["--runs", "{pile}"]),
     "snapshot": ("snapshot.py", ["check", "--in", "{pile}"]),
     "sort": ("sort.py", ["--box", "{box}", "--categories", "{pile}/categories.txt"]),
