@@ -425,7 +425,8 @@
   "source": "new",
   "writes": "nothing",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "from": "shape, https://github.com/wagtail/Willow, BSD-3-Clause"
  },
  {
   "name": "forgejo",
