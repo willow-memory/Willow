@@ -94,7 +94,8 @@ def repo(tmp_path):
     and its changelog fragment. Its steps are written by each test."""
     r = tmp_path / "repo"
     for rel in ("kernel.py", "adapters/stdlib/stack/stack.py", "adapters/stdlib/ci/changelog.py",
-                "adapters/stdlib/github/create_pr.py", "adapters/stdlib/github/README.md"):  # fmt: skip
+                "adapters/stdlib/github/create_pr.py", "adapters/stdlib/github/README.md",
+                "adapters/stdlib/ready/ready.py", "adapters/stdlib/ready/steps.md"):  # fmt: skip
         (r / rel).parent.mkdir(parents=True, exist_ok=True)
         shutil.copy(ROOT / rel, r / rel)
     for name, writes in (("say", "made.txt"), ("against", "nothing")):
@@ -447,28 +448,12 @@ def test_a_failed_open_keeps_the_body_and_says_the_command(repo):
 
 
 # ── the pieces ───────────────────────────────────────────────────────────────
-def test_the_real_steps_are_a_stack_of_add_ons_that_are_here():
-    pools = cp.steps(cp.STEPS)
-    names = [n for _, ss in pools for n, _ in ss]
-    assert names[0] == "restack" and names[-1] == "ci.changelog"
-    assert pools[-1][0] == cp.AFTER and all(h != cp.AFTER for h, _ in pools[:-1])
-    assert {"ci.made", "test-impact.impact", "against"} <= set(names)
-    assert set(cp.FINE_42) <= set(names) and set(cp.STOP_ON) <= set(names)
-
-
 def test_owner_and_name_come_from_origin_whatever_its_shape():
     for url in ("https://github.com/willow-memory/Willow.git", "git@github.com:willow-memory/Willow",
                 "http://proxy@127.0.0.1:9/git/willow-memory/Willow/"):  # fmt: skip
         assert cp.slug_of(url) == "willow-memory/Willow", url
     with pytest.raises(cp.Refused):
         cp.slug_of("nowhere")
-
-
-def test_fill_spreads_the_open_branches_and_fills_the_rest():
-    fields = {"base": "origin/main", "pr": 7, "open": ["origin/a", "origin/b"]}
-    assert cp.fill(["--base", "{base}", "{open}", "#{pr}"], fields) == [
-        "--base", "origin/main", "origin/a", "origin/b", "#7"]  # fmt: skip
-    assert cp.fill(["{open}"], {**fields, "open": []}) == []
 
 
 def test_an_add_on_the_change_touches_has_its_cards_promises_in_the_body(repo):

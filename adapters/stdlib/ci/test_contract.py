@@ -777,6 +777,8 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "reading-level": ("reading_level.py", ["--box", "{box}"]),
     "reading-log": ("reading_log.py", ["--box", "{box}"]),
     "readings": ("readings.py", ["bite", "--box", "{box}", *NOW, "tomatoes"]),
+    # the steps it would run, read and listed: nothing of the repo's touched
+    "ready": ("ready.py", ["steps"]),
     "red-on-main": ("red_on_main.py", ["--pr", "{box}", "--main", "{box}"]),
     "renewals": ("renewals.py", ["--box", "{box}", *NOW]),
     # a list naming no owner/repo builds nothing, before any clone: no network

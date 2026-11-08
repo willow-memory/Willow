@@ -1218,9 +1218,9 @@ def verb(cmd: str, argv: list[str]) -> int:
             lines.append(f"  {p['name']}{mark}: {p['line']}")
             lines += [f"      {u}" for u in p.get("usage", [])]
             lines.append(f"      here because {p['role_why']}")
-        runner = cv.willow / "adapters" / "stdlib" / "github" / "create_pr.md"
+        runner = cv.willow / "adapters" / "stdlib" / "ready" / "steps.md"
         if want == "repo" and runner.is_file():
-            lines.append("\nIn order, before a pull request opens: python adapters/stdlib/github/create_pr.py (its steps: adapters/stdlib/github/create_pr.md)")  # fmt: skip
+            lines.append("\nIn order, before a pull request opens: python adapters/stdlib/github/create_pr.py (its steps: adapters/stdlib/ready/steps.md, run by ready)")  # fmt: skip
         return show(mine, "\n".join(lines))
     if cmd == "needs":
         if not rest or (bad := [n for n in rest if n not in ps]):
