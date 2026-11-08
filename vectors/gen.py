@@ -742,7 +742,8 @@ def stem_cases() -> list[dict]:
         "dad", "dads", "replies", "tried", "hives", "ties", "lies", "dies", "eyes",
         "ss", "sss", "less", "bus", "gas", "seed", "need", "fee", "free", "tree",
         "OWES", "Paying", "ing", "sing", "being", "ed", "bed", "red", "fled",
-        "ruled", "filled", "added", "egged", "a", "ab", "abc", "\u0131ng",
+        "ruled", "filled", "added", "egged", "feed", "feeds", "feeding", "needed",
+        "proceed", "agreed", "eed", "deed", "a", "ab", "abc", "\u0131ng",
         "na\u00efve", "\u0661\u0662",
     ]  # fmt: skip
     letters = "abcdefghijklmnopqrstuvwxyz"
