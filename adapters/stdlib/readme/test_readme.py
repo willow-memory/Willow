@@ -155,6 +155,13 @@ def test_the_draw_is_the_weeks_and_anyone_can_redo_it(repo):
         )
         assert f"**[{built[by_hand]}]" in rd.section_pick(every, week)
         assert rd.section_pick(every, week) == rd.section_pick(every, week)
+    # whichever is drawn, its name and its line each fit the width skim
+    # holds ADDONS.md to: on one line, a fifth of them would not
+    for a in every:
+        if a["built"]:
+            name, line, *_ = rd.section_pick([a], "2026-W43").splitlines()
+            assert name == f"**[{a['name']}]({a['path']})** \\" and line == a["line"]
+            assert len(name) <= 160 and len(line) <= 160, a["name"]
     text = rd.rebuild(PAGE, None)  # check keeps the week already written
     assert "<!-- willow:pick week=2026-W43 -->" in text
     assert "<!-- willow:pick week=2027-W01 -->" in rd.rebuild(PAGE, "2027-W01")

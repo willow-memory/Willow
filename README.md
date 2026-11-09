@@ -152,7 +152,8 @@ says how to pick one up:
 <!-- willow:front show=pick week=2026-W46 -->
 **Add-on of the week**
 
-**[fixity](adapters/stdlib/fixity/)** — Your folder's files hashed again now and then, the hashes kept on the record, and a file that changed with no edit of yours flagged as rot.
+**[fixity](adapters/stdlib/fixity/)** \
+Your folder's files hashed again now and then, the hashes kept on the record, and a file that changed with no edit of yours flagged as rot.
 
 *Drawn for 2026-W46: SHA-256 of "willow add-on of the week 2026-W46", modulo the 351 built add-ons in name order.*
 
