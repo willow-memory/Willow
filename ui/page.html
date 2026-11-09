@@ -264,7 +264,7 @@ function plainTags(p){const t=[];if(p.network&&p.network!=='none')t.push(el('spa
  if(p.kind==='deps')t.push(el('span',{class:'tag inst',text:'needs installing'}));if((p.writes||'').includes('to'))t.push(el('span',{class:'tag',text:'writes only where you point it'}));if((p.writes||'').includes('record'))t.push(el('span',{class:'tag',text:'writes your record'}));
  if(p.in_stack)t.push(el('span',{class:'tag have',text:'already here'}));return t}
 const all=()=>STAGES.flatMap(s=>(S.stages[s.key]||[]));
-const FACT=new Set(['no-install','needs-install','offline','this-machine','online']);
+const FACT=new Set(['no-install','needs-install','offline','this-machine','online','to-a-model']);
 // a tag you can click: every piece that shares it
 function topics(p){return(p.tags||[]).filter(t=>!FACT.has(t)).map(t=>el('button',{class:'topic',text:'#'+t,title:'every piece tagged '+t,onclick:e=>{e.stopPropagation();find('#'+t)}}))}
 function stageTitle(p){const k=stageOf(p);return STAGES.find(s=>s.key===k)?.title||'willow’s own repository, not your stack'}

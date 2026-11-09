@@ -5,6 +5,7 @@ source: box
 added: 2026-11-05
 writes: record
 network: none
+hands: the passages served for each prompt, to the model of the assistant it hooks (Gemini CLI, Codex, opencode)
 role: guards
 tags: hooks
 uses: claude-code

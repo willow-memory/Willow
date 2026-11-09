@@ -92,6 +92,10 @@ def repo(tmp_path, monkeypatch):
     monkeypatch.setattr(rd, "ADAPTERS", tmp_path / "adapters")
     monkeypatch.setattr(rd, "PLANNED", tmp_path / "adapters" / "planned.json")
     monkeypatch.setattr(rd, "WEEK_FILE", tmp_path / "week.json")
+    # a bare write draws for this week, as it should; these tests write
+    # 2026-W45 and mean "still that week", so this week is that week here,
+    # whatever the calendar says (they failed the day W46 began)
+    monkeypatch.setattr(rd, "this_week", lambda: "2026-W45")
     return tmp_path
 
 
@@ -277,6 +281,8 @@ def test_the_draw_is_the_weeks_and_anyone_can_redo_it(repo):
         ("stdlib/delta", card(tags="offline"), "worked out from the card"),
         ("stdlib/delta", card(tags="money"), None),
         ("stdlib/delta", card(), None),  # a tag of your own is optional
+        ("stdlib/delta", card(hands="none"), "leave it off when it hands nothing"),
+        ("stdlib/delta", card(hands="the passages, to the client's model"), None),
         ("stdlib/alpha2", "", "has no README.md card"),
     ],
 )
@@ -293,6 +299,33 @@ def test_an_add_on_that_doesnt_hold_together_is_refused(repo, folder, text, why)
         return
     with pytest.raises(rd.Refused, match=why):
         rd.rebuild(PAGE, None)
+
+
+@pytest.mark.parametrize(
+    "code",
+    [
+        'print(json.dumps({"additionalContext": text}))',
+        'req = {"method": "sampling/createMessage"}',
+        'reply = {"jsonrpc": "2.0", "result": served}',
+        "from mcp.server.fastmcp import FastMCP",
+    ],
+)
+def test_code_that_hands_text_to_a_model_needs_a_hands_line(repo, code):
+    """What leaves is said before it leaves (CONST-III-5): code that writes a
+    hook's context, a JSON-RPC reply, a sampling request or an MCP server is
+    refused until its card says what it hands and to whom; a test file
+    holding the same text is not the add-on's code."""
+    where = repo / "adapters" / "stdlib" / "delta"
+    where.mkdir(parents=True)
+    (where / "README.md").write_text(card())
+    (where / "test_delta.py").write_text(code + "\n")
+    (repo / "README.md").touch()
+    rd.rebuild(PAGE, None)  # only a test holds it: holds together
+    (where / "delta.py").write_text(code + "\n")
+    with pytest.raises(rd.Refused, match="delta.py hands text to another program"):
+        rd.rebuild(PAGE, None)
+    (where / "README.md").write_text(card(hands="the passages, to the client's model"))
+    rd.rebuild(PAGE, None)
 
 
 def test_code_taken_keeps_the_notice_of_where_it_came_from(repo):

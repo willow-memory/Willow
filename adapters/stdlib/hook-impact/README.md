@@ -5,6 +5,7 @@ source: box
 added: 2026-10-29
 writes: nothing
 network: none
+hands: the lines of your files that name a file before it is edited, to the assistant's model
 role: guards
 tags: hooks
 uses: habits

@@ -1406,6 +1406,7 @@ willow/
 │   │   │   │   ├── comeback.md
 │   │   │   │   ├── export.md
 │   │   │   │   ├── foster.md
+│   │   │   │   ├── hands.md  what the add-ons hand to an assistant's model
 │   │   │   │   ├── maintainer.md
 │   │   │   │   ├── reporter.md
 │   │   │   │   ├── repos.md

@@ -5,6 +5,7 @@ source: bot
 added: 2026-10-29
 writes: nothing
 network: none
+hands: what needs you, its dated lines and waiting suggestions included, to the assistant's model at the session's start
 role: guards
 tags: hooks
 uses: digest

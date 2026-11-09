@@ -5,6 +5,7 @@ source: new
 added: 2026-11-07
 writes: record
 network: none
+hands: the session's id and the folder it ended in, never your files' words, to the next session's model
 role: guards
 tags: hooks
 -->

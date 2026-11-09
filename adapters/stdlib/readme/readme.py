@@ -216,7 +216,14 @@ RUNS_IN = {"repo"}
 #: what an add-on prints, when it keeps a shared shape: ci/README.md
 OUTPUTS = {"report", "mirror", "suggestions"}
 #: the tags the similar add-on works out, which a card's own tag is never one of
-FACT_TAGS = {"no-install", "needs-install", "offline", "this-machine", "online"}
+FACT_TAGS = {
+    "no-install",
+    "needs-install",
+    "offline",
+    "this-machine",
+    "online",
+    "to-a-model",
+}
 #: what an add-on may write: the guard in adapters/stdlib/ci/guard holds it
 #: to this while its tests run; a file of the repo may also be named
 WRITES = {"nothing", "record", "to"}
@@ -236,12 +243,25 @@ NOTICE_FILE = re.compile(r"(?:NOTICE|LICEN[CS]E|COPYING)(?:[-._].*)?", re.I)
 #: field spelt wrong is never read as one left out
 KEYS = {"section", "line", "source", "writes", "network", "role", "added", "tags",
         "uses", "looks-for", "reads", "output", "needs", "floor", "programs",
-        "runs-in", "from"}  # fmt: skip
+        "runs-in", "from", "hands"}  # fmt: skip
 IDEA_KEYS = (KEYS - {"added"}) | {"name", "kind"}
 HEADER = re.compile(r"\A<!-- willow-addon\n(.*?)\n-->\n", re.S)
 #: a kind of file a reader reads: .ext, or a file name it looks for
 KIND = re.compile(r"\.?[A-Za-z0-9][A-Za-z0-9_.+-]*")
 NAME = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*")
+#: what in an add-on's code hands text to another program that may send it
+#: on: a hook's context, an MCP server's results, a sampling request. Its
+#: card says so in `hands` (CONST-III-5); a plain-stdout hook can't be told
+#: from its code, so this is a floor, and the hands stack the rest
+HANDS_SIGNS = re.compile(
+    r'additionalContext|sampling/createMessage|"jsonrpc"|mcp\.server'
+)
+#: an add-on whose code holds a sign and hands nothing, and why
+NOT_HANDED = {
+    "robinhood": "fake_robinhood.py is a stand-in for Robinhood's server in its "
+    "tests; robinhood reads from that server and hands nothing to a model",
+    "readme": "readme.py names the signs, to look for them",
+}
 #: a language pack: words- and the language's ISO 639 code
 LANGUAGE = re.compile(r"words-([a-z]{2,3})")
 
@@ -329,6 +349,17 @@ def addons() -> list[dict]:
             raise Refused(f"{where}: writes is nothing, or any of record, to, or a file of the repo: {a['writes']!r}")  # fmt: skip
         if not a["network"].strip():
             raise Refused(f"{where}: network is none, loopback, or what it reaches and why")  # fmt: skip
+        # CONST-III-5: what leaves is stated before it leaves. network is what
+        # the add-on itself connects to; hands is what it gives a program that
+        # may send it on (an assistant's model), and to whom
+        if "hands" in a and a["hands"].strip() in ("", "none"):
+            raise Refused(f"{where}: hands is what it gives another program and to whom; leave it off when it hands nothing")  # fmt: skip
+        if a["built"] and "hands" not in a and a["name"] not in NOT_HANDED:
+            signs = [p.name for p in sorted((ROOT / a["path"]).iterdir())
+                     if p.suffix in (".py", ".js", ".ts") and not p.name.startswith("test_")
+                     and HANDS_SIGNS.search(p.read_text(encoding="utf-8", errors="replace"))]  # fmt: skip
+            if signs:
+                raise Refused(f"{where}: {', '.join(signs)} hands text to another program, and the card has no hands line")  # fmt: skip
         if a["kind"] == "deps" and not a.get("needs"):
             raise Refused(f"{where}: a deps add-on says what it needs")
         if a["kind"] == "stdlib" and a.get("needs"):
@@ -440,6 +471,8 @@ def said_facts(a: dict) -> list[str]:
         out.append("Reaches this machine only.")
     elif a["network"] != "none":
         out.append(f"Goes online: {a['network']}.")
+    if a.get("hands"):
+        out.append(f"Hands on {a['hands']}.")
     return out
 
 

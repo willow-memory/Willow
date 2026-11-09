@@ -5,6 +5,7 @@ source: bot
 added: 2026-10-24
 writes: record
 network: none
+hands: the passages served for each prompt, to Claude Code's model
 role: ways
 uses: mcp-lite
 looks-for: index-cache, scan
