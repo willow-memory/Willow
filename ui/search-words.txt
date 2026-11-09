@@ -51,3 +51,9 @@ games = game, play, dice, quiz
 
 # searching code
 grep = ripgrep
+repos = git, commit, codebase, comments
+repositories = git, commit, codebase, comments
+
+# showing your work
+cv = timeline, export, hunt
+resume = timeline, export, hunt
