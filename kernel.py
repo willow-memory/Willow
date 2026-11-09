@@ -1124,9 +1124,9 @@ def test() -> None:
         assert got == ["seed/f11.md:1", "seed/f05.md:1", "seed/f09.md:1"]
         # 9. the core reaches nothing that extends it (CONST-III-6): every
         #    module this file imports is Python's own, and none is an add-on
-        assert foreign("import json\nfrom adapters.stdlib import todo\n") == {
-            "adapters"
-        }
+        # (a stand-in name, never an add-on's: this file names none)
+        planted = "import json\nfrom extends_me.part import thing\nfrom . import near\n"
+        assert foreign(planted) == {"extends_me", "."}
         assert foreign(Path(__file__).read_text(encoding="utf-8")) == set()
         # 10. the record keeps acts, not words (CONST-VI-8): after the whole
         #     cycle, no word it holds is one a question or a suggestion said
