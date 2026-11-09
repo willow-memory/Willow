@@ -3,6 +3,7 @@ section: Finding things
 line: Tries the strict word match first, then your folder's phrases, and says which one found the answer and why the others didn't.
 source: bot
 added: 2026-10-28
+version: 0.1.0
 writes: nothing
 network: none
 role: tools

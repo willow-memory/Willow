@@ -320,7 +320,19 @@ To make one, open a pull request that changes only the docs:
    `date-released: YYYY-MM-DD` to match.
 
 `test_docs.py` fails if the two disagree, and the changelog check owes
-nothing for it. Once it merges, tag the merge commit `vX.Y.Z` and publish a
+nothing for it.
+
+**Add-ons and ideas are versioned the same way**, each on its own: `version:`
+on its card, and `"version"` on its entry in `adapters/planned.json`. An
+idea starts at 0.0.1 and steps a patch each time its entry changes; its
+first build is 0.1.0; a built add-on steps a patch for a fix, a minor step
+for something added, and a major one when something that relied on it no
+longer can. Below 1.0 a breaking change is a minor step, as the standard
+says, and 1.0 comes when its author judges the add-on has settled; it is
+not an end. One pull request is one step, however many commits it has.
+`adapters/stdlib/ci/versions.py check` holds it on every pull request, and
+`write` (one of ready's steps) takes the smallest step each change owes; a
+bigger one is yours to write. Once it merges, tag the merge commit `vX.Y.Z` and publish a
 release whose notes are that section of the changelog.
 
 ## After you open it

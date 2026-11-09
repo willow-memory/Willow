@@ -3,6 +3,7 @@ section: Play
 line: Exact odds, as fractions, for a game's dice and tables: what each outcome's chance really is.
 source: bot
 added: 2026-10-24
+version: 0.1.0
 writes: nothing
 network: none
 role: tools

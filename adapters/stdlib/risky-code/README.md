@@ -3,6 +3,7 @@ section: Privacy and safety
 line: Code lines matching a known-dangerous pattern (command injection, eval, SQL concatenation, broken TLS and more), by file and line, as leads.
 source: new
 added: 2026-10-25
+version: 0.1.0
 writes: nothing
 network: none
 role: page

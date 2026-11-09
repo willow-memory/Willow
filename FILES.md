@@ -1410,6 +1410,7 @@ willow/
 │   │   │   │   ├── comeback.md
 │   │   │   │   ├── export.md
 │   │   │   │   ├── foster.md
+│   │   │   │   ├── hands.md  what the add-ons hand to an assistant's model
 │   │   │   │   ├── maintainer.md
 │   │   │   │   ├── reporter.md
 │   │   │   │   ├── repos.md
@@ -1595,6 +1596,7 @@ willow/
 │   │   ├── ci/
 │   │   │   ├── ci.py         this repo's checks as verdict rows on a kernel record
 │   │   │   ├── changelog.py  a change beyond the docs adds its entry to CHANGELOG.md, and names a bug it fixed
+│   │   │   ├── versions.py   each add-on and idea a pull request changes steps its version, once
 │   │   │   ├── bugs.py       makes BUGS.md from the tests marked as known bugs
 │   │   │   ├── whose.py      which commit wrote these lines, or with a host's host.json which pull request
 │   │   │   ├── cores.py      ci.py's run as its shards at once on this machine, a record each, shown together
@@ -1606,6 +1608,7 @@ willow/
 │   │   │   ├── test_guard.py the guard's tests: each broken promise caught
 │   │   │   ├── test_contract.py  what every add-on promises alike, held for all of them
 │   │   │   ├── test_changelog.py  changelog.py's tests: owed, not owed, and in the wrong place
+│   │   │   ├── test_versions.py  versions.py's tests: one step a pull request, a promise never a patch, where new ones start
 │   │   │   ├── test_bugs.py  bugs.py's tests: strict marks only, and the list made from them
 │   │   │   ├── test_whose.py whose.py's tests: commits, merges, squashes, another host, places refused
 │   │   │   ├── test_cores.py cores.py's tests: every gate once across the shards, refusals that run nothing
@@ -1638,15 +1641,15 @@ willow/
 │   │   │   ├── test_copies.py
 │   │   │   ├── test_mirrors.py
 │   │   │   └── README.md     its card: gates, states, the guard and exit codes
+```
+
+#### adapters/stdlib/, from ci-memo/
+
+```
 │   │   ├── ci-memo/
 │   │   │   ├── ci_memo.py    a gate whose inputs' bytes are unchanged keeps its verdict: pin a run's keys, plan the rest
 │   │   │   ├── test_ci_memo.py
 │   │   │   └── README.md
-```
-
-#### adapters/stdlib/, from github/
-
-```
 │   │   ├── github/
 │   │   │   ├── create_pr.py  this branch's pull request: GitHub's part around ready's steps, pushed, opened and numbered, or 42 for what needs you
 │   │   │   ├── github.py     what the repo needs from GitHub: a security report's comment, .github/ held to the repo

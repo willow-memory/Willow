@@ -3,6 +3,7 @@ section: Ways to use it
 line: One page made from several add-ons run in the order you list them, their results grouped so the biggest come first.
 source: new
 added: 2026-10-26
+version: 0.1.0
 writes: nothing
 network: none
 role: ways
@@ -34,7 +35,7 @@ anywhere in a step's args is replaced with the `--box` path, so a step that
 reads the box names it and a step that doesn't (a `git` or `pgp` step) leaves
 it out. Blank lines, lines beginning `#` (but not `##`), and any other prose
 are skipped, so a stack file reads as markdown; a step before any pool is
-refused. A worked example is `adapters/stdlib/stack/example.md`; nine more,
+refused. A worked example is `adapters/stdlib/stack/example.md`; ten more,
 each for a different kind of folder, are in `adapters/stdlib/stack/examples/`.
 A stack you sealed with the forge add-on, with why each step is there, is
 written out to share by [stack-share](../stack-share/).

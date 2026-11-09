@@ -3,10 +3,12 @@ section: Assistants
 line: Lets any MCP client, such as an AI assistant or editor, ask your folder and hand in suggestions.
 source: new
 added: 2026-10-23
+version: 0.1.0
 needs: mcp; MIT
 floor: mcp 2.0.0; the rule names 0.9.1, its first release, but MCPServer arrived in 2.0.0 and 2.x removed 1.x's server API, so no one server runs on both
 writes: record
 network: none
+hands: the passages served for each ask, and what waits on you, to the MCP client's model
 role: ways
 -->
 # mcp

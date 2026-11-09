@@ -3,6 +3,7 @@ section: Reading more kinds of files
 line: An X (Twitter) archive: your posts, replies and DMs as dated lines.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: to
 network: none
 role: reads

@@ -3,6 +3,7 @@ section: Reading more kinds of files
 line: Letterboxd's export: the films you've watched, your ratings and reviews, as dated lines.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: to
 network: none
 role: reads

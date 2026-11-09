@@ -3,6 +3,7 @@ section: For maintainers
 line: This repo's checks as verdict rows on a kernel record, the same every run.
 source: box
 added: 2026-10-23
+version: 0.1.0
 writes: record, BUGS.md, FILES.md, README.md, ADDONS.md, adapters/planned.json, adapters/*/*, adapters/*/*/*, demo/*/*, demo/*/*/*
 network: PyPI, to read each dependency floor's release date; GitHub, through gh, to find main's last records (main_run.py, times.py)
 role: repo
@@ -81,6 +82,19 @@ says how), or, from before the fragments, an entry in CHANGELOG.md's
 listing must be named in a `fixed` one, `bug #12`. Exit 0 every entry owed
 is there, or nothing is owed; 42 git couldn't compare with the base; 2 an
 entry is missing.
+
+**Versions:** [versions.py](versions.py) runs in the changelog job too, on
+the same base. Every add-on and idea carries a version, `MAJOR.MINOR.PATCH`
+([Releases](../../../CONTRIBUTING.md#releases)): an idea starts at 0.0.1 and
+steps a patch each time its entry changes, its first build is 0.1.0, and a
+built add-on steps by the size of its change. One pull request is one step:
+`check` refuses an add-on whose files changed (its tests aside) without
+one, a step of more than one, a changed `writes`, `network` or `hands` taken
+as a patch, and a new add-on or idea that doesn't start where it should.
+`write` gives each the smallest step it owes, a patch or, for a changed
+promise, a minor one; a bigger step is the author's, and 1.0 is a person's
+call. Exit 0 every version holds; 42 git couldn't compare with the base; 2
+one doesn't.
 
 **Known bugs:** [bugs.py](bugs.py) makes BUGS.md from the tests marked as
 expected to fail, `strict=True` with a reason `bug #N: …`, and refuses any

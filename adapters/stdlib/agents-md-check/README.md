@@ -3,6 +3,7 @@ section: For maintainers
 line: Commands and paths named in AGENTS.md, CLAUDE.md, GEMINI.md or copilot-instructions.md that no longer exist in the repo.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: nothing
 network: none
 role: page

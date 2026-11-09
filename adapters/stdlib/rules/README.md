@@ -3,6 +3,7 @@ section: Finding things
 line: A game's or a house's rules, approved one section at a time, so asking what a rule says gives back that exact section, word for word.
 source: bot
 added: 2026-11-01
+version: 0.1.0
 writes: record
 network: none
 role: tools

@@ -3,6 +3,7 @@ section: Ways to use it
 line: Approved answers as W3C Web Annotations, so any annotation tool can show what your files say about a page.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: to
 network: none
 role: makes

@@ -3,6 +3,7 @@ section: Reading more kinds of files
 line: A web page or data file fetched once into a folder, as it came, with its address, the time and its SHA-256, so later answers cite the copy.
 source: bot
 added: 2026-10-24
+version: 0.1.0
 writes: to
 network: the address you give, fetched once
 role: reads

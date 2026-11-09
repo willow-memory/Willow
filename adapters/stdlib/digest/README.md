@@ -3,6 +3,7 @@ section: Keeping track
 line: One page of what your folder needs from you: suggestions waiting, approvals gone stale, dates coming up, questions that find nothing.
 source: bot
 added: 2026-10-24
+version: 0.1.0
 writes: nothing
 network: none
 role: page

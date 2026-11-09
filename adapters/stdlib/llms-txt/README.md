@@ -3,6 +3,7 @@ section: Ways to use it
 line: An llms.txt for your folder, written to the spec's version 2 from what's in it, and any llms.txt you saved checked against that spec.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: to
 network: none
 role: makes

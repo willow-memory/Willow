@@ -3,6 +3,7 @@ section: Play
 line: Verse from the word pairs your own files use most, in your own dialect.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: nothing
 network: none
 role: page

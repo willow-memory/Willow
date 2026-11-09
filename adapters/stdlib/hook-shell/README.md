@@ -3,6 +3,7 @@ section: Assistants
 line: A command split as the shell will split it (quotes, variables, chained commands) before any rule judges it, so spelling can't dodge a rule.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: nothing
 network: none
 role: guards

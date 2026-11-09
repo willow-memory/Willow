@@ -3,6 +3,7 @@ section: Reading more kinds of files
 line: Subtitle and transcript files (.vtt, .srt) as lines cited by timestamp, for podcasts and videos already transcribed.
 source: new
 added: 2026-10-27
+version: 0.1.0
 writes: to
 network: none
 role: reads

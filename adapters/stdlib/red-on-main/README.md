@@ -3,6 +3,7 @@ section: For maintainers
 line: A pull request's failing checks held to main's last run: red there too is not the pull request's, green there is.
 source: new
 added: 2026-11-07
+version: 0.1.0
 writes: nothing
 network: none
 role: repo

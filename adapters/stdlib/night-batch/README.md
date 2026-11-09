@@ -3,6 +3,7 @@ section: Assistants
 line: Questions waiting for suggestions batched into one local-model run overnight, stopped the moment you're back.
 source: new
 added: 2026-11-02
+version: 0.1.0
 writes: record
 network: loopback
 role: suggests

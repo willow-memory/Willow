@@ -3,6 +3,7 @@ section: For maintainers
 line: The lists this repo makes held to how a person reads them: a heading each screen, no line too long, each add-on and folder a name to find.
 source: new
 added: 2026-11-08
+version: 0.1.0
 writes: nothing
 network: none
 role: repo

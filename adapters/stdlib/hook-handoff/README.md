@@ -3,8 +3,10 @@ section: Assistants
 line: A Stop hook that writes where the session ended, and the next session's first prompt gets it back, so nothing rides on memory.
 source: new
 added: 2026-11-07
+version: 0.1.0
 writes: record
 network: none
+hands: the session's id and the folder it ended in, never your files' words, to the next session's model
 role: guards
 tags: hooks
 -->

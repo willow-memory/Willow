@@ -3,6 +3,7 @@ section: Trust and proof
 line: Your record in one zip, every byte and the chain checked before it's kept; never beside your key, and it never reads the key.
 source: new
 added: 2026-10-24
+version: 0.1.0
 writes: to
 network: none
 role: makes

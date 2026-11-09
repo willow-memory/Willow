@@ -3,6 +3,7 @@ section: Reading more kinds of files
 line: LaTeX sources as plain prose, commands stripped, cited by the .tex file's own lines.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: to
 network: none
 role: reads

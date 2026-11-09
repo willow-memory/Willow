@@ -3,6 +3,7 @@ section: Ways to use it
 line: A stack you sealed with the Forge, written out to share: your sentence, each choice and why, each step's promises, and the stack to run.
 source: new
 added: 2026-11-06
+version: 0.1.0
 writes: nothing
 network: none
 role: ways

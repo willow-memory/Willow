@@ -3,6 +3,7 @@ section: Keeping track
 line: For freelancers: invoices and payments matched by the id pattern you give, never guessed.
 source: new
 added: 2026-11-01
+version: 0.1.0
 writes: nothing
 network: none
 role: tools

@@ -3,6 +3,7 @@ section: Trust and proof
 line: Your willow (the files it reads, its record, your approved answers) as an RO-Crate research object that Zenodo and other archives can read.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: to
 network: none
 role: makes

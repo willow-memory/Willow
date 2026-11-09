@@ -3,6 +3,7 @@ section: Assistants
 line: Your corrections to an assistant (no, wrong, I said) caught by fixed patterns at each prompt and handed in through propose, to keep or drop.
 source: new
 added: 2026-11-07
+version: 0.1.0
 writes: record
 network: none
 role: guards

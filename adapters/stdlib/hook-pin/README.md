@@ -3,6 +3,7 @@ section: Assistants
 line: Each hook's SHA-256 kept on the record when you approve it, so a hook that changed since is named before it runs, never trusted silently.
 source: new
 added: 2026-10-24
+version: 0.1.0
 writes: record
 network: none
 role: guards

@@ -3,6 +3,7 @@ section: Ways to use it
 line: A willow command and tab completion for bash, zsh, fish and PowerShell, on Linux, macOS and Windows.
 source: new
 added: 2026-10-24
+version: 0.1.0
 writes: record
 network: none
 role: ways

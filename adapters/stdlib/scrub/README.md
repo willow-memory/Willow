@@ -3,6 +3,7 @@ section: Privacy and safety
 line: Strips the hidden details (EXIF, author, edit history) from a file before you share it.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: to
 network: none
 role: makes

@@ -3,6 +3,7 @@ section: Reading more kinds of files
 line: Org-mode files as plain lines, Org's markup taken off and each outline entry its own passage, cited by the .org file's own lines.
 source: new
 added: 2026-11-02
+version: 0.1.0
 writes: to
 network: none
 role: reads

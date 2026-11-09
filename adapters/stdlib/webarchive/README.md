@@ -3,6 +3,7 @@ section: Reading more kinds of files
 line: Pages Safari saved as .webarchive, as their readable text with the address they came from, and their frames' text after them.
 source: new
 added: 2026-11-02
+version: 0.1.0
 writes: to
 network: none
 role: reads

@@ -3,6 +3,7 @@ section: For maintainers
 line: Builds ADDONS.md, and the README's one feature, from the add-ons' own cards.
 source: new
 added: 2026-10-23
+version: 0.1.0
 writes: README.md, ADDONS.md
 network: none
 role: repo
@@ -60,7 +61,9 @@ built one.
 
 **Tags:** up to five per add-on, worked out by
 [similar](../similar/): `no-install` or `needs-install`; `offline`,
-`this-machine` or `online`; two topic words the add-on shares with its
+`this-machine`, `online`, or `to-a-model` for one that reaches nothing
+itself but hands something to a model (its card's `hands:` line); two topic
+words the add-on shares with its
 nearest neighbours on the list; and the one tag its author chose, the card's
 `tags:` line, if it has one. Each entry also names its three nearest
 neighbours. It never writes a card or `adapters/planned.json`.

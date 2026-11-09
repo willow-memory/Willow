@@ -3,6 +3,7 @@ section: Keeping track
 line: Each pet's vet visits, vaccines and medicines, from your records: what's due next.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: nothing
 network: none
 role: page

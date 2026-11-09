@@ -3,6 +3,7 @@ section: Reading more kinds of files
 line: Plain-text files the kernel leaves out (UTF-16, an old code page, over 1 MB, lines past 500 characters) as UTF-8 it reads, line for line.
 source: new
 added: 2026-11-02
+version: 0.1.0
 writes: to
 network: none
 role: reads

@@ -3,6 +3,7 @@ section: Assistants
 line: A model card filled in from the weights file's own GGUF or safetensors header: architecture, quantization, context length, licence.
 source: new
 added: 2026-11-02
+version: 0.1.0
 writes: to
 network: none
 role: suggests

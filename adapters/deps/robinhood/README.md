@@ -3,6 +3,7 @@ section: Keeping track
 line: Your Robinhood account as dated files (positions, orders, portfolio, watchlists), read through Robinhood's own MCP server, never traded on.
 source: new
 added: 2026-11-06
+version: 0.1.0
 needs: mcp (Python SDK); MIT
 floor: mcp 2.0.0; the rule names 0.9.1, its first release, but 2.x renamed the client's fields and its tests' stand-in server needs MCPServer, which arrived in 2.0.0
 writes: to

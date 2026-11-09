@@ -3,6 +3,7 @@ section: For maintainers
 line: Where your venvs are, in willow-bot or out, their locks and the services running them; and which one has what CI needs, and how to run it.
 source: bot
 added: 2026-10-26
+version: 0.1.0
 writes: nothing
 network: none
 role: tools

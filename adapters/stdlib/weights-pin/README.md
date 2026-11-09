@@ -3,6 +3,7 @@ section: Trust and proof
 line: A local model's weights file hashed before each run and refused when it differs from the hash on its model card.
 source: new
 added: 2026-11-02
+version: 0.1.0
 writes: nothing
 network: none
 role: tools

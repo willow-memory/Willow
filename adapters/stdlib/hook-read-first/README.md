@@ -3,6 +3,7 @@ section: Assistants
 line: A PreToolUse hook that refuses an edit to a file the assistant hasn't read this session, or that changed since, each read kept as a hash.
 source: new
 added: 2026-11-07
+version: 0.1.0
 writes: record
 network: none
 role: guards

@@ -3,6 +3,7 @@ section: Privacy and safety
 line: Which of your passages went to which online model, read from the record by model card: what left this machine and where to.
 source: new
 added: 2026-11-01
+version: 0.1.0
 writes: nothing
 network: none
 role: page

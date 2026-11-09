@@ -3,6 +3,7 @@ section: Keeping track
 line: A terms or policy page fetched each time you run it, by snapshot, and what changed since last time, sentence by sentence, by clauses.
 source: new
 added: 2026-10-24
+version: 0.1.0
 writes: to
 network: the page you name, fetched each time you run it
 role: makes
