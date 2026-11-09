@@ -424,6 +424,9 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - <a id="canvas"></a>**canvas** (idea) \
   Canvas course exports: pages, assignments and discussions as passages. \
   *new* `no-install` `offline` `assignments` `course` · near: moodle, syllabus, google-classroom
+- <a id="chat-dataset"></a>**chat-dataset** (idea) \
+  Chat fine-tuning and evaluation sets in JSONL ({"messages": [...]}) as numbered turns, one example after another. \
+  *new* `no-install` `offline` `messages` `chat` · near: agent-transcript, chats, teams
 - <a id="confluence"></a>**confluence** (idea) \
   A Confluence space's HTML export as plain text, page by page. \
   *new* `no-install` `offline` `html` · near: wallabag, recipes, mediawiki
