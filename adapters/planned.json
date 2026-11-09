@@ -1821,18 +1821,6 @@
   "version": "0.0.1"
  },
  {
-  "name": "synonyms",
-  "kind": "deps",
-  "section": "Your own words",
-  "line": "Suggests words-list lines for a word no file has.",
-  "source": "new",
-  "needs": "nltk and WordNet; Apache-2.0",
-  "writes": "to",
-  "network": "the WordNet data, downloaded once",
-  "role": "words",
-  "version": "0.0.1"
- },
- {
   "name": "tatoeba",
   "kind": "stdlib",
   "section": "Your own words",

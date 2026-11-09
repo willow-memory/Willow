@@ -115,6 +115,12 @@ PILE_EXTRA: dict[str, dict[str, bytes]] = {
     # a category of the person's own, which the default pile's garden.md holds
     "sort": {"categories.txt": b"garden: tomatoes, sun\n"},
     "sort-ask": {"categories.txt": b"garden: tomatoes, sun\n"},
+    # WordNet's eight database files, empty: a dictionary with no word in it
+    "synonyms": {
+        f"{part}.{kind}": b""
+        for kind in ("noun", "verb", "adj", "adv")
+        for part in ("index", "data")
+    },
     # a GGUF header with no keys and no tensors: a card that says so
     "weights-card": {"m.gguf": b"GGUF\x03" + b"\0" * 16},
     # a card pinning another file of the same size: it differs, 42
@@ -820,6 +826,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "surprise": ("surprise.py", ["--box", "{box}", *NOW]),
     "syllabus": ("syllabus.py", ["--box", "{box}"]),
     "symptoms": ("symptoms.py", ["--box", "{box}", "tomatoes"]),
+    "synonyms": ("synonyms.py", ["--box", "{box}", "--data", "{pile}", "tomatoes"]),
     "tarot": ("tarot.py", ["--box", "{box}", "draw", *NOW]),
     "test-impact": ("impact.py", ["plan", "README.md"]),
     "test-shards": ("shards.py", ["--shards", "2", "--tests", "{pile}/garden.md"]),

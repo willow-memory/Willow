@@ -19,13 +19,13 @@ is written: `no-install` or `needs-install`; `offline`, `this-machine` or
 tag its author chose, if any. *near* names the three add-ons closest to it.
 
 <!-- willow:pools -->
-`█████████████░░░░░░░` **350 of 537 built** · 481 need no install · 56 need one
+`█████████████░░░░░░░` **351 of 537 built** · 482 need no install · 55 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
 | Reading more kinds of files | 94 | 30 | 115 | 9 |
 | Finding things | 34 | 14 | 38 | 10 |
-| Your own words | 20 | 8 | 24 | 4 |
+| Your own words | 21 | 7 | 25 | 3 |
 | Keeping track | 43 | 15 | 57 | 1 |
 | Trust and proof | 32 | 23 | 46 | 9 |
 | Privacy and safety | 13 | 3 | 16 | 0 |
@@ -68,6 +68,8 @@ its list: someone who speaks the language can add one without much Python.
 ## Newest
 
 <!-- willow:newest -->
+- 2026-11-09 · [**synonyms**](adapters/stdlib/synonyms/) \
+  Words-list lines for a word no file holds: the dictionary's other words that your files do hold.
 - 2026-11-08 · [**wake-gate**](adapters/deps/wake-gate/) \
   Ask out loud after a wake word you chose: audio before it is never transcribed, kept or sent.
 - 2026-11-08 · [**skim**](adapters/stdlib/skim/) \
@@ -76,16 +78,14 @@ its list: someone who speaks the language can add one without much Python.
   A branch made ready for its pull request, on no host: the repo's own steps run in order, what they make committed, and the body written.
 - 2026-11-07 · [**restack-open**](adapters/stdlib/restack-open/) \
   Every open pull request that conflicts with its base, merged up to it by restack's rules and pushed, or named for a person.
-- 2026-11-07 · [**red-on-main**](adapters/stdlib/red-on-main/) \
-  A pull request's failing checks held to main's last run: red there too is not the pull request's, green there is.
 <!-- /willow:newest -->
 
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W46 -->
-**[bank](adapters/stdlib/bank/)** — Bank CSV and OFX statements as dated lines, with spending by month.
+**[fixity](adapters/stdlib/fixity/)** — Your folder's files hashed again now and then, the hashes kept on the record, and a file that changed with no edit of yours flagged as rot.
 
-*Drawn for 2026-W46: SHA-256 of "willow add-on of the week 2026-W46", modulo the 350 built add-ons in name order.*
+*Drawn for 2026-W46: SHA-256 of "willow add-on of the week 2026-W46", modulo the 351 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -691,7 +691,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 
 The blind tests' biggest gap: on day one, a person's words aren't their files' words.
 
-### What words it knows
+### What words it knows, a to w
 
 - <a id="abbreviations"></a>[**abbreviations**](adapters/stdlib/abbreviations/) \
   Your own shorthand, written down once (appt, Rx, w/c), so a question finds either form. \
@@ -708,6 +708,9 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - <a id="stems"></a>[**stems**](adapters/deps/stems/) \
   Word forms for 20+ languages, so "häuser" finds "haus" and "книги" finds "книга". \
   Needs snowballstemmer; BSD-3-Clause. *new* `needs-install` `offline` `form` · near: accents, abbreviations, ocr
+- <a id="synonyms"></a>[**synonyms**](adapters/stdlib/synonyms/) \
+  Words-list lines for a word no file holds: the dictionary's other words that your files do hold. \
+  Reaches this machine only. *new* `no-install` `this-machine` · near: accents, abbreviations, starter-words
 - <a id="words-ar"></a>[**words-ar**](adapters/stdlib/words-ar/) \
   Arabic common words ("في", "من", "على"). \
   *new* `no-install` `offline` `common` `arabic` · near: words-it, words-pl, words-pt
@@ -717,6 +720,9 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - <a id="words-de"></a>[**words-de**](adapters/stdlib/words-de/) \
   German common words, so questions aren't matched on "der" and "und". \
   *new* `no-install` `offline` `common` `german` · near: words-nl, words-pl, words-it
+
+#### What words it knows, w to w
+
 - <a id="words-es"></a>[**words-es**](adapters/stdlib/words-es/) \
   Spanish common words ("el", "y"). \
   *new* `no-install` `offline` `common` `spanish` · near: words-it, words-pt, words-cy
@@ -753,10 +759,6 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - <a id="memoir"></a>**memoir** (idea) \
   A question a week about your life, answered in your own words and kept, so your story is in your files. \
   *new* `no-install` `offline` `life` · near: quiz, why-not, browse
-- <a id="synonyms"></a>**synonyms** (idea) \
-  Suggests words-list lines for a word no file has. \
-  Needs nltk and WordNet; Apache-2.0. Goes online: the WordNet data, downloaded once. *new* `needs-install` `online` · near: accents, abbreviations,
-  starter-words
 - <a id="tatoeba"></a>**tatoeba** (idea) \
   A question in one language finds the same idea in another, through Tatoeba's sentence pairs, downloaded once. \
   *new* `no-install` `offline` `pairs` `language` · near: why-not, stems, latent
