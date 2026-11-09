@@ -167,6 +167,17 @@
   "version": "0.0.1"
  },
  {
+  "name": "chain-check",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "A hash-chained JSONL log that isn't willow's own record, checked link by link: where its chain holds, and the first row where it breaks.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "role": "tools",
+  "version": "0.0.1"
+ },
+ {
   "name": "chess-puzzle",
   "kind": "stdlib",
   "section": "Play",

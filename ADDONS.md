@@ -1122,8 +1122,11 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
   A local model's weights file hashed before each run and refused when it differs from the hash on its model card. \
   Uses weights-card. *new* `no-install` `offline` `local` `weights` · near: weights-card, model-card, model-fit
 
-#### Tools you run yourself: ideas, not built yet, e to m
+#### Tools you run yourself: ideas, not built yet, c to m
 
+- <a id="chain-check"></a>**chain-check** (idea) \
+  A hash-chained JSONL log that isn't willow's own record, checked link by link: where its chain holds, and the first row where it breaks. \
+  *new* `no-install` `offline` `rows` `chain` · near: merkle, sync, diverge
 - <a id="encrypt"></a>**encrypt** (idea) \
   Keeps the record folder encrypted at rest. \
   Needs cryptography; Apache-2.0 or BSD. From: shape of [willow-memory/willow-data-vault](https://github.com/willow-memory/willow-data-vault), Apache-2.0.
