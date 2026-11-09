@@ -1913,7 +1913,8 @@ willow/
 │   │   ├── lists.md          notes: FILES.md and ADDONS.md, what makes them hard to read and search, and the skim idea
 │   │   ├── pieces.md         proposal: every pull request a piece of the pile: cite, draft, check, accept or 42
 │   │   ├── repo-index.md     proposal: the repo as one deterministic-snapshot box, indexed by a custom serve-style stack
-│   │   └── serve.md          proposal: a sealed stack of piles served to a model, on markdown (the grove's serve, in willow)
+│   │   ├── serve.md          proposal: a sealed stack of piles served to a model, on markdown (the grove's serve, in willow)
+│   │   └── versions.md       proposal: one way to version everything, the law, amendments, add-ons and ideas
 │   ├── agents/               AGENTS.md's longer how-tos, one page a job
 │   │   ├── add-ons.md        an add-on's ten steps, the guard, ideas and a deps floor
 │   │   ├── pull-requests.md  opening one, main moving under a branch, a new CI row
