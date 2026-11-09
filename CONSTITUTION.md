@@ -605,10 +605,10 @@ A clause reported with no artifact found SHALL state **why** none was found. "No
 | 2026-10-24 | IV | Draft 0.13 — IV.9, a check that cannot fail is no check: each is shown to fail on a planted break, and a break none catches is recorded with its reason | *draft — by merge of #4* |
 | 2026-10-24 | VI | Draft 0.14 — VI.7, every change carries its account: a change is recorded with what it changed, and a known defect is a check expected to fail that leaves only by a recorded fix | *draft — by merge of #4* |
 | 2026-10-24 | VIII | Draft 0.15 — VIII.2, the emergency door kept on a timer: an emergency amendment enters by the same checks and acceptance, states when it expires within ninety days, never renews itself, and lapses into failing checks until a full amendment keeps or undoes it | *draft — by merge of #4* |
-| 2026-11-06 | III | Draft 0.16.0 — III.6, the core reaches nothing that extends it: it never loads, calls on or waits for an extension, depends on nothing beyond its platform, and does the same work with every extension removed | *draft — by merge of #0* |
-| 2026-11-06 | IV | Draft 0.16.0 — IV.10, the same question, the same answer: the same passages in the same order on every run and every machine, and a ranking that varies is refused | *draft — by merge of #0* |
-| 2026-11-06 | V | Draft 0.16.0 — V.10, a no is final: a refusal is made with the person's key and recorded; what they refused is not offered again or approved over it, and a refusal that does not prove counts for nothing | *draft — by merge of #0* |
-| 2026-11-06 | VI | Draft 0.16.0 — VI.8, the record keeps acts, not words: a question put to the person's files and the passages it was served are kept by hash and place, never by text; what the person enters on purpose to be recorded is theirs to keep | *draft — by merge of #0* |
+| 2026-11-06 | III | Draft 0.16.0 — III.6, the core reaches nothing that extends it: it never loads, calls on or waits for an extension, depends on nothing beyond its platform, and does the same work with every extension removed | *draft — by merge of #323* |
+| 2026-11-06 | IV | Draft 0.16.0 — IV.10, the same question, the same answer: the same passages in the same order on every run and every machine, and a ranking that varies is refused | *draft — by merge of #323* |
+| 2026-11-06 | V | Draft 0.16.0 — V.10, a no is final: a refusal is made with the person's key and recorded; what they refused is not offered again or approved over it, and a refusal that does not prove counts for nothing | *draft — by merge of #323* |
+| 2026-11-06 | VI | Draft 0.16.0 — VI.8, the record keeps acts, not words: a question put to the person's files and the passages it was served are kept by hash and place, never by text; what the person enters on purpose to be recorded is theirs to keep | *draft — by merge of #323* |
 
 ---
 
