@@ -8,12 +8,13 @@ The output shown is real.
 ```
 $ git clone https://github.com/willow-memory/Willow && cd Willow
 $ python kernel.py test
-kernel: the eight beats held
+kernel: the twelve beats held
 ```
 
-`test` sets up a throwaway folder, runs every command, and checks eight
+`test` sets up a throwaway folder, runs every command, and checks twelve
 properties, among them that an unapproved suggestion is never given as an
-answer, a forged approval is rejected, and an edited log is refused.
+answer, a forged approval is rejected, a declined one is never offered again,
+the log keeps none of your words, and an edited log is refused.
 
 ## 2. Ask questions of someone else's files
 

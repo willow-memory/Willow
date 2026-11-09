@@ -12,7 +12,7 @@ makes the cuts; they're never written by hand.
 
 ```
 willow/
-├── kernel.py                 the whole program (about 1,100 lines)
+├── kernel.py                 the whole program (about 1,200 lines)
 ├── test_kernel.py            its tests
 ├── test_docs.py              holds every doc to the files that exist, and the trees to the repo
 ├── test_docs_fires.py        plants a violation for each docs check and makes sure it fails
@@ -51,7 +51,11 @@ willow/
 │   │   ├── 0003.md           VIII.3, Article 0 strengthened only by clauses that cite it: made 0.12
 │   │   ├── 0004.md           IV.9, a check that cannot fail is no check: made 0.13
 │   │   ├── 0005.md           VI.7, every change carries its account: made 0.14
-│   │   └── 0006.md           VIII.2, the emergency door on a timer: made 0.15
+│   │   ├── 0006.md           VIII.2, the emergency door on a timer: made 0.15
+│   │   ├── 0007.md           III.6, the core reaches nothing that extends it: with 0008 to 0010, made 0.16.0
+│   │   ├── 0008.md           IV.10, the same question, the same answer: made 0.16.0
+│   │   ├── 0009.md           V.10, a no is final: made 0.16.0
+│   │   └── 0010.md           VI.8, the record keeps acts, not words: made 0.16.0
 │   └── README.md             what the kernel answers for, and what it doesn't claim
 ```
 
@@ -1908,9 +1912,12 @@ willow/
 │   ├── how-it-works.md       what it reads, how it ranks, the key, the record, approvals
 │   ├── stone-soup.md         one real pile and add-on after add-on: what each found, what each misread, and the chain that dates a pile's words
 │   ├── design/
+│   │   ├── draft-0.16.md     proposal: four of willow's own promises made law, and four new beats
 │   │   ├── lists.md          notes: FILES.md and ADDONS.md, what makes them hard to read and search, and the skim idea
+│   │   ├── pieces.md         proposal: every pull request a piece of the pile: cite, draft, check, accept or 42
 │   │   ├── repo-index.md     proposal: the repo as one deterministic-snapshot box, indexed by a custom serve-style stack
-│   │   └── serve.md          proposal: a sealed stack of piles served to a model, on markdown (the grove's serve, in willow)
+│   │   ├── serve.md          proposal: a sealed stack of piles served to a model, on markdown (the grove's serve, in willow)
+│   │   └── versions.md       proposal: one way to version everything, the law, amendments, add-ons and ideas
 │   ├── agents/               AGENTS.md's longer how-tos, one page a job
 │   │   ├── add-ons.md        an add-on's ten steps, the guard, ideas and a deps floor
 │   │   ├── pull-requests.md  opening one, main moving under a branch, a new CI row

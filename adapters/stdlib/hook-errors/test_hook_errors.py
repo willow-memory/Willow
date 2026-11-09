@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import subprocess
 import sys
@@ -93,7 +94,12 @@ def test_two_failures_are_recorded_and_the_third_try_is_blocked(tmp_path):
     ]
     assert len(rows) == 2
     assert rows[0]["exit"] == 1 and len(rows[0]["cmd_sha256"]) == 64
-    assert rows[0]["command"] == CMD
+    # the record keeps acts, not words (CONST-VI-8): the hash, never the text
+    assert (
+        "command" not in rows[0]
+        and rows[0]["cmd_sha256"] == hashlib.sha256(CMD.encode()).hexdigest()
+    )
+    assert "missing" not in (b / "record.jsonl").read_text()
     blocked = run("--box", str(b), "run", *NOW, data=pre())
     assert blocked.returncode == 2 and blocked.stdout == ""
     assert (
@@ -103,7 +109,8 @@ def test_two_failures_are_recorded_and_the_third_try_is_blocked(tmp_path):
     )
     check = run("--box", str(b), "check")
     assert check.returncode == 42
-    assert "exit 1  2 times" in check.stdout and CMD in check.stdout
+    assert "exit 1  2 times" in check.stdout and rows[0]["cmd_sha256"] in check.stdout
+    assert CMD not in check.stdout
 
 
 def test_a_different_exit_is_a_different_failure(tmp_path):
