@@ -58,12 +58,26 @@ way VIII.3 allows, by citing it.
 
 ### VI.8, the record keeps acts, not words
 
-> **VI.8 — The record keeps acts, not words.** What a person asked, and
-> what they were answered, is kept in the record by its hash and its place,
-> never by its text. The record says that a question was asked, when, what
-> it was served and what was done about it; the words stay in the person's
-> files and the person's head. Raw, in VI.6, is every event unsmoothed, not
-> every word kept: the hash is the event's raw form.
+> **VI.8 — The record keeps acts, not words.** A question put to the
+> person's files, and the passages it was served, are kept in the record by
+> their hash and their place, never by their text. The record says that a
+> question was asked, when, what it was served and what was done about it;
+> the words stay in the person's files and the person's head. What the
+> person enters on purpose to be recorded, such as a decision and its
+> reason, is theirs to keep, and is kept as they wrote it. Raw, in VI.6, is
+> every event unsmoothed, not every word kept: the hash is the event's raw
+> form.
+
+**Why it was narrowed.** The first draft said "what a person asked, and
+what they were answered" is never kept by its text. Read against the
+add-ons that write to the record (2026-11-09), that forbade what
+`decisions` is for: it keeps a decision's question, answer and reason as
+the person typed them, so they can be read back. What VI.8 is about is the
+person's questions to their own files, and what those were served, kept as
+a side effect; not words the person writes down to keep. The same reading
+found `hook-errors` keeping the first 120 characters of every failed
+command an assistant ran, which can carry the person's words, as a side
+effect; it now keeps the command's hash alone.
 
 VI.6 says the record keeps every event raw. VI.8 has to say why a hash
 does not break that: the event is the act of asking, not the words asked.
