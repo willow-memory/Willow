@@ -1,15 +1,15 @@
 {
- "week": "2026-W45",
+ "week": "2026-W46",
  "worked": {
   "a11y-check": {
    "near": [
+    "skim",
     "digest",
-    "scrub",
-    "todo"
+    "scrub"
    ],
    "topics": [
     "problems",
-    "share"
+    "screen"
    ]
   },
   "abbreviations": {
@@ -66,19 +66,19 @@
   "against": {
    "near": [
     "test-impact",
-    "pr-context",
-    "upstream-desk"
+    "red-on-main",
+    "ready"
    ],
    "topics": [
     "pull",
-    "requests"
+    "request"
    ]
   },
   "agent-transcript": {
    "near": [
     "instruction-files",
-    "hooks-elsewhere",
-    "gemini-cli"
+    "session-cost",
+    "hooks-elsewhere"
    ],
    "topics": [
     "gemini",
@@ -88,12 +88,12 @@
   "agents-md-check": {
    "near": [
     "instruction-files",
-    "hook-impact",
-    "agent-transcript"
+    "skim",
+    "hook-impact"
    ],
    "topics": [
-    "gemini",
-    "agent"
+    "agent",
+    "gemini"
    ]
   },
   "aider": {
@@ -106,8 +106,8 @@
   },
   "all": {
    "near": [
-    "latent",
     "claim-check",
+    "latent",
     "thesis"
    ],
    "topics": [
@@ -327,8 +327,7 @@
     "pile-build"
    ],
    "topics": [
-    "release",
-    "build"
+    "release"
    ]
   },
   "bibtex": {
@@ -348,8 +347,7 @@
     "reddit"
    ],
    "topics": [
-    "posts",
-    "repo"
+    "posts"
    ]
   },
   "bm25": {
@@ -376,8 +374,8 @@
   },
   "books": {
    "near": [
-    "oakenscroll",
     "almanac",
+    "oakenscroll",
     "text"
    ],
    "topics": [
@@ -392,8 +390,7 @@
     "ci-why"
    ],
    "topics": [
-    "test",
-    "repo"
+    "test"
    ]
   },
   "box-health": {
@@ -448,8 +445,8 @@
   "by-function": {
    "near": [
     "codebase-memory",
-    "risky-code",
-    "sigmap"
+    "sigmap",
+    "risky-code"
    ],
    "topics": [
     "function",
@@ -522,7 +519,7 @@
    "near": [
     "hook-replay",
     "lending",
-    "hook-errors"
+    "model-drift"
    ],
    "topics": [
     "rows",
@@ -599,22 +596,22 @@
    "near": [
     "ci-bets",
     "welcome",
-    "github-archive"
+    "red-on-main"
    ],
    "topics": [
     "pull",
-    "requests"
+    "request"
    ]
   },
   "ci-bets": {
    "near": [
     "ci-baseline",
-    "roll-for-merge",
+    "red-on-main",
     "weather-bet"
    ],
    "topics": [
     "pull",
-    "requests"
+    "request"
    ]
   },
   "ci-cache": {
@@ -631,8 +628,8 @@
   "ci-logs": {
    "near": [
     "ci-why",
-    "ci-cache",
-    "logs"
+    "logs",
+    "ci-cache"
    ],
    "topics": [
     "log",
@@ -654,22 +651,22 @@
    "near": [
     "ci",
     "ci-logs",
-    "ci-memo"
+    "red-on-main"
    ],
    "topics": [
-    "job",
-    "fails"
+    "fails",
+    "pull"
    ]
   },
   "cite-honesty": {
    "near": [
-    "sent-log",
-    "model-card",
-    "hook-cite"
+    "hook-cite",
+    "assistant-scores",
+    "sent-log"
    ],
    "topics": [
-    "refuses",
-    "citing"
+    "citing",
+    "refuses"
    ]
   },
   "claim-check": {
@@ -686,8 +683,8 @@
   "claude": {
    "near": [
     "claude-code",
-    "bedrock",
-    "cite-honesty"
+    "cite-honesty",
+    "bedrock"
    ],
    "topics": [
     "citing",
@@ -869,7 +866,7 @@
    ],
    "topics": [
     "pull",
-    "requests"
+    "request"
    ]
   },
   "contributions": {
@@ -913,7 +910,7 @@
    ],
    "topics": [
     "vectors",
-    "held"
+    "port"
    ]
   },
   "crosswalk": {
@@ -975,15 +972,13 @@
     "surprise",
     "serve"
    ],
-   "topics": [
-    "daily"
-   ]
+   "topics": []
   },
   "datasette": {
    "near": [
     "record-sql",
     "report",
-    "ro-crate"
+    "export"
    ],
    "topics": [
     "sql"
@@ -1017,8 +1012,8 @@
   },
   "deep-links": {
    "near": [
-    "jetbrains",
     "browse",
+    "jetbrains",
     "vscode"
    ],
    "topics": [
@@ -1063,7 +1058,7 @@
     "tarot"
    ],
    "topics": [
-    "seeded",
+    "rows",
     "dice"
    ]
   },
@@ -1080,19 +1075,20 @@
   },
   "dictate": {
    "near": [
+    "wake-gate",
     "oakenscroll",
-    "agent-transcript",
-    "man-pages"
+    "misheard"
    ],
    "topics": [
-    "turned"
+    "loud",
+    "spoken"
    ]
   },
   "digest": {
    "near": [
     "hook-start",
-    "hook-compact",
-    "renewals"
+    "renewals",
+    "hook-compact"
    ],
    "topics": [
     "waiting",
@@ -1124,8 +1120,8 @@
   "docs-i18n": {
    "near": [
     "readme",
-    "against",
-    "llms-txt"
+    "llms-txt",
+    "against"
    ],
    "topics": [
     "readme",
@@ -1162,8 +1158,8 @@
   "email-ask": {
    "near": [
     "jeles",
-    "bot-venv",
-    "thesis"
+    "willow-box",
+    "bot-venv"
    ],
    "topics": [
     "sources",
@@ -1173,8 +1169,8 @@
   "emergency-card": {
    "near": [
     "privacy",
-    "digest",
-    "calendar"
+    "calendar",
+    "stack"
    ],
    "topics": [
     "prints",
@@ -1193,13 +1189,13 @@
   },
   "equations": {
    "near": [
-    "notation",
     "latex",
+    "notation",
     "code-comments"
    ],
    "topics": [
     "latex",
-    "sources"
+    "equation"
    ]
   },
   "evernote": {
@@ -1226,10 +1222,10 @@
    "near": [
     "scan",
     "parallel",
-    "ripgrep"
+    "bench"
    ],
    "topics": [
-    "sources"
+    "found"
    ]
   },
   "family-box": {
@@ -1271,6 +1267,17 @@
    "topics": [
     "rolls",
     "replayable"
+   ]
+  },
+  "file-kind": {
+   "near": [
+    "text",
+    "pdf",
+    "why-not"
+   ],
+   "topics": [
+    "pdf",
+    "whatever"
    ]
   },
   "first-mention": {
@@ -1358,11 +1365,11 @@
    "near": [
     "gitlab",
     "sourcehut",
-    "github"
+    "forgejo-dump"
    ],
    "topics": [
-    "repo",
-    "actions"
+    "host",
+    "forgejo"
    ]
   },
   "forgejo-dump": {
@@ -1372,8 +1379,8 @@
     "gh-json"
    ],
    "topics": [
-    "requests",
-    "issues"
+    "issues",
+    "request"
    ]
   },
   "forget": {
@@ -1401,11 +1408,11 @@
   "front-page": {
    "near": [
     "spurious",
-    "quake-bets",
-    "readme"
+    "readme",
+    "quake-bets"
    ],
    "topics": [
-    "settled",
+    "settle",
     "front"
    ]
   },
@@ -1416,8 +1423,8 @@
     "hook-replay"
    ],
    "topics": [
-    "test",
-    "fuzz"
+    "command",
+    "test"
    ]
   },
   "fuzzy-dates": {
@@ -1482,9 +1489,9 @@
   },
   "gifts": {
    "near": [
-    "hook-replay",
     "repro",
-    "daily-word"
+    "hook-replay",
+    "opentimestamps"
    ],
    "topics": [
     "twice"
@@ -1514,12 +1521,12 @@
   },
   "github": {
    "near": [
+    "ready",
     "gitlab",
-    "restack",
     "ci"
    ],
    "topics": [
-    "repo",
+    "branch",
     "github"
    ]
   },
@@ -1527,11 +1534,11 @@
    "near": [
     "quote-review",
     "contribute",
-    "forgejo-dump"
+    "gitlab-export"
    ],
    "topics": [
     "issues",
-    "requests"
+    "request"
    ]
   },
   "gitlab": {
@@ -1541,8 +1548,8 @@
     "sourcehut"
    ],
    "topics": [
-    "github",
-    "repo"
+    "host",
+    "github"
    ]
   },
   "gitlab-export": {
@@ -1597,6 +1604,17 @@
    ],
    "topics": [
     "assignments"
+   ]
+  },
+  "grant": {
+   "near": [
+    "hook-compact",
+    "lesson-time",
+    "rules"
+   ],
+   "topics": [
+    "key",
+    "paths"
    ]
   },
   "grant-report": {
@@ -1684,7 +1702,7 @@
    "near": [
     "home-sensors",
     "mcp-sampling",
-    "launcher"
+    "willow-box"
    ],
    "topics": [
     "assistant",
@@ -1726,13 +1744,13 @@
   },
   "hook-checks": {
    "near": [
+    "hook-errors",
     "hook-pin",
-    "hook-fail-closed",
     "hook-impact"
    ],
    "topics": [
     "fails",
-    "output"
+    "edit"
    ]
   },
   "hook-cite": {
@@ -1759,35 +1777,35 @@
   },
   "hook-errors": {
    "near": [
-    "hook-replay",
-    "hook-fail-closed",
-    "hook-fuzz"
+    "hook-read-first",
+    "hook-feedback",
+    "hook-handoff"
    ],
    "topics": [
-    "fails",
-    "hash"
+    "assistant",
+    "fails"
    ]
   },
   "hook-fail-closed": {
    "near": [
     "hook-fuzz",
-    "hooks-elsewhere",
-    "agent-transcript"
+    "hook-errors",
+    "hooks-elsewhere"
    ],
    "topics": [
-    "gemini",
-    "claude"
+    "codex",
+    "gemini"
    ]
   },
   "hook-feedback": {
    "near": [
-    "memory-import",
-    "basic-memory",
-    "hermes"
+    "hook-handoff",
+    "hook-read-first",
+    "hook-errors"
    ],
    "topics": [
-    "handed",
-    "propose"
+    "prompt",
+    "assistant"
    ]
   },
   "hook-fuzz": {
@@ -1798,7 +1816,7 @@
    ],
    "topics": [
     "crash",
-    "fuzz"
+    "fails"
    ]
   },
   "hook-guard": {
@@ -1814,24 +1832,24 @@
   },
   "hook-handoff": {
    "near": [
-    "hook-stop",
-    "memory-import",
-    "hook-read-first"
+    "hook-read-first",
+    "hook-feedback",
+    "hook-errors"
    ],
    "topics": [
     "assistant",
-    "session"
+    "prompt"
    ]
   },
   "hook-impact": {
    "near": [
     "hook-read-first",
-    "hook-start",
-    "hook-stop"
+    "hook-feedback",
+    "hook-handoff"
    ],
    "topics": [
     "assistant",
-    "pretooluse"
+    "edit"
    ]
   },
   "hook-leaks": {
@@ -1859,12 +1877,12 @@
   "hook-read-first": {
    "near": [
     "hook-impact",
-    "hook-leaks",
-    "hook-start"
+    "hook-handoff",
+    "hook-errors"
    ],
    "topics": [
     "assistant",
-    "refuses"
+    "edit"
    ]
   },
   "hook-replay": {
@@ -1880,20 +1898,20 @@
   },
   "hook-sequence": {
    "near": [
+    "hook-read-first",
     "hook-stop",
-    "hook-guard",
-    "hook-start"
+    "hook-guard"
    ],
    "topics": [
-    "assistant",
-    "rule"
+    "session",
+    "assistant"
    ]
   },
   "hook-shell": {
    "near": [
+    "hook-errors",
     "shell",
-    "hook-impact",
-    "hook-leaks"
+    "hook-impact"
    ],
    "topics": [
     "command",
@@ -1907,15 +1925,15 @@
     "browse"
    ],
    "topics": [
-    "coming",
-    "assistant"
+    "assistant",
+    "coming"
    ]
   },
   "hook-stop": {
    "near": [
-    "hook-impact",
     "hook-handoff",
-    "hook-replay"
+    "hook-read-first",
+    "hook-feedback"
    ],
    "topics": [
     "assistant",
@@ -1926,10 +1944,10 @@
    "near": [
     "translate",
     "plain-language",
-    "hook-sequence"
+    "hook-read-first"
    ],
    "topics": [
-    "rule",
+    "edit",
     "held"
    ]
   },
@@ -1937,11 +1955,11 @@
    "near": [
     "claude-code",
     "gemini-cli",
-    "hook-fail-closed"
+    "hook-feedback"
    ],
    "topics": [
-    "gemini",
-    "claude"
+    "prompt",
+    "gemini"
    ]
   },
   "horoscope": {
@@ -1972,8 +1990,8 @@
     "claude-code"
    ],
    "topics": [
-    "hook",
-    "mcp"
+    "mcp",
+    "assistant"
    ]
   },
   "hours": {
@@ -2021,8 +2039,8 @@
   },
   "in-toto": {
    "near": [
-    "annotations",
     "ro-crate",
+    "annotations",
     "prov"
    ],
    "topics": [
@@ -2037,19 +2055,18 @@
     "policy-watch"
    ],
    "topics": [
-    "between",
     "scan"
    ]
   },
   "ink-story": {
    "near": [
     "oracle-text",
-    "restack",
+    "tarot",
     "timeline"
    ],
    "topics": [
-    "branch",
-    "choice"
+    "seeded",
+    "branch"
    ]
   },
   "install-scripts": {
@@ -2078,7 +2095,7 @@
    "near": [
     "agent-transcript",
     "agents-md-check",
-    "claude-code"
+    "hook-read-first"
    ],
    "topics": [
     "gemini",
@@ -2119,13 +2136,13 @@
   },
   "issue-answer": {
    "near": [
-    "hook-checks",
     "repo-index",
-    "pr-context"
+    "pr-context",
+    "bluesky"
    ],
    "topics": [
-    "repo",
-    "docs"
+    "docs",
+    "posts"
    ]
   },
   "jeles": {
@@ -2297,7 +2314,7 @@
    "near": [
     "jeles",
     "first-mention",
-    "nestor"
+    "hook-handoff"
    ],
    "topics": [
     "jeles",
@@ -2308,11 +2325,11 @@
    "near": [
     "scan",
     "all",
-    "pile-rank"
+    "duplicates"
    ],
    "topics": [
-    "ranked",
-    "index"
+    "index",
+    "scan"
    ]
   },
   "latex": {
@@ -2323,7 +2340,7 @@
    ],
    "topics": [
     "latex",
-    "sources"
+    "prose"
    ]
   },
   "launcher": {
@@ -2408,7 +2425,7 @@
    "near": [
     "reddit",
     "meta-archive",
-    "x-archive"
+    "discord"
    ],
    "topics": [
     "posts",
@@ -2429,8 +2446,8 @@
   "live": {
    "near": [
     "mutants",
-    "ci",
-    "github"
+    "github",
+    "ci"
    ],
    "topics": []
   },
@@ -2537,8 +2554,8 @@
     "github-archive"
    ],
    "topics": [
-    "server",
-    "local"
+    "local",
+    "server"
    ]
   },
   "lunatic": {
@@ -2607,7 +2624,7 @@
     "car"
    ],
    "topics": [
-    "settled",
+    "settle",
     "calls"
    ]
   },
@@ -2615,7 +2632,7 @@
    "near": [
     "assistant-scores",
     "secrets-audit",
-    "weather-bet"
+    "quiz"
    ],
    "topics": [
     "score",
@@ -2651,8 +2668,8 @@
     "pypi"
    ],
    "topics": [
-    "repo",
-    "vectors"
+    "vectors",
+    "port"
    ]
   },
   "mcp": {
@@ -2670,7 +2687,7 @@
    "near": [
     "model-card",
     "snapshot",
-    "hook-read-first"
+    "hook-pin"
    ],
    "topics": [
     "assistant",
@@ -2712,8 +2729,8 @@
   "mediawiki": {
    "near": [
     "notion",
-    "jira",
-    "joplin"
+    "warc",
+    "jira"
    ],
    "topics": [
     "title",
@@ -2754,8 +2771,8 @@
   },
   "merkle": {
    "near": [
-    "ci",
     "hook-replay",
+    "ci",
     "claim-check"
    ],
    "topics": [
@@ -2777,12 +2794,12 @@
   "mex": {
    "near": [
     "instruction-files",
-    "codebase-memory",
-    "corpus-lens"
+    "hook-handoff",
+    "codebase-memory"
    ],
    "topics": [
-    "agent",
-    "memory"
+    "memory",
+    "agent"
    ]
   },
   "mileage": {
@@ -2825,14 +2842,24 @@
    ],
    "topics": [
     "commit",
-    "repo"
+    "forge"
+   ]
+  },
+  "misheard": {
+   "near": [
+    "pile-build",
+    "predict",
+    "scan"
+   ],
+   "topics": [
+    "spoken"
    ]
   },
   "misquote": {
    "near": [
     "quotes",
     "stale",
-    "xref"
+    "quote-check"
    ],
    "topics": [
     "quote",
@@ -2852,8 +2879,8 @@
   },
   "model-card": {
    "near": [
-    "local-model",
     "weights-card",
+    "local-model",
     "weights-pin"
    ],
    "topics": [
@@ -2984,8 +3011,7 @@
     "ci"
    ],
    "topics": [
-    "test",
-    "fails"
+    "test"
    ]
   },
   "my-lessons": {
@@ -3080,8 +3106,8 @@
     "bibtex"
    ],
    "topics": [
-    "sources",
-    "latex"
+    "latex",
+    "equation"
    ]
   },
   "notes": {
@@ -3123,8 +3149,8 @@
     "pypi"
    ],
    "topics": [
-    "repo",
-    "vectors"
+    "vectors",
+    "port"
    ]
   },
   "nuget": {
@@ -3134,8 +3160,8 @@
     "pypi"
    ],
    "topics": [
-    "repo",
-    "vectors"
+    "vectors",
+    "port"
    ]
   },
   "oakenscroll": {
@@ -3245,12 +3271,12 @@
   "oracle-text": {
    "near": [
     "hook-replay",
-    "restack",
-    "ink-story"
+    "ink-story",
+    "restack"
    ],
    "topics": [
-    "branch",
-    "replayed"
+    "seeded",
+    "branch"
    ]
   },
   "orders": {
@@ -3283,7 +3309,7 @@
    ],
    "topics": [
     "apple",
-    "mac"
+    "download"
    ]
   },
   "outdated": {
@@ -3311,7 +3337,7 @@
    "near": [
     "install-scripts",
     "pins",
-    "package-contents"
+    "ci-cache"
    ],
    "topics": [
     "install",
@@ -3454,7 +3480,7 @@
    "near": [
     "pile-store",
     "pile-serve",
-    "predict"
+    "pile-rank"
    ],
    "topics": [
     "store"
@@ -3611,7 +3637,7 @@
    ],
    "topics": [
     "pull",
-    "requests"
+    "request"
    ]
   },
   "predict": {
@@ -3681,7 +3707,7 @@
    "near": [
     "fuzz",
     "hook-fuzz",
-    "weakest-link"
+    "model-shelf"
    ],
    "topics": [
     "inputs",
@@ -3717,8 +3743,8 @@
     "maven"
    ],
    "topics": [
-    "repo",
-    "vectors"
+    "vectors",
+    "package"
    ]
   },
   "pypy": {
@@ -3750,14 +3776,14 @@
    ],
    "topics": [
     "bet",
-    "settled"
+    "settle"
    ]
   },
   "quantized": {
    "near": [
     "model-shelf",
     "model-fit",
-    "local-model"
+    "model-exam"
    ],
    "topics": [
     "local"
@@ -3766,8 +3792,8 @@
   "quiet-corner": {
    "near": [
     "google-classroom",
-    "repo-index",
-    "homestead"
+    "homestead",
+    "forgejo-dump"
    ],
    "topics": [
     "classroom"
@@ -3777,7 +3803,7 @@
    "near": [
     "daily-word",
     "serve",
-    "plain"
+    "pile-gold"
    ],
    "topics": []
   },
@@ -3799,7 +3825,7 @@
    ],
    "topics": [
     "pull",
-    "requests"
+    "request"
    ]
   },
   "quotes": {
@@ -3848,8 +3874,8 @@
   "readme": {
    "near": [
     "similar",
-    "against",
-    "live"
+    "skim",
+    "front-page"
    ],
    "topics": []
   },
@@ -3862,6 +3888,17 @@
    "topics": [
     "book",
     "highlights"
+   ]
+  },
+  "ready": {
+   "near": [
+    "github",
+    "against",
+    "restack-open"
+   ],
+   "topics": [
+    "pull",
+    "request"
    ]
   },
   "real-sky": {
@@ -3905,6 +3942,17 @@
    ],
    "topics": []
   },
+  "red-on-main": {
+   "near": [
+    "against",
+    "ci-bets",
+    "ci-baseline"
+   ],
+   "topics": [
+    "pull",
+    "request"
+   ]
+  },
   "reddit": {
    "near": [
     "linkedin",
@@ -3920,7 +3968,7 @@
    "near": [
     "report",
     "sent-log",
-    "predict"
+    "tip-pin"
    ],
    "topics": [
     "bundle",
@@ -3937,24 +3985,24 @@
   },
   "repo-index": {
    "near": [
-    "same-way",
-    "persona-card",
+    "repo-pile",
+    "issue-answer",
     "latent"
    ],
    "topics": [
     "repositories",
-    "index"
+    "build"
    ]
   },
   "repo-pile": {
    "near": [
     "upstream-desk",
-    "pile-build",
-    "pile-serve"
+    "pile-serve",
+    "pile-build"
    ],
    "topics": [
-    "project",
-    "repo"
+    "repositories",
+    "build"
    ]
   },
   "report": {
@@ -3982,8 +4030,8 @@
   "rerank": {
    "near": [
     "model-fit",
-    "pile-gold",
-    "all"
+    "pile-store",
+    "pile-gold"
    ],
    "topics": [
     "top"
@@ -3991,24 +4039,35 @@
   },
   "restack": {
    "near": [
-    "github",
+    "restack-open",
     "similar",
     "oracle-text"
    ],
    "topics": [
     "branch",
-    "repo"
+    "conflicts"
+   ]
+  },
+  "restack-open": {
+   "near": [
+    "restack",
+    "red-on-main",
+    "ready"
+   ],
+   "topics": [
+    "pull",
+    "request"
    ]
   },
   "restore-drill": {
    "near": [
     "backup",
     "diverge",
-    "three-two-one"
+    "ci"
    ],
    "topics": [
-    "zip",
-    "backup"
+    "backup",
+    "zip"
    ]
   },
   "retire": {
@@ -4060,6 +4119,7 @@
     "sort"
    ],
    "topics": [
+    "matched",
     "command"
    ]
   },
@@ -4085,20 +4145,20 @@
   },
   "roll-for-merge": {
    "near": [
+    "red-on-main",
     "ci-bets",
-    "against",
-    "ci-baseline"
+    "against"
    ],
    "topics": [
     "pull",
-    "requests"
+    "request"
    ]
   },
   "rss-out": {
    "near": [
     "annotations",
-    "opml",
-    "in-toto"
+    "in-toto",
+    "opml"
    ],
    "topics": [
     "feed"
@@ -4299,8 +4359,8 @@
   "secrets-audit": {
    "near": [
     "pii-audit",
-    "xref",
-    "hook-leaks"
+    "hook-leaks",
+    "xref"
    ],
    "topics": [
     "numbers",
@@ -4309,9 +4369,9 @@
   },
   "sent-log": {
    "near": [
-    "cite-honesty",
     "gaps",
-    "model-card"
+    "model-card",
+    "redential"
    ],
    "topics": [
     "left",
@@ -4333,7 +4393,8 @@
     "words-pl"
    ],
    "topics": [
-    "serve"
+    "serve",
+    "alone"
    ]
   },
   "session-cost": {
@@ -4436,7 +4497,7 @@
    "near": [
     "provenance",
     "pgp",
-    "mirror"
+    "sync"
    ],
    "topics": [
     "trust",
@@ -4456,11 +4517,22 @@
   },
   "similar": {
    "near": [
+    "ready",
     "readme",
-    "restack",
-    "against"
+    "restack"
    ],
    "topics": []
+  },
+  "skim": {
+   "near": [
+    "against",
+    "agents-md-check",
+    "mutants"
+   ],
+   "topics": [
+    "screen",
+    "held"
+   ]
   },
   "slack": {
    "near": [
@@ -4545,14 +4617,14 @@
    ],
    "topics": [
     "host",
-    "repo"
+    "json"
    ]
   },
   "speak": {
    "near": [
+    "willow-box",
     "aider",
-    "debts",
-    "openai-compatible"
+    "debts"
    ],
    "topics": []
   },
@@ -4612,7 +4684,7 @@
    "near": [
     "kart",
     "static-search",
-    "manifests"
+    "dialect"
    ],
    "topics": []
   },
@@ -4722,9 +4794,9 @@
   },
   "surprise": {
    "near": [
-    "serve",
     "on-this-day",
-    "tarot"
+    "serve",
+    "daily-word"
    ],
    "topics": [
     "seeded",
@@ -4803,9 +4875,9 @@
   },
   "tarot": {
    "near": [
+    "life",
     "catgrid",
-    "dice",
-    "life"
+    "dice"
    ],
    "topics": [
     "seeded",
@@ -4870,8 +4942,8 @@
   "test-shards": {
    "near": [
     "slow-tests",
-    "profile",
-    "ci"
+    "ci",
+    "profile"
    ],
    "topics": [
     "test"
@@ -4968,8 +5040,8 @@
     "ci"
    ],
    "topics": [
-    "rows",
-    "pin"
+    "pin",
+    "rows"
    ]
   },
   "todays-place": {
@@ -5080,11 +5152,11 @@
    "near": [
     "contribute",
     "against",
-    "pr-context"
+    "restack-open"
    ],
    "topics": [
     "pull",
-    "requests"
+    "request"
    ]
   },
   "vectors": {
@@ -5110,21 +5182,21 @@
   },
   "vocab": {
    "near": [
-    "apple-notes",
     "equations",
+    "apple-notes",
     "oracle-text"
    ],
    "topics": []
   },
   "voice": {
    "near": [
+    "wis",
     "writefreely",
-    "calendar",
     "texts"
    ],
    "topics": [
-    "transcribed",
-    "voice"
+    "voice",
+    "transcribed"
    ]
   },
   "vscode": {
@@ -5135,6 +5207,16 @@
    ],
    "topics": [
     "jump"
+   ]
+  },
+  "wake-gate": {
+   "near": [
+    "dictate",
+    "pdf",
+    "ocr"
+   ],
+   "topics": [
+    "loud"
    ]
   },
   "wallabag": {
@@ -5155,14 +5237,14 @@
     "webarchive"
    ],
    "topics": [
-    "unpacking",
-    "address"
+    "address",
+    "unpacking"
    ]
   },
   "warm": {
    "near": [
-    "start",
     "pile-store",
+    "start",
     "night-batch"
    ],
    "topics": [
@@ -5184,7 +5266,7 @@
    "near": [
     "index-cache",
     "scan",
-    "pile-store"
+    "policy-watch"
    ],
    "topics": [
     "index",
@@ -5249,7 +5331,7 @@
    "near": [
     "model-shelf",
     "weights-pin",
-    "model-fit"
+    "model-card"
    ],
    "topics": [
     "weights",
@@ -5271,20 +5353,30 @@
    "near": [
     "ci-baseline",
     "against",
-    "pr-context"
+    "restack-open"
    ],
    "topics": [
     "pull",
-    "requests"
+    "request"
    ]
   },
   "why-not": {
    "near": [
+    "latent",
     "nicknames",
-    "scan",
-    "latent"
+    "daily-word"
    ],
    "topics": []
+  },
+  "willow-box": {
+   "near": [
+    "aider",
+    "speak",
+    "shell"
+   ],
+   "topics": [
+    "voice"
+   ]
   },
   "windsurf": {
    "near": [
@@ -5296,6 +5388,17 @@
     "mcp"
    ]
   },
+  "wis": {
+   "near": [
+    "voice",
+    "wake-gate",
+    "writefreely"
+   ],
+   "topics": [
+    "transcribed",
+    "audio"
+   ]
+  },
   "witness": {
    "near": [
     "second-opinion",
@@ -5303,8 +5406,8 @@
     "model-recall"
    ],
    "topics": [
-    "second",
-    "person"
+    "beside",
+    "second"
    ]
   },
   "words-ar": {
@@ -5466,7 +5569,7 @@
    ],
    "topics": [
     "common",
-    "segmenter"
+    "found"
    ]
   },
   "writefreely": {
