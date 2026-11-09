@@ -61,7 +61,8 @@ FRONT = """# the front page
 
 def card(section="Play", line="A thing.", source="new", added="2026-10-23", **more):
     head = {"section": section, "line": line, "source": source, "added": added,
-            "writes": "nothing", "network": "none", "role": "tools", **more}  # fmt: skip
+            "version": "0.1.0", "writes": "nothing", "network": "none", "role": "tools",
+            **more}  # fmt: skip
     body = "".join(f"{k}: {v}\n" for k, v in head.items())
     return f"<!-- willow-addon\n{body}-->\n# card\n"
 
@@ -82,7 +83,7 @@ def repo(tmp_path, monkeypatch):
         )
     planned = [{"name": "gamma", "kind": "stdlib", "section": "Play", "line": "Later.",
                 "source": "box", "writes": "to", "network": "loopback",
-                "role": "makes", "tags": "later"}]  # fmt: skip
+                "role": "makes", "tags": "later", "version": "0.0.1"}]  # fmt: skip
     (tmp_path / "adapters" / "planned.json").write_text(json.dumps(planned))
     (tmp_path / "ADDONS.md").write_text(PAGE)
     (tmp_path / "README.md").write_text(FRONT)
@@ -282,6 +283,10 @@ def test_the_draw_is_the_weeks_and_anyone_can_redo_it(repo):
         ("stdlib/delta", card(tags="money"), None),
         ("stdlib/delta", card(), None),  # a tag of your own is optional
         ("stdlib/delta", card(hands="none"), "leave it off when it hands nothing"),
+        ("stdlib/delta", card(version="0.0.3"), "a built add-on is 0.1.0 or later"),
+        ("stdlib/delta", card(version="1.2"), "version is MAJOR.MINOR.PATCH"),
+        ("stdlib/delta", card(version="v0.1.0"), "version is MAJOR.MINOR.PATCH"),
+        ("stdlib/delta", card(version="1.4.0"), None),  # past 1.0, as it may be
         ("stdlib/delta", card(hands="the passages, to the client's model"), None),
         ("stdlib/alpha2", "", "has no README.md card"),
     ],
@@ -326,6 +331,19 @@ def test_code_that_hands_text_to_a_model_needs_a_hands_line(repo, code):
         rd.rebuild(PAGE, None)
     (where / "README.md").write_text(card(hands="the passages, to the client's model"))
     rd.rebuild(PAGE, None)
+
+
+@pytest.mark.parametrize("version, ok", [("0.0.1", True), ("0.0.7", True),
+                                          ("0.0.0", False), ("0.1.0", False)])  # fmt: skip
+def test_an_idea_is_0_0_n_until_it_is_built(repo, version, ok):
+    planned = json.loads((repo / "adapters" / "planned.json").read_text())
+    planned[0]["version"] = version
+    (repo / "adapters" / "planned.json").write_text(json.dumps(planned))
+    if ok:
+        rd.rebuild(PAGE, None)
+    else:
+        with pytest.raises(rd.Refused, match="an idea is 0.0.N, from 0.0.1"):
+            rd.rebuild(PAGE, None)
 
 
 def test_code_taken_keeps_the_notice_of_where_it_came_from(repo):
@@ -476,7 +494,8 @@ def test_the_languages_are_the_words_packs_built_and_planned(repo):
     planned = json.loads((repo / "adapters" / "planned.json").read_text())
     planned.append({"name": "words-zh", "kind": "stdlib", "section": "Your own words",
                     "line": "Chinese.", "source": "new", "writes": "record",
-                    "network": "none", "role": "words", "tags": "words"})  # fmt: skip
+                    "network": "none", "role": "words", "tags": "words",
+                    "version": "0.0.1"})  # fmt: skip
     (repo / "adapters" / "planned.json").write_text(json.dumps(planned))
     got = rd.section_languages(rd.addons())
     assert got.startswith("**2 built, 1 planned**")
@@ -514,7 +533,8 @@ def test_the_counts_stand_as_of_the_weeks_monday_and_its_own_line_is_now():
 # ── the week's tags and nearest entries ──────────────────────────────────────
 def idea(name: str, line: str) -> dict:
     return {"name": name, "kind": "stdlib", "section": "Play", "line": line,
-            "source": "new", "writes": "nothing", "network": "none", "role": "tools"}  # fmt: skip
+            "source": "new", "writes": "nothing", "network": "none", "role": "tools",
+            "version": "0.0.1"}  # fmt: skip
 
 
 def add_ideas(repo: Path, *more: dict) -> None:

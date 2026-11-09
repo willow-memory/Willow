@@ -3,6 +3,7 @@ section: Ways to use it
 line: Write down what you want done and the passages it rests on; it checks they still hold, and never does it for you.
 source: new
 added: 2026-10-30
+version: 0.1.0
 writes: to
 network: none
 role: makes

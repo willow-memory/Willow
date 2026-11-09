@@ -3,6 +3,7 @@ section: Finding things
 line: Your files sorted into your own categories, by the phrases you gave each: what's where, and what nothing of yours reached.
 source: new
 added: 2026-11-03
+version: 0.1.0
 writes: nothing
 network: none
 role: tools

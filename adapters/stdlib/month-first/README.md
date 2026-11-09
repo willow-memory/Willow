@@ -3,6 +3,7 @@ section: Finding things
 line: For a folder you know writes dates month first: each one's ISO form written beside it, so it can be placed.
 source: new
 added: 2026-10-31
+version: 0.1.0
 writes: to
 network: none
 role: makes

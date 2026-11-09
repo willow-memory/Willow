@@ -3,6 +3,7 @@ section: Assistants
 line: The prompt hook for Gemini CLI, Codex and opencode, wherever they take hooks, held to Claude Code's answer byte for byte.
 source: box
 added: 2026-11-05
+version: 0.1.0
 writes: record
 network: none
 hands: the passages served for each prompt, to the model of the assistant it hooks (Gemini CLI, Codex, opencode)

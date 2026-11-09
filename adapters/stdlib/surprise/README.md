@@ -3,6 +3,7 @@ section: Finding things
 line: One passage from your folder at random, seeded so it can be replayed.
 source: bot
 added: 2026-10-23
+version: 0.1.0
 writes: record
 network: none
 role: page

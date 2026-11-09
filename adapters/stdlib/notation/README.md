@@ -3,6 +3,7 @@ section: Reading more kinds of files
 line: Each displayed LaTeX equation with the words its paper gives its symbols ("where η is the packing fraction"), so words find the equation.
 source: new
 added: 2026-11-06
+version: 0.1.0
 writes: to
 network: none
 role: reads

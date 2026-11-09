@@ -3,6 +3,7 @@ section: Assistants
 line: How often each assistant's suggestions were sealed or set aside, from the record.
 source: new
 added: 2026-11-06
+version: 0.1.0
 writes: nothing
 network: none
 role: suggests

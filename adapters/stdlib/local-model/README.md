@@ -3,6 +3,7 @@ section: Assistants
 line: Suggestions from a model on this machine only, such as Ollama, llama.cpp's server, llamafile, KoboldCpp or Jan.
 source: new
 added: 2026-11-02
+version: 0.1.0
 writes: record
 network: loopback
 role: suggests

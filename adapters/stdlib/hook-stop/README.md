@@ -3,6 +3,7 @@ section: Assistants
 line: A Stop hook that won't let an assistant's turn end while the record doesn't verify or its changes aren't committed, and says which.
 source: box
 added: 2026-10-29
+version: 0.1.0
 writes: nothing
 network: none
 role: guards

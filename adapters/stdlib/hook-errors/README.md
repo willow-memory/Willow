@@ -3,6 +3,7 @@ section: Assistants
 line: Each failed command an assistant runs kept as a row of its hash and exit code, so the third time it fails it's named, not retried blind.
 source: new
 added: 2026-11-07
+version: 0.1.0
 writes: record
 network: none
 role: guards

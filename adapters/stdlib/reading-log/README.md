@@ -3,6 +3,7 @@ section: Keeping track
 line: A child's reading log: books, pages and minutes, week by week.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: nothing
 network: none
 role: page

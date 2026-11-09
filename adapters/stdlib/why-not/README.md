@@ -3,6 +3,7 @@ section: Finding things
 line: When the answer is 'not enough to say', which words found nothing, and what kind of file would have answered.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: nothing
 network: none
 role: tools

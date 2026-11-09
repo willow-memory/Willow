@@ -3,6 +3,7 @@ section: For maintainers
 line: What's already on the add-on list near a new idea, by the kernel's own search.
 source: box
 added: 2026-10-23
+version: 0.1.0
 writes: nothing
 network: none
 role: repo

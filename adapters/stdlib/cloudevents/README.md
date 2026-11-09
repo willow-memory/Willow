@@ -3,6 +3,7 @@ section: Ways to use it
 line: Record rows in the CloudEvents envelope, for any tool that already reads them.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: to
 network: none
 role: makes

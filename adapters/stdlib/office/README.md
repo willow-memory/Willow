@@ -3,6 +3,7 @@ section: Reading more kinds of files
 line: .docx, .odt, .pptx, .xlsx and .ods, which are all zipped XML.
 source: new
 added: 2026-10-23
+version: 0.1.0
 writes: to
 network: none
 role: reads

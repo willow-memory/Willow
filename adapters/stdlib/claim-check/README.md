@@ -3,6 +3,7 @@ section: Trust and proof
 line: A claim checked against your sources: the passages that hold all of its parts, the ones that hold only some, and the parts no file names.
 source: new
 added: 2026-10-24
+version: 0.1.0
 writes: nothing
 network: none
 role: tools

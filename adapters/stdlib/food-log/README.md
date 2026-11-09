@@ -3,6 +3,7 @@ section: Keeping track
 line: What you ate, from your notes, by day.
 source: new
 added: 2026-11-06
+version: 0.1.0
 writes: nothing
 network: none
 role: page

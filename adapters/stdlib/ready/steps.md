@@ -28,6 +28,11 @@ report.
 
 - ci.made -- write
 
+Each add-on and idea the change touched takes the smallest version step it
+owes; a bigger one is yours to write.
+
+- ci.versions -- write --base {base}
+
 ## checked here
 
 The gates the change can reach, fast ones first; a change that reaches
@@ -35,6 +40,7 @@ everything leaves every gate to CI, which runs them anyway, and still runs
 what the rest of it reaches.
 
 - ci.ci -- run lint --box {scratch}/lint
+- ci.versions -- check --base {base}
 - test-impact.impact -- run --base {base} --narrow --jobs 4
 
 Each add-on the change touches, run on every demo person's real folder.

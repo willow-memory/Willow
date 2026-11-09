@@ -3,6 +3,7 @@ section: Keeping track
 line: Feeds, sleeps and nappies from your notes, by day: when was the last one?
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: nothing
 network: none
 role: page

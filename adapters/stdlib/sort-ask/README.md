@@ -3,6 +3,7 @@ section: Finding things
 line: A model on this machine suggests a category for each file your phrases didn't place, citing a passage, for your seal.
 source: new
 added: 2026-11-03
+version: 0.1.0
 writes: record
 network: loopback
 role: suggests

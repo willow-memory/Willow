@@ -3,6 +3,7 @@ section: Reading more kinds of files
 line: Each displayed equation in LaTeX sources as a passage of its own, with the sentences around it and its label, cited by the .tex file's line.
 source: new
 added: 2026-11-05
+version: 0.1.0
 writes: to
 network: none
 role: reads

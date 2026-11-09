@@ -3,6 +3,7 @@ section: Trust and proof
 line: Every reference in your files checked: each link to another file, and each quoted line, still there and still saying it.
 source: bot
 added: 2026-10-24
+version: 0.1.0
 writes: nothing
 network: none
 role: page

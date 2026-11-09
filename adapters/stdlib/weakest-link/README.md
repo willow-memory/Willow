@@ -3,6 +3,7 @@ section: Trust and proof
 line: Each answer's inputs marked measured, fitted or assumed, and the result worth its weakest input, never an average.
 source: new
 added: 2026-11-01
+version: 0.1.0
 writes: nothing
 network: none
 role: page

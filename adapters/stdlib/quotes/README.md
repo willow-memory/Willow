@@ -3,6 +3,7 @@ section: Finding things
 line: Every quote in a document checked against your files: as written, almost (and what it adds, drops or changes), or not there.
 source: new
 added: 2026-11-01
+version: 0.1.0
 writes: nothing
 network: none
 role: tools

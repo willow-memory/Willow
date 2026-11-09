@@ -3,6 +3,7 @@ section: Your own words
 line: A word typed without its accent read as your files write it, and the words-list lines that make it last.
 source: new
 added: 2026-10-25
+version: 0.1.0
 writes: nothing
 network: none
 role: words

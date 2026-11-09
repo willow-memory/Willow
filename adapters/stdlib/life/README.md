@@ -3,6 +3,7 @@ section: Play
 line: Conway's Game of Life as rows: a fully deterministic world on the record.
 source: bot
 added: 2026-10-24
+version: 0.1.0
 writes: record
 network: none
 role: tools

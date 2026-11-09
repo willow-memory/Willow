@@ -3,6 +3,7 @@ section: Keeping track
 line: Hours worked or volunteered, per client or group, from your notes.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: nothing
 network: none
 role: page

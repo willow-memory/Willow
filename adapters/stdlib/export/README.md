@@ -3,6 +3,7 @@ section: Trust and proof
 line: Approved answers, and the question log (counts only, never words), as Markdown or CSV.
 source: box
 added: 2026-10-23
+version: 0.1.0
 writes: nothing
 network: none
 role: page

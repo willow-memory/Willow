@@ -3,6 +3,7 @@ section: For maintainers
 line: A pull request held to the other open ones: a name both add fails, a file both change is said.
 source: new
 added: 2026-11-03
+version: 0.1.0
 writes: nothing
 network: none
 role: repo

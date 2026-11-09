@@ -3,6 +3,7 @@ section: Reading more kinds of files
 line: Pocket's export, the HTML and CSV in its zip, as one dated line per saved article, now that Pocket is gone.
 source: new
 added: 2026-11-02
+version: 0.1.0
 writes: to
 network: none
 role: reads

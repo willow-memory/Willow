@@ -3,6 +3,7 @@ section: Assistants
 line: Before an edit, a hook hands the assistant every place in your files that names what it's about to change, by file and line.
 source: box
 added: 2026-10-29
+version: 0.1.0
 writes: nothing
 network: none
 hands: the lines of your files that name a file before it is edited, to the assistant's model

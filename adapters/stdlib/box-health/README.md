@@ -3,6 +3,7 @@ section: Trust and proof
 line: Is your willow all right? One line: files it can't read, readers out of date, and when its record was last checked.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: nothing
 network: none
 role: page

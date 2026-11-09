@@ -3,6 +3,7 @@ section: Reading more kinds of files
 line: Apple Mail's .emlx messages, read as the mail add-on reads an .eml.
 source: new
 added: 2026-11-02
+version: 0.1.0
 writes: to
 network: none
 role: reads

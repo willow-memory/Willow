@@ -3,6 +3,7 @@ section: Your own words
 line: The words your folder uses far more than the world does, each dated by its first and last appearance, with the passage that first says it.
 source: new
 added: 2026-11-06
+version: 0.1.0
 needs: wordfreq; Apache-2.0, its data CC BY-SA 4.0
 floor: wordfreq 3.1.0; the 2020 rule names 2.3.2, and every release before 3.1.0 imports pkg_resources, which a Python 3.13 environment doesn't have
 uses: dialect, first-mention
