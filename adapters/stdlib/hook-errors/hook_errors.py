@@ -11,8 +11,9 @@ Cursor send on standard input:
 
     PostToolUse (an exit code is present)
         a non-zero exit appends a `hook-errors` row (command hash, exit,
-        a short command text, and the call's `session_id` when sent). The
-        call is allowed; recording never blocks.
+        and the call's `session_id` when sent), never the command's words,
+        which can carry the person's (CONST-VI-8). The call is allowed;
+        recording never blocks.
 
     PreToolUse (no exit code yet)
         if this session already has two rows for the same command hash and
@@ -23,8 +24,8 @@ Cursor send on standard input:
         allowed; the hook writes nothing.
 
 `check` is the same look for a person: each (command hash, exit) that has
-failed at least once is listed; exit 42 when any has reached the block
-rung (two or more).
+failed at least once is listed by its hash and last row; exit 42 when any
+has reached the block rung (two or more).
 
 It never reads the key. Exit codes: 0 allowed (or `check` none at the
 block rung); 42 `check` found a repeated failure; 2 refused or blocked.
@@ -42,7 +43,6 @@ import kernel  # noqa: E402
 KIND = "hook-errors"
 BLOCK_AT = 2  # two prior same (hash, exit) → third attempt blocked
 SHELL = {"Bash", "Shell", "run_terminal_cmd"}
-CMD_KEEP = 120  # characters of the command kept on the row for naming
 
 
 def session_of(call: dict) -> str:
@@ -128,7 +128,6 @@ def judge(raw: str, box: Path, ts: str) -> tuple[int, str]:
             who="hook-errors",
             cmd_sha256=digest,
             exit=code,
-            command=command[:CMD_KEEP],
             session=session_of(call),
         )
         return 0, ""
@@ -139,18 +138,19 @@ def judge(raw: str, box: Path, ts: str) -> tuple[int, str]:
     return (2, why) if why else (0, "")
 
 
-def listed(rows: list[dict]) -> list[tuple[str, int, int, int, str]]:
-    """(cmd_sha256, exit, times, last n, command) for every failure group."""
-    groups: dict[tuple[str, int], tuple[int, int, str]] = {}
+def listed(rows: list[dict]) -> list[tuple[str, int, int, int]]:
+    """(cmd_sha256, exit, times, last n) for every failure group. A row
+    made before the record stopped keeping a command's text still holds it;
+    it is never shown."""
+    groups: dict[tuple[str, int], tuple[int, int]] = {}
     for r in rows:
         if r["kind"] != KIND:
             continue
         key = (r["cmd_sha256"], r["exit"])
-        n, _, cmd = groups.get(key, (0, 0, ""))
-        groups[key] = (n + 1, r["n"], r.get("command") or cmd)
+        n, _ = groups.get(key, (0, 0))
+        groups[key] = (n + 1, r["n"])
     out = [
-        (digest, code, times, last, cmd)
-        for (digest, code), (times, last, cmd) in groups.items()
+        (digest, code, times, last) for (digest, code), (times, last) in groups.items()
     ]
     return sorted(out, key=lambda t: (-t[2], t[0], t[1]))
 
@@ -185,11 +185,11 @@ def main(argv: list[str]) -> int:
         )
         return kernel.REFUSED
     items = listed(rows)
-    for digest, code, times, last, cmd in items:
-        print(f"exit {code}  {times} times  {digest}  last: {cmd}  (row {last})")
+    for digest, code, times, last in items:
+        print(f"exit {code}  {times} times  {digest}  (last at row {last})")
     return (
         kernel.ESCALATE
-        if any(times >= BLOCK_AT for _, _, times, _, _ in items)
+        if any(times >= BLOCK_AT for _, _, times, _ in items)
         else kernel.ALIVE
     )
 

@@ -24,7 +24,7 @@ Cursor send on standard input:
 
 | Event | What happens |
 |---|---|
-| PostToolUse (an exit code is present) | a non-zero exit appends a `hook-errors` row (command hash, exit, a short command text, and the call's `session_id` when sent); the call is allowed |
+| PostToolUse (an exit code is present) | a non-zero exit appends a `hook-errors` row (command hash, exit, and the call's `session_id` when sent), never the command's words; the call is allowed |
 | PreToolUse (no exit code yet) | if this session already has two rows for the same command hash and the same exit, the third try is blocked (exit 2) and named; otherwise allowed |
 | anything else | allowed; nothing is written |
 
@@ -33,8 +33,10 @@ blocked: this command has failed 2 times with exit 1 (last at row 3); look at th
 ```
 
 `check` is the same look for a person: each (command hash, exit) that has
-failed at least once is listed; exit 42 when any has reached the block rung
-(two or more).
+failed at least once is listed by its hash and last row; exit 42 when any
+has reached the block rung (two or more). A command can carry the person's
+words, and the record keeps acts, not words, so the command is kept by its
+hash alone: the assistant that ran it has it in hand at the third try.
 
 To use it, put the `run` line where the assistant's settings name a
 PreToolUse hook for Bash (or Shell) and a PostToolUse hook for the same
@@ -44,4 +46,5 @@ It never reads the key. Exit codes: 0 allowed (or `check` none at the block
 rung); 42 `check` found a repeated failure; 2 refused or blocked.
 
 **Never:** reads the key; lets the same (command, exit) fail a third time
-blind; invents a command the call didn't name.
+blind; invents a command the call didn't name; keeps a command's words in
+the record.
