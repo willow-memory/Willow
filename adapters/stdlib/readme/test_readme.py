@@ -92,6 +92,10 @@ def repo(tmp_path, monkeypatch):
     monkeypatch.setattr(rd, "ADAPTERS", tmp_path / "adapters")
     monkeypatch.setattr(rd, "PLANNED", tmp_path / "adapters" / "planned.json")
     monkeypatch.setattr(rd, "WEEK_FILE", tmp_path / "week.json")
+    # a bare write draws for this week, as it should; these tests write
+    # 2026-W45 and mean "still that week", so this week is that week here,
+    # whatever the calendar says (they failed the day W46 began)
+    monkeypatch.setattr(rd, "this_week", lambda: "2026-W45")
     return tmp_path
 
 
