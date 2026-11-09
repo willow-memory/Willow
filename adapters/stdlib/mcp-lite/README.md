@@ -5,6 +5,7 @@ source: box
 added: 2026-10-24
 writes: record
 network: none
+hands: the passages served for each ask, and what waits on you, to the MCP client's model
 role: ways
 -->
 # mcp-lite

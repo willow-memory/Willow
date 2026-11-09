@@ -1274,14 +1274,16 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
   llm-cli, night-batch
 - <a id="llm-cli"></a>[**llm-cli**](adapters/deps/llm-cli/) \
   Suggestions through the llm command, so any model its plugins reach (local or hosted) can hand one in, with llm's own log naming the model. \
-  Needs llm and the plugin for your model; Apache-2.0. Uses openai-compatible. Goes online: the model its plugin reaches, to ask for suggestions. *new*
-  `needs-install` `online` `local` `openai` · near: in-process, openai-compatible, night-batch
+  Needs llm and the plugin for your model; Apache-2.0. Uses openai-compatible. Goes online: the model its plugin reaches, to ask for suggestions. Hands on
+  your question and the passages served, to the llm command and the model it runs. *new* `needs-install` `online` `local` `openai` · near: in-process,
+  openai-compatible, night-batch
 - <a id="local-model"></a>[**local-model**](adapters/stdlib/local-model/) \
   Suggestions from a model on this machine only, such as Ollama, llama.cpp's server, llamafile, KoboldCpp or Jan. \
   Uses openai-compatible. Reaches this machine only. *new* `no-install` `this-machine` `cpp` `jan` · near: openai-compatible, in-process, model-shelf
 - <a id="mcp-sampling"></a>[**mcp-sampling**](adapters/stdlib/mcp-sampling/) \
   Suggestions from whatever model your MCP client already runs, asked through MCP sampling, so willow needs no model or key of its own. \
-  Uses openai-compatible. *new* `no-install` `offline` `mcp` `client` · near: cursor, opencode, windsurf
+  Uses openai-compatible. Hands on your question and the passages served, to the model your MCP client runs. *new* `no-install` `to-a-model` `mcp` `client` ·
+  near: cursor, opencode, windsurf
 - <a id="night-batch"></a>[**night-batch**](adapters/stdlib/night-batch/) \
   Questions waiting for suggestions batched into one local-model run overnight, stopped the moment you're back. \
   Uses local-model. Reaches this machine only. *new* `no-install` `this-machine` `local` · near: llm-cli, in-process, openai-compatible
@@ -1401,7 +1403,8 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
   Uses hosts. *new* `no-install` `offline` · near: launcher, emacs, browse
 - <a id="claude-code"></a>[**claude-code**](adapters/stdlib/claude-code/) \
   Claude Code sees cited passages from your folder with each prompt, through its prompt hook. \
-  Uses mcp-lite. *bot* `no-install` `offline` `hook` `prompt` · near: hooks-elsewhere, gemini-cli, hook-impact
+  Uses mcp-lite. Hands on the passages served for each prompt, to Claude Code's model. *bot* `no-install` `to-a-model` `hook` `prompt` · near:
+  hooks-elsewhere, gemini-cli, hook-impact
 - <a id="codex-cli"></a>[**codex-cli**](adapters/stdlib/codex-cli/) \
   OpenAI's Codex CLI asks your folder and hands in suggestions, through the mcp add-on. \
   Uses hosts. *new* `no-install` `offline` `mcp` `cli` · near: cursor, opencode, windsurf
@@ -1413,19 +1416,22 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
   Uses mcp-lite, pipe. *new* `no-install` `offline` `hook` `mcp` · near: hooks-elsewhere, gemini-cli, claude-code
 - <a id="mcp"></a>[**mcp**](adapters/deps/mcp/) \
   Lets any MCP client, such as an AI assistant or editor, ask your folder and hand in suggestions. \
-  Needs mcp; MIT. *new* `needs-install` `offline` `mcp` `assistant` · near: mcp-lite, zed, cursor
+  Needs mcp; MIT. Hands on the passages served for each ask, and what waits on you, to the MCP client's model. *new* `needs-install` `to-a-model` `mcp`
+  `assistant` · near: mcp-lite, zed, cursor
 - <a id="mcp-lite"></a>[**mcp-lite**](adapters/stdlib/mcp-lite/) \
   The mcp add-on's three tools with nothing to install: the protocol by hand, standard library only. \
-  *box* `no-install` `offline` `mcp` · near: mcp, cursor, opencode
+  Hands on the passages served for each ask, and what waits on you, to the MCP client's model. *box* `no-install` `to-a-model` `mcp` · near: mcp, cursor,
+  opencode
 - <a id="opencode"></a>[**opencode**](adapters/stdlib/opencode/) \
   OpenCode asks your folder and hands in suggestions, through the mcp add-on. \
   Uses hosts. *new* `no-install` `offline` `mcp` · near: cursor, windsurf, zed
 
-### What guards it
+### What guards it, h to h
 
 - <a id="hook-compact"></a>[**hook-compact**](adapters/stdlib/hook-compact/) \
   A PreCompact hook that prints what the record holds open (seals waiting, questions unanswered), so it survives the assistant's summary. \
-  Uses digest. *box* `no-install` `offline` `waiting` `open` `hooks` · near: digest, sort-ask, hook-start
+  Uses digest. Hands on the waiting suggestions' text and reasons, to the assistant's model before it summarises. *box* `no-install` `to-a-model` `waiting`
+  `open` `hooks` · near: digest, sort-ask, hook-start
 - <a id="hook-errors"></a>[**hook-errors**](adapters/stdlib/hook-errors/) \
   Each failed command an assistant runs kept as a row of its hash and exit code, so the third time it fails it's named, not retried blind. \
   *new* `no-install` `offline` `fails` `hash` `hooks` · near: hook-replay, hook-fail-closed, hook-fuzz
@@ -1443,10 +1449,15 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
   *box* `no-install` `offline` `assistant` `pretooluse` `hooks` · near: hook-impact, hook-leaks, hook-read-first
 - <a id="hook-handoff"></a>[**hook-handoff**](adapters/stdlib/hook-handoff/) \
   A Stop hook that writes where the session ended, and the next session's first prompt gets it back, so nothing rides on memory. \
-  *new* `no-install` `offline` `assistant` `session` `hooks` · near: hook-stop, memory-import, hook-read-first
+  Hands on the session's id and the folder it ended in, never your files' words, to the next session's model. *new* `no-install` `to-a-model` `assistant`
+  `session` `hooks` · near: hook-stop, memory-import, hook-read-first
 - <a id="hook-impact"></a>[**hook-impact**](adapters/stdlib/hook-impact/) \
   Before an edit, a hook hands the assistant every place in your files that names what it's about to change, by file and line. \
-  Uses habits. *box* `no-install` `offline` `assistant` `pretooluse` `hooks` · near: hook-read-first, hook-start, hook-stop
+  Uses habits. Hands on the lines of your files that name a file before it is edited, to the assistant's model. *box* `no-install` `to-a-model` `assistant`
+  `pretooluse` `hooks` · near: hook-read-first, hook-start, hook-stop
+
+#### What guards it, h to s
+
 - <a id="hook-leaks"></a>[**hook-leaks**](adapters/stdlib/hook-leaks/) \
   A PreToolUse hook that refuses a write or command holding a key, password or card number, by the privacy add-on's shapes, naming the kind. \
   Uses privacy. *box* `no-install` `offline` `numbers` `key` `hooks` · near: hook-read-first, hook-impact, hook-guard
@@ -1464,13 +1475,15 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
   *new* `no-install` `offline` `command` `shell` `hooks` · near: shell, hook-impact, hook-leaks
 - <a id="hook-start"></a>[**hook-start**](adapters/stdlib/hook-start/) \
   A SessionStart hook that hands the assistant what needs you, read the way digest reads it, so opening a session writes nothing. \
-  Uses digest. *bot* `no-install` `offline` `coming` `assistant` `hooks` · near: digest, hook-impact, browse
+  Uses digest. Hands on what needs you, its dated lines and waiting suggestions included, to the assistant's model at the session's start. *bot* `no-install`
+  `to-a-model` `coming` `assistant` `hooks` · near: digest, hook-impact, browse
 - <a id="hook-stop"></a>[**hook-stop**](adapters/stdlib/hook-stop/) \
   A Stop hook that won't let an assistant's turn end while the record doesn't verify or its changes aren't committed, and says which. \
   *box* `no-install` `offline` `assistant` `end` `hooks` · near: hook-impact, hook-handoff, hook-replay
 - <a id="hooks-elsewhere"></a>[**hooks-elsewhere**](adapters/stdlib/hooks-elsewhere/) \
   The prompt hook for Gemini CLI, Codex and opencode, wherever they take hooks, held to Claude Code's answer byte for byte. \
-  Uses claude-code. *box* `no-install` `offline` `gemini` `claude` `hooks` · near: claude-code, gemini-cli, hook-fail-closed
+  Uses claude-code. Hands on the passages served for each prompt, to the model of the assistant it hooks (Gemini CLI, Codex, opencode). *box* `no-install`
+  `to-a-model` `gemini` `claude` `hooks` · near: claude-code, gemini-cli, hook-fail-closed
 - <a id="serve"></a>[**serve**](adapters/stdlib/serve/) \
   The one file an AI model may read: only the passages you approved, under ids it can't guess, and nothing else. \
   *bot* `no-install` `offline` · near: stack, decisions, folder-card

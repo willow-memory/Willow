@@ -5,6 +5,7 @@ source: box
 added: 2026-10-29
 writes: nothing
 network: none
+hands: the waiting suggestions' text and reasons, to the assistant's model before it summarises
 role: guards
 tags: hooks
 uses: digest

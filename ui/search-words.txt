@@ -48,3 +48,6 @@ chatgpt = openai, model, suggestions
 
 # play
 games = game, play, dice, quiz
+
+# searching code
+grep = ripgrep

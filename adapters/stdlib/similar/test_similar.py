@@ -123,6 +123,17 @@ def test_a_tag_follows_the_card_when_the_card_changes():
     assert sim.worked_out(moved)["vim"]["tags"][1] == "this-machine"
 
 
+def test_an_add_on_that_hands_on_to_a_model_is_never_tagged_offline():
+    """It reaches nothing itself, but what it hands an assistant's model may
+    leave: the card's hands line says so, and the tag says it too (CONST-III-5)."""
+    got = sim.worked_out(sim.entries())
+    assert got["mcp-sampling"]["tags"][1] == "to-a-model"
+    assert got["claude-code"]["tags"][1] == "to-a-model"
+    assert got["vim"]["tags"][1] == "offline"  # it shows answers to the person
+    online = {"name": "x", "kind": "deps", "network": "api.example.com", "hands": "h"}
+    assert sim.facts_tags(online)[1] == "online"  # what it reaches comes first
+
+
 def test_a_topic_never_says_the_authors_own_tag_again():
     """hook-guard's author tagged it hooks; "hook" beside it would say it twice."""
     tags = sim.worked_out(sim.entries())["hook-guard"]["tags"]

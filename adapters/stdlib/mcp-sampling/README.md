@@ -5,6 +5,7 @@ source: new
 added: 2026-11-05
 writes: record
 network: none
+hands: your question and the passages served, to the model your MCP client runs
 role: suggests
 uses: openai-compatible
 -->

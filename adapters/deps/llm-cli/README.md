@@ -7,6 +7,7 @@ needs: llm and the plugin for your model; Apache-2.0
 floor: llm 0.28; the rule names 0.1, its first release (2023), but llm up to 0.27.1 has a known advisory (PYSEC-2026-400, code run by --functions, which willow never passes), so 0.28 is the first safe one
 writes: record
 network: the model its plugin reaches, to ask for suggestions
+hands: your question and the passages served, to the llm command and the model it runs
 role: suggests
 uses: openai-compatible
 -->
