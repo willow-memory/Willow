@@ -3,6 +3,7 @@ section: Ways to use it
 line: One page made from several add-ons run in the order you list them, their results grouped so the biggest come first.
 source: new
 added: 2026-10-26
+version: 0.1.0
 writes: nothing
 network: none
 role: ways

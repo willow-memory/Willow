@@ -3,6 +3,7 @@ section: Reading more kinds of files
 line: .ics events and .vcf contacts as dated lines.
 source: new
 added: 2026-10-23
+version: 0.1.0
 writes: to
 network: none
 role: reads

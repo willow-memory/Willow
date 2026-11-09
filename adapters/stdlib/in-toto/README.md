@@ -3,6 +3,7 @@ section: Trust and proof
 line: A sealed answer exported as an in-toto Statement, the envelope SLSA uses, so others can check it.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: to
 network: none
 role: makes

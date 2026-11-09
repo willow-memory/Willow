@@ -3,6 +3,7 @@ section: Assistants
 line: A persona written as a card and compiled into the same system-prompt bytes every time, with the prompt's hash on the record.
 source: box
 added: 2026-10-31
+version: 0.1.0
 writes: record
 network: none
 role: tools

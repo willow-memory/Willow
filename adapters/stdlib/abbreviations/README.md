@@ -3,6 +3,7 @@ section: Your own words
 line: Your own shorthand, written down once (appt, Rx, w/c), so a question finds either form.
 source: new
 added: 2026-10-27
+version: 0.1.0
 writes: to
 network: none
 role: words

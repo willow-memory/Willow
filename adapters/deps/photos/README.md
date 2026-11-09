@@ -3,6 +3,7 @@ section: Reading more kinds of files
 line: When and where each photo was taken, as dated lines.
 source: new
 added: 2026-10-29
+version: 0.1.0
 needs: Pillow; MIT-CMU
 floor: Pillow 11.0.0; the 2020 rule names 8.0.1, which has no wheel for Python 3.13 and won't build there, and 11.0.0 is the first release with one
 writes: to

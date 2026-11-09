@@ -143,6 +143,7 @@ goes are said from `needs` and `network`, whatever the tags say.
 |---|---|
 | `writes` | `nothing` (it only prints); `record` (it writes the record, through the kernel); `to` (it writes only where `--to` points: a mirror folder, or one file); or a file of this repo by name, such as `README.md`. Several are joined with commas. |
 | `network` | `none`; `loopback` (this machine only); or what it reaches and why, such as `api.anthropic.com, to ask for suggestions`. |
+| `version` | `MAJOR.MINOR.PATCH`: an idea is 0.0.N from 0.0.1, its first build 0.1.0, and each pull request that changes it steps it once, by the size of the change ([Releases](../CONTRIBUTING.md#releases)). `adapters/stdlib/ci/versions.py` holds the step. |
 | `hands` | Only when it gives another program something that program may send on, such as an assistant's model: what it gives, and to whom, such as `the passages served for each prompt, to Claude Code's model`. Left off when it hands nothing; never `none`. |
 
 `network` is what the add-on itself connects to, and the guard sees it.

@@ -3,6 +3,7 @@ section: Reading more kinds of files
 line: AsciiDoc documents as the text they show, line for line, markup taken off, cited by the file's own lines.
 source: new
 added: 2026-11-02
+version: 0.1.0
 writes: to
 network: none
 role: reads

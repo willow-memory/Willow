@@ -3,6 +3,7 @@ section: Reading more kinds of files
 line: reStructuredText files as plain prose, line for line, with directives, roles, links and tables read.
 source: new
 added: 2026-11-02
+version: 0.1.0
 writes: to
 network: none
 role: reads

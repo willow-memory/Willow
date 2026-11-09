@@ -3,6 +3,7 @@ section: Trust and proof
 line: A Merkle tree over the record, so one row can be proven with a handful of hashes, not the whole file.
 source: new
 added: 2026-10-27
+version: 0.1.0
 writes: to
 network: none
 role: makes

@@ -3,6 +3,7 @@ section: Reading more kinds of files
 line: Lockfiles as passages (package-lock.json, pnpm-lock.yaml, poetry.lock, uv.lock, Cargo.lock, go.sum): each package and its locked version.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: to
 network: none
 role: reads

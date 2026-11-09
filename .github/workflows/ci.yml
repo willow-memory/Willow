@@ -115,6 +115,11 @@ jobs:
           BASE: origin/${{ github.base_ref }}
           PR: ${{ github.event.number }}
         run: python adapters/stdlib/ci/changelog.py --base "$BASE" --pr "$PR"
+      # each add-on and idea it changed steps its version, once
+      # (CONTRIBUTING.md, Releases): the same base, the same pull request
+      - env:
+          BASE: origin/${{ github.base_ref }}
+        run: python adapters/stdlib/ci/versions.py check --base "$BASE"
 
   against:
     # This pull request held to the other open ones (adapters/stdlib/against):

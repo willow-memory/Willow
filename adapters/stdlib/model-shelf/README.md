@@ -3,6 +3,7 @@ section: Assistants
 line: Every model already on this machine (Ollama, LM Studio, Jan, GPT4All, the Hugging Face cache): its runtime, size, quantization and hash.
 source: new
 added: 2026-11-02
+version: 0.1.0
 writes: nothing
 network: none
 role: suggests

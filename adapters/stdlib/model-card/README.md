@@ -3,6 +3,7 @@ section: Assistants
 line: A card naming the model behind an assistant (version or weights hash, where it runs, licence, limits), on the record for each suggestion.
 source: new
 added: 2026-11-02
+version: 0.1.0
 writes: record
 network: none
 role: suggests

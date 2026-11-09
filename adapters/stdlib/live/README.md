@@ -3,6 +3,7 @@ section: For maintainers
 line: Each way-in add-on run through the real program it's for, a shell, an editor or an AI tool: works, fails, or not here.
 source: new
 added: 2026-10-24
+version: 0.1.0
 writes: nothing
 network: only what the programs it starts reach on their own; it reaches nothing itself
 role: repo

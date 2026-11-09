@@ -3,6 +3,7 @@ section: Reading more kinds of files
 line: Any Markdown file as the text it shows, line for line, with no word the file doesn't hold.
 source: new
 added: 2026-11-02
+version: 0.1.0
 writes: to
 network: none
 role: reads

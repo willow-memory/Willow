@@ -3,6 +3,7 @@ section: Finding things
 line: How hard a passage reads (sentence length, word length, Flesch), so a teacher can find texts for a class.
 source: new
 added: 2026-10-27
+version: 0.1.0
 writes: nothing
 network: none
 role: page

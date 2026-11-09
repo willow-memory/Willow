@@ -3,6 +3,7 @@ section: For maintainers
 line: A branch made ready for its pull request, on no host: the repo's own steps run in order, what they make committed, and the body written.
 source: new
 added: 2026-11-08
+version: 0.1.0
 writes: to, changes/*
 network: none
 role: repo

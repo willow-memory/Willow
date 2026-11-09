@@ -3,6 +3,7 @@ section: Finding things
 line: Your own quotes, gathered: every 'so-and-so, on this date: "..."' in your files, as a dated timeline of what was decided.
 source: new
 added: 2026-10-27
+version: 0.1.0
 writes: nothing
 network: none
 role: page

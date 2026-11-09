@@ -3,6 +3,7 @@ section: Keeping track
 line: Each animal's births, treatments and sales, from your farm records.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: nothing
 network: none
 role: page

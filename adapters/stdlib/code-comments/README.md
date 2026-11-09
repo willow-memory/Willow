@@ -3,6 +3,7 @@ section: Reading more kinds of files
 line: A codebase's comments and docstrings as passages, cited by file and line.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: to
 network: none
 role: reads

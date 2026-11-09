@@ -3,6 +3,7 @@ section: For maintainers
 line: Every open pull request that conflicts with its base, merged up to it by restack's rules and pushed, or named for a person.
 source: new
 added: 2026-11-07
+version: 0.1.0
 writes: nothing
 network: github.com, to fetch and push the open pull requests' branches
 role: repo

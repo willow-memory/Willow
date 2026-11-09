@@ -3,6 +3,7 @@ section: Keeping track
 line: The engine the logs share: your notes' dated lines read by a short spec of words, numbers and a period, so a new log is a spec, not code.
 source: new
 added: 2026-11-06
+version: 0.1.0
 writes: nothing
 network: none
 role: tools

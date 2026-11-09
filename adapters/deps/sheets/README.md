@@ -3,6 +3,7 @@ section: Reading more kinds of files
 line: Spreadsheets with formulas and formatting kept, beyond what the office add-on reads.
 source: new
 added: 2026-10-29
+version: 0.1.0
 needs: openpyxl; MIT
 floor: openpyxl 3.0.5
 writes: to

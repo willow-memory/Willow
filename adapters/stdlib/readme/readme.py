@@ -201,7 +201,11 @@ EXAMPLES = {
     "Play": ["quiz", "life"],
     "For maintainers": ["mutants", "ci"],
 }  # fmt: skip
-FIELDS = {"section", "line", "source", "writes", "network", "role"}
+FIELDS = {"section", "line", "source", "writes", "network", "role", "version"}
+#: a version, MAJOR.MINOR.PATCH (CONTRIBUTING.md, Releases): an idea is 0.0.N
+#: from 0.0.1, and its first build is 0.1.0; adapters/stdlib/ci/versions.py
+#: holds each step a pull request takes
+VERSION = re.compile(r"(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)")
 #: the part an add-on plays in a stack (the docstring says each), from the
 #: one grouping the UI and the lists share (groups.py, beside this)
 _groups_spec = importlib.util.spec_from_file_location(
@@ -243,7 +247,7 @@ NOTICE_FILE = re.compile(r"(?:NOTICE|LICEN[CS]E|COPYING)(?:[-._].*)?", re.I)
 #: field spelt wrong is never read as one left out
 KEYS = {"section", "line", "source", "writes", "network", "role", "added", "tags",
         "uses", "looks-for", "reads", "output", "needs", "floor", "programs",
-        "runs-in", "from", "hands"}  # fmt: skip
+        "runs-in", "from", "hands", "version"}  # fmt: skip
 IDEA_KEYS = (KEYS - {"added"}) | {"name", "kind"}
 HEADER = re.compile(r"\A<!-- willow-addon\n(.*?)\n-->\n", re.S)
 #: a kind of file a reader reads: .ext, or a file name it looks for
@@ -349,6 +353,13 @@ def addons() -> list[dict]:
             raise Refused(f"{where}: writes is nothing, or any of record, to, or a file of the repo: {a['writes']!r}")  # fmt: skip
         if not a["network"].strip():
             raise Refused(f"{where}: network is none, loopback, or what it reaches and why")  # fmt: skip
+        ver = VERSION.fullmatch(str(a["version"]))
+        if not ver:
+            raise Refused(f"{where}: version is MAJOR.MINOR.PATCH, such as 0.1.0: {a['version']!r}")  # fmt: skip
+        if a["built"] and ver.group(1, 2) == ("0", "0"):
+            raise Refused(f"{where}: a built add-on is 0.1.0 or later, its first build 0.1.0: {a['version']}")  # fmt: skip
+        if not a["built"] and (ver.group(1, 2) != ("0", "0") or ver.group(3) == "0"):
+            raise Refused(f"{where}: an idea is 0.0.N, from 0.0.1, until it is built: {a['version']}")  # fmt: skip
         # CONST-III-5: what leaves is stated before it leaves. network is what
         # the add-on itself connects to; hands is what it gives a program that
         # may send it on (an assistant's model), and to whom

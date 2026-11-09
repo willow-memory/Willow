@@ -3,6 +3,7 @@ section: Assistants
 line: Your frozen questions asked again of a model now and then, flagging when its answers change while its name and card stay the same.
 source: new
 added: 2026-11-02
+version: 0.1.0
 writes: nothing
 network: the endpoint you configure, to ask your questions again
 role: suggests

@@ -3,6 +3,7 @@ section: Assistants
 line: A PreCompact hook that prints what the record holds open (seals waiting, questions unanswered), so it survives the assistant's summary.
 source: box
 added: 2026-10-29
+version: 0.1.0
 writes: nothing
 network: none
 hands: the waiting suggestions' text and reasons, to the assistant's model before it summarises

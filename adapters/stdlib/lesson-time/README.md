@@ -3,6 +3,7 @@ section: Keeping track
 line: Lesson plans whose timed parts don't add up to the time the plan says it takes, each part's minutes shown beside the total.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: nothing
 network: none
 role: page

@@ -3,6 +3,7 @@ section: Assistants
 line: A card for your folder itself (what the files are, their dates, the gaps you know of), made from your files and notes, as a model's context.
 source: new
 added: 2026-11-01
+version: 0.1.0
 writes: to
 network: none
 role: makes

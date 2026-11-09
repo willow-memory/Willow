@@ -3,6 +3,7 @@ section: Finding things
 line: A quote that is almost in your files: the closest passage, and the words it adds, drops or changes, so a misquote shows as one.
 source: new
 added: 2026-10-24
+version: 0.1.0
 writes: nothing
 network: none
 role: tools

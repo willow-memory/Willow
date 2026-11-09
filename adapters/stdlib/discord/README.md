@@ -3,6 +3,7 @@ section: Reading more kinds of files
 line: Discord's data package: your messages, one dated line each, by server and channel.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: to
 network: none
 role: reads
