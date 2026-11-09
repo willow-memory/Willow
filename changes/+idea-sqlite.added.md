@@ -1,0 +1,1 @@
+`sqlite` (idea): any SQLite database read from a copy, each table a section and each row a line with its column names. Six add-ons each read one application's SQLite (bookmarks, zotero, texts, jeles, nestor, oakenscroll) and none reads the rest: a folder of working files held 42 `.db` files that `box-health` could only count as unreadable

@@ -1721,6 +1721,17 @@
   "version": "0.0.1"
  },
  {
+  "name": "sqlite",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Any SQLite database, read from a copy: each table as a section, each row a line with its column names.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "role": "reads",
+  "version": "0.0.1"
+ },
+ {
   "name": "standards",
   "kind": "stdlib",
   "section": "Finding things",
