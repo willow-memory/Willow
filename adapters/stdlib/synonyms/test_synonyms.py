@@ -176,6 +176,12 @@ def test_a_file_of_questions_is_read_each_word_once(tmp_path, made):
         got.stdout == "postponed = table, defer\ngaps = crack\n" and got.returncode == 0
     )
     assert sy.questions(q) == ["what was postponed", "what was postponed, the gaps"]
+    # only the first tab parts a name from its question
+    q.write_text("n\tpostponed\tgaps\n")
+    assert sy.questions(q) == ["postponed\tgaps"]
+    q.write_text(
+        "# a note\n\nfirst\twhat was postponed\nwhat was postponed, the gaps\n"
+    )
     missing = run(
         "--box", str(box), "--data", str(data), "--questions", str(tmp_path / "no")
     )
