@@ -648,3 +648,23 @@ def test_a_reader_is_offered_for_a_kind_its_card_says_it_reads(site):
     assert cv.readers_for(".no-such-kind") == []
     assert cv.readers_for(".txt") == []  # the kernel reads it anyway
     assert all(cv.pieces()[n]["role"] == "reads" for n in cv.readers_for(".json"))
+
+
+def test_the_browse_page_wears_the_canvas_colours():
+    """One look: the page you approve on (browse) uses the ground, card, ink
+    and accent the canvas declares, light and dark."""
+    browse = canvas.HERE.parent / "adapters" / "stdlib" / "browse" / "browse.py"
+    style = browse.read_text(encoding="utf-8").split('STYLE = """')[1].split('"""')[0]
+    root = (canvas.HERE / "page.html").read_text(encoding="utf-8")
+    light, dark = (
+        root.split(":root{")[1].split("}")[0],
+        root.split(':root[data-theme="dark"]{')[1].split("}")[0],
+    )
+    for theme in (light, dark):
+        declared = dict(
+            d.split(":", 1)
+            for d in theme.replace("\n", "").split(";")
+            if d.startswith("--") and ":" in d
+        )
+        for name in ("--bg", "--card", "--ink", "--acc", "--line", "--mute"):
+            assert declared[name] in style, (name, declared[name])
