@@ -1,4 +1,4 @@
-# Design note: Drafts 0.16 to 0.19, four of willow's own promises made law
+# Design note: Draft 0.16.0, four of willow's own promises made law
 
 **Status: built on its branch, 2026-11-06; nothing is in force.** The
 operator chose the four clauses; the clause text is written into its
@@ -42,9 +42,9 @@ The corrections to the brief's process:
   clauses in one amendment's `clauses:` header, but checks the amendment's
   text as one block, word for word in the law. These four clauses go in four
   articles, so one amendment holding them is refused. They are built as four
-  amendments, 0007 to 0010, one a clause, making Drafts 0.16 to 0.19. One
-  amendment would need the check to hold each clause's paragraph on its
-  own: a change to a check, and the operator's call.
+  amendments, 0007 to 0010, one a clause. They first made Drafts 0.16 to
+  0.19, one each; with drafts versioned ([versions](versions.md)), one pull
+  request makes one draft, so together they make 0.16.0, a minor step.
 - **Twelve beats, not thirteen.** Four clauses, four beats; no candidate
   was padded in to make five.
 - **No verdict is owed.** `constitution/declarations.json` records none

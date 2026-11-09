@@ -1,6 +1,7 @@
 # Design note: one way to version everything
 
-**Status: proposal, drafted 2026-11-09. Nothing here is built.** The
+**Status: proposal, drafted 2026-11-09. The law's numbering is built;
+add-ons and ideas are not.** The
 operator's: standard versioning across all of willow, the law, its
 amendments, every add-on and every idea, because no base is ever finished.
 However good the base, someone can add to it, and will find something to
@@ -79,12 +80,12 @@ reached 1.0; that is a person's call.
 - `CONTRIBUTING.md`: the Releases section names the rule as the one for
   everything.
 - This branch's four amendments: renumbered from Drafts 0.16 to 0.19 to one
-  Draft 0.16.0, once `constitution/amend.py` takes it.
+  Draft 0.16.0 (done).
 
 ## The order of work
 
 1. This note.
-2. The law's numbering in `constitution/amend.py`, then this branch's amendments as one
-   Draft 0.16.0.
+2. The law's numbering in `constitution/amend.py`, then this branch's
+   amendments as one Draft 0.16.0 (done).
 3. Versions for ideas and add-ons: the field, the 537 starting numbers and
    the check, as a pull request of its own.

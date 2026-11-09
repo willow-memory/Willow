@@ -13,18 +13,29 @@ correction is made here, never in a copy.
 An amendment is a pull request that carries two things: the clause, written
 into its article in `CONSTITUTION.md`, and a file in
 [amendments/](amendments/) holding the same text under a header (the draft
-it makes, the date, the pull request, the articles, the clauses, a one-line
-summary, and any earlier amendment it supersedes). Then:
+it makes, its bump, the date, the pull request, the articles, the clauses, a
+one-line summary, and any earlier amendment it supersedes). Then:
 
     python constitution/amend.py write
 
 fills in the draft number at the top of the law, the Amendment History row
-and the step in the draft lineage. CI refuses the pull request if:
+and the step in the draft lineage.
+
+**Drafts are versioned** like everything in willow
+([versions](../docs/design/versions.md)): `MAJOR.MINOR.PATCH`, and each
+amendment says its `bump`: `minor` for a new clause or one made to promise
+more, `patch` for wording that leaves the meaning alone, `major` when a
+clause no longer promises what something relied on. One pull request makes
+one draft, however many amendments it carries: those in a row with the same
+`pr` share it, stepped by the largest bump among them. The first six
+amendments here were made the old way, 0.10 to 0.15, and keep their
+numbers. CI refuses the pull request if:
 
 - the Preamble or Article 0 changed by one byte: they are fixed, and Article
   0 is beyond the reach of any amendment (VIII.3);
-- the amendment names an Article 0 clause, makes a draft that isn't the next
-  one, or its text isn't in the law word for word;
+- the amendment names an Article 0 clause, makes a draft that isn't the
+  step its pull request's largest bump makes, has no bump or one that isn't
+  major, minor or patch, or its text isn't in the law word for word;
 - the Amendment History before the first amendment here, or the lineage up
   to 0.9, was edited;
 - a clause it adds or changes isn't cited by code and by a test: an

@@ -52,10 +52,10 @@ willow/
 │   │   ├── 0004.md           IV.9, a check that cannot fail is no check: made 0.13
 │   │   ├── 0005.md           VI.7, every change carries its account: made 0.14
 │   │   ├── 0006.md           VIII.2, the emergency door on a timer: made 0.15
-│   │   ├── 0007.md           III.6, the core reaches nothing that extends it: made 0.16
-│   │   ├── 0008.md           IV.10, the same question, the same answer: made 0.17
-│   │   ├── 0009.md           V.10, a no is final: made 0.18
-│   │   └── 0010.md           VI.8, the record keeps acts, not words: made 0.19
+│   │   ├── 0007.md           III.6, the core reaches nothing that extends it: with 0008 to 0010, made 0.16.0
+│   │   ├── 0008.md           IV.10, the same question, the same answer: made 0.16.0
+│   │   ├── 0009.md           V.10, a no is final: made 0.16.0
+│   │   └── 0010.md           VI.8, the record keeps acts, not words: made 0.16.0
 │   └── README.md             what the kernel answers for, and what it doesn't claim
 ```
 
