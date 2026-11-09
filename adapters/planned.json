@@ -89,6 +89,17 @@
   "version": "0.0.1"
  },
  {
+  "name": "before-copy",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "A file beside its dated before-copy (plan.py.pre-2026-09-30, notes.md.bak) side by side: what changed since the copy was made.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "role": "tools",
+  "version": "0.0.1"
+ },
+ {
   "name": "bluesky",
   "kind": "stdlib",
   "section": "Reading more kinds of files",

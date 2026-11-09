@@ -1122,8 +1122,11 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
   A local model's weights file hashed before each run and refused when it differs from the hash on its model card. \
   Uses weights-card. *new* `no-install` `offline` `local` `weights` · near: weights-card, model-card, model-fit
 
-#### Tools you run yourself: ideas, not built yet, e to m
+#### Tools you run yourself: ideas, not built yet, b to m
 
+- <a id="before-copy"></a>**before-copy** (idea) \
+  A file beside its dated before-copy (plan.py.pre-2026-09-30, notes.md.bak) side by side: what changed since the copy was made. \
+  *new* `no-install` `offline` · near: garden, policy-watch, contradictions
 - <a id="encrypt"></a>**encrypt** (idea) \
   Keeps the record folder encrypted at rest. \
   Needs cryptography; Apache-2.0 or BSD. From: shape of [willow-memory/willow-data-vault](https://github.com/willow-memory/willow-data-vault), Apache-2.0.
