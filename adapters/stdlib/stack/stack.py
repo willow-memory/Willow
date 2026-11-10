@@ -1,6 +1,6 @@
 """stack.py: one document from a stack of add-on steps over a box. Python 3.9+.
 
-    python adapters/stdlib/stack/stack.py --box DIR --stack FILE
+    python adapters/stdlib/stack/stack.py --box DIR --stack FILE [--to FOLDER]
 
 FILE is a markdown stack: a `##` heading opens a pool, and each `- NAME -- ARGS`
 line under it is a step -- the add-on NAME run with the ARGS after the lone
@@ -19,7 +19,16 @@ printed in the report's one shape (ci/README.md, the report contract); its
 height is its rows, not its lines, and it is flagged by its exit code alone,
 since a report's 42 never means "found nothing".
 
-It only reads and composes. It runs add-ons, and each is held to its own card
+--to FOLDER keeps the run as it happens, for following while it goes and for
+reading after: `00-stack.txt` gets a line as each step starts and a line as it
+ends (its exit code, and how many lines it made), and each step's output is
+`NN-NAME.txt`, NN its place in the stack file. A step that prints as it goes
+is written as it prints; a step asked for a report is written once, when its
+report is whole. FOLDER must be there and empty: a run is one folder, and a
+second run in it would read as part of the first. Without --to nothing is
+kept but the page, as before.
+
+It only reads and composes, and with --to writes that one folder. It runs add-ons, and each is held to its own card
 by the guard, so stack writes no box, reads no key and approves nothing -- the
 one-way arrow, a box to a document. The step list is open: any add-on can be a
 step, so stack names network:none for its own run and leaves each step's reach
@@ -33,6 +42,7 @@ shown but not flagged.
 from __future__ import annotations
 
 import json
+import os
 import re
 import shlex
 import subprocess
@@ -96,17 +106,64 @@ def resolve(name: str) -> Path | None:
     return None
 
 
-def run_step(script: Path, args: list[str], box: str) -> tuple[int, str]:
+def run_step(
+    script: Path, args: list[str], box: str, live: Path | None = None
+) -> tuple[int, str]:
     """Run one step; (its exit code, the text it made). `{box}` in an arg is
     the box. stdin is inherited (not opened here): a step reads no input, and
-    opening /dev/null would itself be a write the card doesn't allow."""
+    opening /dev/null would itself be a write the card doesn't allow. With
+    `live`, what the step prints goes to that file as it prints it, so the
+    run can be followed; what it said on stderr is put there only when it
+    printed nothing, as it is for the page."""
     filled = [a.replace("{box}", box) for a in args]
-    got = subprocess.run(
-        [sys.executable, str(script), *filled],
-        capture_output=True,
-        text=True,
-    )
-    return got.returncode, (got.stdout or got.stderr).rstrip()
+    if live is None:
+        got = subprocess.run(
+            [sys.executable, str(script), *filled],
+            capture_output=True,
+            text=True,
+        )
+        return got.returncode, (got.stdout or got.stderr).rstrip()
+    # unbuffered, or a Python step's lines sit in its own buffer till it ends
+    with open(live, "w", encoding="utf-8") as f:
+        got = subprocess.run(
+            [sys.executable, str(script), *filled],
+            stdout=f,
+            stderr=subprocess.PIPE,
+            text=True,
+            env={**os.environ, "PYTHONUNBUFFERED": "1"},
+        )
+    out = live.read_text(encoding="utf-8", errors="replace")
+    if not out and got.stderr:
+        out = got.stderr
+        live.write_text(out, encoding="utf-8")
+    return got.returncode, out.rstrip()
+
+
+class Run:
+    """A run kept in a folder as it happens: a line in 00-stack.txt as each
+    step starts and ends, and each step's output in a file of its own."""
+
+    def __init__(self, folder: Path, steps: int):
+        self.folder = folder
+        self.width = max(2, len(str(steps)))
+        self.log = folder / f"{'0' * self.width}-stack.txt"
+        self.log.write_text("", encoding="utf-8")
+
+    def say(self, line: str) -> None:
+        with open(self.log, "a", encoding="utf-8") as f:
+            f.write(line + "\n")
+
+    def file(self, n: int, name: str) -> Path:
+        return self.folder / f"{n:0{self.width}d}-{name}.txt"
+
+    def start(self, n: int, name: str) -> Path:
+        self.say(f"{n:0{self.width}d} {name}: started")
+        return self.file(n, name)
+
+    def end(self, n: int, name: str, code: int, out: str, note: str) -> None:
+        lines = mass(out)
+        said = f"exit {code}, {lines} line{'s' * (lines != 1)}"
+        self.say(f"{n:0{self.width}d} {name}: {said}{', ' + note if note else ''}")
 
 
 def prints_a_report(script: Path) -> bool:
@@ -192,11 +249,16 @@ def main(argv: list[str]) -> int:
     extra: list[str] = []
     it = iter(argv)
     for a in it:
-        if a in ("--box", "--stack"):
+        if a in ("--box", "--stack", "--to"):
             opts[a] = next(it, "")
         else:
             extra.append(a)
-    if extra or not opts.get("--box") or not opts.get("--stack"):
+    if (
+        extra
+        or not opts.get("--box")
+        or not opts.get("--stack")
+        or ("--to" in opts and not opts["--to"])
+    ):
         print(__doc__.split("\n\n")[1], file=sys.stderr)
         return kernel.REFUSED
     box = Path(opts["--box"])
@@ -222,15 +284,35 @@ def main(argv: list[str]) -> int:
                     return kernel.REFUSED
                 scripts[name] = script
 
+    run = None
+    if "--to" in opts:
+        to = Path(opts["--to"])
+        if not to.is_dir():
+            print(
+                f"refused: {to} isn't a folder that's there; make it first",
+                file=sys.stderr,
+            )
+            return kernel.REFUSED
+        if any(to.iterdir()):
+            print(
+                f"refused: {to} isn't empty; a run wants a folder of its own",
+                file=sys.stderr,
+            )
+            return kernel.REFUSED
+        run = Run(to, sum(len(steps) for _, steps in pools))
+
     worst, flagged, nsteps = kernel.ALIVE, 0, 0
     ran: list = []
     for heading, steps in pools:
         done: list = []
         for idx, (name, args) in enumerate(steps):
             nsteps += 1
+            live = run.start(nsteps, name) if run else None
             if prints_a_report(scripts[name]):  # its rows decide its mass
                 code, out = run_step(scripts[name], [*args, "--json"], str(box))
                 doc, out = as_report(code, out)
+                if live is not None:  # whole, once: its JSON is nothing to follow
+                    live.write_text(out + "\n" if out else "", encoding="utf-8")
                 if doc is None:
                     is_flagged, note, size = True, f"exit {code}", mass(out)
                 else:
@@ -238,9 +320,11 @@ def main(argv: list[str]) -> int:
                     note = doc["state"] if is_flagged else ""
                     size = 1 + sum(len(g["rows"]) for g in doc["groups"])
             else:
-                code, out = run_step(scripts[name], args, str(box))
+                code, out = run_step(scripts[name], args, str(box), live)
                 is_flagged, note = step_result(name, code)
                 size = mass(out)
+            if run:
+                run.end(nsteps, name, code, out, "flagged" if is_flagged else "")
             done.append((size, idx, name, args, code, out, note))
             if is_flagged:
                 flagged += 1
@@ -252,6 +336,8 @@ def main(argv: list[str]) -> int:
     doc = compose(ran, str(box))
     print(doc, end="")
     print(f"\n{flagged} of {nsteps} steps flagged (exit 42).")
+    if run:
+        run.say(f"done: {flagged} of {nsteps} steps flagged")
     return worst
 
 

@@ -15,6 +15,7 @@ from __future__ import annotations
 import shutil
 import subprocess
 import sys
+import time
 from pathlib import Path
 
 import pytest
@@ -252,3 +253,147 @@ def test_a_report_add_ons_step_that_prints_no_report_runs_as_written(tmp_path):
         str(a_stack(tmp_path, '## p\n- twoverbs -- ask --box {box} "q"\n')),
     )
     assert "(exit 2)" not in got.stdout and "asked" in got.stdout, got.stdout
+
+
+# ── a run kept in a folder, to follow as it goes ─────────────────────────────
+THREE = "## a\n- heavy -- --box {box}\n- light -- --box {box}\n## b\n- amounts -- --box {box}\n"
+
+
+def test_a_run_is_kept_step_by_step_and_the_page_is_the_same(tmp_path):
+    box = a_box(tmp_path)
+    stack = a_stack(tmp_path, THREE)
+    plain = run("--box", str(box), "--stack", str(stack))
+    to = tmp_path / "run"
+    to.mkdir()
+    before = snapshot(box)
+    got = run("--box", str(box), "--stack", str(stack), "--to", str(to))
+    assert (got.returncode, got.stdout, got.stderr) == (
+        plain.returncode,
+        plain.stdout,
+        plain.stderr,
+    )
+    assert snapshot(box) == before, "the box is only read"
+    assert sorted(p.name for p in to.iterdir()) == [
+        "00-stack.txt", "01-heavy.txt", "02-light.txt", "03-amounts.txt",
+    ]  # fmt: skip
+    assert (to / "00-stack.txt").read_text() == (
+        "01 heavy: started\n01 heavy: exit 0, 5 lines\n"
+        "02 light: started\n02 light: exit 0, 1 line\n"
+        "03 amounts: started\n03 amounts: exit 42, 0 lines\n"
+        "done: 0 of 3 steps flagged\n"
+    )
+    heavy = (to / "01-heavy.txt").read_text()
+    assert heavy.count("\n") == 5 and heavy.startswith("heavy line 1, over a box of")
+    assert (to / "02-light.txt").read_text().count("\n") == 1
+    assert (to / "03-amounts.txt").read_text() == ""
+
+
+def test_a_step_that_only_complains_keeps_its_complaint_and_is_flagged(tmp_path):
+    box = a_box(tmp_path)
+    to = tmp_path / "run"
+    to.mkdir()
+    got = run("--box", str(box), "--stack", str(a_stack(tmp_path, "## a\n- heavy -- --nope\n")), "--to", str(to))  # fmt: skip
+    assert got.returncode == 42 and "refused: not a kernel box" in got.stdout
+    assert (to / "01-heavy.txt").read_text() == "refused: not a kernel box\n"
+    assert (to / "00-stack.txt").read_text() == (
+        "01 heavy: started\n01 heavy: exit 2, 1 line, flagged\ndone: 1 of 1 steps flagged\n"
+    )
+
+
+def test_a_step_is_written_as_it_prints_not_when_it_ends(tmp_path):
+    folder = STACK.parents[1] / "slow"
+    folder.mkdir()
+    (folder / "slow.py").write_text(
+        "import sys, time\nif __name__ == '__main__':\n    print('first')\n"
+        "    time.sleep(float(sys.argv[1]))\n    print('second')\n"
+    )
+    box = a_box(tmp_path)
+    to = tmp_path / "run"
+    to.mkdir()
+    stack = a_stack(tmp_path, "## a\n- slow -- 4\n")
+    p = subprocess.Popen(
+        [sys.executable, str(STACK), "--box", str(box), "--stack", str(stack), "--to", str(to)],
+        stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+    )  # fmt: skip
+    seen_early = False
+    for _ in range(30):  # three seconds; the step itself takes four
+        time.sleep(0.1)
+        step = to / "01-slow.txt"
+        if step.is_file() and step.read_text() == "first\n":
+            seen_early = p.poll() is None
+            break
+    out, _ = p.communicate(timeout=30)
+    assert seen_early, "the first line was there to follow while the step still ran"
+    assert (to / "00-stack.txt").read_text().startswith("01 slow: started\n")
+    assert (to / "01-slow.txt").read_text() == "first\nsecond\n" and "second" in out
+
+
+def test_a_report_step_is_kept_as_its_report_not_its_json(tmp_path):
+    folder = STACK.parents[1] / "rep"
+    folder.mkdir()
+    (folder / "README.md").write_text("<!-- willow-addon\noutput: report\n-->\n")
+    (folder / "rep.py").write_text(
+        "import json, sys\n"
+        "doc = {'addon': 'rep', 'state': 'populated', 'said': '1 thing', 'groups': "
+        "[{'name': None, 'rows': [{'where': 'a.txt:1', 'what': 'the thing'}]}]}\n"
+        "if __name__ == '__main__':\n"
+        "    print(json.dumps(doc) if '--json' in sys.argv else 'not asked for json')\n"
+    )
+    box = a_box(tmp_path)
+    to = tmp_path / "run"
+    to.mkdir()
+    got = run("--box", str(box), "--stack", str(a_stack(tmp_path, "## a\n- rep -- --box {box}\n")), "--to", str(to))  # fmt: skip
+    assert got.returncode == 0, got.stdout + got.stderr
+    kept = (to / "01-rep.txt").read_text()
+    assert (
+        kept.startswith("rep: populated, 1 thing\n")
+        and "a.txt:1" in kept
+        and "{" not in kept
+    )
+    assert "01 rep: exit 0, 2 lines\n" in (to / "00-stack.txt").read_text()
+
+
+def test_a_run_wants_a_folder_of_its_own_that_is_there(tmp_path):
+    box = a_box(tmp_path)
+    stack = a_stack(tmp_path, THREE)
+    missing = tmp_path / "nowhere"
+    got = run("--box", str(box), "--stack", str(stack), "--to", str(missing))
+    assert (
+        got.returncode == 2 and f"{missing} isn't a folder that's there" in got.stderr
+    )
+    assert not missing.exists() and got.stdout == "", (
+        "it makes no folder and runs no step"
+    )
+    full = tmp_path / "full"
+    full.mkdir()
+    (full / "yours.txt").write_text("keep me")
+    got = run("--box", str(box), "--stack", str(stack), "--to", str(full))
+    assert (
+        got.returncode == 2 and f"{full} isn't empty" in got.stderr and got.stdout == ""
+    )
+    assert snapshot(full) == {"yours.txt": b"keep me"}
+    got = run("--box", str(box), "--stack", str(stack), "--to")
+    assert got.returncode == 2 and "stack.py" in got.stderr
+    a_file = tmp_path / "a-file"
+    a_file.write_text("x")
+    got = run("--box", str(box), "--stack", str(stack), "--to", str(a_file))
+    assert got.returncode == 2 and "isn't a folder" in got.stderr
+
+
+def test_step_files_sort_in_the_order_they_ran_however_many(tmp_path, monkeypatch):
+    # in this process, so the guard reads --to from here as it would from a run
+    monkeypatch.setattr(sys, "argv", ["stack.py", "--to", str(tmp_path)])
+    few = st.Run(tmp_path, 3)
+    assert few.file(2, "todo").name == "02-todo.txt" and few.log.name == "00-stack.txt"
+    many = tmp_path / "many"
+    many.mkdir()
+    lots = st.Run(many, 120)
+    assert (
+        lots.file(7, "todo").name == "007-todo.txt" and lots.log.name == "000-stack.txt"
+    )
+    lots.end(7, "todo", 0, "a\n\nb", "")
+    lots.end(8, "x", 42, "", "flagged")
+    assert (
+        lots.log.read_text()
+        == "007 todo: exit 0, 2 lines\n008 x: exit 42, 0 lines, flagged\n"
+    )
