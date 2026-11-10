@@ -167,14 +167,14 @@
   "version": "0.0.1"
  },
  {
-  "name": "chat-dataset",
+  "name": "chain-check",
   "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Chat fine-tuning and evaluation sets in JSONL ({\"messages\": [...]}) as numbered turns, one example after another.",
+  "section": "Trust and proof",
+  "line": "A hash-chained JSONL log that isn't willow's own record, checked link by link: where its chain holds, and the first row where it breaks.",
   "source": "new",
-  "writes": "to",
+  "writes": "nothing",
   "network": "none",
-  "role": "reads",
+  "role": "tools",
   "version": "0.0.1"
  },
  {
@@ -1732,6 +1732,17 @@
   "version": "0.0.1"
  },
  {
+  "name": "sqlite",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Any SQLite database, read from a copy: each table as a section, each row a line with its column names.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "role": "reads",
+  "version": "0.0.1"
+ },
+ {
   "name": "standards",
   "kind": "stdlib",
   "section": "Finding things",
@@ -2107,6 +2118,17 @@
   "kind": "stdlib",
   "section": "Reading more kinds of files",
   "line": "WriteFreely posts, from its export or a copy of its SQLite database, as dated text.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "role": "reads",
+  "version": "0.0.1"
+ },
+ {
+  "name": "chat-dataset",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Chat fine-tuning and evaluation sets in JSONL ({\"messages\": [...]}) as numbered turns, one example after another.",
   "source": "new",
   "writes": "to",
   "network": "none",

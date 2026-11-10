@@ -490,6 +490,9 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - <a id="signal"></a>**signal** (idea) \
   A Signal backup, decrypted with its passphrase, as one dated line per message. \
   Needs cryptography; Apache-2.0 or BSD. *new* `needs-install` `offline` `message` `backup` · near: texts, teams, chats
+- <a id="sqlite"></a>**sqlite** (idea) \
+  Any SQLite database, read from a copy: each table as a section, each row a line with its column names. \
+  *new* `no-install` `offline` `copy` `sqlite` · near: writefreely, apple-notes, codebase-memory
 - <a id="steam"></a>**steam** (idea) \
   Your Steam library from its local files: games, playtime and when you last played. \
   *new* `no-install` `offline` `game` `library` · near: life, game-master, music-library
@@ -1125,8 +1128,11 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
   A local model's weights file hashed before each run and refused when it differs from the hash on its model card. \
   Uses weights-card. *new* `no-install` `offline` `local` `weights` · near: weights-card, model-card, model-fit
 
-#### Tools you run yourself: ideas, not built yet, e to m
+#### Tools you run yourself: ideas, not built yet, c to m
 
+- <a id="chain-check"></a>**chain-check** (idea) \
+  A hash-chained JSONL log that isn't willow's own record, checked link by link: where its chain holds, and the first row where it breaks. \
+  *new* `no-install` `offline` `rows` `chain` · near: merkle, sync, diverge
 - <a id="encrypt"></a>**encrypt** (idea) \
   Keeps the record folder encrypted at rest. \
   Needs cryptography; Apache-2.0 or BSD. From: shape of [willow-memory/willow-data-vault](https://github.com/willow-memory/willow-data-vault), Apache-2.0.

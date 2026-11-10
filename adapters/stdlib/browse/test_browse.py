@@ -322,3 +322,174 @@ def test_a_suggestion_you_declined_no_longer_waits(site, tmp_path):
     assert k("decline", "--box", str(b), subject, *NOW).returncode == 0
     site.start()
     assert "Nothing is waiting for your approval." in site.req("GET", "/waiting")[1]
+
+
+# ── a card a person can read ─────────────────────────────────────────────────
+CHOICE = {
+    "card": {
+        "line": "Commit messages as a dated pile.",
+        "name": "git-history",
+        "sha256": "d3" * 32,
+    },
+    "chose": "git-history",
+    "decision_type": "willow-repos",
+    "over": ["code-comments", "codebase-memory"],
+    "why": "it is the only one with dates",
+    "word": "repos",
+}
+STACK = "# read my repos\n\n## for “read my repos”\n- git-history -- mirror --from {box} --to {tmp}/gh\n- export -- --box {box}\n"
+
+
+def prop(data: str, claim: str = "the claim") -> dict:
+    return {"path": "p.md", "data": data, "cites": [], "claim": claim}
+
+
+def test_rich_escapes_first_then_marks_bold_lists_and_headings():
+    got = br.rich(
+        "# A <b>title</b>\n**bold** and <i>not</i>\nsame line\n\n- one\n- two & more\nafter"
+    )
+    assert got == (
+        "<p class=said><strong>A &lt;b&gt;title&lt;/b&gt;</strong></p>"
+        "<p class=said><strong>bold</strong> and &lt;i&gt;not&lt;/i&gt; same line</p>"
+        "<ul><li>one</li><li>two &amp; more</li></ul>"
+        "<p class=said>after</p>"
+    )
+    assert br.rich("") == ""
+    assert br.rich("text\n- item") == "<p class=said>text</p><ul><li>item</li></ul>"
+    assert br.rich("a ** b") == "<p class=said>a ** b</p>"
+
+
+def test_names_are_listed_as_a_person_lists_them():
+    assert br.listed([]) == ""
+    assert br.listed(["a"]) == "a"
+    assert br.listed(["a", "b"]) == "a or b"
+    assert br.listed(["a", "b", 3]) == "a, b or 3"
+
+
+def test_a_choice_reads_as_a_sentence_with_its_own_reason():
+    kind, head, body, why = br.reading(prop(json.dumps(CHOICE)))
+    assert kind == "choice"
+    assert head == "For “repos”, use git-history"
+    assert body == (
+        "<p>Not code-comments or codebase-memory.</p>"
+        "<p class=muted>git-history: Commit messages as a dated pile.</p>"
+    )
+    assert why == "it is the only one with dates"
+    bare = {"chose": "<a>", "word": "<w>", "over": []}
+    assert br.reading(prop(json.dumps(bare), "its <claim>")) == (
+        "choice",
+        "For “&lt;w&gt;”, use &lt;a&gt;",
+        "",
+        "its &lt;claim&gt;",
+    )
+    assert br.reading(prop(json.dumps({**bare, "why": ""}), "c"))[3] == "c"
+    assert br.reading(prop(json.dumps({**bare, "card": {"line": 3}})))[2] == ""
+
+
+def test_only_the_shape_of_a_choice_is_read_as_one():
+    for not_one in (
+        ["chose"],
+        {"chose": "a", "word": "w"},
+        {"chose": "a", "over": []},
+        {"word": "w", "over": []},
+        {"chose": 1, "word": "w", "over": []},
+        {"chose": "a", "word": 2, "over": []},
+        {"chose": "a", "word": "w", "over": "b"},
+    ):
+        kind, head, body, _ = br.reading(prop(json.dumps(not_one)))
+        assert (kind, head) == ("answer", "") and body.startswith("<p class=said>")
+
+
+def test_a_stack_reads_as_its_title_and_steps():
+    kind, head, body, why = br.reading(prop("\n" + STACK, "a <stack>"))
+    assert (kind, head, why) == ("stack", "read my repos", "a &lt;stack&gt;")
+    assert body == (
+        "<ul><li>git-history -- mirror --from {box} --to {tmp}/gh</li>"
+        "<li>export -- --box {box}</li></ul>"
+    )
+    assert br.reading(prop("# a title\n- no steps here"))[0] == "answer"
+    assert br.reading(prop("- step -- --box {box}"))[0] == "answer"
+
+
+def test_the_waiting_page_says_each_suggestion_in_words(site, tmp_path):
+    b = site.willow.box
+    rows = [
+        {
+            "path": "forge/decisions/willow-repos.json",
+            "data": json.dumps(CHOICE),
+            "cites": [],
+            "claim": "for repos",
+        },
+        {"path": "forge/stack.md", "data": STACK, "cites": [], "claim": "a stack"},
+    ]
+    served = json.loads(k("bite", "--box", str(b), *NOW, "when is the dentist").stdout)[
+        "served"
+    ]
+    rows.append(
+        {
+            "path": "dentist.md",
+            "data": "**Tuesday** at 3pm",
+            "cites": [served[0]["id"]],
+            "claim": "the note",
+        }
+    )
+    (tmp_path / "s.jsonl").write_text("".join(json.dumps(r) + "\n" for r in rows))
+    assert (
+        k(
+            "propose", "--box", str(b), "--file", str(tmp_path / "s.jsonl"), *NOW
+        ).returncode
+        == 42
+    )
+    site.start()
+    text = site.req("GET", "/waiting")[1]
+    assert "<strong>3 waiting.</strong>" in text
+    one, two, three = text.split("<div class=card><p class=kick>")[1:]
+    assert one.startswith(
+        "A suggested choice <span class=pill>forge/decisions/willow-repos.json</span>"
+    )
+    assert "<h2>For “repos”, use git-history</h2>" in one
+    assert "It cites nothing from your folder." in one and "It cites 0" not in one
+    assert "<button>Approve this choice</button>" in one
+    # what the seal signs is still there to read, escaped and folded away
+    assert "Exactly what you'd be approving</summary><pre>{&quot;card&quot;" in one
+    assert "proposal:" in one.split("</pre>")[1].split("</details>")[0]
+    assert (
+        "<h2>read my repos</h2>" in two and "<button>Approve this stack</button>" in two
+    )
+    assert "<h2>" not in three and "<strong>Tuesday</strong> at 3pm" in three
+    assert "<summary>It cites 1 passage of your folder</summary>" in three
+    assert "dentist.txt:1" in three and "<button>Approve this answer</button>" in three
+    subject = two.split('name=subject value="')[1].split('"')[0]
+    assert "Approved" in site.post("/approve", subject=subject)[1]
+    assert "<strong>2 waiting.</strong>" in site.req("GET", "/waiting")[1]
+
+
+def test_an_approved_answer_is_shown_in_words_with_its_name(site, tmp_path):
+    b = site.willow.box
+    served = json.loads(k("bite", "--box", str(b), *NOW, "when is the dentist").stdout)[
+        "served"
+    ]
+    row = {
+        "path": "d.md",
+        "data": "**Tuesday** <at> 3pm",
+        "cites": [served[0]["id"]],
+        "claim": "c",
+    }
+    (tmp_path / "s.jsonl").write_text(json.dumps(row) + "\n")
+    k("propose", "--box", str(b), "--file", str(tmp_path / "s.jsonl"), *NOW)
+    site.start()
+    waiting = site.req("GET", "/waiting")[1]
+    assert "<strong>1 waiting.</strong>" in waiting
+    subject = waiting.split('name=subject value="')[1].split('"')[0]
+    site.post("/approve", subject=subject)
+    text = site.post("/ask", q="when is the dentist")[1]
+    assert (
+        "<div class=card><p class=said><strong>Tuesday</strong> &lt;at&gt; 3pm</p>"
+        f"<p class=where>{subject}</p></div>"
+    ) in text
+
+
+def test_the_page_wears_the_canvas_colours():
+    """The canvas is the main page; ui/test_ui.py holds these to its own."""
+    for colour in ("#eceee7", "#f8f9f5", "#23251f", "#45652a", "#141712", "#a6c56f"):
+        assert colour in br.STYLE

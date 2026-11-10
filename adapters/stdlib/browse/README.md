@@ -3,7 +3,7 @@ section: Ways to use it
 line: Your folder in your web browser: ask, read each answer at its file and line, and approve suggestions with a click, from this machine only.
 source: new
 added: 2026-10-24
-version: 0.1.0
+version: 0.2.0
 writes: record
 network: loopback
 role: ways
@@ -37,6 +37,29 @@ and approving is its `seal`, run in this process. Both are on the record
 exactly as if you'd typed them. An approval is signed with your key, which
 the page never shows or sends anywhere.
 
+**How a suggestion is shown.** Each waiting suggestion is a card you can
+read without knowing how it was made: what kind of thing it is, the thing in
+a sentence, why, and what it stands on.
+
+- **A choice** (a JSON object saying which was chosen for one of your words,
+  and over what) reads "For “repos”, use git-history", then what it was
+  chosen over, that add-on's own line, and the reason given.
+- **A stack** (a file of `- NAME -- ARGS` steps under a heading) reads as
+  its title and its steps, one a line.
+- **An answer** is its words, with `# ` lines as headings, `- ` lines as a
+  list and `**bold**` as bold. Every character is escaped first, so a
+  suggestion can never write markup of its own.
+
+Which it is, is told by the shape of what the suggestion holds, never by who
+made it. The passages it cites are folded under "It cites N passages of your
+folder", and one that cites none says so. "Exactly what you'd be approving"
+unfolds the suggestion's own bytes and its name on the record, since those,
+not the sentence above them, are what your key signs. The button says what
+it approves: this choice, this stack, this answer.
+
+The page wears the colours, type and corners of [the canvas](../../../ui/),
+willow's main page, and `ui/test_ui.py` holds the two together.
+
 **Who can reach it:**
 
 | Way in | What stops it |
@@ -55,9 +78,9 @@ read, approve and ask-again worked. That run also caught a bug the tests
 couldn't: under `Referrer-Policy: no-referrer`, Chromium sends `Origin: null`
 on the page's own forms, so they were refused. It's `same-origin` now.
 
-**What it leaves out:** turning a suggestion down (the kernel has no verb
-for that yet: it just keeps waiting), and words in the page in a language
-other than English.
+**What it leaves out:** turning a suggestion down (the kernel's `decline`
+does it, from a terminal; the page has no button for it, so there it just
+keeps waiting), and words in the page in a language other than English.
 
 **Uses:** the kernel's `bite`, `seal`, `read`, `sealed` and `chunks`; the
 [digest](../digest/) add-on for the front page, and a
