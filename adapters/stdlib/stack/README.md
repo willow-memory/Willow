@@ -72,7 +72,8 @@ nothing and complained is kept as its complaint, and the line that ends it
 says `flagged`. The last line is `done: N of M steps flagged`.
 
 A step that printed a report has it kept twice: as words, in its file, and
-as data, under `reports/` with the same name and `.json`, so a page can draw
+as data, in a `reports` folder inside the run's, under the same name ending
+in json, so a page can draw
 it without running the step again ([browse](../browse/)'s `--run`). It is in
 a folder of its own so that what follows the run reads words only. A step
 run again that prints no report this time has its old data taken away.
