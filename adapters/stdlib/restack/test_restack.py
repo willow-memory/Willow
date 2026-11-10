@@ -163,6 +163,21 @@ def test_planned_is_refs_list_less_what_the_branch_built_plus_what_it_added():
         rs.planned(base, "{", mine)
 
 
+def test_planned_is_settled_a_to_z_as_order_holds_it():
+    """The branch's new idea goes where its name puts it, never at the end:
+    the list is kept A to Z, and ci/order.py fails one that isn't (#325)."""
+    dump = lambda xs: json.dumps(xs, indent=1)  # noqa: E731
+    base = dump([entry("apple"), entry("pear")])
+    ref = dump([entry("apple"), entry("pear"), entry("quince")])  # main added quince
+    mine = dump([entry("apple"), entry("fig"), entry("pear")])  # the branch added fig
+    names = [x["name"] for x in json.loads(rs.planned(base, ref, mine))]
+    assert names == ["apple", "fig", "pear", "quince"] == sorted(names)
+    # and a REF that was itself out of order comes back in it
+    ref = dump([entry("pear"), entry("apple")])
+    names = [x["name"] for x in json.loads(rs.planned(base, ref, mine))]
+    assert names == ["apple", "fig", "pear"]
+
+
 @pytest.mark.parametrize("argv", [[], ["--onto"], ["--onto", "main"], ["main", "x"],
                                   ["--onto", "main", "--stray"], ["--into", "main", "x"]])  # fmt: skip
 def test_a_bad_command_line_is_refused_and_names_the_script(argv):

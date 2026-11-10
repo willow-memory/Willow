@@ -31,7 +31,7 @@ branch, and it is left exactly as it was:
                              both sides: a branch that changed anything else
                              stops)
     adapters/planned.json    REF's list, less the ideas the branch built, plus
-                             any it added
+                             any it added, by name A to Z
     any other .md file       both sides' lines, REF's first, when each side
                              only added lines where the base had none (a
                              paragraph each on an add-on's card); a side
@@ -346,7 +346,8 @@ def contract_entries(base: str, ref: str, mine: str) -> str:
 
 def planned(base: str, ref: str, mine: str) -> str:
     """REF's ideas, less those the branch took off the list (built), plus those
-    it put on; in REF's order, the new ones after, as the file is written."""
+    it put on; by name, A to Z, as the file is kept and as ci/order.py holds
+    it: a new idea left at the end passes test_docs and fails test_order."""
     try:
         b, r, m = (json.loads(x) for x in (base, ref, mine))
     except ValueError as e:
@@ -355,6 +356,7 @@ def planned(base: str, ref: str, mine: str) -> str:
     gone, added = names(b) - names(m), [x for x in m if x["name"] not in names(b)]
     out = [x for x in r if x["name"] not in gone]
     out += [x for x in added if x["name"] not in names(out)]
+    out.sort(key=lambda x: x["name"])
     return json.dumps(out, indent=1, ensure_ascii=False) + "\n"
 
 

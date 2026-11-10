@@ -36,7 +36,7 @@ merge conflicts:
 | CHANGELOG.md | REF's, with each entry the branch added under `## Unreleased` moved to a fragment of its own: `changes/<N>.<kind>.md` when it ends `(#N)`, else `changes/+<branch>.<kind>.md`; one REF already holds (a branch stacked on another pull request) only leaves. This one runs whether the merge conflicted there or not; a branch that changed the file any other way stops |
 | FILES.md | REF's, then made again by ci/files.py (its cuts, groups.py's order, the branch's files), with what the branch wrote of each file only it added |
 | test_contract.py | both sides' `COMMANDS` lines, and entries either side added to `COMMANDS`, `READERS` or `PILE_EXTRA`, with imports, whole |
-| adapters/planned.json | REF's ideas, less the ones the branch built, plus any it added |
+| adapters/planned.json | REF's ideas, less the ones the branch built, plus any it added, by name A to Z as `adapters/stdlib/ci/order.py` holds the list |
 | any other Markdown file | both sides' lines, REF's first, when each side only added lines where the base had none (two paragraphs on one add-on's card), a blank line between paragraphs |
 
 These are the files every add-on's pull request touches and that main's

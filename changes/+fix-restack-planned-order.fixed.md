@@ -1,0 +1,1 @@
+`restack`: an idea a branch added is settled into `adapters/planned.json` by name, A to Z, as the list is kept; left at the end, it passed the docs test restack runs and failed the ordering test in CI
