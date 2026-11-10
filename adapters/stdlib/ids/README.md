@@ -3,8 +3,10 @@ section: Trust and proof
 line: Every file and passage given its Software Heritage ID and IPFS CID, names the rest of the world already uses.
 source: new
 added: 2026-10-27
+version: 0.1.0
 writes: nothing
 network: none
+role: page
 -->
 # ids
 

@@ -3,8 +3,11 @@ section: Reading more kinds of files
 line: KML and GeoJSON files: each place's name, note and coordinates as a passage.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: to
 network: none
+role: reads
+reads: .kml, .geojson, .gpx
 -->
 # places
 

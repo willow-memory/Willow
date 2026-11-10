@@ -3,8 +3,10 @@ section: Finding things
 line: Finds passages that use your folder's own phrases ("sourdough bread"), not just the separate words, ranked without any AI model.
 source: bot
 added: 2026-10-28
+version: 0.1.0
 writes: nothing
 network: none
+role: tools
 tags: pile
 uses: pile-store
 -->

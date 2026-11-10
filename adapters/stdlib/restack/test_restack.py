@@ -43,30 +43,67 @@ def test_changelog_never_settles_a_conflict_outside_unreleased():
         rs.changelog(text)
 
 
+BASE_LOG = (
+    "# Changelog\n\n## Unreleased\n\n### Added\n\n- old. (#1)\n\n## v0.1.0\n\n- first\n"
+)
+
+
+def test_fragments_moves_each_new_entry_named_for_its_number_or_branch():
+    mine = BASE_LOG.replace(
+        "- old. (#1)\n",
+        "- `a`, wrapped\n  over two. (#12)\n- `b`, unnumbered.\n- old. (#1)\n### Fixed\n\n- `c`, bug #3.\n",
+    )
+    got = rs.fragments(
+        BASE_LOG, BASE_LOG, mine, "feat/x", {"changes/12.added.md": "taken\n"}
+    )
+    assert got == {
+        "changes/12.added.1.md": "`a`, wrapped over two.\n",
+        "changes/+feat-x.added.md": "`b`, unnumbered.\n",
+        "changes/+feat-x.fixed.md": "`c`, bug #3.\n",
+    }
+
+
+def test_fragments_is_none_with_nothing_new_and_skips_what_ref_holds():
+    assert rs.fragments(BASE_LOG, BASE_LOG, BASE_LOG, "x", {}) is None
+    mine = BASE_LOG.replace("- old. (#1)\n", "- `held`, below. (#9)\n- old. (#1)\n")
+    # stacked on #9: its entry is REF's fragment already, so it only leaves
+    assert (
+        rs.fragments(
+            BASE_LOG, BASE_LOG, mine, "x", {"changes/9.added.md": "`held`, below.\n"}
+        )
+        == {}
+    )
+
+
+@pytest.mark.parametrize("mine", [
+    BASE_LOG.replace("- old. (#1)\n", "- new.\n- old, edited. (#1)\n"),
+    BASE_LOG.replace("### Added", "### Notes").replace("- old. (#1)\n", "- new.\n- old. (#1)\n"),
+])  # fmt: skip
+def test_fragments_stops_on_any_other_change_or_a_heading_with_no_kind(mine):
+    with pytest.raises(rs.Stop, match="CHANGELOG.md"):
+        rs.fragments(BASE_LOG, BASE_LOG, mine, "x", {})
+
+
 TREE = "│   │   ├── {n}/\n│   │   │   ├── {n}.py    it\n│   │   │   ├── test_{n}.py\n"
 CLOSE = "│   │   │   └── README.md\n"
 
 
-def test_files_tree_is_both_sides_entries_a_to_z_each_one_closed():
-    text = (TREE.format(n="gaps") + CLOSE
-            + conflict(TREE.format(n="life"), TREE.format(n="lending"))
-            + CLOSE + TREE.format(n="mail") + CLOSE)  # fmt: skip
-    got = rs.files_tree(text)
-    assert got == (TREE.format(n="gaps") + CLOSE + TREE.format(n="lending") + CLOSE
-                   + TREE.format(n="life") + CLOSE + TREE.format(n="mail") + CLOSE)  # fmt: skip
+def test_described_reads_each_path_and_its_words_from_the_nesting():
+    text = ("willow/\n├── adapters/\n│   ├── stdlib/\n" + TREE.format(n="gaps") + CLOSE
+            + "```\n\n### adapters/stdlib/: a group\n\n```\n" + TREE.format(n="mail") + CLOSE)  # fmt: skip
+    got = rs.described(text)
+    assert got["adapters/stdlib/gaps/gaps.py"] == "it"
+    assert got["adapters/stdlib/mail/test_mail.py"] == "", "a test says nothing"
+    assert "adapters/stdlib/mail/README.md" in got, "read past a cut"
 
 
-def test_files_tree_with_closed_entries_needs_no_tail():
-    text = conflict(TREE.format(n="zed") + CLOSE, TREE.format(n="again") + CLOSE)
-    assert rs.files_tree(text) == TREE.format(n="again") + CLOSE + TREE.format(n="zed") + CLOSE  # fmt: skip
-
-
-def test_files_tree_stops_when_both_sides_changed_one_entry_or_it_isnt_a_tree():
-    a = TREE.format(n="todo")
-    with pytest.raises(rs.Stop, match="both sides changed todo/"):
-        rs.files_tree(conflict(a, a.replace("it", "something else")))
-    with pytest.raises(rs.Stop, match="isn't two sets of entries"):
-        rs.files_tree(conflict("plain words\n", TREE.format(n="x")))
+def test_keep_words_puts_back_what_the_branch_wrote_at_files_pys_column():
+    text = "willow/\n├── adapters/\n│   ├── stdlib/\n" + TREE.format(n="gaps") + CLOSE
+    made = text.replace("gaps.py    it", "gaps.py")
+    got = rs.keep_words(made, {"adapters/stdlib/gaps/gaps.py": "the gaps, by hand"})
+    line = next(x for x in got.splitlines() if "gaps.py" in x and "test_" not in x)
+    assert line == "│   │   │   ├── gaps.py".ljust(30) + "the gaps, by hand"
+    assert rs.keep_words(text, {}) == text, "nothing to keep, nothing moves"
 
 
 def test_contract_keeps_both_sides_commands_lines_refs_first():
@@ -82,6 +119,30 @@ def test_contract_keeps_both_sides_commands_lines_refs_first():
 def test_a_conflict_it_cant_read_stops():
     with pytest.raises(rs.Stop, match="can't read"):
         rs.hunks("no markers here\n", lambda *a: "")
+
+
+CARD = "# ci\n\n**Every file:** files.py.\n\n**A to Z:** order.py.\n"
+
+
+def test_a_card_both_sides_added_a_paragraph_to_keeps_both_refs_first():
+    """#243 and #244 each added paragraphs to ci's card at the same place."""
+    ref = CARD.replace("\n\n**A to Z", "\n\n**Made again:** made.py.\n\n**A to Z")
+    mine = CARD.replace("\n\n**A to Z", "\n\n**Its line:** commands.py.\n\n**A to Z")
+    assert rs.added_both("README.md", CARD, ref, mine) == (
+        "# ci\n\n**Every file:** files.py.\n\n**Made again:** made.py.\n\n"
+        "**Its line:** commands.py.\n\n**A to Z:** order.py.\n"
+    )
+
+
+def test_a_list_both_sides_added_to_keeps_both_with_no_gap():
+    base = "- a\n- z\n"
+    got = rs.added_both("x.md", base, "- a\n- b\n- z\n", "- a\n- c\n- z\n")
+    assert got == "- a\n- b\n- c\n- z\n"
+
+
+def test_a_side_that_changed_a_line_the_base_had_stops():
+    with pytest.raises(rs.Stop, match="changed lines the base had"):
+        rs.added_both("x.md", "one\n", "one, said again\n", "one, said otherwise\n")
 
 
 def entry(name: str) -> dict:
@@ -100,6 +161,21 @@ def test_planned_is_refs_list_less_what_the_branch_built_plus_what_it_added():
     )
     with pytest.raises(rs.Stop, match="isn't JSON"):
         rs.planned(base, "{", mine)
+
+
+def test_planned_is_settled_a_to_z_as_order_holds_it():
+    """The branch's new idea goes where its name puts it, never at the end:
+    the list is kept A to Z, and ci/order.py fails one that isn't (#325)."""
+    dump = lambda xs: json.dumps(xs, indent=1)  # noqa: E731
+    base = dump([entry("apple"), entry("pear")])
+    ref = dump([entry("apple"), entry("pear"), entry("quince")])  # main added quince
+    mine = dump([entry("apple"), entry("fig"), entry("pear")])  # the branch added fig
+    names = [x["name"] for x in json.loads(rs.planned(base, ref, mine))]
+    assert names == ["apple", "fig", "pear", "quince"] == sorted(names)
+    # and a REF that was itself out of order comes back in it
+    ref = dump([entry("pear"), entry("apple")])
+    names = [x["name"] for x in json.loads(rs.planned(base, ref, mine))]
+    assert names == ["apple", "fig", "pear"]
 
 
 @pytest.mark.parametrize("argv", [[], ["--onto"], ["--onto", "main"], ["main", "x"],
@@ -143,16 +219,24 @@ def clone(tmp_path):
     return repo
 
 
+_DOCS_PASS: list[bool] = []
+
+
 def docs_pass(repo: Path) -> bool:
     """Whether the copy's own test_docs.py passes at main. It doesn't in the
     copy test_strip.py makes, its FILES.md naming what was stripped: there
-    nothing can move, and the tests hold restack to saying so."""
+    nothing can move, and the tests hold restack to saying so. Every clone's
+    main is the same files, so it is asked once a run, not once a test (50 s
+    each; three tests asked it, and restack's mutants timed out at 600 s)."""
+    if _DOCS_PASS:
+        return _DOCS_PASS[0]
     work = repo.parent / "main-docs"
     git(repo, "worktree", "add", "-q", "--detach", str(work), "main")
     got = subprocess.run([sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider",
                           "test_docs.py"], cwd=work, capture_output=True)  # fmt: skip
     git(repo, "worktree", "remove", "--force", str(work))
-    return got.returncode == 0
+    _DOCS_PASS.append(got.returncode == 0)
+    return _DOCS_PASS[0]
 
 
 def run(repo: Path, *argv: str) -> subprocess.CompletedProcess:
@@ -171,14 +255,19 @@ def test_a_branch_is_put_on_top_with_its_changelog_settled_and_nothing_else_touc
         assert git(clone, "rev-parse", "work") == old, "nothing moves unchecked"
         return
     assert got.returncode == 0, got.stdout + got.stderr
-    assert "settled CHANGELOG.md" in got.stdout
+    assert "CHANGELOG.md, 1 new entry moved to changes/" in got.stdout
     assert "  push: git push origin work" in got.stdout
     assert git(clone, "merge-base", "--is-ancestor", "main", "work") == ""
     # merged, not rewritten: the branch's old commit is still under it
     assert git(clone, "log", "-1", "--format=%s", "work") == "Merge main into work"
     assert git(clone, "merge-base", "--is-ancestor", old, "work") == ""
-    text = git(clone, "show", "work:CHANGELOG.md")
-    assert "- `work`, from the branch.\n- `mainline`, from main. (#99)\n" in text + "\n"
+    # the branch's entry is a fragment now, and CHANGELOG.md is main's
+    assert git(clone, "show", "work:CHANGELOG.md") == git(
+        clone, "show", "main:CHANGELOG.md"
+    )
+    assert (
+        git(clone, "show", "work:changes/+work.added.md") == "`work`, from the branch."
+    )
     assert git(clone, "worktree", "list").count("\n") == 0, (
         "its scratch worktree is gone"
     )
@@ -196,7 +285,7 @@ def test_a_conflict_with_no_rule_stops_it_and_leaves_the_branch_as_it_was(clone)
     got = run(clone, "--onto", "main", "work")
     assert got.returncode == 2
     assert (
-        "work: stopped, left as it was: a conflict with no rule, in LIMITS.md"
+        "work: stopped, left as it was: LIMITS.md: a side changed lines the base had"
         in got.stdout
     )
     assert git(clone, "rev-parse", "work") == old
@@ -409,3 +498,112 @@ def test_a_reader_branch_that_changed_more_than_it_added_stops_untouched(clone, 
     assert "work: stopped, left as it was: test_contract.py: the branch changes" in got.stdout  # fmt: skip
     assert git(clone, "rev-parse", "work") == old
     assert git(clone, "worktree", "list").count("\n") == 0
+
+
+# ── everything the repo makes, from the repo's one list ──────────────────────
+def test_the_makers_are_read_from_the_trees_own_list_less_what_may_go_online(tmp_path):
+    assert rs.makers(tmp_path) == [], "a tree with no list has none"
+    ci = tmp_path / "adapters" / "stdlib" / "ci"
+    ci.mkdir(parents=True)
+    (ci / "made.py").write_text(
+        'X = 1\nMADE = (\n    ("one", "a/one.py"),\n'
+        f'    ("dates", "{rs.ONLINE[0]}"),\n    ("two", "b/two.py"),\n)\n'
+    )
+    assert rs.makers(tmp_path) == ["a/one.py", "b/two.py"]
+    for unreadable in (
+        "MADE = (",
+        "OTHER = ()\n",
+        "MADE = (1, 2)\n",
+        "MADE = made()\n",
+    ):
+        (ci / "made.py").write_text(unreadable)
+        assert rs.makers(tmp_path) == [], unreadable
+    # and the real one names the lists kept A to Z, which restack's own short
+    # list never did: the gap that sent #325 red
+    real = rs.makers(ROOT)
+    assert "adapters/stdlib/ci/order.py" in real and rs.ONLINE[0] not in real
+    assert set(rs.MADE.values()) <= set(real)
+
+
+def test_stale_asks_only_the_listed_scripts_it_did_not_run(tmp_path):
+    assert rs.stale(tmp_path) is None, "no list, nothing asked"
+    ci = tmp_path / "adapters" / "stdlib" / "ci"
+    ci.mkdir(parents=True)
+    online = tmp_path / rs.ONLINE[0]
+    # a script it ran is never asked, even one whose check would fail
+    (tmp_path / "ran.py").write_text("import sys\nsys.exit(1)\n")
+    (ci / "made.py").write_text(
+        f'MADE = (("ran", "ran.py"), ("dates", "{rs.ONLINE[0]}"))\n'
+    )
+    online.write_text(
+        "import sys\nassert sys.argv[1:] == ['check']\nprint('all current')\n"
+    )
+    assert rs.stale(tmp_path) is None
+    online.write_text(
+        "import sys\nprint('first line')\nprint('a pin has no date', file=sys.stderr)\nsys.exit(1)\n"
+    )
+    assert rs.stale(tmp_path) == f"{rs.ONLINE[0]} check: a pin has no date"
+    online.write_text("import sys\nsys.exit(3)\n")
+    assert rs.stale(tmp_path) == f"{rs.ONLINE[0]} check: no output"
+    (ci / "made.py").write_text('MADE = (("ran", "ran.py"),)\n')
+    assert rs.stale(tmp_path) is None, "off the list, not asked"
+    assert rs.listed(tmp_path) == ["ran.py"] == rs.makers(tmp_path)
+
+
+def on_main(repo: Path, edit, message: str) -> None:
+    git(repo, "checkout", "-q", "main")
+    edit()
+    git(repo, "add", "-A")
+    git(repo, "commit", "-q", "-m", message)
+    git(repo, "checkout", "-q", "--detach")
+
+
+def test_a_list_main_left_out_of_order_is_put_right_on_the_branch(clone):
+    """order.py is on the repo's list and was never on restack's: a branch
+    restacked onto such a main passed test_docs and failed test_order in CI."""
+    planned = clone / "adapters" / "planned.json"
+
+    def edit():
+        ideas = json.loads(planned.read_text(encoding="utf-8"))
+        ideas.append(
+            {
+                **ideas[0],
+                "name": "aaa-out-of-order",
+                "line": "An idea put at the end, for restack's test.",
+            }
+        )
+        planned.write_text(
+            json.dumps(ideas, indent=1, ensure_ascii=False) + "\n", encoding="utf-8"
+        )
+
+    on_main(clone, edit, "an idea at the end of the list")
+    old = git(clone, "rev-parse", "work")
+    got = run(clone, "--onto", "main", "work")
+    if not docs_pass(clone):
+        assert got.returncode == 2 and git(clone, "rev-parse", "work") == old
+        return
+    assert got.returncode == 0, got.stdout + got.stderr
+    assert "the made files, made again" in got.stdout
+    names = [
+        e["name"] for e in json.loads(git(clone, "show", "work:adapters/planned.json"))
+    ]
+    assert names == sorted(names) and "aaa-out-of-order" in names
+
+
+def test_a_made_file_left_stale_stops_it_and_the_branch_is_not_moved(clone):
+    dates = clone / rs.ONLINE[0]
+    stub = "import sys\nif sys.argv[1:] == ['check']:\n    print('a pin has no date')\n    sys.exit(1)\n"
+    on_main(
+        clone,
+        lambda: dates.write_text(stub, encoding="utf-8"),
+        "a check that always fails",
+    )
+    old = git(clone, "rev-parse", "work")
+    got = run(clone, "--onto", "main", "work")
+    assert got.returncode == 2, got.stdout + got.stderr
+    assert git(clone, "rev-parse", "work") == old, "nothing moves unchecked"
+    if docs_pass(clone):
+        assert (
+            f"a file the repo makes is stale ({rs.ONLINE[0]} check: a pin has no date); not moved"
+            in got.stdout
+        )

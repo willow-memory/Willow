@@ -3,8 +3,10 @@ section: Keeping track
 line: Who owes whom, from the IOUs in your notes and messages, each cited.
 source: new
 added: 2026-10-27
+version: 0.1.0
 writes: nothing
 network: none
+role: page
 uses: amounts
 -->
 # debts

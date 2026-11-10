@@ -3,8 +3,10 @@ section: Privacy and safety
 line: Your documents checked for screen-reader problems: images without descriptions, headings out of order.
 source: new
 added: 2026-10-27
+version: 0.1.0
 writes: nothing
 network: none
+role: page
 -->
 # a11y-check
 

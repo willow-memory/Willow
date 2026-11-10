@@ -3,8 +3,11 @@ section: Reading more kinds of files
 line: Google Keep from Takeout: notes, lists and labels as dated passages.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: to
 network: none
+role: reads
+reads: .json
 -->
 # google-keep
 

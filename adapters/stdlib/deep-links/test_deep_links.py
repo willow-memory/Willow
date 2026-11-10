@@ -203,7 +203,7 @@ def test_a_bad_command_line_says_how_to_run_it(tmp_path):
         assert run(*argv).returncode == 2, argv
     assert (
         run().stderr.strip()
-        == "python adapters/stdlib/deep-links/deep_links.py --box DIR [--base URL]"
+        == "python adapters/stdlib/deep-links/deep_links.py --box DIR [--base URL] [--from FOLDER]"
     )
 
 
@@ -215,3 +215,80 @@ def test_a_long_passage_is_cut_at_a_hundred_characters(tmp_path):
     got = run("--box", str(b), "tomatoes want sun")
     first = got.stdout.splitlines()[0]
     assert len(first) == 100 and first.startswith("Tomatoes want sun want sun")
+
+
+def mirrored(tmp_path: Path, places: dict | None) -> tuple[Path, Path, Path]:
+    """A folder, a reader's mirror of it (with its map, unless None) and a box
+    whose pile is the mirror."""
+    folder, mirror = tmp_path / "folder", tmp_path / "mirror"
+    (folder / "notes").mkdir(parents=True)
+    (folder / "notes" / "g.md").write_text(
+        "# Notes\n\nTomatoes want six hours of sun.\nWater them daily.\n"
+    )
+    (mirror / "notes").mkdir(parents=True)
+    (mirror / "notes" / "g.md.txt").write_text(
+        "Notes\n\nTomatoes want six hours of sun.\nWater them daily.\n"
+    )
+    if places is not None:
+        (mirror / ".places" / "notes").mkdir(parents=True)
+        doc = {"source": "notes/g.md", "places": places}
+        (mirror / ".places" / "notes" / "g.md.txt.json").write_text(json.dumps(doc))
+    b = tmp_path / "box"
+    k(
+        "init",
+        "--box",
+        str(b),
+        "--pile",
+        str(mirror),
+        "--key",
+        str(tmp_path / "key"),
+        *NOW,
+    )
+    return folder, mirror, b
+
+
+def test_a_mirror_with_a_map_says_where_and_links_to_the_original(tmp_path):
+    folder, mirror, b = mirrored(tmp_path, {"1": "line 1", "3": "line 3"})
+    got = run("--box", str(b), "how many hours of sun do tomatoes want")
+    assert got.returncode == 0, got.stderr
+    tag = "notes/g.md.txt:3 (notes/g.md, line 3)"
+    assert (
+        f"  {tag}   {(mirror / 'notes/g.md.txt').resolve().as_uri()}#line=2,4"
+        in got.stdout
+    )
+    got = run("--box", str(b), "--from", str(folder), "--base", "https://x.org/n",
+              "how many hours of sun do tomatoes want")  # fmt: skip
+    lines = got.stdout.splitlines()
+    assert (
+        lines[1] == f"  {tag}   {(folder / 'notes/g.md').resolve().as_uri()}#line=2,4"
+    )
+    assert lines[2].strip().startswith("https://x.org/n/notes/g.md#:~:text=Tomatoes")
+
+
+def test_a_range_links_to_its_lines_and_a_named_place_to_the_file(tmp_path):
+    folder, mirror, b = mirrored(tmp_path, {"1": "line 1", "3": "lines 3-4"})
+    got = run(
+        "--box", str(b), "--from", str(folder), "how many hours of sun do tomatoes want"
+    )
+    assert got.stdout.splitlines()[1].endswith("notes/g.md#line=2,4")
+    folder, mirror, b = mirrored(tmp_path / "n", {"1": "cell 1", "3": "cell 2"})
+    got = run(
+        "--box", str(b), "--from", str(folder), "how many hours of sun do tomatoes want"
+    )
+    line = got.stdout.splitlines()[1]
+    assert "(notes/g.md, cell 2)" in line and line.endswith(
+        (folder / "notes/g.md").resolve().as_uri()
+    )
+
+
+def test_a_mirror_without_a_map_is_linked_as_before_and_a_bad_from_is_refused(tmp_path):
+    folder, mirror, b = mirrored(tmp_path, None)
+    got = run(
+        "--box", str(b), "--from", str(folder), "how many hours of sun do tomatoes want"
+    )
+    assert got.stdout.splitlines()[1] == (
+        f"  notes/g.md.txt:3   {(mirror / 'notes/g.md.txt').resolve().as_uri()}#line=2,4"
+    )
+    for bad in (["--from", str(tmp_path / "none")], ["--from", ""]):
+        assert run("--box", str(b), *bad, "sun").returncode == 2, bad
+    assert dl.place_of({"path": "notes/g.md.txt", "line": 1}, mirror, {}) is None

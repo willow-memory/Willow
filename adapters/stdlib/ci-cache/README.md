@@ -3,8 +3,10 @@ section: For maintainers
 line: CI caches pip, npm, .NET and Maven downloads keyed on their lockfiles, so a run skips the installs.
 source: new
 added: 2026-10-26
+version: 0.1.0
 writes: nothing
 network: none
+role: tools
 -->
 # ci-cache
 

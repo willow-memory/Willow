@@ -26,6 +26,11 @@ the kernel's own `append`, so the record is a kernel record and the kernel's
                   machine's paths
     python        the major.minor it ran under
     why           for a gate that didn't pass: the reason, in one line
+    key           for a deps gate: the SHA-256 of what its run rests on (its
+                  folder, kernel.py, ci.py, the guard, its pins, the Python)
+    held          true when that gate wasn't run because the record that
+                  WILLOW_HELD_RECORD names (main's, on a pull request) has a
+                  satisfied verdict for it with the same key
 
 A verdict is code's record of what happened, never a seal: its kind is always
 `verdict`, it is written as `ci`, and nothing here writes a `seal` row. CI's
@@ -194,17 +199,21 @@ def breaches(log: Path) -> str | None:
     return "; ".join(lines)[:400] if lines else None
 
 
-def guarded_tests(*target: str):
+def guarded_tests(*target: str, junit: str = ""):
     """pytest over `target` under the guard: failing on a failed test, or on
-    any breach of a card's promises."""
+    any breach of a card's promises. With WILLOW_JUNIT_DIR set (CI, on main)
+    and a `junit` name, pytest's times are written there as NAME.xml, which
+    times.py makes test-times.json from."""
 
     def gate() -> tuple[str, str, str | None]:
         why = missing_module("pytest")
         if why:
             return UNREACHABLE, "", why
+        where = os.environ.get("WILLOW_JUNIT_DIR", "")
+        xml = (f"--junitxml={Path(where) / junit}.xml",) if where and junit else ()
         with tempfile.TemporaryDirectory() as tmp:
             log = Path(tmp) / "guard.log"
-            code, said = run((*PYTEST, *target), env=guarded(log))
+            code, said = run((*PYTEST, *target, *xml), env=guarded(log))
             broke = breaches(log)
         if broke:  # first: a breach is why the tests failed, if they did
             return FAILING, said, f"broke its card's promises: {broke}"
@@ -262,6 +271,49 @@ def needing(needs):
     return put
 
 
+#: a record of an earlier run (main's deps record, which ci.yml downloads on a
+#: pull request) whose satisfied deps verdicts a gate with the same key holds
+HELD = "WILLOW_HELD_RECORD"
+#: what a deps gate's run rests on beside its own folder
+DEPS_RESTS_ON = ("kernel.py", "adapters/stdlib/ci/ci.py", "adapters/stdlib/ci/guard")
+
+
+def deps_key(name: str, pins: str) -> str:
+    """The SHA-256 of what a deps gate's run rests on: every file git tracks
+    in its folder, kernel.py, ci.py and the guard, by path and bytes; which
+    pins it installs; and the Python running it. The same key is the same
+    run, but for what PyPI serves for a pin's own dependencies."""
+    listed = subprocess.run(
+        ["git", "ls-files", "-z", "--", f"adapters/deps/{name}", *DEPS_RESTS_ON],
+        cwd=ROOT, capture_output=True, text=True,
+    ).stdout  # fmt: skip
+    h = hashlib.sha256()
+    for rel in sorted(p for p in listed.split("\0") if p):
+        path = ROOT / rel
+        h.update(rel.encode() + b"\0")
+        h.update((path.read_bytes() if path.is_file() else b"") + b"\0")
+    h.update(f"{pins}\0{sys.version_info[0]}.{sys.version_info[1]}".encode())
+    return h.hexdigest()
+
+
+def held(gate: str, key: str) -> dict | None:
+    """The last satisfied verdict for `gate` with this key in the record
+    HELD names, or None: no record named, one that won't read or verify its
+    chain, or no such row. Then the gate runs."""
+    named = os.environ.get(HELD)
+    if not named or not Path(named).is_file():
+        return None
+    rows, breaks = kernel.read(Path(named))
+    if breaks:
+        return None
+    found = None
+    for r in rows:
+        if (r.get("kind") == "verdict" and r.get("who") == WHO and r.get("gate") == gate
+                and r.get("key") == key):  # fmt: skip
+            found = r if r.get("state") == SATISFIED else None
+    return found
+
+
 def deps_add_on(name: str, pins: str = "requirements.txt"):
     """A deps add-on's tests in a fresh virtual environment of its own, with
     `pins` and pytest installed there, so one add-on's packages never decide
@@ -281,6 +333,10 @@ def deps_add_on(name: str, pins: str = "requirements.txt"):
     @needing(needs)
     def gate() -> tuple[str, str, str | None]:
         here = ROOT / "adapters" / "deps" / name
+        gate_name = f"deps:{name}" + ("" if pins == "requirements.txt" else "@floor")
+        if os.environ.get(HELD) and held(gate_name, gate.key()) is not None:
+            # the same files, pins and Python passed before: said, not rerun
+            return SATISFIED, f"held: unchanged since its satisfied verdict, key {gate.key()[:12]}\n", None  # fmt: skip
         lacks = needs()
         if lacks:
             return UNREACHABLE, "", lacks
@@ -318,6 +374,7 @@ def deps_add_on(name: str, pins: str = "requirements.txt"):
             return SATISFIED, said, None
 
     gate.online = "installs its requirements from PyPI"
+    gate.key = functools.lru_cache(maxsize=None)(lambda: deps_key(name, pins))
     return gate
 
 
@@ -412,6 +469,75 @@ def floors() -> tuple[str, str, str | None]:
 floors.online = "reads each pin's release history from PyPI"
 
 
+def audit(path: Path) -> list[tuple[str, str, str, str]]:
+    """[(package, version, advisory, first fixed or "")] that pip-audit finds
+    for the pins in `path`, read as they are (--no-deps --disable-pip): the
+    pins themselves, never what they would pull in. OSError when PyPI's
+    advisory data is out of reach."""
+    got = subprocess.run(
+        [PY, "-m", "pip_audit", "-r", str(path), "--no-deps", "--disable-pip",
+         "--progress-spinner", "off", "--format", "json"],
+        capture_output=True, text=True,
+    )  # fmt: skip
+    try:
+        found = json.loads(got.stdout)
+    except ValueError:
+        raise OSError((got.stderr.strip().splitlines() or ["no answer"])[-1]) from None
+    return [
+        (dep["name"], dep.get("version", ""), vuln["id"], ", ".join(vuln.get("fix_versions") or []))
+        for dep in found.get("dependencies", [])
+        for vuln in dep.get("vulns", [])
+    ]  # fmt: skip
+
+
+@needing(lambda: missing_module("pip_audit"))
+def advisories() -> tuple[str, str, str | None]:
+    """Each deps add-on's pins against PyPI's advisories, by pip-audit: a pin
+    with one fails, since requirements.txt is what a person installs. A floor
+    with one is said, not failed: requirements-floor.txt is the oldest
+    version CI holds the add-on to, not one anyone is told to install, and
+    raising it is a change to its card's `floor:` line, with its reason.
+    PyPI out of reach is unreachable."""
+    said, wrong = [], []
+    for name in deps_add_ons():
+        here = ROOT / "adapters" / "deps" / name
+        for pins, fails in (
+            ("requirements.txt", True),
+            ("requirements-floor.txt", False),
+        ):
+            if not (here / pins).is_file():
+                continue
+            try:
+                found = audit(here / pins)
+            except OSError as exc:
+                return (
+                    UNREACHABLE,
+                    "",
+                    f"couldn't read advisories for {name}: {exc}"[:200],
+                )
+            if fails:
+                for package, version, vuln, fixed in found:
+                    line = (f"{name}: {package}=={version} in {pins} has {vuln}"
+                            + (f", fixed in {fixed}" if fixed else ", no fixed release named"))  # fmt: skip
+                    said.append(line)
+                    wrong.append(line)
+                continue
+            # a floor's are counted, one line a package: an old floor can
+            # have a hundred, and the line to change is its card's floor:
+            for package in sorted({f[0] for f in found}):
+                these = [f for f in found if f[0] == package]
+                said.append(f"{name}: {package}=={these[0][1]} floor has {len(these)} "
+                            f"advisor{'y' if len(these) == 1 else 'ies'}, said, not failed")  # fmt: skip
+    said = "\n".join(said) + "\n" if said else "no pin has a known advisory\n"
+    print(said, end="")
+    if wrong:
+        return FAILING, said, "; ".join(sorted(set(wrong)))[:400]
+    return SATISFIED, said, None
+
+
+advisories.online = "asks PyPI's advisories for each pin"
+
+
 def deps_add_ons() -> list[str]:
     return sorted(
         p.name
@@ -480,6 +606,7 @@ GATE_COST = {
     "tests:coverage": 30,
     "lint:check": 10,
     "lint:format": 10,
+    "lint:py39": 10,
 }
 DEFAULT_COST = 30
 #: TIMES was taken on a busier box than a CI runner: about this much of a
@@ -566,44 +693,67 @@ def live_checks() -> list[str]:
 
 
 #: (gate, pytest target, programs it needs) for each demo whose tests CI
-#: runs, in the one fixed order. Every test file under demo/ is under one of
-#: these targets: test_ci.py fails on one that isn't, since a test no gate
-#: runs is a test that never fails.
+#: runs, written for the ones whose gate has a name of its own or needs a
+#: program. A demo with tests and no row here gets one anyway, from
+#: demo_tests(): a test no gate runs is a test that never fails.
 DEMO_TESTS = (
-    # PHP2Shell's runs fetch PHP's source; CI holds only what they froze
-    ("demo:php2shell", "demo/php2shell", ()),
-    # the Google privacy study fetched its sources once; CI holds what it froze
-    ("demo:google-privacy-2026-10-16", "demo/google-privacy-2026-10-16", ()),
-    # Bernadette's files through every layer: readers to the trust add-ons
-    ("demo:stack", "demo/bernadette", ()),
-    # the Johnson report passed between five people's willows, with share
-    ("demo:share", "demo/johnson", ()),
-    # Teodora's whole folder against the starter words list
-    ("demo:teodora-words", "demo/teodora", ()),
     # the Craft apps taken apart and assembled: CI holds what was frozen, and
     # the tools on sources it makes, which git commits and Cargo builds
     ("demo:craft-assembly", "demo/craft-assembly", ("git", "cargo")),
-    # a frozen recon composition over a planted target; its intel is committed
-    ("demo:redteam", "demo/redteam", ()),
-    # the fleet's own known gaps asked of the code their fixes changed; the
-    # runs read the fleet's repositories, CI holds only what they froze
-    ("demo:known-gaps", "demo/known-gaps", ()),
     # five repositories through the stacks: the stacks, the words list and the
     # records are committed; the runs read the repositories, CI holds the rest
     ("demo:five-repos", "demo/five-repos", ()),
+    # the Google privacy study fetched its sources once; CI holds what it froze
+    ("demo:google-privacy-2026-10-16", "demo/google-privacy-2026-10-16", ()),
+    # the fleet's own known gaps asked of the code their fixes changed; the
+    # runs read the fleet's repositories, CI holds only what they froze
+    ("demo:known-gaps", "demo/known-gaps", ()),
     # the reusable novelty check every demo can run, over the idea pile and demos
     ("demo:novelty", "demo/test_novelty.py", ()),
     # Marisol's ofrenda: what was frozen is here, her folder made the same way
     ("demo:ofrenda-frozen", "demo/ofrenda", ()),
-    # the Stewart crossover: its freeze, and the parts that need no network
-    ("demo:stewart-crossover-frozen", "demo/stewart-crossover", ()),
+    # PHP2Shell's runs fetch PHP's source; CI holds only what they froze
+    ("demo:php2shell", "demo/php2shell", ()),
+    # a frozen recon composition over a planted target; its intel is committed
+    ("demo:redteam", "demo/redteam", ()),
+    # the Johnson report passed between five people's willows, with share
+    ("demo:share", "demo/johnson", ()),
     # the small local models' runs, read from the box built from what's committed
     ("demo:small-models", "demo/small-models", ()),
+    # Bernadette's files through every layer: readers to the trust add-ons
+    ("demo:stack", "demo/bernadette", ()),
+    # the Stewart crossover: its freeze, and the parts that need no network
+    ("demo:stewart-crossover-frozen", "demo/stewart-crossover", ()),
+    # Teodora's whole folder against the starter words list
+    ("demo:teodora-words", "demo/teodora", ()),
 )
 
 
 def people() -> list[str]:
     return sorted(p.parent.name for p in (ROOT / "demo").glob("*/make_life.py"))
+
+
+def demo_tests() -> list[tuple[str, str, tuple[str, ...]]]:
+    """DEMO_TESTS, and a row for each demo whose tests no row runs: a folder
+    is `demo:NAME`, or `demo:NAME-tests` beside a person's own gate; a test
+    file at demo/'s top is `demo:` and its name. Written by no one."""
+    rows = list(DEMO_TESTS)
+    targets = [t for _, t, _ in rows]
+
+    def run_by_none(path: Path) -> bool:
+        rel = path.relative_to(ROOT).as_posix()
+        return not any(rel == t or rel.startswith(t + "/") for t in targets)
+
+    demo_dir = ROOT / "demo"
+    for folder in sorted(p for p in demo_dir.iterdir() if p.is_dir()):
+        tests = [p for p in folder.rglob("test_*.py") if "__pycache__" not in p.parts]
+        if any(run_by_none(p) for p in tests):
+            name = folder.name + ("-tests" if folder.name in people() else "")
+            rows.append((f"demo:{name}", f"demo/{folder.name}", ()))
+    for file in sorted(demo_dir.glob("test_*.py")):
+        if run_by_none(file):
+            rows.append((f"demo:{file.stem[5:]}", f"demo/{file.name}", ()))
+    return rows
 
 
 def gates() -> list[tuple[str, str, object]]:
@@ -613,6 +763,8 @@ def gates() -> list[tuple[str, str, object]]:
                                        needs=lambda: missing_module("ruff"))),
         ("lint", "lint:format", command(PY, "-m", "ruff", "format", "--check", ".",
                                         needs=lambda: missing_module("ruff"))),
+        # what 3.10 and later added, which ruff can't see: py39.py
+        ("lint", "lint:py39", command(PY, "adapters/stdlib/ci/py39.py", "check")),
         ("tests", "tests:beats", command(PY, "kernel.py", "test")),
     ]  # fmt: skip
     pytest = lambda *target, **kw: command(  # noqa: E731
@@ -623,7 +775,13 @@ def gates() -> list[tuple[str, str, object]]:
         ("tests", "tests:docs", pytest("test_docs.py", "test_docs_fires.py")),
     ]
     for k, part in enumerate(chunks(adapter_tests(), ADAPTER_CHUNKS), 1):
-        out.append(("tests", f"tests:adapters-{k}", guarded_tests(*part)))
+        out.append(
+            (
+                "tests",
+                f"tests:adapters-{k}",
+                guarded_tests(*part, junit=f"adapters-{k}"),
+            )
+        )
     # each add-on's tests again, in a copy holding only what its card uses
     out.append(("tests", "tests:alone", command(PY, "adapters/stdlib/ci/alone.py",
                 needs=lambda: missing_module("pytest"))))  # fmt: skip
@@ -645,14 +803,17 @@ def gates() -> list[tuple[str, str, object]]:
             needs=lambda p=port: missing_tools(*TOOLS[p]), judge=port_ran(port),
         )  # fmt: skip
         out.append(("ports", f"ports:{port}", how))
-    out += [("demo", f"demo:{name}", demo(name)) for name in people()]
-    for gate, target, tools in DEMO_TESTS:
-        out.append(("demo", gate, command(*PYTEST, target, needs=lambda t=tools: (
+    # the demos A to Z, a person's folder among the rest
+    demos = [("demo", f"demo:{name}", demo(name)) for name in people()]
+    for gate, target, tools in demo_tests():
+        demos.append(("demo", gate, command(*PYTEST, target, needs=lambda t=tools: (
             missing_module("pytest") or missing_tools(*t)))))  # fmt: skip
+    out += sorted(demos, key=lambda g: g[1])
     for name in deps_add_ons():
         out.append(("deps", f"deps:{name}", deps_add_on(name)))
         out.append(("deps", f"deps:{name}@floor",
                     deps_add_on(name, "requirements-floor.txt")))  # fmt: skip
+    out.append(("deps", "deps:advisories", advisories))
     out.append(("deps", "deps:floors", floors))
     for name in mutant_targets():
         how = command(PY, "adapters/stdlib/mutants/mutants.py", "run", name,
@@ -795,6 +956,10 @@ def do_run(box: Path, chosen: list[str], ts: str) -> int:
         }
         if why:
             row["why"] = why
+        if getattr(how, "key", None):  # what its run rested on, for a later run to hold
+            row["key"] = how.key()
+            if said.startswith("held: "):
+                row["held"] = True
         skips = skipped(said)
         if skips:
             row["skipped"] = skips

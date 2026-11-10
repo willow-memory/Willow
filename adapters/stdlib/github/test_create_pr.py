@@ -21,8 +21,10 @@ spec = importlib.util.spec_from_file_location("create_pr", HERE / "create_pr.py"
 cp = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(cp)
 
+#: no waits between tries: a test isn't GitHub, and doesn't need a second
 ENV = {**os.environ, "GIT_AUTHOR_NAME": "t", "GIT_AUTHOR_EMAIL": "t@t",
-       "GIT_COMMITTER_NAME": "t", "GIT_COMMITTER_EMAIL": "t@t"}  # fmt: skip
+       "GIT_COMMITTER_NAME": "t", "GIT_COMMITTER_EMAIL": "t@t",
+       "WILLOW_CREATE_PR_WAITS": "0,0,0"}  # fmt: skip
 CHANGELOG = """# Changelog
 
 ## Unreleased
@@ -56,12 +58,20 @@ state.write_text(json.dumps(s))
 if os.environ.get("FAKE_GH_FAIL"):
     print("HTTP 403: Resource not accessible", file=sys.stderr)
     sys.exit(1)
+# a 502 on the first open: made (FAKE_GH_502=made, as GitHub did for #236) or not
+bad = os.environ.get("FAKE_GH_502") and not [c for c in s["calls"][:-1] if "POST" in c]
+if "POST" in sys.argv and bad and os.environ["FAKE_GH_502"] != "made":
+    print("gh: Server Error (HTTP 502)", file=sys.stderr)
+    sys.exit(1)
 if "POST" in sys.argv:
     sent = json.loads(Path(sys.argv[sys.argv.index("--input") + 1]).read_text())
     pr = {"number": 7, "html_url": "https://example.test/o/r/pull/7",
           "head": {"ref": sent["head"], "repo": {"full_name": "o/r"}}, "sent": sent}
     s["prs"].append(pr)
     state.write_text(json.dumps(s))
+    if bad:
+        print("gh: Server Error (HTTP 502)", file=sys.stderr)
+        sys.exit(1)
     print(json.dumps(pr))
 else:
     print(json.dumps(s["prs"]))
@@ -81,10 +91,12 @@ def card(writes: str) -> str:
 @pytest.fixture
 def repo(tmp_path):
     """The repo, on branch `work` one commit past origin's main: a code file
-    and its changelog entry. Its steps are written by each test."""
+    and its changelog fragment. Its steps are written by each test."""
     r = tmp_path / "repo"
     for rel in ("kernel.py", "adapters/stdlib/stack/stack.py", "adapters/stdlib/ci/changelog.py",
-                "adapters/stdlib/github/create_pr.py", "adapters/stdlib/github/README.md"):  # fmt: skip
+                "adapters/stdlib/github/create_pr.py", "adapters/stdlib/github/README.md",
+                "adapters/stdlib/ready/ready.py", "adapters/stdlib/ready/steps.md",
+                "adapters/stdlib/ready/README.md"):  # fmt: skip
         (r / rel).parent.mkdir(parents=True, exist_ok=True)
         shutil.copy(ROOT / rel, r / rel)
     for name, writes in (("say", "made.txt"), ("against", "nothing")):
@@ -104,8 +116,10 @@ def repo(tmp_path):
     git(r, "push", "-q", "origin", "main")
     git(r, "checkout", "-q", "-b", "work")
     (r / "thing.py").write_text("x = 1\n", encoding="utf-8")
-    log = r / "CHANGELOG.md"
-    log.write_text(log.read_text().replace("### Added\n\n", "### Added\n\n- `thing`, a new\n  thing.\n", 1))  # fmt: skip
+    (r / "changes").mkdir()
+    (r / "changes/+work.added.md").write_text(
+        "`thing`, a new thing\n", encoding="utf-8"
+    )
     git(r, "add", "-A")
     git(r, "commit", "-q", "-m", "thing: a new thing\n\nBecause it was missing.\n\nCo-Authored-By: x <x@x>")  # fmt: skip
     bin_ = tmp_path / "bin"
@@ -216,16 +230,55 @@ def test_green_steps_open_it_with_its_body_and_number_and_push_it_all(repo):
     )
     assert "It touches no add-on." in sent["body"] and "say 0 all good" in sent["body"]
     assert sent["body"].rstrip().endswith("made by a test")
-    log = at_origin(repo, "CHANGELOG.md")
-    assert (
-        "- `thing`, a new\n  thing. (#7)\n" in log
-        and "- `old`, from before. (#1)" in log
-    )
+    assert at_origin(repo, "changes/7.added.md") == "`thing`, a new thing"
+    assert at_origin(repo, "CHANGELOG.md") == CHANGELOG.strip(), "untouched"
     subjects = git(repo, "log", "--format=%s", "origin/work").splitlines()
     assert subjects[:3] == ["changelog: its number (#7)",
                             "tidy: made again by say 0 made it make=made.txt",
                             "thing: a new thing"]  # fmt: skip
     assert at_origin(repo, "made.txt") == "made"
+
+
+def test_a_fragment_not_yet_named_is_named_for_its_pull_request(repo):
+    """changes/+work.added.md, towncrier's orphan: renamed for its pull
+    request in the push that opens it, past a name already taken, with no edit
+    to CHANGELOG.md, which no other pull request then conflicts with."""
+    (repo / "changes/7.added.md").write_text("an older one\n", encoding="utf-8")
+    git(repo, "add", "-A")
+    git(repo, "commit", "-q", "-m", "thing: its entry, in a file of its own")
+    steps(repo, GREEN)
+    got = run(repo)
+    assert got.returncode == 0, got.stdout + got.stderr
+    assert "named its changelog fragment changes/7.added.1.md" in got.stdout
+    assert at_origin(repo, "changes/7.added.1.md") == "`thing`, a new thing"
+    assert at_origin(repo, "CHANGELOG.md") == CHANGELOG.strip(), (
+        "CHANGELOG.md untouched"
+    )
+    assert "+work.added.md" not in git(
+        repo, "ls-tree", "--name-only", "origin/work", "changes/"
+    )
+
+
+def test_no_entry_anywhere_stops_it_saying_where_one_goes(repo):
+    git(repo, "rm", "-q", "changes/+work.added.md")
+    git(repo, "commit", "-q", "-m", "no entry")
+    steps(repo, GREEN)
+    got = run(repo)
+    assert got.returncode == 42 and "changes/+<branch>.<kind>.md" in got.stderr
+
+
+def test_an_entry_in_changelog_md_is_not_one_and_gets_no_number(repo):
+    """CHANGELOG.md takes no new entry (changelog.py refuses one), so an
+    entry written there owes the fragment still, and is never numbered."""
+    git(repo, "rm", "-q", "changes/+work.added.md")
+    log = repo / "CHANGELOG.md"
+    log.write_text(log.read_text().replace("### Added\n\n", "### Added\n\n- `thing`.\n", 1))  # fmt: skip
+    git(repo, "commit", "-q", "-am", "an entry the old way")
+    steps(repo, GREEN)
+    got = run(repo)
+    assert got.returncode == 42 and "no changelog entry" in got.stderr
+    assert git(repo, "ls-remote", "origin", "work") == ""
+    assert "(#" not in log.read_text().split("- `thing`.")[1].split("\n")[0]
 
 
 def test_run_again_it_finds_its_pull_request_and_opens_no_second(repo):
@@ -301,14 +354,14 @@ def test_a_change_with_no_changelog_entry_stops_and_docs_alone_owe_none(repo):
     git(repo, "add", "-A")
     git(repo, "commit", "-q", "-m", "other: no entry")
     got = run(repo)
-    assert got.returncode == 42 and "no new entry under ## Unreleased" in got.stderr
+    assert got.returncode == 42 and "no changelog entry" in got.stderr
     git(repo, "checkout", "-q", "-b", "docs", "main")
     (repo / "NOTES.md").write_text("words\n")
     git(repo, "add", "-A")
     git(repo, "commit", "-q", "-m", "docs: words")
     got = run(repo)
     assert got.returncode == 0, got.stdout + got.stderr
-    assert "(#7)" not in at_origin(repo, "CHANGELOG.md", "docs")
+    assert git(repo, "ls-tree", "--name-only", "origin/docs", "changes/") == ""
 
 
 def test_origin_moved_on_is_stopped_on_never_force_pushed(repo):
@@ -351,6 +404,36 @@ def test_a_git_that_fails_is_stopped_on_with_what_git_said(repo):
     assert "nowhere.git" in got.stderr, "git's own reason, not an empty one"
 
 
+@pytest.mark.parametrize("made", ["made", "not made"])
+def test_a_502_on_opening_is_looked_past_and_never_opens_a_second(repo, made):
+    """GitHub answered #236's open with a 502 and opened it anyway: the
+    run stopped, and a rerun did every gate again to find it."""
+    steps(repo, GREEN)
+    got = run(repo, FAKE_GH_502=made)
+    assert got.returncode == 0, got.stdout + got.stderr
+    assert "HTTP 502" in got.stderr and "numbered 7" in got.stdout
+    posts = [c for c in gh_state(repo)["calls"] if "POST" in c]
+    assert len(gh_state(repo)["prs"]) == 1
+    assert len(posts) == (1 if made == "made" else 2)
+    assert ("#7 is open after all" in got.stderr) == (made == "made")
+    assert at_origin(repo, "changes/7.added.md") == "`thing`, a new thing"
+
+
+def test_a_push_github_turns_away_once_is_tried_again(repo):
+    """'fatal error in commit_refs': a push GitHub failed, that went through
+    on the next try."""
+    steps(repo, GREEN)
+    hook = repo.parent / "origin.git" / "hooks" / "pre-receive"
+    once = repo.parent / "turned-away"
+    hook.write_text(f"#!/bin/sh\n[ -e '{once}' ] && exit 0\ntouch '{once}'\n"
+                    "echo 'fatal error in commit_refs' >&2\nexit 1\n")  # fmt: skip
+    hook.chmod(0o755)
+    got = run(repo)
+    assert got.returncode == 0, got.stdout + got.stderr
+    assert "push failed" in got.stderr and "commit_refs" in got.stderr
+    assert at_origin(repo, "changes/7.added.md") == "`thing`, a new thing"
+
+
 def test_a_failed_open_keeps_the_body_and_says_the_command(repo):
     steps(repo, GREEN)
     gh = repo.parent / "bin" / "gh"
@@ -358,6 +441,7 @@ def test_a_failed_open_keeps_the_body_and_says_the_command(repo):
                   'if "POST" in sys.argv:\n    print("HTTP 422", file=sys.stderr); sys.exit(1)\nif False:'))  # fmt: skip
     got = run(repo)
     assert got.returncode == 42 and "--method POST --input" in got.stderr
+    assert "HTTP 422, after 4 tries" in got.stderr, "GitHub's own reason, kept"
     kept = Path(re.search(r"the pull request is in (\S+):", got.stderr).group(1))
     assert json.loads(kept.read_text())["head"] == "work"
     shutil.rmtree(kept.parent)
@@ -365,15 +449,6 @@ def test_a_failed_open_keeps_the_body_and_says_the_command(repo):
 
 
 # ── the pieces ───────────────────────────────────────────────────────────────
-def test_the_real_steps_are_a_stack_of_add_ons_that_are_here():
-    pools = cp.steps(cp.STEPS)
-    names = [n for _, ss in pools for n, _ in ss]
-    assert names[0] == "restack" and names[-1] == "ci.changelog"
-    assert pools[-1][0] == cp.AFTER and all(h != cp.AFTER for h, _ in pools[:-1])
-    assert {"readme", "ci.bugs", "test-impact.impact", "against"} <= set(names)
-    assert set(cp.FINE_42) <= set(names) and set(cp.STOP_ON) <= set(names)
-
-
 def test_owner_and_name_come_from_origin_whatever_its_shape():
     for url in ("https://github.com/willow-memory/Willow.git", "git@github.com:willow-memory/Willow",
                 "http://proxy@127.0.0.1:9/git/willow-memory/Willow/"):  # fmt: skip
@@ -382,8 +457,12 @@ def test_owner_and_name_come_from_origin_whatever_its_shape():
         cp.slug_of("nowhere")
 
 
-def test_fill_spreads_the_open_branches_and_fills_the_rest():
-    fields = {"base": "origin/main", "pr": 7, "open": ["origin/a", "origin/b"]}
-    assert cp.fill(["--base", "{base}", "{open}", "#{pr}"], fields) == [
-        "--base", "origin/main", "origin/a", "origin/b", "#7"]  # fmt: skip
-    assert cp.fill(["{open}"], {**fields, "open": []}) == []
+def test_an_add_on_the_change_touches_has_its_cards_promises_in_the_body(repo):
+    """Its writes and network, read from the card's header, not its body."""
+    say = repo / "adapters/stdlib/say/say.py"
+    say.write_text(say.read_text(encoding="utf-8") + "# touched\n", encoding="utf-8")
+    git(repo, "commit", "-q", "-am", "say: touched")
+    steps(repo, GREEN)
+    assert run(repo).returncode == 0
+    body = gh_state(repo)["prs"][0]["sent"]["body"]
+    assert "- `say`: writes made.txt;" in body and "network none" in body

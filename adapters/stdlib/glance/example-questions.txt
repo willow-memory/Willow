@@ -1,0 +1,3 @@
+sun	how much sun do tomatoes need
+frost	when does the frost come in autumn
+roof	who mended the roof slates

@@ -1,15 +1,21 @@
-"""changelog.py: a pull request that changes more than the docs says so in
-CHANGELOG.md.
+"""changelog.py: a pull request that changes more than the docs says so, in
+a changelog fragment of its own.
 
     python adapters/stdlib/ci/changelog.py --base REF --pr N
 
 Compares the checkout with REF (the branch the pull request goes into). When
 every changed file is Markdown, or CITATION.cff, nothing is owed: a release
-moves entries and sets the citation's version, and changes nothing else. Otherwise CHANGELOG.md's
-`## Unreleased` section must hold an entry, added by this pull request, that
-ends with its number: `(#N)`. An entry is a `- ` line and the indented lines
-that wrap it. One elsewhere in the file, or one that names another pull
-request, doesn't count.
+moves entries and sets the citation's version, and changes nothing else.
+Otherwise the pull request owes an entry: a file of its own under changes/,
+towncrier's shape, `changes/<number>.<kind>.md` (changes/README.md), which no other
+pull request writes, so none conflicts with another.
+
+**CHANGELOG.md takes no new entry.** One a pull request adds or changes
+under `## Unreleased` is refused, docs-only or not, with the fragment to
+write instead: an entry written there is the one conflict every branch had
+with every other. `adapters/stdlib/restack/restack.py` moves a branch's to
+fragments when it merges main in. The entries already there, from before
+the fragments, stay until the next release moves them.
 
 A bug BUGS.md listed at REF and no longer lists was fixed here, so each one
 also owes an entry of this pull request's under `### Fixed` that names it,
@@ -54,6 +60,48 @@ def unreleased(text: str) -> list[tuple[str, str]]:
     return out
 
 
+#: a fragment, towncrier's shape: changes/<pr>.<kind>[.<n>].md, or before the
+#: pull request has a number, changes/+<anything>.<kind>[.<n>].md
+FRAGMENT = re.compile(r"^changes/(\+[^/]+?|\d+)\.([a-z]+)(?:\.\d+)?\.md$")
+HEADING = {"added": "Added", "changed": "Changed", "deprecated": "Deprecated",
+           "removed": "Removed", "fixed": "Fixed", "security": "Security"}  # fmt: skip
+
+
+def kinds(root: Path | None = None) -> dict[str, str]:
+    """{kind: heading} from towncrier.toml's types, read by line (tomllib is
+    3.11's); HEADING when there is no such file."""
+    path = (root or ROOT) / "towncrier.toml"
+    if not path.is_file():
+        return dict(HEADING)
+    text = path.read_text(encoding="utf-8")
+    pairs = re.findall(r'directory = "([a-z]+)"\s*\nname = "([^"]+)"', text)
+    return dict(pairs) or dict(HEADING)
+
+
+def fragment_entries(files: list[str], pr: str) -> list[tuple[str, str]]:
+    """(heading, entry) for each fragment this pull request added, named for
+    its number (create_pr.py renames a +<branch> one to it): the entry is the
+    file's text, with (#N) as towncrier will write it."""
+    known, out = kinds(), []
+    for rel in files:
+        m = FRAGMENT.match(rel)
+        if not m or m.group(1) != pr or m.group(2) not in known:
+            continue
+        path = ROOT / rel
+        text = (
+            " ".join(path.read_text(encoding="utf-8").split()) if path.is_file() else ""
+        )
+        if text:
+            out.append((known[m.group(2)], f"{text} (#{pr})"))
+    return out
+
+
+def owed(files: list[str]) -> list[str]:
+    """The changed files that owe an entry: all but Markdown and CITATION.cff,
+    which a release moves and sets and nothing else changes."""
+    return [f for f in files if not f.endswith(".md") and f != "CITATION.cff"]
+
+
 def bugs_listed(text: str) -> set[int]:
     return {int(n) for n in re.findall(r"^\| #(\d+) \|", text, re.M)}
 
@@ -64,14 +112,26 @@ def check(base: str, pr: str) -> int:
         print(f"unreachable: git can't compare with {base}: {changed.stderr.strip()}")
         return kernel.ESCALATE
     files = [f for f in changed.stdout.split() if f]
-    code = [f for f in files if not f.endswith(".md") and f != "CITATION.cff"]
-    if not code:
-        print(f"docs only ({len(files)} files): no changelog line owed")
-        return kernel.ALIVE
     before = git("show", f"{base}:CHANGELOG.md")
     old = set(unreleased(before.stdout)) if before.returncode == 0 else set()
     now = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
-    mine = [e for e in unreleased(now) if e not in old and e[1].endswith(f"(#{pr})")]
+    added = [e for e in unreleased(now) if e not in old]
+    if added:
+        heading, entry = added[0]
+        kind = {v: k for k, v in kinds().items()}.get(heading, "<kind>")
+        print(f"refused: CHANGELOG.md's ## Unreleased has {len(added)} new or changed"
+              f" entr{'y' if len(added) == 1 else 'ies'} ({entry[:60]}…); it takes none"
+              " now, so no two pull requests conflict there", file=sys.stderr)  # fmt: skip
+        print(f"move each to a fragment of its own, changes/+<branch>.{kind}.md (or"
+              f" changes/{pr}.{kind}.md), its text without the (#N), and take it out of"
+              " CHANGELOG.md; restack.py --onto origin/main <branch> does it for you"
+              " (changes/README.md)", file=sys.stderr)  # fmt: skip
+        return kernel.REFUSED
+    code = owed(files)
+    if not code:
+        print(f"docs only ({len(files)} files): no changelog line owed")
+        return kernel.ALIVE
+    mine = fragment_entries(files, pr)
     bugs_then = git("show", f"{base}:BUGS.md")
     bugs_now = ROOT / "BUGS.md"
     fixed = sorted(
@@ -85,16 +145,19 @@ def check(base: str, pr: str) -> int:
         if not any(h == "Fixed" and re.search(rf"\bbug #{n}\b", e) for h, e in mine)
     ]  # fmt: skip
     if mine and not unnamed:
-        print(f"CHANGELOG.md: this pull request's entry (#{pr}) is under Unreleased"
+        print(f"this pull request's entry (#{pr}) is in changes/"
               + (f", naming fixed bugs {', '.join(f'#{n}' for n in fixed)}" if fixed else ""))  # fmt: skip
         return kernel.ALIVE
     if not mine:
         print(
             f"refused: {len(code)} files beyond the docs changed ({', '.join(code[:3])}"
-            f"{', …' if len(code) > 3 else ''}), and CHANGELOG.md has no new entry under "
-            f"## Unreleased ending (#{pr})",
+            f"{', …' if len(code) > 3 else ''}), and changes/ holds no {pr}.<kind>.md",
             file=sys.stderr,
         )
+        print("write the entry in changes/+<branch>.<kind>.md (changes/README.md says how)"
+              " and commit it with the change; then"
+              " python adapters/stdlib/github/create_pr.py names it for the pull"
+              " request, in the push that opens it", file=sys.stderr)  # fmt: skip
     for n in unnamed:
         print(f"refused: BUGS.md no longer lists bug #{n}, and no entry of this pull "
               f"request's under ### Fixed names it as bug #{n}", file=sys.stderr)  # fmt: skip

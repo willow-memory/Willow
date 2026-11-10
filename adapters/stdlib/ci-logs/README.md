@@ -3,8 +3,11 @@ section: Reading more kinds of files
 line: CI run logs you downloaded (GitHub Actions, GitLab CI, Forgejo Actions): each failing step as a passage.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: to
 network: none
+role: reads
+reads: .log, .txt
 -->
 # ci-logs
 

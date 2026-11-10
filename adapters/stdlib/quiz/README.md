@@ -3,8 +3,10 @@ section: Play
 line: A quiz from your own files: a passage with a word missing, and you fill it in.
 source: new
 added: 2026-10-27
+version: 0.1.0
 writes: record
 network: none
+role: tools
 -->
 # quiz
 

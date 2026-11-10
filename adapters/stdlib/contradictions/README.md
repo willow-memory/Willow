@@ -3,8 +3,10 @@ section: Trust and proof
 line: Two passages that disagree about the same date or amount, side by side.
 source: new
 added: 2026-10-24
+version: 0.1.0
 writes: nothing
 network: none
+role: page
 -->
 # contradictions
 

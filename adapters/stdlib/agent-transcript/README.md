@@ -3,8 +3,11 @@ section: Reading more kinds of files
 line: Claude Code, Codex, Gemini CLI, Cursor and Copilot session files as plain text, each turn numbered, so you can ask what an agent was told.
 source: new
 added: 2026-10-31
+version: 0.1.0
 writes: to
 network: none
+role: reads
+reads: .jsonl
 -->
 # agent-transcript
 

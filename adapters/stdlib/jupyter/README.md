@@ -3,8 +3,12 @@ section: Reading more kinds of files
 line: Jupyter notebooks: Markdown cells, code and text outputs as passages, cited by cell.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: to
 network: none
+role: reads
+output: mirror
+reads: .ipynb
 -->
 # jupyter
 
@@ -47,6 +51,11 @@ folder, or MIRROR and FOLDER are inside one another).
 
 **Uses:** the kernel's exit codes (`ALIVE`, `ESCALATE`, `REFUSED`); Python's
 standard library for the format.
+
+**Where each passage came from** is in a hidden map beside its mirror,
+`MIRROR/.places/<same path>.txt.json`, which the kernel never reads, as
+[the mirror contract](../ci/README.md#the-mirror-contract) says: each
+passage at its cell (`cell 4`), the title at `notebook metadata`.
 
 **Never:** writes inside FOLDER, modifies an original, writes anything outside
 MIRROR, or goes online.

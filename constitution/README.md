@@ -13,18 +13,29 @@ correction is made here, never in a copy.
 An amendment is a pull request that carries two things: the clause, written
 into its article in `CONSTITUTION.md`, and a file in
 [amendments/](amendments/) holding the same text under a header (the draft
-it makes, the date, the pull request, the articles, the clauses, a one-line
-summary, and any earlier amendment it supersedes). Then:
+it makes, its bump, the date, the pull request, the articles, the clauses, a
+one-line summary, and any earlier amendment it supersedes). Then:
 
     python constitution/amend.py write
 
 fills in the draft number at the top of the law, the Amendment History row
-and the step in the draft lineage. CI refuses the pull request if:
+and the step in the draft lineage.
+
+**Drafts are versioned** like everything in willow
+([versions](../docs/design/versions.md)): `MAJOR.MINOR.PATCH`, and each
+amendment says its `bump`: `minor` for a new clause or one made to promise
+more, `patch` for wording that leaves the meaning alone, `major` when a
+clause no longer promises what something relied on. One pull request makes
+one draft, however many amendments it carries: those in a row with the same
+`pr` share it, stepped by the largest bump among them. The first six
+amendments here were made the old way, 0.10 to 0.15, and keep their
+numbers. CI refuses the pull request if:
 
 - the Preamble or Article 0 changed by one byte: they are fixed, and Article
   0 is beyond the reach of any amendment (VIII.3);
-- the amendment names an Article 0 clause, makes a draft that isn't the next
-  one, or its text isn't in the law word for word;
+- the amendment names an Article 0 clause, makes a draft that isn't the
+  step its pull request's largest bump makes, has no bump or one that isn't
+  major, minor or patch, or its text isn't in the law word for word;
 - the Amendment History before the first amendment here, or the lineage up
   to 0.9, was edited;
 - a clause it adds or changes isn't cited by code and by a test: an
@@ -64,7 +75,7 @@ own lines enforce, at those lines.
 | [declarations.json](declarations.json) | The verdicts, kept by hand: `satisfied`, `differently`, `not applicable` or `failing`, one per clause, each with a sentence saying why |
 | [amend.py](amend.py) | How an amendment enters the law: `write` fills in what the amendment files make, `check` refuses a law that doesn't hold together with them |
 | [test_amend.py](test_amend.py) | Each way the law and its amendments could drift apart, attempted on a copy and refused; one amendment superseding another keeps both |
-| [amendments/](amendments/) | Every amendment made here, numbered in turn: 0001 VIII.4 *Always a draft*, 0002 VIII.1 *Propose, check, accept*, 0003 VIII.3 on strengthening Article 0, 0004 IV.9 *A check that cannot fail is no check*, 0005 VI.7 *Every change carries its account*, 0006 VIII.2 *the emergency door on a timer* |
+| [amendments/](amendments/) | Every amendment made here, numbered in turn: 0001 VIII.4 *Always a draft*, 0002 VIII.1 *Propose, check, accept*, 0003 VIII.3 on strengthening Article 0, 0004 IV.9 *A check that cannot fail is no check*, 0005 VI.7 *Every change carries its account*, 0006 VIII.2 *the emergency door on a timer*, 0007 III.6 *the core reaches nothing that extends it*, 0008 IV.10 *the same question, the same answer*, 0009 V.10 *a no is final*, 0010 VI.8 *the record keeps acts, not words* |
 | [reach.json](reach.json) | Every clause no code or test cites, answered: *out of reach*, or *open*, and why. An article's answer stands for each of its clauses with none of its own |
 
     python constitution/coverage.py

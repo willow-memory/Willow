@@ -3,10 +3,12 @@ section: Privacy and safety
 line: A total of everyone's counts, by Shamir's secret sharing: the one who asked learns the sum, and no one's own count is in any package.
 source: new
 added: 2026-11-04
+version: 0.1.0
 needs: shamirs; MIT
 floor: shamirs 2.0.0; the rule names 0.1.0.0 from 2018, and before 2.0.0 shares() takes no modulus, so its shares can't be held to one field that every person in a round uses
 writes: record
 network: none
+role: tools
 uses: kart, share
 -->
 # secure-sum

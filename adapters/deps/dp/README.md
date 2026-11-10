@@ -3,10 +3,12 @@ section: Privacy and safety
 line: A count of yours, noised by OpenDP before you seal and send it, so your one number doesn't say what your folder holds.
 source: new
 added: 2026-11-04
+version: 0.1.0
 needs: opendp; MIT
 floor: opendp 0.8.0; the rule names its first release, 0.1.0 from 2021, and before 0.8.0 there is no make_laplace over a vector of whole numbers, the one mechanism noise uses
 writes: record
 network: none
+role: tools
 uses: kart, share
 -->
 # dp

@@ -3,8 +3,10 @@ section: For maintainers
 line: Only the tests a change can reach run first, from the import graph; the full suite still runs after.
 source: new
 added: 2026-10-24
+version: 0.1.0
 writes: nothing
 network: none
+role: repo
 uses: ci
 runs-in: repo
 -->
@@ -71,11 +73,15 @@ shrinks silently.
 **`run`** says the plan, then runs it in order and stops at the first gate that
 fails, naming the gates it did not reach. The gates are ci.py's own: the
 add-on tests run under the same guard that holds them to their cards. With
-`--narrow`, a change that widens to every gate runs nothing and says so,
-exit 0, since CI runs every gate anyway; [create_pr.py](../github/create_pr.py)
-runs it that way.
+`--narrow`, a change that widens to every gate leaves every gate to CI,
+which runs them anyway, and still runs the docs' checks and what the rest
+of the change reaches: ruff.toml changed beside an add-on runs that
+add-on's tests under the guard. [create_pr.py](../github/create_pr.py) runs
+it that way.
 
-**What it leaves to the full run, always:** the strip test (minutes), the other
+**What it leaves to the full run, always:** the strip test whole (minutes; a
+change that reaches it by import, as any change to ci/ does, runs only its
+own reached tests in the copy without GitHub, in seconds), the other
 add-ons' mutants, and any test that only a change somewhere else could break
 without importing it. Run the full thing before you say it's done.
 

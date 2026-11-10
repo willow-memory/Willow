@@ -304,6 +304,31 @@ def test_mine_stacked_on_another_is_read_from_where_it_left_that_one(repo):
     ]
 
 
+def test_a_stack_that_each_merged_main_since_shares_its_names_still(repo):
+    # #265 and #267 tonight: pr/12 took mine, main moved on, pr/12 merged it,
+    # then mine merged main too. Neither holds the other's head now, and
+    # pr/12 left main later than they left each other, yet sort is still
+    # mine's, carried by pr/12, and no duplicate
+    branch(repo, "mine", addon("sort"))
+    branch(repo, "pr/12", addon("zip"), start="mine")
+    git(repo, "checkout", "-q", "main")
+    write(repo, {"NOTES.md": "main moved on\n"})
+    git(repo, "add", "-A")
+    git(repo, "commit", "-qm", "main moves")
+    for name in ("pr/12", "mine"):
+        git(repo, "checkout", "-q", name)
+        git(repo, "merge", "-q", "--no-edit", "main")
+    git(repo, "checkout", "-q", "main")
+    for head, other in (("mine", "pr/12"), ("pr/12", "mine")):
+        got = check(repo, head, other)
+        assert got.returncode == 0, got.stdout
+        assert "duplicate:" not in got.stdout
+    # what pr/12 adds past mine is still its own
+    branch(repo, "pr/13", addon("zip"))
+    got = check(repo, "pr/12", "pr/13")
+    assert got.returncode == 2 and "duplicate: both add add-on zip (#13)" in got.stdout
+
+
 # ── near ideas ───────────────────────────────────────────────────────────────
 def test_an_idea_near_one_the_other_adds_is_suggested(repo):
     line = "Rain and frost for each garden bed, by day, from your own notes."
@@ -403,7 +428,10 @@ def test_the_files_it_calls_settled_are_the_ones_restack_settles():
     import restack
 
     ours = set(against.SETTLED)
-    assert ours == set(restack.MADE) | set(restack.SETTLE) | {"adapters/planned.json"}
+    assert ours == set(restack.MADE) | set(restack.SETTLE) | {
+        "adapters/planned.json",
+        restack.FILES,
+    }
     assert against.CONTRACT == restack.CONTRACT
 
 
@@ -413,7 +441,31 @@ def test_restacks_card_names_each_of_them_in_its_table():
     cells = [row.split("|")[1].strip() for row in table.splitlines()[2:]]
     names = {n.strip().strip("`") for cell in cells for n in cell.split(",")}
     short = {Path(p).name: p for p in against.SETTLED}
+    # restack's rule for any other Markdown file is against.only_added's
+    assert "any other Markdown file" in names
+    names.discard("any other Markdown file")
     assert {short.get(n, n) for n in names} == set(against.SETTLED)
+
+
+def test_a_markdown_conflict_where_both_only_added_is_settled_and_one_that_changed_isnt():
+    """#243 and #244 each added a paragraph to ci's card: restack keeps both,
+    so against says settled, not collides."""
+    base = "# ci\n\n**A:** a.\n\n**Z:** z.\n"
+    mine = base.replace("\n\n**Z", "\n\n**B:** b.\n\n**Z")
+    other = base.replace("\n\n**Z", "\n\n**C:** c.\n\n**Z")
+    assert against.only_added(base, mine, other)
+    assert not against.only_added(
+        base, base.replace("a.", "aa."), base.replace("a.", "ab.")
+    )
+    assert not against.only_added(base, base, base), "no conflict is not 'only added'"
+
+
+def test_a_file_at_a_commit_is_its_text_and_a_path_it_lacks_is_empty():
+    """A Markdown file one branch added has no base: read as empty, its
+    every line is one that branch added."""
+    agents = against.blob("HEAD", "AGENTS.md")
+    assert agents.startswith("# For agents")
+    assert against.blob("HEAD", "no/such/file.md") == ""
 
 
 # ── read on this repo's own files ────────────────────────────────────────────

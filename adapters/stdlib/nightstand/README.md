@@ -3,8 +3,10 @@ section: Keeping track
 line: Set heavy things down at night and pick up just one small next step in the morning: at most one thing in hand, and nothing ever deleted.
 source: new
 added: 2026-11-01
+version: 0.1.0
 writes: record
 network: none
+role: tools
 -->
 # nightstand
 

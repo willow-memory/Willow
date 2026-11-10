@@ -405,6 +405,8 @@ def test_a_mirror_is_written_at_the_same_path_with_txt_added(tmp_path):
     )
     assert got.returncode == 0, got.stderr
     assert sorted(p.relative_to(out).as_posix() for p in out.rglob("*") if p.is_file()) == [
+        ".places/c.asc.txt.json", ".places/docs/b.ASCIIDOC.txt.json",
+        ".places/docs/guide.adoc.txt.json",
         "c.asc.txt", "docs/b.ASCIIDOC.txt", "docs/guide.adoc.txt",
     ]  # fmt: skip
     assert got.stdout.strip().endswith("wrote 3 files to " + str(out) + "; skipped 0")
@@ -426,7 +428,7 @@ def test_an_asc_file_that_is_pgp_armor_is_passed_over_without_being_counted(tmp_
     assert got.returncode == 0, got.stderr
     assert got.stdout.strip().endswith("wrote 2 files to " + str(out) + "; skipped 0")
     assert sorted(p.name for p in out.rglob("*") if p.is_file()) == [
-        "key.adoc.txt", "notes.asc.txt",
+        "key.adoc.txt", "key.adoc.txt.json", "notes.asc.txt", "notes.asc.txt.json",
     ]  # fmt: skip
     only_keys, _ = mirror_of(tmp_path / "k", {"key.asc": key})
     assert only_keys.returncode == 42 and "skipped 0" in only_keys.stdout
@@ -439,7 +441,7 @@ def test_hidden_files_and_folders_are_not_read(tmp_path):
     )
     assert sorted(
         p.relative_to(out).as_posix() for p in out.rglob("*") if p.is_file()
-    ) == ["doc.adoc.txt"]
+    ) == [".places/doc.adoc.txt.json", "doc.adoc.txt"]
 
 
 def test_the_same_folder_gives_the_same_bytes_and_originals_are_unchanged(tmp_path):

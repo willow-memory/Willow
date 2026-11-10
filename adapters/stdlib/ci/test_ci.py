@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import types
 import os
 import subprocess
 import sys
@@ -215,7 +216,7 @@ def test_verify_holds_the_chain_and_refuses_anything_but_ci_verdicts(tmp_path):
 def test_the_gates_run_in_one_fixed_order_and_cover_every_part():
     names = [g for _, g, _ in ci.gates()]
     assert names == [
-        "lint:check", "lint:format",
+        "lint:check", "lint:format", "lint:py39",
         "tests:beats", "tests:kernel", "tests:docs",
         *(f"tests:adapters-{k}" for k in range(1, ci.ADAPTER_CHUNKS + 1)),
         "tests:alone",
@@ -224,10 +225,13 @@ def test_the_gates_run_in_one_fixed_order_and_cover_every_part():
         *(f"tests:strip-{k}" for k in range(1, ci.STRIP_CHUNKS + 1)),
         "tests:constitution", "tests:coverage",
         *(f"ports:{p}" for p in ci.PORTS),
-        *(f"demo:{p}" for p in ci.people()), "demo:php2shell", "demo:google-privacy-2026-10-16",
-        "demo:stack", "demo:share", "demo:teodora-words", "demo:craft-assembly", "demo:redteam", "demo:known-gaps", "demo:five-repos", "demo:novelty",
-        "demo:ofrenda-frozen", "demo:stewart-crossover-frozen", "demo:small-models",
+        *sorted([*(f"demo:{p}" for p in ci.people()), "demo:craft-assembly", "demo:five-repos",
+                 "demo:google-privacy-2026-10-16", "demo:known-gaps", "demo:novelty", "demo:ofrenda-frozen",
+                 "demo:php2shell", "demo:redteam", "demo:share", "demo:small-models", "demo:stack",
+                 "demo:stewart-crossover-frozen", "demo:teodora-words",
+                 *(g for g, _, _ in ci.demo_tests()[len(ci.DEMO_TESTS):])]),
         *(g for d in ci.deps_add_ons() for g in (f"deps:{d}", f"deps:{d}@floor")),
+        "deps:advisories",
         "deps:floors",
         *(f"mutants:{n}" for n in ci.mutant_targets()),
         *(f"tools:{n}" for n in ci.live_checks()),
@@ -239,7 +243,7 @@ def test_the_gates_run_in_one_fixed_order_and_cover_every_part():
 def test_every_test_file_under_demo_is_run_by_a_gate():
     # a demo's tests that no gate names never fail: ofrenda's, stewart-
     # crossover's and small-models' went unrun, and one broke unseen
-    targets = [t for _, t, _ in ci.DEMO_TESTS]
+    targets = [t for _, t, _ in ci.demo_tests()]
     under = lambda f, t: f == t or f.startswith(t + "/")  # noqa: E731
     files = sorted(
         p.relative_to(ci.ROOT).as_posix()
@@ -248,6 +252,24 @@ def test_every_test_file_under_demo_is_run_by_a_gate():
     )
     assert files and [f for f in files if not any(under(f, t) for t in targets)] == []
     assert all((ci.ROOT / t).exists() for t in targets)
+
+
+def test_a_demo_with_tests_and_no_row_gets_a_gate_of_its_own(monkeypatch, tmp_path):
+    """No row to write for a new demo's tests: its folder's name is its gate,
+    beside a person's own gate when it has one; a file at demo/'s top too."""
+    for rel in ("demo/fresh/test_fresh.py", "demo/odile/make_life.py",
+                "demo/odile/test_words.py", "demo/test_loose.py",
+                "demo/php2shell/test_php2shell.py", "demo/plain/README.md"):  # fmt: skip
+        (tmp_path / rel).parent.mkdir(parents=True, exist_ok=True)
+        (tmp_path / rel).write_text("")
+    monkeypatch.setattr(ci, "ROOT", tmp_path)
+    monkeypatch.setattr(ci, "DEMO_TESTS", (("demo:php2shell", "demo/php2shell", ()),))
+    assert ci.demo_tests() == [
+        ("demo:php2shell", "demo/php2shell", ()),
+        ("demo:fresh", "demo/fresh", ()),
+        ("demo:odile-tests", "demo/odile", ()),
+        ("demo:loose", "demo/test_loose.py", ()),
+    ]
 
 
 def test_shards_run_every_gate_of_what_was_named_once_in_its_order():
@@ -301,7 +323,7 @@ def test_a_gate_is_named_or_left_out_by_name():
     assert ci.select(["tests:strip-2"], [], None) == ["tests:strip-2"]
     assert ci.select(["tests:strip"], [], None) == strip  # a group is its chunks
     assert ci.select(["tests"], ["tests:strip"], None) == [g for g in tests if g not in strip]  # fmt: skip
-    assert ci.select(["lint", "tests:strip-1"], [], None) == ["lint:check", "lint:format", "tests:strip-1"]  # fmt: skip
+    assert ci.select(["lint", "tests:strip-1"], [], None) == ["lint:check", "lint:format", "lint:py39", "tests:strip-1"]  # fmt: skip
     assert ci.select([], [], None) == [g for _, g, _ in ci.gates()]
 
 
@@ -376,28 +398,9 @@ def test_the_floor_rule_takes_the_last_release_of_2020_else_the_first():
 
 
 def test_a_floor_above_the_rule_needs_a_reason_on_its_card(monkeypatch):
-    uploaded = {"pypdf": {"1.9": "2014-05-17T00:00:00Z", "3.1.0": "2022-12-23T00:00:00Z"},
-                "mcp": {"0.9.1": "2024-11-20T00:00:00Z", "2.0.0": "2026-07-28T00:00:00Z"},
-                "numpy": {"1.19.4": "2020-11-02T00:00:00Z", "2.1.0": "2024-08-18T00:00:00Z"},
-                "pytest-xdist": {"2.2.0": "2020-12-14T00:00:00Z", "3.0.2": "2022-10-25T00:00:00Z"},
-                "snowballstemmer": {"2.0.0": "2019-10-03T00:00:00Z", "3.1.1": "2026-06-03T00:00:00Z"},
-                "pillow": {"8.0.1": "2020-10-22T00:00:00Z", "11.0.0": "2024-10-15T00:00:00Z"},
-                "openpyxl": {"3.0.5": "2020-08-21T00:00:00Z", "3.1.5": "2024-06-28T00:00:00Z"},
-                "pyyaml": {"5.3.1": "2020-03-18T00:00:00Z", "6.0.3": "2025-09-25T00:00:00Z"},
-                "duckdb": {"0.2.3": "2020-12-03T00:00:00Z", "1.1.1": "2024-09-24T00:00:00Z"},
-                "wordfreq": {"2.3.2": "2020-05-01T00:00:00Z", "3.1.0": "2023-11-21T00:00:00Z"},
-                "ripgrep": {"14.1.0": "2024-08-10T00:00:00Z", "15.1.0": "2026-05-24T00:00:00Z"},
-                "ast-grep-cli": {"0.14.1": "2023-12-01T00:00:00Z", "0.50.0": "2026-10-09T00:00:00Z"},
-                "pagefind": {"1.2.0a4": "2024-10-02T00:00:00Z", "1.3.0": "2024-12-18T00:00:00Z"},
-                "pagefind-bin": {"1.2.0a5": "2024-10-02T00:00:00Z", "1.3.0": "2024-12-18T00:00:00Z"},
-                "python-gnupg": {"0.4.6": "2020-04-17T00:00:00Z", "0.5.7": "2026-09-29T00:00:00Z"},
-                "llama-cpp-python": {"0.1.1": "2023-03-23T00:00:00Z", "0.2.29": "2024-01-15T00:00:00Z"},
-                "kartikeya": {"0.0.1": "2026-07-08T23:13:11Z", "0.5.2": "2026-09-29T00:12:05Z"},
-                "opendp": {"0.1.0": "2021-08-05T14:51:36Z", "0.8.0": "2023-08-11T18:27:15Z"},
-                "shamirs": {"0.1.0.0": "2018-01-14T18:22:20Z", "2.0.0": "2022-07-14T03:26:48Z"},
-                "wasmtime": {"0.21.0": "2020-11-05T15:57:42Z", "48.0.0": "2026-08-20T19:31:28Z"},
-                "wasi-python": {"0.1.0a3": "2026-10-17T21:20:01Z", "0.1.0a5": "2026-10-18T19:38:48Z"},
-                "forge-play": {"0.1.0": "2026-09-03T00:00:00Z", "0.10.0": "2026-11-03T00:00:00Z"}}  # fmt: skip
+    # PyPI's own dates for each floor pin and the rule's release, kept by
+    # pypi_dates.py write: no package is typed here by hand
+    uploaded = json.loads((ci.ROOT / "adapters/stdlib/ci/pypi-dates.json").read_text())
     monkeypatch.setattr(ci, "releases", lambda package: uploaded[package])
     assert ci.floors()[0] == ci.SATISFIED
     monkeypatch.setattr(ci, "floor_line", lambda name: "")
@@ -409,6 +412,52 @@ def test_a_floor_above_the_rule_needs_a_reason_on_its_card(monkeypatch):
 
     monkeypatch.setattr(ci, "releases", offline)
     assert ci.floors()[0] == ci.UNREACHABLE
+
+
+def test_an_advisory_on_a_pin_fails_and_on_a_floor_is_only_said(monkeypatch):
+    def found(path):
+        if path.name == "requirements.txt" and path.parent.name == "pdf":
+            return [("pypdf", "1.0", "PYSEC-1", "2.0")]
+        if path.name == "requirements-floor.txt" and path.parent.name == "mcp":
+            return [("mcp", "0.1", "GHSA-x", "")]
+        return []
+
+    monkeypatch.setattr(ci, "audit", found)
+    state, said, why = ci.advisories()
+    assert state == ci.FAILING
+    assert why == "pdf: pypdf==1.0 in requirements.txt has PYSEC-1, fixed in 2.0"
+    assert "mcp: mcp==0.1 floor has 1 advisory, said, not failed" in said
+    monkeypatch.setattr(ci, "audit", lambda path: [] if path.parent.name == "pdf"
+                        else found(path))  # fmt: skip
+    assert ci.advisories()[0] == ci.SATISFIED
+
+    def offline(path):
+        raise OSError("no network")
+
+    monkeypatch.setattr(ci, "audit", offline)
+    assert ci.advisories()[0] == ci.UNREACHABLE
+
+
+def test_audit_reads_pip_audits_json(monkeypatch):
+    answer = json.dumps({"dependencies": [
+        {"name": "llm", "version": "0.27", "vulns": [{"id": "PYSEC-2026-400", "fix_versions": []}]},
+        {"name": "pyyaml", "version": "5.3.1", "vulns": [{"id": "PYSEC-2021-142", "fix_versions": ["5.4"]}]},
+        {"name": "ok", "version": "1", "vulns": []},
+    ]})  # fmt: skip
+    monkeypatch.setattr(ci.subprocess, "run", lambda *a, **k: types.SimpleNamespace(
+        stdout=answer, stderr="", returncode=1))  # fmt: skip
+    assert ci.audit(ci.ROOT / "requirements.txt") == [
+        ("llm", "0.27", "PYSEC-2026-400", ""),
+        ("pyyaml", "5.3.1", "PYSEC-2021-142", "5.4"),
+    ]
+    monkeypatch.setattr(ci.subprocess, "run", lambda *a, **k: types.SimpleNamespace(
+        stdout="", stderr="ConnectionError: no route\n", returncode=1))  # fmt: skip
+    try:
+        ci.audit(ci.ROOT / "requirements.txt")
+    except OSError as exc:
+        assert "no route" in str(exc)
+    else:
+        raise AssertionError("an unreadable answer is unreachable, not clean")
 
 
 def test_a_program_a_deps_card_names_and_this_machine_lacks_is_unreachable(
@@ -438,3 +487,118 @@ def test_a_program_a_deps_card_names_and_this_machine_lacks_is_unreachable(
     assert ci.deps_add_on("pdf").needs() is None
     with pytest.raises(Made):  # pdf names no program: on to its install
         ci.deps_add_on("pdf")()
+
+
+# ── a deps gate held by an earlier satisfied verdict with its key ────────────
+def earlier(tmp_path: Path, *rows: tuple[str, str, str]) -> Path:
+    """A ci record holding a verdict per (gate, state, key): what main's
+    deps run uploads, as a pull request's deps job downloads it."""
+    box = tmp_path / "main-record"
+    ts = "2026-11-06T00:00:00Z"
+    ci.open_box(box, ts)
+    for gate, state, key in rows:
+        ci.kernel.append(box, ts, "verdict", who=ci.WHO, gate=gate, state=state,
+                         files_sha256="0" * 64, said_sha256="0" * 64, python="3.13",
+                         key=key)  # fmt: skip
+    return box / "record.jsonl"
+
+
+def test_a_deps_key_is_what_its_run_rests_on():
+    pdf = ci.deps_key("pdf", "requirements.txt")
+    assert pdf == ci.deps_key("pdf", "requirements.txt"), "the same files, the same key"
+    assert pdf != ci.deps_key("pdf", "requirements-floor.txt")
+    assert pdf != ci.deps_key("ocr", "requirements.txt")
+    listed = subprocess.run(["git", "ls-files", "--", "adapters/deps/pdf", *ci.DEPS_RESTS_ON],
+                            cwd=ci.ROOT, capture_output=True, text=True).stdout.split()  # fmt: skip
+    assert "adapters/deps/pdf/requirements.txt" in listed and "kernel.py" in listed
+    assert any(p.startswith("adapters/stdlib/ci/guard/") for p in listed)
+
+
+def test_a_deps_key_changes_with_any_file_it_rests_on(monkeypatch, tmp_path):
+    """The key hashes bytes, so a change to the add-on, the kernel or the guard
+    is a new key, and the gate runs."""
+    real = ci.Path.read_bytes
+    before = ci.deps_key("pdf", "requirements.txt")
+    for changed in ("adapters/deps/pdf/requirements.txt", "kernel.py",
+                    "adapters/stdlib/ci/guard/sitecustomize.py"):  # fmt: skip
+        target = ci.ROOT / changed
+
+        def read(self, target=target):
+            return real(self) + (b"\n# changed" if self == target else b"")
+
+        monkeypatch.setattr(ci.Path, "read_bytes", read)
+        assert ci.deps_key("pdf", "requirements.txt") != before, changed
+        monkeypatch.setattr(ci.Path, "read_bytes", real)
+
+
+def test_a_deps_gate_with_a_satisfied_verdict_for_its_key_is_held_not_run(
+    monkeypatch, tmp_path
+):
+    gate = ci.deps_add_on("pdf")
+    key = gate.key()
+    record = earlier(tmp_path, ("deps:pdf", ci.SATISFIED, key))
+    monkeypatch.setenv(ci.HELD, str(record))
+
+    def ran(*a, **kw):
+        raise AssertionError("a held gate installs nothing")
+
+    real_run = ci.subprocess.run
+    monkeypatch.setattr(ci.subprocess, "run", lambda argv, *a, **kw: (
+        real_run(argv, *a, **kw) if argv[:2] == ["git", "ls-files"] else ran()))  # fmt: skip
+    state, said, why = gate()
+    assert (state, why) == (ci.SATISFIED, None)
+    assert said == f"held: unchanged since its satisfied verdict, key {key[:12]}\n"
+
+
+@pytest.mark.parametrize(
+    "which", ["other key", "failing", "floor gate", "no record", "broken"]
+)
+def test_a_deps_gate_runs_unless_that_verdict_is_there(monkeypatch, tmp_path, which):
+    """Another key, a verdict that wasn't satisfied (even after a satisfied
+    one), the other pins' gate, a record that isn't there or won't read: it
+    runs, which here stops at making its environment."""
+    gate = ci.deps_add_on("pdf")
+    key = gate.key()
+    rows = {
+        "other key": [("deps:pdf", ci.SATISFIED, "f" * 64)],
+        "failing": [("deps:pdf", ci.SATISFIED, key), ("deps:pdf", ci.FAILING, key)],
+        "floor gate": [("deps:pdf@floor", ci.SATISFIED, key)],
+        "no record": [],
+        "broken": [("deps:pdf", ci.SATISFIED, key)],
+    }[which]
+    record = earlier(tmp_path, *rows)
+    if which == "no record":
+        record = tmp_path / "missing.jsonl"
+    if which == "broken":
+        lines = record.read_text().splitlines()
+        lines[-1] = lines[-1].replace(ci.SATISFIED, "satisfied ", 1)
+        record.write_text("\n".join(lines) + "\n")
+    monkeypatch.setenv(ci.HELD, str(record))
+
+    class Made(Exception):
+        """it went on to make a virtual environment"""
+
+    real_run = ci.subprocess.run
+
+    def run(argv, *a, **kw):
+        if argv[:2] == ["git", "ls-files"]:
+            return real_run(argv, *a, **kw)
+        raise Made
+
+    monkeypatch.setattr(ci.subprocess, "run", run)
+    with pytest.raises(Made):
+        gate()
+
+
+def test_a_deps_verdict_row_carries_its_key_and_says_when_it_was_held(
+    monkeypatch, tmp_path
+):
+    gate = ci.deps_add_on("pdf")
+    record = earlier(tmp_path, ("deps:pdf", ci.SATISFIED, gate.key()))
+    monkeypatch.setenv(ci.HELD, str(record))
+    monkeypatch.setattr(ci, "gates", lambda: [("deps", "deps:pdf", gate)])
+    box = tmp_path / "this-run"
+    assert ci.do_run(box, ["deps:pdf"], "2026-11-06T01:00:00Z") == 0
+    rows, _ = ci.kernel.read(box / "record.jsonl")
+    assert rows[-1]["gate"] == "deps:pdf" and rows[-1]["key"] == gate.key()
+    assert rows[-1]["held"] is True and rows[-1]["state"] == ci.SATISFIED

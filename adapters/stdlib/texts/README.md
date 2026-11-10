@@ -3,8 +3,11 @@ section: Reading more kinds of files
 line: Phone text messages, from an Android SMS backup or an iPhone backup's copy, one dated line per message.
 source: new
 added: 2026-10-31
+version: 0.1.0
 writes: to
 network: none
+role: reads
+reads: .xml
 -->
 # texts
 

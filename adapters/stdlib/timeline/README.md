@@ -3,8 +3,10 @@ section: Trust and proof
 line: A dated timeline of one matter (a dispute, an illness, a tenancy), every line cited, to hand to a lawyer, doctor or council.
 source: new
 added: 2026-10-24
+version: 0.1.0
 writes: to
 network: none
+role: makes
 -->
 # timeline
 

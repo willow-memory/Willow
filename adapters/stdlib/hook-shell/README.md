@@ -1,10 +1,12 @@
 <!-- willow-addon
 section: Assistants
-line: A command split the way the shell will split it, quotes, variables and chained commands included, before any rule judges it, so a rule can't be dodged by spelling.
+line: A command split as the shell will split it (quotes, variables, chained commands) before any rule judges it, so spelling can't dodge a rule.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: nothing
 network: none
+role: guards
 tags: hooks
 -->
 # hook-shell

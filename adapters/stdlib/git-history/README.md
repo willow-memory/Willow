@@ -3,8 +3,11 @@ section: Reading more kinds of files
 line: Commit messages and diffs as a dated pile: "when did we change the retry limit?"
 source: new
 added: 2026-10-31
+version: 0.1.0
 writes: to
 network: none
+role: reads
+reads: none
 -->
 # git-history
 

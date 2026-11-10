@@ -3,8 +3,11 @@ section: Reading more kinds of files
 line: Joplin's .jex export, read without unpacking it: each note as plain text with its title and dates.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: to
 network: none
+role: reads
+reads: .jex, .md
 -->
 # joplin
 

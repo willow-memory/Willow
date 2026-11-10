@@ -3,10 +3,12 @@ section: Finding things
 line: Exact search through ripgrep, much faster on a big folder, its hits checked against the kernel's hashes.
 source: new
 added: 2026-10-30
+version: 0.1.0
 needs: the ripgrep program, from the ripgrep wheel on PyPI or your own rg; MIT or Unlicense
 floor: ripgrep 14.1.0
 writes: nothing
 network: none
+role: tools
 -->
 # ripgrep
 

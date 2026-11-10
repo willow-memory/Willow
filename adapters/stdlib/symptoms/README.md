@@ -3,8 +3,10 @@ section: Keeping track
 line: A symptom diary over time, ready to show a doctor: what, when, how bad, each line cited.
 source: new
 added: 2026-10-27
+version: 0.1.0
 writes: nothing
 network: none
+role: tools
 output: report
 -->
 # symptoms

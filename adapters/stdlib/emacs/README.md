@@ -3,8 +3,10 @@ section: Ways to use it
 line: Answers in an Emacs compilation buffer, each a jump to its file and line.
 source: new
 added: 2026-10-24
+version: 0.1.0
 writes: nothing
 network: none
+role: ways
 uses: hosts
 -->
 # emacs

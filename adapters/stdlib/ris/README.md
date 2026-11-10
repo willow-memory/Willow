@@ -3,8 +3,11 @@ section: Reading more kinds of files
 line: RIS citation exports from EndNote, Zotero, Mendeley and the journal databases: each reference as a passage that opens with its citation.
 source: new
 added: 2026-11-02
+version: 0.1.0
 writes: to
 network: none
+role: reads
+reads: .ris, .enw
 -->
 # ris
 

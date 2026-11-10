@@ -3,6 +3,7 @@ ladder (every third ask), and never offered once an approval stands."""
 
 from __future__ import annotations
 
+import importlib.util
 import json
 import subprocess
 import sys
@@ -11,6 +12,9 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 KERNEL = HERE.parents[2] / "kernel.py"
 NOW = ["--now", "2026-10-23T00:00:00Z"]
+spec = importlib.util.spec_from_file_location("again", HERE / "again.py")
+ag = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(ag)
 
 
 def run(*argv: str) -> subprocess.CompletedProcess:
@@ -124,3 +128,31 @@ def test_one_question_by_its_words_is_42_only_at_the_offer(tmp_path):
     assert run(str(HERE / "again.py"), "--box", str(b), q).returncode == 0
     ask(b, q, 1)
     assert run(str(HERE / "again.py"), "--box", str(b), q).returncode == 42
+
+
+def test_only_bite_rows_are_counted():
+    """A seal (or any non-bite) is not a repeat even when it carries a
+    bite_key; a bite without a key is not one either."""
+    rows = [
+        {
+            "kind": "seal",
+            "bite_key": "fake",
+            "ts": "2026-10-23T00:00:00Z",
+            "served": [],
+        },
+        {
+            "kind": "bite",
+            "bite_key": "q",
+            "ts": "2026-10-23T00:00:00Z",
+            "served": [],
+        },
+        {
+            "kind": "bite",
+            "bite_key": "q",
+            "ts": "2026-10-23T01:00:00Z",
+            "served": [],
+        },
+        {"kind": "bite", "ts": "2026-10-23T02:00:00Z", "served": []},
+    ]
+    got = ag.repeats(rows)
+    assert list(got) == ["q"] and got["q"]["times"] == 2

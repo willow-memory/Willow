@@ -3,8 +3,10 @@ section: Keeping track
 line: A course syllabus as dates: readings, assignments and exams due, each cited.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: nothing
 network: none
+role: page
 uses: habits
 -->
 # syllabus

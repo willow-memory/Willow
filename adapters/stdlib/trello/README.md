@@ -3,8 +3,11 @@ section: Reading more kinds of files
 line: A Trello board's JSON export: cards, checklists and comments, by list.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: to
 network: none
+role: reads
+reads: .json
 -->
 # trello
 

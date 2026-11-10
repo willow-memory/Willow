@@ -3,8 +3,10 @@ section: Trust and proof
 line: How many verified copies of your record exist and where, held to three copies, on two kinds of storage, one away from home.
 source: new
 added: 2026-10-31
+version: 0.1.0
 writes: nothing
 network: none
+role: tools
 uses: backup
 -->
 # three-two-one

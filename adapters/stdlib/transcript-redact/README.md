@@ -3,8 +3,10 @@ section: Privacy and safety
 line: An agent transcript with keys, home paths and emails taken out before you share it, each removal listed by line.
 source: new
 added: 2026-10-27
+version: 0.1.0
 writes: to
 network: none
+role: makes
 uses: privacy
 -->
 # transcript-redact

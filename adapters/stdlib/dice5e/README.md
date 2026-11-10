@@ -3,8 +3,10 @@ section: Play
 line: Full tabletop dice notation (4d6kh3, advantage), rolled on the record and checkable like dice.
 source: bot
 added: 2026-11-01
+version: 0.1.0
 writes: record
 network: none
+role: tools
 uses: dice
 -->
 # dice5e

@@ -48,6 +48,7 @@ def sibling(folder: str, module: str):
     return mod
 
 
+# differs on purpose: what the kernel says is handed to the person as start's own message, its newline trimmed
 def quiet(fn, *args) -> tuple[int, str]:
     out = io.StringIO()
     with contextlib.redirect_stdout(out), contextlib.redirect_stderr(out):

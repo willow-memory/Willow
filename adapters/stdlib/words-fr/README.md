@@ -3,8 +3,10 @@ section: Your own words
 line: French common words ("le", "et").
 source: new
 added: 2026-10-24
+version: 0.1.0
 writes: record
 network: none
+role: words
 tags: french
 -->
 # words-fr

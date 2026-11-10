@@ -3,8 +3,10 @@ section: Ways to use it
 line: Ask from Alfred, Raycast, KRunner or PowerToys Run, answers with file and line.
 source: new
 added: 2026-10-30
+version: 0.1.0
 writes: nothing
 network: none
+role: ways
 -->
 # launcher
 

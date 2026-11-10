@@ -3,8 +3,11 @@ section: Reading more kinds of files
 line: SARIF reports from code scanners such as CodeQL and Semgrep: each finding as a passage with its rule and place.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: to
 network: none
+role: reads
+reads: .sarif
 -->
 # sarif
 

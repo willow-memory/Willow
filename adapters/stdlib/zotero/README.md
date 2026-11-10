@@ -3,8 +3,11 @@ section: Reading more kinds of files
 line: Your Zotero library, from a copy of zotero.sqlite: items, notes and PDF annotations, each with its citation.
 source: new
 added: 2026-11-02
+version: 0.1.0
 writes: to
 network: none
+role: reads
+reads: zotero.sqlite
 -->
 # zotero
 

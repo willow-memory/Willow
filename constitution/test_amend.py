@@ -106,9 +106,9 @@ def test_a_later_amendment_supersedes_an_earlier_and_both_stay(folder):
     old = first.split("-->\n", 1)[1].strip()
     new = old.replace("This constitution is never closed.",
                       "This constitution is never closed, and says so.")  # fmt: skip
-    n, draft = len(EVERY) + 1, am.next_draft(LATEST)
+    n, draft = len(EVERY) + 1, am.next_draft(LATEST, "minor")
     (folder / f"{n:04d}.md").write_text(
-        first.replace("draft: 0.10", f"draft: {draft}")
+        first.replace("draft: 0.10", f"draft: {draft}\nbump: minor")
         .replace("pr: 4\n", "pr: 99\nsupersedes: 0001\n")
         .replace("summary: VIII.4,", "summary: VIII.4 restated,")
         .replace(old, new),
@@ -142,13 +142,15 @@ def test_a_bad_command_line_is_refused(argv):
 VIII4 = next(a for a in EVERY if a["clauses"] == ["CONST-VIII-4"])["body"]
 
 
-def add(folder: Path, expires: str = "", supersedes: str = "", date: str = "2026-10-24") -> int:  # fmt: skip
+def add(folder: Path, expires: str = "", supersedes: str = "", date: str = "2026-10-24",
+        bump: str = "patch", pr: int | None = None, draft: str | None = None) -> int:  # fmt: skip
     """The next amendment: VIII.4 restated as it stands, so the law's text
-    holds it, optionally an emergency one."""
-    every = am.amendments(folder)
-    n, draft = len(every) + 1, am.next_draft(every[-1]["draft"])
-    head = [f"draft: {draft}", f"date: {date}", "pr: 99", "articles: VIII",
-            "clauses: CONST-VIII-4", f"summary: amendment {n}"]  # fmt: skip
+    holds it, optionally an emergency one. Each is its own pull request, and
+    so its own draft, unless `pr` names one already used."""
+    n = len(list(folder.glob("*.md"))) + 1  # counted, so a pair half-written can be
+    draft = draft or am.next_draft(am.amendments(folder)[-1]["draft"], bump)
+    head = [f"draft: {draft}", f"bump: {bump}", f"date: {date}", f"pr: {pr or 100 + n}",
+            "articles: VIII", "clauses: CONST-VIII-4", f"summary: amendment {n}"]  # fmt: skip
     head += [f"expires: {expires}"] * bool(expires) + [f"supersedes: {supersedes}"] * bool(supersedes)  # fmt: skip
     body = "<!-- willow-amendment\n" + "\n".join(head) + "\n-->\n" + VIII4 + "\n"
     (folder / f"{n:04d}.md").write_text(body, encoding="utf-8")
@@ -197,3 +199,73 @@ def test_ninety_days_on_is_within_the_bound(folder):
     add(folder, expires="2027-01-22")
     law = am.build(LAW, am.amendments(folder))
     assert am.problems(law, folder, today="2026-10-25") == []
+
+
+# ── versioned drafts (docs/design/versions.md) ───────────────────────────────
+@pytest.mark.parametrize(
+    "draft, bump, want",
+    [
+        ("0.15", "minor", "0.16.0"),
+        ("0.15", "patch", "0.15.1"),
+        ("0.15", "major", "1.0.0"),
+        ("0.16.0", "patch", "0.16.1"),
+        ("0.16.3", "minor", "0.17.0"),
+        ("1.4.2", "major", "2.0.0"),
+        ("0.9", None, "0.10"),  # the old way, two parts and 0.01
+    ],
+)
+def test_a_draft_steps_by_its_bump(draft, bump, want):
+    assert am.next_draft(draft, bump) == want
+
+
+def test_the_drafts_made_here_go_from_two_parts_to_three():
+    """0.10 to 0.15 were made the old way and keep their numbers; this
+    branch's four amendments make one draft, 0.16.0, a minor step."""
+    drafts = [a["draft"] for a in EVERY]
+    assert drafts[:6] == ["0.10", "0.11", "0.12", "0.13", "0.14", "0.15"]
+    assert set(drafts[6:]) == {"0.16.0"} and LATEST == "0.16.0"
+
+
+def test_one_pull_requests_amendments_make_one_draft_by_their_largest_bump(folder):
+    add(folder, bump="patch", pr=500, draft="0.17.0")
+    n = add(folder, bump="minor", pr=500, draft="0.17.0")
+    law = am.build(LAW, am.amendments(folder))
+    assert am.problems(law, folder) == [] and "> Draft 0.17.0. " in law
+    assert " → 0.17.0 (amendment 11; amendment 12)" in law
+    rows = [r for r in am.history(law) if "by merge of #500" in r]
+    assert len(rows) == 2 and all("Draft 0.17.0 —" in r for r in rows)
+    # each the patch it would be alone: refused, the larger bump decides
+    (folder / f"{n:04d}.md").unlink()
+    (folder / f"{n - 1:04d}.md").unlink()
+    add(folder, bump="patch", pr=500, draft="0.16.1")
+    add(folder, bump="minor", pr=500, draft="0.16.1")
+    got = am.problems(LAW, folder)
+    assert any(
+        "make 0.17.0 from 0.16.0, by their largest bump, minor" in p for p in got
+    ), got
+
+
+def test_two_pull_requests_make_two_drafts(folder):
+    add(folder, bump="patch")
+    add(folder, bump="patch")
+    law = am.build(LAW, am.amendments(folder))
+    assert am.problems(law, folder) == [] and "> Draft 0.16.2. " in law
+
+
+@pytest.mark.parametrize(
+    "head, says",
+    [
+        ("draft: 0.17\n", "has three parts and a bump"),  # the old way, after the new
+        ("draft: 0.17.0\nbump: some\n", "with a bump of major, minor or patch"),
+        ("draft: 0.17.0\n", "with a bump of major, minor or patch"),  # no bump
+        ("draft: 0.17\nbump: minor\n", "MAJOR.MINOR.PATCH"),
+        ("draft: 0.18.0\nbump: minor\n", "make 0.17.0 from 0.16.0"),  # skips one
+        ("draft: 0.16.1\nbump: minor\n", "make 0.17.0 from 0.16.0"),  # too small
+    ],
+)
+def test_a_versioned_draft_that_doesnt_follow_is_refused(folder, head, says):
+    body = (f"<!-- willow-amendment\n{head}date: 2026-11-09\npr: 600\narticles: VIII\n"
+            f"clauses: CONST-VIII-4\nsummary: x\n-->\n{VIII4}\n")  # fmt: skip
+    (folder / f"{len(EVERY) + 1:04d}.md").write_text(body, encoding="utf-8")
+    got = am.problems(LAW, folder)
+    assert any(says in p for p in got), got

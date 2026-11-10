@@ -3,8 +3,11 @@ section: Reading more kinds of files
 line: The man pages installed on this machine as plain text, so you can ask your own system's docs.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: to
 network: none
+role: reads
+reads: .1, .2, .3, .4, .5, .6, .7, .8
 -->
 # man-pages
 

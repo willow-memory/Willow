@@ -3,8 +3,11 @@ section: Reading more kinds of files
 line: Chess games from PGN files: players, dates, openings and your annotations.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: to
 network: none
+role: reads
+reads: .pgn
 -->
 # pgn
 

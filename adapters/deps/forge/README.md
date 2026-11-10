@@ -1,15 +1,18 @@
 <!-- willow-addon
 section: Assistants
-line: A sentence in, the add-ons it names or means out, as a plan with its forks for the Forge's checkpoint to resolve and the person to seal before anything runs.
+line: A sentence in, the add-ons it means out: a plan with its forks, for the Forge's checkpoint to settle and the person to seal before it runs.
 source: new
 added: 2026-11-03
+version: 0.1.0
 needs: forge-play; Apache-2.0
 floor: forge-play 0.10.0; the rule names 0.1.0, its first release, but the card box this reads the cards with arrived in 0.10.0
 writes: record, to
 network: none
+role: repo
 output: report
 uses: stack
 looks-for: ci
+runs-in: repo
 -->
 # forge
 
@@ -81,6 +84,9 @@ waits its turn until the first no longer stands.
     ## built
       adapters/stdlib/mail/       mail: contract held; tests unreachable (no --python with pytest given); ran: clean
       adapters/stdlib/coming-up/  coming-up: contract held; tests unreachable (no --python with pytest given); ran: clean
+
+To share a stack you sealed, with your reasons, see
+[stack-share](../../stdlib/stack-share/).
 
 `build` runs the stack you sealed for these words, and nothing else. It
 reads the sealed stack from your record, never from a file you could edit;

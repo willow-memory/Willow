@@ -3,11 +3,14 @@ section: Assistants
 line: Suggestions from a GGUF model loaded inside the add-on itself through llama-cpp-python: no server, no port, nothing listening.
 source: new
 added: 2026-11-02
+version: 0.1.0
 needs: llama-cpp-python; MIT; licence of the model varies
 floor: llama-cpp-python 0.2.29; the rule names 0.1.1, its first release, which reads no GGUF; a seed per chat arrived in 0.2.15, and before 0.2.29 every quiet load opens /dev/null to write, which the guard holds as a write its card doesn't allow
 writes: record
 network: none
+role: suggests
 uses: openai-compatible
+output: suggestions
 -->
 # in-process
 
@@ -36,8 +39,9 @@ bare `[1]`, or a file and line in brackets, points at a passage and answers
 nothing, and a suggestion with no words in it would wait on nobody. `--system FILE` puts a voice before the rule.
 
 **Its claim** names the model file by its name and SHA-256, never by
-where it lives: `qwen.gguf (sha256 9c1e…) in this process answered from 1
-of the 2 passages served`. [weights-pin](../../stdlib/weights-pin/) in
+where it lives, in the suggestions contract's one form: `qwen.gguf in this
+process (weights sha256 9c1e…, temperature 0, seed 0) answered from 1 of
+the 2 passages served`, a `--system` voice by its SHA-256 too. [weights-pin](../../stdlib/weights-pin/) in
 front of it holds the file to its card before it loads.
 
 **Small models and the rule.** On this repository's test machine (4 CPU

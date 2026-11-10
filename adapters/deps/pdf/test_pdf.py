@@ -163,3 +163,16 @@ def test_a_ligature_is_written_as_its_letters_not_its_glyph_name():
     spec.loader.exec_module(pdf)
     text = pdf.as_text(["/f_inancing to /f_irms, o/uniFB00-balance"])
     assert "financing to firms, off-balance" in text, text
+
+
+@pytest.mark.xfail(
+    strict=True,
+    reason="bug #112: ligatures come through as glyph names, so /f_inancing is never found as financing",
+)
+def test_a_ligature_character_is_written_as_its_letters():
+    # the same bug when pypdf gives the ligature as its Unicode character
+    spec = importlib.util.spec_from_file_location("pdf_addon", HERE / "pdf.py")
+    pdf = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(pdf)
+    text = pdf.as_text(["pinch o\ufb00 from each other, de\ufb01ne"])
+    assert "pinch off from each other, define" in text, text

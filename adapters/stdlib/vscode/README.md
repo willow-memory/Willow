@@ -3,8 +3,10 @@ section: Ways to use it
 line: A VS Code task whose answers land in the Problems panel, each a jump to its file and line.
 source: new
 added: 2026-10-24
+version: 0.1.0
 writes: nothing
 network: none
+role: ways
 uses: hosts
 -->
 # vscode

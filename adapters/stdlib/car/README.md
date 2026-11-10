@@ -3,8 +3,10 @@ section: Keeping track
 line: Your car's services, repairs and inspection dates, from receipts and notes: what's due, and what it cost.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: nothing
 network: none
+role: page
 uses: habits
 -->
 # car

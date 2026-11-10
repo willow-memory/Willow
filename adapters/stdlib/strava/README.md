@@ -3,8 +3,11 @@ section: Reading more kinds of files
 line: Strava's export and GPX files: each run, ride and walk as a dated line with its distance and time.
 source: new
 added: 2026-11-02
+version: 0.1.0
 writes: to
 network: none
+role: reads
+reads: .csv, .gpx, .tcx, .fit, .gz
 -->
 # strava
 

@@ -45,9 +45,9 @@ add-on, so it runs the same if you delete every one.
   and re-hashed from the edit onward is not detected on its own; see
   [LIMITS.md](LIMITS.md).
 - **Portable:** reimplemented in Java, TypeScript, C#, Go and Rust, and all
-  six are held to the same 4,686 test cases.
+  six are held to the same 4,694 test cases.
 
-**Contents:** [Your first five minutes](#your-first-five-minutes) · [What it is not](#what-it-is-not) · [Building on it](#building-on-it) · [What you can build on it](#what-you-can-build-on-it) · [How it works](#how-it-works) · [Commands](#commands) · [Guarantees, and the tests behind them](#guarantees-and-the-tests-behind-them) · [Where it falls short](#where-it-falls-short) · [How it's verified](#how-its-verified) · [What's in this repo](#whats-in-this-repo) · [Licence](#licence)
+**Contents:** [Your first five minutes](#your-first-five-minutes) · [Which path am I on?](#which-path-am-i-on) · [What it is not](#what-it-is-not) · [Building on it](#building-on-it) · [What you can build on it](#what-you-can-build-on-it) · [How it works](#how-it-works) · [Commands](#commands) · [Guarantees, and the tests behind them](#guarantees-and-the-tests-behind-them) · [Where it falls short](#where-it-falls-short) · [How it's verified](#how-its-verified) · [What's in this repo](#whats-in-this-repo) · [Licence](#licence)
 
 
 ## Your first five minutes
@@ -58,7 +58,7 @@ made-up beekeeper's six years of notes:
 ```
 $ git clone https://github.com/willow-memory/Willow && cd Willow
 $ python kernel.py test
-kernel: the eight beats held
+kernel: the twelve beats held
 $ python demo/odile/make_life.py
 $ python kernel.py init --box odile-record --pile demo/odile/life --key odile.key
 $ python kernel.py bite --box odile-record "how are the bees"
@@ -67,6 +67,32 @@ $ python kernel.py bite --box odile-record "how are the bees"
 The answer is up to three passages from her files, each with its file and
 line. [The full five minutes](docs/tour.md) goes on: a question her files
 don't answer, teaching it her words, and approving an answer with the key.
+
+
+## Which path am I on?
+
+| I want to… | Start here |
+|---|---|
+| See that it works, in five minutes | [docs/tour.md](docs/tour.md) (the commands above) |
+| Ask questions of my own files, with the kernel alone | [docs/use/kernel.md](docs/use/kernel.md) |
+| Put a stack of add-ons together on this machine | `python ui/canvas.py`: [docs/use/stack.md](docs/use/stack.md) and [ui/README.md](ui/README.md) |
+| Know why a question found nothing | [docs/use/asking.md](docs/use/asking.md) and [docs/how-it-works.md](docs/how-it-works.md) |
+| Read the guarantees and the law, or change willow | [Govern and contribute](#govern-and-contribute), below |
+
+### Govern and contribute
+
+The rules the code is written to enforce, and how to change it:
+
+- [CONSTITUTION.md](CONSTITUTION.md): the law, always a draft; its first
+  article can never be loosened
+- [DECISIONS.md](DECISIONS.md): what's settled, and why
+- [LIMITS.md](LIMITS.md): what it doesn't do, on purpose or not yet
+- [CONTRIBUTING.md](CONTRIBUTING.md): the rules every change follows
+- [AGENTS.md](AGENTS.md): for AI agents changing willow
+- [SECURITY.md](SECURITY.md), [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) and
+  [BUGS.md](BUGS.md)
+
+None of them is needed to ask your first question of your own files.
 
 
 ## What it is not
@@ -123,14 +149,15 @@ says how to pick one up:
 - **For maintainers:** the repo's own tools: CI, the list, tests that can fail. For example [mutants](adapters/stdlib/mutants/) and [ci](adapters/stdlib/ci/).
 <!-- /willow:summary -->
 
-<!-- willow:front show=pick week=2026-W45 -->
+<!-- willow:front show=pick week=2026-W46 -->
 **Add-on of the week**
 
-**[why-not](adapters/stdlib/why-not/)** — When the answer is 'not enough to say', which words found nothing, and what kind of file would have answered.
+**[fixity](adapters/stdlib/fixity/)** \
+Your folder's files hashed again now and then, the hashes kept on the record, and a file that changed with no edit of yours flagged as rot.
 
-*Drawn for 2026-W45: SHA-256 of "willow add-on of the week 2026-W45", modulo the 334 built add-ons in name order.*
+*Drawn for 2026-W46: SHA-256 of "willow add-on of the week 2026-W46", modulo the 351 built add-ons in name order.*
 
-[Every add-on, 334 built of 525, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 351 built of 537, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 
@@ -179,7 +206,7 @@ python kernel.py test
 | `decline` | turns one down, with your key: it isn't offered again |
 | `verify` | checks every line of the log, every approval and every No |
 | `out` | lists what is waiting for your approval |
-| `test` | runs the whole cycle in a temporary folder and checks eight properties |
+| `test` | runs the whole cycle in a temporary folder and checks twelve properties |
 
 The commands that write to the log also take `--now TIMESTAMP`, to fix the
 time recorded (for scripts and tests).
@@ -201,17 +228,18 @@ willow's own.
 
 | Guarantee | Clause | Enforced by |
 |---|---|---|
-| Uses only Python's own library, and never an add-on | none | `test_kernel.py` fails on any other import, `adapters` included |
-| Never goes online | none | `test_kernel.py` parses the file and fails on any network module, `eval`, `exec`, `compile` or `__import__` |
-| Never stores your words | none | the log is checked for the question's and answer's words after a full cycle |
+| Uses only Python's own library, and never an add-on | `CONST-III-6` | `kernel.py test` reads its own imports; `test_kernel.py` fails on any other, `adapters` included; `test_strip.py` runs it with `adapters/` deleted |
+| Never goes online | `CONST-III-1`, `CONST-III-5` | `test_kernel.py` parses the file and fails on any network module, `eval`, `exec`, `compile` or `__import__` |
+| Never stores your words | `CONST-VI-8` | `kernel.py test`: after the whole cycle, the log holds no word a question or a suggestion said |
 | Never gives a suggestion as an answer until it's approved | `CONST-0-1`, `CONST-0-2` | `kernel.py test`: a suggestion without a seal is listed as waiting, not given |
 | Never accepts a forged approval | `CONST-0-4` | `kernel.py test`: a seal with the right shape and a re-hashed chain is still rejected |
+| Never offers again what you declined, or approves over it | `CONST-V-10` | `kernel.py test`: a decline that doesn't prove changes nothing; one that does ends the offer, and a seal after it is refused |
 | Never serves an approval for a question you didn't seal it for | `CONST-0-4` | `test_kernel.py`: a record rewritten and re-hashed can't change, strip or re-point the question a seal names |
 | Never writes past a change | `CONST-0-5` | `kernel.py test`: one edited field in one past line, and every command refuses |
 | What no one decided is yours: nothing matched, or something waits on you, is exit 42 | `CONST-0-6` | `constitution/test_eternity.py`: nothing found, an answer waiting and a seal that doesn't prove each end at 42, never 0 |
-| Same answer every run | none | the ranking is checked under different hash seeds |
+| Same answer every run | `CONST-IV-10` | `kernel.py test`: the same question under three hash seeds serves the same passages in the same order |
 | Every add-on keeps its card's promises: what it writes, where it goes online | `CONST-0-3` | the guard watches every process an add-on's tests start, and fails a breach even one the add-on catches and hides |
-| Every add-on's tests can fail | none | each add-on's code is broken on purpose a few ways (`mutants`); a break its tests miss fails CI, unless it's listed as harmless with the reason |
+| Every add-on's tests can fail | `CONST-IV-9` | each add-on's code is broken on purpose a few ways (`mutants`); a break its tests miss fails CI, unless it's listed as harmless with the reason |
 | Every add-on refuses a bad command line, and every reader keeps the same contract | none | one test holds them all to it (`adapters/stdlib/ci/test_contract.py`) |
 
 
@@ -257,10 +285,11 @@ in `demo/*/STRIP.md`.
   verdict row on a kernel record, which `verify` then checks like any other.
   A tool that isn't installed is recorded as unreachable, never as a pass.
   It is deterministic: the same files give the same record, byte for byte.
-  CI runs the same script on every pull request and every push to main, with the tests on Python 3.9 through
-  3.14 (a pull request on 3.9 and 3.14 only, every push to main on all six), and keeps each job's record as an artifact. The verdicts are draft;
+  CI runs the same script on every pull request and on every commit main takes, with the tests on Python 3.9 through
+  3.14 (a pull request on 3.9 and 3.14 only, main's commit on all six: once, in the merge queue, or on its push when
+  the queue didn't run it), and keeps each job's record as an artifact. The verdicts are draft;
   merging is the person's call. See [adapters/stdlib/ci](adapters/stdlib/ci/).
-- **Six implementations, one behaviour.** `vectors/gen.py` reads 4,686 cases
+- **Six implementations, one behaviour.** `vectors/gen.py` reads 4,694 cases
   out of `kernel.py`, covering canonical JSON, word splitting, HTML text,
   ranking, dates, word forms and every refusal. The Java, TypeScript, C#, Go
   and Rust ports must give byte-identical answers. Then the same session runs
@@ -290,7 +319,7 @@ The top of it. [FILES.md](FILES.md) lists every file and what it is, and
 
 ```
 willow/
-├── kernel.py                 the whole program (about 1,100 lines)
+├── kernel.py                 the whole program (about 1,200 lines)
 ├── test_kernel.py            its tests
 ├── test_docs.py              holds every doc to the files that exist, and the trees to the repo
 ├── test_docs_fires.py        plants a violation for each docs check and makes sure it fails
@@ -301,6 +330,7 @@ willow/
 ├── CONTRIBUTING.md           the rules every change follows, and how to show it does
 ├── AGENTS.md                 for AI agents: what CI catches when CONTRIBUTING is missed
 ├── CLAUDE.md                 one line: read AGENTS.md
+├── GEMINI.md                 points Gemini CLI at AGENTS.md (no @ import there)
 ├── CODE_OF_CONDUCT.md        how we treat each other
 ├── SECURITY.md               what counts as a security problem, and how to report it in public
 ├── CHANGELOG.md              what changed, by pull request, and each release
@@ -315,13 +345,15 @@ willow/
 ├── ports/                    kernel.py rewritten in other languages
 ├── vectors/                  what keeps the six implementations identical
 ├── demo/                     four made-up people, and one real bug, to try it on
-├── docs/                     the full first five minutes, and how it works in full
+├── docs/                     the full first five minutes, using it on your own files, how it works in full, and agents' how-tos
 ├── .github/                  CI, the issue forms, the pull request template: the GitHub add-on's
 ├── .gitignore                generated files and build output
 ├── .gitattributes            every file checked out with LF line endings, on every system
 ├── .editorconfig             the same line endings and indents, for editors
 ├── ruff.toml                 lint settings
-└── LICENSE                   Apache-2.0
+├── LICENSE                   Apache-2.0
+├── changes/                  each pull request's changelog entry, until a release folds it in
+└── towncrier.toml            how a release folds them into CHANGELOG.md
 ```
 
 ## Licence

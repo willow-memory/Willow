@@ -3,8 +3,10 @@ section: Ways to use it
 line: A note written into your folder in one line, with its type and tags, so the next question can find it.
 source: new
 added: 2026-11-01
+version: 0.1.0
 writes: to
 network: none
+role: makes
 -->
 # capture
 

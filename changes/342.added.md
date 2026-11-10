@@ -1,0 +1,1 @@
+`look`: one question answered by the step whose job it is. It takes route's kind for the question and shows the lines a stack's kept run holds for that kind's steps, the ones holding your words first; a thing you wrote down is asked of your files with `--box`

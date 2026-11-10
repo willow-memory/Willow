@@ -3,8 +3,10 @@ section: Finding things
 line: When the answer is 'not enough to say', which words found nothing, and what kind of file would have answered.
 source: new
 added: 2026-10-29
+version: 0.1.1
 writes: nothing
 network: none
+role: tools
 output: report
 -->
 # why-not
@@ -16,6 +18,7 @@ is the thing not in the files, or is it there under another name? This asks
 the same question of the same folder, the kernel's own way, and says why.
 
     python adapters/stdlib/why-not/why_not.py --box DIR "when does the frost come in autumn" [--json]
+    python adapters/stdlib/why-not/why_not.py --box DIR --questions FILE [--of SCANNED] [--json]
 
     why-not: populated, "when does the frost come in autumn": a passage has to hold 2 of the 3 words at once
     ## words
@@ -26,6 +29,24 @@ the same question of the same folder, the kernel's own way, and says why.
       diary.txt:3   holds 1 (frost); lacks come, autumn
     ## what would have answered it
       kind of file  a dated note, an event or a deadline, with the date on the line
+
+**A whole list of questions.** `--questions FILE` takes a file of them, one
+a line, or a name, a tab, then the question, the way [scan](../scan/) takes
+them. Each question that finds nothing is explained under a heading of its
+own, its name and the question; one your files do hold is left out:
+
+    why-not: populated, 2 of 3 questions found nothing; each says why
+    ## frost: when does the frost come in autumn
+      it needs     a passage has to hold 2 of the 3 words at once
+      frost        held by 1 passage: diary.txt:3
+      autumn       no passage holds it
+      diary.txt:3  holds 1 (frost); lacks come, autumn
+
+`--of SCANNED` hands it what scan already found: the lines scan printed for
+that same file. Then only the questions scan said were empty are explained,
+and none is asked twice. In a [stack](../stack/) that is an earlier step's
+output, named by its number, `--of {01}`. Lines that aren't scan's are
+refused, saying which line; so is a file with nothing in it.
 
 It prints [a report](../ci/README.md#the-report-contract): a line saying the
 question and the share a passage needs, then the words, the nearest

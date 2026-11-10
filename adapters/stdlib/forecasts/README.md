@@ -3,8 +3,10 @@ section: Keeping track
 line: Write a prediction before the outcome, settle it later with your seal, see your Brier score.
 source: bot
 added: 2026-11-01
+version: 0.1.0
 writes: record
 network: none
+role: tools
 output: report
 -->
 # forecasts

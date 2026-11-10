@@ -3,8 +3,10 @@ section: Keeping track
 line: Write down what a question will come to before you ask it, and grade it after; the record counts how often it was right.
 source: bot
 added: 2026-11-01
+version: 0.1.0
 writes: record
 network: none
+role: tools
 output: report
 -->
 # predict

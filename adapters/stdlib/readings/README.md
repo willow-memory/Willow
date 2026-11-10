@@ -3,8 +3,10 @@ section: Keeping track
 line: Two hints beside an answer: a number in your files that moved a lot lately, and a date in a log that passed with nothing written since.
 source: box
 added: 2026-10-22
+version: 0.1.0
 writes: record
 network: none
+role: tools
 -->
 # readings
 

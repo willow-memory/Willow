@@ -7,6 +7,7 @@ FOLDER kept apart."""
 from __future__ import annotations
 
 import importlib.util
+import json
 import subprocess
 import sys
 from pathlib import Path
@@ -411,7 +412,17 @@ def test_hidden_files_and_folders_are_not_read(tmp_path):
     )
     assert sorted(
         p.relative_to(out).as_posix() for p in out.rglob("*") if p.is_file()
-    ) == ["a/n.md.txt"]
+    ) == [".places/a/n.md.txt.json", "a/n.md.txt"]
+
+
+def test_each_passage_is_placed_on_its_own_line_and_a_table_on_two(tmp_path):
+    src = b"---\ntitle: Plot\n---\n# Beds\n\nTomatoes in bed two.\n\n| crop | bed |\n|---|---|\n| leek | 3 |\n"
+    got, out = mirror_of(tmp_path, {"g.md": src})
+    doc = json.loads((out / ".places" / "g.md.txt.json").read_text())
+    assert doc == {"source": "g.md",
+                   "places": {"2": "line 2", "4": "line 4", "6": "line 6", "9": "lines 8-9"}}  # fmt: skip
+    text = (out / "g.md.txt").read_text().splitlines()
+    assert text[8] == "crop; bed", "the header, on the separator's line"
 
 
 def test_the_same_folder_gives_the_same_bytes_and_originals_are_unchanged(tmp_path):

@@ -3,8 +3,11 @@ section: Reading more kinds of files
 line: Bank CSV and OFX statements as dated lines, with spending by month.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: to
 network: none
+role: reads
+reads: .csv, .ofx, .qfx
 -->
 # bank
 

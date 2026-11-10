@@ -3,8 +3,10 @@ section: Assistants
 line: Any model scored against the answers you sealed, your own questions as its exam, before you trust its suggestions.
 source: new
 added: 2026-11-02
+version: 0.1.0
 writes: nothing
 network: the endpoint you configure, to ask your sealed questions
+role: suggests
 uses: openai-compatible
 -->
 # model-exam

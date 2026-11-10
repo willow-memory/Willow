@@ -254,3 +254,53 @@ def test_two_times_is_the_least_it_asks(box, model, tmp_path):
     )
     assert got.returncode == 0 and got.stdout.startswith("same     2 of 2  ")
     assert len(model.sent) == 2
+
+
+def test_system_and_reasoning_ask_the_chat_local_model_asks(box, model, tmp_path):
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location(
+        "oc_for_test", HERE.parent / "openai-compatible" / "openai_compatible.py"
+    )
+    oc = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(oc)
+    voice = tmp_path / "voice.txt"
+    voice.write_text("  You are Abuela Eufemia.\n", encoding="utf-8")
+    model.replies = ["Lard [1]."]
+    q = questions(tmp_path, "what goes in biscochitos")
+    base = ["--box", box, "--url", model.url, "--model", "m", "--questions", q]
+    got = run(*base, "--system", voice, "--reasoning", "none")
+    assert got.returncode == 0, got.stderr
+    assert len(model.sent) == 3
+    for body in model.sent:
+        assert body["reasoning_effort"] == "none"
+        assert body["messages"][0] == {
+            "role": "system",
+            "content": "You are Abuela Eufemia.\n\n" + oc.RULE,
+        }
+    model.sent = []
+    assert run(*base, "--reasoning", "high").returncode == 0
+    assert {b["reasoning_effort"] for b in model.sent} == {"high"}
+    assert model.sent[0]["messages"][0]["content"] == oc.RULE
+    model.sent = []
+    assert run(*base).returncode == 0
+    assert list(model.sent[0]) == ["model", "messages", "temperature", "seed"]
+    assert model.sent[0]["messages"][0]["content"] == oc.RULE
+
+
+def test_a_bad_system_or_reasoning_is_refused_before_anything_is_asked(
+    box, model, tmp_path
+):
+    q = questions(tmp_path, "what goes in biscochitos")
+    base = ["--box", box, "--url", model.url, "--model", "m", "--questions", q]
+    voice = tmp_path / "voice.txt"
+    voice.write_text("Speak softly.\n", encoding="utf-8")
+    for more in (["--reasoning", "think"], ["--reasoning", ""], ["--reasoning"],
+                 ["--system", ""], ["--system"],
+                 ["--system", voice, "--system", voice]):  # fmt: skip
+        got = run(*base, *more)
+        assert got.returncode == 2 and "same_way.py" in got.stderr, more
+    got = run(*base, "--system", tmp_path / "gone.txt")
+    assert got.returncode == 2
+    assert "can't read the system file: FileNotFoundError" in got.stderr
+    assert model.sent == []

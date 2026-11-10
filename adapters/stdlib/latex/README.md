@@ -3,8 +3,12 @@ section: Reading more kinds of files
 line: LaTeX sources as plain prose, commands stripped, cited by the .tex file's own lines.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: to
 network: none
+role: reads
+output: mirror
+reads: .tex
 -->
 # latex
 
@@ -31,8 +35,11 @@ make. A line that held only dropped material is blank, so the numbering holds.
 
 Each file is written to MIRROR at the same relative path with .txt added.
 FOLDER is only read: hidden folders and files are skipped, and nothing is
-written inside it. A file that can't be read is skipped and counted, never a
-crash:
+written inside it. A file is read as UTF-8, else as Windows-1252, else as
+Latin-1, so a paper holding one stray byte of another encoding (an en dash
+pasted from a word processor, as in some arXiv sources) is still read, as the
+[equations](../equations/) reader reads it. A file holding a NUL byte (UTF-16,
+or a binary) or that can't be read is skipped and counted, never a crash:
 
     wrote 2 files to MIRROR; skipped 1
 
@@ -43,6 +50,11 @@ folder, or MIRROR and FOLDER are inside one another).
 
 **Uses:** the kernel's exit codes (`ALIVE`, `ESCALATE`, `REFUSED`); Python's
 standard library for the format.
+
+**Where each passage came from** is in a hidden map beside its mirror,
+`MIRROR/.places/<same path>.txt.json`, which the kernel never reads: each
+passage's line, which is the source's own, as
+[the mirror contract](../ci/README.md#the-mirror-contract) says.
 
 **Never:** writes inside FOLDER, modifies an original, writes anything outside
 MIRROR, or goes online.

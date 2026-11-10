@@ -3,8 +3,10 @@ section: Ways to use it
 line: New approved answers as an RSS feed file, for any feed reader.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: to
 network: none
+role: makes
 -->
 # rss-out
 

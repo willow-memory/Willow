@@ -3,8 +3,10 @@ section: Your own words
 line: Russian common words ("и", "в", "на").
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: record
 network: none
+role: words
 tags: russian
 -->
 # words-ru

@@ -3,8 +3,11 @@ section: Reading more kinds of files
 line: Evernote's .enex files: each note as plain text with its notebook, tags and dates.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: to
 network: none
+role: reads
+reads: .enex
 -->
 # evernote
 

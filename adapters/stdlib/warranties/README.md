@@ -3,8 +3,10 @@ section: Keeping track
 line: Receipts and warranties: when the dishwasher's cover ends, and where its receipt is.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: nothing
 network: none
+role: page
 uses: car
 -->
 # warranties

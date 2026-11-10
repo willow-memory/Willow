@@ -3,8 +3,10 @@ section: Ways to use it
 line: An external tool for IntelliJ, PyCharm and the rest, with answers as links to file and line.
 source: new
 added: 2026-10-24
+version: 0.1.0
 writes: nothing
 network: none
+role: ways
 uses: hosts
 -->
 # jetbrains

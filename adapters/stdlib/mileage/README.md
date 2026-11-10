@@ -3,8 +3,10 @@ section: Keeping track
 line: Miles driven for work, from your trips and notes, totalled for a tax year.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: nothing
 network: none
+role: page
 uses: habits
 -->
 # mileage

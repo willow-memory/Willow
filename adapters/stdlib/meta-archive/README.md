@@ -3,8 +3,11 @@ section: Reading more kinds of files
 line: Facebook and Instagram's Download Your Information files: posts, comments and messages as dated lines.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: to
 network: none
+role: reads
+reads: .json
 -->
 # meta-archive
 

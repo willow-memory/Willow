@@ -3,11 +3,13 @@ section: Ways to use it
 line: A job someone sent you, run in a sandbox over your own folder only once you seal it, its result yours to seal before it goes back.
 source: new
 added: 2026-11-03
+version: 0.1.0
 needs: kartikeya, and the bwrap program (bubblewrap), run not linked; Apache-2.0, LGPL-2.0-or-later
 programs: bwrap
 floor: kartikeya 0.0.1
 writes: record, to
 network: none
+role: tools
 uses: share
 -->
 # kart

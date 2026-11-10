@@ -3,8 +3,10 @@ section: Your own words
 line: Polish common words ('i', 'w').
 source: new
 added: 2026-10-27
+version: 0.1.0
 writes: record
 network: none
+role: words
 tags: polish
 -->
 # words-pl

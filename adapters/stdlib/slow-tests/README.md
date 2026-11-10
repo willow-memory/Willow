@@ -3,8 +3,10 @@ section: For maintainers
 line: Each test's time kept per run, with the slowest named and any that got slower flagged.
 source: new
 added: 2026-10-24
+version: 0.1.0
 writes: nothing
 network: none
+role: tools
 -->
 # slow-tests
 

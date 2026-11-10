@@ -3,8 +3,10 @@ section: Assistants
 line: GitHub Copilot, in VS Code and in its own CLI, asks your folder through the mcp add-on.
 source: new
 added: 2026-10-24
+version: 0.1.0
 writes: nothing
 network: none
+role: ways
 uses: hosts
 -->
 # copilot

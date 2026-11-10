@@ -3,8 +3,10 @@ section: For maintainers
 line: How fast the kernel answers on boxes of set sizes, per release, so a slowdown is seen.
 source: new
 added: 2026-10-26
+version: 0.1.0
 writes: nothing
 network: none
+role: tools
 -->
 # bench
 

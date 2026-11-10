@@ -3,8 +3,10 @@ section: Assistants
 line: Finds the smallest quantized local model that still gets your box's own questions right, so suggestions come faster.
 source: new
 added: 2026-11-02
+version: 0.1.0
 writes: nothing
 network: loopback
+role: suggests
 uses: local-model, model-exam
 -->
 # quantized

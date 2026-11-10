@@ -3,8 +3,11 @@ section: Reading more kinds of files
 line: Element's room export, JSON or HTML: one dated line per message in each Matrix room.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: to
 network: none
+role: reads
+reads: .json
 -->
 # matrix
 

@@ -3,8 +3,10 @@ section: Privacy and safety
 line: Dependency names a letter off from a popular one (reqeusts, lodahs), checked against a list of top packages you downloaded.
 source: new
 added: 2026-10-24
+version: 0.1.0
 writes: nothing
 network: none
+role: page
 uses: advisories
 -->
 # typosquat

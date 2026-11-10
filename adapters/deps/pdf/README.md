@@ -3,10 +3,13 @@ section: Reading more kinds of files
 line: Text out of PDFs.
 source: new
 added: 2026-10-23
+version: 0.1.0
 needs: pypdf; BSD-3-Clause
 floor: pypdf 3.1.0; the 2020 rule names 1.9 from 2014, a Python 2 release under the same name, and 3.1.0 is the first since it was revived
 writes: to
 network: none
+role: reads
+reads: .pdf
 -->
 # pdf
 

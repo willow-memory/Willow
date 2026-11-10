@@ -3,8 +3,10 @@ section: Finding things
 line: Forgives misspellings in questions.
 source: new
 added: 2026-10-25
+version: 0.1.0
 writes: nothing
 network: none
+role: tools
 -->
 # typos
 

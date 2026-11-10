@@ -3,8 +3,11 @@ section: Reading more kinds of files
 line: Saved web pages, .html and .mhtml, as their readable text, with the address they came from.
 source: new
 added: 2026-10-24
+version: 0.1.0
 writes: to
 network: none
+role: reads
+reads: .html, .htm, .mhtml, .mht
 uses: clauses
 -->
 # web-pages

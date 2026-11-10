@@ -1,10 +1,13 @@
 <!-- willow-addon
 section: Reading more kinds of files
-line: A policy, contract or set of terms as one sentence a passage, so an answer lands on the clause, and what changed between two versions, sentence by sentence.
+line: A policy, contract or terms as one sentence a passage, so an answer lands on its clause; and what changed between two versions, by sentence.
 source: new
 added: 2026-10-24
+version: 0.1.0
 writes: to
 network: none
+role: reads
+reads: .html, .htm, .md, .txt
 tags: policies
 -->
 # clauses
@@ -31,7 +34,12 @@ answer should be the one sentence that says so, not the paragraph around it.
   `== page N` heading is kept after it, so an answer still says the page;
 - a sentence ends at `.`, `!` or `?` (a closing quote or bracket may
   follow) before a capital, a digit or an opening quote, but never after a
-  short abbreviation (e.g., Inc., U.S.) or a single initial.
+  short abbreviation (e.g., Inc., U.S.) or a single initial;
+- a sentence longer than one of the kernel's chunks (500 characters) keeps
+  its source's own lines, a line longer than that cut at a space, so the
+  kernel reads all of it, in pieces. A chat export holds no full stops: on
+  one line, its "sentence" ran for pages and the kernel kept its first 500
+  characters.
 
 **diff** splits two versions the same way and lists what changed:
 
@@ -57,7 +65,8 @@ file that isn't UTF-8 text is skipped and counted.
 own text puts a label on the same line as a sentence (a glossary term, a
 "Learn more" link), the two come out as one passage, and a diff may show
 that as a rewording. Sentences are cut by punctuation, not grammar, so a
-list run together without full stops is one passage.
+list run together without full stops is one passage, in pieces when it is
+long.
 
 **What it was built for:** Google's privacy policy of 16 October 2026, in
 [demo/google-privacy-2026-10-16](../../../demo/google-privacy-2026-10-16/):

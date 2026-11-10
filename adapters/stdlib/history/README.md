@@ -3,8 +3,10 @@ section: Trust and proof
 line: Your record in plain sentences: what was asked when, what found nothing, what you approved; places and counts, never the words.
 source: new
 added: 2026-10-24
+version: 0.1.0
 writes: nothing
 network: none
+role: page
 tags: everyday
 output: report
 -->

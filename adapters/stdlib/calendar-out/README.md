@@ -3,8 +3,10 @@ section: Ways to use it
 line: Dates coming up as an .ics file your calendar app can subscribe to.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: to
 network: none
+role: makes
 uses: coming-up
 -->
 # calendar-out

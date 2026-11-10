@@ -1,10 +1,12 @@
 <!-- willow-addon
 section: Finding things
-line: Your approved answers used as a test: each question asked again, scored by how often the search puts the passage that held it in its top five.
+line: Your approved answers used as a test: each question asked again, scored by how often search puts its passage in the top five.
 source: box
 added: 2026-10-28
+version: 0.1.0
 writes: record
 network: none
+role: tools
 tags: pile
 uses: pile-rank, scan
 -->

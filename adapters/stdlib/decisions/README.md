@@ -3,8 +3,10 @@ section: Trust and proof
 line: A recorded no with its reason and the condition that would reopen it, so a rejection is kept, not forgotten.
 source: new
 added: 2026-11-01
+version: 0.1.0
 writes: record
 network: none
+role: tools
 -->
 # decisions
 

@@ -3,8 +3,10 @@ section: Keeping track
 line: Approved question-and-answer pairs become cards, scheduled by spaced repetition.
 source: box
 added: 2026-11-01
+version: 0.1.0
 writes: record
 network: none
+role: tools
 -->
 # flashcards
 

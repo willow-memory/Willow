@@ -3,8 +3,11 @@ section: Reading more kinds of files
 line: corpus-lens's process reports on your own sessions with agents, as passages: where your intent arrives, who writes the code.
 source: new
 added: 2026-10-31
+version: 0.1.0
 writes: to
 network: none
+role: reads
+reads: .json, .md
 -->
 # corpus-lens
 

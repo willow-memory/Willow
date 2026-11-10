@@ -1,10 +1,12 @@
 <!-- willow-addon
 section: Ways to use it
-line: One page made from several willow records at once (each one's digest, export, timeline or readings), every line still cited by where it came from.
+line: One page from several willow records at once (each one's digest, export, timeline or readings), every line still cited where it came from.
 source: new
 added: 2026-10-25
+version: 0.1.0
 writes: nothing
 network: none
+role: ways
 tags: everyday
 looks-for: digest, export, readings, timeline
 -->

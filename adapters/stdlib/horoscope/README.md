@@ -3,8 +3,10 @@ section: Play
 line: A daily horoscope keyed on your name and the date: same name, same day, same reading, always.
 source: bot
 added: 2026-10-24
+version: 0.1.0
 writes: nothing
 network: none
+role: tools
 -->
 # horoscope
 

@@ -3,8 +3,10 @@ section: Privacy and safety
 line: How old each locked dependency is, and which are yanked, deprecated or two years without a release, from a registry index you downloaded.
 source: new
 added: 2026-10-24
+version: 0.1.0
 writes: nothing
 network: none
+role: page
 uses: advisories
 -->
 # outdated

@@ -1375,7 +1375,7 @@ fn stem(w: &str) -> String {
         s = format!("{}y", &s[..n - 3]);
     } else if n > 4 && s.ends_with("ing") {
         s.truncate(n - 3);
-    } else if n > 3 && s.ends_with("ed") {
+    } else if n > 3 && s.ends_with("ed") && !s.ends_with("eed") {
         s.truncate(n - 2);
     } else if n > 3 && s.ends_with('s') && !s.ends_with("ss") {
         s.truncate(n - 1);

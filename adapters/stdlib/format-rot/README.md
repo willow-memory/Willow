@@ -1,10 +1,12 @@
 <!-- willow-addon
 section: Trust and proof
-line: Files in formats that may stop opening (old office files, proprietary ones, those no reader handles) flagged while you can still convert them.
+line: Files in formats that may stop opening (old office files, proprietary ones, ones no reader handles), flagged while you can convert them.
 source: new
 added: 2026-10-31
+version: 0.1.0
 writes: nothing
 network: none
+role: tools
 -->
 # format-rot
 

@@ -284,6 +284,7 @@ def text_encoding(name: str) -> bool:
     return getattr(info, "_is_text_encoding", True)
 
 
+# differs on purpose: it takes --encoding
 def main(argv: list[str]) -> int:
     opts = dict(zip(argv[1::2], argv[2::2])) if argv[:1] == ["mirror"] else {}
     keys = sorted(opts)

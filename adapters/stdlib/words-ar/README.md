@@ -3,8 +3,10 @@ section: Your own words
 line: Arabic common words ("في", "من", "على").
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: record
 network: none
+role: words
 tags: arabic
 -->
 # words-ar

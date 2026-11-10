@@ -3,8 +3,10 @@ section: For maintainers
 line: Why CI went red: the failing block pulled out of the job's log, plain, put where people look.
 source: bot
 added: 2026-10-24
+version: 0.1.0
 writes: nothing
 network: none
+role: tools
 -->
 # ci-why
 

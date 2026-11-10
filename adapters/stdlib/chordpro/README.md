@@ -3,8 +3,11 @@ section: Reading more kinds of files
 line: ChordPro song sheets: titles, lyrics and chords, so you can ask which song had that line.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: to
 network: none
+role: reads
+reads: .cho, .chopro, .chordpro, .crd, .pro
 -->
 # chordpro
 

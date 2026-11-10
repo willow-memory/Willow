@@ -3,8 +3,10 @@ section: Assistants
 line: Windsurf asks your folder and hands in suggestions, through the mcp add-on.
 source: new
 added: 2026-10-24
+version: 0.1.0
 writes: nothing
 network: none
+role: ways
 uses: hosts
 -->
 # windsurf

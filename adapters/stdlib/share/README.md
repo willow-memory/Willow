@@ -3,8 +3,11 @@ section: Ways to use it
 line: Sealed answers sent to someone, checkable by them and by whoever they pass them on to, without giving anyone the folder.
 source: new
 added: 2026-11-03
+version: 0.1.0
 writes: record, to
 network: none
+role: makes
+from: shape, https://github.com/willow-memory/willow-gate, Apache-2.0
 -->
 # share
 

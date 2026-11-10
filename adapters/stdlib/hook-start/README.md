@@ -3,8 +3,11 @@ section: Assistants
 line: A SessionStart hook that hands the assistant what needs you, read the way digest reads it, so opening a session writes nothing.
 source: bot
 added: 2026-10-29
+version: 0.1.0
 writes: nothing
 network: none
+hands: what needs you, its dated lines and waiting suggestions included, to the assistant's model at the session's start
+role: guards
 tags: hooks
 uses: digest
 -->

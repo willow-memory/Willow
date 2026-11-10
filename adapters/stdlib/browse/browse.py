@@ -1,6 +1,7 @@
 """browse.py: your folder in your web browser, on this machine only. Python 3.9+.
 
-    python adapters/stdlib/browse/browse.py --box DIR [--port N] [--lang de|es|fr|pt] [--no-open]
+    python adapters/stdlib/browse/browse.py --box DIR [--stack FILE] [--run FOLDER]
+        [--port N] [--lang de|es|fr|pt] [--no-open]
     python adapters/stdlib/browse/browse.py launcher --box DIR
 
 A page to ask your folder questions, read the passages that answer them
@@ -8,6 +9,18 @@ A page to ask your folder questions, read the passages that answer them
 approve one with a click. The front page is the digest add-on's: what's
 waiting, what went stale, what's coming up. Nothing to install and no
 commands to type once it's open. Stop it with Ctrl-C.
+
+With --stack FILE (a stack file, as the stack add-on runs), a third page
+shows what the stack's steps found: each step whose card says it prints a
+report is run and drawn as a card, its one line, then its rows, where and
+what. One way of drawing serves every report add-on, since they all print
+the one shape. Steps that print something else are named and left to stack.
+
+With --run FOLDER (a run the stack add-on kept with its --to), a page shows
+that run and runs nothing: each step in the order it ran, whether it has
+ended and how, a report step's report drawn from the data the run kept, any
+other step's words. While the run is still going the page looks again every
+few seconds, with no script: a step's lines appear as it prints them.
 
 Asking is the kernel's own `bite`, and approving is its own `seal`, so
 both are on the record exactly as if typed. With --lang, a question goes
@@ -37,6 +50,7 @@ import hmac
 import html
 import io
 import json
+import re
 import secrets
 import shlex
 import socketserver
@@ -86,39 +100,114 @@ def esc(text: object) -> str:
 
 
 # ── the pages ────────────────────────────────────────────────────────────────
+#: the canvas's own colours, type and corners (ui/page.html), so the two pages
+#: read as one; a card here is laid out as a person reads it: what kind of
+#: thing it is, the thing in a sentence, why, then what it stands on, folded
 STYLE = """
-:root { color-scheme: light dark; --fg: #1d1d1b; --bg: #fbfaf7; --muted: #5f5d58;
-        --line: #d9d6cf; --card: #ffffff; --accent: #2f6b4f; }
+:root { color-scheme: light dark; --bg: #eceee7; --side: #e2e5dc; --card: #f8f9f5;
+        --fg: #23251f; --muted: #5f6458; --line: #cdd1c4; --accent: #45652a;
+        --onacc: #f6f8f0; --accl: #dde7cc; --tag: #e2e5db;
+        --mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace; }
 @media (prefers-color-scheme: dark) {
-  :root { --fg: #ecebe7; --bg: #1b1c1a; --muted: #a9a7a0; --line: #3a3b37;
-          --card: #242522; --accent: #7fc2a0; } }
+  :root { --bg: #141712; --side: #181c16; --card: #1d221a; --fg: #e2e5da;
+          --muted: #a0a795; --line: #353c2f; --accent: #a6c56f; --onacc: #16200d;
+          --accl: #2a3620; --tag: #272d23; } }
 * { box-sizing: border-box; }
-body { margin: 0 auto; max-width: 46rem; padding: 1.5rem 1rem 4rem; font: 1.125rem/1.55
-       system-ui, sans-serif; color: var(--fg); background: var(--bg); }
-h1 { font-size: 1.6rem; margin: 0 0 1rem; } h2 { font-size: 1.2rem; margin: 2rem 0 .5rem; }
-a { color: var(--accent); } nav a { margin-right: 1rem; }
-form.ask { display: flex; gap: .5rem; flex-wrap: wrap; margin: 1rem 0; }
-input[type=text] { flex: 1 1 16rem; font: inherit; padding: .6rem .7rem;
-       border: 1px solid var(--line); border-radius: .4rem; background: var(--card); color: inherit; }
-button { font: inherit; padding: .6rem 1rem; border: 0; border-radius: .4rem;
-         background: var(--accent); color: var(--bg); cursor: pointer; }
-.card { background: var(--card); border: 1px solid var(--line); border-radius: .5rem;
-        padding: .8rem 1rem; margin: .7rem 0; }
-.where { color: var(--muted); font-size: .9rem; font-family: ui-monospace, monospace;
-         overflow-wrap: anywhere; }
-.text { white-space: pre-wrap; overflow-wrap: anywhere; margin: .3rem 0 0; }
-.muted { color: var(--muted); } .card h2 { margin-top: .2rem; }
+body { margin: 0; font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+       color: var(--fg); background: var(--bg); }
+nav { background: var(--side); border-bottom: 1px solid var(--line); padding: 10px 16px; }
+nav a { margin-right: 16px; color: var(--fg); font-weight: 600; text-decoration: none; }
+main { margin: 0 auto; max-width: 46rem; padding: 24px 16px 64px; }
+h1 { font-size: 27px; line-height: 1.15; letter-spacing: -.02em; margin: 0 0 8px; }
+h2 { font-size: 16px; font-weight: 650; margin: 28px 0 6px; }
+a { color: var(--accent); }
+form.ask { display: flex; gap: 8px; flex-wrap: wrap; margin: 16px 0; }
+input[type=text] { flex: 1 1 16rem; font: inherit; padding: 8px 10px;
+       border: 1px solid var(--line); border-radius: 4px; background: var(--card); color: inherit; }
+button { font: inherit; font-weight: 600; padding: 7px 14px; border: 0; border-radius: 4px;
+         background: var(--accent); color: var(--onacc); cursor: pointer; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 4px;
+        padding: 12px 14px; margin: 10px 0; }
+.card h2 { font-size: 18px; margin: 2px 0 6px; overflow-wrap: anywhere; }
+.card p, .card ul { margin: 6px 0; } .card ul { padding-left: 1.2rem; }
+.kick { font: 600 11px/1.3 var(--mono); text-transform: uppercase; letter-spacing: .09em;
+        color: var(--muted); margin: 0 0 4px; }
+.pill { display: inline-block; font: 12px/1.6 var(--mono); text-transform: none;
+        letter-spacing: 0; padding: 0 7px; border-radius: 9px;
+        background: var(--tag); color: var(--muted); margin-right: 4px; overflow-wrap: anywhere; }
+.where { color: var(--muted); font: 13px/1.4 var(--mono); overflow-wrap: anywhere; }
+.text { white-space: pre-wrap; overflow-wrap: anywhere; margin: 4px 0 0; }
+.said { overflow-wrap: anywhere; }
+details { margin: 8px 0; } summary { cursor: pointer; color: var(--muted); }
+pre { white-space: pre-wrap; overflow-wrap: anywhere; font: 12px/1.5 var(--mono);
+      background: var(--bg); border: 1px solid var(--line); border-radius: 4px; padding: 8px 10px; }
+.muted { color: var(--muted); }
+.pill.wait { background: var(--accl); color: var(--fg); }
+.group { font-weight: 600; margin: 10px 0 2px; }
+.row { display: grid; grid-template-columns: minmax(7rem, 38%) 1fr; gap: 10px;
+       padding: 3px 0; border-top: 1px solid var(--line); }
+.row .text { margin: 0; white-space: normal; }
 """
 
 
-def page(title: str, body: str) -> str:
+def page(title: str, body: str, more: str = "", head: str = "") -> str:
+    """One page. `more` is links for the bar after the two every page has;
+    `head` is for the head (the run's page asks to be looked at again)."""
     return (
         "<!doctype html><html lang=en><head><meta charset=utf-8>"
         '<meta name=viewport content="width=device-width, initial-scale=1">'
-        f"<title>{esc(title)} · willow</title><style>{STYLE}</style></head><body>"
-        '<nav><a href="/">Home</a><a href="/waiting">Waiting for you</a></nav>'
-        f"<h1>{esc(title)}</h1>{body}</body></html>"
+        f"{head}<title>{esc(title)} · willow</title><style>{STYLE}</style></head><body>"
+        f'<nav><a href="/">Home</a><a href="/waiting">Waiting for you</a>{more}</nav>'
+        f"<main><h1>{esc(title)}</h1>{body}</main></body></html>"
     )
+
+
+#: a report's state, the kernel's word, as a person says it
+STATES = {
+    "populated": "found",
+    "empty": "nothing found",
+    "unreachable": "couldn't look",
+}
+SHOWN = 8  # rows a card shows before the rest fold away
+
+
+def rows_html(pairs: list[tuple[object, dict]]) -> str:
+    """(group, row) pairs as rows under their group's name, each row where
+    then what, a group's name said once above its first row."""
+    out, last = [], object()
+    for group, row in pairs:
+        if group != last and group is not None:
+            out.append(f"<p class=group>{esc(group)}</p>")
+        last = group
+        out.append(
+            f"<div class=row><span class=where>{esc(row['where'])}</span>"
+            f"<p class=text>{esc(row['what'])}</p></div>"
+        )
+    return "".join(out)
+
+
+def report_card(doc: dict, code: int = 0, shown: int = SHOWN, pills: str = "") -> str:
+    """One report, any add-on's, as a card: whose it is and its state, the one
+    thing it said, then its rows, the first few in sight and the rest folded.
+    The shape is the report contract's (ci/README.md): `addon`, `state`,
+    `said`, and `groups` of `rows`, each a `where` and a `what`. A report
+    that found things and exited 42 waits on the person, and says so.
+    `pills` is more to say beside its state, already HTML."""
+    pairs = [(g["name"], r) for g in doc["groups"] for r in g["rows"]]
+    state = STATES.get(doc["state"], str(doc["state"]))
+    waits = code == kernel.ESCALATE and doc["state"] == "populated"
+    head = (
+        f"<p class=kick>{esc(doc['addon'])} <span class=pill>{esc(state)}</span>"
+        + (" <span class='pill wait'>waits on you</span>" if waits else "")
+        + f"{pills}</p><h2>{esc(doc['said'])}</h2>"
+    )
+    rest = ""
+    if len(pairs) > shown:
+        rest = (
+            f"<details><summary>All {len(pairs)} rows</summary>"
+            f"{rows_html(pairs[shown:])}</details>"
+        )
+    return f"<div class=card>{head}{rows_html(pairs[:shown])}{rest}</div>"
 
 
 def ask_form(token: str, value: str = "") -> str:
@@ -131,6 +220,90 @@ def ask_form(token: str, value: str = "") -> str:
     )
 
 
+_BOLD = re.compile(r"\*\*(.+?)\*\*")
+_STEP = re.compile(r"^- \S+ -- ", re.M)
+
+
+def rich(text: str) -> str:
+    """Text a suggestion gave, as a person reads it: `# ` lines as headings,
+    `- ` lines as a list, `**bold**` as bold, and every character escaped
+    first, so nothing a suggestion says is ever markup of its own."""
+    out: list[str] = []
+    items: list[str] = []
+    para: list[str] = []
+
+    def close() -> None:
+        if items:
+            out.append("<ul>" + "".join(f"<li>{i}</li>" for i in items) + "</ul>")
+            items.clear()
+        if para:
+            out.append("<p class=said>" + " ".join(para) + "</p>")
+            para.clear()
+
+    for raw in text.splitlines():
+        line = _BOLD.sub(r"<strong>\1</strong>", esc(raw.strip()))
+        if line.startswith("- "):
+            if para:
+                close()
+            items.append(line[2:])
+        elif line.startswith("#"):
+            close()
+            out.append(f"<p class=said><strong>{line.lstrip('#').strip()}</strong></p>")
+        elif not line:
+            close()
+        else:
+            if items:
+                close()
+            para.append(line)
+    close()
+    return "".join(out)
+
+
+def listed(names: list) -> str:
+    """Names as a person lists them: a, b or c."""
+    names = [str(n) for n in names]
+    if len(names) < 2:
+        return "".join(names)
+    return ", ".join(names[:-1]) + " or " + names[-1]
+
+
+def reading(prop: dict) -> tuple[str, str, str, str]:
+    """A suggestion as (what kind of thing, its headline, its body, why), each
+    already HTML. Told by the shape of what it holds, never by who made it: a
+    choice is a JSON object saying which was chosen for a word and over what;
+    a stack is a file of `- NAME -- ARGS` steps under a heading; anything else
+    is an answer in words."""
+    data = prop["data"]
+    try:
+        doc = json.loads(data)
+    except ValueError:
+        doc = None
+    if (
+        isinstance(doc, dict)
+        and isinstance(doc.get("chose"), str)
+        and isinstance(doc.get("word"), str)
+        and isinstance(doc.get("over"), list)
+    ):
+        body = ""
+        if doc["over"]:
+            body += f"<p>Not {esc(listed(doc['over']))}.</p>"
+        card = doc.get("card")
+        if isinstance(card, dict) and isinstance(card.get("line"), str):
+            body += f"<p class=muted>{esc(doc['chose'])}: {esc(card['line'])}</p>"
+        why = (
+            doc["why"]
+            if isinstance(doc.get("why"), str) and doc["why"]
+            else prop["claim"]
+        )
+        head = f"For \u201c{esc(doc['word'])}\u201d, use {esc(doc['chose'])}"
+        return "choice", head, body, esc(why)
+    if data.lstrip().startswith("# ") and _STEP.search(data):
+        first, _, rest = data.lstrip().partition("\n")
+        steps = "\n".join(ln for ln in rest.splitlines() if not ln.startswith("#"))
+        return "stack", esc(first[2:].strip()), rich(steps), esc(prop["claim"])
+    return "answer", "", rich(data), esc(prop["claim"])
+
+
 def passage(where: str, text: str, note: str = "") -> str:
     note = f" <span class=muted>({esc(note)})</span>" if note else ""
     return (f'<div class=card><div class=where>{esc(where)}{note}</div>'
@@ -140,12 +313,119 @@ def passage(where: str, text: str, note: str = "") -> str:
 class Willow:
     """The pages for one box, with this start's secret."""
 
-    def __init__(self, box: Path, lang: str | None = None, token: str | None = None):
+    def __init__(
+        self,
+        box: Path,
+        lang: str | None = None,
+        token: str | None = None,
+        stack: Path | None = None,
+        run: Path | None = None,
+    ):
         self.box = box
+        self.stack = stack
+        self.run = run
         self.token = token or secrets.token_urlsafe(32)
         self.words = sibling(f"words-{lang}", f"words_{lang}") if lang else None
         if lang and self.words is None:
             raise ValueError(f"the words-{lang} add-on isn't here")
+
+    def page(self, title: str, body: str, head: str = "") -> str:
+        more = '<a href="/steps">What your stack found</a>' if self.stack else ""
+        more += '<a href="/run">The run</a>' if self.run else ""
+        return page(title, body, more, head)
+
+    def ran(self) -> str:
+        """The run kept in the folder named with --run: read, never run."""
+        title = "The run"
+        st = sibling("stack", "stack")
+        if self.run is None or st is None:
+            why = (
+                "No run was named when this was started."
+                if st
+                else "The stack add-on isn't here."
+            )
+            return self.page(title, f"<p class=muted>{why}</p>")
+        logs = sorted(self.run.glob("0*-stack.txt"))
+        if not logs:
+            return self.page(title, f"<p>{esc(self.run)} holds no run: the stack add-on's <code>--to</code> makes one.</p>")  # fmt: skip
+        steps, done = run_steps(
+            logs[0].read_text(encoding="utf-8", errors="replace"), st
+        )
+        if done:
+            body = [f"<p><strong>Finished.</strong> {esc(done)}.</p>"]
+            head = ""
+        else:
+            body = [f"<p><strong>Still running.</strong> This page looks again every {AGAIN} seconds.</p>"]  # fmt: skip
+            head = f'<meta http-equiv="refresh" content="{AGAIN}">'
+        for step in steps:
+            name = f"{step['n']}-{step['name']}"
+            pills = ""
+            if not step["ended"]:
+                pills = " <span class='pill wait'>running</span>"
+            else:
+                pills += " <span class=pill>kept from before</span>" * step["kept"]
+                pills += " <span class='pill wait'>flagged</span>" * step["flagged"]
+            try:
+                doc = json.loads((self.run / "reports" / f"{name}.json").read_text(encoding="utf-8"))  # fmt: skip
+                body.append(report_card(doc, step["code"], pills=f" <span class=pill>step {esc(step['n'])}</span>{pills}"))  # fmt: skip
+                continue
+            except (OSError, ValueError, KeyError, TypeError):
+                pass  # no report kept, or the step hasn't ended: its words
+            try:
+                text = (self.run / f"{name}.txt").read_text(
+                    encoding="utf-8", errors="replace"
+                )
+            except OSError:
+                text = ""
+            code = (
+                f" <span class=pill>exit {step['code']}</span>" if step["ended"] else ""
+            )
+            head_html = f"<p class=kick>{esc(step['name'])} <span class=pill>step {esc(step['n'])}</span>{code}{pills}</p>"  # fmt: skip
+            body.append(words_card(head_html, text))
+        if not steps:
+            body.append("<p class=muted>No step has started yet.</p>")
+        return self.page(title, "".join(body), head)
+
+    def steps(self) -> str:
+        """What the stack's report steps found, each drawn as a card, in the
+        stack file's order under its pools' headings. Run when asked for."""
+        title = "What your stack found"
+        st = sibling("stack", "stack")
+        if self.stack is None or st is None:
+            why = (
+                "No stack was named when this was started."
+                if st
+                else "The stack add-on isn't here."
+            )
+            return self.page(title, f"<p class=muted>{why}</p>")
+        try:
+            pools, err = st.parse_stack(self.stack.read_text(encoding="utf-8"))
+        except OSError:
+            pools, err = [], f"can't read the stack {self.stack}"
+        if err:
+            return self.page(title, f"<p>Couldn't read your stack: {esc(err)}</p>")
+        body, left = [], []
+        for heading, steps in pools:
+            cards = []
+            for name, args in steps:
+                script = st.resolve(name)
+                if script is None:
+                    cards.append(f"<div class=card><p class=kick>{esc(name)}</p><p class=muted>The {esc(name)} add-on isn't here.</p></div>")  # fmt: skip
+                elif not st.prints_a_report(script):
+                    left.append(name)
+                else:
+                    code, out = st.run_step(script, [*args, "--json"], str(self.box))
+                    doc, text = st.as_report(code, out)
+                    try:
+                        cards.append(report_card(doc, code))
+                    except (KeyError, TypeError):  # no report came: what it said
+                        cards.append(f"<div class=card><p class=kick>{esc(name)} <span class=pill>exit {code}</span></p><p class=text>{esc(text)}</p></div>")  # fmt: skip
+            if cards:
+                body.append(f"<h2>{esc(heading)}</h2>" + "".join(cards))
+        if left:
+            names = ", ".join(dict.fromkeys(left))
+            body.append(f"<p class=muted>Not drawn here, since they print something other than a report: {esc(names)}. The stack add-on runs those.</p>")  # fmt: skip
+        return self.page(title, "".join(body) or "<p class=muted>Your stack has no step that prints a report.</p>")  # fmt: skip
 
     def home(self) -> str:
         dg = sibling("digest", "digest")
@@ -158,7 +438,7 @@ class Willow:
                 if "refused" not in doc
                 else (f"<p>Your record doesn't check out: {esc(doc['refused'])}</p>")
             )
-        return page("Your folder", ask_form(self.token) + summary)
+        return self.page("Your folder", ask_form(self.token) + summary)
 
     def summary(self, doc: dict) -> str:
         out = []
@@ -195,18 +475,19 @@ class Willow:
         if self.words is not None:
             asked = " ".join(self.words.kept(question))
         if not kernel.words(asked):
-            return page("Ask", ask_form(self.token, question) +
+            return self.page("Ask", ask_form(self.token, question) +
                         "<p>Every word there is a common one. Name the thing you mean.</p>")  # fmt: skip
         code, said, err = call("bite", "--box", str(self.box), asked)
         body = ask_form(self.token, question)
         if code == kernel.REFUSED:
-            return page(
+            return self.page(
                 "Ask", body + f"<p>Couldn't ask: {esc(err.strip() or said.strip())}</p>"
             )
         doc = json.loads(said)
         if doc["state"] == "sealed":
-            body += "<h2>You approved this answer</h2>" + passage(
-                doc["by"], doc["answer"]
+            body += (
+                "<h2>You approved this answer</h2><div class=card>"
+                f"{rich(doc['answer'])}<p class=where>{esc(doc['by'])}</p></div>"
             )
         elif doc["state"] == "populated":
             body += "<h2>Your files say</h2>" + "".join(
@@ -226,12 +507,12 @@ class Willow:
                     esc(h[k]) for k in ("why", "where", "next") if h.get(k)
                 )
                 body += f"<p class=muted>{tips}</p>"
-        return page("Ask", body)
+        return self.page("Ask", body)
 
     def waiting(self) -> str:
         rows, breaks = kernel.read(self.box / "record.jsonl")
         if breaks:
-            return page(
+            return self.page(
                 "Waiting for you",
                 f"<p>Your record doesn't check out: {esc('; '.join(breaks))}</p>",
             )
@@ -239,16 +520,18 @@ class Willow:
         subjects = [r["subject"] for r in rows if r["kind"] == "proposal"
                     and r.get("verdict") == "pass" and r["subject"] not in done]  # fmt: skip
         if not subjects:
-            return page(
+            return self.page(
                 "Waiting for you",
                 "<p class=muted>Nothing is waiting for your approval.</p>",
             )
         pile = {
             c["id"]: c for c in kernel.chunks(Path(kernel.config(self.box)["pile"]))
         }
+        n = len(subjects)
         body = [
-            "<p>Each was suggested by something you let ask your folder. "
-            "Approving one makes it the answer to its question from now on.</p>"
+            f"<p><strong>{n} waiting.</strong> Each was suggested by something you let "
+            "ask your folder. Approving one makes it the answer to its question from "
+            "now on.</p>"
         ]
         for subj in subjects:
             prop = json.loads((self.box / "proposals" / f"{subj[9:]}.json").read_text())
@@ -258,24 +541,86 @@ class Willow:
                 else passage(c[:12], "This passage is no longer in your folder.")
                 for c in prop["cites"]
             )
+            kind, head, said, why = reading(prop)
+            n = len(prop["cites"])
+            stands = (
+                f"<details><summary>It cites {n} passage{'s' if n != 1 else ''} "
+                f"of your folder</summary>{cites}</details>"
+                if n
+                else "<p class=muted>It cites nothing from your folder.</p>"
+            )
+            exact = (
+                "<details><summary>Exactly what you'd be approving</summary>"
+                f"<pre>{esc(prop['data'])}</pre>"
+                f"<p class=where>{esc(subj)}</p></details>"
+            )
             body.append(
-                f"<div class=card><h2>{esc(prop['data'])}</h2>"
-                f"<p class=muted>Why: {esc(prop['claim'])}</p>"
-                f"<p class=muted>It cites:</p>{cites}"
+                f"<div class=card><p class=kick>A suggested {kind}"
+                f" <span class=pill>{esc(prop['path'])}</span></p>"
+                + (f"<h2>{head}</h2>" if head else "")
+                + said
+                + f"<p class=muted>Why: {why}</p>{stands}{exact}"
                 '<form method=post action="/approve">'
                 f'<input type=hidden name=token value="{esc(self.token)}">'
                 f'<input type=hidden name=subject value="{esc(subj)}">'
-                "<button>Approve this answer</button></form></div>"
+                f"<button>Approve this {kind}</button></form></div>"
             )
-        return page("Waiting for you", "".join(body))
+        return self.page("Waiting for you", "".join(body))
 
     def approve(self, subject: str) -> str:
         code, said, err = call("seal", "--box", str(self.box), subject)
         if code != kernel.ALIVE:
-            return page("Not approved", f"<p>{esc(err.strip() or said.strip())}</p>")
-        return page("Approved", "<p>It's on your record, signed with your key, and it "
+            return self.page(
+                "Not approved", f"<p>{esc(err.strip() or said.strip())}</p>"
+            )
+        return self.page("Approved", "<p>It's on your record, signed with your key, and it "
                     "answers its question from now on.</p>"
                     '<p><a href="/waiting">Back to what\'s waiting</a></p>')  # fmt: skip
+
+
+AGAIN = 3  # seconds between looks at a run that is still going
+
+
+def run_steps(log: str, st) -> tuple[list[dict], str | None]:
+    """A run's log as (its steps in order, the line that ended it or None).
+    Each step: its number as written, its name, whether it has ended, and
+    then its exit code, whether it was flagged, and whether it was kept from
+    an earlier go. The lines are the stack add-on's, read by its own
+    patterns, so the two can't come to disagree about what a line says."""
+    steps: dict[str, dict] = {}
+    done = None
+    for line in log.splitlines():
+        if m := st.STARTED.fullmatch(line):
+            steps[m.group(1)] = {"n": m.group(1), "name": m.group(2), "ended": False}
+            done = None
+        elif m := st.ENDED.fullmatch(line):
+            step = steps.get(m.group(1))
+            if step and step["name"] == m.group(2):
+                said = [x for x in m.group(5).split(", ") if x]
+                step.update(ended=True, code=int(m.group(3)), flagged="flagged" in said, kept=False)  # fmt: skip
+        elif line.endswith(": kept from before"):
+            n = line.split(" ", 1)[0]
+            if n in steps and steps[n]["ended"]:
+                steps[n]["kept"] = True
+        elif line.startswith("done: "):
+            done = line[6:]
+        elif line.startswith("resumed: "):
+            done = None
+    return [steps[n] for n in sorted(steps)], done
+
+
+def words_card(head: str, text: str, shown: int = SHOWN) -> str:
+    """A step that printed words, not a report: its first lines in sight and
+    the rest folded, as written."""
+    lines = text.splitlines()
+    rest = ""
+    if len(lines) > shown:
+        rest = (
+            f"<details><summary>All {len(lines)} lines</summary>"
+            f"<pre>{esc(chr(10).join(lines[shown:]))}</pre></details>"
+        )
+    first = f"<pre>{esc(chr(10).join(lines[:shown]))}</pre>" if lines else "<p class=muted>It printed nothing.</p>"  # fmt: skip
+    return f"<div class=card>{head}{first}{rest}</div>"
 
 
 # ── the server ───────────────────────────────────────────────────────────────
@@ -343,6 +688,10 @@ class Handler(BaseHTTPRequestHandler):
             return self.send(200, self.willow.home())
         if url.path == "/waiting":
             return self.send(200, self.willow.waiting())
+        if url.path == "/steps":
+            return self.send(200, self.willow.steps())
+        if url.path == "/run":
+            return self.send(200, self.willow.ran())
         return self.send(
             404, page("Not here", "<p>There's no page at that address.</p>")
         )
@@ -437,7 +786,7 @@ def main(argv: list[str]) -> int:
         return kernel.ALIVE
     opts, flags, rest, it = {}, set(), [], iter(argv)
     for a in it:
-        if a in ("--box", "--port", "--lang"):
+        if a in ("--box", "--port", "--lang", "--stack", "--run"):
             opts[a] = next(it, "")
         elif a == "--no-open":
             flags.add(a)
@@ -445,7 +794,9 @@ def main(argv: list[str]) -> int:
             rest.append(a)
     port = opts.get("--port", "0")
     if (not opts.get("--box") or rest or not port.isdigit() or int(port) > 65535
-            or opts.get("--lang", "de") not in LANGS):  # fmt: skip
+            or opts.get("--lang", "de") not in LANGS
+            or ("--stack" in opts and not opts["--stack"])
+            or ("--run" in opts and not opts["--run"])):  # fmt: skip
         print(__doc__.split("\n\n")[1], file=sys.stderr)
         return kernel.REFUSED
     box = Path(opts["--box"])
@@ -453,7 +804,15 @@ def main(argv: list[str]) -> int:
         print("refused: not a kernel box; init first", file=sys.stderr)
         return kernel.REFUSED
     try:
-        willow = Willow(box, opts.get("--lang"))
+        stack = Path(opts["--stack"]) if "--stack" in opts else None
+        if stack is not None and not stack.is_file():
+            print(f"refused: can't read the stack {stack}", file=sys.stderr)
+            return kernel.REFUSED
+        run = Path(opts["--run"]) if "--run" in opts else None
+        if run is not None and not run.is_dir():
+            print(f"refused: {run} isn't a folder that's there", file=sys.stderr)
+            return kernel.REFUSED
+        willow = Willow(box, opts.get("--lang"), stack=stack, run=run)
         server = serve(willow, int(port))
     except (OSError, ValueError) as e:
         print(f"refused: {e}", file=sys.stderr)

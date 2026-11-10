@@ -3,8 +3,10 @@ section: Ways to use it
 line: Questions in on standard input, answers out one per line: JSON lines, or file:line: text for grep and fzf.
 source: box
 added: 2026-10-24
+version: 0.1.0
 writes: record
 network: none
+role: ways
 -->
 # pipe
 

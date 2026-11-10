@@ -3,8 +3,11 @@ section: Reading more kinds of files
 line: Apple Health and Google Fit exports as daily numbers the readings add-on can trend.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: to
 network: none
+role: reads
+reads: .xml
 -->
 # health
 

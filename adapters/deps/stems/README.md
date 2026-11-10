@@ -3,10 +3,12 @@ section: Your own words
 line: Word forms for 20+ languages, so "häuser" finds "haus" and "книги" finds "книга".
 source: new
 added: 2026-10-29
+version: 0.1.0
 needs: snowballstemmer; BSD-3-Clause
 floor: snowballstemmer 2.0.0
 writes: nothing
 network: none
+role: words
 -->
 # stems
 

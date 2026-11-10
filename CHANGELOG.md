@@ -2,40 +2,126 @@
 
 What changed, newest first, by the pull request that changed it, under
 Added, Changed, Fixed and Removed. A fix names what it fixes: a known bug
-from [BUGS.md](BUGS.md) as `bug #N`, or a security report. A release turns
-`Unreleased` into `vX.Y.Z · YYYY-MM-DD` ([CONTRIBUTING.md](CONTRIBUTING.md)
-says how). The first was v0.1.0.
+from [BUGS.md](BUGS.md) as `bug #N`, or a security report. A pull request
+writes its entry in a file of its own under [changes/](changes/README.md),
+never here (CI refuses a new entry here), so no two conflict; a release folds them in with towncrier as
+`vX.Y.Z · YYYY-MM-DD` ([CONTRIBUTING.md](CONTRIBUTING.md) says how). The
+entries under Unreleased came before that, and the next release takes them
+too. The first release was v0.1.0.
 
 ## Unreleased
 
 ### Added
 
-- `wasi-python` runs a sealed kart job that is a Python script on
-  wasi-python's CPython 3.15 for WebAssembly, over your folder read-only,
-  with no network, no environment and no path of this machine's but the
-  folder; its tools are the runtime's and its library's SHA-256, and its
-  result goes to `kart gather`, dp and secure-sum as kart's do.
-  demo/johnson/private.py takes `--engine wasi-python`, sending
-  count/count.py in place of the Rust module. `warm --to CACHE` keeps the
-  compiled runtime in a folder you name, as index-cache keeps scan's index,
-  and `run --cache` only reads it: 2 seconds a run in place of 52
-- `dp` adds OpenDP's discrete Laplace noise to a kart result's numbers
-  before you seal and send them, `--epsilon` your spend and `--per-item`
-  how far one item can move each count; a result is noised once, each spend
-  is a `noised` row, `spent` adds them up, and `kart gather` adds noisy
-  results as it adds any others
-- `secure-sum` totals several people's kart results by Shamir's secret
-  sharing (shamirs): `split` cuts a sealed result into one share per person
-  in the round, sent straight to each; `combine` adds the shares a person
-  holds; `total` puts the sums together, any T of them, checking the rest.
-  The one who asks learns the total, and no package holds anyone's own
-  count; a forwarded share, a sum from someone not at its place, and sums
-  that disagree are refused
-- `wasm` runs a sealed kart job that is a WebAssembly module, or a script
-  for a WASI runtime you keep, in Wasmtime over your folder read-only, with
-  no network and no environment, bounded by `--fuel`; its tools are the
-  module's SHA-256, so the same job answers alike on every machine, and its
-  result goes to `kart gather` as kart's do
+- `llm-cli`: suggestions through Simon Willison's `llm` command — bite first,
+  only served passages go to the model any of its plugins reach, propose a
+  cited reply; llm's log names the model (#253)
+- `hooks-elsewhere` refuses `--host cursor`: Cursor's `beforeSubmitPrompt`
+  can only continue or block a prompt, never inject passages; the card and
+  `hosts` point at the `cursor` MCP add-on instead (#252)
+- `hooks-elsewhere` `setup --host opencode` prints a native OpenCode plugin
+  (save as `<.opencode/plugins/willow-passages.js>`) that injects Claude's
+  framed passages as synthetic text, and still offers the Claude-compatible
+  hook JSON for runners that take it (#251)
+- `.github/copilot-instructions.md` points Copilot at `AGENTS.md` (prose, like
+  `GEMINI.md`); `agents-md-check` reads it too, and AGENTS.md tips that need
+  REST for `gh pr create` are framed by capability, not by product (#250)
+
+- `equations`: each displayed equation in LaTeX sources as a passage of its
+  own, the math as its source writes it, with its labels, its .tex line and
+  the sentences around it, so a question finds an equation by what its paper
+  says about it; the latex add-on keeps the prose and drops the math. (#248)
+- `hooks-elsewhere`: Gemini CLI, Codex and OpenCode get cited passages at each prompt, held to `claude-code`'s framed answer byte for byte (`setup --host` / `prompt --host`); MCP stays `hosts` (#247)
+- `GEMINI.md` points Gemini CLI at `AGENTS.md` (prose, since Gemini has no
+  `@` import like Claude Code's `CLAUDE.md`); `agents-md-check` reads it too (#247)
+- Assistants' two ways in, named on `hosts`, `claude-code`, `gemini-cli` and
+  the Assistants section of ADDONS.md: MCP tools any host can call, and a
+  prompt hook that cites passages where the host allows it (`claude-code`
+  today; `hooks-elsewhere` for the rest) (#247)
+- `ci`'s `adapters/stdlib/ci/realdata.py run NAME` runs an add-on's COMMANDS
+  line on every demo person's real folder, under the guard, failing on a
+  traceback, a breach, a hang or an odd exit; create_pr.py runs it for each
+  add-on a change touches, so AGENTS.md's real-data step is a command (#245)
+- `ci`'s `adapters/stdlib/ci/times.py` keeps test-times.json to CI's own run:
+  the tests job writes each tests:adapters gate's JUnit XML on a push to main,
+  and `write --run latest` reads the last green run's (#245)
+- `ci`'s `adapters/stdlib/ci/pypi_dates.py` keeps PyPI's upload dates for
+  each deps floor pin and the floor rule's release in pypi-dates.json, which
+  the floor test reads in place of a table typed into test_ci.py; `write`
+  asks PyPI only for a pin the file lacks, and made.py runs it (#243)
+- `ci`'s `adapters/stdlib/ci/made.py` makes again, or checks, every file a
+  script makes: the add-on lists, BUGS.md, FILES.md, the lists kept A to Z
+  and craft-assembly's report, which a change elsewhere left stale five
+  times in CI. create_pr.py runs `write` as one step in place of four, so a
+  generator added to its table is made in every pull request (#243)
+- `ci`'s lint:py39 gate, `adapters/stdlib/ci/py39.py check`, names each use of
+  what Python 3.10 and later added that ruff can't see (`write_text(newline=)`,
+  `zip(strict=)`, `itertools.pairwise`, `isinstance(x, A | B)`), which failed
+  CI's 3.9 run three times; ruff now also refuses an `int | None` annotation
+  without `from __future__ import annotations` (FA102) (#244)
+- `ci`: a demo folder with tests that no DEMO_TESTS row runs gets its own
+  gate, `demo:FOLDER`, so a new demo's tests run in CI with no row written (#244)
+- `ci`'s `adapters/stdlib/ci/commands.py suggest NAME` finds an add-on's
+  line in test_contract.py's COMMANDS from its own usage lines, run as the
+  contract test runs them, and `--write` puts it there A to Z; new.py's list
+  of what's left names it (#244)
+- `claude-code`'s prompt hook answers from scan's index with `--index`,
+  while index-cache says the folder hasn't changed: the same passages and
+  the same row on the record, in 2 s, not the 30 s the kernel takes to read
+  the bot's 22,873 files at every prompt (#241)
+- `ui/`'s `assemble.py remove NAME...` takes a piece out of a stack: its
+  folder and its STACK.json entry, and one `remove` row on the record naming
+  the files it held; not one a piece that stays imports, nor one whose files
+  changed since it was put in (#240)
+- `ui/` offers a reader for a kind of file the kernel can't read by the
+  reader cards' `reads`, the ones reading the fewest kinds first, where it
+  went by a table and words in a card's line (which offered zotero for a
+  PDF) (#235)
+- `ci`'s `adapters/stdlib/ci/order.py` keeps the lists people add to A to Z:
+  COMMANDS, READERS, PILE_EXTRA and REPORT_COMMANDS in test_contract.py
+  and ci.py's DEMO_TESTS, each entry with its comments, adapters/planned.json,
+  FILES.md's folders kept A to Z, and demo/ always; `write` sorts them,
+  `check` and its test hold the repo to it, and create_pr.py runs `write`.
+  The tables and FILES.md's stdlib, deps and demo folders are sorted, CI's
+  demo rows run A to Z, and a folder of ten or more with one pair in ten out
+  of turn now counts as A to Z (#238)
+- `ci`'s `adapters/stdlib/ci/new.py NAME` starts an add-on from its idea on
+  adapters/planned.json: its folder, its card with the idea's entry as its
+  header, a script that refuses every command line until it's built and a
+  test holding that, the idea off the list, FILES.md and the add-on list
+  written; it exits 42 with what's left for a person (#237)
+- `ci`'s `adapters/stdlib/ci/files.py` keeps FILES.md's tree to the repo's
+  files: `write` puts each new file in its folder's own order with what it
+  says of itself (its docstring's first line, its title, `its card`) and
+  takes out what's gone with its notes, its corners and bars kept right;
+  `check` says what's out. github's create_pr.py runs `write` before it opens
+  a pull request (#236)
+- `reads` on every reader's card: the kinds of file it reads, by extension
+  or by name (`.eml, .mbox`; `zotero.sqlite`), or `none`. `readme.py
+  check` requires it of a built reader and of no other card, and
+  ci/test_contract.py holds each kind to the reader's own code (#234)
+- `ui/canvas.py`'s commands, the page's steps for an agent or a terminal:
+  `make`, `pieces` (by role, each with why; `--role repo` the commands that
+  work on willow's own repository), `needs`, `examples`, `plan` (prints the
+  stack file the page would send), `look` and `propose`, which exits 42,
+  waiting for your seal; there is no `seal`. Look it over shows the same
+  stack file and commands, to copy (#233)
+- `ui/` page: three panels, the steps on the left, the one you're on in the
+  middle with its add-ons as cards to tick or drag in, and the stack on the
+  right as a tree, what runs on your page apart from what's set up
+  alongside; a willow look with a dark theme; undo; an example previewed in
+  the tree before it's used; a piece traced in the tree on hover; Look it
+  over as the last step. The steps are the cards' roles, and a piece with no
+  options of its own runs on the page exactly when its role is page; what's
+  first in a step is what the examples run, or the readers your folders'
+  files need; it says that the page shows what says most first, so the
+  order of its steps only breaks ties; "sealed" and "changed since you
+  sealed it" come from the record, wherever the seal was made (#232)
+- `role` on every add-on's card and every entry in adapters/planned.json:
+  the part it plays in a stack (reads, words, page, suggests, ways, guards,
+  makes, tools, repo), each said in adapters/README.md. `readme.py check`
+  requires it, one of those, and holds `role: repo` to exactly the cards
+  with `runs-in: repo` (#231)
 - `bot-venv --find` lists every venv under a folder: inside willow-bot or
   out, its packages, the bot's lock for it (none, holds or drifted), and the
   services running from it, read from /proc; the steward's venv inventory
@@ -1775,8 +1861,48 @@ says how). The first was v0.1.0.
   kernel's no-network test III.1 and III.5, the guard and the add-on cards
   II.1, and the generated pages VI.6. Their answers in `constitution/reach.json` go. (#4)
 
+### Fixed
+
+- test_docs.py asks git for the repo's files once a run, not once a doc: 61 s
+  to 5 s, the same answers for every doc; restack's tests, which run it three
+  times in a scratch copy, 4:17 to 1:05, so restack's mutants no longer time
+  out at 600 s in CI's mutants-reach (#261)
+- `mcp-lite`: parse a propose refusal with `partition` instead of a maxsplit
+  `split`, so the accepted inert mutant is gone (same as `mcp-sampling`) (#257)
+
 ### Changed
 
+- `ci`'s test-times.json made from main's own CI run by `times.py write --run
+  latest`: 17 test files it lacked are in, share's at 175 s, and 20 others
+  moved by half or more, so the tests:adapters chunks are even again (#256)
+- `AGENTS.md` is a third as long: what every agent needs before a change (the
+  Never list, set up, what to run after a change), and a paragraph a job
+  pointing at its page in `docs/agents/`: add-ons, studies, pull requests,
+  searching. Every rule moved, none changed; four lessons added where they
+  belong (leave the checkout alone while create_pr.py runs; a dry run that
+  serves nothing tests nothing after the kernel; the kernel's echo rule,
+  exactly; a box's words list is its owner's alone). (#258)
+- `test-impact`: the add-on test files a change reaches run as up to four
+  steps, one a minute of their past times, and `--jobs` starts the longest
+  steps first; restack and ci together, 22 reached files and two add-ons'
+  mutants, run in 10 minutes, not 21 (#246)
+- `restack` settles a conflict in any other Markdown file when both sides
+  only added lines where the base had none: REF's lines, then the branch's,
+  as #243 and #244 each added paragraphs to ci's card; a side that changed
+  a line the base had still stops. `against` says such a conflict is settled,
+  not a collision, so create_pr.py no longer stops on it (#245)
+- `test-impact`'s `run --narrow` on a change that widens to every gate leaves
+  them to CI and still runs the docs' checks and what the rest of the change
+  reaches, under the guard: #244 changed ruff.toml beside commands.py, nothing
+  ran, and a guard breach in commands.py's tests was CI's to find (#245)
+- `test-impact`: a change that reaches test_strip.py by import, as any change
+  to ci/ does, runs only its own reached tests in the copy without GitHub
+  (WILLOW_STRIP_ONLY), in seconds, not every add-on's tests four times: 17 to
+  19 of the 20 to 25 minutes of a create_pr.py run on ci/ today; GitHub's own
+  files still run it whole (#245)
+- `ci`: the changelog check's refusal says what does the rest: commit the
+  entry with the change, and create_pr.py numbers it in the push that opens
+  the pull request (#245)
 - `ci` says what pytest skipped: a gate whose tests skipped some keeps its
   state, and its row says how many and why (`skipped`), printed after the
   state by `run`, `show` and cores.py, as `satisfied  [1 skipped: ...]`.
@@ -2009,24 +2135,33 @@ says how). The first was v0.1.0.
 
 ### Fixed
 
-- `ci`'s guard no longer counts as a write an `os.mkdir` where something
-  already is: that call can only fail with FileExistsError and changes
-  nothing. wasi-python asks for its cache folder so on every run, which
-  made `run --cache` a breach of `writes: record, to`. A folder that isn't
-  there is still a write
-- `kart run` refuses, exit 2, when bubblewrap is installed but can't make a
-  sandbox on this machine (a default Docker container; AppArmor on Ubuntu
-  24.04), saying why in bwrap's own words: an empty sandbox is tried first.
-  It used to run the job, exit 42 as if the job had failed, and leave a
-  `ran` row on the person's chain for a job that never ran
-- `kart` runs a job on the system's PATH (`/usr/bin:/bin`) and the `C`
-  locale, not the person's own, which reached the sandbox despite its card's
-  "no environment variable of yours" and could change what `sort` and
-  `grep -i` say. The `ran` row records the SHA-256 of bash and each program
-  the job names, a result's claim carries their hash, and `gather` says when
-  results ran on different tools. demo/johnson's first job is `grep -rli`,
-  not `-rlic`, which busybox's grep read as a count and listed a file with
-  no Johnson in it
+- `ci`'s realdata.py fails a reader whose mirror holds a line longer than one
+  of the kernel's chunks (500 characters), naming the first: the kernel keeps
+  only a line's first 500, and says nothing of the rest. Run on every reader
+  over the demo people's folders, it found clauses before its fix (3 lines on
+  bernadette, 37 on hollis) and no other (#262)
+- `clauses` keeps a sentence longer than one of the kernel's chunks on its
+  source's own lines, a line longer than that cut at a space: a chat export
+  holds no full stops, so its "sentence" ran for pages on one line and the
+  kernel read only its first 500 characters. On the demo people's folders
+  that was 74 passages and 19,047 words never read; now none. A sentence of
+  500 characters or fewer is written as before, and google-privacy's mirrors
+  are the same bytes (#262)
+- `local-model`: the test that no server on the usual ports means 42 no
+  longer sends a real question to whatever model runs on this machine; it
+  points the usual ports at ones just bound and closed, and asserts 42
+  every time, not only when nothing happened to answer (#255)
+- `latex` reads a file holding a stray byte of another encoding as
+  Windows-1252, else Latin-1, rather than skipping it whole: Santos's lecture
+  notes on arXiv (1310.5578), ASCII but for one en dash, gave no prose. A
+  file holding a NUL byte (UTF-16, or a binary) is still skipped and counted. (#249)
+- `github`'s create_pr.py tries a push or an open GitHub answers with an
+  error again, after 2, 4, 8 and 16 seconds, and looks for the pull request
+  before each new open: GitHub answered #236's with a 502 and opened it,
+  and the run stopped, so a second run did every gate again to find it (#242)
+- `forge`'s card says `role: repo` and `runs-in: repo`, so `ui/assemble.py`
+  refuses it: it reads every card in the repository and runs assemble, and in
+  a stack, which holds neither, 29 of its 40 tests failed (#239)
 - `ci`: a deps add-on whose program this machine lacks is unreachable, not
   failing. A card names each program PyPI doesn't install on a `programs:`
   line (ocr's tesseract, kart's bwrap, pgp's gpg), and its deps gates ask
@@ -2221,6 +2356,8 @@ says how). The first was v0.1.0.
   tests exit non-zero, so an add-on not yet in `COMMANDS` (or a stray
   uncommitted add-on folder) fails the contract test and marks every mutant
   killed — a false pass CI later exposes as the real survivors. (#50)
+
+<!-- towncrier release notes start -->
 
 ## v0.1.0 · 2026-10-23
 

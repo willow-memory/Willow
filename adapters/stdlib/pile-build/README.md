@@ -3,8 +3,10 @@ section: Finding things
 line: Rebuilds pile-store's saved passages after each change, one build at a time, so your next question doesn't wait for it.
 source: bot
 added: 2026-10-28
+version: 0.1.0
 writes: to
 network: none
+role: makes
 tags: pile
 uses: pile-store
 -->

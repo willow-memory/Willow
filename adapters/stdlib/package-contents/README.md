@@ -3,8 +3,10 @@ section: Privacy and safety
 line: What's inside a wheel, sdist, npm tarball or .crate before you install it: every file, and any code it runs on install.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: nothing
 network: none
+role: page
 output: report
 -->
 # package-contents

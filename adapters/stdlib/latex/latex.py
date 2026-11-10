@@ -21,8 +21,11 @@ an `\item` as "- ", escaped characters as themselves, `--` and `---` as dashes,
 and accents (an umlaut, an acute, a cedilla) as the letters they make.
 
 Each file is written to MIRROR at the same relative path with `.txt` added.
-FOLDER is only read. A file with no prose, or that cannot be read, is skipped
-and counted.
+FOLDER is only read. A file is read as UTF-8, else as Windows-1252, else as
+Latin-1: older papers often hold one byte of another encoding (a dash pasted
+from a word processor), and a whole paper is not lost to it. A file with no
+prose, one holding a NUL byte (UTF-16, or a binary), or one that cannot be
+read, is skipped and counted.
 
 Exit codes, the kernel's: 0 wrote some; 42 nothing readable; 2 refused (FOLDER
 is not a folder, or MIRROR and FOLDER are inside one another).
@@ -30,6 +33,7 @@ is not a folder, or MIRROR and FOLDER are inside one another).
 
 from __future__ import annotations
 
+import json
 import os
 import re
 import unicodedata
@@ -129,8 +133,22 @@ def line_text(text: str) -> str:
     return " ".join(text.split())
 
 
+def decode(data: bytes) -> str:
+    """A .tex file's text: UTF-8 (a byte-order mark dropped), else
+    Windows-1252, else Latin-1, which reads any byte. A NUL byte is no
+    text (UTF-16, or a binary), and is refused."""
+    if b"\0" in data:
+        raise ValueError("a NUL byte: not text")
+    for codec in ("utf-8-sig", "cp1252"):
+        try:
+            return data.decode(codec)
+        except UnicodeDecodeError:
+            pass
+    return data.decode("latin-1")
+
+
 def convert(data: bytes) -> str | None:
-    text = data.decode("utf-8-sig").replace("\r\n", "\n")
+    text = decode(data).replace("\r\n", "\n")
     text = re.sub(r"(?<!\\)%[^\n]*", "", text)
     text = KILL_ENV.sub(keep_lines, text)
     text = KILL_MATH.sub(keep_lines, text)
@@ -170,6 +188,23 @@ def _within(inner: Path, outer: Path) -> bool:
     return inner == outer or outer in inner.parents
 
 
+def places(text: str) -> dict[str, str]:
+    """The mirror contract's places (adapters/stdlib/ci/README.md): the
+    mirror is line for line, so the line each passage starts on is the
+    source's same line."""
+    lines = text.splitlines()
+    return {str(i): f"line {i}" for i, s in enumerate(lines, 1)
+            if s.strip() and (i == 1 or not lines[i - 2].strip())}  # fmt: skip
+
+
+def write_places(dst: Path, rel: str, found: dict[str, str]) -> None:
+    """The map, hidden beside the mirror, where the kernel never reads."""
+    out = dst / ".places" / (rel + ".txt.json")
+    out.parent.mkdir(parents=True, exist_ok=True)
+    doc = {"source": rel, "places": found}
+    out.write_bytes((json.dumps(doc, ensure_ascii=False) + "\n").encode("utf-8"))
+
+
 def mirror(src: Path, dst: Path) -> tuple[int, int]:
     """Write the mirror of `src` into `dst`. Returns (written, skipped)."""
     wrote = skipped = 0
@@ -183,6 +218,7 @@ def mirror(src: Path, dst: Path) -> tuple[int, int]:
             target = dst.joinpath(rel.parent, rel.name + ".txt")
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_bytes(text.encode("utf-8"))
+            write_places(dst, rel.as_posix(), places(text))
         except ERRORS:
             skipped += 1
             continue

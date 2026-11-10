@@ -1,10 +1,12 @@
 <!-- willow-addon
 section: Assistants
-line: A PreToolUse hook that refuses a write or a command holding a key, password or card number, by the privacy add-on's shapes, naming only the kind.
+line: A PreToolUse hook that refuses a write or command holding a key, password or card number, by the privacy add-on's shapes, naming the kind.
 source: box
 added: 2026-10-29
+version: 0.1.0
 writes: nothing
 network: none
+role: guards
 tags: hooks
 uses: privacy
 -->

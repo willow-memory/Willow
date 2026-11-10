@@ -1,10 +1,12 @@
 <!-- willow-addon
 section: Finding things
-line: Index a big folder once, then ask it a list of questions in seconds, with the kernel's own answers: of everything, or only what changed since another index.
+line: Index a big folder once, then ask it a list of questions in seconds with the kernel's own answers, of everything or only what's changed.
 source: box
 added: 2026-10-24
+version: 0.1.0
 writes: to
 network: none
+role: makes
 tags: index
 uses: todo
 -->

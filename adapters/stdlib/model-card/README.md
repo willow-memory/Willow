@@ -1,10 +1,12 @@
 <!-- willow-addon
 section: Assistants
-line: A card naming the model behind an assistant (version or weights hash, where it runs, licence, known limits), with the card's hash on the record so each suggestion can say which model made it.
+line: A card naming the model behind an assistant (version or weights hash, where it runs, licence, limits), on the record for each suggestion.
 source: new
 added: 2026-11-02
+version: 0.1.0
 writes: record
 network: none
+role: suggests
 uses: weights-card
 -->
 # model-card

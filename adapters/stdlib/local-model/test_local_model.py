@@ -3,7 +3,9 @@ server and its model when they aren't named."""
 
 from __future__ import annotations
 
+import importlib.util
 import json
+import socket
 import subprocess
 import sys
 import threading
@@ -16,6 +18,9 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[2]
 SCRIPT = HERE / "local_model.py"
 NOW = ["--now", "2026-11-02T00:00:00Z"]
+_spec = importlib.util.spec_from_file_location("willow_local_model_under_test", SCRIPT)
+lm = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(lm)
 
 
 class Server:
@@ -180,23 +185,41 @@ def test_a_server_offering_no_model_is_refused_unless_one_is_named(box):
         empty.http.shutdown()
 
 
-def test_no_server_running_on_the_usual_ports_is_42(box):
-    """None of the usual ports answer on the machine the tests run on."""
-    got = run("ask", "--box", box, *NOW, "what goes in biscochitos")
-    if got.stdout.startswith("no local model server is running"):
-        assert got.returncode == 42
-        assert "http://127.0.0.1:11434/v1, http://127.0.0.1:1234/v1" in got.stdout
-        assert kinds(box) == ["boot"]
-    got = run("servers")
-    assert [" ".join(line.split()[:2]) for line in got.stdout.splitlines()] == [
-        "ollama http://127.0.0.1:11434/v1",
-        "lm-studio http://127.0.0.1:1234/v1",
-        "llama.cpp http://127.0.0.1:8080/v1",
-        "vllm http://127.0.0.1:8000/v1",
-        "koboldcpp http://127.0.0.1:5001/v1",
-        "jan http://127.0.0.1:1337/v1",
-        "gpt4all http://127.0.0.1:4891/v1",
+def closed_port() -> int:
+    """A port on 127.0.0.1 just bound and closed, so nothing listens there."""
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.bind(("127.0.0.1", 0))
+        return s.getsockname()[1]
+
+
+def test_the_usual_ports_in_the_order_they_are_tried():
+    assert lm.known([]) == [
+        ("ollama", "http://127.0.0.1:11434/v1"),
+        ("lm-studio", "http://127.0.0.1:1234/v1"),
+        ("llama.cpp", "http://127.0.0.1:8080/v1"),
+        ("vllm", "http://127.0.0.1:8000/v1"),
+        ("koboldcpp", "http://127.0.0.1:5001/v1"),
+        ("jan", "http://127.0.0.1:1337/v1"),
+        ("gpt4all", "http://127.0.0.1:4891/v1"),
     ]
+
+
+def test_no_server_running_on_the_usual_ports_is_42(box, monkeypatch, capsys):
+    """With no --url, the usual ports are tried; here they are ports nothing
+    listens on, whatever runs on this machine, so no question is ever sent."""
+    names = [name for name, _ in lm.KNOWN]
+    usual = tuple((name, closed_port()) for name in names)
+    monkeypatch.setattr(lm, "KNOWN", usual)
+    urls = [f"http://127.0.0.1:{port}/v1" for _, port in usual]
+    assert lm.main(["ask", "--box", str(box), *NOW, "what goes in biscochitos"]) == 42
+    assert capsys.readouterr().out == (
+        f"no local model server is running (looked at {', '.join(urls)})\n"
+    )
+    assert kinds(box) == ["boot"]
+    assert lm.main(["servers"]) == 42
+    assert capsys.readouterr().out == "".join(
+        f"{name:<14} {url}  not running\n" for name, url in zip(names, urls)
+    )
 
 
 def test_ask_tries_each_url_in_turn(box, server):
@@ -260,3 +283,26 @@ def test_a_bad_command_line_is_refused(box, server):
         got = run(*argv)
         assert got.returncode == 2 and "local_model.py" in got.stderr, argv
     assert server.sent == []
+
+
+def test_system_and_reasoning_go_to_openai_compatibles_ask(box, server, tmp_path):
+    voice = tmp_path / "voice.txt"
+    voice.write_text("Speak softly.\n")
+    got = run("ask", "--box", box, "--url", server.url, "--system", voice,
+              "--reasoning", "none", *NOW, "what goes in biscochitos")  # fmt: skip
+    assert got.returncode == 0, got.stdout + got.stderr
+    (body,) = server.sent
+    assert body["reasoning_effort"] == "none"
+    assert body["messages"][0]["content"].startswith("Speak softly.\n\nAnswer only")
+    got = run(
+        "ask", "--box", box, "--url", server.url, *NOW, "what goes in biscochitos"
+    )
+    assert got.returncode == 0
+    assert "reasoning_effort" not in server.sent[1]
+
+
+def test_a_reasoning_effort_not_on_the_list_is_refused_before_any_server(box, server):
+    got = run("ask", "--box", box, "--url", server.url, "--reasoning", "max", *NOW,
+              "what goes in biscochitos")  # fmt: skip
+    assert got.returncode == 2 and "local_model.py" in got.stderr
+    assert server.sent == [] and kinds(box) == ["boot"]

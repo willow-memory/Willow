@@ -1,0 +1,1 @@
+`readme`: two of its tests failed from the day 2026-W46 began, since they wrote 2026-W45 and then a bare write, which draws for the calendar's week; their test repo now pins this week to the one they mean

@@ -3,8 +3,11 @@ section: Reading more kinds of files
 line: A reader run over several folders at once, across every CPU core, so a big mirror of many sources builds in a fraction of the time.
 source: new
 added: 2026-10-26
+version: 0.1.0
 writes: to
 network: none
+role: reads
+reads: none
 -->
 # parallel
 

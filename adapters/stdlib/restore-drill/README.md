@@ -3,8 +3,10 @@ section: Trust and proof
 line: A backup zip restored into scratch and verified there, chain and every file, so you know it restores before the day you need it.
 source: new
 added: 2026-10-31
+version: 0.1.0
 writes: nothing
 network: none
+role: tools
 uses: backup
 -->
 # restore-drill

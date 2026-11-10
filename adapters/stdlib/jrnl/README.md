@@ -3,8 +3,11 @@ section: Reading more kinds of files
 line: jrnl journals: each [YYYY-MM-DD HH:MM] entry as a dated passage.
 source: new
 added: 2026-10-27
+version: 0.1.0
 writes: to
 network: none
+role: reads
+reads: .txt
 -->
 # jrnl
 

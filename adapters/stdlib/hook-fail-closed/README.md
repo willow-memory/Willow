@@ -1,10 +1,12 @@
 <!-- willow-addon
 section: Assistants
-line: Wraps any hook so a crash, a timeout or output it can't read blocks the tool, since Claude Code, Gemini CLI, Codex and Cursor all let the tool run by default.
+line: Wraps any hook so a crash, a timeout or output it can't read blocks the tool, where Claude Code, Gemini CLI, Codex and Cursor let it run.
 source: new
 added: 2026-10-24
+version: 0.1.0
 writes: nothing
 network: none
+role: guards
 tags: hooks
 -->
 # hook-fail-closed

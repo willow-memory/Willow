@@ -42,7 +42,7 @@ USAGE = "usage: against.py check --base REF HEAD OTHER [OTHER ...]"
 CONTRACT = "adapters/stdlib/ci/test_contract.py"
 PLANNED = "adapters/planned.json"
 #: the files restack settles by rule when two branches both change them
-SETTLED = frozenset({"ADDONS.md", "README.md", "BUGS.md", "CHANGELOG.md", "FILES.md", CONTRACT, PLANNED})  # fmt: skip
+SETTLED = frozenset({"ADDONS.md", "README.md", "adapters/stdlib/readme/week.json", "BUGS.md", "CHANGELOG.md", "FILES.md", CONTRACT, PLANNED})  # fmt: skip
 CARD = re.compile(r"^adapters/(?:stdlib|deps)/([^/]+)/README\.md$")
 BRANCH = re.compile(r"^(?P<lead>(?:│   |    )*)[├└]── (?P<name>\S+)")
 PULL = re.compile(r"(?:^|/)(?:pr|pull)/(\d+)(?:/head)?$")
@@ -64,6 +64,11 @@ def commit(ref: str) -> str | None:
     got = subprocess.run(["git", "rev-parse", "--verify", "--quiet", f"{ref}^{{commit}}"],
                          capture_output=True, text=True)  # fmt: skip
     return got.stdout.strip() if got.returncode == 0 else None
+
+
+def git_ok(*argv: str) -> int:
+    """git's exit code alone, for a question it answers yes or no."""
+    return subprocess.run(["git", *argv], capture_output=True).returncode
 
 
 def left(ref: str, rev: str) -> str:
@@ -171,6 +176,17 @@ class Adds:
             at(base, "FILES.md")
         )
 
+    def less(self, shared: Adds) -> Adds:
+        """These adds without what `shared` adds: the commits two pull
+        requests share are neither's."""
+        for name in shared.addons:
+            self.addons.pop(name, None)
+        for name in shared.ideas:
+            self.ideas.pop(name, None)
+        self.commands -= shared.commands
+        self.paths -= shared.paths
+        return self
+
     def names(self) -> dict[str, tuple[str, str]]:
         """name -> (what it is, its line); an add-on beats an idea of its name."""
         out = {n: ("idea", line) for n, line in self.ideas.items()}
@@ -216,11 +232,40 @@ def merge_conflicts(mine: str, other: str) -> list[str]:
     return sorted({p for p in got.stdout.split("\0")[1:] if p})
 
 
+def only_added(base: str, mine: str, other: str) -> bool:
+    """Every conflict of the two is lines each side added where the base had
+    none: what restack keeps both of, in a Markdown file outside SETTLED."""
+    with tempfile.TemporaryDirectory() as tmp:
+        paths = []
+        for side, text in (("mine", mine), ("base", base), ("other", other)):
+            (Path(tmp) / side).write_text(text, encoding="utf-8")
+            paths.append(str(Path(tmp) / side))
+        merged = subprocess.run(["git", "merge-file", "-p", "--diff3", *paths],
+                                capture_output=True, text=True).stdout  # fmt: skip
+    hunks = re.findall(r"^\|{7} [^\n]*\n(.*?)^={7}\n", merged, re.S | re.M)
+    return bool(hunks) and not any(h.strip() for h in hunks)
+
+
+def blob(ref: str, path: str) -> str:
+    got = subprocess.run(
+        ["git", "show", f"{ref}:{path}"], capture_output=True, text=True
+    )
+    return got.stdout if got.returncode == 0 else ""
+
+
 def collisions(mine: str, other: str, who: str) -> list[str]:
     out = []
     for path in merge_conflicts(mine, other):
         if path in SETTLED:
             out.append(f"settled: {path} with {who}; restack settles it")
+        elif path.endswith(".md") and only_added(
+            blob(git("merge-base", mine, other).strip(), path),
+            blob(mine, path),
+            blob(other, path),
+        ):
+            out.append(
+                f"settled: {path} with {who}; both only added lines, restack keeps both"
+            )
         else:
             out.append(
                 f"collides: {path} with {who}; merge its branch first and base on it"
@@ -258,6 +303,14 @@ def check(base: str, head: str, others: list[str]) -> tuple[int, list[str]]:
             fork = left(mine, sha)
             mine_adds = Adds(mine, read_from(ref, mine, fork))
             there = Adds(sha, read_from(ref, sha, fork))
+            # commits the two share that REF lacks (one stacked on the
+            # other, or merged it) add for neither, even once each has
+            # merged REF since: then git finds REF's tip as one merge base
+            # of the two and their shared commit as another, so each is read
+            for shared in git("merge-base", "--all", mine, sha).split():
+                if git_ok("merge-base", "--is-ancestor", shared, ref) != 0:
+                    gone = Adds(shared, left(ref, shared))
+                    mine_adds, there = mine_adds.less(gone), there.less(gone)
             found = (duplicates(mine_adds, there, who) + collisions(mine, sha, who)
                      + nears(mine_adds, there, who))  # fmt: skip
         except Unchecked as why:

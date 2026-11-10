@@ -3,8 +3,11 @@ section: Reading more kinds of files
 line: A web page or data file fetched once into a folder, as it came, with its address, the time and its SHA-256, so later answers cite the copy.
 source: bot
 added: 2026-10-24
+version: 0.1.0
 writes: to
 network: the address you give, fetched once
+role: reads
+reads: none
 tags: sources
 -->
 # snapshot
@@ -12,7 +15,7 @@ tags: sources
 A web page or file fetched once into a folder, with where it came from,
 when, and its SHA-256.
 
-    python adapters/stdlib/snapshot/snapshot.py fetch --url URL --to FOLDER [--name NAME]
+    python adapters/stdlib/snapshot/snapshot.py fetch --url URL --to FOLDER [--name NAME] [--contact EMAIL]
     python adapters/stdlib/snapshot/snapshot.py check --in FOLDER
     python kernel.py init --box BOX --pile FOLDER --key KEY
 

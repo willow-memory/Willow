@@ -1,0 +1,1 @@
+`stack`: a step can take what an earlier step made: `{01}` in its args is the file step 01's output was kept in, `{01.json}` its report as data; refused before anything runs when the run isn't kept, the step named isn't an earlier one, or a report is asked of a step that prints none, and a step whose earlier step kept nothing is not run and says so

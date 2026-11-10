@@ -1,114 +1,284 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8">
 <title>Put your willow together</title><style>
-:root{--bg:#f7f6f2;--ink:#222;--mute:#6f6c64;--line:#d9d6cc;--card:#fff;--acc:#2f6d4f;--accl:#e6f2ea;--warn:#a2561b;--warnl:#f6e2cf;--fix:#eef0f6}
-*{box-sizing:border-box}body{user-select:none;-webkit-user-select:none;margin:0;font:15px/1.45 system-ui,sans-serif;background:var(--bg);color:var(--ink);display:grid;grid-template-columns:340px 1fr;height:100vh}
-input[type=text]{user-select:text;-webkit-user-select:text;width:100%;padding:7px;border:1px solid var(--line);border-radius:5px;font:inherit}
-button{font:inherit;padding:6px 12px;border:1px solid var(--line);border-radius:5px;background:#fff;cursor:pointer}button.go{background:var(--acc);color:#fff;border-color:var(--acc)}button:disabled{opacity:.4;cursor:default}button.link{border:0;background:none;color:var(--acc);padding:0;text-decoration:underline}
-aside{border-right:1px solid var(--line);overflow:auto;padding:16px;background:#fbfaf7}main{overflow:auto;padding:22px 30px 120px}
-h1{font-size:22px;margin:0 0 4px}h2{font-size:17px;margin:0}h3{font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--mute);margin:16px 0 6px}
-.lede{color:var(--mute);margin:0 0 14px;max-width:760px}.steps{display:flex;gap:10px;margin:0 0 22px;flex-wrap:wrap}
-.steps div{background:#fff;border:1px solid var(--line);border-radius:20px;padding:4px 12px;font-size:14px}.steps b{color:var(--acc);margin-right:4px}
-.flow{max-width:780px}.stage{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px}.stage.sel{border-color:var(--acc);box-shadow:0 0 0 2px var(--accl)}
-.stage.fixed{background:var(--fix);border-style:solid}.stage.fixed h2::after{content:" · always there";font-weight:400;color:var(--mute);font-size:13px}
-.stage .say{color:var(--mute);font-size:14px;margin:2px 0 8px}.stage .none{color:var(--mute);font-size:13px;font-style:italic}
+/* Willow. Ground: the silvery underside of a willow leaf. Ink: bark. Green: the leaf, for what you've chosen.
+   Catkin yellow: only for what is waiting on you. Mono: anything that is a record (paths, counts, tags, options).
+   Layout: the flow hangs from one thread, stage under stage, the way a willow's branches do. */
+:root{
+--bg:#eceee7;--side:#e2e5dc;--card:#f8f9f5;--ink:#23251f;--mute:#5f6458;--faint:#9ba092;--line:#cdd1c4;--line2:#e1e4da;
+--acc:#45652a;--onacc:#f6f8f0;--accl:#dde7cc;--catkin:#cdb43c;--catkinl:#f3ebc2;--warn:#8f4c17;--warnl:#f3e1cc;--bad:#a8322a;
+--fix:#e5e8df;--blue:#2f557a;--bluel:#dce5ee;--violet:#5b467f;--violetl:#e6e0ef;--tagbg:#e2e5db;
+--sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
+--mono:ui-monospace,"SF Mono","Cascadia Mono","JetBrains Mono",Menlo,Consolas,monospace;
+--r:4px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+--bg:#141712;--side:#181c16;--card:#1d221a;--ink:#e2e5da;--mute:#a0a795;--faint:#6b7263;--line:#353c2f;--line2:#272d23;
+--acc:#a6c56f;--onacc:#16200d;--accl:#2a3620;--catkin:#d9c457;--catkinl:#353016;--warn:#e3a066;--warnl:#3b2a19;--bad:#ef7a6c;
+--fix:#191e17;--blue:#93b6dc;--bluel:#1f2b38;--violet:#bba6e0;--violetl:#2a2438;--tagbg:#272d23;color-scheme:dark}}
+:root[data-theme="dark"]{
+--bg:#141712;--side:#181c16;--card:#1d221a;--ink:#e2e5da;--mute:#a0a795;--faint:#6b7263;--line:#353c2f;--line2:#272d23;
+--acc:#a6c56f;--onacc:#16200d;--accl:#2a3620;--catkin:#d9c457;--catkinl:#353016;--warn:#e3a066;--warnl:#3b2a19;--bad:#ef7a6c;
+--fix:#191e17;--blue:#93b6dc;--bluel:#1f2b38;--violet:#bba6e0;--violetl:#2a2438;--tagbg:#272d23;color-scheme:dark}
+
+*{box-sizing:border-box}html{background:var(--bg)}
+body{user-select:none;-webkit-user-select:none;margin:0;font:15px/1.5 var(--sans);background:var(--bg);color:var(--ink);display:grid;grid-template-columns:272px minmax(0,1fr) 330px;height:100vh;-webkit-font-smoothing:antialiased}
+::selection{background:var(--catkinl);color:var(--ink)}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+a{color:var(--acc)}
+input[type=text]{user-select:text;-webkit-user-select:text;width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:var(--r);font:inherit;background:var(--card);color:var(--ink)}
+input[type=text]::placeholder{color:var(--faint)}input[type=text]:focus{outline:none;border-color:var(--acc);box-shadow:0 0 0 3px var(--accl)}
+button{font:inherit;font-size:14px;padding:6px 12px;border:1px solid var(--line);border-radius:var(--r);background:var(--card);color:var(--ink);cursor:pointer;transition:border-color .12s,background-color .12s}
+button:hover{border-color:var(--mute)}
+button.go{background:var(--acc);color:var(--onacc);border-color:var(--acc);font-weight:600}button.go:hover{filter:brightness(1.1)}
+button:disabled{opacity:.4;cursor:default}button:disabled:hover{border-color:var(--line);filter:none}
+button.link{border:0;background:none;color:var(--acc);padding:0;text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px}
+a.go{background:var(--acc)!important;color:var(--onacc)!important;border-radius:var(--r)!important;font-weight:600}
+
+nav.side{border-right:1px solid var(--line);overflow:auto;padding:18px 12px 110px;background:var(--side)}
+main{overflow:auto;padding:26px 32px 120px;min-width:0}
+.rail{overflow:auto;padding:18px 16px 110px;background:var(--side);border-left:1px solid var(--line)}
+.rail>h3{margin:0 0 2px}.rail-note{color:var(--mute);font-size:12.5px;margin:0 0 12px}
+
+/* left: the steps as mini cards on one thread; an empty step is just a line */
+nav.side h3{margin:16px 6px 8px}
+.mini{position:relative;display:grid;grid-template-columns:24px minmax(0,1fr);column-gap:8px;align-items:baseline;width:100%;text-align:left;padding:8px 10px 8px 6px;background:var(--card);border:1px solid var(--line);border-radius:var(--r);font-size:14px;line-height:1.3}
+.mini .no{font:600 11px/18px var(--mono);color:var(--mute);text-align:center;grid-row:span 2;align-self:start;border-radius:9px;height:18px}
+.mini b{font-weight:600}.mini small{grid-column:2;color:var(--mute);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.mini:hover{border-color:var(--mute)}
+.mini.sel{border-color:var(--acc);box-shadow:0 0 0 1px var(--acc)}.mini.sel .no{background:var(--acc);color:var(--onacc)}
+.mini.fixed{background-color:var(--fix);background-image:repeating-linear-gradient(135deg,transparent 0 9px,var(--line2) 9px 10px)}
+.mini.empty{background:transparent;border-color:transparent;padding-top:3px;padding-bottom:3px}
+.mini.empty b{font-weight:400;color:var(--mute);font-size:13.5px}.mini.empty .no{background:var(--side);color:var(--faint)}
+.mini.empty:hover{border-color:transparent}.mini.empty:hover b{color:var(--ink)}
+.mini.empty.sel{background:var(--card);border-color:var(--acc)}.mini.empty.sel b{color:var(--ink);font-weight:600}
+.mini.start{border-style:dashed;background:transparent}.mini.start.sel{border-style:solid;background:var(--card)}
+.minis{position:relative;display:flex;flex-direction:column;gap:5px}
+.minis::before{content:"";position:absolute;left:18px;top:12px;bottom:12px;border-left:2px solid var(--line)}
+
+/* middle: the step you're on, then what can go in it */
+.top .lede{font-size:14.5px;margin-bottom:14px}.top .steps{margin-bottom:20px}
+#flow{max-width:none;scroll-margin-top:18px}
+#stage{margin:0 0 22px}
+#stage header{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+#stage header .no{font:600 12px/22px var(--mono);min-width:22px;height:22px;text-align:center;border-radius:11px;background:var(--acc);color:var(--onacc);align-self:center}
+#stage header h2{flex:none;font-size:20px}#stage header .sum{color:var(--mute);font-size:13.5px}
+#stage.fixed header .no{background:var(--mute)}
+#shelf{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:8px;align-items:start}#shelf>:not(.piece){grid-column:1/-1}
+#shelf>.piece{margin:0}#shelf>input{max-width:420px}
+.shelf-head h3{margin:0 0 8px}
+#shelf .tree{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:8px;align-items:start;margin-top:8px}
+#shelf .tree h3{grid-column:1/-1;margin:10px 0 0}
+#shelf .node{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:8px 10px!important;height:100%}
+#shelf .grab{cursor:grab}#shelf .grab:active{cursor:grabbing}
+.adding #stage .chips{min-height:64px;outline:1px dashed var(--acc);outline-offset:3px;background:var(--accl);align-content:flex-start}
+.adding #stage .chips:empty{align-items:center;justify-content:center}.adding #stage .chips:empty::after{content:"Drop it here";color:var(--acc);font-size:13.5px}
+#shelf .node.on{border-color:var(--acc);background:var(--accl)}
+#shelf .node.sub{grid-column:1/-1;margin-left:24px;height:auto}
+#shelf .node.off{background:transparent;border-style:dashed}
+#startview{display:flex;flex-direction:column;gap:14px;max-width:880px}#startview[hidden]{display:none}
+#startview .batches,#startview .examples-stage{margin:0;max-width:none}
+#railex .ex{padding:10px 12px;margin:8px 0}#railex .ex .exhead button{flex:none;font-size:13px;padding:3px 10px}
+#railex .ex .steps{gap:4px}#railex .ex .steps span{font-size:11px;padding:0 6px}
+
+/* right: the stack as a tree, in the order it runs */
+.stacktree{font:12.5px/1.5 var(--mono);display:flex;flex-direction:column;gap:6px}
+.t-stage{display:flex;gap:8px;align-items:baseline;padding:2px 6px;border-radius:3px;cursor:pointer;font-family:var(--sans);font-size:13.5px}
+.t-stage:hover{background:var(--accl)}.t-stage.sel{background:var(--accl);box-shadow:inset 2px 0 0 var(--acc)}
+.t-name{font-weight:600}.t-stage.fixed .t-name{color:var(--mute)}.t-stage.brought .t-name{font-weight:500;font-style:italic;color:var(--mute)}
+.t-sum{color:var(--mute);margin-left:auto;font:11.5px var(--mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.t-kids{margin:2px 0 0 12px;padding-left:12px;border-left:1px solid var(--line)}
+.t-leaf{position:relative;padding:1px 0;display:flex;flex-wrap:wrap;gap:0 6px;align-items:baseline}
+.t-leaf::before{content:"";position:absolute;left:-12px;top:.8em;width:9px;border-top:1px solid var(--line)}
+.t-leaf .path{overflow-wrap:anywhere;min-width:0;flex:1 1 100%}.t-leaf .t-sum{margin-left:0;color:var(--faint)}
+.t-leaf .arg{color:var(--blue)}.t-leaf .need{flex-basis:100%;color:var(--mute);font-size:11.5px;padding-left:10px}
+.railhead{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px}.railhead h3{margin:0 0 2px;flex:1;white-space:nowrap}
+.sealmark{font:600 10.5px/1.6 var(--mono);text-transform:uppercase;letter-spacing:.06em;padding:0 6px;border-radius:2px}
+.sealmark.sealed{background:var(--acc);color:var(--onacc)}.sealmark.sealed::before{content:"✓ "}
+.sealmark.changed{background:var(--catkinl);color:var(--ink);border:1px solid var(--catkin)}.sealmark.changed::before{content:"! "}
+.counts{display:flex;flex-wrap:wrap;gap:4px 14px;align-items:baseline;font-size:13px;color:var(--mute);margin:-2px 0 10px;font-variant-numeric:tabular-nums}.counts .in{color:var(--acc)}
+.proto{font-size:12.5px;color:var(--mute);background:var(--catkinl);border:1px solid var(--catkin);border-radius:var(--r);padding:5px 9px;margin:0 0 10px;max-width:72ch}
+.why-here{font-size:11.5px;color:var(--faint);font-style:italic;margin-top:4px}
+.t-divider{font:600 10.5px/1.4 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--mute);border-top:1px dashed var(--line);padding:8px 6px 0;margin-top:4px}
+.t-leaf .ord{color:var(--acc);font-weight:600;min-width:1.6em}
+.mini-div{position:relative;font:600 10.5px/1.4 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--mute);background:var(--side);padding:8px 6px 2px;margin-left:30px}
+.tracetip{font:12px/1.4 var(--sans);color:var(--mute);background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:6px 8px;margin:0 0 10px}
+.stacktree.tracing .t-leaf{opacity:.35}.stacktree.tracing .t-leaf.lit{opacity:1}
+.t-leaf.lit{border-radius:2px;background:var(--accl)}.t-leaf.main{background:var(--acc);color:var(--onacc)}.t-leaf.main .arg,.t-leaf.main .need{color:var(--onacc)}
+.t-leaf.needed::after{content:"needed";font-size:10px;color:var(--acc);margin-left:auto;padding-right:4px}.t-leaf.needs::after{content:"needs it";font-size:10px;color:var(--blue);margin-left:auto;padding-right:4px}
+.t-leaf.ghost{color:var(--acc);opacity:.85;font-style:italic}.t-leaf.ghost::before{border-top-style:dashed}
+.t-preview{font:12.5px/1.45 var(--sans);background:var(--catkinl);border:1px solid var(--catkin);border-radius:var(--r);padding:6px 8px}
+.ex.pv{border-color:var(--catkin);box-shadow:0 0 0 1px var(--catkin)}
+.mini.review{margin-top:6px;border-color:var(--acc);border-style:dashed;background:transparent}.mini.review .no{color:var(--acc)}.mini.review.sel{border-style:solid;background:var(--card)}.mini.review.sel .no{color:var(--onacc)}
+.agent{margin:14px 0;border:1px solid var(--line);border-radius:var(--r);padding:8px 12px;background:var(--bg)}.agent summary{cursor:pointer;font-weight:600}.agent p{font-size:13.5px;color:var(--mute);margin:8px 0 6px}
+.copybox{position:relative}.copybox pre{margin:0;max-height:260px;overflow:auto;background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px;font:12px/1.5 var(--mono);font-variant-ligatures:none;white-space:pre;user-select:text;-webkit-user-select:text}
+.copybox button{position:absolute;top:6px;right:6px;font-size:12px;padding:2px 8px}
+#review[hidden]{display:none}#review .review{margin:0}
+footer #undo{order:0}
+.t-skip{font:12px/1.6 var(--sans);color:var(--faint);padding:2px 6px 2px 26px;border-left:2px dotted var(--line);margin-left:12px}
+.t-skip button.link{color:var(--mute);font-size:12px;text-decoration-color:var(--line)}.t-skip button.link:hover{color:var(--acc)}
+h1{font-size:27px;line-height:1.15;letter-spacing:-.02em;font-weight:700;margin:0 0 8px;text-wrap:balance}
+h2{font-size:16px;font-weight:650;letter-spacing:-.005em;margin:0;text-wrap:balance}
+h3{font:600 11px/1.3 var(--mono);text-transform:uppercase;letter-spacing:.09em;color:var(--mute);margin:18px 0 6px}
+.lede{color:var(--mute);margin:0 0 18px;max-width:66ch;font-size:15.5px}
+
+/* the three steps are a real sequence: one segmented strip */
+.steps{display:flex;margin:0 0 28px;flex-wrap:wrap}
+.steps div{background:var(--card);border:1px solid var(--line);padding:6px 14px 6px 12px;font-size:14px;margin-left:-1px}
+.steps div:first-child{border-radius:var(--r) 0 0 var(--r);margin-left:0}.steps div:last-child{border-radius:0 var(--r) var(--r) 0}
+.steps b{font:600 12px var(--mono);color:var(--acc);margin-right:8px}
+
+.flow{max-width:800px}
+.stage{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px}
+.stage.sel{border-color:var(--acc);box-shadow:0 0 0 1px var(--acc)}
+/* the kernel can't be taken out: hatched, like a fixed part on a drawing */
+.stage.fixed{background-color:var(--fix);background-image:repeating-linear-gradient(135deg,transparent 0 9px,var(--line2) 9px 10px)}
+.stage.fixed h2::after{content:"always there";font:500 10px/1 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--mute);border:1px solid var(--line);background:var(--card);border-radius:2px;padding:3px 5px;margin-left:10px;vertical-align:2px}
+.stage .say{color:var(--mute);font-size:14px;margin:4px 0 10px;max-width:70ch}.stage .none{color:var(--mute);font-size:13px;font-style:italic}
 .stage header{display:flex;align-items:baseline;gap:10px}.stage header h2{flex:1}
-.down{text-align:center;color:#b5b1a6;font-size:20px;line-height:1;margin:4px 0}
-.chips{display:flex;flex-wrap:wrap;gap:8px;min-height:10px;border-radius:6px;padding:2px}.chips.on{background:var(--accl)}
-.chip{background:#fff;border:1px solid #bdb9ad;border-radius:7px;padding:6px 9px;width:230px;cursor:grab;position:relative}
-.chip b{display:block;padding-right:16px}.chip small{display:block;color:var(--mute);font-size:12px;line-height:1.3}.chip .x{position:absolute;top:2px;right:4px;border:0;background:none;color:var(--mute);padding:0 4px;font-size:16px}
-.chip.before{box-shadow:-4px 0 0 var(--acc)}.chip.after{box-shadow:4px 0 0 var(--acc)}
-.tag{display:inline-block;font-size:11px;padding:0 6px;border-radius:8px;background:#eee;margin:3px 4px 0 0}.tag.net{background:var(--warnl);color:var(--warn)}.tag.inst{background:#e9e4f5;color:#5a3f8f}.tag.have{background:var(--accl);color:var(--acc)}
-.shelf-head{margin-bottom:10px}.shelf-head p{color:var(--mute);font-size:14px;margin:4px 0 10px}
-.piece{background:#fff;border:1px solid var(--line);border-radius:7px;padding:7px 9px;margin:6px 0;cursor:pointer}.piece:hover{border-color:var(--acc)}
-.piece.idea{background:#f0efea;color:var(--mute);cursor:default}.piece.used{opacity:.5;cursor:default}.piece b{display:block}.piece small{display:block;color:var(--mute);font-size:13px;line-height:1.35}
-.folder{display:flex;gap:8px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:7px;padding:6px 9px;margin:6px 0}.folder span{flex:1;word-break:break-all;font-size:14px}.folder small{color:var(--mute)}
-#picker{border:1px solid var(--line);border-radius:7px;background:#fff;padding:8px;margin-top:8px}.ppath{font-family:monospace;font-size:12px;word-break:break-all;margin-bottom:6px}
-.plist{max-height:280px;overflow:auto;border-top:1px solid var(--line)}.plist div{padding:4px 6px;cursor:pointer;border-bottom:1px solid #f0eee8}.plist div:hover{background:var(--accl)}.plist .up{color:var(--mute)}
-footer{position:fixed;left:340px;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);padding:12px 30px;display:flex;gap:14px;align-items:center}footer .sum{flex:1}
-.review{max-width:780px;background:#fff;border:2px solid var(--acc);border-radius:10px;padding:16px 18px;margin:0 0 20px}.review ul{margin:8px 0 12px;padding-left:20px}.review li{margin:3px 0}
-.why{background:var(--fix);border-radius:7px;padding:10px 12px;font-size:14px;margin:10px 0}.subj{font-family:monospace;font-size:11px;word-break:break-all;color:var(--mute)}
-.msg{font-size:14px}.msg.err{color:#b00}.gap{color:var(--warn);font-size:13px;margin:2px 0}
-.find{position:relative;margin-bottom:14px}.find input{font-size:16px;padding:9px 30px 9px 10px;border-color:var(--acc)}.find .x{position:absolute;right:6px;top:6px;border:0;background:none;font-size:18px;color:var(--mute)}
-.topic{display:inline-block;font-size:11px;padding:0 6px;border-radius:8px;background:#e8eef8;color:#2b4f86;margin:3px 4px 0 0;cursor:pointer;border:0}.topic:hover{background:#d3e0f5}
+/* the thread between stages */
+.down{position:relative;width:0;height:24px;margin:0 0 0 22px;border-left:2px solid var(--line);font-size:0;line-height:0;color:transparent;overflow:visible}
+.down::after{content:"";position:absolute;left:-5px;bottom:-4px;width:8px;height:8px;border-radius:50%;background:var(--acc);box-shadow:0 0 0 2px var(--bg)}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px;min-height:10px;border-radius:var(--r);padding:2px}
+.chips.on{background:var(--accl);outline:1px dashed var(--acc);outline-offset:2px}
+.chip{background:var(--bg);border:1px solid var(--line);border-radius:var(--r);padding:7px 10px;width:232px;cursor:grab;position:relative;transition:border-color .12s}
+.chip:hover{border-color:var(--mute)}
+.chip b{display:block;padding-right:16px;font-weight:600}.chip small{display:block;color:var(--mute);font-size:12px;line-height:1.35}
+.chip .x{position:absolute;top:3px;right:4px;border:0;background:none;color:var(--mute);padding:0 4px;font-size:16px;line-height:1.2}.chip .x:hover{color:var(--bad)}
+.chip.before{box-shadow:-3px 0 0 var(--acc)}.chip.after{box-shadow:3px 0 0 var(--acc)}
+.chip .runs{font-family:var(--mono);font-size:11px;color:var(--blue);display:block}
+.tag{display:inline-block;font:500 10.5px/1.7 var(--mono);padding:0 6px;border-radius:2px;background:var(--tagbg);color:var(--mute);margin:4px 4px 0 0}
+.tag.net{background:var(--warnl);color:var(--warn)}.tag.inst{background:var(--violetl);color:var(--violet)}.tag.have{background:var(--accl);color:var(--acc)}
+.topic{display:inline-block;font:500 11px/1.7 var(--sans);padding:0 7px;border-radius:2px;background:var(--bluel);color:var(--blue);margin:4px 4px 0 0;cursor:pointer;border:0}
+.topic:hover{background:var(--blue);color:var(--card)}
 .goes{font-size:12px;color:var(--mute);margin-top:4px}.goes button{font-size:12px;padding:0 4px;border:0;background:none;color:var(--acc);text-decoration:underline;cursor:pointer}
 .where{font-size:12px;color:var(--acc);margin-top:3px}
-.started{max-width:780px;background:#fff;border:2px solid var(--acc);border-radius:10px;padding:16px 18px;margin:0 0 20px}
-.started ol{margin:8px 0 12px;padding-left:20px}.started li{margin:5px 0}.started li small{display:block;color:var(--mute);word-break:break-word}
-.st-done{color:var(--acc)}.st-refused,.st-failed{color:#b00}.st-unreachable,.st-needs{color:var(--warn)}
-.started pre{max-height:420px;overflow:auto;background:#f6f5f0;border:1px solid var(--line);border-radius:6px;padding:10px;font-size:12px;user-select:text;-webkit-user-select:text;white-space:pre-wrap}
-#ask .box{border:2px solid var(--warn);background:var(--warnl);border-radius:7px;padding:10px;margin-bottom:12px;font-size:14px}#ask .box div{display:flex;gap:8px;margin-top:8px}
-.tree{margin-top:6px}.node{display:flex;align-items:flex-start;gap:6px;padding:4px 0;border-bottom:1px solid #efede6}.node .tw{width:16px;flex:none;cursor:pointer;color:var(--mute);user-select:none}.node .tw.none{cursor:default}
-.node input{margin-top:3px;flex:none}.node .what{flex:1}.node b{font-weight:600}.node small{display:block;color:var(--mute);font-size:12.5px;line-height:1.3}
-.node.off{color:var(--mute)}.node .note{font-size:12px;color:var(--acc)}.node .note.opt{color:#2b4f86}.node .note.no{color:var(--warn)}
-.base{margin-top:4px}.bfold{border-top:1px solid #d6d9e4;padding:8px 0}.bpath{font-family:monospace;font-size:12px;color:var(--mute);word-break:break-all}
-.bline{margin:4px 0;font-size:14px}.bline.ok{color:var(--acc)}.bline.mute{color:var(--mute);font-size:12.5px}.bcant{margin:4px 0;padding-left:18px;font-size:14px}.bcant li{margin:3px 0}.bcant button.link{font-size:13px}
-.batches{max-width:780px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:0 0 18px}
-.batches h2{font-size:16px}.batches .save{display:flex;gap:8px;margin:8px 0}.batches .save input{max-width:320px}
-.batches ul{list-style:none;padding:0;margin:6px 0 0}.batches li{display:flex;gap:10px;align-items:center;padding:6px 0;border-top:1px solid #efede6}.batches li b{flex:1}.batches li small{color:var(--mute)}
-.examples .q,.batches .q{border:2px solid var(--warn);background:var(--warnl);border-radius:7px;padding:10px;margin:8px 0;font-size:14px}.examples .q div,.batches .q div{display:flex;gap:8px;margin-top:8px}
-.examples{max-width:780px;margin-top:22px}.examples>h2{font-size:17px}.ex{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:10px 0}
-.ex h3{font-size:15px;text-transform:none;letter-spacing:0;color:var(--ink);margin:0 0 4px}.ex p{margin:0 0 6px;color:var(--mute);font-size:14px}.ex .steps{font-size:13px;margin:6px 0}
-.ex .steps span{display:inline-block;margin:2px 6px 2px 0;padding:1px 7px;border-radius:9px;background:#eef0f6}.ex .steps span.no{background:#f0efea;color:var(--mute)}.ex .opt{color:#2b4f86}
-.chip .runs{font-family:monospace;font-size:11px;color:#2b4f86;display:block}
-header.fold{cursor:pointer;display:flex;align-items:baseline;gap:8px}header.fold h2{flex:none}header.fold .sum{flex:1;color:var(--mute);font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-header.fold .caret,.exhead .caret{color:var(--mute);width:12px;flex:none}header.fold button.link{margin-left:auto}
-.examples-stage{background:#fdfcf8}.ex .exhead{display:flex;align-items:baseline;gap:8px;cursor:pointer}.ex .exhead h3{flex:1;margin:0}.ex.folded{padding:8px 12px}.ex.folded .steps{margin:4px 0 0 20px}
+
+/* the shelf */
+.find{position:relative;margin-bottom:16px}.find input{font-size:16px;padding:10px 34px 10px 12px;border-color:var(--acc)}
+.find .x{position:absolute;right:6px;top:7px;border:0;background:none;font-size:18px;color:var(--mute);padding:0 6px}
+.shelf-head{margin-bottom:10px}.shelf-head p{color:var(--mute);font-size:14px;margin:4px 0 10px}
+.piece{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:8px 10px;margin:6px 0;cursor:pointer;transition:border-color .12s}.piece:hover{border-color:var(--acc)}
+.piece.idea{background:transparent;border-style:dashed;color:var(--mute);cursor:default}.piece.idea:hover{border-color:var(--line)}
+.piece.used{opacity:.5;cursor:default}.piece.used:hover{border-color:var(--line)}
+.piece b{display:block;font-weight:600}.piece small{display:block;color:var(--mute);font-size:13px;line-height:1.4}
+.folder{display:flex;gap:10px;align-items:center;background:var(--bg);border:1px solid var(--line);border-radius:var(--r);padding:7px 10px;margin:6px 0}
+.folder span{flex:1;min-width:0;word-break:break-all;font:13px var(--mono)}.folder small{color:var(--mute);font-variant-numeric:tabular-nums}
+#picker{border:1px solid var(--line);border-radius:var(--r);background:var(--card);padding:8px;margin-top:8px}
+.ppath{font-family:var(--mono);font-size:12px;word-break:break-all;margin-bottom:6px;color:var(--mute)}
+.plist{max-height:280px;overflow:auto;border-top:1px solid var(--line)}
+.plist div{padding:5px 6px;cursor:pointer;border-bottom:1px solid var(--line2);font-size:14px}.plist div:hover{background:var(--accl)}.plist .up{color:var(--mute)}
+
+footer{position:fixed;left:272px;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);padding:12px 36px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+footer .sum{flex:1;font-size:14px;font-variant-numeric:tabular-nums}footer button.go{padding:8px 18px}
+
+/* what's waiting on you: catkin */
+#ask .box,.examples .q,.batches .q{border:1px solid var(--catkin);background:var(--catkinl);border-radius:var(--r);padding:10px 12px;font-size:14px}
+#ask .box{margin-bottom:12px}.examples .q,.batches .q{margin:8px 0}
+#ask .box div,.examples .q div,.batches .q div{display:flex;gap:8px;margin-top:8px}
+
+.review,.started{max-width:800px;background:var(--card);border:1px solid var(--acc);box-shadow:0 0 0 1px var(--acc);border-radius:var(--r);padding:16px 18px;margin:0 0 22px}
+.review ul{margin:8px 0 12px;padding-left:20px}.review li{margin:3px 0}
+.why{background:var(--fix);border:1px solid var(--line2);border-radius:var(--r);padding:10px 12px;font-size:14px;margin:10px 0}
+.subj{font-family:var(--mono);font-size:11px;word-break:break-all;color:var(--mute)}
+.msg{font-size:13.5px}.msg.err{color:var(--bad)}.gap{color:var(--warn);font-size:13px;margin:2px 0}
+.started ol{margin:8px 0 12px;padding-left:22px}.started li{margin:6px 0}.started li small{display:block;color:var(--mute);word-break:break-word}
+.st-done{color:var(--acc)}.st-refused,.st-failed{color:var(--bad)}.st-unreachable,.st-needs{color:var(--warn)}
+.started pre{max-height:420px;overflow:auto;background:var(--bg);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px;font:12px/1.5 var(--mono);color:var(--ink);user-select:text;-webkit-user-select:text;white-space:pre-wrap}
+
+.tree{margin-top:6px}.node{display:flex;align-items:flex-start;gap:6px;padding:5px 0;border-bottom:1px solid var(--line2)}
+.node .tw{width:16px;flex:none;cursor:pointer;color:var(--mute);user-select:none}.node .tw.none{cursor:default}
+.node input{margin-top:4px;flex:none;accent-color:var(--acc)}.node .what{flex:1;min-width:0}.node b{font-weight:600}
+.node small{display:block;color:var(--mute);font-size:12.5px;line-height:1.35}
+.node.off{color:var(--mute)}.node .note{font-size:12px;color:var(--acc)}.node .note.opt{color:var(--blue)}.node .note.no{color:var(--warn)}
+.base{margin-top:6px}.bfold{border-top:1px solid var(--line);padding:9px 0}
+.bpath{font-family:var(--mono);font-size:12px;color:var(--mute);word-break:break-all}
+.bline{margin:4px 0;font-size:14px;font-variant-numeric:tabular-nums}.bline.ok{color:var(--acc)}.bline.mute{color:var(--mute);font-size:12.5px}
+.bcant{margin:4px 0;padding-left:18px;font-size:14px}.bcant li{margin:3px 0}.bcant button.link{font-size:13px}
+
+.batches{max-width:800px;background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:12px 16px;margin:0 0 18px}
+.batches h2{font-size:15px}.batches .save{display:flex;gap:8px;margin:8px 0}.batches .save input{max-width:320px}
+.batches ul{list-style:none;padding:0;margin:6px 0 0}.batches li{display:flex;gap:10px;align-items:center;padding:7px 0;border-top:1px solid var(--line2)}.batches li b{flex:1}.batches li small{color:var(--mute)}
+.examples{max-width:800px;margin-top:22px}.examples>h2{font-size:17px}.examples-stage{background:var(--card)}
+.ex{background:var(--bg);border:1px solid var(--line2);border-radius:var(--r);padding:12px 14px;margin:10px 0}
+.ex h3{font:600 15px/1.3 var(--sans);text-transform:none;letter-spacing:0;color:var(--ink);margin:0 0 4px}.ex p{margin:0 0 6px;color:var(--mute);font-size:14px}
+.ex .steps{font-size:13px;margin:6px 0;gap:6px}
+.ex .steps span{display:inline-block;padding:1px 8px;border-radius:2px;background:var(--card);border:1px solid var(--line);font:12px/1.6 var(--mono)}
+.ex .steps span.no{background:transparent;border-style:dashed;color:var(--mute)}.ex .opt{color:var(--blue)}
+.ex .exhead{display:flex;align-items:baseline;gap:8px;cursor:pointer}.ex .exhead h3{flex:1;margin:0}.ex.folded{padding:9px 12px}.ex.folded .steps{margin:4px 0 0 20px}
+header.fold{cursor:pointer;display:flex;align-items:baseline;gap:8px}header.fold h2{flex:none}
+header.fold .sum{flex:1;min-width:0;color:var(--mute);font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+header.fold .caret,.exhead .caret{color:var(--faint);width:12px;flex:none;font-size:11px}
+header.fold:hover .caret,.exhead:hover .caret{color:var(--acc)}header.fold button.link{margin-left:auto}
 details.more{margin-top:18px}details.more summary{cursor:pointer;color:var(--mute)}
+
+@media (max-width:1180px){body{grid-template-columns:236px minmax(0,1fr) 280px}footer{left:236px}main{padding:22px 20px 120px}.steps div{font-size:13px;padding:5px 10px 5px 9px}.steps b{margin-right:6px}}
+@media (max-width:900px){body{display:block;height:auto}footer{left:0;padding:10px 16px}footer .sum{flex:1 1 100%;font-size:13px}footer .msg{flex:1;font-size:12.5px}main{padding:20px 16px 30px}.rail{border-left:0;border-top:1px solid var(--line);padding-bottom:150px}
+ nav.side{border-right:0;border-bottom:1px solid var(--line);padding:12px 16px;overflow:visible}
+ nav.side h3{display:none}.minis{flex-direction:row;overflow-x:auto;padding-bottom:4px}.minis::before{display:none}
+ .mini{flex:none;width:auto;max-width:220px}.mini.start{margin-bottom:8px}.mini.empty{border-color:var(--line2)}
+ .steps:not(.ex .steps){flex-direction:column}.steps div{margin:-1px 0 0;border-radius:0}.steps div:first-child{margin:0;border-radius:var(--r) var(--r) 0 0}.steps div:last-child{border-radius:0 0 var(--r) var(--r)}
+ .chip{width:100%}h1{font-size:23px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style></head><body>
-<aside>
-<div class="find"><input type="text" id="find" placeholder="What do you want willow to do?"><button class="x" id="findx" title="clear" hidden>×</button></div>
+<nav class="side" id="steplist" aria-label="The steps of your flow"></nav>
+<main>
+<header class="top"><h1>Put your willow together</h1>
+<p class="lede">Willow answers questions from your own folders, in their own words, with the file and line for each answer. It never makes an answer up: when your files don't say it, it says so. Here you choose what it reads and what else it does. Nothing runs until you look it over and seal it.</p>
+<div class="steps"><div><b>1</b>Choose your folders</div><div><b>2</b>Add what you want it to do</div><div><b>3</b>Look it over, and seal it</div></div></header>
+<div id="started"></div>
+<div class="find"><input type="text" id="find" placeholder="What do you want willow to do?  ( / )"><button class="x" id="findx" title="clear" hidden>×</button></div>
 <div id="ask"></div>
+<div id="flow"><section class="stage" id="stage"></section><div id="review" hidden></div><div id="startview" hidden><section class="batches" id="batches"></section><div id="railex"></div></div></div>
 <div class="shelf-head" id="shelfhead"></div>
 <div id="shelf"></div>
-</aside>
-<main>
-<h1>Put your willow together</h1>
-<p class="lede">Willow answers questions from your own folders, in their own words, with the file and line for each answer. It never makes an answer up: when your files don't say it, it says so. Here you choose what it reads and what else it does. Nothing runs until you look it over and seal it.</p>
-<div class="steps"><div><b>1</b>Choose your folders</div><div><b>2</b>Add what you want it to do</div><div><b>3</b>Look it over, and seal it</div></div>
-<section class="batches" id="batches"></section>
-<div id="started"></div>
-<div id="review"></div>
-<div class="flow" id="flow"></div>
-
 </main>
-<footer><div class="sum" id="sum"></div><span class="msg" id="msg"></span><button class="go" id="look">Look it over</button></footer>
+<aside class="rail" aria-label="Your stack"><div class="railhead"><h3>Your stack</h3><span id="sealmark" class="sealmark" hidden></span></div><p class="rail-note">What it reads, what runs on your page (numbered in the order it runs; the page shows what says most first), and what’s set up alongside. Click a step to work on it.</p><div class="tracetip" id="tracetip" hidden></div><div class="stacktree" id="stacktree"></div></aside>
+<footer><div class="sum" id="sum"></div><span class="msg" id="msg"></span><button id="undo" hidden title="undo the last change (Ctrl+Z)">Undo</button><button class="go" id="look">Look it over</button></footer>
 <script>
 const T=location.pathname.replace(/\/$/,'');
 const api=(p,b)=>fetch(T+'/api/'+p,b?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)}:{}).then(r=>r.json());
 const el=(t,a={},...k)=>{const e=document.createElement(t);for(const[x,v]of Object.entries(a)){if(x==='text')e.textContent=v;else if(x.startsWith('on'))e.addEventListener(x.slice(2),v);else e.setAttribute(x,v)}for(const c of k)if(c!=null)e.append(c);return e};
+// PROTOTYPE: the steps are roles, the part a piece plays in your stack, guessed from its card
+// (see roleOf); a card's section is what it's about, and shows as the headings inside a role.
 const STAGES=[
  {key:'folders',title:'Your folders',say:'What willow may read. It only ever reads them: it never changes, moves or uploads a file.'},
+ {key:'reads',title:'What it reads',group:'rank',say:'Readers turn PDFs, email, chats and office files into plain text beside your folder, so the kernel can search them. They run over your folders before anything else. Without any, it reads plain text, markdown and web pages.'},
+ {key:'words',title:'What words it knows',group:'rank',say:'Words lists: a language’s common words, its word forms, and your own (the names you call people, your shorthand), so a question finds what your files call it. The kernel uses them on every question.'},
  {key:'kernel',title:'Willow’s kernel',fixed:true,say:'What it does on your folders alone, before any add-on, shown below as counts. Every question comes here. It finds the passages of your files that hold the question’s words and gives up to three, each with its file and line. If none do, it says it doesn’t know. Every step goes on a record that can’t be quietly changed.'},
- {key:'read',title:'Reading other kinds of files',sec:'Reading more kinds of files',say:'Turns PDFs, email, chats and office files into text it can search. Without any, it reads plain text, markdown and web pages.'},
- {key:'words',title:'Your own words',sec:'Your own words',say:'Teaches it the words you use, so a question finds what your files call it ("doc" finds "doctor").'},
- {key:'find',title:'More ways to find things',sec:'Finding things',say:'Other ways to look when a plain match misses: every match, phrases, this day in past years, an exact quote.'},
- {key:'watch',title:'Things it keeps watch on',sec:'Keeping track',say:'What it notices without being asked: dates coming up, to-dos, numbers over time.'},
- {key:'hide',title:'What it hides',sec:'Privacy and safety',say:'Blanks out phone numbers, card numbers and keys before anything is shown, and finds secrets sitting in files.'},
- {key:'suggest',title:'Assistants',sec:'Assistants',say:'AI assistants, and what they’re allowed to see. They can ask and suggest answers, but none of them can approve one.'},
+ {key:'page',title:'What runs on your page',ordered:true,group:'section',say:'The steps that run each time your page is made: what’s coming up, what needs you, what changed. Your page shows what says the most first, whatever their order here; the order only breaks ties, and matters only for a step that writes your record, which runs before the ones after it.'},
+ {key:'suggests',title:'What suggests answers',group:'suggests',say:'Models that suggest an answer from your passages, each citing what it read and held until you seal it, and the checks that tell you whether to trust a model first. None of them can approve anything.'},
+ {key:'ways',title:'Where you ask from',group:'ways',say:'Your terminal, your editor, an AI assistant such as Claude Code, a page in your browser. Each is set up once, then you ask from there. Without one, you type commands.'},
+ {key:'guards',title:'What guards it',group:'section',say:'What keeps something from being shown or done: a hook that checks what an AI assistant does before it does it, a filter that blanks out numbers and keys before an answer is shown, the one file a model may read.'},
+ {key:'makes',title:'What it makes for elsewhere',group:'section',say:'Files for other programs: a calendar feed, a feed reader’s list, a printable page, a backup. Each writes only where you point it.'},
+ {key:'tools',title:'Tools you run yourself',group:'section',say:'Things you run when you want, with your own words or options: flashcards, a forecast, a check of a claim. They’re put in your stack, but not run on your page.'},
  {key:'you',title:'You',fixed:true,say:'A suggested answer counts only once you seal it. Sealing is you saying “yes, this is mine”. The same goes for this whole arrangement.'},
- {key:'honest',title:'Keeping it honest',sec:'Trust and proof',say:'Checks that stay true later: an approved answer whose source changed is flagged, the record is backed up and pinned.'},
- {key:'use',title:'How you’ll use it',sec:'Ways to use it',say:'Where you ask from: a page in your browser, your shell, your editor. Without one, you type commands.'},
- {key:'extra',title:'Extras',sec:['Play','For maintainers'],say:'Games on the record, and tools for people working on willow itself.'},
 ];
-const SUGGEST={read:['pdf','mail','office'],words:['starter-words','nicknames'],find:['all','pile-rungs','on-this-day'],watch:['coming-up','todo'],hide:['privacy'],suggest:['claude-code','mcp-lite'],honest:['stale','backup','tip-pin'],use:['browse','shell']};
 const KEY='willow-canvas-2';
-let P={},S=JSON.parse(localStorage.getItem(KEY)||'null'),cur='folders',subject=null,drag=null,here='';
-const stageOf=p=>{for(const s of STAGES)if(s.sec&&[].concat(s.sec).includes(p.section))return s.key;return'extra'};
+let HIDE=(()=>{try{return localStorage.getItem('willow-canvas-hide')==='1'}catch(e){return false}})(),P={},S=JSON.parse(localStorage.getItem(KEY)||'null'),cur='folders',subject=null,drag=null,here='',SEALED=false,back='folders';
+// which role a piece plays, and the fact on its card that says so: canvas.py's `role` guesses it
+const roleOf=p=>[p.role||'tools',p.role_why||''];
+const stageOf=p=>roleOf(p)[0];
 const save=()=>localStorage.setItem(KEY,JSON.stringify(S));
 function say(t,err){const m=document.getElementById('msg');m.textContent=t||'';m.className='msg'+(err?' err':'')}
+// where a stack reaches beyond this machine: loopback is this machine, not online
+function away(reach){return reach.filter(x=>x!=='loopback')}
 function plainTags(p){const t=[];if(p.network&&p.network!=='none')t.push(el('span',{class:'tag net',text:p.network==='loopback'?'this machine only':'goes online: '+p.network}));
- if(p.kind==='deps')t.push(el('span',{class:'tag inst',text:'needs installing'}));if((p.writes||'').includes('to'))t.push(el('span',{class:'tag',text:'writes only where you point it'}));
+ if(p.kind==='deps')t.push(el('span',{class:'tag inst',text:'needs installing'}));if((p.writes||'').includes('to'))t.push(el('span',{class:'tag',text:'writes only where you point it'}));if((p.writes||'').includes('record'))t.push(el('span',{class:'tag',text:'writes your record'}));
  if(p.in_stack)t.push(el('span',{class:'tag have',text:'already here'}));return t}
 const all=()=>STAGES.flatMap(s=>(S.stages[s.key]||[]));
-const FACT=new Set(['no-install','needs-install','offline','this-machine','online']);
+const FACT=new Set(['no-install','needs-install','offline','this-machine','online','to-a-model']);
 // a tag you can click: every piece that shares it
 function topics(p){return(p.tags||[]).filter(t=>!FACT.has(t)).map(t=>el('button',{class:'topic',text:'#'+t,title:'every piece tagged '+t,onclick:e=>{e.stopPropagation();find('#'+t)}}))}
-function stageTitle(p){const k=stageOf(p);return STAGES.find(s=>s.key===k).title}
+function stageTitle(p){const k=stageOf(p);return STAGES.find(s=>s.key===k)?.title||'willow’s own repository, not your stack'}
+// an add-on card you can drag into the step's pieces, at the place you drop it
+function addable(n,e){e.dataset.n=n;if(all().includes(n)||cantAdd(n))return e;e.draggable=true;e.classList.add('grab');if(!e.title)e.title='drag into the step, or tick it';
+ e.addEventListener('dragstart',ev=>{if(ev.target.tagName==='INPUT'){ev.preventDefault();return}drag={add:n};ev.dataTransfer.effectAllowed='copy';ev.dataTransfer.setData('text/plain',n);document.body.classList.add('adding')});
+ e.addEventListener('dragend',()=>{drag=null;document.body.classList.remove('adding')});return e}
 function pieceCard(p,why){const used=all().includes(p.name),idea=!!cantAdd(p.name);
- return el('div',{class:'piece'+(idea?' idea':'')+(used?' used':''),title:idea?cantAdd(p.name):used?'already in your flow':'click to add',onclick:()=>{if(!idea&&!used)addPiece(p.name)}},
-  el('b',{text:p.name+(used?'  ✓':'')}),el('small',{text:(p.runs_in==='repo'?'works on willow itself · ':'')+p.line}),...plainTags(p),...topics(p),why?el('div',{class:'where',text:'goes in: '+stageTitle(p)+(why?' · '+why:'')}):null)}
+ return addable(p.name,el('div',{class:'piece'+(idea?' idea':'')+(used?' used':''),title:idea?cantAdd(p.name):used?'already in your flow':'click to add',onclick:()=>{if(!idea&&!used)addPiece(p.name)}},
+  el('b',{text:p.name+(used?'  ✓':'')}),el('small',{text:(p.runs_in==='repo'?'works on willow itself · ':'')+p.line}),...plainTags(p),...topics(p),why?el('div',{class:'where',text:'goes in: '+stageTitle(p)+(why?' · '+why:'')}):null))}
 const BASE={};
-async function baseline(path){if(BASE[path])return;BASE[path]={loading:true};flow();BASE[path]=await api('baseline?path='+encodeURIComponent(path));flow()}
+async function baseline(path){if(BASE[path])return;BASE[path]={loading:true};flow();BASE[path]=await api('baseline?path='+encodeURIComponent(path));flow();if(cur==='reads'&&!document.getElementById('find').value.trim())shelf()}
 const n2=(n,w)=>n.toLocaleString()+' '+w+(n===1?'':'s');
 function baselines(){const box=el('div',{class:'base'});
  if(!S.folders.length){box.append(el('div',{class:'none',text:'Choose a folder first: this is where you’ll see what the kernel makes of it on its own.'}));return box}
@@ -128,7 +298,7 @@ function baselines(){const box=el('div',{class:'base'});
  box.append(el('div',{class:'bline mute',text:'Counts only: nothing of what your files say, and none of their names, is shown here.'}));return box}
 // ── saved batches: the add-ons you picked, by name ──────────────────────────
 let BATCHES={};
-async function loadBatches(){const r=await api('batches');BATCHES=r.refused?{}:r;batchPanel(r.refused||'')}
+async function loadBatches(){const r=await api('batches');BATCHES=r.refused?{}:r;batchPanel(r.refused||'');steplist()}
 function ask(text,buttons,where='bask'){const q=document.getElementById(where);q.innerHTML='';q.className='q';q.append(el('span',{text}),el('div',{},...buttons.map(([t,f,go])=>el('button',{class:go?'go':'',text:t,onclick:()=>{q.innerHTML='';q.className='';f&&f()}}))));q.scrollIntoView({behavior:'smooth',block:'nearest'})}
 function picked(){const st={};for(const k of Object.keys(S.stages))if((S.stages[k]||[]).length)st[k]=[...S.stages[k]];return st}
 async function saveBatch(name,replace){const r=await api('batches/save',{name,stages:picked(),replace});
@@ -169,18 +339,22 @@ function examplesCard(){const st=el('section',{class:'stage examples-stage'}),n=
  for(const e of EX.found){const names=[...new Set(e.steps.map(x=>x.name))],key='ex:'+e.file,o=isOpen(key);
   const steps=el('div',{class:'steps'},...names.map(n=>{const x=e.steps.find(y=>y.name===n),opt=x.args.replace('--box {box}','').trim(),no=cantAdd(n);
    return el('span',{class:no?'no':'',title:no||P[n]?.line||''},n,o&&opt?el('span',{class:'opt',text:' '+opt}):null,o&&no?' ('+no+')':'')}));
-  const card=el('div',{class:'ex'+(o?'':' folded')});
+  const card=el('div',{class:'ex'+(o?'':' folded')+(PV===e.file?' pv':''),'data-ex':e.file});
   card.append(el('div',{class:'exhead',onclick:ev=>{if(ev.target.tagName!=='BUTTON'){toggle(key)}}},el('span',{class:'caret',text:o?'▾':'▸'}),el('h3',{text:e.title.charAt(0).toUpperCase()+e.title.slice(1)}),el('button',{text:'Use this',onclick:()=>useExample(e)})),steps);
   if(o)card.insertBefore(el('p',{text:e.about}),steps);
   st.append(card)}
  return st}
+// an example shown in the tree before it's used: what it would add, faded
+let PV=null,PIN=false;
+function exAdds(e){const out=[],args={};for(const st of e.steps){const x=st.name;if(cantAdd(x))continue;args[x]??=st.args;for(const y of[...needs(x),x])if(!all().includes(y)&&!out.includes(y))out.push(y)}return{out,args}}
+function preview(file){PV=file;if(!file)PIN=false;document.querySelectorAll('.ex[data-ex]').forEach(x=>x.classList.toggle('pv',x.dataset.ex===file));stacktree()}
 function useExample(e){const n=all().length,them=n===1?'it':'them';
- const go=(replace)=>{if(replace){S.stages={};S.args={}}S.args??={};const skipped=[];
+ const go=(replace)=>{preview(null);if(replace){S.stages={};S.args={}}S.args??={};const skipped=[];
   for(const st of e.steps){const x=st.name;if(cantAdd(x)){if(!skipped.includes(x))skipped.push(x+' ('+cantAdd(x)+')');continue}
    if(!S.args[x])S.args[x]=st.args;for(const y of[...needs(x),x])if(!all().includes(y))(S.stages[stageOf(P[y])]??=[]).push(y)}
   changed();say('Started from “'+e.title+'”'+(skipped.length?'; left out: '+skipped.join(', '):'')+'.',!!skipped.length);document.getElementById('flow').scrollIntoView({behavior:'smooth'})};
  if(!n){go(true);return}
- ask('You have '+n+' piece'+(n===1?'':'s')+' picked. Replace '+them+' with the example “'+e.title+'”, or add the example to '+them+'?',[['Replace '+them,()=>go(true),1],['Add to '+them,()=>go(false)],['Cancel']],'exask')}
+ preview(e.file);PIN=true;ask('You have '+n+' piece'+(n===1?'':'s')+' picked. Replace '+them+' with the example “'+e.title+'”, or add the example to '+them+'? The tree on the right shows what it would add.',[['Replace '+them,()=>{preview(null);go(true)},1],['Add to '+them,()=>{preview(null);go(false)}],['Cancel',()=>preview(null)]],'exask')}
 // ── folding: a card is its title and a line until you open it ──────────────
 const FOLDKEY='willow-canvas-open';const OPEN=new Set(JSON.parse(localStorage.getItem(FOLDKEY)||'["folders","kernel","examples"]'));
 const isOpen=k=>OPEN.has(k);
@@ -199,7 +373,22 @@ async function found(){const q=document.getElementById('find').value.trim(),head
 function pulled(){const have=new Set(all()),out=[],todo=[...have];while(todo.length){const n=todo.shift();for(const h of(P[n]?.hard||[]))if(!have.has(h)&&!out.includes(h)){out.push(h);todo.push(h)}}return out}
 function freshState(){const st={};const deps=new Set(Object.values(P).filter(p=>p.in_stack).flatMap(p=>p.hard));
  for(const p of Object.values(P))if(p.in_stack&&!deps.has(p.name))(st[stageOf(p)]??=[]).push(p.name);return{stages:st,folders:[]}}
-function changed(){save();subject=null;document.getElementById('review').innerHTML='';flow();document.getElementById('find').value.trim()?found():shelf();summary()}
+// undo: every change is one step back
+const UNDO=[];let was=null;
+function remember(){const now=JSON.stringify(S);if(was!==null&&was!==now){UNDO.push(was);if(UNDO.length>50)UNDO.shift()}was=now;undoBtn()}
+function undoBtn(){document.getElementById('undo').hidden=!UNDO.length}
+function undo(){if(!UNDO.length)return;was=UNDO.pop();S=JSON.parse(was);save();refreshSeal();subject=null;SEALED=false;stale();preview(null);flow();document.getElementById('find').value.trim()?found():shelf();summary();undoBtn();say('Undone.')}
+document.getElementById('undo').onclick=undo;
+const ORDER=()=>['start',...STAGES.map(s=>s.key)];
+document.addEventListener('keydown',e=>{const typing=['INPUT','TEXTAREA','SELECT'].includes(document.activeElement?.tagName);
+ if(e.key==='Escape'&&document.activeElement?.id==='find'){find('');document.activeElement.blur();return}
+ if(typing||e.ctrlKey||e.metaKey||e.altKey)return;
+ if(e.key==='/'){e.preventDefault();document.getElementById('find').focus();return}
+ if(e.key==='ArrowDown'||e.key==='ArrowUp'){const ae=document.activeElement;if(ae&&ae!==document.body&&!ae.closest('#steplist'))return;
+  const o=ORDER(),i=o.indexOf(cur==='review'?STAGES.at(-1).key:cur),j=Math.max(0,Math.min(o.length-1,i+(e.key==='ArrowDown'?1:-1)));
+  e.preventDefault();if(o[j]!==cur){go(o[j]);document.querySelector('#steplist .mini.sel')?.focus({preventScroll:true})}}});
+document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&!e.shiftKey&&e.key.toLowerCase()==='z'&&!['INPUT','TEXTAREA'].includes(document.activeElement?.tagName)){e.preventDefault();undo()}});
+function changed(){remember();save();refreshSeal();subject=null;SEALED=false;stale();flow();document.getElementById('find').value.trim()?found():shelf();summary()}
 // ── a piece needs its parents: what its card uses, and theirs ───────────────
 function needs(n){const out=[],todo=[...(P[n]?.hard||[])];while(todo.length){const h=todo.shift();if(out.includes(h)||!P[h])continue;out.push(h);todo.push(...(P[h].hard||[]))}return out}
 function needing(n){return all().filter(m=>m!==n&&needs(m).includes(n))}
@@ -219,86 +408,154 @@ function mark(box,i){const cs=box.querySelectorAll('.chip');cs.forEach((c,k)=>{c
 function chips(s){const box=el('div',{class:'chips'}),list=S.stages[s.key]??=[];
  list.forEach((n,i)=>{const p=P[n]||{name:n,line:''};const pulls=(p.hard||[]).length?el('small',{text:'needs '+p.hard.map(h=>h+(all().includes(h)?' ✓':' (not in your flow)')).join(', ')}):null,looks=(p.soft||[]).filter(x=>!all().includes(x)&&P[x]).length?el('small',{text:'uses if you add it: '+(p.soft||[]).filter(x=>!all().includes(x)&&P[x]).join(', ')}):null;
   const near=(p.near||[]).filter(m=>P[m]?.state==='built'&&!all().includes(m)),goes=near.length?el('div',{class:'goes'},'goes well with ',...near.flatMap((m,k)=>[k?', ':'',el('button',{text:m,title:P[m].line+' (click to add)',onclick:()=>addPiece(m)})])):null;
-  const c=el('div',{class:'chip',draggable:'true',title:'drag to reorder'},el('button',{class:'x',text:'×',title:'take it out',onclick:()=>removePiece(n)}),el('b',{text:n}),(S.args||{})[n]&&S.args[n]!=='--box {box}'?el('span',{class:'runs',title:'the options it runs with',text:S.args[n].replace('--box {box}','').trim()}):null,el('small',{text:p.line}),...plainTags(p),...topics(p),pulls,looks,goes);
+  const c=el('div',{class:'chip',draggable:'true',title:'drag to change the order they run in','data-n':n},el('button',{class:'x',text:'×',title:'take it out',onclick:()=>removePiece(n)}),el('b',{text:n}),(S.args||{})[n]&&S.args[n]!=='--box {box}'?el('span',{class:'runs',title:'the options it runs with',text:S.args[n].replace('--box {box}','').trim()}):null,el('small',{text:p.line}),...plainTags(p),...topics(p),pulls,looks,goes);
   c.addEventListener('dragstart',e=>{drag={stage:s.key,i};e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain',n)});c.addEventListener('dragend',()=>{drag=null});box.append(c)});
- box.addEventListener('dragover',e=>{if(!drag||drag.stage!==s.key)return;e.preventDefault();box.classList.add('on');mark(box,slot(box,e))});
+ box.addEventListener('dragover',e=>{if(!drag||(!drag.add&&drag.stage!==s.key))return;e.preventDefault();if(drag.add)e.dataTransfer.dropEffect='copy';box.classList.add('on');mark(box,slot(box,e))});
  box.addEventListener('dragleave',e=>{if(!box.contains(e.relatedTarget)){box.classList.remove('on');mark(box,-1)}});
- box.addEventListener('drop',e=>{e.preventDefault();box.classList.remove('on');if(!drag||drag.stage!==s.key)return;let j=slot(box,e);const[n]=list.splice(drag.i,1);if(drag.i<j)j--;list.splice(j,0,n);drag=null;changed()});
+ box.addEventListener('drop',e=>{e.preventDefault();box.classList.remove('on');document.body.classList.remove('adding');if(drag?.add){const n=drag.add,j=slot(box,e);drag=null;addPiece(n);const L=S.stages[s.key]||[],k=L.indexOf(n);if(k>=0&&k!==j){L.splice(k,1);L.splice(Math.min(j,L.length),0,n);changed()}return}if(!drag||drag.stage!==s.key)return;let j=slot(box,e);const[n]=list.splice(drag.i,1);if(drag.i<j)j--;list.splice(j,0,n);drag=null;changed()});
  return box}
 function stageSummary(s){if(s.key==='folders')return S.folders.length?S.folders.length+' folder'+(S.folders.length===1?'':'s'):'none yet';
  if(s.key==='kernel'){const bs=S.folders.map(f=>BASE[f.path]).filter(b=>b&&b.ok);return bs.length?bs.reduce((t,b)=>t+b.read,0).toLocaleString()+' files it can read, '+bs.reduce((t,b)=>t+b.cant.reduce((u,c)=>u+c.files,0),0).toLocaleString()+' it can’t':'always there'}
  if(s.key==='you')return'your seal';const ns=S.stages[s.key]||[];return ns.length?ns.length+' piece'+(ns.length===1?'':'s')+': '+ns.slice(0,4).join(', ')+(ns.length>4?', …':''):'nothing here'}
-function flow(){const f=document.getElementById('flow');f.innerHTML='';
- STAGES.forEach((s,i)=>{if(i)f.append(el('div',{class:'down',text:'↓'}));const st=el('section',{class:'stage'+(s.fixed?' fixed':'')+(cur===s.key?' sel':'')});
-  const add=s.fixed?null:el('button',{class:'link',text:s.key==='folders'?'+ add a folder':'+ add',onclick:()=>{cur=s.key;find('');if(!isOpen(s.key))OPEN.add(s.key);flow();shelf()}});
-  st.append(foldHead(s.key,el('h2',{text:s.title}),stageSummary(s),add));
-  if(!isOpen(s.key)){f.append(st);if(s.key==='kernel'){f.append(el('div',{class:'down',text:'↓'}),examplesCard())}return}
-  st.append(el('div',{class:'say',text:s.say}));
+function go(k){cur=k;keep();const f=document.getElementById('find');if(f.value){f.value='';document.getElementById('findx').hidden=true}flow();shelf();document.getElementById('flow').scrollIntoView({block:'nearest',behavior:'smooth'})}
+function flow(){const view=cur==='start'||cur==='review'?cur:'stage',st=document.getElementById('stage');document.getElementById('startview').hidden=view!=='start';document.getElementById('review').hidden=view!=='review';st.hidden=view!=='stage';st.innerHTML='';
+ if(view==='stage'){const s=STAGES.find(x=>x.key===cur),i=STAGES.indexOf(s);st.className='stage'+(s.fixed?' fixed':'');
+  st.append(el('header',{},el('span',{class:'no',text:String(i+1)}),el('h2',{text:s.title}),el('span',{class:'sum',text:stageSummary(s)})),el('div',{class:'say',text:s.say}));
   if(s.key==='folders'){if(!S.folders.length)st.append(el('div',{class:'none',text:'No folders yet. Add at least one: it’s what willow answers from.'}));
-   S.folders.forEach((fo,k)=>st.append(el('div',{class:'folder'},el('span',{text:fo.path}),el('small',{text:fo.files+' files'}),el('button',{class:'link',text:'remove',onclick:()=>{S.folders.splice(k,1);changed()}}))))}
+   S.folders.forEach((fo,k)=>st.append(el('div',{class:'folder'},el('span',{text:fo.path}),el('small',{text:fo.files+' items'}),el('button',{class:'link',text:'remove',onclick:()=>{S.folders.splice(k,1);changed()}}))))}
   else if(s.key==='kernel')st.append(baselines());
-  else if(!s.fixed){if(!(S.stages[s.key]||[]).length)st.append(el('div',{class:'none',text:'Nothing here: this step is skipped.'}));st.append(chips(s))}
-  f.append(st);if(s.key==='kernel')f.append(el('div',{class:'down',text:'↓'}),examplesCard())})}
+  else if(!s.fixed){if(!(S.stages[s.key]||[]).length)st.append(el('div',{class:'none',text:'Nothing here: this step is skipped.'}));st.append(chips(s))}}
+ document.getElementById('railex').replaceChildren(examplesCard());steplist();stacktree()}
+// the step you were on comes back next time; the review doesn't, as opening it writes to the record
+const CURKEY='willow-canvas-cur';function keep(){try{if(cur!=='review')localStorage.setItem(CURKEY,cur)}catch(e){}}
+function kept(){try{const k=localStorage.getItem(CURKEY);return k==='start'||STAGES.some(s=>s.key===k)?k:null}catch(e){return null}}
+let shown=null;
+// the steps, as mini cards: an empty one is a line
+function steplist(){if(!S)return;const box=document.getElementById('steplist');box.innerHTML='';const nEx=EX?.found?.length||0,nB=Object.keys(BATCHES).length;
+ box.append(el('button',{class:'mini start'+(cur==='start'?' sel':''),onclick:()=>go('start')},el('span',{class:'no',text:'↺'}),el('b',{text:'Start from an example'}),el('small',{text:nEx+' examples · '+(nB?nB+' saved batch'+(nB===1?'':'es'):'no saved batches')})));
+ box.append(el('h3',{text:'Your stack'}));const list=el('div',{class:'minis'});
+ STAGES.forEach((s,i)=>{if(s.key==='suggests')list.append(el('div',{class:'mini-div',text:'Set up alongside'}));const n=s.key==='folders'?S.folders.length:(S.stages[s.key]||[]).length,empty=!s.fixed&&!n;
+  list.append(el('button',{class:'mini'+(empty?' empty':'')+(s.fixed?' fixed':'')+(cur===s.key?' sel':''),title:s.say,onclick:()=>go(s.key)},el('span',{class:'no',text:String(i+1)}),el('b',{text:s.title}),empty?null:el('small',{text:stageSummary(s)})))});
+ list.append(el('button',{class:'mini review'+(cur==='review'?' sel':''),title:'everything you picked, in one place, to seal',onclick:()=>subject?go('review'):look()},el('span',{class:'no',text:String(STAGES.length+1)}),el('b',{text:'Look it over, and seal it'}),el('small',{text:sealState()==='sealed'?'sealed':subject?'looked over, not sealed yet':sealState()==='changed'?'changed since you sealed it':'nothing runs until you seal'})));
+ box.append(list);if(shown!==cur){shown=cur;const sel=box.querySelector('.mini.sel');if(sel&&getComputedStyle(list).flexDirection==='row')sel.scrollIntoView({inline:'nearest',block:'nearest'})}}
+// what you sealed on this page, to tell whether the stack has moved since
+// what the page would propose now, as look() sends it
+function proposalDoc(){return{name:'my willow',folders:S.folders.map(f=>f.path),lanes:STAGES.filter(s=>!s.fixed&&s.key!=='folders').map(s=>({title:s.title,steps:(S.stages[s.key]||[]).map(n=>({name:n,args:(S.args||{})[n]||'--box {box}'}))})).filter(l=>l.steps.length)}}
+// sealed, or changed since: the record says, wherever the seal was made (canvas.py's sealed_against)
+let SEALST=null,sealT=null;
+function sealState(){return SEALST}
+function refreshSeal(){clearTimeout(sealT);sealT=setTimeout(async()=>{const r=await api('sealed',proposalDoc());if(r.state!==SEALST){SEALST=r.state??null;steplist();stacktree()}},150)}
+// hover a piece anywhere: its line in the tree lights, with what it needs and what needs it
+let TR=null;
+function trace(n){const rel=new Set(n?[n,...needs(n),...needing(n)]:[]),tree=document.getElementById('stacktree');let hit=false;
+ tree.querySelectorAll('.t-leaf[data-n]').forEach(x=>{const on=rel.has(x.dataset.n);if(on)hit=true;x.classList.toggle('lit',on);x.classList.toggle('main',on&&x.dataset.n===n);
+  x.classList.toggle('needed',on&&x.dataset.n!==n&&needs(n).includes(x.dataset.n));x.classList.toggle('needs',on&&x.dataset.n!==n&&needing(n).includes(x.dataset.n))});
+ tree.classList.toggle('tracing',hit);const tip=document.getElementById('tracetip');
+ if(tip){const brings=n?needs(n).filter(x=>!all().includes(x)):[];
+  tip.textContent=!n?'':!all().includes(n)?n+' isn’t in your stack'+(brings.length?'; adding it brings '+brings.join(', '):''):
+  [needs(n).length?'needs '+needs(n).join(', '):'needs nothing else',needing(n).length?'needed by '+needing(n).join(', '):''].filter(Boolean).join(' · ');tip.hidden=!n}}
+const hov=e=>{const x=e.target.closest?.('[data-n]'),n=x?.dataset.n||null;if(n!==TR){TR=n;trace(n)}
+ const ex=e.target.closest?.('.ex[data-ex]')?.dataset.ex||null;if(!PIN&&ex!==PV)preview(ex)};
+document.addEventListener('mouseover',hov);document.addEventListener('focusin',hov);
+// the stack, as a tree: what runs, in order, and what each piece needs
+function stacktree(){const t=document.getElementById('stacktree');t.innerHTML='';const skipped=[];
+ const ss=sealState(),mark=document.getElementById('sealmark');if(mark){mark.className='sealmark '+(ss||'');mark.textContent=ss==='sealed'?'sealed':ss==='changed'?'changed since you sealed it':'';mark.hidden=!ss}
+ const ex=PV&&EX?.found?.find(x=>x.file===PV),pv=ex?exAdds(ex):{out:[],args:{}},ghosts=k=>pv.out.filter(y=>stageOf(P[y])===k);
+ if(ex)t.append(el('div',{class:'t-preview'},el('b',{text:'Previewing “'+ex.title+'”'}),el('span',{text:pv.out.length?' · it would add '+pv.out.length+' piece'+(pv.out.length===1?'':'s')+', shown with +':' · everything in it is already here'})));
+ const flush=()=>{if(!skipped.length)return;t.append(el('div',{class:'t-skip'},el('span',{text:'skipped '}),...skipped.flatMap((s,k)=>[k?' · ':'',el('button',{class:'link',text:s.title,onclick:()=>go(s.key)})])));skipped.length=0};
+ for(const s of STAGES){if(s.key==='suggests'){flush();t.append(el('div',{class:'t-divider',text:'Set up alongside, not run on the page'}))}const ns=s.key==='folders'?S.folders:(S.stages[s.key]||[]),gs=s.fixed||s.key==='folders'?[]:ghosts(s.key);if(!s.fixed&&s.key!=='folders'&&!ns.length&&!gs.length){skipped.push(s);continue}flush();
+  const bs=S.folders.map(f=>BASE[f.path]).filter(b=>b&&b.ok),sum=s.key==='kernel'?(bs.length?bs.reduce((t,b)=>t+b.passages,0).toLocaleString()+' passages':'always there'):s.key==='you'?'your seal':s.key==='folders'&&!ns.length?'none yet':'';
+  const row=el('div',{class:'t-stage'+(cur===s.key?' sel':'')+(s.fixed?' fixed':''),onclick:()=>go(s.key)},el('span',{class:'t-name',text:s.title}),sum?el('span',{class:'t-sum',text:sum}):null);
+  const kids=el('div',{class:'t-kids'});
+  if(s.key==='folders')for(const f of S.folders)kids.append(el('div',{class:'t-leaf'},el('span',{class:'path',text:f.path}),el('span',{class:'t-sum',text:f.files+' items'})));
+  else if(!s.fixed)for(const n of ns){const p=P[n]||{},a=((S.args||{})[n]||'').replace('--box {box}','').trim(),leaf=el('div',{class:'t-leaf','data-n':n},s.ordered?el('span',{class:'ord',text:(ns.indexOf(n)+1)+'.'}):null,el('span',{text:n}));
+   if(a)leaf.append(el('span',{class:'arg',text:' '+a}));if((p.hard||[]).length)leaf.append(el('div',{class:'need',text:'needs '+p.hard.join(', ')}));kids.append(leaf)}
+  for(const g of gs){const a=(pv.args[g]||'').replace('--box {box}','').trim();kids.append(el('div',{class:'t-leaf ghost'},el('span',{text:'+ '+g}),a?el('span',{class:'arg',text:' '+a}):null))}
+  t.append(el('div',{class:'t-group'},row,kids.childNodes.length?kids:null))}
+ flush();const pl=pulled();
+ if(pl.length)t.append(el('div',{class:'t-group'},el('div',{class:'t-stage brought'},el('span',{class:'t-name',text:'Brought along'}),el('span',{class:'t-sum',text:'needed by the pieces above'})),el('div',{class:'t-kids'},...pl.map(n=>el('div',{class:'t-leaf','data-n':n,text:n})))))}
 // ── the shelf: what can go in the chosen stage ──────────────────────────────
-async function browse(path){const r=await api('dirs?path='+encodeURIComponent(path));if(!r.ok){say(r.path+': '+r.why,1);return}here=r.path;
+async function browse(path){const r=await api('dirs?path='+encodeURIComponent(path));if(!document.getElementById('ppath'))return;if(!r.ok){say(r.path+': '+r.why,1);return}here=r.path;
  document.getElementById('ppath').textContent=r.path;const l=document.getElementById('plist');l.innerHTML='';
  if(r.parent)l.append(el('div',{class:'up',text:'↑ up to '+r.parent,onclick:()=>browse(r.parent)}));
  for(const d of r.dirs)l.append(el('div',{text:'📁 '+d,onclick:()=>browse(r.path.replace(/\/$/,'')+'/'+d)}));if(!r.dirs.length)l.append(el('div',{class:'up',text:'no folders inside'}))}
 async function addFolder(path){const r=await api('folder?path='+encodeURIComponent(path));if(!r.ok){say(path+': '+r.why,1);return}if(!S.folders.some(f=>f.path===r.path))S.folders.push({path:r.path,files:r.files});say('');changed();baseline(r.path)}
 function shelf(){const s=STAGES.find(x=>x.key===cur),head=document.getElementById('shelfhead'),box=document.getElementById('shelf');head.innerHTML='';box.innerHTML='';
- head.append(el('h3',{text:'Adding to'}),el('h2',{text:s.title}),el('p',{text:s.say}));
+ if(!s||s.fixed)return;head.append(el('h3',{text:s.key==='folders'?'Add a folder':'Add-ons for this step'}));
  if(s.key==='folders'){const t=el('input',{type:'text',placeholder:'or type a path and press Enter'});t.addEventListener('keydown',e=>{if(e.key==='Enter'&&t.value.trim()){addFolder(t.value.trim());t.value=''}});
   box.append(el('div',{id:'picker'},el('div',{class:'ppath',id:'ppath'}),el('div',{class:'plist',id:'plist'}),el('div',{style:'display:flex;gap:8px;margin-top:8px'},el('button',{class:'go',text:'Add this folder',onclick:()=>here&&addFolder(here)}))),el('div',{style:'margin-top:10px'},t));
   browse(here||S.folders.at(-1)?.path||'');return}
- const secs=[].concat(s.sec),q=el('input',{type:'text',placeholder:'filter these'}),list=el('div',{class:'tree'});box.append(q,list);
- const mine=Object.values(P).filter(p=>secs.includes(p.section)),inStage=new Set(mine.map(p=>p.name));
+ const q=el('input',{type:'text',placeholder:'filter these'}),list=el('div',{class:'tree'});box.append(q,list);
+ const grouped=s.group!=='rank',mine=Object.values(P).filter(p=>stageOf(p)===s.key),inStage=new Set(grouped?[]:mine.map(p=>p.name));
+ head.append(el('p',{class:'proto',text:'Prototype: which step a piece is in is a guess from its card. Each card says why it’s here.'}));
  const under={};for(const p of mine)for(const h of(p.hard||[]))if(inStage.has(h))(under[h]??=[]).push(p.name);
- const rank=p=>(SUGGEST[s.key]||[]).includes(p.name)?0:cantAdd(p.name)?2:1,order=(a,b)=>rank(P[a])-rank(P[b])||a.localeCompare(b);
- const node=(n,depth,trail)=>{const p=P[n],kids=(under[n]||[]).filter(c=>!trail.includes(c)).sort(order),used=all().includes(n),no=cantAdd(n);
+ const nIn=mine.filter(p=>all().includes(p.name)).length,nNo=mine.filter(p=>cantAdd(p.name)&&!all().includes(p.name)).length,hidden=n=>HIDE&&!!cantAdd(n)&&!all().includes(n);
+ head.append(el('div',{class:'counts'},el('span',{text:mine.length+' add-on'+(mine.length===1?'':'s')}),el('span',{class:'in',text:nIn+' in your stack'}),nNo?el('span',{text:nNo+' can’t be added yet'}):null,
+  nNo?el('button',{class:'link',text:HIDE?'show them':'hide them',onclick:()=>{HIDE=!HIDE;try{localStorage.setItem('willow-canvas-hide',HIDE?'1':'0')}catch(e){}shelf()}}):null));
+ // first: for reading, the readers the kernel's counts name for files in your folders; else what the examples run
+ const want=new Set(S.folders.flatMap(f=>(BASE[f.path]?.cant||[]).flatMap(c=>c.readers))),first=p=>s.key==='reads'?want.has(p.name):p.in_examples>0;
+ const rank=p=>cantAdd(p.name)?2:first(p)?0:1,order=(a,b)=>rank(P[a])-rank(P[b])||a.localeCompare(b);
+ const node=(n,depth,trail)=>{const p=P[n],kids=(under[n]||[]).filter(c=>!trail.includes(c)&&!hidden(c)).sort(order),used=all().includes(n),no=cantAdd(n);
   const cb=el('input',{type:'checkbox',title:no||(used?'take it out':'add it')});cb.checked=used;cb.disabled=!!no&&!used;
   if(used&&kids.some(c=>all().includes(c))&&kids.some(c=>!all().includes(c)&&!cantAdd(c)))cb.indeterminate=true;  // some of what's below is in
   cb.addEventListener('change',()=>cb.checked?addPiece(n):removePiece(n));
   const out=(p.hard||[]).filter(h=>!inStage.has(h)),opt=(p.soft||[]).filter(h=>P[h]);
   const open=openRows.has(n),tw=el('span',{class:'tw'+(kids.length?'':' none'),text:kids.length?(open?'▾':'▸'):'',title:kids.length?kids.length+' that need it':''});
   if(kids.length)tw.onclick=()=>{open?openRows.delete(n):openRows.add(n);draw()};
-  list.append(el('div',{class:'node'+(no&&!used?' off':''),style:'padding-left:'+(depth*18)+'px'},tw,cb,el('div',{class:'what'},el('b',{text:n}),kids.length?el('small',{text:kids.length+' below need it'}):null,el('small',{text:p.line}),...plainTags(p),...topics(p),
+  list.append(addable(n,el('div',{class:'node'+(no&&!used?' off':'')+(depth?' sub':'')+(used?' on':''),style:'padding-left:'+(depth*18)+'px'},tw,cb,el('div',{class:'what'},el('b',{text:n}),kids.length?el('small',{text:kids.length+' below need it'}):null,el('small',{text:p.line}),...plainTags(p),...topics(p),el('div',{class:'why-here',text:'here because '+roleOf(p)[1]}),
    out.length?el('div',{class:'note',text:'needs '+out.join(', ')+(out.every(h=>all().includes(h))?' ✓':' (added with it)')}):null,
    opt.length?el('div',{class:'note opt',text:'works with '+opt.join(', ')+', if you add '+(opt.length===1?'it':'them')}):null,
-   no&&!used?el('div',{class:'note no',text:no}):null)));
+   no&&!used?el('div',{class:'note no',text:no}):null))));
   if(open)for(const c of kids)node(c,depth+1,[...trail,n])};
  const draw=()=>{list.innerHTML='';const w=q.value.toLowerCase();
-  if(w){for(const p of mine.filter(p=>(p.name+' '+p.line+' '+(p.tags||[]).join(' ')).toLowerCase().includes(w)).sort((a,b)=>order(a.name,b.name)))node(p.name,0,[]);return}
-  const roots=mine.filter(p=>!(p.hard||[]).some(h=>inStage.has(h))).map(p=>p.name).sort(order);
-  let last=-1;for(const n of roots){const r=rank(P[n]);if(r!==last){list.append(el('h3',{text:r===0?'A good start':r===1?'Everything else':'Can’t be added yet'}));last=r}node(n,0,[])}};
+  if(w){for(const p of mine.filter(p=>!hidden(p.name)&&(p.name+' '+p.line+' '+(p.tags||[]).join(' ')).toLowerCase().includes(w)).sort((a,b)=>order(a.name,b.name)))node(p.name,0,[]);return}
+  const roots=mine.filter(p=>!hidden(p.name)&&!(p.hard||[]).some(h=>inStage.has(h))).map(p=>p.name).sort(order);
+  if(grouped){const sec=n=>P[n].section||'Other',by=s.group==='section'?sec:n=>P[n].group||'Other',at=n=>s.group==='section'?0:P[n].group_at??99,groups=[...new Set(roots.map(by))].sort((a,b)=>at(roots.find(n=>by(n)===a))-at(roots.find(n=>by(n)===b))||a.localeCompare(b)).map(h=>({h,n:roots.filter(n=>by(n)===h)}));
+   const left=new Set(roots);for(const w of groups){const ns=w.n.filter(n=>left.has(n)).sort(order);if(!ns.length)continue;
+   list.append(el('h3',{text:w.h}));for(const n of ns){left.delete(n);node(n,0,[])}}return}
+  let last=-1;for(const n of roots){const r=rank(P[n]);if(r!==last){list.append(el('h3',{text:r===0?(s.key==='reads'?'For files in your folders':'In the examples'):r===1?(last===0?'Everything else':'Ready to add'):'Can’t be added yet'}));last=r}node(n,0,[])}};
  q.addEventListener('input',draw);draw()}
 // ── the summary, the look-over, the seal ────────────────────────────────────
 function summary(){const n=all().length,b=pulled().length,net=[...new Set([...all(),...pulled()].map(x=>P[x]?.network).filter(x=>x&&x!=='none'))];
- const s=document.getElementById('sum');s.innerHTML='';s.append(el('b',{text:`${S.folders.length} folder${S.folders.length===1?'':'s'}, ${n} piece${n===1?'':'s'}`}),b?` (and ${b} they bring along)`:'',' · ',net.length?el('span',{style:'color:var(--warn)',text:'goes online: '+net.join('; ')}):'never goes online')}
-async function look(){if(!S.folders.length){cur='folders';flow();shelf();say('Add a folder first: it’s what willow answers from.',1);return}
- const lanes=STAGES.filter(s=>!s.fixed&&s.key!=='folders').map(s=>({title:s.title,steps:(S.stages[s.key]||[]).map(n=>({name:n,args:(S.args||{})[n]||'--box {box}'}))})).filter(l=>l.steps.length);
+ const s=document.getElementById('sum');s.innerHTML='';s.append(el('b',{text:`${S.folders.length} folder${S.folders.length===1?'':'s'}, ${n} piece${n===1?'':'s'}`}),b?` (and ${b} they bring along)`:'',' · ',away(net).length?el('span',{style:'color:var(--warn)',text:'goes online: '+away(net).join('; ')}):net.length?'stays on this machine':'never goes online')}
+async function look(){if(!S.folders.length){cur='folders';flow();shelf();say('Add a folder first: it’s what willow answers from.',1);return}if(cur!=='review')back=cur;
+ const lanes=proposalDoc().lanes;
  const r=await api('propose',{name:'my willow',folders:S.folders.map(f=>f.path),lanes});if(r.refused){say(r.refused,1);return}subject=r.subject;const a=r.arrangement;
- const named=k=>(S.stages[k]||[]).join(', ');const li=(t)=>el('li',{text:t});const rv=document.getElementById('review');rv.innerHTML='';
+ const named=k=>(S.stages[k]||[]).join(', ');const li=(t)=>el('li',{text:t});const rv=document.getElementById('review');rv.innerHTML='';cur='review';const f0=document.getElementById('find');if(f0.value){f0.value='';document.getElementById('findx').hidden=true}SEALED=false;
  const one=a.folders.length===1;
  const ul=el('ul',{},li('It reads '+a.folders.join(', ')+', and never changes '+(one?'it':'them')+'.'),
-  named('read')?null:li('It reads plain text, markdown and web pages; nothing else.'),
+  named('reads')?null:li('It reads plain text, markdown and web pages; nothing else.'),
   li('It answers only from what it reads, with the file and line, and says so when nothing there holds an answer.'),
-  li(a.reach.length?'It goes online: '+a.reach.join('; ')+'.':'It never goes online.'),
+  li(away(a.reach).length?'It goes online: '+away(a.reach).join('; ')+'.':a.reach.length?'It stays on this machine: some of it listens or asks here, and nowhere beyond.':'It never goes online.'),
   li('It writes its own record'+(a.writes.includes('to')?', and files only where you point it':'')+'.'),
   a.installs.length?li('Needs installing first: '+a.installs.join(', ')+'.'):null);
- const parts=el('div');for(const st of STAGES){const ns=S.stages[st.key]||[];if(st.fixed||st.key==='folders'||!ns.length)continue;
+ const parts=el('div');for(const st of STAGES){const ns=(S.stages[st.key]||[]).filter(n=>!(a.kept||[]).includes(n)&&!a.pulled_in.includes(n));if(st.fixed||st.key==='folders'||!ns.length)continue;
   parts.append(el('h3',{text:st.title}),el('ul',{},...ns.map(n=>el('li',{},el('b',{text:n}),' — '+(P[n]?.line||'')))))}
  if(a.kept?.length)parts.append(el('h3',{text:'Put in, but not run on the morning page'}),el('p',{class:'msg',text:'Each of these runs its own way: a reader over a folder, a hook, a page server, a verb with its own words. Running them with only your record would refuse or never end.'}),el('ul',{},...a.kept.map(n=>el('li',{},el('b',{text:n}),' — '+(P[n]?.line||'')))));
  if(a.pulled_in.length)parts.append(el('h3',{text:'Brought along, because pieces above need them'}),el('ul',{},...a.pulled_in.map(n=>el('li',{},el('b',{text:n}),' — '+(P[n]?.line||'')))));
  const sealB=el('button',{class:'go',text:'Seal it'}),asmB=el('button',{text:'Put it together',disabled:''}),out=el('div',{class:'msg'});
  sealB.onclick=async()=>{const x=await api('seal',{subject});if(x.refused||!x.sealed){out.className='msg err';out.textContent='Not sealed: '+(x.refused||x.said);return}
-  sealB.disabled=true;asmB.disabled=false;out.className='msg';out.textContent='Sealed. This is yours now. “Put it together” copies in the pieces that aren’t here yet, each one written on the record.'};
+  sealB.disabled=true;asmB.disabled=false;SEALED=true;refreshSeal();out.className='msg';out.textContent='Sealed. This is yours now. “Put it together” copies in the pieces that aren’t here yet, each one written on the record.'};
  asmB.onclick=async()=>{const x=await api('assemble',{subject});if(x.refused){out.className='msg err';out.textContent=x.refused;return}asmB.disabled=true;
   out.textContent=(x.added.length?'Put together: '+x.added.join(', ')+'.':'Every piece was already here.')+(x.skipped?.length?' Not added: '+x.skipped.join(', ')+(x.said?' ('+x.said.trim().split('\n').pop()+')':'')+'.':'');P=await api('pieces');flow();shelf();offerStart(subject,'my willow')};
- rv.append(el('section',{class:'review'},el('h2',{text:'Here’s what you’re putting together'}),ul,parts,
+ rv.append(el('section',{class:'review'},el('h2',{text:'Here’s what you’re putting together'}),ul,parts,forAgent(a),
   el('div',{class:'why'},el('b',{text:'What sealing means. '}),'Sealing is you saying “yes, this is mine, run it this way.” Until you do, nothing above runs. Your seal is made with your key, a file only you should be able to read; after that, any change to this arrangement needs a new seal. ',
    el('i',{text:'Today that key is a file on this computer, so a program running as you could seal too. That’s the next thing to fix.'})),
-  el('div',{style:'display:flex;gap:10px;align-items:center'},sealB,asmB,el('button',{class:'link',text:'change something',onclick:()=>{rv.innerHTML='';subject=null}})),out,el('div',{class:'subj',text:'what you’d be sealing: '+subject})));
- rv.scrollIntoView({behavior:'smooth'})}
+  el('div',{style:'display:flex;gap:10px;align-items:center'},sealB,asmB,el('button',{class:'link',text:'change something',onclick:()=>{rv.innerHTML='';subject=null;go(back)}})),out,el('div',{class:'subj',text:'what you’d be sealing: '+subject})));
+ flow();shelf();document.getElementById('flow').scrollIntoView({block:'nearest',behavior:'smooth'})}
+// a change after looking it over: the look-over is out of date, and says so
+// the same stack for an agent or a terminal: the stack file the page just sent,
+// and the commands that look it over and propose it. None of them seals.
+let TO='';
+function copyBox(text){const pre=el('pre',{text});const b=el('button',{text:'Copy',onclick:async()=>{try{await navigator.clipboard.writeText(text);b.textContent='Copied'}catch(e){const r=document.createRange();r.selectNodeContents(pre);const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent='Selected: copy it'}setTimeout(()=>b.textContent='Copy',2000)}});
+ return el('div',{class:'copybox'},b,pre)}
+function forAgent(a){const to=TO?' --to '+(/\s/.test(TO)?JSON.stringify(TO):TO):'',missing=a.pieces.filter(n=>P[n]&&!P[n].in_stack);
+ const cmds=[...(missing.length?['python ui/assemble.py add '+missing.join(' ')+to]:[]),'python ui/canvas.py look my-willow.md'+to,'python ui/canvas.py propose my-willow.md'+to];
+ return el('details',{class:'agent'},el('summary',{text:'For an agent or a terminal'}),
+  el('p',{text:'This stack as a file, the one the stack add-on runs. Save it as my-willow.md; the commands below look it over and propose it, as this page does. None of them seals it: that stays yours.'}),
+  copyBox(a.stack_md.trimEnd()),el('p',{text:missing.length?'Then, from this willow’s folder (the first line copies in what isn’t in your stack yet):':'Then, from this willow’s folder:'}),copyBox(cmds.join('\n')))}
+function stale(){const rv=document.getElementById('review');if(!rv.firstChild)return;rv.innerHTML='';
+ rv.append(el('section',{class:'review'},el('h2',{text:'You’ve changed something since you looked it over'}),el('p',{class:'lede',text:'Look it over again to see it as it is now. Nothing has been sealed.'}),el('button',{class:'go',text:'Look it over again',onclick:look})))}
 document.getElementById('look').onclick=look;
 // ── start it ────────────────────────────────────────────────────────────────
 function offerStart(subj,name){const box=document.getElementById('started');box.innerHTML='';
@@ -316,6 +573,8 @@ async function watch(){const pr=document.getElementById('progress');const j=awai
  if(j.state==='running')setTimeout(watch,1500)}
 document.getElementById('find').addEventListener('input',e=>find(e.target.value));document.getElementById('findx').onclick=()=>find('');
 (async()=>{P=await api('pieces');loadBatches();if(!S)S=freshState();loadExamples();
- const st=await api('state');const last=(st.stacks||[]).filter(x=>x.sealed).at(-1);if(last){offerStart(last.subject,last.name||'my willow');const j=await api('start');if(j.state&&j.state!=='none')watch()}
- for(const f of st.folders||[])if(!S.folders.some(x=>x.path===f))await addFolder(f);flow();shelf();summary()})();
+ const st=await api('state');TO=st.to||'';const last=(st.stacks||[]).filter(x=>x.sealed).at(-1);if(last){offerStart(last.subject,last.name||'my willow');const j=await api('start');if(j.state&&j.state!=='none')watch()}
+ for(const f of st.folders||[])if(!S.folders.some(x=>x.path===f))await addFolder(f);{const old=['read','words','find','watch','hide','suggest','honest','use','extra'],keys=[...STAGES.map(s=>s.key),...old,...Object.keys(S.stages)],names=[...new Set(keys.flatMap(k=>S.stages[k]||[]))];
+  S.stages={};for(const n of names)if(P[n])(S.stages[stageOf(P[n])]??=[]).push(n)}save();
+ for(const f of S.folders)baseline(f.path);UNDO.length=0;was=JSON.stringify(S);undoBtn();cur=kept()||cur;refreshSeal();flow();shelf();summary()})();
 </script></body></html>

@@ -3,8 +3,10 @@ section: Trust and proof
 line: Your folder's files hashed again now and then, the hashes kept on the record, and a file that changed with no edit of yours flagged as rot.
 source: new
 added: 2026-10-31
+version: 0.1.0
 writes: record
 network: none
+role: page
 -->
 # fixity
 

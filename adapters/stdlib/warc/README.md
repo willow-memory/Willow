@@ -1,10 +1,13 @@
 <!-- willow-addon
 section: Reading more kinds of files
-line: WARC web archives, from Webrecorder, Heritrix or the Internet Archive, read without unpacking: each captured page's text with its address and the time it was captured.
+line: WARC web archives (Webrecorder, Heritrix, the Internet Archive) read without unpacking: each page's text with its address and capture time.
 source: new
 added: 2026-11-02
+version: 0.1.0
 writes: to
 network: none
+role: reads
+reads: .warc, .wacz
 -->
 # warc
 

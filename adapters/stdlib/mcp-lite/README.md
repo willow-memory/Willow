@@ -3,8 +3,11 @@ section: Assistants
 line: The mcp add-on's three tools with nothing to install: the protocol by hand, standard library only.
 source: box
 added: 2026-10-24
+version: 0.1.0
 writes: record
 network: none
+hands: the passages served for each ask, and what waits on you, to the MCP client's model
+role: ways
 -->
 # mcp-lite
 

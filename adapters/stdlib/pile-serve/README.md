@@ -3,8 +3,10 @@ section: Finding things
 line: Keeps your folder's search ready in one background process on this machine, so a hook's lookup answers in milliseconds instead of seconds.
 source: bot
 added: 2026-10-28
+version: 0.1.0
 writes: to
 network: none
+role: makes
 tags: pile
 uses: pile-rank, pile-rungs
 -->

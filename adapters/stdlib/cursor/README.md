@@ -3,8 +3,10 @@ section: Assistants
 line: Cursor asks your folder and hands in suggestions, through the mcp add-on.
 source: new
 added: 2026-10-24
+version: 0.1.0
 writes: nothing
 network: none
+role: ways
 uses: hosts
 -->
 # cursor
@@ -24,9 +26,17 @@ Each starts `mcp-lite/server.py --box DIR` with the Python that ran this
 script, so Cursor gets the three tools: `ask`, `suggest` and `waiting`.
 There's no approve tool: approving stays `python kernel.py seal`, yours.
 
+Cursor's Agent hooks include `beforeSubmitPrompt`, but that event can only
+continue or block a prompt — there is no field for injected context — so
+cited passages stay MCP (this add-on), not a prompt hook.
+[hooks-elsewhere](../hooks-elsewhere/) refuses `--host cursor` for that
+reason.
+
 **Source:** Cursor's own documentation for registering a stdio MCP server,
-as it stood on 2026-10-24. If Cursor moves the file or renames a key,
-this add-on's test is the place to change.
+as it stood on 2026-10-24, and for Agent hooks (`beforeSubmitPrompt`) as it
+stood on 2026-11-05. If Cursor moves the file, renames a key, or later
+lets a hook inject context, this add-on's test (and hooks-elsewhere) is the
+place to change.
 
 **Uses:** nothing of the kernel's but its exit codes; mcp-lite does the rest.
 

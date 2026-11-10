@@ -132,7 +132,7 @@ def test_hidden_files_and_folders_are_not_read(tmp_path):
     )
     assert sorted(
         p.relative_to(out).as_posix() for p in out.rglob("*") if p.is_file()
-    ) == ["paper/main.tex.txt"]
+    ) == [".places/paper/main.tex.txt.json", "paper/main.tex.txt"]
 
 
 def test_the_same_folder_gives_the_same_bytes_and_originals_are_unchanged(tmp_path):
@@ -148,7 +148,8 @@ def test_the_same_folder_gives_the_same_bytes_and_originals_are_unchanged(tmp_pa
 
 def test_a_file_it_cannot_read_is_skipped_and_counted_not_a_crash(tmp_path):
     got, out = mirror_of(
-        tmp_path, {"good.tex": SAMPLE, "bad.tex": b"\xff\xfe not utf8"}
+        tmp_path,
+        {"good.tex": SAMPLE, "bad.tex": "\\section{Sixteen}\n".encode("utf-16")},
     )
     assert got.returncode == 0, got.stderr
     assert "wrote 1 files" in got.stdout and "skipped 1" in got.stdout
@@ -190,3 +191,23 @@ def test_a_cedilla_or_caron_with_braces_or_a_space_but_not_a_command_that_starts
         f"Fran{bs}c{{c}}ois {bs}v{{S}}koda Fran{bs}c c. {bs}v S. {bs}vspace{{1cm}} {bs}caption{{Cap}}"
     )
     assert out == "François Škoda Franç. Š. Cap\n"
+
+
+def test_a_stray_byte_of_another_encoding_does_not_lose_the_paper():
+    dash = b'\\begin{document}\nRoutes in the Debye\x96H\\"uckel theory.\n\\end{document}\n'
+    assert (
+        mod.convert(dash).split("\n")[1]
+        == "Routes in the Debye\u2013H\u00fcckel theory."
+    )
+    odd = b"caf\x81 au lait\n"  # undefined in Windows-1252: read as Latin-1
+    assert mod.convert(odd) == "caf\x81 au lait\n"
+    assert mod.decode(b"\xef\xbb\xbfx") == "x"
+
+
+def test_a_file_with_no_prose_is_skipped_and_counted_once(tmp_path):
+    got, out = mirror_of(
+        tmp_path, {"good.tex": SAMPLE, "bare.tex": b"% a comment only\n"}
+    )
+    assert got.returncode == 0, got.stderr
+    assert got.stdout.strip().endswith("wrote 1 files to " + str(out) + "; skipped 1")
+    assert not (out / "bare.tex.txt").exists()

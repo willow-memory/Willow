@@ -1,0 +1,1 @@
+`constitution`: drafts are versioned, MAJOR.MINOR.PATCH: each amendment says its bump (major, minor or patch), and one pull request's amendments make one draft together, stepped by the largest; amend.py holds the step. The amendments made the old way, 0.10 to 0.15, keep their numbers

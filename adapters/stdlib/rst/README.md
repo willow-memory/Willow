@@ -3,8 +3,12 @@ section: Reading more kinds of files
 line: reStructuredText files as plain prose, line for line, with directives, roles, links and tables read.
 source: new
 added: 2026-11-02
+version: 0.1.0
 writes: to
 network: none
+role: reads
+output: mirror
+reads: .rst, .rest
 -->
 # rst
 
@@ -59,6 +63,11 @@ folder, or MIRROR and FOLDER are inside one another).
 
 **Uses:** the kernel's exit codes (`ALIVE`, `ESCALATE`, `REFUSED`); Python's
 standard library for the format. No docutils.
+
+**Where each passage came from** is in a hidden map beside its mirror,
+`MIRROR/.places/<same path>.txt.json`, which the kernel never reads: each
+passage's line, which is the source's own, as
+[the mirror contract](../ci/README.md#the-mirror-contract) says.
 
 **Never:** writes inside FOLDER, modifies an original, writes anything outside
 MIRROR, or goes online.

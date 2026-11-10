@@ -3,8 +3,10 @@ section: Keeping track
 line: Tokens each agent session spent, by day and by repo, summed from its own session files and priced from a table you keep.
 source: new
 added: 2026-10-31
+version: 0.1.0
 writes: nothing
 network: none
+role: tools
 -->
 # session-cost
 

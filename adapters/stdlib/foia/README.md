@@ -3,8 +3,10 @@ section: Keeping track
 line: Freedom-of-information requests: what you asked, when, and when the answer is due by law.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: nothing
 network: none
+role: page
 uses: habits
 -->
 # foia

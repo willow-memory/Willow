@@ -8,12 +8,13 @@ The output shown is real.
 ```
 $ git clone https://github.com/willow-memory/Willow && cd Willow
 $ python kernel.py test
-kernel: the eight beats held
+kernel: the twelve beats held
 ```
 
-`test` sets up a throwaway folder, runs every command, and checks eight
+`test` sets up a throwaway folder, runs every command, and checks twelve
 properties, among them that an unapproved suggestion is never given as an
-answer, a forged approval is rejected, and an edited log is refused.
+answer, a forged approval is rejected, a declined one is never offered again,
+the log keeps none of your words, and an edited log is refused.
 
 ## 2. Ask questions of someone else's files
 
@@ -118,5 +119,13 @@ $ python kernel.py bite --box my-record "your own question"
 
 Keep the key somewhere other than the record folder; `init` refuses a key
 inside it.
+
+Next:
+
+- your own files, with the kernel alone: [use/kernel.md](use/kernel.md)
+- a stack of add-ons on this machine: [use/stack.md](use/stack.md), or
+  `python ui/canvas.py`
+- how it ranks, and what the record keeps: [how-it-works.md](how-it-works.md)
+- an agent about to change willow: [AGENTS.md](../AGENTS.md)
 
 Back to the [README](../README.md).

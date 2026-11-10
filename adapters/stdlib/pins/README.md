@@ -3,8 +3,10 @@ section: For maintainers
 line: Version ranges in package.json, pyproject.toml or Cargo.toml that no lockfile holds.
 source: new
 added: 2026-10-24
+version: 0.1.0
 writes: nothing
 network: none
+role: page
 uses: advisories
 output: report
 -->

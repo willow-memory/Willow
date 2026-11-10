@@ -3,8 +3,10 @@ section: Finding things
 line: Keeps scan's index between runs and rebuilds it only when a file in your folder actually changed.
 source: new
 added: 2026-10-26
+version: 0.1.0
 writes: to
 network: none
+role: makes
 tags: index
 uses: scan
 -->

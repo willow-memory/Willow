@@ -3,8 +3,10 @@ section: Your own words
 line: Italian common words ("il", "e").
 source: new
 added: 2026-10-24
+version: 0.1.0
 writes: record
 network: none
+role: words
 tags: italian
 -->
 # words-it

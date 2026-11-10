@@ -396,6 +396,50 @@ def test_a_deps_add_on_comes_in_only_with_its_packages_already_there(tmp_path, c
     assert assemble.version_key("2.0rc1") == (2, 0)
 
 
+def test_a_piece_is_taken_out_whole_and_said_on_the_record(tmp_path, capsys):
+    """`remove` takes a piece's folder and its STACK.json entry, one `remove`
+    row each; not a piece one staying imports, one whose files changed, or
+    one that isn't here, and then nothing is taken out."""
+    to = tmp_path / "willow-stack"
+    assert assemble.main(["init", "--to", str(to)]) == assemble.ALIVE
+    assert assemble.add(["hook-start", "todo"], to, None) != assemble.REFUSED
+    stack = to / "stack"
+    stdlib = stack / "adapters" / "stdlib"
+    m = assemble.manifest(stack)
+    assert "digest" in m["addons"]["hook-start"]["hard"]
+    rows = lambda: [  # noqa: E731
+        json.loads(r) for r in (to / "box" / "record.jsonl").read_text().splitlines()
+    ]
+    before = len(rows())
+    # hook-start imports digest: digest alone is refused
+    assert assemble.main(["remove", "digest", "--to", str(to)]) == assemble.REFUSED
+    assert "hook-start import digest" in capsys.readouterr().err
+    assert assemble.remove(["not-here"], to) == assemble.REFUSED
+    (stdlib / "todo" / "todo.py").write_text("# yours now\n")
+    assert assemble.remove(["todo"], to) == assemble.REFUSED
+    assert "isn't deleted" in capsys.readouterr().err
+    assert len(rows()) == before and (stdlib / "todo" / "todo.py").is_file()
+    # both together go, one row each, and every file left is the one put in
+    assert assemble.remove(["hook-start", "digest"], to) == assemble.ALIVE
+    assert not (stdlib / "hook-start").exists() and not (stdlib / "digest").exists()
+    assert {"hook-start", "digest"}.isdisjoint(assemble.manifest(stack)["addons"])
+    gone = [r for r in rows()[before:] if r["kind"] == "remove"]
+    assert [r["piece"] for r in gone] == ["hook-start", "digest"]
+    assert (
+        gone[0]["files"]
+        == assemble.hashlib.sha256(
+            json.dumps(m["addons"]["hook-start"]["files"], sort_keys=True).encode()
+        ).hexdigest()
+    )
+    (stdlib / "todo" / "todo.py").write_bytes(
+        (canvas.WILLOW / "adapters" / "stdlib" / "todo" / "todo.py").read_bytes()
+    )
+    assert assemble.check(to) == assemble.ALIVE
+    assert assemble.load_kernel(stack).main(["verify", "--box", str(to / "box")]) == 0
+    # and a piece taken out can be added again
+    assert assemble.add(["digest"], to, None) != assemble.REFUSED
+
+
 def test_a_bad_command_line_is_refused():
     assert canvas.main(["--stray"]) == assemble.REFUSED
     assert canvas.main(["--port", "x"]) == assemble.REFUSED
@@ -445,3 +489,209 @@ def test_a_reader_is_offered_for_a_kind_its_card_names_not_for_an_english_word()
     assert canvas.names_kind("zip", "A Notion export zip, page by page.")
     assert canvas.names_kind("pdf", "Your PDF files as passages.")
     assert not canvas.names_kind("go", "Notes you go back to.")
+
+
+def test_each_piece_says_the_part_it_plays_and_why(site):
+    """A role is a guess from the card, so every piece says which fact it went
+    by; the page and the command line read the same one."""
+    cv, call = site
+    _, ps = call("GET", "/tok/api/pieces")
+    keys = {k for k, _ in canvas.ROLES}
+    assert all(p["role"] in keys and p["role_why"] for p in ps.values())
+    want = {
+        "pdf": "reads",
+        "stems": "words",
+        "privacy": "guards",
+        "coming-up": "page",
+        "local-model": "suggests",
+        "model-exam": "suggests",
+        "vscode": "ways",
+        "claude-code": "ways",  # tagged hook, but a way in first
+        "hook-guard": "guards",
+        "calendar-out": "makes",
+        "ci": "repo",
+    }
+    assert {n: ps[n]["role"] for n in want} == want
+    assert ps["vscode"]["group"] == "In your editor"
+    assert ps["local-model"]["group"] == "Models that suggest answers"
+    assert ps["model-exam"]["group"] == "Checking a model before you trust it"
+
+
+def test_the_page_names_every_role_a_person_can_fill():
+    page = (canvas.HERE / "page.html").read_text(encoding="utf-8")
+    for key, title in canvas.ROLES:
+        if key != "repo":
+            assert f"{{key:'{key}',title:'{title}'" in page
+
+
+def run(capsys, *argv):
+    code = canvas.main([str(a) for a in argv])
+    out = capsys.readouterr()
+    return code, out.out, out.err
+
+
+def test_the_commands_list_what_the_page_lists(stack_dir, capsys):
+    code, out, _ = run(capsys, "pieces", "--to", stack_dir)
+    assert code == 0 and all(t in out for _, t in canvas.ROLES)
+    code, out, _ = run(capsys, "pieces", "--role", "repo", "--to", stack_dir)
+    assert code == 0 and "python adapters/stdlib/ci/ci.py run" in out
+    assert run(capsys, "pieces", "--role", "nope", "--to", stack_dir)[0] == 2
+    code, out, _ = run(capsys, "needs", "copilot", "--json", "--to", stack_dir)
+    assert code == 0 and "hosts" in json.loads(out)["copilot"]["brings"]
+    code, out, _ = run(capsys, "examples", "--to", stack_dir)
+    assert code == 0 and "choir.md" in out
+
+
+def test_a_plan_is_the_stack_file_the_page_would_send(stack_dir, tmp_path, capsys):
+    """An example's steps keep their options; a way in is set up alongside,
+    not run on the page; read back, the file is the same arrangement."""
+    code, out, _ = run(capsys, "plan", "--example", "choir.md", "vscode", "--to", stack_dir)  # fmt: skip
+    assert code == 0
+    assert "## What runs on your page" in out and "- coming-up -- --box {box} --days 30" in out  # fmt: skip
+    assert "not run on the page: " in out and "vscode" in out.split("not run on the page: ")[1].split("-->")[0]  # fmt: skip
+    cv = canvas.Canvas(stack_dir, canvas.WILLOW, stack_dir / "box", [])
+    arr, _ = cv.arrangement(canvas.read_stack(out))
+    assert arr["stack_md"].rstrip() == out.rstrip()
+    f = tmp_path / "mine.md"
+    f.write_text(out)
+    code, said, _ = run(capsys, "look", f, "--to", stack_dir)
+    assert code == 0 and "1. habits" in said and "vscode" in said.split("set up alongside")[1]  # fmt: skip
+
+
+def test_a_command_proposes_and_never_seals(stack_dir, tmp_path, capsys):
+    code, out, _ = run(capsys, "plan", "coming-up", "--to", stack_dir)
+    f = tmp_path / "mine.md"
+    f.write_text(out)
+    code, said, _ = run(capsys, "propose", f, "--to", stack_dir)
+    assert code == 42 and "waiting for your seal" in said
+    subject = said.split("subject ")[1].split(",")[0]
+    k = assemble.load_kernel(stack_dir / "stack")
+    rows, _ = k.read(stack_dir / "box" / "record.jsonl")
+    assert any(r.get("subject") == subject for r in rows)
+    assert subject not in k.sealed(stack_dir / "box", rows)
+    assert "seal" not in canvas.VERBS and run(capsys, "seal", subject)[0] == 2
+
+
+def test_the_commands_refuse_what_the_page_refuses(stack_dir, tmp_path, capsys):
+    assert run(capsys, "plan", "ci", "--to", stack_dir)[0] == 2  # willow's own repo
+    assert run(capsys, "plan", "no-such-thing", "--to", stack_dir)[0] == 2
+    assert run(capsys, "plan", "--to", stack_dir)[0] == 2
+    assert run(capsys, "look", tmp_path / "absent.md", "--to", stack_dir)[0] == 2
+    code, _, err = run(capsys, "pieces", "--to", tmp_path / "no-stack")
+    assert code == 2 and "make --to" in err
+
+
+def test_the_page_knows_its_stack_to_say_the_commands_for_it(site, stack_dir):
+    _, call = site
+    assert call("GET", "/tok/api/state")[1]["to"] == str(stack_dir.resolve())
+
+
+def test_sealed_or_changed_is_the_records_word_wherever_it_was_sealed(site, tmp_path):
+    """Sealed with the kernel's own command, not the page: the page's pick is
+    "sealed" while it's what was sealed, "changed" once it isn't, and asking
+    writes nothing."""
+    cv, call = site
+    doc = {
+        "name": "mine",
+        "folders": [str(a_folder(tmp_path))],
+        "lanes": [
+            {
+                "title": "t",
+                "steps": [{"name": "coming-up", "args": "--box {box} --days 9"}],
+            }
+        ],  # fmt: skip
+    }
+    subject = call("POST", "/tok/api/propose", doc)[1]["subject"]
+    k = cv.kernel
+    assert canvas.quiet(k.seal, cv.box, subject, k.now())[0] == k.ALIVE
+    before = (cv.box / "record.jsonl").read_bytes()
+    assert call("POST", "/tok/api/sealed", doc)[1] == {"state": "sealed", "subject": subject}  # fmt: skip
+    moved = json.loads(json.dumps(doc))
+    moved["lanes"][0]["steps"][0]["args"] = "--box {box} --days 10"
+    assert call("POST", "/tok/api/sealed", moved)[1]["state"] == "changed"
+    assert call("POST", "/tok/api/sealed", {"lanes": []})[1]["state"] == "changed"
+    assert (cv.box / "record.jsonl").read_bytes() == before
+
+
+def test_a_start_is_what_the_examples_run_not_a_list_by_hand(site):
+    cv, call = site
+    _, ps = call("GET", "/tok/api/pieces")
+    ran = {s["name"] for e in cv.examples()["found"] for s in e["steps"]}
+    assert ran and all(ps[n]["in_examples"] >= 1 for n in ran if n in ps)
+    assert all(p["in_examples"] == 0 for n, p in ps.items() if n not in ran)
+    page = (canvas.HERE / "page.html").read_text(encoding="utf-8")
+    assert "SUGGEST" not in page
+
+
+def test_a_card_whose_role_is_page_can_run_on_the_page(stack_dir):
+    """role: page is what puts a piece on the page; it holds only for one
+    that runs with nothing but the record and stays offline."""
+    cv = canvas.Canvas(stack_dir, canvas.WILLOW, stack_dir / "box", [])
+    ps = cv.pieces()
+    page = [n for n, p in ps.items() if p["state"] == "built" and p["role"] == "page"]
+    assert page and all(ps[n]["page"] for n in page)
+    arr, _ = cv.arrangement({"lanes": [{"title": "t", "steps": [
+        {"name": "coming-up", "args": canvas.DEFAULT_ARGS},
+        {"name": "session-seal", "args": canvas.DEFAULT_ARGS},  # runs alone, but a tool
+    ]}]})  # fmt: skip
+    assert [s["name"] for ln in arr["lanes"] for s in ln["steps"]] == ["coming-up"]
+    assert "session-seal" in arr["kept"]
+
+
+def test_a_reader_is_offered_for_a_kind_its_card_says_it_reads(site):
+    """By the cards' `reads`, not words in their lines: zotero's line names
+    PDF annotations, but it reads zotero.sqlite, so it isn't offered for one."""
+    cv, _ = site
+    pdf = cv.readers_for(".pdf")
+    assert pdf[0] == "pdf" and "ocr" in pdf and "zotero" not in pdf
+    assert cv.readers_for(".DOCX") == ["office"]
+    assert cv.readers_for(".no-such-kind") == []
+    assert cv.readers_for(".txt") == []  # the kernel reads it anyway
+    assert all(cv.pieces()[n]["role"] == "reads" for n in cv.readers_for(".json"))
+
+
+def test_the_browse_page_wears_the_canvas_colours():
+    """One look: the page you approve on (browse) uses the ground, card, ink
+    and accent the canvas declares, light and dark."""
+    browse = canvas.HERE.parent / "adapters" / "stdlib" / "browse" / "browse.py"
+    style = browse.read_text(encoding="utf-8").split('STYLE = """')[1].split('"""')[0]
+    root = (canvas.HERE / "page.html").read_text(encoding="utf-8")
+    light, dark = (
+        root.split(":root{")[1].split("}")[0],
+        root.split(':root[data-theme="dark"]{')[1].split("}")[0],
+    )
+    for theme in (light, dark):
+        declared = dict(
+            d.split(":", 1)
+            for d in theme.replace("\n", "").split(";")
+            if d.startswith("--") and ":" in d
+        )
+        for name in ("--bg", "--card", "--ink", "--acc", "--line", "--mute"):
+            assert declared[name] in style, (name, declared[name])
+
+
+def test_a_stack_that_reaches_only_this_machine_is_not_said_to_go_online(stack_dir, tmp_path, capsys):  # fmt: skip
+    """loopback is this machine. The page and the terminal said "goes online:
+    loopback", in warning colour, of a stack that goes nowhere."""
+
+    def looked(*names):
+        code, out, _ = run(capsys, "plan", *names, "--to", stack_dir)
+        assert code == 0, names
+        f = tmp_path / ("-".join(names) + ".md")
+        f.write_text(out)
+        code, said, _ = run(capsys, "look", f, "--to", stack_dir)
+        assert code == 0
+        return said
+
+    assert "never goes online" in looked("coming-up")
+    here = looked("coming-up", "browse")
+    assert "stays on this machine" in here and "goes online" not in here
+    net = canvas.Canvas(stack_dir, canvas.WILLOW, stack_dir / "box", []).pieces()["openai-compatible"]["network"]  # fmt: skip
+    away = looked("coming-up", "browse", "openai-compatible")
+    assert f"goes online: {net}" in away and "loopback" not in away.split("goes online: ")[1].splitlines()[0]  # fmt: skip
+    page = (canvas.HERE / "page.html").read_text(encoding="utf-8")
+    assert "'stays on this machine'" in page and "It stays on this machine" in page
+    assert "'goes online: '+net.join" not in page and "+a.reach.join" not in page
+    assert "+' items'" in page and "fo.files+' files'" not in page, (
+        "it counts folders too"
+    )

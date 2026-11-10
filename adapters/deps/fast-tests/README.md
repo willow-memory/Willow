@@ -3,10 +3,12 @@ section: For maintainers
 line: The test suite across every core with pytest-xdist, the same tests in a fraction of the time.
 source: new
 added: 2026-10-26
+version: 0.1.0
 needs: pytest-xdist; MIT
 floor: pytest-xdist 3.0.2; the rule names 2.2.0, but every 2.x imports py.log, long gone from pytest, so 2.x installs on today's Python yet cannot run a suite; 3.0.0 dropped the py dependency, so 3.0.2 is the oldest that runs
 writes: nothing
 network: none
+role: tools
 -->
 # fast-tests
 

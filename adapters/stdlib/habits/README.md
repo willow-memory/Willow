@@ -3,8 +3,10 @@ section: Keeping track
 line: Streaks from the lines you write each day: how many days in a row, and which you missed.
 source: new
 added: 2026-10-27
+version: 0.1.0
 writes: nothing
 network: none
+role: page
 -->
 # habits
 

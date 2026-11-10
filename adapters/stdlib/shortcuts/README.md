@@ -3,8 +3,11 @@ section: Reading more kinds of files
 line: Link files dragged to a desktop or folder (.url, .webloc, .desktop) as their title and the address they hold.
 source: new
 added: 2026-11-02
+version: 0.1.0
 writes: to
 network: none
+role: reads
+reads: .url, .webloc, .desktop
 -->
 # shortcuts
 
