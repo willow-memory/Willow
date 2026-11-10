@@ -53,6 +53,9 @@ gather = gather, parallel
 collect = gather
 glance = glance
 route = route
+look = look, glance
+answer = look
+answers = look
 
 # keeping it safe
 backup = backup, backups, copies, zip, restore

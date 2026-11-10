@@ -625,6 +625,9 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - <a id="latent"></a>[**latent**](adapters/deps/latent/) \
   Finds code by meaning, not just matching words, using scan's index: a question reaches code that says the same thing another way. \
   Needs numpy; BSD-3-Clause. Uses scan. *new* `needs-install` `offline` `index` `scan` · near: scan, all, duplicates
+- <a id="look"></a>[**look**](adapters/stdlib/look/) \
+  One question sent to the step whose job it is, and answered by the lines that step's kept run holds; your own notes by the kernel. \
+  Uses route. *new* `no-install` `offline` `owes` · near: pipe, debts, why-not
 - <a id="misquote"></a>[**misquote**](adapters/stdlib/misquote/) \
   A quote that is almost in your files: the closest passage, and the words it adds, drops or changes, so a misquote shows as one. \
   *new* `no-install` `offline` `quote` `drops` · near: quotes, stale, quote-check

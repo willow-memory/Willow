@@ -723,6 +723,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "local-model": ("local_model.py", ["ask", "--box", "{box}", "--url", "http://127.0.0.1:9/v1",
                     "--model", "m", "tomatoes"]),
     "log-kit": ("log_kit.py", ["--box", "{box}", "--words", "tomatoes"]),
+    "look": ("look.py", ["tomatoes", "--box", "{box}"]),
     "make-it-so": ("make_it_so.py", ["plan", "--box", "{box}", "--to", "{tmp}/plan.json", "--cmd", "echo hi", "tomatoes"]),
     "market-calls": ("market_calls.py", ["score", "--box", "{box}"]),
     "mcp-lite": ("server.py", ["--box", "{box}"]),
