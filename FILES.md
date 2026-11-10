@@ -2236,6 +2236,43 @@ willow/
 │   │       └── ada.md        Ada Lovelace's
 ```
 
+#### demo/, from percus-yevick/
+
+```
+│   ├── percus-yevick/        a study, in draft: can a physics derivation be found rather than generated
+│   │   ├── arms.py           the study's reported arms, beside the pass rules. None is scored
+│   │   ├── blind.py          the blind questions, written by a local model that has seen no
+│   │   ├── expectations.json  what the author expects each step to come to, graded after
+│   │   ├── fetch.py          the stack's sources, fetched again and held to their hashes
+│   │   ├── FROZEN-2.json     freeze 2: the SHA-256 of union.py, its rules, and what it uses
+│   │   ├── FROZEN-3.json     freeze 3: arms.py again, with time for the work
+│   │   ├── FROZEN-4.json     freeze 4: the pile with notation reading the math
+│   │   ├── FROZEN.json       the pre-registration: the SHA-256 of every pin, step, question, rule, card and tool
+│   │   ├── models/
+│   │   │   ├── gemma3-4b.md  Gemma 3 4B's card, read from its weights file
+│   │   │   ├── qwen3-8b.md   Qwen3 8B's card, read from its weights file
+│   │   │   └── qwen3.8-flash-next-iq3_s.md Qwen3.8 Flash Next, IQ3_S
+│   │   ├── pipeline.py       the finding half of the study, in one command
+│   │   ├── prompt.md         The problem
+│   │   ├── questions/
+│   │   │   ├── author.txt    the author's questions, one or more a step
+│   │   │   ├── blind-a.txt   the blind questions, as qwen3:8b wrote them
+│   │   │   ├── blind-a.txt.raw  qwen3:8b's reply, word for word
+│   │   │   ├── blind-prompt.txt  all the blind questions' writer was shown
+│   │   │   └── null.txt      physics off the chain, asked of the same stack
+│   │   ├── references/
+│   │   │   └── primaries.bib  the paywalled originals, by reference only
+│   │   ├── rubric.md         How clear the path is
+│   │   ├── score.py          the hit rule. Whether a served passage holds a step of the chain
+│   │   ├── sources.json      the stack: each source by address, version and SHA-256
+│   │   ├── steps.json        the chain's steps, and what a passage must hold to count
+│   │   ├── tally.py          the pass rules in the README, counted from the pipeline's rows
+│   │   ├── union.py          freeze 2: every ranker together, R7 to R10
+│   │   ├── words.txt         notation a question may use, read as the sources' words
+│   │   ├── test_percus_yevick.py  the draft hangs together, and its hit rule does what it says
+│   │   └── README.md         Percus–Yevick: found, not generated
+```
+
 #### demo/, from php2shell/
 
 ```
