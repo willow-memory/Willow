@@ -1,0 +1,1 @@
+`why-not`: `--questions FILE` explains every question of a file that finds nothing, a heading a question, and `--of` takes what scan already found for that file, so only the questions scan said were empty are explained and none is asked twice

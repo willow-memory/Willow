@@ -1,0 +1,1 @@
+`stack`: a kept run notes the files each step was given, by their bytes, so `--resume` asks a step again when a file it reads has changed (a questions file with a question added), and every step after it

@@ -247,7 +247,7 @@ def several(pile: list[dict], asked: list[tuple[str, str]], alias: dict, as_json
         if state == "empty":
             continue
         short += 1
-        rows = [("", said.split('": ', 1)[-1])]
+        rows = [("it needs", said.split('": ', 1)[-1])]
         rows += [r for g, rs in parts if g != "what would have answered it" for r in rs]
         groups.append((f"{name}: {' '.join(q.split())}", rows))
     n = len(asked)

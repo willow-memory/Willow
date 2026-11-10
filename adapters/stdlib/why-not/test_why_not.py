@@ -236,7 +236,7 @@ def test_each_question_of_a_file_that_finds_nothing_is_a_group(tmp_path):
     ], "the one the files hold has no group; the rest keep the file's order"
     frost = doc["groups"][0]["rows"]
     assert frost[0] == {
-        "where": "",
+        "where": "it needs",
         "what": "a passage has to hold 2 of the 3 words at once",
     }
     assert {"where": "autumn", "what": "no passage holds it"} in frost
