@@ -741,14 +741,16 @@ def section_newest(every: list[dict]) -> str:
 
 def section_pick(every: list[dict], week: str) -> str:
     """One built add-on, drawn by the SHA-256 of the week: the same week
-    always draws the same one, and anyone can redo the draw."""
+    always draws the same one, and anyone can redo the draw. Its name, then
+    its line on a line of its own, as the newest are written: on one line, a
+    long name and a long line together pass the width a person reads."""
     built = sorted(a["name"] for a in every if a["built"])
     if not built:
         return "Nothing is built yet."
     seed = kernel.h256(f"willow add-on of the week {week}")
     a = next(x for x in every if x["name"] == built[int(seed, 16) % len(built)])
     return (
-        f"**[{a['name']}]({a['path']})** — {a['line']}\n\n"
+        f"**[{a['name']}]({a['path']})** \\\n{a['line']}\n\n"
         f'*Drawn for {week}: SHA-256 of "willow add-on of the week {week}",'
         f" modulo the {len(built)} built add-ons in name order.*"
     )

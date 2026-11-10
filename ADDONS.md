@@ -83,7 +83,8 @@ its list: someone who speaks the language can add one without much Python.
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W46 -->
-**[bank](adapters/stdlib/bank/)** — Bank CSV and OFX statements as dated lines, with spending by month.
+**[bank](adapters/stdlib/bank/)** \
+Bank CSV and OFX statements as dated lines, with spending by month.
 
 *Drawn for 2026-W46: SHA-256 of "willow add-on of the week 2026-W46", modulo the 350 built add-ons in name order.*
 <!-- /willow:pick -->

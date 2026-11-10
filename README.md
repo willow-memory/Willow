@@ -152,7 +152,8 @@ says how to pick one up:
 <!-- willow:front show=pick week=2026-W46 -->
 **Add-on of the week**
 
-**[bank](adapters/stdlib/bank/)** — Bank CSV and OFX statements as dated lines, with spending by month.
+**[bank](adapters/stdlib/bank/)** \
+Bank CSV and OFX statements as dated lines, with spending by month.
 
 *Drawn for 2026-W46: SHA-256 of "willow add-on of the week 2026-W46", modulo the 350 built add-ons in name order.*
 
