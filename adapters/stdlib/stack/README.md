@@ -83,6 +83,36 @@ folder, and a second run in it would read as part of the first. Follow it
 with anything that follows a folder of files; the page is printed at the end
 as before, the same with `--to` as without.
 
+## a step that takes an earlier step's output
+
+A later step can be given what an earlier one made. In a step's args, a
+step's number in braces is the file that step's output was kept in:
+
+    ## what I asked
+    - scan -- scan --index my.index --questions my-questions.txt
+    - glance -- --of {01} --questions my-questions.txt
+
+`{01}` is step 01's output, 01 being its place in the stack file, counted
+from the top. `{01.json}` is its report as data, for a step that printed
+one. So the second step reads what the first found, and nothing is asked
+twice.
+
+It is the earlier step handing on, so it is held to a few rules, each
+refused before anything runs:
+
+- the run has to be kept, with `--to`: a step can only take a file that is there;
+- the number has to be a step before this one;
+- `.json` has to name a step that prints a report.
+
+A step whose earlier step kept nothing is not run, and the log and the page
+say so (`not run: step 1 (scan) kept nothing to hand on`); it is flagged,
+and the steps after it still run.
+
+A backslash in a step's args has to sit inside quotes. Outside them the
+line is read the way a shell reads it, which drops the backslash without a
+word, so a pattern written as INV-\d+ would be run as INV-d+ and match
+nothing. Such a line is refused, naming its number; write `"INV-\d+"`.
+
 ## going on with a run
 
 A run that was cut off (a model that took too long, a machine put to sleep),
@@ -93,12 +123,13 @@ or one whose stack has had a step added, needn't start again:
     resumed: 2 of 4 steps had finished
     01 todo: kept from before
     02 scan: kept from before
-    03 local-model: started (95d7e44f)
+    03 local-model: started (95d7e44f, fed 1c0e44aa)
 
 From the top of the stack, a step is kept, and not run, when the earlier run
 finished it, it is asked the very same way now (the eight characters after
 `started` are the add-on and its arguments, hashed: the same add-on asked
-another question is another step), and its output is still in the folder.
+another question is another step), the files it was given are as they
+were, and its output is still in the folder.
 From the first step that isn't, every step runs, finished before or not. A
 stack is a row where a later step may need what an earlier one made, so
 nothing is kept past a step that changed.
@@ -111,9 +142,18 @@ The page is the one a whole run would print, byte for byte: the log keeps
 what each step weighed and how it was flagged, so a kept step sits where it
 would have. In an empty folder `--resume` is a run from the start.
 
-**What it can't know** is whether your folder changed since. A kept step's
-output is what it was then. `--resume` is for going on with a run, not for
-refreshing one; for that, a new folder.
+**The files a step is given** are noted when it starts: `fed`, and eight
+characters that are the bytes of each file its args name. A questions file
+with a question added is another file, so the step that reads it is asked
+again, and so is every step after it. Two things a step names are not
+counted: the file after `--to`, which is what the step makes, and an
+earlier step's output (`{01}`), which that step answers for. A log from
+before files were noted says nothing of them, and is taken at its word.
+
+**What it can't know** is whether a folder changed since. Only files are
+read, not folders: a step over your whole folder is asked again only when
+its line changes. A kept step's output is what it was then. `--resume` is
+for going on with a run, not for refreshing one; for that, a new folder.
 
 ## what it does and doesn't
 
