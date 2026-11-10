@@ -18,9 +18,9 @@ One question sent to the step whose job it is, and answered by the lines that st
 
     look: populated, "who still owes me money": money owed (by "owe"); 2 lines from debts and invoices
     ## debts: its 1 line (none holds still, money)
-      11-debts.txt:1     2024-05-22 $212.40 mail/sent/2024-05-22_fwd_letter.eml:7 Dana - got a letter saying I owe $212.40
+      mail/sent/2024-05-22_fwd_letter.eml:7  2024-05-22 $212.40 Dana - got a letter saying I owe $212.40
     ## invoices: its 1 line (none holds still, money)
-      12-invoices.txt:1  overdue INV-2026-011 Larkfield Community Theatre $640.00 due 2026-06-27, 117 days ago
+      12-invoices.txt:1                      overdue INV-2026-011 Larkfield Community Theatre $640.00 due 2026-06-27, 117 days ago
 
 One box takes every question. [route](../route/) says what kind of question
 yours is, and which steps' job that kind is. This goes one step on and
@@ -40,8 +40,11 @@ step said when it ran.
 - **Then the rest, as the step said them.** A short answer is shown whole.
 - **The words that only said the kind aren't counted.** In "who still owes
   me money", owes is what sent it to debts; it doesn't pick a line.
-- **Eight lines a step.** The heading says when there are more. Each row
-  names the kept file and the line, so the rest is one file away.
+- **Eight lines a step.** The heading says when there are more.
+- **Each row is at a place you can check.** A line that names a place in
+  your files, like `notes/iou.txt:3`, is shown at that place. A line that
+  names none (a total, a heading) is shown at its line of the run's kept
+  file.
 
 ## A thing you wrote down: `--box`
 

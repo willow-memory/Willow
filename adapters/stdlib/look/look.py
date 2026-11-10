@@ -5,9 +5,9 @@
 
     look: populated, "who still owes me money": money owed; 4 lines from debts and invoices
     ## debts: its 3 lines (none holds still, money)
-      11-debts.txt:1     2024-05-22  $212.40  mail/sent/2024-05-22_fwd_letter.eml:7  Dana - got a letter saying I owe
+      mail/sent/2024-05-22_fwd_letter.eml:7  2024-05-22 $212.40 Dana - got a letter saying I owe
     ## invoices: its 1 line (none holds still, money)
-      12-invoices.txt:1  overdue  INV-2026-011  Larkfield Community Theatre  $640.00  due 2026-06-27
+      12-invoices.txt:1                      overdue INV-2026-011 Larkfield Community Theatre $640.00
 
 One box takes every question. The route add-on says what kind a question
 is and which steps' job that kind is; this goes on and answers it, from
@@ -19,7 +19,8 @@ A step's lines that hold a word of the question come first, the ones
 holding most of them first, then the rest as the step said them: "did
 lakeside pay" puts the Lakeside lines of a long list on top. The words
 that only said what kind of question it is (owes) aren't counted. Eight
-lines a step; the rest are in the file each row names.
+lines a step. A line that names a place in your files is shown at that
+place; one that names none, at its line of the run's kept file.
 
 A thing you wrote down ("ruth's phone number"), or a kind that names the
 ask beside its steps, is asked of your files with --box: the kernel's own
@@ -36,6 +37,7 @@ isn't in the run, or the ask was left for want of --box; 2 refused.
 from __future__ import annotations
 
 import json
+import re
 import sys
 import types
 from pathlib import Path
@@ -90,6 +92,23 @@ def lines_of(path: Path) -> list[tuple[int, str]]:
     return [(n, ln) for n, ln in enumerate(text.splitlines(), 1) if ln.strip()]
 
 
+#: a place a step's line names: a file with an ending, then its line number
+PLACE = re.compile(r"(?<!\S)(\S*\w\.\w{1,8}:\d+)(?!\S)")
+
+
+def placed(name: str, n: int, line: str) -> tuple[str, str]:
+    """(where, what) for one line a step kept. A line that names a place in
+    your files (notes/iou.txt:3) is shown at that place, with the rest of
+    what it said; one that names none is shown at its line of the kept
+    file, which is where it can be checked."""
+    found = PLACE.search(line)
+    if found:
+        rest = clip(line[: found.start()] + " " + line[found.end() :])
+        if rest:
+            return found.group(1), rest
+    return f"{name}:{n}", clip(line)
+
+
 def from_step(path: Path, want: list[str], alias: dict):
     """(heading, rows) for one step's kept file: its lines holding a word of
     the question first, most held first, then the rest as the step said them."""
@@ -111,7 +130,7 @@ def from_step(path: Path, want: list[str], alias: dict):
         head = f"its {total}{none}"
     if len(shown) < len(lines):
         head += f"; {len(shown)} shown"
-    return head, [(f"{path.name}:{n}", clip(ln)) for n, ln in shown]
+    return head, [placed(path.name, n, ln) for n, ln in shown]
 
 
 def from_files(box: Path, question: str):
