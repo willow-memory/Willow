@@ -3,6 +3,7 @@ section: Reading more kinds of files
 line: Jupyter notebooks: Markdown cells, code and text outputs as passages, cited by cell.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: to
 network: none
 role: reads

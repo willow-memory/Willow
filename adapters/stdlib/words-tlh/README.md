@@ -3,6 +3,7 @@ section: Your own words
 line: Klingon common words ("'ej", "nuq").
 source: new
 added: 2026-10-30
+version: 0.1.0
 writes: record
 network: none
 role: words

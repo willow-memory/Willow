@@ -1,0 +1,1 @@
+`synonyms`: for a word no file of yours holds, the dictionary's other words for it that your files do hold, as words-list lines; WordNet's own files read with nothing installed, and an embedder on this machine to put the nearest word first

@@ -1,0 +1,1 @@
+`readme`: the add-on of the week is written as its name, then its line on a line of its own; on one line, about a fifth of the add-ons would pass the width the list is held to, and the week one of them is drawn every pull request goes red

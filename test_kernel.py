@@ -1,4 +1,4 @@
-"""kernel.py, the smallest script for anyone: its eight beats hold, the whole
+"""kernel.py, the smallest script for anyone: its twelve beats hold, the whole
 loop runs on the command line, and what it serves is what its rules say."""
 
 from __future__ import annotations
@@ -6,6 +6,7 @@ from __future__ import annotations
 import ast
 import importlib.util
 import json
+import re
 import shutil
 import subprocess
 import sys
@@ -26,9 +27,54 @@ def cli(*argv: str) -> subprocess.CompletedProcess:
     )
 
 
-def test_its_eight_beats_hold():
+def test_its_twelve_beats_hold():
     p = cli("test")
-    assert p.returncode == 0 and "eight beats held" in p.stdout, p.stderr
+    assert p.returncode == 0 and "twelve beats held" in p.stdout, p.stderr
+
+
+#: For each beat Draft 0.16 added, a break planted in a copy of the kernel,
+#: and the beat that must catch it: a check that cannot fail is no check
+#: (CONST-IV-9). Each is the one promise its clause makes, broken.
+PLANTED = {
+    # CONST-V-10: out offers a proposal the person declined
+    "# 7.": ('and r["subject"] not in no', ""),
+    # CONST-IV-10: the order follows the process's hash seed
+    "# 8.": ("key=lambda s: (-s[0],", "key=lambda s: (hash(s[2]) % 3, -s[0],"),
+    # CONST-III-6: the core reaches for an add-on, quietly
+    "# 9.": (
+        "from fractions import Fraction\n",
+        "from fractions import Fraction\n\ntry:\n"
+        "    import adapters.stdlib.todo  # noqa: F401\nexcept ImportError:\n"
+        "    pass\n",
+    ),
+    # CONST-VI-8: a bite's row keeps the question's words
+    "# 10.": (
+        'append(box, ts, "bite", bite_key=k, served=refs, **listed)',
+        'append(box, ts, "bite", bite_key=k, served=refs, asked=text, **listed)',
+    ),
+}
+
+
+@pytest.mark.parametrize("beat", sorted(PLANTED))
+def test_each_new_beat_fails_on_its_planted_break(tmp_path, beat):
+    old, new = PLANTED[beat]
+    source = HERE.read_text(encoding="utf-8")
+    assert source.count(old) == 1, old  # the break lands, or the test says so
+    broken = tmp_path / "kernel.py"
+    broken.write_text(source.replace(old, new), encoding="utf-8")
+    p = subprocess.run(
+        [sys.executable, str(broken), "test"], capture_output=True, text=True
+    )
+    assert p.returncode != 0 and "beats held" not in p.stdout
+    # and the assert that failed is the planted beat's: the last line of the
+    # broken copy the traceback names lies between that beat's comment and
+    # the next beat's
+    lines = broken.read_text(encoding="utf-8").split("\n")
+    beats = [i for i, ln in enumerate(lines, 1) if re.match(r"\s*# \d+\. ", ln)]
+    at = re.findall(rf'"{re.escape(str(broken))}", line (\d+)', p.stderr)[-1]
+    mine = next(i for i in beats if lines[i - 1].strip().startswith(beat))
+    after = [i for i in beats if i > mine]
+    assert mine < int(at) < (after[0] if after else len(lines)), p.stderr
 
 
 def test_the_whole_loop_on_the_command_line(tmp_path):
@@ -60,7 +106,8 @@ def test_the_whole_loop_on_the_command_line(tmp_path):
 def test_a_no_is_proved_like_a_seal_and_is_final(tmp_path):
     """decline: the person's No, an HMAC under their key over "decline" and
     the subject. out stops offering it, seal refuses it, and a No that
-    doesn't prove is never counted (LIMITS.md asked for this verb)."""
+    doesn't prove is never counted (LIMITS.md asked for this verb). A no is
+    final (CONST-V-10)."""
     pile, box, key = tmp_path / "pile", tmp_path / "box", tmp_path / "keys" / "me.key"
     pile.mkdir()
     (pile / "notes.md").write_text("The bus leaves at seven from the square.\n")
@@ -348,6 +395,7 @@ def outside_the_standard_library(names: set[str]) -> set[str]:
 
 
 def test_it_uses_only_the_standard_library_and_never_an_add_on():
+    """The core reaches nothing that extends it (CONST-III-6)."""
     assert (
         outside_the_standard_library(imports(HERE.read_text(encoding="utf-8"))) == set()
     )
@@ -405,7 +453,8 @@ SEED_BITE = "w4 w2 w6 w1 w3 w0"
 
 
 def test_the_rank_is_the_same_under_every_hash_seed():
-    """Scores are exact (Fraction), so the set's walk order can't move them."""
+    """Scores are exact (Fraction), so the set's walk order can't move them:
+    the same question, the same answer (CONST-IV-10)."""
     pile = [
         {"path": f"f{i:02d}.md", "line": 1, "text": t, "id": str(i)}
         for i, t in enumerate(SEED_PILE)
@@ -592,6 +641,16 @@ def test_word_forms_are_one_word(tmp_path):
     assert k.rank(k.chunks(tmp_path), "how much do I still owe dev")
 
 
+def test_a_root_ending_in_eed_keeps_its_d():
+    """Bug #308: feed lost its "ed" and became fee, so a sort phrase "feed"
+    took every Apache-2.0 licence ("charge a fee"), and feed missed feeds."""
+    for w in ("feed", "need", "seed", "speed", "breed", "bleed", "proceed"):
+        assert k.stem(w) == k.stem(w + "s") == k.stem(w + "ing"), w
+        assert k.stem(w) != k.stem(w[:-1]), w
+    assert k.stem("needed") == k.stem("need")
+    assert k.stem("fee") == k.stem("fees")
+
+
 def test_an_accent_typed_one_way_holds_where_it_was_saved_the_other(tmp_path):
     """é is one code point as typed, and often e plus a combining accent as
     macOS saves it. Unmixed, the saved é split into "cafe" and a stray mark,
@@ -720,6 +779,17 @@ def test_every_word_of_a_long_line_is_read(tmp_path):
     )
     read = " ".join(c["text"] for c in k.chunks(tmp_path))
     assert "airlock" in read
+
+
+@pytest.mark.xfail(
+    strict=True,
+    reason="bug #284: html_text splits a word at an inline tag, so re<span>s</span>t reads as re s t",
+)
+def test_an_inline_tag_inside_a_word_leaves_the_word_whole():
+    # Wikisource marks each long s of an old book this way
+    page = '<p>remains always <span class="typographic-long-s">s</span>imilar</p>'
+    assert k.html_text(page).split() == ["remains", "always", "similar"]
+    assert k.html_text("<p>wo<b>rd</b>s</p><p>apart</p>").split() == ["words", "apart"]
 
 
 def test_a_date_inside_a_web_address_dates_nothing():

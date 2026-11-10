@@ -3,6 +3,7 @@ section: Reading more kinds of files
 line: WhatsApp and Telegram exports, one dated line per message.
 source: new
 added: 2026-10-23
+version: 0.1.0
 writes: to
 network: none
 role: reads

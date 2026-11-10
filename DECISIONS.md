@@ -24,7 +24,7 @@ module, `eval`, `exec`, `compile` or `__import__`.
 **It answers only in your own lines, or says it can't.** An answer quoted
 with its file and line can be checked by opening the file; anything else
 asks to be trusted. When the files don't hold it, the exit code is 42, not
-a guess. *Held by:* `kernel.py test`, the eight beats.
+a guess. *Held by:* `kernel.py test`, the twelve beats.
 
 **Nothing becomes an answer until a person approves it with their key.**
 An AI model, a script or another person can suggest; only the key holder

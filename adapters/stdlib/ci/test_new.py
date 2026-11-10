@@ -25,7 +25,8 @@ spec.loader.exec_module(new)
 IDEAS = [
     {"name": "anki-deck", "kind": "stdlib", "section": "Ways to use it",
      "line": "Approved answers as an Anki deck.", "source": "new",
-     "writes": "to", "network": "none", "role": "makes", "tags": "cards"},
+     "writes": "to", "network": "none", "role": "makes", "tags": "cards",
+     "version": "0.0.3"},
     {"name": "pdf-forms", "kind": "deps", "section": "Reading more kinds of files",
      "line": "Filled PDF forms as text.", "source": "new", "needs": "pypdf; BSD-3-Clause",
      "writes": "to", "network": "none", "role": "reads"},
@@ -82,8 +83,8 @@ def test_an_idea_becomes_a_folder_whose_card_is_its_entry(repo):
     card = (repo / "adapters/stdlib/anki-deck/README.md").read_text()
     assert card.startswith(
         "<!-- willow-addon\nsection: Ways to use it\nline: Approved answers as an Anki deck.\n"
-        "source: new\nadded: 2026-11-04\nwrites: to\nnetwork: none\nrole: makes\ntags: cards\n-->\n# anki-deck\n"
-    )
+        "source: new\nadded: 2026-11-04\nversion: 0.1.0\nwrites: to\nnetwork: none\nrole: makes\ntags: cards\n-->\n# anki-deck\n"
+    )  # its idea's 0.0.3 is gone: the first build is 0.1.0
     assert any("COMMANDS" in item for item in left) and any(
         "changelog fragment" in item for item in left
     )

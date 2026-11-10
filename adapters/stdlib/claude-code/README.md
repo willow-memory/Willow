@@ -3,8 +3,10 @@ section: Assistants
 line: Claude Code sees cited passages from your folder with each prompt, through its prompt hook.
 source: bot
 added: 2026-10-24
+version: 0.1.0
 writes: record
 network: none
+hands: the passages served for each prompt, to Claude Code's model
 role: ways
 uses: mcp-lite
 looks-for: index-cache, scan

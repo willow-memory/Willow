@@ -1,8 +1,9 @@
 <!-- willow-addon
 section: Assistants
-line: For a folder, which instruction files each coding agent would load (AGENTS.md, CLAUDE.md, GEMINI.md, rules folders), in what order, with each file's size and hash.
+line: For a folder, which instruction files each coding agent loads (AGENTS.md, CLAUDE.md, GEMINI.md, rules), in what order, with size and hash.
 source: box
 added: 2026-10-29
+version: 0.1.0
 writes: nothing
 network: none
 role: page

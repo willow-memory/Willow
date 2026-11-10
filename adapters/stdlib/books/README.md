@@ -3,6 +3,7 @@ section: Reading more kinds of files
 line: Kindle "My Clippings.txt" highlights and .epub text.
 source: new
 added: 2026-10-23
+version: 0.1.0
 writes: to
 network: none
 role: reads

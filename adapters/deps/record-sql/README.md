@@ -3,6 +3,7 @@ section: Finding things
 line: SQL straight over your record, in place: 'how many answers did I approve in March?'
 source: box
 added: 2026-10-29
+version: 0.1.0
 needs: DuckDB; MIT
 floor: duckdb 1.1.1; the 2020 rule names 0.2.3, built for Python 3.6 to 3.9, and 1.1.1 is the first release with a wheel for Python 3.13 (1.1.0 has none and is compiled from source)
 writes: nothing

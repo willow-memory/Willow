@@ -3,8 +3,10 @@ section: Assistants
 line: Suggestions from whatever model your MCP client already runs, asked through MCP sampling, so willow needs no model or key of its own.
 source: new
 added: 2026-11-05
+version: 0.1.0
 writes: record
 network: none
+hands: your question and the passages served, to the model your MCP client runs
 role: suggests
 uses: openai-compatible
 -->

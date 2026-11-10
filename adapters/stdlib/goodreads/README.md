@@ -3,6 +3,7 @@ section: Reading more kinds of files
 line: Goodreads and StoryGraph exports: the books you've read, when, and what you thought of them.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: to
 network: none
 role: reads

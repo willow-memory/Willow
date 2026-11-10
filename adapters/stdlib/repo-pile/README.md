@@ -3,6 +3,7 @@ section: Ways to use it
 line: Public repositories you list, cloned and made askable, keeping only those under a licence an Apache-2.0 project can use.
 source: new
 added: 2026-10-24
+version: 0.1.0
 writes: record, to
 network: github.com (or the --source you give), to clone the repositories you list
 role: makes

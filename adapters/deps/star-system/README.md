@@ -1,8 +1,9 @@
 <!-- willow-addon
 section: Reading more kinds of files
-line: A friend's star-system simulation (science_bitch) run deterministically and written as cited passages: each body's Kepler period and how well the run conserves energy, angular momentum and linear momentum.
+line: A friend's star-system simulation (science_bitch) run deterministically: each body's Kepler period, and how well the run conserves momentum.
 source: bot
 added: 2026-10-26
+version: 0.1.0
 needs: numpy; BSD-3-Clause
 floor: numpy 2.1.0; the 2020 rule names 1.19, which has no wheel for Python 3.13 (the version the deps CI job runs), and 2.1.0 is the first that does
 writes: to

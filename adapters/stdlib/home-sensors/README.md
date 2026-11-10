@@ -3,6 +3,7 @@ section: Reading more kinds of files
 line: Home Assistant's history export: sensor readings as dated numbers the readings add-on can trend.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: to
 network: none
 role: reads

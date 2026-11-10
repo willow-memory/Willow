@@ -3,6 +3,7 @@ section: Reading more kinds of files
 line: CSV and TSV tables as one passage per row, the header row kept once as the first.
 source: new
 added: 2026-11-02
+version: 0.1.0
 writes: to
 network: none
 role: reads

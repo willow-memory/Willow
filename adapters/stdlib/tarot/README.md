@@ -3,6 +3,7 @@ section: Play
 line: A seeded tarot draw on the record, replayable by anyone with the seed.
 source: new
 added: 2026-10-27
+version: 0.1.0
 writes: record
 network: none
 role: tools

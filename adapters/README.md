@@ -75,6 +75,13 @@ it (`python ui/canvas.py pieces --role ROLE`):
 | `tools` | is run by you, with words or options of its own |
 | `repo` | works on willow's own repository; it has `runs-in: repo`, and only it does |
 
+Two roles have a second level: readers by what their files come from
+(documents, mail and chat, notes and saved pages, exports from apps, code
+and data, media), and the ways in by where you'd be. The UI and the add-on
+list read both from one place, [readme/groups.py](stdlib/readme/groups.py),
+so an add-on sits in the same place on the page and in ADDONS.md; a built
+reader or way in that groups.py doesn't place fails its test.
+
 A reader says what it reads, `reads: .eml, .mbox`: kinds of file by
 extension, or a file it looks for by name (`zotero.sqlite`), or `none` for
 one that reads no kind of file (a repository, a page it fetches). The UI
@@ -96,6 +103,26 @@ add-on to them twice: `stdlib/ci/test_contract.py` fails one whose code reaches 
 add-on its card doesn't name, and `tests:alone` runs each add-on's tests in a
 copy holding only the kernel, the add-on and what it `uses`.
 
+Where its idea or its code came from, when it came from another project, is
+on its card too, idea or built, beside `source`:
+
+    from: shape, https://github.com/wagtail/Willow, BSD-3-Clause
+    from: code, https://github.com/willow-memory/willow-mcp, Apache-2.0
+
+Each part is how it was taken, the address, and that project's licence as
+SPDX writes it (`none` when it has none), with `;` between parts. `shape`
+is the idea rebuilt here, no code taken; `code` is code ported here; `dep`
+is the project installed and used, by a deps add-on that names it in
+`needs`. A project with no licence gives only a shape, and a copyleft one
+gives no code: an add-on is Apache-2.0, and its code can't be GPL's.
+Code taken keeps its notice: a built add-on whose `from` says `code` is
+refused until a NOTICE, LICENSE or COPYING file of the source's is in its
+folder. The list shows it in words, linked. `source: bot` stays the word
+for willow-bot's one script, whose code was rebuilt, not copied.
+
+A header or an idea with a field no card has (`form:` for `from:`) is
+refused, so a field spelt wrong is never read as one left out.
+
 `tags` is optional: one tag of your own, lowercase words joined by -, for
 finding it. The rest are worked out every time the list is written, never
 stored, so they follow the card when it changes: whether it needs an
@@ -116,6 +143,21 @@ goes are said from `needs` and `network`, whatever the tags say.
 |---|---|
 | `writes` | `nothing` (it only prints); `record` (it writes the record, through the kernel); `to` (it writes only where `--to` points: a mirror folder, or one file); or a file of this repo by name, such as `README.md`. Several are joined with commas. |
 | `network` | `none`; `loopback` (this machine only); or what it reaches and why, such as `api.anthropic.com, to ask for suggestions`. |
+| `version` | `MAJOR.MINOR.PATCH`: an idea is 0.0.N from 0.0.1, its first build 0.1.0, and each pull request that changes it steps it once, by the size of the change ([Releases](../CONTRIBUTING.md#releases)). `adapters/stdlib/ci/versions.py` holds the step. |
+| `hands` | Only when it gives another program something that program may send on, such as an assistant's model: what it gives, and to whom, such as `the passages served for each prompt, to Claude Code's model`. Left off when it hands nothing; never `none`. |
+
+`network` is what the add-on itself connects to, and the guard sees it.
+`hands` is what it passes to a program that may send it on, which no guard
+on this machine can follow: a hook's context, an MCP server's results, a
+sampling request. The law asks that what leaves is said before it leaves
+(III.5), and an add-on can't know where the program it hands to sends
+things, so the card says what it hands and to whom, and installing it is
+the person's yes. `readme.py check` refuses a card with no `hands` line
+whose code writes a hook's `additionalContext`, a JSON-RPC reply, a
+sampling request or an MCP SDK server, unless its reason for handing
+nothing is written beside the check. A hook that hands text on through
+plain standard output can't be told from its code; the stack in
+`adapters/stdlib/stack/examples/hands.md` lists every place that might.
 
 Three more hold for every add-on, whatever its card says: it never changes
 an original (the folder given to `--from`, or a box's pile), never writes a

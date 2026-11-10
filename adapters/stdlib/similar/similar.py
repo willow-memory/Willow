@@ -109,7 +109,14 @@ idea ideas com www http https org toward nearly three four five ons guess
 TOPIC_USE = (2, 25)
 NEIGHBOURS = 6
 #: what the install and network tags can be; the card's own tag is never one
-FACT_TAGS = {"no-install", "needs-install", "offline", "this-machine", "online"}
+FACT_TAGS = {
+    "no-install",
+    "needs-install",
+    "offline",
+    "this-machine",
+    "online",
+    "to-a-model",
+}
 
 
 def card_text(a: dict, root: Path = ROOT) -> str:
@@ -140,6 +147,8 @@ def topic_words(text: str) -> list[tuple[str, str]]:
 
 def facts_tags(a: dict) -> list[str]:
     net = {"none": "offline", "loopback": "this-machine"}.get(a["network"], "online")
+    if a.get("hands") and net != "online":  # it reaches nothing, but hands on
+        net = "to-a-model"
     return ["no-install" if a["kind"] == "stdlib" else "needs-install", net]
 
 
@@ -185,7 +194,11 @@ def worked_out(every: list[dict], root: Path = ROOT) -> dict[str, dict]:
                 topics.append(word)
             if len(topics) == 2:
                 break
-        out[n] = {"tags": facts_tags(a) + topics + own, "near": nb[:3]}
+        out[n] = {
+            "tags": facts_tags(a) + topics + own,
+            "near": nb[:3],
+            "topics": topics,
+        }
     return out
 
 

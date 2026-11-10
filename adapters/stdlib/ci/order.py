@@ -15,7 +15,7 @@ The lists:
   at the end;
 - adapters/planned.json, by name, written as it always is;
 - FILES.md's folders kept A to Z, with a slip or two by hand
-  (files.py's rule), and demo/ always, each entry with its notes and
+  (files.py's rule), but adapters/stdlib/, in groups.py's order, and demo/ always, each entry with its notes and
   what's under it; a folder in an order of its own is left as it is.
 
 `check` names each list out of order; `write` puts it in order and moves
@@ -160,8 +160,13 @@ def run(root: Path, write: bool) -> list[str]:
             )
     files = _files_mod(root)
     doc = root / "FILES.md"
-    tree = files.Tree(doc.read_text(encoding="utf-8"))
-    folders = ["", *sorted(tree.folders())]
+    places = files.places(root)
+    tree = files.Tree(doc.read_text(encoding="utf-8"), places)
+    # adapters/stdlib/ is in groups.py's order when there's one (files.py)
+    folders = [
+        "",
+        *sorted(f for f in tree.folders() if not (places and f == files.STDLIB)),
+    ]
     moved = [f for f in folders if tree.sort(f, always=f in ALWAYS)]
     out += [f"FILES.md: {f or 'willow'}/" for f in moved]
     if write and moved:

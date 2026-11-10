@@ -1,8 +1,9 @@
 <!-- willow-addon
 section: Finding things
-line: Finds the passage length that suits your folder, by asking your own answered questions at several lengths and naming the one that finds the most.
+line: Finds the passage length that suits your folder, by asking your answered questions at several lengths and naming the one finding the most.
 source: bot
 added: 2026-10-28
+version: 0.1.0
 writes: nothing
 network: none
 role: tools

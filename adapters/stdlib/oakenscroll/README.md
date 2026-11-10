@@ -3,6 +3,7 @@ section: Reading more kinds of files
 line: Oakenscroll's Office prediction ledger as dated passages you can ask: what you believed, how sure you were, and how it turned out.
 source: new
 added: 2026-11-01
+version: 0.1.0
 writes: to
 network: none
 role: reads

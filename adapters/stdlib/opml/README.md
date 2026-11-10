@@ -3,6 +3,7 @@ section: Reading more kinds of files
 line: OPML feed and podcast lists, a line per feed under its folder, and outliner exports as indented items with their notes.
 source: new
 added: 2026-11-02
+version: 0.1.0
 writes: to
 network: none
 role: reads

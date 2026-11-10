@@ -3,6 +3,7 @@ section: Reading more kinds of files
 line: Readwise's highlights export: every highlight with its book or article, and your note on it.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: to
 network: none
 role: reads

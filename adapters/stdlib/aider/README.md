@@ -3,6 +3,7 @@ section: Assistants
 line: Aider reads answers from your folder with its /run command, file and line included.
 source: new
 added: 2026-10-24
+version: 0.1.0
 writes: nothing
 network: none
 role: ways

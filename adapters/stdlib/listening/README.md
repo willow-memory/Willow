@@ -3,6 +3,7 @@ section: Reading more kinds of files
 line: Spotify's data download: what you listened to, by day, so you can ask what was on that summer.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: to
 network: none
 role: reads

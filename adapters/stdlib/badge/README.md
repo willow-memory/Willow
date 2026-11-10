@@ -3,6 +3,7 @@ section: Ways to use it
 line: A badge for a page: these answers came from these files and were approved, linked to the check anyone can run.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: to
 network: none
 role: makes

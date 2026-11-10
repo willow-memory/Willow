@@ -3,6 +3,7 @@ section: Assistants
 line: Whether this machine's GPU, NPU or Apple silicon can run a local model, and about how fast, before you download one.
 source: new
 added: 2026-11-02
+version: 0.1.0
 writes: nothing
 network: none
 role: suggests

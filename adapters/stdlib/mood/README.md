@@ -3,6 +3,7 @@ section: Keeping track
 line: Mood scores you write in a journal, over weeks and months.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: nothing
 network: none
 role: page

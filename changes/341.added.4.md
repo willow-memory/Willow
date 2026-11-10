@@ -1,0 +1,1 @@
+`projects`: every project under one folder: its records, its stacks, and each stack's runs, a run tied to its stack by its steps and not its folder's name, so a page, a terminal or an assistant can ask what there is to go back to

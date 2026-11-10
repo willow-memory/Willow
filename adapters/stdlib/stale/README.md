@@ -3,6 +3,7 @@ section: Trust and proof
 line: Approved answers whose cited passage has changed or gone. Citations are content hashes, so it's exact.
 source: box
 added: 2026-10-23
+version: 0.1.0
 writes: nothing
 network: none
 role: page

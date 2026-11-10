@@ -1,0 +1,1 @@
+`before-copy` (idea): a file beside the dated copy kept before changing it (`plan.py.pre-2026-09-30`, `notes.md.bak`), side by side: what changed since the copy was made, and the copies whose file is gone. `diverge` compares two folders or zips, not a file with the copy beside it

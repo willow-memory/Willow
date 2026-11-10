@@ -3,6 +3,7 @@ section: Ways to use it
 line: Each answer as a link that opens the file at the line (RFC 5147 lines, browser text fragments).
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: nothing
 network: none
 role: page

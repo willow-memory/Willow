@@ -3,6 +3,7 @@ section: Keeping track
 line: Where a log you keep stops: the days a daily note, reading or diary skipped, said as gaps, not left out.
 source: new
 added: 2026-10-24
+version: 0.1.0
 writes: nothing
 network: none
 role: page

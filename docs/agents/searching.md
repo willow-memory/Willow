@@ -5,7 +5,7 @@ of [AGENTS.md](../../AGENTS.md).
 
 `kernel.rank` serves a passage only when it holds half the question's content
 words. That is the promise that an answer the folder doesn't have is never
-invented, and the eight beats in `test_kernel.py` test it.
+invented, and the beats of `kernel.py test` test it.
 
 - **Don't loosen it for recall.** A third of the words, or any two, finds a
   few more on code, but answers questions about something else several times

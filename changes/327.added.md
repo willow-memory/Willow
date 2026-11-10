@@ -1,0 +1,1 @@
+`chain-check` (idea): a hash-chained JSONL log that isn't willow's own record (each row naming the hash of the one before) checked link by link, saying where its chain holds and the first row where it breaks. `kernel.py verify` checks willow's record and nothing else; other tools keep the same shape, an agent campaign's ledger among them

@@ -88,7 +88,7 @@ def test_an_author_login_that_isnt_one_is_left_out(stand_ins, tmp_path):
 FILES = ["kernel.py", "README.md", "FILES.md", ".github/workflows/ci.yml",
          ".github/workflows/law.yml",
          ".github/ISSUE_TEMPLATE/idea.yml", ".github/ISSUE_TEMPLATE/security.yml",
-         "adapters/stdlib/readme/readme.py"]  # fmt: skip
+         "adapters/stdlib/readme/readme.py", "adapters/stdlib/readme/groups.py"]  # fmt: skip
 
 
 def test_the_repos_github_folder_holds():
@@ -310,18 +310,46 @@ def ci_text() -> str:
     return (ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8")
 
 
+#: the mutants job's condition: main's commit only, on a push the queue didn't run
+MUTANTS_IF = "    if: ${{ github.event_name != 'pull_request' && !failure() && !cancelled() && needs.queued.outputs.tested != 'true' }}\n"
+
+
 def test_a_push_only_job_needs_a_pull_request_job_that_plans_its_gates():
     ci = ci_text()
-    assert "    if: github.event_name == 'push'\n    runs-on" in ci
+    assert ci.count(MUTANTS_IF) == 1, (
+        "the mutants job's condition, as these plants read it"
+    )
     assert gh.split_problems(ci) == []
     # no reach job at all: the mutants gates are dropped from pull requests
     whole = re.sub(r"^  mutants-reach:\n.*?(?=^  \S)", "", ci, flags=re.M | re.S)
     assert "\n  mutants-reach:\n" not in whole
     got = gh.split_problems(whole)
     assert len(got) == 1 and "mutants job is skipped on pull requests" in got[0]
+    # the old shape, push alone, is held the same way
+    push = whole.replace(MUTANTS_IF, "    if: github.event_name == 'push' && needs.queued.outputs.tested != 'true'\n")  # fmt: skip
+    assert any("mutants job is skipped on pull requests" in p for p in gh.split_problems(push))  # fmt: skip
     # a job on pull requests only, with no push side, runs its gates on no push
-    only = ci.replace("    if: github.event_name == 'push'\n    runs-on", "    if: github.event_name == 'pull_request'\n    runs-on", 1)  # fmt: skip
+    only = ci.replace(MUTANTS_IF, "    if: github.event_name == 'pull_request'\n")
     assert any("mutants:again in no job" in p for p in gh.split_problems(only))
-    # a job with no condition runs on both pushes and pull requests
-    both = ci.replace("    if: github.event_name == 'push'\n    runs-on", "    runs-on", 1)  # fmt: skip
+    # a job that runs on pull requests too still stands down on a queued push
+    both = ci.replace(MUTANTS_IF, "    if: ${{ !failure() && !cancelled() && needs.queued.outputs.tested != 'true' }}\n")  # fmt: skip
     assert gh.split_problems(both) == []
+
+
+def test_every_job_that_runs_a_gate_stands_on_the_queues_run_of_a_pushed_commit():
+    ci = ci_text()
+    # tests runs its gates again on a push the queue ran
+    loose = ci.replace("    needs: [queued, lint, against, changelog]\n", "    needs: [lint, against, changelog]\n", 1)  # fmt: skip
+    got = gh.split_problems(loose)
+    assert any("tests job runs gates again on a push the merge queue" in p for p in got), got  # fmt: skip
+    unasked = ci.replace("&& needs.queued.outputs.tested != 'true' }}\n    runs-on: ubuntu-24.04\n    steps:\n      - uses: actions/checkout@v7\n      - uses: actions/setup-python@v7\n        with:\n          python-version: \"3.13\"\n      - run: pip install ruff", "}}\n    runs-on: ubuntu-24.04\n    steps:\n      - uses: actions/checkout@v7\n      - uses: actions/setup-python@v7\n        with:\n          python-version: \"3.13\"\n      - run: pip install ruff", 1)  # fmt: skip
+    assert unasked != ci, "the lint job's condition, as this plant reads it"
+    got = gh.split_problems(unasked)
+    assert any("lint job runs gates again" in p for p in got), got
+    # the queued job asks for any run, not the queue's green run of this commit
+    for old, new in (('--commit "$GITHUB_SHA" ', ""), ("--status success ", ""), ("--event merge_group", "--event push")):  # fmt: skip
+        assert old in ci
+        got = gh.split_problems(ci.replace(old, new, 1))
+        assert any("no queued job" in p for p in got), (old, got)
+    gone = re.sub(r"^  queued:\n.*?(?=^  \S)", "", ci, flags=re.M | re.S)
+    assert any("no queued job" in p for p in gh.split_problems(gone))

@@ -3,6 +3,7 @@ section: Keeping track
 line: Market calls kept as wagers on the record ('SPY closes up on Friday'), settled later by your seal, with the losers kept.
 source: bot
 added: 2026-11-01
+version: 0.1.0
 writes: record
 network: none
 role: tools

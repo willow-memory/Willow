@@ -1,0 +1,1 @@
+`glance`: what a scan found, a line a question: where its best passage is, how it opens, and for one held only in part, how many of the question's words it holds and which it lacks, the thinnest first

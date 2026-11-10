@@ -3,6 +3,7 @@ section: Keeping track
 line: Attendance for a class, club or group, from your register, by week.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: nothing
 network: none
 role: page

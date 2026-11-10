@@ -3,6 +3,7 @@ section: Keeping track
 line: Passports, licences, insurance and memberships: when each expires, from your documents.
 source: new
 added: 2026-10-27
+version: 0.1.0
 writes: nothing
 network: none
 role: page

@@ -151,6 +151,25 @@ def test_highlight_has_iso_date_and_page_and_note_is_kept(tmp_path):
     assert "Remember the second pier.\n" in text  # a note is kept
 
 
+def test_clipping_text_right_after_the_meta_line_is_kept(tmp_path):
+    """Kindle usually blanks a line after the meta line; without that blank
+    the highlight text is still the next non-empty line, not skipped."""
+    raw = (
+        "Harbour\n"
+        "- Your Highlight on page 1 | Location 1 | "
+        "Added on Sunday, 3 March 2024 10:15:22\n"
+        "The tide keeps its own calendar.\n"
+        "\n"
+        "==========\n"
+    )
+    folder, to = tmp_path / "f", tmp_path / "m"
+    (folder / "kindle").mkdir(parents=True)
+    (folder / "kindle" / "My Clippings.txt").write_text(raw, encoding="utf-8")
+    assert mirror(folder, to).returncode == 0
+    text = (to / "kindle" / "My Clippings.txt.txt").read_text(encoding="utf-8")
+    assert "The tide keeps its own calendar.\n" in text
+
+
 def test_both_added_on_formats_read_to_the_same_iso_day(tmp_path):
     folder, to = tmp_path / "f", tmp_path / "m"
     (folder / "kindle").mkdir(parents=True)

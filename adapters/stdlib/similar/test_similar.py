@@ -32,12 +32,12 @@ def test_the_real_list_has_no_two_entries_the_same():
 def test_near_serves_a_built_add_on_and_an_idea_with_the_words_they_share():
     every = sim.entries()
     found = {a["name"]: shared for a, shared in sim.near(every, "Text out of PDFs.")}
-    assert "pdf" in found and "ocr" in found and "dictate" in found
+    assert "pdf" in found and "ocr" in found and "file-kind" in found
     assert {"pdfs", "text"} <= set(found["pdf"])
     lines = cli("near", "Text out of PDFs.").stdout
     assert "[**pdf**](adapters/deps/pdf/), built: connect to it." in lines
     assert "[**ocr**](adapters/deps/ocr/), built: connect to it." in lines
-    assert "**dictate**, an idea already on the list." in lines
+    assert "**file-kind**, an idea already on the list." in lines
 
 
 def test_a_long_line_still_finds_the_short_entry_it_contains():
@@ -121,6 +121,17 @@ def test_a_tag_follows_the_card_when_the_card_changes():
     vim = next(a for a in every if a["name"] == "vim")
     moved = [a if a is not vim else {**vim, "network": "loopback"} for a in every]
     assert sim.worked_out(moved)["vim"]["tags"][1] == "this-machine"
+
+
+def test_an_add_on_that_hands_on_to_a_model_is_never_tagged_offline():
+    """It reaches nothing itself, but what it hands an assistant's model may
+    leave: the card's hands line says so, and the tag says it too (CONST-III-5)."""
+    got = sim.worked_out(sim.entries())
+    assert got["mcp-sampling"]["tags"][1] == "to-a-model"
+    assert got["claude-code"]["tags"][1] == "to-a-model"
+    assert got["vim"]["tags"][1] == "offline"  # it shows answers to the person
+    online = {"name": "x", "kind": "deps", "network": "api.example.com", "hands": "h"}
+    assert sim.facts_tags(online)[1] == "online"  # what it reaches comes first
 
 
 def test_a_topic_never_says_the_authors_own_tag_again():

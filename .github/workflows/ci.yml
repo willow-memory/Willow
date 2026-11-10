@@ -31,10 +31,12 @@ permissions:
 # a duplicate add-on costs four jobs, not fourteen. first is not among them:
 # it runs what a change reaches, which for a wide change is minutes (18 on a
 # pull request converting seven add-ons), so it runs beside the rest as the
-# early word it was meant to be. On a push to main two of the three don't
+# early word it was meant to be. On main's commit two of the three don't
 # run, so the heavy jobs say `!failure() && !cancelled()`: they wait for what
-# ran and go on past what was skipped. mutants runs on pushes only and waits
-# on lint alone.
+# ran and go on past what was skipped. mutants runs on main's commit only and
+# waits on lint alone. Each job that runs a gate also needs `queued`, which on
+# a push says whether the merge queue already ran this very commit, and
+# stands down when it did.
 #
 # bash's own pipefail: each check below is piped through tee, for ci-why to
 # read when it fails, and the step must still fail with it
@@ -113,6 +115,11 @@ jobs:
           BASE: origin/${{ github.base_ref }}
           PR: ${{ github.event.number }}
         run: python adapters/stdlib/ci/changelog.py --base "$BASE" --pr "$PR"
+      # each add-on and idea it changed steps its version, once
+      # (CONTRIBUTING.md, Releases): the same base, the same pull request
+      - env:
+          BASE: origin/${{ github.base_ref }}
+        run: python adapters/stdlib/ci/versions.py check --base "$BASE"
 
   against:
     # This pull request held to the other open ones (adapters/stdlib/against):
@@ -198,7 +205,38 @@ jobs:
       - if: failure()
         run: python adapters/stdlib/ci-why/ci_why.py "$RUNNER_TEMP/ci.log" >> "$GITHUB_STEP_SUMMARY" || true
 
+  queued:
+    # A push to main is a commit the merge queue has already run, whole and
+    # on every Python, as main with every pull request ahead of it: GitHub
+    # moves main to the very commit the queue tested. So a push stands on
+    # that run when it passed: every job here that runs a gate skips, and
+    # what reads main's records (mutants-reach, deps, red-on-main, times.py)
+    # finds the queue's run by adapters/stdlib/ci/main_run.py. A push the
+    # queue didn't test, or one gh can't say of, runs every gate, as before.
+    # github.py check holds each job that runs a gate to it.
+    if: github.event_name == 'push'
+    runs-on: ubuntu-24.04
+    permissions:
+      actions: read
+    outputs:
+      tested: ${{ steps.find.outputs.tested }}
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - id: find
+        run: |
+          id=$(gh run list -R "$GITHUB_REPOSITORY" --workflow ci.yml --event merge_group --commit "$GITHUB_SHA" --status success -L 1 --json databaseId -q '.[].databaseId' 2>/dev/null || true)
+          if [ -n "$id" ]; then
+            echo "tested=true" >> "$GITHUB_OUTPUT"
+            echo "Stood on the merge queue's green run $id of this commit: no gate runs again here." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "tested=false" >> "$GITHUB_OUTPUT"
+            echo "No green merge-queue run of this commit to stand on: every gate runs here." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
   lint:
+    needs: [queued]
+    if: ${{ !failure() && !cancelled() && needs.queued.outputs.tested != 'true' }}
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
@@ -220,7 +258,8 @@ jobs:
   tests:
     # kernel.py says 3.9+, so 3.9 is in the matrix, not assumed; a pull request
     # runs 3.9 and 3.14 only, since the six Pythons were 72 of its 84 jobs
-    # behind a 20-job limit, and a push to main runs all six. Every gate of
+    # behind a 20-job limit, and main's commit runs all six (in the merge
+    # queue, or on the push when the queue didn't test it). Every gate of
     # the tests part but tests:strip, which the strip job runs beside it on
     # the same Pythons: it runs the add-ons' tests again in a copy without
     # GitHub, so in one job it doubled the time. github.py check holds the two
@@ -229,18 +268,18 @@ jobs:
     # cores and a job used one, and the job's wall time was its slowest gate
     # (about nine minutes) whatever the cut. cores.py runs ci.py's --shard
     # parts at once, four to a runner, so they end about together. A pull
-    # request is 14 jobs, not 36, and a push to main 30, not 84, behind the
+    # request is 14 jobs, not 36, and main's commit 30, not 84, behind the
     # 20-job limit. tests:alone starts a pool of its own, a thread for each
     # core, so under four shards the cores are oversubscribed; that is slower
     # than it could be, not wrong, and alone.py is left as it is.
-    needs: [lint, against, changelog]
-    if: ${{ !failure() && !cancelled() }}
+    needs: [queued, lint, against, changelog]
+    if: ${{ !failure() && !cancelled() && needs.queued.outputs.tested != 'true' }}
     runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
         python-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
-        # A pull request runs the oldest and newest Python; a push to main
+        # A pull request runs the oldest and newest Python; main's commit
         # runs all six.
         exclude: ${{ github.event_name == 'pull_request' && fromJSON('[{"python-version":"3.10"},{"python-version":"3.11"},{"python-version":"3.12"},{"python-version":"3.13"}]') || fromJSON('[]') }}
     steps:
@@ -256,7 +295,7 @@ jobs:
       # adapters/stdlib/ci/times.py to keep test-times.json to
       - run: python adapters/stdlib/ci/cores.py --jobs 4 --box ${{ runner.temp }}/ci-record tests --without tests:strip | tee "$RUNNER_TEMP/ci.log"
         env:
-          WILLOW_JUNIT_DIR: ${{ github.event_name == 'push' && matrix.python-version == '3.13' && format('{0}/junit', runner.temp) || '' }}
+          WILLOW_JUNIT_DIR: ${{ github.event_name != 'pull_request' && matrix.python-version == '3.13' && format('{0}/junit', runner.temp) || '' }}
       - if: failure()
         run: python adapters/stdlib/ci-why/ci_why.py "$RUNNER_TEMP/ci.log" >> "$GITHUB_STEP_SUMMARY" || true
       - if: always()
@@ -266,7 +305,7 @@ jobs:
         with:
           name: ci-record-tests-${{ matrix.python-version }}
           path: ${{ runner.temp }}/ci-record/*/record.jsonl
-      - if: github.event_name == 'push' && matrix.python-version == '3.13'
+      - if: github.event_name != 'pull_request' && matrix.python-version == '3.13'
         uses: actions/upload-artifact@v7
         with:
           name: test-times
@@ -277,14 +316,14 @@ jobs:
     # add-on, each still passing. Four gates, tests:strip-1 to -4, each a
     # share of the add-ons' tests in the stripped copy. One job on each
     # Python, the four run at once by cores.py, as the tests job does.
-    needs: [lint, against, changelog]
-    if: ${{ !failure() && !cancelled() }}
+    needs: [queued, lint, against, changelog]
+    if: ${{ !failure() && !cancelled() && needs.queued.outputs.tested != 'true' }}
     runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
         python-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
-        # A pull request runs the oldest and newest Python; a push to main
+        # A pull request runs the oldest and newest Python; main's commit
         # runs all six.
         exclude: ${{ github.event_name == 'pull_request' && fromJSON('[{"python-version":"3.10"},{"python-version":"3.11"},{"python-version":"3.12"},{"python-version":"3.13"}]') || fromJSON('[]') }}
     steps:
@@ -305,8 +344,8 @@ jobs:
           path: ${{ runner.temp }}/ci-record/*/record.jsonl
 
   ports:
-    needs: [lint, against, changelog]
-    if: ${{ !failure() && !cancelled() }}
+    needs: [queued, lint, against, changelog]
+    if: ${{ !failure() && !cancelled() && needs.queued.outputs.tested != 'true' }}
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
@@ -323,7 +362,7 @@ jobs:
       - uses: actions/setup-dotnet@v6
         with:
           dotnet-version: "8.0.x"
-      - uses: actions/setup-go@v5
+      - uses: actions/setup-go@v7
         with:
           go-version: "1.24"
       - uses: dtolnay/rust-toolchain@stable
@@ -339,8 +378,8 @@ jobs:
           path: ${{ runner.temp }}/ci-record/record.jsonl
 
   demo:
-    needs: [lint, against, changelog]
-    if: ${{ !failure() && !cancelled() }}
+    needs: [queued, lint, against, changelog]
+    if: ${{ !failure() && !cancelled() && needs.queued.outputs.tested != 'true' }}
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
@@ -367,12 +406,13 @@ jobs:
     # adapters/stdlib/mutants/accepted.json gives the reason it's harmless.
     # Cut in four by ci.py's --shard, each add-on in one of them: the gates
     # take seconds each, so a cut by count ends the four about together.
-    # A push to main runs all of them, so the merge's receipt is whole and
-    # is the record mutants-reach below stands a pull request's gates on; a
+    # Main's commit runs all of them (in the merge queue, or on the push
+    # when the queue didn't test it), so the merge's receipt is whole and is
+    # the record mutants-reach below stands a pull request's gates on; a
     # pull request runs mutants-reach instead (github.py check holds the two
     # to the whole part).
-    needs: [lint]
-    if: github.event_name == 'push'
+    needs: [queued, lint]
+    if: ${{ github.event_name != 'pull_request' && !failure() && !cancelled() && needs.queued.outputs.tested != 'true' }}
     runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
@@ -408,8 +448,8 @@ jobs:
     # beside this one, and planned against this tree. A gate whose reach
     # holds the same bytes as main's keeps main's verdict; this job's record
     # holds only what it ran, never main's verdicts, and the summary names
-    # the run they are from. The merge's evidence stays whole, since a push
-    # to main runs every gate (the mutants job).
+    # the run they are from. The merge's evidence stays whole, since main's
+    # commit runs every gate (the mutants job, in the queue or on the push).
     # Never silent, never short: with no green run of main, no artifact to
     # download, or a pin ci-memo refuses (the records are of another tree),
     # this job runs the whole part, and says why in the summary.
@@ -447,7 +487,8 @@ jobs:
             touch "$RUNNER_TEMP/whole"
             exit 0
           }
-          found=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow ci.yml --branch main --event push --status success --limit 1 --json databaseId,headSha --jq '.[] | "\(.databaseId) \(.headSha)"') || fallback "gh couldn't list main's runs."
+          # main's push run, or the queue's run of its commit when the push stood on it
+          found=$(python adapters/stdlib/ci/main_run.py --repo "$GITHUB_REPOSITORY" --artifact 'ci-record-mutants-*' 2> "$RUNNER_TEMP/main.err") || fallback "no run of main's holds its mutants records: $(cat "$RUNNER_TEMP/main.err")"
           read -r id sha <<< "$found"
           [ -n "${sha:-}" ] || fallback "main has no successful ci run."
           gh run download "$id" --repo "$GITHUB_REPOSITORY" -p 'ci-record-mutants-*' -D "$RUNNER_TEMP/main-records" || fallback "main's run $id has no mutants records to download (expired, say)."
@@ -502,9 +543,17 @@ jobs:
     # runner's Ubuntu: tesseract for ocr, bubblewrap for kart (gpg, for pgp,
     # comes with the image). Ubuntu 24.04 keeps unprivileged user namespaces
     # behind AppArmor, and bwrap needs one, so this runner lets them be made.
-    needs: [lint, against, changelog]
-    if: ${{ !failure() && !cancelled() }}
+    # On a pull request, main's last deps record is fetched first: a gate
+    # whose key (its folder, kernel.py, ci.py, the guard, its pins, the
+    # Python) has a satisfied verdict there is held, not reinstalled. A push
+    # to main fetches nothing and runs every gate, so a bad hold is caught on
+    # the next merge; a record that can't be fetched holds nothing.
+    needs: [queued, lint, against, changelog]
+    if: ${{ !failure() && !cancelled() && needs.queued.outputs.tested != 'true' }}
     runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      actions: read
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
@@ -513,6 +562,20 @@ jobs:
       - run: sudo apt-get update -q && sudo apt-get install -y -q tesseract-ocr bubblewrap
       - run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - run: pip install pip-audit==2.10.1
+      - if: github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        # main's green runs only (its push run, or the queue's run of the
+        # commit it stood on), by adapters/stdlib/ci/main_run.py: never an
+        # artifact found by name, which a pull request from a fork's own main
+        # could have uploaded
+        run: |
+          read -r id _ <<< "$(python adapters/stdlib/ci/main_run.py --repo "$GITHUB_REPOSITORY" --artifact ci-record-deps || true)"
+          if [ -n "${id:-}" ] && gh run download "$id" -R "$GITHUB_REPOSITORY" -n ci-record-deps -D "$RUNNER_TEMP/held" 2>/dev/null; then
+            echo "held by main's deps record, run $id"
+            echo "WILLOW_HELD_RECORD=$RUNNER_TEMP/held/record.jsonl" >> "$GITHUB_ENV"
+          fi
+          [ -f "$RUNNER_TEMP/held/record.jsonl" ] || echo "no deps record from main to hold by: every deps gate runs"
       - run: python adapters/stdlib/ci/ci.py run deps --box ${{ runner.temp }}/ci-record | tee "$RUNNER_TEMP/ci.log"
       - if: failure()
         run: python adapters/stdlib/ci-why/ci_why.py "$RUNNER_TEMP/ci.log" --record "$RUNNER_TEMP/ci-record/record.jsonl" >> "$GITHUB_STEP_SUMMARY" || true
@@ -529,8 +592,8 @@ jobs:
     # add-on prints (adapters/stdlib/live/live.py). Pinned, so a run says
     # which version read them; one that didn't install is unreachable, and
     # an unreachable gate fails this job: nothing here passes unchecked.
-    needs: [lint, against, changelog]
-    if: ${{ !failure() && !cancelled() }}
+    needs: [queued, lint, against, changelog]
+    if: ${{ !failure() && !cancelled() && needs.queued.outputs.tested != 'true' }}
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
@@ -558,3 +621,40 @@ jobs:
         with:
           name: ci-record-tools
           path: ${{ runner.temp }}/ci-record/record.jsonl
+
+  red-on-main:
+    # A red pull request's failing checks held to main's last push run that
+    # kept its records: one red on main too is said not to be this change's,
+    # one green there is, in the run's summary, so nobody chases main's own
+    # failure as theirs (adapters/stdlib/red-on-main). It runs only on a red
+    # pull request, and says nothing when main's records can't be fetched.
+    needs: [lint, tests, strip, ports, demo, mutants-reach, deps, tools]
+    if: ${{ failure() && github.event_name == 'pull_request' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - uses: actions/download-artifact@v7
+        with:
+          pattern: ci-record-*
+          path: ${{ runner.temp }}/pr
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # main's push run, or the queue's run of its commit when the push stood on it
+          read -r id sha <<< "$(python adapters/stdlib/ci/main_run.py --repo "$GITHUB_REPOSITORY" --artifact 'ci-record-*' || true)"
+          if [ -z "${id:-}" ] || ! gh run download "$id" -R "$GITHUB_REPOSITORY" -p 'ci-record-*' -D "$RUNNER_TEMP/main" 2>/dev/null; then
+            sha=""
+          fi
+          if [ -n "$sha" ]; then
+            { echo '### Red on main too?'; echo; echo '```'
+              python adapters/stdlib/red-on-main/red_on_main.py --pr "$RUNNER_TEMP/pr" --main "$RUNNER_TEMP/main" --main-sha "$sha" || true
+              echo '```'; } | tee -a "$GITHUB_STEP_SUMMARY"
+          else
+            echo "no record of main's to hold the failing checks to" | tee -a "$GITHUB_STEP_SUMMARY"
+          fi

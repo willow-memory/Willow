@@ -3,6 +3,7 @@ section: Keeping track
 line: Home upkeep: the boiler service, the filters, the gutters, what's due and when it was last done.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: nothing
 network: none
 role: page

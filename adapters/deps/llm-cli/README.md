@@ -3,10 +3,12 @@ section: Assistants
 line: Suggestions through the llm command, so any model its plugins reach (local or hosted) can hand one in, with llm's own log naming the model.
 source: new
 added: 2026-11-05
+version: 0.1.0
 needs: llm and the plugin for your model; Apache-2.0
 floor: llm 0.28; the rule names 0.1, its first release (2023), but llm up to 0.27.1 has a known advisory (PYSEC-2026-400, code run by --functions, which willow never passes), so 0.28 is the first safe one
 writes: record
 network: the model its plugin reaches, to ask for suggestions
+hands: your question and the passages served, to the llm command and the model it runs
 role: suggests
 uses: openai-compatible
 -->

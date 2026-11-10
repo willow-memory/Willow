@@ -7,7 +7,8 @@
   "source": "new",
   "writes": "to",
   "network": "none",
-  "role": "makes"
+  "role": "makes",
+  "version": "0.0.1"
  },
  {
   "name": "apple-notes",
@@ -17,7 +18,8 @@
   "source": "new",
   "writes": "to",
   "network": "none",
-  "role": "reads"
+  "role": "reads",
+  "version": "0.0.1"
  },
  {
   "name": "archivebox",
@@ -27,7 +29,8 @@
   "source": "new",
   "writes": "to",
   "network": "none",
-  "role": "reads"
+  "role": "reads",
+  "version": "0.0.1"
  },
  {
   "name": "art-of-the-day",
@@ -37,7 +40,8 @@
   "source": "new",
   "writes": "record",
   "network": "collectionapi.metmuseum.org, to read the artwork",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "ask-later",
@@ -47,7 +51,8 @@
   "source": "new",
   "writes": "record",
   "network": "none",
-  "role": "page"
+  "role": "page",
+  "version": "0.0.1"
  },
  {
   "name": "basic-memory",
@@ -57,7 +62,8 @@
   "source": "new",
   "writes": "record",
   "network": "none",
-  "role": "suggests"
+  "role": "suggests",
+  "version": "0.0.1"
  },
  {
   "name": "beacon",
@@ -67,7 +73,8 @@
   "source": "bot",
   "writes": "record",
   "network": "api.drand.sh, to read a beacon round's randomness",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "bedrock",
@@ -78,7 +85,19 @@
   "needs": "boto3; Apache-2.0",
   "writes": "record",
   "network": "Amazon Bedrock's endpoint in your region, to ask for suggestions",
-  "role": "suggests"
+  "role": "suggests",
+  "version": "0.0.1"
+ },
+ {
+  "name": "before-copy",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "A file beside its dated before-copy (plan.py.pre-2026-09-30, notes.md.bak) side by side: what changed since the copy was made.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "bluesky",
@@ -88,7 +107,8 @@
   "source": "new",
   "writes": "to",
   "network": "none",
-  "role": "reads"
+  "role": "reads",
+  "version": "0.0.1"
  },
  {
   "name": "bm25",
@@ -98,7 +118,8 @@
   "source": "new",
   "writes": "nothing",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "browser-model",
@@ -108,7 +129,8 @@
   "source": "new",
   "writes": "record",
   "network": "loopback",
-  "role": "suggests"
+  "role": "suggests",
+  "version": "0.0.1"
  },
  {
   "name": "by-function",
@@ -119,7 +141,8 @@
   "needs": "tree-sitter and its language pack; MIT",
   "writes": "to",
   "network": "none",
-  "role": "makes"
+  "role": "makes",
+  "version": "0.0.1"
  },
  {
   "name": "canvas",
@@ -129,7 +152,8 @@
   "source": "new",
   "writes": "to",
   "network": "none",
-  "role": "reads"
+  "role": "reads",
+  "version": "0.0.1"
  },
  {
   "name": "care",
@@ -139,17 +163,41 @@
   "source": "box",
   "writes": "nothing",
   "network": "none",
-  "role": "page"
+  "role": "page",
+  "version": "0.0.1"
  },
  {
   "name": "cassettes",
   "kind": "stdlib",
   "section": "Assistants",
-  "line": "Each exchange with a model kept as a row (what was asked, what came back, the model and its seed), replayed later as a test, and drift between models found by plain diff.",
+  "line": "Each exchange with a model kept as a row (what was asked and came back, the model, its seed), replayed later as a test, drift found by diff.",
   "source": "bot",
   "writes": "record",
   "network": "none",
-  "role": "suggests"
+  "role": "suggests",
+  "version": "0.0.1"
+ },
+ {
+  "name": "chain-check",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "A hash-chained JSONL log that isn't willow's own record, checked link by link: where its chain holds, and the first row where it breaks.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "role": "tools",
+  "version": "0.0.1"
+ },
+ {
+  "name": "chat-dataset",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Chat fine-tuning and evaluation sets in JSONL ({\"messages\": [...]}) as numbered turns, one example after another.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "role": "reads",
+  "version": "0.0.1"
  },
  {
   "name": "chess-puzzle",
@@ -159,7 +207,8 @@
   "source": "new",
   "writes": "record",
   "network": "lichess.org, to read the puzzle",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "ci-baseline",
@@ -169,7 +218,8 @@
   "source": "new",
   "writes": "nothing",
   "network": "data.gharchive.org, its hours downloaded once",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "ci-bets",
@@ -179,17 +229,19 @@
   "source": "new",
   "writes": "record",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "cite-honesty",
   "kind": "stdlib",
   "section": "Assistants",
-  "line": "How often each model's suggestions were refused at propose for citing a passage the last bite never returned, read from the record by model card.",
+  "line": "How often each model's suggestions were refused at propose for citing a passage the last bite never returned, read from the record.",
   "source": "new",
   "writes": "nothing",
   "network": "none",
-  "role": "suggests"
+  "role": "suggests",
+  "version": "0.0.1"
  },
  {
   "name": "claude",
@@ -200,7 +252,8 @@
   "needs": "anthropic; MIT",
   "writes": "record",
   "network": "api.anthropic.com, to ask for suggestions",
-  "role": "suggests"
+  "role": "suggests",
+  "version": "0.0.1"
  },
  {
   "name": "code-first",
@@ -210,7 +263,8 @@
   "source": "bot",
   "writes": "nothing",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "code-stats",
@@ -221,7 +275,8 @@
   "needs": "the scc program; MIT",
   "writes": "nothing",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "compiled",
@@ -232,7 +287,8 @@
   "needs": "mypyc; MIT",
   "writes": "nothing",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "confluence",
@@ -242,7 +298,8 @@
   "source": "new",
   "writes": "to",
   "network": "none",
-  "role": "reads"
+  "role": "reads",
+  "version": "0.0.1"
  },
  {
   "name": "connect-four",
@@ -252,7 +309,8 @@
   "source": "new",
   "writes": "record",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "contracts",
@@ -262,7 +320,8 @@
   "source": "new",
   "writes": "nothing",
   "network": "none",
-  "role": "page"
+  "role": "page",
+  "version": "0.0.1"
  },
  {
   "name": "contribute",
@@ -272,7 +331,8 @@
   "source": "bot",
   "writes": "nothing",
   "network": "GitHub, through gh, with your own login",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "contributions",
@@ -282,7 +342,8 @@
   "source": "bot",
   "writes": "nothing",
   "network": "GitHub, through gh, with your own login",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "crates",
@@ -292,7 +353,8 @@
   "source": "new",
   "writes": "to",
   "network": "crates.io, to publish a release a maintainer tags",
-  "role": "makes"
+  "role": "makes",
+  "version": "0.0.1"
  },
  {
   "name": "crosswalk",
@@ -302,7 +364,8 @@
   "source": "new",
   "writes": "to",
   "network": "none",
-  "role": "makes"
+  "role": "makes",
+  "version": "0.0.1"
  },
  {
   "name": "crowd",
@@ -312,7 +375,8 @@
   "source": "new",
   "writes": "record",
   "network": "the market's public API, to read the question and its resolution",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "cycle",
@@ -322,7 +386,8 @@
   "source": "new",
   "writes": "nothing",
   "network": "none",
-  "role": "page"
+  "role": "page",
+  "version": "0.0.1"
  },
  {
   "name": "datasette",
@@ -333,7 +398,8 @@
   "needs": "Datasette; Apache-2.0",
   "writes": "nothing",
   "network": "loopback",
-  "role": "ways"
+  "role": "ways",
+  "version": "0.0.1"
  },
  {
   "name": "desktop",
@@ -343,7 +409,8 @@
   "source": "new",
   "writes": "record",
   "network": "none",
-  "role": "ways"
+  "role": "ways",
+  "version": "0.0.1"
  },
  {
   "name": "dictate",
@@ -354,7 +421,8 @@
   "needs": "faster-whisper; MIT",
   "writes": "nothing",
   "network": "the model, downloaded once",
-  "role": "ways"
+  "role": "ways",
+  "version": "0.0.1"
  },
  {
   "name": "docs-i18n",
@@ -364,7 +432,8 @@
   "source": "new",
   "writes": "nothing",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "email-ask",
@@ -374,7 +443,8 @@
   "source": "new",
   "writes": "nothing",
   "network": "your own mail server, over IMAP and SMTP, to read questions and reply",
-  "role": "ways"
+  "role": "ways",
+  "version": "0.0.1"
  },
  {
   "name": "emergency-card",
@@ -384,7 +454,8 @@
   "source": "new",
   "writes": "to",
   "network": "none",
-  "role": "makes"
+  "role": "makes",
+  "version": "0.0.1"
  },
  {
   "name": "encrypt",
@@ -395,7 +466,9 @@
   "needs": "cryptography; Apache-2.0 or BSD",
   "writes": "record",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "from": "shape, https://github.com/willow-memory/willow-data-vault, Apache-2.0",
+  "version": "0.0.1"
  },
  {
   "name": "family-box",
@@ -405,7 +478,8 @@
   "source": "new",
   "writes": "record",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "fight5e",
@@ -415,7 +489,20 @@
   "source": "new",
   "writes": "record",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
+ },
+ {
+  "name": "file-kind",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Each file the kernel leaves out, named by what its first bytes say it is (a PDF, a PNG, a zip), whatever its name or extension says.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "role": "tools",
+  "from": "shape, https://github.com/wagtail/Willow, BSD-3-Clause",
+  "version": "0.0.1"
  },
  {
   "name": "forgejo",
@@ -425,7 +512,8 @@
   "source": "new",
   "writes": "nothing",
   "network": "the Forgejo instance's API, to read the author of a pull request a security report points to",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "forgejo-dump",
@@ -435,7 +523,8 @@
   "source": "new",
   "writes": "to",
   "network": "none",
-  "role": "reads"
+  "role": "reads",
+  "version": "0.0.1"
  },
  {
   "name": "forget",
@@ -445,7 +534,8 @@
   "source": "new",
   "writes": "record",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "front-page",
@@ -455,7 +545,8 @@
   "source": "new",
   "writes": "record",
   "network": "hn.algolia.com, to read the front page",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "fuzz",
@@ -465,7 +556,8 @@
   "source": "new",
   "writes": "nothing",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "gifts",
@@ -475,7 +567,8 @@
   "source": "new",
   "writes": "nothing",
   "network": "none",
-  "role": "page"
+  "role": "page",
+  "version": "0.0.1"
  },
  {
   "name": "git-notes",
@@ -486,7 +579,8 @@
   "needs": "the git program; GPL, called not linked",
   "writes": "to",
   "network": "none",
-  "role": "makes"
+  "role": "makes",
+  "version": "0.0.1"
  },
  {
   "name": "github-archive",
@@ -496,7 +590,8 @@
   "source": "new",
   "writes": "to",
   "network": "none",
-  "role": "reads"
+  "role": "reads",
+  "version": "0.0.1"
  },
  {
   "name": "gitlab",
@@ -506,7 +601,8 @@
   "source": "new",
   "writes": "nothing",
   "network": "GitLab, through glab, to read the author of a merge request a security report points to",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "gitlab-export",
@@ -516,7 +612,8 @@
   "source": "new",
   "writes": "to",
   "network": "none",
-  "role": "reads"
+  "role": "reads",
+  "version": "0.0.1"
  },
  {
   "name": "google-classroom",
@@ -526,7 +623,21 @@
   "source": "new",
   "writes": "to",
   "network": "none",
-  "role": "reads"
+  "role": "reads",
+  "version": "0.0.1"
+ },
+ {
+  "name": "grant",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "Someone else allowed to ask part of your folder: a grant to their key for a path and a time, passed on only narrower, never your seal key.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "role": "tools",
+  "uses": "share",
+  "from": "shape, https://willowprotocol.org/specs/meadowcap/, none; shape, https://github.com/Deln0r/willow-go, MIT",
+  "version": "0.0.1"
  },
  {
   "name": "grant-report",
@@ -536,7 +647,8 @@
   "source": "new",
   "writes": "nothing",
   "network": "none",
-  "role": "page"
+  "role": "page",
+  "version": "0.0.1"
  },
  {
   "name": "gutenberg",
@@ -546,7 +658,8 @@
   "source": "new",
   "writes": "record",
   "network": "gutenberg.org, each book fetched once",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "handoff",
@@ -556,7 +669,8 @@
   "source": "new",
   "writes": "record",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "hanoi",
@@ -566,7 +680,8 @@
   "source": "new",
   "writes": "record",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "hermes",
@@ -576,7 +691,8 @@
   "source": "new",
   "writes": "record",
   "network": "none",
-  "role": "suggests"
+  "role": "suggests",
+  "version": "0.0.1"
  },
  {
   "name": "home-assistant",
@@ -586,7 +702,8 @@
   "source": "new",
   "writes": "nothing",
   "network": "your Home Assistant, on your own network, to answer its voice assistant",
-  "role": "ways"
+  "role": "ways",
+  "version": "0.0.1"
  },
  {
   "name": "homestead",
@@ -596,18 +713,20 @@
   "source": "new",
   "writes": "to",
   "network": "none",
-  "role": "reads"
+  "role": "reads",
+  "version": "0.0.1"
  },
  {
   "name": "hook-checks",
   "kind": "stdlib",
   "section": "Assistants",
-  "line": "A PostToolUse hook that runs the repo's own fast checks on the file just edited and hands back only what failed, the same output for the same file.",
+  "line": "A PostToolUse hook that runs the repo's fast checks on the file just edited and hands back only what failed, the same for the same file.",
   "source": "new",
   "writes": "nothing",
   "network": "none",
   "role": "guards",
-  "tags": "hooks"
+  "tags": "hooks",
+  "version": "0.0.1"
  },
  {
   "name": "hook-cite",
@@ -618,62 +737,20 @@
   "writes": "nothing",
   "network": "none",
   "role": "guards",
-  "tags": "hooks"
- },
- {
-  "name": "hook-errors",
-  "kind": "stdlib",
-  "section": "Assistants",
-  "line": "Each failed command an assistant runs kept as a row of its hash and exit code, so the same failure the third time is named, not retried blind.",
-  "source": "new",
-  "writes": "record",
-  "network": "none",
-  "role": "guards",
-  "tags": "hooks"
- },
- {
-  "name": "hook-feedback",
-  "kind": "stdlib",
-  "section": "Assistants",
-  "line": "Your corrections to an assistant (no, wrong, I said) caught by fixed patterns at each prompt and handed in through propose, for you to keep or drop.",
-  "source": "new",
-  "writes": "record",
-  "network": "none",
-  "role": "guards",
-  "tags": "hooks"
- },
- {
-  "name": "hook-handoff",
-  "kind": "stdlib",
-  "section": "Assistants",
-  "line": "A Stop hook that writes where the session ended, and the next session's first prompt gets it back, so nothing rides on the assistant's memory.",
-  "source": "new",
-  "writes": "record",
-  "network": "none",
-  "role": "guards",
-  "tags": "hooks"
- },
- {
-  "name": "hook-read-first",
-  "kind": "stdlib",
-  "section": "Assistants",
-  "line": "A PreToolUse hook that refuses an edit to a file the assistant hasn't read this session, or whose bytes changed since it did, each read kept as a hash.",
-  "source": "new",
-  "writes": "record",
-  "network": "none",
-  "role": "guards",
-  "tags": "hooks"
+  "tags": "hooks",
+  "version": "0.0.1"
  },
  {
   "name": "hook-sequence",
   "kind": "stdlib",
   "section": "Assistants",
-  "line": "Rules over what an assistant did before, not just this call: no push until the tests ran on this commit, at most so many deletions a session, read from the record.",
+  "line": "Rules over what an assistant did before, not just this call: no push until the tests ran on this commit, so many deletions a session.",
   "source": "new",
   "writes": "nothing",
   "network": "none",
   "role": "guards",
-  "tags": "hooks"
+  "tags": "hooks",
+  "version": "0.0.1"
  },
  {
   "name": "hook-tiers",
@@ -684,7 +761,8 @@
   "writes": "record",
   "network": "none",
   "role": "guards",
-  "tags": "hooks"
+  "tags": "hooks",
+  "version": "0.0.1"
  },
  {
   "name": "horoscope-grades",
@@ -694,7 +772,8 @@
   "source": "new",
   "writes": "record",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "in-case",
@@ -704,7 +783,8 @@
   "source": "new",
   "writes": "to",
   "network": "none",
-  "role": "makes"
+  "role": "makes",
+  "version": "0.0.1"
  },
  {
   "name": "ink-story",
@@ -715,7 +795,8 @@
   "needs": "inkjs; MIT",
   "writes": "record",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "instapaper",
@@ -725,7 +806,8 @@
   "source": "new",
   "writes": "to",
   "network": "none",
-  "role": "reads"
+  "role": "reads",
+  "version": "0.0.1"
  },
  {
   "name": "inventory",
@@ -735,7 +817,8 @@
   "source": "new",
   "writes": "nothing",
   "network": "none",
-  "role": "page"
+  "role": "page",
+  "version": "0.0.1"
  },
  {
   "name": "issue-answer",
@@ -745,7 +828,8 @@
   "source": "new",
   "writes": "record",
   "network": "the forge, through the workflow's token, to post an answer once it is sealed",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "joins",
@@ -755,7 +839,8 @@
   "source": "bot",
   "writes": "record",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "journiv",
@@ -765,7 +850,8 @@
   "source": "new",
   "writes": "to",
   "network": "none",
-  "role": "reads"
+  "role": "reads",
+  "version": "0.0.1"
  },
  {
   "name": "kids",
@@ -775,7 +861,8 @@
   "source": "new",
   "writes": "nothing",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "kiosk",
@@ -785,7 +872,8 @@
   "source": "new",
   "writes": "nothing",
   "network": "loopback",
-  "role": "ways"
+  "role": "ways",
+  "version": "0.0.1"
  },
  {
   "name": "kiwix",
@@ -796,7 +884,8 @@
   "needs": "libzim, and a ZIM file you download; GPL-3.0",
   "writes": "nothing",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "lab-notebook",
@@ -806,17 +895,19 @@
   "source": "new",
   "writes": "nothing",
   "network": "none",
-  "role": "page"
+  "role": "page",
+  "version": "0.0.1"
  },
  {
   "name": "ladder",
   "kind": "stdlib",
   "section": "Assistants",
-  "line": "Your files first, then sources you trust such as Jeles and Nestor, then a model, stopping at the first that answers, each answer kept for next time.",
+  "line": "Your files first, then sources you trust such as Jeles and Nestor, then a model, stopping at the first that answers, kept for next time.",
   "source": "bot",
   "writes": "record",
   "network": "none",
-  "role": "suggests"
+  "role": "suggests",
+  "version": "0.0.1"
  },
  {
   "name": "lessons",
@@ -826,7 +917,8 @@
   "source": "new",
   "writes": "to",
   "network": "none",
-  "role": "reads"
+  "role": "reads",
+  "version": "0.0.1"
  },
  {
   "name": "line-origin",
@@ -837,7 +929,8 @@
   "needs": "the git program; GPL, called not linked",
   "writes": "nothing",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "lore",
@@ -847,7 +940,8 @@
   "source": "bot",
   "writes": "record",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "losc",
@@ -857,7 +951,8 @@
   "source": "bot",
   "writes": "nothing",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "lunatic",
@@ -868,7 +963,8 @@
   "needs": "Skyfield; MIT",
   "writes": "nothing",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "mastermind",
@@ -878,7 +974,8 @@
   "source": "new",
   "writes": "record",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "maven",
@@ -888,17 +985,19 @@
   "source": "new",
   "writes": "to",
   "network": "Maven Central, to publish a release a maintainer tags",
-  "role": "makes"
+  "role": "makes",
+  "version": "0.0.1"
  },
  {
   "name": "mcp-by-hash",
   "kind": "stdlib",
   "section": "Assistants",
-  "line": "Your passages served as MCP resources named by their SHA-256, so an assistant cites exactly the bytes it read and a changed passage gets a new name.",
+  "line": "Your passages served as MCP resources named by their SHA-256, so an assistant cites the bytes it read; a changed one gets a new name.",
   "source": "bot",
   "writes": "nothing",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "meaning",
@@ -909,7 +1008,8 @@
   "needs": "sentence-transformers; Apache-2.0",
   "writes": "to",
   "network": "the model, downloaded once from Hugging Face",
-  "role": "makes"
+  "role": "makes",
+  "version": "0.0.1"
  },
  {
   "name": "medical-records",
@@ -919,7 +1019,8 @@
   "source": "new",
   "writes": "to",
   "network": "none",
-  "role": "reads"
+  "role": "reads",
+  "version": "0.0.1"
  },
  {
   "name": "memoir",
@@ -929,7 +1030,8 @@
   "source": "new",
   "writes": "to",
   "network": "none",
-  "role": "words"
+  "role": "words",
+  "version": "0.0.1"
  },
  {
   "name": "memory-import",
@@ -939,7 +1041,8 @@
   "source": "new",
   "writes": "record",
   "network": "none",
-  "role": "suggests"
+  "role": "suggests",
+  "version": "0.0.1"
  },
  {
   "name": "mex",
@@ -949,7 +1052,8 @@
   "source": "new",
   "writes": "record",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "mirror",
@@ -960,7 +1064,20 @@
   "needs": "the git program; GPL, called not linked",
   "writes": "nothing",
   "network": "each mirror's git URL, to read its refs",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
+ },
+ {
+  "name": "misheard",
+  "kind": "stdlib",
+  "section": "Your own words",
+  "line": "A spoken question's misheard words corrected against your own folder's words before it is asked, each change shown.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "role": "tools",
+  "from": "shape, https://github.com/toverainc/willow-autocorrect, Apache-2.0",
+  "version": "0.0.1"
  },
  {
   "name": "mlx",
@@ -971,7 +1088,8 @@
   "needs": "mlx-lm, on Apple silicon only; MIT; licence of the model varies",
   "writes": "record",
   "network": "none",
-  "role": "suggests"
+  "role": "suggests",
+  "version": "0.0.1"
  },
  {
   "name": "model-recall",
@@ -981,7 +1099,8 @@
   "source": "new",
   "writes": "nothing",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "moodle",
@@ -991,7 +1110,8 @@
   "source": "new",
   "writes": "to",
   "network": "none",
-  "role": "reads"
+  "role": "reads",
+  "version": "0.0.1"
  },
  {
   "name": "movie",
@@ -1002,7 +1122,8 @@
   "needs": "the gource program; GPL-3.0, called not linked",
   "writes": "to",
   "network": "none",
-  "role": "makes"
+  "role": "makes",
+  "version": "0.0.1"
  },
  {
   "name": "music-library",
@@ -1012,7 +1133,8 @@
   "source": "new",
   "writes": "to",
   "network": "none",
-  "role": "reads"
+  "role": "reads",
+  "version": "0.0.1"
  },
  {
   "name": "my-lessons",
@@ -1022,7 +1144,8 @@
   "source": "new",
   "writes": "nothing",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "nim",
@@ -1032,7 +1155,8 @@
   "source": "new",
   "writes": "record",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "ninety-percent",
@@ -1042,7 +1166,8 @@
   "source": "new",
   "writes": "record",
   "network": "Our World in Data, its numbers downloaded once",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "notary",
@@ -1052,7 +1177,8 @@
   "source": "new",
   "writes": "record",
   "network": "an RFC 3161 time server you choose, sent only the hash",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "novelty",
@@ -1062,7 +1188,8 @@
   "source": "new",
   "writes": "nothing",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "npm",
@@ -1072,7 +1199,8 @@
   "source": "new",
   "writes": "to",
   "network": "registry.npmjs.org, to publish a release a maintainer tags",
-  "role": "makes"
+  "role": "makes",
+  "version": "0.0.1"
  },
  {
   "name": "nuget",
@@ -1082,7 +1210,8 @@
   "source": "new",
   "writes": "to",
   "network": "nuget.org, to publish a release a maintainer tags",
-  "role": "makes"
+  "role": "makes",
+  "version": "0.0.1"
  },
  {
   "name": "obsidian",
@@ -1092,7 +1221,8 @@
   "source": "new",
   "writes": "nothing",
   "network": "loopback",
-  "role": "ways"
+  "role": "ways",
+  "version": "0.0.1"
  },
  {
   "name": "opentimestamps",
@@ -1102,28 +1232,31 @@
   "source": "new",
   "writes": "record",
   "network": "the OpenTimestamps calendars, sent only the hash",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "os-model",
   "kind": "deps",
   "section": "Assistants",
-  "line": "Suggestions from the model built into the operating system, such as Apple's Foundation Models on a Mac: nothing to download, nothing leaving the device.",
+  "line": "Suggestions from the model built into the operating system, such as Apple's Foundation Models: nothing to download, nothing leaving it.",
   "source": "new",
   "needs": "macOS 26 with Apple Intelligence on, and a small Swift helper; Apple's terms",
   "writes": "record",
   "network": "none",
-  "role": "suggests"
+  "role": "suggests",
+  "version": "0.0.1"
  },
  {
   "name": "package-docs",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
-  "line": "The READMEs and docs inside packages you've already installed (site-packages, node_modules, Cargo's registry cache), so you can ask your dependencies offline.",
+  "line": "The READMEs and docs in packages you've installed (site-packages, node_modules, Cargo's cache), so you can ask your dependencies offline.",
   "source": "new",
   "writes": "to",
   "network": "none",
-  "role": "reads"
+  "role": "reads",
+  "version": "0.0.1"
  },
  {
   "name": "pageviews",
@@ -1133,7 +1266,8 @@
   "source": "new",
   "writes": "record",
   "network": "the Wikimedia pageviews API, to settle it",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "paper-key",
@@ -1143,7 +1277,8 @@
   "source": "new",
   "writes": "to",
   "network": "none",
-  "role": "makes"
+  "role": "makes",
+  "version": "0.0.1"
  },
  {
   "name": "past-papers",
@@ -1153,7 +1288,8 @@
   "source": "new",
   "writes": "to",
   "network": "none",
-  "role": "reads"
+  "role": "reads",
+  "version": "0.0.1"
  },
  {
   "name": "plain-language",
@@ -1163,7 +1299,8 @@
   "source": "new",
   "writes": "record",
   "network": "none",
-  "role": "suggests"
+  "role": "suggests",
+  "version": "0.0.1"
  },
  {
   "name": "pr-context",
@@ -1173,7 +1310,8 @@
   "source": "new",
   "writes": "nothing",
   "network": "the forge, through the workflow's token, to post the comment",
-  "role": "ways"
+  "role": "ways",
+  "version": "0.0.1"
  },
  {
   "name": "predictions",
@@ -1183,7 +1321,8 @@
   "source": "bot",
   "writes": "record",
   "network": "api.drand.sh, to read a beacon round's randomness",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "promises",
@@ -1193,7 +1332,8 @@
   "source": "new",
   "writes": "nothing",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "property-tests",
@@ -1204,7 +1344,8 @@
   "needs": "Hypothesis; MPL-2.0",
   "writes": "nothing",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "provenance",
@@ -1215,17 +1356,19 @@
   "needs": "sigstore; Apache-2.0",
   "writes": "nothing",
   "network": "the registry and Sigstore's log, to fetch the attestation",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "pypi",
   "kind": "stdlib",
   "section": "For maintainers",
-  "line": "kernel.py on PyPI as a package with no dependencies, built from this repo, checked against the vectors, and attested on upload; uvx and pipx run it.",
+  "line": "kernel.py on PyPI as a package with no dependencies, built from this repo, checked against the vectors and attested; uvx and pipx run it.",
   "source": "new",
   "writes": "to",
   "network": "upload.pypi.org, to publish a release a maintainer tags",
-  "role": "makes"
+  "role": "makes",
+  "version": "0.0.1"
  },
  {
   "name": "pypy",
@@ -1235,7 +1378,8 @@
   "source": "new",
   "writes": "nothing",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "qr",
@@ -1245,7 +1389,8 @@
   "source": "new",
   "writes": "nothing",
   "network": "none",
-  "role": "ways"
+  "role": "ways",
+  "version": "0.0.1"
  },
  {
   "name": "quake-bets",
@@ -1255,7 +1400,8 @@
   "source": "new",
   "writes": "record",
   "network": "earthquake.usgs.gov, to read the week's earthquakes",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "quiet-corner",
@@ -1265,7 +1411,8 @@
   "source": "new",
   "writes": "to",
   "network": "none",
-  "role": "reads"
+  "role": "reads",
+  "version": "0.0.1"
  },
  {
   "name": "quote-review",
@@ -1275,7 +1422,8 @@
   "source": "new",
   "writes": "nothing",
   "network": "the forge, through the workflow's token, to read the review comments",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "real-sky",
@@ -1286,7 +1434,8 @@
   "needs": "Skyfield; MIT",
   "writes": "nothing",
   "network": "the ephemeris file, downloaded once",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "recipes",
@@ -1296,7 +1445,8 @@
   "source": "new",
   "writes": "to",
   "network": "none",
-  "role": "reads"
+  "role": "reads",
+  "version": "0.0.1"
  },
  {
   "name": "reconciler",
@@ -1307,7 +1457,9 @@
   "needs": "willow-reconciler; Apache-2.0",
   "writes": "nothing",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "from": "dep, https://github.com/willow-memory/willow-reconciler, Apache-2.0",
+  "version": "0.0.1"
  },
  {
   "name": "redential",
@@ -1318,17 +1470,19 @@
   "needs": "the redential program, run through npx; Apache-2.0",
   "writes": "record",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "repo-index",
   "kind": "stdlib",
   "section": "For maintainers",
-  "line": "This repository as its own deterministic box: its cards, docs and code as dated passages, rebuilt the same bytes each time, so willow can answer questions about itself.",
+  "line": "This repository as its own deterministic box: its cards, docs and code as dated passages, the same each build, so willow can answer of it.",
   "source": "new",
   "writes": "to",
   "network": "none",
-  "role": "makes"
+  "role": "makes",
+  "version": "0.0.1"
  },
  {
   "name": "report",
@@ -1338,7 +1492,8 @@
   "source": "box",
   "writes": "to",
   "network": "none",
-  "role": "makes"
+  "role": "makes",
+  "version": "0.0.1"
  },
  {
   "name": "repro",
@@ -1348,7 +1503,8 @@
   "source": "new",
   "writes": "nothing",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "rerank",
@@ -1359,7 +1515,8 @@
   "needs": "FlashRank; Apache-2.0",
   "writes": "nothing",
   "network": "the model, downloaded once",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "retire",
@@ -1369,7 +1526,8 @@
   "source": "bot",
   "writes": "record",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "reversi",
@@ -1379,7 +1537,8 @@
   "source": "new",
   "writes": "record",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "roll-for-merge",
@@ -1389,7 +1548,8 @@
   "source": "new",
   "writes": "record",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "rubric",
@@ -1399,7 +1559,8 @@
   "source": "new",
   "writes": "nothing",
   "network": "none",
-  "role": "page"
+  "role": "page",
+  "version": "0.0.1"
  },
  {
   "name": "safe-app",
@@ -1409,7 +1570,8 @@
   "source": "new",
   "writes": "nothing",
   "network": "none",
-  "role": "ways"
+  "role": "ways",
+  "version": "0.0.1"
  },
  {
   "name": "sap-gate",
@@ -1420,7 +1582,8 @@
   "needs": "openclaw-sap-gate; MIT",
   "writes": "nothing",
   "network": "none",
-  "role": "guards"
+  "role": "guards",
+  "version": "0.0.1"
  },
  {
   "name": "schema-check",
@@ -1430,7 +1593,8 @@
   "source": "box",
   "writes": "record",
   "network": "none",
-  "role": "suggests"
+  "role": "suggests",
+  "version": "0.0.1"
  },
  {
   "name": "school",
@@ -1440,7 +1604,8 @@
   "source": "new",
   "writes": "nothing",
   "network": "none",
-  "role": "page"
+  "role": "page",
+  "version": "0.0.1"
  },
  {
   "name": "scripture",
@@ -1450,7 +1615,8 @@
   "source": "new",
   "writes": "to",
   "network": "none",
-  "role": "reads"
+  "role": "reads",
+  "version": "0.0.1"
  },
  {
   "name": "scrivener",
@@ -1460,7 +1626,8 @@
   "source": "new",
   "writes": "to",
   "network": "none",
-  "role": "reads"
+  "role": "reads",
+  "version": "0.0.1"
  },
  {
   "name": "second-opinion",
@@ -1470,17 +1637,19 @@
   "source": "new",
   "writes": "record",
   "network": "none",
-  "role": "suggests"
+  "role": "suggests",
+  "version": "0.0.1"
  },
  {
   "name": "serve-piles",
   "kind": "stdlib",
   "section": "Assistants",
-  "line": "serve's piles grouped on all four W's -- who, when, what and where -- not where alone, so a model meets a question from every box that touched it.",
+  "line": "serve's piles grouped on all four W's (who, when, what, where), not where alone, so a model meets a question from every box that touched it.",
   "source": "new",
   "writes": "record, to",
   "network": "none",
-  "role": "guards"
+  "role": "guards",
+  "version": "0.0.1"
  },
  {
   "name": "sigmap",
@@ -1490,7 +1659,8 @@
   "source": "new",
   "writes": "to",
   "network": "none",
-  "role": "reads"
+  "role": "reads",
+  "version": "0.0.1"
  },
  {
   "name": "signal",
@@ -1501,7 +1671,8 @@
   "needs": "cryptography; Apache-2.0 or BSD",
   "writes": "to",
   "network": "none",
-  "role": "reads"
+  "role": "reads",
+  "version": "0.0.1"
  },
  {
   "name": "signed-commits",
@@ -1512,7 +1683,8 @@
   "needs": "the git program; GPL, called not linked",
   "writes": "nothing",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "silence-log",
@@ -1522,7 +1694,8 @@
   "source": "bot",
   "writes": "record",
   "network": "none",
-  "role": "suggests"
+  "role": "suggests",
+  "version": "0.0.1"
  },
  {
   "name": "socratic",
@@ -1532,7 +1705,8 @@
   "source": "new",
   "writes": "record",
   "network": "none",
-  "role": "ways"
+  "role": "ways",
+  "version": "0.0.1"
  },
  {
   "name": "sokoban",
@@ -1542,7 +1716,8 @@
   "source": "new",
   "writes": "record",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "sourcehut",
@@ -1552,7 +1727,8 @@
   "source": "new",
   "writes": "nothing",
   "network": "sr.ht, through hut, to read the author of a patch a security report points to",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "speak",
@@ -1563,7 +1739,8 @@
   "needs": "pyttsx3; MPL-2.0",
   "writes": "nothing",
   "network": "none",
-  "role": "ways"
+  "role": "ways",
+  "version": "0.0.1"
  },
  {
   "name": "spurious",
@@ -1573,7 +1750,19 @@
   "source": "new",
   "writes": "nothing",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
+ },
+ {
+  "name": "sqlite",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Any SQLite database, read from a copy: each table as a section, each row a line with its column names.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "role": "reads",
+  "version": "0.0.1"
  },
  {
   "name": "standards",
@@ -1583,7 +1772,8 @@
   "source": "new",
   "writes": "nothing",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "steam",
@@ -1593,7 +1783,8 @@
   "source": "new",
   "writes": "to",
   "network": "none",
-  "role": "reads"
+  "role": "reads",
+  "version": "0.0.1"
  },
  {
   "name": "student-records",
@@ -1603,7 +1794,8 @@
   "source": "new",
   "writes": "record",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "support-plan",
@@ -1613,7 +1805,8 @@
   "source": "new",
   "writes": "nothing",
   "network": "none",
-  "role": "page"
+  "role": "page",
+  "version": "0.0.1"
  },
  {
   "name": "swift",
@@ -1623,7 +1816,8 @@
   "source": "new",
   "writes": "nothing",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "symbols",
@@ -1634,7 +1828,8 @@
   "needs": "scip-python; MIT",
   "writes": "nothing",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "sync",
@@ -1644,18 +1839,8 @@
   "source": "new",
   "writes": "record",
   "network": "none",
-  "role": "tools"
- },
- {
-  "name": "synonyms",
-  "kind": "deps",
-  "section": "Your own words",
-  "line": "Suggests words-list lines for a word no file has.",
-  "source": "new",
-  "needs": "nltk and WordNet; Apache-2.0",
-  "writes": "to",
-  "network": "the WordNet data, downloaded once",
-  "role": "words"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "tatoeba",
@@ -1665,7 +1850,8 @@
   "source": "new",
   "writes": "to",
   "network": "none",
-  "role": "words"
+  "role": "words",
+  "version": "0.0.1"
  },
  {
   "name": "tax-year",
@@ -1675,7 +1861,8 @@
   "source": "new",
   "writes": "nothing",
   "network": "none",
-  "role": "page"
+  "role": "page",
+  "version": "0.0.1"
  },
  {
   "name": "teams",
@@ -1685,7 +1872,8 @@
   "source": "new",
   "writes": "to",
   "network": "none",
-  "role": "reads"
+  "role": "reads",
+  "version": "0.0.1"
  },
  {
   "name": "telegram-bot",
@@ -1695,7 +1883,8 @@
   "source": "new",
   "writes": "nothing",
   "network": "api.telegram.org, to receive your questions and send answers",
-  "role": "ways"
+  "role": "ways",
+  "version": "0.0.1"
  },
  {
   "name": "tic-tac-toe",
@@ -1705,7 +1894,8 @@
   "source": "new",
   "writes": "record",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "tides",
@@ -1715,7 +1905,8 @@
   "source": "new",
   "writes": "record",
   "network": "NOAA's tides API, to read predictions and what happened",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "time-capsule",
@@ -1725,7 +1916,8 @@
   "source": "new",
   "writes": "record",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "todays-place",
@@ -1735,7 +1927,8 @@
   "source": "new",
   "writes": "record",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "trips",
@@ -1745,7 +1938,8 @@
   "source": "new",
   "writes": "nothing",
   "network": "none",
-  "role": "page"
+  "role": "page",
+  "version": "0.0.1"
  },
  {
   "name": "tui",
@@ -1755,7 +1949,8 @@
   "source": "new",
   "writes": "record",
   "network": "none",
-  "role": "ways"
+  "role": "ways",
+  "version": "0.0.1"
  },
  {
   "name": "upgrade-notes",
@@ -1765,7 +1960,8 @@
   "source": "new",
   "writes": "nothing",
   "network": "the registry (PyPI, npm or crates.io), to fetch the newer version's changelog",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "upstream-desk",
@@ -1775,7 +1971,8 @@
   "source": "bot",
   "writes": "nothing",
   "network": "GitHub, through gh, with your own login",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "vectors",
@@ -1787,7 +1984,8 @@
   "writes": "to",
   "network": "none",
   "role": "makes",
-  "tags": "pile"
+  "tags": "pile",
+  "version": "0.0.1"
  },
  {
   "name": "vocab",
@@ -1797,7 +1995,8 @@
   "source": "new",
   "writes": "to",
   "network": "none",
-  "role": "words"
+  "role": "words",
+  "version": "0.0.1"
  },
  {
   "name": "voice",
@@ -1808,7 +2007,8 @@
   "needs": "faster-whisper; MIT",
   "writes": "to",
   "network": "the model, downloaded once",
-  "role": "reads"
+  "role": "reads",
+  "version": "0.0.1"
  },
  {
   "name": "warm",
@@ -1818,7 +2018,8 @@
   "source": "new",
   "writes": "nothing",
   "network": "loopback",
-  "role": "ways"
+  "role": "ways",
+  "version": "0.0.1"
  },
  {
   "name": "watch",
@@ -1828,7 +2029,8 @@
   "source": "new",
   "writes": "to",
   "network": "none",
-  "role": "makes"
+  "role": "makes",
+  "version": "0.0.1"
  },
  {
   "name": "weather-bet",
@@ -1838,7 +2040,8 @@
   "source": "new",
   "writes": "record",
   "network": "api.open-meteo.com, to read the forecast and the outcome",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "welcome",
@@ -1848,7 +2051,33 @@
   "source": "bot",
   "writes": "nothing",
   "network": "the forge, through the workflow's token, to post the thank-you",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
+ },
+ {
+  "name": "willow-box",
+  "kind": "stdlib",
+  "section": "Ways to use it",
+  "line": "Ask from a Willow voice box on your counter: its application server sends your words here and reads the answer back.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "your Willow Application Server, on your own network, to answer what the box heard",
+  "role": "ways",
+  "from": "shape, https://github.com/HeyWillow/willow-application-server, Apache-2.0",
+  "version": "0.0.1"
+ },
+ {
+  "name": "wis",
+  "kind": "deps",
+  "section": "Reading more kinds of files",
+  "line": "Audio files transcribed by a Willow Inference Server you run on your own network, kept as dated text.",
+  "source": "new",
+  "needs": "a Willow Inference Server you run; Apache-2.0, called over HTTP, not linked",
+  "writes": "to",
+  "network": "your own Willow Inference Server, to transcribe the audio you point it at",
+  "role": "reads",
+  "from": "dep, https://github.com/toverainc/willow-inference-server, Apache-2.0",
+  "version": "0.0.1"
  },
  {
   "name": "witness",
@@ -1858,7 +2087,8 @@
   "source": "new",
   "writes": "record",
   "network": "none",
-  "role": "tools"
+  "role": "tools",
+  "version": "0.0.1"
  },
  {
   "name": "words-hi",
@@ -1868,7 +2098,8 @@
   "source": "new",
   "writes": "to",
   "network": "none",
-  "role": "words"
+  "role": "words",
+  "version": "0.0.1"
  },
  {
   "name": "words-ja",
@@ -1878,7 +2109,8 @@
   "source": "new",
   "writes": "to",
   "network": "none",
-  "role": "words"
+  "role": "words",
+  "version": "0.0.1"
  },
  {
   "name": "words-zh",
@@ -1888,7 +2120,8 @@
   "source": "new",
   "writes": "to",
   "network": "none",
-  "role": "words"
+  "role": "words",
+  "version": "0.0.1"
  },
  {
   "name": "writefreely",
@@ -1898,6 +2131,7 @@
   "source": "new",
   "writes": "to",
   "network": "none",
-  "role": "reads"
+  "role": "reads",
+  "version": "0.0.1"
  }
 ]

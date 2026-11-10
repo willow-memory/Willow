@@ -3,6 +3,7 @@ section: Finding things
 line: Every matching passage, ranked, not just the top three.
 source: box
 added: 2026-10-23
+version: 0.1.0
 writes: nothing
 network: none
 role: tools
