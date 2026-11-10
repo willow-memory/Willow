@@ -498,3 +498,112 @@ def test_a_reader_branch_that_changed_more_than_it_added_stops_untouched(clone, 
     assert "work: stopped, left as it was: test_contract.py: the branch changes" in got.stdout  # fmt: skip
     assert git(clone, "rev-parse", "work") == old
     assert git(clone, "worktree", "list").count("\n") == 0
+
+
+# ── everything the repo makes, from the repo's one list ──────────────────────
+def test_the_makers_are_read_from_the_trees_own_list_less_what_may_go_online(tmp_path):
+    assert rs.makers(tmp_path) == [], "a tree with no list has none"
+    ci = tmp_path / "adapters" / "stdlib" / "ci"
+    ci.mkdir(parents=True)
+    (ci / "made.py").write_text(
+        'X = 1\nMADE = (\n    ("one", "a/one.py"),\n'
+        f'    ("dates", "{rs.ONLINE[0]}"),\n    ("two", "b/two.py"),\n)\n'
+    )
+    assert rs.makers(tmp_path) == ["a/one.py", "b/two.py"]
+    for unreadable in (
+        "MADE = (",
+        "OTHER = ()\n",
+        "MADE = (1, 2)\n",
+        "MADE = made()\n",
+    ):
+        (ci / "made.py").write_text(unreadable)
+        assert rs.makers(tmp_path) == [], unreadable
+    # and the real one names the lists kept A to Z, which restack's own short
+    # list never did: the gap that sent #325 red
+    real = rs.makers(ROOT)
+    assert "adapters/stdlib/ci/order.py" in real and rs.ONLINE[0] not in real
+    assert set(rs.MADE.values()) <= set(real)
+
+
+def test_stale_asks_only_the_listed_scripts_it_did_not_run(tmp_path):
+    assert rs.stale(tmp_path) is None, "no list, nothing asked"
+    ci = tmp_path / "adapters" / "stdlib" / "ci"
+    ci.mkdir(parents=True)
+    online = tmp_path / rs.ONLINE[0]
+    # a script it ran is never asked, even one whose check would fail
+    (tmp_path / "ran.py").write_text("import sys\nsys.exit(1)\n")
+    (ci / "made.py").write_text(
+        f'MADE = (("ran", "ran.py"), ("dates", "{rs.ONLINE[0]}"))\n'
+    )
+    online.write_text(
+        "import sys\nassert sys.argv[1:] == ['check']\nprint('all current')\n"
+    )
+    assert rs.stale(tmp_path) is None
+    online.write_text(
+        "import sys\nprint('first line')\nprint('a pin has no date', file=sys.stderr)\nsys.exit(1)\n"
+    )
+    assert rs.stale(tmp_path) == f"{rs.ONLINE[0]} check: a pin has no date"
+    online.write_text("import sys\nsys.exit(3)\n")
+    assert rs.stale(tmp_path) == f"{rs.ONLINE[0]} check: no output"
+    (ci / "made.py").write_text('MADE = (("ran", "ran.py"),)\n')
+    assert rs.stale(tmp_path) is None, "off the list, not asked"
+    assert rs.listed(tmp_path) == ["ran.py"] == rs.makers(tmp_path)
+
+
+def on_main(repo: Path, edit, message: str) -> None:
+    git(repo, "checkout", "-q", "main")
+    edit()
+    git(repo, "add", "-A")
+    git(repo, "commit", "-q", "-m", message)
+    git(repo, "checkout", "-q", "--detach")
+
+
+def test_a_list_main_left_out_of_order_is_put_right_on_the_branch(clone):
+    """order.py is on the repo's list and was never on restack's: a branch
+    restacked onto such a main passed test_docs and failed test_order in CI."""
+    planned = clone / "adapters" / "planned.json"
+
+    def edit():
+        ideas = json.loads(planned.read_text(encoding="utf-8"))
+        ideas.append(
+            {
+                **ideas[0],
+                "name": "aaa-out-of-order",
+                "line": "An idea put at the end, for restack's test.",
+            }
+        )
+        planned.write_text(
+            json.dumps(ideas, indent=1, ensure_ascii=False) + "\n", encoding="utf-8"
+        )
+
+    on_main(clone, edit, "an idea at the end of the list")
+    old = git(clone, "rev-parse", "work")
+    got = run(clone, "--onto", "main", "work")
+    if not docs_pass(clone):
+        assert got.returncode == 2 and git(clone, "rev-parse", "work") == old
+        return
+    assert got.returncode == 0, got.stdout + got.stderr
+    assert "the made files, made again" in got.stdout
+    names = [
+        e["name"] for e in json.loads(git(clone, "show", "work:adapters/planned.json"))
+    ]
+    assert names == sorted(names) and "aaa-out-of-order" in names
+
+
+def test_a_made_file_left_stale_stops_it_and_the_branch_is_not_moved(clone):
+    dates = clone / rs.ONLINE[0]
+    stub = "import sys\nif sys.argv[1:] == ['check']:\n    print('a pin has no date')\n    sys.exit(1)\n"
+    on_main(
+        clone,
+        lambda: dates.write_text(stub, encoding="utf-8"),
+        "a check that always fails",
+    )
+    old = git(clone, "rev-parse", "work")
+    got = run(clone, "--onto", "main", "work")
+    assert got.returncode == 2, got.stdout + got.stderr
+    assert git(clone, "rev-parse", "work") == old, "nothing moves unchecked"
+    if docs_pass(clone):
+        assert (
+            f"a file the repo makes is stale ({rs.ONLINE[0]} check: a pin has no date); not moved"
+            in got.stdout
+        )

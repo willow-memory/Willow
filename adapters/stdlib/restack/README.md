@@ -57,9 +57,18 @@ added after REF's last. An entry REF already has is left as REF has it. A
 branch that changed or removed an entry that was there, or changed anything
 else in the file, stops: that is a person's call.
 
-**Nothing moves until it checks.** After the merge, `test_docs.py` runs in
-the scratch worktree; it is the check that catches a merge settled wrong. Only
-when it passes is the branch moved to the new commit. If the branch is checked
+**Everything the repo makes is made again.** After the merge, every script
+on the repo's own list of what it makes, `adapters/stdlib/ci/made.py`, is run
+in the scratch worktree: the add-on lists, BUGS.md, the tree in FILES.md,
+the lists kept A to Z, and whatever main adds to that list later, since the
+list is read there and not kept here. One script on it is left out, the one
+that asks PyPI for a new pin's dates: this never goes online.
+
+**Nothing moves until it checks.** Then `test_docs.py` runs in the scratch
+worktree; it is the check that catches a merge settled wrong. After it,
+the one script left out is asked to check, which asks no one: a pin with no
+date stops the branch, and the message says so. Only when both pass is the
+branch moved to the new commit. If the branch is checked
 out somewhere, that checkout is moved with it, and only when it has no changes
 of yours, committed or not. Nothing is pushed: it prints the push, a plain
 one, since nothing of the branch is rewritten.

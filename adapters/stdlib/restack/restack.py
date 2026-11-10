@@ -41,9 +41,13 @@ The changelog's entries move whether the merge conflicted there or not:
 CHANGELOG.md only takes a release's now, and an entry written there the old
 way is the one conflict every branch had with every other.
 
-Once REF is merged in, test_docs.py runs in the scratch worktree: it is
-the check that catches a merge settled wrong (a tree missing a file, a
-count that is off). Only when it passes is the branch moved, forward, to the
+Once REF is merged in, everything on the repo's own list of what it makes
+(adapters/stdlib/ci/made.py, read in the worktree) is made again, less the
+one script that may go online. Then test_docs.py runs in the scratch
+worktree: it is the check that catches a merge settled wrong (a tree missing
+a file, a count that is off). The script left out is then asked to check,
+which asks no one: a made file it would have had to go online for stops the
+branch. Only when it passes is the branch moved, forward, to the
 merge commit; if the branch is checked out somewhere, that checkout is moved
 too, and only when it has no changes of yours. Nothing is pushed: it says
 the push to make.
@@ -80,6 +84,10 @@ MADE = {
     "adapters/stdlib/readme/week.json": "adapters/stdlib/readme/readme.py",
     "BUGS.md": "adapters/stdlib/ci/bugs.py",
 }
+#: where the repo keeps the one list of what it makes, and the scripts on it
+#: that may go online (PyPI's dates asks PyPI for a new pin's): this never does
+MAKERS = "adapters/stdlib/ci/made.py"
+ONLINE = ("adapters/stdlib/ci/pypi_dates.py",)
 ENTRY = re.compile(r'^\s+(?:"[\w-]+": \(|\*\*\{)')  # a COMMANDS line
 CONTRACT = "adapters/stdlib/ci/test_contract.py"
 DICTS = ("COMMANDS", "READERS", "PILE_EXTRA")  # test_contract.py's, added to by add-ons
@@ -484,10 +492,51 @@ def settle(work: Path) -> list[str]:
     return names
 
 
-def remake(work: Path) -> None:
-    """The files the repo makes, made again from the cards and the tests."""
+def listed(work: Path) -> list[str]:
+    """Every script the worktree's own ci/made.py runs, in its order: the list
+    is read there, never kept here, so a file main starts making is made again
+    on every branch without this changing. A tree with no such list, or one
+    that can't be read, has none."""
+    try:
+        tree = ast.parse((work / MAKERS).read_text(encoding="utf-8"))
+        made = next(
+            ast.literal_eval(n.value)
+            for n in tree.body
+            if isinstance(n, ast.Assign)
+            and any(getattr(t, "id", "") == "MADE" for t in n.targets)
+        )
+        return [script for _, script in made]
+    except (OSError, ValueError, SyntaxError, StopIteration, TypeError):
+        return []
+
+
+def makers(work: Path) -> list[str]:
+    """The listed scripts this runs: all but the ones that may go online."""
+    return [s for s in listed(work) if s not in ONLINE]
+
+
+def stale(work: Path) -> str | None:
+    """What a listed script this didn't run says is stale, by its own `check`,
+    which reads and asks no one; None when each is current. What this did
+    run it has just made, so only the others are asked."""
+    for script in listed(work):
+        if script not in ONLINE:
+            continue
+        got = subprocess.run([sys.executable, script, "check"], cwd=work,
+                             capture_output=True, text=True)  # fmt: skip
+        if got.returncode != 0:
+            said = (got.stdout + got.stderr).strip().splitlines() or ["no output"]
+            return f"{script} check: {said[-1][:300]}"
+    return None
+
+
+def remake(work: Path, every: bool = False) -> None:
+    """The files the repo makes, made again from the cards and the tests:
+    the ones settle leaves to their scripts, and with `every`, the rest of
+    the repo's own list too (the lists kept A to Z, and what main adds)."""
     # FILES.md is settled by its entries, then cut again by files.py
-    for script in dict.fromkeys([*MADE.values(), "adapters/stdlib/ci/files.py"]):
+    scripts = [*MADE.values(), "adapters/stdlib/ci/files.py"]
+    for script in dict.fromkeys(scripts + (makers(work) if every else [])):
         got = subprocess.run([sys.executable, script, "write"], cwd=work,
                              capture_output=True, text=True)  # fmt: skip
         if got.returncode != 0:
@@ -565,7 +614,7 @@ def restack(branch: str, onto: str) -> tuple[int, list[str]]:
                 (work / path).parent.mkdir(exist_ok=True)
                 (work / path).write_text(text, encoding="utf-8")
             settled.append(f"CHANGELOG.md, {len(moved)} new entr{'y' if len(moved) == 1 else 'ies'} moved to changes/")  # fmt: skip
-        remake(work)
+        remake(work, every=True)
         if git("status", "--porcelain", cwd=work).stdout.strip():
             git("add", "-A", cwd=work)
             git("commit", "-q", "--amend", "--no-edit", cwd=work)
@@ -577,6 +626,10 @@ def restack(branch: str, onto: str) -> tuple[int, list[str]]:
             if "No module named pytest" in check.stderr:
                 return kernel.ESCALATE, [f"{branch}: merged, not moved: pytest isn't installed to check it"]  # fmt: skip
             raise Stop(f"merged, but test_docs.py fails ({said}); not moved")
+        if (said := stale(work)) is not None:
+            raise Stop(
+                f"merged, but a file the repo makes is stale ({said}); not moved"
+            )
         new = sha("HEAD", cwd=work)
     except Stop:
         git("merge", "--abort", cwd=work, ok=(0, 1, 128))
