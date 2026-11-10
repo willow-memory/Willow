@@ -146,10 +146,12 @@ button { font: inherit; font-weight: 600; padding: 7px 14px; border: 0; border-r
 .text { white-space: pre-wrap; overflow-wrap: anywhere; margin: 4px 0 0; }
 .said { overflow-wrap: anywhere; }
 details { margin: 8px 0; } summary { cursor: pointer; color: var(--muted); }
-pre { white-space: pre-wrap; overflow-wrap: anywhere; font: 12px/1.5 var(--mono);
+pre { white-space: pre; overflow-x: auto; font: 12px/1.5 var(--mono);
       background: var(--bg); border: 1px solid var(--line); border-radius: 4px; padding: 8px 10px; }
 .muted { color: var(--muted); }
 .switch { margin: 0 0 12px; }
+nav .here { font-weight: 700; margin-right: 16px; color: var(--accent); }
+nav .sep { color: var(--muted); margin-right: 16px; }
 .pill.wait { background: var(--accl); color: var(--fg); }
 .group { font-weight: 600; margin: 10px 0 2px; }
 .row { display: grid; grid-template-columns: minmax(7rem, 38%) 1fr; gap: 10px;
@@ -165,7 +167,7 @@ def page(title: str, body: str, more: str = "", head: str = "") -> str:
         "<!doctype html><html lang=en><head><meta charset=utf-8>"
         '<meta name=viewport content="width=device-width, initial-scale=1">'
         f"{head}<title>{esc(title)} · willow</title><style>{STYLE}</style></head><body>"
-        f'<nav><a href="/">Home</a><a href="/waiting">Waiting for you</a>{more}</nav>'
+        f'<nav><a href="/">Ask</a><a href="/waiting">Waiting for you</a>{more}</nav>'
         f"<main><h1>{esc(title)}</h1>{body}</main></body></html>"
     )
 
@@ -329,6 +331,7 @@ class Willow:
         stack: Path | None = None,
         run: Path | None = None,
         base: str = "",
+        name: str = "",
         stacks: list[Path] | None = None,
         runs: list[Path] | None = None,
     ):
@@ -340,6 +343,7 @@ class Willow:
         self.stack = self.stacks[0] if self.stacks else None
         self.run = self.runs[0] if self.runs else None
         self.base = base  # "/p/NAME" when one of several projects, else ""
+        self.name = name  # the project's name, said in the bar of its pages
         self.token = token or secrets.token_urlsafe(32)
         self.words = sibling(f"words-{lang}", f"words_{lang}") if lang else None
         if lang and self.words is None:
@@ -352,7 +356,8 @@ class Willow:
         if self.base:  # one of several: its links are its own, and a way back
             html = html.replace('href="/', f'href="{self.base}/')
             html = html.replace('action="/', f'action="{self.base}/')
-            html = html.replace("<nav>", '<nav><a href="/">Projects</a>', 1)
+            here = f'<nav><a href="/">Projects</a><span class=sep>›</span><span class=here>{esc(self.name)}</span>'  # fmt: skip
+            html = html.replace("<nav>", here, 1)
         return html
 
     def switch(self, what: str, choices: list[Path], chosen: Path) -> str:
@@ -392,37 +397,53 @@ class Willow:
         steps, done = run_steps(
             logs[0].read_text(encoding="utf-8", errors="replace"), st
         )
-        if done:
-            body = [self.switch("run", self.runs, run), f"<p><strong>Finished.</strong> {esc(done)}.</p>"]  # fmt: skip
-            head = ""
-        else:
-            body = [self.switch("run", self.runs, run), f"<p><strong>Still running.</strong> This page looks again every {AGAIN} seconds.</p>"]  # fmt: skip
-            head = f'<meta http-equiv="refresh" content="{AGAIN}">'
+        cards, came = [], []
         for step in steps:
             name = f"{step['n']}-{step['name']}"
-            pills = ""
+            num = f" <span class=pill>step {esc(step['n'])}</span>"
+            kept = " <span class=pill>kept from before</span>" * step.get("kept", False)
             if not step["ended"]:
-                pills = " <span class='pill wait'>running</span>"
-            else:
-                pills += " <span class=pill>kept from before</span>" * step["kept"]
-                pills += " <span class='pill wait'>flagged</span>" * step["flagged"]
-            try:
-                doc = json.loads((run / "reports" / f"{name}.json").read_text(encoding="utf-8"))  # fmt: skip
-                body.append(report_card(doc, step["code"], pills=f" <span class=pill>step {esc(step['n'])}</span>{pills}"))  # fmt: skip
-                continue
-            except (OSError, ValueError, KeyError, TypeError):
-                pass  # no report kept, or the step hasn't ended: its words
+                came.append("still running")
+            doc = None
+            if step["ended"]:
+                try:
+                    doc = json.loads((run / "reports" / f"{name}.json").read_text(encoding="utf-8"))  # fmt: skip
+                    card = report_card(doc, step["code"], pills=num + kept)
+                    came.append(OUTCOMES.get(doc["state"], "said something"))
+                    cards.append(card)
+                    continue
+                except (OSError, ValueError, KeyError, TypeError):
+                    pass  # no report kept: its words
             try:
                 text = (run / f"{name}.txt").read_text(
                     encoding="utf-8", errors="replace"
                 )
             except OSError:
                 text = ""
-            code = (
-                f" <span class=pill>exit {step['code']}</span>" if step["ended"] else ""
-            )
-            head_html = f"<p class=kick>{esc(step['name'])} <span class=pill>step {esc(step['n'])}</span>{code}{pills}</p>"  # fmt: skip
-            body.append(words_card(head_html, text))
+            if step["ended"]:
+                note = st.step_result(step["name"], step["code"])[1]
+                came.append(
+                    "found nothing" if note == "none found"
+                    else "didn't finish cleanly" if note.startswith("exit")
+                    else "said something" if text.strip() else "found nothing"
+                )  # fmt: skip
+                wait = " wait" if came[-1] == "didn't finish cleanly" else ""
+                pill = f" <span class='pill{wait}'>{esc(came[-1])}</span>" + (f" <span class=pill>exit {step['code']}</span>" if wait else "")  # fmt: skip
+            else:
+                pill = " <span class='pill wait'>running</span>"
+            head_html = f"<p class=kick>{esc(step['name'])}{num}{pill}{kept}</p>"
+            cards.append(words_card(head_html, text))
+        tally_ = ", ".join(
+            f"{came.count(c)} {c}" for c in dict.fromkeys(ORDER) if c in came
+        )
+        n = len(steps)
+        if done:
+            said = f"<p><strong>Finished.</strong> {n} step{'s' * (n != 1)}: {esc(tally_)}.</p>"
+            head = ""
+        else:
+            said = f"<p><strong>Still running.</strong> {esc(tally_) or 'Nothing has started'}. This page looks again every {AGAIN} seconds.</p>"  # fmt: skip
+            head = f'<meta http-equiv="refresh" content="{AGAIN}">'
+        body = [self.switch("run", self.runs, run), said, *cards]
         if not steps:
             body.append("<p class=muted>No step has started yet.</p>")
         return self.page(title, "".join(body), head)
@@ -625,6 +646,15 @@ class Willow:
 
 
 AGAIN = 3  # seconds between looks at a run that is still going
+#: what a step came to, in a person's words: a report's by its state, any
+#: other step's by its exit code as its own card reads it
+OUTCOMES = {
+    "populated": "found something",
+    "empty": "found nothing",
+    "unreachable": "couldn't look",
+}
+ORDER = ("found something", "said something", "found nothing", "couldn't look",
+         "didn't finish cleanly", "still running")  # fmt: skip
 
 
 def run_steps(log: str, st) -> tuple[list[dict], str | None]:
@@ -744,7 +774,12 @@ class Projects:
         for pr in find_projects(self.home):
             for box in pr["boxes"]:
                 if self.key(pr, box) == key:
-                    return Willow(box, None, self.token, base=f"/p/{key}",
+                    name = (
+                        pr["name"]
+                        if len(pr["boxes"]) == 1
+                        else f"{pr['name']} ({box.name})"
+                    )
+                    return Willow(box, None, self.token, base=f"/p/{key}", name=name,
                                   stacks=pr["stacks"], runs=pr["runs"])  # fmt: skip
         return None
 
@@ -796,7 +831,7 @@ class Projects:
             )
         )
         html = page("Your projects", "".join(body))
-        return html.replace('<a href="/">Home</a><a href="/waiting">Waiting for you</a>', '<a href="/">Projects</a>', 1)  # fmt: skip
+        return html.replace('<a href="/">Ask</a><a href="/waiting">Waiting for you</a>', '<a href="/">Projects</a>', 1)  # fmt: skip
 
 
 # ── the server ───────────────────────────────────────────────────────────────

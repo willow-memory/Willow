@@ -689,7 +689,10 @@ def test_a_run_is_shown_from_what_it_kept_and_nothing_is_run(tmp_path):
         (run / "02-heavy.txt").write_text("refused: <not> a box\n")
         (run / "03-slow.txt").write_text("".join(f"line {i}\n" for i in range(1, 12)))
         text = s.req("GET", "/run")[1]
-        assert "<strong>Still running.</strong>" in text
+        assert (
+            "<strong>Still running.</strong> 1 found something, 1 didn&#x27;t finish cleanly, 1 still running."
+            in text
+        )
         assert f'<meta http-equiv="refresh" content="{br.AGAIN}">' in text
         one, two, three = text.split("<div class=card>")[1:]
         assert (
@@ -698,7 +701,7 @@ def test_a_run_is_shown_from_what_it_kept_and_nothing_is_run(tmp_path):
         )
         assert "<h2>2 lines marked to do</h2>" in one and "call &lt;them&gt;" in one
         assert (
-            "<span class=pill>exit 2</span> <span class='pill wait'>flagged</span>"
+            "<span class='pill wait'>didn&#x27;t finish cleanly</span> <span class=pill>exit 2</span>"
             in two
         )
         assert "<pre>refused: &lt;not&gt; a box</pre>" in two
@@ -715,10 +718,13 @@ def test_a_run_is_shown_from_what_it_kept_and_nothing_is_run(tmp_path):
             f.write("03 slow: exit 0, 11 lines\ndone: 1 of 3 steps flagged\n")
         text = s.req("GET", "/run")[1]
         assert (
-            "<strong>Finished.</strong> 1 of 3 steps flagged." in text
+            "<strong>Finished.</strong> 3 steps: 1 found something, 1 said something, 1 didn&#x27;t finish cleanly."
+            in text
             and "http-equiv" not in text
         )
-        assert "running" not in text
+        assert "running" not in text and "exit 0" not in text, (
+            "a clean exit needs no saying"
+        )
         assert (b / "record.jsonl").read_text() == rows_before, (
             "showing a run writes nothing"
         )
