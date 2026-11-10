@@ -591,6 +591,10 @@ willow/
 │   │   │   ├── glance.py     What a scan found, a line a question: where its best passage is, how it opens, and which of the question's words it lacks
 │   │   │   ├── test_glance.py
 │   │   │   └── README.md     its card
+│   │   ├── look/
+│   │   │   ├── look.py       One question sent to the step whose job it is, and answered by the lines that step's kept run holds; your own notes by the kernel
+│   │   │   ├── test_look.py
+│   │   │   └── README.md     its card
 │   │   ├── misquote/
 │   │   │   ├── misquote.py   a quote almost in your files: the closest passage, and what differs
 │   │   │   ├── test_misquote.py
@@ -619,16 +623,16 @@ willow/
 │   │   │   ├── quotes.py     every quote in a document checked: as written, almost (and what differs), or not there
 │   │   │   ├── test_quotes.py
 │   │   │   └── README.md
+```
+
+#### adapters/stdlib/, from route/
+
+```
 │   │   ├── route/
 │   │   │   ├── kinds.txt
 │   │   │   ├── route.py      A question sent to the step whose job it is, by a file of kinds you can edit
 │   │   │   ├── test_route.py
 │   │   │   └── README.md     its card
-```
-
-#### adapters/stdlib/, from rules/
-
-```
 │   │   ├── rules/
 │   │   │   ├── rules.py      a rules file sealed section by section; the kernel then answers 'rule NAME' word for word
 │   │   │   ├── test_rules.py
