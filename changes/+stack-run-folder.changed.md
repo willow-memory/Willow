@@ -1,0 +1,1 @@
+`stack`: `--to FOLDER` keeps a run as it happens, a line in `00-stack.txt` as each step starts and ends and each step's output in a file of its own, written as the step prints, so a long run can be followed; its card's `writes` is `to` now, where it was `nothing`

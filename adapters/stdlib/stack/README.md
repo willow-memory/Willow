@@ -3,8 +3,8 @@ section: Ways to use it
 line: One page made from several add-ons run in the order you list them, their results grouped so the biggest come first.
 source: new
 added: 2026-10-26
-version: 0.1.0
-writes: nothing
+version: 0.2.0
+writes: to
 network: none
 role: ways
 -->
@@ -16,7 +16,7 @@ many heterogeneous steps over one box and composes what each prints — pooled,
 and ordered tallest-first. It is the input side of the serve layer in
 `docs/design/serve.md`: the operator's stack, before any seal.
 
-    python adapters/stdlib/stack/stack.py --box DIR --stack FILE
+    python adapters/stdlib/stack/stack.py --box DIR --stack FILE [--to FOLDER]
 
 ## the stack file
 
@@ -49,12 +49,39 @@ attention: the reader meets the biggest stack first. The document is markdown �
 a `##` per pool, each step's output fenced under it, a step flagged `(exit N)`
 when it didn't run clean.
 
+## a run you can follow
+
+A stack of slow steps (a model, a big index) prints nothing until the last
+one ends, because the page is ordered by what every step made. `--to FOLDER`
+keeps the run as it happens:
+
+    <FOLDER>/00-stack.txt     a line as each step starts, a line as it ends
+    <FOLDER>/01-todo.txt      the first step's output
+    <FOLDER>/02-scan.txt      the second's, and so on
+
+    01 todo: started
+    01 todo: exit 0, 12 lines
+    02 scan: started
+
+Each step's file is named for its place in the stack file, so the folder
+reads in the order things ran. A step that prints as it goes is written as
+it prints, so its file can be followed while it runs; a step asked for a
+report is written once, when its report is whole. A step that printed
+nothing and complained is kept as its complaint, and the line that ends it
+says `flagged`. The last line is `done: N of M steps flagged`.
+
+FOLDER must be there and empty, and stack makes no folder: a run is one
+folder, and a second run in it would read as part of the first. Follow it
+with anything that follows a folder of files; the page is printed at the end
+as before, the same with `--to` as without.
+
 ## what it does and doesn't
 
 The step list is **open**: any add-on, built in or user-written, can be a step.
 `stack` doesn't care which add-on produced a part — it runs the step, takes
 what it printed, and composes. Each step is held to **its own card** by the
-guard, so `stack` itself writes no box, reads no key and approves nothing (the
+guard, so `stack` itself writes no box, reads no key and approves nothing, and
+writes only the run folder you name with `--to` (the
 one-way arrow, a box to a document); a step's own reach is the step's card, not
 this one. `stack` names `network: none` for its own run.
 
