@@ -1126,8 +1126,11 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
   A local model's weights file hashed before each run and refused when it differs from the hash on its model card. \
   Uses weights-card. *new* `no-install` `offline` `local` `weights` · near: weights-card, model-card, model-fit
 
-#### Tools you run yourself: ideas, not built yet, c to m
+#### Tools you run yourself: ideas, not built yet, b to m
 
+- <a id="before-copy"></a>**before-copy** (idea) \
+  A file beside its dated before-copy (plan.py.pre-2026-09-30, notes.md.bak) side by side: what changed since the copy was made. \
+  *new* `no-install` `offline` · near: garden, policy-watch, contradictions
 - <a id="chain-check"></a>**chain-check** (idea) \
   A hash-chained JSONL log that isn't willow's own record, checked link by link: where its chain holds, and the first row where it breaks. \
   *new* `no-install` `offline` `rows` `chain` · near: merkle, sync, diverge
