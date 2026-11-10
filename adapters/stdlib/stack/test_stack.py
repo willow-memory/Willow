@@ -257,6 +257,11 @@ def test_a_report_add_ons_step_that_prints_no_report_runs_as_written(tmp_path):
 
 # ── a run kept in a folder, to follow as it goes ─────────────────────────────
 THREE = "## a\n- heavy -- --box {box}\n- light -- --box {box}\n## b\n- amounts -- --box {box}\n"
+BOXED = ["--box", "{box}"]
+
+
+def started(n: str, name: str, args=BOXED) -> str:
+    return f"{n} {name}: started ({st.mark(name, list(args))})\n"
 
 
 def test_a_run_is_kept_step_by_step_and_the_page_is_the_same(tmp_path):
@@ -277,9 +282,12 @@ def test_a_run_is_kept_step_by_step_and_the_page_is_the_same(tmp_path):
         "00-stack.txt", "01-heavy.txt", "02-light.txt", "03-amounts.txt",
     ]  # fmt: skip
     assert (to / "00-stack.txt").read_text() == (
-        "01 heavy: started\n01 heavy: exit 0, 5 lines\n"
-        "02 light: started\n02 light: exit 0, 1 line\n"
-        "03 amounts: started\n03 amounts: exit 42, 0 lines\n"
+        started("01", "heavy")
+        + "01 heavy: exit 0, 5 lines\n"
+        + started("02", "light")
+        + "02 light: exit 0, 1 line\n"
+        + started("03", "amounts")
+        + "03 amounts: exit 42, 0 lines\n"
         "done: 0 of 3 steps flagged\n"
     )
     heavy = (to / "01-heavy.txt").read_text()
@@ -296,7 +304,8 @@ def test_a_step_that_only_complains_keeps_its_complaint_and_is_flagged(tmp_path)
     assert got.returncode == 42 and "refused: not a kernel box" in got.stdout
     assert (to / "01-heavy.txt").read_text() == "refused: not a kernel box\n"
     assert (to / "00-stack.txt").read_text() == (
-        "01 heavy: started\n01 heavy: exit 2, 1 line, flagged\ndone: 1 of 1 steps flagged\n"
+        started("01", "heavy", ["--nope"])
+        + "01 heavy: exit 2, 1 line, flagged\ndone: 1 of 1 steps flagged\n"
     )
 
 
@@ -324,7 +333,7 @@ def test_a_step_is_written_as_it_prints_not_when_it_ends(tmp_path):
             break
     out, _ = p.communicate(timeout=30)
     assert seen_early, "the first line was there to follow while the step still ran"
-    assert (to / "00-stack.txt").read_text().startswith("01 slow: started\n")
+    assert (to / "00-stack.txt").read_text().startswith("01 slow: started (")
     assert (to / "01-slow.txt").read_text() == "first\nsecond\n" and "second" in out
 
 
@@ -391,9 +400,206 @@ def test_step_files_sort_in_the_order_they_ran_however_many(tmp_path, monkeypatc
     assert (
         lots.file(7, "todo").name == "007-todo.txt" and lots.log.name == "000-stack.txt"
     )
-    lots.end(7, "todo", 0, "a\n\nb", "")
-    lots.end(8, "x", 42, "", "flagged")
+    lots.end(7, "todo", 0, "a\n\nb", 2, "", False)
+    lots.end(8, "x", 42, "", 0, "", True)
+    lots.end(9, "r", 42, "r: populated, 1 thing\n## g\n  a  b", 2, "populated", True)
+    assert lots.log.read_text() == (
+        "007 todo: exit 0, 2 lines\n008 x: exit 42, 0 lines, flagged\n"
+        "009 r: exit 42, 3 lines, mass 2, populated, flagged\n"
+    )
+
+
+# ── going on with a run that was cut off, or whose stack grew ────────────────
+REP = (
+    "import json, sys\n"
+    "doc = {'addon': 'rep', 'state': 'populated', 'said': '2 things', 'groups': "
+    "[{'name': 'a group', 'rows': [{'where': 'a.txt:1', 'what': 'one'}, {'where': 'b.txt:2', 'what': 'two'}]}]}\n"
+    "if __name__ == '__main__':\n"
+    "    print(json.dumps(doc) if '--json' in sys.argv else 'not asked for json')\n"
+    "    sys.exit(42)\n"
+)
+FOUR = THREE + "- rep -- --box {box}\n"
+
+
+def a_run(tmp_path, text=FOUR):
+    folder = STACK.parents[1] / "rep"
+    folder.mkdir(exist_ok=True)
+    (folder / "README.md").write_text("<!-- willow-addon\noutput: report\n-->\n")
+    (folder / "rep.py").write_text(REP)
+    box = a_box(tmp_path)
+    stack = a_stack(tmp_path, text)
+    to = tmp_path / "run"
+    to.mkdir()
+    first = run("--box", str(box), "--stack", str(stack), "--to", str(to))
+    assert first.returncode in (0, 42), first.stdout + first.stderr
+    return box, stack, to, first
+
+
+def again(box, stack, to):
+    return run("--box", str(box), "--stack", str(stack), "--to", str(to), "--resume")
+
+
+def test_a_finished_run_resumed_runs_nothing_and_gives_the_same_page(tmp_path):
+    box, stack, to, first = a_run(tmp_path)
+    log = (to / "00-stack.txt").read_text()
+    assert "04 rep: exit 42, 4 lines, mass 3, populated, flagged\n" in log
+    files = snapshot(to)
+    got = again(box, stack, to)
+    assert (got.returncode, got.stdout, got.stderr) == (
+        first.returncode,
+        first.stdout,
+        first.stderr,
+    )
+    assert (to / "00-stack.txt").read_text() == log + (
+        "resumed: 4 of 4 steps had finished\n"
+        "01 heavy: kept from before\n02 light: kept from before\n"
+        "03 amounts: kept from before\n04 rep: kept from before\n"
+        "done: 1 of 4 steps flagged\n"
+    )
+    del files["00-stack.txt"]
+    assert {k: v for k, v in snapshot(to).items() if k != "00-stack.txt"} == files
+    # and again: what it kept the second time, it keeps the third
+    third = again(box, stack, to)
     assert (
-        lots.log.read_text()
-        == "007 todo: exit 0, 2 lines\n008 x: exit 42, 0 lines, flagged\n"
+        third.stdout == first.stdout
+        and (to / "00-stack.txt").read_text().count("started (") == 4
+    )
+
+
+def test_a_run_cut_off_goes_on_from_the_step_it_was_in(tmp_path):
+    box, stack, to, first = a_run(tmp_path)
+    log = (to / "00-stack.txt").read_text()
+    cut = log[: log.index("02 light: exit")]  # stopped while light was running
+    (to / "00-stack.txt").write_text(cut)
+    (to / "02-light.txt").write_text("half a li")
+    (to / "03-amounts.txt").unlink()
+    (to / "04-rep.txt").unlink()
+    got = again(box, stack, to)
+    assert (got.returncode, got.stdout) == (first.returncode, first.stdout)
+    assert (to / "00-stack.txt").read_text() == cut + (
+        "resumed: 1 of 4 steps had finished\n01 heavy: kept from before\n"
+        + started("02", "light")
+        + "02 light: exit 0, 1 line\n"
+        + started("03", "amounts")
+        + "03 amounts: exit 42, 0 lines\n"
+        + started("04", "rep")
+        + "04 rep: exit 42, 4 lines, mass 3, populated, flagged\n"
+        "done: 1 of 4 steps flagged\n"
+    )
+    assert (to / "02-light.txt").read_text().startswith("light line 1")
+
+
+def test_a_step_asked_another_way_runs_and_so_does_every_step_after_it(tmp_path):
+    box, stack, to, _ = a_run(tmp_path)
+    log = (to / "00-stack.txt").read_text()
+    stack.write_text(
+        FOUR.replace("- light -- --box {box}", "- light -- --box {box} more")
+    )
+    got = again(box, stack, to)
+    added = (to / "00-stack.txt").read_text()[len(log) :]
+    assert added == (
+        "resumed: 4 of 4 steps had finished\n01 heavy: kept from before\n"
+        + started("02", "light", [*BOXED, "more"])
+        + "02 light: exit 0, 1 line\n"
+        + started("03", "amounts")
+        + "03 amounts: exit 42, 0 lines\n"
+        + started("04", "rep")
+        + "04 rep: exit 42, 4 lines, mass 3, populated, flagged\n"
+        "done: 1 of 4 steps flagged\n"
+    ), "amounts and rep had finished, and ran: they come after a step that changed"
+    assert got.returncode == 42
+
+
+def test_a_step_added_at_the_end_is_the_only_one_run(tmp_path):
+    box, stack, to, _ = a_run(tmp_path, THREE)
+    log = (to / "00-stack.txt").read_text()
+    stack.write_text(THREE + "- heavy -- --box {box}\n")
+    got = again(box, stack, to)
+    added = (to / "00-stack.txt").read_text()[len(log) :]
+    assert added == (
+        "resumed: 3 of 4 steps had finished\n01 heavy: kept from before\n"
+        "02 light: kept from before\n03 amounts: kept from before\n"
+        + started("04", "heavy")
+        + "04 heavy: exit 0, 5 lines\ndone: 0 of 4 steps flagged\n"
+    )
+    assert got.returncode == 0 and got.stdout.count("heavy line 1") == 2
+
+
+def test_a_step_whose_output_is_gone_or_whose_add_on_changed_is_run(tmp_path):
+    box, stack, to, first = a_run(tmp_path)
+    (to / "01-heavy.txt").unlink()
+    got = again(box, stack, to)
+    assert got.stdout == first.stdout
+    assert "kept from before" not in (to / "00-stack.txt").read_text()
+    stack.write_text(
+        FOUR.replace(
+            "- heavy -- --box {box}\n- light", "- light -- --box {box}\n- light"
+        )
+    )
+    again(box, stack, to)
+    assert (
+        "01 light: started (" in (to / "00-stack.txt").read_text().split("resumed:")[-1]
+    )
+
+
+def test_resume_wants_a_run_to_go_on_with(tmp_path):
+    box = a_box(tmp_path)
+    stack = a_stack(tmp_path, THREE)
+    got = run("--box", str(box), "--stack", str(stack), "--resume")
+    assert got.returncode == 2 and "stack.py" in got.stderr and got.stdout == ""
+    other = tmp_path / "other"
+    other.mkdir()
+    (other / "yours.txt").write_text("keep me")
+    got = run("--box", str(box), "--stack", str(stack), "--to", str(other), "--resume")
+    assert got.returncode == 2 and "it has no log to resume from" in got.stderr
+    assert snapshot(other) == {"yours.txt": b"keep me"} and got.stdout == ""
+    got = run("--box", str(box), "--stack", str(stack), "--to", str(other))
+    assert (
+        got.returncode == 2
+        and "--resume goes on with the run that's in it" in got.stderr
+    )
+    empty = tmp_path / "empty"
+    empty.mkdir()
+    plain = run("--box", str(box), "--stack", str(stack))
+    got = run("--box", str(box), "--stack", str(stack), "--to", str(empty), "--resume")
+    assert got.stdout == plain.stdout, "nothing to go on with is a run from the start"
+    assert "resumed" not in (empty / "00-stack.txt").read_text()
+
+
+def test_ended_reads_only_what_the_log_last_says_of_a_step():
+    m1, m2 = st.mark("a", []), st.mark("b", ["x"])
+    log = (
+        f"01 a: started ({m1})\n01 a: exit 0, 3 lines\n"
+        f"02 b: started ({m2})\n02 b: exit 42, 4 lines, mass 3, populated, flagged\n"
+        "03 c: exit 0, 1 line\n"  # an end with no start
+        f"04 d: started ({m1})\n04 e: exit 0, 1 line\n"  # an end under another name
+        "done: 1 of 4 steps flagged\nresumed: 2 of 4 steps had finished\n"
+        "01 a: kept from before\nnonsense\n\n"
+    )
+    assert st.ended(log) == {
+        1: {
+            "name": "a",
+            "mark": m1,
+            "code": 0,
+            "size": 3,
+            "flagged": False,
+            "note": "",
+        },
+        2: {
+            "name": "b",
+            "mark": m2,
+            "code": 42,
+            "size": 3,
+            "flagged": True,
+            "note": "populated",
+        },
+    }
+    # started again and not ended: not finished, whatever came before
+    assert 1 not in st.ended(log + f"01 a: started ({m1})\n") and 2 in st.ended(
+        log + f"01 a: started ({m1})\n"
+    )
+    assert st.ended("") == {}
+    assert (
+        st.mark("a", ["x"]) != st.mark("a", ["y"]) != st.mark("b", ["y"])
+        and len(m1) == 8
     )
