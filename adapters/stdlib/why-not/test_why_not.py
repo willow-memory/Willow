@@ -192,3 +192,161 @@ def test_a_bad_command_line_says_how_to_run_it(tmp_path):
 def test_one_word_is_not_pluralised(tmp_path):
     got = run("--box", str(box(tmp_path)), "zebra")
     assert "a passage has to hold 1 of the 1 word at once" in got.stdout
+
+
+# ── every question of a file, and only the ones a scan found nothing for ────
+QUESTIONS = (
+    "# what I ask\n"
+    "beans\twhen do the beans go in\n"
+    "\n"
+    "frost\twhen does the frost come in autumn\n"
+    "roof\twho mended the roof slates\n"
+)
+
+
+def asked(tmp_path: Path, text: str = QUESTIONS) -> Path:
+    q = tmp_path / "questions.txt"
+    q.write_text(text)
+    return q
+
+
+def scanned(tmp_path: Path, states: dict[str, str]) -> Path:
+    """What scan would have printed: a line a question, its name and state."""
+    path = tmp_path / "scanned.txt"
+    path.write_text(
+        "".join(
+            json.dumps({"question": n, "state": s, "served": []}) + "\n"
+            for n, s in states.items()
+        )
+    )
+    return path
+
+
+def test_each_question_of_a_file_that_finds_nothing_is_a_group(tmp_path):
+    b = box(tmp_path)
+    got = run("--box", str(b), "--questions", str(asked(tmp_path)), "--json")
+    assert got.returncode == 42, got.stderr
+    doc = json.loads(got.stdout)
+    assert doc["state"] == "populated"
+    assert doc["said"] == "2 of 3 questions found nothing; each says why"
+    names = [g["name"] for g in doc["groups"]]
+    assert names == [
+        "frost: when does the frost come in autumn",
+        "roof: who mended the roof slates",
+    ], "the one the files hold has no group; the rest keep the file's order"
+    frost = doc["groups"][0]["rows"]
+    assert frost[0] == {
+        "where": "",
+        "what": "a passage has to hold 2 of the 3 words at once",
+    }
+    assert {"where": "autumn", "what": "no passage holds it"} in frost
+    assert any(
+        r["where"] == "diary.txt:3" and "holds 1 (frost)" in r["what"] for r in frost
+    )
+    assert not any(r["where"] == "kind of file" for r in frost), "the kind is left out"
+    roof = doc["groups"][1]["rows"]
+    assert roof[0]["what"].endswith("; no passage holds any of them")
+
+
+def test_a_bare_question_is_named_by_its_line(tmp_path):
+    b = box(tmp_path)
+    q = asked(tmp_path, "when do the beans go in\nwho mended the roof slates\n")
+    doc = json.loads(run("--box", str(b), "--questions", str(q), "--json").stdout)
+    assert [g["name"] for g in doc["groups"]] == ["2: who mended the roof slates"]
+    assert doc["said"] == "1 of 2 questions found nothing; each says why"
+
+
+def test_a_file_the_folder_answers_whole_has_nothing_to_explain(tmp_path):
+    b = box(tmp_path)
+    q = asked(tmp_path, "beans\twhen do the beans go in\n")
+    got = run("--box", str(b), "--questions", str(q), "--json")
+    assert got.returncode == 0
+    doc = json.loads(got.stdout)
+    assert doc["state"] == "empty" and doc["groups"] == []
+    assert doc["said"] == "your files hold all 1 question; nothing to explain"
+
+
+def test_only_the_questions_a_scan_said_were_empty_are_explained(tmp_path):
+    b = box(tmp_path)
+    q = asked(tmp_path)
+    of = scanned(
+        tmp_path, {"beans": "populated", "frost": "populated", "roof": "empty"}
+    )
+    got = run("--box", str(b), "--questions", str(q), "--of", str(of), "--json")
+    assert got.returncode == 42, got.stderr
+    doc = json.loads(got.stdout)
+    assert [g["name"] for g in doc["groups"]] == ["roof: who mended the roof slates"]
+    assert doc["said"] == "1 of 1 question found nothing; each says why"
+
+
+def test_a_scan_that_found_them_all_hands_on_nothing_to_explain(tmp_path):
+    b = box(tmp_path)
+    of = scanned(tmp_path, {"beans": "populated", "frost": "populated"})
+    got = run(
+        "--box", str(b), "--questions", str(asked(tmp_path)), "--of", str(of), "--json"
+    )
+    assert got.returncode == 0
+    doc = json.loads(got.stdout)
+    assert doc["state"] == "empty"
+    assert doc["said"] == "the scan handed on no empty question; nothing to explain"
+
+
+def test_what_isnt_a_scans_is_refused_and_says_which_line(tmp_path):
+    b = box(tmp_path)
+    q = asked(tmp_path)
+    bad = tmp_path / "bad.txt"
+    bad.write_text(json.dumps({"question": "roof", "state": "empty"}) + "\nnot json\n")
+    got = run("--box", str(b), "--questions", str(q), "--of", str(bad))
+    assert got.returncode == 2
+    assert (
+        "can't be taken: line 2 has no question and state, as scan's lines do"
+        in got.stderr
+    )
+    bad.write_text(json.dumps({"question": "roof"}) + "\n")
+    got = run("--box", str(b), "--questions", str(q), "--of", str(bad))
+    assert got.returncode == 2 and "line 1 has no question and state" in got.stderr
+    bad.write_text("\n\n")
+    got = run("--box", str(b), "--questions", str(q), "--of", str(bad))
+    assert got.returncode == 2
+    assert "it is empty: the step before said nothing to hand on" in got.stderr
+    got = run("--box", str(b), "--questions", str(q), "--of", str(tmp_path / "gone"))
+    assert got.returncode == 2 and "could not be read" in got.stderr
+
+
+def test_a_questions_file_with_no_question_or_asked_wrongly_is_refused(tmp_path):
+    b = box(tmp_path)
+    q = asked(tmp_path)
+    none = tmp_path / "none.txt"
+    none.write_text("# nothing here\n\n")
+    got = run("--box", str(b), "--questions", str(none))
+    assert got.returncode == 2 and "holds no question" in got.stderr
+    of = scanned(tmp_path, {"roof": "empty"})
+    for argv in (
+        ["--box", str(b), "--questions", str(q), "a question too"],
+        ["--box", str(b), "--of", str(of), "a question"],
+        ["--box", str(b), "--questions"],
+        ["--box", str(b), "--questions", str(q), "--of"],
+        ["--box", str(b), "--questions", str(tmp_path / "gone")],
+    ):
+        assert run(*argv).returncode == 2, argv
+    usage = run().stderr
+    assert "--questions FILE [--of SCANNED]" in usage and "why_not.py" in usage
+
+
+def test_many_questions_write_nothing(tmp_path):
+    b = box(tmp_path)
+    before = {p: p.read_bytes() for p in sorted(b.rglob("*")) if p.is_file()}
+    of = scanned(tmp_path, {"roof": "empty"})
+    run("--box", str(b), "--questions", str(asked(tmp_path)), "--of", str(of))
+    assert {p: p.read_bytes() for p in sorted(b.rglob("*")) if p.is_file()} == before
+
+
+def test_the_text_of_many_is_a_heading_a_question(tmp_path):
+    b = box(tmp_path)
+    got = run("--box", str(b), "--questions", str(asked(tmp_path)))
+    lines = got.stdout.splitlines()
+    assert (
+        lines[0] == "why-not: populated, 2 of 3 questions found nothing; each says why"
+    )
+    assert "## frost: when does the frost come in autumn" in lines
+    assert "## roof: who mended the roof slates" in lines

@@ -283,10 +283,15 @@ def main(argv: list[str]) -> int:
         try:
             many = questions(Path(opts["--questions"]).read_text(encoding="utf-8"))
             scanned = (
-                Path(opts["--of"]).read_text(encoding="utf-8") if "--of" in opts else None
+                Path(opts["--of"]).read_text(encoding="utf-8")
+                if "--of" in opts
+                else None
             )
         except (OSError, ValueError) as e:
-            print(f"refused: a file could not be read: {type(e).__name__}", file=sys.stderr)
+            print(
+                f"refused: a file could not be read: {type(e).__name__}",
+                file=sys.stderr,
+            )
             return kernel.REFUSED
         if not many:
             print(f"refused: {opts['--questions']} holds no question", file=sys.stderr)
@@ -318,6 +323,7 @@ def main(argv: list[str]) -> int:
     state, said, groups = one(pile, args[0], alias or {})
     say(report(NAME, state, said, groups), as_json)
     return kernel.ALIVE if state == "empty" else kernel.ESCALATE
+
 
 if __name__ == "__main__":
     raise SystemExit(main(sys.argv[1:]))
