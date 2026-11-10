@@ -92,7 +92,8 @@ def test_a_sealed_stack_is_a_page_with_each_steps_card_promises_and_reason(tmp_p
     )
     due = next(x for x in lines if x.startswith("| stack |"))
     assert "One page made from several add-ons run in the order you list them" in due
-    assert "writes nothing; network none" in due
+    # the stack's own card: it writes the run folder named with --to
+    assert "writes to; network none" in due
     assert "chosen for “due” over renewals: the boiler isn't a subscription |" in due
     # the stack itself, to run, and nothing of the folder
     assert (
