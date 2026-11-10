@@ -45,14 +45,19 @@ def a_run(tmp_path: Path, **steps: str) -> Path:
     return folder
 
 
-def box(tmp_path: Path, text: str = DIARY) -> Path:
+def box(tmp_path: Path, text: str = DIARY, words: str = "") -> Path:
     pile = tmp_path / "pile"
     pile.mkdir()
     (pile / "diary.txt").write_text(text)
     b = tmp_path / "box"
+    more = []
+    if words:
+        (tmp_path / "w.txt").write_text(words)
+        (tmp_path / "w.txt").chmod(0o600)
+        more = ["--words", str(tmp_path / "w.txt")]
     subprocess.run(
         [sys.executable, str(KERNEL), "init", "--box", str(b), "--pile", str(pile),
-         "--key", str(tmp_path / "k"), "--now", "2026-10-24T00:00:00Z"],
+         "--key", str(tmp_path / "k"), "--now", "2026-10-24T00:00:00Z", *more],
         check=True, capture_output=True,
     )  # fmt: skip
     return b
@@ -291,3 +296,29 @@ def test_nothing_is_written(tmp_path):
     before = now()
     run("ruth's phone number", "--run", r, "--box", b, "--kinds", k)
     assert now() == before
+
+
+def test_no_more_than_three_passages_of_your_files_are_shown(tmp_path):
+    text = "".join(f"The frost came early in year {n}.\n\n" for n in range(1, 6))
+    b = box(tmp_path, text)
+    doc = json.loads(run("frost came early", "--box", b, "--json").stdout)
+    assert len(doc["groups"][0]["rows"]) == look.PASSAGES == 3
+    assert doc["said"].endswith("3 lines from your files")
+
+
+def test_a_word_your_list_reads_another_way_is_not_said_to_be_lacking(tmp_path):
+    b = box(tmp_path, words="telephone = phone\n")
+    doc = json.loads(run("ruth's telephone number", "--box", b, "--json").stdout)
+    assert doc["groups"][0]["name"] == (
+        "your files: the passages holding the most of your words"
+    )
+
+
+def test_a_long_place_doesnt_push_every_row_past_sixty(tmp_path):
+    b = box(tmp_path)
+    long = "a-very-long-name-for-a-file-of-frost-" * 2 + ".txt"
+    (tmp_path / "pile" / long).write_text("The frosts came early again.\n")
+    lines = run("frosts came early", "--box", b).stdout.splitlines()
+    assert len(long) > 60
+    assert f"  {long}:1  The frosts came early again." in lines
+    assert f"  {'diary.txt:3':<60}  The frosts came early last year." in lines
