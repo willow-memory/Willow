@@ -2,7 +2,6 @@
 
     python adapters/stdlib/browse/browse.py --box DIR [--stack FILE] [--run FOLDER]
         [--port N] [--lang de|es|fr|pt] [--no-open]
-    python adapters/stdlib/browse/browse.py projects [--home DIR] [--port N] [--no-open]
     python adapters/stdlib/browse/browse.py launcher --box DIR
 
 A page to ask your folder questions, read the passages that answer them
@@ -22,12 +21,6 @@ that run and runs nothing: each step in the order it ran, whether it has
 ended and how, a report step's report drawn from the data the run kept, any
 other step's words. While the run is still going the page looks again every
 few seconds, with no script: a step's lines appear as it prints them.
-
-`projects` is the front door when you keep several: every folder under DIR
-(~/willow-stacks unless you say) that holds a box is a project, shown with
-what waits in each box, its stack files and its runs. Opening one gives the
-same pages as above for that box, with links to switch between its stacks
-and between its runs.
 
 Asking is the kernel's own `bite`, and approving is its own `seal`, so
 both are on the record exactly as if typed. With --lang, a question goes
@@ -146,12 +139,9 @@ button { font: inherit; font-weight: 600; padding: 7px 14px; border: 0; border-r
 .text { white-space: pre-wrap; overflow-wrap: anywhere; margin: 4px 0 0; }
 .said { overflow-wrap: anywhere; }
 details { margin: 8px 0; } summary { cursor: pointer; color: var(--muted); }
-pre { white-space: pre; overflow-x: auto; font: 12px/1.5 var(--mono);
+pre { white-space: pre-wrap; overflow-wrap: anywhere; font: 12px/1.5 var(--mono);
       background: var(--bg); border: 1px solid var(--line); border-radius: 4px; padding: 8px 10px; }
 .muted { color: var(--muted); }
-.switch { margin: 0 0 12px; }
-nav .here { font-weight: 700; margin-right: 16px; color: var(--accent); }
-nav .sep { color: var(--muted); margin-right: 16px; }
 .pill.wait { background: var(--accl); color: var(--fg); }
 .group { font-weight: 600; margin: 10px 0 2px; }
 .row { display: grid; grid-template-columns: minmax(7rem, 38%) 1fr; gap: 10px;
@@ -167,7 +157,7 @@ def page(title: str, body: str, more: str = "", head: str = "") -> str:
         "<!doctype html><html lang=en><head><meta charset=utf-8>"
         '<meta name=viewport content="width=device-width, initial-scale=1">'
         f"{head}<title>{esc(title)} · willow</title><style>{STYLE}</style></head><body>"
-        f'<nav><a href="/">Ask</a><a href="/waiting">Waiting for you</a>{more}</nav>'
+        f'<nav><a href="/">Home</a><a href="/waiting">Waiting for you</a>{more}</nav>'
         f"<main><h1>{esc(title)}</h1>{body}</main></body></html>"
     )
 
@@ -330,20 +320,10 @@ class Willow:
         token: str | None = None,
         stack: Path | None = None,
         run: Path | None = None,
-        base: str = "",
-        name: str = "",
-        stacks: list[Path] | None = None,
-        runs: list[Path] | None = None,
     ):
         self.box = box
-        #: every stack file and run this box's pages may show; the first is
-        #: shown unless another is asked for by name, never by path
-        self.stacks = stacks if stacks is not None else ([stack] if stack else [])
-        self.runs = runs if runs is not None else ([run] if run else [])
-        self.stack = self.stacks[0] if self.stacks else None
-        self.run = self.runs[0] if self.runs else None
-        self.base = base  # "/p/NAME" when one of several projects, else ""
-        self.name = name  # the project's name, said in the bar of its pages
+        self.stack = stack
+        self.run = run
         self.token = token or secrets.token_urlsafe(32)
         self.words = sibling(f"words-{lang}", f"words_{lang}") if lang else None
         if lang and self.words is None:
@@ -352,109 +332,66 @@ class Willow:
     def page(self, title: str, body: str, head: str = "") -> str:
         more = '<a href="/steps">What your stack found</a>' if self.stack else ""
         more += '<a href="/run">The run</a>' if self.run else ""
-        html = page(title, body, more, head)
-        if self.base:  # one of several: its links are its own, and a way back
-            html = html.replace('href="/', f'href="{self.base}/')
-            html = html.replace('action="/', f'action="{self.base}/')
-            here = f'<nav><a href="/">Projects</a><span class=sep>›</span><span class=here>{esc(self.name)}</span>'  # fmt: skip
-            html = html.replace("<nav>", here, 1)
-        return html
+        return page(title, body, more, head)
 
-    def switch(self, what: str, choices: list[Path], chosen: Path) -> str:
-        """Links to the other stacks (or runs) of this project, the one in
-        view named plainly; nothing when there is only the one."""
-        if len(choices) < 2:
-            return ""
-        links = [
-            f"<strong>{esc(c.name)}</strong>" if c == chosen
-            else f'<a href="/{what}?pick={esc(c.name)}">{esc(c.name)}</a>'
-            for c in choices
-        ]  # fmt: skip
-        return f"<p class=switch>{' · '.join(links)}</p>"
-
-    @staticmethod
-    def picked(choices: list[Path], name: str) -> Path | None:
-        """The choice of that name, or the first; a name is never a path."""
-        return next(
-            (c for c in choices if c.name == name), choices[0] if choices else None
-        )
-
-    def ran(self, pick: str = "") -> str:
+    def ran(self) -> str:
         """The run kept in the folder named with --run: read, never run."""
         title = "The run"
         st = sibling("stack", "stack")
-        run = self.picked(self.runs, pick)
-        if run is None or st is None:
+        if self.run is None or st is None:
             why = (
                 "No run was named when this was started."
                 if st
                 else "The stack add-on isn't here."
             )
             return self.page(title, f"<p class=muted>{why}</p>")
-        logs = sorted(run.glob("0*-stack.txt"))
+        logs = sorted(self.run.glob("0*-stack.txt"))
         if not logs:
-            return self.page(title, f"<p>{esc(run)} holds no run: the stack add-on's <code>--to</code> makes one.</p>")  # fmt: skip
+            return self.page(title, f"<p>{esc(self.run)} holds no run: the stack add-on's <code>--to</code> makes one.</p>")  # fmt: skip
         steps, done = run_steps(
             logs[0].read_text(encoding="utf-8", errors="replace"), st
         )
-        cards, came = [], []
+        if done:
+            body = [f"<p><strong>Finished.</strong> {esc(done)}.</p>"]
+            head = ""
+        else:
+            body = [f"<p><strong>Still running.</strong> This page looks again every {AGAIN} seconds.</p>"]  # fmt: skip
+            head = f'<meta http-equiv="refresh" content="{AGAIN}">'
         for step in steps:
             name = f"{step['n']}-{step['name']}"
-            num = f" <span class=pill>step {esc(step['n'])}</span>"
-            kept = " <span class=pill>kept from before</span>" * step.get("kept", False)
+            pills = ""
             if not step["ended"]:
-                came.append("still running")
-            doc = None
-            if step["ended"]:
-                try:
-                    doc = json.loads((run / "reports" / f"{name}.json").read_text(encoding="utf-8"))  # fmt: skip
-                    card = report_card(doc, step["code"], pills=num + kept)
-                    came.append(OUTCOMES.get(doc["state"], "said something"))
-                    cards.append(card)
-                    continue
-                except (OSError, ValueError, KeyError, TypeError):
-                    pass  # no report kept: its words
+                pills = " <span class='pill wait'>running</span>"
+            else:
+                pills += " <span class=pill>kept from before</span>" * step["kept"]
+                pills += " <span class='pill wait'>flagged</span>" * step["flagged"]
             try:
-                text = (run / f"{name}.txt").read_text(
+                doc = json.loads((self.run / "reports" / f"{name}.json").read_text(encoding="utf-8"))  # fmt: skip
+                body.append(report_card(doc, step["code"], pills=f" <span class=pill>step {esc(step['n'])}</span>{pills}"))  # fmt: skip
+                continue
+            except (OSError, ValueError, KeyError, TypeError):
+                pass  # no report kept, or the step hasn't ended: its words
+            try:
+                text = (self.run / f"{name}.txt").read_text(
                     encoding="utf-8", errors="replace"
                 )
             except OSError:
                 text = ""
-            if step["ended"]:
-                # the kernel's own exit codes: 42 is nothing to say, not a failure
-                came.append(
-                    "found nothing" if step["code"] == kernel.ESCALATE or not text.strip()
-                    else "said something" if step["code"] == kernel.ALIVE
-                    else "didn't finish cleanly"
-                )  # fmt: skip
-                wait = " wait" if came[-1] == "didn't finish cleanly" else ""
-                pill = f" <span class='pill{wait}'>{esc(came[-1])}</span>" + (f" <span class=pill>exit {step['code']}</span>" if wait else "")  # fmt: skip
-            else:
-                pill = " <span class='pill wait'>running</span>"
-            head_html = f"<p class=kick>{esc(step['name'])}{num}{pill}{kept}</p>"
-            cards.append(words_card(head_html, text))
-        tally_ = ", ".join(
-            f"{came.count(c)} {c}" for c in dict.fromkeys(ORDER) if c in came
-        )
-        n = len(steps)
-        if done:
-            said = f"<p><strong>Finished.</strong> {n} step{'s' * (n != 1)}: {esc(tally_)}.</p>"
-            head = ""
-        else:
-            said = f"<p><strong>Still running.</strong> {esc(tally_) or 'Nothing has started'}. This page looks again every {AGAIN} seconds.</p>"  # fmt: skip
-            head = f'<meta http-equiv="refresh" content="{AGAIN}">'
-        body = [self.switch("run", self.runs, run), said, *cards]
+            code = (
+                f" <span class=pill>exit {step['code']}</span>" if step["ended"] else ""
+            )
+            head_html = f"<p class=kick>{esc(step['name'])} <span class=pill>step {esc(step['n'])}</span>{code}{pills}</p>"  # fmt: skip
+            body.append(words_card(head_html, text))
         if not steps:
             body.append("<p class=muted>No step has started yet.</p>")
         return self.page(title, "".join(body), head)
 
-    def steps(self, pick: str = "") -> str:
+    def steps(self) -> str:
         """What the stack's report steps found, each drawn as a card, in the
         stack file's order under its pools' headings. Run when asked for."""
         title = "What your stack found"
         st = sibling("stack", "stack")
-        stack = self.picked(self.stacks, pick)
-        if stack is None or st is None:
+        if self.stack is None or st is None:
             why = (
                 "No stack was named when this was started."
                 if st
@@ -462,12 +399,12 @@ class Willow:
             )
             return self.page(title, f"<p class=muted>{why}</p>")
         try:
-            pools, err = st.parse_stack(stack.read_text(encoding="utf-8"))
+            pools, err = st.parse_stack(self.stack.read_text(encoding="utf-8"))
         except OSError:
-            pools, err = [], f"can't read the stack {stack}"
+            pools, err = [], f"can't read the stack {self.stack}"
         if err:
             return self.page(title, f"<p>Couldn't read your stack: {esc(err)}</p>")
-        body, left = [self.switch("steps", self.stacks, stack)], []
+        body, left = [], []
         for heading, steps in pools:
             cards = []
             for name, args in steps:
@@ -488,11 +425,7 @@ class Willow:
         if left:
             names = ", ".join(dict.fromkeys(left))
             body.append(f"<p class=muted>Not drawn here, since they print something other than a report: {esc(names)}. The stack add-on runs those.</p>")  # fmt: skip
-        if not any(body[1:]):
-            body.append(
-                "<p class=muted>Your stack has no step that prints a report.</p>"
-            )
-        return self.page(title, "".join(body))
+        return self.page(title, "".join(body) or "<p class=muted>Your stack has no step that prints a report.</p>")  # fmt: skip
 
     def home(self) -> str:
         dg = sibling("digest", "digest")
@@ -646,15 +579,6 @@ class Willow:
 
 
 AGAIN = 3  # seconds between looks at a run that is still going
-#: what a step came to, in a person's words: a report's by its state, any
-#: other step's by its exit code as its own card reads it
-OUTCOMES = {
-    "populated": "found something",
-    "empty": "found nothing",
-    "unreachable": "couldn't look",
-}
-ORDER = ("found something", "said something", "found nothing", "couldn't look",
-         "didn't finish cleanly", "still running")  # fmt: skip
 
 
 def run_steps(log: str, st) -> tuple[list[dict], str | None]:
@@ -699,157 +623,10 @@ def words_card(head: str, text: str, shown: int = SHOWN) -> str:
     return f"<div class=card>{head}{first}{rest}</div>"
 
 
-def tally(box: Path) -> dict:
-    """A box in four counts, or why it can't be counted: questions asked,
-    answers approved, suggestions waiting, rows on the record."""
-    rows, breaks = kernel.read(box / "record.jsonl")
-    if breaks:
-        return {"broken": "; ".join(breaks)}
-    done = {**kernel.sealed(box, rows), **kernel.declined(box, rows)}
-    waiting = sum(1 for r in rows if r["kind"] == "proposal"
-                  and r.get("verdict") == "pass" and r["subject"] not in done)  # fmt: skip
-    return {
-        "asked": sum(1 for r in rows if r["kind"] == "bite"),
-        "approved": len(kernel.sealed(box, rows)),
-        "waiting": waiting,
-        "rows": len(rows),
-    }
-
-
-def find_projects(home: Path) -> list[dict]:
-    """Each folder under `home` that holds a box: its boxes, the stack files
-    beside them, and its runs (here, or one folder down), newest first.
-    A project is found by what it holds, never by a name it was given."""
-    st = sibling("stack", "stack")
-    out = []
-    for d in sorted(
-        p for p in home.iterdir() if p.is_dir() and not p.name.startswith(".")
-    ):
-        boxes = sorted(b for b in d.iterdir() if (b / "kernel.json").is_file())
-        if not boxes:
-            continue
-        stacks = []
-        for f in sorted(d.glob("*.md")) if st else []:
-            try:
-                if not st.parse_stack(f.read_text(encoding="utf-8"))[1]:
-                    stacks.append(f)
-            except (OSError, ValueError):
-                pass
-        # a run is a folder with a stack's log in it: here, or one folder down
-        # (runs/, mine/, whatever the person called it), never inside a box
-        places = [d, *(c for c in d.iterdir() if c.is_dir() and c not in boxes)]
-        runs = [
-            r
-            for place in places
-            for r in sorted(place.iterdir())
-            if r.is_dir() and r not in boxes and any(r.glob("0*-stack.txt"))
-        ]
-        runs.sort(key=lambda r: (-r.stat().st_mtime, r.name))
-        out.append(
-            {
-                "name": d.name,
-                "folder": d,
-                "boxes": boxes,
-                "stacks": stacks,
-                "runs": runs,
-            }
-        )
-    return out
-
-
-class Projects:
-    """The front door: every project under one folder, and the pages of each."""
-
-    def __init__(self, home: Path, token: str | None = None):
-        self.home = home
-        self.token = token or secrets.token_urlsafe(32)
-
-    def key(self, project: dict, box: Path) -> str:
-        return f"{project['name']}~{box.name}"
-
-    def willow(self, key: str) -> Willow | None:
-        """The pages for one box of one project, by its key; None if no
-        project found now has that key (a key is looked up, never joined
-        to a path)."""
-        for pr in find_projects(self.home):
-            for box in pr["boxes"]:
-                if self.key(pr, box) == key:
-                    name = (
-                        pr["name"]
-                        if len(pr["boxes"]) == 1
-                        else f"{pr['name']} ({box.name})"
-                    )
-                    return Willow(box, None, self.token, base=f"/p/{key}", name=name,
-                                  stacks=pr["stacks"], runs=pr["runs"])  # fmt: skip
-        return None
-
-    def front(self) -> str:
-        found = find_projects(self.home)
-        body = []
-        for pr in found:
-            boxes = []
-            for box in pr["boxes"]:
-                t = tally(box)
-                if "broken" in t:
-                    said = f"<span class='pill wait'>its record doesn't check out</span> {esc(t['broken'])}"
-                else:
-                    said = (
-                        (
-                            f"<span class='pill wait'>{t['waiting']} waiting on you</span> "
-                            if t["waiting"]
-                            else ""
-                        )
-                        + f"<span class=pill>{t['approved']} approved</span> "
-                        f"<span class=pill>{t['asked']} asked</span>"
-                    )
-                boxes.append(
-                    f'<div class=row><a href="/p/{esc(self.key(pr, box))}/">{esc(box.name)}</a>'
-                    f"<p class=text>{said}</p></div>"
-                )
-            n, m = len(pr["stacks"]), len(pr["runs"])
-            stacks = ", ".join(esc(f.name) for f in pr["stacks"]) or "none yet"
-            latest = f", the latest {esc(pr['runs'][0].name)}" if m else ""
-            body.append(
-                f"<div class=card><p class=kick>project</p><h2>{esc(pr['name'])}</h2>"
-                + "".join(boxes)
-                + f"<p class=muted>{n} stack{'s' * (n != 1)}: {stacks}. {m} run{'s' * (m != 1)} kept{latest}.</p></div>"
-            )
-        if not found:
-            body.append(
-                f"<p class=muted>No folder under {esc(self.home)} holds a box yet.</p>"
-            )
-        examples = sorted(p.stem for p in (STDLIB / "stack" / "examples").glob("*.md"))
-        body.append(
-            "<h2>Start a new one</h2><p>A new project is put together on the canvas, "
-            "willow's page for choosing folders and what to do with them. This page "
-            "can't open it for you yet; from a terminal, in willow's folder:</p>"
-            f"<pre>python ui/canvas.py --to {esc(self.home)}/NAME</pre>"
-            + (
-                f"<p class=muted>It can start from an example: {esc(', '.join(examples))}.</p>"
-                if examples
-                else ""
-            )
-        )
-        html = page("Your projects", "".join(body))
-        return html.replace('<a href="/">Ask</a><a href="/waiting">Waiting for you</a>', '<a href="/">Projects</a>', 1)  # fmt: skip
-
-
 # ── the server ───────────────────────────────────────────────────────────────
 class Handler(BaseHTTPRequestHandler):
-    willow: Willow | None  # the one box's pages, or None when there are projects
-    projects: "Projects | None" = None
-    token: str
+    willow: Willow
     hosts: frozenset
-
-    def site(self, path: str) -> tuple[Willow | None, str]:
-        """(whose pages, the path within them) for an address: the one box's,
-        or under /p/KEY/ the project's of that key."""
-        if self.projects is None:
-            return self.willow, path
-        if path.startswith("/p/"):
-            key, _, rest = path[3:].partition("/")
-            return self.projects.willow(key), "/" + rest
-        return None, path
 
     def log_message(self, *args) -> None:  # the questions stay off the terminal
         pass
@@ -882,7 +659,7 @@ class Handler(BaseHTTPRequestHandler):
         if self.headers.get("Host", "") not in self.hosts:
             self.refuse("This page only answers to this machine's own address.")
             return False
-        if not hmac.compare_digest(self.cookie(), self.token):
+        if not hmac.compare_digest(self.cookie(), self.willow.token):
             self.refuse("This browser hasn't been given this start's link.")
             return False
         return True
@@ -895,30 +672,26 @@ class Handler(BaseHTTPRequestHandler):
                     "This page only answers to this machine's own address."
                 )
             given = parse_qs(url.query).get("key", [""])[0]
-            if not hmac.compare_digest(given, self.token):
+            if not hmac.compare_digest(given, self.willow.token):
                 return self.refuse("That link is from another start, or was cut short.")
             return self.send(
                 303,
                 "",
                 {
                     "Location": "/",
-                    "Set-Cookie": f"{COOKIE}={self.token}; HttpOnly; SameSite=Strict; Path=/",
+                    "Set-Cookie": f"{COOKIE}={self.willow.token}; HttpOnly; SameSite=Strict; Path=/",
                 },
             )
         if not self.allowed():
             return None
-        if self.projects is not None and url.path == "/":
-            return self.send(200, self.projects.front())
-        willow, path = self.site(url.path)
-        pick = parse_qs(url.query).get("pick", [""])[0]
-        if willow is not None and path == "/":
-            return self.send(200, willow.home())
-        if willow is not None and path == "/waiting":
-            return self.send(200, willow.waiting())
-        if willow is not None and path == "/steps":
-            return self.send(200, willow.steps(pick))
-        if willow is not None and path == "/run":
-            return self.send(200, willow.ran(pick))
+        if url.path == "/":
+            return self.send(200, self.willow.home())
+        if url.path == "/waiting":
+            return self.send(200, self.willow.waiting())
+        if url.path == "/steps":
+            return self.send(200, self.willow.steps())
+        if url.path == "/run":
+            return self.send(200, self.willow.ran())
         return self.send(
             404, page("Not here", "<p>There's no page at that address.</p>")
         )
@@ -933,13 +706,13 @@ class Handler(BaseHTTPRequestHandler):
         if size > MAX_FORM:
             return self.send(413, page("Too long", "<p>That form was too long.</p>"))
         form = parse_qs(self.rfile.read(size).decode("utf-8", "replace"))
-        if not hmac.compare_digest(form.get("token", [""])[0], self.token):
+        if not hmac.compare_digest(form.get("token", [""])[0], self.willow.token):
             return self.refuse("That form wasn't made by this page.")
-        willow, path = self.site(urlsplit(self.path).path)
-        if willow is not None and path == "/ask":
-            return self.send(200, willow.ask(form.get("q", [""])[0]))
-        if willow is not None and path == "/approve":
-            return self.send(200, willow.approve(form.get("subject", [""])[0]))
+        url = urlsplit(self.path)
+        if url.path == "/ask":
+            return self.send(200, self.willow.ask(form.get("q", [""])[0]))
+        if url.path == "/approve":
+            return self.send(200, self.willow.approve(form.get("subject", [""])[0]))
         return self.send(
             404, page("Not here", "<p>There's no page at that address.</p>")
         )
@@ -952,7 +725,7 @@ class Server(HTTPServer):
         self.server_name, self.server_port = self.server_address[:2]
 
 
-def serve(willow: "Willow | Projects", port: int = 0) -> Server:
+def serve(willow: Willow, port: int = 0) -> Server:
     """A server for `willow` on 127.0.0.1, bound but not yet serving."""
     server = Server(("127.0.0.1", port), Handler)
     bound = server.server_address[1]
@@ -960,9 +733,7 @@ def serve(willow: "Willow | Projects", port: int = 0) -> Server:
         "BoundHandler",
         (Handler,),
         {
-            "willow": willow if isinstance(willow, Willow) else None,
-            "projects": willow if isinstance(willow, Projects) else None,
-            "token": willow.token,
+            "willow": willow,
             "hosts": frozenset({f"127.0.0.1:{bound}", f"localhost:{bound}"}),
         },
     )
@@ -1002,42 +773,6 @@ def launcher(box: Path) -> str:
     return "\n".join(out)
 
 
-def main_projects(argv: list[str]) -> int:
-    opts, flags, rest, it = {}, set(), [], iter(argv)
-    for a in it:
-        if a in ("--home", "--port"):
-            opts[a] = next(it, "")
-        elif a == "--no-open":
-            flags.add(a)
-        else:
-            rest.append(a)
-    port = opts.get("--port", "0")
-    if rest or not port.isdigit() or int(port) > 65535 or ("--home" in opts and not opts["--home"]):  # fmt: skip
-        print(__doc__.split("\n\n")[1], file=sys.stderr)
-        return kernel.REFUSED
-    home = Path(opts["--home"]) if "--home" in opts else Path.home() / "willow-stacks"
-    if not home.is_dir():
-        print(f"refused: {home} isn't a folder that's there", file=sys.stderr)
-        return kernel.REFUSED
-    try:
-        site = Projects(home)
-        server = serve(site, int(port))
-    except OSError as e:
-        print(f"refused: {e}", file=sys.stderr)
-        return kernel.REFUSED
-    link = f"http://127.0.0.1:{server.server_address[1]}/start?key={site.token}"
-    print(f"willow is open on this machine only:\n\n    {link}\n\nCtrl-C stops it.", flush=True)  # fmt: skip
-    if "--no-open" not in flags:
-        webbrowser.open(link)
-    try:
-        server.serve_forever()
-    except KeyboardInterrupt:
-        pass
-    finally:
-        server.server_close()
-    return kernel.ALIVE
-
-
 def main(argv: list[str]) -> int:
     if argv[:1] == ["launcher"]:
         if len(argv) != 3 or argv[1] != "--box":
@@ -1049,8 +784,6 @@ def main(argv: list[str]) -> int:
             return kernel.REFUSED
         print(launcher(box), end="")
         return kernel.ALIVE
-    if argv[:1] == ["projects"]:
-        return main_projects(argv[1:])
     opts, flags, rest, it = {}, set(), [], iter(argv)
     for a in it:
         if a in ("--box", "--port", "--lang", "--stack", "--run"):
