@@ -621,7 +621,7 @@ willow/
 │   │   │   └── README.md
 │   │   ├── route/
 │   │   │   ├── kinds.txt
-│   │   │   ├── route.py      A question sent to the step whose job it is: money owed to debts and invoices, a date to what's coming up, a thing you wrote down to the ask
+│   │   │   ├── route.py      A question sent to the step whose job it is, by a file of kinds you can edit
 │   │   │   ├── test_route.py
 │   │   │   └── README.md     its card
 ```
@@ -886,7 +886,7 @@ willow/
 │   │   │   ├── test_forecasts.py
 │   │   │   └── README.md
 │   │   ├── handover/
-│   │   │   ├── handover.py   Where one project stands, to hand on: what waits on you, what each stack's last run said step by step, and where each line can be checked
+│   │   │   ├── handover.py   Where one project stands, to hand on, from what its runs kept
 │   │   │   ├── test_handover.py
 │   │   │   └── README.md     its card
 │   │   ├── invoices/
