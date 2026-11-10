@@ -755,3 +755,99 @@ def test_a_step_that_printed_nothing_says_so_and_no_run_is_no_page(
     )
     assert "isn't a folder that's there" in capsys.readouterr().err
     assert br.main(["--box", str(site.willow.box), "--run"]) == 2
+
+
+# ── a question goes to the steps whose job it is, and a miss says why ───────
+LOOK_HERE = (br.STDLIB / "look" / "look.py").is_file()
+WHY_NOT_HERE = (br.STDLIB / "why-not" / "why_not.py").is_file()
+
+
+def a_kept_run(tmp_path: Path, **steps: str) -> Path:
+    run = tmp_path / "run"
+    run.mkdir()
+    (run / "00-stack.txt").write_text("done: 0 of 1 steps flagged\n")
+    for n, (name, text) in enumerate(steps.items(), 1):
+        (run / f"{n:02d}-{name}.txt").write_text(text)
+    return run
+
+
+@pytest.mark.skipif(not LOOK_HERE, reason="the look add-on isn't here")
+def test_a_question_a_step_answers_shows_that_steps_lines_above_your_files(tmp_path):
+    run = a_kept_run(
+        tmp_path, debts="Dana owes you $40 <soon>\n", invoices="overdue  Theatre\n"
+    )
+    s = opened(make_box(tmp_path), run=run)
+    try:
+        r, text = s.post("/ask", q="who owes the dentist")
+        assert r.status == 200
+        assert "<h2>What your stack already found</h2>" in text
+        assert "money owed" in text and "2 lines from debts and invoices" in text
+        assert "01-debts.txt:1" in text and "Dana owes you $40 &lt;soon&gt;" in text
+        assert "<soon>" not in text
+        assert "waits on you" not in text
+        # the step's lines come before the kernel's own passages, which stay
+        assert text.index("already found") < text.index("Your files say")
+        assert "dentist.txt:1" in text
+        # look writes nothing: the last row is the page's own bite
+        rows = (s.willow.box / "record.jsonl").read_text().splitlines()
+        assert json.loads(rows[-1])["kind"] == "bite"
+    finally:
+        s.close()
+
+
+@pytest.mark.skipif(not LOOK_HERE, reason="the look add-on isn't here")
+def test_a_step_the_run_lacks_is_said_and_a_thing_written_down_gets_no_card(tmp_path):
+    run = a_kept_run(tmp_path, debts="Dana owes you $40\n")
+    s = opened(make_box(tmp_path), run=run)
+    try:
+        _, text = s.post("/ask", q="who owes the dentist")
+        assert "its job, and not a step of this run" in text
+        assert "waits on you" in text
+        # the ask is the page's own, so look's note that it left it is dropped
+        assert "add --box BOX" not in text
+        _, text = s.post("/ask", q="bring the dentist card")
+        assert "already found" not in text and "Your files say" in text
+    finally:
+        s.close()
+
+
+def test_without_a_run_asking_is_the_kernels_alone(site):
+    site.start()
+    _, text = site.post("/ask", q="who owes the dentist")
+    assert "already found" not in text and "Your files say" in text
+
+
+@pytest.mark.skipif(not WHY_NOT_HERE, reason="the why-not add-on isn't here")
+def test_a_question_that_finds_nothing_is_given_why_nots_reasons(site):
+    site.start()
+    _, text = site.post("/ask", q="passport renewal office")
+    assert "<h2>Nothing in your folder holds that</h2>" in text
+    assert "<p class=kick>why-not" in text
+    assert "no passage holds it" in text
+    assert "<details><summary>Why no passage" not in text
+
+
+@pytest.mark.skipif(
+    not (LOOK_HERE and WHY_NOT_HERE), reason="the look or why-not add-on isn't here"
+)
+def test_a_sum_no_passage_says_is_not_called_a_miss(tmp_path):
+    run = a_kept_run(
+        tmp_path, debts="Dana owes you $40\n", invoices="overdue  Theatre\n"
+    )
+    s = opened(make_box(tmp_path), run=run)
+    try:
+        _, text = s.post("/ask", q="who still owes me money")
+        assert "<h2>No one passage in your folder says that</h2>" in text
+        assert "Nothing in your folder holds that" not in text
+        assert "<details><summary>Why no passage holds it</summary>" in text
+        assert text.index("already found") < text.index("No one passage")
+    finally:
+        s.close()
+
+
+def test_report_of_gives_no_report_for_an_add_on_that_isnt_here_or_isnt_one():
+    assert br.report_of("no-such-add-on", "nope") == (0, None)
+    # the kernel prints no report: asked as one, it is none
+    if (br.STDLIB / "starter-words" / "starter_words.py").is_file():
+        code, doc = br.report_of("starter-words", "starter_words")
+        assert doc is None

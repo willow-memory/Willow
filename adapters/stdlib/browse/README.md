@@ -8,7 +8,7 @@ writes: record
 network: loopback
 role: ways
 tags: everyday
-looks-for: digest, stack, words-de, words-es, words-fr, words-pt
+looks-for: digest, look, stack, why-not, words-de, words-es, words-fr, words-pt
 -->
 # browse
 
@@ -91,6 +91,29 @@ While the run is still going, the page says so and looks again every three
 seconds, with no script: a step's lines show up as it prints them. When the
 run's log says it is done, the page says how many steps were flagged and
 stops asking. It reads the folder only, and writes nothing, not the record.
+
+**A question goes to the step whose job it is.** With `--run FOLDER`, the
+ask box does one more thing. Your question is still the kernel's own
+`bite`, on the record, and its passages are still shown. Above them, the
+[look](../look/) add-on says what kind of question it is and shows what the
+run's steps already found for that kind:
+
+- "who still owes me money" shows the lines the run's debts and invoices
+  steps kept, each with its file and line in the run;
+- a question no one passage answers, but a step did, is not called a miss:
+  the page says "No one passage in your folder says that", under the
+  step's lines;
+- a step whose job it is that the run doesn't have is named, with
+  `waits on you`: that is a step to add to your stack;
+- a thing you wrote down ("the wifi password") is the kernel's alone, and
+  the page is as it was.
+
+Nothing is run again; the run's kept files are only read.
+
+**A miss says why.** When nothing in your folder holds a question, the
+[why-not](../why-not/) add-on's report is drawn under it: which words no
+passage holds, the nearest passages and what they lacked, a close spelling.
+Without the look or the why-not add-on, the page is as it was.
 
 **Who can reach it:**
 

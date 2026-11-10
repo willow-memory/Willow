@@ -23,7 +23,11 @@ other step's words. While the run is still going the page looks again every
 few seconds, with no script: a step's lines appear as it prints them.
 
 Asking is the kernel's own `bite`, and approving is its own `seal`, so
-both are on the record exactly as if typed. With --lang, a question goes
+both are on the record exactly as if typed. With --run, a question is also
+sent to the steps whose job it is (the look add-on): "who still owes me
+money" shows what the run's debts and invoices steps found, above your
+files' own passages. A question that finds nothing is given the why-not
+add-on's reasons. With --lang, a question goes
 through that language's words add-on first (words-de, for instance).
 
 Who can reach it. It listens on 127.0.0.1, never on the network. Each
@@ -93,6 +97,24 @@ def call(*argv: str) -> tuple[int, str, str]:
     with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
         code = kernel.main(list(argv))
     return code, out.getvalue(), err.getvalue()
+
+
+def report_of(folder: str, module: str, *argv: str) -> tuple[int, dict | None]:
+    """A report add-on asked in this process: (its exit code, its report),
+    the report None when the add-on isn't here or printed something else."""
+    mod = sibling(folder, module)
+    if mod is None:
+        return 0, None
+    out, err = io.StringIO(), io.StringIO()
+    with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+        code = mod.main([*argv, "--json"])
+    try:
+        doc = json.loads(out.getvalue())
+        [(r["where"], r["what"]) for g in doc["groups"] for r in g["rows"]]
+        doc["addon"], doc["state"], doc["said"]
+    except (ValueError, KeyError, TypeError):
+        return code, None
+    return code, doc
 
 
 def esc(text: object) -> str:
@@ -469,6 +491,34 @@ class Willow:
             ]
         return "".join(out)
 
+    def from_run(self, question: str) -> tuple[str, bool]:
+        """(What the kept run already holds for a question, as the look add-on
+        finds it: the lines of the steps whose job its kind is; whether a
+        step answered.) The kernel's own answer is the page's, below, so
+        look's note that it left the ask is dropped; a step it couldn't
+        answer from is still said."""
+        if self.run is None:
+            return "", False
+        _, doc = report_of("look", "look", question, "--run", str(self.run))
+        if doc is None:
+            return "", False
+        groups = []
+        for g in doc["groups"]:
+            rows = [
+                r
+                for r in g["rows"]
+                if not (g["name"] == "left" and r["where"] == "ask")
+            ]
+            if rows:
+                groups.append({**g, "rows": rows})
+        if not groups:
+            return "", False
+        left = any(g["name"] == "left" for g in groups)
+        doc = {**doc, "state": "populated", "groups": groups}
+        card = report_card(doc, kernel.ESCALATE if left else kernel.ALIVE)
+        answered = any(g["name"] != "left" for g in groups)
+        return "<h2>What your stack already found</h2>" + card, answered
+
     def ask(self, question: str) -> str:
         question = question.strip()
         asked = question
@@ -484,22 +534,33 @@ class Willow:
                 "Ask", body + f"<p>Couldn't ask: {esc(err.strip() or said.strip())}</p>"
             )
         doc = json.loads(said)
+        found, answered = self.from_run(question)
         if doc["state"] == "sealed":
             body += (
                 "<h2>You approved this answer</h2><div class=card>"
                 f"{rich(doc['answer'])}<p class=where>{esc(doc['by'])}</p></div>"
-            )
+            ) + found
         elif doc["state"] == "populated":
-            body += "<h2>Your files say</h2>" + "".join(
-                passage(
-                    s["where"],
-                    s["text"],
-                    "only asks your question back" if s["echo"] else "",
+            body += (
+                found
+                + "<h2>Your files say</h2>"
+                + "".join(
+                    passage(
+                        s["where"],
+                        s["text"],
+                        "only asks your question back" if s["echo"] else "",
+                    )
+                    for s in doc["served"]
                 )
-                for s in doc["served"]
             )
         else:
-            body += "<h2>Nothing in your folder holds that</h2>"
+            # a question a step answered is no miss: it is a sum over many
+            # lines, which no one passage says
+            body += found + (
+                "<h2>No one passage in your folder says that</h2>"
+                if answered
+                else "<h2>Nothing in your folder holds that</h2>"
+            )
             body += "".join(passage(s["where"], s["text"], "only asks your question back")
                             for s in doc["served"])  # fmt: skip
             for h in doc.get("look", []):
@@ -507,6 +568,15 @@ class Willow:
                     esc(h[k]) for k in ("why", "where", "next") if h.get(k)
                 )
                 body += f"<p class=muted>{tips}</p>"
+            # why it found nothing, in the why-not add-on's words, if it's here
+            code, why = report_of("why-not", "why_not", "--box", str(self.box), asked)
+            if why is not None and why["groups"]:
+                card = report_card(why, code)
+                body += (
+                    f"<details><summary>Why no passage holds it</summary>{card}</details>"
+                    if answered
+                    else card
+                )
         return self.page("Ask", body)
 
     def waiting(self) -> str:
