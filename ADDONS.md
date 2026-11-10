@@ -619,6 +619,9 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - <a id="first-mention"></a>[**first-mention**](adapters/stdlib/first-mention/) \
   When your files first mention something, and the line that does. \
   *new* `no-install` `offline` `mention` · near: dialect-dates, people, timeline
+- <a id="glance"></a>[**glance**](adapters/stdlib/glance/) \
+  What a scan found, a line a question: where its best passage is, how it opens, and which of the question's words it lacks. \
+  *new* `no-install` `offline` `scan` · near: scan, latent, accents
 - <a id="latent"></a>[**latent**](adapters/deps/latent/) \
   Finds code by meaning, not just matching words, using scan's index: a question reaches code that says the same thing another way. \
   Needs numpy; BSD-3-Clause. Uses scan. *new* `needs-install` `offline` `index` `scan` · near: scan, all, duplicates

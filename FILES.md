@@ -585,6 +585,10 @@ willow/
 │   │   │   ├── first_mention.py  when the files first mention something: the earliest dated line that holds every word
 │   │   │   ├── test_first_mention.py
 │   │   │   └── README.md
+│   │   ├── glance/
+│   │   │   ├── glance.py     What a scan found, a line a question: where its best passage is, how it opens, and which of the question's words it lacks
+│   │   │   ├── test_glance.py
+│   │   │   └── README.md     its card
 │   │   ├── misquote/
 │   │   │   ├── misquote.py   a quote almost in your files: the closest passage, and what differs
 │   │   │   ├── test_misquote.py
@@ -617,15 +621,15 @@ willow/
 │   │   │   ├── rules.py      a rules file sealed section by section; the kernel then answers 'rule NAME' word for word
 │   │   │   ├── test_rules.py
 │   │   │   └── README.md
+```
+
+#### adapters/stdlib/, from sort/
+
+```
 │   │   ├── sort/
 │   │   │   ├── sort.py       your files sorted into your own categories, by the phrases you gave each
 │   │   │   ├── test_sort.py
 │   │   │   └── README.md
-```
-
-#### adapters/stdlib/, from typos/
-
-```
 │   │   ├── typos/
 │   │   │   ├── typos.py      a misspelt word read as the files spell it, one edit inside, offered not asked
 │   │   │   ├── test_typos.py
