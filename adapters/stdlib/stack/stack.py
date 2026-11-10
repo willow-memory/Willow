@@ -19,6 +19,14 @@ printed in the report's one shape (ci/README.md, the report contract); its
 height is its rows, not its lines, and it is flagged by its exit code alone,
 since a report's 42 never means "found nothing".
 
+A step can take what an earlier step made. `{01}` in a step's args is the
+file step 01's output was kept in, and `{01.json}` its report as data, 01
+being its place in the stack file. It is the earlier step handing on: so it
+needs the run kept (--to), the number must be a step before this one, and
+`.json` a step that prints a report; each of those is refused before
+anything runs. A step whose earlier step kept nothing is not run, and says
+so.
+
 --to FOLDER keeps the run as it happens, for following while it goes and for
 reading after: `00-stack.txt` gets a line as each step starts and a line as it
 ends (its exit code, and how many lines it made), and each step's output is
@@ -154,6 +162,37 @@ def mark(name: str, args: list[str]) -> str:
     return kernel.h256(json.dumps([name, args]))[:8]
 
 
+#: `{03}` or `{03.json}` in a step's args: an earlier step's kept output
+HANDS = re.compile(r"\{(\d+)(\.json)?\}")
+
+
+def hands(args: list[str]) -> list[tuple[int, bool]]:
+    """(the step named, whether its report is asked for) for each earlier
+    step a step's args name, in the order named."""
+    return [(int(n), bool(j)) for a in args for n, j in HANDS.findall(a)]
+
+
+def unhandable(flat: list, scripts: dict, kept: bool) -> str | None:
+    """Why a stack's hand-ons can't be, or None: said before anything runs.
+    `flat` is every step in the stack file's order."""
+    for at, (name, args) in enumerate(flat, 1):
+        for n, as_json in hands(args):
+            tag = f"{{{n:02d}{'.json' if as_json else ''}}}"
+            if not kept:
+                return (
+                    f"step {at} ({name}) takes {tag}, an earlier step's output; "
+                    "that needs the run kept: add --to FOLDER"
+                )
+            if not 1 <= n < at:
+                return f"step {at} ({name}) takes {tag}, which isn't a step before it"
+            if as_json and not prints_a_report(scripts[flat[n - 1][0]]):
+                return (
+                    f"step {at} ({name}) takes {tag}, but step {n} "
+                    f"({flat[n - 1][0]}) prints no report; {{{n:02d}}} is what it said"
+                )
+    return None
+
+
 STARTED = re.compile(r"(\d+) (\S+): started \((\w+)\)")
 ENDED = re.compile(r"(\d+) (\S+): exit (\d+), (\d+) lines?((?:, [^,]+)*)")
 
@@ -237,6 +276,22 @@ class Run:
         except OSError:
             return None
         return {**was, "out": text.rstrip()}
+
+    def handed(self, flat: list, args: list[str]) -> tuple[list[str], str]:
+        """(a step's args with each earlier step named put in as its kept
+        file, "") or ([], which step kept nothing to hand on)."""
+        missing: list[str] = []
+
+        def path(m) -> str:
+            n = int(m.group(1))
+            name = flat[n - 1][0]
+            p = self.data(n, name) if m.group(2) else self.file(n, name)
+            if not p.is_file() or not p.stat().st_size:
+                missing.append(f"step {n} ({name})")
+            return str(p)
+
+        filled = [HANDS.sub(path, a) for a in args]
+        return ([], missing[0]) if missing else (filled, "")
 
     def start(self, n: int, name: str, args: list[str]) -> Path:
         self.say(f"{n:0{self.width}d} {name}: started ({mark(name, args)})")
@@ -375,6 +430,11 @@ def main(argv: list[str]) -> int:
                     return kernel.REFUSED
                 scripts[name] = script
 
+    flat = [step for _, steps in pools for step in steps]
+    if why := unhandable(flat, scripts, "--to" in opts):
+        print(f"refused: {why}", file=sys.stderr)
+        return kernel.REFUSED
+
     run = None
     if "--to" in opts:
         to = Path(opts["--to"])
@@ -416,9 +476,17 @@ def main(argv: list[str]) -> int:
                 code, out, size, is_flagged = was["code"], was["out"], was["size"], was["flagged"]  # fmt: skip
                 note = was["note"] if report else step_result(name, code)[1]
                 run.say(f"{nsteps:0{run.width}d} {name}: kept from before")
+            elif hands(args) and not (given := run.handed(flat, args))[0]:
+                # the step before kept nothing: nothing to take, so not run
+                fresh = True
+                code, size, is_flagged, note = kernel.ESCALATE, 1, True, "not run"
+                out = f"not run: {given[1]} kept nothing to hand on"
+                run.say(f"{nsteps:0{run.width}d} {name}: {out}")
             else:
                 fresh = True
                 live = run.start(nsteps, name, args) if run else None
+                if hands(args):
+                    args = run.handed(flat, args)[0]
                 if report:
                     code, out = run_step(scripts[name], [*args, "--json"], str(box))
                     doc, out = as_report(code, out)

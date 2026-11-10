@@ -1,6 +1,7 @@
 """why_not.py: why a question got "not enough to say". Python 3.9+.
 
     python adapters/stdlib/why-not/why_not.py --box DIR "when does the frost come" [--json]
+    python adapters/stdlib/why-not/why_not.py --box DIR --questions FILE [--of SCANNED] [--json]
 
 A bite that finds nothing says only that. This asks the same question of the
 same folder, the kernel's own way, and says why, without asking it for real:
@@ -33,6 +34,13 @@ If your files do hold the question, it says so and where in the first line
 (an empty report: nothing to explain), and stops. A words
 list (the box's own, if it has one) is read as the bite reads it.
 
+--questions FILE asks every question of a file (one a line, or
+`name<TAB>question`, as scan takes them) and explains each that found
+nothing, a group a question. --of SCANNED hands it what scan already found:
+the lines scan printed for that file, so only the questions scan said were
+empty are explained and none is asked twice. In a stack that is an earlier
+step's output, named by its number: `--of {01}`.
+
 It prints a report (ci/README.md, "The report contract"); `--json` gives the
 same as one object. States and exit codes: empty, 0, your files do hold the
 question, so there is nothing to explain; populated, 42, they don't, and the
@@ -43,8 +51,8 @@ doesn't read).
 
 from __future__ import annotations
 
-import json
 import difflib
+import json
 import math
 import re
 import sys
@@ -173,39 +181,14 @@ def explain(pile: list[dict], question: str, alias: dict) -> tuple[bool, list[st
     return False, lines
 
 
-def main(argv: list[str]) -> int:
-    as_json = "--json" in argv
-    argv = [a for a in argv if a != "--json"]
-    opts, args, it = {}, [], iter(argv)
-    for a in it:
-        if a == "--box":
-            opts[a] = next(it, "")
-        else:
-            args.append(a)
-    if not opts.get("--box") or len(args) != 1 or args[0].startswith("--"):
-        print(__doc__.split("\n\n")[1].splitlines()[0], file=sys.stderr)
-        return kernel.REFUSED
-    box = Path(opts["--box"])
-    if not (box / "kernel.json").exists():
-        print("refused: not a kernel box; init first", file=sys.stderr)
-        return kernel.REFUSED
-    cfg = kernel.config(box)
-    alias: dict = {}
-    if "words" in cfg:
-        alias, _, why = kernel.read_words(Path(cfg["words"]), box)
-        if why is not None:
-            print(f"refused: {why}", file=sys.stderr)
-            return kernel.REFUSED
-    held, lines = explain(kernel.chunks(Path(cfg["pile"])), args[0], alias or {})
-    asked = " ".join(args[0].split())
-    if held:
+def one(pile: list[dict], question: str, alias: dict) -> tuple[str, str, list]:
+    """(the state, the line said, the groups) for one question: empty when
+    your files hold it, unreachable when every word is a common one."""
+    held, lines = explain(pile, question, alias)
+    asked = " ".join(question.split())
+    if held or not want_of(question):
         said = f'"{asked}": {lines[0][0].lower()}{lines[0][1:].rstrip(".")}'
-        say(report(NAME, "empty", said, []), as_json)
-        return kernel.ALIVE
-    if not want_of(args[0]):
-        said = f'"{asked}": {lines[0][0].lower()}{lines[0][1:].rstrip(".")}'
-        say(report(NAME, "unreachable", said, []), as_json)
-        return kernel.ESCALATE
+        return ("empty" if held else "unreachable"), said, []
     # the lines explain gave, sorted into the report's groups
     said, words, nearest, kind = f'"{asked}": ', [], [], []
     in_nearest = False
@@ -223,9 +206,118 @@ def main(argv: list[str]) -> int:
             (nearest if in_nearest else words).append((where, what))
     groups = [("words", words), ("the nearest it came", nearest),
               ("what would have answered it", kind)]  # fmt: skip
+    return "populated", said, groups
+
+
+def questions(text: str) -> list[tuple[str, str]]:
+    """(name, question) for each line of a questions file, as scan reads
+    one: `name<TAB>question`, or a bare question named by its line."""
+    out = []
+    for n, line in enumerate(text.splitlines(), 1):
+        if not line.strip() or line.lstrip().startswith("#"):
+            continue
+        name, tab, q = line.partition("\t")
+        out.append((name.strip(), q.strip()) if tab else (str(n), line.strip()))
+    return out
+
+
+def empties(text: str) -> tuple[set[str] | None, str]:
+    """(the names of the questions scan said were empty, "") from the lines
+    scan printed, or (None, why they aren't scan's)."""
+    out: set[str] = set()
+    rows = [ln for ln in text.splitlines() if ln.strip()]
+    if not rows:
+        return None, "it is empty: the step before said nothing to hand on"
+    for n, ln in enumerate(rows, 1):
+        try:
+            row = json.loads(ln)
+            name, state = row["question"], row["state"]
+        except (ValueError, KeyError, TypeError):
+            return None, f"line {n} has no question and state, as scan's lines do"
+        if state == "empty":
+            out.add(str(name))
+    return out, ""
+
+
+def several(pile: list[dict], asked: list[tuple[str, str]], alias: dict, as_json: bool) -> int:  # fmt: skip
+    """Every question that found nothing explained, a group a question."""
+    groups, short = [], 0
+    for name, q in asked:
+        state, said, parts = one(pile, q, alias)
+        if state == "empty":
+            continue
+        short += 1
+        rows = [("", said.split('": ', 1)[-1])]
+        rows += [r for g, rs in parts if g != "what would have answered it" for r in rs]
+        groups.append((f"{name}: {' '.join(q.split())}", rows))
+    n = len(asked)
+    if not short:
+        said = f"your files hold all {n} question{'s' * (n != 1)}; nothing to explain"
+        say(report(NAME, "empty", said, []), as_json)
+        return kernel.ALIVE
+    said = f"{short} of {n} question{'s' * (n != 1)} found nothing; each says why"
     say(report(NAME, "populated", said, groups), as_json)
     return kernel.ESCALATE
 
+
+def main(argv: list[str]) -> int:
+    as_json = "--json" in argv
+    argv = [a for a in argv if a != "--json"]
+    opts, args, it = {}, [], iter(argv)
+    for a in it:
+        if a in ("--box", "--questions", "--of"):
+            opts[a] = next(it, "")
+        else:
+            args.append(a)
+    if (
+        not opts.get("--box")
+        or bool(opts.get("--questions")) == bool(args)
+        or len(args) > 1
+        or any(a.startswith("--") for a in args)
+        or ("--of" in opts and not (opts["--of"] and opts.get("--questions")))
+    ):
+        print(__doc__.split("\n\n")[1], file=sys.stderr)
+        return kernel.REFUSED
+    many = None
+    if "--questions" in opts:
+        try:
+            many = questions(Path(opts["--questions"]).read_text(encoding="utf-8"))
+            scanned = (
+                Path(opts["--of"]).read_text(encoding="utf-8") if "--of" in opts else None
+            )
+        except (OSError, ValueError) as e:
+            print(f"refused: a file could not be read: {type(e).__name__}", file=sys.stderr)
+            return kernel.REFUSED
+        if not many:
+            print(f"refused: {opts['--questions']} holds no question", file=sys.stderr)
+            return kernel.REFUSED
+        if scanned is not None:
+            names, why = empties(scanned)
+            if names is None:
+                print(f"refused: {opts['--of']} can't be taken: {why}", file=sys.stderr)
+                return kernel.REFUSED
+            many = [(n, q) for n, q in many if n in names]
+            if not many:
+                said = "the scan handed on no empty question; nothing to explain"
+                say(report(NAME, "empty", said, []), as_json)
+                return kernel.ALIVE
+    box = Path(opts["--box"])
+    if not (box / "kernel.json").exists():
+        print("refused: not a kernel box; init first", file=sys.stderr)
+        return kernel.REFUSED
+    cfg = kernel.config(box)
+    alias: dict = {}
+    if "words" in cfg:
+        alias, _, why = kernel.read_words(Path(cfg["words"]), box)
+        if why is not None:
+            print(f"refused: {why}", file=sys.stderr)
+            return kernel.REFUSED
+    pile = kernel.chunks(Path(cfg["pile"]))
+    if many is not None:
+        return several(pile, many, alias or {}, as_json)
+    state, said, groups = one(pile, args[0], alias or {})
+    say(report(NAME, state, said, groups), as_json)
+    return kernel.ALIVE if state == "empty" else kernel.ESCALATE
 
 if __name__ == "__main__":
     raise SystemExit(main(sys.argv[1:]))
