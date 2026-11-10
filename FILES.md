@@ -647,6 +647,10 @@ willow/
 │   │   │   ├── starter.py    copies it where yours will live, readable only by you
 │   │   │   ├── test_starter_words.py
 │   │   │   └── README.md
+│   │   ├── synonyms/
+│   │   │   ├── synonyms.py   Suggests words-list lines for a word no file has
+│   │   │   ├── test_synonyms.py
+│   │   │   └── README.md     its card
 │   │   ├── words-ar/
 │   │   │   ├── words_ar.py   a question in Arabic, its common words out, then the kernel's bite
 │   │   │   ├── test_words_ar.py
@@ -679,15 +683,15 @@ willow/
 │   │   │   ├── words_pl.py   Polish questions without Polish's common words, then the kernel's own bite
 │   │   │   ├── test_words_pl.py
 │   │   │   └── README.md
+```
+
+#### adapters/stdlib/, from words-pt/
+
+```
 │   │   ├── words-pt/
 │   │   │   ├── words_pt.py   a question in Portuguese, its common words out, then the kernel's bite
 │   │   │   ├── test_words_pt.py
 │   │   │   └── README.md
-```
-
-#### adapters/stdlib/, from words-ru/
-
-```
 │   │   ├── words-ru/
 │   │   │   ├── words_ru.py   a question in Russian, its common words out, then the kernel's bite
 │   │   │   ├── test_words_ru.py

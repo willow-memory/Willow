@@ -152,12 +152,12 @@ says how to pick one up:
 <!-- willow:front show=pick week=2026-W46 -->
 **Add-on of the week**
 
-**[bank](adapters/stdlib/bank/)** \
-Bank CSV and OFX statements as dated lines, with spending by month.
+**[fixity](adapters/stdlib/fixity/)** \
+Your folder's files hashed again now and then, the hashes kept on the record, and a file that changed with no edit of yours flagged as rot.
 
-*Drawn for 2026-W46: SHA-256 of "willow add-on of the week 2026-W46", modulo the 350 built add-ons in name order.*
+*Drawn for 2026-W46: SHA-256 of "willow add-on of the week 2026-W46", modulo the 351 built add-ons in name order.*
 
-[Every add-on, 350 built of 537, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 351 built of 537, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 
