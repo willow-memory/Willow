@@ -8,7 +8,7 @@ writes: record
 network: loopback
 role: ways
 tags: everyday
-looks-for: digest, look, stack, why-not, words-de, words-es, words-fr, words-pt
+looks-for: digest, index-cache, look, scan, stack, why-not, words-de, words-es, words-fr, words-pt
 -->
 # browse
 
@@ -18,7 +18,7 @@ you, and approve one with a click. The front page shows what's waiting,
 what went stale and what's coming up. Nothing to install, and no commands
 to type once it's open.
 
-    python adapters/stdlib/browse/browse.py --box DIR [--stack FILE] [--run FOLDER]
+    python adapters/stdlib/browse/browse.py --box DIR [--stack FILE] [--run FOLDER] [--index INDEX]
 
 It prints a link and opens it. Ctrl-C stops it. `--lang de` (or `es`,
 `fr`, `pt`) sends each question through that language's words add-on first.
@@ -115,6 +115,37 @@ Nothing is run again; the run's kept files are only read.
 passage holds, the nearest passages and what they lacked, a close spelling.
 Without the look or the why-not add-on, the page is as it was.
 
+**Three panels.** Every page is laid out the same way:
+
+- **Left, where you are:** the project's name, then each section there is
+  to open: Ask, Waiting for you (with how many wait), What your stack
+  found, The run. Under the run, each of its steps, marked when it was
+  flagged or is still running; a step's link goes to its card.
+- **Middle, the section that is open.**
+- **Right, what is at a place.** A file and line anywhere on a page
+  (`notes/iou.txt:3`) is a link. Click it and the right panel shows the
+  passage of your folder that holds that line, or, for a line of the run's
+  kept files, the lines around it. `Close` shuts the panel. Only a file the
+  kernel reads into your folder's passages, or one of the run's kept
+  files, is ever opened this way.
+
+On a narrow screen the three stack, top to bottom.
+
+**One script, its own.** The right panel fills without leaving the page
+because of one small script, `page.js`, beside `browse.py`. The page allows
+that file and no other: no script from anywhere else, and none written into
+a page. It asks only this page for anything. With scripts off, every link
+it handles is still a link: the place opens as a page of its own.
+Approving stays a plain form.
+
+**An index, if you keep one.** With `--index INDEX`, an index of your
+folder that [index-cache](../index-cache/) keeps current, a question is
+answered from the index instead of by reading every file again. The answer
+is the kernel's own, passage for passage, and the ask is on your record the
+same way. When the index isn't current (a file changed since it was built),
+or the [scan](../scan/) or index-cache add-on isn't here, the kernel reads
+the folder as before.
+
 **Who can reach it:**
 
 | Way in | What stops it |
@@ -123,7 +154,7 @@ Without the look or the why-not add-on, the page is as it was.
 | Another website, in a browser you've opened willow in | Each start makes a new secret. The link hands it to your browser as an HttpOnly, SameSite=Strict cookie, and every form carries it as well. Without both, a request gets 403. A form whose Origin isn't this page (or is `null`, as a sandboxed frame's is) gets 403. |
 | A website that renames itself as this machine (DNS rebinding) | A Host header that isn't `127.0.0.1:PORT` or `localhost:PORT` gets 403. |
 | A website that frames it and lays a button over Approve | `frame-ancestors 'none'` and `X-Frame-Options: DENY`. |
-| Something injected into a passage | Every passage is HTML-escaped, and the page allows no scripts (`default-src 'none'`). |
+| Something injected into a passage | Every passage is HTML-escaped. Past that, the only script the page allows is its own file (`script-src 'self'`): one written into a page, as an injected one would be, never runs. |
 | A program already running as you | Nothing. That program could run `kernel.py seal` itself, so the page gives it no reach it didn't already have. |
 
 Checked in a real Chromium as well as in the tests. With willow open in one
@@ -143,4 +174,5 @@ keeps waiting), and words in the page in a language other than English.
 deleted, the page says so.
 
 **Never:** listens beyond this machine, shows or sends your key, runs a
-script in your browser, or approves anything you didn't click.
+script in your browser that isn't its own one file, or approves anything
+you didn't click.

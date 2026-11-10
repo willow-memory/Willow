@@ -1,7 +1,7 @@
 """browse.py: your folder in your web browser, on this machine only. Python 3.9+.
 
     python adapters/stdlib/browse/browse.py --box DIR [--stack FILE] [--run FOLDER]
-        [--port N] [--lang de|es|fr|pt] [--no-open]
+        [--index INDEX] [--port N] [--lang de|es|fr|pt] [--no-open]
     python adapters/stdlib/browse/browse.py launcher --box DIR
 
 A page to ask your folder questions, read the passages that answer them
@@ -22,6 +22,12 @@ ended and how, a report step's report drawn from the data the run kept, any
 other step's words. While the run is still going the page looks again every
 few seconds, with no script: a step's lines appear as it prints them.
 
+Every page is three panels: on the left the project and its sections (and
+the run's steps); in the middle the section that is open; on the right,
+when you click a file and line, the passage that is there. With --index
+INDEX (scan's index, kept current by index-cache) a question is answered
+from the index, the kernel's own answer without reading every file again.
+
 Asking is the kernel's own `bite`, and approving is its own `seal`, so
 both are on the record exactly as if typed. With --run, a question is also
 sent to the steps whose job it is (the look add-on): "who still owes me
@@ -36,7 +42,9 @@ browser as a cookie no other site can send, and every request needs it,
 and every form also carries it. A request naming another host is refused,
 so a web page can't reach it by renaming itself as this machine (DNS
 rebinding), and no page may frame it, so a button can't be laid over
-another site's. It sends no scripts. Anything already running as you could
+another site's. It sends one script, its own file (page.js), and allows
+no other: none from elsewhere, none written into a page. Anything already
+running as you could
 run `kernel.py seal` itself, so the page gives nothing on this machine more
 reach than it had; what it keeps out is every website.
 
@@ -65,7 +73,7 @@ import webbrowser
 from datetime import date
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
-from urllib.parse import parse_qs, urlsplit
+from urllib.parse import parse_qs, quote, urlsplit
 
 HERE = Path(__file__).resolve()
 STDLIB = HERE.parents[1]
@@ -73,9 +81,12 @@ sys.path.insert(0, str(STDLIB.parents[1]))
 import kernel  # noqa: E402
 
 LANGS = ("de", "es", "fr", "pt")
+#: the page's one script, a file beside this one, sent as it is
+SCRIPT = HERE.parent / "page.js"
 COOKIE = "willow"
-#: no scripts, no outside anything, never framed, forms only back here
-CSP = ("default-src 'none'; style-src 'unsafe-inline'; form-action 'self'; "
+#: one script, the page's own file and never one written into a page; no
+#: outside anything, never framed, forms and fetches only back here
+CSP = ("default-src 'none'; style-src 'unsafe-inline'; script-src 'self'; connect-src 'self'; form-action 'self'; "
        "frame-ancestors 'none'; base-uri 'none'")  # fmt: skip
 MAX_FORM = 64 * 1024
 
@@ -117,6 +128,45 @@ def report_of(folder: str, module: str, *argv: str) -> tuple[int, dict | None]:
     return code, doc
 
 
+def indexed(box: Path, text: str, at: Path) -> dict | None:
+    """The kernel's bite, answered from scan's index at `at` instead of a
+    fresh read of the whole folder: the same row on the record and the same
+    passages, since scan only narrows which ones the kernel's own `rank`
+    looks at. None, and the kernel reads the folder as before, when scan or
+    index-cache isn't here, the index isn't current for the box's folder by
+    index-cache's manifest, or the box's words list can't be read (the
+    kernel's bite then says why)."""
+    cache, scan = sibling("index-cache", "index_cache"), sibling("scan", "scan")
+    if cache is None or scan is None:
+        return None
+    cfg = kernel.config(box)
+    alias, listed = {}, {}
+    if "words" in cfg:  # asked with their words, as the kernel's bite asks
+        alias, sha, why = kernel.read_words(Path(cfg["words"]), box)
+        if why is not None:
+            return None
+        listed = {"words_sha256": sha}
+    old = cache.cached(at)
+    if old is None or old != cache.manifest(Path(cfg["pile"])):
+        return None
+    rows, breaks = kernel.read(box / "record.jsonl")
+    k = kernel.bite_key(text)
+    if breaks or k is None:
+        return None  # the kernel's bite says why
+    ts = kernel.now()
+    for subj, row in kernel.sealed(box, rows).items():  # a sealed answer first
+        prop, asked, why = kernel.standing(box, rows, subj, row)
+        if why is None and asked == k:
+            kernel.append(box, ts, "bite", bite_key=k, answered_by=subj, served=[])
+            return {"state": "sealed", "answer": prop["data"], "by": subj}
+    served = scan.Index(at).rank(text, alias, None)
+    refs = [{"id": c["id"], "where": f"{c['path']}:{c['line']}",
+             "echo": kernel.echo(text, c["text"])} for c in served]  # fmt: skip
+    kernel.append(box, ts, "bite", bite_key=k, served=refs, **listed)
+    return {"state": "populated" if refs else "empty", "bite_key": k,
+            "served": [{**r, "text": c["text"]} for r, c in zip(refs, served)]}  # fmt: skip
+
+
 def esc(text: object) -> str:
     return html.escape(str(text), quote=True)
 
@@ -137,9 +187,28 @@ STYLE = """
 * { box-sizing: border-box; }
 body { margin: 0; font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
        color: var(--fg); background: var(--bg); }
-nav { background: var(--side); border-bottom: 1px solid var(--line); padding: 10px 16px; }
-nav a { margin-right: 16px; color: var(--fg); font-weight: 600; text-decoration: none; }
-main { margin: 0 auto; max-width: 46rem; padding: 24px 16px 64px; }
+.shell { display: grid; grid-template-columns: 14rem minmax(0, 1fr); min-height: 100vh; }
+.shell.open { grid-template-columns: 14rem minmax(0, 1fr) minmax(18rem, 34%); }
+nav, aside { background: var(--side); position: sticky; top: 0; align-self: start;
+       height: 100vh; overflow: auto; }
+nav { border-right: 1px solid var(--line); padding: 14px 10px; }
+nav a { display: block; padding: 5px 8px; border-radius: 4px; color: var(--fg);
+       font-weight: 600; text-decoration: none; overflow-wrap: anywhere; }
+nav a.on { background: var(--accl); }
+nav a.sub { font-weight: 400; font-size: 14px; padding: 2px 8px 2px 20px; }
+nav .proj { font: 600 11px/1.3 var(--mono); text-transform: uppercase; letter-spacing: .09em;
+       color: var(--muted); margin: 0 8px 10px; overflow-wrap: anywhere; }
+aside { display: none; border-left: 1px solid var(--line); padding: 16px 14px; }
+.shell.open aside { display: block; }
+aside .close { float: right; font-size: 14px; }
+main { margin: 0 auto; width: 100%; max-width: 46rem; padding: 24px 16px 64px; }
+.where a { color: inherit; text-decoration: none; }
+.where a:hover { text-decoration: underline; }
+.ln { font: 13px/1.5 var(--mono); white-space: pre-wrap; overflow-wrap: anywhere; }
+.ln.at { background: var(--accl); }
+@media (max-width: 820px) {
+  .shell, .shell.open { grid-template-columns: 1fr; }
+  nav, aside { position: static; height: auto; border: 0; border-bottom: 1px solid var(--line); } }
 h1 { font-size: 27px; line-height: 1.15; letter-spacing: -.02em; margin: 0 0 8px; }
 h2 { font-size: 16px; font-weight: 650; margin: 28px 0 6px; }
 a { color: var(--accent); }
@@ -172,16 +241,44 @@ pre { white-space: pre-wrap; overflow-wrap: anywhere; font: 12px/1.5 var(--mono)
 """
 
 
-def page(title: str, body: str, more: str = "", head: str = "") -> str:
-    """One page. `more` is links for the bar after the two every page has;
-    `head` is for the head (the run's page asks to be looked at again)."""
+#: each section's page, by the title it is shown under
+SECTIONS = {"Your folder": "/", "Ask": "/", "Waiting for you": "/waiting",
+            "What your stack found": "/steps", "The run": "/run"}  # fmt: skip
+#: the left panel of a page that has no box to speak of (a refusal)
+BARE = '<a href="/">Ask</a><a href="/waiting">Waiting for you</a>'
+
+
+def page(
+    title: str, body: str, side: str = BARE, head: str = "", detail: str = ""
+) -> str:
+    """One page, three panels: `side` is the left one, where you are and
+    what there is to open; the middle is the section that is open; `detail`
+    is the right one, about one thing picked in the middle, and is out of
+    sight while it is empty. `head` is for the head (the run's page asks to
+    be looked at again). The one script, the page's own, fills the right
+    panel without leaving the page; with no script every link still goes."""
     return (
         "<!doctype html><html lang=en><head><meta charset=utf-8>"
         '<meta name=viewport content="width=device-width, initial-scale=1">'
-        f"{head}<title>{esc(title)} · willow</title><style>{STYLE}</style></head><body>"
-        f'<nav><a href="/">Home</a><a href="/waiting">Waiting for you</a>{more}</nav>'
-        f"<main><h1>{esc(title)}</h1>{body}</main></body></html>"
+        f"{head}<title>{esc(title)} · willow</title><style>{STYLE}</style>"
+        '<script src="/page.js" defer></script></head><body>'
+        f"<div class='shell{' open' if detail else ''}'><nav>{side}</nav>"
+        f"<main><h1>{esc(title)}</h1>{body}</main>"
+        f"<aside id=detail>{detail}</aside></div></body></html>"
     )
+
+
+#: a place: a file, then a line in it (the last thing said, after any date)
+_PLACE = re.compile(r"\S.*:\d+")
+
+
+def where_html(where: object) -> str:
+    """A place as words, or as a link to what is there when it reads as a
+    file and a line: the right panel shows it, or its own page with no script."""
+    w = str(where)
+    if not _PLACE.fullmatch(w):
+        return esc(w)
+    return f'<a data-place href="/place?at={quote(w, safe="")}">{esc(w)}</a>'
 
 
 #: a report's state, the kernel's word, as a person says it
@@ -202,7 +299,7 @@ def rows_html(pairs: list[tuple[object, dict]]) -> str:
             out.append(f"<p class=group>{esc(group)}</p>")
         last = group
         out.append(
-            f"<div class=row><span class=where>{esc(row['where'])}</span>"
+            f"<div class=row><span class=where>{where_html(row['where'])}</span>"
             f"<p class=text>{esc(row['what'])}</p></div>"
         )
     return "".join(out)
@@ -328,7 +425,7 @@ def reading(prop: dict) -> tuple[str, str, str, str]:
 
 def passage(where: str, text: str, note: str = "") -> str:
     note = f" <span class=muted>({esc(note)})</span>" if note else ""
-    return (f'<div class=card><div class=where>{esc(where)}{note}</div>'
+    return (f'<div class=card><div class=where>{where_html(where)}{note}</div>'
             f'<p class=text>{esc(text)}</p></div>')  # fmt: skip
 
 
@@ -342,19 +439,110 @@ class Willow:
         token: str | None = None,
         stack: Path | None = None,
         run: Path | None = None,
+        index: Path | None = None,
     ):
         self.box = box
         self.stack = stack
         self.run = run
+        self.index = index
         self.token = token or secrets.token_urlsafe(32)
         self.words = sibling(f"words-{lang}", f"words_{lang}") if lang else None
         if lang and self.words is None:
             raise ValueError(f"the words-{lang} add-on isn't here")
 
-    def page(self, title: str, body: str, head: str = "") -> str:
-        more = '<a href="/steps">What your stack found</a>' if self.stack else ""
-        more += '<a href="/run">The run</a>' if self.run else ""
-        return page(title, body, more, head)
+    def name(self) -> str:
+        """What this project is called: its folder's name."""
+        box = self.box.resolve()
+        return box.parent.name if box.name == "box" and box.parent.name else box.name
+
+    def owed(self) -> tuple[list[str], list[str]]:
+        """(the suggestions waiting for a yes or a no, the record's breaks)."""
+        rows, breaks = kernel.read(self.box / "record.jsonl")
+        if breaks:
+            return [], breaks
+        done = {**kernel.sealed(self.box, rows), **kernel.declined(self.box, rows)}
+        return [r["subject"] for r in rows if r["kind"] == "proposal"
+                and r.get("verdict") == "pass" and r["subject"] not in done], []  # fmt: skip
+
+    def side(self, here: str) -> str:
+        """The left panel: the project, then each section there is to open,
+        the one that is open marked; under the run, its steps."""
+
+        def link(href: str, text: str, more: str = "", sub: bool = False) -> str:
+            cls = " ".join(c for c in ("on" * (href == here), "sub" * sub) if c)
+            cls = f" class='{cls}'" if cls else ""
+            return f'<a href="{href}"{cls}>{esc(text)}{more}</a>'
+
+        n = len(self.owed()[0])
+        out = [f"<p class=proj>{esc(self.name())}</p>", link("/", "Ask")]
+        out.append(link("/waiting", "Waiting for you",
+                        f" <span class='pill wait'>{n}</span>" if n else ""))  # fmt: skip
+        if self.stack:
+            out.append(link("/steps", "What your stack found"))
+        if self.run:
+            out.append(link("/run", "The run"))
+            st = sibling("stack", "stack")
+            logs = sorted(self.run.glob("0*-stack.txt"))
+            if st is not None and logs:
+                steps, _ = run_steps(
+                    logs[0].read_text(encoding="utf-8", errors="replace"), st
+                )
+                for s in steps:
+                    mark = ""
+                    if not s["ended"]:
+                        mark = " <span class='pill wait'>running</span>"
+                    elif s["flagged"]:
+                        mark = " <span class='pill wait'>flagged</span>"
+                    out.append(link(f"/run#s{s['n']}", f"{s['n']} {s['name']}", mark, True))  # fmt: skip
+        return "".join(out)
+
+    def page(self, title: str, body: str, head: str = "", here: str = "") -> str:
+        """A page of this box's. The section that is open is `here`, or the
+        one its title is the name of."""
+        return page(title, body, self.side(here or SECTIONS.get(title, "")), head)
+
+    def place(self, at: str) -> tuple[str, str]:
+        """(What a place is called, what is there): the passage of your
+        folder that holds that line, or the lines around it in a file the
+        run kept. Only a file the kernel reads into your folder's passages,
+        or one of the run's own kept files, is ever opened."""
+        at = (at.split() or [""])[-1]
+        path, _, line = at.rpartition(":")
+        if not path or not line.isdigit():
+            return "Not a place", "<p class=muted>That isn't a file and a line.</p>"
+        n = int(line)
+        if self.run is not None and re.fullmatch(r"\d+-[\w-]+\.txt", path):
+            try:
+                lines = (self.run / path).read_text(encoding="utf-8", errors="replace").splitlines()  # fmt: skip
+            except OSError:
+                lines = []
+            if 1 <= n <= len(lines):
+                near = "".join(
+                    f"<div class='ln{' at' if i == n else ''}'>{esc(lines[i - 1]) or '&nbsp;'}</div>"
+                    for i in range(max(1, n - 4), min(len(lines), n + 4) + 1)
+                )
+                return at, f"<p class=kick>What the run kept</p><div class=card>{near}</div>"  # fmt: skip
+        best = None
+        for c in kernel.chunks(Path(kernel.config(self.box)["pile"])):
+            if c["path"] == path and c["line"] <= n:
+                if best is None or c["line"] > best["line"]:
+                    best = c
+        if best is None:
+            return at, ("<p class=muted>Nothing is at that place in your folder now. "
+                        "The file may have changed since this was found.</p>")  # fmt: skip
+        return at, (
+            "<p class=kick>In your folder</p><div class=card>"
+            f"<div class=where>{esc(best['path'])}:{best['line']}</div>"
+            f"<p class=text>{esc(best['text'])}</p></div>"
+        )
+
+    def detail(self, at: str) -> str:
+        """The right panel for a place: what it is called, a way to shut it,
+        what is there."""
+        title, body = self.place(at)
+        return (
+            f'<a class=close data-close href="/">Close</a><h2>{esc(title)}</h2>{body}'
+        )
 
     def ran(self) -> str:
         """The run kept in the folder named with --run: read, never run."""
@@ -389,7 +577,8 @@ class Willow:
                 pills += " <span class='pill wait'>flagged</span>" * step["flagged"]
             try:
                 doc = json.loads((self.run / "reports" / f"{name}.json").read_text(encoding="utf-8"))  # fmt: skip
-                body.append(report_card(doc, step["code"], pills=f" <span class=pill>step {esc(step['n'])}</span>{pills}"))  # fmt: skip
+                card = report_card(doc, step["code"], pills=f" <span class=pill>step {esc(step['n'])}</span>{pills}")  # fmt: skip
+                body.append(f'<div id="s{esc(step["n"])}">{card}</div>')
                 continue
             except (OSError, ValueError, KeyError, TypeError):
                 pass  # no report kept, or the step hasn't ended: its words
@@ -403,10 +592,12 @@ class Willow:
                 f" <span class=pill>exit {step['code']}</span>" if step["ended"] else ""
             )
             head_html = f"<p class=kick>{esc(step['name'])} <span class=pill>step {esc(step['n'])}</span>{code}{pills}</p>"  # fmt: skip
-            body.append(words_card(head_html, text))
+            body.append(
+                f'<div id="s{esc(step["n"])}">{words_card(head_html, text)}</div>'
+            )
         if not steps:
             body.append("<p class=muted>No step has started yet.</p>")
-        return self.page(title, "".join(body), head)
+        return self.page(title, "".join(body), head, here="/run")
 
     def steps(self) -> str:
         """What the stack's report steps found, each drawn as a card, in the
@@ -447,7 +638,7 @@ class Willow:
         if left:
             names = ", ".join(dict.fromkeys(left))
             body.append(f"<p class=muted>Not drawn here, since they print something other than a report: {esc(names)}. The stack add-on runs those.</p>")  # fmt: skip
-        return self.page(title, "".join(body) or "<p class=muted>Your stack has no step that prints a report.</p>")  # fmt: skip
+        return self.page(title, "".join(body) or "<p class=muted>Your stack has no step that prints a report.</p>", here="/steps")  # fmt: skip
 
     def home(self) -> str:
         dg = sibling("digest", "digest")
@@ -460,7 +651,7 @@ class Willow:
                 if "refused" not in doc
                 else (f"<p>Your record doesn't check out: {esc(doc['refused'])}</p>")
             )
-        return self.page("Your folder", ask_form(self.token) + summary)
+        return self.page("Your folder", ask_form(self.token) + summary, here="/")
 
     def summary(self, doc: dict) -> str:
         out = []
@@ -527,13 +718,16 @@ class Willow:
         if not kernel.words(asked):
             return self.page("Ask", ask_form(self.token, question) +
                         "<p>Every word there is a common one. Name the thing you mean.</p>")  # fmt: skip
-        code, said, err = call("bite", "--box", str(self.box), asked)
         body = ask_form(self.token, question)
-        if code == kernel.REFUSED:
-            return self.page(
-                "Ask", body + f"<p>Couldn't ask: {esc(err.strip() or said.strip())}</p>"
-            )
-        doc = json.loads(said)
+        doc = indexed(self.box, asked, self.index) if self.index else None
+        if doc is None:  # no index, or not current: the kernel reads the folder
+            code, said, err = call("bite", "--box", str(self.box), asked)
+            if code == kernel.REFUSED:
+                return self.page(
+                    "Ask",
+                    body + f"<p>Couldn't ask: {esc(err.strip() or said.strip())}</p>",
+                )
+            doc = json.loads(said)
         found, answered = self.from_run(question)
         if doc["state"] == "sealed":
             body += (
@@ -577,18 +771,15 @@ class Willow:
                     if answered
                     else card
                 )
-        return self.page("Ask", body)
+        return self.page("Ask", body, here="/")
 
     def waiting(self) -> str:
-        rows, breaks = kernel.read(self.box / "record.jsonl")
+        subjects, breaks = self.owed()
         if breaks:
             return self.page(
                 "Waiting for you",
                 f"<p>Your record doesn't check out: {esc('; '.join(breaks))}</p>",
             )
-        done = {**kernel.sealed(self.box, rows), **kernel.declined(self.box, rows)}
-        subjects = [r["subject"] for r in rows if r["kind"] == "proposal"
-                    and r.get("verdict") == "pass" and r["subject"] not in done]  # fmt: skip
         if not subjects:
             return self.page(
                 "Waiting for you",
@@ -635,7 +826,7 @@ class Willow:
                 f'<input type=hidden name=subject value="{esc(subj)}">'
                 f"<button>Approve this {kind}</button></form></div>"
             )
-        return self.page("Waiting for you", "".join(body))
+        return self.page("Waiting for you", "".join(body), here="/waiting")
 
     def approve(self, subject: str) -> str:
         code, said, err = call("seal", "--box", str(self.box), subject)
@@ -762,6 +953,16 @@ class Handler(BaseHTTPRequestHandler):
             return self.send(200, self.willow.steps())
         if url.path == "/run":
             return self.send(200, self.willow.ran())
+        if url.path == "/page.js":
+            return self.send(200, SCRIPT.read_text(encoding="utf-8"),
+                             {"Content-Type": "text/javascript; charset=utf-8"})  # fmt: skip
+        if url.path == "/place":
+            asked = parse_qs(url.query)
+            at = asked.get("at", [""])[0]
+            if asked.get("part"):  # the right panel alone, for the page's script
+                return self.send(200, self.willow.detail(at))
+            title, body = self.willow.place(at)
+            return self.send(200, self.willow.page(title, body))
         return self.send(
             404, page("Not here", "<p>There's no page at that address.</p>")
         )
@@ -856,7 +1057,7 @@ def main(argv: list[str]) -> int:
         return kernel.ALIVE
     opts, flags, rest, it = {}, set(), [], iter(argv)
     for a in it:
-        if a in ("--box", "--port", "--lang", "--stack", "--run"):
+        if a in ("--box", "--port", "--lang", "--stack", "--run", "--index"):
             opts[a] = next(it, "")
         elif a == "--no-open":
             flags.add(a)
@@ -866,7 +1067,8 @@ def main(argv: list[str]) -> int:
     if (not opts.get("--box") or rest or not port.isdigit() or int(port) > 65535
             or opts.get("--lang", "de") not in LANGS
             or ("--stack" in opts and not opts["--stack"])
-            or ("--run" in opts and not opts["--run"])):  # fmt: skip
+            or ("--run" in opts and not opts["--run"])
+            or ("--index" in opts and not opts["--index"])):  # fmt: skip
         print(__doc__.split("\n\n")[1], file=sys.stderr)
         return kernel.REFUSED
     box = Path(opts["--box"])
@@ -882,7 +1084,11 @@ def main(argv: list[str]) -> int:
         if run is not None and not run.is_dir():
             print(f"refused: {run} isn't a folder that's there", file=sys.stderr)
             return kernel.REFUSED
-        willow = Willow(box, opts.get("--lang"), stack=stack, run=run)
+        index = Path(opts["--index"]) if "--index" in opts else None
+        if index is not None and not index.is_dir():
+            print(f"refused: {index} isn't an index that's there (scan's index, kept by index-cache)", file=sys.stderr)  # fmt: skip
+            return kernel.REFUSED
+        willow = Willow(box, opts.get("--lang"), stack=stack, run=run, index=index)
         server = serve(willow, int(port))
     except (OSError, ValueError) as e:
         print(f"refused: {e}", file=sys.stderr)

@@ -1422,6 +1422,7 @@ willow/
 ```
 │   │   ├── browse/
 │   │   │   ├── browse.py     your folder in your browser, on 127.0.0.1: ask, read, approve with a click
+│   │   │   ├── page.js
 │   │   │   ├── test_browse.py
 │   │   │   └── README.md
 │   │   ├── launcher/

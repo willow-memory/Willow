@@ -1,12 +1,13 @@
 """browse: a page on 127.0.0.1 that asks with the kernel's bite and approves
 with its seal, reachable only with this start's secret, from this machine's
-own address, and never framed or scripted."""
+own address, never framed, and running no script but its own one file."""
 
 from __future__ import annotations
 
 import http.client
 import importlib.util
 import json
+import re
 import shlex
 import subprocess
 import sys
@@ -157,15 +158,25 @@ def test_a_form_from_anywhere_else_is_refused(site):
     assert r.status == 403  # the form's token alone isn't enough
 
 
-def test_every_page_forbids_framing_scripts_and_caching(site):
+def test_every_page_forbids_framing_outside_scripts_and_caching(site):
     site.start()
-    for r, _ in (
+    for r, text in (
         site.req("GET", "/"),
         site.req("GET", "/nope"),
         site.req("GET", "/", cookie=False),
+        site.req("GET", "/page.js"),
+        site.req("GET", "/place?at=dentist.txt:1&part=1"),
     ):
-        assert "frame-ancestors 'none'" in r.getheader("Content-Security-Policy")
-        assert "default-src 'none'" in r.getheader("Content-Security-Policy")
+        csp = r.getheader("Content-Security-Policy")
+        assert "frame-ancestors 'none'" in csp
+        assert "default-src 'none'" in csp
+        # one script, the page's own file: none from elsewhere, none written
+        # into a page, so a line of a file that reads as script never runs
+        assert "script-src 'self';" in csp and "connect-src 'self';" in csp
+        assert csp.count("unsafe-inline") == 1 and "style-src 'unsafe-inline'" in csp
+        assert "unsafe-eval" not in csp
+        assert not re.search(r"<script(?![^>]* src=\"/page\.js\")", text)
+        assert not re.search(r"\son\w+=", text), "no handler written into a page"
         assert r.getheader("X-Frame-Options") == "DENY"
         assert r.getheader("Cache-Control") == "no-store"
         assert r.getheader("Referrer-Policy") == "same-origin"
@@ -514,10 +525,13 @@ def test_a_report_is_a_card_its_line_then_its_rows_under_their_groups():
     assert br.report_card(DOC) == (
         "<div class=card><p class=kick>pii-audit <span class=pill>found</span></p>"
         "<h2>3 numbers in 2 of 9 files</h2>"
-        "<div class=row><span class=where>a.txt:1</span><p class=text>loose &lt;row&gt;</p></div>"
+        '<div class=row><span class=where><a data-place href="/place?at=a.txt%3A1">a.txt:1</a></span>'
+        "<p class=text>loose &lt;row&gt;</p></div>"
         "<p class=group>a card &amp; number</p>"
-        "<div class=row><span class=where>m/o.csv:17</span><p class=text>···· 4242</p></div>"
-        "<div class=row><span class=where>m/o.csv:18</span><p class=text>···· 1111</p></div>"
+        '<div class=row><span class=where><a data-place href="/place?at=m%2Fo.csv%3A17">m/o.csv:17</a></span>'
+        "<p class=text>···· 4242</p></div>"
+        '<div class=row><span class=where><a data-place href="/place?at=m%2Fo.csv%3A18">m/o.csv:18</a></span>'
+        "<p class=text>···· 1111</p></div>"
         "</div>"
     )
 
@@ -851,3 +865,178 @@ def test_report_of_gives_no_report_for_an_add_on_that_isnt_here_or_isnt_one():
     if (br.STDLIB / "starter-words" / "starter_words.py").is_file():
         code, doc = br.report_of("starter-words", "starter_words")
         assert doc is None
+
+
+# ── three panels: where you are, the open section, what is at a place ───────
+def test_the_left_panel_names_the_project_and_marks_the_open_section(site):
+    site.start()
+    _, text = site.req("GET", "/")
+    nav = text[text.index("<nav>") : text.index("</nav>")]
+    assert f"<p class=proj>{site.willow.box.parent.name}</p>" in nav
+    assert "<a href=\"/\" class='on'>Ask</a>" in nav
+    assert '<a href="/waiting">Waiting for you</a>' in nav
+    assert "/steps" not in nav and "/run" not in nav
+    _, text = site.req("GET", "/waiting")
+    assert "<a href=\"/waiting\" class='on'>Waiting for you</a>" in text
+    assert '<a href="/">Ask</a>' in text
+    # the middle is the section; the right panel is there, empty and shut
+    assert "<div class='shell'><nav>" in text
+    assert text.count("<main>") == 1 and "<aside id=detail></aside>" in text
+
+
+def test_a_box_not_named_box_is_called_by_its_own_name(tmp_path):
+    b = make_box(tmp_path)
+    assert br.Willow(b).name() == tmp_path.name
+    other = b.rename(tmp_path / "garden")
+    assert br.Willow(other).name() == "garden"
+
+
+def test_the_left_panel_counts_what_waits(site, tmp_path):
+    b = site.willow.box
+    served = json.loads(k("bite", "--box", str(b), *NOW, "when is the dentist").stdout)["served"]  # fmt: skip
+    row = {"path": "dentist.md", "data": "Tuesday at 3pm", "cites": [served[0]["id"]],
+           "claim": "the dentist note"}  # fmt: skip
+    (tmp_path / "s.jsonl").write_text(json.dumps(row) + "\n")
+    assert k("propose", "--box", str(b), "--file", str(tmp_path / "s.jsonl"), *NOW).returncode == 42  # fmt: skip
+    site.start()
+    _, text = site.req("GET", "/")
+    assert "Waiting for you <span class='pill wait'>1</span></a>" in text
+
+
+@pytest.mark.skipif(
+    not STACK_HERE, reason="a run is the stack add-on's, and it isn't here"
+)
+def test_the_left_panel_lists_the_runs_steps_each_a_link_to_its_card(tmp_path):
+    run = tmp_path / "run"
+    run.mkdir()
+    (run / "00-stack.txt").write_text(LOG)
+    (run / "01-todo.txt").write_text("call them\n")
+    s = opened(make_box(tmp_path), run=run)
+    try:
+        _, text = s.req("GET", "/run")
+        nav = text[text.index("<nav>") : text.index("</nav>")]
+        assert "<a href=\"/run\" class='on'>The run</a>" in nav
+        assert "<a href=\"/run#s01\" class='sub'>01 todo</a>" in nav
+        assert "02 heavy <span class='pill wait'>flagged</span></a>" in nav
+        assert "03 slow <span class='pill wait'>running</span></a>" in nav
+        main = text[text.index("<main>") :]
+        assert '<div id="s01">' in main and '<div id="s03">' in main
+    finally:
+        s.close()
+
+
+def test_a_place_is_a_link_and_its_passage_fills_the_right_panel(site):
+    site.start()
+    _, text = site.post("/ask", q="when is the dentist")
+    assert '<a data-place href="/place?at=dentist.txt%3A1">dentist.txt:1</a>' in text
+    r, part = site.req("GET", "/place?at=dentist.txt%3A1&part=1")
+    assert r.status == 200
+    assert not part.startswith("<!doctype"), "the panel alone, not a page"
+    assert '<a class=close data-close href="/">Close</a>' in part
+    assert "<h2>dentist.txt:1</h2>" in part and "In your folder" in part
+    assert "&lt;b&gt;Bring&lt;/b&gt;" in part and "<b>Bring" not in part
+    # with no script the same link is a page of its own
+    r, whole = site.req("GET", "/place?at=dentist.txt%3A1")
+    assert whole.startswith("<!doctype") and "&lt;b&gt;Bring&lt;/b&gt;" in whole
+    # a date before the place is passed over, as the front page writes one
+    _, part = site.req("GET", "/place?at=2026-11-03%20%C2%B7%20dentist.txt%3A1&part=1")
+    assert "In your folder" in part
+
+
+def test_only_your_folders_passages_and_the_runs_kept_files_are_opened(tmp_path):
+    secret = tmp_path / "secret.txt"
+    secret.write_text("the key to everything\n")
+    run = tmp_path / "run"
+    run.mkdir()
+    (run / "00-stack.txt").write_text("done: 0 of 1 steps flagged\n")
+    (run / "01-debts.txt").write_text("one\ntwo <b>\nthree\n")
+    s = opened(make_box(tmp_path), run=run)
+    try:
+        for at in (f"{secret}:1", "../secret.txt:1", "../../etc/passwd:1", "/etc/passwd:1",
+                   "kernel.json:1", "01-debts.txt:9", "nope", "", ":3", "dentist.txt:x"):  # fmt: skip
+            r, part = s.req("GET", "/place?" + urlencode({"at": at, "part": "1"}))
+            assert r.status == 200 and "the key to everything" not in part, at
+            assert "root:" not in part and "In your folder" not in part, at
+            assert "What the run kept" not in part, at
+        _, part = s.req("GET", "/place?at=01-debts.txt%3A2&part=1")
+        assert "What the run kept" in part
+        assert "<div class='ln at'>two &lt;b&gt;</div>" in part
+        assert (
+            "<div class='ln'>one</div>" in part
+            and "<div class='ln'>three</div>" in part
+        )
+    finally:
+        s.close()
+
+
+def test_what_reads_as_a_place_is_a_link_and_what_doesnt_is_words():
+    assert br.where_html("a b/c.txt:12") == (
+        '<a data-place href="/place?at=a%20b%2Fc.txt%3A12">a b/c.txt:12</a>'
+    )
+    assert br.where_html("still") == "still"
+    assert br.where_html("<b>:x") == "&lt;b&gt;:x"
+    assert br.where_html('"><script>:1').count("<") == 2  # the link's own tags only
+
+
+def test_the_script_is_the_file_beside_browse_and_needs_this_starts_cookie(site):
+    r, _ = site.req("GET", "/page.js", cookie=False)
+    assert r.status == 403
+    site.start()
+    r, text = site.req("GET", "/page.js")
+    assert r.status == 200
+    assert r.getheader("Content-Type") == "text/javascript; charset=utf-8"
+    assert r.getheader("X-Content-Type-Options") == "nosniff"
+    assert text == (HERE / "page.js").read_text()
+    # it asks only this page for anything, and runs nothing it is handed
+    assert "http://" not in text and "https://" not in text
+    assert "eval(" not in text and "Function(" not in text
+    _, page = site.req("GET", "/")
+    assert (
+        page.count("<script") == 1 and '<script src="/page.js" defer></script>' in page
+    )
+
+
+# ── an index, when one is given and current ─────────────────────────────────
+INDEX_HERE = all(
+    (br.STDLIB / d / f).is_file()
+    for d, f in (("scan", "scan.py"), ("index-cache", "index_cache.py"))
+)
+
+
+@pytest.mark.skipif(not INDEX_HERE, reason="scan or index-cache isn't here")
+def test_with_a_current_index_the_answer_is_the_kernels_and_on_the_record(tmp_path):
+    b = make_box(tmp_path)
+    at = tmp_path / "index"
+    got = subprocess.run(
+        [sys.executable, str(br.STDLIB / "index-cache" / "index_cache.py"),
+         "--from", str(tmp_path / "pile"), "--to", str(at)],
+        capture_output=True, text=True,
+    )  # fmt: skip
+    assert got.returncode == 0, got.stderr
+    asked = []
+    real = br.call
+    s = opened(b, index=at)
+    try:
+        br.call = lambda *a: asked.append(a) or real(*a)
+        _, text = s.post("/ask", q="when is the dentist")
+        assert "Your files say" in text and "dentist.txt:1" in text
+        assert not asked, "the folder was not read again: the index answered"
+        row = json.loads((b / "record.jsonl").read_text().splitlines()[-1])
+        assert row["kind"] == "bite" and row["served"][0]["where"] == "dentist.txt:1"
+        # a file changed since: the index is stale, and the kernel reads the folder
+        (tmp_path / "pile" / "new.txt").write_text("The dentist moved to Friday.\n")
+        _, text = s.post("/ask", q="when is the dentist")
+        assert asked and asked[0][0] == "bite"
+        assert "new.txt:1" in text
+    finally:
+        br.call = real
+        s.close()
+
+
+def test_an_index_that_isnt_there_is_refused_before_anything_listens(tmp_path, capsys):
+    b = make_box(tmp_path)
+    assert (
+        br.main(["--box", str(b), "--index", str(tmp_path / "nope"), "--no-open"]) == 2
+    )
+    assert "isn't an index that's there" in capsys.readouterr().err
+    assert br.main(["--box", str(b), "--index"]) == 2
