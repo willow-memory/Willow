@@ -175,8 +175,10 @@ def missing() -> str | None:
     if shutil.which("bwrap") is None:
         return "bubblewrap isn't installed: the bwrap program (apt install bubblewrap)"
     try:
+        # an empty pipe for its input, not the null device: opening that is a
+        # write by the guard's rule, and this add-on writes record and to only
         got = subprocess.run(PROBE, capture_output=True, text=True, timeout=30,
-                             stdin=subprocess.DEVNULL)  # fmt: skip
+                             input="")  # fmt: skip
     except (OSError, subprocess.TimeoutExpired) as e:
         got = subprocess.CompletedProcess(PROBE, 1, "", str(e))
     if got.returncode != 0:
