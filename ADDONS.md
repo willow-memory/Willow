@@ -970,6 +970,9 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - <a id="forecasts"></a>[**forecasts**](adapters/stdlib/forecasts/) \
   Write a prediction before the outcome, settle it later with your seal, see your Brier score. \
   *bot* `no-install` `offline` `brier` `forecast` · near: market-calls, predict, weather-bet
+- <a id="handover"></a>[**handover**](adapters/stdlib/handover/) \
+  Where one project stands, to hand on: what waits on you, what each stack's last run said step by step, and where each line can be checked. \
+  *new* `no-install` `offline` `step` `stack` · near: stack-share, stack, red-on-main
 - <a id="invoices"></a>[**invoices**](adapters/stdlib/invoices/) \
   For freelancers: invoices and payments matched by the id pattern you give, never guessed. \
   Uses amounts, bank. *new* `no-install` `offline` `numbers` · near: serve, share, privacy
@@ -990,7 +993,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
   *bot* `no-install` `offline` `score` `down` · near: forecasts, pile-gold, assistant-scores
 - <a id="projects"></a>[**projects**](adapters/stdlib/projects/) \
   Every project under one folder: its records, its stacks, and each stack's runs, so you can see what there is to go back to. \
-  *new* `no-install` `offline` `stack` · near: stack-share, stack, github
+  Uses stack. *new* `no-install` `offline` `stack` · near: stack-share, stack, github
 - <a id="readings"></a>[**readings**](adapters/stdlib/readings/) \
   Two hints beside an answer: a number in your files that moved a lot lately, and a date in a log that passed with nothing written since. \
   *box* `no-install` `offline` `numbers` · near: plain, privacy, coming-up

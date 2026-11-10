@@ -878,6 +878,10 @@ willow/
 │   │   │   ├── forecasts.py  a wager before the outcome, settled by your seal, scored by Brier
 │   │   │   ├── test_forecasts.py
 │   │   │   └── README.md
+│   │   ├── handover/
+│   │   │   ├── handover.py   Where one project stands, to hand on: what waits on you, what each stack's last run said step by step, and where each line can be checked
+│   │   │   ├── test_handover.py
+│   │   │   └── README.md     its card
 │   │   ├── invoices/
 │   │   │   ├── invoices.py   invoices you sent, paid only when a line names the number as paid; the rest overdue first
 │   │   │   ├── test_invoices.py

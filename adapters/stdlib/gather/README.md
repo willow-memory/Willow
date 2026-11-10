@@ -7,6 +7,7 @@ version: 0.1.0
 writes: to
 network: none
 role: makes
+output: report
 -->
 # gather
 
