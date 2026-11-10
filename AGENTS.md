@@ -121,8 +121,9 @@ that should now pass.
   conflicts.
   [docs/agents/pull-requests.md](docs/agents/pull-requests.md), with a new CI
   row.
-- **A chain of add-ons for someone.** Ask the forge add-on with their
-  words, settle its forks with a reason each, and leave the seal to them;
+- **A chain of add-ons for someone.** One want at a time: ask the forge
+  add-on with their words, propose the card, add it on their yes, run, then
+  the next want. Settle its forks with a reason each, and leave the seal to them;
   a missed word is a line in `ui/search-words.txt`, and a sealed stack is
   shared with stack-share. [docs/agents/stacks.md](docs/agents/stacks.md).
 - **Search.** The kernel's rank is for answering; pointing at where to look
