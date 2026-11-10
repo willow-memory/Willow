@@ -331,7 +331,7 @@ class Canvas:
                 "path": typed,
                 "why": "not a folder (give the whole path, starting with / or ~)",
             }
-        n = 0
+        n = 0  # everything under it, folders too: the page says items, not files
         for _ in p.rglob("*"):
             n += 1
             if n >= 5000:
@@ -1072,7 +1072,9 @@ def said_arrangement(arr: dict) -> str:
         out.append("set up alongside, not run on the page: " + ", ".join(arr["kept"]))
     if arr["pulled_in"]:
         out.append("brought along, because pieces above need them: " + ", ".join(arr["pulled_in"]))  # fmt: skip
-    out.append("goes online: " + "; ".join(arr["reach"]) if arr["reach"] else "never goes online")  # fmt: skip
+    away = [r for r in arr["reach"] if r != "loopback"]  # loopback is this machine
+    out.append("goes online: " + "; ".join(away) if away else
+               "stays on this machine" if arr["reach"] else "never goes online")  # fmt: skip
     out.append("writes: " + ", ".join(arr["writes"]) if arr["writes"] else "writes nothing but its record")  # fmt: skip
     if arr["installs"]:
         out.append("needs installing first: " + ", ".join(arr["installs"]))

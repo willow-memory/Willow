@@ -260,6 +260,8 @@ const roleOf=p=>[p.role||'tools',p.role_why||''];
 const stageOf=p=>roleOf(p)[0];
 const save=()=>localStorage.setItem(KEY,JSON.stringify(S));
 function say(t,err){const m=document.getElementById('msg');m.textContent=t||'';m.className='msg'+(err?' err':'')}
+// where a stack reaches beyond this machine: loopback is this machine, not online
+function away(reach){return reach.filter(x=>x!=='loopback')}
 function plainTags(p){const t=[];if(p.network&&p.network!=='none')t.push(el('span',{class:'tag net',text:p.network==='loopback'?'this machine only':'goes online: '+p.network}));
  if(p.kind==='deps')t.push(el('span',{class:'tag inst',text:'needs installing'}));if((p.writes||'').includes('to'))t.push(el('span',{class:'tag',text:'writes only where you point it'}));if((p.writes||'').includes('record'))t.push(el('span',{class:'tag',text:'writes your record'}));
  if(p.in_stack)t.push(el('span',{class:'tag have',text:'already here'}));return t}
@@ -420,7 +422,7 @@ function flow(){const view=cur==='start'||cur==='review'?cur:'stage',st=document
  if(view==='stage'){const s=STAGES.find(x=>x.key===cur),i=STAGES.indexOf(s);st.className='stage'+(s.fixed?' fixed':'');
   st.append(el('header',{},el('span',{class:'no',text:String(i+1)}),el('h2',{text:s.title}),el('span',{class:'sum',text:stageSummary(s)})),el('div',{class:'say',text:s.say}));
   if(s.key==='folders'){if(!S.folders.length)st.append(el('div',{class:'none',text:'No folders yet. Add at least one: it’s what willow answers from.'}));
-   S.folders.forEach((fo,k)=>st.append(el('div',{class:'folder'},el('span',{text:fo.path}),el('small',{text:fo.files+' files'}),el('button',{class:'link',text:'remove',onclick:()=>{S.folders.splice(k,1);changed()}}))))}
+   S.folders.forEach((fo,k)=>st.append(el('div',{class:'folder'},el('span',{text:fo.path}),el('small',{text:fo.files+' items'}),el('button',{class:'link',text:'remove',onclick:()=>{S.folders.splice(k,1);changed()}}))))}
   else if(s.key==='kernel')st.append(baselines());
   else if(!s.fixed){if(!(S.stages[s.key]||[]).length)st.append(el('div',{class:'none',text:'Nothing here: this step is skipped.'}));st.append(chips(s))}}
  document.getElementById('railex').replaceChildren(examplesCard());steplist();stacktree()}
@@ -465,7 +467,7 @@ function stacktree(){const t=document.getElementById('stacktree');t.innerHTML=''
   const bs=S.folders.map(f=>BASE[f.path]).filter(b=>b&&b.ok),sum=s.key==='kernel'?(bs.length?bs.reduce((t,b)=>t+b.passages,0).toLocaleString()+' passages':'always there'):s.key==='you'?'your seal':s.key==='folders'&&!ns.length?'none yet':'';
   const row=el('div',{class:'t-stage'+(cur===s.key?' sel':'')+(s.fixed?' fixed':''),onclick:()=>go(s.key)},el('span',{class:'t-name',text:s.title}),sum?el('span',{class:'t-sum',text:sum}):null);
   const kids=el('div',{class:'t-kids'});
-  if(s.key==='folders')for(const f of S.folders)kids.append(el('div',{class:'t-leaf'},el('span',{class:'path',text:f.path}),el('span',{class:'t-sum',text:f.files+' files'})));
+  if(s.key==='folders')for(const f of S.folders)kids.append(el('div',{class:'t-leaf'},el('span',{class:'path',text:f.path}),el('span',{class:'t-sum',text:f.files+' items'})));
   else if(!s.fixed)for(const n of ns){const p=P[n]||{},a=((S.args||{})[n]||'').replace('--box {box}','').trim(),leaf=el('div',{class:'t-leaf','data-n':n},s.ordered?el('span',{class:'ord',text:(ns.indexOf(n)+1)+'.'}):null,el('span',{text:n}));
    if(a)leaf.append(el('span',{class:'arg',text:' '+a}));if((p.hard||[]).length)leaf.append(el('div',{class:'need',text:'needs '+p.hard.join(', ')}));kids.append(leaf)}
   for(const g of gs){const a=(pv.args[g]||'').replace('--box {box}','').trim();kids.append(el('div',{class:'t-leaf ghost'},el('span',{text:'+ '+g}),a?el('span',{class:'arg',text:' '+a}):null))}
@@ -515,7 +517,7 @@ function shelf(){const s=STAGES.find(x=>x.key===cur),head=document.getElementByI
  q.addEventListener('input',draw);draw()}
 // ── the summary, the look-over, the seal ────────────────────────────────────
 function summary(){const n=all().length,b=pulled().length,net=[...new Set([...all(),...pulled()].map(x=>P[x]?.network).filter(x=>x&&x!=='none'))];
- const s=document.getElementById('sum');s.innerHTML='';s.append(el('b',{text:`${S.folders.length} folder${S.folders.length===1?'':'s'}, ${n} piece${n===1?'':'s'}`}),b?` (and ${b} they bring along)`:'',' · ',net.length?el('span',{style:'color:var(--warn)',text:'goes online: '+net.join('; ')}):'never goes online')}
+ const s=document.getElementById('sum');s.innerHTML='';s.append(el('b',{text:`${S.folders.length} folder${S.folders.length===1?'':'s'}, ${n} piece${n===1?'':'s'}`}),b?` (and ${b} they bring along)`:'',' · ',away(net).length?el('span',{style:'color:var(--warn)',text:'goes online: '+away(net).join('; ')}):net.length?'stays on this machine':'never goes online')}
 async function look(){if(!S.folders.length){cur='folders';flow();shelf();say('Add a folder first: it’s what willow answers from.',1);return}if(cur!=='review')back=cur;
  const lanes=proposalDoc().lanes;
  const r=await api('propose',{name:'my willow',folders:S.folders.map(f=>f.path),lanes});if(r.refused){say(r.refused,1);return}subject=r.subject;const a=r.arrangement;
@@ -524,7 +526,7 @@ async function look(){if(!S.folders.length){cur='folders';flow();shelf();say('Ad
  const ul=el('ul',{},li('It reads '+a.folders.join(', ')+', and never changes '+(one?'it':'them')+'.'),
   named('reads')?null:li('It reads plain text, markdown and web pages; nothing else.'),
   li('It answers only from what it reads, with the file and line, and says so when nothing there holds an answer.'),
-  li(a.reach.length?'It goes online: '+a.reach.join('; ')+'.':'It never goes online.'),
+  li(away(a.reach).length?'It goes online: '+away(a.reach).join('; ')+'.':a.reach.length?'It stays on this machine: some of it listens or asks here, and nowhere beyond.':'It never goes online.'),
   li('It writes its own record'+(a.writes.includes('to')?', and files only where you point it':'')+'.'),
   a.installs.length?li('Needs installing first: '+a.installs.join(', ')+'.'):null);
  const parts=el('div');for(const st of STAGES){const ns=(S.stages[st.key]||[]).filter(n=>!(a.kept||[]).includes(n)&&!a.pulled_in.includes(n));if(st.fixed||st.key==='folders'||!ns.length)continue;
