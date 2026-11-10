@@ -1,0 +1,1 @@
+`browse`: `--run FOLDER` shows a run the stack add-on kept, and runs nothing: each step in order, ended or still running, a report step drawn from the data the run kept, the page looking again every three seconds until the run is done

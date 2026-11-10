@@ -12,6 +12,7 @@ it, and test stack, not the add-ons it runs."""
 
 from __future__ import annotations
 
+import json
 import shutil
 import subprocess
 import sys
@@ -603,3 +604,23 @@ def test_ended_reads_only_what_the_log_last_says_of_a_step():
         st.mark("a", ["x"]) != st.mark("a", ["y"]) != st.mark("b", ["y"])
         and len(m1) == 8
     )
+
+
+def test_a_report_steps_report_is_kept_as_data_beside_its_words(tmp_path):
+    box, stack, to, _ = a_run(tmp_path)
+    kept = sorted(p.name for p in (to / "reports").iterdir())
+    assert kept == ["04-rep.json"], "only the step that printed a report"
+    doc = json.loads((to / "reports" / "04-rep.json").read_text())
+    assert doc["addon"] == "rep" and doc["state"] == "populated"
+    assert [r["what"] for g in doc["groups"] for r in g["rows"]] == ["one", "two"]
+    assert sorted(p.name for p in to.iterdir() if p.is_file()) == [
+        "00-stack.txt", "01-heavy.txt", "02-light.txt", "03-amounts.txt", "04-rep.txt",
+    ]  # fmt: skip
+    # run again and printing no report this time, the old one is not left to be read
+    (STACK.parents[1] / "rep" / "rep.py").write_text(
+        "import sys\nif __name__ == '__main__':\n    print('not json')\n    sys.exit(0)\n"
+    )
+    (to / "04-rep.txt").unlink()
+    again(box, stack, to)
+    assert not (to / "reports" / "04-rep.json").exists()
+    assert "not a report" in (to / "04-rep.txt").read_text()

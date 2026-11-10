@@ -24,7 +24,8 @@ reading after: `00-stack.txt` gets a line as each step starts and a line as it
 ends (its exit code, and how many lines it made), and each step's output is
 `NN-NAME.txt`, NN its place in the stack file. A step that prints as it goes
 is written as it prints; a step asked for a report is written once, when its
-report is whole. FOLDER must be there and empty: a run is one folder, and a
+report is whole, and its report is kept as data too, in `reports/NN-NAME.json`,
+for a page to draw (browse's --run). FOLDER must be there and empty: a run is one folder, and a
 second run in it would read as part of the first. Without --to nothing is
 kept but the page, as before.
 
@@ -208,6 +209,22 @@ class Run:
 
     def file(self, n: int, name: str) -> Path:
         return self.folder / f"{n:0{self.width}d}-{name}.txt"
+
+    def data(self, n: int, name: str) -> Path:
+        """Where a report step's report is kept as data, for a page to draw:
+        in a folder of its own, so what follows the run reads words only."""
+        return self.folder / "reports" / f"{n:0{self.width}d}-{name}.json"
+
+    def keep_report(self, n: int, name: str, doc: dict | None) -> None:
+        """The step's report as JSON beside its words, or nothing there when
+        it printed no report this time (an earlier go's would be a lie)."""
+        path = self.data(n, name)
+        if doc is None:
+            if path.exists():
+                path.unlink()
+            return
+        path.parent.mkdir(exist_ok=True)
+        path.write_text(json.dumps(doc, ensure_ascii=False) + "\n", encoding="utf-8")
 
     def kept(self, n: int, name: str, args: list[str]) -> dict | None:
         """What the earlier run made of this very step, if it finished it and
@@ -407,6 +424,7 @@ def main(argv: list[str]) -> int:
                     doc, out = as_report(code, out)
                     if live is not None:  # whole, once: its JSON is nothing to follow
                         live.write_text(out + "\n" if out else "", encoding="utf-8")
+                        run.keep_report(nsteps, name, doc)
                     if doc is None:
                         is_flagged, note, size = True, f"exit {code}", mass(out)
                     else:

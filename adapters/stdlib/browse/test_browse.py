@@ -620,3 +620,137 @@ def test_a_stack_that_isnt_there_is_refused_before_anything_listens(tmp_path, ca
     assert "can't read the stack" in capsys.readouterr().err
     assert br.main(["--box", str(b), "--stack"]) == 2
     assert "browse.py" in capsys.readouterr().err
+
+
+# ── a run that was kept, shown and not run ───────────────────────────────────
+def opened(box, **kw):
+    s = Open.__new__(Open)
+    s.willow = br.Willow(box, None, **kw)
+    s.server = br.serve(s.willow)
+    s.port = s.server.server_address[1]
+    s.host = f"127.0.0.1:{s.port}"
+    threading.Thread(target=s.server.serve_forever, daemon=True).start()
+    s.cookie = ""
+    s.start()
+    return s
+
+
+LOG = (
+    "01 todo: started (aaaaaaaa)\n01 todo: exit 0, 3 lines\n"
+    "02 heavy: started (bbbbbbbb)\n02 heavy: exit 2, 1 line, flagged\n"
+    "03 slow: started (cccccccc)\n"
+)
+REPORT = {"addon": "todo", "state": "populated", "said": "2 lines marked to do",
+          "groups": [{"name": None, "rows": [{"where": "a.txt:1", "what": "call <them>"}]}]}  # fmt: skip
+
+
+@pytest.mark.skipif(
+    not STACK_HERE, reason="a run is the stack add-on's, and it isn't here"
+)
+def test_a_runs_log_is_read_as_its_steps_and_whether_it_ended():
+    st = br.sibling("stack", "stack")
+    steps, done = br.run_steps(LOG, st)
+    assert done is None and [s["n"] for s in steps] == ["01", "02", "03"]
+    assert steps[0] == {"n": "01", "name": "todo", "ended": True, "code": 0, "flagged": False, "kept": False}  # fmt: skip
+    assert steps[1]["code"] == 2 and steps[1]["flagged"] and steps[2] == {"n": "03", "name": "slow", "ended": False}  # fmt: skip
+    steps, done = br.run_steps(
+        LOG + "03 slow: exit 0, 2 lines\ndone: 1 of 3 steps flagged\n", st
+    )
+    assert done == "1 of 3 steps flagged" and steps[2]["ended"]
+    more = (
+        LOG
+        + "done: x\nresumed: 2 of 3 steps had finished\n01 todo: kept from before\n09 nope: kept from before\n"
+    )
+    steps, done = br.run_steps(more, st)
+    assert (
+        done is None and steps[0]["kept"] and not steps[1]["kept"] and len(steps) == 3
+    )
+    assert br.run_steps("02 x: exit 0, 1 line\nnonsense\n", st) == ([], None), (
+        "an end with no start"
+    )
+
+
+def test_a_run_is_shown_from_what_it_kept_and_nothing_is_run(tmp_path):
+    b = make_box(tmp_path)
+    run = tmp_path / "run"
+    (run / "reports").mkdir(parents=True)
+    rows_before = (b / "record.jsonl").read_text()
+    s = opened(b, run=run)
+    try:
+        assert '<a href="/run">The run</a>' in s.req("GET", "/")[1]
+        text = s.req("GET", "/run")[1]
+        if not STACK_HERE:
+            assert "The stack add-on isn't here." in text
+            return
+        assert "holds no run" in text and "http-equiv" not in text
+        (run / "00-stack.txt").write_text(LOG)
+        (run / "reports" / "01-todo.json").write_text(json.dumps(REPORT))
+        (run / "01-todo.txt").write_text("todo: populated, 2 lines marked to do\n")
+        (run / "02-heavy.txt").write_text("refused: <not> a box\n")
+        (run / "03-slow.txt").write_text("".join(f"line {i}\n" for i in range(1, 12)))
+        text = s.req("GET", "/run")[1]
+        assert "<strong>Still running.</strong>" in text
+        assert f'<meta http-equiv="refresh" content="{br.AGAIN}">' in text
+        one, two, three = text.split("<div class=card>")[1:]
+        assert (
+            "<p class=kick>todo <span class=pill>found</span> <span class=pill>step 01</span></p>"
+            in one
+        )
+        assert "<h2>2 lines marked to do</h2>" in one and "call &lt;them&gt;" in one
+        assert (
+            "<span class=pill>exit 2</span> <span class='pill wait'>flagged</span>"
+            in two
+        )
+        assert "<pre>refused: &lt;not&gt; a box</pre>" in two
+        assert (
+            "<span class='pill wait'>running</span>" in three
+            and "exit" not in three.split("</p>")[0]
+        )
+        assert (
+            "<summary>All 11 lines</summary>" in three
+            and "line 8\n"
+            not in three.split("<details>")[0].replace("line 8</pre>", "")
+        )
+        with (run / "00-stack.txt").open("a") as f:
+            f.write("03 slow: exit 0, 11 lines\ndone: 1 of 3 steps flagged\n")
+        text = s.req("GET", "/run")[1]
+        assert (
+            "<strong>Finished.</strong> 1 of 3 steps flagged." in text
+            and "http-equiv" not in text
+        )
+        assert "running" not in text
+        assert (b / "record.jsonl").read_text() == rows_before, (
+            "showing a run writes nothing"
+        )
+        (run / "reports" / "01-todo.json").write_text("{not json")
+        assert (
+            "<pre>todo: populated, 2 lines marked to do</pre>"
+            in s.req("GET", "/run")[1]
+        )
+    finally:
+        s.close()
+
+
+def test_a_step_that_printed_nothing_says_so_and_no_run_is_no_page(
+    site, tmp_path, capsys
+):
+    assert "It printed nothing." in br.words_card("<p class=kick>x</p>", "")
+    assert br.words_card("", "a\nb", shown=1) == (
+        "<div class=card><pre>a</pre><details><summary>All 2 lines</summary><pre>b</pre></details></div>"
+    )
+    site.start()
+    assert "/run" not in site.req("GET", "/")[1]
+    assert (
+        br.main(
+            [
+                "--box",
+                str(site.willow.box),
+                "--run",
+                str(tmp_path / "absent"),
+                "--no-open",
+            ]
+        )
+        == 2
+    )
+    assert "isn't a folder that's there" in capsys.readouterr().err
+    assert br.main(["--box", str(site.willow.box), "--run"]) == 2

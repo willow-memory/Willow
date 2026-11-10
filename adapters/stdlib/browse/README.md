@@ -3,7 +3,7 @@ section: Ways to use it
 line: Your folder in your web browser: ask, read each answer at its file and line, and approve suggestions with a click, from this machine only.
 source: new
 added: 2026-10-24
-version: 0.3.0
+version: 0.4.0
 writes: record
 network: loopback
 role: ways
@@ -18,7 +18,7 @@ you, and approve one with a click. The front page shows what's waiting,
 what went stale and what's coming up. Nothing to install, and no commands
 to type once it's open.
 
-    python adapters/stdlib/browse/browse.py --box DIR [--stack FILE]
+    python adapters/stdlib/browse/browse.py --box DIR [--stack FILE] [--run FOLDER]
 
 It prints a link and opens it. Ctrl-C stops it. `--lang de` (or `es`,
 `fr`, `pt`) sends each question through that language's words add-on first.
@@ -76,6 +76,21 @@ report add-on written tomorrow is drawn without this changing. A step that
 prints something else (a reader's mirror, a model's suggestion) is named
 under the cards and left to stack. The steps are run when you open the
 page, each time: it shows what they find now, not what a run kept.
+
+**The run.** With `--run FOLDER`, a run the stack add-on kept with its
+`--to`, the page gains a link that shows that run and runs nothing:
+
+- each step in the order it ran, with its number, and whether it has ended:
+  its exit code, `flagged`, `kept from before` when the run was resumed, or
+  `running`;
+- a report step drawn from the data the run kept for it, the same card as
+  above, so a step that took an hour is read, not waited for again;
+- any other step as the words it printed, the first eight lines in sight.
+
+While the run is still going, the page says so and looks again every three
+seconds, with no script: a step's lines show up as it prints them. When the
+run's log says it is done, the page says how many steps were flagged and
+stops asking. It reads the folder only, and writes nothing, not the record.
 
 **Who can reach it:**
 

@@ -1,7 +1,7 @@
 """browse.py: your folder in your web browser, on this machine only. Python 3.9+.
 
-    python adapters/stdlib/browse/browse.py --box DIR [--stack FILE] [--port N]
-        [--lang de|es|fr|pt] [--no-open]
+    python adapters/stdlib/browse/browse.py --box DIR [--stack FILE] [--run FOLDER]
+        [--port N] [--lang de|es|fr|pt] [--no-open]
     python adapters/stdlib/browse/browse.py launcher --box DIR
 
 A page to ask your folder questions, read the passages that answer them
@@ -15,6 +15,12 @@ shows what the stack's steps found: each step whose card says it prints a
 report is run and drawn as a card, its one line, then its rows, where and
 what. One way of drawing serves every report add-on, since they all print
 the one shape. Steps that print something else are named and left to stack.
+
+With --run FOLDER (a run the stack add-on kept with its --to), a page shows
+that run and runs nothing: each step in the order it ran, whether it has
+ended and how, a report step's report drawn from the data the run kept, any
+other step's words. While the run is still going the page looks again every
+few seconds, with no script: a step's lines appear as it prints them.
 
 Asking is the kernel's own `bite`, and approving is its own `seal`, so
 both are on the record exactly as if typed. With --lang, a question goes
@@ -144,12 +150,13 @@ pre { white-space: pre-wrap; overflow-wrap: anywhere; font: 12px/1.5 var(--mono)
 """
 
 
-def page(title: str, body: str, steps: bool = False) -> str:
-    more = '<a href="/steps">What your stack found</a>' if steps else ""
+def page(title: str, body: str, more: str = "", head: str = "") -> str:
+    """One page. `more` is links for the bar after the two every page has;
+    `head` is for the head (the run's page asks to be looked at again)."""
     return (
         "<!doctype html><html lang=en><head><meta charset=utf-8>"
         '<meta name=viewport content="width=device-width, initial-scale=1">'
-        f"<title>{esc(title)} · willow</title><style>{STYLE}</style></head><body>"
+        f"{head}<title>{esc(title)} · willow</title><style>{STYLE}</style></head><body>"
         f'<nav><a href="/">Home</a><a href="/waiting">Waiting for you</a>{more}</nav>'
         f"<main><h1>{esc(title)}</h1>{body}</main></body></html>"
     )
@@ -179,19 +186,20 @@ def rows_html(pairs: list[tuple[object, dict]]) -> str:
     return "".join(out)
 
 
-def report_card(doc: dict, code: int = 0, shown: int = SHOWN) -> str:
+def report_card(doc: dict, code: int = 0, shown: int = SHOWN, pills: str = "") -> str:
     """One report, any add-on's, as a card: whose it is and its state, the one
     thing it said, then its rows, the first few in sight and the rest folded.
     The shape is the report contract's (ci/README.md): `addon`, `state`,
     `said`, and `groups` of `rows`, each a `where` and a `what`. A report
-    that found things and exited 42 waits on the person, and says so."""
+    that found things and exited 42 waits on the person, and says so.
+    `pills` is more to say beside its state, already HTML."""
     pairs = [(g["name"], r) for g in doc["groups"] for r in g["rows"]]
     state = STATES.get(doc["state"], str(doc["state"]))
     waits = code == kernel.ESCALATE and doc["state"] == "populated"
     head = (
         f"<p class=kick>{esc(doc['addon'])} <span class=pill>{esc(state)}</span>"
         + (" <span class='pill wait'>waits on you</span>" if waits else "")
-        + f"</p><h2>{esc(doc['said'])}</h2>"
+        + f"{pills}</p><h2>{esc(doc['said'])}</h2>"
     )
     rest = ""
     if len(pairs) > shown:
@@ -311,16 +319,72 @@ class Willow:
         lang: str | None = None,
         token: str | None = None,
         stack: Path | None = None,
+        run: Path | None = None,
     ):
         self.box = box
         self.stack = stack
+        self.run = run
         self.token = token or secrets.token_urlsafe(32)
         self.words = sibling(f"words-{lang}", f"words_{lang}") if lang else None
         if lang and self.words is None:
             raise ValueError(f"the words-{lang} add-on isn't here")
 
-    def page(self, title: str, body: str) -> str:
-        return page(title, body, steps=self.stack is not None)
+    def page(self, title: str, body: str, head: str = "") -> str:
+        more = '<a href="/steps">What your stack found</a>' if self.stack else ""
+        more += '<a href="/run">The run</a>' if self.run else ""
+        return page(title, body, more, head)
+
+    def ran(self) -> str:
+        """The run kept in the folder named with --run: read, never run."""
+        title = "The run"
+        st = sibling("stack", "stack")
+        if self.run is None or st is None:
+            why = (
+                "No run was named when this was started."
+                if st
+                else "The stack add-on isn't here."
+            )
+            return self.page(title, f"<p class=muted>{why}</p>")
+        logs = sorted(self.run.glob("0*-stack.txt"))
+        if not logs:
+            return self.page(title, f"<p>{esc(self.run)} holds no run: the stack add-on's <code>--to</code> makes one.</p>")  # fmt: skip
+        steps, done = run_steps(
+            logs[0].read_text(encoding="utf-8", errors="replace"), st
+        )
+        if done:
+            body = [f"<p><strong>Finished.</strong> {esc(done)}.</p>"]
+            head = ""
+        else:
+            body = [f"<p><strong>Still running.</strong> This page looks again every {AGAIN} seconds.</p>"]  # fmt: skip
+            head = f'<meta http-equiv="refresh" content="{AGAIN}">'
+        for step in steps:
+            name = f"{step['n']}-{step['name']}"
+            pills = ""
+            if not step["ended"]:
+                pills = " <span class='pill wait'>running</span>"
+            else:
+                pills += " <span class=pill>kept from before</span>" * step["kept"]
+                pills += " <span class='pill wait'>flagged</span>" * step["flagged"]
+            try:
+                doc = json.loads((self.run / "reports" / f"{name}.json").read_text(encoding="utf-8"))  # fmt: skip
+                body.append(report_card(doc, step["code"], pills=f" <span class=pill>step {esc(step['n'])}</span>{pills}"))  # fmt: skip
+                continue
+            except (OSError, ValueError, KeyError, TypeError):
+                pass  # no report kept, or the step hasn't ended: its words
+            try:
+                text = (self.run / f"{name}.txt").read_text(
+                    encoding="utf-8", errors="replace"
+                )
+            except OSError:
+                text = ""
+            code = (
+                f" <span class=pill>exit {step['code']}</span>" if step["ended"] else ""
+            )
+            head_html = f"<p class=kick>{esc(step['name'])} <span class=pill>step {esc(step['n'])}</span>{code}{pills}</p>"  # fmt: skip
+            body.append(words_card(head_html, text))
+        if not steps:
+            body.append("<p class=muted>No step has started yet.</p>")
+        return self.page(title, "".join(body), head)
 
     def steps(self) -> str:
         """What the stack's report steps found, each drawn as a card, in the
@@ -514,6 +578,51 @@ class Willow:
                     '<p><a href="/waiting">Back to what\'s waiting</a></p>')  # fmt: skip
 
 
+AGAIN = 3  # seconds between looks at a run that is still going
+
+
+def run_steps(log: str, st) -> tuple[list[dict], str | None]:
+    """A run's log as (its steps in order, the line that ended it or None).
+    Each step: its number as written, its name, whether it has ended, and
+    then its exit code, whether it was flagged, and whether it was kept from
+    an earlier go. The lines are the stack add-on's, read by its own
+    patterns, so the two can't come to disagree about what a line says."""
+    steps: dict[str, dict] = {}
+    done = None
+    for line in log.splitlines():
+        if m := st.STARTED.fullmatch(line):
+            steps[m.group(1)] = {"n": m.group(1), "name": m.group(2), "ended": False}
+            done = None
+        elif m := st.ENDED.fullmatch(line):
+            step = steps.get(m.group(1))
+            if step and step["name"] == m.group(2):
+                said = [x for x in m.group(5).split(", ") if x]
+                step.update(ended=True, code=int(m.group(3)), flagged="flagged" in said, kept=False)  # fmt: skip
+        elif line.endswith(": kept from before"):
+            n = line.split(" ", 1)[0]
+            if n in steps and steps[n]["ended"]:
+                steps[n]["kept"] = True
+        elif line.startswith("done: "):
+            done = line[6:]
+        elif line.startswith("resumed: "):
+            done = None
+    return [steps[n] for n in sorted(steps)], done
+
+
+def words_card(head: str, text: str, shown: int = SHOWN) -> str:
+    """A step that printed words, not a report: its first lines in sight and
+    the rest folded, as written."""
+    lines = text.splitlines()
+    rest = ""
+    if len(lines) > shown:
+        rest = (
+            f"<details><summary>All {len(lines)} lines</summary>"
+            f"<pre>{esc(chr(10).join(lines[shown:]))}</pre></details>"
+        )
+    first = f"<pre>{esc(chr(10).join(lines[:shown]))}</pre>" if lines else "<p class=muted>It printed nothing.</p>"  # fmt: skip
+    return f"<div class=card>{head}{first}{rest}</div>"
+
+
 # ── the server ───────────────────────────────────────────────────────────────
 class Handler(BaseHTTPRequestHandler):
     willow: Willow
@@ -581,6 +690,8 @@ class Handler(BaseHTTPRequestHandler):
             return self.send(200, self.willow.waiting())
         if url.path == "/steps":
             return self.send(200, self.willow.steps())
+        if url.path == "/run":
+            return self.send(200, self.willow.ran())
         return self.send(
             404, page("Not here", "<p>There's no page at that address.</p>")
         )
@@ -675,7 +786,7 @@ def main(argv: list[str]) -> int:
         return kernel.ALIVE
     opts, flags, rest, it = {}, set(), [], iter(argv)
     for a in it:
-        if a in ("--box", "--port", "--lang", "--stack"):
+        if a in ("--box", "--port", "--lang", "--stack", "--run"):
             opts[a] = next(it, "")
         elif a == "--no-open":
             flags.add(a)
@@ -684,7 +795,8 @@ def main(argv: list[str]) -> int:
     port = opts.get("--port", "0")
     if (not opts.get("--box") or rest or not port.isdigit() or int(port) > 65535
             or opts.get("--lang", "de") not in LANGS
-            or ("--stack" in opts and not opts["--stack"])):  # fmt: skip
+            or ("--stack" in opts and not opts["--stack"])
+            or ("--run" in opts and not opts["--run"])):  # fmt: skip
         print(__doc__.split("\n\n")[1], file=sys.stderr)
         return kernel.REFUSED
     box = Path(opts["--box"])
@@ -696,7 +808,11 @@ def main(argv: list[str]) -> int:
         if stack is not None and not stack.is_file():
             print(f"refused: can't read the stack {stack}", file=sys.stderr)
             return kernel.REFUSED
-        willow = Willow(box, opts.get("--lang"), stack=stack)
+        run = Path(opts["--run"]) if "--run" in opts else None
+        if run is not None and not run.is_dir():
+            print(f"refused: {run} isn't a folder that's there", file=sys.stderr)
+            return kernel.REFUSED
+        willow = Willow(box, opts.get("--lang"), stack=stack, run=run)
         server = serve(willow, int(port))
     except (OSError, ValueError) as e:
         print(f"refused: {e}", file=sys.stderr)

@@ -3,7 +3,7 @@ section: Ways to use it
 line: One page made from several add-ons run in the order you list them, their results grouped so the biggest come first.
 source: new
 added: 2026-10-26
-version: 0.3.0
+version: 0.4.0
 writes: to
 network: none
 role: ways
@@ -58,6 +58,7 @@ keeps the run as it happens:
     <FOLDER>/00-stack.txt     a line as each step starts, a line as it ends
     <FOLDER>/01-todo.txt      the first step's output
     <FOLDER>/02-scan.txt      the second's, and so on
+    <FOLDER>/reports/         a report step's report as data, for a page
 
     01 todo: started (3f9a2c1b)
     01 todo: exit 0, 12 lines
@@ -70,7 +71,13 @@ report is written once, when its report is whole. A step that printed
 nothing and complained is kept as its complaint, and the line that ends it
 says `flagged`. The last line is `done: N of M steps flagged`.
 
-FOLDER must be there and empty, and stack makes no folder: a run is one
+A step that printed a report has it kept twice: as words, in its file, and
+as data, under `reports/` with the same name and `.json`, so a page can draw
+it without running the step again ([browse](../browse/)'s `--run`). It is in
+a folder of its own so that what follows the run reads words only. A step
+run again that prints no report this time has its old data taken away.
+
+FOLDER must be there and empty, and stack makes no folder but that one: a run is one
 folder, and a second run in it would read as part of the first. Follow it
 with anything that follows a folder of files; the page is printed at the end
 as before, the same with `--to` as without.
