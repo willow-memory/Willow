@@ -902,6 +902,10 @@ willow/
 │   │   │   ├── predict.py    what a question will come to, on the record before it is asked, graded after
 │   │   │   ├── test_predict.py
 │   │   │   └── README.md
+│   │   ├── projects/
+│   │   │   ├── projects.py   Every project under one folder: its records, its stacks, and each stack's runs, so you can see what there is to go back to
+│   │   │   ├── test_projects.py
+│   │   │   └── README.md     its card
 │   │   ├── readings/
 │   │   │   ├── readings.py   notes beside an answer: numbers over time, dates gone by
 │   │   │   ├── test_readings.py

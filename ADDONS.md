@@ -988,6 +988,9 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - <a id="predict"></a>[**predict**](adapters/stdlib/predict/) \
   Write down what a question will come to before you ask it, and grade it after; the record counts how often it was right. \
   *bot* `no-install` `offline` `score` `down` · near: forecasts, pile-gold, assistant-scores
+- <a id="projects"></a>[**projects**](adapters/stdlib/projects/) \
+  Every project under one folder: its records, its stacks, and each stack's runs, so you can see what there is to go back to. \
+  *new* `no-install` `offline` `stack` · near: stack-share, stack, github
 - <a id="readings"></a>[**readings**](adapters/stdlib/readings/) \
   Two hints beside an answer: a number in your files that moved a lot lately, and a date in a log that passed with nothing written since. \
   *box* `no-install` `offline` `numbers` · near: plain, privacy, coming-up
