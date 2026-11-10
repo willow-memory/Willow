@@ -134,7 +134,7 @@ def kept(run: Path | None) -> dict[str, list[str]]:
 
 def where(step: str, found: dict[str, list[str]]) -> str:
     """Where a run kept a step's output; the ask's is the scan's or glance's."""
-    for name in ([step] if step != "ask" else ["glance", "scan"]):
+    for name in [step] if step != "ask" else ["glance", "scan"]:
         if name in found:
             return found[name][-1]
     return ""
@@ -166,7 +166,11 @@ def main(argv: list[str]) -> int:
             for n, ln in enumerate(Path(opts["--questions"]).read_text(encoding="utf-8").splitlines(), 1):  # fmt: skip
                 if ln.strip() and not ln.lstrip().startswith("#"):
                     name, tab, q = ln.partition("\t")
-                    asked.append((name.strip(), q.strip()) if tab else (str(n), ln.strip()))
+                    asked.append(
+                        (name.strip() or str(n), q.strip())
+                        if tab
+                        else (str(n), ln.strip())
+                    )
         else:
             asked = [("", args[0])]
     except (OSError, ValueError) as e:
@@ -179,7 +183,7 @@ def main(argv: list[str]) -> int:
     if run is not None and not run.is_dir():
         print(f"refused: {run} isn't a folder", file=sys.stderr)
         return kernel.REFUSED
-    if not asked or not all(q for _, q in asked):
+    if not asked or not all(said(q) for _, q in asked):
         print("refused: a question with no words", file=sys.stderr)
         return kernel.REFUSED
     found = kept(run)
@@ -205,15 +209,21 @@ def main(argv: list[str]) -> int:
         steps_of: dict[str, list[str]] = {}
         for name, q in asked:
             kind, steps, cue = kind_of(q, table)
-            steps_of[kind] = steps
+            mine = steps_of.setdefault(kind, [])
+            # a kind on two lines is one group, with both lines' steps
+            mine += [s for s in steps if s not in mine]
             by_kind.setdefault(kind, []).append((name, " ".join(q.split())))
-        order = [k for k, _, _ in table if k in by_kind] + ([PLAIN] if PLAIN in by_kind else [])
+        order = [
+            k for k in dict.fromkeys([k for k, _, _ in table] + [PLAIN]) if k in by_kind
+        ]
         groups = []
         for k in order:
             head = [(f"-> {s}", step_row(s)[1]) for s in steps_of[k]]
             groups.append((f"{k}: {len(by_kind[k])}", head + by_kind[k]))
         n = len(asked)
-        said_ = f"{n} questions: " + ", ".join(f"{len(by_kind[k])} {k}" for k in order)
+        said_ = f"{n} question{'' if n == 1 else 's'}: " + ", ".join(
+            f"{len(by_kind[k])} {k}" for k in order
+        )
     doc = {
         "addon": NAME,
         "state": "populated",
