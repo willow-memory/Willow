@@ -688,7 +688,7 @@ def tally(box: Path) -> dict:
 
 def find_projects(home: Path) -> list[dict]:
     """Each folder under `home` that holds a box: its boxes, the stack files
-    beside them, and its runs (here, or in its mine/ folder), newest first.
+    beside them, and its runs (here, or one folder down), newest first.
     A project is found by what it holds, never by a name it was given."""
     st = sibling("stack", "stack")
     out = []
@@ -705,9 +705,15 @@ def find_projects(home: Path) -> list[dict]:
                     stacks.append(f)
             except (OSError, ValueError):
                 pass
-        places = [d, d / "mine"]
-        runs = [r for place in places if place.is_dir() for r in place.iterdir()
-                if r.is_dir() and any(r.glob("0*-stack.txt"))]  # fmt: skip
+        # a run is a folder with a stack's log in it: here, or one folder down
+        # (runs/, mine/, whatever the person called it), never inside a box
+        places = [d, *(c for c in d.iterdir() if c.is_dir() and c not in boxes)]
+        runs = [
+            r
+            for place in places
+            for r in sorted(place.iterdir())
+            if r.is_dir() and r not in boxes and any(r.glob("0*-stack.txt"))
+        ]
         runs.sort(key=lambda r: (-r.stat().st_mtime, r.name))
         out.append(
             {
