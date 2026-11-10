@@ -130,7 +130,11 @@ def find(home: Path, st) -> list[dict]:
             steps = [s for _, ss in pools for s in ss] if not err else []
             if steps:
                 stacks.append(
-                    {"file": f, "marks": [st.mark(n, a) for n, a in steps], "steps": steps}
+                    {
+                        "file": f,
+                        "marks": [st.mark(n, a) for n, a in steps],
+                        "steps": steps,
+                    }
                 )
         # a run is a folder with a stack's log in it: here, or one folder down
         places = [d, *(c for c in inside if c.is_dir() and c not in boxes)]
@@ -149,7 +153,11 @@ def find(home: Path, st) -> list[dict]:
 def owner(run: dict, stacks: list[dict]) -> tuple[dict | None, bool]:
     """(the stack a run is of, whether it is the stack as it is now). A run
     is a stack's when its marks are the stack's own in order, as far as the
-    run got; it is of the stack as it was when it shares most of them."""
+    run got; it is of the stack as it was when it shares most of them. A
+    stack the run is the whole of comes before one it is only the start of."""
+    for s in stacks:
+        if run["marks"] and run["marks"] == s["marks"]:
+            return s, True
     best, share = None, 0.0
     for s in stacks:
         if run["marks"] and run["marks"] == s["marks"][: len(run["marks"])]:
@@ -187,8 +195,11 @@ def rows_of(p: dict, st) -> tuple[list[tuple[str, str]], int, bool]:
             continue
         waiting += t["waiting"]
         rows.append(
-            (b.name, f"{count(t['rows'], 'row')}: {t['asked']} asked, "
-                     f"{t['approved']} approved, {t['waiting']} waiting")  # fmt: skip
+            (
+                b.name,
+                f"{count(t['rows'], 'row')}: {t['asked']} asked, "
+                f"{t['approved']} approved, {t['waiting']} waiting",
+            )  # fmt: skip
         )
     mine: dict[str, list] = {s["file"].name: [] for s in p["stacks"]}
     loose = []
@@ -215,8 +226,10 @@ def rows_of(p: dict, st) -> tuple[list[tuple[str, str]], int, bool]:
         rows.append((s["file"].name, what))
     for r in loose:
         rows.append(
-            (str(r["folder"].relative_to(p["folder"])),
-             f"a run of no stack that is here now: {count(len(r['marks']), 'step')}, {said_of(r)}")  # fmt: skip
+            (
+                str(r["folder"].relative_to(p["folder"])),
+                f"a run of no stack that is here now: {count(len(r['marks']), 'step')}, {said_of(r)}",
+            )  # fmt: skip
         )
     return rows, waiting, broken
 
