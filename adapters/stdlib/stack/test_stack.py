@@ -380,7 +380,9 @@ def test_a_run_wants_a_folder_of_its_own_that_is_there(tmp_path):
     assert got.returncode == 2 and "isn't a folder" in got.stderr
 
 
-def test_step_files_sort_in_the_order_they_ran_however_many(tmp_path):
+def test_step_files_sort_in_the_order_they_ran_however_many(tmp_path, monkeypatch):
+    # in this process, so the guard reads --to from here as it would from a run
+    monkeypatch.setattr(sys, "argv", ["stack.py", "--to", str(tmp_path)])
     few = st.Run(tmp_path, 3)
     assert few.file(2, "todo").name == "02-todo.txt" and few.log.name == "00-stack.txt"
     many = tmp_path / "many"
