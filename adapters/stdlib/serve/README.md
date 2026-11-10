@@ -3,6 +3,7 @@ section: Assistants
 line: The one file an AI model may read: only the passages you approved, under ids it can't guess, and nothing else.
 source: bot
 added: 2026-10-26
+version: 0.1.0
 writes: record, to
 network: none
 role: guards

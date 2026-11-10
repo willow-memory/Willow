@@ -3,6 +3,7 @@ section: Trust and proof
 line: The Wayback Machine's copy of a page from a window of days, saved beside your own snapshot and compared with it byte for byte.
 source: new
 added: 2026-10-24
+version: 0.1.0
 writes: to
 network: archive.org, to find the archived copy and fetch it
 role: makes

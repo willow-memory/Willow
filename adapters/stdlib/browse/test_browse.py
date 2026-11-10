@@ -322,3 +322,436 @@ def test_a_suggestion_you_declined_no_longer_waits(site, tmp_path):
     assert k("decline", "--box", str(b), subject, *NOW).returncode == 0
     site.start()
     assert "Nothing is waiting for your approval." in site.req("GET", "/waiting")[1]
+
+
+# ── a card a person can read ─────────────────────────────────────────────────
+CHOICE = {
+    "card": {
+        "line": "Commit messages as a dated pile.",
+        "name": "git-history",
+        "sha256": "d3" * 32,
+    },
+    "chose": "git-history",
+    "decision_type": "willow-repos",
+    "over": ["code-comments", "codebase-memory"],
+    "why": "it is the only one with dates",
+    "word": "repos",
+}
+STACK = "# read my repos\n\n## for “read my repos”\n- git-history -- mirror --from {box} --to {tmp}/gh\n- export -- --box {box}\n"
+
+
+def prop(data: str, claim: str = "the claim") -> dict:
+    return {"path": "p.md", "data": data, "cites": [], "claim": claim}
+
+
+def test_rich_escapes_first_then_marks_bold_lists_and_headings():
+    got = br.rich(
+        "# A <b>title</b>\n**bold** and <i>not</i>\nsame line\n\n- one\n- two & more\nafter"
+    )
+    assert got == (
+        "<p class=said><strong>A &lt;b&gt;title&lt;/b&gt;</strong></p>"
+        "<p class=said><strong>bold</strong> and &lt;i&gt;not&lt;/i&gt; same line</p>"
+        "<ul><li>one</li><li>two &amp; more</li></ul>"
+        "<p class=said>after</p>"
+    )
+    assert br.rich("") == ""
+    assert br.rich("text\n- item") == "<p class=said>text</p><ul><li>item</li></ul>"
+    assert br.rich("a ** b") == "<p class=said>a ** b</p>"
+
+
+def test_names_are_listed_as_a_person_lists_them():
+    assert br.listed([]) == ""
+    assert br.listed(["a"]) == "a"
+    assert br.listed(["a", "b"]) == "a or b"
+    assert br.listed(["a", "b", 3]) == "a, b or 3"
+
+
+def test_a_choice_reads_as_a_sentence_with_its_own_reason():
+    kind, head, body, why = br.reading(prop(json.dumps(CHOICE)))
+    assert kind == "choice"
+    assert head == "For “repos”, use git-history"
+    assert body == (
+        "<p>Not code-comments or codebase-memory.</p>"
+        "<p class=muted>git-history: Commit messages as a dated pile.</p>"
+    )
+    assert why == "it is the only one with dates"
+    bare = {"chose": "<a>", "word": "<w>", "over": []}
+    assert br.reading(prop(json.dumps(bare), "its <claim>")) == (
+        "choice",
+        "For “&lt;w&gt;”, use &lt;a&gt;",
+        "",
+        "its &lt;claim&gt;",
+    )
+    assert br.reading(prop(json.dumps({**bare, "why": ""}), "c"))[3] == "c"
+    assert br.reading(prop(json.dumps({**bare, "card": {"line": 3}})))[2] == ""
+
+
+def test_only_the_shape_of_a_choice_is_read_as_one():
+    for not_one in (
+        ["chose"],
+        {"chose": "a", "word": "w"},
+        {"chose": "a", "over": []},
+        {"word": "w", "over": []},
+        {"chose": 1, "word": "w", "over": []},
+        {"chose": "a", "word": 2, "over": []},
+        {"chose": "a", "word": "w", "over": "b"},
+    ):
+        kind, head, body, _ = br.reading(prop(json.dumps(not_one)))
+        assert (kind, head) == ("answer", "") and body.startswith("<p class=said>")
+
+
+def test_a_stack_reads_as_its_title_and_steps():
+    kind, head, body, why = br.reading(prop("\n" + STACK, "a <stack>"))
+    assert (kind, head, why) == ("stack", "read my repos", "a &lt;stack&gt;")
+    assert body == (
+        "<ul><li>git-history -- mirror --from {box} --to {tmp}/gh</li>"
+        "<li>export -- --box {box}</li></ul>"
+    )
+    assert br.reading(prop("# a title\n- no steps here"))[0] == "answer"
+    assert br.reading(prop("- step -- --box {box}"))[0] == "answer"
+
+
+def test_the_waiting_page_says_each_suggestion_in_words(site, tmp_path):
+    b = site.willow.box
+    rows = [
+        {
+            "path": "forge/decisions/willow-repos.json",
+            "data": json.dumps(CHOICE),
+            "cites": [],
+            "claim": "for repos",
+        },
+        {"path": "forge/stack.md", "data": STACK, "cites": [], "claim": "a stack"},
+    ]
+    served = json.loads(k("bite", "--box", str(b), *NOW, "when is the dentist").stdout)[
+        "served"
+    ]
+    rows.append(
+        {
+            "path": "dentist.md",
+            "data": "**Tuesday** at 3pm",
+            "cites": [served[0]["id"]],
+            "claim": "the note",
+        }
+    )
+    (tmp_path / "s.jsonl").write_text("".join(json.dumps(r) + "\n" for r in rows))
+    assert (
+        k(
+            "propose", "--box", str(b), "--file", str(tmp_path / "s.jsonl"), *NOW
+        ).returncode
+        == 42
+    )
+    site.start()
+    text = site.req("GET", "/waiting")[1]
+    assert "<strong>3 waiting.</strong>" in text
+    one, two, three = text.split("<div class=card><p class=kick>")[1:]
+    assert one.startswith(
+        "A suggested choice <span class=pill>forge/decisions/willow-repos.json</span>"
+    )
+    assert "<h2>For “repos”, use git-history</h2>" in one
+    assert "It cites nothing from your folder." in one and "It cites 0" not in one
+    assert "<button>Approve this choice</button>" in one
+    # what the seal signs is still there to read, escaped and folded away
+    assert "Exactly what you'd be approving</summary><pre>{&quot;card&quot;" in one
+    assert "proposal:" in one.split("</pre>")[1].split("</details>")[0]
+    assert (
+        "<h2>read my repos</h2>" in two and "<button>Approve this stack</button>" in two
+    )
+    assert "<h2>" not in three and "<strong>Tuesday</strong> at 3pm" in three
+    assert "<summary>It cites 1 passage of your folder</summary>" in three
+    assert "dentist.txt:1" in three and "<button>Approve this answer</button>" in three
+    subject = two.split('name=subject value="')[1].split('"')[0]
+    assert "Approved" in site.post("/approve", subject=subject)[1]
+    assert "<strong>2 waiting.</strong>" in site.req("GET", "/waiting")[1]
+
+
+def test_an_approved_answer_is_shown_in_words_with_its_name(site, tmp_path):
+    b = site.willow.box
+    served = json.loads(k("bite", "--box", str(b), *NOW, "when is the dentist").stdout)[
+        "served"
+    ]
+    row = {
+        "path": "d.md",
+        "data": "**Tuesday** <at> 3pm",
+        "cites": [served[0]["id"]],
+        "claim": "c",
+    }
+    (tmp_path / "s.jsonl").write_text(json.dumps(row) + "\n")
+    k("propose", "--box", str(b), "--file", str(tmp_path / "s.jsonl"), *NOW)
+    site.start()
+    waiting = site.req("GET", "/waiting")[1]
+    assert "<strong>1 waiting.</strong>" in waiting
+    subject = waiting.split('name=subject value="')[1].split('"')[0]
+    site.post("/approve", subject=subject)
+    text = site.post("/ask", q="when is the dentist")[1]
+    assert (
+        "<div class=card><p class=said><strong>Tuesday</strong> &lt;at&gt; 3pm</p>"
+        f"<p class=where>{subject}</p></div>"
+    ) in text
+
+
+def test_the_page_wears_the_canvas_colours():
+    """The canvas is the main page; ui/test_ui.py holds these to its own."""
+    for colour in ("#eceee7", "#f8f9f5", "#23251f", "#45652a", "#141712", "#a6c56f"):
+        assert colour in br.STYLE
+
+
+# ── any report, drawn one way ────────────────────────────────────────────────
+STACK_HERE = (HERE.parent / "stack").is_dir()
+TODO_HERE = (HERE.parent / "todo").is_dir()
+DOC = {
+    "addon": "pii-audit",
+    "state": "populated",
+    "said": "3 numbers in 2 of 9 files",
+    "groups": [
+        {"name": None, "rows": [{"where": "a.txt:1", "what": "loose <row>"}]},
+        {"name": "a card & number", "rows": [{"where": "m/o.csv:17", "what": "···· 4242"},
+                                              {"where": "m/o.csv:18", "what": "···· 1111"}]},
+    ],
+}  # fmt: skip
+
+
+def test_a_report_is_a_card_its_line_then_its_rows_under_their_groups():
+    assert br.report_card(DOC) == (
+        "<div class=card><p class=kick>pii-audit <span class=pill>found</span></p>"
+        "<h2>3 numbers in 2 of 9 files</h2>"
+        "<div class=row><span class=where>a.txt:1</span><p class=text>loose &lt;row&gt;</p></div>"
+        "<p class=group>a card &amp; number</p>"
+        "<div class=row><span class=where>m/o.csv:17</span><p class=text>···· 4242</p></div>"
+        "<div class=row><span class=where>m/o.csv:18</span><p class=text>···· 1111</p></div>"
+        "</div>"
+    )
+
+
+def test_a_report_says_its_state_in_words_and_when_it_waits_on_you():
+    empty = {"addon": "todo", "state": "empty", "said": "nothing to do", "groups": []}
+    got = br.report_card(empty)
+    assert "<span class=pill>nothing found</span>" in got and "class=row" not in got
+    assert "<span class=pill>couldn&#x27;t look</span>" in br.report_card(
+        {**empty, "state": "unreachable"}
+    )
+    assert "<span class=pill>&lt;odd&gt;</span>" in br.report_card(
+        {**empty, "state": "<odd>"}
+    )
+    waits = "<span class='pill wait'>waits on you</span>"
+    assert waits in br.report_card(DOC, 42) and waits not in br.report_card(DOC, 0)
+    assert waits not in br.report_card(empty, 42), "nothing found is nothing to wait on"
+    assert waits not in br.report_card(DOC, 2)
+
+
+def test_a_long_report_shows_its_first_rows_and_folds_the_rest():
+    rows = [{"where": f"f{i}.txt:1", "what": f"line {i}"} for i in range(11)]
+    doc = {"addon": "todo", "state": "populated", "said": "11 lines", "groups": [
+        {"name": "old", "rows": rows[:7]}, {"name": "new", "rows": rows[7:]}]}  # fmt: skip
+    got = br.report_card(doc)
+    seen, folded = got.split("<details>")
+    assert seen.count("class=row") == 8 == br.SHOWN and folded.count("class=row") == 3
+    assert "<summary>All 11 rows</summary>" in folded
+    # the group a fold cuts through is named on both sides of it
+    assert (
+        seen.count("<p class=group>new</p>") == 1
+        and folded.count("<p class=group>new</p>") == 1
+    )
+    assert "<details>" not in br.report_card(
+        {**doc, "groups": [{"name": "old", "rows": rows[:8]}]}
+    )
+    assert br.report_card(doc, shown=2).split("<details>")[0].count("class=row") == 2
+
+
+def test_a_stacks_report_steps_are_drawn_and_the_rest_are_named(tmp_path):
+    b = make_box(tmp_path)
+    (tmp_path / "pile" / "list.txt").write_text("TODO: call the <dentist> back\n")
+    stack = tmp_path / "mine.md"
+    stack.write_text(
+        "# mine\n## what's owed\n- todo -- --box {box}\n- nowhere -- --box {box}\n"
+        "## the rest\n- browse -- --box {box}\n"
+    )
+    s = Open.__new__(Open)
+    s.willow = br.Willow(b, None, stack=stack)
+    s.server = br.serve(s.willow)
+    s.port = s.server.server_address[1]
+    s.host = f"127.0.0.1:{s.port}"
+    threading.Thread(target=s.server.serve_forever, daemon=True).start()
+    s.cookie = ""
+    try:
+        s.start()
+        assert '<a href="/steps">What your stack found</a>' in s.req("GET", "/")[1]
+        r, text = s.req("GET", "/steps")
+        assert r.status == 200
+        if not STACK_HERE:
+            assert "The stack add-on isn't here." in text
+            return
+        assert "The nowhere add-on isn't here." in text
+        assert "<h2>what&#x27;s owed</h2>" in text and "<h2>the rest</h2>" not in text
+        assert (
+            "Not drawn here, since they print something other than a report: browse."
+            in text
+        )
+        if TODO_HERE:
+            assert "<p class=kick>todo <span class=pill>found</span>" in text
+            assert "call the &lt;dentist&gt; back" in text and "list.txt:1" in text
+        stack.write_text("no steps here\n")
+        assert "Couldn't read your stack" in s.req("GET", "/steps")[1]
+        stack.unlink()
+        assert (
+            "Couldn't read your stack: can&#x27;t read the stack"
+            in s.req("GET", "/steps")[1]
+        )
+    finally:
+        s.close()
+
+
+def test_without_a_stack_there_is_no_third_page_to_go_to(site):
+    site.start()
+    assert "/steps" not in site.req("GET", "/")[1]
+    r, text = site.req("GET", "/steps")
+    assert (
+        r.status == 200
+        and "No stack was named when this was started." in text
+        or (not STACK_HERE and "The stack add-on isn't here." in text)
+    )
+
+
+def test_a_stack_that_isnt_there_is_refused_before_anything_listens(tmp_path, capsys):
+    b = make_box(tmp_path)
+    assert (
+        br.main(["--box", str(b), "--stack", str(tmp_path / "absent.md"), "--no-open"])
+        == 2
+    )
+    assert "can't read the stack" in capsys.readouterr().err
+    assert br.main(["--box", str(b), "--stack"]) == 2
+    assert "browse.py" in capsys.readouterr().err
+
+
+# ── a run that was kept, shown and not run ───────────────────────────────────
+def opened(box, **kw):
+    s = Open.__new__(Open)
+    s.willow = br.Willow(box, None, **kw)
+    s.server = br.serve(s.willow)
+    s.port = s.server.server_address[1]
+    s.host = f"127.0.0.1:{s.port}"
+    threading.Thread(target=s.server.serve_forever, daemon=True).start()
+    s.cookie = ""
+    s.start()
+    return s
+
+
+LOG = (
+    "01 todo: started (aaaaaaaa)\n01 todo: exit 0, 3 lines\n"
+    "02 heavy: started (bbbbbbbb)\n02 heavy: exit 2, 1 line, flagged\n"
+    "03 slow: started (cccccccc)\n"
+)
+REPORT = {"addon": "todo", "state": "populated", "said": "2 lines marked to do",
+          "groups": [{"name": None, "rows": [{"where": "a.txt:1", "what": "call <them>"}]}]}  # fmt: skip
+
+
+@pytest.mark.skipif(
+    not STACK_HERE, reason="a run is the stack add-on's, and it isn't here"
+)
+def test_a_runs_log_is_read_as_its_steps_and_whether_it_ended():
+    st = br.sibling("stack", "stack")
+    steps, done = br.run_steps(LOG, st)
+    assert done is None and [s["n"] for s in steps] == ["01", "02", "03"]
+    assert steps[0] == {"n": "01", "name": "todo", "ended": True, "code": 0, "flagged": False, "kept": False}  # fmt: skip
+    assert steps[1]["code"] == 2 and steps[1]["flagged"] and steps[2] == {"n": "03", "name": "slow", "ended": False}  # fmt: skip
+    steps, done = br.run_steps(
+        LOG + "03 slow: exit 0, 2 lines\ndone: 1 of 3 steps flagged\n", st
+    )
+    assert done == "1 of 3 steps flagged" and steps[2]["ended"]
+    more = (
+        LOG
+        + "done: x\nresumed: 2 of 3 steps had finished\n01 todo: kept from before\n09 nope: kept from before\n"
+    )
+    steps, done = br.run_steps(more, st)
+    assert (
+        done is None and steps[0]["kept"] and not steps[1]["kept"] and len(steps) == 3
+    )
+    assert br.run_steps("02 x: exit 0, 1 line\nnonsense\n", st) == ([], None), (
+        "an end with no start"
+    )
+
+
+def test_a_run_is_shown_from_what_it_kept_and_nothing_is_run(tmp_path):
+    b = make_box(tmp_path)
+    run = tmp_path / "run"
+    (run / "reports").mkdir(parents=True)
+    rows_before = (b / "record.jsonl").read_text()
+    s = opened(b, run=run)
+    try:
+        assert '<a href="/run">The run</a>' in s.req("GET", "/")[1]
+        text = s.req("GET", "/run")[1]
+        if not STACK_HERE:
+            assert "The stack add-on isn't here." in text
+            return
+        assert "holds no run" in text and "http-equiv" not in text
+        (run / "00-stack.txt").write_text(LOG)
+        (run / "reports" / "01-todo.json").write_text(json.dumps(REPORT))
+        (run / "01-todo.txt").write_text("todo: populated, 2 lines marked to do\n")
+        (run / "02-heavy.txt").write_text("refused: <not> a box\n")
+        (run / "03-slow.txt").write_text("".join(f"line {i}\n" for i in range(1, 12)))
+        text = s.req("GET", "/run")[1]
+        assert "<strong>Still running.</strong>" in text
+        assert f'<meta http-equiv="refresh" content="{br.AGAIN}">' in text
+        assert "looks again every 3 seconds" in text, "three, as the card says"
+        one, two, three = text.split("<div class=card>")[1:]
+        assert (
+            "<p class=kick>todo <span class=pill>found</span> <span class=pill>step 01</span></p>"
+            in one
+        )
+        assert "<h2>2 lines marked to do</h2>" in one and "call &lt;them&gt;" in one
+        assert (
+            "<span class=pill>exit 2</span> <span class='pill wait'>flagged</span>"
+            in two
+        )
+        assert "<pre>refused: &lt;not&gt; a box</pre>" in two
+        assert (
+            "<span class='pill wait'>running</span>" in three
+            and "exit" not in three.split("</p>")[0]
+        )
+        assert (
+            "<summary>All 11 lines</summary>" in three
+            and "line 8\n"
+            not in three.split("<details>")[0].replace("line 8</pre>", "")
+        )
+        with (run / "00-stack.txt").open("a") as f:
+            f.write("03 slow: exit 0, 11 lines\ndone: 1 of 3 steps flagged\n")
+        text = s.req("GET", "/run")[1]
+        assert (
+            "<strong>Finished.</strong> 1 of 3 steps flagged." in text
+            and "http-equiv" not in text
+        )
+        assert "running" not in text
+        assert (b / "record.jsonl").read_text() == rows_before, (
+            "showing a run writes nothing"
+        )
+        (run / "reports" / "01-todo.json").write_text("{not json")
+        assert (
+            "<pre>todo: populated, 2 lines marked to do</pre>"
+            in s.req("GET", "/run")[1]
+        )
+    finally:
+        s.close()
+
+
+def test_a_step_that_printed_nothing_says_so_and_no_run_is_no_page(
+    site, tmp_path, capsys
+):
+    assert "It printed nothing." in br.words_card("<p class=kick>x</p>", "")
+    assert br.words_card("", "a\nb", shown=1) == (
+        "<div class=card><pre>a</pre><details><summary>All 2 lines</summary><pre>b</pre></details></div>"
+    )
+    site.start()
+    assert "/run" not in site.req("GET", "/")[1]
+    assert (
+        br.main(
+            [
+                "--box",
+                str(site.willow.box),
+                "--run",
+                str(tmp_path / "absent"),
+                "--no-open",
+            ]
+        )
+        == 2
+    )
+    assert "isn't a folder that's there" in capsys.readouterr().err
+    assert br.main(["--box", str(site.willow.box), "--run"]) == 2

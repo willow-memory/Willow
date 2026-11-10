@@ -3,6 +3,7 @@ section: Assistants
 line: One table of the assistants that take an MCP server, printing the lines that register willow with any of them.
 source: new
 added: 2026-10-26
+version: 0.1.0
 writes: nothing
 network: none
 role: ways

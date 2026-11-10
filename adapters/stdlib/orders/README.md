@@ -3,6 +3,7 @@ section: Reading more kinds of files
 line: Amazon's order history and other shops' CSV exports: what you bought, when, and for how much.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: to
 network: none
 role: reads

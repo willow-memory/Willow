@@ -3,6 +3,7 @@ section: Reading more kinds of files
 line: Your bash, zsh and fish history: what you ran, and when the shell recorded it.
 source: new
 added: 2026-10-31
+version: 0.1.0
 writes: to
 network: none
 role: reads

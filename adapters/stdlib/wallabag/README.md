@@ -3,6 +3,7 @@ section: Reading more kinds of files
 line: wallabag's JSON or HTML export: saved entries as plain text, with their tags.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: to
 network: none
 role: reads

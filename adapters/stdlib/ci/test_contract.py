@@ -109,10 +109,18 @@ PILE_EXTRA: dict[str, dict[str, bytes]] = {
         "catalog.json": b'{"entries": [{"id": "tides", "status": "dark", '
         b'"recovery": [{"url": "https://x.example/", "permission": "excluded"}]}]}'
     },
+    # no pull request open: restack-open answers before any fetch or push
+    "restack-open": {"open-prs.json": b"[]"},
     "scrub": {"photo.png": _png()},
     # a category of the person's own, which the default pile's garden.md holds
     "sort": {"categories.txt": b"garden: tomatoes, sun\n"},
     "sort-ask": {"categories.txt": b"garden: tomatoes, sun\n"},
+    # WordNet's eight database files, empty: a dictionary with no word in it
+    "synonyms": {
+        f"{part}.{kind}": b""
+        for kind in ("noun", "verb", "adj", "adv")
+        for part in ("index", "data")
+    },
     # a GGUF header with no keys and no tensors: a card that says so
     "weights-card": {"m.gguf": b"GGUF\x03" + b"\0" * 16},
     # a card pinning another file of the same size: it differs, 42
@@ -612,6 +620,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "almanac-keep": ("keep.py", ["--catalog", "{pile}/catalog.json", "--id", "tides", "--to", "{tmp}/kept"]),
     "amounts": ("amounts.py", ["--box", "{box}"]),
     "annotations": ("annotations.py", ["--box", "{box}", "--to", "{tmp}/annotations.json"]),
+    "assistant-scores": ("assistant_scores.py", ["--box", "{box}"]),
     "attendance": ("attendance.py", ["--box", "{box}"]),
     "baby-log": ("baby_log.py", ["--box", "{box}"]),
     "backup": ("backup.py", ["--box", "{box}", "--to", "{tmp}/backups", *NOW]),
@@ -656,6 +665,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "flashcards": ("flashcards.py", ["--box", "{box}", "due", *NOW]),
     "foia": ("foia.py", ["--box", "{box}"]),
     "folder-card": ("folder_card.py", ["--box", "{box}", "--to", "{tmp}/card.md"]),
+    "food-log": ("food_log.py", ["--box", "{box}"]),
     "forecasts": ("forecasts.py", ["wager", "--box", "{box}", "--p", "0.7", *NOW,
                   "tomatoes"]),  # fmt: skip
     "format-rot": ("format_rot.py", ["--from", "{pile}"]),
@@ -663,19 +673,29 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "game-master": ("game_master.py", ["--box", "{box}", "check"]),
     "gaps": ("gaps.py", ["--box", "{box}", *NOW]),
     "garden": ("garden.py", ["--box", "{box}"]),
+    "gather": ("gather.py", ["--from", "{pile}", "--to", "{tmp}/gathered"]),
     "gemini-cli": ("gemini_cli.py", ["--box", "{box}"]),
     "git-history": ("git_history.py", ["mirror", "--from", "{pile}", "--to", "{tmp}/gh"]),
+    "glance": ("glance.py", ["--of", "adapters/stdlib/glance/example-scanned.jsonl", "--questions", "adapters/stdlib/glance/example-questions.txt"]),
     "gradebook": ("gradebook.py", ["--box", "{box}"]),
     "habits": ("habits.py", ["--box", "{box}"]),
+    "handover": ("handover.py", ["--project", "{box}/.."]),
     "history": ("history.py", ["--box", "{box}"]),
     "home-upkeep": ("home_upkeep.py", ["--box", "{box}"]),
     "hook-compact": ("hook_compact.py", ["--box", "{box}"]),
+    "hook-errors": ("hook_errors.py", ["check", "--box", "{box}"]),
     "hook-fail-closed": ("hook_fail_closed.py", ["--hook", "true"]),
+    "hook-feedback": ("hook_feedback.py", ["check", "--box", "{box}"]),
     "hook-fuzz": ("hook_fuzz.py", ["--hook", "true"]),
     "hook-guard": ("hook_guard.py", ["rules"]),
+    "hook-handoff": ("hook_handoff.py", ["check", "--box", "{box}"]),
     "hook-impact": ("hook_impact.py", ["check", "--box", "{box}", "{pile}/garden.md"]),
     "hook-leaks": ("hook_leaks.py", ["check", "--from", "{pile}/garden.md"]),
     "hook-pin": ("hook_pin.py", ["--box", "{box}", "approve", "{pile}/garden.md", *NOW]),
+    "hook-read-first": (
+        "hook_read_first.py",
+        ["check", "--box", "{box}", "{pile}/garden.md"],
+    ),
     "hook-replay": ("hook_replay.py", ["--box", "{box}", "--to", "{tmp}", "run", "--hook", "true", *NOW]),
     "hook-shell": ("hook_shell.py", ["split", "ls -la"]),
     "hook-start": ("hook_start.py", ["--box", "{box}", *NOW]),
@@ -702,6 +722,8 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "llms-txt": ("llms_txt.py", ["write", "--from", "{pile}", "--to", "{tmp}/llms.txt"]),
     "local-model": ("local_model.py", ["ask", "--box", "{box}", "--url", "http://127.0.0.1:9/v1",
                     "--model", "m", "tomatoes"]),
+    "log-kit": ("log_kit.py", ["--box", "{box}", "--words", "tomatoes"]),
+    "look": ("look.py", ["tomatoes", "--box", "{box}"]),
     "make-it-so": ("make_it_so.py", ["plan", "--box", "{box}", "--to", "{tmp}/plan.json", "--cmd", "echo hi", "tomatoes"]),
     "market-calls": ("market_calls.py", ["score", "--box", "{box}"]),
     "mcp-lite": ("server.py", ["--box", "{box}"]),
@@ -756,6 +778,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "print": ("print.py", ["--box", "{box}", "--to", "{tmp}/page.html", *NOW, "tomatoes"]),
     "privacy": ("privacy.py", ["bite", "--box", "{box}", *NOW, "tomatoes"]),
     "profile": ("question_profile.py", ["--box", "{box}", "tomatoes"]),
+    "projects": ("projects.py", ["--home", "{box}/.."]),
     "prov": ("prov.py", ["--box", "{box}", "--to", "{tmp}/prov.json"]),
     # nothing sealed for the question: nothing to mark, no server looked for
     "quantized": ("quantized.py", ["--box", "{box}", "--questions", "{pile}/garden.md"]),
@@ -765,14 +788,19 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "reading-level": ("reading_level.py", ["--box", "{box}"]),
     "reading-log": ("reading_log.py", ["--box", "{box}"]),
     "readings": ("readings.py", ["bite", "--box", "{box}", *NOW, "tomatoes"]),
+    # the steps it would run, read and listed: nothing of the repo's touched
+    "ready": ("ready.py", ["steps"]),
+    "red-on-main": ("red_on_main.py", ["--pr", "{box}", "--main", "{box}"]),
     "renewals": ("renewals.py", ["--box", "{box}", *NOW]),
     # a list naming no owner/repo builds nothing, before any clone: no network
     "repo-pile": ("repo_pile.py", ["build", "--to", "{tmp}/base", "--repos",
                                    "{pile}/garden.md", "--key", "{tmp}/base.key"]),
     "restack": ("restack.py", ["--onto", "HEAD", "HEAD"]),
+    "restack-open": ("restack_open.py", ["--prs", "{pile}/open-prs.json"]),
     "restore-drill": ("restore_drill.py", ["--from", "{pile}/garden.md"]),
     "risky-code": ("risky_code.py", ["--box", "{box}"]),
     "ro-crate": ("ro_crate.py", ["--box", "{box}", "--to", "{tmp}/crate"]),
+    "route": ("route.py", ["tomatoes"]),
     "rss-out": ("rss_out.py", ["--box", "{box}", "--to", "{tmp}/feed.xml"]),
     "rules": ("rules.py", ["list", "--box", "{box}"]),
     "said": ("said.py", ["--box", "{box}"]),
@@ -788,6 +816,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "session-seal": ("session_seal.py", ["--box", "{box}", *NOW]),
     "share": ("share.py", ["log", "--box", "{box}"]),
     "shell": ("shell.py", ["script", "bash"]),
+    "skim": ("skim.py", ["check"]),
     "slow-tests": ("slow_tests.py", ["--runs", "{pile}"]),
     "snapshot": ("snapshot.py", ["check", "--in", "{pile}"]),
     "sort": ("sort.py", ["--box", "{box}", "--categories", "{pile}/categories.txt"]),
@@ -795,6 +824,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "sort-ask": ("sort_ask.py", ["--box", "{box}", "--categories", "{pile}/categories.txt",
                  "--model", "m", "--url", "http://127.0.0.1:9/v1"]),
     "stack": ("stack.py", ["--box", "{box}", "--stack", "adapters/stdlib/stack/example.md"]),
+    "stack-share": ("stack_share.py", ["--box", "{box}"]),
     "stale": ("stale.py", ["--box", "{box}"]),
     "start": ("start.py", ["--pile", "{pile}", "--to", "{tmp}/willow"]),
     "starter-words": ("starter.py", ["copy", "--to", "{tmp}/words.txt"]),
@@ -802,6 +832,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "surprise": ("surprise.py", ["--box", "{box}", *NOW]),
     "syllabus": ("syllabus.py", ["--box", "{box}"]),
     "symptoms": ("symptoms.py", ["--box", "{box}", "tomatoes"]),
+    "synonyms": ("synonyms.py", ["--box", "{box}", "--data", "{pile}", "tomatoes"]),
     "tarot": ("tarot.py", ["--box", "{box}", "draw", *NOW]),
     "test-impact": ("impact.py", ["plan", "README.md"]),
     "test-shards": ("shards.py", ["--shards", "2", "--tests", "{pile}/garden.md"]),
@@ -899,6 +930,13 @@ def test_a_bad_command_line_is_refused_and_says_how_to_run_it(name, tmp_path):
     )
 
 
+_spec = importlib.util.spec_from_file_location(
+    "mirrors_for_contract", STDLIB / "ci" / "mirrors.py"
+)
+MIRRORS = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(MIRRORS)
+
+
 def check_reader(script: Path, sample: dict[str, bytes], tmp: Path) -> None:
     """The contract every reader keeps, run on one folder of its own files."""
     folder, mirror = tmp / "folder", tmp / "mirror"
@@ -913,7 +951,14 @@ def check_reader(script: Path, sample: dict[str, bytes], tmp: Path) -> None:
     assert got.returncode == 0, got.stderr
     line = got.stdout.strip().splitlines()[-1]
     assert re.fullmatch(rf"wrote {len(sample)} files? to .+; skipped 0", line), line
-    assert sorted(snapshot(mirror)) == sorted(f"{rel}.txt" for rel in sample)
+    shown = [p for p in snapshot(mirror) if not p.startswith(MIRRORS.PLACES + "/")]
+    assert sorted(shown) == sorted(f"{rel}.txt" for rel in sample)
+    if MIRRORS.keeps(script.parent / "README.md"):  # the mirror contract
+        assert MIRRORS.check(folder, mirror) == []
+    else:
+        assert not (mirror / MIRRORS.PLACES).exists(), (
+            "a map, so its card says output: mirror"
+        )
     again = tmp / "again"
     run(script, "mirror", "--from", str(folder), "--to", str(again))
     assert snapshot(again) == snapshot(mirror), "the same folder, the same bytes"
@@ -1148,3 +1193,115 @@ def test_every_report_keeps_the_report_contract(name, files, tmp_path):
     assert {"empty": code == 0, "unreachable": code == 42,
             "populated": code in (0, 42)}[state], (state, code)  # fmt: skip
     assert run(script, *good).stdout == text.stdout, "the same box, the same report"
+
+
+# ── the suggestions contract (adapters/stdlib/ci/README.md) ─────────────────
+_spec = importlib.util.spec_from_file_location(
+    "oc_for_suggestions", STDLIB / "openai-compatible" / "openai_compatible.py"
+)
+OC = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(OC)
+SUGGESTS = sorted(
+    n
+    for n, p in ADDONS.items()
+    if p.parent.name == "stdlib" and re.search(r"^output:(?:.*,)?\s*suggestions\s*(?:,.*)?$",
+                                               (p / "README.md").read_text(encoding="utf-8"), re.M)
+)  # fmt: skip
+#: how each is asked for one suggestion of a stand-in model at {url}; a
+#: `seal` first is a person's sealed answer for it to work from (translate)
+ASK_ONE: dict[str, tuple[str, list[str]]] = {
+    "local-model": ("local_model.py", ["ask", "--box", "{box}", "--url", "{url}",
+                                       "--model", "m", "how much sun do tomatoes want"]),
+    "night-batch": ("night_batch.py", ["run", "--box", "{box}", "--questions",
+                                       "{tmp}/questions.txt", "--url", "{url}", "--model", "m"]),
+    "openai-compatible": ("openai_compatible.py", ["ask", "--box", "{box}", "--url", "{url}",
+                                                   "--model", "m", "how much sun do tomatoes want"]),
+    "sort-ask": ("sort_ask.py", ["--box", "{box}", "--categories", "{tmp}/categories.txt",
+                                 "--model", "m", "--url", "{url}"]),
+    "translate": ("translate.py", ["--box", "{box}", "--into", "Spanish", "--url", "{url}",
+                                   "--model", "m", "how much sun do tomatoes want"]),
+}  # fmt: skip
+
+
+#: rows that take no --now: night-batch is bounded by --until, and asks now
+NO_NOW = {"night-batch"}
+
+
+def stand_in_model():
+    """A chat server on 127.0.0.1 that offers model m and answers every chat
+    with a garden reply citing [1]."""
+    import threading
+    from http.server import BaseHTTPRequestHandler, HTTPServer
+
+    class Handler(BaseHTTPRequestHandler):
+        def reply(self, doc: dict) -> None:
+            body = json.dumps(doc).encode()
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+
+        def do_GET(self):  # noqa: N802
+            self.reply({"data": [{"id": "m"}]})
+
+        def do_POST(self):  # noqa: N802
+            self.rfile.read(int(self.headers["Content-Length"]))
+            self.reply({"choices": [{"message": {"content": "garden [1]"}}]})
+
+        def log_message(self, *a):
+            pass
+
+    srv = HTTPServer(("127.0.0.1", 0), Handler)
+    threading.Thread(target=srv.serve_forever, daemon=True).start()
+    return srv, f"http://127.0.0.1:{srv.server_address[1]}/v1"
+
+
+def test_every_add_on_that_proposes_a_models_reply_is_asked_here():
+    assert SUGGESTS == sorted(ASK_ONE), "a card saying output: suggestions gets a row"
+
+
+@pytest.mark.parametrize("name", only(SUGGESTS))
+def test_every_suggestion_keeps_the_suggestions_contract(name, tmp_path):
+    pile = tmp_path / "pile"
+    pile.mkdir()
+    (pile / "beds.txt").write_text("Tomatoes want six hours of sun.\n")
+    (tmp_path / "categories.txt").write_text("garden: courgettes\n")
+    (tmp_path / "questions.txt").write_text("how much sun do tomatoes want\n")
+    box = tmp_path / "box"
+    kernel = [sys.executable, str(KERNEL)]
+    subprocess.run([*kernel, "init", "--box", str(box), "--pile", str(pile), "--key",
+                    str(tmp_path / "key"), *NOW], check=True, capture_output=True)  # fmt: skip
+    if name == "translate":  # a person's sealed answer to translate
+        bite = run(
+            KERNEL, "bite", "--box", str(box), *NOW, "how much sun do tomatoes want"
+        )
+        row = {"path": "answers/a.md", "data": "Six hours [1].\n", "claim": "mine",
+               "cites": [json.loads(bite.stdout)["served"][0]["id"]]}  # fmt: skip
+        (tmp_path / "s.jsonl").write_text(json.dumps(row) + "\n")
+        got = run(
+            KERNEL,
+            "propose",
+            "--box",
+            str(box),
+            *NOW,
+            "--file",
+            str(tmp_path / "s.jsonl"),
+        )
+        subprocess.run([*kernel, "seal", "--box", str(box), "--key", str(tmp_path / "key"),
+                        *NOW, got.stdout.split()[1]], check=True, capture_output=True)  # fmt: skip
+    before = {p.name for p in (box / "proposals").glob("*.json")}
+    srv, url = stand_in_model()
+    try:
+        script, argv = ASK_ONE[name]
+        good = [a.format(box=box, url=url, tmp=tmp_path) for a in argv]
+        got = run(STDLIB / name / script, *good, *([] if name in NO_NOW else NOW))
+    finally:
+        srv.shutdown()
+    made = [p for p in (box / "proposals").glob("*.json") if p.name not in before]
+    assert len(made) == 1, (got.stdout, got.stderr)
+    said = json.loads(made[0].read_text())["claim"]
+    c = OC.read_claim(said)
+    assert c and c["url"] == url and c["who"] == "m", said
+    assert list(c["settings"])[:2] == ["temperature", "seed"], said
+    assert said == OC.claim(c["who"], c["where"], list(c["settings"].items()), c["did"])

@@ -3,6 +3,7 @@ section: Reading more kinds of files
 line: System and app logs (syslog, journald's export, nginx): each line dated, so you can ask when it started.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: to
 network: none
 role: reads

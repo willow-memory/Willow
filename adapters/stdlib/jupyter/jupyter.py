@@ -83,9 +83,17 @@ def cells_of(nb: dict) -> list[dict]:
 
 
 def convert(data: bytes) -> str | None:
+    found = blocks(data)
+    return "".join(b for b, _ in found) if found else None
+
+
+def blocks(data: bytes) -> list[tuple[str, str]]:
+    """The mirror's blocks, each with its place in the notebook: `notebook metadata`
+    for its title, `cell N` for each cell. None of them when it has no cell
+    with words."""
     nb = json.loads(data.decode("utf-8-sig"))
     if not isinstance(nb, dict) or not cells_of(nb):
-        return None
+        return []
     meta = nb.get("metadata") if isinstance(nb.get("metadata"), dict) else {}
     spec = meta.get("kernelspec") if isinstance(meta.get("kernelspec"), dict) else {}
     info = (
@@ -97,7 +105,12 @@ def convert(data: bytes) -> str | None:
     lang = ", ".join(
         x for x in (spec.get("name"), info.get("name") or spec.get("language")) if x
     )
-    out = [f"notebook: {title}" + (f" ({lang})" if lang else "") + "\n\n"]
+    out = [
+        (
+            f"notebook: {title}" + (f" ({lang})" if lang else "") + "\n\n",
+            "notebook metadata",
+        )
+    ]
     for n, cell in enumerate(cells_of(nb), 1):
         if not isinstance(cell, dict):
             continue
@@ -117,8 +130,30 @@ def convert(data: bytes) -> str | None:
         block = f"cell {n} ({kind})\n{source}\n" if source else f"cell {n} ({kind})\n"
         for text in outputs:
             block += f"output:\n{text}\n"
-        out.append(block + "\n")
-    return "".join(out) if len(out) > 1 else None
+        out.append((block + "\n", f"cell {n}"))
+    return out if len(out) > 1 else []
+
+
+def places(found: list[tuple[str, str]]) -> dict[str, str]:
+    """The mirror contract's places (adapters/stdlib/ci/README.md): every
+    passage of a cell's block, a blank line in its source starting a new one,
+    at that cell."""
+    out, at = {}, 1
+    for block, place in found:
+        lines = block.split("\n")[:-1]
+        for i, s in enumerate(lines):
+            if s.strip() and (i == 0 or not lines[i - 1].strip()):
+                out[str(at + i)] = place
+        at += len(lines)
+    return out
+
+
+def write_places(dst: Path, rel: str, found: dict[str, str]) -> None:
+    """The map, hidden beside the mirror, where the kernel never reads."""
+    out = dst / ".places" / (rel + ".txt.json")
+    out.parent.mkdir(parents=True, exist_ok=True)
+    doc = {"source": rel, "places": found}
+    out.write_bytes((json.dumps(doc, ensure_ascii=False) + "\n").encode("utf-8"))
 
 
 EXTS = (".ipynb",)
@@ -158,13 +193,14 @@ def mirror(src: Path, dst: Path) -> tuple[int, int]:
     for path in _sources(src):
         rel = path.relative_to(src)
         try:
-            text = convert(path.read_bytes())
-            if text is None:
+            found = blocks(path.read_bytes())
+            if not found:
                 skipped += 1
                 continue
             target = dst.joinpath(rel.parent, rel.name + ".txt")
             target.parent.mkdir(parents=True, exist_ok=True)
-            target.write_bytes(text.encode("utf-8"))
+            target.write_bytes("".join(b for b, _ in found).encode("utf-8"))
+            write_places(dst, rel.as_posix(), places(found))
         except ERRORS:
             skipped += 1
             continue

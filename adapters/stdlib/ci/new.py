@@ -50,9 +50,10 @@ class Refused(Exception):
 
 
 def card(name: str, entry: dict, added: str, script: str, kind: str) -> str:
-    fields = [(k, v) for k, v in entry.items() if k not in ("name", "kind")]
+    fields = [(k, v) for k, v in entry.items() if k not in ("name", "kind", "version")]
     at = next((i + 1 for i, (k, _) in enumerate(fields) if k == "source"), len(fields))
-    fields.insert(at, ("added", added))
+    # an idea is 0.0.N; its first build is 0.1.0 (CONTRIBUTING.md, Releases)
+    fields[at:at] = [("added", added), ("version", "0.1.0")]
     head = "".join(f"{k}: {v}\n" for k, v in fields)
     return (
         f"<!-- willow-addon\n{head}-->\n# {name}\n\n{entry['line']}\n\n"

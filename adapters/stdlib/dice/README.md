@@ -3,6 +3,7 @@ section: Play
 line: Seeded dice rolls as rows: every roll replayable and checkable.
 source: bot
 added: 2026-10-24
+version: 0.1.0
 writes: record
 network: none
 role: tools

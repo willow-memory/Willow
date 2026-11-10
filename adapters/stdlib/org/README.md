@@ -3,9 +3,11 @@ section: Reading more kinds of files
 line: Org-mode files as plain lines, Org's markup taken off and each outline entry its own passage, cited by the .org file's own lines.
 source: new
 added: 2026-11-02
+version: 0.1.0
 writes: to
 network: none
 role: reads
+output: mirror
 reads: .org
 -->
 # org
@@ -66,6 +68,12 @@ folder, or MIRROR and FOLDER are inside one another).
 
 **Uses:** the kernel's exit codes (`ALIVE`, `ESCALATE`, `REFUSED`); Python's
 standard library for the format.
+
+**Where each passage came from** is in a hidden map beside its mirror,
+`MIRROR/.places/<same path>.txt.json`, which the kernel never reads: each
+passage's line, which is the source's own, as
+[the mirror contract](../ci/README.md#the-mirror-contract) says. A table's first
+passage, its header moved onto the separator's line, is on both lines.
 
 **Never:** writes inside FOLDER, modifies an original, writes anything outside
 MIRROR, or goes online.

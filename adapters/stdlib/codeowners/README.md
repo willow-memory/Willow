@@ -3,6 +3,7 @@ section: Finding things
 line: Who owns this file: the CODEOWNERS rule that matches it, cited by line, on GitHub, GitLab and Forgejo alike.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: nothing
 network: none
 role: tools

@@ -1,0 +1,1 @@
+`ui`: a folder's count on the canvas says items, which is what it counts (files and the folders that hold them); and a stack that reaches only this machine is said to stay on it, where the page and `look` said "goes online: loopback" in warning colour

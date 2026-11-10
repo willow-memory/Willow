@@ -15,6 +15,9 @@ notes = obsidian, logseq, joplin, evernote, keep
 journal = diary, jrnl, entries
 bookmarks = karakeep, wallabag, readwise, links
 
+# comparing things
+compare = sort, duplicates, diverge, contradictions
+
 # keeping track
 remind = coming, due, dates, deadline, renewals
 reminders = coming, due, dates, deadline
@@ -25,6 +28,34 @@ spending = budget, bank, statements
 money = bank, budget, invoices, amounts, debts
 todo = todos, fixme
 tasks = todo, nightstand, minutes
+slide = coming, due, digest, renewals
+forget = coming, due, digest
+dropped = coming, due, digest
+owes = debts, invoices
+owed = debts, invoices
+behind = invoices, debts
+unpaid = invoices, debts
+promised = todo, commitments
+projects = projects, handover
+runs = projects, handover
+stands = handover, digest
+stand = handover, digest
+
+# when a question finds nothing
+nothing = why, synonyms, typos
+missed = why, synonyms, typos
+different = synonyms, abbreviations, nicknames
+
+# starting out
+start = start, gather, starter
+begin = start, gather
+gather = gather, parallel
+collect = gather
+glance = glance
+route = route
+look = look, glance
+answer = look
+answers = look
 
 # keeping it safe
 backup = backup, backups, copies, zip, restore
@@ -45,3 +76,12 @@ chatgpt = openai, model, suggestions
 
 # play
 games = game, play, dice, quiz
+
+# searching code
+grep = ripgrep
+repos = git, commit, codebase, comments
+repositories = git, commit, codebase, comments
+
+# showing your work
+cv = timeline, export, hunt
+resume = timeline, export, hunt

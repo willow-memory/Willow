@@ -11,7 +11,8 @@ the push is a plain one. When the merge conflicts, the files this repo makes
 or only adds lines to are settled by a rule; any other conflict stops that
 branch, and it is left exactly as it was:
 
-    ADDONS.md, README.md     REF's, then made again: readme.py write
+    ADDONS.md, README.md     REF's, then made again: readme.py write; so
+    readme/week.json         is the week's tags and nearest entries
     BUGS.md                  REF's, then made again: ci/bugs.py write
     CHANGELOG.md             REF's, and each entry the branch added under
                              ## Unreleased moved to a fragment of its own
@@ -19,7 +20,10 @@ branch, and it is left exactly as it was:
                              when it ends (#N), else
                              changes/+<branch>.<kind>.md; a branch that
                              changed the file any other way stops
-    FILES.md                 both sides' folders, A to Z
+    FILES.md                 REF's, then made again: ci/files.py write (its
+                             cuts, groups.py's order, the branch's files),
+                             with what the branch wrote of each file only it
+                             added
     test_contract.py         both sides' COMMANDS lines; or, when a conflict
                              is more than those, the entries either side
                              added to COMMANDS, READERS or PILE_EXTRA, with
@@ -27,7 +31,7 @@ branch, and it is left exactly as it was:
                              both sides: a branch that changed anything else
                              stops)
     adapters/planned.json    REF's list, less the ideas the branch built, plus
-                             any it added
+                             any it added, by name A to Z
     any other .md file       both sides' lines, REF's first, when each side
                              only added lines where the base had none (a
                              paragraph each on an add-on's card); a side
@@ -37,9 +41,13 @@ The changelog's entries move whether the merge conflicted there or not:
 CHANGELOG.md only takes a release's now, and an entry written there the old
 way is the one conflict every branch had with every other.
 
-Once REF is merged in, test_docs.py runs in the scratch worktree: it is
-the check that catches a merge settled wrong (a tree missing a file, a
-count that is off). Only when it passes is the branch moved, forward, to the
+Once REF is merged in, everything on the repo's own list of what it makes
+(adapters/stdlib/ci/made.py, read in the worktree) is made again, less the
+one script that may go online. Then test_docs.py runs in the scratch
+worktree: it is the check that catches a merge settled wrong (a tree missing
+a file, a count that is off). The script left out is then asked to check,
+which asks no one: a made file it would have had to go online for stops the
+branch. Only when it passes is the branch moved, forward, to the
 merge commit; if the branch is checked out somewhere, that checkout is moved
 too, and only when it has no changes of yours. Nothing is pushed: it says
 the push to make.
@@ -73,8 +81,13 @@ HUNK = re.compile(
 MADE = {
     "ADDONS.md": "adapters/stdlib/readme/readme.py",
     "README.md": "adapters/stdlib/readme/readme.py",
+    "adapters/stdlib/readme/week.json": "adapters/stdlib/readme/readme.py",
     "BUGS.md": "adapters/stdlib/ci/bugs.py",
 }
+#: where the repo keeps the one list of what it makes, and the scripts on it
+#: that may go online (PyPI's dates asks PyPI for a new pin's): this never does
+MAKERS = "adapters/stdlib/ci/made.py"
+ONLINE = ("adapters/stdlib/ci/pypi_dates.py",)
 ENTRY = re.compile(r'^\s+(?:"[\w-]+": \(|\*\*\{)')  # a COMMANDS line
 CONTRACT = "adapters/stdlib/ci/test_contract.py"
 DICTS = ("COMMANDS", "READERS", "PILE_EXTRA")  # test_contract.py's, added to by add-ons
@@ -183,50 +196,34 @@ def fragments(
     return out
 
 
-def groups(side: str, lead: str) -> list[tuple[str, list[str]]]:
-    """A side of FILES.md's tree as (name, its lines), one per entry at `lead`."""
-    out: list[tuple[str, list[str]]] = []
-    for line in side.splitlines(keepends=True):
+def described(text: str) -> dict[str, str]:
+    """Each path FILES.md's tree names, and the words on its line."""
+    out, stack = {}, []
+    for line in text.splitlines():
         m = BRANCH.match(line)
-        if m and m["lead"] == lead:
-            out.append((m["name"], [line]))
-        elif out and m and len(m["lead"]) > len(lead):
-            out[-1][1].append(line)
-        else:
-            raise Stop("FILES.md conflicts in a way that isn't two sets of entries")
+        if not m:
+            continue
+        del stack[len(m["lead"]) // 4 :]
+        stack.append(m["name"].rstrip("/"))
+        out["/".join(stack)] = line[m.end() :].strip()
     return out
 
 
-def files_tree(text: str) -> str:
-    """Both sides' entries, A to Z. Each side's last entry may be open: its
-    closing lines are shared, after the conflict, and go to the last one."""
-
-    def combine(ref, mine, rest):
-        first = BRANCH.match((ref or mine).splitlines()[0]) if (ref or mine) else None
-        if first is None:
-            raise Stop("FILES.md conflicts in a way that isn't two sets of entries")
-        lead = first["lead"]
-        both = dict(groups(ref, lead))
-        for name, lines in groups(mine, lead):
-            if name in both and both[name] != lines:
-                raise Stop(f"FILES.md: both sides changed {name}")
-            both[name] = lines
-        tail = []
-        for line in rest.splitlines(keepends=True):
-            m = BRANCH.match(line)
-            if not m or len(m["lead"]) <= len(lead):
-                break
-            tail.append(line)
-        last = {groups(s, lead)[-1][0] for s in (ref, mine) if s.strip()}
-        order = sorted(both, key=lambda n: n.rstrip("/").lower())
-        out = []
-        for name in order:
-            out += both[name]
-            if tail and name in last and name != order[-1]:
-                out += tail  # an open entry, closed here as it is after the conflict
-        return "".join(out)
-
-    return hunks(text, combine)
+def keep_words(text: str, keep: dict[str, str]) -> str:
+    """FILES.md with each path in `keep` saying those words, at files.py's
+    column: what the branch wrote of the files it added, made again over."""
+    out, stack = [], []
+    for line in text.split("\n"):
+        m = BRANCH.match(line)
+        if m:
+            del stack[len(m["lead"]) // 4 :]
+            stack.append(m["name"].rstrip("/"))
+            words = keep.get("/".join(stack))
+            if words and line[m.end() :].strip() != words:
+                head = line[: m.end()]
+                line = (head.ljust(30) if len(head) < 29 else head + " ") + words
+        out.append(line)
+    return "\n".join(out)
 
 
 def contract(text: str) -> str:
@@ -357,7 +354,8 @@ def contract_entries(base: str, ref: str, mine: str) -> str:
 
 def planned(base: str, ref: str, mine: str) -> str:
     """REF's ideas, less those the branch took off the list (built), plus those
-    it put on; in REF's order, the new ones after, as the file is written."""
+    it put on; by name, A to Z, as the file is kept and as ci/order.py holds
+    it: a new idea left at the end passes test_docs and fails test_order."""
     try:
         b, r, m = (json.loads(x) for x in (base, ref, mine))
     except ValueError as e:
@@ -366,6 +364,7 @@ def planned(base: str, ref: str, mine: str) -> str:
     gone, added = names(b) - names(m), [x for x in m if x["name"] not in names(b)]
     out = [x for x in r if x["name"] not in gone]
     out += [x for x in added if x["name"] not in names(out)]
+    out.sort(key=lambda x: x["name"])
     return json.dumps(out, indent=1, ensure_ascii=False) + "\n"
 
 
@@ -404,9 +403,13 @@ def added_both(name: str, base: str, ref: str, mine: str) -> str:
 
 SETTLE = {
     "CHANGELOG.md": changelog,
-    "FILES.md": files_tree,
     CONTRACT: contract,
 }
+#: made again, and what the branch wrote of its own files put back (settle)
+FILES = "FILES.md"
+#: per worktree, the words the branch wrote of the files only it added to
+#: FILES.md, put back once files.py has made the tree again (remake)
+KEEP: dict[Path, dict[str, str]] = {}
 
 
 # ── git, in a scratch worktree ───────────────────────────────────────────────
@@ -463,6 +466,14 @@ def settle(work: Path) -> list[str]:
         p = work / n
         if n in MADE:
             git("checkout", "--theirs", "--", n, cwd=work)
+        elif n == FILES:
+            # REF's tree, made again by files.py (remake), with what the branch
+            # wrote of the files it added: a tree in groups.py's order isn't
+            # merged line by line, since the two sides' order differs
+            _, ref, mine = stages(work, n)
+            theirs = described(ref)
+            KEEP[work] = {p: w for p, w in described(mine).items() if p not in theirs and w}  # fmt: skip
+            git("checkout", "--theirs", "--", n, cwd=work)
         elif n == "adapters/planned.json":
             p.write_text(planned(*stages(work, n)), encoding="utf-8")
         elif n == CONTRACT:
@@ -481,13 +492,60 @@ def settle(work: Path) -> list[str]:
     return names
 
 
-def remake(work: Path) -> None:
-    """The files the repo makes, made again from the cards and the tests."""
-    for script in dict.fromkeys(MADE.values()):
+def listed(work: Path) -> list[str]:
+    """Every script the worktree's own ci/made.py runs, in its order: the list
+    is read there, never kept here, so a file main starts making is made again
+    on every branch without this changing. A tree with no such list, or one
+    that can't be read, has none."""
+    try:
+        tree = ast.parse((work / MAKERS).read_text(encoding="utf-8"))
+        made = next(
+            ast.literal_eval(n.value)
+            for n in tree.body
+            if isinstance(n, ast.Assign)
+            and any(getattr(t, "id", "") == "MADE" for t in n.targets)
+        )
+        return [script for _, script in made]
+    except (OSError, ValueError, SyntaxError, StopIteration, TypeError):
+        return []
+
+
+def makers(work: Path) -> list[str]:
+    """The listed scripts this runs: all but the ones that may go online."""
+    return [s for s in listed(work) if s not in ONLINE]
+
+
+def stale(work: Path) -> str | None:
+    """What a listed script this didn't run says is stale, by its own `check`,
+    which reads and asks no one; None when each is current. What this did
+    run it has just made, so only the others are asked."""
+    for script in listed(work):
+        if script not in ONLINE:
+            continue
+        got = subprocess.run([sys.executable, script, "check"], cwd=work,
+                             capture_output=True, text=True)  # fmt: skip
+        if got.returncode != 0:
+            said = (got.stdout + got.stderr).strip().splitlines() or ["no output"]
+            return f"{script} check: {said[-1][:300]}"
+    return None
+
+
+def remake(work: Path, every: bool = False) -> None:
+    """The files the repo makes, made again from the cards and the tests:
+    the ones settle leaves to their scripts, and with `every`, the rest of
+    the repo's own list too (the lists kept A to Z, and what main adds)."""
+    # FILES.md is settled by its entries, then cut again by files.py
+    scripts = [*MADE.values(), "adapters/stdlib/ci/files.py"]
+    for script in dict.fromkeys(scripts + (makers(work) if every else [])):
         got = subprocess.run([sys.executable, script, "write"], cwd=work,
                              capture_output=True, text=True)  # fmt: skip
         if got.returncode != 0:
             raise Stop(f"{script} write: {(got.stderr or got.stdout).strip()[:300]}")
+    if keep := KEEP.pop(work, None):
+        doc = work / "FILES.md"
+        doc.write_text(
+            keep_words(doc.read_text(encoding="utf-8"), keep), encoding="utf-8"
+        )
 
 
 def checkouts() -> dict[str, Path]:
@@ -556,7 +614,7 @@ def restack(branch: str, onto: str) -> tuple[int, list[str]]:
                 (work / path).parent.mkdir(exist_ok=True)
                 (work / path).write_text(text, encoding="utf-8")
             settled.append(f"CHANGELOG.md, {len(moved)} new entr{'y' if len(moved) == 1 else 'ies'} moved to changes/")  # fmt: skip
-        remake(work)
+        remake(work, every=True)
         if git("status", "--porcelain", cwd=work).stdout.strip():
             git("add", "-A", cwd=work)
             git("commit", "-q", "--amend", "--no-edit", cwd=work)
@@ -568,6 +626,10 @@ def restack(branch: str, onto: str) -> tuple[int, list[str]]:
             if "No module named pytest" in check.stderr:
                 return kernel.ESCALATE, [f"{branch}: merged, not moved: pytest isn't installed to check it"]  # fmt: skip
             raise Stop(f"merged, but test_docs.py fails ({said}); not moved")
+        if (said := stale(work)) is not None:
+            raise Stop(
+                f"merged, but a file the repo makes is stale ({said}); not moved"
+            )
         new = sha("HEAD", cwd=work)
     except Stop:
         git("merge", "--abort", cwd=work, ok=(0, 1, 128))

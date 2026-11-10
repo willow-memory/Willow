@@ -144,7 +144,10 @@ def test_check_names_each_list_and_write_puts_each_in_order(repo):
         indent=1,
         ensure_ascii=False,
     ) + "\n"
-    lines = (repo / "FILES.md").read_text().splitlines()
+    # the tree's own lines, less the cuts files.py makes for reading, where
+    # they sat under the heading, the blank line and the opening fence
+    tree_lines = order._files_mod(repo).Tree((repo / "FILES.md").read_text()).lines
+    lines = ["", "", "", *tree_lines]
     assert lines[4:6] == ["├── b.md", "├── a.md"], "an order of its own stays"
     assert lines[6:12] == [
         "├── demo/",
@@ -165,7 +168,7 @@ def test_check_names_each_list_and_write_puts_each_in_order(repo):
         "    ├── delta/",
         "    │   └── delta.py   delta's",
     ]
-    assert lines[-3:] == ["    └── m6/", "        └── m6.py   m6's", "```"]
+    assert lines[-2:] == ["    └── m6/", "        └── m6.py   m6's"]
 
 
 def test_the_repos_own_lists_are_a_to_z():

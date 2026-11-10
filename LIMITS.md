@@ -37,6 +37,11 @@ where it falls short today, and a fix is welcome.
   Russian, Klingon and Turkish common words aside before a question reaches it; other
   languages keep every word. Word forms are English's only, and words in
   other scripts are matched only as written.
+- **Word forms are a few suffix rules, not a dictionary.** A word ending
+  in "eed" keeps it, so feed stays feed and never meets fee (bug #308); the
+  price is that agreed, freed and guaranteed no longer meet agree, free and
+  guarantee. Irregular forms (paid, went) meet theirs only through a words
+  list.
 - **A rewritten or cut-short record is not caught by `verify` alone.**
   `verify` finds an edit to one past row, a row removed from the middle, and
   a seal the key does not prove. It cannot find rows cut off the end, or rows

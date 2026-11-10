@@ -259,7 +259,7 @@ def test_mirror_writes_each_file_beside_its_path_and_counts(tmp_path):
     ]
     assert sorted(
         p.relative_to(out).as_posix() for p in out.rglob("*") if p.is_file()
-    ) == ["paper/py.tex.txt"]
+    ) == [".places/paper/py.tex.txt.json", "paper/py.tex.txt"]
     assert (out / "paper/py.tex.txt").read_text() == "\n\n".join(got()) + "\n"
     for rel, data in files.items():
         assert (tmp_path / "src" / rel).read_bytes() == data
@@ -326,3 +326,46 @@ def test_a_stray_byte_of_another_encoding_does_not_lose_the_paper():
     odd = b"caf\x81 leads in\n\\[ y = 2 \\]\n"  # undefined in Windows-1252
     assert mod.passages(odd, "a.tex") == ["a.tex line 2\ncaf\x81 leads in\ny = 2"]
     assert mod.decode(b"\xef\xbb\xbfx") == "x"
+
+
+def test_each_passage_is_placed_from_its_lead_in_to_its_sentence_after():
+    body = (b"\\begin{document}\nOpening words.\n\nThe relation\nreads\n"
+            b"\\begin{equation}\nh = c \\label{eq:oz}\n\\end{equation}\n"
+            b"where c is direct.\nAnd more.\n\n\\[ k = 1 \\]\n\\end{document}\n")  # fmt: skip
+    ((p1, a1, b1), (p2, a2, b2)) = mod.placed(body, "p.tex")
+    assert p1.split("\n")[0] == "p.tex line 6, label eq:oz"
+    assert (a1, b1) == (4, 10), "the lead-in's paragraph to the end of the one after"
+    assert (p2, a2, b2) == ("p.tex line 12\nk = 1", 12, 12)
+    assert mod.places([(p1, a1, b1), (p2, a2, b2)]) == {
+        "1": "lines 4-10",
+        "6": "line 12",
+    }
+
+
+def test_a_lead_in_with_no_blank_line_is_placed_from_its_first_line():
+    ((p, a, b),) = mod.placed(b"A\nlead in\n\\[ k = 1 \\]\n", "a.tex")
+    assert p == "a.tex line 3\nA lead in\nk = 1" and (a, b) == (1, 3)
+
+
+def test_an_equation_longer_than_a_chunk_is_cut_at_spaces_over_lines(tmp_path):
+    long = " + ".join(f"a_{{{i}}} x^{{{i}}}" for i in range(80))  # over 500 characters
+    body = f"Lead in.\n\\begin{{equation}}\n{long}\n\\end{{equation}}\n".encode()
+    (p,) = mod.passages(body, "a.tex")
+    lines = p.split("\n")
+    assert all(len(s) <= mod.kernel.MAX_CHUNK for s in lines)
+    assert lines[0] == "a.tex line 2", "too long for its lead-in: no room for the prose"
+    assert " ".join(lines[1:]) == long, "joined with a space, the equation as it was"
+    assert mod._fit("x" * 1100).split("\n") == ["x" * 500, "x" * 500, "x" * 100]
+    assert mod._fit("k = 1") == "k = 1"
+    src, out = tmp_path / "src", tmp_path / "out"
+    src.mkdir()
+    (src / "a.tex").write_bytes(body)
+    assert run("mirror", "--from", str(src), "--to", str(out)).returncode == 0
+    words = " ".join(c["text"] for c in mod.kernel.chunks(out)).split()
+    assert words[-3:] == long.split()[-3:], "the kernel reads the equation to its end"
+
+
+def test_an_equation_too_long_for_its_lead_in_takes_none_of_it():
+    long = " + ".join(f"a_{{{i}}} x^{{{i}}}" for i in range(80))
+    (p,) = mod.passages(f"the sum is S\n\\[ {long} \\]\n".encode(), "a.tex")
+    assert p.split("\n")[0] == "a.tex line 2" and p.split("\n")[1].startswith("a_{0}")

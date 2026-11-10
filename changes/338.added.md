@@ -1,0 +1,1 @@
+`stack`: `--resume` goes on with the run in `--to`'s folder: from the top, a step the earlier run finished, asked the same way, with its output still there, is kept and not run; from the first that isn't, every step runs; the page is the one a whole run would print

@@ -64,6 +64,7 @@ def journal_text(raw: bytes) -> str | None:
     return "".join("\n".join(entry) + "\n\n" for entry in out)
 
 
+# differs on purpose: it reads only jrnl's .txt journals
 def _sources(folder: Path) -> list[Path]:
     """The .txt files under `folder`, sorted by relative path. Hidden folders
     and files are skipped; symlinked folders are not followed."""
@@ -85,6 +86,7 @@ def _within(inner: Path, outer: Path) -> bool:
     return inner == outer or outer in inner.parents
 
 
+# differs on purpose: journal_text reads only text, so only OSError and a bad byte are left to catch
 def mirror(src: Path, dst: Path) -> tuple[int, int]:
     """Write the mirror of `src` into `dst`. Returns (written, skipped)."""
     wrote = skipped = 0

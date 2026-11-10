@@ -1,0 +1,1 @@
+`kernel`: a word ending in "eed" keeps its "ed", so feed, feeds and feeding are one word and feed is no longer fee (need, seed, speed, breed, bleed and proceed likewise), in `kernel.py`, every port and the vectors; fixes bug #308

@@ -3,6 +3,7 @@ section: Reading more kinds of files
 line: Fountain and Final Draft scripts: scenes, characters and lines, cited by scene.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: to
 network: none
 role: reads

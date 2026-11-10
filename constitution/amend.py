@@ -14,14 +14,22 @@ the top of the law, a row in its Amendment History, and a step in its draft
 lineage. The clause text itself is written by hand, in its article and in the
 amendment file, and `check` holds the two together.
 
+Drafts are versioned the way everything in willow is (docs/design/
+versions.md): MAJOR.MINOR.PATCH, each amendment saying its `bump` (major,
+minor or patch), and one pull request's amendments, those in a row with the
+same `pr`, making one draft together, stepped by the largest bump among
+them. The amendments made before this (0.10 to 0.15) keep their two-part
+numbers, each one the last plus 0.01; 0.15 reads as 0.15.0.
+
 `check` refuses:
 
   * any change to the Preamble or Article 0, which are fixed: Article 0 is
     beyond the reach of any amendment (CONST-VIII-3);
   * an amendment that names an Article 0 clause;
   * an amendment file that doesn't hold together: a field missing, a number
-    out of order, a draft that isn't the next one, a supersession of one
-    that doesn't come before it;
+    out of order, a draft that isn't the next one (or isn't the step its
+    pull request's largest bump makes), a bump that isn't major, minor or
+    patch, a supersession of one that doesn't come before it;
   * an emergency amendment (one with `expires:`) that expires more than
     90 days after its date, renews another emergency amendment, or is still
     standing after it expired, with no full amendment superseding it to keep
@@ -75,7 +83,9 @@ FIELDS = ("draft", "date", "pr", "articles", "clauses", "summary")
 #: keeps or undoes it (VIII.2; a proposed default the maintainers may change)
 EMERGENCY_DAYS = 90
 HEADER = re.compile(r"\A<!-- willow-amendment\n(.*?)\n-->\n(.*)\Z", re.S)
-DRAFT_LINE = re.compile(r"^> Draft (\d+\.\d+)\. ", re.M)
+DRAFT_LINE = re.compile(r"^> Draft (\d+\.\d+(?:\.\d+)?)\. ", re.M)
+#: how far an amendment moves the draft, the largest first
+BUMPS = ("major", "minor", "patch")
 TRACE = re.compile(r"CONST-(?:0|[IVX]+)-[0-9A-Za-z]+")
 CLAUSE = re.compile(r"\*\*§?(0|[IVX]+)\.([0-9A-Za-z]+)\s")
 
@@ -123,9 +133,37 @@ def lineage(text: str) -> str:
     return found[0]
 
 
-def next_draft(draft: str) -> str:
-    major, minor = draft.split(".")
-    return f"{major}.{int(minor) + 1}"
+def next_draft(draft: str, bump: str | None = None) -> str:
+    """The draft after `draft`: with no bump, the old way, a two-part draft
+    plus 0.01 (0.9, 0.10, ..., 0.15); with one, a three-part version
+    stepped by it, a two-part draft read as N.N.0 (0.15 minor: 0.16.0)."""
+    if bump is None:
+        major, minor = draft.split(".")
+        return f"{major}.{int(minor) + 1}"
+    major, minor, patch = (list(map(int, draft.split("."))) + [0])[:3]
+    if bump == "major":
+        return f"{major + 1}.0.0"
+    if bump == "minor":
+        return f"{major}.{minor + 1}.0"
+    return f"{major}.{minor}.{patch + 1}"
+
+
+def three_part(draft: str) -> bool:
+    return draft.count(".") == 2
+
+
+def steps(every: list[dict]) -> list[list[dict]]:
+    """The amendments as the drafts they make: each two-part one alone, and
+    each run of three-part ones with the same pr together, one pull request
+    making one draft."""
+    out: list[list[dict]] = []
+    for a in every:
+        last = out[-1][-1] if out else None
+        if last and three_part(a["draft"]) and three_part(last["draft"]) and a["pr"] == last["pr"]:  # fmt: skip
+            out[-1].append(a)
+        else:
+            out.append([a])
+    return out
 
 
 def amendments(folder: Path = None) -> list[dict]:
@@ -144,9 +182,18 @@ def amendments(folder: Path = None) -> list[dict]:
         missing = [f for f in FIELDS if not head.get(f)]
         if missing:
             raise Refused(f"{name}: missing {', '.join(missing)}")
-        want = next_draft(out[-1]["draft"] if out else BASE)
-        if head["draft"] != want:
-            raise Refused(f"{name}: makes draft {head['draft']}, but the next draft is {want}")  # fmt: skip
+        # CONST-VIII-4: every amendment makes the next draft. The old way
+        # (two parts, +0.01) until the first with a bump; versioned after
+        bump = head.get("bump")
+        before = out[-1]["draft"] if out else BASE
+        if bump is None and not three_part(head["draft"]):
+            if out and three_part(before):
+                raise Refused(f"{name}: a draft after {before} has three parts and a bump")  # fmt: skip
+            want = next_draft(before)
+            if head["draft"] != want:
+                raise Refused(f"{name}: makes draft {head['draft']}, but the next draft is {want}")  # fmt: skip
+        elif bump not in BUMPS or not re.fullmatch(r"\d+\.\d+\.\d+", head["draft"]):
+            raise Refused(f"{name}: a versioned draft is MAJOR.MINOR.PATCH with a bump of major, minor or patch")  # fmt: skip
         if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", head["date"]):
             raise Refused(f"{name}: date is YYYY-MM-DD")
         if "→" in head["summary"] or "|" in head["summary"]:
@@ -181,6 +228,17 @@ def amendments(folder: Path = None) -> list[dict]:
                 raise Refused(f"{name}: an emergency amendment can't renew another ({', '.join(renews)}); a full amendment keeps or undoes it (VIII.2)")  # fmt: skip
         out.append({**head, "n": i, "name": str(name), "clauses": clauses,
                     "body": body, "supersedes": supersedes, "expires": expires})  # fmt: skip
+    # one pull request's amendments make one draft, by their largest bump
+    for group in steps(out):
+        if not three_part(group[0]["draft"]):
+            continue
+        at = out.index(group[0])
+        before = out[at - 1]["draft"] if at else BASE
+        bump = min((a["bump"] for a in group), key=BUMPS.index)
+        want = next_draft(before, bump)
+        for a in group:
+            if a["draft"] != want:
+                raise Refused(f"{a['name']}: makes draft {a['draft']}, but #{a['pr']}'s amendments make {want} from {before}, by their largest bump, {bump}")  # fmt: skip
     gone = {s for a in out for s in a["supersedes"]}
     for a in out:
         a["live"] = f"{a['n']:04d}" not in gone
@@ -205,8 +263,11 @@ def build(text: str, every: list[dict]) -> str:
     new = [row(a) for a in every]
     text = text.replace("\n".join(rows), "\n".join(base + new), 1)
     line = lineage(text)
-    steps = "".join(f" → {a['draft']} ({a['summary']})" for a in every)
-    return text.replace(line, _base_lineage(line)[:-2] + steps + ".*", 1)
+    made = "".join(
+        f" → {g[0]['draft']} ({'; '.join(a['summary'] for a in g)})"
+        for g in steps(every)
+    )
+    return text.replace(line, _base_lineage(line)[:-2] + made + ".*", 1)
 
 
 def _after(a: str, b: str) -> bool:
@@ -256,7 +317,7 @@ def _base_lineage(line: str) -> str:
     """The lineage line as it stood at BASE: our steps taken off."""
     head = line.rstrip("*").rstrip(".")
     while True:
-        m = re.search(r" → (\d+\.\d+) \((?:(?! → ).)*\)$", head)
+        m = re.search(r" → (\d+\.\d+(?:\.\d+)?) \((?:(?! → ).)*\)$", head)
         if not m or not _after(m.group(1), BASE):
             break
         head = head[: m.start()]

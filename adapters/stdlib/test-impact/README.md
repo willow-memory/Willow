@@ -3,6 +3,7 @@ section: For maintainers
 line: Only the tests a change can reach run first, from the import graph; the full suite still runs after.
 source: new
 added: 2026-10-24
+version: 0.1.0
 writes: nothing
 network: none
 role: repo

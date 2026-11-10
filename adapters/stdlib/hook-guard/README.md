@@ -1,8 +1,9 @@
 <!-- willow-addon
 section: Assistants
-line: A PreToolUse hook that blocks, by fixed rule and never by judgment, a tool call that would read your key or write willow's record behind its back, naming the rule.
+line: A PreToolUse hook that blocks, by fixed rule and never by judgment, a call that would read your key or write the record behind its back.
 source: box
 added: 2026-10-29
+version: 0.1.0
 writes: nothing
 network: none
 role: guards

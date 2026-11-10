@@ -5,15 +5,18 @@
 The record holds no model identity. A `proposal` row is the kernel's own
 (`who` is "kernel", never the model's), and holds only the subject, the
 verdict and the bite it answered. The one place a model is named is the
-proposal's `claim`, in the proposal file, which the subject hashes: for
-`openai-compatible` it reads "MODEL at URL answered from N of the M passages
-served". So for each proposal that passed this reads the file (only if it is
+proposal's `claim`, in the proposal file, which the subject hashes, in the
+suggestions contract's one form (openai-compatible's `read_claim`): "MODEL
+at URL (temperature 0, seed 0) answered from N of the M passages served",
+or "FILE in this process (...)", a claim from before the settings were said
+read too. So for each proposal that passed this reads the file (only if it is
 the bytes the subject names), takes the model and endpoint from that claim,
 and lists the passages its bite served, from the bite row. A claim that does
 not say so is shown as unnamed, never guessed.
 
     row 4  2026-10-23T00:00:00Z  proposal:eb63d0addbe2…
            gemma-3-4b-it at http://127.0.0.1:8080/v1 (this machine)
+           asked at: temperature 0, seed 0, reasoning low
            went: garden.md:1 63d9b600aca4
 
 What this cannot tell, and says: the claim is the proposer's own words, not
@@ -28,6 +31,7 @@ proposed; 2 refused (a bad command line, a record that doesn't verify).
 
 from __future__ import annotations
 
+import importlib.util
 import json
 import re
 import sys
@@ -37,7 +41,16 @@ from urllib.parse import urlsplit
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 import kernel  # noqa: E402
 
-CLAIM = re.compile(r"(.+) at (\S+) answered from (\d+) of the (\d+) passages served")
+_spec = importlib.util.spec_from_file_location(
+    "willow_openai_compatible_for_sent_log",
+    Path(__file__).resolve().parent.parent
+    / "openai-compatible"
+    / "openai_compatible.py",
+)
+oc = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(oc)
+#: what a claim's `did` says when it counts the passages it was served
+COUNTED = re.compile(r"answered from \d+ of the (\d+) passages served")
 LOCAL = ("localhost", "::1")
 
 
@@ -89,15 +102,22 @@ def check(box: Path) -> tuple[int, list[dict]]:
             "passages": passages,
         }
         prop, why = proposal_file(box, r["subject"])
-        m = CLAIM.fullmatch(prop["claim"]) if prop else None
+        c = oc.read_claim(prop["claim"]) if prop else None
         if why:
             e["broken"] = why
-        elif m is None:
+        elif c is None:
             e["unnamed"] = prop["claim"]
         else:
-            e["model"], e["url"] = m.group(1), m.group(2)
-            e["to"] = where_to(m.group(2))
-            e["counted"] = int(m.group(4)) == len(passages)
+            e["model"], e["where"], e["settings"] = c["who"], c["where"], c["settings"]
+            e["to"] = (
+                where_to(c["url"])
+                if c["url"]
+                else f"not said: {c['where']} names no address"
+                if c["via"]
+                else "this machine"
+            )
+            n = COUNTED.fullmatch(c["did"])
+            e["counted"] = bool(n) and int(n.group(1)) == len(passages)
         out.append(e)
     silent = sum(
         r["kind"] == "bite"
@@ -121,11 +141,14 @@ def show(e: dict) -> None:
     if "unnamed" in e:
         print(f"{head}\n       model not named; its claim says {e['unnamed'][:80]!r}")
         return
-    print(f"{head}\n       {e['model']} at {e['url']} ({e['to']})")
+    print(f"{head}\n       {e['model']} {e['where']} ({e['to']})")
+    if e["settings"]:
+        said = ", ".join(f"{k} {v}" for k, v in e["settings"].items())
+        print(f"       asked at: {said}")
     note = (
         "went"
         if e["counted"]
-        else "served, may have gone (the claim counts another number)"
+        else "served, may have gone (the claim counts another number, or none)"
     )
     places = " ".join(f"{p['where']} {p['id'][:12]}" for p in e["passages"])
     print(f"       {note}: {places or 'none'}")

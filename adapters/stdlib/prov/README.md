@@ -3,6 +3,7 @@ section: Trust and proof
 line: The record exported as W3C PROV: what came from what, by which step, sealed by whom.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: to
 network: none
 role: makes

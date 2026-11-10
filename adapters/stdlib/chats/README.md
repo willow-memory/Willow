@@ -3,9 +3,11 @@ section: Reading more kinds of files
 line: WhatsApp and Telegram exports, one dated line per message.
 source: new
 added: 2026-10-23
+version: 0.1.0
 writes: to
 network: none
 role: reads
+output: mirror
 reads: .json, .txt
 -->
 # chats
@@ -42,6 +44,13 @@ FOLDER or the other way round, or FOLDER not a folder).
 
 **Uses:** nothing from the kernel's functions, only its exit codes. Its tests
 run `kernel.py` `init` and `bite` on the mirror it writes.
+
+**Where each passage came from** is in a hidden map beside its mirror,
+`MIRROR/.places/<same path>.txt.json`, which the kernel never reads, as
+[the mirror contract](../ci/README.md#the-mirror-contract) says: each
+message on its lines in a WhatsApp export (`lines 12-14` with its
+continuations), a Telegram message by its id (`message 4417`), and the
+date-order note on the `whole file` it is about.
 
 **Never:** writes inside FOLDER, changes an original, guesses a date order, or
 goes online.

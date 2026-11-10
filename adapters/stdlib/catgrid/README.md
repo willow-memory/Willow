@@ -3,6 +3,7 @@ section: Play
 line: A seeded logic grid with one cat in every row, column and colour region and a unique answer, replayed from its moves.
 source: new
 added: 2026-11-01
+version: 0.1.0
 writes: record
 network: none
 role: tools

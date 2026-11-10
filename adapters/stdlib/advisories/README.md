@@ -1,8 +1,9 @@
 <!-- willow-addon
 section: Privacy and safety
-line: Security advisories from a downloaded OSV or GitHub advisory database, matched to your lockfiles: which dependency each names, and since when.
+line: Security advisories from a downloaded OSV or GitHub database, matched to your lockfiles: which dependency each names, and since when.
 source: new
 added: 2026-10-24
+version: 0.1.0
 writes: nothing
 network: none
 role: page

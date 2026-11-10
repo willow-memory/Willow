@@ -3,6 +3,7 @@ section: Reading more kinds of files
 line: A MediaWiki XML dump: each page's latest text, with its title and when it changed.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: to
 network: none
 role: reads

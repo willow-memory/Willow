@@ -3,6 +3,7 @@ section: Keeping track
 line: Dates written in your files in the next N days: appointments, renewals, deadlines.
 source: box
 added: 2026-10-23
+version: 0.1.0
 writes: nothing
 network: none
 role: page

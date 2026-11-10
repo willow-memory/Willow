@@ -3,6 +3,7 @@ section: For maintainers
 line: A pull request held to the other open ones: a name both add fails, a file both change is said.
 source: new
 added: 2026-11-03
+version: 0.1.0
 writes: nothing
 network: none
 role: repo
@@ -31,7 +32,10 @@ CI fetches `refs/pull/<N>/head` and a person can name local branches. Each pair
 is read from where the two left REF (`git merge-base`), so main's later
 commits are nobody's. A pull request stacked on another, or one that merged
 the other, is read from where the two left each other instead, so what they
-share is neither's: the one below sees only what the one above adds past it.
+share is neither's: the one below sees only what the one above adds past it. That holds after
+each has merged REF again since, when they share their stack's commits but
+neither holds the other's head: what those shared commits add is still
+neither's.
 
 **What it says, for each other pull request:**
 

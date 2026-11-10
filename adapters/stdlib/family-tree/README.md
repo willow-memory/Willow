@@ -3,6 +3,7 @@ section: Reading more kinds of files
 line: Family trees from GEDCOM files: who was born where and when, and which record says so.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: to
 network: none
 role: reads

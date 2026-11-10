@@ -1,0 +1,1 @@
+`handover`: where one project stands, to hand on, made from what its runs kept: what waits on you, flagged steps first with the file to check, each stack's last run by the one line each step said, and the stacks never run or changed since

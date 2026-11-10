@@ -3,9 +3,16 @@
 Every file in the repo, and what it is. `test_docs.py` fails if this tree and
 the repo ever disagree. [README.md](README.md) shows the top of it.
 
+It's one tree, cut for reading: a heading for each top-level folder, one for
+each group of add-ons in `adapters/stdlib/` (the sections and groups
+[ADDONS.md](ADDONS.md) and the UI show, in their order), and, where a block
+would run past a screen, one saying whose entries go on. The bars are the
+whole tree's, so each line's depth still reads. `adapters/stdlib/ci/files.py`
+makes the cuts; they're never written by hand.
+
 ```
 willow/
-├── kernel.py                 the whole program (about 1,100 lines)
+├── kernel.py                 the whole program (about 1,200 lines)
 ├── test_kernel.py            its tests
 ├── test_docs.py              holds every doc to the files that exist, and the trees to the repo
 ├── test_docs_fires.py        plants a violation for each docs check and makes sure it fails
@@ -25,6 +32,11 @@ willow/
 ├── DECISIONS.md              what's settled, why, and what holds it
 ├── LIMITS.md                 what willow doesn't do, on purpose or not yet
 ├── CONSTITUTION.md           the law the kernel is written to enforce (always a draft; now 0.15)
+```
+
+## constitution/
+
+```
 ├── constitution/             the checks that answer to it
 │   ├── test_eternity.py      each eternity clause, attacked, and refused by the kernel
 │   ├── coverage.py           which clauses are cited where, generated, never tabled
@@ -39,8 +51,17 @@ willow/
 │   │   ├── 0003.md           VIII.3, Article 0 strengthened only by clauses that cite it: made 0.12
 │   │   ├── 0004.md           IV.9, a check that cannot fail is no check: made 0.13
 │   │   ├── 0005.md           VI.7, every change carries its account: made 0.14
-│   │   └── 0006.md           VIII.2, the emergency door on a timer: made 0.15
+│   │   ├── 0006.md           VIII.2, the emergency door on a timer: made 0.15
+│   │   ├── 0007.md           III.6, the core reaches nothing that extends it: with 0008 to 0010, made 0.16.0
+│   │   ├── 0008.md           IV.10, the same question, the same answer: made 0.16.0
+│   │   ├── 0009.md           V.10, a no is final: made 0.16.0
+│   │   └── 0010.md           VI.8, the record keeps acts, not words: made 0.16.0
 │   └── README.md             what the kernel answers for, and what it doesn't claim
+```
+
+## ui/
+
+```
 ├── ui/                       willow's own UI: put your willow together on a page, on this machine only
 │   ├── canvas.py             the page and its server: folders, the kernel's baseline, add-ons, batches, the seal
 │   ├── page.html             the page itself, served by canvas.py
@@ -48,641 +69,43 @@ willow/
 │   ├── search-words.txt      how people ask for an add-on, and the words its card uses, for the search
 │   ├── test_ui.py            its tests: its server over a scratch stack, counts only, batches, the seal
 │   └── README.md             what it does, where your stack is kept, and what it never does
+```
+
+## adapters/
+
+```
 ├── adapters/                 add-ons built on top of kernel.py
 │   ├── README.md             the rules every add-on follows
 │   ├── planned.json          the add-ons not built yet, as this README lists them
 │   ├── stdlib/               add-ons that need nothing beyond Python
-│   │   ├── a11y-check/
-│   │   │   ├── a11y_check.py what trips a screen reader in the documents: images without descriptions, headings out of order
-│   │   │   ├── test_a11y_check.py
-│   │   │   └── README.md
-│   │   ├── abbreviations/
-│   │   │   ├── abbreviations.py  a question's shorthand read as the files write it, either way; words-list lines
-│   │   │   ├── test_abbreviations.py
-│   │   │   └── README.md
-│   │   ├── accents/
-│   │   │   ├── accents.py    a word typed without its accent, read as the files write it; words-list lines
-│   │   │   ├── test_accents.py
-│   │   │   └── README.md
-│   │   ├── across/
-│   │   │   ├── across.py     one document across several boxes: each box's digest, export, timeline or readings, composed
-│   │   │   ├── test_across.py
-│   │   │   └── README.md
-│   │   ├── advisories/
-│   │   │   ├── advisories.py locked dependencies matched to a downloaded OSV advisory database, offline
-│   │   │   ├── test_advisories.py
-│   │   │   └── README.md
-│   │   ├── again/
-│   │   │   ├── again.py      the questions you keep asking, counted from the record
-│   │   │   ├── test_again.py
-│   │   │   └── README.md
-│   │   ├── against/
-│   │   │   ├── against.py    a pull request held to the other open ones: the names both add, the files both change
-│   │   │   ├── test_against.py
-│   │   │   └── README.md
-│   │   ├── agent-transcript/
-│   │   │   ├── agent_transcript.py  Claude Code, Cursor and other session files as numbered spoken turns
-│   │   │   ├── test_agent_transcript.py
-│   │   │   └── README.md
-│   │   ├── agents-md-check/
-│   │   │   ├── agents_md_check.py   the commands and paths AGENTS.md, CLAUDE.md, GEMINI.md or copilot-instructions.md name that the repo no longer has
-│   │   │   ├── test_agents_md_check.py
-│   │   │   └── README.md
-│   │   ├── aider/
-│   │   │   ├── aider.py          the /run line that brings answers into Aider's chat
-│   │   │   ├── test_aider.py
-│   │   │   └── README.md
-│   │   ├── all/
-│   │   │   ├── all.py        every passage that holds a question, in the kernel's order
-│   │   │   ├── test_all.py
-│   │   │   └── README.md
-│   │   ├── almanac/
-│   │   │   ├── almanac.py    an Almanac's catalog.json: each public dataset's description and source as a passage
-│   │   │   ├── test_almanac.py
-│   │   │   └── README.md
-│   │   ├── almanac-keep/
-│   │   │   ├── keep.py       an Almanac entry's best permitted copy, publisher or ranked recovery list, fetched into your folder
-│   │   │   ├── test_keep.py
-│   │   │   └── README.md
-│   │   ├── amounts/
-│   │   │   ├── amounts.py    every sum of money in the files, dated by its line, the date above or the file's name
-│   │   │   ├── test_amounts.py
-│   │   │   └── README.md
-│   │   ├── annotations/
-│   │   │   ├── annotations.py   approved answers as W3C Web Annotations: the answer as the body, each cited passage as a target with its lines and words
-│   │   │   ├── test_annotations.py
-│   │   │   └── README.md
-│   │   ├── apple-mail/
-│   │   │   ├── apple_mail.py     Apple Mail's .emlx, read as mail reads an .eml
-│   │   │   ├── test_apple_mail.py
-│   │   │   └── README.md
+```
+
+### adapters/stdlib/: Reading more kinds of files: Documents and office files
+
+```
 │   │   ├── asciidoc/
 │   │   │   ├── asciidoc.py   an AsciiDoc document as the text it shows, line for line, markup taken off
 │   │   │   ├── test_asciidoc.py
-│   │   │   └── README.md
-│   │   ├── attendance/
-│   │   │   ├── attendance.py   who was there, by person or by week
-│   │   │   ├── test_attendance.py
-│   │   │   └── README.md
-│   │   ├── baby-log/
-│   │   │   ├── baby_log.py   feeds, sleeps and nappies by day, and the last of each
-│   │   │   ├── test_baby_log.py
-│   │   │   └── README.md
-│   │   ├── backup/
-│   │   │   ├── backup.py     your record in one zip, every byte and the chain checked; never the key
-│   │   │   ├── test_backup.py
-│   │   │   └── README.md
-│   │   ├── badge/
-│   │   │   ├── badge.py   an SVG badge of the record's counts: answers approved, the files they came from, and whether it holds
-│   │   │   ├── test_badge.py
-│   │   │   └── README.md
-│   │   ├── bank/
-│   │   │   ├── bank.py   bank statements as dated lines with monthly totals
-│   │   │   ├── test_bank.py
-│   │   │   └── README.md
-│   │   ├── bench/
-│   │   │   ├── bench.py       how fast the kernel reads and ranks piles of set sizes, per release
-│   │   │   ├── test_bench.py
 │   │   │   └── README.md
 │   │   ├── bibtex/
 │   │   │   ├── bibtex.py   each reference in a .bib file as a passage that begins with its citation key
 │   │   │   ├── test_bibtex.py
 │   │   │   └── README.md
-│   │   ├── bookmarks/
-│   │   │   ├── bookmarks.py   browser bookmarks and history, from an export, a backup or a copy of the database
-│   │   │   ├── test_bookmarks.py
-│   │   │   └── README.md
 │   │   ├── books/
 │   │   │   ├── books.py      Kindle highlights and .epub text, as passages
 │   │   │   ├── test_books.py
-│   │   │   └── README.md
-│   │   ├── bot-venv/
-│   │   │   ├── bot_venv.py       does willow-bot's venv, or any named, have what CI needs; the line that runs CI with it
-│   │   │   ├── test_bot_venv.py
-│   │   │   └── README.md
-│   │   ├── box-health/
-│   │   │   ├── box_health.py   a box's health in one line: the chain, approvals, files it can't read, the words list, and the last out row
-│   │   │   ├── test_box_health.py
-│   │   │   └── README.md
-│   │   ├── braille/
-│   │   │   ├── braille.py   approved answers as a BRF: uncontracted English braille ASCII in lines of cells and pages, for a display or an embosser
-│   │   │   ├── test_braille.py
-│   │   │   └── README.md
-│   │   ├── browse/
-│   │   │   ├── browse.py     your folder in your browser, on 127.0.0.1: ask, read, approve with a click
-│   │   │   ├── test_browse.py
-│   │   │   └── README.md
-│   │   ├── budget/
-│   │   │   ├── budget.py   spending against a budget you wrote, by month
-│   │   │   ├── test_budget.py
-│   │   │   └── README.md
-│   │   ├── calendar/
-│   │   │   ├── cal.py        .ics events and .vcf contacts, as dated lines
-│   │   │   ├── test_calendar.py
-│   │   │   └── README.md
-│   │   ├── calendar-out/
-│   │   │   ├── calendar_out.py   the dates coming up as an .ics file: an all-day event for each, the line as its title and the file and line as its description
-│   │   │   ├── test_calendar_out.py
-│   │   │   └── README.md
-│   │   ├── capture/
-│   │   │   ├── capture.py   a note written into your folder as one paragraph with its type and tags
-│   │   │   ├── test_capture.py
-│   │   │   └── README.md
-│   │   ├── car/
-│   │   │   ├── car.py   a car's jobs, costs and what's due
-│   │   │   ├── test_car.py
-│   │   │   └── README.md
-│   │   ├── catgrid/
-│   │   │   ├── catgrid.py    a seeded logic grid with one answer, played on the record; check plays every game again
-│   │   │   ├── test_catgrid.py
-│   │   │   └── README.md
-│   │   ├── changed/
-│   │   │   ├── changed.py    what's new, edited or deleted since the last check, as fingerprint rows
-│   │   │   ├── test_changed.py
-│   │   │   └── README.md
-│   │   ├── chats/
-│   │   │   ├── chats.py      WhatsApp and Telegram exports, a dated line a message
-│   │   │   ├── test_chats.py
-│   │   │   └── README.md
-│   │   ├── chordpro/
-│   │   │   ├── chordpro.py   a ChordPro song as its title line, chords and lyrics with the chords taken out of the lines
-│   │   │   ├── test_chordpro.py
-│   │   │   └── README.md
-│   │   ├── ci/
-│   │   │   ├── ci.py         this repo's checks as verdict rows on a kernel record
-│   │   │   ├── changelog.py  a change beyond the docs adds its entry to CHANGELOG.md, and names a bug it fixed
-│   │   │   ├── bugs.py       makes BUGS.md from the tests marked as known bugs
-│   │   │   ├── whose.py      which commit wrote these lines, or with a host's host.json which pull request
-│   │   │   ├── cores.py      ci.py's run as its shards at once on this machine, a record each, shown together
-│   │   │   ├── alone.py      each add-on's tests in a copy holding only the kernel, the add-on and what its card uses
-│   │   │   ├── guard/
-│   │   │   │   └── sitecustomize.py  holds each add-on to its card while its tests run
-│   │   │   ├── test-times.json  seconds each add-on test file took, to cut the add-ons' tests into even chunks
-│   │   │   ├── test_ci.py    its tests: the same record every run, and every state
-│   │   │   ├── test_guard.py the guard's tests: each broken promise caught
-│   │   │   ├── test_contract.py  what every add-on promises alike, held for all of them
-│   │   │   ├── test_changelog.py  changelog.py's tests: owed, not owed, and in the wrong place
-│   │   │   ├── test_bugs.py  bugs.py's tests: strict marks only, and the list made from them
-│   │   │   ├── test_whose.py whose.py's tests: commits, merges, squashes, another host, places refused
-│   │   │   ├── test_cores.py cores.py's tests: every gate once across the shards, refusals that run nothing
-│   │   │   ├── test_alone.py alone.py's tests: what a card uses comes along, and leaning on what it doesn't name fails
-│   │   │   ├── reports.py    bringing add-ons onto the report contract in batches: survey, scaffold, check
-│   │   │   ├── test_reports.py  reports.py's tests: --json taken off first, stack's rendering word for word, never twice
-│   │   │   ├── files.py      FILES.md's tree kept to the repo's files, by a script
-│   │   │   ├── test_files.py files.py's tests: each file in its folder's order, gone ones out, the real tree round-tripped
-│   │   │   ├── new.py        an add-on started from its idea on the list
-│   │   │   ├── test_new.py   new.py's tests: the card is the idea, the script refuses, the list and FILES.md kept
-│   │   │   ├── order.py      the lists people add to by hand, kept A to Z by a script
-│   │   │   ├── test_order.py order.py's tests: entries move with their comments, refusals, the repo's own lists A to Z
-│   │   │   ├── made.py       every file the repo makes from its others, made again, or checked
-│   │   │   ├── test_made.py  made.py's tests: each made again in order, what's stale named, the repo's current
-│   │   │   ├── pypi-dates.json  PyPI's dates for each deps floor pin and the rule's release, read by test_ci
-│   │   │   ├── pypi_dates.py PyPI's upload dates for every deps floor pin, kept for the tests
-│   │   │   ├── test_pypi_dates.py  pypi_dates.py's tests: PyPI asked only for what's new, what's missing named
-│   │   │   ├── commands.py   an add-on's line in COMMANDS, found from its own usage lines
-│   │   │   ├── test_commands.py  commands.py's tests: placeholders filled, the contract held, the line placed A to Z
-│   │   │   ├── py39.py       what Python 3.10 and later added, found before CI's 3.9 run does
-│   │   │   ├── test_py39.py  py39.py's tests: what 3.9 lacks named, guarded imports pass, the repo clean
-│   │   │   ├── realdata.py   an add-on run on every demo person's real folder, by a script
-│   │   │   ├── test_realdata.py  realdata.py's tests: a run per person, a traceback fails, a refusal holds
-│   │   │   ├── test_times.py  times.py's tests: JUnit summed by file, unseen kept, gone dropped
-│   │   │   ├── times.py      test-times.json kept to what CI's own run took, by a script
-│   │   │   └── README.md     its card: gates, states, the guard and exit codes
-│   │   ├── ci-cache/
-│   │   │   ├── ci_cache.py    a cache key per ecosystem from a repo's lockfiles, so CI skips the reinstall
-│   │   │   ├── test_ci_cache.py
-│   │   │   └── README.md
-│   │   ├── ci-logs/
-│   │   │   ├── ci_logs.py   a CI run log as its failing steps
-│   │   │   ├── test_ci_logs.py
-│   │   │   └── README.md
-│   │   ├── ci-memo/
-│   │   │   ├── ci_memo.py    a gate whose inputs' bytes are unchanged keeps its verdict: pin a run's keys, plan the rest
-│   │   │   ├── test_ci_memo.py
-│   │   │   └── README.md
-│   │   ├── ci-why/
-│   │   │   ├── ci_why.py     the failing block of a red CI log, plain: the test, the assertion, the line to act on
-│   │   │   ├── test_ci_why.py
-│   │   │   └── README.md
-│   │   ├── claim-check/
-│   │   │   ├── claim_check.py  a claim, part by part: what holds it all, some of it, and what no file names
-│   │   │   ├── test_claim_check.py
-│   │   │   └── README.md
-│   │   ├── claude-code/
-│   │   │   ├── hook.py           Claude Code's prompt hook: cited passages at each prompt; setup prints it
-│   │   │   ├── test_hook.py
 │   │   │   └── README.md
 │   │   ├── clauses/
 │   │   │   ├── clauses.py    a long document as one sentence a passage, and a sentence-by-sentence diff
 │   │   │   ├── test_clauses.py
 │   │   │   └── README.md
-│   │   ├── cloudevents/
-│   │   │   ├── cloudevents.py   the record's rows as CloudEvents 1.0 JSON events, one a line, the id each row's own hash
-│   │   │   ├── test_cloudevents.py
-│   │   │   └── README.md
-│   │   ├── code-comments/
-│   │   │   ├── code_comments.py   a source file's comments on the lines they were on
-│   │   │   ├── test_code_comments.py
-│   │   │   └── README.md
-│   │   ├── codebase-memory/
-│   │   │   ├── codebase_memory.py  a code-graph SQLite file: each function, what it calls, its file and line
-│   │   │   ├── test_codebase_memory.py
-│   │   │   └── README.md
-│   │   ├── codeowners/
-│   │   │   ├── codeowners.py   who owns a file: the CODEOWNERS rule that matches it, cited by line, on GitHub, GitLab and Forgejo
-│   │   │   ├── test_codeowners.py
-│   │   │   └── README.md
-│   │   ├── codex-cli/
-│   │   │   ├── codex_cli.py      the config.toml lines that register mcp-lite with Codex CLI
-│   │   │   ├── test_codex_cli.py
-│   │   │   └── README.md
-│   │   ├── coming-up/
-│   │   │   ├── coming_up.py  dates in your files in the next few days
-│   │   │   ├── test_coming_up.py
-│   │   │   └── README.md
-│   │   ├── contradictions/
-│   │   │   ├── contradictions.py  two lines saying the same thing with a different date or amount, side by side
-│   │   │   ├── test_contradictions.py
-│   │   │   └── README.md
-│   │   ├── copilot/
-│   │   │   ├── copilot.py        the mcp.json lines that register mcp-lite with Copilot, in VS Code and its CLI
-│   │   │   ├── test_copilot.py
-│   │   │   └── README.md
-│   │   ├── corpus-lens/
-│   │   │   ├── corpus_lens.py  corpus-lens process reports: where intent arrives, who writes the code
-│   │   │   ├── test_corpus_lens.py
-│   │   │   └── README.md
-│   │   ├── csv-rows/
-│   │   │   ├── csv_rows.py   a CSV or TSV table as one passage per row, the header row once as the first
-│   │   │   ├── test_csv_rows.py
-│   │   │   └── README.md
-│   │   ├── cursor/
-│   │   │   ├── cursor.py         the mcp.json lines that register mcp-lite with Cursor
-│   │   │   ├── test_cursor.py
-│   │   │   └── README.md
-│   │   ├── daily-word/
-│   │   │   ├── daily_word.py the day's word from the folder's own words, six guesses marked on the record
-│   │   │   ├── test_daily_word.py
-│   │   │   └── README.md
-│   │   ├── day-one/
-│   │   │   ├── day_one.py   a journal export entry by entry
-│   │   │   ├── test_day_one.py
-│   │   │   └── README.md
-│   │   ├── debts/
-│   │   │   ├── debts.py      lines speaking of money owed, dated and cited, the sum as written, never netted
-│   │   │   ├── test_debts.py
-│   │   │   └── README.md
-│   │   ├── decisions/
-│   │   │   ├── decisions.py  a yes and a no with their reasons, a never told from a not-yet, asked about a new question
-│   │   │   ├── test_decisions.py
-│   │   │   └── README.md
-│   │   ├── deep-links/
-│   │   │   ├── deep_links.py   each answer as links that open the file at the line: an RFC 5147 file link and a browser text-fragment web link
-│   │   │   ├── test_deep_links.py
-│   │   │   └── README.md
-│   │   ├── dice/
-│   │   │   ├── dice.py       dice rolled on the record, seeded by its tip; check throws every roll again
-│   │   │   ├── test_dice.py
-│   │   │   └── README.md
-│   │   ├── dice5e/
-│   │   │   ├── dice5e.py     4d6kh3, adv and dis on the record, seeded as dice is; check throws every roll again
-│   │   │   ├── test_dice5e.py
-│   │   │   └── README.md
-│   │   ├── digest/
-│   │   │   ├── digest.py     one page of what waits on you, gone stale, coming up; writes nothing
-│   │   │   ├── test_digest.py
-│   │   │   └── README.md
-│   │   ├── discord/
-│   │   │   ├── discord.py   a Discord data package as dated lines of your messages
-│   │   │   ├── test_discord.py
-│   │   │   └── README.md
-│   │   ├── diverge/
-│   │   │   ├── diverge.py    where two copies part: records by row, files, then the first line
-│   │   │   ├── test_diverge.py
-│   │   │   └── README.md
-│   │   ├── dotfiles/
-│   │   │   ├── dotfiles.py    a dotfiles repository's settings, each on its own line in the file's own words, secrets withheld
-│   │   │   ├── test_dotfiles.py
-│   │   │   └── README.md
-│   │   ├── duplicates/
-│   │   │   ├── duplicates.py    passages saying the same thing in two files, the newest copy named when it can be
-│   │   │   ├── test_duplicates.py
-│   │   │   └── README.md
-│   │   ├── emacs/
-│   │   │   ├── emacs.py          an M-x willow command: answers in a grep-mode buffer
-│   │   │   ├── test_emacs.py
-│   │   │   └── README.md
 │   │   ├── equations/
-│   │   │   ├── equations.py  Each displayed equation in LaTeX sources as a passage of its own, with the sentences around it and its label, cited by the .tex file's line
+│   │   │   ├── equations.py  each displayed LaTeX equation as a passage, with the sentences around it and its label, cited by line
 │   │   │   ├── test_equations.py
 │   │   │   └── README.md     its card
-│   │   ├── evernote/
-│   │   │   ├── evernote.py   an Evernote .enex export as its notes: title, notebook, dates, tags, source, attachments and text
-│   │   │   ├── test_evernote.py
-│   │   │   └── README.md
-│   │   ├── export/
-│   │   │   ├── export.py     approved answers and the question log, as Markdown or CSV
-│   │   │   ├── test_export.py
-│   │   │   └── README.md
-│   │   ├── fair-merge/
-│   │   │   ├── fair_merge.py   each folder ranked on its own and the lists dealt out in turns, so a large corpus can't bury a small one
-│   │   │   ├── test_fair_merge.py
-│   │   │   └── README.md
-│   │   ├── family-tree/
-│   │   │   ├── family_tree.py   a family tree as a paragraph for each person
-│   │   │   ├── test_family_tree.py
-│   │   │   └── README.md
-│   │   ├── first-mention/
-│   │   │   ├── first_mention.py  when the files first mention something: the earliest dated line that holds every word
-│   │   │   ├── test_first_mention.py
-│   │   │   └── README.md
-│   │   ├── fixity/
-│   │   │   ├── fixity.py     files hashed again now and then; a hash that moved with no newer mtime is rot
-│   │   │   ├── test_fixity.py
-│   │   │   └── README.md
-│   │   ├── flashcards/
-│   │   │   ├── flashcards.py  sealed approvals as cards, scheduled by FSRS-5 replayed from review rows
-│   │   │   ├── test_flashcards.py
-│   │   │   └── README.md
-│   │   ├── foia/
-│   │   │   ├── foia.py   requests sent, answers and when they are due by law
-│   │   │   ├── test_foia.py
-│   │   │   └── README.md
-│   │   ├── folder-card/
-│   │   │   ├── folder_card.py  a card for your folder: its files, dates and gaps, with your notes, written to a file
-│   │   │   ├── test_folder_card.py
-│   │   │   └── README.md
-│   │   ├── forecasts/
-│   │   │   ├── forecasts.py  a wager before the outcome, settled by your seal, scored by Brier
-│   │   │   ├── test_forecasts.py
-│   │   │   └── README.md
-│   │   ├── format-rot/
-│   │   │   ├── format_rot.py  files in formats that may stop opening, flagged while you can still convert them
-│   │   │   ├── test_format_rot.py
-│   │   │   └── README.md
-│   │   ├── fuzzy-dates/
-│   │   │   ├── fuzzy_dates.py  dates that admit doubt, read with the doubt kept, in EDTF
-│   │   │   ├── test_fuzzy_dates.py
-│   │   │   └── README.md
-│   │   ├── game-master/
-│   │   │   ├── game_master.py  a world played beat by beat: 2d6 rolls on the record, rulings that move only on your seal
-│   │   │   ├── test_game_master.py
-│   │   │   └── README.md
-│   │   ├── gaps/
-│   │   │   ├── gaps.py       where a log you keep stops: the days it skipped, said as gaps
-│   │   │   ├── test_gaps.py
-│   │   │   └── README.md
-│   │   ├── garden/
-│   │   │   ├── garden.py   what was planted and harvested, season by season
-│   │   │   ├── test_garden.py
-│   │   │   └── README.md
-│   │   ├── gemini-cli/
-│   │   │   ├── gemini_cli.py     the settings.json lines that register mcp-lite with Gemini CLI
-│   │   │   ├── test_gemini_cli.py
-│   │   │   └── README.md
-│   │   ├── gh-json/
-│   │   │   ├── gh_json.py   gh --json output as dated lines
-│   │   │   ├── test_gh_json.py
-│   │   │   └── README.md
-│   │   ├── git-history/
-│   │   │   ├── git_history.py  commit messages and diffs as a dated pile, git called not linked
-│   │   │   ├── test_git_history.py
-│   │   │   └── README.md
-│   │   ├── github/
-│   │   │   ├── create_pr.md  the steps create_pr.py runs before it opens a pull request, as a stack
-│   │   │   ├── create_pr.py  this branch's pull request: its steps run, pushed, opened and numbered, or 42 for what needs you
-│   │   │   ├── github.py     what the repo needs from GitHub: a security report's comment, .github/ held to the repo
-│   │   │   ├── host.json     how GitHub titles the merge of a pull request, for whose.py --host
-│   │   │   ├── test_create_pr.py
-│   │   │   ├── test_github.py
-│   │   │   └── README.md     its card: and .github/ belongs to it
-│   │   ├── goodreads/
-│   │   │   ├── goodreads.py   books read, reading and wanted, as dated lines
-│   │   │   ├── test_goodreads.py
-│   │   │   └── README.md
-│   │   ├── google-keep/
-│   │   │   ├── google_keep.py   a Keep note or list with its day and labels
-│   │   │   ├── test_google_keep.py
-│   │   │   └── README.md
-│   │   ├── gradebook/
-│   │   │   ├── gradebook.py   students' marks, and who is falling behind
-│   │   │   ├── test_gradebook.py
-│   │   │   └── README.md
-│   │   ├── habits/
-│   │   │   ├── habits.py     streaks from the short lines written day after day, runs and misses by plain counting
-│   │   │   ├── test_habits.py
-│   │   │   └── README.md
-│   │   ├── health/
-│   │   │   ├── health.py   an Apple Health export as daily numbers
-│   │   │   ├── test_health.py
-│   │   │   └── README.md
-│   │   ├── history/
-│   │   │   ├── history.py    your record in plain sentences, places and counts, never the words
-│   │   │   ├── test_history.py
-│   │   │   └── README.md
-│   │   ├── home-sensors/
-│   │   │   ├── home_sensors.py   Home Assistant history as daily numbers
-│   │   │   ├── test_home_sensors.py
-│   │   │   └── README.md
-│   │   ├── home-upkeep/
-│   │   │   ├── home_upkeep.py   what's due at home and when it was last done
-│   │   │   ├── test_home_upkeep.py
-│   │   │   └── README.md
-│   │   ├── hook-compact/
-│   │   │   ├── hook_compact.py   what the record holds open, before a summary
-│   │   │   ├── test_hook_compact.py
-│   │   │   └── README.md
-│   │   ├── hook-fail-closed/
-│   │   │   ├── hook_fail_closed.py a hook that crashes, hangs or says what can't be read blocks the tool
-│   │   │   ├── test_hook_fail_closed.py
-│   │   │   └── README.md
-│   │   ├── hook-fuzz/
-│   │   │   ├── hook_fuzz.py      bad input thrown at a hook, and each one that breaks it named
-│   │   │   ├── test_hook_fuzz.py
-│   │   │   └── README.md
-│   │   ├── hook-guard/
-│   │   │   ├── hook_guard.py   refuses a call that reads the key or writes the box
-│   │   │   ├── test_hook_guard.py
-│   │   │   └── README.md
-│   │   ├── hook-impact/
-│   │   │   ├── hook_impact.py   hands over the places that name a file before it is edited
-│   │   │   ├── test_hook_impact.py
-│   │   │   └── README.md
-│   │   ├── hook-leaks/
-│   │   │   ├── hook_leaks.py   a PreToolUse hook that refuses a write or command holding a key, password or card number, naming only the kind
-│   │   │   ├── test_hook_leaks.py
-│   │   │   └── README.md
-│   │   ├── hook-pin/
-│   │   │   ├── hook_pin.py       a hook runs only as the bytes you approved, pinned on the record
-│   │   │   ├── test_hook_pin.py
-│   │   │   └── README.md
-│   │   ├── hook-replay/
-│   │   │   ├── hook_replay.py    every hook answer a row of hashes, and each one run again
-│   │   │   ├── test_hook_replay.py
-│   │   │   └── README.md
-│   │   ├── hook-shell/
-│   │   │   ├── hook_shell.py   a command split as the shell splits it, quotes, variables and chains included, before a rule judges it
-│   │   │   ├── test_hook_shell.py
-│   │   │   └── README.md
-│   │   ├── hook-start/
-│   │   │   ├── hook_start.py   a SessionStart hook that tells the assistant what waits on the person, read the way digest reads it
-│   │   │   ├── test_hook_start.py
-│   │   │   └── README.md
-│   │   ├── hook-stop/
-│   │   │   ├── hook_stop.py   a Stop hook: the record verifies and the work is committed
-│   │   │   ├── test_hook_stop.py
-│   │   │   └── README.md
-│   │   ├── hooks-elsewhere/
-│   │   │   ├── hooks_elsewhere.py The prompt hook for Gemini CLI, Codex and opencode, wherever they take hooks, held to Claude Code's answer byte for byte
-│   │   │   ├── test_hooks_elsewhere.py
-│   │   │   └── README.md     its card
-│   │   ├── horoscope/
-│   │   │   ├── horoscope.py  a daily reading picked by the SHA-256 of name and date
-│   │   │   ├── test_horoscope.py
-│   │   │   └── README.md
-│   │   ├── hosts/
-│   │   │   ├── hosts.py          one table of assistants that take an MCP server, and the lines that register willow with each
-│   │   │   ├── test_hosts.py
-│   │   │   └── README.md
-│   │   ├── hours/
-│   │   │   ├── hours.py   hours worked or volunteered, per client
-│   │   │   ├── test_hours.py
-│   │   │   └── README.md
-│   │   ├── ids/
-│   │   │   ├── ids.py        each file and passage by its Software Heritage ID and one-chunk IPFS CID
-│   │   │   ├── test_ids.py
-│   │   │   └── README.md
-│   │   ├── in-toto/
-│   │   │   ├── in_toto.py   each approved answer as an in-toto Statement, its subject hashed from the file written
-│   │   │   ├── test_in_toto.py
-│   │   │   └── README.md
-│   │   ├── index-cache/
-│   │   │   ├── index_cache.py  a folder's scan index kept between runs, rebuilt only when a file's hash changed
-│   │   │   ├── test_index_cache.py
-│   │   │   └── README.md
-│   │   ├── install-scripts/
-│   │   │   ├── install_scripts.py  the install scripts node_modules would run (preinstall, install, postinstall), by file and line
-│   │   │   ├── test_install_scripts.py
-│   │   │   └── README.md
-│   │   ├── instruction-files/
-│   │   │   ├── instruction_files.py   which instruction files each coding agent would load for a folder, in order, with size and hash
-│   │   │   ├── test_instruction_files.py
-│   │   │   └── README.md
-│   │   ├── invoices/
-│   │   │   ├── invoices.py   invoices you sent, paid only when a line names the number as paid; the rest overdue first
-│   │   │   ├── test_invoices.py
-│   │   │   └── README.md
-│   │   ├── irc/
-│   │   │   ├── irc.py   IRC logs as dated lines of messages
-│   │   │   ├── test_irc.py
-│   │   │   └── README.md
-│   │   ├── jeles/
-│   │   │   ├── jeles.py      Jeles' nuggets as passages, and your approved answers as Jeles nuggets, paired by question hash
-│   │   │   ├── test_jeles.py
-│   │   │   └── README.md
-│   │   ├── jetbrains/
-│   │   │   ├── jetbrains.py      an external tool for JetBrains IDEs: answers as links to file and line
-│   │   │   ├── test_jetbrains.py
-│   │   │   └── README.md
-│   │   ├── jira/
-│   │   │   ├── jira.py   a Jira export issue by issue
-│   │   │   ├── test_jira.py
-│   │   │   └── README.md
-│   │   ├── job-hunt/
-│   │   │   ├── job_hunt.py   applications sent, replies and who you're waiting on
-│   │   │   ├── test_job_hunt.py
-│   │   │   └── README.md
-│   │   ├── joplin/
-│   │   │   ├── joplin.py   a Joplin export note by note
-│   │   │   ├── test_joplin.py
-│   │   │   └── README.md
-│   │   ├── jrnl/
-│   │   │   ├── jrnl.py       jrnl journals mirrored, each stamped entry one dated passage
-│   │   │   ├── test_jrnl.py
-│   │   │   └── README.md
-│   │   ├── json-paths/
-│   │   │   ├── json_paths.py   any JSON or JSON Lines file as plain lines, one passage per record
-│   │   │   ├── test_json_paths.py
-│   │   │   └── README.md
-│   │   ├── jupyter/
-│   │   │   ├── jupyter.py   a Jupyter notebook as text, one block for each cell with its number and kind
-│   │   │   ├── test_jupyter.py
-│   │   │   └── README.md
-│   │   ├── karakeep/
-│   │   │   ├── karakeep.py   a bookmark export with tags and notes
-│   │   │   ├── test_karakeep.py
-│   │   │   └── README.md
 │   │   ├── latex/
 │   │   │   ├── latex.py   a LaTeX source as its prose, line for line, commands stripped
 │   │   │   ├── test_latex.py
-│   │   │   └── README.md
-│   │   ├── launcher/
-│   │   │   ├── launcher.py   ask from a launcher, passages with file and line
-│   │   │   ├── test_launcher.py
-│   │   │   └── README.md
-│   │   ├── lending/
-│   │   │   ├── lending.py    what you lent, and what your files say came back
-│   │   │   ├── test_lending.py
-│   │   │   └── README.md
-│   │   ├── lesson-time/
-│   │   │   ├── lesson_time.py   lesson plans whose timed parts do not add up to the time they say
-│   │   │   ├── test_lesson_time.py
-│   │   │   └── README.md
-│   │   ├── letterboxd/
-│   │   │   ├── letterboxd.py   films watched, rated and reviewed as dated lines
-│   │   │   ├── test_letterboxd.py
-│   │   │   └── README.md
-│   │   ├── licenses/
-│   │   │   ├── licenses.py   the licence of every installed Python and npm package, and which are copyleft, by file and line
-│   │   │   ├── test_licenses.py
-│   │   │   └── README.md
-│   │   ├── life/
-│   │   │   ├── life.py       Conway's Game of Life as one row; check plays it again
-│   │   │   ├── test_life.py
-│   │   │   └── README.md
-│   │   ├── linkedin/
-│   │   │   ├── linkedin.py   LinkedIn messages, posts, comments and connections as dated lines
-│   │   │   ├── test_linkedin.py
-│   │   │   └── README.md
-│   │   ├── listening/
-│   │   │   ├── listening.py   what you listened to, as dated lines of plays
-│   │   │   ├── test_listening.py
-│   │   │   └── README.md
-│   │   ├── live/
-│   │   │   ├── live.py       each way-in add-on run through its real program: works, fails, or not here
-│   │   │   ├── test_live.py
-│   │   │   └── README.md
-│   │   ├── livestock/
-│   │   │   ├── livestock.py   each animal's births, treatments and sales
-│   │   │   ├── test_livestock.py
-│   │   │   └── README.md
-│   │   ├── llms-txt/
-│   │   │   ├── llms_txt.py   an llms.txt written from a folder's text files, and a checker for one
-│   │   │   ├── test_llms_txt.py
-│   │   │   └── README.md
-│   │   ├── local-model/
-│   │   │   ├── local_model.py  suggestions from a model on this machine only, finding the server and model running
-│   │   │   ├── test_local_model.py
-│   │   │   └── README.md
-│   │   ├── location-history/
-│   │   │   ├── location_history.py   places and trips from a Timeline export, by day
-│   │   │   ├── test_location_history.py
-│   │   │   └── README.md
-│   │   ├── lockfiles/
-│   │   │   ├── lockfiles.py   lockfiles as a line for each locked package
-│   │   │   ├── test_lockfiles.py
-│   │   │   └── README.md
-│   │   ├── logs/
-│   │   │   ├── logs.py   system and web server logs as dated lines
-│   │   │   ├── test_logs.py
-│   │   │   └── README.md
-│   │   ├── mail/
-│   │   │   ├── mail.py       .eml and .mbox, with sender, date and subject
-│   │   │   ├── test_mail.py
-│   │   │   └── README.md
-│   │   ├── make-it-so/
-│   │   │   ├── make_it_so.py   an order held for you with the passages it rests on, never run; a check they still stand
-│   │   │   ├── test_make_it_so.py
 │   │   │   └── README.md
 │   │   ├── man-pages/
 │   │   │   ├── man_pages.py   man pages as plain text
@@ -692,9 +115,75 @@ willow/
 │   │   │   ├── markdown.py   a Markdown file as the text it shows, line for line, with no word the file lacks
 │   │   │   ├── test_markdown.py
 │   │   │   └── README.md
-│   │   ├── market-calls/
-│   │   │   ├── market_calls.py  market calls as wagers, closed by the closes you type, settled by your seal, losers kept
-│   │   │   ├── test_market_calls.py
+│   │   ├── mediawiki/
+│   │   │   ├── mediawiki.py   a MediaWiki dump as plain text, page by page
+│   │   │   ├── test_mediawiki.py
+│   │   │   └── README.md
+│   │   ├── notation/
+│   │   │   ├── notation.py   each displayed LaTeX equation with the words its paper gives its symbols, so words find the equation
+│   │   │   ├── test_notation.py
+│   │   │   └── README.md     its card
+│   │   ├── office/
+│   │   │   ├── office.py     .docx, .odt, .pptx, .xlsx and .ods, as text
+│   │   │   ├── test_office.py
+│   │   │   └── README.md
+│   │   ├── ris/
+│   │   │   ├── ris.py   each reference in a RIS citation export as a passage that opens with its citation
+│   │   │   ├── test_ris.py
+│   │   │   └── README.md
+│   │   ├── rst/
+│   │   │   ├── rst.py   a reStructuredText file as the text it shows, line for line, markup taken off
+│   │   │   ├── test_rst.py
+│   │   │   └── README.md
+```
+
+#### adapters/stdlib/, from rtf/
+
+```
+│   │   ├── rtf/
+│   │   │   ├── rtf.py   an RTF document as the plain text it displays
+│   │   │   ├── test_rtf.py
+│   │   │   └── README.md
+│   │   ├── screenplay/
+│   │   │   ├── screenplay.py   scripts as scenes, cues and dialogue
+│   │   │   ├── test_screenplay.py
+│   │   │   └── README.md
+│   │   ├── text/
+│   │   │   ├── text.py       every .txt as UTF-8 the kernel reads whole: UTF-16, a named code page, over 1 MB
+│   │   │   ├── test_text.py
+│   │   │   └── README.md
+│   │   ├── zotero/
+│   │   │   ├── zotero.py   a copy of zotero.sqlite: each item, note and PDF annotation, with its citation
+│   │   │   ├── test_zotero.py
+│   │   │   └── README.md
+```
+
+### adapters/stdlib/: Reading more kinds of files: Mail and chat
+
+```
+│   │   ├── apple-mail/
+│   │   │   ├── apple_mail.py     Apple Mail's .emlx, read as mail reads an .eml
+│   │   │   ├── test_apple_mail.py
+│   │   │   └── README.md
+│   │   ├── chats/
+│   │   │   ├── chats.py      WhatsApp and Telegram exports, a dated line a message
+│   │   │   ├── test_chats.py
+│   │   │   └── README.md
+│   │   ├── discord/
+│   │   │   ├── discord.py   a Discord data package as dated lines of your messages
+│   │   │   ├── test_discord.py
+│   │   │   └── README.md
+│   │   ├── irc/
+│   │   │   ├── irc.py   IRC logs as dated lines of messages
+│   │   │   ├── test_irc.py
+│   │   │   └── README.md
+│   │   ├── linkedin/
+│   │   │   ├── linkedin.py   LinkedIn messages, posts, comments and connections as dated lines
+│   │   │   ├── test_linkedin.py
+│   │   │   └── README.md
+│   │   ├── mail/
+│   │   │   ├── mail.py       .eml and .mbox, with sender, date and subject
+│   │   │   ├── test_mail.py
 │   │   │   └── README.md
 │   │   ├── mastodon/
 │   │   │   ├── mastodon.py   your posts as dated lines
@@ -704,99 +193,59 @@ willow/
 │   │   │   ├── matrix.py   a Matrix room export as dated lines of messages
 │   │   │   ├── test_matrix.py
 │   │   │   └── README.md
-│   │   ├── mcp-lite/
-│   │   │   ├── server.py         the mcp add-on's three tools, the protocol by hand, nothing to install
-│   │   │   ├── test_server.py
-│   │   │   └── README.md
-│   │   ├── mcp-sampling/
-│   │   │   ├── mcp_sampling.py Suggestions from whatever model your MCP client already runs, asked through MCP sampling, so willow needs no model or key of its own
-│   │   │   ├── test_mcp_sampling.py
-│   │   │   └── README.md     its card
-│   │   ├── mediawiki/
-│   │   │   ├── mediawiki.py   a MediaWiki dump as plain text, page by page
-│   │   │   ├── test_mediawiki.py
-│   │   │   └── README.md
-│   │   ├── merkle/
-│   │   │   ├── merkle.py     a Merkle tree over the record: one row proven with a handful of hashes
-│   │   │   ├── test_merkle.py
-│   │   │   └── README.md
 │   │   ├── meta-archive/
 │   │   │   ├── meta_archive.py   Facebook and Instagram messages, posts and comments as dated lines
 │   │   │   ├── test_meta_archive.py
 │   │   │   └── README.md
-│   │   ├── mileage/
-│   │   │   ├── mileage.py   miles driven for work, by tax year
-│   │   │   ├── test_mileage.py
+│   │   ├── reddit/
+│   │   │   ├── reddit.py   Reddit posts, comments and saved items as dated lines
+│   │   │   ├── test_reddit.py
 │   │   │   └── README.md
-│   │   ├── milestones/
-│   │   │   ├── milestones.py   a child's firsts and measurements, by age
-│   │   │   ├── test_milestones.py
+│   │   ├── slack/
+│   │   │   ├── slack.py   a Slack export as dated lines of messages
+│   │   │   ├── test_slack.py
 │   │   │   └── README.md
-│   │   ├── minutes/
-│   │   │   ├── minutes.py   decisions and actions from meeting minutes
-│   │   │   ├── test_minutes.py
+│   │   ├── texts/
+│   │   │   ├── texts.py      Android and iPhone text backups and call logs, a dated line a message
+│   │   │   ├── test_texts.py
 │   │   │   └── README.md
-│   │   ├── misquote/
-│   │   │   ├── misquote.py   a quote almost in your files: the closest passage, and what differs
-│   │   │   ├── test_misquote.py
+│   │   ├── x-archive/
+│   │   │   ├── x_archive.py   your X posts and messages as dated lines
+│   │   │   ├── test_x_archive.py
 │   │   │   └── README.md
-│   │   ├── model-card/
-│   │   │   ├── model_card.py  a card naming the model behind an assistant, its SHA-256 on the record
-│   │   │   ├── test_model_card.py
+```
+
+### adapters/stdlib/: Reading more kinds of files: Notes, journals and saved pages
+
+```
+│   │   ├── bookmarks/
+│   │   │   ├── bookmarks.py   browser bookmarks and history, from an export, a backup or a copy of the database
+│   │   │   ├── test_bookmarks.py
 │   │   │   └── README.md
-│   │   ├── model-drift/
-│   │   │   ├── model_drift.py  your frozen questions asked again, flagging answers that changed under the same name and card
-│   │   │   ├── test_model_drift.py
+│   │   ├── day-one/
+│   │   │   ├── day_one.py   a journal export entry by entry
+│   │   │   ├── test_day_one.py
 │   │   │   └── README.md
-│   │   ├── model-exam/
-│   │   │   ├── model_exam.py  a model scored against the answers you sealed, your questions as its exam
-│   │   │   ├── test_model_exam.py
+│   │   ├── evernote/
+│   │   │   ├── evernote.py   an Evernote .enex export as its notes: title, notebook, dates, tags, source, attachments and text
+│   │   │   ├── test_evernote.py
 │   │   │   └── README.md
-│   │   ├── model-fit/
-│   │   │   ├── model_fit.py  the memory, CPU, GPUs and NPUs this machine has, and where a model of a given size fits
-│   │   │   ├── test_model_fit.py
+│   │   ├── google-keep/
+│   │   │   ├── google_keep.py   a Keep note or list with its day and labels
+│   │   │   ├── test_google_keep.py
 │   │   │   └── README.md
-│   │   ├── model-shelf/
-│   │   │   ├── model_shelf.py  every model on this machine, from each runtime's own folder, with its quantization and hash
-│   │   │   ├── test_model_shelf.py
+│   │   ├── joplin/
+│   │   │   ├── joplin.py   a Joplin export note by note
+│   │   │   ├── test_joplin.py
 │   │   │   └── README.md
-│   │   ├── month-first/
-│   │   │   ├── month_first.py   a folder written month first, mirrored with each date's ISO form beside it
-│   │   │   ├── test_month_first.py
+│   │   ├── jrnl/
+│   │   │   ├── jrnl.py       jrnl journals mirrored, each stamped entry one dated passage
+│   │   │   ├── test_jrnl.py
 │   │   │   └── README.md
-│   │   ├── mood/
-│   │   │   ├── mood.py   mood scores over weeks and months
-│   │   │   ├── test_mood.py
+│   │   ├── karakeep/
+│   │   │   ├── karakeep.py   a bookmark export with tags and notes
+│   │   │   ├── test_karakeep.py
 │   │   │   └── README.md
-│   │   ├── musicxml/
-│   │   │   ├── musicxml.py   scores as titles, key, tempo, markings and lyrics
-│   │   │   ├── test_musicxml.py
-│   │   │   └── README.md
-│   │   ├── mutants/
-│   │   │   ├── mutants.py    breaks each add-on's code on purpose and checks its tests notice
-│   │   │   ├── accepted.json the breaks that change nothing a person could notice, each with why
-│   │   │   ├── test_mutants.py
-│   │   │   └── README.md
-│   │   ├── nestor/
-│   │   │   ├── nestor.py     answers a person has checked in Nestor, from a copy of its store
-│   │   │   ├── test_nestor.py
-│   │   │   └── README.md
-│   │   ├── nicknames/
-│   │   │   ├── nicknames.py   the names you call people, found beside a family word in your files, as a words list
-│   │   │   ├── test_nicknames.py
-│   │   │   └── README.md
-│   │   ├── night-batch/
-│   │   │   ├── night_batch.py  waiting questions asked of a local model in one run, stopped once you're back
-│   │   │   ├── test_night_batch.py
-│   │   │   └── README.md
-│   │   ├── nightstand/
-│   │   │   ├── nightstand.py  things set down, one bite picked up: one in hand, a bite every time, nothing deleted
-│   │   │   ├── test_nightstand.py
-│   │   │   └── README.md
-│   │   ├── notation/
-│   │   │   ├── notation.py   Each displayed equation in LaTeX sources with the words its paper gives for its symbols ("where η is the packing fraction"), so a question in words finds the equation
-│   │   │   ├── test_notation.py
-│   │   │   └── README.md     its card
 │   │   ├── notes/
 │   │   │   ├── notes.py      Obsidian and Logseq vaults, links and backlinks kept
 │   │   │   ├── test_notes.py
@@ -805,454 +254,38 @@ willow/
 │   │   │   ├── notion.py   a Notion export as pages and databases with their paths
 │   │   │   ├── test_notion.py
 │   │   │   └── README.md
-│   │   ├── oakenscroll/
-│   │   │   ├── oakenscroll.py   an Oakenscroll's Office calibration ledger: each claim, its revisions and grade, as dated passages
-│   │   │   ├── test_oakenscroll.py
-│   │   │   └── README.md
-│   │   ├── odds/
-│   │   │   ├── odds.py       exact odds for any dice, as fractions
-│   │   │   ├── test_odds.py
-│   │   │   └── README.md
-│   │   ├── office/
-│   │   │   ├── office.py     .docx, .odt, .pptx, .xlsx and .ods, as text
-│   │   │   ├── test_office.py
-│   │   │   └── README.md
-│   │   ├── on-this-day/
-│   │   │   ├── on_this_day.py what your files say happened on this date in other years
-│   │   │   ├── test_on_this_day.py
-│   │   │   └── README.md
-│   │   ├── openai-compatible/
-│   │   │   ├── openai_compatible.py  a model at any OpenAI-compatible endpoint suggests from the passages served, held for your seal
-│   │   │   ├── test_openai_compatible.py
-│   │   │   └── README.md
-│   │   ├── opencode/
-│   │   │   ├── opencode.py       the opencode.json lines that register mcp-lite with OpenCode
-│   │   │   ├── test_opencode.py
-│   │   │   └── README.md
 │   │   ├── opml/
 │   │   │   ├── opml.py   an OPML feed list as a line per feed under its folder, an outline as indented items with their notes
 │   │   │   ├── test_opml.py
-│   │   │   └── README.md
-│   │   ├── oracle-text/
-│   │   │   ├── oracle_text.py   readings from a Tracery grammar, replayable
-│   │   │   ├── test_oracle_text.py
-│   │   │   └── README.md
-│   │   ├── orders/
-│   │   │   ├── orders.py   what you bought, as dated lines with prices
-│   │   │   ├── test_orders.py
 │   │   │   └── README.md
 │   │   ├── org/
 │   │   │   ├── org.py   an Org-mode file as plain lines, line for line, its markup taken off
 │   │   │   ├── test_org.py
 │   │   │   └── README.md
-│   │   ├── outdated/
-│   │   │   ├── outdated.py   how old each locked dependency is, and which are yanked, deprecated or unmaintained
-│   │   │   ├── test_outdated.py
-│   │   │   └── README.md
-│   │   ├── package-contents/
-│   │   │   ├── package_contents.py   what a wheel, sdist, npm tarball or crate holds, and the code it runs on install, by file and line
-│   │   │   ├── test_package_contents.py
-│   │   │   └── README.md
-│   │   ├── pair-drift/
-│   │   │   ├── pair_drift.py   figures a summary says that its full text does not
-│   │   │   ├── test_pair_drift.py
-│   │   │   └── README.md
-│   │   ├── parallel/
-│   │   │   ├── parallel.py   a reader run over several folders at once, across cores, into one mirror
-│   │   │   ├── test_parallel.py
-│   │   │   └── README.md
-│   │   ├── people/
-│   │   │   ├── people.py     everyone the files name, by what they do with a name, and each one's every mention
-│   │   │   ├── test_people.py
-│   │   │   └── README.md
-│   │   ├── persona-card/
-│   │   │   ├── persona_card.py  a persona card compiled to the same prompt bytes; the hash on the record
-│   │   │   ├── test_persona_card.py
-│   │   │   └── README.md
-│   │   ├── pets/
-│   │   │   ├── pets.py   each pet's care and what's due
-│   │   │   ├── test_pets.py
-│   │   │   └── README.md
-│   │   ├── pgn/
-│   │   │   ├── pgn.py   a PGN game as who, when, where, the result, the opening and every comment with its move
-│   │   │   ├── test_pgn.py
-│   │   │   └── README.md
-│   │   ├── pii-audit/
-│   │   │   ├── pii_audit.py  the personal numbers in the files, checked never guessed, shown masked
-│   │   │   ├── test_pii_audit.py
-│   │   │   └── README.md
-│   │   ├── pile-build/
-│   │   │   ├── pile_build.py  the store built after each change, behind a lock, until it matches the folder
-│   │   │   ├── test_pile_build.py
-│   │   │   └── README.md
-│   │   ├── pile-gold/
-│   │   │   ├── pile_gold.py   your sealed answers as a test of the search, scored as recall at five
-│   │   │   ├── test_pile_gold.py
-│   │   │   └── README.md
-│   │   ├── pile-poetry/
-│   │   │   ├── pile_poetry.py   verse from your own word pairs
-│   │   │   ├── test_pile_poetry.py
-│   │   │   └── README.md
-│   │   ├── pile-rank/
-│   │   │   ├── pile_rank.py   BM25F over words and the folder's own word pairs, titles and questions weighted
-│   │   │   ├── test_pile_rank.py
-│   │   │   └── README.md
-│   │   ├── pile-rungs/
-│   │   │   ├── pile_rungs.py  a question climbs words, phrases, embedder; each rung says why it answered or stopped
-│   │   │   ├── test_pile_rungs.py
-│   │   │   └── README.md
-│   │   ├── pile-serve/
-│   │   │   ├── pile_serve.py  the passages held warm by one process, asked over a Unix socket in milliseconds
-│   │   │   ├── test_pile_serve.py
-│   │   │   └── README.md
-│   │   ├── pile-store/
-│   │   │   ├── pile_store.py  a folder's passages in one SQLite file, each repeat once, used only while it matches
-│   │   │   ├── test_pile_store.py
-│   │   │   └── README.md
-│   │   ├── pile-sweep/
-│   │   │   ├── pile_sweep.py  your sealed answers asked at several passage sizes, the best one named
-│   │   │   ├── test_pile_sweep.py
-│   │   │   └── README.md
-│   │   ├── pins/
-│   │   │   ├── pins.py       version ranges in package.json or requirements.txt that no lockfile pins
-│   │   │   ├── test_pins.py
-│   │   │   └── README.md
-│   │   ├── pipe/
-│   │   │   ├── pipe.py           questions in, one answer a line out: JSON lines, or grep's file:line: text
-│   │   │   ├── test_pipe.py
-│   │   │   └── README.md
-│   │   ├── places/
-│   │   │   ├── places.py   KML, GeoJSON and GPX files as places: each one's name, folders, note and coordinates
-│   │   │   ├── test_places.py
-│   │   │   └── README.md
-│   │   ├── plain/
-│   │   │   ├── plain.py      the kernel's answer as sentences
-│   │   │   ├── test_plain.py
-│   │   │   └── README.md
 │   │   ├── pocket/
 │   │   │   ├── pocket.py     Pocket's export, its HTML and the CSVs in its zip, one dated line per saved article
 │   │   │   ├── test_pocket.py
 │   │   │   └── README.md
-│   │   ├── policy-watch/
-│   │   │   ├── policy_watch.py  a policy page fetched each run, and what changed since, sentence by sentence
-│   │   │   ├── test_policy_watch.py
-│   │   │   └── README.md
-│   │   ├── predict/
-│   │   │   ├── predict.py    what a question will come to, on the record before it is asked, graded after
-│   │   │   ├── test_predict.py
-│   │   │   └── README.md
-│   │   ├── print/
-│   │   │   ├── print.py      an answer as a page to print, with its sources; --large for big type
-│   │   │   ├── test_print.py
-│   │   │   └── README.md
-│   │   ├── privacy/
-│   │   │   ├── privacy.py    personal data and keys withheld from what a question prints
-│   │   │   ├── test_privacy.py
-│   │   │   └── README.md
-│   │   ├── profile/
-│   │   │   ├── question_profile.py   where a question's time goes: reading the folder, ranking, and the functions the time went to, from cProfile
-│   │   │   ├── test_question_profile.py
-│   │   │   └── README.md
-│   │   ├── prov/
-│   │   │   ├── prov.py   the record as W3C PROV-JSON: what came from what, by which step, sealed by whom
-│   │   │   ├── test_prov.py
-│   │   │   └── README.md
-│   │   ├── quantized/
-│   │   │   ├── quantized.py  the smallest local model that still passes your sealed questions
-│   │   │   ├── test_quantized.py
-│   │   │   └── README.md
-│   │   ├── quiz/
-│   │   │   ├── quiz.py       a passage of your own writing with a word missing, cut and scored on the record
-│   │   │   ├── test_quiz.py
-│   │   │   └── README.md
-│   │   ├── quote-check/
-│   │   │   ├── quote_check.py is this exact quote in my files, and where
-│   │   │   ├── test_quote_check.py
-│   │   │   └── README.md
-│   │   ├── quotes/
-│   │   │   ├── quotes.py     every quote in a document checked: as written, almost (and what differs), or not there
-│   │   │   ├── test_quotes.py
-│   │   │   └── README.md
-│   │   ├── reading-level/
-│   │   │   ├── reading_level.py  how hard each file reads: Flesch by the book, counted as written, easiest first
-│   │   │   ├── test_reading_level.py
-│   │   │   └── README.md
-│   │   ├── reading-log/
-│   │   │   ├── reading_log.py   books, pages and minutes read, week by week
-│   │   │   ├── test_reading_log.py
-│   │   │   └── README.md
-│   │   ├── readings/
-│   │   │   ├── readings.py   notes beside an answer: numbers over time, dates gone by
-│   │   │   ├── test_readings.py
-│   │   │   └── README.md     its card: what it adds, uses and never does
-│   │   ├── readme/
-│   │   │   ├── readme.py     builds this README's generated sections from the cards
-│   │   │   ├── test_readme.py
-│   │   │   └── README.md     its card: sections, the draw, what it reads
 │   │   ├── readwise/
 │   │   │   ├── readwise.py   highlights with their book and your note
 │   │   │   ├── test_readwise.py
 │   │   │   └── README.md
-│   │   ├── reddit/
-│   │   │   ├── reddit.py   Reddit posts, comments and saved items as dated lines
-│   │   │   ├── test_reddit.py
-│   │   │   └── README.md
-│   │   ├── renewals/
-│   │   │   ├── renewals.py   when each thing expires, from lines saying an expiry word and their own date
-│   │   │   ├── test_renewals.py
-│   │   │   └── README.md
-│   │   ├── repo-pile/
-│   │   │   ├── repo_pile.py  public repos made into a box: cloned, licence-gated, their docs the pile, indexed
-│   │   │   ├── test_repo_pile.py
-│   │   │   └── README.md
-│   │   ├── restack/
-│   │   │   ├── restack.py    your branches back on top of main, the repo's own conflicts settled
-│   │   │   ├── test_restack.py
-│   │   │   └── README.md
-│   │   ├── restore-drill/
-│   │   │   ├── restore_drill.py  a backup zip restored into scratch; the chain and every file checked there
-│   │   │   ├── test_restore_drill.py
-│   │   │   └── README.md
-│   │   ├── ris/
-│   │   │   ├── ris.py   each reference in a RIS citation export as a passage that opens with its citation
-│   │   │   ├── test_ris.py
-│   │   │   └── README.md
-│   │   ├── risky-code/
-│   │   │   ├── risky_code.py  lines of code matching a known-dangerous pattern, by file and line, as leads to read
-│   │   │   ├── test_risky_code.py
-│   │   │   └── README.md
-│   │   ├── ro-crate/
-│   │   │   ├── ro_crate.py   a box snapshot as an RO-Crate zip: every file with its SHA-256, size, kind and licence, and the record's tip pinned
-│   │   │   ├── test_ro_crate.py
-│   │   │   └── README.md
-│   │   ├── rss-out/
-│   │   │   ├── rss_out.py   your approved answers as an RSS 2.0 feed, newest first, an item for each
-│   │   │   ├── test_rss_out.py
-│   │   │   └── README.md
-│   │   ├── rst/
-│   │   │   ├── rst.py   a reStructuredText file as the text it shows, line for line, markup taken off
-│   │   │   ├── test_rst.py
-│   │   │   └── README.md
-│   │   ├── rtf/
-│   │   │   ├── rtf.py   an RTF document as the plain text it displays
-│   │   │   ├── test_rtf.py
-│   │   │   └── README.md
-│   │   ├── rules/
-│   │   │   ├── rules.py      a rules file sealed section by section; the kernel then answers 'rule NAME' word for word
-│   │   │   ├── test_rules.py
-│   │   │   └── README.md
-│   │   ├── said/
-│   │   │   ├── said.py       who said what, read by shape (a chat's stamp, a speech verb, quotation marks), dated
-│   │   │   ├── test_said.py
-│   │   │   └── README.md
-│   │   ├── same-way/
-│   │   │   ├── same_way.py  a local model asked each question several times, and how often its answer flips
-│   │   │   ├── test_same_way.py
-│   │   │   └── README.md
-│   │   ├── sarif/
-│   │   │   ├── sarif.py   scanner findings by file and line
-│   │   │   ├── test_sarif.py
-│   │   │   └── README.md
-│   │   ├── sbom/
-│   │   │   ├── sbom.py   an SBOM component by component with licences
-│   │   │   ├── test_sbom.py
-│   │   │   └── README.md
-│   │   ├── scan/
-│   │   │   ├── scan.py       indexes a folder once, then asks it a list of questions, the kernel's way
-│   │   │   ├── test_scan.py  holds its answers to the kernel's, every ranking vector included
-│   │   │   └── README.md
-│   │   ├── screenplay/
-│   │   │   ├── screenplay.py   scripts as scenes, cues and dialogue
-│   │   │   ├── test_screenplay.py
-│   │   │   └── README.md
-│   │   ├── scrub/
-│   │   │   ├── scrub.py   a copy of a JPEG, PNG, docx, xlsx or pptx without its Exif, author, times and edit history, and what was taken out
-│   │   │   ├── test_scrub.py
-│   │   │   └── README.md
-│   │   ├── secrets-audit/
-│   │   │   ├── secrets_audit.py passwords, keys and card numbers in plain files, by file and line
-│   │   │   ├── test_secrets_audit.py
-│   │   │   └── README.md
-│   │   ├── sent-log/
-│   │   │   ├── sent_log.py    which passages went to which model and where, from what the record holds; says what it can't see
-│   │   │   ├── test_sent_log.py
-│   │   │   └── README.md
-│   │   ├── serve/
-│   │   │   ├── serve.py       the one markdown file a model reads: only a human-sealed scope, pooled, peaks first, by unguessable ids
-│   │   │   ├── test_serve.py
-│   │   │   └── README.md
-│   │   ├── session-cost/
-│   │   │   ├── session_cost.py  tokens each agent session spent, by day and by repo, priced from a table you keep
-│   │   │   ├── test_session_cost.py
-│   │   │   └── README.md
-│   │   ├── session-seal/
-│   │   │   ├── session_seal.py one seal over a session's rows, proposed through the kernel
-│   │   │   ├── test_session_seal.py
-│   │   │   └── README.md
-│   │   ├── share/
-│   │   │   ├── share.py         sealed answers packed for someone, signed, received, forwarded in layers, corrected, and witnessed
-│   │   │   ├── ed25519.py       Ed25519 signatures (RFC 8032) in the standard library
-│   │   │   ├── test_share.py
-│   │   │   └── README.md
-│   │   ├── shell/
-│   │   │   ├── shell.py          a willow command and tab completion for bash, zsh, fish, PowerShell and cmd
-│   │   │   ├── test_shell.py
-│   │   │   └── README.md
-│   │   ├── shell-history/
-│   │   │   ├── shell_history.py  bash, zsh and fish history, each command a line with its shell's time
-│   │   │   ├── test_shell_history.py
-│   │   │   └── README.md
+```
+
+#### adapters/stdlib/, from shortcuts/
+
+```
 │   │   ├── shortcuts/
 │   │   │   ├── shortcuts.py   link files from a desktop or folder (.url, .webloc, .desktop) as title and address
 │   │   │   ├── test_shortcuts.py
-│   │   │   └── README.md
-│   │   ├── similar/
-│   │   │   ├── similar.py    what's already on the list near a new idea
-│   │   │   ├── test_similar.py
-│   │   │   └── README.md
-│   │   ├── slack/
-│   │   │   ├── slack.py   a Slack export as dated lines of messages
-│   │   │   ├── test_slack.py
-│   │   │   └── README.md
-│   │   ├── slow-tests/
-│   │   │   ├── slow_tests.py each test's time over several runs, the slowest named, any that got slower flagged
-│   │   │   ├── test_slow_tests.py
 │   │   │   └── README.md
 │   │   ├── snapshot/
 │   │   │   ├── snapshot.py   a page or file fetched once, with its address, time and SHA-256
 │   │   │   ├── test_snapshot.py
 │   │   │   └── README.md
-│   │   ├── sort/
-│   │   │   ├── sort.py       your files sorted into your own categories, by the phrases you gave each
-│   │   │   ├── test_sort.py
-│   │   │   └── README.md
-│   │   ├── sort-ask/
-│   │   │   ├── sort_ask.py   a model on this machine suggests a category for each file sort didn't place, for your seal
-│   │   │   ├── test_sort_ask.py
-│   │   │   └── README.md
-│   │   ├── stack/
-│   │   │   ├── stack.py       one document from a stack of add-on steps over a box, pooled and peaks-first
-│   │   │   ├── test_stack.py
-│   │   │   ├── example.md
-│   │   │   ├── examples/      stacks to start from, one kind of folder each: a choir, a smallholding, a code library, a class, a story, foster dogs, a knee, a folder of repositories, a box handed on
-│   │   │   │   ├── choir.md
-│   │   │   │   ├── comeback.md
-│   │   │   │   ├── export.md
-│   │   │   │   ├── foster.md
-│   │   │   │   ├── maintainer.md
-│   │   │   │   ├── reporter.md
-│   │   │   │   ├── repos.md
-│   │   │   │   ├── smallholding.md
-│   │   │   │   └── teacher.md
-│   │   │   └── README.md
-│   │   ├── stale/
-│   │   │   ├── stale.py      approved answers whose cited passage changed or went
-│   │   │   ├── test_stale.py
-│   │   │   └── README.md
-│   │   ├── start/
-│   │   │   ├── start.py      set up in one step: the box, the key and the starter words, then what next
-│   │   │   ├── test_start.py
-│   │   │   └── README.md
-│   │   ├── starter-words/
-│   │   │   ├── words.txt     a first-day words list, in the kernel's format
-│   │   │   ├── starter.py    copies it where yours will live, readable only by you
-│   │   │   ├── test_starter_words.py
-│   │   │   └── README.md
-│   │   ├── strava/
-│   │   │   ├── strava.py     Strava's activities.csv, GPX and TCX files: each activity a dated line with its distance and time
-│   │   │   ├── test_strava.py
-│   │   │   └── README.md
-│   │   ├── subscriptions/
-│   │   │   ├── subscriptions.py   payments that come round monthly or yearly, and when next
-│   │   │   ├── test_subscriptions.py
-│   │   │   └── README.md
-│   │   ├── subtitles/
-│   │   │   ├── subtitles.py  .srt and .vtt transcripts mirrored, each cue a line cited by its start
-│   │   │   ├── test_subtitles.py
-│   │   │   └── README.md
-│   │   ├── surprise/
-│   │   │   ├── surprise.py   one passage drawn by a seeded stream, replayable
-│   │   │   ├── test_surprise.py
-│   │   │   └── README.md
-│   │   ├── syllabus/
-│   │   │   ├── syllabus.py   readings, assignments and exams as dates
-│   │   │   ├── test_syllabus.py
-│   │   │   └── README.md
-│   │   ├── symptoms/
-│   │   │   ├── symptoms.py   one symptom's dated diary, turns marked only where the line says one, each cited
-│   │   │   ├── test_symptoms.py
-│   │   │   └── README.md
-│   │   ├── takeout/
-│   │   │   ├── takeout.py    My Activity and YouTube history, JSON or HTML, one dated line each
-│   │   │   ├── test_takeout.py
-│   │   │   └── README.md
-│   │   ├── tarot/
-│   │   │   ├── tarot.py      a tarot spread dealt by the record's tip, replayable by anyone, meaning nothing by itself
-│   │   │   ├── test_tarot.py
-│   │   │   └── README.md
-│   │   ├── test-impact/
-│   │   │   ├── impact.py     which of this repo's checks a change can reach, closest first, in ci's gate names
-│   │   │   ├── test_impact.py
-│   │   │   └── README.md
-│   │   ├── test-shards/
-│   │   │   ├── shards.py     splits the test run into parts by each test's past time
-│   │   │   ├── test_shards.py
-│   │   │   └── README.md
-│   │   ├── text/
-│   │   │   ├── text.py       every .txt as UTF-8 the kernel reads whole: UTF-16, a named code page, over 1 MB
-│   │   │   ├── test_text.py
-│   │   │   └── README.md
-│   │   ├── texts/
-│   │   │   ├── texts.py      Android and iPhone text backups and call logs, a dated line a message
-│   │   │   ├── test_texts.py
-│   │   │   └── README.md
-│   │   ├── thesis/
-│   │   │   ├── thesis.py     a document's claims, each against your sources, and the ones no passage holds
-│   │   │   ├── test_thesis.py
-│   │   │   └── README.md
-│   │   ├── three-two-one/
-│   │   │   ├── three_two_one.py  how many verified copies of the record exist, held to three, two kinds, one away
-│   │   │   ├── test_three_two_one.py
-│   │   │   └── README.md
-│   │   ├── timeline/
-│   │   │   ├── timeline.py   one matter's lines by date, each cited, written to one file
-│   │   │   ├── test_timeline.py
-│   │   │   └── README.md
-│   │   ├── tip-pin/
-│   │   │   ├── tip_pin.py    where the record ends, pinned outside the box; found cut short or rewritten
-│   │   │   ├── test_tip_pin.py
-│   │   │   └── README.md
-│   │   ├── todo/
-│   │   │   ├── todo.py       things marked to do, oldest first
-│   │   │   ├── test_todo.py
-│   │   │   └── README.md
-│   │   ├── transcript-redact/
-│   │   │   ├── transcript_redact.py  a transcript's keys, home paths and emails taken out, each removal listed
-│   │   │   ├── test_transcript_redact.py
-│   │   │   └── README.md
-│   │   ├── translate/
-│   │   │   ├── translate.py  an answer you sealed, translated on this machine, held for your seal beside the original
-│   │   │   ├── test_translate.py
-│   │   │   └── README.md
 │   │   ├── trello/
 │   │   │   ├── trello.py   a Trello board by list with cards, checklists and comments
 │   │   │   ├── test_trello.py
-│   │   │   └── README.md
-│   │   ├── typos/
-│   │   │   ├── typos.py      a misspelt word read as the files spell it, one edit inside, offered not asked
-│   │   │   ├── test_typos.py
-│   │   │   └── README.md
-│   │   ├── typosquat/
-│   │   │   ├── typosquat.py  dependency names a letter off a popular one, checked against a top-packages list
-│   │   │   ├── test_typosquat.py
-│   │   │   └── README.md
-│   │   ├── vim/
-│   │   │   ├── vim.py            a :Willow command: answers in the quickfix list
-│   │   │   ├── test_vim.py
-│   │   │   └── README.md
-│   │   ├── vscode/
-│   │   │   ├── vscode.py         a VS Code task: answers in the Problems panel
-│   │   │   ├── test_vscode.py
 │   │   │   └── README.md
 │   │   ├── wallabag/
 │   │   │   ├── wallabag.py   saved articles with tags and highlights
@@ -1262,18 +295,6 @@ willow/
 │   │   │   ├── warc.py       WARC web archives (.warc, .warc.gz, .wacz) as each captured page's text, under its time and address
 │   │   │   ├── test_warc.py
 │   │   │   └── README.md
-│   │   ├── warranties/
-│   │   │   ├── warranties.py   when a cover ends, and where its receipt is
-│   │   │   ├── test_warranties.py
-│   │   │   └── README.md
-│   │   ├── wayback/
-│   │   │   ├── wayback.py    the Wayback Machine's copy of a page, saved and compared byte for byte
-│   │   │   ├── test_wayback.py
-│   │   │   └── README.md
-│   │   ├── weakest-link/
-│   │   │   ├── weakest_link.py  each approved answer worth its weakest cited input: measured, fitted, assumed or unmarked
-│   │   │   ├── test_weakest_link.py
-│   │   │   └── README.md
 │   │   ├── web-pages/
 │   │   │   ├── web_pages.py  saved .html and .mhtml as their paragraphs, under the address they came from
 │   │   │   ├── test_web_pages.py
@@ -1282,22 +303,378 @@ willow/
 │   │   │   ├── webarchive.py  Safari's .webarchive as web-pages reads the page, then each frame under its address
 │   │   │   ├── test_webarchive.py
 │   │   │   └── README.md
-│   │   ├── weights-card/
-│   │   │   ├── weights_card.py  a model card from a GGUF or safetensors file's own header, with the file's SHA-256
-│   │   │   ├── test_weights_card.py
+```
+
+### adapters/stdlib/: Reading more kinds of files: Exports from apps and services
+
+```
+│   │   ├── almanac/
+│   │   │   ├── almanac.py    an Almanac's catalog.json: each public dataset's description and source as a passage
+│   │   │   ├── test_almanac.py
 │   │   │   └── README.md
-│   │   ├── weights-pin/
-│   │   │   ├── weights_pin.py  a weights file held to the SHA-256 and size on its model card before it runs
-│   │   │   ├── test_weights_pin.py
+│   │   ├── almanac-keep/
+│   │   │   ├── keep.py       an Almanac entry's best permitted copy, publisher or ranked recovery list, fetched into your folder
+│   │   │   ├── test_keep.py
+│   │   │   └── README.md
+│   │   ├── bank/
+│   │   │   ├── bank.py   bank statements as dated lines with monthly totals
+│   │   │   ├── test_bank.py
+│   │   │   └── README.md
+│   │   ├── calendar/
+│   │   │   ├── cal.py        .ics events and .vcf contacts, as dated lines
+│   │   │   ├── test_calendar.py
+│   │   │   └── README.md
+│   │   ├── family-tree/
+│   │   │   ├── family_tree.py   a family tree as a paragraph for each person
+│   │   │   ├── test_family_tree.py
+│   │   │   └── README.md
+│   │   ├── goodreads/
+│   │   │   ├── goodreads.py   books read, reading and wanted, as dated lines
+│   │   │   ├── test_goodreads.py
+│   │   │   └── README.md
+│   │   ├── health/
+│   │   │   ├── health.py   an Apple Health export as daily numbers
+│   │   │   ├── test_health.py
+│   │   │   └── README.md
+│   │   ├── home-sensors/
+│   │   │   ├── home_sensors.py   Home Assistant history as daily numbers
+│   │   │   ├── test_home_sensors.py
+│   │   │   └── README.md
+│   │   ├── letterboxd/
+│   │   │   ├── letterboxd.py   films watched, rated and reviewed as dated lines
+│   │   │   ├── test_letterboxd.py
+│   │   │   └── README.md
+│   │   ├── listening/
+│   │   │   ├── listening.py   what you listened to, as dated lines of plays
+│   │   │   ├── test_listening.py
+│   │   │   └── README.md
+│   │   ├── location-history/
+│   │   │   ├── location_history.py   places and trips from a Timeline export, by day
+│   │   │   ├── test_location_history.py
+│   │   │   └── README.md
+│   │   ├── oakenscroll/
+│   │   │   ├── oakenscroll.py   an Oakenscroll's Office calibration ledger: each claim, its revisions and grade, as dated passages
+│   │   │   ├── test_oakenscroll.py
+│   │   │   └── README.md
+│   │   ├── orders/
+│   │   │   ├── orders.py   what you bought, as dated lines with prices
+│   │   │   ├── test_orders.py
+│   │   │   └── README.md
+```
+
+#### adapters/stdlib/, from pgn/
+
+```
+│   │   ├── pgn/
+│   │   │   ├── pgn.py   a PGN game as who, when, where, the result, the opening and every comment with its move
+│   │   │   ├── test_pgn.py
+│   │   │   └── README.md
+│   │   ├── places/
+│   │   │   ├── places.py   KML, GeoJSON and GPX files as places: each one's name, folders, note and coordinates
+│   │   │   ├── test_places.py
+│   │   │   └── README.md
+│   │   ├── strava/
+│   │   │   ├── strava.py     Strava's activities.csv, GPX and TCX files: each activity a dated line with its distance and time
+│   │   │   ├── test_strava.py
+│   │   │   └── README.md
+│   │   ├── takeout/
+│   │   │   ├── takeout.py    My Activity and YouTube history, JSON or HTML, one dated line each
+│   │   │   ├── test_takeout.py
+│   │   │   └── README.md
+```
+
+### adapters/stdlib/: Reading more kinds of files: Code and data
+
+```
+│   │   ├── agent-transcript/
+│   │   │   ├── agent_transcript.py  Claude Code, Cursor and other session files as numbered spoken turns
+│   │   │   ├── test_agent_transcript.py
+│   │   │   └── README.md
+│   │   ├── ci-logs/
+│   │   │   ├── ci_logs.py   a CI run log as its failing steps
+│   │   │   ├── test_ci_logs.py
+│   │   │   └── README.md
+│   │   ├── code-comments/
+│   │   │   ├── code_comments.py   a source file's comments on the lines they were on
+│   │   │   ├── test_code_comments.py
+│   │   │   └── README.md
+│   │   ├── codebase-memory/
+│   │   │   ├── codebase_memory.py  a code-graph SQLite file: each function, what it calls, its file and line
+│   │   │   ├── test_codebase_memory.py
+│   │   │   └── README.md
+│   │   ├── corpus-lens/
+│   │   │   ├── corpus_lens.py  corpus-lens process reports: where intent arrives, who writes the code
+│   │   │   ├── test_corpus_lens.py
+│   │   │   └── README.md
+│   │   ├── csv-rows/
+│   │   │   ├── csv_rows.py   a CSV or TSV table as one passage per row, the header row once as the first
+│   │   │   ├── test_csv_rows.py
+│   │   │   └── README.md
+│   │   ├── dotfiles/
+│   │   │   ├── dotfiles.py    a dotfiles repository's settings, each on its own line in the file's own words, secrets withheld
+│   │   │   ├── test_dotfiles.py
+│   │   │   └── README.md
+│   │   ├── gh-json/
+│   │   │   ├── gh_json.py   gh --json output as dated lines
+│   │   │   ├── test_gh_json.py
+│   │   │   └── README.md
+│   │   ├── git-history/
+│   │   │   ├── git_history.py  commit messages and diffs as a dated pile, git called not linked
+│   │   │   ├── test_git_history.py
+│   │   │   └── README.md
+│   │   ├── jira/
+│   │   │   ├── jira.py   a Jira export issue by issue
+│   │   │   ├── test_jira.py
+│   │   │   └── README.md
+│   │   ├── json-paths/
+│   │   │   ├── json_paths.py   any JSON or JSON Lines file as plain lines, one passage per record
+│   │   │   ├── test_json_paths.py
+│   │   │   └── README.md
+│   │   ├── jupyter/
+│   │   │   ├── jupyter.py   a Jupyter notebook as text, one block for each cell with its number and kind
+│   │   │   ├── test_jupyter.py
+│   │   │   └── README.md
+│   │   ├── lockfiles/
+│   │   │   ├── lockfiles.py   lockfiles as a line for each locked package
+│   │   │   ├── test_lockfiles.py
+│   │   │   └── README.md
+```
+
+#### adapters/stdlib/, from logs/
+
+```
+│   │   ├── logs/
+│   │   │   ├── logs.py   system and web server logs as dated lines
+│   │   │   ├── test_logs.py
+│   │   │   └── README.md
+│   │   ├── parallel/
+│   │   │   ├── parallel.py   a reader run over several folders at once, across cores, into one mirror
+│   │   │   ├── test_parallel.py
+│   │   │   └── README.md
+│   │   ├── sarif/
+│   │   │   ├── sarif.py   scanner findings by file and line
+│   │   │   ├── test_sarif.py
+│   │   │   └── README.md
+│   │   ├── sbom/
+│   │   │   ├── sbom.py   an SBOM component by component with licences
+│   │   │   ├── test_sbom.py
+│   │   │   └── README.md
+│   │   ├── shell-history/
+│   │   │   ├── shell_history.py  bash, zsh and fish history, each command a line with its shell's time
+│   │   │   ├── test_shell_history.py
+│   │   │   └── README.md
+```
+
+### adapters/stdlib/: Reading more kinds of files: Media
+
+```
+│   │   ├── chordpro/
+│   │   │   ├── chordpro.py   a ChordPro song as its title line, chords and lyrics with the chords taken out of the lines
+│   │   │   ├── test_chordpro.py
+│   │   │   └── README.md
+│   │   ├── musicxml/
+│   │   │   ├── musicxml.py   scores as titles, key, tempo, markings and lyrics
+│   │   │   ├── test_musicxml.py
+│   │   │   └── README.md
+│   │   ├── subtitles/
+│   │   │   ├── subtitles.py  .srt and .vtt transcripts mirrored, each cue a line cited by its start
+│   │   │   ├── test_subtitles.py
+│   │   │   └── README.md
+```
+
+### adapters/stdlib/: Reading more kinds of files: What it makes for elsewhere
+
+```
+│   │   ├── gather/
+│   │   │   ├── gather.py     Folders and files you name, copied into your pile under a name, only the kinds you keep, never a key or a file too big to read
+│   │   │   ├── test_gather.py
+│   │   │   └── README.md     its card
+```
+
+### adapters/stdlib/: Finding things: What runs on your page
+
+```
+│   │   ├── amounts/
+│   │   │   ├── amounts.py    every sum of money in the files, dated by its line, the date above or the file's name
+│   │   │   ├── test_amounts.py
+│   │   │   └── README.md
+│   │   ├── duplicates/
+│   │   │   ├── duplicates.py    passages saying the same thing in two files, the newest copy named when it can be
+│   │   │   ├── test_duplicates.py
+│   │   │   └── README.md
+│   │   ├── fuzzy-dates/
+│   │   │   ├── fuzzy_dates.py  dates that admit doubt, read with the doubt kept, in EDTF
+│   │   │   ├── test_fuzzy_dates.py
+│   │   │   └── README.md
+│   │   ├── on-this-day/
+│   │   │   ├── on_this_day.py what your files say happened on this date in other years
+│   │   │   ├── test_on_this_day.py
+│   │   │   └── README.md
+│   │   ├── people/
+│   │   │   ├── people.py     everyone the files name, by what they do with a name, and each one's every mention
+│   │   │   ├── test_people.py
+│   │   │   └── README.md
+│   │   ├── reading-level/
+│   │   │   ├── reading_level.py  how hard each file reads: Flesch by the book, counted as written, easiest first
+│   │   │   ├── test_reading_level.py
+│   │   │   └── README.md
+│   │   ├── said/
+│   │   │   ├── said.py       who said what, read by shape (a chat's stamp, a speech verb, quotation marks), dated
+│   │   │   ├── test_said.py
+│   │   │   └── README.md
+│   │   ├── surprise/
+│   │   │   ├── surprise.py   one passage drawn by a seeded stream, replayable
+│   │   │   ├── test_surprise.py
+│   │   │   └── README.md
+```
+
+### adapters/stdlib/: Finding things: Models that suggest answers
+
+```
+│   │   ├── sort-ask/
+│   │   │   ├── sort_ask.py   a model on this machine suggests a category for each file sort didn't place, for your seal
+│   │   │   ├── test_sort_ask.py
+│   │   │   └── README.md
+```
+
+### adapters/stdlib/: Finding things: What it makes for elsewhere
+
+```
+│   │   ├── index-cache/
+│   │   │   ├── index_cache.py  a folder's scan index kept between runs, rebuilt only when a file's hash changed
+│   │   │   ├── test_index_cache.py
+│   │   │   └── README.md
+│   │   ├── month-first/
+│   │   │   ├── month_first.py   a folder written month first, mirrored with each date's ISO form beside it
+│   │   │   ├── test_month_first.py
+│   │   │   └── README.md
+│   │   ├── pile-build/
+│   │   │   ├── pile_build.py  the store built after each change, behind a lock, until it matches the folder
+│   │   │   ├── test_pile_build.py
+│   │   │   └── README.md
+│   │   ├── pile-serve/
+│   │   │   ├── pile_serve.py  the passages held warm by one process, asked over a Unix socket in milliseconds
+│   │   │   ├── test_pile_serve.py
+│   │   │   └── README.md
+│   │   ├── pile-store/
+│   │   │   ├── pile_store.py  a folder's passages in one SQLite file, each repeat once, used only while it matches
+│   │   │   ├── test_pile_store.py
+│   │   │   └── README.md
+│   │   ├── scan/
+│   │   │   ├── scan.py       indexes a folder once, then asks it a list of questions, the kernel's way
+│   │   │   ├── test_scan.py  holds its answers to the kernel's, every ranking vector included
+│   │   │   └── README.md
+```
+
+### adapters/stdlib/: Finding things: Tools you run yourself
+
+```
+│   │   ├── all/
+│   │   │   ├── all.py        every passage that holds a question, in the kernel's order
+│   │   │   ├── test_all.py
+│   │   │   └── README.md
+│   │   ├── codeowners/
+│   │   │   ├── codeowners.py   who owns a file: the CODEOWNERS rule that matches it, cited by line, on GitHub, GitLab and Forgejo
+│   │   │   ├── test_codeowners.py
+│   │   │   └── README.md
+│   │   ├── fair-merge/
+│   │   │   ├── fair_merge.py   each folder ranked on its own and the lists dealt out in turns, so a large corpus can't bury a small one
+│   │   │   ├── test_fair_merge.py
+│   │   │   └── README.md
+│   │   ├── first-mention/
+│   │   │   ├── first_mention.py  when the files first mention something: the earliest dated line that holds every word
+│   │   │   ├── test_first_mention.py
+│   │   │   └── README.md
+│   │   ├── glance/
+│   │   │   ├── example-questions.txt
+│   │   │   ├── example-scanned.jsonl
+│   │   │   ├── glance.py     What a scan found, a line a question: where its best passage is, how it opens, and which of the question's words it lacks
+│   │   │   ├── test_glance.py
+│   │   │   └── README.md     its card
+│   │   ├── look/
+│   │   │   ├── look.py       One question sent to the step whose job it is, and answered by the lines that step's kept run holds; your own notes by the kernel
+│   │   │   ├── test_look.py
+│   │   │   └── README.md     its card
+│   │   ├── misquote/
+│   │   │   ├── misquote.py   a quote almost in your files: the closest passage, and what differs
+│   │   │   ├── test_misquote.py
+│   │   │   └── README.md
+│   │   ├── pile-gold/
+│   │   │   ├── pile_gold.py   your sealed answers as a test of the search, scored as recall at five
+│   │   │   ├── test_pile_gold.py
+│   │   │   └── README.md
+│   │   ├── pile-rank/
+│   │   │   ├── pile_rank.py   BM25F over words and the folder's own word pairs, titles and questions weighted
+│   │   │   ├── test_pile_rank.py
+│   │   │   └── README.md
+│   │   ├── pile-rungs/
+│   │   │   ├── pile_rungs.py  a question climbs words, phrases, embedder; each rung says why it answered or stopped
+│   │   │   ├── test_pile_rungs.py
+│   │   │   └── README.md
+│   │   ├── pile-sweep/
+│   │   │   ├── pile_sweep.py  your sealed answers asked at several passage sizes, the best one named
+│   │   │   ├── test_pile_sweep.py
+│   │   │   └── README.md
+│   │   ├── quote-check/
+│   │   │   ├── quote_check.py is this exact quote in my files, and where
+│   │   │   ├── test_quote_check.py
+│   │   │   └── README.md
+│   │   ├── quotes/
+│   │   │   ├── quotes.py     every quote in a document checked: as written, almost (and what differs), or not there
+│   │   │   ├── test_quotes.py
+│   │   │   └── README.md
+```
+
+#### adapters/stdlib/, from route/
+
+```
+│   │   ├── route/
+│   │   │   ├── kinds.txt
+│   │   │   ├── route.py      A question sent to the step whose job it is, by a file of kinds you can edit
+│   │   │   ├── test_route.py
+│   │   │   └── README.md     its card
+│   │   ├── rules/
+│   │   │   ├── rules.py      a rules file sealed section by section; the kernel then answers 'rule NAME' word for word
+│   │   │   ├── test_rules.py
+│   │   │   └── README.md
+│   │   ├── sort/
+│   │   │   ├── sort.py       your files sorted into your own categories, by the phrases you gave each
+│   │   │   ├── test_sort.py
+│   │   │   └── README.md
+│   │   ├── typos/
+│   │   │   ├── typos.py      a misspelt word read as the files spell it, one edit inside, offered not asked
+│   │   │   ├── test_typos.py
 │   │   │   └── README.md
 │   │   ├── why-not/
 │   │   │   ├── why_not.py   why a question got not enough to say: which words nothing holds, the nearest passages and what kind of file would answer
 │   │   │   ├── test_why_not.py
 │   │   │   └── README.md
-│   │   ├── windsurf/
-│   │   │   ├── windsurf.py       the mcp_config.json lines that register mcp-lite with Windsurf
-│   │   │   ├── test_windsurf.py
+```
+
+### adapters/stdlib/: Your own words: What words it knows
+
+```
+│   │   ├── abbreviations/
+│   │   │   ├── abbreviations.py  a question's shorthand read as the files write it, either way; words-list lines
+│   │   │   ├── test_abbreviations.py
 │   │   │   └── README.md
+│   │   ├── accents/
+│   │   │   ├── accents.py    a word typed without its accent, read as the files write it; words-list lines
+│   │   │   ├── test_accents.py
+│   │   │   └── README.md
+│   │   ├── nicknames/
+│   │   │   ├── nicknames.py   the names you call people, found beside a family word in your files, as a words list
+│   │   │   ├── test_nicknames.py
+│   │   │   └── README.md
+│   │   ├── starter-words/
+│   │   │   ├── words.txt     a first-day words list, in the kernel's format
+│   │   │   ├── starter.py    copies it where yours will live, readable only by you
+│   │   │   ├── test_starter_words.py
+│   │   │   └── README.md
+│   │   ├── synonyms/
+│   │   │   ├── synonyms.py   Suggests words-list lines for a word no file has
+│   │   │   ├── test_synonyms.py
+│   │   │   └── README.md     its card
 │   │   ├── words-ar/
 │   │   │   ├── words_ar.py   a question in Arabic, its common words out, then the kernel's bite
 │   │   │   ├── test_words_ar.py
@@ -1330,6 +707,11 @@ willow/
 │   │   │   ├── words_pl.py   Polish questions without Polish's common words, then the kernel's own bite
 │   │   │   ├── test_words_pl.py
 │   │   │   └── README.md
+```
+
+#### adapters/stdlib/, from words-pt/
+
+```
 │   │   ├── words-pt/
 │   │   │   ├── words_pt.py   a question in Portuguese, its common words out, then the kernel's bite
 │   │   │   ├── test_words_pt.py
@@ -1350,22 +732,1012 @@ willow/
 │   │   │   ├── words_tr.py   a question in Turkish, its common words out, then the kernel's bite
 │   │   │   ├── test_words_tr.py
 │   │   │   └── README.md
-│   │   ├── x-archive/
-│   │   │   ├── x_archive.py   your X posts and messages as dated lines
-│   │   │   ├── test_x_archive.py
+```
+
+### adapters/stdlib/: Keeping track: What runs on your page
+
+```
+│   │   ├── again/
+│   │   │   ├── again.py      the questions you keep asking, counted from the record
+│   │   │   ├── test_again.py
+│   │   │   └── README.md
+│   │   ├── attendance/
+│   │   │   ├── attendance.py   who was there, by person or by week
+│   │   │   ├── test_attendance.py
+│   │   │   └── README.md
+│   │   ├── baby-log/
+│   │   │   ├── baby_log.py   feeds, sleeps and nappies by day, and the last of each
+│   │   │   ├── test_baby_log.py
+│   │   │   └── README.md
+│   │   ├── budget/
+│   │   │   ├── budget.py   spending against a budget you wrote, by month
+│   │   │   ├── test_budget.py
+│   │   │   └── README.md
+│   │   ├── car/
+│   │   │   ├── car.py   a car's jobs, costs and what's due
+│   │   │   ├── test_car.py
+│   │   │   └── README.md
+│   │   ├── coming-up/
+│   │   │   ├── coming_up.py  dates in your files in the next few days
+│   │   │   ├── test_coming_up.py
+│   │   │   └── README.md
+│   │   ├── debts/
+│   │   │   ├── debts.py      lines speaking of money owed, dated and cited, the sum as written, never netted
+│   │   │   ├── test_debts.py
+│   │   │   └── README.md
+│   │   ├── digest/
+│   │   │   ├── digest.py     one page of what waits on you, gone stale, coming up; writes nothing
+│   │   │   ├── test_digest.py
+│   │   │   └── README.md
+│   │   ├── foia/
+│   │   │   ├── foia.py   requests sent, answers and when they are due by law
+│   │   │   ├── test_foia.py
+│   │   │   └── README.md
+│   │   ├── food-log/
+│   │   │   ├── food_log.py   What you ate, from your notes, by day
+│   │   │   ├── test_food_log.py
+│   │   │   └── README.md     its card
+│   │   ├── gaps/
+│   │   │   ├── gaps.py       where a log you keep stops: the days it skipped, said as gaps
+│   │   │   ├── test_gaps.py
+│   │   │   └── README.md
+│   │   ├── garden/
+│   │   │   ├── garden.py   what was planted and harvested, season by season
+│   │   │   ├── test_garden.py
+│   │   │   └── README.md
+│   │   ├── gradebook/
+│   │   │   ├── gradebook.py   students' marks, and who is falling behind
+│   │   │   ├── test_gradebook.py
+│   │   │   └── README.md
+```
+
+#### adapters/stdlib/, from habits/
+
+```
+│   │   ├── habits/
+│   │   │   ├── habits.py     streaks from the short lines written day after day, runs and misses by plain counting
+│   │   │   ├── test_habits.py
+│   │   │   └── README.md
+│   │   ├── home-upkeep/
+│   │   │   ├── home_upkeep.py   what's due at home and when it was last done
+│   │   │   ├── test_home_upkeep.py
+│   │   │   └── README.md
+│   │   ├── hours/
+│   │   │   ├── hours.py   hours worked or volunteered, per client
+│   │   │   ├── test_hours.py
+│   │   │   └── README.md
+│   │   ├── job-hunt/
+│   │   │   ├── job_hunt.py   applications sent, replies and who you're waiting on
+│   │   │   ├── test_job_hunt.py
+│   │   │   └── README.md
+│   │   ├── lending/
+│   │   │   ├── lending.py    what you lent, and what your files say came back
+│   │   │   ├── test_lending.py
+│   │   │   └── README.md
+│   │   ├── lesson-time/
+│   │   │   ├── lesson_time.py   lesson plans whose timed parts do not add up to the time they say
+│   │   │   ├── test_lesson_time.py
+│   │   │   └── README.md
+│   │   ├── livestock/
+│   │   │   ├── livestock.py   each animal's births, treatments and sales
+│   │   │   ├── test_livestock.py
+│   │   │   └── README.md
+│   │   ├── mileage/
+│   │   │   ├── mileage.py   miles driven for work, by tax year
+│   │   │   ├── test_mileage.py
+│   │   │   └── README.md
+│   │   ├── minutes/
+│   │   │   ├── minutes.py   decisions and actions from meeting minutes
+│   │   │   ├── test_minutes.py
+│   │   │   └── README.md
+│   │   ├── mood/
+│   │   │   ├── mood.py   mood scores over weeks and months
+│   │   │   ├── test_mood.py
+│   │   │   └── README.md
+│   │   ├── pets/
+│   │   │   ├── pets.py   each pet's care and what's due
+│   │   │   ├── test_pets.py
+│   │   │   └── README.md
+│   │   ├── reading-log/
+│   │   │   ├── reading_log.py   books, pages and minutes read, week by week
+│   │   │   ├── test_reading_log.py
+│   │   │   └── README.md
+│   │   ├── renewals/
+│   │   │   ├── renewals.py   when each thing expires, from lines saying an expiry word and their own date
+│   │   │   ├── test_renewals.py
+│   │   │   └── README.md
+```
+
+#### adapters/stdlib/, from subscriptions/
+
+```
+│   │   ├── subscriptions/
+│   │   │   ├── subscriptions.py   payments that come round monthly or yearly, and when next
+│   │   │   ├── test_subscriptions.py
+│   │   │   └── README.md
+│   │   ├── syllabus/
+│   │   │   ├── syllabus.py   readings, assignments and exams as dates
+│   │   │   ├── test_syllabus.py
+│   │   │   └── README.md
+│   │   ├── todo/
+│   │   │   ├── todo.py       things marked to do, oldest first
+│   │   │   ├── test_todo.py
+│   │   │   └── README.md
+│   │   ├── warranties/
+│   │   │   ├── warranties.py   when a cover ends, and where its receipt is
+│   │   │   ├── test_warranties.py
+│   │   │   └── README.md
+```
+
+### adapters/stdlib/: Keeping track: What it makes for elsewhere
+
+```
+│   │   ├── policy-watch/
+│   │   │   ├── policy_watch.py  a policy page fetched each run, and what changed since, sentence by sentence
+│   │   │   ├── test_policy_watch.py
+│   │   │   └── README.md
+```
+
+### adapters/stdlib/: Keeping track: Tools you run yourself
+
+```
+│   │   ├── flashcards/
+│   │   │   ├── flashcards.py  sealed approvals as cards, scheduled by FSRS-5 replayed from review rows
+│   │   │   ├── test_flashcards.py
+│   │   │   └── README.md
+│   │   ├── forecasts/
+│   │   │   ├── forecasts.py  a wager before the outcome, settled by your seal, scored by Brier
+│   │   │   ├── test_forecasts.py
+│   │   │   └── README.md
+│   │   ├── handover/
+│   │   │   ├── handover.py   Where one project stands, to hand on, from what its runs kept
+│   │   │   ├── test_handover.py
+│   │   │   └── README.md     its card
+│   │   ├── invoices/
+│   │   │   ├── invoices.py   invoices you sent, paid only when a line names the number as paid; the rest overdue first
+│   │   │   ├── test_invoices.py
+│   │   │   └── README.md
+│   │   ├── log-kit/
+│   │   │   ├── log_kit.py    the engine the logs share: dated lines read by a short spec, so a new log is a spec, not code
+│   │   │   ├── test_log_kit.py
+│   │   │   └── README.md     its card
+│   │   ├── market-calls/
+│   │   │   ├── market_calls.py  market calls as wagers, closed by the closes you type, settled by your seal, losers kept
+│   │   │   ├── test_market_calls.py
+│   │   │   └── README.md
+│   │   ├── milestones/
+│   │   │   ├── milestones.py   a child's firsts and measurements, by age
+│   │   │   ├── test_milestones.py
+│   │   │   └── README.md
+│   │   ├── nightstand/
+│   │   │   ├── nightstand.py  things set down, one bite picked up: one in hand, a bite every time, nothing deleted
+│   │   │   ├── test_nightstand.py
+│   │   │   └── README.md
+│   │   ├── predict/
+│   │   │   ├── predict.py    what a question will come to, on the record before it is asked, graded after
+│   │   │   ├── test_predict.py
+│   │   │   └── README.md
+│   │   ├── projects/
+│   │   │   ├── projects.py   Every project under one folder: its records, its stacks, and each stack's runs, so you can see what there is to go back to
+│   │   │   ├── test_projects.py
+│   │   │   └── README.md     its card
+│   │   ├── readings/
+│   │   │   ├── readings.py   notes beside an answer: numbers over time, dates gone by
+│   │   │   ├── test_readings.py
+│   │   │   └── README.md     its card: what it adds, uses and never does
+│   │   ├── session-cost/
+│   │   │   ├── session_cost.py  tokens each agent session spent, by day and by repo, priced from a table you keep
+│   │   │   ├── test_session_cost.py
+│   │   │   └── README.md
+│   │   ├── symptoms/
+│   │   │   ├── symptoms.py   one symptom's dated diary, turns marked only where the line says one, each cited
+│   │   │   ├── test_symptoms.py
+│   │   │   └── README.md
+```
+
+### adapters/stdlib/: Trust and proof: What runs on your page
+
+```
+│   │   ├── box-health/
+│   │   │   ├── box_health.py   a box's health in one line: the chain, approvals, files it can't read, the words list, and the last out row
+│   │   │   ├── test_box_health.py
+│   │   │   └── README.md
+│   │   ├── changed/
+│   │   │   ├── changed.py    what's new, edited or deleted since the last check, as fingerprint rows
+│   │   │   ├── test_changed.py
+│   │   │   └── README.md
+│   │   ├── contradictions/
+│   │   │   ├── contradictions.py  two lines saying the same thing with a different date or amount, side by side
+│   │   │   ├── test_contradictions.py
+│   │   │   └── README.md
+│   │   ├── export/
+│   │   │   ├── export.py     approved answers and the question log, as Markdown or CSV
+│   │   │   ├── test_export.py
+│   │   │   └── README.md
+│   │   ├── fixity/
+│   │   │   ├── fixity.py     files hashed again now and then; a hash that moved with no newer mtime is rot
+│   │   │   ├── test_fixity.py
+│   │   │   └── README.md
+│   │   ├── history/
+│   │   │   ├── history.py    your record in plain sentences, places and counts, never the words
+│   │   │   ├── test_history.py
+│   │   │   └── README.md
+│   │   ├── ids/
+│   │   │   ├── ids.py        each file and passage by its Software Heritage ID and one-chunk IPFS CID
+│   │   │   ├── test_ids.py
+│   │   │   └── README.md
+│   │   ├── licenses/
+│   │   │   ├── licenses.py   the licence of every installed Python and npm package, and which are copyleft, by file and line
+│   │   │   ├── test_licenses.py
+│   │   │   └── README.md
+│   │   ├── pair-drift/
+│   │   │   ├── pair_drift.py   figures a summary says that its full text does not
+│   │   │   ├── test_pair_drift.py
+│   │   │   └── README.md
+│   │   ├── stale/
+│   │   │   ├── stale.py      approved answers whose cited passage changed or went
+│   │   │   ├── test_stale.py
+│   │   │   └── README.md
+│   │   ├── weakest-link/
+│   │   │   ├── weakest_link.py  each approved answer worth its weakest cited input: measured, fitted, assumed or unmarked
+│   │   │   ├── test_weakest_link.py
 │   │   │   └── README.md
 │   │   ├── xref/
 │   │   │   ├── xref.py       each link and file:line in your files checked, still there
 │   │   │   ├── test_xref.py
 │   │   │   └── README.md
+```
+
+### adapters/stdlib/: Trust and proof: What it makes for elsewhere
+
+```
+│   │   ├── backup/
+│   │   │   ├── backup.py     your record in one zip, every byte and the chain checked; never the key
+│   │   │   ├── test_backup.py
+│   │   │   └── README.md
+│   │   ├── in-toto/
+│   │   │   ├── in_toto.py   each approved answer as an in-toto Statement, its subject hashed from the file written
+│   │   │   ├── test_in_toto.py
+│   │   │   └── README.md
+│   │   ├── jeles/
+│   │   │   ├── jeles.py      Jeles' nuggets as passages, and your approved answers as Jeles nuggets, paired by question hash
+│   │   │   ├── test_jeles.py
+│   │   │   └── README.md
+│   │   ├── merkle/
+│   │   │   ├── merkle.py     a Merkle tree over the record: one row proven with a handful of hashes
+│   │   │   ├── test_merkle.py
+│   │   │   └── README.md
+│   │   ├── nestor/
+│   │   │   ├── nestor.py     answers a person has checked in Nestor, from a copy of its store
+│   │   │   ├── test_nestor.py
+│   │   │   └── README.md
+│   │   ├── prov/
+│   │   │   ├── prov.py   the record as W3C PROV-JSON: what came from what, by which step, sealed by whom
+│   │   │   ├── test_prov.py
+│   │   │   └── README.md
+│   │   ├── ro-crate/
+│   │   │   ├── ro_crate.py   a box snapshot as an RO-Crate zip: every file with its SHA-256, size, kind and licence, and the record's tip pinned
+│   │   │   ├── test_ro_crate.py
+│   │   │   └── README.md
+│   │   ├── timeline/
+│   │   │   ├── timeline.py   one matter's lines by date, each cited, written to one file
+│   │   │   ├── test_timeline.py
+│   │   │   └── README.md
+│   │   ├── tip-pin/
+│   │   │   ├── tip_pin.py    where the record ends, pinned outside the box; found cut short or rewritten
+│   │   │   ├── test_tip_pin.py
+│   │   │   └── README.md
+│   │   ├── wayback/
+│   │   │   ├── wayback.py    the Wayback Machine's copy of a page, saved and compared byte for byte
+│   │   │   ├── test_wayback.py
+│   │   │   └── README.md
+```
+
+### adapters/stdlib/: Trust and proof: Tools you run yourself
+
+```
+│   │   ├── claim-check/
+│   │   │   ├── claim_check.py  a claim, part by part: what holds it all, some of it, and what no file names
+│   │   │   ├── test_claim_check.py
+│   │   │   └── README.md
+│   │   ├── decisions/
+│   │   │   ├── decisions.py  a yes and a no with their reasons, a never told from a not-yet, asked about a new question
+│   │   │   ├── test_decisions.py
+│   │   │   └── README.md
+│   │   ├── diverge/
+│   │   │   ├── diverge.py    where two copies part: records by row, files, then the first line
+│   │   │   ├── test_diverge.py
+│   │   │   └── README.md
+│   │   ├── format-rot/
+│   │   │   ├── format_rot.py  files in formats that may stop opening, flagged while you can still convert them
+│   │   │   ├── test_format_rot.py
+│   │   │   └── README.md
+│   │   ├── restore-drill/
+│   │   │   ├── restore_drill.py  a backup zip restored into scratch; the chain and every file checked there
+│   │   │   ├── test_restore_drill.py
+│   │   │   └── README.md
+│   │   ├── session-seal/
+│   │   │   ├── session_seal.py one seal over a session's rows, proposed through the kernel
+│   │   │   ├── test_session_seal.py
+│   │   │   └── README.md
+│   │   ├── thesis/
+│   │   │   ├── thesis.py     a document's claims, each against your sources, and the ones no passage holds
+│   │   │   ├── test_thesis.py
+│   │   │   └── README.md
+│   │   ├── three-two-one/
+│   │   │   ├── three_two_one.py  how many verified copies of the record exist, held to three, two kinds, one away
+│   │   │   ├── test_three_two_one.py
+│   │   │   └── README.md
+│   │   ├── weights-pin/
+│   │   │   ├── weights_pin.py  a weights file held to the SHA-256 and size on its model card before it runs
+│   │   │   ├── test_weights_pin.py
+│   │   │   └── README.md
+```
+
+### adapters/stdlib/: Privacy and safety: What runs on your page
+
+```
+│   │   ├── a11y-check/
+│   │   │   ├── a11y_check.py what trips a screen reader in the documents: images without descriptions, headings out of order
+│   │   │   ├── test_a11y_check.py
+│   │   │   └── README.md
+│   │   ├── advisories/
+│   │   │   ├── advisories.py locked dependencies matched to a downloaded OSV advisory database, offline
+│   │   │   ├── test_advisories.py
+│   │   │   └── README.md
+│   │   ├── install-scripts/
+│   │   │   ├── install_scripts.py  the install scripts node_modules would run (preinstall, install, postinstall), by file and line
+│   │   │   ├── test_install_scripts.py
+│   │   │   └── README.md
+│   │   ├── outdated/
+│   │   │   ├── outdated.py   how old each locked dependency is, and which are yanked, deprecated or unmaintained
+│   │   │   ├── test_outdated.py
+│   │   │   └── README.md
+│   │   ├── package-contents/
+│   │   │   ├── package_contents.py   what a wheel, sdist, npm tarball or crate holds, and the code it runs on install, by file and line
+│   │   │   ├── test_package_contents.py
+│   │   │   └── README.md
+│   │   ├── pii-audit/
+│   │   │   ├── pii_audit.py  the personal numbers in the files, checked never guessed, shown masked
+│   │   │   ├── test_pii_audit.py
+│   │   │   └── README.md
+│   │   ├── risky-code/
+│   │   │   ├── risky_code.py  lines of code matching a known-dangerous pattern, by file and line, as leads to read
+│   │   │   ├── test_risky_code.py
+│   │   │   └── README.md
+│   │   ├── secrets-audit/
+│   │   │   ├── secrets_audit.py passwords, keys and card numbers in plain files, by file and line
+│   │   │   ├── test_secrets_audit.py
+│   │   │   └── README.md
+│   │   ├── sent-log/
+│   │   │   ├── sent_log.py    which passages went to which model and where, from what the record holds; says what it can't see
+│   │   │   ├── test_sent_log.py
+│   │   │   └── README.md
+│   │   ├── typosquat/
+│   │   │   ├── typosquat.py  dependency names a letter off a popular one, checked against a top-packages list
+│   │   │   ├── test_typosquat.py
+│   │   │   └── README.md
+```
+
+### adapters/stdlib/: Privacy and safety: What guards it
+
+```
+│   │   ├── privacy/
+│   │   │   ├── privacy.py    personal data and keys withheld from what a question prints
+│   │   │   ├── test_privacy.py
+│   │   │   └── README.md
+```
+
+### adapters/stdlib/: Privacy and safety: What it makes for elsewhere
+
+```
+│   │   ├── scrub/
+│   │   │   ├── scrub.py   a copy of a JPEG, PNG, docx, xlsx or pptx without its Exif, author, times and edit history, and what was taken out
+│   │   │   ├── test_scrub.py
+│   │   │   └── README.md
+│   │   ├── transcript-redact/
+│   │   │   ├── transcript_redact.py  a transcript's keys, home paths and emails taken out, each removal listed
+│   │   │   ├── test_transcript_redact.py
+│   │   │   └── README.md
+```
+
+### adapters/stdlib/: Assistants: What runs on your page
+
+```
+│   │   ├── instruction-files/
+│   │   │   ├── instruction_files.py   which instruction files each coding agent would load for a folder, in order, with size and hash
+│   │   │   ├── test_instruction_files.py
+│   │   │   └── README.md
+```
+
+### adapters/stdlib/: Assistants: Models that suggest answers
+
+```
+│   │   ├── local-model/
+│   │   │   ├── local_model.py  suggestions from a model on this machine only, finding the server and model running
+│   │   │   ├── test_local_model.py
+│   │   │   └── README.md
+│   │   ├── mcp-sampling/
+│   │   │   ├── mcp_sampling.py suggestions from the model your MCP client already runs, through MCP sampling: no model or key of willow's
+│   │   │   ├── test_mcp_sampling.py
+│   │   │   └── README.md     its card
+│   │   ├── night-batch/
+│   │   │   ├── night_batch.py  waiting questions asked of a local model in one run, stopped once you're back
+│   │   │   ├── test_night_batch.py
+│   │   │   └── README.md
+│   │   ├── openai-compatible/
+│   │   │   ├── openai_compatible.py  a model at any OpenAI-compatible endpoint suggests from the passages served, held for your seal
+│   │   │   ├── test_openai_compatible.py
+│   │   │   └── README.md
+│   │   ├── translate/
+│   │   │   ├── translate.py  an answer you sealed, translated on this machine, held for your seal beside the original
+│   │   │   ├── test_translate.py
+│   │   │   └── README.md
+```
+
+### adapters/stdlib/: Assistants: Checking a model before you trust it
+
+```
+│   │   ├── assistant-scores/
+│   │   │   ├── assistant_scores.py How often each assistant's suggestions were sealed or set aside, from the record
+│   │   │   ├── test_assistant_scores.py
+│   │   │   └── README.md     its card
+│   │   ├── model-card/
+│   │   │   ├── model_card.py  a card naming the model behind an assistant, its SHA-256 on the record
+│   │   │   ├── test_model_card.py
+│   │   │   └── README.md
+│   │   ├── model-drift/
+│   │   │   ├── model_drift.py  your frozen questions asked again, flagging answers that changed under the same name and card
+│   │   │   ├── test_model_drift.py
+│   │   │   └── README.md
+│   │   ├── model-exam/
+│   │   │   ├── model_exam.py  a model scored against the answers you sealed, your questions as its exam
+│   │   │   ├── test_model_exam.py
+│   │   │   └── README.md
+│   │   ├── model-fit/
+│   │   │   ├── model_fit.py  the memory, CPU, GPUs and NPUs this machine has, and where a model of a given size fits
+│   │   │   ├── test_model_fit.py
+│   │   │   └── README.md
+│   │   ├── model-shelf/
+│   │   │   ├── model_shelf.py  every model on this machine, from each runtime's own folder, with its quantization and hash
+│   │   │   ├── test_model_shelf.py
+│   │   │   └── README.md
+│   │   ├── quantized/
+│   │   │   ├── quantized.py  the smallest local model that still passes your sealed questions
+│   │   │   ├── test_quantized.py
+│   │   │   └── README.md
+│   │   ├── same-way/
+│   │   │   ├── same_way.py  a local model asked each question several times, and how often its answer flips
+│   │   │   ├── test_same_way.py
+│   │   │   └── README.md
+│   │   ├── weights-card/
+│   │   │   ├── weights_card.py  a model card from a GGUF or safetensors file's own header, with the file's SHA-256
+│   │   │   ├── test_weights_card.py
+│   │   │   └── README.md
+```
+
+### adapters/stdlib/: Assistants: In your editor
+
+```
+│   │   ├── copilot/
+│   │   │   ├── copilot.py        the mcp.json lines that register mcp-lite with Copilot, in VS Code and its CLI
+│   │   │   ├── test_copilot.py
+│   │   │   └── README.md
+│   │   ├── cursor/
+│   │   │   ├── cursor.py         the mcp.json lines that register mcp-lite with Cursor
+│   │   │   ├── test_cursor.py
+│   │   │   └── README.md
+│   │   ├── windsurf/
+│   │   │   ├── windsurf.py       the mcp_config.json lines that register mcp-lite with Windsurf
+│   │   │   ├── test_windsurf.py
+│   │   │   └── README.md
 │   │   ├── zed/
 │   │   │   ├── zed.py            the settings.json lines that register mcp-lite with Zed
 │   │   │   ├── test_zed.py
 │   │   │   └── README.md
-│   │   └── zotero/
-│   │       ├── zotero.py   a copy of zotero.sqlite: each item, note and PDF annotation, with its citation
-│   │       ├── test_zotero.py
+```
+
+### adapters/stdlib/: Assistants: With an AI assistant
+
+```
+│   │   ├── aider/
+│   │   │   ├── aider.py          the /run line that brings answers into Aider's chat
+│   │   │   ├── test_aider.py
+│   │   │   └── README.md
+│   │   ├── claude-code/
+│   │   │   ├── hook.py           Claude Code's prompt hook: cited passages at each prompt; setup prints it
+│   │   │   ├── test_hook.py
+│   │   │   └── README.md
+│   │   ├── codex-cli/
+│   │   │   ├── codex_cli.py      the config.toml lines that register mcp-lite with Codex CLI
+│   │   │   ├── test_codex_cli.py
+│   │   │   └── README.md
+│   │   ├── gemini-cli/
+│   │   │   ├── gemini_cli.py     the settings.json lines that register mcp-lite with Gemini CLI
+│   │   │   ├── test_gemini_cli.py
+│   │   │   └── README.md
+│   │   ├── hosts/
+│   │   │   ├── hosts.py          one table of assistants that take an MCP server, and the lines that register willow with each
+│   │   │   ├── test_hosts.py
+│   │   │   └── README.md
+│   │   ├── mcp-lite/
+│   │   │   ├── server.py         the mcp add-on's three tools, the protocol by hand, nothing to install
+│   │   │   ├── test_server.py
+│   │   │   └── README.md
+│   │   ├── opencode/
+│   │   │   ├── opencode.py       the opencode.json lines that register mcp-lite with OpenCode
+│   │   │   ├── test_opencode.py
+│   │   │   └── README.md
+```
+
+### adapters/stdlib/: Assistants: What guards it
+
+```
+│   │   ├── hook-compact/
+│   │   │   ├── hook_compact.py   what the record holds open, before a summary
+│   │   │   ├── test_hook_compact.py
+│   │   │   └── README.md
+│   │   ├── hook-errors/
+│   │   │   ├── hook_errors.py each failed command kept as a row, so the third time it fails it's named, not retried blind
+│   │   │   ├── test_hook_errors.py
+│   │   │   └── README.md     its card
+│   │   ├── hook-fail-closed/
+│   │   │   ├── hook_fail_closed.py a hook that crashes, hangs or says what can't be read blocks the tool
+│   │   │   ├── test_hook_fail_closed.py
+│   │   │   └── README.md
+│   │   ├── hook-feedback/
+│   │   │   ├── hook_feedback.py your corrections to an assistant caught at each prompt and handed in through propose, to keep or drop
+│   │   │   ├── test_hook_feedback.py
+│   │   │   └── README.md     its card
+│   │   ├── hook-fuzz/
+│   │   │   ├── hook_fuzz.py      bad input thrown at a hook, and each one that breaks it named
+│   │   │   ├── test_hook_fuzz.py
+│   │   │   └── README.md
+│   │   ├── hook-guard/
+│   │   │   ├── hook_guard.py   refuses a call that reads the key or writes the box
+│   │   │   ├── test_hook_guard.py
+│   │   │   └── README.md
+│   │   ├── hook-handoff/
+│   │   │   ├── hook_handoff.py a Stop hook that writes where the session ended, for the next session's first prompt
+│   │   │   ├── test_hook_handoff.py
+│   │   │   └── README.md     its card
+│   │   ├── hook-impact/
+│   │   │   ├── hook_impact.py   hands over the places that name a file before it is edited
+│   │   │   ├── test_hook_impact.py
+│   │   │   └── README.md
+│   │   ├── hook-leaks/
+│   │   │   ├── hook_leaks.py   a PreToolUse hook that refuses a write or command holding a key, password or card number, naming only the kind
+│   │   │   ├── test_hook_leaks.py
+│   │   │   └── README.md
+│   │   ├── hook-pin/
+│   │   │   ├── hook_pin.py       a hook runs only as the bytes you approved, pinned on the record
+│   │   │   ├── test_hook_pin.py
+│   │   │   └── README.md
+│   │   ├── hook-read-first/
+│   │   │   ├── hook_read_first.py refuses an edit to a file the assistant hasn't read this session, or that changed since
+│   │   │   ├── test_hook_read_first.py
+│   │   │   └── README.md     its card
+│   │   ├── hook-replay/
+│   │   │   ├── hook_replay.py    every hook answer a row of hashes, and each one run again
+│   │   │   ├── test_hook_replay.py
+│   │   │   └── README.md
+│   │   ├── hook-shell/
+│   │   │   ├── hook_shell.py   a command split as the shell splits it, quotes, variables and chains included, before a rule judges it
+│   │   │   ├── test_hook_shell.py
+│   │   │   └── README.md
+```
+
+#### adapters/stdlib/, from hook-start/
+
+```
+│   │   ├── hook-start/
+│   │   │   ├── hook_start.py   a SessionStart hook that tells the assistant what waits on the person, read the way digest reads it
+│   │   │   ├── test_hook_start.py
+│   │   │   └── README.md
+│   │   ├── hook-stop/
+│   │   │   ├── hook_stop.py   a Stop hook: the record verifies and the work is committed
+│   │   │   ├── test_hook_stop.py
+│   │   │   └── README.md
+│   │   ├── hooks-elsewhere/
+│   │   │   ├── hooks_elsewhere.py The prompt hook for Gemini CLI, Codex and opencode, wherever they take hooks, held to Claude Code's answer byte for byte
+│   │   │   ├── test_hooks_elsewhere.py
+│   │   │   └── README.md     its card
+│   │   ├── serve/
+│   │   │   ├── serve.py       the one markdown file a model reads: only a human-sealed scope, pooled, peaks first, by unguessable ids
+│   │   │   ├── test_serve.py
+│   │   │   └── README.md
+```
+
+### adapters/stdlib/: Assistants: What it makes for elsewhere
+
+```
+│   │   ├── folder-card/
+│   │   │   ├── folder_card.py  a card for your folder: its files, dates and gaps, with your notes, written to a file
+│   │   │   ├── test_folder_card.py
+│   │   │   └── README.md
+```
+
+### adapters/stdlib/: Assistants: Tools you run yourself
+
+```
+│   │   ├── persona-card/
+│   │   │   ├── persona_card.py  a persona card compiled to the same prompt bytes; the hash on the record
+│   │   │   ├── test_persona_card.py
+│   │   │   └── README.md
+```
+
+### adapters/stdlib/: Ways to use it: What runs on your page
+
+```
+│   │   ├── deep-links/
+│   │   │   ├── deep_links.py   each answer as links that open the file at the line: an RFC 5147 file link and a browser text-fragment web link
+│   │   │   ├── test_deep_links.py
+│   │   │   └── README.md
+```
+
+### adapters/stdlib/: Ways to use it: In your terminal
+
+```
+│   │   ├── pipe/
+│   │   │   ├── pipe.py           questions in, one answer a line out: JSON lines, or grep's file:line: text
+│   │   │   ├── test_pipe.py
+│   │   │   └── README.md
+│   │   ├── plain/
+│   │   │   ├── plain.py      the kernel's answer as sentences
+│   │   │   ├── test_plain.py
+│   │   │   └── README.md
+│   │   ├── shell/
+│   │   │   ├── shell.py          a willow command and tab completion for bash, zsh, fish, PowerShell and cmd
+│   │   │   ├── test_shell.py
+│   │   │   └── README.md
+│   │   ├── start/
+│   │   │   ├── start.py      set up in one step: the box, the key and the starter words, then what next
+│   │   │   ├── test_start.py
+│   │   │   └── README.md
+```
+
+### adapters/stdlib/: Ways to use it: In your editor
+
+```
+│   │   ├── emacs/
+│   │   │   ├── emacs.py          an M-x willow command: answers in a grep-mode buffer
+│   │   │   ├── test_emacs.py
+│   │   │   └── README.md
+│   │   ├── jetbrains/
+│   │   │   ├── jetbrains.py      an external tool for JetBrains IDEs: answers as links to file and line
+│   │   │   ├── test_jetbrains.py
+│   │   │   └── README.md
+│   │   ├── vim/
+│   │   │   ├── vim.py            a :Willow command: answers in the quickfix list
+│   │   │   ├── test_vim.py
+│   │   │   └── README.md
+│   │   ├── vscode/
+│   │   │   ├── vscode.py         a VS Code task: answers in the Problems panel
+│   │   │   ├── test_vscode.py
+│   │   │   └── README.md
+```
+
+### adapters/stdlib/: Ways to use it: In your browser or on your desktop
+
+```
+│   │   ├── browse/
+│   │   │   ├── browse.py     your folder in your browser, on 127.0.0.1: ask, read, approve with a click
+│   │   │   ├── test_browse.py
+│   │   │   └── README.md
+│   │   ├── launcher/
+│   │   │   ├── launcher.py   ask from a launcher, passages with file and line
+│   │   │   ├── test_launcher.py
+│   │   │   └── README.md
+```
+
+### adapters/stdlib/: Ways to use it: Several add-ons at once
+
+```
+│   │   ├── across/
+│   │   │   ├── across.py     one document across several boxes: each box's digest, export, timeline or readings, composed
+│   │   │   ├── test_across.py
+│   │   │   └── README.md
+│   │   ├── stack/
+│   │   │   ├── stack.py       one document from a stack of add-on steps over a box, pooled and peaks-first
+│   │   │   ├── test_stack.py
+│   │   │   ├── example.md
+│   │   │   ├── examples/      stacks to start from, one kind of folder each: a choir, a smallholding, a code library, a class, a story...
+│   │   │   │   ├── choir.md
+│   │   │   │   ├── comeback.md
+│   │   │   │   ├── export.md
+│   │   │   │   ├── foster.md
+│   │   │   │   ├── hands.md  what the add-ons hand to an assistant's model
+│   │   │   │   ├── maintainer.md
+│   │   │   │   ├── reporter.md
+│   │   │   │   ├── repos.md
+│   │   │   │   ├── smallholding.md
+│   │   │   │   └── teacher.md
+│   │   │   └── README.md
+│   │   ├── stack-share/
+│   │   │   ├── stack_share.py a stack you sealed with the Forge, written out to share: your sentence, each choice and why, the stack
+│   │   │   ├── test_stack_share.py
+│   │   │   └── README.md     its card
+```
+
+### adapters/stdlib/: Ways to use it: What it makes for elsewhere
+
+```
+│   │   ├── annotations/
+│   │   │   ├── annotations.py   approved answers as W3C Web Annotations: the answer as the body, each cited passage as a target with its lines and words
+│   │   │   ├── test_annotations.py
+│   │   │   └── README.md
+│   │   ├── badge/
+│   │   │   ├── badge.py   an SVG badge of the record's counts: answers approved, the files they came from, and whether it holds
+│   │   │   ├── test_badge.py
+│   │   │   └── README.md
+│   │   ├── braille/
+│   │   │   ├── braille.py   approved answers as a BRF: uncontracted English braille ASCII in lines of cells and pages, for a display or an embosser
+│   │   │   ├── test_braille.py
+│   │   │   └── README.md
+│   │   ├── calendar-out/
+│   │   │   ├── calendar_out.py   the dates coming up as an .ics file: an all-day event for each, the line as its title and the file and line as its description
+│   │   │   ├── test_calendar_out.py
+│   │   │   └── README.md
+│   │   ├── capture/
+│   │   │   ├── capture.py   a note written into your folder as one paragraph with its type and tags
+│   │   │   ├── test_capture.py
+│   │   │   └── README.md
+│   │   ├── cloudevents/
+│   │   │   ├── cloudevents.py   the record's rows as CloudEvents 1.0 JSON events, one a line, the id each row's own hash
+│   │   │   ├── test_cloudevents.py
+│   │   │   └── README.md
+│   │   ├── llms-txt/
+│   │   │   ├── llms_txt.py   an llms.txt written from a folder's text files, and a checker for one
+│   │   │   ├── test_llms_txt.py
+│   │   │   └── README.md
+│   │   ├── make-it-so/
+│   │   │   ├── make_it_so.py   an order held for you with the passages it rests on, never run; a check they still stand
+│   │   │   ├── test_make_it_so.py
+│   │   │   └── README.md
+│   │   ├── print/
+│   │   │   ├── print.py      an answer as a page to print, with its sources; --large for big type
+│   │   │   ├── test_print.py
+│   │   │   └── README.md
+│   │   ├── repo-pile/
+│   │   │   ├── repo_pile.py  public repos made into a box: cloned, licence-gated, their docs the pile, indexed
+│   │   │   ├── test_repo_pile.py
+│   │   │   └── README.md
+│   │   ├── rss-out/
+│   │   │   ├── rss_out.py   your approved answers as an RSS 2.0 feed, newest first, an item for each
+│   │   │   ├── test_rss_out.py
+│   │   │   └── README.md
+│   │   ├── share/
+│   │   │   ├── share.py         sealed answers packed for someone, signed, received, forwarded in layers, corrected, and witnessed
+│   │   │   ├── ed25519.py       Ed25519 signatures (RFC 8032) in the standard library
+│   │   │   ├── test_share.py
+│   │   │   └── README.md
+```
+
+### adapters/stdlib/: Play: What runs on your page
+
+```
+│   │   ├── pile-poetry/
+│   │   │   ├── pile_poetry.py   verse from your own word pairs
+│   │   │   ├── test_pile_poetry.py
+│   │   │   └── README.md
+```
+
+### adapters/stdlib/: Play: Tools you run yourself
+
+```
+│   │   ├── catgrid/
+│   │   │   ├── catgrid.py    a seeded logic grid with one answer, played on the record; check plays every game again
+│   │   │   ├── test_catgrid.py
+│   │   │   └── README.md
+│   │   ├── daily-word/
+│   │   │   ├── daily_word.py the day's word from the folder's own words, six guesses marked on the record
+│   │   │   ├── test_daily_word.py
+│   │   │   └── README.md
+│   │   ├── dice/
+│   │   │   ├── dice.py       dice rolled on the record, seeded by its tip; check throws every roll again
+│   │   │   ├── test_dice.py
+│   │   │   └── README.md
+│   │   ├── dice5e/
+│   │   │   ├── dice5e.py     4d6kh3, adv and dis on the record, seeded as dice is; check throws every roll again
+│   │   │   ├── test_dice5e.py
+│   │   │   └── README.md
+│   │   ├── game-master/
+│   │   │   ├── game_master.py  a world played beat by beat: 2d6 rolls on the record, rulings that move only on your seal
+│   │   │   ├── test_game_master.py
+│   │   │   └── README.md
+│   │   ├── horoscope/
+│   │   │   ├── horoscope.py  a daily reading picked by the SHA-256 of name and date
+│   │   │   ├── test_horoscope.py
+│   │   │   └── README.md
+│   │   ├── life/
+│   │   │   ├── life.py       Conway's Game of Life as one row; check plays it again
+│   │   │   ├── test_life.py
+│   │   │   └── README.md
+│   │   ├── odds/
+│   │   │   ├── odds.py       exact odds for any dice, as fractions
+│   │   │   ├── test_odds.py
+│   │   │   └── README.md
+│   │   ├── oracle-text/
+│   │   │   ├── oracle_text.py   readings from a Tracery grammar, replayable
+│   │   │   ├── test_oracle_text.py
+│   │   │   └── README.md
+│   │   ├── quiz/
+│   │   │   ├── quiz.py       a passage of your own writing with a word missing, cut and scored on the record
+│   │   │   ├── test_quiz.py
+│   │   │   └── README.md
+│   │   ├── tarot/
+│   │   │   ├── tarot.py      a tarot spread dealt by the record's tip, replayable by anyone, meaning nothing by itself
+│   │   │   ├── test_tarot.py
+│   │   │   └── README.md
+```
+
+### adapters/stdlib/: For maintainers: What runs on your page
+
+```
+│   │   ├── agents-md-check/
+│   │   │   ├── agents_md_check.py   the commands and paths AGENTS.md, CLAUDE.md, GEMINI.md or copilot-instructions.md name that the repo no longer has
+│   │   │   ├── test_agents_md_check.py
+│   │   │   └── README.md
+│   │   ├── pins/
+│   │   │   ├── pins.py       version ranges in package.json or requirements.txt that no lockfile pins
+│   │   │   ├── test_pins.py
+│   │   │   └── README.md
+```
+
+### adapters/stdlib/: For maintainers: Tools you run yourself
+
+```
+│   │   ├── bench/
+│   │   │   ├── bench.py       how fast the kernel reads and ranks piles of set sizes, per release
+│   │   │   ├── test_bench.py
+│   │   │   └── README.md
+│   │   ├── bot-venv/
+│   │   │   ├── bot_venv.py       does willow-bot's venv, or any named, have what CI needs; the line that runs CI with it
+│   │   │   ├── test_bot_venv.py
+│   │   │   └── README.md
+│   │   ├── ci-cache/
+│   │   │   ├── ci_cache.py    a cache key per ecosystem from a repo's lockfiles, so CI skips the reinstall
+│   │   │   ├── test_ci_cache.py
+│   │   │   └── README.md
+│   │   ├── ci-why/
+│   │   │   ├── ci_why.py     the failing block of a red CI log, plain: the test, the assertion, the line to act on
+│   │   │   ├── test_ci_why.py
+│   │   │   └── README.md
+│   │   ├── mutants/
+│   │   │   ├── mutants.py    breaks each add-on's code on purpose and checks its tests notice
+│   │   │   ├── accepted.json the breaks that change nothing a person could notice, each with why
+│   │   │   ├── test_mutants.py
+│   │   │   └── README.md
+│   │   ├── profile/
+│   │   │   ├── question_profile.py   where a question's time goes: reading the folder, ranking, and the functions the time went to, from cProfile
+│   │   │   ├── test_question_profile.py
+│   │   │   └── README.md
+│   │   ├── slow-tests/
+│   │   │   ├── slow_tests.py each test's time over several runs, the slowest named, any that got slower flagged
+│   │   │   ├── test_slow_tests.py
+│   │   │   └── README.md
+│   │   ├── test-shards/
+│   │   │   ├── shards.py     splits the test run into parts by each test's past time
+│   │   │   ├── test_shards.py
+│   │   │   └── README.md
+```
+
+### adapters/stdlib/: For maintainers: Works on willow itself
+
+```
+│   │   ├── against/
+│   │   │   ├── against.py    a pull request held to the other open ones: the names both add, the files both change
+│   │   │   ├── test_against.py
+│   │   │   └── README.md
+│   │   ├── ci/
+│   │   │   ├── ci.py         this repo's checks as verdict rows on a kernel record
+│   │   │   ├── changelog.py  a change beyond the docs adds its entry to CHANGELOG.md, and names a bug it fixed
+│   │   │   ├── versions.py   each add-on and idea a pull request changes steps its version, once
+│   │   │   ├── bugs.py       makes BUGS.md from the tests marked as known bugs
+│   │   │   ├── whose.py      which commit wrote these lines, or with a host's host.json which pull request
+│   │   │   ├── cores.py      ci.py's run as its shards at once on this machine, a record each, shown together
+│   │   │   ├── alone.py      each add-on's tests in a copy holding only the kernel, the add-on and what its card uses
+│   │   │   ├── guard/
+│   │   │   │   └── sitecustomize.py  holds each add-on to its card while its tests run
+│   │   │   ├── test-times.json  seconds each add-on test file took, to cut the add-ons' tests into even chunks
+│   │   │   ├── test_ci.py    its tests: the same record every run, and every state
+│   │   │   ├── test_guard.py the guard's tests: each broken promise caught
+│   │   │   ├── test_contract.py  what every add-on promises alike, held for all of them
+│   │   │   ├── test_changelog.py  changelog.py's tests: owed, not owed, and in the wrong place
+│   │   │   ├── test_versions.py  versions.py's tests: one step a pull request, a promise never a patch, where new ones start
+│   │   │   ├── test_bugs.py  bugs.py's tests: strict marks only, and the list made from them
+│   │   │   ├── test_whose.py whose.py's tests: commits, merges, squashes, another host, places refused
+│   │   │   ├── test_cores.py cores.py's tests: every gate once across the shards, refusals that run nothing
+│   │   │   ├── test_alone.py alone.py's tests: what a card uses comes along, and leaning on what it doesn't name fails
+│   │   │   ├── reports.py    bringing add-ons onto the report contract in batches: survey, scaffold, check
+│   │   │   ├── test_reports.py  reports.py's tests: --json taken off first, stack's rendering word for word, never twice
+│   │   │   ├── files.py      FILES.md's tree kept to the repo's files, by a script
+│   │   │   ├── test_files.py files.py's tests: each file in its folder's order, gone ones out, the real tree round-tripped
+│   │   │   ├── new.py        an add-on started from its idea on the list
+│   │   │   ├── test_new.py   new.py's tests: the card is the idea, the script refuses, the list and FILES.md kept
+│   │   │   ├── order.py      the lists people add to by hand, kept A to Z by a script
+│   │   │   ├── test_order.py order.py's tests: entries move with their comments, refusals, the repo's own lists A to Z
+│   │   │   ├── made.py       every file the repo makes from its others, made again, or checked
+│   │   │   ├── test_made.py  made.py's tests: each made again in order, what's stale named, the repo's current
+│   │   │   ├── pypi-dates.json  PyPI's dates for each deps floor pin and the rule's release, read by test_ci
+│   │   │   ├── pypi_dates.py PyPI's upload dates for every deps floor pin, kept for the tests
+│   │   │   ├── test_pypi_dates.py  pypi_dates.py's tests: PyPI asked only for what's new, what's missing named
+│   │   │   ├── commands.py   an add-on's line in COMMANDS, found from its own usage lines
+│   │   │   ├── test_commands.py  commands.py's tests: placeholders filled, the contract held, the line placed A to Z
+│   │   │   ├── py39.py       what Python 3.10 and later added, found before CI's 3.9 run does
+│   │   │   ├── test_py39.py  py39.py's tests: what 3.9 lacks named, guarded imports pass, the repo clean
+│   │   │   ├── realdata.py   an add-on run on every demo person's real folder, by a script
+│   │   │   ├── test_realdata.py  realdata.py's tests: a run per person, a traceback fails, a refusal holds
+│   │   │   ├── test_times.py  times.py's tests: JUnit summed by file, unseen kept, gone dropped
+│   │   │   ├── times.py      test-times.json kept to what CI's own run took, by a script
+│   │   │   ├── test_main_run.py main_run.py's tests: a push's own records, the queue's run of its commit, none, gh unreachable
+│   │   │   ├── main_run.py   the green run that holds main's records: its push run, or the queue's run it stood on
+│   │   │   ├── copies.py     the functions add-ons keep their own copy of, and the copies that drifted
+│   │   │   ├── mirrors.py    the mirror contract, checked
+│   │   │   ├── test_copies.py
+│   │   │   ├── test_mirrors.py
+│   │   │   └── README.md     its card: gates, states, the guard and exit codes
+```
+
+#### adapters/stdlib/, from ci-memo/
+
+```
+│   │   ├── ci-memo/
+│   │   │   ├── ci_memo.py    a gate whose inputs' bytes are unchanged keeps its verdict: pin a run's keys, plan the rest
+│   │   │   ├── test_ci_memo.py
+│   │   │   └── README.md
+│   │   ├── github/
+│   │   │   ├── create_pr.py  this branch's pull request: GitHub's part around ready's steps, pushed, opened and numbered, or 42 for what needs you
+│   │   │   ├── github.py     what the repo needs from GitHub: a security report's comment, .github/ held to the repo
+│   │   │   ├── host.json     how GitHub titles the merge of a pull request, for whose.py --host
+│   │   │   ├── test_create_pr.py
+│   │   │   ├── test_github.py
+│   │   │   └── README.md     its card: and .github/ belongs to it
+│   │   ├── live/
+│   │   │   ├── live.py       each way-in add-on run through its real program: works, fails, or not here
+│   │   │   ├── test_live.py
+│   │   │   └── README.md
+│   │   ├── readme/
+│   │   │   ├── groups.py     every add-on's place, the one grouping the UI and the lists share
+│   │   │   ├── readme.py     builds this README's generated sections from the cards
+│   │   │   ├── week.json
+│   │   │   ├── test_groups.py
+│   │   │   ├── test_readme.py
+│   │   │   └── README.md     its card: sections, the draw, what it reads
+│   │   ├── ready/
+│   │   │   ├── ready.py      a pull request's steps run in order, their tidy committed, its body written and its fragment named, on no host
+│   │   │   ├── steps.md      the steps ready runs before a pull request opens and after, as a stack
+│   │   │   ├── test_ready.py
+│   │   │   └── README.md     its card
+│   │   ├── red-on-main/
+│   │   │   ├── red_on_main.py A pull request's failing checks held to main's last run: red there too is not the pull request's, green there is
+│   │   │   ├── test_red_on_main.py
+│   │   │   └── README.md     its card
+│   │   ├── restack/
+│   │   │   ├── restack.py    your branches back on top of main, the repo's own conflicts settled
+│   │   │   ├── test_restack.py
+│   │   │   └── README.md
+│   │   ├── restack-open/
+│   │   │   ├── restack_open.py Every open pull request that conflicts with its base, merged up to it by restack's rules and pushed, or named for a person
+│   │   │   ├── test_restack_open.py
+│   │   │   └── README.md     its card
+│   │   ├── similar/
+│   │   │   ├── similar.py    what's already on the list near a new idea
+│   │   │   ├── test_similar.py
+│   │   │   └── README.md
+│   │   ├── skim/
+│   │   │   ├── skim.py       a made list held to how a person reads it: a heading a screen, a line a look, a name to jump to
+│   │   │   ├── test_skim.py
+│   │   │   └── README.md     its card
+│   │   └── test-impact/
+│   │       ├── impact.py     which of this repo's checks a change can reach, closest first, in ci's gate names
+│   │       ├── test_impact.py
 │   │       └── README.md
+```
+
+#### adapters/, from deps/
+
+```
 │   └── deps/                 add-ons that need something installed
 │       ├── README.md         what one must declare: pins, floors, licences, network
 │       ├── code-shape/
@@ -1380,6 +1752,12 @@ willow/
 │       │   ├── requirements-floor.txt  wordfreq at its floor, also tested
 │       │   ├── test_dialect.py
 │       │   └── README.md
+│       ├── dialect-dates/
+│       │   ├── dialect_dates.py the words your folder uses far more than the world does, dated by first and last appearance
+│       │   ├── requirements-floor.txt
+│       │   ├── requirements.txt
+│       │   ├── test_dialect_dates.py
+│       │   └── README.md     its card
 │       ├── fast-tests/
 │       │   ├── fast_tests.py  the test suite across every core with pytest-xdist, in a fraction of the time
 │       │   ├── requirements.txt  pytest-xdist, pinned
@@ -1411,8 +1789,13 @@ willow/
 │       │   ├── requirements-floor.txt  numpy at its floor, also tested
 │       │   ├── test_latent.py
 │       │   └── README.md
+```
+
+#### adapters/deps/, from llm-cli/
+
+```
 │       ├── llm-cli/
-│       │   ├── llm_cli.py    Suggestions through the llm command, so any model its plugins reach (local or hosted) can hand one in, with llm's own log naming the model
+│       │   ├── llm_cli.py    suggestions through the llm command, from any model its plugins reach, its log naming the model
 │       │   ├── requirements.txt  llm, pinned
 │       │   ├── requirements-floor.txt  llm at its floor, also tested
 │       │   ├── test_llm_cli.py
@@ -1465,6 +1848,19 @@ willow/
 │       │   ├── requirements-floor.txt  ripgrep at its floor, also tested
 │       │   ├── test_ripgrep.py
 │       │   └── README.md
+```
+
+#### adapters/deps/, from robinhood/
+
+```
+│       ├── robinhood/
+│       │   ├── fake_robinhood.py A stand-in for Robinhood's MCP server, on this machine, for the tests
+│       │   ├── requirements-floor.txt
+│       │   ├── requirements.txt
+│       │   ├── robinhood.py  your Robinhood account as dated files, read through Robinhood's own MCP server, never traded on
+│       │   ├── stack.md      your Robinhood account, read back
+│       │   ├── test_robinhood.py
+│       │   └── README.md     its card
 │       ├── sheets/
 │       │   ├── sheets.py     spreadsheets as shown: number formats, formulas and notes kept
 │       │   ├── requirements.txt  openpyxl, pinned
@@ -1490,12 +1886,27 @@ willow/
 │       │   ├── requirements-floor.txt  pagefind and pagefind-bin at their floors, also tested
 │       │   ├── test_static_search.py
 │       │   └── README.md
-│       └── stems/
-│           ├── stems.py      a word's other forms, by Snowball's stemmer for 30 languages
-│           ├── requirements.txt  snowballstemmer, pinned
-│           ├── requirements-floor.txt  snowballstemmer at its floor, also tested
-│           ├── test_stems.py
-│           └── README.md
+│       ├── stems/
+│       │   ├── stems.py      a word's other forms, by Snowball's stemmer for 30 languages
+│       │   ├── requirements.txt  snowballstemmer, pinned
+│       │   ├── requirements-floor.txt  snowballstemmer at its floor, also tested
+│       │   ├── test_stems.py
+│       │   └── README.md
+│       └── wake-gate/
+│           ├── LICENSE-openWakeWord
+│           ├── LICENSE-willow-mcp
+│           ├── NOTICE
+│           ├── NOTICE-willow-mcp
+│           ├── requirements-floor.txt
+│           ├── requirements.txt
+│           ├── wake_gate.py  ask out loud only after a wake word you chose
+│           ├── test_wake_gate.py
+│           └── README.md     its card
+```
+
+## ports/
+
+```
 ├── ports/                    kernel.py rewritten in other languages
 │   ├── java/
 │   │   └── Kernel.java       JDK 11+, standard library only
@@ -1515,24 +1926,51 @@ willow/
 │   └── rust/
 │       ├── kernel.rs         Rust 1.47+, standard library only, no crates: SHA-256 and HMAC written in
 │       └── Cargo.toml
+```
+
+## vectors/
+
+```
 ├── vectors/                  what keeps the six implementations identical
 │   ├── gen.py                reads the test cases out of kernel.py
-│   ├── cases.json            4,686 cases, with the answers kernel.py gives
+│   ├── cases.json            4,694 cases, with the answers kernel.py gives
 │   ├── kernel_tables.json    Python's Unicode and HTML rules, so ports don't use their own
 │   ├── compare.py            runs every port against the cases and each other's logs
 │   ├── test_vectors.py       fails if the cases are stale or a port disagrees
 │   └── README.md             how the ports were built and what testing them found
+```
+
+## docs/
+
+```
 ├── docs/
 │   ├── tour.md               the first five minutes, in full: a question, a gap, her words, an approval
 │   ├── how-it-works.md       what it reads, how it ranks, the key, the record, approvals
+│   ├── stone-soup.md         one real pile and add-on after add-on: what each found, what each misread, and the chain that dates a pile's words
 │   ├── design/
+│   │   ├── draft-0.16.md     proposal: four of willow's own promises made law, and four new beats
+│   │   ├── forge-and-pages.md Design note: the forge, and the pages a person approves on
+│   │   ├── lists.md          notes: FILES.md and ADDONS.md, what makes them hard to read and search, and the skim idea
+│   │   ├── pieces.md         proposal: every pull request a piece of the pile: cite, draft, check, accept or 42
 │   │   ├── repo-index.md     proposal: the repo as one deterministic-snapshot box, indexed by a custom serve-style stack
-│   │   └── serve.md          proposal: a sealed stack of piles served to a model, on markdown (the grove's serve, in willow)
-│   └── agents/               AGENTS.md's longer how-tos, one page a job
-│       ├── add-ons.md        an add-on's ten steps, the guard, ideas and a deps floor
-│       ├── pull-requests.md  opening one, main moving under a branch, a new CI row
-│       ├── searching.md      the kernel's rank, and the jobs that need another search
-│       └── studies.md        freezing a study, its dry run, and what a dry run misses
+│   │   ├── serve.md          proposal: a sealed stack of piles served to a model, on markdown (the grove's serve, in willow)
+│   │   └── versions.md       proposal: one way to version everything, the law, amendments, add-ons and ideas
+│   ├── agents/               AGENTS.md's longer how-tos, one page a job
+│   │   ├── add-ons.md        an add-on's ten steps, the guard, ideas and a deps floor
+│   │   ├── pull-requests.md  opening one, main moving under a branch, a new CI row
+│   │   ├── searching.md      the kernel's rank, and the jobs that need another search
+│   │   ├── stacks.md         A stack, for agents
+│   │   └── studies.md        freezing a study, its dry run, and what a dry run misses
+│   └── use/                  using it on your own files, after the tour
+│       ├── asking.md         why a question found nothing: words not meanings, half its words, dates
+│       ├── kernel.md         the kernel alone on your files: verify, a words list, suggestions and seals
+│       ├── stack.md          a stack of add-ons, on the page or from a terminal, sealed by you
+│       └── README.md         which page for which job
+```
+
+## demo/
+
+```
 ├── demo/                     four made-up people, a case passed between five more, a real bug, a real policy change and programs taken apart, to try it on
 │   ├── bernadette/           built blind, in her apps' raw formats, and run through the whole stack
 │   │   ├── make_life.py      her mail, calendars, chats, vault, office files, Kindle and PDFs, the same bytes every run
@@ -1542,6 +1980,13 @@ willow/
 │   │   ├── STRIP.md          what each need came to, and what each layer of the stack did
 │   │   ├── stack.py          her files through every reader, start, the finders, privacy, an MCP assistant, and the trust add-ons
 │   │   └── test_stack.py     holds the stack to the states STRIP.md scores
+│   ├── corwin/
+│   │   ├── CHARACTER.md      Corwin Tamsett
+│   │   ├── fetch.py          the papers in Corwin's catalogue, fetched again and held to their hashes
+│   │   ├── make_life.py      Write the files Corwin Tamsett's life has left on his computer into ./life/
+│   │   ├── PLANTED.md        PLANTED: answer key (testers: do not read until after scoring)
+│   │   ├── QUESTIONS.md      Questions Corwin might type
+│   │   └── STRIP.md          Corwin, blind: the strip-down
 │   ├── craft-assembly/       the Craft apps taken apart into pieces, rebuilt exactly, and five assembled into one
 │   │   ├── README.md         the claim, the threats, what is frozen, what was seen before each freeze, results
 │   │   ├── REPORT.md         the full report, written by report.py from the files here, every number counted
@@ -1563,6 +2008,11 @@ willow/
 │   │       ├── run-3.json    the third run's, from freeze 3: every rule held
 │   │       ├── record.jsonl  a copy of the record the verdicts are rows on, without its key
 │   │       └── checks.md     what the kernel, xref and claim-check say of the report
+```
+
+#### demo/, from five-repos/
+
+```
 │   ├── five-repos/           five repositories through the stacks: the stacks, the words list, the reports, two records without their keys
 │   │   ├── README.md         what was run, what held, what failed and became #211, and the rule: proposed, never sealed
 │   │   ├── exam.txt          the twelve questions the model was asked
@@ -1608,6 +2058,11 @@ willow/
 │   │       ├── proof.md
 │   │       ├── voice.md
 │   │       └── ways-in.md
+```
+
+#### demo/, from google-privacy-2026-10-16/
+
+```
 │   ├── google-privacy-2026-10-16/  a real policy change: what Google's text says against what the news said
 │   │   ├── README.md         the claim, the threats, what is frozen, how to reproduce, the results
 │   │   ├── FROZEN.json       the SHA-256 of each frozen file, and of the tools when frozen
@@ -1635,6 +2090,11 @@ willow/
 │   │   ├── make_life.py      the five people's files, the same bytes every run
 │   │   ├── scene.py          the report sealed, sent, forwarded hop by hop, forged once, corrected and witnessed; stacks shared, taken and declined
 │   │   └── test_scene.py     holds the scene to what README.md says it shows
+```
+
+#### demo/, from known-gaps/
+
+```
 │   ├── known-gaps/           the fleet's own twelve known security gaps, asked of the code their fixes changed
 │   │   ├── README.md         the claim, the threats, what is frozen, how to reproduce, the dry run
 │   │   ├── FROZEN.json       freeze 1: the SHA-256 of every frozen file and tool; a change is a new freeze
@@ -1678,6 +2138,11 @@ willow/
 │   │   │   │   ├── KG10.txt  the same for KG10
 │   │   │   │   ├── KG11.txt  the same for KG11
 │   │   │   │   └── KG12.txt  the same for KG12
+```
+
+#### demo/known-gaps/questions/, from cpython/
+
+```
 │   │   │   ├── cpython/
 │   │   │   │   ├── local/
 │   │   │   │   │   ├── CP1.txt  eight questions a local model wrote, blind, for CP1
@@ -1698,6 +2163,29 @@ willow/
 │   │   │   └── null/
 │   │   │       └── null.txt  fifty questions with nothing to do with security, written with no input
 │   │   └── test_known_gaps.py  holds the frozen files to their hashes, and the tools to their word
+│   ├── markets-2026-11-05/   a broad equities and macro pile from public sources: SEC EDGAR, FRED, Treasury, the Fed, CBOE and more
+│   │   ├── README.md         what's in the pile, what isn't and why, and how it's kept honest
+│   │   ├── fetch.py          saves 944 sources into a pile once (SEC EDGAR only with --contact), sets error bodies aside, and checks them offline
+│   │   ├── mirror.py         the pile as text the kernel searches, each reader's part, over-long files cut into parts
+│   │   ├── sources.json      each source fetched, with its address, size and SHA-256, and what failed
+│   │   └── test_markets.py   holds what fetch.py froze, and the parts that need no network, to the README
+│   ├── money-hour/           four people from the other demos at one table, every market figure they repeat held to the real record
+│   │   ├── README.md         the claim, what the record says, how it runs, run 1's results and its one failure
+│   │   ├── CHARACTER.md      Teo, Bernie, Hollis and Marisol, where each comes from, and what each keeps
+│   │   ├── PLANTED.md        every fact, trap and wager in their files, with the source each is held to
+│   │   ├── FROZEN.json       the SHA-256 of the rules, the lines, the runner, the stacks and the themes, freeze by freeze
+│   │   ├── questions.json    the frozen lines, the slice of the markets mirror, and every rule
+│   │   ├── make_life.py      the four folders, real-world lines only from questions.json; --check holds them to it
+│   │   ├── money-hour.md     Teo's stack for her own box: said, people, amounts, coming-up, todo, digest, history
+│   │   ├── fed.md            the Fed desk's stack: first-mention, who voted against, every decision ranked
+│   │   ├── filings.md        the filings desk's stack: sort by Hollis's themes, buybacks, the funds rate in the 10-Ks
+│   │   ├── themes.txt        Hollis's themes for the 10-Ks, as sort reads them
+│   │   ├── run.py            the slice, five boxes, every rule judged by its own add-on; stops at each person's seal
+│   │   ├── test_money_hour.py holds the frozen files, and the parts that need no mirror, to their word
+│   │   └── results/
+│   │       ├── run-1.json    every outcome of run 1, places and verdicts, never a source's words
+│   │       ├── run-2.json    every outcome of run 2, freeze 2's desks, letter, themes and stacks added
+│   │       └── run-3.json    every outcome of run 3, after pair-drift's fix: every rule held
 │   ├── novelty.py           the reusable novelty check: have these pieces been put together before?
 │   ├── odile/                piano tuner and beekeeper, caring for her father
 │   │   ├── make_life.py      writes her files into life/, the same bytes every run
@@ -1705,6 +2193,11 @@ willow/
 │   │   ├── PLANTED.md        the needs hidden in her files, and the traps
 │   │   ├── STRIP.md          her questions, and what kernel.py found and missed
 │   │   └── names.txt         everyone named in her files, written by make_life.py
+```
+
+#### demo/, from ofrenda/
+
+```
 │   ├── ofrenda/              a séance with a local Gemma: a made-up abuela's files and two real books, every word cited or silent
 │   │   ├── README.md         the story, the claim, what is frozen, the dry run, how to run it, the results
 │   │   ├── CHARACTER.md      Femia, Marisol and the ofrenda kept up year round
@@ -1741,6 +2234,11 @@ willow/
 │   │       ├── femia.md      the abuela's voice, put before the rule, never in place of it
 │   │       ├── babbage.md    Babbage's
 │   │       └── ada.md        Ada Lovelace's
+```
+
+#### demo/, from percus-yevick/
+
+```
 │   ├── percus-yevick/        a study, in draft: can a physics derivation be found rather than generated
 │   │   ├── arms.py           the study's reported arms, beside the pass rules. None is scored
 │   │   ├── blind.py          the blind questions, written by a local model that has seen no
@@ -1773,6 +2271,11 @@ willow/
 │   │   ├── words.txt         notation a question may use, read as the sources' words
 │   │   ├── test_percus_yevick.py  the draft hangs together, and its hit rule does what it says
 │   │   └── README.md         Percus–Yevick: found, not generated
+```
+
+#### demo/, from php2shell/
+
+```
 │   ├── php2shell/            a real bug: the PHP2Shell result, tested seven ways
 │   │   ├── README.md         the claim, the threats, what is frozen, each phase's results
 │   │   ├── FROZEN.json       the SHA-256 of each frozen file, and of the tools when frozen
@@ -1801,6 +2304,11 @@ willow/
 │   │       ├── reword.txt     the author's eight, rephrased five ways each, blind
 │   │       ├── advisory-words.txt  a words list of acronyms the advisories expand
 │   │       └── null.txt      fifty questions with nothing to do with the bug
+```
+
+#### demo/, from redteam/
+
+```
 │   ├── redteam/             a frozen recon composition over a planted target, scanned for novelty
 │   │   ├── README.md         the composition, what is planted, what is frozen, the novelty check
 │   │   ├── FROZEN.json       the SHA-256 of every source, and the finding expected from each section
@@ -1855,6 +2363,11 @@ willow/
 │   │       ├── weeknote-gemma-teodora.json  a this-week note the model wrote
 │   │       ├── weeknote-qwen-teodora.json  a this-week note the model wrote
 │   │       └── weeknote2-qwen-teodora.json  the same, five lines kept a chunk
+```
+
+#### demo/, from stewart-crossover/
+
+```
 │   ├── stewart-crossover/    a fictional fan's files beside a real life: every word about him from a source
 │   │   ├── README.md         the claim, the five repositories' parts, what is frozen, the dry run, the results
 │   │   ├── FROZEN.json       the SHA-256 of each frozen file, and of the tools in five repositories when frozen
@@ -1880,10 +2393,16 @@ willow/
 │   │   ├── STRIP.md
 │   │   └── test_words.py     the starter words list against her whole folder: her debt to Dev, served with it and not without
 │   └── test_novelty.py      a novel description reads as novel, one an existing demo holds as prior art
+```
+
+## .github/
+
+```
 ├── .github/
 │   ├── workflows/
 │   │   ├── ci.yml            runs adapters/stdlib/ci/ci.py a part or a cut of one a job, tests on Python 3.9 to 3.14 (3.9 and 3.14 on a pull request)
 │   │   ├── law.yml           every Monday, the law's check: an expired emergency amendment fails it
+│   │   ├── restack.yml
 │   │   └── security.yml      posts the github add-on's comment on a security report
 │   ├── ISSUE_TEMPLATE/
 │   │   ├── bug.yml           the form for something wrong
@@ -1900,6 +2419,11 @@ willow/
 ├── .editorconfig             the same line endings and indents, for editors
 ├── ruff.toml                 lint settings
 ├── LICENSE                   Apache-2.0
+```
+
+## changes/
+
+```
 ├── changes/
 │   └── README.md             Changes not yet released
 └── towncrier.toml            each pull request's changelog fragment in changes/, folded into CHANGELOG.md at a release

@@ -3,6 +3,7 @@ section: Your own words
 line: German common words, so questions aren't matched on "der" and "und".
 source: new
 added: 2026-10-24
+version: 0.1.0
 writes: record
 network: none
 role: words

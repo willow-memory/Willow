@@ -103,6 +103,13 @@ def matrix(ci: str) -> list[str]:
 CI_PY = Path(__file__).resolve().parents[1] / "ci" / "ci.py"
 PUSH_IF = "github.event_name == 'push'"
 PULL_IF = "github.event_name == 'pull_request'"
+#: a job's condition that keeps it off pull requests, but not off the merge
+#: queue: main's commit, wherever it is run
+NOT_PULL = "github.event_name != 'pull_request'"
+#: a job that runs a gate stands down on a push the merge queue already ran
+STAND = "needs.queued.outputs.tested != 'true'"
+#: the queued job's ask: the queue's green run of the very commit pushed
+QUEUED = '--event merge_group --commit "$GITHUB_SHA" --status success'
 
 
 def reach_problems(job: str, gates: set, blocks: dict, cimod) -> list[str]:
@@ -175,7 +182,9 @@ def split_problems(ci: str) -> list[str]:
         blocks[job] = block
         if re.search(rf"^    if: {re.escape(PULL_IF)}$", block, re.M):
             continue  # runs no gate on a push; reach_problems reads it below
-        if re.search(rf"^    if: {re.escape(PUSH_IF)}$", block, re.M):
+        if re.search(
+            rf"^    if: .*(?:{re.escape(PUSH_IF)}|{re.escape(NOT_PULL)})", block, re.M
+        ):
             pushed.append(job)
         shards = re.search(r"^        shard: \[(.*?)\]$", block, re.M)
         values = [v.strip() for v in shards.group(1).split(",")] if shards else [""]
@@ -185,6 +194,14 @@ def split_problems(ci: str) -> list[str]:
             # one, so the line runs what ci.py's select names, uncut
             argv = re.sub(r"\$\{\{.*?\}\}", "X", line).split()
             lines.append((" ".join(strip_options(argv)), [""]))
+        if lines and not (
+            re.search(r"^    needs: \[[^\]]*\bqueued\b", block, re.M)
+            and re.search(rf"^    if: .*{re.escape(STAND)}", block, re.M)
+        ):
+            out.append(
+                f"ci.yml's {job} job runs gates again on a push the merge queue"
+                " already ran: it needs queued and stands down when queued says so"
+            )
         for line, values in lines:
             for v in values:
                 argv = line.replace("${{ matrix.shard }}", v).split()
@@ -211,6 +228,14 @@ def split_problems(ci: str) -> list[str]:
             out.append(f"ci.yml runs {gate} in no job")
         elif len(jobs) > 1:
             out.append(f"ci.yml runs {gate} more than once, in {', '.join(jobs)}")
+    queued = blocks.get("queued", "")
+    if not (
+        re.search(rf"^    if: {re.escape(PUSH_IF)}$", queued, re.M) and QUEUED in queued
+    ):
+        out.append(
+            "ci.yml has no queued job that asks, on a push, for the merge queue's"
+            " green run of the very commit pushed"
+        )
     for job in pushed:
         gates = {g for g, js in ran.items() if job in js}
         out += reach_problems(job, gates, blocks, cimod) if gates else []

@@ -127,6 +127,7 @@ def test_refusals(tmp_path):
     b = box(tmp_path, {"p.md": SHORT})
     assert ask(b, "--period", "lots").returncode == 2
     assert ask(b, "--period", "0").returncode == 2
+    assert ask(b, "--period", "1000").returncode == 2  # the range's top edge
     assert ask(b, "stray").returncode == 2
     assert run(str(HERE / "lesson_time.py")).returncode == 2
 

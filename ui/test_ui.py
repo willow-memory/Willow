@@ -517,26 +517,6 @@ def test_each_piece_says_the_part_it_plays_and_why(site):
     assert ps["model-exam"]["group"] == "Checking a model before you trust it"
 
 
-def test_a_role_goes_by_the_first_fact_that_fits():
-    def r(**card):
-        return canvas.role({"name": "x", "section": "", "line": "", **card})["role"]
-
-    assert r(section="Reading more kinds of files", page=True) == "reads"
-    assert r(name="hook-x", page=True) == "guards"
-    assert r(line="Suggestions from a model.", page=True) == "suggests"
-    assert r(page=True, writes="to") == "page"
-    assert r(section="Ways to use it", writes="to") == "makes"
-    assert r(section="Ways to use it", writes="nothing") == "ways"
-    assert r(writes="record") == "tools"
-    assert "idea" in canvas.role({"name": "x", "state": "idea"})["role_why"]
-    assert r(runs_in="repo", section="Reading more kinds of files") == "repo"
-    assert r(section="Your own words") == "words"
-    # what the card says comes first; the guess is for a willow from before
-    said = canvas.role({"name": "hook-x", "state": "built", "role": "tools", "page": True})  # fmt: skip
-    assert said["role"] == "tools" and said["role_why"] == "its card says so"
-    assert canvas.role({"name": "hook-x", "role": "nonsense"})["role"] == "guards"
-
-
 def test_the_page_names_every_role_a_person_can_fill():
     page = (canvas.HERE / "page.html").read_text(encoding="utf-8")
     for key, title in canvas.ROLES:
@@ -668,3 +648,50 @@ def test_a_reader_is_offered_for_a_kind_its_card_says_it_reads(site):
     assert cv.readers_for(".no-such-kind") == []
     assert cv.readers_for(".txt") == []  # the kernel reads it anyway
     assert all(cv.pieces()[n]["role"] == "reads" for n in cv.readers_for(".json"))
+
+
+def test_the_browse_page_wears_the_canvas_colours():
+    """One look: the page you approve on (browse) uses the ground, card, ink
+    and accent the canvas declares, light and dark."""
+    browse = canvas.HERE.parent / "adapters" / "stdlib" / "browse" / "browse.py"
+    style = browse.read_text(encoding="utf-8").split('STYLE = """')[1].split('"""')[0]
+    root = (canvas.HERE / "page.html").read_text(encoding="utf-8")
+    light, dark = (
+        root.split(":root{")[1].split("}")[0],
+        root.split(':root[data-theme="dark"]{')[1].split("}")[0],
+    )
+    for theme in (light, dark):
+        declared = dict(
+            d.split(":", 1)
+            for d in theme.replace("\n", "").split(";")
+            if d.startswith("--") and ":" in d
+        )
+        for name in ("--bg", "--card", "--ink", "--acc", "--line", "--mute"):
+            assert declared[name] in style, (name, declared[name])
+
+
+def test_a_stack_that_reaches_only_this_machine_is_not_said_to_go_online(stack_dir, tmp_path, capsys):  # fmt: skip
+    """loopback is this machine. The page and the terminal said "goes online:
+    loopback", in warning colour, of a stack that goes nowhere."""
+
+    def looked(*names):
+        code, out, _ = run(capsys, "plan", *names, "--to", stack_dir)
+        assert code == 0, names
+        f = tmp_path / ("-".join(names) + ".md")
+        f.write_text(out)
+        code, said, _ = run(capsys, "look", f, "--to", stack_dir)
+        assert code == 0
+        return said
+
+    assert "never goes online" in looked("coming-up")
+    here = looked("coming-up", "browse")
+    assert "stays on this machine" in here and "goes online" not in here
+    net = canvas.Canvas(stack_dir, canvas.WILLOW, stack_dir / "box", []).pieces()["openai-compatible"]["network"]  # fmt: skip
+    away = looked("coming-up", "browse", "openai-compatible")
+    assert f"goes online: {net}" in away and "loopback" not in away.split("goes online: ")[1].splitlines()[0]  # fmt: skip
+    page = (canvas.HERE / "page.html").read_text(encoding="utf-8")
+    assert "'stays on this machine'" in page and "It stays on this machine" in page
+    assert "'goes online: '+net.join" not in page and "+a.reach.join" not in page
+    assert "+' items'" in page and "fo.files+' files'" not in page, (
+        "it counts folders too"
+    )

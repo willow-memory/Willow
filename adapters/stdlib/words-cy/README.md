@@ -3,6 +3,7 @@ section: Your own words
 line: Welsh common words ("a", "y", "yn").
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: record
 network: none
 role: words

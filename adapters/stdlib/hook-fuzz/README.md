@@ -1,8 +1,9 @@
 <!-- willow-addon
 section: Assistants
-line: Throws empty, malformed, oversized and non-UTF-8 input at a hook and fails it if any of them crash it, since a crashed hook lets the tool run.
+line: Throws empty, malformed, oversized and non-UTF-8 input at a hook and fails it if any crash it, since a crashed hook lets the tool run.
 source: new
 added: 2026-10-24
+version: 0.1.0
 writes: nothing
 network: none
 role: guards

@@ -3,6 +3,7 @@ section: Ways to use it
 line: An answer as a printable page with its sources, to take to an appointment; --large for big, high-contrast type.
 source: new
 added: 2026-10-24
+version: 0.1.0
 writes: record, to
 network: none
 role: makes

@@ -1,0 +1,1 @@
+`chat-dataset` (idea): chat fine-tuning and evaluation sets in JSONL, `{"messages": [...]}` one example a line, as numbered turns. `agent-transcript` reads an agent's session files but not this shape, which is how training and eval sets for a model are kept: a folder of working files held them beside the runs they fed

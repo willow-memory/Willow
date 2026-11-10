@@ -1,0 +1,19 @@
+wake-gate takes code from two Apache-2.0 projects; each one's licence is
+beside this file, and willow-mcp's own notice is NOTICE-willow-mcp.
+
+willow-mcp (https://github.com/willow-memory/willow-mcp), Copyright 2026
+Sean Campbell: the voice ingress controller, src/willow_mcp/voice/
+voice_controller.py. Changed here: only its listening and capturing states
+are kept (no speaking, barge-in, speaker check or dispatch gate), a frame
+is raw 16-bit audio rather than a synthetic score, and a false wake, a
+sentence's end and its length cap are counted in 80 ms frames.
+
+openWakeWord (https://github.com/dscripka/openWakeWord), by David Scripka:
+the pipeline of its three models (a melspectrogram, a speech embedding of
+the last 76 of its frames, the wake word model over the last 16
+embeddings) and the melspectrogram's scaling. Changed here: run through
+onnxruntime directly, without the openwakeword package, whose tflite-runtime
+dependency has no wheel for Python 3.13 on Linux; the melspectrogram is
+taken over the last 0.8 s of audio at each frame rather than streamed.
+openWakeWord's own pre-trained wake word models are licensed CC BY-NC-SA
+4.0, not Apache-2.0, and none is included here.

@@ -3,6 +3,7 @@ section: Reading more kinds of files
 line: Google Maps Timeline and other location exports: where you were, by day.
 source: new
 added: 2026-10-29
+version: 0.1.0
 writes: to
 network: none
 role: reads

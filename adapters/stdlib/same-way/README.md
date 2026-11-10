@@ -1,8 +1,9 @@
 <!-- willow-addon
 section: Assistants
-line: A local model asked each of your box's questions three times, and how often its answer flips, since a model that answers the same way every time is one you can build on.
+line: A local model asked each of your box's questions three times, and how often its answer flips: one that answers the same way can be built on.
 source: new
 added: 2026-11-02
+version: 0.1.0
 writes: nothing
 network: loopback
 role: suggests

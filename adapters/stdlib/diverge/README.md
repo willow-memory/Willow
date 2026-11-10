@@ -3,6 +3,7 @@ section: Trust and proof
 line: Where two copies part, your record and its backup zip or two copies of a folder, down to the first row, file and line that differ.
 source: bot
 added: 2026-10-24
+version: 0.1.0
 writes: nothing
 network: none
 role: tools

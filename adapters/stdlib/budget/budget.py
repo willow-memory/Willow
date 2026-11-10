@@ -63,6 +63,7 @@ AMOUNT = re.compile(
 DATE = re.compile(r"\d{1,4}[-/.]\d{1,2}[-/.]\d{1,4}")
 
 
+# differs on purpose: a statement's line is dated by its own date only, never one above it
 def entries(pile: list[dict]) -> list[tuple[str, str, int, str]]:
     """(day, path, line number, text) for each line that says its own date, the
     latest it says: a statement's row has one."""

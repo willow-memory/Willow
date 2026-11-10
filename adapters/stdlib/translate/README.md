@@ -3,10 +3,12 @@ section: Assistants
 line: An answer translated by a local model, the original kept beside it, the translation held until you seal it.
 source: new
 added: 2026-11-02
+version: 0.1.0
 writes: record
 network: loopback
 role: suggests
 uses: local-model, openai-compatible
+output: suggestions
 -->
 # translate
 
@@ -26,15 +28,19 @@ model is the first local server answering among those `--url` names, or
 on the usual ports, as [local-model](../local-model/) finds one, and its
 first model unless `--model` names another. It is told to translate into
 the language and keep each citation, `[1]`, beside the words it belongs to,
-at temperature 0 with a fixed seed.
+at temperature 0 with a fixed seed. `--reasoning none|low|medium|high` asks a
+thinking model to think that much, as [openai-compatible](../openai-compatible/)
+does; without it the request names no reasoning.
 
 **Its own question.** The translation is proposed through `kernel.py
 propose` as the answer to "your question in Spanish", never to the
 original question: sealed, it answers that question, and the original
 still answers yours. The proposal holds the translation, then `Original:`
 and the answer you sealed; it cites the original's passages that the new
-question's bite serves; its claim names the model, the server and the
-original's proposal. A translation sealed already is said, and the model
+question's bite serves; its claim names the model, the server, its
+settings and the original's proposal, in the suggestions contract's one
+form: `gemma3:4b at URL (temperature 0, seed 0) translated proposal:… into
+Spanish`. A translation sealed already is said, and the model
 isn't asked again.
 
 **Its citations must be the original's.** A translation that drops a `[1]`

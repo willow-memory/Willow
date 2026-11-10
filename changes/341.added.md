@@ -1,0 +1,1 @@
+`gather`: folders and files you name, copied into your pile under a name, only the kinds you keep, never a key or a file too big to read; a line of a stack a source, so what a project is made of is the top of its stack, and run again to refresh

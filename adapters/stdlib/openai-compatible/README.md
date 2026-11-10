@@ -1,11 +1,13 @@
 <!-- willow-addon
 section: Assistants
-line: Suggestions from any OpenAI-compatible endpoint you choose (LM Studio, vLLM, LocalAI, SGLang, Docker Model Runner, OpenRouter, Groq, Mistral), citing your passages.
+line: Suggestions from any OpenAI-compatible endpoint you choose (LM Studio, vLLM, LocalAI, OpenRouter, Groq, Mistral...), citing your passages.
 source: new
 added: 2026-10-31
+version: 0.1.0
 writes: record
 network: the endpoint you configure, to ask for suggestions
 role: suggests
+output: suggestions
 -->
 # openai-compatible
 
@@ -34,6 +36,14 @@ seal. A reply whose brackets name no served passage is printed and
 proposed to no one. Asked at temperature 0 with a fixed seed, so a server
 that honours them says the same thing twice. It waits up to fifteen
 minutes for a reply, since a model on a laptop's CPU can be slow.
+
+**Its claim** says who answered, where, at what settings and what it did,
+in the suggestions contract's one form
+([ci/README.md](../ci/README.md#the-suggestions-contract)):
+`gemma at http://127.0.0.1:8080/v1 (temperature 0, seed 0, reasoning low)
+answered from 1 of the 2 passages served`. The reasoning is said when it was
+asked for, and a `--system` voice by its SHA-256, since each can change the
+reply.
 
 `--system FILE` puts a voice before the rule (a persona, a tone), never in
 place of it. An API key, when the endpoint wants one, comes from
