@@ -425,6 +425,9 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - <a id="canvas"></a>**canvas** (idea) \
   Canvas course exports: pages, assignments and discussions as passages. \
   *new* `no-install` `offline` `assignments` `course` · near: moodle, syllabus, google-classroom
+- <a id="chat-dataset"></a>**chat-dataset** (idea) \
+  Chat fine-tuning and evaluation sets in JSONL ({"messages": [...]}) as numbered turns, one example after another. \
+  *new* `no-install` `offline` `messages` `chat` · near: agent-transcript, chats, teams
 - <a id="confluence"></a>**confluence** (idea) \
   A Confluence space's HTML export as plain text, page by page. \
   *new* `no-install` `offline` `html` · near: wallabag, recipes, mediawiki
@@ -455,12 +458,12 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - <a id="medical-records"></a>**medical-records** (idea) \
   Your health records as FHIR JSON or C-CDA XML: visits, results and prescriptions as dated lines. \
   *new* `no-install` `offline` `json` `health` · near: box-health, takeout, schema-check
-- <a id="moodle"></a>**moodle** (idea) \
-  Moodle course backups: pages, assignments, quizzes and forum posts as passages. \
-  *new* `no-install` `offline` `assignments` `course` · near: canvas, syllabus, front-page
 
 #### Other readers: ideas, not built yet, m to w
 
+- <a id="moodle"></a>**moodle** (idea) \
+  Moodle course backups: pages, assignments, quizzes and forum posts as passages. \
+  *new* `no-install` `offline` `assignments` `course` · near: canvas, syllabus, front-page
 - <a id="music-library"></a>**music-library** (idea) \
   Your music files' tags (MP3, FLAC, M4A): artist, album, year and track, as lines. \
   *new* `no-install` `offline` `year` `library` · near: listening, livestock, tax-year

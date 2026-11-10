@@ -189,6 +189,17 @@
   "version": "0.0.1"
  },
  {
+  "name": "chat-dataset",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Chat fine-tuning and evaluation sets in JSONL ({\"messages\": [...]}) as numbered turns, one example after another.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "role": "reads",
+  "version": "0.0.1"
+ },
+ {
   "name": "chess-puzzle",
   "kind": "stdlib",
   "section": "Play",
