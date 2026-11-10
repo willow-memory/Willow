@@ -25,7 +25,10 @@ MEND = "# mending\n\n## look\n- todo -- --box {box}\n- stale -- --box {box}\n\n#
 #: stacks that are really run: the only add-ons sure to be beside this one
 #: are itself and stack, so its steps are those
 QUIET = "## look\n- projects -- --home {box}/../..\n"
-LOUD = "## look\n- projects -- --home {box}/../..\n- projects -- --home {box}\n"
+LOUD = (
+    "## look\n- projects -- --home {box}/../..\n"
+    "- projects -- --home {box}/kernel.json\n"  # not a folder: refused, so flagged
+)
 
 
 def k(*argv) -> subprocess.CompletedProcess:
@@ -149,10 +152,10 @@ def test_a_folder_that_holds_no_project_is_empty_and_waits_on_you(tmp_path):
     log(home / "plain" / "run-1", steps_of(MEND))
     (home / "notes.txt").write_text("a file, not a folder\n")
     got = projects("--home", home)
-    assert got.returncode == 42
+    assert got.returncode == 0, "nothing to list is not something waiting on you"
     assert got.stdout == f"projects: empty, no folder under {home} holds a record\n"
     data = projects("--home", home, "--json")
-    assert data.returncode == 42 and json.loads(data.stdout) == {
+    assert data.returncode == 0 and json.loads(data.stdout) == {
         "addon": "projects",
         "state": "empty",
         "said": f"no folder under {home} holds a record",
@@ -165,7 +168,7 @@ def test_a_record_right_under_the_folder_is_not_a_project(tmp_path):
     level too high, is nobody's."""
     record(tmp_path / "home")
     got = projects("--home", tmp_path / "home")
-    assert got.returncode == 42 and got.stdout.startswith("projects: empty, ")
+    assert got.returncode == 0 and got.stdout.startswith("projects: empty, ")
 
 
 def test_a_project_is_found_by_what_it_holds_whatever_it_is_called(tmp_path):

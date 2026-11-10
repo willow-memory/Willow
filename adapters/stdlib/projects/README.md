@@ -98,9 +98,9 @@ them, and is taken at its word. Folders are not compared, only files.
 It refuses, and prints nothing but why, when the command line is wrong or
 `--home` is not a folder.
 
-**Exit codes:** 0 everything is listed and nothing waits on you; 42 a
-suggestion waits somewhere, a record's chain is broken, or the folder holds
-no project at all (the report is then `empty`, and says so); 2 refused.
+**Exit codes:** 0 everything is listed and nothing waits on you, or the
+folder holds no project at all (the report is then `empty`, and says so);
+42 a suggestion waits somewhere, or a record's chain is broken; 2 refused.
 A step that flagged something in a run does not make it 42: that is the
 run's to say, and it is said on the stack's row.
 

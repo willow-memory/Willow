@@ -102,7 +102,7 @@ refused before anything runs:
 
 - the run has to be kept, with `--to`: a step can only take a file that is there;
 - the number has to be a step before this one;
-- `.json` has to name a step that prints a report.
+- the report as data can only be asked of a step that prints a report.
 
 A step whose earlier step kept nothing is not run, and the log and the page
 say so (`not run: step 1 (scan) kept nothing to hand on`); it is flagged,

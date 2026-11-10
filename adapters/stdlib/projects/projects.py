@@ -27,9 +27,9 @@ A project is found by what it holds, never by a name it was given. Records
 are counted from their rows; your key is never read. Nothing is written.
 
 It prints a report (ci/README.md, "The report contract"); --json gives the
-same as one object. Exit codes, the kernel's: 0 listed; 42 a suggestion
-waits on you somewhere, a record's chain is broken, or the folder holds no
-project; 2 refused.
+same as one object. Exit codes, the kernel's: 0 listed, or the folder holds
+no project (an empty report, saying so); 42 a suggestion waits on you
+somewhere, or a record's chain is broken; 2 refused.
 """
 
 from __future__ import annotations
@@ -280,7 +280,7 @@ def main(argv: list[str]) -> int:
             print(f"## {g['name']}")
             for r in g["rows"]:
                 print(f"  {r['where']:<{w}}  {r['what']}".rstrip())
-    return kernel.ESCALATE if waiting or broken or not found else kernel.ALIVE
+    return kernel.ESCALATE if waiting or broken else kernel.ALIVE
 
 
 if __name__ == "__main__":

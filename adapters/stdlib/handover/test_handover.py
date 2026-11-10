@@ -149,8 +149,9 @@ def really_run(tmp_path: Path, p: Path, stack: str, to: str) -> None:
 
 
 def work(tmp_path: Path) -> Path:
-    """A project whose stack was really run: a report step that flags, one
-    that doesn't, a step that prints no report, and a step that was refused."""
+    """A project whose stack was really run: two report steps (one with
+    nothing to list), a step that prints no report, and a step that was
+    refused, so flagged."""
     p = project(tmp_path)
     shutil.copytree(p / "box", tmp_path / "quiet" / "calm" / "box")
     inner = tmp_path / "inner.md"
@@ -337,12 +338,12 @@ def test_a_stack_really_run_is_said_step_by_step_with_its_flagged_steps_first(tm
     got = handover("--project", p)
     assert got.returncode == 42 and got.stderr == ""
     assert got.stdout == (
-        "handover: populated, proj: 2 steps flagged, 1 stack run\n"
+        "handover: populated, proj: 1 step flagged, 1 stack run\n"
         "## flagged\n"
-        "  work.md step 01  projects: empty, no folder under home/proj/box holds a record (mine/run-1/01-projects.txt)\n"
         "  work.md step 04  projects: refused: nowhere isn't a folder (mine/run-1/04-projects.txt)\n"
         "## last runs\n"
-        "  work.md          mine/run-1: 4 steps, 2 flagged\n"
+        "  work.md          mine/run-1: 4 steps, 1 flagged\n"
+        "  work.md step 01  projects: empty, no folder under home/proj/box holds a record\n"
         "  work.md step 02  projects: populated, 1 project under quiet: 1 record, 0 stacks, 0 runs\n"
         "  work.md step 03  stack: # stack over home/proj/box: 1 step in 1 pool, peaks first\n"
     )  # fmt: skip
@@ -386,7 +387,7 @@ def test_a_file_a_stack_was_given_that_has_changed_is_said(tmp_path):
     doc = report(p)
     assert doc["groups"][-1] == {"name": "changed since its last run", "rows": [
         {"where": "work.md", "what": "a file it was given is not as it was"}]}  # fmt: skip
-    assert doc["said"] == "proj: 2 steps flagged, 1 stack run"
+    assert doc["said"] == "proj: 1 step flagged, 1 stack run"
     assert handover("--project", p).stdout.splitlines()[-2:] == [
         "## changed since its last run",
         "  work.md          a file it was given is not as it was",
