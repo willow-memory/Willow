@@ -178,6 +178,17 @@
   "version": "0.0.1"
  },
  {
+  "name": "chat-dataset",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Chat fine-tuning and evaluation sets in JSONL ({\"messages\": [...]}) as numbered turns, one example after another.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "role": "reads",
+  "version": "0.0.1"
+ },
+ {
   "name": "chess-puzzle",
   "kind": "stdlib",
   "section": "Play",
@@ -2118,17 +2129,6 @@
   "kind": "stdlib",
   "section": "Reading more kinds of files",
   "line": "WriteFreely posts, from its export or a copy of its SQLite database, as dated text.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "role": "reads",
-  "version": "0.0.1"
- },
- {
-  "name": "chat-dataset",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "Chat fine-tuning and evaluation sets in JSONL ({\"messages\": [...]}) as numbered turns, one example after another.",
   "source": "new",
   "writes": "to",
   "network": "none",
