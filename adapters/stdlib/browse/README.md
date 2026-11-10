@@ -3,12 +3,12 @@ section: Ways to use it
 line: Your folder in your web browser: ask, read each answer at its file and line, and approve suggestions with a click, from this machine only.
 source: new
 added: 2026-10-24
-version: 0.2.0
+version: 0.3.0
 writes: record
 network: loopback
 role: ways
 tags: everyday
-looks-for: digest, words-de, words-es, words-fr, words-pt
+looks-for: digest, stack, words-de, words-es, words-fr, words-pt
 -->
 # browse
 
@@ -18,7 +18,7 @@ you, and approve one with a click. The front page shows what's waiting,
 what went stale and what's coming up. Nothing to install, and no commands
 to type once it's open.
 
-    python adapters/stdlib/browse/browse.py --box DIR
+    python adapters/stdlib/browse/browse.py --box DIR [--stack FILE]
 
 It prints a link and opens it. Ctrl-C stops it. `--lang de` (or `es`,
 `fr`, `pt`) sends each question through that language's words add-on first.
@@ -59,6 +59,23 @@ it approves: this choice, this stack, this answer.
 
 The page wears the colours, type and corners of [the canvas](../../../ui/),
 willow's main page, and `ui/test_ui.py` holds the two together.
+
+**What your stack found.** With `--stack FILE`, a stack file as
+[stack](../stack/) runs it, the page gains a third link. Each step whose card
+says it prints a report is run and drawn as a card:
+
+- whose report it is, and its state in words: found, nothing found, or
+  couldn't look. A report that found things and waits on you says so;
+- the one thing it said, as the card's headline;
+- its rows, where and then what, under their groups' names. The first eight
+  are in sight and the rest fold under "All N rows".
+
+Every report add-on prints the one shape (the report contract, in the
+[ci](../ci/) add-on's card), so one way of drawing serves them all, and a
+report add-on written tomorrow is drawn without this changing. A step that
+prints something else (a reader's mirror, a model's suggestion) is named
+under the cards and left to stack. The steps are run when you open the
+page, each time: it shows what they find now, not what a run kept.
 
 **Who can reach it:**
 

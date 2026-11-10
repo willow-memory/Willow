@@ -493,3 +493,130 @@ def test_the_page_wears_the_canvas_colours():
     """The canvas is the main page; ui/test_ui.py holds these to its own."""
     for colour in ("#eceee7", "#f8f9f5", "#23251f", "#45652a", "#141712", "#a6c56f"):
         assert colour in br.STYLE
+
+
+# ── any report, drawn one way ────────────────────────────────────────────────
+STACK_HERE = (HERE.parent / "stack").is_dir()
+TODO_HERE = (HERE.parent / "todo").is_dir()
+DOC = {
+    "addon": "pii-audit",
+    "state": "populated",
+    "said": "3 numbers in 2 of 9 files",
+    "groups": [
+        {"name": None, "rows": [{"where": "a.txt:1", "what": "loose <row>"}]},
+        {"name": "a card & number", "rows": [{"where": "m/o.csv:17", "what": "···· 4242"},
+                                              {"where": "m/o.csv:18", "what": "···· 1111"}]},
+    ],
+}  # fmt: skip
+
+
+def test_a_report_is_a_card_its_line_then_its_rows_under_their_groups():
+    assert br.report_card(DOC) == (
+        "<div class=card><p class=kick>pii-audit <span class=pill>found</span></p>"
+        "<h2>3 numbers in 2 of 9 files</h2>"
+        "<div class=row><span class=where>a.txt:1</span><p class=text>loose &lt;row&gt;</p></div>"
+        "<p class=group>a card &amp; number</p>"
+        "<div class=row><span class=where>m/o.csv:17</span><p class=text>···· 4242</p></div>"
+        "<div class=row><span class=where>m/o.csv:18</span><p class=text>···· 1111</p></div>"
+        "</div>"
+    )
+
+
+def test_a_report_says_its_state_in_words_and_when_it_waits_on_you():
+    empty = {"addon": "todo", "state": "empty", "said": "nothing to do", "groups": []}
+    got = br.report_card(empty)
+    assert "<span class=pill>nothing found</span>" in got and "class=row" not in got
+    assert "<span class=pill>couldn&#x27;t look</span>" in br.report_card(
+        {**empty, "state": "unreachable"}
+    )
+    assert "<span class=pill>&lt;odd&gt;</span>" in br.report_card(
+        {**empty, "state": "<odd>"}
+    )
+    waits = "<span class='pill wait'>waits on you</span>"
+    assert waits in br.report_card(DOC, 42) and waits not in br.report_card(DOC, 0)
+    assert waits not in br.report_card(empty, 42), "nothing found is nothing to wait on"
+    assert waits not in br.report_card(DOC, 2)
+
+
+def test_a_long_report_shows_its_first_rows_and_folds_the_rest():
+    rows = [{"where": f"f{i}.txt:1", "what": f"line {i}"} for i in range(11)]
+    doc = {"addon": "todo", "state": "populated", "said": "11 lines", "groups": [
+        {"name": "old", "rows": rows[:7]}, {"name": "new", "rows": rows[7:]}]}  # fmt: skip
+    got = br.report_card(doc)
+    seen, folded = got.split("<details>")
+    assert seen.count("class=row") == 8 == br.SHOWN and folded.count("class=row") == 3
+    assert "<summary>All 11 rows</summary>" in folded
+    # the group a fold cuts through is named on both sides of it
+    assert (
+        seen.count("<p class=group>new</p>") == 1
+        and folded.count("<p class=group>new</p>") == 1
+    )
+    assert "<details>" not in br.report_card(
+        {**doc, "groups": [{"name": "old", "rows": rows[:8]}]}
+    )
+    assert br.report_card(doc, shown=2).split("<details>")[0].count("class=row") == 2
+
+
+def test_a_stacks_report_steps_are_drawn_and_the_rest_are_named(tmp_path):
+    b = make_box(tmp_path)
+    (tmp_path / "pile" / "list.txt").write_text("TODO: call the <dentist> back\n")
+    stack = tmp_path / "mine.md"
+    stack.write_text(
+        "# mine\n## what's owed\n- todo -- --box {box}\n- nowhere -- --box {box}\n"
+        "## the rest\n- browse -- --box {box}\n"
+    )
+    s = Open.__new__(Open)
+    s.willow = br.Willow(b, None, stack=stack)
+    s.server = br.serve(s.willow)
+    s.port = s.server.server_address[1]
+    s.host = f"127.0.0.1:{s.port}"
+    threading.Thread(target=s.server.serve_forever, daemon=True).start()
+    s.cookie = ""
+    try:
+        s.start()
+        assert '<a href="/steps">What your stack found</a>' in s.req("GET", "/")[1]
+        r, text = s.req("GET", "/steps")
+        assert r.status == 200
+        if not STACK_HERE:
+            assert "The stack add-on isn't here." in text
+            return
+        assert "The nowhere add-on isn't here." in text
+        assert "<h2>what&#x27;s owed</h2>" in text and "<h2>the rest</h2>" not in text
+        assert (
+            "Not drawn here, since they print something other than a report: browse."
+            in text
+        )
+        if TODO_HERE:
+            assert "<p class=kick>todo <span class=pill>found</span>" in text
+            assert "call the &lt;dentist&gt; back" in text and "list.txt:1" in text
+        stack.write_text("no steps here\n")
+        assert "Couldn't read your stack" in s.req("GET", "/steps")[1]
+        stack.unlink()
+        assert (
+            "Couldn't read your stack: can&#x27;t read the stack"
+            in s.req("GET", "/steps")[1]
+        )
+    finally:
+        s.close()
+
+
+def test_without_a_stack_there_is_no_third_page_to_go_to(site):
+    site.start()
+    assert "/steps" not in site.req("GET", "/")[1]
+    r, text = site.req("GET", "/steps")
+    assert (
+        r.status == 200
+        and "No stack was named when this was started." in text
+        or (not STACK_HERE and "The stack add-on isn't here." in text)
+    )
+
+
+def test_a_stack_that_isnt_there_is_refused_before_anything_listens(tmp_path, capsys):
+    b = make_box(tmp_path)
+    assert (
+        br.main(["--box", str(b), "--stack", str(tmp_path / "absent.md"), "--no-open"])
+        == 2
+    )
+    assert "can't read the stack" in capsys.readouterr().err
+    assert br.main(["--box", str(b), "--stack"]) == 2
+    assert "browse.py" in capsys.readouterr().err
