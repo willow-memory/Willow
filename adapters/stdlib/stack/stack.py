@@ -1,6 +1,6 @@
 """stack.py: one document from a stack of add-on steps over a box. Python 3.9+.
 
-    python adapters/stdlib/stack/stack.py --box DIR --stack FILE [--to FOLDER]
+    python adapters/stdlib/stack/stack.py --box DIR --stack FILE [--to FOLDER [--resume]]
 
 FILE is a markdown stack: a `##` heading opens a pool, and each `- NAME -- ARGS`
 line under it is a step -- the add-on NAME run with the ARGS after the lone
@@ -27,6 +27,14 @@ is written as it prints; a step asked for a report is written once, when its
 report is whole. FOLDER must be there and empty: a run is one folder, and a
 second run in it would read as part of the first. Without --to nothing is
 kept but the page, as before.
+
+--resume goes on with the run that is in FOLDER, one that was cut off or one
+whose stack has had steps added. From the top of the stack, each step the
+earlier run finished, asked the very same way, with its output still there,
+is kept and not run again. From the first step that isn't, every step runs,
+finished before or not: a later step may need what an earlier one makes.
+The page is the one a whole run would give. It doesn't know whether your
+folder changed in between: it is for going on, not for refreshing.
 
 It only reads and composes, and with --to writes that one folder. It runs add-ons, and each is held to its own card
 by the guard, so stack writes no box, reads no key and approves nothing -- the
@@ -139,15 +147,60 @@ def run_step(
     return got.returncode, out.rstrip()
 
 
+def mark(name: str, args: list[str]) -> str:
+    """Eight characters that are this step and no other: the same add-on
+    asked another way is another step, and what it made before is not its."""
+    return kernel.h256(json.dumps([name, args]))[:8]
+
+
+STARTED = re.compile(r"(\d+) (\S+): started \((\w+)\)")
+ENDED = re.compile(r"(\d+) (\S+): exit (\d+), (\d+) lines?((?:, [^,]+)*)")
+
+
+def ended(log: str) -> dict[int, dict]:
+    """The steps an earlier run finished, read from its log: for each step's
+    number, its name, its mark, its exit code, and how it was weighed and
+    flagged. A step is finished when the last thing the log says of it is
+    that it ended: one started again and not ended is not, whatever came
+    before, since its file may be half of a second go."""
+    out: dict[int, dict] = {}
+    marks: dict[int, tuple[str, str]] = {}
+    for line in log.splitlines():
+        if m := STARTED.fullmatch(line):
+            marks[int(m.group(1))] = (m.group(2), m.group(3))
+            out.pop(int(m.group(1)), None)
+        elif m := ENDED.fullmatch(line):
+            n, name = int(m.group(1)), m.group(2)
+            if marks.get(n, ("", ""))[0] != name:
+                continue  # an end with no start of its own says nothing
+            said = [x for x in m.group(5).split(", ") if x]
+            size = next((int(x[5:]) for x in said if x.startswith("mass ") and x[5:].isdigit()), int(m.group(4)))  # fmt: skip
+            out[n] = {
+                "name": name,
+                "mark": marks[n][1],
+                "code": int(m.group(3)),
+                "size": size,
+                "flagged": "flagged" in said,
+                "note": next(
+                    (x for x in said if x != "flagged" and not x.startswith("mass ")),
+                    "",
+                ),  # fmt: skip
+            }
+    return out
+
+
 class Run:
     """A run kept in a folder as it happens: a line in 00-stack.txt as each
-    step starts and ends, and each step's output in a file of its own."""
+    step starts and ends, and each step's output in a file of its own. With
+    `again`, the folder is an earlier run's: its log is added to, not begun."""
 
-    def __init__(self, folder: Path, steps: int):
+    def __init__(self, folder: Path, steps: int, again: bool = False):
         self.folder = folder
         self.width = max(2, len(str(steps)))
         self.log = folder / f"{'0' * self.width}-stack.txt"
-        self.log.write_text("", encoding="utf-8")
+        self.before = ended(self.log.read_text(encoding="utf-8")) if again else {}
+        if not again:
+            self.log.write_text("", encoding="utf-8")
 
     def say(self, line: str) -> None:
         with open(self.log, "a", encoding="utf-8") as f:
@@ -156,14 +209,32 @@ class Run:
     def file(self, n: int, name: str) -> Path:
         return self.folder / f"{n:0{self.width}d}-{name}.txt"
 
-    def start(self, n: int, name: str) -> Path:
-        self.say(f"{n:0{self.width}d} {name}: started")
+    def kept(self, n: int, name: str, args: list[str]) -> dict | None:
+        """What the earlier run made of this very step, if it finished it and
+        its output is still there; None if it must be run."""
+        was = self.before.get(n)
+        if was is None or (was["name"], was["mark"]) != (name, mark(name, args)):
+            return None
+        try:
+            text = self.file(n, name).read_text(encoding="utf-8", errors="replace")
+        except OSError:
+            return None
+        return {**was, "out": text.rstrip()}
+
+    def start(self, n: int, name: str, args: list[str]) -> Path:
+        self.say(f"{n:0{self.width}d} {name}: started ({mark(name, args)})")
         return self.file(n, name)
 
-    def end(self, n: int, name: str, code: int, out: str, note: str) -> None:
+    def end(self, n: int, name: str, code: int, out: str, size: int, note: str, flagged: bool) -> None:  # fmt: skip
+        """`size` is said when it isn't the lines (a report weighs its rows),
+        and `note` when the exit code alone doesn't give it (a report's
+        state): with those, a later run can put this step on its page as this
+        one did, without running it."""
         lines = mass(out)
-        said = f"exit {code}, {lines} line{'s' * (lines != 1)}"
-        self.say(f"{n:0{self.width}d} {name}: {said}{', ' + note if note else ''}")
+        said = [f"exit {code}", f"{lines} line{'s' * (lines != 1)}"]
+        said += [f"mass {size}"] * (size != lines) + [note] * bool(note)
+        said += ["flagged"] * flagged
+        self.say(f"{n:0{self.width}d} {name}: {', '.join(said)}")
 
 
 def prints_a_report(script: Path) -> bool:
@@ -251,6 +322,8 @@ def main(argv: list[str]) -> int:
     for a in it:
         if a in ("--box", "--stack", "--to"):
             opts[a] = next(it, "")
+        elif a == "--resume":
+            opts[a] = "yes"
         else:
             extra.append(a)
     if (
@@ -258,6 +331,7 @@ def main(argv: list[str]) -> int:
         or not opts.get("--box")
         or not opts.get("--stack")
         or ("--to" in opts and not opts["--to"])
+        or ("--resume" in opts and "--to" not in opts)
     ):
         print(__doc__.split("\n\n")[1], file=sys.stderr)
         return kernel.REFUSED
@@ -293,38 +367,58 @@ def main(argv: list[str]) -> int:
                 file=sys.stderr,
             )
             return kernel.REFUSED
-        if any(to.iterdir()):
+        total = sum(len(steps) for _, steps in pools)
+        again = "--resume" in opts and any(to.iterdir())
+        if again and not (to / f"{'0' * max(2, len(str(total)))}-stack.txt").is_file():
             print(
-                f"refused: {to} isn't empty; a run wants a folder of its own",
+                f"refused: {to} isn't a run of a stack this long; it has no log to resume from",
                 file=sys.stderr,
             )
             return kernel.REFUSED
-        run = Run(to, sum(len(steps) for _, steps in pools))
+        if not again and any(to.iterdir()):
+            print(
+                f"refused: {to} isn't empty; a run wants a folder of its own "
+                "(--resume goes on with the run that's in it)",
+                file=sys.stderr,
+            )
+            return kernel.REFUSED
+        run = Run(to, total, again)
+        if again:
+            run.say(f"resumed: {len(run.before)} of {total} steps had finished")
 
     worst, flagged, nsteps = kernel.ALIVE, 0, 0
+    fresh = False  # once a step runs, every step after it runs: it may need it
     ran: list = []
     for heading, steps in pools:
         done: list = []
         for idx, (name, args) in enumerate(steps):
             nsteps += 1
-            live = run.start(nsteps, name) if run else None
-            if prints_a_report(scripts[name]):  # its rows decide its mass
-                code, out = run_step(scripts[name], [*args, "--json"], str(box))
-                doc, out = as_report(code, out)
-                if live is not None:  # whole, once: its JSON is nothing to follow
-                    live.write_text(out + "\n" if out else "", encoding="utf-8")
-                if doc is None:
-                    is_flagged, note, size = True, f"exit {code}", mass(out)
-                else:
-                    is_flagged = code != kernel.ALIVE
-                    note = doc["state"] if is_flagged else ""
-                    size = 1 + sum(len(g["rows"]) for g in doc["groups"])
+            report = prints_a_report(scripts[name])  # its rows decide its mass
+            was = run.kept(nsteps, name, args) if run and not fresh else None
+            if was is not None:
+                code, out, size, is_flagged = was["code"], was["out"], was["size"], was["flagged"]  # fmt: skip
+                note = was["note"] if report else step_result(name, code)[1]
+                run.say(f"{nsteps:0{run.width}d} {name}: kept from before")
             else:
-                code, out = run_step(scripts[name], args, str(box), live)
-                is_flagged, note = step_result(name, code)
-                size = mass(out)
-            if run:
-                run.end(nsteps, name, code, out, "flagged" if is_flagged else "")
+                fresh = True
+                live = run.start(nsteps, name, args) if run else None
+                if report:
+                    code, out = run_step(scripts[name], [*args, "--json"], str(box))
+                    doc, out = as_report(code, out)
+                    if live is not None:  # whole, once: its JSON is nothing to follow
+                        live.write_text(out + "\n" if out else "", encoding="utf-8")
+                    if doc is None:
+                        is_flagged, note, size = True, f"exit {code}", mass(out)
+                    else:
+                        is_flagged = code != kernel.ALIVE
+                        note = doc["state"] if is_flagged else ""
+                        size = 1 + sum(len(g["rows"]) for g in doc["groups"])
+                else:
+                    code, out = run_step(scripts[name], args, str(box), live)
+                    is_flagged, note = step_result(name, code)
+                    size = mass(out)
+                if run:
+                    run.end(nsteps, name, code, out, size, note if report else "", is_flagged)  # fmt: skip
             done.append((size, idx, name, args, code, out, note))
             if is_flagged:
                 flagged += 1
