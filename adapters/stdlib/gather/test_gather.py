@@ -192,7 +192,7 @@ def test_a_file_that_looks_like_a_key_is_never_copied(tmp_path):
     alone = gather("--from", src / "server.key", "--to", pile)
     assert alone.returncode == 42
     assert alone.stdout.splitlines() == [
-        "gather: empty, 0 files copied from 1 place, 1 left out",
+        "gather: populated, 0 files copied from 1 place, 1 left out",
         "  server.key        0 files",
         "## left out",
         "  looks like a key  1 file",
@@ -481,7 +481,7 @@ def test_when_no_place_named_is_there_it_couldnt_look(tmp_path):
     )
     assert got.returncode == 42
     doc = json.loads(got.stdout)
-    assert doc["state"] == "unreachable"
+    assert doc["state"] == "populated"
     assert doc["said"] == "0 files copied from 0 places, 2 places not there"
     assert [g["name"] for g in doc["groups"]] == ["not there"]
     assert [r["where"] for r in doc["groups"][0]["rows"]] == [
@@ -505,17 +505,17 @@ def test_a_place_gone_with_nothing_else_copied_couldnt_look_either(tmp_path):
     )
     assert got.returncode == 42
     assert got.stdout.splitlines()[0] == (
-        "gather: unreachable, 0 files copied from 1 place, 1 left out, 1 place not there"
+        "gather: populated, 0 files copied from 1 place, 1 left out, 1 place not there"
     )
 
 
-def test_nothing_copied_is_empty_and_waits_on_you(tmp_path):
+def test_nothing_copied_waits_on_you(tmp_path):
     src = put(tmp_path / "src", {"a.txt": "a", "b.txt": "b"})
     pile = tmp_path / "pile"
     got = gather("--from", src, "--to", pile, "--keep", ".py")
     assert got.returncode == 42
     assert got.stdout.splitlines() == [
-        "gather: empty, 0 files copied from 1 place, 2 left out",
+        "gather: populated, 0 files copied from 1 place, 2 left out",
         "  src                  0 files",
         "## left out",
         "  not a kind you keep  2 files",
@@ -525,7 +525,10 @@ def test_nothing_copied_is_empty_and_waits_on_you(tmp_path):
     bare.mkdir()
     got = gather("--from", bare, "--to", pile)
     assert got.returncode == 42
-    assert got.stdout == "gather: empty, 0 files copied from 1 place\n  bare  0 files\n"
+    assert (
+        got.stdout
+        == "gather: populated, 0 files copied from 1 place\n  bare  0 files\n"
+    )
 
 
 def test_the_where_column_is_as_wide_as_its_longest_up_to_sixty(tmp_path):

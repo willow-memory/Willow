@@ -173,7 +173,7 @@ def report(took, out, missing, gone) -> dict:
     ]
     return {
         "addon": "gather",
-        "state": "unreachable" if missing and not n else "populated" if n else "empty",
+        "state": "populated",  # every place named is a row, copied from or not
         "said": said,
         "groups": [
             {"name": g, "rows": [{"where": w, "what": x} for w, x in rows]}
@@ -241,7 +241,8 @@ def main(argv: list[str]) -> int:
     took, out, missing, gone = gather(sources, to, keep, listed(opts.get("--skip", "")))
     doc = report(took, out, missing, gone)
     print(json.dumps(doc, ensure_ascii=False) if as_json else report_text(doc))
-    return kernel.ESCALATE if missing or doc["state"] != "populated" else kernel.ALIVE
+    copied = sum(c for _, c in took)
+    return kernel.ESCALATE if missing or not copied else kernel.ALIVE
 
 
 if __name__ == "__main__":

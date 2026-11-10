@@ -96,12 +96,13 @@ def main(argv: list[str]) -> int:
     pr, st = sibling("projects", "projects"), sibling("stack", "stack")
     found = [p for p in pr.find(folder.parent, st) if p["folder"].resolve() == folder]
     if not found:
-        doc = {"addon": NAME, "state": "empty", "groups": [],
+        # it couldn't look: no record, so nothing to say where the work stands
+        doc = {"addon": NAME, "state": "unreachable", "groups": [],
                "said": f"{folder} holds no record, so it is no project"}  # fmt: skip
         print(
             json.dumps(doc, ensure_ascii=False)
             if as_json
-            else f"{NAME}: empty, {doc['said']}"
+            else f"{NAME}: unreachable, {doc['said']}"
         )
         return kernel.ESCALATE
     p = found[0]
@@ -172,15 +173,16 @@ def main(argv: list[str]) -> int:
         parts.insert(0, "nothing waits on you and no step is flagged")
     groups = [("waits on you", waits), ("flagged", flagged), ("last runs", last),
               ("never run", never), ("changed since its last run", changed)]  # fmt: skip
+    shown = [
+        {"name": g, "rows": [{"where": w, "what": x} for w, x in rows]}
+        for g, rows in groups
+        if rows
+    ]
     doc = {
         "addon": NAME,
-        "state": "populated",
+        "state": "populated" if shown else "empty",  # a record, and nothing else yet
         "said": f"{p['name']}: {', '.join(parts)}",
-        "groups": [
-            {"name": g, "rows": [{"where": w, "what": x} for w, x in rows]}
-            for g, rows in groups
-            if rows
-        ],
+        "groups": shown,
     }
     if as_json:
         print(json.dumps(doc, ensure_ascii=False))

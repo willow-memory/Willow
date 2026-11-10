@@ -516,7 +516,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 
 - <a id="gather"></a>[**gather**](adapters/stdlib/gather/) \
   Folders and files you name, copied into your pile under a name, only the kinds you keep, never a key or a file too big to read. \
-  *new* `no-install` `offline` `key` `copy` · near: repo-pile, hook-guard, snapshot
+  *new* `no-install` `offline` `key` `copy` · near: json-paths, snapshot, repo-pile
 
 ### Tools you run yourself
 
@@ -621,7 +621,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
   *new* `no-install` `offline` `mention` · near: dialect-dates, people, timeline
 - <a id="glance"></a>[**glance**](adapters/stdlib/glance/) \
   What a scan found, a line a question: where its best passage is, how it opens, and which of the question's words it lacks. \
-  *new* `no-install` `offline` `scan` · near: scan, latent, accents
+  *new* `no-install` `offline` `scan` · near: scan, synonyms, latent
 - <a id="latent"></a>[**latent**](adapters/deps/latent/) \
   Finds code by meaning, not just matching words, using scan's index: a question reaches code that says the same thing another way. \
   Needs numpy; BSD-3-Clause. Uses scan. *new* `needs-install` `offline` `index` `scan` · near: scan, all, duplicates
@@ -658,7 +658,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
   ocr
 - <a id="route"></a>[**route**](adapters/stdlib/route/) \
   A question sent to the step whose job it is: money owed to debts and invoices, a date to what's coming up, the rest to the ask. \
-  *new* `no-install` `offline` `coming` `money` · near: coming-up, calendar-out, digest
+  *new* `no-install` `offline` `coming` `money` · near: debts, coming-up, meaning
 - <a id="rules"></a>[**rules**](adapters/stdlib/rules/) \
   A game's or a house's rules, approved one section at a time, so asking what a rule says gives back that exact section, word for word. \
   *bot* `no-install` `offline` `game` · near: session-seal, game-master, night-batch
@@ -975,7 +975,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
   *bot* `no-install` `offline` `brier` `forecast` · near: market-calls, predict, weather-bet
 - <a id="handover"></a>[**handover**](adapters/stdlib/handover/) \
   Where one project stands, to hand on: what waits on you, what each stack's last run said step by step, and where each line can be checked. \
-  Uses projects, stack. *new* `no-install` `offline` `step` `stack` · near: stack-share, stack, red-on-main
+  Uses projects, stack. *new* `no-install` `offline` `stack` `step` · near: stack-share, stack, red-on-main
 - <a id="invoices"></a>[**invoices**](adapters/stdlib/invoices/) \
   For freelancers: invoices and payments matched by the id pattern you give, never guessed. \
   Uses amounts, bank. *new* `no-install` `offline` `numbers` · near: serve, share, privacy

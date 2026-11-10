@@ -586,6 +586,8 @@ willow/
 │   │   │   ├── test_first_mention.py
 │   │   │   └── README.md
 │   │   ├── glance/
+│   │   │   ├── example-questions.txt
+│   │   │   ├── example-scanned.jsonl
 │   │   │   ├── glance.py     What a scan found, a line a question: where its best passage is, how it opens, and which of the question's words it lacks
 │   │   │   ├── test_glance.py
 │   │   │   └── README.md     its card

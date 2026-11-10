@@ -223,7 +223,7 @@ def test_what_is_not_a_folder_is_refused_by_name(tmp_path):
             assert got.stderr == f"refused: {path} isn't a folder\n"
 
 
-def test_a_folder_that_holds_no_record_is_an_empty_report_that_says_why(tmp_path):
+def test_a_folder_that_holds_no_record_couldnt_be_looked_at_and_says_why(tmp_path):
     p = project(tmp_path)
     bare = p.parent / "bare"
     bare.mkdir()
@@ -232,12 +232,12 @@ def test_a_folder_that_holds_no_record_is_an_empty_report_that_says_why(tmp_path
     got = handover("--project", bare)
     assert (got.returncode, got.stdout, got.stderr) == (
         42,
-        f"handover: empty, {said}\n",
+        f"handover: unreachable, {said}\n",
         "",
     )
     data = handover("--project", bare, "--json")
     assert data.returncode == 42 and json.loads(data.stdout) == {
-        "addon": "handover", "state": "empty", "said": said, "groups": []
+        "addon": "handover", "state": "unreachable", "said": said, "groups": []
     }  # fmt: skip
 
 
@@ -246,7 +246,7 @@ def test_it_reports_the_project_named_not_the_one_beside_it(tmp_path):
     first = project(tmp_path, "first")  # sorts before it, and has a suggestion
     suggest(tmp_path, first / "box", "Six hours.")
     got = handover("--project", p)
-    assert got.returncode == 0 and got.stdout == f"handover: populated, proj: {QUIET}\n"
+    assert got.returncode == 0 and got.stdout == f"handover: empty, proj: {QUIET}\n"
     assert report(first)["said"] == "first: 1 suggestion waits on you"
 
 
@@ -255,12 +255,12 @@ def test_a_project_with_nothing_waiting_and_nothing_flagged_says_so(tmp_path):
     got = handover("--project", p)
     assert (got.returncode, got.stdout, got.stderr) == (
         0,
-        f"handover: populated, proj: {QUIET}\n",
+        f"handover: empty, proj: {QUIET}\n",
         "",
     )
     data = handover("--json", "--project", p)  # --json may come first
     assert data.returncode == 0 and json.loads(data.stdout) == {
-        "addon": "handover", "state": "populated", "said": f"proj: {QUIET}", "groups": []
+        "addon": "handover", "state": "empty", "said": f"proj: {QUIET}", "groups": []
     }  # fmt: skip
     assert data.stdout.count("\n") == 1  # one object, on one line
 
@@ -271,7 +271,7 @@ def test_a_project_can_be_named_from_where_you_stand(tmp_path):
         [sys.executable, str(HERE / "handover.py"), "--project", "."],
         capture_output=True, text=True, cwd=p,
     )  # fmt: skip
-    assert got.returncode == 0 and got.stdout == f"handover: populated, proj: {QUIET}\n"
+    assert got.returncode == 0 and got.stdout == f"handover: empty, proj: {QUIET}\n"
 
 
 def test_one_suggestion_waits_and_two_wait(tmp_path):
@@ -716,5 +716,25 @@ def test_it_reads_and_never_writes(tmp_path):
     before = kept_as_it_is(tmp_path)
     assert handover("--project", p).returncode == 42
     assert handover("--project", p, "--json").returncode == 42
-    assert handover("--project", p.parent).returncode == 42  # no project: empty
+    assert handover("--project", p.parent).returncode == 42  # no project: couldn't look
     assert kept_as_it_is(tmp_path) == before
+
+
+def test_a_record_with_no_stack_and_nothing_waiting_is_an_empty_report(tmp_path):
+    p = tmp_path / "home" / "fresh"
+    p.mkdir(parents=True)
+    pile = p / "pile"
+    pile.mkdir()
+    (pile / "a.md").write_text("Tomatoes want sun.\n")
+    subprocess.run(
+        [sys.executable, str(KERNEL), "init", "--box", str(p / "box"), "--pile",
+         str(pile), "--key", str(tmp_path / "key"), "--now", "2026-10-23T00:00:00Z"],
+        check=True, capture_output=True,
+    )  # fmt: skip
+    got = handover("--project", p, "--json")
+    assert got.returncode == 0, got.stderr
+    doc = json.loads(got.stdout)
+    assert doc["state"] == "empty" and doc["groups"] == []
+    assert doc["said"] == f"fresh: {QUIET}"
+    text = handover("--project", p)
+    assert text.stdout == f"handover: empty, fresh: {QUIET}\n"

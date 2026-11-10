@@ -74,8 +74,9 @@ hand-on gives its reason.
 
     handover: populated, dashboards: nothing waits on you and no step is flagged, 4 stacks run
 
-A folder that holds no record is no project. That is said too, as an empty
-report naming the folder.
+A folder that holds no record is no project, so there was nothing to look
+at. That is said too, naming the folder, as a report that couldn't look
+(`unreachable`), not as an empty one.
 
 **What it can't carry:** the why. It knows what ran and what each step said,
 not why you ran it, what you were trying, or what you would do next. That
