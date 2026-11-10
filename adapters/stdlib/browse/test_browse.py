@@ -691,6 +691,7 @@ def test_a_run_is_shown_from_what_it_kept_and_nothing_is_run(tmp_path):
         text = s.req("GET", "/run")[1]
         assert "<strong>Still running.</strong>" in text
         assert f'<meta http-equiv="refresh" content="{br.AGAIN}">' in text
+        assert "looks again every 3 seconds" in text, "three, as the card says"
         one, two, three = text.split("<div class=card>")[1:]
         assert (
             "<p class=kick>todo <span class=pill>found</span> <span class=pill>step 01</span></p>"
