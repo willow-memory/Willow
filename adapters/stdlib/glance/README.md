@@ -8,6 +8,7 @@ writes: nothing
 network: none
 role: tools
 output: report
+uses: scan
 -->
 # glance
 
