@@ -91,13 +91,16 @@ def run_of(folder: Path, st) -> dict | None:
     except OSError:
         return None
     marks: dict[int, str] = {}
+    fed: dict[int, str | None] = {}
     for line in log.splitlines():
         if m := st.STARTED.fullmatch(line):
             marks[int(m.group(1))] = m.group(3)
+            fed[int(m.group(1))] = m.group(4)
     done = st.ended(log)
     return {
         "folder": folder,
         "marks": [marks[n] for n in sorted(marks)],
+        "fed": [fed[n] for n in sorted(marks)],
         "flagged": sum(1 for s in done.values() if s["flagged"]),
         "finished": any(ln.startswith("done: ") for ln in log.splitlines()),
         "when": logs[0].stat().st_mtime,
@@ -126,7 +129,9 @@ def find(home: Path, st) -> list[dict]:
                 continue
             steps = [s for _, ss in pools for s in ss] if not err else []
             if steps:
-                stacks.append({"file": f, "marks": [st.mark(n, a) for n, a in steps]})
+                stacks.append(
+                    {"file": f, "marks": [st.mark(n, a) for n, a in steps], "steps": steps}
+                )
         # a run is a folder with a stack's log in it: here, or one folder down
         places = [d, *(c for c in inside if c.is_dir() and c not in boxes)]
         runs = []
@@ -156,12 +161,22 @@ def owner(run: dict, stacks: list[dict]) -> tuple[dict | None, bool]:
     return (best, False) if share > 0.5 else (None, False)
 
 
+def stale(run: dict, stack: dict, boxes: list[Path], st) -> bool:
+    """Whether a file a run's step was given is not as it was then. Only
+    for a run that noted its files; a `{box}` is tried as each record."""
+    for (name, args), was in zip(stack["steps"], run["fed"]):
+        if was is None or (was or "") in {st.fed(args, str(b)) for b in boxes}:
+            continue
+        return True
+    return False
+
+
 def said_of(run: dict) -> str:
     out = "nothing flagged" if not run["flagged"] else f"{run['flagged']} flagged"
     return out if run["finished"] else out + ", not finished"
 
 
-def rows_of(p: dict) -> tuple[list[tuple[str, str]], int, bool]:
+def rows_of(p: dict, st) -> tuple[list[tuple[str, str]], int, bool]:
     """(a project's rows, the suggestions waiting in it, a record is broken)."""
     rows, waiting, broken = [], 0, False
     for b in p["boxes"]:
@@ -193,6 +208,8 @@ def rows_of(p: dict) -> tuple[list[tuple[str, str]], int, bool]:
             what += f"; last run {r['folder'].relative_to(p['folder'])}, {said_of(r)}"
             if not same:
                 what += ", of the stack before it changed"
+            elif stale(r, s, p["boxes"], st):
+                what += ", of files that have changed since"
             if len(runs) > 1:
                 what += f"; {count(len(runs) - 1, 'run')} before it"
         rows.append((s["file"].name, what))
@@ -214,10 +231,11 @@ def main(argv: list[str]) -> int:
     if not home.is_dir():
         print(f"refused: {home} isn't a folder", file=sys.stderr)
         return kernel.REFUSED
-    found = find(home, stack_addon())
+    st = stack_addon()
+    found = find(home, st)
     groups, waiting, broken = [], 0, False
     for p in found:
-        rows, w, b = rows_of(p)
+        rows, w, b = rows_of(p, st)
         groups.append((p["name"], rows))
         waiting, broken = waiting + w, broken or b
     said = (

@@ -58,6 +58,7 @@ shown but not flagged.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import re
@@ -193,7 +194,27 @@ def unhandable(flat: list, scripts: dict, kept: bool) -> str | None:
     return None
 
 
-STARTED = re.compile(r"(\d+) (\S+): started \((\w+)\)")
+def fed(args: list[str], box: str) -> str:
+    """Eight characters that are the files a step is given, as they are now:
+    each arg that names a file, by its bytes. The file after `--to` is what
+    the step makes, not what it is given, and an earlier step's output
+    (`{01}`) is that step's to answer for; neither counts. A folder isn't
+    read: a step over a folder is asked again only when its line changes.
+    "" when it is given no file."""
+    seen = []
+    for before, a in zip([""] + args, args):
+        if before == "--to" or HANDS.search(a):
+            continue
+        path = Path(a.replace("{box}", box))
+        try:
+            if path.is_file():
+                seen.append([a, hashlib.sha256(path.read_bytes()).hexdigest()])
+        except OSError:
+            pass
+    return kernel.h256(json.dumps(seen))[:8] if seen else ""
+
+
+STARTED = re.compile(r"(\d+) (\S+): started \((\w+)(?:, fed (\w+))?\)")
 ENDED = re.compile(r"(\d+) (\S+): exit (\d+), (\d+) lines?((?:, [^,]+)*)")
 
 
@@ -204,20 +225,21 @@ def ended(log: str) -> dict[int, dict]:
     that it ended: one started again and not ended is not, whatever came
     before, since its file may be half of a second go."""
     out: dict[int, dict] = {}
-    marks: dict[int, tuple[str, str]] = {}
+    marks: dict[int, tuple[str, str, str | None]] = {}
     for line in log.splitlines():
         if m := STARTED.fullmatch(line):
-            marks[int(m.group(1))] = (m.group(2), m.group(3))
+            marks[int(m.group(1))] = (m.group(2), m.group(3), m.group(4))
             out.pop(int(m.group(1)), None)
         elif m := ENDED.fullmatch(line):
             n, name = int(m.group(1)), m.group(2)
-            if marks.get(n, ("", ""))[0] != name:
+            if marks.get(n, ("", "", None))[0] != name:
                 continue  # an end with no start of its own says nothing
             said = [x for x in m.group(5).split(", ") if x]
             size = next((int(x[5:]) for x in said if x.startswith("mass ") and x[5:].isdigit()), int(m.group(4)))  # fmt: skip
             out[n] = {
                 "name": name,
                 "mark": marks[n][1],
+                "fed": marks[n][2],  # None: a log from before this was kept
                 "code": int(m.group(3)),
                 "size": size,
                 "flagged": "flagged" in said,
@@ -265,11 +287,15 @@ class Run:
         path.parent.mkdir(exist_ok=True)
         path.write_text(json.dumps(doc, ensure_ascii=False) + "\n", encoding="utf-8")
 
-    def kept(self, n: int, name: str, args: list[str]) -> dict | None:
-        """What the earlier run made of this very step, if it finished it and
-        its output is still there; None if it must be run."""
+    def kept(self, n: int, name: str, args: list[str], box: str) -> dict | None:
+        """What the earlier run made of this very step, if it finished it,
+        its output is still there, and the files it was given are as they
+        were; None if it must be run. A log from before a step's files were
+        noted says nothing of them, and is taken at its word."""
         was = self.before.get(n)
         if was is None or (was["name"], was["mark"]) != (name, mark(name, args)):
+            return None
+        if was["fed"] is not None and was["fed"] != fed(args, box):
             return None
         try:
             text = self.file(n, name).read_text(encoding="utf-8", errors="replace")
@@ -293,8 +319,12 @@ class Run:
         filled = [HANDS.sub(path, a) for a in args]
         return ([], missing[0]) if missing else (filled, "")
 
-    def start(self, n: int, name: str, args: list[str]) -> Path:
-        self.say(f"{n:0{self.width}d} {name}: started ({mark(name, args)})")
+    def start(self, n: int, name: str, args: list[str], box: str) -> Path:
+        given = fed(args, box)
+        self.say(
+            f"{n:0{self.width}d} {name}: started ({mark(name, args)}"
+            f"{', fed ' + given if given else ''})"
+        )
         return self.file(n, name)
 
     def end(self, n: int, name: str, code: int, out: str, size: int, note: str, flagged: bool) -> None:  # fmt: skip
@@ -471,7 +501,7 @@ def main(argv: list[str]) -> int:
         for idx, (name, args) in enumerate(steps):
             nsteps += 1
             report = prints_a_report(scripts[name])  # its rows decide its mass
-            was = run.kept(nsteps, name, args) if run and not fresh else None
+            was = run.kept(nsteps, name, args, str(box)) if run and not fresh else None
             if was is not None:
                 code, out, size, is_flagged = was["code"], was["out"], was["size"], was["flagged"]  # fmt: skip
                 note = was["note"] if report else step_result(name, code)[1]
@@ -484,7 +514,7 @@ def main(argv: list[str]) -> int:
                 run.say(f"{nsteps:0{run.width}d} {name}: {out}")
             else:
                 fresh = True
-                live = run.start(nsteps, name, args) if run else None
+                live = run.start(nsteps, name, args, str(box)) if run else None
                 if hands(args):
                     args = run.handed(flat, args)[0]
                 if report:
