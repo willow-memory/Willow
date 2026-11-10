@@ -1,0 +1,1 @@
+`browse`: `--stack FILE` adds a page of what the stack's steps found, each report step run and drawn as a card (its state in words, its one line, its rows where and what, the first eight in sight); one way of drawing for every add-on that prints a report

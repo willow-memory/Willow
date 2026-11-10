@@ -1,6 +1,7 @@
 """browse.py: your folder in your web browser, on this machine only. Python 3.9+.
 
-    python adapters/stdlib/browse/browse.py --box DIR [--port N] [--lang de|es|fr|pt] [--no-open]
+    python adapters/stdlib/browse/browse.py --box DIR [--stack FILE] [--port N]
+        [--lang de|es|fr|pt] [--no-open]
     python adapters/stdlib/browse/browse.py launcher --box DIR
 
 A page to ask your folder questions, read the passages that answer them
@@ -8,6 +9,12 @@ A page to ask your folder questions, read the passages that answer them
 approve one with a click. The front page is the digest add-on's: what's
 waiting, what went stale, what's coming up. Nothing to install and no
 commands to type once it's open. Stop it with Ctrl-C.
+
+With --stack FILE (a stack file, as the stack add-on runs), a third page
+shows what the stack's steps found: each step whose card says it prints a
+report is run and drawn as a card, its one line, then its rows, where and
+what. One way of drawing serves every report add-on, since they all print
+the one shape. Steps that print something else are named and left to stack.
 
 Asking is the kernel's own `bite`, and approving is its own `seal`, so
 both are on the record exactly as if typed. With --lang, a question goes
@@ -129,17 +136,70 @@ details { margin: 8px 0; } summary { cursor: pointer; color: var(--muted); }
 pre { white-space: pre-wrap; overflow-wrap: anywhere; font: 12px/1.5 var(--mono);
       background: var(--bg); border: 1px solid var(--line); border-radius: 4px; padding: 8px 10px; }
 .muted { color: var(--muted); }
+.pill.wait { background: var(--accl); color: var(--fg); }
+.group { font-weight: 600; margin: 10px 0 2px; }
+.row { display: grid; grid-template-columns: minmax(7rem, 38%) 1fr; gap: 10px;
+       padding: 3px 0; border-top: 1px solid var(--line); }
+.row .text { margin: 0; white-space: normal; }
 """
 
 
-def page(title: str, body: str) -> str:
+def page(title: str, body: str, steps: bool = False) -> str:
+    more = '<a href="/steps">What your stack found</a>' if steps else ""
     return (
         "<!doctype html><html lang=en><head><meta charset=utf-8>"
         '<meta name=viewport content="width=device-width, initial-scale=1">'
         f"<title>{esc(title)} · willow</title><style>{STYLE}</style></head><body>"
-        '<nav><a href="/">Home</a><a href="/waiting">Waiting for you</a></nav>'
+        f'<nav><a href="/">Home</a><a href="/waiting">Waiting for you</a>{more}</nav>'
         f"<main><h1>{esc(title)}</h1>{body}</main></body></html>"
     )
+
+
+#: a report's state, the kernel's word, as a person says it
+STATES = {
+    "populated": "found",
+    "empty": "nothing found",
+    "unreachable": "couldn't look",
+}
+SHOWN = 8  # rows a card shows before the rest fold away
+
+
+def rows_html(pairs: list[tuple[object, dict]]) -> str:
+    """(group, row) pairs as rows under their group's name, each row where
+    then what, a group's name said once above its first row."""
+    out, last = [], object()
+    for group, row in pairs:
+        if group != last and group is not None:
+            out.append(f"<p class=group>{esc(group)}</p>")
+        last = group
+        out.append(
+            f"<div class=row><span class=where>{esc(row['where'])}</span>"
+            f"<p class=text>{esc(row['what'])}</p></div>"
+        )
+    return "".join(out)
+
+
+def report_card(doc: dict, code: int = 0, shown: int = SHOWN) -> str:
+    """One report, any add-on's, as a card: whose it is and its state, the one
+    thing it said, then its rows, the first few in sight and the rest folded.
+    The shape is the report contract's (ci/README.md): `addon`, `state`,
+    `said`, and `groups` of `rows`, each a `where` and a `what`. A report
+    that found things and exited 42 waits on the person, and says so."""
+    pairs = [(g["name"], r) for g in doc["groups"] for r in g["rows"]]
+    state = STATES.get(doc["state"], str(doc["state"]))
+    waits = code == kernel.ESCALATE and doc["state"] == "populated"
+    head = (
+        f"<p class=kick>{esc(doc['addon'])} <span class=pill>{esc(state)}</span>"
+        + (" <span class='pill wait'>waits on you</span>" if waits else "")
+        + f"</p><h2>{esc(doc['said'])}</h2>"
+    )
+    rest = ""
+    if len(pairs) > shown:
+        rest = (
+            f"<details><summary>All {len(pairs)} rows</summary>"
+            f"{rows_html(pairs[shown:])}</details>"
+        )
+    return f"<div class=card>{head}{rows_html(pairs[:shown])}{rest}</div>"
 
 
 def ask_form(token: str, value: str = "") -> str:
@@ -245,12 +305,63 @@ def passage(where: str, text: str, note: str = "") -> str:
 class Willow:
     """The pages for one box, with this start's secret."""
 
-    def __init__(self, box: Path, lang: str | None = None, token: str | None = None):
+    def __init__(
+        self,
+        box: Path,
+        lang: str | None = None,
+        token: str | None = None,
+        stack: Path | None = None,
+    ):
         self.box = box
+        self.stack = stack
         self.token = token or secrets.token_urlsafe(32)
         self.words = sibling(f"words-{lang}", f"words_{lang}") if lang else None
         if lang and self.words is None:
             raise ValueError(f"the words-{lang} add-on isn't here")
+
+    def page(self, title: str, body: str) -> str:
+        return page(title, body, steps=self.stack is not None)
+
+    def steps(self) -> str:
+        """What the stack's report steps found, each drawn as a card, in the
+        stack file's order under its pools' headings. Run when asked for."""
+        title = "What your stack found"
+        st = sibling("stack", "stack")
+        if self.stack is None or st is None:
+            why = (
+                "No stack was named when this was started."
+                if st
+                else "The stack add-on isn't here."
+            )
+            return self.page(title, f"<p class=muted>{why}</p>")
+        try:
+            pools, err = st.parse_stack(self.stack.read_text(encoding="utf-8"))
+        except OSError:
+            pools, err = [], f"can't read the stack {self.stack}"
+        if err:
+            return self.page(title, f"<p>Couldn't read your stack: {esc(err)}</p>")
+        body, left = [], []
+        for heading, steps in pools:
+            cards = []
+            for name, args in steps:
+                script = st.resolve(name)
+                if script is None:
+                    cards.append(f"<div class=card><p class=kick>{esc(name)}</p><p class=muted>The {esc(name)} add-on isn't here.</p></div>")  # fmt: skip
+                elif not st.prints_a_report(script):
+                    left.append(name)
+                else:
+                    code, out = st.run_step(script, [*args, "--json"], str(self.box))
+                    doc, text = st.as_report(code, out)
+                    try:
+                        cards.append(report_card(doc, code))
+                    except (KeyError, TypeError):  # no report came: what it said
+                        cards.append(f"<div class=card><p class=kick>{esc(name)} <span class=pill>exit {code}</span></p><p class=text>{esc(text)}</p></div>")  # fmt: skip
+            if cards:
+                body.append(f"<h2>{esc(heading)}</h2>" + "".join(cards))
+        if left:
+            names = ", ".join(dict.fromkeys(left))
+            body.append(f"<p class=muted>Not drawn here, since they print something other than a report: {esc(names)}. The stack add-on runs those.</p>")  # fmt: skip
+        return self.page(title, "".join(body) or "<p class=muted>Your stack has no step that prints a report.</p>")  # fmt: skip
 
     def home(self) -> str:
         dg = sibling("digest", "digest")
@@ -263,7 +374,7 @@ class Willow:
                 if "refused" not in doc
                 else (f"<p>Your record doesn't check out: {esc(doc['refused'])}</p>")
             )
-        return page("Your folder", ask_form(self.token) + summary)
+        return self.page("Your folder", ask_form(self.token) + summary)
 
     def summary(self, doc: dict) -> str:
         out = []
@@ -300,12 +411,12 @@ class Willow:
         if self.words is not None:
             asked = " ".join(self.words.kept(question))
         if not kernel.words(asked):
-            return page("Ask", ask_form(self.token, question) +
+            return self.page("Ask", ask_form(self.token, question) +
                         "<p>Every word there is a common one. Name the thing you mean.</p>")  # fmt: skip
         code, said, err = call("bite", "--box", str(self.box), asked)
         body = ask_form(self.token, question)
         if code == kernel.REFUSED:
-            return page(
+            return self.page(
                 "Ask", body + f"<p>Couldn't ask: {esc(err.strip() or said.strip())}</p>"
             )
         doc = json.loads(said)
@@ -332,12 +443,12 @@ class Willow:
                     esc(h[k]) for k in ("why", "where", "next") if h.get(k)
                 )
                 body += f"<p class=muted>{tips}</p>"
-        return page("Ask", body)
+        return self.page("Ask", body)
 
     def waiting(self) -> str:
         rows, breaks = kernel.read(self.box / "record.jsonl")
         if breaks:
-            return page(
+            return self.page(
                 "Waiting for you",
                 f"<p>Your record doesn't check out: {esc('; '.join(breaks))}</p>",
             )
@@ -345,7 +456,7 @@ class Willow:
         subjects = [r["subject"] for r in rows if r["kind"] == "proposal"
                     and r.get("verdict") == "pass" and r["subject"] not in done]  # fmt: skip
         if not subjects:
-            return page(
+            return self.page(
                 "Waiting for you",
                 "<p class=muted>Nothing is waiting for your approval.</p>",
             )
@@ -390,13 +501,15 @@ class Willow:
                 f'<input type=hidden name=subject value="{esc(subj)}">'
                 f"<button>Approve this {kind}</button></form></div>"
             )
-        return page("Waiting for you", "".join(body))
+        return self.page("Waiting for you", "".join(body))
 
     def approve(self, subject: str) -> str:
         code, said, err = call("seal", "--box", str(self.box), subject)
         if code != kernel.ALIVE:
-            return page("Not approved", f"<p>{esc(err.strip() or said.strip())}</p>")
-        return page("Approved", "<p>It's on your record, signed with your key, and it "
+            return self.page(
+                "Not approved", f"<p>{esc(err.strip() or said.strip())}</p>"
+            )
+        return self.page("Approved", "<p>It's on your record, signed with your key, and it "
                     "answers its question from now on.</p>"
                     '<p><a href="/waiting">Back to what\'s waiting</a></p>')  # fmt: skip
 
@@ -466,6 +579,8 @@ class Handler(BaseHTTPRequestHandler):
             return self.send(200, self.willow.home())
         if url.path == "/waiting":
             return self.send(200, self.willow.waiting())
+        if url.path == "/steps":
+            return self.send(200, self.willow.steps())
         return self.send(
             404, page("Not here", "<p>There's no page at that address.</p>")
         )
@@ -560,7 +675,7 @@ def main(argv: list[str]) -> int:
         return kernel.ALIVE
     opts, flags, rest, it = {}, set(), [], iter(argv)
     for a in it:
-        if a in ("--box", "--port", "--lang"):
+        if a in ("--box", "--port", "--lang", "--stack"):
             opts[a] = next(it, "")
         elif a == "--no-open":
             flags.add(a)
@@ -568,7 +683,8 @@ def main(argv: list[str]) -> int:
             rest.append(a)
     port = opts.get("--port", "0")
     if (not opts.get("--box") or rest or not port.isdigit() or int(port) > 65535
-            or opts.get("--lang", "de") not in LANGS):  # fmt: skip
+            or opts.get("--lang", "de") not in LANGS
+            or ("--stack" in opts and not opts["--stack"])):  # fmt: skip
         print(__doc__.split("\n\n")[1], file=sys.stderr)
         return kernel.REFUSED
     box = Path(opts["--box"])
@@ -576,7 +692,11 @@ def main(argv: list[str]) -> int:
         print("refused: not a kernel box; init first", file=sys.stderr)
         return kernel.REFUSED
     try:
-        willow = Willow(box, opts.get("--lang"))
+        stack = Path(opts["--stack"]) if "--stack" in opts else None
+        if stack is not None and not stack.is_file():
+            print(f"refused: can't read the stack {stack}", file=sys.stderr)
+            return kernel.REFUSED
+        willow = Willow(box, opts.get("--lang"), stack=stack)
         server = serve(willow, int(port))
     except (OSError, ValueError) as e:
         print(f"refused: {e}", file=sys.stderr)
