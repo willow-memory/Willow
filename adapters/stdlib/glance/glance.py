@@ -61,12 +61,19 @@ def questions(text: str) -> dict[str, str]:
 def scanned(text: str) -> tuple[list[dict] | None, str]:
     """(scan's lines as rows, "") or (None, why they aren't scan's)."""
     rows = []
-    for n, ln in enumerate((x for x in text.splitlines() if x.strip()), 1):
+    for n, ln in enumerate(text.splitlines(), 1):
+        if not ln.strip():
+            continue
         try:
             row = json.loads(ln)
-            row["question"], row["state"], list(row["served"])
+            row["question"], row["state"]
+            # each passage served has a place and a text, both words
+            [(s["where"] + "", s["text"] + "") for s in row["served"]]
         except (ValueError, KeyError, TypeError):
-            return None, f"line {n} has no question, state and served, as scan's lines do"
+            return (
+                None,
+                f"line {n} has no question, state and served, as scan's lines do",
+            )
         rows.append(row)
     if not rows:
         return None, "it is empty: the step before said nothing to hand on"
@@ -105,7 +112,9 @@ def look(rows: list[dict], asked: dict[str, str], alias: dict):
         top = row["served"][0]
         place = f"{short(top['where'])}  {opening(top['text'])}"
         want = want_of(q)
-        toks = kernel.toks({"text": top["text"], "path": top["where"].rpartition(":")[0]})
+        toks = kernel.toks(
+            {"text": top["text"], "path": top["where"].rpartition(":")[0]}
+        )
         lacks = [w for w in want if not kernel.held_by(w, toks, alias)]
         if not want or not lacks:
             whole.append((name, place))
