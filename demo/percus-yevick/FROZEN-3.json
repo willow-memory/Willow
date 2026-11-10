@@ -1,0 +1,15 @@
+{
+ "about": "Freeze 3 of demo/percus-yevick: arms.py again, after its first real run failed (same-way's timeout) and wrote nothing. Freezes 1 and 2 are unchanged and their verdicts stand; the arms count nothing. Committed alone; held by test_percus_yevick.py, which holds each file to the latest freeze naming it.",
+ "frozen": "2026-11-06",
+ "built_on": "18cbd66",
+ "known_when_frozen": "freezes 1 and 2's verdicts; that the first arms run failed at 03:47 UTC and why; no arm's results, since none were written",
+ "change": "same-way gets ASK_LIMIT (1800 s) times its asks; a timeout is said, never raised; each arm is written to --out as it ends",
+ "models": "qwen3:8b@none,gemma3:4b: without reasoning, by the decision of the person running the study; the reasoning-on side-by-side is dropped",
+ "files": {
+  "arms.py": "e434caff688419f5c71c1d63768d45145211c1eb1974c98b73c7613d102e2014"
+ },
+ "tools_at_freeze": {
+  "adapters/stdlib/local-model/local_model.py": "6f460b811e340c74f2b0e8ffc22f6de64283c8a6637f7295c3bc50644f40b909",
+  "adapters/stdlib/same-way/same_way.py": "a223e592eeade2f82a37564c8fd9c1ec0da050735d25741134b29679fa0420e9"
+ }
+}

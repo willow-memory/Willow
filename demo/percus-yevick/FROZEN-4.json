@@ -1,0 +1,19 @@
+{
+ "about": "Freeze 4 of demo/percus-yevick: the pile built again with the notation add-on (pull request #273) reading each paper's math, each equation with the words its paper gives for its symbols; nothing else changed. Freezes 1 to 3 are unchanged and their verdicts stand. Committed alone, before any question was asked of the notation pile. Held by test_percus_yevick.py.",
+ "frozen": "2026-11-06",
+ "built_on": "528af1f",
+ "known_when_frozen": "freezes 1 and 2's results and the ceiling (9 of 11 steps held somewhere); notation's glossaries on these papers; 1,303 of 1,394 equations given a symbols line; nothing any ranker served from the notation pile",
+ "how_run": "pipeline.py --math notation, then union.py --math notation on the same WORK; verdicts named percus-yevick:notation:R1 and on",
+ "pass_rules": "R1 to R5 (pipeline.py) and R7 to R10 (union.py), the bars as frozen in FROZEN.json and FROZEN-2.json",
+ "the_guess": "the kernel's author questions (R1's count) find at least 3 of 11 steps on the notation pile, with R3 and R4 satisfied: the guess holds; 1 or 0: it is wrong; 2: too close to call",
+ "files": {
+  "pipeline.py": "db811668ff63ffe755cc78c9aafd993f9ecbeb45e324bee7433ab1bd40423658",
+  "union.py": "5473b14dbabceb0375a3cc4ae854a1dc0d0fc6060fe3ceb467243b6686815bb4"
+ },
+ "tools_at_freeze": {
+  "adapters/stdlib/notation/notation.py": "0032d1e527bd152bd620e6dec4473e506ba9a23de24699b445030157a154c7bb",
+  "adapters/stdlib/equations/equations.py": "959912fb5cd1dba2293741a5ce23941ecb216c05b27efb752a02e1c4e6a791dd",
+  "kernel.py": "0f6f34eabdc4f4ec82eaf2ded411bea46da2aee0ea57bbc2b0c6a4e0ecfe4111",
+  "adapters/stdlib/scan/scan.py": "ff3717e7f280eb0a3dea479136bdab43360cd72cd6861d7827fbdf1504c2ce9d"
+ }
+}

@@ -1,0 +1,37 @@
+{
+ "about": "Freeze 2 of demo/percus-yevick: the claim as its author meant it, that the stack and the add-ons find the derivation, where freeze 1 (FROZEN.json, unchanged) counted the kernel alone. Committed alone, after freeze 1's run and before any arm's output was read. Held by test_percus_yevick.py; a change is a new freeze.",
+ "frozen": "2026-11-06",
+ "built_on": "a13f4e1",
+ "known_when_frozen": "freeze 1's verdicts and rows, and how many passages in the pile hold each step (README, The run); nothing any ranker but the kernel served",
+ "pass_rules": {
+  "R7": "author questions, all five rankers (kernel, kernel+words, bm25, pile-rungs, latent), three passages each, a step found when any ranker serves its own question a passage holding it: at least 9 of 11, with s5a, s5b and s7",
+  "R8": "blind questions, the same way: at least 7 of 11, with s5b and s7",
+  "R9": "at most 2 of 10 null questions served a chain step by any of the five",
+  "R10": "fifteen random passages for each author question, seed 0, find at most 2 of 11 steps",
+  "reported, never counted": "each ranker's own finds; steps found only through Wertheim's Laplace method or sticky spheres"
+ },
+ "files": {
+  "union.py": "4b8862a7cd70e4481af2c6cb97c8d42fdda8b6ef843c7c481088aecbcc1046b7",
+  "arms.py": "704bb2526c50d768676105fcafcd1e41d2bd71033c5a05230a2f87bbf64926ea",
+  "pipeline.py": "65f96d28db23a29bc8520831d292e197617955345b2c69a0e4272ce5c2413ad2",
+  "tally.py": "5ba26782be3da2414a41650ccdb21c26a0dc4d45c8a26f5a61d32271a8af35c9",
+  "score.py": "eeb3838c62e7382f30a0beaa855b7fcac5fd686a3e36492ec2c48a147453f08d",
+  "steps.json": "bffba352994391cd586287a1db84b01afec5b399f3a7ada4100db8fd14a7b600",
+  "words.txt": "233073687b568303e0daafae92b4673373ee8a5f1b863fedd0a350fd504e3c70",
+  "sources.json": "07e65b4e7c6e52909c7a63574d6cd58e493a44d1679a2dc2d1773d0cda9fbb85",
+  "questions/author.txt": "810f5c7d281c05f397094f977b82b56af822b8ed5def939dfcfa1c05da7bc8ca",
+  "questions/blind-a.txt": "cdd45454f27766f816865bf9d0f245ea48c30064e62229b98ebaf64d36247f49",
+  "questions/null.txt": "eba409affb3d4979d2b4b059503b58df7e6bd4638d281d6690e6e2f5ea6ae051"
+ },
+ "tools_at_freeze": {
+  "kernel.py": "0f6f34eabdc4f4ec82eaf2ded411bea46da2aee0ea57bbc2b0c6a4e0ecfe4111",
+  "adapters/stdlib/scan/scan.py": "ff3717e7f280eb0a3dea479136bdab43360cd72cd6861d7827fbdf1504c2ce9d",
+  "adapters/stdlib/pile-rungs/pile_rungs.py": "8752b9b085889bf2a9f05db3c368800ad4f5dccf541540b36fb2bb9f4ece7b5a",
+  "adapters/deps/latent/latent.py": "f37590d9135058fc28cbcafdb3b7fe55f098235413d19735ec3075ec53114122",
+  "adapters/stdlib/latex/latex.py": "f65208eb08ac19e8547bff3eb7d40d2fe1171908d86b94220426aef206b0197a",
+  "adapters/stdlib/equations/equations.py": "959912fb5cd1dba2293741a5ce23941ecb216c05b27efb752a02e1c4e6a791dd",
+  "adapters/stdlib/mediawiki/mediawiki.py": "c0f142d87902577c0a80cb9dd2a2347977851da48dda89c19b3c403af6d60656",
+  "adapters/deps/pdf/pdf.py": "854c80d591c568788394bcb8e7449a3851760077a39a2cc6c9e8af060507d523",
+  "adapters/stdlib/bibtex/bibtex.py": "620fa90ae3d17a361d62523cf40bd3cfeb3861ed89fc3ab0adf153b5a317c35e"
+ }
+}

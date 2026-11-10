@@ -1,0 +1,16 @@
+# Notation and abbreviations a physicist might use in a question, read as
+# the words the sources use. Written from general knowledge, before any real
+# question was asked; frozen with the rest. Used for R2's second count and
+# reported beside R1, never in place of the plain count.
+# Their word = the sources' word(s).
+py = percus, yevick
+oz = ornstein, zernike
+rdf = radial
+dcf = direct
+eos = equation
+hs = hard
+electronic = electron
+packing = eta, phi, varphi
+compressibility = compressible, compressibilities
+saxs = scattering
+sans = scattering

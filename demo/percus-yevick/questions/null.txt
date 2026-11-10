@@ -1,0 +1,13 @@
+# Null questions: physics off the chain, asked of the same stack. A served
+# passage that holds a chain step here is the rate at which anything would
+# have hit. Frozen in FROZEN.json.
+n.1	What is the Debye screening length of an electrolyte?
+n.2	What are the van der Waals constants of a real gas?
+n.3	What is the critical temperature of the two dimensional Ising model?
+n.4	What is Bragg's law for diffraction from a crystal lattice?
+n.5	What is the mean free path of a molecule in a dilute gas?
+n.6	What is the Debye model of the heat capacity of a solid?
+n.7	How does Rayleigh scattering depend on wavelength?
+n.8	What is the hypernetted chain closure?
+n.9	What is the Lennard-Jones potential?
+n.10	What is the Mean Spherical Approximation for charged hard spheres?

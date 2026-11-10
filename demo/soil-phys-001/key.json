@@ -1,0 +1,337 @@
+{
+ "about": "The answer key: each ledger line checked by reading (SOIL-PHYS-001 rev 3, CHECKS.md), with the file whose words decide it, the verdict, and the deciding quote; then the claim claim-check is given and the question the kernel is asked, both written before any tool was run on the pile. null: ten off-topic claims and questions, which no physics source should back or answer.",
+ "lines": [
+  {
+   "id": "04.01-a",
+   "file": "jacobson-1995.pdf",
+   "verdict": "holds",
+   "quote": "The Einstein equation is derived from the proportionality of entropy and horizon area together with the fundamental relation δQ = T dS",
+   "claim": "Einstein's equation follows from the proportionality of entropy and horizon area with the relation dQ = T dS",
+   "question": "How can Einstein's equation be derived from thermodynamics of horizons?"
+  },
+  {
+   "id": "04.01-b",
+   "file": "verlinde-2011.pdf",
+   "verdict": "holds",
+   "quote": "Gravity is explained as an entropic force caused by changes in the information associated with the positions of material bodies.",
+   "claim": "Gravity is an entropic force caused by changes in information",
+   "question": "Is gravity an entropic force?"
+  },
+  {
+   "id": "04.02-a",
+   "file": "ryu-takayanagi-2006.pdf",
+   "verdict": "holds with a change",
+   "quote": "we propose the following 'area law'",
+   "claim": "The entanglement entropy of a boundary region equals the area of a minimal surface in the bulk",
+   "question": "How is entanglement entropy related to the area of a minimal surface?"
+  },
+  {
+   "id": "04.02-b",
+   "file": "van-raamsdonk-2010.pdf",
+   "verdict": "holds",
+   "quote": "the two regions of spacetime pull apart and pinch off from each other",
+   "claim": "Removing entanglement between two regions makes spacetime pull apart",
+   "question": "What happens to spacetime when entanglement between two regions decreases?"
+  },
+  {
+   "id": "04.02-c",
+   "file": "maldacena-susskind-2013.pdf",
+   "verdict": "holds",
+   "quote": "claim that even for an entangled pair of particles, in a quantum theory of gravity there must be a Planckian bridge between them",
+   "claim": "Entangled particles are connected by a Planckian bridge, ER equals EPR",
+   "question": "Are entangled particles connected by Einstein-Rosen bridges?"
+  },
+  {
+   "id": "04.02-d",
+   "file": "van-raamsdonk-2010.pdf",
+   "verdict": "does not hold",
+   "quote": "decreases, in direct proportionality to the decrease in entanglement entropy",
+   "claim": "The metric is directly proportional to quantum entanglement",
+   "question": "Is the spacetime metric proportional to entanglement?"
+  },
+  {
+   "id": "06.01-a",
+   "file": "shannon-1948.pdf",
+   "verdict": "holds",
+   "quote": "This is the maximum compression possible when we encode into the same alphabet.",
+   "claim": "Entropy measures information and sets the maximum compression of a source",
+   "question": "What is the maximum compression possible for an information source?"
+  },
+  {
+   "id": "06.01-b",
+   "file": "solomonoff-1964.pdf",
+   "verdict": "holds with a change",
+   "quote": "The weight assigned to a description of length N is 2^{-N}.",
+   "claim": "Induction assigns probabilities by weighting descriptions on a universal machine by their length",
+   "question": "How are a priori probabilities assigned to sequences in inductive inference?"
+  },
+  {
+   "id": "06.01-c",
+   "file": "huh-2024.pdf",
+   "verdict": "holds",
+   "quote": "We hypothesize that this convergence is driving toward a shared statistical model of reality, akin to Plato's concept of an ideal reality.",
+   "claim": "Representations in AI models are converging toward a shared statistical model of reality",
+   "question": "Are the representations of different AI models converging?"
+  },
+  {
+   "id": "06.01-d",
+   "file": "huh-2024.pdf",
+   "verdict": "does not hold",
+   "quote": "We hypothesize that this convergence is driving toward a shared statistical model of reality",
+   "claim": "Large models converge onto the same geometric representation of physics",
+   "question": "Do large models converge on a geometric representation of physics?"
+  },
+  {
+   "id": "03.02-a",
+   "file": "ajl-2005.pdf",
+   "verdict": "holds",
+   "quote": "While four-dimensional on large scales, the quantum universe appears two-dimensional at short distances.",
+   "claim": "The quantum universe is four-dimensional on large scales and two-dimensional at short distances",
+   "question": "What is the spectral dimension of the quantum universe at short distances?"
+  },
+  {
+   "id": "03.02-b",
+   "file": "cook-2004.pdf",
+   "verdict": "holds",
+   "quote": "an elementary one dimensional cellular automaton known as \"Rule 110\" is capable of universal computation.",
+   "claim": "The elementary cellular automaton Rule 110 is capable of universal computation",
+   "question": "Is Rule 110 capable of universal computation?"
+  },
+  {
+   "id": "01.02-a",
+   "file": "tegmark-1997.pdf",
+   "verdict": "holds with a change",
+   "quote": "it is not implausible that only a 3+1-dimensional spacetime can contain observers",
+   "claim": "Only a 3+1-dimensional spacetime can contain observers",
+   "question": "Why does spacetime have three space dimensions and one time dimension?"
+  },
+  {
+   "id": "02.01-a",
+   "file": "sakharov-1967-open.pdf",
+   "verdict": "holds with a change",
+   "quote": "To explain baryon asymmetry, we propose in addition an approximate character for the baryon conservation law.",
+   "claim": "Baryon asymmetry arises if baryon conservation is approximate, with CP violation and departure from equilibrium",
+   "question": "How can the baryon asymmetry of the universe arise?"
+  },
+  {
+   "id": "02.01-b",
+   "file": "sakharov-1967-open.pdf",
+   "verdict": "does not hold",
+   "quote": "We assume that the baryon and muon conservation laws are not absolute",
+   "claim": "A conserved ground offset seeds the baryon asymmetry",
+   "question": "Is the baryon asymmetry a conserved quantity?"
+  },
+  {
+   "id": "02.01-c",
+   "file": "planck-2018-parameters.pdf",
+   "verdict": "not found in this text",
+   "quote": "baryon density Ωb h2 = 0.0224 ± 0.0001",
+   "claim": "The baryon-to-photon ratio is near 6 times 10 to the minus 10",
+   "question": "What is the baryon density measured by Planck?"
+  },
+  {
+   "id": "02.03-a/eb",
+   "file": "englert-brout-1964.pdf",
+   "verdict": "holds with a change",
+   "quote": "we shall show that in certain cases vector mesons do indeed acquire mass when the vacuum is degenerate with respect to a compact Lie group.",
+   "claim": "Gauge vector mesons acquire mass when the vacuum is degenerate",
+   "question": "Do gauge vector mesons acquire mass through broken symmetry?"
+  },
+  {
+   "id": "02.03-a/higgs",
+   "file": "higgs-1964.pdf",
+   "verdict": "holds with a change",
+   "quote": "the spin-one quanta of some of the gauge fields acquire mass",
+   "claim": "The spin-one quanta of gauge fields acquire mass through broken symmetry",
+   "question": "How do gauge bosons acquire mass when symmetry is broken?"
+  },
+  {
+   "id": "02.03-a/ghk",
+   "file": "ghk-1964.pdf",
+   "verdict": "holds with a change",
+   "quote": "to form the three components of a massive vector field",
+   "claim": "Gauge fields combine with a scalar to form a massive vector field",
+   "question": "How does a massive vector field arise in a gauge theory with broken symmetry?"
+  },
+  {
+   "id": "02.03-b",
+   "file": "higgs-1964.pdf",
+   "verdict": "holds",
+   "quote": "the prediction of incomplete multiplets of scalar and vector bosons.",
+   "claim": "The theory predicts incomplete multiplets of scalar and vector bosons",
+   "question": "What does broken symmetry predict about multiplets of scalar and vector bosons?"
+  },
+  {
+   "id": "02.03-c",
+   "file": "ghk-1964.pdf",
+   "verdict": "holds with a change",
+   "quote": "While one sees by inspection that there is a massless particle in the theory, it is easily seen that it is completely decoupled from the other (massive) excitations",
+   "claim": "The massless particle is decoupled from the massive excitations",
+   "question": "Are massless Goldstone particles decoupled in gauge theories?"
+  },
+  {
+   "id": "01.02-b",
+   "file": "einstein-1915.html",
+   "verdict": "holds",
+   "quote": "Wir setzen",
+   "claim": "Einstein gives the field equations of gravitation",
+   "question": "What are Einstein's field equations of gravitation?"
+  },
+  {
+   "id": "01.02-c",
+   "file": "kaluza-1921.pdf",
+   "verdict": "holds",
+   "quote": "A unique potential tensor generates a universal field which splits, in ordinary condition, into a gravitational and electromagnetic part.",
+   "claim": "A unique potential tensor generates a universal field that splits into gravitational and electromagnetic parts",
+   "question": "How does a fifth dimension unify gravitation and electromagnetism?"
+  },
+  {
+   "id": "01.02-d",
+   "file": "klein-1926-open.pdf",
+   "verdict": "holds with a change",
+   "quote": "bei denen die fünfte Dimension rein harmonisch auftritt mit einer bestimmten mit der Planckschen Konstante zusammenhängenden Periode",
+   "claim": "The fifth dimension enters harmonically with a period connected to Planck's constant",
+   "question": "How is the fifth dimension related to Planck's constant?"
+  },
+  {
+   "id": "05.01-a",
+   "file": "casimir-1948.pdf",
+   "verdict": "holds with a change",
+   "quote": "This force may be interpreted as a zero point pressure of electromagnetic waves.",
+   "claim": "Two conducting plates attract, a zero point pressure of electromagnetic waves",
+   "question": "Why do two perfectly conducting plates attract?"
+  },
+  {
+   "id": "05.01-b",
+   "file": "nernst-1906.pdf",
+   "verdict": "holds with a change",
+   "quote": "So drängte sich die Annahme auf, daß in solchen Fällen in der nächsten Nähe des absoluten Nullpunktes ein völliges Zusammenfallen beider Größen stattfindet",
+   "claim": "Near absolute zero the maximal work and the energy of a reaction coincide",
+   "question": "What happens to chemical equilibrium near absolute zero?"
+  },
+  {
+   "id": "03.01-a",
+   "file": "julia-1918.pdf",
+   "verdict": "holds",
+   "quote": "Le Mémoire que je soumets au jugement de l'Académie est consacré à l'étude de l'itération d'une fraction rationnelle",
+   "claim": "The memoir studies the iteration of a rational fraction",
+   "question": "What is known about the iteration of rational functions?"
+  },
+  {
+   "id": "03.01-b",
+   "file": "fatou-1919.pdf",
+   "verdict": "holds",
+   "quote": "Me bornant à l'étude de l'itération des substitutions rationnelles effectuées sur une seule variable complexe, et des équations fonctionnelles qui s'y rattachent",
+   "claim": "Fatou studies the iteration of rational substitutions of a complex variable and functional equations",
+   "question": "How are functional equations related to the iteration of rational substitutions?"
+  },
+  {
+   "id": "02.02-a",
+   "file": "mach-1883.html",
+   "verdict": "holds",
+   "quote": "When a body moves relatively to the fixed stars, centrifugal forces are produced",
+   "claim": "When a body moves relatively to the fixed stars, centrifugal forces are produced",
+   "question": "What produces centrifugal forces in a rotating body?"
+  },
+  {
+   "id": "02.02-b",
+   "file": "leibniz-clarke-1717",
+   "verdict": "not found in this text",
+   "quote": "Sir Isaac Newton says, that Space is an Organ, which God makes use of to perceive Things by.",
+   "claim": "Space is relations among things",
+   "question": "Is space something real or only relations among things?"
+  },
+  {
+   "id": "02.02-b2",
+   "file": "leibniz-clarke-1717-third",
+   "verdict": "holds",
+   "quote": "I hold Space to be something merely relative, as Time is; that I hold it to be an Order of Coexistences, as Time is an Order of Successions.",
+   "claim": "Space is something merely relative, an order of coexistences, as time is an order of successions",
+   "question": "Is space absolute or merely relative?"
+  },
+  {
+   "id": "02.02-c",
+   "file": "leibniz-clarke-1717-third",
+   "verdict": "holds",
+   "quote": "those two States, the one such as it now is, the other supposed to be the quite contrary way, would not at all differ from one another.",
+   "claim": "If space is only an order of relations, a world with east changed into west would not differ",
+   "question": "Would the world differ if east and west were exchanged?"
+  },
+  {
+   "id": "02.03-d",
+   "file": "nambu-2008.pdf",
+   "verdict": "holds",
+   "quote": "The ground state has huge degeneracy. A symmetry operation takes one ground state to another.",
+   "claim": "In spontaneous symmetry breaking the ground state has huge degeneracy",
+   "question": "What happens to the ground state in spontaneous symmetry breaking?"
+  },
+  {
+   "id": "02.03-e",
+   "file": "goldstone-1961-preprint.pdf",
+   "verdict": "holds",
+   "quote": "By choosing one solution, the reflection symmetry is effectively destroyed.",
+   "claim": "By choosing one solution, the reflection symmetry is destroyed",
+   "question": "How does choosing a vacuum break a symmetry?"
+  },
+  {
+   "id": "02.03-f",
+   "file": "goldstone-1961-preprint.pdf",
+   "verdict": "holds",
+   "quote": "The phase of χ is not determined. Fixing it destroys the symmetry.",
+   "claim": "The phase is not determined, and fixing it destroys the symmetry",
+   "question": "Is the phase of the field determined when a continuous symmetry is broken?"
+  }
+ ],
+ "null": [
+  {
+   "id": "n.1",
+   "claim": "Photosynthesis converts light energy into chemical energy in chloroplasts",
+   "question": "How does photosynthesis store light energy?"
+  },
+  {
+   "id": "n.2",
+   "claim": "The French Revolution began with the storming of the Bastille in 1789",
+   "question": "When did the French Revolution begin?"
+  },
+  {
+   "id": "n.3",
+   "claim": "Sourdough bread rises because wild yeast ferments the dough",
+   "question": "Why does sourdough bread rise?"
+  },
+  {
+   "id": "n.4",
+   "claim": "Plate tectonics moves continents a few centimetres a year",
+   "question": "How fast do continents move?"
+  },
+  {
+   "id": "n.5",
+   "claim": "The violin has four strings tuned in fifths",
+   "question": "How is a violin tuned?"
+  },
+  {
+   "id": "n.6",
+   "claim": "Vaccines train the immune system to recognize a pathogen",
+   "question": "How do vaccines work?"
+  },
+  {
+   "id": "n.7",
+   "claim": "Interest rates rise when a central bank tightens monetary policy",
+   "question": "Why do central banks raise interest rates?"
+  },
+  {
+   "id": "n.8",
+   "claim": "Honeybees communicate the location of flowers with a waggle dance",
+   "question": "How do honeybees tell each other where flowers are?"
+  },
+  {
+   "id": "n.9",
+   "claim": "The Great Wall of China was built over many dynasties",
+   "question": "Who built the Great Wall of China?"
+  },
+  {
+   "id": "n.10",
+   "claim": "Tomatoes need full sun and regular watering to fruit",
+   "question": "How much sun do tomato plants need?"
+  }
+ ]
+}
