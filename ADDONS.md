@@ -656,6 +656,9 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
   Exact search through ripgrep, much faster on a big folder, its hits checked against the kernel's hashes. \
   Needs the ripgrep program, from the ripgrep wheel on PyPI or your own rg; MIT or Unlicense. *new* `needs-install` `offline` `search` · near: manifests, pdf,
   ocr
+- <a id="route"></a>[**route**](adapters/stdlib/route/) \
+  A question sent to the step whose job it is: money owed to debts and invoices, a date to what's coming up, the rest to the ask. \
+  *new* `no-install` `offline` `coming` `money` · near: coming-up, calendar-out, digest
 - <a id="rules"></a>[**rules**](adapters/stdlib/rules/) \
   A game's or a house's rules, approved one section at a time, so asking what a rule says gives back that exact section, word for word. \
   *bot* `no-install` `offline` `game` · near: session-seal, game-master, night-batch
@@ -972,7 +975,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
   *bot* `no-install` `offline` `brier` `forecast` · near: market-calls, predict, weather-bet
 - <a id="handover"></a>[**handover**](adapters/stdlib/handover/) \
   Where one project stands, to hand on: what waits on you, what each stack's last run said step by step, and where each line can be checked. \
-  *new* `no-install` `offline` `step` `stack` · near: stack-share, stack, red-on-main
+  Uses projects, stack. *new* `no-install` `offline` `step` `stack` · near: stack-share, stack, red-on-main
 - <a id="invoices"></a>[**invoices**](adapters/stdlib/invoices/) \
   For freelancers: invoices and payments matched by the id pattern you give, never guessed. \
   Uses amounts, bank. *new* `no-install` `offline` `numbers` · near: serve, share, privacy
