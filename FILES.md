@@ -482,6 +482,15 @@ willow/
 │   │   │   └── README.md
 ```
 
+### adapters/stdlib/: Reading more kinds of files: What it makes for elsewhere
+
+```
+│   │   ├── gather/
+│   │   │   ├── gather.py     Folders and files you name, copied into your pile under a name, only the kinds you keep, never a key or a file too big to read
+│   │   │   ├── test_gather.py
+│   │   │   └── README.md     its card
+```
+
 ### adapters/stdlib/: Finding things: What runs on your page
 
 ```

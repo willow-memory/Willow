@@ -512,6 +512,12 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
   WriteFreely posts, from its export or a copy of its SQLite database, as dated text. \
   *new* `no-install` `offline` `copy` `sqlite` · near: apple-notes, bookmarks, nestor
 
+### What it makes for elsewhere
+
+- <a id="gather"></a>[**gather**](adapters/stdlib/gather/) \
+  Folders and files you name, copied into your pile under a name, only the kinds you keep, never a key or a file too big to read. \
+  *new* `no-install` `offline` `key` `copy` · near: repo-pile, hook-guard, snapshot
+
 ### Tools you run yourself
 
 
