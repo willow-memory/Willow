@@ -31,6 +31,68 @@ their reasons on their record; you propose, they seal.
    they sealed is on it, and nothing of their folder; they read it and post
    it.
 
+## One want at a time
+
+A stack is a row of wants, in the order the person had them: each want, the
+card that answers it, and the yes that put it there. It is built the way it
+reads, one want at a time, and never written whole from an agent's own idea
+of what the job needs. The steps above are one turn of this; the whole of it
+is the turn repeated:
+
+1. **Take one want, in their words.** "I want to do X." One thing they want
+   done, not the whole job.
+2. **Look for the card.** Ask the forge add-on with that sentence. Where the
+   Forge can't run, ask the list (`python adapters/stdlib/similar/similar.py
+   near "their sentence"`) and the roles (`python ui/canvas.py pieces --role
+   ROLE`).
+3. **Propose it.** The card, why it answers the want, and what it misreads
+   on this kind of folder. A fork is theirs to settle. **No card is an
+   answer too:** say so, and propose the line of `ui/search-words.txt` their
+   word was missing, or the idea for `adapters/planned.json`. A want no card
+   answers is never a step written by hand around the gap.
+4. **On their yes, it goes on the stack:** one step, with the want kept
+   beside it, as a note above the step in the stack file.
+5. **Run the stack as it now stands,** from a fresh box (the box, their
+   words list on it, the stack, then `verify`), and say what the new step
+   found and what it got wrong.
+6. **The next want.** "Next I want to do Y." Down the row.
+
+**A want is the next thing the thing needs in order to run.** Think of it
+as a workflow: x, then y, then z, where z needs x and y to have happened. It
+is deterministic building, as a program is built: add a chunk, add a block,
+add an add-on. So a want isn't sized by its subject; it is sized by what is
+missing right now, and the order of the row is the order things need one
+another in. A card says what its block needs and gives (`uses`, `reads`,
+`output`); when a step needs what an earlier one made, say so beside it.
+
+It holds whether the forge add-on is there or not: the Forge follows a chain
+of thoughts the same way every time, and an agent working here follows the
+same chain by hand when it isn't in play.
+
+What this rules out:
+
+- **A whole stack at once.** Ten steps the person never asked for, proposed
+  together, is the agent's plan with their name on it.
+- **Running an add-on beside the stack.** If it is worth running, it is a
+  step, with its want and its reason; run from the stack, what it printed is
+  on the page with the rest.
+- **Reading a file in full to find out what it says.** If you need to, the
+  stack is missing a step: a reader, an index, a question.
+
+**A pile can have more than one stack, and no one of them is the right
+one.** Each is a different question of the same folder, and good answers
+come from many arrangements. What they share is being full: something that
+turns each kind of file into words, the person's own words list, a way of
+finding, and a check on what was found. One add-on over raw files is a
+step, not a stack. `demo/five-repos` is the worked example: one folder,
+seven stacks, a words list, and a report for each run saying what it found
+and what it got wrong.
+
+That demo kept to this by a narrow task and explicit prompting, the person
+carrying the row from prompt to prompt. This section is so that it holds
+without that. Whatever is built to carry the row (the forge taking one want
+and adding to the stack that is already there, say) is held to this page.
+
 Where the Forge can't run (it needs forge-play and Python 3.11 or newer),
 say so, and write the stack file by hand, each step with its reason beside
 it, so what's shared still says why.
