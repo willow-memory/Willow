@@ -421,11 +421,11 @@ class Willow:
             except OSError:
                 text = ""
             if step["ended"]:
-                note = st.step_result(step["name"], step["code"])[1]
+                # the kernel's own exit codes: 42 is nothing to say, not a failure
                 came.append(
-                    "found nothing" if note == "none found"
-                    else "didn't finish cleanly" if note.startswith("exit")
-                    else "said something" if text.strip() else "found nothing"
+                    "found nothing" if step["code"] == kernel.ESCALATE or not text.strip()
+                    else "said something" if step["code"] == kernel.ALIVE
+                    else "didn't finish cleanly"
                 )  # fmt: skip
                 wait = " wait" if came[-1] == "didn't finish cleanly" else ""
                 pill = f" <span class='pill{wait}'>{esc(came[-1])}</span>" + (f" <span class=pill>exit {step['code']}</span>" if wait else "")  # fmt: skip
