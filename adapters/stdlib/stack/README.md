@@ -3,7 +3,7 @@ section: Ways to use it
 line: One page made from several add-ons run in the order you list them, their results grouped so the biggest come first.
 source: new
 added: 2026-10-26
-version: 0.2.0
+version: 0.3.0
 writes: to
 network: none
 role: ways
@@ -16,7 +16,7 @@ many heterogeneous steps over one box and composes what each prints — pooled,
 and ordered tallest-first. It is the input side of the serve layer in
 `docs/design/serve.md`: the operator's stack, before any seal.
 
-    python adapters/stdlib/stack/stack.py --box DIR --stack FILE [--to FOLDER]
+    python adapters/stdlib/stack/stack.py --box DIR --stack FILE [--to FOLDER [--resume]]
 
 ## the stack file
 
@@ -59,9 +59,9 @@ keeps the run as it happens:
     <FOLDER>/01-todo.txt      the first step's output
     <FOLDER>/02-scan.txt      the second's, and so on
 
-    01 todo: started
+    01 todo: started (3f9a2c1b)
     01 todo: exit 0, 12 lines
-    02 scan: started
+    02 scan: started (a04e77d2)
 
 Each step's file is named for its place in the stack file, so the folder
 reads in the order things ran. A step that prints as it goes is written as
@@ -74,6 +74,38 @@ FOLDER must be there and empty, and stack makes no folder: a run is one
 folder, and a second run in it would read as part of the first. Follow it
 with anything that follows a folder of files; the page is printed at the end
 as before, the same with `--to` as without.
+
+## going on with a run
+
+A run that was cut off (a model that took too long, a machine put to sleep),
+or one whose stack has had a step added, needn't start again:
+
+    python adapters/stdlib/stack/stack.py --box DIR --stack FILE --to FOLDER --resume
+
+    resumed: 2 of 4 steps had finished
+    01 todo: kept from before
+    02 scan: kept from before
+    03 local-model: started (95d7e44f)
+
+From the top of the stack, a step is kept, and not run, when the earlier run
+finished it, it is asked the very same way now (the eight characters after
+`started` are the add-on and its arguments, hashed: the same add-on asked
+another question is another step), and its output is still in the folder.
+From the first step that isn't, every step runs, finished before or not. A
+stack is a row where a later step may need what an earlier one made, so
+nothing is kept past a step that changed.
+
+A step counts as finished only when the last thing the log says of it is
+that it ended. One that was started again and cut off is run, whatever came
+before, because its file may be half of the second go.
+
+The page is the one a whole run would print, byte for byte: the log keeps
+what each step weighed and how it was flagged, so a kept step sits where it
+would have. In an empty folder `--resume` is a run from the start.
+
+**What it can't know** is whether your folder changed since. A kept step's
+output is what it was then. `--resume` is for going on with a run, not for
+refreshing one; for that, a new folder.
 
 ## what it does and doesn't
 
