@@ -31,7 +31,8 @@ folders, by the projects add-on. Nothing is written.
 
 It prints a report (ci/README.md, "The report contract"); --json gives the
 same as one object. Exit codes, the kernel's: 0 nothing waits and nothing
-is flagged; 42 something does, or the folder is no project; 2 refused.
+is flagged; 42 something does, a record's chain is broken, or the folder is
+no project; 2 refused.
 """
 
 from __future__ import annotations
@@ -73,7 +74,9 @@ def said(run: Path, n: int, name: str, width: int) -> str:
             text = (run / f"{stem}.txt").read_text(encoding="utf-8", errors="replace")
         except OSError:
             return "its output is gone"
-        line = next((ln.strip() for ln in text.splitlines() if ln.strip()), "said nothing")
+        line = next(
+            (ln.strip() for ln in text.splitlines() if ln.strip()), "said nothing"
+        )
         if line.startswith("{"):  # a program's line, not a person's
             line = f"{len(text.splitlines())} lines for a program"
         line = line.removeprefix(f"{name}: ")
@@ -95,16 +98,20 @@ def main(argv: list[str]) -> int:
     if not found:
         doc = {"addon": NAME, "state": "empty", "groups": [],
                "said": f"{folder} holds no record, so it is no project"}  # fmt: skip
-        print(json.dumps(doc, ensure_ascii=False) if as_json else f"{NAME}: empty, {doc['said']}")
+        print(
+            json.dumps(doc, ensure_ascii=False)
+            if as_json
+            else f"{NAME}: empty, {doc['said']}"
+        )
         return kernel.ESCALATE
     p = found[0]
     waits, flagged, last, never, changed = [], [], [], [], []
-    waiting = 0
+    waiting = broken = ran = 0
     for b in p["boxes"]:
         t = pr.tally(b)
         if "broken" in t:
             waits.append((b.name, f"its chain is broken: {t['broken']}"))
-            waiting += 1
+            broken += 1
         elif t["waiting"]:
             waiting += t["waiting"]
             waits.append((b.name, f"{pr.count(t['waiting'], 'suggestion')} waiting, of {pr.count(t['rows'], 'row')}"))  # fmt: skip
@@ -127,14 +134,19 @@ def main(argv: list[str]) -> int:
         logs = sorted(r["folder"].glob("0*-stack.txt"))
         width = len(logs[0].name.split("-")[0])
         done = st.ended(logs[0].read_text(encoding="utf-8", errors="replace"))
-        last.append((name, f"{rel}: {pr.count(len(r['marks']), 'step')}, {pr.said_of(r)}"))
+        last.append(
+            (name, f"{rel}: {pr.count(len(r['marks']), 'step')}, {pr.said_of(r)}")
+        )
+        ran += 1
         clean = [n for n in sorted(done) if not done[n]["flagged"]]
         for n in sorted(done):
             step = done[n]
             line = f"{step['name']}: {said(r['folder'], n, step['name'], width)}"
             where = f"{name} step {n:0{width}d}"
             if step["flagged"]:
-                flagged.append((where, f"{line} ({rel}/{n:0{width}d}-{step['name']}.txt)"))
+                flagged.append(
+                    (where, f"{line} ({rel}/{n:0{width}d}-{step['name']}.txt)")
+                )
             elif len(clean) <= MANY:
                 last.append((where, line))
         if len(clean) > MANY:  # a long stack by what ran, not a row a step
@@ -145,15 +157,18 @@ def main(argv: list[str]) -> int:
             last.append((f"{name} steps", f"{each}: each in {rel}"))
     parts = []
     if waiting:
-        parts.append(f"{pr.count(waiting, 'suggestion')} wait{'s' * (waiting == 1)} on you")
+        parts.append(
+            f"{pr.count(waiting, 'suggestion')} wait{'s' * (waiting == 1)} on you"
+        )
+    if broken:
+        parts.append(f"{pr.count(broken, 'record')} broken")
     if flagged:
         parts.append(f"{pr.count(len(flagged), 'step')} flagged")
-    runs_n = sum(1 for w, _ in last if " step" not in w)
-    if runs_n:
-        parts.append(f"{pr.count(runs_n, 'stack')} run")
+    if ran:
+        parts.append(f"{pr.count(ran, 'stack')} run")
     if never:
         parts.append(f"{pr.count(len(never), 'stack')} never run")
-    if not waiting and not flagged:
+    if not waiting and not broken and not flagged:
         parts.insert(0, "nothing waits on you and no step is flagged")
     groups = [("waits on you", waits), ("flagged", flagged), ("last runs", last),
               ("never run", never), ("changed since its last run", changed)]  # fmt: skip
@@ -177,7 +192,7 @@ def main(argv: list[str]) -> int:
             print(f"## {g['name']}")
             for r in g["rows"]:
                 print(f"  {r['where']:<{w}}  {r['what']}".rstrip())
-    return kernel.ESCALATE if waiting or flagged else kernel.ALIVE
+    return kernel.ESCALATE if waiting or broken or flagged else kernel.ALIVE
 
 
 if __name__ == "__main__":
