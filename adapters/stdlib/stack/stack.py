@@ -76,6 +76,27 @@ NONE_FOUND = {"amounts", "contradictions", "duplicates", "said"}
 FLAGS_ON_ALIVE = {"contradictions"}
 
 
+def bare_backslash(argstr: str) -> bool:
+    """Whether a step's args hold a backslash before a letter or digit,
+    outside quotes. The shell's rule drops it without a word, so a pattern
+    written `INV-\\d+` would run as `INV-d+` and match nothing."""
+    quote = ""
+    chars = iter(enumerate(argstr))
+    for i, c in chars:
+        if quote:
+            if c == "\\" and quote == '"':
+                next(chars, None)  # in double quotes it stays, or escapes a quote
+            elif c == quote:
+                quote = ""
+        elif c in "'\"":
+            quote = c
+        elif c == "\\":
+            if argstr[i + 1 : i + 2].isalnum():
+                return True
+            next(chars, None)
+    return False
+
+
 def parse_stack(text: str) -> tuple[list, str | None]:
     """The pools a stack file names: a list of (heading, [steps]), each step a
     (name, args). Returns (pools, error); error is a message or None. A `##`
@@ -99,6 +120,11 @@ def parse_stack(text: str) -> tuple[list, str | None]:
                 args = shlex.split(argstr) if sep else []
             except ValueError as e:
                 return [], f"line {n}: {e}"
+            if bare_backslash(argstr):
+                return [], (
+                    f"line {n}: a backslash outside quotes would be dropped; "
+                    "put that option in quotes"
+                )
             pools[-1][1].append((name, args))
         # any other line is prose in the markdown stack, and is skipped
     if not any(steps for _, steps in pools):
