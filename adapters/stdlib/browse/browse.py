@@ -37,6 +37,7 @@ import hmac
 import html
 import io
 import json
+import re
 import secrets
 import shlex
 import socketserver
@@ -86,28 +87,48 @@ def esc(text: object) -> str:
 
 
 # ── the pages ────────────────────────────────────────────────────────────────
+#: the canvas's own colours, type and corners (ui/page.html), so the two pages
+#: read as one; a card here is laid out as a person reads it: what kind of
+#: thing it is, the thing in a sentence, why, then what it stands on, folded
 STYLE = """
-:root { color-scheme: light dark; --fg: #1d1d1b; --bg: #fbfaf7; --muted: #5f5d58;
-        --line: #d9d6cf; --card: #ffffff; --accent: #2f6b4f; }
+:root { color-scheme: light dark; --bg: #eceee7; --side: #e2e5dc; --card: #f8f9f5;
+        --fg: #23251f; --muted: #5f6458; --line: #cdd1c4; --accent: #45652a;
+        --onacc: #f6f8f0; --accl: #dde7cc; --tag: #e2e5db;
+        --mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace; }
 @media (prefers-color-scheme: dark) {
-  :root { --fg: #ecebe7; --bg: #1b1c1a; --muted: #a9a7a0; --line: #3a3b37;
-          --card: #242522; --accent: #7fc2a0; } }
+  :root { --bg: #141712; --side: #181c16; --card: #1d221a; --fg: #e2e5da;
+          --muted: #a0a795; --line: #353c2f; --accent: #a6c56f; --onacc: #16200d;
+          --accl: #2a3620; --tag: #272d23; } }
 * { box-sizing: border-box; }
-body { margin: 0 auto; max-width: 46rem; padding: 1.5rem 1rem 4rem; font: 1.125rem/1.55
-       system-ui, sans-serif; color: var(--fg); background: var(--bg); }
-h1 { font-size: 1.6rem; margin: 0 0 1rem; } h2 { font-size: 1.2rem; margin: 2rem 0 .5rem; }
-a { color: var(--accent); } nav a { margin-right: 1rem; }
-form.ask { display: flex; gap: .5rem; flex-wrap: wrap; margin: 1rem 0; }
-input[type=text] { flex: 1 1 16rem; font: inherit; padding: .6rem .7rem;
-       border: 1px solid var(--line); border-radius: .4rem; background: var(--card); color: inherit; }
-button { font: inherit; padding: .6rem 1rem; border: 0; border-radius: .4rem;
-         background: var(--accent); color: var(--bg); cursor: pointer; }
-.card { background: var(--card); border: 1px solid var(--line); border-radius: .5rem;
-        padding: .8rem 1rem; margin: .7rem 0; }
-.where { color: var(--muted); font-size: .9rem; font-family: ui-monospace, monospace;
-         overflow-wrap: anywhere; }
-.text { white-space: pre-wrap; overflow-wrap: anywhere; margin: .3rem 0 0; }
-.muted { color: var(--muted); } .card h2 { margin-top: .2rem; }
+body { margin: 0; font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+       color: var(--fg); background: var(--bg); }
+nav { background: var(--side); border-bottom: 1px solid var(--line); padding: 10px 16px; }
+nav a { margin-right: 16px; color: var(--fg); font-weight: 600; text-decoration: none; }
+main { margin: 0 auto; max-width: 46rem; padding: 24px 16px 64px; }
+h1 { font-size: 27px; line-height: 1.15; letter-spacing: -.02em; margin: 0 0 8px; }
+h2 { font-size: 16px; font-weight: 650; margin: 28px 0 6px; }
+a { color: var(--accent); }
+form.ask { display: flex; gap: 8px; flex-wrap: wrap; margin: 16px 0; }
+input[type=text] { flex: 1 1 16rem; font: inherit; padding: 8px 10px;
+       border: 1px solid var(--line); border-radius: 4px; background: var(--card); color: inherit; }
+button { font: inherit; font-weight: 600; padding: 7px 14px; border: 0; border-radius: 4px;
+         background: var(--accent); color: var(--onacc); cursor: pointer; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 4px;
+        padding: 12px 14px; margin: 10px 0; }
+.card h2 { font-size: 18px; margin: 2px 0 6px; overflow-wrap: anywhere; }
+.card p, .card ul { margin: 6px 0; } .card ul { padding-left: 1.2rem; }
+.kick { font: 600 11px/1.3 var(--mono); text-transform: uppercase; letter-spacing: .09em;
+        color: var(--muted); margin: 0 0 4px; }
+.pill { display: inline-block; font: 12px/1.6 var(--mono); text-transform: none;
+        letter-spacing: 0; padding: 0 7px; border-radius: 9px;
+        background: var(--tag); color: var(--muted); margin-right: 4px; overflow-wrap: anywhere; }
+.where { color: var(--muted); font: 13px/1.4 var(--mono); overflow-wrap: anywhere; }
+.text { white-space: pre-wrap; overflow-wrap: anywhere; margin: 4px 0 0; }
+.said { overflow-wrap: anywhere; }
+details { margin: 8px 0; } summary { cursor: pointer; color: var(--muted); }
+pre { white-space: pre-wrap; overflow-wrap: anywhere; font: 12px/1.5 var(--mono);
+      background: var(--bg); border: 1px solid var(--line); border-radius: 4px; padding: 8px 10px; }
+.muted { color: var(--muted); }
 """
 
 
@@ -117,7 +138,7 @@ def page(title: str, body: str) -> str:
         '<meta name=viewport content="width=device-width, initial-scale=1">'
         f"<title>{esc(title)} · willow</title><style>{STYLE}</style></head><body>"
         '<nav><a href="/">Home</a><a href="/waiting">Waiting for you</a></nav>'
-        f"<h1>{esc(title)}</h1>{body}</body></html>"
+        f"<main><h1>{esc(title)}</h1>{body}</main></body></html>"
     )
 
 
@@ -129,6 +150,90 @@ def ask_form(token: str, value: str = "") -> str:
         'placeholder="Ask your folder, in your own words" autofocus required>'
         "<button>Ask</button></form>"
     )
+
+
+_BOLD = re.compile(r"\*\*(.+?)\*\*")
+_STEP = re.compile(r"^- \S+ -- ", re.M)
+
+
+def rich(text: str) -> str:
+    """Text a suggestion gave, as a person reads it: `# ` lines as headings,
+    `- ` lines as a list, `**bold**` as bold, and every character escaped
+    first, so nothing a suggestion says is ever markup of its own."""
+    out: list[str] = []
+    items: list[str] = []
+    para: list[str] = []
+
+    def close() -> None:
+        if items:
+            out.append("<ul>" + "".join(f"<li>{i}</li>" for i in items) + "</ul>")
+            items.clear()
+        if para:
+            out.append("<p class=said>" + " ".join(para) + "</p>")
+            para.clear()
+
+    for raw in text.splitlines():
+        line = _BOLD.sub(r"<strong>\1</strong>", esc(raw.strip()))
+        if line.startswith("- "):
+            if para:
+                close()
+            items.append(line[2:])
+        elif line.startswith("#"):
+            close()
+            out.append(f"<p class=said><strong>{line.lstrip('#').strip()}</strong></p>")
+        elif not line:
+            close()
+        else:
+            if items:
+                close()
+            para.append(line)
+    close()
+    return "".join(out)
+
+
+def listed(names: list) -> str:
+    """Names as a person lists them: a, b or c."""
+    names = [str(n) for n in names]
+    if len(names) < 2:
+        return "".join(names)
+    return ", ".join(names[:-1]) + " or " + names[-1]
+
+
+def reading(prop: dict) -> tuple[str, str, str, str]:
+    """A suggestion as (what kind of thing, its headline, its body, why), each
+    already HTML. Told by the shape of what it holds, never by who made it: a
+    choice is a JSON object saying which was chosen for a word and over what;
+    a stack is a file of `- NAME -- ARGS` steps under a heading; anything else
+    is an answer in words."""
+    data = prop["data"]
+    try:
+        doc = json.loads(data)
+    except ValueError:
+        doc = None
+    if (
+        isinstance(doc, dict)
+        and isinstance(doc.get("chose"), str)
+        and isinstance(doc.get("word"), str)
+        and isinstance(doc.get("over"), list)
+    ):
+        body = ""
+        if doc["over"]:
+            body += f"<p>Not {esc(listed(doc['over']))}.</p>"
+        card = doc.get("card")
+        if isinstance(card, dict) and isinstance(card.get("line"), str):
+            body += f"<p class=muted>{esc(doc['chose'])}: {esc(card['line'])}</p>"
+        why = (
+            doc["why"]
+            if isinstance(doc.get("why"), str) and doc["why"]
+            else prop["claim"]
+        )
+        head = f"For \u201c{esc(doc['word'])}\u201d, use {esc(doc['chose'])}"
+        return "choice", head, body, esc(why)
+    if data.lstrip().startswith("# ") and _STEP.search(data):
+        first, _, rest = data.lstrip().partition("\n")
+        steps = "\n".join(ln for ln in rest.splitlines() if not ln.startswith("#"))
+        return "stack", esc(first[2:].strip()), rich(steps), esc(prop["claim"])
+    return "answer", "", rich(data), esc(prop["claim"])
 
 
 def passage(where: str, text: str, note: str = "") -> str:
@@ -205,8 +310,9 @@ class Willow:
             )
         doc = json.loads(said)
         if doc["state"] == "sealed":
-            body += "<h2>You approved this answer</h2>" + passage(
-                doc["by"], doc["answer"]
+            body += (
+                "<h2>You approved this answer</h2><div class=card>"
+                f"{rich(doc['answer'])}<p class=where>{esc(doc['by'])}</p></div>"
             )
         elif doc["state"] == "populated":
             body += "<h2>Your files say</h2>" + "".join(
@@ -246,9 +352,11 @@ class Willow:
         pile = {
             c["id"]: c for c in kernel.chunks(Path(kernel.config(self.box)["pile"]))
         }
+        n = len(subjects)
         body = [
-            "<p>Each was suggested by something you let ask your folder. "
-            "Approving one makes it the answer to its question from now on.</p>"
+            f"<p><strong>{n} waiting.</strong> Each was suggested by something you let "
+            "ask your folder. Approving one makes it the answer to its question from "
+            "now on.</p>"
         ]
         for subj in subjects:
             prop = json.loads((self.box / "proposals" / f"{subj[9:]}.json").read_text())
@@ -258,14 +366,29 @@ class Willow:
                 else passage(c[:12], "This passage is no longer in your folder.")
                 for c in prop["cites"]
             )
+            kind, head, said, why = reading(prop)
+            n = len(prop["cites"])
+            stands = (
+                f"<details><summary>It cites {n} passage{'s' if n != 1 else ''} "
+                f"of your folder</summary>{cites}</details>"
+                if n
+                else "<p class=muted>It cites nothing from your folder.</p>"
+            )
+            exact = (
+                "<details><summary>Exactly what you'd be approving</summary>"
+                f"<pre>{esc(prop['data'])}</pre>"
+                f"<p class=where>{esc(subj)}</p></details>"
+            )
             body.append(
-                f"<div class=card><h2>{esc(prop['data'])}</h2>"
-                f"<p class=muted>Why: {esc(prop['claim'])}</p>"
-                f"<p class=muted>It cites:</p>{cites}"
+                f"<div class=card><p class=kick>A suggested {kind}"
+                f" <span class=pill>{esc(prop['path'])}</span></p>"
+                + (f"<h2>{head}</h2>" if head else "")
+                + said
+                + f"<p class=muted>Why: {why}</p>{stands}{exact}"
                 '<form method=post action="/approve">'
                 f'<input type=hidden name=token value="{esc(self.token)}">'
                 f'<input type=hidden name=subject value="{esc(subj)}">'
-                "<button>Approve this answer</button></form></div>"
+                f"<button>Approve this {kind}</button></form></div>"
             )
         return page("Waiting for you", "".join(body))
 

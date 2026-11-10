@@ -1913,6 +1913,7 @@ willow/
 │   ├── stone-soup.md         one real pile and add-on after add-on: what each found, what each misread, and the chain that dates a pile's words
 │   ├── design/
 │   │   ├── draft-0.16.md     proposal: four of willow's own promises made law, and four new beats
+│   │   ├── forge-and-pages.md Design note: the forge, and the pages a person approves on
 │   │   ├── lists.md          notes: FILES.md and ADDONS.md, what makes them hard to read and search, and the skim idea
 │   │   ├── pieces.md         proposal: every pull request a piece of the pile: cite, draft, check, accept or 42
 │   │   ├── repo-index.md     proposal: the repo as one deterministic-snapshot box, indexed by a custom serve-style stack

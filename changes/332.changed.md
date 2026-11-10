@@ -1,0 +1,1 @@
+`browse`: a waiting suggestion is a card a person can read (a choice as a sentence, a stack as its steps, an answer as its words, citations folded, the button named for what it approves), and the page wears the canvas's colours
