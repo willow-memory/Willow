@@ -1,0 +1,28 @@
+{
+ "about": "The pre-registration of demo/soil-phys-001: each file's SHA-256, held by test_soil_phys_001.py, committed alone before any real quote, claim or question was asked of the sources. A change is a new freeze.",
+ "frozen": "2026-11-06",
+ "built_on": "728c8d9",
+ "pass_rules": {
+  "R1": "misquote finds at least 90% of the 30 readable deciding quotes in the right source",
+  "R2": "claim-check gives all parts from a passage in the right source to at least 60% of the 25 readable lines that hold",
+  "R3": "the kernel serves a passage from the right source among its top 3 for at least 50% of those 25 lines' questions",
+  "R4": "claim-check gives all parts to at most 1 of 10 off-topic claims, and the kernel serves anything to at most 2 of 10 off-topic questions"
+ },
+ "predictions": {
+  "P1": "claim-check gives all parts to at least 1 of revision 1's 3 false claims",
+  "P2": "misquote finds 0 of the 5 quotes from sources with no text layer"
+ },
+ "files": {
+  "key.json": "075c15fb54fef337ee8b3bd992a20d5036b85dfaa10b2ab89b6f7ff3e307aa88",
+  "sources.json": "87d7234ea96ba8d31644c3fd03af3e4fa1f67ad98f27042f0dcc3026c2874bed",
+  "run.py": "27a25ee434999369052811c89c91926710656211488ff516c08916525dce5865",
+  "fetch.py": "d26122430aff433a1b55145ac3086f1d360fa70b105394c9ea3b32b962285752"
+ },
+ "tools_at_freeze": {
+  "kernel.py": "0f6f34eabdc4f4ec82eaf2ded411bea46da2aee0ea57bbc2b0c6a4e0ecfe4111",
+  "adapters/stdlib/misquote/misquote.py": "438994a820db3a63c341d1ca0036ac9f8c75655c3f98c03499ac3ff224b0af7e",
+  "adapters/stdlib/claim-check/claim_check.py": "4f0d171909eb536b6b9d9206e49db850d0b76836359711317f880146513f257a",
+  "adapters/deps/pdf/pdf.py": "854c80d591c568788394bcb8e7449a3851760077a39a2cc6c9e8af060507d523",
+  "adapters/stdlib/web-pages/web_pages.py": "ab6588b07c711ab0b141ab2e3151edc5b30803b7d58638b88f84371a5c61b122"
+ }
+}

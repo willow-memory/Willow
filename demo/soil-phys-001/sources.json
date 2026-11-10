@@ -1,0 +1,257 @@
+{
+ "about": "The works the answer key quotes, each by the address it was fetched from, when, and its SHA-256. Kept by address and hash, never their text (fetch.py fetches the open ones again; the browser downloads are done by hand). text_layer false: a scan or a font no reader turns into words, so no tool can find its quotes, said before the run.",
+ "sources": [
+  {
+   "file": "ajl-2005.pdf",
+   "bytes": 136521,
+   "sha256": "66111197414ccb8f3fb8dbaaac8355084c49aa7d1f6879092bd16ad76744f00b",
+   "url": "https://arxiv.org/pdf/hep-th/0505113",
+   "how": "fetched by almanac-keep",
+   "fetched": "2026-11-06T06:03:21Z",
+   "text_layer": true
+  },
+  {
+   "file": "casimir-1948.pdf",
+   "bytes": 110073,
+   "sha256": "ed23071262a61c9680b9c1d69c4ff3d2151f9881b4c9888746dfd967f5274db6",
+   "url": "https://www.ph.nat.tum.de/fileadmin/w00bya/t75/pdf/Casimir1948.pdf",
+   "how": "fetched by almanac-keep",
+   "fetched": "2026-11-06T06:19:05Z",
+   "text_layer": false
+  },
+  {
+   "file": "cook-2004.pdf",
+   "bytes": 903483,
+   "sha256": "c9a2885248ae2811c5825c5bcbaa52ca167a7d5300ba88f87ee832b93b293c03",
+   "url": "https://content.wolfram.com/sites/13/2023/02/15-1-1.pdf",
+   "how": "fetched by almanac-keep",
+   "fetched": "2026-11-06T06:19:09Z",
+   "text_layer": true
+  },
+  {
+   "file": "einstein-1915.html",
+   "bytes": 116577,
+   "sha256": "6306b58be5b3e24a36f91e8aff5b17481826545d7f5d39bd92d44bef96be8c2b",
+   "url": "https://de.wikisource.org/wiki/Die_Feldgleichungen_der_Gravitation",
+   "how": "fetched by almanac-keep",
+   "fetched": "2026-11-06T06:19:03Z",
+   "text_layer": true
+  },
+  {
+   "file": "englert-brout-1964.pdf",
+   "bytes": 230198,
+   "sha256": "15ae44333cccf1a56ae83c61247902e153bbc77356dd7f9f4b2520a9ef705c66",
+   "url": "https://journals.aps.org/prl/pdf/10.1103/PhysRevLett.13.321",
+   "how": "downloaded in a browser (scripts refused)",
+   "fetched": "2026-11-06T06:46:32Z",
+   "text_layer": true
+  },
+  {
+   "file": "fatou-1919.pdf",
+   "bytes": 8707350,
+   "sha256": "8422a5204b6935edf7f2886ec0efd61fbf71d4cbe3253f269392a354ec62edcc",
+   "url": "https://www.numdam.org/item/10.24033/bsmf.998.pdf",
+   "how": "fetched by almanac-keep",
+   "fetched": "2026-11-06T06:19:08Z",
+   "text_layer": true
+  },
+  {
+   "file": "ghk-1964.pdf",
+   "bytes": 310276,
+   "sha256": "6b85894213a89ca4337268a71f237fafe62db2a23eeede178e30660c53fd223c",
+   "url": "https://journals.aps.org/prl/pdf/10.1103/PhysRevLett.13.585",
+   "how": "downloaded in a browser (scripts refused)",
+   "fetched": "2026-11-06T06:46:32Z",
+   "text_layer": true
+  },
+  {
+   "file": "goldstone-1961-preprint.pdf",
+   "bytes": 1007253,
+   "sha256": "3ba7b2b118f15947d14a52d6540b71c5dd89d3cf146a16f96a3327c4f9612329",
+   "url": "https://cds.cern.ch/record/343400/files/CM-P00057225.pdf",
+   "how": "downloaded in a browser (scripts refused)",
+   "fetched": "2026-11-06T08:17:29Z",
+   "text_layer": false
+  },
+  {
+   "file": "higgs-1964.pdf",
+   "bytes": 165129,
+   "sha256": "f76b7d68c615878dbc284327384ee5ddd24cfd24d0c73444c828114bbc63a9c9",
+   "url": "https://journals.aps.org/prl/pdf/10.1103/PhysRevLett.13.508",
+   "how": "downloaded in a browser (scripts refused)",
+   "fetched": "2026-11-06T06:46:32Z",
+   "text_layer": true
+  },
+  {
+   "file": "huh-2024.pdf",
+   "bytes": 3268833,
+   "sha256": "fa9b7cc99c1e852960733b2ac89069bf448b2451bd198b4fc2d93aedb533e858",
+   "url": "https://arxiv.org/pdf/2405.07987",
+   "how": "fetched by almanac-keep",
+   "fetched": "2026-11-06T06:03:23Z",
+   "text_layer": true
+  },
+  {
+   "file": "jacobson-1995.pdf",
+   "bytes": 90623,
+   "sha256": "85ed65e912baf62c27923dbf0e4b420ed444c4a253cb33f0a7763285b1271c4c",
+   "url": "https://arxiv.org/pdf/gr-qc/9504004",
+   "how": "fetched by almanac-keep",
+   "fetched": "2026-11-06T06:03:22Z",
+   "text_layer": true
+  },
+  {
+   "file": "julia-1918.pdf",
+   "bytes": 12116814,
+   "sha256": "45ae89366dc78d6aad9f757f30095e11a56e6babaa7768599201f42ea5b06479",
+   "url": "https://www.numdam.org/item/JMPA_1918_8_1__47_0.pdf",
+   "how": "fetched by almanac-keep",
+   "fetched": "2026-11-06T06:19:06Z",
+   "text_layer": true
+  },
+  {
+   "file": "kaluza-1921.pdf",
+   "bytes": 96071,
+   "sha256": "344fe5b1c838bf4a92e702685d75f887e8eff27f42b2e8e8c02c706b7f15eb5a",
+   "url": "https://arxiv.org/pdf/1803.08616",
+   "how": "fetched by almanac-keep",
+   "fetched": "2026-11-06T06:19:03Z",
+   "text_layer": true
+  },
+  {
+   "file": "klein-1926-open.pdf",
+   "bytes": 2478664,
+   "sha256": "f7a15dfa8a3850a2963f76fe3f1a06852ac4f24227553cda3327e016413ccee1",
+   "url": "https://edition-open-sources.org/media/sources/10/10/sources10chap8.pdf",
+   "how": "fetched by almanac-keep",
+   "fetched": "2026-11-06T06:19:03Z",
+   "text_layer": false
+  },
+  {
+   "file": "leibniz-clarke-1717",
+   "bytes": 9222,
+   "sha256": "248c6da5d458ef61cf13260f9565216176ac0258963ab6ffa16b1bb0205e73e3",
+   "url": "https://newtonproject.ox.ac.uk/view/texts/xml/THEM00226",
+   "how": "fetched by almanac-keep",
+   "fetched": "2026-11-06T06:19:02Z",
+   "text_layer": true
+  },
+  {
+   "file": "leibniz-clarke-1717-third",
+   "bytes": 19313,
+   "sha256": "02a377d5e0ec336795520960237900602a52f4dc0e18311f49fe6f479549442c",
+   "url": "https://newtonproject.ox.ac.uk/view/texts/xml/THEM00230",
+   "how": "fetched by almanac-keep",
+   "fetched": "2026-11-06T08:17:29Z",
+   "text_layer": true
+  },
+  {
+   "file": "mach-1883.html",
+   "bytes": 1211719,
+   "sha256": "317815846bd56718f7821d14a43530f989a603788d3455939ed3369285f64d3e",
+   "url": "https://archive.org/stream/sciencemechanic02machgoog/sciencemechanic02machgoog_djvu.txt",
+   "how": "fetched by almanac-keep",
+   "fetched": "2026-11-06T06:19:01Z",
+   "text_layer": true
+  },
+  {
+   "file": "maldacena-susskind-2013.pdf",
+   "bytes": 731058,
+   "sha256": "5e2ae91af67cd84cd5d73e2b3f0339fb95c0fea1a061b4ed1ee7732d6ce5e546",
+   "url": "https://arxiv.org/pdf/1306.0533",
+   "how": "fetched by almanac-keep",
+   "fetched": "2026-11-06T06:03:22Z",
+   "text_layer": true
+  },
+  {
+   "file": "nambu-2008.pdf",
+   "bytes": 565867,
+   "sha256": "ef5f473e5ca7357630e5554aa45db1a9c4a60ea8cde0b3dfa010337f6aa664b5",
+   "url": "https://www.nobelprize.org/uploads/2018/06/nambu_lecture.pdf",
+   "how": "fetched by almanac-keep",
+   "fetched": "2026-11-06T08:17:29Z",
+   "text_layer": true
+  },
+  {
+   "file": "nernst-1906.pdf",
+   "bytes": 3807269,
+   "sha256": "d2e289921437b4e904eaa79110cbe6cdbe3f1f0fbcf5ca1c969c7d74a7fb5a33",
+   "url": "https://academicweb.nd.edu/~powers/ame.20231/nernst1906.pdf",
+   "how": "fetched by almanac-keep",
+   "fetched": "2026-11-06T06:19:00Z",
+   "text_layer": true
+  },
+  {
+   "file": "planck-2018-parameters.pdf",
+   "bytes": 9317371,
+   "sha256": "8e172730faf07c9f4ff3fdcc7043f76ed67df6f76066d47df30d693025b6ce77",
+   "url": "https://arxiv.org/pdf/1807.06209",
+   "how": "fetched by almanac-keep",
+   "fetched": "2026-11-06T06:03:13Z",
+   "text_layer": true
+  },
+  {
+   "file": "ryu-takayanagi-2006.pdf",
+   "bytes": 187229,
+   "sha256": "2c8802f8ce95275be371de0eebf143aac8827856d502b26249ea16851bcf27db",
+   "url": "https://arxiv.org/pdf/hep-th/0603001",
+   "how": "fetched by almanac-keep",
+   "fetched": "2026-11-06T06:03:22Z",
+   "text_layer": true
+  },
+  {
+   "file": "sakharov-1967-open.pdf",
+   "bytes": 174633,
+   "sha256": "8fb4ed6f83c086a5d6b277544a3e0cab32b46999cf1d8cb9de0c3bfc46267b50",
+   "url": "https://ufn.ru/ufn91/ufn91_5/ufn915h.pdf",
+   "how": "fetched by almanac-keep",
+   "fetched": "2026-11-06T06:18:56Z",
+   "text_layer": true
+  },
+  {
+   "file": "shannon-1948.pdf",
+   "bytes": 366296,
+   "sha256": "6e4e3411984f3edf99dbfe8b941cb5e8a321379ff0cae6ae5c1f592ad8882ca8",
+   "url": "https://people.math.harvard.edu/~ctm/home/text/others/shannon/entropy/entropy.pdf",
+   "how": "fetched by almanac-keep",
+   "fetched": "2026-11-06T06:18:59Z",
+   "text_layer": true
+  },
+  {
+   "file": "solomonoff-1964.pdf",
+   "bytes": 219388,
+   "sha256": "a4858f9369c83279a5c83015ffcffe2fded6cb40ec5dbe634137246cd688bf9e",
+   "url": "https://theworld.com/~rjs/1964pt1.pdf",
+   "how": "fetched by almanac-keep",
+   "fetched": "2026-11-06T06:19:49Z",
+   "text_layer": false
+  },
+  {
+   "file": "tegmark-1997.pdf",
+   "bytes": 164337,
+   "sha256": "ad48e1e777124927a8af6f7e21fa534038fd8add5a05b361c780ab6e894a4346",
+   "url": "https://arxiv.org/pdf/gr-qc/9702052",
+   "how": "fetched by almanac-keep",
+   "fetched": "2026-11-06T06:03:10Z",
+   "text_layer": true
+  },
+  {
+   "file": "van-raamsdonk-2010.pdf",
+   "bytes": 108620,
+   "sha256": "3b96c5632dfc5fb5d19d2a6ffc0ce0ace07ca184965c96238182b96a99f6bfd4",
+   "url": "https://arxiv.org/pdf/1005.3035",
+   "how": "fetched by almanac-keep",
+   "fetched": "2026-11-06T06:03:22Z",
+   "text_layer": true
+  },
+  {
+   "file": "verlinde-2011.pdf",
+   "bytes": 981053,
+   "sha256": "427de7805bac04b97c39a1cbf62766f3739822965ca69e14ace6816b84efcf6c",
+   "url": "https://arxiv.org/pdf/1001.0785",
+   "how": "fetched by almanac-keep",
+   "fetched": "2026-11-06T06:03:22Z",
+   "text_layer": true
+  }
+ ]
+}
