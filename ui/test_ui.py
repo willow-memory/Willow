@@ -668,3 +668,30 @@ def test_the_browse_page_wears_the_canvas_colours():
         )
         for name in ("--bg", "--card", "--ink", "--acc", "--line", "--mute"):
             assert declared[name] in style, (name, declared[name])
+
+
+def test_a_stack_that_reaches_only_this_machine_is_not_said_to_go_online(stack_dir, tmp_path, capsys):  # fmt: skip
+    """loopback is this machine. The page and the terminal said "goes online:
+    loopback", in warning colour, of a stack that goes nowhere."""
+
+    def looked(*names):
+        code, out, _ = run(capsys, "plan", *names, "--to", stack_dir)
+        assert code == 0, names
+        f = tmp_path / ("-".join(names) + ".md")
+        f.write_text(out)
+        code, said, _ = run(capsys, "look", f, "--to", stack_dir)
+        assert code == 0
+        return said
+
+    assert "never goes online" in looked("coming-up")
+    here = looked("coming-up", "browse")
+    assert "stays on this machine" in here and "goes online" not in here
+    net = canvas.Canvas(stack_dir, canvas.WILLOW, stack_dir / "box", []).pieces()["openai-compatible"]["network"]  # fmt: skip
+    away = looked("coming-up", "browse", "openai-compatible")
+    assert f"goes online: {net}" in away and "loopback" not in away.split("goes online: ")[1].splitlines()[0]  # fmt: skip
+    page = (canvas.HERE / "page.html").read_text(encoding="utf-8")
+    assert "'stays on this machine'" in page and "It stays on this machine" in page
+    assert "'goes online: '+net.join" not in page and "+a.reach.join" not in page
+    assert "+' items'" in page and "fo.files+' files'" not in page, (
+        "it counts folders too"
+    )
