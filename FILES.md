@@ -482,6 +482,15 @@ willow/
 │   │   │   └── README.md
 ```
 
+### adapters/stdlib/: Reading more kinds of files: What it makes for elsewhere
+
+```
+│   │   ├── gather/
+│   │   │   ├── gather.py     Folders and files you name, copied into your pile under a name, only the kinds you keep, never a key or a file too big to read
+│   │   │   ├── test_gather.py
+│   │   │   └── README.md     its card
+```
+
 ### adapters/stdlib/: Finding things: What runs on your page
 
 ```
@@ -576,6 +585,12 @@ willow/
 │   │   │   ├── first_mention.py  when the files first mention something: the earliest dated line that holds every word
 │   │   │   ├── test_first_mention.py
 │   │   │   └── README.md
+│   │   ├── glance/
+│   │   │   ├── example-questions.txt
+│   │   │   ├── example-scanned.jsonl
+│   │   │   ├── glance.py     What a scan found, a line a question: where its best passage is, how it opens, and which of the question's words it lacks
+│   │   │   ├── test_glance.py
+│   │   │   └── README.md     its card
 │   │   ├── misquote/
 │   │   │   ├── misquote.py   a quote almost in your files: the closest passage, and what differs
 │   │   │   ├── test_misquote.py
@@ -604,6 +619,16 @@ willow/
 │   │   │   ├── quotes.py     every quote in a document checked: as written, almost (and what differs), or not there
 │   │   │   ├── test_quotes.py
 │   │   │   └── README.md
+│   │   ├── route/
+│   │   │   ├── kinds.txt
+│   │   │   ├── route.py      A question sent to the step whose job it is, by a file of kinds you can edit
+│   │   │   ├── test_route.py
+│   │   │   └── README.md     its card
+```
+
+#### adapters/stdlib/, from rules/
+
+```
 │   │   ├── rules/
 │   │   │   ├── rules.py      a rules file sealed section by section; the kernel then answers 'rule NAME' word for word
 │   │   │   ├── test_rules.py
@@ -612,11 +637,6 @@ willow/
 │   │   │   ├── sort.py       your files sorted into your own categories, by the phrases you gave each
 │   │   │   ├── test_sort.py
 │   │   │   └── README.md
-```
-
-#### adapters/stdlib/, from typos/
-
-```
 │   │   ├── typos/
 │   │   │   ├── typos.py      a misspelt word read as the files spell it, one edit inside, offered not asked
 │   │   │   ├── test_typos.py
@@ -865,6 +885,10 @@ willow/
 │   │   │   ├── forecasts.py  a wager before the outcome, settled by your seal, scored by Brier
 │   │   │   ├── test_forecasts.py
 │   │   │   └── README.md
+│   │   ├── handover/
+│   │   │   ├── handover.py   Where one project stands, to hand on, from what its runs kept
+│   │   │   ├── test_handover.py
+│   │   │   └── README.md     its card
 │   │   ├── invoices/
 │   │   │   ├── invoices.py   invoices you sent, paid only when a line names the number as paid; the rest overdue first
 │   │   │   ├── test_invoices.py
@@ -889,6 +913,10 @@ willow/
 │   │   │   ├── predict.py    what a question will come to, on the record before it is asked, graded after
 │   │   │   ├── test_predict.py
 │   │   │   └── README.md
+│   │   ├── projects/
+│   │   │   ├── projects.py   Every project under one folder: its records, its stacks, and each stack's runs, so you can see what there is to go back to
+│   │   │   ├── test_projects.py
+│   │   │   └── README.md     its card
 │   │   ├── readings/
 │   │   │   ├── readings.py   notes beside an answer: numbers over time, dates gone by
 │   │   │   ├── test_readings.py

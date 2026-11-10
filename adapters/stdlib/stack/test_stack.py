@@ -12,6 +12,7 @@ it, and test stack, not the add-ons it runs."""
 
 from __future__ import annotations
 
+import json
 import shutil
 import subprocess
 import sys
@@ -580,6 +581,7 @@ def test_ended_reads_only_what_the_log_last_says_of_a_step():
         1: {
             "name": "a",
             "mark": m1,
+            "fed": None,
             "code": 0,
             "size": 3,
             "flagged": False,
@@ -588,6 +590,7 @@ def test_ended_reads_only_what_the_log_last_says_of_a_step():
         2: {
             "name": "b",
             "mark": m2,
+            "fed": None,
             "code": 42,
             "size": 3,
             "flagged": True,
@@ -603,3 +606,275 @@ def test_ended_reads_only_what_the_log_last_says_of_a_step():
         st.mark("a", ["x"]) != st.mark("a", ["y"]) != st.mark("b", ["y"])
         and len(m1) == 8
     )
+
+
+def test_a_report_steps_report_is_kept_as_data_beside_its_words(tmp_path):
+    box, stack, to, _ = a_run(tmp_path)
+    kept = sorted(p.name for p in (to / "reports").iterdir())
+    assert kept == ["04-rep.json"], "only the step that printed a report"
+    doc = json.loads((to / "reports" / "04-rep.json").read_text())
+    assert doc["addon"] == "rep" and doc["state"] == "populated"
+    assert [r["what"] for g in doc["groups"] for r in g["rows"]] == ["one", "two"]
+    assert sorted(p.name for p in to.iterdir() if p.is_file()) == [
+        "00-stack.txt", "01-heavy.txt", "02-light.txt", "03-amounts.txt", "04-rep.txt",
+    ]  # fmt: skip
+    # run again and printing no report this time, the old one is not left to be read
+    (STACK.parents[1] / "rep" / "rep.py").write_text(
+        "import sys\nif __name__ == '__main__':\n    print('not json')\n    sys.exit(0)\n"
+    )
+    (to / "04-rep.txt").unlink()
+    again(box, stack, to)
+    assert not (to / "reports" / "04-rep.json").exists()
+    assert "not a report" in (to / "04-rep.txt").read_text()
+
+
+# ── a step takes what an earlier step kept ──────────────────────────────────
+SHOW = """import sys
+
+argv = sys.argv[1:]
+text = open(argv[argv.index("--of") + 1], encoding="utf-8").read()
+print("shown: " + text.strip().replace("\\n", " | "))
+if __name__ == "__main__":
+    sys.exit(0)
+"""
+QUIET = """import sys
+
+if __name__ == "__main__":
+    sys.exit(0)
+"""
+
+
+def an_add_on(name: str, source: str, card: str = "") -> None:
+    """A stand-in add-on beside the scratch stack.py, with a card if given."""
+    folder = STACK.parents[1] / name
+    folder.mkdir()
+    (folder / f"{name}.py").write_text(source)
+    if card:
+        (folder / "README.md").write_text(card)
+
+
+def test_a_step_takes_the_file_an_earlier_step_was_kept_in(tmp_path):
+    box = a_box(tmp_path)
+    an_add_on("show", SHOW)
+    stack = a_stack(tmp_path, "## p\n- light -- --box {box}\n- show -- --of {01}\n")
+    to = tmp_path / "run"
+    to.mkdir()
+    got = run("--box", str(box), "--stack", str(stack), "--to", str(to))
+    assert got.returncode == 0, got.stdout + got.stderr
+    said = (to / "02-show.txt").read_text()
+    assert said == "shown: light line 1, over a box of 1 rows\n"
+    assert "shown: light line 1" in got.stdout  # and on the page
+    # the step is marked by what was written, not by where the run was kept
+    assert (
+        f"02 show: started ({st.mark('show', ['--of', '{01}'])})"
+        in (to / "00-stack.txt").read_text()
+    )
+
+
+def test_a_number_without_its_zero_names_the_same_step(tmp_path):
+    box = a_box(tmp_path)
+    an_add_on("show", SHOW)
+    stack = a_stack(tmp_path, "## p\n- light -- --box {box}\n- show -- --of {1}\n")
+    to = tmp_path / "run"
+    to.mkdir()
+    got = run("--box", str(box), "--stack", str(stack), "--to", str(to))
+    assert got.returncode == 0, got.stderr
+    assert "shown: light line 1" in (to / "02-show.txt").read_text()
+
+
+def test_a_report_steps_report_is_handed_on_as_data(tmp_path):
+    box = a_box(tmp_path)
+    an_add_on("show", SHOW)
+    doc = {"addon": "tells", "state": "populated", "said": "one thing",
+           "groups": [{"name": None, "rows": [{"where": "a.md:1", "what": "it"}]}]}  # fmt: skip
+    an_add_on(
+        "tells",
+        f"import sys\nprint({json.dumps(json.dumps(doc))})\n"
+        'if __name__ == "__main__":\n    sys.exit(0)\n',
+        "<!-- willow-addon\noutput: report\n-->\n",
+    )
+    stack = a_stack(tmp_path, "## p\n- tells\n- show -- --of {01.json}\n")
+    to = tmp_path / "run"
+    to.mkdir()
+    got = run("--box", str(box), "--stack", str(stack), "--to", str(to))
+    assert got.returncode == 0, got.stdout + got.stderr
+    shown = (to / "02-show.txt").read_text()
+    assert json.loads(shown.removeprefix("shown: ")) == doc
+
+
+def test_a_hand_on_that_cant_be_is_refused_before_anything_runs(tmp_path):
+    box = a_box(tmp_path)
+    an_add_on("show", SHOW)
+    to = tmp_path / "run"
+    to.mkdir()
+
+    def refused(text: str, *more: str) -> str:
+        got = run("--box", str(box), "--stack", str(a_stack(tmp_path, text)), *more)
+        assert got.returncode == 2, got.stdout + got.stderr
+        assert not any(to.iterdir()), "nothing ran, nothing kept"
+        return got.stderr
+
+    two = "## p\n- light -- --box {box}\n- show -- --of {01}\n"
+    said = refused(two)  # the run isn't kept
+    assert "step 2 (show) takes {01}" in said and "add --to FOLDER" in said
+    keep = ("--to", str(to))
+    said = refused("## p\n- show -- --of {01}\n- light -- --box {box}\n", *keep)
+    assert "step 1 (show) takes {01}, which isn't a step before it" in said
+    said = refused("## p\n- light -- --box {box}\n- show -- --of {03}\n", *keep)
+    assert "takes {03}, which isn't a step before it" in said
+    said = refused("## p\n- light -- --box {box}\n- show -- --of {00}\n", *keep)
+    assert "takes {00}, which isn't a step before it" in said
+    said = refused("## p\n- light -- --box {box}\n- show -- --of {01.json}\n", *keep)
+    assert "step 1 (light) prints no report; {01} is what it said" in said
+
+
+def test_a_step_whose_earlier_step_kept_nothing_is_not_run(tmp_path):
+    box = a_box(tmp_path)
+    an_add_on("show", SHOW)
+    an_add_on("quiet", QUIET)
+    stack = a_stack(
+        tmp_path, "## p\n- quiet\n- show -- --of {01}\n- light -- --box {box}\n"
+    )
+    to = tmp_path / "run"
+    to.mkdir()
+    got = run("--box", str(box), "--stack", str(stack), "--to", str(to))
+    assert got.returncode == 42, got.stdout + got.stderr
+    log = (to / "00-stack.txt").read_text()
+    assert "02 show: not run: step 1 (quiet) kept nothing to hand on\n" in log
+    assert "02 show: started" not in log and not (to / "02-show.txt").exists()
+    assert "not run: step 1 (quiet) kept nothing to hand on" in got.stdout
+    assert "03 light: exit 0" in log, "the steps after it still run"
+    assert "done: 1 of 3 steps flagged" in log
+
+
+def test_hands_reads_each_earlier_step_a_steps_args_name():
+    assert st.hands(["--of", "{01}", "--and", "x{12.json}y", "{box}", "{a}"]) == [
+        (1, False),
+        (12, True),
+    ]
+    assert st.hands(["--box", "{box}"]) == []
+
+
+# ── a run notes the files each step was given ───────────────────────────────
+def test_a_step_given_a_file_notes_its_bytes_beside_its_mark(tmp_path):
+    box = a_box(tmp_path)
+    an_add_on("show", SHOW)
+    q = tmp_path / "q.txt"
+    q.write_text("one\n")
+    stack = a_stack(tmp_path, f"## p\n- light -- --box {{box}}\n- show -- --of {q}\n")
+    to = tmp_path / "run"
+    to.mkdir()
+    assert (
+        run("--box", str(box), "--stack", str(stack), "--to", str(to)).returncode == 0
+    )
+    log = (to / "00-stack.txt").read_text()
+    given = st.fed(["--of", str(q)], str(box))
+    assert len(given) == 8
+    assert f"02 show: started ({st.mark('show', ['--of', str(q)])}, fed {given})" in log
+    # a step given no file says nothing of it: a box is a folder, not a file
+    assert f"01 light: started ({st.mark('light', ['--box', '{box}'])})\n" in log
+
+
+def test_fed_is_the_files_a_step_is_given_as_they_are_now(tmp_path):
+    a, b = tmp_path / "a.txt", tmp_path / "b.txt"
+    a.write_text("one\n")
+    b.write_text("two\n")
+    box = str(tmp_path)
+    one = st.fed(["--of", str(a)], box)
+    assert one and one == st.fed(["--of", str(a)], box), "the same bytes, the same"
+    assert st.fed(["--of", str(b)], box) != one, "another file's bytes"
+    assert st.fed(["--of", str(a), "--and", str(b)], box) != one
+    a.write_text("one more\n")
+    assert st.fed(["--of", str(a)], box) != one, "its bytes changed"
+    # what it makes, an earlier step's output, a folder, and no file: not given
+    assert st.fed(["--to", str(a)], box) == ""
+    assert st.fed(["--of", "{01}"], box) == ""
+    assert st.fed(["--from", str(tmp_path)], box) == ""
+    assert st.fed(["--from", str(tmp_path / "nope")], box) == ""
+    assert st.fed([], box) == ""
+    # only the file after --to is left out, not the ones beside it
+    assert st.fed(["--to", str(a), str(b)], box) == st.fed([str(b)], box) != ""
+    # {box} is the box given, and the file is named as it was written
+    (tmp_path / "in.txt").write_text("x\n")
+    assert st.fed(["{box}/in.txt"], box) != ""
+    assert st.fed(["{box}/in.txt"], str(tmp_path / "nope")) == ""
+
+
+def test_a_changed_file_is_asked_again_and_an_unchanged_one_is_kept(tmp_path):
+    box = a_box(tmp_path)
+    an_add_on("show", SHOW)
+    q = tmp_path / "q.txt"
+    q.write_text("one\n")
+    stack = a_stack(
+        tmp_path,
+        f"## p\n- light -- --box {{box}}\n- show -- --of {q}\n- heavy -- --box {{box}}\n",
+    )
+    to = tmp_path / "run"
+    to.mkdir()
+    argv = ("--box", str(box), "--stack", str(stack), "--to", str(to))
+    assert run(*argv).returncode == 0
+    assert run(*argv, "--resume").returncode == 0
+    log = (to / "00-stack.txt").read_text()
+    assert log.count("kept from before") == 3 and log.count("02 show: started") == 1
+    q.write_text("two\n")
+    assert run(*argv, "--resume").returncode == 0
+    log = (to / "00-stack.txt").read_text()
+    assert log.count("01 light: kept from before") == 2, "before it: still kept"
+    assert log.count("02 show: started") == 2, "its file changed: asked again"
+    assert log.count("03 heavy: started") == 2, "and so is every step after it"
+    assert (to / "02-show.txt").read_text() == "shown: two\n"
+
+
+def test_a_log_from_before_files_were_noted_is_taken_at_its_word(tmp_path):
+    box = a_box(tmp_path)
+    an_add_on("show", SHOW)
+    q = tmp_path / "q.txt"
+    q.write_text("one\n")
+    stack = a_stack(tmp_path, f"## p\n- show -- --of {q}\n")
+    to = tmp_path / "run"
+    to.mkdir()
+    argv = ("--box", str(box), "--stack", str(stack), "--to", str(to))
+    assert run(*argv).returncode == 0
+    log = to / "00-stack.txt"
+    given = st.fed(["--of", str(q)], str(box))
+    assert f", fed {given}" in log.read_text()
+    log.write_text(log.read_text().replace(f", fed {given}", ""))  # as written then
+    q.write_text("two\n")
+    assert run(*argv, "--resume").returncode == 0
+    assert "01 show: kept from before" in log.read_text()
+    assert (to / "01-show.txt").read_text() == "shown: one\n"
+
+
+def test_ended_reads_the_files_a_step_noted():
+    m = st.mark("a", ["q.txt"])
+    log = f"01 a: started ({m}, fed 0123abcd)\n01 a: exit 0, 1 line\n"
+    assert st.ended(log)[1]["fed"] == "0123abcd"
+    assert st.ended(log)[1]["mark"] == m
+
+
+# ── a backslash the shell's rule would drop ─────────────────────────────────
+def test_a_bare_backslash_before_a_letter_is_caught_and_quoted_ones_are_not():
+    assert st.bare_backslash("--id INV-\\d+")
+    assert st.bare_backslash("--box {box} --id \\w")
+    assert st.bare_backslash("'quoted' then \\d")
+    assert st.bare_backslash('"double" then \\9')
+    assert not st.bare_backslash('--id "INV-\\d+"')
+    assert not st.bare_backslash("--id 'INV-\\d+'")
+    assert not st.bare_backslash('"a \\"quoted\\" word"')
+    assert not st.bare_backslash("two\\ words")  # an escaped space is kept as one
+    assert not st.bare_backslash("--box {box}")
+    assert not st.bare_backslash("ends with \\")
+    assert not st.bare_backslash("")
+
+
+def test_a_stack_line_with_a_backslash_that_would_be_dropped_is_refused(tmp_path):
+    box = a_box(tmp_path)
+    stack = a_stack(
+        tmp_path, "## p\n- light -- --box {box}\n- light -- --box {box} --id INV-\\d+\n"
+    )
+    got = run("--box", str(box), "--stack", str(stack))
+    assert got.returncode == 2
+    assert "line 3: a backslash outside quotes would be dropped" in got.stderr
+    assert "put that option in quotes" in got.stderr
+    quoted = a_stack(tmp_path, '## p\n- light -- --box {box} --id "INV-\\d+"\n')
+    assert run("--box", str(box), "--stack", str(quoted)).returncode == 0

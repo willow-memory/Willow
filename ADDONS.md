@@ -512,6 +512,12 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
   WriteFreely posts, from its export or a copy of its SQLite database, as dated text. \
   *new* `no-install` `offline` `copy` `sqlite` · near: apple-notes, bookmarks, nestor
 
+### What it makes for elsewhere
+
+- <a id="gather"></a>[**gather**](adapters/stdlib/gather/) \
+  Folders and files you name, copied into your pile under a name, only the kinds you keep, never a key or a file too big to read. \
+  *new* `no-install` `offline` `key` `copy` · near: json-paths, snapshot, repo-pile
+
 ### Tools you run yourself
 
 
@@ -613,6 +619,9 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - <a id="first-mention"></a>[**first-mention**](adapters/stdlib/first-mention/) \
   When your files first mention something, and the line that does. \
   *new* `no-install` `offline` `mention` · near: dialect-dates, people, timeline
+- <a id="glance"></a>[**glance**](adapters/stdlib/glance/) \
+  What a scan found, a line a question: where its best passage is, how it opens, and which of the question's words it lacks. \
+  Uses scan. *new* `no-install` `offline` `scan` · near: scan, synonyms, latent
 - <a id="latent"></a>[**latent**](adapters/deps/latent/) \
   Finds code by meaning, not just matching words, using scan's index: a question reaches code that says the same thing another way. \
   Needs numpy; BSD-3-Clause. Uses scan. *new* `needs-install` `offline` `index` `scan` · near: scan, all, duplicates
@@ -647,6 +656,9 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
   Exact search through ripgrep, much faster on a big folder, its hits checked against the kernel's hashes. \
   Needs the ripgrep program, from the ripgrep wheel on PyPI or your own rg; MIT or Unlicense. *new* `needs-install` `offline` `search` · near: manifests, pdf,
   ocr
+- <a id="route"></a>[**route**](adapters/stdlib/route/) \
+  A question sent to the step whose job it is: money owed to debts and invoices, a date to what's coming up, the rest to the ask. \
+  *new* `no-install` `offline` `coming` `money` · near: debts, coming-up, meaning
 - <a id="rules"></a>[**rules**](adapters/stdlib/rules/) \
   A game's or a house's rules, approved one section at a time, so asking what a rule says gives back that exact section, word for word. \
   *bot* `no-install` `offline` `game` · near: session-seal, game-master, night-batch
@@ -961,6 +973,9 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - <a id="forecasts"></a>[**forecasts**](adapters/stdlib/forecasts/) \
   Write a prediction before the outcome, settle it later with your seal, see your Brier score. \
   *bot* `no-install` `offline` `brier` `forecast` · near: market-calls, predict, weather-bet
+- <a id="handover"></a>[**handover**](adapters/stdlib/handover/) \
+  Where one project stands, to hand on: what waits on you, what each stack's last run said step by step, and where each line can be checked. \
+  Uses projects, stack. *new* `no-install` `offline` `stack` `step` · near: stack-share, stack, red-on-main
 - <a id="invoices"></a>[**invoices**](adapters/stdlib/invoices/) \
   For freelancers: invoices and payments matched by the id pattern you give, never guessed. \
   Uses amounts, bank. *new* `no-install` `offline` `numbers` · near: serve, share, privacy
@@ -979,6 +994,9 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - <a id="predict"></a>[**predict**](adapters/stdlib/predict/) \
   Write down what a question will come to before you ask it, and grade it after; the record counts how often it was right. \
   *bot* `no-install` `offline` `score` `down` · near: forecasts, pile-gold, assistant-scores
+- <a id="projects"></a>[**projects**](adapters/stdlib/projects/) \
+  Every project under one folder: its records, its stacks, and each stack's runs, so you can see what there is to go back to. \
+  Uses stack. *new* `no-install` `offline` `stack` · near: stack-share, stack, github
 - <a id="readings"></a>[**readings**](adapters/stdlib/readings/) \
   Two hints beside an answer: a number in your files that moved a lot lately, and a date in a log that passed with nothing written since. \
   *box* `no-install` `offline` `numbers` · near: plain, privacy, coming-up

@@ -19,12 +19,21 @@ printed in the report's one shape (ci/README.md, the report contract); its
 height is its rows, not its lines, and it is flagged by its exit code alone,
 since a report's 42 never means "found nothing".
 
+A step can take what an earlier step made. `{01}` in a step's args is the
+file step 01's output was kept in, and `{01.json}` its report as data, 01
+being its place in the stack file. It is the earlier step handing on: so it
+needs the run kept (--to), the number must be a step before this one, and
+`.json` a step that prints a report; each of those is refused before
+anything runs. A step whose earlier step kept nothing is not run, and says
+so.
+
 --to FOLDER keeps the run as it happens, for following while it goes and for
 reading after: `00-stack.txt` gets a line as each step starts and a line as it
 ends (its exit code, and how many lines it made), and each step's output is
 `NN-NAME.txt`, NN its place in the stack file. A step that prints as it goes
 is written as it prints; a step asked for a report is written once, when its
-report is whole. FOLDER must be there and empty: a run is one folder, and a
+report is whole, and its report is kept as data too, in `reports/NN-NAME.json`,
+for a page to draw (browse's --run). FOLDER must be there and empty: a run is one folder, and a
 second run in it would read as part of the first. Without --to nothing is
 kept but the page, as before.
 
@@ -49,6 +58,7 @@ shown but not flagged.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import re
@@ -64,6 +74,27 @@ import kernel  # noqa: E402
 
 NONE_FOUND = {"amounts", "contradictions", "duplicates", "said"}
 FLAGS_ON_ALIVE = {"contradictions"}
+
+
+def bare_backslash(argstr: str) -> bool:
+    """Whether a step's args hold a backslash before a letter or digit,
+    outside quotes. The shell's rule drops it without a word, so a pattern
+    written `INV-\\d+` would run as `INV-d+` and match nothing."""
+    quote = ""
+    chars = iter(enumerate(argstr))
+    for i, c in chars:
+        if quote:
+            if c == "\\" and quote == '"':
+                next(chars, None)  # in double quotes it stays, or escapes a quote
+            elif c == quote:
+                quote = ""
+        elif c in "'\"":
+            quote = c
+        elif c == "\\":
+            if argstr[i + 1 : i + 2].isalnum():
+                return True
+            next(chars, None)
+    return False
 
 
 def parse_stack(text: str) -> tuple[list, str | None]:
@@ -89,6 +120,11 @@ def parse_stack(text: str) -> tuple[list, str | None]:
                 args = shlex.split(argstr) if sep else []
             except ValueError as e:
                 return [], f"line {n}: {e}"
+            if bare_backslash(argstr):
+                return [], (
+                    f"line {n}: a backslash outside quotes would be dropped; "
+                    "put that option in quotes"
+                )
             pools[-1][1].append((name, args))
         # any other line is prose in the markdown stack, and is skipped
     if not any(steps for _, steps in pools):
@@ -153,7 +189,58 @@ def mark(name: str, args: list[str]) -> str:
     return kernel.h256(json.dumps([name, args]))[:8]
 
 
-STARTED = re.compile(r"(\d+) (\S+): started \((\w+)\)")
+#: `{03}` or `{03.json}` in a step's args: an earlier step's kept output
+HANDS = re.compile(r"\{(\d+)(\.json)?\}")
+
+
+def hands(args: list[str]) -> list[tuple[int, bool]]:
+    """(the step named, whether its report is asked for) for each earlier
+    step a step's args name, in the order named."""
+    return [(int(n), bool(j)) for a in args for n, j in HANDS.findall(a)]
+
+
+def unhandable(flat: list, scripts: dict, kept: bool) -> str | None:
+    """Why a stack's hand-ons can't be, or None: said before anything runs.
+    `flat` is every step in the stack file's order."""
+    for at, (name, args) in enumerate(flat, 1):
+        for n, as_json in hands(args):
+            tag = f"{{{n:02d}{'.json' if as_json else ''}}}"
+            if not kept:
+                return (
+                    f"step {at} ({name}) takes {tag}, an earlier step's output; "
+                    "that needs the run kept: add --to FOLDER"
+                )
+            if not 1 <= n < at:
+                return f"step {at} ({name}) takes {tag}, which isn't a step before it"
+            if as_json and not prints_a_report(scripts[flat[n - 1][0]]):
+                return (
+                    f"step {at} ({name}) takes {tag}, but step {n} "
+                    f"({flat[n - 1][0]}) prints no report; {{{n:02d}}} is what it said"
+                )
+    return None
+
+
+def fed(args: list[str], box: str) -> str:
+    """Eight characters that are the files a step is given, as they are now:
+    each arg that names a file, by its bytes. The file after `--to` is what
+    the step makes, not what it is given, and an earlier step's output
+    (`{01}`) is that step's to answer for; neither counts. A folder isn't
+    read: a step over a folder is asked again only when its line changes.
+    "" when it is given no file."""
+    seen = []
+    for before, a in zip([""] + args, args):
+        if before == "--to" or HANDS.search(a):
+            continue
+        path = Path(a.replace("{box}", box))
+        try:
+            if path.is_file():
+                seen.append([a, hashlib.sha256(path.read_bytes()).hexdigest()])
+        except OSError:
+            pass
+    return kernel.h256(json.dumps(seen))[:8] if seen else ""
+
+
+STARTED = re.compile(r"(\d+) (\S+): started \((\w+)(?:, fed (\w+))?\)")
 ENDED = re.compile(r"(\d+) (\S+): exit (\d+), (\d+) lines?((?:, [^,]+)*)")
 
 
@@ -164,20 +251,21 @@ def ended(log: str) -> dict[int, dict]:
     that it ended: one started again and not ended is not, whatever came
     before, since its file may be half of a second go."""
     out: dict[int, dict] = {}
-    marks: dict[int, tuple[str, str]] = {}
+    marks: dict[int, tuple[str, str, str | None]] = {}
     for line in log.splitlines():
         if m := STARTED.fullmatch(line):
-            marks[int(m.group(1))] = (m.group(2), m.group(3))
+            marks[int(m.group(1))] = (m.group(2), m.group(3), m.group(4))
             out.pop(int(m.group(1)), None)
         elif m := ENDED.fullmatch(line):
             n, name = int(m.group(1)), m.group(2)
-            if marks.get(n, ("", ""))[0] != name:
+            if marks.get(n, ("", "", None))[0] != name:
                 continue  # an end with no start of its own says nothing
             said = [x for x in m.group(5).split(", ") if x]
             size = next((int(x[5:]) for x in said if x.startswith("mass ") and x[5:].isdigit()), int(m.group(4)))  # fmt: skip
             out[n] = {
                 "name": name,
                 "mark": marks[n][1],
+                "fed": marks[n][2],  # None: a log from before this was kept
                 "code": int(m.group(3)),
                 "size": size,
                 "flagged": "flagged" in said,
@@ -209,11 +297,31 @@ class Run:
     def file(self, n: int, name: str) -> Path:
         return self.folder / f"{n:0{self.width}d}-{name}.txt"
 
-    def kept(self, n: int, name: str, args: list[str]) -> dict | None:
-        """What the earlier run made of this very step, if it finished it and
-        its output is still there; None if it must be run."""
+    def data(self, n: int, name: str) -> Path:
+        """Where a report step's report is kept as data, for a page to draw:
+        in a folder of its own, so what follows the run reads words only."""
+        return self.folder / "reports" / f"{n:0{self.width}d}-{name}.json"
+
+    def keep_report(self, n: int, name: str, doc: dict | None) -> None:
+        """The step's report as JSON beside its words, or nothing there when
+        it printed no report this time (an earlier go's would be a lie)."""
+        path = self.data(n, name)
+        if doc is None:
+            if path.exists():
+                path.unlink()
+            return
+        path.parent.mkdir(exist_ok=True)
+        path.write_text(json.dumps(doc, ensure_ascii=False) + "\n", encoding="utf-8")
+
+    def kept(self, n: int, name: str, args: list[str], box: str) -> dict | None:
+        """What the earlier run made of this very step, if it finished it,
+        its output is still there, and the files it was given are as they
+        were; None if it must be run. A log from before a step's files were
+        noted says nothing of them, and is taken at its word."""
         was = self.before.get(n)
         if was is None or (was["name"], was["mark"]) != (name, mark(name, args)):
+            return None
+        if was["fed"] is not None and was["fed"] != fed(args, box):
             return None
         try:
             text = self.file(n, name).read_text(encoding="utf-8", errors="replace")
@@ -221,8 +329,28 @@ class Run:
             return None
         return {**was, "out": text.rstrip()}
 
-    def start(self, n: int, name: str, args: list[str]) -> Path:
-        self.say(f"{n:0{self.width}d} {name}: started ({mark(name, args)})")
+    def handed(self, flat: list, args: list[str]) -> tuple[list[str], str]:
+        """(a step's args with each earlier step named put in as its kept
+        file, "") or ([], which step kept nothing to hand on)."""
+        missing: list[str] = []
+
+        def path(m) -> str:
+            n = int(m.group(1))
+            name = flat[n - 1][0]
+            p = self.data(n, name) if m.group(2) else self.file(n, name)
+            if not p.is_file() or not p.stat().st_size:
+                missing.append(f"step {n} ({name})")
+            return str(p)
+
+        filled = [HANDS.sub(path, a) for a in args]
+        return ([], missing[0]) if missing else (filled, "")
+
+    def start(self, n: int, name: str, args: list[str], box: str) -> Path:
+        given = fed(args, box)
+        self.say(
+            f"{n:0{self.width}d} {name}: started ({mark(name, args)}"
+            f"{', fed ' + given if given else ''})"
+        )
         return self.file(n, name)
 
     def end(self, n: int, name: str, code: int, out: str, size: int, note: str, flagged: bool) -> None:  # fmt: skip
@@ -358,6 +486,11 @@ def main(argv: list[str]) -> int:
                     return kernel.REFUSED
                 scripts[name] = script
 
+    flat = [step for _, steps in pools for step in steps]
+    if why := unhandable(flat, scripts, "--to" in opts):
+        print(f"refused: {why}", file=sys.stderr)
+        return kernel.REFUSED
+
     run = None
     if "--to" in opts:
         to = Path(opts["--to"])
@@ -394,19 +527,28 @@ def main(argv: list[str]) -> int:
         for idx, (name, args) in enumerate(steps):
             nsteps += 1
             report = prints_a_report(scripts[name])  # its rows decide its mass
-            was = run.kept(nsteps, name, args) if run and not fresh else None
+            was = run.kept(nsteps, name, args, str(box)) if run and not fresh else None
             if was is not None:
                 code, out, size, is_flagged = was["code"], was["out"], was["size"], was["flagged"]  # fmt: skip
                 note = was["note"] if report else step_result(name, code)[1]
                 run.say(f"{nsteps:0{run.width}d} {name}: kept from before")
+            elif hands(args) and not (given := run.handed(flat, args))[0]:
+                # the step before kept nothing: nothing to take, so not run
+                fresh = True
+                code, size, is_flagged, note = kernel.ESCALATE, 1, True, "not run"
+                out = f"not run: {given[1]} kept nothing to hand on"
+                run.say(f"{nsteps:0{run.width}d} {name}: {out}")
             else:
                 fresh = True
-                live = run.start(nsteps, name, args) if run else None
+                live = run.start(nsteps, name, args, str(box)) if run else None
+                if hands(args):
+                    args = run.handed(flat, args)[0]
                 if report:
                     code, out = run_step(scripts[name], [*args, "--json"], str(box))
                     doc, out = as_report(code, out)
                     if live is not None:  # whole, once: its JSON is nothing to follow
                         live.write_text(out + "\n" if out else "", encoding="utf-8")
+                        run.keep_report(nsteps, name, doc)
                     if doc is None:
                         is_flagged, note, size = True, f"exit {code}", mass(out)
                     else:

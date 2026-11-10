@@ -62,5 +62,8 @@
   },
   "typosquat": {
     "0b021f6deb3f": "src is used only via len(src)!=1; with the two-name list, flipping 'o in opts' to 'o not in opts' swaps which names land in src but leaves that length 0/1/2 the same for every command line, so the refuse/pass decision is unchanged."
+  },
+  "why-not": {
+    "0a2392676768": "The 1 caps how many times \"A passage\" is made lower case in the line that says how many words a passage has to hold; that line holds the phrase once, so any cap of one or more gives the same words."
   }
 }
