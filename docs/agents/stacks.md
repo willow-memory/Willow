@@ -57,6 +57,14 @@ is the turn repeated:
    found and what it got wrong.
 6. **The next want.** "Next I want to do Y." Down the row.
 
+**A want is the next thing the thing needs in order to run.** Think of it
+as a workflow: x, then y, then z, where z needs x and y to have happened. It
+is deterministic building, as a program is built: add a chunk, add a block,
+add an add-on. So a want isn't sized by its subject; it is sized by what is
+missing right now, and the order of the row is the order things need one
+another in. A card says what its block needs and gives (`uses`, `reads`,
+`output`); when a step needs what an earlier one made, say so beside it.
+
 It holds whether the forge add-on is there or not: the Forge follows a chain
 of thoughts the same way every time, and an agent working here follows the
 same chain by hand when it isn't in play.
