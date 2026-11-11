@@ -277,8 +277,40 @@ What the Terms ask, that bears on this study:
   sweep of simulations is none of these.
 - **Limits can change** without these pages changing.
 
-Not read, and named by the Terms as part of them: the Acceptable Use
-Policy, the Community Guidelines and the Privacy Policy.
+**The three pages the Terms fold in**, read the same day from a second
+copy (SHA-256 `05d787be92f428332b28e1bcc4335ae7c9b824c0530976a8b6f23804250a936d`): the Acceptable Use Policy (effective
+June 22, 2025), the Community Guidelines (updated March 4, 2026) and the
+Privacy Policy (effective February 5, 2024).
+
+- **The one line that bears on whether this may be run there at all.**
+  The Acceptable Use Policy forbids abusing the resources, and lists
+  under that "server farming" and "activity unrelated to ML data
+  science". This study is a sweep of gravity simulations: numerical
+  computing, in NumPy, asking whether machines agree and whether a memory
+  saves work. It trains nothing and analyses no dataset. Whether that is
+  related to data science is not this plan's to decide, and it is not
+  plain either way. The Guidelines name abusing notebook resources as
+  grounds for a ban without warning.
+- **How large it is**, for whoever judges: about fifteen notebook runs,
+  five at a time, on CPU only, each a few minutes; near an hour of
+  machine time in all, a few megabytes kept.
+- **Attaching an input a notebook doesn't use is not allowed.** A
+  second-round notebook is given the first round's outputs and reads
+  every one, so the wire is within that; a notebook given a round it
+  does not read would not be.
+- **The rules on what a shared notebook should be for** are about ones
+  shared publicly. These stay private. The general rules hold for
+  private ones too, and nothing here touches them.
+- **Kaggle sees what is uploaded, private or not**, to run the service
+  and to look for abuse, and keeps deleted things for up to about two
+  months, and backups up to six. So the privacy check before upload is
+  not a courtesy: what goes up is read.
+
+So, before step 5: the maintainer either takes the study to be within
+those words, asks Kaggle whether it is, or takes the machines from
+somewhere else. The scripts don't care which: a machine is anything
+that runs runner.py and hands back a folder. Earlier trial runs on
+Kaggle, above, were made before these pages were read.
 
 ### What a first try at the whole thing found
 
@@ -603,10 +635,10 @@ repository; neither opened a file.
 
 ## The order
 
-1. Settle the list above. Kaggle's Terms and two pages of its
-   documentation are read; its Acceptable Use Policy and Community
-   Guidelines are not, and the privacy check is not named. Those wait on
-   the maintainer; none is needed before step 4.
+1. Settle the list above. Kaggle's pages are read. Two things wait on
+   the maintainer: whether this use is within Kaggle's Acceptable Use
+   Policy, which must be settled before step 5, and the privacy check,
+   before anything is uploaded. Neither is needed before step 4.
 2. Write the sweep, the predicted saving, the questions and the rules.
    Done, above.
 3. Dry run, with nonsense setups, on one machine here. Done, above.
