@@ -151,3 +151,45 @@ def test_kernel_serves_a_function_from_the_mirror(tmp_path):
 def test_a_bad_command_line_is_refused(tmp_path):
     got = mirror(tmp_path / "missing", tmp_path / "m")
     assert got.returncode == 2 and "refused:" in got.stderr
+
+
+def test_a_graph_kept_as_nodes_and_edges_reads_the_same_way(tmp_path):
+    folder, to = tmp_path / "f", tmp_path / "m"
+    folder.mkdir()
+    con = sqlite3.connect(folder / "graph.db")
+    con.executescript(
+        """
+        CREATE TABLE nodes (
+            id INTEGER PRIMARY KEY, project TEXT, label TEXT, name TEXT,
+            qualified_name TEXT, file_path TEXT, start_line INTEGER
+        );
+        CREATE TABLE edges (
+            id INTEGER PRIMARY KEY, project TEXT, source_id INTEGER,
+            target_id INTEGER, type TEXT
+        );
+        INSERT INTO nodes VALUES
+            (1, 'p', 'Function', 'run', 'p.mod.run', 'mod.py', 10),
+            (2, 'p', 'Class', 'Helper', 'p.mod.Helper', 'mod.py', 1),
+            (3, 'p', 'Method', 'work', 'p.mod.Helper.work', 'mod.py', 4),
+            (4, 'p', 'Function', 'len', 'builtins.len', '<python-builtins>', 1),
+            (5, 'p', 'Variable', 'LIMIT', 'p.mod.LIMIT', 'mod.py', 2);
+        INSERT INTO edges VALUES
+            (1, 'p', 1, 3, 'CALLS'), (2, 'p', 1, 4, 'CALLS'), (3, 'p', 1, 3, 'CALLS'),
+            (4, 'p', 1, 2, 'IMPORTS'), (5, 'p', 1, 5, 'USAGE'), (6, 'p', 3, 2, 'INHERITS');
+        """
+    )
+    con.close()
+    got = mirror(folder, to)
+    assert got.returncode == 0, got.stderr
+    text = (to / "graph.db.txt").read_text(encoding="utf-8")
+    assert text.startswith("code graph: 2 functions\n"), "a built-in has no file"
+    assert (
+        "run (function)\nfile: mod.py:10\nname: p.mod.run\n"
+        "edges: call builtins.len; call p.mod.Helper.work; import p.mod.Helper\n"
+    ) in text, "each thing reached once, and only calls, imports and inherits"
+    assert "work (method)\nfile: mod.py:4\nname: p.mod.Helper.work\nedges: inherit p.mod.Helper\n" in text  # fmt: skip
+    assert (
+        "Helper (class)" not in text
+        and "LIMIT" not in text
+        and "len (function)" not in text
+    )

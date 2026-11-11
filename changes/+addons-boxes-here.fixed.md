@@ -1,0 +1,1 @@
+`codebase-memory`: a graph kept as `nodes` and `edges`, the tables codebase-memory-mcp writes now, is read; before, only the older `symbols` table was, and every graph of today's was skipped as not a graph.

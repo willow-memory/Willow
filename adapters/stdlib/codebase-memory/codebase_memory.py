@@ -3,10 +3,12 @@
     python adapters/stdlib/codebase-memory/codebase_memory.py \\
         mirror --from FOLDER --to MIRROR
 
-Walks FOLDER for `.db` files that hold a code graph (the `symbols` and
-`edges` tables codebase-memory-mcp writes, or a copy of them). Each
-function or method becomes one paragraph: its name, its file and line, and
-what it calls or imports.
+Walks FOLDER for `.db` files that hold a code graph (the tables
+codebase-memory-mcp writes, or a copy of them: `nodes` and `edges` as it
+writes them now, `symbols` and `edges` as it did). Each function or method
+becomes one paragraph: its name, its file and line, and what it calls or
+imports. A name the graph has for a language's own built-ins, which have no
+file, is left out.
 
     vendor_sync_check (function)
     file: tools/vendor_sync_check.py:129
@@ -49,22 +51,63 @@ def graph_text(path: Path) -> str | None:
             r[0]
             for r in con.execute("SELECT name FROM sqlite_master WHERE type='table'")
         }
-        if not {"symbols", "edges"} <= tables:
+        if {"nodes", "edges"} <= tables:
+            symbols, outs = _nodes(con)
+        elif not {"symbols", "edges"} <= tables:
             return None
-        symbols = con.execute(
-            "SELECT fqn, name, kind, file_path, start_line FROM symbols "
-            "WHERE kind IN ('function', 'method') ORDER BY fqn"
-        ).fetchall()
-        outs: dict[str, list[str]] = {}
-        for src, tgt, kind in con.execute(
-            "SELECT source_fqn, target_fqn, edge_type FROM edges "
-            "ORDER BY source_fqn, target_fqn"
-        ):
-            outs.setdefault(src, []).append(f"{kind} {_one_line(tgt)}")
+        else:
+            symbols, outs = _symbols(con)
     except sqlite3.Error:
         return None
     finally:
         con.close()
+    return _paragraphs(symbols, outs)
+
+
+#: the edges of the graph as it is written now that say what a function
+#: reaches for, and the word each is said with
+REACHES = {"CALLS": "call", "IMPORTS": "import", "INHERITS": "inherit"}
+
+
+def _nodes(con) -> tuple[list, dict[str, list[str]]]:
+    """The functions and methods of a graph kept as `nodes` and `edges`, in
+    the shape of the older tables: (fqn, name, kind, file, line) rows, and
+    what each reaches."""
+    symbols = con.execute(
+        "SELECT qualified_name, name, lower(label), file_path, start_line FROM nodes "
+        "WHERE label IN ('Function', 'Method') AND file_path NOT LIKE '<%' "
+        "ORDER BY qualified_name"
+    ).fetchall()
+    outs: dict[str, list[str]] = {}
+    marks = ", ".join("?" * len(REACHES))
+    for src, tgt, kind in con.execute(
+        "SELECT s.qualified_name, t.qualified_name, e.type FROM edges e "
+        "JOIN nodes s ON s.id = e.source_id JOIN nodes t ON t.id = e.target_id "
+        f"WHERE e.type IN ({marks}) ORDER BY s.qualified_name, t.qualified_name",
+        sorted(REACHES),
+    ):
+        said = f"{REACHES[kind]} {_one_line(tgt)}"
+        if said not in outs.setdefault(src, []):
+            outs[src].append(said)
+    return symbols, outs
+
+
+def _symbols(con) -> tuple[list, dict[str, list[str]]]:
+    """The same from a graph kept as `symbols` and `edges`."""
+    symbols = con.execute(
+        "SELECT fqn, name, kind, file_path, start_line FROM symbols "
+        "WHERE kind IN ('function', 'method') ORDER BY fqn"
+    ).fetchall()
+    outs: dict[str, list[str]] = {}
+    for src, tgt, kind in con.execute(
+        "SELECT source_fqn, target_fqn, edge_type FROM edges "
+        "ORDER BY source_fqn, target_fqn"
+    ):
+        outs.setdefault(src, []).append(f"{kind} {_one_line(tgt)}")
+    return symbols, outs
+
+
+def _paragraphs(symbols: list, outs: dict[str, list[str]]) -> str:
     paras = []
     for fqn, name, kind, file_path, start in symbols:
         lines = [f"{_one_line(name) or _one_line(fqn)} ({_one_line(kind)})"]
