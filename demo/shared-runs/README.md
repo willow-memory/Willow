@@ -328,6 +328,87 @@ it was uploaded. An account, like the two above.
   for two rounds; a third round would take the second's outputs the
   same way.
 
+## Where the pieces stand, after four trials and three runs
+
+Written 2026-11-12 by the session that ran the simulations, from the
+trials' own pages and its own runs. Proposals, for the maintainer to set
+or cut.
+
+**One shape, met at two sizes.** The simulation runs kept a state under a
+name made from what led to it, and a later job went on from it.
+[Trial 4](trial-4/RESULTS.md) asked the same of a stack's step: named
+from the step as it is written, is it the same work in another folder?
+Both found the same two things. The name has to leave out the place and
+the clock. And what is worth remembering is what was made, not what was
+printed about making it.
+
+**What the runs change in the setup.**
+
+- Five machines at a time, in rounds, not tens at once.
+- Each trajectory belongs to the machine its name picks. No machine
+  speaks to another, and none steps what another is stepping.
+- The wire is one notebook's output given as the next one's input.
+- States are kept often: the saving and the price of a check both turn
+  on the spacing.
+
+**Three rules to reword.**
+
+- **R1** asks for a fixed runtime. The real project agreed on three
+  kinds of processor with one power written another way. The rule could
+  ask for the same bytes on three kinds of processor, however got.
+- **R5** asks that a check cost a twentieth of the job. A check costs one
+  spacing's steps, whatever the job. The rule could name that price.
+- **R6** should count only runs that began. A setup that is refused never
+  ran.
+
+**Rules first, then agents, for the blind half.**
+[Trial 3](trial-3/RESULTS.md) put three written rules where
+[trial 2](trial-2/RESULTS.md) had three agents: the rules' steps ran
+clean, one repaired the step an agent had misread, and when no rule fit
+it stopped and said so. The other trial of that day, 18 models asked one
+open question, found the mirror of it: a model answers. So in the study
+a script would choose and check, and an agent would be asked only what a
+script cannot say, with R9's questions that have no answer among the
+rest.
+
+**What two records need to find each other.** Trial 4 found that two
+runs of one stack share nothing on the record but the kinds of their
+rows. The stack-row add-on now puts a run on the record as one row. For
+two machines' rows to be compared, a row needs an identity without its
+clock, and a step's output one without its place.
+
+### A bigger stack, run the same way
+
+Trial 4 compared a stack of 30 steps and 24 add-ons. The same day the
+same comparison, by [same.py](same.py) with only this project's folder
+names given to it, was made of a stack of 95 steps and 70 add-ons: the
+one a published research ledger carries, built twice into two folders
+from the same 52 source files and run twice in each. Each pass took six
+minutes. An account: the runs are on that session's machine.
+
+| | 30 steps (trial 4) | 95 steps |
+|---|---|---|
+| marked the same as they ran | 10 | 95 |
+| marked the same from the step as written | 30 | 95 |
+| printed the same bytes, first runs | 17 | 92 |
+| the same without the place, first runs | 23 | 93 |
+| the same without the place, second runs | 27 | 91 |
+
+- **It holds at three times the size, and better.** This stack names its
+  folders from where it is run, not in full, so the place was never in a
+  step's mark or in most of what it printed. How a stack is written
+  decides most of what trial 4 had to take back out.
+- **What still differs is the clock, as before.** The Merkle root over
+  the record; a step that prints how many seconds it took; and, on a
+  second run, two steps that print when the last check was.
+- **A second run in the same folder is not the same work.** First run
+  against second, in one folder, 82 of 95 steps printed the same. Eight
+  of the thirteen that didn't are steps that write a file once and
+  refuse to write it again: they ended 0 the first time and 2 the
+  second. Three more say "first check" once and "nothing changed" after.
+  So "run it again" has two meanings, and a memory of steps has to know
+  which steps make something and which only look.
+
 ## The order
 
 1. Settle the list above.
