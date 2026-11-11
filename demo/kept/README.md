@@ -11,7 +11,7 @@ every line below is what a step printed, or a count of it.
 **Whose wants these are.** A stack is a row of wants in the person's own
 words ([stacks, for agents](../../docs/agents/stacks.md)). Here the person
 gave the subject ("remembering over recomputing, and shared computing") and
-said to add whatever might come up, at least thirteen. So the 27 wants in
+said to add whatever might come up, at least thirteen. So the 28 wants in
 [stack.md](stack.md) are the session's, each written above its step, and
 they stand as proposals: cut any of them. The Forge could not run
 (`forge-play` is not installed), so each step was written by hand, added
@@ -19,7 +19,7 @@ one at a time, and the stack run from a fresh box after each.
 
 ## What is here
 
-- [stack.md](stack.md): 29 steps of 25 add-ons in eight pools, for
+- [stack.md](stack.md): 30 steps of 26 add-ons in nine pools, for
   [stack](../../adapters/stdlib/stack/). Paths of the machine it ran on
   are `<scratch>`, `<pile>` for the folder it asks and `<repo>` for this
   checkout.
@@ -89,6 +89,8 @@ finds itself again.
 | 27 | box-health | flagged: no `out` row yet, and 1 file it can't read (over 1 MB) | nothing: both are true |
 | 28 | history | "You started your record. A fixity row." | nothing: that is all the record holds |
 | 29 | thesis | the design note's 82 sentences: 14 held whole by some passage, 68 not; the only words no file holds are supercomputing, supercomputers, simulated, whittling and whittled | most of its 14 "held" are word matches (one is a test about card numbers); and it reads the folder again for every sentence, 150 seconds of the run |
+
+| 30 | stack-row | the run itself, on the record: 29 steps in one row, 23 clean and 6 ended otherwise | nothing seen |
 
 Six steps ended flagged (07, 11, 13, 26, 27, 29), each for a reason in its row.
 
@@ -183,20 +185,33 @@ measuring.
 ## Since: what the steps take from one another
 
 The stack is written as a row and run as one. Read by the stack-bridges
-add-on, it is not one. Of its 29 steps, 11 take nothing any other step
-made. The 23 bridges between the rest go three steps deep at most, from
+add-on, it is not one. Of its 30 steps, 11 take nothing any other step
+made. The 24 bridges between the rest go three steps deep at most, from
 glance down through scan and an index to the reader that wrote its
 folder.
 
-So it could have run in four rounds: 11 steps at once, then 13, then 3,
+So it could have run in four rounds: 11 steps at once, then 14, then 3,
 then 2. It ran one step after another for about a minute, and two and a
 half more for the last. That is the conversation's second half in small:
 the work was shareable as written, and nothing in how it was run knew.
 
-Nine of those bridges are the record. Only fixity adds a row to it, by
-its card, and every step that names the record after it is placed after
-it. That errs toward waiting: a step may name the record and never read a
+Ten of those bridges are the record. Before the last step only fixity
+adds a row to it, by its card, and every step that names the record after
+it is placed after it. That errs toward waiting: a step may name the record and never read a
 row.
+
+## Since: the run on the record
+
+"What didn't" says the record remembered two rows of 28 steps. The last
+step is now the stack-row add-on, and the record ends with a third: the 29
+steps before it, each with its place, its add-on, the stack's marks of how
+it was asked, how it ended and the SHA-256 of what it printed. The six
+that ended other than clean are there as that. No output is on the row and
+no argument, since a question is the person's words.
+
+So what this run found can be held to: a step's kept output either hashes
+to what the row says or it doesn't. What it does not yet do is get used.
+prov runs before the row is written, and writes what it wrote before.
 
 ## The rule
 

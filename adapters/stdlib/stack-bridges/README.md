@@ -17,7 +17,7 @@ leaves them in.
 
     python adapters/stdlib/stack-bridges/stack_bridges.py --stack FILE [--json]
 
-    stack-bridges: populated, 29 steps, 23 bridges, 3 deep; 11 rest on no other
+    stack-bridges: populated, 30 steps, 24 bridges, 3 deep; 11 rest on no other
     ## what each step takes, and from which
       04 index-cache        01 code-comments: what it wrote, {box}-code
       06 scan               03 index-cache: what it wrote, index-repo; 04 index-cache: what it wrote, index-code
@@ -26,21 +26,21 @@ leaves them in.
       25 restore-drill      24 backup: what it wrote, usb
     ## the order that leaves them in
       rest on no other      11: 01 code-comments, 02 git-history, 03 index-cache, 10 first-mention
-      1 step deep           13: 04 index-cache, 05 index-cache, 09 fair-merge, 15 pile-rungs
+      1 step deep           14: 04 index-cache, 05 index-cache, 09 fair-merge, 15 pile-rungs
       2 steps deep          3: 06 scan, 25 restore-drill, 26 three-two-one
       3 steps deep          2: 07 glance, 08 why-not
       the longest way down  07 glance → 06 scan → 04 index-cache → 01 code-comments
-      write the record      1: 16 fixity; a step that names the record after one of these takes the record as it left it
+      write the record      2: 16 fixity, 30 stack-row; a step that names the record after one of these takes the record as it left it
 
 **Why.** [stack](../stack/) runs a file's steps top to bottom. But the
 steps are not a row. Some take what an earlier one made, and the rest
 could run in any order, or at once. Which is which is decided when the
 stack is written, and nothing says it: a card says what an add-on `uses`,
 never what a step in someone's stack takes from the step above. This
-reads the file and says it. On the 29 steps of
-[demo/kept](../../../demo/kept/README.md) there are 23 such bridges, the
+reads the file and says it. On the 30 steps of
+[demo/kept](../../../demo/kept/README.md) there are 24 such bridges, the
 longest way down is three steps, and 11 steps rest on no other: it could
-run in four rounds, 11 steps at once, then 13, then 3, then 2.
+run in four rounds, 11 steps at once, then 14, then 3, then 2.
 
 **A bridge is one step taking what another made.** Two kinds are read off
 the file:

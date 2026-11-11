@@ -102,3 +102,9 @@
 # here holds at all. The note is read from this checkout; the pile it is put
 # to is still the pinned one, so it is never checked against itself.
 - thesis -- --box {box} <repo>/docs/design/one-shape.md
+
+## what the run leaves behind it
+# want 28: the run itself on the record, which the first 28 steps left two
+# rows on: for each step that has ended, how it was asked, how it ended and
+# the hash of what it printed. Last, so every step before it has ended.
+- stack-row -- --box {box} --run <scratch>/run

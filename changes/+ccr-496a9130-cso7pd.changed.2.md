@@ -1,0 +1,1 @@
+`demo/kept`: a 30th step, stack-row, puts the run itself on the record, which the first 28 steps had left two rows on; and what stack-bridges says of the stack: 24 bridges, 11 steps resting on no other, four rounds where it ran thirty turns
