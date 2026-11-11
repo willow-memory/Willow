@@ -1694,6 +1694,10 @@ willow/
 │   │   │   ├── test_create_pr.py
 │   │   │   ├── test_github.py
 │   │   │   └── README.md     its card: and .github/ belongs to it
+│   │   ├── kinds/
+│   │   │   ├── kinds.py      every file of this repo sorted by what it is, and the ones nothing declares
+│   │   │   ├── test_kinds.py
+│   │   │   └── README.md     its card
 │   │   ├── live/
 │   │   │   ├── live.py       each way-in add-on run through its real program: works, fails, or not here
 │   │   │   ├── test_live.py

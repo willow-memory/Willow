@@ -712,6 +712,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "invoices": ("invoices.py", ["--box", "{box}", "--id", "INV-\\d+"]),
     "jetbrains": ("jetbrains.py", ["--box", "{box}"]),
     "job-hunt": ("job_hunt.py", ["--box", "{box}"]),
+    "kinds": ("kinds.py", ["count"]),
     "launcher": ("launcher.py", ["--box", "{box}"]),
     "lending": ("lending.py", ["--box", "{box}"]),
     "lesson-time": ("lesson_time.py", ["--box", "{box}"]),

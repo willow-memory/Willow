@@ -1,0 +1,1 @@
+`kinds`: every file of this repo sorted by what it is, from what the repo already keeps (a card, made.py, towncrier.toml, the ideas list, a FROZEN.json, a test's name, a make_life.py), and the ones nothing declares listed by folder: today the kernel, its ports and its law among them
