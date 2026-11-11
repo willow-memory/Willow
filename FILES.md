@@ -2461,6 +2461,7 @@ willow/
 │   │   │   ├── dry.py            the whole plan on one machine, only for a plan that says it is a dry one
 │   │   │   ├── FROZEN.json       the study's freeze: each frozen file's SHA-256, the rules and their thresholds
 │   │   │   ├── judge.py          the study's nine rules, each held to what the machines kept
+│   │   │   ├── notebooks.py      the study's Kaggle notebooks, made from the frozen files: one script a machine run
 │   │   │   ├── plan.json         the study's sweep: 220 jobs over 22 trajectories, its machines, seeds and agents
 │   │   │   ├── runner.py         what one machine does: every job alone, its share with the memory, a check, or the project as written
 │   │   │   ├── starts.json   each trajectory's start as exact numbers, built once and never stepped

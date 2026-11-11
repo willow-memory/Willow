@@ -649,6 +649,49 @@ the next one's input. And the two agents were this session's own, started
 with the brief as their whole prompt but not sealed off from the
 repository; neither opened a file.
 
+## Running it
+
+Written after the freeze; the notebook is not among the frozen files,
+and decides nothing the rules read.
+
+[study/notebooks.py](study/notebooks.py) makes thirteen notebooks from
+the frozen files, one a machine run: the baseline twice, five machines
+for each of two rounds, and the check. Each is one script that carries
+the plan, the starts and the two scripts it needs inside itself, held to
+their SHA-256 when unpacked, so nothing else is uploaded. It fetches the
+project at the plan's commit, installs the plan's NumPy beside the
+machine's own if that is another, and calls runner.py for its part. A
+round's notebooks name the rounds before as their inputs, and stop if
+one is missing.
+
+It was rehearsed here on the dry run's made-up sweep: all thirteen run
+one after another as Kaggle would run them, each given only a folder of
+the earlier ones' output, came to the same reports as the dry run, byte
+for byte. What the rehearsal could not try is the fetch from GitHub,
+which this session's network refuses, and Kaggle itself.
+
+The steps, for the maintainer. The three `kaggle` commands are as
+recalled from Kaggle's command line, not read from its pages:
+
+1. Make them, outside the repository, with the account's name:
+   `python demo/shared-runs/study/notebooks.py make --user NAME --to DIR`.
+2. Put DIR through the privacy check.
+3. Push the two baselines and the five of round one, each with
+   `kaggle kernels push -p DIR/NAME-OF-RUN`. Kaggle ran five at once
+   when it was tried, so the baselines go first or after.
+4. When round one's five have finished, push round two's five. Their
+   inputs are round one's outputs, so they can't go sooner.
+5. When round two has finished, push the check.
+6. Fetch each one's output into one folder, a folder a run:
+   `kaggle kernels output NAME/shared-runs-NAME-OF-RUN -p RUNS`.
+7. The two other check machines, the laptop and the cloud session, run
+   runner.py themselves, given the ten rounds' folders: first `check`
+   and then `native`, each with `--to RUNS/laptop` or
+   `RUNS/cloud-session`, under NumPy 2.1.3, on a checkout of the project
+   at its commit.
+8. Then the reports, the two agents, and judge.py with a record outside
+   the repository, as the dry run did.
+
 ## The order
 
 1. Settle the list above. Kaggle's pages are read. The maintainer has
@@ -663,7 +706,8 @@ repository; neither opened a file.
    them to it. With it in that commit are only that test and their two
    lines in the file tree. From here a change to any of them is a new
    freeze, with its reason.
-5. The baseline: one notebook, no memory, twice.
+5. The baseline: one notebook, no memory, twice. The notebooks for this
+   and the next two steps are written and rehearsed; see "Running it".
 6. The shared run: many notebooks, one dataset.
 7. The check: a fresh notebook that only verifies.
 8. The blind account: a fresh agent, the reports, the frozen questions.

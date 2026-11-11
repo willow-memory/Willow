@@ -229,3 +229,72 @@ def test_what_the_dry_run_kept_scores_as_its_page_says():
     for name in ("small", "larger"):
         held = account.held(plan, f, (HERE / "dry" / f"answers-{name}.txt").read_text())
         assert set(held["marks"].values()) == {"right"} and held["struck"] == []
+
+
+def test_the_notebooks_run_the_plan_each_given_only_the_rounds_before_it(tmp_path, monkeypatch):  # fmt: skip
+    import shutil
+    import subprocess
+
+    import notebooks
+
+    file = tmp_path / "plan.json"
+    file.write_text(json.dumps(PLAN))
+    starts = tmp_path / "starts.json"
+    starts.write_text(json.dumps(sweep.starts(PLAN, tmp_path)))
+    made = notebooks.make(file, starts, "someone", tmp_path / "nb")
+    assert made == [r["name"] for r in notebooks.roles(PLAN)] and len(made) == 9
+    meta = json.loads((tmp_path / "nb" / "check" / "kernel-metadata.json").read_text())
+    assert meta["is_private"] is True and meta["enable_gpu"] is False
+    assert meta["kernel_sources"] == [
+        f"someone/shared-runs-round-{r}-machine-{k}" for r in (1, 2) for k in range(3)
+    ]
+    assert "someone" not in (tmp_path / "nb" / "check" / "run.py").read_text()
+    runs = tmp_path / "runs"
+    for role in notebooks.roles(PLAN):
+        given = tmp_path / "in" / role["name"]
+        given.mkdir(parents=True)
+        for need in role["needs"]:
+            shutil.copytree(runs / need, given / notebooks.slug(need) / need)
+        env = {"SHARED_RUNS_INPUT": str(given), "SHARED_RUNS_WORKING": str(runs),
+               "SHARED_RUNS_STEPPER": "--toy", "PATH": ""}  # fmt: skip
+        script = tmp_path / "nb" / role["name"] / "run.py"
+        assert subprocess.run([sys.executable, str(script)], env=env).returncode == 0
+    f = judge.judged(file, runs)[0]
+    assert f["differ"] == [] and f["shared_jobs"] == 16 and f["afresh"] == f["draw"]
+    alone = tmp_path / "in" / "none"
+    alone.mkdir()
+    env = {"SHARED_RUNS_INPUT": str(alone), "SHARED_RUNS_WORKING": str(tmp_path / "x"),
+           "SHARED_RUNS_STEPPER": "--toy", "PATH": ""}  # fmt: skip
+    script = tmp_path / "nb" / "round-2-machine-1" / "run.py"
+    got = subprocess.run([sys.executable, str(script)], env=env, capture_output=True, text=True)  # fmt: skip
+    assert got.returncode != 0 and "not among the inputs" in got.stderr
+
+
+def test_a_notebook_carries_the_frozen_files_and_is_made_outside_the_repository(tmp_path, capsys):  # fmt: skip
+    import hashlib
+
+    import notebooks
+
+    frozen = json.loads((HERE / "FROZEN.json").read_text())["files"]
+    assert (
+        notebooks.main(["make", "--user", "someone", "--to", str(tmp_path / "nb")]) == 0
+    )
+    made = sorted(p.name for p in (tmp_path / "nb").iterdir())
+    assert len(made) == 13 and "round-2-machine-4" in made
+    scope: dict = {}
+    text = (tmp_path / "nb" / "baseline-1" / "run.py").read_text()
+    exec(text.rpartition("\nmain()\n")[0], scope)
+    for name, body in scope["FILES"].items():
+        assert hashlib.sha256(body.encode()).hexdigest() == frozen[name] == scope["SHA256"][name]  # fmt: skip
+    assert sorted(scope["FILES"]) == [
+        "plan.json",
+        "runner.py",
+        "starts.json",
+        "sweep.py",
+    ]
+    assert notebooks.main(["make", "--user", "someone", "--to", str(HERE / "nb")]) == 2
+    assert (
+        notebooks.main(["make", "--user", "some one", "--to", str(tmp_path / "b")]) == 2
+    )
+    assert notebooks.main(["make", "--to", str(tmp_path / "c")]) == 2
+    assert not (HERE / "nb").exists() and not (tmp_path / "b").exists()
