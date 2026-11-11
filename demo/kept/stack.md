@@ -1,16 +1,19 @@
 # remembered, not recomputed: this repository asked what it keeps
+# <pile> is the repository as it was at one commit, cloned outside itself, so
+# the stack reads what was there before it was and never its own write-up.
+# <repo> is this checkout, for the one add-on that runs code from it.
 
 ## its words
 # want 1: read what the code says of itself, not only the prose around it.
-- code-comments -- mirror --from <repo> --to {box}-code
+- code-comments -- mirror --from <pile> --to {box}-code
 # want 2: read when each thing was decided, from the commits, dated by the commit.
-- git-history -- mirror --from <repo> --to {box}-commits --messages
+- git-history -- mirror --from <pile> --to {box}-commits --messages
 
 ## found once, kept
 # want 3: stop reading 20 MB again for every question: one index each of the
 # prose, the code's comments and the commits, kept between runs, rebuilt
 # only when a file's bytes changed. Needs steps 1 and 2: it indexes what they wrote.
-- index-cache -- --from <repo> --to <scratch>/kept/index-repo
+- index-cache -- --from <pile> --to <scratch>/kept/index-repo
 - index-cache -- --from {box}-code --to <scratch>/kept/index-code
 - index-cache -- --from {box}-commits --to <scratch>/kept/index-commits
 # want 4: ask every question of all three at once, with the kernel's own answers.
@@ -26,7 +29,7 @@
 # want 7: the prose is 42,000 passages and the commits 6,500, so one ranked
 # list is mostly prose. Each of the three ranked on its own and dealt in turns.
 # Needs steps 1 and 2's folders.
-- fair-merge -- --from <repo> --from {box}-code --from {box}-commits --top 9 "a result kept so it is not computed again"
+- fair-merge -- --from <pile> --from {box}-code --from {box}-commits --top 9 "a result kept so it is not computed again"
 # want 8: when the repository first said it. Asked of the box, so the words list reads.
 - first-mention -- --box {box} "cached"
 
@@ -43,10 +46,10 @@
 ## asked another way
 # want 12: the passages themselves read once and kept in one file, so the
 # next step (and any later add-on) doesn't read the folder again.
-- pile-store -- --from <repo> --to <scratch>/kept/store.sqlite
+- pile-store -- --from <pile> --to <scratch>/kept/store.sqlite
 # want 13: a question the strict word match half-answers, climbed rung by rung,
 # saying which rung answered and why the others didn't. Needs step 14's store.
-- pile-rungs -- --from <repo> --store <scratch>/kept/store.sqlite "computed once and kept"
+- pile-rungs -- --from <pile> --store <scratch>/kept/store.sqlite "computed once and kept"
 
 ## kept, and named
 # want 14: every file's hash on the record, so a later run can say which

@@ -1,6 +1,7 @@
 # Kept: this repository asked what it remembers
 
-One stack, built by hand on 2026-11-11, over one folder: this repository.
+One stack, built by hand on 2026-11-11, over one folder: this repository
+as it was at commit `82983e8`, the last before this folder existed.
 It came out of a conversation about supercomputing that ended on a claim:
 the big machines recompute what should be remembered, and computing should
 be shared. The stack asks what willow already does toward that, and tries
@@ -20,15 +21,43 @@ one at a time, and the stack run from a fresh box after each.
 
 - [stack.md](stack.md): 28 steps of 24 add-ons in seven pools, for
   [stack](../../adapters/stdlib/stack/). Paths of the machine it ran on
-  are `<scratch>` and `<repo>`.
+  are `<scratch>`, `<pile>` for the folder it asks and `<repo>` for this
+  checkout.
 - [words.txt](words.txt): the six-line words list the box carried, written
   from what the questions missed and cut once.
 - [questions.txt](questions.txt): the sixteen questions scan was asked.
 - [results/](results/): the last run's log, a line as each step started
   and ended, and what glance said of the 48 answers.
-- [rebuild.sh](rebuild.sh): `bash demo/kept/rebuild.sh SCRATCH` makes a
-  fresh box over the repository, puts the words list on it, runs the
-  stack and verifies the record. It takes about a minute.
+- [rebuild.sh](rebuild.sh): `bash demo/kept/rebuild.sh SCRATCH` clones
+  the repository at the pinned commit into SCRATCH, makes a fresh box over
+  that clone, puts the words list on it, runs the stack and verifies the
+  record. It takes about a minute.
+
+## The pile is pinned, so the stack can't find itself
+
+The first runs asked this checkout. Then this folder was committed into
+it, and the stack began answering from its own write-up: the claim check
+closed on [stack.md](stack.md), where the claim is written; glance counted
+25 questions held whole, up from 16, by finding
+[questions.txt](questions.txt); and five of the seven passages one step
+served were this report or the commits that added it. Asked about floating
+point, it quoted the line below that says nothing here speaks of it.
+
+A pile that holds what was asked of it, and what was said of the answers,
+agrees with itself. So the pile is no longer this checkout. `rebuild.sh`
+clones the repository at one named commit, `82983e8`, into scratch, and the
+box, the readers and every index are over that clone. It holds 1,022
+commits and no trace of this folder. Run that way, the stack gives the
+numbers of the first run again, to the line.
+
+Two things came with it. The folder asked is now named: a commit is a name
+for exactly these bytes, so someone else's run is of the same pile. And the
+run no longer dirties what it reads: add-ons run from this checkout, so
+Python's `.pyc` files land here and not in the pile, and box-health's count
+of files it can't read fell from 11 to 1.
+
+`rebuild.sh SCRATCH COMMIT` asks another commit. From `b4a8223` on, it
+finds itself again.
 
 ## The row
 
@@ -47,7 +76,7 @@ one at a time, and the stack run from a fresh box after each.
 | 13 | xref | 1,572 references checked, 136 don't hold | most are files a test makes up; 7 are the casebook, which lives in another repository |
 | 14 | pile-store | 41,976 passages are 36,492 texts: 5,484 are copies, stored once | nothing seen |
 | 15 | pile-rungs | answered at the first rung, from the store, not the folder | its top passage is an idea not yet built (`vectors`) |
-| 16 | fixity | 1,753 files hashed, one row on the record | nothing seen; a first check has nothing to compare |
+| 16 | fixity | 1,747 files hashed, one row on the record | nothing seen; a first check has nothing to compare |
 | 17 | ids | `kernel.py` and its 141 passages named; the name is git's own `hash-object` | nothing seen |
 | 18, 19 | star-system | a three-body run, 21,359 steps, energy drift 7.2e-11, twice | its page says "Yoshida integrator" of the stand-in checkout, whose own file says velocity-Verlet |
 | 20 | diverge | "The same: every file, byte for byte." | nothing seen |
@@ -56,17 +85,10 @@ one at a time, and the stack run from a fresh box after each.
 | 23 | tip-pin | 2 rows pinned outside the box | nothing seen |
 | 24, 25 | backup, restore-drill | a checked zip, and it restores | nothing seen |
 | 26 | three-two-one | flagged: 2 copies, none away from home | nothing: that is true of a scratch folder |
-| 27 | box-health | flagged: 11 files it can't read | 10 are `.pyc` files the run itself leaves in the folder while it runs |
+| 27 | box-health | flagged: no `out` row yet, and 1 file it can't read (over 1 MB) | nothing: both are true |
 | 28 | history | "You started your record. A fixity row." | nothing: that is all the record holds |
 
 Five steps ended flagged (07, 11, 13, 26, 27), each for a reason in its row.
-
-**The numbers are of the run before this folder existed.** It is in the
-repository now, so it is in the pile: a run today finds its own questions
-in [questions.txt](questions.txt) and the claim in [stack.md](stack.md),
-the first claim check closes on this folder and glance counts 25 held
-whole. A stack kept inside the folder it asks answers itself; keep yours
-outside, as [the guide](../../docs/use/stack.md) says.
 
 ## What held
 
@@ -129,8 +151,8 @@ this side were brought up to it:
   it off the checkout and writes it as a line, only when that setup builds,
   bit for bit, the system it ran.
 
-What the second run said: 28 steps in 81 seconds, 4 flagged (the first
-claim check now closes on this folder, as said above). The two real runs
+What that run said, on the pinned pile: 28 steps in 83 seconds, the same
+5 flagged. The two real runs
 were the same, byte for byte; energy drifted 6.7e-14 over three orbits of
 Jupiter, against the stand-in's 7.2e-11; and both pages carry the setup
 digest `sha256:dd4c9ad5…`, the one the project's own function gives.
@@ -149,6 +171,7 @@ of your own and seal what you choose.
 ## Its test
 
 [test_kept.py](test_kept.py) holds what is committed: the stack parses,
-names only add-ons that are here and no machine of its own, a step takes
-only an earlier step's output, the words list is one the kernel reads, and
-the log is the stack's.
+names only add-ons that are here and no machine of its own, every step
+that reads the repository reads the pinned pile and never this checkout, a
+step takes only an earlier step's output, the words list is one the kernel
+reads, and the log is the stack's and holds nothing of this folder.

@@ -46,6 +46,31 @@ def test_the_stack_names_no_machine_of_its_own():
     assert "<scratch>" in STACK and "<repo>" in STACK and "{box}" in STACK
 
 
+def test_the_stack_asks_the_pinned_pile_and_never_this_checkout():
+    for name, args in steps():
+        said = " ".join(args)
+        if name == "star-system":
+            assert "<repo>/adapters/deps/star-system/example_repo" in said
+        else:
+            assert "<repo>" not in said, f"{name} reads this checkout: {said}"
+    asked = [name for name, args in steps() if "<pile>" in " ".join(args)]
+    assert asked == [
+        "code-comments", "git-history", "index-cache", "fair-merge", "pile-store", "pile-rungs",
+    ]  # fmt: skip
+    script = (HERE / "rebuild.sh").read_text(encoding="utf-8")
+    (pinned,) = re.findall(r"^PINNED=([0-9a-f]{40})$", script, flags=re.M)
+    assert pinned.startswith("82983e8"), "the last commit before this folder existed"
+    assert '--pile "$S/pile"' in script and "s#<pile>#$S/pile#g" in script
+
+
+def test_what_was_kept_of_the_run_holds_nothing_of_this_folder():
+    for path in sorted((HERE / "results").iterdir()):
+        text = path.read_text(encoding="utf-8")
+        assert (
+            "demo/kept" not in text and "/tmp/" not in text and "/home/" not in text
+        ), path.name
+
+
 def test_every_step_has_its_want_above_it():
     wants = re.findall(r"^# want (\d+):", STACK, flags=re.M)
     assert wants == [str(n) for n in range(1, 27)], "the row of wants, in order"
