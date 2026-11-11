@@ -1,0 +1,1 @@
+`dp` adds OpenDP's discrete Laplace noise to a kart result's numbers before you seal and send them, `--epsilon` your spend and `--per-item` how far one item can move each count; a result is noised once, each spend is a `noised` row, `spent` adds them up, and `kart gather` adds noisy results as it adds any others

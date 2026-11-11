@@ -3,7 +3,7 @@ section: For maintainers
 line: This repo's checks as verdict rows on a kernel record, the same every run.
 source: box
 added: 2026-10-23
-version: 0.1.0
+version: 0.1.1
 writes: record, BUGS.md, FILES.md, README.md, ADDONS.md, adapters/planned.json, adapters/*/*, adapters/*/*/*, demo/*/*, demo/*/*/*
 network: PyPI, to read each dependency floor's release date; GitHub, through gh, to find main's last records (main_run.py, times.py)
 role: repo

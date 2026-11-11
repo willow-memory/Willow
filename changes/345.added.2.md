@@ -1,0 +1,1 @@
+`wasm` runs a sealed kart job that is a WebAssembly module, or a script for a WASI runtime you keep, in Wasmtime over your folder read-only, with no network and no environment, bounded by `--fuel`; its tools are the module's SHA-256, so the same job answers alike on every machine, and its result goes to `kart gather` as kart's do

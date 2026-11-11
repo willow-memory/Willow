@@ -19,7 +19,7 @@ bookmarks = karakeep, wallabag, readwise, links
 compare = sort, duplicates, diverge, contradictions
 
 # keeping track
-remind = coming, due, dates, deadline, renewals
+remind = coming, due, dates, deadline, appointments, renewals
 reminders = coming, due, dates, deadline
 due = coming, deadline, renewals, expires
 deadlines = coming, due, dates

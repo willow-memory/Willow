@@ -1,0 +1,1 @@
+`kart run` refuses, exit 2, when bubblewrap is installed but can't make a sandbox on this machine (a default Docker container; AppArmor on Ubuntu 24.04), saying why in bwrap's own words: an empty sandbox is tried first. It used to run the job, exit 42 as if the job had failed, and leave a `ran` row on the person's chain for a job that never ran
