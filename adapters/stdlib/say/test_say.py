@@ -283,3 +283,12 @@ def test_nothing_is_written(tmp_path, boxes, ollama):
     assert {
         p: p.read_bytes() for p in sorted(tmp_path.rglob("*")) if p.is_file()
     } == before
+
+
+def test_a_timeout_of_a_second_or_less_is_taken(boxes):
+    # nothing listens on port 9: taken, the model is tried and can't be asked; refused would be 2
+    for seconds in ("0.5", "1", "0.01"):
+        got = run("--boxes", boxes, "--host", "127.0.0.1:9", "--timeout", seconds)
+        assert got.returncode == 42 and got.stdout.startswith("say: unreachable"), (
+            seconds
+        )

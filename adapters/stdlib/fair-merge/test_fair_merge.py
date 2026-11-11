@@ -265,3 +265,12 @@ def test_a_bad_command_line_says_how_to_run_it(tmp_path):
         got = run(*argv)
         assert got.returncode == 2, argv
     assert "fair_merge.py" in run().stderr
+
+
+def test_a_refusal_says_the_first_line_of_how_it_is_run():
+    said = run().stderr.strip()
+    assert (
+        said
+        == 'python adapters/stdlib/fair-merge/fair_merge.py --box DIR [--top N] "question"'
+    )
+    assert run("--top", "0", "frost").stderr.strip() == said

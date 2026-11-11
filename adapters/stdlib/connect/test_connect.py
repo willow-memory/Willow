@@ -323,3 +323,16 @@ def test_nothing_is_written(box, tmp_path):
     )
     go("--box", box, "--first", "invoices.txt:1", "--second", "gone.txt:1")
     assert now() == before
+
+
+def test_a_number_with_pence_is_not_the_whole_number():
+    a, b = INVOICE, LOG
+    # 640.00 is 640, as an invoice writes it; 640.50 is another number
+    assert (
+        cn._norm("640") == "640"
+        and cn._norm("640.00") == "640"
+        and cn._norm("1,180.") == "1180"
+    )
+    assert cn._norm("640.50") == "640.50" and cn._norm("0.5") == "0.5"
+    assert cn.added("It was 640.00 in 2026.", a, b) == []
+    assert cn.added("It was 640.50 in 2026.", a, b) == ["640.50"]
