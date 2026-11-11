@@ -2421,6 +2421,7 @@ willow/
 │   ├── shared-runs/          a plan for a study, nothing frozen: simulations on machines nobody chose, sharing one memory, run by a script
 │   │   ├── chain.py      starts the project, makes each link's handoff, and applies or refuses the step a link offers
 │   │   ├── rules.py          the next step of a stack chosen by rule from what its last run said, or that no rule fits
+│   │   ├── same.py       two kept runs of one stack, step by step: asked the same way, printed the same thing
 │   │   ├── trial-1/          a first try of the blind handover, on demo/kept's run: what was fixed before, what each agent said
 │   │   │   ├── a-account-struck.txt that account after the strike, which took nothing out: what the last agent was given
 │   │   │   ├── a-account.txt what the first agent wrote from the report, word for word
@@ -2460,6 +2461,8 @@ willow/
 │   │   │   ├── RESULTS.md    the rules beside the agents, what the code did not do, and what to hold against it
 │   │   │   ├── RULES.md      what the code is held to and what to hold against it, written before the run
 │   │   │   └── stack-at-the-end.txt the stack the rules left: seven steps it was given, two it added
+│   │   ├── trial-4/      willow's own stack run twice in two folders: does each step come out the same
+│   │   │   └── RULES.md      what will be counted and what is expected, written before the two runs were compared
 │   │   ├── trial.py          makes the report and the key from a kept run, strikes what an account adds, scores answers
 │   │   ├── test_trial.py
 │   │   └── README.md         the claim, eight proposed rules, a session led by a script, how it could be wrong, what waits before the freeze
