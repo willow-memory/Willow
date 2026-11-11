@@ -240,6 +240,46 @@ no text when fetched; other sites say twelve hours a session, unchecked),
 whether a notebook may write a dataset from inside a run, and how much
 slower the fixed runtime is than native.
 
+### What Kaggle's own pages say
+
+Read on 2026-11-11, from the maintainer's copy of three pages as their
+browser showed them: the Terms of Use (effective June 22, 2025), and the
+Notebooks and Datasets pages of the documentation, at `kaggle.com` under
+terms, docs/notebooks and docs/datasets. Their text is not kept here; the
+copy read has the SHA-256
+`ff1ff6d58b46ae8d0d12b5ffe6fc637a28f51651ba1aee26a15a2640e7274739`.
+What follows is a reading for this plan, not advice on the law.
+
+| asked | what the pages say |
+|---|---|
+| how long a session runs | 12 hours for a CPU notebook, and a saved version must run top to bottom within that |
+| the machine | 4 cores, 30 GB of memory, 20 GB of kept output |
+| which processors | "CPU Platforms (ex. Intel Skylake, Broadwell, AMD) may be variable during regular notebook runs": the machine is not the user's to choose, in Kaggle's own words |
+| the wire | one notebook's output files can be added as another's input, and the page calls chaining them this way building a pipeline |
+| a dataset written from inside a run | no way is described; a dataset is made from a notebook's output afterwards, by hand. Not needed, with the wire above |
+| the internet | on by default in a new notebook, and packages may be installed from it |
+| how many at once | not said. Five was found by trying, above |
+| a private notebook or dataset | private by default, seen by its owner and by Kaggle to run the service |
+
+What the Terms ask, that bears on this study:
+
+- **One account a person.** Nobody may hold or run more than one. So
+  "every notebook is run by one account" is not a shortcut taken here:
+  a second account to play a stranger is not allowed, and a machine that
+  lies stays outside what this study can show.
+- **Use is to be one's own, personal and non-commercial**, "and not on
+  behalf of or for the benefit of any third party". The study is the
+  maintainer's own and nothing is sold. It runs a friend's public code;
+  whether that is within those words is the maintainer's to judge, and
+  it is the one line here worth their reading themselves.
+- **What is forbidden by name** is scraping the service, copying its
+  content in bulk, cryptomining, and data under arms-export rules. A
+  sweep of simulations is none of these.
+- **Limits can change** without these pages changing.
+
+Not read, and named by the Terms as part of them: the Acceptable Use
+Policy, the Community Guidelines and the Privacy Policy.
+
 ### What a first try at the whole thing found
 
 Later the same day the session tried the plan small, on the star-system
@@ -563,8 +603,10 @@ repository; neither opened a file.
 
 ## The order
 
-1. Settle the list above. Done but for Kaggle's own terms and the privacy
-   check, which wait on the maintainer; neither is needed before step 4.
+1. Settle the list above. Kaggle's Terms and two pages of its
+   documentation are read; its Acceptable Use Policy and Community
+   Guidelines are not, and the privacy check is not named. Those wait on
+   the maintainer; none is needed before step 4.
 2. Write the sweep, the predicted saving, the questions and the rules.
    Done, above.
 3. Dry run, with nonsense setups, on one machine here. Done, above.
