@@ -296,3 +296,45 @@ def test_a_rule_does_not_fire_on_what_it_was_not_written_for(tmp_path):
         )
     ]
     assert rules.repair(other) is None, "another refusal is not this rule's"
+
+
+def test_what_trial_threes_page_says_is_what_its_kept_files_hold():
+    import chain
+
+    three = TRIAL.parent / "trial-3"
+    turns = [
+        json.loads(line) for line in (three / "chain.jsonl").read_text().splitlines()
+    ]
+    assert [(t["link"], t["model"], t["refused"], t["ended"]) for t in turns] == [
+        ("link-1", "rules", None, "exit 0"), ("link-2", "rules", None, "exit 0")]  # fmt: skip
+    steps = chain.steps_of((three / "stack-at-the-end.txt").read_text())
+    assert [name for name, _ in steps[7:]] == ["why-not", "fair-merge"] and len(
+        steps
+    ) == 9
+    assert steps[7][1] == "--box {box} --questions <scratch>/questions.txt --of {06}"
+    assert (
+        three / "reply-3.txt"
+    ).read_text() == "no rule fits: 9 steps, 3 rules tried\n"
+    merged = (three / "09-fair-merge.txt").read_text()
+    assert (
+        "box-code: found nothing" in merged and "box-commits: found nothing" in merged
+    )
+    assert merged.startswith("1. pile/")
+    assert "nothing to explain" in (three / "08-why-not.txt").read_text()
+    stood = json.loads((three / "chain-where-link-3-stood.jsonl").read_text())
+    assert (
+        stood["refused"] is None and stood["ended"] == "exit 0" and stood["place"] == 11
+    )
+    assert stood["step"] == f"- why-not -- {steps[7][1]}", (
+        "the repair is the step the rules chose from the start"
+    )
+    two = [
+        json.loads(line)
+        for line in (TRIAL.parent / "trial-2" / "chain.jsonl").read_text().splitlines()
+    ]
+    assert [t["ended"] for t in two] == ["exit 0", "exit 2", "exit 42"], (
+        "what the page sets it beside"
+    )
+    for path in three.iterdir():
+        text = path.read_text()
+        assert "/tmp/" not in text and "/home/" not in text, path.name

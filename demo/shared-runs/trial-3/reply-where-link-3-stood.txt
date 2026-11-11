@@ -1,0 +1,4 @@
+want: Run step 09 again with the record where the record goes.
+step: - why-not -- --box {box} --questions <scratch>/questions.txt --of {06}
+why: Step 09 (why-not) was refused as not a kernel box: it was given <pile> for --box, and the record is {box}.
+cards: none

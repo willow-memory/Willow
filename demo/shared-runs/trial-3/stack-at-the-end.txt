@@ -1,0 +1,29 @@
+# remembered, not recomputed: this repository asked what it keeps
+# <pile> is the repository as it was at one commit, cloned outside itself, so
+# the stack reads what was there before it was and never its own write-up.
+# <repo> is this checkout, for the one add-on that runs code from it.
+
+## its words
+# want 1: read what the code says of itself, not only the prose around it.
+- code-comments -- mirror --from <pile> --to {box}-code
+# want 2: read when each thing was decided, from the commits, dated by the commit.
+- git-history -- mirror --from <pile> --to {box}-commits --messages
+
+## found once, kept
+# want 3: stop reading 20 MB again for every question: one index each of the
+# prose, the code's comments and the commits, kept between runs, rebuilt
+# only when a file's bytes changed. Needs steps 1 and 2: it indexes what they wrote.
+- index-cache -- --from <pile> --to <scratch>/kept/index-repo
+- index-cache -- --from {box}-code --to <scratch>/kept/index-code
+- index-cache -- --from {box}-commits --to <scratch>/kept/index-commits
+# want 4: ask every question of all three at once, with the kernel's own answers.
+# Needs steps 3 to 5: their indexes.
+- scan -- scan --index <scratch>/kept/index-repo --index <scratch>/kept/index-code --index <scratch>/kept/index-commits --questions <scratch>/questions.txt --words <scratch>/words.txt
+
+## what was found, and what wasn't
+# want 5: one line a question, so 48 answers can be read at a look. Needs step 6's answers.
+- glance -- --of {06} --questions <scratch>/questions.txt --words <scratch>/words.txt
+# want (link-1, rules): Say why the 1 question that found nothing found nothing.
+- why-not -- --box {box} --questions <scratch>/questions.txt --of {06}
+# want (link-2, rules): Ask each pile on its own the question that found nothing, to see which pile lacks it.
+- fair-merge -- --from <pile> --from {box}-code --from {box}-commits --top 6 "floating point results that differ between machines"

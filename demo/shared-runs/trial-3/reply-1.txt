@@ -1,0 +1,4 @@
+want: Say why the 1 question that found nothing found nothing.
+step: - why-not -- --box {box} --questions <scratch>/questions.txt --of {06}
+why: Step 07 (glance) lists 1 under found nothing, and no step says why.
+cards: none

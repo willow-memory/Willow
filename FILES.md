@@ -2398,7 +2398,7 @@ willow/
 ```
 │   ├── shared-runs/          a plan for a study, nothing frozen: simulations on machines nobody chose, sharing one memory, run by a script
 │   │   ├── chain.py      starts the project, makes each link's handoff, and applies or refuses the step a link offers
-│   │   ├── rules.py          the next step of a stack, chosen by rule from what its last run
+│   │   ├── rules.py          the next step of a stack chosen by rule from what its last run said, or that no rule fits
 │   │   ├── trial-1/          a first try of the blind handover, on demo/kept's run: what was fixed before, what each agent said
 │   │   │   ├── a-account-struck.txt that account after the strike, which took nothing out: what the last agent was given
 │   │   │   ├── a-account.txt what the first agent wrote from the report, word for word
@@ -2424,8 +2424,20 @@ willow/
 │   │   │   ├── RESULTS.md    what was counted, a reading of whether each step was the next one needed, and what to hold against it
 │   │   │   ├── RULES.md      what a link may do, what the script refuses, and what will be counted
 │   │   │   └── stack-at-the-end.txt the stack the chain left: seven steps it was given, three it added
-│   │   ├── trial-3/
-│   │   │   └── RULES.md      Trial 3: the rules, written before the run
+│   │   ├── trial-3/      code in the agents' place, from the same start, and the two compared
+│   │   │   ├── 08-why-not.txt what the first step the rules added printed
+│   │   │   ├── 09-fair-merge.txt what the second printed: which piles hold nothing for the question
+│   │   │   ├── 11-why-not-where-link-3-stood.txt what the repaired step printed, on trial 2's project
+│   │   │   ├── chain-where-link-3-stood.jsonl the script's line for that repair
+│   │   │   ├── chain.jsonl   what the script wrote as each turn ended
+│   │   │   ├── log-at-the-end.txt the stack's log when the rules stopped
+│   │   │   ├── reply-1.txt   the first turn's reply, from the explain rule
+│   │   │   ├── reply-2.txt   the second turn's reply, from the by-pile rule
+│   │   │   ├── reply-3.txt   the third turn's reply: no rule fits
+│   │   │   ├── reply-where-link-3-stood.txt the repair rule's reply where the third agent stood
+│   │   │   ├── RESULTS.md    the rules beside the agents, what the code did not do, and what to hold against it
+│   │   │   ├── RULES.md      what the code is held to and what to hold against it, written before the run
+│   │   │   └── stack-at-the-end.txt the stack the rules left: seven steps it was given, two it added
 │   │   ├── trial.py          makes the report and the key from a kept run, strikes what an account adds, scores answers
 │   │   ├── test_trial.py
 │   │   └── README.md         the claim, eight proposed rules, a session led by a script, how it could be wrong, what waits before the freeze

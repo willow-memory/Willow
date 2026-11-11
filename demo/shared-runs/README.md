@@ -19,7 +19,9 @@ study: three agents, one kept run, twelve closed questions. What was fixed befor
 [trial-1/RESULTS.md](trial-1/RESULTS.md). A second let three agents build:
 each added a step to a stack from the built add-ons, handed only what the
 last run left. Its rules are in [trial-2/RULES.md](trial-2/RULES.md) and
-what happened in [trial-2/RESULTS.md](trial-2/RESULTS.md).
+what happened in [trial-2/RESULTS.md](trial-2/RESULTS.md). A third put code
+in the agents' place, three rules from the same start, and set the two
+side by side: [trial-3/RESULTS.md](trial-3/RESULTS.md).
 
 ## The claim
 
