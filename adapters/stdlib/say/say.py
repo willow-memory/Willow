@@ -113,10 +113,15 @@ def strip_think(text: str) -> str:
     return re.sub(r"<think>.*?</think>", " ", text, flags=re.S).strip()
 
 
-def ollama_say(model: str = MODEL, host: str | None = None, timeout: float = TIMEOUT):
+def ollama_say(
+    model: str = MODEL,
+    host: str | None = None,
+    timeout: float = TIMEOUT,
+    most: int | None = None,
+):
     """A say: prompt in, the model's words out, by Ollama's /api/generate on
     this machine, through no proxy. It raises SayUnreachable for every way
-    it can't answer."""
+    it can't answer. `most` is the most tokens it may say, when given."""
 
     def say(prompt: str) -> str:
         base = ollama_base(host)
@@ -128,7 +133,10 @@ def ollama_say(model: str = MODEL, host: str | None = None, timeout: float = TIM
                 "prompt": prompt + think_off,
                 "stream": False,
                 "think": False,
-                "options": {"temperature": 0},
+                "options": {
+                    "temperature": 0,
+                    **({"num_predict": most} if most else {}),
+                },
             }
         ).encode("utf-8")
         req = urllib.request.Request(

@@ -1378,6 +1378,9 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - <a id="assistant-scores"></a>[**assistant-scores**](adapters/stdlib/assistant-scores/) \
   How often each assistant's suggestions were sealed or set aside, from the record. \
   Uses openai-compatible. *new* `no-install` `offline` `aside` `score` · near: retire, predict, forecasts
+- <a id="connect"></a>[**connect**](adapters/stdlib/connect/) \
+  What a model on this machine says connects two passages of yours, in a few sentences, each number and name it gives checked against them. \
+  Uses say. Reaches this machine only. *new* `no-install` `this-machine` `sentence` · near: contradictions, duplicates, claim-check
 - <a id="model-card"></a>[**model-card**](adapters/stdlib/model-card/) \
   A card naming the model behind an assistant (version or weights hash, where it runs, licence, limits), on the record for each suggestion. \
   Uses weights-card. *new* `no-install` `offline` `hash` `weights` · near: weights-card, local-model, weights-pin

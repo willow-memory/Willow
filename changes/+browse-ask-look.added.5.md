@@ -1,0 +1,1 @@
+`connect`: what a model on this machine says connects two passages of your folder, asked as one plain question and held to a few sentences. Every number and name it gives is checked against the two passages, and an answer that speaks of one passage only is named; the reading itself is shown as the model's. `say`'s model call takes a length limit for it

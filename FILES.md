@@ -1194,6 +1194,10 @@ willow/
 │   │   │   ├── assistant_scores.py How often each assistant's suggestions were sealed or set aside, from the record
 │   │   │   ├── test_assistant_scores.py
 │   │   │   └── README.md     its card
+│   │   ├── connect/
+│   │   │   ├── connect.py    what a model on this machine says connects two passages, and what of it checks out
+│   │   │   ├── test_connect.py
+│   │   │   └── README.md     its card
 │   │   ├── model-card/
 │   │   │   ├── model_card.py  a card naming the model behind an assistant, its SHA-256 on the record
 │   │   │   ├── test_model_card.py

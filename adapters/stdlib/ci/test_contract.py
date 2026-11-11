@@ -645,6 +645,8 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "codeowners": ("codeowners.py", ["--box", "{box}", "garden.md"]),
     "codex-cli": ("codex_cli.py", ["--box", "{box}"]),
     "coming-up": ("coming_up.py", ["--box", "{box}", *NOW]),
+    # two places with no passage: nothing is asked of any model, and it says so, 42
+    "connect": ("connect.py", ["--box", "{box}", "--first", "no-such-file.txt:1", "--second", "no-such-file.txt:2", "--host", "127.0.0.1:9"]),
     "contradictions": ("contradictions.py", ["--box", "{box}"]),
     "copilot": ("copilot.py", ["--box", "{box}"]),
     "cursor": ("cursor.py", ["--box", "{box}"]),
