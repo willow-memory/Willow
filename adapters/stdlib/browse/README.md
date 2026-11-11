@@ -213,6 +213,15 @@ line, "found nothing" or the words it lacks. None of it goes on your
 record, none of it can be approved, and its places are not links: they are
 not in your folder.
 
+**Drag a project onto the open one** (with `--home`) and it is asked beside
+it the same way: every index found in that project is a pile, named
+`project: index`. It is marked "beside" in the left panel, and its × takes
+it away again. The small + does the same with scripts off. Nothing is
+copied, merged or written, in either project: it is a way to see whether
+two projects belong together before anything is done about it, and it lasts
+while the page runs. A project with no index says so and isn't asked: a
+folder is never read whole for this.
+
 **Who can reach it:**
 
 | Way in | What stops it |

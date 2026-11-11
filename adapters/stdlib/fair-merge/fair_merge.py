@@ -117,15 +117,22 @@ def ranked(pile_chunks: list[dict], question: str, alias: dict) -> list[dict]:
     ]
 
 
-def across(indexes: list[Path], question: str, alias: dict, top: int = TOP) -> dict:
+def across(
+    indexes: list[Path],
+    question: str,
+    alias: dict,
+    top: int = TOP,
+    names: list[str] | None = None,
+) -> dict:
     """The same merge for a caller in this process: `served`, each passage
     dealt in turns with its `where`, `text` and the piles it is `in`, and
     `piles`, each index's name, how many passages it `found`, how many
     `more` it held than were shown, and the words of the question it
-    `lacks`. ValueError when one isn't an index, or two share a name."""
-    names = [Path(i).resolve().name for i in indexes]
-    if len(set(names)) != len(names):
-        raise ValueError("two indexes have the same folder name")
+    `lacks`. A pile is called by its index's folder, or by `names`, one for
+    each. ValueError when one isn't an index, or two share a name."""
+    names = names or [Path(i).resolve().name for i in indexes]
+    if len(set(names)) != len(names) or len(names) != len(indexes):
+        raise ValueError("two indexes have the same name")
     lists, absent = [], {}
     for name, i in zip(names, indexes):  # one whole index in memory at a time
         found, absent[name] = from_index(Path(i), question, alias)

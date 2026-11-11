@@ -258,7 +258,9 @@ main { margin: 0 auto; width: 100%; max-width: 46rem; padding: 24px 16px 64px; }
 .more > summary { color: var(--accent); }
 .say.struck s { color: var(--muted); }
 .say .why { display: block; font: 12px/1.5 var(--mono); color: var(--muted); }
-form.switch { margin: 0; } nav button.link { display: block; width: 100%; text-align: left;
+form.switch { margin: 0; } .prow { display: flex; align-items: center; } .prow form:first-child { flex: 1; }
+.prow button.tiny { border: 0; background: none; color: var(--muted); cursor: pointer; padding: 0 .5em; }
+nav a.over { outline: 2px dashed var(--accent); } nav button.link { display: block; width: 100%; text-align: left;
       background: none; color: var(--fg); font-weight: 400; padding: 5px 8px; }
 nav button.link:hover { background: var(--accl); }
 @media (max-width: 820px) {
@@ -552,6 +554,7 @@ class Willow:
         beside: list[Path] | None = None,
     ):
         self.beside = list(beside or [])  # other piles' indexes, asked too
+        self.joined: dict[str, list[Path]] = {}  # projects put beside this one
         self.say_model = say  # the model that says a turn's boxes, if any
         self.sayer = None  # prompt -> words, in place of the model: for tests
         self.said_turns = 0
@@ -591,7 +594,7 @@ class Willow:
                 self.box = p["boxes"][0]
                 self.run = p["runs"][0]["folder"] if p["runs"] else None
                 self.stack = self.index = None
-                self.beside = []
+                self.beside, self.joined = [], {}
                 return True
         return False
 
@@ -608,6 +611,35 @@ class Willow:
         done = {**kernel.sealed(self.box, rows), **kernel.declined(self.box, rows)}
         return [r["subject"] for r in rows if r["kind"] == "proposal"
                 and r.get("verdict") == "pass" and r["subject"] not in done], []  # fmt: skip
+
+    def put_beside(self, name: str, off: bool = False) -> str | None:
+        """Put another project under --home beside the one that is open, so
+        its piles are asked too, or (off) take it away again. Nothing is
+        copied and nothing is written: it lasts while the page runs. It says
+        why not, or None when it is done. A project is asked by its indexes
+        (scan's), never by reading its whole folder."""
+        if off:
+            self.joined.pop(name, None)
+            return None
+        for p in self.projects():
+            if p["name"] != name:
+                continue
+            if p["boxes"][0].resolve() == self.box.resolve():
+                return "That project is the one that's open."
+            d = p["boxes"][0].parent
+            found = sorted(
+                q.parent
+                for depth in ("*", "*/*", "*/*/*")
+                for q in d.glob(f"{depth}/index.json")
+                if (q.parent / "chunks.jsonl").is_file()
+            )
+            if not found:
+                return (f"{name} has no index yet, and a project is only asked beside "
+                        "another by its index. Make one of its folder with the "
+                        "index-cache add-on, then drop it here again.")  # fmt: skip
+            self.joined[name] = found
+            return None
+        return "There's no project by that name."
 
     def side(self, here: str) -> str:
         """The left panel: the project, then each section there is to open,
@@ -646,14 +678,24 @@ class Willow:
             out.append("<p class=proj>Projects</p>")
             for p in found:
                 if p["boxes"][0].resolve() == self.box.resolve():
-                    out.append(f"<a class=on>{esc(p['name'])}</a>")
-                else:
-                    out.append(
-                        '<form class=switch method=post action="/switch">'
-                        f'<input type=hidden name=token value="{esc(self.token)}">'
-                        f'<input type=hidden name=project value="{esc(p["name"])}">'
-                        f"<button class=link>{esc(p['name'])}</button></form>"
-                    )
+                    out.append(f"<a class=on data-drop>{esc(p['name'])}</a>")
+                    continue
+                name, on = esc(p["name"]), p["name"] in self.joined
+                hidden = (f'<input type=hidden name=token value="{esc(self.token)}">'
+                          f'<input type=hidden name=project value="{name}">')  # fmt: skip
+                # dragged onto the open project it is asked beside it; the
+                # small button does the same with scripts off
+                out.append(
+                    f'<div class=prow draggable=true data-project="{name}">'
+                    f'<form class=switch method=post action="/switch">{hidden}'
+                    f"<button class=link>{name}"
+                    + (" <span class=pill>beside</span>" if on else "")
+                    + "</button></form>"
+                    f'<form class=switch method=post action="/beside" data-beside="{name}">{hidden}'
+                    + ("<input type=hidden name=off value=1>" if on else "")
+                    + f'<button class=tiny title="{"Stop asking it" if on else "Ask it"} beside '
+                    f'{esc(self.name())}">{"×" if on else "+"}</button></form></div>'
+                )
         return "".join(out)
 
     def page(self, title: str, body: str, head: str = "", here: str = "") -> str:
@@ -947,10 +989,16 @@ class Willow:
         of it is your folder's answer. ("", "") with no pile beside, or
         when fair-merge isn't here."""
         fair = sibling("fair-merge", "fair_merge")
-        if not self.beside or fair is None or sibling("scan", "scan") is None:
+        if fair is None or sibling("scan", "scan") is None:
+            return "", ""
+        piles = [(i.name, i) for i in self.beside]
+        piles += [(f"{n}: {i.name}", i) for n, found in self.joined.items() for i in found]  # fmt: skip
+        if not piles:
             return "", ""
         try:
-            got = fair.across(self.beside, asked, {})
+            got = fair.across(
+                [i for _, i in piles], asked, {}, names=[n for n, _ in piles]
+            )
         except (OSError, ValueError) as e:
             return f"<h2>Other piles</h2><p class=muted>Couldn't look: {esc(e)}</p>", ""
         cards = "".join(
@@ -1296,6 +1344,13 @@ class Handler(BaseHTTPRequestHandler):
         if url.path == "/switch":
             if not self.willow.switch(form.get("project", [""])[0]):
                 return self.send(404, self.willow.page("Not here", "<p>There's no project by that name.</p>"))  # fmt: skip
+            return self.send(303, "", {"Location": "/"})
+        if url.path == "/beside":
+            why = self.willow.put_beside(form.get("project", [""])[0], "off" in form)
+            if why is not None:
+                return self.send(
+                    409, self.willow.page("Not beside", f"<p>{esc(why)}</p>")
+                )
             return self.send(303, "", {"Location": "/"})
         if url.path == "/approve":
             return self.send(200, self.willow.approve(form.get("subject", [""])[0]))

@@ -1284,14 +1284,20 @@ def test_the_left_panel_lists_the_projects_and_a_click_opens_another(tmp_path):
     try:
         _, text = s.req("GET", "/")
         nav = text[text.index("<nav>") : text.index("</nav>")]
-        assert "<p class=proj>Projects</p>" in nav and "<a class=on>garden</a>" in nav
+        assert (
+            "<p class=proj>Projects</p>" in nav
+            and "<a class=on data-drop>garden</a>" in nav
+        )
         assert 'name=project value="house"><button class=link>house</button>' in nav
         s.post("/ask", q="when do the beans go in")
         r, _ = s.post("/switch", project="house")
         assert r.status == 303 and r.getheader("Location") == "/"
         _, text = s.req("GET", "/")
         nav = text[text.index("<nav>") : text.index("</nav>")]
-        assert "<p class=proj>house</p>" in nav and "<a class=on>house</a>" in nav
+        assert (
+            "<p class=proj>house</p>" in nav
+            and "<a class=on data-drop>house</a>" in nav
+        )
         assert 'value="garden"><button class=link>garden</button>' in nav
         # its newest run comes with it, and the other project's turns stay there
         assert '<a href="/run">The run</a>' in nav and "01 todo" in nav
@@ -1317,6 +1323,73 @@ def test_only_a_project_under_home_is_opened_and_only_by_this_pages_form(tmp_pat
         assert s.willow.box == home / "garden" / "box"
         r, _ = s.req("POST", "/switch", {"project": "house", "token": "wrong"})
         assert r.status == 403 and s.willow.box == home / "garden" / "box"
+    finally:
+        s.close()
+
+
+@pytest.mark.skipif(not (PROJECTS_HERE and FAIR_HERE), reason="projects, stack, fair-merge or scan isn't here")  # fmt: skip
+def test_a_project_put_beside_the_open_one_is_asked_too_and_taken_away_again(tmp_path):
+    home = two_projects(tmp_path)
+    s = opened(home / "garden" / "box", home=home)
+    try:
+        _, text = s.req("GET", "/")
+        nav = text[text.index("<nav>") : text.index("</nav>")]
+        # the row can be dragged, the open project takes the drop, and a
+        # button does the same with scripts off
+        assert 'draggable=true data-project="house"' in nav and "data-drop" in nav
+        assert 'action="/beside" data-beside="house"' in nav and ">+</button>" in nav
+        # no index, no asking: its folder is never read whole
+        r, text = s.post("/beside", project="house")
+        assert r.status == 409 and "house has no index yet" in text
+        before = {p: p.read_bytes() for p in home.rglob("*") if p.is_file()}
+        (home / "house" / "mine" / "notes.index").parent.mkdir(exist_ok=True)
+        subprocess.run(
+            [sys.executable, str(br.STDLIB / "scan" / "scan.py"), "index",
+             "--from", str(home / "house" / "pile"), "--to", str(home / "house" / "mine" / "notes.index")],
+            capture_output=True, check=True,
+        )  # fmt: skip
+        r, _ = s.post("/beside", project="house")
+        assert r.status == 303 and r.getheader("Location") == "/"
+        _, text = s.req("GET", "/")
+        nav = text[text.index("<nav>") : text.index("</nav>")]
+        assert "house <span class=pill>beside</span>" in nav and ">×</button>" in nav
+        assert "<p class=proj>garden</p>" in nav  # garden is still the one open
+        _, text = s.post("/ask", q="when does the roofer come")
+        assert "Nothing in your folder holds that" in text
+        assert "Other piles, not your folder" in text
+        assert "house: notes.index/notes.txt:1" in text and "The roofer comes" in text
+        # nothing of house's changed, and garden's record holds only its own ask
+        assert all(p.read_bytes() == b for p, b in before.items() if "house" in p.parts)
+        last = json.loads((home / "garden" / "box" / "record.jsonl").read_text().splitlines()[-1])  # fmt: skip
+        assert last["kind"] == "bite" and last["served"] == []
+        r, _ = s.post("/beside", project="house", off="1")
+        assert r.status == 303
+        _, text = s.post("/ask", q="roofer friday")
+        assert text.count("Other piles, not your folder") == 1  # the turn before, only
+    finally:
+        s.close()
+
+
+@pytest.mark.skipif(not (PROJECTS_HERE and FAIR_HERE), reason="projects, stack, fair-merge or scan isn't here")  # fmt: skip
+def test_only_another_project_under_home_goes_beside_and_switching_clears_it(tmp_path):
+    home = two_projects(tmp_path)
+    for name in ("garden", "house"):
+        subprocess.run(
+            [sys.executable, str(br.STDLIB / "scan" / "scan.py"), "index",
+             "--from", str(home / name / "pile"), "--to", str(home / name / "ix")],
+            capture_output=True, check=True,
+        )  # fmt: skip
+    s = opened(home / "garden" / "box", home=home)
+    try:
+        for name in ("garden", "nope", "../house", ""):
+            r, _ = s.post("/beside", project=name)
+            assert r.status == 409, name
+        r, _ = s.req("POST", "/beside", {"project": "house", "token": "wrong"})
+        assert r.status == 403
+        assert s.post("/beside", project="house")[0].status == 303
+        assert s.willow.joined == {"house": [home / "house" / "ix"]}
+        s.post("/switch", project="house")
+        assert s.willow.joined == {}
     finally:
         s.close()
 
