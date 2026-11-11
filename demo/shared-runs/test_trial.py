@@ -87,3 +87,59 @@ def test_the_report_and_briefs_name_no_machine_and_hold_no_answer_key():
         text = (TRIAL / name).read_text()
         assert "/tmp/" not in text and "/home/" not in text, name
     assert "not said" not in (TRIAL / "report.txt").read_text()
+
+
+def test_the_chain_refuses_what_a_step_may_not_be_and_passes_what_it_may():
+    import chain
+
+    stack = "## a\n- scan -- scan --index x\n- glance -- --of {01}\n"
+    passes = [("ids", "--box {box} kernel.py"), ("fixity", "--box {box}"),
+              ("glance", "--of {02} --questions <scratch>/questions.txt"),
+              ("fair-merge", '--from <pile> "kept so it is not computed again"')]  # fmt: skip
+    for name, args in passes:
+        assert chain.refusal(name, args, stack) is None, (name, args)
+    refused = {
+        ("nope", "--box {box}"): "not a built add-on",
+        ("kinds", "count"): "not a built add-on",  # a repo tool, not a stack's step
+        ("scan", "scan --index x"): "already on the stack",
+        ("backup", "--box {box} --to /media/usb"): "no path of its own",
+        ("ids", "--box {box} ../x"): "no path of its own",
+        ("ids", "--box {box} ~/x"): "no path of its own",
+        ("ids", "--box {box} <repo>/kernel.py"): "the only folders",
+        ("glance", "--of {03}"): "not an earlier step",
+        ("glance", "--of {00}"): "not an earlier step",
+        ("share", "send --box {box} --id <scratch>/a.key"): "may not name .key",
+        ("fixity", "--box {box} --key x"): "may not name",
+        ("session-seal", "--box {box}"): "may not name seal",
+    }
+    for (name, args), why in refused.items():
+        got = chain.refusal(name, args, stack)
+        assert got and why in got, (name, args, got)
+
+
+def test_a_reply_is_read_by_its_three_lines_and_the_catalog_is_what_a_stack_can_run():
+    import chain
+
+    said = chain.read_reply(
+        "want: a thing\nstep: - ids -- --box {box} kernel.py\nwhy: because\ncards: none\n"
+    )
+    assert said == {
+        "want": ["a thing"],
+        "step": ["- ids -- --box {box} kernel.py"],
+        "why": ["because"],
+    }
+    assert chain.steps_of("## a\n- ids -- --box {box}\n# - no -- x\n- scan -- scan\n") == [
+        ("ids", "--box {box}"), ("scan", "scan")]  # fmt: skip
+    cards = chain.catalog()
+    assert "scan" in cards and "fixity" in cards and "star-system" in cards
+    assert (
+        "kinds" not in cards
+        and "hook-handoff" not in cards
+        and "starter-words" not in cards
+    )
+    page = (TRIAL.parent / "trial-2" / "handoff-1.txt").read_text()
+    assert page.startswith(
+        (TRIAL.parent / "trial-2" / "brief.txt").read_text().rstrip()
+    )
+    assert "/tmp/" not in page and "/home/" not in page
+    assert "hook-handoff: no session before this one." in page

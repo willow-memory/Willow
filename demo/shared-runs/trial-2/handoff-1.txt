@@ -1,0 +1,325 @@
+You are one link in a chain. No person is leading this session: a script handed you this page, and it is everything you have been told. You have not seen the sessions before yours and cannot ask them anything.
+
+The person's want, in their own words: "Remembering over recomputing, and shared computing." The question the stack is being built to answer: what does this repository already keep, so that it need not compute it again, and where does it compute again?
+
+A stack is a list of steps, each one built add-on run with arguments. The stack so far is below, with what its last run said. Add ONE step: the next thing the stack needs in order to answer the question, given what is already there. Choose from the add-ons listed at the end. You may read up to two add-on cards to learn an add-on's arguments: a card is the README.md in the add-on's folder, adapters/stdlib/<name>/ or adapters/deps/<name>/. Read nothing else, run nothing, and write nothing: the script runs the stack.
+
+In a step's arguments, {box} is the record, <pile> is the folder being asked, <scratch> is a folder the stack may write to, <scratch>/questions.txt and <scratch>/words.txt are the questions and the words list, and {NN} is the file an earlier step's output was kept in (step 06 is {06}). Name no other path. A step may not seal, propose or touch a key. A step already on the stack is refused.
+
+Reply with exactly these lines and nothing else:
+
+want: one sentence, the next thing the stack needs, in plain words
+step: - NAME -- ARGUMENTS
+why: one or two sentences, from what this page says
+cards: the cards you read, or none
+
+--- what the session before left (the hook-handoff add-on) ---
+hook-handoff: no session before this one.
+
+--- where the project stands (the handover add-on) ---
+handover: populated, chain: 1 step flagged, 1 stack run
+## flagged
+  stack.md step 07  glance: populated, 48 questions: 16 held whole, 30 in part, 2 found nothing (run/07-glance.txt)
+## last runs
+  stack.md          run: 7 steps, 1 flagged
+  stack.md step 01  code-comments: wrote 885 files to…
+  stack.md step 02  git-history: wrote 1022 files to…
+  stack.md step 03  index-cache: rebuilt 41976 passages to…
+  stack.md step 04  index-cache: rebuilt 13164 passages to…
+  stack.md step 05  index-cache: rebuilt 6492 passages to…
+  stack.md step 06  scan: 48 lines for a program
+
+--- the stack as it stands ---
+# remembered, not recomputed: this repository asked what it keeps
+# <pile> is the repository as it was at one commit, cloned outside itself, so
+# the stack reads what was there before it was and never its own write-up.
+# <repo> is this checkout, for the one add-on that runs code from it.
+
+## its words
+# want 1: read what the code says of itself, not only the prose around it.
+- code-comments -- mirror --from <pile> --to {box}-code
+# want 2: read when each thing was decided, from the commits, dated by the commit.
+- git-history -- mirror --from <pile> --to {box}-commits --messages
+
+## found once, kept
+# want 3: stop reading 20 MB again for every question: one index each of the
+# prose, the code's comments and the commits, kept between runs, rebuilt
+# only when a file's bytes changed. Needs steps 1 and 2: it indexes what they wrote.
+- index-cache -- --from <pile> --to <scratch>/kept/index-repo
+- index-cache -- --from {box}-code --to <scratch>/kept/index-code
+- index-cache -- --from {box}-commits --to <scratch>/kept/index-commits
+# want 4: ask every question of all three at once, with the kernel's own answers.
+# Needs steps 3 to 5: their indexes.
+- scan -- scan --index <scratch>/kept/index-repo --index <scratch>/kept/index-code --index <scratch>/kept/index-commits --questions <scratch>/questions.txt --words <scratch>/words.txt
+
+## what was found, and what wasn't
+# want 5: one line a question, so 48 answers can be read at a look. Needs step 6's answers.
+- glance -- --of {06} --questions <scratch>/questions.txt --words <scratch>/words.txt
+
+--- the add-ons you may choose from, each with its card's line ---
+code-shape: Search code by its shape, not its words: every call of a kind, whatever it's named.
+dialect: The words you use far more than the world does: your own dialect, from your files against wordfreq's counts.
+dialect-dates: The words your folder uses far more than the world does, each dated by its first and last appearance, with the passage that first says it.
+dp: A count of yours, noised by OpenDP before you seal and send it, so your one number doesn't say what your folder holds.
+fast-tests: The test suite across every core with pytest-xdist, the same tests in a fraction of the time.
+kart: A job someone sent you, run in a sandbox over your own folder only once you seal it, its result yours to seal before it goes back.
+latent: Finds code by meaning, not just matching words, using scan's index: a question reaches code that says the same thing another way.
+manifests: Docker Compose and Kubernetes YAML: each service, image, port and volume as a passage.
+ocr: Text out of photos of letters and scanned PDFs.
+pdf: Text out of PDFs.
+pgp: Signs exports and reports with your PGP key, verifiable anywhere.
+photos: When and where each photo was taken, as dated lines.
+record-sql: SQL straight over your record, in place: 'how many answers did I approve in March?'
+ripgrep: Exact search through ripgrep, much faster on a big folder, its hits checked against the kernel's hashes.
+robinhood: Your Robinhood account as dated files (positions, orders, portfolio, watchlists), read through Robinhood's own MCP server, never traded on.
+secure-sum: A total of everyone's counts, by Shamir's secret sharing: the one who asked learns the sum, and no one's own count is in any package.
+sheets: Spreadsheets with formulas and formatting kept, beyond what the office add-on reads.
+star-system: A friend's star-system simulation (science_bitch) run deterministically: each body's Kepler period, and how well the run conserves momentum.
+wasi-python: A job someone sent you as a Python script, run on CPython for WebAssembly over your folder read-only: one runtime, the same answer anywhere.
+wasm: A job someone sent you as WebAssembly, run by Wasmtime over your folder read-only: the same bytes, so the same answer, on every machine.
+a11y-check: Your documents checked for screen-reader problems: images without descriptions, headings out of order.
+advisories: Security advisories from a downloaded OSV or GitHub database, matched to your lockfiles: which dependency each names, and since when.
+again: Questions you keep asking: "asked 4 times; approve an answer?"
+agent-transcript: Claude Code, Codex, Gemini CLI, Cursor and Copilot session files as plain text, each turn numbered, so you can ask what an agent was told.
+agents-md-check: Commands and paths named in AGENTS.md, CLAUDE.md, GEMINI.md or copilot-instructions.md that no longer exist in the repo.
+all: Every matching passage, ranked, not just the top three.
+almanac: An Almanac's catalog.json: each public dataset's description and source as passages, with when its link was last checked.
+almanac-keep: An Almanac entry's best permitted copy, from the publisher or its ranked recovery list, fetched into your folder with its SHA-256.
+amounts: Every sum of money in your files, with its date and the line it's on.
+annotations: Approved answers as W3C Web Annotations, so any annotation tool can show what your files say about a page.
+apple-mail: Apple Mail's .emlx messages, read as the mail add-on reads an .eml.
+asciidoc: AsciiDoc documents as the text they show, line for line, markup taken off, cited by the file's own lines.
+attendance: Attendance for a class, club or group, from your register, by week.
+baby-log: Feeds, sleeps and nappies from your notes, by day: when was the last one?
+backup: Your record in one zip, every byte and the chain checked before it's kept; never beside your key, and it never reads the key.
+badge: A badge for a page: these answers came from these files and were approved, linked to the check anyone can run.
+bank: Bank CSV and OFX statements as dated lines, with spending by month.
+bench: How fast the kernel answers on boxes of set sizes, per release, so a slowdown is seen.
+bibtex: .bib files: each reference as a passage, so you can ask which paper said it and get its key.
+bookmarks: Browser bookmarks (HTML export, Firefox JSON) and history, read from a copy of its SQLite file.
+books: Kindle "My Clippings.txt" highlights and .epub text.
+bot-venv: Where your venvs are, in willow-bot or out, their locks and the services running them; and which one has what CI needs, and how to run it.
+box-health: Is your willow all right? One line: files it can't read, readers out of date, and when its record was last checked.
+braille: Answers as braille-ready files (BRF) for a braille display or embosser.
+budget: Spending against the budget you wrote down, month by month, from your statements.
+calendar: .ics events and .vcf contacts as dated lines.
+calendar-out: Dates coming up as an .ics file your calendar app can subscribe to.
+capture: A note written into your folder in one line, with its type and tags, so the next question can find it.
+car: Your car's services, repairs and inspection dates, from receipts and notes: what's due, and what it cost.
+catgrid: A seeded logic grid with one cat in every row, column and colour region and a unique answer, replayed from its moves.
+changed: What's new, edited or deleted in your folder since the last check, as fingerprint rows.
+chats: WhatsApp and Telegram exports, one dated line per message.
+chordpro: ChordPro song sheets: titles, lyrics and chords, so you can ask which song had that line.
+ci-cache: CI caches pip, npm, .NET and Maven downloads keyed on their lockfiles, so a run skips the installs.
+ci-logs: CI run logs you downloaded (GitHub Actions, GitLab CI, Forgejo Actions): each failing step as a passage.
+ci-why: Why CI went red: the failing block pulled out of the job's log, plain, put where people look.
+claim-check: A claim checked against your sources: the passages that hold all of its parts, the ones that hold only some, and the parts no file names.
+clauses: A policy, contract or terms as one sentence a passage, so an answer lands on its clause; and what changed between two versions, by sentence.
+cloudevents: Record rows in the CloudEvents envelope, for any tool that already reads them.
+code-comments: A codebase's comments and docstrings as passages, cited by file and line.
+codebase-memory: codebase-memory-mcp's code graph, read from a copy of its SQLite file: each function, what calls it, and its file and line.
+codeowners: Who owns this file: the CODEOWNERS rule that matches it, cited by line, on GitHub, GitLab and Forgejo alike.
+coming-up: Dates written in your files in the next N days: appointments, renewals, deadlines.
+contradictions: Two passages that disagree about the same date or amount, side by side.
+corpus-lens: corpus-lens's process reports on your own sessions with agents, as passages: where your intent arrives, who writes the code.
+csv-rows: CSV and TSV tables as one passage per row, the header row kept once as the first.
+daily-word: A five-letter word game drawn from your own files' words: a new word each day, the same for anyone asking the same folder.
+day-one: Day One's JSON export: each journal entry as a dated passage, with its place and weather.
+debts: Who owes whom, from the IOUs in your notes and messages, each cited.
+decisions: A recorded no with its reason and the condition that would reopen it, so a rejection is kept, not forgotten.
+deep-links: Each answer as a link that opens the file at the line (RFC 5147 lines, browser text fragments).
+dice: Seeded dice rolls as rows: every roll replayable and checkable.
+dice5e: Full tabletop dice notation (4d6kh3, advantage), rolled on the record and checkable like dice.
+digest: One page of what your folder needs from you: suggestions waiting, approvals gone stale, dates coming up, questions that find nothing.
+discord: Discord's data package: your messages, one dated line each, by server and channel.
+diverge: Where two copies part, your record and its backup zip or two copies of a folder, down to the first row, file and line that differ.
+dotfiles: Your dotfiles as passages: which file sets what, for 'where did I set my editor?'
+duplicates: Passages that say the same thing in two files, and which one is newer.
+equations: Each displayed equation in LaTeX sources as a passage of its own, with the sentences around it and its label, cited by the .tex file's line.
+evernote: Evernote's .enex files: each note as plain text with its notebook, tags and dates.
+export: Approved answers, and the question log (counts only, never words), as Markdown or CSV.
+fair-merge: Each folder ranked on its own and the lists merged in turns, so a big corpus can't crowd out a small one; one that found nothing says so.
+family-tree: Family trees from GEDCOM files: who was born where and when, and which record says so.
+first-mention: When your files first mention something, and the line that does.
+fixity: Your folder's files hashed again now and then, the hashes kept on the record, and a file that changed with no edit of yours flagged as rot.
+flashcards: Approved question-and-answer pairs become cards, scheduled by spaced repetition.
+foia: Freedom-of-information requests: what you asked, when, and when the answer is due by law.
+folder-card: A card for your folder itself (what the files are, their dates, the gaps you know of), made from your files and notes, as a model's context.
+food-log: What you ate, from your notes, by day.
+forecasts: Write a prediction before the outcome, settle it later with your seal, see your Brier score.
+format-rot: Files in formats that may stop opening (old office files, proprietary ones, ones no reader handles), flagged while you can convert them.
+fuzzy-dates: Dates that admit doubt ('about 1880', 'sometime in March') read and kept with their doubt, in EDTF.
+game-master: A tabletop game's rolls and rulings as rows on the record, with the game master's calls sealed.
+gaps: Where a log you keep stops: the days a daily note, reading or diary skipped, said as gaps, not left out.
+garden: What you planted, where and when, and how it did, season by season.
+gather: Folders and files you name, copied into your pile under a name, only the kinds you keep, never a key or a file too big to read.
+gh-json: What gh prints with --json (issues, pull requests, runs), saved to a file and read as dated passages.
+git-history: Commit messages and diffs as a dated pile: "when did we change the retry limit?"
+glance: What a scan found, a line a question: where its best passage is, how it opens, and which of the question's words it lacks.
+goodreads: Goodreads and StoryGraph exports: the books you've read, when, and what you thought of them.
+google-keep: Google Keep from Takeout: notes, lists and labels as dated passages.
+gradebook: A teacher's gradebook, kept on this machine: each student's marks by assignment, and who is falling behind.
+habits: Streaks from the lines you write each day: how many days in a row, and which you missed.
+handover: Where one project stands, to hand on: what waits on you, what each stack's last run said step by step, and where each line can be checked.
+health: Apple Health and Google Fit exports as daily numbers the readings add-on can trend.
+history: Your record in plain sentences: what was asked when, what found nothing, what you approved; places and counts, never the words.
+home-sensors: Home Assistant's history export: sensor readings as dated numbers the readings add-on can trend.
+home-upkeep: Home upkeep: the boiler service, the filters, the gutters, what's due and when it was last done.
+horoscope: A daily horoscope keyed on your name and the date: same name, same day, same reading, always.
+hours: Hours worked or volunteered, per client or group, from your notes.
+ids: Every file and passage given its Software Heritage ID and IPFS CID, names the rest of the world already uses.
+in-toto: A sealed answer exported as an in-toto Statement, the envelope SLSA uses, so others can check it.
+index-cache: Keeps scan's index between runs and rebuilds it only when a file in your folder actually changed.
+install-scripts: The install scripts the packages in node_modules would run (preinstall, install, postinstall), each cited by file and line.
+instruction-files: For a folder, which instruction files each coding agent loads (AGENTS.md, CLAUDE.md, GEMINI.md, rules), in what order, with size and hash.
+invoices: For freelancers: invoices and payments matched by the id pattern you give, never guessed.
+irc: IRC logs from WeeChat, irssi or ZNC, one dated line per message, by network and channel.
+jeles: Your approved answers as Jeles nuggets (question, answer, sources, who sealed it), and Jeles' own verified nuggets read back as passages.
+jira: Jira's issue export, CSV or XML: each issue, comment and status change as dated passages.
+job-hunt: Applications sent, replies and interviews, by date: who you're still waiting on.
+joplin: Joplin's .jex export, read without unpacking it: each note as plain text with its title and dates.
+jrnl: jrnl journals: each [YYYY-MM-DD HH:MM] entry as a dated passage.
+json-paths: Any JSON or JSON Lines file as plain lines, one passage per record, each value beside its key.
+jupyter: Jupyter notebooks: Markdown cells, code and text outputs as passages, cited by cell.
+karakeep: Karakeep's JSON export: bookmarks, notes and tags as plain text.
+latex: LaTeX sources as plain prose, commands stripped, cited by the .tex file's own lines.
+lending: Things you lent, to whom and when, and which are still out.
+lesson-time: Lesson plans whose timed parts don't add up to the time the plan says it takes, each part's minutes shown beside the total.
+letterboxd: Letterboxd's export: the films you've watched, your ratings and reviews, as dated lines.
+licenses: The licence of every installed dependency, read from its own metadata on this machine: which are copyleft, and which file says so.
+life: Conway's Game of Life as rows: a fully deterministic world on the record.
+linkedin: LinkedIn's data export: messages, posts and connections as dated lines.
+listening: Spotify's data download: what you listened to, by day, so you can ask what was on that summer.
+livestock: Each animal's births, treatments and sales, from your farm records.
+llms-txt: An llms.txt for your folder, written to the spec's version 2 from what's in it, and any llms.txt you saved checked against that spec.
+location-history: Google Maps Timeline and other location exports: where you were, by day.
+lockfiles: Lockfiles as passages (package-lock.json, pnpm-lock.yaml, poetry.lock, uv.lock, Cargo.lock, go.sum): each package and its locked version.
+log-kit: The engine the logs share: your notes' dated lines read by a short spec of words, numbers and a period, so a new log is a spec, not code.
+logs: System and app logs (syslog, journald's export, nginx): each line dated, so you can ask when it started.
+look: One question sent to the step whose job it is, and answered by the lines that step's kept run holds; your own notes by the kernel.
+mail: .eml and .mbox files, with sender, date and subject kept.
+make-it-so: Write down what you want done and the passages it rests on; it checks they still hold, and never does it for you.
+man-pages: The man pages installed on this machine as plain text, so you can ask your own system's docs.
+markdown: Any Markdown file as the text it shows, line for line, with no word the file doesn't hold.
+market-calls: Market calls kept as wagers on the record ('SPY closes up on Friday'), settled later by your seal, with the losers kept.
+mastodon: A Mastodon or Pixelfed account archive's outbox.json: your posts as dated lines.
+matrix: Element's room export, JSON or HTML: one dated line per message in each Matrix room.
+mediawiki: A MediaWiki XML dump: each page's latest text, with its title and when it changed.
+merkle: A Merkle tree over the record, so one row can be proven with a handful of hashes, not the whole file.
+meta-archive: Facebook and Instagram's Download Your Information files: posts, comments and messages as dated lines.
+mileage: Miles driven for work, from your trips and notes, totalled for a tax year.
+milestones: Your child's firsts, words and heights, from your notes, by age.
+minutes: Meeting minutes: who decided what and when, and which actions are still open.
+misquote: A quote that is almost in your files: the closest passage, and the words it adds, drops or changes, so a misquote shows as one.
+month-first: For a folder you know writes dates month first: each one's ISO form written beside it, so it can be placed.
+mood: Mood scores you write in a journal, over weeks and months.
+musicxml: MusicXML scores: titles, lyrics, tempo and performance markings as passages.
+mutants: Breaks each add-on's code on purpose and checks its tests notice.
+nestor: Answers Nestor records a person has checked, read from a copy of its SQLite store, each citing who checked it and when.
+nightstand: Set heavy things down at night and pick up just one small next step in the morning: at most one thing in hand, and nothing ever deleted.
+notation: Each displayed LaTeX equation with the words its paper gives its symbols ("where η is the packing fraction"), so words find the equation.
+notes: Obsidian and Logseq vaults, with [[links]] and #tags kept and backlinks listed.
+notion: Notion's export zip, Markdown and CSV, as plain text with each page's title and path.
+oakenscroll: Oakenscroll's Office prediction ledger as dated passages you can ask: what you believed, how sure you were, and how it turned out.
+odds: Exact odds, as fractions, for a game's dice and tables: what each outcome's chance really is.
+office: .docx, .odt, .pptx, .xlsx and .ods, which are all zipped XML.
+on-this-day: What you wrote on this date in earlier years.
+opml: OPML feed and podcast lists, a line per feed under its folder, and outliner exports as indented items with their notes.
+oracle-text: Readings written by a Tracery grammar, every branch picked by the seeded stream, so each one can be replayed.
+orders: Amazon's order history and other shops' CSV exports: what you bought, when, and for how much.
+org: Org-mode files as plain lines, Org's markup taken off and each outline entry its own passage, cited by the .org file's own lines.
+outdated: How old each locked dependency is, and which are yanked, deprecated or two years without a release, from a registry index you downloaded.
+package-contents: What's inside a wheel, sdist, npm tarball or .crate before you install it: every file, and any code it runs on install.
+pair-drift: Figures a summary says that its full text doesn't: a draft and its packet side by side, ranges and billions read as written.
+parallel: A reader run over several folders at once, across every CPU core, so a big mirror of many sources builds in a fraction of the time.
+people: Everyone your files name, and every place each is mentioned.
+persona-card: A persona written as a card and compiled into the same system-prompt bytes every time, with the prompt's hash on the record.
+pets: Each pet's vet visits, vaccines and medicines, from your records: what's due next.
+pgn: Chess games from PGN files: players, dates, openings and your annotations.
+pii-audit: Personal data sitting in your files (ID numbers, health details, card numbers), listed by file and line.
+pile-build: Rebuilds pile-store's saved passages after each change, one build at a time, so your next question doesn't wait for it.
+pile-gold: Your approved answers used as a test: each question asked again, scored by how often search puts its passage in the top five.
+pile-poetry: Verse from the word pairs your own files use most, in your own dialect.
+pile-rank: Finds passages that use your folder's own phrases ("sourdough bread"), not just the separate words, ranked without any AI model.
+pile-rungs: Tries the strict word match first, then your folder's phrases, and says which one found the answer and why the others didn't.
+pile-serve: Keeps your folder's search ready in one background process on this machine, so a hook's lookup answers in milliseconds instead of seconds.
+pile-store: Your folder's passages kept in one file between questions, used only while the folder is unchanged, so add-ons don't re-read it each time.
+pile-sweep: Finds the passage length that suits your folder, by asking your answered questions at several lengths and naming the one finding the most.
+pins: Version ranges in package.json, pyproject.toml or Cargo.toml that no lockfile holds.
+places: KML and GeoJSON files: each place's name, note and coordinates as a passage.
+pocket: Pocket's export, the HTML and CSV in its zip, as one dated line per saved article, now that Pocket is gone.
+policy-watch: A terms or policy page fetched each time you run it, by snapshot, and what changed since last time, sentence by sentence, by clauses.
+predict: Write down what a question will come to before you ask it, and grade it after; the record counts how often it was right.
+print: An answer as a printable page with its sources, to take to an appointment; --large for big, high-contrast type.
+profile: Where a question's time goes, function by function, from cProfile, per release.
+projects: Every project under one folder: its records, its stacks, and each stack's runs, so you can see what there is to go back to.
+prov: The record exported as W3C PROV: what came from what, by which step, sealed by whom.
+quiz: A quiz from your own files: a passage with a word missing, and you fill it in.
+quote-check: Is this exact quote in my files, and where? For writers, journalists and students.
+quotes: Every quote in a document checked against your files: as written, almost (and what it adds, drops or changes), or not there.
+reading-level: How hard a passage reads (sentence length, word length, Flesch), so a teacher can find texts for a class.
+reading-log: A child's reading log: books, pages and minutes, week by week.
+readings: Two hints beside an answer: a number in your files that moved a lot lately, and a date in a log that passed with nothing written since.
+readwise: Readwise's highlights export: every highlight with its book or article, and your note on it.
+reddit: Reddit's data export: your posts, comments and saved items as dated lines.
+renewals: Passports, licences, insurance and memberships: when each expires, from your documents.
+repo-pile: Public repositories you list, cloned and made askable, keeping only those under a licence an Apache-2.0 project can use.
+restore-drill: A backup zip restored into scratch and verified there, chain and every file, so you know it restores before the day you need it.
+ris: RIS citation exports from EndNote, Zotero, Mendeley and the journal databases: each reference as a passage that opens with its citation.
+risky-code: Code lines matching a known-dangerous pattern (command injection, eval, SQL concatenation, broken TLS and more), by file and line, as leads.
+ro-crate: Your willow (the files it reads, its record, your approved answers) as an RO-Crate research object that Zenodo and other archives can read.
+route: A question sent to the step whose job it is: money owed to debts and invoices, a date to what's coming up, the rest to the ask.
+rss-out: New approved answers as an RSS feed file, for any feed reader.
+rst: reStructuredText files as plain prose, line for line, with directives, roles, links and tables read.
+rtf: RTF documents as plain text.
+rules: A game's or a house's rules, approved one section at a time, so asking what a rule says gives back that exact section, word for word.
+said: Your own quotes, gathered: every 'so-and-so, on this date: "..."' in your files, as a dated timeline of what was decided.
+sarif: SARIF reports from code scanners such as CodeQL and Semgrep: each finding as a passage with its rule and place.
+sbom: SBOMs in SPDX or CycloneDX JSON: each component, its version and licence, as passages.
+scan: Index a big folder once, then ask it a list of questions in seconds with the kernel's own answers, of everything or only what's changed.
+screenplay: Fountain and Final Draft scripts: scenes, characters and lines, cited by scene.
+scrub: Strips the hidden details (EXIF, author, edit history) from a file before you share it.
+secrets-audit: Finds passwords, keys and card numbers sitting in plain files, by file and line, never showing the value.
+sent-log: Which of your passages went to which online model, read from the record by model card: what left this machine and where to.
+session-cost: Tokens each agent session spent, by day and by repo, summed from its own session files and priced from a table you keep.
+session-seal: One seal at the end of a session, over everything asked and approved in it: yes, these were my actions.
+share: Sealed answers sent to someone, checkable by them and by whoever they pass them on to, without giving anyone the folder.
+shell-history: Your bash, zsh and fish history: what you ran, and when the shell recorded it.
+shortcuts: Link files dragged to a desktop or folder (.url, .webloc, .desktop) as their title and the address they hold.
+slack: Slack's export zip: one dated line per message, with channel and author.
+slow-tests: Each test's time kept per run, with the slowest named and any that got slower flagged.
+snapshot: A web page or data file fetched once into a folder, as it came, with its address, the time and its SHA-256, so later answers cite the copy.
+sort: Your files sorted into your own categories, by the phrases you gave each: what's where, and what nothing of yours reached.
+stale: Approved answers whose cited passage has changed or gone. Citations are content hashes, so it's exact.
+strava: Strava's export and GPX files: each run, ride and walk as a dated line with its distance and time.
+subscriptions: What you pay for every month, found in bank statements and emails, and when each renews.
+subtitles: Subtitle and transcript files (.vtt, .srt) as lines cited by timestamp, for podcasts and videos already transcribed.
+surprise: One passage from your folder at random, seeded so it can be replayed.
+syllabus: A course syllabus as dates: readings, assignments and exams due, each cited.
+symptoms: A symptom diary over time, ready to show a doctor: what, when, how bad, each line cited.
+takeout: Google Takeout's My Activity and YouTube history, JSON or HTML, as dated lines.
+tarot: A seeded tarot draw on the record, replayable by anyone with the seed.
+test-shards: The CI test jobs split by each test's past time, so every job finishes about together.
+text: Plain-text files the kernel leaves out (UTF-16, an old code page, over 1 MB, lines past 500 characters) as UTF-8 it reads, line for line.
+texts: Phone text messages, from an Android SMS backup or an iPhone backup's copy, one dated line per message.
+thesis: A thesis's claims, each tied to the source that backs it, and a list of the ones with none.
+three-two-one: How many verified copies of your record exist and where, held to three copies, on two kinds of storage, one away from home.
+timeline: A dated timeline of one matter (a dispute, an illness, a tenancy), every line cited, to hand to a lawyer, doctor or council.
+tip-pin: Where your record ends, written somewhere willow can't reach, so rows cut off the end or rewritten are caught where verify can't.
+todo: TODO, FIXME and "need to" lines across the folder, oldest first.
+transcript-redact: An agent transcript with keys, home paths and emails taken out before you share it, each removal listed by line.
+trello: A Trello board's JSON export: cards, checklists and comments, by list.
+typos: Forgives misspellings in questions.
+typosquat: Dependency names a letter off from a popular one (reqeusts, lodahs), checked against a list of top packages you downloaded.
+wallabag: wallabag's JSON or HTML export: saved entries as plain text, with their tags.
+warc: WARC web archives (Webrecorder, Heritrix, the Internet Archive) read without unpacking: each page's text with its address and capture time.
+warranties: Receipts and warranties: when the dishwasher's cover ends, and where its receipt is.
+wayback: The Wayback Machine's copy of a page from a window of days, saved beside your own snapshot and compared with it byte for byte.
+weakest-link: Each answer's inputs marked measured, fitted or assumed, and the result worth its weakest input, never an average.
+web-pages: Saved web pages, .html and .mhtml, as their readable text, with the address they came from.
+webarchive: Pages Safari saved as .webarchive, as their readable text with the address they came from, and their frames' text after them.
+weights-pin: A local model's weights file hashed before each run and refused when it differs from the hash on its model card.
+why-not: When the answer is 'not enough to say', which words found nothing, and what kind of file would have answered.
+x-archive: An X (Twitter) archive: your posts, replies and DMs as dated lines.
+xref: Every reference in your files checked: each link to another file, and each quoted line, still there and still saying it.
+zotero: Your Zotero library, from a copy of zotero.sqlite: items, notes and PDF annotations, each with its citation.

@@ -2392,6 +2392,7 @@ willow/
 │   │           └── evil-pkg/
 │   │               └── package.json  a postinstall that pipes a remote script to a shell
 │   ├── shared-runs/          a plan for a study, nothing frozen: simulations on machines nobody chose, sharing one memory, run by a script
+│   │   ├── chain.py      starts the project, makes each link's handoff, and applies or refuses the step a link offers
 │   │   ├── trial-1/          a first try of the blind handover, on demo/kept's run: what was fixed before, what each agent said
 │   │   │   ├── a-account-struck.txt that account after the strike, which took nothing out: what the last agent was given
 │   │   │   ├── a-account.txt what the first agent wrote from the report, word for word
@@ -2404,6 +2405,10 @@ willow/
 │   │   │   ├── report.txt    the script's report of the run: no agent wrote any of it
 │   │   │   ├── RESULTS.md    what was counted, what was lost on the way, and what to hold against it
 │   │   │   └── RULES.md      the trial's rules and what will be counted, written before any agent was started
+│   │   ├── trial-2/      a chain of agents building a stack, each handed only what the last run left: fixed before it ran
+│   │   │   ├── brief.txt     what every link is told, above its handoff
+│   │   │   ├── handoff-1.txt the first link's whole page, made by chain.py
+│   │   │   └── RULES.md      what a link may do, what the script refuses, and what will be counted
 │   │   ├── trial.py          makes the report and the key from a kept run, strikes what an account adds, scores answers
 │   │   ├── test_trial.py
 │   │   └── README.md         the claim, eight proposed rules, a session led by a script, how it could be wrong, what waits before the freeze
