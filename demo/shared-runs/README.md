@@ -700,6 +700,51 @@ the rest, and its kind counts toward R1's three like any other. First it
 is asked to try the dry sweep, by [study/TESTER.md](study/TESTER.md)
 alone: a page written for someone who was not here.
 
+### Run, 2026-11-11, from the maintainer's laptop
+
+Steps 1 to 7 of the list above, but for the cloud session's part, done
+from the maintainer's laptop on their word, one step at a time. What each
+machine kept is in [study/runs/](study/runs/), as it came back; nothing
+there is judged yet.
+
+- **Made and checked.** The thirteen notebooks were made with `--user` the
+  account's name, outside the repository. The privacy check was the
+  maintainer's own gate and deny-list: no term of the list, no path, email
+  or key; what it flagged were the files' SHA-256s, the project's commit,
+  and a colon before an escaped newline in the packed scripts. The runs
+  were put through it again before they were added here: SHA-256s and
+  states packed as hex, and nothing else.
+- **Pushed in the plan's order,** all private: round one's five, then the
+  baselines, then round two, then the check. Kaggle refused a sixth at
+  once ("Maximum batch CPU session count of 5 reached"), so two of round
+  two were pushed as slots came free. All thirteen ended clean.
+- **One step's layout differed from the plan's.** `kaggle kernels output`
+  puts a run's files one folder deeper (`RUNS/NAME/NAME/`) and its log
+  beside them; they were moved up to `RUNS/NAME/`, and the log is kept as
+  `kaggle.log`.
+- **The draw gave two kinds:** twelve runs on `intel x86_64 avx2` (an
+  Intel Xeon at 2.20GHz) and round two's machine 3 on `amd x86_64 avx2`
+  (an AMD EPYC 7B12). The laptop is `intel x86_64 avx512` (an i7-1185G7).
+  Every machine said NumPy 2.1.3 and the same stepper SHA-256.
+- **What the machines did,** as they said it: each baseline 440 acts and
+  1,586,762 steps; round one 110 jobs and 278,519 steps; round two 110
+  jobs, all of them taken from the memory, and 57,860 steps.
+- **The two check machines that have run** (Kaggle's, and the laptop on
+  the project at `2fae2f2`, NumPy 2.1.3 in an environment of its own):
+  each stepped 435 kept states again and found all 435 the same. Run as
+  the project is written, the two came to the same bytes on 14 of the 220
+  jobs they both ran.
+- **Before it, the laptop tried the dry sweep by
+  [study/TESTER.md](study/TESTER.md)**: the steps worked as written on
+  Python 3.14.4, and both lines were 30 of 30. This was the maintainer's
+  own machine, with an agent beside them, so it is not the fourth
+  machine's try and says less of the page than a stranger would; the
+  page also doesn't mention the two lines the run prints before its last
+  three.
+
+Left: the cloud session's check (step 7, `--to RUNS/cloud-session`), then
+step 8.
+
 ## The order
 
 1. Settle the list above. Kaggle's pages are read. The maintainer has
