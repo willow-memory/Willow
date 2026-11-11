@@ -827,6 +827,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
                  "--model", "m", "--url", "http://127.0.0.1:9/v1"]),
     "stack": ("stack.py", ["--box", "{box}", "--stack", "adapters/stdlib/stack/example.md"]),
     "stack-bridges": ("stack_bridges.py", ["--stack", "adapters/stdlib/stack-bridges/example.md"]),
+    "stack-row": ("stack_row.py", ["--box", "{box}", "--run", "adapters/stdlib/stack-row/example-run", *NOW]),
     "stack-share": ("stack_share.py", ["--box", "{box}"]),
     "stale": ("stale.py", ["--box", "{box}"]),
     "start": ("start.py", ["--pile", "{pile}", "--to", "{tmp}/willow"]),

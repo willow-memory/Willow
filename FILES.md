@@ -1060,6 +1060,14 @@ willow/
 │   │   │   ├── session_seal.py one seal over a session's rows, proposed through the kernel
 │   │   │   ├── test_session_seal.py
 │   │   │   └── README.md
+│   │   ├── stack-row/
+│   │   │   ├── example-run/  a small kept run, two steps ended and one only started
+│   │   │   │   ├── 00-stack.txt  its log, as stack writes one
+│   │   │   │   ├── 01-todo.txt   what its first step printed
+│   │   │   │   └── 02-scan.txt   what its second step printed
+│   │   │   ├── stack_row.py  a stack's kept run put on your record as one row
+│   │   │   ├── test_stack_row.py
+│   │   │   └── README.md     its card
 │   │   ├── thesis/
 │   │   │   ├── thesis.py     a document's claims, each against your sources, and the ones no passage holds
 │   │   │   ├── test_thesis.py

@@ -1,0 +1,1 @@
+`stack-row`: a stack's kept run put on your record as one row, for each step that has ended its place, its add-on, the stack's own marks of how it was asked, how it ended and the SHA-256 of what it printed, never the output or an argument; asked twice of a run that hasn't changed, it writes once

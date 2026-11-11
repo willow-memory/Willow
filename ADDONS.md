@@ -1142,6 +1142,9 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - <a id="session-seal"></a>[**session-seal**](adapters/stdlib/session-seal/) \
   One seal at the end of a session, over everything asked and approved in it: yes, these were my actions. \
   *bot* `no-install` `offline` `end` · near: rules, abbreviations, tip-pin
+- <a id="stack-row"></a>[**stack-row**](adapters/stdlib/stack-row/) \
+  A stack's kept run put on your record as one row: which steps ran, how each ended, and the hash of what each printed, never the words. \
+  Uses stack. *new* `no-install` `offline` `stack` `step` · near: stack, stack-share, backup
 - <a id="thesis"></a>[**thesis**](adapters/stdlib/thesis/) \
   A thesis's claims, each tied to the source that backs it, and a list of the ones with none. \
   Uses claim-check. *new* `no-install` `offline` `claim` `top` · near: claim-check, all, surprise
