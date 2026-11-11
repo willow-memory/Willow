@@ -3,12 +3,12 @@ section: Ways to use it
 line: Your folder in your web browser: ask, read each answer at its file and line, and approve suggestions with a click, from this machine only.
 source: new
 added: 2026-10-24
-version: 0.4.0
+version: 0.5.0
 writes: record
 network: loopback
 role: ways
 tags: everyday
-looks-for: digest, index-cache, look, projects, say, scan, stack, why-not, words-de, words-es, words-fr, words-pt
+looks-for: digest, fair-merge, index-cache, look, projects, say, scan, stack, why-not, words-de, words-es, words-fr, words-pt
 -->
 # browse
 
@@ -18,7 +18,7 @@ you, and approve one with a click. The front page shows what's waiting,
 what went stale and what's coming up. Nothing to install, and no commands
 to type once it's open.
 
-    python adapters/stdlib/browse/browse.py --box DIR [--stack FILE] [--run FOLDER] [--index INDEX] [--home FOLDER] [--say MODEL]
+    python adapters/stdlib/browse/browse.py --box DIR [--stack FILE] [--run FOLDER] [--index INDEX] [--beside INDEX ...] [--home FOLDER] [--say MODEL]
 
 It prints a link and opens it. Ctrl-C stops it. `--lang de` (or `es`,
 `fr`, `pt`) sends each question through that language's words add-on first.
@@ -197,6 +197,21 @@ is the kernel's own, passage for passage, and the ask is on your record the
 same way. When the index isn't current (a file changed since it was built),
 or the [scan](../scan/) or index-cache add-on isn't here, the kernel reads
 the folder as before.
+
+A passage is shown when it holds half your question's words, so it can
+answer and still lack the thing you asked about. With an index and the
+[fair-merge](../fair-merge/) add-on, the page says which of your words no
+passage in your folder holds at all: "No passage in your folder holds:
+violin." That line is true without any ranking.
+
+**Other piles, beside your folder.** With `--beside INDEX`, once for each,
+other piles' indexes ([scan](../scan/) makes one) are asked the same
+question by fair-merge. What they hold is shown under your folder's answer
+in a box of its own, "Other piles, not your folder": each pile ranked alone
+and taking turns, a passage two piles hold shown once, and each pile's own
+line, "found nothing" or the words it lacks. None of it goes on your
+record, none of it can be approved, and its places are not links: they are
+not in your folder.
 
 **Who can reach it:**
 

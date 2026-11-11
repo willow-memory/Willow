@@ -1043,6 +1043,99 @@ def test_an_index_that_isnt_there_is_refused_before_anything_listens(tmp_path, c
     assert br.main(["--box", str(b), "--index"]) == 2
 
 
+FAIR_HERE = all((br.STDLIB / n).is_dir() for n in ("fair-merge", "scan"))
+
+
+def scan_index(tmp_path: Path, name: str, **files: str) -> Path:
+    src = tmp_path / f"{name}-src"
+    src.mkdir()
+    for f, text in files.items():
+        (src / f"{f}.txt").write_text(text)
+    at = tmp_path / name
+    got = subprocess.run(
+        [sys.executable, str(br.STDLIB / "scan" / "scan.py"), "index", "--from", str(src), "--to", str(at)],
+        capture_output=True, text=True,
+    )  # fmt: skip
+    assert got.returncode == 0, got.stderr
+    return at
+
+
+@pytest.mark.skipif(
+    not (INDEX_HERE and FAIR_HERE), reason="fair-merge, scan or index-cache isn't here"
+)
+def test_with_an_index_the_words_no_passage_holds_are_said(tmp_path):
+    b = make_box(tmp_path)
+    at = tmp_path / "index"
+    subprocess.run(
+        [sys.executable, str(br.STDLIB / "index-cache" / "index_cache.py"),
+         "--from", str(tmp_path / "pile"), "--to", str(at)],
+        capture_output=True, check=True,
+    )  # fmt: skip
+    s = opened(b, index=at)
+    try:
+        # half the words is enough to be shown: the passage has no violin in it
+        _, text = s.post("/ask", q="dentist violin")
+        assert "dentist.txt:1" in text
+        assert "No passage in your folder holds: violin." in text
+        _, text = s.post("/ask", q="dentist tuesday")
+        assert (
+            text.count("No passage in your folder holds") == 2
+        )  # the turn above, twice
+    finally:
+        s.close()
+
+
+@pytest.mark.skipif(not FAIR_HERE, reason="fair-merge or scan isn't here")
+def test_piles_beside_are_asked_too_and_kept_apart_from_your_folder(tmp_path):
+    b = make_box(tmp_path)
+    teeth = scan_index(tmp_path, "teeth", a="A dentist checks teeth twice a year.\n")
+    birds = scan_index(tmp_path, "birds", a="The wren sings at dawn.\n")
+    s = opened(b, beside=[teeth, birds])
+    try:
+        _, text = s.post("/ask", q="when is the dentist")
+        assert "Your files say" in text and "dentist.txt:1" in text
+        assert "Other piles, not your folder" in text
+        assert text.index("Your files say") < text.index("Other piles, not your folder")
+        assert "teeth/a.txt:1" in text and "(in teeth)" in text
+        assert "birds: found nothing; no passage holds: dentist" in text
+        assert "Beside it, 1 of 2 other piles holds something for it." in text
+        # an other pile's passage is not a place in your folder: no link to it
+        assert "teeth%2Fa.txt" not in text and "at=teeth" not in text
+        rows = [json.loads(x) for x in (b / "record.jsonl").read_text().splitlines()]
+        last = rows[-1]
+        assert last["kind"] == "bite"
+        assert [r["where"] for r in last["served"]] == ["dentist.txt:1"]
+        # your folder holds nothing; the other pile still says what it holds
+        _, text = s.post("/ask", q="teeth twice")
+        assert "Nothing in your folder holds that" in text and "teeth/a.txt:1" in text
+        _, text = s.post("/ask", q="zebra giraffe")
+        assert "Beside it, none of the 2 other piles holds it." in text
+    finally:
+        s.close()
+
+
+@pytest.mark.skipif(not FAIR_HERE, reason="fair-merge or scan isn't here")
+def test_with_fair_merge_gone_the_page_answers_as_before(tmp_path):
+    b = make_box(tmp_path)
+    teeth = scan_index(tmp_path, "teeth", a="A dentist checks teeth twice a year.\n")
+    real = br.sibling
+    s = opened(b, beside=[teeth])
+    try:
+        br.sibling = lambda f, m: None if f == "fair-merge" else real(f, m)
+        _, text = s.post("/ask", q="when is the dentist")
+        assert "dentist.txt:1" in text and "Other piles" not in text
+    finally:
+        br.sibling = real
+        s.close()
+
+
+def test_a_pile_beside_that_isnt_an_index_is_refused(tmp_path, capsys):
+    b = make_box(tmp_path)
+    assert br.main(["--box", str(b), "--beside", str(tmp_path / "pile"), "--no-open"]) == 2  # fmt: skip
+    assert "isn't an index" in capsys.readouterr().err
+    assert br.main(["--box", str(b), "--beside"]) == 2
+
+
 # ── the stream: your lines plain, code's marked, in the order they were said ─
 def newest(text: str) -> str:
     return text.rsplit("<details class=turn", 1)[1]

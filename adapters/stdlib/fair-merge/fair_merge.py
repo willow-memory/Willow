@@ -117,6 +117,43 @@ def ranked(pile_chunks: list[dict], question: str, alias: dict) -> list[dict]:
     ]
 
 
+def across(indexes: list[Path], question: str, alias: dict, top: int = TOP) -> dict:
+    """The same merge for a caller in this process: `served`, each passage
+    dealt in turns with its `where`, `text` and the piles it is `in`, and
+    `piles`, each index's name, how many passages it `found`, how many
+    `more` it held than were shown, and the words of the question it
+    `lacks`. ValueError when one isn't an index, or two share a name."""
+    names = [Path(i).resolve().name for i in indexes]
+    if len(set(names)) != len(names):
+        raise ValueError("two indexes have the same folder name")
+    lists, absent = [], {}
+    for name, i in zip(names, indexes):  # one whole index in memory at a time
+        found, absent[name] = from_index(Path(i), question, alias)
+        lists.append((name, [{**c, "path": f"{name}/{c['path']}"} for c in found]))
+    found_by = {name: len(found) for name, found in lists}
+    lists, held = joined(lists)
+    out, more = merge(lists, top)
+    return {
+        "served": [
+            {
+                "where": f"{c['path']}:{c['line']}",
+                "text": c["text"],
+                "in": held[c["id"]],
+            }
+            for _, c in out
+        ],
+        "piles": [
+            {
+                "name": n,
+                "found": found_by[n],
+                "more": more.get(n, 0),
+                "lacks": absent[n],
+            }
+            for n in names
+        ],
+    }
+
+
 def merge(
     lists: list[tuple[str, list[dict]]], top: int
 ) -> tuple[list[tuple[str, dict]], dict[str, int]]:

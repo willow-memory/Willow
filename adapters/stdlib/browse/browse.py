@@ -1,7 +1,7 @@
 """browse.py: your folder in your web browser, on this machine only. Python 3.9+.
 
     python adapters/stdlib/browse/browse.py --box DIR [--stack FILE] [--run FOLDER]
-        [--index INDEX] [--home FOLDER] [--say MODEL] [--port N] [--lang de|es|fr|pt] [--no-open]
+        [--index INDEX] [--beside INDEX ...] [--home FOLDER] [--say MODEL] [--port N] [--lang de|es|fr|pt] [--no-open]
     python adapters/stdlib/browse/browse.py launcher --box DIR
 
 A page to ask your folder questions, read the passages that answer them
@@ -26,7 +26,11 @@ Every page is three panels: on the left the project and its sections (and
 the run's steps); in the middle the section that is open; on the right,
 when you click a file and line, the passage that is there. With --index
 INDEX (scan's index, kept current by index-cache) a question is answered
-from the index, the kernel's own answer without reading every file again.
+from the index, the kernel's own answer without reading every file again,
+and the page says which of your question's words no passage there holds.
+With --beside INDEX, once for each, other piles' indexes are asked too
+(the fair-merge add-on): what each holds is shown under your folder's
+answer, apart from it, with the words each one lacks.
 With --home FOLDER, the folder your projects are under, the left panel
 lists them (the projects add-on) and a click opens another.
 
@@ -178,6 +182,24 @@ def indexed(box: Path, text: str, at: Path) -> dict | None:
     kernel.append(box, ts, "bite", bite_key=k, served=refs, **listed)
     return {"state": "populated" if refs else "empty", "bite_key": k,
             "served": [{**r, "text": c["text"]} for r, c in zip(refs, served)]}  # fmt: skip
+
+
+def lacking(box: Path, text: str, at: Path) -> list[str]:
+    """The question's words no passage of the index at `at` holds, each held
+    as the kernel holds a word, with the box's words list; none when
+    fair-merge or scan isn't here, or the index or the list can't be read."""
+    fair = sibling("fair-merge", "fair_merge")
+    if fair is None or sibling("scan", "scan") is None:
+        return []
+    cfg, alias = kernel.config(box), {}
+    try:
+        if "words" in cfg:
+            alias, _, why = kernel.read_words(Path(cfg["words"]), box)
+            if why is not None:
+                return []
+        return fair.from_index(at, text, alias or {})[1]
+    except (OSError, ValueError):
+        return []
 
 
 def short(text: str, most: int = 200) -> str:
@@ -527,7 +549,9 @@ class Willow:
         index: Path | None = None,
         home: Path | None = None,
         say: str | None = None,
+        beside: list[Path] | None = None,
     ):
+        self.beside = list(beside or [])  # other piles' indexes, asked too
         self.say_model = say  # the model that says a turn's boxes, if any
         self.sayer = None  # prompt -> words, in place of the model: for tests
         self.said_turns = 0
@@ -567,6 +591,7 @@ class Willow:
                 self.box = p["boxes"][0]
                 self.run = p["runs"][0]["folder"] if p["runs"] else None
                 self.stack = self.index = None
+                self.beside = []
                 return True
         return False
 
@@ -915,6 +940,40 @@ class Willow:
             turn["model"] = {"model": self.say_model, **got}
         return model_html(turn["model"])
 
+    def other_piles(self, asked: str) -> tuple[str, str]:
+        """(What the piles beside your folder hold for a question, as one box;
+        the line to say.) Each pile is ranked on its own and they take turns
+        (the fair-merge add-on); nothing of it goes on your record, and none
+        of it is your folder's answer. ("", "") with no pile beside, or
+        when fair-merge isn't here."""
+        fair = sibling("fair-merge", "fair_merge")
+        if not self.beside or fair is None or sibling("scan", "scan") is None:
+            return "", ""
+        try:
+            got = fair.across(self.beside, asked, {})
+        except (OSError, ValueError) as e:
+            return f"<h2>Other piles</h2><p class=muted>Couldn't look: {esc(e)}</p>", ""
+        cards = "".join(
+            f"<div class=card><div class=where>{esc(s['where'])} "
+            f"<span class=muted>(in {esc(', '.join(s['in']))})</span></div>"
+            f"<p class=text>{esc(s['text'])}</p></div>"
+            for s in got["served"]
+        )
+        rows = []
+        for q in got["piles"]:
+            said = ["found nothing"] if not q["found"] else (
+                [f"{q['more']} more, not shown"] if q["more"] else [])  # fmt: skip
+            if q["lacks"]:
+                said.append("no passage holds: " + ", ".join(q["lacks"]))
+            if said:
+                rows.append(
+                    f"<p class=muted>{esc(q['name'])}: {esc('; '.join(said))}</p>"
+                )
+        n, of = sum(bool(q["found"]) for q in got["piles"]), len(got["piles"])
+        line = (f"{n} of {of} other pile{'s' * (of != 1)} hold{'s' * (n == 1)} something for it"
+                if n else f"none of the {of} other pile{'s' * (of != 1)} holds it")  # fmt: skip
+        return f"<h2>Other piles, not your folder</h2>{cards}{''.join(rows)}", line
+
     def ask(self, question: str) -> str:
         """Your line, then code's answer under it, added to the stream."""
         turns = self.turns
@@ -950,6 +1009,26 @@ class Willow:
             doc = json.loads(said)
         found, answered, line = self.from_run(question)
         line = line[:1].upper() + line[1:] + "." if line else ""
+        boxes, facts = turn["boxes"], turn["facts"]
+        turn = self.answered(turn, doc, asked, found, answered, line)
+        if doc["state"] == "populated" and self.index:
+            lacks = lacking(self.box, asked, self.index)
+            if lacks:  # shown on half the words: say which the folder holds nowhere
+                gone = ", ".join(lacks)
+                turn["say"] += f" No passage in your folder holds: {gone}."
+                boxes.append(f"<p class=muted>No passage in your folder holds: {esc(gone)}.</p>")  # fmt: skip
+                facts.append(f"no passage in your folder holds: {gone}")
+        other, said = self.other_piles(asked)
+        if other:
+            boxes.append(other)
+        if said:
+            turn["say"] += f" Beside it, {said}."
+            facts.append(f"beside your folder, {said}")
+        return turn
+
+    def answered(self, turn: dict, doc: dict, asked: str, found, answered, line: str) -> dict:  # fmt: skip
+        """A turn with your folder's own answer in it: what the run held,
+        then the kernel's answer, sealed, served or nothing."""
         boxes, facts = turn["boxes"], turn["facts"]
         if found:
             boxes.append(found)
@@ -1291,7 +1370,7 @@ def main(argv: list[str]) -> int:
             return kernel.REFUSED
         print(launcher(box), end="")
         return kernel.ALIVE
-    opts, flags, rest, it = {}, set(), [], iter(argv)
+    opts, flags, rest, beside, it = {}, set(), [], [], iter(argv)
     for a in it:
         if a in (
             "--box",
@@ -1304,6 +1383,8 @@ def main(argv: list[str]) -> int:
             "--say",
         ):
             opts[a] = next(it, "")
+        elif a == "--beside":
+            beside.append(next(it, ""))
         elif a == "--no-open":
             flags.add(a)
         else:
@@ -1315,7 +1396,8 @@ def main(argv: list[str]) -> int:
             or ("--run" in opts and not opts["--run"])
             or ("--index" in opts and not opts["--index"])
             or ("--home" in opts and not opts["--home"])
-            or ("--say" in opts and not opts["--say"])):  # fmt: skip
+            or ("--say" in opts and not opts["--say"])
+            or "" in beside):  # fmt: skip
         print(__doc__.split("\n\n")[1], file=sys.stderr)
         return kernel.REFUSED
     box = Path(opts["--box"])
@@ -1335,11 +1417,16 @@ def main(argv: list[str]) -> int:
         if index is not None and not index.is_dir():
             print(f"refused: {index} isn't an index that's there (scan's index, kept by index-cache)", file=sys.stderr)  # fmt: skip
             return kernel.REFUSED
+        for i in beside:
+            if not (Path(i) / "index.json").is_file():
+                print(f"refused: {i} isn't an index (scan makes one)", file=sys.stderr)
+                return kernel.REFUSED
         home = Path(opts["--home"]) if "--home" in opts else None
         if home is not None and not home.is_dir():
             print(f"refused: {home} isn't a folder that's there", file=sys.stderr)
             return kernel.REFUSED
-        willow = Willow(box, opts.get("--lang"), stack=stack, run=run, index=index, home=home, say=opts.get("--say"))  # fmt: skip
+        willow = Willow(box, opts.get("--lang"), stack=stack, run=run, index=index, home=home, say=opts.get("--say"),
+                        beside=[Path(i) for i in beside])  # fmt: skip
         server = serve(willow, int(port))
     except (OSError, ValueError) as e:
         print(f"refused: {e}", file=sys.stderr)
