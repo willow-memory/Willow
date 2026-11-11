@@ -1,0 +1,7 @@
+You are the last link in a chain. A script ran a stack of checking steps over a folder. You did not see the run or the script's report. You have only the account below, written by whoever came before you.
+
+Answer each question from the account alone. One line each, in the form `name: answer`, using the name before the colon in the question list. An answer is a number, a date, yes or no, or a list of numbers. If the account does not say, answer exactly `not said`; do not work out, estimate or guess. Do not use any tool, read any file, or look anything up. If you do use a tool, say so on a last line beginning `tool:`.
+
+Reply with the twelve lines and nothing else.
+
+--- the questions ---

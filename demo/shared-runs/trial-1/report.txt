@@ -1,0 +1,51 @@
+# what the handover add-on says
+handover: populated, pin: 6 steps flagged, 1 stack run, 1 stack never run
+## flagged
+  stack.md step 07  glance: populated, 48 questions: 16 held whole, 30 in part, 2 found nothing (run/07-glance.txt)
+  stack.md step 11  claim-check: some parts   adapters/planned.json:548   named, inputs, kept, twice   lacks result, hash, shared, computes (run/11-claim-check.txt)
+  stack.md step 13  xref: populated, 1572 references checked, 136 don't hold (run/13-xref.txt)
+  stack.md step 26  three-two-one: 3-2-1 needs you: 2 copies on 2 kinds of storage, none away from home (run/26-three-two-one.txt)
+  stack.md step 27  box-health: populated, box needs you: 2 things, 1 files can't be read (run/27-box-health.txt)
+  stack.md step 29  thesis: populated, 82 claims; 14 held, 68 short; 0 skipped (run/29-thesis.txt)
+## last runs
+  stack.md          run: 29 steps, 6 flagged
+  stack.md steps    code-comments, git-history, index-cache ×3, scan, why-not, fair-merge, first-mention, claim-check, pile-store, pile-rungs, fixity, ids, star-system ×2, diverge, merkle, prov, tip-pin, backup, restore-drill, history: each in run
+## never run
+  page.md           29 steps
+
+# what the kernel says of the record
+the chain holds: 2 rows, 0 sealed
+
+# how the run ended
+done: 6 of 29 steps flagged
+
+# the first line each step printed
+01-code-comments: wrote 885 files to <scratch>/box-code; skipped 7
+02-git-history: wrote 1022 files to <scratch>/box-commits; skipped 0
+03-index-cache: current: 1746 files unchanged; the index at <scratch>/kept/index-repo still answers. Ask it with scan.
+04-index-cache: current: 884 files unchanged; the index at <scratch>/kept/index-code still answers. Ask it with scan.
+05-index-cache: current: 1022 files unchanged; the index at <scratch>/kept/index-commits still answers. Ask it with scan.
+06-scan: {"index": "index-repo", "question": "kept", "state": "populated", "served": [{"rank": 1, "where": "ADDONS.md:599", "id": "a3be76cd5814a3a7c1dfb5fb80c899543f66234af8f10a4399831de1967eba91", "echo": fal
+07-glance: glance: populated, 48 questions: 16 held whole, 30 in part, 2 found nothing
+08-why-not: why-not: empty, your files hold all 1 question; nothing to explain
+09-fair-merge: 1. pile/ADDONS.md:599    [pile]    The meaning add-on's vectors kept in the store's own SQLite file, so they're computed onc…
+10-first-mention: first-mention: populated, first mention of "cached": 1959-04-17 (date from line 27); 333 mentions in 76 files, 1959-04-17 to 2026-11-07; 178 undated, which could be earlier
+11-claim-check: some parts   adapters/planned.json:548   named, inputs, kept, twice   lacks result, hash, shared, computes
+12-claim-check: all parts    CHANGELOG.md:1459   same, folder, gives, bytes
+13-xref: xref: populated, 1572 references checked, 136 don't hold
+14-pile-store: current: the store at <scratch>/kept/store.sqlite still matches <scratch>/pile
+15-pile-rungs: {"question": "computed once and kept", "state": "populated", "rung": "words", "read_from": "store", "rungs": [{"rung": "words", "state": "answered", "why": "held half of ['computed', 'kept', 'once']"}
+16-fixity: First fixity check: 1747 files hashed. The next check says which changed without an edit.
+17-ids: kernel.py
+18-star-system: wrote 3 bodies to <scratch>/out/sim-a/star-system.md
+19-star-system: wrote 3 bodies to <scratch>/out/sim-b/star-system.md
+20-diverge: The same: every file, byte for byte.
+21-merkle: root 594410d5d361fb7dcaf42897602eab9a7a6bf30cc4a7545c26aa68fe4b99e14b over 2 rows
+22-prov: wrote <scratch>/out/prov.json: 2 activities, 0 entities, 2 agents
+23-tip-pin: pinned 2 rows, tip 29f115d16923…, to <scratch>/out/away/pin.json
+24-backup: backed up: <scratch>/out/usb/willow-backup-20261111-120000.zip (2 files, 2 rows; every byte and the chain checked)
+25-restore-drill: restored: willow-backup-20261111-120000.zip, 2 files, 2 rows; the chain holds
+26-three-two-one: 3-2-1 needs you: 2 copies on 2 kinds of storage, none away from home
+27-box-health: box-health: populated, box needs you: 2 things, 1 files can't be read
+28-history: history: populated, 2 things on your record over 1 day
+29-thesis: thesis: populated, 82 claims; 14 held, 68 short; 0 skipped

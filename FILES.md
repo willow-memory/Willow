@@ -2392,6 +2392,14 @@ willow/
 │   │           └── evil-pkg/
 │   │               └── package.json  a postinstall that pipes a remote script to a shell
 │   ├── shared-runs/          a plan for a study, nothing frozen: simulations on machines nobody chose, sharing one memory, run by a script
+│   │   ├── trial-1/          a first try of the blind handover, on demo/kept's run: what was fixed before, what each agent said
+│   │   │   ├── brief-a.txt   what the first agent is told, above the report
+│   │   │   ├── brief-b.txt   what the last agent and the control are told, above the questions
+│   │   │   ├── key.json      each question's answer, read off the run's files by trial.py
+│   │   │   ├── questions.txt the twelve questions, two of which the report cannot answer
+│   │   │   ├── report.txt    the script's report of the run: no agent wrote any of it
+│   │   │   └── RULES.md      the trial's rules and what will be counted, written before any agent was started
+│   │   ├── trial.py          makes the report and the key from a kept run, strikes what an account adds, scores answers
 │   │   └── README.md         the claim, eight proposed rules, a session led by a script, how it could be wrong, what waits before the freeze
 ```
 
