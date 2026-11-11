@@ -145,6 +145,18 @@
   "version": "0.0.1"
  },
  {
+  "name": "by-index",
+  "kind": "stdlib",
+  "section": "Finding things",
+  "line": "claim-check, all and first-mention asked of scan's index, so a folder too big to hold in memory is still checked passage by passage.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "role": "tools",
+  "uses": "scan",
+  "version": "0.0.1"
+ },
+ {
   "name": "canvas",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -695,6 +707,17 @@
   "version": "0.0.1"
  },
  {
+  "name": "hit-kinds",
+  "kind": "stdlib",
+  "section": "Finding things",
+  "line": "Every place some text appears, sorted by what it sits inside: on its own, a number, a date, a hash, a path, a name, each with its count.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "role": "tools",
+  "version": "0.0.1"
+ },
+ {
   "name": "home-assistant",
   "kind": "stdlib",
   "section": "Ways to use it",
@@ -829,6 +852,18 @@
   "writes": "record",
   "network": "the forge, through the workflow's token, to post an answer once it is sealed",
   "role": "tools",
+  "version": "0.0.1"
+ },
+ {
+  "name": "join-check",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "A connection a model made between two passages, held to your files: each thing it says looked for, and the passage that backs it shown.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "role": "suggests",
+  "uses": "claim-check, connect",
   "version": "0.0.1"
  },
  {
@@ -1068,6 +1103,17 @@
   "version": "0.0.1"
  },
  {
+  "name": "mirror-sweep",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "When a file is deleted, the copies of it that readers made are found and removed, so your folder stops answering from what is gone.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "role": "tools",
+  "version": "0.0.1"
+ },
+ {
   "name": "misheard",
   "kind": "stdlib",
   "section": "Your own words",
@@ -1141,6 +1187,17 @@
   "kind": "stdlib",
   "section": "Finding things",
   "line": "Your own lesson plans by grade, subject and standard: what did I teach on fractions last year?",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "role": "tools",
+  "version": "0.0.1"
+ },
+ {
+  "name": "narrow",
+  "kind": "stdlib",
+  "section": "Finding things",
+  "line": "The question to ask you next: the one fact about what you're after that would cut what's left the most, with the count each answer leaves.",
   "source": "new",
   "writes": "nothing",
   "network": "none",
@@ -1225,6 +1282,18 @@
   "version": "0.0.1"
  },
  {
+  "name": "one-step",
+  "kind": "stdlib",
+  "section": "Ways to use it",
+  "line": "One step of a kept run run again alone, its new output kept in its place, and the steps after it marked as resting on the old one.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "role": "tools",
+  "uses": "stack",
+  "version": "0.0.1"
+ },
+ {
   "name": "opentimestamps",
   "kind": "stdlib",
   "section": "Trust and proof",
@@ -1299,6 +1368,17 @@
   "source": "new",
   "writes": "record",
   "network": "none",
+  "role": "suggests",
+  "version": "0.0.1"
+ },
+ {
+  "name": "pool-fit",
+  "kind": "stdlib",
+  "section": "Assistants",
+  "line": "How many passages a model on this machine can be handed at once, measured on your own questions, before its answers add what they lack.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "loopback",
   "role": "suggests",
   "version": "0.0.1"
  },
@@ -1765,6 +1845,18 @@
   "version": "0.0.1"
  },
  {
+  "name": "stack-check",
+  "kind": "stdlib",
+  "section": "Ways to use it",
+  "line": "A stack file read through before anything runs: each add-on is here, each option is one it takes, each file it names is there.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "role": "tools",
+  "uses": "stack",
+  "version": "0.0.1"
+ },
+ {
   "name": "standards",
   "kind": "stdlib",
   "section": "Finding things",
@@ -2106,6 +2198,17 @@
   "kind": "stdlib",
   "section": "Your own words",
   "line": "Japanese, which has no spaces: a small segmenter of its own and a common-words list.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "role": "words",
+  "version": "0.0.1"
+ },
+ {
+  "name": "words-later",
+  "kind": "stdlib",
+  "section": "Your own words",
+  "line": "A box made again with a words list it lacked, its record kept as it was, since a box takes its words only when it is made.",
   "source": "new",
   "writes": "to",
   "network": "none",
