@@ -3,7 +3,7 @@ section: Ways to use it
 line: Which steps of a stack take what an earlier step made, the order that leaves them in, and a step that takes what none before it made.
 source: new
 added: 2026-11-11
-version: 0.1.0
+version: 0.1.1
 writes: nothing
 network: none
 role: tools
@@ -75,6 +75,12 @@ it doesn't. So a step that names the record after a step whose card says
 it writes it takes "the record as it left it", from the last such step
 before it. The page lists the steps that write the record. A step naming
 an add-on that isn't here has no card, and is listed as not known.
+
+A step names a record as `{box}`, or as the folder it gives to `--box`
+(`--box boxes/sources`). A stack may keep more than one, so a step is tied
+only to a writer of the same record. Whether `{box}` is one of the folders
+named is decided when the stack is run, and the file doesn't say, so the
+two are kept apart.
 
 This errs toward waiting. A step that names the record may never read a
 row, and it is still placed after the writer above it.
