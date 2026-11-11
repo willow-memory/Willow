@@ -192,3 +192,26 @@ def test_a_long_answer_and_a_long_reason_are_cut_short(tmp_path):
     assert "A" * 99 + "…" in text and "A" * 100 not in text
     why = ("because " + "reason " * 30).split()
     assert f"(why: {' '.join(why)[:99]}…)" in text
+
+
+def test_no_dates_leaves_the_dates_out_and_keeps_what_waits(tmp_path):
+    b = life(tmp_path)
+    text = context(run("--box", str(b), "--no-dates", *NOW))
+    assert text.startswith("hook-start: populated, 1 waiting")
+    assert "## Waiting for you" in text and "## Coming up" not in text
+    assert "car.txt" not in text
+    assert ("## Gone stale" in text) == BESIDE["stale"]
+
+
+def test_no_dates_on_a_box_of_only_dates_prints_nothing(tmp_path):
+    b, _ = init(tmp_path, {"log.txt": "On 2026-10-24 the tests passed.\n"})
+    assert (
+        "## Coming up" in context(run("--box", str(b), *NOW)) or not BESIDE["coming-up"]
+    )
+    got = run("--box", str(b), "--no-dates", *NOW)
+    assert got.returncode == 0 and got.stdout == "" and got.stderr == ""
+
+
+def test_no_dates_and_days_together_are_refused(tmp_path):
+    b, _ = init(tmp_path, {"a.txt": "x\n"})
+    assert run("--box", str(b), "--no-dates", "--days", "3", *NOW).returncode == 2
