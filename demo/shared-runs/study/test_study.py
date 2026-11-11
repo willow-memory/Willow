@@ -298,3 +298,24 @@ def test_a_notebook_carries_the_frozen_files_and_is_made_outside_the_repository(
     )
     assert notebooks.main(["make", "--to", str(tmp_path / "c")]) == 2
     assert not (HERE / "nb").exists() and not (tmp_path / "b").exists()
+
+
+def test_a_machine_trying_the_dry_sweep_is_told_how_its_bytes_compare(tmp_path):
+    file, runs = whole(tmp_path)
+    acts = [json.loads(x) for x in (runs / "baseline-1" / "acts.jsonl").read_text().splitlines()]  # fmt: skip
+    kept = {"rewritten": {}, "as_written": {}}
+    for a in acts:
+        name = "rewritten" if a["mode"] == "alone" else "as_written"
+        kept[name][a["job"]] = [a["outcome"], a["ended"], a["sha256"]]
+    kept["as_written"]["t1@32"][2] = "0" * 64
+    kept["as_written"]["t1@50"][2] = "0" * 64
+    other = tmp_path / "bytes.json"
+    other.write_text(json.dumps(kept))
+    said = dry.against(runs, other)
+    assert said[1] == "the power rewritten: 16 of 16 jobs the same bytes as the other machine"  # fmt: skip
+    assert said[2].startswith("the power as written: 14 of 16") and said[2].endswith("differs is t1@32")  # fmt: skip
+    real = json.loads((HERE / "dry" / "bytes.json").read_text())
+    assert len(real["rewritten"]) == len(real["as_written"]) == 30
+    page = (HERE / "TESTER.md").read_text()
+    plan = json.loads((HERE / "dry-plan.json").read_text())["project"]
+    assert plan["commit"] in page and f"numpy=={plan['numpy']}" in page

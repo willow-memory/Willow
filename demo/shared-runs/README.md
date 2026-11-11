@@ -692,6 +692,14 @@ recalled from Kaggle's command line, not read from its pages:
 8. Then the reports, the two agents, and judge.py with a record outside
    the repository, as the dry run did.
 
+**A fourth check machine, said before anything is run.** A person the
+maintainer knows has offered a machine of their own. The frozen plan
+names three check machines, and is not changed. If theirs takes part it
+does what a check machine does and no more, its folder is judged with
+the rest, and its kind counts toward R1's three like any other. First it
+is asked to try the dry sweep, by [study/TESTER.md](study/TESTER.md)
+alone: a page written for someone who was not here.
+
 ## The order
 
 1. Settle the list above. Kaggle's pages are read. The maintainer has

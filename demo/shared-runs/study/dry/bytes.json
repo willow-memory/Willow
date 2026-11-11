@@ -1,0 +1,307 @@
+{
+ "about": "What each job of the dry sweep came to on the machine that wrote it (intel x86_64 avx512, NumPy 2.1.3): how it ended and the SHA-256 of its state, with the project's one power rewritten and as it is written. Made-up setups; no result.",
+ "as_written": {
+  "qqqq-and-one@1200": [
+   "ended",
+   1200,
+   "9c96bbccf9ae7b14b307ad7e62ebcee3d593ae32b285eb4f2b6c744af1f77220"
+  ],
+  "qqqq-and-one@150": [
+   "ended",
+   150,
+   "ac0f1d889ad674bc094e9efa4fdf49b4238f5c072957d26526e864bb296cdb76"
+  ],
+  "qqqq-and-one@333": [
+   "ended",
+   333,
+   "80106da48eb35fc760b25a124b3b2bde18033704f0cd256dd51f50ea0b2f2420"
+  ],
+  "qqqq-and-one@40": [
+   "ended",
+   40,
+   "8dcae95aa69c0accd1097094d74e00ec15f538f8834336c238c8d481df569d20"
+  ],
+  "qqqq-and-one@700": [
+   "ended",
+   700,
+   "2c528bc36305a7e0eb1f0141dda1d1c4034ddb8abf16745f2699491ee477a2ff"
+  ],
+  "qqqq@1200": [
+   "ended",
+   1200,
+   "a24b1f95f6b708caa68a85672adb885196db45a9e04e36ac44dc97a9ee1dda12"
+  ],
+  "qqqq@150": [
+   "ended",
+   150,
+   "9a8d79ad9021e09433c925fcc4a8e8cae2a7303c75b378ad8201117507f2ff1a"
+  ],
+  "qqqq@333": [
+   "ended",
+   333,
+   "6726d8dc438e805f94a6c834515415c7328f43fceac88b0ed0a7d037e706f4ed"
+  ],
+  "qqqq@40": [
+   "ended",
+   40,
+   "e739f90678fae9e72d13a702babf7bdb4aab35b698b05f91928ce14a501d4b20"
+  ],
+  "qqqq@700": [
+   "ended",
+   700,
+   "1ee60b7a5fcd8c9edfa7b420b1d9896fd8617cc3fe6a14226ad8d43584742fd7"
+  ],
+  "vvvv-coarse@1200": [
+   "refused",
+   0,
+   "0cdb157fd2f907ce7576c738cff67d265db664fc0675da2ad81d6ed7854b3abc"
+  ],
+  "vvvv-coarse@150": [
+   "refused",
+   0,
+   "0cdb157fd2f907ce7576c738cff67d265db664fc0675da2ad81d6ed7854b3abc"
+  ],
+  "vvvv-coarse@333": [
+   "refused",
+   0,
+   "0cdb157fd2f907ce7576c738cff67d265db664fc0675da2ad81d6ed7854b3abc"
+  ],
+  "vvvv-coarse@40": [
+   "refused",
+   0,
+   "0cdb157fd2f907ce7576c738cff67d265db664fc0675da2ad81d6ed7854b3abc"
+  ],
+  "vvvv-coarse@700": [
+   "refused",
+   0,
+   "0cdb157fd2f907ce7576c738cff67d265db664fc0675da2ad81d6ed7854b3abc"
+  ],
+  "wwww-crowded@1200": [
+   "halted",
+   258,
+   "cea0f86e0b792be4578f102fbd303f4353b4109e0c6c8080357174637517fd3b"
+  ],
+  "wwww-crowded@150": [
+   "ended",
+   150,
+   "c53151aae9331cbde019fdcd7ffa46b3a2e018da80c287c2de891b78ef1830e6"
+  ],
+  "wwww-crowded@333": [
+   "halted",
+   258,
+   "cea0f86e0b792be4578f102fbd303f4353b4109e0c6c8080357174637517fd3b"
+  ],
+  "wwww-crowded@40": [
+   "ended",
+   40,
+   "cf2617a2508c0d5f04a6611aaf510189b493586557e6bf43f2d4934960de035d"
+  ],
+  "wwww-crowded@700": [
+   "halted",
+   258,
+   "cea0f86e0b792be4578f102fbd303f4353b4109e0c6c8080357174637517fd3b"
+  ],
+  "xxxx@1200": [
+   "ended",
+   1200,
+   "9934db4c94d9249abf71712367ebc50f366661534f0dbdd102c7bffa7fcaa591"
+  ],
+  "xxxx@150": [
+   "ended",
+   150,
+   "66cb0cdc8ec996dbc9c61fe3c29f92af060aede9c84bd38be957c787e937f42e"
+  ],
+  "xxxx@333": [
+   "ended",
+   333,
+   "9371f012942d5caaab7270a67e7f4a21ed070d4413e7eed41762b8f5034d16dc"
+  ],
+  "xxxx@40": [
+   "ended",
+   40,
+   "449068322a0efd9d77d551b5dde57067b6f1c9343b406a95fe9ffacf4eec8dcb"
+  ],
+  "xxxx@700": [
+   "ended",
+   700,
+   "0f16c5c41f10da7a1ada572ea3628d2628ed10a89f49560e066f1cb44c52d370"
+  ],
+  "zzzz@1200": [
+   "ended",
+   1200,
+   "f2069eac2c732dc1429a028f88fc5ac9a0444ab5b1b6bf42b3eef3351e2f7166"
+  ],
+  "zzzz@150": [
+   "ended",
+   150,
+   "d2790f59efff0a9380608f1d0bd43832e7ed6f9775f8339d9f0f263c1c7fa787"
+  ],
+  "zzzz@333": [
+   "ended",
+   333,
+   "e77b425c59c765595fc132a3464081e848f2e1596a3bab6fa27f7c6f83865278"
+  ],
+  "zzzz@40": [
+   "ended",
+   40,
+   "cd0f822d2d787bb1fc99860aed198081ff7ba993aff71036e157e95460b7f805"
+  ],
+  "zzzz@700": [
+   "ended",
+   700,
+   "aa3c82b9221bb9c806adb8d75b97f2a48f87cd271450cd92b56e8715219c4c81"
+  ]
+ },
+ "rewritten": {
+  "qqqq-and-one@1200": [
+   "ended",
+   1200,
+   "ddb0b3abb09061696eae9ab1c37ea5dc739983dcb30e75a3f9fa1e6538a1c68b"
+  ],
+  "qqqq-and-one@150": [
+   "ended",
+   150,
+   "f674c37293f56cb15642133ca640bb670e4fcbf001ed166208ce14486c9d8d27"
+  ],
+  "qqqq-and-one@333": [
+   "ended",
+   333,
+   "7bf64eaaf1c7fc7301ed476eb2c623be013de7f38abe833bcfaa5fb62533e435"
+  ],
+  "qqqq-and-one@40": [
+   "ended",
+   40,
+   "1a223597170b09e8dde74fed7c40c1182dda1e1595c7843e70e18761b04257e2"
+  ],
+  "qqqq-and-one@700": [
+   "ended",
+   700,
+   "228503867e79b2c1d36558066a00a0cb1a93b206e2025243f35608b26d7957be"
+  ],
+  "qqqq@1200": [
+   "ended",
+   1200,
+   "1fa25147d31d64af4b094bd712dfa04031595f42040c9ebbdd00cc5c4034997c"
+  ],
+  "qqqq@150": [
+   "ended",
+   150,
+   "8da0273f6398c7c992553c946092aad4c638fcc04022d931562b5a3fde0f826a"
+  ],
+  "qqqq@333": [
+   "ended",
+   333,
+   "5071e74b6c2546bc5226cde0994b59183e1216ba4849404515ef1e901c0aaf5d"
+  ],
+  "qqqq@40": [
+   "ended",
+   40,
+   "e739f90678fae9e72d13a702babf7bdb4aab35b698b05f91928ce14a501d4b20"
+  ],
+  "qqqq@700": [
+   "ended",
+   700,
+   "c8d14477e1226d2fff001903301d3874ef64665cedfafdf7c72288ed2f5fa5b0"
+  ],
+  "vvvv-coarse@1200": [
+   "refused",
+   0,
+   "0cdb157fd2f907ce7576c738cff67d265db664fc0675da2ad81d6ed7854b3abc"
+  ],
+  "vvvv-coarse@150": [
+   "refused",
+   0,
+   "0cdb157fd2f907ce7576c738cff67d265db664fc0675da2ad81d6ed7854b3abc"
+  ],
+  "vvvv-coarse@333": [
+   "refused",
+   0,
+   "0cdb157fd2f907ce7576c738cff67d265db664fc0675da2ad81d6ed7854b3abc"
+  ],
+  "vvvv-coarse@40": [
+   "refused",
+   0,
+   "0cdb157fd2f907ce7576c738cff67d265db664fc0675da2ad81d6ed7854b3abc"
+  ],
+  "vvvv-coarse@700": [
+   "refused",
+   0,
+   "0cdb157fd2f907ce7576c738cff67d265db664fc0675da2ad81d6ed7854b3abc"
+  ],
+  "wwww-crowded@1200": [
+   "halted",
+   258,
+   "3a5c79b2260b94846275a5cc051aac3721eaa07efb7768285abfc883ecc1e5d6"
+  ],
+  "wwww-crowded@150": [
+   "ended",
+   150,
+   "b60db8c5c80e0e8f5c7fd3c2cf44641f9adb64bca89e3305379906b29e2eeb5a"
+  ],
+  "wwww-crowded@333": [
+   "halted",
+   258,
+   "3a5c79b2260b94846275a5cc051aac3721eaa07efb7768285abfc883ecc1e5d6"
+  ],
+  "wwww-crowded@40": [
+   "ended",
+   40,
+   "eab01e53caebc707194e386617b7106846453424424a0bc1fd758f68f5a7c93b"
+  ],
+  "wwww-crowded@700": [
+   "halted",
+   258,
+   "3a5c79b2260b94846275a5cc051aac3721eaa07efb7768285abfc883ecc1e5d6"
+  ],
+  "xxxx@1200": [
+   "ended",
+   1200,
+   "5c13d950587d9a129889aa12ad58ad5b69ffa95ff8aa2f284fd1ff5786b43b68"
+  ],
+  "xxxx@150": [
+   "ended",
+   150,
+   "da50edc480a66890d6aa8227a4ba6da5c2ecfb50977f48ca075d0d3cd5d96d5d"
+  ],
+  "xxxx@333": [
+   "ended",
+   333,
+   "c3c3bf1a482e1800410275dc5b74483ee04a73e56453796ea1d6de3680719e9e"
+  ],
+  "xxxx@40": [
+   "ended",
+   40,
+   "7534b648e9c21e75eeec0e80f98edf17dab824432e997c425c5fa04c99585ade"
+  ],
+  "xxxx@700": [
+   "ended",
+   700,
+   "93cceec3979db7c1a9ad27da17484f072da22aa284366caa4f8d44a844b6bdcf"
+  ],
+  "zzzz@1200": [
+   "ended",
+   1200,
+   "f69df7cd5132916a5510eb9a0f3f3645be363e3cbccb2dc90d9dc76d4f24d827"
+  ],
+  "zzzz@150": [
+   "ended",
+   150,
+   "c67a89cca9117f29e7529fc44ad30493d8aa8e87c5f5a3e2a6eafd481de14dc1"
+  ],
+  "zzzz@333": [
+   "ended",
+   333,
+   "9d486fb2be2d606531bbdf586b5b8428df11f68b60cbd249ee0697da1c8c7cd2"
+  ],
+  "zzzz@40": [
+   "ended",
+   40,
+   "988b42fea199ed0d8dacfb6b2b278354d12c5ace0cf5274c22ece855d0b320fa"
+  ],
+  "zzzz@700": [
+   "ended",
+   700,
+   "f58a3f26327959757e496547e7c4efcd655eadad09262c887ef67efd4f7bab9d"
+  ]
+ }
+}

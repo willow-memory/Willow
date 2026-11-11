@@ -2453,6 +2453,7 @@ willow/
 │   │   │   │   ├── agent-input.txt   an agent's whole input in the dry run: what is asked, the reports, the questions
 │   │   │   │   ├── answers-larger.txt what the larger model sent back, word for word
 │   │   │   │   ├── answers-small.txt what the small model sent back, word for word
+│   │   │   │   ├── bytes.json        what each dry job came to on the machine that wrote it, to hold another machine to
 │   │   │   │   ├── key.json          each question's answer, counted from the dry run's acts
 │   │   │   │   ├── report.txt        the dry run's reports, made by account.py: no agent wrote any of it
 │   │   │   │   ├── verdicts.json     the dry run's figures and its nine verdicts, as judge.py printed them
@@ -2466,6 +2467,7 @@ willow/
 │   │   │   ├── runner.py         what one machine does: every job alone, its share with the memory, a check, or the project as written
 │   │   │   ├── starts.json   each trajectory's start as exact numbers, built once and never stepped
 │   │   │   ├── sweep.py          a plan's jobs, the deal, each trajectory's owner, the predicted saving and the seeded draw
+│   │   │   ├── TESTER.md     Trying it on a machine of your own
 │   │   │   ├── test_frozen.py    every frozen file is the bytes it was, and the rules frozen are the rules judged
 │   │   │   └── test_study.py     the deal, the memory against a job alone, each rule failing when broken, the dry run kept
 │   │   ├── trial-1/          a first try of the blind handover, on demo/kept's run: what was fixed before, what each agent said
