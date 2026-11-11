@@ -1892,7 +1892,9 @@ willow/
 │       │           └── star_system/
 │       │               ├── __init__.py
 │       │               ├── core.py    a plain velocity-Verlet stand-in, not the real integrator
-│       │               └── data.py    a tiny stand-in catalog
+│       │               ├── data.py    a tiny stand-in catalog
+│       │               ├── initialization.py the stand-in's setup: the start it builds, kept so it can be named
+│       │               └── persistence.py the stand-in's names for itself, and its digest of a setup
 │       ├── static-search/
 │       │   ├── static_search.py  approved answers as a static site, searched by Pagefind
 │       │   ├── requirements.txt  pagefind and pagefind-bin, pinned

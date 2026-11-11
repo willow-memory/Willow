@@ -114,6 +114,31 @@ outside, as [the guide](../../docs/use/stack.md) says.
   results differing between machines. That is the honest answer, and the
   open problem the conversation ended on.
 
+## Since: run again, against the real project
+
+The simulation steps above ran star-system's stand-in checkout. Later the
+same day the stack was run again with steps 18 and 19 pointed at the real
+science_bitch, at its commit `2fae2f2` of 10 November, after two things on
+this side were brought up to it:
+
+- **The page names the checkout's own method.** Row 18's fault is fixed:
+  the stand-in is now called `fixed-velocity-verlet-stand-in`, and
+  "Yoshida" is said only of a checkout whose own name says so.
+- **The page carries the project's own name for the setup.** The project
+  now gives every setup a SHA-256 digest of its inputs. star-system reads
+  it off the checkout and writes it as a line, only when that setup builds,
+  bit for bit, the system it ran.
+
+What the second run said: 28 steps in 81 seconds, 4 flagged (the first
+claim check now closes on this folder, as said above). The two real runs
+were the same, byte for byte; energy drifted 6.7e-14 over three orbits of
+Jupiter, against the stand-in's 7.2e-11; and both pages carry the setup
+digest `sha256:dd4c9ad5…`, the one the project's own function gives.
+
+That digest is the piece "What didn't" says nothing here joins: a result
+named by its inputs. It is the project's, not willow's, and it is now on a
+page a box can hold.
+
 ## The rule
 
 The session proposed and never sealed. The box is a scratch one with a
