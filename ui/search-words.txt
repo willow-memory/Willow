@@ -58,12 +58,12 @@ sentence = say
 connects = connect
 connection = connect
 related = connect
-why = connect, why-not
+why = connect
 voice = say
 conversational = say
 hallucinate = say, check, lack
 invent = say, check, lack
-made-up = say, check, lack
+madeup = say, check, lack
 answer = look
 answers = look
 
