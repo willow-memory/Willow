@@ -180,6 +180,24 @@ The step is also the slowest in the stack by far. thesis asks the folder
 afresh for each sentence, which is the thing this stack began by
 measuring.
 
+## Since: what the steps take from one another
+
+The stack is written as a row and run as one. Read by the stack-bridges
+add-on, it is not one: of its 29 steps, 19 take nothing any other step
+made, and the 14 bridges between the rest go three steps deep at most,
+from glance down through scan and an index to the reader that wrote its
+folder.
+
+So most of this stack could have run at once, on as many machines as
+there were steps, and only four chains had to wait their turn. It ran one
+step after another for about a minute, and two and a half more for the
+last. That is the conversation's second half in small: the work was
+shareable as written, and nothing in how it was run knew.
+
+What that count leaves out is the record. Fifteen of the steps name it,
+and a step that adds a row and one that reads the record lean on each
+other in a way no stack file says.
+
 ## The rule
 
 The session proposed and never sealed. The box is a scratch one with a
