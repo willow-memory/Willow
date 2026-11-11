@@ -312,6 +312,12 @@ somewhere else. The scripts don't care which: a machine is anything
 that runs runner.py and hands back a folder. Earlier trial runs on
 Kaggle, above, were made before these pages were read.
 
+**Settled 2026-11-11, by the maintainer:** the study runs on Kaggle. It
+is their account and their judgment that a run this small, on CPU and
+well inside the week's free allowance, is no abuse of the resources.
+The policy's words are as quoted above, and the question was not put to
+Kaggle.
+
 ### What a first try at the whole thing found
 
 Later the same day the session tried the plan small, on the star-system
@@ -635,10 +641,9 @@ repository; neither opened a file.
 
 ## The order
 
-1. Settle the list above. Kaggle's pages are read. Two things wait on
-   the maintainer: whether this use is within Kaggle's Acceptable Use
-   Policy, which must be settled before step 5, and the privacy check,
-   before anything is uploaded. Neither is needed before step 4.
+1. Settle the list above. Kaggle's pages are read. The maintainer has
+   settled that it runs there. One thing waits on them: the privacy
+   check, before anything is uploaded. It is not needed before step 4.
 2. Write the sweep, the predicted saving, the questions and the rules.
    Done, above.
 3. Dry run, with nonsense setups, on one machine here. Done, above.
