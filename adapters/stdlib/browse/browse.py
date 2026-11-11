@@ -690,8 +690,7 @@ class Willow:
                     f"<span class=muted>{esc(str(b))}</span><br>{esc(said)}</label></p>"
                 )
             body.append(
-                "<p><button>Keep the ticked ones at hand</button> <span class=muted>"
-                "Each is marked not for a model that isn't on this machine.</span></p></form>"
+                "<p><button>Keep the ticked ones at hand</button></p></form>"
             )  # fmt: skip
         else:
             body.append(
@@ -829,7 +828,6 @@ class Willow:
                 marks = (
                     (f" <span class='pill wait'>{b['waiting']}</span>" if b["waiting"] else "")
                     + (f" <span class='pill wait'>{esc(b['said'].split(':')[0])}</span>" if b["said"] else "")
-                    + " <span class=pill title=\"Not for a model that isn't on this machine\">not for cloud</span>"
                 )  # fmt: skip
                 if b["box"].resolve() == self.box.resolve():
                     out.append(f'<a class=on title="{at}">{esc(b["name"])}{marks}</a>')

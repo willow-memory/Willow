@@ -25,10 +25,8 @@ keep adds boxes to a list, FILE, by where they are: nothing is copied or
 moved, and a box stays where you keep it. drop takes them off. --kept
 reads the list back the way --in reads a folder, and says which are gone.
 
-Each kept box is marked `"cloud": false`: it is yours to keep from a model
-that isn't on this machine. It is a mark and not a lock. Nothing here
-sends a box anywhere; the mark is for whatever might: an assistant, a
-server that answers one. A model on this machine may read it.
+Keeping a box says where it is, and nothing about who may read it: this
+sends a box nowhere, and what may leave the machine is not its to decide.
 
 It writes FILE, under --to, and nothing else: no row on a record, and your
 key is never read. FILE's folder must be there already. It prints a report
@@ -138,14 +136,10 @@ def kept(file: Path) -> tuple[list[dict] | None, str]:
     except (OSError, ValueError) as e:
         return None, f"it could not be read: {type(e).__name__}"
     ok = isinstance(doc, list) and all(
-        isinstance(b, dict)
-        and isinstance(b.get("box"), str)
-        and b["box"]
-        and b.get("cloud") is False
-        for b in doc
+        isinstance(b, dict) and isinstance(b.get("box"), str) and b["box"] for b in doc
     )
     if not ok:
-        return None, 'it is not a list of {"box": where it is, "cloud": false}'
+        return None, 'it is not a list of {"box": where it is}'
     return doc, ""
 
 
@@ -161,7 +155,7 @@ def change(file: Path, boxes: list[Path], drop: bool) -> tuple[list[dict], int]:
         doc = [b for b in doc if b["box"] not in names]
         return doc, before - len(doc)
     have = {b["box"] for b in doc}
-    doc += [{"box": n, "cloud": False} for n in dict.fromkeys(names) if n not in have]
+    doc += [{"box": n} for n in dict.fromkeys(names) if n not in have]
     return sorted(doc, key=lambda b: b["box"]), len(doc) - before
 
 
@@ -245,7 +239,7 @@ def listed(file: Path) -> tuple[dict | None, str, bool]:
     out = report(
         "populated" if doc else "empty",
         said,
-        [("kept from a model that isn't on this machine", rows)],
+        [("kept boxes", rows)],
     )
     return out, "", bool(waiting) or flagged
 

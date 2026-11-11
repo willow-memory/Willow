@@ -163,8 +163,8 @@ def test_chosen_boxes_are_kept_by_where_they_are_and_dropped_again(tmp_path):
     got = here("keep", "--to", file, a, b, a)
     assert got.returncode == 0 and got.stdout == f"kept 2 of 3; 2 in {file}\n"
     assert json.loads(file.read_text()) == [
-        {"box": str(a.resolve()), "cloud": False},
-        {"box": str(b.resolve()), "cloud": False},
+        {"box": str(a.resolve())},
+        {"box": str(b.resolve())},
     ]
     assert file.read_text().endswith("]\n")
     again = here("keep", "--to", file, a)
@@ -174,7 +174,7 @@ def test_chosen_boxes_are_kept_by_where_they_are_and_dropped_again(tmp_path):
     listed = here("--kept", file, "--json")
     assert listed.returncode == 0
     assert rows(listed) == {
-        "kept from a model that isn't on this machine": {
+        "kept boxes": {
             str(a.resolve()): "1 row: 0 asked, 0 approved, 0 waiting",
             str(b.resolve()): "1 row: 0 asked, 0 approved, 0 waiting",
         }
@@ -200,9 +200,7 @@ def test_a_kept_box_that_is_gone_or_waits_is_said(tmp_path):
     got = here("--kept", file)
     assert got.returncode == 42
     assert "2 boxes kept in" in got.stdout and "1 suggestion waits on you" in got.stdout
-    said = rows(here("--kept", file, "--json"))[
-        "kept from a model that isn't on this machine"
-    ]
+    said = rows(here("--kept", file, "--json"))["kept boxes"]
     assert said[str(b.resolve())] == "no box is there now"
     assert said[str(a.resolve())].endswith("1 waiting")
     empty = here("--kept", tmp_path / "none.json")
@@ -222,8 +220,8 @@ def test_what_is_not_a_box_or_not_a_list_is_refused_and_nothing_written(tmp_path
     assert not (tmp_path / "nope").exists(), "a missing folder is not made"
     got = here("keep", "--to", home, a)
     assert got.returncode == 2 and "is a folder, not a list" in got.stderr
-    for bad in ("{", '{"box": "x"}', '[{"box": "x"}]', '[{"box": "", "cloud": false}]',
-                '[{"box": "x", "cloud": true}]', '[{"box": 3, "cloud": false}]', '["x"]'):  # fmt: skip
+    for bad in ("{", '{"box": "x"}', '[{"bx": "x"}]', '[{"box": ""}]',
+                '[{"box": 3}]', '["x"]', "[3]"):  # fmt: skip
         file.write_text(bad)
         for argv in (["keep", "--to", file, a], ["drop", "--to", file, a], ["--kept", file]):  # fmt: skip
             got = here(*argv)

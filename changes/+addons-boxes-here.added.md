@@ -1,1 +1,1 @@
-`boxes-here`: the boxes already in a folder and what waits on each, so one that is there is opened and not made twice; where the look stopped short is said. `keep`, `drop` and `--kept` hold a list of the ones you choose, by where they are, each marked not for a model that isn't on this machine.
+`boxes-here`: the boxes already in a folder and what waits on each, so one that is there is opened and not made twice; where the look stopped short is said. `keep`, `drop` and `--kept` hold a list of the ones you choose, by where they are.

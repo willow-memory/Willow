@@ -1554,14 +1554,13 @@ def test_a_box_already_in_a_folder_is_found_ticked_kept_and_opened_where_it_is(
                                        ("token", s.willow.token)])  # fmt: skip
         assert r.status == 303 and r.getheader("Location") == "/"
         assert json.loads(kept.read_text()) == [
-            {"box": str(garden), "cloud": False},
-            {"box": str(house), "cloud": False},
+            {"box": str(garden)},
+            {"box": str(house)},
         ]
         nav = nav_of(s)
         assert (
             f'name=box value="{house}"><button class=link title="{house}">house' in nav
         )
-        assert nav.count("not for cloud</span>") == 2
         _, text = s.post("/find", folder=str(away))
         assert "<span class=pill>kept</span> <b>house</b>" in text
         assert "type=checkbox" not in text, "a box already kept isn't offered again"
@@ -1592,8 +1591,8 @@ def test_only_a_box_on_the_list_is_opened_and_what_waits_or_is_gone_is_said(tmp_
     away = two_projects(tmp_path / "away")
     house, garden = away / "house" / "box", away / "garden" / "box"
     kept = tmp_path / "kept.json"
-    kept.write_text(json.dumps([{"box": str(house), "cloud": False},
-                                {"box": str(garden), "cloud": False}]))  # fmt: skip
+    kept.write_text(json.dumps([{"box": str(house)},
+                                {"box": str(garden)}]))  # fmt: skip
     s = opened(home / "garden" / "box", home=home, boxes=kept)
     try:
         for at in (str(home / "house" / "box"), str(away), "../house"):

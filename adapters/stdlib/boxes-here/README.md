@@ -55,10 +55,10 @@ box stays where you keep it. `drop` takes them off. `--kept` reads the
 list back the way `--in` reads a folder, and says which are gone.
 [browse](../browse/) shows the boxes on such a list beside your projects.
 
-**Not for a model that isn't on this machine.** Each kept box is written
-`"cloud": false`. It is a mark, not a lock: nothing here sends a box
-anywhere. It is for whatever might, an assistant or a server that answers
-one, to read before it does. A model on this machine may read the box.
+**Where a box is, not who may read it.** The list says where each box is
+and nothing else. This sends a box nowhere. What may leave the machine, a
+model that isn't on it most of all, is decided where that is already
+decided for everything: the operator's standing consent.
 
 It writes FILE, under `--to`, and nothing else: no row on any record, and
 your key is never read. FILE's folder must be there already.

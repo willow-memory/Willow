@@ -178,9 +178,8 @@ model that can't be asked is said in a word, and nothing else changes.
   through a folder you name for boxes already there (the
   [boxes-here](../boxes-here/) add-on), and the ones you tick go on the
   list. Nothing is copied or moved, a box that is there is never made
-  again, and the list is written by boxes-here, not by this page. Each box
-  on it is marked "not for cloud": yours to keep from a model that isn't on
-  this machine. Only a box on the list can be opened this way.
+  again, and the list is written by boxes-here, not by this page. Only a
+  box on the list can be opened this way.
 - **Middle, the section that is open.**
 - **Right, what is at a place.** A file and line anywhere on a page
   (`notes/iou.txt:3`) is a link. Click it and the right panel shows the
