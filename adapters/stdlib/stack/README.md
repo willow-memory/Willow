@@ -3,7 +3,7 @@ section: Ways to use it
 line: One page made from several add-ons run in the order you list them, their results grouped so the biggest come first.
 source: new
 added: 2026-10-26
-version: 0.4.1
+version: 0.5.0
 writes: to
 network: none
 role: ways
@@ -53,7 +53,9 @@ when it didn't run clean.
 
 A stack of slow steps (a model, a big index) prints nothing until the last
 one ends, because the page is ordered by what every step made. `--to FOLDER`
-keeps the run as it happens:
+keeps the run as it happens. FOLDER is made when it isn't there yet, so a new
+run is one command; the folder it goes in must be there, so a mistyped path
+is refused rather than made:
 
     <FOLDER>/00-stack.txt     a line as each step starts, a line as it ends
     <FOLDER>/01-todo.txt      the first step's output
