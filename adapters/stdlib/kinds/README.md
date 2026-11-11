@@ -16,6 +16,7 @@ Every file of this repo sorted by what it is, and the ones nothing declares.
 
     python adapters/stdlib/kinds/kinds.py count [--json] [--root DIR]
     python adapters/stdlib/kinds/kinds.py of PATH... [--json] [--root DIR]
+    python adapters/stdlib/kinds/kinds.py sift --of REPORT [--leave KIND,...] [--json] [--root DIR]
 
     kinds: populated, 1775 files: 1597 are one of 9 kinds, 178 nothing declares
     ## what it is, and what says so
@@ -80,6 +81,32 @@ never passed over as a source.
       kernel.py  nothing declares it
       ADDONS.md  made; adapters/stdlib/readme/readme.py
 
+**Sifting another add-on's report.** Ask this repo's folder what it needs
+and most of what comes back is not the repo's: a made-up person's bill, a
+date in a test, an example on a card. `sift` takes a report another add-on
+printed, as JSON, and leaves out the rows whose file is of a kind you name
+with `--leave`: tests, fixtures, made-up people's files and frozen ones
+unless told otherwise.
+
+    $ python adapters/stdlib/digest/digest.py --box BOX --json > digest.json
+    $ python adapters/stdlib/kinds/kinds.py sift --of digest.json
+    kinds: populated, digest's 25 rows: 11 kept, 14 left out
+    ## Coming up (next 14 days)
+      adapters/stdlib/home-upkeep/README.md:21  2026-11-20  boiler last 2025-11-20 2 times £470.00 due 2026-11-20
+    ## left out, by what kind of file the row is in
+      test     4 rows in 4 files
+      made-up  8 rows in 2 files
+      frozen   2 rows in 1 file
+
+Each group stays as it was, less those rows, and a last group counts what
+was left out, kind by kind. A row that names no file of the repo, a
+suggestion waiting say, is kept. In a stack, the report is an earlier
+step's, named as [stack](../stack/) names a step's report as data.
+
+What is kept is not thereby true of the repo. The row above is an example
+on a card, and a card is a kind `sift` keeps unless told. It narrows what
+a person has to read; it doesn't read it for them.
+
 `--root DIR` reads another checkout, a clone at an older commit say.
 `--json` prints [the report](../ci/README.md#the-report-contract) as one
 JSON object.
@@ -88,8 +115,9 @@ It reads the files git tracks and the new ones it isn't told to ignore, and
 inside them only the cards' first line,
 made.py, towncrier.toml and each FROZEN.json. It writes nothing.
 
-**Exit codes**, the kernel's: 0 every file asked about has a kind; 42 some
-have none, and they are listed, or git couldn't list the files; 2 refused
+**Exit codes**, the kernel's: 0 every file asked about has a kind, or a
+report was sifted; 42 some files have none, and they are listed, or git
+couldn't list the files; 2 refused
 (a bad command line, a `--root` that is not a folder, a PATH that isn't one
 of the repo's files).
 

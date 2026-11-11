@@ -2129,7 +2129,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
   list the open pull requests and open yours. *box* `no-install` `online` `branch` `github` · near: ready, gitlab, ci
 - <a id="kinds"></a>[**kinds**](adapters/stdlib/kinds/) \
   Every file of this repo sorted by what it is (code, a card, a test, made by a script, made-up, an idea) and the ones nothing declares. \
-  *new* `no-install` `offline` `scripts` `test` · near: fast-tests, json-paths, install-scripts
+  *new* `no-install` `offline` `scripts` `test` · near: fast-tests, github, json-paths
 - <a id="live"></a>[**live**](adapters/stdlib/live/) \
   Each way-in add-on run through the real program it's for, a shell, an editor or an AI tool: works, fails, or not here. \
   Uses mcp-lite, pipe. Goes online: only what the programs it starts reach on their own; it reaches nothing itself. *new* `no-install` `online` `tests` ·

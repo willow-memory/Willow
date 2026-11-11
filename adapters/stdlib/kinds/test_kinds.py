@@ -327,3 +327,131 @@ def test_it_writes_nothing(tmp_path):
     assert run("count", "--root", str(root)).returncode == 42
     assert run("of", "--json", "--root", str(root), "kernel.py").returncode == 42
     assert sorted(str(p) for p in root.rglob("*") if ".git" not in p.parts) == before
+
+
+def a_report(tmp_path: Path, groups: list, addon: str = "digest") -> Path:
+    doc = {"addon": addon, "state": "populated", "said": "x",
+           "groups": [{"name": g, "rows": [{"where": w, "what": x} for w, x in rows_]} for g, rows_ in groups]}  # fmt: skip
+    file = tmp_path / "report.json"
+    file.write_text(json.dumps(doc))
+    return file
+
+
+def sifted(root: Path, report: Path, *more: str) -> tuple[dict, int]:
+    got = run("sift", "--of", str(report), "--json", "--root", str(root), *more)
+    assert got.stdout, got.stderr
+    return json.loads(got.stdout), got.returncode
+
+
+def test_sift_leaves_out_rows_in_tests_fixtures_made_up_and_frozen_files(tmp_path):
+    root = make(tmp_path / "repo" if (tmp_path / "repo").mkdir() is None else tmp_path)
+    report = a_report(tmp_path, [
+        ("Coming up", [
+            ("demo/ada/CHARACTER.md:3", "a made-up date"),
+            ("adapters/stdlib/thing/sample.txt:1", "a fixture's date"),
+            ("adapters/stdlib/readme/test_readme.py:9:2", "a test's date"),
+            ("demo/ada/questions.json", "a frozen file's date"),
+            ("adapters/stdlib/thing/README.md:21", "a card's example"),
+            ("kernel.py:10", "the kernel's own"),
+            ("docs/tour.md:4", "a doc's"),
+        ]),
+        ("Waiting", [("proposal:abc", "waiting on your seal"), ("demo/ada/CHARACTER.md:9", "another")]),
+    ])  # fmt: skip
+    doc, code = sifted(root, report)
+    assert code == 0 and doc["state"] == "populated"
+    assert doc["said"] == "digest's 9 rows: 4 kept, 5 left out"
+    assert rows(doc, "Coming up") == {
+        "adapters/stdlib/thing/README.md:21": "a card's example",
+        "kernel.py:10": "the kernel's own",
+        "docs/tour.md:4": "a doc's",
+    }
+    assert rows(doc, "Waiting") == {"proposal:abc": "waiting on your seal"}, (
+        "a row that names no file stays"
+    )
+    assert rows(doc, "left out, by what kind of file the row is in") == {
+        "test": "1 row in 1 file",
+        "fixture": "1 row in 1 file",
+        "made-up": "2 rows in 1 file",
+        "frozen": "1 row in 1 file",
+    }
+    assert [g["name"] for g in doc["groups"]] == ["Coming up", "Waiting", "left out, by what kind of file the row is in"]  # fmt: skip
+
+
+def test_sift_leaves_out_the_kinds_it_is_told_and_only_those(tmp_path):
+    root = make(tmp_path / "repo" if (tmp_path / "repo").mkdir() is None else tmp_path)
+    report = a_report(tmp_path, [(None, [
+        ("demo/ada/CHARACTER.md:3", "made up"), ("adapters/stdlib/thing/README.md:2", "a card"),
+        ("adapters/stdlib/thing/thing.py:5", "code"), ("ADDONS.md:7", "made")])])  # fmt: skip
+    doc, _ = sifted(root, report, "--leave", "card, made")
+    assert rows(doc, None) == {
+        "demo/ada/CHARACTER.md:3": "made up",
+        "adapters/stdlib/thing/thing.py:5": "code",
+    }
+    assert rows(doc, "left out, by what kind of file the row is in") == {
+        "made": "1 row in 1 file",
+        "card": "1 row in 1 file",
+    }
+    assert list(rows(doc, "left out, by what kind of file the row is in")) == [
+        "made",
+        "card",
+    ], "in the order the kinds are tried"
+    doc, _ = sifted(root, report, "--leave", "idea")
+    assert (
+        doc["said"] == "digest's 4 rows: 4 kept, 0 left out"
+        and rows(doc, "left out, by what kind of file the row is in") == {}
+    )
+    for bad, why in ((["--leave", "nope"], "names no kind: nope"), (["--leave", ""], "names no kind: nothing"),
+                     (["--leave", "test,sauce"], "names no kind: sauce")):  # fmt: skip
+        got = run("sift", "--of", str(report), "--root", str(root), *bad)
+        assert got.returncode == 2 and why in got.stderr, bad
+
+
+def test_a_row_is_at_a_file_by_its_path_or_its_path_and_line():
+    files = {"a/b.py", "c.md", "odd:name.txt"}
+    for where, want in (("a/b.py", "a/b.py"), ("a/b.py:12", "a/b.py"), ("a/b.py:12:3", "a/b.py"),
+                        ("c.md:1", "c.md"), ("odd:name.txt:4", "odd:name.txt"), ("a/b.py:x", None),
+                        ("proposal:abc", None), ("a/b.py:1:2:3", None), ("", None), ("z.py:1", None)):  # fmt: skip
+        assert kinds.file_of(where, files) == want, where
+
+
+def test_sift_of_a_report_with_no_rows_is_empty_and_of_no_report_is_refused(tmp_path):
+    root = make(tmp_path / "repo" if (tmp_path / "repo").mkdir() is None else tmp_path)
+    doc, code = sifted(root, a_report(tmp_path, [("Coming up", [])], addon="xref"))
+    assert (
+        code == 0
+        and doc["state"] == "empty"
+        and doc["said"] == "xref has no rows to sift"
+    )
+    not_json = tmp_path / "not.json"
+    not_json.write_text("digest: populated, 3 coming up\n")
+    no_groups = tmp_path / "list.json"
+    no_groups.write_text("[1, 2]")
+    for argv, why in (
+        (["sift"], "usage: kinds.py count"),
+        (["sift", "--root", str(root)], "usage: kinds.py count"),
+        (["sift", "--of", str(tmp_path / "absent.json")], "no report at"),
+        (["sift", "--of", str(not_json), "--root", str(root)], "is not a report"),
+        (
+            ["sift", "--of", str(no_groups), "--root", str(root)],
+            "is not a report: it has no groups",
+        ),
+        (["sift", "--of", str(not_json), "extra"], "usage: kinds.py count"),
+        (["count", "--of", str(not_json)], "usage: kinds.py count"),
+        (["count", "--leave", "test"], "usage: kinds.py count"),
+    ):
+        got = run(*argv)
+        assert got.returncode == 2 and why in got.stderr and got.stdout == "", argv
+
+
+def test_the_sifted_text_is_the_report_its_json_holds(tmp_path):
+    root = make(tmp_path / "repo" if (tmp_path / "repo").mkdir() is None else tmp_path)
+    report = a_report(
+        tmp_path,
+        [("Coming up", [("kernel.py:1", "x"), ("demo/ada/CHARACTER.md:3", "y")])],
+    )
+    doc, _ = sifted(root, report)
+    text = run("sift", "--of", str(report), "--root", str(root)).stdout
+    assert text == kinds.report_text(doc) + "\n"
+    assert (
+        text.splitlines()[0] == "kinds: populated, digest's 2 rows: 1 kept, 1 left out"
+    )

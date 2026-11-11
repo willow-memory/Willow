@@ -2,6 +2,7 @@
 
     python adapters/stdlib/kinds/kinds.py count [--json] [--root DIR]
     python adapters/stdlib/kinds/kinds.py of PATH... [--json] [--root DIR]
+    python adapters/stdlib/kinds/kinds.py sift --of REPORT [--leave KIND,...] [--json] [--root DIR]
 
 A repository holds several kinds of thing in one folder: what was written
 to be read, what a script made from that, tests, made-up data, ideas not
@@ -29,6 +30,14 @@ told to ignore. `of` says each named file's kind and what says so, a line
 each. `--root DIR` reads another checkout; `--json` prints the report as one
 JSON object.
 
+`sift` takes a report another add-on printed, as JSON, and leaves out the
+rows whose file is of a kind named in `--leave`: tests, fixtures, made-up
+people's files and frozen ones unless told otherwise. A report on this
+repo's folder is mostly about those, since most dated, quoted and numbered
+lines here are examples. What is left is what the repo says of itself, and
+a last group counts what was left out, kind by kind. A row that names no
+file of the repo is kept.
+
 It reads the repo and writes nothing. Exit codes, the kernel's: 0 every
 file asked about has a kind; 42 some have none, and they are listed, or git
 couldn't list the files; 2 refused (a bad command line, a `--root` that is
@@ -50,7 +59,13 @@ sys.path.insert(0, str(ROOT))
 import kernel  # noqa: E402
 
 NAME = "kinds"
-USAGE = "usage: kinds.py count [--json] [--root DIR] | kinds.py of PATH... [--json] [--root DIR]"
+USAGE = (
+    "usage: kinds.py count [--json] [--root DIR] | kinds.py of PATH... [--json] [--root DIR]"
+    " | kinds.py sift --of REPORT [--leave KIND,...] [--json] [--root DIR]"
+)
+#: The kinds `sift` leaves out unless told: files that are, by what says so,
+#: not this repo speaking of itself.
+LEAVE = ("test", "fixture", "made-up", "frozen")
 
 #: Each kind, in the order they are tried, and what says a file is one.
 KINDS = (
@@ -277,36 +292,125 @@ def named(paths: list[str], known: dict) -> dict:
     return report(NAME, "populated", said, [(None, rows)])
 
 
-def args_of(argv: list[str]) -> tuple[bool, Path, list[str]]:
-    """(as JSON, the root, the paths asked of: none for `count`)."""
-    if not argv or argv[0] not in ("count", "of"):
+def file_of(where: str, files: set[str]) -> str | None:
+    """The repo's file a report's row is at, or None when it names none:
+    the row's where, or its where less a `:line` or `:line:col`."""
+    cut = where
+    for _ in range(3):
+        if cut in files:
+            return cut
+        head, sep, last = cut.rpartition(":")
+        if not sep or not last.isdigit():
+            return None
+        cut = head
+    return None
+
+
+def sift(doc: dict, known: dict, files: list[str], leave: tuple[str, ...]) -> dict:
+    """A report with the rows left out whose file is one of the kinds in
+    `leave`, each group as it was, and a last group saying how many rows
+    were left out, kind by kind. A row that names no file of the repo stays."""
+    have = set(files)
+    groups, out = [], {k: [0, set()] for k, _ in KINDS if k in leave}
+    rows = kept = 0
+    for g in doc.get("groups", []):
+        stay = []
+        for r in g.get("rows", []):
+            rows += 1
+            f = file_of(str(r.get("where", "")), have)
+            kind = known[f][0] if f in known else None
+            if kind in out:
+                out[kind][0] += 1
+                out[kind][1].add(f)
+            else:
+                stay.append((str(r.get("where", "")), str(r.get("what", ""))))
+        kept += len(stay)
+        groups.append((g.get("name"), stay))
+    left = [
+        (
+            k,
+            f"{n} row{'' if n == 1 else 's'} in {len(fs)} file{'' if len(fs) == 1 else 's'}",
+        )
+        for k, (n, fs) in out.items()
+        if n
+    ]
+    whose = str(doc.get("addon", "a report"))
+    if not rows:
+        return report(NAME, "empty", f"{whose} has no rows to sift", [])
+    said = f"{whose}'s {rows} row{'' if rows == 1 else 's'}: {kept} kept, {rows - kept} left out"
+    return report(
+        NAME,
+        "populated",
+        said,
+        [*groups, ("left out, by what kind of file the row is in", left)],
+    )
+
+
+def args_of(argv: list[str]) -> dict:
+    """The verb, whether as JSON, the root, the paths asked of (`of`), and
+    for `sift` the report's file and the kinds to leave out."""
+    if not argv or argv[0] not in ("count", "of", "sift"):
         raise ValueError(USAGE)
-    as_json, root, paths, it = False, ROOT, [], iter(argv[1:])
+    got: dict = {
+        "verb": argv[0],
+        "json": False,
+        "root": ROOT,
+        "paths": [],
+        "of": None,
+        "leave": LEAVE,
+    }
+    it = iter(argv[1:])
     for a in it:
         if a == "--json":
-            as_json = True
+            got["json"] = True
         elif a == "--root":
             given = next(it, "")
-            root = Path(given)
-            if not given or not root.is_dir():
+            got["root"] = Path(given)
+            if not given or not got["root"].is_dir():
                 raise ValueError(
                     f"refused: --root {given or 'with no folder'} is not a folder"
                 )
-        elif a.startswith("-"):
+        elif a == "--of" and argv[0] == "sift" and got["of"] is None:
+            got["of"] = Path(next(it, ""))
+            if not got["of"].is_file():
+                raise ValueError(f"refused: no report at {got['of']}")
+        elif a == "--leave" and argv[0] == "sift":
+            got["leave"] = tuple(
+                k.strip() for k in next(it, "").split(",") if k.strip()
+            )
+            strange = [k for k in got["leave"] if k not in dict(KINDS)]
+            if strange or not got["leave"]:
+                raise ValueError(
+                    f"refused: --leave names no kind: {', '.join(strange) or 'nothing'}"
+                )
+        elif a.startswith("-") or argv[0] != "of":
             raise ValueError(USAGE)
         else:
-            paths.append(a.rstrip("/"))
-    if (argv[0] == "of") != bool(paths):
+            got["paths"].append(a.rstrip("/"))
+    if (argv[0] == "of") != bool(got["paths"]) or (argv[0] == "sift") != (
+        got["of"] is not None
+    ):
         raise ValueError(USAGE)
-    return as_json, root, paths
+    return got
 
 
 def main(argv: list[str]) -> int:
     try:
-        as_json, root, paths = args_of(argv)
-    except ValueError as why:
-        print(why, file=sys.stderr)
+        got = args_of(argv)
+        doc = json.loads(got["of"].read_text(encoding="utf-8")) if got["of"] else None
+        if doc is not None and not (
+            isinstance(doc, dict) and isinstance(doc.get("groups"), list)
+        ):
+            raise ValueError(f"refused: {got['of']} is not a report: it has no groups")
+    except (ValueError, UnicodeDecodeError) as why:
+        print(
+            why
+            if str(why).startswith(("refused", "usage"))
+            else f"refused: {got['of']} is not a report: {why}",
+            file=sys.stderr,
+        )
         return kernel.REFUSED
+    as_json, root, paths = got["json"], got["root"], got["paths"]
     files = tracked(root)
     if files is None:
         say(report(NAME, "unreachable", f"git couldn't list the files of {root}", []), as_json)  # fmt: skip
@@ -316,6 +420,9 @@ def main(argv: list[str]) -> int:
         print(f"refused: git doesn't track {stray[0]} here", file=sys.stderr)
         return kernel.REFUSED
     known, unknown = census(root, files)
+    if doc is not None:
+        say(sift(doc, known, files, got["leave"]), as_json)
+        return kernel.ALIVE
     say(named(paths, known) if paths else whole(files, known, unknown), as_json)
     asked = paths or files
     waits = unknown or any(f not in known for f in asked)
