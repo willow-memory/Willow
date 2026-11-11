@@ -179,7 +179,7 @@ def writes_record(name: str) -> bool | None:
     for kind in ("stdlib", "deps"):
         card = HERE.parents[1] / kind / name / "README.md"
         if card.is_file():
-            head = card.read_text(encoding="utf-8").split("-->", 1)[0]
+            head = card.read_text(encoding="utf-8").partition("-->")[0]
             line = re.search(r"^writes: (.+)$", head, flags=re.M)
             return bool(line) and "record" in [
                 w.strip() for w in line.group(1).split(",")
