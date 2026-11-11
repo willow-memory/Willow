@@ -2391,6 +2391,13 @@ willow/
 │   │       └── node_modules/
 │   │           └── evil-pkg/
 │   │               └── package.json  a postinstall that pipes a remote script to a shell
+│   ├── shared-runs/          a plan for a study, nothing frozen: simulations on machines nobody chose, sharing one memory, run by a script
+│   │   └── README.md         the claim, eight proposed rules, a session led by a script, how it could be wrong, what waits before the freeze
+```
+
+#### demo/, from small-models/
+
+```
 │   ├── small-models/         Gemma 3 and Qwen2.5 on willow's own cards and teodora's files, and one box of it all
 │   │   ├── README.md         what was tried, what came of it, the box, what asking it found
 │   │   ├── SESSION.json      the session that ran it, by its first bytes and their SHA-256, never its text
@@ -2417,11 +2424,6 @@ willow/
 │   │       ├── weeknote-gemma-teodora.json  a this-week note the model wrote
 │   │       ├── weeknote-qwen-teodora.json  a this-week note the model wrote
 │   │       └── weeknote2-qwen-teodora.json  the same, five lines kept a chunk
-```
-
-#### demo/, from soil-phys-001/
-
-```
 │   ├── soil-phys-001/
 │   │   ├── fetch.py          the study's sources, fetched again and held to their hashes
 │   │   ├── FROZEN.json       the pre-registration: the key, sources, runner, rules and tools by SHA-256
@@ -2447,6 +2449,11 @@ willow/
 │   │       ├── record-2.jsonl  a copy of run 2's record, without its key
 │   │       ├── run-3.json    the third run's, from freeze 3: every rule held
 │   │       └── record-3.jsonl  a copy of run 3's record, without its key
+```
+
+#### demo/, from teodora/
+
+```
 │   ├── teodora/              built blind, from a different line of work
 │   │   ├── make_life.py
 │   │   ├── CHARACTER.md
