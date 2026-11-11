@@ -1718,6 +1718,10 @@ willow/
 │   │   │   ├── red_on_main.py A pull request's failing checks held to main's last run: red there too is not the pull request's, green there is
 │   │   │   ├── test_red_on_main.py
 │   │   │   └── README.md     its card
+│   │   ├── repo-digest/
+│   │   │   ├── repo_digest.py what this repo needs from you, and the order its add-ons build in
+│   │   │   ├── test_repo_digest.py
+│   │   │   └── README.md     its card
 │   │   ├── restack/
 │   │   │   ├── restack.py    your branches back on top of main, the repo's own conflicts settled
 │   │   │   ├── test_restack.py
@@ -1734,15 +1738,15 @@ willow/
 │   │   │   ├── skim.py       a made list held to how a person reads it: a heading a screen, a line a look, a name to jump to
 │   │   │   ├── test_skim.py
 │   │   │   └── README.md     its card
+```
+
+#### adapters/stdlib/, from test-impact/
+
+```
 │   │   └── test-impact/
 │   │       ├── impact.py     which of this repo's checks a change can reach, closest first, in ci's gate names
 │   │       ├── test_impact.py
 │   │       └── README.md
-```
-
-#### adapters/, from deps/
-
-```
 │   └── deps/                 add-ons that need something installed
 │       ├── README.md         what one must declare: pins, floors, licences, network
 │       ├── code-shape/

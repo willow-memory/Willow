@@ -793,6 +793,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "ready": ("ready.py", ["steps"]),
     "red-on-main": ("red_on_main.py", ["--pr", "{box}", "--main", "{box}"]),
     "renewals": ("renewals.py", ["--box", "{box}", *NOW]),
+    "repo-digest": ("repo_digest.py", ["page"]),
     # a list naming no owner/repo builds nothing, before any clone: no network
     "repo-pile": ("repo_pile.py", ["build", "--to", "{tmp}/base", "--repos",
                                    "{pile}/garden.md", "--key", "{tmp}/base.key"]),

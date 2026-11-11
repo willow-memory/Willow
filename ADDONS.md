@@ -2090,6 +2090,9 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - <a id="red-on-main"></a>[**red-on-main**](adapters/stdlib/red-on-main/) \
   A pull request's failing checks held to main's last run: red there too is not the pull request's, green there is. \
   *new* `no-install` `offline` `pull` `request` · near: against, ci-bets, ci-baseline
+- <a id="repo-digest"></a>[**repo-digest**](adapters/stdlib/repo-digest/) \
+  One page of what this repo needs from you: files nothing declares, a ring in what add-ons use, ideas waiting, and the order they build in. \
+  Uses kinds. *new* `no-install` `offline` `digest` `build` · near: readme, across, stack
 - <a id="restack"></a>[**restack**](adapters/stdlib/restack/) \
   Main merged into your branches, conflicts in the files the repo makes or only adds to settled by its own tools, and any other left to you. \
   *new* `no-install` `offline` `branch` `conflicts` `git` · near: restack-open, similar, oracle-text
