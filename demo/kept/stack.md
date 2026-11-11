@@ -104,8 +104,20 @@
 # to is still the pinned one, so it is never checked against itself.
 - thesis -- --box {box} <repo>/docs/design/one-shape.md
 
+## what the folder says it needs, less what isn't its own
+# want 28: what the record's own page says this folder needs from its owner.
+# The date is pinned, so the same run says the same thing.
+- digest -- --box {box} --now 2026-11-11
+# want 29: that page again, less the rows that are in tests, fixtures, made-up
+# people's files and frozen ones: what is left is the repository's own.
+# Needs step 30's report.
+- kinds -- sift --of {30.json} --root <pile>
+# want 30: the same sift of the references that don't hold, most of which
+# are file names a test makes up. Needs step 13's report.
+- kinds -- sift --of {13.json} --root <pile>
+
 ## what the run leaves behind it
-# want 28: the run itself on the record, which the first 28 steps left two
+# want 31: the run itself on the record, which the first 28 steps left two
 # rows on: for each step that has ended, how it was asked, how it ended and
 # the hash of what it printed. Last, so every step before it has ended.
 - stack-row -- --box {box} --run <scratch>/run

@@ -46,7 +46,7 @@
 23 tip-pin: exit 0, 2 lines
 24 backup: started (39faf2cf)
 24 backup: exit 0, 3 lines
-25 restore-drill: started (f1e18cd4, fed 945712e5)
+25 restore-drill: started (f1e18cd4, fed c4d3bf53)
 25 restore-drill: exit 0, 1 line
 26 three-two-one: started (a2f840c3)
 26 three-two-one: exit 42, 3 lines, flagged
@@ -56,6 +56,12 @@
 28 history: exit 0, 4 lines, mass 3
 29 thesis: started (9f7a1be1, fed 99c75ef7)
 29 thesis: exit 42, 85 lines, mass 83, populated, flagged
-30 stack-row: started (d6330253)
-30 stack-row: exit 0, 1 line
-done: 6 of 30 steps flagged
+30 digest: started (79d43a14)
+30 digest: exit 0, 27 lines, mass 26
+31 kinds: started (2b5bf2c6)
+31 kinds: exit 0, 17 lines, mass 15
+32 kinds: started (c39dbf6c)
+32 kinds: exit 0, 65 lines, mass 62
+33 stack-row: started (d6330253)
+33 stack-row: exit 0, 1 line
+done: 6 of 33 steps flagged

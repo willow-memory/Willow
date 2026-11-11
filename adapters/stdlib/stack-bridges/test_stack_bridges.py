@@ -223,7 +223,7 @@ def test_on_the_repos_own_stacks_every_bridge_holds():
     doc = json.loads(kept.stdout)
     assert (
         kept.returncode == 0
-        and doc["said"] == "30 steps, 25 bridges, 3 deep; 11 rest on no other"
+        and doc["said"] == "33 steps, 28 bridges, 3 deep; 11 rest on no other"
     )
     assert rows(doc, "what each step takes")["07 glance"] == "06 scan: its output"
     assert (
