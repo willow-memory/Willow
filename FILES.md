@@ -2459,11 +2459,13 @@ willow/
 │   │   │   │   └── verify.txt        what the kernel said of the scratch record the dry verdicts are rows on
 │   │   │   ├── dry-plan.json     the dry run's sweep: six made-up setups under nonsense names
 │   │   │   ├── dry.py            the whole plan on one machine, only for a plan that says it is a dry one
+│   │   │   ├── FROZEN.json       the study's freeze: each frozen file's SHA-256, the rules and their thresholds
 │   │   │   ├── judge.py          the study's nine rules, each held to what the machines kept
 │   │   │   ├── plan.json         the study's sweep: 220 jobs over 22 trajectories, its machines, seeds and agents
 │   │   │   ├── runner.py         what one machine does: every job alone, its share with the memory, a check, or the project as written
 │   │   │   ├── starts.json   each trajectory's start as exact numbers, built once and never stepped
 │   │   │   ├── sweep.py          a plan's jobs, the deal, each trajectory's owner, the predicted saving and the seeded draw
+│   │   │   ├── test_frozen.py    every frozen file is the bytes it was, and the rules frozen are the rules judged
 │   │   │   └── test_study.py     the deal, the memory against a job alone, each rule failing when broken, the dry run kept
 │   │   ├── trial-1/          a first try of the blind handover, on demo/kept's run: what was fixed before, what each agent said
 │   │   │   ├── a-account-struck.txt that account after the strike, which took nothing out: what the last agent was given
