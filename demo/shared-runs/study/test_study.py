@@ -187,6 +187,12 @@ def test_the_dry_run_runs_only_a_plan_that_says_it_is_one(tmp_path, capsys):
     assert "dry" not in proposed
     assert [c["name"] for c in proposed["check_machines"]] == ["kaggle-check", "laptop", "cloud-session"]  # fmt: skip
     assert proposed["project"]["numpy"] == "2.1.3"
+    assert [a["name"] for a in proposed["agents"]] == ["small", "larger"]
+    starts = json.loads((HERE / "starts.json").read_text())
+    assert sorted(starts) == sorted(t["name"] for t in proposed["trajectories"])
+    for start in starts.values():
+        assert len(start["masses"]) == len(start["r"]) == len(start["v"])
+        float.fromhex(start["dt"])
     args = ["--work", str(tmp_path / "w"), "--toy"]
     assert dry.main(["--plan", str(HERE / "plan.json"), *args]) == 2
     assert "does not say it is a dry one" in capsys.readouterr().err

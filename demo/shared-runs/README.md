@@ -62,7 +62,7 @@ measurement, and is reported as one.
 |---|---|
 | R1, the machines agree | every job gives the same bytes on every machine that ran it, and every kept state stepped again comes out the same, on at least three kinds of processor, however that is got |
 | R2, the project as it is written, measured | no threshold: the share of jobs whose bytes agree across machines with the project's gravity left as its author wrote it, with where the first difference falls |
-| R3, memory saves the work it should | the steps not stepped, as a share of the baseline's, are within two points of the share the sweep's shared beginnings predict, worked out before the run |
+| R3, memory saves the work it should | the steps not stepped, as a share of the baseline's, are within two points of the share the sweep's shared beginnings predict: worked out before the run, and then cut at each halt the baseline, which has no memory, finds |
 | R4, memory serves only what a run would give | of a tenth of served results, chosen by a seeded draw and run afresh, every one is the same bytes |
 | R5, what a check costs, measured | no threshold: the steps it takes to step one kept state again from the one before it, at the median |
 | R6, a halt is not repeated | no trajectory that began and then halted is stepped into its halt a second time; a setup refused before a first step never ran, and is counted apart |
@@ -541,7 +541,9 @@ is frozen, and nothing below is a result.
 - R1, R5 and R6 as reworded above; R5 is a measurement, in steps.
 - R3's two points and R4's tenth stand as first proposed.
 - For the blind half a script makes the reports and the key and holds the
-  account to them. One agent answers, run as two models.
+  account to them. One agent answers, run as two models, named in the
+  plan: the smallest and the mid-size Claude model the judging session
+  offers, each given the brief as its whole prompt.
 
 **The scripts**, in [study/](study/):
 
@@ -553,13 +555,19 @@ is frozen, and nothing below is a result.
 | [account.py](study/account.py) | the reports, an agent's whole input, the 21 questions and their key, and an agent's answers held to it |
 | [dry.py](study/dry.py) | all of it on one machine, and only for a plan that says it is a dry one |
 
-**The sweep, proposed**, in [study/plan.json](study/plan.json): 220 jobs,
+**The sweep**, in [study/plan.json](study/plan.json): 220 jobs,
 22 trajectories of the project's own bodies each run to ten lengths, five
 machines, two rounds, a state kept every 100 steps. Alone it is 1,481,810
 steps; each trajectory stepped once is 396,000; so the predicted saving is
 73.3%. In the order the jobs are dealt it is 403,390 steps, 72.8%: a short
 job dealt after a longer one steps on from the last kept state before it.
-That is counted from the plan, not run. No setup in it has been stepped.
+That is counted from the plan, not run. Each start is in
+[study/starts.json](study/starts.json) as exact numbers, built by the
+project's own code and never stepped: the same file under NumPy 2.1.3 and
+2.5.3. No setup has been stepped for this study. One start, the Sun with
+Earth and Jupiter, is the one [demo/kept](../kept/README.md) ran three
+orbits of through the star-system add-on, with the project as written;
+what was read there was how well it kept its energy, and no bytes.
 Five are crowded on purpose and whether any halts is not known: if none
 does, R6 is not tested. One has a step too coarse to take, and is refused
 by arithmetic.
@@ -595,8 +603,8 @@ asked again, since their input's last line had changed.
   halts.** A halt shortens the baseline and the shared run both. The plan
   can't say where a trajectory halts, so the judge takes it from the
   baseline, which has no memory, and holds the shared run to the share
-  that leaves. That is a change to R3 as it was agreed, and the
-  maintainer's to accept or cut.
+  that leaves. That was a change to R3 as it was first agreed; the
+  maintainer accepted it on 2026-11-11, and the rule above says it.
 - **The first proposed lengths all fell on the spacing**, which would have
   made R3 true by arithmetic. They no longer do, and a test holds that.
 - The dry run can't be pointed at the study's sweep: it refuses a plan

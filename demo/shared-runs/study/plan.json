@@ -1,5 +1,5 @@
 {
- "about": "The study's sweep, proposed and not frozen: 220 jobs, each a trajectory of the project's own bodies run to one of ten lengths. No setup here has been stepped. Whether a crowded one halts is not known; the coarse one is refused by its step alone.",
+ "about": "The study's sweep: 220 jobs, each a trajectory of the project's own bodies run to one of ten lengths. Whether a crowded one halts was not known when this was frozen; the coarse one is refused by its step alone.",
  "project": {
   "address": "https://github.com/AllHailSeizure/science_bitch",
   "commit": "2fae2f2c4981db7903dfbd9f094ce35718875800",
@@ -29,6 +29,10 @@
   {"name": "kaggle-check", "what": "a fresh Kaggle notebook, given both rounds' outputs"},
   {"name": "laptop", "what": "the maintainer's laptop"},
   {"name": "cloud-session", "what": "the cloud session the plan was written in: an Intel with AVX-512, where Kaggle's Intel had none. It was chosen, so it only checks, and steps no job of the shared run"}
+ ],
+ "agents": [
+  {"name": "small", "model": "haiku", "what": "the smallest Claude model the judging session offers, given the brief as its whole prompt"},
+  {"name": "larger", "model": "sonnet", "what": "the mid-size Claude model the judging session offers, given the same"}
  ],
  "trajectories": [
   {"name": "sun-earth", "star": "sun", "planets": ["earth"]},
