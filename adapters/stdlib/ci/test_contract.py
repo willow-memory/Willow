@@ -765,6 +765,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "people": ("people.py", ["--box", "{box}"]),
     "persona-card": ("persona_card.py", ["--box", "{box}", "--from", "{pile}/garden.md", *NOW]),
     "pets": ("pets.py", ["--box", "{box}"]),
+    "pieces": ("pieces.py", ["--box", "{box}"]),
     "pii-audit": ("pii_audit.py", ["--box", "{box}"]),
     "pile-build": ("pile_build.py", ["--from", "{pile}", "--to", "{tmp}/pile.sqlite"]),
     "pile-gold": ("pile_gold.py", ["--box", "{box}", "--questions", "{pile}/garden.md", *NOW]),

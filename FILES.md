@@ -599,6 +599,10 @@ willow/
 │   │   │   ├── misquote.py   a quote almost in your files: the closest passage, and what differs
 │   │   │   ├── test_misquote.py
 │   │   │   └── README.md
+│   │   ├── pieces/
+│   │   │   ├── pieces.py     Your folder's passages a folder at a time, the same as the kernel reads them, so a big folder is never held in memory all at once
+│   │   │   ├── test_pieces.py
+│   │   │   └── README.md     its card
 │   │   ├── pile-gold/
 │   │   │   ├── pile_gold.py   your sealed answers as a test of the search, scored as recall at five
 │   │   │   ├── test_pile_gold.py
@@ -619,15 +623,15 @@ willow/
 │   │   │   ├── quote_check.py is this exact quote in my files, and where
 │   │   │   ├── test_quote_check.py
 │   │   │   └── README.md
+```
+
+#### adapters/stdlib/, from quotes/
+
+```
 │   │   ├── quotes/
 │   │   │   ├── quotes.py     every quote in a document checked: as written, almost (and what differs), or not there
 │   │   │   ├── test_quotes.py
 │   │   │   └── README.md
-```
-
-#### adapters/stdlib/, from route/
-
-```
 │   │   ├── route/
 │   │   │   ├── kinds.txt
 │   │   │   ├── route.py      A question sent to the step whose job it is, by a file of kinds you can edit

@@ -631,15 +631,18 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - <a id="misquote"></a>[**misquote**](adapters/stdlib/misquote/) \
   A quote that is almost in your files: the closest passage, and the words it adds, drops or changes, so a misquote shows as one. \
   *new* `no-install` `offline` `quote` `drops` · near: quotes, stale, quote-check
+- <a id="pieces"></a>[**pieces**](adapters/stdlib/pieces/) \
+  Your folder's passages a folder at a time, the same as the kernel reads them, so a big folder is never held in memory all at once. \
+  *new* `no-install` `offline` · near: pile-store, surprise, scan
 - <a id="pile-gold"></a>[**pile-gold**](adapters/stdlib/pile-gold/) \
   Your approved answers used as a test: each question asked again, scored by how often search puts its passage in the top five. \
   Uses pile-rank, scan. *box* `no-install` `offline` `search` `pile` · near: again, pile-store, pile-sweep
-- <a id="pile-rank"></a>[**pile-rank**](adapters/stdlib/pile-rank/) \
-  Finds passages that use your folder's own phrases ("sourdough bread"), not just the separate words, ranked without any AI model. \
-  Uses pile-store. *bot* `no-install` `offline` `phrases` `ranked` `pile` · near: pile-rungs, pile-serve, all
 
 #### Tools you run yourself, p to w
 
+- <a id="pile-rank"></a>[**pile-rank**](adapters/stdlib/pile-rank/) \
+  Finds passages that use your folder's own phrases ("sourdough bread"), not just the separate words, ranked without any AI model. \
+  Uses pile-store. *bot* `no-install` `offline` `phrases` `ranked` `pile` · near: pile-rungs, pile-serve, all
 - <a id="pile-rungs"></a>[**pile-rungs**](adapters/stdlib/pile-rungs/) \
   Tries the strict word match first, then your folder's phrases, and says which one found the answer and why the others didn't. \
   Uses pile-rank. *bot* `no-install` `offline` `matched` `phrases` `pile` · near: pile-rank, pile-serve, pile-store

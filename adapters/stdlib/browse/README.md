@@ -8,7 +8,7 @@ writes: record
 network: loopback
 role: ways
 tags: everyday
-looks-for: boxes-here, digest, fair-merge, index-cache, look, projects, say, scan, stack, why-not, words-de, words-es, words-fr, words-pt
+looks-for: boxes-here, digest, fair-merge, index-cache, look, pieces, projects, say, scan, stack, why-not, words-de, words-es, words-fr, words-pt
 -->
 # browse
 

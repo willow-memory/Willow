@@ -726,6 +726,30 @@ class Willow:
         """What this project is called: its folder's name."""
         return box_name(self.box.resolve())
 
+    def pile(self) -> Path:
+        return Path(kernel.config(self.box)["pile"])
+
+    def cited(self, ids: set[str]) -> dict[str, dict]:
+        """The passages of the open box's pile with these ids, read a folder
+        at a time by the pieces add-on, so a big pile is never all held at
+        once; the kernel's whole read when pieces isn't here."""
+        if not ids:
+            return {}
+        pc = sibling("pieces", "pieces")
+        found = {}
+        for c in pc.passages(self.pile()) if pc else kernel.chunks(self.pile()):
+            if c["id"] in ids:
+                found[c["id"]] = c
+                if len(found) == len(ids):
+                    break
+        return found
+
+    def of_file(self, path: str) -> list[dict]:
+        """One file's passages, and only that file read (pieces), or the
+        kernel's whole read when pieces isn't here."""
+        pc = sibling("pieces", "pieces")
+        return pc.of_file(self.pile(), path) if pc else kernel.chunks(self.pile())
+
     def owed(self) -> tuple[list[str], list[str]]:
         """(the suggestions waiting for a yes or a no, the record's breaks)."""
         rows, breaks = kernel.read(self.box / "record.jsonl")
@@ -871,7 +895,7 @@ class Willow:
                 )
                 return at, f"<p class=kick>What the run kept</p><div class=card>{near}</div>"  # fmt: skip
         best = None
-        for c in kernel.chunks(Path(kernel.config(self.box)["pile"])):
+        for c in self.of_file(path):
             if c["path"] == path and c["line"] <= n:
                 if best is None or c["line"] > best["line"]:
                     best = c
@@ -1288,9 +1312,11 @@ class Willow:
                 "Waiting for you",
                 "<p class=muted>Nothing is waiting for your approval.</p>",
             )
-        pile = {
-            c["id"]: c for c in kernel.chunks(Path(kernel.config(self.box)["pile"]))
+        props = {
+            subj: json.loads((self.box / "proposals" / f"{subj[9:]}.json").read_text())
+            for subj in subjects
         }
+        pile = self.cited({c for prop in props.values() for c in prop["cites"]})
         n = len(subjects)
         body = [
             f"<p><strong>{n} waiting.</strong> Each was suggested by something you let "
@@ -1298,7 +1324,7 @@ class Willow:
             "now on.</p>"
         ]
         for subj in subjects:
-            prop = json.loads((self.box / "proposals" / f"{subj[9:]}.json").read_text())
+            prop = props[subj]
             cites = "".join(
                 passage(f"{pile[c]['path']}:{pile[c]['line']}", pile[c]["text"])
                 if c in pile

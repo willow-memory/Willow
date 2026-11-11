@@ -49,6 +49,7 @@ import json
 import calendar
 import re
 import sys
+import types
 from datetime import date, timedelta
 from pathlib import Path
 
@@ -225,6 +226,32 @@ def coming(pile: list[dict], today: date, days: int) -> list[tuple]:
     return sorted(once | set(repeating(pile, today, end)))
 
 
+def pieces():
+    """The pieces add-on, which reads a pile a folder at a time, or None
+    when it isn't beside this one."""
+    path = Path(__file__).resolve().parents[1] / "pieces" / "pieces.py"
+    if not path.is_file():
+        return None
+    mod = types.ModuleType("coming_up_pieces")
+    mod.__file__ = str(path)
+    exec(compile(path.read_text(encoding="utf-8"), str(path), "exec"), mod.__dict__)
+    return mod
+
+
+def coming_in(pile: Path, today: date, days: int) -> list[tuple]:
+    """coming() of the whole pile, read a folder at a time when the pieces
+    add-on is beside this one: a file's passages all come in one piece, and
+    every date here is found within its file, so the dates are the same and
+    only those in the window are kept."""
+    pc = pieces()
+    if pc is None:
+        return coming(kernel.chunks(pile), today, days)
+    found: set[tuple] = set()
+    for got in pc.folders(pile):
+        found.update(coming(got, today, days))
+    return sorted(found)
+
+
 def main(argv: list[str]) -> int:
     as_json = "--json" in argv
     argv = [a for a in argv if a != "--json"]
@@ -243,7 +270,7 @@ def main(argv: list[str]) -> int:
         print("refused: not a kernel box; init first", file=sys.stderr)
         return kernel.REFUSED
     today = ymd((opts.get("--now") or kernel.now())[:10].replace("-", ""))
-    hits = coming(kernel.chunks(Path(kernel.config(box)["pile"])), today, int(days))
+    hits = coming_in(Path(kernel.config(box)["pile"]), today, int(days))
     end = today + timedelta(days=int(days))
     if not hits:
         say(
