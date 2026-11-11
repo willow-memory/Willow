@@ -185,8 +185,8 @@ def test_a_graph_kept_as_nodes_and_edges_reads_the_same_way(tmp_path):
     assert text.startswith("code graph: 2 functions\n"), "a built-in has no file"
     assert (
         "run (function)\nfile: mod.py:10\nname: p.mod.run\n"
-        "edges: call builtins.len; call p.mod.Helper.work; import p.mod.Helper\n"
-    ) in text, "each thing reached once, and only calls, imports and inherits"
+        "edges: call builtins.len; import p.mod.Helper; call p.mod.Helper.work\n"
+    ) in text, "each thing reached once, by its name; only calls, imports and inherits"
     assert "work (method)\nfile: mod.py:4\nname: p.mod.Helper.work\nedges: inherit p.mod.Helper\n" in text  # fmt: skip
     assert (
         "Helper (class)" not in text

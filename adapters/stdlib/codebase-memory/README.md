@@ -3,7 +3,7 @@ section: Reading more kinds of files
 line: codebase-memory-mcp's code graph, read from a copy of its SQLite file: each function, what calls it, and its file and line.
 source: new
 added: 2026-10-31
-version: 0.1.0
+version: 0.1.1
 writes: to
 network: none
 role: reads
