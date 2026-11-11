@@ -1,10 +1,12 @@
-# Shared runs: a plan for a study, not yet a study
+# Shared runs: a study, frozen and not yet run
 
-**Status: a plan, written 2026-11-11. Nothing is frozen, nothing has been
-run, and no number below is a result.** Every threshold here is a proposal
-for the maintainer to set or change before the freeze. It becomes a study
-on the day its sources, questions and pass rules are committed alone, as
-[the rules for a study](../../docs/agents/studies.md) say.
+**Status: frozen 2026-11-11, and not run. No number below is a result.**
+The sweep, the scripts, the rules and the questions were committed alone,
+as [the rules for a study](../../docs/agents/studies.md) say; what was
+frozen is in [study/FROZEN.json](study/FROZEN.json). The trials and the
+dry run told of below came before it, and are accounts. Where a section
+says "proposed", the section called "The study as written" says what
+was settled.
 
 It tests, small, the claim the design note
 [one shape, at every size](../../docs/design/one-shape.md) ends on: that
@@ -655,7 +657,12 @@ repository; neither opened a file.
 2. Write the sweep, the predicted saving, the questions and the rules.
    Done, above.
 3. Dry run, with nonsense setups, on one machine here. Done, above.
-4. Freeze, in one commit, alone.
+4. Freeze, in one commit, alone. Done 2026-11-11, in commit `92db883`:
+   [study/FROZEN.json](study/FROZEN.json) holds the sweep, its starts,
+   the scripts, the rules and the questions by SHA-256, and a test holds
+   them to it. With it in that commit are only that test and their two
+   lines in the file tree. From here a change to any of them is a new
+   freeze, with its reason.
 5. The baseline: one notebook, no memory, twice.
 6. The shared run: many notebooks, one dataset.
 7. The check: a fresh notebook that only verifies.

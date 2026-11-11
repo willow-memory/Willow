@@ -2442,12 +2442,12 @@ willow/
 #### demo/, from shared-runs/
 
 ```
-│   ├── shared-runs/          a plan for a study, nothing frozen: simulations on machines nobody chose, sharing one memory, run by a script
+│   ├── shared-runs/          a study, frozen and not yet run: simulations on machines nobody chose, sharing one memory, run by a script
 │   │   ├── chain.py      starts the project, makes each link's handoff, and applies or refuses the step a link offers
 │   │   ├── KEPT.json     what the trials' scripts and agents printed, listed as kept
 │   │   ├── rules.py          the next step of a stack chosen by rule from what its last run said, or that no rule fits
 │   │   ├── same.py       two kept runs of one stack, step by step: asked the same way, printed the same thing
-│   │   ├── study/            the study's scripts and proposed sweep, and its dry run: nothing frozen
+│   │   ├── study/            the study's sweep and scripts, frozen, and the dry run that came before
 │   │   │   ├── account.py        the blind half: the reports, an agent's whole input, the questions and key, and answers held to them
 │   │   │   ├── dry/              what the dry run printed and what two agents sent back; made-up setups, no result
 │   │   │   │   ├── agent-input.txt   an agent's whole input in the dry run: what is asked, the reports, the questions
