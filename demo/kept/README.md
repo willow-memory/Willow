@@ -186,11 +186,11 @@ measuring.
 
 The stack is written as a row and run as one. Read by the stack-bridges
 add-on, it is not one. Of its 30 steps, 11 take nothing any other step
-made. The 24 bridges between the rest go three steps deep at most, from
+made. The 25 bridges between the rest go three steps deep at most, from
 glance down through scan and an index to the reader that wrote its
 folder.
 
-So it could have run in four rounds: 11 steps at once, then 14, then 3,
+So it could have run in four rounds: 11 steps at once, then 13, then 4,
 then 2. It ran one step after another for about a minute, and two and a
 half more for the last. That is the conversation's second half in small:
 the work was shareable as written, and nothing in how it was run knew.

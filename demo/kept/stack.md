@@ -27,9 +27,10 @@
 # so the words list is written from what was missed. Needs step 6's answers.
 - why-not -- --box {box} --questions <scratch>/questions.txt --of {06}
 # want 7: the prose is 42,000 passages and the commits 6,500, so one ranked
-# list is mostly prose. Each of the three ranked on its own and dealt in turns.
-# Needs steps 1 and 2's folders.
-- fair-merge -- --from <pile> --from {box}-code --from {box}-commits --top 9 "a result kept so it is not computed again"
+# list is mostly prose. Each of the three ranked on its own and dealt in turns,
+# asked of the kept indexes so nothing is read again, each saying the words
+# of the question no passage of it holds. Needs steps 3 to 5: their indexes.
+- fair-merge -- --index <scratch>/kept/index-repo --index <scratch>/kept/index-code --index <scratch>/kept/index-commits --words <scratch>/words.txt --top 9 "a result kept so it is not computed again"
 # want 8: when the repository first said it. Asked of the box, so the words list reads.
 - first-mention -- --box {box} "cached"
 
