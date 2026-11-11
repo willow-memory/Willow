@@ -1,0 +1,1 @@
+`stack-bridges`: which steps of a stack take what an earlier step made (its kept output, or a place it was told to write to), the order that leaves the steps in, and a step that takes what none before it made; on the 29 steps of demo/kept, 14 bridges, three deep, with 19 steps resting on no other

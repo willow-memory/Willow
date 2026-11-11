@@ -66,7 +66,8 @@ does load the other. Whether that should stand is the maintainer's to say.
 
 **What it does not see.** Only `uses` is read. A step of a stack that takes
 an earlier step's output is a bridge too, made when the stack is written,
-and no card says it. `looks-for`, which names an add-on used only when it
+and no card says it: [stack-bridges](../stack-bridges/) reads a stack file
+for those. `looks-for`, which names an add-on used only when it
 is there, is not a need and is not counted.
 
 `--root DIR` reads another checkout. `--json` prints

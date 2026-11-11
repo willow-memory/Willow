@@ -1514,6 +1514,16 @@ willow/
 │   │   │   └── README.md
 ```
 
+### adapters/stdlib/: Ways to use it: Tools you run yourself
+
+```
+│   │   ├── stack-bridges/
+│   │   │   ├── example.md    a small stack with five bridges, for reading
+│   │   │   ├── stack_bridges.py which steps of a stack take what an earlier step made, and the order that leaves them in
+│   │   │   ├── test_stack_bridges.py
+│   │   │   └── README.md     its card
+```
+
 ### adapters/stdlib/: Play: What runs on your page
 
 ```

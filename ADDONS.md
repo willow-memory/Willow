@@ -1775,6 +1775,9 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
   A job someone sent you, run in a sandbox over your own folder only once you seal it, its result yours to seal before it goes back. \
   Needs kartikeya, and the bwrap program (bubblewrap), run not linked; Apache-2.0, LGPL-2.0-or-later. Uses share. *new* `needs-install` `offline` · near: ocr,
   pdf, dialect
+- <a id="stack-bridges"></a>[**stack-bridges**](adapters/stdlib/stack-bridges/) \
+  Which steps of a stack take what an earlier step made, the order that leaves them in, and a step that takes what none before it made. \
+  Uses stack. *new* `no-install` `offline` `stack` `order` · near: stack, stack-share, ready
 - <a id="wasi-python"></a>[**wasi-python**](adapters/deps/wasi-python/) \
   A job someone sent you as a Python script, run on CPython for WebAssembly over your folder read-only: one runtime, the same answer anywhere. \
   Needs wasi-python; Apache-2.0. Uses kart, share. *new* `needs-install` `offline` `job` `sent` · near: kart, fast-tests, dialect
