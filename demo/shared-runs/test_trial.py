@@ -193,3 +193,106 @@ def test_what_trial_twos_page_says_is_what_its_kept_files_hold():
         and "08 again: exit 0" in log
         and "10 box-health: exit 42" in log
     )
+
+
+def project_with(tmp_path, steps):
+    """A made-up project: (add-on, args, exit, what it printed) a step."""
+    (tmp_path / "run").mkdir()
+    stack, log = ["## a"], []
+    for place, (name, args, code, text) in enumerate(steps, 1):
+        stack.append(f"- {name} -- {args}")
+        log.append(f"{place:02d} {name}: exit {code}, 1 line")
+        (tmp_path / "run" / f"{place:02d}-{name}.txt").write_text(text)
+    (tmp_path / "stack.txt").write_text("\n".join(stack) + "\n")
+    (tmp_path / "run" / "00-stack.txt").write_text("\n".join(log) + "\n")
+    return tmp_path
+
+
+GLANCE = "glance: populated, 4 questions\n## found nothing\n  float  floats that differ\n  float  floats that differ\n## held whole\n  a  b\n"
+START = [
+    ("code-comments", "mirror --from <pile> --to {box}-code", 0, "wrote 2 files"),
+    ("scan", "scan --index x", 0, "{}"),
+    ("glance", "--of {02}", 42, GLANCE),
+]
+
+
+def test_each_rule_fits_its_own_situation_and_no_other(tmp_path):
+    import rules
+
+    one = (
+        project_with(tmp_path / "one", START)
+        if (tmp_path / "one").mkdir() is None
+        else None
+    )
+    rule, said = rules.next_step(one)
+    assert (
+        rule == "explain"
+        and "step: - why-not -- --box {box} --questions <scratch>/questions.txt --of {02}"
+        in said
+    )
+    two = tmp_path / "two"
+    two.mkdir()
+    held = ("why-not", "--box {box} --questions <scratch>/questions.txt --of {02}", 0,
+            "why-not: empty, your files hold all 1 question; nothing to explain")  # fmt: skip
+    rule, said = rules.next_step(project_with(two, [*START, held]))
+    assert rule == "by-pile"
+    assert (
+        'step: - fair-merge -- --from <pile> --from {box}-code --top 6 "floats that differ"'
+        in said
+    )
+    three = tmp_path / "three"
+    three.mkdir()
+    merged = (
+        "fair-merge",
+        '--from <pile> --from {box}-code --top 6 "floats that differ"',
+        0,
+        "x",
+    )
+    rule, said = rules.next_step(project_with(three, [*START, held, merged]))
+    assert rule is None and said.startswith("no rule fits: 5 steps, 3 rules tried")
+    four = tmp_path / "four"
+    four.mkdir()
+    broken = (
+        "why-not",
+        "--box <pile> --questions q --of {02}",
+        2,
+        "refused: not a kernel box; init first",
+    )
+    rule, said = rules.next_step(project_with(four, [*START, broken]))
+    assert (
+        rule == "repair"
+        and "step: - why-not -- --box {box} --questions q --of {02}" in said
+    )
+    five = tmp_path / "five"
+    five.mkdir()
+    fixed = (
+        "why-not",
+        "--box {box} --questions q --of {02}",
+        0,
+        "why-not: populated, 1 of 1",
+    )
+    rule, _ = rules.next_step(project_with(five, [*START, broken, fixed]))
+    assert rule is None, "repaired, and why-not explained them: nothing left for a rule"
+
+
+def test_a_rule_does_not_fire_on_what_it_was_not_written_for(tmp_path):
+    import rules
+
+    clean = [
+        START[0],
+        START[1],
+        ("glance", "--of {02}", 0, "glance: populated\n## held whole\n  a  b\n"),
+    ]
+    assert rules.next_step(project_with(tmp_path, clean))[0] is None
+    assert rules.found_nothing(GLANCE) == ["floats that differ"]
+    assert rules.found_nothing("## held whole\n  a  b\n") == []
+    other = [
+        dict(
+            place=1,
+            name="ids",
+            args="--box <pile>",
+            exit=2,
+            text="refused: no such file",
+        )
+    ]
+    assert rules.repair(other) is None, "another refusal is not this rule's"
