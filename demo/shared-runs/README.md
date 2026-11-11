@@ -16,7 +16,10 @@ agent reported.
 **A first try of the handover has been run here**, small and not the
 study: three agents, one kept run, twelve closed questions. What was fixed before it is in
 [trial-1/RULES.md](trial-1/RULES.md), and what happened in
-[trial-1/RESULTS.md](trial-1/RESULTS.md).
+[trial-1/RESULTS.md](trial-1/RESULTS.md). A second let three agents build:
+each added a step to a stack from the built add-ons, handed only what the
+last run left. Its rules are in [trial-2/RULES.md](trial-2/RULES.md) and
+what happened in [trial-2/RESULTS.md](trial-2/RESULTS.md).
 
 ## The claim
 

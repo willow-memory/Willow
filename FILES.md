@@ -2391,6 +2391,11 @@ willow/
 │   │       └── node_modules/
 │   │           └── evil-pkg/
 │   │               └── package.json  a postinstall that pipes a remote script to a shell
+```
+
+#### demo/, from shared-runs/
+
+```
 │   ├── shared-runs/          a plan for a study, nothing frozen: simulations on machines nobody chose, sharing one memory, run by a script
 │   │   ├── chain.py      starts the project, makes each link's handoff, and applies or refuses the step a link offers
 │   │   ├── trial-1/          a first try of the blind handover, on demo/kept's run: what was fixed before, what each agent said
@@ -2407,8 +2412,17 @@ willow/
 │   │   │   └── RULES.md      the trial's rules and what will be counted, written before any agent was started
 │   │   ├── trial-2/      a chain of agents building a stack, each handed only what the last run left: fixed before it ran
 │   │   │   ├── brief.txt     what every link is told, above its handoff
+│   │   │   ├── chain.jsonl   what the script wrote as each link's turn ended
 │   │   │   ├── handoff-1.txt the first link's whole page, made by chain.py
-│   │   │   └── RULES.md      what a link may do, what the script refuses, and what will be counted
+│   │   │   ├── handoff-2.txt the second link's whole page
+│   │   │   ├── handoff-3.txt the third link's whole page, with the failed step on it
+│   │   │   ├── log-at-the-end.txt the stack's log when the chain ended
+│   │   │   ├── reply-1.txt   the first link's reply, word for word
+│   │   │   ├── reply-2.txt   the second link's reply, word for word
+│   │   │   ├── reply-3.txt   the third link's reply, word for word
+│   │   │   ├── RESULTS.md    what was counted, a reading of whether each step was the next one needed, and what to hold against it
+│   │   │   ├── RULES.md      what a link may do, what the script refuses, and what will be counted
+│   │   │   └── stack-at-the-end.txt the stack the chain left: seven steps it was given, three it added
 │   │   ├── trial.py          makes the report and the key from a kept run, strikes what an account adds, scores answers
 │   │   ├── test_trial.py
 │   │   └── README.md         the claim, eight proposed rules, a session led by a script, how it could be wrong, what waits before the freeze

@@ -143,3 +143,53 @@ def test_a_reply_is_read_by_its_three_lines_and_the_catalog_is_what_a_stack_can_
     )
     assert "/tmp/" not in page and "/home/" not in page
     assert "hook-handoff: no session before this one." in page
+
+
+def test_what_trial_twos_page_says_is_what_its_kept_files_hold():
+    import chain
+
+    two = TRIAL.parent / "trial-2"
+    turns = [
+        json.loads(line) for line in (two / "chain.jsonl").read_text().splitlines()
+    ]
+    assert [(t["link"], t["model"]) for t in turns] == [
+        ("link-1", "haiku"), ("link-2", "sonnet"), ("link-3", "haiku")]  # fmt: skip
+    assert [t["refused"] for t in turns] == [None, None, None]
+    assert [t["ended"] for t in turns] == ["exit 0", "exit 2", "exit 42"]
+    assert [t["place"] for t in turns] == [8, 9, 10]
+    stack = (two / "stack-at-the-end.txt").read_text()
+    steps = chain.steps_of(stack)
+    assert len(steps) == 10 and [name for name, _ in steps[7:]] == [
+        "again",
+        "why-not",
+        "box-health",
+    ]
+    assert len(set(steps)) == len(steps), "no step is on the stack twice"
+    cards = chain.catalog()
+    for n, turn in enumerate(turns, 1):
+        reply = (two / f"reply-{n}.txt").read_text()
+        said = chain.read_reply(reply)
+        assert (
+            said["step"] == [turn["step"]]
+            and turn["step"] == f"- {steps[6 + n][0]} -- {steps[6 + n][1]}"
+        )
+        page = (two / f"handoff-{n}.txt").read_text()
+        assert steps[6 + n][0] in cards and f"\n{steps[6 + n][0]}: " in page, (
+            "chosen from the page"
+        )
+        figures = set(trial.figures(" ".join(said["want"] + said["why"])))
+        assert figures <= set(trial.figures(page)), (
+            n,
+            figures - set(trial.figures(page)),
+        )
+        assert "/tmp/" not in page and "/home/" not in page
+    assert "no session before this one" in (two / "handoff-1.txt").read_text()
+    assert "session link-1 ended" in (two / "handoff-2.txt").read_text()
+    assert "session link-2 ended" in (two / "handoff-3.txt").read_text()
+    assert "why-not: refused: not a kernel box" in (two / "handoff-3.txt").read_text()
+    log = (two / "log-at-the-end.txt").read_text()
+    assert (
+        "09 why-not: exit 2" in log
+        and "08 again: exit 0" in log
+        and "10 box-health: exit 42" in log
+    )

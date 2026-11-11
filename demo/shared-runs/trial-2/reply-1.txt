@@ -1,0 +1,4 @@
+want: Count which of the 48 questions are asked again and again, so the stack can keep their answers instead of recomputing them.
+step: - again -- --box {box}
+why: Steps 3 to 7 index and scan the folder for every question, so repeat questions are recomputed each run. The again add-on counts repeats from the record (the question's hash, never its words) and says which ones are at an offer to be kept as a standing answer.
+cards: adapters/stdlib/again/README.md
