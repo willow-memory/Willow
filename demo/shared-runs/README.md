@@ -307,6 +307,23 @@ it was uploaded. An account, like the two above.
   laptop and Kaggle agreed on 40 of 40. So R1 can be met on the real code
   with NumPy kept, by a one-line change that is its author's to make.
   A finding for them, not a change made.
+- **Then the whole plan, small, on Kaggle.** 125 jobs over 15
+  trajectories of the real project, each notebook fetching it from GitHub
+  and making that one change in memory. Round one: five notebooks at
+  once, each stepping the trajectories its name owns. Round two: five
+  more, each given round one's five outputs as its input, so the wire was
+  Kaggle's own and nothing was carried by hand. Each also ran its jobs
+  alone. Alone: 1,289,778 steps and 1,130 machine-seconds. With the
+  memory: 341,495 steps and 317. All 125 jobs came out the bytes of the
+  job alone. Predicted saving 73.4%, measured 73.2%. One trajectory
+  halted, after its 7,889th step; six jobs were on it and none stepped
+  into the halt again. The laptop, a third kind of processor beside
+  Kaggle's Intel and AMD, stepped 400 of the 3,418 kept states again and
+  ran 12 jobs alone: every one the same bytes.
+- **So a notebook need not write a dataset.** One notebook's output can
+  be another's input. That answers the plan's question about the wire
+  for two rounds; a third round would take the second's outputs the
+  same way.
 
 ## The order
 
