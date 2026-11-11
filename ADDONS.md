@@ -1440,7 +1440,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - <a id="say"></a>[**say**](adapters/stdlib/say/) \
   One sentence a model on this machine says about your boxes, struck and left to code when it adds a word or number they lack. \
   Uses say-check. Reaches this machine only. From: code of [willow-memory/willows-grove](https://github.com/willow-memory/willows-grove), Apache-2.0. *new*
-  `no-install` `this-machine` `sentence` `left` · near: on-this-day, hooks-elsewhere, clauses
+  `no-install` `this-machine` `sentence` · near: on-this-day, hooks-elsewhere, clauses
 - <a id="weights-card"></a>[**weights-card**](adapters/stdlib/weights-card/) \
   A model card filled in from the weights file's own GGUF or safetensors header: architecture, quantization, context length, licence. \
   *new* `no-install` `offline` `weights` `quantization` · near: model-shelf, weights-pin, model-card
