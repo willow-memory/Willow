@@ -1,0 +1,1 @@
+`docs/design/one-shape.md`, a design note: the pile kept apart from the record, an answer that names its source and its kind or says it does not know, and a gap kept with what was planted in it, as one shape from one folder to every machine, with what a day of running it on this repo showed

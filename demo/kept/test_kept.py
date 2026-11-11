@@ -35,8 +35,8 @@ def steps():
 def test_the_stack_parses_and_names_only_add_ons_that_are_here():
     stack = stack_module()
     names = [name for name, _ in steps()]
-    assert len(names) == 28
-    assert len(set(names)) == 24, "at least thirteen add-ons were asked for"
+    assert len(names) == 29
+    assert len(set(names)) == 25, "at least thirteen add-ons were asked for"
     missing = sorted(n for n in set(names) if stack.resolve(n) is None)
     assert not missing, f"the stack names add-ons that aren't here: {missing}"
 
@@ -51,6 +51,10 @@ def test_the_stack_asks_the_pinned_pile_and_never_this_checkout():
         said = " ".join(args)
         if name == "star-system":
             assert "<repo>/adapters/deps/star-system/example_repo" in said
+        elif name == "thesis":
+            # the note is read from here; what it is put to is the box over the pile
+            assert said == "--box {box} <repo>/docs/design/one-shape.md"
+            assert (ROOT / "docs/design/one-shape.md").is_file()
         else:
             assert "<repo>" not in said, f"{name} reads this checkout: {said}"
     asked = [name for name, args in steps() if "<pile>" in " ".join(args)]
@@ -73,7 +77,7 @@ def test_what_was_kept_of_the_run_holds_nothing_of_this_folder():
 
 def test_every_step_has_its_want_above_it():
     wants = re.findall(r"^# want (\d+):", STACK, flags=re.M)
-    assert wants == [str(n) for n in range(1, 27)], "the row of wants, in order"
+    assert wants == [str(n) for n in range(1, 28)], "the row of wants, in order"
     lines = [ln for ln in STACK.splitlines() if ln.strip()]
     for i, line in enumerate(lines):
         if line.startswith("- "):
@@ -116,5 +120,5 @@ def test_the_log_kept_is_this_stacks():
     ended = re.findall(r"^(\d\d) ([a-z0-9-]+): exit (\d+)", log, flags=re.M)
     assert [name for _, name, _ in ended] == [name for name, _ in steps()]
     flagged = [n for n, _, code in ended if code != "0"]
-    assert flagged == ["07", "11", "13", "26", "27"]
-    assert log.strip().endswith("done: 5 of 28 steps flagged")
+    assert flagged == ["07", "11", "13", "26", "27", "29"]
+    assert log.strip().endswith("done: 6 of 29 steps flagged")

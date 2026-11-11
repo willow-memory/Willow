@@ -11,7 +11,7 @@ every line below is what a step printed, or a count of it.
 **Whose wants these are.** A stack is a row of wants in the person's own
 words ([stacks, for agents](../../docs/agents/stacks.md)). Here the person
 gave the subject ("remembering over recomputing, and shared computing") and
-said to add whatever might come up, at least thirteen. So the 26 wants in
+said to add whatever might come up, at least thirteen. So the 27 wants in
 [stack.md](stack.md) are the session's, each written above its step, and
 they stand as proposals: cut any of them. The Forge could not run
 (`forge-play` is not installed), so each step was written by hand, added
@@ -19,7 +19,7 @@ one at a time, and the stack run from a fresh box after each.
 
 ## What is here
 
-- [stack.md](stack.md): 28 steps of 24 add-ons in seven pools, for
+- [stack.md](stack.md): 29 steps of 25 add-ons in eight pools, for
   [stack](../../adapters/stdlib/stack/). Paths of the machine it ran on
   are `<scratch>`, `<pile>` for the folder it asks and `<repo>` for this
   checkout.
@@ -31,7 +31,8 @@ one at a time, and the stack run from a fresh box after each.
 - [rebuild.sh](rebuild.sh): `bash demo/kept/rebuild.sh SCRATCH` clones
   the repository at the pinned commit into SCRATCH, makes a fresh box over
   that clone, puts the words list on it, runs the stack and verifies the
-  record. It takes about a minute.
+  record. It takes about three and a half minutes, two and a half of
+  them the last step.
 
 ## The pile is pinned, so the stack can't find itself
 
@@ -87,8 +88,9 @@ finds itself again.
 | 26 | three-two-one | flagged: 2 copies, none away from home | nothing: that is true of a scratch folder |
 | 27 | box-health | flagged: no `out` row yet, and 1 file it can't read (over 1 MB) | nothing: both are true |
 | 28 | history | "You started your record. A fixity row." | nothing: that is all the record holds |
+| 29 | thesis | the design note's 82 sentences: 14 held whole by some passage, 68 not; the only words no file holds are supercomputing, supercomputers, simulated, whittling and whittled | most of its 14 "held" are word matches (one is a test about card numbers); and it reads the folder again for every sentence, 150 seconds of the run |
 
-Five steps ended flagged (07, 11, 13, 26, 27), each for a reason in its row.
+Six steps ended flagged (07, 11, 13, 26, 27, 29), each for a reason in its row.
 
 ## What held
 
@@ -151,8 +153,8 @@ this side were brought up to it:
   it off the checkout and writes it as a line, only when that setup builds,
   bit for bit, the system it ran.
 
-What that run said, on the pinned pile: 28 steps in 83 seconds, the same
-5 flagged. The two real runs
+What that run said, on the pinned pile, before step 29 was added: 28 steps
+in 83 seconds, the same 5 flagged. The two real runs
 were the same, byte for byte; energy drifted 6.7e-14 over three orbits of
 Jupiter, against the stand-in's 7.2e-11; and both pages carry the setup
 digest `sha256:dd4c9ad5…`, the one the project's own function gives.
@@ -160,6 +162,23 @@ digest `sha256:dd4c9ad5…`, the one the project's own function gives.
 That digest is the piece "What didn't" says nothing here joins: a result
 named by its inputs. It is the project's, not willow's, and it is now on a
 page a box can hold.
+
+## Since: the shape written down, and held to the pile
+
+The conversation this came from ended in a design note,
+[one shape, at every size](../../docs/design/one-shape.md). Step 29 puts
+it to the pinned pile, a sentence at a time.
+
+Its firm finding is the short one: every part of every sentence about
+willow is somewhere in the repository, and five words are nowhere in it:
+supercomputing, supercomputers, simulated, whittling, whittled. That is
+the note's subject arriving from outside, which the note says of itself.
+The rest is where to read, not a verdict: "held" means one passage has all
+of a sentence's words, and a design note is mostly things not yet true.
+
+The step is also the slowest in the stack by far. thesis asks the folder
+afresh for each sentence, which is the thing this stack began by
+measuring.
 
 ## The rule
 

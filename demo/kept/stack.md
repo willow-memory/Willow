@@ -95,3 +95,10 @@
 - box-health -- --box {box}
 # want 26: the record in plain sentences, to see what this whole run left on it.
 - history -- --box {box}
+
+## what was written about it, held to it
+# want 27: the design note this work ended in, sentence by sentence, put to
+# the pile: which claims some passage holds whole, and which words no file
+# here holds at all. The note is read from this checkout; the pile it is put
+# to is still the pinned one, so it is never checked against itself.
+- thesis -- --box {box} <repo>/docs/design/one-shape.md
