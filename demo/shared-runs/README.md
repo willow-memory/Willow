@@ -232,6 +232,55 @@ no text when fetched; other sites say twelve hours a session, unchecked),
 whether a notebook may write a dataset from inside a run, and how much
 slower the fixed runtime is than native.
 
+### What a first try at the whole thing found
+
+Later the same day the session tried the plan small, on the star-system
+add-on's stand-in and not on science_bitch: 95 made-up jobs over nine
+trajectories, two of which halt, dealt to five machines. What it ran and
+printed is on that session's machine, so this too is an account. It is
+here because it moved four things in the plan.
+
+- **A memory of exact repeats is not enough; one of states is.** Keyed by
+  a job's inputs alone, memory saved only whole repeats. Keeping a
+  trajectory's state every so many steps, under a name made from the
+  trajectory and the step count, let a longer job go on from a shorter
+  one's end. Every one of the 95 jobs then came out the bytes of the same
+  job run alone, halts at the same step.
+- **R3 is a test of the spacing, and of who steps what.** Predicted from
+  the sweep, 82.0% of steps need not be stepped. Measured: 78.1% with a
+  state kept every 2,000 steps, 80.9% at 500, 81.8% at 100. With five
+  machines at once and no rule between them, about 70%: they stepped the
+  same trajectories. With each trajectory given to the machine its name
+  picks, in two rounds, 81.7%, and no machine spoke to another. That
+  fits a wire that is a dataset.
+- **R2's answer here is 27 of 44.** Three Kaggle machines gave the same
+  bytes as each other on every job. The session's laptop agreed with them
+  on 27 of 44, parting somewhere between the tenth step and the 1,780th.
+  Two NumPy versions agreed with each other on the laptop, so it is the
+  processor, or what NumPy does with it.
+- **R1 was met without a runtime, on three kinds of processor.** The same
+  physics written with only add, subtract, multiply, divide and square
+  root, each trajectory's start given as exact numbers, gave the same
+  bytes on the laptop and on Kaggle. Run whole: five Kaggle notebooks at
+  once made the memory (four Intel Xeons and, by chance, one AMD EPYC),
+  and the laptop, a third kind, was served 64 jobs from it, stepped 16 on
+  from it, and got for all 95 the bytes of its own run alone. It stepped
+  all 667 of Kaggle's kept states again, and each came out the same.
+  Whether a fixed runtime is still wanted is now a question for a job
+  that can't be written that way.
+- **R5 needs rewording.** A check that steps one kept state again costs
+  one spacing's worth of steps, whatever the job. Against the median job
+  here that was about a tenth, not a twentieth; against a long job it is
+  far less. "A twentieth of the time computing it took" passes or fails
+  by the length of the job, not by the check.
+- **A refusal is not a halt.** A setup the simulation won't start was
+  first stored as a failure. They are kept apart now, and R6 counts only
+  runs that began.
+
+What it does not show: science_bitch itself; jobs of more than
+milliseconds; a notebook writing the dataset (the memory was downloaded
+and merged by hand); anyone's machine but one account's and one laptop.
+
 ## The order
 
 1. Settle the list above.
