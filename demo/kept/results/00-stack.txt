@@ -1,0 +1,57 @@
+01 code-comments: started (a3e917c6)
+01 code-comments: exit 0, 1 line
+02 git-history: started (706410bc)
+02 git-history: exit 0, 1 line
+03 index-cache: started (bbd19d4a)
+03 index-cache: exit 0, 1 line
+04 index-cache: started (29669fa4)
+04 index-cache: exit 0, 1 line
+05 index-cache: started (5b8bbe97)
+05 index-cache: exit 0, 1 line
+06 scan: started (84abf9fb, fed 3c9911b7)
+06 scan: exit 0, 48 lines
+07 glance: started (94db4944, fed 3c9911b7)
+07 glance: exit 42, 52 lines, mass 49, populated, flagged
+08 why-not: started (ae280a44, fed 57c63ab8)
+08 why-not: exit 0, 1 line
+09 fair-merge: started (853bfda8)
+09 fair-merge: exit 0, 9 lines
+10 first-mention: started (f3b102e5)
+10 first-mention: exit 0, 2 lines
+11 claim-check: started (c57e4658)
+11 claim-check: exit 42, 3 lines, flagged
+12 claim-check: started (76301388)
+12 claim-check: exit 0, 143 lines
+13 xref: started (c26d7744)
+13 xref: exit 42, 139 lines, mass 137, populated, flagged
+14 pile-store: started (ba092d4d)
+14 pile-store: exit 0, 1 line
+15 pile-rungs: started (42cea11a, fed 2101e45c)
+15 pile-rungs: exit 0, 1 line
+16 fixity: started (3f4d5f9d)
+16 fixity: exit 0, 1 line
+17 ids: started (1f729ab1, fed 10b04fd4)
+17 ids: exit 0, 426 lines
+18 star-system: started (4d7f124a)
+18 star-system: exit 0, 1 line
+19 star-system: started (442fd69f)
+19 star-system: exit 0, 1 line
+20 diverge: started (1df152cd)
+20 diverge: exit 0, 1 line
+21 merkle: started (bab44993)
+21 merkle: exit 0, 1 line
+22 prov: started (7e903432)
+22 prov: exit 0, 1 line
+23 tip-pin: started (5dc3e5e5)
+23 tip-pin: exit 0, 2 lines
+24 backup: started (ff923c9f)
+24 backup: exit 0, 3 lines
+25 restore-drill: started (16e44bef, fed f3427506)
+25 restore-drill: exit 0, 1 line
+26 three-two-one: started (fd0be5f0)
+26 three-two-one: exit 42, 3 lines, flagged
+27 box-health: started (5a644aca)
+27 box-health: exit 42, 11 lines, mass 8, populated, flagged
+28 history: started (a770f547)
+28 history: exit 0, 4 lines, mass 3
+done: 5 of 28 steps flagged

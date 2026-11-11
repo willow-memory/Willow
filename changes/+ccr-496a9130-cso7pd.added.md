@@ -1,0 +1,1 @@
+`demo/kept`, a stack built by hand over this repository, asking what it remembers and what it computes again: 28 steps of 24 add-ons, one want above each, with its words list, its questions, the run's log and a report of what each step found and got wrong

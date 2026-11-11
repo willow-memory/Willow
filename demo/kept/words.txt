@@ -1,0 +1,10 @@
+# The asker's words read as this repository's. A question's word on the left
+# is read as any of the words after the =. Written from what steps 7 and 8
+# said the questions lacked, then cut once: core, computed, results, inputs
+# and shown went, for the noise they let in (report, want 7).
+recompute = recomputed, rerun, reread, reindex
+remembered = kept, cached, memo, pinned
+supercomputer = runner, runners, shard, shards
+queue = waits, waiting, queued
+machines = machine, runner, runners, platform, platforms
+differ = differs, drift, diverge, flips

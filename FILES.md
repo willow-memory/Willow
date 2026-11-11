@@ -2127,6 +2127,16 @@ willow/
 │   │   ├── private.py        one count over four folders, where the one who asks learns the
 │   │   ├── scene.py          the report sealed, sent, forwarded hop by hop, forged once, corrected and witnessed; stacks shared, taken and declined
 │   │   └── test_scene.py     holds the scene to what README.md says it shows
+│   ├── kept/                 a stack built by hand over this repository: what it remembers, and what it computes again
+│   │   ├── questions.txt     the sixteen questions scan was asked
+│   │   ├── rebuild.sh        a fresh box over the repository, the words list on it, the stack, the verify
+│   │   ├── results/
+│   │   │   ├── 00-stack.txt  the last run's log: a line as each step started, a line as it ended
+│   │   │   └── 07-glance.txt what glance said of the 48 answers
+│   │   ├── stack.md          the 28 steps, each with its want above it
+│   │   ├── words.txt         the six-line words list the box carried
+│   │   ├── test_kept.py
+│   │   └── README.md         the row step by step: what each found, what it got wrong, what held and what didn't
 ```
 
 #### demo/, from known-gaps/
