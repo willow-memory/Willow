@@ -2282,6 +2282,11 @@ willow/
 │   │   ├── mirror.py         the pile as text the kernel searches, each reader's part, over-long files cut into parts
 │   │   ├── sources.json      each source fetched, with its address, size and SHA-256, and what failed
 │   │   └── test_markets.py   holds what fetch.py froze, and the parts that need no network, to the README
+│   ├── minors/           four made-up minors, each standing somewhere different to their own box
+│   │   ├── make_life.py      writes each box's made-up files into life/, the same bytes every run
+│   │   ├── scene.py          four minors, each standing somewhere different to their own box
+│   │   ├── test_minors.py    the files are as written, and the scene plays as its page tells it
+│   │   └── README.md         Four minors, each standing somewhere different to their own box
 │   ├── money-hour/           four people from the other demos at one table, every market figure they repeat held to the real record
 │   │   ├── README.md         the claim, what the record says, how it runs, run 1's results and its one failure
 │   │   ├── CHARACTER.md      Teo, Bernie, Hollis and Marisol, where each comes from, and what each keeps
