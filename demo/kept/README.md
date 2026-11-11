@@ -249,6 +249,19 @@ examples, on two cards and in one script's own description. A card is a
 kind, and a true one; an example on it is not the card speaking. That is
 a finer line than a file's kind can draw.
 
+## Since: the saved runs declared
+
+Eight of the eleven dates the sift kept were in one demo's saved model
+runs, which nothing declared. That demo now keeps a KEPT.json beside
+them, listing each with its SHA-256, and kinds reads it: a file a run
+printed, kept as it came. This folder and the trials' folder list their
+own kept outputs the same way.
+
+By today's declarations the digest's 25 dates sift to 3, the three
+examples. The stack's own steps still say 11, and rightly: they ask the
+pile as it was at one commit, before any of this was declared. Across the
+repository the files nothing declares fell from 219 to 184.
+
 ## The rule
 
 The session proposed and never sealed. The box is a scratch one with a

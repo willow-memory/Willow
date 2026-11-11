@@ -1,0 +1,1 @@
+`kinds`: a tenth kind, kept, for what a run printed and was kept as it came, declared by a KEPT.json in its demo; demo/small-models lists its thirteen saved model runs that way, each with its SHA-256, and by that the digest's 25 dates on this repo's own folder sift to 3

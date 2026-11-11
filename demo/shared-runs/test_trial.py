@@ -449,3 +449,24 @@ def test_what_trial_fours_page_says_is_what_its_kept_files_hold():
     for name in ("cold.jsonl", "warm.jsonl"):
         text = (four / name).read_text()
         assert "/tmp/" not in text and "/home/" not in text, name
+
+
+def test_what_the_trials_printed_is_listed_as_kept_and_what_was_written_is_not():
+    here = TRIAL.parent
+    kept = json.loads((here / "KEPT.json").read_text())["files"]
+    written = {
+        "RULES.md",
+        "RESULTS.md",
+        "brief.txt",
+        "brief-a.txt",
+        "brief-b.txt",
+        "questions.txt",
+    }
+    printed = sorted(
+        f"{t.name}/{p.name}"
+        for t in here.glob("trial-*")
+        for p in t.iterdir()
+        if p.name not in written
+    )
+    assert kept == printed and len(kept) == 28
+    assert not [name for name in kept if name.rsplit("/", 1)[1] in written]

@@ -122,3 +122,12 @@ def test_the_log_kept_is_this_stacks():
     flagged = [n for n, _, code in ended if code != "0"]
     assert flagged == ["07", "11", "13", "26", "27", "29"]
     assert log.strip().endswith("done: 6 of 33 steps flagged")
+
+
+def test_what_the_run_printed_is_listed_as_kept():
+    import json
+
+    kept = json.loads((HERE / "KEPT.json").read_text())
+    assert kept["files"] == sorted(
+        f"results/{p.name}" for p in (HERE / "results").iterdir()
+    )

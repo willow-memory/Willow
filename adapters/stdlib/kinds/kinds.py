@@ -15,6 +15,8 @@ here: a file has a kind only when something the repo already keeps says so.
     account   what was done, not what is: towncrier.toml names the changelog
     idea      not built yet: adapters/planned.json is the ideas list
     frozen    a study froze it: a FROZEN.json in its demo lists it
+    kept      a run printed it and it was kept as it came: a KEPT.json in
+              its demo lists it
     test      pytest runs it: it is named test_*.py or conftest.py
     card      an add-on's README.md, the one that opens `<!-- willow-addon`
     code      a script beside an add-on's card
@@ -32,7 +34,7 @@ JSON object.
 
 `sift` takes a report another add-on printed, as JSON, and leaves out the
 rows whose file is of a kind named in `--leave`: tests, fixtures, made-up
-people's files and frozen ones unless told otherwise. A report on this
+people's files, frozen ones and a run's kept output unless told otherwise. A report on this
 repo's folder is mostly about those, since most dated, quoted and numbered
 lines here are examples. What is left is what the repo says of itself, and
 a last group counts what was left out, kind by kind. A row that names no
@@ -65,7 +67,7 @@ USAGE = (
 )
 #: The kinds `sift` leaves out unless told: files that are, by what says so,
 #: not this repo speaking of itself.
-LEAVE = ("test", "fixture", "made-up", "frozen")
+LEAVE = ("test", "fixture", "made-up", "frozen", "kept")
 
 #: Each kind, in the order they are tried, and what says a file is one.
 KINDS = (
@@ -73,6 +75,7 @@ KINDS = (
     ("account", "what was done: towncrier.toml names the changelog"),
     ("idea", "not built yet: the ideas list"),
     ("frozen", "a study froze it: its demo's FROZEN.json lists it"),
+    ("kept", "a run printed it and it was kept: its demo's KEPT.json lists it"),
     ("test", "pytest runs it: named test_*.py or conftest.py"),
     ("card", "an add-on's own README.md"),
     ("code", "a script beside an add-on's card"),
@@ -191,6 +194,26 @@ def frozen_by(root: Path, files: list[str]) -> dict[str, str]:
     return out
 
 
+def kept_by(root: Path, files: list[str]) -> dict[str, str]:
+    """{file: the KEPT.json that lists it}. A demo's KEPT.json lists, under
+    `files`, what a run printed and was kept as it came, by path from the
+    demo's folder: a list of names, or names with their SHA-256."""
+    out: dict[str, str] = {}
+    for f in files:
+        parts = f.split("/")
+        if len(parts) != 3 or parts[0] != "demo" or parts[2] != "KEPT.json":
+            continue
+        try:
+            doc = json.loads(text_of(root / f) or "{}")
+        except ValueError:
+            doc = {}  # one that can't be read lists nothing
+        listed = doc.get("files") if isinstance(doc, dict) else None
+        for name in listed if isinstance(listed, (dict, list)) else ():
+            if isinstance(name, str):
+                out.setdefault(f"demo/{parts[1]}/{name}", f)
+    return out
+
+
 def census(
     root: Path, files: list[str]
 ) -> tuple[dict[str, tuple[str, str]], list[str]]:
@@ -200,6 +223,7 @@ def census(
     made, unknown = made_by(root)
     fragments, log = changelog(root)
     frozen = frozen_by(root, files)
+    kept = kept_by(root, files)
     cards = {
         f.rsplit("/", 1)[0]
         for f in files
@@ -226,6 +250,8 @@ def census(
             out[f] = ("idea", IDEAS)
         elif f in frozen:
             out[f] = ("frozen", frozen[f])
+        elif f in kept:
+            out[f] = ("kept", kept[f])
         elif (
             base.startswith("test_") and base.endswith(".py")
         ) or base == "conftest.py":

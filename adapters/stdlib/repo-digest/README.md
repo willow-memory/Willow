@@ -17,7 +17,7 @@ One page of what this repo needs from you, and the order its add-ons build in.
 
     python adapters/stdlib/repo-digest/repo_digest.py page [--json] [--root DIR]
 
-    repo-digest: populated, 219 files nothing declares, 1 ring in what uses what, 190 ideas waiting; 363 add-ons build 6 steps deep
+    repo-digest: populated, 184 files nothing declares, 1 ring in what uses what, 199 ideas waiting; 368 add-ons build 6 steps deep
     ## a ring in what uses what: they come together, or a uses line is wrong
       readme → similar → readme  each needs the other beside it; 6 add-ons rest on it: against, ci, ci-memo, github, ready, test-impact
     ## nothing declares: a declaration, where its subject lives

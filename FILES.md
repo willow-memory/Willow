@@ -2180,6 +2180,7 @@ willow/
 │   │   ├── scene.py          the report sealed, sent, forwarded hop by hop, forged once, corrected and witnessed; stacks shared, taken and declined
 │   │   └── test_scene.py     holds the scene to what README.md says it shows
 │   ├── kept/                 a stack built by hand over this repository: what it remembers, and what it computes again
+│   │   ├── KEPT.json     what the stack's last run printed, listed as kept
 │   │   ├── questions.txt     the sixteen questions scan was asked
 │   │   ├── rebuild.sh        the repository cloned at the pinned commit, a fresh box over the clone, the stack, the verify
 │   │   ├── results/
@@ -2443,6 +2444,7 @@ willow/
 ```
 │   ├── shared-runs/          a plan for a study, nothing frozen: simulations on machines nobody chose, sharing one memory, run by a script
 │   │   ├── chain.py      starts the project, makes each link's handoff, and applies or refuses the step a link offers
+│   │   ├── KEPT.json     what the trials' scripts and agents printed, listed as kept
 │   │   ├── rules.py          the next step of a stack chosen by rule from what its last run said, or that no rule fits
 │   │   ├── same.py       two kept runs of one stack, step by step: asked the same way, printed the same thing
 │   │   ├── trial-1/          a first try of the blind handover, on demo/kept's run: what was fixed before, what each agent said
@@ -2509,20 +2511,21 @@ willow/
 │   │   │   ├── cardpick.py   willow serves each need its cards; the plan may use only those
 │   │   │   ├── weeknote.py   a this-week note: lines kept in chunks, written citing [n], each point held
 │   │   │   └── ranked.py     facts labelled and ranked by rule; the model only phrases them
-│   │   └── runs/
-│   │       ├── assemble-gemma.json  cards picked in batches, then one pipeline
-│   │       ├── assemble-qwen.json  cards picked in batches, then one pipeline
-│   │       ├── person-gemma-teodora.json  a pipeline for teodora, run on her files
-│   │       ├── person-qwen-teodora.json  a pipeline for teodora, run on her files
-│   │       ├── pick-gemma-teodora.json  willow served the cards for her needs
-│   │       ├── pick-qwen-teodora.json  willow served the cards for her needs
-│   │       ├── pick2-gemma-teodora.json  the same, each card with its opening paragraph
-│   │       ├── pick2-qwen-teodora.json  the same, each card with its opening paragraph
-│   │       ├── ranked-gemma-teodora.json  code ranked the facts, the model phrased
-│   │       ├── ranked2-gemma-teodora.json  the same, with the bank held against the ledger
-│   │       ├── weeknote-gemma-teodora.json  a this-week note the model wrote
-│   │       ├── weeknote-qwen-teodora.json  a this-week note the model wrote
-│   │       └── weeknote2-qwen-teodora.json  the same, five lines kept a chunk
+│   │   ├── runs/
+│   │   │   ├── assemble-gemma.json  cards picked in batches, then one pipeline
+│   │   │   ├── assemble-qwen.json  cards picked in batches, then one pipeline
+│   │   │   ├── person-gemma-teodora.json  a pipeline for teodora, run on her files
+│   │   │   ├── person-qwen-teodora.json  a pipeline for teodora, run on her files
+│   │   │   ├── pick-gemma-teodora.json  willow served the cards for her needs
+│   │   │   ├── pick-qwen-teodora.json  willow served the cards for her needs
+│   │   │   ├── pick2-gemma-teodora.json  the same, each card with its opening paragraph
+│   │   │   ├── pick2-qwen-teodora.json  the same, each card with its opening paragraph
+│   │   │   ├── ranked-gemma-teodora.json  code ranked the facts, the model phrased
+│   │   │   ├── ranked2-gemma-teodora.json  the same, with the bank held against the ledger
+│   │   │   ├── weeknote-gemma-teodora.json  a this-week note the model wrote
+│   │   │   ├── weeknote-qwen-teodora.json  a this-week note the model wrote
+│   │   │   └── weeknote2-qwen-teodora.json  the same, five lines kept a chunk
+│   │   └── KEPT.json     the thirteen saved model runs, each with its SHA-256, listed as kept
 │   ├── soil-phys-001/
 │   │   ├── fetch.py          the study's sources, fetched again and held to their hashes
 │   │   ├── FROZEN.json       the pre-registration: the key, sources, runner, rules and tools by SHA-256

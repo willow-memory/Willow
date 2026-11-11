@@ -18,21 +18,22 @@ Every file of this repo sorted by what it is, and the ones nothing declares.
     python adapters/stdlib/kinds/kinds.py of PATH... [--json] [--root DIR]
     python adapters/stdlib/kinds/kinds.py sift --of REPORT [--leave KIND,...] [--json] [--root DIR]
 
-    kinds: populated, 1775 files: 1597 are one of 9 kinds, 178 nothing declares
+    kinds: populated, 1877 files: 1693 are one of 10 kinds, 184 nothing declares
     ## what it is, and what says so
       made      6 files; a script makes it: made.py names the script
-      account   112 files; what was done: towncrier.toml names the changelog
+      account   133 files; what was done: towncrier.toml names the changelog
       idea      1 file; not built yet: the ideas list
       frozen    159 files; a study froze it: its demo's FROZEN.json lists it
-      test      415 files; pytest runs it: named test_*.py or conftest.py
-      card      361 files; an add-on's own README.md
-      code      384 files; a script beside an add-on's card
-      fixture   87 files; the rest of an add-on's folder
+      kept      43 files; a run printed it and it was kept: its demo's KEPT.json lists it
+      test      423 files; pytest runs it: named test_*.py or conftest.py
+      card      368 files; an add-on's own README.md
+      code      391 files; a script beside an add-on's card
+      fixture   97 files; the rest of an add-on's folder
       made-up   72 files; a made-up person's files: the demo holds a make_life.py
     ## nothing declares
-      demo/five-repos/  37 files, such as demo/five-repos/README.md
-      docs/             19 files, such as docs/agents/add-ons.md
-      (top level)       18 files, such as .editorconfig
+      demo/five-repos/   37 files, such as demo/five-repos/README.md
+      docs/              20 files, such as docs/agents/add-ons.md
+      (top level)        18 files, such as .editorconfig
 
 **Why.** This repository holds several kinds of thing in one folder: what
 was written to be read, what a script made from that, tests, made-up data,
@@ -53,6 +54,7 @@ repo already keeps says so, and a row names what says it:
 | account | towncrier.toml names the changelog and the folder its entries wait in |
 | idea | it is the ideas list, where an add-on waits until it is built |
 | frozen | a FROZEN.json in its demo lists it, under `files` or `sources` |
+| kept | a KEPT.json in its demo lists it, under `files`: what a run printed, kept as it came |
 | test | pytest runs it: it is named `test_<name>.py`, or is pytest's conftest file |
 | card | it is an add-on's README.md, the one that opens `<!-- willow-addon` |
 | code | it is a script beside an add-on's card |
@@ -61,6 +63,12 @@ repo already keeps says so, and a row names what says it:
 
 The first that fits, top to bottom, is the file's kind. So a test inside an
 add-on is a test, and a made-up person's frozen file is frozen.
+
+**Declaring what a run printed.** A demo that keeps what a model, a script
+or a stack printed lists those files in a KEPT.json beside them, under
+`files`, by their path from the demo's folder: a list of names, or each
+name with its SHA-256 for a test of the demo's to hold. That is the
+declaration, and it lives with its subject. Three demos have one.
 
 **What nothing declares is listed, by folder, the most first.** Today that
 is the kernel, its ports, its test cases and its law, the docs, the UI, and
@@ -85,18 +93,19 @@ never passed over as a source.
 and most of what comes back is not the repo's: a made-up person's bill, a
 date in a test, an example on a card. `sift` takes a report another add-on
 printed, as JSON, and leaves out the rows whose file is of a kind you name
-with `--leave`: tests, fixtures, made-up people's files and frozen ones
-unless told otherwise.
+with `--leave`: tests, fixtures, made-up people's files, frozen ones and a
+run's kept output unless told otherwise.
 
     $ python adapters/stdlib/digest/digest.py --box BOX --json > digest.json
     $ python adapters/stdlib/kinds/kinds.py sift --of digest.json
-    kinds: populated, digest's 25 rows: 11 kept, 14 left out
+    kinds: populated, digest's 25 rows: 3 kept, 22 left out
     ## Coming up (next 14 days)
       adapters/stdlib/home-upkeep/README.md:21  2026-11-20  boiler last 2025-11-20 2 times £470.00 due 2026-11-20
     ## left out, by what kind of file the row is in
+      frozen   2 rows in 1 file
+      kept     8 rows in 5 files
       test     4 rows in 4 files
       made-up  8 rows in 2 files
-      frozen   2 rows in 1 file
 
 Each group stays as it was, less those rows, and a last group counts what
 was left out, kind by kind. A row that names no file of the repo, a

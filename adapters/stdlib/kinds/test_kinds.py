@@ -53,6 +53,8 @@ TREE = {
     "demo/study/FROZEN-2.json": ('{"sources": ["pins/a.json", 7]}', "frozen"),
     "demo/study/pins/a.json": ("{}", "frozen"),
     "demo/study/run.py": ("", None),
+    "demo/study/KEPT.json": ('{"files": ["out/run.json", 7]}', None),
+    "demo/study/out/run.json": ("{}", "kept"),
     "demo/test_novelty.py": ("", "test"),
     "docs/tour.md": ("# tour\n", None),
 }
@@ -129,7 +131,7 @@ def test_the_whole_report_counts_each_kind_and_lists_what_nothing_declares(tmp_p
     assert none == {
         "(top level)": "3 files, such as CONSTITUTION.md",
         "adapters/stdlib/": "3 files, such as adapters/stdlib/ci/made.py",
-        "demo/study/": "2 files, such as demo/study/README.md",
+        "demo/study/": "3 files, such as demo/study/KEPT.json",
         "adapters/": "1 file, such as adapters/README.md",
         "changes/": "1 file, such as changes/README.md",
         "docs/": "1 file, such as docs/tour.md",
@@ -141,7 +143,7 @@ def test_the_whole_report_counts_each_kind_and_lists_what_nothing_declares(tmp_p
 def all_declared() -> dict:
     """TREE with nothing undeclared: made.py gets a card beside it, so it is
     code, and the changelog goes, since the file that names it has no kind."""
-    tree = {rel: v for rel, v in TREE.items() if v[1] not in (None, "account")}
+    tree = {rel: v for rel, v in TREE.items() if v[1] not in (None, "account", "kept")}
     tree["adapters/stdlib/ci/README.md"] = (CARD, "card")
     tree["adapters/stdlib/ci/made.py"] = (MADE, "code")
     return tree
@@ -455,3 +457,49 @@ def test_the_sifted_text_is_the_report_its_json_holds(tmp_path):
     assert (
         text.splitlines()[0] == "kinds: populated, digest's 2 rows: 1 kept, 1 left out"
     )
+
+
+def test_a_runs_kept_output_is_kept_only_while_its_demos_kept_json_lists_it(tmp_path):
+    tree = {
+        "demo/a/KEPT.json": (
+            '{"files": {"runs/x.json": "abc", "runs/absent.json": "def"}}',
+            None,
+        ),
+        "demo/a/runs/x.json": ("{}", "kept"),
+        "demo/a/runs/y.json": ("{}", None),
+        "demo/b/KEPT.json": ('{"files": ["out.txt"]}', None),
+        "demo/b/out.txt": ("", "kept"),
+        "demo/c/KEPT.json": ("not json", None),
+        "demo/c/out.txt": ("", None),
+        "demo/d/KEPT.json": ('{"files": "out.txt", "sources": ["out.txt"]}', None),
+        "demo/d/out.txt": ("", None),
+        "demo/e/deeper/KEPT.json": ('{"files": ["out.txt"]}', None),
+        "demo/e/deeper/out.txt": ("", None),
+        "other/f/KEPT.json": ('{"files": ["out.txt"]}', None),
+        "other/f/out.txt": ("", None),
+        "demo/g/make_life.py": ("", "made-up"),
+        "demo/g/KEPT.json": ('{"files": ["said.txt"]}', "made-up"),
+        "demo/g/said.txt": ("", "kept"),
+        "demo/g/note.txt": ("", "made-up"),
+    }
+    root = make(tmp_path, tree)
+    known, _ = kinds.census(root, kinds.tracked(root))
+    for rel, (_, kind) in tree.items():
+        assert (known[rel][0] if rel in known else None) == kind, rel
+    assert known["demo/a/runs/x.json"] == ("kept", "demo/a/KEPT.json")
+
+
+def test_sift_leaves_out_a_runs_kept_output_unless_told_otherwise(tmp_path):
+    root = make(tmp_path / "repo" if (tmp_path / "repo").mkdir() is None else tmp_path)
+    report = a_report(
+        tmp_path,
+        [(None, [("demo/study/out/run.json:3", "a model said"), ("kernel.py:1", "x")])],
+    )
+    doc, _ = sifted(root, report)
+    assert rows(doc, None) == {"kernel.py:1": "x"}
+    assert rows(doc, "left out, by what kind of file the row is in") == {
+        "kept": "1 row in 1 file"
+    }
+    doc, _ = sifted(root, report, "--leave", "test")
+    assert len(rows(doc, None)) == 2
+    assert kinds.LEAVE == ("test", "fixture", "made-up", "frozen", "kept")
