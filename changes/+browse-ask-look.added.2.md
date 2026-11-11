@@ -1,0 +1,1 @@
+`say-check`: a sentence said about your boxes, held to them by four checks: each cite was served, each box is cited, no number or word the boxes lack, your words quoted exactly. One that fails is struck, and each check says what failed. The checks are willows-grove's, brought over without its code-graph and record checks

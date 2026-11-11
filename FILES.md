@@ -988,6 +988,18 @@ willow/
 │   │   │   └── README.md
 ```
 
+### adapters/stdlib/: Trust and proof: Checking a model before you trust it
+
+```
+│   │   ├── say-check/
+│   │   │   ├── example-boxes.json two boxes to try it on, the ones its card shows
+│   │   │   ├── LICENSE-willows-grove the licence of the project its checks came from
+│   │   │   ├── NOTICE        what was taken from willows-grove, and what was changed
+│   │   │   ├── say_check.py  a sentence said about your boxes, held to them by four checks
+│   │   │   ├── test_say_check.py
+│   │   │   └── README.md     its card
+```
+
 ### adapters/stdlib/: Trust and proof: What it makes for elsewhere
 
 ```
@@ -1190,6 +1202,10 @@ willow/
 │   │   │   ├── assistant_scores.py How often each assistant's suggestions were sealed or set aside, from the record
 │   │   │   ├── test_assistant_scores.py
 │   │   │   └── README.md     its card
+│   │   ├── connect/
+│   │   │   ├── connect.py    what a model on this machine says connects two passages, and what of it checks out
+│   │   │   ├── test_connect.py
+│   │   │   └── README.md     its card
 │   │   ├── model-card/
 │   │   │   ├── model_card.py  a card naming the model behind an assistant, its SHA-256 on the record
 │   │   │   ├── test_model_card.py
@@ -1218,6 +1234,12 @@ willow/
 │   │   │   ├── same_way.py  a local model asked each question several times, and how often its answer flips
 │   │   │   ├── test_same_way.py
 │   │   │   └── README.md
+│   │   ├── say/
+│   │   │   ├── LICENSE-willows-grove the licence of the project its prompt came from
+│   │   │   ├── NOTICE        what was taken from willows-grove, and what was changed
+│   │   │   ├── say.py        one sentence a model on this machine says about your boxes, struck when it adds to them
+│   │   │   ├── test_say.py
+│   │   │   └── README.md     its card
 │   │   ├── weights-card/
 │   │   │   ├── weights_card.py  a model card from a GGUF or safetensors file's own header, with the file's SHA-256
 │   │   │   ├── test_weights_card.py
@@ -1430,6 +1452,7 @@ willow/
 ```
 │   │   ├── browse/
 │   │   │   ├── browse.py     your folder in your browser, on 127.0.0.1: ask, read, approve with a click
+│   │   │   ├── page.js       the page's one script: fills the right panel with what is at a place you click
 │   │   │   ├── test_browse.py
 │   │   │   └── README.md
 │   │   ├── launcher/

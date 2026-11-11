@@ -615,7 +615,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
   *new* `no-install` `offline` `gitlab` `github` · near: gitlab, across, rules
 - <a id="fair-merge"></a>[**fair-merge**](adapters/stdlib/fair-merge/) \
   Each folder ranked on its own and the lists merged in turns, so a big corpus can't crowd out a small one; one that found nothing says so. \
-  *bot* `no-install` `offline` `found` `pile` · near: scan, parallel, bench
+  Uses scan. *bot* `no-install` `offline` `found` `pile` · near: scan, parallel, bench
 - <a id="first-mention"></a>[**first-mention**](adapters/stdlib/first-mention/) \
   When your files first mention something, and the line that does. \
   *new* `no-install` `offline` `mention` · near: dialect-dates, people, timeline
@@ -680,15 +680,24 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - <a id="bm25"></a>**bm25** (idea) \
   BM25 over a box in one go, with no index to build first: the rank scan --rank bm25 gives, for a folder you ask once. \
   *new* `no-install` `offline` `index` `scan` · near: scan, index-cache, latent
+- <a id="by-index"></a>**by-index** (idea) \
+  claim-check, all and first-mention asked of scan's index, so a folder too big to hold in memory is still checked passage by passage. \
+  Uses scan. *new* `no-install` `offline` `index` `scan` · near: claim-check, scan, index-cache
 - <a id="code-first"></a>**code-first** (idea) \
   Questions code can answer exactly (counts, dates, ids) answered by code before any model, with a wrong answer counted as a defect. \
   *bot* `no-install` `offline` · near: model-exam, sigmap, install-scripts
+- <a id="hit-kinds"></a>**hit-kinds** (idea) \
+  Every place some text appears, sorted by what it sits inside: on its own, a number, a date, a hash, a path, a name, each with its count. \
+  *new* `no-install` `offline` `hit` `sorted` · near: sort, ripgrep, symbols
 - <a id="kiwix"></a>**kiwix** (idea) \
   An offline Wikipedia (or Stack Exchange, or Gutenberg) as a source after your own files, cited by article. \
   Needs libzim, and a ZIM file you download; GPL-3.0. *new* `needs-install` `offline` `stack` `wikipedia` · near: pageviews, codeowners, stack-share
 - <a id="my-lessons"></a>**my-lessons** (idea) \
   Your own lesson plans by grade, subject and standard: what did I teach on fractions last year? \
   *new* `no-install` `offline` `lesson` `plan` · near: lessons, lesson-time, standards
+- <a id="narrow"></a>**narrow** (idea) \
+  The question to ask you next: the one fact about what you're after that would cut what's left the most, with the count each answer leaves. \
+  *new* `no-install` `offline` `fact` `counts` · near: predict, pile-sweep, lore
 - <a id="promises"></a>**promises** (idea) \
   What a candidate or a council said, by date and source, from the documents you saved. \
   *new* `no-install` `offline` `saved` `council` · near: said, thesis, timeline
@@ -790,6 +799,9 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - <a id="words-ja"></a>**words-ja** (idea) \
   Japanese, which has no spaces: a small segmenter of its own and a common-words list. \
   *new* `no-install` `offline` `common` `segmenter` · near: words-zh, words-hi, synonyms
+- <a id="words-later"></a>**words-later** (idea) \
+  A box made again with a words list it lacked, its record kept as it was, since a box takes its words only when it is made. \
+  *new* `no-install` `offline` · near: ask-later, starter-words, sync
 - <a id="words-zh"></a>**words-zh** (idea) \
   Chinese, which has no spaces: words found by a small segmenter of its own, and a common-words list. \
   *new* `no-install` `offline` `common` `found` · near: words-ja, words-hi, synonyms
@@ -999,7 +1011,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
   *bot* `no-install` `offline` `score` `down` · near: forecasts, pile-gold, assistant-scores
 - <a id="projects"></a>[**projects**](adapters/stdlib/projects/) \
   Every project under one folder: its records, its stacks, and each stack's runs, so you can see what there is to go back to. \
-  Uses stack. *new* `no-install` `offline` `stack` · near: stack-share, stack, github
+  Uses stack. *new* `no-install` `offline` `stack` · near: stack-share, stack, browse
 - <a id="readings"></a>[**readings**](adapters/stdlib/readings/) \
   Two hints beside an answer: a number in your files that moved a lot lately, and a date in a log that passed with nothing written since. \
   *box* `no-install` `offline` `numbers` · near: plain, privacy, coming-up
@@ -1016,6 +1028,9 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
   You against the crowd: a prediction market's question copied into your ledger, your probability beside theirs, both scored. \
   Goes online: the market's public API, to read the question and its resolution. *new* `no-install` `online` `prediction` `score` · near: predictions,
   oakenscroll, market-calls
+- <a id="mirror-sweep"></a>**mirror-sweep** (idea) \
+  When a file is deleted, the copies of it that readers made are found and removed, so your folder stops answering from what is gone. \
+  *new* `no-install` `offline` `reader` `sweep` · near: pile-sweep, format-rot, changed
 - <a id="upstream-desk"></a>**upstream-desk** (idea) \
   Your work in other people's projects, in one place: notifications sorted into what needs you, and your open pull requests there. \
   Goes online: GitHub, through gh, with your own login. *bot* `no-install` `online` `pull` `request` · near: contribute, against, restack-open
@@ -1060,6 +1075,19 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - <a id="xref"></a>[**xref**](adapters/stdlib/xref/) \
   Every reference in your files checked: each link to another file, and each quoted line, still there and still saying it. \
   *bot* `no-install` `offline` `quote` `everyday` · near: quote-review, secrets-audit, quotes
+
+### Checking a model before you trust it
+
+- <a id="say-check"></a>[**say-check**](adapters/stdlib/say-check/) \
+  A sentence said about your boxes, checked by code: each cite served, each box cited, no word or number the boxes lack, your words exact. \
+  From: code of [willow-memory/willows-grove](https://github.com/willow-memory/willows-grove), Apache-2.0. *new* `no-install` `offline` `sentence` · near:
+  plain, on-this-day, code-comments
+
+#### Checking a model before you trust it: ideas, not built yet
+
+- <a id="join-check"></a>**join-check** (idea) \
+  A connection a model made between two passages, held to your files: each thing it says looked for, and the passage that backs it shown. \
+  Uses claim-check, connect. *new* `no-install` `offline` `join` `between` · near: joins, clauses, contradictions
 
 ### What guards it
 
@@ -1380,6 +1408,9 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - <a id="assistant-scores"></a>[**assistant-scores**](adapters/stdlib/assistant-scores/) \
   How often each assistant's suggestions were sealed or set aside, from the record. \
   Uses openai-compatible. *new* `no-install` `offline` `aside` `score` · near: retire, predict, forecasts
+- <a id="connect"></a>[**connect**](adapters/stdlib/connect/) \
+  What a model on this machine says connects two passages of yours, in a few sentences, each number and name it gives checked against them. \
+  Uses say. Reaches this machine only. *new* `no-install` `this-machine` `sentence` · near: contradictions, duplicates, claim-check
 - <a id="model-card"></a>[**model-card**](adapters/stdlib/model-card/) \
   A card naming the model behind an assistant (version or weights hash, where it runs, licence, limits), on the record for each suggestion. \
   Uses weights-card. *new* `no-install` `offline` `hash` `weights` · near: weights-card, local-model, weights-pin
@@ -1403,6 +1434,10 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - <a id="same-way"></a>[**same-way**](adapters/stdlib/same-way/) \
   A local model asked each of your box's questions three times, and how often its answer flips: one that answers the same way can be built on. \
   Uses openai-compatible. Reaches this machine only. *new* `no-install` `this-machine` `local` · near: model-exam, model-drift, night-batch
+- <a id="say"></a>[**say**](adapters/stdlib/say/) \
+  One sentence a model on this machine says about your boxes, struck and left to code when it adds a word or number they lack. \
+  Uses say-check. Reaches this machine only. From: code of [willow-memory/willows-grove](https://github.com/willow-memory/willows-grove), Apache-2.0. *new*
+  `no-install` `this-machine` `sentence` `left` · near: on-this-day, hooks-elsewhere, clauses
 - <a id="weights-card"></a>[**weights-card**](adapters/stdlib/weights-card/) \
   A model card filled in from the weights file's own GGUF or safetensors header: architecture, quantization, context length, licence. \
   *new* `no-install` `offline` `weights` `quantization` · near: model-shelf, weights-pin, model-card
@@ -1418,6 +1453,9 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - <a id="ladder"></a>**ladder** (idea) \
   Your files first, then sources you trust such as Jeles and Nestor, then a model, stopping at the first that answers, kept for next time. \
   *bot* `no-install` `offline` `jeles` `nestor` · near: jeles, first-mention, hook-handoff
+- <a id="pool-fit"></a>**pool-fit** (idea) \
+  How many passages a model on this machine can be handed at once, measured on your own questions, before its answers add what they lack. \
+  Reaches this machine only. *new* `no-install` `this-machine` `fit` · near: model-exam, model-fit, in-process
 - <a id="schema-check"></a>**schema-check** (idea) \
   A model's answer held to a JSON schema before anything reads it, and a reply that doesn't fit recorded as a result, not lost as an error. \
   *box* `no-install` `offline` `result` `fit` · near: weights-pin, model-fit, connect-four
@@ -1787,6 +1825,15 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - <a id="wasm"></a>[**wasm**](adapters/deps/wasm/) \
   A job someone sent you as WebAssembly, run by Wasmtime over your folder read-only: the same bytes, so the same answer, on every machine. \
   Needs wasmtime; Apache-2.0 WITH LLVM-exception. Uses kart, share. *new* `needs-install` `offline` `job` `sent` · near: kart, fast-tests, dialect
+
+#### Tools you run yourself: ideas, not built yet
+
+- <a id="one-step"></a>**one-step** (idea) \
+  One step of a kept run run again alone, its new output kept in its place, and the steps after it marked as resting on the old one. \
+  Uses stack. *new* `no-install` `offline` `step` · near: hook-replay, start, warm
+- <a id="stack-check"></a>**stack-check** (idea) \
+  A stack file read through before anything runs: each add-on is here, each option is one it takes, each file it names is there. \
+  Uses stack. *new* `no-install` `offline` `stack` · near: stack, mutants, sap-gate
 
 ## Play
 

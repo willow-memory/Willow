@@ -3,12 +3,12 @@ section: Ways to use it
 line: Your folder in your web browser: ask, read each answer at its file and line, and approve suggestions with a click, from this machine only.
 source: new
 added: 2026-10-24
-version: 0.4.0
+version: 0.5.0
 writes: record
 network: loopback
 role: ways
 tags: everyday
-looks-for: digest, stack, words-de, words-es, words-fr, words-pt
+looks-for: digest, fair-merge, index-cache, look, projects, say, scan, stack, why-not, words-de, words-es, words-fr, words-pt
 -->
 # browse
 
@@ -18,7 +18,7 @@ you, and approve one with a click. The front page shows what's waiting,
 what went stale and what's coming up. Nothing to install, and no commands
 to type once it's open.
 
-    python adapters/stdlib/browse/browse.py --box DIR [--stack FILE] [--run FOLDER]
+    python adapters/stdlib/browse/browse.py --box DIR [--stack FILE] [--run FOLDER] [--index INDEX] [--beside INDEX ...] [--home FOLDER] [--say MODEL]
 
 It prints a link and opens it. Ctrl-C stops it. `--lang de` (or `es`,
 `fr`, `pt`) sends each question through that language's words add-on first.
@@ -92,6 +92,136 @@ seconds, with no script: a step's lines show up as it prints them. When the
 run's log says it is done, the page says how many steps were flagged and
 stops asking. It reads the folder only, and writes nothing, not the record.
 
+**A question goes to the step whose job it is.** With `--run FOLDER`, the
+ask box does one more thing. Your question is still the kernel's own
+`bite`, on the record, and its passages are still shown. Above them, the
+[look](../look/) add-on says what kind of question it is and shows what the
+run's steps already found for that kind:
+
+- "who still owes me money" shows the lines the run's debts and invoices
+  steps kept, each with its file and line in the run;
+- a question no one passage answers, but a step did, is not called a miss:
+  the page says "No one passage in your folder says that", under the
+  step's lines;
+- a step whose job it is that the run doesn't have is named, with
+  `waits on you`: that is a step to add to your stack;
+- a thing you wrote down ("the wifi password") is the kernel's alone, and
+  the page is as it was.
+
+Nothing is run again; the run's kept files are only read.
+
+**A miss says why.** When nothing in your folder holds a question, the
+[why-not](../why-not/) add-on's report is drawn under it: which words no
+passage holds, the nearest passages and what they lacked, a close spelling.
+Without the look or the why-not add-on, the page is as it was.
+
+**The middle is a stream.** Asking doesn't replace the page: each
+question and its answer is added under the last, in the order they were
+said, with the ask box at the bottom.
+
+- **Your line is plain,** as you typed it, with the time.
+- **What the page says back is marked `willow · code`.** It is one line,
+  made by code from what the boxes under it hold: "Your files hold 3
+  passages for that; the first is at notes/recipes.txt:12." No model is
+  asked, and nothing is said that a box doesn't hold.
+- **The boxes are under the line:** the first in sight, the rest behind
+  `more?`.
+- **The newest answer is open; the ones before fold to their line.** Click
+  a line to open it again.
+- **A question asked before says so:** "asked before: first on 2026-11-10
+  at 22:58", read from your record by the question's key, and the answer
+  is shown again. The record keeps that key and never your words.
+- **Small talk is answered by code** with one of a few fixed words
+  ("thanks", "Anytime."). Nothing is asked of your folder and nothing goes
+  on your record.
+- **The stream opens with what waits and what is coming up,** the front
+  page's summary, folded once you've asked something.
+
+The stream lasts as long as the page runs. It is kept nowhere else: stop
+browse and it is gone, and your record still holds every ask, by its key.
+
+**A model may say it too, and never the last word.** With `--say MODEL`,
+an [Ollama](https://ollama.com) tag on this machine, each answer also gets
+a sentence from that model, under code's line:
+
+- **It is marked with the model's name,** `willow · llama3.2:3b`, never as
+  code's.
+- **It is given only what code said:** your line, and the same facts
+  code's line was made from.
+- **The [say-check](../say-check/) add-on holds it to those facts.** A
+  sentence that keeps to them stands. One that adds a word or a number,
+  or misquotes you, is struck: shown struck through, with what failed,
+  and code's line above it stands.
+- **It comes after the page is up.** Code's line is there at once; the
+  page's script asks for the model's sentence, which can take seconds. With
+  scripts off there is no model's sentence, and code's line is the reply.
+- **It is asked once a turn,** kept with the turn while the page runs, and
+  goes nowhere near your record.
+- **Small talk and the opening are code's alone.**
+
+The model is asked by the [say](../say/) add-on, on this machine only. A
+model that can't be asked is said in a word, and nothing else changes.
+
+**Three panels.** Every page is laid out the same way:
+
+- **Left, where you are:** the project's name, then each section there is
+  to open: Ask, Waiting for you (with how many wait), What your stack
+  found, The run. Under the run, each of its steps, marked when it was
+  flagged or is still running; a step's link goes to its card. With
+  `--home FOLDER`, the folder your projects are under, the other projects
+  the [projects](../projects/) add-on finds there are listed too. Click
+  one and the page opens it: its box, its newest run, and its own stream.
+  Only a project found under that folder can be opened.
+- **Middle, the section that is open.**
+- **Right, what is at a place.** A file and line anywhere on a page
+  (`notes/iou.txt:3`) is a link. Click it and the right panel shows the
+  passage of your folder that holds that line, or, for a line of the run's
+  kept files, the lines around it. `Close` shuts the panel. Only a file the
+  kernel reads into your folder's passages, or one of the run's kept
+  files, is ever opened this way.
+
+On a narrow screen the three stack, top to bottom.
+
+**One script, its own.** The right panel fills without leaving the page
+because of one small script, `page.js`, beside `browse.py`. The same
+script asks for a model's sentence when you named one with `--say`. The page allows
+that file and no other: no script from anywhere else, and none written into
+a page. It asks only this page for anything. With scripts off, every link
+it handles is still a link: the place opens as a page of its own.
+Approving stays a plain form.
+
+**An index, if you keep one.** With `--index INDEX`, an index of your
+folder that [index-cache](../index-cache/) keeps current, a question is
+answered from the index instead of by reading every file again. The answer
+is the kernel's own, passage for passage, and the ask is on your record the
+same way. When the index isn't current (a file changed since it was built),
+or the [scan](../scan/) or index-cache add-on isn't here, the kernel reads
+the folder as before.
+
+A passage is shown when it holds half your question's words, so it can
+answer and still lack the thing you asked about. With an index and the
+[fair-merge](../fair-merge/) add-on, the page says which of your words no
+passage in your folder holds at all: "No passage in your folder holds:
+violin." That line is true without any ranking.
+
+**Other piles, beside your folder.** With `--beside INDEX`, once for each,
+other piles' indexes ([scan](../scan/) makes one) are asked the same
+question by fair-merge. What they hold is shown under your folder's answer
+in a box of its own, "Other piles, not your folder": each pile ranked alone
+and taking turns, a passage two piles hold shown once, and each pile's own
+line, "found nothing" or the words it lacks. None of it goes on your
+record, none of it can be approved, and its places are not links: they are
+not in your folder.
+
+**Drag a project onto the open one** (with `--home`) and it is asked beside
+it the same way: every index found in that project is a pile, named
+`project: index`. It is marked "beside" in the left panel, and its × takes
+it away again. The small + does the same with scripts off. Nothing is
+copied, merged or written, in either project: it is a way to see whether
+two projects belong together before anything is done about it, and it lasts
+while the page runs. A project with no index says so and isn't asked: a
+folder is never read whole for this.
+
 **Who can reach it:**
 
 | Way in | What stops it |
@@ -100,7 +230,7 @@ stops asking. It reads the folder only, and writes nothing, not the record.
 | Another website, in a browser you've opened willow in | Each start makes a new secret. The link hands it to your browser as an HttpOnly, SameSite=Strict cookie, and every form carries it as well. Without both, a request gets 403. A form whose Origin isn't this page (or is `null`, as a sandboxed frame's is) gets 403. |
 | A website that renames itself as this machine (DNS rebinding) | A Host header that isn't `127.0.0.1:PORT` or `localhost:PORT` gets 403. |
 | A website that frames it and lays a button over Approve | `frame-ancestors 'none'` and `X-Frame-Options: DENY`. |
-| Something injected into a passage | Every passage is HTML-escaped, and the page allows no scripts (`default-src 'none'`). |
+| Something injected into a passage | Every passage is HTML-escaped. Past that, the only script the page allows is its own file (`script-src 'self'`): one written into a page, as an injected one would be, never runs. |
 | A program already running as you | Nothing. That program could run `kernel.py seal` itself, so the page gives it no reach it didn't already have. |
 
 Checked in a real Chromium as well as in the tests. With willow open in one
@@ -120,4 +250,5 @@ keeps waiting), and words in the page in a language other than English.
 deleted, the page says so.
 
 **Never:** listens beyond this machine, shows or sends your key, runs a
-script in your browser, or approves anything you didn't click.
+script in your browser that isn't its own one file, or approves anything
+you didn't click.

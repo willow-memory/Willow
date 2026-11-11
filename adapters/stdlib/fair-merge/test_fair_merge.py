@@ -1,7 +1,9 @@
 """fair-merge: each source ranked on its own and the lists dealt out in turns,
 so a large source can't crowd a small one out; a source with nothing says so;
 the echo of the question is no answer; --from takes folders, --box takes the
-pile's folders; nothing is written; a bad command line is refused."""
+pile's folders, --index takes scan's indexes and names the words none of
+their passages hold; a passage two sources hold is shown once, with both;
+nothing is written; a bad command line is refused."""
 
 from __future__ import annotations
 
@@ -150,6 +152,107 @@ def test_it_writes_nothing_not_even_a_record_row(tmp_path):
     b = box(tmp_path, pile(tmp_path))
     before = {q: q.read_bytes() for q in tmp_path.rglob("*") if q.is_file()}
     run("--box", str(b), "frost")
+    assert {q: q.read_bytes() for q in tmp_path.rglob("*") if q.is_file()} == before
+
+
+SCAN = HERE.parent / "scan" / "scan.py"
+
+
+def index(tmp_path: Path, folder: Path, name: str) -> Path:
+    to = tmp_path / name
+    subprocess.run(
+        [sys.executable, str(SCAN), "index", "--from", str(folder), "--to", str(to)],
+        capture_output=True,
+    )
+    return to
+
+
+def indexes(tmp_path: Path) -> tuple[Path, Path, Path]:
+    p = pile(tmp_path)
+    return tuple(index(tmp_path, p / n, n + "-ix") for n in ("logs", "notes", "archive"))  # fmt: skip
+
+
+def test_indexes_take_turns_as_folders_do_in_the_order_given(tmp_path):
+    logs, notes, archive = indexes(tmp_path)
+    got = run("--index", str(notes), "--index", str(logs), "--index", str(archive), "--top", "3", "frost")  # fmt: skip
+    assert got.returncode == 0, got.stderr
+    assert places(got.stdout) == [
+        "notes-ix/garden.md:1",
+        "logs-ix/syslog:1",
+        "notes-ix/garden.md:3",
+    ]
+    assert "[notes-ix]" in got.stdout.splitlines()[0]
+    assert "logs-ix: 2 more that held it, not shown" in got.stdout
+    p = tmp_path / "pile"
+    same = run("--from", str(p / "notes"), "--from", str(p / "logs"), "--top", "3", "frost")  # fmt: skip
+    assert [x.split("/", 1)[1] for x in places(same.stdout)] == [
+        x.split("/", 1)[1] for x in places(got.stdout)
+    ]
+
+
+def test_an_index_names_the_words_none_of_its_passages_hold(tmp_path):
+    logs, notes, archive = indexes(tmp_path)
+    got = run("--index", str(notes), "--index", str(archive), "frost violin")
+    assert got.returncode == 0
+    lines = got.stdout.splitlines()
+    assert "archive-ix: found nothing; no passage holds: frost, violin" in lines
+    # found, on half the words, and still said to lack the other
+    assert "notes-ix: no passage holds: violin" in lines
+    whole = run("--index", str(notes), "frost beans")
+    assert "no passage holds" not in whole.stdout
+
+
+def test_an_absent_word_is_held_as_the_kernel_holds_one(tmp_path):
+    logs, notes, archive = indexes(tmp_path)
+    words = tmp_path / "words.txt"
+    words.write_text("rime = frost\n")
+    plain = run("--index", str(notes), "rime")
+    assert plain.returncode == 42
+    assert "notes-ix: found nothing; no passage holds: rime" in plain.stdout
+    got = run("--index", str(notes), "--words", str(words), "rime")
+    assert got.returncode == 0 and "no passage holds" not in got.stdout
+    # a plural is the word: "beans" is held, so "bean" is
+    assert "no passage holds" not in run("--index", str(notes), "bean").stdout
+
+
+def test_a_passage_two_sources_hold_is_shown_once_with_both(tmp_path):
+    p = tmp_path / "p"
+    for name in ("a", "b"):
+        (p / name).mkdir(parents=True)
+        (p / name / "x.txt").write_text("Frost is due in November.\n")
+    (p / "b" / "y.txt").write_text("The frost took the beans.\n")
+    got = run("--from", str(p / "a"), "--from", str(p / "b"), "frost")
+    assert places(got.stdout) == ["a/x.txt:1", "b/y.txt:1"]
+    assert "[a, b]" in got.stdout.splitlines()[0]
+    assert "[b]" in got.stdout.splitlines()[1]
+    assert "found nothing" not in got.stdout and "more" not in got.stdout
+    ia, ib = index(tmp_path, p / "a", "ia"), index(tmp_path, p / "b", "ib")
+    got = run("--index", str(ib), "--index", str(ia), "frost")
+    assert len(places(got.stdout)) == 2 and "[ib, ia]" in got.stdout
+    assert "ia: found nothing" not in got.stdout  # it found one; ib showed it
+
+
+def test_what_is_not_an_index_is_refused_and_two_of_one_name(tmp_path):
+    logs, notes, archive = indexes(tmp_path)
+    p = tmp_path / "pile"
+    assert run("--index", str(p / "notes"), "frost").returncode == 2
+    assert "not an index" in run("--index", str(p / "notes"), "frost").stderr
+    (tmp_path / "other").mkdir()
+    twin = index(tmp_path / "other", p / "logs", "notes-ix")
+    got = run("--index", str(notes), "--index", str(twin), "frost")
+    assert got.returncode == 2 and "same folder name" in got.stderr
+    bad = tmp_path / "bad.txt"
+    bad.write_text("no equals sign here\n")
+    for argv in (["--index", str(notes), "--from", str(p / "logs"), "frost"], ["--index", "", "frost"],
+                 ["--from", str(p / "logs"), "--words", str(bad), "frost"], ["--index", str(notes), "--words", "", "frost"],
+                 ["--index", str(notes), "--words", str(tmp_path / "missing"), "frost"]):  # fmt: skip
+        assert run(*argv).returncode == 2, argv
+
+
+def test_indexes_are_read_and_nothing_is_written(tmp_path):
+    logs, notes, archive = indexes(tmp_path)
+    before = {q: q.read_bytes() for q in tmp_path.rglob("*") if q.is_file()}
+    run("--index", str(logs), "--index", str(notes), "frost")
     assert {q: q.read_bytes() for q in tmp_path.rglob("*") if q.is_file()} == before
 
 

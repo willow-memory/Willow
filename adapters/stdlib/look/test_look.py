@@ -322,3 +322,38 @@ def test_a_long_place_doesnt_push_every_row_past_sixty(tmp_path):
     assert len(long) > 60
     assert f"  {long}:1  The frosts came early again." in lines
     assert f"  {'diary.txt:3':<60}  The frosts came early last year." in lines
+
+
+def test_a_line_that_names_a_place_in_your_files_is_shown_at_that_place(tmp_path):
+    r = a_run(
+        tmp_path,
+        debts="2024-05-22  $40  notes/iou.txt:3  Dana owes you forty\n1 line speaks of debts\n",
+        invoices="invoice  work/log_2026.csv:98\n",
+    )
+    doc = json.loads(
+        run("who owes me", "--run", r, "--kinds", kinds(tmp_path), "--json").stdout
+    )
+    assert doc["groups"][0]["rows"] == [
+        {"where": "notes/iou.txt:3", "what": "2024-05-22 $40 Dana owes you forty"},
+        {"where": "01-debts.txt:2", "what": "1 line speaks of debts"},
+    ]
+    assert doc["groups"][1]["rows"] == [
+        {"where": "work/log_2026.csv:98", "what": "invoice"}
+    ]
+
+
+def test_what_is_and_isnt_a_place():
+    assert look.placed("s.txt", 4, "a.md:12  call them") == ("a.md:12", "call them")
+    assert look.placed("s.txt", 4, "x  a/b.eml.txt:6  y") == ("a/b.eml.txt:6", "x y")
+    # a time, a sum and a bare number are no place, and the kept line is
+    for line in (
+        "[13:10] Nell: hi",
+        "due 2026-06-27, $640.00",
+        "ratio 3:2",
+        "see notes:4",
+    ):
+        assert look.placed("s.txt", 4, line) == ("s.txt:4", line), line
+    # a line that is only a place has nothing else to say: shown whole
+    assert look.placed("s.txt", 4, "a.md:12") == ("s.txt:4", "a.md:12")
+    # the first place a line names is the one
+    assert look.placed("s.txt", 1, "a.md:1 then b.md:2")[0] == "a.md:1"

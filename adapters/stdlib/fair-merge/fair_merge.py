@@ -3,6 +3,7 @@ Python 3.9+.
 
     python adapters/stdlib/fair-merge/fair_merge.py --box DIR [--top N] "question"
     python adapters/stdlib/fair-merge/fair_merge.py --from FOLDER [--from FOLDER...] [--top N] "question"
+    python adapters/stdlib/fair-merge/fair_merge.py --index INDEX [--index INDEX...] [--words FILE] [--top N] "question"
 
 One ranked list over a big pile lets a large corpus push a small one out on
 volume alone: a thousand log lines hold "frost" more often than the one
@@ -16,12 +17,24 @@ own, and the lists are dealt out in turns, first of each, then second of each:
     archive: found nothing
 
 A source is a folder: with --box, each folder at the top of the box's pile
-(and the files loose at the top, as "."); with --from, each FOLDER given. Each
+(and the files loose at the top, as "."); with --from, each FOLDER given; with
+--index, each INDEX the scan add-on made of a folder, read one at a time and
+only where the question's words are, so a pile too big to read whole can be
+one. --words FILE is a words list for the indexes, as scan takes one. Each
 list is the kernel's `rank` of that source alone (a passage must hold half the
 question's words), so the rarest words weigh most within a source and not
 across them. Sources take turns in the order they are named, or by name for a
 box, and a source with nothing to say says "found nothing" instead of
-disappearing. The question asked back (a passage that only repeats it) is not
+disappearing. A source that is an index says more: the words of the question
+none of its passages hold, whether or not it found something. Half the words
+is enough to be shown, so a passage can answer and still lack the subject:
+
+    recipes: found nothing; no passage holds: frost
+    logs: 1 more that held it, not shown; no passage holds: violin
+
+A passage two sources hold word for word is one passage: it is shown once,
+at the first source's place, with every source that holds it, `[notes, old]`.
+The question asked back (a passage that only repeats it) is not
 an answer and is left out. --top N shows N passages (6 unless said).
 
 It asks without asking: nothing is written, not even a record row.
@@ -39,6 +52,46 @@ sys.path.insert(0, str(STDLIB.parents[1]))
 import kernel  # noqa: E402
 
 TOP = 6
+
+
+def scan_addon():
+    """The scan add-on's module, from its source beside this one."""
+    sys.path.insert(0, str(STDLIB / "scan"))
+    import scan
+
+    return scan
+
+
+def from_index(at: Path, question: str, alias: dict) -> tuple[list[dict], list[str]]:
+    """(an index's passages that answer, best first; the question's words no
+    passage of it holds, each held the way the kernel holds a word)."""
+    ix = scan_addon().Index(at)
+    found = [
+        c
+        for c in ix.rank(question, alias, kernel.TOP)
+        if not kernel.echo(question, c["text"])
+    ]
+    want = [
+        w for w in dict.fromkeys(kernel.words(question)) if w not in kernel.FUNCTION
+    ]
+    return found, [w for w in want if not ix.near(w, alias)]
+
+
+def joined(
+    lists: list[tuple[str, list[dict]]],
+) -> tuple[list[tuple[str, list[dict]]], dict[str, list[str]]]:
+    """(the lists with a passage an earlier source also found left out of the
+    later one, {a passage's id: every source that found it, in order})."""
+    held: dict[str, list[str]] = {}
+    out = []
+    for name, found in lists:
+        mine = []
+        for c in found:
+            if c["id"] not in held:
+                mine.append(c)
+            held.setdefault(c["id"], []).append(name)
+        out.append((name, mine))
+    return out, held
 
 
 def sources_of_pile(pile: Path) -> list[tuple[str, Path | None]]:
@@ -64,6 +117,50 @@ def ranked(pile_chunks: list[dict], question: str, alias: dict) -> list[dict]:
     ]
 
 
+def across(
+    indexes: list[Path],
+    question: str,
+    alias: dict,
+    top: int = TOP,
+    names: list[str] | None = None,
+) -> dict:
+    """The same merge for a caller in this process: `served`, each passage
+    dealt in turns with its `where`, `text` and the piles it is `in`, and
+    `piles`, each index's name, how many passages it `found`, how many
+    `more` it held than were shown, and the words of the question it
+    `lacks`. A pile is called by its index's folder, or by `names`, one for
+    each. ValueError when one isn't an index, or two share a name."""
+    names = names or [Path(i).resolve().name for i in indexes]
+    if len(set(names)) != len(names) or len(names) != len(indexes):
+        raise ValueError("two indexes have the same name")
+    lists, absent = [], {}
+    for name, i in zip(names, indexes):  # one whole index in memory at a time
+        found, absent[name] = from_index(Path(i), question, alias)
+        lists.append((name, [{**c, "path": f"{name}/{c['path']}"} for c in found]))
+    found_by = {name: len(found) for name, found in lists}
+    lists, held = joined(lists)
+    out, more = merge(lists, top)
+    return {
+        "served": [
+            {
+                "where": f"{c['path']}:{c['line']}",
+                "text": c["text"],
+                "in": held[c["id"]],
+            }
+            for _, c in out
+        ],
+        "piles": [
+            {
+                "name": n,
+                "found": found_by[n],
+                "more": more.get(n, 0),
+                "lacks": absent[n],
+            }
+            for n in names
+        ],
+    }
+
+
 def merge(
     lists: list[tuple[str, list[dict]]], top: int
 ) -> tuple[list[tuple[str, dict]], dict[str, int]]:
@@ -85,11 +182,13 @@ def merge(
 
 
 def main(argv: list[str]) -> int:
-    folders, opts, args, it = [], {}, [], iter(argv)
+    folders, indexes, opts, args, it = [], [], {}, [], iter(argv)
     for a in it:
         if a == "--from":
             folders.append(next(it, ""))
-        elif a in ("--box", "--top"):
+        elif a == "--index":
+            indexes.append(next(it, ""))
+        elif a in ("--box", "--top", "--words"):
             opts[a] = next(it, "")
         else:
             args.append(a)
@@ -102,14 +201,35 @@ def main(argv: list[str]) -> int:
     )
     if (
         not ok
-        or bool(opts.get("--box")) == bool(folders)
-        or "" in folders
+        or (bool(opts.get("--box")) + bool(folders) + bool(indexes)) != 1
+        or "" in folders + indexes
         or ("--box" in opts and not opts["--box"])
+        or ("--words" in opts and (not indexes or not opts["--words"]))
     ):
         print(__doc__.split("\n\n")[1].splitlines()[0], file=sys.stderr)
         return kernel.REFUSED
     alias: dict = {}
-    if opts.get("--box"):
+    absent: dict[str, list[str]] = {}
+    if indexes:
+        names = [Path(i).resolve().name for i in indexes]
+        if len(set(names)) != len(names):
+            print("refused: two indexes have the same folder name", file=sys.stderr)
+            return kernel.REFUSED
+        lists = []
+        try:
+            if "--words" in opts:
+                alias, why = kernel.parse_words(
+                    Path(opts["--words"]).read_text(encoding="utf-8")
+                )
+                if why:
+                    raise ValueError(why)
+            for name, i in zip(names, indexes):  # one whole index in memory at a time
+                found, absent[name] = from_index(Path(i), args[0], alias)
+                lists.append((name, [{**c, "path": f"{name}/{c['path']}"} for c in found]))  # fmt: skip
+        except (OSError, ValueError) as e:
+            print(f"refused: {e}", file=sys.stderr)
+            return kernel.REFUSED
+    elif opts.get("--box"):
         box = Path(opts["--box"])
         if not (box / "kernel.json").exists():
             print("refused: not a kernel box; init first", file=sys.stderr)
@@ -147,17 +267,24 @@ def main(argv: list[str]) -> int:
                     ],
                 )
             )
+    found_by = {name: bool(found) for name, found in lists}
+    lists, held = joined(lists)
     out, more = merge(lists, int(top))
-    for n, (name, c) in enumerate(out, 1):
+    for n, (_, c) in enumerate(out, 1):
         line = " ".join(c["text"].split())
         print(
-            f"{n}. {c['path']}:{c['line']}    [{name}]    {line if len(line) <= 90 else line[:89] + '…'}"
+            f"{n}. {c['path']}:{c['line']}    [{', '.join(held[c['id']])}]    {line if len(line) <= 90 else line[:89] + '…'}"
         )
-    for name, found in lists:
-        if not found:
-            print(f"{name}: found nothing")
+    for name, _ in lists:
+        said = []
+        if not found_by[name]:
+            said.append("found nothing")
         elif name in more:
-            print(f"{name}: {more[name]} more that held it, not shown")
+            said.append(f"{more[name]} more that held it, not shown")
+        if absent.get(name):
+            said.append(f"no passage holds: {', '.join(absent[name])}")
+        if said:
+            print(f"{name}: {'; '.join(said)}")
     return kernel.ALIVE if out else kernel.ESCALATE
 
 

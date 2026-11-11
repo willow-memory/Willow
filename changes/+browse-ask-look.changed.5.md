@@ -1,0 +1,1 @@
+browse says which of a question's words no passage in your folder holds (with `--index`), and with `--beside INDEX` asks other piles' indexes too, shown apart from your folder's answer, each with the words it lacks. A project dragged onto the open one in the left panel (or its + button) is asked beside it, by its indexes, until its × is pressed.

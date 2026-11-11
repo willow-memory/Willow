@@ -1,0 +1,1 @@
+`browse`: `--index INDEX` answers a question from scan's index, kept current by index-cache, instead of reading every file again: the kernel's own answer, on the record the same way, and the folder is read as before when the index isn't current
