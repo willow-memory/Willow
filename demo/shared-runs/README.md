@@ -55,6 +55,7 @@ measurement, and is reported as one.
 | R6, a failure is not repeated | no setup recorded as halted is run again by a later notebook |
 | R7, the blind account | the receiving agent's answers to the frozen questions match the key the script makes from the records; see below |
 | R8, the blind account adds nothing | no sentence of the receiving agent's account names a figure, a machine or an outcome that no report holds |
+| R9, the blind account says when the reports don't | every frozen question the reports hold no answer to is answered "the reports don't say", and none of them with a figure |
 
 ## A session led by a script
 
@@ -86,6 +87,11 @@ many setups were computed and how many served, which machines disagreed
 and where, which setups halted, how much was not computed. It answers from
 the reports alone, each answer with the line it came from.
 
+**Some of the questions have no answer.** A share of the frozen list asks
+what no report holds: a machine that never ran, a setup that was not in the
+sweep. The right reply is that the reports don't say (R9). A list with no
+such question can't tell an agent that knows from one that always answers.
+
 **Why it is worth testing on its own.** The stack in
 [demo/kept](../kept/README.md) showed a session breaking three rules that
 were only written down, with nothing to stop it. A chain of agents is
@@ -98,6 +104,40 @@ project stands from what was kept, every line naming its file. The look
 add-on answers a question from a kept run's own lines. The thesis and
 claim-check add-ons put a sentence to a folder, part by part.
 
+## What one session's trial run says of R7 to R9
+
+A session the same day put one plain question, "What's the connection
+between these two?", about 23 pairs of passages to 18 models, each pair in
+a chat of its own: five on the session's machine, from half a billion
+parameters to ten, and thirteen hosted, run as one private Kaggle benchmark
+task. Every pair shared one number and, for most, nothing else. The answers
+were sorted by a word pattern and a handful read in full; they are kept on
+that machine, not here, so these are an account, not a result.
+
+- **Asked an open question, a model answers.** Only two of the eighteen
+  said "nothing joins these but the number" for most pairs. The seven
+  mid-sized hosted models said it for at most a third of them, and the
+  small ones' "nothing" fell on pairs at random. So R8 can't rest on the
+  agent holding back: the strike has to be a script's, as planned.
+- **Models agreeing is not a record.** On pairs the largest models called
+  empty, most models still added the same words, because each described
+  the two passages the same way. Agreement between agents is no check of a
+  report; the records are.
+- **An agent that sees more than its brief sees more than a blind one.**
+  Three agents were first handed all the pairs in one sitting, and named
+  the shared number every time. Asked one pair a chat, the smallest of
+  the three named it as the only link for 6 pairs where it had for 16
+  (the two were not the same version of the model). The brief's whole
+  input, kept by SHA-256, is the guard, and it has to be the whole of it.
+- **A second model is within reach.** One Kaggle task ran on thirteen
+  hosted models, privately, with no key on the session's machine. The
+  receiving agent could be run as two different models in this study, and
+  not left to a later one.
+- **What is uploaded is checked first, by a tool, not by eye.** One pair
+  named the maintainer and held a signature; it was left out. The check
+  that found it was written on the spot, where a stricter one already
+  existed and should have run first.
+
 ## How it could be wrong
 
 | threat | what is planned against it |
@@ -108,7 +148,7 @@ claim-check add-ons put a sentence to a folder, part by part.
 | The baseline is slowed by something else | the baseline and the shared run use the same notebook settings, and the baseline is run twice |
 | A report is written to please | reports are made from records, and R8 strikes what the records lack |
 | The receiving agent was told the answers | it is started fresh, and its whole input is kept by SHA-256 |
-| The agents are the same model, so they agree | said plainly as a limit: agreement between two of one model is weak evidence, and a second model is a later study |
+| The agents are the same model, so they agree | the receiving agent is run as two different models, if the maintainer says so (see the trial run above); if only one, it is said plainly as a limit: agreement between two of one model is weak evidence, and a second model is a later study |
 | A dry run that finds nothing tests nothing | the dry run gets one made-up setup its nonsense questions find, as the study rules ask |
 
 ## What it cannot show
@@ -134,6 +174,10 @@ These are not known, and the plan waits on them.
 - **The maintainer's say** on running code from outside this repository:
   science_bitch, and the two tools sent to its author, a store of runs
   kept under their inputs' name and a witness of what a run computed.
+- **What is checked before it is uploaded, and by what.** Every notebook,
+  dataset and brief that leaves the maintainer's machine is put through a
+  privacy check first: names, keys, paths, signatures. Which tool, and its
+  list of terms, is the maintainer's to name; the list is never committed.
 - **Which agents, and what each may do.** The brief for each phase, the
   commands it may run, and what it must never do, written before any is
   started.
