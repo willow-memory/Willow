@@ -437,6 +437,14 @@ card for what a step reads besides the pile (the record, the clock; the
 `reads:` line some cards have names file types, not this), and the
 record's state in the mark of a step that reads it.
 
+[stack-bridges](../../adapters/stdlib/stack-bridges/) reads the same
+thing off the cards without running anything: a step that names the
+record after one that writes it takes "the record as it left it". On
+this stack it finds no bridge at all. It takes `{box}` for the record,
+and this stack names its record by its folder, `--box boxes/sources`.
+The runs show two steps that read a record eight others wrote. Not
+changed here: a fix for after this branch is merged.
+
 ## The order
 
 1. Settle the list above.
