@@ -43,7 +43,9 @@ KART = ROOT / "adapters" / "deps" / "kart" / "kart.py"
 PEOPLE = ["ines", "walt", "aurelie", "tamsin", "harold"]
 NAMES = {"ines": "Ines", "walt": "Walt", "aurelie": "Aurelie", "tamsin": "Tamsin",
          "harold": "Harold"}  # fmt: skip
-JOB = "grep -rlic johnson {pile} | sed 's|^.*/||' | sort\ngrep -rhi johnson {pile} | wc -l"
+JOB = (
+    "grep -rli johnson {pile} | sed 's|^.*/||' | sort\ngrep -rhi johnson {pile} | wc -l"
+)
 #: only aggregates: two counts a folder, nothing of what its lines say
 COUNT = "grep -rhi johnson {pile} | wc -l\ngrep -rh '2026-0[34]' {pile} | wc -l"
 #: the same ask, written to bring back the folder itself

@@ -1,0 +1,1 @@
+`ci`'s guard no longer counts as a write an `os.mkdir` where something already is: that call can only fail with FileExistsError and changes nothing. wasi-python asks for its cache folder so on every run, which made `run --cache` a breach of `writes: record, to`. A folder that isn't there is still a write

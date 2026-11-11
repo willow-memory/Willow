@@ -7,6 +7,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -108,6 +109,22 @@ echo "home: $(ls ~ 2>/dev/null | wc -l)"
     assert not (walt.dir / "pile" / "new").exists()
 
 
+def test_a_job_runs_on_the_systems_path_and_locale_not_yours(walt, tmp_path):
+    """Your PATH and LANG change what a job's grep and sort say; the same job
+    over everyone's folders should differ only by what the folders hold."""
+    subj = walt.job('echo "$LANG"; echo "$PATH"')
+    env = {
+        **os.environ,
+        "LANG": "tr_TR.UTF-8",
+        "PATH": f"{tmp_path}:{os.environ['PATH']}",
+    }
+    got = walt.kart("run", "--job", subj, "--to", tmp_path / "o", *NOW, env=env)
+    assert got.returncode == 42, got.stdout + got.stderr
+    lang, path = (tmp_path / "o").read_text().splitlines()
+    assert lang == "C" and path.split(":")[:2] == ["/usr/bin", "/bin"]
+    assert str(tmp_path) not in path
+
+
 def test_a_run_is_on_your_record_without_its_output(walt, tmp_path):
     subj = walt.job("grep -rhi johnson {pile} | wc -l")
     got = walt.kart("run", "--job", subj, "--to", tmp_path / "out.txt", *NOW)
@@ -128,6 +145,9 @@ def test_a_run_is_on_your_record_without_its_output(walt, tmp_path):
         and ran["bound_rw"] == 1
     )
     assert str((walt.dir / "pile").resolve()) in ran["bound_ro"]
+    assert sorted(ran["tools"]) == ["bash", "grep", "wc"] and ran["locale"] == "C"
+    grep = Path(shutil.which("grep", path="/usr/bin:/bin")).resolve()
+    assert ran["tools"]["grep"] == hashlib.sha256(grep.read_bytes()).hexdigest()
     assert str(walt.box.resolve()) not in json.dumps(ran["bound_ro"])
     assert "Johnson" not in (walt.box / "record.jsonl").read_text(), (
         "the record keeps no output"
@@ -212,6 +232,28 @@ def test_without_bubblewrap_it_refuses_and_names_it(walt, tmp_path):
     env = {**os.environ, "PATH": str(tmp_path / "empty")}
     got = walt.kart("run", "--job", subj, "--to", tmp_path / "o", *NOW, env=env)
     assert got.returncode == 2 and "bubblewrap isn't installed" in got.stderr
+
+
+def test_a_bubblewrap_that_cant_sandbox_here_refuses_before_anything_runs(
+    walt, tmp_path
+):
+    """Installed but forbidden its namespaces, as in a default Docker container
+    or under Ubuntu 24.04's AppArmor: refused in bwrap's words, and nothing
+    on the record, since nothing ran."""
+    subj = walt.job("echo hi")
+    fake = tmp_path / "bin"
+    fake.mkdir()
+    (fake / "bwrap").write_text(
+        "#!/bin/sh\necho 'bwrap: No permissions to create a new namespace' >&2\nexit 1\n"
+    )
+    (fake / "bwrap").chmod(0o755)
+    env = {**os.environ, "PATH": f"{fake}{os.pathsep}{os.environ['PATH']}"}
+    before = walt.rows()
+    got = walt.kart("run", "--job", subj, "--to", tmp_path / "o", *NOW, env=env)
+    assert got.returncode == 2, got.stdout + got.stderr
+    assert "can't make a sandbox" in got.stderr
+    assert "No permissions to create a new namespace" in got.stderr
+    assert walt.rows() == before and not (tmp_path / "o").exists()
 
 
 def test_the_policy_is_willows_and_says_so(walt):
@@ -451,9 +493,11 @@ def test_gather_adds_everyones_numbers_and_waits_on_your_seal(ask):
     got = ask.gather(*pkgs)
     assert got.returncode == 42, got.stdout + got.stderr
     assert "total          4 2  from 3 folders" in got.stdout
+    assert "sets of tools" not in got.stdout
     subj = got.stdout.splitlines()[-1].split()[1]
     prop = json.loads((ask.ines.box / "proposals" / f"{subj[9:]}.json").read_text())
     assert prop["data"] == "4\n2\n" and prop["cites"] == []
+    assert "on the same tools" in prop["claim"]
     assert sum(r["kind"] == "seal" for r in ask.ines.rows()) == 1, (
         "only Ines's job so far"
     )
@@ -497,3 +541,25 @@ def test_gather_refuses_lines_that_dont_line_up_and_what_isnt_a_result(ask, tmp_
     ask.receive(ask.ines, pkg)
     got = ask.gather(w, pkg)
     assert got.returncode == 2 and "isn't one kart result" in got.stderr
+
+
+def test_gather_says_when_results_ran_on_different_tools(ask):
+    """Two machines' grep can count one job differently (busybox's and GNU's
+    read `-lic` apart): the totals still add, and say so before you seal."""
+    job = ask.job(COUNT, "count johnson and kessler")
+    w = ask.answer("walt", job)
+    tamsin = ask.people["tamsin"]
+    claim = (f"what job {job} printed; tools {'0' * 64}; "
+             f"job text {hashlib.sha256(COUNT.encode()).hexdigest()}")  # fmt: skip
+    other = tamsin.propose("a result from elsewhere", {"path": "kart/results/x.txt",
+                           "data": "0\n1\n", "cites": [], "claim": claim})  # fmt: skip
+    tamsin.seal(other)
+    back = ask.send(tamsin, other, ask.ines, "other-tools")
+    ask.receive(ask.ines, back)
+    got = ask.gather(w, back)
+    assert got.returncode == 42, got.stdout + got.stderr
+    assert "total          2 2  from 2 folders" in got.stdout
+    assert "ran on 2 different sets of tools" in got.stdout
+    subj = got.stdout.splitlines()[-1].split()[1]
+    prop = json.loads((ask.ines.box / "proposals" / f"{subj[9:]}.json").read_text())
+    assert "on 2 sets of tools" in prop["claim"]

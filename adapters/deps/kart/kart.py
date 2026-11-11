@@ -13,8 +13,9 @@ seal it, through the kernel. `run` runs a job you sealed, and nothing else.
 It runs in Kartikeya's bubblewrap sandbox under a policy of willow's, not
 Kartikeya's default: your folder read-only, one scratch folder of its own,
 the system's /usr read-only, private /tmp, no network, and no environment
-variable of yours. The box and the key are never in it. `{pile}` and
-`{scratch}` in the job are its two folders, as they are mounted. A job that
+variable of yours: its PATH is the system's and its locale C. The box and
+the key are never in it. `{pile}` and `{scratch}` in the job are its two
+folders, as they are mounted. A job that
 asks for the network (`# allow_net`, `# allow_db`, `# allow_localhost`) is
 refused before anything runs, and Kartikeya's own scan refuses commands it
 reads as harmful before any sandbox is built. `policy` prints the policy.
@@ -36,18 +37,22 @@ line, and proposes the totals as your answer, waiting on your seal.
 Exit codes, the kernel's: 0 the policy printed; 42 a job taken, a result or
 a total proposed, waiting on your seal, or a job that failed or broke its
 shape; 2 refused (no
-bubblewrap or Kartikeya, a job not sealed, one asking for the network).
+bubblewrap or Kartikeya, a bubblewrap that can't make a sandbox here, a job
+not sealed, one asking for the network).
 """
 
 from __future__ import annotations
 
 import contextlib
+import hashlib
 import importlib.util
 import io
 import json
 import os
+import re
 import shlex
 import shutil
+import subprocess
 import sys
 import tempfile
 from pathlib import Path
@@ -137,12 +142,49 @@ def policy(pile: Path, scratch: Path) -> dict:
     }  # fmt: skip
 
 
+#: an empty sandbox: the namespaces and the fresh /proc every job's needs
+PROBE = ["bwrap", "--unshare-all", "--die-with-parent", "--ro-bind", "/", "/",
+         "--proc", "/proc", "--dev", "/dev", "true"]  # fmt: skip
+
+
+#: what a job's programs are found on, and its locale: the system's, never yours,
+#: so one job reads the same on everyone's machine but for the tools themselves
+PATH = "/usr/bin:/bin"
+LOCALE = "C"
+
+
+def tools(job: str) -> dict[str, str]:
+    """{program: SHA-256 of its file} for bash and each word of the job that is
+    a program on PATH under /usr, the only system folder a job sees. The same
+    job over two machines answers alike only if these are alike."""
+    words = {"bash"} | set(re.findall(r"(?<![\w./{-])[A-Za-z][\w.+-]*", job))
+    found = {}
+    for w in sorted(words):
+        at = shutil.which(w, path=PATH)
+        real = Path(at).resolve() if at else None
+        if real and real.is_relative_to("/usr"):
+            found[w] = hashlib.sha256(real.read_bytes()).hexdigest()
+    return found
+
+
 def missing() -> str | None:
-    """Why a job can't run here, or None: Kartikeya and bubblewrap, named."""
+    """Why a job can't run here, or None: Kartikeya and bubblewrap, named, and
+    a bubblewrap that can't make a sandbox on this machine, in its own words."""
     if importlib.util.find_spec("kartikeya") is None:
         return "Kartikeya isn't installed: pip install -r adapters/deps/kart/requirements.txt"
     if shutil.which("bwrap") is None:
         return "bubblewrap isn't installed: the bwrap program (apt install bubblewrap)"
+    try:
+        # an empty pipe for its input, not the null device: opening that is a
+        # write by the guard's rule, and this add-on writes record and to only
+        got = subprocess.run(PROBE, capture_output=True, text=True, timeout=30,
+                             input="")  # fmt: skip
+    except (OSError, subprocess.TimeoutExpired) as e:
+        got = subprocess.CompletedProcess(PROBE, 1, "", str(e))
+    if got.returncode != 0:
+        said = (got.stderr.strip().splitlines() or ["no reason given"])[0][:300]
+        return (f"bubblewrap can't make a sandbox on this machine ({said}); "
+                "nothing ran. a container's or AppArmor's rules may forbid it")  # fmt: skip
     return None
 
 
@@ -229,6 +271,7 @@ def do_run(opts: dict, ts: str) -> int:
     if why:
         return refuse(why)
     pile = Path(kernel.config(box)["pile"]).resolve()
+    used = tools(prop["data"])
     status, result = sandboxed(prop["data"], pile, timeout)
     out = str(result.get("stdout") or "")
     to.write_text(out, encoding="utf-8")
@@ -240,6 +283,7 @@ def do_run(opts: dict, ts: str) -> int:
         bound_ro=manifest.get("bound_ro"), bound_rw=len(manifest.get("bound_rw") or []),
         refused=(result.get("error") or None) if status != "completed" else None,
         shape=shape, held_shape=shaped(out, shape) if status == "completed" else None,
+        tools=used, locale=LOCALE,
     )  # fmt: skip
     print(f"ran    {subj}  {status}, exit {result.get('returncode')}, row {row['n']}")
     print(f"output written to {to} ({len(out)} characters)")
@@ -257,6 +301,7 @@ def do_run(opts: dict, ts: str) -> int:
     res = {"path": f"kart/results/{subj[9:21]}.txt", "data": out[:OUTPUT], "cites": [],
            "claim": f"what job {subj} printed, run at row {row['n']} over this folder "
                     f"read-only, with no network{', held to ' + shape if shape else ''}; "
+                    f"tools {kernel.h256(kernel.canon(used))}; "
                     f"job text {kernel.h256(prop['data'])}"}  # fmt: skip
     rsubj, said = propose(box, f"kart result {subj}", res, now)
     if rsubj is None:
@@ -291,8 +336,9 @@ def result_of(rows: list[dict], path: Path) -> tuple[dict | None, str | None]:
     if not shaped(ans[0]["data"], "numbers"):
         return None, f"{path} isn't numbers"
     lines = [int(x) for x in ans[0]["data"].strip().splitlines()]
+    said = re.search(r"; tools ([0-9a-f]{64}); job text ", ans[0]["claim"])
     return {"package": pid, "from": core["from"], "chain": core["chain"]["start"],
-            "job": job, "numbers": lines}, None  # fmt: skip
+            "job": job, "numbers": lines, "tools": said and said[1]}, None  # fmt: skip
 
 
 def do_gather(opts: dict) -> int:
@@ -318,11 +364,17 @@ def do_gather(opts: dict) -> int:
             f"  {share.short(r['from'])}  {' '.join(map(str, r['numbers']))}  {r['package']}"
         )
     print(f"  total          {' '.join(map(str, total))}  from {len(got)} folders")
+    sets = {r["tools"] for r in got}
+    alike = len(sets) == 1 and None not in sets
+    if not alike:
+        print(f"  ran on {len(sets)} different sets of tools{' (or tools not said)' if None in sets else ''}: "
+              "the same job can count differently on each; read them before you seal")  # fmt: skip
     now = ["--now", opts["--now"]] if opts.get("--now") else []
     prop = {"path": f"kart/gathered/{got[0]['job'][:12]}.txt",
             "data": "\n".join(map(str, total)) + "\n", "cites": [],
-            "claim": f"the sum of {len(got)} results of job text {got[0]['job']}, from "
-                     + ", ".join(r["package"] for r in got)}  # fmt: skip
+            "claim": f"the sum of {len(got)} results of job text {got[0]['job']}, "
+                     + ("on the same tools" if alike else f"on {len(sets)} sets of tools")
+                     + ", from " + ", ".join(r["package"] for r in got)}  # fmt: skip
     subj, said = propose(box, opts["--words"], prop, now)
     if subj is None:
         print(said, end="")
@@ -344,12 +396,14 @@ def sandboxed(job: str, pile: Path, timeout: int) -> tuple[str, dict]:
         conf.write_text(json.dumps(policy(pile, scratch)), encoding="utf-8")
         task = job.replace("{pile}", shlex.quote(str(pile)))
         task = task.replace("{scratch}", shlex.quote(str(scratch)))
-        keep = {
-            k: os.environ.get(k) for k in ("KART_SANDBOX_CONFIG", "WILLOW_HOME", "HOME")
-        }
-        os.environ.update(
-            KART_SANDBOX_CONFIG=str(conf), WILLOW_HOME=str(home), HOME=str(home)
-        )
+        # bwrap itself is looked up on PATH too: its folder goes last, where
+        # the job can't see it (only /usr is mounted)
+        bwrap = os.path.dirname(shutil.which("bwrap") or "/usr/bin/bwrap")
+        path = PATH if bwrap in PATH.split(":") else f"{PATH}:{bwrap}"
+        swap = {"KART_SANDBOX_CONFIG": str(conf), "WILLOW_HOME": str(home),
+                "HOME": str(home), "PATH": path, "LANG": LOCALE}  # fmt: skip
+        keep = {k: os.environ.get(k) for k in swap}
+        os.environ.update(swap)
         try:
             return run_shell_task(task, timeout=timeout)
         finally:

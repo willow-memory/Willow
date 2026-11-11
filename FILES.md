@@ -1442,6 +1442,7 @@ willow/
 │   │   │   ├── test_stack.py
 │   │   │   ├── example.md
 │   │   │   ├── examples/      stacks to start from, one kind of folder each: a choir, a smallholding, a code library, a class, a story...
+│   │   │   │   ├── asked.md  someone who was asked to run a job
 │   │   │   │   ├── choir.md
 │   │   │   │   ├── comeback.md
 │   │   │   │   ├── export.md
@@ -1758,6 +1759,12 @@ willow/
 │       │   ├── requirements.txt
 │       │   ├── test_dialect_dates.py
 │       │   └── README.md     its card
+│       ├── dp/
+│       │   ├── dp.py         noise on a count before it leaves, by OpenDP, so one person's number
+│       │   ├── requirements-floor.txt
+│       │   ├── requirements.txt
+│       │   ├── test_dp.py
+│       │   └── README.md     its card
 │       ├── fast-tests/
 │       │   ├── fast_tests.py  the test suite across every core with pytest-xdist, in a fraction of the time
 │       │   ├── requirements.txt  pytest-xdist, pinned
@@ -1783,17 +1790,17 @@ willow/
 │       │   ├── requirements-floor.txt  kartikeya at its floor, also tested
 │       │   ├── test_kart.py  the sandbox probed from inside, the seals at both doors, and the Johnson folders
 │       │   └── README.md
+```
+
+#### adapters/deps/, from latent/
+
+```
 │       ├── latent/
 │       │   ├── latent.py     ranks a scan index by meaning (TF-IDF + SVD), offline
 │       │   ├── requirements.txt  numpy, pinned
 │       │   ├── requirements-floor.txt  numpy at its floor, also tested
 │       │   ├── test_latent.py
 │       │   └── README.md
-```
-
-#### adapters/deps/, from llm-cli/
-
-```
 │       ├── llm-cli/
 │       │   ├── llm_cli.py    suggestions through the llm command, from any model its plugins reach, its log naming the model
 │       │   ├── requirements.txt  llm, pinned
@@ -1842,17 +1849,17 @@ willow/
 │       │   ├── requirements-floor.txt  duckdb at its floor, also tested
 │       │   ├── test_record_sql.py
 │       │   └── README.md
+```
+
+#### adapters/deps/, from ripgrep/
+
+```
 │       ├── ripgrep/
 │       │   ├── ripgrep.py    exact search through rg, each hit checked against the kernel's passages
 │       │   ├── requirements.txt  ripgrep, pinned
 │       │   ├── requirements-floor.txt  ripgrep at its floor, also tested
 │       │   ├── test_ripgrep.py
 │       │   └── README.md
-```
-
-#### adapters/deps/, from robinhood/
-
-```
 │       ├── robinhood/
 │       │   ├── fake_robinhood.py A stand-in for Robinhood's MCP server, on this machine, for the tests
 │       │   ├── requirements-floor.txt
@@ -1860,6 +1867,12 @@ willow/
 │       │   ├── robinhood.py  your Robinhood account as dated files, read through Robinhood's own MCP server, never traded on
 │       │   ├── stack.md      your Robinhood account, read back
 │       │   ├── test_robinhood.py
+│       │   └── README.md     its card
+│       ├── secure-sum/
+│       │   ├── requirements-floor.txt
+│       │   ├── requirements.txt
+│       │   ├── secure_sum.py a total of everyone's counts, in which no one's own count is
+│       │   ├── test_secure_sum.py
 │       │   └── README.md     its card
 │       ├── sheets/
 │       │   ├── sheets.py     spreadsheets as shown: number formats, formulas and notes kept
@@ -1892,15 +1905,32 @@ willow/
 │       │   ├── requirements-floor.txt  snowballstemmer at its floor, also tested
 │       │   ├── test_stems.py
 │       │   └── README.md
-│       └── wake-gate/
-│           ├── LICENSE-openWakeWord
-│           ├── LICENSE-willow-mcp
-│           ├── NOTICE
-│           ├── NOTICE-willow-mcp
+```
+
+#### adapters/deps/, from wake-gate/
+
+```
+│       ├── wake-gate/
+│       │   ├── LICENSE-openWakeWord
+│       │   ├── LICENSE-willow-mcp
+│       │   ├── NOTICE
+│       │   ├── NOTICE-willow-mcp
+│       │   ├── requirements-floor.txt
+│       │   ├── requirements.txt
+│       │   ├── wake_gate.py  ask out loud only after a wake word you chose
+│       │   ├── test_wake_gate.py
+│       │   └── README.md     its card
+│       ├── wasi-python/
+│       │   ├── requirements-floor.txt
+│       │   ├── requirements.txt
+│       │   ├── wasi_py.py    a job someone sent you, as a Python script, run on wasi-python's
+│       │   ├── test_wasi_py.py
+│       │   └── README.md     its card
+│       └── wasm/
 │           ├── requirements-floor.txt
 │           ├── requirements.txt
-│           ├── wake_gate.py  ask out loud only after a wake word you chose
-│           ├── test_wake_gate.py
+│           ├── wasm.py       a job someone sent you, as WebAssembly, run by Wasmtime over your
+│           ├── test_wasm.py
 │           └── README.md     its card
 ```
 
@@ -2086,8 +2116,15 @@ willow/
 │   │   └── STRIP.md
 │   ├── johnson/              one report passed between five people's willows, a forged copy, a correction and a rewrite caught
 │   │   ├── README.md         the scene, what each step shows, and what it found
+│   │   ├── count/
+│   │   │   ├── Cargo.toml
+│   │   │   ├── count.py
+│   │   │   ├── count.wasm.b64
+│   │   │   └── src/
+│   │   │       └── main.rs
 │   │   ├── jobs.py           one question run by kart over others' folders, sealed by each, back to Ines; only aggregates, gathered
 │   │   ├── make_life.py      the five people's files, the same bytes every run
+│   │   ├── private.py        one count over four folders, where the one who asks learns the
 │   │   ├── scene.py          the report sealed, sent, forwarded hop by hop, forged once, corrected and witnessed; stacks shared, taken and declined
 │   │   └── test_scene.py     holds the scene to what README.md says it shows
 ```

@@ -1276,6 +1276,12 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 
 ### Tools you run yourself
 
+- <a id="dp"></a>[**dp**](adapters/deps/dp/) \
+  A count of yours, noised by OpenDP before you seal and send it, so your one number doesn't say what your folder holds. \
+  Needs opendp; MIT. Uses kart, share. *new* `needs-install` `offline` · near: kart, pdf, fast-tests
+- <a id="secure-sum"></a>[**secure-sum**](adapters/deps/secure-sum/) \
+  A total of everyone's counts, by Shamir's secret sharing: the one who asked learns the sum, and no one's own count is in any package. \
+  Needs shamirs; MIT. Uses kart, share. *new* `needs-install` `offline` `share` · near: share, kart, pdf
 
 #### Tools you run yourself: ideas, not built yet
 
@@ -1769,6 +1775,12 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
   A job someone sent you, run in a sandbox over your own folder only once you seal it, its result yours to seal before it goes back. \
   Needs kartikeya, and the bwrap program (bubblewrap), run not linked; Apache-2.0, LGPL-2.0-or-later. Uses share. *new* `needs-install` `offline` · near: ocr,
   pdf, dialect
+- <a id="wasi-python"></a>[**wasi-python**](adapters/deps/wasi-python/) \
+  A job someone sent you as a Python script, run on CPython for WebAssembly over your folder read-only: one runtime, the same answer anywhere. \
+  Needs wasi-python; Apache-2.0. Uses kart, share. *new* `needs-install` `offline` `job` `sent` · near: kart, fast-tests, dialect
+- <a id="wasm"></a>[**wasm**](adapters/deps/wasm/) \
+  A job someone sent you as WebAssembly, run by Wasmtime over your folder read-only: the same bytes, so the same answer, on every machine. \
+  Needs wasmtime; Apache-2.0 WITH LLVM-exception. Uses kart, share. *new* `needs-install` `offline` `job` `sent` · near: kart, fast-tests, dialect
 
 ## Play
 

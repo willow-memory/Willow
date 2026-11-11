@@ -6,7 +6,10 @@ themselves and each script they run, carries one audit hook. It does
 nothing unless WILLOW_GUARD_LOG names a file; `ci.py` sets both.
 
 The hook sees each file opened for writing, made, removed or renamed, each
-open of the key file, and each network connection or name lookup. It finds
+open of the key file, and each network connection or name lookup. A folder
+made where something already is (os.makedirs(..., exist_ok=True) over one
+that's there, say) is no write: that mkdir can only fail, and changes
+nothing. It finds
 whose code asked by walking the call stack to the first frame in the repo:
 
     an add-on's own code     judged against that add-on's card
@@ -299,6 +302,10 @@ def hook(event: str, args: tuple) -> None:
             paths = [real(args[0], args[1])]
         elif event == "os.mkdir":  # (path, mode, dir_fd)
             paths = [real(args[0], args[2])]
+            if paths[0] is not None and os.path.lexists(paths[0]):
+                # something is there already, so mkdir can only fail
+                # (FileExistsError) and nothing changes: not a write
+                paths = []
         else:
             paths = [real(args[0])]
         for path in paths:
