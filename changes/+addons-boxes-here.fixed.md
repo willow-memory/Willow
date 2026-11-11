@@ -1,1 +1,1 @@
-`codebase-memory`: a graph kept as `nodes` and `edges`, the tables codebase-memory-mcp writes now, is read; before, only the older `symbols` table was, and every graph of today's was skipped as not a graph.
+`codebase-memory`: a graph kept as `nodes` and `edges`, the tables codebase-memory-mcp writes now, is read; before, only the older `symbols` table was, and every graph of today's was skipped as not a graph. A graph whose text is over the kernel's megabyte cap is written in parts, cut between functions; in one file the kernel left it out and nothing could ask it.

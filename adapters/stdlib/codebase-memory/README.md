@@ -30,7 +30,10 @@ function or method becomes one paragraph, sorted by name. The original is
 only read, and only through SQLite's own read-only open.
 
 Each graph is written to MIRROR at the same relative path with .txt
-added. A file that is not a graph is skipped and counted. Point the
+added. A graph too long for the kernel to read as one file (it leaves
+out a file over a megabyte, without a word) is cut between functions into
+numbered parts (a 1, a 2 and so on before the .txt), each saying which
+part it is. A file that is not a graph is skipped and counted. Point the
 kernel at MIRROR to ask who calls what.
 
 Exit codes, the kernel's: 0 wrote some; 42 nothing readable; 2 refused.

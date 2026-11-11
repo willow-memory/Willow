@@ -4,6 +4,7 @@ the original is only read."""
 from __future__ import annotations
 
 import hashlib
+import importlib.util
 import sqlite3
 import subprocess
 import sys
@@ -192,4 +193,25 @@ def test_a_graph_kept_as_nodes_and_edges_reads_the_same_way(tmp_path):
         "Helper (class)" not in text
         and "LIMIT" not in text
         and "len (function)" not in text
+    )
+
+
+def test_a_graph_too_long_for_one_file_is_cut_between_functions():
+    spec = importlib.util.spec_from_file_location("cbm_under_test", SCRIPT)
+    cbm = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(cbm)
+    paras = [f"f{i} (function)\nfile: mod.py:{i}\nname: mod.f{i}\n" for i in range(40)]
+    text = "code graph: 40 functions\n\n" + "\n".join(paras)
+    assert cbm.parts(text) == [text], "one that fits is one file, as it was"
+    cut = cbm.parts(text, most=400)
+    assert len(cut) > 1 and all(len(p.encode()) <= 400 for p in cut)
+    assert cut[0].startswith(
+        f"code graph: 40 functions, part 1 of {len(cut)}\n\nf0 (function)\n"
+    )
+    assert cut[-1].startswith(
+        f"code graph: 40 functions, part {len(cut)} of {len(cut)}\n\n"
+    )
+    got = [p for part in cut for p in part.partition("\n\n")[2].split("\n\n")]
+    assert [p.rstrip("\n") for p in got] == [p.rstrip("\n") for p in paras], (
+        "every function, whole, once, in order"
     )

@@ -15,7 +15,8 @@ file, is left out.
     imports: tools.vendor_sync_check.CheckResult
 
 Each graph is written to MIRROR at the same relative path with `.txt`
-added. A file that is not a graph is skipped and counted. Hidden folders
+added. One too long for the kernel to read as a single file (its cap is a
+megabyte) is cut between functions into `.1.txt`, `.2.txt` and so on. A file that is not a graph is skipped and counted. Hidden folders
 and files are skipped. The original is only read.
 
     wrote 1 files to MIRROR; skipped 0
@@ -126,6 +127,31 @@ def _paragraphs(symbols: list, outs: dict[str, list[str]]) -> str:
     return head + ("\n".join(paras) if paras else "")
 
 
+def parts(text: str, most: int = kernel.MAX_FILE) -> list[str]:
+    """A graph's text as the files it is written to: one, when the kernel
+    will read a file that long; else cut between functions into parts that
+    each fit, every part saying which it is. The kernel leaves out a file
+    over its size cap without a word, so a whole graph in one file is a
+    mirror nothing can ask."""
+    if len(text.encode("utf-8")) <= most:
+        return [text]
+    head, _, body = text.partition("\n\n")
+    room = most - len(head.encode("utf-8")) - 64
+    out: list[list[str]] = [[]]
+    size = 0
+    for para in body.split("\n\n"):
+        n = len(para.encode("utf-8")) + 2
+        if out[-1] and size + n > room:
+            out.append([])
+            size = 0
+        out[-1].append(para)
+        size += n
+    return [
+        f"{head}, part {i} of {len(out)}\n\n" + "\n\n".join(ps).rstrip("\n") + "\n"
+        for i, ps in enumerate(out, 1)
+    ]
+
+
 def _sources(folder: Path) -> list[Path]:
     found = []
     for dirpath, dirnames, filenames in os.walk(folder):
@@ -153,9 +179,12 @@ def mirror(src: Path, dst: Path) -> tuple[int, int]:
                 skipped += 1
                 continue
             rel = path.relative_to(src)
-            target = dst.joinpath(rel.parent, rel.name + ".txt")
-            target.parent.mkdir(parents=True, exist_ok=True)
-            target.write_bytes(text.encode("utf-8"))
+            cut = parts(text)
+            for i, part in enumerate(cut, 1):
+                name = f"{rel.name}.txt" if len(cut) == 1 else f"{rel.name}.{i}.txt"
+                target = dst.joinpath(rel.parent, name)
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_bytes(part.encode("utf-8"))
         except OSError:
             skipped += 1
             continue
