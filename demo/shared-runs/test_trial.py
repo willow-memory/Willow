@@ -408,3 +408,44 @@ def test_two_runs_are_compared_as_run_and_with_their_own_folders_taken_out(tmp_p
     assert (
         same.main([str(a)]) == 2 and same.main([str(a), str(tmp_path / "absent")]) == 2
     )
+
+
+def test_what_trial_fours_page_says_is_what_its_kept_files_hold():
+    four = TRIAL.parent / "trial-4"
+
+    def rows(name):
+        lines = (four / name).read_text().splitlines()
+        return [json.loads(line) for line in lines if line.startswith("{")], lines[-1]
+
+    cold, cold_said = rows("cold.jsonl")
+    warm, warm_said = rows("warm.jsonl")
+    assert len(cold) == len(warm) == 30
+    for found, placeless in ((cold, 23), (warm, 27)):
+        assert (
+            sum(r["asked"] for r in found) == 10
+            and sum(r["as_written"] for r in found) == 30
+        )
+        assert (
+            sum(r["printed"] for r in found) == 17
+            and sum(r["placeless"] for r in found) == placeless
+        )
+        assert all(r["exit"] for r in found)
+    assert cold_said.startswith(
+        "30 steps: asked the same 10, the same as written 30, printed the same 17"
+    )
+    assert "the same without the place 27" in warm_said
+    still = [(r["n"], r["addon"]) for r in warm if not r["placeless"]]
+    assert still == [(21, "merkle"), (23, "tip-pin"), (28, "history")]
+    only_cold = sorted(r["n"] for r in cold if not r["placeless"])
+    assert only_cold == [3, 4, 5, 14, 21, 23, 28], (
+        "the four more are the index steps and the store"
+    )
+    assert [r["addon"] for r in cold if r["n"] in (3, 4, 5, 14)] == [
+        "index-cache"
+    ] * 3 + ["pile-store"]
+    assert sum(1 for r in warm[:29] if r["placeless"]) == 26, (
+        "left out, the thirtieth makes it 26 of 29"
+    )
+    for name in ("cold.jsonl", "warm.jsonl"):
+        text = (four / name).read_text()
+        assert "/tmp/" not in text and "/home/" not in text, name
