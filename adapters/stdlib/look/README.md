@@ -3,7 +3,7 @@ section: Finding things
 line: One question sent to the step whose job it is, and answered by the lines that step's kept run holds; your own notes by the kernel.
 source: new
 added: 2026-11-10
-version: 0.1.0
+version: 0.1.1
 writes: nothing
 network: none
 role: tools
