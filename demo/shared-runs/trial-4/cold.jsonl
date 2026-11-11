@@ -1,0 +1,31 @@
+{"n": 1, "addon": "code-comments", "asked": false, "as_written": true, "printed": false, "placeless": true, "exit": true}
+{"n": 2, "addon": "git-history", "asked": false, "as_written": true, "printed": false, "placeless": true, "exit": true}
+{"n": 3, "addon": "index-cache", "asked": false, "as_written": true, "printed": false, "placeless": false, "exit": true, "differs": ["current: 1746 files unchanged; the index at <scratch>/kept/index-repo still answers. Ask it with scan.", "rebuilt 41976 passages to <scratch>/kept/index-repo (+1746 new)"], "sha256": ["5cf43cf05f2a", "ef4c0283df79"]}
+{"n": 4, "addon": "index-cache", "asked": false, "as_written": true, "printed": false, "placeless": false, "exit": true, "differs": ["current: 884 files unchanged; the index at <scratch>/kept/index-code still answers. Ask it with scan.", "rebuilt 13164 passages to <scratch>/kept/index-code (+884 new)"], "sha256": ["5605aea2d51b", "c3084a49c437"]}
+{"n": 5, "addon": "index-cache", "asked": false, "as_written": true, "printed": false, "placeless": false, "exit": true, "differs": ["current: 1022 files unchanged; the index at <scratch>/kept/index-commits still answers. Ask it with scan.", "rebuilt 6492 passages to <scratch>/kept/index-commits (+1022 new)"], "sha256": ["83611d65f363", "20d6a7d97630"]}
+{"n": 6, "addon": "scan", "asked": false, "as_written": true, "printed": true, "placeless": true, "exit": true}
+{"n": 7, "addon": "glance", "asked": false, "as_written": true, "printed": true, "placeless": true, "exit": true}
+{"n": 8, "addon": "why-not", "asked": false, "as_written": true, "printed": true, "placeless": true, "exit": true}
+{"n": 9, "addon": "fair-merge", "asked": false, "as_written": true, "printed": true, "placeless": true, "exit": true}
+{"n": 10, "addon": "first-mention", "asked": true, "as_written": true, "printed": true, "placeless": true, "exit": true}
+{"n": 11, "addon": "claim-check", "asked": true, "as_written": true, "printed": true, "placeless": true, "exit": true}
+{"n": 12, "addon": "claim-check", "asked": true, "as_written": true, "printed": true, "placeless": true, "exit": true}
+{"n": 13, "addon": "xref", "asked": true, "as_written": true, "printed": true, "placeless": true, "exit": true}
+{"n": 14, "addon": "pile-store", "asked": false, "as_written": true, "printed": false, "placeless": false, "exit": true, "differs": ["current: the store at <scratch>/kept/store.sqlite still matches <pile>", "built 41976 passages (36492 texts, each stored once) to <scratch>/kept/store.sqlite (no store yet)"], "sha256": ["def9d4520f72", "a9e140f3f44a"]}
+{"n": 15, "addon": "pile-rungs", "asked": false, "as_written": true, "printed": true, "placeless": true, "exit": true}
+{"n": 16, "addon": "fixity", "asked": true, "as_written": true, "printed": true, "placeless": true, "exit": true}
+{"n": 17, "addon": "ids", "asked": true, "as_written": true, "printed": true, "placeless": true, "exit": true}
+{"n": 18, "addon": "star-system", "asked": false, "as_written": true, "printed": false, "placeless": true, "exit": true}
+{"n": 19, "addon": "star-system", "asked": false, "as_written": true, "printed": false, "placeless": true, "exit": true}
+{"n": 20, "addon": "diverge", "asked": false, "as_written": true, "printed": true, "placeless": true, "exit": true}
+{"n": 21, "addon": "merkle", "asked": true, "as_written": true, "printed": false, "placeless": false, "exit": true, "differs": ["root a94c9c9633128d21c5c2907ef1ac273e55ec91331c2c8a5d58acf3f28b76c508 over 2 rows", "root ea355aac0002ef283087fc6e4de697966d3a34dfa8e0ed6b777ca645cb1f6481 over 2 rows"], "sha256": ["794fafdb3d97", "d6df19f6b048"]}
+{"n": 22, "addon": "prov", "asked": false, "as_written": true, "printed": false, "placeless": true, "exit": true}
+{"n": 23, "addon": "tip-pin", "asked": false, "as_written": true, "printed": false, "placeless": false, "exit": true, "differs": ["pinned 2 rows, tip a2a579fb9575…, to <scratch>/out/away/pin.json", "pinned 2 rows, tip 2e78c8ac727b…, to <scratch>/out/away/pin.json"], "sha256": ["afae11ad5226", "0a8150aae05d"]}
+{"n": 24, "addon": "backup", "asked": false, "as_written": true, "printed": false, "placeless": true, "exit": true}
+{"n": 25, "addon": "restore-drill", "asked": false, "as_written": true, "printed": true, "placeless": true, "exit": true}
+{"n": 26, "addon": "three-two-one", "asked": false, "as_written": true, "printed": true, "placeless": true, "exit": true}
+{"n": 27, "addon": "box-health", "asked": true, "as_written": true, "printed": true, "placeless": true, "exit": true}
+{"n": 28, "addon": "history", "asked": true, "as_written": true, "printed": false, "placeless": false, "exit": true, "differs": ["  07:44  You started your record.", "  08:00  You started your record."], "sha256": ["3591d72c376a", "8a7461988d42"]}
+{"n": 29, "addon": "thesis", "asked": true, "as_written": true, "printed": true, "placeless": true, "exit": true}
+{"n": 30, "addon": "stack-row", "asked": false, "as_written": true, "printed": true, "placeless": true, "exit": true}
+30 steps: asked the same 10, the same as written 30, printed the same 17, the same without the place 23, ended the same 30

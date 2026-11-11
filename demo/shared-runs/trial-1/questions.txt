@@ -1,0 +1,12 @@
+steps: How many steps did the stack run?
+flagged-count: How many steps ended flagged?
+flagged-steps: Which steps ended flagged? Give their two-digit numbers.
+same-bytes: Did the two simulation runs come out the same, byte for byte? yes or no.
+record-rows: How many rows did the record hold when the run ended?
+sealed: How many things were sealed?
+held-whole: How many questions did glance say were held whole?
+broken-references: How many references did xref say don't hold?
+first-mention: What date did first-mention give for the first mention of "cached"?
+thesis-held: How many claims did thesis say were held?
+seconds: How many seconds did the whole run take?
+machines: How many different machines took part in the run?

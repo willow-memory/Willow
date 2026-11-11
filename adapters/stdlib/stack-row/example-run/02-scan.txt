@@ -1,0 +1,3 @@
+scan: populated, 2 questions
+  a  1
+  b  2

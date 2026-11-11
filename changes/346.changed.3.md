@@ -1,0 +1,1 @@
+fair-merge takes scan's indexes as sources (`--index INDEX`, with `--words FILE`), so piles too big to read whole can be merged; an index names the words of the question none of its passages hold; a passage two sources hold word for word is shown once, with both.

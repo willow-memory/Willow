@@ -1,0 +1,4 @@
+want: Ask each pile on its own the question that found nothing, to see which pile lacks it.
+step: - fair-merge -- --from <pile> --from {box}-code --from {box}-commits --top 6 "floating point results that differ between machines"
+why: Step 08 (why-not) says the box's files hold it, and step 07 (glance) says it found nothing, so the nothing was in another of the 3 piles.
+cards: none

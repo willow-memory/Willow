@@ -15,8 +15,10 @@ copied here.
 It evolves the system for `--orbits` (default 3) orbits of the outermost body
 and writes to `--to`: each body's Kepler period and distance, and how well the
 run conserves energy, angular momentum and linear momentum -- the same
-invariants the project's own tests check, with the tolerances it asserts. The
-numbers are the simulation's; the same star, planets and orbit count give the
+invariants the project's own tests check, with the tolerances it asserts, and
+what was run in the checkout's own names: its model, its numerical method and
+its own digest of the setup, given only when that setup builds the system run
+here. The numbers are the simulation's; the same star, planets and orbit count give the
 same bytes every run, because the integrator is fixed-step and deterministic.
 
 It reads the checkout and writes only `--to`; it reads no box, no key, and
@@ -83,6 +85,40 @@ def load(repo: str):
     return core, data
 
 
+def identity(star: str, planets: list[str], system) -> dict:
+    """What the checkout says of itself: its names for its model and its
+    numerical method, and its own digest of this setup. A checkout from
+    before it named these gives {}. The digest is given only when the setup
+    it names builds, bit for bit, the system run here; otherwise `why` says
+    what stood in the way. Call it before the system is stepped."""
+    try:
+        from simulations.star_system import persistence
+    except Exception:
+        return {}
+    said = {
+        "model": getattr(persistence, "MODEL_VERSION", None),
+        "numerical": getattr(persistence, "NUMERICAL_VERSION", None),
+    }
+    try:
+        from simulations.star_system.initialization import build_system, legacy_setup
+
+        setup = legacy_setup(star, tuple(planets))
+        built = build_system(setup).system
+        same = built.dt == system.dt and all(
+            getattr(built, name).tobytes() == getattr(system, name).tobytes()
+            for name in ("masses", "r", "v")
+        )
+        if same:
+            said["digest"] = persistence.setup_digest(setup)
+        else:
+            said["why"] = (
+                "the setup it names builds another start than the one run here"
+            )
+    except Exception as exc:
+        said["why"] = f"it could not be computed here ({type(exc).__name__}: {exc})"
+    return said
+
+
 def lines(core, data, star: str, planets: list[str], orbits: float) -> list[str]:
     """The run as cited markdown lines, or a one-line reason this can't run
     (a bad orbit, a close encounter). Raises nothing the caller must map."""
@@ -90,6 +126,13 @@ def lines(core, data, star: str, planets: list[str], orbits: float) -> list[str]
     dist = {p: data.PLANETS[p].distance for p in planets}
     periods = {p: float(core.period(star, p, dist[p])) for p in planets}
     system = core.make_system(star, planets)  # may raise ValueError (bad orbit)
+    said = identity(star, planets, system)
+    method = said.get("numerical")
+    integrator = (
+        f"fixed-step integrator ({method})"
+        if method
+        else "fixed-step Yoshida integrator"
+    )
     outer = max(planets, key=lambda p: periods[p])
     span = orbits * periods[outer]
     steps = round(span / system.dt)
@@ -106,7 +149,7 @@ def lines(core, data, star: str, planets: list[str], orbits: float) -> list[str]
         f"A deterministic run of the star_system simulation from science_bitch "
         f"({PROJECT}), evolved {orbits:g} orbit"
         f"{'' if orbits == 1 else 's'} of the outermost body ({outer}) with its "
-        f"fixed-step Yoshida integrator. Units are AU, solar masses and Julian "
+        f"{integrator}. Units are AU, solar masses and Julian "
         f"years; the same inputs give the same numbers every run.",
         "",
         "## the system",
@@ -125,12 +168,32 @@ def lines(core, data, star: str, planets: list[str], orbits: float) -> list[str]
         f"- angular momentum drift |dL/L0| = {abs((l1 - l0) / l0):.3e} "
         f"(asserts <= 1e-11)",
         f"- net linear momentum |p| = {p1:.3e} (began {p0:.3e}; barycentric)",
+    ]
+    if said:
+        out += ["", "## what was run, in the checkout's own names"]
+        if said.get("model"):
+            out.append(f"- model: {said['model']}")
+        if method:
+            out.append(f"- numerical method: {method}")
+        if said.get("digest"):
+            out.append(
+                f"- setup digest: sha256:{said['digest']} (its setup_digest of this "
+                f"star, these planets and this step)"
+            )
+        else:
+            out.append(f"- setup digest: none given; {said['why']}")
+    out += [
         "",
         "## sources",
         f"- model, integrator and catalog: science_bitch star_system, {PROJECT}",
-        "- integrator: Yoshida 1990, doi:10.1016/0375-9601(90)90092-3",
-        "- catalog values: NASA NSSDC fact sheets; stars as the project cites",
     ]
+    if method is None or "yoshida" in method.lower():
+        out.append("- integrator: Yoshida 1990, doi:10.1016/0375-9601(90)90092-3")
+    else:
+        out.append(
+            "- integrator: the checkout's own, named above; not the project's Yoshida"
+        )
+    out.append("- catalog values: NASA NSSDC fact sheets; stars as the project cites")
     return out
 
 

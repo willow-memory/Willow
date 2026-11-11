@@ -1,0 +1,16 @@
+kept	a result kept so it is not computed again
+changed	rebuilt only when a file actually changed
+same-bytes	the same input gives the same bytes
+verdict	a verdict kept while its inputs are unchanged
+name	a name for a file anyone can compute from its bytes
+check	check a result without running it again
+lineage	what came from what, by which step
+sent-job	a job someone sent you, run the same on every machine
+sum	a total of everyone's counts with no one's own count shown
+hand-on	an answer someone else can check without the folder
+every-time	reads the whole folder on every question
+cores	work split across every core
+cut-off	a run that was cut off needn't start again
+float	floating point results that differ between machines
+recompute	recompute
+supercomputer	a supercomputer queue

@@ -1,0 +1,31 @@
+{"n": 1, "addon": "code-comments", "asked": false, "as_written": true, "printed": false, "placeless": true, "exit": true}
+{"n": 2, "addon": "git-history", "asked": false, "as_written": true, "printed": false, "placeless": true, "exit": true}
+{"n": 3, "addon": "index-cache", "asked": false, "as_written": true, "printed": false, "placeless": true, "exit": true}
+{"n": 4, "addon": "index-cache", "asked": false, "as_written": true, "printed": false, "placeless": true, "exit": true}
+{"n": 5, "addon": "index-cache", "asked": false, "as_written": true, "printed": false, "placeless": true, "exit": true}
+{"n": 6, "addon": "scan", "asked": false, "as_written": true, "printed": true, "placeless": true, "exit": true}
+{"n": 7, "addon": "glance", "asked": false, "as_written": true, "printed": true, "placeless": true, "exit": true}
+{"n": 8, "addon": "why-not", "asked": false, "as_written": true, "printed": true, "placeless": true, "exit": true}
+{"n": 9, "addon": "fair-merge", "asked": false, "as_written": true, "printed": true, "placeless": true, "exit": true}
+{"n": 10, "addon": "first-mention", "asked": true, "as_written": true, "printed": true, "placeless": true, "exit": true}
+{"n": 11, "addon": "claim-check", "asked": true, "as_written": true, "printed": true, "placeless": true, "exit": true}
+{"n": 12, "addon": "claim-check", "asked": true, "as_written": true, "printed": true, "placeless": true, "exit": true}
+{"n": 13, "addon": "xref", "asked": true, "as_written": true, "printed": true, "placeless": true, "exit": true}
+{"n": 14, "addon": "pile-store", "asked": false, "as_written": true, "printed": false, "placeless": true, "exit": true}
+{"n": 15, "addon": "pile-rungs", "asked": false, "as_written": true, "printed": true, "placeless": true, "exit": true}
+{"n": 16, "addon": "fixity", "asked": true, "as_written": true, "printed": true, "placeless": true, "exit": true}
+{"n": 17, "addon": "ids", "asked": true, "as_written": true, "printed": true, "placeless": true, "exit": true}
+{"n": 18, "addon": "star-system", "asked": false, "as_written": true, "printed": false, "placeless": true, "exit": true}
+{"n": 19, "addon": "star-system", "asked": false, "as_written": true, "printed": false, "placeless": true, "exit": true}
+{"n": 20, "addon": "diverge", "asked": false, "as_written": true, "printed": true, "placeless": true, "exit": true}
+{"n": 21, "addon": "merkle", "asked": true, "as_written": true, "printed": false, "placeless": false, "exit": true, "differs": ["root a94c9c9633128d21c5c2907ef1ac273e55ec91331c2c8a5d58acf3f28b76c508 over 2 rows", "root 87ff47943e80e36e2740df46dc117b87fe0e0b82a5afbb27c898f0ece746dd91 over 2 rows"], "sha256": ["794fafdb3d97", "6e0f288032bd"]}
+{"n": 22, "addon": "prov", "asked": false, "as_written": true, "printed": false, "placeless": true, "exit": true}
+{"n": 23, "addon": "tip-pin", "asked": false, "as_written": true, "printed": false, "placeless": false, "exit": true, "differs": ["pinned 2 rows, tip a2a579fb9575…, to <scratch>/out/away/pin.json", "pinned 2 rows, tip e2367e59a01e…, to <scratch>/out/away/pin.json"], "sha256": ["afae11ad5226", "f3af9b4f6bd6"]}
+{"n": 24, "addon": "backup", "asked": false, "as_written": true, "printed": false, "placeless": true, "exit": true}
+{"n": 25, "addon": "restore-drill", "asked": false, "as_written": true, "printed": true, "placeless": true, "exit": true}
+{"n": 26, "addon": "three-two-one", "asked": false, "as_written": true, "printed": true, "placeless": true, "exit": true}
+{"n": 27, "addon": "box-health", "asked": true, "as_written": true, "printed": true, "placeless": true, "exit": true}
+{"n": 28, "addon": "history", "asked": true, "as_written": true, "printed": false, "placeless": false, "exit": true, "differs": ["  07:44  You started your record.", "  08:05  You started your record."], "sha256": ["3591d72c376a", "b4b55ba5bfeb"]}
+{"n": 29, "addon": "thesis", "asked": true, "as_written": true, "printed": true, "placeless": true, "exit": true}
+{"n": 30, "addon": "stack-row", "asked": false, "as_written": true, "printed": true, "placeless": true, "exit": true}
+30 steps: asked the same 10, the same as written 30, printed the same 17, the same without the place 27, ended the same 30

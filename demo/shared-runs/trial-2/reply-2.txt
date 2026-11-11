@@ -1,0 +1,4 @@
+want: Explain why the 2 questions that found nothing found nothing, so the gaps in what the repository keeps are named.
+step: - why-not -- --box <pile> --questions <scratch>/questions.txt --of {06}
+why: The glance step flagged 2 of 48 questions that found nothing, and why-not turns each into the words no passage holds and the kind of file that would have answered. That shows where the repository has no kept answer and would have to compute again.
+cards: why-not

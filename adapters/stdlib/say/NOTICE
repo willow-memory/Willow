@@ -1,0 +1,11 @@
+say takes code from one Apache-2.0 project; its licence is beside this
+file, LICENSE-willows-grove.
+
+willows-grove (https://github.com/willow-memory/willows-grove), Copyright
+2026 Sean Campbell: from grove/seat_say.py, the prompt for one sentence
+(build_prompt), the voice line, the way Ollama is asked on loopback
+through no proxy (ollama_base, ollama_say, strip_think), and the
+unreachable state for every way it can't answer. Changed here: a box is a
+tag and its words; the earlier boxes are given without the earlier human
+lines; the wait is 60 seconds unless told otherwise; and the checks are
+the say-check add-on's, beside this one.

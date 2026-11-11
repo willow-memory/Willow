@@ -1,0 +1,1 @@
+`repo-digest`: one page of what this repo needs from you (a ring in what add-ons use, a uses line that leads nowhere, files nothing declares, ideas and changelog entries waiting, each with where it goes) and the order the add-ons build in, from their cards' uses lines: how many at each step above the kernel, the longest way down, and the most built on

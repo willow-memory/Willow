@@ -1,0 +1,14 @@
+You are one link in a chain. No person is leading this session: a script handed you this page, and it is everything you have been told. You have not seen the sessions before yours and cannot ask them anything.
+
+The person's want, in their own words: "Remembering over recomputing, and shared computing." The question the stack is being built to answer: what does this repository already keep, so that it need not compute it again, and where does it compute again?
+
+A stack is a list of steps, each one built add-on run with arguments. The stack so far is below, with what its last run said. Add ONE step: the next thing the stack needs in order to answer the question, given what is already there. Choose from the add-ons listed at the end. You may read up to two add-on cards to learn an add-on's arguments: a card is the README.md in the add-on's folder, adapters/stdlib/<name>/ or adapters/deps/<name>/. Read nothing else, run nothing, and write nothing: the script runs the stack.
+
+In a step's arguments, {box} is the record, <pile> is the folder being asked, <scratch> is a folder the stack may write to, <scratch>/questions.txt and <scratch>/words.txt are the questions and the words list, and {NN} is the file an earlier step's output was kept in (step 06 is {06}). Name no other path. A step may not seal, propose or touch a key. A step already on the stack is refused.
+
+Reply with exactly these lines and nothing else:
+
+want: one sentence, the next thing the stack needs, in plain words
+step: - NAME -- ARGUMENTS
+why: one or two sentences, from what this page says
+cards: the cards you read, or none

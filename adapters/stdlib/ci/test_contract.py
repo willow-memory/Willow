@@ -645,6 +645,8 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "codeowners": ("codeowners.py", ["--box", "{box}", "garden.md"]),
     "codex-cli": ("codex_cli.py", ["--box", "{box}"]),
     "coming-up": ("coming_up.py", ["--box", "{box}", *NOW]),
+    # two places with no passage: nothing is asked of any model, and it says so, 42
+    "connect": ("connect.py", ["--box", "{box}", "--first", "no-such-file.txt:1", "--second", "no-such-file.txt:2", "--host", "127.0.0.1:9"]),
     "contradictions": ("contradictions.py", ["--box", "{box}"]),
     "copilot": ("copilot.py", ["--box", "{box}"]),
     "cursor": ("cursor.py", ["--box", "{box}"]),
@@ -712,6 +714,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "invoices": ("invoices.py", ["--box", "{box}", "--id", "INV-\\d+"]),
     "jetbrains": ("jetbrains.py", ["--box", "{box}"]),
     "job-hunt": ("job_hunt.py", ["--box", "{box}"]),
+    "kinds": ("kinds.py", ["count"]),
     "launcher": ("launcher.py", ["--box", "{box}"]),
     "lending": ("lending.py", ["--box", "{box}"]),
     "lesson-time": ("lesson_time.py", ["--box", "{box}"]),
@@ -792,6 +795,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "ready": ("ready.py", ["steps"]),
     "red-on-main": ("red_on_main.py", ["--pr", "{box}", "--main", "{box}"]),
     "renewals": ("renewals.py", ["--box", "{box}", *NOW]),
+    "repo-digest": ("repo_digest.py", ["page"]),
     # a list naming no owner/repo builds nothing, before any clone: no network
     "repo-pile": ("repo_pile.py", ["build", "--to", "{tmp}/base", "--repos",
                                    "{pile}/garden.md", "--key", "{tmp}/base.key"]),
@@ -807,6 +811,9 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     # the question is the passage itself, an echo: nothing is asked, the port never reached
     "same-way": ("same_way.py", ["--box", "{box}", "--url", "http://127.0.0.1:9/v1",
                  "--model", "m", "--questions", "{pile}/garden.md"]),
+    # a closed port on this machine: no model is asked, the say is unreachable, 42
+    "say": ("say.py", ["--boxes", "adapters/stdlib/say-check/example-boxes.json", "--host", "127.0.0.1:9"]),
+    "say-check": ("say_check.py", ["--sentence", "PR 712 is waiting [b4], ratify the work order [b5].", "--boxes", "adapters/stdlib/say-check/example-boxes.json"]),
     "scan": ("scan.py", ["index", "--from", "{pile}", "--to", "{tmp}/index"]),
     "scrub": ("scrub.py", ["--from", "{pile}/photo.png", "--to", "{tmp}/clean.png"]),
     "secrets-audit": ("secrets_audit.py", ["--box", "{box}"]),
@@ -824,6 +831,8 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "sort-ask": ("sort_ask.py", ["--box", "{box}", "--categories", "{pile}/categories.txt",
                  "--model", "m", "--url", "http://127.0.0.1:9/v1"]),
     "stack": ("stack.py", ["--box", "{box}", "--stack", "adapters/stdlib/stack/example.md"]),
+    "stack-bridges": ("stack_bridges.py", ["--stack", "adapters/stdlib/stack-bridges/example.md"]),
+    "stack-row": ("stack_row.py", ["--box", "{box}", "--run", "adapters/stdlib/stack-row/example-run", *NOW]),
     "stack-share": ("stack_share.py", ["--box", "{box}"]),
     "stale": ("stale.py", ["--box", "{box}"]),
     "start": ("start.py", ["--pile", "{pile}", "--to", "{tmp}/willow"]),

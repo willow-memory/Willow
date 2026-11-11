@@ -1,0 +1,51 @@
+01 code-comments: started (40e19262)
+01 code-comments: exit 0, 1 line
+02 git-history: started (128d1779)
+02 git-history: exit 0, 1 line
+03 index-cache: started (5c24bce5)
+03 index-cache: exit 0, 1 line
+04 index-cache: started (39bb30f4)
+04 index-cache: exit 0, 1 line
+05 index-cache: started (f448e7c9)
+05 index-cache: exit 0, 1 line
+06 scan: started (cc228737, fed a55fbf05)
+06 scan: exit 0, 48 lines
+07 glance: started (ceedb0d8, fed a55fbf05)
+07 glance: exit 42, 52 lines, mass 49, populated, flagged
+done: 1 of 7 steps flagged
+resumed: 7 of 8 steps had finished
+01 code-comments: kept from before
+02 git-history: kept from before
+03 index-cache: kept from before
+04 index-cache: kept from before
+05 index-cache: kept from before
+06 scan: kept from before
+07 glance: kept from before
+08 again: started (3f992b95)
+08 again: exit 0, 1 line
+done: 1 of 8 steps flagged
+resumed: 8 of 9 steps had finished
+01 code-comments: kept from before
+02 git-history: kept from before
+03 index-cache: kept from before
+04 index-cache: kept from before
+05 index-cache: kept from before
+06 scan: kept from before
+07 glance: kept from before
+08 again: kept from before
+09 why-not: started (dad501cb, fed d93c3205)
+09 why-not: exit 2, 1 line, exit 2, flagged
+done: 2 of 9 steps flagged
+resumed: 9 of 10 steps had finished
+01 code-comments: kept from before
+02 git-history: kept from before
+03 index-cache: kept from before
+04 index-cache: kept from before
+05 index-cache: kept from before
+06 scan: kept from before
+07 glance: kept from before
+08 again: kept from before
+09 why-not: kept from before
+10 box-health: started (5a644aca)
+10 box-health: exit 42, 10 lines, mass 7, populated, flagged
+done: 3 of 10 steps flagged

@@ -1,0 +1,1 @@
+`browse`: `--say MODEL` has a model on this machine say each answer in a sentence of its own, under code's line and marked with the model's name. It is given only what code said, the say-check add-on holds it to that, and a sentence that adds to it is shown struck through with what failed while code's line stands

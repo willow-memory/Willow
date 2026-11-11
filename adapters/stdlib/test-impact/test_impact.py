@@ -164,7 +164,12 @@ def test_an_add_on_gets_its_tests_its_share_of_the_contract_its_docs_and_its_mut
     plan_of,
 ):
     got = plan_of("adapters/stdlib/changed/changed.py").stdout
-    assert "pytest adapters/stdlib/changed/test_changed.py" in got
+    # its own tests are in the plan, on a pytest line: alone, or with the
+    # other test files that reach it (browse's do, since it reads changed)
+    (own,) = [
+        ln for ln in got.splitlines() if "adapters/stdlib/changed/test_changed.py" in ln
+    ]
+    assert own.strip().startswith("pytest ")
     assert "WILLOW_ONLY=changed pytest adapters/stdlib/ci/test_contract.py" in got
     assert "pytest test_docs.py\n" in got
     assert "mutants:changed" in got and "mutants.py run changed" in got
@@ -183,7 +188,7 @@ def test_the_steps_are_ordered_cheapest_first(plan_of):
                      "tests:adapters", "tests:docs", "tests:ui", "demo:stack", "mutants:changed"]  # fmt: skip
     narrow, own = (
         "WILLOW_ONLY=changed pytest",
-        "pytest adapters/stdlib/changed/test_changed.py",
+        "adapters/stdlib/changed/test_changed.py",
     )
     assert got.index(narrow) < got.index(own), (
         "the contract's share takes under a second"

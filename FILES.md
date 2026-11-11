@@ -988,6 +988,18 @@ willow/
 │   │   │   └── README.md
 ```
 
+### adapters/stdlib/: Trust and proof: Checking a model before you trust it
+
+```
+│   │   ├── say-check/
+│   │   │   ├── example-boxes.json two boxes to try it on, the ones its card shows
+│   │   │   ├── LICENSE-willows-grove the licence of the project its checks came from
+│   │   │   ├── NOTICE        what was taken from willows-grove, and what was changed
+│   │   │   ├── say_check.py  a sentence said about your boxes, held to them by four checks
+│   │   │   ├── test_say_check.py
+│   │   │   └── README.md     its card
+```
+
 ### adapters/stdlib/: Trust and proof: What it makes for elsewhere
 
 ```
@@ -1060,6 +1072,14 @@ willow/
 │   │   │   ├── session_seal.py one seal over a session's rows, proposed through the kernel
 │   │   │   ├── test_session_seal.py
 │   │   │   └── README.md
+│   │   ├── stack-row/
+│   │   │   ├── example-run/  a small kept run, two steps ended and one only started
+│   │   │   │   ├── 00-stack.txt  its log, as stack writes one
+│   │   │   │   ├── 01-todo.txt   what its first step printed
+│   │   │   │   └── 02-scan.txt   what its second step printed
+│   │   │   ├── stack_row.py  a stack's kept run put on your record as one row
+│   │   │   ├── test_stack_row.py
+│   │   │   └── README.md     its card
 │   │   ├── thesis/
 │   │   │   ├── thesis.py     a document's claims, each against your sources, and the ones no passage holds
 │   │   │   ├── test_thesis.py
@@ -1182,6 +1202,10 @@ willow/
 │   │   │   ├── assistant_scores.py How often each assistant's suggestions were sealed or set aside, from the record
 │   │   │   ├── test_assistant_scores.py
 │   │   │   └── README.md     its card
+│   │   ├── connect/
+│   │   │   ├── connect.py    what a model on this machine says connects two passages, and what of it checks out
+│   │   │   ├── test_connect.py
+│   │   │   └── README.md     its card
 │   │   ├── model-card/
 │   │   │   ├── model_card.py  a card naming the model behind an assistant, its SHA-256 on the record
 │   │   │   ├── test_model_card.py
@@ -1210,6 +1234,12 @@ willow/
 │   │   │   ├── same_way.py  a local model asked each question several times, and how often its answer flips
 │   │   │   ├── test_same_way.py
 │   │   │   └── README.md
+│   │   ├── say/
+│   │   │   ├── LICENSE-willows-grove the licence of the project its prompt came from
+│   │   │   ├── NOTICE        what was taken from willows-grove, and what was changed
+│   │   │   ├── say.py        one sentence a model on this machine says about your boxes, struck when it adds to them
+│   │   │   ├── test_say.py
+│   │   │   └── README.md     its card
 │   │   ├── weights-card/
 │   │   │   ├── weights_card.py  a model card from a GGUF or safetensors file's own header, with the file's SHA-256
 │   │   │   ├── test_weights_card.py
@@ -1422,6 +1452,7 @@ willow/
 ```
 │   │   ├── browse/
 │   │   │   ├── browse.py     your folder in your browser, on 127.0.0.1: ask, read, approve with a click
+│   │   │   ├── page.js       the page's one script: fills the right panel with what is at a place you click
 │   │   │   ├── test_browse.py
 │   │   │   └── README.md
 │   │   ├── launcher/
@@ -1512,6 +1543,16 @@ willow/
 │   │   │   ├── ed25519.py       Ed25519 signatures (RFC 8032) in the standard library
 │   │   │   ├── test_share.py
 │   │   │   └── README.md
+```
+
+### adapters/stdlib/: Ways to use it: Tools you run yourself
+
+```
+│   │   ├── stack-bridges/
+│   │   │   ├── example.md    a small stack with five bridges, for reading
+│   │   │   ├── stack_bridges.py which steps of a stack take what an earlier step made, and the order that leaves them in
+│   │   │   ├── test_stack_bridges.py
+│   │   │   └── README.md     its card
 ```
 
 ### adapters/stdlib/: Play: What runs on your page
@@ -1694,6 +1735,10 @@ willow/
 │   │   │   ├── test_create_pr.py
 │   │   │   ├── test_github.py
 │   │   │   └── README.md     its card: and .github/ belongs to it
+│   │   ├── kinds/
+│   │   │   ├── kinds.py      every file of this repo sorted by what it is, and the ones nothing declares
+│   │   │   ├── test_kinds.py
+│   │   │   └── README.md     its card
 │   │   ├── live/
 │   │   │   ├── live.py       each way-in add-on run through its real program: works, fails, or not here
 │   │   │   ├── test_live.py
@@ -1714,6 +1759,10 @@ willow/
 │   │   │   ├── red_on_main.py A pull request's failing checks held to main's last run: red there too is not the pull request's, green there is
 │   │   │   ├── test_red_on_main.py
 │   │   │   └── README.md     its card
+│   │   ├── repo-digest/
+│   │   │   ├── repo_digest.py what this repo needs from you, and the order its add-ons build in
+│   │   │   ├── test_repo_digest.py
+│   │   │   └── README.md     its card
 │   │   ├── restack/
 │   │   │   ├── restack.py    your branches back on top of main, the repo's own conflicts settled
 │   │   │   ├── test_restack.py
@@ -1730,15 +1779,15 @@ willow/
 │   │   │   ├── skim.py       a made list held to how a person reads it: a heading a screen, a line a look, a name to jump to
 │   │   │   ├── test_skim.py
 │   │   │   └── README.md     its card
+```
+
+#### adapters/stdlib/, from test-impact/
+
+```
 │   │   └── test-impact/
 │   │       ├── impact.py     which of this repo's checks a change can reach, closest first, in ci's gate names
 │   │       ├── test_impact.py
 │   │       └── README.md
-```
-
-#### adapters/, from deps/
-
-```
 │   └── deps/                 add-ons that need something installed
 │       ├── README.md         what one must declare: pins, floors, licences, network
 │       ├── code-shape/
@@ -1892,7 +1941,9 @@ willow/
 │       │           └── star_system/
 │       │               ├── __init__.py
 │       │               ├── core.py    a plain velocity-Verlet stand-in, not the real integrator
-│       │               └── data.py    a tiny stand-in catalog
+│       │               ├── data.py    a tiny stand-in catalog
+│       │               ├── initialization.py the stand-in's setup: the start it builds, kept so it can be named
+│       │               └── persistence.py the stand-in's names for itself, and its digest of a setup
 │       ├── static-search/
 │       │   ├── static_search.py  approved answers as a static site, searched by Pagefind
 │       │   ├── requirements.txt  pagefind and pagefind-bin, pinned
@@ -1981,6 +2032,7 @@ willow/
 │   │   ├── draft-0.16.md     proposal: four of willow's own promises made law, and four new beats
 │   │   ├── forge-and-pages.md Design note: the forge, and the pages a person approves on
 │   │   ├── lists.md          notes: FILES.md and ADDONS.md, what makes them hard to read and search, and the skim idea
+│   │   ├── one-shape.md      proposal: one shape at every size: the pile apart from the record, an answer that says its source and kind, a gap kept
 │   │   ├── pieces.md         proposal: every pull request a piece of the pile: cite, draft, check, accept or 42
 │   │   ├── repo-index.md     proposal: the repo as one deterministic-snapshot box, indexed by a custom serve-style stack
 │   │   ├── serve.md          proposal: a sealed stack of piles served to a model, on markdown (the grove's serve, in willow)
@@ -2127,6 +2179,17 @@ willow/
 │   │   ├── private.py        one count over four folders, where the one who asks learns the
 │   │   ├── scene.py          the report sealed, sent, forwarded hop by hop, forged once, corrected and witnessed; stacks shared, taken and declined
 │   │   └── test_scene.py     holds the scene to what README.md says it shows
+│   ├── kept/                 a stack built by hand over this repository: what it remembers, and what it computes again
+│   │   ├── KEPT.json     what the stack's last run printed, listed as kept
+│   │   ├── questions.txt     the sixteen questions scan was asked
+│   │   ├── rebuild.sh        the repository cloned at the pinned commit, a fresh box over the clone, the stack, the verify
+│   │   ├── results/
+│   │   │   ├── 00-stack.txt  the last run's log: a line as each step started, a line as it ended
+│   │   │   └── 07-glance.txt what glance said of the 48 answers
+│   │   ├── stack.md          the 28 steps, each with its want above it
+│   │   ├── words.txt         the six-line words list the box carried
+│   │   ├── test_kept.py
+│   │   └── README.md         the row step by step: what each found, what it got wrong, what held and what didn't
 ```
 
 #### demo/, from known-gaps/
@@ -2374,6 +2437,68 @@ willow/
 │   │       └── node_modules/
 │   │           └── evil-pkg/
 │   │               └── package.json  a postinstall that pipes a remote script to a shell
+```
+
+#### demo/, from shared-runs/
+
+```
+│   ├── shared-runs/          a plan for a study, nothing frozen: simulations on machines nobody chose, sharing one memory, run by a script
+│   │   ├── chain.py      starts the project, makes each link's handoff, and applies or refuses the step a link offers
+│   │   ├── KEPT.json     what the trials' scripts and agents printed, listed as kept
+│   │   ├── rules.py          the next step of a stack chosen by rule from what its last run said, or that no rule fits
+│   │   ├── same.py       two kept runs of one stack, step by step: asked the same way, printed the same thing
+│   │   ├── trial-1/          a first try of the blind handover, on demo/kept's run: what was fixed before, what each agent said
+│   │   │   ├── a-account-struck.txt that account after the strike, which took nothing out: what the last agent was given
+│   │   │   ├── a-account.txt what the first agent wrote from the report, word for word
+│   │   │   ├── b-answers.txt the last agent's twelve answers, from the account alone
+│   │   │   ├── brief-a.txt   what the first agent is told, above the report
+│   │   │   ├── brief-b.txt   what the last agent and the control are told, above the questions
+│   │   │   ├── c-answers.txt the control's twelve answers, from the report itself
+│   │   │   ├── key.json      each question's answer, read off the run's files by trial.py
+│   │   │   ├── questions.txt the twelve questions, two of which the report cannot answer
+│   │   │   ├── report.txt    the script's report of the run: no agent wrote any of it
+│   │   │   ├── RESULTS.md    what was counted, what was lost on the way, and what to hold against it
+│   │   │   └── RULES.md      the trial's rules and what will be counted, written before any agent was started
+│   │   ├── trial-2/      a chain of agents building a stack, each handed only what the last run left: fixed before it ran
+│   │   │   ├── brief.txt     what every link is told, above its handoff
+│   │   │   ├── chain.jsonl   what the script wrote as each link's turn ended
+│   │   │   ├── handoff-1.txt the first link's whole page, made by chain.py
+│   │   │   ├── handoff-2.txt the second link's whole page
+│   │   │   ├── handoff-3.txt the third link's whole page, with the failed step on it
+│   │   │   ├── log-at-the-end.txt the stack's log when the chain ended
+│   │   │   ├── reply-1.txt   the first link's reply, word for word
+│   │   │   ├── reply-2.txt   the second link's reply, word for word
+│   │   │   ├── reply-3.txt   the third link's reply, word for word
+│   │   │   ├── RESULTS.md    what was counted, a reading of whether each step was the next one needed, and what to hold against it
+│   │   │   ├── RULES.md      what a link may do, what the script refuses, and what will be counted
+│   │   │   └── stack-at-the-end.txt the stack the chain left: seven steps it was given, three it added
+│   │   ├── trial-3/      code in the agents' place, from the same start, and the two compared
+│   │   │   ├── 08-why-not.txt what the first step the rules added printed
+│   │   │   ├── 09-fair-merge.txt what the second printed: which piles hold nothing for the question
+│   │   │   ├── 11-why-not-where-link-3-stood.txt what the repaired step printed, on trial 2's project
+│   │   │   ├── chain-where-link-3-stood.jsonl the script's line for that repair
+│   │   │   ├── chain.jsonl   what the script wrote as each turn ended
+│   │   │   ├── log-at-the-end.txt the stack's log when the rules stopped
+│   │   │   ├── reply-1.txt   the first turn's reply, from the explain rule
+│   │   │   ├── reply-2.txt   the second turn's reply, from the by-pile rule
+│   │   │   ├── reply-3.txt   the third turn's reply: no rule fits
+│   │   │   ├── reply-where-link-3-stood.txt the repair rule's reply where the third agent stood
+│   │   │   ├── RESULTS.md    the rules beside the agents, what the code did not do, and what to hold against it
+│   │   │   ├── RULES.md      what the code is held to and what to hold against it, written before the run
+│   │   │   └── stack-at-the-end.txt the stack the rules left: seven steps it was given, two it added
+│   │   ├── trial-4/      willow's own stack run twice in two folders: does each step come out the same
+│   │   │   ├── cold.jsonl    the first comparison, a line a step: one folder had run before, the other had not
+│   │   │   ├── RESULTS.md    what was expected and what was found, the three steps that still differ, and why
+│   │   │   ├── RULES.md      what will be counted and what is expected, written before the two runs were compared
+│   │   │   └── warm.jsonl    the second, with both folders run before
+│   │   ├── trial.py          makes the report and the key from a kept run, strikes what an account adds, scores answers
+│   │   ├── test_trial.py
+│   │   └── README.md         the claim, eight proposed rules, a session led by a script, how it could be wrong, what waits before the freeze
+```
+
+#### demo/, from small-models/
+
+```
 │   ├── small-models/         Gemma 3 and Qwen2.5 on willow's own cards and teodora's files, and one box of it all
 │   │   ├── README.md         what was tried, what came of it, the box, what asking it found
 │   │   ├── SESSION.json      the session that ran it, by its first bytes and their SHA-256, never its text
@@ -2386,25 +2511,21 @@ willow/
 │   │   │   ├── cardpick.py   willow serves each need its cards; the plan may use only those
 │   │   │   ├── weeknote.py   a this-week note: lines kept in chunks, written citing [n], each point held
 │   │   │   └── ranked.py     facts labelled and ranked by rule; the model only phrases them
-│   │   └── runs/
-│   │       ├── assemble-gemma.json  cards picked in batches, then one pipeline
-│   │       ├── assemble-qwen.json  cards picked in batches, then one pipeline
-│   │       ├── person-gemma-teodora.json  a pipeline for teodora, run on her files
-│   │       ├── person-qwen-teodora.json  a pipeline for teodora, run on her files
-│   │       ├── pick-gemma-teodora.json  willow served the cards for her needs
-│   │       ├── pick-qwen-teodora.json  willow served the cards for her needs
-│   │       ├── pick2-gemma-teodora.json  the same, each card with its opening paragraph
-│   │       ├── pick2-qwen-teodora.json  the same, each card with its opening paragraph
-│   │       ├── ranked-gemma-teodora.json  code ranked the facts, the model phrased
-│   │       ├── ranked2-gemma-teodora.json  the same, with the bank held against the ledger
-│   │       ├── weeknote-gemma-teodora.json  a this-week note the model wrote
-│   │       ├── weeknote-qwen-teodora.json  a this-week note the model wrote
-│   │       └── weeknote2-qwen-teodora.json  the same, five lines kept a chunk
-```
-
-#### demo/, from soil-phys-001/
-
-```
+│   │   ├── runs/
+│   │   │   ├── assemble-gemma.json  cards picked in batches, then one pipeline
+│   │   │   ├── assemble-qwen.json  cards picked in batches, then one pipeline
+│   │   │   ├── person-gemma-teodora.json  a pipeline for teodora, run on her files
+│   │   │   ├── person-qwen-teodora.json  a pipeline for teodora, run on her files
+│   │   │   ├── pick-gemma-teodora.json  willow served the cards for her needs
+│   │   │   ├── pick-qwen-teodora.json  willow served the cards for her needs
+│   │   │   ├── pick2-gemma-teodora.json  the same, each card with its opening paragraph
+│   │   │   ├── pick2-qwen-teodora.json  the same, each card with its opening paragraph
+│   │   │   ├── ranked-gemma-teodora.json  code ranked the facts, the model phrased
+│   │   │   ├── ranked2-gemma-teodora.json  the same, with the bank held against the ledger
+│   │   │   ├── weeknote-gemma-teodora.json  a this-week note the model wrote
+│   │   │   ├── weeknote-qwen-teodora.json  a this-week note the model wrote
+│   │   │   └── weeknote2-qwen-teodora.json  the same, five lines kept a chunk
+│   │   └── KEPT.json     the thirteen saved model runs, each with its SHA-256, listed as kept
 │   ├── soil-phys-001/
 │   │   ├── fetch.py          the study's sources, fetched again and held to their hashes
 │   │   ├── FROZEN.json       the pre-registration: the key, sources, runner, rules and tools by SHA-256
@@ -2430,6 +2551,11 @@ willow/
 │   │       ├── record-2.jsonl  a copy of run 2's record, without its key
 │   │       ├── run-3.json    the third run's, from freeze 3: every rule held
 │   │       └── record-3.jsonl  a copy of run 3's record, without its key
+```
+
+#### demo/, from teodora/
+
+```
 │   ├── teodora/              built blind, from a different line of work
 │   │   ├── make_life.py
 │   │   ├── CHARACTER.md

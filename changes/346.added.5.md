@@ -1,0 +1,1 @@
+Nine ideas on the list, each a gap this work kept meeting and nothing covered: `narrow` (the question to ask you next), `hit-kinds`, `pool-fit`, `join-check`, `by-index`, `mirror-sweep`, `words-later`, `stack-check` and `one-step`

@@ -1,0 +1,12 @@
+steps: 29
+flagged-count: 6
+flagged-steps: 07, 11, 13, 26, 27, 29
+same-bytes: not said
+record-rows: 2
+sealed: 0
+held-whole: 16
+broken-references: 136
+first-mention: not said
+thesis-held: 14
+seconds: not said
+machines: not said

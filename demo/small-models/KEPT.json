@@ -1,0 +1,19 @@
+{
+ "about": "What the small models printed on the night this demo records, kept as it came. A model wrote these, about a made-up person; none of it is willow speaking of itself. Each file's SHA-256 is beside its name, and the demo's test holds them.",
+ "kept": "2026-11-01",
+ "files": {
+  "runs/assemble-gemma.json": "b2ac5f5520851477da87e7f297d0003a62ef2248009d2c7aa69420e174475761",
+  "runs/assemble-qwen.json": "a0cbad2303e43190b95384ef22938d7f2db01aedd14cf96b2875787cce4481e9",
+  "runs/person-gemma-teodora.json": "ceee382956670c731fac07cd2d755fcaf0515bc599e997384cc80e6cab10546b",
+  "runs/person-qwen-teodora.json": "da117e9f2a4952152b7672b98a211f58a9d83ebc0f51ee143acf53505bc4adf9",
+  "runs/pick-gemma-teodora.json": "2085ff179e1aa04504857ec7bfc90c266b80d4ba62e694a5d514f8f9ff777e9e",
+  "runs/pick-qwen-teodora.json": "8fd08abfcc3b138820ed2492cef7bb92f15208f277d788b3d784a77ad7b78500",
+  "runs/pick2-gemma-teodora.json": "f2215fbdeb88efe2b00be87b8bd1570801054bdf919afa72713bb2b2d3e472b2",
+  "runs/pick2-qwen-teodora.json": "ef71fc7cf828135a5a9649cb1248a1436586aca7fa3542187ce1219303a0b175",
+  "runs/ranked-gemma-teodora.json": "801716a218c7bb5be1ecb157b3b7a79397dcd30cdac495eca2d667d8ce8db9fd",
+  "runs/ranked2-gemma-teodora.json": "69b76dd0f8f51f570e4ed72c3cffd324d73551d95c9b2a9d776513aacf576778",
+  "runs/weeknote-gemma-teodora.json": "a26be87fcea2aabf5745b0622567bbe0c0511d1d748ae522af5fa1170ad2bf79",
+  "runs/weeknote-qwen-teodora.json": "aed0ac74ccacb59bbb6860669b5210cea283618d8f01bdf1f4f388e57ed0e52a",
+  "runs/weeknote2-qwen-teodora.json": "aab6ab4bbcf216ed3ed91f4ea6cc2e93a97cf24644443af5449d0aed1df8dcb5"
+ }
+}

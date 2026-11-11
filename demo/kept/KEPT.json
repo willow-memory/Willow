@@ -1,0 +1,7 @@
+{
+ "about": "What the stack's last run printed, kept as it came: its log, and what glance said. Printed by add-ons over the pinned pile, not written by a person.",
+ "files": [
+  "results/00-stack.txt",
+  "results/07-glance.txt"
+ ]
+}

@@ -1,0 +1,7 @@
+You are one link in a chain. A script ran a stack of 29 checking steps over a folder and wrote the report below. You did not see the run.
+
+Write a handover account of it, 150 words or fewer, plain prose, for someone who will never see this report and will have only your account. Say what ran, how it ended, what was flagged, and the figures that matter. Say only what the report says. Do not use any tool, read any file, or look anything up: the report below is everything you have. If you do use a tool, say so at the end.
+
+Reply with the account and nothing else.
+
+--- the report ---

@@ -1,0 +1,9 @@
+The stack of 29 checking steps ran once over the folder and finished with 6 of 29 steps flagged.
+Step 07 (glance) found 48 questions: 16 held whole, 30 in part, 2 found nothing.
+Step 11 (claim-check) found some parts in adapters/planned.json:548, lacking result, hash, shared and computes.
+Step 13 (xref) checked 1572 references, and 136 don't hold.
+Step 26 (three-two-one) says the backups need you: 2 copies on 2 kinds of storage, none away from home.
+Step 27 (box-health) says the box needs you for 2 things, and 1 file can't be read.
+Step 29 (thesis) has 82 claims: 14 held, 68 short, none skipped.
+The backup and restore drill both passed, and the kernel chain holds 2 rows, 0 sealed.
+page.md, also 29 steps, was never run.

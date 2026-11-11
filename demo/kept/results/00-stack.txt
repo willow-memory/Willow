@@ -1,0 +1,67 @@
+01 code-comments: started (1cc6733e)
+01 code-comments: exit 0, 1 line
+02 git-history: started (6a919e1d)
+02 git-history: exit 0, 1 line
+03 index-cache: started (ad3ab782)
+03 index-cache: exit 0, 1 line
+04 index-cache: started (baf839d0)
+04 index-cache: exit 0, 1 line
+05 index-cache: started (42810e7c)
+05 index-cache: exit 0, 1 line
+06 scan: started (6d5fae14, fed f87a5568)
+06 scan: exit 0, 48 lines
+07 glance: started (c3582978, fed f87a5568)
+07 glance: exit 42, 52 lines, mass 49, populated, flagged
+08 why-not: started (8d4915b4, fed 6b79abb3)
+08 why-not: exit 0, 1 line
+09 fair-merge: started (b0134a73, fed 7c5f5939)
+09 fair-merge: exit 0, 10 lines
+10 first-mention: started (f3b102e5)
+10 first-mention: exit 0, 2 lines
+11 claim-check: started (c57e4658)
+11 claim-check: exit 42, 3 lines, flagged
+12 claim-check: started (76301388)
+12 claim-check: exit 0, 143 lines
+13 xref: started (c26d7744)
+13 xref: exit 42, 139 lines, mass 137, populated, flagged
+14 pile-store: started (8107bc65)
+14 pile-store: exit 0, 1 line
+15 pile-rungs: started (785cece4, fed 219d5913)
+15 pile-rungs: exit 0, 1 line
+16 fixity: started (3f4d5f9d)
+16 fixity: exit 0, 1 line
+17 ids: started (1f729ab1, fed 10b04fd4)
+17 ids: exit 0, 426 lines
+18 star-system: started (2019b0c6)
+18 star-system: exit 0, 1 line
+19 star-system: started (8f34779f)
+19 star-system: exit 0, 1 line
+20 diverge: started (8c87bc55)
+20 diverge: exit 0, 1 line
+21 merkle: started (bab44993)
+21 merkle: exit 0, 1 line
+22 prov: started (3afbbea4)
+22 prov: exit 0, 1 line
+23 tip-pin: started (12a9cd9e)
+23 tip-pin: exit 0, 2 lines
+24 backup: started (39faf2cf)
+24 backup: exit 0, 3 lines
+25 restore-drill: started (f1e18cd4, fed c4d3bf53)
+25 restore-drill: exit 0, 1 line
+26 three-two-one: started (a2f840c3)
+26 three-two-one: exit 42, 3 lines, flagged
+27 box-health: started (5a644aca)
+27 box-health: exit 42, 10 lines, mass 7, populated, flagged
+28 history: started (a770f547)
+28 history: exit 0, 4 lines, mass 3
+29 thesis: started (9f7a1be1, fed 99c75ef7)
+29 thesis: exit 42, 85 lines, mass 83, populated, flagged
+30 digest: started (79d43a14)
+30 digest: exit 0, 27 lines, mass 26
+31 kinds: started (2b5bf2c6)
+31 kinds: exit 0, 17 lines, mass 15
+32 kinds: started (c39dbf6c)
+32 kinds: exit 0, 65 lines, mass 62
+33 stack-row: started (d6330253)
+33 stack-row: exit 0, 1 line
+done: 6 of 33 steps flagged

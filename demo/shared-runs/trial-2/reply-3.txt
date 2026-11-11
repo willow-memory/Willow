@@ -1,0 +1,4 @@
+want: Check that the record is a kernel box in good order before the stack asks why the unfound questions found nothing.
+step: - box-health -- --box {box}
+why: The why-not step was refused with "not a kernel box; init first", so the stack needs to know what state the box is in before it can explain the gaps. box-health reports whether the record's chain holds and which files can't be read, and it writes nothing.
+cards: adapters/stdlib/box-health/README.md

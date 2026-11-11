@@ -1,0 +1,33 @@
+{
+ "about": "What the trials' scripts and agents printed, kept word for word: reports, keys, handoffs, replies, logs and comparisons. The rules, briefs, questions and results beside them were written, and are not listed.",
+ "files": [
+  "trial-1/a-account-struck.txt",
+  "trial-1/a-account.txt",
+  "trial-1/b-answers.txt",
+  "trial-1/c-answers.txt",
+  "trial-1/key.json",
+  "trial-1/report.txt",
+  "trial-2/chain.jsonl",
+  "trial-2/handoff-1.txt",
+  "trial-2/handoff-2.txt",
+  "trial-2/handoff-3.txt",
+  "trial-2/log-at-the-end.txt",
+  "trial-2/reply-1.txt",
+  "trial-2/reply-2.txt",
+  "trial-2/reply-3.txt",
+  "trial-2/stack-at-the-end.txt",
+  "trial-3/08-why-not.txt",
+  "trial-3/09-fair-merge.txt",
+  "trial-3/11-why-not-where-link-3-stood.txt",
+  "trial-3/chain-where-link-3-stood.jsonl",
+  "trial-3/chain.jsonl",
+  "trial-3/log-at-the-end.txt",
+  "trial-3/reply-1.txt",
+  "trial-3/reply-2.txt",
+  "trial-3/reply-3.txt",
+  "trial-3/reply-where-link-3-stood.txt",
+  "trial-3/stack-at-the-end.txt",
+  "trial-4/cold.jsonl",
+  "trial-4/warm.jsonl"
+ ]
+}

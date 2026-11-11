@@ -1,0 +1,38 @@
+01 code-comments: started (5a118ab8)
+01 code-comments: exit 0, 1 line
+02 git-history: started (b8711739)
+02 git-history: exit 0, 1 line
+03 index-cache: started (4c217c70)
+03 index-cache: exit 0, 1 line
+04 index-cache: started (8e5ba1a2)
+04 index-cache: exit 0, 1 line
+05 index-cache: started (df966ec6)
+05 index-cache: exit 0, 1 line
+06 scan: started (c513e249, fed e9baca79)
+06 scan: exit 0, 48 lines
+07 glance: started (dc0f71e5, fed e9baca79)
+07 glance: exit 42, 52 lines, mass 49, populated, flagged
+done: 1 of 7 steps flagged
+resumed: 7 of 8 steps had finished
+01 code-comments: kept from before
+02 git-history: kept from before
+03 index-cache: kept from before
+04 index-cache: kept from before
+05 index-cache: kept from before
+06 scan: kept from before
+07 glance: kept from before
+08 why-not: started (a05a7fff, fed 875fadc0)
+08 why-not: exit 0, 1 line
+done: 1 of 8 steps flagged
+resumed: 8 of 9 steps had finished
+01 code-comments: kept from before
+02 git-history: kept from before
+03 index-cache: kept from before
+04 index-cache: kept from before
+05 index-cache: kept from before
+06 scan: kept from before
+07 glance: kept from before
+08 why-not: kept from before
+09 fair-merge: started (9d63be96)
+09 fair-merge: exit 0, 3 lines
+done: 1 of 9 steps flagged

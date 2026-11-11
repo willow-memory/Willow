@@ -1,0 +1,1 @@
+`star-system`: the page now says what was run in the checkout's own names, its model, its numerical method and its own SHA-256 digest of the setup, read off science_bitch as it stands in November 2026; the method named is the checkout's, so the stand-in is no longer called Yoshida, and a digest is given only when its setup builds, bit for bit, the system that was run

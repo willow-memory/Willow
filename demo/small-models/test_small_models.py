@@ -100,3 +100,14 @@ def test_a_bad_command_line_or_a_folder_that_exists_is_refused(tmp_path):
     assert run("--to", str(tmp_path), "--stray", "x").returncode == 2
     got = run("--to", str(tmp_path))
     assert got.returncode == 2 and got.stderr.startswith("refused")
+
+
+def test_every_kept_run_is_listed_with_its_hash_and_no_other_file_is():
+    import hashlib
+
+    kept = json.loads((HERE / "KEPT.json").read_text())
+    assert set(kept) == {"about", "kept", "files"}
+    runs = sorted(f"runs/{p.name}" for p in (HERE / "runs").glob("*.json"))
+    assert sorted(kept["files"]) == runs and len(runs) == 13
+    for name, sha in kept["files"].items():
+        assert hashlib.sha256((HERE / name).read_bytes()).hexdigest() == sha, name

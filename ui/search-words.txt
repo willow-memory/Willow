@@ -54,6 +54,16 @@ collect = gather
 glance = glance
 route = route
 look = look, glance
+sentence = say
+connects = connect
+connection = connect
+related = connect
+why = connect
+voice = say
+conversational = say
+hallucinate = say, check, lack
+invent = say, check, lack
+madeup = say, check, lack
 answer = look
 answers = look
 

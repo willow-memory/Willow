@@ -186,6 +186,19 @@ def test_search_finds_a_card_in_a_persons_own_words(site):
     assert vim == {"name": "vim", "why": "you named it"}
 
 
+def test_the_search_words_list_is_one_the_kernel_reads():
+    """One line the kernel refuses and the whole list is dropped, with no
+    word said: every search then goes on without it."""
+    import kernel
+
+    text = (Path(__file__).resolve().parent / "search-words.txt").read_text(
+        encoding="utf-8"
+    )
+    alias, why = kernel.parse_words(text)
+    assert why is None, why
+    assert alias["remind"] and len(alias) >= 62
+
+
 def test_only_a_sealed_pick_is_put_together_and_the_seal_is_the_kernels(site, tmp_path):
     cv, call = site
     folder = a_folder(tmp_path)

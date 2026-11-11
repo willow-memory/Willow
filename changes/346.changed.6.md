@@ -1,0 +1,1 @@
+`demo/kept`: the pile is pinned to the commit before the folder existed, so the stack no longer answers from its own report; and a 29th step, thesis, puts the design note the work ended in to that pile, sentence by sentence

@@ -7,6 +7,8 @@ the real project is what --repo points at in use."""
 
 from __future__ import annotations
 
+import re
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -42,6 +44,114 @@ def test_the_output_is_deterministic(tmp_path):
     run(*args, "--to", str(a))
     run(*args, "--to", str(b))
     assert a.read_bytes() == b.read_bytes(), "same inputs, same bytes"
+
+
+def page_of(repo: Path, tmp_path: Path, *argv: str) -> str:
+    out = tmp_path / "page.md"
+    got = run("--repo", str(repo), "--orbits", "1", *argv, "--to", str(out))
+    assert got.returncode == 0, got.stdout + got.stderr
+    return out.read_text()
+
+
+def checkout(tmp_path: Path, edits: dict | None = None, without: tuple = ()) -> Path:
+    """A copy of the stand-in checkout with files taken out, or one line of
+    a file changed; each change is held to having matched once."""
+    repo = tmp_path / "checkout"
+    shutil.copytree(REPO, repo, ignore=shutil.ignore_patterns("__pycache__"))
+    pkg = repo / "simulations" / "star_system"
+    for name in without:
+        (pkg / name).unlink()
+    for name, (old, new) in (edits or {}).items():
+        text = (pkg / name).read_text()
+        assert text.count(old) == 1, f"{name}: {old!r} is there {text.count(old)} times"
+        (pkg / name).write_text(text.replace(old, new))
+    return repo
+
+
+def test_the_page_names_the_checkouts_own_method_not_the_real_projects(tmp_path):
+    page = page_of(REPO, tmp_path)
+    assert "with its fixed-step integrator (fixed-velocity-verlet-stand-in)." in page
+    assert "## what was run, in the checkout's own names" in page
+    assert "- model: planar-newtonian-point-mass-v1\n" in page
+    assert "- numerical method: fixed-velocity-verlet-stand-in\n" in page
+    assert "Yoshida 1990" not in page and "Yoshida integrator" not in page
+    assert "- integrator: the checkout's own, named above" in page
+    assert (
+        page.index("## conserved")
+        < page.index("## what was run")
+        < page.index("## sources")
+    )
+
+
+def test_the_setup_digest_is_the_checkouts_own_and_names_the_setup(tmp_path):
+    sys.path.insert(0, str(REPO))
+    try:
+        from simulations.star_system import initialization, persistence
+    finally:
+        sys.path.remove(str(REPO))
+    theirs = persistence.setup_digest(
+        initialization.legacy_setup("sun", ("earth", "jupiter"))
+    )
+    page = page_of(REPO, tmp_path)
+    (line,) = re.findall(r"^- setup digest: (.*)$", page, flags=re.M)
+    assert (
+        line
+        == f"sha256:{theirs} (its setup_digest of this star, these planets and this step)"
+    )
+    other = page_of(REPO, tmp_path, "--planet", "earth")
+    assert re.findall(r"sha256:[0-9a-f]{64}", other) != [f"sha256:{theirs}"]
+    assert len(re.findall(r"sha256:[0-9a-f]{64}", other)) == 1
+
+
+def test_a_checkout_from_before_it_named_itself_reads_as_it_did(tmp_path):
+    old = checkout(tmp_path, without=("persistence.py", "initialization.py"))
+    page = page_of(old, tmp_path)
+    assert "with its fixed-step Yoshida integrator." in page
+    assert "## what was run" not in page and "setup digest" not in page
+    assert "- integrator: Yoshida 1990, doi:10.1016/0375-9601(90)90092-3" in page
+
+
+def test_a_digest_of_another_start_is_not_given(tmp_path):
+    for name, old, new in (
+        ("r", "system.r.copy(),", "system.r.copy() + 1e-12,"),
+        ("v", "system.v.copy(),", "system.v.copy() * 2,"),
+        ("dt", "        system.dt,\n", "        system.dt * 2,\n"),
+        ("masses", "system.masses.copy(),", "system.masses.copy() * 2,"),
+    ):
+        sub = tmp_path / name
+        sub.mkdir()
+        page = page_of(checkout(sub, {"initialization.py": (old, new)}), sub)
+        assert (
+            "- setup digest: none given; the setup it names builds another "
+            "start than the one run here"
+        ) in page, name
+        assert "sha256:" not in page, name
+
+
+def test_a_digest_that_cannot_be_computed_says_why_and_the_run_still_writes(tmp_path):
+    broken = checkout(tmp_path, {"persistence.py": (
+        "    named = {",
+        "    raise ModuleNotFoundError(\"No module named 'matplotlib'\")\n    named = {")})  # fmt: skip
+    page = page_of(broken, tmp_path)
+    assert ("- setup digest: none given; it could not be computed here "
+            "(ModuleNotFoundError: No module named 'matplotlib')") in page  # fmt: skip
+    assert "- numerical method: fixed-velocity-verlet-stand-in" in page
+    assert "energy drift" in page
+    no_setup = tmp_path / "no-setup"
+    no_setup.mkdir()
+    page = page_of(checkout(no_setup, without=("initialization.py",)), no_setup)
+    assert (
+        "- setup digest: none given; it could not be computed here (ModuleNotFoundError"
+        in page
+    )
+
+
+def test_the_digest_is_taken_before_the_run_moves_the_system(tmp_path):
+    # after the run the system is elsewhere; a digest checked then would never match
+    for orbits in ("1", "2"):
+        out = tmp_path / f"{orbits}.md"
+        got = run("--repo", str(REPO), "--orbits", orbits, "--to", str(out))
+        assert got.returncode == 0 and "sha256:" in out.read_text(), orbits
 
 
 def test_an_unknown_body_is_refused(tmp_path):
