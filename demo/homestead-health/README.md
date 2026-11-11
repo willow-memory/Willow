@@ -11,7 +11,8 @@ engine, its health, ledger and law modules, the organisation's own
 pages, and its list of software a person owns. 397 files. None of their
 text is kept here; [rebuild.sh](rebuild.sh) fetches them again at those
 commits, builds a fresh box on a scratch key outside this repository,
-and asks it [questions.txt](questions.txt).
+and asks it [questions.txt](questions.txt) and then
+[guardian-questions.txt](guardian-questions.txt).
 
     demo/homestead-health/rebuild.sh SCRATCH
 
@@ -45,6 +46,15 @@ What that does and doesn't say:
   file, and names another project's `guardian_of` edges as prior art
   for the day it is taken up. No question here was worded to find it; a
   search for the word did.
+
+## What came next
+
+- [GUARDIANSHIP.md](GUARDIANSHIP.md): holding a record for someone
+  else, put to the pile in ten questions, with what the homestead design
+  holds and what it leaves open.
+- [COMPARED.md](COMPARED.md): homestead's rungs and gates beside
+  willow's seal and record, and what a willow that held health records
+  would have to borrow.
 
 ## What it is not
 

@@ -34,6 +34,24 @@ def test_the_first_asks_kept_are_what_the_page_says_of_them():
     card = next(r for r in rows if r[0] == "what is on the emergency card")
     assert card[2].startswith("homestead/docs/PLAN-homestead-health.md:")
     kept = json.loads((HERE / "KEPT.json").read_text())["files"]
-    assert kept == ["results/asks.txt"]
+    assert kept == ["results/asks.txt", "results/guardian-asks.txt"]
     page = (HERE / "README.md").read_text()
     assert "397 files" in page and "Eleven were served" in page
+
+
+def test_the_guardianship_asks_kept_are_what_their_page_says():
+    asked = [q for q in (HERE / "guardian-questions.txt").read_text().splitlines() if q]
+    rows = [
+        r.split("  |  ")
+        for r in (HERE / "results" / "guardian-asks.txt").read_text().splitlines()
+    ]
+    assert [r[0] for r in rows] == asked and len(asked) == 10
+    assert all(r[1] == "populated" for r in rows)
+    plan = [r[0] for r in rows if r[2].startswith("homestead/docs/PLAN-homestead-health.md:")]  # fmt: skip
+    assert plan == [
+        "who holds a child's health record",
+        "what does the household hold as guardian",
+        "what is the open decision on minor consent",
+    ]
+    page = (HERE / "GUARDIANSHIP.md").read_text()
+    assert "All ten were served" in page and "Three came straight" in page

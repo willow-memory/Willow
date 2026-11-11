@@ -2167,11 +2167,15 @@ willow/
 │   │   ├── QUESTIONS.md      the questions he would ask, written before any run
 │   │   └── STRIP.md
 │   ├── homestead-health/ a box over the six homestead-affairs repositories, to ask about health records a household holds
+│   │   ├── COMPARED.md       Homestead's rungs and gates, beside willow's seal and record
+│   │   ├── guardian-questions.txt ten questions on holding a record for someone else
+│   │   ├── GUARDIANSHIP.md   Holding a record for someone else: what the pile says
 │   │   ├── KEPT.json         what the first asks printed, listed as kept
 │   │   ├── questions.txt     twelve questions put to the box when it was first built
 │   │   ├── rebuild.sh        fetches the six repositories at their commits, builds the box and asks it
 │   │   ├── results/          what rebuild.sh printed, kept as it came
-│   │   │   └── asks.txt          each question, what the kernel said, and where the first passage it served is
+│   │   │   ├── asks.txt          each question, what the kernel said, and where the first passage it served is
+│   │   │   └── guardian-asks.txt each guardianship question, what the kernel said, and where its first passage is
 │   │   ├── sources.json      the six repositories, each at one commit; none of their text is kept
 │   │   ├── test_health_box.py the pile is six whole commits, and the kept asks are what the page says
 │   │   └── README.md         A box for health: the homestead-affairs repositories as one pile
@@ -2188,6 +2192,11 @@ willow/
 │   │   ├── private.py        one count over four folders, where the one who asks learns the
 │   │   ├── scene.py          the report sealed, sent, forwarded hop by hop, forged once, corrected and witnessed; stacks shared, taken and declined
 │   │   └── test_scene.py     holds the scene to what README.md says it shows
+```
+
+#### demo/, from kept/
+
+```
 │   ├── kept/                 a stack built by hand over this repository: what it remembers, and what it computes again
 │   │   ├── KEPT.json     what the stack's last run printed, listed as kept
 │   │   ├── questions.txt     the sixteen questions scan was asked
@@ -2199,11 +2208,6 @@ willow/
 │   │   ├── words.txt         the six-line words list the box carried
 │   │   ├── test_kept.py
 │   │   └── README.md         the row step by step: what each found, what it got wrong, what held and what didn't
-```
-
-#### demo/, from known-gaps/
-
-```
 │   ├── known-gaps/           the fleet's own twelve known security gaps, asked of the code their fixes changed
 │   │   ├── README.md         the claim, the threats, what is frozen, how to reproduce, the dry run
 │   │   ├── FROZEN.json       freeze 1: the SHA-256 of every frozen file and tool; a change is a new freeze

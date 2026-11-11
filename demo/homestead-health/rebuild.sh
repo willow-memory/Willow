@@ -28,15 +28,19 @@ while IFS=$'\t' read -r name address commit as; do
 done < "$S/sources.tsv"
 cd "$R" || exit 2
 python3 kernel.py init --box "$S/box" --pile "$S/pile" --key "$S/scratch.key" >/dev/null || exit 2
-while IFS= read -r q; do
-  [ -n "$q" ] || continue
-  python3 kernel.py bite --box "$S/box" "$q" | python3 -c '
+ask() {
+  while IFS= read -r q; do
+    [ -n "$q" ] || continue
+    python3 kernel.py bite --box "$S/box" "$q" | python3 -c '
 import json, sys
 d = json.load(sys.stdin)
 first = (d.get("served") or [{}])[0].get("where", "")
 print(sys.argv[1], d["state"], first, sep="  |  ")' "$q"
-done < "$HERE/questions.txt" > "$S/asks.txt"
-cat "$S/asks.txt"
+  done < "$HERE/$1" > "$S/$2"
+  cat "$S/$2"
+}
+ask questions.txt asks.txt
+ask guardian-questions.txt guardian-asks.txt
 python3 kernel.py verify --box "$S/box"
 find "$R" -name __pycache__ -type d -not -path "*/.git/*" -exec rm -rf {} + 2>/dev/null
 echo "box: $S/box  pile: $S/pile"
