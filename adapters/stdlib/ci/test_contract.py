@@ -628,6 +628,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "bench": ("bench.py", ["run", "--sizes", "20,40"]),
     "bot-venv": ("bot_venv.py", ["--venv", "{pile}"]),
     "box-health": ("box_health.py", ["--box", "{box}", *NOW]),
+    "boxes-here": ("boxes_here.py", ["--in", "{box}/.."]),
     "braille": ("braille.py", ["--box", "{box}", "--to", "{tmp}/answers.brf"]),
     "browse": ("browse.py", ["launcher", "--box", "{box}"]),
     "budget": ("budget.py", ["--box", "{box}"]),

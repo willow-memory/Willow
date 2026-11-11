@@ -982,6 +982,9 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 
 ### Tools you run yourself
 
+- <a id="boxes-here"></a>[**boxes-here**](adapters/stdlib/boxes-here/) \
+  The boxes already in a folder and what waits on each, so one that is there is opened, not made twice; and a list of the ones you choose. \
+  Uses projects. *new* `no-install` `offline` `open` · near: thesis, timeline, box-health
 - <a id="flashcards"></a>[**flashcards**](adapters/stdlib/flashcards/) \
   Approved question-and-answer pairs become cards, scheduled by spaced repetition. \
   *box* `no-install` `offline` · near: jeles, ask-later, hook-compact

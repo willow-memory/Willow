@@ -881,6 +881,10 @@ willow/
 ### adapters/stdlib/: Keeping track: Tools you run yourself
 
 ```
+│   │   ├── boxes-here/
+│   │   │   ├── boxes_here.py The boxes already in a folder, and how much waits on each, so one that is there is opened, not made again; and a list kept of the ones you choose
+│   │   │   ├── test_boxes_here.py
+│   │   │   └── README.md     its card
 │   │   ├── flashcards/
 │   │   │   ├── flashcards.py  sealed approvals as cards, scheduled by FSRS-5 replayed from review rows
 │   │   │   ├── test_flashcards.py
@@ -929,6 +933,11 @@ willow/
 │   │   │   ├── session_cost.py  tokens each agent session spent, by day and by repo, priced from a table you keep
 │   │   │   ├── test_session_cost.py
 │   │   │   └── README.md
+```
+
+#### adapters/stdlib/, from symptoms/
+
+```
 │   │   ├── symptoms/
 │   │   │   ├── symptoms.py   one symptom's dated diary, turns marked only where the line says one, each cited
 │   │   │   ├── test_symptoms.py
