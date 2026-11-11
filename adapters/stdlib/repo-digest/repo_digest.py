@@ -9,8 +9,9 @@ digest add-on is for a person's folder, with where each goes.
 
 What waits, and where it goes:
 
-    a ring in what uses what    two add-ons that each need the other beside
-                                them: one of the two `uses` lines is wrong
+    a ring in what uses what    add-ons that each need the other beside
+                                them: they come together or not at all, or
+                                one of the `uses` lines is wrong
     uses one that isn't here    a card's `uses` names no built add-on: build
                                 it, or take the name off
     nothing declares            a file with no kind (the kinds add-on's
@@ -246,7 +247,7 @@ def page(root: Path, files: list[str]) -> tuple[dict, bool]:
         f"{count(len(uses), 'add-on')} build {count(top, 'step')} deep"
     )
     doc = report(NAME, "populated", said, [
-        ("a ring in what uses what: one of the two uses lines is wrong", ring_rows),
+        ("a ring in what uses what: they come together, or a uses line is wrong", ring_rows),
         ("uses one that isn't here: build it, or take the name off", nowhere),
         ("nothing declares: a declaration, where its subject lives", undeclared),
         ("ideas waiting: to build, or to leave", idea_rows),

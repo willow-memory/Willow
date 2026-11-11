@@ -18,7 +18,7 @@ One page of what this repo needs from you, and the order its add-ons build in.
     python adapters/stdlib/repo-digest/repo_digest.py page [--json] [--root DIR]
 
     repo-digest: populated, 219 files nothing declares, 1 ring in what uses what, 190 ideas waiting; 363 add-ons build 6 steps deep
-    ## a ring in what uses what: one of the two uses lines is wrong
+    ## a ring in what uses what: they come together, or a uses line is wrong
       readme → similar → readme  each needs the other beside it; 6 add-ons rest on it: against, ci, ci-memo, github, ready, test-impact
     ## nothing declares: a declaration, where its subject lives
       docs/                      20 files, such as docs/agents/add-ons.md
@@ -45,7 +45,7 @@ found by whoever happened to run the tool that knew. This is that page.
 
 | group | what it is | where it goes |
 |---|---|---|
-| a ring in what uses what | add-ons whose cards each name the other in `uses`, with the add-ons that rest on the ring | one of the two lines is wrong: a ring has no order to build in |
+| a ring in what uses what | add-ons whose cards each name the other in `uses`, with the add-ons that rest on the ring | a ring has no order to build in: the two come together or not at all, or one of the lines is wrong |
 | uses one that isn't here | a `uses` line naming no built add-on | build it, or take the name off |
 | nothing declares | files with no kind, by folder, as [kinds](../kinds/) counts them | a declaration, where the file's subject lives |
 | ideas waiting | the ideas list, by section | to build, or to leave: an idea is a seed, not a fault |
@@ -60,7 +60,9 @@ are at each step, the longest way down from any one, and the five most
 built on.
 
 An add-on in a ring, or resting on one, has no step: it is named with the
-ring and left out of the order.
+ring and left out of the order. Today's ring is a true one: readme reads
+similar's tags, and similar reads readme's list of add-ons, so each script
+does load the other. Whether that should stand is the maintainer's to say.
 
 **What it does not see.** Only `uses` is read. A step of a stack that takes
 an earlier step's output is a bridge too, made when the stack is written,
