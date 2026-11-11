@@ -615,7 +615,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
   *new* `no-install` `offline` `gitlab` `github` · near: gitlab, across, rules
 - <a id="fair-merge"></a>[**fair-merge**](adapters/stdlib/fair-merge/) \
   Each folder ranked on its own and the lists merged in turns, so a big corpus can't crowd out a small one; one that found nothing says so. \
-  *bot* `no-install` `offline` `found` `pile` · near: scan, parallel, bench
+  Uses scan. *bot* `no-install` `offline` `found` `pile` · near: scan, parallel, bench
 - <a id="first-mention"></a>[**first-mention**](adapters/stdlib/first-mention/) \
   When your files first mention something, and the line that does. \
   *new* `no-install` `offline` `mention` · near: dialect-dates, people, timeline
