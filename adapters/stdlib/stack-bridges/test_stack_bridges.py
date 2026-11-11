@@ -17,6 +17,26 @@ SCRIPT = HERE / "stack_bridges.py"
 sys.path.insert(0, str(HERE))
 import stack_bridges  # noqa: E402
 
+#: Copied out beside the kernel alone (alone.py), this add-on has the stack
+#: add-on beside it and no other: the cards it reads of other add-ons, and
+#: the repo's own stacks, are there only in the repo.
+CARDS_HERE = all(
+    (ROOT / "adapters" / kind / name / "README.md").is_file()
+    for kind, name in (
+        ("stdlib", "fixity"),
+        ("stdlib", "backup"),
+        ("stdlib", "glance"),
+        ("deps", "dp"),
+    )
+)
+REPO_HERE = (ROOT / "demo" / "kept" / "stack.md").is_file()
+needs_cards = pytest.mark.skipif(
+    not CARDS_HERE, reason="the other add-ons' cards aren't here"
+)
+needs_repo = pytest.mark.skipif(
+    not REPO_HERE, reason="the repo's own stacks aren't here"
+)
+
 STACK = """# a stack
 ## read
 - code-comments -- mirror --from PILE --to {box}-code
@@ -65,6 +85,7 @@ def test_each_step_is_tied_to_the_step_whose_output_or_place_it_names(tmp_path):
     assert rows(doc, "a bridge that can't hold") == {}
 
 
+@needs_cards
 def test_the_order_is_by_depth_with_the_longest_way_down_and_the_record_said(tmp_path):
     doc, _ = doc_of(tmp_path, STACK)
     order = rows(doc, "the order")
@@ -218,6 +239,7 @@ def test_a_bad_command_line_or_a_file_that_is_not_a_stack_is_refused(
     assert got.returncode == 2 and said in got.stderr and got.stdout == ""
 
 
+@needs_repo
 def test_on_the_repos_own_stacks_every_bridge_holds():
     kept = run("--stack", str(ROOT / "demo/kept/stack.md"), "--json")
     doc = json.loads(kept.stdout)
@@ -242,6 +264,7 @@ def test_it_writes_nothing_and_opens_no_place_the_stack_names(tmp_path):
     assert sorted(p.name for p in tmp_path.iterdir()) == ["stack.md"]
 
 
+@needs_cards
 def test_its_own_example_has_the_bridges_its_card_says():
     got = run("--stack", str(HERE / "example.md"), "--json")
     doc = json.loads(got.stdout)
@@ -279,17 +302,13 @@ def test_a_step_naming_the_record_after_one_that_writes_it_takes_the_record():
     )
     assert stack_bridges.record_bridges(steps, writes=lambda name: False) == {}
     assert stack_bridges.record_bridges(steps, writes=lambda name: None) == {}
-    assert (
-        stack_bridges.writes_record("fixity") is True
-        and stack_bridges.writes_record("glance") is False
-    )
-    assert stack_bridges.writes_record("backup") is False, (
-        "it writes to a place, not the record"
-    )
     assert stack_bridges.writes_record("no-such-add-on") is None
-    assert stack_bridges.writes_record("dp") is True, "an add-on in deps has a card too"
+    assert stack_bridges.writes_record("stack") is False, (
+        "the one card that is always beside it"
+    )
 
 
+@needs_cards
 def test_the_record_makes_a_step_deeper_and_is_said_beside_what_else_it_takes(tmp_path):
     text = (
         "## a\n- fixity -- --box {box}\n- backup -- --box {box} --to S/usb\n"
@@ -305,3 +324,16 @@ def test_the_record_makes_a_step_deeper_and_is_said_beside_what_else_it_takes(tm
         rows(doc, "the order")["the longest way down"]
         == "03 three-two-one → 02 backup → 01 fixity"
     )
+
+
+@needs_cards
+def test_whether_an_add_on_writes_the_record_is_read_off_its_card():
+    assert (
+        stack_bridges.writes_record("fixity") is True
+        and stack_bridges.writes_record("glance") is False
+    )
+    assert stack_bridges.writes_record("backup") is False, (
+        "it writes to a place, not the record"
+    )
+    assert stack_bridges.writes_record("no-such-add-on") is None
+    assert stack_bridges.writes_record("dp") is True, "an add-on in deps has a card too"
