@@ -59,7 +59,7 @@ def test_the_stack_asks_the_pinned_pile_and_never_this_checkout():
             assert "<repo>" not in said, f"{name} reads this checkout: {said}"
     asked = [name for name, args in steps() if "<pile>" in " ".join(args)]
     assert asked == [
-        "code-comments", "git-history", "index-cache", "fair-merge", "pile-store", "pile-rungs",
+        "code-comments", "git-history", "index-cache", "pile-store", "pile-rungs",
     ]  # fmt: skip
     script = (HERE / "rebuild.sh").read_text(encoding="utf-8")
     (pinned,) = re.findall(r"^PINNED=([0-9a-f]{40})$", script, flags=re.M)
