@@ -2166,6 +2166,15 @@ willow/
 │   │   ├── PLANTED.md
 │   │   ├── QUESTIONS.md      the questions he would ask, written before any run
 │   │   └── STRIP.md
+│   ├── homestead-health/ a box over the six homestead-affairs repositories, to ask about health records a household holds
+│   │   ├── KEPT.json         what the first asks printed, listed as kept
+│   │   ├── questions.txt     twelve questions put to the box when it was first built
+│   │   ├── rebuild.sh        fetches the six repositories at their commits, builds the box and asks it
+│   │   ├── results/          what rebuild.sh printed, kept as it came
+│   │   │   └── asks.txt          each question, what the kernel said, and where the first passage it served is
+│   │   ├── sources.json      the six repositories, each at one commit; none of their text is kept
+│   │   ├── test_health_box.py the pile is six whole commits, and the kept asks are what the page says
+│   │   └── README.md         A box for health: the homestead-affairs repositories as one pile
 │   ├── johnson/              one report passed between five people's willows, a forged copy, a correction and a rewrite caught
 │   │   ├── README.md         the scene, what each step shows, and what it found
 │   │   ├── count/

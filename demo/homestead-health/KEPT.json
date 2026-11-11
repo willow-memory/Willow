@@ -1,0 +1,6 @@
+{
+ "about": "What rebuild.sh printed when the box was first built and asked, kept as it came.",
+ "files": [
+  "results/asks.txt"
+ ]
+}
