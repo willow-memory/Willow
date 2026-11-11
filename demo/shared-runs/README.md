@@ -13,8 +13,8 @@ planned to be run in a way no study here has been: not led by a person,
 but by a script, with each agent receiving only what a script or another
 agent reported.
 
-**A first try has been run**, small and not the study: three agents, one
-kept run, twelve questions. What was fixed before it is in
+**A first try of the handover has been run here**, small and not the
+study: three agents, one kept run, twelve closed questions. What was fixed before it is in
 [trial-1/RULES.md](trial-1/RULES.md), and what happened in
 [trial-1/RESULTS.md](trial-1/RESULTS.md).
 

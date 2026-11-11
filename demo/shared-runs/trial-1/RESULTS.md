@@ -1,7 +1,7 @@
 # Trial 1: what happened
 
 Run 2026-11-11, after [the rules](RULES.md) and everything they name were
-committed alone (`ff581a3`). Each agent's reply is kept word for word.
+committed alone (`2f587ab`). Each agent's reply is kept word for word.
 
 | | what was counted | result |
 |---|---|---|
@@ -46,6 +46,22 @@ committed alone (`ff581a3`). Each agent's reply is kept word for word.
 - **The cost.** About 207,000 tokens across the three agents, nearly all
   of it what any agent started here carries before it reads a word, not
   the five-kilobyte brief.
+
+## Beside the other trial of the same day
+
+The plan's own page gives an account of another session's run: one open
+question about 23 pairs of passages, put to 18 models, most of which
+answered where the right answer was that nothing joined the pair. This
+trial went the other way, and the two fit.
+
+- **The brief did the holding back.** Here the questions were closed, the
+  brief said to answer `not said`, and both agents did, on the two
+  questions with no answer and, for B, on the two A dropped. That is
+  T4, and it is the plan's R9 in small. It does not say an agent holds
+  back unasked; the other trial says it doesn't.
+- **Nothing added is one account, not a rule.** A's 129 words carried no
+  figure the report lacks. The other trial's finding stands: R8 has to be
+  a script's strike, and this one checked only figures.
 
 ## What it suggests for the study
 
