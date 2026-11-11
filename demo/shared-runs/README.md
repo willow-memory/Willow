@@ -60,15 +60,20 @@ measurement, and is reported as one.
 
 | rule | passes when |
 |---|---|
-| R1, the fixed runtime agrees | every job run inside the WebAssembly runtime gives the same bytes on every machine that ran it, on at least three kinds of processor |
-| R2, the native run, measured | no threshold: the share of jobs whose native NumPy runs agree to the last bit across machines, with where the first difference falls |
-| R3, memory saves the work it should | the steps not computed, as a share of the baseline's, are within two points of the share the sweep's shared beginnings predict, worked out before the run |
+| R1, the machines agree | every job gives the same bytes on every machine that ran it, and every kept state stepped again comes out the same, on at least three kinds of processor, however that is got |
+| R2, the project as it is written, measured | no threshold: the share of jobs whose bytes agree across machines with the project's gravity left as its author wrote it, with where the first difference falls |
+| R3, memory saves the work it should | the steps not stepped, as a share of the baseline's, are within two points of the share the sweep's shared beginnings predict, worked out before the run |
 | R4, memory serves only what a run would give | of a tenth of served results, chosen by a seeded draw and run afresh, every one is the same bytes |
-| R5, a check is cheap | verifying a served result takes at most a twentieth of the time computing it took, at the median |
-| R6, a failure is not repeated | no setup recorded as halted is run again by a later notebook |
+| R5, what a check costs, measured | no threshold: the steps it takes to step one kept state again from the one before it, at the median |
+| R6, a halt is not repeated | no trajectory that began and then halted is stepped into its halt a second time; a setup refused before a first step never ran, and is counted apart |
 | R7, the blind account | the receiving agent's answers to the frozen questions match the key the script makes from the records; see below |
 | R8, the blind account adds nothing | no sentence of the receiving agent's account names a figure, a machine or an outcome that no report holds |
 | R9, the blind account says when the reports don't | every frozen question the reports hold no answer to is answered "the reports don't say", and none of them with a figure |
+
+R1, R5 and R6 are as the maintainer reworded them on 2026-11-11, after
+the trials below; R2 now measures the project unchanged, beside R1's run
+with one power written another way. The first wording is in this file's
+history.
 
 ## A session led by a script
 
@@ -445,11 +450,95 @@ and this stack names its record by its folder, `--box boxes/sources`.
 The runs show two steps that read a record eight others wrote. Not
 changed here: a fix for after this branch is merged.
 
+## The study as written, and its dry run
+
+Written 2026-11-11, on the maintainer's word for each choice. Nothing here
+is frozen, and nothing below is a result.
+
+**What was settled.**
+
+- The project is run both ways. R1's jobs run it with `d2**1.5` written
+  as `d2*np.sqrt(d2)`, changed in memory and never in its files; R2's run
+  it as its author wrote it. The change is still theirs to make.
+- R1, R5 and R6 as reworded above; R5 is a measurement, in steps.
+- R3's two points and R4's tenth stand as first proposed.
+- For the blind half a script makes the reports and the key and holds the
+  account to them. One agent answers, run as two models.
+
+**The scripts**, in [study/](study/):
+
+| | |
+|---|---|
+| [sweep.py](study/sweep.py) | a plan's jobs, the order they are dealt in, the machine each trajectory belongs to, the predicted saving, and the seeded draw; and each start as exact numbers, so no machine builds one |
+| [runner.py](study/runner.py) | what one machine does: every job alone, its share with the memory, a check of the memory, or the project as it is written |
+| [judge.py](study/judge.py) | the nine rules, counted from what the machines kept, and each verdict as a row on a record |
+| [account.py](study/account.py) | the reports, an agent's whole input, the 21 questions and their key, and an agent's answers held to it |
+| [dry.py](study/dry.py) | all of it on one machine, and only for a plan that says it is a dry one |
+
+**The sweep, proposed**, in [study/plan.json](study/plan.json): 220 jobs,
+22 trajectories of the project's own bodies each run to ten lengths, five
+machines, two rounds, a state kept every 100 steps. Alone it is 1,481,810
+steps; each trajectory stepped once is 396,000; so the predicted saving is
+73.3%. In the order the jobs are dealt it is 403,390 steps, 72.8%: a short
+job dealt after a longer one steps on from the last kept state before it.
+That is counted from the plan, not run. No setup in it has been stepped.
+Five are crowded on purpose and whether any halts is not known: if none
+does, R6 is not tested. One has a step too coarse to take, and is refused
+by arithmetic.
+
+**The dry run** put the whole plan through on one machine, on six made-up
+setups under nonsense names ([study/dry-plan.json](study/dry-plan.json)):
+30 jobs, one setup tuned until it halted partway and one too coarse to
+start. The baseline twice, two rounds of five machines as separate
+processes given only folders, a check, and the reports handed to two
+agents, a small model and a larger one. What it printed is in
+[study/dry/](study/dry/); its verdicts are rows `shared-runs:dry:R1` to
+`R9` on a scratch record, which verifies (10 rows, 0 sealed).
+
+| rule | in the dry run | what that can and can't say |
+|---|---|---|
+| R1 | not tested | every job and kept state agreed, on one kind of processor; one machine can't give three |
+| R2 | 30 of 30 | one machine agrees with itself |
+| R3 | failed: 48.8% against 52.5% | the rule did its job: the made-up lengths are near the spacing, so the order wastes 3.7 points |
+| R4 | passed, 7 of 7 | the draw, the fresh runs and the comparison are wired |
+| R5 | 100 steps | one spacing, as expected |
+| R6 | passed | the made-up halt was stepped into once, and the refusal was counted apart |
+| R7 | passed, 16 of 16, both models | |
+| R8 | passed, nothing struck | |
+| R9 | passed, 5 of 5, both models | |
+
+**What the dry run found and changed.**
+
+- A machine dealt no job kept no list of acts, and the check stopped on
+  it. It keeps an empty one now.
+- **R3's prediction can't be made from the sweep alone when something
+  halts.** A halt shortens the baseline and the shared run both. The plan
+  can't say where a trajectory halts, so the judge takes it from the
+  baseline, which has no memory, and holds the shared run to the share
+  that leaves. That is a change to R3 as it was agreed, and the
+  maintainer's to accept or cut.
+- **The first proposed lengths all fell on the spacing**, which would have
+  made R3 true by arithmetic. They no longer do, and a test holds that.
+- The dry run can't be pointed at the study's sweep: it refuses a plan
+  that doesn't say it is a dry one.
+- A machine refuses a checkout whose stepper is not the file the plan
+  names by SHA-256.
+
+**What it could not see.** A second processor, so nothing of R1 or R2. A
+wrong answer, an added figure or a guess from an agent: both models got
+every one right, so those paths are held only by tests with made-up
+answers. Kaggle: a notebook's limits, and one notebook's output given as
+the next one's input. And the two agents were this session's own, started
+with the brief as their whole prompt but not sealed off from the
+repository; neither opened a file.
+
 ## The order
 
-1. Settle the list above.
+1. Settle the list above. Done but for Kaggle's own terms and the privacy
+   check, which wait on the maintainer; neither is needed before step 4.
 2. Write the sweep, the predicted saving, the questions and the rules.
-3. Dry run, with nonsense setups, on one machine here.
+   Done, above.
+3. Dry run, with nonsense setups, on one machine here. Done, above.
 4. Freeze, in one commit, alone.
 5. The baseline: one notebook, no memory, twice.
 6. The shared run: many notebooks, one dataset.

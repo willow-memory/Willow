@@ -463,10 +463,13 @@ def test_what_the_trials_printed_is_listed_as_kept_and_what_was_written_is_not()
         "questions.txt",
     }
     printed = sorted(
-        f"{t.name}/{p.name}"
-        for t in here.glob("trial-*")
-        for p in t.iterdir()
-        if p.name not in written
+        [
+            f"{t.name}/{p.name}"
+            for t in here.glob("trial-*")
+            for p in t.iterdir()
+            if p.name not in written
+        ]
+        + [f"study/dry/{p.name}" for p in (here / "study" / "dry").iterdir()]
     )
-    assert kept == printed and len(kept) == 28
+    assert kept == printed and len(kept) == 35
     assert not [name for name in kept if name.rsplit("/", 1)[1] in written]

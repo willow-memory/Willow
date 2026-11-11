@@ -1,6 +1,13 @@
 {
- "about": "What the trials' scripts and agents printed, kept word for word: reports, keys, handoffs, replies, logs and comparisons. The rules, briefs, questions and results beside them were written, and are not listed.",
+ "about": "What the trials' scripts and agents printed, kept word for word: reports, keys, handoffs, replies, logs and comparisons. The rules, briefs, questions and results beside them were written, and are not listed. With them, what the study's dry run printed and what two agents sent back, under study/dry.",
  "files": [
+  "study/dry/agent-input.txt",
+  "study/dry/answers-larger.txt",
+  "study/dry/answers-small.txt",
+  "study/dry/key.json",
+  "study/dry/report.txt",
+  "study/dry/verdicts.json",
+  "study/dry/verify.txt",
   "trial-1/a-account-struck.txt",
   "trial-1/a-account.txt",
   "trial-1/b-answers.txt",

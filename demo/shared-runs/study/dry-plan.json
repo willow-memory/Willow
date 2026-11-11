@@ -1,0 +1,31 @@
+{
+ "about": "The dry run's sweep: made-up setups under nonsense names, to find wiring breaks before the freeze. Not the study's sweep; nothing it finds is a result.",
+ "dry": true,
+ "project": {
+  "address": "https://github.com/AllHailSeizure/science_bitch",
+  "commit": "2fae2f2c4981db7903dfbd9f094ce35718875800",
+  "core_sha256": "84c6ecff5368af754dc799ec54561d35d123880c69eec19c14385cb559f079b3"
+ },
+ "machines": 5,
+ "rounds": 2,
+ "spacing": 100,
+ "deal_seed": "qqqq zzzz",
+ "draw_seed": "zzzz qqqq",
+ "draw_one_in": 3,
+ "check_one_in": 4,
+ "lengths": [
+  40,
+  150,
+  333,
+  700,
+  1200
+ ],
+ "trajectories": [
+  {"name": "qqqq", "star": "sun", "planets": ["earth", "mars"], "distances": [0.61, 2.9]},
+  {"name": "qqqq-and-one", "star": "sun", "planets": ["earth", "mars", "neptune"], "distances": [0.61, 2.9, 11.0]},
+  {"name": "zzzz", "star": "sirius", "planets": ["jupiter", "saturn", "ceres"], "distances": [3.3, 7.7, 1.9]},
+  {"name": "xxxx", "star": "proxima", "planets": ["mercury", "venus"], "distances": [0.07, 0.19]},
+  {"name": "wwww-crowded", "star": "sun", "planets": ["jupiter", "saturn"], "distances": [1.0, 1.1], "dt_times": 6},
+  {"name": "vvvv-coarse", "star": "sun", "planets": ["earth"], "distances": [1.0], "dt_times": 60}
+ ]
+}

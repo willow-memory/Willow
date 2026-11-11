@@ -1,0 +1,1 @@
+demo/shared-runs: the study as written and dry-run, nothing frozen. A proposed sweep of 220 jobs, the script each machine would run, a judge for the nine rules as reworded, and the blind account's reports, questions and key; all of it put through on one machine with made-up setups, with what that found.

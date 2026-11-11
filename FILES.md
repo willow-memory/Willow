@@ -2447,6 +2447,23 @@ willow/
 │   │   ├── KEPT.json     what the trials' scripts and agents printed, listed as kept
 │   │   ├── rules.py          the next step of a stack chosen by rule from what its last run said, or that no rule fits
 │   │   ├── same.py       two kept runs of one stack, step by step: asked the same way, printed the same thing
+│   │   ├── study/            the study's scripts and proposed sweep, and its dry run: nothing frozen
+│   │   │   ├── account.py        the blind half: the reports, an agent's whole input, the questions and key, and answers held to them
+│   │   │   ├── dry/              what the dry run printed and what two agents sent back; made-up setups, no result
+│   │   │   │   ├── agent-input.txt   an agent's whole input in the dry run: what is asked, the reports, the questions
+│   │   │   │   ├── answers-larger.txt what the larger model sent back, word for word
+│   │   │   │   ├── answers-small.txt what the small model sent back, word for word
+│   │   │   │   ├── key.json          each question's answer, counted from the dry run's acts
+│   │   │   │   ├── report.txt        the dry run's reports, made by account.py: no agent wrote any of it
+│   │   │   │   ├── verdicts.json     the dry run's figures and its nine verdicts, as judge.py printed them
+│   │   │   │   └── verify.txt        what the kernel said of the scratch record the dry verdicts are rows on
+│   │   │   ├── dry-plan.json     the dry run's sweep: six made-up setups under nonsense names
+│   │   │   ├── dry.py            the whole plan on one machine, only for a plan that says it is a dry one
+│   │   │   ├── judge.py          the study's nine rules, each held to what the machines kept
+│   │   │   ├── plan.json         the study's sweep, proposed and not frozen: 220 jobs over 22 trajectories
+│   │   │   ├── runner.py         what one machine does: every job alone, its share with the memory, a check, or the project as written
+│   │   │   ├── sweep.py          a plan's jobs, the deal, each trajectory's owner, the predicted saving and the seeded draw
+│   │   │   └── test_study.py     the deal, the memory against a job alone, each rule failing when broken, the dry run kept
 │   │   ├── trial-1/          a first try of the blind handover, on demo/kept's run: what was fixed before, what each agent said
 │   │   │   ├── a-account-struck.txt that account after the strike, which took nothing out: what the last agent was given
 │   │   │   ├── a-account.txt what the first agent wrote from the report, word for word
@@ -2472,6 +2489,11 @@ willow/
 │   │   │   ├── RESULTS.md    what was counted, a reading of whether each step was the next one needed, and what to hold against it
 │   │   │   ├── RULES.md      what a link may do, what the script refuses, and what will be counted
 │   │   │   └── stack-at-the-end.txt the stack the chain left: seven steps it was given, three it added
+```
+
+#### demo/shared-runs/, from trial-3/
+
+```
 │   │   ├── trial-3/      code in the agents' place, from the same start, and the two compared
 │   │   │   ├── 08-why-not.txt what the first step the rules added printed
 │   │   │   ├── 09-fair-merge.txt what the second printed: which piles hold nothing for the question
@@ -2494,11 +2516,6 @@ willow/
 │   │   ├── trial.py          makes the report and the key from a kept run, strikes what an account adds, scores answers
 │   │   ├── test_trial.py
 │   │   └── README.md         the claim, eight proposed rules, a session led by a script, how it could be wrong, what waits before the freeze
-```
-
-#### demo/, from small-models/
-
-```
 │   ├── small-models/         Gemma 3 and Qwen2.5 on willow's own cards and teodora's files, and one box of it all
 │   │   ├── README.md         what was tried, what came of it, the box, what asking it found
 │   │   ├── SESSION.json      the session that ran it, by its first bytes and their SHA-256, never its text
@@ -2526,6 +2543,11 @@ willow/
 │   │   │   ├── weeknote-qwen-teodora.json  a this-week note the model wrote
 │   │   │   └── weeknote2-qwen-teodora.json  the same, five lines kept a chunk
 │   │   └── KEPT.json     the thirteen saved model runs, each with its SHA-256, listed as kept
+```
+
+#### demo/, from soil-phys-001/
+
+```
 │   ├── soil-phys-001/
 │   │   ├── fetch.py          the study's sources, fetched again and held to their hashes
 │   │   ├── FROZEN.json       the pre-registration: the key, sources, runner, rules and tools by SHA-256
@@ -2551,11 +2573,6 @@ willow/
 │   │       ├── record-2.jsonl  a copy of run 2's record, without its key
 │   │       ├── run-3.json    the third run's, from freeze 3: every rule held
 │   │       └── record-3.jsonl  a copy of run 3's record, without its key
-```
-
-#### demo/, from teodora/
-
-```
 │   ├── teodora/              built blind, from a different line of work
 │   │   ├── make_life.py
 │   │   ├── CHARACTER.md
