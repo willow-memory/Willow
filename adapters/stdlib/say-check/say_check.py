@@ -177,14 +177,16 @@ def run_checks(
         (
             CHECK_NAMES[0],
             not a,
-            f"failed: {', '.join(f'[{x}]' for x in a)} was never given"
+            f"failed: {', '.join(f'[{x}]' for x in a)} {'was' if len(a) == 1 else 'were'} never given"
             if a
             else "held",
         ),  # fmt: skip
         (
             CHECK_NAMES[1],
             not b,
-            f"failed: {', '.join(f'[{x}]' for x in b)} is not cited" if b else "held",
+            f"failed: {', '.join(f'[{x}]' for x in b)} {'is' if len(b) == 1 else 'are'} not cited"
+            if b
+            else "held",
         ),  # fmt: skip
         (
             CHECK_NAMES[2],

@@ -1222,6 +1222,12 @@ willow/
 │   │   │   ├── same_way.py  a local model asked each question several times, and how often its answer flips
 │   │   │   ├── test_same_way.py
 │   │   │   └── README.md
+│   │   ├── say/
+│   │   │   ├── LICENSE-willows-grove the licence of the project its prompt came from
+│   │   │   ├── NOTICE        what was taken from willows-grove, and what was changed
+│   │   │   ├── say.py        one sentence a model on this machine says about your boxes, struck when it adds to them
+│   │   │   ├── test_say.py
+│   │   │   └── README.md     its card
 │   │   ├── weights-card/
 │   │   │   ├── weights_card.py  a model card from a GGUF or safetensors file's own header, with the file's SHA-256
 │   │   │   ├── test_weights_card.py

@@ -1,0 +1,1 @@
+`say`: one sentence a model on this machine (Ollama, loopback only) says about your boxes, held to them by say-check; a sentence that adds a word or number, misses a box or misquotes you is struck, and a model that can't be asked is unreachable. The prompt and the way Ollama is asked are willows-grove's

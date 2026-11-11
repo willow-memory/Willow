@@ -114,6 +114,9 @@ def test_a_cite_to_a_box_never_given_fails_and_an_earlier_one_was_given():
     b9 = {"id": "b9", "text": "decided: phone only proposes"}
     assert sc.unserved(s, BOXES, [b9]) == []
     assert "[b9] was never given" in sc.run_checks(s, BOXES)[0][2]
+    two = sc.run_checks("The work order [b5] is waiting [b4] [b8] [b9].", BOXES)[0][2]
+    assert two == "failed: [b8], [b9] were never given"
+    assert sc.run_checks("Waiting.", BOXES)[1][2] == "failed: [b5], [b4] are not cited"
 
 
 def test_every_box_given_now_must_be_cited_and_earlier_ones_need_not_be():
