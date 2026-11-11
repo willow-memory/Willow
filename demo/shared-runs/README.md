@@ -405,9 +405,37 @@ minutes. An account: the runs are on that session's machine.
   against second, in one folder, 82 of 95 steps printed the same. Eight
   of the thirteen that didn't are steps that write a file once and
   refuse to write it again: they ended 0 the first time and 2 the
-  second. Three more say "first check" once and "nothing changed" after.
-  So "run it again" has two meanings, and a memory of steps has to know
-  which steps make something and which only look.
+  second. So "run it again" has two meanings, and a memory of steps has
+  to know which steps make something and which only look.
+
+### Which steps make and which only look, from their cards
+
+Every add-on's card has a `writes:` line. The 95 steps were sorted by it
+and held to what each did the second time in the same folder. The two
+folders gave the same counts. An account, as above.
+
+| the card says it writes | steps | the same again | the rest |
+|---|---|---|---|
+| nothing | 78 | 76 | one prints the seconds it took; one prints how many rows the record holds, 7 and then 15 |
+| the record | 8 | 6 | two say "first check" once and name the last check's time after |
+| a file | 9 | 0 | eight are refused the second time; one writes over its file, a root over a record that has grown |
+
+- **The card finds every maker.** All 17 steps whose card says they
+  write changed something, the six that printed the same words too: each
+  adds rows to the record every time it runs. None of them is a step a
+  memory may serve as the same; it is run, or said to be made already.
+- **It misses two lookers.** 76 of the 78 that write nothing can be
+  served. The two that can't read something no card names: the clock,
+  and the record.
+- **The mark doesn't hold the record.** All 95 steps were marked the
+  same both times. A step's mark is its words and the pile it was fed,
+  so a step that reads the record looks unchanged when what it reads has
+  grown.
+
+Two things would close it, both proposed and neither done: a line on the
+card for what a step reads besides the pile (the record, the clock; the
+`reads:` line some cards have names file types, not this), and the
+record's state in the mark of a step that reads it.
 
 ## The order
 
