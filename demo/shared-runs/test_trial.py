@@ -338,3 +338,73 @@ def test_what_trial_threes_page_says_is_what_its_kept_files_hold():
     for path in three.iterdir():
         text = path.read_text()
         assert "/tmp/" not in text and "/home/" not in text, path.name
+
+
+def run_of(tmp_path, name, steps):
+    """A made-up project: (add-on, args as written, exit, what it printed),
+    with its own folder filled into the arguments and the output."""
+    project = tmp_path / name
+    (project / "run").mkdir(parents=True)
+    here = str(project)
+    stack, log = ["## a"], []
+    for place, (addon, args, code, text) in enumerate(steps, 1):
+        ran = (
+            args.replace("<scratch>", here)
+            .replace("<pile>", here + "/pile")
+            .replace("{box}", here + "/box")
+        )
+        stack.append(f"- {addon} -- {ran}")
+        mark = __import__("hashlib").sha256(f"{addon} {ran}".encode()).hexdigest()[:8]
+        log += [
+            f"{place:02d} {addon}: started ({mark})",
+            f"{place:02d} {addon}: exit {code}, 1 line",
+        ]
+        (project / "run" / f"{place:02d}-{addon}.txt").write_text(
+            text.replace("<scratch>", here)
+        )
+    (project / "stack.md").write_text("\n".join(stack) + "\n")
+    (project / "run" / "00-stack.txt").write_text("\n".join(log) + "\ndone\n")
+    return project
+
+
+def test_two_runs_are_compared_as_run_and_with_their_own_folders_taken_out(tmp_path):
+    import same
+
+    steps = [
+        (
+            "reader",
+            "mirror --from <pile> --to <scratch>/out",
+            0,
+            "wrote 3 files to <scratch>/out\n",
+        ),
+        ("ids", "--box {box} kernel.py", 0, "kernel.py\n  swh:1:cnt:abc\n"),
+        ("merkle", "root --box {box}", 0, "root ROOT over 2 rows\n"),
+    ]
+    a = run_of(tmp_path, "a", steps)
+    b = run_of(
+        tmp_path,
+        "b",
+        [
+            steps[0],
+            steps[1],
+            ("merkle", "root --box {box}", 0, "root OTHER over 2 rows\n"),
+        ],
+    )
+    rows = same.compare(a, b)
+    assert [(r["n"], r["addon"]) for r in rows] == [
+        (1, "reader"),
+        (2, "ids"),
+        (3, "merkle"),
+    ]
+    assert [r["asked"] for r in rows] == [False, False, False], (
+        "each mark holds the folder it ran in"
+    )
+    assert [r["as_written"] for r in rows] == [True, True, True]
+    assert [r["printed"] for r in rows] == [False, True, False]
+    assert [r["placeless"] for r in rows] == [True, True, False]
+    assert rows[2]["differs"] == ["root ROOT over 2 rows", "root OTHER over 2 rows"]
+    assert "differs" not in rows[0] and all(r["exit"] for r in rows)
+    assert same.first_difference("a\nb\n", "a\nb\nc\n") == ("(2 lines)", "(3 lines)")
+    assert (
+        same.main([str(a)]) == 2 and same.main([str(a), str(tmp_path / "absent")]) == 2
+    )
