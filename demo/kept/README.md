@@ -70,7 +70,7 @@ finds itself again.
 | 06 | scan | 48 answers in 3 s; one question through the kernel takes 10 s here | nothing seen |
 | 07 | glance | 16 held whole, 30 in part, 2 found nothing | "held whole" on a question with two content words: `lineage` landed on a test about card numbers |
 | 08 | why-not | "your files hold all 1 question" | the two empty answers were in the code and commit indexes, which it cannot ask: it takes a box |
-| 09 | fair-merge | the commits, ranked alone, served the `--resume` commit: "a step is kept from the earlier run" | the code's turn went to "kept" in other senses (a chess comment, a privacy budget) |
+| 09 | fair-merge | the commits, ranked alone, served the `--resume` commit: "a step is kept from the earlier run"; and, asked of the kept indexes, that no commit message holds the word "computed" | the code's turn went to "kept" in other senses (a chess comment, a privacy budget) |
 | 10 | first-mention | "cached" first said 1959-04-17 | wrong: a made-up person's date in a demo. The commits are the place to ask, and it takes only a box |
 | 11 | claim-check | no one place holds the claim's eight parts; the nearest hold four | its nearest three are word matches, not the idea |
 | 12 | claim-check | "the same folder gives the same bytes" holds whole in 140 places | nothing: it is the readers' stock promise |
@@ -212,6 +212,20 @@ no argument, since a question is the person's words.
 So what this run found can be held to: a step's kept output either hashes
 to what the row says or it doesn't. What it does not yet do is get used.
 prov runs before the row is written, and writes what it wrote before.
+
+## Since: asked of what was kept
+
+The ninth step first read its three folders again, each time, for one
+question: thirteen seconds. fair-merge has since learned to take scan's
+indexes as its sources, and the step now asks the three that steps 3 to 5
+keep. It serves the same nine passages in the same order, in half a
+second, and the whole stack runs in about three and a half minutes where
+it took four.
+
+It also says one thing it could not before: "index-commits: no passage
+holds: computed". Of 1,022 commit messages, none uses the word. The
+commits say kept, cached, resumed; the question said computed. That is a
+line for the words list, found by the step and not by a person reading.
 
 ## The rule
 

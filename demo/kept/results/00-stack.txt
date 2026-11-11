@@ -14,8 +14,8 @@
 07 glance: exit 42, 52 lines, mass 49, populated, flagged
 08 why-not: started (8d4915b4, fed 6b79abb3)
 08 why-not: exit 0, 1 line
-09 fair-merge: started (87360a43)
-09 fair-merge: exit 0, 9 lines
+09 fair-merge: started (b0134a73, fed 7c5f5939)
+09 fair-merge: exit 0, 10 lines
 10 first-mention: started (f3b102e5)
 10 first-mention: exit 0, 2 lines
 11 claim-check: started (c57e4658)
@@ -46,7 +46,7 @@
 23 tip-pin: exit 0, 2 lines
 24 backup: started (39faf2cf)
 24 backup: exit 0, 3 lines
-25 restore-drill: started (f1e18cd4, fed 45efa057)
+25 restore-drill: started (f1e18cd4, fed 945712e5)
 25 restore-drill: exit 0, 1 line
 26 three-two-one: started (a2f840c3)
 26 three-two-one: exit 42, 3 lines, flagged
