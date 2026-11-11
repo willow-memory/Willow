@@ -8,7 +8,7 @@ writes: record
 network: loopback
 role: ways
 tags: everyday
-looks-for: digest, index-cache, look, projects, scan, stack, why-not, words-de, words-es, words-fr, words-pt
+looks-for: digest, index-cache, look, projects, say, scan, stack, why-not, words-de, words-es, words-fr, words-pt
 -->
 # browse
 
@@ -18,7 +18,7 @@ you, and approve one with a click. The front page shows what's waiting,
 what went stale and what's coming up. Nothing to install, and no commands
 to type once it's open.
 
-    python adapters/stdlib/browse/browse.py --box DIR [--stack FILE] [--run FOLDER] [--index INDEX] [--home FOLDER]
+    python adapters/stdlib/browse/browse.py --box DIR [--stack FILE] [--run FOLDER] [--index INDEX] [--home FOLDER] [--say MODEL]
 
 It prints a link and opens it. Ctrl-C stops it. `--lang de` (or `es`,
 `fr`, `pt`) sends each question through that language's words add-on first.
@@ -140,6 +140,28 @@ said, with the ask box at the bottom.
 The stream lasts as long as the page runs. It is kept nowhere else: stop
 browse and it is gone, and your record still holds every ask, by its key.
 
+**A model may say it too, and never the last word.** With `--say MODEL`,
+an [Ollama](https://ollama.com) tag on this machine, each answer also gets
+a sentence from that model, under code's line:
+
+- **It is marked with the model's name,** `willow · llama3.2:3b`, never as
+  code's.
+- **It is given only what code said:** your line, and the same facts
+  code's line was made from.
+- **The [say-check](../say-check/) add-on holds it to those facts.** A
+  sentence that keeps to them stands. One that adds a word or a number,
+  or misquotes you, is struck: shown struck through, with what failed,
+  and code's line above it stands.
+- **It comes after the page is up.** Code's line is there at once; the
+  page's script asks for the model's sentence, which can take seconds. With
+  scripts off there is no model's sentence, and code's line is the reply.
+- **It is asked once a turn,** kept with the turn while the page runs, and
+  goes nowhere near your record.
+- **Small talk and the opening are code's alone.**
+
+The model is asked by the [say](../say/) add-on, on this machine only. A
+model that can't be asked is said in a word, and nothing else changes.
+
 **Three panels.** Every page is laid out the same way:
 
 - **Left, where you are:** the project's name, then each section there is
@@ -161,7 +183,8 @@ browse and it is gone, and your record still holds every ask, by its key.
 On a narrow screen the three stack, top to bottom.
 
 **One script, its own.** The right panel fills without leaving the page
-because of one small script, `page.js`, beside `browse.py`. The page allows
+because of one small script, `page.js`, beside `browse.py`. The same
+script asks for a model's sentence when you named one with `--say`. The page allows
 that file and no other: no script from anywhere else, and none written into
 a page. It asks only this page for anything. With scripts off, every link
 it handles is still a link: the place opens as a page of its own.

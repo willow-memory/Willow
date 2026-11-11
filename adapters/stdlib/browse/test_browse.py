@@ -1242,3 +1242,112 @@ def test_a_home_that_isnt_there_is_refused_before_anything_listens(tmp_path, cap
         br.main(["--box", str(b), "--home", str(tmp_path / "nope"), "--no-open"]) == 2
     )
     assert "isn't a folder that's there" in capsys.readouterr().err
+
+
+# ── a model's sentence about an answer, held to what code said ──────────────
+SAY_HERE = all((br.STDLIB / d / f).is_file()
+               for d, f in (("say", "say.py"), ("say-check", "say_check.py")))  # fmt: skip
+FACT = "Your files hold 1 passage for it; the first is at dentist.txt:1"
+
+
+@pytest.mark.skipif(not SAY_HERE, reason="the say or say-check add-on isn't here")
+def test_a_models_sentence_that_keeps_to_the_boxes_stands_under_codes_line(tmp_path):
+    s = opened(make_box(tmp_path), say="tiny:1b")
+    asked = []
+    s.willow.sayer = lambda prompt: (
+        asked.append(prompt) or "The dentist is on Tuesday at 3pm [b1]."
+    )
+    try:
+        _, text = s.post("/ask", q="when is the dentist")
+        turn = newest(text)
+        # the page comes with code's line and a place for the model's, not yet asked
+        assert "<span class=by>willow · code</span>Your files hold 1 passage" in turn
+        assert '<span data-say="/say?turn=1"></span>' in turn and not asked
+        r, part = s.req("GET", "/say?turn=1")
+        assert r.status == 200 and not part.startswith("<!doctype")
+        assert part == (
+            "<span class=say><span class=by>willow · tiny:1b</span>"
+            "The dentist is on Tuesday at 3pm."
+            "<span class=why>held to the boxes by 4 checks</span></span>"
+        )
+        # what the model was given is what code said, and your line
+        (prompt,) = asked
+        assert "The human asked: when is the dentist" in prompt
+        assert prompt.splitlines()[-1].startswith(
+            "[b1] your files hold 1 passage for it; the first is at dentist.txt:1: The dentist is on"
+        )
+        # asked once: the sentence is kept with the turn, and the page has it now
+        s.req("GET", "/say?turn=1")
+        _, text = s.req("GET", "/")
+        assert len(asked) == 1 and "data-say" not in text
+        assert "willow · tiny:1b</span>The dentist is on Tuesday at 3pm." in text
+        # it is not on your record: the last row is still the ask
+        assert json.loads((s.willow.box / "record.jsonl").read_text().splitlines()[-1])["kind"] == "bite"  # fmt: skip
+    finally:
+        s.close()
+
+
+@pytest.mark.skipif(not SAY_HERE, reason="the say or say-check add-on isn't here")
+def test_a_models_sentence_that_adds_to_the_boxes_is_struck_and_codes_stands(tmp_path):
+    s = opened(make_box(tmp_path), say="tiny:1b")
+    s.willow.sayer = lambda prompt: "The <b>dentist</b> is on Friday at 9 [b1]."
+    try:
+        s.post("/ask", q="when is the dentist")
+        _, part = s.req("GET", "/say?turn=1")
+        assert part.startswith(
+            "<span class='say struck'><span class=by>willow · tiny:1b</span>"
+        )
+        assert "<s>The &lt;b&gt;dentist&lt;/b&gt; is on Friday at 9.</s>" in part
+        assert "struck, so code's line stands." in part
+        assert "nothing the boxes lack: 9, friday are no box&#x27;s" in part
+        assert "<b>" not in part
+        _, text = s.req("GET", "/")
+        assert "<span class=by>willow · code</span>Your files hold 1 passage" in text
+    finally:
+        s.close()
+
+
+@pytest.mark.skipif(not SAY_HERE, reason="the say or say-check add-on isn't here")
+def test_a_model_that_cant_be_asked_is_said_and_codes_line_is_the_reply(tmp_path):
+    s = opened(make_box(tmp_path), say="tiny:1b")
+
+    def down(prompt):
+        raise RuntimeError("anything at all")
+
+    s.willow.sayer = down
+    try:
+        s.post("/ask", q="when is the dentist")
+        r, part = s.req("GET", "/say?turn=1")
+        assert r.status == 200, "a voice that fails never takes the page with it"
+        assert (
+            "<span class=why>not asked: the say add-on couldn&#x27;t: RuntimeError</span>"
+            in part
+        )
+        _, text = s.req("GET", "/")
+        assert "<span class=by>willow · code</span>Your files hold 1 passage" in text
+    finally:
+        s.close()
+
+
+def test_with_no_model_named_none_is_asked_and_small_talk_is_never_said(tmp_path):
+    s = opened(make_box(tmp_path))
+    try:
+        _, text = s.post("/ask", q="when is the dentist")
+        assert "data-say" not in text
+        assert s.req("GET", "/say?turn=1")[1] == ""
+    finally:
+        s.close()
+    (tmp_path / "two").mkdir()
+    t = opened(make_box(tmp_path / "two"), say="tiny:1b")
+    t.willow.sayer = lambda prompt: pytest.fail("small talk is code's alone")
+    try:
+        _, text = t.post("/ask", q="thanks")
+        assert "data-say" not in text and t.req("GET", "/say?turn=1")[1] == ""
+        assert t.req("GET", "/say?turn=99")[1] == "" and t.req("GET", "/say")[1] == ""
+    finally:
+        t.close()
+
+
+def test_a_say_with_no_model_named_is_refused(tmp_path, capsys):
+    b = make_box(tmp_path)
+    assert br.main(["--box", str(b), "--say"]) == 2

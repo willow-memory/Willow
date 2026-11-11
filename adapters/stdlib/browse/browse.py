@@ -1,7 +1,7 @@
 """browse.py: your folder in your web browser, on this machine only. Python 3.9+.
 
     python adapters/stdlib/browse/browse.py --box DIR [--stack FILE] [--run FOLDER]
-        [--index INDEX] [--home FOLDER] [--port N] [--lang de|es|fr|pt] [--no-open]
+        [--index INDEX] [--home FOLDER] [--say MODEL] [--port N] [--lang de|es|fr|pt] [--no-open]
     python adapters/stdlib/browse/browse.py launcher --box DIR
 
 A page to ask your folder questions, read the passages that answer them
@@ -34,6 +34,12 @@ The middle is a stream: each question is added under the last, your line
 plain and what the page says back marked as code's, one line made from
 what the boxes under it hold. No model is asked. A question asked before
 says when it was first asked. The stream is kept only while the page runs.
+
+With --say MODEL (an Ollama tag on this machine, as the say add-on asks
+it), a model also says each answer in a sentence of its own, under code's
+line and marked with the model's name. The say-check add-on holds that
+sentence to what code said: one that adds a word or a number is struck,
+shown struck through with what failed, and code's line stands.
 
 Asking is the kernel's own `bite`, and approving is its own `seal`, so
 both are on the record exactly as if typed. With --run, a question is also
@@ -174,6 +180,12 @@ def indexed(box: Path, text: str, at: Path) -> dict | None:
             "served": [{**r, "text": c["text"]} for r, c in zip(refs, served)]}  # fmt: skip
 
 
+def short(text: str, most: int = 200) -> str:
+    """A text on one line, cut at a word when it runs long."""
+    flat = " ".join(str(text).split())
+    return flat if len(flat) <= most else flat[:most].rsplit(" ", 1)[0] + "…"
+
+
 def esc(text: object) -> str:
     return html.escape(str(text), quote=True)
 
@@ -222,6 +234,8 @@ main { margin: 0 auto; width: 100%; max-width: 46rem; padding: 24px 16px 64px; }
 .by { font: 600 11px/1.3 var(--mono); text-transform: uppercase; letter-spacing: .09em;
       color: var(--muted); margin-right: 6px; }
 .more > summary { color: var(--accent); }
+.say.struck s { color: var(--muted); }
+.say .why { display: block; font: 12px/1.5 var(--mono); color: var(--muted); }
 form.switch { margin: 0; } nav button.link { display: block; width: 100%; text-align: left;
       background: none; color: var(--fg); font-weight: 400; padding: 5px 8px; }
 nav button.link:hover { background: var(--accl); }
@@ -357,7 +371,7 @@ SMALL = {"hi": "Hello.", "hello": "Hello.", "morning": "Morning.",
 KEPT = 50
 
 
-def turn_html(at: str, you: str, say: str, again: str, boxes, opened: bool) -> str:
+def turn_html(at: str, you: str, say: str, again: str, boxes, opened: bool, model: str = "") -> str:  # fmt: skip
     """One turn of the stream. Your line is plain, as you typed it. What
     the page says back is marked as code's: its one line, then the boxes
     the line rests on, the first in sight and the rest behind "more?". A
@@ -370,12 +384,33 @@ def turn_html(at: str, you: str, say: str, again: str, boxes, opened: bool) -> s
     if again:
         noted = f" <span class=stamp>asked before: first on {esc(again[:10])} at {esc(again[11:16])}</span>"  # fmt: skip
     said = f"<span class=say><span class=by>willow · code</span>{esc(say)}{noted}</span>" if say else ""  # fmt: skip
+    said += model  # a model's sentence about the same boxes, already HTML
     body = boxes[0] if boxes else ""
     if len(boxes) > 1:
         body += f"<details class=more><summary>more?</summary>{''.join(boxes[1:])}</details>"  # fmt: skip
     return (
         f"<details class=turn name=turn{' open' * opened}>"
         f"<summary>{yours}{said}</summary>{body}</details>"
+    )
+
+
+def model_html(got: dict) -> str:
+    """A model's sentence about a turn's boxes, as the say add-on gave it:
+    marked with the model's name, never as code's. One that held to the
+    boxes stands, its tags taken out for reading. One that failed a check
+    is struck through, with what failed, and code's line above it stands.
+    A model that couldn't be asked is said in a word."""
+    by = f"<span class=by>willow · {esc(got.get('model', 'a model'))}</span>"
+    if got["state"] != "populated":
+        return f"<span class='say struck'>{by}<span class=why>not asked: {esc(got['why'])}</span></span>"  # fmt: skip
+    plain = " ".join(re.sub(r"\s*\[\w+\]", "", got["sentence"]).split())
+    if got["stands"]:
+        n = len(got["checks"])
+        return f"<span class=say>{by}{esc(plain)}<span class=why>held to the boxes by {n} checks</span></span>"  # fmt: skip
+    failed = "; ".join(f"{c}: {w.removeprefix('failed: ')}" for c, ok, w in got["checks"] if ok is False)  # fmt: skip
+    return (
+        f"<span class='say struck'>{by}<s>{esc(plain)}</s>"
+        f"<span class=why>struck, so code's line stands. {esc(failed)}</span></span>"
     )
 
 
@@ -491,7 +526,11 @@ class Willow:
         run: Path | None = None,
         index: Path | None = None,
         home: Path | None = None,
+        say: str | None = None,
     ):
+        self.say_model = say  # the model that says a turn's boxes, if any
+        self.sayer = None  # prompt -> words, in place of the model: for tests
+        self.said_turns = 0
         self.under = home  # the folder its sibling projects are under
         self.sittings: dict[Path, list[dict]] = {}
         self.box = box
@@ -769,7 +808,15 @@ class Willow:
         shown = next((t for t in reversed(turns) if t["boxes"]), None)
         out = [turn_html("", "", say, "", boxes, shown is None)]
         out += [
-            turn_html(t["at"], t["you"], t["say"], t["again"], t["boxes"], t is shown)
+            turn_html(
+                t["at"],
+                t["you"],
+                t["say"],
+                t["again"],
+                t["boxes"],
+                t is shown,
+                self.voiced(t),
+            )  # fmt: skip
             for t in turns
         ]
         title = "Ask" if turns else "Your folder"
@@ -834,6 +881,40 @@ class Willow:
         line = re.sub(r' \(by "[^"]*"\)', "", doc["said"].rpartition('": ')[2])
         return "<h2>What your stack already found</h2>" + card, answered, line
 
+    def voiced(self, turn: dict) -> str:
+        """Where a model's sentence about a turn goes: the sentence, once it
+        has been asked for; before that, an empty place the page's script
+        fills by asking. With no script it stays empty, and code's line is
+        the whole reply. Nothing, when no model was named or the turn has
+        no boxes to say."""
+        if "model" in turn:
+            return model_html(turn["model"])
+        if self.say_model is None or not turn.get("facts"):
+            return ""
+        return f'<span data-say="/say?turn={turn["id"]}"></span>'
+
+    def say(self, turn_id: str) -> str:
+        """A model's sentence about one turn's boxes, asked once and kept
+        with the turn: the say add-on asks a model on this machine and holds
+        the sentence to the boxes. The boxes are what code's own line was
+        made from, so the model is given nothing code didn't say."""
+        turn = next((t for t in self.turns if str(t.get("id")) == turn_id), None)
+        if turn is None or self.say_model is None or not turn.get("facts"):
+            return ""
+        if "model" not in turn:
+            boxes = [{"id": f"b{n}", "text": f} for n, f in enumerate(turn["facts"], 1)]
+            try:
+                mod = sibling("say", "say")
+                got = (
+                    mod.said(boxes, turn["you"], None, self.sayer, self.say_model)
+                    if mod is not None
+                    else {"state": "unreachable", "why": "the say add-on isn't here"}
+                )
+            except Exception as e:  # noqa: BLE001 - a voice that fails never takes the page with it
+                got = {"state": "unreachable", "why": f"the say add-on couldn't: {type(e).__name__}"}  # fmt: skip
+            turn["model"] = {"model": self.say_model, **got}
+        return model_html(turn["model"])
+
     def ask(self, question: str) -> str:
         """Your line, then code's answer under it, added to the stream."""
         turns = self.turns
@@ -846,8 +927,9 @@ class Willow:
         when the same words were first asked (if they were), and the boxes
         the line rests on. No model is asked; the line is made here, from
         what the boxes hold."""
-        turn = {"at": datetime.now().strftime("%H:%M"), "you": question,
-                "say": "", "again": "", "boxes": []}  # fmt: skip
+        self.said_turns += 1
+        turn = {"at": datetime.now().strftime("%H:%M"), "you": question, "say": "",
+                "again": "", "boxes": [], "facts": [], "id": self.said_turns}  # fmt: skip
         small = SMALL.get(" ".join(question.lower().split()).strip(" .!?"))
         if small:  # small talk: code's own word, nothing asked, nothing on the record
             return {**turn, "say": small}
@@ -868,13 +950,15 @@ class Willow:
             doc = json.loads(said)
         found, answered, line = self.from_run(question)
         line = line[:1].upper() + line[1:] + "." if line else ""
-        boxes = turn["boxes"]
+        boxes, facts = turn["boxes"], turn["facts"]
         if found:
             boxes.append(found)
+            facts.append(line)
         if doc["state"] == "sealed":
             boxes.insert(0, "<h2>You approved this answer</h2><div class=card>"
                          f"{rich(doc['answer'])}<p class=where>{esc(doc['by'])}</p></div>")  # fmt: skip
             turn["say"] = "You approved an answer for this."
+            facts.insert(0, "you approved an answer for this: " + short(doc["answer"]))
         elif doc["state"] == "populated":
             served = [
                 passage(s["where"], s["text"], "only asks your question back" if s["echo"] else "")
@@ -884,6 +968,9 @@ class Willow:
             boxes += served
             n = sum(not s["echo"] for s in doc["served"])
             first = next(s["where"] for s in doc["served"] if not s["echo"])
+            text = next(s["text"] for s in doc["served"] if not s["echo"])
+            facts.append(f"your files hold {n} passage{'s' * (n != 1)} for it; "
+                         f"the first is at {first}: {short(text)}")  # fmt: skip
             turn["say"] = (
                 f"{line} Your files hold {n} passage{'s' * (n != 1)} for it too."
                 if answered
@@ -912,6 +999,8 @@ class Willow:
                 )
             turn["say"] = (f"{line} No one passage in your folder says it." if answered
                            else "Nothing in your folder holds that.")  # fmt: skip
+            facts.append("no one passage in your folder says it" if answered
+                         else "nothing in your folder holds that")  # fmt: skip
         return turn
 
     def waiting(self) -> str:
@@ -1097,6 +1186,8 @@ class Handler(BaseHTTPRequestHandler):
         if url.path == "/page.js":
             return self.send(200, SCRIPT.read_text(encoding="utf-8"),
                              {"Content-Type": "text/javascript; charset=utf-8"})  # fmt: skip
+        if url.path == "/say":
+            return self.send(200, self.willow.say(parse_qs(url.query).get("turn", [""])[0]))  # fmt: skip
         if url.path == "/place":
             asked = parse_qs(url.query)
             at = asked.get("at", [""])[0]
@@ -1202,7 +1293,16 @@ def main(argv: list[str]) -> int:
         return kernel.ALIVE
     opts, flags, rest, it = {}, set(), [], iter(argv)
     for a in it:
-        if a in ("--box", "--port", "--lang", "--stack", "--run", "--index", "--home"):
+        if a in (
+            "--box",
+            "--port",
+            "--lang",
+            "--stack",
+            "--run",
+            "--index",
+            "--home",
+            "--say",
+        ):
             opts[a] = next(it, "")
         elif a == "--no-open":
             flags.add(a)
@@ -1214,7 +1314,8 @@ def main(argv: list[str]) -> int:
             or ("--stack" in opts and not opts["--stack"])
             or ("--run" in opts and not opts["--run"])
             or ("--index" in opts and not opts["--index"])
-            or ("--home" in opts and not opts["--home"])):  # fmt: skip
+            or ("--home" in opts and not opts["--home"])
+            or ("--say" in opts and not opts["--say"])):  # fmt: skip
         print(__doc__.split("\n\n")[1], file=sys.stderr)
         return kernel.REFUSED
     box = Path(opts["--box"])
@@ -1238,7 +1339,7 @@ def main(argv: list[str]) -> int:
         if home is not None and not home.is_dir():
             print(f"refused: {home} isn't a folder that's there", file=sys.stderr)
             return kernel.REFUSED
-        willow = Willow(box, opts.get("--lang"), stack=stack, run=run, index=index, home=home)  # fmt: skip
+        willow = Willow(box, opts.get("--lang"), stack=stack, run=run, index=index, home=home, say=opts.get("--say"))  # fmt: skip
         server = serve(willow, int(port))
     except (OSError, ValueError) as e:
         print(f"refused: {e}", file=sys.stderr)
