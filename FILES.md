@@ -2462,10 +2462,10 @@ willow/
 │   │   │   ├── RULES.md      what the code is held to and what to hold against it, written before the run
 │   │   │   └── stack-at-the-end.txt the stack the rules left: seven steps it was given, two it added
 │   │   ├── trial-4/      willow's own stack run twice in two folders: does each step come out the same
-│   │   │   ├── cold.jsonl
-│   │   │   ├── RESULTS.md    Trial 4: what happened
+│   │   │   ├── cold.jsonl    the first comparison, a line a step: one folder had run before, the other had not
+│   │   │   ├── RESULTS.md    what was expected and what was found, the three steps that still differ, and why
 │   │   │   ├── RULES.md      what will be counted and what is expected, written before the two runs were compared
-│   │   │   └── warm.jsonl
+│   │   │   └── warm.jsonl    the second, with both folders run before
 │   │   ├── trial.py          makes the report and the key from a kept run, strikes what an account adds, scores answers
 │   │   ├── test_trial.py
 │   │   └── README.md         the claim, eight proposed rules, a session led by a script, how it could be wrong, what waits before the freeze

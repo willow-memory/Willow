@@ -22,6 +22,9 @@ last run left. Its rules are in [trial-2/RULES.md](trial-2/RULES.md) and
 what happened in [trial-2/RESULTS.md](trial-2/RESULTS.md). A third put code
 in the agents' place, three rules from the same start, and set the two
 side by side: [trial-3/RESULTS.md](trial-3/RESULTS.md).
+A fourth asked the plan's R2 of willow's own work: one stack run in two
+folders, and whether each step came out the same,
+[trial-4/RESULTS.md](trial-4/RESULTS.md).
 
 ## The claim
 
