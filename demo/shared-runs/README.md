@@ -187,6 +187,46 @@ These are not known, and the plan waits on them.
   commands it may run, and what it must never do, written before any is
   started.
 
+### What a first look at Kaggle found
+
+On 2026-11-11 a session pushed nine private notebooks that report only
+the machine they run on, internet off, each put through the maintainer's
+privacy check first. What they printed is kept on that session's machine,
+not here, so this is an account for the list above, not a result.
+
+| asked | found |
+|---|---|
+| how many at once | five: the sixth push was refused, "Maximum batch CPU session count of 5 reached" |
+| the machine | 4 cores, 32.9 GB of memory, 21 GB of working disk |
+| the processor | Intel Xeon at 2.20 GHz, with AVX2 and without AVX-512, on nine of nine |
+| what is installed | Python 3.13.18, NumPy 2.1.3 on OpenBLAS; no WebAssembly runtime |
+| internet, switched off | none reached |
+| a small job, pushed to finished | about 90 seconds |
+| the account's week | 45 hours of GPU and 20 of TPU; a CPU notebook uses neither |
+
+What that settles, and what it moves:
+
+- **Which processors Kaggle gives: one kind, as far as nine draws show.**
+  R1 asks for three. On CPU notebooks alone it would be reported as not
+  tested. A second kind has to come from somewhere else: Kaggle's GPU
+  machines, which spend the week's hours, or a machine that is not
+  Kaggle's.
+- **R2 would pass there for the wrong reason.** Two small NumPy sums came
+  out the same, to the last bit, on all nine: one processor, one NumPy.
+  The session's own laptop differed from them in the last digits of both,
+  but it has another processor and a newer NumPy, so which of the two did
+  it is not shown. R2 needs machines that differ in one thing at a time.
+- **Five at a time, in rounds.** "Tens of machines" is tens of runs, five
+  at once.
+- **The fixed runtime is not there.** It would be installed in each
+  notebook, which needs internet on for that step, or carried in as a
+  dataset.
+
+Still not known: Kaggle's own page of limits and its terms (the page gave
+no text when fetched; other sites say twelve hours a session, unchecked),
+whether a notebook may write a dataset from inside a run, and how much
+slower the fixed runtime is than native.
+
 ## The order
 
 1. Settle the list above.
