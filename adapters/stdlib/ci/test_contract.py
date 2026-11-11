@@ -807,6 +807,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     # the question is the passage itself, an echo: nothing is asked, the port never reached
     "same-way": ("same_way.py", ["--box", "{box}", "--url", "http://127.0.0.1:9/v1",
                  "--model", "m", "--questions", "{pile}/garden.md"]),
+    "say-check": ("say_check.py", ["--sentence", "PR 712 is waiting [b4], ratify the work order [b5].", "--boxes", "adapters/stdlib/say-check/example-boxes.json"]),
     "scan": ("scan.py", ["index", "--from", "{pile}", "--to", "{tmp}/index"]),
     "scrub": ("scrub.py", ["--from", "{pile}/photo.png", "--to", "{tmp}/clean.png"]),
     "secrets-audit": ("secrets_audit.py", ["--box", "{box}"]),

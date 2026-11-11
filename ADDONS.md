@@ -1061,6 +1061,13 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
   Every reference in your files checked: each link to another file, and each quoted line, still there and still saying it. \
   *bot* `no-install` `offline` `quote` `everyday` · near: quote-review, secrets-audit, quotes
 
+### Checking a model before you trust it
+
+- <a id="say-check"></a>[**say-check**](adapters/stdlib/say-check/) \
+  A sentence said about your boxes, checked by code: each cite served, each box cited, no word or number the boxes lack, your words exact. \
+  From: code of [willow-memory/willows-grove](https://github.com/willow-memory/willows-grove), Apache-2.0. *new* `no-install` `offline` `sentence` · near:
+  plain, on-this-day, code-comments
+
 ### What guards it
 
 

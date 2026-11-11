@@ -988,6 +988,18 @@ willow/
 │   │   │   └── README.md
 ```
 
+### adapters/stdlib/: Trust and proof: Checking a model before you trust it
+
+```
+│   │   ├── say-check/
+│   │   │   ├── example-boxes.json two boxes to try it on, the ones its card shows
+│   │   │   ├── LICENSE-willows-grove the licence of the project its checks came from
+│   │   │   ├── NOTICE        what was taken from willows-grove, and what was changed
+│   │   │   ├── say_check.py  a sentence said about your boxes, held to them by four checks
+│   │   │   ├── test_say_check.py
+│   │   │   └── README.md     its card
+```
+
 ### adapters/stdlib/: Trust and proof: What it makes for elsewhere
 
 ```

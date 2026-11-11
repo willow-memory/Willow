@@ -1,0 +1,12 @@
+say-check takes code from one Apache-2.0 project; its licence is beside
+this file, LICENSE-willows-grove.
+
+willows-grove (https://github.com/willow-memory/willows-grove), Copyright
+2026 Sean Campbell: the four checks of grove/seat_say.py (every cite was
+served, every box cited, nothing the boxes lack, your words quoted
+exactly), with its glue words (grove/seat_boxes.py) and function words.
+Changed here: a box is a tag and its words, not the Grove's Box; each check
+says what failed rather than only whether it held; and its checks of code
+cites against a code graph and of quotes against the one script's layer-5
+gate are left out, since willow has neither. The local model, its prompt
+and the thread are not taken.

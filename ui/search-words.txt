@@ -54,6 +54,10 @@ collect = gather
 glance = glance
 route = route
 look = look, glance
+sentence = say
+hallucinate = say, check, lack
+invent = say, check, lack
+made-up = say, check, lack
 answer = look
 answers = look
 
