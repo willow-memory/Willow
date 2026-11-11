@@ -281,6 +281,33 @@ What it does not show: science_bitch itself; jobs of more than
 milliseconds; a notebook writing the dataset (the memory was downloaded
 and merged by hand); anyone's machine but one account's and one laptop.
 
+### What the real project did, on the maintainer's word
+
+The maintainer said to run science_bitch, first on the session's laptop
+and then on Kaggle. It was cloned at its commit `2fae2f2` and not changed;
+the Kaggle notebooks fetched it from GitHub at that commit, so no copy of
+it was uploaded. An account, like the two above.
+
+- **The memory works on the real stepper.** The same 95 jobs, on one
+  machine, five processes at once: alone, 372,957 steps in 124.6 seconds;
+  with the memory, 67 jobs served, 17 stepped on from a kept state,
+  68,239 steps in 9.7 seconds. All 95 came out the bytes of the job run
+  alone. Its state can be stopped and picked up exactly. No job in this
+  sweep halted, so R6 is not tested on it.
+- **R2, on the real code: 7 of 40.** One AMD and two Intel machines at
+  Kaggle agreed with each other on every job. The laptop agreed with them
+  on 7 of the 40 that ran, parting between the 10th step and the 8,383rd.
+- **One operation does it.** Of thirteen NumPy operations tried on the
+  same fixed numbers, three gave other bytes on the laptop than at Kaggle:
+  a number to the power 1.5, a cube, and the square root of a cube.
+  Square root, division, squares, sums, sine and cosine agreed. The
+  project's gravity has `d2**1.5` in it.
+- **With that one power written as a product and a square root**,
+  `d2*np.sqrt(d2)`, patched in memory and not in the project's files, the
+  laptop and Kaggle agreed on 40 of 40. So R1 can be met on the real code
+  with NumPy kept, by a one-line change that is its author's to make.
+  A finding for them, not a change made.
+
 ## The order
 
 1. Settle the list above.
