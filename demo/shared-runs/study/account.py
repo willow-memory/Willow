@@ -60,7 +60,7 @@ QUESTIONS = (
     ("graphics", "Which machines had a graphics card?", None),
     ("afresh-same", "How many of those came out the same bytes?", "afresh_same"),
     ("native-same", "With the project's gravity as it is written, how many jobs came out the same bytes on every machine?", "native_same"),
-    ("kinds", "How many kinds of processor ran the jobs?", "processors"),
+    ("kinds", "How many kinds of processor ran the jobs?", "kinds"),
     ("busiest", "Which machine stepped the most steps?", None),
 )  # fmt: skip
 
@@ -112,8 +112,8 @@ def report(plan: dict, f: dict) -> str:
         "came out the same bytes on every one.",
         "",
         "# the machines",
-        f"Kinds of processor that ran the jobs: {len(f['processors'])}"
-        + "".join(f"; {p}" for p in f["processors"])
+        f"Kinds of processor that ran the jobs: {len(f['kinds'])}"
+        + "".join(f"; {p}" for p in f["kinds"])
         + ".",
     ]  # fmt: skip
     return "\n".join(out) + "\n"
@@ -162,6 +162,7 @@ def held(plan: dict, f: dict, answers: str) -> dict:
     return {
         "marks": marks,
         "answerable": {name: want != NOT_SAID for name, want in keyed.items()},
+        "account": bool(said.strip()),
         "struck": strike(report(plan, f), said)[1] if said.strip() else [],
     }  # fmt: skip
 
@@ -200,7 +201,13 @@ def main(argv: list[str]) -> int:
             print(f"{name}: {mark} ({kind})")
         for sentence in got["struck"]:
             print(f"struck: {sentence}")
-        bad = got["struck"] or any(m != "right" for m in got["marks"].values())
+        if not got["account"]:
+            print("no account: nothing under a line `## account`")
+        bad = (
+            got["struck"]
+            or not got["account"]
+            or any(m != "right" for m in got["marks"].values())
+        )
         return judge.ESCALATE if bad else 0
     return 0
 

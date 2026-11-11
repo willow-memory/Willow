@@ -11,6 +11,8 @@ passed.
 
     R1  the same bytes for every job on every machine that ran it, and
         for every kept state stepped again, on three kinds of processor
+        (a kind is its maker, its architecture and its widest vector
+        instructions, as each machine says of itself)
     R2  measured: the jobs whose bytes agree across machines with the
         project's gravity as it is written
     R3  the steps not stepped, as a share of the baseline's, within two
@@ -124,7 +126,7 @@ def figures(plan: dict, machines: list[dict]) -> dict:
     kinds: dict[str, set] = {}
     for m, a in patched:
         said.setdefault(a["job"], set()).add(result(a))
-        kinds.setdefault(a["job"], set()).add(m["machine"]["processor"])
+        kinds.setdefault(a["job"], set()).add(m["machine"]["kind"])
     f["differ"] = sorted(j for j, got in said.items() if len(got) > 1)
     f["jobs_run"] = len(said)
     f["jobs_on_three_kinds"] = sum(1 for k in kinds.values() if len(k) >= 3)
@@ -132,10 +134,11 @@ def figures(plan: dict, machines: list[dict]) -> dict:
     f["states_checked"] = len(checks)
     f["states_same"] = sum(1 for _, a in checks if a["same"])
     f["check_steps"] = statistics.median(a["stepped"] for _, a in checks) if checks else None  # fmt: skip
+    f["checked_by"] = sorted({m["name"] for m, _ in checks})
     f["median_job"] = statistics.median(n for _, _, n in sweep.jobs(plan))
-    f["processors"] = sorted(
-        {m["machine"]["processor"] for m, _ in patched}
-        | {m["machine"]["processor"] for m, _ in checks}
+    f["kinds"] = sorted(
+        {m["machine"]["kind"] for m, _ in patched}
+        | {m["machine"]["kind"] for m, _ in checks}
     )
 
     last = {a["job"]: a for a in shared}
@@ -152,7 +155,7 @@ def figures(plan: dict, machines: list[dict]) -> dict:
         {a["job"]: a for a in m["acts"] if a["mode"] == "native"} for m in natives
     ]
     f["native_machines"] = len(natives)
-    f["native_processors"] = sorted({m["machine"]["processor"] for m in natives})
+    f["native_kinds"] = sorted({m["machine"]["kind"] for m in natives})
     same = [j for j in jobs if by_native and all(j in r for r in by_native)
             and len({result(r[j]) for r in by_native}) == 1]  # fmt: skip
     f["native_jobs"] = sum(
@@ -173,7 +176,7 @@ def rule(state: str, said: str, **figs) -> dict:
 
 def verdicts(plan: dict, f: dict, accounts: dict[str, dict]) -> dict[str, dict]:
     v: dict[str, dict] = {}
-    kinds = len(f["processors"])
+    kinds = len(f["kinds"])
     bad_states = f["states_checked"] - f["states_same"]
     figs = dict(jobs_run=f["jobs_run"], differ=len(f["differ"]), kinds=kinds,
                 jobs_on_three_kinds=f["jobs_on_three_kinds"],
@@ -187,13 +190,13 @@ def verdicts(plan: dict, f: dict, accounts: dict[str, dict]) -> dict[str, dict]:
     else:
         v["R1"] = rule("passed", f"every job and kept state agreed, on {kinds} kinds of processor", **figs)  # fmt: skip
 
-    figs = dict(machines=f["native_machines"], kinds=len(f["native_processors"]),
+    figs = dict(machines=f["native_machines"], kinds=len(f["native_kinds"]),
                 jobs=f["native_jobs"], same=f["native_same"],
                 first_difference=f["native_first_difference"])  # fmt: skip
     if f["native_machines"] < 2:
         v["R2"] = rule("not tested", "fewer than two machines ran the project as it is written", **figs)  # fmt: skip
     else:
-        v["R2"] = rule("measured", f"{f['native_same']} of {f['native_jobs']} jobs the same bytes on {f['native_machines']} machines; kinds of processor among them: {len(f['native_processors'])}", **figs)  # fmt: skip
+        v["R2"] = rule("measured", f"{f['native_same']} of {f['native_jobs']} jobs the same bytes on {f['native_machines']} machines; kinds of processor among them: {len(f['native_kinds'])}", **figs)  # fmt: skip
 
     figs = dict(predicted=f["predicted"], predicted_with_halts=f["predicted_with_halts"],
                 measured=f["measured"],
@@ -245,7 +248,11 @@ def verdicts(plan: dict, f: dict, accounts: dict[str, dict]) -> dict[str, dict]:
         return v
     each = lambda got, of: "; ".join(f"{n}: {got[n]} of {of[n]}" for n in sorted(got))  # noqa: E731
     v["R7"] = rule("passed" if right == asked else "failed", f"right, of the questions the reports answer: {each(right, asked)}", right=right, asked=asked)  # fmt: skip
-    v["R8"] = rule("passed" if not any(struck.values()) else "failed", "sentences saying a figure no report holds: " + "; ".join(f"{n}: {struck[n]}" for n in sorted(struck)), struck=struck)  # fmt: skip
+    silent = sorted(name for name, a in accounts.items() if not a["account"])
+    if silent:
+        v["R8"] = rule("not tested", f"no account to hold to the reports from: {', '.join(silent)}", struck=struck)  # fmt: skip
+    else:
+        v["R8"] = rule("passed" if not any(struck.values()) else "failed", "sentences saying a figure no report holds: " + "; ".join(f"{n}: {struck[n]}" for n in sorted(struck)), struck=struck)  # fmt: skip
     v["R9"] = rule("passed" if held == unsaid else "failed", f"left unsaid, of the questions the reports don't answer: {each(held, unsaid)}", held=held, asked=unsaid)  # fmt: skip
     return v
 

@@ -35,7 +35,7 @@ Trajectories refused before a first step: 1; vvvv-coarse.
 3 machines ran it. 30 of 30 jobs came out the same bytes on every one.
 
 # the machines
-Kinds of processor that ran the jobs: 1; Intel(R) Xeon(R) Processor @ 2.10GHz.
+Kinds of processor that ran the jobs: 1; intel x86_64 avx512.
 
 ## the questions
 

@@ -51,6 +51,9 @@ def load(path: Path) -> dict:
     for name in ("deal_seed", "draw_seed"):
         if not isinstance(plan.get(name), str) or not plan[name]:
             raise ValueError(f"the plan names no {name}")
+    checks = [c.get("name") for c in plan.get("check_machines") or []]
+    if len(set(checks)) != len(checks) or not all(checks):
+        raise ValueError("the plan's check machines need a name each, no two the same")
     names = [t.get("name") for t in plan.get("trajectories") or []]
     if not names or len(set(names)) != len(names) or not all(names):
         raise ValueError("the plan's trajectories need a name each, no two the same")

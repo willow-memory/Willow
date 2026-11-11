@@ -27,8 +27,8 @@ count, and keeps where a trajectory halted. A job goes on from the latest
 kept state at or before its length, and is never stepped into a halt the
 memory knows.
 
-OUT gets three files: what the machine says of itself (its processor,
-system, Python and NumPy; never its name), what it did, one line an act,
+OUT gets three files: what the machine says of itself (its processor and
+its kind, its system, Python and NumPy; never its name), what it did, one line an act,
 and what it kept. The last two are added to and never rewritten. It writes
 nowhere else. Exit codes, the kernel's: 0 done; 2 refused (a bad command
 line, a plan or starts that don't fit, no such checkout).
@@ -86,7 +86,8 @@ class Project:
     `step`, one whole step at a time. `as_written` leaves its gravity alone;
     otherwise `d2**1.5` is `d2*np.sqrt(d2)`, in memory."""
 
-    def __init__(self, repo: Path, as_written: bool, core_sha256: str | None = None):
+    def __init__(self, repo: Path, as_written: bool, core_sha256: str | None = None,
+                 numpy: str | None = None):  # fmt: skip
         file = repo / "simulations" / "star_system" / "core.py"
         if not file.is_file():
             raise ValueError(f"{repo} is not a checkout of the project")
@@ -99,6 +100,10 @@ class Project:
             from simulations.star_system import core
         except Exception as why:
             raise ValueError(f"{repo} is not a checkout of the project: {why}")
+        if numpy and np.__version__ != numpy:
+            raise ValueError(
+                f"the plan names NumPy {numpy}, and this is {np.__version__}"
+            )
         self.np, self.core = np, core
         self.said = {
             "stepper": "project",
@@ -238,10 +243,48 @@ def processor() -> str:
     return platform.processor() or platform.machine()
 
 
+def kind_of(said: str, arch: str, features: set[str]) -> str:
+    """A processor's kind: who made it, its architecture, and the widest
+    set of vector instructions it has. Two machines of one kind may still
+    differ; two of different kinds can do the same sum another way."""
+    low = said.lower()
+    vendor = next((v for v in ("intel", "amd", "apple") if v in low), "other")
+    arch = {"amd64": "x86_64", "aarch64": "arm64"}.get(arch.lower(), arch.lower())
+    have = {f.lower() for f in features}
+    level = (
+        "avx512" if "avx512f" in have
+        else "avx2" if "avx2" in have
+        else "neon" if have & {"neon", "asimd"}
+        else "plain"
+    )  # fmt: skip
+    return f"{vendor} {arch} {level}"
+
+
+def features(stepper) -> set[str]:
+    """What the processor can do: as NumPy found it when the project is
+    run, since that is what its sums use; else as the system lists it."""
+    if hasattr(stepper, "np"):
+        try:
+            from numpy._core._multiarray_umath import __cpu_features__ as found
+
+            return {name for name, has in found.items() if has}
+        except ImportError:
+            pass
+    try:
+        for line in Path("/proc/cpuinfo").read_text().splitlines():
+            if line.startswith(("flags", "Features")):
+                return set(line.partition(":")[2].split())
+    except OSError:
+        pass
+    return set()
+
+
 def machine(stepper) -> dict:
     said = {k: v for k, v in stepper.said.items() if k != "power"}
-    return {"processor": processor(), "system": platform.system(),
-            "python": platform.python_version(), **said}  # fmt: skip
+    name = processor()
+    maker = name + (" apple" if platform.system() == "Darwin" else "")
+    return {"processor": name, "kind": kind_of(maker, platform.machine(), features(stepper)),
+            "system": platform.system(), "python": platform.python_version(), **said}  # fmt: skip
 
 
 def alone(plan, starts, stepper, act) -> None:
@@ -352,7 +395,7 @@ def main(argv: list[str]) -> int:
         stepper = (
             Toy() if opts["toy"]
             else Project(Path(opts["repo"]), opts["mode"] == "native",
-                         (plan.get("project") or {}).get("core_sha256"))
+                         **{k: (plan.get("project") or {}).get(k) for k in ("core_sha256", "numpy")})
         )  # fmt: skip
     except (OSError, ValueError, json.JSONDecodeError) as why:
         print(why if str(why).startswith(("usage", "refused")) else f"refused: {why}", file=sys.stderr)  # fmt: skip

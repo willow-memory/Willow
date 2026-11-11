@@ -493,7 +493,9 @@ start. The baseline twice, two rounds of five machines as separate
 processes given only folders, a check, and the reports handed to two
 agents, a small model and a larger one. What it printed is in
 [study/dry/](study/dry/); its verdicts are rows `shared-runs:dry:R1` to
-`R9` on a scratch record, which verifies (10 rows, 0 sealed).
+`R9` on a scratch record, which verifies (10 rows, 0 sealed). The kept
+files are of its second pass, under NumPy 2.1.3; the two agents were
+asked again, since their input's last line had changed.
 
 | rule | in the dry run | what that can and can't say |
 |---|---|---|
@@ -523,6 +525,33 @@ agents, a small model and a larger one. What it printed is in
   that doesn't say it is a dry one.
 - A machine refuses a checkout whose stepper is not the file the plan
   names by SHA-256.
+
+**A kind of processor, and a fourth machine**, added the same day on the
+maintainer's word.
+
+- **A kind is the processor's maker, its architecture and its widest
+  vector instructions**, as each machine says of itself and as NumPy
+  found them: `intel x86_64 avx512`. R1 counted the name a machine gives
+  its processor, so two of one make at another clock speed would have
+  been two kinds. They are one now.
+- **The session that wrote this is a check machine.** Its processor is an
+  Intel with AVX-512, which NumPy uses; Kaggle's Intel, in the first look
+  above, had none. So it is a kind Kaggle did not give, beside the laptop
+  and Kaggle's AMD when the draw gives one. It was chosen, where the
+  claim is of machines nobody chose, so it only checks: it steps kept
+  states again and runs the project as it is written, and steps no job
+  of the shared run. A cloud session's machine is not promised to be the
+  same the next time, so its part is run, with what it says of itself,
+  in one sitting after the freeze. The plan names the three check
+  machines: a fresh Kaggle notebook, the laptop, this.
+- **One NumPy on every machine.** The plan names 2.1.3, Kaggle's, and a
+  machine with another is refused, so two machines differ by their
+  processor and not by their NumPy as well. Here it is a virtual
+  environment. The dry run was run again in it, and under 2.5.3 before:
+  the same bytes for all 30 jobs.
+- **An answer with no account under it was passing R8**, with nothing to
+  strike. Found when the kept answers were rebuilt without that line. It
+  is not tested now, and said.
 
 **What it could not see.** A second processor, so nothing of R1 or R2. A
 wrong answer, an added figure or a guess from an agent: both models got

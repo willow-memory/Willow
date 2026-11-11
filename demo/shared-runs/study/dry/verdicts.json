@@ -14,6 +14,9 @@
   "baseline_same": 30,
   "baseline_steps": 10656,
   "check_steps": 100,
+  "checked_by": [
+   "check"
+  ],
   "computed": 9,
   "differ": [],
   "draw": [
@@ -34,20 +37,20 @@
   "jobs": 30,
   "jobs_on_three_kinds": 0,
   "jobs_run": 30,
+  "kinds": [
+   "intel x86_64 avx512"
+  ],
   "measured": 48.8,
   "median_job": 333.0,
   "native_first_difference": {},
   "native_jobs": 30,
-  "native_machines": 3,
-  "native_processors": [
-   "Intel(R) Xeon(R) Processor @ 2.10GHz"
+  "native_kinds": [
+   "intel x86_64 avx512"
   ],
+  "native_machines": 3,
   "native_same": 30,
   "predicted": 50.5,
   "predicted_with_halts": 52.5,
-  "processors": [
-   "Intel(R) Xeon(R) Processor @ 2.10GHz"
-  ],
   "refusals_tried": {
    "vvvv-coarse": 1
   },

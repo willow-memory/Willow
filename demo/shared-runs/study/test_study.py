@@ -119,7 +119,7 @@ def test_r1_needs_three_kinds_of_processor_and_fails_on_one_other_byte(tmp_path)
     assert states(file, runs)["R1"] == "not tested"
     for folder, kind in (("baseline-2", "another"), ("check", "a third")):
         said = json.loads((runs / folder / "machine.json").read_text())
-        (runs / folder / "machine.json").write_text(json.dumps({**said, "processor": kind}))  # fmt: skip
+        (runs / folder / "machine.json").write_text(json.dumps({**said, "kind": kind}))  # fmt: skip
     assert states(file, runs)["R1"] == "passed"
 
     def other(act):
@@ -128,6 +128,18 @@ def test_r1_needs_three_kinds_of_processor_and_fails_on_one_other_byte(tmp_path)
     rewrite(runs / "baseline-2", other)
     got = judge.judged(file, runs)
     assert got[1]["R1"]["state"] == "failed" and got[0]["differ"] == ["t1@50"]
+
+
+def test_a_kind_is_the_maker_the_architecture_and_the_widest_vector_instructions():
+    xeon = "Intel(R) Xeon(R) Processor @ 2.10GHz"
+    assert runner.kind_of(xeon, "x86_64", {"AVX2", "AVX512F"}) == "intel x86_64 avx512"
+    assert runner.kind_of("Intel(R) Xeon(R) CPU @ 2.20GHz", "AMD64", {"avx2", "fma"}) == "intel x86_64 avx2"  # fmt: skip
+    assert runner.kind_of("AMD EPYC 7B12", "x86_64", {"avx2"}) == "amd x86_64 avx2"
+    assert runner.kind_of("arm apple", "arm64", {"NEON", "ASIMD"}) == "apple arm64 neon"
+    assert runner.kind_of("", "riscv64", set()) == "other riscv64 plain"
+    assert runner.kind_of(xeon, "x86_64", {"avx2"}) == runner.kind_of(
+        "Intel(R) Xeon(R) CPU @ 2.20GHz", "x86_64", {"avx2"}
+    ), "another clock speed is not another kind"
 
 
 def test_r6_fails_when_a_known_halt_is_stepped_into_again(tmp_path):
@@ -159,6 +171,8 @@ def test_an_agents_answers_are_held_to_the_key_and_its_account_to_the_report(tmp
     assert [states(file, runs)[r] for r in ("R7", "R8", "R9")] == ["failed", "passed", "passed"]  # fmt: skip
     (folder / "answers.txt").write_text(right + said + "It took 4,321 seconds.\n")
     assert [states(file, runs)[r] for r in ("R7", "R8", "R9")] == ["passed", "failed", "passed"]  # fmt: skip
+    (folder / "answers.txt").write_text(right)
+    assert states(file, runs)["R8"] == "not tested", "no account is not a clean one"
     guessed = right.replace(f"cost: {account.NOT_SAID}", "cost: 12")
     (folder / "answers.txt").write_text(guessed + said)
     assert [states(file, runs)[r] for r in ("R7", "R8", "R9")] == ["passed", "passed", "failed"]  # fmt: skip
@@ -169,7 +183,10 @@ def test_an_agents_answers_are_held_to_the_key_and_its_account_to_the_report(tmp
 
 def test_the_dry_run_runs_only_a_plan_that_says_it_is_one(tmp_path, capsys):
     assert json.loads((HERE / "dry-plan.json").read_text())["dry"] is True
-    assert "dry" not in json.loads((HERE / "plan.json").read_text())
+    proposed = json.loads((HERE / "plan.json").read_text())
+    assert "dry" not in proposed
+    assert [c["name"] for c in proposed["check_machines"]] == ["kaggle-check", "laptop", "cloud-session"]  # fmt: skip
+    assert proposed["project"]["numpy"] == "2.1.3"
     args = ["--work", str(tmp_path / "w"), "--toy"]
     assert dry.main(["--plan", str(HERE / "plan.json"), *args]) == 2
     assert "does not say it is a dry one" in capsys.readouterr().err
