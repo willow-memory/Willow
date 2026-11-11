@@ -7,7 +7,7 @@ But the steps are not a row: some take what an earlier one made, and the
 rest could run in any order, or at once. That is decided when the stack is
 written, and nothing says it. This reads the file and says it.
 
-A bridge is a step taking what another made, and there are two kinds:
+A bridge is a step taking what another made. Two kinds are in the file:
 
     its output    the step names an earlier step's kept output, `{06}`
     what it wrote the step names a place an earlier step was told to
@@ -18,10 +18,14 @@ From the bridges comes the order. A step that takes nothing rests on no
 other and could run first. A step is one deeper than the deepest it takes
 from, and steps at the same depth don't need one another.
 
-One bridge it cannot see: the record. A step that adds a row and a later
-one that reads the record lean on each other, and the file names only
-`{box}` for both. So it says how many steps name the record, and that
-those keep the order they are written in.
+A third kind comes from the cards, not the file:
+
+    the record    the step names the record, `{box}`, after a step whose
+                  add-on's card says it writes the record
+
+A stack file names the record the same way for a step that adds a row and
+one that only reads, so the card's `writes` line is what tells them apart.
+A step naming an add-on that isn't here has no card to read, and is said.
 
 And two bridges that can't hold, each said with its step:
 
@@ -169,6 +173,37 @@ def bridges(
     return takes, sorted(set(broken)), sorted(set(shared))
 
 
+def writes_record(name: str) -> bool | None:
+    """Whether the add-on's card promises to write the record: its `writes`
+    line names it. None when no add-on here is called that."""
+    for kind in ("stdlib", "deps"):
+        card = HERE.parents[1] / kind / name / "README.md"
+        if card.is_file():
+            head = card.read_text(encoding="utf-8").split("-->", 1)[0]
+            line = re.search(r"^writes: (.+)$", head, flags=re.M)
+            return bool(line) and "record" in [
+                w.strip() for w in line.group(1).split(",")
+            ]
+    return None
+
+
+def record_bridges(
+    steps: list[tuple[str, list[str]]], writes=writes_record
+) -> dict[int, int]:
+    """{a step's place: the place of the last step before it that writes the
+    record}, for each step that names the record after one that writes it."""
+    out: dict[int, int] = {}
+    last = None
+    for n, (name, args) in enumerate(steps, 1):
+        if "{box}" not in args:
+            continue
+        if last is not None:
+            out[n] = last
+        if writes(name):
+            last = n
+    return out
+
+
 def depths(count: int, takes: dict[int, list[tuple[int, str]]]) -> dict[int, int]:
     """{a step's place: how many steps deep it rests}: 0 taking nothing,
     else one more than the deepest it takes from. Sources come first, so
@@ -196,6 +231,8 @@ def page(text: str) -> tuple[dict | None, str | None, bool]:
     steps = [step for _, rows in pools for step in rows]
     label = {n: f"{n:02d} {name}" for n, (name, _) in enumerate(steps, 1)}
     takes, broken, shared = bridges(steps)
+    for n, src in record_bridges(steps).items():
+        takes[n] = sorted(set(takes.get(n, [])) | {(src, "the record as it left it")})
     deep = depths(len(steps), takes)
     count = sum(len({src for src, _ in found}) for found in takes.values())
     cant = [(label[n], why) for n, why in broken]
@@ -230,16 +267,23 @@ def page(text: str) -> tuple[dict | None, str | None, bool]:
                 " → ".join(label[n] for n in way_down(deepest, takes, deep)),
             )
         )
-    record = [
-        label[n]
-        for n, (_, args) in enumerate(steps, 1)
-        if "{box}" in args  # the record itself, not a folder named after it
+    named = [
+        (n, writes_record(name))
+        for n, (name, args) in enumerate(steps, 1)
+        if "{box}" in args
     ]
-    if len(record) > 1:
+    writers = [label[n] for n, w in named if w]
+    if writers:
         order.append((
-            "name the record",
-            f"{len(record)}: a step that adds a row and one that reads the record are a "
-            "bridge no stack file says; these keep the order they are written in",
+            "write the record",
+            f"{len(writers)}: {', '.join(writers)}; a step that names the record after "
+            "one of these takes the record as it left it",
+        ))  # fmt: skip
+    unknown = [label[n] for n, w in named if w is None]
+    if unknown:
+        order.append((
+            "no card here",
+            f"{len(unknown)}: {', '.join(unknown)}; whether these write the record isn't known",
         ))  # fmt: skip
     plural = "" if len(steps) == 1 else "s"
     if not count and not cant and not both:
@@ -253,7 +297,7 @@ def page(text: str) -> tuple[dict | None, str | None, bool]:
         ("a bridge that can't hold", cant),
         ("two steps write to one place: fine for a folder, a loss for a file", both),
         ("what each step takes, and from which", rows),
-        ("the order that leaves them in, the record aside", order),
+        ("the order that leaves them in", order),
     ])  # fmt: skip
     return doc, None, bool(cant)
 

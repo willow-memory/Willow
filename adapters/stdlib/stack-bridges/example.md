@@ -1,4 +1,4 @@
-# an example stack with bridges: nine steps, five of them taking what an earlier one made
+# an example stack with bridges: nine steps, six of them taking what an earlier one made
 
 Read it with:
 

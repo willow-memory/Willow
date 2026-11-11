@@ -69,7 +69,7 @@ def test_the_order_is_by_depth_with_the_longest_way_down_and_the_record_said(tmp
     doc, _ = doc_of(tmp_path, STACK)
     order = rows(doc, "the order")
     assert list(order) == ["rest on no other", "1 step deep", "2 steps deep", "3 steps deep",
-                           "the longest way down", "name the record"]  # fmt: skip
+                           "the longest way down", "write the record"]  # fmt: skip
     assert (
         order["rest on no other"]
         == "4: 01 code-comments, 05 star-system, 07 backup, 09 fixity"
@@ -83,8 +83,11 @@ def test_the_order_is_by_depth_with_the_longest_way_down_and_the_record_said(tmp
         order["the longest way down"]
         == "04 glance → 03 scan → 02 index-cache → 01 code-comments"
     )
-    assert order["name the record"].startswith("3: a step that adds a row"), (
-        "{box}-code is not the record"
+    assert order["write the record"].startswith(
+        "1: 09 fixity; a step that names the record after"
+    )
+    assert "the record" not in " ".join(rows(doc, "what each step takes").values()), (
+        "none comes after the writer"
     )
 
 
@@ -167,9 +170,10 @@ def test_a_step_taking_from_two_is_as_deep_as_the_deeper_and_its_json_data_count
         order["2 steps deep"] == "2: 04 d, 05 e" and order["1 step deep"] == "1: 02 b"
     )
     assert order["the longest way down"] == "04 d → 02 b → 01 a"
-    assert "name the record" not in order, (
-        "one step naming the record leans on no other"
+    assert (
+        order["no card here"] == "1: 03 c; whether these write the record isn't known"
     )
+    assert "write the record" not in order
     assert stack_bridges.depths(3, {2: [(1, "x")], 3: [(1, "x"), (2, "y")]}) == {
         1: 0,
         2: 1,
@@ -219,7 +223,7 @@ def test_on_the_repos_own_stacks_every_bridge_holds():
     doc = json.loads(kept.stdout)
     assert (
         kept.returncode == 0
-        and doc["said"] == "29 steps, 14 bridges, 3 deep; 19 rest on no other"
+        and doc["said"] == "29 steps, 23 bridges, 3 deep; 11 rest on no other"
     )
     assert rows(doc, "what each step takes")["07 glance"] == "06 scan: its output"
     assert (
@@ -243,9 +247,13 @@ def test_its_own_example_has_the_bridges_its_card_says():
     doc = json.loads(got.stdout)
     assert (
         got.returncode == 0
-        and doc["said"] == "9 steps, 5 bridges, 3 deep; 4 rest on no other"
+        and doc["said"] == "9 steps, 6 bridges, 3 deep; 3 rest on no other"
     )
-    assert rows(doc, "the order")["name the record"].startswith("4: ")
+    assert rows(doc, "the order")["write the record"].startswith("1: 08 fixity; ")
+    assert (
+        rows(doc, "what each step takes")["09 history"]
+        == "08 fixity: the record as it left it"
+    )
 
 
 def test_a_step_is_never_a_bridge_to_itself(tmp_path):
@@ -259,3 +267,41 @@ def test_a_step_is_never_a_bridge_to_itself(tmp_path):
     assert code == 0 and rows(doc, "a bridge that can't hold") == {}
     assert rows(doc, "what each step takes") == {"02 next": "01 tidy: what it wrote, x"}
     assert doc["said"] == "2 steps, 1 bridge, 1 deep; 1 rest on no other"
+
+
+def test_a_step_naming_the_record_after_one_that_writes_it_takes_the_record():
+    steps = [("a", ["--box", "{box}"]), ("w", ["--box", "{box}"]), ("b", ["--from", "{box}-code"]),
+             ("c", ["--box", "{box}"]), ("w", ["--box", "{box}"]), ("d", ["--box", "{box}"]),
+             ("w", ["--to", "x"])]  # fmt: skip
+    got = stack_bridges.record_bridges(steps, writes=lambda name: name == "w")
+    assert got == {4: 2, 5: 2, 6: 5}, (
+        "the last writer before it; {box}-code is not the record"
+    )
+    assert stack_bridges.record_bridges(steps, writes=lambda name: False) == {}
+    assert stack_bridges.record_bridges(steps, writes=lambda name: None) == {}
+    assert (
+        stack_bridges.writes_record("fixity") is True
+        and stack_bridges.writes_record("glance") is False
+    )
+    assert stack_bridges.writes_record("backup") is False, (
+        "it writes to a place, not the record"
+    )
+    assert stack_bridges.writes_record("no-such-add-on") is None
+    assert stack_bridges.writes_record("dp") is True, "an add-on in deps has a card too"
+
+
+def test_the_record_makes_a_step_deeper_and_is_said_beside_what_else_it_takes(tmp_path):
+    text = (
+        "## a\n- fixity -- --box {box}\n- backup -- --box {box} --to S/usb\n"
+        "- three-two-one -- --box {box} --copy usb:S/usb/b.zip\n"
+    )
+    doc, code = doc_of(tmp_path, text)
+    assert code == 0 and doc["said"] == "3 steps, 3 bridges, 2 deep; 1 rest on no other"
+    assert rows(doc, "what each step takes") == {
+        "02 backup": "01 fixity: the record as it left it",
+        "03 three-two-one": "01 fixity: the record as it left it; 02 backup: what it wrote, usb",
+    }
+    assert (
+        rows(doc, "the order")["the longest way down"]
+        == "03 three-two-one → 02 backup → 01 fixity"
+    )

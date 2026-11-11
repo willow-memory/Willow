@@ -17,19 +17,20 @@ leaves them in.
 
     python adapters/stdlib/stack-bridges/stack_bridges.py --stack FILE [--json]
 
-    stack-bridges: populated, 29 steps, 14 bridges, 3 deep; 19 rest on no other
+    stack-bridges: populated, 29 steps, 23 bridges, 3 deep; 11 rest on no other
     ## what each step takes, and from which
       04 index-cache        01 code-comments: what it wrote, {box}-code
       06 scan               03 index-cache: what it wrote, index-repo; 04 index-cache: what it wrote, index-code
       07 glance             06 scan: its output
+      21 merkle             16 fixity: the record as it left it
       25 restore-drill      24 backup: what it wrote, usb
-    ## the order that leaves them in, the record aside
-      rest on no other      19: 01 code-comments, 02 git-history, 03 index-cache, 10 first-mention
-      1 step deep           7: 04 index-cache, 05 index-cache, 09 fair-merge, 15 pile-rungs
-      2 steps deep          1: 06 scan
+    ## the order that leaves them in
+      rest on no other      11: 01 code-comments, 02 git-history, 03 index-cache, 10 first-mention
+      1 step deep           13: 04 index-cache, 05 index-cache, 09 fair-merge, 15 pile-rungs
+      2 steps deep          3: 06 scan, 25 restore-drill, 26 three-two-one
       3 steps deep          2: 07 glance, 08 why-not
       the longest way down  07 glance → 06 scan → 04 index-cache → 01 code-comments
-      name the record       15: a step that adds a row and one that reads the record are a bridge no stack file says
+      write the record      1: 16 fixity; a step that names the record after one of these takes the record as it left it
 
 **Why.** [stack](../stack/) runs a file's steps top to bottom. But the
 steps are not a row. Some take what an earlier one made, and the rest
@@ -37,10 +38,12 @@ could run in any order, or at once. Which is which is decided when the
 stack is written, and nothing says it: a card says what an add-on `uses`,
 never what a step in someone's stack takes from the step above. This
 reads the file and says it. On the 29 steps of
-[demo/kept](../../../demo/kept/README.md) there are 14 such bridges, the
-longest way down is three steps, and 19 steps rest on no other.
+[demo/kept](../../../demo/kept/README.md) there are 23 such bridges, the
+longest way down is three steps, and 11 steps rest on no other: it could
+run in four rounds, 11 steps at once, then 13, then 3, then 2.
 
-**A bridge is one step taking what another made**, and two kinds are read:
+**A bridge is one step taking what another made.** Two kinds are read off
+the file:
 
 - **its output**: the step names an earlier step's kept output, as stack
   writes it, the step's two-digit place in braces;
@@ -65,17 +68,25 @@ For a folder that is how it is used: two of the stack add-on's own examples
 write several files into one folder. For a file, one of the two is lost.
 The stack file doesn't say which the place is.
 
-**What it cannot see: the record.** A step that adds a row and a later one
-that reads the record lean on each other, and the file names only `{box}`
-for both. So the page says how many steps name the record, and that those
-keep the order they are written in. Nor does it see a place a step writes
-without being told to with `--to`, or reads without naming.
+**A third kind is read off the cards: the record.** A stack file names the
+record the same way for a step that adds a row and one that only reads it.
+The add-on's card tells them apart: its `writes` line names the record or
+it doesn't. So a step that names the record after a step whose card says
+it writes it takes "the record as it left it", from the last such step
+before it. The page lists the steps that write the record. A step naming
+an add-on that isn't here has no card, and is listed as not known.
+
+This errs toward waiting. A step that names the record may never read a
+row, and it is still placed after the writer above it.
+
+**What it still cannot see:** a place a step writes without being told to
+with `--to`, or reads without naming.
 
 It is not a check that the stack will run: an add-on that isn't here, an
 option it doesn't take, a file that isn't there. That is the `stack-check`
 idea's job.
 
-[example.md](example.md) is a small stack with five bridges to try it on;
+[example.md](example.md) is a small stack with six bridges to try it on;
 none of the stack add-on's own examples has one, each step there asking
 the record alone.
 
@@ -87,6 +98,7 @@ the stack names. `--json` prints
 (`empty`); 42 one can't hold; 2 refused (a bad command line, no such file,
 a file that isn't a stack).
 
-**Uses:** the kernel's exit codes; the stack add-on's `parse_stack`.
+**Uses:** the kernel's exit codes; the stack add-on's `parse_stack`; each
+step's add-on's card, for its `writes` line.
 
 **Never:** writes anything, runs a step, reads the key, or goes online.
