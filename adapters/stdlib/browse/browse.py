@@ -1,7 +1,7 @@
 """browse.py: your folder in your web browser, on this machine only. Python 3.9+.
 
     python adapters/stdlib/browse/browse.py --box DIR [--stack FILE] [--run FOLDER]
-        [--index INDEX] [--port N] [--lang de|es|fr|pt] [--no-open]
+        [--index INDEX] [--home FOLDER] [--port N] [--lang de|es|fr|pt] [--no-open]
     python adapters/stdlib/browse/browse.py launcher --box DIR
 
 A page to ask your folder questions, read the passages that answer them
@@ -27,6 +27,13 @@ the run's steps); in the middle the section that is open; on the right,
 when you click a file and line, the passage that is there. With --index
 INDEX (scan's index, kept current by index-cache) a question is answered
 from the index, the kernel's own answer without reading every file again.
+With --home FOLDER, the folder your projects are under, the left panel
+lists them (the projects add-on) and a click opens another.
+
+The middle is a stream: each question is added under the last, your line
+plain and what the page says back marked as code's, one line made from
+what the boxes under it hold. No model is asked. A question asked before
+says when it was first asked. The stream is kept only while the page runs.
 
 Asking is the kernel's own `bite`, and approving is its own `seal`, so
 both are on the record exactly as if typed. With --run, a question is also
@@ -70,7 +77,7 @@ import subprocess
 import sys
 import types
 import webbrowser
-from datetime import date
+from datetime import date, datetime
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, quote, urlsplit
@@ -206,6 +213,18 @@ main { margin: 0 auto; width: 100%; max-width: 46rem; padding: 24px 16px 64px; }
 .where a:hover { text-decoration: underline; }
 .ln { font: 13px/1.5 var(--mono); white-space: pre-wrap; overflow-wrap: anywhere; }
 .ln.at { background: var(--accl); }
+.turn { margin: 14px 0; } .turn > summary { color: var(--fg); list-style: none; }
+.turn > summary::-webkit-details-marker { display: none; }
+.you { display: block; font-weight: 600; }
+.stamp { font: 12px/1.4 var(--mono); color: var(--muted); font-weight: 400; margin-right: 6px; }
+.say { display: block; border-left: 3px solid var(--accent); padding: 2px 0 2px 10px;
+       margin: 4px 0 0; }
+.by { font: 600 11px/1.3 var(--mono); text-transform: uppercase; letter-spacing: .09em;
+      color: var(--muted); margin-right: 6px; }
+.more > summary { color: var(--accent); }
+form.switch { margin: 0; } nav button.link { display: block; width: 100%; text-align: left;
+      background: none; color: var(--fg); font-weight: 400; padding: 5px 8px; }
+nav button.link:hover { background: var(--accl); }
 @media (max-width: 820px) {
   .shell, .shell.open { grid-template-columns: 1fr; }
   nav, aside { position: static; height: auto; border: 0; border-bottom: 1px solid var(--line); } }
@@ -329,6 +348,37 @@ def report_card(doc: dict, code: int = 0, shown: int = SHOWN, pills: str = "") -
     return f"<div class=card>{head}{rows_html(pairs[:shown])}{rest}</div>"
 
 
+#: small talk, answered by code with one of its own few words: nothing is
+#: asked of your folder, and nothing goes on the record
+SMALL = {"hi": "Hello.", "hello": "Hello.", "morning": "Morning.",
+         "good morning": "Morning.", "thanks": "Anytime.", "thank you": "Anytime.",
+         "ok": "Got it.", "okay": "Got it."}  # fmt: skip
+#: how many turns of a sitting the stream keeps for a box
+KEPT = 50
+
+
+def turn_html(at: str, you: str, say: str, again: str, boxes, opened: bool) -> str:
+    """One turn of the stream. Your line is plain, as you typed it. What
+    the page says back is marked as code's: its one line, then the boxes
+    the line rests on, the first in sight and the rest behind "more?". A
+    question asked before says when it was first asked. `boxes` is a list
+    of boxes, or one already put together; a turn with no line of yours is
+    the page's own opening."""
+    boxes = [boxes] if isinstance(boxes, str) else list(boxes)
+    yours = f"<span class=you><span class=stamp>{esc(at)}</span>{esc(you)}</span>" if you else ""  # fmt: skip
+    noted = ""
+    if again:
+        noted = f" <span class=stamp>asked before: first on {esc(again[:10])} at {esc(again[11:16])}</span>"  # fmt: skip
+    said = f"<span class=say><span class=by>willow · code</span>{esc(say)}{noted}</span>" if say else ""  # fmt: skip
+    body = boxes[0] if boxes else ""
+    if len(boxes) > 1:
+        body += f"<details class=more><summary>more?</summary>{''.join(boxes[1:])}</details>"  # fmt: skip
+    return (
+        f"<details class=turn name=turn{' open' * opened}>"
+        f"<summary>{yours}{said}</summary>{body}</details>"
+    )
+
+
 def ask_form(token: str, value: str = "") -> str:
     return (
         '<form class=ask method=post action="/ask">'
@@ -440,7 +490,10 @@ class Willow:
         stack: Path | None = None,
         run: Path | None = None,
         index: Path | None = None,
+        home: Path | None = None,
     ):
+        self.under = home  # the folder its sibling projects are under
+        self.sittings: dict[Path, list[dict]] = {}
         self.box = box
         self.stack = stack
         self.run = run
@@ -449,6 +502,34 @@ class Willow:
         self.words = sibling(f"words-{lang}", f"words_{lang}") if lang else None
         if lang and self.words is None:
             raise ValueError(f"the words-{lang} add-on isn't here")
+
+    @property
+    def turns(self) -> list[dict]:
+        """This sitting's turns for the box that is open: kept while the
+        page runs, and nowhere else."""
+        return self.sittings.setdefault(self.box.resolve(), [])
+
+    def projects(self) -> list[dict]:
+        """The projects under --home, as the projects add-on finds them:
+        each folder that holds a record, with its runs, newest first."""
+        pr, st = sibling("projects", "projects"), sibling("stack", "stack")
+        if self.under is None or pr is None or st is None:
+            return []
+        try:
+            return pr.find(self.under, st)
+        except OSError:
+            return []
+
+    def switch(self, name: str) -> bool:
+        """Open another project: its box, and its newest run. Only a project
+        the projects add-on finds under --home can be opened."""
+        for p in self.projects():
+            if p["name"] == name:
+                self.box = p["boxes"][0]
+                self.run = p["runs"][0]["folder"] if p["runs"] else None
+                self.stack = self.index = None
+                return True
+        return False
 
     def name(self) -> str:
         """What this project is called: its folder's name."""
@@ -494,6 +575,21 @@ class Willow:
                     elif s["flagged"]:
                         mark = " <span class='pill wait'>flagged</span>"
                     out.append(link(f"/run#s{s['n']}", f"{s['n']} {s['name']}", mark, True))  # fmt: skip
+        found = self.projects()
+        if len(found) > 1 or any(
+            p["boxes"][0].resolve() != self.box.resolve() for p in found
+        ):
+            out.append("<p class=proj>Projects</p>")
+            for p in found:
+                if p["boxes"][0].resolve() == self.box.resolve():
+                    out.append(f"<a class=on>{esc(p['name'])}</a>")
+                else:
+                    out.append(
+                        '<form class=switch method=post action="/switch">'
+                        f'<input type=hidden name=token value="{esc(self.token)}">'
+                        f'<input type=hidden name=project value="{esc(p["name"])}">'
+                        f"<button class=link>{esc(p['name'])}</button></form>"
+                    )
         return "".join(out)
 
     def page(self, title: str, body: str, head: str = "", here: str = "") -> str:
@@ -640,18 +736,44 @@ class Willow:
             body.append(f"<p class=muted>Not drawn here, since they print something other than a report: {esc(names)}. The stack add-on runs those.</p>")  # fmt: skip
         return self.page(title, "".join(body) or "<p class=muted>Your stack has no step that prints a report.</p>", here="/steps")  # fmt: skip
 
-    def home(self) -> str:
+    def opening(self) -> tuple[str, str]:
+        """(Code's one line, the boxes under it) for the top of the stream:
+        what waits, what is coming up, what went stale, by the digest add-on."""
         dg = sibling("digest", "digest")
         if dg is None:
-            summary = "<p class=muted>The digest add-on isn't here, so there's no summary.</p>"
-        else:
-            doc = dg.digest(self.box, date.today())
-            summary = (
-                self.summary(doc)
-                if "refused" not in doc
-                else (f"<p>Your record doesn't check out: {esc(doc['refused'])}</p>")
-            )
-        return self.page("Your folder", ask_form(self.token) + summary, here="/")
+            return "", "<p class=muted>The digest add-on isn't here, so there's no summary.</p>"  # fmt: skip
+        doc = dg.digest(self.box, date.today())
+        if "refused" in doc:
+            return "", f"<p>Your record doesn't check out: {esc(doc['refused'])}</p>"
+        n, c, s = (len(doc[k]["items"]) for k in ("waiting", "coming", "stale"))
+        say = [f"{n} suggestion{'s wait' if n != 1 else ' waits'} for you" if n
+               else "Nothing is waiting for you"]  # fmt: skip
+        if c:
+            say.append(f"{c} coming up in the next two weeks")
+        if s:
+            say.append(f"{s} approved answer{'s' * (s != 1)} went stale")
+        return "; ".join(say) + ".", self.summary(doc)
+
+    def home(self) -> str:
+        return self.stream()
+
+    def stream(self) -> str:
+        """The middle panel's own section: one column, in the order things
+        were said. A line of yours is plain. Everything this page says is
+        marked as code's, with the boxes it rests on under it; the newest is
+        open and the rest are folded to their one line."""
+        turns = self.turns
+        say, boxes = self.opening()
+        # the one that is open is the newest with boxes under it: small talk
+        # doesn't fold the answer you were reading
+        shown = next((t for t in reversed(turns) if t["boxes"]), None)
+        out = [turn_html("", "", say, "", boxes, shown is None)]
+        out += [
+            turn_html(t["at"], t["you"], t["say"], t["again"], t["boxes"], t is shown)
+            for t in turns
+        ]
+        title = "Ask" if turns else "Your folder"
+        return self.page(title, "".join(out) + ask_form(self.token), here="/")
 
     def summary(self, doc: dict) -> str:
         out = []
@@ -682,17 +804,17 @@ class Willow:
             ]
         return "".join(out)
 
-    def from_run(self, question: str) -> tuple[str, bool]:
+    def from_run(self, question: str) -> tuple[str, bool, str]:
         """(What the kept run already holds for a question, as the look add-on
         finds it: the lines of the steps whose job its kind is; whether a
-        step answered.) The kernel's own answer is the page's, below, so
-        look's note that it left the ask is dropped; a step it couldn't
-        answer from is still said."""
+        step answered; look's one line, to say.) The kernel's own answer is
+        the page's, below, so look's note that it left the ask is dropped; a
+        step it couldn't answer from is still said."""
         if self.run is None:
-            return "", False
+            return "", False, ""
         _, doc = report_of("look", "look", question, "--run", str(self.run))
         if doc is None:
-            return "", False
+            return "", False, ""
         groups = []
         for g in doc["groups"]:
             rows = [
@@ -703,75 +825,94 @@ class Willow:
             if rows:
                 groups.append({**g, "rows": rows})
         if not groups:
-            return "", False
+            return "", False, ""
         left = any(g["name"] == "left" for g in groups)
         doc = {**doc, "state": "populated", "groups": groups}
         card = report_card(doc, kernel.ESCALATE if left else kernel.ALIVE)
         answered = any(g["name"] != "left" for g in groups)
-        return "<h2>What your stack already found</h2>" + card, answered
+        # look's line without the question said back, or the cue that sent it
+        line = re.sub(r' \(by "[^"]*"\)', "", doc["said"].rpartition('": ')[2])
+        return "<h2>What your stack already found</h2>" + card, answered, line
 
     def ask(self, question: str) -> str:
-        question = question.strip()
+        """Your line, then code's answer under it, added to the stream."""
+        turns = self.turns
+        turns.append(self.answer(question.strip()))
+        del turns[:-KEPT]
+        return self.stream()
+
+    def answer(self, question: str) -> dict:
+        """One turn: when, your words as you typed them, code's one line,
+        when the same words were first asked (if they were), and the boxes
+        the line rests on. No model is asked; the line is made here, from
+        what the boxes hold."""
+        turn = {"at": datetime.now().strftime("%H:%M"), "you": question,
+                "say": "", "again": "", "boxes": []}  # fmt: skip
+        small = SMALL.get(" ".join(question.lower().split()).strip(" .!?"))
+        if small:  # small talk: code's own word, nothing asked, nothing on the record
+            return {**turn, "say": small}
         asked = question
         if self.words is not None:
             asked = " ".join(self.words.kept(question))
         if not kernel.words(asked):
-            return self.page("Ask", ask_form(self.token, question) +
-                        "<p>Every word there is a common one. Name the thing you mean.</p>")  # fmt: skip
-        body = ask_form(self.token, question)
+            return {**turn, "say": "Every word there is a common one. Name the thing you mean."}  # fmt: skip
+        key = kernel.bite_key(asked)
+        before = [r["ts"] for r in kernel.read(self.box / "record.jsonl")[0]
+                  if r["kind"] == "bite" and r.get("bite_key") == key]  # fmt: skip
+        turn["again"] = before[0] if before else ""
         doc = indexed(self.box, asked, self.index) if self.index else None
         if doc is None:  # no index, or not current: the kernel reads the folder
             code, said, err = call("bite", "--box", str(self.box), asked)
             if code == kernel.REFUSED:
-                return self.page(
-                    "Ask",
-                    body + f"<p>Couldn't ask: {esc(err.strip() or said.strip())}</p>",
-                )
+                return {**turn, "again": "", "say": f"Couldn't ask: {err.strip() or said.strip()}"}  # fmt: skip
             doc = json.loads(said)
-        found, answered = self.from_run(question)
+        found, answered, line = self.from_run(question)
+        line = line[:1].upper() + line[1:] + "." if line else ""
+        boxes = turn["boxes"]
+        if found:
+            boxes.append(found)
         if doc["state"] == "sealed":
-            body += (
-                "<h2>You approved this answer</h2><div class=card>"
-                f"{rich(doc['answer'])}<p class=where>{esc(doc['by'])}</p></div>"
-            ) + found
+            boxes.insert(0, "<h2>You approved this answer</h2><div class=card>"
+                         f"{rich(doc['answer'])}<p class=where>{esc(doc['by'])}</p></div>")  # fmt: skip
+            turn["say"] = "You approved an answer for this."
         elif doc["state"] == "populated":
-            body += (
-                found
-                + "<h2>Your files say</h2>"
-                + "".join(
-                    passage(
-                        s["where"],
-                        s["text"],
-                        "only asks your question back" if s["echo"] else "",
-                    )
-                    for s in doc["served"]
-                )
+            served = [
+                passage(s["where"], s["text"], "only asks your question back" if s["echo"] else "")
+                for s in doc["served"]
+            ]  # fmt: skip
+            served[0] = "<h2>Your files say</h2>" + served[0]
+            boxes += served
+            n = sum(not s["echo"] for s in doc["served"])
+            first = next(s["where"] for s in doc["served"] if not s["echo"])
+            turn["say"] = (
+                f"{line} Your files hold {n} passage{'s' * (n != 1)} for it too."
+                if answered
+                else f"Your files hold {n} passage{'s' * (n != 1)} for that; the first is at {first}."
             )
         else:
             # a question a step answered is no miss: it is a sum over many
             # lines, which no one passage says
-            body += found + (
-                "<h2>No one passage in your folder says that</h2>"
-                if answered
-                else "<h2>Nothing in your folder holds that</h2>"
-            )
-            body += "".join(passage(s["where"], s["text"], "only asks your question back")
-                            for s in doc["served"])  # fmt: skip
-            for h in doc.get("look", []):
-                tips = " · ".join(
-                    esc(h[k]) for k in ("why", "where", "next") if h.get(k)
-                )
-                body += f"<p class=muted>{tips}</p>"
+            head = ("<h2>No one passage in your folder says that</h2>" if answered
+                    else "<h2>Nothing in your folder holds that</h2>")  # fmt: skip
+            echoes = "".join(passage(s["where"], s["text"], "only asks your question back")
+                             for s in doc["served"])  # fmt: skip
+            tips = "".join(
+                "<p class=muted>" + " · ".join(esc(h[k]) for k in ("why", "where", "next") if h.get(k)) + "</p>"
+                for h in doc.get("look", [])
+            )  # fmt: skip
+            boxes.append(head + echoes + tips)
             # why it found nothing, in the why-not add-on's words, if it's here
             code, why = report_of("why-not", "why_not", "--box", str(self.box), asked)
             if why is not None and why["groups"]:
                 card = report_card(why, code)
-                body += (
+                boxes.append(
                     f"<details><summary>Why no passage holds it</summary>{card}</details>"
                     if answered
                     else card
                 )
-        return self.page("Ask", body, here="/")
+            turn["say"] = (f"{line} No one passage in your folder says it." if answered
+                           else "Nothing in your folder holds that.")  # fmt: skip
+        return turn
 
     def waiting(self) -> str:
         subjects, breaks = self.owed()
@@ -982,6 +1123,10 @@ class Handler(BaseHTTPRequestHandler):
         url = urlsplit(self.path)
         if url.path == "/ask":
             return self.send(200, self.willow.ask(form.get("q", [""])[0]))
+        if url.path == "/switch":
+            if not self.willow.switch(form.get("project", [""])[0]):
+                return self.send(404, self.willow.page("Not here", "<p>There's no project by that name.</p>"))  # fmt: skip
+            return self.send(303, "", {"Location": "/"})
         if url.path == "/approve":
             return self.send(200, self.willow.approve(form.get("subject", [""])[0]))
         return self.send(
@@ -1057,7 +1202,7 @@ def main(argv: list[str]) -> int:
         return kernel.ALIVE
     opts, flags, rest, it = {}, set(), [], iter(argv)
     for a in it:
-        if a in ("--box", "--port", "--lang", "--stack", "--run", "--index"):
+        if a in ("--box", "--port", "--lang", "--stack", "--run", "--index", "--home"):
             opts[a] = next(it, "")
         elif a == "--no-open":
             flags.add(a)
@@ -1068,7 +1213,8 @@ def main(argv: list[str]) -> int:
             or opts.get("--lang", "de") not in LANGS
             or ("--stack" in opts and not opts["--stack"])
             or ("--run" in opts and not opts["--run"])
-            or ("--index" in opts and not opts["--index"])):  # fmt: skip
+            or ("--index" in opts and not opts["--index"])
+            or ("--home" in opts and not opts["--home"])):  # fmt: skip
         print(__doc__.split("\n\n")[1], file=sys.stderr)
         return kernel.REFUSED
     box = Path(opts["--box"])
@@ -1088,7 +1234,11 @@ def main(argv: list[str]) -> int:
         if index is not None and not index.is_dir():
             print(f"refused: {index} isn't an index that's there (scan's index, kept by index-cache)", file=sys.stderr)  # fmt: skip
             return kernel.REFUSED
-        willow = Willow(box, opts.get("--lang"), stack=stack, run=run, index=index)
+        home = Path(opts["--home"]) if "--home" in opts else None
+        if home is not None and not home.is_dir():
+            print(f"refused: {home} isn't a folder that's there", file=sys.stderr)
+            return kernel.REFUSED
+        willow = Willow(box, opts.get("--lang"), stack=stack, run=run, index=index, home=home)  # fmt: skip
         server = serve(willow, int(port))
     except (OSError, ValueError) as e:
         print(f"refused: {e}", file=sys.stderr)

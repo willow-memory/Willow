@@ -8,7 +8,7 @@ writes: record
 network: loopback
 role: ways
 tags: everyday
-looks-for: digest, index-cache, look, scan, stack, why-not, words-de, words-es, words-fr, words-pt
+looks-for: digest, index-cache, look, projects, scan, stack, why-not, words-de, words-es, words-fr, words-pt
 -->
 # browse
 
@@ -18,7 +18,7 @@ you, and approve one with a click. The front page shows what's waiting,
 what went stale and what's coming up. Nothing to install, and no commands
 to type once it's open.
 
-    python adapters/stdlib/browse/browse.py --box DIR [--stack FILE] [--run FOLDER] [--index INDEX]
+    python adapters/stdlib/browse/browse.py --box DIR [--stack FILE] [--run FOLDER] [--index INDEX] [--home FOLDER]
 
 It prints a link and opens it. Ctrl-C stops it. `--lang de` (or `es`,
 `fr`, `pt`) sends each question through that language's words add-on first.
@@ -115,12 +115,41 @@ Nothing is run again; the run's kept files are only read.
 passage holds, the nearest passages and what they lacked, a close spelling.
 Without the look or the why-not add-on, the page is as it was.
 
+**The middle is a stream.** Asking doesn't replace the page: each
+question and its answer is added under the last, in the order they were
+said, with the ask box at the bottom.
+
+- **Your line is plain,** as you typed it, with the time.
+- **What the page says back is marked `willow · code`.** It is one line,
+  made by code from what the boxes under it hold: "Your files hold 3
+  passages for that; the first is at notes/recipes.txt:12." No model is
+  asked, and nothing is said that a box doesn't hold.
+- **The boxes are under the line:** the first in sight, the rest behind
+  `more?`.
+- **The newest answer is open; the ones before fold to their line.** Click
+  a line to open it again.
+- **A question asked before says so:** "asked before: first on 2026-11-10
+  at 22:58", read from your record by the question's key, and the answer
+  is shown again. The record keeps that key and never your words.
+- **Small talk is answered by code** with one of a few fixed words
+  ("thanks", "Anytime."). Nothing is asked of your folder and nothing goes
+  on your record.
+- **The stream opens with what waits and what is coming up,** the front
+  page's summary, folded once you've asked something.
+
+The stream lasts as long as the page runs. It is kept nowhere else: stop
+browse and it is gone, and your record still holds every ask, by its key.
+
 **Three panels.** Every page is laid out the same way:
 
 - **Left, where you are:** the project's name, then each section there is
   to open: Ask, Waiting for you (with how many wait), What your stack
   found, The run. Under the run, each of its steps, marked when it was
-  flagged or is still running; a step's link goes to its card.
+  flagged or is still running; a step's link goes to its card. With
+  `--home FOLDER`, the folder your projects are under, the other projects
+  the [projects](../projects/) add-on finds there are listed too. Click
+  one and the page opens it: its box, its newest run, and its own stream.
+  Only a project found under that folder can be opened.
 - **Middle, the section that is open.**
 - **Right, what is at a place.** A file and line anywhere on a page
   (`notes/iou.txt:3`) is a link. Click it and the right panel shows the
