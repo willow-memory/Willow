@@ -410,6 +410,10 @@ What it found:
   from a key the ward has, names her guardian, and that is who is
   called. It is the person her own card names, and it is not because
   her card says so.
+- **How strict, settled 2026-11-12 by the maintainer: the middle is
+  fine.** The rule as played sits between telling whoever is at the
+  bedside and telling no one a card names: cautions at once, grants
+  when someone the ward knows has spoken for the key.
 - **The cost falls on Jun, for a night.** Under the rule the person
   Marcus chose is not told until morning. The adults' scene had the
   ward tell Jun at once, as a ward might; this one is stricter, and the
