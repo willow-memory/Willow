@@ -327,11 +327,14 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
   Google Takeout's My Activity and YouTube history, JSON or HTML, as dated lines. \
   *new* `no-install` `offline` `html` `json` · near: matrix, chats, pocket
 
-### Code and data, a to j
+### Code and data, a to g
 
 - <a id="agent-transcript"></a>[**agent-transcript**](adapters/stdlib/agent-transcript/) \
   Claude Code, Codex, Gemini CLI, Cursor and Copilot session files as plain text, each turn numbered, so you can ask what an agent was told. \
   *new* `no-install` `offline` `gemini` `claude` · near: instruction-files, session-cost, hooks-elsewhere
+- <a id="ai-code-tracking"></a>[**ai-code-tracking**](adapters/stdlib/ai-code-tracking/) \
+  Which code Cursor's AI wrote, from its tracking database: each scored commit and conversation, and lines by tab, composer and human. \
+  *new* `no-install` `offline` `score` · near: musicxml, sarif, text
 - <a id="ci-logs"></a>[**ci-logs**](adapters/stdlib/ci-logs/) \
   CI run logs you downloaded (GitHub Actions, GitLab CI, Forgejo Actions): each failing step as a passage. \
   *new* `no-install` `offline` `log` `fails` · near: ci-why, logs, ci-cache
@@ -347,6 +350,9 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - <a id="csv-rows"></a>[**csv-rows**](adapters/stdlib/csv-rows/) \
   CSV and TSV tables as one passage per row, the header row kept once as the first. \
   *new* `no-install` `offline` `csv` `log` · near: json-paths, google-keep, irc
+- <a id="cursor-chats"></a>[**cursor-chats**](adapters/stdlib/cursor-chats/) \
+  Cursor agent chats, each kept in its own SQLite database, as plain text with each turn numbered, so you can ask what the agent was told. \
+  *new* `no-install` `offline` `told` `cursor` · near: agent-transcript, notion, rtf
 - <a id="dotfiles"></a>[**dotfiles**](adapters/stdlib/dotfiles/) \
   Your dotfiles as passages: which file sets what, for 'where did I set my editor?' \
   *new* `no-install` `offline` · near: org, json-paths, latex
@@ -356,12 +362,12 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - <a id="git-history"></a>[**git-history**](adapters/stdlib/git-history/) \
   Commit messages and diffs as a dated pile: "when did we change the retry limit?" \
   *new* `no-install` `offline` `history` `message` · near: clauses, discord, linkedin
-- <a id="jira"></a>[**jira**](adapters/stdlib/jira/) \
-  Jira's issue export, CSV or XML: each issue, comment and status change as dated passages. \
-  *new* `no-install` `offline` `comments` `xml` · near: mediawiki, linkedin, day-one
 
 #### Code and data, j to s
 
+- <a id="jira"></a>[**jira**](adapters/stdlib/jira/) \
+  Jira's issue export, CSV or XML: each issue, comment and status change as dated passages. \
+  *new* `no-install` `offline` `comments` `xml` · near: mediawiki, linkedin, day-one
 - <a id="json-paths"></a>[**json-paths**](adapters/stdlib/json-paths/) \
   Any JSON or JSON Lines file as plain lines, one passage per record, each value beside its key. \
   *new* `no-install` `offline` `value` `key` · near: org, csv-rows, rst
@@ -634,6 +640,9 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - <a id="misquote"></a>[**misquote**](adapters/stdlib/misquote/) \
   A quote that is almost in your files: the closest passage, and the words it adds, drops or changes, so a misquote shows as one. \
   *new* `no-install` `offline` `quote` `drops` · near: quotes, stale, quote-check
+- <a id="pieces"></a>[**pieces**](adapters/stdlib/pieces/) \
+  Your folder's passages a folder at a time, the same as the kernel reads them, so a big folder is never held in memory all at once. \
+  *new* `no-install` `offline` · near: pile-store, surprise, scan
 - <a id="pile-gold"></a>[**pile-gold**](adapters/stdlib/pile-gold/) \
   Your approved answers used as a test: each question asked again, scored by how often search puts its passage in the top five. \
   Uses pile-rank, scan. *box* `no-install` `offline` `search` `pile` · near: again, pile-store, pile-sweep
@@ -985,6 +994,9 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 
 ### Tools you run yourself
 
+- <a id="boxes-here"></a>[**boxes-here**](adapters/stdlib/boxes-here/) \
+  The boxes already in a folder and what waits on each, so one that is there is opened, not made twice; and a list of the ones you choose. \
+  Uses projects. *new* `no-install` `offline` `open` · near: thesis, timeline, box-health
 - <a id="flashcards"></a>[**flashcards**](adapters/stdlib/flashcards/) \
   Approved question-and-answer pairs become cards, scheduled by spaced repetition. \
   *box* `no-install` `offline` · near: jeles, ask-later, hook-compact
@@ -1440,7 +1452,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - <a id="say"></a>[**say**](adapters/stdlib/say/) \
   One sentence a model on this machine says about your boxes, struck and left to code when it adds a word or number they lack. \
   Uses say-check. Reaches this machine only. From: code of [willow-memory/willows-grove](https://github.com/willow-memory/willows-grove), Apache-2.0. *new*
-  `no-install` `this-machine` `sentence` `left` · near: on-this-day, hooks-elsewhere, clauses
+  `no-install` `this-machine` `sentence` · near: on-this-day, hooks-elsewhere, clauses
 - <a id="weights-card"></a>[**weights-card**](adapters/stdlib/weights-card/) \
   A model card filled in from the weights file's own GGUF or safetensors header: architecture, quantization, context length, licence. \
   *new* `no-install` `offline` `weights` `quantization` · near: model-shelf, weights-pin, model-card

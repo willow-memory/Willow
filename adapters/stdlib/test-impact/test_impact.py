@@ -3,6 +3,8 @@ rules, said in ci.py's gate names, and never narrower than it can place."""
 
 from __future__ import annotations
 
+import re
+
 import importlib.util
 import subprocess
 import sys
@@ -184,8 +186,23 @@ def test_the_steps_are_ordered_cheapest_first(plan_of):
     order = [g for g in gate_names(got)]
     # tests:ui: ui/canvas.py names stack.py, the runner it runs, and a file
     # named so is the stack demo's, which runs changed: by name, never less
-    assert order == ["lint:check", "lint:format", "lint:py39", "tests:adapters", "tests:adapters",
-                     "tests:adapters", "tests:docs", "tests:ui", "demo:stack", "mutants:changed"]  # fmt: skip
+    # how many parts the reached test files are cut into is test-times.json's
+    # to say (times.py refreshes it), so it is read from the plan's own "part K
+    # of N" lines and held there: every part, once, in order
+    (n,) = {int(m) for m in re.findall(r"part \d+ of (\d+) of the", got)}
+    assert [int(k) for k in re.findall(r"part (\d+) of \d+ of the", got)] == list(
+        range(1, n + 1)
+    )
+    assert order == (
+        [
+            "lint:check",
+            "lint:format",
+            "lint:py39",
+            "tests:adapters",
+        ]  # the contract's share
+        + ["tests:adapters"] * n
+        + ["tests:docs", "tests:ui", "demo:stack", "mutants:changed"]
+    )
     narrow, own = (
         "WILLOW_ONLY=changed pytest",
         "adapters/stdlib/changed/test_changed.py",

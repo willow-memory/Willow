@@ -3,12 +3,12 @@ section: Ways to use it
 line: Your folder in your web browser: ask, read each answer at its file and line, and approve suggestions with a click, from this machine only.
 source: new
 added: 2026-10-24
-version: 0.5.0
+version: 0.6.0
 writes: record
 network: loopback
 role: ways
 tags: everyday
-looks-for: digest, fair-merge, index-cache, look, projects, say, scan, stack, why-not, words-de, words-es, words-fr, words-pt
+looks-for: boxes-here, digest, fair-merge, index-cache, look, pieces, projects, say, scan, stack, why-not, words-de, words-es, words-fr, words-pt
 -->
 # browse
 
@@ -18,7 +18,7 @@ you, and approve one with a click. The front page shows what's waiting,
 what went stale and what's coming up. Nothing to install, and no commands
 to type once it's open.
 
-    python adapters/stdlib/browse/browse.py --box DIR [--stack FILE] [--run FOLDER] [--index INDEX] [--beside INDEX ...] [--home FOLDER] [--say MODEL]
+    python adapters/stdlib/browse/browse.py --box DIR [--stack FILE] [--run FOLDER] [--index INDEX] [--beside INDEX ...] [--home FOLDER] [--boxes FILE] [--say MODEL]
 
 It prints a link and opens it. Ctrl-C stops it. `--lang de` (or `es`,
 `fr`, `pt`) sends each question through that language's words add-on first.
@@ -172,6 +172,14 @@ model that can't be asked is said in a word, and nothing else changes.
   the [projects](../projects/) add-on finds there are listed too. Click
   one and the page opens it: its box, its newest run, and its own stream.
   Only a project found under that folder can be opened.
+  With `--boxes FILE`, a list of boxes kept somewhere else on this machine,
+  those are listed under "Elsewhere", each with how many suggestions wait
+  on it, and a click opens one where it is. "Find boxes in a folder" looks
+  through a folder you name for boxes already there (the
+  [boxes-here](../boxes-here/) add-on), and the ones you tick go on the
+  list. Nothing is copied or moved, a box that is there is never made
+  again, and the list is written by boxes-here, not by this page. Only a
+  box on the list can be opened this way.
 - **Middle, the section that is open.**
 - **Right, what is at a place.** A file and line anywhere on a page
   (`notes/iou.txt:3`) is a link. Click it and the right panel shows the
