@@ -880,6 +880,9 @@ two agents were this session's own, given the brief as their whole
 prompt but not sealed off from the repository; each made one call, to
 hand back its answer.
 
+What could be tried next, and which of it may already be answered by
+work on the maintainer's own machine, is listed in [NEXT.md](NEXT.md).
+
 ## The order
 
 1. Settle the list above. Kaggle's pages are read. The maintainer has

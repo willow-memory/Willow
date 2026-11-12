@@ -2445,6 +2445,7 @@ willow/
 │   ├── shared-runs/          a study, frozen and not yet run: simulations on machines nobody chose, sharing one memory, run by a script
 │   │   ├── chain.py      starts the project, makes each link's handoff, and applies or refuses the step a link offers
 │   │   ├── KEPT.json     what the trials' scripts and agents printed, listed as kept
+│   │   ├── NEXT.md           What could be tried next
 │   │   ├── rules.py          the next step of a stack chosen by rule from what its last run said, or that no rule fits
 │   │   ├── same.py       two kept runs of one stack, step by step: asked the same way, printed the same thing
 │   │   ├── study/            the study's sweep and scripts, frozen, and the dry run that came before
