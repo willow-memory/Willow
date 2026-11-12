@@ -3,7 +3,7 @@ section: Reading more kinds of files
 line: Which code Cursor's AI wrote, from its tracking database: each scored commit and conversation, and lines by tab, composer and human.
 source: new
 added: 2026-11-12
-version: 0.1.1
+version: 0.1.0
 writes: to
 network: none
 role: reads

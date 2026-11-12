@@ -3,7 +3,7 @@ section: Reading more kinds of files
 line: Cursor agent chats, each kept in its own SQLite database, as plain text with each turn numbered, so you can ask what the agent was told.
 source: new
 added: 2026-11-11
-version: 0.2.0
+version: 0.1.0
 writes: to
 network: none
 role: reads
