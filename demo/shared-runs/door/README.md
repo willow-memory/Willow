@@ -75,6 +75,7 @@ the arithmetic.
 | 25, 10 enrolled | 52.8% | 20.4% |
 | 25, none enrolled | 41.4% | 31.8% |
 | 50, none enrolled: no signer is ever seen twice | 37.5% | 35.7% |
+| 5, none enrolled, the same five held open for all ten rounds | 54.6% | 18.6% |
 
 - **A stranger costs one round of its own work.** Everything it keeps
   the first time is stepped again; after that it has earned its place.
@@ -83,10 +84,26 @@ the arithmetic.
   states again costs what the stranger stepped, not what the jobs would
   cost alone: the beginnings they share are still shared. Trusting no one
   halves the saving. It does not end it.
-- **A machine that never comes back never earns anything.** On Kaggle
-  every notebook is a new machine. If each is a new signer, every round
-  is a stranger's. So the key has to belong to something that lasts
-  longer than a run: the account, or the person, enrolled once.
+- **A machine that never comes back never earns anything**, and one
+  that stays earns it once. If every round is run by a signer never
+  seen before, every round is a stranger's: 37.5%. If the same five
+  machines stay for all ten rounds, they are strangers for the first
+  round only: 54.6%, most of the way back to 60.9%.
+- **Kaggle can hold a machine open**, as the maintainer points out: its
+  own pages give a session twelve hours. The first study started a new
+  notebook for every round, and that was this study's habit, not
+  Kaggle's rule. A session held open is one machine across rounds, and
+  its key can be made there and never leave it, which is what the
+  phone-keys proposal asks of a key. Since a place needs only its own
+  earlier work, a session held open needs no one else's output to go
+  from one round to the next.
+- **What holding open does not give.** A run's output can be another
+  notebook's input only when the run is done, as far as Kaggle's pages
+  say. So a door that looks after every round cannot look into a
+  session that is still open, unless what it keeps gets out some other
+  way. Either the rounds end and start again, or the checking waits for
+  the end, or there is a way out mid-run that those pages do not name.
+  That is for a run to find, not for counting.
 
 ### How much is checked: this is where it falls
 

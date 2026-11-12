@@ -261,7 +261,7 @@ def tables(plan0: dict, stops0: dict[str, int], seeds: int) -> dict:
     out: dict = {"size": {}, "strangers": {}, "checked": {}}
     for scale, rounds in ((1, 2), (10, 2), (10, 10), (100, 10)):
         out["size"][f"{scale} times, {rounds} rounds"] = few(run(scale, rounds))
-    for signers, enrolled in ((25, 25), (25, 20), (25, 10), (25, 0), (50, 0)):
+    for signers, enrolled in ((25, 25), (25, 20), (25, 10), (25, 0), (50, 0), (5, 0)):
         out["strangers"][f"{enrolled} of {signers} enrolled"] = few(run(10, 10, signers=signers, enrolled=enrolled))  # fmt: skip
     for name, c, d in LEVELS:
         told = [

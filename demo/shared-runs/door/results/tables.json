@@ -96,6 +96,16 @@
    "saving_after_the_door": 37.5,
    "states_kept": 34730,
    "held_rounds": 50
+  },
+  "0 of 5 enrolled": {
+   "jobs": 2200,
+   "alone": 12565180,
+   "stepped": 3364870,
+   "saving": 73.2,
+   "checking_share": 18.6,
+   "saving_after_the_door": 54.6,
+   "states_kept": 34730,
+   "held_rounds": 5
   }
  },
  "checked": {
