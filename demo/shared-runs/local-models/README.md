@@ -36,14 +36,14 @@ For each model that ollama lists:
 
 1. Give it the input file's text as the whole prompt, once.
 2. Save what it sends back, word for word, as
-   `answers/NAME/answers.txt` in this folder, NAME being the model's name
+   `answers/<NAME>/answers.txt` in this folder, NAME being the model's name
    with its colon made a dash.
-3. Beside it, as `answers/NAME/model.txt`, the line `ollama list` gives
+3. Beside it, as `answers/<NAME>/model.txt`, the line `ollama list` gives
    for it: its name, its id and its size.
 
 Then, for each:
 
-    python demo/shared-runs/study/account.py score --plan demo/shared-runs/study/plan.json --runs demo/shared-runs/study/runs demo/shared-runs/local-models/answers/NAME/answers.txt
+    python demo/shared-runs/study/account.py score --plan demo/shared-runs/study/plan.json --runs demo/shared-runs/study/runs demo/shared-runs/local-models/answers/<NAME>/answers.txt
 
 What comes back to the branch is the `answers` folder. The counting and
 the writing up are done after, from those files.

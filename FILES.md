@@ -2479,7 +2479,59 @@ willow/
 │   │   │   ├── lies.py       a memory that has been lied to, and whether the checks find it
 │   │   │   ├── test_lies.py
 │   │   │   └── README.md     A memory that has been lied to: a study, drafted
+```
+
+#### demo/shared-runs/, from local-models/
+
+```
 │   │   ├── local-models/     the first study's brief given to models a laptop runs: asked, not yet run
+│   │   │   ├── answers/           each local model's answer to the two agents' input, one folder a model
+│   │   │   │   ├── gemma3-4b/
+│   │   │   │   │   ├── answers.txt   what it sent back, word for word
+│   │   │   │   │   └── model.txt     its line in `ollama list`: name, id, size
+│   │   │   │   ├── gemma4-e2b/
+│   │   │   │   │   ├── answers.txt   what it sent back, word for word
+│   │   │   │   │   ├── model.txt     its line in `ollama list`: name, id, size
+│   │   │   │   │   └── thinking.txt  what it thought before answering, kept apart
+│   │   │   │   ├── llama3.1-8b/
+│   │   │   │   │   ├── answers.txt   what it sent back, word for word
+│   │   │   │   │   └── model.txt     its line in `ollama list`: name, id, size
+│   │   │   │   ├── llama3.2-1b/
+│   │   │   │   │   ├── answers.txt   what it sent back, word for word
+│   │   │   │   │   └── model.txt     its line in `ollama list`: name, id, size
+│   │   │   │   ├── llama3.2-3b/
+│   │   │   │   │   ├── answers.txt   what it sent back, word for word
+│   │   │   │   │   └── model.txt     its line in `ollama list`: name, id, size
+│   │   │   │   ├── mistral-7b/
+│   │   │   │   │   ├── answers.txt   what it sent back, word for word
+│   │   │   │   │   └── model.txt     its line in `ollama list`: name, id, size
+│   │   │   │   ├── nomic-embed-text-latest/
+│   │   │   │   │   ├── model.txt     its line in `ollama list`: name, id, size
+│   │   │   │   │   └── refused.txt   why it gave no answer: an embedding model can't generate
+│   │   │   │   ├── phi4-mini-latest/
+│   │   │   │   │   ├── answers.txt   what it sent back, word for word
+│   │   │   │   │   └── model.txt     its line in `ollama list`: name, id, size
+│   │   │   │   ├── qwen2.5-0.5b/
+│   │   │   │   │   ├── answers.txt   what it sent back, word for word
+│   │   │   │   │   └── model.txt     its line in `ollama list`: name, id, size
+│   │   │   │   ├── qwen2.5vl-7b/
+│   │   │   │   │   ├── answers.txt   what it sent back, word for word
+│   │   │   │   │   └── model.txt     its line in `ollama list`: name, id, size
+│   │   │   │   ├── qwen3-4b/
+│   │   │   │   │   ├── answers.txt   what it sent back, word for word
+│   │   │   │   │   ├── model.txt     its line in `ollama list`: name, id, size
+│   │   │   │   │   └── thinking.txt  what it thought before answering, kept apart
+│   │   │   │   ├── qwen3-4b-32k-latest/
+│   │   │   │   │   ├── answers.txt   what it sent back, word for word
+│   │   │   │   │   ├── model.txt     its line in `ollama list`: name, id, size
+│   │   │   │   │   └── thinking.txt  what it thought before answering, kept apart
+│   │   │   │   ├── qwen3.5-latest/
+│   │   │   │   │   ├── answers.txt   what it sent back, word for word
+│   │   │   │   │   ├── model.txt     its line in `ollama list`: name, id, size
+│   │   │   │   │   └── thinking.txt  what it thought before answering, kept apart
+│   │   │   │   └── willow-lane4-3b-latest/
+│   │   │   │       ├── answers.txt   what it sent back, word for word
+│   │   │   │       └── model.txt     its line in `ollama list`: name, id, size
 │   │   │   └── README.md     The same brief, given to models that run on a laptop
 │   │   ├── NEXT.md           What could be tried next
 │   │   ├── rules.py          the next step of a stack chosen by rule from what its last run said, or that no rule fits
