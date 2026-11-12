@@ -1,1 +1,1 @@
-demo/homestead-health: a box over the six homestead-affairs repositories, each at one commit, to ask about health records a household holds; its recipe, twelve first questions, and what they found.
+demo/shared-runs: the study run and judged. Fifteen machine runs on three kinds of processor and two agents; R1, R3, R4, R6, R8 and R9 passed, R2 and R5 were measured, and R7 failed on a fault in the frozen scorer. A second freeze, made after the answers were read and said so, mends it; judged again, R7 passes and nothing else moves. Both judgings stay on the record.
