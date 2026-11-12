@@ -2450,6 +2450,11 @@ willow/
 │   │   ├── chain.py      starts the project, makes each link's handoff, and applies or refuses the step a link offers
 │   │   ├── door/             the shared memory with a door on it, counted at larger sizes: not run, nothing frozen
 │   │   │   ├── door.py       the shared memory with a door on it, counted and not run, to see
+│   │   │   ├── kaggle/           the door's first run on Kaggle: the first study's sweep, cut, carried on and sealed
+│   │   │   │   ├── door_notebooks.py the door's machine as Kaggle notebooks, for a plan: cut and carried on, sealed, each given only its own place's earlier work
+│   │   │   │   ├── held.py   what came back from Kaggle held to the first study's kept runs, rule by rule
+│   │   │   │   ├── test_kaggle.py    the notebooks run in order and pass; another kind is begun over and said; what is wrong fails
+│   │   │   │   └── README.md The door on Kaggle: the first study's sweep, cut, carried on and sealed
 │   │   │   ├── machine.py    one machine of a run at size: checks before it starts, a chained log, going on after a cut, a budget, a door, a seal
 │   │   │   ├── probe.py      a small notebook asking Kaggle three things its pages don't answer; it steps nothing
 │   │   │   ├── results/
@@ -2487,6 +2492,11 @@ willow/
 │   │   │   ├── test_every_kind_frozen.py the frozen files are the bytes they were, and only the named machines are added
 │   │   │   └── README.md     Every job on every kind: an addition to the first study
 │   │   ├── KEPT.json     what the trials' scripts and agents printed, listed as kept
+```
+
+#### demo/shared-runs/, from lies/
+
+```
 │   │   ├── lies/             a study drafted and dry-run, not frozen: a memory that has been lied to
 │   │   │   ├── dry/
 │   │   │   │   ├── trials.txt        every trial of the dry run, listed before any was run
@@ -2498,11 +2508,6 @@ willow/
 │   │   │   ├── lies.py       a memory that has been lied to, and whether the checks find it
 │   │   │   ├── test_lies.py
 │   │   │   └── README.md     A memory that has been lied to: a study, drafted
-```
-
-#### demo/shared-runs/, from local-models/
-
-```
 │   │   ├── local-models/     the first study's brief given to models a laptop runs, and how each did
 │   │   │   ├── answers/           each local model's answer to the two agents' input, one folder a model
 │   │   │   │   ├── gemma3-4b/
@@ -2544,6 +2549,11 @@ willow/
 │   │   │   │   │   ├── answers.txt   what it sent back, word for word
 │   │   │   │   │   ├── model.txt     its line in `ollama list`: name, id, size
 │   │   │   │   │   └── thinking.txt  what it thought before answering, kept apart
+```
+
+#### demo/shared-runs/local-models/answers/, from qwen3.5-latest/
+
+```
 │   │   │   │   ├── qwen3.5-latest/
 │   │   │   │   │   ├── answers.txt   what it sent back, word for word
 │   │   │   │   │   ├── model.txt     its line in `ollama list`: name, id, size
@@ -2556,11 +2566,6 @@ willow/
 │   │   ├── NEXT.md           What could be tried next
 │   │   ├── rules.py          the next step of a stack chosen by rule from what its last run said, or that no rule fits
 │   │   ├── same.py       two kept runs of one stack, step by step: asked the same way, printed the same thing
-```
-
-#### demo/shared-runs/, from study/
-
-```
 │   │   ├── study/            the study's sweep and scripts, frozen, and the dry run that came before
 │   │   │   ├── account.py        the blind half: the reports, an agent's whole input, the questions and key, and answers held to them
 │   │   │   ├── dry/              what the dry run printed and what two agents sent back; made-up setups, no result

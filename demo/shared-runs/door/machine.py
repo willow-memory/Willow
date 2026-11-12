@@ -74,10 +74,11 @@ import time
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
+# beside it when it is carried alone; else where the repository keeps them
 for place in (
-    HERE,
     HERE.parent / "study",
-    HERE.parents[2] / "adapters" / "stdlib" / "share",
+    *(p / "adapters" / "stdlib" / "share" for p in HERE.parents[2:3]),
+    HERE,
 ):
     sys.path.insert(0, str(place))
 import runner  # noqa: E402
