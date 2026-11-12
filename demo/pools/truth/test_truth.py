@@ -57,6 +57,18 @@ def test_the_reader_and_its_taker_meet_only_through_the_map():
     assert ("r", "t") not in pairs_of(off, "acts on the same thing")
 
 
+def test_a_taker_meets_its_reader_only_in_a_stack():
+    """Alone, no step is given another's mirror, so the reader and its
+    taker share no place there: with the stack rows dropped, they don't
+    pair; the places a step names are read from all its runs."""
+    rows, shapes, cards = t.dry_planted()
+    alone = [r for r in rows if "stack" not in r]
+    assert ("r", "t") not in pairs_of(t.measure(alone, shapes, cards, t.DRY_GRID))
+    assert ("r", "t") in pairs_of(
+        t.measure(rows, shapes, cards, t.DRY_GRID), "acts on the same thing"
+    )
+
+
 def test_shuffled_piles_lose_every_planted_pair():
     m = t.measure(*t.dry_shuffled(), t.DRY_GRID)
     assert not pairs_of(m) & {("a", "b"), ("c", "d"), ("r", "t")}

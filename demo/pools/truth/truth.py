@@ -233,6 +233,16 @@ def measure(rows: list[dict], shapes: list[dict], cards_: dict, manifest: dict, 
             r["step"], {}
         ):  # the first run alone is the one read
             single.setdefault(r["step"], {})[r["pile"]] = {**r, "verdict": verdict(r), "id": row_id(r)}  # fmt: skip
+    # what each step named on each pile, over all its runs there, alone and
+    # in stacks: alone a step is never given another's mirror, so a taker
+    # meets its reader's places only in a stack, through the map
+    named: dict[str, dict[str, dict[str, set]]] = {}
+    for r in rows:
+        at = named.setdefault(r["step"], {}).setdefault(
+            r["pile"], {"places": set(), "files": set()}
+        )
+        at["places"] |= set(r.get("places", []))
+        at["files"] |= set(r.get("files", []))
     # a step whose own runs alone disagree draws at random or tells the
     # time: no stack can be held to it, so it is listed, not checked
     unsteady = sorted({s for (s, _), o in outs.items() if len(o) > 1})
@@ -256,8 +266,8 @@ def measure(rows: list[dict], shapes: list[dict], cards_: dict, manifest: dict, 
             if n < rules["min_piles"] or k < rules["min_piles"]:
                 continue
             on = sorted(fa & fb)
-            jp = jaccard(single[a], single[b], on, "places")
-            jf = jaccard(single[a], single[b], on, "files")
+            jp = jaccard(named[a], named[b], on, "places")
+            jf = jaccard(named[a], named[b], on, "files")
             tested[(a, b)] = tail_p(k, n, len(fa), len(fb))
             stats[(a, b)] = {"n": n, "k": k, "fa": len(fa), "fb": len(fb), "jp": round(jp, 4), "jf": round(jf, 4),
                              "rows": sorted(single[a][p]["id"] for p in on) + sorted(single[b][p]["id"] for p in on)}  # fmt: skip
@@ -275,7 +285,7 @@ def measure(rows: list[dict], shapes: list[dict], cards_: dict, manifest: dict, 
     dups = []
     for (a, b), st in sorted(stats.items()):
         on = sorted(fire[a] & fire[b])
-        each = [jaccard(single[a], single[b], [p], "places") for p in on]
+        each = [jaccard(named[a], named[b], [p], "places") for p in on]
         if (
             len(on) >= rules["min_piles"]
             and each
@@ -528,9 +538,11 @@ def dry_planted(map_on: bool = True) -> tuple[list, list, dict]:
         rows.append(_row("d", p, second, cd))
         source, mirror = _own("src", p), _own("page", p)
         rows.append(_row("r", p, first, source))
-        rows.append(
-            _row("t", p, first, (source if map_on else mirror) | _own("t", p, 2))
-        )
+        rows.append(_row("t", p, first, _own("t", p, 2)))  # alone: no mirror to read
+        if first:  # after r, in its bridge stack: r's pages, through the map
+            rows.append(_row("r", p, True, source, stack="r-t", at=0))
+            rows.append(_row("t", p, True, (source if map_on else mirror) | _own("t", p, 2),
+                             stack="r-t", at=1, out="t-after-r"))  # fmt: skip
         for n in ("x", "y", "z"):
             rows.append(_row(n, p, rnd.random() < 0.5, _own(n, p)))
     cards_ = {n: _card({"section": "S"}, True) for n in "abcdrtxyz"}
@@ -555,7 +567,8 @@ def dry_shuffled(seed: int = 3) -> tuple[list, list, dict]:
     return out, shapes, cards_
 
 
-DRY_GRID = {"steps": {}, "bridges": [], "stacks": []}
+DRY_GRID = {"steps": {}, "bridges": [{"from": "r", "to": "t", "by": ["planted"]}],
+            "stacks": [{"id": "r-t", "way": "bridge", "steps": ["r", "t"]}]}  # fmt: skip
 
 
 def dry(box: Path) -> int:

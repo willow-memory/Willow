@@ -116,6 +116,14 @@ rows it stands on. No line of the report is typed by hand.
 | the null | a step in a stack may print other than it did alone on the pile only when an earlier step bridges to it, directly or through others (bridges frozen in the grid). A step that differs from itself alone is unsteady, listed, and not held |
 | a known gap | 3 or more probes, questions with their answer's place set by hand before any run; found when most miss and every control probe of the same reader hits; otherwise it can't be read |
 
+**Where the places come from.** A step's places on a pile are what it
+named in every run there, alone and in stacks. Alone, no step is given
+another's mirror, so a reader and a step that reads its pages meet only
+in a stack, through the map: firing together is read from the runs
+alone, the places from all of them. And a place is seen only when an
+output names a file of the pile as one word, so the places, and every
+pair and gap read from them, are a floor.
+
 **The dry runs, and that they can fail.** `truth.py dry --box BOX` runs
 the measure on made-up rows and writes each verdict as a kernel row
 named `study:dry:...` on a box outside the repo, never the study's:
@@ -129,6 +137,8 @@ named `study:dry:...` on a box outside the repo, never the study's:
   duplicate, `.zzz` the one gap, and never a-r.
 - **map off**: the same, with the taker's places those of the mirror's
   pages. Held: the reader and its taker no longer act on the same thing.
+  The taker meets the reader only in their bridge stack, as in a real run:
+  with the stack's rows left out, they don't pair.
 - **shuffled**: the planted rows moved between piles at random. Held: no
   planted pair survives.
 

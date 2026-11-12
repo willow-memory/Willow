@@ -1,6 +1,6 @@
 # The pools study: what the runs said
 
-Made by demo/pools/truth/truth.py from 180 rows: 9 steps on 20 piles, by rules 167403c1a057. Nothing here is typed by hand; each claim names the rows it stands on.
+Made by demo/pools/truth/truth.py from 200 rows: 9 steps on 20 piles, by rules 167403c1a057. Nothing here is typed by hand; each claim names the rows it stands on.
 
 ## What could not be trusted
 
