@@ -327,7 +327,7 @@ def build_report(path: Path) -> dict:
 def main(argv: list[str]) -> int:
     args = list(argv)
     as_json = False
-    if args[:1] == ["report"] and args[-1:] == ["--json"]:
+    if args[:1] in (["report"], ["mirror"]) and args[-1:] == ["--json"]:
         as_json, args = True, args[:-1]
     verb = args[:1]
     opts = dict(zip(args[1::2], args[2::2])) if verb in (["mirror"], ["report"]) else {}
@@ -354,7 +354,11 @@ def main(argv: list[str]) -> int:
         )
         return kernel.REFUSED
     wrote, skipped = mirror(src, dst)
-    print(f"wrote {wrote} files to {opts['--to']}; skipped {skipped}")
+    said = f"wrote {wrote} files to {opts['--to']}; skipped {skipped}"
+    if as_json:  # a stack asks every step of an output: report card for --json
+        say(report(NAME, "populated" if wrote else "empty", said, []), True)
+    else:
+        print(said)
     return kernel.ALIVE if wrote else kernel.ESCALATE
 
 

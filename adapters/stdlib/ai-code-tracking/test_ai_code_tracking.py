@@ -300,3 +300,16 @@ def test_bad_command_lines_are_refused(tmp_path):
     got = mirror(tmp_path, tmp_path / "inside")
     assert got.returncode == 2 and "inside one another" in got.stderr
     assert not (tmp_path / "inside").exists()
+
+
+def test_mirror_answers_json_as_a_report_since_a_stack_asks_for_it(tmp_path):
+    """A stack asks every step whose card says output: report for --json;
+    mirror answered that with its usage line until this held it."""
+    db = tmp_path / "ai-code-tracking.db"
+    make_db(db)
+    got = run("mirror", "--from", str(db), "--to", str(tmp_path / "m"), "--json")
+    assert got.returncode == 0, got.stderr
+    doc = json.loads(got.stdout)
+    assert doc["addon"] == "ai-code-tracking" and doc["state"] == "populated"
+    assert doc["said"].startswith("wrote 1 files")
+    assert (tmp_path / "m").is_dir()
