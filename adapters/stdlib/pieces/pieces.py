@@ -27,7 +27,7 @@ Exit codes: 0 read; 2 refused (not a box, a bad command line).
 
 from __future__ import annotations
 
-import os
+import shutil
 import sys
 import tempfile
 from pathlib import Path
@@ -61,8 +61,10 @@ def _read(files: list[Path], rel: Path) -> list[dict]:
     if not files:
         return []
     with tempfile.TemporaryDirectory() as t:
+        # a copy, not a link: the bytes the kernel reads are the same, and
+        # the original is only read (a link counts as a write to it)
         for f in files:
-            os.symlink(f, Path(t, f.name))
+            shutil.copyfile(f, Path(t, f.name))
         got = kernel.chunks(Path(t))
     if rel.parts:
         for c in got:

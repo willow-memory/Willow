@@ -107,6 +107,17 @@ def snapshot(folder: Path) -> dict[str, bytes]:
     }
 
 
+def held_mirror(mod, folder, to):
+    """mirror() called in-process with the command line it would have had,
+    since the guard holds a write to the --to it reads from sys.argv."""
+    saved = sys.argv
+    sys.argv = [str(SCRIPT), "mirror", "--from", str(folder), "--to", str(to)]
+    try:
+        return mod.mirror(folder, to)
+    finally:
+        sys.argv = saved
+
+
 def test_spoken_turns_are_numbered_and_tools_are_left_out(tmp_path):
     folder, to = tmp_path / "f", tmp_path / "m"
     folder.mkdir()
@@ -359,7 +370,7 @@ def test_a_session_that_fits_is_one_file_with_no_part_line(tmp_path):
     mod = load()
     folder, to = tmp_path / "f", tmp_path / "m"
     write_session(folder, ["one", "two"])
-    assert mod.mirror(folder, to) == (1, 0)
+    assert held_mirror(mod, folder, to) == (1, 0)
     assert [p.name for p in to.iterdir()] == ["sess.jsonl.txt"]
     text = (to / "sess.jsonl.txt").read_text(encoding="utf-8")
     assert "part " not in text and text.startswith("session long-1\n")
@@ -371,7 +382,7 @@ def test_a_long_session_is_three_parts_each_under_the_limit(tmp_path, monkeypatc
     folder, to = tmp_path / "f", tmp_path / "m"
     turns = [f"turn {i} " + "w" * 150 for i in range(1, 9)]
     write_session(folder, turns)
-    assert mod.mirror(folder, to) == (1, 0)
+    assert held_mirror(mod, folder, to) == (1, 0)
     names = sorted(p.name for p in to.iterdir())
     assert names == ["sess.jsonl.2.txt", "sess.jsonl.3.txt", "sess.jsonl.txt"]
     texts = [
@@ -400,7 +411,7 @@ def test_a_turn_longer_than_a_part_goes_on_at_a_line_end(tmp_path, monkeypatch):
     folder, to = tmp_path / "f", tmp_path / "m"
     big = "\n".join(f"line {i:03d} " + "x" * 20 for i in range(60))  # ~1.7 KB
     write_session(folder, ["first", big, "last"])
-    assert mod.mirror(folder, to) == (1, 0)
+    assert held_mirror(mod, folder, to) == (1, 0)
     texts = [p.read_text(encoding="utf-8") for p in in_order(to)]
     assert len(texts) > 2
     assert all(len(t.encode("utf-8")) <= 500 for t in texts)
@@ -420,7 +431,7 @@ def test_a_line_longer_than_a_part_is_cut_between_characters(tmp_path, monkeypat
         folder, to = tmp_path / f"f{len(lead)}", tmp_path / f"m{len(lead)}"
         long = lead + "日" * 400 + "é" * 300 + "🙂" * 50  # 2.2 KB, one line
         write_session(folder, ["go", long])
-        assert mod.mirror(folder, to) == (1, 0)
+        assert held_mirror(mod, folder, to) == (1, 0)
         texts = []
         for p in in_order(to):
             raw = p.read_bytes()
@@ -439,7 +450,7 @@ def test_a_rerun_after_the_session_shortens_removes_only_the_stale_part(
     monkeypatch.setattr(mod, "PART", 700)
     folder, to = tmp_path / "f", tmp_path / "m"
     write_session(folder, [f"turn {i} " + "w" * 150 for i in range(1, 9)])
-    assert mod.mirror(folder, to) == (1, 0)
+    assert held_mirror(mod, folder, to) == (1, 0)
     assert (to / "sess.jsonl.3.txt").exists()
     other = {  # not this session's parts: left alone
         "sess2.jsonl.3.txt": b"another session's part",
@@ -452,7 +463,7 @@ def test_a_rerun_after_the_session_shortens_removes_only_the_stale_part(
     (to / "sub").mkdir()
     (to / "sub" / "sess.jsonl.3.txt").write_bytes(b"same name, another folder")
     write_session(folder, [f"turn {i} " + "w" * 150 for i in range(1, 6)])
-    assert mod.mirror(folder, to) == (1, 0)
+    assert held_mirror(mod, folder, to) == (1, 0)
     assert not (to / "sess.jsonl.3.txt").exists()
     assert (to / "sess.jsonl.2.txt").exists()
     for name, data in other.items():
@@ -461,10 +472,10 @@ def test_a_rerun_after_the_session_shortens_removes_only_the_stale_part(
         to / "sub" / "sess.jsonl.3.txt"
     ).read_bytes() == b"same name, another folder"
     first = snapshot(to)
-    assert mod.mirror(folder, to) == (1, 0)
+    assert held_mirror(mod, folder, to) == (1, 0)
     assert snapshot(to) == first  # the same source gives the same files
     write_session(folder, ["one", "two"])  # now it fits: one file, no parts
-    assert mod.mirror(folder, to) == (1, 0)
+    assert held_mirror(mod, folder, to) == (1, 0)
     assert not (to / "sess.jsonl.2.txt").exists()
     assert "part " not in (to / "sess.jsonl.txt").read_text(encoding="utf-8")
 

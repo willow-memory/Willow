@@ -53,6 +53,17 @@ def mirror(folder: Path, to: Path) -> subprocess.CompletedProcess:
     return run(SCRIPT, "mirror", "--from", folder, "--to", to)
 
 
+def held_mirror(mod, folder, to):
+    """mirror() called in-process with the command line it would have had,
+    since the guard holds a write to the --to it reads from sys.argv."""
+    saved = sys.argv
+    sys.argv = [str(SCRIPT), "mirror", "--from", str(folder), "--to", str(to)]
+    try:
+        return mod.mirror(folder, to)
+    finally:
+        sys.argv = saved
+
+
 def test_each_function_is_a_paragraph_with_its_edges(tmp_path):
     folder, to = tmp_path / "f", tmp_path / "m"
     folder.mkdir()
@@ -228,7 +239,7 @@ def test_a_graph_mirrored_in_parts_numbers_its_files_from_one(tmp_path, monkeypa
     most = len(whole.encode()) - 1  # just too long for one file
     real = cbm.parts
     monkeypatch.setattr(cbm, "parts", lambda text: real(text, most=most))
-    cbm.mirror(src, dst)
+    held_mirror(cbm, src, dst)
     n = len(real(whole, most=most))
     assert n > 1
     assert sorted(p.name for p in dst.iterdir() if p.is_file()) == sorted(
