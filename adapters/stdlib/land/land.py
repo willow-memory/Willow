@@ -13,7 +13,8 @@ the copy is logged in DIR/<category>/landed.jsonl: its path, where it came
 from, and its sha256.
 
 **From a pile path to its original.** A reader writes FOLDER's file
-`a/b.pdf` as `a/b.pdf.txt`, a long one as `a/b.pdf.part2.txt` too, and a
+`a/b.pdf` as `a/b.pdf.txt`, a long one as `a/b.pdf.part2.txt` too (and a
+mirror of a mirror carries two such names, each taken off in turn), and a
 pile made by several readers puts each under its own folder first
 (`pdf/a/b.pdf.txt`). So a pile path names, in this order, the file at that
 path in FOLDER, the file it is a mirror of, then those two with the first
@@ -25,7 +26,8 @@ categories, it is said and copied nowhere.
 copied: they wait for your phrase or your seal. A copy that would replace a
 different file already in DIR is left undone and said; the same bytes
 already there are "already there". A path under a --skip PREFIX (a code
-checkout inside the folder, say) is passed over and counted. --dry-run says
+checkout inside the folder, say) is passed over and counted, and
+what sort left waiting under it no longer waits. --dry-run says
 the same and writes nothing.
 
 **What you settle.** --settle FILE is your own word on where a file goes,
@@ -92,17 +94,21 @@ def say(doc: dict, as_json: bool) -> None:
 
 def candidates(rel: str) -> list[str]:
     """The paths in FOLDER a pile path may be the words of, in the order
-    they're tried: itself, what it mirrors, then what it mirrors and itself
-    without their first folder (a reader's own folder)."""
-    bare = MIRROR.sub("", rel)
-    out = [rel, bare]
-    for p in (bare, rel):
+    they're tried: itself, then what it mirrors (a reader's added name taken
+    off, again while there is one, since a mirror of a mirror carries two),
+    then those without their first folder (a reader's own folder), the most
+    taken off first."""
+    strips = [rel]
+    while MIRROR.search(strips[-1]) and MIRROR.sub("", strips[-1]):
+        strips.append(MIRROR.sub("", strips[-1]))
+    out = list(strips)
+    for p in reversed(strips):
         parts = PurePosixPath(p).parts
         if len(parts) > 1:
             out.append(str(PurePosixPath(*parts[1:])))
     seen: list[str] = []
     for c in out:
-        if c and c not in seen:
+        if c not in seen:
             seen.append(c)
     return seen
 
@@ -135,6 +141,13 @@ def sha(p: Path) -> str:
 
 def within(inner: Path, outer: Path) -> bool:
     return inner == outer or outer in inner.parents
+
+
+def skipped_by(path: str, skip: list[str]) -> bool:
+    """Whether a path is under one of the --skip prefixes."""
+    return any(
+        path == s.rstrip("/") or path.startswith(s.rstrip("/") + "/") for s in skip
+    )
 
 
 def placed(doc: dict) -> tuple[dict, list]:
@@ -190,10 +203,7 @@ def land(
             if orig is None:
                 no_original.append((rel, f"{cat}: no original in the folder"))
                 continue
-            if any(
-                orig == s.rstrip("/") or orig.startswith(s.rstrip("/") + "/")
-                for s in skip
-            ):
+            if skipped_by(orig, skip):
                 skipped += 1
                 continue
             homes.setdefault(orig, {}).setdefault(cat, why)
@@ -211,7 +221,12 @@ def land(
             )
         else:
             homes[orig] = {cat: "settled by you"}
-    waiting = [(w, x) for w, x in waiting if original(src, w) not in settled]
+    waiting = [
+        (w, x)
+        for w, x in waiting
+        if original(src, w) not in settled
+        and not skipped_by(original(src, w) or w, skip)
+    ]
     twice = [
         (o, "in " + ", ".join(sorted(c)))
         for o, c in sorted(homes.items())

@@ -134,6 +134,12 @@ def test_a_file_at_the_pile_path_itself_is_the_original_first(tmp_path):
     assert la.original(src, "../etc/passwd") is None
     assert la.candidates("notes") == ["notes"]  # tried once, not twice
     assert la.candidates("a/b") == ["a/b", "b"]
+    # a mirror of a mirror: nest-read's own .txt, then the reader's part
+    assert la.candidates("text/x.md.txt.part2.txt") == [
+        "text/x.md.txt.part2.txt", "text/x.md.txt", "text/x.md",
+        "x.md", "x.md.txt", "x.md.txt.part2.txt",
+    ]  # fmt: skip
+    assert la.candidates(".txt") == [".txt"]
 
 
 def test_ties_unsorted_and_two_categories_wait_and_are_copied_nowhere(tmp_path):
@@ -272,7 +278,14 @@ def test_nothing_placed_is_empty(tmp_path):
 
 def test_what_you_settle_lands_where_you_said_before_anything_sort_said(tmp_path):
     src = folder(
-        tmp_path, {"tie.md": "t", "lost.pdf": "l", "wrong.txt": "w", "Willow/x.md": "x"}
+        tmp_path,
+        {
+            "tie.md": "t",
+            "lost.pdf": "l",
+            "wrong.txt": "w",
+            "Willow/x.md": "x",
+            "Willow/y.md": "y",
+        },
     )
     of = tmp_path / "sort.json"
     of.write_text(
@@ -281,7 +294,10 @@ def test_what_you_settle_lands_where_you_said_before_anything_sort_said(tmp_path
                 {
                     "money": [("wrong.txt", "1 hit")],
                     "more than one": [("tie.md", "money 1, health 1")],
-                    "unsorted": [("pdf/lost.pdf.txt", "no phrase of yours")],
+                    "unsorted": [
+                        ("pdf/lost.pdf.txt", "no phrase of yours"),
+                        ("Willow/y.md", "none"),
+                    ],
                 }
             )
         )

@@ -44,7 +44,8 @@ pile a box of its own reads.
 **The original, not the words.** A pile holds what the readers wrote, so
 `<reader>/<path>.txt` is the words of `<path>`. A pile path names, in this
 order: the file at that path in FOLDER; the file it is the mirror of (the
-extension a reader adds taken off, and a long file's part number with it);
+extension a reader adds taken off, and a long file's part number with it,
+again while there's one, since a mirror of a mirror carries two);
 then those two with the first folder taken off (a reader's own folder, in a
 pile made by several), the mirror first. The first that is a file in FOLDER
 is the one copied, so a bank statement lands as the CSV the bank reader
@@ -58,7 +59,8 @@ suggested, settles them, and the next sort places them. A copy that would
 replace a different file already in DIR is left undone, under **left as it
 was**; the same bytes already there are **already there**, so a second run
 copies nothing twice. A path under `--skip PREFIX` (a code checkout inside
-the folder, say) is passed over and counted. `--dry-run` says all of it and
+the folder, say) is passed over and counted, and what sort left waiting under it no longer
+waits. `--dry-run` says all of it and
 writes nothing.
 
 **What you settle.** `--settle FILE` is your own word on where a file
