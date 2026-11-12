@@ -2282,13 +2282,6 @@ willow/
 │   │   ├── mirror.py         the pile as text the kernel searches, each reader's part, over-long files cut into parts
 │   │   ├── sources.json      each source fetched, with its address, size and SHA-256, and what failed
 │   │   └── test_markets.py   holds what fetch.py froze, and the parts that need no network, to the README
-│   ├── wards/            made-up people whose records are held for them: minors calm and tense, and two adults
-│   │   ├── adults.py         two adults who cannot decide: one who said beforehand, one who named no one
-│   │   ├── make_life.py      writes each box's made-up files into life/, the same bytes every run
-│   │   ├── scene.py          four minors, each standing somewhere different to their own box
-│   │   ├── tense.py          a third set, where the minor and the one who cares for them are at odds
-│   │   ├── test_wards.py     the files are as written, and the scene plays as its page tells it
-│   │   └── README.md         Held for someone else: minors, and adults who cannot decide
 │   ├── money-hour/           four people from the other demos at one table, every market figure they repeat held to the real record
 │   │   ├── README.md         the claim, what the record says, how it runs, run 1's results and its one failure
 │   │   ├── CHARACTER.md      Teo, Bernie, Hollis and Marisol, where each comes from, and what each keeps
@@ -2307,17 +2300,17 @@ willow/
 │   │       ├── run-2.json    every outcome of run 2, freeze 2's desks, letter, themes and stacks added
 │   │       └── run-3.json    every outcome of run 3, after pair-drift's fix: every rule held
 │   ├── novelty.py           the reusable novelty check: have these pieces been put together before?
-```
-
-#### demo/, from odile/
-
-```
 │   ├── odile/                piano tuner and beekeeper, caring for her father
 │   │   ├── make_life.py      writes her files into life/, the same bytes every run
 │   │   ├── CHARACTER.md      who she is and how her life is written down
 │   │   ├── PLANTED.md        the needs hidden in her files, and the traps
 │   │   ├── STRIP.md          her questions, and what kernel.py found and missed
 │   │   └── names.txt         everyone named in her files, written by make_life.py
+```
+
+#### demo/, from ofrenda/
+
+```
 │   ├── ofrenda/              a séance with a local Gemma: a made-up abuela's files and two real books, every word cited or silent
 │   │   ├── README.md         the story, the claim, what is frozen, the dry run, how to run it, the results
 │   │   ├── CHARACTER.md      Femia, Marisol and the ofrenda kept up year round
@@ -2583,6 +2576,13 @@ willow/
 │   │   ├── QUESTIONS.md
 │   │   ├── STRIP.md
 │   │   └── test_words.py     the starter words list against her whole folder: her debt to Dev, served with it and not without
+│   ├── wards/            made-up people whose records are held for them: minors calm and tense, and two adults
+│   │   ├── adults.py         two adults who cannot decide: one who said beforehand, one who named no one
+│   │   ├── make_life.py      writes each box's made-up files into life/, the same bytes every run
+│   │   ├── scene.py          four minors, each standing somewhere different to their own box
+│   │   ├── tense.py          a third set, where the minor and the one who cares for them are at odds
+│   │   ├── test_wards.py     the files are as written, and the scene plays as its page tells it
+│   │   └── README.md         Held for someone else: minors, and adults who cannot decide
 │   └── test_novelty.py      a novel description reads as novel, one an existing demo holds as prior art
 ```
 
