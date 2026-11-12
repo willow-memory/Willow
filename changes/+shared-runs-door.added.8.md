@@ -1,0 +1,1 @@
+`demo/shared-runs/door/unknown/`: the fifth run for Kaggle, frozen before any job of it is stepped: the grown sweep again with every round signed by a key nobody enrolled and nobody cleared, so every round holds what it is given. Counted beforehand, the saving falls from 87.0% to 34.8%, five times the stepping for the same answers.

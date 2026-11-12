@@ -1,0 +1,40 @@
+{
+ "about": "The freeze of the sweep where nobody is known: each file's SHA-256 as it stood before any job of it was stepped, held by test_unknown_frozen.py. A change is a new freeze, in its own commit, with its reason.",
+ "frozen": "2026-11-12",
+ "on_whose_word": "the maintainer's, to the cloud session: \"come up with the next few and run them\"",
+ "files": {
+  "unknown_notebooks.py": "2d013836e982ca5daebb34c132e50f6c0dde5c958d9249aac0c0c39669fedc25",
+  "fell.py": "7e913c30e2e102abe7d1e1a2be39b6beec0049964c73ac2c63318e4192eb0af2",
+  "../grown/grown_notebooks.py": "7cc1ea46c17579725f373b1d9bf810d5ec4abca7b1cbef535c3ed0025ea1ab21",
+  "../grown/plan.json": "ca973186d4061603114e075c4461a04a92449304ad79065acab57c83cc069e4e",
+  "../grown/starts.json": "480a72451e6a75db9b7fa20f90a5eb919c616b1d42e625d6ee9c3107f246156f",
+  "../kaggle/door_notebooks.py": "fcd3ca1602de233b0b869f41a14543b0f1c8c9f1b2bab8acad725df1643a8cd4",
+  "../machine.py": "83219e91242afd4c54045aefc939aa8a948fdb3ed49db674e6eaeb1d4b09f7b5",
+  "../../study/runner.py": "0f9b5b62aa0540c9459c9b1a4ebde1ed2f4e14993fee79a746d27712be22b088",
+  "../../study/sweep.py": "2c8b8537366d0ec70f532ce4cf2f5189b12fa401a615e91140ec29f15e85904a",
+  "../../../../adapters/stdlib/share/ed25519.py": "ca54a7ae5f6b7b003d6333b62db4e83704fb09088c93cab63739884212d4487e"
+ },
+ "against": "the grown sweep as it came back from Kaggle with every signer enrolled: the branch shared-runs/door-kaggle-runs-k3, demo/shared-runs/door/grown/runs-k3",
+ "foretold": {
+  "alone": 13319565,
+  "stepped": 8683650,
+  "saved": 34.8,
+  "halts_counted_with": 20,
+  "enrolled_stepped": 1726780
+ },
+ "rules": {
+  "U1": "passes when every folder is whole by its seal and its signature holds, and no round's signer is in the ring",
+  "U2": "passes when every round held every folder it was given, as a signer the door has not enrolled",
+  "U3": "passes when every job was done and the share of steps saved is within 2 points of the share counted beforehand for a memory nobody trusts, 34.8",
+  "U4": "passes when every job ends as it did where every signer was enrolled: the same end, outcome and SHA-256, all 2200",
+  "U5": "passes when the checks stepped every kept state of all fifty folders again and found every one the same, and every halt the memory names halts"
+ },
+ "measured": [
+  "steps, beside the enrolled sweep's",
+  "states kept",
+  "bytes that came back",
+  "the kinds of processor drawn"
+ ],
+ "not_tested_is_not_passed": "a folder that did not come back sealed leaves every rule not tested",
+ "not_frozen": "the identities, which are made when the notebooks are and kept outside the repository; the Kaggle account"
+}
