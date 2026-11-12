@@ -1,6 +1,7 @@
 {
  "about": "What the trials' scripts and agents printed, kept word for word: reports, keys, handoffs, replies, logs and comparisons. The rules, briefs, questions and results beside them were written, and are not listed. With them, what the study's dry run printed and what two agents sent back, under study/dry. And what the study's machines and agents sent back, under study/runs, with what the judge made of it, under study/results.",
  "files": [
+  "door/results/tables.json",
   "every-kind/results/record.jsonl",
   "every-kind/results/verdicts.json",
   "every-kind/results/verify.txt",

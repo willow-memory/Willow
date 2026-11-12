@@ -74,6 +74,13 @@ signer the door does not know refused or held as a suggestion. For a
 shared memory the door is wherever a kept state is taken in and gone on
 from, which is also A7.
 
+A1, A5, A6, A7 and S1 are counted together, not run, in
+[door/](door/README.md): the sweep at ten and a hundred times its size
+with a door on the memory. Size alone changes nothing; strangers cost a
+round each; and checking every kept state against the one before finds
+every lie for a quarter of the work alone, where the first study's rate
+finds two in five.
+
 ## B. Machines: more kinds, and one difference at a time
 
 | | what is tried | what it would show | needs | from where | already on the maintainer's machine? |

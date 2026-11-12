@@ -471,6 +471,7 @@ def test_what_the_trials_printed_is_listed_as_kept_and_what_was_written_is_not()
         ]
         + [f"study/dry/{p.name}" for p in (here / "study" / "dry").iterdir()]
         + [f"lies/dry/{p.name}" for p in (here / "lies" / "dry").iterdir()]
+        + [f"door/results/{p.name}" for p in (here / "door" / "results").iterdir()]
         + [
             p.relative_to(here).as_posix()
             for sub in ("results", "runs")
