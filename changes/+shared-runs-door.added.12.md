@@ -1,0 +1,1 @@
+`demo/shared-runs/door/unknown/README.md`: the sweep where nobody is known came back from Kaggle and every rule passed. 8,683,650 steps, counted beforehand to the step: 34.8% saved where the enrolled sweep saved 87.0%, the same 2,200 jobs to the same bytes for five times the stepping, five times the memory and five times the checking.
