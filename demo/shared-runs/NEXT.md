@@ -34,7 +34,7 @@ From "What it cannot show" and "What the passes do and don't say".
 
 | | what is tried | what it would show | needs | from where | already on the maintainer's machine? |
 |---|---|---|---|---|---|
-| A1 | **A machine that lies.** One kept state is changed by a bit, or one notebook hands back other bytes. | whether the check catches it, how many jobs were served from it first, and how that moves with the size of the draw | the frozen scripts, and a rule for what counts as caught | here | |
+| A1 | **A machine that lies.** Drafted and dry-run, not frozen: [lies/](lies/README.md). One kept state is changed by a bit, or one notebook hands back other bytes. | whether the check catches it, how many jobs were served from it first, and how that moves with the size of the draw | the frozen scripts, and a rule for what counts as caught | here | |
 | A2 | **Two machines disagree.** One is wrong and nothing says which. | whether a third settles it, and what it costs | A1's set-up, three machines | here | |
 | A3 | **A stale memory.** States kept by an older version of the code are offered to a newer one. | whether the name a state is kept under holds the code as well as the inputs. It does, by the stepper's SHA-256; this would test it | two commits of a project | here | |
 | A4 | **The same thing sent twice**, or a round's output given to the wrong round | whether a repeat or a misdelivery is refused or silently counted | the notebooks | here | |

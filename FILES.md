@@ -2445,6 +2445,17 @@ willow/
 │   ├── shared-runs/          a study, frozen and not yet run: simulations on machines nobody chose, sharing one memory, run by a script
 │   │   ├── chain.py      starts the project, makes each link's handoff, and applies or refuses the step a link offers
 │   │   ├── KEPT.json     what the trials' scripts and agents printed, listed as kept
+│   │   ├── lies/             a study drafted and dry-run, not frozen: a memory that has been lied to
+│   │   │   ├── dry/
+│   │   │   │   ├── trials.txt        every trial of the dry run, listed before any was run
+│   │   │   │   └── verdicts.json     each dry trial and the seven verdicts, as lies.py printed them
+│   │   │   ├── dry-lies.json     the dry run's lies: how many of each kind, the arms and the seed
+│   │   │   ├── dry-plan.json     the dry run's made-up sweep of whole-number steppers
+│   │   │   ├── dry-starts.json   that sweep's starts
+│   │   │   ├── lies.json         the lies proposed for the first study's own memory: not frozen
+│   │   │   ├── lies.py       a memory that has been lied to, and whether the checks find it
+│   │   │   ├── test_lies.py
+│   │   │   └── README.md     A memory that has been lied to: a study, drafted
 │   │   ├── NEXT.md           What could be tried next
 │   │   ├── rules.py          the next step of a stack chosen by rule from what its last run said, or that no rule fits
 │   │   ├── same.py       two kept runs of one stack, step by step: asked the same way, printed the same thing
