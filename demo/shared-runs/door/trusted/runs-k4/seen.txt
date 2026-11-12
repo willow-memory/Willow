@@ -1,0 +1,16 @@
+N1  passed: 12 folders whole and signed by the ring, the liar's among them
+N2  passed: the liar's folder was taken; 2 jobs went out wrong: 1 stopped at the halt that is no halt, 1 from the changed state
+N3  passed: the changed state found, the halt that is no halt found; the other four clean
+N4  passed: the liar's first round held, the round that went on from it held; 0 jobs wrong after, 56635 steps
+N5  passed: the other four places took their own and are the first study's, byte for byte
+measured:
+  jobs that went out wrong before the check: 2 of place 3's second round
+  of the round that went on from the lie, the check found 19 of 19 states the same: a state stepped rightly from a wrong one looks right to a check of that step
+  round-2-machine-0-before: 735 steps
+  round-2-machine-1-before: 14765 steps
+  round-2-machine-2-before: 4030 steps
+  round-2-machine-3-after: 56635 steps
+  round-2-machine-3-before: 1105 steps
+  round-2-machine-4-before: 33800 steps
+  the check stepped 276269 steps
+  kinds drawn: amd x86_64 avx2 (3), intel x86_64 avx2 (9)

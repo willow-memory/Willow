@@ -1,0 +1,14 @@
+{"again":0,"from":0,"job":"sun-mars-ceres@2675","took":false}
+{"again":0,"from":0,"job":"sun-giants@2675","took":false}
+{"again":0,"from":700,"job":"sun-mars-ceres@745","took":true}
+{"again":0,"from":0,"job":"crowded-earth-venus@1520","took":false}
+{"again":0,"from":1520,"job":"crowded-earth-venus@8090","took":true}
+{"again":0,"from":0,"job":"rigel-wide-neptune@745","took":false}
+{"again":0,"from":745,"job":"rigel-wide-neptune@8090","took":true}
+{"again":0,"from":300,"job":"sun-giants@310","took":true}
+{"again":0,"from":2675,"job":"sun-mars-ceres@8090","took":true}
+{"again":0,"from":8090,"job":"crowded-earth-venus@14575","took":true}
+{"again":0,"from":6100,"job":"crowded-earth-venus@6160","took":true}
+{"again":0,"from":6100,"job":"sun-mars-ceres@6160","took":true}
+{"again":0,"from":2600,"job":"crowded-earth-venus@2675","took":true}
+{"again":0,"from":2675,"job":"sun-giants@8090","took":true}
