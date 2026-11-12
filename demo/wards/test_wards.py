@@ -14,6 +14,7 @@ import make_life  # noqa: E402
 import scene  # noqa: E402
 import adults  # noqa: E402
 import askable  # noqa: E402
+import card  # noqa: E402
 import fourteen  # noqa: E402
 import tense  # noqa: E402
 
@@ -26,7 +27,7 @@ def test_the_made_up_files_are_as_written_and_his_words_are_in_no_box_marit_hold
     assert make_life.check() == []
     made = sorted({name.split("/")[0] for name in make_life.FILES})
     assert made == sorted(
-        [*scene.BOXES, *tense.BOXES, "sable-with-bryony", *adults.BOXES, *adults.LATER, *fourteen.BOXES]
+        {*scene.BOXES, *tense.BOXES, "sable-with-bryony", *adults.BOXES, *adults.LATER, *fourteen.BOXES, *card.BOXES}
     )  # fmt: skip
 
 
@@ -200,3 +201,60 @@ def test_what_he_was_sent_is_askable_only_when_written_out_as_pages(tmp_path, ca
     capsys.readouterr()
     assert askable.main(["run", "--life", str(HERE / "life"), "--to", str(to)]) == 2
     assert askable.main(["run"]) == 2
+
+
+def test_an_unknown_signer_can_make_a_ward_more_careful_and_never_less():
+    ring = {"k-surgery": "the surgery"}
+    inner = {"from": "k-him", "wraps": None}
+    assert card.standing(inner, ring) == ("unknown", "")
+    assert card.standing({"from": "k-partner", "wraps": inner}, ring) == ("unknown", "")
+    assert card.standing({"from": "k-surgery", "wraps": inner}, ring) == (
+        "vouched",
+        "the surgery",
+    )
+    assert card.standing(inner, {**ring, "k-him": "him"}) == ("enrolled", "him")
+    assert card.done("caution", "unknown") == "honoured"
+    assert (
+        card.done("all-clear", "unknown") == "held"
+        and card.done("grant", "unknown") == "held"
+    )
+    assert card.done("all-clear", "vouched") == "honoured" and card.done("grant", "enrolled") == "honoured"  # fmt: skip
+    assert card.done("fact", "unknown").startswith("shown, as said by") and card.done("fact", "vouched") == "shown"  # fmt: skip
+    assert (
+        card.done("caution", "broken") == "honoured"
+        and card.done("grant", "broken") == "held"
+    )
+
+
+def test_the_card_scene_plays_as_told(tmp_path, capsys):
+    to = tmp_path / "card"
+    assert card.main(["run", "--life", str(HERE / "life"), "--to", str(to)]) == 0
+    doc = json.loads((to / "card.json").read_text())
+    assert doc["wrong"] == [] and all(
+        v.startswith("the chain holds") for v in doc["boxes"].values()
+    )
+    said = doc["said"]
+    assert said["from_jun"] == {"caution": "honoured", "fact": "shown, as said by a signer not known", "grant": "held"}  # fmt: skip
+    assert said["from_someone"] == {"all-clear": "held", "grant": "held"}
+    assert said["from_the_surgery"] == {
+        "caution": "honoured",
+        "fact": "shown",
+        "grant": "honoured",
+    }
+    assert said["sable"] == {
+        "her_guardian_of_old": {"all-clear": "held", "grant": "held"},
+        "her_own": {"all-clear": "held", "grant": "held"},
+        "the_court": {"grant": "honoured"}, "called": "Bryony Okonjo",
+    }  # fmt: skip
+    assert (
+        said["penicillin_withheld_throughout"] is True
+        and said["an_unknown_all_clear_taken"] is False
+    )
+    assert (
+        said["after_he_enrols"]["grant"] == "honoured"
+        and said["the_second_card_then"] == "unknown"
+    )
+    assert said["lines_on_the_wards_record"] == len(doc["read"]) - 3 == 13
+    assert "went otherwise" not in capsys.readouterr().out
+    assert card.main(["run", "--life", str(HERE / "life"), "--to", str(to)]) == 2
+    assert card.main(["run"]) == 2

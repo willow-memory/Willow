@@ -346,6 +346,96 @@ What anyone else can check is a package, which is signed another way.
 Every claim on this page that one person can check another's word is
 about a package.
 
+## The emergency card, read by a stranger
+
+The one case the proposal above cannot reach: a ward reading a card
+whose signer was never at its door. This plays what a ward can do with
+one anyway.
+
+    python demo/wards/card.py run --life demo/wards/life --to /tmp/card
+
+Three things decide it.
+
+**How the card stands at this door.** *Enrolled*: its signer's key is
+one the ward enrolled. *Vouched*: it is not, but the card comes wrapped
+by a signer that is, who says whose key it is. *Unknown*: neither; the
+signature holds, and that is all that can be said.
+
+**What each line says.** A *caution* makes the reader more careful: an
+allergy named. An *all-clear* makes them less careful: "none known". A
+*fact* is to be weighed: a daily medicine. A *grant* names someone to be
+called and told.
+
+**The rule.** A caution is honoured however the card stands. An
+all-clear and a grant are honoured only enrolled or vouched. A fact is
+shown with how it stands. **An unknown signer can make a ward more
+careful, never less.**
+
+What the scene plays, on the night Marcus is brought in and after:
+
+| | how it stands | allergy to penicillin | "no known allergy" | whom to call |
+|---|---|---|---|---|
+| his card, handed over by Jun | unknown | honoured | | held |
+| a second card, saying it is his | unknown | | held | held |
+| his card, passed on by the surgery he is registered at | vouched by the surgery | honoured | | honoured: Jun is called |
+| his card again, after he shows his key at the ward's desk | enrolled | honoured | | honoured |
+
+And when Sable is brought in with two cards:
+
+| | how it stands | "no known allergy" | whom to call |
+|---|---|---|---|
+| the card Garrick wrote | unknown | held | held |
+| the card she wrote | unknown | held | held |
+| the court's order naming Bryony her guardian | enrolled | | honoured: Bryony is called |
+
+What it found:
+
+- **Most of a card is safe to honour from a stranger, and the part that
+  matters most is.** Penicillin was withheld from the first minute, on a
+  card whose signer the ward had never met. Believing a false caution
+  costs a little care. That is why a bracelet works.
+- **The dangerous lie is the all-clear.** The second card says he has no
+  allergy. Had it been believed, it would have undone the first. Under
+  the rule it changes nothing: an unknown signer cannot lower the care
+  taken. Both cards arrived with good signatures; a signature was never
+  the question.
+- **One hop of vouching is enough, and it is something people already
+  do.** Marcus showed his key at his surgery's desk a year before. The
+  ward knows the surgery. So the surgery passing on the copy he gave it,
+  with "this is his key; he showed it at our desk", is what turns "call
+  Jun" from held to honoured. No stranger has to be trusted, only a desk
+  he once stood at.
+- **Two cards that disagree are settled by neither.** Sable's cards name
+  two people. Neither is called on a card alone. The court's order,
+  from a key the ward has, names her guardian, and that is who is
+  called. It is the person her own card names, and it is not because
+  her card says so.
+- **The cost falls on Jun, for a night.** Under the rule the person
+  Marcus chose is not told until morning. The adults' scene had the
+  ward tell Jun at once, as a ward might; this one is stricter, and the
+  difference is a choice about harm that the scene does not make for
+  anyone.
+- **Every reading is on the ward's record**: which card, what kind of
+  line, how it stood, what was done. When Marcus wakes that is what he
+  is shown.
+- **Enrolling after is cheap.** He shows his key at the desk, and the
+  same card read again stands enrolled. The second card still stands
+  unknown.
+
+What it rests on that nothing here builds:
+
+- **A ring at each door.** The scene holds the ward's enrolled keys in a
+  table of its own. That is the ring the proposal above asks for.
+- **Someone to read each line.** Which lines are cautions and which are
+  grants is a table in the scene, standing in for a nurse. A card cannot
+  be let to say what kind of thing it says: a grant marked as a caution
+  would walk through.
+- **A refusal of treatment.** No card here says "do not". That is the
+  line where being wrong either way is gravest, and it needs more than
+  this rule.
+- **A ward that knows no one who knows him.** Vouching needs one desk in
+  common. A traveller far from home has none.
+
 ## Two adults who cannot decide
 
 A child has a guardian from the start and a day the holding ends. An
@@ -450,8 +540,5 @@ What it leaves open:
 - **An adult with no one at all.** Agnes has a daughter and Marcus a
   partner. Someone with neither, and nothing said beforehand, is the
   case a court's deputy or a public guardian is for, and is not here.
-- **A stranger reading the emergency card.** Wren's and Imani's are in
-  their piles, authored by Marit. Nothing here serves one to someone
-  outside.
 - **Anything real.** The names, dates and care are invented, and the
   rules about what a minor may consent to differ by place.

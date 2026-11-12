@@ -2579,6 +2579,7 @@ willow/
 │   ├── wards/            made-up people whose records are held for them: minors calm and tense, and two adults
 │   │   ├── adults.py         two adults who cannot decide: one who said beforehand, one who named no one
 │   │   ├── askable.py        what a box was sent, and three ways of having it answer from that
+│   │   ├── card.py           an emergency card read by someone who never met its signer: enrolled, vouched or unknown
 │   │   ├── fourteen.py       Leo four years on: a box of his own beside the one held for him across two houses
 │   │   ├── make_life.py      writes each box's made-up files into life/, the same bytes every run
 │   │   ├── scene.py          four minors, each standing somewhere different to their own box

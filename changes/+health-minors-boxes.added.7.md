@@ -1,0 +1,1 @@
+demo/wards: an emergency card read by a stranger. How it stands at a door (enrolled, vouched by a signer the door knows, or unknown), what each line says (a caution, an all-clear, a fact, a grant), and one rule: an unknown signer can make a ward more careful, never less. Played on a man brought in unconscious and a girl with two cards.

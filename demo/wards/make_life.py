@@ -23,6 +23,10 @@ Leo four years on is played by fourteen.py: `leo-at-fourteen`, the box
 his mother still holds, `ravi-later`, his father's, `leo-own`, and the
 `asthma-nurse`.
 
+The emergency card read by a stranger is played by card.py, with the
+`practice` Marcus is registered at, and `someone` whose card says it is
+his.
+
 Two adults who cannot decide are played by adults.py: `agnes`, who
 named her daughter while she could, with `petra`, `dorian`, the memory
 `clinic` and the two boxes her children start for her; and `marcus`,
@@ -371,6 +375,19 @@ needed nine times in the month at one home and once at the other; smoke
 indoors at the first. The plan stands: the purple preventer, one puff
 morning and night, at both homes. He asked that the count not go to his
 father. Advised him to tell the adult at the first home himself.
+""",
+    # ── the emergency card, read by a stranger (card.py plays these) ──────
+    "practice/desk.md": """\
+# The surgery: keys shown at the desk
+
+2025-06-03. Marcus Bell came in and showed us the key his papers are
+signed with. We wrote it down against his name, with him standing there.
+""",
+    "someone/card.md": """\
+# Marcus Bell: emergency card
+
+Allergy: none known.
+Call first: a number that is not Jun's.
 """,
 }
 
