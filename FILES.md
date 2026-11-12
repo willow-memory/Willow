@@ -2266,6 +2266,15 @@ willow/
 │   ├── marisol/
 │   │   ├── CHARACTER.md      Marisol Ortiz Beltrán
 │   │   ├── FROZEN.json
+│   │   ├── handoff/
+│   │   │   ├── FOR-FELIPE.md For Felipe
+│   │   │   ├── make_handoff.py the handoff zip, built the same way every time
+│   │   │   ├── marisol-handoff.zip
+│   │   │   ├── pile/
+│   │   │   │   └── hurricane-maria-landfall.txt
+│   │   │   ├── suggestions.jsonl
+│   │   │   ├── test_handoff.py
+│   │   │   └── README.md     Check a translation, and seal it from your own box
 │   │   ├── make_life.py      Marisol Ortiz Beltran's folder, as the files her work leaves: python3 make_life.py [--check]
 │   │   ├── names.txt
 │   │   ├── PLANTED.md        What the author planted: the answer key (notes, written before the generator)

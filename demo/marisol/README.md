@@ -16,6 +16,9 @@ run once; the result is below, with what failed.
   them again and `check DIR` compares hashes offline. One source (a NBC New York
   page) could not be fetched and no claim depends on it.
 - [run.py](run.py) is the run; [results/](results/) holds what it wrote.
+- [handoff/](handoff/) is a separate, small thing: a zip with instructions for a reviewer to
+  check and seal one Spanish sentence from their own box, and instructions for one
+  reviewer in particular. It holds no key and no personal document.
 
 Everything about the people, the school and the companies is invented. The
 real facts are Section 936's phase-out (the 1996 Act scheduled its repeal for
