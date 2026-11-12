@@ -2452,7 +2452,11 @@ willow/
 │   │   │   │   ├── verdicts.json     the two verdicts and what each machine came to, as every_kind.py printed them
 │   │   │   │   └── verify.txt        what the kernel said of that record
 │   │   │   ├── runs/             one folder for each named machine that has run the sweep alone
-│   │   │   │   └── cloud-session/    the cloud session's run of all 220 jobs
+│   │   │   │   ├── cloud-session/    the cloud session's run of all 220 jobs
+│   │   │   │   │   ├── acts.jsonl        what it did, one line a job
+│   │   │   │   │   ├── machine.json      what the machine said of itself
+│   │   │   │   │   └── memory.jsonl      empty: a job run alone keeps nothing
+│   │   │   │   └── laptop/           the maintainer's laptop's run of all 220 jobs
 │   │   │   │       ├── acts.jsonl        what it did, one line a job
 │   │   │   │       ├── machine.json      what the machine said of itself
 │   │   │   │       └── memory.jsonl      empty: a job run alone keeps nothing
