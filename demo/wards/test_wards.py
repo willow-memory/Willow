@@ -206,13 +206,26 @@ def test_what_he_was_sent_is_askable_only_when_written_out_as_pages(tmp_path, ca
 def test_an_unknown_signer_can_make_a_ward_more_careful_and_never_less():
     ring = {"k-surgery": "the surgery"}
     inner = {"from": "k-him", "wraps": None}
-    assert card.standing(inner, ring) == ("unknown", "")
-    assert card.standing({"from": "k-partner", "wraps": inner}, ring) == ("unknown", "")
-    assert card.standing({"from": "k-surgery", "wraps": inner}, ring) == (
-        "vouched",
-        "the surgery",
+    assert card.standing(inner, ring, {}) == ("unknown", "")
+    assert card.standing({"from": "k-partner", "wraps": inner}, ring, {}) == (
+        "unknown",
+        "",
     )
-    assert card.standing(inner, {**ring, "k-him": "him"}) == ("enrolled", "him")
+    assert card.standing({"from": "k-surgery", "wraps": inner}, ring, {}) == (
+        "unknown",
+        "",
+    ), "passed on by a signer the door knows is not vouched for"
+    spoken = {"k-him": ("him", "the surgery")}
+    assert card.standing(inner, ring, spoken) == ("vouched", "the surgery")
+    assert (
+        card.standing({"from": "k-partner", "wraps": inner}, ring, spoken)[0]
+        == "vouched"
+    )
+    assert card.standing(inner, {**ring, "k-him": "him"}, {}) == ("enrolled", "him")
+    assert card.SAYS_WHOSE.match(
+        "The key " + "ab" * 32 + " is Marcus Bell's: shown at the desk."
+    )
+    assert not card.SAYS_WHOSE.match("This is Marcus Bell's key.")
     assert card.done("caution", "unknown") == "honoured"
     assert (
         card.done("all-clear", "unknown") == "held"
@@ -223,13 +236,6 @@ def test_an_unknown_signer_can_make_a_ward_more_careful_and_never_less():
     assert card.done("caution", "broken") == card.done("grant", "broken")
     assert card.done("caution", "broken").startswith("not read"), (
         "the rule is for cards that hold"
-    )
-    wrapped_stranger = {
-        "from": "k-surgery",
-        "wraps": {"from": "k-someone", "wraps": None},
-    }
-    assert card.standing(wrapped_stranger, ring)[0] == "vouched", (
-        "any known signer's wrap counts: the vouching is only as careful as the voucher"
     )
 
 
@@ -243,11 +249,14 @@ def test_the_card_scene_plays_as_told(tmp_path, capsys):
     said = doc["said"]
     assert said["from_jun"] == {"caution": "honoured", "fact": "shown, as said by a signer not known", "grant": "held"}  # fmt: skip
     assert said["from_someone"] == {"all-clear": "held", "grant": "held"}
-    assert said["from_the_surgery"] == {
-        "caution": "honoured",
-        "fact": "shown",
-        "grant": "honoured",
+    assert said["once_the_surgery_has_spoken"] == {"caution": "honoured", "fact": "shown", "grant": "honoured"}  # fmt: skip
+    assert said["second_card_wrapped_by_a_known_signer"] == {
+        "all-clear": "held",
+        "grant": "held",
     }
+    rows = [json.loads(x) for x in (to / "boxes" / "hospital" / "record.jsonl").read_text().splitlines()]  # fmt: skip
+    spoken = [r for r in rows if r["kind"] == "key-spoken-for"]
+    assert [(r["whose"], r["by"]) for r in spoken] == [("Marcus Bell", "the surgery")]
     assert said["sable"] == {
         "her_guardian_of_old": {"all-clear": "held", "grant": "held"},
         "her_own": {"all-clear": "held", "grant": "held"},
@@ -261,7 +270,7 @@ def test_the_card_scene_plays_as_told(tmp_path, capsys):
         said["after_he_enrols"]["grant"] == "honoured"
         and said["the_second_card_then"] == "unknown"
     )
-    assert said["lines_on_the_wards_record"] == len(doc["read"]) - 3 == 13
+    assert said["lines_on_the_wards_record"] == len(doc["read"]) - 3 == 15
     assert "went otherwise" not in capsys.readouterr().out
     assert card.main(["run", "--life", str(HERE / "life"), "--to", str(to)]) == 2
     assert card.main(["run"]) == 2

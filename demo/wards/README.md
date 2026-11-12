@@ -357,9 +357,10 @@ one anyway.
 Three things decide it.
 
 **How the card stands at this door.** *Enrolled*: its signer's key is
-one the ward enrolled. *Vouched*: it is not, but the card comes wrapped
-by a signer that is, who says whose key it is. *Unknown*: neither; the
-signature holds, and that is all that can be said.
+one the ward enrolled. *Vouched*: it is not, but a signer that is has
+sealed and sent whose key it is and how it knows. *Unknown*: neither;
+the signature holds, and that is all that can be said. A card merely
+passed on by a signer the ward knows is not vouched for.
 
 **What each line says.** A *caution* makes the reader more careful: an
 allergy named. An *all-clear* makes them less careful: "none known". A
@@ -377,7 +378,8 @@ What the scene plays, on the night Marcus is brought in and after:
 |---|---|---|---|---|
 | his card, handed over by Jun | unknown | honoured | | held |
 | a second card, saying it is his | unknown | | held | held |
-| his card, passed on by the surgery he is registered at | vouched by the surgery | honoured | | honoured: Jun is called |
+| his card, once the surgery he is registered at has said whose key it is | vouched by the surgery | honoured | | honoured: Jun is called |
+| the second card, passed on by the court without a word | unknown | | held | held |
 | his card again, after he shows his key at the ward's desk | enrolled | honoured | | honoured |
 
 And when Sable is brought in with two cards:
@@ -401,10 +403,17 @@ What it found:
   the question.
 - **One hop of vouching is enough, and it is something people already
   do.** Marcus showed his key at his surgery's desk a year before. The
-  ward knows the surgery. So the surgery passing on the copy he gave it,
-  with "this is his key; he showed it at our desk", is what turns "call
-  Jun" from held to honoured. No stranger has to be trusted, only a desk
-  he once stood at.
+  ward knows the surgery. So the surgery seals and sends one sentence,
+  "the key … is Marcus Bell's: he showed it at our desk", and that is
+  what turns "call Jun" from held to honoured. The surgery never has to
+  hold the card: it speaks for the key, and the card Jun handed over the
+  night before is the one read again. No stranger has to be trusted,
+  only a desk he once stood at.
+- **Passing a card on is not speaking for it.** The second card is sent
+  to the court, which the ward knows, and the court passes it on
+  without a word. It stands unknown, as it did. A wrap is not a
+  statement, and the ward's record keeps each statement it does hear as
+  a row of its own: whose key, said by whom.
 - **Two cards that disagree are settled by neither.** Sable's cards name
   two people. Neither is called on a card alone. The court's order,
   from a key the ward has, names her guardian, and that is who is
@@ -435,15 +444,15 @@ or vouched for.
 Held on 2026-11-12 to the section the proposal now carries, three
 things came out that neither page had said:
 
-- **A wrap is not a word.** Here, and in the proposal's wording, a card
-  is vouched when a signer the door knows has wrapped it. The surgery
-  in the scene checks that the key inside is one it enrolled before it
-  passes the card on, and says so in a note. Nothing makes it check, and
-  nothing reads the note: a signer the ward knows who passes on a
-  stranger's card without looking has vouched for it all the same. One
-  hop of vouching is only as careful as the one who vouches. Vouching
-  should be a thing said and signed, "this key is his, and here is how I
-  know", and not merely a card passed on.
+- **A wrap is not a word.** As first played, and in the proposal's
+  wording, a card was vouched when a signer the door knows had wrapped
+  it. The surgery checked the key inside before passing the card on,
+  but nothing made it check and nothing read its note: a known signer
+  passing on a stranger's card without looking would have vouched for
+  it. The scene is changed. Vouching is now a thing said and signed,
+  "this key is his, and here is how I know", and a card merely passed
+  on stays unknown. That is this scene's choice; the proposal's own
+  wording is the maintainer's to settle.
 - **A caution is cheap in a ward and may not be at a door.** Every
   caution played here withholds one drug. The proposal lets an
   unenrolled device "flag something, refuse something, hold something

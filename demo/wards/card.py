@@ -8,8 +8,9 @@ trust. An emergency card is read at a door its signer was never at. This
 plays what a ward can do with one anyway, by three things:
 
     how it stands   enrolled: the signer's key is one this door enrolled.
-                    vouched: it is not, but the card comes wrapped by a
-                    signer that is, who says whose key it is.
+                    vouched: it is not, but a signer that is has sealed
+                    and sent whose key it is and how it knows. A card
+                    merely passed on by such a signer is not vouched.
                     unknown: neither. The signature holds, and that is
                     all that can be said of it.
     what it says    a caution makes the reader more careful: an allergy
@@ -28,7 +29,9 @@ scene's own table stands in for the nurse who reads it.
 1. Marcus is brought in. His partner hands over his card: unknown.
 2. A second card comes, saying it is his and that he has no allergy.
 3. In the morning the surgery he is registered at, whose key the ward
-   has, passes on the copy he gave them: vouched.
+   has, seals and sends whose key that is and how it knows: vouched. The
+   second card, passed on by a signer the ward knows who says nothing of
+   it, is not.
 4. Sable is brought in with two cards naming two people to call. The
    court, whose key the ward has, has said who her guardian is.
 5. Marcus, awake again, reads what was done with each line and how it stood,
@@ -41,6 +44,7 @@ scene plays as told, 1 when a step went otherwise, 2 a bad command.
 from __future__ import annotations
 
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -78,21 +82,21 @@ READ = {
 ON_SIGHT = {"caution"}
 
 
-def standing(package: dict, ring: dict[str, str]) -> tuple[str, str]:
+SAYS_WHOSE = re.compile(r"^The key ([0-9a-f]{64}) is (.+?)'s: ")
+
+
+def standing(package: dict, ring: dict[str, str], spoken: dict[str, tuple[str, str]]) -> tuple[str, str]:  # fmt: skip
     """(how the innermost layer stands at a door, by whom): enrolled when
-    its signer is in the door's ring; vouched when a layer wrapped round it
-    is signed by one that is; else unknown."""
-    layers = []
-    layer = package
-    while layer:
-        layers.append(layer)
-        layer = layer.get("wraps")
-    inner = layers[-1]
+    its signer is in the door's ring; vouched when a signer in the ring has
+    said, and signed, whose key that is; else unknown. Being wrapped and
+    passed on by a signer the door knows is not being vouched for."""
+    inner = package
+    while inner.get("wraps"):
+        inner = inner["wraps"]
     if inner["from"] in ring:
         return "enrolled", ring[inner["from"]]
-    for outer in layers[:-1]:
-        if outer["from"] in ring:
-            return "vouched", ring[outer["from"]]
+    if inner["from"] in spoken:
+        return "vouched", spoken[inner["from"]][1]
     return "unknown", ""
 
 
@@ -112,6 +116,7 @@ class Card(tense.Tense):
         self.now = at("2025-06-03T10:00:00Z")
         self.holder = {name: holder for name, (_, holder) in BOXES.items()}
         self.ring: dict[str, str] = {}
+        self.spoken: dict[str, tuple[str, str]] = {}
         self.read: list[dict] = []
 
     def line(self, name: str, question: str, source: str, data: str, n: int) -> str:
@@ -140,7 +145,9 @@ class Card(tense.Tense):
             self.run(SHARE, "check", "--package", path).split("\n")[0].endswith("holds")
         )
         package = json.loads(path.read_text(encoding="utf-8"))
-        stands, by = standing(package, self.ring) if whole else ("broken", "")
+        stands, by = (
+            standing(package, self.ring, self.spoken) if whole else ("broken", "")
+        )
         layer = package
         while layer.get("wraps"):
             layer = layer["wraps"]
@@ -156,6 +163,27 @@ class Card(tense.Tense):
             out.append(row)
         self.read += out
         return out
+
+    def hears(self, name: str) -> int:
+        """The ward reads a package for what it says of whose key a key is.
+        Only a signer the door has enrolled is heard, and only its own
+        signed answer: a note on a wrap says nothing."""
+        path = self.to / f"{name}.pkg"
+        whole = (
+            self.run(SHARE, "check", "--package", path).split("\n")[0].endswith("holds")
+        )
+        package = json.loads(path.read_text(encoding="utf-8"))
+        if not whole or package.get("wraps") or package["from"] not in self.ring:
+            return 0
+        heard = 0
+        for answer in package["answers"]:
+            said = SAYS_WHOSE.match(answer["data"])
+            if said:
+                self.spoken[said.group(1)] = (said.group(2), self.ring[package["from"]])
+                kernel.append(self.box("hospital"), self.ts(), "key-spoken-for", who="wards",
+                              key=said.group(1), whose=said.group(2), by=self.ring[package["from"]])  # fmt: skip
+                heard += 1
+        return heard
 
     def what(self, rows: list[dict]) -> dict[str, str]:
         return {r["kind"]: r["done"] for r in rows}
@@ -210,22 +238,39 @@ class Card(tense.Tense):
         )
         print(f"  penicillin is still not given: {careful}; an unknown signer's all-clear was taken: {lowered}")  # fmt: skip
 
-        print("── 3. in the morning: the surgery passes on the copy he gave it")
+        print("── 3. in the morning: the surgery says whose key it is")
         self.now = at("2026-11-03T08:10:00Z")
         theirs = json.loads(
             (self.to / "marcus-to-practice.pkg").read_text(encoding="utf-8")
         )
-        knows = standing(theirs, surgery_ring)
+        knows = standing(theirs, surgery_ring, {})
         print(f"  at the surgery's own door his card stands {knows[0]}, as {knows[1]}")
         self.expect(knows[0] == "enrolled", "the surgery did not know his key")
-        self.forward("practice", "marcus-to-practice", "hospital", "card-from-practice",
-                     "This is Marcus Bell's key. He showed it at our desk on 2025-06-03.")  # fmt: skip
+        word = self.line("practice", "whose key was shown at the desk", "desk.md",
+                         f"The key {self.pub['marcus']} is Marcus Bell's: he showed it at our desk on 2025-06-03.", 1)  # fmt: skip
+        self.pack("practice", word, "hospital", "word-from-practice", "Whose key this is, and how we know.")  # fmt: skip
+        heard = self.hears("word-from-practice")
+        print(f"  the surgery seals and sends that the key is his, and how it knows; the ward hears it: {heard == 1}")  # fmt: skip
         third = self.what(
-            self.door("card-from-practice", "the card the surgery passes on")
+            self.door("card-from-jun", "the card Jun handed over, read again")
         )
-        self.expect(third == {"caution": "honoured", "fact": "shown", "grant": "honoured"},
+        self.expect(heard == 1 and third == {"caution": "honoured", "fact": "shown", "grant": "honoured"},
                     f"the vouched card was not read as told: {third}")  # fmt: skip
-        print("  so Jun is called and told, on the surgery's word for whose key it is")
+        print(
+            "  so Jun is called and told, on the surgery's signed word for whose key it is"
+        )
+        self.pack("someone", ",".join(fake), "court", "someone-to-court", "Marcus Bell's emergency card.")  # fmt: skip
+        self.receive("court", "someone-to-court", quiet=True)
+        self.forward(
+            "court",
+            "someone-to-court",
+            "hospital",
+            "second-card-wrapped",
+            "Passing this on.",
+        )
+        wrapped = self.what(self.door("second-card-wrapped", "the second card, passed on by the court without a word"))  # fmt: skip
+        self.expect(wrapped == {"all-clear": "held", "grant": "held"} and self.hears("second-card-wrapped") == 0,
+                    f"a wrap alone vouched: {wrapped}")  # fmt: skip
 
         print("── 4. Sable is brought in, with two cards")
         self.now = at("2026-11-12T21:00:00Z")
@@ -268,9 +313,7 @@ class Card(tense.Tense):
         )
         again = self.what(self.door("card-from-jun", "the same card, now"))
         self.expect(again == {"caution": "honoured", "fact": "shown", "grant": "honoured"}, f"enrolled, his card was not honoured: {again}")  # fmt: skip
-        other = standing(
-            json.loads((self.to / "card-from-someone.pkg").read_text()), self.ring
-        )[0]
+        other = standing(json.loads((self.to / "card-from-someone.pkg").read_text()), self.ring, self.spoken)[0]  # fmt: skip
         print(f"  and the second card, which was never his, still stands: {other}")
         self.expect(other == "unknown", "the second card gained standing")
 
@@ -282,7 +325,8 @@ class Card(tense.Tense):
             self.expect(out.startswith("the chain holds"), f"{name} does not verify")
         print(f"  {len(table)} boxes, each: the chain holds")
         self.said = {
-            "from_jun": first, "from_someone": second, "from_the_surgery": third,
+            "from_jun": first, "from_someone": second, "once_the_surgery_has_spoken": third,
+            "second_card_wrapped_by_a_known_signer": wrapped,
             "sable": {"her_guardian_of_old": a, "her_own": b, "the_court": c, "called": called},
             "penicillin_withheld_throughout": careful, "an_unknown_all_clear_taken": lowered,
             "lines_on_the_wards_record": len(rows), "after_he_enrols": again, "the_second_card_then": other,
