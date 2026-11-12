@@ -2451,6 +2451,11 @@ willow/
 │   │   │   ├── results/
 │   │   │   │   └── tables.json       what door.py counted for the page: the study's own check, size, strangers, how much is checked
 │   │   │   ├── stops.json        where each trajectory stops, as the first study's baseline found it
+│   │   │   ├── wagers/           what was said before the runs, on a box apart from the verdict box
+│   │   │   │   ├── claims.txt        twelve claims about the runs to come, each with how likely the cloud session thought it
+│   │   │   │   ├── record.jsonl      the wagers box's record as it stood: twelve wagers, five choices and noes, none sealed
+│   │   │   │   ├── tip.json          where that record ended, by tip-pin
+│   │   │   │   └── README.md What was said before the runs
 │   │   │   ├── test_door.py      counting comes to what the study's machines did, to the step; a lie is found by a check that looks
 │   │   │   ├── test_machine.py   it comes to the first study's bytes; a run cut off ends the same; a changed file shows; the door takes, holds, refuses
 │   │   │   └── README.md     A door on the shared memory, counted at larger sizes
