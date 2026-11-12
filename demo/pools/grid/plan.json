@@ -1,0 +1,7 @@
+{
+ "all_shuffles": 3,
+ "cell_min": 3,
+ "random_draws": 10,
+ "random_sizes": [3, 10, 30, 100],
+ "seed": 20261112
+}
