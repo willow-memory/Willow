@@ -1,0 +1,1 @@
+`demo/shared-runs/door/machine.py`: the door holds a folder that an enrolled checker stepped again and found not the same, and any folder that went on from such a one, whoever signed them. Before, an enrolled signer was taken even after a check had found its folder wrong.

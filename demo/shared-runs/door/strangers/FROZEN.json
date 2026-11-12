@@ -8,7 +8,7 @@
   "told.py": "1cb9fa2644dc4baf8df1a4422a554ce3057284de5bdaf89bbb180225be36020f",
   "../../study/plan.json": "73bdf4e767856805923db276d1349dde9ec3fcb70aded8116b076ea12d861d0f",
   "../../study/starts.json": "68bfc3a18cc2e369b26d5a9105a9820c1a37b7c7ecc1d674787fcdc851f4f012",
-  "../machine.py": "7e95de4c93c82df65fdc5647a167b5a43b21a778355614f2fa88b0cfb227df3a",
+  "../machine.py": "83219e91242afd4c54045aefc939aa8a948fdb3ed49db674e6eaeb1d4b09f7b5",
   "../../study/runner.py": "0f9b5b62aa0540c9459c9b1a4ebde1ed2f4e14993fee79a746d27712be22b088",
   "../../study/sweep.py": "2c8b8537366d0ec70f532ce4cf2f5189b12fa401a615e91140ec29f15e85904a",
   "../../../../adapters/stdlib/share/ed25519.py": "ca54a7ae5f6b7b003d6333b62db4e83704fb09088c93cab63739884212d4487e"
@@ -59,5 +59,17 @@
   "not_the_same_at_the_liar": "3 of 891 states and halts",
   "the_check_stepped": 276269
  },
- "not_frozen": "the identities, which are made when the notebooks are and kept outside the repository; the Kaggle account"
+ "not_frozen": "the identities, which are made when the notebooks are and kept outside the repository; the Kaggle account",
+ "freeze_2": {
+  "frozen": "2026-11-12",
+  "made_after": "its run on Kaggle had come back and been judged, every rule passed, with the first freeze's bytes",
+  "reason": "machine.py's door took an enrolled signer's folder even when an enrolled checker had stepped it again and found it not the same, and took a folder that had gone on from such a one. Neither case arises in this run, where every enrolled signer is honest, so nothing this run measured turns on it. The door now holds both, whoever signed them; that is what the run after these asks about.",
+  "changed": {
+   "../machine.py": {
+    "was": "7e95de4c93c82df65fdc5647a167b5a43b21a778355614f2fa88b0cfb227df3a",
+    "now": "83219e91242afd4c54045aefc939aa8a948fdb3ed49db674e6eaeb1d4b09f7b5"
+   }
+  },
+  "what_ran": "this run's notebooks carry the file as it was"
+ }
 }

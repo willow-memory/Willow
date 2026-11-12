@@ -7,7 +7,7 @@
   "grew.py": "1c5add5b0f5a9a13774c196921ef4b1dd54024a28ec5eaef991a66d7c4c86e2b",
   "plan.json": "ca973186d4061603114e075c4461a04a92449304ad79065acab57c83cc069e4e",
   "starts.json": "480a72451e6a75db9b7fa20f90a5eb919c616b1d42e625d6ee9c3107f246156f",
-  "../machine.py": "7e95de4c93c82df65fdc5647a167b5a43b21a778355614f2fa88b0cfb227df3a",
+  "../machine.py": "83219e91242afd4c54045aefc939aa8a948fdb3ed49db674e6eaeb1d4b09f7b5",
   "../kaggle/door_notebooks.py": "fcd3ca1602de233b0b869f41a14543b0f1c8c9f1b2bab8acad725df1643a8cd4",
   "../../study/runner.py": "0f9b5b62aa0540c9459c9b1a4ebde1ed2f4e14993fee79a746d27712be22b088",
   "../../study/sweep.py": "2c8b8537366d0ec70f532ce4cf2f5189b12fa401a615e91140ec29f15e85904a",
@@ -37,5 +37,17 @@
  ],
  "no_baseline": "what the sweep would cost alone is counted from the plan and the halts the shared run finds, each of which the check steps up to",
  "not_tested_is_not_passed": "a folder that did not come back sealed leaves every rule not tested",
- "not_frozen": "the identities, which are made when the notebooks are and kept outside the repository; the Kaggle account"
+ "not_frozen": "the identities, which are made when the notebooks are and kept outside the repository; the Kaggle account",
+ "freeze_2": {
+  "frozen": "2026-11-12",
+  "made_after": "its notebooks had been made from the first freeze's bytes and were being pushed to Kaggle; the run uses those bytes, and nothing of it was stepped with the changed file",
+  "reason": "machine.py's door took an enrolled signer's folder even when an enrolled checker had stepped it again and found it not the same, and took a folder that had gone on from such a one. Neither case arises in this run, where every enrolled signer is honest, so nothing this run measured turns on it. The door now holds both, whoever signed them; that is what the run after these asks about.",
+  "changed": {
+   "../machine.py": {
+    "was": "7e95de4c93c82df65fdc5647a167b5a43b21a778355614f2fa88b0cfb227df3a",
+    "now": "83219e91242afd4c54045aefc939aa8a948fdb3ed49db674e6eaeb1d4b09f7b5"
+   }
+  },
+  "what_ran": "this run's notebooks carry the file as it was"
+ }
 }

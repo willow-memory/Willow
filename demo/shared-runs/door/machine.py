@@ -42,7 +42,11 @@ the bytes the first study's machines came to. What is added:
                file of enrolled public keys) or an enrolled signer's check
                found every state of it the same. One that is whole but
                whose signer is not known is held: logged, and not gone on
-               from. One that is not whole is refused, and the run stops.
+               from. So is one an enrolled checker stepped again and
+               found not the same, and one that went on from such a one,
+               whoever signed them: being enrolled does not outweigh a
+               check that looked. One that is not whole is refused, and
+               the run stops.
     a seal     when it ends clean: `manifest.json`, the SHA-256 of each
                file it leaves, of the plan, the starts and the code, what
                it took in and what it held, signed with the key in `--id`
@@ -211,10 +215,11 @@ def tools() -> dict[str, str]:
     return out
 
 
-def held(folder: Path, ring: dict[str, str] | None, ours: dict, vouched: dict[str, str]) -> tuple[str, str]:  # fmt: skip
+def held(folder: Path, ring: dict[str, str] | None, ours: dict, vouched: dict[str, str],
+         faulted: dict[str, str] | None = None) -> tuple[str, str]:  # fmt: skip
     """(how another run's folder stands at this door, why): `taken` to be
-    gone on from, `held` whole but not known, `refused` not whole or not
-    this plan's."""
+    gone on from, `held` whole but not known or found wrong, `refused` not
+    whole or not this plan's."""
     seal = folder / "manifest.json"
     if not seal.is_file():
         return "refused", "it has no seal: the run did not end, or is not one of these"
@@ -232,9 +237,11 @@ def held(folder: Path, ring: dict[str, str] | None, ours: dict, vouched: dict[st
         return "refused", "its seal's signature does not hold"
     if ring is None:
         return "taken", "no ring was given, so whoever is whole is taken"
+    this = hashlib.sha256(seal.read_bytes()).hexdigest()
+    if faulted and this in faulted:
+        return "held", f"whoever signed it, {faulted[this]}"
     if signer in ring:
         return "taken", f"its signer is enrolled: {ring[signer]}"
-    this = hashlib.sha256(seal.read_bytes()).hexdigest()
     if this in vouched:
         return (
             "taken",
@@ -283,6 +290,44 @@ def vouches(folders: list[Path], ring: dict[str, str] | None) -> dict[str, str]:
             return found
         for s in lost:
             del found[s]
+
+
+def faults(folders: list[Path], ring: dict[str, str] | None) -> dict[str, str]:
+    """{a run's seal's SHA-256: why it is not to be gone on from}, from the
+    check runs among the folders given: a run an enrolled checker stepped
+    again and found not the same, and any run that went on from such a
+    one, however it is signed. Being enrolled says who a signer is; it
+    does not outweigh a check that looked."""
+    if ring is None:
+        return {}
+    out: dict[str, str] = {}
+    seals: dict[str, dict] = {}
+    for folder in folders:
+        seal = folder / "manifest.json"
+        if not seal.is_file():
+            continue
+        doc = json.loads(seal.read_text(encoding="utf-8"))
+        seals[sha(seal)] = doc
+        if (
+            doc.get("mode") != "check"
+            or doc.get("signer") not in ring
+            or not signed(doc)
+        ):
+            continue
+        for one in doc.get("checked", {}).values():
+            if not one["all_the_same"]:
+                out[one["seal"]] = (
+                    f"{ring[doc['signer']]} stepped it again and found it not the same"
+                )
+    while True:
+        more = [
+            s for s, d in seals.items()
+            if s not in out and any(v["how"] == "taken" and v["seal"] in out for v in d.get("took_in", {}).values())
+        ]  # fmt: skip
+        if not more:
+            return out
+        for s in more:
+            out[s] = "it went on from a run that was found not the same"
 
 
 def signed(doc: dict) -> bool:
@@ -391,12 +436,12 @@ class Run:
     # ── the door ────────────────────────────────────────────────────────────
     def door(self) -> list[Path]:
         given = [Path(p) for p in self.opts["memory"]]
-        spoken = vouches(given, self.ring)
+        spoken, wrong = vouches(given, self.ring), faults(given, self.ring)
         taken = []
         for folder in given:
             if (folder / "run.json").is_file() and json.loads((folder / "run.json").read_text()).get("mode") == "check":  # fmt: skip
                 continue
-            how, why = held(folder, self.ring, self.ours, spoken)
+            how, why = held(folder, self.ring, self.ours, spoken, wrong)
             seal = folder / "manifest.json"
             self.took_in[folder.name] = {"how": how, "why": why,
                                          "seal": sha(seal) if seal.is_file() else None}  # fmt: skip

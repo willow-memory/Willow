@@ -417,3 +417,95 @@ def test_a_bad_command_line_is_refused(capsys):
     for argv in ([], ["nonsense"], ["alone", "--plan", "p"], ["verify"], ["check", "--plan", "p", "--starts", "s", "--to", "o", "--toy"]):  # fmt: skip
         assert machine.main(argv) == 2
     assert "usage" in capsys.readouterr().err or True
+
+
+def test_being_enrolled_does_not_outweigh_a_check_that_looked(tmp_path):
+    base = setup(tmp_path)
+    ours, ours_key = ident(tmp_path, "ours")
+    liar, liar_key = ident(tmp_path, "liar")
+    ring = tmp_path / "ring.json"
+    ring.write_text(json.dumps({ours_key: "ours", liar_key: "an enrolled liar"}))
+    honest = shared(base, tmp_path, 0, 1, to=tmp_path / "honest")
+    lied = tmp_path / "lied"
+    lied.mkdir()
+    for name in ("acts.jsonl", "log.jsonl", "machine.json", "run.json"):
+        (lied / name).write_bytes((honest / name).read_bytes())
+    memory = rows(honest / "memory.jsonl")
+    never = machine.runner.identity({"toy": {"seed": 1}}, machine.runner.Toy.said)
+    memory.append({"trajectory": never, "halt": 10})
+    (lied / "memory.jsonl").write_text(
+        "".join(machine.canon(m).decode() + "\n" for m in memory)
+    )
+    doc = json.loads((honest / "manifest.json").read_text())
+    doc["files"] = {n: machine.sha(lied / n) for n in machine.FILES}
+    seed = machine.read_id(liar)
+    doc["signer"] = liar_key
+    doc.pop("sig", None)
+    doc["sig"] = machine.ed25519.sign(seed, machine.canon(doc)).hex()
+    (lied / "manifest.json").write_text(json.dumps(doc))
+    right = {a["job"]: a["sha256"] for a in rows(shared(base, tmp_path, 0, 2, "--memory", honest,
+                                                        to=tmp_path / "right") / "acts.jsonl")}  # fmt: skip
+
+    # before anyone looks: its signer is enrolled, so it is taken, and a wrong byte goes out
+    took = shared(
+        base,
+        tmp_path,
+        0,
+        2,
+        "--memory",
+        lied,
+        "--ring",
+        ring,
+        "--id",
+        ours,
+        to=tmp_path / "took",
+    )
+    seal = json.loads((took / "manifest.json").read_text())
+    assert (
+        seal["took_in"]["lied"]["how"] == "taken"
+        and "enrolled" in seal["took_in"]["lied"]["why"]
+    )
+    assert any(a["sha256"] != right[a["job"]] for a in rows(took / "acts.jsonl"))
+
+    # an enrolled checker looks, at the liar's folder and at the one that went on from it
+    check = tmp_path / "check"
+    assert (
+        go(
+            "check",
+            *base,
+            "--to",
+            check,
+            "--memory",
+            lied,
+            "--memory",
+            took,
+            "--id",
+            ours,
+        )
+        == 0
+    )
+    found = json.loads((check / "manifest.json").read_text())["checked"]
+    assert found["lied"]["all_the_same"] is False
+    wrong = machine.faults([lied, took, check], machine.ring_of(ring))
+    assert set(wrong) == {
+        machine.sha(lied / "manifest.json"),
+        machine.sha(took / "manifest.json"),
+    }
+    assert "went on from" in wrong[machine.sha(took / "manifest.json")] or "not the same" in wrong[machine.sha(took / "manifest.json")]  # fmt: skip
+
+    # after: both are held, whoever signed them, and every byte is right
+    after = tmp_path / "after"
+    assert go("shared", *base, "--to", after, "--machine", 0, "--round", 2, "--memory", lied,
+              "--memory", took, "--memory", check, "--ring", ring, "--id", ours) == 42  # fmt: skip
+    seal = json.loads((after / "manifest.json").read_text())
+    assert {v["how"] for v in seal["took_in"].values()} == {"held"}
+    assert "whoever signed it" in seal["took_in"]["lied"]["why"]
+    assert {a["job"]: a["sha256"] for a in rows(after / "acts.jsonl")} == right
+
+    # a checker the ring does not know condemns nobody
+    stranger, _ = ident(tmp_path, "stranger")
+    assert (
+        go("check", *base, "--to", tmp_path / "c2", "--memory", lied, "--id", stranger)
+        == 0
+    )
+    assert machine.faults([lied, tmp_path / "c2"], machine.ring_of(ring)) == {}
