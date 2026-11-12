@@ -4,7 +4,7 @@
  "on_whose_word": "the maintainer's, to the cloud session: \"come up with the next few and run them\"",
  "files": {
   "cleared_notebooks.py": "e3a79ee0f22182693d221373e2d1da16bb970dda0108c03e9a34680868bc5a66",
-  "bought.py": "adc2b8615a1d56e156bbf4219d40c678a5995385c522e8289c0ca82799ac6754",
+  "bought.py": "52a1ef4df21eadd8fc65f2acd4f511146e765da044a2f96d1a4ed174d830e62b",
   "../grown/grown_notebooks.py": "7cc1ea46c17579725f373b1d9bf810d5ec4abca7b1cbef535c3ed0025ea1ab21",
   "../grown/plan.json": "ca973186d4061603114e075c4461a04a92449304ad79065acab57c83cc069e4e",
   "../grown/starts.json": "480a72451e6a75db9b7fa20f90a5eb919c616b1d42e625d6ee9c3107f246156f",
@@ -40,5 +40,17 @@
   "the kinds of processor drawn"
  ],
  "not_tested_is_not_passed": "a folder that did not come back sealed leaves every rule not tested",
- "not_frozen": "the identities, which are made when the notebooks are and kept outside the repository; the Kaggle account"
+ "not_frozen": "the identities, which are made when the notebooks are and kept outside the repository; the Kaggle account",
+ "freeze_2": {
+  "frozen": "2026-11-12",
+  "made_after": "the run had come back from Kaggle and been judged, every rule passed",
+  "reason": "bought.py's count of clearings carried on on another kind of processor looked only at the last twelve lines of each clearing's log, and after the third round the line that says so is further back than that: it said 1 of 18 where the logs say 6. It is a figure measured with no threshold; no rule reads it and no verdict changes. It is now counted from the whole of the last clearing's log, which is carried on with it and holds every time it was said.",
+  "changed": {
+   "bought.py": {
+    "was": "adc2b8615a1d56e156bbf4219d40c678a5995385c522e8289c0ca82799ac6754",
+    "now": "52a1ef4df21eadd8fc65f2acd4f511146e765da044a2f96d1a4ed174d830e62b"
+   }
+  },
+  "verdicts": "C1 to C5 as they were"
+ }
 }

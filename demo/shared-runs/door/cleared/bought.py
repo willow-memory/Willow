@@ -198,9 +198,13 @@ def figures(
         f["clears"]["looked"] += sum(a["mode"] == "check" for a in last)
         f["clears"]["twice"] += len(keys) - len(set(keys))
         f["clears"]["not_same"] += sum(not a["same"] for a in last)
+        # a clearing's log is carried on with it, so the last one's holds every time it was said
+        said = [
+            row["what"]
+            for row in rows(got[f"clear-{plan['rounds'] - 1}-{k}"] / "log.jsonl")
+        ]
+        f["clears"]["other_kind"] += said.count("carried on, on another kind")
         for r in list(rounds)[:-1]:
-            said = [row["what"] for row in rows(got[f"clear-{r}-{k}"] / "log.jsonl")]
-            f["clears"]["other_kind"] += "carried on, on another kind" in said[-12:]
             found = seals[f"clear-{r}-{k}"]["checked"]
             want = {f"round-{q}-machine-{k}" for q in range(1, r + 1)}
             if set(found) != want or not all(
