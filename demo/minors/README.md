@@ -1,4 +1,4 @@
-# Four minors, each standing somewhere different to their own box
+# Minors, each standing somewhere different to their own box
 
 Test data, made 2026-11-12 on the maintainer's word, to have something to
 hold the talk about health records against. Nobody here is real, and
@@ -66,11 +66,82 @@ Marit also has a box about herself. One key holds all four of hers.
 - **Two houses is one box and a sender.** Leo's box has one holder. His
   father adds to it by sending, not by holding a second key.
 
+## A third set: where it is tense
+
+The first four all get on with whoever holds their box. These two do
+not, and they pull opposite ways on purpose: in one the wall protects
+the minor, and in the other it shuts out someone who is right to worry.
+
+    python demo/minors/tense.py run --life demo/minors/life --to /tmp/tense
+
+**Sable, fifteen, and Garrick.** Her mother has died. Her stepfather is
+her guardian, holds her box, and sits in on every appointment. She asked
+the school nurse to see her alone, and said she can't speak freely at
+home. She keeps a box of her own at her aunt Bryony's, with a card that
+says to call her aunt first; the card Garrick wrote says to call him.
+
+**Kit, sixteen, and Rosa.** Kit has diabetes and lives with a
+grandmother. The clinic has written that things are getting worse. Kit
+stopped showing her the numbers in September, "because every number
+turned into an argument", and writes: "I know it is going wrong."
+
+What the scene plays:
+
+1. Garrick asks the box he holds about the nurse, three ways. It has
+   nothing, each time. The nurse sends her note to Sable's own box and
+   nothing to the house. Sable seals her own card; her seal proves under
+   her key and not his.
+2. A court makes Bryony her guardian. Garrick hands nothing over.
+   Bryony starts a box from a photograph of a vaccination card. Garrick
+   goes on sealing in the old one.
+3. Rosa asks the box she holds for Kit's readings, and it has none. Then
+   Kit seals one sentence, the count for October, and sends it to her,
+   with a note: "I want help, not a row."
+
+What it found:
+
+- **Asking leaves a mark, and the mark can be tested.** Every question
+  Garrick put is a row on the record of the box he holds: when, and a
+  fingerprint of the words, not the words. Someone who guesses the
+  question can confirm the guess; a wrong guess confirms nothing. So a
+  girl who later gets that box can see how often it was asked, and test
+  what she fears was asked.
+- **A key says who approved. It does not say who may ask.** Sable's seal
+  cannot be made by Garrick. But the scene puts her box in his hands and
+  asks it his question, and it answers. Nothing in willow keeps a box
+  from whoever holds its folder. Her box is safe because it is at her
+  aunt's, not because of anything willow does. That is the largest thing
+  this set found, and the calm cases could not have shown it.
+- **Holding ends in law, not in the key.** After the court's order two
+  boxes say they are held for Sable. Both verify. The old holder still
+  seals. The only thing that tells them apart is the order, which is a
+  file in a pile and not a key anyone can check. The `held-for` row this
+  demo invented has an "until", and nothing reads it.
+- **An uncooperative handover loses the record.** Bryony's box knows of
+  two doses; Garrick's knows of three. What he will not hand over, she
+  does not have.
+- **Two cards, two answers.** A stranger in an emergency would find one
+  card or the other, and nothing says which is hers.
+- **The wall is the same wall.** Rosa's box says "empty" exactly as
+  Garrick's does. Willow cannot tell a guardian who should not know from
+  one who needs to. It opens from the minor's side only, and Kit opens
+  it.
+- **What arrives cannot be asked.** After Kit's sentence came, Rosa
+  asked again and her box still said "empty". A package received is on
+  the record, not in her files, and the kernel answers from files. She
+  would have to read the receipt.
+
 ## What it does not show
 
 - **Who may start a box.** Tobias has a key of his own because the scene
   gave him one. Whether a fourteen-year-old should, and for what, is the
   law's and the family's, not this demo's.
+- **Who is right.** The scene takes no side between Sable and Garrick,
+  or between Kit and Rosa. It plays what each can do with a box, and
+  the same act serves a girl who needs a door and a teenager who
+  needs help they are not asking for.
+- **Harm.** Nothing here models danger, and nothing here is advice to
+  anyone living it.
 - **The adult who cannot decide.** Every minor here has a guardian from
   the start and a day the holding ends. Neither is true of an adult who
   falls ill.

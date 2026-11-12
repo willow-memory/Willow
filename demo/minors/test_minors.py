@@ -12,6 +12,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import make_life  # noqa: E402
 import scene  # noqa: E402
+import tense  # noqa: E402
 
 make_life.main(
     []
@@ -20,9 +21,8 @@ make_life.main(
 
 def test_the_made_up_files_are_as_written_and_his_words_are_in_no_box_marit_holds():
     assert make_life.check() == []
-    assert sorted({name.split("/")[0] for name in make_life.FILES}) == sorted(
-        scene.BOXES
-    )
+    made = sorted({name.split("/")[0] for name in make_life.FILES})
+    assert made == sorted([*scene.BOXES, *tense.BOXES, "sable-with-bryony"])
     wrong = dict(make_life.FILES)
     wrong["tobias/checkups.md"] += "\nAsk him about the counselling.\n"
     old, make_life.FILES = make_life.FILES, wrong
@@ -70,3 +70,48 @@ def test_a_scene_is_played_outside_the_repository_and_never_over_another(tmp_pat
     )
     assert scene.main(["run"]) == 2 and scene.main([]) == 2
     assert not (HERE / "out").exists()
+
+
+def test_the_tense_scene_plays_as_told(tmp_path, capsys):
+    to = tmp_path / "tense"
+    assert tense.main(["run", "--life", str(HERE / "life"), "--to", str(to)]) == 0
+    said = json.loads((to / "tense.json").read_text())
+    assert said["wrong"] == []
+    assert all(
+        b["verify"].startswith("the chain holds") for b in said["boxes"].values()
+    )
+    assert said["said"]["sable"] == {
+        "his_asks": 4, "found": ["empty"], "guess_confirmed": True, "her_key": 1, "his_key": 0,
+        "cards_differ": True, "answers_whoever_holds_it": True,
+    }  # fmt: skip
+    assert said["said"]["guardian"] == {
+        "claim_to_hold": ["sable", "sable-with-bryony"], "old_holder_seals_after_order": 1,
+        "handed_over": False, "old_box_seals": 2, "new_box_seals": 1,
+    }  # fmt: skip
+    assert said["said"]["kit"] == {
+        "before": "empty", "received": 1, "kits_notes_travelled": False, "rosa_asked_again": "empty",
+    }  # fmt: skip
+    printed = capsys.readouterr().out
+    assert (
+        printed.count("received, not sealed by you") == 2
+        and "went otherwise" not in printed
+    )
+    assert (
+        tense.main(["run", "--life", str(HERE / "life"), "--to", str(HERE / "out")])
+        == 2
+    )
+    assert tense.main(["run", "--life", str(HERE / "life"), "--to", str(to)]) == 2
+    assert tense.main(["run"]) == 2 and not (HERE / "out").exists()
+
+
+def test_what_a_minor_keeps_alone_is_in_no_box_their_caregiver_holds():
+    held = dict(make_life.FILES)
+    held["sable/appointments.md"] += "\nThe nurse wants to see her.\n"
+    held["kit/clinic-letters.md"] += "\nBring the glucose log.\n"
+    old, make_life.FILES = make_life.FILES, held
+    try:
+        wrong = make_life.check()
+        assert any("sable/appointments.md says 'nurse'" in w for w in wrong)
+        assert any("kit/clinic-letters.md says 'glucose'" in w for w in wrong)
+    finally:
+        make_life.FILES = old

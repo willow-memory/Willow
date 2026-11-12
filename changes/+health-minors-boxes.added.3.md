@@ -1,0 +1,1 @@
+demo/minors: a third set, where it is tense. A fifteen-year-old whose guardian reads everything and will not hand over when a court replaces him, and a sixteen-year-old hiding a worsening illness from a grandmother who is right to worry; what a box can and cannot do for each, and that a key says who approved, not who may ask.
