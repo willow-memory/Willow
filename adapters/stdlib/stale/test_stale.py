@@ -70,9 +70,13 @@ def test_every_id_asked_for_that_is_in_the_pile_is_found(tmp_path):
     assert st.present(pile, ids | {"0" * 64}) == ids
 
 
-def test_it_reads_the_pile_a_folder_at_a_time_through_pieces_beside_it():
+def test_it_reads_the_pile_a_folder_at_a_time_through_pieces_when_beside_it():
+    # the card's looks-for: pieces is used when it is beside stale, and stale
+    # reads the kernel's way without it (copied out alone, tests:alone)
+    beside = (HERE.parent / "pieces" / "pieces.py").is_file()
     pc = module().pieces()
-    assert pc is not None and hasattr(pc, "passages")
+    assert (pc is not None) == beside
+    assert pc is None or hasattr(pc, "passages")
 
 
 def test_an_approval_holds_while_its_cited_passage_is_there(tmp_path):

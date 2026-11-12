@@ -205,8 +205,10 @@ def test_no_dates_leaves_the_dates_out_and_keeps_what_waits(tmp_path):
 
 def test_no_dates_on_a_box_of_only_dates_prints_nothing(tmp_path):
     b, _ = init(tmp_path, {"log.txt": "On 2026-10-24 the tests passed.\n"})
-    assert (
-        "## Coming up" in context(run("--box", str(b), *NOW)) or not BESIDE["coming-up"]
+    # copied out alone (tests:alone), coming-up isn't beside it and the hook
+    # has nothing to say, so its output is only read when coming-up is there
+    assert not BESIDE["coming-up"] or "## Coming up" in context(
+        run("--box", str(b), *NOW)
     )
     got = run("--box", str(b), "--no-dates", *NOW)
     assert got.returncode == 0 and got.stdout == "" and got.stderr == ""
