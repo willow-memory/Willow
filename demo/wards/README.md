@@ -426,6 +426,12 @@ What it found:
   same card read again stands enrolled. The second card still stands
   unknown.
 
+The rule went back the way it came: the proposal in willows-grove now
+carries it, in a section called "A signer who can never be enrolled"
+(commit 55afe2d), for a phone that comes home unenrolled. Its rows can
+add caution on sight, and grant or relax nothing until it is enrolled
+or vouched for.
+
 What it rests on that nothing here builds:
 
 - **A ring at each door.** The scene holds the ward's enrolled keys in a
