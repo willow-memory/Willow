@@ -2462,6 +2462,8 @@ willow/
 │   │   │   ├── lies.py       a memory that has been lied to, and whether the checks find it
 │   │   │   ├── test_lies.py
 │   │   │   └── README.md     A memory that has been lied to: a study, drafted
+│   │   ├── local-models/     the first study's brief given to models a laptop runs: asked, not yet run
+│   │   │   └── README.md     The same brief, given to models that run on a laptop
 │   │   ├── NEXT.md           What could be tried next
 │   │   ├── rules.py          the next step of a stack chosen by rule from what its last run said, or that no rule fits
 │   │   ├── same.py       two kept runs of one stack, step by step: asked the same way, printed the same thing
