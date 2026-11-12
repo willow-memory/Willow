@@ -1,0 +1,257 @@
+{
+ "figures": {
+  "afresh": [
+   "coarse-step@2675",
+   "coarse-step@8090",
+   "crowded-earth-venus@11250",
+   "crowded-giants@4030",
+   "proxima-close-mars@4030",
+   "proxima-close@2675",
+   "rigel-wide-neptune@2675",
+   "rigel-wide@1520",
+   "rigel-wide@745",
+   "sirius-earth-jupiter-saturn@8090",
+   "sirius-earth-jupiter@6160",
+   "sun-earth-jupiter-saturn@310",
+   "sun-earth@8090",
+   "sun-eight@6160",
+   "sun-giants-pluto@745",
+   "sun-giants@14575",
+   "sun-inner@310",
+   "sun-mars-ceres-jupiter@18000",
+   "sun-mars-ceres@14575",
+   "sun-mars-ceres@18000"
+  ],
+  "afresh_same": 20,
+  "baseline_runs": 2,
+  "baseline_same": 220,
+  "baseline_steps": 1256518,
+  "check_steps": 100,
+  "checked_by": [
+   "check",
+   "cloud-session",
+   "laptop"
+  ],
+  "computed": 22,
+  "differ": [],
+  "draw": [
+   "coarse-step@2675",
+   "coarse-step@8090",
+   "crowded-earth-venus@11250",
+   "crowded-giants@4030",
+   "proxima-close-mars@4030",
+   "proxima-close@2675",
+   "rigel-wide-neptune@2675",
+   "rigel-wide@1520",
+   "rigel-wide@745",
+   "sirius-earth-jupiter-saturn@8090",
+   "sirius-earth-jupiter@6160",
+   "sun-earth-jupiter-saturn@310",
+   "sun-earth@8090",
+   "sun-eight@6160",
+   "sun-giants-pluto@745",
+   "sun-giants@14575",
+   "sun-inner@310",
+   "sun-mars-ceres-jupiter@18000",
+   "sun-mars-ceres@14575",
+   "sun-mars-ceres@18000"
+  ],
+  "halted": [
+   "crowded-coarse-giants",
+   "crowded-coarse-three",
+   "crowded-three"
+  ],
+  "halts_tried": {
+   "crowded-coarse-giants": 1,
+   "crowded-coarse-three": 1,
+   "crowded-three": 1
+  },
+  "jobs": 220,
+  "jobs_on_three_kinds": 3,
+  "jobs_run": 220,
+  "kinds": [
+   "amd x86_64 avx2",
+   "intel x86_64 avx2",
+   "intel x86_64 avx512"
+  ],
+  "measured": 73.2,
+  "median_job": 5095.0,
+  "native_first_difference": {
+   "crowded-coarse-giants": 310,
+   "crowded-coarse-three": 310,
+   "crowded-earth-venus": 310,
+   "crowded-giants": 310,
+   "crowded-three": 745,
+   "proxima-close": 310,
+   "proxima-close-mars": 310,
+   "rigel-wide": 310,
+   "rigel-wide-neptune": 310,
+   "sirius-earth-jupiter": 310,
+   "sirius-earth-jupiter-saturn": 310,
+   "sun-earth": 310,
+   "sun-earth-jupiter": 310,
+   "sun-earth-jupiter-saturn": 310,
+   "sun-eight": 310,
+   "sun-giants": 310,
+   "sun-giants-pluto": 745,
+   "sun-inner": 310,
+   "sun-inner-jupiter": 310,
+   "sun-mars-ceres": 1520,
+   "sun-mars-ceres-jupiter": 310
+  },
+  "native_jobs": 220,
+  "native_kinds": [
+   "intel x86_64 avx2",
+   "intel x86_64 avx512"
+  ],
+  "native_machines": 5,
+  "native_same": 14,
+  "predicted": 73.3,
+  "predicted_with_halts": 73.7,
+  "refusals_tried": {
+   "coarse-step": 1
+  },
+  "refused": [
+   "coarse-step"
+  ],
+  "served": 29,
+  "shared_jobs": 220,
+  "shared_machines": 10,
+  "shared_steps": 336379,
+  "states_checked": 1305,
+  "states_same": 1305,
+  "stepped_on": 169,
+  "trajectories": 22
+ },
+ "verdicts": {
+  "R1": {
+   "figures": {
+    "differ": 0,
+    "jobs_on_three_kinds": 3,
+    "jobs_run": 220,
+    "kinds": 3,
+    "states_checked": 1305,
+    "states_same": 1305
+   },
+   "said": "every job and kept state agreed, on 3 kinds of processor",
+   "state": "passed"
+  },
+  "R2": {
+   "figures": {
+    "first_difference": {
+     "crowded-coarse-giants": 310,
+     "crowded-coarse-three": 310,
+     "crowded-earth-venus": 310,
+     "crowded-giants": 310,
+     "crowded-three": 745,
+     "proxima-close": 310,
+     "proxima-close-mars": 310,
+     "rigel-wide": 310,
+     "rigel-wide-neptune": 310,
+     "sirius-earth-jupiter": 310,
+     "sirius-earth-jupiter-saturn": 310,
+     "sun-earth": 310,
+     "sun-earth-jupiter": 310,
+     "sun-earth-jupiter-saturn": 310,
+     "sun-eight": 310,
+     "sun-giants": 310,
+     "sun-giants-pluto": 745,
+     "sun-inner": 310,
+     "sun-inner-jupiter": 310,
+     "sun-mars-ceres": 1520,
+     "sun-mars-ceres-jupiter": 310
+    },
+    "jobs": 220,
+    "kinds": 2,
+    "machines": 5,
+    "same": 14
+   },
+   "said": "14 of 220 jobs the same bytes on 5 machines; kinds of processor among them: 2",
+   "state": "measured"
+  },
+  "R3": {
+   "figures": {
+    "baseline_steps": 1256518,
+    "jobs": 220,
+    "measured": 73.2,
+    "predicted": 73.3,
+    "predicted_with_halts": 73.7,
+    "shared_jobs": 220,
+    "shared_steps": 336379
+   },
+   "said": "predicted 73.7% once the baseline's halts are known (73.3% from the sweep alone), measured 73.2%: 0.5 points apart",
+   "state": "passed"
+  },
+  "R4": {
+   "figures": {
+    "drawn": 20,
+    "run": 20,
+    "same": 20
+   },
+   "said": "20 of 20 served jobs run afresh came out the same bytes",
+   "state": "passed"
+  },
+  "R5": {
+   "figures": {
+    "checks": 1305,
+    "median_job": 5095.0,
+    "spacing": 100,
+    "steps": 100
+   },
+   "said": "a check stepped 100 steps at the median, 2.0% of the median job's 5095",
+   "state": "measured"
+  },
+  "R6": {
+   "figures": {
+    "halted": {
+     "crowded-coarse-giants": 1,
+     "crowded-coarse-three": 1,
+     "crowded-three": 1
+    },
+    "refused": {
+     "coarse-step": 1
+    }
+   },
+   "said": "trajectories that began and halted: 3, each stepped into its halt once",
+   "state": "passed"
+  },
+  "R7": {
+   "figures": {
+    "asked": {
+     "larger": 16,
+     "small": 16
+    },
+    "right": {
+     "larger": 15,
+     "small": 15
+    }
+   },
+   "said": "right, of the questions the reports answer: larger: 15 of 16; small: 15 of 16",
+   "state": "failed"
+  },
+  "R8": {
+   "figures": {
+    "struck": {
+     "larger": 0,
+     "small": 0
+    }
+   },
+   "said": "sentences saying a figure no report holds: larger: 0; small: 0",
+   "state": "passed"
+  },
+  "R9": {
+   "figures": {
+    "asked": {
+     "larger": 5,
+     "small": 5
+    },
+    "held": {
+     "larger": 5,
+     "small": 5
+    }
+   },
+   "said": "left unsaid, of the questions the reports don't answer: larger: 5 of 5; small: 5 of 5",
+   "state": "passed"
+  }
+ }
+}

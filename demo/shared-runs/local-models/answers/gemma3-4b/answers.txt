@@ -1,0 +1,25 @@
+jobs: jobs: 220
+trajectories: trajectories: 22
+predicted: predicted: 73.3
+seconds: seconds: the reports don't say
+baseline-steps: baseline-steps: 1256518
+shared-steps: shared-steps: 336379
+measured: measured: 73.2
+served: served: 29
+vulcan: vulcan: the reports don't say
+stepped-on: stepped-on: 169
+computed: computed: 22
+halted: halted: 3
+cost: cost: the reports don't say
+refused: refused: 1
+states-checked: states-checked: 1305
+afresh: afresh: 20
+graphics: graphics: the reports don't say
+afresh-same: afresh-same: 14
+native-same: native-same: the reports don't say
+kinds: kinds: 3
+busiest: busiest: the reports don't say
+
+## the reports
+
+The run involved 220 jobs across 22 trajectories. Five machines were involved in the sweep, running two rounds. The baseline run stepped 1,256,518 steps. The shared run processed 220 jobs with 10 machine runs, including 22 runs taking nothing from memory, 169 runs going from a kept state, and 29 runs being served whole. The shared run stepped 336,379 steps and achieved a measured saving of 73.2% in steps. Three trajectories began and then halted. One trajectory was refused before a first step. 1305 kept states were stepped again, and 20 served jobs were run afresh, each producing the same bytes. The jobs were run on 3 types of processors: amd x86_64 avx2, intel x86_64 avx2, and intel x86_64 avx512.

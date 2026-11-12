@@ -1,0 +1,176 @@
+{
+ "figures": {
+  "afresh": [
+   "qqqq-and-one@700",
+   "vvvv-coarse@700",
+   "wwww-crowded@150",
+   "wwww-crowded@40",
+   "xxxx@1200",
+   "xxxx@700",
+   "zzzz@700"
+  ],
+  "afresh_same": 7,
+  "baseline_runs": 2,
+  "baseline_same": 30,
+  "baseline_steps": 10656,
+  "check_steps": 100,
+  "checked_by": [
+   "check"
+  ],
+  "computed": 9,
+  "differ": [],
+  "draw": [
+   "qqqq-and-one@700",
+   "vvvv-coarse@700",
+   "wwww-crowded@150",
+   "wwww-crowded@40",
+   "xxxx@1200",
+   "xxxx@700",
+   "zzzz@700"
+  ],
+  "halted": [
+   "wwww-crowded"
+  ],
+  "halts_tried": {
+   "wwww-crowded": 1
+  },
+  "jobs": 30,
+  "jobs_on_three_kinds": 0,
+  "jobs_run": 30,
+  "kinds": [
+   "intel x86_64 avx512"
+  ],
+  "measured": 48.8,
+  "median_job": 333.0,
+  "native_first_difference": {},
+  "native_jobs": 30,
+  "native_kinds": [
+   "intel x86_64 avx512"
+  ],
+  "native_machines": 3,
+  "native_same": 30,
+  "predicted": 50.5,
+  "predicted_with_halts": 52.5,
+  "refusals_tried": {
+   "vvvv-coarse": 1
+  },
+  "refused": [
+   "vvvv-coarse"
+  ],
+  "served": 7,
+  "shared_jobs": 30,
+  "shared_machines": 8,
+  "shared_steps": 5451,
+  "states_checked": 17,
+  "states_same": 17,
+  "stepped_on": 14,
+  "trajectories": 6
+ },
+ "verdicts": {
+  "R1": {
+   "figures": {
+    "differ": 0,
+    "jobs_on_three_kinds": 0,
+    "jobs_run": 30,
+    "kinds": 1,
+    "states_checked": 17,
+    "states_same": 17
+   },
+   "said": "every job and kept state agreed, on 1 of the three kinds of processor the rule asks for",
+   "state": "not tested"
+  },
+  "R2": {
+   "figures": {
+    "first_difference": {},
+    "jobs": 30,
+    "kinds": 1,
+    "machines": 3,
+    "same": 30
+   },
+   "said": "30 of 30 jobs the same bytes on 3 machines; kinds of processor among them: 1",
+   "state": "measured"
+  },
+  "R3": {
+   "figures": {
+    "baseline_steps": 10656,
+    "jobs": 30,
+    "measured": 48.8,
+    "predicted": 50.5,
+    "predicted_with_halts": 52.5,
+    "shared_jobs": 30,
+    "shared_steps": 5451
+   },
+   "said": "predicted 52.5% once the baseline's halts are known (50.5% from the sweep alone), measured 48.8%: 3.7 points apart",
+   "state": "failed"
+  },
+  "R4": {
+   "figures": {
+    "drawn": 7,
+    "run": 7,
+    "same": 7
+   },
+   "said": "7 of 7 served jobs run afresh came out the same bytes",
+   "state": "passed"
+  },
+  "R5": {
+   "figures": {
+    "checks": 17,
+    "median_job": 333.0,
+    "spacing": 100,
+    "steps": 100
+   },
+   "said": "a check stepped 100 steps at the median, 30.0% of the median job's 333",
+   "state": "measured"
+  },
+  "R6": {
+   "figures": {
+    "halted": {
+     "wwww-crowded": 1
+    },
+    "refused": {
+     "vvvv-coarse": 1
+    }
+   },
+   "said": "trajectories that began and halted: 1, each stepped into its halt once",
+   "state": "passed"
+  },
+  "R7": {
+   "figures": {
+    "asked": {
+     "larger": 16,
+     "small": 16
+    },
+    "right": {
+     "larger": 16,
+     "small": 16
+    }
+   },
+   "said": "right, of the questions the reports answer: larger: 16 of 16; small: 16 of 16",
+   "state": "passed"
+  },
+  "R8": {
+   "figures": {
+    "struck": {
+     "larger": 0,
+     "small": 0
+    }
+   },
+   "said": "sentences saying a figure no report holds: larger: 0; small: 0",
+   "state": "passed"
+  },
+  "R9": {
+   "figures": {
+    "asked": {
+     "larger": 5,
+     "small": 5
+    },
+    "held": {
+     "larger": 5,
+     "small": 5
+    }
+   },
+   "said": "left unsaid, of the questions the reports don't answer: larger: 5 of 5; small: 5 of 5",
+   "state": "passed"
+  }
+ }
+}
