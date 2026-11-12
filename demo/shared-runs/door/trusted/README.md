@@ -1,7 +1,7 @@
 # A liar the ring trusts
 
-**Status: built and dry-run with a made-up stepper; not yet frozen,
-and nothing of it pushed.** The fourth of the runs the maintainer asked
+**Status: frozen 2026-11-12, before any of it was pushed to Kaggle.
+Dry-run here only.** The fourth of the runs the maintainer asked
 for. Among [the strangers](../strangers/README.md) the liar was not
 enrolled, so the door held it before anyone looked and no wrong byte
 went out. Here the liar's key is in the ring.
@@ -32,7 +32,7 @@ Twelve notebooks, made by [trusted_notebooks.py](trusted_notebooks.py):
 | `check` | every kept state and halt of the five first rounds, and of place 3's second round, stepped again |
 | `round-2-machine-3-after` | place 3's second round again, given its first round, the second round that went on from it, and the check |
 
-## The rules
+## The rules, frozen in [FROZEN.json](FROZEN.json)
 
 [seen.py](seen.py) holds what comes back to them, and to the first
 study's kept runs:
@@ -51,6 +51,21 @@ in which the lie did not bite would show nothing about what follows.
 Measured, with no threshold: how many jobs go out wrong before the
 check; what the check finds of the round that went on from the lie;
 steps; the kinds of processor drawn.
+
+## The dry runs
+
+With a made-up stepper, in [test_trusted.py](test_trusted.py): the
+twelve run in order and every rule passes; a run in which the door went
+on taking the liar after the check fails N4.
+
+With the project's stepper, on the cloud session, all twelve as
+processes given only folders: every rule passed. Before the check the
+liar was taken and two jobs of 20 went out wrong, one stopped at the
+halt that is no halt and one from the changed state. The check found
+both changes. Of the round that went on from the lie it found 19 of 19
+states the same. After it, both were held and the round done again
+came to the first study's bytes, for 56,635 steps. One kind of
+processor; a dry run of the wiring, not a result.
 
 ## What the check cannot see by itself
 

@@ -1,0 +1,52 @@
+{
+ "about": "The freeze of the trusted-liar run: each file's SHA-256 as it stood before anything was pushed, held by test_trusted_frozen.py. A change is a new freeze, in its own commit, with its reason.",
+ "frozen": "2026-11-12",
+ "on_whose_word": "the maintainer's, to the cloud session: \"come up with the next few and run them\"",
+ "files": {
+  "trusted_notebooks.py": "4f68e557bef57a0538b7dca459adc9217846200e93283674971296d31ea2423f",
+  "seen.py": "11078d9c23f35001853abe917a5934d0428ff8bba835df20cf66b9f48e18d93f",
+  "../strangers/strangers_notebooks.py": "464fbfbaa7c80828430710391f45acdf69ab56c3ea8640e389f53c95e2937b4c",
+  "../strangers/lie.py": "bf8bb24439e44d788e30acc79078ccf51101a45568a9eec2adb5ee6d86d2fad4",
+  "../machine.py": "83219e91242afd4c54045aefc939aa8a948fdb3ed49db674e6eaeb1d4b09f7b5",
+  "../../study/plan.json": "73bdf4e767856805923db276d1349dde9ec3fcb70aded8116b076ea12d861d0f",
+  "../../study/starts.json": "68bfc3a18cc2e369b26d5a9105a9820c1a37b7c7ecc1d674787fcdc851f4f012",
+  "../../study/runner.py": "0f9b5b62aa0540c9459c9b1a4ebde1ed2f4e14993fee79a746d27712be22b088",
+  "../../study/sweep.py": "2c8b8537366d0ec70f532ce4cf2f5189b12fa401a615e91140ec29f15e85904a",
+  "../../../../adapters/stdlib/share/ed25519.py": "ca54a7ae5f6b7b003d6333b62db4e83704fb09088c93cab63739884212d4487e"
+ },
+ "liar": 3,
+ "against": "demo/shared-runs/study/runs, the first study's kept runs",
+ "rules": {
+  "N1": "passes when every folder is whole by its seal, its signature holds, and its signer is in the ring, the liar's among them",
+  "N2": "passes when, before the check, the liar's folder was taken as enrolled and the harm went out: a job of the trajectory with the written halt stopped at it, and a job of the trajectory with the changed state came to a SHA-256 the first study's did not",
+  "N3": "passes when the check found both changes in the liar's first round, and every state and halt of the other four first rounds the same",
+  "N4": "passes when, after the check, the liar's first round and the second round that went on from it were both held, whoever signed them, and every job of that second round done again ends as the first study's did",
+  "N5": "passes when the other four places took their own first round as enrolled and their second round is the first study's, byte for byte"
+ },
+ "measured": [
+  "jobs that went out wrong before the check",
+  "what the check found of the round that went on from the lie",
+  "steps",
+  "the kinds of processor drawn"
+ ],
+ "not_tested_is_not_passed": "a folder that did not come back sealed leaves every rule not tested",
+ "dry_run_with_the_projects_stepper": {
+  "where": "the cloud session, one kind of processor (intel x86_64 avx512), twelve processes given only folders; a dry run of the wiring, not a result",
+  "the_lie": {
+   "state": [
+    "sun-giants-pluto",
+    14500
+   ],
+   "halt": [
+    "sirius-earth-jupiter",
+    14575
+   ]
+  },
+  "every_rule": "passed",
+  "jobs_out_wrong_before_the_check": 2,
+  "the_round_that_went_on_from_the_lie": "the check found 19 of its 19 states the same",
+  "after_the_check": "both held, 0 jobs wrong, 56635 steps",
+  "the_check_stepped": 276269
+ },
+ "not_frozen": "the identities, which are made when the notebooks are and kept outside the repository; the Kaggle account"
+}
