@@ -482,6 +482,15 @@ willow/
 │   │   │   └── README.md
 ```
 
+### adapters/stdlib/: Reading more kinds of files: Other readers
+
+```
+│   │   ├── hurdat2/
+│   │   │   ├── hurdat2.py    NOAA's hurricane track file (HURDAT2) with each storm's name and id on every track row, so 'Maria' finds Maria's rows
+│   │   │   ├── test_hurdat2.py
+│   │   │   └── README.md     its card
+```
+
 ### adapters/stdlib/: Reading more kinds of files: What it makes for elsewhere
 
 ```

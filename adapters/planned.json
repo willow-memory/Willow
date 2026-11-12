@@ -832,17 +832,6 @@
   "version": "0.0.1"
  },
  {
-  "name": "hurdat2",
-  "kind": "stdlib",
-  "section": "Reading more kinds of files",
-  "line": "NOAA's hurricane track file (HURDAT2) with each storm's name and id on every track row, so 'Maria' finds Maria's rows.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "role": "reads",
-  "version": "0.0.1"
- },
- {
   "name": "in-case",
   "kind": "stdlib",
   "section": "Trust and proof",

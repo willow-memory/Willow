@@ -1,1 +1,1 @@
-One more idea on the list, `hurdat2`: NOAA's hurricane track file with each storm's name and id on every track row, found when a question naming "Maria" met a file that names its storm only once, on a header line.
+`hurdat2` reads NOAA's hurricane track file (HURDAT2) as one passage per track row with the storm's name and id on every row, the labels once on a header, the status and record codes in words, and a long file in parts under the kernel's megabyte; found when a question naming "Maria" met a file that names its storm only once.
