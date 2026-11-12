@@ -2449,6 +2449,13 @@ willow/
 │   ├── shared-runs/          a study, frozen and not yet run: simulations on machines nobody chose, sharing one memory, run by a script
 │   │   ├── chain.py      starts the project, makes each link's handoff, and applies or refuses the step a link offers
 │   │   ├── door/             the shared memory with a door on it, counted at larger sizes: not run, nothing frozen
+│   │   │   ├── cleared/          the grown sweep with two places nobody enrolled and a check after every round that clears them
+│   │   │   │   ├── bought.py what came back from the sweep with strangers cleared every round, held to its rules: what the clearings cost and what they bought
+│   │   │   │   ├── cleared_notebooks.py the grown sweep with two places nobody enrolled and a check after every round that clears them, as Kaggle notebooks
+│   │   │   │   ├── FROZEN.json       the freeze: each file's SHA-256, the five rules and what was foretold, before any job was stepped
+│   │   │   │   ├── test_cleared.py   the strangers are taken on the checker's word, every round is the enrolled sweep's, each state is looked at once
+│   │   │   │   ├── test_cleared_frozen.py    every frozen file is the bytes it was; the rules and the figures foretold are kept
+│   │   │   │   └── README.md Strangers cleared every round
 │   │   │   ├── door.py       the shared memory with a door on it, counted and not run, to see
 │   │   │   ├── grown/            the sweep grown ten times, for Kaggle: 2,200 jobs, ten rounds, a check a place
 │   │   │   │   ├── FROZEN.json       the freeze: each file's SHA-256 and the six rules, before any job of it was stepped
@@ -2493,6 +2500,11 @@ willow/
 │   │   │   │   ├── test_unknown.py   every round holds what it is given, the steps are what was counted, every job ends as the enrolled run's
 │   │   │   │   ├── test_unknown_frozen.py    every frozen file is the bytes it was; the rules and the figure foretold are kept
 │   │   │   │   └── README.md The grown sweep where nobody is known
+```
+
+#### demo/shared-runs/door/, from wagers/
+
+```
 │   │   │   ├── wagers/           what was said before the runs, on a box apart from the verdict box
 │   │   │   │   ├── claims.txt        twelve claims about the runs to come, each with how likely the cloud session thought it
 │   │   │   │   ├── record.jsonl      the wagers box's record as it stood: twelve wagers, five choices and noes, none sealed
@@ -2501,11 +2513,6 @@ willow/
 │   │   │   ├── test_door.py      counting comes to what the study's machines did, to the step; a lie is found by a check that looks
 │   │   │   ├── test_machine.py   it comes to the first study's bytes; a run cut off ends the same; a changed file shows; the door takes, holds, refuses
 │   │   │   └── README.md     A door on the shared memory, counted at larger sizes
-```
-
-#### demo/shared-runs/, from every-kind/
-
-```
 │   │   ├── every-kind/       an addition to the first study, frozen: every job run alone on other kinds of processor
 │   │   │   ├── every_kind.py every job of the sweep, run alone on another machine, held to the baseline
 │   │   │   ├── FROZEN.json   the addition's freeze: its judge, the first study's files it uses, the truth, the machines and the rules
