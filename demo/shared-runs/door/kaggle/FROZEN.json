@@ -1,0 +1,33 @@
+{
+ "about": "The freeze of the door's first run on Kaggle: each file's SHA-256 as it stood before anything was pushed, held by test_kaggle_frozen.py. A change is a new freeze, in its own commit, with its reason.",
+ "frozen": "2026-11-12",
+ "on_whose_word": "the maintainer's, to the cloud session: \"come up with the next few and run them\"",
+ "files": {
+  "door_notebooks.py": "fcd3ca1602de233b0b869f41a14543b0f1c8c9f1b2bab8acad725df1643a8cd4",
+  "held.py": "8340509659915127538b0aff32b5b6d7b9123e36f0bfdf61dd5d1ba2062d58ef",
+  "../machine.py": "7e95de4c93c82df65fdc5647a167b5a43b21a778355614f2fa88b0cfb227df3a",
+  "../../study/plan.json": "73bdf4e767856805923db276d1349dde9ec3fcb70aded8116b076ea12d861d0f",
+  "../../study/starts.json": "68bfc3a18cc2e369b26d5a9105a9820c1a37b7c7ecc1d674787fcdc851f4f012",
+  "../../study/runner.py": "0f9b5b62aa0540c9459c9b1a4ebde1ed2f4e14993fee79a746d27712be22b088",
+  "../../study/sweep.py": "2c8b8537366d0ec70f532ce4cf2f5189b12fa401a615e91140ec29f15e85904a",
+  "../../../../adapters/stdlib/share/ed25519.py": "ca54a7ae5f6b7b003d6333b62db4e83704fb09088c93cab63739884212d4487e"
+ },
+ "cut_seconds": 10,
+ "against": "demo/shared-runs/study/runs, the first study's kept runs",
+ "rules": {
+  "K1": "passes when every folder that came back ended is whole by its seal, its log holds, its seal's signature holds, and its signer is in the ring",
+  "K2": "passes when each machine's part in each round is the first study's: the same jobs, from, stepped, ended, outcome and SHA-256, and the same states kept",
+  "K3": "passes when every first-round part was carried on or said it began over, and at least one was cut inside a job; none cut inside is not tested",
+  "K4": "passes when the ten shared runs step 336379 steps, the first study's",
+  "K5": "passes when the check stepped every kept state of all ten folders, found every one the same, and every halt the memory names halts",
+  "K6": "passes when each later round took in its own place's earlier rounds and nothing else, each as enrolled"
+ },
+ "measured": [
+  "the kinds of processor drawn",
+  "the parts begun over on another kind",
+  "seconds",
+  "bytes that came back"
+ ],
+ "not_tested_is_not_passed": "a folder that did not come back leaves a rule not tested",
+ "not_frozen": "the identities, which are made when the notebooks are and kept outside the repository; the Kaggle account"
+}

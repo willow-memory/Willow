@@ -2452,8 +2452,10 @@ willow/
 │   │   │   ├── door.py       the shared memory with a door on it, counted and not run, to see
 │   │   │   ├── kaggle/           the door's first run on Kaggle: the first study's sweep, cut, carried on and sealed
 │   │   │   │   ├── door_notebooks.py the door's machine as Kaggle notebooks, for a plan: cut and carried on, sealed, each given only its own place's earlier work
+│   │   │   │   ├── FROZEN.json       the freeze: each file's SHA-256 and the six rules, before anything was pushed
 │   │   │   │   ├── held.py   what came back from Kaggle held to the first study's kept runs, rule by rule
 │   │   │   │   ├── test_kaggle.py    the notebooks run in order and pass; another kind is begun over and said; what is wrong fails
+│   │   │   │   ├── test_kaggle_frozen.py     every frozen file is the bytes it was; the rules frozen are the rules held
 │   │   │   │   └── README.md The door on Kaggle: the first study's sweep, cut, carried on and sealed
 │   │   │   ├── machine.py    one machine of a run at size: checks before it starts, a chained log, going on after a cut, a budget, a door, a seal
 │   │   │   ├── probe.py      a small notebook asking Kaggle three things its pages don't answer; it steps nothing

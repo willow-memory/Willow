@@ -28,7 +28,7 @@ every notebook carries the ring. If a part comes back on another kind
 of processor, machine.py refuses to go on, and the notebook begins that
 part over and says so.
 
-## The rules
+## The rules, frozen in [FROZEN.json](FROZEN.json)
 
 [held.py](held.py) holds what comes back to them, and to the first
 study's kept runs:
