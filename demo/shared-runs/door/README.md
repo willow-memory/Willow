@@ -199,6 +199,12 @@ What it found, as that session reported it:
 | a value that outlasts a run | not settled. The account had no secret of the agreed name, and the secrets client answered with a connection error, so "no such secret" cannot be told from "could not ask" |
 | one machine for the whole of a run | the same processor at the start and at the end of one run of four minutes, an AMD EPYC 7B12 |
 
+The probe as it was pushed would have said how long a secret was, had
+one been given. A length says something of a value, and the pull
+request's scanner said so; the probe now says only whether one was
+given, and keeps nothing of it. None was given in the run above, so
+no length was ever written.
+
 Two things follow for a run at size. A notebook's output is all or
 nothing: one that is cut off, or pushed over, leaves nothing, so a
 long machine run is better as several short ones, each ending clean

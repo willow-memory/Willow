@@ -50,10 +50,10 @@ def secret() -> str:
     except ImportError:
         return "no secrets client here: not on Kaggle, or it is not offered"
     try:
-        value = UserSecretsClient().get_secret("SHARED_RUNS_PROBE")
+        UserSecretsClient().get_secret("SHARED_RUNS_PROBE")  # asked for, and not kept
     except Exception as why:  # the client's own errors differ by version
         return f"the client is here; no secret of that name was given ({type(why).__name__})"
-    return f"a secret of that name was given, {len(value)} characters long; its value is not said"
+    return "a secret of that name was given; nothing of its value is kept or said"
 
 
 def main() -> int:
