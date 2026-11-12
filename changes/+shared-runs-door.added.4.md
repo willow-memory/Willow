@@ -1,0 +1,1 @@
+`demo/shared-runs/door/strangers/README.md`: the strangers run came back from Kaggle and every rule passed. Both signers nobody enrolled were held; a check cleared the honest one, which was then taken, and found both of the liar's changes; no job came to a wrong byte. Not being known cost one place 38,797 steps, once.
