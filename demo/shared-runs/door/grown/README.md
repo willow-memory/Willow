@@ -84,8 +84,11 @@ session from the bytes on that branch.
   and the more jobs lean on that one stepping the more is saved. The
   order the jobs were dealt in cost 4.6% over stepping each exactly
   once (1,726,780 against 1,651,220), where it cost the first study
-  1.9% (336,379 against 330,244): with ten rounds a short job is more
-  often dealt after a longer one of its trajectory.
+  1.9% (336,379 against 330,244). A job dealt after a longer one of
+  its trajectory steps on from the last kept state before its length,
+  up to 99 steps; with twice the lengths to a trajectory there are
+  twice as many such jobs for each stepping-once. The plan foretold
+  it: 4.5% if nothing halted.
 - **Checking everything costs one more pass, and no more.** The checks
   stepped 1,651,220 steps: to the step, what stepping every trajectory
   once to its end costs. So a sweep shared and then checked in full
