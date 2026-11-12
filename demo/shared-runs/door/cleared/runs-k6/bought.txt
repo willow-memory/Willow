@@ -1,0 +1,10 @@
+C1  passed: 73 folders whole; the strangers' rounds signed by keys the ring does not hold
+C2  passed: every round took in every earlier round of its place: the strangers' on the checker's word
+C3  passed: all 50 rounds are the enrolled sweep's, byte for byte: 1726780 steps
+C4  passed: 7542 of 7542 states looked at, 0 twice, 0 not the same; 714369 steps, 714369 foretold
+C5  passed: 18290 of 18290 states the same (18290 kept), 20 of 20 halts halt, over 50 folders
+measured:
+  the clearings stepped 714369 steps, 5.4% of the sweep alone
+  saved, the sweep itself: 87.0%; with the clearings paid for: 81.7%
+  clearings carried on on another kind of processor: 1 of 18
+  kinds drawn: amd x86_64 avx2 (10), intel x86_64 avx2 (63)

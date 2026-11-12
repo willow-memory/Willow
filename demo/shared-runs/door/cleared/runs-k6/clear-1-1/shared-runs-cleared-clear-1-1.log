@@ -1,0 +1,16 @@
+[{"stream_name":"stdout","time":181.02566338,"data":"clear-1-1 ended 0 {\"core_sha256\": \"84c6ecff5368af754dc799ec54561d35d123880c69eec19c14385cb559f079b3\", \"kind\": \"intel x86_64 avx2\", \"numpy\": \"2.1.3\", \"processor\": \"Intel(R) Xeon(R) CPU @ 2.20GHz\", \"python\": \"3.13.18\", \"stepper\": \"project\", \"system\": \"Linux\"}\n"}
+,{"stream_name":"stdout","time":181.025734204,"data":"{'at': '2026-11-12T21:48:45Z', 'check': 'python', 'holds': True, 'n': 0, 'said': '3.13.18', 'what': 'checked'}\n"}
+,{"stream_name":"stdout","time":181.025778232,"data":"{'at': '2026-11-12T21:48:45Z', 'check': \"the starts are this plan's\", 'holds': True, 'n': 1, 'said': '110 starts, 110 trajectories', 'what': 'checked'}\n"}
+,{"stream_name":"stdout","time":181.025846872,"data":"{'at': '2026-11-12T21:48:45Z', 'check': \"the stepper is the plan's\", 'holds': True, 'n': 2, 'said': '{\"core_sha256\": \"84c6ecff5368af754dc799ec54561d35d123880c69eec19c14385cb559f079b3\", \"numpy\": \"2.1.3\", \"power\": \"a product and a square root\", \"stepper\": \"project\"}', 'what': 'checked'}\n"}
+,{"stream_name":"stdout","time":181.025916752,"data":"{'at': '2026-11-12T21:48:45Z', 'check': 'there is room for what would be kept', 'holds': True, 'n': 3, 'said': '20940169216 bytes free, about 42240000 wanted', 'what': 'checked'}\n"}
+,{"stream_name":"stdout","time":181.02592458,"data":"{'at': '2026-11-12T21:48:45Z', 'done': 0, 'folders': 1, 'mode': 'check', 'n': 4, 'what': 'starting'}\n"}
+,{"stream_name":"stdout","time":181.02592986,"data":"{'at': '2026-11-12T21:48:46Z', 'folder': 'round-1-machine-1', 'how': 'taken', 'n': 5, 'what': 'at the door', 'why': 'no ring was given, so whoever is whole is taken'}\n"}
+,{"stream_name":"stdout","time":181.025938993,"data":"{'all_the_same': True, 'at': '2026-11-12T21:51:43Z', 'folder': 'round-1-machine-1', 'halts': 4, 'halts_that_halt': 4, 'n': 6, 'of': 1785, 'same': 1785, 'seal': '150db3eeebbab3279d0acfc5e961dab4d1b90e7d0b0698aab6bc8c03d6be60d3', 'states': 1785, 'what': 'checked a folder'}\n"}
+,{"stream_name":"stdout","time":181.025972601,"data":"{'acts': 1789, 'at': '2026-11-12T21:51:43Z', 'n': 7, 'seconds': 178.4, 'what': 'ended'}\n"}
+,{"stream_name":"stderr","time":184.06596003,"data":"/usr/local/lib/python3.13/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":184.066018806,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":184.573330397,"data":"/usr/local/lib/python3.13/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":184.573367429,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":186.859087633,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
+,{"stream_name":"stderr","time":188.541523207,"data":"[NbConvertApp] Writing 798869 bytes to __results__.html\n"}
+]

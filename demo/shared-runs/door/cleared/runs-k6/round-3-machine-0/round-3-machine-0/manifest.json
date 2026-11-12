@@ -1,0 +1,37 @@
+{
+ "acts": 58,
+ "files": {
+  "acts.jsonl": "479259fad566ae321a6d701180a41cd58a25bd48c0339d8bafa39d91fd32090e",
+  "log.jsonl": "a2b240fa8ca7c620f7c7be2294b78790ff48fcb7f9bb7ce87028c638e94231fa",
+  "machine.json": "d8a5f190e1a197f477e241ccf44ec7b86be78449b78a5c47bc158f5e1d6df997",
+  "memory.jsonl": "1ff44b43a61e42bd2fbc6558a8636bf6fcc0e7521d65f396f24504073777c71e"
+ },
+ "kind": "amd x86_64 avx2",
+ "log_lines": 13,
+ "log_tip": "8c69d3f96be0d241eed1eac1a16b59c3aeb6198f01aa760b5b2480f51ef29d79",
+ "machine": 0,
+ "mode": "shared",
+ "plan": "ca973186d4061603114e075c4461a04a92449304ad79065acab57c83cc069e4e",
+ "power": "a product and a square root",
+ "round": 3,
+ "sig": "c4370f6f62394e239202180c70e1700b4f794c09daf6f8e43e7538043a3400c29d9eb7b9b61513363dbd0168ca8ec5a83418ea3aa8f97431b2bb80591524e902",
+ "signer": "7008e817501c51ad55df2f2752483e0b84e08b3b5fc7611f109b0068d4471a83",
+ "starts": "480a72451e6a75db9b7fa20f90a5eb919c616b1d42e625d6ee9c3107f246156f",
+ "took_in": {
+  "round-1-machine-0": {
+   "how": "taken",
+   "seal": "b89563f8479821ad5b51159aa1b31e02ffae35fc145dc547a6650fc799b96fc0",
+   "why": "its signer is enrolled: place 0"
+  },
+  "round-2-machine-0": {
+   "how": "taken",
+   "seal": "b42e010a2a0da6d49568f7577674ef67d65a2868783c651679f5fa4a9d84e0ee",
+   "why": "its signer is enrolled: place 0"
+  }
+ },
+ "tools": {
+  "machine.py": "5e889eb96b24e0bdca7c74115f367b59b6b545b33c7d3ed4e001fb301851455b",
+  "runner.py": "0f9b5b62aa0540c9459c9b1a4ebde1ed2f4e14993fee79a746d27712be22b088",
+  "sweep.py": "2c8b8537366d0ec70f532ce4cf2f5189b12fa401a615e91140ec29f15e85904a"
+ }
+}

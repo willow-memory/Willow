@@ -1,0 +1,64 @@
+{
+ "acts": 3161,
+ "checked": {
+  "round-1-machine-1": {
+   "all_the_same": true,
+   "halts": 4,
+   "halts_that_halt": 4,
+   "of": 1785,
+   "same": 1785,
+   "seal": "150db3eeebbab3279d0acfc5e961dab4d1b90e7d0b0698aab6bc8c03d6be60d3",
+   "states": 1785
+  },
+  "round-2-machine-1": {
+   "all_the_same": true,
+   "halts": 0,
+   "halts_that_halt": 0,
+   "of": 586,
+   "same": 586,
+   "seal": "46be7339f5282cf64e2b810e633168a941fde19428400e1008206d1239964f3d",
+   "states": 586
+  },
+  "round-3-machine-1": {
+   "all_the_same": true,
+   "halts": 0,
+   "halts_that_halt": 0,
+   "of": 493,
+   "same": 493,
+   "seal": "aee3126570f2e03a5a2e98dcc0b6fa24343be05b9cd5eef4d52bced171c032f7",
+   "states": 493
+  },
+  "round-4-machine-1": {
+   "all_the_same": true,
+   "halts": 0,
+   "halts_that_halt": 0,
+   "of": 293,
+   "same": 293,
+   "seal": "fdd9974ccccddee838e740976d3dbc58aa790b8e04991faab306c30e456f9b19",
+   "states": 293
+  }
+ },
+ "files": {
+  "acts.jsonl": "b452233804bd211277f008110ff43c3076b4712cd525ec190dcf6271428fc697",
+  "log.jsonl": "7e0224d8ea04559ca5a0d4461d086775de0e17302c30547f55edf48e83a7cdf9",
+  "machine.json": "d8a5f190e1a197f477e241ccf44ec7b86be78449b78a5c47bc158f5e1d6df997",
+  "memory.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+ },
+ "kind": "amd x86_64 avx2",
+ "log_lines": 51,
+ "log_tip": "ccd2d873eb92a8f159cbc55a0d1b04b48e0e86316b62fc69615d59e0fe2a595f",
+ "machine": null,
+ "mode": "check",
+ "plan": "ca973186d4061603114e075c4461a04a92449304ad79065acab57c83cc069e4e",
+ "power": "a product and a square root",
+ "round": null,
+ "sig": "08a18864fb1c17962478dd7868286dfff1f994599e1169d450b5da76e240066c20c69dfe52e6fdafb72dc333eb716457009ec3b96e20e95ee9d70b1ae5b8d300",
+ "signer": "23bcde9efac372bd3f3e4d2796d0f5d19616c69b4842d61601ef569f7b063342",
+ "starts": "480a72451e6a75db9b7fa20f90a5eb919c616b1d42e625d6ee9c3107f246156f",
+ "took_in": {},
+ "tools": {
+  "machine.py": "5e889eb96b24e0bdca7c74115f367b59b6b545b33c7d3ed4e001fb301851455b",
+  "runner.py": "0f9b5b62aa0540c9459c9b1a4ebde1ed2f4e14993fee79a746d27712be22b088",
+  "sweep.py": "2c8b8537366d0ec70f532ce4cf2f5189b12fa401a615e91140ec29f15e85904a"
+ }
+}

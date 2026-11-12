@@ -1,0 +1,52 @@
+{
+ "acts": 34,
+ "files": {
+  "acts.jsonl": "b0e674f3baf4f90eeff1a0936578a56a663936a75944a4d059c1b56f10703f1b",
+  "log.jsonl": "5d95fefda381d22c9531782451e7303b849d1e819982ae51c763c399712660af",
+  "machine.json": "713127ab0931becc1b43b7f17919d0a92409a52666a8ae5884d706d6e0d4b999",
+  "memory.jsonl": "3c29266a15788337b49cd98b4b0e8169515a06b655a71031f4394e32144b7a89"
+ },
+ "kind": "intel x86_64 avx2",
+ "log_lines": 14,
+ "log_tip": "19fa1dda5dbbac73082621935d256355647f75a879ea0a5d4828ba58edc0d764",
+ "machine": 3,
+ "mode": "shared",
+ "plan": "ca973186d4061603114e075c4461a04a92449304ad79065acab57c83cc069e4e",
+ "power": "a product and a square root",
+ "round": 6,
+ "sig": "c68e6a876e8af9f0b9e9d051173111697284d477ad844cb3f3bcdb1462817d2f07c8bcc6d0d1dc5c6ca5a51bf82244abea5da26f56314d598b4ced901360a901",
+ "signer": "4e5dd9a117c6e9be7ee1c248ffae14c6ba8f606abd1d567810f238a98ef5469e",
+ "starts": "480a72451e6a75db9b7fa20f90a5eb919c616b1d42e625d6ee9c3107f246156f",
+ "took_in": {
+  "round-1-machine-3": {
+   "how": "taken",
+   "seal": "be85f4a06304b5f64393aba8ae69871a37e6485d9d3fd76a7876df3c5727dc92",
+   "why": "every state of it was stepped again and found the same by checker 3"
+  },
+  "round-2-machine-3": {
+   "how": "taken",
+   "seal": "b210b2f0cfe868b5287fadbfb397c46fca76396ae0bf12daf80b7e2615f7cf3f",
+   "why": "every state of it was stepped again and found the same by checker 3"
+  },
+  "round-3-machine-3": {
+   "how": "taken",
+   "seal": "7960780d2c4c06b60957613d32af219b617d95ff8f02ecaddc71bcb581470a7d",
+   "why": "every state of it was stepped again and found the same by checker 3"
+  },
+  "round-4-machine-3": {
+   "how": "taken",
+   "seal": "9b6b2640962b15ce3d3a04f54c0e401cde81f0c886dcfca449fc06e2c1b658a1",
+   "why": "every state of it was stepped again and found the same by checker 3"
+  },
+  "round-5-machine-3": {
+   "how": "taken",
+   "seal": "ac96e72af389343d8f3901748eb88f42a650e83a37ae0acc62b6f25130ce1ef1",
+   "why": "every state of it was stepped again and found the same by checker 3"
+  }
+ },
+ "tools": {
+  "machine.py": "5e889eb96b24e0bdca7c74115f367b59b6b545b33c7d3ed4e001fb301851455b",
+  "runner.py": "0f9b5b62aa0540c9459c9b1a4ebde1ed2f4e14993fee79a746d27712be22b088",
+  "sweep.py": "2c8b8537366d0ec70f532ce4cf2f5189b12fa401a615e91140ec29f15e85904a"
+ }
+}

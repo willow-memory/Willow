@@ -1,0 +1,23 @@
+[{"stream_name":"stdout","time":31.684102155,"data":"round-5-machine-0 ended 0 {\"core_sha256\": \"84c6ecff5368af754dc799ec54561d35d123880c69eec19c14385cb559f079b3\", \"kind\": \"intel x86_64 avx2\", \"numpy\": \"2.1.3\", \"processor\": \"Intel(R) Xeon(R) CPU @ 2.20GHz\", \"python\": \"3.13.18\", \"stepper\": \"project\", \"system\": \"Linux\"}\n"}
+,{"stream_name":"stdout","time":31.684181577,"data":"{'at': '2026-11-12T22:04:34Z', 'check': 'python', 'holds': True, 'n': 0, 'said': '3.13.18', 'what': 'checked'}\n"}
+,{"stream_name":"stdout","time":31.684189309,"data":"{'at': '2026-11-12T22:04:34Z', 'check': \"the starts are this plan's\", 'holds': True, 'n': 1, 'said': '110 starts, 110 trajectories', 'what': 'checked'}\n"}
+,{"stream_name":"stdout","time":31.684194397,"data":"{'at': '2026-11-12T22:04:34Z', 'check': 'the machine and the round are in the plan', 'holds': True, 'n': 2, 'said': 'machine 0, round 5', 'what': 'checked'}\n"}
+,{"stream_name":"stdout","time":31.684224472,"data":"{'at': '2026-11-12T22:04:34Z', 'check': \"the stepper is the plan's\", 'holds': True, 'n': 3, 'said': '{\"core_sha256\": \"84c6ecff5368af754dc799ec54561d35d123880c69eec19c14385cb559f079b3\", \"numpy\": \"2.1.3\", \"power\": \"a product and a square root\", \"stepper\": \"project\"}', 'what': 'checked'}\n"}
+,{"stream_name":"stdout","time":31.68423147,"data":"{'at': '2026-11-12T22:04:34Z', 'check': 'there is room for what would be kept', 'holds': True, 'n': 4, 'said': '20940156928 bytes free, about 42240000 wanted', 'what': 'checked'}\n"}
+,{"stream_name":"stdout","time":31.684248089,"data":"{'at': '2026-11-12T22:04:35Z', 'folder': 'round-1-machine-0', 'how': 'taken', 'n': 5, 'what': 'at the door', 'why': 'its signer is enrolled: place 0'}\n"}
+,{"stream_name":"stdout","time":31.684251862,"data":"{'at': '2026-11-12T22:04:35Z', 'folder': 'round-2-machine-0', 'how': 'taken', 'n': 6, 'what': 'at the door', 'why': 'its signer is enrolled: place 0'}\n"}
+,{"stream_name":"stdout","time":31.684262161,"data":"{'at': '2026-11-12T22:04:35Z', 'folder': 'round-3-machine-0', 'how': 'taken', 'n': 7, 'what': 'at the door', 'why': 'its signer is enrolled: place 0'}\n"}
+,{"stream_name":"stdout","time":31.684311318,"data":"{'at': '2026-11-12T22:04:35Z', 'folder': 'round-4-machine-0', 'how': 'taken', 'n': 8, 'what': 'at the door', 'why': 'its signer is enrolled: place 0'}\n"}
+,{"stream_name":"stdout","time":31.684331006,"data":"{'at': '2026-11-12T22:04:35Z', 'cut_off': [], 'done': 0, 'mode': 'shared', 'n': 9, 'what': 'starting'}\n"}
+,{"stream_name":"stdout","time":31.684358022,"data":"{'at': '2026-11-12T22:04:47Z', 'n': 10, 'same': True, 'step': 327, 'trajectory': 'crowded-coarse-giants~nearer', 'what': 'canary'}\n"}
+,{"stream_name":"stdout","time":31.684447227,"data":"{'at': '2026-11-12T22:04:47Z', 'done': 25, 'n': 11, 'of': 65, 'seconds': 12.7, 'what': 'so far'}\n"}
+,{"stream_name":"stdout","time":31.684455738,"data":"{'at': '2026-11-12T22:05:01Z', 'n': 12, 'same': True, 'step': 18000, 'trajectory': 'sun-giants~farther', 'what': 'canary'}\n"}
+,{"stream_name":"stdout","time":31.68446065,"data":"{'at': '2026-11-12T22:05:01Z', 'done': 50, 'n': 13, 'of': 65, 'seconds': 27.3, 'what': 'so far'}\n"}
+,{"stream_name":"stdout","time":31.684467316,"data":"{'acts': 65, 'at': '2026-11-12T22:05:02Z', 'n': 14, 'seconds': 28.6, 'what': 'ended'}\n"}
+,{"stream_name":"stderr","time":34.924373618,"data":"/usr/local/lib/python3.13/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":34.924461853,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":35.418561435,"data":"/usr/local/lib/python3.13/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":35.418597959,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":37.578759827,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
+,{"stream_name":"stderr","time":39.150515686,"data":"[NbConvertApp] Writing 799500 bytes to __results__.html\n"}
+]

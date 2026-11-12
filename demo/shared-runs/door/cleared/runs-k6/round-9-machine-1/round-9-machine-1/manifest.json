@@ -1,0 +1,67 @@
+{
+ "acts": 53,
+ "files": {
+  "acts.jsonl": "4ce723fefad492b64dec84032039b595b4ce03ab377b913f6df75d31e31ada52",
+  "log.jsonl": "781272637c92cd1dc41eaf6ce28ae05d8aba293deb654dfff8566343f0e68f7b",
+  "machine.json": "713127ab0931becc1b43b7f17919d0a92409a52666a8ae5884d706d6e0d4b999",
+  "memory.jsonl": "3251bda22c6077b2f6d672aad8214ec1032821a3e48c93e72986c25599f36fa7"
+ },
+ "kind": "intel x86_64 avx2",
+ "log_lines": 19,
+ "log_tip": "f093f1e0ae3ae6582677efd4fd92d31fef0420b3b3e78f4029c41bd19517f3a3",
+ "machine": 1,
+ "mode": "shared",
+ "plan": "ca973186d4061603114e075c4461a04a92449304ad79065acab57c83cc069e4e",
+ "power": "a product and a square root",
+ "round": 9,
+ "sig": "d09660582d957fcc08277cf240ae7374275b1b54f3d66ebde72514575a6aebb1af0d08545ecb0279ea1b237153d328af103683fb61d9ae6b90fbd876ae9cef0f",
+ "signer": "ec489e689927bc053235ea445f4c6d04f9a80a10ab9d022183fa1401d191f062",
+ "starts": "480a72451e6a75db9b7fa20f90a5eb919c616b1d42e625d6ee9c3107f246156f",
+ "took_in": {
+  "round-1-machine-1": {
+   "how": "taken",
+   "seal": "150db3eeebbab3279d0acfc5e961dab4d1b90e7d0b0698aab6bc8c03d6be60d3",
+   "why": "every state of it was stepped again and found the same by checker 1"
+  },
+  "round-2-machine-1": {
+   "how": "taken",
+   "seal": "46be7339f5282cf64e2b810e633168a941fde19428400e1008206d1239964f3d",
+   "why": "every state of it was stepped again and found the same by checker 1"
+  },
+  "round-3-machine-1": {
+   "how": "taken",
+   "seal": "aee3126570f2e03a5a2e98dcc0b6fa24343be05b9cd5eef4d52bced171c032f7",
+   "why": "every state of it was stepped again and found the same by checker 1"
+  },
+  "round-4-machine-1": {
+   "how": "taken",
+   "seal": "fdd9974ccccddee838e740976d3dbc58aa790b8e04991faab306c30e456f9b19",
+   "why": "every state of it was stepped again and found the same by checker 1"
+  },
+  "round-5-machine-1": {
+   "how": "taken",
+   "seal": "013a600576829de987f2aa6be44b61aa8d2a59d9f1df13456ecf8d31160a39cf",
+   "why": "every state of it was stepped again and found the same by checker 1"
+  },
+  "round-6-machine-1": {
+   "how": "taken",
+   "seal": "023a61abece05d5c15c941a4e08900eaad1b85f6b738c7713921c348547e2e35",
+   "why": "every state of it was stepped again and found the same by checker 1"
+  },
+  "round-7-machine-1": {
+   "how": "taken",
+   "seal": "24f27089f714f02bb152104347d3eef5ef0948b8d330077d749b8042aa0808ae",
+   "why": "every state of it was stepped again and found the same by checker 1"
+  },
+  "round-8-machine-1": {
+   "how": "taken",
+   "seal": "00bc5d867bf66a51d05f585a875a9f17798d60d413f94259687909e11c815dca",
+   "why": "every state of it was stepped again and found the same by checker 1"
+  }
+ },
+ "tools": {
+  "machine.py": "5e889eb96b24e0bdca7c74115f367b59b6b545b33c7d3ed4e001fb301851455b",
+  "runner.py": "0f9b5b62aa0540c9459c9b1a4ebde1ed2f4e14993fee79a746d27712be22b088",
+  "sweep.py": "2c8b8537366d0ec70f532ce4cf2f5189b12fa401a615e91140ec29f15e85904a"
+ }
+}

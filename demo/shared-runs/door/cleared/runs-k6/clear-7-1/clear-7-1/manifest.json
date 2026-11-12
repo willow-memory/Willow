@@ -1,0 +1,91 @@
+{
+ "acts": 3466,
+ "checked": {
+  "round-1-machine-1": {
+   "all_the_same": true,
+   "halts": 4,
+   "halts_that_halt": 4,
+   "of": 1785,
+   "same": 1785,
+   "seal": "150db3eeebbab3279d0acfc5e961dab4d1b90e7d0b0698aab6bc8c03d6be60d3",
+   "states": 1785
+  },
+  "round-2-machine-1": {
+   "all_the_same": true,
+   "halts": 0,
+   "halts_that_halt": 0,
+   "of": 586,
+   "same": 586,
+   "seal": "46be7339f5282cf64e2b810e633168a941fde19428400e1008206d1239964f3d",
+   "states": 586
+  },
+  "round-3-machine-1": {
+   "all_the_same": true,
+   "halts": 0,
+   "halts_that_halt": 0,
+   "of": 493,
+   "same": 493,
+   "seal": "aee3126570f2e03a5a2e98dcc0b6fa24343be05b9cd5eef4d52bced171c032f7",
+   "states": 493
+  },
+  "round-4-machine-1": {
+   "all_the_same": true,
+   "halts": 0,
+   "halts_that_halt": 0,
+   "of": 293,
+   "same": 293,
+   "seal": "fdd9974ccccddee838e740976d3dbc58aa790b8e04991faab306c30e456f9b19",
+   "states": 293
+  },
+  "round-5-machine-1": {
+   "all_the_same": true,
+   "halts": 0,
+   "halts_that_halt": 0,
+   "of": 133,
+   "same": 133,
+   "seal": "013a600576829de987f2aa6be44b61aa8d2a59d9f1df13456ecf8d31160a39cf",
+   "states": 133
+  },
+  "round-6-machine-1": {
+   "all_the_same": true,
+   "halts": 0,
+   "halts_that_halt": 0,
+   "of": 114,
+   "same": 114,
+   "seal": "023a61abece05d5c15c941a4e08900eaad1b85f6b738c7713921c348547e2e35",
+   "states": 114
+  },
+  "round-7-machine-1": {
+   "all_the_same": true,
+   "halts": 0,
+   "halts_that_halt": 0,
+   "of": 58,
+   "same": 58,
+   "seal": "24f27089f714f02bb152104347d3eef5ef0948b8d330077d749b8042aa0808ae",
+   "states": 58
+  }
+ },
+ "files": {
+  "acts.jsonl": "a1e28e0e9ebce3c827bb524dc5a2c1ee946280e7907587ade49da217aafdf389",
+  "log.jsonl": "8a802ea6a937a2a89c915e3f338de259a9370d10998eba87d1e0e1f64132fbc5",
+  "machine.json": "713127ab0931becc1b43b7f17919d0a92409a52666a8ae5884d706d6e0d4b999",
+  "memory.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+ },
+ "kind": "intel x86_64 avx2",
+ "log_lines": 114,
+ "log_tip": "543c1c6dd90e5bc4d953a9bd1ec1e44d8d2ad749e61e0aa73081f8f10380e578",
+ "machine": null,
+ "mode": "check",
+ "plan": "ca973186d4061603114e075c4461a04a92449304ad79065acab57c83cc069e4e",
+ "power": "a product and a square root",
+ "round": null,
+ "sig": "985c5441085356e71c356e828ac6a8ab35f794a952ff9750781687d3f65f8b040dfa9549e2ace8c2052e8e492f69121be1b3477144388a8f5da984d4d49fae0e",
+ "signer": "23bcde9efac372bd3f3e4d2796d0f5d19616c69b4842d61601ef569f7b063342",
+ "starts": "480a72451e6a75db9b7fa20f90a5eb919c616b1d42e625d6ee9c3107f246156f",
+ "took_in": {},
+ "tools": {
+  "machine.py": "5e889eb96b24e0bdca7c74115f367b59b6b545b33c7d3ed4e001fb301851455b",
+  "runner.py": "0f9b5b62aa0540c9459c9b1a4ebde1ed2f4e14993fee79a746d27712be22b088",
+  "sweep.py": "2c8b8537366d0ec70f532ce4cf2f5189b12fa401a615e91140ec29f15e85904a"
+ }
+}

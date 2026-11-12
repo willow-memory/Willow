@@ -1,0 +1,52 @@
+{
+ "acts": 57,
+ "files": {
+  "acts.jsonl": "9da027d1cb41bb9b781b9d850e9c4316c98093dc0a05d2d35bb3b01b3334cd37",
+  "log.jsonl": "c03aba0736356f2605b5df576dd31a4f37b585840b4cf7b03cfe3f1d12447d6c",
+  "machine.json": "d8a5f190e1a197f477e241ccf44ec7b86be78449b78a5c47bc158f5e1d6df997",
+  "memory.jsonl": "2550f721a3865abdbe25eeb827db7228d6b08f35724c8eff92d9cf4b2c218b1a"
+ },
+ "kind": "amd x86_64 avx2",
+ "log_lines": 16,
+ "log_tip": "05c793f0622fc8a7559d8ec472da12b3d8dfeb60a22cee83895d6fb3f6dc227d",
+ "machine": 0,
+ "mode": "shared",
+ "plan": "ca973186d4061603114e075c4461a04a92449304ad79065acab57c83cc069e4e",
+ "power": "a product and a square root",
+ "round": 6,
+ "sig": "6f4cc722502fd30aaacbe5da3f8fbf8f485790e748436a9a8c14ababbc3f63ef48cbf1cd7d1e952bb884864a9352abc8b17c46f0fc298de7e7c92d9d7be6fd03",
+ "signer": "7008e817501c51ad55df2f2752483e0b84e08b3b5fc7611f109b0068d4471a83",
+ "starts": "480a72451e6a75db9b7fa20f90a5eb919c616b1d42e625d6ee9c3107f246156f",
+ "took_in": {
+  "round-1-machine-0": {
+   "how": "taken",
+   "seal": "b89563f8479821ad5b51159aa1b31e02ffae35fc145dc547a6650fc799b96fc0",
+   "why": "its signer is enrolled: place 0"
+  },
+  "round-2-machine-0": {
+   "how": "taken",
+   "seal": "b42e010a2a0da6d49568f7577674ef67d65a2868783c651679f5fa4a9d84e0ee",
+   "why": "its signer is enrolled: place 0"
+  },
+  "round-3-machine-0": {
+   "how": "taken",
+   "seal": "7006af40d97d50bf842e9276dd64ca1b02837af58c0f7a66cc2ddfdb314ee0bc",
+   "why": "its signer is enrolled: place 0"
+  },
+  "round-4-machine-0": {
+   "how": "taken",
+   "seal": "16ee8c808dc1aa5552cd0154544e0cd554ff59d03ff4e3e8e3f09f2a188a386a",
+   "why": "its signer is enrolled: place 0"
+  },
+  "round-5-machine-0": {
+   "how": "taken",
+   "seal": "8856cf93f2795f73f2a0f26bb7145a0a6649440320fb79b39f2802e7dcbe9d75",
+   "why": "its signer is enrolled: place 0"
+  }
+ },
+ "tools": {
+  "machine.py": "5e889eb96b24e0bdca7c74115f367b59b6b545b33c7d3ed4e001fb301851455b",
+  "runner.py": "0f9b5b62aa0540c9459c9b1a4ebde1ed2f4e14993fee79a746d27712be22b088",
+  "sweep.py": "2c8b8537366d0ec70f532ce4cf2f5189b12fa401a615e91140ec29f15e85904a"
+ }
+}

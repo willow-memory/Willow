@@ -1,0 +1,37 @@
+{
+ "acts": 48,
+ "files": {
+  "acts.jsonl": "3f102bfb17e8fa15c6a0feb3736605a94da661c393b020983ebb172607b96220",
+  "log.jsonl": "f93bc078f296e30edab87fe8d5460b0316d6ef022a506ccf0b3bd87f12370afe",
+  "machine.json": "713127ab0931becc1b43b7f17919d0a92409a52666a8ae5884d706d6e0d4b999",
+  "memory.jsonl": "1ea2d547299586b653f7efdbf0c677066ee5f46e66e25819346de3ae6e799f72"
+ },
+ "kind": "intel x86_64 avx2",
+ "log_lines": 11,
+ "log_tip": "0e88d9379ea967eb4a1cca0401491617fb5019dbf68d038e215a5c6ebf69e03c",
+ "machine": 3,
+ "mode": "shared",
+ "plan": "ca973186d4061603114e075c4461a04a92449304ad79065acab57c83cc069e4e",
+ "power": "a product and a square root",
+ "round": 3,
+ "sig": "9ae6ea4fbb9a433ae5d07e8c2a56d3bc2f4c405a8ffa099b8d42c914e786d3b7bb31f188a058804d3091f673b50757d14dbeb7a1f395c38a66a1fbf0afb07207",
+ "signer": "00be7acf776019f091b7d3fef5b995a58f61693d3e368d014cf140a12b16cbf7",
+ "starts": "480a72451e6a75db9b7fa20f90a5eb919c616b1d42e625d6ee9c3107f246156f",
+ "took_in": {
+  "round-1-machine-3": {
+   "how": "taken",
+   "seal": "be85f4a06304b5f64393aba8ae69871a37e6485d9d3fd76a7876df3c5727dc92",
+   "why": "every state of it was stepped again and found the same by checker 3"
+  },
+  "round-2-machine-3": {
+   "how": "taken",
+   "seal": "b210b2f0cfe868b5287fadbfb397c46fca76396ae0bf12daf80b7e2615f7cf3f",
+   "why": "every state of it was stepped again and found the same by checker 3"
+  }
+ },
+ "tools": {
+  "machine.py": "5e889eb96b24e0bdca7c74115f367b59b6b545b33c7d3ed4e001fb301851455b",
+  "runner.py": "0f9b5b62aa0540c9459c9b1a4ebde1ed2f4e14993fee79a746d27712be22b088",
+  "sweep.py": "2c8b8537366d0ec70f532ce4cf2f5189b12fa401a615e91140ec29f15e85904a"
+ }
+}

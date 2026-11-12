@@ -1,0 +1,82 @@
+{
+ "acts": 3408,
+ "checked": {
+  "round-1-machine-1": {
+   "all_the_same": true,
+   "halts": 4,
+   "halts_that_halt": 4,
+   "of": 1785,
+   "same": 1785,
+   "seal": "150db3eeebbab3279d0acfc5e961dab4d1b90e7d0b0698aab6bc8c03d6be60d3",
+   "states": 1785
+  },
+  "round-2-machine-1": {
+   "all_the_same": true,
+   "halts": 0,
+   "halts_that_halt": 0,
+   "of": 586,
+   "same": 586,
+   "seal": "46be7339f5282cf64e2b810e633168a941fde19428400e1008206d1239964f3d",
+   "states": 586
+  },
+  "round-3-machine-1": {
+   "all_the_same": true,
+   "halts": 0,
+   "halts_that_halt": 0,
+   "of": 493,
+   "same": 493,
+   "seal": "aee3126570f2e03a5a2e98dcc0b6fa24343be05b9cd5eef4d52bced171c032f7",
+   "states": 493
+  },
+  "round-4-machine-1": {
+   "all_the_same": true,
+   "halts": 0,
+   "halts_that_halt": 0,
+   "of": 293,
+   "same": 293,
+   "seal": "fdd9974ccccddee838e740976d3dbc58aa790b8e04991faab306c30e456f9b19",
+   "states": 293
+  },
+  "round-5-machine-1": {
+   "all_the_same": true,
+   "halts": 0,
+   "halts_that_halt": 0,
+   "of": 133,
+   "same": 133,
+   "seal": "013a600576829de987f2aa6be44b61aa8d2a59d9f1df13456ecf8d31160a39cf",
+   "states": 133
+  },
+  "round-6-machine-1": {
+   "all_the_same": true,
+   "halts": 0,
+   "halts_that_halt": 0,
+   "of": 114,
+   "same": 114,
+   "seal": "023a61abece05d5c15c941a4e08900eaad1b85f6b738c7713921c348547e2e35",
+   "states": 114
+  }
+ },
+ "files": {
+  "acts.jsonl": "4c4c54b5dda52e19d8983fb83a47c6857d4446a197da8d819b68618101d64d04",
+  "log.jsonl": "5fa69bcb195e30a0bd42ab227f4685f7d8d1e4e4c27872caca968213bd21daad",
+  "machine.json": "d8a5f190e1a197f477e241ccf44ec7b86be78449b78a5c47bc158f5e1d6df997",
+  "memory.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+ },
+ "kind": "amd x86_64 avx2",
+ "log_lines": 91,
+ "log_tip": "1a7b00e2bcea1eb62bc8657807ad43161cd15c4e76fc8231904c5fa559b892f9",
+ "machine": null,
+ "mode": "check",
+ "plan": "ca973186d4061603114e075c4461a04a92449304ad79065acab57c83cc069e4e",
+ "power": "a product and a square root",
+ "round": null,
+ "sig": "11d20977cfef22b43083887196374ad0cdc3e68086ca215a0dd719f06271af8964552fb85151e3b8472e69d301845a75525147836f29534bd5a43a9b53b0b507",
+ "signer": "23bcde9efac372bd3f3e4d2796d0f5d19616c69b4842d61601ef569f7b063342",
+ "starts": "480a72451e6a75db9b7fa20f90a5eb919c616b1d42e625d6ee9c3107f246156f",
+ "took_in": {},
+ "tools": {
+  "machine.py": "5e889eb96b24e0bdca7c74115f367b59b6b545b33c7d3ed4e001fb301851455b",
+  "runner.py": "0f9b5b62aa0540c9459c9b1a4ebde1ed2f4e14993fee79a746d27712be22b088",
+  "sweep.py": "2c8b8537366d0ec70f532ce4cf2f5189b12fa401a615e91140ec29f15e85904a"
+ }
+}
