@@ -5,7 +5,7 @@
  "files": {
   "door_notebooks.py": "fcd3ca1602de233b0b869f41a14543b0f1c8c9f1b2bab8acad725df1643a8cd4",
   "held.py": "8340509659915127538b0aff32b5b6d7b9123e36f0bfdf61dd5d1ba2062d58ef",
-  "../machine.py": "83219e91242afd4c54045aefc939aa8a948fdb3ed49db674e6eaeb1d4b09f7b5",
+  "../machine.py": "5e889eb96b24e0bdca7c74115f367b59b6b545b33c7d3ed4e001fb301851455b",
   "../../study/plan.json": "73bdf4e767856805923db276d1349dde9ec3fcb70aded8116b076ea12d861d0f",
   "../../study/starts.json": "68bfc3a18cc2e369b26d5a9105a9820c1a37b7c7ecc1d674787fcdc851f4f012",
   "../../study/runner.py": "0f9b5b62aa0540c9459c9b1a4ebde1ed2f4e14993fee79a746d27712be22b088",
@@ -41,5 +41,16 @@
    }
   },
   "what_ran": "this run's notebooks carry the file as it was"
+ },
+ "freeze_3": {
+  "frozen": "2026-11-12",
+  "reason": "machine.py's check can now be carried on from an earlier check's folder, looking only at what that one did not (known by the seal of the folder each state was in), and may be carried on on another kind of processor; each check act now says the kind it was stepped under and the seal of the folder it looked at. Stepping, the door and the seal are as they were. This run makes no check that is carried on, so nothing it measured turns on it; the run after it does.",
+  "changed": {
+   "../machine.py": {
+    "was": "83219e91242afd4c54045aefc939aa8a948fdb3ed49db674e6eaeb1d4b09f7b5",
+    "now": "5e889eb96b24e0bdca7c74115f367b59b6b545b33c7d3ed4e001fb301851455b"
+   }
+  },
+  "what_ran": "this run's notebooks carried the file as it was at the first freeze; the run came back and every rule passed"
  }
 }

@@ -7,7 +7,7 @@
   "seen.py": "11078d9c23f35001853abe917a5934d0428ff8bba835df20cf66b9f48e18d93f",
   "../strangers/strangers_notebooks.py": "464fbfbaa7c80828430710391f45acdf69ab56c3ea8640e389f53c95e2937b4c",
   "../strangers/lie.py": "bf8bb24439e44d788e30acc79078ccf51101a45568a9eec2adb5ee6d86d2fad4",
-  "../machine.py": "83219e91242afd4c54045aefc939aa8a948fdb3ed49db674e6eaeb1d4b09f7b5",
+  "../machine.py": "5e889eb96b24e0bdca7c74115f367b59b6b545b33c7d3ed4e001fb301851455b",
   "../../study/plan.json": "73bdf4e767856805923db276d1349dde9ec3fcb70aded8116b076ea12d861d0f",
   "../../study/starts.json": "68bfc3a18cc2e369b26d5a9105a9820c1a37b7c7ecc1d674787fcdc851f4f012",
   "../../study/runner.py": "0f9b5b62aa0540c9459c9b1a4ebde1ed2f4e14993fee79a746d27712be22b088",
@@ -48,5 +48,16 @@
   "after_the_check": "both held, 0 jobs wrong, 56635 steps",
   "the_check_stepped": 276269
  },
- "not_frozen": "the identities, which are made when the notebooks are and kept outside the repository; the Kaggle account"
+ "not_frozen": "the identities, which are made when the notebooks are and kept outside the repository; the Kaggle account",
+ "freeze_2": {
+  "frozen": "2026-11-12",
+  "reason": "machine.py's check can now be carried on from an earlier check's folder, looking only at what that one did not (known by the seal of the folder each state was in), and may be carried on on another kind of processor; each check act now says the kind it was stepped under and the seal of the folder it looked at. Stepping, the door and the seal are as they were. This run makes no check that is carried on, so nothing it measured turns on it; the run after it does.",
+  "changed": {
+   "../machine.py": {
+    "was": "83219e91242afd4c54045aefc939aa8a948fdb3ed49db674e6eaeb1d4b09f7b5",
+    "now": "5e889eb96b24e0bdca7c74115f367b59b6b545b33c7d3ed4e001fb301851455b"
+   }
+  },
+  "what_ran": "this run's notebooks carried the file as it was at its freeze; the run came back and every rule passed"
+ }
 }

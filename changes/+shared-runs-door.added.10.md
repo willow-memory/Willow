@@ -1,0 +1,1 @@
+`demo/shared-runs/door/machine.py`: a check can be carried on from an earlier check with `--from`, looking only at what that one did not look at, and on another kind of processor; each check act says the kind it was stepped under and the seal of the folder it looked at.

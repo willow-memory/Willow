@@ -5,6 +5,7 @@ changed file shows; and the door takes, holds and refuses as it says."""
 from __future__ import annotations
 
 import json
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -509,3 +510,114 @@ def test_being_enrolled_does_not_outweigh_a_check_that_looked(tmp_path):
         == 0
     )
     assert machine.faults([lied, tmp_path / "c2"], machine.ring_of(ring)) == {}
+
+
+def test_a_check_carried_on_looks_only_at_what_was_not_looked_at(tmp_path):
+    base = setup(tmp_path)
+    ours, ours_key = ident(tmp_path, "ours")
+    ring = tmp_path / "ring.json"
+    ring.write_text(json.dumps({ours_key: "ours"}))
+    a = shared(base, tmp_path, 0, 1, to=tmp_path / "a")
+    b = shared(base, tmp_path, 0, 2, "--memory", a, to=tmp_path / "b")
+    first = tmp_path / "first"
+    assert go("check", *base, "--to", first, "--memory", a, "--id", ours) == 0
+    n = len(rows(first / "acts.jsonl"))
+    second = tmp_path / "second"
+    assert (
+        go(
+            "check",
+            *base,
+            "--to",
+            second,
+            "--memory",
+            a,
+            "--memory",
+            b,
+            "--from",
+            first,
+            "--id",
+            ours,
+        )
+        == 0
+    )
+    acts = rows(second / "acts.jsonl")
+    assert (
+        acts[:n] == rows(first / "acts.jsonl")
+        and all(x["of"] == "b" for x in acts[n:])
+        and len(acts) > n
+    )
+    whole = tmp_path / "whole"
+    assert (
+        go("check", *base, "--to", whole, "--memory", a, "--memory", b, "--id", ours)
+        == 0
+    )
+
+    def strip(rs):
+        return sorted(
+            (x["of"], x["trajectory"], x["step"], x["mode"], x["same"]) for x in rs
+        )
+
+    assert strip(acts) == strip(rows(whole / "acts.jsonl")), (
+        "carried on, it has looked at what one check of both would"
+    )
+    found = json.loads((second / "manifest.json").read_text())["checked"]
+    assert set(found) == {"a", "b"} and all(
+        f["all_the_same"] and f["states"] == f["of"] for f in found.values()
+    )
+    assert go("verify", "--run", second, "--ring", ring) == 0
+    assert set(machine.vouches([a, b, second], machine.ring_of(ring))) == {
+        machine.sha(x / "manifest.json") for x in (a, b)
+    }
+    said = [r["what"] for r in rows(second / "log.jsonl")]
+    assert "carried on from" in said and said.count("ended") == 2
+
+    # on another kind of processor a check goes on, and says so; a stepping run does not
+    other = tmp_path / "other-kind"
+    shutil.copytree(first, other)
+    doc = json.loads((other / "machine.json").read_text())
+    (other / "machine.json").write_text(json.dumps({**doc, "kind": "another kind"}))
+    third = tmp_path / "third"
+    assert (
+        go(
+            "check",
+            *base,
+            "--to",
+            third,
+            "--memory",
+            a,
+            "--memory",
+            b,
+            "--from",
+            other,
+            "--id",
+            ours,
+        )
+        == 0
+    )
+    assert "carried on, on another kind" in [
+        r["what"] for r in rows(third / "log.jsonl")
+    ]
+    assert {x["kind"] for x in rows(third / "acts.jsonl")[n:]} == {
+        json.loads((third / "machine.json").read_text())["kind"]
+    }
+
+    # a folder of the same name with other bytes is looked at afresh
+    changed = tmp_path / "x" / "a"
+    shutil.copytree(shared(base, tmp_path, 1, 1, to=tmp_path / "a-other"), changed)
+    fourth = tmp_path / "fourth"
+    assert (
+        go(
+            "check",
+            *base,
+            "--to",
+            fourth,
+            "--memory",
+            changed,
+            "--from",
+            first,
+            "--id",
+            ours,
+        )
+        == 0
+    )
+    assert len(rows(fourth / "acts.jsonl")) > n

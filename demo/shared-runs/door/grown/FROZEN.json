@@ -7,7 +7,7 @@
   "grew.py": "1c5add5b0f5a9a13774c196921ef4b1dd54024a28ec5eaef991a66d7c4c86e2b",
   "plan.json": "ca973186d4061603114e075c4461a04a92449304ad79065acab57c83cc069e4e",
   "starts.json": "480a72451e6a75db9b7fa20f90a5eb919c616b1d42e625d6ee9c3107f246156f",
-  "../machine.py": "83219e91242afd4c54045aefc939aa8a948fdb3ed49db674e6eaeb1d4b09f7b5",
+  "../machine.py": "5e889eb96b24e0bdca7c74115f367b59b6b545b33c7d3ed4e001fb301851455b",
   "../kaggle/door_notebooks.py": "fcd3ca1602de233b0b869f41a14543b0f1c8c9f1b2bab8acad725df1643a8cd4",
   "../../study/runner.py": "0f9b5b62aa0540c9459c9b1a4ebde1ed2f4e14993fee79a746d27712be22b088",
   "../../study/sweep.py": "2c8b8537366d0ec70f532ce4cf2f5189b12fa401a615e91140ec29f15e85904a",
@@ -49,5 +49,16 @@
    }
   },
   "what_ran": "this run's notebooks carry the file as it was"
+ },
+ "freeze_3": {
+  "frozen": "2026-11-12",
+  "reason": "machine.py's check can now be carried on from an earlier check's folder, looking only at what that one did not (known by the seal of the folder each state was in), and may be carried on on another kind of processor; each check act now says the kind it was stepped under and the seal of the folder it looked at. Stepping, the door and the seal are as they were. This run makes no check that is carried on, so nothing it measured turns on it; the run after it does.",
+  "changed": {
+   "../machine.py": {
+    "was": "83219e91242afd4c54045aefc939aa8a948fdb3ed49db674e6eaeb1d4b09f7b5",
+    "now": "5e889eb96b24e0bdca7c74115f367b59b6b545b33c7d3ed4e001fb301851455b"
+   }
+  },
+  "what_ran": "this run's notebooks carried the file as it was at the first freeze; the run came back and every rule passed"
  }
 }

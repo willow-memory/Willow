@@ -60,6 +60,13 @@ held to that state, and the other run to its own), every one unless
 it halt: a halt is not taken on a signer's word. It leaves no memory of
 its own, and its seal names each folder it checked and what it found.
 
+A check can be carried on with `--from DIR`, the folder an earlier
+check left, sealed or not: it looks only at what that one did not look
+at, known by the seal of the folder each state was in, and its own seal
+names everything either looked at. It may be carried on on another
+kind of processor, which a stepping run may not: a check's act says
+only whether a state was the same, and under which kind it was stepped.
+
 `verify` reads a finished OUT and says what holds: the seal, the log's
 chain, the signer's standing against a ring.
 
@@ -358,7 +365,10 @@ class Run:
             and (carried / "run.json").is_file()
             and not (self.out / "run.json").exists()
         ):
-            for name in (*FILES, "run.json", "begun.jsonl", "manifest.json"):
+            # a check carried on is a new check that remembers what it looked at:
+            # the seal of the one before is not its seal
+            sealed = () if self.mode == "check" else ("manifest.json",)
+            for name in (*FILES, "run.json", "begun.jsonl", *sealed):
                 if (carried / name).is_file():
                     shutil.copyfile(carried / name, self.out / name)
         self.log = Log(self.out / "log.jsonl")
@@ -423,13 +433,24 @@ class Run:
             kind = json.loads((self.out / "machine.json").read_text(encoding="utf-8"))[
                 "kind"
             ]
-            self.check("this is the kind of processor that began it", kind == now["kind"],
-                       f"began on {kind}, this is {now['kind']}")  # fmt: skip
+            if self.mode == "check":
+                # a check's act says only whether a state was the same, and under which kind
+                if kind != now["kind"]:
+                    self.log.say(
+                        "carried on, on another kind", began=kind, now=now["kind"]
+                    )
+                (self.out / "machine.json").write_text(
+                    json.dumps(now, sort_keys=True) + "\n"
+                )
+            else:
+                self.check("this is the kind of processor that began it", kind == now["kind"],
+                           f"began on {kind}, this is {now['kind']}")  # fmt: skip
         else:
             was.write_text(json.dumps(mine, sort_keys=True) + "\n")
             (self.out / "machine.json").write_text(
                 json.dumps(now, sort_keys=True) + "\n"
             )
+        self.kind = now["kind"]
         (self.out / "memory.jsonl").touch()
         (self.out / "acts.jsonl").touch()
 
@@ -574,7 +595,8 @@ class Run:
         given = [Path(p) for p in self.opts["memory"]]
         one_in = int(self.opts.get("one_in") or 1)
         acts, _ = lines_of(self.out / "acts.jsonl")
-        seen = {(a["of"], a["trajectory"], a["step"], a["mode"]): a for a in acts}
+        # what was looked at before is known by the seal of the folder it was in, not its name
+        seen = {(a.get("seal"), a["trajectory"], a["step"], a["mode"]): a for a in acts}
         runs = [f for f in given if (f / "memory.jsonl").is_file()]
         self.all = runner.Memory(runs, None)
         names = {runner.identity(self.starts[t["name"]], self.stepper.said): t["name"] for t in self.plan["trajectories"]}  # fmt: skip
@@ -590,6 +612,7 @@ class Run:
             self.log.say("at the door", folder=folder.name, how=how, why=why)
             if how == "refused":
                 raise Refuse(f"{folder.name} is refused at the door: {why}")
+            sealed = sha(folder / "manifest.json")
             memory = runner.Memory([folder], None)
             states = sorted(
                 (names[t], x)
@@ -606,25 +629,31 @@ class Run:
             for name, step in states:
                 if f"{name}@{step}" not in pick:
                     continue
-                key = (folder.name, name, step, "check")
+                key = (sealed, name, step, "check")
                 if key in seen:
                     row = seen[key]
                 else:
                     if self.over_budget():
                         self.log.say("stopped at the budget", folder=folder.name)
                         return ESCALATE
-                    row = self.one_state(folder.name, memory, name, step)
+                    row = {
+                        **self.one_state(folder.name, memory, name, step),
+                        "seal": sealed,
+                    }
                     add(self.out / "acts.jsonl", row)
                 stepped += 1
                 same += bool(row["same"])
             halts = sorted((names[t], k) for t, k in memory.halts.items() if t in names)
             halts_hold = 0
             for name, at in halts:
-                key = (folder.name, name, at, "halt-check")
+                key = (sealed, name, at, "halt-check")
                 if key in seen:
                     row = seen[key]
                 else:
-                    row = self.one_halt(folder.name, memory, name, at)
+                    row = {
+                        **self.one_halt(folder.name, memory, name, at),
+                        "seal": sealed,
+                    }
                     add(self.out / "acts.jsonl", row)
                 halts_hold += bool(row["same"])
             self.found[folder.name] = {
@@ -649,7 +678,7 @@ class Run:
         except runner.Halt:
             same = False
         return {"mode": "check", "of": of, "trajectory": name, "step": step, "from": before,
-                "stepped": step - before, "same": same}  # fmt: skip
+                "stepped": step - before, "same": same, "kind": self.kind}  # fmt: skip
 
     def one_halt(self, of: str, memory: runner.Memory, name: str, at: int) -> dict:
         """A halt the memory names, stepped up to: it must be reached, and
@@ -671,7 +700,7 @@ class Run:
         except runner.Halt:
             halts = False
         return {"mode": "halt-check", "of": of, "trajectory": name, "step": at, "from": before,
-                "stepped": at - before, "same": halts}  # fmt: skip
+                "stepped": at - before, "same": halts, "kind": self.kind}  # fmt: skip
 
     # ── after ───────────────────────────────────────────────────────────────
     def seal(self) -> None:
