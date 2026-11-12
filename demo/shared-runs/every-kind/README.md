@@ -1,6 +1,8 @@
 # Every job on every kind: an addition to the first study
 
-**Status: written and dry-run 2026-11-12, then frozen; see the end.**
+**Status: frozen 2026-11-12. The cloud session's part is run and judged;
+the laptop's and the phone's are asked and not yet back. See "What has
+come back" at the end.**
 An addition made after [the first study](../README.md) was judged. It
 changes none of that study's verdicts and none of its files.
 
@@ -63,6 +65,28 @@ same. What that could see is that the judge reads a run and a truth and
 says so; a test with a changed byte and a test with a run cut short hold
 the other two verdicts. It could not see a second kind, being one
 machine.
+
+## What has come back
+
+Frozen in [FROZEN.json](FROZEN.json) before any of the three machines
+ran the sweep alone. Each judging is a pair of rows,
+`shared-runs:every-kind:E1` and `E2`, on the same record outside the
+repository as the first study's verdicts; a copy is
+[results/record.jsonl](results/record.jsonl), and the kernel says of it:
+"the chain holds: 21 rows, 0 sealed". It is judged again, onto that
+record, each time a machine's folder comes back.
+
+**The cloud session, 2026-11-12.** An Intel Xeon with AVX-512, NumPy
+2.1.3, the project at its commit. It ran all 220 jobs alone.
+
+| rule | verdict | what was counted |
+|---|---|---|
+| E1 | **passed**, for the one machine back | 220 of 220 jobs the same outcome, step and bytes as Kaggle's baseline |
+| E2 | measured | every job now run in full on two kinds: Intel AVX2 220, Intel AVX-512 220. On three kinds: 0 |
+
+So what the first study's R1 rested on for most jobs, kept states
+stepped again, is now the job itself for all of them, on a second kind.
+A third kind in full waits on the phone.
 
 ## What it cannot show
 

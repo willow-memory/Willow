@@ -119,3 +119,25 @@ def test_the_command_line_refuses_what_it_cannot_judge(tmp_path, capsys):
     assert every_kind.main(args + ["--box", str(tmp_path)]) == 2
     assert every_kind.main(["--plan", str(file)]) == 2 and every_kind.main([]) == 2
     assert every_kind.main(["--plan", str(file), "--truth", str(added / "laptop"), "--runs", str(added), "--gate", "x", "--box", str(tmp_path)]) == 2  # fmt: skip
+
+
+def test_what_has_come_back_is_what_the_page_says():
+    study = HERE.parent / "study"
+    kept = json.loads((HERE / "results" / "verdicts.json").read_text())["verdicts"]
+    live = every_kind.judged(sweep.load(study / "plan.json"), study / "runs" / "baseline-1", HERE / "runs", study / "runs")[1]  # fmt: skip
+    assert json.loads(json.dumps(live)) == kept, (
+        "what is kept is what judging again gives"
+    )
+    cloud = kept["E1"]["figures"]["cloud-session"]
+    assert kept["E1"]["state"] == "passed" and (cloud["ran"], cloud["same"]) == (
+        220,
+        220,
+    )
+    assert kept["E2"]["figures"]["by_kind"]["intel x86_64 avx512"] == 220
+    rows = [
+        json.loads(x)
+        for x in (HERE / "results" / "record.jsonl").read_text().splitlines()
+    ]
+    assert [r.get("gate") for r in rows[-2:]] == ["shared-runs:every-kind:E1", "shared-runs:every-kind:E2"]  # fmt: skip
+    frozen = json.loads((HERE / "FROZEN.json").read_text())
+    assert rows[-2]["tools"]["every_kind.py"] == frozen["files"]["every_kind.py"]

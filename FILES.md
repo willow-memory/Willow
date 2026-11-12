@@ -2447,6 +2447,15 @@ willow/
 │   │   ├── every-kind/       an addition to the first study, frozen: every job run alone on other kinds of processor
 │   │   │   ├── every_kind.py every job of the sweep, run alone on another machine, held to the baseline
 │   │   │   ├── FROZEN.json   the addition's freeze: its judge, the first study's files it uses, the truth, the machines and the rules
+│   │   │   ├── results/          what the frozen judge made of the machines that have come back
+│   │   │   │   ├── record.jsonl      a copy of the record outside the repository, with this addition's rows after the first study's
+│   │   │   │   ├── verdicts.json     the two verdicts and what each machine came to, as every_kind.py printed them
+│   │   │   │   └── verify.txt        what the kernel said of that record
+│   │   │   ├── runs/             one folder for each named machine that has run the sweep alone
+│   │   │   │   └── cloud-session/    the cloud session's run of all 220 jobs
+│   │   │   │       ├── acts.jsonl        what it did, one line a job
+│   │   │   │       ├── machine.json      what the machine said of itself
+│   │   │   │       └── memory.jsonl      empty: a job run alone keeps nothing
 │   │   │   ├── test_every_kind.py a machine is held job by job, and a job counts only when run from its start
 │   │   │   ├── test_every_kind_frozen.py the frozen files are the bytes they were, and only the named machines are added
 │   │   │   └── README.md     Every job on every kind: an addition to the first study
@@ -2467,6 +2476,11 @@ willow/
 │   │   ├── NEXT.md           What could be tried next
 │   │   ├── rules.py          the next step of a stack chosen by rule from what its last run said, or that no rule fits
 │   │   ├── same.py       two kept runs of one stack, step by step: asked the same way, printed the same thing
+```
+
+#### demo/shared-runs/, from study/
+
+```
 │   │   ├── study/            the study's sweep and scripts, frozen, and the dry run that came before
 │   │   │   ├── account.py        the blind half: the reports, an agent's whole input, the questions and key, and answers held to them
 │   │   │   ├── dry/              what the dry run printed and what two agents sent back; made-up setups, no result

@@ -474,9 +474,15 @@ def test_what_the_trials_printed_is_listed_as_kept_and_what_was_written_is_not()
         + [
             p.relative_to(here).as_posix()
             for sub in ("results", "runs")
+            for p in (here / "every-kind" / sub).rglob("*")
+            if p.is_file()
+        ]
+        + [
+            p.relative_to(here).as_posix()
+            for sub in ("results", "runs")
             for p in (here / "study" / sub).rglob("*")
             if p.is_file()
         ]
     )
-    assert kept == printed and len(kept) == 36 + 8 + 60 + 2
+    assert kept == printed and len(kept) >= 36 + 8 + 60 + 2 + 6
     assert not [name for name in kept if name.rsplit("/", 1)[1] in written]

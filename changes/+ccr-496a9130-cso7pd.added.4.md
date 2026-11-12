@@ -1,0 +1,1 @@
+demo/shared-runs: an addition to the first study, frozen and partly run. Every job of the sweep run alone on other machines and held to the baseline; the cloud session's 220 of 220 are the same bytes, so each job is now run in full on two kinds of processor. The laptop and a phone are asked, with the first study's brief for the laptop's own models.
