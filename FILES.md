@@ -390,6 +390,10 @@ willow/
 │   │   │   ├── agent_transcript.py  Claude Code, Cursor and other session files as numbered spoken turns
 │   │   │   ├── test_agent_transcript.py
 │   │   │   └── README.md
+│   │   ├── ai-code-tracking/
+│   │   │   ├── ai_code_tracking.py Which code Cursor's AI wrote, from its tracking database
+│   │   │   ├── test_ai_code_tracking.py
+│   │   │   └── README.md     its card
 │   │   ├── ci-logs/
 │   │   │   ├── ci_logs.py   a CI run log as its failing steps
 │   │   │   ├── test_ci_logs.py
@@ -410,6 +414,10 @@ willow/
 │   │   │   ├── csv_rows.py   a CSV or TSV table as one passage per row, the header row once as the first
 │   │   │   ├── test_csv_rows.py
 │   │   │   └── README.md
+│   │   ├── cursor-chats/
+│   │   │   ├── cursor_chats.py Cursor agent chats as numbered turns
+│   │   │   ├── test_cursor_chats.py
+│   │   │   └── README.md     its card
 │   │   ├── dotfiles/
 │   │   │   ├── dotfiles.py    a dotfiles repository's settings, each on its own line in the file's own words, secrets withheld
 │   │   │   ├── test_dotfiles.py
@@ -430,6 +438,11 @@ willow/
 │   │   │   ├── json_paths.py   any JSON or JSON Lines file as plain lines, one passage per record
 │   │   │   ├── test_json_paths.py
 │   │   │   └── README.md
+```
+
+#### adapters/stdlib/, from jupyter/
+
+```
 │   │   ├── jupyter/
 │   │   │   ├── jupyter.py   a Jupyter notebook as text, one block for each cell with its number and kind
 │   │   │   ├── test_jupyter.py
@@ -438,11 +451,6 @@ willow/
 │   │   │   ├── lockfiles.py   lockfiles as a line for each locked package
 │   │   │   ├── test_lockfiles.py
 │   │   │   └── README.md
-```
-
-#### adapters/stdlib/, from logs/
-
-```
 │   │   ├── logs/
 │   │   │   ├── logs.py   system and web server logs as dated lines
 │   │   │   ├── test_logs.py
@@ -480,19 +488,6 @@ willow/
 │   │   │   ├── subtitles.py  .srt and .vtt transcripts mirrored, each cue a line cited by its start
 │   │   │   ├── test_subtitles.py
 │   │   │   └── README.md
-```
-
-### adapters/stdlib/: Reading more kinds of files: Other readers
-
-```
-│   │   ├── ai-code-tracking/
-│   │   │   ├── ai_code_tracking.py Which code Cursor's AI wrote, from its ai-code-tracking database: each scored commit and conversation as passages, and a report of lines by tab, composer and human
-│   │   │   ├── test_ai_code_tracking.py
-│   │   │   └── README.md     its card
-│   │   ├── cursor-chats/
-│   │   │   ├── cursor_chats.py Cursor agent chats as numbered turns
-│   │   │   ├── test_cursor_chats.py
-│   │   │   └── README.md     its card
 ```
 
 ### adapters/stdlib/: Reading more kinds of files: What it makes for elsewhere
@@ -903,7 +898,7 @@ willow/
 
 ```
 │   │   ├── boxes-here/
-│   │   │   ├── boxes_here.py The boxes already in a folder, and how much waits on each, so one that is there is opened, not made again; and a list kept of the ones you choose
+│   │   │   ├── boxes_here.py The boxes already in a folder, and how much waits on each
 │   │   │   ├── test_boxes_here.py
 │   │   │   └── README.md     its card
 │   │   ├── flashcards/
