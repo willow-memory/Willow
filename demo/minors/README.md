@@ -110,8 +110,12 @@ What it found:
   cannot be made by Garrick. But the scene puts her box in his hands and
   asks it his question, and it answers. Nothing in willow keeps a box
   from whoever holds its folder. Her box is safe because it is at her
-  aunt's, not because of anything willow does. That is the largest thing
-  this set found, and the calm cases could not have shown it.
+  aunt's, not because of anything willow does. This is not a flaw
+  found: it is what a folder of files is, and willow never said
+  otherwise. A box opened answers whoever opened it, as a terminal
+  opened gives whoever opened it a shell. What the tense case adds is
+  only that here it matters where the box is kept, and in the calm
+  cases it did not.
 - **Holding ends in law, not in the key.** After the court's order two
   boxes say they are held for Sable. Both verify. The old holder still
   seals. The only thing that tells them apart is the order, which is a
