@@ -6,8 +6,8 @@ nothing here is anyone's record. It follows from
 [demo/homestead-health](../homestead-health/GUARDIANSHIP.md), where the
 question was what it means to hold a record for someone else.
 
-    python demo/minors/make_life.py
-    python demo/minors/scene.py run --life demo/minors/life --to /tmp/minors
+    python demo/wards/make_life.py
+    python demo/wards/scene.py run --life demo/wards/life --to /tmp/wards
 
 | Who | Where they stand | The box, and who holds its key |
 |---|---|---|
@@ -78,7 +78,7 @@ The first four all get on with whoever holds their box. These two do
 not, and they pull opposite ways on purpose: in one the wall protects
 the minor, and in the other it shuts out someone who is right to worry.
 
-    python demo/minors/tense.py run --life demo/minors/life --to /tmp/tense
+    python demo/wards/tense.py run --life demo/wards/life --to /tmp/tense
 
 **Sable, fifteen, and Garrick.** Her mother has died. Her stepfather is
 her guardian, holds her box, and sits in on every appointment. She asked
@@ -199,7 +199,7 @@ A child has a guardian from the start and a day the holding ends. An
 adult has neither. The two stories differ in the one thing that turns
 out to matter: whether they said beforehand.
 
-    python demo/minors/adults.py run --life demo/minors/life --to /tmp/adults
+    python demo/wards/adults.py run --life demo/wards/life --to /tmp/adults
 
 **Agnes, seventy-eight.** In March 2025, well, she wrote: "If two
 doctors say I can no longer decide about my care, my daughter Petra

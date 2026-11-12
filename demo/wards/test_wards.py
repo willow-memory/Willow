@@ -1,4 +1,4 @@
-"""demo/minors: the made-up files are what make_life.py writes, and the
+"""demo/wards: the made-up files are what make_life.py writes, and the
 scene plays as its page tells it: who holds each box, what a held box
 cannot find, whose key proves whose seal, and what a handover leaves."""
 

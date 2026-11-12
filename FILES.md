@@ -2282,12 +2282,12 @@ willow/
 │   │   ├── mirror.py         the pile as text the kernel searches, each reader's part, over-long files cut into parts
 │   │   ├── sources.json      each source fetched, with its address, size and SHA-256, and what failed
 │   │   └── test_markets.py   holds what fetch.py froze, and the parts that need no network, to the README
-│   ├── minors/           made-up people whose records are held for them: minors calm and tense, and two adults
+│   ├── wards/            made-up people whose records are held for them: minors calm and tense, and two adults
 │   │   ├── adults.py         two adults who cannot decide: one who said beforehand, one who named no one
 │   │   ├── make_life.py      writes each box's made-up files into life/, the same bytes every run
 │   │   ├── scene.py          four minors, each standing somewhere different to their own box
 │   │   ├── tense.py          a third set, where the minor and the one who cares for them are at odds
-│   │   ├── test_minors.py    the files are as written, and the scene plays as its page tells it
+│   │   ├── test_wards.py     the files are as written, and the scene plays as its page tells it
 │   │   └── README.md         Held for someone else: minors, and adults who cannot decide
 │   ├── money-hour/           four people from the other demos at one table, every market figure they repeat held to the real record
 │   │   ├── README.md         the claim, what the record says, how it runs, run 1's results and its one failure

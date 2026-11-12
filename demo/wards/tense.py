@@ -1,7 +1,7 @@
 """tense.py: a third set, where the minor and the one who cares for them
 are at odds.
 
-    python demo/minors/tense.py run --life DIR --to DIR
+    python demo/wards/tense.py run --life DIR --to DIR
 
 DIR for --life is what make_life.py wrote. Nobody here is real. Two
 stories, pulling opposite ways:
@@ -124,7 +124,7 @@ class Tense(scene.Scene):
         for name, (whose, holder, until) in BOXES.items():
             self.start(name, self.life / name)
             if until:
-                kernel.append(self.box(name), self.ts(), "held-for", who="minors",
+                kernel.append(self.box(name), self.ts(), "held-for", who="wards",
                               **{"for": whose, "by": holder, "until": until})  # fmt: skip
             held = (
                 f"held by {holder} until {until}" if until else f"on {holder}'s own key"
@@ -204,7 +204,7 @@ class Tense(scene.Scene):
         self.receive("sable-with-bryony", "order-to-sable-with-bryony")
         self.receive("sable-own", "order-to-sable-own")
         print("  and to the box Garrick holds. He does not take it in.")
-        kernel.append(self.box("sable-with-bryony"), self.ts(), "held-for", who="minors",
+        kernel.append(self.box("sable-with-bryony"), self.ts(), "held-for", who="wards",
                       **{"for": "Sable", "by": "bryony", "until": "2029-03-08", "on": served["sable-with-bryony"]})  # fmt: skip
         self.seal("sable-with-bryony", "which doses are on the photograph of her card", "immunizations.md",
                   "The photograph shows two MMR doses and nothing after 2016.",

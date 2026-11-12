@@ -1,6 +1,6 @@
 """adults.py: two adults who cannot decide, and who may act for them.
 
-    python demo/minors/adults.py run --life DIR --to DIR
+    python demo/wards/adults.py run --life DIR --to DIR
 
 DIR for --life is what make_life.py wrote. Nobody here is real. A child
 has a guardian from the start and a day the holding ends. An adult has
@@ -117,10 +117,10 @@ class Adults(tense.Tense):
         for name, holder in LATER.items():
             self.holder[name] = holder
             self.start(name, self.life / name)
-        kernel.append(self.box("agnes-with-petra"), self.ts(), "held-for", who="minors",
+        kernel.append(self.box("agnes-with-petra"), self.ts(), "held-for", who="wards",
                       **{"for": "Agnes", "by": "petra", "until": "looked at again 2027-02",
                          "on": ["agnes-to-petra", "finding-to-petra"]})  # fmt: skip
-        kernel.append(self.box("agnes-with-dorian"), self.ts(), "held-for", who="minors",
+        kernel.append(self.box("agnes-with-dorian"), self.ts(), "held-for", who="wards",
                       **{"for": "Agnes", "by": "dorian", "until": None})  # fmt: skip
         self.seal("agnes-with-petra", "where does she stay", "care.md",
                   "Agnes stays in her own house, with a carer three days a week.", "what she asked for")  # fmt: skip

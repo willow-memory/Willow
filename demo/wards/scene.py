@@ -1,6 +1,6 @@
 """scene.py: four minors, each standing somewhere different to their own box.
 
-    python demo/minors/scene.py run --life DIR --to DIR [--now TS]
+    python demo/wards/scene.py run --life DIR --to DIR [--now TS]
 
 DIR for --life is what make_life.py wrote: one folder a box. Each gets a
 box under --to, which must not be there yet, and a key in the folder of
@@ -150,7 +150,7 @@ class Scene:
         for name, (whose, holder, until) in BOXES.items():
             self.start(name, self.life / name)
             if until:
-                kernel.append(self.box(name), self.ts(), "held-for", who="minors",
+                kernel.append(self.box(name), self.ts(), "held-for", who="wards",
                               **{"for": whose, "by": holder, "until": until})  # fmt: skip
             held = (
                 f"held by {holder} until {until}" if until else f"on {holder}'s own key"
@@ -209,7 +209,7 @@ class Scene:
                        "--note", "Yours from today. What I kept for you, and how I knew it.",
                        "--now", self.ts())  # fmt: skip
         pid = out.split()[1] if out.startswith("packed ") else ""
-        kernel.append(self.box("imani"), self.ts(), "handed-over", who="minors",
+        kernel.append(self.box("imani"), self.ts(), "handed-over", who="wards",
                       **{"for": "Imani", "to": self.pub["imani-own"], "package": pid})  # fmt: skip
         got = self.run(SHARE, "receive", "--box", self.box("imani-own"), "--id",
                        self.ids["imani-own"], "--package", pkg, "--now", self.ts())  # fmt: skip
