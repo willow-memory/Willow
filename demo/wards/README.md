@@ -432,6 +432,34 @@ carries it, in a section called "A signer who can never be enrolled"
 add caution on sight, and grant or relax nothing until it is enrolled
 or vouched for.
 
+Held on 2026-11-12 to the section the proposal now carries, three
+things came out that neither page had said:
+
+- **A wrap is not a word.** Here, and in the proposal's wording, a card
+  is vouched when a signer the door knows has wrapped it. The surgery
+  in the scene checks that the key inside is one it enrolled before it
+  passes the card on, and says so in a note. Nothing makes it check, and
+  nothing reads the note: a signer the ward knows who passes on a
+  stranger's card without looking has vouched for it all the same. One
+  hop of vouching is only as careful as the one who vouches. Vouching
+  should be a thing said and signed, "this key is his, and here is how I
+  know", and not merely a card passed on.
+- **A caution is cheap in a ward and may not be at a door.** Every
+  caution played here withholds one drug. The proposal lets an
+  unenrolled device "flag something, refuse something, hold something
+  back", and a refusal is a larger thing: anyone who can reach the door
+  could make it refuse. This page sets refusals aside as needing more
+  than the rule; the proposal's phone takes them in. Where a false
+  caution costs little the rule holds as it is. Where it can stop work,
+  a caution from an unknown signer should be shown and weighed, not
+  obeyed.
+- **A card whose signature does not hold.** The scene's code honoured a
+  caution even then, and nobody had decided that; it was never played,
+  only asserted in a test. The rule is about cards that hold. One that
+  does not is now left unread by the rule, as a note of no known hand,
+  for the ward to treat as it would any unsigned note. The proposal's
+  door refuses what fails, which is the same thing said more firmly.
+
 What it rests on that nothing here builds:
 
 - **A ring at each door.** The scene holds the ward's enrolled keys in a

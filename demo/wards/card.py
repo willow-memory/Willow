@@ -16,7 +16,8 @@ plays what a ward can do with one anyway, by three things:
                     named. An all-clear makes them less careful: "none
                     known". A fact is to be weighed: a daily medicine. A
                     grant names someone to be called and told.
-    the rule        a caution is honoured however it stands. An all-clear
+    the rule        of a card whose signature holds: a caution is
+                    honoured however it stands. An all-clear
                     and a grant are honoured only enrolled or vouched. A
                     fact is shown with how it stands. An unknown signer
                     can make a ward more careful, never less.
@@ -96,6 +97,10 @@ def standing(package: dict, ring: dict[str, str]) -> tuple[str, str]:
 
 
 def done(kind: str, stands: str) -> str:
+    if stands == "broken":
+        # the rule is about cards whose signature holds; one that does not
+        # is a note of no known hand, and what to do with it is the ward's
+        return "not read: its signature does not hold"
     if kind in ON_SIGHT or stands in ("enrolled", "vouched"):
         return "shown" if kind == "fact" else "honoured"
     return "shown, as said by a signer not known" if kind == "fact" else "held"

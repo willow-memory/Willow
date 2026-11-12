@@ -220,9 +220,16 @@ def test_an_unknown_signer_can_make_a_ward_more_careful_and_never_less():
     )
     assert card.done("all-clear", "vouched") == "honoured" and card.done("grant", "enrolled") == "honoured"  # fmt: skip
     assert card.done("fact", "unknown").startswith("shown, as said by") and card.done("fact", "vouched") == "shown"  # fmt: skip
-    assert (
-        card.done("caution", "broken") == "honoured"
-        and card.done("grant", "broken") == "held"
+    assert card.done("caution", "broken") == card.done("grant", "broken")
+    assert card.done("caution", "broken").startswith("not read"), (
+        "the rule is for cards that hold"
+    )
+    wrapped_stranger = {
+        "from": "k-surgery",
+        "wraps": {"from": "k-someone", "wraps": None},
+    }
+    assert card.standing(wrapped_stranger, ring)[0] == "vouched", (
+        "any known signer's wrap counts: the vouching is only as careful as the voucher"
     )
 
 
