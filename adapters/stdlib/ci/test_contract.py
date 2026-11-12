@@ -109,6 +109,11 @@ PILE_EXTRA: dict[str, dict[str, bytes]] = {
         "catalog.json": b'{"entries": [{"id": "tides", "status": "dark", '
         b'"recovery": [{"url": "https://x.example/", "permission": "excluded"}]}]}'
     },
+    # sort's report placing the default pile's garden.md: land copies it
+    "land": {
+        "sort.json": b'{"addon": "sort", "state": "populated", "said": "", '
+        b'"groups": [{"name": "garden", "rows": [{"where": "garden.md", "what": "1 hit"}]}]}'
+    },
     # no pull request open: restack-open answers before any fetch or push
     "restack-open": {"open-prs.json": b"[]"},
     "scrub": {"photo.png": _png()},
@@ -719,6 +724,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "jetbrains": ("jetbrains.py", ["--box", "{box}"]),
     "job-hunt": ("job_hunt.py", ["--box", "{box}"]),
     "kinds": ("kinds.py", ["count"]),
+    "land": ("land.py", ["--of", "{pile}/sort.json", "--from", "{pile}", "--to", "{tmp}/landed", "--dry-run"]),
     "launcher": ("launcher.py", ["--box", "{box}"]),
     "lending": ("lending.py", ["--box", "{box}"]),
     "lesson-time": ("lesson_time.py", ["--box", "{box}"]),
