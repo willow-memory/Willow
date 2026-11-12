@@ -12,6 +12,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import make_life  # noqa: E402
 import scene  # noqa: E402
+import adults  # noqa: E402
 import tense  # noqa: E402
 
 make_life.main(
@@ -22,7 +23,9 @@ make_life.main(
 def test_the_made_up_files_are_as_written_and_his_words_are_in_no_box_marit_holds():
     assert make_life.check() == []
     made = sorted({name.split("/")[0] for name in make_life.FILES})
-    assert made == sorted([*scene.BOXES, *tense.BOXES, "sable-with-bryony"])
+    assert made == sorted(
+        [*scene.BOXES, *tense.BOXES, "sable-with-bryony", *adults.BOXES, *adults.LATER]
+    )
     wrong = dict(make_life.FILES)
     wrong["tobias/checkups.md"] += "\nAsk him about the counselling.\n"
     old, make_life.FILES = make_life.FILES, wrong
@@ -121,3 +124,34 @@ def test_what_a_minor_keeps_alone_is_in_no_box_their_caregiver_holds():
         assert any("kit/clinic-letters.md says 'glucose'" in w for w in wrong)
     finally:
         make_life.FILES = old
+
+
+def test_the_adults_scene_plays_as_told(tmp_path, capsys):
+    to = tmp_path / "adults"
+    assert adults.main(["run", "--life", str(HERE / "life"), "--to", str(to)]) == 0
+    said = json.loads((to / "adults.json").read_text())
+    assert said["wrong"] == []
+    assert all(
+        b["verify"].startswith("the chain holds") for b in said["boxes"].values()
+    )
+    assert said["said"]["agnes"] == {
+        "claim_to_hold": ["agnes-with-dorian", "agnes-with-petra"],
+        "by_her_word_and_the_finding": ["agnes-with-petra"],
+        "her_word_holds_alone": True, "finding_holds_alone": True, "sent_while_well": True,
+    }  # fmt: skip
+    assert said["said"]["key"] == {
+        "seals_under_her_key": 3, "told_apart_by_the_record": 0, "before_the_finding": 1,
+        "after_the_finding": 2, "first_word_still_holds": True,
+    }  # fmt: skip
+    assert said["said"]["marcus"] == {
+        "card_signed_by_him": True, "mother_holds_his_word": False, "boxes_held_for_him": 0,
+        "his_box_untouched_meanwhile": True, "took_in_on_waking": True,
+        "hospital_record_holds": True, "his_own_seals": 2,
+    }  # fmt: skip
+    assert "went otherwise" not in capsys.readouterr().out
+    assert adults.main(["run", "--life", str(HERE / "life"), "--to", str(to)]) == 2
+    assert (
+        adults.main(["run", "--life", str(HERE / "life"), "--to", str(HERE / "out")])
+        == 2
+    )
+    assert adults.main(["run"]) == 2 and not (HERE / "out").exists()

@@ -19,6 +19,12 @@ school `nurse`, the family `court`, and the box her aunt starts,
 `sable-with-bryony`; and
 `kit`, sixteen, held by a grandmother, with `kit-own`.
 
+Two adults who cannot decide are played by adults.py: `agnes`, who
+named her daughter while she could, with `petra`, `dorian`, the memory
+`clinic` and the two boxes her children start for her; and `marcus`,
+knocked off his bike with no one named, with `jun`, `elaine` and the
+`hospital`.
+
 `marit` is Marit's own box, about herself. `--check` reads the files back
 and holds them to PLANTED: the lines the scene's answers cite, and that
 no box Marit holds says anything of what Tobias keeps himself.
@@ -241,6 +247,92 @@ I stopped showing Gran in September, because every number turned into an
 argument. I know it is going wrong. I don't know how to say so without
 another one.
 """,
+    # ── adults who cannot decide (adults.py plays these) ──────────────────
+    "agnes/wishes.md": """\
+# Agnes Thorne: what I want, written while I can
+
+2025-03-14. If two doctors say I can no longer decide about my care, my
+daughter Petra Thorne is to hold my papers and decide for me. Not my
+son: we do not see it the same way.
+
+I want to stay in my own house as long as it is safe.
+""",
+    "agnes/diary.md": """\
+# Agnes Thorne: days
+
+2026-11-09. A clear day. Petra came. I told her again that I want to
+stay in my own house, and she wrote it down with me.
+""",
+    "petra/notes.md": """\
+# Petra Thorne: Mum
+
+2025-03-14. Mum gave me her paper about who decides. I hope I never
+need it.
+
+2026-11-05. The memory clinic has written. I need it now.
+""",
+    "agnes-with-petra/care.md": """\
+# Agnes Thorne: her care, kept by Petra
+
+Tablets: donepezil in the morning, started 2026-06-02.
+Carer comes Monday, Wednesday and Friday from 2026-11-12.
+She stays in her own house; that is what she asked for.
+""",
+    "dorian/notes.md": """\
+# Dorian Thorne
+
+Mum should come and live near us. Petra has taken over everything and
+will not hear of it.
+""",
+    "agnes-with-dorian/plan.md": """\
+# Agnes Thorne: the plan, kept by Dorian
+
+Move her to the flat near us in the spring. Sell the house.
+""",
+    "clinic/findings.md": """\
+# The memory clinic: findings
+
+2026-11-05. Agnes Thorne, seen by Dr Osei and Dr Lindqvist. She cannot
+at present weigh a decision about her medical treatment. This is about
+that kind of decision and about now, and is to be looked at again in
+three months.
+""",
+    "marcus/emergency-card.md": """\
+# Marcus Bell: emergency card
+
+Written by me, 2026-01-10.
+
+Allergy: penicillin. Anaphylaxis in 2014.
+Daily medicine: none.
+Call first: Jun Okada, my partner.
+""",
+    "jun/notes.md": """\
+# Jun Okada
+
+2026-01-10. Marcus sent me his card, in case.
+
+2026-11-02. The hospital rang at ten past six. He was knocked off his
+bike. They asked who I was to him.
+""",
+    "elaine/notes.md": """\
+# Elaine Bell
+
+2026-11-02. I am his mother. Nobody at the hospital would tell me
+anything until the afternoon.
+""",
+    "hospital/bell.md": """\
+# The ward: Marcus Bell
+
+2026-11-02. Admitted unconscious after a road collision. No one had
+been named to decide for him. His partner, Jun Okada, brought a card he
+had written and signed.
+
+2026-11-03. Surgery to the left leg, decided by the surgical team as
+being in his interests. Jun Okada was told beforehand and agreed.
+Penicillin was not given: his own card says anaphylaxis in 2014.
+
+2026-11-11. Awake, and able to decide for himself again.
+""",
 }
 
 #: (box, file, a line the scene's answers cite)
@@ -257,6 +349,22 @@ PLANTED = [
     ("bryony", "order.md", "Family court order of 2026-11-10"),
     ("court", "orders.md", "Bryony Okonjo is\nappointed her guardian from this day"),
     ("kit-own", "meter.md", "In October I took 11 glucose readings."),
+    (
+        "agnes",
+        "wishes.md",
+        "my\ndaughter Petra Thorne is to hold my papers and decide for me",
+    ),
+    (
+        "clinic",
+        "findings.md",
+        "She cannot\nat present weigh a decision about her medical treatment",
+    ),
+    ("marcus", "emergency-card.md", "Call first: Jun Okada, my partner."),
+    (
+        "hospital",
+        "bell.md",
+        "Penicillin was not given: his own card says anaphylaxis in 2014.",
+    ),
 ]
 #: words that are in Sable's own box, or the nurse's, and in no box Garrick holds
 HERS_ALONE = ("nurse", "alone", "school", "aunt", "bryony", "safeguarding")

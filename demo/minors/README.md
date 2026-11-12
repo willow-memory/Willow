@@ -1,4 +1,4 @@
-# Minors, each standing somewhere different to their own box
+# Held for someone else: minors, and adults who cannot decide
 
 Test data, made 2026-11-12 on the maintainer's word, to have something to
 hold the talk about health records against. Nobody here is real, and
@@ -193,6 +193,96 @@ Where it still runs out:
   for someone on a shared login whose trouble is inside the house, it is
   the one piece the computer does not give.
 
+## Two adults who cannot decide
+
+A child has a guardian from the start and a day the holding ends. An
+adult has neither. The two stories differ in the one thing that turns
+out to matter: whether they said beforehand.
+
+    python demo/minors/adults.py run --life demo/minors/life --to /tmp/adults
+
+**Agnes, seventy-eight.** In March 2025, well, she wrote: "If two
+doctors say I can no longer decide about my care, my daughter Petra
+Thorne is to hold my papers and decide for me. Not my son: we do not see
+it the same way. I want to stay in my own house as long as it is safe."
+She sealed it and sent it to Petra. In November 2026 a memory clinic
+finds that she cannot, for now, weigh a decision about her treatment, to
+be looked at again in three months. Her son Dorian wants her moved near
+him and the house sold.
+
+**Marcus, forty-one.** Knocked off his bike on the second of November,
+unconscious for nine days. He had named no one. In January he had
+written an emergency card (allergic to penicillin; call his partner Jun
+first) and sent it to Jun, "in case". His mother Elaine arrives too, and
+writes: "Nobody at the hospital would tell me anything until the
+afternoon."
+
+What the scene plays:
+
+1. Petra and Dorian each start a box held for Agnes. Petra's rests on
+   two packages: Agnes's own word, signed by Agnes's key in 2025, and
+   the clinic's finding, signed by the clinic's. Dorian's rests on
+   nothing.
+2. After the finding, on a clear day, Agnes seals that she wants to stay
+   in her house. The next evening Dorian, at her computer, seals with
+   her key that he is to decide for her.
+3. Jun passes Marcus's card to the hospital, Marcus's signature inside
+   Jun's. Nobody holds a box for Marcus and nobody touches his. The
+   hospital keeps its own record. When he wakes it sends him what was
+   done; he takes it in, holds the hospital's record to it, and seals
+   that he has read it.
+
+What it found:
+
+- **Said beforehand, an adult's own key is the authority.** No court is
+  needed to tell Agnes's children apart. Her word is a package signed by
+  her, sent while she could send it, and it names Petra. That is the
+  strongest holding in any of these scenes: the minors' guardians hold
+  by law, and Bryony by a court; Petra holds because Agnes said so.
+- **It takes two signatures, and that is the right number.** Her word
+  says who, and on what condition. The clinic's finding says the
+  condition is met. Either alone starts nothing.
+- **The key outlives the deciding.** Three seals on Agnes's record prove
+  under her key: her word of 2025, her wish on a clear day, and Dorian's
+  at her keyboard. Her record has no way to tell her hand from his. A
+  key says a key was used. With a child that never came up, because a
+  child's key was never the authority.
+- **The record's order is what is left.** Agnes's box took the clinic's
+  finding in. So her record itself puts one seal before the finding and
+  two after it, whatever any clock says. It cannot say which of the two
+  is hers; it can say both were made when two doctors had found she
+  could not decide. And her word of 2025 still holds against what Petra
+  was sent: a later seal does not unsay an earlier one.
+- **A seal can cite a page that says the opposite.** Dorian's "my son
+  Dorian is to decide for me" cites the line of her own page that says
+  "not my son". The kernel checks that what is cited was served, not
+  that the answer agrees with it.
+- **For a short while, the right amount of holding is none.** Nobody
+  needed Marcus's key or his box. Jun had something he signed; the
+  hospital acted and wrote down what it did; and when he woke it was
+  handed to him as a thing received, for him to read and hold them to.
+  His own record then has, in its own order, what was done while he
+  could not say.
+- **Who is believed turns on who was sent something.** Jun is not his
+  wife and Elaine is his mother. Jun has his card, signed by his key;
+  Elaine has nothing he signed. The scene does not say that is fair. It
+  is what the papers show.
+
+What it leaves open:
+
+- **Whose key it is.** The hospital met Marcus's key, and Jun's, as keys
+  it had never seen. Whether the card is his rests on that, and it is
+  being worked on elsewhere.
+- **Getting better.** The finding says "looked at again in three
+  months". If Agnes can decide again, something has to say so with the
+  same weight as the finding, and Petra's holding has to stop. The scene
+  writes the review date on the `held-for` row and nothing reads it.
+- **A clear day.** Capacity comes and goes, and is judged decision by
+  decision. Her record has one line drawn across it.
+- **Taking the finding in.** It reached Agnes's box because someone at
+  her computer took it in. Had Dorian been that someone, he need not
+  have.
+
 ## What it does not show
 
 - **Who may start a box.** Tobias has a key of his own because the scene
@@ -204,9 +294,9 @@ Where it still runs out:
   needs help they are not asking for.
 - **Harm.** Nothing here models danger, and nothing here is advice to
   anyone living it.
-- **The adult who cannot decide.** Every minor here has a guardian from
-  the start and a day the holding ends. Neither is true of an adult who
-  falls ill.
+- **An adult with no one at all.** Agnes has a daughter and Marcus a
+  partner. Someone with neither, and nothing said beforehand, is the
+  case a court's deputy or a public guardian is for, and is not here.
 - **A stranger reading the emergency card.** Wren's and Imani's are in
   their piles, authored by Marit. Nothing here serves one to someone
   outside.
