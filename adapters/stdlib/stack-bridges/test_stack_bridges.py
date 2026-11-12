@@ -302,6 +302,40 @@ def test_a_step_naming_the_record_after_one_that_writes_it_takes_the_record():
     )
     assert stack_bridges.record_bridges(steps, writes=lambda name: False) == {}
     assert stack_bridges.record_bridges(steps, writes=lambda name: None) == {}
+
+
+def test_a_record_named_by_its_folder_is_a_bridge_between_steps_naming_that_folder():
+    steps = [("w", ["--box", "boxes/sources"]), ("a", ["root", "--box", "boxes/sources"]),
+             ("b", ["--box", "boxes/links"]), ("c", ["--box", "{box}"]),
+             ("w", ["--box", "./boxes/links/"]), ("d", ["--box", "boxes/links", "--top", "3"]),
+             ("e", ["--in", "boxes/sources"]), ("f", ["--box"])]  # fmt: skip
+    got = stack_bridges.record_bridges(steps, writes=lambda name: name == "w")
+    assert got == {2: 1, 6: 5}, (
+        "only the same folder's writer; {box} is not a folder named; "
+        "a folder given to another option is not a record"
+    )
+    assert [stack_bridges.record_of(args) for _, args in steps] == [
+        "boxes/sources", "boxes/sources", "boxes/links", "{box}",
+        "boxes/links", "boxes/links", None, None,
+    ]  # fmt: skip
+    assert stack_bridges.record_of(["--box", "/"]) == "/"
+    assert stack_bridges.record_of(["--box", "{box}", "--from", "x"]) == "{box}"
+    assert stack_bridges.record_of(["--from", "{box}", "--box", "kept"]) == "kept"
+
+
+@needs_cards
+def test_a_stack_that_names_its_record_by_folder_has_its_bridges_found(tmp_path):
+    doc, code = doc_of(
+        tmp_path,
+        "# s\n\n## one\n- glance -- --box boxes/sources\n- fixity -- --box boxes/sources\n"
+        "- merkle -- root --box boxes/sources\n- glance -- --box boxes/links\n",
+    )
+    assert code == 0 and doc["state"] == "populated", doc
+    assert rows(doc, "what each step takes") == {
+        "03 merkle": "02 fixity: the record as it left it"
+    }
+    assert rows(doc, "the order")["write the record"].startswith("1: 02 fixity; ")
+
     assert stack_bridges.writes_record("no-such-add-on") is None
     assert stack_bridges.writes_record("stack") is False, (
         "the one card that is always beside it"

@@ -4,6 +4,7 @@ the original is only read."""
 from __future__ import annotations
 
 import hashlib
+import importlib.util
 import sqlite3
 import subprocess
 import sys
@@ -50,6 +51,17 @@ def write_graph(path: Path) -> None:
 
 def mirror(folder: Path, to: Path) -> subprocess.CompletedProcess:
     return run(SCRIPT, "mirror", "--from", folder, "--to", to)
+
+
+def held_mirror(mod, folder, to):
+    """mirror() called in-process with the command line it would have had,
+    since the guard holds a write to the --to it reads from sys.argv."""
+    saved = sys.argv
+    sys.argv = [str(SCRIPT), "mirror", "--from", str(folder), "--to", str(to)]
+    try:
+        return mod.mirror(folder, to)
+    finally:
+        sys.argv = saved
 
 
 def test_each_function_is_a_paragraph_with_its_edges(tmp_path):
@@ -151,3 +163,85 @@ def test_kernel_serves_a_function_from_the_mirror(tmp_path):
 def test_a_bad_command_line_is_refused(tmp_path):
     got = mirror(tmp_path / "missing", tmp_path / "m")
     assert got.returncode == 2 and "refused:" in got.stderr
+
+
+def test_a_graph_kept_as_nodes_and_edges_reads_the_same_way(tmp_path):
+    folder, to = tmp_path / "f", tmp_path / "m"
+    folder.mkdir()
+    con = sqlite3.connect(folder / "graph.db")
+    con.executescript(
+        """
+        CREATE TABLE nodes (
+            id INTEGER PRIMARY KEY, project TEXT, label TEXT, name TEXT,
+            qualified_name TEXT, file_path TEXT, start_line INTEGER
+        );
+        CREATE TABLE edges (
+            id INTEGER PRIMARY KEY, project TEXT, source_id INTEGER,
+            target_id INTEGER, type TEXT
+        );
+        INSERT INTO nodes VALUES
+            (1, 'p', 'Function', 'run', 'p.mod.run', 'mod.py', 10),
+            (2, 'p', 'Class', 'Helper', 'p.mod.Helper', 'mod.py', 1),
+            (3, 'p', 'Method', 'work', 'p.mod.Helper.work', 'mod.py', 4),
+            (4, 'p', 'Function', 'len', 'builtins.len', '<python-builtins>', 1),
+            (5, 'p', 'Variable', 'LIMIT', 'p.mod.LIMIT', 'mod.py', 2);
+        INSERT INTO edges VALUES
+            (1, 'p', 1, 3, 'CALLS'), (2, 'p', 1, 4, 'CALLS'), (3, 'p', 1, 3, 'CALLS'),
+            (4, 'p', 1, 2, 'IMPORTS'), (5, 'p', 1, 5, 'USAGE'), (6, 'p', 3, 2, 'INHERITS');
+        """
+    )
+    con.close()
+    got = mirror(folder, to)
+    assert got.returncode == 0, got.stderr
+    text = (to / "graph.db.txt").read_text(encoding="utf-8")
+    assert text.startswith("code graph: 2 functions\n"), "a built-in has no file"
+    assert (
+        "run (function)\nfile: mod.py:10\nname: p.mod.run\n"
+        "edges: call builtins.len; import p.mod.Helper; call p.mod.Helper.work\n"
+    ) in text, "each thing reached once, by its name; only calls, imports and inherits"
+    assert "work (method)\nfile: mod.py:4\nname: p.mod.Helper.work\nedges: inherit p.mod.Helper\n" in text  # fmt: skip
+    assert (
+        "Helper (class)" not in text
+        and "LIMIT" not in text
+        and "len (function)" not in text
+    )
+
+
+def test_a_graph_too_long_for_one_file_is_cut_between_functions():
+    spec = importlib.util.spec_from_file_location("cbm_under_test", SCRIPT)
+    cbm = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(cbm)
+    paras = [f"f{i} (function)\nfile: mod.py:{i}\nname: mod.f{i}\n" for i in range(40)]
+    text = "code graph: 40 functions\n\n" + "\n".join(paras)
+    assert cbm.parts(text) == [text], "one that fits is one file, as it was"
+    cut = cbm.parts(text, most=400)
+    assert len(cut) > 1 and all(len(p.encode()) <= 400 for p in cut)
+    assert cut[0].startswith(
+        f"code graph: 40 functions, part 1 of {len(cut)}\n\nf0 (function)\n"
+    )
+    assert cut[-1].startswith(
+        f"code graph: 40 functions, part {len(cut)} of {len(cut)}\n\n"
+    )
+    got = [p for part in cut for p in part.partition("\n\n")[2].split("\n\n")]
+    assert [p.rstrip("\n") for p in got] == [p.rstrip("\n") for p in paras], (
+        "every function, whole, once, in order"
+    )
+
+
+def test_a_graph_mirrored_in_parts_numbers_its_files_from_one(tmp_path, monkeypatch):
+    spec = importlib.util.spec_from_file_location("cbm_parts_named", SCRIPT)
+    cbm = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(cbm)
+    src, dst = tmp_path / "graphs", tmp_path / "mirror"
+    src.mkdir()
+    write_graph(src / "g.db")
+    whole = cbm.graph_text(src / "g.db")
+    most = len(whole.encode()) - 1  # just too long for one file
+    real = cbm.parts
+    monkeypatch.setattr(cbm, "parts", lambda text: real(text, most=most))
+    held_mirror(cbm, src, dst)
+    n = len(real(whole, most=most))
+    assert n > 1
+    assert sorted(p.name for p in dst.iterdir() if p.is_file()) == sorted(
+        f"g.db.{i}.txt" for i in range(1, n + 1)
+    )

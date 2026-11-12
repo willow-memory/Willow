@@ -495,11 +495,16 @@ def main(argv: list[str]) -> int:
     if "--to" in opts:
         to = Path(opts["--to"])
         if not to.is_dir():
-            print(
-                f"refused: {to} isn't a folder that's there; make it first",
-                file=sys.stderr,
-            )
-            return kernel.REFUSED
+            # a new run's own folder is made here; the folder it goes in
+            # never is, so a mistyped path is refused, not built
+            if to.exists() or not to.parent.is_dir():
+                print(
+                    f"refused: {to} can't be a run's folder: "
+                    + ("it is a file" if to.exists() else f"{to.parent} isn't there"),
+                    file=sys.stderr,
+                )
+                return kernel.REFUSED
+            to.mkdir()
         total = sum(len(steps) for _, steps in pools)
         again = "--resume" in opts and any(to.iterdir())
         if again and not (to / f"{'0' * max(2, len(str(total)))}-stack.txt").is_file():

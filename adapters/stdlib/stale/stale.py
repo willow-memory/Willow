@@ -33,12 +33,40 @@ from __future__ import annotations
 
 import json
 import sys
+import types
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 import kernel  # noqa: E402
 
 NAME = "stale"
+
+
+def pieces():
+    """The pieces add-on, which reads a pile a folder at a time, or None
+    when it isn't beside this one."""
+    path = Path(__file__).resolve().parents[1] / "pieces" / "pieces.py"
+    if not path.is_file():
+        return None
+    mod = types.ModuleType("stale_pieces")
+    mod.__file__ = str(path)
+    exec(compile(path.read_text(encoding="utf-8"), str(path), "exec"), mod.__dict__)
+    return mod
+
+
+def present(pile: Path, ids: set[str]) -> set[str]:
+    """Which of these ids are passages of the pile now. With pieces beside,
+    the pile is read a folder at a time and only these ids are kept."""
+    if not ids:
+        return set()
+    pc = pieces()
+    found = set()
+    for c in pc.passages(pile) if pc else kernel.chunks(pile):
+        if c["id"] in ids:
+            found.add(c["id"])
+            if len(found) == len(ids):
+                break
+    return found
 
 
 def check(box: Path) -> tuple[int, list[dict]]:
@@ -50,10 +78,14 @@ def check(box: Path) -> tuple[int, list[dict]]:
     for r in rows:
         for s in r.get("served", []):
             places.setdefault(s["id"], s["where"])
-    here = {c["id"] for c in kernel.chunks(Path(kernel.config(box)["pile"]))}
+    standing = [
+        (subj, row, *kernel.standing(box, rows, subj, row))
+        for subj, row in sorted(kernel.sealed(box, rows).items(), key=lambda x: x[1]["n"])
+    ]  # fmt: skip
+    cited = {c for _, _, prop, _, why in standing if why is None for c in prop["cites"]}
+    here = present(Path(kernel.config(box)["pile"]), cited)
     out = []
-    for subj, row in sorted(kernel.sealed(box, rows).items(), key=lambda x: x[1]["n"]):
-        prop, _, why = kernel.standing(box, rows, subj, row)
+    for subj, row, prop, _, why in standing:
         if (
             why is not None
         ):  # its cites can't be read from a file that isn't what was sealed

@@ -106,9 +106,9 @@ def coming_up(box: Path, today: date, days: int) -> dict:
     cu = sibling("coming-up", "coming_up")
     if cu is None:
         return section([], "the coming-up add-on isn't here")
-    pile = kernel.chunks(Path(kernel.config(box)["pile"]))
+    pile = Path(kernel.config(box)["pile"])
     return section([{"date": d.isoformat(), "where": where, "line": line}
-                    for d, where, line in cu.coming(pile, today, days)])  # fmt: skip
+                    for d, where, line in cu.coming_in(pile, today, days)])  # fmt: skip
 
 
 def asked_again(rows: list[dict]) -> dict:
