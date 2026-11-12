@@ -1,0 +1,1 @@
+`received`, an idea: a package you were sent, kept by your own choice as a page that says whose word it is, so your folder can answer from it. demo/wards tried it by hand and says what it has to get right.
