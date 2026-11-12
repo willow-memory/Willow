@@ -1,0 +1,15 @@
+{
+ "about": "The pools study's pass rules and thresholds, read by truth.py. Proposed, not frozen: the study's freeze holds this file's SHA-256, and a change after it is a new freeze.",
+ "fires": "exit 0 or 42, not timed out, no guard breach, and a report's state 'populated' or, with no report state, at least one line printed",
+ "min_piles": 5,
+ "pair_jaccard": 0.2,
+ "duplicate_jaccard": 0.8,
+ "fdr_q": 0.05,
+ "section_share": 0.5,
+ "neighbours": 3,
+ "probes_per_gap": 3,
+ "gap_found": "a known gap is found when most of its probes miss and every control probe of its reader hits",
+ "no_bridge_pairs": 500,
+ "seed": 20261112,
+ "order": "a step in a stack may print other than it did alone on the same pile only when an earlier step of that stack bridges to it, directly or through earlier steps"
+}

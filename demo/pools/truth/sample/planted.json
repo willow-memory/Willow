@@ -1,0 +1,185 @@
+{
+ "duplicates": [
+  {
+   "a": "c",
+   "b": "d",
+   "least": 1.0,
+   "piles": 10,
+   "rows": [
+    "366e39601341",
+    "45593c344f6d",
+    "5b6ffef348fa",
+    "5f97b2592f70",
+    "69fb924fdcec",
+    "789128abb7fb",
+    "7aa0854254a3",
+    "a6aef6d243d6",
+    "af1c50725595",
+    "d2fc2bb22b7c",
+    "2021e01f66a5",
+    "27d4dcf02e49",
+    "2d2b352e2549",
+    "423521446d25",
+    "56d816951ad0",
+    "6aa3f9f4e6a3",
+    "74c13e662d16",
+    "8df173c53089",
+    "dcdad1483548",
+    "e45b25eb7719"
+   ]
+  }
+ ],
+ "gaps": [
+  {
+   "ideas": [
+    "zz-reader"
+   ],
+   "kind": ".zzz",
+   "piles": 2
+  }
+ ],
+ "levels": {
+  "acts on the same thing": 3,
+  "shares files": 0
+ },
+ "neighbours": {
+  "a": [
+   "b"
+  ],
+  "b": [
+   "a"
+  ],
+  "c": [
+   "d"
+  ],
+  "d": [
+   "c"
+  ],
+  "r": [
+   "t"
+  ],
+  "t": [
+   "r"
+  ]
+ },
+ "never_fires": [],
+ "no_partner": [
+  "x",
+  "y",
+  "z"
+ ],
+ "no_pile": [],
+ "order_breaks": [],
+ "pairs": [
+  {
+   "a": "a",
+   "b": "b",
+   "fa": 10,
+   "fb": 10,
+   "jf": 0.6667,
+   "jp": 0.6667,
+   "k": 10,
+   "level": "acts on the same thing",
+   "n": 20,
+   "p": 5.412544112234515e-06,
+   "rows": [
+    "0e616750e592",
+    "11b34afae15b",
+    "1f06a765802d",
+    "2a4dcbb6016e",
+    "7e6ba4248032",
+    "a3eb76cc7f91",
+    "a47dec0bc53f",
+    "a506b33a570a",
+    "befc4c5edc1d",
+    "edc22c499776",
+    "023c68f3f820",
+    "10f20da0030a",
+    "47ff9ff1bc44",
+    "4a8ad254e113",
+    "618a55364dea",
+    "67f03cfa11a4",
+    "6d51c8fd73b1",
+    "acd64dbbbb9c",
+    "ce998d771482",
+    "d7a10632c685"
+   ]
+  },
+  {
+   "a": "c",
+   "b": "d",
+   "fa": 10,
+   "fb": 10,
+   "jf": 1.0,
+   "jp": 1.0,
+   "k": 10,
+   "level": "acts on the same thing",
+   "n": 20,
+   "p": 5.412544112234515e-06,
+   "rows": [
+    "366e39601341",
+    "45593c344f6d",
+    "5b6ffef348fa",
+    "5f97b2592f70",
+    "69fb924fdcec",
+    "789128abb7fb",
+    "7aa0854254a3",
+    "a6aef6d243d6",
+    "af1c50725595",
+    "d2fc2bb22b7c",
+    "2021e01f66a5",
+    "27d4dcf02e49",
+    "2d2b352e2549",
+    "423521446d25",
+    "56d816951ad0",
+    "6aa3f9f4e6a3",
+    "74c13e662d16",
+    "8df173c53089",
+    "dcdad1483548",
+    "e45b25eb7719"
+   ]
+  },
+  {
+   "a": "r",
+   "b": "t",
+   "fa": 10,
+   "fb": 10,
+   "jf": 0.6,
+   "jp": 0.6,
+   "k": 10,
+   "level": "acts on the same thing",
+   "n": 20,
+   "p": 5.412544112234515e-06,
+   "rows": [
+    "44e40c260188",
+    "6d0ddebbdcf5",
+    "6f3ea81bd459",
+    "76fd37037506",
+    "846dadb7095a",
+    "9c4c1a4ec2e3",
+    "a1ad5fb47586",
+    "b4c7b12fedba",
+    "ccac9b7a022f",
+    "fc8d73ee4855",
+    "17f88654e652",
+    "2b80391f99a4",
+    "31f369ba0cdf",
+    "48e94b234383",
+    "53c891c8395b",
+    "7377a9278b0d",
+    "8e6e7a5533e7",
+    "9de2a4088231",
+    "9f3f30f0db1d",
+    "c174304f72cc"
+   ]
+  }
+ ],
+ "pairs_tested": 26,
+ "piles": 20,
+ "refused": [],
+ "rows": 180,
+ "rules": "167403c1a0574fc83f076e3b4ad8da53541163e152c6fc4c5def446e05690704",
+ "sections": [],
+ "steps": 9,
+ "unsteady": []
+}

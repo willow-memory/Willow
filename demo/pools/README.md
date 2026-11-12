@@ -97,9 +97,55 @@ So on this pile a step's company changes what it says for about one
 step in thirty. A trial's figures, again, and a first sight of what
 the study would count.
 
+## What the report may say: [truth/](truth/)
+
+`python demo/pools/truth/truth.py measure ...` reads the trace's rows and
+nothing else, by the rules in [truth/rules.json](truth/rules.json), and
+`report` writes the one report from what it found, each claim with the
+rows it stands on. No line of the report is typed by hand.
+
+| rule | what it takes |
+|---|---|
+| fires | exit 0 or 42, not timed out, no guard breach, and a report's `populated` (or, with no report state, a line printed). Empty is silence; the rest is refused, counted, never read as silence |
+| a pair | fired together, on the piles both apply to, beyond chance (the exact hypergeometric tail, on 5 piles or more), held at a false discovery rate of 0.05 (Benjamini-Hochberg), **and** the same places named, within each pile, overlapping 0.2 or more. Places overlapping is "acts on the same thing"; only files overlapping is "shares files" |
+| a duplicate | the same places, 0.8 or more, on every pile both fired, 5 or more |
+| never fires | applies to a pile (its card's `reads:`, or every pile when it names none) and fires on none; kept apart from "had no pile it applies to" |
+| a gap | a kind of file in the piles that no step's output named; an idea whose line names it is said beside it |
+| a section | at least half of a step's partners are under one other heading |
+| neighbours | a step's three best partners, places before files; "none found" when it has none |
+| the null | a step in a stack may print other than it did alone on the pile only when an earlier step bridges to it, directly or through others (bridges frozen in the grid). A step that differs from itself alone is unsteady, listed, and not held |
+| a known gap | 3 or more probes, questions with their answer's place set by hand before any run; found when most miss and every control probe of the same reader hits; otherwise it can't be read |
+
+**The dry runs, and that they can fail.** `truth.py dry --box BOX` runs
+the measure on made-up rows and writes each verdict as a kernel row
+named `study:dry:...` on a box outside the repo, never the study's:
+
+- **nonsense**: steps that fire at random and name places of their own;
+  any pair or duplicate is invented. Held: none.
+- **planted**: a and b on the same places; c a duplicate of d; a kind of
+  file, `.zzz`, nothing names; a reader and a taker of its mirror, which
+  meet only through the map; and a and r firing on the same piles with
+  no place in common. Held: exactly a-b, c-d and r-t, c-d the one
+  duplicate, `.zzz` the one gap, and never a-r.
+- **map off**: the same, with the taker's places those of the mirror's
+  pages. Held: the reader and its taker no longer act on the same thing.
+- **shuffled**: the planted rows moved between piles at random. Held: no
+  planted pair survives.
+
+The tests break each rule on purpose and the dry run that should notice
+does: with the place rule taken off, a and r pair on firing alone; with
+the false discovery rate at 1, chance pairs are kept. The planted run's
+result and report are kept in [truth/sample/](truth/sample/), and the
+report is made from them again byte for byte.
+
+**For the freeze.** It holds `rules.json`, `truth.py`, the grid's
+manifest, each pile's shape (`truth.py shape`, a pile's kinds of file
+and its files' salted hashes, never their names or words), the cards
+(`truth.py cards`), the seeded pairs no bridge joins (`truth.py pairs`,
+500 by the rules' seed, each run in both orders), and the probes, each
+with its answer's place, before any of them is asked.
+
 ## What is not here yet
 
-The piles, the rules for a pool, a gap and a duplicate, the dry runs
-(a nonsense pile, planted pairs, shuffled labels), the freeze, and
-anything for Kaggle. Those are being worked out between sessions and are the
-maintainer's to start.
+The piles, the probes' questions and answers, the freeze, and anything
+for Kaggle. Those are the maintainer's to start.
