@@ -152,9 +152,13 @@ def facts_tags(a: dict) -> list[str]:
     return ["no-install" if a["kind"] == "stdlib" else "needs-install", net]
 
 
-def worked_out(every: list[dict], root: Path = ROOT) -> dict[str, dict]:
+def worked_out(
+    every: list[dict], root: Path = ROOT, only: set[str] | None = None
+) -> dict[str, dict]:
     """{name: {"tags": [...], "near": [three names]}} for every entry, the
-    same for the same cards on any machine."""
+    same for the same cards on any machine. With `only`, for those names
+    alone, each still ranked against every entry, so its line is the same
+    as the whole list's: one entry's line doesn't need the rest's."""
     text = {a["name"]: card_text(a, root) for a in every}
     whole = {n: {s for s, _ in topic_words(t)} for n, t in text.items()}
     form: dict[str, Counter] = defaultdict(Counter)
@@ -174,6 +178,8 @@ def worked_out(every: list[dict], root: Path = ROOT) -> dict[str, dict]:
     out = {}
     for a in every:
         n = a["name"]
+        if only is not None and n not in only:
+            continue
         nb = [c["path"] for c, _, _ in ranker.rank(text[n], NEIGHBOURS + 1)
               if c["path"] != n][:NEIGHBOURS]  # fmt: skip
         shared = Counter(
