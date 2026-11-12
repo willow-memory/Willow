@@ -99,6 +99,32 @@ carried on in the next ends as one never cut, to the byte, and the seal
 and the door work on machines nobody here can see. **What it does not:**
 the refusal across kinds has still only been met in a made-up dry run.
 
+## The refusal across kinds, met afterwards, and what it guards
+
+Not part of the frozen run; a trial made on 2026-11-12 with one of its
+folders. Kaggle never brought a part back on another kind, so the
+cloud session did it by hand: it took what `round-1-machine-0-a` left
+(two jobs done and a third cut at step 9,000 of 18,000, on an Intel
+Xeon with AVX2) and tried to carry it on itself, on an Intel with
+AVX-512.
+
+- **As it is, machine.py refused**, exit 2: "began on intel x86_64
+  avx2, this is intel x86_64 avx512", and the refusal is the last line
+  of the folder's log. So the refusal works on a real folder.
+- **With the folder's own account of its processor altered** to say
+  AVX-512, so that the refusal did not fire, it carried on: the cut job
+  was taken up at step 9,000 and the round ended. All 20 acts and every
+  kept state are the first study's, byte for byte.
+
+So here the refusal guarded against nothing: a job begun on one kind
+and ended on another came to the same bytes, as the every-kind study
+would lead one to expect of this stepper with its one power rewritten.
+That is one job on two kinds, and the refusal stays until there is
+more: what it costs is a part begun over, which the notebooks already
+do and say. The reason for it was never that the bytes would differ;
+it is that an act is written under one kind, and a folder that mixes
+two no longer says which kind stepped what.
+
 ## What it cannot show
 
 Strangers and liars: every signer here is enrolled and honest. Size:

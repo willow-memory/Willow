@@ -1,0 +1,1 @@
+`demo/shared-runs/door/kaggle/README.md`: the refusal to carry a part on across kinds of processor, met on a real folder: a part cut on Kaggle's Intel AVX2 was refused on an AVX-512 machine; with the folder's account of its processor altered so the refusal did not fire, the cut job carried on and the round came to the first study's bytes.
