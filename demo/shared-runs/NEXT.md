@@ -64,6 +64,16 @@ Found by holding A1's draft to what is already here
 | A7 | **Received, not yet gone on from.** A state is not used until something has looked at it. | what the saving falls to when nothing is trusted on arrival | a change to the memory | here || In part, for a ledger: Nestor walks its ledger's chain once a process, every N seconds, or on every append (`NESTOR_LEDGER_VERIFY_INTERVAL_SEC`, `nestor/cascade.py`), the cost of not trusting on arrival made a setting |
 | A8 | **A recall.** From a found lie, the jobs that went on from it are named. | how many of the wrong jobs can be called back, from what each job already says it took | nothing new: the acts say it | here | |
 
+A6 has a design to start from, made 2026-11-11 in the maintainer's
+willows-grove repository: the page "Phone keys: made anywhere, checked at
+home" (commit d90afb4; proposed, not ratified, nothing built). Its
+thought is that the check belongs where a thing is taken in, not where
+its key was made: a machine's public key enrolled once by whoever owns
+the door, what it sends signed with the share add-on's keys, and a
+signer the door does not know refused or held as a suggestion. For a
+shared memory the door is wherever a kept state is taken in and gone on
+from, which is also A7.
+
 ## B. Machines: more kinds, and one difference at a time
 
 | | what is tried | what it would show | needs | from where | already on the maintainer's machine? |
