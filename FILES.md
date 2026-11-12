@@ -489,6 +489,10 @@ willow/
 │   │   │   ├── ai_code_tracking.py Which code Cursor's AI wrote, from its ai-code-tracking database: each scored commit and conversation as passages, and a report of lines by tab, composer and human
 │   │   │   ├── test_ai_code_tracking.py
 │   │   │   └── README.md     its card
+│   │   ├── cursor-chats/
+│   │   │   ├── cursor_chats.py Cursor agent chats as numbered turns
+│   │   │   ├── test_cursor_chats.py
+│   │   │   └── README.md     its card
 ```
 
 ### adapters/stdlib/: Reading more kinds of files: What it makes for elsewhere

@@ -222,6 +222,19 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         b"Surname,Forename,Townland,Age,Occupation\n"
         b"Considine,Patrick,Caherfeenick,17,Farm Labourer\n"
     )}),
+    "cursor-chats": ("cursor_chats.py", {"store.db": _sqlite(
+        "CREATE TABLE meta (key TEXT, value TEXT);\n"
+        "CREATE TABLE blobs (id TEXT, data BLOB);\n"
+        "INSERT INTO meta VALUES ('0', '"
+        + b'{"agentId":"c1","latestRootBlobId":"'.hex() + ("cc" * 32).encode().hex()
+        + b'","name":"Dentist","createdAt":1788174000000}'.hex() + "');\n"
+        "INSERT INTO blobs VALUES ('" + "aa" * 32 + "', X'"
+        + b'{"role":"user","content":"When is the dentist?"}'.hex() + "');\n"
+        "INSERT INTO blobs VALUES ('" + "bb" * 32 + "', X'"
+        + b'{"role":"assistant","content":"Tuesday at 3."}'.hex() + "');\n"
+        "INSERT INTO blobs VALUES ('" + "cc" * 32 + "', X'"
+        + ("0a20" + "aa" * 32 + "0a20" + "bb" * 32) + "');\n"
+    )}),
     "day-one": ("day_one.py", {"Journal.json": (
         b'{"metadata":{"version":"1.0"},"entries":['
         b'{"creationDate":"2024-03-03T09:00:00Z","text":"Second entry\\\\.","tags":["garden","spring"],"starred":true,"location":{"placeName":"Kitchen","localityName":"Leeds","country":"United Kingdom"},"weather":{"conditionsDescription":"Cloudy","temperatureCelsius":7.6}},'

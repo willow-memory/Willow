@@ -413,6 +413,9 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - <a id="ai-code-tracking"></a>[**ai-code-tracking**](adapters/stdlib/ai-code-tracking/) \
   Which code Cursor's AI wrote, from its tracking database: each scored commit and conversation, and lines by tab, composer and human. \
   *new* `no-install` `offline` `score` · near: musicxml, sarif, text
+- <a id="cursor-chats"></a>[**cursor-chats**](adapters/stdlib/cursor-chats/) \
+  Cursor agent chats, each kept in its own SQLite database, as plain text with each turn numbered, so you can ask what the agent was told. \
+  *new* `no-install` `offline` `told` `cursor` · near: agent-transcript, notion, rtf
 
 #### Other readers: ideas, not built yet, a to m
 
