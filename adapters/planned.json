@@ -968,6 +968,18 @@
   "version": "0.0.1"
  },
  {
+  "name": "linkedin-analytics",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "LinkedIn's analytics export: each post's impressions, reactions and comments as dated lines, kept past LinkedIn's 90 days.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "role": "reads",
+  "uses": "office",
+  "version": "0.0.1"
+ },
+ {
   "name": "lore",
   "kind": "stdlib",
   "section": "Play",
@@ -1077,6 +1089,17 @@
   "writes": "record",
   "network": "none",
   "role": "suggests",
+  "version": "0.0.1"
+ },
+ {
+  "name": "meta-insights",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Meta Business Suite's insights CSVs: Facebook and Instagram reach, views and engagement per post as dated lines.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "role": "reads",
   "version": "0.0.1"
  },
  {
@@ -1383,6 +1406,18 @@
   "version": "0.0.1"
  },
  {
+  "name": "post-stats",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "Each post's views, upvote ratio and country shares from your notes' dated lines, by day or week, with the fewest people each share can mean.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "role": "tools",
+  "uses": "log-kit",
+  "version": "0.0.1"
+ },
+ {
   "name": "pr-context",
   "kind": "stdlib",
   "section": "Ways to use it",
@@ -1542,6 +1577,40 @@
   "version": "0.0.1"
  },
  {
+  "name": "reddit-api",
+  "kind": "deps",
+  "section": "Keeping track",
+  "line": "Your own Reddit posts read through Reddit's API on a timer: score, ratio and comments each time, so the first fifteen minutes can be read.",
+  "source": "new",
+  "needs": "praw; BSD-2-Clause",
+  "writes": "to",
+  "network": "Reddit's API, with the credentials of an app you make, to read your own posts",
+  "role": "tools",
+  "version": "0.0.1"
+ },
+ {
+  "name": "reddit-history",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Older Reddit posts and comments from an archive you name, for a window of days, written as dated lines beside your own export.",
+  "source": "new",
+  "writes": "to",
+  "network": "the archive you name, to read posts from a window of days",
+  "role": "tools",
+  "version": "0.0.1"
+ },
+ {
+  "name": "reddit-pro",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Reddit Pro's analytics, saved as a CSV or copied as text: each post's views, upvotes and followers gained as dated lines.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "role": "reads",
+  "version": "0.0.1"
+ },
+ {
   "name": "redential",
   "kind": "deps",
   "section": "Trust and proof",
@@ -1632,6 +1701,17 @@
   "version": "0.0.1"
  },
  {
+  "name": "rpsync",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "RPSync's exported social statistics, read from a copy, as dated lines for each platform it collects.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "role": "reads",
+  "version": "0.0.1"
+ },
+ {
   "name": "rubric",
   "kind": "stdlib",
   "section": "Keeping track",
@@ -1685,6 +1765,19 @@
   "writes": "nothing",
   "network": "none",
   "role": "page",
+  "version": "0.0.1"
+ },
+ {
+  "name": "screenshot-stats",
+  "kind": "deps",
+  "section": "Reading more kinds of files",
+  "line": "Dashboard screenshots read into dated numbers (views, ratio, upvotes, country shares), each line citing its image.",
+  "source": "new",
+  "needs": "Pillow and the tesseract program, run not linked; MIT-CMU, Apache-2.0",
+  "writes": "to",
+  "network": "none",
+  "role": "reads",
+  "uses": "ocr",
   "version": "0.0.1"
  },
  {
@@ -1778,6 +1871,17 @@
   "version": "0.0.1"
  },
  {
+  "name": "social-osint-cache",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "The local cache of OWASP SocialOSINTLM, read offline: posts it gathered from Bluesky, Mastodon and Reddit as dated lines.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "role": "reads",
+  "version": "0.0.1"
+ },
+ {
   "name": "socratic",
   "kind": "stdlib",
   "section": "Ways to use it",
@@ -1865,6 +1969,17 @@
   "writes": "nothing",
   "network": "none",
   "role": "tools",
+  "version": "0.0.1"
+ },
+ {
+  "name": "statbot",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "A Discord server's exported activity and growth stats, as dated lines by day and channel.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "role": "reads",
   "version": "0.0.1"
  },
  {
@@ -2001,6 +2116,17 @@
   "version": "0.0.1"
  },
  {
+  "name": "tiktok-studio",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "TikTok Studio's exported video stats as dated lines, kept past the app's 60-day window.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "role": "reads",
+  "version": "0.0.1"
+ },
+ {
   "name": "time-capsule",
   "kind": "stdlib",
   "section": "Trust and proof",
@@ -2042,6 +2168,17 @@
   "writes": "record",
   "network": "none",
   "role": "ways",
+  "version": "0.0.1"
+ },
+ {
+  "name": "umami-clicks",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "Link clicks and UTM sources exported from Umami or Plausible, as dated lines: which post sent the visits.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "role": "reads",
   "version": "0.0.1"
  },
  {
@@ -2231,6 +2368,17 @@
   "kind": "stdlib",
   "section": "Reading more kinds of files",
   "line": "WriteFreely posts, from its export or a copy of its SQLite database, as dated text.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "role": "reads",
+  "version": "0.0.1"
+ },
+ {
+  "name": "youtube-studio",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "YouTube Studio's exported CSVs: each video's views, watch time and subscribers gained as dated lines.",
   "source": "new",
   "writes": "to",
   "network": "none",

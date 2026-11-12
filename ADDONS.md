@@ -411,7 +411,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 ### Other readers
 
 
-#### Other readers: ideas, not built yet, a to m
+#### Other readers: ideas, not built yet, a to l
 
 - <a id="apple-notes"></a>**apple-notes** (idea) \
   Apple Notes, read from a copy of its database: each note as plain text with its folder and dates. \
@@ -455,12 +455,18 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - <a id="lessons"></a>**lessons** (idea) \
   Lesson plans from the Emerging Rule community library, by grade and subject, as passages a teacher can ask. \
   *new* `no-install` `offline` `plan` `lesson` · near: my-lessons, lesson-time, support-plan
+
+#### Other readers: ideas, not built yet, l to s
+
+- <a id="linkedin-analytics"></a>**linkedin-analytics** (idea) \
+  LinkedIn's analytics export: each post's impressions, reactions and comments as dated lines, kept past LinkedIn's 90 days. \
+  Uses office. *new* `no-install` `offline` `posts` `comments` · near: linkedin, reddit, meta-archive
 - <a id="medical-records"></a>**medical-records** (idea) \
   Your health records as FHIR JSON or C-CDA XML: visits, results and prescriptions as dated lines. \
   *new* `no-install` `offline` `json` `health` · near: box-health, takeout, schema-check
-
-#### Other readers: ideas, not built yet, m to w
-
+- <a id="meta-insights"></a>**meta-insights** (idea) \
+  Meta Business Suite's insights CSVs: Facebook and Instagram reach, views and engagement per post as dated lines. \
+  *new* `no-install` `offline` `posts` `csv` · near: meta-archive, bluesky, mastodon
 - <a id="moodle"></a>**moodle** (idea) \
   Moodle course backups: pages, assignments, quizzes and forum posts as passages. \
   *new* `no-install` `offline` `assignments` `course` · near: canvas, syllabus, front-page
@@ -479,9 +485,22 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - <a id="recipes"></a>**recipes** (idea) \
   Recipes from saved web pages and recipe-app exports, as plain text: what can I cook with leeks? \
   *new* `no-install` `offline` `saved` `web` · near: web-pages, webarchive, confluence
+- <a id="reddit-pro"></a>**reddit-pro** (idea) \
+  Reddit Pro's analytics, saved as a CSV or copied as text: each post's views, upvotes and followers gained as dated lines. \
+  *new* `no-install` `offline` `posts` `saved` · near: reddit, instapaper, pocket
+- <a id="rpsync"></a>**rpsync** (idea) \
+  RPSync's exported social statistics, read from a copy, as dated lines for each platform it collects. \
+  *new* `no-install` `offline` `copy` · near: apple-notes, discord, bluesky
+- <a id="screenshot-stats"></a>**screenshot-stats** (idea) \
+  Dashboard screenshots read into dated numbers (views, ratio, upvotes, country shares), each line citing its image. \
+  Needs Pillow and the tesseract program, run not linked; MIT-CMU, Apache-2.0. Uses ocr. *new* `needs-install` `offline` `numbers` `image` · near:
+  issue-answer, log-kit, home-sensors
 - <a id="scripture"></a>**scripture** (idea) \
   A scripture or other canonical text with your study notes beside it, cited by book, chapter and verse. \
   *new* `no-install` `offline` `book` `beside` · near: readwise, books, gutenberg
+
+#### Other readers: ideas, not built yet, s to y
+
 - <a id="scrivener"></a>**scrivener** (idea) \
   Scrivener projects: each document in the binder as plain text, by its place in the manuscript. \
   *new* `no-install` `offline` `documents` · near: rtf, apple-notes, sigmap
@@ -491,15 +510,27 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - <a id="signal"></a>**signal** (idea) \
   A Signal backup, decrypted with its passphrase, as one dated line per message. \
   Needs cryptography; Apache-2.0 or BSD. *new* `needs-install` `offline` `message` `backup` · near: texts, teams, chats
+- <a id="social-osint-cache"></a>**social-osint-cache** (idea) \
+  The local cache of OWASP SocialOSINTLM, read offline: posts it gathered from Bluesky, Mastodon and Reddit as dated lines. \
+  *new* `no-install` `offline` `posts` `bluesky` · near: bluesky, mastodon, reddit
 - <a id="sqlite"></a>**sqlite** (idea) \
   Any SQLite database, read from a copy: each table as a section, each row a line with its column names. \
   *new* `no-install` `offline` `copy` `sqlite` · near: writefreely, apple-notes, codebase-memory
+- <a id="statbot"></a>**statbot** (idea) \
+  A Discord server's exported activity and growth stats, as dated lines by day and channel. \
+  *new* `no-install` `offline` `channel` `activity` · near: discord, slack, takeout
 - <a id="steam"></a>**steam** (idea) \
   Your Steam library from its local files: games, playtime and when you last played. \
   *new* `no-install` `offline` `game` `library` · near: life, game-master, music-library
 - <a id="teams"></a>**teams** (idea) \
   Microsoft Teams chats from your Microsoft account's export, one dated line per message. \
   *new* `no-install` `offline` `message` `chats` · near: chats, signal, texts
+- <a id="tiktok-studio"></a>**tiktok-studio** (idea) \
+  TikTok Studio's exported video stats as dated lines, kept past the app's 60-day window. \
+  *new* `no-install` `offline` · near: chats, slack, instapaper
+- <a id="umami-clicks"></a>**umami-clicks** (idea) \
+  Link clicks and UTM sources exported from Umami or Plausible, as dated lines: which post sent the visits. \
+  *new* `no-install` `offline` `posts` `visits` · near: deep-links, bluesky, linkedin
 - <a id="voice"></a>**voice** (idea) \
   Dictation, calls and lectures transcribed into dated text. \
   Needs faster-whisper; MIT. Goes online: the model, downloaded once. *new* `needs-install` `online` `voice` `transcribed` · near: wis, writefreely, texts
@@ -511,6 +542,9 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - <a id="writefreely"></a>**writefreely** (idea) \
   WriteFreely posts, from its export or a copy of its SQLite database, as dated text. \
   *new* `no-install` `offline` `copy` `sqlite` · near: apple-notes, bookmarks, nestor
+- <a id="youtube-studio"></a>**youtube-studio** (idea) \
+  YouTube Studio's exported CSVs: each video's views, watch time and subscribers gained as dated lines. \
+  *new* `no-install` `offline` `watch` `csv` · near: takeout, instapaper, letterboxd
 
 ### What it makes for elsewhere
 
@@ -526,6 +560,9 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - <a id="file-kind"></a>**file-kind** (idea) \
   Each file the kernel leaves out, named by what its first bytes say it is (a PDF, a PNG, a zip), whatever its name or extension says. \
   From: shape of [wagtail/Willow](https://github.com/wagtail/Willow), BSD-3-Clause. *new* `no-install` `offline` `pdf` `whatever` · near: text, pdf, why-not
+- <a id="reddit-history"></a>**reddit-history** (idea) \
+  Older Reddit posts and comments from an archive you name, for a window of days, written as dated lines beside your own export. \
+  Goes online: the archive you name, to read posts from a window of days. *new* `no-install` `online` `posts` `archive` · near: reddit, meta-archive, wayback
 
 ## Finding things
 
@@ -1034,6 +1071,13 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - <a id="mirror-sweep"></a>**mirror-sweep** (idea) \
   When a file is deleted, the copies of it that readers made are found and removed, so your folder stops answering from what is gone. \
   *new* `no-install` `offline` `reader` `sweep` · near: pile-sweep, format-rot, changed
+- <a id="post-stats"></a>**post-stats** (idea) \
+  Each post's views, upvote ratio and country shares from your notes' dated lines, by day or week, with the fewest people each share can mean. \
+  Uses log-kit. *new* `no-install` `offline` `posts` `share` · near: log-kit, mastodon, linkedin
+- <a id="reddit-api"></a>**reddit-api** (idea) \
+  Your own Reddit posts read through Reddit's API on a timer: score, ratio and comments each time, so the first fifteen minutes can be read. \
+  Needs praw; BSD-2-Clause. Goes online: Reddit's API, with the credentials of an app you make, to read your own posts. *new* `needs-install` `online`
+  `minutes` `reddit` · near: reddit, test-impact, minutes
 - <a id="upstream-desk"></a>**upstream-desk** (idea) \
   Your work in other people's projects, in one place: notifications sorted into what needs you, and your open pull requests there. \
   Goes online: GitHub, through gh, with your own login. *bot* `no-install` `online` `pull` `request` · near: contribute, against, restack-open
