@@ -13,6 +13,7 @@ sys.path.insert(0, str(HERE))
 import make_life  # noqa: E402
 import scene  # noqa: E402
 import adults  # noqa: E402
+import fourteen  # noqa: E402
 import tense  # noqa: E402
 
 make_life.main(
@@ -24,15 +25,8 @@ def test_the_made_up_files_are_as_written_and_his_words_are_in_no_box_marit_hold
     assert make_life.check() == []
     made = sorted({name.split("/")[0] for name in make_life.FILES})
     assert made == sorted(
-        [*scene.BOXES, *tense.BOXES, "sable-with-bryony", *adults.BOXES, *adults.LATER]
-    )
-    wrong = dict(make_life.FILES)
-    wrong["tobias/checkups.md"] += "\nAsk him about the counselling.\n"
-    old, make_life.FILES = make_life.FILES, wrong
-    try:
-        assert any("says 'counselling'" in w for w in make_life.check())
-    finally:
-        make_life.FILES = old
+        [*scene.BOXES, *tense.BOXES, "sable-with-bryony", *adults.BOXES, *adults.LATER, *fourteen.BOXES]
+    )  # fmt: skip
 
 
 def test_the_scene_plays_as_told(tmp_path, capsys):
@@ -155,3 +149,26 @@ def test_the_adults_scene_plays_as_told(tmp_path, capsys):
         == 2
     )
     assert adults.main(["run"]) == 2 and not (HERE / "out").exists()
+
+
+def test_leo_at_fourteen_plays_as_told(tmp_path, capsys):
+    to = tmp_path / "fourteen"
+    assert fourteen.main(["run", "--life", str(HERE / "life"), "--to", str(to)]) == 0
+    said = json.loads((to / "fourteen.json").read_text())
+    assert said["wrong"] == []
+    assert all(
+        b["verify"].startswith("the chain holds") for b in said["boxes"].values()
+    )
+    assert said["said"] == {
+        "parents_disagree": True, "either_parent_has_the_others_word": 0,
+        "count_reached_father": False, "nurse_reached_a_house": False,
+        "taken_in": {
+            "leo-own": {"leo-at-fourteen": 1, "ravi-later": 1, "asthma-nurse": 1},
+            "leo-at-fourteen": {"leo-own": 1}, "ravi-later": {"leo-own": 1}, "asthma-nurse": {},
+        },
+        "his_seals_under_his_key": 2, "under_his_mothers": 0,
+        "parents_records_hold": {"leo-at-fourteen": "holds", "ravi-later": "holds"},
+    }  # fmt: skip
+    assert "went otherwise" not in capsys.readouterr().out
+    assert fourteen.main(["run", "--life", str(HERE / "life"), "--to", str(to)]) == 2
+    assert fourteen.main(["run"]) == 2

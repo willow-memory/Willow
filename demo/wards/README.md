@@ -193,6 +193,58 @@ Where it still runs out:
   for someone on a shared login whose trouble is inside the house, it is
   the one piece the computer does not give.
 
+## Leo at fourteen
+
+Four years after the first set. At ten Leo had one box, held by his
+mother, and his father added to it by sending. Now he has a box of his
+own beside it.
+
+    python demo/wards/fourteen.py run --life demo/wards/life --to /tmp/fourteen
+
+His preventer inhaler was changed at a review his mother took him to.
+Nobody told his father, who still gives him the old one. Leo has counted
+how often he needs his reliever: nine times in a month at his mother's,
+once at his father's, and he has written down why: his mother's partner
+smokes in the kitchen. He saw the asthma nurse on his own. And he wrote:
+"I don't want Dad to have the count. He would use it on Mum."
+
+What the scene plays:
+
+1. Each parent sends his box what they know of his preventer. They do
+   not agree, and neither parent's box holds the other's word.
+2. The nurse sends her note to his box only. He seals the plan and sends
+   it to his father; he seals the count and sends it to the box his
+   mother holds.
+3. He holds each parent's record to what that parent sent him.
+
+What it found:
+
+- **The child is the only one with all of it.** His box took in three
+  packages: his mother's, his father's and the nurse's. Each parent's
+  took in one, from him. Two adults who do not share a house or a
+  notebook each hold half, and for four years the only whole record of
+  his care is the one he keeps. That was not true at ten, when one
+  parent held the box and the other fed it.
+- **He sees the disagreement and they do not.** His mother's box says
+  purple, one puff. His father's says brown, two. Each is sure. Only in
+  his box do the two sit side by side, and a child being given two
+  different doses by two careful parents is exactly the thing a shared
+  record is for.
+- **What he sends is his to choose, and he chooses differently for
+  each.** His father gets the plan and not the count. His mother gets
+  the count and not a word of what his father said. The nurse's note
+  goes to neither house. This is the same wall as Sable's and Kit's,
+  used by a boy who is not hiding from anyone: he is keeping a fact from
+  becoming a weapon between two people he lives with.
+- **He does not have to wait for eighteen to hold them to it.** Imani
+  could hold her mother's record to what she was sent only at the
+  handover. Leo can do it now, to both parents, because each has already
+  sent him something.
+- **What still does not work.** His box cannot be asked what his parents
+  said: what arrives is on his record and not in his files, so to have
+  it answer he has to write it down again himself, as he did with the
+  nurse's plan. And it met both his parents as keys it had never seen.
+
 ## Two adults who cannot decide
 
 A child has a guardian from the start and a day the holding ends. An
@@ -300,7 +352,5 @@ What it leaves open:
 - **A stranger reading the emergency card.** Wren's and Imani's are in
   their piles, authored by Marit. Nothing here serves one to someone
   outside.
-- **Leo at fourteen**, with a box of his own beside one held in two
-  houses.
 - **Anything real.** The names, dates and care are invented, and the
   rules about what a minor may consent to differ by place.
