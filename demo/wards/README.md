@@ -306,6 +306,46 @@ It is the same shape the study of shared runs met from the other side:
 a thing received should not be gone on from until someone has looked at
 it.
 
+## How a key gets known: a proposal from elsewhere, held to these scenes
+
+Every scene here met someone's key "as a key you haven't had a package
+from before": Imani her mother's, Bryony the court's, the hospital
+Marcus's, Leo both his parents'. A proposal made on 2026-11-11 in the
+maintainer's willows-grove repository (the design page "Phone keys: made
+anywhere, checked at home", commit d90afb4; proposed, not ratified,
+nothing built) is about exactly that, for a phone coming home. Its
+thought, in the maintainer's words: the security belongs "not
+necessarily where the key is produced but where it's verified".
+
+Its shape: a box makes its own key wherever it is; its public half is
+enrolled once, by the person whose door it is, over a channel they
+trust; what comes back is checked at the door against the keys
+enrolled; a signer the door does not know is refused, or what it sent
+is held as a suggestion and not as sealed; a changed key is taken only
+on that person's word.
+
+Held to the people here:
+
+| who meets whose key | how it would be enrolled | what changes |
+|---|---|---|
+| Imani, her mother's | across a table, before the handover | the package reads as her mother's and not a stranger's |
+| Leo, each parent's | at each house | "Dad says" is his enrolment, not a label written by hand |
+| Bryony, the court's | from the paper order, or at the court's desk | her holding rests on a key she checked, where today it rests on one she took on sight |
+| Garrick, the court's | he will not | nothing. Enrolling is the owner's act, and refusing it is his |
+| the hospital, Marcus's | it cannot be: they have never met | the proposal's own answer fits what a ward does. A card from a signer it does not know is held as something said, not as sealed: read, weighed, acted on with care |
+
+So it answers every case where the two can meet first, which is most of
+them, and it names the one where they cannot. The emergency card stays
+the hard case: the one time a stranger has to act on a key, there was
+never a door to enrol it at.
+
+One thing it makes plain that these scenes passed over: a box's own seal
+can be checked only by whoever holds that box's key. "Her seal proves
+under her key and not under his" is something only she can find out.
+What anyone else can check is a package, which is signed another way.
+Every claim on this page that one person can check another's word is
+about a package.
+
 ## Two adults who cannot decide
 
 A child has a guardian from the start and a day the holding ends. An
@@ -384,8 +424,8 @@ What it found:
 What it leaves open:
 
 - **Whose key it is.** The hospital met Marcus's key, and Jun's, as keys
-  it had never seen. Whether the card is his rests on that, and it is
-  being worked on elsewhere.
+  it had never seen. Whether the card is his rests on that; see "How a
+  key gets known", above.
 - **Getting better.** The finding says "looked at again in three
   months". If Agnes can decide again, something has to say so with the
   same weight as the finding, and Petra's holding has to stop. The scene
