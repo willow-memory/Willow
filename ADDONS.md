@@ -1809,6 +1809,9 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - <a id="emergency-card"></a>**emergency-card** (idea) \
   One page of your medicines, allergies and contacts, from your files, to print or keep on your phone. \
   *new* `no-install` `offline` `prints` `contacts` · near: privacy, calendar, stack
+- <a id="received"></a>**received** (idea) \
+  A package you were sent, kept by your own choice as a page: whose word it is, when, not sealed by you, so your folder can answer from it. \
+  Uses share. *new* `no-install` `offline` `sent` `choice` · near: kart, share, silence-log
 
 ### Tools you run yourself
 

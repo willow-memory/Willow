@@ -1518,6 +1518,18 @@
   "version": "0.0.1"
  },
  {
+  "name": "received",
+  "kind": "stdlib",
+  "section": "Ways to use it",
+  "line": "A package you were sent, kept by your own choice as a page: whose word it is, when, not sealed by you, so your folder can answer from it.",
+  "source": "new",
+  "writes": "record, to",
+  "network": "none",
+  "role": "makes",
+  "uses": "share",
+  "version": "0.0.1"
+ },
+ {
   "name": "recipes",
   "kind": "stdlib",
   "section": "Reading more kinds of files",

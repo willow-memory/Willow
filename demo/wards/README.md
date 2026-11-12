@@ -296,6 +296,12 @@ before anyone builds one:
 - **A later package that replaces an earlier one** has to mark the
   earlier page, or the box answers from both.
 
+The idea is on the list of planned add-ons as `received`, with those
+five things as what it has to get right; it is not built. One idea
+already on that list bears on the rest of this page: `grant`, someone
+else allowed to ask part of your folder, for a path and a time. That is
+the other half of "a key says who approved, not who may ask".
+
 It is the same shape the study of shared runs met from the other side:
 a thing received should not be gone on from until someone has looked at
 it.
