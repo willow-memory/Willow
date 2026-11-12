@@ -338,13 +338,21 @@ def test_what_the_study_kept_is_what_its_page_says():
     assert f["kinds"] == ["amd x86_64 avx2", "intel x86_64 avx2", "intel x86_64 avx512"]
     assert (f["native_same"], f["native_jobs"], f["native_machines"]) == (14, 220, 5)
     rows = [json.loads(x) for x in (HERE / "results" / "record.jsonl").read_text().splitlines()]  # fmt: skip
-    assert [r.get("gate") for r in rows[1:]] == [
-        f"shared-runs:{r}" for r in judge.RULES
-    ]
-    assert [r["verdict"] for r in rows[1:]] == [kept["verdicts"][r]["state"] for r in judge.RULES]  # fmt: skip
-    frozen = json.loads((HERE / "FROZEN.json").read_text())["files"]
-    assert rows[1]["tools"]["judge.py"] == frozen["judge.py"], (
-        "judged by the frozen judge"
+    first, second_rows = rows[1:10], rows[10:]
+    assert [r.get("gate") for r in first] == [f"shared-runs:{r}" for r in judge.RULES]
+    assert [r["verdict"] for r in first] == [kept["verdicts"][r]["state"] for r in judge.RULES]  # fmt: skip
+    assert [r.get("gate") for r in second_rows] == [f"shared-runs:freeze-2:{r}" for r in judge.RULES]  # fmt: skip
+    second = json.loads((HERE / "results" / "freeze-2-verdicts.json").read_text())
+    assert second["figures"] == f, "the second freeze changed no figure"
+    assert [r["verdict"] for r in second_rows] == [second["verdicts"][r]["state"] for r in judge.RULES]  # fmt: skip
+    assert second["verdicts"]["R7"]["state"] == "passed"
+    frozen = json.loads((HERE / "FROZEN.json").read_text())
+    was = frozen["freeze_2"]["changed"]["account.py"]["was"]
+    assert first[0]["tools"]["judge.py"] == frozen["files"]["judge.py"], "judged by the frozen judge"  # fmt: skip
+    assert first[0]["tools"]["account.py"] == was != frozen["files"]["account.py"]
+    assert second_rows[0]["tools"]["account.py"] == frozen["files"]["account.py"]
+    assert second_rows[0]["answers_sha256"] == first[0]["answers_sha256"], (
+        "both judgings read the same answers"
     )
     plan = sweep.load(HERE / "plan.json")
     again = judge.judged(HERE / "plan.json", HERE / "runs")[1]
@@ -365,3 +373,4 @@ def test_what_the_study_kept_is_what_its_page_says():
         ), "the answer marked wrong is the figure the reports give"
     page = (HERE.parent / "README.md").read_text()
     assert "R7 failed, and the fault is the judge's" in page and "73.2%" in page
+    assert "R7 under the second\nfreeze: passed" in page and "19 rows, 0 sealed" in page

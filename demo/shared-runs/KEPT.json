@@ -10,6 +10,8 @@
   "study/dry/verdicts.json",
   "study/dry/verify.txt",
   "study/results/agent-input.txt",
+  "study/results/freeze-2-key.json",
+  "study/results/freeze-2-verdicts.json",
   "study/results/key.json",
   "study/results/record.jsonl",
   "study/results/report.txt",

@@ -477,5 +477,5 @@ def test_what_the_trials_printed_is_listed_as_kept_and_what_was_written_is_not()
             if p.is_file()
         ]
     )
-    assert kept == printed and len(kept) == 36 + 6 + 60
+    assert kept == printed and len(kept) == 36 + 8 + 60
     assert not [name for name in kept if name.rsplit("/", 1)[1] in written]

@@ -753,7 +753,7 @@ Judged 2026-11-12 by the frozen judge.py, from what fifteen machine runs
 and two agents kept ([study/runs/](study/runs/)). Each verdict is a row,
 `shared-runs:R1` to `R9`, on a record outside the repository; a copy of
 that record is [study/results/record.jsonl](study/results/record.jsonl),
-and the kernel says of it: "the chain holds: 10 rows, 0 sealed". The
+and the kernel said of it then: "the chain holds: 10 rows, 0 sealed". The
 figures are in [study/results/verdicts.json](study/results/verdicts.json).
 No frozen file was changed between the freeze and the judging.
 
@@ -793,10 +793,36 @@ what a dry run on a small sweep misses, and it is written here because
 the next study should have one figure in its dry run as large as any the
 real one will hold.
 
-The verdict stands as frozen: R7 failed. Mending the key would be a
-change to a frozen file after the answers were read, which is a new
-freeze with its reason, and the maintainer's to call. Read by hand, both
-agents were right on all 16.
+The verdict stands as frozen: R7 failed. Read by hand, both agents
+were right on all 16.
+
+### The second freeze
+
+Made 2026-11-12 on the maintainer's word, **after** the run, the answers
+and the first judging had been read. That order is the whole of what
+has to be said about it, and it is said in
+[study/FROZEN.json](study/FROZEN.json) with the SHA-256 of both agents'
+answers as they stood before the change.
+
+- **What changed:** one thing in account.py. A figure is written with
+  every digit, where it was written to six.
+- **What did not:** the plan, the starts, the runner, the judge, the
+  questions, the reports, the agents' input and their answers. The
+  reports and the input are byte for byte what they were, so neither
+  agent was asked again.
+- **What it could move:** R7, and nothing else.
+
+Judged again, all nine, onto the same record, as rows
+`shared-runs:freeze-2:R1` to `R9` beside the first nine. The kernel says
+of it now: "the chain holds: 19 rows, 0 sealed". The figures are the
+same to the last one. Eight verdicts are the same. **R7 under the second
+freeze: passed, each agent right on 16 of 16**
+([study/results/freeze-2-verdicts.json](study/results/freeze-2-verdicts.json)).
+
+Both rows stay. The first says what the study's own tools found when
+they were first asked. The second says what they find once a fault in
+them is mended, by someone who had seen the answers. A reader who trusts
+only what was fixed beforehand has the first: R7 failed.
 
 ### What the passes do and don't say
 
@@ -844,8 +870,8 @@ agents were right on all 16.
   five thousand.
 - **An agent can say what happened, and no more:** nothing added, and
   nothing guessed where the reports were silent. Whether it said what
-  happened is what R7 asks, and R7's verdict is failed, for the reason
-  above.
+  happened is what R7 asks: failed as first frozen, for the reason
+  above, and passed under the second freeze.
 
 What it still cannot show is what the plan said it could not: scale, a
 machine that lies, tightly coupled work. Two of the machines were

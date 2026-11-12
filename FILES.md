@@ -2484,8 +2484,10 @@ willow/
 │   │   │   ├── plan.json         the study's sweep: 220 jobs over 22 trajectories, its machines, seeds and agents
 │   │   │   ├── results/          what the frozen judge made of the run: verdicts, figures, and the record they are rows on
 │   │   │   │   ├── agent-input.txt   the two agents' whole input: what is asked, the reports, the questions
+│   │   │   │   ├── freeze-2-key.json each question's answer under the second freeze: every figure whole
+│   │   │   │   ├── freeze-2-verdicts.json the same figures and the nine verdicts, judged again under the second freeze
 │   │   │   │   ├── key.json          each question's answer, as the frozen account.py wrote it
-│   │   │   │   ├── record.jsonl      a copy of the record outside the repository that the nine verdicts are rows on
+│   │   │   │   ├── record.jsonl      a copy of the record outside the repository that both judgings' verdicts are rows on
 │   │   │   │   ├── report.txt        the run's reports, made by account.py: no agent wrote any of it
 │   │   │   │   ├── verdicts.json     the run's figures and its nine verdicts, as judge.py printed them
 │   │   │   │   └── verify.txt        what the kernel said of that record
