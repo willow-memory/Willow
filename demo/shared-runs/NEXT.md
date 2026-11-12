@@ -19,6 +19,20 @@ How to read "from where": *here* is a cloud session like the one that
 wrote this; *laptop* is the maintainer's machine; *Kaggle* is their
 account there; *someone* is a person with a machine of their own.
 
+## What could be asked of the laptop and the phone
+
+Proposed 2026-11-12, after the laptop's session said what it can run.
+**None of these is asked until the maintainer says so**, and each says
+what it would belong to. A thing run for a study that is already judged
+is an addition after the fact, and is written up as one.
+
+| | what | on what | belongs to | what comes back |
+|---|---|---|---|---|
+| P1 | the dry sweep, by [study/TESTER.md](study/TESTER.md) alone | the phone (ARM, NEON, NumPy built on Termux's OpenBLAS) | nothing frozen: it is a dry run, and no result | its last three lines and its runs folder. The first ARM machine, and the first with another linear-algebra library; both differences are to be said beside whatever it shows |
+| P2 | every job of the frozen sweep alone: `runner.py alone` with the study's plan and starts | the laptop, and a cloud session beside it | an addition to the first study, B1 below: every job in full on a third kind. It needs a line frozen first, saying what is held to what | one folder a machine, as the study's machines left theirs |
+| P3 | the two agents' input, [study/results/agent-input.txt](study/results/agent-input.txt), given whole to each local model | the laptop's thirteen models under ollama | C4 below: a measurement after the fact, scored by the second freeze's account.py as the two agents were | each model's answer, word for word, in a folder of its own |
+| P4 | the lies study, both arms | one machine: the laptop or a cloud session | [lies/](lies/README.md), once it is frozen | its trials, as lies.py keeps them |
+
 ## The gaps the study left
 
 From "What it cannot show" and "What the passes do and don't say".

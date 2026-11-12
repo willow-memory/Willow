@@ -49,7 +49,8 @@ You need Python 3.9 or later and git.
 
 ## What you should see
 
-Three lines at the end, like these from the machine that wrote this:
+Two lines saying where things were written, and then three lines like
+these, from the machine that wrote this:
 
     this machine: intel x86_64 avx512, NumPy 2.1.3
     the power rewritten: 30 of 30 jobs the same bytes as the other machine

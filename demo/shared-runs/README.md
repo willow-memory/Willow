@@ -685,7 +685,10 @@ recalled from Kaggle's command line, not read from its pages:
    inputs are round one's outputs, so they can't go sooner.
 5. When round two has finished, push the check.
 6. Fetch each one's output into one folder, a folder a run:
-   `kaggle kernels output NAME/shared-runs-NAME-OF-RUN -p RUNS`.
+   `kaggle kernels output NAME/shared-runs-NAME-OF-RUN -p RUNS`. As it was
+   found when run: the files land one folder deeper than that, under the
+   run's name twice, with Kaggle's log beside them. Move them up one, so
+   each run's three files sit in its own folder under RUNS.
 7. The two other check machines, the laptop and the cloud session, run
    runner.py themselves, given the ten rounds' folders: first `check`
    and then `native`, each with `--to RUNS/laptop` or
